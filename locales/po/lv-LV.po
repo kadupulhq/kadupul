@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.2.20\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-03 19:49-0700\n"
+"POT-Creation-Date: 2026-10-03 19:59-0700\n"
 "PO-Revision-Date: 2026-05-10 08:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -51,9 +51,9 @@ msgstr "Šī programma tiek izplatīta cerībā, ka kādam tā būs noderīga, t
 #: data_queries.php:972 data_queries.php:1252 data_source_profiles.php:16
 #: data_source_profiles.php:912 data_sources.php:22 data_sources.php:1229
 #: data_templates.php:19 data_templates.php:791 gprint_presets.php:12
-#: graph_templates.php:22 graph_templates.php:517 graphs.php:31
+#: graph_templates.php:22 graph_templates.php:517 graphs.php:31 host.php:29
 #: host_templates.php:20 host_templates.php:485 host_templates.php:542
-#: include/global_arrays.php:1654 include/global_settings.php:232
+#: include/global_arrays.php:1652 include/global_settings.php:232
 #: lib/api_automation.php:1323 lib/api_automation.php:1386
 #: lib/api_automation.php:1457 lib/html.php:1546 lib/html_form.php:1397
 #: lib/html_reports.php:1937 managers.php:13 pollers.php:18 tree.php:1688
@@ -86,7 +86,7 @@ msgstr "Saistīt ar apkopojumu"
 msgid "Disassociate with Aggregate"
 msgstr "Atdalīt ar apkopojumu"
 
-#: aggregate_graphs.php:70 graphs.php:199
+#: aggregate_graphs.php:70 graphs.php:199 host.php:250
 #, php-format
 msgid "Place on a Tree (%s)"
 msgstr "Vieta kokā (%s)"
@@ -128,10 +128,12 @@ msgstr "Noklikšķiniet 'Turpināt', lai dzēstu šādu(s) apkopoto(-s) grafiku(
 #: data_templates.php:486 data_templates.php:498 data_templates.php:514
 #: gprint_presets.php:137 graph_templates.php:373 graph_templates.php:385
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
-#: graph_view.php:1043 graphs.php:875 graphs.php:891 graphs.php:902
-#: graphs.php:913 graphs.php:928 graphs.php:942 graphs.php:951 graphs.php:1153
-#: graphs.php:1196 graphs.php:1218 graphs.php:1249 graphs.php:1261
-#: graphs.php:1845 host_templates.php:222 host_templates.php:236
+#: graph_view.php:1043 graphs.php:876 graphs.php:892 graphs.php:903
+#: graphs.php:914 graphs.php:929 graphs.php:943 graphs.php:952 graphs.php:1154
+#: graphs.php:1197 graphs.php:1219 graphs.php:1250 graphs.php:1262
+#: graphs.php:1846 host.php:475 host.php:484 host.php:531 host.php:540
+#: host.php:549 host.php:565 host.php:579 host.php:588 host.php:619
+#: host.php:631 host_templates.php:222 host_templates.php:236
 #: host_templates.php:247 host_templates.php:302 host_templates.php:375
 #: lib/clog_webapi.php:225 lib/html.php:2833 lib/html_form.php:1396
 #: lib/html_form.php:1413 lib/html_form.php:1424 lib/html_reports.php:632
@@ -161,9 +163,11 @@ msgstr "Atcelt"
 #: data_templates.php:486 data_templates.php:498 data_templates.php:514
 #: gprint_presets.php:137 graph_templates.php:373 graph_templates.php:385
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
-#: graphs.php:875 graphs.php:891 graphs.php:902 graphs.php:913 graphs.php:928
-#: graphs.php:942 graphs.php:951 graphs.php:1153 graphs.php:1196
-#: graphs.php:1218 graphs.php:1249 graphs.php:1261 host_templates.php:222
+#: graphs.php:876 graphs.php:892 graphs.php:903 graphs.php:914 graphs.php:929
+#: graphs.php:943 graphs.php:952 graphs.php:1154 graphs.php:1197
+#: graphs.php:1219 graphs.php:1250 graphs.php:1262 host.php:475 host.php:484
+#: host.php:531 host.php:540 host.php:549 host.php:565 host.php:579
+#: host.php:588 host.php:619 host.php:631 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
 #: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2832
 #: lib/html_reports.php:574 managers.php:1066 managers.php:1127 pollers.php:549
@@ -177,7 +181,7 @@ msgid "Continue"
 msgstr "Turpināt"
 
 #: aggregate_graphs.php:370 aggregate_graphs.php:445 aggregate_graphs.php:470
-#: graphs.php:875
+#: graphs.php:876
 msgid "Delete Graph(s)"
 msgstr "Dzēst grafiku(s)"
 
@@ -191,8 +195,8 @@ msgstr "Lai migrētu tālāk norādītos apkopotos grafikus uz veidnēm balstīt
 
 #: aggregate_graphs.php:406 aggregate_graphs.php:456 aggregate_graphs.php:504
 #: auth_changepassword.php:415 auth_profile.php:464 automation_networks.php:387
-#: automation_snmp.php:245 graphs.php:1155 graphs.php:1205 graphs.php:1208
-#: graphs.php:1252 graphs.php:1845 include/auth.php:309
+#: automation_snmp.php:245 graphs.php:1156 graphs.php:1206 graphs.php:1209
+#: graphs.php:1253 graphs.php:1846 host.php:622 include/auth.php:309
 #: lib/api_aggregate.php:2209 lib/api_aggregate.php:2224 lib/html_form.php:1422
 #: lib/html_reports.php:632 managers.php:1130 permission_denied.php:14
 #: permission_denied.php:16
@@ -240,29 +244,29 @@ msgstr "Kopējais nosaukums:"
 msgid "New Aggregate"
 msgstr "Jauns agregāts"
 
-#: aggregate_graphs.php:485 graphs.php:1233
+#: aggregate_graphs.php:485 graphs.php:1234 host.php:603
 msgid "Click 'Continue' to add the selected Graphs to the Report below."
 msgstr "Noklikšķiniet 'Turpināt', lai pievienotu atlasītos grafikus zemāk esošajam pārskatam."
 
-#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1237
+#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1238 host.php:607
 #: lib/html_reports.php:18 lib/html_reports.php:2133
 msgid "Report Name"
 msgstr "Pārskata nosaukums"
 
-#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1241
+#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1242 host.php:611
 #: lib/html_reports.php:1789
 msgid "Timespan"
 msgstr "Laika sprīdis"
 
-#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1245
+#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1246 host.php:615
 msgid "Align"
 msgstr "Izlīdzināt"
 
-#: aggregate_graphs.php:501 graphs.php:1249
+#: aggregate_graphs.php:501 graphs.php:1250
 msgid "Add Graphs to Report"
 msgstr "Pievienot grafikus pārskatam"
 
-#: aggregate_graphs.php:503 graphs.php:1251
+#: aggregate_graphs.php:503 graphs.php:1252
 msgid "You currently have no reports defined."
 msgstr "Pašlaik jums nav definēta neviena pārskata."
 
@@ -294,11 +298,11 @@ msgstr "Atsaistīt grafiku(s)"
 msgid "Click 'Continue' to place the following Aggregate Graph(s) under the Tree Branch."
 msgstr "Noklikšķiniet 'Turpināt', lai zem koka zara novietotu šādu(s) apkopoto(-s) grafiku(-us)."
 
-#: aggregate_graphs.php:538
+#: aggregate_graphs.php:538 host.php:571
 msgid "Destination Branch:"
 msgstr "Galamērķa zars:"
 
-#: aggregate_graphs.php:545 graphs.php:928
+#: aggregate_graphs.php:545 graphs.php:929
 msgid "Place Graph(s) on Tree"
 msgstr "Novietot grafiku(s) uz koka"
 
@@ -353,15 +357,15 @@ msgstr "Kopējais priekšskatījums neeksistē"
 msgid "Aggregate Preview %s"
 msgstr "Apkopotais priekšskatījums %s"
 
-#: aggregate_graphs.php:763 graph.php:551 graphs.php:1678
+#: aggregate_graphs.php:763 graph.php:551 graphs.php:1679
 msgid "RRDtool Command:"
 msgstr "RRDtool komanda:"
 
-#: aggregate_graphs.php:765 graph.php:560 graphs.php:1682
+#: aggregate_graphs.php:765 graph.php:560 graphs.php:1683
 msgid "Not Checked"
 msgstr "Nepārbaudīts"
 
-#: aggregate_graphs.php:765 graph.php:556 graphs.php:1680
+#: aggregate_graphs.php:765 graph.php:556 graphs.php:1681
 msgid "RRDtool Says:"
 msgstr "RRDtool ziņo:"
 
@@ -370,24 +374,24 @@ msgstr "RRDtool ziņo:"
 msgid "Aggregate Graph %s"
 msgstr "Apkopotā diagramma %s"
 
-#: aggregate_graphs.php:820 aggregate_templates.php:408 graphs.php:1019
+#: aggregate_graphs.php:820 aggregate_templates.php:408 graphs.php:1020
 msgid "Prefix Replacement Values"
 msgstr "Prefiksu aizstāšanas vērtības"
 
-#: aggregate_graphs.php:821 aggregate_templates.php:409 graphs.php:1020
+#: aggregate_graphs.php:821 aggregate_templates.php:409 graphs.php:1021
 msgid "You may use these replacement values for the Prefix in the Aggregate Graph"
 msgstr "Šīs aizvietošanas vērtības varat izmantot prefiksam apkopotajā diagrammā"
 
-#: aggregate_graphs.php:988 aggregate_templates.php:536 graphs.php:1102
+#: aggregate_graphs.php:988 aggregate_templates.php:536 graphs.php:1103
 #: lib/api_aggregate.php:2344
 msgid "Total"
 msgstr "Kopā"
 
-#: aggregate_graphs.php:992 aggregate_templates.php:540 graphs.php:1104
+#: aggregate_graphs.php:992 aggregate_templates.php:540 graphs.php:1105
 msgid "All Items"
 msgstr "Visi elementi"
 
-#: aggregate_graphs.php:1010 graphs.php:1693 lib/api_aggregate.php:2504
+#: aggregate_graphs.php:1010 graphs.php:1694 lib/api_aggregate.php:2504
 msgid "Graph Configuration"
 msgstr "Grafika iestatījumi"
 
@@ -413,7 +417,7 @@ msgstr "Atbilstošie grafiki"
 #: color_templates.php:560 data_debug.php:1189 data_queries.php:1371
 #: data_source_profiles.php:1164 data_sources.php:1783 data_templates.php:1101
 #: gprint_presets.php:255 graph_templates.php:727 graph_view.php:667
-#: graphs.php:2099 graphs_new.php:524 host_templates.php:795
+#: graphs.php:2100 graphs_new.php:524 host.php:1820 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
 #: lib/api_automation.php:480 lib/api_automation.php:708
 #: lib/clog_webapi.php:608 lib/html.php:268 lib/html_filter.php:46
@@ -432,9 +436,9 @@ msgstr "Meklēt"
 #: aggregate_graphs.php:1288 aggregate_graphs.php:1324
 #: aggregate_graphs.php:1587 color_templates.php:680 data_sources.php:1985
 #: data_sources.php:2124 graph_view.php:488 graph_view.php:739
-#: graph_view.php:803 graphs.php:2116 graphs.php:2315
+#: graph_view.php:803 graphs.php:2117 graphs.php:2316 host.php:1934
 #: include/global_arrays.php:993 include/global_arrays.php:1229
-#: include/global_arrays.php:2014 lib/api_automation.php:283 lib/html.php:1996
+#: include/global_arrays.php:2012 lib/api_automation.php:283 lib/html.php:1996
 #: lib/html.php:2065 lib/html_graph.php:197 lib/html_tree.php:1022
 #: lib/html_tree.php:1378 tree.php:917 tree.php:2366 user_admin.php:801
 #: user_admin.php:1073 user_admin.php:2347 user_group_admin.php:932
@@ -450,7 +454,7 @@ msgstr "Grafiki"
 #: data_debug.php:1199 data_queries.php:1381 data_source_profiles.php:1174
 #: data_source_profiles.php:1296 data_sources.php:1793 data_templates.php:1130
 #: gprint_presets.php:265 graph_templates.php:737 graph_view.php:743
-#: graphs.php:2120 graphs_new.php:534 host_templates.php:805
+#: graphs.php:2121 graphs_new.php:534 host.php:1845 host_templates.php:805
 #: include/global_form.php:242 lib/api_automation.php:182
 #: lib/api_automation.php:490 lib/api_automation.php:718
 #: lib/api_automation.php:1082 lib/html_reports.php:2045 managers.php:154
@@ -474,15 +478,16 @@ msgstr "Daļa no Agregāta"
 #: automation_tree_rules.php:877 cdef.php:758 color_templates.php:598
 #: data_debug.php:1114 data_queries.php:1396 data_source_profiles.php:1195
 #: data_sources.php:1733 data_templates.php:1151 gprint_presets.php:283
-#: graph_templates.php:758 graph_view.php:675 graphs.php:2090
-#: graphs_new.php:513 host_templates.php:786 lib/api_automation.php:187
-#: lib/api_automation.php:471 lib/api_automation.php:723
-#: lib/api_automation.php:1087 lib/clog_webapi.php:533 lib/html.php:1828
-#: lib/html_filter.php:63 lib/html_graph.php:178 lib/html_reports.php:2056
-#: lib/html_tree.php:1009 managers.php:169 managers.php:529 managers.php:794
-#: plugins.php:530 pollers.php:914 tree.php:2242 user_admin.php:2150
-#: user_admin.php:2347 user_admin.php:2353 user_admin.php:2359
-#: user_admin.php:2365 user_admin.php:2371 user_admin.php:2377
+#: graph_templates.php:758 graph_view.php:675 graphs.php:2091
+#: graphs_new.php:513 host.php:1810 host_templates.php:786
+#: lib/api_automation.php:187 lib/api_automation.php:471
+#: lib/api_automation.php:723 lib/api_automation.php:1087
+#: lib/clog_webapi.php:533 lib/html.php:1828 lib/html_filter.php:63
+#: lib/html_graph.php:178 lib/html_reports.php:2056 lib/html_tree.php:1009
+#: managers.php:169 managers.php:529 managers.php:794 plugins.php:530
+#: pollers.php:914 tree.php:2242 user_admin.php:2150 user_admin.php:2347
+#: user_admin.php:2353 user_admin.php:2359 user_admin.php:2365
+#: user_admin.php:2371 user_admin.php:2377
 msgid "Go"
 msgstr "Doties"
 
@@ -491,9 +496,9 @@ msgstr "Doties"
 #: automation_templates.php:418 cdef.php:758 data_debug.php:1114
 #: data_queries.php:1396 data_source_profiles.php:1195 data_sources.php:1733
 #: data_templates.php:1151 gprint_presets.php:283 graph_templates.php:758
-#: graph_view.php:675 graphs.php:2090 graphs_new.php:513 host_templates.php:786
-#: lib/html_graph.php:178 managers.php:169 managers.php:529 managers.php:794
-#: plugins.php:530 pollers.php:914
+#: graph_view.php:675 graphs.php:2091 graphs_new.php:513 host.php:1810
+#: host_templates.php:786 lib/html_graph.php:178 managers.php:169
+#: managers.php:529 managers.php:794 plugins.php:530 pollers.php:914
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
 #: tree.php:2242 user_admin.php:2150 user_domains.php:665
 #: user_group_admin.php:2010 utilities.php:1084 utilities.php:1470
@@ -508,16 +513,17 @@ msgstr "Atlasīt/Atjaunināt filtrus"
 #: automation_tree_rules.php:878 cdef.php:759 color_templates.php:599
 #: data_debug.php:1115 data_queries.php:1397 data_source_profiles.php:1196
 #: data_sources.php:1734 data_templates.php:1152 gprint_presets.php:284
-#: graph_templates.php:759 graph_view.php:676 graphs.php:2091
-#: graphs_new.php:514 host_templates.php:787 lib/api_automation.php:188
-#: lib/api_automation.php:472 lib/api_automation.php:724
-#: lib/api_automation.php:1088 lib/clog_webapi.php:534 lib/html_filter.php:68
-#: lib/html_graph.php:179 lib/html_graph.php:305 lib/html_reports.php:2057
-#: lib/html_tree.php:1010 lib/html_tree.php:1121 managers.php:170
-#: managers.php:530 managers.php:795 plugins.php:531 pollers.php:915
-#: tree.php:2243 user_admin.php:2151 user_admin.php:2347 user_admin.php:2353
-#: user_admin.php:2359 user_admin.php:2365 user_admin.php:2371
-#: user_admin.php:2377 user_domains.php:666
+#: graph_templates.php:759 graph_view.php:676 graphs.php:2092
+#: graphs_new.php:514 host.php:1811 host_templates.php:787
+#: lib/api_automation.php:188 lib/api_automation.php:472
+#: lib/api_automation.php:724 lib/api_automation.php:1088
+#: lib/clog_webapi.php:534 lib/html_filter.php:68 lib/html_graph.php:179
+#: lib/html_graph.php:305 lib/html_reports.php:2057 lib/html_tree.php:1010
+#: lib/html_tree.php:1121 managers.php:170 managers.php:530 managers.php:795
+#: plugins.php:531 pollers.php:915 tree.php:2243 user_admin.php:2151
+#: user_admin.php:2347 user_admin.php:2353 user_admin.php:2359
+#: user_admin.php:2365 user_admin.php:2371 user_admin.php:2377
+#: user_domains.php:666
 msgid "Clear"
 msgstr "Notīrīt"
 
@@ -525,9 +531,10 @@ msgstr "Notīrīt"
 #: automation_templates.php:419 cdef.php:759 data_debug.php:1115
 #: data_queries.php:1397 data_source_profiles.php:1196 data_sources.php:1734
 #: data_templates.php:1152 gprint_presets.php:284 graph_templates.php:759
-#: graph_view.php:676 graphs.php:2091 graphs_new.php:514 host_templates.php:787
-#: lib/html_graph.php:179 lib/html_tree.php:1010 managers.php:170
-#: managers.php:530 managers.php:795 plugins.php:531 pollers.php:915
+#: graph_view.php:676 graphs.php:2092 graphs_new.php:514 host.php:1811
+#: host_templates.php:787 lib/html_graph.php:179 lib/html_tree.php:1010
+#: managers.php:170 managers.php:530 managers.php:795 plugins.php:531
+#: pollers.php:915
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:96
 #: tree.php:2243 user_admin.php:2151 user_domains.php:666
 #: user_group_admin.php:2011 utilities.php:1085 utilities.php:1471
@@ -535,7 +542,7 @@ msgstr "Notīrīt"
 msgid "Clear Filters"
 msgstr "Notīrīt filtrus"
 
-#: aggregate_graphs.php:1329 aggregate_graphs.php:1662 graphs.php:1182
+#: aggregate_graphs.php:1329 aggregate_graphs.php:1662 graphs.php:1183
 #: lib/api_automation.php:574 user_admin.php:809 user_group_admin.php:940
 msgid "Graph Title"
 msgstr "Grafika nosaukums"
@@ -543,12 +550,12 @@ msgstr "Grafika nosaukums"
 #: aggregate_graphs.php:1330 aggregate_graphs.php:1663
 #: automation_graph_rules.php:964 automation_tree_rules.php:971
 #: data_debug.php:499 data_queries.php:1482 data_sources.php:1979
-#: data_templates.php:1260 graph_templates.php:864 graphs.php:2331
-#: host_templates.php:949 lib/api_automation.php:282 pollers.php:995
-#: tree.php:2306 user_admin.php:809 user_admin.php:924 user_admin.php:1073
-#: user_admin.php:1212 user_admin.php:1351 user_group_admin.php:733
-#: user_group_admin.php:940 user_group_admin.php:1087 user_group_admin.php:1223
-#: user_group_admin.php:1355
+#: data_templates.php:1260 graph_templates.php:864 graphs.php:2332
+#: host.php:1928 host_templates.php:949 lib/api_automation.php:282
+#: pollers.php:995 tree.php:2306 user_admin.php:809 user_admin.php:924
+#: user_admin.php:1073 user_admin.php:1212 user_admin.php:1351
+#: user_group_admin.php:733 user_group_admin.php:940 user_group_admin.php:1087
+#: user_group_admin.php:1223 user_group_admin.php:1355
 msgid "ID"
 msgstr "ID"
 
@@ -557,7 +564,7 @@ msgid "Included in Aggregate"
 msgstr "Iekļauts apkopojumā"
 
 #: aggregate_graphs.php:1332 aggregate_graphs.php:1665 graph_templates.php:881
-#: graph_view.php:832 graph_view.php:845 graphs.php:2349 lib/spikekill.php:1745
+#: graph_view.php:832 graph_view.php:845 graphs.php:2350 lib/spikekill.php:1745
 msgid "Size"
 msgstr "Izmērs"
 
@@ -587,7 +594,7 @@ msgstr "Nē"
 msgid "Yes"
 msgstr "Jā"
 
-#: aggregate_graphs.php:1354 graphs.php:2391 lib/api_automation.php:601
+#: aggregate_graphs.php:1354 graphs.php:2392 lib/api_automation.php:601
 msgid "No Graphs Found"
 msgstr "Nav atrasts neviens grafiks"
 
@@ -596,14 +603,15 @@ msgid " [ Custom Graphs List Applied - Clear to Reset ]"
 msgstr " [ Pielietots pielāgots grafiku saraksts - Notīri, lai atiestatīt ]"
 
 #: aggregate_graphs.php:1547 aggregate_graphs.php:1653
-#: include/global_arrays.php:2766
+#: include/global_arrays.php:2764
 msgid "Aggregate Graphs"
 msgstr "Apkopotie grafiki"
 
 #: aggregate_graphs.php:1562 data_debug.php:1085 data_sources.php:1704
-#: graph_view.php:699 graphs.php:2052 include/global_arrays.php:2894
-#: include/global_settings.php:610 lib/api_automation.php:446
-#: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:381
+#: graph_view.php:699 graphs.php:2053 host.php:1756
+#: include/global_arrays.php:2892 include/global_settings.php:610
+#: lib/api_automation.php:446 lib/html_graph.php:139 lib/html_tree.php:973
+#: rrdcleaner.php:381
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:59
 #: utilities.php:2087
 msgid "Template"
@@ -614,7 +622,8 @@ msgstr "Veidne"
 #: automation_devices.php:564 automation_graph_rules.php:819
 #: automation_graph_rules.php:841 automation_tree_rules.php:855
 #: data_debug.php:1089 data_sources.php:1708 graph_templates_items.php:447
-#: graphs.php:2056 graphs_items.php:262 lib/api_automation.php:26
+#: graphs.php:2057 graphs_items.php:262 host.php:1719 host.php:1740
+#: host.php:1760 host.php:1830 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3824 lib/auth.php:3873
 #: lib/html.php:2351 lib/html.php:2379 lib/html.php:2418 lib/html.php:2452
@@ -632,24 +641,24 @@ msgstr "Jebkuru"
 #: automation_networks.php:460 automation_tree_rules.php:983
 #: data_debug.php:1090 data_sources.php:1083 data_sources.php:1709
 #: data_sources.php:2040 data_templates.php:1323 graph_templates_items.php:53
-#: graphs.php:1582 graphs.php:1591 graphs.php:2057 graphs_items.php:263
-#: graphs_items.php:383 include/global_arrays.php:523
-#: include/global_arrays.php:581 include/global_arrays.php:673
-#: include/global_arrays.php:885 include/global_arrays.php:1743
-#: include/global_form.php:574 include/global_form.php:883
-#: include/global_form.php:891 include/global_form.php:899
-#: include/global_form.php:938 include/global_form.php:945
-#: include/global_form.php:971 include/global_form.php:1000
-#: include/global_form.php:1008 include/global_form.php:1186
-#: include/global_form.php:1205 include/global_form.php:1214
-#: include/global_form.php:2128 include/global_form.php:2170
-#: include/global_settings.php:614 include/global_settings.php:622
-#: include/global_settings.php:630 include/global_settings.php:1338
-#: include/global_settings.php:2001 lib/api_automation.php:48
-#: lib/api_automation.php:431 lib/api_automation.php:451
-#: lib/api_automation.php:589 lib/auth.php:3827 lib/auth.php:3876
-#: lib/auth.php:3922 lib/html.php:228 lib/html.php:2352 lib/html.php:2377
-#: lib/html.php:2419 lib/html.php:2453 lib/html_form.php:392
+#: graphs.php:1583 graphs.php:1592 graphs.php:2058 graphs_items.php:263
+#: graphs_items.php:383 host.php:294 host.php:1275 host.php:1286 host.php:1720
+#: host.php:1761 include/global_arrays.php:523 include/global_arrays.php:581
+#: include/global_arrays.php:673 include/global_arrays.php:885
+#: include/global_arrays.php:1741 include/global_form.php:574
+#: include/global_form.php:883 include/global_form.php:891
+#: include/global_form.php:899 include/global_form.php:938
+#: include/global_form.php:945 include/global_form.php:971
+#: include/global_form.php:1000 include/global_form.php:1008
+#: include/global_form.php:1186 include/global_form.php:1205
+#: include/global_form.php:1214 include/global_form.php:2128
+#: include/global_form.php:2170 include/global_settings.php:614
+#: include/global_settings.php:622 include/global_settings.php:630
+#: include/global_settings.php:1338 include/global_settings.php:2001
+#: lib/api_automation.php:48 lib/api_automation.php:431
+#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3827
+#: lib/auth.php:3876 lib/auth.php:3922 lib/html.php:228 lib/html.php:2352
+#: lib/html.php:2377 lib/html.php:2419 lib/html.php:2453 lib/html_form.php:392
 #: lib/html_reports.php:1041 lib/html_reports.php:1045
 #: lib/html_reports.php:1081 lib/html_reports.php:1157
 #: lib/html_reports.php:1163 lib/html_reports.php:1167
@@ -670,7 +679,7 @@ msgstr "Apkopoto diagrammu nosaukums"
 msgid "The internal database identifier for this object"
 msgstr "Šī objekta iekšējais datu bāzes identifikators"
 
-#: aggregate_graphs.php:1664 graphs.php:1186
+#: aggregate_graphs.php:1664 graphs.php:1187
 msgid "Aggregate Template"
 msgstr "Apkopotā veidne"
 
@@ -713,7 +722,7 @@ msgid "Aggregate Template [new]"
 msgstr "Apkopotā veidne [jauna]"
 
 #: aggregate_templates.php:598 aggregate_templates.php:697
-#: include/global_arrays.php:2748
+#: include/global_arrays.php:2746
 msgid "Aggregate Templates"
 msgstr "Apkopotās veidnes"
 
@@ -749,8 +758,8 @@ msgstr "Dzēšams"
 msgid "Graphs Using"
 msgstr "Grafiki izmanto"
 
-#: aggregate_templates.php:709 graphs.php:2111 host_templates.php:730
-#: include/global_arrays.php:958 include/global_arrays.php:1363
+#: aggregate_templates.php:709 graphs.php:2112 host_templates.php:730
+#: include/global_arrays.php:958 include/global_arrays.php:1361
 #: include/global_form.php:1399 include/global_form.php:1635
 #: lib/html_reports.php:1181 tree.php:1944
 msgid "Graph Template"
@@ -812,7 +821,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "Radās problēmas ar paroles maiņas lapu.  Nekavējoties sazinieties ar savu Kadupul administratoru."
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4219 lib/html.php:2768
+#: include/global_form.php:1552 lib/functions.php:4226 lib/html.php:2768
 msgid "Change Password"
 msgstr "Mainīt paroli"
 
@@ -825,7 +834,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "Lūdzu, ievadiet savu jauno Kadupul paroli."
 
 #: auth_changepassword.php:397 auth_login.php:336 auth_login.php:339
-#: include/global_settings.php:1835 lib/functions.php:6149
+#: include/global_settings.php:1835 lib/functions.php:6156
 msgid "Username"
 msgstr "Lietotājvārds"
 
@@ -917,7 +926,7 @@ msgstr "Lietotāja autorizēšanās"
 msgid "Enter your Username and Password below"
 msgstr "Zemāk ievadiet savu lietotājvārdu un paroli"
 
-#: auth_login.php:344 include/global_form.php:1519 lib/functions.php:6150
+#: auth_login.php:344 include/global_form.php:1519 lib/functions.php:6157
 msgid "Password"
 msgstr "Parole"
 
@@ -1056,14 +1065,14 @@ msgstr "Dzēst ierīci"
 
 #: automation_devices.php:39 automation_devices.php:294
 #: automation_devices.php:406 automation_devices.php:417
-#: automation_devices.php:679 automation_devices.php:680
+#: automation_devices.php:679 automation_devices.php:680 host.php:1835
 #: lib/api_automation.php:31 lib/html_utility.php:1327 pollers.php:32
 msgid "Down"
 msgstr "Neaktīva (nedarbojoša, bezsaistē, izslēgta)"
 
 #: automation_devices.php:40 automation_devices.php:294
 #: automation_devices.php:408 automation_devices.php:419
-#: automation_devices.php:679 automation_devices.php:680
+#: automation_devices.php:679 automation_devices.php:680 host.php:1834
 #: lib/api_automation.php:30 lib/html_utility.php:1333
 msgid "Up"
 msgstr "Aktīva (darbojoša, tiešsaistē, ieslēgta)"
@@ -1111,17 +1120,18 @@ msgstr "Pievienot ierīci(-es)"
 msgid "Click 'Continue' to Delete the following Discovered device(s)."
 msgstr "Noklikšķiniet 'Turpināt', lai dzēstu sekojošu(-as) atklāto(-ās) ierīci(-es)."
 
-#: automation_devices.php:220
+#: automation_devices.php:220 host.php:565
 msgid "Delete Device(s)"
 msgstr "Dzēst ierīci(-es)"
 
-#: automation_devices.php:262 automation_devices.php:578
-#: include/global_arrays.php:990 include/global_arrays.php:1046
-#: include/global_arrays.php:2328 lib/api_automation.php:178
-#: lib/api_automation.php:271 lib/api_automation.php:486
-#: lib/api_automation.php:563 lib/api_automation.php:1189 pollers.php:1031
-#: tree.php:916 tree.php:2360 user_admin.php:1065 user_admin.php:2359
-#: user_group_admin.php:1079 user_group_admin.php:2146 utilities.php:315
+#: automation_devices.php:262 automation_devices.php:578 host.php:1705
+#: host.php:1841 host.php:1994 include/global_arrays.php:990
+#: include/global_arrays.php:1046 include/global_arrays.php:2326
+#: lib/api_automation.php:178 lib/api_automation.php:271
+#: lib/api_automation.php:486 lib/api_automation.php:563
+#: lib/api_automation.php:1189 pollers.php:1031 tree.php:916 tree.php:2360
+#: user_admin.php:1065 user_admin.php:2359 user_group_admin.php:1079
+#: user_group_admin.php:2146 utilities.php:315
 msgid "Devices"
 msgstr "Ierīces"
 
@@ -1137,7 +1147,7 @@ msgstr "IP"
 msgid "SNMP Name"
 msgstr "SNMP nosaukums"
 
-#: automation_devices.php:274 include/global_form.php:1184
+#: automation_devices.php:274 host.php:1780 include/global_form.php:1184
 #: include/global_settings.php:2319 lib/html.php:2448
 msgid "Location"
 msgstr "Atrašanās vieta"
@@ -1159,7 +1169,7 @@ msgstr "Apraksts"
 msgid "OS"
 msgstr "OS"
 
-#: automation_devices.php:278 include/global_arrays.php:524
+#: automation_devices.php:278 host.php:1958 include/global_arrays.php:524
 msgid "Uptime"
 msgstr "Darbības laiks"
 
@@ -1171,7 +1181,8 @@ msgstr "SNMP"
 #: automation_devices.php:280 automation_devices.php:524
 #: automation_graph_rules.php:837 automation_networks.php:1075
 #: automation_tree_rules.php:851 data_debug.php:505 data_debug.php:1144
-#: data_sources.php:1762 data_templates.php:1289 lib/api_automation.php:52
+#: data_sources.php:1762 data_templates.php:1289 host.php:874 host.php:1003
+#: host.php:1826 host.php:1946 lib/api_automation.php:52
 #: lib/api_automation.php:53 lib/api_automation.php:280
 #: lib/api_automation.php:573 lib/api_automation.php:1199
 #: lib/html_reports.php:2031 lib/installer.php:2044 managers.php:216
@@ -1190,7 +1201,7 @@ msgstr "Pēdējā pārbaude"
 msgid "Not Detected"
 msgstr "Nav noteikts"
 
-#: automation_devices.php:318
+#: automation_devices.php:318 host.php:2052
 msgid "No Devices Found"
 msgstr "Netika atrasta neviena ierīce"
 
@@ -1206,7 +1217,7 @@ msgstr "Tīkls"
 msgid "Reset fields to defaults"
 msgstr "Atiestatīt laukus uz to noklusējuma vērtībām"
 
-#: automation_devices.php:515 lib/html_form.php:1436
+#: automation_devices.php:515 host.php:1812 lib/html_form.php:1436
 msgid "Export"
 msgstr "Izgūt"
 
@@ -1226,9 +1237,9 @@ msgstr "Iztīrīt atklātās ierīces"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:673 data_source_profiles.php:61 lib/functions.php:6508
-#: lib/functions.php:6513 lib/html.php:1434 lib/html.php:1506
-#: lib/html_reports.php:1810 lib/html_reports.php:1838
+#: data_debug.php:673 data_source_profiles.php:61 host.php:2021
+#: lib/functions.php:6515 lib/functions.php:6520 lib/html.php:1434
+#: lib/html.php:1506 lib/html_reports.php:1810 lib/html_reports.php:1838
 #: lib/html_reports.php:1915 lib/html_reports.php:1916
 #: lib/html_reports.php:1917 lib/spikekill.php:1734 lib/spikekill.php:1735
 #: lib/spikekill.php:1800 lib/spikekill.php:1801 lib/spikekill.php:1802
@@ -1245,13 +1256,13 @@ msgstr "Nav pieejams"
 #: automation_tree_rules.php:14 cdef.php:15 color_templates.php:14
 #: data_queries.php:17 data_source_profiles.php:17 data_templates.php:20
 #: graph_templates.php:23 graphs.php:51 host_templates.php:21
-#: include/global_arrays.php:1651
+#: include/global_arrays.php:1649
 msgid "Duplicate"
 msgstr "Dublēt"
 
 #: automation_graph_rules.php:15 automation_networks.php:18
-#: automation_tree_rules.php:15 data_sources.php:25
-#: include/global_arrays.php:1652 include/global_settings.php:1787
+#: automation_tree_rules.php:15 data_sources.php:25 host.php:30
+#: include/global_arrays.php:1650 include/global_settings.php:1787
 #: managers.php:14 managers.php:20 plugins.php:24 pollers.php:20
 #: user_admin.php:19 user_domains.php:17 user_domains.php:397
 #: user_group_admin.php:21
@@ -1259,8 +1270,8 @@ msgid "Enable"
 msgstr "Iespējot"
 
 #: automation_graph_rules.php:16 automation_networks.php:17
-#: automation_tree_rules.php:16 data_sources.php:26
-#: include/global_arrays.php:1653 managers.php:15 managers.php:19
+#: automation_tree_rules.php:16 data_sources.php:26 host.php:31
+#: include/global_arrays.php:1651 managers.php:15 managers.php:19
 #: plugins.php:25 pollers.php:19 user_admin.php:20 user_domains.php:16
 #: user_group_admin.php:22
 msgid "Disable"
@@ -1278,8 +1289,8 @@ msgstr "Nospiediet 'Turpināt', lai dzēstu sekojošos grafika noteikumus."
 msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Graph Rules."
 msgstr "Noklikšķiniet 'Turpināt', lai dublētu sekojošu(-as) kārtulu(-as). Varat pēc savas izvēles mainīt jauno grafiku kārtulu virsraksta formātu."
 
-#: automation_graph_rules.php:305 automation_tree_rules.php:282 graphs.php:897
-#: graphs.php:908
+#: automation_graph_rules.php:305 automation_tree_rules.php:282 graphs.php:898
+#: graphs.php:909
 msgid "Title Format"
 msgstr "Virsraksta formāts"
 
@@ -1349,13 +1360,13 @@ msgstr "Grafika izveides kritēriji"
 
 #: automation_graph_rules.php:800 automation_graph_rules.php:847
 #: automation_graph_rules.php:954 include/global_arrays.php:1013
-#: include/global_arrays.php:2784
+#: include/global_arrays.php:2782
 msgid "Graph Rules"
 msgstr "Grafika noteikumi"
 
 #: automation_graph_rules.php:815 automation_graph_rules.php:965
-#: graphs.php:2112 include/global_arrays.php:1366
-#: include/global_arrays.php:2893 include/global_form.php:1645
+#: graphs.php:2113 include/global_arrays.php:1364
+#: include/global_arrays.php:2891 include/global_form.php:1645
 #: include/global_form.php:2207
 msgid "Data Query"
 msgstr "Datu vaicājums"
@@ -1364,7 +1375,7 @@ msgstr "Datu vaicājums"
 #: automation_graph_rules.php:983 automation_networks.php:535
 #: automation_tree_rules.php:856 automation_tree_rules.php:976
 #: automation_tree_rules.php:994 data_debug.php:1150 data_sources.php:1767
-#: include/global_arrays.php:917 include/global_form.php:1527
+#: host.php:1831 include/global_arrays.php:917 include/global_form.php:1527
 #: include/global_settings.php:345 include/global_settings.php:361
 #: lib/api_automation.php:27 lib/html_reports.php:2036
 #: lib/html_reports.php:2141 lib/html_reports.php:2152
@@ -1379,8 +1390,8 @@ msgstr "Iespējots"
 #: automation_graph_rules.php:843 automation_graph_rules.php:983
 #: automation_networks.php:1090 automation_tree_rules.php:857
 #: automation_tree_rules.php:994 data_debug.php:1151 data_sources.php:1768
-#: data_templates.php:1325 include/global_arrays.php:916
-#: include/global_arrays.php:1575 include/global_arrays.php:1867
+#: data_templates.php:1325 host.php:1832 include/global_arrays.php:916
+#: include/global_arrays.php:1573 include/global_arrays.php:1865
 #: include/global_settings.php:344 include/global_settings.php:360
 #: include/global_settings.php:1370 include/global_settings.php:1630
 #: include/global_settings.php:1644 include/global_settings.php:1657
@@ -1487,17 +1498,17 @@ msgid "Manual"
 msgstr "Manuāli"
 
 #: automation_networks.php:409 automation_networks.php:1064
-#: include/global_arrays.php:1881 include/global_settings.php:1371
+#: include/global_arrays.php:1879 include/global_settings.php:1371
 msgid "Daily"
 msgstr "Katru dienu"
 
 #: automation_networks.php:410 automation_networks.php:1065
-#: include/global_arrays.php:1882
+#: include/global_arrays.php:1880
 msgid "Weekly"
 msgstr "Katru nedēļu"
 
 #: automation_networks.php:411 automation_networks.php:1066
-#: include/global_arrays.php:1883
+#: include/global_arrays.php:1881
 msgid "Monthly"
 msgstr "Ikmēneša"
 
@@ -1551,7 +1562,7 @@ msgstr "Piešķiriet šim tīklam jēgpilnu nosaukumu."
 msgid "New Network Discovery Range"
 msgstr "Jauns tīkla atklāšanas diapazons"
 
-#: automation_networks.php:447 automation_networks.php:1072
+#: automation_networks.php:447 automation_networks.php:1072 host.php:1736
 msgid "Data Collector"
 msgstr "Datu apkopotājs"
 
@@ -1654,12 +1665,12 @@ msgstr "%d minūte"
 #: include/global_arrays.php:755 include/global_arrays.php:756
 #: include/global_arrays.php:757 include/global_arrays.php:758
 #: include/global_arrays.php:759 include/global_arrays.php:1208
-#: include/global_arrays.php:1209 include/global_arrays.php:1582
-#: include/global_arrays.php:1586 include/global_arrays.php:1594
-#: include/global_arrays.php:1595 include/global_arrays.php:1619
+#: include/global_arrays.php:1209 include/global_arrays.php:1580
+#: include/global_arrays.php:1584 include/global_arrays.php:1592
+#: include/global_arrays.php:1593 include/global_arrays.php:1617
+#: include/global_arrays.php:1618 include/global_arrays.php:1619
 #: include/global_arrays.php:1620 include/global_arrays.php:1621
-#: include/global_arrays.php:1622 include/global_arrays.php:1623
-#: include/global_arrays.php:1636 include/global_settings.php:1698
+#: include/global_arrays.php:1634 include/global_settings.php:1698
 #: include/global_settings.php:1699 include/global_settings.php:1700
 #: include/global_settings.php:1701 include/global_settings.php:1702
 #: include/global_settings.php:2663 include/global_settings.php:2938
@@ -1670,7 +1681,7 @@ msgid "%d Minutes"
 msgstr "%d minūtes"
 
 #: automation_networks.php:526 include/global_arrays.php:760
-#: include/global_arrays.php:770 include/global_arrays.php:1456
+#: include/global_arrays.php:770 include/global_arrays.php:1454
 #, php-format
 msgid "%d Hour"
 msgstr "%d stunda"
@@ -1683,15 +1694,15 @@ msgstr "%d stunda"
 #: include/global_arrays.php:762 include/global_arrays.php:763
 #: include/global_arrays.php:764 include/global_arrays.php:771
 #: include/global_arrays.php:772 include/global_arrays.php:773
-#: include/global_arrays.php:774 include/global_arrays.php:1457
-#: include/global_arrays.php:1458 include/global_arrays.php:1459
-#: include/global_arrays.php:1460 include/global_arrays.php:1527
+#: include/global_arrays.php:774 include/global_arrays.php:1455
+#: include/global_arrays.php:1456 include/global_arrays.php:1457
+#: include/global_arrays.php:1458 include/global_arrays.php:1525
+#: include/global_arrays.php:1526 include/global_arrays.php:1527
 #: include/global_arrays.php:1528 include/global_arrays.php:1529
-#: include/global_arrays.php:1530 include/global_arrays.php:1531
+#: include/global_arrays.php:1546 include/global_arrays.php:1547
 #: include/global_arrays.php:1548 include/global_arrays.php:1549
-#: include/global_arrays.php:1550 include/global_arrays.php:1551
-#: include/global_arrays.php:1552 include/global_arrays.php:1558
-#: include/global_arrays.php:1559 include/global_settings.php:1704
+#: include/global_arrays.php:1550 include/global_arrays.php:1556
+#: include/global_arrays.php:1557 include/global_settings.php:1704
 #: include/global_settings.php:1705 include/global_settings.php:1706
 #: include/global_settings.php:1707 include/global_settings.php:2942
 #: include/global_settings.php:2943
@@ -1801,37 +1812,37 @@ msgid "What Day(s) of the week will this Network Range be discovered."
 msgstr "Kurā(-ās) nedēļas dienā(-ās) tiks atklāts šis tīkla diapazons."
 
 #: automation_networks.php:636 automation_networks.php:694
-#: include/global_arrays.php:1939
+#: include/global_arrays.php:1937
 msgid "Sunday"
 msgstr "Svētdiena"
 
 #: automation_networks.php:637 automation_networks.php:695
-#: include/global_arrays.php:1940
+#: include/global_arrays.php:1938
 msgid "Monday"
 msgstr "Pirmdiena"
 
 #: automation_networks.php:638 automation_networks.php:696
-#: include/global_arrays.php:1941
+#: include/global_arrays.php:1939
 msgid "Tuesday"
 msgstr "Otrdiena"
 
 #: automation_networks.php:639 automation_networks.php:697
-#: include/global_arrays.php:1942
+#: include/global_arrays.php:1940
 msgid "Wednesday"
 msgstr "Trešdiena"
 
 #: automation_networks.php:640 automation_networks.php:698
-#: include/global_arrays.php:1943
+#: include/global_arrays.php:1941
 msgid "Thursday"
 msgstr "Ceturtdiena"
 
 #: automation_networks.php:641 automation_networks.php:699
-#: include/global_arrays.php:1944
+#: include/global_arrays.php:1942
 msgid "Friday"
 msgstr "Piektdiena"
 
 #: automation_networks.php:642 automation_networks.php:700
-#: include/global_arrays.php:1945
+#: include/global_arrays.php:1943
 msgid "Saturday"
 msgstr "Sestdiena"
 
@@ -1843,51 +1854,51 @@ msgstr "Gada mēneši"
 msgid "What Months(s) of the Year will this Network Range be discovered."
 msgstr "Kuros gada mēnešos šis tīkla diapazons tiks atklāts."
 
-#: automation_networks.php:652 include/global_arrays.php:1893
+#: automation_networks.php:652 include/global_arrays.php:1891
 msgid "January"
 msgstr "Janvāris"
 
-#: automation_networks.php:653 include/global_arrays.php:1894
+#: automation_networks.php:653 include/global_arrays.php:1892
 msgid "February"
 msgstr "Februāris"
 
-#: automation_networks.php:654 include/global_arrays.php:1895
+#: automation_networks.php:654 include/global_arrays.php:1893
 msgid "March"
 msgstr "Marts"
 
-#: automation_networks.php:655 include/global_arrays.php:1896
+#: automation_networks.php:655 include/global_arrays.php:1894
 msgid "April"
 msgstr "Aprīlis"
 
-#: automation_networks.php:656 include/global_arrays.php:1897
+#: automation_networks.php:656 include/global_arrays.php:1895
 msgid "May"
 msgstr "Maijs"
 
-#: automation_networks.php:657 include/global_arrays.php:1898
+#: automation_networks.php:657 include/global_arrays.php:1896
 msgid "June"
 msgstr "Jūnijs"
 
-#: automation_networks.php:658 include/global_arrays.php:1899
+#: automation_networks.php:658 include/global_arrays.php:1897
 msgid "July"
 msgstr "Jūlijs"
 
-#: automation_networks.php:659 include/global_arrays.php:1900
+#: automation_networks.php:659 include/global_arrays.php:1898
 msgid "August"
 msgstr "Augusts"
 
-#: automation_networks.php:660 include/global_arrays.php:1901
+#: automation_networks.php:660 include/global_arrays.php:1899
 msgid "September"
 msgstr "Septembris"
 
-#: automation_networks.php:661 include/global_arrays.php:1902
+#: automation_networks.php:661 include/global_arrays.php:1900
 msgid "October"
 msgstr "Oktobris"
 
-#: automation_networks.php:662 include/global_arrays.php:1903
+#: automation_networks.php:662 include/global_arrays.php:1901
 msgid "November"
 msgstr "Novembris"
 
-#: automation_networks.php:663 include/global_arrays.php:1904
+#: automation_networks.php:663 include/global_arrays.php:1902
 msgid "December"
 msgstr "Decembris"
 
@@ -2101,13 +2112,13 @@ msgstr "Atsvaidzināt"
 #: include/global_arrays.php:749 include/global_arrays.php:750
 #: include/global_arrays.php:1203 include/global_arrays.php:1204
 #: include/global_arrays.php:1205 include/global_arrays.php:1206
+#: include/global_arrays.php:1574 include/global_arrays.php:1575
 #: include/global_arrays.php:1576 include/global_arrays.php:1577
-#: include/global_arrays.php:1578 include/global_arrays.php:1579
-#: include/global_arrays.php:1580 include/global_arrays.php:1615
-#: include/global_arrays.php:1616 include/global_arrays.php:1628
+#: include/global_arrays.php:1578 include/global_arrays.php:1613
+#: include/global_arrays.php:1614 include/global_arrays.php:1626
+#: include/global_arrays.php:1627 include/global_arrays.php:1628
 #: include/global_arrays.php:1629 include/global_arrays.php:1630
 #: include/global_arrays.php:1631 include/global_arrays.php:1632
-#: include/global_arrays.php:1633 include/global_arrays.php:1634
 #: include/global_settings.php:1271 include/global_settings.php:1272
 #: include/global_settings.php:1273 include/global_settings.php:1274
 #: include/global_settings.php:2659 include/global_settings.php:2660
@@ -2220,7 +2231,7 @@ msgstr "Versija"
 msgid "Community"
 msgstr "Kopiena"
 
-#: automation_snmp.php:543 lib/functions.php:6145
+#: automation_snmp.php:543 lib/functions.php:6152
 msgid "Port"
 msgstr "Ports"
 
@@ -2342,7 +2353,7 @@ msgstr "Noklikšķiniet uz 'Turpināt', lai dzēstu sekojošo(-ās) automatizāc
 msgid "Delete Automation Template(s)"
 msgstr "Dzēst automatizācijas veidni(-es)"
 
-#: automation_templates.php:271 include/global_arrays.php:1367
+#: automation_templates.php:271 include/global_arrays.php:1365
 #: include/global_form.php:1211 include/global_form.php:1630
 #: lib/html_reports.php:1160
 msgid "Device Template"
@@ -2489,7 +2500,7 @@ msgstr "Vai tiešām vēlaties turpināt?"
 
 #: automation_tree_rules.php:836 automation_tree_rules.php:861
 #: automation_tree_rules.php:961 include/global_arrays.php:1014
-#: include/global_arrays.php:2808
+#: include/global_arrays.php:2806
 msgid "Tree Rules"
 msgstr "Koku noteikumi"
 
@@ -2517,8 +2528,8 @@ msgstr "ROOT - uz objektu orientēta bibliotēku kopa mērogojamu datu analīzei
 msgid "No Tree Rules Found"
 msgstr "Koku noteikumi netika atrasti"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6655 lib/functions.php:6725
-#: lib/functions.php:6821 lib/functions.php:7475 poller.php:417 poller.php:584
+#: cactid.php:27 help.php:54 lib/functions.php:6662 lib/functions.php:6732
+#: lib/functions.php:6828 lib/functions.php:7482 poller.php:417 poller.php:584
 #: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
 #: poller_automation.php:37 poller_boost.php:387
 msgid "Kadupul System Warning"
@@ -2624,7 +2635,7 @@ msgstr "CDEF [labot: %s]"
 msgid "CDEF [new]"
 msgstr "CDEF [jauns]"
 
-#: cdef.php:558 include/global_arrays.php:2154
+#: cdef.php:558 include/global_arrays.php:2152
 msgid "CDEF Items"
 msgstr "CDEF preces"
 
@@ -2642,7 +2653,7 @@ msgid "Delete CDEF Item"
 msgstr "Dzēst CDEF elementu"
 
 #: cdef.php:718 cdef.php:733 cdef.php:858 include/global_arrays.php:1019
-#: include/global_arrays.php:2136
+#: include/global_arrays.php:2134
 msgid "CDEFs"
 msgstr "CDEF"
 
@@ -2675,12 +2686,12 @@ msgstr "Grafiku veidņu skaits, kas izmanto šo CDEF."
 msgid "No CDEFs"
 msgstr "Nav CDEF"
 
-#: cli/refresh_csrf.php:104 lib/functions.php:666 settings.php:295
+#: cli/refresh_csrf.php:104 lib/functions.php:673 settings.php:295
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
 msgstr "Iestatījumi, kas tiek saglabāti pakalpojumā Data Collector, %d tika izlaisti sirdsdarbības dēļ."
 
-#: cli/refresh_csrf.php:105 lib/functions.php:679 settings.php:307
+#: cli/refresh_csrf.php:105 lib/functions.php:686 settings.php:307
 #, php-format
 msgid "Settings save to Data Collector %d Failed."
 msgstr "Iestatījumu saglabāšana pakalpojumā Data Collector %d neizdevās."
@@ -2919,7 +2930,7 @@ msgid "Color Template '%s' had no Aggregate Templates or Graphs using this Color
 msgstr "Krāsu veidnei “%s” nebija apkopotu veidņu vai diagrammu, izmantojot šo krāsu veidni."
 
 #: color_templates.php:552 color_templates.php:566 color_templates.php:661
-#: include/global_arrays.php:2724
+#: include/global_arrays.php:2722
 msgid "Color Templates"
 msgstr "Krāsu veidnes"
 
@@ -3093,8 +3104,8 @@ msgid "Summary of issues found for the Data Source."
 msgstr "Datu avotam atrasto problēmu kopsavilkums."
 
 #: data_debug.php:621 data_debug.php:1195 data_sources.php:1789
-#: data_sources.php:1963 include/global_arrays.php:994
-#: include/global_arrays.php:1040 include/global_arrays.php:2310
+#: data_sources.php:1963 host.php:1940 include/global_arrays.php:994
+#: include/global_arrays.php:1040 include/global_arrays.php:2308
 #: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1087
 #: utilities.php:325
 msgid "Data Sources"
@@ -3305,7 +3316,7 @@ msgstr "Profils"
 
 #: data_debug.php:1129 data_debug.php:1148 data_debug.php:1159
 #: data_sources.php:1746 data_sources.php:1766 data_templates.php:1111
-#: graphs.php:2109 graphs_new.php:486 host_templates.php:716
+#: graphs.php:2110 graphs_new.php:486 host.php:1784 host_templates.php:716
 #: host_templates.php:734 lib/clog_webapi.php:549 lib/html.php:227
 #: lib/html_reports.php:1138 lib/html_reports.php:2284 plugins.php:501
 #: settings.php:590 settings.php:612 settings.php:643 tree.php:914
@@ -3567,8 +3578,9 @@ msgstr "Lauka nosaukums"
 msgid "Suggested Value"
 msgstr "Ieteicamā vērtība"
 
-#: data_queries.php:893 data_queries.php:1003 host_templates.php:515
-#: host_templates.php:569 lib/html.php:51 lib/html_filter.php:38
+#: data_queries.php:893 data_queries.php:1003 host.php:961 host.php:1105
+#: host_templates.php:515 host_templates.php:569 lib/html.php:51
+#: lib/html_filter.php:38
 msgid "Add"
 msgstr "Pievienot"
 
@@ -3606,12 +3618,13 @@ msgstr "XML fails ir veiksmīgi atrasts"
 msgid "Could not locate XML file."
 msgstr "Nevarēja atrast XML failu."
 
-#: data_queries.php:1206 host_templates.php:466 include/global_arrays.php:2418
+#: data_queries.php:1206 host.php:869 host_templates.php:466
+#: include/global_arrays.php:2416
 msgid "Associated Graph Templates"
 msgstr "Saistītās grafiku veidnes"
 
 #: data_queries.php:1210 graph_templates.php:858 graphs_new.php:638
-#: lib/api_automation.php:576
+#: host.php:873 lib/api_automation.php:576
 msgid "Graph Template Name"
 msgstr "Grafika veidnes nosaukums"
 
@@ -3637,11 +3650,11 @@ msgstr "Dzēst saistīto grafiku"
 
 #: data_queries.php:1362 data_queries.php:1377 data_queries.php:1512
 #: include/global_arrays.php:999 include/global_arrays.php:1226
-#: include/global_arrays.php:2400 lib/api_automation.php:1078
+#: include/global_arrays.php:2398 lib/api_automation.php:1078
 msgid "Data Queries"
 msgstr "Datu vaicājumi"
 
-#: data_queries.php:1476 utilities.php:1930
+#: data_queries.php:1476 host.php:1001 utilities.php:1930
 msgid "Data Query Name"
 msgstr "Datu vaicājuma nosaukums"
 
@@ -3665,7 +3678,7 @@ msgstr "Diagrammu skaits, kas izmanto šo datu vaicājumu."
 msgid "The number of Graphs Templates using this Data Query."
 msgstr "Grafiku veidņu skaits, kas izmanto šo datu vaicājumu."
 
-#: data_queries.php:1505 include/global_arrays.php:1359
+#: data_queries.php:1505 include/global_arrays.php:1357
 #: include/global_form.php:570 include/global_form.php:1380
 msgid "Data Input Method"
 msgstr "Datu ievades metode"
@@ -3821,7 +3834,7 @@ msgstr "Ievadiet derīgu rindu skaitu, lai iegūtu RRA izmēru."
 #: include/global_arrays.php:790 include/global_arrays.php:791
 #: include/global_arrays.php:792 include/global_arrays.php:793
 #: include/global_arrays.php:794 include/global_arrays.php:795
-#: include/global_arrays.php:1473 include/global_settings.php:1636
+#: include/global_arrays.php:1471 include/global_settings.php:1636
 #, php-format
 msgid "%d Years"
 msgstr "%d gadi"
@@ -3831,30 +3844,30 @@ msgid "1 Year"
 msgstr "1 gads"
 
 #: data_source_profiles.php:1075 include/global_arrays.php:781
-#: include/global_arrays.php:1467 rrdcleaner.php:537
+#: include/global_arrays.php:1465 rrdcleaner.php:537
 #, php-format
 msgid "%d Month"
 msgstr "%d mēnesis"
 
 #: data_source_profiles.php:1075 include/global_arrays.php:782
 #: include/global_arrays.php:783 include/global_arrays.php:784
-#: include/global_arrays.php:785 include/global_arrays.php:1468
-#: include/global_arrays.php:1469 include/global_arrays.php:1470
-#: include/global_arrays.php:1471 rrdcleaner.php:538 rrdcleaner.php:539
+#: include/global_arrays.php:785 include/global_arrays.php:1466
+#: include/global_arrays.php:1467 include/global_arrays.php:1468
+#: include/global_arrays.php:1469 rrdcleaner.php:538 rrdcleaner.php:539
 #: rrdcleaner.php:540
 #, php-format
 msgid "%d Months"
 msgstr "%d mēneši"
 
 #: data_source_profiles.php:1084 include/global_arrays.php:722
-#: include/global_arrays.php:778 include/global_arrays.php:1465
+#: include/global_arrays.php:778 include/global_arrays.php:1463
 #: rrdcleaner.php:533 rrdcleaner.php:534
 #, php-format
 msgid "%d Week"
 msgstr "%d nedēļa"
 
 #: data_source_profiles.php:1084 include/global_arrays.php:779
-#: include/global_arrays.php:780 include/global_arrays.php:1466
+#: include/global_arrays.php:780 include/global_arrays.php:1464
 #: include/global_settings.php:2946 include/global_settings.php:2947
 #: include/global_settings.php:2948 rrdcleaner.php:535 rrdcleaner.php:536
 #, php-format
@@ -3863,15 +3876,15 @@ msgstr "%d nedēļas"
 
 #: data_source_profiles.php:1093 include/global_arrays.php:721
 #: include/global_arrays.php:765 include/global_arrays.php:775
-#: include/global_arrays.php:1461
+#: include/global_arrays.php:1459
 #, php-format
 msgid "%d Day"
 msgstr "%d diena"
 
 #: data_source_profiles.php:1093 include/global_arrays.php:766
 #: include/global_arrays.php:776 include/global_arrays.php:777
-#: include/global_arrays.php:1462 include/global_arrays.php:1463
-#: include/global_arrays.php:1464 include/global_settings.php:1631
+#: include/global_arrays.php:1460 include/global_arrays.php:1461
+#: include/global_arrays.php:1462 include/global_settings.php:1631
 #: include/global_settings.php:1632 include/global_settings.php:1633
 #: include/global_settings.php:1634 include/global_settings.php:1645
 #: include/global_settings.php:1646 include/global_settings.php:1647
@@ -3881,9 +3894,9 @@ msgid "%d Days"
 msgstr "%d dienas"
 
 #: data_source_profiles.php:1101 include/global_arrays.php:715
-#: include/global_arrays.php:1526 include/global_arrays.php:1547
-#: include/global_arrays.php:1557 include/global_arrays.php:1587
-#: include/global_arrays.php:1596 include/global_arrays.php:1624
+#: include/global_arrays.php:1524 include/global_arrays.php:1545
+#: include/global_arrays.php:1555 include/global_arrays.php:1585
+#: include/global_arrays.php:1594 include/global_arrays.php:1622
 #: include/global_settings.php:1406 include/global_settings.php:1703
 #: include/global_settings.php:2941
 msgid "1 Hour"
@@ -4107,7 +4120,7 @@ msgstr "Ieslēdziet datu avota informācijas režīmu."
 msgid "Edit Graph: '%s'."
 msgstr "Rediģēt diagrammu: '%s'."
 
-#: data_sources.php:997 graphs.php:1544
+#: data_sources.php:997 graphs.php:1545
 msgid "Edit Device."
 msgstr "Rediģēt ierīci."
 
@@ -4131,10 +4144,10 @@ msgstr "Atlasītā datu veidne"
 msgid "The name given to this data template.  Please note that you may only change Graph Templates to a 100%$ compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "Šai datu veidnei piešķirtais nosaukums. Lūdzu, ņemiet vērā, ka diagrammas veidnes drīkst mainīt tikai uz 100%$ saderīgu diagrammu veidni, kas nozīmē, ka tajā ir iekļauti identiski datu avoti."
 
-#: data_sources.php:1081 graph_view.php:817 graphs.php:1587
+#: data_sources.php:1081 graph_view.php:817 graphs.php:1588
 #: include/global_arrays.php:954 include/global_arrays.php:1003
-#: include/global_arrays.php:1690 include/global_arrays.php:1859
-#: lib/api_automation.php:426 lib/functions.php:6144 lib/html.php:2347
+#: include/global_arrays.php:1688 include/global_arrays.php:1857
+#: lib/api_automation.php:426 lib/functions.php:6151 lib/html.php:2347
 #: lib/html.php:2384 lib/html_reports.php:1170 utilities.php:1930
 msgid "Device"
 msgstr "Ierīce"
@@ -4182,8 +4195,8 @@ msgid "External"
 msgstr "Ārējais"
 
 #: data_sources.php:1528 include/global_arrays.php:710
-#: include/global_arrays.php:1207 include/global_arrays.php:1581
-#: include/global_arrays.php:1617 include/global_arrays.php:1635
+#: include/global_arrays.php:1207 include/global_arrays.php:1579
+#: include/global_arrays.php:1615 include/global_arrays.php:1633
 #: include/global_settings.php:1697 include/global_settings.php:2662
 msgid "1 Minute"
 msgstr "1 minūte"
@@ -4205,11 +4218,11 @@ msgstr "Datu avoti [ %s ]"
 msgid "Bad Indexes"
 msgstr "Slikti indeksi"
 
-#: data_sources.php:1775 graphs.php:2085
+#: data_sources.php:1775 graphs.php:2086
 msgid "Note that this query may take some time to run."
 msgstr "Ņemiet vērā, ka šī vaicājuma izpilde var aizņemt kādu laiku."
 
-#: data_sources.php:1775 graphs.php:2085
+#: data_sources.php:1775 graphs.php:2086
 msgid "Orphaned"
 msgstr "Bāreņi"
 
@@ -4365,7 +4378,7 @@ msgid "After you uncheck this checkbox and then Save the Data Template, any exis
 msgstr "Kad noņemsiet atzīmi no šīs izvēles rūtiņas un pēc tam saglabāsiet datu veidni, visi esošie datu avoti, kuru pamatā ir šī datu veidne, zaudēs savus pielāgotos datus. Tas var izraisīt bojātu datu vākšanu un grafikus"
 
 #: data_templates.php:1092 data_templates.php:1126 data_templates.php:1296
-#: include/global_arrays.php:1237 include/global_arrays.php:2292
+#: include/global_arrays.php:1237 include/global_arrays.php:2290
 msgid "Data Templates"
 msgstr "Datu veidnes"
 
@@ -4435,7 +4448,7 @@ msgstr "GPRINT sākotnējie iestatījumi [rediģēt: %s]"
 msgid "GPRINT Presets [new]"
 msgstr "GPRINT sākotnējie iestatījumi [jauns]"
 
-#: gprint_presets.php:246 include/global_arrays.php:2118
+#: gprint_presets.php:246 include/global_arrays.php:2116
 msgid "GPRINT Presets"
 msgstr "GPRINT priekšiestatījumi"
 
@@ -4528,45 +4541,44 @@ msgstr "Grafika dati"
 msgid "RRDtool Graph Syntax"
 msgstr "RRDtool grafikas sintakse"
 
-#: graph_image.php:174 graph_json.php:208 graph_realtime.php:317
+#: graph_image.php:174 graph_json.php:208 graph_realtime.php:319
 #: lib/rrd.php:2526
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul aptaujātajs vēl nav bijis palaists."
 
-#: graph_realtime.php:70 graph_realtime.php:439
-msgid "Real-time has been disabled by your administrator."
-msgstr "Jūsu administrators ir atspējojis reāllaika režīmu."
-
-#: graph_realtime.php:72 graph_realtime.php:74 graph_realtime.php:446
-#: include/auth.php:316 lib/functions.php:8148 permission_denied.php:29
-#: permission_denied.php:36
+#: graph_realtime.php:36 graph_realtime.php:448 include/auth.php:316
+#: lib/functions.php:8155 permission_denied.php:29 permission_denied.php:36
 msgid "Permission Denied"
 msgstr "Atļauja liegta"
 
-#: graph_realtime.php:453
+#: graph_realtime.php:73 graph_realtime.php:441
+msgid "Real-time has been disabled by your administrator."
+msgstr "Jūsu administrators ir atspējojis reāllaika režīmu."
+
+#: graph_realtime.php:455
 msgid "The Image Cache Directory does not exist.  Please first create it and set permissions and then attempt to open another Real-time graph."
 msgstr "Attēlu kešatmiņas direktorijs nepastāv. Lūdzu, vispirms izveidojiet to un iestatiet atļaujas un pēc tam mēģiniet atvērt citu reāllaika grafiku."
 
-#: graph_realtime.php:460
+#: graph_realtime.php:462
 msgid "The Image Cache Directory is not writable.  Please set permissions and then attempt to open another Real-time graph."
 msgstr "Attēlu kešatmiņas direktorijs nav ierakstāms. Lūdzu, iestatiet atļaujas un pēc tam mēģiniet atvērt citu reāllaika grafiku."
 
-#: graph_realtime.php:481
+#: graph_realtime.php:483
 #, fuzzy
 msgid "Kadupul Real-time Graphing"
 msgstr "Kadupul reāllaika diagrammas"
 
-#: graph_realtime.php:528 lib/html_graph.php:229 lib/html_reports.php:107
+#: graph_realtime.php:530 lib/html_graph.php:229 lib/html_reports.php:107
 #: lib/html_tree.php:1051
 msgid "Thumbnails"
 msgstr "Sīktēli"
 
-#: graph_realtime.php:532
+#: graph_realtime.php:534
 #, php-format
 msgid "%d seconds left."
 msgstr "Atlikušas %d sekundes."
 
-#: graph_realtime.php:548
+#: graph_realtime.php:550
 msgid " seconds left."
 msgstr " atlikušas sekundes."
 
@@ -4645,7 +4657,7 @@ msgstr "Noklikšķiniet uz \"Turpināt\", lai veiktu savu grafiku ātru sinhroni
 msgid "Graph Template Items [edit: %s]"
 msgstr "Diagrammas veidnes vienumi [rediģēt: %s]"
 
-#: graph_templates.php:497 include/global_arrays.php:2262
+#: graph_templates.php:497 include/global_arrays.php:2260
 msgid "Graph Item Inputs"
 msgstr "Grafika elementu ievades"
 
@@ -4676,7 +4688,7 @@ msgstr "Atzīmējiet šo izvēles rūtiņu, ja vēlaties ļaut lietotājam grafi
 
 #: graph_templates.php:718 graph_templates.php:733 graph_templates.php:900
 #: graphs_new.php:635 include/global_arrays.php:1236
-#: include/global_arrays.php:2238 lib/html_tree.php:541 user_admin.php:1204
+#: include/global_arrays.php:2236 lib/html_tree.php:541 user_admin.php:1204
 #: user_group_admin.php:1215
 msgid "Graph Templates"
 msgstr "Grafiku veidnes"
@@ -4808,18 +4820,18 @@ msgstr "Paziņot par pārkāpumu"
 msgid "All Graphs & Templates"
 msgstr "Visi grafiki un veidnes"
 
-#: graph_view.php:704 include/global_arrays.php:2892 lib/graphs.php:40
+#: graph_view.php:704 include/global_arrays.php:2890 lib/graphs.php:40
 #: lib/graphs.php:49 lib/html.php:221 lib/html_graph.php:144
 #: lib/html_tree.php:978
 msgid "Not Templated"
 msgstr "Nav veidnes"
 
-#: graph_view.php:812 graph_view.php:840 graphs.php:2325
+#: graph_view.php:812 graph_view.php:840 graphs.php:2326
 #: include/global_form.php:1884 lib/html_reports.php:1201 tree.php:1021
 msgid "Graph Name"
 msgstr "Grafika nosaukums"
 
-#: graph_view.php:814 graph_view.php:842 graphs.php:2328
+#: graph_view.php:814 graph_view.php:842 graphs.php:2329
 msgid "The Title of this Graph.  Generally programmatically generated from the Graph Template definition or Suggested Naming rules.  The max length of the Title is controlled under Settings->Visual."
 msgstr "Šī grafika nosaukums.  Parasti ģenerē no grafika veidnes definīciju vai ieteikto nosaukumu piešķiršanas noteikumiem.  Maksimālo nosaukuma garumu var izmainīt zem Iestatījumi->Vizuāls sadaļas."
 
@@ -4827,23 +4839,23 @@ msgstr "Šī grafika nosaukums.  Parasti ģenerē no grafika veidnes definīciju
 msgid "The device for this Graph."
 msgstr "Ierīce šim grafikam."
 
-#: graph_view.php:822 graphs.php:2337
+#: graph_view.php:822 graphs.php:2338
 msgid "Source Type"
 msgstr "Avota veids"
 
-#: graph_view.php:824 graphs.php:2340
+#: graph_view.php:824 graphs.php:2341
 msgid "The underlying source that this Graph was based upon."
 msgstr "Pamatavots, uz kura balstījās šī diagramma."
 
-#: graph_view.php:827 graphs.php:2343
+#: graph_view.php:827 graphs.php:2344
 msgid "Source Name"
 msgstr "Avota nosaukums"
 
-#: graph_view.php:829 graphs.php:2346
+#: graph_view.php:829 graphs.php:2347
 msgid "The Graph Template or Data Query that this Graph was based upon."
 msgstr "Grafika veidne vai datu vaicājums, uz kuru balstījās šīs grafiks."
 
-#: graph_view.php:834 graph_view.php:847 graphs.php:2352
+#: graph_view.php:834 graph_view.php:847 graphs.php:2353
 msgid "The size of this Graph when not in Preview mode."
 msgstr "Šīs diagrammas lielums, kad tas nav priekšskatījuma režīmā."
 
@@ -4851,7 +4863,7 @@ msgstr "Šīs diagrammas lielums, kad tas nav priekšskatījuma režīmā."
 msgid "Select the Report to add the selected Graphs to."
 msgstr "Atlasiet pārskatu, kuram pievienot atlasītos grafikus."
 
-#: graph_view.php:995 include/global_arrays.php:2038
+#: graph_view.php:995 include/global_arrays.php:2036
 #: include/global_settings.php:2733
 msgid "Preview Mode"
 msgstr "Priekšskatījuma režīms"
@@ -4914,23 +4926,23 @@ msgstr "Kopsavilkuma detaļas"
 msgid "Download"
 msgstr "Lejupielādēt"
 
-#: graphs.php:36 graphs.php:891 include/global_arrays.php:2088
+#: graphs.php:36 graphs.php:892 include/global_arrays.php:2086
 msgid "Change Graph Template"
 msgstr "Mainīt diagrammas veidni"
 
-#: graphs.php:44 graphs.php:1153
+#: graphs.php:44 graphs.php:1154
 msgid "Create Aggregate Graph"
 msgstr "Izveidojiet apkopotu grafiku"
 
-#: graphs.php:45 graphs.php:1196
+#: graphs.php:45 graphs.php:1197
 msgid "Create Aggregate from Template"
 msgstr "Izveidojiet apkopojumu no veidnes"
 
-#: graphs.php:46 graphs.php:1218
+#: graphs.php:46 graphs.php:1219 host.php:34
 msgid "Apply Automation Rules"
 msgstr "Izmantojiet automatizācijas noteikumus"
 
-#: graphs.php:52 graphs.php:913
+#: graphs.php:52 graphs.php:914
 msgid "Convert to Graph Template"
 msgstr "Konvertēt uz diagrammas veidni"
 
@@ -4947,212 +4959,212 @@ msgstr "Izveidots grafiks: %s"
 msgid "ERROR: No Data Source associated. Check Template"
 msgstr "KĻŪDA: nav saistīts datu avots. Pārbaudiet veidni"
 
-#: graphs.php:672
+#: graphs.php:677
 msgid "The selected Device is not available."
 msgstr ""
 
-#: graphs.php:691
+#: graphs.php:696
 msgid "Aggregate graph creation could not be confirmed. Review the graph settings before retrying."
 msgstr ""
 
-#: graphs.php:842
+#: graphs.php:843
 msgid "Click 'Continue' to delete the following Graph(s).  Note that if you choose to Delete Data Sources, only those Data Sources not in use elsewhere will also be Deleted."
 msgstr "Noklikšķiniet uz \"Turpināt\", lai dzēstu šādu(s) grafiku(-s). Ņemiet vērā: ja izvēlaties Dzēst datu avotus, tiks dzēsti arī tikai tie datu avoti, kas netiek izmantoti citur."
 
-#: graphs.php:846
+#: graphs.php:847
 msgid "The following Data Source(s) are in use by these Graph(s)."
 msgstr "Šajos grafikos tiek izmantots(-i) šāds(-i) datu avots(-i)."
 
-#: graphs.php:865
+#: graphs.php:866
 msgid "Delete all Data Source(s) referenced by these Graph(s) that are not in use elsewhere."
 msgstr "Dzēsiet visus datu avotus, uz kuriem ir atsauce šajā grafikā un kuri netiek izmantoti citur."
 
-#: graphs.php:867
+#: graphs.php:868
 msgid "Leave the Data Source(s) untouched."
 msgstr "Neatstājiet datu avotu(-s) neskartus."
 
-#: graphs.php:879
+#: graphs.php:880
 msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
 msgstr "Izvēlieties diagrammas veidni un noklikšķiniet uz \"Turpināt\", lai mainītu diagrammas veidni tālāk norādītajam(-iem) grafikam(-iem). Lūdzu, ņemiet vērā, ka tiks parādītas tikai saderīgas grafiku veidnes. Saderību nosaka tie, kuriem ir identiski datu avoti."
 
-#: graphs.php:881 graphs_new.php:604
+#: graphs.php:882 graphs_new.php:604
 msgid "New Graph Template"
 msgstr "Jauna grafika veidne"
 
-#: graphs.php:895
+#: graphs.php:896
 msgid "Click 'Continue' to duplicate the following Graph(s). You can optionally change the title format for the new Graph(s)."
 msgstr "Noklikšķiniet uz \"Turpināt\", lai dublētu šādu(-s) grafiku(-us). Varat pēc izvēles mainīt jaunā(-o) grafika(-u) virsraksta formātu."
 
-#: graphs.php:898
+#: graphs.php:899
 msgid "<graph_title> (1)"
 msgstr "<graph_title> (1)"
 
-#: graphs.php:902
+#: graphs.php:903
 msgid "Duplicate Graph(s)"
 msgstr "Diagrammas(-u) dublikāti"
 
-#: graphs.php:906
+#: graphs.php:907
 msgid "Click 'Continue' to convert the following Graph(s) into Graph Template(s).  You can optionally change the title format for the new Graph Template(s)."
 msgstr "Noklikšķiniet uz 'Turpināt', lai pārvērstu tālāk norādīto(-os) grafiku(-s) par diagrammas veidni(-ēm). Varat pēc izvēles mainīt virsraksta formātu jaunajai(-ām) diagrammas veidnei(-ēm)."
 
-#: graphs.php:909
+#: graphs.php:910
 msgid "<graph_title> Template"
 msgstr "<graph_title> Veidne"
 
-#: graphs.php:917
+#: graphs.php:918
 msgid "Click 'Continue' to place the following Graph(s) under the Tree Branch selected below."
 msgstr "Noklikšķiniet uz \"Turpināt\", lai zem tālāk atlasītā koka zara novietotu šādu(s) grafiku(-us)."
 
-#: graphs.php:919
+#: graphs.php:920
 msgid "Destination Branch"
 msgstr "Galamērķa filiāle"
 
-#: graphs.php:932
+#: graphs.php:933
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
 msgstr "Izvēlieties jaunu ierīci šiem grafikiem un noklikšķiniet uz \"Turpināt\"."
 
-#: graphs.php:934 include/global_arrays.php:987
+#: graphs.php:935 include/global_arrays.php:987
 msgid "New Device"
 msgstr "Jauna ierīce"
 
-#: graphs.php:942
+#: graphs.php:943
 msgid "Change Graph(s) Associated Device"
 msgstr "Mainīt Graph(-es) saistīto ierīci"
 
-#: graphs.php:946
+#: graphs.php:947
 msgid "Click 'Continue' to re-apply suggested naming to the following Graph(s)."
 msgstr "Noklikšķiniet uz \"Turpināt\", lai atkārtoti lietotu ieteikto nosaukumu šim(-iem) grafikam(-iem)."
 
-#: graphs.php:951
+#: graphs.php:952
 msgid "Reapply Suggested Naming to Graph(s)"
 msgstr "Atkārtoti lietot ieteikto nosaukumu piešķiršanu diagrammai(-ām)"
 
-#: graphs.php:967
+#: graphs.php:968
 msgid "Click 'Continue' to create an Aggregate Graph from the selected Graph(s)."
 msgstr "Noklikšķiniet uz \"Turpināt\", lai no atlasītā(-iem) grafika(-iem) izveidotu apkopotu grafiku."
 
-#: graphs.php:976
+#: graphs.php:977
 msgid "The following Data Sources are in use by these Graphs:"
 msgstr "Šajos grafikos tiek izmantoti šādi datu avoti:"
 
-#: graphs.php:1037
+#: graphs.php:1038
 msgid "Please confirm"
 msgstr "Lūdzu apstipriniet"
 
-#: graphs.php:1175
+#: graphs.php:1176
 msgid "Select the Aggregate Template to use and press 'Continue' to create your Aggregate Graph.  Otherwise press 'Cancel' to return."
 msgstr "Atlasiet izmantojamo apkopojuma veidni un nospiediet \"Turpināt\", lai izveidotu apkopoto grafiku. Pretējā gadījumā nospiediet \"Atcelt\", lai atgrieztos."
 
-#: graphs.php:1200
+#: graphs.php:1201
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
 msgstr "Pašlaik šai diagrammas veidnei nav definētas apkopotās veidnes. Lūdzu, vispirms izveidojiet apkopoto veidni atlasītajai grafiku diagrammas veidnei un mēģiniet vēlreiz, vai arī vienkārši izveidojiet apkopoto grafiku bez veidnes."
 
-#: graphs.php:1201
+#: graphs.php:1202
 msgid "Press 'Return' to return and select different Graphs."
 msgstr "Nospiediet Atgriezties, lai atgrieztos un atlasītu dažādus grafikus."
 
-#: graphs.php:1213
+#: graphs.php:1214
 msgid "Click 'Continue' to apply Automation Rules to the following Graphs."
 msgstr "Noklikšķiniet uz \"Turpināt\", lai lietotu automatizācijas noteikumus tālāk norādītajiem grafikiem."
 
-#: graphs.php:1300
+#: graphs.php:1301
 msgid "Graph Items [new]"
 msgstr "Grafika elementi [jauns]"
 
-#: graphs.php:1344
+#: graphs.php:1345
 #, php-format
 msgid "Graph Items [edit: %s]"
 msgstr "Grafika elementi [labot: %s]"
 
-#: graphs.php:1468
+#: graphs.php:1469
 #, php-format
 msgid "Graph [edit: %s]"
 msgstr "Grafiks [rediģēt: %s]"
 
-#: graphs.php:1478
+#: graphs.php:1479
 msgid "Graph [new]"
 msgstr "Grafiks [jauns]"
 
-#: graphs.php:1503
+#: graphs.php:1504
 msgid "Turn Off Graph Debug Mode."
 msgstr "Izslēdziet grafika atkļūdošanas režīmu."
 
-#: graphs.php:1505
+#: graphs.php:1506
 msgid "Turn On Graph Debug Mode."
 msgstr "Ieslēdziet grafika atkļūdošanas režīmu."
 
-#: graphs.php:1527
+#: graphs.php:1528
 msgid "Edit Graph Template."
 msgstr "Rediģēt diagrammas veidni."
 
-#: graphs.php:1539
+#: graphs.php:1540
 #, php-format
 msgid "Edit Data Source: '%s'."
 msgstr "Rediģēt datu avotu: '%s'."
 
-#: graphs.php:1548
+#: graphs.php:1549
 msgid "Unlock Graph."
 msgstr "Atbloķēt grafiku."
 
-#: graphs.php:1550
+#: graphs.php:1551
 msgid "Lock Graph."
 msgstr "Bloķēt grafiku."
 
-#: graphs.php:1579
+#: graphs.php:1580
 msgid "Selected Graph Template"
 msgstr "Atlasītā grafika veidne"
 
-#: graphs.php:1580
+#: graphs.php:1581
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "Izvēlieties diagrammas veidni, ko lietot šim grafikam. Lūdzu, ņemiet vērā, ka diagrammu veidnes drīkst mainīt tikai uz 100%% saderīgu diagrammu veidni, kas nozīmē, ka tajā ir iekļauti identiski datu avoti."
 
-#: graphs.php:1588
+#: graphs.php:1589
 msgid "Choose the Device that this Graph belongs to."
 msgstr "Izvēlieties ierīci, kurai pieder šis grafiks."
 
-#: graphs.php:1644
+#: graphs.php:1645
 msgid "Supplemental Graph Template Data"
 msgstr "Papildu diagrammas veidnes dati"
 
-#: graphs.php:1646
+#: graphs.php:1647
 msgid "Graph Fields"
 msgstr "Grafika lauki"
 
-#: graphs.php:1647
+#: graphs.php:1648
 msgid "Graph Item Fields"
 msgstr "Grafika elementa lauki"
 
-#: graphs.php:2025
+#: graphs.php:2026
 msgid "Graph Management [ Custom Graphs List Applied - Clear to Reset ]"
 msgstr "Grafiku pārvaldība [Lietots pielāgoto grafiku saraksts — notīrīt, lai atiestatītu]"
 
-#: graphs.php:2027
+#: graphs.php:2028
 msgid "Graph Management [ All Devices ]"
 msgstr "Grafiku pārvaldība [ Visas ierīces ]"
 
-#: graphs.php:2029
+#: graphs.php:2030
 msgid "Graph Management [ Non Device Based ]"
 msgstr "Grafiku pārvaldība [nav balstīta uz ierīci]"
 
-#: graphs.php:2032
+#: graphs.php:2033
 #, php-format
 msgid "Graph Management [ %s ]"
 msgstr "Grafiku pārvaldība [ %s ]"
 
-#: graphs.php:2105
+#: graphs.php:2106
 msgid "Graph Source"
 msgstr "Grafika avots"
 
-#: graphs.php:2110
+#: graphs.php:2111
 msgid "Non Templated"
 msgstr "Nav veidnes"
 
-#: graphs.php:2334
+#: graphs.php:2335
 msgid "The internal database ID for this Graph.  Useful when performing automation or debugging."
 msgstr "Šī grafika iekšējā datu bāzes ID. Noderīgs, veicot automatizāciju vai atkļūdošanu."
 
-#: graphs.php:2378
+#: graphs.php:2379
 msgid "Empty Graph"
 msgstr "Tukšs grafiks"
 
@@ -5165,7 +5177,7 @@ msgstr "Datu avoti [nav ierīces]"
 msgid "Data Sources [%s]"
 msgstr "Datu avoti [%s]"
 
-#: graphs_items.php:258 include/global_arrays.php:1358
+#: graphs_items.php:258 include/global_arrays.php:1356
 #: include/global_form.php:1640
 msgid "Data Template"
 msgstr "Datu veidne"
@@ -5220,7 +5232,7 @@ msgstr "Saglabāt filtrus"
 msgid "Edit this Device"
 msgstr "Rediģēt šo ierīci"
 
-#: graphs_new.php:552
+#: graphs_new.php:552 host.php:829
 msgid "Create New Device"
 msgstr "Izveidojiet jaunu ierīci"
 
@@ -5309,6 +5321,423 @@ msgstr "BRĪDINĀJUMS: Kadupul lapa:%s lietotājam:%s ģenerēta fatāla kļūda
 msgid "The document page '%s' could not be reached locally."
 msgstr ""
 
+#: host.php:32
+msgid "Change Device Settings"
+msgstr "Mainiet ierīces iestatījumus"
+
+#: host.php:33 pollers.php:21
+msgid "Clear Statistics"
+msgstr "Notīrīt statistiku"
+
+#: host.php:35
+msgid "Sync to Device Template"
+msgstr "Sinhronizēt ar ierīces veidni"
+
+#: host.php:36
+msgid "Place Device on Report"
+msgstr "Novietojiet ierīci ziņojumā"
+
+#: host.php:109
+msgid "Data Query Re-indexed."
+msgstr "Datu vaicājums ir atkārtoti indeksēts."
+
+#: host.php:117
+msgid "Device Data Query Re-indexed.  Verbose output displayed."
+msgstr "Ierīces datu vaicājums ir atkārtoti indeksēts. Tiek parādīta detalizēta izvade."
+
+#: host.php:143
+msgid "Device Debugging Enabled for Device."
+msgstr "Ierīcei ir iespējota ierīces atkļūdošana."
+
+#: host.php:152
+msgid "Device Debugging Disabled for Device."
+msgstr "Ierīces atkļūdošana ir atspējota ierīcei."
+
+#: host.php:161
+msgid "Poller Cache for Device Refreshed."
+msgstr "Aptaujātaja kešatmiņa šai ierīcei ir atsvaidzināta."
+
+#: host.php:163
+msgid "ERROR: Invalid Device ID."
+msgstr "KĻŪDA: nederīgs ierīces ID."
+
+#: host.php:222
+msgid "Device Reindex Failed."
+msgstr ""
+
+#: host.php:238
+#, php-format
+msgid "Device Reindex Completed in %0.2f seconds.  There were %d items updated."
+msgstr "Ierīces atkārtota indeksēšana pabeigta pēc %0.2f sekundēm. Tika atjaunināti %d vienumi."
+
+#: host.php:401
+#, php-format
+msgid "Unable to add some Devices to Report '%s'"
+msgstr "Pārskatam “%s” nevar pievienot dažas ierīces"
+
+#: host.php:470
+msgid "Click 'Continue' to enable the following Device(s)."
+msgstr "Noklikšķiniet uz \"Turpināt\", lai iespējotu šādu(-as) ierīci(-es)."
+
+#: host.php:475
+msgid "Enable Device(s)"
+msgstr "Iespējot ierīci(-es)"
+
+#: host.php:479
+msgid "Click 'Continue' to disable the following Device(s)."
+msgstr "Noklikšķiniet uz \"Turpināt\", lai atspējotu šādu(-as) ierīci(-es)."
+
+#: host.php:484
+msgid "Disable Device(s)"
+msgstr "Atspējot ierīci(-es)"
+
+#: host.php:488
+msgid "Click 'Continue' to change the Device options below for multiple Device(s).  Please check the box next to the fields you want to update, and then fill in the new value."
+msgstr "Noklikšķiniet uz \"Turpināt\", lai mainītu tālāk norādītās ierīces opcijas vairākām ierīcēm. Lūdzu, atzīmējiet izvēles rūtiņu blakus laukiem, kurus vēlaties atjaunināt, un pēc tam ievadiet jauno vērtību."
+
+#: host.php:508
+msgid "Update this Field"
+msgstr "Atsvaidzināt šo lauku"
+
+#: host.php:531
+msgid "Change Device(s) SNMP Options"
+msgstr "Mainiet ierīces(-u) SNMP opcijas"
+
+#: host.php:535
+msgid "Click 'Continue' to clear the counters for the following Device(s)."
+msgstr "Noklikšķiniet uz \"Turpināt\", lai notīrītu tālāk norādītās(-o) ierīces(-u) skaitītājus."
+
+#: host.php:540
+msgid "Clear Statistics on Device(s)"
+msgstr "Notīrīt statistiku par ierīci(-ēm)"
+
+#: host.php:544
+msgid "Click 'Continue' to Synchronize the following Device(s) to their Device Template."
+msgstr "Noklikšķiniet uz \"Turpināt\", lai sinhronizētu tālāk norādīto(-ās) ierīci(-es) ar to ierīces veidni."
+
+#: host.php:549
+msgid "Synchronize Device(s)"
+msgstr "Sinhronizēt ierīci(-es)"
+
+#: host.php:553
+msgid "Click 'Continue' to delete the following Device(s)."
+msgstr "Noklikšķiniet uz \"Turpināt\", lai dzēstu šādu(-as) ierīci(-es)."
+
+#: host.php:556
+msgid "Leave all Graph(s) and Data Source(s) untouched.  Data Source(s) will be disabled however."
+msgstr "Neatstājiet neskartu(-us) grafiku(-us) un datu avotu(-s). Tomēr datu avots(-i) tiks atspējoti."
+
+#: host.php:558
+msgid "Delete all associated Graph(s) and Data Source(s)."
+msgstr "Dzēsiet visus saistītos grafikus un datu avotus."
+
+#: host.php:569
+msgid "Click 'Continue' to place the following Device(s) under the branch selected below."
+msgstr "Noklikšķiniet uz \"Turpināt\", lai zem tālāk atlasītās filiāles novietotu šādu(-as) ierīci(-es)."
+
+#: host.php:579
+msgid "Place Device(s) on Tree"
+msgstr "Novietojiet ierīci(-es) uz koka"
+
+#: host.php:583
+msgid "Click 'Continue' to apply Automation Rules to the following Devices(s)."
+msgstr "Noklikšķiniet uz \"Turpināt\", lai lietotu automatizācijas noteikumus tālāk norādītajām ierīcēm."
+
+#: host.php:588
+msgid "Run Automation on Device(s)"
+msgstr "Palaist automatizāciju ierīcē(-ēs)"
+
+#: host.php:619
+msgid "Add Devices to Report"
+msgstr "Pievienojiet ziņojumam ierīces"
+
+#: host.php:621
+msgid "You currently have no Reports defined."
+msgstr "Pašlaik jums nav definēta neviena pārskata."
+
+#: host.php:793
+msgid "Device [new]"
+msgstr "Ierīce [jauna]"
+
+#: host.php:807
+#, php-format
+msgid "Device [edit: %s]"
+msgstr "Ierīce [labot: %s]"
+
+#: host.php:809
+msgid "Disable Device Debug"
+msgstr "Atspējot ierīces atkļūdošanu"
+
+#: host.php:811
+msgid "Enable Device Debug"
+msgstr "Iespējot ierīces atkļūdošanu"
+
+#: host.php:814
+msgid "Repopulate Poller Cache"
+msgstr "Atkārtoti aizpildīt aptaujātaja kešatmiņu"
+
+#: host.php:815 include/global_arrays.php:2458 include/global_arrays.php:2470
+#: utilities.php:2401
+msgid "View Poller Cache"
+msgstr "Skatīt aptaujātāja kešatmiņu"
+
+#: host.php:830
+msgid "Create Graphs for this Device"
+msgstr "Izveidojiet diagrammas šai ierīcei"
+
+#: host.php:831
+msgid "Re-Index Device"
+msgstr "Pārindeksēt ierīci"
+
+#: host.php:834
+msgid "Data Source List"
+msgstr "Datu avotu saraksts"
+
+#: host.php:835
+msgid "Graph List"
+msgstr "Grafiku saraksts"
+
+#: host.php:841
+msgid "Contacting Device"
+msgstr "Sazināšanās ar ierīci"
+
+#: host.php:936 tree.php:1782 tree.php:1856 tree.php:1964
+msgid "Edit"
+msgstr "Rediģēt"
+
+#: host.php:936
+msgid "Is Being Graphed"
+msgstr "Tiek attēlots grafiks"
+
+#: host.php:936
+msgid "Not Being Graphed"
+msgstr "Netiek zīmēts"
+
+#: host.php:939
+msgid "Delete Graph Template Association"
+msgstr "Dzēst diagrammas veidņu asociāciju"
+
+#: host.php:946 host_templates.php:493
+msgid "No associated graph templates."
+msgstr "Nav saistītu diagrammu veidņu."
+
+#: host.php:955 host_templates.php:502
+msgid "Add Graph Template"
+msgstr "Pievienojiet diagrammas veidni"
+
+#: host.php:961
+msgid "Add Graph Template to Device"
+msgstr "Pievienojiet ierīcei diagrammas veidni"
+
+#: host.php:977
+msgid "Data Query Debug Information"
+msgstr "Datu vaicājuma atkļūdošanas informācija"
+
+#: host.php:981 lib/functions.php:4903 tree.php:1804 tree.php:1878
+#: tree.php:1986 user_admin.php:18 user_group_admin.php:20
+msgid "Copy"
+msgstr "Kopēt"
+
+#: host.php:982
+msgid "Hide"
+msgstr "Slēpt"
+
+#: host.php:997 host_templates.php:525
+msgid "Associated Data Queries"
+msgstr "Saistītie datu vaicājumi"
+
+#: host.php:1002 host.php:1099
+msgid "Re-Index Method"
+msgstr "Pārindeksēšanas metode"
+
+#: host.php:1004 include/global_arrays.php:2092 include/global_arrays.php:2158
+#: include/global_arrays.php:2248 include/global_arrays.php:2284
+#: include/global_arrays.php:2302 include/global_arrays.php:2320
+#: include/global_arrays.php:2338 include/global_arrays.php:2368
+#: include/global_arrays.php:2404 include/global_arrays.php:2434
+#: include/global_arrays.php:2530 include/global_arrays.php:2734
+#: include/global_arrays.php:2758 include/global_arrays.php:2776
+#: include/global_arrays.php:2794 include/global_arrays.php:2818
+#: lib/api_automation.php:1289 lib/api_automation.php:1352
+#: lib/api_automation.php:1422 lib/html_reports.php:1792 plugins.php:605
+msgid "Actions"
+msgstr "Darbības"
+
+#: host.php:1066
+#, php-format
+msgid " [%d Items, %d Rows]"
+msgstr " [%d vienumi, %d rindas]"
+
+#: host.php:1066
+msgid "Fail"
+msgstr "Neizdevās"
+
+#: host.php:1066 lib/functions.php:6166 lib/functions.php:6171
+msgid "Success"
+msgstr "Izpildīts"
+
+#: host.php:1069
+msgid "Reload Query"
+msgstr "Pārlādēt vaicājumu"
+
+#: host.php:1070
+msgid "Verbose Query"
+msgstr "Verbozs vaicājums"
+
+#: host.php:1071
+msgid "Remove Query"
+msgstr "Noņemt vaicājumu"
+
+#: host.php:1077
+msgid "No Associated Data Queries."
+msgstr "Nav saistītu datu vaicājumu."
+
+#: host.php:1093 host_templates.php:559
+msgid "Add Data Query"
+msgstr "Pievienot datu vaicājumu"
+
+#: host.php:1105
+msgid "Add Data Query to Device"
+msgstr "Pievienojiet ierīcei datu vaicājumu"
+
+#: host.php:1276 host.php:1289 include/global_arrays.php:679
+msgid "Ping"
+msgstr "Ping"
+
+#: host.php:1287 include/global_arrays.php:674
+msgid "Ping and SNMP Uptime"
+msgstr "Ping un SNMP darbības laiks"
+
+#: host.php:1288 include/global_arrays.php:676
+msgid "SNMP Uptime"
+msgstr "SNMP darbības laiks"
+
+#: host.php:1290 include/global_arrays.php:675
+msgid "Ping or SNMP Uptime"
+msgstr "Ping vai SNMP darbības laiks"
+
+#: host.php:1291 include/global_arrays.php:677
+msgid "SNMP Desc"
+msgstr "SNMP apraksts"
+
+#: host.php:1292
+msgid "SNMP GetNext"
+msgstr "SNMP GetNext"
+
+#: host.php:1356
+msgid "Delete Item from Device"
+msgstr "Dzēst elementu no ierīces veidnes"
+
+#: host.php:1599 host.php:1792
+msgid "Undefined"
+msgstr "Nav noteikts"
+
+#: host.php:1715 include/global_settings.php:618 lib/html.php:2414
+#: lib/html_reports.php:1151
+msgid "Site"
+msgstr "Atrašanās vieta"
+
+#: host.php:1812
+msgid "Export Devices"
+msgstr "Izgūt ierīces"
+
+#: host.php:1833 lib/api_automation.php:29
+msgid "Not Up"
+msgstr "Nedarbojas"
+
+#: host.php:1836 lib/api_automation.php:32 lib/html.php:65
+#: lib/html_utility.php:1330 pollers.php:34
+msgid "Recovering"
+msgstr "Atgūstas"
+
+#: host.php:1837 lib/api_automation.php:33 lib/auth.php:3007
+#: lib/clog_webapi.php:856 lib/html_utility.php:1339 lib/import.php:342
+#: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4196 lib/rrd.php:4208
+#: lib/spikekill.php:301 package_import.php:522 package_import.php:600
+#: utilities.php:211 utilities.php:212 utilities.php:2759
+msgid "Unknown"
+msgstr "Nezināms"
+
+#: host.php:1916 lib/api_automation.php:570 tree.php:987 utilities.php:2277
+msgid "Device Description"
+msgstr "Ierīces apraksts"
+
+#: host.php:1919
+msgid "The name by which this Device will be referred to."
+msgstr "Nosaukums, ar kādu šī Ierīce tiks apzīmēta."
+
+#: host.php:1922 include/global_form.php:1176 include/global_form.php:1747
+#: lib/api_automation.php:279 lib/api_automation.php:571
+#: lib/api_automation.php:890 lib/api_automation.php:1197 managers.php:217
+#: pollers.php:115 pollers.php:1001 user_admin.php:1073
+#: user_group_admin.php:1087
+msgid "Hostname"
+msgstr "Resursdatora nosaukums"
+
+#: host.php:1925
+msgid "Either an IP address, or hostname.  If a hostname, it must be resolvable by either DNS, or from your hosts file."
+msgstr "Vai nu IP adrese, vai resursdatora nosaukums. Ja resursdatora nosaukums, tam ir jābūt atrisināmam ar DNS vai no jūsu saimniekdatora faila."
+
+#: host.php:1931
+msgid "The internal database ID for this Device.  Useful when performing automation or debugging."
+msgstr "Šīs ierīces iekšējās datu bāzes ID. Noderīgs, veicot automatizāciju vai atkļūdošanu."
+
+#: host.php:1937
+msgid "The total number of Graphs generated from this Device."
+msgstr "Kopējais no šīs ierīces ģenerēto grafiku skaits."
+
+#: host.php:1943
+msgid "The total number of Data Sources generated from this Device."
+msgstr "Kopējais datu avotu skaits, kas ģenerēti no šīs ierīces."
+
+#: host.php:1949
+msgid "The monitoring status of the Device based upon ping results.  If this Device is a special type Device, by using the hostname \"localhost\", or due to the setting to not perform an Availability Check, it will always remain Up.  When using cmd.php data collector, a Device with no Graphs, is not pinged by the data collector and will remain in an \"Unknown\" state."
+msgstr "Ierīces uzraudzības statuss, pamatojoties uz ping rezultātiem.  Ja šī ierīce ir īpaša tipa ierīce, izmantojot resursdatora nosaukumu “localhost” vai iestatījuma dēļ neveikt pieejamības pārbaudi, tā vienmēr paliks Up. Lietojot cmd.php datu apkopotāju, datu savācējs nepiesaista ierīci bez diagrammām, un tā paliks stāvoklī \"Nezināms\"."
+
+#: host.php:1952
+msgid "In State"
+msgstr "Valstī"
+
+#: host.php:1955
+msgid "The amount of time that this Device has been in its current state."
+msgstr "Laiks, cik ilgi šī ierīce ir atradusies pašreizējā stāvoklī."
+
+#: host.php:1961
+msgid "The current amount of time that the host has been up."
+msgstr "Pašreizējais saimniekdatora darbības laiks."
+
+#: host.php:1964
+msgid "Poll Time"
+msgstr "Aptaujas laiks"
+
+#: host.php:1967
+msgid "The amount of time it takes to collect data from this Device."
+msgstr "Laiks, kas nepieciešams datu ievākšanai no šīs ierīces."
+
+#: host.php:1970
+msgid "Current (ms)"
+msgstr "Pašreizējais (ms)"
+
+#: host.php:1973
+msgid "The current ping time in milliseconds to reach the Device."
+msgstr "Pašreizējais ehotestēšanas laiks milisekundēs, lai sasniegtu ierīci."
+
+#: host.php:1976
+msgid "Average (ms)"
+msgstr "Vidējais (ms)"
+
+#: host.php:1979
+msgid "The average ping time in milliseconds to reach the Device since the counters were cleared for this Device."
+msgstr "Vidējais ehotestēšanas laiks milisekundēs, lai sasniegtu ierīci, kopš šīs ierīces skaitītāji ir notīrīti."
+
+#: host.php:1982
+msgid "Availability"
+msgstr "Pieejamība"
+
+#: host.php:1985
+msgid "The availability percentage based upon ping results since the counters were cleared for this Device."
+msgstr "Pieejamības procents, pamatojoties uz ping rezultātiem, kopš šīs ierīces skaitītāji tika notīrīti."
+
 #: host_templates.php:22
 msgid "Sync Devices"
 msgstr "Sinhronizēt ierīces"
@@ -5372,29 +5801,13 @@ msgstr "Ierīču veidnes [jauna]"
 msgid "Default Submit Button"
 msgstr "Noklusējuma poga Iesniegt"
 
-#: host_templates.php:493
-msgid "No associated graph templates."
-msgstr "Nav saistītu diagrammu veidņu."
-
-#: host_templates.php:502
-msgid "Add Graph Template"
-msgstr "Pievienojiet diagrammas veidni"
-
 #: host_templates.php:515
 msgid "Add Graph Template to Device Template"
 msgstr "Pievienojiet diagrammas veidni ierīces veidnei"
 
-#: host_templates.php:525
-msgid "Associated Data Queries"
-msgstr "Saistītie datu vaicājumi"
-
 #: host_templates.php:550
 msgid "No associated data queries."
 msgstr "Nav saistītu datu vaicājumu."
-
-#: host_templates.php:559
-msgid "Add Data Query"
-msgstr "Pievienot datu vaicājumu"
 
 #: host_templates.php:569
 msgid "Add Data Query to Device Template"
@@ -5405,7 +5818,7 @@ msgid "Delete Item from Device Template"
 msgstr "Dzēst elementu no ierīces veidnes"
 
 #: host_templates.php:703 host_templates.php:801 host_templates.php:968
-#: include/global_arrays.php:1238 include/global_arrays.php:2274
+#: include/global_arrays.php:1238 include/global_arrays.php:2272
 msgid "Device Templates"
 msgstr "Ierīču veidnes"
 
@@ -5477,11 +5890,11 @@ msgstr "FATAL: Jums ir jāpiesakās, lai piekļūtu šim Kadupul apgabalam."
 msgid "Login Again"
 msgstr "Pieteikties vēlreiz"
 
-#: include/auth.php:317 lib/functions.php:8149 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8156 permission_denied.php:38
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Ja jūtat, ka tā ir kļūda. Lūdzu, sazinieties ar savu Kadupul administratoru."
 
-#: include/auth.php:317 lib/functions.php:8149 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8156 permission_denied.php:38
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Jums nav atļauts piekļūt šai Kadupul sadaļai."
 
@@ -6057,29 +6470,9 @@ msgstr "Logfile un Syslog/Eventlog"
 msgid "Syslog/Eventlog Only"
 msgstr "Tikai sistēmas/notikumu žurnālus"
 
-#: include/global_arrays.php:674
-msgid "Ping and SNMP Uptime"
-msgstr "Ping un SNMP darbības laiks"
-
-#: include/global_arrays.php:675
-msgid "Ping or SNMP Uptime"
-msgstr "Ping vai SNMP darbības laiks"
-
-#: include/global_arrays.php:676
-msgid "SNMP Uptime"
-msgstr "SNMP darbības laiks"
-
-#: include/global_arrays.php:677
-msgid "SNMP Desc"
-msgstr "SNMP apraksts"
-
 #: include/global_arrays.php:678
 msgid "SNMP getNext"
 msgstr "SNMP GetNext"
-
-#: include/global_arrays.php:679
-msgid "Ping"
-msgstr "Ping"
 
 #: include/global_arrays.php:683
 msgid "ICMP Ping"
@@ -6155,9 +6548,9 @@ msgstr "Katru stundu"
 #: include/global_arrays.php:739 include/global_arrays.php:740
 #: include/global_arrays.php:811 include/global_arrays.php:812
 #: include/global_arrays.php:813 include/global_arrays.php:814
+#: include/global_arrays.php:1867 include/global_arrays.php:1868
 #: include/global_arrays.php:1869 include/global_arrays.php:1870
-#: include/global_arrays.php:1871 include/global_arrays.php:1872
-#: include/global_arrays.php:1873 include/global_settings.php:2551
+#: include/global_arrays.php:1871 include/global_settings.php:2551
 #: include/global_settings.php:2552
 #, php-format
 msgid "Every %d Hours"
@@ -6173,7 +6566,7 @@ msgstr "Katru %d dienu"
 msgid "%0.1f Minutes"
 msgstr "%0.1f minūtes"
 
-#: include/global_arrays.php:786 include/global_arrays.php:1472
+#: include/global_arrays.php:786 include/global_arrays.php:1470
 #: include/global_settings.php:1635 rrdcleaner.php:541
 #, php-format
 msgid "%d Year"
@@ -6286,7 +6679,7 @@ msgid "Header"
 msgstr "Galvene"
 
 #: include/global_arrays.php:953 include/global_arrays.php:1004
-#: include/global_arrays.php:1689 include/global_arrays.php:1858
+#: include/global_arrays.php:1687 include/global_arrays.php:1856
 #: lib/html.php:2845
 msgid "Graph"
 msgstr "Grafiks"
@@ -6385,16 +6778,16 @@ msgid "Data Collection"
 msgstr "Datu apkopošana"
 
 #: include/global_arrays.php:998 include/global_arrays.php:1049
-#: include/global_arrays.php:2202 pollers.php:860
+#: include/global_arrays.php:2200 pollers.php:860
 msgid "Data Collectors"
 msgstr "Datu savācēji"
 
 #: include/global_arrays.php:1000 include/global_arrays.php:1225
-#: include/global_arrays.php:2364
+#: include/global_arrays.php:2362
 msgid "Data Input Methods"
 msgstr "Datu ievades metodes"
 
-#: include/global_arrays.php:1006 include/global_arrays.php:2895
+#: include/global_arrays.php:1006 include/global_arrays.php:2893
 msgid "Aggregate"
 msgstr "Agregāts"
 
@@ -6421,11 +6814,11 @@ msgstr "Standarti"
 msgid "Data Profiles"
 msgstr "Datu profili"
 
-#: include/global_arrays.php:1020 include/global_arrays.php:2526
+#: include/global_arrays.php:1020 include/global_arrays.php:2524
 msgid "VDEFs"
 msgstr "VDEF"
 
-#: include/global_arrays.php:1021 include/global_arrays.php:2226
+#: include/global_arrays.php:1021 include/global_arrays.php:2224
 msgid "Colors"
 msgstr "Krāsas"
 
@@ -6434,16 +6827,16 @@ msgid "Import/Export"
 msgstr "Ievietot/Izgūt"
 
 #: include/global_arrays.php:1025 include/global_arrays.php:1241
-#: include/global_arrays.php:2652
+#: include/global_arrays.php:2650
 msgid "Import Templates"
 msgstr "Ievietot veidnes"
 
-#: include/global_arrays.php:1026 include/global_arrays.php:2658
+#: include/global_arrays.php:1026 include/global_arrays.php:2656
 msgid "Import Packages"
 msgstr "Ievietot pakotnes"
 
 #: include/global_arrays.php:1027 include/global_arrays.php:1240
-#: include/global_arrays.php:2640 templates_export.php:142
+#: include/global_arrays.php:2638 templates_export.php:142
 msgid "Export Templates"
 msgstr "Izgūt veidnes"
 
@@ -6457,23 +6850,23 @@ msgstr "Konfigurācija"
 msgid "Settings"
 msgstr "Iestatījumi"
 
-#: include/global_arrays.php:1031 include/global_arrays.php:2580
+#: include/global_arrays.php:1031 include/global_arrays.php:2578
 #: user_admin.php:2131 user_admin.php:2236 user_group_admin.php:725
 #: user_group_admin.php:2164
 msgid "Users"
 msgstr "Lietotāji"
 
-#: include/global_arrays.php:1032 include/global_arrays.php:2610
+#: include/global_arrays.php:1032 include/global_arrays.php:2608
 msgid "User Groups"
 msgstr "Lietotāju grupas"
 
-#: include/global_arrays.php:1033 include/global_arrays.php:2598
+#: include/global_arrays.php:1033 include/global_arrays.php:2596
 #: user_domains.php:634 user_domains.php:728
 msgid "User Domains"
 msgstr "Lietotāju domēni"
 
 #: include/global_arrays.php:1035 include/global_arrays.php:1054
-#: include/global_arrays.php:1071 include/global_arrays.php:2454
+#: include/global_arrays.php:1071 include/global_arrays.php:2452
 msgid "Utilities"
 msgstr "Rīki"
 
@@ -6483,7 +6876,7 @@ msgstr "Sistēmas utilītas"
 
 #: include/global_arrays.php:1037 include/global_arrays.php:1072
 #: include/global_arrays.php:1115 include/global_arrays.php:1218
-#: include/global_arrays.php:2214 user_admin.php:1497 user_group_admin.php:1511
+#: include/global_arrays.php:2212 user_admin.php:1497 user_group_admin.php:1511
 msgid "External Links"
 msgstr "Ārējās saites"
 
@@ -6677,259 +7070,259 @@ msgstr "Pamatadministrācija"
 msgid "System Administration"
 msgstr "Sistēmas pārvaldīšana"
 
-#: include/global_arrays.php:1355 lib/html.php:1408
+#: include/global_arrays.php:1353 lib/html.php:1408
 msgid "CDEF"
 msgstr "CDEF"
 
-#: include/global_arrays.php:1356
+#: include/global_arrays.php:1354
 msgid "CDEF Item"
 msgstr "CDEF elements"
 
-#: include/global_arrays.php:1357
+#: include/global_arrays.php:1355
 msgid "GPRINT Preset"
 msgstr "GPRINT iepriekš iestatīts"
 
-#: include/global_arrays.php:1360
+#: include/global_arrays.php:1358
 msgid "Data Input Field"
 msgstr "Datu ievades lauks"
 
-#: include/global_arrays.php:1361 include/global_form.php:579
+#: include/global_arrays.php:1359 include/global_form.php:579
 #: include/global_form.php:1679 package_import.php:862
 msgid "Data Source Profile"
 msgstr "Datu avota profils"
 
-#: include/global_arrays.php:1362
+#: include/global_arrays.php:1360
 msgid "Data Template Item"
 msgstr "Datu veidnes elements"
 
-#: include/global_arrays.php:1364
+#: include/global_arrays.php:1362
 msgid "Graph Template Item"
 msgstr "Grafika veidnes elements"
 
-#: include/global_arrays.php:1365
+#: include/global_arrays.php:1363
 msgid "Graph Template Input"
 msgstr "Grafika veidnes ievade"
 
-#: include/global_arrays.php:1368 lib/html.php:1409
+#: include/global_arrays.php:1366 lib/html.php:1409
 msgid "VDEF"
 msgstr "VDEF"
 
-#: include/global_arrays.php:1369
+#: include/global_arrays.php:1367
 msgid "VDEF Item"
 msgstr "VDEF elements"
 
-#: include/global_arrays.php:1423
+#: include/global_arrays.php:1421
 msgid "Last Half Hour"
 msgstr "Pēdējā pusstunda"
 
-#: include/global_arrays.php:1424
+#: include/global_arrays.php:1422
 msgid "Last Hour"
 msgstr "Pēdējo stundu"
 
+#: include/global_arrays.php:1423 include/global_arrays.php:1424
 #: include/global_arrays.php:1425 include/global_arrays.php:1426
-#: include/global_arrays.php:1427 include/global_arrays.php:1428
 #, php-format
 msgid "Last %d Hours"
 msgstr "Pēdējās %d stundas"
 
-#: include/global_arrays.php:1429
+#: include/global_arrays.php:1427
 msgid "Last Day"
 msgstr "Pēdējo dienu"
 
-#: include/global_arrays.php:1430 include/global_arrays.php:1431
-#: include/global_arrays.php:1432
+#: include/global_arrays.php:1428 include/global_arrays.php:1429
+#: include/global_arrays.php:1430
 #, php-format
 msgid "Last %d Days"
 msgstr "Pēdējās %d dienas"
 
-#: include/global_arrays.php:1433
+#: include/global_arrays.php:1431
 msgid "Last Week"
 msgstr "Pagājušo nedēļu"
 
-#: include/global_arrays.php:1434
+#: include/global_arrays.php:1432
 #, php-format
 msgid "Last %d Weeks"
 msgstr "Pēdējās %d nedēļas"
 
-#: include/global_arrays.php:1435
+#: include/global_arrays.php:1433
 msgid "Last Month"
 msgstr "Pagājušais mēnesis"
 
+#: include/global_arrays.php:1434 include/global_arrays.php:1435
 #: include/global_arrays.php:1436 include/global_arrays.php:1437
-#: include/global_arrays.php:1438 include/global_arrays.php:1439
 #, php-format
 msgid "Last %d Months"
 msgstr "Pēdējie %d mēneši"
 
-#: include/global_arrays.php:1440
+#: include/global_arrays.php:1438
 msgid "Last Year"
 msgstr "Pagājušais gads"
 
-#: include/global_arrays.php:1441
+#: include/global_arrays.php:1439
 #, php-format
 msgid "Last %d Years"
 msgstr "Pēdējie %d gadi"
 
-#: include/global_arrays.php:1442
+#: include/global_arrays.php:1440
 msgid "Day Shift"
 msgstr "Dienas maiņa"
 
-#: include/global_arrays.php:1443
+#: include/global_arrays.php:1441
 msgid "This Day"
 msgstr "Šajā dienā"
 
-#: include/global_arrays.php:1444
+#: include/global_arrays.php:1442
 msgid "This Week"
 msgstr "Šajā nedēļā"
 
-#: include/global_arrays.php:1445
+#: include/global_arrays.php:1443
 msgid "This Month"
 msgstr "Šajā mēnesī"
 
-#: include/global_arrays.php:1446
+#: include/global_arrays.php:1444
 msgid "This Year"
 msgstr "Šis gads"
 
-#: include/global_arrays.php:1447
+#: include/global_arrays.php:1445
 msgid "Previous Day"
 msgstr "Iepriekšējā diena"
 
-#: include/global_arrays.php:1448
+#: include/global_arrays.php:1446
 msgid "Previous Week"
 msgstr "Iepriekšējā nedēļa"
 
-#: include/global_arrays.php:1449
+#: include/global_arrays.php:1447
 msgid "Previous Month"
 msgstr "Iepriekšējais mēnesis"
 
-#: include/global_arrays.php:1450
+#: include/global_arrays.php:1448
 msgid "Previous Year"
 msgstr "Iepriekšējais gads"
 
-#: include/global_arrays.php:1455
+#: include/global_arrays.php:1453
 #, php-format
 msgid "%d Min"
 msgstr "%d min"
 
-#: include/global_arrays.php:1510
+#: include/global_arrays.php:1508
 msgid "Month Number, Day, Year"
 msgstr "Mēneša numurs, diena, gads"
 
-#: include/global_arrays.php:1511
+#: include/global_arrays.php:1509
 msgid "Month Name, Day, Year"
 msgstr "Mēnesis Vārds, diena, gads"
 
-#: include/global_arrays.php:1512
+#: include/global_arrays.php:1510
 msgid "Day, Month Number, Year"
 msgstr "Diena, mēneša numurs, gads"
 
-#: include/global_arrays.php:1513
+#: include/global_arrays.php:1511
 msgid "Day, Month Name, Year"
 msgstr "Diena, mēneša nosaukums, gads"
 
-#: include/global_arrays.php:1514
+#: include/global_arrays.php:1512
 msgid "Year, Month Number, Day"
 msgstr "Gads, mēneša numurs, diena"
 
-#: include/global_arrays.php:1515
+#: include/global_arrays.php:1513
 msgid "Year, Month Name, Day"
 msgstr "Gads, mēnesis Vārds, diena"
 
-#: include/global_arrays.php:1525 include/global_arrays.php:1556
+#: include/global_arrays.php:1523 include/global_arrays.php:1554
 msgid "After Boost"
 msgstr "Pēc Boost"
 
+#: include/global_arrays.php:1533 include/global_arrays.php:1534
 #: include/global_arrays.php:1535 include/global_arrays.php:1536
-#: include/global_arrays.php:1537 include/global_arrays.php:1538
-#: include/global_arrays.php:1539 include/global_arrays.php:1601
-#: include/global_arrays.php:1602
+#: include/global_arrays.php:1537 include/global_arrays.php:1599
+#: include/global_arrays.php:1600
 #, php-format
 msgid "%d MBytes"
 msgstr "%d MB"
 
-#: include/global_arrays.php:1540
+#: include/global_arrays.php:1538
 msgid "1 GByte"
 msgstr "1 GB baits"
 
-#: include/global_arrays.php:1541 include/global_arrays.php:1604
+#: include/global_arrays.php:1539 include/global_arrays.php:1602
 #: lib/boost.php:124
 #, php-format
 msgid "%s GBytes"
 msgstr "%s GBaiti"
 
-#: include/global_arrays.php:1542 include/global_arrays.php:1543
+#: include/global_arrays.php:1540 include/global_arrays.php:1541
+#: include/global_arrays.php:1603 include/global_arrays.php:1604
 #: include/global_arrays.php:1605 include/global_arrays.php:1606
 #: include/global_arrays.php:1607 include/global_arrays.php:1608
-#: include/global_arrays.php:1609 include/global_arrays.php:1610
 #, php-format
 msgid "%d GBytes"
 msgstr "%d GBaiti"
 
-#: include/global_arrays.php:1563
+#: include/global_arrays.php:1561
 msgid "2,000 Data Source Items"
 msgstr "2000 datu avota vienumu"
 
-#: include/global_arrays.php:1564
+#: include/global_arrays.php:1562
 msgid "5,000 Data Source Items"
 msgstr "5000 datu avota vienumu"
 
-#: include/global_arrays.php:1565
+#: include/global_arrays.php:1563
 msgid "10,000 Data Source Items"
 msgstr "10 000 datu avota vienumu"
 
-#: include/global_arrays.php:1566
+#: include/global_arrays.php:1564
 msgid "15,000 Data Source Items"
 msgstr "15 000 datu avota vienumu"
 
-#: include/global_arrays.php:1567
+#: include/global_arrays.php:1565
 msgid "25,000 Data Source Items"
 msgstr "25 000 datu avota vienumu"
 
-#: include/global_arrays.php:1568
+#: include/global_arrays.php:1566
 msgid "50,000 Data Source Items (Default)"
 msgstr "50 000 datu avota vienumu (noklusējums)"
 
-#: include/global_arrays.php:1569
+#: include/global_arrays.php:1567
 msgid "100,000 Data Source Items"
 msgstr "100 000 datu avota vienumu"
 
-#: include/global_arrays.php:1570
+#: include/global_arrays.php:1568
 msgid "200,000 Data Source Items"
 msgstr "200 000 datu avota vienumu"
 
-#: include/global_arrays.php:1571
+#: include/global_arrays.php:1569
 msgid "400,000 Data Source Items"
 msgstr "400 000 datu avota vienumu"
 
-#: include/global_arrays.php:1588
+#: include/global_arrays.php:1586
 msgid "2 Hours"
 msgstr "2 stundas"
 
-#: include/global_arrays.php:1589
+#: include/global_arrays.php:1587
 msgid "4 Hours"
 msgstr "4 stundas"
 
-#: include/global_arrays.php:1590
+#: include/global_arrays.php:1588
 msgid "6 Hours"
 msgstr "6 stundas"
 
-#: include/global_arrays.php:1597 include/global_settings.php:1489
+#: include/global_arrays.php:1595 include/global_settings.php:1489
 #: include/global_settings.php:1490 include/global_settings.php:1491
 #, php-format
 msgid "%s Hours"
 msgstr "%s stundas"
 
-#: include/global_arrays.php:1603
+#: include/global_arrays.php:1601
 #, php-format
 msgid "%d GByte"
 msgstr "%d GB baiti"
 
-#: include/global_arrays.php:1611 utilities.php:2856 utilities.php:2857
+#: include/global_arrays.php:1609 utilities.php:2856 utilities.php:2857
 #: utilities.php:2906
 msgid "Unlimited"
 msgstr "Neierobežots"
 
-#: include/global_arrays.php:1618 include/global_settings.php:1388
+#: include/global_arrays.php:1616 include/global_settings.php:1388
 #: include/global_settings.php:1389 include/global_settings.php:1390
 #: include/global_settings.php:1391 include/global_settings.php:1401
 #: include/global_settings.php:1402 include/global_settings.php:1403
@@ -6945,759 +7338,741 @@ msgstr "Neierobežots"
 msgid "%s Minutes"
 msgstr "%s minūtes"
 
-#: include/global_arrays.php:1640
+#: include/global_arrays.php:1638
 msgid "1 Megabyte"
 msgstr "1 megabaits"
 
+#: include/global_arrays.php:1639 include/global_arrays.php:1640
 #: include/global_arrays.php:1641 include/global_arrays.php:1642
 #: include/global_arrays.php:1643 include/global_arrays.php:1644
-#: include/global_arrays.php:1645 include/global_arrays.php:1646
 #, php-format
 msgid "%d Megabytes"
 msgstr "%d megabaiti"
 
-#: include/global_arrays.php:1650
+#: include/global_arrays.php:1648
 msgid "Send Now"
 msgstr "Sūtīt tagad"
 
-#: include/global_arrays.php:1658
+#: include/global_arrays.php:1656
 msgid "Take Ownership"
 msgstr "Kļūt par īpašnieku"
 
-#: include/global_arrays.php:1662
+#: include/global_arrays.php:1660
 msgid "Inline PNG Image"
 msgstr "Iekļauts PNG attēls"
 
-#: include/global_arrays.php:1667
+#: include/global_arrays.php:1665
 msgid "Inline JPEG Image"
 msgstr "Iekļauts JPEG attēls"
 
-#: include/global_arrays.php:1668
+#: include/global_arrays.php:1666
 msgid "Inline GIF Image"
 msgstr "Iekļauts GIF attēls"
 
-#: include/global_arrays.php:1671
+#: include/global_arrays.php:1669
 msgid "Attached PNG Image"
 msgstr "Pievienots PNG attēls"
 
-#: include/global_arrays.php:1674
+#: include/global_arrays.php:1672
 msgid "Attached JPEG Image"
 msgstr "Pievienots JPEG attēls"
 
-#: include/global_arrays.php:1675
+#: include/global_arrays.php:1673
 msgid "Attached GIF Image"
 msgstr "Pievienots GIF attēls"
 
-#: include/global_arrays.php:1679
+#: include/global_arrays.php:1677
 msgid "Inline PNG Image, LN Style"
 msgstr "Iekļauts PNG attēls, LN stils"
 
-#: include/global_arrays.php:1681
+#: include/global_arrays.php:1679
 msgid "Inline JPEG Image, LN Style"
 msgstr "Iekļauts JPEG attēls, LN stils"
 
-#: include/global_arrays.php:1682
+#: include/global_arrays.php:1680
 msgid "Inline GIF Image, LN Style"
 msgstr "Iekļauts GIF attēls, LN stils"
 
-#: include/global_arrays.php:1687
+#: include/global_arrays.php:1685
 msgid "Text"
 msgstr "Teksts"
 
-#: include/global_arrays.php:1688 include/global_form.php:2252
+#: include/global_arrays.php:1686 include/global_form.php:2252
 msgid "Tree"
 msgstr "Koks"
 
-#: include/global_arrays.php:1691
+#: include/global_arrays.php:1689
 msgid "Horizontal Rule"
 msgstr "Horizontālā kārtula"
 
-#: include/global_arrays.php:1695
+#: include/global_arrays.php:1693
 msgid "left"
 msgstr "pa kreisi"
 
-#: include/global_arrays.php:1696
+#: include/global_arrays.php:1694
 msgid "center"
 msgstr "centrs"
 
-#: include/global_arrays.php:1697
+#: include/global_arrays.php:1695
 msgid "right"
 msgstr "pa labi"
 
-#: include/global_arrays.php:1701
+#: include/global_arrays.php:1699
 msgid "Minute(s)"
 msgstr "minūte(s)"
 
-#: include/global_arrays.php:1702
+#: include/global_arrays.php:1700
 msgid "Hour(s)"
 msgstr "Stunda(s)"
 
-#: include/global_arrays.php:1703
+#: include/global_arrays.php:1701
 msgid "Day(s)"
 msgstr "Diena(s)"
 
-#: include/global_arrays.php:1704
+#: include/global_arrays.php:1702
 msgid "Week(s)"
 msgstr "Nedēļa(s)"
 
-#: include/global_arrays.php:1705
+#: include/global_arrays.php:1703
 msgid "Month(s), Day of Month"
 msgstr "Mēnesis(-i), mēneša diena"
 
-#: include/global_arrays.php:1706
+#: include/global_arrays.php:1704
 msgid "Month(s), Day of Week"
 msgstr "Mēnesis(-i), nedēļas diena"
 
-#: include/global_arrays.php:1707
+#: include/global_arrays.php:1705
 msgid "Year(s)"
 msgstr "Gads(-i)"
 
-#: include/global_arrays.php:1711
+#: include/global_arrays.php:1709
 msgid "Keep Graph Types"
 msgstr "Saglabājiet grafiku veidus"
 
-#: include/global_arrays.php:1712
+#: include/global_arrays.php:1710
 msgid "Keep Type and STACK"
 msgstr "Saglabāt veidu un KAUVI"
 
-#: include/global_arrays.php:1713
+#: include/global_arrays.php:1711
 msgid "Convert to AREA/STACK Graph"
 msgstr "Konvertēt uz AREA/STACK grafiku"
 
-#: include/global_arrays.php:1714
+#: include/global_arrays.php:1712
 msgid "Convert to LINE1 Graph"
 msgstr "Konvertēt uz LINE1 grafiku"
 
-#: include/global_arrays.php:1715
+#: include/global_arrays.php:1713
 msgid "Convert to LINE2 Graph"
 msgstr "Konvertēt uz LINE2 grafiku"
 
-#: include/global_arrays.php:1716
+#: include/global_arrays.php:1714
 msgid "Convert to LINE3 Graph"
 msgstr "Konvertēt uz LINE3 grafiku"
 
-#: include/global_arrays.php:1717
+#: include/global_arrays.php:1715
 msgid "Convert to LINE1/STACK Graph"
 msgstr "Konvertēt uz LINE1/STACK grafiku"
 
-#: include/global_arrays.php:1718
+#: include/global_arrays.php:1716
 msgid "Convert to LINE2/STACK Graph"
 msgstr "Konvertēt uz LINE2/STACK grafiku"
 
-#: include/global_arrays.php:1719
+#: include/global_arrays.php:1717
 msgid "Convert to LINE3/STACK Graph"
 msgstr "Konvertēt uz LINE3/STACK grafiku"
 
-#: include/global_arrays.php:1723
+#: include/global_arrays.php:1721
 msgid "No Totals"
 msgstr "Nav kopsummas"
 
-#: include/global_arrays.php:1724
+#: include/global_arrays.php:1722
 msgid "Print All Legend Items"
 msgstr "Drukāt visus leģendas vienumus"
 
-#: include/global_arrays.php:1725
+#: include/global_arrays.php:1723
 msgid "Print Totaling Legend Items Only"
 msgstr "Drukājiet tikai summējošos apzīmējumus"
 
-#: include/global_arrays.php:1729
+#: include/global_arrays.php:1727
 msgid "Total Similar Data Sources"
 msgstr "Līdzīgu datu avotu kopskaits"
 
-#: include/global_arrays.php:1730
+#: include/global_arrays.php:1728
 msgid "Total All Data Sources"
 msgstr "Visi datu avoti kopā"
 
-#: include/global_arrays.php:1734
+#: include/global_arrays.php:1732
 msgid "No Reordering"
 msgstr "Nav pārkārtošanas"
 
-#: include/global_arrays.php:1735
+#: include/global_arrays.php:1733
 msgid "Data Source, Graph"
 msgstr "Datu avots, grafiks"
 
-#: include/global_arrays.php:1736
+#: include/global_arrays.php:1734
 msgid "Graph, Data Source"
 msgstr "Grafiks, datu avots"
 
-#: include/global_arrays.php:1737
+#: include/global_arrays.php:1735
 msgid "Base Graph Order"
 msgstr "Bāzes grafiku secība"
 
-#: include/global_arrays.php:1744
+#: include/global_arrays.php:1742
 msgid "contains"
 msgstr "satur"
 
-#: include/global_arrays.php:1745
+#: include/global_arrays.php:1743
 msgid "does not contain"
 msgstr "nesatur"
 
-#: include/global_arrays.php:1746
+#: include/global_arrays.php:1744
 msgid "begins with"
 msgstr "sākas ar"
 
-#: include/global_arrays.php:1747
+#: include/global_arrays.php:1745
 msgid "does not begin with"
 msgstr "nesākas ar"
 
-#: include/global_arrays.php:1748
+#: include/global_arrays.php:1746
 msgid "ends with"
 msgstr "beidzas ar"
 
-#: include/global_arrays.php:1749
+#: include/global_arrays.php:1747
 msgid "does not end with"
 msgstr "nebeidzas ar"
 
-#: include/global_arrays.php:1750
+#: include/global_arrays.php:1748
 msgid "matches"
 msgstr "atbilst"
 
-#: include/global_arrays.php:1751
+#: include/global_arrays.php:1749
 msgid "is not equal to"
 msgstr "nav vienāds ar"
 
-#: include/global_arrays.php:1752
+#: include/global_arrays.php:1750
 msgid "is less than"
 msgstr "ir mazāks par"
 
-#: include/global_arrays.php:1753
+#: include/global_arrays.php:1751
 msgid "is less than or equal"
 msgstr "ir mazāks par vai vienāds"
 
-#: include/global_arrays.php:1754
+#: include/global_arrays.php:1752
 msgid "is greater than"
 msgstr "ir labāks par"
 
-#: include/global_arrays.php:1755
+#: include/global_arrays.php:1753
 msgid "is greater than or equal"
 msgstr "ir lielāks vai vienāds ar"
 
-#: include/global_arrays.php:1756
+#: include/global_arrays.php:1754
 msgid "is unknown"
 msgstr "nav zināms"
 
-#: include/global_arrays.php:1757
+#: include/global_arrays.php:1755
 msgid "is not unknown"
 msgstr "nav nezināms"
 
-#: include/global_arrays.php:1758
+#: include/global_arrays.php:1756
 msgid "is empty"
 msgstr "ir tukšs"
 
-#: include/global_arrays.php:1759
+#: include/global_arrays.php:1757
 msgid "is not empty"
 msgstr "nav tukšs"
 
-#: include/global_arrays.php:1760
+#: include/global_arrays.php:1758
 msgid "matches regular expression"
 msgstr "atbilst regulārai izteiksmei"
 
-#: include/global_arrays.php:1761
+#: include/global_arrays.php:1759
 msgid "does not match regular expression"
 msgstr "neatbilst regulārai izteiksmei"
 
-#: include/global_arrays.php:1863
+#: include/global_arrays.php:1861
 msgid "Fixed String"
 msgstr "Fiksēta virkne"
 
-#: include/global_arrays.php:1868
+#: include/global_arrays.php:1866
 msgid "Every 1 Hour"
 msgstr "Ik pēc 1 stundas"
 
-#: include/global_arrays.php:1874
+#: include/global_arrays.php:1872
 msgid "Every Day"
 msgstr "Katru dienu"
 
-#: include/global_arrays.php:1875
+#: include/global_arrays.php:1873
 msgid "Every Week"
 msgstr "Katru nedēļu"
 
-#: include/global_arrays.php:1876 include/global_arrays.php:1877
+#: include/global_arrays.php:1874 include/global_arrays.php:1875
 #, php-format
 msgid "Every %d Weeks"
 msgstr "Ik pēc %d nedēļām"
 
-#: include/global_arrays.php:1908
+#: include/global_arrays.php:1906
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jan"
 msgstr "Jan"
 
-#: include/global_arrays.php:1909
+#: include/global_arrays.php:1907
 msgctxt "A short textual representation of a month, three letters"
 msgid "Feb"
 msgstr "Feb"
 
-#: include/global_arrays.php:1910
+#: include/global_arrays.php:1908
 msgctxt "A short textual representation of a month, three letters"
 msgid "Mar"
 msgstr "Mar"
 
-#: include/global_arrays.php:1911
+#: include/global_arrays.php:1909
 msgctxt "A short textual representation of a month, three letters"
 msgid "Apr"
 msgstr "Apr"
 
-#: include/global_arrays.php:1912
+#: include/global_arrays.php:1910
 msgctxt "A short textual representation of a month, three letters"
 msgid "May"
 msgstr "Maijs"
 
-#: include/global_arrays.php:1913
+#: include/global_arrays.php:1911
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jun"
 msgstr "Jūn"
 
-#: include/global_arrays.php:1914
+#: include/global_arrays.php:1912
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jul"
 msgstr "Jūl"
 
-#: include/global_arrays.php:1915
+#: include/global_arrays.php:1913
 msgctxt "A short textual representation of a month, three letters"
 msgid "Aug"
 msgstr "Aug"
 
-#: include/global_arrays.php:1916
+#: include/global_arrays.php:1914
 msgctxt "A short textual representation of a month, three letters"
 msgid "Sep"
 msgstr "Sep"
 
-#: include/global_arrays.php:1917
+#: include/global_arrays.php:1915
 msgctxt "A short textual representation of a month, three letters"
 msgid "Oct"
 msgstr "Okt"
 
-#: include/global_arrays.php:1918
+#: include/global_arrays.php:1916
 msgctxt "A short textual representation of a month, three letters"
 msgid "Nov"
 msgstr "Nov"
 
-#: include/global_arrays.php:1919
+#: include/global_arrays.php:1917
 msgctxt "A short textual representation of a month, three letters"
 msgid "Dec"
 msgstr "Dec"
 
-#: include/global_arrays.php:1923
+#: include/global_arrays.php:1921
 msgid "Use the First Handler Found"
 msgstr "Izmantojiet pirmo atrasto apdarinātāju"
 
-#: include/global_arrays.php:1927
+#: include/global_arrays.php:1925
 msgid "Use the PHP GetText Handler"
 msgstr "Izmantojiet PHP GetText apdarinātāju"
 
-#: include/global_arrays.php:1931
+#: include/global_arrays.php:1929
 msgid "Use the Oscarotero GetText Handler"
 msgstr "Izmantojiet Oscarotero GetText apdarinātāju"
 
-#: include/global_arrays.php:1935
+#: include/global_arrays.php:1933
 msgid "Use the MonoTranslator GetText Handler"
 msgstr "Izmantojiet MonoTranslator GetText apdarinātāju"
 
-#: include/global_arrays.php:1949
+#: include/global_arrays.php:1947
 msgctxt "A textual representation of a day, three letters"
 msgid "Sun"
 msgstr "Sv"
 
-#: include/global_arrays.php:1950
+#: include/global_arrays.php:1948
 msgctxt "A textual representation of a day, three letters"
 msgid "Mon"
 msgstr "P"
 
-#: include/global_arrays.php:1951
+#: include/global_arrays.php:1949
 msgctxt "A textual representation of a day, three letters"
 msgid "Tue"
 msgstr "O"
 
-#: include/global_arrays.php:1952
+#: include/global_arrays.php:1950
 msgctxt "A textual representation of a day, three letters"
 msgid "Wed"
 msgstr "T"
 
-#: include/global_arrays.php:1953
+#: include/global_arrays.php:1951
 msgctxt "A textual representation of a day, three letters"
 msgid "Thu"
 msgstr "Cet"
 
-#: include/global_arrays.php:1954
+#: include/global_arrays.php:1952
 msgctxt "A textual representation of a day, three letters"
 msgid "Fri"
 msgstr "P"
 
-#: include/global_arrays.php:1955
+#: include/global_arrays.php:1953
 msgctxt "A textual representation of a day, three letters"
 msgid "Sat"
 msgstr "S"
 
-#: include/global_arrays.php:1959
+#: include/global_arrays.php:1957
 msgid "Arabic"
 msgstr "Arābu"
 
-#: include/global_arrays.php:1960
+#: include/global_arrays.php:1958
 msgid "Bulgarian"
 msgstr "Bulgāru"
 
-#: include/global_arrays.php:1961
+#: include/global_arrays.php:1959
 msgid "Chinese (China)"
 msgstr "Ķīniešu (Ķīna)"
 
-#: include/global_arrays.php:1962
+#: include/global_arrays.php:1960
 msgid "Chinese (Taiwan)"
 msgstr "Ķīniešu (Taivāna)"
 
-#: include/global_arrays.php:1963
+#: include/global_arrays.php:1961
 msgid "Dutch"
 msgstr "Holandiešu"
 
-#: include/global_arrays.php:1964
+#: include/global_arrays.php:1962
 msgid "English"
 msgstr "Angļu"
 
-#: include/global_arrays.php:1965
+#: include/global_arrays.php:1963
 msgid "French"
 msgstr "Franču"
 
-#: include/global_arrays.php:1966
+#: include/global_arrays.php:1964
 msgid "German"
 msgstr "Vācu"
 
-#: include/global_arrays.php:1967
+#: include/global_arrays.php:1965
 msgid "Greek"
 msgstr "grieķu valoda"
 
-#: include/global_arrays.php:1968
+#: include/global_arrays.php:1966
 msgid "Hebrew"
 msgstr "ebreju valoda"
 
-#: include/global_arrays.php:1969
+#: include/global_arrays.php:1967
 msgid "Hindi"
 msgstr "hindi"
 
-#: include/global_arrays.php:1970
+#: include/global_arrays.php:1968
 msgid "Italian"
 msgstr "Itāļu"
 
-#: include/global_arrays.php:1971
+#: include/global_arrays.php:1969
 msgid "Japanese"
 msgstr "Japāņu"
 
-#: include/global_arrays.php:1972
+#: include/global_arrays.php:1970
 msgid "Korean"
 msgstr "korejiešu"
 
-#: include/global_arrays.php:1973
+#: include/global_arrays.php:1971
 msgid "Polish"
 msgstr "Poļu"
 
-#: include/global_arrays.php:1974
+#: include/global_arrays.php:1972
 msgid "Portuguese"
 msgstr "Portugāļu"
 
-#: include/global_arrays.php:1975
+#: include/global_arrays.php:1973
 msgid "Portuguese (Brazil)"
 msgstr "Portugāļu (Brazīlija)"
 
-#: include/global_arrays.php:1976
+#: include/global_arrays.php:1974
 msgid "Russian"
 msgstr "Krievu"
 
-#: include/global_arrays.php:1977
+#: include/global_arrays.php:1975
 msgid "Spanish"
 msgstr "Spāņu"
 
-#: include/global_arrays.php:1978
+#: include/global_arrays.php:1976
 msgid "Swedish"
 msgstr "Zviedru"
 
-#: include/global_arrays.php:1979
+#: include/global_arrays.php:1977
 msgid "Turkish"
 msgstr "Turku"
 
-#: include/global_arrays.php:1980
+#: include/global_arrays.php:1978
 msgid "Vietnamese"
 msgstr "vjetnamietis"
 
-#: include/global_arrays.php:1984
+#: include/global_arrays.php:1982
 msgid "Classic"
 msgstr "Klasika"
 
-#: include/global_arrays.php:1985
+#: include/global_arrays.php:1983
 msgid "Modern"
 msgstr "Mūsdienīgs"
 
-#: include/global_arrays.php:1986
+#: include/global_arrays.php:1984
 msgid "Dark"
 msgstr "Tumša"
 
-#: include/global_arrays.php:1987
+#: include/global_arrays.php:1985
 msgid "Paper-plane"
 msgstr "Papīra lidmašīna"
 
-#: include/global_arrays.php:1988
+#: include/global_arrays.php:1986
 msgid "Paw"
 msgstr "Ķepa"
 
-#: include/global_arrays.php:1989
+#: include/global_arrays.php:1987
 msgid "Sunrise"
 msgstr "Saullēkts"
 
-#: include/global_arrays.php:1993
+#: include/global_arrays.php:1991
 msgid "[Fail]"
 msgstr "[Neizdevās]"
 
-#: include/global_arrays.php:1994
+#: include/global_arrays.php:1992
 msgid "[Warning]"
 msgstr "[Brīdinājums]"
 
-#: include/global_arrays.php:1995
+#: include/global_arrays.php:1993
 msgid "[Restart]"
 msgstr "Ierobežots"
 
-#: include/global_arrays.php:1996
+#: include/global_arrays.php:1994
 msgid "[Success]"
 msgstr "[Veiksme]"
 
-#: include/global_arrays.php:1997
+#: include/global_arrays.php:1995
 msgid "[Skipped]"
 msgstr "[Izlaists]"
 
-#: include/global_arrays.php:2002 include/global_arrays.php:2008
+#: include/global_arrays.php:2000 include/global_arrays.php:2006
 msgid "User Profile (Edit)"
 msgstr "Lietotāja profils (rediģēt)"
 
-#: include/global_arrays.php:2020 include/global_arrays.php:2026
+#: include/global_arrays.php:2018 include/global_arrays.php:2024
 msgid "Tree Mode"
 msgstr "Koka režīms"
 
-#: include/global_arrays.php:2032
+#: include/global_arrays.php:2030
 msgid "List Mode"
 msgstr "Saraksta režīms"
 
-#: include/global_arrays.php:2064 include/global_arrays.php:2070
-#: lib/functions.php:4441 lib/html.php:1988 lib/html.php:2053 lib/html.php:2778
+#: include/global_arrays.php:2062 include/global_arrays.php:2068
+#: lib/functions.php:4448 lib/html.php:1988 lib/html.php:2053 lib/html.php:2778
 #: user_admin.php:1472 user_group_admin.php:1486
 msgid "Console"
 msgstr "Konsole"
 
-#: include/global_arrays.php:2076
+#: include/global_arrays.php:2074
 msgid "Graph Management"
 msgstr "Grafiku pārvaldība"
 
-#: include/global_arrays.php:2082 include/global_arrays.php:2124
-#: include/global_arrays.php:2142 include/global_arrays.php:2196
-#: include/global_arrays.php:2208 include/global_arrays.php:2220
-#: include/global_arrays.php:2232 include/global_arrays.php:2244
-#: include/global_arrays.php:2280 include/global_arrays.php:2298
-#: include/global_arrays.php:2316 include/global_arrays.php:2334
-#: include/global_arrays.php:2352 include/global_arrays.php:2376
-#: include/global_arrays.php:2412 include/global_arrays.php:2538
-#: include/global_arrays.php:2562 include/global_arrays.php:2586
-#: include/global_arrays.php:2604 include/global_arrays.php:2616
-#: include/global_arrays.php:2730 include/global_arrays.php:2754
-#: include/global_arrays.php:2772 include/global_arrays.php:2790
-#: include/global_arrays.php:2814
+#: include/global_arrays.php:2080 include/global_arrays.php:2122
+#: include/global_arrays.php:2140 include/global_arrays.php:2194
+#: include/global_arrays.php:2206 include/global_arrays.php:2218
+#: include/global_arrays.php:2230 include/global_arrays.php:2242
+#: include/global_arrays.php:2278 include/global_arrays.php:2296
+#: include/global_arrays.php:2314 include/global_arrays.php:2332
+#: include/global_arrays.php:2350 include/global_arrays.php:2374
+#: include/global_arrays.php:2410 include/global_arrays.php:2536
+#: include/global_arrays.php:2560 include/global_arrays.php:2584
+#: include/global_arrays.php:2602 include/global_arrays.php:2614
+#: include/global_arrays.php:2728 include/global_arrays.php:2752
+#: include/global_arrays.php:2770 include/global_arrays.php:2788
+#: include/global_arrays.php:2812
 msgid "(Edit)"
 msgstr "(Rediģēt)"
 
-#: include/global_arrays.php:2094 include/global_arrays.php:2160
-#: include/global_arrays.php:2250 include/global_arrays.php:2286
-#: include/global_arrays.php:2304 include/global_arrays.php:2322
-#: include/global_arrays.php:2340 include/global_arrays.php:2370
-#: include/global_arrays.php:2406 include/global_arrays.php:2436
-#: include/global_arrays.php:2532 include/global_arrays.php:2736
-#: include/global_arrays.php:2760 include/global_arrays.php:2778
-#: include/global_arrays.php:2796 include/global_arrays.php:2820
-#: lib/api_automation.php:1289 lib/api_automation.php:1352
-#: lib/api_automation.php:1422 lib/html_reports.php:1792 plugins.php:605
-msgid "Actions"
-msgstr "Darbības"
-
-#: include/global_arrays.php:2100 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2098 lib/api_aggregate.php:2333
 msgid "Graph Items"
 msgstr "Grafika vienumi"
 
-#: include/global_arrays.php:2106
+#: include/global_arrays.php:2104
 msgid "Create New Graphs"
 msgstr "Izveidojiet jaunus grafikus"
 
-#: include/global_arrays.php:2112
+#: include/global_arrays.php:2110
 msgid "Create Graphs from Data Query"
 msgstr "Izveidojiet grafikus no datu vaicājuma"
 
-#: include/global_arrays.php:2130 include/global_arrays.php:2148
-#: include/global_arrays.php:2268 include/global_arrays.php:2358
-#: include/global_arrays.php:2382 include/global_arrays.php:2544
+#: include/global_arrays.php:2128 include/global_arrays.php:2146
+#: include/global_arrays.php:2266 include/global_arrays.php:2356
+#: include/global_arrays.php:2380 include/global_arrays.php:2542
 msgid "(Remove)"
 msgstr "(Noņemt)"
 
-#: include/global_arrays.php:2166 include/global_arrays.php:2172
-#: include/global_arrays.php:2178 include/global_arrays.php:2184
-#: include/global_arrays.php:2478
+#: include/global_arrays.php:2164 include/global_arrays.php:2170
+#: include/global_arrays.php:2176 include/global_arrays.php:2182
+#: include/global_arrays.php:2476
 msgid "View Log"
 msgstr "Skatīt žurnālu"
 
-#: include/global_arrays.php:2190
+#: include/global_arrays.php:2188
 msgid "Graph Trees"
 msgstr "Grafika koki"
 
-#: include/global_arrays.php:2256 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2254 lib/api_aggregate.php:2333
 msgid "Graph Template Items"
 msgstr "Grafika veidnes vienumi"
 
-#: include/global_arrays.php:2346
+#: include/global_arrays.php:2344
 msgid "Round Robin Archives"
 msgstr "Round Robin arhīvs"
 
-#: include/global_arrays.php:2388
+#: include/global_arrays.php:2386
 msgid "Data Input Fields"
 msgstr "Datu ievades lauki"
 
-#: include/global_arrays.php:2394 include/global_arrays.php:2424
+#: include/global_arrays.php:2392 include/global_arrays.php:2422
 msgid "(Remove Item)"
 msgstr "(Noņemt elementu)"
 
-#: include/global_arrays.php:2430 include/global_settings.php:217
+#: include/global_arrays.php:2428 include/global_settings.php:217
 #: rrdcleaner.php:323
 msgid "RRD Cleaner"
 msgstr "RRD tīrītājs"
 
-#: include/global_arrays.php:2442
+#: include/global_arrays.php:2440
 msgid "List unused Files"
 msgstr "Nelietoto failu saraksts"
 
-#: include/global_arrays.php:2448
+#: include/global_arrays.php:2446
 msgid "RRD Check"
 msgstr "Palaist pārbaudi"
 
-#: include/global_arrays.php:2460 include/global_arrays.php:2472
-#: utilities.php:2401
-msgid "View Poller Cache"
-msgstr "Skatīt aptaujātāja kešatmiņu"
-
-#: include/global_arrays.php:2466 utilities.php:2405
+#: include/global_arrays.php:2464 utilities.php:2405
 msgid "View Data Query Cache"
 msgstr "Skatīt datu vaicājumu kešatmiņu"
 
-#: include/global_arrays.php:2484
+#: include/global_arrays.php:2482
 msgid "Clear Log"
 msgstr "Notīrīt žurnālu"
 
-#: include/global_arrays.php:2490 utilities.php:2394
+#: include/global_arrays.php:2488 utilities.php:2394
 msgid "View User Log"
 msgstr "Skatīt lietotāja žurnālu"
 
-#: include/global_arrays.php:2496
+#: include/global_arrays.php:2494
 msgid "Clear User Log"
 msgstr "Notīrīt lietotāja žurnālu"
 
-#: include/global_arrays.php:2502 utilities.php:2385 utilities.php:2386
+#: include/global_arrays.php:2500 utilities.php:2385 utilities.php:2386
 msgid "Technical Support"
 msgstr "Tehniskais atbalsts"
 
-#: include/global_arrays.php:2508 utilities.php:2576
+#: include/global_arrays.php:2506 utilities.php:2576
 msgid "Boost Status"
 msgstr "Pastiprināšanas statuss"
 
-#: include/global_arrays.php:2514 utilities.php:2460
+#: include/global_arrays.php:2512 utilities.php:2460
 msgid "View SNMP Agent Cache"
 msgstr "Skatiet SNMP aģenta kešatmiņu"
 
-#: include/global_arrays.php:2520 utilities.php:2471
+#: include/global_arrays.php:2518 utilities.php:2471
 msgid "View SNMP Agent Notification Log"
 msgstr "Skatīt SNMP aģenta paziņojumu žurnālu"
 
-#: include/global_arrays.php:2550
+#: include/global_arrays.php:2548
 msgid "VDEF Items"
 msgstr "VDEF preces"
 
-#: include/global_arrays.php:2556
+#: include/global_arrays.php:2554
 msgid "View SNMP Notification Receivers"
 msgstr "Skatiet SNMP paziņojumu uztvērējus"
 
-#: include/global_arrays.php:2568
+#: include/global_arrays.php:2566
 #, fuzzy
 msgid "Kadupul Settings"
 msgstr "Kadupul iestatījumi"
 
-#: include/global_arrays.php:2574
+#: include/global_arrays.php:2572
 msgid "External Link"
 msgstr "Ārējā saite"
 
-#: include/global_arrays.php:2592 include/global_arrays.php:2622
+#: include/global_arrays.php:2590 include/global_arrays.php:2620
 msgid "(Action)"
 msgstr "(Darbība)"
 
-#: include/global_arrays.php:2628 lib/html.php:2799
+#: include/global_arrays.php:2626 lib/html.php:2799
 msgid "About Kadupul"
 msgstr "Par Kadupul"
 
-#: include/global_arrays.php:2634
+#: include/global_arrays.php:2632
 #, fuzzy
 msgid "Kadupul Help"
 msgstr "Kadupul mājas"
 
-#: include/global_arrays.php:2646
+#: include/global_arrays.php:2644
 msgid "Export Results"
 msgstr "Izgūt rezultātus"
 
-#: include/global_arrays.php:2664 include/global_arrays.php:2694
+#: include/global_arrays.php:2662 include/global_arrays.php:2692
 #: lib/html.php:2004 lib/html.php:2078
 msgid "Reporting"
 msgstr "Ziņošana"
 
-#: include/global_arrays.php:2670 include/global_arrays.php:2700
+#: include/global_arrays.php:2668 include/global_arrays.php:2698
 msgid "Report Add"
 msgstr "Ziņojums Pievienot"
 
-#: include/global_arrays.php:2676 include/global_arrays.php:2706
+#: include/global_arrays.php:2674 include/global_arrays.php:2704
 msgid "Report Delete"
 msgstr "Ziņot par dzēšanu"
 
-#: include/global_arrays.php:2682 include/global_arrays.php:2712
+#: include/global_arrays.php:2680 include/global_arrays.php:2710
 msgid "Report Edit"
 msgstr "Pārskats Rediģēt"
 
-#: include/global_arrays.php:2688 include/global_arrays.php:2718
+#: include/global_arrays.php:2686 include/global_arrays.php:2716
 msgid "Report Edit Item"
 msgstr "Ziņot par vienumu rediģēšanu"
 
-#: include/global_arrays.php:2742
+#: include/global_arrays.php:2740
 msgid "Color Template Items"
 msgstr "Krāsu veidņu vienumi"
 
-#: include/global_arrays.php:2802
+#: include/global_arrays.php:2800
 msgid "Graph Rule Items"
 msgstr "Grafika kārtulas vienumi"
 
-#: include/global_arrays.php:2826
+#: include/global_arrays.php:2824
 msgid "Tree Rule Items"
 msgstr "Koka kārtulas vienumi"
 
-#: include/global_arrays.php:2857 include/global_arrays.php:2873
-#: lib/api_device.php:1952
+#: include/global_arrays.php:2855 include/global_arrays.php:2871
+#: lib/api_device.php:1948
 msgid "days"
 msgstr "dienas"
 
-#: include/global_arrays.php:2858
+#: include/global_arrays.php:2856
 msgid "hrs"
 msgstr "st"
 
-#: include/global_arrays.php:2859
+#: include/global_arrays.php:2857
 msgid "mins"
 msgstr "min"
 
-#: include/global_arrays.php:2860
+#: include/global_arrays.php:2858
 msgid "secs"
 msgstr "sek"
 
-#: include/global_arrays.php:2874 lib/api_device.php:1952
+#: include/global_arrays.php:2872 lib/api_device.php:1948
 msgid "hours"
 msgstr "stundas"
 
-#: include/global_arrays.php:2875 lib/api_device.php:1952
+#: include/global_arrays.php:2873 lib/api_device.php:1948
 msgid "minutes"
 msgstr "minūtes"
 
-#: include/global_arrays.php:2876
+#: include/global_arrays.php:2874
 msgid "seconds"
 msgstr "sekundes"
 
@@ -8585,14 +8960,6 @@ msgstr "Pamatierīces opcijas"
 msgid "Give this host a meaningful description."
 msgstr "Sniedziet šim saimniekam jēgpilnu aprakstu."
 
-#: include/global_form.php:1176 include/global_form.php:1747
-#: lib/api_automation.php:279 lib/api_automation.php:571
-#: lib/api_automation.php:890 lib/api_automation.php:1197 managers.php:217
-#: pollers.php:115 pollers.php:1001 user_admin.php:1073
-#: user_group_admin.php:1087
-msgid "Hostname"
-msgstr "Resursdatora nosaukums"
-
 #: include/global_form.php:1177 include/global_form.php:1748
 msgid "Fully qualified hostname or IP address for this device."
 msgstr "Pilnībā kvalificēts saimniekdatora nosaukums vai IP adrese šai ierīcei."
@@ -9170,7 +9537,7 @@ msgstr "Dati"
 msgid "Visual"
 msgstr "Vizuāli"
 
-#: include/global_settings.php:28 lib/functions.php:6148 lib/functions.php:6153
+#: include/global_settings.php:28 lib/functions.php:6155 lib/functions.php:6160
 msgid "Authentication"
 msgstr "Autentifikācija"
 
@@ -9206,11 +9573,11 @@ msgstr "Grafika fonti"
 msgid "PHP Mail() Function"
 msgstr "PHP Mail() funkcija"
 
-#: include/global_settings.php:69 lib/functions.php:6129
+#: include/global_settings.php:69 lib/functions.php:6136
 msgid "Sendmail"
 msgstr "Nosūtīt pastu"
 
-#: include/global_settings.php:70 lib/functions.php:6135
+#: include/global_settings.php:70 lib/functions.php:6142
 msgid "SMTP"
 msgstr "SMTP"
 
@@ -9786,10 +10153,6 @@ msgstr "Pamatnoklusējuma iestatījumi"
 msgid "The default Device Template used on all new Devices."
 msgstr "Noklusējuma ierīces veidne, kas tiek izmantota visās jaunajās ierīcēs."
 
-#: include/global_settings.php:618 lib/html.php:2414 lib/html_reports.php:1151
-msgid "Site"
-msgstr "Atrašanās vieta"
-
 #: include/global_settings.php:619
 msgid "The default Site for all new Devices."
 msgstr "Noklusējuma vietne visām jaunajām ierīcēm."
@@ -10221,7 +10584,7 @@ msgstr "Fontu atlases metode"
 msgid "How do you wish fonts to be handled by default?"
 msgstr "Kā vēlaties, lai fonti tiktu apstrādāti pēc noklusējuma?"
 
-#: include/global_settings.php:1060 lib/api_device.php:1907
+#: include/global_settings.php:1060 lib/api_device.php:1903
 msgid "System"
 msgstr "Sisitēma"
 
@@ -11137,7 +11500,7 @@ msgstr "Šis ir tas, cik rakstzīmju būs atļauts, pirms e-pasta rindiņa tiek 
 msgid "Sendmail Options"
 msgstr "Sendmail opcijas"
 
-#: include/global_settings.php:1956 lib/functions.php:6129
+#: include/global_settings.php:1956 lib/functions.php:6136
 msgid "Sendmail Path"
 msgstr "Sendmail ceļš"
 
@@ -12166,23 +12529,6 @@ msgstr "Apkopotie vienumi nav rediģējami"
 msgid "Override this Value"
 msgstr "Aizstāt šo vērtību"
 
-#: lib/api_automation.php:29
-msgid "Not Up"
-msgstr "Nedarbojas"
-
-#: lib/api_automation.php:32 lib/html.php:65 lib/html_utility.php:1330
-#: pollers.php:34
-msgid "Recovering"
-msgstr "Atgūstas"
-
-#: lib/api_automation.php:33 lib/auth.php:3007 lib/clog_webapi.php:856
-#: lib/html_utility.php:1339 lib/import.php:342 lib/plugins.php:1499
-#: lib/plugins.php:1500 lib/rrd.php:4196 lib/rrd.php:4208 lib/spikekill.php:301
-#: package_import.php:522 package_import.php:600 utilities.php:211
-#: utilities.php:212 utilities.php:2759
-msgid "Unknown"
-msgstr "Nezināms"
-
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
 #: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4173
@@ -12202,10 +12548,6 @@ msgstr "Nav atbilstošu ierīču"
 #: lib/api_automation.php:878
 msgid "Matching Objects"
 msgstr "Atbilstoši objekti"
-
-#: lib/api_automation.php:570 tree.php:987 utilities.php:2277
-msgid "Device Description"
-msgstr "Ierīces apraksts"
 
 #: lib/api_automation.php:714
 msgid "Objects"
@@ -12306,11 +12648,11 @@ msgstr "Kārtulas elements [rediģēt kārtulas vienumu %s: %s]"
 msgid "Rule Item [new rule item for %s: %s]"
 msgstr "Kārtulas elements [jauns kārtulas vienums priekš %s: %s]"
 
-#: lib/api_automation.php:3344
+#: lib/api_automation.php:3288
 msgid "Added by Kadupul Automation"
 msgstr "Pievienoja Kadupul Automation"
 
-#: lib/api_automation.php:3638
+#: lib/api_automation.php:3582
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "KĻŪDA: IP diapazoni diapazonā1-diapazons2 vairs netiek atbalstīti."
 
@@ -12318,13 +12660,13 @@ msgstr "KĻŪDA: IP diapazoni diapazonā1-diapazons2 vairs netiek atbalstīti."
 #: lib/api_device.php:389 lib/api_device.php:451 lib/api_device.php:456
 #: lib/api_device.php:501 lib/api_device.php:505 lib/api_device.php:581
 #: lib/api_device.php:585 lib/api_device.php:640 lib/api_device.php:644
-#: lib/api_device.php:710 lib/api_device.php:713 lib/api_device.php:788
-#: lib/api_device.php:791 lib/api_device.php:840 lib/api_device.php:843
-#: lib/api_device.php:886 lib/api_device.php:889 lib/api_device.php:1312
-#: lib/api_device.php:1325 lib/api_device.php:1329 lib/api_device.php:1374
-#: lib/api_device.php:1377 lib/api_device.php:1564 lib/api_device.php:1568
-#: lib/api_device.php:1604 lib/api_device.php:1608 lib/api_device.php:1653
-#: lib/api_device.php:1657 lib/api_device.php:1718 lib/api_device.php:1722
+#: lib/api_device.php:710 lib/api_device.php:713 lib/api_device.php:786
+#: lib/api_device.php:789 lib/api_device.php:838 lib/api_device.php:841
+#: lib/api_device.php:882 lib/api_device.php:885 lib/api_device.php:1308
+#: lib/api_device.php:1321 lib/api_device.php:1325 lib/api_device.php:1370
+#: lib/api_device.php:1373 lib/api_device.php:1560 lib/api_device.php:1564
+#: lib/api_device.php:1600 lib/api_device.php:1604 lib/api_device.php:1649
+#: lib/api_device.php:1653 lib/api_device.php:1714 lib/api_device.php:1718
 #: lib/utility.php:742
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
@@ -12334,76 +12676,76 @@ msgstr "Remote Poller %s nedarbojas, jums būs jāveic FullSync, tiklīdz tas at
 msgid "Device replication failed. A FullSync is required; see the log for details."
 msgstr ""
 
-#: lib/api_device.php:1828
+#: lib/api_device.php:1824
 msgid "ERROR: Device ID is Blank"
 msgstr "KĻŪDA: ierīces ID ir tukšs"
 
-#: lib/api_device.php:1841 lib/api_device.php:1843
+#: lib/api_device.php:1837 lib/api_device.php:1839
 msgid "ERROR: Device["
 msgstr "KĻŪDA: Ierīce["
 
-#: lib/api_device.php:1859
+#: lib/api_device.php:1855
 msgid "ERROR: Failed to connect to remote collector."
 msgstr "KĻŪDA: neizdevās izveidot savienojumu ar attālo kolektoru."
 
-#: lib/api_device.php:1866
+#: lib/api_device.php:1862
 msgid "Device is Disabled"
 msgstr "Ierīce ir atspējota"
 
-#: lib/api_device.php:1867
+#: lib/api_device.php:1863
 msgid "Device Availability Check Bypassed"
 msgstr "Ierīces pieejamības pārbaude apieta"
 
-#: lib/api_device.php:1874
+#: lib/api_device.php:1870
 msgid "SNMP Information"
 msgstr "SNMP informācija"
 
-#: lib/api_device.php:1878
+#: lib/api_device.php:1874
 msgid "SNMP not in use"
 msgstr "SNMP netiek izmantots"
 
-#: lib/api_device.php:1899 lib/api_device.php:1907 lib/api_device.php:1926
+#: lib/api_device.php:1895 lib/api_device.php:1903 lib/api_device.php:1922
 msgid "SNMP error"
 msgstr "SNMP kļūda"
 
-#: lib/api_device.php:1899
+#: lib/api_device.php:1895
 msgid "Session"
 msgstr "Sesija"
 
-#: lib/api_device.php:1926
+#: lib/api_device.php:1922
 msgid "Host"
 msgstr "Resursdatora"
 
-#: lib/api_device.php:1944
+#: lib/api_device.php:1940
 msgid "System:"
 msgstr "Sistēma:"
 
-#: lib/api_device.php:1951
+#: lib/api_device.php:1947
 msgid "Uptime:"
 msgstr "Darbības laiks:"
 
-#: lib/api_device.php:1953
+#: lib/api_device.php:1949
 msgid "Hostname:"
 msgstr "Resursdatora nosaukums:"
 
-#: lib/api_device.php:1954
+#: lib/api_device.php:1950
 msgid "Location:"
 msgstr "Atrašanās vieta:"
 
-#: lib/api_device.php:1955
+#: lib/api_device.php:1951
 msgid "Contact:"
 msgstr "Kontaktinformācija:"
 
-#: lib/api_device.php:1986 lib/functions.php:6162 lib/functions.php:6164
-#: lib/functions.php:6168
+#: lib/api_device.php:1982 lib/functions.php:6169 lib/functions.php:6171
+#: lib/functions.php:6175
 msgid "Ping Results"
 msgstr "Ping rezultāti"
 
-#: lib/api_device.php:1991
+#: lib/api_device.php:1987
 msgid "No Ping or SNMP Availability Check in Use"
 msgstr "Netiek izmantota ping vai SNMP pieejamības pārbaude"
 
-#: lib/api_tree.php:203
+#: lib/api_tree.php:186
 msgid "New Branch"
 msgstr "Jaunā filiāle"
 
@@ -12463,7 +12805,7 @@ msgid "Branch:"
 msgstr "Filiāle:"
 
 #: lib/auth.php:3248 lib/auth.php:3282 lib/html_tree.php:949
-#: lib/reports.php:1114
+#: lib/reports.php:1081
 msgid "Device:"
 msgstr "Ierīce:"
 
@@ -12667,430 +13009,430 @@ msgstr "Paroles nesakrīt"
 msgid "System Device"
 msgstr "Sinhronizēt ierīces"
 
-#: lib/data_query.php:64 lib/data_query.php:466
+#: lib/data_query.php:54 lib/data_query.php:423
 msgid "Automation Execution for Data Query complete"
 msgstr "Datu vaicājuma automatizācijas izpilde ir pabeigta"
 
-#: lib/data_query.php:67 lib/data_query.php:469
+#: lib/data_query.php:57 lib/data_query.php:426
 msgid "Plugin Hooks complete"
 msgstr "Spraudņu āķi ir pabeigti"
 
-#: lib/data_query.php:85
+#: lib/data_query.php:75
 #, php-format
 msgid "Running Data Query [%s]."
 msgstr "Tiek izpildīts datu vaicājums [%s]."
 
-#: lib/data_query.php:97
+#: lib/data_query.php:85
 #, php-format
 msgid "Found Type = '%s' [%s]."
 msgstr "Atrasts tips = '%s' [%s]."
 
-#: lib/data_query.php:119
+#: lib/data_query.php:107
 #, php-format
 msgid "Unknown Type = '%s'."
 msgstr "Nezināms veids = '%s'."
 
-#: lib/data_query.php:154
+#: lib/data_query.php:142
 msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
 msgstr "BRĪDINĀJUMS. Kārtošanas lauku asociācija ir mainījusies. Var rasties atkārtotas kartēšanas problēmas!"
 
-#: lib/data_query.php:166
+#: lib/data_query.php:154
 msgid "Update Data Query Sort Cache complete"
 msgstr "Datu vaicājuma kārtošanas kešatmiņas atjaunināšana ir pabeigta"
 
-#: lib/data_query.php:193
+#: lib/data_query.php:179
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "Atrasts %s vietējo datu ID, kas jāpārbauda"
 
-#: lib/data_query.php:299
+#: lib/data_query.php:273
 #, php-format
 msgid "Index Change Detected! CurrentIndex: %s, PreviousIndex: %s"
 msgstr "Konstatētas indeksa izmaiņas! Pašreizējais indekss: %s, iepriekšējais indekss: %s"
 
-#: lib/data_query.php:323
+#: lib/data_query.php:293
 #, php-format
 msgid "Transient Index Removal Detected! PreviousIndex: %s.  No action taken."
 msgstr "Konstatēta pārejoša indeksa noņemšana! IepriekšējaisIndekss: %s. Nav veiktas nekādas darbības."
 
-#: lib/data_query.php:326
+#: lib/data_query.php:296
 #, php-format
 msgid "Index Removal Detected! PreviousIndex: %s"
 msgstr "Konstatēta rādītāja noņemšana! IepriekšējaisIndekss: %s"
 
-#: lib/data_query.php:366
+#: lib/data_query.php:330
 #, php-format
 msgid "Verification of %s Local Data ID's Complete"
 msgstr "%s vietējo datu ID pārbaude ir pabeigta"
 
-#: lib/data_query.php:369
+#: lib/data_query.php:333
 #, php-format
 msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
 msgstr "Atrasts mainīts %s un %s bāreņu lokālo datu ID, lai atkārtoti kartētu."
 
-#: lib/data_query.php:372
+#: lib/data_query.php:336
 msgid "Done remapping Graphs to their new Indexes"
 msgstr "Pabeigts Grafiku pārveidošana to jaunajiem indeksiem"
 
-#: lib/data_query.php:378 lib/data_query.php:385
+#: lib/data_query.php:342 lib/data_query.php:349
 msgid "Done updating Data Source Title Cache"
 msgstr "Datu avota nosaukumu kešatmiņas atjaunināšana ir pabeigta"
 
-#: lib/data_query.php:381 lib/data_query.php:388
+#: lib/data_query.php:345 lib/data_query.php:352
 msgid "Done updating Graph Title Cache"
 msgstr "Grafika virsrakstu kešatmiņas atjaunināšana ir pabeigta"
 
-#: lib/data_query.php:392
+#: lib/data_query.php:356
 msgid "Index Association with Local Data complete"
 msgstr "Indeksa saistīšana ar vietējiem datiem ir pabeigta"
 
-#: lib/data_query.php:398
+#: lib/data_query.php:362
 #, php-format
 msgid "Update Re-Index Cache complete. There were %s index changes, and %s orphaned indexes."
 msgstr "Atkārtotas indeksēšanas kešatmiņas atjaunināšana ir pabeigta. Notika %s indeksa izmaiņas un %s bāreņindeksi."
 
-#: lib/data_query.php:402
+#: lib/data_query.php:366
 msgid "Update Poller Cache for Query complete"
 msgstr "Poller kešatmiņas atjaunināšana vaicājumam ir pabeigta"
 
-#: lib/data_query.php:404
+#: lib/data_query.php:368
 msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
 msgstr "Nav konstatētas nekādas indeksa izmaiņas, tiek izlaista atkārtota indeksēšana un Poller kešatmiņas atkārtota aizpildīšana"
 
-#: lib/data_query.php:458
+#: lib/data_query.php:415
 msgid "Automation Executing for Data Query complete"
 msgstr "Datu vaicājuma automatizācijas izpilde ir pabeigta"
 
-#: lib/data_query.php:461
+#: lib/data_query.php:418
 msgid "Plugin hooks complete"
 msgstr "Spraudņu āķi ir pabeigti"
 
-#: lib/data_query.php:520
+#: lib/data_query.php:474
 msgid "Checking for Sort Field change.  No changes detected."
 msgstr "Notiek kārtošanas lauka izmaiņu pārbaude. Izmaiņas nav konstatētas."
 
-#: lib/data_query.php:525
+#: lib/data_query.php:479
 #, php-format
 msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "Konstatēts jauns kārtošanas lauks: '%s' Vecais kārtošanas lauks '%s'"
 
-#: lib/data_query.php:546
+#: lib/data_query.php:496
 msgid "ERROR: New Sort Field not suitable.  Sort Field will not change."
 msgstr "KĻŪDA: jauns kārtošanas lauks nav piemērots. Kārtošanas lauks nemainīsies."
 
-#: lib/data_query.php:560
+#: lib/data_query.php:508
 msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "Jaunais kārtošanas lauks ir apstiprināts. Kārtošanas lauks tiks atjaunināts."
 
-#: lib/data_query.php:673
+#: lib/data_query.php:606
 #, php-format
 msgid "Could not find data query XML file at '%s'"
 msgstr "Nevarēja atrast datu vaicājuma XML failu '%s'"
 
-#: lib/data_query.php:677
+#: lib/data_query.php:610
 #, php-format
 msgid "Found data query XML file at '%s'"
 msgstr "Atrasts datu vaicājuma XML fails '%s'"
 
-#: lib/data_query.php:701 lib/data_query.php:895 lib/data_query.php:2642
+#: lib/data_query.php:633 lib/data_query.php:821 lib/data_query.php:2394
 msgid "Error parsing XML file into an array."
 msgstr "Kļūda, analizējot XML failu masīvā."
 
-#: lib/data_query.php:705 lib/data_query.php:899
+#: lib/data_query.php:637 lib/data_query.php:825
 msgid "XML file parsed ok."
 msgstr "XML fails ir parsēts labi."
 
-#: lib/data_query.php:713 lib/data_query.php:902
+#: lib/data_query.php:645 lib/data_query.php:828
 #, php-format
 msgid "Invalid field &lt;index_order&gt;%s&lt;/index_order&gt;"
 msgstr "Nederīgs lauks &lt;index_order&gt;%s&lt;/index_order&gt;"
 
-#: lib/data_query.php:714 lib/data_query.php:903
+#: lib/data_query.php:646 lib/data_query.php:829
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
 msgstr "Jāiekļauj &lt;direction&gt;input&lt;/direction&gt; vai &lt;virziens&gt;ievade-izeja&lt;/direction&gt; tikai lauki"
 
-#: lib/data_query.php:731
+#: lib/data_query.php:663
 msgid "Data Query returned no indexes."
 msgstr "Datu vaicājums neatgrieza nevienu indeksu."
 
-#: lib/data_query.php:732
+#: lib/data_query.php:664
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; XML failā pastāv, bet dati netiek atgriezti., \"Indeksa skaits mainīts\" netiek atbalstīts"
 
-#: lib/data_query.php:735
+#: lib/data_query.php:667
 #, php-format
 msgid "Executing script for num of indexes '%s'"
 msgstr "Tiek izpildīts skripts indeksu skaitam “%s”"
 
-#: lib/data_query.php:738
+#: lib/data_query.php:670
 #, php-format
 msgid "Found number of indexes: %s"
 msgstr "Atrasts indeksu skaits: %s"
 
-#: lib/data_query.php:742
+#: lib/data_query.php:674
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; XML failā trūkst, \"Indeksa skaits mainīts\" netiek atbalstīts"
 
-#: lib/data_query.php:744
+#: lib/data_query.php:676
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
 msgstr "&lt;arg_num_indexes&gt; trūkst XML faila, \"Indeksa skaits mainīts\" emulēts, skaitot arg_index ierakstus"
 
-#: lib/data_query.php:755
+#: lib/data_query.php:687
 msgid "ERROR: Data Query returned no indexes."
 msgstr "KĻŪDA: datu vaicājums neatgrieza nevienu indeksu."
 
-#: lib/data_query.php:759
+#: lib/data_query.php:691
 #, php-format
 msgid "Executing script for list of indexes '%s', Index Count: %s"
 msgstr "Tiek izpildīts skripts indeksu sarakstam “%s”, indeksu skaits: %s"
 
-#: lib/data_query.php:761
+#: lib/data_query.php:693
 msgid "Click to show Data Query output for 'index'"
 msgstr "Noklikšķiniet, lai parādītu datu vaicājuma izvadi \"indeksam\""
 
-#: lib/data_query.php:764
+#: lib/data_query.php:696
 #, php-format
 msgid "Found index: %s"
 msgstr "Atrasts rādītājs: %s"
 
-#: lib/data_query.php:779 lib/data_query.php:1366
+#: lib/data_query.php:711 lib/data_query.php:1213
 #, php-format
 msgid "Click to show Data Query output for field '%s'"
 msgstr "Noklikšķiniet, lai parādītu datu vaicājuma izvadi laukam \"%s\""
 
-#: lib/data_query.php:785
+#: lib/data_query.php:717
 #, php-format
 msgid "Sort field returned no data for field name %s, skipping"
 msgstr "Kārtošanas lauks neatgrieza datus lauka nosaukumam %s, izlaižot"
 
-#: lib/data_query.php:787
+#: lib/data_query.php:719
 #, php-format
 msgid "Executing script query '%s'"
 msgstr "Notiek skripta vaicājuma “%s” izpilde"
 
-#: lib/data_query.php:798 lib/data_query.php:805
+#: lib/data_query.php:730 lib/data_query.php:737
 #, php-format
 msgid "Found item [%s='%s'] index: %s"
 msgstr "Atrasts elements [%s='%s'] rādītājs: %s"
 
-#: lib/data_query.php:845 lib/data_query.php:861
+#: lib/data_query.php:775 lib/data_query.php:790
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
 msgstr "Kopā: %f, delta: %f, %s"
 
-#: lib/data_query.php:889
+#: lib/data_query.php:815
 #, php-format
 msgid "Invalid host_id: %s"
 msgstr "Nederīgs saimniekdatora_id: %s"
 
-#: lib/data_query.php:913
+#: lib/data_query.php:839
 msgid "Auto Bulk Walk Size Selected."
 msgstr "Atlasīts automātiskās lielapjoma pastaigas lielums."
 
-#: lib/data_query.php:935 lib/data_query.php:994
+#: lib/data_query.php:849 lib/data_query.php:894
 msgid "Failed to load SNMP session."
 msgstr "Neizdevās ielādēt SNMP sesiju."
 
-#: lib/data_query.php:945
+#: lib/data_query.php:859
 #, php-format
 msgid "Tested Bulk Walk Size %d with a response of %2.4f."
 msgstr "Pārbaudīts lielapjoma iešanas lielums %d ar atbildi %2.4f."
 
-#: lib/data_query.php:956
+#: lib/data_query.php:870
 #, php-format
 msgid "Bulk Walk Size selected was %d."
 msgstr "Atlasītais lielapjoma pastaigas lielums bija %d."
 
-#: lib/data_query.php:959
+#: lib/data_query.php:873
 msgid "Saving Bulk Walk Size to Device."
 msgstr "Lielapjoma pastaigas lieluma saglabāšana ierīcē."
 
-#: lib/data_query.php:973
+#: lib/data_query.php:885
 #, php-format
 msgid "Bulk Walk Size is fixed at %d."
 msgstr "Lielapjoma pastaigas lielums ir fiksēts uz %d."
 
-#: lib/data_query.php:1007
+#: lib/data_query.php:907
 #, php-format
 msgid "Executing SNMP get for num of indexes @ '%s' Index Count: %s"
 msgstr "Izpilda SNMP get par indeksu skaitu @ '%s' Index Count: %s"
 
-#: lib/data_query.php:1009
+#: lib/data_query.php:909
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
 msgstr "&lt;oid_num_indexes&gt; XML failā trūkst, \"Indeksa skaits mainīts\" emulē, skaitot oid_index ierakstus"
 
-#: lib/data_query.php:1012
+#: lib/data_query.php:912
 #, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
 msgstr "Notiek SNMP pastaiga indeksu sarakstam @ '%s' Indeksu skaits: %s"
 
-#: lib/data_query.php:1016
+#: lib/data_query.php:916
 msgid "No SNMP data returned"
 msgstr "Nav atgriezti SNMP dati"
 
-#: lib/data_query.php:1021
+#: lib/data_query.php:921
 #, php-format
 msgid "Index found at OID: '%s' value: '%s'"
 msgstr "Indekss atrasts pie OID: '%s' vērtība: '%s'"
 
-#: lib/data_query.php:1052
+#: lib/data_query.php:952
 #, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
 msgstr "Indeksu saraksta filtrēšana @ '%s' Indeksu skaits: %s"
 
-#: lib/data_query.php:1056
+#: lib/data_query.php:956
 #, php-format
 msgid "Filtered Index by value found at OID: '%s' value: '%s'"
 msgstr "Pie OID atrasts filtrēts indekss: '%s' vērtība: '%s'"
 
-#: lib/data_query.php:1072
+#: lib/data_query.php:972
 #, php-format
 msgid "Filtering list of indexes @ '%s' Index Count: %s"
 msgstr "Indeksu saraksta filtrēšana @ '%s' Indeksu skaits: %s"
 
-#: lib/data_query.php:1076
+#: lib/data_query.php:976
 #, php-format
 msgid "Filtered Index found at OID: '%s' value: '%s'"
 msgstr "Pie OID atrasts filtrēts indekss: '%s' vērtība: '%s'"
 
-#: lib/data_query.php:1096
+#: lib/data_query.php:996
 #, php-format
 msgid "Fixing wrong 'method' field for '%s' since 'rewrite_index' or 'oid_suffix' is defined"
 msgstr "Nepareiza lauka “method” labošana laukam “%s”, jo ir definēts “rewrite_index” vai “oid_suffix”"
 
-#: lib/data_query.php:1103
+#: lib/data_query.php:1003
 #, php-format
 msgid "Inserting index data for field '%s' [value='%s']"
 msgstr "Notiek indeksa datu ievietošana laukam '%s' [value='%s']"
 
-#: lib/data_query.php:1108
+#: lib/data_query.php:1008
 #, php-format
 msgid "Located input field '%s' [get]"
 msgstr "Atrodas ievades lauks “%s” [get]"
 
-#: lib/data_query.php:1117
+#: lib/data_query.php:1017
 #, php-format
 msgid "Found OID rewrite rule: 's/%s/%s/'"
 msgstr "Atrasta OID pārrakstīšanas kārtula: 's/%s/%s/'"
 
-#: lib/data_query.php:1128
+#: lib/data_query.php:1028
 #, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
 msgstr "oid_rewrite pie OID: '%s' jauns OID: '%s'"
 
-#: lib/data_query.php:1161
+#: lib/data_query.php:1049
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='%s']"
 msgstr "Tiek izpildīts SNMP get for data @ '%s' [value='%s']"
 
-#: lib/data_query.php:1172
+#: lib/data_query.php:1060
 #, php-format
 msgid "Field '%s' %s"
 msgstr "Lauks '%s' %s"
 
-#: lib/data_query.php:1233
+#: lib/data_query.php:1121
 #, php-format
 msgid "Executing SNMP get for %s oids (%s)"
 msgstr "Notiek SNMP get izpilde %s oīdiem (%s)"
 
-#: lib/data_query.php:1271 lib/data_query.php:1406 lib/data_query.php:1414
+#: lib/data_query.php:1147 lib/data_query.php:1239 lib/data_query.php:1247
 #, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
 msgstr "Kārtošanas lauks neatgrieza datus par OID[%s], izlaižot."
 
-#: lib/data_query.php:1277
+#: lib/data_query.php:1151
 #, php-format
 msgid "Found result for data @ '%s' [value='%s']"
 msgstr "Atrasts rezultāts datiem @ '%s' [value='%s']"
 
-#: lib/data_query.php:1290
+#: lib/data_query.php:1159
 #, php-format
 msgid "Setting result for data @ '%s' [key='%s', value='%s']"
 msgstr "Notiek datu iestatīšanas rezultāts @ '%s' [key='%s', value='%s']"
 
-#: lib/data_query.php:1300
+#: lib/data_query.php:1163
 #, php-format
 msgid "Skipped result for data @ '%s' [key='%s', value='%s']"
 msgstr "Izlaists rezultāts datiem @ '%s' [key='%s', value='%s']"
 
-#: lib/data_query.php:1318
+#: lib/data_query.php:1177
 #, php-format
 msgid "Got SNMP get result for data @ '%s' [value='%s'] (index: %s)"
 msgstr "Iegūts SNMP iegūt rezultātu datiem @ '%s' [value='%s'] (indekss: %s)"
 
-#: lib/data_query.php:1360
+#: lib/data_query.php:1207
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
 msgstr "Tiek izpildīts SNMP get for data @ '%s' [value='$value']"
 
-#: lib/data_query.php:1368
+#: lib/data_query.php:1215
 #, php-format
 msgid "Located input field '%s' [walk]"
 msgstr "Atrodas ievades lauks “%s” [staigāt]"
 
-#: lib/data_query.php:1419
+#: lib/data_query.php:1252
 #, php-format
 msgid "Executing SNMP walk for data @ '%s'"
 msgstr "Notiek datu SNMP pastaiga @ '%s'"
 
-#: lib/data_query.php:1438 lib/data_query.php:1496 lib/data_query.php:1545
-#: lib/data_query.php:1596
+#: lib/data_query.php:1271 lib/data_query.php:1329 lib/data_query.php:1378
+#: lib/data_query.php:1429
 #, php-format
 msgid "No index[%s] in value_index_parse, skipping."
 msgstr "VALUE_Index_Parse nav indeksa[%s], tiek izlaists."
 
-#: lib/data_query.php:1479
+#: lib/data_query.php:1312
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from %s]"
 msgstr "Atrastās elements [%s='%s'] rādītājs: %s [no %s]"
 
-#: lib/data_query.php:1521
+#: lib/data_query.php:1354
 #, php-format
 msgid "Found OCTET STRING '%s' decoded value: '%s'"
 msgstr "Atrasta OCTET STRING '%s' dekodētā vērtība: '%s'"
 
-#: lib/data_query.php:1527 lib/data_query.php:1576
+#: lib/data_query.php:1360 lib/data_query.php:1409
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
 msgstr "Atrasts elements [%s='%s'] indekss: %s [no regexp oid parsēšanas]"
 
-#: lib/data_query.php:1604
+#: lib/data_query.php:1437
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
 msgstr "Atrasts elements [%s='%s'] indekss: %s [no regexp oid value parse]"
 
-#: lib/data_query.php:1839
+#: lib/data_query.php:1659
 #, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
 msgstr "Atrasts fiktīvs rewrite_value vienums, index='%s'"
 
-#: lib/data_query.php:1852
+#: lib/data_query.php:1672
 msgid "Could not parse translation map (rewrite_value)"
 msgstr "Nevarēja parsēt tulkojuma karti (rewrite_value)"
 
-#: lib/data_query.php:1876
+#: lib/data_query.php:1696
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
 msgstr "oid_rewrite pie OID: '%s' jauns OID: '%s'"
 
-#: lib/data_query.php:1990
+#: lib/data_query.php:1801
 msgid "Update graph data query cache complete"
 msgstr "Datu vaicājuma kārtošanas kešatmiņas atjaunināšana ir pabeigta"
 
-#: lib/data_query.php:2009
+#: lib/data_query.php:1818
 msgid "Re-Indexing Data Query complete"
 msgstr "Datu vaicājuma atkārtota indeksēšana ir pabeigta"
 
-#: lib/data_query.php:2161
+#: lib/data_query.php:1949
 msgid "Unknown Index"
 msgstr "Nezināms indekss"
 
-#: lib/data_query.php:2766
+#: lib/data_query.php:2507
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "Jums ir jāatlasa XML izvades kolonna datu avotam “%s” un jāieslēdz izvēles rūtiņa tās labajā pusē."
 
-#: lib/data_query.php:2772
+#: lib/data_query.php:2513
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Jūsu diagrammas veidnē netiek izmantotas datu veidnes. Lūdzu, izlabojiet diagrammas veidni"
 
@@ -13153,187 +13495,178 @@ msgstr "Netika atrasta neviena problēma"
 msgid "RRDfile not created yet"
 msgstr "RRD fails pēc aptaujas netika atjaunināts"
 
-#: lib/functions.php:1214 lib/functions.php:1296
+#: lib/functions.php:1221 lib/functions.php:1303
 msgid "Message Not Found."
 msgstr "Ziņojums nav atrasts."
 
-#: lib/functions.php:1711
+#: lib/functions.php:1718
 #, php-format
 msgid "Error %s is not readable"
 msgstr "Kļūda %s nav nolasāma"
 
-#: lib/functions.php:4195
+#: lib/functions.php:4202
 msgid "Logged in a Guest"
 msgstr "Pieteicies viesis"
 
-#: lib/functions.php:4195 lib/functions.php:4213
+#: lib/functions.php:4202 lib/functions.php:4220
 msgid "Logged in as"
 msgstr "Pieslēgts kā"
 
-#: lib/functions.php:4195
+#: lib/functions.php:4202
 msgid "Login as Regular User"
 msgstr "Piesakieties kā parasts lietotājs"
 
-#: lib/functions.php:4195
+#: lib/functions.php:4202
 msgid "guest"
 msgstr "viesis"
 
-#: lib/functions.php:4198 lib/functions.php:4223 lib/html.php:2784
+#: lib/functions.php:4205 lib/functions.php:4230 lib/html.php:2784
 msgid "User Community"
 msgstr "Lietotāju kopiena"
 
-#: lib/functions.php:4199 lib/functions.php:4224 lib/html.php:2786
+#: lib/functions.php:4206 lib/functions.php:4231 lib/html.php:2786
 #: lib/utility.php:1444
 msgid "Documentation"
 msgstr "Dokumentācija"
 
-#: lib/functions.php:4216
+#: lib/functions.php:4223
 #, php-format
 msgid "Logged in as %s"
 msgstr "Autorizējies kā %s"
 
-#: lib/functions.php:4218 lib/html.php:2765
+#: lib/functions.php:4225 lib/html.php:2765
 msgid "Edit Profile"
 msgstr "Rediģēt"
 
-#: lib/functions.php:4228 lib/html.php:2769
+#: lib/functions.php:4235 lib/html.php:2769
 msgid "Logout"
 msgstr "Iziet"
 
-#: lib/functions.php:4382
+#: lib/functions.php:4389
 msgid "Leaf"
 msgstr "Lapa"
 
-#: lib/functions.php:4406 lib/html_tree.php:648 lib/html_tree.php:684
+#: lib/functions.php:4413 lib/html_tree.php:648 lib/html_tree.php:684
 #: lib/html_tree.php:913 lib/html_tree.php:921 lib/html_tree.php:1522
 msgid "Non Query Based"
 msgstr "Nebalstīts uz vaicājumiem"
 
-#: lib/functions.php:4444
+#: lib/functions.php:4451
 #, php-format
 msgid "Link %s"
 msgstr "Saite %s"
 
-#: lib/functions.php:4896 tree.php:1804 tree.php:1878 tree.php:1986
-#: user_admin.php:18 user_group_admin.php:20
-msgid "Copy"
-msgstr "Kopēt"
-
-#: lib/functions.php:5698
+#: lib/functions.php:5705
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Pasta sūtītāja kļūda: nav iestatīta adresāta adrese!<br> Ja izmantojat saiti <i>Test Mail</i> , lūdzu, iestatiet <b>brīdinājuma e-pasta</b> iestatījumu."
 
-#: lib/functions.php:6092
+#: lib/functions.php:6099
 #, php-format
 msgid "Authentication failed: %s"
 msgstr "Autentifikācija neizdevās: %s"
 
-#: lib/functions.php:6096
+#: lib/functions.php:6103
 #, php-format
 msgid "HELO failed: %s"
 msgstr "HELO neizdevās: %s"
 
-#: lib/functions.php:6099
+#: lib/functions.php:6106
 #, php-format
 msgid "Connect failed: %s"
 msgstr "Neizdevās izveidot savienojumu: %s"
 
-#: lib/functions.php:6102
+#: lib/functions.php:6109
 msgid "SMTP error: "
 msgstr "SMTP kļūda: "
 
-#: lib/functions.php:6116
+#: lib/functions.php:6123
 #, fuzzy
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "Šis ir testa ziņojums, kas ģenerēts no Kadupul. Šis ziņojums tika nosūtīts, lai pārbaudītu jūsu pasta iestatījumu konfigurāciju."
 
-#: lib/functions.php:6117
+#: lib/functions.php:6124
 msgid "Your email settings are currently set as follows"
 msgstr "Jūsu e-pasta iestatījumi pašlaik ir iestatīti šādi"
 
-#: lib/functions.php:6118
+#: lib/functions.php:6125
 msgid "Method"
 msgstr "Metode"
 
-#: lib/functions.php:6120
+#: lib/functions.php:6127
 msgid "Checking Configuration...<br>"
 msgstr "Notiek konfigurācijas pārbaude...<br>"
 
-#: lib/functions.php:6127
+#: lib/functions.php:6134
 msgid "PHP's Mailer Class"
 msgstr "PHP pasta klase"
 
-#: lib/functions.php:6133
+#: lib/functions.php:6140
 msgid "Method: SMTP"
 msgstr "Metode: SMTP"
 
-#: lib/functions.php:6150
+#: lib/functions.php:6157
 msgid "Not Shown for Security Reasons"
 msgstr "Nav parādīts drošības apsvērumu dēļ"
 
-#: lib/functions.php:6151
+#: lib/functions.php:6158
 msgid "Security"
 msgstr "Drošība"
 
-#: lib/functions.php:6159
+#: lib/functions.php:6166
 msgid "Ping Results:"
 msgstr "Ping rezultāti:"
 
-#: lib/functions.php:6159 lib/functions.php:6164
-msgid "Success"
-msgstr "Izpildīts"
-
-#: lib/functions.php:6168
+#: lib/functions.php:6175
 msgid "Bypassed"
 msgstr "Apbraukts"
 
-#: lib/functions.php:6177
+#: lib/functions.php:6184
 msgid "Creating Message Text..."
 msgstr "Notiek ziņojuma teksta izveide..."
 
-#: lib/functions.php:6180
+#: lib/functions.php:6187
 msgid "Sending Message..."
 msgstr "Notiek ziņas sūtīšana..."
 
-#: lib/functions.php:6184
+#: lib/functions.php:6191
 #, fuzzy
 msgid "Kadupul Test Message"
 msgstr "Kadupul testa ziņojums"
 
-#: lib/functions.php:6186
+#: lib/functions.php:6193
 msgid "Success!"
 msgstr "Izdevās!"
 
-#: lib/functions.php:6189
+#: lib/functions.php:6196
 msgid "Message Not Sent due to ping failure."
 msgstr "Ziņojums nav nosūtīts ping kļūmes dēļ."
 
-#: lib/functions.php:6655 lib/functions.php:6725
+#: lib/functions.php:6662 lib/functions.php:6732
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul atspējoja spraudni %s šādas kļūdas dēļ: %s! Plašāku informāciju skatiet Kadupul žurnālfailā."
 
-#: lib/functions.php:6821
+#: lib/functions.php:6828
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "BRĪDINĀJUMS: PollerID:%s ir nederīgs resursdatora nosaukums:%s.  Vai tas nav sasniedzams, izmantojot DNS!"
 
-#: lib/functions.php:7245 lib/functions.php:7247
+#: lib/functions.php:7252 lib/functions.php:7254
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:7245
+#: lib/functions.php:7252
 #, php-format
 msgid "Version %s %s"
 msgstr "Versija %s %s"
 
-#: lib/functions.php:7247
+#: lib/functions.php:7254
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7475
+#: lib/functions.php:7482
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "BRĪDINĀJUMS: trūkst atslēgas Kadupul iekļaut failu %s.  Lūdzu, atrodiet un aizstājiet šo failu"
@@ -13370,7 +13703,7 @@ msgstr "Veidnes atlasītas"
 msgid "Enter keyword"
 msgstr "Ievadiet atslēgvārdu"
 
-#: lib/html.php:464 lib/reports.php:1711
+#: lib/html.php:464 lib/reports.php:1678
 msgid "Data Query:"
 msgstr "Datu vaicājums:"
 
@@ -14462,7 +14795,7 @@ msgstr "Diagrammas veidne:"
 msgid "Template Based"
 msgstr "Pamatojoties uz veidni"
 
-#: lib/html_tree.php:927 lib/reports.php:1359
+#: lib/html_tree.php:927 lib/reports.php:1326
 msgid "Tree:"
 msgstr "Koks:"
 
@@ -15932,69 +16265,69 @@ msgstr "Nav norādīts"
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 
-#: lib/reports.php:174
+#: lib/reports.php:141
 #, php-format
 msgid "Device '%s' successfully added to Report."
 msgstr "Ierīce “%s” ir veiksmīgi pievienota pārskatam."
 
-#: lib/reports.php:177
+#: lib/reports.php:144
 msgid "Device not found! Unable to add to Report"
 msgstr "Ierīce nav atrasta! Nevar pievienot ziņojumam"
 
-#: lib/reports.php:181
+#: lib/reports.php:148
 #, php-format
 msgid "Device '%s' not added to Report as it already exists on report."
 msgstr "Ierīce “%s” nav pievienota pārskatam, jo tā jau pastāv pārskatā."
 
-#: lib/reports.php:636
+#: lib/reports.php:603
 #, php-format
 msgid "Problems sending Report '%s' Problem with e-mail Subsystem Error is '%s'"
 msgstr "Problēmas nosūtot ziņojumu “%s” Problēma ar e-pastu Apakšsistēmas kļūda ir “%s”"
 
-#: lib/reports.php:643
+#: lib/reports.php:610
 #, php-format
 msgid "Report '%s' Sent Successfully"
 msgstr "Atskaite '%s' ir veiksmīgi nosūtīta"
 
-#: lib/reports.php:1141 lib/reports.php:1497
+#: lib/reports.php:1108 lib/reports.php:1464
 msgid "(No Graph Template)"
 msgstr "(Nav diagrammas veidnes)"
 
-#: lib/reports.php:1565
+#: lib/reports.php:1532
 msgid "(Non Query Based)"
 msgstr "(Nebalstīts uz vaicājumiem)"
 
-#: lib/reports.php:1976
+#: lib/reports.php:1943
 msgid "Add to Report"
 msgstr "Pievienot ziņojumam"
 
-#: lib/reports.php:1994
+#: lib/reports.php:1961
 msgid "Choose the Report to associate these graphs with.  The defaults for alignment will be used for each graph in the list below."
 msgstr "Izvēlieties pārskatu, ar kuru saistīt šīs diagrammas. Izlīdzināšanas noklusējuma iestatījumi tiks izmantoti katrai diagrammai zemāk esošajā sarakstā."
 
-#: lib/reports.php:1996
+#: lib/reports.php:1963
 msgid "Report:"
 msgstr "Atskaite:"
 
-#: lib/reports.php:2006
+#: lib/reports.php:1973
 msgid "Graph Timespan:"
 msgstr "Grafika laika posms:"
 
-#: lib/reports.php:2009
+#: lib/reports.php:1976
 msgid "Graph Alignment:"
 msgstr "Grafika līdzinājums:"
 
-#: lib/reports.php:2108
+#: lib/reports.php:2075
 #, php-format
 msgid "Created Report Graph Item '<i>%s</i>'"
 msgstr "Izveidots atskaites grafikas elements \" <i>%s</i> \""
 
-#: lib/reports.php:2110
+#: lib/reports.php:2077
 #, php-format
 msgid "Failed Adding Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "Neizdevās pievienot atskaites grafikas elementu <i>%s</i> . Jau pastāv"
 
-#: lib/reports.php:2113
+#: lib/reports.php:2080
 #, php-format
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "Izlaistā pārskata grafikas elements “ <i>%s</i> ” jau pastāv"
@@ -16211,8 +16544,8 @@ msgstr ""
 msgid "RRD storage configuration requires attention"
 msgstr ""
 
-#: lib/snmp.php:234 lib/snmp.php:355 lib/snmp.php:471 lib/snmp.php:960
-#: lib/snmp.php:983
+#: lib/snmp.php:226 lib/snmp.php:343 lib/snmp.php:455 lib/snmp.php:940
+#: lib/snmp.php:963
 #, fuzzy, php-format
 msgid "SNMP Command is: %s"
 msgstr "SNMP opcijas [labot: %s]"
@@ -17420,10 +17753,6 @@ msgstr "Kadupul automatizācijas ziņojumam ir nepieciešams e-pasta klients, ku
 msgid "WARNING: Detected Poller Boost Overrun, Possible Boost Poller Crash"
 msgstr "BRĪDINĀJUMS: konstatēts Poller Boost pārtēriņš, iespējama Boost Poller avārija"
 
-#: pollers.php:21
-msgid "Clear Statistics"
-msgstr "Notīrīt statistiku"
-
 #: pollers.php:25
 msgid "Full Sync"
 msgstr "Pilna sinhronizācija"
@@ -18524,10 +18853,6 @@ msgstr "Alfabētiski"
 #: tree.php:1752
 msgid "Natural"
 msgstr "Dabiski"
-
-#: tree.php:1782 tree.php:1856 tree.php:1964
-msgid "Edit"
-msgstr "Rediģēt"
 
 #: tree.php:1789 tree.php:1863 tree.php:1971
 msgid "Cut"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-03 19:49-0700\n"
+"POT-Creation-Date: 2026-10-03 19:59-0700\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -54,9 +54,9 @@ msgstr "本程序的發布是希望它有用，但沒有任何擔保;甚至沒�
 #: data_queries.php:972 data_queries.php:1252 data_source_profiles.php:16
 #: data_source_profiles.php:912 data_sources.php:22 data_sources.php:1229
 #: data_templates.php:19 data_templates.php:791 gprint_presets.php:12
-#: graph_templates.php:22 graph_templates.php:517 graphs.php:31
+#: graph_templates.php:22 graph_templates.php:517 graphs.php:31 host.php:29
 #: host_templates.php:20 host_templates.php:485 host_templates.php:542
-#: include/global_arrays.php:1654 include/global_settings.php:232
+#: include/global_arrays.php:1652 include/global_settings.php:232
 #: lib/api_automation.php:1323 lib/api_automation.php:1386
 #: lib/api_automation.php:1457 lib/html.php:1546 lib/html_form.php:1397
 #: lib/html_reports.php:1937 managers.php:13 pollers.php:18 tree.php:1688
@@ -96,7 +96,7 @@ msgstr "與Aggregate相關聯"
 msgid "Disassociate with Aggregate"
 msgstr "與Aggregate解除關聯"
 
-#: aggregate_graphs.php:70 graphs.php:199
+#: aggregate_graphs.php:70 graphs.php:199 host.php:250
 #, fuzzy, php-format
 msgid "Place on a Tree (%s)"
 msgstr "放在樹上（%s）"
@@ -138,10 +138,12 @@ msgstr "單擊“繼續”以刪除以下聚合圖。"
 #: data_templates.php:486 data_templates.php:498 data_templates.php:514
 #: gprint_presets.php:137 graph_templates.php:373 graph_templates.php:385
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
-#: graph_view.php:1043 graphs.php:875 graphs.php:891 graphs.php:902
-#: graphs.php:913 graphs.php:928 graphs.php:942 graphs.php:951 graphs.php:1153
-#: graphs.php:1196 graphs.php:1218 graphs.php:1249 graphs.php:1261
-#: graphs.php:1845 host_templates.php:222 host_templates.php:236
+#: graph_view.php:1043 graphs.php:876 graphs.php:892 graphs.php:903
+#: graphs.php:914 graphs.php:929 graphs.php:943 graphs.php:952 graphs.php:1154
+#: graphs.php:1197 graphs.php:1219 graphs.php:1250 graphs.php:1262
+#: graphs.php:1846 host.php:475 host.php:484 host.php:531 host.php:540
+#: host.php:549 host.php:565 host.php:579 host.php:588 host.php:619
+#: host.php:631 host_templates.php:222 host_templates.php:236
 #: host_templates.php:247 host_templates.php:302 host_templates.php:375
 #: lib/clog_webapi.php:225 lib/html.php:2833 lib/html_form.php:1396
 #: lib/html_form.php:1413 lib/html_form.php:1424 lib/html_reports.php:632
@@ -172,9 +174,11 @@ msgstr "取消"
 #: data_templates.php:486 data_templates.php:498 data_templates.php:514
 #: gprint_presets.php:137 graph_templates.php:373 graph_templates.php:385
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
-#: graphs.php:875 graphs.php:891 graphs.php:902 graphs.php:913 graphs.php:928
-#: graphs.php:942 graphs.php:951 graphs.php:1153 graphs.php:1196
-#: graphs.php:1218 graphs.php:1249 graphs.php:1261 host_templates.php:222
+#: graphs.php:876 graphs.php:892 graphs.php:903 graphs.php:914 graphs.php:929
+#: graphs.php:943 graphs.php:952 graphs.php:1154 graphs.php:1197
+#: graphs.php:1219 graphs.php:1250 graphs.php:1262 host.php:475 host.php:484
+#: host.php:531 host.php:540 host.php:549 host.php:565 host.php:579
+#: host.php:588 host.php:619 host.php:631 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
 #: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2832
 #: lib/html_reports.php:574 managers.php:1066 managers.php:1127 pollers.php:549
@@ -189,7 +193,7 @@ msgid "Continue"
 msgstr "繼續"
 
 #: aggregate_graphs.php:370 aggregate_graphs.php:445 aggregate_graphs.php:470
-#: graphs.php:875
+#: graphs.php:876
 msgid "Delete Graph(s)"
 msgstr "刪除圖表"
 
@@ -204,8 +208,8 @@ msgstr "為了將下面的聚合圖遷移到基於模板的聚合，它們只能
 
 #: aggregate_graphs.php:406 aggregate_graphs.php:456 aggregate_graphs.php:504
 #: auth_changepassword.php:415 auth_profile.php:464 automation_networks.php:387
-#: automation_snmp.php:245 graphs.php:1155 graphs.php:1205 graphs.php:1208
-#: graphs.php:1252 graphs.php:1845 include/auth.php:309
+#: automation_snmp.php:245 graphs.php:1156 graphs.php:1206 graphs.php:1209
+#: graphs.php:1253 graphs.php:1846 host.php:622 include/auth.php:309
 #: lib/api_aggregate.php:2209 lib/api_aggregate.php:2224 lib/html_form.php:1422
 #: lib/html_reports.php:632 managers.php:1130 permission_denied.php:14
 #: permission_denied.php:16
@@ -257,32 +261,32 @@ msgstr "匯總名稱："
 msgid "New Aggregate"
 msgstr "新聚合"
 
-#: aggregate_graphs.php:485 graphs.php:1233
+#: aggregate_graphs.php:485 graphs.php:1234 host.php:603
 msgid "Click 'Continue' to add the selected Graphs to the Report below."
 msgstr "點擊“繼續”將選定的圖表添加到下面的報告中。"
 
-#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1237
+#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1238 host.php:607
 #: lib/html_reports.php:18 lib/html_reports.php:2133
 #, fuzzy
 msgid "Report Name"
 msgstr "報告名稱"
 
-#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1241
+#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1242 host.php:611
 #: lib/html_reports.php:1789
 #, fuzzy
 msgid "Timespan"
 msgstr "時間跨度"
 
-#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1245
+#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1246 host.php:615
 #, fuzzy
 msgid "Align"
 msgstr "對齊"
 
-#: aggregate_graphs.php:501 graphs.php:1249
+#: aggregate_graphs.php:501 graphs.php:1250
 msgid "Add Graphs to Report"
 msgstr "添加圖表到報告"
 
-#: aggregate_graphs.php:503 graphs.php:1251
+#: aggregate_graphs.php:503 graphs.php:1252
 #, fuzzy
 msgid "You currently have no reports defined."
 msgstr "您目前沒有定義報告。"
@@ -315,12 +319,12 @@ msgstr "Dis-Associate Graph（s）"
 msgid "Click 'Continue' to place the following Aggregate Graph(s) under the Tree Branch."
 msgstr "單擊“繼續”將以下聚合圖放在樹枝下。"
 
-#: aggregate_graphs.php:538
+#: aggregate_graphs.php:538 host.php:571
 #, fuzzy
 msgid "Destination Branch:"
 msgstr "目的地分支："
 
-#: aggregate_graphs.php:545 graphs.php:928
+#: aggregate_graphs.php:545 graphs.php:929
 msgid "Place Graph(s) on Tree"
 msgstr "將圖放在樹上"
 
@@ -383,17 +387,17 @@ msgstr "匯總預覽[%s]"
 msgid "Aggregate Preview %s"
 msgstr "匯總預覽[%s]"
 
-#: aggregate_graphs.php:763 graph.php:551 graphs.php:1678
+#: aggregate_graphs.php:763 graph.php:551 graphs.php:1679
 #, fuzzy
 msgid "RRDtool Command:"
 msgstr "RRDtool命令："
 
-#: aggregate_graphs.php:765 graph.php:560 graphs.php:1682
+#: aggregate_graphs.php:765 graph.php:560 graphs.php:1683
 #, fuzzy
 msgid "Not Checked"
 msgstr "檢查"
 
-#: aggregate_graphs.php:765 graph.php:556 graphs.php:1680
+#: aggregate_graphs.php:765 graph.php:556 graphs.php:1681
 #, fuzzy
 msgid "RRDtool Says:"
 msgstr "RRDtool說："
@@ -403,27 +407,27 @@ msgstr "RRDtool說："
 msgid "Aggregate Graph %s"
 msgstr "聚合圖%s"
 
-#: aggregate_graphs.php:820 aggregate_templates.php:408 graphs.php:1019
+#: aggregate_graphs.php:820 aggregate_templates.php:408 graphs.php:1020
 #, fuzzy
 msgid "Prefix Replacement Values"
 msgstr "替換模式"
 
-#: aggregate_graphs.php:821 aggregate_templates.php:409 graphs.php:1020
+#: aggregate_graphs.php:821 aggregate_templates.php:409 graphs.php:1021
 msgid "You may use these replacement values for the Prefix in the Aggregate Graph"
 msgstr "您可以將這些替換值用於聚合圖中的前綴"
 
-#: aggregate_graphs.php:988 aggregate_templates.php:536 graphs.php:1102
+#: aggregate_graphs.php:988 aggregate_templates.php:536 graphs.php:1103
 #: lib/api_aggregate.php:2344
 #, fuzzy
 msgid "Total"
 msgstr "總計"
 
-#: aggregate_graphs.php:992 aggregate_templates.php:540 graphs.php:1104
+#: aggregate_graphs.php:992 aggregate_templates.php:540 graphs.php:1105
 #, fuzzy
 msgid "All Items"
 msgstr "所有項目"
 
-#: aggregate_graphs.php:1010 graphs.php:1693 lib/api_aggregate.php:2504
+#: aggregate_graphs.php:1010 graphs.php:1694 lib/api_aggregate.php:2504
 #, fuzzy
 msgid "Graph Configuration"
 msgstr "圖形配置"
@@ -453,7 +457,7 @@ msgstr "匹配圖"
 #: color_templates.php:560 data_debug.php:1189 data_queries.php:1371
 #: data_source_profiles.php:1164 data_sources.php:1783 data_templates.php:1101
 #: gprint_presets.php:255 graph_templates.php:727 graph_view.php:667
-#: graphs.php:2099 graphs_new.php:524 host_templates.php:795
+#: graphs.php:2100 graphs_new.php:524 host.php:1820 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
 #: lib/api_automation.php:480 lib/api_automation.php:708
 #: lib/clog_webapi.php:608 lib/html.php:268 lib/html_filter.php:46
@@ -473,9 +477,9 @@ msgstr "搜尋"
 #: aggregate_graphs.php:1288 aggregate_graphs.php:1324
 #: aggregate_graphs.php:1587 color_templates.php:680 data_sources.php:1985
 #: data_sources.php:2124 graph_view.php:488 graph_view.php:739
-#: graph_view.php:803 graphs.php:2116 graphs.php:2315
+#: graph_view.php:803 graphs.php:2117 graphs.php:2316 host.php:1934
 #: include/global_arrays.php:993 include/global_arrays.php:1229
-#: include/global_arrays.php:2014 lib/api_automation.php:283 lib/html.php:1996
+#: include/global_arrays.php:2012 lib/api_automation.php:283 lib/html.php:1996
 #: lib/html.php:2065 lib/html_graph.php:197 lib/html_tree.php:1022
 #: lib/html_tree.php:1378 tree.php:917 tree.php:2366 user_admin.php:801
 #: user_admin.php:1073 user_admin.php:2347 user_group_admin.php:932
@@ -492,7 +496,7 @@ msgstr "圖表"
 #: data_debug.php:1199 data_queries.php:1381 data_source_profiles.php:1174
 #: data_source_profiles.php:1296 data_sources.php:1793 data_templates.php:1130
 #: gprint_presets.php:265 graph_templates.php:737 graph_view.php:743
-#: graphs.php:2120 graphs_new.php:534 host_templates.php:805
+#: graphs.php:2121 graphs_new.php:534 host.php:1845 host_templates.php:805
 #: include/global_form.php:242 lib/api_automation.php:182
 #: lib/api_automation.php:490 lib/api_automation.php:718
 #: lib/api_automation.php:1082 lib/html_reports.php:2045 managers.php:154
@@ -518,15 +522,16 @@ msgstr "聚合的一部分"
 #: automation_tree_rules.php:877 cdef.php:758 color_templates.php:598
 #: data_debug.php:1114 data_queries.php:1396 data_source_profiles.php:1195
 #: data_sources.php:1733 data_templates.php:1151 gprint_presets.php:283
-#: graph_templates.php:758 graph_view.php:675 graphs.php:2090
-#: graphs_new.php:513 host_templates.php:786 lib/api_automation.php:187
-#: lib/api_automation.php:471 lib/api_automation.php:723
-#: lib/api_automation.php:1087 lib/clog_webapi.php:533 lib/html.php:1828
-#: lib/html_filter.php:63 lib/html_graph.php:178 lib/html_reports.php:2056
-#: lib/html_tree.php:1009 managers.php:169 managers.php:529 managers.php:794
-#: plugins.php:530 pollers.php:914 tree.php:2242 user_admin.php:2150
-#: user_admin.php:2347 user_admin.php:2353 user_admin.php:2359
-#: user_admin.php:2365 user_admin.php:2371 user_admin.php:2377
+#: graph_templates.php:758 graph_view.php:675 graphs.php:2091
+#: graphs_new.php:513 host.php:1810 host_templates.php:786
+#: lib/api_automation.php:187 lib/api_automation.php:471
+#: lib/api_automation.php:723 lib/api_automation.php:1087
+#: lib/clog_webapi.php:533 lib/html.php:1828 lib/html_filter.php:63
+#: lib/html_graph.php:178 lib/html_reports.php:2056 lib/html_tree.php:1009
+#: managers.php:169 managers.php:529 managers.php:794 plugins.php:530
+#: pollers.php:914 tree.php:2242 user_admin.php:2150 user_admin.php:2347
+#: user_admin.php:2353 user_admin.php:2359 user_admin.php:2365
+#: user_admin.php:2371 user_admin.php:2377
 #, fuzzy
 msgid "Go"
 msgstr "送出"
@@ -536,9 +541,9 @@ msgstr "送出"
 #: automation_templates.php:418 cdef.php:758 data_debug.php:1114
 #: data_queries.php:1396 data_source_profiles.php:1195 data_sources.php:1733
 #: data_templates.php:1151 gprint_presets.php:283 graph_templates.php:758
-#: graph_view.php:675 graphs.php:2090 graphs_new.php:513 host_templates.php:786
-#: lib/html_graph.php:178 managers.php:169 managers.php:529 managers.php:794
-#: plugins.php:530 pollers.php:914
+#: graph_view.php:675 graphs.php:2091 graphs_new.php:513 host.php:1810
+#: host_templates.php:786 lib/html_graph.php:178 managers.php:169
+#: managers.php:529 managers.php:794 plugins.php:530 pollers.php:914
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
 #: tree.php:2242 user_admin.php:2150 user_domains.php:665
 #: user_group_admin.php:2010 utilities.php:1084 utilities.php:1470
@@ -554,16 +559,17 @@ msgstr "設置/刷新過濾器"
 #: automation_tree_rules.php:878 cdef.php:759 color_templates.php:599
 #: data_debug.php:1115 data_queries.php:1397 data_source_profiles.php:1196
 #: data_sources.php:1734 data_templates.php:1152 gprint_presets.php:284
-#: graph_templates.php:759 graph_view.php:676 graphs.php:2091
-#: graphs_new.php:514 host_templates.php:787 lib/api_automation.php:188
-#: lib/api_automation.php:472 lib/api_automation.php:724
-#: lib/api_automation.php:1088 lib/clog_webapi.php:534 lib/html_filter.php:68
-#: lib/html_graph.php:179 lib/html_graph.php:305 lib/html_reports.php:2057
-#: lib/html_tree.php:1010 lib/html_tree.php:1121 managers.php:170
-#: managers.php:530 managers.php:795 plugins.php:531 pollers.php:915
-#: tree.php:2243 user_admin.php:2151 user_admin.php:2347 user_admin.php:2353
-#: user_admin.php:2359 user_admin.php:2365 user_admin.php:2371
-#: user_admin.php:2377 user_domains.php:666
+#: graph_templates.php:759 graph_view.php:676 graphs.php:2092
+#: graphs_new.php:514 host.php:1811 host_templates.php:787
+#: lib/api_automation.php:188 lib/api_automation.php:472
+#: lib/api_automation.php:724 lib/api_automation.php:1088
+#: lib/clog_webapi.php:534 lib/html_filter.php:68 lib/html_graph.php:179
+#: lib/html_graph.php:305 lib/html_reports.php:2057 lib/html_tree.php:1010
+#: lib/html_tree.php:1121 managers.php:170 managers.php:530 managers.php:795
+#: plugins.php:531 pollers.php:915 tree.php:2243 user_admin.php:2151
+#: user_admin.php:2347 user_admin.php:2353 user_admin.php:2359
+#: user_admin.php:2365 user_admin.php:2371 user_admin.php:2377
+#: user_domains.php:666
 #, fuzzy
 msgid "Clear"
 msgstr "清除"
@@ -572,9 +578,10 @@ msgstr "清除"
 #: automation_templates.php:419 cdef.php:759 data_debug.php:1115
 #: data_queries.php:1397 data_source_profiles.php:1196 data_sources.php:1734
 #: data_templates.php:1152 gprint_presets.php:284 graph_templates.php:759
-#: graph_view.php:676 graphs.php:2091 graphs_new.php:514 host_templates.php:787
-#: lib/html_graph.php:179 lib/html_tree.php:1010 managers.php:170
-#: managers.php:530 managers.php:795 plugins.php:531 pollers.php:915
+#: graph_view.php:676 graphs.php:2092 graphs_new.php:514 host.php:1811
+#: host_templates.php:787 lib/html_graph.php:179 lib/html_tree.php:1010
+#: managers.php:170 managers.php:530 managers.php:795 plugins.php:531
+#: pollers.php:915
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:96
 #: tree.php:2243 user_admin.php:2151 user_domains.php:666
 #: user_group_admin.php:2011 utilities.php:1085 utilities.php:1471
@@ -583,7 +590,7 @@ msgstr "清除"
 msgid "Clear Filters"
 msgstr "清除過濾器"
 
-#: aggregate_graphs.php:1329 aggregate_graphs.php:1662 graphs.php:1182
+#: aggregate_graphs.php:1329 aggregate_graphs.php:1662 graphs.php:1183
 #: lib/api_automation.php:574 user_admin.php:809 user_group_admin.php:940
 #, fuzzy
 msgid "Graph Title"
@@ -592,12 +599,12 @@ msgstr "圖標題"
 #: aggregate_graphs.php:1330 aggregate_graphs.php:1663
 #: automation_graph_rules.php:964 automation_tree_rules.php:971
 #: data_debug.php:499 data_queries.php:1482 data_sources.php:1979
-#: data_templates.php:1260 graph_templates.php:864 graphs.php:2331
-#: host_templates.php:949 lib/api_automation.php:282 pollers.php:995
-#: tree.php:2306 user_admin.php:809 user_admin.php:924 user_admin.php:1073
-#: user_admin.php:1212 user_admin.php:1351 user_group_admin.php:733
-#: user_group_admin.php:940 user_group_admin.php:1087 user_group_admin.php:1223
-#: user_group_admin.php:1355
+#: data_templates.php:1260 graph_templates.php:864 graphs.php:2332
+#: host.php:1928 host_templates.php:949 lib/api_automation.php:282
+#: pollers.php:995 tree.php:2306 user_admin.php:809 user_admin.php:924
+#: user_admin.php:1073 user_admin.php:1212 user_admin.php:1351
+#: user_group_admin.php:733 user_group_admin.php:940 user_group_admin.php:1087
+#: user_group_admin.php:1223 user_group_admin.php:1355
 #, fuzzy
 msgid "ID"
 msgstr "ID"
@@ -608,7 +615,7 @@ msgid "Included in Aggregate"
 msgstr "包含在Aggregate中"
 
 #: aggregate_graphs.php:1332 aggregate_graphs.php:1665 graph_templates.php:881
-#: graph_view.php:832 graph_view.php:845 graphs.php:2349 lib/spikekill.php:1745
+#: graph_view.php:832 graph_view.php:845 graphs.php:2350 lib/spikekill.php:1745
 #, fuzzy
 msgid "Size"
 msgstr "尺寸"
@@ -641,7 +648,7 @@ msgstr "否"
 msgid "Yes"
 msgstr "是"
 
-#: aggregate_graphs.php:1354 graphs.php:2391 lib/api_automation.php:601
+#: aggregate_graphs.php:1354 graphs.php:2392 lib/api_automation.php:601
 #, fuzzy
 msgid "No Graphs Found"
 msgstr "找不到圖表"
@@ -652,15 +659,16 @@ msgid " [ Custom Graphs List Applied - Clear to Reset ]"
 msgstr " [自定義圖表列表已應用 - 從列表中過濾]"
 
 #: aggregate_graphs.php:1547 aggregate_graphs.php:1653
-#: include/global_arrays.php:2766
+#: include/global_arrays.php:2764
 #, fuzzy
 msgid "Aggregate Graphs"
 msgstr "聚合圖"
 
 #: aggregate_graphs.php:1562 data_debug.php:1085 data_sources.php:1704
-#: graph_view.php:699 graphs.php:2052 include/global_arrays.php:2894
-#: include/global_settings.php:610 lib/api_automation.php:446
-#: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:381
+#: graph_view.php:699 graphs.php:2053 host.php:1756
+#: include/global_arrays.php:2892 include/global_settings.php:610
+#: lib/api_automation.php:446 lib/html_graph.php:139 lib/html_tree.php:973
+#: rrdcleaner.php:381
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:59
 #: utilities.php:2087
 #, fuzzy
@@ -672,7 +680,8 @@ msgstr "模板"
 #: automation_devices.php:564 automation_graph_rules.php:819
 #: automation_graph_rules.php:841 automation_tree_rules.php:855
 #: data_debug.php:1089 data_sources.php:1708 graph_templates_items.php:447
-#: graphs.php:2056 graphs_items.php:262 lib/api_automation.php:26
+#: graphs.php:2057 graphs_items.php:262 host.php:1719 host.php:1740
+#: host.php:1760 host.php:1830 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3824 lib/auth.php:3873
 #: lib/html.php:2351 lib/html.php:2379 lib/html.php:2418 lib/html.php:2452
@@ -691,24 +700,24 @@ msgstr "任何"
 #: automation_networks.php:460 automation_tree_rules.php:983
 #: data_debug.php:1090 data_sources.php:1083 data_sources.php:1709
 #: data_sources.php:2040 data_templates.php:1323 graph_templates_items.php:53
-#: graphs.php:1582 graphs.php:1591 graphs.php:2057 graphs_items.php:263
-#: graphs_items.php:383 include/global_arrays.php:523
-#: include/global_arrays.php:581 include/global_arrays.php:673
-#: include/global_arrays.php:885 include/global_arrays.php:1743
-#: include/global_form.php:574 include/global_form.php:883
-#: include/global_form.php:891 include/global_form.php:899
-#: include/global_form.php:938 include/global_form.php:945
-#: include/global_form.php:971 include/global_form.php:1000
-#: include/global_form.php:1008 include/global_form.php:1186
-#: include/global_form.php:1205 include/global_form.php:1214
-#: include/global_form.php:2128 include/global_form.php:2170
-#: include/global_settings.php:614 include/global_settings.php:622
-#: include/global_settings.php:630 include/global_settings.php:1338
-#: include/global_settings.php:2001 lib/api_automation.php:48
-#: lib/api_automation.php:431 lib/api_automation.php:451
-#: lib/api_automation.php:589 lib/auth.php:3827 lib/auth.php:3876
-#: lib/auth.php:3922 lib/html.php:228 lib/html.php:2352 lib/html.php:2377
-#: lib/html.php:2419 lib/html.php:2453 lib/html_form.php:392
+#: graphs.php:1583 graphs.php:1592 graphs.php:2058 graphs_items.php:263
+#: graphs_items.php:383 host.php:294 host.php:1275 host.php:1286 host.php:1720
+#: host.php:1761 include/global_arrays.php:523 include/global_arrays.php:581
+#: include/global_arrays.php:673 include/global_arrays.php:885
+#: include/global_arrays.php:1741 include/global_form.php:574
+#: include/global_form.php:883 include/global_form.php:891
+#: include/global_form.php:899 include/global_form.php:938
+#: include/global_form.php:945 include/global_form.php:971
+#: include/global_form.php:1000 include/global_form.php:1008
+#: include/global_form.php:1186 include/global_form.php:1205
+#: include/global_form.php:1214 include/global_form.php:2128
+#: include/global_form.php:2170 include/global_settings.php:614
+#: include/global_settings.php:622 include/global_settings.php:630
+#: include/global_settings.php:1338 include/global_settings.php:2001
+#: lib/api_automation.php:48 lib/api_automation.php:431
+#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3827
+#: lib/auth.php:3876 lib/auth.php:3922 lib/html.php:228 lib/html.php:2352
+#: lib/html.php:2377 lib/html.php:2419 lib/html.php:2453 lib/html_form.php:392
 #: lib/html_reports.php:1041 lib/html_reports.php:1045
 #: lib/html_reports.php:1081 lib/html_reports.php:1157
 #: lib/html_reports.php:1163 lib/html_reports.php:1167
@@ -732,7 +741,7 @@ msgstr "聚合圖的標題"
 msgid "The internal database identifier for this object"
 msgstr "此對象的內部數據庫標識符"
 
-#: aggregate_graphs.php:1664 graphs.php:1186
+#: aggregate_graphs.php:1664 graphs.php:1187
 #, fuzzy
 msgid "Aggregate Template"
 msgstr "聚合模板"
@@ -779,7 +788,7 @@ msgid "Aggregate Template [new]"
 msgstr "聚合模板[新]"
 
 #: aggregate_templates.php:598 aggregate_templates.php:697
-#: include/global_arrays.php:2748
+#: include/global_arrays.php:2746
 #, fuzzy
 msgid "Aggregate Templates"
 msgstr "聚合模板"
@@ -822,8 +831,8 @@ msgstr "可刪除"
 msgid "Graphs Using"
 msgstr "圖表使用"
 
-#: aggregate_templates.php:709 graphs.php:2111 host_templates.php:730
-#: include/global_arrays.php:958 include/global_arrays.php:1363
+#: aggregate_templates.php:709 graphs.php:2112 host_templates.php:730
+#: include/global_arrays.php:958 include/global_arrays.php:1361
 #: include/global_form.php:1399 include/global_form.php:1635
 #: lib/html_reports.php:1181 tree.php:1944
 #, fuzzy
@@ -895,7 +904,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr ""
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4219 lib/html.php:2768
+#: include/global_form.php:1552 lib/functions.php:4226 lib/html.php:2768
 #, fuzzy
 msgid "Change Password"
 msgstr "更改密碼"
@@ -911,7 +920,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "請輸入您當前的密碼和新密碼<br>Kadupul密碼。"
 
 #: auth_changepassword.php:397 auth_login.php:336 auth_login.php:339
-#: include/global_settings.php:1835 lib/functions.php:6149
+#: include/global_settings.php:1835 lib/functions.php:6156
 #, fuzzy
 msgid "Username"
 msgstr "用戶名"
@@ -1013,7 +1022,7 @@ msgstr "用戶登錄"
 msgid "Enter your Username and Password below"
 msgstr "在下面輸入您的用戶名和密碼"
 
-#: auth_login.php:344 include/global_form.php:1519 lib/functions.php:6150
+#: auth_login.php:344 include/global_form.php:1519 lib/functions.php:6157
 #, fuzzy
 msgid "Password"
 msgstr "密碼"
@@ -1182,7 +1191,7 @@ msgstr "刪除設備"
 
 #: automation_devices.php:39 automation_devices.php:294
 #: automation_devices.php:406 automation_devices.php:417
-#: automation_devices.php:679 automation_devices.php:680
+#: automation_devices.php:679 automation_devices.php:680 host.php:1835
 #: lib/api_automation.php:31 lib/html_utility.php:1327 pollers.php:32
 #, fuzzy
 msgid "Down"
@@ -1190,7 +1199,7 @@ msgstr "向下"
 
 #: automation_devices.php:40 automation_devices.php:294
 #: automation_devices.php:408 automation_devices.php:419
-#: automation_devices.php:679 automation_devices.php:680
+#: automation_devices.php:679 automation_devices.php:680 host.php:1834
 #: lib/api_automation.php:30 lib/html_utility.php:1333
 #, fuzzy
 msgid "Up"
@@ -1242,17 +1251,18 @@ msgstr "添加設備"
 msgid "Click 'Continue' to Delete the following Discovered device(s)."
 msgstr "單擊“繼續”以添加以下發現的設備。"
 
-#: automation_devices.php:220
+#: automation_devices.php:220 host.php:565
 msgid "Delete Device(s)"
 msgstr "刪除設備"
 
-#: automation_devices.php:262 automation_devices.php:578
-#: include/global_arrays.php:990 include/global_arrays.php:1046
-#: include/global_arrays.php:2328 lib/api_automation.php:178
-#: lib/api_automation.php:271 lib/api_automation.php:486
-#: lib/api_automation.php:563 lib/api_automation.php:1189 pollers.php:1031
-#: tree.php:916 tree.php:2360 user_admin.php:1065 user_admin.php:2359
-#: user_group_admin.php:1079 user_group_admin.php:2146 utilities.php:315
+#: automation_devices.php:262 automation_devices.php:578 host.php:1705
+#: host.php:1841 host.php:1994 include/global_arrays.php:990
+#: include/global_arrays.php:1046 include/global_arrays.php:2326
+#: lib/api_automation.php:178 lib/api_automation.php:271
+#: lib/api_automation.php:486 lib/api_automation.php:563
+#: lib/api_automation.php:1189 pollers.php:1031 tree.php:916 tree.php:2360
+#: user_admin.php:1065 user_admin.php:2359 user_group_admin.php:1079
+#: user_group_admin.php:2146 utilities.php:315
 #, fuzzy
 msgid "Devices"
 msgstr "設備"
@@ -1272,7 +1282,7 @@ msgstr "IP"
 msgid "SNMP Name"
 msgstr "SNMP名稱"
 
-#: automation_devices.php:274 include/global_form.php:1184
+#: automation_devices.php:274 host.php:1780 include/global_form.php:1184
 #: include/global_settings.php:2319 lib/html.php:2448
 #, fuzzy
 msgid "Location"
@@ -1298,7 +1308,7 @@ msgstr "描述"
 msgid "OS"
 msgstr "作業系統"
 
-#: automation_devices.php:278 include/global_arrays.php:524
+#: automation_devices.php:278 host.php:1958 include/global_arrays.php:524
 #, fuzzy
 msgid "Uptime"
 msgstr "運行時間"
@@ -1312,7 +1322,8 @@ msgstr "SNMP"
 #: automation_devices.php:280 automation_devices.php:524
 #: automation_graph_rules.php:837 automation_networks.php:1075
 #: automation_tree_rules.php:851 data_debug.php:505 data_debug.php:1144
-#: data_sources.php:1762 data_templates.php:1289 lib/api_automation.php:52
+#: data_sources.php:1762 data_templates.php:1289 host.php:874 host.php:1003
+#: host.php:1826 host.php:1946 lib/api_automation.php:52
 #: lib/api_automation.php:53 lib/api_automation.php:280
 #: lib/api_automation.php:573 lib/api_automation.php:1199
 #: lib/html_reports.php:2031 lib/installer.php:2044 managers.php:216
@@ -1334,7 +1345,7 @@ msgstr "最後檢查"
 msgid "Not Detected"
 msgstr "沒有檢測到"
 
-#: automation_devices.php:318
+#: automation_devices.php:318 host.php:2052
 #, fuzzy
 msgid "No Devices Found"
 msgstr "未找到裝置"
@@ -1354,7 +1365,7 @@ msgstr "網絡"
 msgid "Reset fields to defaults"
 msgstr "將字段重置為默認值"
 
-#: automation_devices.php:515 lib/html_form.php:1436
+#: automation_devices.php:515 host.php:1812 lib/html_form.php:1436
 #, fuzzy
 msgid "Export"
 msgstr "匯出"
@@ -1378,9 +1389,9 @@ msgstr "清除發現的設備"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:673 data_source_profiles.php:61 lib/functions.php:6508
-#: lib/functions.php:6513 lib/html.php:1434 lib/html.php:1506
-#: lib/html_reports.php:1810 lib/html_reports.php:1838
+#: data_debug.php:673 data_source_profiles.php:61 host.php:2021
+#: lib/functions.php:6515 lib/functions.php:6520 lib/html.php:1434
+#: lib/html.php:1506 lib/html_reports.php:1810 lib/html_reports.php:1838
 #: lib/html_reports.php:1915 lib/html_reports.php:1916
 #: lib/html_reports.php:1917 lib/spikekill.php:1734 lib/spikekill.php:1735
 #: lib/spikekill.php:1800 lib/spikekill.php:1801 lib/spikekill.php:1802
@@ -1398,14 +1409,14 @@ msgstr "不适用"
 #: automation_tree_rules.php:14 cdef.php:15 color_templates.php:14
 #: data_queries.php:17 data_source_profiles.php:17 data_templates.php:20
 #: graph_templates.php:23 graphs.php:51 host_templates.php:21
-#: include/global_arrays.php:1651
+#: include/global_arrays.php:1649
 #, fuzzy
 msgid "Duplicate"
 msgstr "複製"
 
 #: automation_graph_rules.php:15 automation_networks.php:18
-#: automation_tree_rules.php:15 data_sources.php:25
-#: include/global_arrays.php:1652 include/global_settings.php:1787
+#: automation_tree_rules.php:15 data_sources.php:25 host.php:30
+#: include/global_arrays.php:1650 include/global_settings.php:1787
 #: managers.php:14 managers.php:20 plugins.php:24 pollers.php:20
 #: user_admin.php:19 user_domains.php:17 user_domains.php:397
 #: user_group_admin.php:21
@@ -1414,8 +1425,8 @@ msgid "Enable"
 msgstr "啟用"
 
 #: automation_graph_rules.php:16 automation_networks.php:17
-#: automation_tree_rules.php:16 data_sources.php:26
-#: include/global_arrays.php:1653 managers.php:15 managers.php:19
+#: automation_tree_rules.php:16 data_sources.php:26 host.php:31
+#: include/global_arrays.php:1651 managers.php:15 managers.php:19
 #: plugins.php:25 pollers.php:19 user_admin.php:20 user_domains.php:16
 #: user_group_admin.php:22
 #, fuzzy
@@ -1434,8 +1445,8 @@ msgstr "按“繼續”以刪除以下圖表規則。"
 msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Graph Rules."
 msgstr "單擊“繼續”以復制以下規則。您可以選擇更改新圖表規則的標題格式。"
 
-#: automation_graph_rules.php:305 automation_tree_rules.php:282 graphs.php:897
-#: graphs.php:908
+#: automation_graph_rules.php:305 automation_tree_rules.php:282 graphs.php:898
+#: graphs.php:909
 #, fuzzy
 msgid "Title Format"
 msgstr "標題格式:"
@@ -1510,14 +1521,14 @@ msgstr "圖形創建標準"
 
 #: automation_graph_rules.php:800 automation_graph_rules.php:847
 #: automation_graph_rules.php:954 include/global_arrays.php:1013
-#: include/global_arrays.php:2784
+#: include/global_arrays.php:2782
 #, fuzzy
 msgid "Graph Rules"
 msgstr "圖規則"
 
 #: automation_graph_rules.php:815 automation_graph_rules.php:965
-#: graphs.php:2112 include/global_arrays.php:1366
-#: include/global_arrays.php:2893 include/global_form.php:1645
+#: graphs.php:2113 include/global_arrays.php:1364
+#: include/global_arrays.php:2891 include/global_form.php:1645
 #: include/global_form.php:2207
 #, fuzzy
 msgid "Data Query"
@@ -1527,7 +1538,7 @@ msgstr "數據查詢"
 #: automation_graph_rules.php:983 automation_networks.php:535
 #: automation_tree_rules.php:856 automation_tree_rules.php:976
 #: automation_tree_rules.php:994 data_debug.php:1150 data_sources.php:1767
-#: include/global_arrays.php:917 include/global_form.php:1527
+#: host.php:1831 include/global_arrays.php:917 include/global_form.php:1527
 #: include/global_settings.php:345 include/global_settings.php:361
 #: lib/api_automation.php:27 lib/html_reports.php:2036
 #: lib/html_reports.php:2141 lib/html_reports.php:2152
@@ -1543,8 +1554,8 @@ msgstr "啟用"
 #: automation_graph_rules.php:843 automation_graph_rules.php:983
 #: automation_networks.php:1090 automation_tree_rules.php:857
 #: automation_tree_rules.php:994 data_debug.php:1151 data_sources.php:1768
-#: data_templates.php:1325 include/global_arrays.php:916
-#: include/global_arrays.php:1575 include/global_arrays.php:1867
+#: data_templates.php:1325 host.php:1832 include/global_arrays.php:916
+#: include/global_arrays.php:1573 include/global_arrays.php:1865
 #: include/global_settings.php:344 include/global_settings.php:360
 #: include/global_settings.php:1370 include/global_settings.php:1630
 #: include/global_settings.php:1644 include/global_settings.php:1657
@@ -1662,19 +1673,19 @@ msgid "Manual"
 msgstr "手動"
 
 #: automation_networks.php:409 automation_networks.php:1064
-#: include/global_arrays.php:1881 include/global_settings.php:1371
+#: include/global_arrays.php:1879 include/global_settings.php:1371
 #, fuzzy
 msgid "Daily"
 msgstr "每日"
 
 #: automation_networks.php:410 automation_networks.php:1065
-#: include/global_arrays.php:1882
+#: include/global_arrays.php:1880
 #, fuzzy
 msgid "Weekly"
 msgstr "每週"
 
 #: automation_networks.php:411 automation_networks.php:1066
-#: include/global_arrays.php:1883
+#: include/global_arrays.php:1881
 #, fuzzy
 msgid "Monthly"
 msgstr "每月"
@@ -1735,7 +1746,7 @@ msgstr "為此網絡提供有意義的名稱。"
 msgid "New Network Discovery Range"
 msgstr "新的網絡發現範圍"
 
-#: automation_networks.php:447 automation_networks.php:1072
+#: automation_networks.php:447 automation_networks.php:1072 host.php:1736
 #, fuzzy
 msgid "Data Collector"
 msgstr "數據收集器"
@@ -1854,12 +1865,12 @@ msgstr "%d 分鐘"
 #: include/global_arrays.php:755 include/global_arrays.php:756
 #: include/global_arrays.php:757 include/global_arrays.php:758
 #: include/global_arrays.php:759 include/global_arrays.php:1208
-#: include/global_arrays.php:1209 include/global_arrays.php:1582
-#: include/global_arrays.php:1586 include/global_arrays.php:1594
-#: include/global_arrays.php:1595 include/global_arrays.php:1619
+#: include/global_arrays.php:1209 include/global_arrays.php:1580
+#: include/global_arrays.php:1584 include/global_arrays.php:1592
+#: include/global_arrays.php:1593 include/global_arrays.php:1617
+#: include/global_arrays.php:1618 include/global_arrays.php:1619
 #: include/global_arrays.php:1620 include/global_arrays.php:1621
-#: include/global_arrays.php:1622 include/global_arrays.php:1623
-#: include/global_arrays.php:1636 include/global_settings.php:1698
+#: include/global_arrays.php:1634 include/global_settings.php:1698
 #: include/global_settings.php:1699 include/global_settings.php:1700
 #: include/global_settings.php:1701 include/global_settings.php:1702
 #: include/global_settings.php:2663 include/global_settings.php:2938
@@ -1870,7 +1881,7 @@ msgid "%d Minutes"
 msgstr "%d 分鐘"
 
 #: automation_networks.php:526 include/global_arrays.php:760
-#: include/global_arrays.php:770 include/global_arrays.php:1456
+#: include/global_arrays.php:770 include/global_arrays.php:1454
 #, fuzzy, php-format
 msgid "%d Hour"
 msgstr "%d 小時"
@@ -1883,15 +1894,15 @@ msgstr "%d 小時"
 #: include/global_arrays.php:762 include/global_arrays.php:763
 #: include/global_arrays.php:764 include/global_arrays.php:771
 #: include/global_arrays.php:772 include/global_arrays.php:773
-#: include/global_arrays.php:774 include/global_arrays.php:1457
-#: include/global_arrays.php:1458 include/global_arrays.php:1459
-#: include/global_arrays.php:1460 include/global_arrays.php:1527
+#: include/global_arrays.php:774 include/global_arrays.php:1455
+#: include/global_arrays.php:1456 include/global_arrays.php:1457
+#: include/global_arrays.php:1458 include/global_arrays.php:1525
+#: include/global_arrays.php:1526 include/global_arrays.php:1527
 #: include/global_arrays.php:1528 include/global_arrays.php:1529
-#: include/global_arrays.php:1530 include/global_arrays.php:1531
+#: include/global_arrays.php:1546 include/global_arrays.php:1547
 #: include/global_arrays.php:1548 include/global_arrays.php:1549
-#: include/global_arrays.php:1550 include/global_arrays.php:1551
-#: include/global_arrays.php:1552 include/global_arrays.php:1558
-#: include/global_arrays.php:1559 include/global_settings.php:1704
+#: include/global_arrays.php:1550 include/global_arrays.php:1556
+#: include/global_arrays.php:1557 include/global_settings.php:1704
 #: include/global_settings.php:1705 include/global_settings.php:1706
 #: include/global_settings.php:1707 include/global_settings.php:2942
 #: include/global_settings.php:2943
@@ -2025,43 +2036,43 @@ msgid "What Day(s) of the week will this Network Range be discovered."
 msgstr "本週的哪一天將發現此網絡範圍。"
 
 #: automation_networks.php:636 automation_networks.php:694
-#: include/global_arrays.php:1939
+#: include/global_arrays.php:1937
 #, fuzzy
 msgid "Sunday"
 msgstr "星期日"
 
 #: automation_networks.php:637 automation_networks.php:695
-#: include/global_arrays.php:1940
+#: include/global_arrays.php:1938
 #, fuzzy
 msgid "Monday"
 msgstr "星期一"
 
 #: automation_networks.php:638 automation_networks.php:696
-#: include/global_arrays.php:1941
+#: include/global_arrays.php:1939
 #, fuzzy
 msgid "Tuesday"
 msgstr "星期二"
 
 #: automation_networks.php:639 automation_networks.php:697
-#: include/global_arrays.php:1942
+#: include/global_arrays.php:1940
 #, fuzzy
 msgid "Wednesday"
 msgstr "星期三"
 
 #: automation_networks.php:640 automation_networks.php:698
-#: include/global_arrays.php:1943
+#: include/global_arrays.php:1941
 #, fuzzy
 msgid "Thursday"
 msgstr "星期四"
 
 #: automation_networks.php:641 automation_networks.php:699
-#: include/global_arrays.php:1944
+#: include/global_arrays.php:1942
 #, fuzzy
 msgid "Friday"
 msgstr "星期五"
 
 #: automation_networks.php:642 automation_networks.php:700
-#: include/global_arrays.php:1945
+#: include/global_arrays.php:1943
 #, fuzzy
 msgid "Saturday"
 msgstr "星期六"
@@ -2076,62 +2087,62 @@ msgstr "一年中的幾個月"
 msgid "What Months(s) of the Year will this Network Range be discovered."
 msgstr "將發現此網絡範圍的年度幾個月。"
 
-#: automation_networks.php:652 include/global_arrays.php:1893
+#: automation_networks.php:652 include/global_arrays.php:1891
 #, fuzzy
 msgid "January"
 msgstr "一月"
 
-#: automation_networks.php:653 include/global_arrays.php:1894
+#: automation_networks.php:653 include/global_arrays.php:1892
 #, fuzzy
 msgid "February"
 msgstr "二月"
 
-#: automation_networks.php:654 include/global_arrays.php:1895
+#: automation_networks.php:654 include/global_arrays.php:1893
 #, fuzzy
 msgid "March"
 msgstr "三月"
 
-#: automation_networks.php:655 include/global_arrays.php:1896
+#: automation_networks.php:655 include/global_arrays.php:1894
 #, fuzzy
 msgid "April"
 msgstr "四月"
 
-#: automation_networks.php:656 include/global_arrays.php:1897
+#: automation_networks.php:656 include/global_arrays.php:1895
 #, fuzzy
 msgid "May"
 msgstr "五月"
 
-#: automation_networks.php:657 include/global_arrays.php:1898
+#: automation_networks.php:657 include/global_arrays.php:1896
 #, fuzzy
 msgid "June"
 msgstr "六月"
 
-#: automation_networks.php:658 include/global_arrays.php:1899
+#: automation_networks.php:658 include/global_arrays.php:1897
 #, fuzzy
 msgid "July"
 msgstr "七月"
 
-#: automation_networks.php:659 include/global_arrays.php:1900
+#: automation_networks.php:659 include/global_arrays.php:1898
 #, fuzzy
 msgid "August"
 msgstr "八月"
 
-#: automation_networks.php:660 include/global_arrays.php:1901
+#: automation_networks.php:660 include/global_arrays.php:1899
 #, fuzzy
 msgid "September"
 msgstr "九月"
 
-#: automation_networks.php:661 include/global_arrays.php:1902
+#: automation_networks.php:661 include/global_arrays.php:1900
 #, fuzzy
 msgid "October"
 msgstr "十月"
 
-#: automation_networks.php:662 include/global_arrays.php:1903
+#: automation_networks.php:662 include/global_arrays.php:1901
 #, fuzzy
 msgid "November"
 msgstr "十一月"
 
-#: automation_networks.php:663 include/global_arrays.php:1904
+#: automation_networks.php:663 include/global_arrays.php:1902
 #, fuzzy
 msgid "December"
 msgstr "十二月"
@@ -2394,13 +2405,13 @@ msgstr "重新整理"
 #: include/global_arrays.php:749 include/global_arrays.php:750
 #: include/global_arrays.php:1203 include/global_arrays.php:1204
 #: include/global_arrays.php:1205 include/global_arrays.php:1206
+#: include/global_arrays.php:1574 include/global_arrays.php:1575
 #: include/global_arrays.php:1576 include/global_arrays.php:1577
-#: include/global_arrays.php:1578 include/global_arrays.php:1579
-#: include/global_arrays.php:1580 include/global_arrays.php:1615
-#: include/global_arrays.php:1616 include/global_arrays.php:1628
+#: include/global_arrays.php:1578 include/global_arrays.php:1613
+#: include/global_arrays.php:1614 include/global_arrays.php:1626
+#: include/global_arrays.php:1627 include/global_arrays.php:1628
 #: include/global_arrays.php:1629 include/global_arrays.php:1630
 #: include/global_arrays.php:1631 include/global_arrays.php:1632
-#: include/global_arrays.php:1633 include/global_arrays.php:1634
 #: include/global_settings.php:1271 include/global_settings.php:1272
 #: include/global_settings.php:1273 include/global_settings.php:1274
 #: include/global_settings.php:2659 include/global_settings.php:2660
@@ -2528,7 +2539,7 @@ msgstr "版本"
 msgid "Community"
 msgstr "社群"
 
-#: automation_snmp.php:543 lib/functions.php:6145
+#: automation_snmp.php:543 lib/functions.php:6152
 #, fuzzy
 msgid "Port"
 msgstr "端口"
@@ -2675,7 +2686,7 @@ msgstr "單擊“繼續”以刪除快照自動化模板。"
 msgid "Delete Automation Template(s)"
 msgstr "刪除自動化模板"
 
-#: automation_templates.php:271 include/global_arrays.php:1367
+#: automation_templates.php:271 include/global_arrays.php:1365
 #: include/global_form.php:1211 include/global_form.php:1630
 #: lib/html_reports.php:1160
 #, fuzzy
@@ -2842,7 +2853,7 @@ msgstr "你確定要繼續嗎？"
 
 #: automation_tree_rules.php:836 automation_tree_rules.php:861
 #: automation_tree_rules.php:961 include/global_arrays.php:1014
-#: include/global_arrays.php:2808
+#: include/global_arrays.php:2806
 #, fuzzy
 msgid "Tree Rules"
 msgstr "樹規則"
@@ -2877,8 +2888,8 @@ msgstr "根部"
 msgid "No Tree Rules Found"
 msgstr "找不到樹規則"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6655 lib/functions.php:6725
-#: lib/functions.php:6821 lib/functions.php:7475 poller.php:417 poller.php:584
+#: cactid.php:27 help.php:54 lib/functions.php:6662 lib/functions.php:6732
+#: lib/functions.php:6828 lib/functions.php:7482 poller.php:417 poller.php:584
 #: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
 #: poller_automation.php:37 poller_boost.php:387
 #, fuzzy
@@ -2987,7 +2998,7 @@ msgstr "CDEF [編輯：%s]"
 msgid "CDEF [new]"
 msgstr "CDEF [新]"
 
-#: cdef.php:558 include/global_arrays.php:2154
+#: cdef.php:558 include/global_arrays.php:2152
 #, fuzzy
 msgid "CDEF Items"
 msgstr "CDEF項目"
@@ -3008,7 +3019,7 @@ msgid "Delete CDEF Item"
 msgstr "刪除CDEF項目"
 
 #: cdef.php:718 cdef.php:733 cdef.php:858 include/global_arrays.php:1019
-#: include/global_arrays.php:2136
+#: include/global_arrays.php:2134
 #, fuzzy
 msgid "CDEFs"
 msgstr "CDEFs"
@@ -3049,12 +3060,12 @@ msgstr "使用此CDEF的圖表模板數。"
 msgid "No CDEFs"
 msgstr "沒有CDEF"
 
-#: cli/refresh_csrf.php:104 lib/functions.php:666 settings.php:295
+#: cli/refresh_csrf.php:104 lib/functions.php:673 settings.php:295
 #, fuzzy, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
 msgstr "設置保存到Data Collector%d失敗。"
 
-#: cli/refresh_csrf.php:105 lib/functions.php:679 settings.php:307
+#: cli/refresh_csrf.php:105 lib/functions.php:686 settings.php:307
 #, fuzzy, php-format
 msgid "Settings save to Data Collector %d Failed."
 msgstr "設置保存到Data Collector%d失敗。"
@@ -3308,7 +3319,7 @@ msgid "Color Template '%s' had no Aggregate Templates or Graphs using this Color
 msgstr "顏色模板'%s'沒有使用此顏色模板的聚合模板或圖形。"
 
 #: color_templates.php:552 color_templates.php:566 color_templates.php:661
-#: include/global_arrays.php:2724
+#: include/global_arrays.php:2722
 #, fuzzy
 msgid "Color Templates"
 msgstr "顏色模板"
@@ -3517,8 +3528,8 @@ msgid "Summary of issues found for the Data Source."
 msgstr "發現數據源的任何摘要問題。"
 
 #: data_debug.php:621 data_debug.php:1195 data_sources.php:1789
-#: data_sources.php:1963 include/global_arrays.php:994
-#: include/global_arrays.php:1040 include/global_arrays.php:2310
+#: data_sources.php:1963 host.php:1940 include/global_arrays.php:994
+#: include/global_arrays.php:1040 include/global_arrays.php:2308
 #: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1087
 #: utilities.php:325
 #, fuzzy
@@ -3770,7 +3781,7 @@ msgstr "個人資料"
 
 #: data_debug.php:1129 data_debug.php:1148 data_debug.php:1159
 #: data_sources.php:1746 data_sources.php:1766 data_templates.php:1111
-#: graphs.php:2109 graphs_new.php:486 host_templates.php:716
+#: graphs.php:2110 graphs_new.php:486 host.php:1784 host_templates.php:716
 #: host_templates.php:734 lib/clog_webapi.php:549 lib/html.php:227
 #: lib/html_reports.php:1138 lib/html_reports.php:2284 plugins.php:501
 #: settings.php:590 settings.php:612 settings.php:643 tree.php:914
@@ -4057,8 +4068,9 @@ msgstr "字段名稱"
 msgid "Suggested Value"
 msgstr "建議價值"
 
-#: data_queries.php:893 data_queries.php:1003 host_templates.php:515
-#: host_templates.php:569 lib/html.php:51 lib/html_filter.php:38
+#: data_queries.php:893 data_queries.php:1003 host.php:961 host.php:1105
+#: host_templates.php:515 host_templates.php:569 lib/html.php:51
+#: lib/html_filter.php:38
 #, fuzzy
 msgid "Add"
 msgstr "新增"
@@ -4103,13 +4115,14 @@ msgstr "成功找到XML文件"
 msgid "Could not locate XML file."
 msgstr "找不到XML文件。"
 
-#: data_queries.php:1206 host_templates.php:466 include/global_arrays.php:2418
+#: data_queries.php:1206 host.php:869 host_templates.php:466
+#: include/global_arrays.php:2416
 #, fuzzy
 msgid "Associated Graph Templates"
 msgstr "關聯圖模板"
 
 #: data_queries.php:1210 graph_templates.php:858 graphs_new.php:638
-#: lib/api_automation.php:576
+#: host.php:873 lib/api_automation.php:576
 #, fuzzy
 msgid "Graph Template Name"
 msgstr "圖形模板名稱"
@@ -4141,12 +4154,12 @@ msgstr "刪除關聯圖表"
 
 #: data_queries.php:1362 data_queries.php:1377 data_queries.php:1512
 #: include/global_arrays.php:999 include/global_arrays.php:1226
-#: include/global_arrays.php:2400 lib/api_automation.php:1078
+#: include/global_arrays.php:2398 lib/api_automation.php:1078
 #, fuzzy
 msgid "Data Queries"
 msgstr "數據查詢"
 
-#: data_queries.php:1476 utilities.php:1930
+#: data_queries.php:1476 host.php:1001 utilities.php:1930
 #, fuzzy
 msgid "Data Query Name"
 msgstr "數據查詢名稱"
@@ -4176,7 +4189,7 @@ msgstr "使用此數據查詢的圖表數量。"
 msgid "The number of Graphs Templates using this Data Query."
 msgstr "使用此數據查詢的圖表模板數。"
 
-#: data_queries.php:1505 include/global_arrays.php:1359
+#: data_queries.php:1505 include/global_arrays.php:1357
 #: include/global_form.php:570 include/global_form.php:1380
 #, fuzzy
 msgid "Data Input Method"
@@ -4340,7 +4353,7 @@ msgstr ""
 #: include/global_arrays.php:790 include/global_arrays.php:791
 #: include/global_arrays.php:792 include/global_arrays.php:793
 #: include/global_arrays.php:794 include/global_arrays.php:795
-#: include/global_arrays.php:1473 include/global_settings.php:1636
+#: include/global_arrays.php:1471 include/global_settings.php:1636
 #, fuzzy, php-format
 msgid "%d Years"
 msgstr "%d年"
@@ -4351,30 +4364,30 @@ msgid "1 Year"
 msgstr "1 年"
 
 #: data_source_profiles.php:1075 include/global_arrays.php:781
-#: include/global_arrays.php:1467 rrdcleaner.php:537
+#: include/global_arrays.php:1465 rrdcleaner.php:537
 #, fuzzy, php-format
 msgid "%d Month"
 msgstr "%d月"
 
 #: data_source_profiles.php:1075 include/global_arrays.php:782
 #: include/global_arrays.php:783 include/global_arrays.php:784
-#: include/global_arrays.php:785 include/global_arrays.php:1468
-#: include/global_arrays.php:1469 include/global_arrays.php:1470
-#: include/global_arrays.php:1471 rrdcleaner.php:538 rrdcleaner.php:539
+#: include/global_arrays.php:785 include/global_arrays.php:1466
+#: include/global_arrays.php:1467 include/global_arrays.php:1468
+#: include/global_arrays.php:1469 rrdcleaner.php:538 rrdcleaner.php:539
 #: rrdcleaner.php:540
 #, fuzzy, php-format
 msgid "%d Months"
 msgstr "%d個月"
 
 #: data_source_profiles.php:1084 include/global_arrays.php:722
-#: include/global_arrays.php:778 include/global_arrays.php:1465
+#: include/global_arrays.php:778 include/global_arrays.php:1463
 #: rrdcleaner.php:533 rrdcleaner.php:534
 #, fuzzy, php-format
 msgid "%d Week"
 msgstr "%d週"
 
 #: data_source_profiles.php:1084 include/global_arrays.php:779
-#: include/global_arrays.php:780 include/global_arrays.php:1466
+#: include/global_arrays.php:780 include/global_arrays.php:1464
 #: include/global_settings.php:2946 include/global_settings.php:2947
 #: include/global_settings.php:2948 rrdcleaner.php:535 rrdcleaner.php:536
 #, fuzzy, php-format
@@ -4383,15 +4396,15 @@ msgstr "%d週"
 
 #: data_source_profiles.php:1093 include/global_arrays.php:721
 #: include/global_arrays.php:765 include/global_arrays.php:775
-#: include/global_arrays.php:1461
+#: include/global_arrays.php:1459
 #, fuzzy, php-format
 msgid "%d Day"
 msgstr "%d 天"
 
 #: data_source_profiles.php:1093 include/global_arrays.php:766
 #: include/global_arrays.php:776 include/global_arrays.php:777
-#: include/global_arrays.php:1462 include/global_arrays.php:1463
-#: include/global_arrays.php:1464 include/global_settings.php:1631
+#: include/global_arrays.php:1460 include/global_arrays.php:1461
+#: include/global_arrays.php:1462 include/global_settings.php:1631
 #: include/global_settings.php:1632 include/global_settings.php:1633
 #: include/global_settings.php:1634 include/global_settings.php:1645
 #: include/global_settings.php:1646 include/global_settings.php:1647
@@ -4401,9 +4414,9 @@ msgid "%d Days"
 msgstr "%d 天"
 
 #: data_source_profiles.php:1101 include/global_arrays.php:715
-#: include/global_arrays.php:1526 include/global_arrays.php:1547
-#: include/global_arrays.php:1557 include/global_arrays.php:1587
-#: include/global_arrays.php:1596 include/global_arrays.php:1624
+#: include/global_arrays.php:1524 include/global_arrays.php:1545
+#: include/global_arrays.php:1555 include/global_arrays.php:1585
+#: include/global_arrays.php:1594 include/global_arrays.php:1622
 #: include/global_settings.php:1406 include/global_settings.php:1703
 #: include/global_settings.php:2941
 #, fuzzy
@@ -4626,7 +4639,7 @@ msgstr "打開數據源信息模式。"
 msgid "Edit Graph: '%s'."
 msgstr "編輯圖表模板。"
 
-#: data_sources.php:997 graphs.php:1544
+#: data_sources.php:997 graphs.php:1545
 #, fuzzy
 msgid "Edit Device."
 msgstr "編輯設備。"
@@ -4656,10 +4669,10 @@ msgstr "選定的數據模板"
 msgid "The name given to this data template.  Please note that you may only change Graph Templates to a 100%$ compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "為此數據模板指定的名稱。請注意，您只能將圖形模板更改為100％兼容的圖形模板，這意味著它包含相同的數據源。"
 
-#: data_sources.php:1081 graph_view.php:817 graphs.php:1587
+#: data_sources.php:1081 graph_view.php:817 graphs.php:1588
 #: include/global_arrays.php:954 include/global_arrays.php:1003
-#: include/global_arrays.php:1690 include/global_arrays.php:1859
-#: lib/api_automation.php:426 lib/functions.php:6144 lib/html.php:2347
+#: include/global_arrays.php:1688 include/global_arrays.php:1857
+#: lib/api_automation.php:426 lib/functions.php:6151 lib/html.php:2347
 #: lib/html.php:2384 lib/html_reports.php:1170 utilities.php:1930
 #, fuzzy
 msgid "Device"
@@ -4717,8 +4730,8 @@ msgid "External"
 msgstr "外部"
 
 #: data_sources.php:1528 include/global_arrays.php:710
-#: include/global_arrays.php:1207 include/global_arrays.php:1581
-#: include/global_arrays.php:1617 include/global_arrays.php:1635
+#: include/global_arrays.php:1207 include/global_arrays.php:1579
+#: include/global_arrays.php:1615 include/global_arrays.php:1633
 #: include/global_settings.php:1697 include/global_settings.php:2662
 #, fuzzy
 msgid "1 Minute"
@@ -4744,11 +4757,11 @@ msgstr "數據來源[%s]"
 msgid "Bad Indexes"
 msgstr "索引"
 
-#: data_sources.php:1775 graphs.php:2085
+#: data_sources.php:1775 graphs.php:2086
 msgid "Note that this query may take some time to run."
 msgstr "請注意，此查詢可能需要一些時間才能運行。"
 
-#: data_sources.php:1775 graphs.php:2085
+#: data_sources.php:1775 graphs.php:2086
 #, fuzzy
 msgid "Orphaned"
 msgstr "孤"
@@ -4925,7 +4938,7 @@ msgid "After you uncheck this checkbox and then Save the Data Template, any exis
 msgstr "取消選中此復選框然後保存數據模板後，任何基於此數據模板的現有數據源都將丟失其自定義數據。這可能會導致數據收集和圖表損壞"
 
 #: data_templates.php:1092 data_templates.php:1126 data_templates.php:1296
-#: include/global_arrays.php:1237 include/global_arrays.php:2292
+#: include/global_arrays.php:1237 include/global_arrays.php:2290
 #, fuzzy
 msgid "Data Templates"
 msgstr "數據模板"
@@ -5008,7 +5021,7 @@ msgstr "GPRINT預設[編輯：%s]"
 msgid "GPRINT Presets [new]"
 msgstr "GPRINT預設[新]"
 
-#: gprint_presets.php:246 include/global_arrays.php:2118
+#: gprint_presets.php:246 include/global_arrays.php:2116
 #, fuzzy
 msgid "GPRINT Presets"
 msgstr "GPRINT預設"
@@ -5117,51 +5130,50 @@ msgstr "圖數據"
 msgid "RRDtool Graph Syntax"
 msgstr "RRDtool圖形語法"
 
-#: graph_image.php:174 graph_json.php:208 graph_realtime.php:317
+#: graph_image.php:174 graph_json.php:208 graph_realtime.php:319
 #: lib/rrd.php:2526
 #, fuzzy
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller尚未運行。"
 
-#: graph_realtime.php:70 graph_realtime.php:439
-#, fuzzy
-msgid "Real-time has been disabled by your administrator."
-msgstr "您的管理員已禁用實時。"
-
-#: graph_realtime.php:72 graph_realtime.php:74 graph_realtime.php:446
-#: include/auth.php:316 lib/functions.php:8148 permission_denied.php:29
-#: permission_denied.php:36
+#: graph_realtime.php:36 graph_realtime.php:448 include/auth.php:316
+#: lib/functions.php:8155 permission_denied.php:29 permission_denied.php:36
 #, fuzzy
 msgid "Permission Denied"
 msgstr "存取被拒"
 
-#: graph_realtime.php:453
+#: graph_realtime.php:73 graph_realtime.php:441
+#, fuzzy
+msgid "Real-time has been disabled by your administrator."
+msgstr "您的管理員已禁用實時。"
+
+#: graph_realtime.php:455
 #, fuzzy
 msgid "The Image Cache Directory does not exist.  Please first create it and set permissions and then attempt to open another Real-time graph."
 msgstr "圖像緩存目錄不存在。請先創建並設置權限，然後嘗試打開另一個實時圖表。"
 
-#: graph_realtime.php:460
+#: graph_realtime.php:462
 #, fuzzy
 msgid "The Image Cache Directory is not writable.  Please set permissions and then attempt to open another Real-time graph."
 msgstr "圖像緩存目錄不可寫。請設置權限，然後嘗試打開另一個實時圖表。"
 
-#: graph_realtime.php:481
+#: graph_realtime.php:483
 #, fuzzy
 msgid "Kadupul Real-time Graphing"
 msgstr "Kadupul實時圖形"
 
-#: graph_realtime.php:528 lib/html_graph.php:229 lib/html_reports.php:107
+#: graph_realtime.php:530 lib/html_graph.php:229 lib/html_reports.php:107
 #: lib/html_tree.php:1051
 #, fuzzy
 msgid "Thumbnails"
 msgstr "縮略圖"
 
-#: graph_realtime.php:532
+#: graph_realtime.php:534
 #, fuzzy, php-format
 msgid "%d seconds left."
 msgstr "%d秒左。"
 
-#: graph_realtime.php:548
+#: graph_realtime.php:550
 #, fuzzy
 msgid " seconds left."
 msgstr " 幾秒鐘。"
@@ -5245,7 +5257,7 @@ msgstr "點擊“繼續”以使您的圖表與以下圖表模板同步。如果
 msgid "Graph Template Items [edit: %s]"
 msgstr "圖表模板項[編輯：%s]"
 
-#: graph_templates.php:497 include/global_arrays.php:2262
+#: graph_templates.php:497 include/global_arrays.php:2260
 #, fuzzy
 msgid "Graph Item Inputs"
 msgstr "圖表項輸入"
@@ -5282,7 +5294,7 @@ msgstr "如果您希望允許用戶在創建圖表期間覆蓋右側的值，請
 
 #: graph_templates.php:718 graph_templates.php:733 graph_templates.php:900
 #: graphs_new.php:635 include/global_arrays.php:1236
-#: include/global_arrays.php:2238 lib/html_tree.php:541 user_admin.php:1204
+#: include/global_arrays.php:2236 lib/html_tree.php:541 user_admin.php:1204
 #: user_group_admin.php:1215
 #, fuzzy
 msgid "Graph Templates"
@@ -5437,20 +5449,20 @@ msgstr "報告"
 msgid "All Graphs & Templates"
 msgstr "所有圖表和模板"
 
-#: graph_view.php:704 include/global_arrays.php:2892 lib/graphs.php:40
+#: graph_view.php:704 include/global_arrays.php:2890 lib/graphs.php:40
 #: lib/graphs.php:49 lib/html.php:221 lib/html_graph.php:144
 #: lib/html_tree.php:978
 #, fuzzy
 msgid "Not Templated"
 msgstr "沒有模板化"
 
-#: graph_view.php:812 graph_view.php:840 graphs.php:2325
+#: graph_view.php:812 graph_view.php:840 graphs.php:2326
 #: include/global_form.php:1884 lib/html_reports.php:1201 tree.php:1021
 #, fuzzy
 msgid "Graph Name"
 msgstr "圖名稱"
 
-#: graph_view.php:814 graph_view.php:842 graphs.php:2328
+#: graph_view.php:814 graph_view.php:842 graphs.php:2329
 msgid "The Title of this Graph.  Generally programmatically generated from the Graph Template definition or Suggested Naming rules.  The max length of the Title is controlled under Settings->Visual."
 msgstr "該圖的標題。通常以編程方式從“圖表模板”定義或“建議命名”規則生成。標題的最大長度在Settings-&gt; Visual下控制。"
 
@@ -5459,27 +5471,27 @@ msgstr "該圖的標題。通常以編程方式從“圖表模板”定義或“
 msgid "The device for this Graph."
 msgstr "該組的名稱。"
 
-#: graph_view.php:822 graphs.php:2337
+#: graph_view.php:822 graphs.php:2338
 #, fuzzy
 msgid "Source Type"
 msgstr "來源類型"
 
-#: graph_view.php:824 graphs.php:2340
+#: graph_view.php:824 graphs.php:2341
 #, fuzzy
 msgid "The underlying source that this Graph was based upon."
 msgstr "此Graph基於的基礎源。"
 
-#: graph_view.php:827 graphs.php:2343
+#: graph_view.php:827 graphs.php:2344
 #, fuzzy
 msgid "Source Name"
 msgstr "來源名稱"
 
-#: graph_view.php:829 graphs.php:2346
+#: graph_view.php:829 graphs.php:2347
 #, fuzzy
 msgid "The Graph Template or Data Query that this Graph was based upon."
 msgstr "此圖表所基於的圖表模板或數據查詢。"
 
-#: graph_view.php:834 graph_view.php:847 graphs.php:2352
+#: graph_view.php:834 graph_view.php:847 graphs.php:2353
 #, fuzzy
 msgid "The size of this Graph when not in Preview mode."
 msgstr "未處於預覽模式時此圖表的大小。"
@@ -5489,7 +5501,7 @@ msgstr "未處於預覽模式時此圖表的大小。"
 msgid "Select the Report to add the selected Graphs to."
 msgstr "選擇“報告”以將選定的圖形添加到。"
 
-#: graph_view.php:995 include/global_arrays.php:2038
+#: graph_view.php:995 include/global_arrays.php:2036
 #: include/global_settings.php:2733
 #, fuzzy
 msgid "Preview Mode"
@@ -5567,27 +5579,27 @@ msgstr "摘要細節"
 msgid "Download"
 msgstr "下載"
 
-#: graphs.php:36 graphs.php:891 include/global_arrays.php:2088
+#: graphs.php:36 graphs.php:892 include/global_arrays.php:2086
 #, fuzzy
 msgid "Change Graph Template"
 msgstr "更改圖表模板"
 
-#: graphs.php:44 graphs.php:1153
+#: graphs.php:44 graphs.php:1154
 #, fuzzy
 msgid "Create Aggregate Graph"
 msgstr "創建聚合圖"
 
-#: graphs.php:45 graphs.php:1196
+#: graphs.php:45 graphs.php:1197
 #, fuzzy
 msgid "Create Aggregate from Template"
 msgstr "從模板創建聚合"
 
-#: graphs.php:46 graphs.php:1218
+#: graphs.php:46 graphs.php:1219 host.php:34
 #, fuzzy
 msgid "Apply Automation Rules"
 msgstr "應用自動化規則"
 
-#: graphs.php:52 graphs.php:913
+#: graphs.php:52 graphs.php:914
 #, fuzzy
 msgid "Convert to Graph Template"
 msgstr "轉換為圖形模板"
@@ -5607,232 +5619,232 @@ msgstr "創建圖：%s"
 msgid "ERROR: No Data Source associated. Check Template"
 msgstr "錯誤：沒有數據源關聯。檢查模板"
 
-#: graphs.php:672
+#: graphs.php:677
 msgid "The selected Device is not available."
 msgstr ""
 
-#: graphs.php:691
+#: graphs.php:696
 msgid "Aggregate graph creation could not be confirmed. Review the graph settings before retrying."
 msgstr ""
 
-#: graphs.php:842
+#: graphs.php:843
 msgid "Click 'Continue' to delete the following Graph(s).  Note that if you choose to Delete Data Sources, only those Data Sources not in use elsewhere will also be Deleted."
 msgstr "單擊“繼續”以刪除以下圖表。請注意，如果選擇“刪除數據源”，則只有那些未在其他地方使用的數據源也將被刪除。"
 
-#: graphs.php:846
+#: graphs.php:847
 msgid "The following Data Source(s) are in use by these Graph(s)."
 msgstr "這些圖表正在使用以下數據源。"
 
-#: graphs.php:865
+#: graphs.php:866
 msgid "Delete all Data Source(s) referenced by these Graph(s) that are not in use elsewhere."
 msgstr "刪除其他地方未使用的這些圖表引用的所有數據源。"
 
-#: graphs.php:867
+#: graphs.php:868
 msgid "Leave the Data Source(s) untouched."
 msgstr "保持數據源不變。"
 
-#: graphs.php:879
+#: graphs.php:880
 msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
 msgstr "選擇一個圖表模板，然後單擊“繼續”以更改以下圖表的圖表模板。請注意，僅顯示兼容的圖表模板。兼容性由具有相同數據源的人識別。"
 
-#: graphs.php:881 graphs_new.php:604
+#: graphs.php:882 graphs_new.php:604
 #, fuzzy
 msgid "New Graph Template"
 msgstr "新圖模板"
 
-#: graphs.php:895
+#: graphs.php:896
 msgid "Click 'Continue' to duplicate the following Graph(s). You can optionally change the title format for the new Graph(s)."
 msgstr "單擊“繼續”以復制以下圖表。您可以選擇更改新圖表的標題格式。"
 
-#: graphs.php:898
+#: graphs.php:899
 msgid "<graph_title> (1)"
 msgstr "<graph_title> （1）"
 
-#: graphs.php:902
+#: graphs.php:903
 msgid "Duplicate Graph(s)"
 msgstr "重複的圖表"
 
-#: graphs.php:906
+#: graphs.php:907
 msgid "Click 'Continue' to convert the following Graph(s) into Graph Template(s).  You can optionally change the title format for the new Graph Template(s)."
 msgstr "單擊“繼續”將以下圖表轉換為圖形模板。您可以選擇更改新圖形模板的標題格式。"
 
-#: graphs.php:909
+#: graphs.php:910
 msgid "<graph_title> Template"
 msgstr "<graph_title>模板"
 
-#: graphs.php:917
+#: graphs.php:918
 msgid "Click 'Continue' to place the following Graph(s) under the Tree Branch selected below."
 msgstr "單擊“繼續”將以下圖表放在下面選擇的樹枝下。"
 
-#: graphs.php:919
+#: graphs.php:920
 #, fuzzy
 msgid "Destination Branch"
 msgstr "目的地分支"
 
-#: graphs.php:932
+#: graphs.php:933
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
 msgstr "為這些圖表選擇一個新設備，然後單擊“繼續”。"
 
-#: graphs.php:934 include/global_arrays.php:987
+#: graphs.php:935 include/global_arrays.php:987
 #, fuzzy
 msgid "New Device"
 msgstr "新設備"
 
-#: graphs.php:942
+#: graphs.php:943
 msgid "Change Graph(s) Associated Device"
 msgstr "更改圖表關聯設備"
 
-#: graphs.php:946
+#: graphs.php:947
 msgid "Click 'Continue' to re-apply suggested naming to the following Graph(s)."
 msgstr "單擊“繼續”以將建議的命名重新應用於以下圖表。"
 
-#: graphs.php:951
+#: graphs.php:952
 msgid "Reapply Suggested Naming to Graph(s)"
 msgstr "將建議的命名重新應用於圖表"
 
-#: graphs.php:967
+#: graphs.php:968
 msgid "Click 'Continue' to create an Aggregate Graph from the selected Graph(s)."
 msgstr "單擊“繼續”以從選定的圖形創建聚合圖。"
 
-#: graphs.php:976
+#: graphs.php:977
 msgid "The following Data Sources are in use by these Graphs:"
 msgstr "這些圖表正在使用以下數據源。"
 
-#: graphs.php:1037
+#: graphs.php:1038
 msgid "Please confirm"
 msgstr "請確認"
 
-#: graphs.php:1175
+#: graphs.php:1176
 msgid "Select the Aggregate Template to use and press 'Continue' to create your Aggregate Graph.  Otherwise press 'Cancel' to return."
 msgstr "選擇要使用的聚合模板，然後按“繼續”以創建聚合圖。否則按“取消”返回。"
 
-#: graphs.php:1200
+#: graphs.php:1201
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
 msgstr "目前沒有為此圖表模板定義聚合模板。請首先為選定的圖形圖模板創建聚合模板，然後重試，或者簡單地折疊未模板化的聚合圖。"
 
-#: graphs.php:1201
+#: graphs.php:1202
 msgid "Press 'Return' to return and select different Graphs."
 msgstr "按“返回”返回並選擇不同的圖表。"
 
-#: graphs.php:1213
+#: graphs.php:1214
 #, fuzzy
 msgid "Click 'Continue' to apply Automation Rules to the following Graphs."
 msgstr "單擊“繼續”將自動化規則應用於以下圖表。"
 
-#: graphs.php:1300
+#: graphs.php:1301
 #, fuzzy
 msgid "Graph Items [new]"
 msgstr "圖形項目[新]"
 
-#: graphs.php:1344
+#: graphs.php:1345
 #, fuzzy, php-format
 msgid "Graph Items [edit: %s]"
 msgstr "圖表項[編輯：%s]"
 
-#: graphs.php:1468
+#: graphs.php:1469
 #, fuzzy, php-format
 msgid "Graph [edit: %s]"
 msgstr "圖[編輯：%s]"
 
-#: graphs.php:1478
+#: graphs.php:1479
 #, fuzzy
 msgid "Graph [new]"
 msgstr "圖[新]"
 
-#: graphs.php:1503
+#: graphs.php:1504
 #, fuzzy
 msgid "Turn Off Graph Debug Mode."
 msgstr "關閉圖形調試模式。"
 
-#: graphs.php:1505
+#: graphs.php:1506
 #, fuzzy
 msgid "Turn On Graph Debug Mode."
 msgstr "打開圖形調試模式。"
 
-#: graphs.php:1527
+#: graphs.php:1528
 #, fuzzy
 msgid "Edit Graph Template."
 msgstr "編輯圖表模板。"
 
-#: graphs.php:1539
+#: graphs.php:1540
 #, fuzzy, php-format
 msgid "Edit Data Source: '%s'."
 msgstr "數據來源[%s]"
 
-#: graphs.php:1548
+#: graphs.php:1549
 #, fuzzy
 msgid "Unlock Graph."
 msgstr "解鎖圖表。"
 
-#: graphs.php:1550
+#: graphs.php:1551
 #, fuzzy
 msgid "Lock Graph."
 msgstr "鎖定圖。"
 
-#: graphs.php:1579
+#: graphs.php:1580
 #, fuzzy
 msgid "Selected Graph Template"
 msgstr "選定的圖形模板"
 
-#: graphs.php:1580
+#: graphs.php:1581
 #, fuzzy, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "選擇要應用於此圖表的圖表模板。請注意，您只能將圖形模板更改為100 %%兼容的圖形模板，這意味著它包含相同的數據源。"
 
-#: graphs.php:1588
+#: graphs.php:1589
 #, fuzzy
 msgid "Choose the Device that this Graph belongs to."
 msgstr "選擇此圖表所屬的設備。"
 
-#: graphs.php:1644
+#: graphs.php:1645
 #, fuzzy
 msgid "Supplemental Graph Template Data"
 msgstr "補充圖表模板數據"
 
-#: graphs.php:1646
+#: graphs.php:1647
 #, fuzzy
 msgid "Graph Fields"
 msgstr "圖形字段"
 
-#: graphs.php:1647
+#: graphs.php:1648
 #, fuzzy
 msgid "Graph Item Fields"
 msgstr "圖表項目字段"
 
-#: graphs.php:2025
+#: graphs.php:2026
 #, fuzzy
 msgid "Graph Management [ Custom Graphs List Applied - Clear to Reset ]"
 msgstr "[自定義圖表列表已應用 - 從列表中過濾]"
 
-#: graphs.php:2027
+#: graphs.php:2028
 #, fuzzy
 msgid "Graph Management [ All Devices ]"
 msgstr "[所有設備]的新圖表"
 
-#: graphs.php:2029
+#: graphs.php:2030
 #, fuzzy
 msgid "Graph Management [ Non Device Based ]"
 msgstr "用戶組管理[編輯：%s]"
 
-#: graphs.php:2032
+#: graphs.php:2033
 #, fuzzy, php-format
 msgid "Graph Management [ %s ]"
 msgstr "圖形管理"
 
-#: graphs.php:2105
+#: graphs.php:2106
 msgid "Graph Source"
 msgstr "圖，數據源"
 
-#: graphs.php:2110
+#: graphs.php:2111
 msgid "Non Templated"
 msgstr "沒有模板化"
 
-#: graphs.php:2334
+#: graphs.php:2335
 #, fuzzy
 msgid "The internal database ID for this Graph.  Useful when performing automation or debugging."
 msgstr "此圖的內部數據庫ID。在執行自動化或調試時很有用。"
 
-#: graphs.php:2378
+#: graphs.php:2379
 #, fuzzy
 msgid "Empty Graph"
 msgstr "複製圖"
@@ -5847,7 +5859,7 @@ msgstr "數據源[無設備]"
 msgid "Data Sources [%s]"
 msgstr "數據來源[%s]"
 
-#: graphs_items.php:258 include/global_arrays.php:1358
+#: graphs_items.php:258 include/global_arrays.php:1356
 #: include/global_form.php:1640
 #, fuzzy
 msgid "Data Template"
@@ -5912,7 +5924,7 @@ msgstr "儲存過濾條件"
 msgid "Edit this Device"
 msgstr "編輯此設備"
 
-#: graphs_new.php:552
+#: graphs_new.php:552 host.php:829
 #, fuzzy
 msgid "Create New Device"
 msgstr "創建新設備"
@@ -6013,6 +6025,495 @@ msgstr ""
 msgid "The document page '%s' could not be reached locally."
 msgstr ""
 
+#: host.php:32
+#, fuzzy
+msgid "Change Device Settings"
+msgstr "更改設備設置"
+
+#: host.php:33 pollers.php:21
+#, fuzzy
+msgid "Clear Statistics"
+msgstr "明確統計"
+
+#: host.php:35
+#, fuzzy
+msgid "Sync to Device Template"
+msgstr "同步到設備模板"
+
+#: host.php:36
+msgid "Place Device on Report"
+msgstr "將設備放在樹上"
+
+#: host.php:109
+#, fuzzy
+msgid "Data Query Re-indexed."
+msgstr "數據查詢索引"
+
+#: host.php:117
+msgid "Device Data Query Re-indexed.  Verbose output displayed."
+msgstr "設備數據查詢重新索引。顯示詳細輸出。"
+
+#: host.php:143
+msgid "Device Debugging Enabled for Device."
+msgstr "為設備啟用設備調試。"
+
+#: host.php:152
+#, fuzzy
+msgid "Device Debugging Disabled for Device."
+msgstr "設備已禁用"
+
+#: host.php:161
+msgid "Poller Cache for Device Refreshed."
+msgstr "刷新設備的輪詢緩存。"
+
+#: host.php:163
+#, fuzzy
+msgid "ERROR: Invalid Device ID."
+msgstr "錯誤：設備["
+
+#: host.php:222
+msgid "Device Reindex Failed."
+msgstr ""
+
+#: host.php:238
+#, fuzzy, php-format
+msgid "Device Reindex Completed in %0.2f seconds.  There were %d items updated."
+msgstr "設備重新索引在 %0.2f 秒內完成。有 %d 個項目已更新。"
+
+#: host.php:401
+#, fuzzy, php-format
+msgid "Unable to add some Devices to Report '%s'"
+msgstr "無法連接到服務器"
+
+#: host.php:470
+msgid "Click 'Continue' to enable the following Device(s)."
+msgstr "單擊“繼續”以啟用以下設備。"
+
+#: host.php:475
+msgid "Enable Device(s)"
+msgstr "啟用設備"
+
+#: host.php:479
+msgid "Click 'Continue' to disable the following Device(s)."
+msgstr "單擊“繼續”以禁用以下設備。"
+
+#: host.php:484
+msgid "Disable Device(s)"
+msgstr "禁用設備"
+
+#: host.php:488
+msgid "Click 'Continue' to change the Device options below for multiple Device(s).  Please check the box next to the fields you want to update, and then fill in the new value."
+msgstr "單擊“繼續”以更改下面的設備選項以查看多個設備。請選中要更新的字段旁邊的框，然後填寫新值。"
+
+#: host.php:508
+#, fuzzy
+msgid "Update this Field"
+msgstr "更新此字段"
+
+#: host.php:531
+msgid "Change Device(s) SNMP Options"
+msgstr "更改設備SNMP選項"
+
+#: host.php:535
+msgid "Click 'Continue' to clear the counters for the following Device(s)."
+msgstr "單擊“繼續”以清除以下設備的計數器。"
+
+#: host.php:540
+msgid "Clear Statistics on Device(s)"
+msgstr "清除設備統計信息"
+
+#: host.php:544
+msgid "Click 'Continue' to Synchronize the following Device(s) to their Device Template."
+msgstr "單擊“繼續”以將以下設備同步到其設備模板。"
+
+#: host.php:549
+msgid "Synchronize Device(s)"
+msgstr "同步設備"
+
+#: host.php:553
+msgid "Click 'Continue' to delete the following Device(s)."
+msgstr "單擊“繼續”以刪除以下設備。"
+
+#: host.php:556
+#, fuzzy
+msgid "Leave all Graph(s) and Data Source(s) untouched.  Data Source(s) will be disabled however."
+msgstr "保持所有圖形和數據源不變。但是，數據源將被禁用。"
+
+#: host.php:558
+#, fuzzy
+msgid "Delete all associated Graph(s) and Data Source(s)."
+msgstr "刪除所有關聯的圖形和數據源。"
+
+#: host.php:569
+msgid "Click 'Continue' to place the following Device(s) under the branch selected below."
+msgstr "單擊“繼續”將以下設備放在下面選擇的分支下。"
+
+#: host.php:579
+msgid "Place Device(s) on Tree"
+msgstr "將設備放在樹上"
+
+#: host.php:583
+msgid "Click 'Continue' to apply Automation Rules to the following Devices(s)."
+msgstr "單擊“繼續”將自動化規則應用於以下設備。"
+
+#: host.php:588
+msgid "Run Automation on Device(s)"
+msgstr "在設備上運行自動化"
+
+#: host.php:619
+msgid "Add Devices to Report"
+msgstr "添加到報告"
+
+#: host.php:621
+#, fuzzy
+msgid "You currently have no Reports defined."
+msgstr "您目前沒有定義報告。"
+
+#: host.php:793
+#, fuzzy
+msgid "Device [new]"
+msgstr "設備[新]"
+
+#: host.php:807
+#, fuzzy, php-format
+msgid "Device [edit: %s]"
+msgstr "設備[編輯：%s]"
+
+#: host.php:809
+#, fuzzy
+msgid "Disable Device Debug"
+msgstr "禁用設備調試"
+
+#: host.php:811
+#, fuzzy
+msgid "Enable Device Debug"
+msgstr "啟用設備調試"
+
+#: host.php:814
+#, fuzzy
+msgid "Repopulate Poller Cache"
+msgstr "重建輪詢器緩存"
+
+#: host.php:815 include/global_arrays.php:2458 include/global_arrays.php:2470
+#: utilities.php:2401
+#, fuzzy
+msgid "View Poller Cache"
+msgstr "查看輪詢器緩存"
+
+#: host.php:830
+#, fuzzy
+msgid "Create Graphs for this Device"
+msgstr "為此設備創建圖表"
+
+#: host.php:831
+#, fuzzy
+msgid "Re-Index Device"
+msgstr "重新索引方法"
+
+#: host.php:834
+#, fuzzy
+msgid "Data Source List"
+msgstr "數據源列表"
+
+#: host.php:835
+#, fuzzy
+msgid "Graph List"
+msgstr "圖表列表"
+
+#: host.php:841
+#, fuzzy
+msgid "Contacting Device"
+msgstr "聯繫設備"
+
+#: host.php:936 tree.php:1782 tree.php:1856 tree.php:1964
+#, fuzzy
+msgid "Edit"
+msgstr "編輯"
+
+#: host.php:936
+#, fuzzy
+msgid "Is Being Graphed"
+msgstr "正在被繪製"
+
+#: host.php:936
+#, fuzzy
+msgid "Not Being Graphed"
+msgstr "沒有被繪製"
+
+#: host.php:939
+#, fuzzy
+msgid "Delete Graph Template Association"
+msgstr "刪除圖形模板關聯"
+
+#: host.php:946 host_templates.php:493
+#, fuzzy
+msgid "No associated graph templates."
+msgstr "沒有關聯的圖表模板。"
+
+#: host.php:955 host_templates.php:502
+#, fuzzy
+msgid "Add Graph Template"
+msgstr "添加圖表模板"
+
+#: host.php:961
+#, fuzzy
+msgid "Add Graph Template to Device"
+msgstr "將圖形模板添加到設備"
+
+#: host.php:977
+#, fuzzy
+msgid "Data Query Debug Information"
+msgstr "數據查詢調試信息"
+
+#: host.php:981 lib/functions.php:4903 tree.php:1804 tree.php:1878
+#: tree.php:1986 user_admin.php:18 user_group_admin.php:20
+#, fuzzy
+msgid "Copy"
+msgstr "複製"
+
+#: host.php:982
+#, fuzzy
+msgid "Hide"
+msgstr "隱藏"
+
+#: host.php:997 host_templates.php:525
+#, fuzzy
+msgid "Associated Data Queries"
+msgstr "關聯數據查詢"
+
+#: host.php:1002 host.php:1099
+#, fuzzy
+msgid "Re-Index Method"
+msgstr "重新索引方法"
+
+#: host.php:1004 include/global_arrays.php:2092 include/global_arrays.php:2158
+#: include/global_arrays.php:2248 include/global_arrays.php:2284
+#: include/global_arrays.php:2302 include/global_arrays.php:2320
+#: include/global_arrays.php:2338 include/global_arrays.php:2368
+#: include/global_arrays.php:2404 include/global_arrays.php:2434
+#: include/global_arrays.php:2530 include/global_arrays.php:2734
+#: include/global_arrays.php:2758 include/global_arrays.php:2776
+#: include/global_arrays.php:2794 include/global_arrays.php:2818
+#: lib/api_automation.php:1289 lib/api_automation.php:1352
+#: lib/api_automation.php:1422 lib/html_reports.php:1792 plugins.php:605
+#, fuzzy
+msgid "Actions"
+msgstr "動作"
+
+#: host.php:1066
+#, fuzzy, php-format
+msgid " [%d Items, %d Rows]"
+msgstr " [%d項目，%d行]"
+
+#: host.php:1066
+#, fuzzy
+msgid "Fail"
+msgstr "失敗"
+
+#: host.php:1066 lib/functions.php:6166 lib/functions.php:6171
+#, fuzzy
+msgid "Success"
+msgstr "成功"
+
+#: host.php:1069
+#, fuzzy
+msgid "Reload Query"
+msgstr "重新加載查詢"
+
+#: host.php:1070
+#, fuzzy
+msgid "Verbose Query"
+msgstr "詳細查詢"
+
+#: host.php:1071
+#, fuzzy
+msgid "Remove Query"
+msgstr "刪除查詢"
+
+#: host.php:1077
+#, fuzzy
+msgid "No Associated Data Queries."
+msgstr "沒有關聯的數據查詢。"
+
+#: host.php:1093 host_templates.php:559
+#, fuzzy
+msgid "Add Data Query"
+msgstr "添加數據查詢"
+
+#: host.php:1105
+#, fuzzy
+msgid "Add Data Query to Device"
+msgstr "將數據查詢添加到設備"
+
+#: host.php:1276 host.php:1289 include/global_arrays.php:679
+#, fuzzy
+msgid "Ping"
+msgstr "Ping"
+
+#: host.php:1287 include/global_arrays.php:674
+#, fuzzy
+msgid "Ping and SNMP Uptime"
+msgstr "Ping和SNMP正常運行時間"
+
+#: host.php:1288 include/global_arrays.php:676
+#, fuzzy
+msgid "SNMP Uptime"
+msgstr "SNMP正常運行時間"
+
+#: host.php:1290 include/global_arrays.php:675
+#, fuzzy
+msgid "Ping or SNMP Uptime"
+msgstr "Ping或SNMP正常運行時間"
+
+#: host.php:1291 include/global_arrays.php:677
+#, fuzzy
+msgid "SNMP Desc"
+msgstr "SNMP描述"
+
+#: host.php:1292
+#, fuzzy
+msgid "SNMP GetNext"
+msgstr "SNMP getNext"
+
+#: host.php:1356
+msgid "Delete Item from Device"
+msgstr "刪除設備模板"
+
+#: host.php:1599 host.php:1792
+#, fuzzy
+msgid "Undefined"
+msgstr "未定義"
+
+#: host.php:1715 include/global_settings.php:618 lib/html.php:2414
+#: lib/html_reports.php:1151
+#, fuzzy
+msgid "Site"
+msgstr "網站"
+
+#: host.php:1812
+#, fuzzy
+msgid "Export Devices"
+msgstr "導出設備"
+
+#: host.php:1833 lib/api_automation.php:29
+#, fuzzy
+msgid "Not Up"
+msgstr "不起來"
+
+#: host.php:1836 lib/api_automation.php:32 lib/html.php:65
+#: lib/html_utility.php:1330 pollers.php:34
+#, fuzzy
+msgid "Recovering"
+msgstr "正在復原"
+
+#: host.php:1837 lib/api_automation.php:33 lib/auth.php:3007
+#: lib/clog_webapi.php:856 lib/html_utility.php:1339 lib/import.php:342
+#: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4196 lib/rrd.php:4208
+#: lib/spikekill.php:301 package_import.php:522 package_import.php:600
+#: utilities.php:211 utilities.php:212 utilities.php:2759
+#, fuzzy
+msgid "Unknown"
+msgstr "未知"
+
+#: host.php:1916 lib/api_automation.php:570 tree.php:987 utilities.php:2277
+#, fuzzy
+msgid "Device Description"
+msgstr "設備描述"
+
+#: host.php:1919
+#, fuzzy
+msgid "The name by which this Device will be referred to."
+msgstr "引用此設備的名稱。"
+
+#: host.php:1922 include/global_form.php:1176 include/global_form.php:1747
+#: lib/api_automation.php:279 lib/api_automation.php:571
+#: lib/api_automation.php:890 lib/api_automation.php:1197 managers.php:217
+#: pollers.php:115 pollers.php:1001 user_admin.php:1073
+#: user_group_admin.php:1087
+#, fuzzy
+msgid "Hostname"
+msgstr "主機名稱"
+
+#: host.php:1925
+#, fuzzy
+msgid "Either an IP address, or hostname.  If a hostname, it must be resolvable by either DNS, or from your hosts file."
+msgstr "IP地址或主機名。如果是主機名，則必須由DNS或主機文件解析。"
+
+#: host.php:1931
+#, fuzzy
+msgid "The internal database ID for this Device.  Useful when performing automation or debugging."
+msgstr "此設備的內部數據庫ID。在執行自動化或調試時很有用。"
+
+#: host.php:1937
+#, fuzzy
+msgid "The total number of Graphs generated from this Device."
+msgstr "從此設備生成的圖表總數。"
+
+#: host.php:1943
+#, fuzzy
+msgid "The total number of Data Sources generated from this Device."
+msgstr "從此設備生成的數據源總數。"
+
+#: host.php:1949
+#, fuzzy
+msgid "The monitoring status of the Device based upon ping results.  If this Device is a special type Device, by using the hostname \"localhost\", or due to the setting to not perform an Availability Check, it will always remain Up.  When using cmd.php data collector, a Device with no Graphs, is not pinged by the data collector and will remain in an \"Unknown\" state."
+msgstr "基於ping結果的設備監控狀態。如果此設備是特殊類型的設備，通過使用主機名“localhost”，或由於設置不執行可用性檢查，它將始終保持為Up。使用cmd.php數據收集器時，沒有圖形的設備不會被數據收集器ping，並將保持“未知”狀態。"
+
+#: host.php:1952
+#, fuzzy
+msgid "In State"
+msgstr "州"
+
+#: host.php:1955
+#, fuzzy
+msgid "The amount of time that this Device has been in its current state."
+msgstr "此設備已處於當前狀態的時間量。"
+
+#: host.php:1961
+#, fuzzy
+msgid "The current amount of time that the host has been up."
+msgstr "主機已啟動的當前時間。"
+
+#: host.php:1964
+#, fuzzy
+msgid "Poll Time"
+msgstr "民意調查時間"
+
+#: host.php:1967
+#, fuzzy
+msgid "The amount of time it takes to collect data from this Device."
+msgstr "從此設備收集數據所需的時間。"
+
+#: host.php:1970
+#, fuzzy
+msgid "Current (ms)"
+msgstr "電流（ms）"
+
+#: host.php:1973
+#, fuzzy
+msgid "The current ping time in milliseconds to reach the Device."
+msgstr "到達設備的當前ping時間（以毫秒為單位）。"
+
+#: host.php:1976
+#, fuzzy
+msgid "Average (ms)"
+msgstr "平均（ms）"
+
+#: host.php:1979
+#, fuzzy
+msgid "The average ping time in milliseconds to reach the Device since the counters were cleared for this Device."
+msgstr "自從為此設備清除計數器以來到達設備的平均ping時間（以毫秒為單位）。"
+
+#: host.php:1982
+#, fuzzy
+msgid "Availability"
+msgstr "可用性"
+
+#: host.php:1985
+#, fuzzy
+msgid "The availability percentage based upon ping results since the counters were cleared for this Device."
+msgstr "自從為此設備清除計數器以來，基於ping結果的可用性百分比。"
+
 #: host_templates.php:22
 #, fuzzy
 msgid "Sync Devices"
@@ -6082,35 +6583,15 @@ msgstr "設備模板[新]"
 msgid "Default Submit Button"
 msgstr "默認提交按鈕"
 
-#: host_templates.php:493
-#, fuzzy
-msgid "No associated graph templates."
-msgstr "沒有關聯的圖表模板。"
-
-#: host_templates.php:502
-#, fuzzy
-msgid "Add Graph Template"
-msgstr "添加圖表模板"
-
 #: host_templates.php:515
 #, fuzzy
 msgid "Add Graph Template to Device Template"
 msgstr "將圖表模板添加到設備模板"
 
-#: host_templates.php:525
-#, fuzzy
-msgid "Associated Data Queries"
-msgstr "關聯數據查詢"
-
 #: host_templates.php:550
 #, fuzzy
 msgid "No associated data queries."
 msgstr "沒有關聯的數據查詢。"
-
-#: host_templates.php:559
-#, fuzzy
-msgid "Add Data Query"
-msgstr "添加數據查詢"
 
 #: host_templates.php:569
 #, fuzzy
@@ -6123,7 +6604,7 @@ msgid "Delete Item from Device Template"
 msgstr "刪除設備模板"
 
 #: host_templates.php:703 host_templates.php:801 host_templates.php:968
-#: include/global_arrays.php:1238 include/global_arrays.php:2274
+#: include/global_arrays.php:1238 include/global_arrays.php:2272
 #, fuzzy
 msgid "Device Templates"
 msgstr "設備模板"
@@ -6206,12 +6687,12 @@ msgstr "致命：您必須登錄才能訪問Kadupul的這個區域。"
 msgid "Login Again"
 msgstr "再次登錄"
 
-#: include/auth.php:317 lib/functions.php:8149 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8156 permission_denied.php:38
 #, fuzzy
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "如果你覺得這是一個錯誤。請聯繫您的Kadupul管理員。"
 
-#: include/auth.php:317 lib/functions.php:8149 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8156 permission_denied.php:38
 #, fuzzy
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "您無權訪問此Kadupul部分。"
@@ -6912,35 +7393,10 @@ msgstr "Logfile和Syslog / Eventlog"
 msgid "Syslog/Eventlog Only"
 msgstr "僅限Syslog / Eventlog"
 
-#: include/global_arrays.php:674
-#, fuzzy
-msgid "Ping and SNMP Uptime"
-msgstr "Ping和SNMP正常運行時間"
-
-#: include/global_arrays.php:675
-#, fuzzy
-msgid "Ping or SNMP Uptime"
-msgstr "Ping或SNMP正常運行時間"
-
-#: include/global_arrays.php:676
-#, fuzzy
-msgid "SNMP Uptime"
-msgstr "SNMP正常運行時間"
-
-#: include/global_arrays.php:677
-#, fuzzy
-msgid "SNMP Desc"
-msgstr "SNMP描述"
-
 #: include/global_arrays.php:678
 #, fuzzy
 msgid "SNMP getNext"
 msgstr "SNMP getNext"
-
-#: include/global_arrays.php:679
-#, fuzzy
-msgid "Ping"
-msgstr "Ping"
 
 #: include/global_arrays.php:683
 #, fuzzy
@@ -7028,9 +7484,9 @@ msgstr "每隔一小時"
 #: include/global_arrays.php:739 include/global_arrays.php:740
 #: include/global_arrays.php:811 include/global_arrays.php:812
 #: include/global_arrays.php:813 include/global_arrays.php:814
+#: include/global_arrays.php:1867 include/global_arrays.php:1868
 #: include/global_arrays.php:1869 include/global_arrays.php:1870
-#: include/global_arrays.php:1871 include/global_arrays.php:1872
-#: include/global_arrays.php:1873 include/global_settings.php:2551
+#: include/global_arrays.php:1871 include/global_settings.php:2551
 #: include/global_settings.php:2552
 #, fuzzy, php-format
 msgid "Every %d Hours"
@@ -7046,7 +7502,7 @@ msgstr "每 %d 天"
 msgid "%0.1f Minutes"
 msgstr "%0.1f 分鐘"
 
-#: include/global_arrays.php:786 include/global_arrays.php:1472
+#: include/global_arrays.php:786 include/global_arrays.php:1470
 #: include/global_settings.php:1635 rrdcleaner.php:541
 #, fuzzy, php-format
 msgid "%d Year"
@@ -7181,7 +7637,7 @@ msgid "Header"
 msgstr "頁首"
 
 #: include/global_arrays.php:953 include/global_arrays.php:1004
-#: include/global_arrays.php:1689 include/global_arrays.php:1858
+#: include/global_arrays.php:1687 include/global_arrays.php:1856
 #: lib/html.php:2845
 #, fuzzy
 msgid "Graph"
@@ -7303,18 +7759,18 @@ msgid "Data Collection"
 msgstr "數據採集"
 
 #: include/global_arrays.php:998 include/global_arrays.php:1049
-#: include/global_arrays.php:2202 pollers.php:860
+#: include/global_arrays.php:2200 pollers.php:860
 #, fuzzy
 msgid "Data Collectors"
 msgstr "數據收集者"
 
 #: include/global_arrays.php:1000 include/global_arrays.php:1225
-#: include/global_arrays.php:2364
+#: include/global_arrays.php:2362
 #, fuzzy
 msgid "Data Input Methods"
 msgstr "數據輸入方法"
 
-#: include/global_arrays.php:1006 include/global_arrays.php:2895
+#: include/global_arrays.php:1006 include/global_arrays.php:2893
 #, fuzzy
 msgid "Aggregate"
 msgstr "聚合"
@@ -7347,12 +7803,12 @@ msgstr "預設"
 msgid "Data Profiles"
 msgstr "數據配置文件"
 
-#: include/global_arrays.php:1020 include/global_arrays.php:2526
+#: include/global_arrays.php:1020 include/global_arrays.php:2524
 #, fuzzy
 msgid "VDEFs"
 msgstr "VDEFS"
 
-#: include/global_arrays.php:1021 include/global_arrays.php:2226
+#: include/global_arrays.php:1021 include/global_arrays.php:2224
 #, fuzzy
 msgid "Colors"
 msgstr "顏色"
@@ -7363,17 +7819,17 @@ msgid "Import/Export"
 msgstr "匯入/匯出"
 
 #: include/global_arrays.php:1025 include/global_arrays.php:1241
-#: include/global_arrays.php:2652
+#: include/global_arrays.php:2650
 #, fuzzy
 msgid "Import Templates"
 msgstr "匯入範本"
 
-#: include/global_arrays.php:1026 include/global_arrays.php:2658
+#: include/global_arrays.php:1026 include/global_arrays.php:2656
 msgid "Import Packages"
 msgstr "匯入範本"
 
 #: include/global_arrays.php:1027 include/global_arrays.php:1240
-#: include/global_arrays.php:2640 templates_export.php:142
+#: include/global_arrays.php:2638 templates_export.php:142
 #, fuzzy
 msgid "Export Templates"
 msgstr "導出模板"
@@ -7390,26 +7846,26 @@ msgstr "組態"
 msgid "Settings"
 msgstr "設定"
 
-#: include/global_arrays.php:1031 include/global_arrays.php:2580
+#: include/global_arrays.php:1031 include/global_arrays.php:2578
 #: user_admin.php:2131 user_admin.php:2236 user_group_admin.php:725
 #: user_group_admin.php:2164
 #, fuzzy
 msgid "Users"
 msgstr "使用者"
 
-#: include/global_arrays.php:1032 include/global_arrays.php:2610
+#: include/global_arrays.php:1032 include/global_arrays.php:2608
 #, fuzzy
 msgid "User Groups"
 msgstr "用戶群組"
 
-#: include/global_arrays.php:1033 include/global_arrays.php:2598
+#: include/global_arrays.php:1033 include/global_arrays.php:2596
 #: user_domains.php:634 user_domains.php:728
 #, fuzzy
 msgid "User Domains"
 msgstr "用戶域名"
 
 #: include/global_arrays.php:1035 include/global_arrays.php:1054
-#: include/global_arrays.php:1071 include/global_arrays.php:2454
+#: include/global_arrays.php:1071 include/global_arrays.php:2452
 #, fuzzy
 msgid "Utilities"
 msgstr "公用程式"
@@ -7421,7 +7877,7 @@ msgstr "系統工具"
 
 #: include/global_arrays.php:1037 include/global_arrays.php:1072
 #: include/global_arrays.php:1115 include/global_arrays.php:1218
-#: include/global_arrays.php:2214 user_admin.php:1497 user_group_admin.php:1511
+#: include/global_arrays.php:2212 user_admin.php:1497 user_group_admin.php:1511
 #, fuzzy
 msgid "External Links"
 msgstr "外部連結"
@@ -7638,305 +8094,305 @@ msgstr "總務局"
 msgid "System Administration"
 msgstr "系統管理"
 
-#: include/global_arrays.php:1355 lib/html.php:1408
+#: include/global_arrays.php:1353 lib/html.php:1408
 #, fuzzy
 msgid "CDEF"
 msgstr "CDEF"
 
-#: include/global_arrays.php:1356
+#: include/global_arrays.php:1354
 #, fuzzy
 msgid "CDEF Item"
 msgstr "CDEF項目"
 
-#: include/global_arrays.php:1357
+#: include/global_arrays.php:1355
 #, fuzzy
 msgid "GPRINT Preset"
 msgstr "GPRINT預設"
 
-#: include/global_arrays.php:1360
+#: include/global_arrays.php:1358
 #, fuzzy
 msgid "Data Input Field"
 msgstr "數據輸入字段"
 
-#: include/global_arrays.php:1361 include/global_form.php:579
+#: include/global_arrays.php:1359 include/global_form.php:579
 #: include/global_form.php:1679 package_import.php:862
 #, fuzzy
 msgid "Data Source Profile"
 msgstr "數據源配置文件"
 
-#: include/global_arrays.php:1362
+#: include/global_arrays.php:1360
 #, fuzzy
 msgid "Data Template Item"
 msgstr "數據模板項"
 
-#: include/global_arrays.php:1364
+#: include/global_arrays.php:1362
 #, fuzzy
 msgid "Graph Template Item"
 msgstr "圖表模板項目"
 
-#: include/global_arrays.php:1365
+#: include/global_arrays.php:1363
 #, fuzzy
 msgid "Graph Template Input"
 msgstr "圖表模板輸入"
 
-#: include/global_arrays.php:1368 lib/html.php:1409
+#: include/global_arrays.php:1366 lib/html.php:1409
 #, fuzzy
 msgid "VDEF"
 msgstr "VDEF"
 
-#: include/global_arrays.php:1369
+#: include/global_arrays.php:1367
 #, fuzzy
 msgid "VDEF Item"
 msgstr "VDEF項目"
 
-#: include/global_arrays.php:1423
+#: include/global_arrays.php:1421
 #, fuzzy
 msgid "Last Half Hour"
 msgstr "上半小時"
 
-#: include/global_arrays.php:1424
+#: include/global_arrays.php:1422
 #, fuzzy
 msgid "Last Hour"
 msgstr "前1小時"
 
+#: include/global_arrays.php:1423 include/global_arrays.php:1424
 #: include/global_arrays.php:1425 include/global_arrays.php:1426
-#: include/global_arrays.php:1427 include/global_arrays.php:1428
 #, fuzzy, php-format
 msgid "Last %d Hours"
 msgstr "最後%d小時"
 
-#: include/global_arrays.php:1429
+#: include/global_arrays.php:1427
 #, fuzzy
 msgid "Last Day"
 msgstr "最後一天"
 
-#: include/global_arrays.php:1430 include/global_arrays.php:1431
-#: include/global_arrays.php:1432
+#: include/global_arrays.php:1428 include/global_arrays.php:1429
+#: include/global_arrays.php:1430
 #, fuzzy, php-format
 msgid "Last %d Days"
 msgstr "最近 %d 天"
 
-#: include/global_arrays.php:1433
+#: include/global_arrays.php:1431
 #, fuzzy
 msgid "Last Week"
 msgstr "上週"
 
-#: include/global_arrays.php:1434
+#: include/global_arrays.php:1432
 #, fuzzy, php-format
 msgid "Last %d Weeks"
 msgstr "最後%d週"
 
-#: include/global_arrays.php:1435
+#: include/global_arrays.php:1433
 #, fuzzy
 msgid "Last Month"
 msgstr "上個月"
 
+#: include/global_arrays.php:1434 include/global_arrays.php:1435
 #: include/global_arrays.php:1436 include/global_arrays.php:1437
-#: include/global_arrays.php:1438 include/global_arrays.php:1439
 #, fuzzy, php-format
 msgid "Last %d Months"
 msgstr "最後%d個月"
 
-#: include/global_arrays.php:1440
+#: include/global_arrays.php:1438
 #, fuzzy
 msgid "Last Year"
 msgstr "去年"
 
-#: include/global_arrays.php:1441
+#: include/global_arrays.php:1439
 #, fuzzy, php-format
 msgid "Last %d Years"
 msgstr "最後%d年"
 
-#: include/global_arrays.php:1442
+#: include/global_arrays.php:1440
 #, fuzzy
 msgid "Day Shift"
 msgstr "白班"
 
-#: include/global_arrays.php:1443
+#: include/global_arrays.php:1441
 #, fuzzy
 msgid "This Day"
 msgstr "最後一天"
 
-#: include/global_arrays.php:1444
+#: include/global_arrays.php:1442
 #, fuzzy
 msgid "This Week"
 msgstr "本週"
 
-#: include/global_arrays.php:1445
+#: include/global_arrays.php:1443
 #, fuzzy
 msgid "This Month"
 msgstr "本月"
 
-#: include/global_arrays.php:1446
+#: include/global_arrays.php:1444
 #, fuzzy
 msgid "This Year"
 msgstr "今年"
 
-#: include/global_arrays.php:1447
+#: include/global_arrays.php:1445
 #, fuzzy
 msgid "Previous Day"
 msgstr "前一天"
 
-#: include/global_arrays.php:1448
+#: include/global_arrays.php:1446
 #, fuzzy
 msgid "Previous Week"
 msgstr "上個禮拜"
 
-#: include/global_arrays.php:1449
+#: include/global_arrays.php:1447
 #, fuzzy
 msgid "Previous Month"
 msgstr "上個月"
 
-#: include/global_arrays.php:1450
+#: include/global_arrays.php:1448
 #, fuzzy
 msgid "Previous Year"
 msgstr "上一年"
 
-#: include/global_arrays.php:1455
+#: include/global_arrays.php:1453
 #, fuzzy, php-format
 msgid "%d Min"
 msgstr "%d分鐘"
 
-#: include/global_arrays.php:1510
+#: include/global_arrays.php:1508
 #, fuzzy
 msgid "Month Number, Day, Year"
 msgstr "月號，日，年"
 
-#: include/global_arrays.php:1511
+#: include/global_arrays.php:1509
 #, fuzzy
 msgid "Month Name, Day, Year"
 msgstr "月份名稱，日期，年份"
 
-#: include/global_arrays.php:1512
+#: include/global_arrays.php:1510
 #, fuzzy
 msgid "Day, Month Number, Year"
 msgstr "日，月號，年"
 
-#: include/global_arrays.php:1513
+#: include/global_arrays.php:1511
 #, fuzzy
 msgid "Day, Month Name, Year"
 msgstr "日，月名，年份"
 
-#: include/global_arrays.php:1514
+#: include/global_arrays.php:1512
 #, fuzzy
 msgid "Year, Month Number, Day"
 msgstr "年，月號，日"
 
-#: include/global_arrays.php:1515
+#: include/global_arrays.php:1513
 #, fuzzy
 msgid "Year, Month Name, Day"
 msgstr "年，月名，日"
 
-#: include/global_arrays.php:1525 include/global_arrays.php:1556
+#: include/global_arrays.php:1523 include/global_arrays.php:1554
 #, fuzzy
 msgid "After Boost"
 msgstr "升壓之後"
 
+#: include/global_arrays.php:1533 include/global_arrays.php:1534
 #: include/global_arrays.php:1535 include/global_arrays.php:1536
-#: include/global_arrays.php:1537 include/global_arrays.php:1538
-#: include/global_arrays.php:1539 include/global_arrays.php:1601
-#: include/global_arrays.php:1602
+#: include/global_arrays.php:1537 include/global_arrays.php:1599
+#: include/global_arrays.php:1600
 #, fuzzy, php-format
 msgid "%d MBytes"
 msgstr "%d MBytes"
 
-#: include/global_arrays.php:1540
+#: include/global_arrays.php:1538
 #, fuzzy
 msgid "1 GByte"
 msgstr "1 GByte"
 
-#: include/global_arrays.php:1541 include/global_arrays.php:1604
+#: include/global_arrays.php:1539 include/global_arrays.php:1602
 #: lib/boost.php:124
 #, fuzzy, php-format
 msgid "%s GBytes"
 msgstr "%s GBytes"
 
-#: include/global_arrays.php:1542 include/global_arrays.php:1543
+#: include/global_arrays.php:1540 include/global_arrays.php:1541
+#: include/global_arrays.php:1603 include/global_arrays.php:1604
 #: include/global_arrays.php:1605 include/global_arrays.php:1606
 #: include/global_arrays.php:1607 include/global_arrays.php:1608
-#: include/global_arrays.php:1609 include/global_arrays.php:1610
 #, fuzzy, php-format
 msgid "%d GBytes"
 msgstr "%d GBytes"
 
-#: include/global_arrays.php:1563
+#: include/global_arrays.php:1561
 #, fuzzy
 msgid "2,000 Data Source Items"
 msgstr "2,000個數據源項目"
 
-#: include/global_arrays.php:1564
+#: include/global_arrays.php:1562
 #, fuzzy
 msgid "5,000 Data Source Items"
 msgstr "5,000個數據源項目"
 
-#: include/global_arrays.php:1565
+#: include/global_arrays.php:1563
 #, fuzzy
 msgid "10,000 Data Source Items"
 msgstr "10,000個數據源項"
 
-#: include/global_arrays.php:1566
+#: include/global_arrays.php:1564
 #, fuzzy
 msgid "15,000 Data Source Items"
 msgstr "15,000個數據源項目"
 
-#: include/global_arrays.php:1567
+#: include/global_arrays.php:1565
 #, fuzzy
 msgid "25,000 Data Source Items"
 msgstr "25,000個數據源項目"
 
-#: include/global_arrays.php:1568
+#: include/global_arrays.php:1566
 #, fuzzy
 msgid "50,000 Data Source Items (Default)"
 msgstr "50,000個數據源項（默認）"
 
-#: include/global_arrays.php:1569
+#: include/global_arrays.php:1567
 #, fuzzy
 msgid "100,000 Data Source Items"
 msgstr "100,000個數據源項"
 
-#: include/global_arrays.php:1570
+#: include/global_arrays.php:1568
 #, fuzzy
 msgid "200,000 Data Source Items"
 msgstr "200,000個數據源項目"
 
-#: include/global_arrays.php:1571
+#: include/global_arrays.php:1569
 #, fuzzy
 msgid "400,000 Data Source Items"
 msgstr "400,000個數據源項目"
 
-#: include/global_arrays.php:1588
+#: include/global_arrays.php:1586
 #, fuzzy
 msgid "2 Hours"
 msgstr "2小時"
 
-#: include/global_arrays.php:1589
+#: include/global_arrays.php:1587
 #, fuzzy
 msgid "4 Hours"
 msgstr "4個小時"
 
-#: include/global_arrays.php:1590
+#: include/global_arrays.php:1588
 #, fuzzy
 msgid "6 Hours"
 msgstr "6個小時"
 
-#: include/global_arrays.php:1597 include/global_settings.php:1489
+#: include/global_arrays.php:1595 include/global_settings.php:1489
 #: include/global_settings.php:1490 include/global_settings.php:1491
 #, fuzzy, php-format
 msgid "%s Hours"
 msgstr "%s小時"
 
-#: include/global_arrays.php:1603
+#: include/global_arrays.php:1601
 #, fuzzy, php-format
 msgid "%d GByte"
 msgstr "%d GBytes"
 
-#: include/global_arrays.php:1611 utilities.php:2856 utilities.php:2857
+#: include/global_arrays.php:1609 utilities.php:2856 utilities.php:2857
 #: utilities.php:2906
 #, fuzzy
 msgid "Unlimited"
 msgstr "無限"
 
-#: include/global_arrays.php:1618 include/global_settings.php:1388
+#: include/global_arrays.php:1616 include/global_settings.php:1388
 #: include/global_settings.php:1389 include/global_settings.php:1390
 #: include/global_settings.php:1391 include/global_settings.php:1401
 #: include/global_settings.php:1402 include/global_settings.php:1403
@@ -7952,923 +8408,903 @@ msgstr "無限"
 msgid "%s Minutes"
 msgstr "%s Minutes"
 
-#: include/global_arrays.php:1640
+#: include/global_arrays.php:1638
 #, fuzzy
 msgid "1 Megabyte"
 msgstr "1兆字節"
 
+#: include/global_arrays.php:1639 include/global_arrays.php:1640
 #: include/global_arrays.php:1641 include/global_arrays.php:1642
 #: include/global_arrays.php:1643 include/global_arrays.php:1644
-#: include/global_arrays.php:1645 include/global_arrays.php:1646
 #, fuzzy, php-format
 msgid "%d Megabytes"
 msgstr "%d兆字節"
 
-#: include/global_arrays.php:1650
+#: include/global_arrays.php:1648
 #, fuzzy
 msgid "Send Now"
 msgstr "立刻寄出"
 
-#: include/global_arrays.php:1658
+#: include/global_arrays.php:1656
 #, fuzzy
 msgid "Take Ownership"
 msgstr "取得所有權"
 
-#: include/global_arrays.php:1662
+#: include/global_arrays.php:1660
 #, fuzzy
 msgid "Inline PNG Image"
 msgstr "內聯PNG圖像"
 
-#: include/global_arrays.php:1667
+#: include/global_arrays.php:1665
 #, fuzzy
 msgid "Inline JPEG Image"
 msgstr "內聯JPEG圖像"
 
-#: include/global_arrays.php:1668
+#: include/global_arrays.php:1666
 #, fuzzy
 msgid "Inline GIF Image"
 msgstr "內聯GIF圖像"
 
-#: include/global_arrays.php:1671
+#: include/global_arrays.php:1669
 #, fuzzy
 msgid "Attached PNG Image"
 msgstr "附PNG圖片"
 
-#: include/global_arrays.php:1674
+#: include/global_arrays.php:1672
 #, fuzzy
 msgid "Attached JPEG Image"
 msgstr "附加的JPEG圖像"
 
-#: include/global_arrays.php:1675
+#: include/global_arrays.php:1673
 #, fuzzy
 msgid "Attached GIF Image"
 msgstr "附加GIF圖像"
 
-#: include/global_arrays.php:1679
+#: include/global_arrays.php:1677
 #, fuzzy
 msgid "Inline PNG Image, LN Style"
 msgstr "內聯PNG圖像，LN樣式"
 
-#: include/global_arrays.php:1681
+#: include/global_arrays.php:1679
 #, fuzzy
 msgid "Inline JPEG Image, LN Style"
 msgstr "內聯JPEG圖像，LN樣式"
 
-#: include/global_arrays.php:1682
+#: include/global_arrays.php:1680
 #, fuzzy
 msgid "Inline GIF Image, LN Style"
 msgstr "內聯GIF圖像，LN樣式"
 
-#: include/global_arrays.php:1687
+#: include/global_arrays.php:1685
 #, fuzzy
 msgid "Text"
 msgstr "文字"
 
-#: include/global_arrays.php:1688 include/global_form.php:2252
+#: include/global_arrays.php:1686 include/global_form.php:2252
 #, fuzzy
 msgid "Tree"
 msgstr "樹"
 
-#: include/global_arrays.php:1691
+#: include/global_arrays.php:1689
 #, fuzzy
 msgid "Horizontal Rule"
 msgstr "水平尺規"
 
-#: include/global_arrays.php:1695
+#: include/global_arrays.php:1693
 #, fuzzy
 msgid "left"
 msgstr "左"
 
-#: include/global_arrays.php:1696
+#: include/global_arrays.php:1694
 #, fuzzy
 msgid "center"
 msgstr "置中"
 
-#: include/global_arrays.php:1697
+#: include/global_arrays.php:1695
 #, fuzzy
 msgid "right"
 msgstr "右"
 
-#: include/global_arrays.php:1701
+#: include/global_arrays.php:1699
 #, fuzzy
 msgid "Minute(s)"
 msgstr "分鐘"
 
-#: include/global_arrays.php:1702
+#: include/global_arrays.php:1700
 #, fuzzy
 msgid "Hour(s)"
 msgstr "小時"
 
-#: include/global_arrays.php:1703
+#: include/global_arrays.php:1701
 #, fuzzy
 msgid "Day(s)"
 msgstr "日"
 
-#: include/global_arrays.php:1704
+#: include/global_arrays.php:1702
 #, fuzzy
 msgid "Week(s)"
 msgstr "週"
 
-#: include/global_arrays.php:1705
+#: include/global_arrays.php:1703
 #, fuzzy
 msgid "Month(s), Day of Month"
 msgstr "月（月），月份日"
 
-#: include/global_arrays.php:1706
+#: include/global_arrays.php:1704
 #, fuzzy
 msgid "Month(s), Day of Week"
 msgstr "月（星期），星期幾"
 
-#: include/global_arrays.php:1707
+#: include/global_arrays.php:1705
 #, fuzzy
 msgid "Year(s)"
 msgstr "年份：%s"
 
-#: include/global_arrays.php:1711
+#: include/global_arrays.php:1709
 #, fuzzy
 msgid "Keep Graph Types"
 msgstr "保持圖表類型"
 
-#: include/global_arrays.php:1712
+#: include/global_arrays.php:1710
 #, fuzzy
 msgid "Keep Type and STACK"
 msgstr "保持類型和堆疊"
 
-#: include/global_arrays.php:1713
+#: include/global_arrays.php:1711
 #, fuzzy
 msgid "Convert to AREA/STACK Graph"
 msgstr "轉換為AREA / STACK圖"
 
-#: include/global_arrays.php:1714
+#: include/global_arrays.php:1712
 #, fuzzy
 msgid "Convert to LINE1 Graph"
 msgstr "轉換為LINE1圖表"
 
-#: include/global_arrays.php:1715
+#: include/global_arrays.php:1713
 #, fuzzy
 msgid "Convert to LINE2 Graph"
 msgstr "轉換為LINE2圖表"
 
-#: include/global_arrays.php:1716
+#: include/global_arrays.php:1714
 #, fuzzy
 msgid "Convert to LINE3 Graph"
 msgstr "轉換為LINE3圖表"
 
-#: include/global_arrays.php:1717
+#: include/global_arrays.php:1715
 #, fuzzy
 msgid "Convert to LINE1/STACK Graph"
 msgstr "轉換為LINE1圖表"
 
-#: include/global_arrays.php:1718
+#: include/global_arrays.php:1716
 #, fuzzy
 msgid "Convert to LINE2/STACK Graph"
 msgstr "轉換為LINE2圖表"
 
-#: include/global_arrays.php:1719
+#: include/global_arrays.php:1717
 #, fuzzy
 msgid "Convert to LINE3/STACK Graph"
 msgstr "轉換為LINE3圖表"
 
-#: include/global_arrays.php:1723
+#: include/global_arrays.php:1721
 #, fuzzy
 msgid "No Totals"
 msgstr "沒有總計"
 
-#: include/global_arrays.php:1724
+#: include/global_arrays.php:1722
 #, fuzzy
 msgid "Print All Legend Items"
 msgstr "打印所有圖例項目"
 
-#: include/global_arrays.php:1725
+#: include/global_arrays.php:1723
 #, fuzzy
 msgid "Print Totaling Legend Items Only"
 msgstr "打印總計僅限圖例項目"
 
-#: include/global_arrays.php:1729
+#: include/global_arrays.php:1727
 #, fuzzy
 msgid "Total Similar Data Sources"
 msgstr "總類似數據源"
 
-#: include/global_arrays.php:1730
+#: include/global_arrays.php:1728
 #, fuzzy
 msgid "Total All Data Sources"
 msgstr "所有數據源總數"
 
-#: include/global_arrays.php:1734
+#: include/global_arrays.php:1732
 #, fuzzy
 msgid "No Reordering"
 msgstr "沒有重新排序"
 
-#: include/global_arrays.php:1735
+#: include/global_arrays.php:1733
 #, fuzzy
 msgid "Data Source, Graph"
 msgstr "數據源，圖表"
 
-#: include/global_arrays.php:1736
+#: include/global_arrays.php:1734
 #, fuzzy
 msgid "Graph, Data Source"
 msgstr "圖，數據源"
 
-#: include/global_arrays.php:1737
+#: include/global_arrays.php:1735
 #, fuzzy
 msgid "Base Graph Order"
 msgstr "有圖表"
 
-#: include/global_arrays.php:1744
+#: include/global_arrays.php:1742
 #, fuzzy
 msgid "contains"
 msgstr "包含"
 
-#: include/global_arrays.php:1745
+#: include/global_arrays.php:1743
 #, fuzzy
 msgid "does not contain"
 msgstr "不包含"
 
-#: include/global_arrays.php:1746
+#: include/global_arrays.php:1744
 #, fuzzy
 msgid "begins with"
 msgstr "開始於"
 
-#: include/global_arrays.php:1747
+#: include/global_arrays.php:1745
 #, fuzzy
 msgid "does not begin with"
 msgstr "不是以"
 
-#: include/global_arrays.php:1748
+#: include/global_arrays.php:1746
 #, fuzzy
 msgid "ends with"
 msgstr "结束於"
 
-#: include/global_arrays.php:1749
+#: include/global_arrays.php:1747
 #, fuzzy
 msgid "does not end with"
 msgstr "結尾非結束於"
 
-#: include/global_arrays.php:1750
+#: include/global_arrays.php:1748
 #, fuzzy
 msgid "matches"
 msgstr "符合"
 
-#: include/global_arrays.php:1751
+#: include/global_arrays.php:1749
 #, fuzzy
 msgid "is not equal to"
 msgstr "不等於"
 
-#: include/global_arrays.php:1752
+#: include/global_arrays.php:1750
 #, fuzzy
 msgid "is less than"
 msgstr "小於"
 
-#: include/global_arrays.php:1753
+#: include/global_arrays.php:1751
 #, fuzzy
 msgid "is less than or equal"
 msgstr "小於等於"
 
-#: include/global_arrays.php:1754
+#: include/global_arrays.php:1752
 #, fuzzy
 msgid "is greater than"
 msgstr "大於"
 
-#: include/global_arrays.php:1755
+#: include/global_arrays.php:1753
 #, fuzzy
 msgid "is greater than or equal"
 msgstr "大於或等於"
 
-#: include/global_arrays.php:1756
+#: include/global_arrays.php:1754
 #, fuzzy
 msgid "is unknown"
 msgstr "未知"
 
-#: include/global_arrays.php:1757
+#: include/global_arrays.php:1755
 #, fuzzy
 msgid "is not unknown"
 msgstr "不是未知數"
 
-#: include/global_arrays.php:1758
+#: include/global_arrays.php:1756
 #, fuzzy
 msgid "is empty"
 msgstr "為空"
 
-#: include/global_arrays.php:1759
+#: include/global_arrays.php:1757
 #, fuzzy
 msgid "is not empty"
 msgstr "不為空"
 
-#: include/global_arrays.php:1760
+#: include/global_arrays.php:1758
 #, fuzzy
 msgid "matches regular expression"
 msgstr "符合規則運算式"
 
-#: include/global_arrays.php:1761
+#: include/global_arrays.php:1759
 #, fuzzy
 msgid "does not match regular expression"
 msgstr "與正則表達式不匹配"
 
-#: include/global_arrays.php:1863
+#: include/global_arrays.php:1861
 #, fuzzy
 msgid "Fixed String"
 msgstr "固定字符串"
 
-#: include/global_arrays.php:1868
+#: include/global_arrays.php:1866
 #, fuzzy
 msgid "Every 1 Hour"
 msgstr "每1小時一次"
 
-#: include/global_arrays.php:1874
+#: include/global_arrays.php:1872
 #, fuzzy
 msgid "Every Day"
 msgstr "每天"
 
-#: include/global_arrays.php:1875
+#: include/global_arrays.php:1873
 #, fuzzy
 msgid "Every Week"
 msgstr "每週"
 
-#: include/global_arrays.php:1876 include/global_arrays.php:1877
+#: include/global_arrays.php:1874 include/global_arrays.php:1875
 #, fuzzy, php-format
 msgid "Every %d Weeks"
 msgstr "每個%d週"
 
-#: include/global_arrays.php:1908
+#: include/global_arrays.php:1906
 #, fuzzy
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jan"
 msgstr "一月"
 
-#: include/global_arrays.php:1909
+#: include/global_arrays.php:1907
 #, fuzzy
 msgctxt "A short textual representation of a month, three letters"
 msgid "Feb"
 msgstr "二月"
 
-#: include/global_arrays.php:1910
+#: include/global_arrays.php:1908
 #, fuzzy
 msgctxt "A short textual representation of a month, three letters"
 msgid "Mar"
 msgstr "三月"
 
-#: include/global_arrays.php:1911
+#: include/global_arrays.php:1909
 #, fuzzy
 msgctxt "A short textual representation of a month, three letters"
 msgid "Apr"
 msgstr "四月"
 
-#: include/global_arrays.php:1912
+#: include/global_arrays.php:1910
 #, fuzzy
 msgctxt "A short textual representation of a month, three letters"
 msgid "May"
 msgstr "五月"
 
-#: include/global_arrays.php:1913
+#: include/global_arrays.php:1911
 #, fuzzy
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jun"
 msgstr "六月"
 
-#: include/global_arrays.php:1914
+#: include/global_arrays.php:1912
 #, fuzzy
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jul"
 msgstr "七月"
 
-#: include/global_arrays.php:1915
+#: include/global_arrays.php:1913
 #, fuzzy
 msgctxt "A short textual representation of a month, three letters"
 msgid "Aug"
 msgstr "八月"
 
-#: include/global_arrays.php:1916
+#: include/global_arrays.php:1914
 #, fuzzy
 msgctxt "A short textual representation of a month, three letters"
 msgid "Sep"
 msgstr "九月"
 
-#: include/global_arrays.php:1917
+#: include/global_arrays.php:1915
 #, fuzzy
 msgctxt "A short textual representation of a month, three letters"
 msgid "Oct"
 msgstr "十月"
 
-#: include/global_arrays.php:1918
+#: include/global_arrays.php:1916
 #, fuzzy
 msgctxt "A short textual representation of a month, three letters"
 msgid "Nov"
 msgstr "十一月"
 
-#: include/global_arrays.php:1919
+#: include/global_arrays.php:1917
 #, fuzzy
 msgctxt "A short textual representation of a month, three letters"
 msgid "Dec"
 msgstr "十二月"
 
-#: include/global_arrays.php:1923
+#: include/global_arrays.php:1921
 msgid "Use the First Handler Found"
 msgstr "使用 PHP GetText 處理程序"
 
-#: include/global_arrays.php:1927
+#: include/global_arrays.php:1925
 msgid "Use the PHP GetText Handler"
 msgstr "使用 PHP GetText 處理程序"
 
-#: include/global_arrays.php:1931
+#: include/global_arrays.php:1929
 msgid "Use the Oscarotero GetText Handler"
 msgstr "使用 Oscarotero GetText 處理程序"
 
-#: include/global_arrays.php:1935
+#: include/global_arrays.php:1933
 msgid "Use the MonoTranslator GetText Handler"
 msgstr "使用 MonoTranslator GetText 處理程序"
 
-#: include/global_arrays.php:1949
+#: include/global_arrays.php:1947
 #, fuzzy
 msgctxt "A textual representation of a day, three letters"
 msgid "Sun"
 msgstr "星期日"
 
-#: include/global_arrays.php:1950
+#: include/global_arrays.php:1948
 #, fuzzy
 msgctxt "A textual representation of a day, three letters"
 msgid "Mon"
 msgstr "星期一"
 
-#: include/global_arrays.php:1951
+#: include/global_arrays.php:1949
 #, fuzzy
 msgctxt "A textual representation of a day, three letters"
 msgid "Tue"
 msgstr "星期二"
 
-#: include/global_arrays.php:1952
+#: include/global_arrays.php:1950
 #, fuzzy
 msgctxt "A textual representation of a day, three letters"
 msgid "Wed"
 msgstr "星期三"
 
-#: include/global_arrays.php:1953
+#: include/global_arrays.php:1951
 #, fuzzy
 msgctxt "A textual representation of a day, three letters"
 msgid "Thu"
 msgstr "星期四"
 
-#: include/global_arrays.php:1954
+#: include/global_arrays.php:1952
 #, fuzzy
 msgctxt "A textual representation of a day, three letters"
 msgid "Fri"
 msgstr "星期五"
 
-#: include/global_arrays.php:1955
+#: include/global_arrays.php:1953
 #, fuzzy
 msgctxt "A textual representation of a day, three letters"
 msgid "Sat"
 msgstr "星期六"
 
-#: include/global_arrays.php:1959
+#: include/global_arrays.php:1957
 #, fuzzy
 msgid "Arabic"
 msgstr "阿拉伯語"
 
-#: include/global_arrays.php:1960
+#: include/global_arrays.php:1958
 #, fuzzy
 msgid "Bulgarian"
 msgstr "保加利亞語"
 
-#: include/global_arrays.php:1961
+#: include/global_arrays.php:1959
 #, fuzzy
 msgid "Chinese (China)"
 msgstr "中文（中國）"
 
-#: include/global_arrays.php:1962
+#: include/global_arrays.php:1960
 #, fuzzy
 msgid "Chinese (Taiwan)"
 msgstr "中文（台灣）"
 
-#: include/global_arrays.php:1963
+#: include/global_arrays.php:1961
 #, fuzzy
 msgid "Dutch"
 msgstr "荷蘭語"
 
-#: include/global_arrays.php:1964
+#: include/global_arrays.php:1962
 #, fuzzy
 msgid "English"
 msgstr "英文"
 
-#: include/global_arrays.php:1965
+#: include/global_arrays.php:1963
 #, fuzzy
 msgid "French"
 msgstr "法語"
 
-#: include/global_arrays.php:1966
+#: include/global_arrays.php:1964
 #, fuzzy
 msgid "German"
 msgstr "德語"
 
-#: include/global_arrays.php:1967
+#: include/global_arrays.php:1965
 #, fuzzy
 msgid "Greek"
 msgstr "希臘語"
 
-#: include/global_arrays.php:1968
+#: include/global_arrays.php:1966
 #, fuzzy
 msgid "Hebrew"
 msgstr "希伯來文"
 
-#: include/global_arrays.php:1969
+#: include/global_arrays.php:1967
 #, fuzzy
 msgid "Hindi"
 msgstr "印地文"
 
-#: include/global_arrays.php:1970
+#: include/global_arrays.php:1968
 #, fuzzy
 msgid "Italian"
 msgstr "義大利文"
 
-#: include/global_arrays.php:1971
+#: include/global_arrays.php:1969
 #, fuzzy
 msgid "Japanese"
 msgstr "日語"
 
-#: include/global_arrays.php:1972
+#: include/global_arrays.php:1970
 #, fuzzy
 msgid "Korean"
 msgstr "韓語"
 
-#: include/global_arrays.php:1973
+#: include/global_arrays.php:1971
 #, fuzzy
 msgid "Polish"
 msgstr "波蘭語"
 
-#: include/global_arrays.php:1974
+#: include/global_arrays.php:1972
 #, fuzzy
 msgid "Portuguese"
 msgstr "葡萄牙語"
 
-#: include/global_arrays.php:1975
+#: include/global_arrays.php:1973
 #, fuzzy
 msgid "Portuguese (Brazil)"
 msgstr "葡萄牙文（巴西）"
 
-#: include/global_arrays.php:1976
+#: include/global_arrays.php:1974
 #, fuzzy
 msgid "Russian"
 msgstr "俄語"
 
-#: include/global_arrays.php:1977
+#: include/global_arrays.php:1975
 #, fuzzy
 msgid "Spanish"
 msgstr "西班牙語"
 
-#: include/global_arrays.php:1978
+#: include/global_arrays.php:1976
 #, fuzzy
 msgid "Swedish"
 msgstr "瑞典語"
 
-#: include/global_arrays.php:1979
+#: include/global_arrays.php:1977
 #, fuzzy
 msgid "Turkish"
 msgstr "土耳其語"
 
-#: include/global_arrays.php:1980
+#: include/global_arrays.php:1978
 #, fuzzy
 msgid "Vietnamese"
 msgstr "越南語"
 
-#: include/global_arrays.php:1984
+#: include/global_arrays.php:1982
 #, fuzzy
 msgid "Classic"
 msgstr "經典"
 
-#: include/global_arrays.php:1985
+#: include/global_arrays.php:1983
 #, fuzzy
 msgid "Modern"
 msgstr "現代"
 
-#: include/global_arrays.php:1986
+#: include/global_arrays.php:1984
 #, fuzzy
 msgid "Dark"
 msgstr "暗色"
 
-#: include/global_arrays.php:1987
+#: include/global_arrays.php:1985
 #, fuzzy
 msgid "Paper-plane"
 msgstr "紙飛機"
 
-#: include/global_arrays.php:1988
+#: include/global_arrays.php:1986
 #, fuzzy
 msgid "Paw"
 msgstr "爪子"
 
-#: include/global_arrays.php:1989
+#: include/global_arrays.php:1987
 #, fuzzy
 msgid "Sunrise"
 msgstr "日出"
 
-#: include/global_arrays.php:1993
+#: include/global_arrays.php:1991
 #, fuzzy
 msgid "[Fail]"
 msgstr "失敗"
 
-#: include/global_arrays.php:1994
+#: include/global_arrays.php:1992
 #, fuzzy
 msgid "[Warning]"
 msgstr "警告："
 
-#: include/global_arrays.php:1995
+#: include/global_arrays.php:1993
 msgid "[Restart]"
 msgstr "受限"
 
-#: include/global_arrays.php:1996
+#: include/global_arrays.php:1994
 #, fuzzy
 msgid "[Success]"
 msgstr "成功！"
 
-#: include/global_arrays.php:1997
+#: include/global_arrays.php:1995
 #, fuzzy
 msgid "[Skipped]"
 msgstr "[跳過]"
 
-#: include/global_arrays.php:2002 include/global_arrays.php:2008
+#: include/global_arrays.php:2000 include/global_arrays.php:2006
 #, fuzzy
 msgid "User Profile (Edit)"
 msgstr "用戶個人資料（編輯）"
 
-#: include/global_arrays.php:2020 include/global_arrays.php:2026
+#: include/global_arrays.php:2018 include/global_arrays.php:2024
 #, fuzzy
 msgid "Tree Mode"
 msgstr "樹模式"
 
-#: include/global_arrays.php:2032
+#: include/global_arrays.php:2030
 #, fuzzy
 msgid "List Mode"
 msgstr "列表模式"
 
-#: include/global_arrays.php:2064 include/global_arrays.php:2070
-#: lib/functions.php:4441 lib/html.php:1988 lib/html.php:2053 lib/html.php:2778
+#: include/global_arrays.php:2062 include/global_arrays.php:2068
+#: lib/functions.php:4448 lib/html.php:1988 lib/html.php:2053 lib/html.php:2778
 #: user_admin.php:1472 user_group_admin.php:1486
 #, fuzzy
 msgid "Console"
 msgstr "控制台"
 
-#: include/global_arrays.php:2076
+#: include/global_arrays.php:2074
 #, fuzzy
 msgid "Graph Management"
 msgstr "圖形管理"
 
-#: include/global_arrays.php:2082 include/global_arrays.php:2124
-#: include/global_arrays.php:2142 include/global_arrays.php:2196
-#: include/global_arrays.php:2208 include/global_arrays.php:2220
-#: include/global_arrays.php:2232 include/global_arrays.php:2244
-#: include/global_arrays.php:2280 include/global_arrays.php:2298
-#: include/global_arrays.php:2316 include/global_arrays.php:2334
-#: include/global_arrays.php:2352 include/global_arrays.php:2376
-#: include/global_arrays.php:2412 include/global_arrays.php:2538
-#: include/global_arrays.php:2562 include/global_arrays.php:2586
-#: include/global_arrays.php:2604 include/global_arrays.php:2616
-#: include/global_arrays.php:2730 include/global_arrays.php:2754
-#: include/global_arrays.php:2772 include/global_arrays.php:2790
-#: include/global_arrays.php:2814
+#: include/global_arrays.php:2080 include/global_arrays.php:2122
+#: include/global_arrays.php:2140 include/global_arrays.php:2194
+#: include/global_arrays.php:2206 include/global_arrays.php:2218
+#: include/global_arrays.php:2230 include/global_arrays.php:2242
+#: include/global_arrays.php:2278 include/global_arrays.php:2296
+#: include/global_arrays.php:2314 include/global_arrays.php:2332
+#: include/global_arrays.php:2350 include/global_arrays.php:2374
+#: include/global_arrays.php:2410 include/global_arrays.php:2536
+#: include/global_arrays.php:2560 include/global_arrays.php:2584
+#: include/global_arrays.php:2602 include/global_arrays.php:2614
+#: include/global_arrays.php:2728 include/global_arrays.php:2752
+#: include/global_arrays.php:2770 include/global_arrays.php:2788
+#: include/global_arrays.php:2812
 #, fuzzy
 msgid "(Edit)"
 msgstr "(編輯)"
 
-#: include/global_arrays.php:2094 include/global_arrays.php:2160
-#: include/global_arrays.php:2250 include/global_arrays.php:2286
-#: include/global_arrays.php:2304 include/global_arrays.php:2322
-#: include/global_arrays.php:2340 include/global_arrays.php:2370
-#: include/global_arrays.php:2406 include/global_arrays.php:2436
-#: include/global_arrays.php:2532 include/global_arrays.php:2736
-#: include/global_arrays.php:2760 include/global_arrays.php:2778
-#: include/global_arrays.php:2796 include/global_arrays.php:2820
-#: lib/api_automation.php:1289 lib/api_automation.php:1352
-#: lib/api_automation.php:1422 lib/html_reports.php:1792 plugins.php:605
-#, fuzzy
-msgid "Actions"
-msgstr "動作"
-
-#: include/global_arrays.php:2100 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2098 lib/api_aggregate.php:2333
 #, fuzzy
 msgid "Graph Items"
 msgstr "圖形項目"
 
-#: include/global_arrays.php:2106
+#: include/global_arrays.php:2104
 #, fuzzy
 msgid "Create New Graphs"
 msgstr "創建新圖"
 
-#: include/global_arrays.php:2112
+#: include/global_arrays.php:2110
 #, fuzzy
 msgid "Create Graphs from Data Query"
 msgstr "從數據查詢創建圖表"
 
-#: include/global_arrays.php:2130 include/global_arrays.php:2148
-#: include/global_arrays.php:2268 include/global_arrays.php:2358
-#: include/global_arrays.php:2382 include/global_arrays.php:2544
+#: include/global_arrays.php:2128 include/global_arrays.php:2146
+#: include/global_arrays.php:2266 include/global_arrays.php:2356
+#: include/global_arrays.php:2380 include/global_arrays.php:2542
 #, fuzzy
 msgid "(Remove)"
 msgstr "移除"
 
-#: include/global_arrays.php:2166 include/global_arrays.php:2172
-#: include/global_arrays.php:2178 include/global_arrays.php:2184
-#: include/global_arrays.php:2478
+#: include/global_arrays.php:2164 include/global_arrays.php:2170
+#: include/global_arrays.php:2176 include/global_arrays.php:2182
+#: include/global_arrays.php:2476
 #, fuzzy
 msgid "View Log"
 msgstr "檢視日誌"
 
-#: include/global_arrays.php:2190
+#: include/global_arrays.php:2188
 #, fuzzy
 msgid "Graph Trees"
 msgstr "圖樹"
 
-#: include/global_arrays.php:2256 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2254 lib/api_aggregate.php:2333
 #, fuzzy
 msgid "Graph Template Items"
 msgstr "圖形模板項"
 
-#: include/global_arrays.php:2346
+#: include/global_arrays.php:2344
 #, fuzzy
 msgid "Round Robin Archives"
 msgstr "Round Robin Archives"
 
-#: include/global_arrays.php:2388
+#: include/global_arrays.php:2386
 #, fuzzy
 msgid "Data Input Fields"
 msgstr "數據輸入字段"
 
-#: include/global_arrays.php:2394 include/global_arrays.php:2424
+#: include/global_arrays.php:2392 include/global_arrays.php:2422
 #, fuzzy
 msgid "(Remove Item)"
 msgstr "（除去項目）"
 
-#: include/global_arrays.php:2430 include/global_settings.php:217
+#: include/global_arrays.php:2428 include/global_settings.php:217
 #: rrdcleaner.php:323
 #, fuzzy
 msgid "RRD Cleaner"
 msgstr "RRD清潔工"
 
-#: include/global_arrays.php:2442
+#: include/global_arrays.php:2440
 #, fuzzy
 msgid "List unused Files"
 msgstr "列出未使用的文件"
 
-#: include/global_arrays.php:2448
+#: include/global_arrays.php:2446
 msgid "RRD Check"
 msgstr "運行檢查"
 
-#: include/global_arrays.php:2460 include/global_arrays.php:2472
-#: utilities.php:2401
-#, fuzzy
-msgid "View Poller Cache"
-msgstr "查看輪詢器緩存"
-
-#: include/global_arrays.php:2466 utilities.php:2405
+#: include/global_arrays.php:2464 utilities.php:2405
 #, fuzzy
 msgid "View Data Query Cache"
 msgstr "查看數據查詢緩存"
 
-#: include/global_arrays.php:2484
+#: include/global_arrays.php:2482
 #, fuzzy
 msgid "Clear Log"
 msgstr "清除日誌"
 
-#: include/global_arrays.php:2490 utilities.php:2394
+#: include/global_arrays.php:2488 utilities.php:2394
 #, fuzzy
 msgid "View User Log"
 msgstr "查看用戶日誌"
 
-#: include/global_arrays.php:2496
+#: include/global_arrays.php:2494
 #, fuzzy
 msgid "Clear User Log"
 msgstr "清除用戶日誌"
 
-#: include/global_arrays.php:2502 utilities.php:2385 utilities.php:2386
+#: include/global_arrays.php:2500 utilities.php:2385 utilities.php:2386
 #, fuzzy
 msgid "Technical Support"
 msgstr "การสนับสนุนทางเทคนิค"
 
-#: include/global_arrays.php:2508 utilities.php:2576
+#: include/global_arrays.php:2506 utilities.php:2576
 #, fuzzy
 msgid "Boost Status"
 msgstr "提升狀態"
 
-#: include/global_arrays.php:2514 utilities.php:2460
+#: include/global_arrays.php:2512 utilities.php:2460
 #, fuzzy
 msgid "View SNMP Agent Cache"
 msgstr "查看SNMP代理緩存"
 
-#: include/global_arrays.php:2520 utilities.php:2471
+#: include/global_arrays.php:2518 utilities.php:2471
 #, fuzzy
 msgid "View SNMP Agent Notification Log"
 msgstr "查看SNMP代理通知日誌"
 
-#: include/global_arrays.php:2550
+#: include/global_arrays.php:2548
 #, fuzzy
 msgid "VDEF Items"
 msgstr "VDEF項目"
 
-#: include/global_arrays.php:2556
+#: include/global_arrays.php:2554
 #, fuzzy
 msgid "View SNMP Notification Receivers"
 msgstr "查看SNMP通知接收器"
 
-#: include/global_arrays.php:2568
+#: include/global_arrays.php:2566
 #, fuzzy
 msgid "Kadupul Settings"
 msgstr "Kadupul設置"
 
-#: include/global_arrays.php:2574
+#: include/global_arrays.php:2572
 #, fuzzy
 msgid "External Link"
 msgstr "外部連結"
 
-#: include/global_arrays.php:2592 include/global_arrays.php:2622
+#: include/global_arrays.php:2590 include/global_arrays.php:2620
 #, fuzzy
 msgid "(Action)"
 msgstr "動作"
 
-#: include/global_arrays.php:2628 lib/html.php:2799
+#: include/global_arrays.php:2626 lib/html.php:2799
 #, fuzzy
 msgid "About Kadupul"
 msgstr "關於Kadupul"
 
-#: include/global_arrays.php:2634
+#: include/global_arrays.php:2632
 #, fuzzy
 msgid "Kadupul Help"
 msgstr "Kadupul之家"
 
-#: include/global_arrays.php:2646
+#: include/global_arrays.php:2644
 #, fuzzy
 msgid "Export Results"
 msgstr "導出結果"
 
-#: include/global_arrays.php:2664 include/global_arrays.php:2694
+#: include/global_arrays.php:2662 include/global_arrays.php:2692
 #: lib/html.php:2004 lib/html.php:2078
 #, fuzzy
 msgid "Reporting"
 msgstr "统计报告"
 
-#: include/global_arrays.php:2670 include/global_arrays.php:2700
+#: include/global_arrays.php:2668 include/global_arrays.php:2698
 #, fuzzy
 msgid "Report Add"
 msgstr "報告添加"
 
-#: include/global_arrays.php:2676 include/global_arrays.php:2706
+#: include/global_arrays.php:2674 include/global_arrays.php:2704
 #, fuzzy
 msgid "Report Delete"
 msgstr "報告刪除"
 
-#: include/global_arrays.php:2682 include/global_arrays.php:2712
+#: include/global_arrays.php:2680 include/global_arrays.php:2710
 #, fuzzy
 msgid "Report Edit"
 msgstr "報告編輯"
 
-#: include/global_arrays.php:2688 include/global_arrays.php:2718
+#: include/global_arrays.php:2686 include/global_arrays.php:2716
 #, fuzzy
 msgid "Report Edit Item"
 msgstr "報告編輯項目"
 
-#: include/global_arrays.php:2742
+#: include/global_arrays.php:2740
 #, fuzzy
 msgid "Color Template Items"
 msgstr "顏色模板項目"
 
-#: include/global_arrays.php:2802
+#: include/global_arrays.php:2800
 #, fuzzy
 msgid "Graph Rule Items"
 msgstr "圖規則項"
 
-#: include/global_arrays.php:2826
+#: include/global_arrays.php:2824
 #, fuzzy
 msgid "Tree Rule Items"
 msgstr "樹規則項"
 
-#: include/global_arrays.php:2857 include/global_arrays.php:2873
-#: lib/api_device.php:1952
+#: include/global_arrays.php:2855 include/global_arrays.php:2871
+#: lib/api_device.php:1948
 #, fuzzy
 msgid "days"
 msgstr "天"
 
-#: include/global_arrays.php:2858
+#: include/global_arrays.php:2856
 #, fuzzy
 msgid "hrs"
 msgstr "小時"
 
-#: include/global_arrays.php:2859
+#: include/global_arrays.php:2857
 #, fuzzy
 msgid "mins"
 msgstr "分鐘"
 
-#: include/global_arrays.php:2860
+#: include/global_arrays.php:2858
 #, fuzzy
 msgid "secs"
 msgstr "秒"
 
-#: include/global_arrays.php:2874 lib/api_device.php:1952
+#: include/global_arrays.php:2872 lib/api_device.php:1948
 #, fuzzy
 msgid "hours"
 msgstr "小時"
 
-#: include/global_arrays.php:2875 lib/api_device.php:1952
+#: include/global_arrays.php:2873 lib/api_device.php:1948
 #, fuzzy
 msgid "minutes"
 msgstr "分鐘"
 
-#: include/global_arrays.php:2876
+#: include/global_arrays.php:2874
 #, fuzzy
 msgid "seconds"
 msgstr "秒"
@@ -9949,15 +10385,6 @@ msgstr "常規設備選項"
 msgid "Give this host a meaningful description."
 msgstr "為此主機提供有意義的描述。"
 
-#: include/global_form.php:1176 include/global_form.php:1747
-#: lib/api_automation.php:279 lib/api_automation.php:571
-#: lib/api_automation.php:890 lib/api_automation.php:1197 managers.php:217
-#: pollers.php:115 pollers.php:1001 user_admin.php:1073
-#: user_group_admin.php:1087
-#, fuzzy
-msgid "Hostname"
-msgstr "主機名稱"
-
 #: include/global_form.php:1177 include/global_form.php:1748
 #, fuzzy
 msgid "Fully qualified hostname or IP address for this device."
@@ -10664,7 +11091,7 @@ msgstr "數據"
 msgid "Visual"
 msgstr "視覺"
 
-#: include/global_settings.php:28 lib/functions.php:6148 lib/functions.php:6153
+#: include/global_settings.php:28 lib/functions.php:6155 lib/functions.php:6160
 #, fuzzy
 msgid "Authentication"
 msgstr "認證"
@@ -10708,12 +11135,12 @@ msgstr "圖形字體"
 msgid "PHP Mail() Function"
 msgstr "PHP Mail（）函數"
 
-#: include/global_settings.php:69 lib/functions.php:6129
+#: include/global_settings.php:69 lib/functions.php:6136
 #, fuzzy
 msgid "Sendmail"
 msgstr "發郵件"
 
-#: include/global_settings.php:70 lib/functions.php:6135
+#: include/global_settings.php:70 lib/functions.php:6142
 #, fuzzy
 msgid "SMTP"
 msgstr "SMTP"
@@ -11393,11 +11820,6 @@ msgstr "一般默認值"
 msgid "The default Device Template used on all new Devices."
 msgstr "所有新設備上使用的默認設備模板。"
 
-#: include/global_settings.php:618 lib/html.php:2414 lib/html_reports.php:1151
-#, fuzzy
-msgid "Site"
-msgstr "網站"
-
 #: include/global_settings.php:619
 #, fuzzy
 msgid "The default Site for all new Devices."
@@ -11924,7 +12346,7 @@ msgstr "字體選擇方法"
 msgid "How do you wish fonts to be handled by default?"
 msgstr "您希望默認情況下如何處理字體？"
 
-#: include/global_settings.php:1060 lib/api_device.php:1907
+#: include/global_settings.php:1060 lib/api_device.php:1903
 #, fuzzy
 msgid "System"
 msgstr "取得系統報表"
@@ -12982,7 +13404,7 @@ msgstr "這是在電子郵件中的一行自動換行之前允許的字符數。
 msgid "Sendmail Options"
 msgstr "Sendmail選項"
 
-#: include/global_settings.php:1956 lib/functions.php:6129
+#: include/global_settings.php:1956 lib/functions.php:6136
 #, fuzzy
 msgid "Sendmail Path"
 msgstr "Sendmail路徑"
@@ -14198,26 +14620,6 @@ msgstr "聚合項目不可編輯"
 msgid "Override this Value"
 msgstr "覆蓋此值"
 
-#: lib/api_automation.php:29
-#, fuzzy
-msgid "Not Up"
-msgstr "不起來"
-
-#: lib/api_automation.php:32 lib/html.php:65 lib/html_utility.php:1330
-#: pollers.php:34
-#, fuzzy
-msgid "Recovering"
-msgstr "正在復原"
-
-#: lib/api_automation.php:33 lib/auth.php:3007 lib/clog_webapi.php:856
-#: lib/html_utility.php:1339 lib/import.php:342 lib/plugins.php:1499
-#: lib/plugins.php:1500 lib/rrd.php:4196 lib/rrd.php:4208 lib/spikekill.php:301
-#: package_import.php:522 package_import.php:600 utilities.php:211
-#: utilities.php:212 utilities.php:2759
-#, fuzzy
-msgid "Unknown"
-msgstr "未知"
-
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
 #: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4173
@@ -14241,11 +14643,6 @@ msgstr "沒有匹配的設備"
 #, fuzzy
 msgid "Matching Objects"
 msgstr "匹配對象"
-
-#: lib/api_automation.php:570 tree.php:987 utilities.php:2277
-#, fuzzy
-msgid "Device Description"
-msgstr "設備描述"
 
 #: lib/api_automation.php:714
 #, fuzzy
@@ -14367,12 +14764,12 @@ msgstr "規則項[編輯%s的規則項：%s]"
 msgid "Rule Item [new rule item for %s: %s]"
 msgstr "規則項[%s的新規則項：%s]"
 
-#: lib/api_automation.php:3344
+#: lib/api_automation.php:3288
 #, fuzzy
 msgid "Added by Kadupul Automation"
 msgstr "由Kadupul Automation添加"
 
-#: lib/api_automation.php:3638
+#: lib/api_automation.php:3582
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "錯誤：不再支持採用 range1-range2 形式的 IP 範圍。"
 
@@ -14380,13 +14777,13 @@ msgstr "錯誤：不再支持採用 range1-range2 形式的 IP 範圍。"
 #: lib/api_device.php:389 lib/api_device.php:451 lib/api_device.php:456
 #: lib/api_device.php:501 lib/api_device.php:505 lib/api_device.php:581
 #: lib/api_device.php:585 lib/api_device.php:640 lib/api_device.php:644
-#: lib/api_device.php:710 lib/api_device.php:713 lib/api_device.php:788
-#: lib/api_device.php:791 lib/api_device.php:840 lib/api_device.php:843
-#: lib/api_device.php:886 lib/api_device.php:889 lib/api_device.php:1312
-#: lib/api_device.php:1325 lib/api_device.php:1329 lib/api_device.php:1374
-#: lib/api_device.php:1377 lib/api_device.php:1564 lib/api_device.php:1568
-#: lib/api_device.php:1604 lib/api_device.php:1608 lib/api_device.php:1653
-#: lib/api_device.php:1657 lib/api_device.php:1718 lib/api_device.php:1722
+#: lib/api_device.php:710 lib/api_device.php:713 lib/api_device.php:786
+#: lib/api_device.php:789 lib/api_device.php:838 lib/api_device.php:841
+#: lib/api_device.php:882 lib/api_device.php:885 lib/api_device.php:1308
+#: lib/api_device.php:1321 lib/api_device.php:1325 lib/api_device.php:1370
+#: lib/api_device.php:1373 lib/api_device.php:1560 lib/api_device.php:1564
+#: lib/api_device.php:1600 lib/api_device.php:1604 lib/api_device.php:1649
+#: lib/api_device.php:1653 lib/api_device.php:1714 lib/api_device.php:1718
 #: lib/utility.php:742
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
@@ -14396,93 +14793,93 @@ msgstr ""
 msgid "Device replication failed. A FullSync is required; see the log for details."
 msgstr ""
 
-#: lib/api_device.php:1828
+#: lib/api_device.php:1824
 #, fuzzy
 msgid "ERROR: Device ID is Blank"
 msgstr "錯誤：設備ID為空"
 
-#: lib/api_device.php:1841 lib/api_device.php:1843
+#: lib/api_device.php:1837 lib/api_device.php:1839
 #, fuzzy
 msgid "ERROR: Device["
 msgstr "錯誤：設備["
 
-#: lib/api_device.php:1859
+#: lib/api_device.php:1855
 #, fuzzy
 msgid "ERROR: Failed to connect to remote collector."
 msgstr "錯誤：無法連接到遠程收集器。"
 
-#: lib/api_device.php:1866
+#: lib/api_device.php:1862
 #, fuzzy
 msgid "Device is Disabled"
 msgstr "設備已禁用"
 
-#: lib/api_device.php:1867
+#: lib/api_device.php:1863
 #, fuzzy
 msgid "Device Availability Check Bypassed"
 msgstr "設備可用性檢查旁路"
 
-#: lib/api_device.php:1874
+#: lib/api_device.php:1870
 #, fuzzy
 msgid "SNMP Information"
 msgstr "SNMP信息"
 
-#: lib/api_device.php:1878
+#: lib/api_device.php:1874
 #, fuzzy
 msgid "SNMP not in use"
 msgstr "SNMP未使用"
 
-#: lib/api_device.php:1899 lib/api_device.php:1907 lib/api_device.php:1926
+#: lib/api_device.php:1895 lib/api_device.php:1903 lib/api_device.php:1922
 #, fuzzy
 msgid "SNMP error"
 msgstr "SNMP錯誤"
 
-#: lib/api_device.php:1899
+#: lib/api_device.php:1895
 #, fuzzy
 msgid "Session"
 msgstr "課堂"
 
-#: lib/api_device.php:1926
+#: lib/api_device.php:1922
 #, fuzzy
 msgid "Host"
 msgstr "主機"
 
-#: lib/api_device.php:1944
+#: lib/api_device.php:1940
 #, fuzzy
 msgid "System:"
 msgstr "取得系統報表"
 
-#: lib/api_device.php:1951
+#: lib/api_device.php:1947
 #, fuzzy
 msgid "Uptime:"
 msgstr "運行時間"
 
-#: lib/api_device.php:1953
+#: lib/api_device.php:1949
 #, fuzzy
 msgid "Hostname:"
 msgstr "主機名稱："
 
-#: lib/api_device.php:1954
+#: lib/api_device.php:1950
 #, fuzzy
 msgid "Location:"
 msgstr "地點:"
 
-#: lib/api_device.php:1955
+#: lib/api_device.php:1951
 #, fuzzy
 msgid "Contact:"
 msgstr "聯繫方式："
 
-#: lib/api_device.php:1986 lib/functions.php:6162 lib/functions.php:6164
-#: lib/functions.php:6168
+#: lib/api_device.php:1982 lib/functions.php:6169 lib/functions.php:6171
+#: lib/functions.php:6175
 #, fuzzy
 msgid "Ping Results"
 msgstr "Ping結果"
 
-#: lib/api_device.php:1991
+#: lib/api_device.php:1987
 #, fuzzy
 msgid "No Ping or SNMP Availability Check in Use"
 msgstr "無Ping或SNMP可用性檢查正在使用中"
 
-#: lib/api_tree.php:203
+#: lib/api_tree.php:186
 #, fuzzy
 msgid "New Branch"
 msgstr "新科"
@@ -14550,7 +14947,7 @@ msgid "Branch:"
 msgstr "科："
 
 #: lib/auth.php:3248 lib/auth.php:3282 lib/html_tree.php:949
-#: lib/reports.php:1114
+#: lib/reports.php:1081
 #, fuzzy
 msgid "Device:"
 msgstr "裝置："
@@ -14777,459 +15174,459 @@ msgstr "密碼不匹配"
 msgid "System Device"
 msgstr "同步設備"
 
-#: lib/data_query.php:64 lib/data_query.php:466
+#: lib/data_query.php:54 lib/data_query.php:423
 #, fuzzy
 msgid "Automation Execution for Data Query complete"
 msgstr "完成數據查詢的自動化執行"
 
-#: lib/data_query.php:67 lib/data_query.php:469
+#: lib/data_query.php:57 lib/data_query.php:426
 #, fuzzy
 msgid "Plugin Hooks complete"
 msgstr "插件掛鉤完成"
 
-#: lib/data_query.php:85
+#: lib/data_query.php:75
 #, fuzzy, php-format
 msgid "Running Data Query [%s]."
 msgstr "運行數據查詢[%s]。"
 
-#: lib/data_query.php:97
+#: lib/data_query.php:85
 #, fuzzy, php-format
 msgid "Found Type = '%s' [%s]."
 msgstr "找到Type =&#39;%s&#39;[%s]。"
 
-#: lib/data_query.php:119
+#: lib/data_query.php:107
 #, fuzzy, php-format
 msgid "Unknown Type = '%s'."
 msgstr "未知類型=&#39;%s&#39;。"
 
-#: lib/data_query.php:154
+#: lib/data_query.php:142
 #, fuzzy
 msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
 msgstr "警告：排序字段關聯已更改。可能會出現重新映射問題！"
 
-#: lib/data_query.php:166
+#: lib/data_query.php:154
 #, fuzzy
 msgid "Update Data Query Sort Cache complete"
 msgstr "更新數據查詢排序緩存完成"
 
-#: lib/data_query.php:193
+#: lib/data_query.php:179
 #, fuzzy, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "找到要轉換的%s表"
 
-#: lib/data_query.php:299
+#: lib/data_query.php:273
 #, fuzzy, php-format
 msgid "Index Change Detected! CurrentIndex: %s, PreviousIndex: %s"
 msgstr "檢測到索引更改！ CurrentIndex：%s，PreviousIndex：%s"
 
-#: lib/data_query.php:323
+#: lib/data_query.php:293
 #, fuzzy, php-format
 msgid "Transient Index Removal Detected! PreviousIndex: %s.  No action taken."
 msgstr "檢測到索引刪除！ PreviousIndex：%s"
 
-#: lib/data_query.php:326
+#: lib/data_query.php:296
 #, fuzzy, php-format
 msgid "Index Removal Detected! PreviousIndex: %s"
 msgstr "檢測到索引刪除！ PreviousIndex：%s"
 
-#: lib/data_query.php:366
+#: lib/data_query.php:330
 #, fuzzy, php-format
 msgid "Verification of %s Local Data ID's Complete"
 msgstr "與本地數據的索引關聯完成"
 
-#: lib/data_query.php:369
+#: lib/data_query.php:333
 #, fuzzy, php-format
 msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
 msgstr "找到已更改的%s和%s孤立的本地數據ID以重新映射。"
 
-#: lib/data_query.php:372
+#: lib/data_query.php:336
 #, fuzzy
 msgid "Done remapping Graphs to their new Indexes"
 msgstr "將圖表重新映射到新索引"
 
-#: lib/data_query.php:378 lib/data_query.php:385
+#: lib/data_query.php:342 lib/data_query.php:349
 #, fuzzy
 msgid "Done updating Data Source Title Cache"
 msgstr "重複的數據源配置文件"
 
-#: lib/data_query.php:381 lib/data_query.php:388
+#: lib/data_query.php:345 lib/data_query.php:352
 #, fuzzy
 msgid "Done updating Graph Title Cache"
 msgstr "完成更新圖標題緩存"
 
-#: lib/data_query.php:392
+#: lib/data_query.php:356
 #, fuzzy
 msgid "Index Association with Local Data complete"
 msgstr "與本地數據的索引關聯完成"
 
-#: lib/data_query.php:398
+#: lib/data_query.php:362
 #, fuzzy, php-format
 msgid "Update Re-Index Cache complete. There were %s index changes, and %s orphaned indexes."
 msgstr "更新重新索引緩存完成。曾經有"
 
-#: lib/data_query.php:402
+#: lib/data_query.php:366
 #, fuzzy
 msgid "Update Poller Cache for Query complete"
 msgstr "更新輪詢器緩存以查詢完成"
 
-#: lib/data_query.php:404
+#: lib/data_query.php:368
 #, fuzzy
 msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
 msgstr "未檢測到索引更改，跳過重新索引和輪詢器緩存重新填充"
 
-#: lib/data_query.php:458
+#: lib/data_query.php:415
 #, fuzzy
 msgid "Automation Executing for Data Query complete"
 msgstr "自動化執行數據查詢完成"
 
-#: lib/data_query.php:461
+#: lib/data_query.php:418
 #, fuzzy
 msgid "Plugin hooks complete"
 msgstr "插件掛鉤完成"
 
-#: lib/data_query.php:520
+#: lib/data_query.php:474
 #, fuzzy
 msgid "Checking for Sort Field change.  No changes detected."
 msgstr "檢查排序字段更改。未檢測到任何更改"
 
-#: lib/data_query.php:525
+#: lib/data_query.php:479
 #, fuzzy, php-format
 msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "檢測到新的排序字段：&#39;%s&#39;舊排序字段&#39;%s&#39;"
 
-#: lib/data_query.php:546
+#: lib/data_query.php:496
 #, fuzzy
 msgid "ERROR: New Sort Field not suitable.  Sort Field will not change."
 msgstr "錯誤：新的排序字段不適合。排序字段不會更改。"
 
-#: lib/data_query.php:560
+#: lib/data_query.php:508
 #, fuzzy
 msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "新的排序字段已驗證。排序字段將更新。"
 
-#: lib/data_query.php:673
+#: lib/data_query.php:606
 #, fuzzy, php-format
 msgid "Could not find data query XML file at '%s'"
 msgstr "無法在&#39;%s&#39;找到數據查詢XML文件"
 
-#: lib/data_query.php:677
+#: lib/data_query.php:610
 #, fuzzy, php-format
 msgid "Found data query XML file at '%s'"
 msgstr "在&#39;%s&#39;找到數據查詢XML文件"
 
-#: lib/data_query.php:701 lib/data_query.php:895 lib/data_query.php:2642
+#: lib/data_query.php:633 lib/data_query.php:821 lib/data_query.php:2394
 #, fuzzy
 msgid "Error parsing XML file into an array."
 msgstr "將XML文件解析為數組時出錯。"
 
-#: lib/data_query.php:705 lib/data_query.php:899
+#: lib/data_query.php:637 lib/data_query.php:825
 #, fuzzy
 msgid "XML file parsed ok."
 msgstr "XML文件解析好了。"
 
-#: lib/data_query.php:713 lib/data_query.php:902
+#: lib/data_query.php:645 lib/data_query.php:828
 #, fuzzy, php-format
 msgid "Invalid field &lt;index_order&gt;%s&lt;/index_order&gt;"
 msgstr "字段&lt;index_order&gt;%s &lt;/ index_order&gt;無效"
 
-#: lib/data_query.php:714 lib/data_query.php:903
+#: lib/data_query.php:646 lib/data_query.php:829
 #, fuzzy
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
 msgstr "必須僅包含&lt;direction&gt;輸入&lt;/ direction&gt;或&lt;direction&gt;輸入輸出&lt;/ direction&gt;字段"
 
-#: lib/data_query.php:731
+#: lib/data_query.php:663
 #, fuzzy
 msgid "Data Query returned no indexes."
 msgstr "錯誤：數據查詢未返回任何索引。"
 
-#: lib/data_query.php:732
+#: lib/data_query.php:664
 #, fuzzy
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
 msgstr "XML文件中缺少&lt;arg_num_indexes&gt;，不支持“索引計數已更改”"
 
-#: lib/data_query.php:735
+#: lib/data_query.php:667
 #, fuzzy, php-format
 msgid "Executing script for num of indexes '%s'"
 msgstr "執行num&#39;索引&#39;%s&#39;的腳本"
 
-#: lib/data_query.php:738
+#: lib/data_query.php:670
 #, fuzzy, php-format
 msgid "Found number of indexes: %s"
 msgstr "找到索引數：%s"
 
-#: lib/data_query.php:742
+#: lib/data_query.php:674
 #, fuzzy
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
 msgstr "XML文件中缺少&lt;arg_num_indexes&gt;，不支持“索引計數已更改”"
 
-#: lib/data_query.php:744
+#: lib/data_query.php:676
 #, fuzzy
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
 msgstr "XML文件中缺少&lt;arg_num_indexes&gt;，通過計算arg_index條目模擬“索引計數已更改”"
 
-#: lib/data_query.php:755
+#: lib/data_query.php:687
 #, fuzzy
 msgid "ERROR: Data Query returned no indexes."
 msgstr "錯誤：數據查詢未返回任何索引。"
 
-#: lib/data_query.php:759
+#: lib/data_query.php:691
 #, fuzzy, php-format
 msgid "Executing script for list of indexes '%s', Index Count: %s"
 msgstr "執行索引列表&#39;%s&#39;的腳本，索引計數：%s"
 
-#: lib/data_query.php:761
+#: lib/data_query.php:693
 #, fuzzy
 msgid "Click to show Data Query output for 'index'"
 msgstr "單擊以顯示“索引”的數據查詢輸出"
 
-#: lib/data_query.php:764
+#: lib/data_query.php:696
 #, fuzzy, php-format
 msgid "Found index: %s"
 msgstr "找到索引：%s"
 
-#: lib/data_query.php:779 lib/data_query.php:1366
+#: lib/data_query.php:711 lib/data_query.php:1213
 #, fuzzy, php-format
 msgid "Click to show Data Query output for field '%s'"
 msgstr "單擊以顯示字段&#39;%s&#39;的數據查詢輸出"
 
-#: lib/data_query.php:785
+#: lib/data_query.php:717
 #, fuzzy, php-format
 msgid "Sort field returned no data for field name %s, skipping"
 msgstr "排序字段未返回任何數據。無法繼續重新索引。"
 
-#: lib/data_query.php:787
+#: lib/data_query.php:719
 #, fuzzy, php-format
 msgid "Executing script query '%s'"
 msgstr "執行腳本查詢&#39;%s&#39;"
 
-#: lib/data_query.php:798 lib/data_query.php:805
+#: lib/data_query.php:730 lib/data_query.php:737
 #, fuzzy, php-format
 msgid "Found item [%s='%s'] index: %s"
 msgstr "找到項目[%s =&#39;%s&#39;]索引：%s"
 
-#: lib/data_query.php:845 lib/data_query.php:861
+#: lib/data_query.php:775 lib/data_query.php:790
 #, fuzzy, php-format
 msgid "Total: %f, Delta: %f, %s"
 msgstr "總計： %f，Delta： %f，%s"
 
-#: lib/data_query.php:889
+#: lib/data_query.php:815
 #, fuzzy, php-format
 msgid "Invalid host_id: %s"
 msgstr "無效的host_id：%s"
 
-#: lib/data_query.php:913
+#: lib/data_query.php:839
 msgid "Auto Bulk Walk Size Selected."
 msgstr "選擇了自動批量步行大小。"
 
-#: lib/data_query.php:935 lib/data_query.php:994
+#: lib/data_query.php:849 lib/data_query.php:894
 #, fuzzy
 msgid "Failed to load SNMP session."
 msgstr "無法加載SNMP會話。"
 
-#: lib/data_query.php:945
+#: lib/data_query.php:859
 #, php-format
 msgid "Tested Bulk Walk Size %d with a response of %2.4f."
 msgstr "測試批量步行大小 %d，響應為 %2.4f。"
 
-#: lib/data_query.php:956
+#: lib/data_query.php:870
 #, php-format
 msgid "Bulk Walk Size selected was %d."
 msgstr "選擇的批量步行大小為 %d。"
 
-#: lib/data_query.php:959
+#: lib/data_query.php:873
 msgid "Saving Bulk Walk Size to Device."
 msgstr "將批量步行大小保存到設備。"
 
-#: lib/data_query.php:973
+#: lib/data_query.php:885
 #, php-format
 msgid "Bulk Walk Size is fixed at %d."
 msgstr "批量步行大小固定為 %d。"
 
-#: lib/data_query.php:1007
+#: lib/data_query.php:907
 #, fuzzy, php-format
 msgid "Executing SNMP get for num of indexes @ '%s' Index Count: %s"
 msgstr "執行SNMP獲取索引數量@&#39;%s&#39;索引計數：%s"
 
-#: lib/data_query.php:1009
+#: lib/data_query.php:909
 #, fuzzy
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
 msgstr "XML文件中缺少&lt;oid_num_indexes&gt;，通過計算oid_index條目模擬“索引計數已更改”"
 
-#: lib/data_query.php:1012
+#: lib/data_query.php:912
 #, fuzzy, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
 msgstr "執行SNMP walk for index列表@&#39;%s&#39;索引計數：%s"
 
-#: lib/data_query.php:1016
+#: lib/data_query.php:916
 #, fuzzy
 msgid "No SNMP data returned"
 msgstr "沒有返回SNMP數據"
 
-#: lib/data_query.php:1021
+#: lib/data_query.php:921
 #, fuzzy, php-format
 msgid "Index found at OID: '%s' value: '%s'"
 msgstr "在OID找到的索引：&#39;%s&#39;值：&#39;%s&#39;"
 
-#: lib/data_query.php:1052
+#: lib/data_query.php:952
 #, fuzzy, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
 msgstr "過濾索引列表@&#39;%s&#39;索引計數：%s"
 
-#: lib/data_query.php:1056
+#: lib/data_query.php:956
 #, fuzzy, php-format
 msgid "Filtered Index by value found at OID: '%s' value: '%s'"
 msgstr "在OID找到過濾的索引：&#39;%s&#39;值：&#39;%s&#39;"
 
-#: lib/data_query.php:1072
+#: lib/data_query.php:972
 #, fuzzy, php-format
 msgid "Filtering list of indexes @ '%s' Index Count: %s"
 msgstr "過濾索引列表@&#39;%s&#39;索引計數：%s"
 
-#: lib/data_query.php:1076
+#: lib/data_query.php:976
 #, fuzzy, php-format
 msgid "Filtered Index found at OID: '%s' value: '%s'"
 msgstr "在OID找到過濾的索引：&#39;%s&#39;值：&#39;%s&#39;"
 
-#: lib/data_query.php:1096
+#: lib/data_query.php:996
 #, fuzzy, php-format
 msgid "Fixing wrong 'method' field for '%s' since 'rewrite_index' or 'oid_suffix' is defined"
 msgstr "修復&#39;%s&#39;錯誤的&#39;方法&#39;字段，因為&#39;rewrite_index&#39;或&#39;oid_suffix&#39;已定義"
 
-#: lib/data_query.php:1103
+#: lib/data_query.php:1003
 #, fuzzy, php-format
 msgid "Inserting index data for field '%s' [value='%s']"
 msgstr "插入字段&#39;%s&#39;的索引數據[value =&#39;%s&#39;]"
 
-#: lib/data_query.php:1108
+#: lib/data_query.php:1008
 #, fuzzy, php-format
 msgid "Located input field '%s' [get]"
 msgstr "位於輸入字段&#39;%s&#39;[get]"
 
-#: lib/data_query.php:1117
+#: lib/data_query.php:1017
 #, fuzzy, php-format
 msgid "Found OID rewrite rule: 's/%s/%s/'"
 msgstr "找到OID重寫規則：&#39;s /%s /%s /&#39;"
 
-#: lib/data_query.php:1128
+#: lib/data_query.php:1028
 #, fuzzy, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
 msgstr "OID的oid_rewrite：&#39;%s&#39;新的OID：&#39;%s&#39;"
 
-#: lib/data_query.php:1161
+#: lib/data_query.php:1049
 #, fuzzy, php-format
 msgid "Executing SNMP get for data @ '%s' [value='%s']"
 msgstr "執行SNMP獲取數據@&#39;%s&#39;[value =&#39;%s&#39;]"
 
-#: lib/data_query.php:1172
+#: lib/data_query.php:1060
 #, fuzzy, php-format
 msgid "Field '%s' %s"
 msgstr "字段&#39;%s&#39;%s"
 
-#: lib/data_query.php:1233
+#: lib/data_query.php:1121
 #, fuzzy, php-format
 msgid "Executing SNMP get for %s oids (%s)"
 msgstr "執行SNMP獲取%s oids（%s）"
 
-#: lib/data_query.php:1271 lib/data_query.php:1406 lib/data_query.php:1414
+#: lib/data_query.php:1147 lib/data_query.php:1239 lib/data_query.php:1247
 #, fuzzy, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
 msgstr "返回的排序字段不是數據。無法繼續重新索引OID [%s]"
 
-#: lib/data_query.php:1277
+#: lib/data_query.php:1151
 #, fuzzy, php-format
 msgid "Found result for data @ '%s' [value='%s']"
 msgstr "找到數據的結果@&#39;%s&#39;[value =&#39;%s&#39;]"
 
-#: lib/data_query.php:1290
+#: lib/data_query.php:1159
 #, fuzzy, php-format
 msgid "Setting result for data @ '%s' [key='%s', value='%s']"
 msgstr "設置數據@&#39;%s&#39;的結果[key =&#39;%s&#39;，value =&#39;%s&#39;]"
 
-#: lib/data_query.php:1300
+#: lib/data_query.php:1163
 #, fuzzy, php-format
 msgid "Skipped result for data @ '%s' [key='%s', value='%s']"
 msgstr "數據的跳過結果@&#39;%s&#39;[key =&#39;%s&#39;，value =&#39;%s&#39;]"
 
-#: lib/data_query.php:1318
+#: lib/data_query.php:1177
 #, fuzzy, php-format
 msgid "Got SNMP get result for data @ '%s' [value='%s'] (index: %s)"
 msgstr "獲得SNMP獲取數據的結果@&#39;%s&#39;[value =&#39;%s&#39;]（索引：%s）"
 
-#: lib/data_query.php:1360
+#: lib/data_query.php:1207
 #, fuzzy, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
 msgstr "執行SNMP獲取數據@&#39;%s&#39;[value =&#39;$ value&#39;]"
 
-#: lib/data_query.php:1368
+#: lib/data_query.php:1215
 #, fuzzy, php-format
 msgid "Located input field '%s' [walk]"
 msgstr "位於輸入字段&#39;%s&#39;[walk]"
 
-#: lib/data_query.php:1419
+#: lib/data_query.php:1252
 #, fuzzy, php-format
 msgid "Executing SNMP walk for data @ '%s'"
 msgstr "執行SNMP walk for data @&#39;%s&#39;"
 
-#: lib/data_query.php:1438 lib/data_query.php:1496 lib/data_query.php:1545
-#: lib/data_query.php:1596
+#: lib/data_query.php:1271 lib/data_query.php:1329 lib/data_query.php:1378
+#: lib/data_query.php:1429
 #, php-format
 msgid "No index[%s] in value_index_parse, skipping."
 msgstr ""
 
-#: lib/data_query.php:1479
+#: lib/data_query.php:1312
 #, fuzzy, php-format
 msgid "Found item [%s='%s'] index: %s [from %s]"
 msgstr "找到項目[%s =&#39;%s&#39;]索引：%s [來自%s]"
 
-#: lib/data_query.php:1521
+#: lib/data_query.php:1354
 #, fuzzy, php-format
 msgid "Found OCTET STRING '%s' decoded value: '%s'"
 msgstr "找到OCTET STRING&#39;%s&#39;解碼值：&#39;%s&#39;"
 
-#: lib/data_query.php:1527 lib/data_query.php:1576
+#: lib/data_query.php:1360 lib/data_query.php:1409
 #, fuzzy, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
 msgstr "找到項目[%s =&#39;%s&#39;]索引：%s [來自regexp oid parse]"
 
-#: lib/data_query.php:1604
+#: lib/data_query.php:1437
 #, fuzzy, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
 msgstr "找到項目[%s =&#39;%s&#39;]索引：%s [來自regexp oid value parse]"
 
-#: lib/data_query.php:1839
+#: lib/data_query.php:1659
 #, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
 msgstr ""
 
-#: lib/data_query.php:1852
+#: lib/data_query.php:1672
 msgid "Could not parse translation map (rewrite_value)"
 msgstr ""
 
-#: lib/data_query.php:1876
+#: lib/data_query.php:1696
 #, fuzzy, php-format
 msgid "rewrite_value: '%s' => '%s'"
 msgstr "OID的oid_rewrite：&#39;%s&#39;新的OID：&#39;%s&#39;"
 
-#: lib/data_query.php:1990
+#: lib/data_query.php:1801
 msgid "Update graph data query cache complete"
 msgstr "更新數據查詢排序緩存完成"
 
-#: lib/data_query.php:2009
+#: lib/data_query.php:1818
 #, fuzzy
 msgid "Re-Indexing Data Query complete"
 msgstr "重新索引數據查詢完成"
 
-#: lib/data_query.php:2161
+#: lib/data_query.php:1949
 #, fuzzy
 msgid "Unknown Index"
 msgstr "未知索引"
 
-#: lib/data_query.php:2766
+#: lib/data_query.php:2507
 #, fuzzy, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "您必須為數據源'%s'選擇XML輸出列，並將復選框切換到右側"
 
-#: lib/data_query.php:2772
+#: lib/data_query.php:2513
 #, fuzzy
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "您的圖表模板尚未使用數據模板。請更正您的圖表模板"
@@ -15303,214 +15700,203 @@ msgstr "沒有發現問題"
 msgid "RRDfile not created yet"
 msgstr "輪詢後RRD文件未更新"
 
-#: lib/functions.php:1214 lib/functions.php:1296
+#: lib/functions.php:1221 lib/functions.php:1303
 #, fuzzy
 msgid "Message Not Found."
 msgstr "未找到信息。"
 
-#: lib/functions.php:1711
+#: lib/functions.php:1718
 #, fuzzy, php-format
 msgid "Error %s is not readable"
 msgstr "錯誤%s無法讀取"
 
-#: lib/functions.php:4195
+#: lib/functions.php:4202
 msgid "Logged in a Guest"
 msgstr "登入"
 
-#: lib/functions.php:4195 lib/functions.php:4213
+#: lib/functions.php:4202 lib/functions.php:4220
 #, fuzzy
 msgid "Logged in as"
 msgstr "登入"
 
-#: lib/functions.php:4195
+#: lib/functions.php:4202
 #, fuzzy
 msgid "Login as Regular User"
 msgstr "以普通用戶身份登錄"
 
-#: lib/functions.php:4195
+#: lib/functions.php:4202
 #, fuzzy
 msgid "guest"
 msgstr "客人"
 
-#: lib/functions.php:4198 lib/functions.php:4223 lib/html.php:2784
+#: lib/functions.php:4205 lib/functions.php:4230 lib/html.php:2784
 #, fuzzy
 msgid "User Community"
 msgstr "用戶社區"
 
-#: lib/functions.php:4199 lib/functions.php:4224 lib/html.php:2786
+#: lib/functions.php:4206 lib/functions.php:4231 lib/html.php:2786
 #: lib/utility.php:1444
 #, fuzzy
 msgid "Documentation"
 msgstr "文件"
 
-#: lib/functions.php:4216
+#: lib/functions.php:4223
 #, fuzzy, php-format
 msgid "Logged in as %s"
 msgstr "已使用 %s 名義登入"
 
-#: lib/functions.php:4218 lib/html.php:2765
+#: lib/functions.php:4225 lib/html.php:2765
 #, fuzzy
 msgid "Edit Profile"
 msgstr "編輯個人資料"
 
-#: lib/functions.php:4228 lib/html.php:2769
+#: lib/functions.php:4235 lib/html.php:2769
 #, fuzzy
 msgid "Logout"
 msgstr "登出"
 
-#: lib/functions.php:4382
+#: lib/functions.php:4389
 #, fuzzy
 msgid "Leaf"
 msgstr "葉子"
 
-#: lib/functions.php:4406 lib/html_tree.php:648 lib/html_tree.php:684
+#: lib/functions.php:4413 lib/html_tree.php:648 lib/html_tree.php:684
 #: lib/html_tree.php:913 lib/html_tree.php:921 lib/html_tree.php:1522
 #, fuzzy
 msgid "Non Query Based"
 msgstr "非查詢"
 
-#: lib/functions.php:4444
+#: lib/functions.php:4451
 #, fuzzy, php-format
 msgid "Link %s"
 msgstr "連結 %s"
 
-#: lib/functions.php:4896 tree.php:1804 tree.php:1878 tree.php:1986
-#: user_admin.php:18 user_group_admin.php:20
-#, fuzzy
-msgid "Copy"
-msgstr "複製"
-
-#: lib/functions.php:5698
+#: lib/functions.php:5705
 #, fuzzy
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "郵件程序錯誤：沒有<b>TO</b>地址集！ <br>如果使用“ <i>測試郵件”</i>鏈接，請設置“ <b>警報電子郵件”</b>設置。"
 
-#: lib/functions.php:6092
+#: lib/functions.php:6099
 #, fuzzy, php-format
 msgid "Authentication failed: %s"
 msgstr "身份驗證失敗：%s"
 
-#: lib/functions.php:6096
+#: lib/functions.php:6103
 #, fuzzy, php-format
 msgid "HELO failed: %s"
 msgstr "HELO失敗了：%s"
 
-#: lib/functions.php:6099
+#: lib/functions.php:6106
 #, fuzzy, php-format
 msgid "Connect failed: %s"
 msgstr "連接失敗：%s"
 
-#: lib/functions.php:6102
+#: lib/functions.php:6109
 #, fuzzy
 msgid "SMTP error: "
 msgstr "SMTP錯誤： "
 
-#: lib/functions.php:6116
+#: lib/functions.php:6123
 #, fuzzy
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "這是Kadupul生成的測試消息。發送此消息是為了測試郵件設置的配置。"
 
-#: lib/functions.php:6117
+#: lib/functions.php:6124
 #, fuzzy
 msgid "Your email settings are currently set as follows"
 msgstr "您的電子郵件設置目前設置如下"
 
-#: lib/functions.php:6118
+#: lib/functions.php:6125
 #, fuzzy
 msgid "Method"
 msgstr "方法"
 
-#: lib/functions.php:6120
+#: lib/functions.php:6127
 #, fuzzy
 msgid "Checking Configuration...<br>"
 msgstr "檢查配置...... <br>"
 
-#: lib/functions.php:6127
+#: lib/functions.php:6134
 #, fuzzy
 msgid "PHP's Mailer Class"
 msgstr "PHP的郵件程序類"
 
-#: lib/functions.php:6133
+#: lib/functions.php:6140
 #, fuzzy
 msgid "Method: SMTP"
 msgstr "方法：SMTP"
 
-#: lib/functions.php:6150
+#: lib/functions.php:6157
 #, fuzzy
 msgid "Not Shown for Security Reasons"
 msgstr "未顯示安全原因"
 
-#: lib/functions.php:6151
+#: lib/functions.php:6158
 #, fuzzy
 msgid "Security"
 msgstr "安全性"
 
-#: lib/functions.php:6159
+#: lib/functions.php:6166
 #, fuzzy
 msgid "Ping Results:"
 msgstr "Ping結果"
 
-#: lib/functions.php:6159 lib/functions.php:6164
-#, fuzzy
-msgid "Success"
-msgstr "成功"
-
-#: lib/functions.php:6168
+#: lib/functions.php:6175
 #, fuzzy
 msgid "Bypassed"
 msgstr "旁路"
 
-#: lib/functions.php:6177
+#: lib/functions.php:6184
 #, fuzzy
 msgid "Creating Message Text..."
 msgstr "創建消息文本..."
 
-#: lib/functions.php:6180
+#: lib/functions.php:6187
 #, fuzzy
 msgid "Sending Message..."
 msgstr "發送消息......"
 
-#: lib/functions.php:6184
+#: lib/functions.php:6191
 #, fuzzy
 msgid "Kadupul Test Message"
 msgstr "Kadupul測試消息"
 
-#: lib/functions.php:6186
+#: lib/functions.php:6193
 #, fuzzy
 msgid "Success!"
 msgstr "成功！"
 
-#: lib/functions.php:6189
+#: lib/functions.php:6196
 #, fuzzy
 msgid "Message Not Sent due to ping failure."
 msgstr "由於ping失敗而未發送消息。"
 
-#: lib/functions.php:6655 lib/functions.php:6725
+#: lib/functions.php:6662 lib/functions.php:6732
 #, fuzzy, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "由於以下錯誤，Kadupul禁用了插件%s：%s！有關更多詳細信息，請參閱Kadupul日誌文件。"
 
-#: lib/functions.php:6821
+#: lib/functions.php:6828
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr ""
 
-#: lib/functions.php:7245 lib/functions.php:7247
+#: lib/functions.php:7252 lib/functions.php:7254
 #, fuzzy, php-format
 msgid "- Beta %s"
 msgstr "-  Beta%s"
 
-#: lib/functions.php:7245
+#: lib/functions.php:7252
 #, fuzzy, php-format
 msgid "Version %s %s"
 msgstr "版本%s%s"
 
-#: lib/functions.php:7247
+#: lib/functions.php:7254
 #, php-format
 msgid "%s %s"
 msgstr "%s - %s"
 
-#: lib/functions.php:7475
+#: lib/functions.php:7482
 #, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr ""
@@ -15552,7 +15938,7 @@ msgstr "選擇模板"
 msgid "Enter keyword"
 msgstr "輸入關鍵字"
 
-#: lib/html.php:464 lib/reports.php:1711
+#: lib/html.php:464 lib/reports.php:1678
 #, fuzzy
 msgid "Data Query:"
 msgstr "數據查詢："
@@ -16840,7 +17226,7 @@ msgstr "圖表模板："
 msgid "Template Based"
 msgstr "基於模板"
 
-#: lib/html_tree.php:927 lib/reports.php:1359
+#: lib/html_tree.php:927 lib/reports.php:1326
 #, fuzzy
 msgid "Tree:"
 msgstr "樹"
@@ -18527,76 +18913,76 @@ msgstr "沒有說明"
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 
-#: lib/reports.php:174
+#: lib/reports.php:141
 #, fuzzy, php-format
 msgid "Device '%s' successfully added to Report."
 msgstr "添加到仙人掌"
 
-#: lib/reports.php:177
+#: lib/reports.php:144
 msgid "Device not found! Unable to add to Report"
 msgstr "未找到圖表嘗試添加到報告"
 
-#: lib/reports.php:181
+#: lib/reports.php:148
 #, php-format
 msgid "Device '%s' not added to Report as it already exists on report."
 msgstr "設備“%s”未添加到報告中，因為它已存在於報告中。"
 
-#: lib/reports.php:636
+#: lib/reports.php:603
 #, fuzzy, php-format
 msgid "Problems sending Report '%s' Problem with e-mail Subsystem Error is '%s'"
 msgstr "發送報告'%s'時出現問題電子郵件子系統錯誤是'%s'"
 
-#: lib/reports.php:643
+#: lib/reports.php:610
 #, fuzzy, php-format
 msgid "Report '%s' Sent Successfully"
 msgstr "報告“%s”已成功發送"
 
-#: lib/reports.php:1141 lib/reports.php:1497
+#: lib/reports.php:1108 lib/reports.php:1464
 #, fuzzy
 msgid "(No Graph Template)"
 msgstr "（無圖表模板）"
 
-#: lib/reports.php:1565
+#: lib/reports.php:1532
 #, fuzzy
 msgid "(Non Query Based)"
 msgstr "（非查詢）"
 
-#: lib/reports.php:1976
+#: lib/reports.php:1943
 #, fuzzy
 msgid "Add to Report"
 msgstr "添加到報告"
 
-#: lib/reports.php:1994
+#: lib/reports.php:1961
 #, fuzzy
 msgid "Choose the Report to associate these graphs with.  The defaults for alignment will be used for each graph in the list below."
 msgstr "選擇要將這些圖表與之關聯的報告。對齊的默認值將用於下面列表中的每個圖形。"
 
-#: lib/reports.php:1996
+#: lib/reports.php:1963
 #, fuzzy
 msgid "Report:"
 msgstr "報告："
 
-#: lib/reports.php:2006
+#: lib/reports.php:1973
 #, fuzzy
 msgid "Graph Timespan:"
 msgstr "圖Timespan："
 
-#: lib/reports.php:2009
+#: lib/reports.php:1976
 #, fuzzy
 msgid "Graph Alignment:"
 msgstr "圖形對齊："
 
-#: lib/reports.php:2108
+#: lib/reports.php:2075
 #, fuzzy, php-format
 msgid "Created Report Graph Item '<i>%s</i>'"
 msgstr "創建報告圖表項&#39; <i>%s</i> &#39;"
 
-#: lib/reports.php:2110
+#: lib/reports.php:2077
 #, fuzzy, php-format
 msgid "Failed Adding Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "添加報表圖項&#39; <i>%s</i> &#39;失敗已經存在"
 
-#: lib/reports.php:2113
+#: lib/reports.php:2080
 #, fuzzy, php-format
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "已跳過的報告圖表項&#39; <i>%s</i> &#39;已存在"
@@ -18832,8 +19218,8 @@ msgstr ""
 msgid "RRD storage configuration requires attention"
 msgstr ""
 
-#: lib/snmp.php:234 lib/snmp.php:355 lib/snmp.php:471 lib/snmp.php:960
-#: lib/snmp.php:983
+#: lib/snmp.php:226 lib/snmp.php:343 lib/snmp.php:455 lib/snmp.php:940
+#: lib/snmp.php:963
 #, fuzzy, php-format
 msgid "SNMP Command is: %s"
 msgstr "SNMP選項[編輯：%s]"
@@ -20145,11 +20531,6 @@ msgstr "Kadupul Automation Report需要一個基於html的電子郵件客戶端"
 msgid "WARNING: Detected Poller Boost Overrun, Possible Boost Poller Crash"
 msgstr "警告：檢測到 Poller Boost Overrun，可能 Boost Poller 崩潰"
 
-#: pollers.php:21
-#, fuzzy
-msgid "Clear Statistics"
-msgstr "明確統計"
-
 #: pollers.php:25
 #, fuzzy
 msgid "Full Sync"
@@ -21388,11 +21769,6 @@ msgstr "按字母順序"
 #, fuzzy
 msgid "Natural"
 msgstr "自然"
-
-#: tree.php:1782 tree.php:1856 tree.php:1964
-#, fuzzy
-msgid "Edit"
-msgstr "編輯"
 
 #: tree.php:1789 tree.php:1863 tree.php:1971
 #, fuzzy
