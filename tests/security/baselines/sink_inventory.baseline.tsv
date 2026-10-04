@@ -970,6 +970,7 @@ header_redirect	./user_group_admin.php:514	        header('Location: user_group_
 header_redirect	./user_group_admin.php:521	    header('Location: user_group_admin.php?action=edit&header=false&tab=general&id=' . get_nfilter_request_var('id'));
 header_redirect	./user_group_admin.php:542	    header('Location: user_group_admin.php?action=edit&header=false&tab=gperms&id=' . get_request_var('group_id'));
 header_redirect	./utilities.php:1296	        header('Location: utilities.php?action=view_logfile&filename=' . $logbase);
+header_redirect	./utilities.php:2359	    header('Location: permission_denied.php');
 header_redirect	./utilities.php:28	        header('Location: utilities.php?action=view_poller_cache');
 header_redirect	./utilities.php:33	        header('Location: utilities.php?header=false');
 header_redirect	./utilities.php:82	        header('Location: utilities.php');
