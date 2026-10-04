@@ -72,6 +72,7 @@ function run_profiles($method, $action, array $request = array(), array $server 
 		namespace DataSourceProfileRuntime;
 
 		const MESSAGE_LEVEL_ERROR = 3;
+		const MESSAGE_LEVEL_WARN = 2;
 		function get_request_var($v) { return isset($_REQUEST[$v]) ? $_REQUEST[$v] : ""; }
 		function get_filter_request_var($v, $f = null, $o = array()) { return get_request_var($v); }
 		function get_nfilter_request_var($v) { return get_request_var($v); }
@@ -251,6 +252,37 @@ test('profile heartbeat propagation joins on both local data and template identi
 		->and($output)->not->toContain('ON dtd.local_data_id = dtr.local_data_id SET');
 });
 
+test('saving an in-use profile heartbeat does not require the disabled step field', function () {
+	$output = run_profiles(
+		'POST',
+		'save',
+		array('save_component_profile' => '1', 'id' => '3', 'name' => 'p', 'heartbeat' => '900'),
+		array(),
+		array('form_save', 'profile_is_read_only', 'profile_refuse_read_only'),
+		array('3' => array(0, 1))
+	);
+
+	expect($output)->toContain('SAVE:data_source_profiles:{"id":"3","hash":"hash","name":"p","heartbeat":"900"}')
+		->and($output)->toContain('EXEC:UPDATE data_template_rrd AS dtr')
+		->and($output)->toContain('MESSAGE:heartbeat_change')
+		->and($output)->not->toContain('"step"');
+});
+
+test('profile structural fields stay read only when the usage lookup fails', function () {
+	$output = run_profiles(
+		'POST',
+		'save',
+		array('save_component_profile' => '1', 'id' => '3', 'name' => 'p', 'step' => '60', 'heartbeat' => '900'),
+		array(),
+		array('form_save', 'profile_is_read_only', 'profile_refuse_read_only'),
+		array('3' => false)
+	);
+
+	expect($output)->toContain('MESSAGE:profile_read_only')
+		->and($output)->not->toContain('SAVE:')
+		->and($output)->not->toContain('EXEC:UPDATE data_template_rrd');
+});
+
 test('RRA removal refuses any GET, an RRA of another profile and a read only profile', function () {
 	expect_refused('item_remove', array('id' => '7', 'profile_id' => '3'));
 
@@ -296,7 +328,7 @@ test('saving a read only profile refuses the fields its edit page disables', fun
 
 	$output = run_profiles('POST', 'save', array('save_component_profile' => '1', 'id' => '3', 'name' => 'renamed', 'heartbeat' => '300'), array(), $save, array('3' => array(0, 1)));
 
-	expect($output)->toContain('SAVE:data_source_profiles:{"id":"3","hash":"hash","name":"renamed"}')
+	expect($output)->toContain('SAVE:data_source_profiles:{"id":"3","hash":"hash","name":"renamed","heartbeat":"300"}')
 		->and($output)->not->toContain('Refused');
 
 	/* Data Templates alone leave the profile editable, as the edit page does. */
@@ -327,6 +359,20 @@ test('saving an RRA refuses one of another profile, and a new or resized RRA of 
 
 	expect($output)->toContain('SAVE:data_source_profiles_rra:{"id":"7","name":"r","data_source_profile_id":"3","timespan":"86400"}')
 		->and($output)->not->toContain('Refused');
+
+	/* a usage lookup that fails reads as in use, so only the name and timespan of an owned RRA still save */
+	foreach (array(false, 'exception') as $failure) {
+		foreach (array(array('id' => '0', 'steps' => '300', 'rows' => '600'), array('id' => '7', 'steps' => '600'), array('id' => '7', 'rows' => '900')) as $locked) {
+			$output = run_profiles('POST', 'save', array('save_component_rra' => '1', 'profile_id' => '3', 'name' => 'r', 'timespan' => '86400') + $locked, array(), $save, array('3' => $failure), array('7' => 3));
+
+			expect($output)->toContain('MESSAGE:profile_read_only')
+				->and($output)->not->toContain('SAVE:data_source_profiles_rra');
+		}
+
+		$output = run_profiles('POST', 'save', array('save_component_rra' => '1', 'id' => '7', 'profile_id' => '3', 'name' => 'r', 'timespan' => '86400'), array(), $save, array('3' => $failure), array('7' => 3));
+
+		expect($output)->toContain('SAVE:data_source_profiles_rra:{"id":"7","name":"r","data_source_profile_id":"3","timespan":"86400"}');
+	}
 
 	$output = run_profiles('POST', 'save', array('save_component_rra' => '1', 'id' => '0', 'profile_id' => '3', 'name' => 'r', 'timespan' => '86400', 'steps' => '600', 'rows' => '700'), array(), $save, array('3' => array(2, 0)));
 
