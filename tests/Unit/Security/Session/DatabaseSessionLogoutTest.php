@@ -39,6 +39,18 @@ session_start();
 
 $GLOBALS['rows'] = $scenario['rows'];
 
+function db_begin_transaction() {
+	return true;
+}
+
+function db_commit_transaction() {
+	return true;
+}
+
+function db_rollback_transaction() {
+	return true;
+}
+
 function cacti_db_session_check() {
 }
 
@@ -75,7 +87,7 @@ function db_execute_prepared($sql, $params = array()) {
 
 PHP;
 
-	foreach (array('cacti_db_session_read', 'cacti_db_session_write') as $name) {
+	foreach (array('cacti_db_session_monotonic_activity', 'cacti_db_session_read', 'cacti_db_session_write') as $name) {
 		$source .= cacti_test_function_source($session, $name) . "\n\n";
 	}
 

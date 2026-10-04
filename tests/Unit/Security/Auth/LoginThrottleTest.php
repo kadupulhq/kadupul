@@ -19,7 +19,7 @@
  * row's old values, so the two statements count the same way.
  */
 
-require_once dirname(__DIR__, 3) . '/Helpers/AuthEntryProbe.php';
+require_once dirname(__DIR__, 3) . '/Helpers/LdapDirectoryProbe.php';
 
 function login_throttle_run(array $config, array $steps, bool $no_weight = false) : array {
 	$root  = dirname(__DIR__, 4);
@@ -188,9 +188,11 @@ function cacti_ldap_auth($username, $password, $dn) {
 
 PHP;
 
-	foreach (array('auth_log_username', 'auth_dummy_password_hash', 'auth_password_too_long', 'auth_login_throttle_keys', 'auth_login_throttle_check', 'auth_login_throttle_release', 'secpass_login_process', 'local_auth_login_process', 'ldap_login_process') as $name) {
+	foreach (array('auth_log_username', 'auth_ldap_equalize_failure', 'auth_dummy_password_hash', 'auth_password_too_long', 'auth_login_throttle_keys', 'auth_login_throttle_check', 'auth_login_throttle_release', 'secpass_login_process', 'local_auth_login_process', 'ldap_login_process') as $name) {
 		$source .= cacti_test_function_source($auth, $name) . "\n\n";
 	}
+
+	$source .= ldap_directory_failover_source() . "\n\n";
 
 	$source .= cacti_test_function_source($maint, 'login_throttle_purge') . "\n\n";
 	$source .= <<<'PHP'

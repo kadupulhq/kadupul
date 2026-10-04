@@ -174,6 +174,10 @@ function cacti_header($location) {
 function raise_message($id, $message = '', $level = 0) {
 }
 
+function db_fetch_assoc_prepared($sql, $params = array()) {
+	return array();
+}
+
 function db_fetch_cell_prepared($sql, $params = array()) {
 	return 'new-hash';
 }

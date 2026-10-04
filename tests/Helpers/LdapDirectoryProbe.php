@@ -320,7 +320,7 @@ function ldap_directory_probe_run(array $scenario, array $auth_functions = array
 	$scenario['ldap_source'] = file_get_contents($root . '/lib/ldap.php');
 	$scenario['auth_source'] = '';
 
-	foreach ($auth_functions as $name) {
+	foreach (array_unique(array_merge(array('auth_log_username', 'auth_login_throttle_check', 'auth_login_throttle_release', 'auth_login_throttle_keys'), $auth_functions)) as $name) {
 		$scenario['auth_source'] .= cacti_test_function_source($auth, $name) . "\n\n";
 	}
 

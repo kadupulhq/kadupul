@@ -168,6 +168,10 @@ function db_fetch_row_prepared($sql, $params = array()) {
 	return $rows ? reset($rows) : array();
 }
 
+function db_fetch_assoc_prepared($sql, $params = array()) {
+	return array();
+}
+
 function db_fetch_cell_prepared($sql, $params = array()) {
 	if (!preg_match('/SELECT\s+`?([a-z_]+)`?\s+FROM user_auth\b/i', $sql, $match)) {
 		return false;
@@ -217,7 +221,7 @@ function db_execute_prepared($sql, $params = array()) {
 
 PHP;
 
-	foreach (array('auth_log_username', 'auth_session_credential_key', 'auth_session_credentials_valid', 'auth_session_epoch', 'auth_session_end_reason', 'auth_session_enforce', 'auth_checkclear_lockout', 'auth_process_lockout_check', 'auth_process_lockout', 'auth_password_too_long', 'secpass_check_pass') as $name) {
+	foreach (array('auth_log_username', 'auth_session_bind_credentials', 'auth_session_credential_key', 'auth_session_credentials_valid', 'auth_session_epoch', 'auth_session_end_reason', 'auth_session_enforce', 'auth_checkclear_lockout', 'auth_process_lockout_check', 'auth_process_lockout', 'auth_password_too_long', 'secpass_check_pass') as $name) {
 		$global .= cacti_test_function_source($auth, $name) . "\n\n";
 	}
 

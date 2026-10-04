@@ -93,6 +93,12 @@ function db_fetch_row_prepared($sql, $params = array()) {
 	return array();
 }
 
+function db_fetch_assoc_prepared($sql, $params = array()) {
+	$epoch = $GLOBALS['scenario']['epoch'];
+
+	return $epoch === false ? false : array(array('value' => $epoch));
+}
+
 function db_fetch_cell_prepared($sql, $params = array()) {
 	if (strpos($sql, 'FROM settings_user') !== false) {
 		return $GLOBALS['scenario']['epoch'];
