@@ -210,7 +210,7 @@ if ($host_id === false) {
     );
 
     if (cacti_sizeof($poller_commands)) {
-        $queued_purge = new \Kadupul\Inventory\Infrastructure\Legacy\QueuedCollectorPurge();
+        $queued_purge = new \Kadupul\Inventory\Infrastructure\Legacy\QueuedCollectorPurge(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner());
         foreach ($poller_commands as $command) {
             $acknowledge = true;
             switch ($command['action']) {

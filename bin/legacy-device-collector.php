@@ -12,6 +12,8 @@ use Kadupul\Inventory\Domain\DeviceEditConflict;
 
 require __DIR__ . '/legacy-assignment-bootstrap.php';
 
+$transactions = new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner();
+
 $status = 'failed';
 $transactionStarted = false;
 $writeStarted = false;
@@ -51,7 +53,7 @@ try {
     $assignment->assign($command['collector_id'], $command['revision']);
     $previous = (int) $row['poller_id'];
     $target = $assignment->collectorId();
-    $journal = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorCleanup();
+    $journal = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorCleanup($transactions);
     $pending = $journal->pending($connection, [$assignment->id]);
     $cleanupPollers = array_keys($pending[$assignment->id] ?? []);
     $pollers = array_unique([$previous, $target, ...$cleanupPollers]);
@@ -102,14 +104,14 @@ try {
     }
     if ($previous !== $target) {
         $writeStarted = true;
-        (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorTransfer())->apply($connection, $connections, $assignment->id, $previous, $target, true);
+        (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorTransfer($transactions))->apply($connection, $connections, $assignment->id, $previous, $target, true);
     }
     $receipts = $journal->retain($connection, [$assignment->id => $previous], $target);
     if (!db_commit_transaction($connection)) {
         throw new RuntimeException('Commit failed');
     }
     $transactionStarted = false;
-    (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorTransfer())->finish($connection, $command['actor'], $connections, [$assignment->id => $previous], $target, $receipts);
+    (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorTransfer($transactions))->finish($connection, $command['actor'], $connections, [$assignment->id => $previous], $target, $receipts);
     $status = 'ok';
     cacti_log('INVENTORY: User ' . $command['actor'] . ' assigned device collector for device ' . $assignment->id, false, 'AUDIT');
 } catch (DeviceEditConflict) {

@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Kadupul\Inventory\Infrastructure\Legacy;
 
 use Closure;
-use Kadupul\Platform\Infrastructure\Legacy\LegacyReferenceWriteTransaction;
+use Kadupul\Platform\Contract\ReferenceWriteTransactionRunner;
 use PDO;
 use PDOStatement;
 use RuntimeException;
@@ -19,6 +19,8 @@ use Throwable;
 /** Serialize queued cleanup with returning device assignments on both servers. */
 final class QueuedCollectorPurge
 {
+    public function __construct(private readonly ReferenceWriteTransactionRunner $transactions) {}
+
     public static function primary(array $configuration, array $sessions, string $key, mixed $onlinePrimary): PDO
     {
         if (($configuration['poller_id'] ?? null) == 1) {
@@ -48,7 +50,7 @@ final class QueuedCollectorPurge
         $id = (int) $command['command'];
 
         return $this->session($primary, function () use ($primary, $collector, $command, $id, $connect, $purge): string {
-            return (new LegacyReferenceWriteTransaction($primary))->run(function () use ($primary, $collector, $command, $id, $connect, $purge): string {
+            return $this->transactions->run($primary, function () use ($primary, $collector, $command, $id, $connect, $purge): string {
                 $host = $this->rows($primary, 'SELECT id, poller_id, deleted FROM host WHERE id = ? FOR UPDATE', [$id]);
                 if (count($host) > 1) {
                     throw new RuntimeException('Primary device identity unavailable');
@@ -73,7 +75,7 @@ final class QueuedCollectorPurge
                     throw new RuntimeException('Collector connection unavailable');
                 }
                 $this->session($remote, function () use ($remote, $id, $purge): void {
-                    (new LegacyReferenceWriteTransaction($remote))->run(function () use ($remote, $id, $purge): bool {
+                    $this->transactions->run($remote, function () use ($remote, $id, $purge): bool {
                         // The missing-row next-key lock also serializes a returning INSERT.
                         $this->rows($remote, 'SELECT id FROM host WHERE id = ? FOR UPDATE', [$id]);
                         if ($purge($remote, $id) !== true || !$remote->inTransaction()) {

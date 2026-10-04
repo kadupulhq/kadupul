@@ -30,6 +30,9 @@ services:
     Kadupul\Platform\Contract\LegacyConfiguration:
         alias: Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration
 
+    Kadupul\Platform\Contract\ReferenceWriteTransactionRunner:
+        alias: Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner
+
     Kadupul\Platform\Contract\DatabaseConnection:
         alias: Kadupul\Platform\Infrastructure\Legacy\InstallationDatabase
 

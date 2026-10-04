@@ -64,17 +64,17 @@ cmd_exec	./lib/rrd.php:228	    return proc_open(array(read_config_option('path_r
 cmd_exec	./lib/rrd_maintenance.php:287	                    // RRD pipes may come from proc_open(), which pclose() does not wait for.
 cmd_exec	./lib/rrdcheck.php:839	    $process = proc_open($command, $fds, $pipes);
 cmd_exec	./lib/snmpagent.php:642		/* add pollers of a distributed system (future) */
-cmd_exec	./lib/utility.php:1660	                        $nproc = system('nproc');
-cmd_exec	./lib/utility.php:1783	        exec('wmic os get FreePhysicalMemory', $memInfo['FreePhysicalMemory']);
-cmd_exec	./lib/utility.php:1784	        exec('wmic os get FreeSpaceInPagingFiles', $memInfo['FreeSpaceInPagingFiles']);
-cmd_exec	./lib/utility.php:1785	        exec('wmic os get FreeVirtualMemory', $memInfo['FreeVirtualMemory']);
-cmd_exec	./lib/utility.php:1786	        exec('wmic os get SizeStoredInPagingFiles', $memInfo['SizeStoredInPagingFiles']);
-cmd_exec	./lib/utility.php:1787	        exec('wmic os get TotalVirtualMemorySize', $memInfo['TotalVirtualMemorySize']);
-cmd_exec	./lib/utility.php:1788	        exec('wmic os get TotalVisibleMemorySize', $memInfo['TotalVisibleMemorySize']);
-cmd_exec	./lib/utility.php:1820	            exec('/usr/bin/free', $output, $exit_code);
-cmd_exec	./lib/utility.php:1873	    $json     = shell_exec($php . ' -q ' . $php_file);
-cmd_exec	./lib/utility.php:1943	    $json     = shell_exec($php . ' -q ' . $php_file);
-cmd_exec	./lib/utility.php:2079	    $json     = shell_exec($php . ' -q ' . $php_file);
+cmd_exec	./lib/utility.php:1661	                        $nproc = system('nproc');
+cmd_exec	./lib/utility.php:1784	        exec('wmic os get FreePhysicalMemory', $memInfo['FreePhysicalMemory']);
+cmd_exec	./lib/utility.php:1785	        exec('wmic os get FreeSpaceInPagingFiles', $memInfo['FreeSpaceInPagingFiles']);
+cmd_exec	./lib/utility.php:1786	        exec('wmic os get FreeVirtualMemory', $memInfo['FreeVirtualMemory']);
+cmd_exec	./lib/utility.php:1787	        exec('wmic os get SizeStoredInPagingFiles', $memInfo['SizeStoredInPagingFiles']);
+cmd_exec	./lib/utility.php:1788	        exec('wmic os get TotalVirtualMemorySize', $memInfo['TotalVirtualMemorySize']);
+cmd_exec	./lib/utility.php:1789	        exec('wmic os get TotalVisibleMemorySize', $memInfo['TotalVisibleMemorySize']);
+cmd_exec	./lib/utility.php:1821	            exec('/usr/bin/free', $output, $exit_code);
+cmd_exec	./lib/utility.php:1874	    $json     = shell_exec($php . ' -q ' . $php_file);
+cmd_exec	./lib/utility.php:1944	    $json     = shell_exec($php . ' -q ' . $php_file);
+cmd_exec	./lib/utility.php:2080	    $json     = shell_exec($php . ' -q ' . $php_file);
 cmd_exec	./poller_boost.php:556	        $process = proc_open($arguments, $descriptors, $pipes);
 cmd_exec	./poller_spikekill.php:230				$response = exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./remote_agent.php:493	                                $cactiphp = proc_open($php_bin . ' -q ' . $srv_path . ' realtime ' . cacti_escapeshellarg($poller_id), $cactides, $pipes);
@@ -431,7 +431,7 @@ dynamic_include	./lib/utility.php:118	    include_once($config['library_path'] .
 dynamic_include	./lib/utility.php:176	    include_once($config['library_path'] . '/data_query.php');
 dynamic_include	./lib/utility.php:177	    include_once($config['library_path'] . '/api_poller.php');
 dynamic_include	./lib/utility.php:34	    include_once($config['library_path'] . '/api_data_source.php');
-dynamic_include	./lib/utility.php:773	    include_once($config['library_path'] . '/api_data_source.php');
+dynamic_include	./lib/utility.php:774	    include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./link.php:75	                include_once($file);
 dynamic_include	./poller.php:1167	    include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller.php:1346	    include_once($config['base_path'] . '/lib/poller.php');
@@ -588,7 +588,7 @@ fs_write	./lib/spikekill.php:1191	        $source_handle = fopen($source, 'rb');
 fs_write	./lib/spikekill.php:1283	            $handle    = @fopen($candidate, 'xb+');
 fs_write	./lib/spikekill.php:533	        $source_handle = @fopen($this->rrdfile, 'rb');
 fs_write	./lib/spikekill.php:954	        $original = @fopen($rrdfile, 'rb');
-fs_write	./lib/utility.php:758	            file_put_contents(sys_get_temp_dir() . '/cacti-option.log', get_debug_prefix() . cacti_debug_backtrace('time_last_change_poller_item', false, false, 0, 1) . "\n", FILE_APPEND);
+fs_write	./lib/utility.php:759	            file_put_contents(sys_get_temp_dir() . '/cacti-option.log', get_debug_prefix() . cacti_debug_backtrace('time_last_change_poller_item', false, false, 0, 1) . "\n", FILE_APPEND);
 fs_write	./package_import.php:373					file_put_contents($xmlfile, $data);
 fs_write	./package_import.php:79		if (file_put_contents($xmlfile, $_SESSION['sess_import_package']) === false) {
 fs_write	./script_server.php:38	    define('STDIN', fopen('php://stdin', 'r'));
