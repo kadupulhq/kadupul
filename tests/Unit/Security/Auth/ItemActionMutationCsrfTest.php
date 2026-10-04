@@ -36,6 +36,7 @@ function read_config_option($name) { return ''; }
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function api_plugin_hook($name) {}
 function api_plugin_hook_function($name, $value = null) { return $value; }
+function is_device_allowed($id) { return (int) $id === 1; }
 function get_current_page() { return 'tree.php'; }
 function get_graph_group($id) { return array(1); }
 function get_graph_parent($id) { return 1; }
@@ -53,7 +54,10 @@ function move_item_down(...$args) { handler_reached(); }
 function db_execute(...$args) { handler_reached(); }
 function db_execute_prepared(...$args) { handler_reached(); }
 function db_fetch_cell(...$args) { handler_reached(); }
-function db_fetch_cell_prepared(...$args) { handler_reached(); }
+function db_fetch_cell_prepared(...$args) {
+    if ($GLOBALS['argv'][2] === 'data_sources.php' && $GLOBALS['argv'][5] === 'data_edit') return 1;
+    handler_reached();
+}
 function db_fetch_row(...$args) { handler_reached(); }
 function db_fetch_row_prepared(...$args) { handler_reached(); }
 function db_fetch_assoc(...$args) { handler_reached(); }

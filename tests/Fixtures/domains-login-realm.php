@@ -108,12 +108,49 @@ if ($mode === 'process') {
         exit;
     }
 
-    $db = new PDO('sqlite::memory:');
+    class DomainCopyPDO extends PDO
+    {
+        public function prepare(string $query, array $options = []): PDOStatement|false
+        {
+            if (!empty($GLOBALS['domain_copy_ready']) && str_starts_with($query, 'INSERT INTO user_auth (')) {
+                $GLOBALS['events'][] = 'COPY';
+            }
+            return parent::prepare($query, $options);
+        }
+    }
+    $db = new DomainCopyPDO('sqlite::memory:');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $db->exec("CREATE TABLE user_auth (id INTEGER, username TEXT, realm INTEGER, full_name TEXT DEFAULT '', email_address TEXT DEFAULT '', must_change_password TEXT DEFAULT '', enabled TEXT DEFAULT 'on', locked TEXT DEFAULT '', lastfail INTEGER DEFAULT 0, failed_attempts INTEGER DEFAULT 0, password TEXT DEFAULT '')");
-    foreach (array('user_auth_perms', 'user_auth_realm', 'settings_user', 'settings_tree', 'user_auth_group_members') as $table) {
+    $database_hostname = 'fixture';
+    $database_port = 0;
+    $database_default = 'auth';
+    $database_sessions = array('fixture:0:auth' => $db);
+    function db_begin_transaction($db)
+    {
+        return $db->beginTransaction();
+    }
+    function db_commit_transaction($db)
+    {
+        return $db->commit();
+    }
+    function db_rollback_transaction($db)
+    {
+        return $db->rollBack();
+    }
+    function db_get_table_column_types($table, $db)
+    {
+        $out = array();
+        foreach ($db->query('PRAGMA table_info(' . $table . ')')->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $out[$row['name']] = array('type' => strtolower($row['type']), 'null' => $row['notnull'] ? 'NO' : 'YES', 'extra' => $row['pk'] ? 'auto_increment' : '', 'default' => $row['dflt_value'] ?? '');
+        }
+        return $out;
+    }
+    $db->exec("CREATE TABLE user_auth (id INTEGER PRIMARY KEY AUTOINCREMENT, reset_perms INTEGER DEFAULT 1, username TEXT, realm INTEGER, full_name TEXT DEFAULT '', email_address TEXT DEFAULT '', must_change_password TEXT DEFAULT '', password_change TEXT DEFAULT '', enabled TEXT DEFAULT 'on', locked TEXT DEFAULT '', lastfail INTEGER DEFAULT 0, failed_attempts INTEGER DEFAULT 0, password TEXT DEFAULT '')");
+    $db->exec('CREATE TABLE user_auth_cache (user_id INTEGER)');
+    $db->exec('CREATE TABLE user_auth_group (id INTEGER PRIMARY KEY)');
+    foreach (array('user_auth_perms', 'user_auth_realm', 'settings_tree', 'user_auth_group_members') as $table) {
         $db->exec('CREATE TABLE ' . $table . ' (user_id INTEGER, group_id INTEGER)');
     }
+    $db->exec('CREATE TABLE settings_user (user_id INTEGER, name TEXT, value TEXT)');
     $db->exec('CREATE TABLE user_domains (domain_id INTEGER, domain_name TEXT, enabled TEXT, defdomain INTEGER, user_id INTEGER)');
     $db->exec('CREATE TABLE user_domains_ldap (domain_id INTEGER, server TEXT, dn TEXT, mode INTEGER, group_require TEXT, cn_full_name TEXT, cn_email TEXT)');
     foreach ($scenario['domains'] as $domain) {
@@ -192,6 +229,8 @@ if ($mode === 'process') {
         return $GLOBALS['db']->prepare($sql)->execute($params);
     }
 
+    $db->exec("INSERT INTO user_auth(id,username,realm) VALUES(100,'unrelated',0)");
+    $domain_copy_ready = true;
     $realm = 0;
     $error = false;
     $error_msg = '';
