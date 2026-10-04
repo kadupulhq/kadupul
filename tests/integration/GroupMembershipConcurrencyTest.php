@@ -6,7 +6,7 @@
 function group_concurrency_worker(array $scenario): array
 {
     $pipes = array();
-    $worker = proc_open(array(PHP_BINARY, '-d', 'display_errors=stderr', dirname(__DIR__) . '/Helpers/GroupTransactionProbe.php', json_encode($scenario)), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $worker = proc_open(array(PHP_BINARY, '-d', 'display_errors=stderr', dirname(__DIR__) . '/Fixtures/group-transaction-probe.php', json_encode($scenario)), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
     stream_set_timeout($pipes[1], 10);
     expect(trim(fgets($pipes[1])))->toBe('READY');
     return array($worker, $pipes);
