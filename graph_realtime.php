@@ -76,14 +76,18 @@ $hash = $_SESSION['sess_realtime_hash'];
 set_default_action();
 
 /* poller_realtime.php polls every device behind the graph and view returns the
- * image that poll cached, so refuse both when real-time is off or the graph
- * render would deny this user. is_graph_allowed() filters on the graph only
- * for a positive id, so a zero or negative id is refused like a missing one */
+ * image that poll cached, so refuse both when real-time is off, the user lacks
+ * the Realtime realm, or the graph render would deny this user. The page is a
+ * guest page, so include/auth.php never checks its realm. is_graph_allowed()
+ * filters on the graph only for a positive id, so a zero or negative id is
+ * refused like a missing one */
 if (in_array(get_request_var('action'), array('init', 'timespan', 'interval', 'countdown', 'view'), true)) {
 	$local_graph_id = get_filter_request_var('local_graph_id');
 
 	if (read_config_option('realtime_enabled') == '') {
 		$denied = __('Real-time has been disabled by your administrator.');
+	} elseif (!is_realm_allowed(25)) {
+		$denied = __('Permission Denied');
 	} elseif (empty($local_graph_id) || $local_graph_id < 1 || ($_SESSION['sess_user_id'] > 0 && !is_graph_allowed($local_graph_id, $_SESSION['sess_user_id']))) {
 		$denied = __('Permission Denied');
 	}
@@ -445,8 +449,11 @@ if (!isset($_SESSION['sess_realtime_graph_start'])) {
 	set_request_var('graph_start', $_SESSION['sess_realtime_graph_start']);
 }
 
+/* the pop-out page and the preferences it saves need the Realtime realm too */
+$realtime_allowed = is_realm_allowed(25);
+
 /* save user preferences */
-if (graph_realtime_is_post()) {
+if (graph_realtime_is_post() && $realtime_allowed) {
 	set_user_setting('realtime_interval', get_request_var('ds_step'));
 	set_user_setting('realtime_gwindow', abs(get_request_var('graph_start')));
 	set_user_setting('realtime_size', get_request_var('size'));
@@ -456,6 +463,8 @@ if (graph_realtime_is_post()) {
 $realtime_error = '';
 if (read_config_option('realtime_enabled') == '') {
 	$realtime_error = __('Real-time has been disabled by your administrator.');
+} elseif (!$realtime_allowed) {
+	$realtime_error = __('Permission Denied');
 } elseif (!is_dir(read_config_option('realtime_cache_path'))) {
 	$realtime_error = __(
 		'The Image Cache Directory does not exist.  Please first create it and set permissions ' .

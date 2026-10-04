@@ -42,6 +42,12 @@ switch ($action) {
 
 		break;
 	default:
+		/* a session opened before the last password change is not logged in */
+		if (isset($_SESSION['sess_user_id']) && !auth_session_credentials_valid($_SESSION['sess_user_id'])) {
+			kill_session_var('sess_change_password');
+			kill_session_var('sess_user_id');
+		}
+
 		/**
 		 * If the user is not logged in, redirect back to the page they came
 		 * of the login page.
@@ -126,6 +132,34 @@ case 'changepassword':
 	// Get current password as entered
 	$current_password = get_nfilter_request_var('current_password');
 
+	/**
+	 * Check the current password first, counting failures toward the login
+	 * lockout. The history and same-as-old checks below also test a guess
+	 * against the stored hash, so they may only run once it is known.
+	 */
+	auth_checkclear_lockout($user['username'], 0);
+
+	if (auth_process_lockout_check($user['username'], 0)) {
+		$bad_password = true;
+		$errorMessage = "<span class='badpassword_message'>" . __('Your account has been locked.  Please contact your Administrator.') . "</span>";
+		break;
+	}
+
+	if ((!empty($user['password']) || !empty($current_password)) && !compat_password_verify($current_password, $user['password'])) {
+		auth_process_lockout($user['username'], 0);
+
+		$bad_password = true;
+
+		/* the last allowed guess locks the account, so say that rather than ask for another try */
+		if (auth_process_lockout_check($user['username'], 0)) {
+			$errorMessage = "<span class='badpassword_message'>" . __('Your account has been locked.  Please contact your Administrator.') . "</span>";
+		} else {
+			$errorMessage = "<span class='badpassword_message'>" . __('Your current password is not correct. Please try again.') . "</span>";
+		}
+
+		break;
+	}
+
 	// Secpass checking
 	$error = secpass_check_pass($password);
 
@@ -147,13 +181,6 @@ case 'changepassword':
 	if ($password !== $password_confirm) {
 		$bad_password = true;
 		$errorMessage = "<span class='badpassword_message'>" . __('Your new passwords do not match, please retype.') . "</span>";
-		break;
-	}
-
-	// Compare current password with stored password
-	if ((!empty($user['password']) || !empty($current_password)) && !compat_password_verify($current_password, $user['password'])) {
-		$bad_password = true;
-		$errorMessage = "<span class='badpassword_message'>" . __('Your current password is not correct. Please try again.') . "</span>";
 		break;
 	}
 

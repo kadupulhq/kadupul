@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -30,24 +31,34 @@ set_default_action();
 
 switch (get_request_var('action')) {
 	case 'save':
+		csrf_require_post(true);
+
 		form_save();
 
 		break;
 	case 'logout_everywhere':
+		csrf_require_post(true);
+
 		api_auth_logout_everywhere();
 
 		break;
 	case 'clear_user_settings':
+		csrf_require_post(true);
+
 		api_auth_clear_user_settings();
 
 		break;
 	case 'reset_default':
+		csrf_require_post(true);
+
 		$name  = get_nfilter_request_var('name');
 
 		api_auth_clear_user_setting($name);
 
 		break;
 	case 'update_data':
+		csrf_require_post(true);
+
 		$name  = get_nfilter_request_var('name');
 		$value = get_nfilter_request_var('value');
 
@@ -193,9 +204,14 @@ function api_auth_update_user_setting($name, $value) {
 				SET $name = ?
 				WHERE id = ?",
 				array($value, $user));
-		} else {
+		} elseif (is_view_allowed('graph_settings')) {
+			/* the settings form is shown only with graph_settings, and form_save() checks it too */
 			foreach($settings_user as $tab => $settings) {
 				if (isset($settings[$name])) {
+					if (!api_auth_user_setting_valid($name, $settings[$name], $value)) {
+						break;
+					}
+
 					db_execute_prepared('REPLACE INTO settings_user
 						(name, value, user_id)
 						VALUES (?, ?, ?)',
@@ -210,6 +226,71 @@ function api_auth_update_user_setting($name, $value) {
 			}
 		}
 	}
+}
+
+/**
+ * api_auth_user_setting_valid - accept only a value the settings form could
+ *   have submitted for the field. Stored values reach script blocks, HTML
+ *   attributes and rrdtool, so anything else is dropped.
+ *
+ * @param  (string) $name  The setting name
+ * @param  (array)  $field The setting's definition from $settings_user
+ * @param  (mixed)  $value The submitted value
+ *
+ * @return (bool) true when the value may be saved
+ */
+function api_auth_user_setting_valid($name, $field, $value) {
+	if (!is_string($value) || !isset($field['method'])) {
+		return false;
+	}
+
+	if (isset($field['max_length']) && strlen($value) > $field['max_length']) {
+		return false;
+	}
+
+	switch ($field['method']) {
+		case 'checkbox':
+			return $value === 'on' || $value === '';
+		case 'drop_array':
+		case 'drop_language':
+			return isset($field['array']) && is_array($field['array']) && array_key_exists($value, $field['array']);
+		case 'drop_sql':
+			if (isset($field['default']) && $value === (string) $field['default']) {
+				return true;
+			}
+
+			if (!ctype_digit($value)) {
+				return false;
+			}
+
+			/* the form offers only the trees this user may view */
+			if ($name == 'default_tree_id') {
+				return is_tree_allowed($value);
+			}
+
+			$rows = db_fetch_assoc($field['sql']);
+
+			if (cacti_sizeof($rows)) {
+				foreach ($rows as $row) {
+					if ((string) $row['id'] === $value) {
+						return true;
+					}
+				}
+			}
+
+			return false;
+		case 'textbox':
+			/* save_user_settings() treats a field with a numeric default as numeric */
+			if (isset($field['default']) && is_numeric($field['default'])) {
+				return is_numeric($value);
+			}
+
+			return true;
+		case 'font':
+			return true;
+	}
+
+	return false;
 }
 
 function form_save() {
@@ -232,6 +313,25 @@ function form_save() {
 
 	// Save the users graph settings if they have permission
 	if (is_view_allowed('graph_settings') == true && isset_request_var('tab') && get_nfilter_request_var('tab') == 'general') {
+		/**
+		 * A drop-down value the form did not offer is left out of the save, as
+		 * update_data leaves it out. Clearing the request variable instead would
+		 * let save_user_settings() store the default of a numeric field.
+		 */
+		foreach ($settings_user as $tab_short_name => $tab_fields) {
+			foreach ($tab_fields as $field_name => $field_array) {
+				if (isset($field_array['method'])
+					&& in_array($field_array['method'], array('drop_array', 'drop_sql', 'drop_language'), true)
+					&& isset_request_var($field_name)
+					&& !api_auth_user_setting_valid($field_name, $field_array, get_nfilter_request_var($field_name))) {
+					unset($settings_user[$tab_short_name][$field_name]);
+
+					$_SESSION['sess_error_fields'][$field_name] = $field_name;
+					$errors[3] = 3;
+				}
+			}
+		}
+
 		save_user_settings($_SESSION['sess_user_id']);
 	} elseif (isset_request_var('tab')) {
 		api_plugin_hook('auth_profile_save');
@@ -458,7 +558,7 @@ function settings_javascript() {
 	var authMethod   = <?php print json_encode((string) read_config_option('auth_method'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>;
 
 	function clearUserSettings() {
-		$.get('auth_profile.php?action=clear_user_settings', function() {
+		$.post('auth_profile.php', {action: 'clear_user_settings', tab: currentTab, __csrf_magic: csrfMagicToken}, function() {
 			document.location = 'auth_profile.php?newtheme=1';
 			$('#clear_settings').blur();
 		});
@@ -489,7 +589,7 @@ function settings_javascript() {
 
 	function logoutEverywhere() {
 		$('#logout_everywhere').blur();
-		$.get('auth_profile.php?action=logout_everywhere', function(data) {
+		$.post('auth_profile.php', {action: 'logout_everywhere', __csrf_magic: csrfMagicToken}, function(data) {
 			$('body').append('<div style="display:none;" id="cleared" title="<?php print __esc('User Sessions Cleared');?>"><p><?php print __('All your login sessions have been cleared.');?></p></div>');
 
 			$('#cleared').dialog({
@@ -581,7 +681,7 @@ function settings_javascript() {
 							var id = $(this).attr('data-id');
 
 							if (id != undefined) {
-								$.get('auth_profile.php?tab='+currentTab+'&action=reset_default&name='+id, function(data) {
+								$.post('auth_profile.php', {action: 'reset_default', tab: currentTab, name: id, __csrf_magic: csrfMagicToken}, function(data) {
 									if (id != 'selected_theme' && id != 'user_language' && id != 'enable_hscroll') {
 										if ($('#'+id).is(':checkbox')) {
 											if (data == 'on') {

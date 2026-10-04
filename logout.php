@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -59,7 +60,7 @@ if (get_request_var('action') == 'timeout' || get_request_var('action') == 'disa
 		$message = __('You have been logged out of Cacti due to a session timeout.');
 	} elseif (get_request_var('action') == 'disabled') {
 		$message = __('You have been logged out of Cacti due to an account suspension.');
-	} elseif (get_request_var('action') == 'remove') {
+	} elseif (get_request_var('action') == 'remote') {
 		$message = __('You have been logged out of Cacti due to a Remote Data Collector state change');
 	} else {
 		$message = '';
