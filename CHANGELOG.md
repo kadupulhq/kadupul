@@ -110,8 +110,8 @@ Targeting `v1.3.0`, the first planned application release. See
 - Save an editable profile heartbeat even when the browser omits the disabled step field, while refusing changes to structural fields for profiles used by local data sources. Fixes #232.
 
 - Limit profile heartbeat propagation to the matching data template as well as the local data source, so template rows sharing the zero local-data sentinel do not overwrite unrelated templates. Fixes #233.
-
 - Recheck data-source profile references when a bulk deletion is submitted, preserving definitions still used by templates or sources while allowing unused profiles in the same selection to be removed.
+- Make the effective graph-policy display honor explicit template grants under Restrictive mode when the template policy defaults to Deny. Fixes #263.
 
 - Remove orphaned user-log entries even when no current user accounts remain.
 - Stop token generation when the cryptographic random source fails instead of returning a predictable fallback. Fixes #580.

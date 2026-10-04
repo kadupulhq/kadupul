@@ -12,6 +12,16 @@ require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
 require_once dirname(__DIR__) . '/Helpers/NativeChildCoverageEvidence.php';
 
 $authSource = file_get_contents(dirname(__DIR__, 2) . '/lib/auth.php');
+$authFunctionBody = static function ($functionName) use ($authSource) {
+    $start = strpos($authSource, 'function ' . $functionName . '(');
+    if ($start === false) {
+        return '';
+    }
+
+    $end = strpos($authSource, "\nfunction ", $start + 1);
+
+    return $end === false ? substr($authSource, $start) : substr($authSource, $start, $end - $start);
+};
 
 // --- GHSA-9ffc-rr2g-c8hh: Remote-User header gate ---
 
