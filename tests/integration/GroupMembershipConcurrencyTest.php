@@ -6,7 +6,7 @@
 function group_concurrency_worker(array $scenario): array
 {
     $pipes = array();
-    $worker = proc_open(array(PHP_BINARY, '-d', 'display_errors=stderr', dirname(__DIR__) . '/Helpers/GroupTransactionProbe.php', json_encode($scenario)), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $worker = proc_open(array(PHP_BINARY, '-d', 'display_errors=stderr', dirname(__DIR__) . '/Fixtures/group-transaction-probe.php', json_encode($scenario)), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
     stream_set_timeout($pipes[1], 10);
     expect(trim(fgets($pipes[1])))->toBe('READY');
     return array($worker, $pipes);
@@ -103,7 +103,7 @@ test('copying group grants cannot recreate children after concurrent parent dele
         $db->exec("INSERT INTO {$prefix}_user_auth_group(id) VALUES(5)");
         $db->exec("INSERT INTO {$prefix}_user_auth_group_perms VALUES(5,9,1)");
         $db->exec("INSERT INTO {$prefix}_user_auth_group_realm VALUES(5,1)");
-        $copy = proc_open(array(PHP_BINARY, dirname(__DIR__) . '/Helpers/GroupCopyRaceProbe.php'), array(0 => array('pipe','r'),1 => array('pipe','w'),2 => array('pipe','w')), $copy_pipes);
+        $copy = proc_open(array(PHP_BINARY, dirname(__DIR__) . '/Fixtures/group-copy-race-probe.php'), array(0 => array('pipe','r'),1 => array('pipe','w'),2 => array('pipe','w')), $copy_pipes);
         $workers[] = $copy;
         fwrite($copy_pipes[0], json_encode($scenario) . "\n");
         stream_set_timeout($copy_pipes[1], 10);
@@ -115,7 +115,7 @@ test('copying group grants cannot recreate children after concurrent parent dele
         $remover_scenario = $scenario;
         $remover_scenario['action'] = 'remove';
         $remover_scenario['group_id'] = $new_id;
-        $remover = proc_open(array(PHP_BINARY, dirname(__DIR__) . '/Helpers/GroupCopyRaceProbe.php'), array(0 => array('pipe','r'),1 => array('pipe','w'),2 => array('pipe','w')), $remover_pipes);
+        $remover = proc_open(array(PHP_BINARY, dirname(__DIR__) . '/Fixtures/group-copy-race-probe.php'), array(0 => array('pipe','r'),1 => array('pipe','w'),2 => array('pipe','w')), $remover_pipes);
         $workers[] = $remover;
         fwrite($remover_pipes[0], json_encode($remover_scenario) . "\n");
         fclose($remover_pipes[0]);
