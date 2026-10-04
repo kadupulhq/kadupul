@@ -398,8 +398,12 @@ if ($scenario['mode'] === 'matches') {
     $start = date('Y-m-d H:i:s', time() + ($scenario['future'] ? 86400 * 40 : -86400 * 2));
     $stmt = $db->prepare('INSERT INTO automation_networks VALUES (8,?,1,?, ?,?,?,?,?,?)');
     $stmt->execute(array($scenario['type'], $start, $scenario['next'] ? $start : '0000-00-00 00:00:00', '1,2,3,4,5,6,7', '1,2,3,4,5,6,7,8,9,10,11,12', '1,15,32', '1,2,3,4', '1,2,3,4,5,6,7'));
+    $before = time();
     $GLOBALS['result'] = api_automation_is_time_to_start(8);
+    $after = time();
     $GLOBALS['contracts'] = $db->query('SELECT * FROM automation_networks WHERE id=8')->fetch(PDO::FETCH_ASSOC);
+    $GLOBALS['contracts']['observed_before'] = $before;
+    $GLOBALS['contracts']['observed_after'] = $after;
 } elseif ($scenario['mode'] === 'preview') {
     $db->exec('INSERT INTO automation_tree_rules VALUES (8,' . TREE_ITEM_TYPE_HOST . ',"Selected")');
     $db->exec("INSERT INTO automation_match_rule_items VALUES (1,8," . AUTOMATION_RULE_TYPE_TREE_MATCH . ",1,0,'h.id'," . AUTOMATION_OP_MATCHES . ",'7')");
