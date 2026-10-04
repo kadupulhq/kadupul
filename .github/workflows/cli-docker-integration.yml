@@ -2,7 +2,7 @@ name: CLI maintenance Docker integration
 
 on:
   pull_request:
-    branches: [main, lts/1.2]
+    branches: [main, lts/1.2, 'chore/consolidate-lts-*']
     paths:
       - 'cli/**'
       - 'lib/api_tree.php'
@@ -68,7 +68,7 @@ jobs:
 
   analyze-binlog:
     name: Native LTS analysis ${{ matrix.image }} PHP ${{ matrix.php }}
-    if: github.event.pull_request.base.ref == 'lts/1.2' || github.ref == 'refs/heads/lts/1.2'
+    if: (github.event.pull_request.base.ref == 'lts/1.2' || startsWith(github.event.pull_request.base.ref, 'chore/consolidate-lts-')) || github.ref == 'refs/heads/lts/1.2'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     strategy:

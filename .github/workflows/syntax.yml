@@ -26,7 +26,7 @@ on:
   push:
     branches: [ develop, 1.2.x, lts/1.2 ]
   pull_request:
-    branches: [ develop, 1.2.x, lts/1.2 ]
+    branches: [ develop, 1.2.x, lts/1.2, 'chore/consolidate-lts-*']
 
 permissions:
   contents: read
