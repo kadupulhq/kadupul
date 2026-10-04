@@ -97,7 +97,7 @@ final class QueuedCollectorPurgeTest extends TestCase
 
     private function execute(?callable $purge = null): string
     {
-        return (new QueuedCollectorPurge())->run(
+        return (new QueuedCollectorPurge(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->run(
             $this->primary,
             3,
             $this->command,
@@ -143,7 +143,7 @@ final class QueuedCollectorPurgeTest extends TestCase
     {
         $this->primary->exec('UPDATE host SET poller_id=3');
         $calls = 0;
-        $result = (new QueuedCollectorPurge())->run($this->primary, 3, $this->command, function () use (&$calls): PDO {
+        $result = (new QueuedCollectorPurge(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->run($this->primary, 3, $this->command, function () use (&$calls): PDO {
             $calls++;
             return $this->remote;
         }, static fn(): bool => throw new RuntimeException('Forbidden purge'));
@@ -278,14 +278,14 @@ final class QueuedCollectorPurgeTest extends TestCase
         $this->primary->prepare('INSERT INTO poller_command VALUES (3,?,?,?,?)')->execute([99,'7:Another', $other['time'], $other['last_updated']]);
         $failure = null;
         try {
-            (new QueuedCollectorPurge())->acknowledge($this->primary, 3, [...$other, 'command' => '7:Unknown ']);
+            (new QueuedCollectorPurge(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->acknowledge($this->primary, 3, [...$other, 'command' => '7:Unknown ']);
         } catch (RuntimeException $error) {
             $failure = $error;
         }
         self::assertInstanceOf(RuntimeException::class, $failure);
         self::assertSame('Queued command acknowledgement changed', $failure->getMessage());
         self::assertSame(3, $this->rowCount($this->primary, 'poller_command'));
-        (new QueuedCollectorPurge())->acknowledge($this->primary, 3, $other);
+        (new QueuedCollectorPurge(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->acknowledge($this->primary, 3, $other);
         self::assertSame(2, $this->rowCount($this->primary, 'poller_command'));
         self::assertSame('7:Another', $this->primary->query('SELECT command FROM poller_command WHERE action=99')->fetchColumn());
     }

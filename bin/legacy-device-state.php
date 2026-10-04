@@ -36,6 +36,8 @@ require_once __DIR__ . '/../lib/snmp.php';
 require_once __DIR__ . '/../lib/template.php';
 require_once __DIR__ . '/../lib/utility.php';
 
+$transactions = new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner();
+
 $status = 'failed';
 $transactionStarted = false;
 $snmpTransactions = [];
@@ -63,7 +65,7 @@ try {
         throw new RuntimeException('Invalid assignment command');
     }
     $assignment = $assignDevices ? new \Kadupul\Inventory\Domain\DeviceBulkAssignment($command['kind'] ?? '', $command['target'] ?? -1) : null;
-    $assignmentWriter = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceBulkAssignmentWriter();
+    $assignmentWriter = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceBulkAssignmentWriter($transactions);
     $snmpChange = $changeSnmp ? new \Kadupul\Inventory\Domain\DeviceBulkSnmpChange($command['changes'] ?? []) : null;
     $snmpWriter = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceSnmpWriter();
     $resolvedSnmp = [];
@@ -80,7 +82,7 @@ try {
     if ($connection->exec('SET NAMES utf8mb4') === false) {
         throw new RuntimeException('Primary connection encoding unavailable');
     }
-    $collectorJournal = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorCleanup();
+    $collectorJournal = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorCleanup($transactions);
     $collectorPending = [];
     $cleanupPollers = [];
     if ($assignDevices && $assignment->kind === 'collector') {
@@ -385,7 +387,7 @@ try {
     }
     if ($assignDevices && $assignment->kind === 'collector') {
         $previousOwners = array_map(static fn($device): int => $device->pollerId, $changed);
-        (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorTransfer())->finish($connection, $command['actor'], $remotes, $previousOwners, $assignment->targetId, $collectorReceipts);
+        (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorTransfer($transactions))->finish($connection, $command['actor'], $remotes, $previousOwners, $assignment->targetId, $collectorReceipts);
     }
     if ($syncTemplates && $changed !== []) {
         // Discovery runs after association commit. Short rechecks release all

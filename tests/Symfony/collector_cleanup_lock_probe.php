@@ -8,6 +8,8 @@ declare(strict_types=1);
  */
 
 require_once dirname(__DIR__, 2) . '/src/Platform/Infrastructure/Legacy/LegacyReferenceWriteTransaction.php';
+require_once dirname(__DIR__, 2) . '/src/Platform/Contract/ReferenceWriteTransactionRunner.php';
+require_once dirname(__DIR__, 2) . '/src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php';
 require_once dirname(__DIR__, 2) . '/src/Inventory/Infrastructure/Legacy/DeviceCollectorCleanup.php';
 
 use Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorCleanup;
@@ -20,7 +22,7 @@ $db->exec('USE `' . $argv[1] . '`');
 $db->beginTransaction();
 $db->query('SELECT poller_id FROM cleanup_host WHERE id=7 FOR UPDATE')->fetchColumn();
 $db->exec('UPDATE cleanup_host SET poller_id=3 WHERE id=7');
-(new DeviceCollectorCleanup())->retain($db, [7 => 2], 3);
+(new DeviceCollectorCleanup(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->retain($db, [7 => 2], 3);
 fwrite(STDOUT, "READY\n");
 fflush(STDOUT);
 $observed = false;

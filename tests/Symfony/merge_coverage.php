@@ -21,7 +21,7 @@ if (!$coverage instanceof CodeCoverage) {
 }
 $mapped = [];
 // Require the physical guarded caller, separately from any utility/helper hit.
-$wrapperStatement = '$changed = (new \Kadupul\Inventory\Infrastructure\Legacy\PollerCacheBufferWrite())->write(';
+$wrapperStatement = '$changed = (new \Kadupul\Inventory\Infrastructure\Legacy\PollerCacheBufferWrite($transactions))->write(';
 $wrapperMatches = [];
 $wrapperSource = file_get_contents($root . '/lib/utility.php');
 if (!is_string($wrapperSource)) {
@@ -45,6 +45,9 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'data_input_scenarios.py', 'data_input_review_http.py', 'data_source_profile_scenarios.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'cli_schema_scenarios.py', 'coverage_support.py', 'link_scenarios.py', 'about_scenarios.py', 'about_authentication_scenarios.py', 'palette_color_review_http.py', 'palette_color_scenarios.py', 'palette_sql_failure_probe.php', 'vdef_scenarios.py', 'vdef_transaction_probe.php', 'vdef_browser_probe.cjs', 'device_bulk_assignment_scenarios.py', 'device_bulk_snmp_scenarios.py', 'device_association_scenarios.py', 'device_legacy_scenarios.py', 'device_maintenance_scenarios.py', 'device_placement_scenarios.py', 'placement_lock_probe.php', 'cli_audit_scenarios.py'];
     $sourcePaths = array_map(static fn(string $script): string => 'tests/Symfony/' . $script, $scripts);
     if ($handler !== 'none') {
+        // Bind the bodyless contract without inventing coverage for its declaration.
+        $sourcePaths[] = 'src/Platform/Contract/ReferenceWriteTransactionRunner.php';
+        $sourcePaths[] = 'src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php';
         $sourcePaths[] = 'tests/Symfony/cdef_legacy_page_scenarios.py';
         $sourcePaths[] = 'public/js/vdef-item.js';
         $sourcePaths[] = 'tests/Fixtures/plugins/compatibility_test/setup.php';
@@ -62,6 +65,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         }
     }
     $checks = $handler === 'none' ? ['disconnected archive verified', 'dependency repair verified', 'invalid manifest and symlink rejected'] : [
+        'selected PDO runner preserves primary and collector identities and caller-owned work',
         'system page size fixture restores original absence and value',
         'profile deletion confirmation page renders',
         'unused profile is normally removable',
@@ -689,6 +693,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Inventory/Infrastructure/Legacy/DeviceCollectorTransfer.php',
         'src/Inventory/Infrastructure/Legacy/DeviceCollectorCleanup.php',
         'src/Inventory/Infrastructure/Legacy/PollerCacheBufferWrite.php',
+        'src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php',
         'src/Inventory/Infrastructure/Symfony/Form/DeviceBulkAssignmentType.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceBulkAssignmentController.php',
         'src/Inventory/Application/Command/ChangeDevicesSnmp.php',

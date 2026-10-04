@@ -52,7 +52,7 @@ $primary->exec("INSERT INTO host VALUES (7,2,9,0,'','')");
 $remote->exec("INSERT INTO host VALUES (7,2,9,0,'on','')");
 $primary->beginTransaction();
 $device = new DeviceState(7, 'fixture', '192.0.2.1', true, 0, 2, 9);
-$writer = new DeviceBulkAssignmentWriter();
+$writer = new DeviceBulkAssignmentWriter(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner());
 $mode = $argv[1];
 $error = null;
 try {

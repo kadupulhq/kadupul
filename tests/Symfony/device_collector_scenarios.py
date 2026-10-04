@@ -97,8 +97,75 @@ def verify_device_collector(harness, session, device_id, hidden_id, check):
         harness.sql(f'DELETE FROM poller WHERE id={offline}')
 
 
+def verify_selected_transaction_runner(harness, poller, check):
+    if not isinstance(poller, int) or poller < 2 or poller > 65535:
+        raise ValueError('Invalid owned collector identity')
+    program = r'''
+require "include/global.php";
+$primary = $database_sessions["$database_hostname:$database_port:$database_default"];
+$remote = poller_connect_to_remote(__COLLECTOR__);
+if (!$primary instanceof PDO || !$remote instanceof PDO || $primary === $remote) {
+    throw new RuntimeException('Owned runner connections unavailable');
+}
+$runner = new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner();
+$readColumn = static function (PDO $db, string $sql, array $parameters): mixed {
+    $read = $db->prepare($sql);
+    if (!$read || !$read->execute($parameters) || $read->errorCode() !== '00000') {
+        throw new RuntimeException('Owned runner read unavailable');
+    }
+    $value = $read->fetchColumn();
+    if ($value === false || $read->errorCode() !== '00000' || !$read->closeCursor() || $read->errorCode() !== '00000') {
+        throw new RuntimeException('Owned runner value unavailable');
+    }
+    return $value;
+};
+$results = [];
+foreach ([$primary, $remote] as $db) {
+    $key = 'poller_replicate_runner_contract_' . bin2hex(random_bytes(8));
+    if ($db->inTransaction() || !$db->beginTransaction()) {
+        throw new RuntimeException('Owned runner caller unavailable');
+    }
+    try {
+        $identity = $readColumn($db, 'SELECT CONNECTION_ID()', []);
+        if (preg_match('/\A[1-9][0-9]*\z/D', (string) $identity) !== 1) {
+            throw new RuntimeException('Owned runner identity unavailable');
+        }
+        $insert = $db->prepare('INSERT INTO settings (name,value) VALUES (?,?)');
+        if (!$insert || !$insert->execute([$key, 'caller']) || $insert->errorCode() !== '00000') {
+            throw new RuntimeException('Owned runner caller write unavailable');
+        }
+        $observed = $runner->run($db, static function () use ($db, $key, $readColumn): array {
+            return [$readColumn($db, 'SELECT CONNECTION_ID()', []), $readColumn($db, 'SELECT value FROM settings WHERE name=?', [$key])];
+        }, ['settings']);
+        if ($observed !== [$identity, 'caller'] || !$db->inTransaction() || !$db->rollBack()) {
+            throw new RuntimeException('Owned runner caller ownership changed');
+        }
+        $count = $readColumn($db, 'SELECT COUNT(*) FROM settings WHERE name=?', [$key]);
+        if ($count !== 0 && $count !== '0') {
+            throw new RuntimeException('Owned runner caller rollback changed');
+        }
+        $results[] = true;
+    } catch (Throwable $error) {
+        try {
+            if ($db->inTransaction()) {
+                $db->rollBack();
+            }
+        } catch (Throwable) {
+            // Preserve the original failure; this scenario cannot claim completion.
+        }
+        throw $error;
+    }
+}
+echo json_encode($results, JSON_THROW_ON_ERROR);
+'''.replace('__COLLECTOR__', str(poller))
+    result = harness.php('-d', 'zend.exception_ignore_args=1', '-r', program)
+    check(result['exit'] == 0 and json.loads(result['stdout']) == [True, True],
+          'selected PDO runner preserves primary and collector identities and caller-owned work')
+
+
 def verify_remote_collector_assignment(harness, session, device_id, poller, check):
     form = CollectorForm(harness, session, device_id)
+    verify_selected_transaction_runner(harness, poller, check)
     data = int(harness.sql(f'INSERT INTO data_local (host_id) VALUES ({device_id}); SELECT LAST_INSERT_ID()').strip())
     graph = int(harness.sql(f'INSERT INTO graph_local (host_id) VALUES ({device_id}); SELECT LAST_INSERT_ID()').strip())
     dtd = int(harness.sql(f"INSERT INTO data_template_data (local_data_id,name) VALUES ({data},'collector fixture'); SELECT LAST_INSERT_ID()").strip())
