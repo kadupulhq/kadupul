@@ -3,12 +3,16 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 1) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../Helpers/GraphZoomNativeHarness.php';
 
 final class GraphInvalidLocalGraphIdTest extends TestCase
 {
+    use \PestCodeCoverageCompatibility;
+
     public function testMissingJoinedGraphRowRedirectsBeforeRendering(): void
     {
         $result = GraphZoomNativeHarness::run(array('request' => array('action' => 'view'), 'missing_graph_row' => true), $this->getTestResultObject()->getCodeCoverage());

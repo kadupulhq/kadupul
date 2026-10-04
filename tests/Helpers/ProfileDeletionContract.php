@@ -3,11 +3,15 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 1) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 abstract class ProfileDeletionContract extends TestCase
 {
-    /** @dataProvider scenarios */
+    use \PestCodeCoverageCompatibility;
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('scenarios')]
     public function testDeletionIsAtomicAndReportsRefusals(array $scenario): void
     {
         $state = $this->runNative($scenario);
@@ -39,7 +43,7 @@ abstract class ProfileDeletionContract extends TestCase
         }
     }
 
-    /** @dataProvider pages */
+    #[\PHPUnit\Framework\Attributes\DataProvider('pages')]
     public function testNativeProfilePagesPreserveTheirContext(array $request, string $needle): void
     {
         $state = $this->runNative(array('request' => $request));
@@ -49,7 +53,7 @@ abstract class ProfileDeletionContract extends TestCase
         self::assertSame(array(1,2,3), array_map('intval', array_column($state['tables']['data_source_profiles'], 'id')));
     }
 
-    /** @dataProvider saveScenarios */
+    #[\PHPUnit\Framework\Attributes\DataProvider('saveScenarios')]
     public function testNativeProfileEditorsPreserveCreationAndRefuseStaleIds(array $request, bool $success, bool $created): void
     {
         $state = $this->runNative(array('request' => $request));
