@@ -95,6 +95,7 @@
       <file>./Unit/Security/Auth/GraphViewSettingOutputTest.php</file>
       <file>./Unit/Security/Auth/ProfileSettingValidationTest.php</file>
       <file>./Unit/Security/Misc/HelpPageErrorNotificationTest.php</file>
+      <file>./Unit/Security/Auth/ItemActionMutationCsrfTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

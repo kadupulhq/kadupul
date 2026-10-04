@@ -7,7 +7,7 @@
 
 include('./include/auth.php');
 
-cacti_require_post_actions(array('actions'));
+cacti_require_post_actions(array('actions', 'moveup', 'movedown', 'remove', 'ajax_dnd'));
 include_once('./lib/poller.php');
 include_once('./lib/utility.php');
 
@@ -528,13 +528,13 @@ function template()
             if (read_config_option('drag_and_drop') == '') {
                 $add_text = '';
                 if ($i < $total_items && $total_items > 1) {
-                    $add_text .= '<a class="pic fa fa-caret-down moveArrow" href="' . html_escape('automation_templates.php?action=movedown&id=' . $dt['id']) . '" title="' . __esc('Move Down') . '"></a>';
+                    $add_text .= '<a class="pic fa fa-caret-down moveArrow cactiPostAction" href="#" data-url="' . html_escape('automation_templates.php?action=movedown&id=' . $dt['id']) . '" title="' . __esc('Move Down') . '"></a>';
                 } else {
                     $add_text .= '<span class="moveArrowNone"></span>';
                 }
 
                 if ($i > 1 && $i <= $total_items) {
-                    $add_text .= '<a class="pic fa fa-caret-up moveArrow" href="' . html_escape('automation_templates.php?action=moveup&id=' . $dt['id']) . '" title="' . __esc('Move Up') . '"></a>';
+                    $add_text .= '<a class="pic fa fa-caret-up moveArrow cactiPostAction" href="#" data-url="' . html_escape('automation_templates.php?action=moveup&id=' . $dt['id']) . '" title="' . __esc('Move Up') . '"></a>';
                 } else {
                     $add_text .= '<span class="moveArrowNone"></span>';
                 }
@@ -577,7 +577,7 @@ function template()
 
         $('#template_ids').tableDnD({
             onDrop: function(table, row) {
-                loadPageNoHeader('automation_templates.php?action=ajax_dnd&'+$.tableDnD.serialize());
+                loadPageUsingPost('automation_templates.php?action=ajax_dnd', $.tableDnD.serialize() + '&__csrf_magic=' + encodeURIComponent(csrfMagicToken));
             }
         });
 		<?php } ?>

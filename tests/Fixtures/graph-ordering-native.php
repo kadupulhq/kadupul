@@ -92,6 +92,14 @@ session_save_path($directory);
 session_start();
 $_SESSION['sess_user_id'] = 7;
 $_SESSION['sess_messages'] = array();
+function csrf_startup()
+{
+    csrf_conf('rewrite', false);
+    csrf_conf('defer', true);
+    csrf_conf('auto-session', false);
+    csrf_conf('secret', 'isolated-graph-ordering-test-secret');
+}
+require $root . '/include/vendor/csrf/csrf-magic.php';
 $before = $database->query('SELECT id,sequence FROM graph_templates_item ORDER BY id')->fetchAll(PDO::FETCH_KEY_PAIR);
 register_shutdown_function(function () use ($database, &$before) {
     $after = $database->query('SELECT id,sequence FROM graph_templates_item ORDER BY id')->fetchAll(PDO::FETCH_KEY_PAIR);
@@ -131,5 +139,7 @@ if (str_contains($scenario, 'boundary')) {
 }
 $_REQUEST = array('action' => str_contains($scenario, 'save') ? 'save' : ($up ? 'item_moveup' : 'item_movedown'), 'id' => $id, 'graph_template_id' => 2, 'local_graph_id' => 3, 'graph_template_item_id' => 0, 'local_graph_template_item_id' => 0, 'save_component_item' => 1, 'sequence' => 0, 'graph_type_id' => 9, 'task_item_id' => 0, 'color_id' => 0, 'alpha' => 'FF', 'cdef_id' => 0, 'vdef_id' => 0, 'consolidation_function_id' => 4, 'gprint_id' => 0, 'text_format' => '', 'value' => '');
 $_POST = $_REQUEST;
+$_SERVER['REQUEST_METHOD'] = 'POST';
+$_POST['__csrf_magic'] = csrf_get_tokens();
 chdir($directory);
 require $directory . '/' . $controller;

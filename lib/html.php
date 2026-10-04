@@ -138,6 +138,14 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
                             $href = '#';
                         }
 
+                        // A state changing button posts its URL from the page with the token.
+                        $post = '';
+                        if (isset($icon['post']) && $icon['post'] === true && $href !== '#') {
+                            $classo .= ' cactiPostAction';
+                            $post   = " data-url='$href'";
+                            $href   = '#';
+                        }
+
                         if (isset($icon['title'])) {
                             $title = $icon['title'];
                         } else {
@@ -148,7 +156,7 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
                             $title = $add_label;
                         }
 
-                        print "<span class='cactiFilterAdd' title='" . html_escape($title) . "'><a" . (isset($icon['id']) ? " id='" . html_escape($icon['id']) . "'" : '') . " class='$classo' href='$href' aria-label='" . html_escape($title) . "'><i class='" . html_escape($classi) . "' aria-hidden='true'></i></a></span>";
+                        print "<span class='cactiFilterAdd' title='" . html_escape($title) . "'><a" . (isset($icon['id']) ? " id='" . html_escape($icon['id']) . "'" : '') . " class='$classo' href='$href' aria-label='" . html_escape($title) . "'$post><i class='" . html_escape($classi) . "' aria-hidden='true'></i></a></span>";
                     }
                 }
             } else {
@@ -1522,20 +1530,20 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
                 $line = '';
 
                 if ($i != cacti_sizeof($item_list) - 1) {
-                    $line .= "<span><a class='moveArrow " . html_icon_class('move-down') . "' title='" . __esc('Move Down') . "' href='" . html_escape("$filename?action=item_movedown&id=" . $item['id'] . "&$url_data") . "'></a></span>";
+                    $line .= "<span><a class='moveArrow " . html_icon_class('move-down') . " cactiPostAction' title='" . __esc('Move Down') . "' href='#' data-url='" . html_escape("$filename?action=item_movedown&id=" . $item['id'] . "&$url_data") . "'></a></span>";
                 } else {
                     $line .= "<span class='moveArrowNone'></span>";
                 }
 
                 if ($i > 0) {
-                    $line .= "<span><a class='moveArrow " . html_icon_class('move-up') . "' title='" . __esc('Move Up') . "' href='" . html_escape("$filename?action=item_moveup&id=" . $item['id'] . "&$url_data") . "'></a></span>";
+                    $line .= "<span><a class='moveArrow " . html_icon_class('move-up') . " cactiPostAction' title='" . __esc('Move Up') . "' href='#' data-url='" . html_escape("$filename?action=item_moveup&id=" . $item['id'] . "&$url_data") . "'></a></span>";
                 } else {
                     $line .= "<span class='moveArrowNone'></span>";
                 }
 
                 form_selectable_cell($line, $rid, '', 'right nowrap');
 
-                $line = "<a class='deleteMarker " . html_icon_class('remove') . "' title='" . __esc('Delete') . "' href='" . html_escape("$filename?action=item_remove&id=" . $item['id'] . "&nostate=true&$url_data") . "'></a>";
+                $line = "<a class='deleteMarker " . html_icon_class('remove') . " cactiPostAction' title='" . __esc('Delete') . "' href='#' data-url='" . html_escape("$filename?action=item_remove&id=" . $item['id'] . "&nostate=true&$url_data") . "'></a>";
 
                 form_selectable_cell($line, $rid, '1%', 'right');
             }

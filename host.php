@@ -7,7 +7,10 @@
 
 include('./include/auth.php');
 
-cacti_require_post_actions(array('actions', 'reindex'));
+cacti_require_post_actions(array(
+    'actions', 'reindex', 'gt_add', 'gt_remove', 'query_add', 'query_remove', 'query_change',
+    'query_reload', 'query_verbose', 'enable_debug', 'disable_debug', 'repopulate'
+));
 include_once('./lib/api_automation.php');
 include_once('./lib/api_data_source.php');
 include_once('./lib/api_device.php');
@@ -803,12 +806,12 @@ function host_edit()
         if (cacti_sizeof($host)) {
             $header_label = __esc('Device [edit: %s]', $host['description']);
             if (is_device_debug_enabled($host['id'])) {
-                $debug_link = "<span class='linkMarker'>*</span><a class='hyperLink' href='" . html_escape('host.php?action=disable_debug&host_id=' . $host['id']) . "'>" . __('Disable Device Debug') . "</a><br>";
+                $debug_link = "<span class='linkMarker'>*</span><a class='hyperLink cactiPostAction' href='#' data-url='" . html_escape('host.php?action=disable_debug&host_id=' . $host['id']) . "'>" . __('Disable Device Debug') . "</a><br>";
             } else {
-                $debug_link = "<span class='linkMarker'>*</span><a class='hyperLink' href='" . html_escape('host.php?action=enable_debug&host_id=' . $host['id']) . "'>" . __('Enable Device Debug') . "</a><br>";
+                $debug_link = "<span class='linkMarker'>*</span><a class='hyperLink cactiPostAction' href='#' data-url='" . html_escape('host.php?action=enable_debug&host_id=' . $host['id']) . "'>" . __('Enable Device Debug') . "</a><br>";
             }
 
-            $repop_link = "<span class='linkMarker'>*</span><a class='hyperLink' href='" . html_escape('host.php?action=repopulate&host_id=' . $host['id']) . "'>" . __('Repopulate Poller Cache') . "</a><br>";
+            $repop_link = "<span class='linkMarker'>*</span><a class='hyperLink cactiPostAction' href='#' data-url='" . html_escape('host.php?action=repopulate&host_id=' . $host['id']) . "'>" . __('Repopulate Poller Cache') . "</a><br>";
             $repop_link .= "<span class='linkMarker'>*</span><a class='hyperLink' href='" . html_escape('utilities.php?poller_action=-1&action=view_poller_cache&host_id=' . $host['id'] . '&template_id=-1&filter=&rows=-1') . "'>" . __('View Poller Cache') . "</a><br>";
         }
     } else {
@@ -1332,15 +1335,6 @@ function device_javascript()
 		setPing();
 	}
 
-	function hostPageLoad(strURL) {
-		var scrollTop = $(window).scrollTop();
-		$.get(strURL, function(data) {
-			$('#main').html(data);
-			applySkin();
-			$(window).scrollTop(scrollTop);
-		});
-	}
-
 	$(function() {
 		// Need to set this for global snmpv3 functions to remain sane between edits
 		snmp_security_initialized = false;
@@ -1398,24 +1392,52 @@ function device_javascript()
 
 		$('[id^="reload"]').on('click', function(data) {
 			$(this).addClass('fa-spin');
-			strURL = 'host.php?action=query_reload&id='+$(this).attr('data-id')+'&host_id='+$('#id').val()+'&nostate=true';
-			hostPageLoad(strURL);
+			var scrollTop = $(window).scrollTop();
+			$.post('host.php?action=query_reload', {
+				id: $(this).attr('data-id'),
+				host_id: $('#id').val(),
+				nostate: 'true',
+				__csrf_magic: csrfMagicToken }).done(function(data) {
+				$('#main').html(data);
+				applySkin();
+				$(window).scrollTop(scrollTop);
+			});
 		});
 
 		$('[id^="verbose"]').on('click', function(data) {
 			$(this).addClass('fa-spin');
-			var strURL = 'host.php?action=query_verbose&id='+$(this).attr('data-id')+'&host_id='+$('#id').val()+'&nostate=true';
-			loadPageNoHeader(strURL, true);
+			loadPageUsingPostChecked('host.php?action=query_verbose', {
+				id: $(this).attr('data-id'),
+				host_id: $('#id').val(),
+				nostate: 'true',
+				__csrf_magic: csrfMagicToken
+			});
 		});
 
 		$('[id^="remove"]').on('click', function(data) {
-			var strURL = 'host.php?action=query_remove&id='+$(this).attr('data-id')+'&host_id='+$('#id').val()+'&nostate=true';
-			hostPageLoad(strURL);
+			var scrollTop = $(window).scrollTop();
+			$.post('host.php?action=query_remove', {
+				id: $(this).attr('data-id'),
+				host_id: $('#id').val(),
+				nostate: 'true',
+				__csrf_magic: csrfMagicToken }).done(function(data) {
+				$('#main').html(data);
+				applySkin();
+				$(window).scrollTop(scrollTop);
+			});
 		});
 
 		$('[id^="gtremove"]').on('click', function(data) {
-			strURL = 'host.php?action=gt_remove&id='+$(this).attr('data-id')+'&host_id='+$('#id').val()+'&nostate=true';
-			hostPageLoad(strURL);
+			var scrollTop = $(window).scrollTop();
+			$.post('host.php?action=gt_remove', {
+				id: $(this).attr('data-id'),
+				host_id: $('#id').val(),
+				nostate: 'true',
+				__csrf_magic: csrfMagicToken }).done(function(data) {
+				$('#main').html(data);
+				applySkin();
+				$(window).scrollTop(scrollTop);
+			});
 		});
 
 		$('#add_dq').on('click', function() {
@@ -1480,14 +1502,15 @@ function device_javascript()
 			});
 
 		$('input[id^="reindex_"]').on('change', function() {
-			strURL  = urlPath+'host.php?action=query_change&header=false';
-			strURL += '&host_id='+$(this).attr('data-device-id');
-			strURL += '&data_query_id='+$(this).attr('data-query-id');
-			strURL += '&reindex_method='+$(this).attr('data-reindex-method');
-
 			height = $('.hostInfoHeader').height();
 
-			loadPageNoHeader(strURL, true);
+			loadPageUsingPostChecked(urlPath+'host.php?action=query_change', {
+				header: 'false',
+				host_id: $(this).attr('data-device-id'),
+				data_query_id: $(this).attr('data-query-id'),
+				reindex_method: $(this).attr('data-reindex-method'),
+				__csrf_magic: csrfMagicToken
+			});
 
 			$('.hostInfoHeader').css('height', height);
 		});
