@@ -25,7 +25,7 @@ on:
       - 'tests/composer.lock'
       - 'tests/phpunit-cookie.xml'
   pull_request:
-    branches: [1.2.x, lts/1.2]
+    branches: [1.2.x, lts/1.2, 'chore/consolidate-lts-*']
     paths:
       - '.github/workflows/cookie-coverage.yml'
       - 'auth_changepassword.php'

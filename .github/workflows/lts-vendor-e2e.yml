@@ -2,7 +2,7 @@ name: LTS vendor compatibility
 
 on:
   pull_request:
-    branches: [lts/1.2]
+    branches: [lts/1.2, 'chore/consolidate-lts-*']
   push:
     branches: [lts/1.2]
 
