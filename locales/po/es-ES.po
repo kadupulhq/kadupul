@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-03 19:59-0700\n"
+"POT-Creation-Date: 2026-10-03 20:03-0700\n"
 "PO-Revision-Date: 2025-12-23 22:54+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -47,9 +47,9 @@ msgstr "Este programa es distribuido con la esperanza de que sea útil, pero SIN
 #: data_queries.php:972 data_queries.php:1252 data_source_profiles.php:16
 #: data_source_profiles.php:912 data_sources.php:22 data_sources.php:1229
 #: data_templates.php:19 data_templates.php:791 gprint_presets.php:12
-#: graph_templates.php:22 graph_templates.php:517 graphs.php:31 host.php:29
+#: graph_templates.php:22 graph_templates.php:517 graphs.php:31
 #: host_templates.php:20 host_templates.php:485 host_templates.php:542
-#: include/global_arrays.php:1652 include/global_settings.php:232
+#: include/global_arrays.php:1654 include/global_settings.php:232
 #: lib/api_automation.php:1323 lib/api_automation.php:1386
 #: lib/api_automation.php:1457 lib/html.php:1546 lib/html_form.php:1397
 #: lib/html_reports.php:1937 managers.php:13 pollers.php:18 tree.php:1688
@@ -82,7 +82,7 @@ msgstr "Asociar con Agregaciones"
 msgid "Disassociate with Aggregate"
 msgstr "Desasociar con Agregados"
 
-#: aggregate_graphs.php:70 graphs.php:199 host.php:250
+#: aggregate_graphs.php:70 graphs.php:199
 #, php-format
 msgid "Place on a Tree (%s)"
 msgstr "Colocar en Arbol (%s)"
@@ -127,9 +127,7 @@ msgstr "Haga click en 'Continuar' para eliminar el/los siguientes Gragicos Agreg
 #: graph_view.php:1043 graphs.php:876 graphs.php:892 graphs.php:903
 #: graphs.php:914 graphs.php:929 graphs.php:943 graphs.php:952 graphs.php:1154
 #: graphs.php:1197 graphs.php:1219 graphs.php:1250 graphs.php:1262
-#: graphs.php:1846 host.php:475 host.php:484 host.php:531 host.php:540
-#: host.php:549 host.php:565 host.php:579 host.php:588 host.php:619
-#: host.php:631 host_templates.php:222 host_templates.php:236
+#: graphs.php:1846 host_templates.php:222 host_templates.php:236
 #: host_templates.php:247 host_templates.php:302 host_templates.php:375
 #: lib/clog_webapi.php:225 lib/html.php:2833 lib/html_form.php:1396
 #: lib/html_form.php:1413 lib/html_form.php:1424 lib/html_reports.php:632
@@ -161,9 +159,7 @@ msgstr "Cancelar"
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
 #: graphs.php:876 graphs.php:892 graphs.php:903 graphs.php:914 graphs.php:929
 #: graphs.php:943 graphs.php:952 graphs.php:1154 graphs.php:1197
-#: graphs.php:1219 graphs.php:1250 graphs.php:1262 host.php:475 host.php:484
-#: host.php:531 host.php:540 host.php:549 host.php:565 host.php:579
-#: host.php:588 host.php:619 host.php:631 host_templates.php:222
+#: graphs.php:1219 graphs.php:1250 graphs.php:1262 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
 #: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2832
 #: lib/html_reports.php:574 managers.php:1066 managers.php:1127 pollers.php:549
@@ -192,7 +188,7 @@ msgstr "Para migrar los gráficos Agregados debajo a un Agregado basado en Plant
 #: aggregate_graphs.php:406 aggregate_graphs.php:456 aggregate_graphs.php:504
 #: auth_changepassword.php:415 auth_profile.php:464 automation_networks.php:387
 #: automation_snmp.php:245 graphs.php:1156 graphs.php:1206 graphs.php:1209
-#: graphs.php:1253 graphs.php:1846 host.php:622 include/auth.php:309
+#: graphs.php:1253 graphs.php:1846 include/auth.php:309
 #: lib/api_aggregate.php:2209 lib/api_aggregate.php:2224 lib/html_form.php:1422
 #: lib/html_reports.php:632 managers.php:1130 permission_denied.php:14
 #: permission_denied.php:16
@@ -240,21 +236,21 @@ msgstr "Nombre de Agregado:"
 msgid "New Aggregate"
 msgstr "Nuevo Agregado"
 
-#: aggregate_graphs.php:485 graphs.php:1234 host.php:603
+#: aggregate_graphs.php:485 graphs.php:1234
 msgid "Click 'Continue' to add the selected Graphs to the Report below."
 msgstr "Haga clic en ' continuar ' para agregar los gráficos seleccionados al siguiente Reporte."
 
-#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1238 host.php:607
+#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1238
 #: lib/html_reports.php:18 lib/html_reports.php:2133
 msgid "Report Name"
 msgstr "Nombre de Reporte"
 
-#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1242 host.php:611
+#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1242
 #: lib/html_reports.php:1789
 msgid "Timespan"
 msgstr "Fecha y hora"
 
-#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1246 host.php:615
+#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1246
 msgid "Align"
 msgstr "Alinear"
 
@@ -294,7 +290,7 @@ msgstr "Desasociar gráfico(s)"
 msgid "Click 'Continue' to place the following Aggregate Graph(s) under the Tree Branch."
 msgstr "Haga click en 'Continuar' para colocar el/los siguiente(s) gráfico(s) Agregado(s) bajo la rama del arbol."
 
-#: aggregate_graphs.php:538 host.php:571
+#: aggregate_graphs.php:538
 msgid "Destination Branch:"
 msgstr "Rama destino:"
 
@@ -413,7 +409,7 @@ msgstr "Coincidencia de gráficos"
 #: color_templates.php:560 data_debug.php:1189 data_queries.php:1371
 #: data_source_profiles.php:1164 data_sources.php:1783 data_templates.php:1101
 #: gprint_presets.php:255 graph_templates.php:727 graph_view.php:667
-#: graphs.php:2100 graphs_new.php:524 host.php:1820 host_templates.php:795
+#: graphs.php:2100 graphs_new.php:524 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
 #: lib/api_automation.php:480 lib/api_automation.php:708
 #: lib/clog_webapi.php:608 lib/html.php:268 lib/html_filter.php:46
@@ -432,9 +428,9 @@ msgstr "Buscar"
 #: aggregate_graphs.php:1288 aggregate_graphs.php:1324
 #: aggregate_graphs.php:1587 color_templates.php:680 data_sources.php:1985
 #: data_sources.php:2124 graph_view.php:488 graph_view.php:739
-#: graph_view.php:803 graphs.php:2117 graphs.php:2316 host.php:1934
+#: graph_view.php:803 graphs.php:2117 graphs.php:2316
 #: include/global_arrays.php:993 include/global_arrays.php:1229
-#: include/global_arrays.php:2012 lib/api_automation.php:283 lib/html.php:1996
+#: include/global_arrays.php:2014 lib/api_automation.php:283 lib/html.php:1996
 #: lib/html.php:2065 lib/html_graph.php:197 lib/html_tree.php:1022
 #: lib/html_tree.php:1378 tree.php:917 tree.php:2366 user_admin.php:801
 #: user_admin.php:1073 user_admin.php:2347 user_group_admin.php:932
@@ -450,7 +446,7 @@ msgstr "Gráficos"
 #: data_debug.php:1199 data_queries.php:1381 data_source_profiles.php:1174
 #: data_source_profiles.php:1296 data_sources.php:1793 data_templates.php:1130
 #: gprint_presets.php:265 graph_templates.php:737 graph_view.php:743
-#: graphs.php:2121 graphs_new.php:534 host.php:1845 host_templates.php:805
+#: graphs.php:2121 graphs_new.php:534 host_templates.php:805
 #: include/global_form.php:242 lib/api_automation.php:182
 #: lib/api_automation.php:490 lib/api_automation.php:718
 #: lib/api_automation.php:1082 lib/html_reports.php:2045 managers.php:154
@@ -475,15 +471,14 @@ msgstr "Parte de Agregados"
 #: data_debug.php:1114 data_queries.php:1396 data_source_profiles.php:1195
 #: data_sources.php:1733 data_templates.php:1151 gprint_presets.php:283
 #: graph_templates.php:758 graph_view.php:675 graphs.php:2091
-#: graphs_new.php:513 host.php:1810 host_templates.php:786
-#: lib/api_automation.php:187 lib/api_automation.php:471
-#: lib/api_automation.php:723 lib/api_automation.php:1087
-#: lib/clog_webapi.php:533 lib/html.php:1828 lib/html_filter.php:63
-#: lib/html_graph.php:178 lib/html_reports.php:2056 lib/html_tree.php:1009
-#: managers.php:169 managers.php:529 managers.php:794 plugins.php:530
-#: pollers.php:914 tree.php:2242 user_admin.php:2150 user_admin.php:2347
-#: user_admin.php:2353 user_admin.php:2359 user_admin.php:2365
-#: user_admin.php:2371 user_admin.php:2377
+#: graphs_new.php:513 host_templates.php:786 lib/api_automation.php:187
+#: lib/api_automation.php:471 lib/api_automation.php:723
+#: lib/api_automation.php:1087 lib/clog_webapi.php:533 lib/html.php:1828
+#: lib/html_filter.php:63 lib/html_graph.php:178 lib/html_reports.php:2056
+#: lib/html_tree.php:1009 managers.php:169 managers.php:529 managers.php:794
+#: plugins.php:530 pollers.php:914 tree.php:2242 user_admin.php:2150
+#: user_admin.php:2347 user_admin.php:2353 user_admin.php:2359
+#: user_admin.php:2365 user_admin.php:2371 user_admin.php:2377
 msgid "Go"
 msgstr "Ir"
 
@@ -492,9 +487,9 @@ msgstr "Ir"
 #: automation_templates.php:418 cdef.php:758 data_debug.php:1114
 #: data_queries.php:1396 data_source_profiles.php:1195 data_sources.php:1733
 #: data_templates.php:1151 gprint_presets.php:283 graph_templates.php:758
-#: graph_view.php:675 graphs.php:2091 graphs_new.php:513 host.php:1810
-#: host_templates.php:786 lib/html_graph.php:178 managers.php:169
-#: managers.php:529 managers.php:794 plugins.php:530 pollers.php:914
+#: graph_view.php:675 graphs.php:2091 graphs_new.php:513 host_templates.php:786
+#: lib/html_graph.php:178 managers.php:169 managers.php:529 managers.php:794
+#: plugins.php:530 pollers.php:914
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
 #: tree.php:2242 user_admin.php:2150 user_domains.php:665
 #: user_group_admin.php:2010 utilities.php:1084 utilities.php:1470
@@ -510,16 +505,15 @@ msgstr "Definir/Refrescar Filtros"
 #: data_debug.php:1115 data_queries.php:1397 data_source_profiles.php:1196
 #: data_sources.php:1734 data_templates.php:1152 gprint_presets.php:284
 #: graph_templates.php:759 graph_view.php:676 graphs.php:2092
-#: graphs_new.php:514 host.php:1811 host_templates.php:787
-#: lib/api_automation.php:188 lib/api_automation.php:472
-#: lib/api_automation.php:724 lib/api_automation.php:1088
-#: lib/clog_webapi.php:534 lib/html_filter.php:68 lib/html_graph.php:179
-#: lib/html_graph.php:305 lib/html_reports.php:2057 lib/html_tree.php:1010
-#: lib/html_tree.php:1121 managers.php:170 managers.php:530 managers.php:795
-#: plugins.php:531 pollers.php:915 tree.php:2243 user_admin.php:2151
-#: user_admin.php:2347 user_admin.php:2353 user_admin.php:2359
-#: user_admin.php:2365 user_admin.php:2371 user_admin.php:2377
-#: user_domains.php:666
+#: graphs_new.php:514 host_templates.php:787 lib/api_automation.php:188
+#: lib/api_automation.php:472 lib/api_automation.php:724
+#: lib/api_automation.php:1088 lib/clog_webapi.php:534 lib/html_filter.php:68
+#: lib/html_graph.php:179 lib/html_graph.php:305 lib/html_reports.php:2057
+#: lib/html_tree.php:1010 lib/html_tree.php:1121 managers.php:170
+#: managers.php:530 managers.php:795 plugins.php:531 pollers.php:915
+#: tree.php:2243 user_admin.php:2151 user_admin.php:2347 user_admin.php:2353
+#: user_admin.php:2359 user_admin.php:2365 user_admin.php:2371
+#: user_admin.php:2377 user_domains.php:666
 msgid "Clear"
 msgstr "Restablecer"
 
@@ -527,10 +521,9 @@ msgstr "Restablecer"
 #: automation_templates.php:419 cdef.php:759 data_debug.php:1115
 #: data_queries.php:1397 data_source_profiles.php:1196 data_sources.php:1734
 #: data_templates.php:1152 gprint_presets.php:284 graph_templates.php:759
-#: graph_view.php:676 graphs.php:2092 graphs_new.php:514 host.php:1811
-#: host_templates.php:787 lib/html_graph.php:179 lib/html_tree.php:1010
-#: managers.php:170 managers.php:530 managers.php:795 plugins.php:531
-#: pollers.php:915
+#: graph_view.php:676 graphs.php:2092 graphs_new.php:514 host_templates.php:787
+#: lib/html_graph.php:179 lib/html_tree.php:1010 managers.php:170
+#: managers.php:530 managers.php:795 plugins.php:531 pollers.php:915
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:96
 #: tree.php:2243 user_admin.php:2151 user_domains.php:666
 #: user_group_admin.php:2011 utilities.php:1085 utilities.php:1471
@@ -547,11 +540,11 @@ msgstr "Título de gráfico"
 #: automation_graph_rules.php:964 automation_tree_rules.php:971
 #: data_debug.php:499 data_queries.php:1482 data_sources.php:1979
 #: data_templates.php:1260 graph_templates.php:864 graphs.php:2332
-#: host.php:1928 host_templates.php:949 lib/api_automation.php:282
-#: pollers.php:995 tree.php:2306 user_admin.php:809 user_admin.php:924
-#: user_admin.php:1073 user_admin.php:1212 user_admin.php:1351
-#: user_group_admin.php:733 user_group_admin.php:940 user_group_admin.php:1087
-#: user_group_admin.php:1223 user_group_admin.php:1355
+#: host_templates.php:949 lib/api_automation.php:282 pollers.php:995
+#: tree.php:2306 user_admin.php:809 user_admin.php:924 user_admin.php:1073
+#: user_admin.php:1212 user_admin.php:1351 user_group_admin.php:733
+#: user_group_admin.php:940 user_group_admin.php:1087 user_group_admin.php:1223
+#: user_group_admin.php:1355
 msgid "ID"
 msgstr "ID"
 
@@ -599,15 +592,14 @@ msgid " [ Custom Graphs List Applied - Clear to Reset ]"
 msgstr " [ Lista personalizada de gráfico aplicada - borre para reiniciar ]"
 
 #: aggregate_graphs.php:1547 aggregate_graphs.php:1653
-#: include/global_arrays.php:2764
+#: include/global_arrays.php:2766
 msgid "Aggregate Graphs"
 msgstr "Gráficos Agregados"
 
 #: aggregate_graphs.php:1562 data_debug.php:1085 data_sources.php:1704
-#: graph_view.php:699 graphs.php:2053 host.php:1756
-#: include/global_arrays.php:2892 include/global_settings.php:610
-#: lib/api_automation.php:446 lib/html_graph.php:139 lib/html_tree.php:973
-#: rrdcleaner.php:381
+#: graph_view.php:699 graphs.php:2053 include/global_arrays.php:2894
+#: include/global_settings.php:610 lib/api_automation.php:446
+#: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:381
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:59
 #: utilities.php:2087
 msgid "Template"
@@ -618,8 +610,7 @@ msgstr "Plantilla"
 #: automation_devices.php:564 automation_graph_rules.php:819
 #: automation_graph_rules.php:841 automation_tree_rules.php:855
 #: data_debug.php:1089 data_sources.php:1708 graph_templates_items.php:447
-#: graphs.php:2057 graphs_items.php:262 host.php:1719 host.php:1740
-#: host.php:1760 host.php:1830 lib/api_automation.php:26
+#: graphs.php:2057 graphs_items.php:262 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3824 lib/auth.php:3873
 #: lib/html.php:2351 lib/html.php:2379 lib/html.php:2418 lib/html.php:2452
@@ -638,23 +629,23 @@ msgstr "Cualquiera"
 #: data_debug.php:1090 data_sources.php:1083 data_sources.php:1709
 #: data_sources.php:2040 data_templates.php:1323 graph_templates_items.php:53
 #: graphs.php:1583 graphs.php:1592 graphs.php:2058 graphs_items.php:263
-#: graphs_items.php:383 host.php:294 host.php:1275 host.php:1286 host.php:1720
-#: host.php:1761 include/global_arrays.php:523 include/global_arrays.php:581
-#: include/global_arrays.php:673 include/global_arrays.php:885
-#: include/global_arrays.php:1741 include/global_form.php:574
-#: include/global_form.php:883 include/global_form.php:891
-#: include/global_form.php:899 include/global_form.php:938
-#: include/global_form.php:945 include/global_form.php:971
-#: include/global_form.php:1000 include/global_form.php:1008
-#: include/global_form.php:1186 include/global_form.php:1205
-#: include/global_form.php:1214 include/global_form.php:2128
-#: include/global_form.php:2170 include/global_settings.php:614
-#: include/global_settings.php:622 include/global_settings.php:630
-#: include/global_settings.php:1338 include/global_settings.php:2001
-#: lib/api_automation.php:48 lib/api_automation.php:431
-#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3827
-#: lib/auth.php:3876 lib/auth.php:3922 lib/html.php:228 lib/html.php:2352
-#: lib/html.php:2377 lib/html.php:2419 lib/html.php:2453 lib/html_form.php:392
+#: graphs_items.php:383 include/global_arrays.php:523
+#: include/global_arrays.php:581 include/global_arrays.php:673
+#: include/global_arrays.php:885 include/global_arrays.php:1743
+#: include/global_form.php:574 include/global_form.php:883
+#: include/global_form.php:891 include/global_form.php:899
+#: include/global_form.php:938 include/global_form.php:945
+#: include/global_form.php:971 include/global_form.php:1000
+#: include/global_form.php:1008 include/global_form.php:1186
+#: include/global_form.php:1205 include/global_form.php:1214
+#: include/global_form.php:2128 include/global_form.php:2170
+#: include/global_settings.php:614 include/global_settings.php:622
+#: include/global_settings.php:630 include/global_settings.php:1338
+#: include/global_settings.php:2001 lib/api_automation.php:48
+#: lib/api_automation.php:431 lib/api_automation.php:451
+#: lib/api_automation.php:589 lib/auth.php:3827 lib/auth.php:3876
+#: lib/auth.php:3922 lib/html.php:228 lib/html.php:2352 lib/html.php:2377
+#: lib/html.php:2419 lib/html.php:2453 lib/html_form.php:392
 #: lib/html_reports.php:1041 lib/html_reports.php:1045
 #: lib/html_reports.php:1081 lib/html_reports.php:1157
 #: lib/html_reports.php:1163 lib/html_reports.php:1167
@@ -718,7 +709,7 @@ msgid "Aggregate Template [new]"
 msgstr "Plantilla de Agregados [nueva]"
 
 #: aggregate_templates.php:598 aggregate_templates.php:697
-#: include/global_arrays.php:2746
+#: include/global_arrays.php:2748
 msgid "Aggregate Templates"
 msgstr "Plantillas de Agregados"
 
@@ -755,7 +746,7 @@ msgid "Graphs Using"
 msgstr "Gráficos en uso"
 
 #: aggregate_templates.php:709 graphs.php:2112 host_templates.php:730
-#: include/global_arrays.php:958 include/global_arrays.php:1361
+#: include/global_arrays.php:958 include/global_arrays.php:1363
 #: include/global_form.php:1399 include/global_form.php:1635
 #: lib/html_reports.php:1181 tree.php:1944
 msgid "Graph Template"
@@ -1060,15 +1051,15 @@ msgstr "Eliminar Dispositivo"
 
 #: automation_devices.php:39 automation_devices.php:294
 #: automation_devices.php:406 automation_devices.php:417
-#: automation_devices.php:679 automation_devices.php:680 host.php:1835
-#: lib/api_automation.php:31 lib/html_utility.php:1327 pollers.php:32
+#: automation_devices.php:679 automation_devices.php:680
+#: lib/api_automation.php:31 lib/html_utility.php:1342 pollers.php:32
 msgid "Down"
 msgstr "Caído"
 
 #: automation_devices.php:40 automation_devices.php:294
 #: automation_devices.php:408 automation_devices.php:419
-#: automation_devices.php:679 automation_devices.php:680 host.php:1834
-#: lib/api_automation.php:30 lib/html_utility.php:1333
+#: automation_devices.php:679 automation_devices.php:680
+#: lib/api_automation.php:30 lib/html_utility.php:1348
 msgid "Up"
 msgstr "Arriba"
 
@@ -1115,18 +1106,17 @@ msgstr "Agregar dispositivo(s)"
 msgid "Click 'Continue' to Delete the following Discovered device(s)."
 msgstr "Haga clic en 'Continuar' para borrar el/los siguiente(s) dispositivo(s) descubierto(s)."
 
-#: automation_devices.php:220 host.php:565
+#: automation_devices.php:220
 msgid "Delete Device(s)"
 msgstr "Eliminar Dispositivo(s)"
 
-#: automation_devices.php:262 automation_devices.php:578 host.php:1705
-#: host.php:1841 host.php:1994 include/global_arrays.php:990
-#: include/global_arrays.php:1046 include/global_arrays.php:2326
-#: lib/api_automation.php:178 lib/api_automation.php:271
-#: lib/api_automation.php:486 lib/api_automation.php:563
-#: lib/api_automation.php:1189 pollers.php:1031 tree.php:916 tree.php:2360
-#: user_admin.php:1065 user_admin.php:2359 user_group_admin.php:1079
-#: user_group_admin.php:2146 utilities.php:315
+#: automation_devices.php:262 automation_devices.php:578
+#: include/global_arrays.php:990 include/global_arrays.php:1046
+#: include/global_arrays.php:2328 lib/api_automation.php:178
+#: lib/api_automation.php:271 lib/api_automation.php:486
+#: lib/api_automation.php:563 lib/api_automation.php:1189 pollers.php:1031
+#: tree.php:916 tree.php:2360 user_admin.php:1065 user_admin.php:2359
+#: user_group_admin.php:1079 user_group_admin.php:2146 utilities.php:315
 msgid "Devices"
 msgstr "Dispositivos"
 
@@ -1142,7 +1132,7 @@ msgstr "IP"
 msgid "SNMP Name"
 msgstr "Nombre SNMP"
 
-#: automation_devices.php:274 host.php:1780 include/global_form.php:1184
+#: automation_devices.php:274 include/global_form.php:1184
 #: include/global_settings.php:2319 lib/html.php:2448
 msgid "Location"
 msgstr "Ubicación"
@@ -1164,7 +1154,7 @@ msgstr "Descripción"
 msgid "OS"
 msgstr "SO"
 
-#: automation_devices.php:278 host.php:1958 include/global_arrays.php:524
+#: automation_devices.php:278 include/global_arrays.php:524
 msgid "Uptime"
 msgstr "Tiempo arriba"
 
@@ -1176,8 +1166,7 @@ msgstr "SNMP"
 #: automation_devices.php:280 automation_devices.php:524
 #: automation_graph_rules.php:837 automation_networks.php:1075
 #: automation_tree_rules.php:851 data_debug.php:505 data_debug.php:1144
-#: data_sources.php:1762 data_templates.php:1289 host.php:874 host.php:1003
-#: host.php:1826 host.php:1946 lib/api_automation.php:52
+#: data_sources.php:1762 data_templates.php:1289 lib/api_automation.php:52
 #: lib/api_automation.php:53 lib/api_automation.php:280
 #: lib/api_automation.php:573 lib/api_automation.php:1199
 #: lib/html_reports.php:2031 lib/installer.php:2044 managers.php:216
@@ -1196,7 +1185,7 @@ msgstr "Ultimo control"
 msgid "Not Detected"
 msgstr "No detectado"
 
-#: automation_devices.php:318 host.php:2052
+#: automation_devices.php:318
 msgid "No Devices Found"
 msgstr "Ningún dispositivo encontrado"
 
@@ -1212,7 +1201,7 @@ msgstr "Red"
 msgid "Reset fields to defaults"
 msgstr "Resetear campos por defecto"
 
-#: automation_devices.php:515 host.php:1812 lib/html_form.php:1436
+#: automation_devices.php:515 lib/html_form.php:1436
 msgid "Export"
 msgstr "Exportar"
 
@@ -1232,9 +1221,9 @@ msgstr "Purgar dispositivos descubiertos"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:673 data_source_profiles.php:61 host.php:2021
-#: lib/functions.php:6515 lib/functions.php:6520 lib/html.php:1434
-#: lib/html.php:1506 lib/html_reports.php:1810 lib/html_reports.php:1838
+#: data_debug.php:673 data_source_profiles.php:61 lib/functions.php:6515
+#: lib/functions.php:6520 lib/html.php:1434 lib/html.php:1506
+#: lib/html_reports.php:1810 lib/html_reports.php:1838
 #: lib/html_reports.php:1915 lib/html_reports.php:1916
 #: lib/html_reports.php:1917 lib/spikekill.php:1734 lib/spikekill.php:1735
 #: lib/spikekill.php:1800 lib/spikekill.php:1801 lib/spikekill.php:1802
@@ -1251,13 +1240,13 @@ msgstr "n/d"
 #: automation_tree_rules.php:14 cdef.php:15 color_templates.php:14
 #: data_queries.php:17 data_source_profiles.php:17 data_templates.php:20
 #: graph_templates.php:23 graphs.php:51 host_templates.php:21
-#: include/global_arrays.php:1649
+#: include/global_arrays.php:1651
 msgid "Duplicate"
 msgstr "Duplicar"
 
 #: automation_graph_rules.php:15 automation_networks.php:18
-#: automation_tree_rules.php:15 data_sources.php:25 host.php:30
-#: include/global_arrays.php:1650 include/global_settings.php:1787
+#: automation_tree_rules.php:15 data_sources.php:25
+#: include/global_arrays.php:1652 include/global_settings.php:1787
 #: managers.php:14 managers.php:20 plugins.php:24 pollers.php:20
 #: user_admin.php:19 user_domains.php:17 user_domains.php:397
 #: user_group_admin.php:21
@@ -1265,8 +1254,8 @@ msgid "Enable"
 msgstr "Habilitar"
 
 #: automation_graph_rules.php:16 automation_networks.php:17
-#: automation_tree_rules.php:16 data_sources.php:26 host.php:31
-#: include/global_arrays.php:1651 managers.php:15 managers.php:19
+#: automation_tree_rules.php:16 data_sources.php:26
+#: include/global_arrays.php:1653 managers.php:15 managers.php:19
 #: plugins.php:25 pollers.php:19 user_admin.php:20 user_domains.php:16
 #: user_group_admin.php:22
 msgid "Disable"
@@ -1355,13 +1344,13 @@ msgstr "Criterio de creación de gráficos"
 
 #: automation_graph_rules.php:800 automation_graph_rules.php:847
 #: automation_graph_rules.php:954 include/global_arrays.php:1013
-#: include/global_arrays.php:2782
+#: include/global_arrays.php:2784
 msgid "Graph Rules"
 msgstr "Reglas de gráficos"
 
 #: automation_graph_rules.php:815 automation_graph_rules.php:965
-#: graphs.php:2113 include/global_arrays.php:1364
-#: include/global_arrays.php:2891 include/global_form.php:1645
+#: graphs.php:2113 include/global_arrays.php:1366
+#: include/global_arrays.php:2893 include/global_form.php:1645
 #: include/global_form.php:2207
 msgid "Data Query"
 msgstr "Consulta de datos"
@@ -1370,7 +1359,7 @@ msgstr "Consulta de datos"
 #: automation_graph_rules.php:983 automation_networks.php:535
 #: automation_tree_rules.php:856 automation_tree_rules.php:976
 #: automation_tree_rules.php:994 data_debug.php:1150 data_sources.php:1767
-#: host.php:1831 include/global_arrays.php:917 include/global_form.php:1527
+#: include/global_arrays.php:917 include/global_form.php:1527
 #: include/global_settings.php:345 include/global_settings.php:361
 #: lib/api_automation.php:27 lib/html_reports.php:2036
 #: lib/html_reports.php:2141 lib/html_reports.php:2152
@@ -1385,15 +1374,15 @@ msgstr "Habilitado"
 #: automation_graph_rules.php:843 automation_graph_rules.php:983
 #: automation_networks.php:1090 automation_tree_rules.php:857
 #: automation_tree_rules.php:994 data_debug.php:1151 data_sources.php:1768
-#: data_templates.php:1325 host.php:1832 include/global_arrays.php:916
-#: include/global_arrays.php:1573 include/global_arrays.php:1865
+#: data_templates.php:1325 include/global_arrays.php:916
+#: include/global_arrays.php:1575 include/global_arrays.php:1867
 #: include/global_settings.php:344 include/global_settings.php:360
 #: include/global_settings.php:1370 include/global_settings.php:1630
 #: include/global_settings.php:1644 include/global_settings.php:1657
 #: include/global_settings.php:1682 include/global_settings.php:1696
 #: include/global_settings.php:1786 include/global_settings.php:2550
 #: lib/api_automation.php:28 lib/html.php:2858 lib/html_reports.php:2037
-#: lib/html_reports.php:2188 lib/html_utility.php:1317 managers.php:241
+#: lib/html_reports.php:2188 lib/html_utility.php:1332 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:936 user_domains.php:397
 #: user_group_admin.php:748 utilities.php:2141 utilities.php:2705
 #: utilities.php:3014
@@ -1493,17 +1482,17 @@ msgid "Manual"
 msgstr "Manual"
 
 #: automation_networks.php:409 automation_networks.php:1064
-#: include/global_arrays.php:1879 include/global_settings.php:1371
+#: include/global_arrays.php:1881 include/global_settings.php:1371
 msgid "Daily"
 msgstr "diario"
 
 #: automation_networks.php:410 automation_networks.php:1065
-#: include/global_arrays.php:1880
+#: include/global_arrays.php:1882
 msgid "Weekly"
 msgstr "Semanal"
 
 #: automation_networks.php:411 automation_networks.php:1066
-#: include/global_arrays.php:1881
+#: include/global_arrays.php:1883
 msgid "Monthly"
 msgstr "Mensual"
 
@@ -1557,7 +1546,7 @@ msgstr "Dar un nombre significativo a esta red."
 msgid "New Network Discovery Range"
 msgstr "Nuevo rango de descubrimiento de redes"
 
-#: automation_networks.php:447 automation_networks.php:1072 host.php:1736
+#: automation_networks.php:447 automation_networks.php:1072
 msgid "Data Collector"
 msgstr "Recolector de datos"
 
@@ -1659,12 +1648,12 @@ msgstr "%d Minuto"
 #: include/global_arrays.php:755 include/global_arrays.php:756
 #: include/global_arrays.php:757 include/global_arrays.php:758
 #: include/global_arrays.php:759 include/global_arrays.php:1208
-#: include/global_arrays.php:1209 include/global_arrays.php:1580
-#: include/global_arrays.php:1584 include/global_arrays.php:1592
-#: include/global_arrays.php:1593 include/global_arrays.php:1617
-#: include/global_arrays.php:1618 include/global_arrays.php:1619
+#: include/global_arrays.php:1209 include/global_arrays.php:1582
+#: include/global_arrays.php:1586 include/global_arrays.php:1594
+#: include/global_arrays.php:1595 include/global_arrays.php:1619
 #: include/global_arrays.php:1620 include/global_arrays.php:1621
-#: include/global_arrays.php:1634 include/global_settings.php:1698
+#: include/global_arrays.php:1622 include/global_arrays.php:1623
+#: include/global_arrays.php:1636 include/global_settings.php:1698
 #: include/global_settings.php:1699 include/global_settings.php:1700
 #: include/global_settings.php:1701 include/global_settings.php:1702
 #: include/global_settings.php:2663 include/global_settings.php:2938
@@ -1675,7 +1664,7 @@ msgid "%d Minutes"
 msgstr "%d Minutos"
 
 #: automation_networks.php:526 include/global_arrays.php:760
-#: include/global_arrays.php:770 include/global_arrays.php:1454
+#: include/global_arrays.php:770 include/global_arrays.php:1456
 #, php-format
 msgid "%d Hour"
 msgstr "%d hora"
@@ -1688,15 +1677,15 @@ msgstr "%d hora"
 #: include/global_arrays.php:762 include/global_arrays.php:763
 #: include/global_arrays.php:764 include/global_arrays.php:771
 #: include/global_arrays.php:772 include/global_arrays.php:773
-#: include/global_arrays.php:774 include/global_arrays.php:1455
-#: include/global_arrays.php:1456 include/global_arrays.php:1457
-#: include/global_arrays.php:1458 include/global_arrays.php:1525
-#: include/global_arrays.php:1526 include/global_arrays.php:1527
+#: include/global_arrays.php:774 include/global_arrays.php:1457
+#: include/global_arrays.php:1458 include/global_arrays.php:1459
+#: include/global_arrays.php:1460 include/global_arrays.php:1527
 #: include/global_arrays.php:1528 include/global_arrays.php:1529
-#: include/global_arrays.php:1546 include/global_arrays.php:1547
+#: include/global_arrays.php:1530 include/global_arrays.php:1531
 #: include/global_arrays.php:1548 include/global_arrays.php:1549
-#: include/global_arrays.php:1550 include/global_arrays.php:1556
-#: include/global_arrays.php:1557 include/global_settings.php:1704
+#: include/global_arrays.php:1550 include/global_arrays.php:1551
+#: include/global_arrays.php:1552 include/global_arrays.php:1558
+#: include/global_arrays.php:1559 include/global_settings.php:1704
 #: include/global_settings.php:1705 include/global_settings.php:1706
 #: include/global_settings.php:1707 include/global_settings.php:2942
 #: include/global_settings.php:2943
@@ -1805,37 +1794,37 @@ msgid "What Day(s) of the week will this Network Range be discovered."
 msgstr "Qué día(s) de la semana será descubierto este rango de redes."
 
 #: automation_networks.php:636 automation_networks.php:694
-#: include/global_arrays.php:1937
+#: include/global_arrays.php:1939
 msgid "Sunday"
 msgstr "Domingo"
 
 #: automation_networks.php:637 automation_networks.php:695
-#: include/global_arrays.php:1938
+#: include/global_arrays.php:1940
 msgid "Monday"
 msgstr "Lunes"
 
 #: automation_networks.php:638 automation_networks.php:696
-#: include/global_arrays.php:1939
+#: include/global_arrays.php:1941
 msgid "Tuesday"
 msgstr "Martes"
 
 #: automation_networks.php:639 automation_networks.php:697
-#: include/global_arrays.php:1940
+#: include/global_arrays.php:1942
 msgid "Wednesday"
 msgstr "Miercoles"
 
 #: automation_networks.php:640 automation_networks.php:698
-#: include/global_arrays.php:1941
+#: include/global_arrays.php:1943
 msgid "Thursday"
 msgstr "Jueves"
 
 #: automation_networks.php:641 automation_networks.php:699
-#: include/global_arrays.php:1942
+#: include/global_arrays.php:1944
 msgid "Friday"
 msgstr "Viernes"
 
 #: automation_networks.php:642 automation_networks.php:700
-#: include/global_arrays.php:1943
+#: include/global_arrays.php:1945
 msgid "Saturday"
 msgstr "Sábado"
 
@@ -1847,51 +1836,51 @@ msgstr "Meses del año"
 msgid "What Months(s) of the Year will this Network Range be discovered."
 msgstr "Qué meses del año será descubierto este rango de redes."
 
-#: automation_networks.php:652 include/global_arrays.php:1891
+#: automation_networks.php:652 include/global_arrays.php:1893
 msgid "January"
 msgstr "Enero"
 
-#: automation_networks.php:653 include/global_arrays.php:1892
+#: automation_networks.php:653 include/global_arrays.php:1894
 msgid "February"
 msgstr "Febrero"
 
-#: automation_networks.php:654 include/global_arrays.php:1893
+#: automation_networks.php:654 include/global_arrays.php:1895
 msgid "March"
 msgstr "Marzo"
 
-#: automation_networks.php:655 include/global_arrays.php:1894
+#: automation_networks.php:655 include/global_arrays.php:1896
 msgid "April"
 msgstr "Abril"
 
-#: automation_networks.php:656 include/global_arrays.php:1895
+#: automation_networks.php:656 include/global_arrays.php:1897
 msgid "May"
 msgstr "Mayo"
 
-#: automation_networks.php:657 include/global_arrays.php:1896
+#: automation_networks.php:657 include/global_arrays.php:1898
 msgid "June"
 msgstr "Junio"
 
-#: automation_networks.php:658 include/global_arrays.php:1897
+#: automation_networks.php:658 include/global_arrays.php:1899
 msgid "July"
 msgstr "Julio"
 
-#: automation_networks.php:659 include/global_arrays.php:1898
+#: automation_networks.php:659 include/global_arrays.php:1900
 msgid "August"
 msgstr "Agosto"
 
-#: automation_networks.php:660 include/global_arrays.php:1899
+#: automation_networks.php:660 include/global_arrays.php:1901
 msgid "September"
 msgstr "Septiembre"
 
-#: automation_networks.php:661 include/global_arrays.php:1900
+#: automation_networks.php:661 include/global_arrays.php:1902
 msgid "October"
 msgstr "Octubre"
 
-#: automation_networks.php:662 include/global_arrays.php:1901
+#: automation_networks.php:662 include/global_arrays.php:1903
 msgid "November"
 msgstr "Noviembre"
 
-#: automation_networks.php:663 include/global_arrays.php:1902
+#: automation_networks.php:663 include/global_arrays.php:1904
 msgid "December"
 msgstr "Diciembre"
 
@@ -2106,13 +2095,13 @@ msgstr "Actualizar"
 #: include/global_arrays.php:749 include/global_arrays.php:750
 #: include/global_arrays.php:1203 include/global_arrays.php:1204
 #: include/global_arrays.php:1205 include/global_arrays.php:1206
-#: include/global_arrays.php:1574 include/global_arrays.php:1575
 #: include/global_arrays.php:1576 include/global_arrays.php:1577
-#: include/global_arrays.php:1578 include/global_arrays.php:1613
-#: include/global_arrays.php:1614 include/global_arrays.php:1626
-#: include/global_arrays.php:1627 include/global_arrays.php:1628
+#: include/global_arrays.php:1578 include/global_arrays.php:1579
+#: include/global_arrays.php:1580 include/global_arrays.php:1615
+#: include/global_arrays.php:1616 include/global_arrays.php:1628
 #: include/global_arrays.php:1629 include/global_arrays.php:1630
 #: include/global_arrays.php:1631 include/global_arrays.php:1632
+#: include/global_arrays.php:1633 include/global_arrays.php:1634
 #: include/global_settings.php:1271 include/global_settings.php:1272
 #: include/global_settings.php:1273 include/global_settings.php:1274
 #: include/global_settings.php:2659 include/global_settings.php:2660
@@ -2347,7 +2336,7 @@ msgstr "Haga click en 'Continuar' para borrar la siguiente Plantilla(s) the Auto
 msgid "Delete Automation Template(s)"
 msgstr "Borrar Plantilla(s) de Automatización"
 
-#: automation_templates.php:271 include/global_arrays.php:1365
+#: automation_templates.php:271 include/global_arrays.php:1367
 #: include/global_form.php:1211 include/global_form.php:1630
 #: lib/html_reports.php:1160
 msgid "Device Template"
@@ -2494,7 +2483,7 @@ msgstr "¿está seguro de que desea continuar?"
 
 #: automation_tree_rules.php:836 automation_tree_rules.php:861
 #: automation_tree_rules.php:961 include/global_arrays.php:1014
-#: include/global_arrays.php:2806
+#: include/global_arrays.php:2808
 msgid "Tree Rules"
 msgstr "Reglas de Arbol"
 
@@ -2523,7 +2512,7 @@ msgid "No Tree Rules Found"
 msgstr "No se encontraron reglas de árbol"
 
 #: cactid.php:27 help.php:54 lib/functions.php:6662 lib/functions.php:6732
-#: lib/functions.php:6828 lib/functions.php:7482 poller.php:417 poller.php:584
+#: lib/functions.php:6828 lib/functions.php:7489 poller.php:417 poller.php:584
 #: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
 #: poller_automation.php:37 poller_boost.php:387
 msgid "Kadupul System Warning"
@@ -2625,7 +2614,7 @@ msgstr "CDEF [editar: %s]"
 msgid "CDEF [new]"
 msgstr "CDEF [Nuevo]"
 
-#: cdef.php:558 include/global_arrays.php:2152
+#: cdef.php:558 include/global_arrays.php:2154
 msgid "CDEF Items"
 msgstr "Items CDEF"
 
@@ -2643,7 +2632,7 @@ msgid "Delete CDEF Item"
 msgstr "Eliminar item CDEF"
 
 #: cdef.php:718 cdef.php:733 cdef.php:858 include/global_arrays.php:1019
-#: include/global_arrays.php:2134
+#: include/global_arrays.php:2136
 msgid "CDEFs"
 msgstr "CDEFs"
 
@@ -2910,7 +2899,7 @@ msgid "Color Template '%s' had no Aggregate Templates or Graphs using this Color
 msgstr "La plantilla de color '%s' no tenía plantillas ni gráficos agregados con esta plantilla de color."
 
 #: color_templates.php:552 color_templates.php:566 color_templates.php:661
-#: include/global_arrays.php:2722
+#: include/global_arrays.php:2724
 msgid "Color Templates"
 msgstr "Plantillas de Color"
 
@@ -3083,8 +3072,8 @@ msgid "Summary of issues found for the Data Source."
 msgstr "Cualquier problema de resumen que se encuentre para la Fuente de datos."
 
 #: data_debug.php:621 data_debug.php:1195 data_sources.php:1789
-#: data_sources.php:1963 host.php:1940 include/global_arrays.php:994
-#: include/global_arrays.php:1040 include/global_arrays.php:2308
+#: data_sources.php:1963 include/global_arrays.php:994
+#: include/global_arrays.php:1040 include/global_arrays.php:2310
 #: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1087
 #: utilities.php:325
 msgid "Data Sources"
@@ -3296,7 +3285,7 @@ msgstr "Perfil"
 
 #: data_debug.php:1129 data_debug.php:1148 data_debug.php:1159
 #: data_sources.php:1746 data_sources.php:1766 data_templates.php:1111
-#: graphs.php:2110 graphs_new.php:486 host.php:1784 host_templates.php:716
+#: graphs.php:2110 graphs_new.php:486 host_templates.php:716
 #: host_templates.php:734 lib/clog_webapi.php:549 lib/html.php:227
 #: lib/html_reports.php:1138 lib/html_reports.php:2284 plugins.php:501
 #: settings.php:590 settings.php:612 settings.php:643 tree.php:914
@@ -3551,9 +3540,8 @@ msgstr "Nombre del campo"
 msgid "Suggested Value"
 msgstr "Valor sugerido"
 
-#: data_queries.php:893 data_queries.php:1003 host.php:961 host.php:1105
-#: host_templates.php:515 host_templates.php:569 lib/html.php:51
-#: lib/html_filter.php:38
+#: data_queries.php:893 data_queries.php:1003 host_templates.php:515
+#: host_templates.php:569 lib/html.php:51 lib/html_filter.php:38
 msgid "Add"
 msgstr "Agregar"
 
@@ -3591,13 +3579,12 @@ msgstr "Archivo XML encontrado"
 msgid "Could not locate XML file."
 msgstr "No se pudo encontrar el archivo XML."
 
-#: data_queries.php:1206 host.php:869 host_templates.php:466
-#: include/global_arrays.php:2416
+#: data_queries.php:1206 host_templates.php:466 include/global_arrays.php:2418
 msgid "Associated Graph Templates"
 msgstr "Plantillas de gráfico asociadas"
 
 #: data_queries.php:1210 graph_templates.php:858 graphs_new.php:638
-#: host.php:873 lib/api_automation.php:576
+#: lib/api_automation.php:576
 msgid "Graph Template Name"
 msgstr "Nombre de plantilla de gráficos"
 
@@ -3623,11 +3610,11 @@ msgstr "Borrar gráfico asociado"
 
 #: data_queries.php:1362 data_queries.php:1377 data_queries.php:1512
 #: include/global_arrays.php:999 include/global_arrays.php:1226
-#: include/global_arrays.php:2398 lib/api_automation.php:1078
+#: include/global_arrays.php:2400 lib/api_automation.php:1078
 msgid "Data Queries"
 msgstr "Consultas de datos"
 
-#: data_queries.php:1476 host.php:1001 utilities.php:1930
+#: data_queries.php:1476 utilities.php:1930
 msgid "Data Query Name"
 msgstr "Nombre de consulta de datos"
 
@@ -3651,7 +3638,7 @@ msgstr "El número de gráficos usando esta consulta de datos."
 msgid "The number of Graphs Templates using this Data Query."
 msgstr "El número de plantillas de gráficos usando esta consulta de datos."
 
-#: data_queries.php:1505 include/global_arrays.php:1357
+#: data_queries.php:1505 include/global_arrays.php:1359
 #: include/global_form.php:570 include/global_form.php:1380
 msgid "Data Input Method"
 msgstr "Método de entrada de datos"
@@ -3801,7 +3788,7 @@ msgstr "Introduzca un número válido de filas para obtener el tamaño RRA."
 #: include/global_arrays.php:790 include/global_arrays.php:791
 #: include/global_arrays.php:792 include/global_arrays.php:793
 #: include/global_arrays.php:794 include/global_arrays.php:795
-#: include/global_arrays.php:1471 include/global_settings.php:1636
+#: include/global_arrays.php:1473 include/global_settings.php:1636
 #, php-format
 msgid "%d Years"
 msgstr "%d años"
@@ -3811,30 +3798,30 @@ msgid "1 Year"
 msgstr "1 año"
 
 #: data_source_profiles.php:1075 include/global_arrays.php:781
-#: include/global_arrays.php:1465 rrdcleaner.php:537
+#: include/global_arrays.php:1467 rrdcleaner.php:537
 #, php-format
 msgid "%d Month"
 msgstr "%d Mes"
 
 #: data_source_profiles.php:1075 include/global_arrays.php:782
 #: include/global_arrays.php:783 include/global_arrays.php:784
-#: include/global_arrays.php:785 include/global_arrays.php:1466
-#: include/global_arrays.php:1467 include/global_arrays.php:1468
-#: include/global_arrays.php:1469 rrdcleaner.php:538 rrdcleaner.php:539
+#: include/global_arrays.php:785 include/global_arrays.php:1468
+#: include/global_arrays.php:1469 include/global_arrays.php:1470
+#: include/global_arrays.php:1471 rrdcleaner.php:538 rrdcleaner.php:539
 #: rrdcleaner.php:540
 #, php-format
 msgid "%d Months"
 msgstr "%d Meses"
 
 #: data_source_profiles.php:1084 include/global_arrays.php:722
-#: include/global_arrays.php:778 include/global_arrays.php:1463
+#: include/global_arrays.php:778 include/global_arrays.php:1465
 #: rrdcleaner.php:533 rrdcleaner.php:534
 #, php-format
 msgid "%d Week"
 msgstr "%d semana"
 
 #: data_source_profiles.php:1084 include/global_arrays.php:779
-#: include/global_arrays.php:780 include/global_arrays.php:1464
+#: include/global_arrays.php:780 include/global_arrays.php:1466
 #: include/global_settings.php:2946 include/global_settings.php:2947
 #: include/global_settings.php:2948 rrdcleaner.php:535 rrdcleaner.php:536
 #, php-format
@@ -3843,15 +3830,15 @@ msgstr "%d semanas"
 
 #: data_source_profiles.php:1093 include/global_arrays.php:721
 #: include/global_arrays.php:765 include/global_arrays.php:775
-#: include/global_arrays.php:1459
+#: include/global_arrays.php:1461
 #, php-format
 msgid "%d Day"
 msgstr "%d dia"
 
 #: data_source_profiles.php:1093 include/global_arrays.php:766
 #: include/global_arrays.php:776 include/global_arrays.php:777
-#: include/global_arrays.php:1460 include/global_arrays.php:1461
-#: include/global_arrays.php:1462 include/global_settings.php:1631
+#: include/global_arrays.php:1462 include/global_arrays.php:1463
+#: include/global_arrays.php:1464 include/global_settings.php:1631
 #: include/global_settings.php:1632 include/global_settings.php:1633
 #: include/global_settings.php:1634 include/global_settings.php:1645
 #: include/global_settings.php:1646 include/global_settings.php:1647
@@ -3861,9 +3848,9 @@ msgid "%d Days"
 msgstr "%d Días"
 
 #: data_source_profiles.php:1101 include/global_arrays.php:715
-#: include/global_arrays.php:1524 include/global_arrays.php:1545
-#: include/global_arrays.php:1555 include/global_arrays.php:1585
-#: include/global_arrays.php:1594 include/global_arrays.php:1622
+#: include/global_arrays.php:1526 include/global_arrays.php:1547
+#: include/global_arrays.php:1557 include/global_arrays.php:1587
+#: include/global_arrays.php:1596 include/global_arrays.php:1624
 #: include/global_settings.php:1406 include/global_settings.php:1703
 #: include/global_settings.php:2941
 msgid "1 Hour"
@@ -4099,7 +4086,7 @@ msgstr "El nombre dado a esta plantilla de datos. Tenga en cuenta que solo puede
 
 #: data_sources.php:1081 graph_view.php:817 graphs.php:1588
 #: include/global_arrays.php:954 include/global_arrays.php:1003
-#: include/global_arrays.php:1688 include/global_arrays.php:1857
+#: include/global_arrays.php:1690 include/global_arrays.php:1859
 #: lib/api_automation.php:426 lib/functions.php:6151 lib/html.php:2347
 #: lib/html.php:2384 lib/html_reports.php:1170 utilities.php:1930
 msgid "Device"
@@ -4148,8 +4135,8 @@ msgid "External"
 msgstr "Externo"
 
 #: data_sources.php:1528 include/global_arrays.php:710
-#: include/global_arrays.php:1207 include/global_arrays.php:1579
-#: include/global_arrays.php:1615 include/global_arrays.php:1633
+#: include/global_arrays.php:1207 include/global_arrays.php:1581
+#: include/global_arrays.php:1617 include/global_arrays.php:1635
 #: include/global_settings.php:1697 include/global_settings.php:2662
 msgid "1 Minute"
 msgstr "1 Minuto"
@@ -4331,7 +4318,7 @@ msgid "After you uncheck this checkbox and then Save the Data Template, any exis
 msgstr "Después de desmarcar esta casilla de verificación y luego Guardar la plantilla de datos, cualquier fuente de datos existente basada en esta plantilla de datos perderá sus datos personalizados. Esto puede dar como resultado una recolección de datos y gráficos rotos."
 
 #: data_templates.php:1092 data_templates.php:1126 data_templates.php:1296
-#: include/global_arrays.php:1237 include/global_arrays.php:2290
+#: include/global_arrays.php:1237 include/global_arrays.php:2292
 msgid "Data Templates"
 msgstr "Plantillas de Datos"
 
@@ -4401,7 +4388,7 @@ msgstr "GPRINT preestablecidos [editar: %s]"
 msgid "GPRINT Presets [new]"
 msgstr "GPRINT preestablecidos [nuevo]"
 
-#: gprint_presets.php:246 include/global_arrays.php:2116
+#: gprint_presets.php:246 include/global_arrays.php:2118
 msgid "GPRINT Presets"
 msgstr "GPRINT preestablecidos"
 
@@ -4500,7 +4487,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "La Sonda de Kadupul no se ha ejecutado aún."
 
 #: graph_realtime.php:36 graph_realtime.php:448 include/auth.php:316
-#: lib/functions.php:8155 permission_denied.php:29 permission_denied.php:36
+#: lib/functions.php:8162 permission_denied.php:29 permission_denied.php:36
 msgid "Permission Denied"
 msgstr "Permiso denegado"
 
@@ -4609,7 +4596,7 @@ msgstr "Haga click en 'Continuar' para sincronizar tus gráficos con la(s) sigui
 msgid "Graph Template Items [edit: %s]"
 msgstr "Items de Plantilla de gráfico [editar: %s]"
 
-#: graph_templates.php:497 include/global_arrays.php:2260
+#: graph_templates.php:497 include/global_arrays.php:2262
 msgid "Graph Item Inputs"
 msgstr "Entradas de items de gráficos"
 
@@ -4641,7 +4628,7 @@ msgstr "Activa esta casilla si deseas permitir que el usuario reemplazar el valo
 
 #: graph_templates.php:718 graph_templates.php:733 graph_templates.php:900
 #: graphs_new.php:635 include/global_arrays.php:1236
-#: include/global_arrays.php:2236 lib/html_tree.php:541 user_admin.php:1204
+#: include/global_arrays.php:2238 lib/html_tree.php:541 user_admin.php:1204
 #: user_group_admin.php:1215
 msgid "Graph Templates"
 msgstr "Plantilla de gráficos"
@@ -4773,7 +4760,7 @@ msgstr "Reporte"
 msgid "All Graphs & Templates"
 msgstr "Todas las Plantillas y gráficos"
 
-#: graph_view.php:704 include/global_arrays.php:2890 lib/graphs.php:40
+#: graph_view.php:704 include/global_arrays.php:2892 lib/graphs.php:40
 #: lib/graphs.php:49 lib/html.php:221 lib/html_graph.php:144
 #: lib/html_tree.php:978
 msgid "Not Templated"
@@ -4816,7 +4803,7 @@ msgstr "El tamaño de este gráfico cuando no está en modo vista previa."
 msgid "Select the Report to add the selected Graphs to."
 msgstr "Seleccione el Reporte para agregar los gráficos seleccionados."
 
-#: graph_view.php:995 include/global_arrays.php:2036
+#: graph_view.php:995 include/global_arrays.php:2038
 #: include/global_settings.php:2733
 msgid "Preview Mode"
 msgstr "Modo de Vista Previa"
@@ -4879,7 +4866,7 @@ msgstr "Detalles del resumen"
 msgid "Download"
 msgstr "Descargar"
 
-#: graphs.php:36 graphs.php:892 include/global_arrays.php:2086
+#: graphs.php:36 graphs.php:892 include/global_arrays.php:2088
 msgid "Change Graph Template"
 msgstr "Cambiar Plantilla de gráfico"
 
@@ -4891,7 +4878,7 @@ msgstr "Crear Gráficos de Agregación"
 msgid "Create Aggregate from Template"
 msgstr "Crear Aggregate desde plantilla"
 
-#: graphs.php:46 graphs.php:1219 host.php:34
+#: graphs.php:46 graphs.php:1219
 msgid "Apply Automation Rules"
 msgstr "Aplicar reglas de automatización"
 
@@ -5130,7 +5117,7 @@ msgstr "Data Sources [Ningún dispositivo]"
 msgid "Data Sources [%s]"
 msgstr "Fuentes de Datos [%s]"
 
-#: graphs_items.php:258 include/global_arrays.php:1356
+#: graphs_items.php:258 include/global_arrays.php:1358
 #: include/global_form.php:1640
 msgid "Data Template"
 msgstr "Plantilla de datos"
@@ -5185,7 +5172,7 @@ msgstr "Guardar filtros"
 msgid "Edit this Device"
 msgstr "Editar este dispositivo"
 
-#: graphs_new.php:552 host.php:829
+#: graphs_new.php:552
 msgid "Create New Device"
 msgstr "Crear nuevo dispositivo"
 
@@ -5274,423 +5261,6 @@ msgstr "ADVERTENCIA: Página de Kadupul:%s para el usuario:%s ¡Se ha generado u
 msgid "The document page '%s' could not be reached locally."
 msgstr ""
 
-#: host.php:32
-msgid "Change Device Settings"
-msgstr "Cambiar opciones de dispositivo"
-
-#: host.php:33 pollers.php:21
-msgid "Clear Statistics"
-msgstr "Borrar estadisticas"
-
-#: host.php:35
-msgid "Sync to Device Template"
-msgstr "Sincronizar con plantilla de dispositivo"
-
-#: host.php:36
-msgid "Place Device on Report"
-msgstr "Colocar dispositivo(s) en árbol"
-
-#: host.php:109
-msgid "Data Query Re-indexed."
-msgstr "Indice de consulta de datos"
-
-#: host.php:117
-msgid "Device Data Query Re-indexed.  Verbose output displayed."
-msgstr "La consulta de datos del dispositivo ha sido Re-Indexada.  La salida verbosa ha sido mostrada."
-
-#: host.php:143
-msgid "Device Debugging Enabled for Device."
-msgstr "La depuración de dispositivo se ha habilitado para este dispositivo."
-
-#: host.php:152
-msgid "Device Debugging Disabled for Device."
-msgstr "El dispositivo está deshabilitado"
-
-#: host.php:161
-msgid "Poller Cache for Device Refreshed."
-msgstr "La cache del Poller para este dispositivo ha sido actualizada."
-
-#: host.php:163
-msgid "ERROR: Invalid Device ID."
-msgstr "ERROR: Dispositivo["
-
-#: host.php:222
-msgid "Device Reindex Failed."
-msgstr ""
-
-#: host.php:238
-#, php-format
-msgid "Device Reindex Completed in %0.2f seconds.  There were %d items updated."
-msgstr "Reindex del dispositivo completado en% 0.2f segundos. Se actualizaron% d elementos."
-
-#: host.php:401
-#, php-format
-msgid "Unable to add some Devices to Report '%s'"
-msgstr "No se pueden añadir algunos dispositivos al informe '%s'"
-
-#: host.php:470
-msgid "Click 'Continue' to enable the following Device(s)."
-msgstr "Haga click en 'Continuar' para habilitar el/los siguiente(s) dispositivo(s)."
-
-#: host.php:475
-msgid "Enable Device(s)"
-msgstr "Habilitar dispositivo(s)"
-
-#: host.php:479
-msgid "Click 'Continue' to disable the following Device(s)."
-msgstr "Haga click en 'Continuar' para deshabilitar el/los siguiente(s) dispositivo(s)."
-
-#: host.php:484
-msgid "Disable Device(s)"
-msgstr "Deshabilitar dispositivo(s)"
-
-#: host.php:488
-msgid "Click 'Continue' to change the Device options below for multiple Device(s).  Please check the box next to the fields you want to update, and then fill in the new value."
-msgstr "Haga click en 'Continuar' para cambiar las opciones del dispositivo debajo para multiples dispositivos. Marque la casilla junto a los campos que quieres actualizar, y luego completa el nuevo valor."
-
-#: host.php:508
-msgid "Update this Field"
-msgstr "Actualizar este campo"
-
-#: host.php:531
-msgid "Change Device(s) SNMP Options"
-msgstr "Cambiar opciones SNMP de dispositivos"
-
-#: host.php:535
-msgid "Click 'Continue' to clear the counters for the following Device(s)."
-msgstr "Haga click en 'Continuar' para borrar los contadores de el/los siguiente(s) dispositivo(s)."
-
-#: host.php:540
-msgid "Clear Statistics on Device(s)"
-msgstr "Borrar estadísticas de dispositivo(s)"
-
-#: host.php:544
-msgid "Click 'Continue' to Synchronize the following Device(s) to their Device Template."
-msgstr "Haga click en 'Continuar' para sincronizar los siguientes dispositivos con sus Plantillas de dispositivos."
-
-#: host.php:549
-msgid "Synchronize Device(s)"
-msgstr "Sincronizar dispositivo(s)"
-
-#: host.php:553
-msgid "Click 'Continue' to delete the following Device(s)."
-msgstr "Haga click en 'Continuar' para eliminar el/los siguiente(s) dispositivo(s)."
-
-#: host.php:556
-msgid "Leave all Graph(s) and Data Source(s) untouched.  Data Source(s) will be disabled however."
-msgstr "Deja todos los gráficos y Data Sources sin tocar. Sin embargo los Data Sources serán deshabilitados."
-
-#: host.php:558
-msgid "Delete all associated Graph(s) and Data Source(s)."
-msgstr "Eliminar todos los gráficos y Data Sources asociados."
-
-#: host.php:569
-msgid "Click 'Continue' to place the following Device(s) under the branch selected below."
-msgstr "Haga click en 'Continuar' para colocar el/los siguiente(s) dispositivo(s) bajo la rama del árbol seleccionada debajo."
-
-#: host.php:579
-msgid "Place Device(s) on Tree"
-msgstr "Colocar dispositivo(s) en árbol"
-
-#: host.php:583
-msgid "Click 'Continue' to apply Automation Rules to the following Devices(s)."
-msgstr "Haga click en 'Continuar' para aplicar las reglas de automatización a el/los siguiente(s) dispositivo(s)."
-
-#: host.php:588
-msgid "Run Automation on Device(s)"
-msgstr "Ejecutar automatización en dispositivo(s)"
-
-#: host.php:619
-msgid "Add Devices to Report"
-msgstr "Agregar a Reporte"
-
-#: host.php:621
-msgid "You currently have no Reports defined."
-msgstr "Actualmente no tiene ningún Reporte definido."
-
-#: host.php:793
-msgid "Device [new]"
-msgstr "Dispositivo [Nuevo]"
-
-#: host.php:807
-#, php-format
-msgid "Device [edit: %s]"
-msgstr "Dispositivo [editar: %s]"
-
-#: host.php:809
-msgid "Disable Device Debug"
-msgstr "Deshabilitar depuración de dispositivo"
-
-#: host.php:811
-msgid "Enable Device Debug"
-msgstr "Habilitar depuración de dispositivo"
-
-#: host.php:814
-msgid "Repopulate Poller Cache"
-msgstr "Reconstruir el cache de Sonda"
-
-#: host.php:815 include/global_arrays.php:2458 include/global_arrays.php:2470
-#: utilities.php:2401
-msgid "View Poller Cache"
-msgstr "Ver cache de la Sonda"
-
-#: host.php:830
-msgid "Create Graphs for this Device"
-msgstr "Crear gráficos para este dispositivo"
-
-#: host.php:831
-msgid "Re-Index Device"
-msgstr "Re-escenear dispositivo"
-
-#: host.php:834
-msgid "Data Source List"
-msgstr "Lista de Data Source"
-
-#: host.php:835
-msgid "Graph List"
-msgstr "Lista de gráficos"
-
-#: host.php:841
-msgid "Contacting Device"
-msgstr "Contactando dispositivo"
-
-#: host.php:936 tree.php:1782 tree.php:1856 tree.php:1964
-msgid "Edit"
-msgstr "Editar"
-
-#: host.php:936
-msgid "Is Being Graphed"
-msgstr "Esta siendo graficado"
-
-#: host.php:936
-msgid "Not Being Graphed"
-msgstr "No esta siendo graficado"
-
-#: host.php:939
-msgid "Delete Graph Template Association"
-msgstr "Desasociar Plantilla de gráfico"
-
-#: host.php:946 host_templates.php:493
-msgid "No associated graph templates."
-msgstr "No hay plantillas de gráficos asociada."
-
-#: host.php:955 host_templates.php:502
-msgid "Add Graph Template"
-msgstr "Agregar plantilla de gráfico"
-
-#: host.php:961
-msgid "Add Graph Template to Device"
-msgstr "Agregar plantilla de gráfico a dispositivo"
-
-#: host.php:977
-msgid "Data Query Debug Information"
-msgstr "Información de depuración de la consulta de datos"
-
-#: host.php:981 lib/functions.php:4903 tree.php:1804 tree.php:1878
-#: tree.php:1986 user_admin.php:18 user_group_admin.php:20
-msgid "Copy"
-msgstr "Copiar"
-
-#: host.php:982
-msgid "Hide"
-msgstr "Ocultar"
-
-#: host.php:997 host_templates.php:525
-msgid "Associated Data Queries"
-msgstr "Consultas de datos de asociadas"
-
-#: host.php:1002 host.php:1099
-msgid "Re-Index Method"
-msgstr "Método de Re-indexación"
-
-#: host.php:1004 include/global_arrays.php:2092 include/global_arrays.php:2158
-#: include/global_arrays.php:2248 include/global_arrays.php:2284
-#: include/global_arrays.php:2302 include/global_arrays.php:2320
-#: include/global_arrays.php:2338 include/global_arrays.php:2368
-#: include/global_arrays.php:2404 include/global_arrays.php:2434
-#: include/global_arrays.php:2530 include/global_arrays.php:2734
-#: include/global_arrays.php:2758 include/global_arrays.php:2776
-#: include/global_arrays.php:2794 include/global_arrays.php:2818
-#: lib/api_automation.php:1289 lib/api_automation.php:1352
-#: lib/api_automation.php:1422 lib/html_reports.php:1792 plugins.php:605
-msgid "Actions"
-msgstr "Acciones"
-
-#: host.php:1066
-#, php-format
-msgid " [%d Items, %d Rows]"
-msgstr " [%d Items, %d filas]"
-
-#: host.php:1066
-msgid "Fail"
-msgstr "Fallo"
-
-#: host.php:1066 lib/functions.php:6166 lib/functions.php:6171
-msgid "Success"
-msgstr "Exitoso"
-
-#: host.php:1069
-msgid "Reload Query"
-msgstr "Volver a consultar"
-
-#: host.php:1070
-msgid "Verbose Query"
-msgstr "Consulta detallada"
-
-#: host.php:1071
-msgid "Remove Query"
-msgstr "Eliminar consulta"
-
-#: host.php:1077
-msgid "No Associated Data Queries."
-msgstr "No hay consultas de datos asociadas."
-
-#: host.php:1093 host_templates.php:559
-msgid "Add Data Query"
-msgstr "Agregar consulta de datos"
-
-#: host.php:1105
-msgid "Add Data Query to Device"
-msgstr "Añadir la consulta de datos al dispositivo"
-
-#: host.php:1276 host.php:1289 include/global_arrays.php:679
-msgid "Ping"
-msgstr "Ping"
-
-#: host.php:1287 include/global_arrays.php:674
-msgid "Ping and SNMP Uptime"
-msgstr "Uptime Ping y SNMP"
-
-#: host.php:1288 include/global_arrays.php:676
-msgid "SNMP Uptime"
-msgstr "Uptime SNMP"
-
-#: host.php:1290 include/global_arrays.php:675
-msgid "Ping or SNMP Uptime"
-msgstr "Uptime Ping o SNMP"
-
-#: host.php:1291 include/global_arrays.php:677
-msgid "SNMP Desc"
-msgstr "Desc SNMP"
-
-#: host.php:1292
-msgid "SNMP GetNext"
-msgstr "SNMP GetNext"
-
-#: host.php:1356
-msgid "Delete Item from Device"
-msgstr "Eliminar Plantilla(s) de dispositivo(s)"
-
-#: host.php:1599 host.php:1792
-msgid "Undefined"
-msgstr "Indefinido"
-
-#: host.php:1715 include/global_settings.php:618 lib/html.php:2414
-#: lib/html_reports.php:1151
-msgid "Site"
-msgstr "Sitio"
-
-#: host.php:1812
-msgid "Export Devices"
-msgstr "Exportar dispositivos"
-
-#: host.php:1833 lib/api_automation.php:29
-msgid "Not Up"
-msgstr "No esta arriba"
-
-#: host.php:1836 lib/api_automation.php:32 lib/html.php:65
-#: lib/html_utility.php:1330 pollers.php:34
-msgid "Recovering"
-msgstr "Recuperando"
-
-#: host.php:1837 lib/api_automation.php:33 lib/auth.php:3007
-#: lib/clog_webapi.php:856 lib/html_utility.php:1339 lib/import.php:342
-#: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4196 lib/rrd.php:4208
-#: lib/spikekill.php:301 package_import.php:522 package_import.php:600
-#: utilities.php:211 utilities.php:212 utilities.php:2759
-msgid "Unknown"
-msgstr "Desconocido"
-
-#: host.php:1916 lib/api_automation.php:570 tree.php:987 utilities.php:2277
-msgid "Device Description"
-msgstr "Descripción de dispositivos"
-
-#: host.php:1919
-msgid "The name by which this Device will be referred to."
-msgstr "El nombre por el cual se hará referencia a este dispositivo."
-
-#: host.php:1922 include/global_form.php:1176 include/global_form.php:1747
-#: lib/api_automation.php:279 lib/api_automation.php:571
-#: lib/api_automation.php:890 lib/api_automation.php:1197 managers.php:217
-#: pollers.php:115 pollers.php:1001 user_admin.php:1073
-#: user_group_admin.php:1087
-msgid "Hostname"
-msgstr "Nombre de equipo"
-
-#: host.php:1925
-msgid "Either an IP address, or hostname.  If a hostname, it must be resolvable by either DNS, or from your hosts file."
-msgstr "Ingrese una dirección IP o nombre de equipo. Si es nombre de equipo, debe ser posible resolverlo ya sea por DNS o por tu archivo de hosts."
-
-#: host.php:1931
-msgid "The internal database ID for this Device.  Useful when performing automation or debugging."
-msgstr "El ID interno de base de datos para este dispositivo. Util cuando se realiza automatización o depuración."
-
-#: host.php:1937
-msgid "The total number of Graphs generated from this Device."
-msgstr "La cantidad de gráficos generados a partir de este dispositivo."
-
-#: host.php:1943
-msgid "The total number of Data Sources generated from this Device."
-msgstr "La cantidad total de Data Sources generados para este dispositivo."
-
-#: host.php:1949
-msgid "The monitoring status of the Device based upon ping results.  If this Device is a special type Device, by using the hostname \"localhost\", or due to the setting to not perform an Availability Check, it will always remain Up.  When using cmd.php data collector, a Device with no Graphs, is not pinged by the data collector and will remain in an \"Unknown\" state."
-msgstr "El estado de monitoreo del dispositivo basado en los resultados de ping. Si este dispositivo es un tipo de dispositivo especial, usando el nombre de equipo \"localhost\", o debido a la configuración de no realizar controles de disponibilidad, siempre estará arriba. Cuando se use el recolector de datos cmd.php, un dispositivo sin gráficos, el recolector de datos no le hará ping por lo que permanecerá en estado \"desconocido\"."
-
-#: host.php:1952
-msgid "In State"
-msgstr "Hace"
-
-#: host.php:1955
-msgid "The amount of time that this Device has been in its current state."
-msgstr "El tiempo que este dispositivo ha estado en su estado actual."
-
-#: host.php:1961
-msgid "The current amount of time that the host has been up."
-msgstr "El tiempo que el equipo ha estado arriba."
-
-#: host.php:1964
-msgid "Poll Time"
-msgstr "Hora de sondeo"
-
-#: host.php:1967
-msgid "The amount of time it takes to collect data from this Device."
-msgstr "El tiempo que lleva recolectar datos de este dispositivo."
-
-#: host.php:1970
-msgid "Current (ms)"
-msgstr "Tiempo actual (ms)"
-
-#: host.php:1973
-msgid "The current ping time in milliseconds to reach the Device."
-msgstr "El tiempo de respuesta actual de ping en milisegundos para alcanzar el dispositivo."
-
-#: host.php:1976
-msgid "Average (ms)"
-msgstr "Promedio (ms)"
-
-#: host.php:1979
-msgid "The average ping time in milliseconds to reach the Device since the counters were cleared for this Device."
-msgstr "El tiempo promedio de ping en milisegundos para alcanzar el dispositivo desde que los contadores para este dispositivo fueron reseteados."
-
-#: host.php:1982
-msgid "Availability"
-msgstr "Disponibilidad"
-
-#: host.php:1985
-msgid "The availability percentage based upon ping results since the counters were cleared for this Device."
-msgstr "El porcentaje de disponibilidad basado en los resultados de ping desde que los contadores para este dispositivo fueron reseteados."
-
 #: host_templates.php:22
 msgid "Sync Devices"
 msgstr "Sincronizar dispositivos"
@@ -5754,13 +5324,29 @@ msgstr "Plantillas de dispositivos [nuevo]"
 msgid "Default Submit Button"
 msgstr "Botón enviar predeterminado"
 
+#: host_templates.php:493
+msgid "No associated graph templates."
+msgstr "No hay plantillas de gráficos asociada."
+
+#: host_templates.php:502
+msgid "Add Graph Template"
+msgstr "Agregar plantilla de gráfico"
+
 #: host_templates.php:515
 msgid "Add Graph Template to Device Template"
 msgstr "Agregar plantilla de gráfico a plantilla de dispositivo"
 
+#: host_templates.php:525
+msgid "Associated Data Queries"
+msgstr "Consultas de datos de asociadas"
+
 #: host_templates.php:550
 msgid "No associated data queries."
 msgstr "No hay consultas de datos asociadas."
+
+#: host_templates.php:559
+msgid "Add Data Query"
+msgstr "Agregar consulta de datos"
 
 #: host_templates.php:569
 msgid "Add Data Query to Device Template"
@@ -5771,7 +5357,7 @@ msgid "Delete Item from Device Template"
 msgstr "Eliminar Plantilla(s) de dispositivo(s)"
 
 #: host_templates.php:703 host_templates.php:801 host_templates.php:968
-#: include/global_arrays.php:1238 include/global_arrays.php:2272
+#: include/global_arrays.php:1238 include/global_arrays.php:2274
 msgid "Device Templates"
 msgstr "Plantilla de dispositivos"
 
@@ -5841,11 +5427,11 @@ msgstr "FATAL: Debes iniciar sesión para acceder a esta área de Kadupul."
 msgid "Login Again"
 msgstr "Volver a Ingresar"
 
-#: include/auth.php:317 lib/functions.php:8156 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8163 permission_denied.php:38
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Si crees que este es un error. Por favor contacta a tu Administrador de Kadupul."
 
-#: include/auth.php:317 lib/functions.php:8156 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8163 permission_denied.php:38
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "No estás autorizado a acceder esta sección de Kadupul."
 
@@ -6419,9 +6005,29 @@ msgstr "Archivo de log y Syslog/Eventlog"
 msgid "Syslog/Eventlog Only"
 msgstr "Syslog/Eventlog solamente"
 
+#: include/global_arrays.php:674
+msgid "Ping and SNMP Uptime"
+msgstr "Uptime Ping y SNMP"
+
+#: include/global_arrays.php:675
+msgid "Ping or SNMP Uptime"
+msgstr "Uptime Ping o SNMP"
+
+#: include/global_arrays.php:676
+msgid "SNMP Uptime"
+msgstr "Uptime SNMP"
+
+#: include/global_arrays.php:677
+msgid "SNMP Desc"
+msgstr "Desc SNMP"
+
 #: include/global_arrays.php:678
 msgid "SNMP getNext"
 msgstr "SNMP getNext"
+
+#: include/global_arrays.php:679
+msgid "Ping"
+msgstr "Ping"
 
 #: include/global_arrays.php:683
 msgid "ICMP Ping"
@@ -6497,9 +6103,9 @@ msgstr "Cada hora"
 #: include/global_arrays.php:739 include/global_arrays.php:740
 #: include/global_arrays.php:811 include/global_arrays.php:812
 #: include/global_arrays.php:813 include/global_arrays.php:814
-#: include/global_arrays.php:1867 include/global_arrays.php:1868
 #: include/global_arrays.php:1869 include/global_arrays.php:1870
-#: include/global_arrays.php:1871 include/global_settings.php:2551
+#: include/global_arrays.php:1871 include/global_arrays.php:1872
+#: include/global_arrays.php:1873 include/global_settings.php:2551
 #: include/global_settings.php:2552
 #, php-format
 msgid "Every %d Hours"
@@ -6515,7 +6121,7 @@ msgstr "Cada %d día"
 msgid "%0.1f Minutes"
 msgstr "%0.1f minutos"
 
-#: include/global_arrays.php:786 include/global_arrays.php:1470
+#: include/global_arrays.php:786 include/global_arrays.php:1472
 #: include/global_settings.php:1635 rrdcleaner.php:541
 #, php-format
 msgid "%d Year"
@@ -6628,7 +6234,7 @@ msgid "Header"
 msgstr "Encabezado"
 
 #: include/global_arrays.php:953 include/global_arrays.php:1004
-#: include/global_arrays.php:1687 include/global_arrays.php:1856
+#: include/global_arrays.php:1689 include/global_arrays.php:1858
 #: lib/html.php:2845
 msgid "Graph"
 msgstr "Gráfico"
@@ -6727,16 +6333,16 @@ msgid "Data Collection"
 msgstr "Recolección de datos"
 
 #: include/global_arrays.php:998 include/global_arrays.php:1049
-#: include/global_arrays.php:2200 pollers.php:860
+#: include/global_arrays.php:2202 pollers.php:860
 msgid "Data Collectors"
 msgstr "Recolectores de datos"
 
 #: include/global_arrays.php:1000 include/global_arrays.php:1225
-#: include/global_arrays.php:2362
+#: include/global_arrays.php:2364
 msgid "Data Input Methods"
 msgstr "Entrada de datos"
 
-#: include/global_arrays.php:1006 include/global_arrays.php:2893
+#: include/global_arrays.php:1006 include/global_arrays.php:2895
 msgid "Aggregate"
 msgstr "Aggregate"
 
@@ -6763,11 +6369,11 @@ msgstr "Valores predefinidos"
 msgid "Data Profiles"
 msgstr "Perfiles de datos"
 
-#: include/global_arrays.php:1020 include/global_arrays.php:2524
+#: include/global_arrays.php:1020 include/global_arrays.php:2526
 msgid "VDEFs"
 msgstr "VDEFs"
 
-#: include/global_arrays.php:1021 include/global_arrays.php:2224
+#: include/global_arrays.php:1021 include/global_arrays.php:2226
 msgid "Colors"
 msgstr "Colores"
 
@@ -6776,16 +6382,16 @@ msgid "Import/Export"
 msgstr "Importar/Exportar"
 
 #: include/global_arrays.php:1025 include/global_arrays.php:1241
-#: include/global_arrays.php:2650
+#: include/global_arrays.php:2652
 msgid "Import Templates"
 msgstr "Importar Plantillas"
 
-#: include/global_arrays.php:1026 include/global_arrays.php:2656
+#: include/global_arrays.php:1026 include/global_arrays.php:2658
 msgid "Import Packages"
 msgstr "Importar Plantillas"
 
 #: include/global_arrays.php:1027 include/global_arrays.php:1240
-#: include/global_arrays.php:2638 templates_export.php:142
+#: include/global_arrays.php:2640 templates_export.php:142
 msgid "Export Templates"
 msgstr "Exportar Plantillas"
 
@@ -6799,23 +6405,23 @@ msgstr "Configuración"
 msgid "Settings"
 msgstr "Opciones"
 
-#: include/global_arrays.php:1031 include/global_arrays.php:2578
+#: include/global_arrays.php:1031 include/global_arrays.php:2580
 #: user_admin.php:2131 user_admin.php:2236 user_group_admin.php:725
 #: user_group_admin.php:2164
 msgid "Users"
 msgstr "Usuarios"
 
-#: include/global_arrays.php:1032 include/global_arrays.php:2608
+#: include/global_arrays.php:1032 include/global_arrays.php:2610
 msgid "User Groups"
 msgstr "Grupos de Usuarios"
 
-#: include/global_arrays.php:1033 include/global_arrays.php:2596
+#: include/global_arrays.php:1033 include/global_arrays.php:2598
 #: user_domains.php:634 user_domains.php:728
 msgid "User Domains"
 msgstr "Dominios de Usuarios"
 
 #: include/global_arrays.php:1035 include/global_arrays.php:1054
-#: include/global_arrays.php:1071 include/global_arrays.php:2452
+#: include/global_arrays.php:1071 include/global_arrays.php:2454
 msgid "Utilities"
 msgstr "Utilidades"
 
@@ -6825,7 +6431,7 @@ msgstr "Utilitarios de sistema"
 
 #: include/global_arrays.php:1037 include/global_arrays.php:1072
 #: include/global_arrays.php:1115 include/global_arrays.php:1218
-#: include/global_arrays.php:2212 user_admin.php:1497 user_group_admin.php:1511
+#: include/global_arrays.php:2214 user_admin.php:1497 user_group_admin.php:1511
 msgid "External Links"
 msgstr "Vínculos externos"
 
@@ -7019,259 +6625,259 @@ msgstr "Administración General"
 msgid "System Administration"
 msgstr "Administración del sistema"
 
-#: include/global_arrays.php:1353 lib/html.php:1408
+#: include/global_arrays.php:1355 lib/html.php:1408
 msgid "CDEF"
 msgstr "CDEF"
 
-#: include/global_arrays.php:1354
+#: include/global_arrays.php:1356
 msgid "CDEF Item"
 msgstr "Item CDEF"
 
-#: include/global_arrays.php:1355
+#: include/global_arrays.php:1357
 msgid "GPRINT Preset"
 msgstr "GPRINT preestablecido"
 
-#: include/global_arrays.php:1358
+#: include/global_arrays.php:1360
 msgid "Data Input Field"
 msgstr "Campo de entrada de datos"
 
-#: include/global_arrays.php:1359 include/global_form.php:579
+#: include/global_arrays.php:1361 include/global_form.php:579
 #: include/global_form.php:1679 package_import.php:862
 msgid "Data Source Profile"
 msgstr "Perfil de Data Source"
 
-#: include/global_arrays.php:1360
+#: include/global_arrays.php:1362
 msgid "Data Template Item"
 msgstr "Item de Plantilla de datos"
 
-#: include/global_arrays.php:1362
+#: include/global_arrays.php:1364
 msgid "Graph Template Item"
 msgstr "Item de Plantilla de gráficos"
 
-#: include/global_arrays.php:1363
+#: include/global_arrays.php:1365
 msgid "Graph Template Input"
 msgstr "Entrada de Plantilla de gráficos"
 
-#: include/global_arrays.php:1366 lib/html.php:1409
+#: include/global_arrays.php:1368 lib/html.php:1409
 msgid "VDEF"
 msgstr "VDEF"
 
-#: include/global_arrays.php:1367
+#: include/global_arrays.php:1369
 msgid "VDEF Item"
 msgstr "Item VDEF"
 
-#: include/global_arrays.php:1421
+#: include/global_arrays.php:1423
 msgid "Last Half Hour"
 msgstr "Ultima media hora"
 
-#: include/global_arrays.php:1422
+#: include/global_arrays.php:1424
 msgid "Last Hour"
 msgstr "Ultima hora"
 
-#: include/global_arrays.php:1423 include/global_arrays.php:1424
 #: include/global_arrays.php:1425 include/global_arrays.php:1426
+#: include/global_arrays.php:1427 include/global_arrays.php:1428
 #, php-format
 msgid "Last %d Hours"
 msgstr "Ultimas %d horas"
 
-#: include/global_arrays.php:1427
+#: include/global_arrays.php:1429
 msgid "Last Day"
 msgstr "El último día"
 
-#: include/global_arrays.php:1428 include/global_arrays.php:1429
-#: include/global_arrays.php:1430
+#: include/global_arrays.php:1430 include/global_arrays.php:1431
+#: include/global_arrays.php:1432
 #, php-format
 msgid "Last %d Days"
 msgstr "Ultimos %d dias"
 
-#: include/global_arrays.php:1431
+#: include/global_arrays.php:1433
 msgid "Last Week"
 msgstr "La última semana"
 
-#: include/global_arrays.php:1432
+#: include/global_arrays.php:1434
 #, php-format
 msgid "Last %d Weeks"
 msgstr "Ultimas %d semanas"
 
-#: include/global_arrays.php:1433
+#: include/global_arrays.php:1435
 msgid "Last Month"
 msgstr "Ultimo mes"
 
-#: include/global_arrays.php:1434 include/global_arrays.php:1435
 #: include/global_arrays.php:1436 include/global_arrays.php:1437
+#: include/global_arrays.php:1438 include/global_arrays.php:1439
 #, php-format
 msgid "Last %d Months"
 msgstr "Ultimos %d meses"
 
-#: include/global_arrays.php:1438
+#: include/global_arrays.php:1440
 msgid "Last Year"
 msgstr "Ultimo año"
 
-#: include/global_arrays.php:1439
+#: include/global_arrays.php:1441
 #, php-format
 msgid "Last %d Years"
 msgstr "Ultimos %d años"
 
-#: include/global_arrays.php:1440
+#: include/global_arrays.php:1442
 msgid "Day Shift"
 msgstr "Jornada diurna"
 
-#: include/global_arrays.php:1441
+#: include/global_arrays.php:1443
 msgid "This Day"
 msgstr "Este día"
 
-#: include/global_arrays.php:1442
+#: include/global_arrays.php:1444
 msgid "This Week"
 msgstr "Esta semana"
 
-#: include/global_arrays.php:1443
+#: include/global_arrays.php:1445
 msgid "This Month"
 msgstr "Este mes"
 
-#: include/global_arrays.php:1444
+#: include/global_arrays.php:1446
 msgid "This Year"
 msgstr "Este año"
 
-#: include/global_arrays.php:1445
+#: include/global_arrays.php:1447
 msgid "Previous Day"
 msgstr "Día anterior"
 
-#: include/global_arrays.php:1446
+#: include/global_arrays.php:1448
 msgid "Previous Week"
 msgstr "Semana anterior"
 
-#: include/global_arrays.php:1447
+#: include/global_arrays.php:1449
 msgid "Previous Month"
 msgstr "Mes anterior"
 
-#: include/global_arrays.php:1448
+#: include/global_arrays.php:1450
 msgid "Previous Year"
 msgstr "Año anterior"
 
-#: include/global_arrays.php:1453
+#: include/global_arrays.php:1455
 #, php-format
 msgid "%d Min"
 msgstr "Min %d"
 
-#: include/global_arrays.php:1508
+#: include/global_arrays.php:1510
 msgid "Month Number, Day, Year"
 msgstr "Número de mes, día, año"
 
-#: include/global_arrays.php:1509
+#: include/global_arrays.php:1511
 msgid "Month Name, Day, Year"
 msgstr "Nombre del mes, día, año"
 
-#: include/global_arrays.php:1510
+#: include/global_arrays.php:1512
 msgid "Day, Month Number, Year"
 msgstr "Día, número del mes, año"
 
-#: include/global_arrays.php:1511
+#: include/global_arrays.php:1513
 msgid "Day, Month Name, Year"
 msgstr "Día, nombre del mes, año"
 
-#: include/global_arrays.php:1512
+#: include/global_arrays.php:1514
 msgid "Year, Month Number, Day"
 msgstr "Año, número del mes, día"
 
-#: include/global_arrays.php:1513
+#: include/global_arrays.php:1515
 msgid "Year, Month Name, Day"
 msgstr "Año, nombre del mes, día"
 
-#: include/global_arrays.php:1523 include/global_arrays.php:1554
+#: include/global_arrays.php:1525 include/global_arrays.php:1556
 msgid "After Boost"
 msgstr "Después de Boost"
 
-#: include/global_arrays.php:1533 include/global_arrays.php:1534
 #: include/global_arrays.php:1535 include/global_arrays.php:1536
-#: include/global_arrays.php:1537 include/global_arrays.php:1599
-#: include/global_arrays.php:1600
+#: include/global_arrays.php:1537 include/global_arrays.php:1538
+#: include/global_arrays.php:1539 include/global_arrays.php:1601
+#: include/global_arrays.php:1602
 #, php-format
 msgid "%d MBytes"
 msgstr "%d MBytes"
 
-#: include/global_arrays.php:1538
+#: include/global_arrays.php:1540
 msgid "1 GByte"
 msgstr "1 GByte"
 
-#: include/global_arrays.php:1539 include/global_arrays.php:1602
+#: include/global_arrays.php:1541 include/global_arrays.php:1604
 #: lib/boost.php:124
 #, php-format
 msgid "%s GBytes"
 msgstr "%s GBytes"
 
-#: include/global_arrays.php:1540 include/global_arrays.php:1541
-#: include/global_arrays.php:1603 include/global_arrays.php:1604
+#: include/global_arrays.php:1542 include/global_arrays.php:1543
 #: include/global_arrays.php:1605 include/global_arrays.php:1606
 #: include/global_arrays.php:1607 include/global_arrays.php:1608
+#: include/global_arrays.php:1609 include/global_arrays.php:1610
 #, php-format
 msgid "%d GBytes"
 msgstr "%d GBytes"
 
-#: include/global_arrays.php:1561
+#: include/global_arrays.php:1563
 msgid "2,000 Data Source Items"
 msgstr "2,000 Items de Data Source"
 
-#: include/global_arrays.php:1562
+#: include/global_arrays.php:1564
 msgid "5,000 Data Source Items"
 msgstr "5,000 Items de Data Source"
 
-#: include/global_arrays.php:1563
+#: include/global_arrays.php:1565
 msgid "10,000 Data Source Items"
 msgstr "10,000 Items de Data Source"
 
-#: include/global_arrays.php:1564
+#: include/global_arrays.php:1566
 msgid "15,000 Data Source Items"
 msgstr "15,000 Items de Data Source"
 
-#: include/global_arrays.php:1565
+#: include/global_arrays.php:1567
 msgid "25,000 Data Source Items"
 msgstr "25,000 Items de Data Source"
 
-#: include/global_arrays.php:1566
+#: include/global_arrays.php:1568
 msgid "50,000 Data Source Items (Default)"
 msgstr "50,000 Items de Data Source (predeterminado)"
 
-#: include/global_arrays.php:1567
+#: include/global_arrays.php:1569
 msgid "100,000 Data Source Items"
 msgstr "100,000 Items de Data Source"
 
-#: include/global_arrays.php:1568
+#: include/global_arrays.php:1570
 msgid "200,000 Data Source Items"
 msgstr "200,000 Items de Data Source"
 
-#: include/global_arrays.php:1569
+#: include/global_arrays.php:1571
 msgid "400,000 Data Source Items"
 msgstr "400,000 Items de Data Source"
 
-#: include/global_arrays.php:1586
+#: include/global_arrays.php:1588
 msgid "2 Hours"
 msgstr "2 horas"
 
-#: include/global_arrays.php:1587
+#: include/global_arrays.php:1589
 msgid "4 Hours"
 msgstr "4 horas"
 
-#: include/global_arrays.php:1588
+#: include/global_arrays.php:1590
 msgid "6 Hours"
 msgstr "6 horas"
 
-#: include/global_arrays.php:1595 include/global_settings.php:1489
+#: include/global_arrays.php:1597 include/global_settings.php:1489
 #: include/global_settings.php:1490 include/global_settings.php:1491
 #, php-format
 msgid "%s Hours"
 msgstr "%s horas"
 
-#: include/global_arrays.php:1601
+#: include/global_arrays.php:1603
 #, php-format
 msgid "%d GByte"
 msgstr "%d GBytes"
 
-#: include/global_arrays.php:1609 utilities.php:2856 utilities.php:2857
+#: include/global_arrays.php:1611 utilities.php:2856 utilities.php:2857
 #: utilities.php:2906
 msgid "Unlimited"
 msgstr "Ilimitado"
 
-#: include/global_arrays.php:1616 include/global_settings.php:1388
+#: include/global_arrays.php:1618 include/global_settings.php:1388
 #: include/global_settings.php:1389 include/global_settings.php:1390
 #: include/global_settings.php:1391 include/global_settings.php:1401
 #: include/global_settings.php:1402 include/global_settings.php:1403
@@ -7287,739 +6893,757 @@ msgstr "Ilimitado"
 msgid "%s Minutes"
 msgstr "%s minutos"
 
-#: include/global_arrays.php:1638
+#: include/global_arrays.php:1640
 msgid "1 Megabyte"
 msgstr "1 Megabyte"
 
-#: include/global_arrays.php:1639 include/global_arrays.php:1640
 #: include/global_arrays.php:1641 include/global_arrays.php:1642
 #: include/global_arrays.php:1643 include/global_arrays.php:1644
+#: include/global_arrays.php:1645 include/global_arrays.php:1646
 #, php-format
 msgid "%d Megabytes"
 msgstr "%d Megabytes"
 
-#: include/global_arrays.php:1648
+#: include/global_arrays.php:1650
 msgid "Send Now"
 msgstr "Enviar ahora"
 
-#: include/global_arrays.php:1656
+#: include/global_arrays.php:1658
 msgid "Take Ownership"
 msgstr "Tomar posesión"
 
-#: include/global_arrays.php:1660
+#: include/global_arrays.php:1662
 msgid "Inline PNG Image"
 msgstr "Imagen PNG en línea"
 
-#: include/global_arrays.php:1665
+#: include/global_arrays.php:1667
 msgid "Inline JPEG Image"
 msgstr "Imagen JPEG en línea"
 
-#: include/global_arrays.php:1666
+#: include/global_arrays.php:1668
 msgid "Inline GIF Image"
 msgstr "Imagen GIF en línea"
 
-#: include/global_arrays.php:1669
+#: include/global_arrays.php:1671
 msgid "Attached PNG Image"
 msgstr "Imagen PNG adjunta"
 
-#: include/global_arrays.php:1672
+#: include/global_arrays.php:1674
 msgid "Attached JPEG Image"
 msgstr "Imagen JPEG adjunta"
 
-#: include/global_arrays.php:1673
+#: include/global_arrays.php:1675
 msgid "Attached GIF Image"
 msgstr "Imagen GIF adjunta"
 
-#: include/global_arrays.php:1677
+#: include/global_arrays.php:1679
 msgid "Inline PNG Image, LN Style"
 msgstr "Estilo LN, imagen PNG en línea"
 
-#: include/global_arrays.php:1679
+#: include/global_arrays.php:1681
 msgid "Inline JPEG Image, LN Style"
 msgstr "Estilo LN, imagen JPEG en línea"
 
-#: include/global_arrays.php:1680
+#: include/global_arrays.php:1682
 msgid "Inline GIF Image, LN Style"
 msgstr "Estilo LN, imagen GIF en línea"
 
-#: include/global_arrays.php:1685
+#: include/global_arrays.php:1687
 msgid "Text"
 msgstr "Texto"
 
-#: include/global_arrays.php:1686 include/global_form.php:2252
+#: include/global_arrays.php:1688 include/global_form.php:2252
 msgid "Tree"
 msgstr "Arbol"
 
-#: include/global_arrays.php:1689
+#: include/global_arrays.php:1691
 msgid "Horizontal Rule"
 msgstr "Regla horizontal"
 
-#: include/global_arrays.php:1693
+#: include/global_arrays.php:1695
 msgid "left"
 msgstr "izquierda"
 
-#: include/global_arrays.php:1694
+#: include/global_arrays.php:1696
 msgid "center"
 msgstr "centro"
 
-#: include/global_arrays.php:1695
+#: include/global_arrays.php:1697
 msgid "right"
 msgstr "derecha"
 
-#: include/global_arrays.php:1699
+#: include/global_arrays.php:1701
 msgid "Minute(s)"
 msgstr "Minuto(s)"
 
-#: include/global_arrays.php:1700
+#: include/global_arrays.php:1702
 msgid "Hour(s)"
 msgstr "Hora(s)"
 
-#: include/global_arrays.php:1701
+#: include/global_arrays.php:1703
 msgid "Day(s)"
 msgstr "Dia(s)"
 
-#: include/global_arrays.php:1702
+#: include/global_arrays.php:1704
 msgid "Week(s)"
 msgstr "Semana(s)"
 
-#: include/global_arrays.php:1703
+#: include/global_arrays.php:1705
 msgid "Month(s), Day of Month"
 msgstr "Mes(es), Día del Mes"
 
-#: include/global_arrays.php:1704
+#: include/global_arrays.php:1706
 msgid "Month(s), Day of Week"
 msgstr "Mes(es), Día de la semana"
 
-#: include/global_arrays.php:1705
+#: include/global_arrays.php:1707
 msgid "Year(s)"
 msgstr "Año(s)"
 
-#: include/global_arrays.php:1709
+#: include/global_arrays.php:1711
 msgid "Keep Graph Types"
 msgstr "Conservar tipos de gráficos"
 
-#: include/global_arrays.php:1710
+#: include/global_arrays.php:1712
 msgid "Keep Type and STACK"
 msgstr "Conservar Tipo y STACK"
 
-#: include/global_arrays.php:1711
+#: include/global_arrays.php:1713
 msgid "Convert to AREA/STACK Graph"
 msgstr "Convertir a gráfico de AREA/STACK"
 
-#: include/global_arrays.php:1712
+#: include/global_arrays.php:1714
 msgid "Convert to LINE1 Graph"
 msgstr "Convertir a gráfico de LINEA1"
 
-#: include/global_arrays.php:1713
+#: include/global_arrays.php:1715
 msgid "Convert to LINE2 Graph"
 msgstr "Convertir a gráfico de LINEA2"
 
-#: include/global_arrays.php:1714
+#: include/global_arrays.php:1716
 msgid "Convert to LINE3 Graph"
 msgstr "Convertir a gráfico de LINEA3"
 
-#: include/global_arrays.php:1715
+#: include/global_arrays.php:1717
 msgid "Convert to LINE1/STACK Graph"
 msgstr "Convertir a gráfico de LINEA1"
 
-#: include/global_arrays.php:1716
+#: include/global_arrays.php:1718
 msgid "Convert to LINE2/STACK Graph"
 msgstr "Convertir a gráfico de LINEA2"
 
-#: include/global_arrays.php:1717
+#: include/global_arrays.php:1719
 msgid "Convert to LINE3/STACK Graph"
 msgstr "Convertir a gráfico de LINEA3"
 
-#: include/global_arrays.php:1721
+#: include/global_arrays.php:1723
 msgid "No Totals"
 msgstr "Sin totales"
 
-#: include/global_arrays.php:1722
+#: include/global_arrays.php:1724
 msgid "Print All Legend Items"
 msgstr "Imprimir todos los item de Leyenda"
 
-#: include/global_arrays.php:1723
+#: include/global_arrays.php:1725
 msgid "Print Totaling Legend Items Only"
 msgstr "Imprimir items Totales de leyenda solamente"
 
-#: include/global_arrays.php:1727
+#: include/global_arrays.php:1729
 msgid "Total Similar Data Sources"
 msgstr "Total de Data Sources similares"
 
-#: include/global_arrays.php:1728
+#: include/global_arrays.php:1730
 msgid "Total All Data Sources"
 msgstr "Total de todos los Data Sources"
 
-#: include/global_arrays.php:1732
+#: include/global_arrays.php:1734
 msgid "No Reordering"
 msgstr "Sin reordenar"
 
-#: include/global_arrays.php:1733
+#: include/global_arrays.php:1735
 msgid "Data Source, Graph"
 msgstr "Data Source, gráfico"
 
-#: include/global_arrays.php:1734
+#: include/global_arrays.php:1736
 msgid "Graph, Data Source"
 msgstr "Gráfico, Data Source"
 
-#: include/global_arrays.php:1735
+#: include/global_arrays.php:1737
 msgid "Base Graph Order"
 msgstr "Contiene gráficos"
 
-#: include/global_arrays.php:1742
+#: include/global_arrays.php:1744
 msgid "contains"
 msgstr "contiene"
 
-#: include/global_arrays.php:1743
+#: include/global_arrays.php:1745
 msgid "does not contain"
 msgstr "no contiene"
 
-#: include/global_arrays.php:1744
+#: include/global_arrays.php:1746
 msgid "begins with"
 msgstr "comienza con"
 
-#: include/global_arrays.php:1745
+#: include/global_arrays.php:1747
 msgid "does not begin with"
 msgstr "no comienza con"
 
-#: include/global_arrays.php:1746
+#: include/global_arrays.php:1748
 msgid "ends with"
 msgstr "termina con"
 
-#: include/global_arrays.php:1747
+#: include/global_arrays.php:1749
 msgid "does not end with"
 msgstr "no termina con"
 
-#: include/global_arrays.php:1748
+#: include/global_arrays.php:1750
 msgid "matches"
 msgstr "coincidencias"
 
-#: include/global_arrays.php:1749
+#: include/global_arrays.php:1751
 msgid "is not equal to"
 msgstr "no es igual a"
 
-#: include/global_arrays.php:1750
+#: include/global_arrays.php:1752
 msgid "is less than"
 msgstr "es menor que"
 
-#: include/global_arrays.php:1751
+#: include/global_arrays.php:1753
 msgid "is less than or equal"
 msgstr "es menor o igual que"
 
-#: include/global_arrays.php:1752
+#: include/global_arrays.php:1754
 msgid "is greater than"
 msgstr "es mayor que"
 
-#: include/global_arrays.php:1753
+#: include/global_arrays.php:1755
 msgid "is greater than or equal"
 msgstr "es mayor o igual que"
 
-#: include/global_arrays.php:1754
+#: include/global_arrays.php:1756
 msgid "is unknown"
 msgstr "es desconocido"
 
-#: include/global_arrays.php:1755
+#: include/global_arrays.php:1757
 msgid "is not unknown"
 msgstr "no es desconocido"
 
-#: include/global_arrays.php:1756
+#: include/global_arrays.php:1758
 msgid "is empty"
 msgstr "esta vacio"
 
-#: include/global_arrays.php:1757
+#: include/global_arrays.php:1759
 msgid "is not empty"
 msgstr "no está vacío"
 
-#: include/global_arrays.php:1758
+#: include/global_arrays.php:1760
 msgid "matches regular expression"
 msgstr "coincide con expresión regular"
 
-#: include/global_arrays.php:1759
+#: include/global_arrays.php:1761
 msgid "does not match regular expression"
 msgstr "no coincide con expresión regular"
 
-#: include/global_arrays.php:1861
+#: include/global_arrays.php:1863
 msgid "Fixed String"
 msgstr "Cadena de texto fija"
 
-#: include/global_arrays.php:1866
+#: include/global_arrays.php:1868
 msgid "Every 1 Hour"
 msgstr "Cada 1 hora"
 
-#: include/global_arrays.php:1872
+#: include/global_arrays.php:1874
 msgid "Every Day"
 msgstr "Todos los días"
 
-#: include/global_arrays.php:1873
+#: include/global_arrays.php:1875
 msgid "Every Week"
 msgstr "Cada semana"
 
-#: include/global_arrays.php:1874 include/global_arrays.php:1875
+#: include/global_arrays.php:1876 include/global_arrays.php:1877
 #, php-format
 msgid "Every %d Weeks"
 msgstr "Cada %d semanas"
 
-#: include/global_arrays.php:1906
+#: include/global_arrays.php:1908
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jan"
 msgstr "Ene"
 
-#: include/global_arrays.php:1907
+#: include/global_arrays.php:1909
 msgctxt "A short textual representation of a month, three letters"
 msgid "Feb"
 msgstr "Feb"
 
-#: include/global_arrays.php:1908
+#: include/global_arrays.php:1910
 msgctxt "A short textual representation of a month, three letters"
 msgid "Mar"
 msgstr "Mar"
 
-#: include/global_arrays.php:1909
+#: include/global_arrays.php:1911
 msgctxt "A short textual representation of a month, three letters"
 msgid "Apr"
 msgstr "Abr"
 
-#: include/global_arrays.php:1910
+#: include/global_arrays.php:1912
 msgctxt "A short textual representation of a month, three letters"
 msgid "May"
 msgstr "May"
 
-#: include/global_arrays.php:1911
+#: include/global_arrays.php:1913
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jun"
 msgstr "Jun"
 
-#: include/global_arrays.php:1912
+#: include/global_arrays.php:1914
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jul"
 msgstr "Jul"
 
-#: include/global_arrays.php:1913
+#: include/global_arrays.php:1915
 msgctxt "A short textual representation of a month, three letters"
 msgid "Aug"
 msgstr "Ago"
 
-#: include/global_arrays.php:1914
+#: include/global_arrays.php:1916
 msgctxt "A short textual representation of a month, three letters"
 msgid "Sep"
 msgstr "Sep"
 
-#: include/global_arrays.php:1915
+#: include/global_arrays.php:1917
 msgctxt "A short textual representation of a month, three letters"
 msgid "Oct"
 msgstr "Oct"
 
-#: include/global_arrays.php:1916
+#: include/global_arrays.php:1918
 msgctxt "A short textual representation of a month, three letters"
 msgid "Nov"
 msgstr "Nov"
 
-#: include/global_arrays.php:1917
+#: include/global_arrays.php:1919
 msgctxt "A short textual representation of a month, three letters"
 msgid "Dec"
 msgstr "Dic"
 
-#: include/global_arrays.php:1921
+#: include/global_arrays.php:1923
 msgid "Use the First Handler Found"
 msgstr "Utilice el controlador PHP GetText"
 
-#: include/global_arrays.php:1925
+#: include/global_arrays.php:1927
 msgid "Use the PHP GetText Handler"
 msgstr "Utilice el controlador PHP GetText"
 
-#: include/global_arrays.php:1929
+#: include/global_arrays.php:1931
 msgid "Use the Oscarotero GetText Handler"
 msgstr "Utilice el controlador GetText de Oscarotero"
 
-#: include/global_arrays.php:1933
+#: include/global_arrays.php:1935
 msgid "Use the MonoTranslator GetText Handler"
 msgstr "Utilice el controlador GetText de MonoTranslator"
 
-#: include/global_arrays.php:1947
+#: include/global_arrays.php:1949
 msgctxt "A textual representation of a day, three letters"
 msgid "Sun"
 msgstr "Dom"
 
-#: include/global_arrays.php:1948
+#: include/global_arrays.php:1950
 msgctxt "A textual representation of a day, three letters"
 msgid "Mon"
 msgstr "Lun"
 
-#: include/global_arrays.php:1949
+#: include/global_arrays.php:1951
 msgctxt "A textual representation of a day, three letters"
 msgid "Tue"
 msgstr "Mar"
 
-#: include/global_arrays.php:1950
+#: include/global_arrays.php:1952
 msgctxt "A textual representation of a day, three letters"
 msgid "Wed"
 msgstr "Mie"
 
-#: include/global_arrays.php:1951
+#: include/global_arrays.php:1953
 msgctxt "A textual representation of a day, three letters"
 msgid "Thu"
 msgstr "Jue"
 
-#: include/global_arrays.php:1952
+#: include/global_arrays.php:1954
 msgctxt "A textual representation of a day, three letters"
 msgid "Fri"
 msgstr "Vie"
 
-#: include/global_arrays.php:1953
+#: include/global_arrays.php:1955
 msgctxt "A textual representation of a day, three letters"
 msgid "Sat"
 msgstr "Sab"
 
-#: include/global_arrays.php:1957
+#: include/global_arrays.php:1959
 msgid "Arabic"
 msgstr "Árabe"
 
-#: include/global_arrays.php:1958
+#: include/global_arrays.php:1960
 msgid "Bulgarian"
 msgstr "Búlgaro"
 
-#: include/global_arrays.php:1959
+#: include/global_arrays.php:1961
 msgid "Chinese (China)"
 msgstr "Chino (China)"
 
-#: include/global_arrays.php:1960
+#: include/global_arrays.php:1962
 msgid "Chinese (Taiwan)"
 msgstr "Chino (Taiwán)"
 
-#: include/global_arrays.php:1961
+#: include/global_arrays.php:1963
 msgid "Dutch"
 msgstr "Holandés"
 
-#: include/global_arrays.php:1962
+#: include/global_arrays.php:1964
 msgid "English"
 msgstr "Inglés"
 
-#: include/global_arrays.php:1963
+#: include/global_arrays.php:1965
 msgid "French"
 msgstr "Francés"
 
-#: include/global_arrays.php:1964
+#: include/global_arrays.php:1966
 msgid "German"
 msgstr "Alemán"
 
-#: include/global_arrays.php:1965
+#: include/global_arrays.php:1967
 msgid "Greek"
 msgstr "Griego"
 
-#: include/global_arrays.php:1966
+#: include/global_arrays.php:1968
 msgid "Hebrew"
 msgstr "Hebreo"
 
-#: include/global_arrays.php:1967
+#: include/global_arrays.php:1969
 msgid "Hindi"
 msgstr "Hindi"
 
-#: include/global_arrays.php:1968
+#: include/global_arrays.php:1970
 msgid "Italian"
 msgstr "Italiano"
 
-#: include/global_arrays.php:1969
+#: include/global_arrays.php:1971
 msgid "Japanese"
 msgstr "Japonés"
 
-#: include/global_arrays.php:1970
+#: include/global_arrays.php:1972
 msgid "Korean"
 msgstr "Koreano"
 
-#: include/global_arrays.php:1971
+#: include/global_arrays.php:1973
 msgid "Polish"
 msgstr "Polaco"
 
-#: include/global_arrays.php:1972
+#: include/global_arrays.php:1974
 msgid "Portuguese"
 msgstr "Portugués"
 
-#: include/global_arrays.php:1973
+#: include/global_arrays.php:1975
 msgid "Portuguese (Brazil)"
 msgstr "Português (Brasil)"
 
-#: include/global_arrays.php:1974
+#: include/global_arrays.php:1976
 msgid "Russian"
 msgstr "Federación Rusa"
 
-#: include/global_arrays.php:1975
+#: include/global_arrays.php:1977
 msgid "Spanish"
 msgstr "Español"
 
-#: include/global_arrays.php:1976
+#: include/global_arrays.php:1978
 msgid "Swedish"
 msgstr "Corona sueca"
 
-#: include/global_arrays.php:1977
+#: include/global_arrays.php:1979
 msgid "Turkish"
 msgstr "Turco"
 
-#: include/global_arrays.php:1978
+#: include/global_arrays.php:1980
 msgid "Vietnamese"
 msgstr "Vietnamita"
 
-#: include/global_arrays.php:1982
+#: include/global_arrays.php:1984
 msgid "Classic"
 msgstr "Clásico"
 
-#: include/global_arrays.php:1983
+#: include/global_arrays.php:1985
 msgid "Modern"
 msgstr "Moderno"
 
-#: include/global_arrays.php:1984
+#: include/global_arrays.php:1986
 msgid "Dark"
 msgstr "Oscuro"
 
-#: include/global_arrays.php:1985
+#: include/global_arrays.php:1987
 msgid "Paper-plane"
 msgstr "Plano de papel"
 
-#: include/global_arrays.php:1986
+#: include/global_arrays.php:1988
 msgid "Paw"
 msgstr "Huella"
 
-#: include/global_arrays.php:1987
+#: include/global_arrays.php:1989
 msgid "Sunrise"
 msgstr "Amanecer"
 
-#: include/global_arrays.php:1991
+#: include/global_arrays.php:1993
 msgid "[Fail]"
 msgstr "[Fallo]"
 
-#: include/global_arrays.php:1992
+#: include/global_arrays.php:1994
 msgid "[Warning]"
 msgstr "[Advertencia]"
 
-#: include/global_arrays.php:1993
+#: include/global_arrays.php:1995
 msgid "[Restart]"
 msgstr "Restringido"
 
-#: include/global_arrays.php:1994
+#: include/global_arrays.php:1996
 msgid "[Success]"
 msgstr "[OK]"
 
-#: include/global_arrays.php:1995
+#: include/global_arrays.php:1997
 msgid "[Skipped]"
 msgstr "[Omitido]"
 
-#: include/global_arrays.php:2000 include/global_arrays.php:2006
+#: include/global_arrays.php:2002 include/global_arrays.php:2008
 msgid "User Profile (Edit)"
 msgstr "Perfil de Usuario (Editar)"
 
-#: include/global_arrays.php:2018 include/global_arrays.php:2024
+#: include/global_arrays.php:2020 include/global_arrays.php:2026
 msgid "Tree Mode"
 msgstr "Modo árbol"
 
-#: include/global_arrays.php:2030
+#: include/global_arrays.php:2032
 msgid "List Mode"
 msgstr "Modo de lista"
 
-#: include/global_arrays.php:2062 include/global_arrays.php:2068
+#: include/global_arrays.php:2064 include/global_arrays.php:2070
 #: lib/functions.php:4448 lib/html.php:1988 lib/html.php:2053 lib/html.php:2778
 #: user_admin.php:1472 user_group_admin.php:1486
 msgid "Console"
 msgstr "Consola"
 
-#: include/global_arrays.php:2074
+#: include/global_arrays.php:2076
 msgid "Graph Management"
 msgstr "Administración de Gráficos"
 
-#: include/global_arrays.php:2080 include/global_arrays.php:2122
-#: include/global_arrays.php:2140 include/global_arrays.php:2194
-#: include/global_arrays.php:2206 include/global_arrays.php:2218
-#: include/global_arrays.php:2230 include/global_arrays.php:2242
-#: include/global_arrays.php:2278 include/global_arrays.php:2296
-#: include/global_arrays.php:2314 include/global_arrays.php:2332
-#: include/global_arrays.php:2350 include/global_arrays.php:2374
-#: include/global_arrays.php:2410 include/global_arrays.php:2536
-#: include/global_arrays.php:2560 include/global_arrays.php:2584
-#: include/global_arrays.php:2602 include/global_arrays.php:2614
-#: include/global_arrays.php:2728 include/global_arrays.php:2752
-#: include/global_arrays.php:2770 include/global_arrays.php:2788
-#: include/global_arrays.php:2812
+#: include/global_arrays.php:2082 include/global_arrays.php:2124
+#: include/global_arrays.php:2142 include/global_arrays.php:2196
+#: include/global_arrays.php:2208 include/global_arrays.php:2220
+#: include/global_arrays.php:2232 include/global_arrays.php:2244
+#: include/global_arrays.php:2280 include/global_arrays.php:2298
+#: include/global_arrays.php:2316 include/global_arrays.php:2334
+#: include/global_arrays.php:2352 include/global_arrays.php:2376
+#: include/global_arrays.php:2412 include/global_arrays.php:2538
+#: include/global_arrays.php:2562 include/global_arrays.php:2586
+#: include/global_arrays.php:2604 include/global_arrays.php:2616
+#: include/global_arrays.php:2730 include/global_arrays.php:2754
+#: include/global_arrays.php:2772 include/global_arrays.php:2790
+#: include/global_arrays.php:2814
 msgid "(Edit)"
 msgstr "(Editar)"
 
-#: include/global_arrays.php:2098 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2094 include/global_arrays.php:2160
+#: include/global_arrays.php:2250 include/global_arrays.php:2286
+#: include/global_arrays.php:2304 include/global_arrays.php:2322
+#: include/global_arrays.php:2340 include/global_arrays.php:2370
+#: include/global_arrays.php:2406 include/global_arrays.php:2436
+#: include/global_arrays.php:2532 include/global_arrays.php:2736
+#: include/global_arrays.php:2760 include/global_arrays.php:2778
+#: include/global_arrays.php:2796 include/global_arrays.php:2820
+#: lib/api_automation.php:1289 lib/api_automation.php:1352
+#: lib/api_automation.php:1422 lib/html_reports.php:1792 plugins.php:605
+msgid "Actions"
+msgstr "Acciones"
+
+#: include/global_arrays.php:2100 lib/api_aggregate.php:2333
 msgid "Graph Items"
 msgstr "Elementos de Gráficos"
 
-#: include/global_arrays.php:2104
+#: include/global_arrays.php:2106
 msgid "Create New Graphs"
 msgstr "Crear nuevos gráficos"
 
-#: include/global_arrays.php:2110
+#: include/global_arrays.php:2112
 msgid "Create Graphs from Data Query"
 msgstr "Crear gráficos desde consulta de datos"
 
-#: include/global_arrays.php:2128 include/global_arrays.php:2146
-#: include/global_arrays.php:2266 include/global_arrays.php:2356
-#: include/global_arrays.php:2380 include/global_arrays.php:2542
+#: include/global_arrays.php:2130 include/global_arrays.php:2148
+#: include/global_arrays.php:2268 include/global_arrays.php:2358
+#: include/global_arrays.php:2382 include/global_arrays.php:2544
 msgid "(Remove)"
 msgstr "(Eliminar)"
 
-#: include/global_arrays.php:2164 include/global_arrays.php:2170
-#: include/global_arrays.php:2176 include/global_arrays.php:2182
-#: include/global_arrays.php:2476
+#: include/global_arrays.php:2166 include/global_arrays.php:2172
+#: include/global_arrays.php:2178 include/global_arrays.php:2184
+#: include/global_arrays.php:2478
 msgid "View Log"
 msgstr "Ver log"
 
-#: include/global_arrays.php:2188
+#: include/global_arrays.php:2190
 msgid "Graph Trees"
 msgstr "Árboles de gráficos"
 
-#: include/global_arrays.php:2254 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2256 lib/api_aggregate.php:2333
 msgid "Graph Template Items"
 msgstr "Items de Plantilla de gráficos"
 
-#: include/global_arrays.php:2344
+#: include/global_arrays.php:2346
 msgid "Round Robin Archives"
 msgstr "Archivos Round Robin"
 
-#: include/global_arrays.php:2386
+#: include/global_arrays.php:2388
 msgid "Data Input Fields"
 msgstr "Campos de entrada de datos"
 
-#: include/global_arrays.php:2392 include/global_arrays.php:2422
+#: include/global_arrays.php:2394 include/global_arrays.php:2424
 msgid "(Remove Item)"
 msgstr "(Eliminar Item)"
 
-#: include/global_arrays.php:2428 include/global_settings.php:217
+#: include/global_arrays.php:2430 include/global_settings.php:217
 #: rrdcleaner.php:323
 msgid "RRD Cleaner"
 msgstr "Limpiador RRD"
 
-#: include/global_arrays.php:2440
+#: include/global_arrays.php:2442
 msgid "List unused Files"
 msgstr "Listar archivos sin usar"
 
-#: include/global_arrays.php:2446
+#: include/global_arrays.php:2448
 msgid "RRD Check"
 msgstr "Ejecutar comprobación"
 
-#: include/global_arrays.php:2464 utilities.php:2405
+#: include/global_arrays.php:2460 include/global_arrays.php:2472
+#: utilities.php:2401
+msgid "View Poller Cache"
+msgstr "Ver cache de la Sonda"
+
+#: include/global_arrays.php:2466 utilities.php:2405
 msgid "View Data Query Cache"
 msgstr "Ver cache de consulta de datos"
 
-#: include/global_arrays.php:2482
+#: include/global_arrays.php:2484
 msgid "Clear Log"
 msgstr "Vaciar log"
 
-#: include/global_arrays.php:2488 utilities.php:2394
+#: include/global_arrays.php:2490 utilities.php:2394
 msgid "View User Log"
 msgstr "Ver log de Usuario"
 
-#: include/global_arrays.php:2494
+#: include/global_arrays.php:2496
 msgid "Clear User Log"
 msgstr "Vaciar log de Usuario"
 
-#: include/global_arrays.php:2500 utilities.php:2385 utilities.php:2386
+#: include/global_arrays.php:2502 utilities.php:2385 utilities.php:2386
 msgid "Technical Support"
 msgstr "Soporte Técnico"
 
-#: include/global_arrays.php:2506 utilities.php:2576
+#: include/global_arrays.php:2508 utilities.php:2576
 msgid "Boost Status"
 msgstr "Estado de Boost"
 
-#: include/global_arrays.php:2512 utilities.php:2460
+#: include/global_arrays.php:2514 utilities.php:2460
 msgid "View SNMP Agent Cache"
 msgstr "Ver cache de agente SNMP"
 
-#: include/global_arrays.php:2518 utilities.php:2471
+#: include/global_arrays.php:2520 utilities.php:2471
 msgid "View SNMP Agent Notification Log"
 msgstr "Ver log de notificaciones del agente SNMP"
 
-#: include/global_arrays.php:2548
+#: include/global_arrays.php:2550
 msgid "VDEF Items"
 msgstr "Items VDEF"
 
-#: include/global_arrays.php:2554
+#: include/global_arrays.php:2556
 msgid "View SNMP Notification Receivers"
 msgstr "Ver receptores de notificaciones SNMP"
 
-#: include/global_arrays.php:2566
+#: include/global_arrays.php:2568
 msgid "Kadupul Settings"
 msgstr "Opciones de Kadupul"
 
-#: include/global_arrays.php:2572
+#: include/global_arrays.php:2574
 msgid "External Link"
 msgstr "Vínculo externo"
 
-#: include/global_arrays.php:2590 include/global_arrays.php:2620
+#: include/global_arrays.php:2592 include/global_arrays.php:2622
 msgid "(Action)"
 msgstr "(Acción)"
 
-#: include/global_arrays.php:2626 lib/html.php:2799
+#: include/global_arrays.php:2628 lib/html.php:2799
 msgid "About Kadupul"
 msgstr "Acerca de Kadupul"
 
-#: include/global_arrays.php:2632
+#: include/global_arrays.php:2634
 msgid "Kadupul Help"
 msgstr "Inicio de Kadupul"
 
-#: include/global_arrays.php:2644
+#: include/global_arrays.php:2646
 msgid "Export Results"
 msgstr "Exportar Resultados"
 
-#: include/global_arrays.php:2662 include/global_arrays.php:2692
+#: include/global_arrays.php:2664 include/global_arrays.php:2694
 #: lib/html.php:2004 lib/html.php:2078
 msgid "Reporting"
 msgstr "Reportes"
 
-#: include/global_arrays.php:2668 include/global_arrays.php:2698
+#: include/global_arrays.php:2670 include/global_arrays.php:2700
 msgid "Report Add"
 msgstr "Agregar Reporte"
 
-#: include/global_arrays.php:2674 include/global_arrays.php:2704
+#: include/global_arrays.php:2676 include/global_arrays.php:2706
 msgid "Report Delete"
 msgstr "Eliminar Reporte"
 
-#: include/global_arrays.php:2680 include/global_arrays.php:2710
+#: include/global_arrays.php:2682 include/global_arrays.php:2712
 msgid "Report Edit"
 msgstr "Editar Reporte"
 
-#: include/global_arrays.php:2686 include/global_arrays.php:2716
+#: include/global_arrays.php:2688 include/global_arrays.php:2718
 msgid "Report Edit Item"
 msgstr "Editar item de Reporte"
 
-#: include/global_arrays.php:2740
+#: include/global_arrays.php:2742
 msgid "Color Template Items"
 msgstr "Items de Plantilla de Color"
 
-#: include/global_arrays.php:2800
+#: include/global_arrays.php:2802
 msgid "Graph Rule Items"
 msgstr "Items de Regla de gráfico"
 
-#: include/global_arrays.php:2824
+#: include/global_arrays.php:2826
 msgid "Tree Rule Items"
 msgstr "Items de regla de árbol"
 
-#: include/global_arrays.php:2855 include/global_arrays.php:2871
-#: lib/api_device.php:1948
+#: include/global_arrays.php:2857 include/global_arrays.php:2873
+#: lib/api_device.php:1952
 msgid "days"
 msgstr "días"
 
-#: include/global_arrays.php:2856
+#: include/global_arrays.php:2858
 msgid "hrs"
 msgstr "hrs"
 
-#: include/global_arrays.php:2857
+#: include/global_arrays.php:2859
 msgid "mins"
 msgstr "minutos"
 
-#: include/global_arrays.php:2858
+#: include/global_arrays.php:2860
 msgid "secs"
 msgstr "segundos"
 
-#: include/global_arrays.php:2872 lib/api_device.php:1948
+#: include/global_arrays.php:2874 lib/api_device.php:1952
 msgid "hours"
 msgstr "horas"
 
-#: include/global_arrays.php:2873 lib/api_device.php:1948
+#: include/global_arrays.php:2875 lib/api_device.php:1952
 msgid "minutes"
 msgstr "minutos"
 
-#: include/global_arrays.php:2874
+#: include/global_arrays.php:2876
 msgid "seconds"
 msgstr "segundos"
 
@@ -8902,6 +8526,14 @@ msgstr "Opciones General de dispositivo"
 #: include/global_form.php:1170
 msgid "Give this host a meaningful description."
 msgstr "Dar a este equipo una descripción significativa."
+
+#: include/global_form.php:1176 include/global_form.php:1747
+#: lib/api_automation.php:279 lib/api_automation.php:571
+#: lib/api_automation.php:890 lib/api_automation.php:1197 managers.php:217
+#: pollers.php:115 pollers.php:1001 user_admin.php:1073
+#: user_group_admin.php:1087
+msgid "Hostname"
+msgstr "Nombre de equipo"
 
 #: include/global_form.php:1177 include/global_form.php:1748
 msgid "Fully qualified hostname or IP address for this device."
@@ -10087,6 +9719,10 @@ msgstr "Opciones generales por defecto"
 msgid "The default Device Template used on all new Devices."
 msgstr "La Plantilla de dispositivo por defecto que se usará para todos los nuevos dispositivos."
 
+#: include/global_settings.php:618 lib/html.php:2414 lib/html_reports.php:1151
+msgid "Site"
+msgstr "Sitio"
+
 #: include/global_settings.php:619
 msgid "The default Site for all new Devices."
 msgstr "El sitio por defecto para todos los nuevos dispositivos."
@@ -10515,7 +10151,7 @@ msgstr "Método de selección de Fuente"
 msgid "How do you wish fonts to be handled by default?"
 msgstr "Como quieres que las fuentes sean administradas por defecto?"
 
-#: include/global_settings.php:1060 lib/api_device.php:1903
+#: include/global_settings.php:1060 lib/api_device.php:1907
 msgid "System"
 msgstr "Sistema"
 
@@ -12381,7 +12017,7 @@ msgstr "Inicializando"
 msgid "Please wait while the installation system for Kadupul Version %s initializes. You must have JavaScript enabled for this to work."
 msgstr "Por favor, espere mientras se inicializa la instalación de Kadupul, versión %s. Debe tener JavaScript habilitado para que esto funcione."
 
-#: install/install.php:101 lib/html_utility.php:1336 lib/installer.php:2085
+#: install/install.php:101 lib/html_utility.php:1351 lib/installer.php:2085
 #: lib/installer.php:4093
 msgid "Error"
 msgstr "Error"
@@ -12450,6 +12086,23 @@ msgstr "Items Agregados no son editables"
 msgid "Override this Value"
 msgstr "Sobreescribir este valor"
 
+#: lib/api_automation.php:29
+msgid "Not Up"
+msgstr "No esta arriba"
+
+#: lib/api_automation.php:32 lib/html.php:65 lib/html_utility.php:1345
+#: pollers.php:34
+msgid "Recovering"
+msgstr "Recuperando"
+
+#: lib/api_automation.php:33 lib/auth.php:3007 lib/clog_webapi.php:856
+#: lib/html_utility.php:1354 lib/import.php:342 lib/plugins.php:1499
+#: lib/plugins.php:1500 lib/rrd.php:4196 lib/rrd.php:4208 lib/spikekill.php:301
+#: package_import.php:522 package_import.php:600 utilities.php:211
+#: utilities.php:212 utilities.php:2759
+msgid "Unknown"
+msgstr "Desconocido"
+
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
 #: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4173
@@ -12469,6 +12122,10 @@ msgstr "Ningún dispositivo coincidente"
 #: lib/api_automation.php:878
 msgid "Matching Objects"
 msgstr "Objetos coincidentes"
+
+#: lib/api_automation.php:570 tree.php:987 utilities.php:2277
+msgid "Device Description"
+msgstr "Descripción de dispositivos"
 
 #: lib/api_automation.php:714
 msgid "Objects"
@@ -12569,11 +12226,11 @@ msgstr "Item de regla [editar item de regla para %s: %s]"
 msgid "Rule Item [new rule item for %s: %s]"
 msgstr "Item de regla [nuevo item de regla para %s: %s]"
 
-#: lib/api_automation.php:3288
+#: lib/api_automation.php:3344
 msgid "Added by Kadupul Automation"
 msgstr "Agregado por automatización de Kadupul"
 
-#: lib/api_automation.php:3582
+#: lib/api_automation.php:3638
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "ERROR: Los rangos de IP en forma de rango1-rango2 ya no son compatibles."
 
@@ -12581,13 +12238,13 @@ msgstr "ERROR: Los rangos de IP en forma de rango1-rango2 ya no son compatibles.
 #: lib/api_device.php:389 lib/api_device.php:451 lib/api_device.php:456
 #: lib/api_device.php:501 lib/api_device.php:505 lib/api_device.php:581
 #: lib/api_device.php:585 lib/api_device.php:640 lib/api_device.php:644
-#: lib/api_device.php:710 lib/api_device.php:713 lib/api_device.php:786
-#: lib/api_device.php:789 lib/api_device.php:838 lib/api_device.php:841
-#: lib/api_device.php:882 lib/api_device.php:885 lib/api_device.php:1308
-#: lib/api_device.php:1321 lib/api_device.php:1325 lib/api_device.php:1370
-#: lib/api_device.php:1373 lib/api_device.php:1560 lib/api_device.php:1564
-#: lib/api_device.php:1600 lib/api_device.php:1604 lib/api_device.php:1649
-#: lib/api_device.php:1653 lib/api_device.php:1714 lib/api_device.php:1718
+#: lib/api_device.php:710 lib/api_device.php:713 lib/api_device.php:788
+#: lib/api_device.php:791 lib/api_device.php:840 lib/api_device.php:843
+#: lib/api_device.php:886 lib/api_device.php:889 lib/api_device.php:1312
+#: lib/api_device.php:1325 lib/api_device.php:1329 lib/api_device.php:1374
+#: lib/api_device.php:1377 lib/api_device.php:1564 lib/api_device.php:1568
+#: lib/api_device.php:1604 lib/api_device.php:1608 lib/api_device.php:1653
+#: lib/api_device.php:1657 lib/api_device.php:1718 lib/api_device.php:1722
 #: lib/utility.php:742
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
@@ -12597,76 +12254,76 @@ msgstr "El sondeador remoto %s no funciona, deberá realizar una sincronización
 msgid "Device replication failed. A FullSync is required; see the log for details."
 msgstr ""
 
-#: lib/api_device.php:1824
+#: lib/api_device.php:1828
 msgid "ERROR: Device ID is Blank"
 msgstr "ERROR: ID del dispositivo está en blanco"
 
-#: lib/api_device.php:1837 lib/api_device.php:1839
+#: lib/api_device.php:1841 lib/api_device.php:1843
 msgid "ERROR: Device["
 msgstr "ERROR: Dispositivo["
 
-#: lib/api_device.php:1855
+#: lib/api_device.php:1859
 msgid "ERROR: Failed to connect to remote collector."
 msgstr "Error: no se pudo conectar al recollector remoto."
 
-#: lib/api_device.php:1862
+#: lib/api_device.php:1866
 msgid "Device is Disabled"
 msgstr "El dispositivo está deshabilitado"
 
-#: lib/api_device.php:1863
+#: lib/api_device.php:1867
 msgid "Device Availability Check Bypassed"
 msgstr "Verificación de disponibilidad de dispositivo omitido"
 
-#: lib/api_device.php:1870
+#: lib/api_device.php:1874
 msgid "SNMP Information"
 msgstr "Información SNMP"
 
-#: lib/api_device.php:1874
+#: lib/api_device.php:1878
 msgid "SNMP not in use"
 msgstr "No usa SNMP"
 
-#: lib/api_device.php:1895 lib/api_device.php:1903 lib/api_device.php:1922
+#: lib/api_device.php:1899 lib/api_device.php:1907 lib/api_device.php:1926
 msgid "SNMP error"
 msgstr "Error SNMP"
 
-#: lib/api_device.php:1895
+#: lib/api_device.php:1899
 msgid "Session"
 msgstr "Sesión"
 
-#: lib/api_device.php:1922
+#: lib/api_device.php:1926
 msgid "Host"
 msgstr "Equipo"
 
-#: lib/api_device.php:1940
+#: lib/api_device.php:1944
 msgid "System:"
 msgstr "Sistema:"
 
-#: lib/api_device.php:1947
+#: lib/api_device.php:1951
 msgid "Uptime:"
 msgstr "Tiempo de Funcionamiento:"
 
-#: lib/api_device.php:1949
+#: lib/api_device.php:1953
 msgid "Hostname:"
 msgstr "Nombre de equipo:"
 
-#: lib/api_device.php:1950
+#: lib/api_device.php:1954
 msgid "Location:"
 msgstr "Ubicación:"
 
-#: lib/api_device.php:1951
+#: lib/api_device.php:1955
 msgid "Contact:"
 msgstr "Contacto:"
 
-#: lib/api_device.php:1982 lib/functions.php:6169 lib/functions.php:6171
+#: lib/api_device.php:1986 lib/functions.php:6169 lib/functions.php:6171
 #: lib/functions.php:6175
 msgid "Ping Results"
 msgstr "Resultados de ping"
 
-#: lib/api_device.php:1987
+#: lib/api_device.php:1991
 msgid "No Ping or SNMP Availability Check in Use"
 msgstr "Ningún método de comprobación disponibilidad seleccionado"
 
-#: lib/api_tree.php:186
+#: lib/api_tree.php:203
 msgid "New Branch"
 msgstr "Nueva Rama"
 
@@ -12726,7 +12383,7 @@ msgid "Branch:"
 msgstr "Rama:"
 
 #: lib/auth.php:3248 lib/auth.php:3282 lib/html_tree.php:949
-#: lib/reports.php:1081
+#: lib/reports.php:1114
 msgid "Device:"
 msgstr "Dispositivo:"
 
@@ -12928,430 +12585,430 @@ msgstr "Las contraseñas no coinciden"
 msgid "System Device"
 msgstr "Sincronizar dispositivos"
 
-#: lib/data_query.php:54 lib/data_query.php:423
+#: lib/data_query.php:64 lib/data_query.php:466
 msgid "Automation Execution for Data Query complete"
 msgstr "Ejecución de Automatización de Consultas de Datos completada"
 
-#: lib/data_query.php:57 lib/data_query.php:426
+#: lib/data_query.php:67 lib/data_query.php:469
 msgid "Plugin Hooks complete"
 msgstr "Ganchos de Plugin completados"
 
-#: lib/data_query.php:75
+#: lib/data_query.php:85
 #, php-format
 msgid "Running Data Query [%s]."
 msgstr "Ejecutando Consulta de Datos [%s]."
 
-#: lib/data_query.php:85
+#: lib/data_query.php:97
 #, php-format
 msgid "Found Type = '%s' [%s]."
 msgstr "Tipo encontrado = '%s' [%s]."
 
-#: lib/data_query.php:107
+#: lib/data_query.php:119
 #, php-format
 msgid "Unknown Type = '%s'."
 msgstr "Tipo desconocido = '%s'."
 
-#: lib/data_query.php:142
+#: lib/data_query.php:154
 msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
 msgstr "ADVERTENCIA: La asociación de campos de clasificación ha cambiado. Puede haber problemas de re asignación!"
 
-#: lib/data_query.php:154
+#: lib/data_query.php:166
 msgid "Update Data Query Sort Cache complete"
 msgstr "Actualización de orden del caché de consulta de datos completado"
 
-#: lib/data_query.php:179
+#: lib/data_query.php:193
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "Se encontraron%s ID de datos locales para verificar"
 
-#: lib/data_query.php:273
+#: lib/data_query.php:299
 #, php-format
 msgid "Index Change Detected! CurrentIndex: %s, PreviousIndex: %s"
 msgstr "Cambio de índices detectado! Actual: %s, Anterior: %s"
 
-#: lib/data_query.php:293
+#: lib/data_query.php:323
 #, php-format
 msgid "Transient Index Removal Detected! PreviousIndex: %s.  No action taken."
 msgstr "Eliminación de índices detectada! Índices anteriores: %s"
 
-#: lib/data_query.php:296
+#: lib/data_query.php:326
 #, php-format
 msgid "Index Removal Detected! PreviousIndex: %s"
 msgstr "Eliminación de índices detectada! Índices anteriores: %s"
 
-#: lib/data_query.php:330
+#: lib/data_query.php:366
 #, php-format
 msgid "Verification of %s Local Data ID's Complete"
 msgstr "Verificación de %s ID de datos locales completa"
 
-#: lib/data_query.php:333
+#: lib/data_query.php:369
 #, php-format
 msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
 msgstr "Encontrado Modificado%sy%s Huérfano ID de datos locales para reasignar."
 
-#: lib/data_query.php:336
+#: lib/data_query.php:372
 msgid "Done remapping Graphs to their new Indexes"
 msgstr "Re asignando gráficos a sus nuevos índices"
 
-#: lib/data_query.php:342 lib/data_query.php:349
+#: lib/data_query.php:378 lib/data_query.php:385
 msgid "Done updating Data Source Title Cache"
 msgstr "Duplicar perfil de Data Source"
 
-#: lib/data_query.php:345 lib/data_query.php:352
+#: lib/data_query.php:381 lib/data_query.php:388
 msgid "Done updating Graph Title Cache"
 msgstr "Terminé de actualizar la caché de títulos de gráficos"
 
-#: lib/data_query.php:356
+#: lib/data_query.php:392
 msgid "Index Association with Local Data complete"
 msgstr "Asociación de índices con datos locales completada"
 
-#: lib/data_query.php:362
+#: lib/data_query.php:398
 #, php-format
 msgid "Update Re-Index Cache complete. There were %s index changes, and %s orphaned indexes."
 msgstr "Actualización de la caché de reíndice completada. Hubo %s cambios en el índice y %s índices huérfanos."
 
-#: lib/data_query.php:366
+#: lib/data_query.php:402
 msgid "Update Poller Cache for Query complete"
 msgstr "Actualización de caché de Sonda desde la consulta completada"
 
-#: lib/data_query.php:368
+#: lib/data_query.php:404
 msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
 msgstr "No se detectó ningún cambio de índice, se omitió la re indexación y rellenado del caché de la Sonda"
 
-#: lib/data_query.php:415
+#: lib/data_query.php:458
 msgid "Automation Executing for Data Query complete"
 msgstr "Ejecución de Automatización de Consultas de Datos completada"
 
-#: lib/data_query.php:418
+#: lib/data_query.php:461
 msgid "Plugin hooks complete"
 msgstr "Ganchos de Plugin completados"
 
-#: lib/data_query.php:474
+#: lib/data_query.php:520
 msgid "Checking for Sort Field change.  No changes detected."
 msgstr "Verificación de la modificación del campo de clasificación.  No se han detectado cambios."
 
-#: lib/data_query.php:479
+#: lib/data_query.php:525
 #, php-format
 msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "Campo de clasificación nuevo detectado: '%s' Campo de clasificación antiguo '%s"
 
-#: lib/data_query.php:496
+#: lib/data_query.php:546
 msgid "ERROR: New Sort Field not suitable.  Sort Field will not change."
 msgstr "ERROR: Nuevo campo de clasificación no adecuado.  El campo Sort no cambiará."
 
-#: lib/data_query.php:508
+#: lib/data_query.php:560
 msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "Validación del nuevo campo de ordenación.  Campo de clasificación se actualice."
 
-#: lib/data_query.php:606
+#: lib/data_query.php:673
 #, php-format
 msgid "Could not find data query XML file at '%s'"
 msgstr "No se pudo encontrar el archivo XML de consulta de datos en '%s'"
 
-#: lib/data_query.php:610
+#: lib/data_query.php:677
 #, php-format
 msgid "Found data query XML file at '%s'"
 msgstr "Archivo XML de consulta de datos encontrado en '%s'"
 
-#: lib/data_query.php:633 lib/data_query.php:821 lib/data_query.php:2394
+#: lib/data_query.php:701 lib/data_query.php:895 lib/data_query.php:2642
 msgid "Error parsing XML file into an array."
 msgstr "Error al analizar archivo XML dentro de una matriz."
 
-#: lib/data_query.php:637 lib/data_query.php:825
+#: lib/data_query.php:705 lib/data_query.php:899
 msgid "XML file parsed ok."
 msgstr "Análisis de archivo XML ok."
 
-#: lib/data_query.php:645 lib/data_query.php:828
+#: lib/data_query.php:713 lib/data_query.php:902
 #, php-format
 msgid "Invalid field &lt;index_order&gt;%s&lt;/index_order&gt;"
 msgstr "Campo inválido &lt;index_order&gt;%s&lt;/index_order&gt;"
 
-#: lib/data_query.php:646 lib/data_query.php:829
+#: lib/data_query.php:714 lib/data_query.php:903
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
 msgstr "Debe contener campos &lt;dirección&gt;entrada&lt;/dirección&gt; o &lt;dirección&gt;entrada-salida&lt;/dirección&gt; solamente"
 
-#: lib/data_query.php:663
+#: lib/data_query.php:731
 msgid "Data Query returned no indexes."
 msgstr "ERROR: Consulta de Datos no devolvió índices."
 
-#: lib/data_query.php:664
+#: lib/data_query.php:732
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; faltan en el archivo XML, 'Recuento de Cambio de índices' no admitido"
 
-#: lib/data_query.php:667
+#: lib/data_query.php:735
 #, php-format
 msgid "Executing script for num of indexes '%s'"
 msgstr "Ejecutando script para números de índices ' %s '"
 
-#: lib/data_query.php:670
+#: lib/data_query.php:738
 #, php-format
 msgid "Found number of indexes: %s"
 msgstr "Número de índices encontrados: %s"
 
-#: lib/data_query.php:674
+#: lib/data_query.php:742
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; faltan en el archivo XML, 'Recuento de Cambio de índices' no admitido"
 
-#: lib/data_query.php:676
+#: lib/data_query.php:744
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
 msgstr "&lt;arg_num_indexes&gt; faltan en el archivo XML, 'Recuento de cambio de índices' emulado contando entradas arg_index"
 
-#: lib/data_query.php:687
+#: lib/data_query.php:755
 msgid "ERROR: Data Query returned no indexes."
 msgstr "ERROR: Consulta de Datos no devolvió índices."
 
-#: lib/data_query.php:691
+#: lib/data_query.php:759
 #, php-format
 msgid "Executing script for list of indexes '%s', Index Count: %s"
 msgstr "Ejecutando script para lista de índices '%s', Conteo de índices: %s"
 
-#: lib/data_query.php:693
+#: lib/data_query.php:761
 msgid "Click to show Data Query output for 'index'"
 msgstr "Haga clic para mostrar la salida de consulta de datos para 'index'"
 
-#: lib/data_query.php:696
+#: lib/data_query.php:764
 #, php-format
 msgid "Found index: %s"
 msgstr "Índice encontrado: %s"
 
-#: lib/data_query.php:711 lib/data_query.php:1213
+#: lib/data_query.php:779 lib/data_query.php:1366
 #, php-format
 msgid "Click to show Data Query output for field '%s'"
 msgstr "Haga clic para mostrar la salida de consulta de datos para el campo '%s'"
 
-#: lib/data_query.php:717
+#: lib/data_query.php:785
 #, php-format
 msgid "Sort field returned no data for field name %s, skipping"
 msgstr "El campo Ordenar no devolvió datos para el nombre del campo %s, omitiendo"
 
-#: lib/data_query.php:719
+#: lib/data_query.php:787
 #, php-format
 msgid "Executing script query '%s'"
 msgstr "Ejecutando script de consulta '%s'"
 
-#: lib/data_query.php:730 lib/data_query.php:737
+#: lib/data_query.php:798 lib/data_query.php:805
 #, php-format
 msgid "Found item [%s='%s'] index: %s"
 msgstr "Item encontrado [%s='%s'] índice: %s"
 
-#: lib/data_query.php:775 lib/data_query.php:790
+#: lib/data_query.php:845 lib/data_query.php:861
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
 msgstr "Total: %f, Delta: %f, %s"
 
-#: lib/data_query.php:815
+#: lib/data_query.php:889
 #, php-format
 msgid "Invalid host_id: %s"
 msgstr "Host_id: %s no válido"
 
-#: lib/data_query.php:839
+#: lib/data_query.php:913
 msgid "Auto Bulk Walk Size Selected."
 msgstr "Todos los Sitios seleccionados"
 
-#: lib/data_query.php:849 lib/data_query.php:894
+#: lib/data_query.php:935 lib/data_query.php:994
 msgid "Failed to load SNMP session."
 msgstr "No se pudo cargar la sesión SNMP."
 
-#: lib/data_query.php:859
+#: lib/data_query.php:945
 #, php-format
 msgid "Tested Bulk Walk Size %d with a response of %2.4f."
 msgstr "Tamaño de caminata masivo probado %d con una respuesta de %2.4f."
 
-#: lib/data_query.php:870
+#: lib/data_query.php:956
 #, php-format
 msgid "Bulk Walk Size selected was %d."
 msgstr "El tamaño de caminata masiva seleccionado fue %d."
 
-#: lib/data_query.php:873
+#: lib/data_query.php:959
 msgid "Saving Bulk Walk Size to Device."
 msgstr "Ahorro de tamaño de caminata a granel en el dispositivo."
 
-#: lib/data_query.php:885
+#: lib/data_query.php:973
 #, php-format
 msgid "Bulk Walk Size is fixed at %d."
 msgstr "El tamaño de caminata masiva se fija en %d."
 
-#: lib/data_query.php:907
+#: lib/data_query.php:1007
 #, php-format
 msgid "Executing SNMP get for num of indexes @ '%s' Index Count: %s"
 msgstr "Ejecutando SNMP Get para NUM de índices @ ' %s ' conteo de índices: %s"
 
-#: lib/data_query.php:909
+#: lib/data_query.php:1009
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
 msgstr "&lt;oid_num_indexes&gt; faltantes en el archivo XML, 'recuento de índices cambió', emulado contando entradas oid_index"
 
-#: lib/data_query.php:912
+#: lib/data_query.php:1012
 #, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
 msgstr "Ejecutando SNMP Walk para la lista de índices @ '%s' cuenta de índice: %s"
 
-#: lib/data_query.php:916
+#: lib/data_query.php:1016
 msgid "No SNMP data returned"
 msgstr "No se devolvió ningún dato SNMP"
 
-#: lib/data_query.php:921
+#: lib/data_query.php:1021
 #, php-format
 msgid "Index found at OID: '%s' value: '%s'"
 msgstr "Índice encontrado en OID: '%s' valor: '%s'"
 
-#: lib/data_query.php:952
+#: lib/data_query.php:1052
 #, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
 msgstr "Filtrando lista de índices @ '%s' Conteo de índices: %s"
 
-#: lib/data_query.php:956
+#: lib/data_query.php:1056
 #, php-format
 msgid "Filtered Index by value found at OID: '%s' value: '%s'"
 msgstr "Índice filtrado encontrado en OID: '%s' valor: '%s'"
 
-#: lib/data_query.php:972
+#: lib/data_query.php:1072
 #, php-format
 msgid "Filtering list of indexes @ '%s' Index Count: %s"
 msgstr "Filtrando lista de índices @ '%s' Conteo de índices: %s"
 
-#: lib/data_query.php:976
+#: lib/data_query.php:1076
 #, php-format
 msgid "Filtered Index found at OID: '%s' value: '%s'"
 msgstr "Índice filtrado encontrado en OID: '%s' valor: '%s'"
 
-#: lib/data_query.php:996
+#: lib/data_query.php:1096
 #, php-format
 msgid "Fixing wrong 'method' field for '%s' since 'rewrite_index' or 'oid_suffix' is defined"
 msgstr "Solucionando campo 'método' equivocado para '%s' ya que 'rewrite_index' u 'oid_index' está definido"
 
-#: lib/data_query.php:1003
+#: lib/data_query.php:1103
 #, php-format
 msgid "Inserting index data for field '%s' [value='%s']"
 msgstr "Insertando datos de índice para el campo '%s' [valor = '%s']"
 
-#: lib/data_query.php:1008
+#: lib/data_query.php:1108
 #, php-format
 msgid "Located input field '%s' [get]"
 msgstr "Campo de entrada localizado '%s' [get]"
 
-#: lib/data_query.php:1017
+#: lib/data_query.php:1117
 #, php-format
 msgid "Found OID rewrite rule: 's/%s/%s/'"
 msgstr "Regla de reescritura OID encontrada: 's/%s/%s/'"
 
-#: lib/data_query.php:1028
+#: lib/data_query.php:1128
 #, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
 msgstr "oid_rewrite en el OID: '%s' nuevo OID: '%s'"
 
-#: lib/data_query.php:1049
+#: lib/data_query.php:1161
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='%s']"
 msgstr "Ejecutando SNMP get para datos @ '%s' [valor='%s']"
 
-#: lib/data_query.php:1060
+#: lib/data_query.php:1172
 #, php-format
 msgid "Field '%s' %s"
 msgstr "Campo '%s' %s"
 
-#: lib/data_query.php:1121
+#: lib/data_query.php:1233
 #, php-format
 msgid "Executing SNMP get for %s oids (%s)"
 msgstr "Ejecutando SNMP get para %s oids (%s)"
 
-#: lib/data_query.php:1147 lib/data_query.php:1239 lib/data_query.php:1247
+#: lib/data_query.php:1271 lib/data_query.php:1406 lib/data_query.php:1414
 #, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
 msgstr "El campo Sort devuelve no los datos.  No se puede continuar con el Re-Index para OID[%s]."
 
-#: lib/data_query.php:1151
+#: lib/data_query.php:1277
 #, php-format
 msgid "Found result for data @ '%s' [value='%s']"
 msgstr "Resultados encontrados para datos @ '%s' [valor='%s']"
 
-#: lib/data_query.php:1159
+#: lib/data_query.php:1290
 #, php-format
 msgid "Setting result for data @ '%s' [key='%s', value='%s']"
 msgstr "Ajustando resultado para datos @ '%s' [[clave='%s', valor='%s']"
 
-#: lib/data_query.php:1163
+#: lib/data_query.php:1300
 #, php-format
 msgid "Skipped result for data @ '%s' [key='%s', value='%s']"
 msgstr "Resultado omitido para los datos @ '%s' [clave = '%s'] (valor: %s)"
 
-#: lib/data_query.php:1177
+#: lib/data_query.php:1318
 #, php-format
 msgid "Got SNMP get result for data @ '%s' [value='%s'] (index: %s)"
 msgstr "Obtenidor esultado SNMP get para los datos @ '%s' [value = '%s'] (índice: %s)"
 
-#: lib/data_query.php:1207
+#: lib/data_query.php:1360
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
 msgstr "Ejecutando SNMP get para datos @ '%s' [valor='$value']"
 
-#: lib/data_query.php:1215
+#: lib/data_query.php:1368
 #, php-format
 msgid "Located input field '%s' [walk]"
 msgstr "Campo de entrada localizado '%s' [walk]"
 
-#: lib/data_query.php:1252
+#: lib/data_query.php:1419
 #, php-format
 msgid "Executing SNMP walk for data @ '%s'"
 msgstr "Ejecutando SNMP Walk para datos @ '%s'"
 
-#: lib/data_query.php:1271 lib/data_query.php:1329 lib/data_query.php:1378
-#: lib/data_query.php:1429
+#: lib/data_query.php:1438 lib/data_query.php:1496 lib/data_query.php:1545
+#: lib/data_query.php:1596
 #, php-format
 msgid "No index[%s] in value_index_parse, skipping."
 msgstr "Sin índice[%s] en value_index_parse, omitiendo."
 
-#: lib/data_query.php:1312
+#: lib/data_query.php:1479
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from %s]"
 msgstr "Elemento encontrado [%s='%s'] índice: %s [de %s]"
 
-#: lib/data_query.php:1354
+#: lib/data_query.php:1521
 #, php-format
 msgid "Found OCTET STRING '%s' decoded value: '%s'"
 msgstr "OCTET STRING encontrado '%s' valor decodificado: '%s'"
 
-#: lib/data_query.php:1360 lib/data_query.php:1409
+#: lib/data_query.php:1527 lib/data_query.php:1576
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
 msgstr "Elemento encontrado [%s = '%s'] índice: %s [de análisis REGEXP OID]"
 
-#: lib/data_query.php:1437
+#: lib/data_query.php:1604
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
 msgstr "Elemento encontrado [%s = '%s'] índice: %s [de análisis REGEXP de valor OID]"
 
-#: lib/data_query.php:1659
+#: lib/data_query.php:1839
 #, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
 msgstr "Elemento rewrite_value falso encontrado, index='%s'"
 
-#: lib/data_query.php:1672
+#: lib/data_query.php:1852
 msgid "Could not parse translation map (rewrite_value)"
 msgstr "No se ha podido analizar el mapa de traducción (rewrite_value)"
 
-#: lib/data_query.php:1696
+#: lib/data_query.php:1876
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
 msgstr "oid_rewrite en el OID: '%s' nuevo OID: '%s'"
 
-#: lib/data_query.php:1801
+#: lib/data_query.php:1990
 msgid "Update graph data query cache complete"
 msgstr "Actualización de orden del caché de consulta de datos completado"
 
-#: lib/data_query.php:1818
+#: lib/data_query.php:2009
 msgid "Re-Indexing Data Query complete"
 msgstr "Re indexación de Consultas de Datos completada"
 
-#: lib/data_query.php:1949
+#: lib/data_query.php:2161
 msgid "Unknown Index"
 msgstr "Índice desconocido"
 
-#: lib/data_query.php:2507
+#: lib/data_query.php:2766
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "Debe seleccionar una columna de salida XML para Fuente de datos '%s' y activar la casilla de verificación a su derecha"
 
-#: lib/data_query.php:2513
+#: lib/data_query.php:2772
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Su plantilla de gráfico no tiene plantillas de datos en uso.  Por favor, corrija su plantilla de gráficos"
 
@@ -13475,6 +13132,11 @@ msgstr "No basado en consulta"
 msgid "Link %s"
 msgstr "Vínculo %s"
 
+#: lib/functions.php:4903 tree.php:1804 tree.php:1878 tree.php:1986
+#: user_admin.php:18 user_group_admin.php:20
+msgid "Copy"
+msgstr "Copiar"
+
 #: lib/functions.php:5705
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Error de remitente: dirección del <b>destinatario</b> no especificada!!<br>Si usa el vínculo <i>Correo de prueba</i>, configure la opción <b>correo de alerta</b>."
@@ -13534,6 +13196,10 @@ msgstr "Seguridad"
 msgid "Ping Results:"
 msgstr "Resultados de ping:"
 
+#: lib/functions.php:6166 lib/functions.php:6171
+msgid "Success"
+msgstr "Exitoso"
+
 #: lib/functions.php:6175
 msgid "Bypassed"
 msgstr "Omitido"
@@ -13583,7 +13249,7 @@ msgstr "Versión %s %s"
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7482
+#: lib/functions.php:7489
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "ADVERTENCIA: Falta el archivo de inclusión de Kadupul clave %s.  Por favor, localice y reemplace este archivo"
@@ -13620,7 +13286,7 @@ msgstr "Plantillas seleccionadas"
 msgid "Enter keyword"
 msgstr "Ingresa palabra clave"
 
-#: lib/html.php:464 lib/reports.php:1678
+#: lib/html.php:464 lib/reports.php:1711
 msgid "Data Query:"
 msgstr "Consulta de datos:"
 
@@ -14705,7 +14371,7 @@ msgstr "Plantilla de gráfico:"
 msgid "Template Based"
 msgstr "Basado en plantillas"
 
-#: lib/html_tree.php:927 lib/reports.php:1326
+#: lib/html_tree.php:927 lib/reports.php:1359
 msgid "Tree:"
 msgstr "Arbol:"
 
@@ -14760,27 +14426,28 @@ msgstr "Las expresiones regulares de los Kadupul están limitadas a 50 caractere
 msgid "Kadupul regular expressions can not includes the semi-color character."
 msgstr "Las expresiones regulares de Kadupul no pueden incluir el carácter semicolor."
 
-#: lib/html_utility.php:1266
+#: lib/html_utility.php:1265 lib/html_utility.php:1269
+#: lib/html_utility.php:1291
 msgid "There was an internal error!"
 msgstr "Hubo un error interno!"
 
-#: lib/html_utility.php:1267
+#: lib/html_utility.php:1292
 msgid "Backtrack limit was exhausted!"
 msgstr "Límite de recursión agotado!"
 
-#: lib/html_utility.php:1268
+#: lib/html_utility.php:1293
 msgid "Recursion limit was exhausted!"
 msgstr "Límite de recursión fue agotado!"
 
-#: lib/html_utility.php:1269
+#: lib/html_utility.php:1294
 msgid "Bad UTF-8 error!"
 msgstr "Error mal UTF-8!"
 
-#: lib/html_utility.php:1270
+#: lib/html_utility.php:1295
 msgid "Bad UTF-8 offset error!"
 msgstr "Error mal offset UTF-8!"
 
-#: lib/html_utility.php:1321
+#: lib/html_utility.php:1336
 msgid "Down (Thold)"
 msgstr "Descargar"
 
@@ -16047,66 +15714,66 @@ msgstr "Contraseña proporcionada no válida. Error de inicio de sesion."
 msgid "Unexpected error %s (Ldap Error: %s) on Server (%s)"
 msgstr "Error inesperado %s (Error LDAP: %s) en el servidor (%s)"
 
-#: lib/ping.php:116
+#: lib/ping.php:130
 msgid "ICMP Ping timed out"
 msgstr "Tiempo agotado de Ping ICMP"
 
-#: lib/ping.php:201 lib/ping.php:219
+#: lib/ping.php:215 lib/ping.php:233
 #, php-format
 msgid "ICMP Ping Success (%s ms)"
 msgstr "Ping ICMP satisfactorio (%s ms)"
 
-#: lib/ping.php:206 lib/ping.php:224
+#: lib/ping.php:220 lib/ping.php:238
 msgid "ICMP ping Timed out"
 msgstr "Tiempo agotado de ping ICMP"
 
-#: lib/ping.php:231 lib/ping.php:458 lib/ping.php:598
+#: lib/ping.php:245 lib/ping.php:486 lib/ping.php:627
 msgid "Destination address not specified"
 msgstr "Dirección de destino no especificada"
 
-#: lib/ping.php:336 lib/ping.php:473
+#: lib/ping.php:364 lib/ping.php:502
 msgid "default"
 msgstr "Predeterminado"
 
-#: lib/ping.php:364 lib/ping.php:373 lib/ping.php:501 lib/ping.php:510
+#: lib/ping.php:392 lib/ping.php:401 lib/ping.php:530 lib/ping.php:539
 msgid "Please upgrade to PHP 5.5.4+ for IPv6 support!"
 msgstr "Por favor actualiza PHP a versión 5.5.4+ para soporte IPv6!"
 
-#: lib/ping.php:396
+#: lib/ping.php:424
 #, php-format
 msgid "UDP ping error: %s"
 msgstr "Error de Ping UDP: %s"
 
-#: lib/ping.php:436
+#: lib/ping.php:464
 #, php-format
 msgid "UDP Ping Success (%s ms)"
 msgstr "Exito de Ping UDP (%s ms)"
 
-#: lib/ping.php:536
+#: lib/ping.php:565
 #, fuzzy, php-format
 msgid "TCP Ping Success Connection Refused (%s ms)"
 msgstr "Ping TCP satisfactorio (%s ms)"
 
-#: lib/ping.php:539
+#: lib/ping.php:568
 #, fuzzy, php-format
 msgid "TCP Ping Failed: socket_connect(), reason: %s"
 msgstr "Ping TCP: socket_connect(), motivo: %s"
 
-#: lib/ping.php:562
+#: lib/ping.php:591
 #, fuzzy, php-format
 msgid "TCP Ping Failed: socket_select() failed, reason: %s"
 msgstr "Ping TCP: socket_select() fallo, motivo: %s"
 
-#: lib/ping.php:577
+#: lib/ping.php:606
 #, php-format
 msgid "TCP Ping Success (%s ms)"
 msgstr "Ping TCP satisfactorio (%s ms)"
 
-#: lib/ping.php:587
+#: lib/ping.php:616
 msgid "TCP ping timed out"
 msgstr "Ping TCP caducó tiempo de espera"
 
-#: lib/ping.php:614
+#: lib/ping.php:644
 msgid "Ping not performed due to setting."
 msgstr "Ping no realizado debido a la configuración."
 
@@ -16164,69 +15831,69 @@ msgstr "No indicado"
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 
-#: lib/reports.php:141
+#: lib/reports.php:174
 #, php-format
 msgid "Device '%s' successfully added to Report."
 msgstr "Dispositivo %s añadido a Kadupul"
 
-#: lib/reports.php:144
+#: lib/reports.php:177
 msgid "Device not found! Unable to add to Report"
 msgstr "No se encontró el gráfico que intentaba agregar al Reporte"
 
-#: lib/reports.php:148
+#: lib/reports.php:181
 #, php-format
 msgid "Device '%s' not added to Report as it already exists on report."
 msgstr "El dispositivo '%s' no se agregó al informe porque ya existe en el informe."
 
-#: lib/reports.php:603
+#: lib/reports.php:636
 #, php-format
 msgid "Problems sending Report '%s' Problem with e-mail Subsystem Error is '%s'"
 msgstr "Problemas al enviar el informe '%s' Problema con el correo electrónico El error del subsistema es '%s'"
 
-#: lib/reports.php:610
+#: lib/reports.php:643
 #, php-format
 msgid "Report '%s' Sent Successfully"
 msgstr "El reporte %s se envió exitosamente"
 
-#: lib/reports.php:1108 lib/reports.php:1464
+#: lib/reports.php:1141 lib/reports.php:1497
 msgid "(No Graph Template)"
 msgstr "(Ninguna Plantilla de Gráfico)"
 
-#: lib/reports.php:1532
+#: lib/reports.php:1565
 msgid "(Non Query Based)"
 msgstr "(no basado en consultas)"
 
-#: lib/reports.php:1943
+#: lib/reports.php:1976
 msgid "Add to Report"
 msgstr "Agregar a Reporte"
 
-#: lib/reports.php:1961
+#: lib/reports.php:1994
 msgid "Choose the Report to associate these graphs with.  The defaults for alignment will be used for each graph in the list below."
 msgstr "Elige el Reporte para asociar a estos gráficos. Se usarán las alineaciones por defecto para cada gráfico en la lista debajo."
 
-#: lib/reports.php:1963
+#: lib/reports.php:1996
 msgid "Report:"
 msgstr "Reporte:"
 
-#: lib/reports.php:1973
+#: lib/reports.php:2006
 msgid "Graph Timespan:"
 msgstr "Fecha y hora de gráfico:"
 
-#: lib/reports.php:1976
+#: lib/reports.php:2009
 msgid "Graph Alignment:"
 msgstr "Alineación del gráfico:"
 
-#: lib/reports.php:2075
+#: lib/reports.php:2108
 #, php-format
 msgid "Created Report Graph Item '<i>%s</i>'"
 msgstr "Item de Reporte de gráfico creado '<i>%s</i>'"
 
-#: lib/reports.php:2077
+#: lib/reports.php:2110
 #, php-format
 msgid "Failed Adding Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "Fallo agregando Item de Reporte de gráfico '<i>%s</i>' Ya existe"
 
-#: lib/reports.php:2080
+#: lib/reports.php:2113
 #, php-format
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "Item de Reporte de gráfico omitido '<i>%s</i>' Ya existe"
@@ -16444,8 +16111,8 @@ msgstr ""
 msgid "RRD storage configuration requires attention"
 msgstr ""
 
-#: lib/snmp.php:226 lib/snmp.php:343 lib/snmp.php:455 lib/snmp.php:940
-#: lib/snmp.php:963
+#: lib/snmp.php:234 lib/snmp.php:355 lib/snmp.php:471 lib/snmp.php:960
+#: lib/snmp.php:983
 #, fuzzy, php-format
 msgid "SNMP Command is: %s"
 msgstr "Opciones de SNMP: [editar: %s]"
@@ -17647,6 +17314,10 @@ msgstr "El informe de automatización de Kadupul requiere un cliente de correo e
 msgid "WARNING: Detected Poller Boost Overrun, Possible Boost Poller Crash"
 msgstr "ADVERTENCIA: Se detectó desbordamiento de impulso de poller, posible bloqueo de Boost Poller"
 
+#: pollers.php:21
+msgid "Clear Statistics"
+msgstr "Borrar estadisticas"
+
 #: pollers.php:25
 msgid "Full Sync"
 msgstr "Sincronización completa"
@@ -18724,6 +18395,10 @@ msgstr "Alfabético"
 #: tree.php:1752
 msgid "Natural"
 msgstr "Natural"
+
+#: tree.php:1782 tree.php:1856 tree.php:1964
+msgid "Edit"
+msgstr "Editar"
 
 #: tree.php:1789 tree.php:1863 tree.php:1971
 msgid "Cut"
