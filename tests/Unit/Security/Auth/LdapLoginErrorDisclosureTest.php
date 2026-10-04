@@ -34,6 +34,8 @@ function get_nfilter_request_var($name, $default = '') {
 }
 function __($text, ...$args) { return vsprintf($text, $args); }
 function cacti_log($string, $output = false, $environ = 'CMDPHP', $level = '') { $GLOBALS['logs'][] = $string; }
+function get_filter_request_var($name) { return (int) get_nfilter_request_var($name); }
+function get_auth_realms($login = false) { return array(1001 => "Example domain"); }
 function auth_checkclear_lockout($username, $realm) {}
 function auth_process_lockout_check($username, $realm) { return false; }
 function auth_process_lockout($username, $realm) { $GLOBALS['lockout_calls']++; }
@@ -98,7 +100,7 @@ test('a successful directory login still returns the account without an error', 
 
     expect($result['error'])->toBeFalse()
         ->and($result['error_msg'])->toBe('')
-        ->and($result['user'])->toBe(array('id' => 9, 'username' => 'alice', 'realm' => $realm === '3' ? 3 : $realm))
+        ->and($result['user'])->toBe(array('id' => 9, 'username' => 'alice', 'realm' => (int) $realm))
         ->and($result['lockout_calls'])->toBe(0);
 })->with(array(
     'ldap' => array('ldap_login_process', '3'),

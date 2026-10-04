@@ -616,6 +616,11 @@ function form_actions()
     if (isset_request_var('selected_items')) {
         $selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
         if (is_array($selected_items)) {
+            foreach ($selected_items as $graph_id) {
+                if (!graph_edit_graph_is_allowed($graph_id)) {
+                    graph_edit_access_denied();
+                }
+            }
             $selected_items = array_values(array_filter(
                 $selected_items,
                 function ($graph_id) {
@@ -745,10 +750,6 @@ function form_actions()
             /* ================= input validation ================= */
             input_validate_input_number($matches[1]);
             /* ==================================================== */
-
-            if (!is_graph_allowed($matches[1])) {
-                continue;
-            }
 
             if (!graph_edit_graph_is_allowed($matches[1])) {
                 graph_edit_access_denied();

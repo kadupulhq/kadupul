@@ -235,7 +235,14 @@ if (str_contains($scenario, 'bulk')) {
     form_actions();
 }
 try {
-    $status = user_group_copy(str_contains($scenario, 'absent') ? 999 : 5, 'Copied');
+    if ($scenario === 'wiring-prefixes') {
+        $status = true;
+        foreach (json_decode($argv[4], true, 512, JSON_THROW_ON_ERROR) as $prefix) {
+            $status = user_group_copy(5, $prefix) && $status;
+        }
+    } else {
+        $status = user_group_copy(str_contains($scenario, 'absent') ? 999 : 5, 'Copied');
+    }
 } catch (Throwable $error) {
     if (!str_contains($scenario, 'cleanup-failed')) {
         throw $error;

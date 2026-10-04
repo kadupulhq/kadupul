@@ -258,6 +258,13 @@ function save_user_settings($user = -1)
 
     foreach ($settings_user as $tab_short_name => $tab_fields) {
         foreach ($tab_fields as $field_name => $field_array) {
+            if (isset_request_var($field_name) && isset($field_array['default']) && is_numeric($field_array['default'])
+                && (!is_numeric(get_nfilter_request_var($field_name)) || !settings_value_passes_filter($field_name, get_nfilter_request_var($field_name), true))) {
+                $_SESSION['sess_error_fields'][$field_name] = $field_name;
+                $_SESSION['sess_field_values'][$field_name] = get_nfilter_request_var($field_name);
+                continue;
+            }
+
             /* Check every field with a numeric default value and reset it to default if the inputted value is not numeric  */
             if (isset($field_array['default']) && is_numeric($field_array['default']) && (!is_numeric(get_nfilter_request_var($field_name)) || !settings_value_passes_filter($field_name, get_nfilter_request_var($field_name), true))) {
                 set_request_var($field_name, $field_array['default']);

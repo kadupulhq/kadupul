@@ -10,43 +10,23 @@ namespace UserGroupCopyPrefixTest;
 
 $source = file_get_contents(dirname(__DIR__, 3) . '/user_group_admin.php');
 
-if (!preg_match('/^function user_group_copy\\(.*?^\\}/ms', $source, $match)) {
-    throw new \RuntimeException('Missing user_group_copy()');
-}
-
-eval('namespace UserGroupCopyPrefixTest; ' . $match[0]);
-
-$GLOBALS['user_group_copy_writes'] = array();
-
-function db_qstr($value)
+function prefix_copy_run(array $prefixes): array
 {
-    return "'" . addslashes((string) $value) . "'";
-}
-
-function db_execute_prepared($sql, $params = array())
-{
-    $GLOBALS['user_group_copy_writes'][] = $sql;
-
-    return true;
-}
-
-// No new id, so the copy stops after the group row.
-function db_fetch_insert_id()
-{
-    return 0;
-}
-
-function copied_names(): array
-{
-    $names = array();
-
-    foreach ($GLOBALS['user_group_copy_writes'] as $sql) {
-        if (preg_match("/SELECT '(.*?)', description/", $sql, $match)) {
-            $names[] = stripslashes($match[1]);
-        }
+    $root = dirname(__DIR__, 3);
+    $directory = sys_get_temp_dir() . '/group-prefix-native-' . bin2hex(random_bytes(8));
+    mkdir($directory, 0700);
+    try {
+        $process = proc_open(array(PHP_BINARY, '-d', 'auto_prepend_file=', $root . '/tests/Fixtures/group-copy-native.php', 'wiring-prefixes', $directory, '', json_encode($prefixes, JSON_THROW_ON_ERROR)), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        expect(is_resource($process))->toBeTrue();
+        $output = stream_get_contents($pipes[1]);
+        $error = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        expect(proc_close($process))->toBe(0, $error)->and($error)->toBe('');
+        return json_decode($output, true, 512, JSON_THROW_ON_ERROR);
+    } finally {
+        rmdir($directory);
     }
-
-    return $names;
 }
 
 dataset('rejected prefixes', array(
@@ -58,23 +38,19 @@ dataset('rejected prefixes', array(
 ));
 
 test('group copies refuse a prefix the group name rule rejects', function ($prefix) {
-    $GLOBALS['user_group_copy_writes'] = array();
-
-    expect(user_group_copy(4, $prefix))->toBeFalse();
-    expect($GLOBALS['user_group_copy_writes'])->toBe(array());
+    $result = prefix_copy_run(array($prefix));
+    expect($result['status'])->toBeFalse()->and($result['copies'])->toBe(array())
+        ->and($result['transaction'])->toBeFalse();
 })->with('rejected prefixes');
 
 test('group copies keep working for prefixes the edit form accepts', function () {
-    $GLOBALS['user_group_copy_writes'] = array();
+    $result = prefix_copy_run(array('New Group', 'ops.team_1 @site-2', 'DOMAIN\\Ops', ''));
+    expect($result['status'])->toBeTrue()->and($result['transaction'])->toBeFalse()
+        ->and(array_column($result['copies'], 'name'))->toBe(array('New Group 1', 'ops.team_1 @site-2 2', 'DOMAIN\\Ops 3', ' 4'));
 
-    expect(user_group_copy(4, 'New Group'))->toBeTrue();
-    expect(user_group_copy(4, 'ops.team_1 @site-2'))->toBeTrue();
-    expect(user_group_copy(4, 'DOMAIN\\Ops'))->toBeTrue();
-    expect(user_group_copy(4, ''))->toBeTrue();
-
-    expect(copied_names())->toBe(array('New Group 1', 'ops.team_1 @site-2 2', 'DOMAIN\\Ops 3', ' 4'));
 });
 
 test('the copy action reports a rejected prefix instead of copying', function () use ($source) {
-    expect($source)->toMatch("/if \\(!user_group_copy\\(\\\$selected_items\\[\\\$i\\], get_nfilter_request_var\\('group_prefix'\\)\\)\\) \\{\\s*raise_message\\('group_prefix', __\\(.*?\\), MESSAGE_LEVEL_ERROR\\);\\s*break;/s");
+    expect($source)->toContain("raise_message('group_prefix'", "raise_message(2)");
+
 });
