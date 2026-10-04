@@ -6,6 +6,7 @@
  */
 
 require_once __DIR__ . '/path_helpers.php';
+require_once __DIR__ . '/graph_fonts.php';
 
 /**
  * title_trim - takes a string of text, truncates it to $max_length and appends
@@ -133,17 +134,9 @@ function read_graph_config_option($config_name, $force = false)
  */
 function graph_font_size_filter($size)
 {
-    if (!is_numeric($size)) {
-        return false;
-    }
+    graph_font_resolver();
 
-    $points = (float) $size;
-
-    if (!is_finite($points) || $points <= 4 || $points > 72) {
-        return false;
-    }
-
-    return $size;
+    return \Kadupul\Graphing\Domain\Font\GraphFontResolver::acceptsSize($size) ? $size : false;
 }
 
 /**
@@ -159,15 +152,59 @@ function graph_font_size_filter($size)
  */
 function graph_font_size($size, $default)
 {
-    if (is_numeric($size) && is_finite((float) $size) && (float) $size > 72) {
+    graph_font_resolver();
+
+    // GraphFontResolver::size() returns floats only. Plugins may compare this
+    // result strictly, so the fallback keeps the type the caller passed and
+    // the cap stays the integer 72, as before the resolver.
+    if (\Kadupul\Graphing\Domain\Font\GraphFontResolver::acceptsSize($size)) {
+        return (float) $size;
+    }
+
+    if (is_numeric($size) && is_finite((float) $size) && (float) $size > \Kadupul\Graphing\Domain\Font\GraphFontResolver::MAX_SIZE) {
         return 72;
     }
 
-    if (graph_font_size_filter($size) === false) {
-        return $default;
+    return $default;
+}
+
+/**
+ * graph_font_name_filter - FILTER_CALLBACK for the graph font settings
+ *
+ * Refuses a value that is not a Pango font description, or that names no
+ * family fontconfig reports as installed. Without fc-list, as on Windows, a
+ * well-formed name is accepted unchecked and the fact is logged.
+ *
+ * @param $name - the submitted font description
+ *
+ * @return - $name when RRDtool can use it, otherwise false
+ */
+function graph_font_name_filter($name)
+{
+    static $installed = null;
+
+    graph_font_resolver();
+
+    if (!is_string($name) || !\Kadupul\Graphing\Domain\Font\GraphFontResolver::acceptsFamily($name)) {
+        return false;
     }
 
-    return (float) $size;
+    // An empty setting leaves the choice to RRDtool.
+    if (trim($name) === '') {
+        return $name;
+    }
+
+    $installed ??= new \Kadupul\Graphing\Infrastructure\Fontconfig\InstalledFontFamilies((new \Symfony\Component\Process\ExecutableFinder())->find('fc-list'));
+
+    $found = $installed->contains($name);
+
+    if ($found === null) {
+        cacti_log('NOTE: Graph font \'' . $name . '\' was saved without checking that it is installed, because fc-list is not available', false, 'SYSTEM', POLLER_VERBOSITY_MEDIUM);
+
+        return $name;
+    }
+
+    return $found ? $name : false;
 }
 
 /**
@@ -247,7 +284,7 @@ function save_user_settings($user = -1)
                             set_user_setting($sub_field_name, get_nfilter_request_var($sub_field_name), $user);
                         }
                     }
-                } elseif (isset_request_var($field_name)) {
+                } elseif (isset_request_var($field_name) && settings_value_passes_filter($field_name, get_nfilter_request_var($field_name), true)) {
                     set_user_setting($field_name, get_nfilter_request_var($field_name), $user);
                 }
             }

@@ -65,6 +65,38 @@ test('graph_font_size keeps sizes RRDtool can draw and replaces the rest', funct
         return array('fn' => 'graph_font_size', 'args' => array($size, 9));
     }, $sizes);
 
-    // Valid sizes come back as floats and the default as given, so compare loosely.
-    expect(rrd_font_arguments_run($this, $calls))->toEqual(array(9, 9, 9, 4.01, 8, 12.5, 72, 72, 9, 9, 9, 9, 9, 9));
+    // Results come back through JSON, which drops the .0 of a whole float.
+    expect(rrd_font_arguments_run($this, $calls))->toBe(array(9, 9, 9, 4.01, 8, 12.5, 72, 72, 9, 9, 9, 9, 9, 9));
 });
+
+test('graph_font_size hands back the default it was given unchanged', function () {
+    $calls = array(
+        array('fn' => 'graph_font_size', 'args' => array('', '10')),
+        array('fn' => 'graph_font_size', 'args' => array('abc', 8.5)),
+        array('fn' => 'graph_font_size', 'args' => array(null, 72)),
+        array('fn' => 'graph_font_size', 'args' => array('4', '72')),
+    );
+
+    expect(rrd_font_arguments_run($this, $calls))->toBe(array('10', 8.5, 72, '72'));
+});
+
+test('a local RRDtool is given the Default Font only when it names a font', function ($font, $environment) {
+    $calls = array(
+        array('fn' => 'putenv', 'args' => array('RRD_DEFAULT_FONT')),
+        // A boolean command with no pipe starts its own RRDtool process through __rrd_init().
+        array('fn' => 'rrdtool_execute', 'args' => array(array('info', 'rra/router_traffic_21.rrd'), false, 4)),
+        array('fn' => 'getenv', 'args' => array('RRD_DEFAULT_FONT')),
+        array('fn' => 'rrdtool_default_font', 'args' => array()),
+    );
+
+    $returned = rrd_font_arguments_run($this, $calls, array('line_mode' => true, 'options' => array('path_rrdtool_default_font' => $font) + rrd_characterization_options()));
+
+    expect($returned[2])->toBe($environment)
+        ->and($returned[3])->toBe($environment === false ? '' : $environment);
+})->with(array(
+    'a family' => array('DejaVu Sans', 'DejaVu Sans'),
+    'a description with a style and size' => array('DejaVu Sans Bold 9', 'DejaVu Sans Bold 9'),
+    'none' => array('', false),
+    'a font file path' => array('/usr/share/fonts/DejaVuSans.ttf', false),
+    'a line break' => array("Sans\nBold", false),
+));

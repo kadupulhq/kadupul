@@ -20,6 +20,8 @@ switch (get_request_var('action')) {
         $errors = array();
         $inserts = array();
 
+        $font_method = isset_request_var('font_method') ? get_nfilter_request_var('font_method') : read_config_option('font_method');
+
         foreach ($settings[get_request_var('tab')] as $field_name => $field_array) {
             if (($field_array['method'] == 'header') || ($field_array['method'] == 'spacer')) {
                 /* do nothing */
@@ -189,7 +191,12 @@ switch (get_request_var('action')) {
                     );
                 }
             } elseif (isset_request_var($field_name)) {
-                if ($field_array['method'] == 'textbox' && isset($field_array['filter'])) {
+                // Theme mode hides the font rows but still posts their stored values, so a
+                // font removed from this server since it was saved must not block the save.
+                $hidden_font = $field_array['method'] == 'font' && $font_method == 1
+                    && get_nfilter_request_var($field_name) === (string) read_config_option($field_name, true);
+
+                if (($field_array['method'] == 'textbox' || $field_array['method'] == 'font') && isset($field_array['filter']) && !$hidden_font) {
                     if (isset($field_array['options'])) {
                         $value = filter_var(get_nfilter_request_var($field_name), $field_array['filter'], $field_array['options']);
                     } else {

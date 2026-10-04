@@ -114,7 +114,7 @@ include/global_constants.php	anonymous-allowed	fragment without bootstrap, revie
 include/global_form.php	anonymous-allowed	fragment without bootstrap, reviewed at 95a0b48968a8; included by include/global.php
 include/global_languages.php	anonymous-allowed	fragment without bootstrap, reviewed at 614a6beac129; included by include/global.php
 include/global_session.php	anonymous-allowed	fragment without bootstrap, reviewed at 0db939a69dc9; included by auth_changepassword.php, auth_login.php, graph_realtime.php
-include/global_settings.php	anonymous-allowed	fragment without bootstrap, reviewed at 32385467641b; included by include/global.php
+include/global_settings.php	anonymous-allowed	fragment without bootstrap, reviewed at f1bbfe6405f9; included by include/global.php
 include/index.php	anonymous-allowed	redirect-only
 include/js/LC_MESSAGES/index.php	anonymous-allowed	redirect-only
 include/js/index.php	anonymous-allowed	redirect-only
