@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
+    branches: [main, 'chore/consolidate-main-*']
   workflow_dispatch:
     inputs:
       repo_name:
