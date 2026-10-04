@@ -133,8 +133,8 @@ dynamic_include	./cli/add_graphs.php:19	require_once($config['base_path'] . '/li
 dynamic_include	./cli/add_graphs.php:20	require_once($config['base_path'] . '/lib/template.php');
 dynamic_include	./cli/add_graphs.php:21	require_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./cli/add_perms.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
-dynamic_include	./cli/add_tree.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
-dynamic_include	./cli/add_tree.php:11	require_once($config['base_path'] . '/lib/api_tree.php');
+dynamic_include	./cli/add_tree.php:11	require_once($config['base_path'] . '/lib/api_automation_tools.php');
+dynamic_include	./cli/add_tree.php:12	require_once($config['base_path'] . '/lib/api_tree.php');
 dynamic_include	./cli/apply_automation_rules.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/apply_automation_rules.php:11	require_once($config['base_path'] . '/lib/api_automation.php');
 dynamic_include	./cli/apply_automation_rules.php:12	require_once($config['base_path'] . '/lib/api_data_source.php');
