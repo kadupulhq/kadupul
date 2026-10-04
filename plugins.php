@@ -845,7 +845,7 @@ function plugin_actions($plugin, $table) {
 		case '0': // Not Installed
 			$not_installed = plugin_required_installed($plugin, $table);
 		 	if ($not_installed != '') {
-				$link .= "<a class='pierror' href='#' title='" . __esc('Unable to Install Plugin.  The following Plugins must be installed first: %s', ucfirst($not_installed)) . "' class='linkEditMain'><img src='" . $config['url_path'] . "images/cog_error.png'></a>";
+				$link .= "<a class='pierror' href='#' title='" . __esc('Unable to Install Plugin: %s', ucfirst($not_installed)) . "' class='linkEditMain'><img src='" . $config['url_path'] . "images/cog_error.png'></a>";
 			} else {
 				$link .= "<a href='" . html_escape($config['url_path'] . 'plugins.php?mode=install&id=' . $plugin['directory']) . "' title='" . __esc('Install Plugin') . "' class='piinstall linkEditMain cactiPostAction'><img src='" . $config['url_path'] . "images/cog_add.png'></a>";
 			}
