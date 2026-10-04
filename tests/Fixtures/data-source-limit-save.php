@@ -32,9 +32,19 @@ $messages = array(1 => array('message' => 'Saved', 'type' => 'info'), 2 => array
     3 => array('message' => 'Validation', 'type' => 'error'), 43 => array('message' => 'Limits', 'type' => 'error'));
 $no_http_headers = true;
 
-function db_fetch_cell_prepared(...$args)
+function db_fetch_cell_prepared($sql, ...$args)
 {
+    // Data and item rows belong to the posted data source unless the test says otherwise.
+    if (str_starts_with($sql, 'SELECT local_data_id FROM data_template_')) {
+        return getenv('LIMIT_ROW_OWNER') ?: $_REQUEST['local_data_id'];
+    }
+
     return '0';
+}
+
+function is_device_allowed($device_id)
+{
+    return getenv('LIMIT_DEVICE_DENIED') !== '1';
 }
 
 function db_fetch_cell(...$args)
