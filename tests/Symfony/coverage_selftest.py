@@ -158,6 +158,7 @@ def main():
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceRemovalController.php',
         'src/Inventory/Domain/DeviceState.php',
         'src/Inventory/Domain/DeviceSelection.php',
+        'src/Inventory/Domain/SelectionIds.php',
         'src/Inventory/Application/Command/SetDevicesEnabled.php',
         'src/Inventory/Application/Query/PrepareDeviceStateChange.php',
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceStates.php',
