@@ -382,6 +382,8 @@ def verify_audit_cases(harness, check, tables, version):
                       stdout=stdout, stderr_filter=stderr_filter, shim_stderr_filter=shim_stderr_filter,
                       log_filter=log_masked)
         original, shim = ran['original'], ran['shim']
+        check(with_recorded_collations(masked_audit(shim['stdout']), collations) == masked_audit(shim['stdout']),
+              f'{label}: native ALTER explicitly retains the recorded column collations')
         if '--upgrade' in arguments:
             check(UPGRADE_DEPRECATION in shim['stderr'],
                   f'{label}: deprecated upgrade flag explains the separate upgrade command')
