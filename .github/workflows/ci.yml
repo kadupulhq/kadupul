@@ -315,9 +315,9 @@ jobs:
       - name: Verify PHP 8.1 idiom contracts
         working-directory: tests
         run: |
-          php -d error_reporting=8191 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/Php81IdiomsTest.php --colors=never
-          php -d error_reporting=8191 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/GhsaPmgmRegressionTest.php --colors=never
-          php -d error_reporting=8191 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/CoreSecurityHardeningTest.php --filter="ping constructor" --colors=never
+          php -d error_reporting=8191 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/Php81IdiomsTest.php --colors=never
+          php -d error_reporting=8191 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/GhsaPmgmRegressionTest.php --colors=never
+          php -d error_reporting=8191 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/CoreSecurityHardeningTest.php --filter="ping constructor" --colors=never
 
       - name: Verify PHP 8.0 string and regex behavior
         working-directory: tests
