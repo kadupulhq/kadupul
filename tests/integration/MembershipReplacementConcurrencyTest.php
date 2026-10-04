@@ -21,7 +21,7 @@ function membership_replacement_schema(PDO $db, string $prefix): array
 
 function membership_replacement_worker(array $scenario): array
 {
-    $process = proc_open(array(PHP_BINARY, dirname(__DIR__) . '/Helpers/MembershipReplacementNativeProbe.php', json_encode($scenario)), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $process = proc_open(array(PHP_BINARY, dirname(__DIR__) . '/Fixtures/membership-replacement-native-probe.php', json_encode($scenario)), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
     stream_set_timeout($pipes[1], 10);
     $ready = trim(fgets($pipes[1]));
     expect($ready)->toStartWith('READY:');
