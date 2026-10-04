@@ -5,13 +5,16 @@ declare(strict_types=1);
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once __DIR__ . '/../Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 require_once dirname(__DIR__) . '/Helpers/NativeChildCoverageEvidence.php';
 
 final class DataDebugNativeCoverageTest extends TestCase
 {
-    /** @dataProvider listCases */
+    use \PestCodeCoverageCompatibility;
+    #[\PHPUnit\Framework\Attributes\DataProvider('listCases')]
     public function testFullControllerKeepsScopedPersistedChecks(array $request, array $ids): void
     {
         $state = $this->render($request);
@@ -56,7 +59,7 @@ final class DataDebugNativeCoverageTest extends TestCase
         );
     }
 
-    /** @dataProvider statusCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('statusCases')]
     public function testRealStatusAndDetailedCheckRendering(string $status, string $heading, string $result): void
     {
         $state = $this->render(array('action' => 'view', 'id' => 101), array('state' => $status));
@@ -86,7 +89,7 @@ final class DataDebugNativeCoverageTest extends TestCase
         );
     }
 
-    /** @dataProvider mutationCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('mutationCases')]
     public function testDebugMutationsKeepUnselectedPersistedChecks(string $operation): void
     {
         $request = $operation === 'runall' ? array('action' => 'runall', 'host_id' => 1) : array();
@@ -122,7 +125,7 @@ final class DataDebugNativeCoverageTest extends TestCase
         return array('existing rerun' => array('rerun'), 'delete' => array('delete'), 'filtered run all' => array('runall'));
     }
 
-    /** @dataProvider cleanerCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('cleanerCases')]
     public function testCleanerFullListKeepsRowsAndUnusedFileScope(array $request, array $names): void
     {
         $state = $this->render($request, array('view' => 'cleaner'));

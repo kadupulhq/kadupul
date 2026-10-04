@@ -7,8 +7,26 @@
 $coverageRoot = dirname(__DIR__, 2);
 if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE') || defined('DATA_INPUT_LIST_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE')) {
     require_once $coverageRoot . '/include/vendor/autoload.php';
+    // Symfony's module suite uses the application's PHPUnit 11 / code-coverage
+    // 10 stack. Child reports are serialized into that parent process, so they
+    // must use the same class versions instead of tests/' PHPUnit 12 stack.
+    $testVendorPath = $coverageRoot . '/include/vendor';
 } else {
     require_once $coverageRoot . '/tests/vendor/autoload.php';
+    $testVendorPath = $coverageRoot . '/tests/vendor';
+}
+$testLoader = Composer\Autoload\ClassLoader::getRegisteredLoaders()[$testVendorPath] ?? null;
+if (!$testLoader instanceof Composer\Autoload\ClassLoader) {
+    throw new RuntimeException('Unable to locate the coverage dependency autoloader');
+}
+// Load the selected stack's RawCodeCoverageData class before application
+// bootstrap code changes Composer loader priority.
+if (!class_exists(SebastianBergmann\CodeCoverage\Data\RawCodeCoverageData::class)) {
+    class_exists(SebastianBergmann\CodeCoverage\RawCodeCoverageData::class);
+}
+$coveragePackageVersion = Composer\InstalledVersions::getVersion('phpunit/php-code-coverage');
+if (!is_string($coveragePackageVersion)) {
+    throw new RuntimeException('Unable to determine the active code-coverage version');
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
 if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE')) {
@@ -359,10 +377,14 @@ $childCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
 );
 $childCoverage->start('native RRD child ' . getmypid());
 $childCoverageFile = RRD_TEST_COVERAGE_DIRECTORY . '/child-' . getmypid() . '.coverage';
-register_shutdown_function(function () use ($childCoverage, $childCoverageFile) {
+register_shutdown_function(function () use ($childCoverage, $childCoverageFile, $coveragePackageVersion, $testLoader) {
     // Append collection after application shutdown handlers so implicit pipe
     // close/drain is measured too, not just the main body of the child script.
-    register_shutdown_function(function () use ($childCoverage, $childCoverageFile) {
+    register_shutdown_function(function () use ($childCoverage, $childCoverageFile, $coveragePackageVersion, $testLoader) {
+        // Application bootstrap prepends its Composer loader. Restore the test
+        // loader as first choice before PHPUnit 12 lazily creates its analyser.
+        $testLoader->unregister();
+        $testLoader->register(true);
         $childCoverage->stop();
         if (defined('RRD_TEST_CLI_COVERAGE_COPY')) {
             // Measure the real copied CLI, then map only its filename. Refuse
@@ -372,15 +394,39 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile) 
             if ($copyHash === false || $sourceHash === false || !hash_equals($sourceHash, $copyHash)) {
                 throw new RuntimeException('Copied CLI changed while measuring coverage');
             }
-            // Coverage records canonical paths; macOS temporary directories may
-            // use /var aliases for /private/var. Map the actual measured names.
+            // Preserve canonical measured paths and support both installed filter APIs.
             $childCoverage->getData(true)->renameFile(realpath(RRD_TEST_CLI_COVERAGE_COPY), realpath(RRD_TEST_CLI_COVERAGE_SOURCE));
-            $childCoverage->filter()->excludeFile(RRD_TEST_CLI_COVERAGE_COPY);
-            $childCoverage->filter()->includeFile(RRD_TEST_CLI_COVERAGE_SOURCE);
+            if (method_exists($childCoverage->filter(), 'excludeFile')) {
+                $childCoverage->filter()->excludeFile(RRD_TEST_CLI_COVERAGE_COPY);
+                $childCoverage->filter()->includeFile(RRD_TEST_CLI_COVERAGE_SOURCE);
+            } else {
+                // The newer allowlist cannot remove a copy. Rebuild it with the
+                // canonical path so getData() cannot rediscover the old copy as
+                // uncovered after its measured lines have been renamed.
+                $canonicalFilter = new SebastianBergmann\CodeCoverage\Filter();
+                foreach ($childCoverage->filter()->files() as $file) {
+                    $canonicalFilter->includeFile($file === realpath(RRD_TEST_CLI_COVERAGE_COPY) ? RRD_TEST_CLI_COVERAGE_SOURCE : $file);
+                }
+                $canonicalCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
+                    (new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($canonicalFilter),
+                    $canonicalFilter
+                );
+                $canonicalCoverage->setData($childCoverage->getData(true));
+                $canonicalCoverage->setTests($childCoverage->getTests());
+                $childCoverage = $canonicalCoverage;
+            }
+
+            // Both filter APIs now report only canonical paths. No global
+            // temporary manifest or deferred source restoration is needed.
+
         }
         $serializedCoverage = serialize($childCoverage);
         if (file_put_contents($childCoverageFile, $serializedCoverage) !== strlen($serializedCoverage)) {
             throw new RuntimeException('Unable to preserve child process coverage');
+        }
+        if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')
+            && file_put_contents($childCoverageFile . '.version', $coveragePackageVersion . PHP_EOL) === false) {
+            throw new RuntimeException('Unable to preserve child coverage version');
         }
         if (isset($GLOBALS['whitelistCoverageEvidence'])) {
             if (!defined('INPUT_WHITELIST_NATIVE_COMPLETED')) {

@@ -3,11 +3,15 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 1) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 final class LegacyRequestContextNativeTest extends TestCase
 {
-    /** @dataProvider bootModes */
+    use \PestCodeCoverageCompatibility;
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('bootModes')]
     public function testProductionWrappersPreserveRequestSelectionSanitizationAndLogging(string $mode): void
     {
         $directory = sys_get_temp_dir() . '/request-context-' . bin2hex(random_bytes(8));
@@ -48,7 +52,7 @@ final class LegacyRequestContextNativeTest extends TestCase
         }
     }
 
-    public function bootModes(): array
+    public static function bootModes(): array
     {
         return array(array('autoload'), array('early'));
     }

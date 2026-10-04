@@ -3,13 +3,17 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 1) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../Helpers/GraphZoomNativeHarness.php';
 
 final class GraphZoomNativeControllerTest extends TestCase
 {
-    /** @dataProvider missingData */
+    use \PestCodeCoverageCompatibility;
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('missingData')]
     public function testMissingStoredDataRedirectsBeforeAnyOutput(array $scenario): void
     {
         $result = GraphZoomNativeHarness::run($scenario, $this->getTestResultObject()->getCodeCoverage());
@@ -20,12 +24,12 @@ final class GraphZoomNativeControllerTest extends TestCase
         self::assertDoesNotMatchRegularExpression('/PHP (Warning|Fatal error|Notice):/', $result['stderr']);
     }
 
-    public function missingData(): array
+    public static function missingData(): array
     {
         return array('no profile' => array(array('no_profile' => true)), 'unassociated selected RRA' => array(array('request' => array('rra_id' => '12'))), 'removed default row' => array(array('deleted_rra' => true)));
     }
 
-    /** @dataProvider selections */
+    #[\PHPUnit\Framework\Attributes\DataProvider('selections')]
     public function testNativeZoomUsesTheOrderedStoredRraAndItsCausalTimeWindow(string $requested, int $expected, int $timespan): void
     {
         $result = GraphZoomNativeHarness::run(array('request' => array('rra_id' => $requested)), $this->getTestResultObject()->getCodeCoverage());
@@ -57,7 +61,7 @@ final class GraphZoomNativeControllerTest extends TestCase
         self::assertStringContainsString('ORDER BY dspr.steps', $associations[0][0]);
     }
 
-    public function selections(): array
+    public static function selections(): array
     {
         return array(array('all', 5, 3000), array('0', 5, 3000), array('', 5, 3000), array('5', 5, 3000), array('7', 7, 360000));
     }
