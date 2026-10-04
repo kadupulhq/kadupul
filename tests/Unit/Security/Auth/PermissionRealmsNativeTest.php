@@ -5,11 +5,15 @@
 
 use PHPUnit\Framework\TestCase;
 
+require_once dirname(__DIR__, 3) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 final class PermissionRealmsNativeTest extends TestCase
 {
+    use \PestCodeCoverageCompatibility;
+
     private static bool $coverageEvidenceChecked = false;
 
-    /** @dataProvider principalKinds */
+    #[\PHPUnit\Framework\Attributes\DataProvider('principalKinds')]
     public function testRealmFormsUseFreshPrincipalSelectionsAndPreserveEverySection(bool $group): void
     {
         $state = $this->runController($group);

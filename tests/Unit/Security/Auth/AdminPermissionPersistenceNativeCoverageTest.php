@@ -3,13 +3,17 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 3) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
 {
+    use \PestCodeCoverageCompatibility;
+
     private static bool $coverageEvidenceChecked = false;
 
-    /** @dataProvider epochFailureCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('epochFailureCases')]
     public function testFailedEpochWritesUndoOnlyTheirPermissionUnit(bool $group, string $operation, string $failure, bool $caller): void
     {
         $scenario = array('group' => $group, 'operation' => $operation, 'type' => 'graph', 'kind' => 'graph', 'type_id' => 1, 'replace' => false, $failure => $group ? 44 : 42, 'caller_transaction' => $caller);
@@ -47,7 +51,7 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
         return $cases;
     }
 
-    /** @dataProvider epochPartialCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('epochPartialCases')]
     public function testRemovedMemberEpochFailureRetainsIndependentSuccessfulUnits(array $selected): void
     {
         $state = $this->runController(array('group' => true, 'operation' => 'membership', 'replace' => false, 'selected' => $selected, 'epoch_failure' => 42));
@@ -63,7 +67,7 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
         return array('failed epoch first' => array(array(42,44)), 'failed epoch last' => array(array(44,42)));
     }
 
-    /** @dataProvider realmCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('realmCases')]
     public function testRealmSavesReplaceOnlyTheTargetPrincipalAndResetItsUsers(bool $group, array $realms, bool $self): void
     {
         $state = $this->runController(['group' => $group, 'operation' => 'realm', 'realms' => $realms, 'self' => $self]);
@@ -103,7 +107,7 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
         ];
     }
 
-    /** @dataProvider permissionCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('permissionCases')]
     public function testPermissionRemovalPreservesOtherTypesItemsAndPrincipals(bool $group, string $typeName, int $typeId, bool $self): void
     {
         $state = $this->runController(['group' => $group, 'operation' => 'remove', 'type' => $typeName, 'self' => $self]);
@@ -151,7 +155,7 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
         return $cases;
     }
 
-    /** @dataProvider bulkCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('bulkCases')]
     public function testBulkWritesInvalidateOnlyAffectedPrincipalsAndExistingSessions(bool $group, string $kind, int $type, bool $replace, bool $self): void
     {
         $membership = $kind === 'membership';
@@ -203,7 +207,7 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
         return $cases;
     }
 
-    /** @dataProvider failedMutationCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('failedMutationCases')]
     public function testNativeSqlFailuresPreserveUnchangedEpochsAndInvalidateOnlySuccessfulWrites(bool $group, string $operation, bool $replace, bool $partial, bool $failureLast = false, string $typeName = 'host'): void
     {
         $membership = $operation === 'membership';
@@ -260,7 +264,7 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
         return $cases;
     }
 
-    /** @dataProvider absentDeleteCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('absentDeleteCases')]
     public function testDeletingAnAbsentExceptionLeavesEpochsUnchanged(bool $group, string $operation): void
     {
         $scenario = ['group' => $group, 'operation' => $operation, 'type' => 'host', 'kind' => 'host', 'type_id' => 3, 'replace' => false, 'self' => true];
@@ -280,7 +284,7 @@ final class AdminPermissionPersistenceNativeCoverageTest extends TestCase
         return [[false, 'remove'], [true, 'remove'], [false, 'bulk'], [true, 'bulk']];
     }
 
-    /** @dataProvider emptySelectionCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('emptySelectionCases')]
     public function testEmptySelectionPreservesAllEpochsAndSessions(bool $group, string $operation): void
     {
         $state = $this->runController(['group' => $group, 'operation' => $operation, 'kind' => 'host', 'type_id' => 3, 'replace' => false, 'self' => true, 'selected' => []]);

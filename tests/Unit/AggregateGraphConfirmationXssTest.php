@@ -3,11 +3,15 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 1) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 final class AggregateGraphConfirmationXssTest extends TestCase
 {
-    /** @dataProvider confirmations */
+    use \PestCodeCoverageCompatibility;
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('confirmations')]
     public function testConfirmationKeepsTheIdInsideOneAttribute(array $scenario, string $expected): void
     {
         $result = $this->runController($scenario);
@@ -36,7 +40,7 @@ final class AggregateGraphConfirmationXssTest extends TestCase
         }
     }
 
-    public function confirmations(): array
+    public static function confirmations(): array
     {
         $cases = array(
             'hostile ID' => array(array('local_graph_id' => "42' onfocus='alert(1)'><x>injected</x>"), "42' onfocus='alert(1)'><x>injected</x>"),
@@ -51,7 +55,7 @@ final class AggregateGraphConfirmationXssTest extends TestCase
         return $cases;
     }
 
-    /** @dataProvider pages */
+    #[\PHPUnit\Framework\Attributes\DataProvider('pages')]
     public function testNativeAggregatePagesKeepTheirGraphAndTemplateContext(array $scenario, string $expected): void
     {
         $result = $this->runController($scenario);
@@ -84,7 +88,7 @@ final class AggregateGraphConfirmationXssTest extends TestCase
         }
     }
 
-    public function pages(): array
+    public static function pages(): array
     {
         return array(
             'list' => array(array('action' => '', 'rows' => 10), 'Graph title'),
