@@ -1,6 +1,7 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -111,7 +112,7 @@ function aggregate_color_item_form_save()
     item - Graph Items
    ----------------------- */
 
-function color_templates_item_dnd()
+function color_templates_item_dnd(): never
 {
     /* ================= Input validation ================= */
     get_filter_request_var('id');

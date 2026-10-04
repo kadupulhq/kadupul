@@ -1,6 +1,7 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -290,7 +291,7 @@ function automation_duplicate_snmp_option($id, $new_name)
     }
 }
 
-function automation_snmp_item_dnd()
+function automation_snmp_item_dnd(): never
 {
     /* ================= Input validation ================= */
     get_filter_request_var('id');

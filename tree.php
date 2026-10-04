@@ -205,7 +205,7 @@ function tree_sort_name_desc()
     db_execute('SET @seq = 0; UPDATE graph_tree SET sequence = (@seq:=@seq+1) ORDER BY name DESC;');
 }
 
-function tree_down()
+function tree_down(): never
 {
     tree_check_sequences();
 
@@ -240,7 +240,7 @@ function tree_down()
     exit;
 }
 
-function tree_up()
+function tree_up(): never
 {
     tree_check_sequences();
 
@@ -275,7 +275,7 @@ function tree_up()
     exit;
 }
 
-function tree_dnd()
+function tree_dnd(): never
 {
     if (isset_request_var('tree_ids') && is_array(get_nfilter_request_var('tree_ids'))) {
         $tids     = get_nfilter_request_var('tree_ids');

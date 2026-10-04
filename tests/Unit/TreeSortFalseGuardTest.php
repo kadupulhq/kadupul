@@ -2,6 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -46,7 +47,8 @@ test('get_branch_sort_type guards against a missing row before the switch', func
     $body = _tree_function_body($source, 'function get_branch_sort_type()');
 
     $guardPos  = strpos($body, '$sort_type === false');
-    $switchPos = strpos($body, 'switch ($sort_type)');
+    preg_match('/switch\s*\(\$sort_type\)/', $body, $switch, PREG_OFFSET_CAPTURE);
+    $switchPos = $switch[0][1] ?? false;
 
     expect($guardPos)->not->toBeFalse('=== false guard must be present');
     expect($switchPos)->not->toBeFalse();
