@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-03 19:59-0700\n"
+"POT-Creation-Date: 2026-10-03 20:00-0700\n"
 "PO-Revision-Date: 2024-04-20 18:23-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -47,9 +47,9 @@ msgstr "Тази програма се разпространява с наде�
 #: data_queries.php:972 data_queries.php:1252 data_source_profiles.php:16
 #: data_source_profiles.php:912 data_sources.php:22 data_sources.php:1229
 #: data_templates.php:19 data_templates.php:791 gprint_presets.php:12
-#: graph_templates.php:22 graph_templates.php:517 graphs.php:31 host.php:29
+#: graph_templates.php:22 graph_templates.php:517 graphs.php:31
 #: host_templates.php:20 host_templates.php:485 host_templates.php:542
-#: include/global_arrays.php:1652 include/global_settings.php:232
+#: include/global_arrays.php:1654 include/global_settings.php:232
 #: lib/api_automation.php:1323 lib/api_automation.php:1386
 #: lib/api_automation.php:1457 lib/html.php:1546 lib/html_form.php:1397
 #: lib/html_reports.php:1937 managers.php:13 pollers.php:18 tree.php:1688
@@ -82,7 +82,7 @@ msgstr "Свържете се със съвкупността"
 msgid "Disassociate with Aggregate"
 msgstr "Отделяне с агрегат"
 
-#: aggregate_graphs.php:70 graphs.php:199 host.php:250
+#: aggregate_graphs.php:70 graphs.php:199
 #, php-format
 msgid "Place on a Tree (%s)"
 msgstr "Място на дърво ( %s)"
@@ -127,9 +127,7 @@ msgstr "Кликнете върху „Напред“, за да изтриет
 #: graph_view.php:1043 graphs.php:876 graphs.php:892 graphs.php:903
 #: graphs.php:914 graphs.php:929 graphs.php:943 graphs.php:952 graphs.php:1154
 #: graphs.php:1197 graphs.php:1219 graphs.php:1250 graphs.php:1262
-#: graphs.php:1846 host.php:475 host.php:484 host.php:531 host.php:540
-#: host.php:549 host.php:565 host.php:579 host.php:588 host.php:619
-#: host.php:631 host_templates.php:222 host_templates.php:236
+#: graphs.php:1846 host_templates.php:222 host_templates.php:236
 #: host_templates.php:247 host_templates.php:302 host_templates.php:375
 #: lib/clog_webapi.php:225 lib/html.php:2833 lib/html_form.php:1396
 #: lib/html_form.php:1413 lib/html_form.php:1424 lib/html_reports.php:632
@@ -161,9 +159,7 @@ msgstr "Отказ"
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
 #: graphs.php:876 graphs.php:892 graphs.php:903 graphs.php:914 graphs.php:929
 #: graphs.php:943 graphs.php:952 graphs.php:1154 graphs.php:1197
-#: graphs.php:1219 graphs.php:1250 graphs.php:1262 host.php:475 host.php:484
-#: host.php:531 host.php:540 host.php:549 host.php:565 host.php:579
-#: host.php:588 host.php:619 host.php:631 host_templates.php:222
+#: graphs.php:1219 graphs.php:1250 graphs.php:1262 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
 #: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2832
 #: lib/html_reports.php:574 managers.php:1066 managers.php:1127 pollers.php:549
@@ -192,7 +188,7 @@ msgstr "За да мигрират агрегираните графики по-
 #: aggregate_graphs.php:406 aggregate_graphs.php:456 aggregate_graphs.php:504
 #: auth_changepassword.php:415 auth_profile.php:464 automation_networks.php:387
 #: automation_snmp.php:245 graphs.php:1156 graphs.php:1206 graphs.php:1209
-#: graphs.php:1253 graphs.php:1846 host.php:622 include/auth.php:309
+#: graphs.php:1253 graphs.php:1846 include/auth.php:309
 #: lib/api_aggregate.php:2209 lib/api_aggregate.php:2224 lib/html_form.php:1422
 #: lib/html_reports.php:632 managers.php:1130 permission_denied.php:14
 #: permission_denied.php:16
@@ -240,21 +236,21 @@ msgstr "Агрегирано име:"
 msgid "New Aggregate"
 msgstr "Нов сбор"
 
-#: aggregate_graphs.php:485 graphs.php:1234 host.php:603
+#: aggregate_graphs.php:485 graphs.php:1234
 msgid "Click 'Continue' to add the selected Graphs to the Report below."
 msgstr "Кликнете върху „Напред“, за да добавите избраните графики към отчета по-долу."
 
-#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1238 host.php:607
+#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1238
 #: lib/html_reports.php:18 lib/html_reports.php:2133
 msgid "Report Name"
 msgstr "Име на отчета"
 
-#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1242 host.php:611
+#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1242
 #: lib/html_reports.php:1789
 msgid "Timespan"
 msgstr "Време"
 
-#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1246 host.php:615
+#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1246
 msgid "Align"
 msgstr "Подравняване"
 
@@ -294,7 +290,7 @@ msgstr "Графики на Dis-Associate"
 msgid "Click 'Continue' to place the following Aggregate Graph(s) under the Tree Branch."
 msgstr "Кликнете върху „Напред“, за да поставите следната графика (и) под клона на дървото."
 
-#: aggregate_graphs.php:538 host.php:571
+#: aggregate_graphs.php:538
 msgid "Destination Branch:"
 msgstr "Клон на дестинацията:"
 
@@ -413,7 +409,7 @@ msgstr "Съответстващи графики"
 #: color_templates.php:560 data_debug.php:1189 data_queries.php:1371
 #: data_source_profiles.php:1164 data_sources.php:1783 data_templates.php:1101
 #: gprint_presets.php:255 graph_templates.php:727 graph_view.php:667
-#: graphs.php:2100 graphs_new.php:524 host.php:1820 host_templates.php:795
+#: graphs.php:2100 graphs_new.php:524 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
 #: lib/api_automation.php:480 lib/api_automation.php:708
 #: lib/clog_webapi.php:608 lib/html.php:268 lib/html_filter.php:46
@@ -432,9 +428,9 @@ msgstr "Търсене"
 #: aggregate_graphs.php:1288 aggregate_graphs.php:1324
 #: aggregate_graphs.php:1587 color_templates.php:680 data_sources.php:1985
 #: data_sources.php:2124 graph_view.php:488 graph_view.php:739
-#: graph_view.php:803 graphs.php:2117 graphs.php:2316 host.php:1934
+#: graph_view.php:803 graphs.php:2117 graphs.php:2316
 #: include/global_arrays.php:993 include/global_arrays.php:1229
-#: include/global_arrays.php:2012 lib/api_automation.php:283 lib/html.php:1996
+#: include/global_arrays.php:2014 lib/api_automation.php:283 lib/html.php:1996
 #: lib/html.php:2065 lib/html_graph.php:197 lib/html_tree.php:1022
 #: lib/html_tree.php:1378 tree.php:917 tree.php:2366 user_admin.php:801
 #: user_admin.php:1073 user_admin.php:2347 user_group_admin.php:932
@@ -450,7 +446,7 @@ msgstr "Графики"
 #: data_debug.php:1199 data_queries.php:1381 data_source_profiles.php:1174
 #: data_source_profiles.php:1296 data_sources.php:1793 data_templates.php:1130
 #: gprint_presets.php:265 graph_templates.php:737 graph_view.php:743
-#: graphs.php:2121 graphs_new.php:534 host.php:1845 host_templates.php:805
+#: graphs.php:2121 graphs_new.php:534 host_templates.php:805
 #: include/global_form.php:242 lib/api_automation.php:182
 #: lib/api_automation.php:490 lib/api_automation.php:718
 #: lib/api_automation.php:1082 lib/html_reports.php:2045 managers.php:154
@@ -475,15 +471,14 @@ msgstr "Част от агрегата"
 #: data_debug.php:1114 data_queries.php:1396 data_source_profiles.php:1195
 #: data_sources.php:1733 data_templates.php:1151 gprint_presets.php:283
 #: graph_templates.php:758 graph_view.php:675 graphs.php:2091
-#: graphs_new.php:513 host.php:1810 host_templates.php:786
-#: lib/api_automation.php:187 lib/api_automation.php:471
-#: lib/api_automation.php:723 lib/api_automation.php:1087
-#: lib/clog_webapi.php:533 lib/html.php:1828 lib/html_filter.php:63
-#: lib/html_graph.php:178 lib/html_reports.php:2056 lib/html_tree.php:1009
-#: managers.php:169 managers.php:529 managers.php:794 plugins.php:530
-#: pollers.php:914 tree.php:2242 user_admin.php:2150 user_admin.php:2347
-#: user_admin.php:2353 user_admin.php:2359 user_admin.php:2365
-#: user_admin.php:2371 user_admin.php:2377
+#: graphs_new.php:513 host_templates.php:786 lib/api_automation.php:187
+#: lib/api_automation.php:471 lib/api_automation.php:723
+#: lib/api_automation.php:1087 lib/clog_webapi.php:533 lib/html.php:1828
+#: lib/html_filter.php:63 lib/html_graph.php:178 lib/html_reports.php:2056
+#: lib/html_tree.php:1009 managers.php:169 managers.php:529 managers.php:794
+#: plugins.php:530 pollers.php:914 tree.php:2242 user_admin.php:2150
+#: user_admin.php:2347 user_admin.php:2353 user_admin.php:2359
+#: user_admin.php:2365 user_admin.php:2371 user_admin.php:2377
 msgid "Go"
 msgstr "Търси"
 
@@ -492,9 +487,9 @@ msgstr "Търси"
 #: automation_templates.php:418 cdef.php:758 data_debug.php:1114
 #: data_queries.php:1396 data_source_profiles.php:1195 data_sources.php:1733
 #: data_templates.php:1151 gprint_presets.php:283 graph_templates.php:758
-#: graph_view.php:675 graphs.php:2091 graphs_new.php:513 host.php:1810
-#: host_templates.php:786 lib/html_graph.php:178 managers.php:169
-#: managers.php:529 managers.php:794 plugins.php:530 pollers.php:914
+#: graph_view.php:675 graphs.php:2091 graphs_new.php:513 host_templates.php:786
+#: lib/html_graph.php:178 managers.php:169 managers.php:529 managers.php:794
+#: plugins.php:530 pollers.php:914
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
 #: tree.php:2242 user_admin.php:2150 user_domains.php:665
 #: user_group_admin.php:2010 utilities.php:1084 utilities.php:1470
@@ -510,16 +505,15 @@ msgstr "Задаване / опресняване на филтрите"
 #: data_debug.php:1115 data_queries.php:1397 data_source_profiles.php:1196
 #: data_sources.php:1734 data_templates.php:1152 gprint_presets.php:284
 #: graph_templates.php:759 graph_view.php:676 graphs.php:2092
-#: graphs_new.php:514 host.php:1811 host_templates.php:787
-#: lib/api_automation.php:188 lib/api_automation.php:472
-#: lib/api_automation.php:724 lib/api_automation.php:1088
-#: lib/clog_webapi.php:534 lib/html_filter.php:68 lib/html_graph.php:179
-#: lib/html_graph.php:305 lib/html_reports.php:2057 lib/html_tree.php:1010
-#: lib/html_tree.php:1121 managers.php:170 managers.php:530 managers.php:795
-#: plugins.php:531 pollers.php:915 tree.php:2243 user_admin.php:2151
-#: user_admin.php:2347 user_admin.php:2353 user_admin.php:2359
-#: user_admin.php:2365 user_admin.php:2371 user_admin.php:2377
-#: user_domains.php:666
+#: graphs_new.php:514 host_templates.php:787 lib/api_automation.php:188
+#: lib/api_automation.php:472 lib/api_automation.php:724
+#: lib/api_automation.php:1088 lib/clog_webapi.php:534 lib/html_filter.php:68
+#: lib/html_graph.php:179 lib/html_graph.php:305 lib/html_reports.php:2057
+#: lib/html_tree.php:1010 lib/html_tree.php:1121 managers.php:170
+#: managers.php:530 managers.php:795 plugins.php:531 pollers.php:915
+#: tree.php:2243 user_admin.php:2151 user_admin.php:2347 user_admin.php:2353
+#: user_admin.php:2359 user_admin.php:2365 user_admin.php:2371
+#: user_admin.php:2377 user_domains.php:666
 msgid "Clear"
 msgstr "Изчисти"
 
@@ -527,10 +521,9 @@ msgstr "Изчисти"
 #: automation_templates.php:419 cdef.php:759 data_debug.php:1115
 #: data_queries.php:1397 data_source_profiles.php:1196 data_sources.php:1734
 #: data_templates.php:1152 gprint_presets.php:284 graph_templates.php:759
-#: graph_view.php:676 graphs.php:2092 graphs_new.php:514 host.php:1811
-#: host_templates.php:787 lib/html_graph.php:179 lib/html_tree.php:1010
-#: managers.php:170 managers.php:530 managers.php:795 plugins.php:531
-#: pollers.php:915
+#: graph_view.php:676 graphs.php:2092 graphs_new.php:514 host_templates.php:787
+#: lib/html_graph.php:179 lib/html_tree.php:1010 managers.php:170
+#: managers.php:530 managers.php:795 plugins.php:531 pollers.php:915
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:96
 #: tree.php:2243 user_admin.php:2151 user_domains.php:666
 #: user_group_admin.php:2011 utilities.php:1085 utilities.php:1471
@@ -547,11 +540,11 @@ msgstr "Заглавие на графиката"
 #: automation_graph_rules.php:964 automation_tree_rules.php:971
 #: data_debug.php:499 data_queries.php:1482 data_sources.php:1979
 #: data_templates.php:1260 graph_templates.php:864 graphs.php:2332
-#: host.php:1928 host_templates.php:949 lib/api_automation.php:282
-#: pollers.php:995 tree.php:2306 user_admin.php:809 user_admin.php:924
-#: user_admin.php:1073 user_admin.php:1212 user_admin.php:1351
-#: user_group_admin.php:733 user_group_admin.php:940 user_group_admin.php:1087
-#: user_group_admin.php:1223 user_group_admin.php:1355
+#: host_templates.php:949 lib/api_automation.php:282 pollers.php:995
+#: tree.php:2306 user_admin.php:809 user_admin.php:924 user_admin.php:1073
+#: user_admin.php:1212 user_admin.php:1351 user_group_admin.php:733
+#: user_group_admin.php:940 user_group_admin.php:1087 user_group_admin.php:1223
+#: user_group_admin.php:1355
 msgid "ID"
 msgstr "ID"
 
@@ -599,15 +592,14 @@ msgid " [ Custom Graphs List Applied - Clear to Reset ]"
 msgstr "[Приложен графичен списък на графиките - Филтър FROM списък]"
 
 #: aggregate_graphs.php:1547 aggregate_graphs.php:1653
-#: include/global_arrays.php:2764
+#: include/global_arrays.php:2766
 msgid "Aggregate Graphs"
 msgstr "Обобщени графики"
 
 #: aggregate_graphs.php:1562 data_debug.php:1085 data_sources.php:1704
-#: graph_view.php:699 graphs.php:2053 host.php:1756
-#: include/global_arrays.php:2892 include/global_settings.php:610
-#: lib/api_automation.php:446 lib/html_graph.php:139 lib/html_tree.php:973
-#: rrdcleaner.php:381
+#: graph_view.php:699 graphs.php:2053 include/global_arrays.php:2894
+#: include/global_settings.php:610 lib/api_automation.php:446
+#: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:381
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:59
 #: utilities.php:2087
 msgid "Template"
@@ -618,8 +610,7 @@ msgstr "Шаблон"
 #: automation_devices.php:564 automation_graph_rules.php:819
 #: automation_graph_rules.php:841 automation_tree_rules.php:855
 #: data_debug.php:1089 data_sources.php:1708 graph_templates_items.php:447
-#: graphs.php:2057 graphs_items.php:262 host.php:1719 host.php:1740
-#: host.php:1760 host.php:1830 lib/api_automation.php:26
+#: graphs.php:2057 graphs_items.php:262 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3824 lib/auth.php:3873
 #: lib/html.php:2351 lib/html.php:2379 lib/html.php:2418 lib/html.php:2452
@@ -638,23 +629,23 @@ msgstr "Всички"
 #: data_debug.php:1090 data_sources.php:1083 data_sources.php:1709
 #: data_sources.php:2040 data_templates.php:1323 graph_templates_items.php:53
 #: graphs.php:1583 graphs.php:1592 graphs.php:2058 graphs_items.php:263
-#: graphs_items.php:383 host.php:294 host.php:1275 host.php:1286 host.php:1720
-#: host.php:1761 include/global_arrays.php:523 include/global_arrays.php:581
-#: include/global_arrays.php:673 include/global_arrays.php:885
-#: include/global_arrays.php:1741 include/global_form.php:574
-#: include/global_form.php:883 include/global_form.php:891
-#: include/global_form.php:899 include/global_form.php:938
-#: include/global_form.php:945 include/global_form.php:971
-#: include/global_form.php:1000 include/global_form.php:1008
-#: include/global_form.php:1186 include/global_form.php:1205
-#: include/global_form.php:1214 include/global_form.php:2128
-#: include/global_form.php:2170 include/global_settings.php:614
-#: include/global_settings.php:622 include/global_settings.php:630
-#: include/global_settings.php:1338 include/global_settings.php:2001
-#: lib/api_automation.php:48 lib/api_automation.php:431
-#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3827
-#: lib/auth.php:3876 lib/auth.php:3922 lib/html.php:228 lib/html.php:2352
-#: lib/html.php:2377 lib/html.php:2419 lib/html.php:2453 lib/html_form.php:392
+#: graphs_items.php:383 include/global_arrays.php:523
+#: include/global_arrays.php:581 include/global_arrays.php:673
+#: include/global_arrays.php:885 include/global_arrays.php:1743
+#: include/global_form.php:574 include/global_form.php:883
+#: include/global_form.php:891 include/global_form.php:899
+#: include/global_form.php:938 include/global_form.php:945
+#: include/global_form.php:971 include/global_form.php:1000
+#: include/global_form.php:1008 include/global_form.php:1186
+#: include/global_form.php:1205 include/global_form.php:1214
+#: include/global_form.php:2128 include/global_form.php:2170
+#: include/global_settings.php:614 include/global_settings.php:622
+#: include/global_settings.php:630 include/global_settings.php:1338
+#: include/global_settings.php:2001 lib/api_automation.php:48
+#: lib/api_automation.php:431 lib/api_automation.php:451
+#: lib/api_automation.php:589 lib/auth.php:3827 lib/auth.php:3876
+#: lib/auth.php:3922 lib/html.php:228 lib/html.php:2352 lib/html.php:2377
+#: lib/html.php:2419 lib/html.php:2453 lib/html_form.php:392
 #: lib/html_reports.php:1041 lib/html_reports.php:1045
 #: lib/html_reports.php:1081 lib/html_reports.php:1157
 #: lib/html_reports.php:1163 lib/html_reports.php:1167
@@ -718,7 +709,7 @@ msgid "Aggregate Template [new]"
 msgstr "Агрегиран шаблон [нов]"
 
 #: aggregate_templates.php:598 aggregate_templates.php:697
-#: include/global_arrays.php:2746
+#: include/global_arrays.php:2748
 msgid "Aggregate Templates"
 msgstr "Агрегирани шаблони"
 
@@ -755,7 +746,7 @@ msgid "Graphs Using"
 msgstr "Използване на графики"
 
 #: aggregate_templates.php:709 graphs.php:2112 host_templates.php:730
-#: include/global_arrays.php:958 include/global_arrays.php:1361
+#: include/global_arrays.php:958 include/global_arrays.php:1363
 #: include/global_form.php:1399 include/global_form.php:1635
 #: lib/html_reports.php:1181 tree.php:1944
 msgid "Graph Template"
@@ -1061,14 +1052,14 @@ msgstr "Изтриване на устройствата"
 
 #: automation_devices.php:39 automation_devices.php:294
 #: automation_devices.php:406 automation_devices.php:417
-#: automation_devices.php:679 automation_devices.php:680 host.php:1835
+#: automation_devices.php:679 automation_devices.php:680
 #: lib/api_automation.php:31 lib/html_utility.php:1327 pollers.php:32
 msgid "Down"
 msgstr "Надолу"
 
 #: automation_devices.php:40 automation_devices.php:294
 #: automation_devices.php:408 automation_devices.php:419
-#: automation_devices.php:679 automation_devices.php:680 host.php:1834
+#: automation_devices.php:679 automation_devices.php:680
 #: lib/api_automation.php:30 lib/html_utility.php:1333
 msgid "Up"
 msgstr "Нагоре"
@@ -1116,18 +1107,17 @@ msgstr "Добавете устройства"
 msgid "Click 'Continue' to Delete the following Discovered device(s)."
 msgstr "Кликнете върху „Напред“, за да добавите следното Открито устройство (а)."
 
-#: automation_devices.php:220 host.php:565
+#: automation_devices.php:220
 msgid "Delete Device(s)"
 msgstr "Изтриване на устройствата"
 
-#: automation_devices.php:262 automation_devices.php:578 host.php:1705
-#: host.php:1841 host.php:1994 include/global_arrays.php:990
-#: include/global_arrays.php:1046 include/global_arrays.php:2326
-#: lib/api_automation.php:178 lib/api_automation.php:271
-#: lib/api_automation.php:486 lib/api_automation.php:563
-#: lib/api_automation.php:1189 pollers.php:1031 tree.php:916 tree.php:2360
-#: user_admin.php:1065 user_admin.php:2359 user_group_admin.php:1079
-#: user_group_admin.php:2146 utilities.php:315
+#: automation_devices.php:262 automation_devices.php:578
+#: include/global_arrays.php:990 include/global_arrays.php:1046
+#: include/global_arrays.php:2328 lib/api_automation.php:178
+#: lib/api_automation.php:271 lib/api_automation.php:486
+#: lib/api_automation.php:563 lib/api_automation.php:1189 pollers.php:1031
+#: tree.php:916 tree.php:2360 user_admin.php:1065 user_admin.php:2359
+#: user_group_admin.php:1079 user_group_admin.php:2146 utilities.php:315
 msgid "Devices"
 msgstr "Устройства"
 
@@ -1143,7 +1133,7 @@ msgstr "IP адрес"
 msgid "SNMP Name"
 msgstr "SNMP име"
 
-#: automation_devices.php:274 host.php:1780 include/global_form.php:1184
+#: automation_devices.php:274 include/global_form.php:1184
 #: include/global_settings.php:2319 lib/html.php:2448
 msgid "Location"
 msgstr "Местоположение"
@@ -1165,7 +1155,7 @@ msgstr "Описание"
 msgid "OS"
 msgstr "Операционна система"
 
-#: automation_devices.php:278 host.php:1958 include/global_arrays.php:524
+#: automation_devices.php:278 include/global_arrays.php:524
 msgid "Uptime"
 msgstr "Време на работа"
 
@@ -1177,8 +1167,7 @@ msgstr "SNMP"
 #: automation_devices.php:280 automation_devices.php:524
 #: automation_graph_rules.php:837 automation_networks.php:1075
 #: automation_tree_rules.php:851 data_debug.php:505 data_debug.php:1144
-#: data_sources.php:1762 data_templates.php:1289 host.php:874 host.php:1003
-#: host.php:1826 host.php:1946 lib/api_automation.php:52
+#: data_sources.php:1762 data_templates.php:1289 lib/api_automation.php:52
 #: lib/api_automation.php:53 lib/api_automation.php:280
 #: lib/api_automation.php:573 lib/api_automation.php:1199
 #: lib/html_reports.php:2031 lib/installer.php:2044 managers.php:216
@@ -1197,7 +1186,7 @@ msgstr "Последна проверка"
 msgid "Not Detected"
 msgstr "Не е открит"
 
-#: automation_devices.php:318 host.php:2052
+#: automation_devices.php:318
 msgid "No Devices Found"
 msgstr "Няма намерени устройства"
 
@@ -1213,7 +1202,7 @@ msgstr "Мрежа"
 msgid "Reset fields to defaults"
 msgstr "Нулиране на полетата по подразбиране"
 
-#: automation_devices.php:515 host.php:1812 lib/html_form.php:1436
+#: automation_devices.php:515 lib/html_form.php:1436
 msgid "Export"
 msgstr "Експортиране"
 
@@ -1233,9 +1222,9 @@ msgstr "Прочистване на откритите устройства"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:673 data_source_profiles.php:61 host.php:2021
-#: lib/functions.php:6515 lib/functions.php:6520 lib/html.php:1434
-#: lib/html.php:1506 lib/html_reports.php:1810 lib/html_reports.php:1838
+#: data_debug.php:673 data_source_profiles.php:61 lib/functions.php:6515
+#: lib/functions.php:6520 lib/html.php:1434 lib/html.php:1506
+#: lib/html_reports.php:1810 lib/html_reports.php:1838
 #: lib/html_reports.php:1915 lib/html_reports.php:1916
 #: lib/html_reports.php:1917 lib/spikekill.php:1734 lib/spikekill.php:1735
 #: lib/spikekill.php:1800 lib/spikekill.php:1801 lib/spikekill.php:1802
@@ -1252,13 +1241,13 @@ msgstr "Няма"
 #: automation_tree_rules.php:14 cdef.php:15 color_templates.php:14
 #: data_queries.php:17 data_source_profiles.php:17 data_templates.php:20
 #: graph_templates.php:23 graphs.php:51 host_templates.php:21
-#: include/global_arrays.php:1649
+#: include/global_arrays.php:1651
 msgid "Duplicate"
 msgstr "Дублирай"
 
 #: automation_graph_rules.php:15 automation_networks.php:18
-#: automation_tree_rules.php:15 data_sources.php:25 host.php:30
-#: include/global_arrays.php:1650 include/global_settings.php:1787
+#: automation_tree_rules.php:15 data_sources.php:25
+#: include/global_arrays.php:1652 include/global_settings.php:1787
 #: managers.php:14 managers.php:20 plugins.php:24 pollers.php:20
 #: user_admin.php:19 user_domains.php:17 user_domains.php:397
 #: user_group_admin.php:21
@@ -1266,8 +1255,8 @@ msgid "Enable"
 msgstr "Включи"
 
 #: automation_graph_rules.php:16 automation_networks.php:17
-#: automation_tree_rules.php:16 data_sources.php:26 host.php:31
-#: include/global_arrays.php:1651 managers.php:15 managers.php:19
+#: automation_tree_rules.php:16 data_sources.php:26
+#: include/global_arrays.php:1653 managers.php:15 managers.php:19
 #: plugins.php:25 pollers.php:19 user_admin.php:20 user_domains.php:16
 #: user_group_admin.php:22
 msgid "Disable"
@@ -1356,13 +1345,13 @@ msgstr "Критерии за създаване на графики"
 
 #: automation_graph_rules.php:800 automation_graph_rules.php:847
 #: automation_graph_rules.php:954 include/global_arrays.php:1013
-#: include/global_arrays.php:2782
+#: include/global_arrays.php:2784
 msgid "Graph Rules"
 msgstr "Графични правила"
 
 #: automation_graph_rules.php:815 automation_graph_rules.php:965
-#: graphs.php:2113 include/global_arrays.php:1364
-#: include/global_arrays.php:2891 include/global_form.php:1645
+#: graphs.php:2113 include/global_arrays.php:1366
+#: include/global_arrays.php:2893 include/global_form.php:1645
 #: include/global_form.php:2207
 msgid "Data Query"
 msgstr "Вземане на данни"
@@ -1371,7 +1360,7 @@ msgstr "Вземане на данни"
 #: automation_graph_rules.php:983 automation_networks.php:535
 #: automation_tree_rules.php:856 automation_tree_rules.php:976
 #: automation_tree_rules.php:994 data_debug.php:1150 data_sources.php:1767
-#: host.php:1831 include/global_arrays.php:917 include/global_form.php:1527
+#: include/global_arrays.php:917 include/global_form.php:1527
 #: include/global_settings.php:345 include/global_settings.php:361
 #: lib/api_automation.php:27 lib/html_reports.php:2036
 #: lib/html_reports.php:2141 lib/html_reports.php:2152
@@ -1386,8 +1375,8 @@ msgstr "Разрешен"
 #: automation_graph_rules.php:843 automation_graph_rules.php:983
 #: automation_networks.php:1090 automation_tree_rules.php:857
 #: automation_tree_rules.php:994 data_debug.php:1151 data_sources.php:1768
-#: data_templates.php:1325 host.php:1832 include/global_arrays.php:916
-#: include/global_arrays.php:1573 include/global_arrays.php:1865
+#: data_templates.php:1325 include/global_arrays.php:916
+#: include/global_arrays.php:1575 include/global_arrays.php:1867
 #: include/global_settings.php:344 include/global_settings.php:360
 #: include/global_settings.php:1370 include/global_settings.php:1630
 #: include/global_settings.php:1644 include/global_settings.php:1657
@@ -1494,17 +1483,17 @@ msgid "Manual"
 msgstr "Ръчна"
 
 #: automation_networks.php:409 automation_networks.php:1064
-#: include/global_arrays.php:1879 include/global_settings.php:1371
+#: include/global_arrays.php:1881 include/global_settings.php:1371
 msgid "Daily"
 msgstr "Ежедневно"
 
 #: automation_networks.php:410 automation_networks.php:1065
-#: include/global_arrays.php:1880
+#: include/global_arrays.php:1882
 msgid "Weekly"
 msgstr "Седмично"
 
 #: automation_networks.php:411 automation_networks.php:1066
-#: include/global_arrays.php:1881
+#: include/global_arrays.php:1883
 msgid "Monthly"
 msgstr "Месечно"
 
@@ -1558,7 +1547,7 @@ msgstr "Дайте на тази мрежа смислено име."
 msgid "New Network Discovery Range"
 msgstr "Нов диапазон за откриване на мрежа"
 
-#: automation_networks.php:447 automation_networks.php:1072 host.php:1736
+#: automation_networks.php:447 automation_networks.php:1072
 msgid "Data Collector"
 msgstr "Събирач на данни"
 
@@ -1660,12 +1649,12 @@ msgstr "%d минута"
 #: include/global_arrays.php:755 include/global_arrays.php:756
 #: include/global_arrays.php:757 include/global_arrays.php:758
 #: include/global_arrays.php:759 include/global_arrays.php:1208
-#: include/global_arrays.php:1209 include/global_arrays.php:1580
-#: include/global_arrays.php:1584 include/global_arrays.php:1592
-#: include/global_arrays.php:1593 include/global_arrays.php:1617
-#: include/global_arrays.php:1618 include/global_arrays.php:1619
+#: include/global_arrays.php:1209 include/global_arrays.php:1582
+#: include/global_arrays.php:1586 include/global_arrays.php:1594
+#: include/global_arrays.php:1595 include/global_arrays.php:1619
 #: include/global_arrays.php:1620 include/global_arrays.php:1621
-#: include/global_arrays.php:1634 include/global_settings.php:1698
+#: include/global_arrays.php:1622 include/global_arrays.php:1623
+#: include/global_arrays.php:1636 include/global_settings.php:1698
 #: include/global_settings.php:1699 include/global_settings.php:1700
 #: include/global_settings.php:1701 include/global_settings.php:1702
 #: include/global_settings.php:2663 include/global_settings.php:2938
@@ -1676,7 +1665,7 @@ msgid "%d Minutes"
 msgstr "%d минути"
 
 #: automation_networks.php:526 include/global_arrays.php:760
-#: include/global_arrays.php:770 include/global_arrays.php:1454
+#: include/global_arrays.php:770 include/global_arrays.php:1456
 #, php-format
 msgid "%d Hour"
 msgstr "%d час"
@@ -1689,15 +1678,15 @@ msgstr "%d час"
 #: include/global_arrays.php:762 include/global_arrays.php:763
 #: include/global_arrays.php:764 include/global_arrays.php:771
 #: include/global_arrays.php:772 include/global_arrays.php:773
-#: include/global_arrays.php:774 include/global_arrays.php:1455
-#: include/global_arrays.php:1456 include/global_arrays.php:1457
-#: include/global_arrays.php:1458 include/global_arrays.php:1525
-#: include/global_arrays.php:1526 include/global_arrays.php:1527
+#: include/global_arrays.php:774 include/global_arrays.php:1457
+#: include/global_arrays.php:1458 include/global_arrays.php:1459
+#: include/global_arrays.php:1460 include/global_arrays.php:1527
 #: include/global_arrays.php:1528 include/global_arrays.php:1529
-#: include/global_arrays.php:1546 include/global_arrays.php:1547
+#: include/global_arrays.php:1530 include/global_arrays.php:1531
 #: include/global_arrays.php:1548 include/global_arrays.php:1549
-#: include/global_arrays.php:1550 include/global_arrays.php:1556
-#: include/global_arrays.php:1557 include/global_settings.php:1704
+#: include/global_arrays.php:1550 include/global_arrays.php:1551
+#: include/global_arrays.php:1552 include/global_arrays.php:1558
+#: include/global_arrays.php:1559 include/global_settings.php:1704
 #: include/global_settings.php:1705 include/global_settings.php:1706
 #: include/global_settings.php:1707 include/global_settings.php:2942
 #: include/global_settings.php:2943
@@ -1806,37 +1795,37 @@ msgid "What Day(s) of the week will this Network Range be discovered."
 msgstr "Какъв ден (дни) на седмицата ще бъде открит този диапазон на мрежата."
 
 #: automation_networks.php:636 automation_networks.php:694
-#: include/global_arrays.php:1937
+#: include/global_arrays.php:1939
 msgid "Sunday"
 msgstr "Неделя"
 
 #: automation_networks.php:637 automation_networks.php:695
-#: include/global_arrays.php:1938
+#: include/global_arrays.php:1940
 msgid "Monday"
 msgstr "Понеделник"
 
 #: automation_networks.php:638 automation_networks.php:696
-#: include/global_arrays.php:1939
+#: include/global_arrays.php:1941
 msgid "Tuesday"
 msgstr "Вторник"
 
 #: automation_networks.php:639 automation_networks.php:697
-#: include/global_arrays.php:1940
+#: include/global_arrays.php:1942
 msgid "Wednesday"
 msgstr "Сряда"
 
 #: automation_networks.php:640 automation_networks.php:698
-#: include/global_arrays.php:1941
+#: include/global_arrays.php:1943
 msgid "Thursday"
 msgstr "Четвъртък"
 
 #: automation_networks.php:641 automation_networks.php:699
-#: include/global_arrays.php:1942
+#: include/global_arrays.php:1944
 msgid "Friday"
 msgstr "Петък"
 
 #: automation_networks.php:642 automation_networks.php:700
-#: include/global_arrays.php:1943
+#: include/global_arrays.php:1945
 msgid "Saturday"
 msgstr "Събота"
 
@@ -1848,51 +1837,51 @@ msgstr "Месеци на годината"
 msgid "What Months(s) of the Year will this Network Range be discovered."
 msgstr "Колко месеца (и) на годината ще бъде открит този обхват на мрежата."
 
-#: automation_networks.php:652 include/global_arrays.php:1891
+#: automation_networks.php:652 include/global_arrays.php:1893
 msgid "January"
 msgstr "Януари"
 
-#: automation_networks.php:653 include/global_arrays.php:1892
+#: automation_networks.php:653 include/global_arrays.php:1894
 msgid "February"
 msgstr "Февруари"
 
-#: automation_networks.php:654 include/global_arrays.php:1893
+#: automation_networks.php:654 include/global_arrays.php:1895
 msgid "March"
 msgstr "Март"
 
-#: automation_networks.php:655 include/global_arrays.php:1894
+#: automation_networks.php:655 include/global_arrays.php:1896
 msgid "April"
 msgstr "Април"
 
-#: automation_networks.php:656 include/global_arrays.php:1895
+#: automation_networks.php:656 include/global_arrays.php:1897
 msgid "May"
 msgstr "Май"
 
-#: automation_networks.php:657 include/global_arrays.php:1896
+#: automation_networks.php:657 include/global_arrays.php:1898
 msgid "June"
 msgstr "Юни"
 
-#: automation_networks.php:658 include/global_arrays.php:1897
+#: automation_networks.php:658 include/global_arrays.php:1899
 msgid "July"
 msgstr "Юли"
 
-#: automation_networks.php:659 include/global_arrays.php:1898
+#: automation_networks.php:659 include/global_arrays.php:1900
 msgid "August"
 msgstr "Август"
 
-#: automation_networks.php:660 include/global_arrays.php:1899
+#: automation_networks.php:660 include/global_arrays.php:1901
 msgid "September"
 msgstr "Септември"
 
-#: automation_networks.php:661 include/global_arrays.php:1900
+#: automation_networks.php:661 include/global_arrays.php:1902
 msgid "October"
 msgstr "Октомври"
 
-#: automation_networks.php:662 include/global_arrays.php:1901
+#: automation_networks.php:662 include/global_arrays.php:1903
 msgid "November"
 msgstr "Ноември"
 
-#: automation_networks.php:663 include/global_arrays.php:1902
+#: automation_networks.php:663 include/global_arrays.php:1904
 msgid "December"
 msgstr "Декември"
 
@@ -2106,13 +2095,13 @@ msgstr "Обновяване"
 #: include/global_arrays.php:749 include/global_arrays.php:750
 #: include/global_arrays.php:1203 include/global_arrays.php:1204
 #: include/global_arrays.php:1205 include/global_arrays.php:1206
-#: include/global_arrays.php:1574 include/global_arrays.php:1575
 #: include/global_arrays.php:1576 include/global_arrays.php:1577
-#: include/global_arrays.php:1578 include/global_arrays.php:1613
-#: include/global_arrays.php:1614 include/global_arrays.php:1626
-#: include/global_arrays.php:1627 include/global_arrays.php:1628
+#: include/global_arrays.php:1578 include/global_arrays.php:1579
+#: include/global_arrays.php:1580 include/global_arrays.php:1615
+#: include/global_arrays.php:1616 include/global_arrays.php:1628
 #: include/global_arrays.php:1629 include/global_arrays.php:1630
 #: include/global_arrays.php:1631 include/global_arrays.php:1632
+#: include/global_arrays.php:1633 include/global_arrays.php:1634
 #: include/global_settings.php:1271 include/global_settings.php:1272
 #: include/global_settings.php:1273 include/global_settings.php:1274
 #: include/global_settings.php:2659 include/global_settings.php:2660
@@ -2347,7 +2336,7 @@ msgstr "Кликнете върху „Напред“, за да изтриет
 msgid "Delete Automation Template(s)"
 msgstr "Изтриване на шаблон (и) за автоматизация"
 
-#: automation_templates.php:271 include/global_arrays.php:1365
+#: automation_templates.php:271 include/global_arrays.php:1367
 #: include/global_form.php:1211 include/global_form.php:1630
 #: lib/html_reports.php:1160
 msgid "Device Template"
@@ -2494,7 +2483,7 @@ msgstr "Наистина ли искате да продължите?"
 
 #: automation_tree_rules.php:836 automation_tree_rules.php:861
 #: automation_tree_rules.php:961 include/global_arrays.php:1014
-#: include/global_arrays.php:2806
+#: include/global_arrays.php:2808
 msgid "Tree Rules"
 msgstr "Правила на дървото"
 
@@ -2626,7 +2615,7 @@ msgstr "CDEF [редактиране: %s]"
 msgid "CDEF [new]"
 msgstr "CDEF [нов]"
 
-#: cdef.php:558 include/global_arrays.php:2152
+#: cdef.php:558 include/global_arrays.php:2154
 msgid "CDEF Items"
 msgstr "CDEF елементи"
 
@@ -2644,7 +2633,7 @@ msgid "Delete CDEF Item"
 msgstr "Изтриване на CDEF елемент"
 
 #: cdef.php:718 cdef.php:733 cdef.php:858 include/global_arrays.php:1019
-#: include/global_arrays.php:2134
+#: include/global_arrays.php:2136
 msgid "CDEFs"
 msgstr "CDEFs"
 
@@ -2911,7 +2900,7 @@ msgid "Color Template '%s' had no Aggregate Templates or Graphs using this Color
 msgstr "Цветовият шаблон „%s“ не е имал агрегирани шаблони или графики, използващи този цветен шаблон."
 
 #: color_templates.php:552 color_templates.php:566 color_templates.php:661
-#: include/global_arrays.php:2722
+#: include/global_arrays.php:2724
 msgid "Color Templates"
 msgstr "Шаблони за цвят"
 
@@ -3084,8 +3073,8 @@ msgid "Summary of issues found for the Data Source."
 msgstr "Всички обобщени проблеми, намерени за източника на данни."
 
 #: data_debug.php:621 data_debug.php:1195 data_sources.php:1789
-#: data_sources.php:1963 host.php:1940 include/global_arrays.php:994
-#: include/global_arrays.php:1040 include/global_arrays.php:2308
+#: data_sources.php:1963 include/global_arrays.php:994
+#: include/global_arrays.php:1040 include/global_arrays.php:2310
 #: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1087
 #: utilities.php:325
 msgid "Data Sources"
@@ -3296,7 +3285,7 @@ msgstr "Профил"
 
 #: data_debug.php:1129 data_debug.php:1148 data_debug.php:1159
 #: data_sources.php:1746 data_sources.php:1766 data_templates.php:1111
-#: graphs.php:2110 graphs_new.php:486 host.php:1784 host_templates.php:716
+#: graphs.php:2110 graphs_new.php:486 host_templates.php:716
 #: host_templates.php:734 lib/clog_webapi.php:549 lib/html.php:227
 #: lib/html_reports.php:1138 lib/html_reports.php:2284 plugins.php:501
 #: settings.php:590 settings.php:612 settings.php:643 tree.php:914
@@ -3551,9 +3540,8 @@ msgstr "Име на поле"
 msgid "Suggested Value"
 msgstr "Предложена стойност"
 
-#: data_queries.php:893 data_queries.php:1003 host.php:961 host.php:1105
-#: host_templates.php:515 host_templates.php:569 lib/html.php:51
-#: lib/html_filter.php:38
+#: data_queries.php:893 data_queries.php:1003 host_templates.php:515
+#: host_templates.php:569 lib/html.php:51 lib/html_filter.php:38
 msgid "Add"
 msgstr "Добави"
 
@@ -3591,13 +3579,12 @@ msgstr "XML файлът е успешно разположен"
 msgid "Could not locate XML file."
 msgstr "XML файлът не можа да бъде намерен."
 
-#: data_queries.php:1206 host.php:869 host_templates.php:466
-#: include/global_arrays.php:2416
+#: data_queries.php:1206 host_templates.php:466 include/global_arrays.php:2418
 msgid "Associated Graph Templates"
 msgstr "Асоциирани шаблони за графики"
 
 #: data_queries.php:1210 graph_templates.php:858 graphs_new.php:638
-#: host.php:873 lib/api_automation.php:576
+#: lib/api_automation.php:576
 msgid "Graph Template Name"
 msgstr "Име на шаблона на графиката"
 
@@ -3623,11 +3610,11 @@ msgstr "Изтриване на асоциирана графика"
 
 #: data_queries.php:1362 data_queries.php:1377 data_queries.php:1512
 #: include/global_arrays.php:999 include/global_arrays.php:1226
-#: include/global_arrays.php:2398 lib/api_automation.php:1078
+#: include/global_arrays.php:2400 lib/api_automation.php:1078
 msgid "Data Queries"
 msgstr "Автоматизирани данни"
 
-#: data_queries.php:1476 host.php:1001 utilities.php:1930
+#: data_queries.php:1476 utilities.php:1930
 msgid "Data Query Name"
 msgstr "Име на заявката за данни"
 
@@ -3651,7 +3638,7 @@ msgstr "Броят графики, използващи това запитва�
 msgid "The number of Graphs Templates using this Data Query."
 msgstr "Броят на шаблоните с графики, използващи това запитване за данни."
 
-#: data_queries.php:1505 include/global_arrays.php:1357
+#: data_queries.php:1505 include/global_arrays.php:1359
 #: include/global_form.php:570 include/global_form.php:1380
 msgid "Data Input Method"
 msgstr "Метод за въвеждане на данни"
@@ -3801,7 +3788,7 @@ msgstr "Въведете валиден брой редове, за да пол�
 #: include/global_arrays.php:790 include/global_arrays.php:791
 #: include/global_arrays.php:792 include/global_arrays.php:793
 #: include/global_arrays.php:794 include/global_arrays.php:795
-#: include/global_arrays.php:1471 include/global_settings.php:1636
+#: include/global_arrays.php:1473 include/global_settings.php:1636
 #, php-format
 msgid "%d Years"
 msgstr "% d години"
@@ -3811,30 +3798,30 @@ msgid "1 Year"
 msgstr "1 Година"
 
 #: data_source_profiles.php:1075 include/global_arrays.php:781
-#: include/global_arrays.php:1465 rrdcleaner.php:537
+#: include/global_arrays.php:1467 rrdcleaner.php:537
 #, php-format
 msgid "%d Month"
 msgstr "% d Месец"
 
 #: data_source_profiles.php:1075 include/global_arrays.php:782
 #: include/global_arrays.php:783 include/global_arrays.php:784
-#: include/global_arrays.php:785 include/global_arrays.php:1466
-#: include/global_arrays.php:1467 include/global_arrays.php:1468
-#: include/global_arrays.php:1469 rrdcleaner.php:538 rrdcleaner.php:539
+#: include/global_arrays.php:785 include/global_arrays.php:1468
+#: include/global_arrays.php:1469 include/global_arrays.php:1470
+#: include/global_arrays.php:1471 rrdcleaner.php:538 rrdcleaner.php:539
 #: rrdcleaner.php:540
 #, php-format
 msgid "%d Months"
 msgstr "% d Месеци"
 
 #: data_source_profiles.php:1084 include/global_arrays.php:722
-#: include/global_arrays.php:778 include/global_arrays.php:1463
+#: include/global_arrays.php:778 include/global_arrays.php:1465
 #: rrdcleaner.php:533 rrdcleaner.php:534
 #, php-format
 msgid "%d Week"
 msgstr "% d Седмица"
 
 #: data_source_profiles.php:1084 include/global_arrays.php:779
-#: include/global_arrays.php:780 include/global_arrays.php:1464
+#: include/global_arrays.php:780 include/global_arrays.php:1466
 #: include/global_settings.php:2946 include/global_settings.php:2947
 #: include/global_settings.php:2948 rrdcleaner.php:535 rrdcleaner.php:536
 #, php-format
@@ -3843,15 +3830,15 @@ msgstr "% d седмици"
 
 #: data_source_profiles.php:1093 include/global_arrays.php:721
 #: include/global_arrays.php:765 include/global_arrays.php:775
-#: include/global_arrays.php:1459
+#: include/global_arrays.php:1461
 #, php-format
 msgid "%d Day"
 msgstr "% d ден"
 
 #: data_source_profiles.php:1093 include/global_arrays.php:766
 #: include/global_arrays.php:776 include/global_arrays.php:777
-#: include/global_arrays.php:1460 include/global_arrays.php:1461
-#: include/global_arrays.php:1462 include/global_settings.php:1631
+#: include/global_arrays.php:1462 include/global_arrays.php:1463
+#: include/global_arrays.php:1464 include/global_settings.php:1631
 #: include/global_settings.php:1632 include/global_settings.php:1633
 #: include/global_settings.php:1634 include/global_settings.php:1645
 #: include/global_settings.php:1646 include/global_settings.php:1647
@@ -3861,9 +3848,9 @@ msgid "%d Days"
 msgstr "% d дни"
 
 #: data_source_profiles.php:1101 include/global_arrays.php:715
-#: include/global_arrays.php:1524 include/global_arrays.php:1545
-#: include/global_arrays.php:1555 include/global_arrays.php:1585
-#: include/global_arrays.php:1594 include/global_arrays.php:1622
+#: include/global_arrays.php:1526 include/global_arrays.php:1547
+#: include/global_arrays.php:1557 include/global_arrays.php:1587
+#: include/global_arrays.php:1596 include/global_arrays.php:1624
 #: include/global_settings.php:1406 include/global_settings.php:1703
 #: include/global_settings.php:2941
 msgid "1 Hour"
@@ -4099,7 +4086,7 @@ msgstr "Името, дадено на този шаблон за данни. М�
 
 #: data_sources.php:1081 graph_view.php:817 graphs.php:1588
 #: include/global_arrays.php:954 include/global_arrays.php:1003
-#: include/global_arrays.php:1688 include/global_arrays.php:1857
+#: include/global_arrays.php:1690 include/global_arrays.php:1859
 #: lib/api_automation.php:426 lib/functions.php:6151 lib/html.php:2347
 #: lib/html.php:2384 lib/html_reports.php:1170 utilities.php:1930
 msgid "Device"
@@ -4148,8 +4135,8 @@ msgid "External"
 msgstr "Външни"
 
 #: data_sources.php:1528 include/global_arrays.php:710
-#: include/global_arrays.php:1207 include/global_arrays.php:1579
-#: include/global_arrays.php:1615 include/global_arrays.php:1633
+#: include/global_arrays.php:1207 include/global_arrays.php:1581
+#: include/global_arrays.php:1617 include/global_arrays.php:1635
 #: include/global_settings.php:1697 include/global_settings.php:2662
 msgid "1 Minute"
 msgstr "1 минута"
@@ -4331,7 +4318,7 @@ msgid "After you uncheck this checkbox and then Save the Data Template, any exis
 msgstr "След като премахнете отметката от това квадратче и след това Запазете шаблона за данни, всички съществуващи източници на данни, базирани на този шаблон на данни, ще загубят своите персонализирани данни. Това може да доведе до нарушено събиране на данни и графики"
 
 #: data_templates.php:1092 data_templates.php:1126 data_templates.php:1296
-#: include/global_arrays.php:1237 include/global_arrays.php:2290
+#: include/global_arrays.php:1237 include/global_arrays.php:2292
 msgid "Data Templates"
 msgstr "Шаблони за данни"
 
@@ -4401,7 +4388,7 @@ msgstr "Предварителни настройки на GPRINT [редакт�
 msgid "GPRINT Presets [new]"
 msgstr "Предварителни настройки на GPRINT [ново]"
 
-#: gprint_presets.php:246 include/global_arrays.php:2116
+#: gprint_presets.php:246 include/global_arrays.php:2118
 msgid "GPRINT Presets"
 msgstr "Предварителни настройки на GPRINT"
 
@@ -4609,7 +4596,7 @@ msgstr "Кликнете върху „Напред“, за да синхрон
 msgid "Graph Template Items [edit: %s]"
 msgstr "Елементи на шаблона на графиката [редактиране: %s]"
 
-#: graph_templates.php:497 include/global_arrays.php:2260
+#: graph_templates.php:497 include/global_arrays.php:2262
 msgid "Graph Item Inputs"
 msgstr "Въвеждане на елементи на графика"
 
@@ -4641,7 +4628,7 @@ msgstr "Поставете отметка в това квадратче, ако
 
 #: graph_templates.php:718 graph_templates.php:733 graph_templates.php:900
 #: graphs_new.php:635 include/global_arrays.php:1236
-#: include/global_arrays.php:2236 lib/html_tree.php:541 user_admin.php:1204
+#: include/global_arrays.php:2238 lib/html_tree.php:541 user_admin.php:1204
 #: user_group_admin.php:1215
 msgid "Graph Templates"
 msgstr "Шаблони за графики"
@@ -4773,7 +4760,7 @@ msgstr "Отчет"
 msgid "All Graphs & Templates"
 msgstr "Всички графики и шаблони"
 
-#: graph_view.php:704 include/global_arrays.php:2890 lib/graphs.php:40
+#: graph_view.php:704 include/global_arrays.php:2892 lib/graphs.php:40
 #: lib/graphs.php:49 lib/html.php:221 lib/html_graph.php:144
 #: lib/html_tree.php:978
 msgid "Not Templated"
@@ -4816,7 +4803,7 @@ msgstr "Размерът на тази графика, когато не е в �
 msgid "Select the Report to add the selected Graphs to."
 msgstr "Изберете Отчет, за да добавите избраните графики към."
 
-#: graph_view.php:995 include/global_arrays.php:2036
+#: graph_view.php:995 include/global_arrays.php:2038
 #: include/global_settings.php:2733
 msgid "Preview Mode"
 msgstr "Общ изглед"
@@ -4879,7 +4866,7 @@ msgstr "Обобщени данни"
 msgid "Download"
 msgstr "Изтегли"
 
-#: graphs.php:36 graphs.php:892 include/global_arrays.php:2086
+#: graphs.php:36 graphs.php:892 include/global_arrays.php:2088
 msgid "Change Graph Template"
 msgstr "Промяна на шаблона на графиката"
 
@@ -4891,7 +4878,7 @@ msgstr "Създайте съвкупна графика"
 msgid "Create Aggregate from Template"
 msgstr "Създайте Съвкупност от Шаблон"
 
-#: graphs.php:46 graphs.php:1219 host.php:34
+#: graphs.php:46 graphs.php:1219
 msgid "Apply Automation Rules"
 msgstr "Прилагане на правила за автоматизация"
 
@@ -5130,7 +5117,7 @@ msgstr "Източници на данни [без устройство]"
 msgid "Data Sources [%s]"
 msgstr "Източници на данни [ %s]"
 
-#: graphs_items.php:258 include/global_arrays.php:1356
+#: graphs_items.php:258 include/global_arrays.php:1358
 #: include/global_form.php:1640
 msgid "Data Template"
 msgstr "Шаблон за данни"
@@ -5185,7 +5172,7 @@ msgstr "Запазване на филтрите"
 msgid "Edit this Device"
 msgstr "Редактирайте това устройство"
 
-#: graphs_new.php:552 host.php:829
+#: graphs_new.php:552
 msgid "Create New Device"
 msgstr "Създайте ново устройство"
 
@@ -5274,423 +5261,6 @@ msgstr "ПРЕДУПРЕЖДЕНИЕ: Страница с Kadupul:%s за пот
 msgid "The document page '%s' could not be reached locally."
 msgstr ""
 
-#: host.php:32
-msgid "Change Device Settings"
-msgstr "Промяна на настройките на устройството"
-
-#: host.php:33 pollers.php:21
-msgid "Clear Statistics"
-msgstr "Изчистване на статистиката"
-
-#: host.php:35
-msgid "Sync to Device Template"
-msgstr "Синхронизиране с шаблон на устройството"
-
-#: host.php:36
-msgid "Place Device on Report"
-msgstr "Поставете устройствата на дървото"
-
-#: host.php:109
-msgid "Data Query Re-indexed."
-msgstr "Индекс на заявките за данни"
-
-#: host.php:117
-msgid "Device Data Query Re-indexed.  Verbose output displayed."
-msgstr "Преиндексирана заявка за данни за устройството. Показва се подробен изход."
-
-#: host.php:143
-msgid "Device Debugging Enabled for Device."
-msgstr "Отстраняване на грешки в устройството е активирано за устройство."
-
-#: host.php:152
-msgid "Device Debugging Disabled for Device."
-msgstr "Устройството е забранено"
-
-#: host.php:161
-msgid "Poller Cache for Device Refreshed."
-msgstr "Кешът на Poller за обновено устройство."
-
-#: host.php:163
-msgid "ERROR: Invalid Device ID."
-msgstr "ГРЕШКА: Устройство ["
-
-#: host.php:222
-msgid "Device Reindex Failed."
-msgstr ""
-
-#: host.php:238
-#, php-format
-msgid "Device Reindex Completed in %0.2f seconds.  There were %d items updated."
-msgstr "Преиндексиране на устройството Завършено за% 0.2f секунди. Има актуализирани% d елемента."
-
-#: host.php:401
-#, fuzzy, php-format
-msgid "Unable to add some Devices to Report '%s'"
-msgstr "Не могат да се добавят някои устройства към отчета „{ 0 }“"
-
-#: host.php:470
-msgid "Click 'Continue' to enable the following Device(s)."
-msgstr "Кликнете върху „Напред“, за да активирате следните устройства."
-
-#: host.php:475
-msgid "Enable Device(s)"
-msgstr "Активиране на устройствата"
-
-#: host.php:479
-msgid "Click 'Continue' to disable the following Device(s)."
-msgstr "Кликнете върху „Напред“, за да деактивирате следните устройства."
-
-#: host.php:484
-msgid "Disable Device(s)"
-msgstr "Деактивиране на устройствата"
-
-#: host.php:488
-msgid "Click 'Continue' to change the Device options below for multiple Device(s).  Please check the box next to the fields you want to update, and then fill in the new value."
-msgstr "Кликнете върху „Напред“, за да промените опциите на устройството по-долу за няколко устройства. Моля, поставете отметка в квадратчето до полетата, които искате да актуализирате, и след това попълнете новата стойност."
-
-#: host.php:508
-msgid "Update this Field"
-msgstr "Актуализирайте това поле"
-
-#: host.php:531
-msgid "Change Device(s) SNMP Options"
-msgstr "Промяна на устройства SNMP Опции"
-
-#: host.php:535
-msgid "Click 'Continue' to clear the counters for the following Device(s)."
-msgstr "Кликнете върху „Напред“, за да изчистите броячите за следните устройства."
-
-#: host.php:540
-msgid "Clear Statistics on Device(s)"
-msgstr "Изчистване на статистиката на устройствата"
-
-#: host.php:544
-msgid "Click 'Continue' to Synchronize the following Device(s) to their Device Template."
-msgstr "Кликнете върху „Продължи“, за да синхронизирате следните устройства със съответния шаблон на устройството."
-
-#: host.php:549
-msgid "Synchronize Device(s)"
-msgstr "Синхронизирайте устройствата"
-
-#: host.php:553
-msgid "Click 'Continue' to delete the following Device(s)."
-msgstr "Кликнете върху „Напред“, за да изтриете следните устройства."
-
-#: host.php:556
-msgid "Leave all Graph(s) and Data Source(s) untouched.  Data Source(s) will be disabled however."
-msgstr "Оставете всички графики и източници на данни недокоснати. Източниците на данни ще бъдат деактивирани."
-
-#: host.php:558
-msgid "Delete all associated Graph(s) and Data Source(s)."
-msgstr "Изтрийте всички свързани графики и източници на данни."
-
-#: host.php:569
-msgid "Click 'Continue' to place the following Device(s) under the branch selected below."
-msgstr "Кликнете върху „Напред“, за да поставите следните устройства под раздела, избран по-долу."
-
-#: host.php:579
-msgid "Place Device(s) on Tree"
-msgstr "Поставете устройствата на дървото"
-
-#: host.php:583
-msgid "Click 'Continue' to apply Automation Rules to the following Devices(s)."
-msgstr "Кликнете върху „Напред“, за да приложите правилата за автоматизация към следните устройства."
-
-#: host.php:588
-msgid "Run Automation on Device(s)"
-msgstr "Изпълнение на автоматизацията на устройствата"
-
-#: host.php:619
-msgid "Add Devices to Report"
-msgstr "Добавяне в Отчет"
-
-#: host.php:621
-msgid "You currently have no Reports defined."
-msgstr "Понастоящем нямате дефинирани отчети."
-
-#: host.php:793
-msgid "Device [new]"
-msgstr "Устройство [ново]"
-
-#: host.php:807
-#, php-format
-msgid "Device [edit: %s]"
-msgstr "Устройство [редактиране: %s]"
-
-#: host.php:809
-msgid "Disable Device Debug"
-msgstr "Деактивиране на отстраняването на грешки в устройството"
-
-#: host.php:811
-msgid "Enable Device Debug"
-msgstr "Активиране на отстраняването на грешки в устройството"
-
-#: host.php:814
-msgid "Repopulate Poller Cache"
-msgstr "Възстановете кеш за полъри"
-
-#: host.php:815 include/global_arrays.php:2458 include/global_arrays.php:2470
-#: utilities.php:2401
-msgid "View Poller Cache"
-msgstr "Виж кеш на събиращия скрипт"
-
-#: host.php:830
-msgid "Create Graphs for this Device"
-msgstr "Създайте графики за това устройство"
-
-#: host.php:831
-msgid "Re-Index Device"
-msgstr "Метод на повторния индекс"
-
-#: host.php:834
-msgid "Data Source List"
-msgstr "Списък с източници на данни"
-
-#: host.php:835
-msgid "Graph List"
-msgstr "Списък с графики"
-
-#: host.php:841
-msgid "Contacting Device"
-msgstr "Свързващо устройство"
-
-#: host.php:936 tree.php:1782 tree.php:1856 tree.php:1964
-msgid "Edit"
-msgstr "Редактирай"
-
-#: host.php:936
-msgid "Is Being Graphed"
-msgstr "Се прегражда"
-
-#: host.php:936
-msgid "Not Being Graphed"
-msgstr "Не се грабват"
-
-#: host.php:939
-msgid "Delete Graph Template Association"
-msgstr "Изтриване на асоциацията с шаблони на графиките"
-
-#: host.php:946 host_templates.php:493
-msgid "No associated graph templates."
-msgstr "Асоциирани шаблони за графики"
-
-#: host.php:955 host_templates.php:502
-msgid "Add Graph Template"
-msgstr "Добавете шаблон за графика"
-
-#: host.php:961
-msgid "Add Graph Template to Device"
-msgstr "Добавете шаблон на графиката към устройството"
-
-#: host.php:977
-msgid "Data Query Debug Information"
-msgstr "Информация за отстраняване на грешки в данните"
-
-#: host.php:981 lib/functions.php:4903 tree.php:1804 tree.php:1878
-#: tree.php:1986 user_admin.php:18 user_group_admin.php:20
-msgid "Copy"
-msgstr "Копирайте"
-
-#: host.php:982
-msgid "Hide"
-msgstr "Скрий"
-
-#: host.php:997 host_templates.php:525
-msgid "Associated Data Queries"
-msgstr "Свързани заявки за данни"
-
-#: host.php:1002 host.php:1099
-msgid "Re-Index Method"
-msgstr "Метод на повторния индекс"
-
-#: host.php:1004 include/global_arrays.php:2092 include/global_arrays.php:2158
-#: include/global_arrays.php:2248 include/global_arrays.php:2284
-#: include/global_arrays.php:2302 include/global_arrays.php:2320
-#: include/global_arrays.php:2338 include/global_arrays.php:2368
-#: include/global_arrays.php:2404 include/global_arrays.php:2434
-#: include/global_arrays.php:2530 include/global_arrays.php:2734
-#: include/global_arrays.php:2758 include/global_arrays.php:2776
-#: include/global_arrays.php:2794 include/global_arrays.php:2818
-#: lib/api_automation.php:1289 lib/api_automation.php:1352
-#: lib/api_automation.php:1422 lib/html_reports.php:1792 plugins.php:605
-msgid "Actions"
-msgstr "Действия"
-
-#: host.php:1066
-#, php-format
-msgid " [%d Items, %d Rows]"
-msgstr "[% d елементи,% d редове]"
-
-#: host.php:1066
-msgid "Fail"
-msgstr "Скъсан"
-
-#: host.php:1066 lib/functions.php:6166 lib/functions.php:6171
-msgid "Success"
-msgstr "Готово"
-
-#: host.php:1069
-msgid "Reload Query"
-msgstr "Презареждане на заявката"
-
-#: host.php:1070
-msgid "Verbose Query"
-msgstr "Подробен въпрос"
-
-#: host.php:1071
-msgid "Remove Query"
-msgstr "Премахване на заявката"
-
-#: host.php:1077
-msgid "No Associated Data Queries."
-msgstr "Няма заявки за свързани данни."
-
-#: host.php:1093 host_templates.php:559
-msgid "Add Data Query"
-msgstr "Добавяне на заявка за данни"
-
-#: host.php:1105
-msgid "Add Data Query to Device"
-msgstr "Добавете заявка за данни към устройството"
-
-#: host.php:1276 host.php:1289 include/global_arrays.php:679
-msgid "Ping"
-msgstr "Ping"
-
-#: host.php:1287 include/global_arrays.php:674
-msgid "Ping and SNMP Uptime"
-msgstr "Ping и SNMP Uptime"
-
-#: host.php:1288 include/global_arrays.php:676
-msgid "SNMP Uptime"
-msgstr "SNMP Uptime"
-
-#: host.php:1290 include/global_arrays.php:675
-msgid "Ping or SNMP Uptime"
-msgstr "Ping или SNMP Uptime"
-
-#: host.php:1291 include/global_arrays.php:677
-msgid "SNMP Desc"
-msgstr "SNMP Desc"
-
-#: host.php:1292
-msgid "SNMP GetNext"
-msgstr "SNMP GetNext"
-
-#: host.php:1356
-msgid "Delete Item from Device"
-msgstr "Изтриване на шаблони на устройствата"
-
-#: host.php:1599 host.php:1792
-msgid "Undefined"
-msgstr "Неопределена"
-
-#: host.php:1715 include/global_settings.php:618 lib/html.php:2414
-#: lib/html_reports.php:1151
-msgid "Site"
-msgstr "Tочка на продажба"
-
-#: host.php:1812
-msgid "Export Devices"
-msgstr "Експортиране на устройства"
-
-#: host.php:1833 lib/api_automation.php:29
-msgid "Not Up"
-msgstr "Не е горе"
-
-#: host.php:1836 lib/api_automation.php:32 lib/html.php:65
-#: lib/html_utility.php:1330 pollers.php:34
-msgid "Recovering"
-msgstr "Възстановяване"
-
-#: host.php:1837 lib/api_automation.php:33 lib/auth.php:3007
-#: lib/clog_webapi.php:856 lib/html_utility.php:1339 lib/import.php:342
-#: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4196 lib/rrd.php:4208
-#: lib/spikekill.php:301 package_import.php:522 package_import.php:600
-#: utilities.php:211 utilities.php:212 utilities.php:2759
-msgid "Unknown"
-msgstr "알려지지 않음"
-
-#: host.php:1916 lib/api_automation.php:570 tree.php:987 utilities.php:2277
-msgid "Device Description"
-msgstr "Описание на устройството"
-
-#: host.php:1919
-msgid "The name by which this Device will be referred to."
-msgstr "Името, с което ще бъде посочено това Устройство."
-
-#: host.php:1922 include/global_form.php:1176 include/global_form.php:1747
-#: lib/api_automation.php:279 lib/api_automation.php:571
-#: lib/api_automation.php:890 lib/api_automation.php:1197 managers.php:217
-#: pollers.php:115 pollers.php:1001 user_admin.php:1073
-#: user_group_admin.php:1087
-msgid "Hostname"
-msgstr "Име на хост"
-
-#: host.php:1925
-msgid "Either an IP address, or hostname.  If a hostname, it must be resolvable by either DNS, or from your hosts file."
-msgstr "Или IP адрес, или име на хост. Ако име на хост, то трябва да може да се разреши или от DNS, или от вашия хост файл."
-
-#: host.php:1931
-msgid "The internal database ID for this Device.  Useful when performing automation or debugging."
-msgstr "ID на вътрешната база данни за това устройство. Полезно при извършване на автоматизация или отстраняване на грешки."
-
-#: host.php:1937
-msgid "The total number of Graphs generated from this Device."
-msgstr "Общият брой графики, генерирани от това устройство."
-
-#: host.php:1943
-msgid "The total number of Data Sources generated from this Device."
-msgstr "Общият брой на източниците на данни, генерирани от това устройство."
-
-#: host.php:1949
-msgid "The monitoring status of the Device based upon ping results.  If this Device is a special type Device, by using the hostname \"localhost\", or due to the setting to not perform an Availability Check, it will always remain Up.  When using cmd.php data collector, a Device with no Graphs, is not pinged by the data collector and will remain in an \"Unknown\" state."
-msgstr "Статусът на наблюдение на устройството въз основа на резултатите от ping. Ако това устройство е специален тип устройство, като използвате името на хоста &quot;localhost&quot;, или поради настройката, която не изпълнява проверка за наличност, тя винаги ще остане нагоре. Когато се използва колектор данни cmd.php, Устройство без графики не се пигира от колектора на данни и ще остане в състояние &quot;Неизвестно&quot;."
-
-#: host.php:1952
-msgid "In State"
-msgstr "Област"
-
-#: host.php:1955
-msgid "The amount of time that this Device has been in its current state."
-msgstr "Времето, през което устройството е в текущото си състояние."
-
-#: host.php:1961
-msgid "The current amount of time that the host has been up."
-msgstr "Текущото време, през което хостът е бил нагоре."
-
-#: host.php:1964
-msgid "Poll Time"
-msgstr "Време на анкетата"
-
-#: host.php:1967
-msgid "The amount of time it takes to collect data from this Device."
-msgstr "Времето, необходимо за събиране на данни от това устройство."
-
-#: host.php:1970
-msgid "Current (ms)"
-msgstr "Текущо (мс)"
-
-#: host.php:1973
-msgid "The current ping time in milliseconds to reach the Device."
-msgstr "Текущото време на пинг в милисекунди, за да достигне устройството."
-
-#: host.php:1976
-msgid "Average (ms)"
-msgstr "Средно (мс)"
-
-#: host.php:1979
-msgid "The average ping time in milliseconds to reach the Device since the counters were cleared for this Device."
-msgstr "Средното време за пинг в милисекунди, за да достигне устройството, тъй като броячите бяха изчистени за това устройство."
-
-#: host.php:1982
-msgid "Availability"
-msgstr "Наличност"
-
-#: host.php:1985
-msgid "The availability percentage based upon ping results since the counters were cleared for this Device."
-msgstr "Процентът на достъпност въз основа на резултатите от ping, тъй като броячите бяха изчистени за това устройство."
-
 #: host_templates.php:22
 msgid "Sync Devices"
 msgstr "Устройства за синхронизиране"
@@ -5754,13 +5324,29 @@ msgstr "Шаблони за устройства [ново]"
 msgid "Default Submit Button"
 msgstr "Бутон за изпращане по подразбиране"
 
+#: host_templates.php:493
+msgid "No associated graph templates."
+msgstr "Асоциирани шаблони за графики"
+
+#: host_templates.php:502
+msgid "Add Graph Template"
+msgstr "Добавете шаблон за графика"
+
 #: host_templates.php:515
 msgid "Add Graph Template to Device Template"
 msgstr "Добавете шаблон за графиката към шаблона на устройството"
 
+#: host_templates.php:525
+msgid "Associated Data Queries"
+msgstr "Свързани заявки за данни"
+
 #: host_templates.php:550
 msgid "No associated data queries."
 msgstr "Няма свързани заявки за данни."
+
+#: host_templates.php:559
+msgid "Add Data Query"
+msgstr "Добавяне на заявка за данни"
 
 #: host_templates.php:569
 msgid "Add Data Query to Device Template"
@@ -5771,7 +5357,7 @@ msgid "Delete Item from Device Template"
 msgstr "Изтриване на шаблони на устройствата"
 
 #: host_templates.php:703 host_templates.php:801 host_templates.php:968
-#: include/global_arrays.php:1238 include/global_arrays.php:2272
+#: include/global_arrays.php:1238 include/global_arrays.php:2274
 msgid "Device Templates"
 msgstr "Шаблони за устройства"
 
@@ -6420,9 +6006,29 @@ msgstr "Logfile и Syslog / Eventlog"
 msgid "Syslog/Eventlog Only"
 msgstr "Само Syslog / Eventlog"
 
+#: include/global_arrays.php:674
+msgid "Ping and SNMP Uptime"
+msgstr "Ping и SNMP Uptime"
+
+#: include/global_arrays.php:675
+msgid "Ping or SNMP Uptime"
+msgstr "Ping или SNMP Uptime"
+
+#: include/global_arrays.php:676
+msgid "SNMP Uptime"
+msgstr "SNMP Uptime"
+
+#: include/global_arrays.php:677
+msgid "SNMP Desc"
+msgstr "SNMP Desc"
+
 #: include/global_arrays.php:678
 msgid "SNMP getNext"
 msgstr "SNMP getNext"
+
+#: include/global_arrays.php:679
+msgid "Ping"
+msgstr "Ping"
 
 #: include/global_arrays.php:683
 msgid "ICMP Ping"
@@ -6498,9 +6104,9 @@ msgstr "Всеки час"
 #: include/global_arrays.php:739 include/global_arrays.php:740
 #: include/global_arrays.php:811 include/global_arrays.php:812
 #: include/global_arrays.php:813 include/global_arrays.php:814
-#: include/global_arrays.php:1867 include/global_arrays.php:1868
 #: include/global_arrays.php:1869 include/global_arrays.php:1870
-#: include/global_arrays.php:1871 include/global_settings.php:2551
+#: include/global_arrays.php:1871 include/global_arrays.php:1872
+#: include/global_arrays.php:1873 include/global_settings.php:2551
 #: include/global_settings.php:2552
 #, php-format
 msgid "Every %d Hours"
@@ -6516,7 +6122,7 @@ msgstr "Всеки %d ден"
 msgid "%0.1f Minutes"
 msgstr "ПРОТОКОЛ"
 
-#: include/global_arrays.php:786 include/global_arrays.php:1470
+#: include/global_arrays.php:786 include/global_arrays.php:1472
 #: include/global_settings.php:1635 rrdcleaner.php:541
 #, php-format
 msgid "%d Year"
@@ -6629,7 +6235,7 @@ msgid "Header"
 msgstr "Хедър"
 
 #: include/global_arrays.php:953 include/global_arrays.php:1004
-#: include/global_arrays.php:1687 include/global_arrays.php:1856
+#: include/global_arrays.php:1689 include/global_arrays.php:1858
 #: lib/html.php:2845
 msgid "Graph"
 msgstr "Графика"
@@ -6728,16 +6334,16 @@ msgid "Data Collection"
 msgstr "Събиране на данни"
 
 #: include/global_arrays.php:998 include/global_arrays.php:1049
-#: include/global_arrays.php:2200 pollers.php:860
+#: include/global_arrays.php:2202 pollers.php:860
 msgid "Data Collectors"
 msgstr "Събирачи на данни"
 
 #: include/global_arrays.php:1000 include/global_arrays.php:1225
-#: include/global_arrays.php:2362
+#: include/global_arrays.php:2364
 msgid "Data Input Methods"
 msgstr "Методи за въвеждане на данни"
 
-#: include/global_arrays.php:1006 include/global_arrays.php:2893
+#: include/global_arrays.php:1006 include/global_arrays.php:2895
 msgid "Aggregate"
 msgstr "агрегат"
 
@@ -6764,11 +6370,11 @@ msgstr "Предварително"
 msgid "Data Profiles"
 msgstr "Профили за данни"
 
-#: include/global_arrays.php:1020 include/global_arrays.php:2524
+#: include/global_arrays.php:1020 include/global_arrays.php:2526
 msgid "VDEFs"
 msgstr "VDEFs"
 
-#: include/global_arrays.php:1021 include/global_arrays.php:2224
+#: include/global_arrays.php:1021 include/global_arrays.php:2226
 msgid "Colors"
 msgstr "Цветове"
 
@@ -6777,16 +6383,16 @@ msgid "Import/Export"
 msgstr "Импорт/Експорт"
 
 #: include/global_arrays.php:1025 include/global_arrays.php:1241
-#: include/global_arrays.php:2650
+#: include/global_arrays.php:2652
 msgid "Import Templates"
 msgstr "Импортиране на шаблони"
 
-#: include/global_arrays.php:1026 include/global_arrays.php:2656
+#: include/global_arrays.php:1026 include/global_arrays.php:2658
 msgid "Import Packages"
 msgstr "Импортиране на шаблони"
 
 #: include/global_arrays.php:1027 include/global_arrays.php:1240
-#: include/global_arrays.php:2638 templates_export.php:142
+#: include/global_arrays.php:2640 templates_export.php:142
 msgid "Export Templates"
 msgstr "Експортиране на шаблони"
 
@@ -6800,23 +6406,23 @@ msgstr "Конфигурация"
 msgid "Settings"
 msgstr "Настойки"
 
-#: include/global_arrays.php:1031 include/global_arrays.php:2578
+#: include/global_arrays.php:1031 include/global_arrays.php:2580
 #: user_admin.php:2131 user_admin.php:2236 user_group_admin.php:725
 #: user_group_admin.php:2164
 msgid "Users"
 msgstr "Потребители"
 
-#: include/global_arrays.php:1032 include/global_arrays.php:2608
+#: include/global_arrays.php:1032 include/global_arrays.php:2610
 msgid "User Groups"
 msgstr "Потребителски групи"
 
-#: include/global_arrays.php:1033 include/global_arrays.php:2596
+#: include/global_arrays.php:1033 include/global_arrays.php:2598
 #: user_domains.php:634 user_domains.php:728
 msgid "User Domains"
 msgstr "Потребителски домейни"
 
 #: include/global_arrays.php:1035 include/global_arrays.php:1054
-#: include/global_arrays.php:1071 include/global_arrays.php:2452
+#: include/global_arrays.php:1071 include/global_arrays.php:2454
 msgid "Utilities"
 msgstr "Приложения"
 
@@ -6826,7 +6432,7 @@ msgstr "Утилити"
 
 #: include/global_arrays.php:1037 include/global_arrays.php:1072
 #: include/global_arrays.php:1115 include/global_arrays.php:1218
-#: include/global_arrays.php:2212 user_admin.php:1497 user_group_admin.php:1511
+#: include/global_arrays.php:2214 user_admin.php:1497 user_group_admin.php:1511
 msgid "External Links"
 msgstr "Външни линкове"
 
@@ -7020,259 +6626,259 @@ msgstr "Обща администрация"
 msgid "System Administration"
 msgstr "Системна администрация"
 
-#: include/global_arrays.php:1353 lib/html.php:1408
+#: include/global_arrays.php:1355 lib/html.php:1408
 msgid "CDEF"
 msgstr "CDEF"
 
-#: include/global_arrays.php:1354
+#: include/global_arrays.php:1356
 msgid "CDEF Item"
 msgstr "CDEF Поз"
 
-#: include/global_arrays.php:1355
+#: include/global_arrays.php:1357
 msgid "GPRINT Preset"
 msgstr "Предварително зададени GPRINT"
 
-#: include/global_arrays.php:1358
+#: include/global_arrays.php:1360
 msgid "Data Input Field"
 msgstr "Поле за въвеждане на данни"
 
-#: include/global_arrays.php:1359 include/global_form.php:579
+#: include/global_arrays.php:1361 include/global_form.php:579
 #: include/global_form.php:1679 package_import.php:862
 msgid "Data Source Profile"
 msgstr "Профил на източника на данни"
 
-#: include/global_arrays.php:1360
+#: include/global_arrays.php:1362
 msgid "Data Template Item"
 msgstr "Шаблон за данни"
 
-#: include/global_arrays.php:1362
+#: include/global_arrays.php:1364
 msgid "Graph Template Item"
 msgstr "Шаблон на графиката"
 
-#: include/global_arrays.php:1363
+#: include/global_arrays.php:1365
 msgid "Graph Template Input"
 msgstr "Входен шаблон на графиката"
 
-#: include/global_arrays.php:1366 lib/html.php:1409
+#: include/global_arrays.php:1368 lib/html.php:1409
 msgid "VDEF"
 msgstr "VDEF"
 
-#: include/global_arrays.php:1367
+#: include/global_arrays.php:1369
 msgid "VDEF Item"
 msgstr "VDEF позиция"
 
-#: include/global_arrays.php:1421
+#: include/global_arrays.php:1423
 msgid "Last Half Hour"
 msgstr "Последно полувреме"
 
-#: include/global_arrays.php:1422
+#: include/global_arrays.php:1424
 msgid "Last Hour"
 msgstr "Последен час"
 
-#: include/global_arrays.php:1423 include/global_arrays.php:1424
 #: include/global_arrays.php:1425 include/global_arrays.php:1426
+#: include/global_arrays.php:1427 include/global_arrays.php:1428
 #, php-format
 msgid "Last %d Hours"
 msgstr "Последно% d часа"
 
-#: include/global_arrays.php:1427
+#: include/global_arrays.php:1429
 msgid "Last Day"
 msgstr "Последен ден"
 
-#: include/global_arrays.php:1428 include/global_arrays.php:1429
-#: include/global_arrays.php:1430
+#: include/global_arrays.php:1430 include/global_arrays.php:1431
+#: include/global_arrays.php:1432
 #, php-format
 msgid "Last %d Days"
 msgstr "Последни% d дни"
 
-#: include/global_arrays.php:1431
+#: include/global_arrays.php:1433
 msgid "Last Week"
 msgstr "Миналата седмица"
 
-#: include/global_arrays.php:1432
+#: include/global_arrays.php:1434
 #, php-format
 msgid "Last %d Weeks"
 msgstr "Последно% d седмици"
 
-#: include/global_arrays.php:1433
+#: include/global_arrays.php:1435
 msgid "Last Month"
 msgstr "Последен Месец"
 
-#: include/global_arrays.php:1434 include/global_arrays.php:1435
 #: include/global_arrays.php:1436 include/global_arrays.php:1437
+#: include/global_arrays.php:1438 include/global_arrays.php:1439
 #, php-format
 msgid "Last %d Months"
 msgstr "Последни% d месеца"
 
-#: include/global_arrays.php:1438
+#: include/global_arrays.php:1440
 msgid "Last Year"
 msgstr "Миналата година"
 
-#: include/global_arrays.php:1439
+#: include/global_arrays.php:1441
 #, php-format
 msgid "Last %d Years"
 msgstr "Последни% d години"
 
-#: include/global_arrays.php:1440
+#: include/global_arrays.php:1442
 msgid "Day Shift"
 msgstr "Дневна смяна"
 
-#: include/global_arrays.php:1441
+#: include/global_arrays.php:1443
 msgid "This Day"
 msgstr "Всеки ден"
 
-#: include/global_arrays.php:1442
+#: include/global_arrays.php:1444
 msgid "This Week"
 msgstr "Тази Седмица"
 
-#: include/global_arrays.php:1443
+#: include/global_arrays.php:1445
 msgid "This Month"
 msgstr "Този месец"
 
-#: include/global_arrays.php:1444
+#: include/global_arrays.php:1446
 msgid "This Year"
 msgstr "Тази година"
 
-#: include/global_arrays.php:1445
+#: include/global_arrays.php:1447
 msgid "Previous Day"
 msgstr "Предишен ден"
 
-#: include/global_arrays.php:1446
+#: include/global_arrays.php:1448
 msgid "Previous Week"
 msgstr "Предишната седмица"
 
-#: include/global_arrays.php:1447
+#: include/global_arrays.php:1449
 msgid "Previous Month"
 msgstr "Предишен месец"
 
-#: include/global_arrays.php:1448
+#: include/global_arrays.php:1450
 msgid "Previous Year"
 msgstr "предходната година"
 
-#: include/global_arrays.php:1453
+#: include/global_arrays.php:1455
 #, php-format
 msgid "%d Min"
 msgstr "% d Мин"
 
-#: include/global_arrays.php:1508
+#: include/global_arrays.php:1510
 msgid "Month Number, Day, Year"
 msgstr "Номер на месеца, ден, година"
 
-#: include/global_arrays.php:1509
+#: include/global_arrays.php:1511
 msgid "Month Name, Day, Year"
 msgstr "Име на месеца, ден, година"
 
-#: include/global_arrays.php:1510
+#: include/global_arrays.php:1512
 msgid "Day, Month Number, Year"
 msgstr "Ден, брой на месеца, година"
 
-#: include/global_arrays.php:1511
+#: include/global_arrays.php:1513
 msgid "Day, Month Name, Year"
 msgstr "Ден, месец, година"
 
-#: include/global_arrays.php:1512
+#: include/global_arrays.php:1514
 msgid "Year, Month Number, Day"
 msgstr "Година, месец, ден"
 
-#: include/global_arrays.php:1513
+#: include/global_arrays.php:1515
 msgid "Year, Month Name, Day"
 msgstr "Година, Име на Месеца, Ден"
 
-#: include/global_arrays.php:1523 include/global_arrays.php:1554
+#: include/global_arrays.php:1525 include/global_arrays.php:1556
 msgid "After Boost"
 msgstr "След повишаване"
 
-#: include/global_arrays.php:1533 include/global_arrays.php:1534
 #: include/global_arrays.php:1535 include/global_arrays.php:1536
-#: include/global_arrays.php:1537 include/global_arrays.php:1599
-#: include/global_arrays.php:1600
+#: include/global_arrays.php:1537 include/global_arrays.php:1538
+#: include/global_arrays.php:1539 include/global_arrays.php:1601
+#: include/global_arrays.php:1602
 #, php-format
 msgid "%d MBytes"
 msgstr "% d МБ"
 
-#: include/global_arrays.php:1538
+#: include/global_arrays.php:1540
 msgid "1 GByte"
 msgstr "1 GByte"
 
-#: include/global_arrays.php:1539 include/global_arrays.php:1602
+#: include/global_arrays.php:1541 include/global_arrays.php:1604
 #: lib/boost.php:124
 #, php-format
 msgid "%s GBytes"
 msgstr "%s GB"
 
-#: include/global_arrays.php:1540 include/global_arrays.php:1541
-#: include/global_arrays.php:1603 include/global_arrays.php:1604
+#: include/global_arrays.php:1542 include/global_arrays.php:1543
 #: include/global_arrays.php:1605 include/global_arrays.php:1606
 #: include/global_arrays.php:1607 include/global_arrays.php:1608
+#: include/global_arrays.php:1609 include/global_arrays.php:1610
 #, php-format
 msgid "%d GBytes"
 msgstr "% d GB"
 
-#: include/global_arrays.php:1561
+#: include/global_arrays.php:1563
 msgid "2,000 Data Source Items"
 msgstr "2000 елемента на източника на данни"
 
-#: include/global_arrays.php:1562
+#: include/global_arrays.php:1564
 msgid "5,000 Data Source Items"
 msgstr "5000 Елементи на източника на данни"
 
-#: include/global_arrays.php:1563
+#: include/global_arrays.php:1565
 msgid "10,000 Data Source Items"
 msgstr "10 000 Елементи на Източника на Данни"
 
-#: include/global_arrays.php:1564
+#: include/global_arrays.php:1566
 msgid "15,000 Data Source Items"
 msgstr "15 000 Елементи на източника на данни"
 
-#: include/global_arrays.php:1565
+#: include/global_arrays.php:1567
 msgid "25,000 Data Source Items"
 msgstr "25 000 Елементи на източника на данни"
 
-#: include/global_arrays.php:1566
+#: include/global_arrays.php:1568
 msgid "50,000 Data Source Items (Default)"
 msgstr "50 000 елемента на източника на данни (по подразбиране)"
 
-#: include/global_arrays.php:1567
+#: include/global_arrays.php:1569
 msgid "100,000 Data Source Items"
 msgstr "100 000 Елементи на източника на данни"
 
-#: include/global_arrays.php:1568
+#: include/global_arrays.php:1570
 msgid "200,000 Data Source Items"
 msgstr "200 000 Елементи на източника на данни"
 
-#: include/global_arrays.php:1569
+#: include/global_arrays.php:1571
 msgid "400,000 Data Source Items"
 msgstr "400 000 Елементи на Източника на Данни"
 
-#: include/global_arrays.php:1586
+#: include/global_arrays.php:1588
 msgid "2 Hours"
 msgstr "2 часа"
 
-#: include/global_arrays.php:1587
+#: include/global_arrays.php:1589
 msgid "4 Hours"
 msgstr "4 часа"
 
-#: include/global_arrays.php:1588
+#: include/global_arrays.php:1590
 msgid "6 Hours"
 msgstr "6 Часа"
 
-#: include/global_arrays.php:1595 include/global_settings.php:1489
+#: include/global_arrays.php:1597 include/global_settings.php:1489
 #: include/global_settings.php:1490 include/global_settings.php:1491
 #, php-format
 msgid "%s Hours"
 msgstr "%s часа"
 
-#: include/global_arrays.php:1601
+#: include/global_arrays.php:1603
 #, php-format
 msgid "%d GByte"
 msgstr "% d GB"
 
-#: include/global_arrays.php:1609 utilities.php:2856 utilities.php:2857
+#: include/global_arrays.php:1611 utilities.php:2856 utilities.php:2857
 #: utilities.php:2906
 msgid "Unlimited"
 msgstr "Неограничено"
 
-#: include/global_arrays.php:1616 include/global_settings.php:1388
+#: include/global_arrays.php:1618 include/global_settings.php:1388
 #: include/global_settings.php:1389 include/global_settings.php:1390
 #: include/global_settings.php:1391 include/global_settings.php:1401
 #: include/global_settings.php:1402 include/global_settings.php:1403
@@ -7288,740 +6894,758 @@ msgstr "Неограничено"
 msgid "%s Minutes"
 msgstr "%s Минути"
 
-#: include/global_arrays.php:1638
+#: include/global_arrays.php:1640
 msgid "1 Megabyte"
 msgstr "1 мегабайт"
 
-#: include/global_arrays.php:1639 include/global_arrays.php:1640
 #: include/global_arrays.php:1641 include/global_arrays.php:1642
 #: include/global_arrays.php:1643 include/global_arrays.php:1644
+#: include/global_arrays.php:1645 include/global_arrays.php:1646
 #, php-format
 msgid "%d Megabytes"
 msgstr "% d мегабайта"
 
-#: include/global_arrays.php:1648
+#: include/global_arrays.php:1650
 msgid "Send Now"
 msgstr "Изпрати"
 
-#: include/global_arrays.php:1656
+#: include/global_arrays.php:1658
 msgid "Take Ownership"
 msgstr "Вземете собственост"
 
-#: include/global_arrays.php:1660
+#: include/global_arrays.php:1662
 msgid "Inline PNG Image"
 msgstr "Вградено PNG изображение"
 
-#: include/global_arrays.php:1665
+#: include/global_arrays.php:1667
 msgid "Inline JPEG Image"
 msgstr "Вградено JPEG изображение"
 
-#: include/global_arrays.php:1666
+#: include/global_arrays.php:1668
 msgid "Inline GIF Image"
 msgstr "Вградено GIF изображение"
 
-#: include/global_arrays.php:1669
+#: include/global_arrays.php:1671
 msgid "Attached PNG Image"
 msgstr "Прикрепено PNG изображение"
 
-#: include/global_arrays.php:1672
+#: include/global_arrays.php:1674
 msgid "Attached JPEG Image"
 msgstr "Прикрепено JPEG изображение"
 
-#: include/global_arrays.php:1673
+#: include/global_arrays.php:1675
 msgid "Attached GIF Image"
 msgstr "Прикачено изображение в GIF"
 
-#: include/global_arrays.php:1677
+#: include/global_arrays.php:1679
 msgid "Inline PNG Image, LN Style"
 msgstr "Вградено изображение PNG, стил LN"
 
-#: include/global_arrays.php:1679
+#: include/global_arrays.php:1681
 msgid "Inline JPEG Image, LN Style"
 msgstr "Вградено JPEG изображение, LN стил"
 
-#: include/global_arrays.php:1680
+#: include/global_arrays.php:1682
 msgid "Inline GIF Image, LN Style"
 msgstr "Вградено изображение на GIF, стил LN"
 
-#: include/global_arrays.php:1685
+#: include/global_arrays.php:1687
 msgid "Text"
 msgstr "Текст"
 
-#: include/global_arrays.php:1686 include/global_form.php:2252
+#: include/global_arrays.php:1688 include/global_form.php:2252
 msgid "Tree"
 msgstr "‎درخت"
 
-#: include/global_arrays.php:1689
+#: include/global_arrays.php:1691
 msgid "Horizontal Rule"
 msgstr "Хоризонтална линия"
 
-#: include/global_arrays.php:1693
+#: include/global_arrays.php:1695
 msgid "left"
 msgstr "ляво"
 
-#: include/global_arrays.php:1694
+#: include/global_arrays.php:1696
 msgid "center"
 msgstr "център"
 
-#: include/global_arrays.php:1695
+#: include/global_arrays.php:1697
 msgid "right"
 msgstr "дясно"
 
-#: include/global_arrays.php:1699
+#: include/global_arrays.php:1701
 msgid "Minute(s)"
 msgstr "минута(и)"
 
-#: include/global_arrays.php:1700
+#: include/global_arrays.php:1702
 msgid "Hour(s)"
 msgstr "Час/ове"
 
-#: include/global_arrays.php:1701
+#: include/global_arrays.php:1703
 msgid "Day(s)"
 msgstr "Ден(и)"
 
-#: include/global_arrays.php:1702
+#: include/global_arrays.php:1704
 msgid "Week(s)"
 msgstr "Седмица (и)"
 
-#: include/global_arrays.php:1703
+#: include/global_arrays.php:1705
 msgid "Month(s), Day of Month"
 msgstr "Месец, ден от месец"
 
-#: include/global_arrays.php:1704
+#: include/global_arrays.php:1706
 msgid "Month(s), Day of Week"
 msgstr "Месец, ден от седмицата"
 
-#: include/global_arrays.php:1705
+#: include/global_arrays.php:1707
 msgid "Year(s)"
 msgstr "Година(и)"
 
-#: include/global_arrays.php:1709
+#: include/global_arrays.php:1711
 msgid "Keep Graph Types"
 msgstr "Запазете типовете графики"
 
-#: include/global_arrays.php:1710
+#: include/global_arrays.php:1712
 msgid "Keep Type and STACK"
 msgstr "Запази типа и стека"
 
-#: include/global_arrays.php:1711
+#: include/global_arrays.php:1713
 msgid "Convert to AREA/STACK Graph"
 msgstr "Конвертиране в ОБЛАСТ / СТЪПКА Графика"
 
-#: include/global_arrays.php:1712
+#: include/global_arrays.php:1714
 msgid "Convert to LINE1 Graph"
 msgstr "Конвертиране в LINE1 графика"
 
-#: include/global_arrays.php:1713
+#: include/global_arrays.php:1715
 msgid "Convert to LINE2 Graph"
 msgstr "Конвертиране в LINE2 графика"
 
-#: include/global_arrays.php:1714
+#: include/global_arrays.php:1716
 msgid "Convert to LINE3 Graph"
 msgstr "Конвертиране в LINE3 Графика"
 
-#: include/global_arrays.php:1715
+#: include/global_arrays.php:1717
 msgid "Convert to LINE1/STACK Graph"
 msgstr "Конвертиране в LINE1 графика"
 
-#: include/global_arrays.php:1716
+#: include/global_arrays.php:1718
 msgid "Convert to LINE2/STACK Graph"
 msgstr "Конвертиране в LINE2 графика"
 
-#: include/global_arrays.php:1717
+#: include/global_arrays.php:1719
 msgid "Convert to LINE3/STACK Graph"
 msgstr "Конвертиране в LINE3 Графика"
 
-#: include/global_arrays.php:1721
+#: include/global_arrays.php:1723
 msgid "No Totals"
 msgstr "Няма общи суми"
 
-#: include/global_arrays.php:1722
+#: include/global_arrays.php:1724
 msgid "Print All Legend Items"
 msgstr "Отпечатайте всички елементи на Legend"
 
-#: include/global_arrays.php:1723
+#: include/global_arrays.php:1725
 msgid "Print Totaling Legend Items Only"
 msgstr "Печат само на обектите на легендата"
 
-#: include/global_arrays.php:1727
+#: include/global_arrays.php:1729
 msgid "Total Similar Data Sources"
 msgstr "Общо подобни източници на данни"
 
-#: include/global_arrays.php:1728
+#: include/global_arrays.php:1730
 msgid "Total All Data Sources"
 msgstr "Общо всички източници на данни"
 
-#: include/global_arrays.php:1732
+#: include/global_arrays.php:1734
 msgid "No Reordering"
 msgstr "Няма пренареждане"
 
-#: include/global_arrays.php:1733
+#: include/global_arrays.php:1735
 msgid "Data Source, Graph"
 msgstr "Източник на данни, графика"
 
-#: include/global_arrays.php:1734
+#: include/global_arrays.php:1736
 msgid "Graph, Data Source"
 msgstr "Графика, Източник на данни"
 
-#: include/global_arrays.php:1735
+#: include/global_arrays.php:1737
 msgid "Base Graph Order"
 msgstr "Има графики"
 
-#: include/global_arrays.php:1742
+#: include/global_arrays.php:1744
 msgid "contains"
 msgstr "съдържа"
 
-#: include/global_arrays.php:1743
+#: include/global_arrays.php:1745
 msgid "does not contain"
 msgstr "не съдържа"
 
-#: include/global_arrays.php:1744
+#: include/global_arrays.php:1746
 msgid "begins with"
 msgstr "Започва с"
 
-#: include/global_arrays.php:1745
+#: include/global_arrays.php:1747
 msgid "does not begin with"
 msgstr "не започва с"
 
-#: include/global_arrays.php:1746
+#: include/global_arrays.php:1748
 msgid "ends with"
 msgstr "завършва с"
 
-#: include/global_arrays.php:1747
+#: include/global_arrays.php:1749
 msgid "does not end with"
 msgstr "не завършва с"
 
-#: include/global_arrays.php:1748
+#: include/global_arrays.php:1750
 msgid "matches"
 msgstr "Кибрит"
 
-#: include/global_arrays.php:1749
+#: include/global_arrays.php:1751
 msgid "is not equal to"
 msgstr "не е равно на"
 
-#: include/global_arrays.php:1750
+#: include/global_arrays.php:1752
 msgid "is less than"
 msgstr "е по- малко от"
 
-#: include/global_arrays.php:1751
+#: include/global_arrays.php:1753
 msgid "is less than or equal"
 msgstr "е по-малко или равно"
 
-#: include/global_arrays.php:1752
+#: include/global_arrays.php:1754
 msgid "is greater than"
 msgstr "е по- голямо от"
 
-#: include/global_arrays.php:1753
+#: include/global_arrays.php:1755
 msgid "is greater than or equal"
 msgstr "е по-голямо или равно"
 
-#: include/global_arrays.php:1754
+#: include/global_arrays.php:1756
 msgid "is unknown"
 msgstr "알려지지 않음"
 
-#: include/global_arrays.php:1755
+#: include/global_arrays.php:1757
 msgid "is not unknown"
 msgstr "не е неизвестно"
 
-#: include/global_arrays.php:1756
+#: include/global_arrays.php:1758
 msgid "is empty"
 msgstr "е празно"
 
-#: include/global_arrays.php:1757
+#: include/global_arrays.php:1759
 msgid "is not empty"
 msgstr "не е празно"
 
-#: include/global_arrays.php:1758
+#: include/global_arrays.php:1760
 msgid "matches regular expression"
 msgstr "съответства на регулярния израз"
 
-#: include/global_arrays.php:1759
+#: include/global_arrays.php:1761
 msgid "does not match regular expression"
 msgstr "не съответства на регулярния израз"
 
-#: include/global_arrays.php:1861
+#: include/global_arrays.php:1863
 msgid "Fixed String"
 msgstr "Фиксирана низ"
 
-#: include/global_arrays.php:1866
+#: include/global_arrays.php:1868
 msgid "Every 1 Hour"
 msgstr "На всеки 1 час"
 
-#: include/global_arrays.php:1872
+#: include/global_arrays.php:1874
 msgid "Every Day"
 msgstr "Всеки ден"
 
-#: include/global_arrays.php:1873
+#: include/global_arrays.php:1875
 msgid "Every Week"
 msgstr "Всяка седмица"
 
-#: include/global_arrays.php:1874 include/global_arrays.php:1875
+#: include/global_arrays.php:1876 include/global_arrays.php:1877
 #, php-format
 msgid "Every %d Weeks"
 msgstr "Всеки% d седмици"
 
-#: include/global_arrays.php:1906
+#: include/global_arrays.php:1908
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jan"
 msgstr "Ян"
 
-#: include/global_arrays.php:1907
+#: include/global_arrays.php:1909
 msgctxt "A short textual representation of a month, three letters"
 msgid "Feb"
 msgstr "Февр"
 
-#: include/global_arrays.php:1908
+#: include/global_arrays.php:1910
 msgctxt "A short textual representation of a month, three letters"
 msgid "Mar"
 msgstr "Март"
 
-#: include/global_arrays.php:1909
+#: include/global_arrays.php:1911
 msgctxt "A short textual representation of a month, three letters"
 msgid "Apr"
 msgstr "Апр"
 
-#: include/global_arrays.php:1910
+#: include/global_arrays.php:1912
 msgctxt "A short textual representation of a month, three letters"
 msgid "May"
 msgstr "Май"
 
-#: include/global_arrays.php:1911
+#: include/global_arrays.php:1913
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jun"
 msgstr "Юни"
 
-#: include/global_arrays.php:1912
+#: include/global_arrays.php:1914
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jul"
 msgstr "Юли"
 
-#: include/global_arrays.php:1913
+#: include/global_arrays.php:1915
 msgctxt "A short textual representation of a month, three letters"
 msgid "Aug"
 msgstr "Авг"
 
-#: include/global_arrays.php:1914
+#: include/global_arrays.php:1916
 msgctxt "A short textual representation of a month, three letters"
 msgid "Sep"
 msgstr "Септ"
 
-#: include/global_arrays.php:1915
+#: include/global_arrays.php:1917
 msgctxt "A short textual representation of a month, three letters"
 msgid "Oct"
 msgstr "Окт"
 
-#: include/global_arrays.php:1916
+#: include/global_arrays.php:1918
 msgctxt "A short textual representation of a month, three letters"
 msgid "Nov"
 msgstr "Ноем"
 
-#: include/global_arrays.php:1917
+#: include/global_arrays.php:1919
 msgctxt "A short textual representation of a month, three letters"
 msgid "Dec"
 msgstr "Дек"
 
-#: include/global_arrays.php:1921
+#: include/global_arrays.php:1923
 msgid "Use the First Handler Found"
 msgstr "Използвайте PHP GetText Handler"
 
-#: include/global_arrays.php:1925
+#: include/global_arrays.php:1927
 msgid "Use the PHP GetText Handler"
 msgstr "Използвайте PHP GetText Handler"
 
-#: include/global_arrays.php:1929
+#: include/global_arrays.php:1931
 msgid "Use the Oscarotero GetText Handler"
 msgstr "Използвайте Oscarotero GetText Handler"
 
-#: include/global_arrays.php:1933
+#: include/global_arrays.php:1935
 msgid "Use the MonoTranslator GetText Handler"
 msgstr "Използвайте MonoTranslator GetText Handler"
 
-#: include/global_arrays.php:1947
+#: include/global_arrays.php:1949
 msgctxt "A textual representation of a day, three letters"
 msgid "Sun"
 msgstr "Нед"
 
-#: include/global_arrays.php:1948
+#: include/global_arrays.php:1950
 msgctxt "A textual representation of a day, three letters"
 msgid "Mon"
 msgstr "Пон"
 
-#: include/global_arrays.php:1949
+#: include/global_arrays.php:1951
 msgctxt "A textual representation of a day, three letters"
 msgid "Tue"
 msgstr "Вт"
 
-#: include/global_arrays.php:1950
+#: include/global_arrays.php:1952
 msgctxt "A textual representation of a day, three letters"
 msgid "Wed"
 msgstr "Ср"
 
-#: include/global_arrays.php:1951
+#: include/global_arrays.php:1953
 msgctxt "A textual representation of a day, three letters"
 msgid "Thu"
 msgstr "Четв"
 
-#: include/global_arrays.php:1952
+#: include/global_arrays.php:1954
 msgctxt "A textual representation of a day, three letters"
 msgid "Fri"
 msgstr "Пет"
 
-#: include/global_arrays.php:1953
+#: include/global_arrays.php:1955
 msgctxt "A textual representation of a day, three letters"
 msgid "Sat"
 msgstr "Съб"
 
-#: include/global_arrays.php:1957
+#: include/global_arrays.php:1959
 msgid "Arabic"
 msgstr "Арабски"
 
-#: include/global_arrays.php:1958
+#: include/global_arrays.php:1960
 msgid "Bulgarian"
 msgstr "Български"
 
-#: include/global_arrays.php:1959
+#: include/global_arrays.php:1961
 msgid "Chinese (China)"
 msgstr "Китайски (Китай)"
 
-#: include/global_arrays.php:1960
+#: include/global_arrays.php:1962
 msgid "Chinese (Taiwan)"
 msgstr "Китайски (Тайван)"
 
-#: include/global_arrays.php:1961
+#: include/global_arrays.php:1963
 msgid "Dutch"
 msgstr "Нидерландски"
 
-#: include/global_arrays.php:1962
+#: include/global_arrays.php:1964
 msgid "English"
 msgstr "Английски"
 
-#: include/global_arrays.php:1963
+#: include/global_arrays.php:1965
 msgid "French"
 msgstr "Френски"
 
-#: include/global_arrays.php:1964
+#: include/global_arrays.php:1966
 msgid "German"
 msgstr "Немски"
 
-#: include/global_arrays.php:1965
+#: include/global_arrays.php:1967
 msgid "Greek"
 msgstr "Гръцки"
 
-#: include/global_arrays.php:1966
+#: include/global_arrays.php:1968
 msgid "Hebrew"
 msgstr "Иврит"
 
-#: include/global_arrays.php:1967
+#: include/global_arrays.php:1969
 msgid "Hindi"
 msgstr "Хинди"
 
-#: include/global_arrays.php:1968
+#: include/global_arrays.php:1970
 msgid "Italian"
 msgstr "Италиански"
 
-#: include/global_arrays.php:1969
+#: include/global_arrays.php:1971
 msgid "Japanese"
 msgstr "Японски"
 
-#: include/global_arrays.php:1970
+#: include/global_arrays.php:1972
 msgid "Korean"
 msgstr "Корейски"
 
-#: include/global_arrays.php:1971
+#: include/global_arrays.php:1973
 msgid "Polish"
 msgstr "Полски"
 
-#: include/global_arrays.php:1972
+#: include/global_arrays.php:1974
 msgid "Portuguese"
 msgstr "Португалски"
 
-#: include/global_arrays.php:1973
+#: include/global_arrays.php:1975
 msgid "Portuguese (Brazil)"
 msgstr "Португалия (Бразилия)"
 
-#: include/global_arrays.php:1974
+#: include/global_arrays.php:1976
 msgid "Russian"
 msgstr "Руски"
 
-#: include/global_arrays.php:1975
+#: include/global_arrays.php:1977
 msgid "Spanish"
 msgstr "Испански"
 
-#: include/global_arrays.php:1976
+#: include/global_arrays.php:1978
 msgid "Swedish"
 msgstr "Шведски"
 
-#: include/global_arrays.php:1977
+#: include/global_arrays.php:1979
 msgid "Turkish"
 msgstr "Турски"
 
-#: include/global_arrays.php:1978
+#: include/global_arrays.php:1980
 msgid "Vietnamese"
 msgstr "Виетнамски"
 
-#: include/global_arrays.php:1982
+#: include/global_arrays.php:1984
 msgid "Classic"
 msgstr "Класически"
 
-#: include/global_arrays.php:1983
+#: include/global_arrays.php:1985
 msgid "Modern"
 msgstr "Модерно"
 
-#: include/global_arrays.php:1984
+#: include/global_arrays.php:1986
 msgid "Dark"
 msgstr "Тъмно"
 
-#: include/global_arrays.php:1985
+#: include/global_arrays.php:1987
 msgid "Paper-plane"
 msgstr "Хартиено самолетче"
 
-#: include/global_arrays.php:1986
+#: include/global_arrays.php:1988
 msgid "Paw"
 msgstr "лапа"
 
-#: include/global_arrays.php:1987
+#: include/global_arrays.php:1989
 msgid "Sunrise"
 msgstr "Изгрев"
 
-#: include/global_arrays.php:1991
+#: include/global_arrays.php:1993
 msgid "[Fail]"
 msgstr "Скъсан"
 
-#: include/global_arrays.php:1992
+#: include/global_arrays.php:1994
 msgid "[Warning]"
 msgstr "ПРЕДУПРЕЖДЕНИЕ:"
 
-#: include/global_arrays.php:1993
+#: include/global_arrays.php:1995
 msgid "[Restart]"
 msgstr "Ограничена"
 
-#: include/global_arrays.php:1994
+#: include/global_arrays.php:1996
 msgid "[Success]"
 msgstr "Успешно!"
 
-#: include/global_arrays.php:1995
+#: include/global_arrays.php:1997
 msgid "[Skipped]"
 msgstr "[Пропусната]"
 
-#: include/global_arrays.php:2000 include/global_arrays.php:2006
+#: include/global_arrays.php:2002 include/global_arrays.php:2008
 msgid "User Profile (Edit)"
 msgstr "Потребителски профил (редактиране)"
 
-#: include/global_arrays.php:2018 include/global_arrays.php:2024
+#: include/global_arrays.php:2020 include/global_arrays.php:2026
 msgid "Tree Mode"
 msgstr "Дървовиден изглед"
 
-#: include/global_arrays.php:2030
+#: include/global_arrays.php:2032
 msgid "List Mode"
 msgstr "Списъчен изглед"
 
-#: include/global_arrays.php:2062 include/global_arrays.php:2068
+#: include/global_arrays.php:2064 include/global_arrays.php:2070
 #: lib/functions.php:4448 lib/html.php:1988 lib/html.php:2053 lib/html.php:2778
 #: user_admin.php:1472 user_group_admin.php:1486
 msgid "Console"
 msgstr "Административна конзола"
 
-#: include/global_arrays.php:2074
+#: include/global_arrays.php:2076
 msgid "Graph Management"
 msgstr "Управление на графики"
 
-#: include/global_arrays.php:2080 include/global_arrays.php:2122
-#: include/global_arrays.php:2140 include/global_arrays.php:2194
-#: include/global_arrays.php:2206 include/global_arrays.php:2218
-#: include/global_arrays.php:2230 include/global_arrays.php:2242
-#: include/global_arrays.php:2278 include/global_arrays.php:2296
-#: include/global_arrays.php:2314 include/global_arrays.php:2332
-#: include/global_arrays.php:2350 include/global_arrays.php:2374
-#: include/global_arrays.php:2410 include/global_arrays.php:2536
-#: include/global_arrays.php:2560 include/global_arrays.php:2584
-#: include/global_arrays.php:2602 include/global_arrays.php:2614
-#: include/global_arrays.php:2728 include/global_arrays.php:2752
-#: include/global_arrays.php:2770 include/global_arrays.php:2788
-#: include/global_arrays.php:2812
+#: include/global_arrays.php:2082 include/global_arrays.php:2124
+#: include/global_arrays.php:2142 include/global_arrays.php:2196
+#: include/global_arrays.php:2208 include/global_arrays.php:2220
+#: include/global_arrays.php:2232 include/global_arrays.php:2244
+#: include/global_arrays.php:2280 include/global_arrays.php:2298
+#: include/global_arrays.php:2316 include/global_arrays.php:2334
+#: include/global_arrays.php:2352 include/global_arrays.php:2376
+#: include/global_arrays.php:2412 include/global_arrays.php:2538
+#: include/global_arrays.php:2562 include/global_arrays.php:2586
+#: include/global_arrays.php:2604 include/global_arrays.php:2616
+#: include/global_arrays.php:2730 include/global_arrays.php:2754
+#: include/global_arrays.php:2772 include/global_arrays.php:2790
+#: include/global_arrays.php:2814
 msgid "(Edit)"
 msgstr "(Редактирай)"
 
-#: include/global_arrays.php:2098 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2094 include/global_arrays.php:2160
+#: include/global_arrays.php:2250 include/global_arrays.php:2286
+#: include/global_arrays.php:2304 include/global_arrays.php:2322
+#: include/global_arrays.php:2340 include/global_arrays.php:2370
+#: include/global_arrays.php:2406 include/global_arrays.php:2436
+#: include/global_arrays.php:2532 include/global_arrays.php:2736
+#: include/global_arrays.php:2760 include/global_arrays.php:2778
+#: include/global_arrays.php:2796 include/global_arrays.php:2820
+#: lib/api_automation.php:1289 lib/api_automation.php:1352
+#: lib/api_automation.php:1422 lib/html_reports.php:1792 plugins.php:605
+msgid "Actions"
+msgstr "Действия"
+
+#: include/global_arrays.php:2100 lib/api_aggregate.php:2333
 msgid "Graph Items"
 msgstr "Графични елементи"
 
-#: include/global_arrays.php:2104
+#: include/global_arrays.php:2106
 msgid "Create New Graphs"
 msgstr "Създаване на нови графики"
 
-#: include/global_arrays.php:2110
+#: include/global_arrays.php:2112
 msgid "Create Graphs from Data Query"
 msgstr "Създаване на графики от автоматизирано събиране на данни"
 
-#: include/global_arrays.php:2128 include/global_arrays.php:2146
-#: include/global_arrays.php:2266 include/global_arrays.php:2356
-#: include/global_arrays.php:2380 include/global_arrays.php:2542
+#: include/global_arrays.php:2130 include/global_arrays.php:2148
+#: include/global_arrays.php:2268 include/global_arrays.php:2358
+#: include/global_arrays.php:2382 include/global_arrays.php:2544
 msgid "(Remove)"
 msgstr "(Изтрий)"
 
-#: include/global_arrays.php:2164 include/global_arrays.php:2170
-#: include/global_arrays.php:2176 include/global_arrays.php:2182
-#: include/global_arrays.php:2476
+#: include/global_arrays.php:2166 include/global_arrays.php:2172
+#: include/global_arrays.php:2178 include/global_arrays.php:2184
+#: include/global_arrays.php:2478
 msgid "View Log"
 msgstr "Преглед на регистрационния файл"
 
-#: include/global_arrays.php:2188
+#: include/global_arrays.php:2190
 msgid "Graph Trees"
 msgstr "Дърво на графики"
 
-#: include/global_arrays.php:2254 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2256 lib/api_aggregate.php:2333
 msgid "Graph Template Items"
 msgstr "Шаблони за елементи на графиката"
 
-#: include/global_arrays.php:2344
+#: include/global_arrays.php:2346
 msgid "Round Robin Archives"
 msgstr "Round Robin Archives"
 
-#: include/global_arrays.php:2386
+#: include/global_arrays.php:2388
 msgid "Data Input Fields"
 msgstr "Полета за въвеждане на данни"
 
-#: include/global_arrays.php:2392 include/global_arrays.php:2422
+#: include/global_arrays.php:2394 include/global_arrays.php:2424
 msgid "(Remove Item)"
 msgstr "(Премахни артикул)"
 
-#: include/global_arrays.php:2428 include/global_settings.php:217
+#: include/global_arrays.php:2430 include/global_settings.php:217
 #: rrdcleaner.php:323
 msgid "RRD Cleaner"
 msgstr "RRD Cleaner"
 
-#: include/global_arrays.php:2440
+#: include/global_arrays.php:2442
 msgid "List unused Files"
 msgstr "Списък на неизползваните файлове"
 
-#: include/global_arrays.php:2446
+#: include/global_arrays.php:2448
 msgid "RRD Check"
 msgstr "Пусни Проверка"
 
-#: include/global_arrays.php:2464 utilities.php:2405
+#: include/global_arrays.php:2460 include/global_arrays.php:2472
+#: utilities.php:2401
+msgid "View Poller Cache"
+msgstr "Виж кеш на събиращия скрипт"
+
+#: include/global_arrays.php:2466 utilities.php:2405
 msgid "View Data Query Cache"
 msgstr "Преглед на кеш за данни"
 
-#: include/global_arrays.php:2482
+#: include/global_arrays.php:2484
 msgid "Clear Log"
 msgstr "Изчистване на списъка"
 
-#: include/global_arrays.php:2488 utilities.php:2394
+#: include/global_arrays.php:2490 utilities.php:2394
 msgid "View User Log"
 msgstr "Преглед на потребителския регистър"
 
-#: include/global_arrays.php:2494
+#: include/global_arrays.php:2496
 msgid "Clear User Log"
 msgstr "Изчисти регистъра на потребителя"
 
-#: include/global_arrays.php:2500 utilities.php:2385 utilities.php:2386
+#: include/global_arrays.php:2502 utilities.php:2385 utilities.php:2386
 msgid "Technical Support"
 msgstr "Техническа поддръжка"
 
-#: include/global_arrays.php:2506 utilities.php:2576
+#: include/global_arrays.php:2508 utilities.php:2576
 msgid "Boost Status"
 msgstr "Статус на Boost"
 
-#: include/global_arrays.php:2512 utilities.php:2460
+#: include/global_arrays.php:2514 utilities.php:2460
 msgid "View SNMP Agent Cache"
 msgstr "Вижте SNMP Agent Cache"
 
-#: include/global_arrays.php:2518 utilities.php:2471
+#: include/global_arrays.php:2520 utilities.php:2471
 msgid "View SNMP Agent Notification Log"
 msgstr "Преглед на протокола за уведомяване на SNMP агент"
 
-#: include/global_arrays.php:2548
+#: include/global_arrays.php:2550
 msgid "VDEF Items"
 msgstr "VDEF елементи"
 
-#: include/global_arrays.php:2554
+#: include/global_arrays.php:2556
 msgid "View SNMP Notification Receivers"
 msgstr "Преглед на SNMP уведомяващи приемници"
 
-#: include/global_arrays.php:2566
+#: include/global_arrays.php:2568
 msgid "Kadupul Settings"
 msgstr "Настройки на Kadupul"
 
-#: include/global_arrays.php:2572
+#: include/global_arrays.php:2574
 msgid "External Link"
 msgstr "Външна връзка"
 
-#: include/global_arrays.php:2590 include/global_arrays.php:2620
+#: include/global_arrays.php:2592 include/global_arrays.php:2622
 msgid "(Action)"
 msgstr "Действие"
 
-#: include/global_arrays.php:2626 lib/html.php:2799
+#: include/global_arrays.php:2628 lib/html.php:2799
 msgid "About Kadupul"
 msgstr "За Kadupul"
 
-#: include/global_arrays.php:2632
+#: include/global_arrays.php:2634
 #, fuzzy
 msgid "Kadupul Help"
 msgstr "Kadupul вкъщи"
 
-#: include/global_arrays.php:2644
+#: include/global_arrays.php:2646
 msgid "Export Results"
 msgstr "Експортиране на резултати"
 
-#: include/global_arrays.php:2662 include/global_arrays.php:2692
+#: include/global_arrays.php:2664 include/global_arrays.php:2694
 #: lib/html.php:2004 lib/html.php:2078
 msgid "Reporting"
 msgstr "Репортаж"
 
-#: include/global_arrays.php:2668 include/global_arrays.php:2698
+#: include/global_arrays.php:2670 include/global_arrays.php:2700
 msgid "Report Add"
 msgstr "Докладвай Добавяне"
 
-#: include/global_arrays.php:2674 include/global_arrays.php:2704
+#: include/global_arrays.php:2676 include/global_arrays.php:2706
 msgid "Report Delete"
 msgstr "Подайте сигнал за изтриване"
 
-#: include/global_arrays.php:2680 include/global_arrays.php:2710
+#: include/global_arrays.php:2682 include/global_arrays.php:2712
 msgid "Report Edit"
 msgstr "Редактиране на отчета"
 
-#: include/global_arrays.php:2686 include/global_arrays.php:2716
+#: include/global_arrays.php:2688 include/global_arrays.php:2718
 msgid "Report Edit Item"
 msgstr "Докладване за редактиране на елемент"
 
-#: include/global_arrays.php:2740
+#: include/global_arrays.php:2742
 msgid "Color Template Items"
 msgstr "Елементи на цветни шаблони"
 
-#: include/global_arrays.php:2800
+#: include/global_arrays.php:2802
 msgid "Graph Rule Items"
 msgstr "Елементи на правилото за графика"
 
-#: include/global_arrays.php:2824
+#: include/global_arrays.php:2826
 msgid "Tree Rule Items"
 msgstr "Елементи от дърво правило"
 
-#: include/global_arrays.php:2855 include/global_arrays.php:2871
-#: lib/api_device.php:1948
+#: include/global_arrays.php:2857 include/global_arrays.php:2873
+#: lib/api_device.php:1952
 msgid "days"
 msgstr "дни"
 
-#: include/global_arrays.php:2856
+#: include/global_arrays.php:2858
 msgid "hrs"
 msgstr "часа"
 
-#: include/global_arrays.php:2857
+#: include/global_arrays.php:2859
 msgid "mins"
 msgstr "мин"
 
-#: include/global_arrays.php:2858
+#: include/global_arrays.php:2860
 msgid "secs"
 msgstr "сек"
 
-#: include/global_arrays.php:2872 lib/api_device.php:1948
+#: include/global_arrays.php:2874 lib/api_device.php:1952
 msgid "hours"
 msgstr "часове"
 
-#: include/global_arrays.php:2873 lib/api_device.php:1948
+#: include/global_arrays.php:2875 lib/api_device.php:1952
 msgid "minutes"
 msgstr "минути"
 
-#: include/global_arrays.php:2874
+#: include/global_arrays.php:2876
 msgid "seconds"
 msgstr "секунди"
 
@@ -8904,6 +8528,14 @@ msgstr "Общи опции на устройството"
 #: include/global_form.php:1170
 msgid "Give this host a meaningful description."
 msgstr "Дайте на този хост смислено описание."
+
+#: include/global_form.php:1176 include/global_form.php:1747
+#: lib/api_automation.php:279 lib/api_automation.php:571
+#: lib/api_automation.php:890 lib/api_automation.php:1197 managers.php:217
+#: pollers.php:115 pollers.php:1001 user_admin.php:1073
+#: user_group_admin.php:1087
+msgid "Hostname"
+msgstr "Име на хост"
 
 #: include/global_form.php:1177 include/global_form.php:1748
 msgid "Fully qualified hostname or IP address for this device."
@@ -10094,6 +9726,10 @@ msgstr "Общи настройки по подразбиране"
 msgid "The default Device Template used on all new Devices."
 msgstr "Шаблонът на устройството по подразбиране, използван за всички нови устройства."
 
+#: include/global_settings.php:618 lib/html.php:2414 lib/html_reports.php:1151
+msgid "Site"
+msgstr "Tочка на продажба"
+
 #: include/global_settings.php:619
 msgid "The default Site for all new Devices."
 msgstr "Сайтът по подразбиране за всички нови устройства."
@@ -10522,7 +10158,7 @@ msgstr "Метод за избор на шрифт"
 msgid "How do you wish fonts to be handled by default?"
 msgstr "Как искате шрифтовете да се обработват по подразбиране?"
 
-#: include/global_settings.php:1060 lib/api_device.php:1903
+#: include/global_settings.php:1060 lib/api_device.php:1907
 msgid "System"
 msgstr "Система"
 
@@ -12462,6 +12098,23 @@ msgstr "Агрегираните елементи не могат да се ре
 msgid "Override this Value"
 msgstr "Замяна на тази стойност"
 
+#: lib/api_automation.php:29
+msgid "Not Up"
+msgstr "Не е горе"
+
+#: lib/api_automation.php:32 lib/html.php:65 lib/html_utility.php:1330
+#: pollers.php:34
+msgid "Recovering"
+msgstr "Възстановяване"
+
+#: lib/api_automation.php:33 lib/auth.php:3007 lib/clog_webapi.php:856
+#: lib/html_utility.php:1339 lib/import.php:342 lib/plugins.php:1499
+#: lib/plugins.php:1500 lib/rrd.php:4196 lib/rrd.php:4208 lib/spikekill.php:301
+#: package_import.php:522 package_import.php:600 utilities.php:211
+#: utilities.php:212 utilities.php:2759
+msgid "Unknown"
+msgstr "알려지지 않음"
+
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
 #: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4173
@@ -12481,6 +12134,10 @@ msgstr "Няма съвпадащи устройства"
 #: lib/api_automation.php:878
 msgid "Matching Objects"
 msgstr "Съответстващи обекти"
+
+#: lib/api_automation.php:570 tree.php:987 utilities.php:2277
+msgid "Device Description"
+msgstr "Описание на устройството"
 
 #: lib/api_automation.php:714
 msgid "Objects"
@@ -12581,11 +12238,11 @@ msgstr "Елемент на правило [редактиране на прав
 msgid "Rule Item [new rule item for %s: %s]"
 msgstr "Елемент на правило [нов елемент на правилото за %s: %s]"
 
-#: lib/api_automation.php:3288
+#: lib/api_automation.php:3344
 msgid "Added by Kadupul Automation"
 msgstr "Добавено от Kadupul Automation"
 
-#: lib/api_automation.php:3582
+#: lib/api_automation.php:3638
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "ГРЕШКА: IP диапазоните под формата на range1-range2 вече не се поддържат."
 
@@ -12593,13 +12250,13 @@ msgstr "ГРЕШКА: IP диапазоните под формата на range
 #: lib/api_device.php:389 lib/api_device.php:451 lib/api_device.php:456
 #: lib/api_device.php:501 lib/api_device.php:505 lib/api_device.php:581
 #: lib/api_device.php:585 lib/api_device.php:640 lib/api_device.php:644
-#: lib/api_device.php:710 lib/api_device.php:713 lib/api_device.php:786
-#: lib/api_device.php:789 lib/api_device.php:838 lib/api_device.php:841
-#: lib/api_device.php:882 lib/api_device.php:885 lib/api_device.php:1308
-#: lib/api_device.php:1321 lib/api_device.php:1325 lib/api_device.php:1370
-#: lib/api_device.php:1373 lib/api_device.php:1560 lib/api_device.php:1564
-#: lib/api_device.php:1600 lib/api_device.php:1604 lib/api_device.php:1649
-#: lib/api_device.php:1653 lib/api_device.php:1714 lib/api_device.php:1718
+#: lib/api_device.php:710 lib/api_device.php:713 lib/api_device.php:788
+#: lib/api_device.php:791 lib/api_device.php:840 lib/api_device.php:843
+#: lib/api_device.php:886 lib/api_device.php:889 lib/api_device.php:1312
+#: lib/api_device.php:1325 lib/api_device.php:1329 lib/api_device.php:1374
+#: lib/api_device.php:1377 lib/api_device.php:1564 lib/api_device.php:1568
+#: lib/api_device.php:1604 lib/api_device.php:1608 lib/api_device.php:1653
+#: lib/api_device.php:1657 lib/api_device.php:1718 lib/api_device.php:1722
 #: lib/utility.php:742
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
@@ -12609,76 +12266,76 @@ msgstr "Отдалеченият цветен праг %s е свален, ще 
 msgid "Device replication failed. A FullSync is required; see the log for details."
 msgstr ""
 
-#: lib/api_device.php:1824
+#: lib/api_device.php:1828
 msgid "ERROR: Device ID is Blank"
 msgstr "ГРЕШКА: ID на устройството е празно"
 
-#: lib/api_device.php:1837 lib/api_device.php:1839
+#: lib/api_device.php:1841 lib/api_device.php:1843
 msgid "ERROR: Device["
 msgstr "ГРЕШКА: Устройство ["
 
-#: lib/api_device.php:1855
+#: lib/api_device.php:1859
 msgid "ERROR: Failed to connect to remote collector."
 msgstr "ГРЕШКА: Неуспешно свързване с отдалечен колектор."
 
-#: lib/api_device.php:1862
+#: lib/api_device.php:1866
 msgid "Device is Disabled"
 msgstr "Устройството е забранено"
 
-#: lib/api_device.php:1863
+#: lib/api_device.php:1867
 msgid "Device Availability Check Bypassed"
 msgstr "Проверка за наличност на устройството е заобиколена"
 
-#: lib/api_device.php:1870
+#: lib/api_device.php:1874
 msgid "SNMP Information"
 msgstr "Информация за SNMP"
 
-#: lib/api_device.php:1874
+#: lib/api_device.php:1878
 msgid "SNMP not in use"
 msgstr "SNMP не се използва"
 
-#: lib/api_device.php:1895 lib/api_device.php:1903 lib/api_device.php:1922
+#: lib/api_device.php:1899 lib/api_device.php:1907 lib/api_device.php:1926
 msgid "SNMP error"
 msgstr "SNMP грешка"
 
-#: lib/api_device.php:1895
+#: lib/api_device.php:1899
 msgid "Session"
 msgstr "Сесия"
 
-#: lib/api_device.php:1922
+#: lib/api_device.php:1926
 msgid "Host"
 msgstr "Хост"
 
-#: lib/api_device.php:1940
+#: lib/api_device.php:1944
 msgid "System:"
 msgstr "Система:"
 
-#: lib/api_device.php:1947
+#: lib/api_device.php:1951
 msgid "Uptime:"
 msgstr "Продължителност:"
 
-#: lib/api_device.php:1949
+#: lib/api_device.php:1953
 msgid "Hostname:"
 msgstr "Име на хост:"
 
-#: lib/api_device.php:1950
+#: lib/api_device.php:1954
 msgid "Location:"
 msgstr "Място:"
 
-#: lib/api_device.php:1951
+#: lib/api_device.php:1955
 msgid "Contact:"
 msgstr "Контакт:"
 
-#: lib/api_device.php:1982 lib/functions.php:6169 lib/functions.php:6171
+#: lib/api_device.php:1986 lib/functions.php:6169 lib/functions.php:6171
 #: lib/functions.php:6175
 msgid "Ping Results"
 msgstr "Резултати от Ping"
 
-#: lib/api_device.php:1987
+#: lib/api_device.php:1991
 msgid "No Ping or SNMP Availability Check in Use"
 msgstr "Не се използва Ping или SNMP"
 
-#: lib/api_tree.php:186
+#: lib/api_tree.php:203
 msgid "New Branch"
 msgstr "Нов клон"
 
@@ -12738,7 +12395,7 @@ msgid "Branch:"
 msgstr "Отрасъл:"
 
 #: lib/auth.php:3248 lib/auth.php:3282 lib/html_tree.php:949
-#: lib/reports.php:1081
+#: lib/reports.php:1114
 msgid "Device:"
 msgstr "Изделие:"
 
@@ -12941,430 +12598,430 @@ msgstr "Паролите не съвпадат"
 msgid "System Device"
 msgstr "Устройства за синхронизиране"
 
-#: lib/data_query.php:54 lib/data_query.php:423
+#: lib/data_query.php:64 lib/data_query.php:466
 msgid "Automation Execution for Data Query complete"
 msgstr "Изпълнението на автоматизацията за заявка за данни е завършено"
 
-#: lib/data_query.php:57 lib/data_query.php:426
+#: lib/data_query.php:67 lib/data_query.php:469
 msgid "Plugin Hooks complete"
 msgstr "Плъгинът е завършен"
 
-#: lib/data_query.php:75
+#: lib/data_query.php:85
 #, php-format
 msgid "Running Data Query [%s]."
 msgstr "Извършване на заявка за данни [ %s]."
 
-#: lib/data_query.php:85
+#: lib/data_query.php:97
 #, php-format
 msgid "Found Type = '%s' [%s]."
 msgstr "Намерен тип = &#39; %s&#39; [ %s]."
 
-#: lib/data_query.php:107
+#: lib/data_query.php:119
 #, php-format
 msgid "Unknown Type = '%s'."
 msgstr "Неизвестен тип = &#39; %s&#39;."
 
-#: lib/data_query.php:142
+#: lib/data_query.php:154
 msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
 msgstr "ВНИМАНИЕ: Сортирането на полето за сортиране е променено. Възможно е да възникнат проблеми с повторното картографиране!"
 
-#: lib/data_query.php:154
+#: lib/data_query.php:166
 msgid "Update Data Query Sort Cache complete"
 msgstr "Актуализиране на заявката за сортиране на заявката за пълно търсене"
 
-#: lib/data_query.php:179
+#: lib/data_query.php:193
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "Намерени са%s локални идентификационни данни за проверка"
 
-#: lib/data_query.php:273
+#: lib/data_query.php:299
 #, php-format
 msgid "Index Change Detected! CurrentIndex: %s, PreviousIndex: %s"
 msgstr "Открита е промяна на индекса! CurrentIndex: %s, PreviousIndex: %s"
 
-#: lib/data_query.php:293
+#: lib/data_query.php:323
 #, php-format
 msgid "Transient Index Removal Detected! PreviousIndex: %s.  No action taken."
 msgstr "Откриване на индекса! PreviousIndex: %s"
 
-#: lib/data_query.php:296
+#: lib/data_query.php:326
 #, php-format
 msgid "Index Removal Detected! PreviousIndex: %s"
 msgstr "Откриване на индекса! PreviousIndex: %s"
 
-#: lib/data_query.php:330
+#: lib/data_query.php:366
 #, php-format
 msgid "Verification of %s Local Data ID's Complete"
 msgstr "Проверката на %s локалния идентификатор на данни е завършена"
 
-#: lib/data_query.php:333
+#: lib/data_query.php:369
 #, php-format
 msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
 msgstr "Намерени променени%s и%s осиротели локални идентификационни данни за пренасочване."
 
-#: lib/data_query.php:336
+#: lib/data_query.php:372
 msgid "Done remapping Graphs to their new Indexes"
 msgstr "Пренасочване на графиките към новите им индекси"
 
-#: lib/data_query.php:342 lib/data_query.php:349
+#: lib/data_query.php:378 lib/data_query.php:385
 msgid "Done updating Data Source Title Cache"
 msgstr "Профил на дублирания източник на данни"
 
-#: lib/data_query.php:345 lib/data_query.php:352
+#: lib/data_query.php:381 lib/data_query.php:388
 msgid "Done updating Graph Title Cache"
 msgstr "Готово актуализиране на кеша на заглавието на графиката"
 
-#: lib/data_query.php:356
+#: lib/data_query.php:392
 msgid "Index Association with Local Data complete"
 msgstr "Индексиране на асоциацията с местните данни е завършено"
 
-#: lib/data_query.php:362
+#: lib/data_query.php:398
 #, php-format
 msgid "Update Re-Index Cache complete. There were %s index changes, and %s orphaned indexes."
 msgstr "Актуализирайте кеша на повторния индекс завършен. Имаше %s промени в индекса и %s осиротели индекси."
 
-#: lib/data_query.php:366
+#: lib/data_query.php:402
 msgid "Update Poller Cache for Query complete"
 msgstr "Актуализирайте кеша за полети за заявка пълна"
 
-#: lib/data_query.php:368
+#: lib/data_query.php:404
 msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
 msgstr "Не са открити промени в индекса, пропускане на повторно индексиране и повторно население на кеша"
 
-#: lib/data_query.php:415
+#: lib/data_query.php:458
 msgid "Automation Executing for Data Query complete"
 msgstr "Изпълнението на автоматизацията за заявка за данни е завършено"
 
-#: lib/data_query.php:418
+#: lib/data_query.php:461
 msgid "Plugin hooks complete"
 msgstr "Плъгините са завършени"
 
-#: lib/data_query.php:474
+#: lib/data_query.php:520
 msgid "Checking for Sort Field change.  No changes detected."
 msgstr "Проверка за промяна на полето за сортиране. Не са открити промени."
 
-#: lib/data_query.php:479
+#: lib/data_query.php:525
 #, php-format
 msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "Открито ново поле за сортиране: &#39; %s&#39; Старо поле за сортиране &#39; %s&#39;"
 
-#: lib/data_query.php:496
+#: lib/data_query.php:546
 msgid "ERROR: New Sort Field not suitable.  Sort Field will not change."
 msgstr "ГРЕШКА: Ново поле за сортиране не е подходящо. Полето за сортиране няма да се промени."
 
-#: lib/data_query.php:508
+#: lib/data_query.php:560
 msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "Новото поле за сортиране е потвърдено. Полето за сортиране се актуализира."
 
-#: lib/data_query.php:606
+#: lib/data_query.php:673
 #, php-format
 msgid "Could not find data query XML file at '%s'"
 msgstr "XML файлът с заявка за данни не можа да бъде намерен на „ %s“"
 
-#: lib/data_query.php:610
+#: lib/data_query.php:677
 #, php-format
 msgid "Found data query XML file at '%s'"
 msgstr "Намерен XML файл с заявка за търсене на „ %s“"
 
-#: lib/data_query.php:633 lib/data_query.php:821 lib/data_query.php:2394
+#: lib/data_query.php:701 lib/data_query.php:895 lib/data_query.php:2642
 msgid "Error parsing XML file into an array."
 msgstr "Грешка при анализиране на XML файл в масив."
 
-#: lib/data_query.php:637 lib/data_query.php:825
+#: lib/data_query.php:705 lib/data_query.php:899
 msgid "XML file parsed ok."
 msgstr "XML файлът е разбран добре."
 
-#: lib/data_query.php:645 lib/data_query.php:828
+#: lib/data_query.php:713 lib/data_query.php:902
 #, php-format
 msgid "Invalid field &lt;index_order&gt;%s&lt;/index_order&gt;"
 msgstr "Невалидно поле &lt;index_order&gt; %s &lt;/index_order&gt;"
 
-#: lib/data_query.php:646 lib/data_query.php:829
+#: lib/data_query.php:714 lib/data_query.php:903
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
 msgstr "Трябва да съдържа само полета &lt;direction&gt; въвеждане &lt;/direction&gt; или &lt;direction&gt; input-output &lt;/direction&gt;"
 
-#: lib/data_query.php:663
+#: lib/data_query.php:731
 msgid "Data Query returned no indexes."
 msgstr "ГРЕШКА: Данните не показват индекси."
 
-#: lib/data_query.php:664
+#: lib/data_query.php:732
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; липсва в XML файл, &#39;Index Count Changed&#39; не се поддържа"
 
-#: lib/data_query.php:667
+#: lib/data_query.php:735
 #, php-format
 msgid "Executing script for num of indexes '%s'"
 msgstr "Изпълнение на скрипт за брой индекси „ %s“"
 
-#: lib/data_query.php:670
+#: lib/data_query.php:738
 #, php-format
 msgid "Found number of indexes: %s"
 msgstr "Намерен е брой индекси: %s"
 
-#: lib/data_query.php:674
+#: lib/data_query.php:742
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; липсва в XML файл, &#39;Index Count Changed&#39; не се поддържа"
 
-#: lib/data_query.php:676
+#: lib/data_query.php:744
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
 msgstr "&lt;arg_num_indexes&gt; липсва в XML файл, &quot;индексът е променен&quot; е емулиран чрез преброяване на аргументи"
 
-#: lib/data_query.php:687
+#: lib/data_query.php:755
 msgid "ERROR: Data Query returned no indexes."
 msgstr "ГРЕШКА: Данните не показват индекси."
 
-#: lib/data_query.php:691
+#: lib/data_query.php:759
 #, php-format
 msgid "Executing script for list of indexes '%s', Index Count: %s"
 msgstr "Изпълнение на скрипт за списък с индекси „ %s“, индекс на брояча: %s"
 
-#: lib/data_query.php:693
+#: lib/data_query.php:761
 msgid "Click to show Data Query output for 'index'"
 msgstr "Кликнете, за да покажете изход за данни за „индекс“"
 
-#: lib/data_query.php:696
+#: lib/data_query.php:764
 #, php-format
 msgid "Found index: %s"
 msgstr "Намерен индекс: %s"
 
-#: lib/data_query.php:711 lib/data_query.php:1213
+#: lib/data_query.php:779 lib/data_query.php:1366
 #, php-format
 msgid "Click to show Data Query output for field '%s'"
 msgstr "Кликнете, за да покажете изхода за данни за полето „ %s“"
 
-#: lib/data_query.php:717
+#: lib/data_query.php:785
 #, php-format
 msgid "Sort field returned no data for field name %s, skipping"
 msgstr "Полето за сортиране не върна данни за име на поле %s, прескачане"
 
-#: lib/data_query.php:719
+#: lib/data_query.php:787
 #, php-format
 msgid "Executing script query '%s'"
 msgstr "Изпълнението на заявката за скрипт „ %s“"
 
-#: lib/data_query.php:730 lib/data_query.php:737
+#: lib/data_query.php:798 lib/data_query.php:805
 #, php-format
 msgid "Found item [%s='%s'] index: %s"
 msgstr "Намерен елемент [ %s = &#39; %s&#39;] индекс: %s"
 
-#: lib/data_query.php:775 lib/data_query.php:790
+#: lib/data_query.php:845 lib/data_query.php:861
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
 msgstr "Общо:% f, Delta:% f, %s"
 
-#: lib/data_query.php:815
+#: lib/data_query.php:889
 #, php-format
 msgid "Invalid host_id: %s"
 msgstr "Невалиден host_id: %s"
 
-#: lib/data_query.php:839
+#: lib/data_query.php:913
 msgid "Auto Bulk Walk Size Selected."
 msgstr "Избран е автоматичният обемно ходене."
 
-#: lib/data_query.php:849 lib/data_query.php:894
+#: lib/data_query.php:935 lib/data_query.php:994
 msgid "Failed to load SNMP session."
 msgstr "Неуспешно зареждане на SNMP сесия."
 
-#: lib/data_query.php:859
+#: lib/data_query.php:945
 #, php-format
 msgid "Tested Bulk Walk Size %d with a response of %2.4f."
 msgstr "Тестван размер на масово ходене %d с отговор от %2.4f."
 
-#: lib/data_query.php:870
+#: lib/data_query.php:956
 #, php-format
 msgid "Bulk Walk Size selected was %d."
 msgstr "Избраният размер на масовото ходене беше %d."
 
-#: lib/data_query.php:873
+#: lib/data_query.php:959
 msgid "Saving Bulk Walk Size to Device."
 msgstr "Запазване на размера на масовото ходене на устройството."
 
-#: lib/data_query.php:885
+#: lib/data_query.php:973
 #, php-format
 msgid "Bulk Walk Size is fixed at %d."
 msgstr "Размерът на масовото ходене е фиксиран на %d."
 
-#: lib/data_query.php:907
+#: lib/data_query.php:1007
 #, php-format
 msgid "Executing SNMP get for num of indexes @ '%s' Index Count: %s"
 msgstr "Изпълнението на SNMP се получава за брой индекси @ &#39; %s&#39; Count Index: %s"
 
-#: lib/data_query.php:909
+#: lib/data_query.php:1009
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
 msgstr "&lt;oid_num_indexes&gt; липсва в XML файл, &quot;Промяната на индекса е променена&quot; емитирана чрез броене на записи в oid_index"
 
-#: lib/data_query.php:912
+#: lib/data_query.php:1012
 #, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
 msgstr "Изпълнение на SNMP разходка за списък от индекси @ &#39; %s&#39; Count Index: %s"
 
-#: lib/data_query.php:916
+#: lib/data_query.php:1016
 msgid "No SNMP data returned"
 msgstr "Не са върнати SNMP данни"
 
-#: lib/data_query.php:921
+#: lib/data_query.php:1021
 #, php-format
 msgid "Index found at OID: '%s' value: '%s'"
 msgstr "Индексът се намира в OID: стойност „ %s“: „ %s“"
 
-#: lib/data_query.php:952
+#: lib/data_query.php:1052
 #, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
 msgstr "Филтриране на списък от индекси @ &#39; %s&#39; Count Index: %s"
 
-#: lib/data_query.php:956
+#: lib/data_query.php:1056
 #, php-format
 msgid "Filtered Index by value found at OID: '%s' value: '%s'"
 msgstr "Филтрираният индекс е намерен в OID: &#39; %s&#39; стойност: &#39; %s&#39;"
 
-#: lib/data_query.php:972
+#: lib/data_query.php:1072
 #, php-format
 msgid "Filtering list of indexes @ '%s' Index Count: %s"
 msgstr "Филтриране на списък от индекси @ &#39; %s&#39; Count Index: %s"
 
-#: lib/data_query.php:976
+#: lib/data_query.php:1076
 #, php-format
 msgid "Filtered Index found at OID: '%s' value: '%s'"
 msgstr "Филтрираният индекс е намерен в OID: &#39; %s&#39; стойност: &#39; %s&#39;"
 
-#: lib/data_query.php:996
+#: lib/data_query.php:1096
 #, php-format
 msgid "Fixing wrong 'method' field for '%s' since 'rewrite_index' or 'oid_suffix' is defined"
 msgstr "Поправяне на грешно поле „method“ за „ %s“, тъй като „rewrite_index“ или „oid_suffix“ е дефинирано"
 
-#: lib/data_query.php:1003
+#: lib/data_query.php:1103
 #, php-format
 msgid "Inserting index data for field '%s' [value='%s']"
 msgstr "Вмъкване на индексни данни за поле „ %s“ [value = « %s»]"
 
-#: lib/data_query.php:1008
+#: lib/data_query.php:1108
 #, php-format
 msgid "Located input field '%s' [get]"
 msgstr "Намиращо се поле за въвеждане „ %s“ [get]"
 
-#: lib/data_query.php:1017
+#: lib/data_query.php:1117
 #, php-format
 msgid "Found OID rewrite rule: 's/%s/%s/'"
 msgstr "Намерено правило за презаписване на OID: &#39;s / %s / %s /&#39;"
 
-#: lib/data_query.php:1028
+#: lib/data_query.php:1128
 #, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
 msgstr "oid_rewrite в OID: &#39; %s&#39; нов OID: &#39; %s&#39;"
 
-#: lib/data_query.php:1049
+#: lib/data_query.php:1161
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='%s']"
 msgstr "Изпълнението на SNMP за данни @ &#39; %s&#39; [value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1060
+#: lib/data_query.php:1172
 #, php-format
 msgid "Field '%s' %s"
 msgstr "Поле &#39; %s&#39; %s"
 
-#: lib/data_query.php:1121
+#: lib/data_query.php:1233
 #, php-format
 msgid "Executing SNMP get for %s oids (%s)"
 msgstr "Изпълнението на SNMP за %s oids ( %s)"
 
-#: lib/data_query.php:1147 lib/data_query.php:1239 lib/data_query.php:1247
+#: lib/data_query.php:1271 lib/data_query.php:1406 lib/data_query.php:1414
 #, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
 msgstr "Полето за сортиране не връща данни. Не може да продължи повторното индексиране за OID [ %s]"
 
-#: lib/data_query.php:1151
+#: lib/data_query.php:1277
 #, php-format
 msgid "Found result for data @ '%s' [value='%s']"
 msgstr "Намерен резултат за data @ &#39; %s&#39; [value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1159
+#: lib/data_query.php:1290
 #, php-format
 msgid "Setting result for data @ '%s' [key='%s', value='%s']"
 msgstr "Задаване на резултат за data @ &#39; %s&#39; [key = &#39; %s&#39;, стойност = &#39; %s&#39;]"
 
-#: lib/data_query.php:1163
+#: lib/data_query.php:1300
 #, php-format
 msgid "Skipped result for data @ '%s' [key='%s', value='%s']"
 msgstr "Пропуснат резултат за data @ &#39; %s&#39; [key = &#39; %s&#39;, value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1177
+#: lib/data_query.php:1318
 #, php-format
 msgid "Got SNMP get result for data @ '%s' [value='%s'] (index: %s)"
 msgstr "Получен е резултат от получаването на SNMP за data @ &#39; %s&#39; [value = &#39; %s&#39;] (индекс: %s)"
 
-#: lib/data_query.php:1207
+#: lib/data_query.php:1360
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
 msgstr "Изпълнението на SNMP за данни @ &#39; %s&#39; [value = &#39;$ value&#39;]"
 
-#: lib/data_query.php:1215
+#: lib/data_query.php:1368
 #, php-format
 msgid "Located input field '%s' [walk]"
 msgstr "Намиращо се поле за въвеждане „ %s“ [разходка]"
 
-#: lib/data_query.php:1252
+#: lib/data_query.php:1419
 #, php-format
 msgid "Executing SNMP walk for data @ '%s'"
 msgstr "Изпълнение на SNMP разходка за данни @ &#39; %s&#39;"
 
-#: lib/data_query.php:1271 lib/data_query.php:1329 lib/data_query.php:1378
-#: lib/data_query.php:1429
+#: lib/data_query.php:1438 lib/data_query.php:1496 lib/data_query.php:1545
+#: lib/data_query.php:1596
 #, php-format
 msgid "No index[%s] in value_index_parse, skipping."
 msgstr "Няма индекс[%s] във VALUE_INDEX_PARSE, прескачане."
 
-#: lib/data_query.php:1312
+#: lib/data_query.php:1479
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from %s]"
 msgstr "Намерен елемент [ %s = &#39; %s&#39;] индекс: %s [от %s]"
 
-#: lib/data_query.php:1354
+#: lib/data_query.php:1521
 #, php-format
 msgid "Found OCTET STRING '%s' decoded value: '%s'"
 msgstr "Намерена е OCTET STRING „ %s“ декодирана стойност: „ %s“"
 
-#: lib/data_query.php:1360 lib/data_query.php:1409
+#: lib/data_query.php:1527 lib/data_query.php:1576
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
 msgstr "Намерен елемент [ %s = &#39; %s&#39;] индекс: %s [от regexp oid parse]"
 
-#: lib/data_query.php:1437
+#: lib/data_query.php:1604
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
 msgstr "Намерен елемент [ %s = &#39; %s&#39;] индекс: %s [от преизчисляване на стойност regexp oid"
 
-#: lib/data_query.php:1659
+#: lib/data_query.php:1839
 #, fuzzy, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
 msgstr "Намерен е фалшив rewrite_value елемент, index =\"{ 0 }\""
 
-#: lib/data_query.php:1672
+#: lib/data_query.php:1852
 msgid "Could not parse translation map (rewrite_value)"
 msgstr "Неуспешен анализ на картата за превод (rewrite_value)"
 
-#: lib/data_query.php:1696
+#: lib/data_query.php:1876
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
 msgstr "oid_rewrite в OID: &#39; %s&#39; нов OID: &#39; %s&#39;"
 
-#: lib/data_query.php:1801
+#: lib/data_query.php:1990
 msgid "Update graph data query cache complete"
 msgstr "Актуализиране на заявката за сортиране на заявката за пълно търсене"
 
-#: lib/data_query.php:1818
+#: lib/data_query.php:2009
 msgid "Re-Indexing Data Query complete"
 msgstr "Повторно индексиране на заявката за данни завърши"
 
-#: lib/data_query.php:1949
+#: lib/data_query.php:2161
 msgid "Unknown Index"
 msgstr "Неизвестен индекс"
 
-#: lib/data_query.php:2507
+#: lib/data_query.php:2766
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "Трябва да изберете изходна колона XML за източник на данни „ %s“ и да поставите отметка в квадратчето отдясно"
 
-#: lib/data_query.php:2513
+#: lib/data_query.php:2772
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Шаблонът ви на графиката не се използва. Моля, коригирайте шаблона на графиката си"
 
@@ -13488,6 +13145,11 @@ msgstr "Въз основа на заявките"
 msgid "Link %s"
 msgstr "Връзка %s"
 
+#: lib/functions.php:4903 tree.php:1804 tree.php:1878 tree.php:1986
+#: user_admin.php:18 user_group_admin.php:20
+msgid "Copy"
+msgstr "Копирайте"
+
 #: lib/functions.php:5705
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Мейлър Грешка: Не е <b>за</b> справяне <b>с</b> определени !! <br> Ако използвате връзката <i>Test Mail,</i> моля, задайте настройката за <b>електронна поща предупреждение.</b>"
@@ -13546,6 +13208,10 @@ msgstr "Сигурност"
 #: lib/functions.php:6166
 msgid "Ping Results:"
 msgstr "Резултати от Ping:"
+
+#: lib/functions.php:6166 lib/functions.php:6171
+msgid "Success"
+msgstr "Готово"
 
 #: lib/functions.php:6175
 msgid "Bypassed"
@@ -13633,7 +13299,7 @@ msgstr "Избрани шаблони"
 msgid "Enter keyword"
 msgstr "Въведете ключова дума"
 
-#: lib/html.php:464 lib/reports.php:1678
+#: lib/html.php:464 lib/reports.php:1711
 msgid "Data Query:"
 msgstr "Вземане на данни"
 
@@ -14720,7 +14386,7 @@ msgstr "Шаблони за елементи на графиката"
 msgid "Template Based"
 msgstr "Въз основа на шаблон"
 
-#: lib/html_tree.php:927 lib/reports.php:1326
+#: lib/html_tree.php:927 lib/reports.php:1359
 msgid "Tree:"
 msgstr "Дърво:"
 
@@ -16182,69 +15848,69 @@ msgstr "Не е посочено"
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 
-#: lib/reports.php:141
+#: lib/reports.php:174
 #, fuzzy, php-format
 msgid "Device '%s' successfully added to Report."
 msgstr "Устройството „{ 0 }“ е добавено успешно към отчета."
 
-#: lib/reports.php:144
+#: lib/reports.php:177
 msgid "Device not found! Unable to add to Report"
 msgstr "Графиката не бе намерена в опит да се добави към отчета"
 
-#: lib/reports.php:148
+#: lib/reports.php:181
 #, php-format
 msgid "Device '%s' not added to Report as it already exists on report."
 msgstr "Устройството „%s“ не е добавено към отчета, тъй като вече съществува в отчета."
 
-#: lib/reports.php:603
+#: lib/reports.php:636
 #, php-format
 msgid "Problems sending Report '%s' Problem with e-mail Subsystem Error is '%s'"
 msgstr "Проблеми при изпращане на доклад „%s“ Проблемът с имейл грешката на подсистемата е „%s“"
 
-#: lib/reports.php:610
+#: lib/reports.php:643
 #, php-format
 msgid "Report '%s' Sent Successfully"
 msgstr "Доклад „%s“ изпратен успешно"
 
-#: lib/reports.php:1108 lib/reports.php:1464
+#: lib/reports.php:1141 lib/reports.php:1497
 msgid "(No Graph Template)"
 msgstr "Шаблони за елементи на графиката"
 
-#: lib/reports.php:1532
+#: lib/reports.php:1565
 msgid "(Non Query Based)"
 msgstr "(Няма основани на заявки)"
 
-#: lib/reports.php:1943
+#: lib/reports.php:1976
 msgid "Add to Report"
 msgstr "Добавяне в Отчет"
 
-#: lib/reports.php:1961
+#: lib/reports.php:1994
 msgid "Choose the Report to associate these graphs with.  The defaults for alignment will be used for each graph in the list below."
 msgstr "Изберете Отчета, за да свържете тези графики с. Стандартните стойности за привеждане в съответствие ще се използват за всеки график в списъка по-долу."
 
-#: lib/reports.php:1963
+#: lib/reports.php:1996
 msgid "Report:"
 msgstr "Отчет"
 
-#: lib/reports.php:1973
+#: lib/reports.php:2006
 msgid "Graph Timespan:"
 msgstr "Период на графиката:"
 
-#: lib/reports.php:1976
+#: lib/reports.php:2009
 msgid "Graph Alignment:"
 msgstr "Подравняване на графиката:"
 
-#: lib/reports.php:2075
+#: lib/reports.php:2108
 #, php-format
 msgid "Created Report Graph Item '<i>%s</i>'"
 msgstr "Създаден графичен елемент „ <i> %s</i> “"
 
-#: lib/reports.php:2077
+#: lib/reports.php:2110
 #, php-format
 msgid "Failed Adding Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "Неуспешно добавяне на елемент от графиката на отчетите „ <i> %s</i> “ вече съществува"
 
-#: lib/reports.php:2080
+#: lib/reports.php:2113
 #, php-format
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "Елементът на графиката „Пропуснати“ „ <i> %s</i> “ вече е налице"
@@ -16461,8 +16127,8 @@ msgstr ""
 msgid "RRD storage configuration requires attention"
 msgstr ""
 
-#: lib/snmp.php:226 lib/snmp.php:343 lib/snmp.php:455 lib/snmp.php:940
-#: lib/snmp.php:963
+#: lib/snmp.php:234 lib/snmp.php:355 lib/snmp.php:471 lib/snmp.php:960
+#: lib/snmp.php:983
 #, fuzzy, php-format
 msgid "SNMP Command is: %s"
 msgstr "Опции на SNMP [редактиране: %s]"
@@ -17666,6 +17332,10 @@ msgstr "Kadupul Automation Report изисква HTML базиран имейл 
 msgid "WARNING: Detected Poller Boost Overrun, Possible Boost Poller Crash"
 msgstr "ПРЕДУПРЕЖДЕНИЕ: Открито превишаване на усилването на Poller, възможно срив на Poller Boost"
 
+#: pollers.php:21
+msgid "Clear Statistics"
+msgstr "Изчистване на статистиката"
+
 #: pollers.php:25
 msgid "Full Sync"
 msgstr "Пълна синхронизация"
@@ -18743,6 +18413,10 @@ msgstr "Азбучен"
 #: tree.php:1752
 msgid "Natural"
 msgstr "Естествено"
+
+#: tree.php:1782 tree.php:1856 tree.php:1964
+msgid "Edit"
+msgstr "Редактирай"
 
 #: tree.php:1789 tree.php:1863 tree.php:1971
 msgid "Cut"
