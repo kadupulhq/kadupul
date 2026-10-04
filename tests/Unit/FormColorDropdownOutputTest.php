@@ -3,11 +3,15 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 1) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 final class FormColorDropdownOutputTest extends TestCase
 {
-    /** @dataProvider dropdowns */
+    use \PestCodeCoverageCompatibility;
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('dropdowns')]
     public function testNativeDropdownEncodesEveryOutputAndKeepsItsSessionKey(array $scenario): void
     {
         $root = dirname(__DIR__, 2);
@@ -103,7 +107,7 @@ final class FormColorDropdownOutputTest extends TestCase
         }
     }
 
-    public function dropdowns(): array
+    public static function dropdowns(): array
     {
         $plain = array('name' => 'colour', 'previous' => '5', 'default' => '', 'none' => 'None', 'class' => '', 'colors' => array(array('5', 'FFFFFF', 'White')));
         $hostile = array_replace($plain, array('name' => "n'><x", 'class' => "c' onfocus='alert(1)", 'none' => 'None<i>', 'colors' => array(array('5', "A'\"><x", 'Name<i>'))));

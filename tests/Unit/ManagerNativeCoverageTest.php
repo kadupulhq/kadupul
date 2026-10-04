@@ -5,13 +5,16 @@ declare(strict_types=1);
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once __DIR__ . '/../Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 require_once dirname(__DIR__) . '/Helpers/NativeChildCoverageEvidence.php';
 
 final class ManagerNativeCoverageTest extends TestCase
 {
-    /** @dataProvider managerCases */
+    use \PestCodeCoverageCompatibility;
+    #[\PHPUnit\Framework\Attributes\DataProvider('managerCases')]
     public function testOriginalManagerDispatchQueriesAndRendersPersistedReceivers(array $request, array $ids, int $total): void
     {
         $state = $this->render($request);
@@ -73,7 +76,7 @@ final class ManagerNativeCoverageTest extends TestCase
         self::assertSame($state['before'], $state['after']);
     }
 
-    /** @dataProvider tabCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('tabCases')]
     public function testOriginalManagerTabsKeepScopedNotificationsAndLogRows(string $tab, int $id, array $filters, array $expected): void
     {
         $state = $this->render(array_merge(array('action' => 'edit', 'tab' => $tab, 'id' => $id), $filters));
@@ -144,7 +147,7 @@ final class ManagerNativeCoverageTest extends TestCase
         );
     }
 
-    /** @dataProvider notificationMutationCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('notificationMutationCases')]
     public function testNotificationMutationKeepsReceiverScopeAndAdmission(string $method, bool $csrf, string $action, bool $expectedPresent, int $status, string $notification = 'Name & <script>', string $mib = 'MIB-A'): void
     {
         $request = array('action' => 'actions', 'action_receiver_notifications' => 1, 'id' => 1, 'drp_action' => $action, 'selected_items' => serialize(array($mib => array($notification => true))));

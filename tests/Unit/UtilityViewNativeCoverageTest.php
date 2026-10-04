@@ -6,10 +6,13 @@
 use PHPUnit\Framework\TestCase;
 
 require_once dirname(__DIR__) . '/Helpers/NativeChildCoverageEvidence.php';
+require_once dirname(__DIR__) . '/Helpers/PestCodeCoverageCompatibility.php';
 
 final class UtilityViewNativeCoverageTest extends TestCase
 {
-    /** @dataProvider viewCases */
+    use \PestCodeCoverageCompatibility;
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('viewCases')]
     public function testNativeUtilityViewsKeepScopedRowsAndEscapedFilters(string $view, array $request, array $expected): void
     {
         $state = $this->render(array('view' => $view, 'request' => $request));
@@ -82,7 +85,7 @@ final class UtilityViewNativeCoverageTest extends TestCase
         }
     }
 
-    /** @dataProvider sameNameRealmCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('sameNameRealmCases')]
     public function testNativeUserLogJoinsTheRecordedAccountAcrossSameNameRealms(array $request, array $names, array $dates, int $total): void
     {
         $state = $this->render(array('view' => 'user', 'request' => $request, 'same_name_realms' => true));
@@ -111,7 +114,7 @@ final class UtilityViewNativeCoverageTest extends TestCase
         );
     }
 
-    /** @dataProvider invalidPrincipalCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidPrincipalCases')]
     public function testDeletedFilterMatchesTheRecordedUserIdAndUsername(array $request, array $names, array $dates, int $total): void
     {
         $state = $this->render(array('view' => 'user', 'request' => array_merge(array('username' => '-2'), $request), 'same_name_realms' => true, 'mismatched_log_principals' => true));
@@ -188,7 +191,7 @@ final class UtilityViewNativeCoverageTest extends TestCase
         );
     }
 
-    /** @dataProvider logfileCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('logfileCases')]
     public function testNativeLogfileViewReadsActualFilesAndKeepsOrderedFilteredContent(array $request, array $expected): void
     {
         $state = $this->render(array('view' => 'log', 'request' => $request));
@@ -231,7 +234,7 @@ final class UtilityViewNativeCoverageTest extends TestCase
         );
     }
 
-    /** @dataProvider boostCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('boostCases')]
     public function testNativeBoostStatusUsesRealDatabaseMetadataWorkersAndCacheFiles(string $status, string $expectedStatus, bool $empty): void
     {
         if (!getenv('KADUPUL_TEST_MYSQL_DSN')) {
@@ -273,7 +276,7 @@ final class UtilityViewNativeCoverageTest extends TestCase
         );
     }
 
-    /** @dataProvider rowChoiceCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('rowChoiceCases')]
     public function testNativeRowChoicesPreserveOrderEscapedLabelsAndEmptyConfiguration(string $view, array $choices, int $rows): void
     {
         $state = $this->render(array('view' => $view, 'request' => array('rows' => $rows), 'choices' => $choices));
@@ -319,7 +322,7 @@ final class UtilityViewNativeCoverageTest extends TestCase
         self::assertCount(0, $xpath->query('//script'));
     }
 
-    /** @dataProvider exactRowSelectionCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('exactRowSelectionCases')]
     public function testNativeRowOptionsSelectOnlyTheExactStringForm(array $choices, mixed $selected, string $expected): void
     {
         $state = $this->render(array('view' => 'options', 'request' => array(), 'choices' => $choices, 'selected' => $selected));
