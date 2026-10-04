@@ -59,6 +59,8 @@ test('production Boost owns, supervises and reaps actual worker processes', func
         } elseif (in_array($mode, array('prepare-failure','archive-retry'), true)) {
             expect($result['boost_poller_status'])->toBe('failed - preparation');
             expect(file($dir . '/reaped'))->toHaveCount(1);
+        } elseif ($mode === 'output-legacy-lock') {
+            expect($result)->toBe(array(-1, true, 60, 0));
         } elseif (strpos($mode, 'output-') === 0) {
             expect($result)->toBe(array($mode === 'output-empty' ? 0 : -1, $mode !== 'output-init'));
         } else {
@@ -92,4 +94,4 @@ test('production Boost owns, supervises and reaps actual worker processes', func
         }
 
     }
-})->with(array('success','early-crash','timeout','launch-failure','shutdown','output-init','output-archives','output-count','output-empty','output-ids','output-last','output-select','output-next-count','prepare-failure','archive-retry','master-failed-count','master-child-failed','master-invalid-total','master-missing-child','master-success-empty','master-success-retained','master-success-requeued'));
+})->with(array('success','early-crash','timeout','launch-failure','shutdown','output-init','output-archives','output-count','output-empty','output-ids','output-last','output-legacy-lock','output-select','output-next-count','prepare-failure','archive-retry','master-failed-count','master-child-failed','master-invalid-total','master-missing-child','master-success-empty','master-success-retained','master-success-requeued'));

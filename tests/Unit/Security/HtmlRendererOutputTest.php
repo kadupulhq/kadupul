@@ -16,7 +16,7 @@ require_once dirname(__DIR__, 2) . '/Helpers/NativeChildCoverageEvidence.php';
 function rendererCoverageSources(): array
 {
     return array(
-        'lib/html.php', 'tests/Fixtures/rrd-process-coverage.php',
+        'lib/html.php', 'config/icons.json', 'src/Platform/Contract/IconRegistry.php', 'tests/Fixtures/rrd-process-coverage.php',
         'tests/Helpers/NativeChildCoverageEvidence.php', 'composer.lock', 'tests/composer.lock',
         'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php',
         'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php',
@@ -83,7 +83,7 @@ function render(string $call, array $arguments, ?object $coverage): string
     mkdir($directory, 0700);
     $program = <<<'PHP'
         $a = json_decode($argv[2], true, 512, JSON_THROW_ON_ERROR);
-        $GLOBALS['config'] = array('url_path' => $a['url_path'] ?? '/', 'poller_id' => 1);
+        $GLOBALS['config'] = array('url_path' => $a['url_path'] ?? '/', 'poller_id' => 1, 'base_path' => $argv[1]);
         $GLOBALS['settings'] = array('spikes' => array(
             'spikekill_deviations' => array('array' => array()),
             'spikekill_number' => array('array' => array()),
@@ -97,6 +97,7 @@ function render(string $call, array $arguments, ?object $coverage): string
         function is_realm_allowed($realm) { return true; }
         function get_current_graph_start() { return -86400; }
         function get_current_graph_end() { return 0; }
+        function get_selected_theme() { return 'modern'; }
         function get_current_page($basename = true) { return $GLOBALS['a']['page'] ?? 'graphs.php'; }
         function api_plugin_hook_function($name, $value = null) { return $value; }
         function aggregate_build_children_url($id) { return ''; }
@@ -109,6 +110,7 @@ function render(string $call, array $arguments, ?object $coverage): string
         function clean_up_name($name) { return $name; }
         class CactiSecureHeaders { public static function getNonceAttribute() { return 'nonce="fixture"'; } }
         $_SERVER['SCRIPT_NAME'] = '/graphs.php';
+        require $argv[1] . '/include/vendor/autoload.php';
         require $argv[1] . '/lib/html.php';
         PHP;
     $program .= "\n" . $call;
@@ -120,7 +122,7 @@ function render(string $call, array $arguments, ?object $coverage): string
             . 'require ' . var_export($root . '/tests/Helpers/NativeChildCoverageEvidence.php', true) . ';'
             . '$GLOBALS["nativeChildCoverageSnapshot"] = NativeChildCoverageEvidence::snapshot($argv[1],'
             . '"tests/Unit/Security/HtmlRendererOutputTest.php", $argv[3], array('
-            . '"lib/html.php", "tests/Fixtures/rrd-process-coverage.php",'
+            . '"lib/html.php", "config/icons.json", "src/Platform/Contract/IconRegistry.php", "tests/Fixtures/rrd-process-coverage.php",'
             . '"tests/Helpers/NativeChildCoverageEvidence.php", "composer.lock", "tests/composer.lock",'
             . '"lib/rrd.php", "src/Graphing/Infrastructure/Rrd/ProxyCipher.php", "lib/dsdebug.php",'
             . '"lib/rrd_maintenance.php", "lib/poller.php", "lib/boost.php",'
@@ -164,7 +166,7 @@ function render(string $call, array $arguments, ?object $coverage): string
             $child = \NativeChildCoverageEvidence::load($report, $root, 'tests/Unit/Security/HtmlRendererOutputTest.php', $scenario, $sources, $markers, array('lib/html.php'));
             static $evidenceChecked = false;
             if (!$evidenceChecked) {
-                expect(\NativeChildCoverageEvidence::verifyRejections($report, $root, 'tests/Unit/Security/HtmlRendererOutputTest.php', $scenario, $sources, $markers, array('lib/html.php'), 'tests/Helpers/NativeChildCoverageEvidence.php'))->toBe(26);
+                expect(\NativeChildCoverageEvidence::verifyRejections($report, $root, 'tests/Unit/Security/HtmlRendererOutputTest.php', $scenario, $sources, $markers, array('lib/html.php'), 'tests/Helpers/NativeChildCoverageEvidence.php'))->toBe(28);
                 verifyRendererEvidenceFailures($report, $root, $scenario, $sources, $markers);
                 $evidenceChecked = true;
             }

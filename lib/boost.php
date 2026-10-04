@@ -10,6 +10,22 @@
  * boost_purge_cached_png_files() removes old ones a dead writer left behind */
 define('BOOST_PNG_TEMP_PREFIX', 'boost_png_tmp_');
 
+/** Acquire an old-RRDtool writer lock with a bounded number of attempts. */
+function boost_acquire_legacy_lock($local_data_id, $max_attempts = 60)
+{
+    $local_data_id = (int) $local_data_id;
+    $max_attempts = max(1, (int) $max_attempts);
+    $lock_attempts = 0;
+
+    while (!db_fetch_cell_prepared('SELECT GET_LOCK(?, 1)', array('boost.single_ds.' . $local_data_id))) {
+        if (++$lock_attempts >= $max_attempts) {
+            return false;
+        }
+        usleep(50000);
+    }
+    return true;
+}
+
 /** Failed workers may leave samples even when other children succeeded. */
 function boost_archive_is_empty($table)
 {
