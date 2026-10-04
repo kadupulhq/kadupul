@@ -36,6 +36,7 @@ $policyCase = str_contains($credentialScenario, '-policy-');
 $databaseSessions = $argv[3] === 'database';
 $remembered = str_starts_with($scenario, 'unbound-remembered');
 $rollback = str_ends_with($scenario, '-rollback');
+$disabledRollback = $scenario === 'disabled-rollback';
 $dsn = getenv('KADUPUL_SESSION_TEST_DSN') ?: 'sqlite:' . $directory . '/credentials.sqlite';
 class RehashInterleavingPdo extends PDO
 {
@@ -216,6 +217,11 @@ if ($credentialScenario === 'deleted-live') {
 }
 $accepted = false;
 $unauthenticated = false;
+$resumeWhileActiveDenied = null;
+$resumeAfterRollbackDenied = null;
+if ($disabledRollback) {
+    $db->exec("UPDATE user_auth SET enabled='' WHERE id=9");
+}
 if (str_ends_with($scenario, '-write') || $rollback) {
     $db->beginTransaction();
     if ($rollback) {
@@ -290,13 +296,22 @@ try {
         } catch (RuntimeException) {
             $refusedWhileActive = $db->inTransaction()
                 && $db->query("SELECT COUNT(*) FROM settings WHERE name='caller_owned_work'")->fetchColumn() === 1
-                && $db->query('SELECT COUNT(*) FROM user_auth_cache')->fetchColumn() === 3;
+                && $db->query('SELECT COUNT(*) FROM user_auth_cache')->fetchColumn() === ($remembered ? 3 : 0);
+        }
+        if ($disabledRollback) {
+            $db->exec("UPDATE user_auth SET enabled='on' WHERE id=9");
+            $resumeWhileActiveDenied = $session->read() === [] && $db->inTransaction()
+                && $db->query("SELECT COUNT(*) FROM settings WHERE name='caller_owned_work'")->fetchColumn() === 1;
         }
     }
 } finally {
     if ($db->inTransaction()) {
         $rollback ? $db->rollBack() : $db->commit();
     }
+}
+if ($disabledRollback) {
+    $db->exec("UPDATE user_auth SET enabled='on' WHERE id=9");
+    $resumeAfterRollbackDenied = $session->read() === [] && $console->consoleActor() === null;
 }
 if (($rollback || str_ends_with($scenario, '-write')) && method_exists($session, 'completeRevocation')) {
     if ($rollback && $db->query("SELECT COUNT(*) FROM settings WHERE name='caller_owned_work'")->fetchColumn() !== 0) {
@@ -327,6 +342,9 @@ if ($remembered) {
     $transition = ['cookie_cleared' => $cleared, 'legacy' => $legacy, 'remaining' => $db->query('SELECT COUNT(*) FROM user_auth_cache')->fetchColumn()];
 }
 $completionMarkers = isset($responseDispatched) ? ['session-state-observed', 'response-dispatched'] : ['session-state-observed'];
+if ($disabledRollback) {
+    $completionMarkers[] = 'rollback-resume-observed';
+}
 if ($policyCase) {
     $completionMarkers[] = 'restoration-policy-state-observed';
 }
@@ -334,4 +352,4 @@ if ($restore && $accepted && $legacyValid === true && $nextConsole === true) {
     $completionMarkers[] = 'restore-handoff-observed';
 }
 define('SYMFONY_SESSION_NATIVE_COMPLETED', $completionMarkers);
-fwrite(STDOUT, json_encode(['policy_before' => $policyBefore ?? null, 'policy_after' => $policyAfter ?? null, 'accepted' => $accepted, 'unauthenticated' => $unauthenticated, 'initial' => $initial, 'revoked' => $revoked, 'transition' => $transition, 'refused_while_active' => $refusedWhileActive, 'legacy_valid' => $legacyValid ?? null, 'next_console' => $nextConsole ?? null], JSON_THROW_ON_ERROR));
+fwrite(STDOUT, json_encode(['resume_while_active_denied' => $resumeWhileActiveDenied, 'resume_after_rollback_denied' => $resumeAfterRollbackDenied, 'policy_before' => $policyBefore ?? null, 'policy_after' => $policyAfter ?? null, 'accepted' => $accepted, 'unauthenticated' => $unauthenticated, 'initial' => $initial, 'revoked' => $revoked, 'transition' => $transition, 'refused_while_active' => $refusedWhileActive, 'legacy_valid' => $legacyValid ?? null, 'next_console' => $nextConsole ?? null], JSON_THROW_ON_ERROR));
