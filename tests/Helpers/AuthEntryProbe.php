@@ -5,7 +5,7 @@
 
 /*
  * Runs the shipped include/auth.php and lib/auth.php in a child PHP process
- * against an in-memory user_auth table; see AuthEntryProbeChild.php. The
+ * against an in-memory user_auth table; see Fixtures/auth-entry-probe-child.php. The
  * child's stubs live in their own file because PHP declares a file's
  * functions when it compiles the file, and other tests in the same run
  * declare the same names.
@@ -23,7 +23,7 @@ if (!function_exists('auth_entry_probe_run')) {
     {
         $pipes = array();
         $process = proc_open(
-            child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'error_reporting=' . (E_ALL & ~E_DEPRECATED), '-d', 'xdebug.mode=off', '-r', 'require ' . var_export(__DIR__ . '/AuthEntryProbeChild.php', true) . ';'), $coverage_dir, child_coverage_registration(__FILE__, 'auth-entry-probe', $scenario, array('auth-entry-result-readback'), array('lib/auth.php'), array('tests/Helpers/AuthEntryProbeChild.php', 'tests/Unit/Security/Auth/RememberMePasswordChangeTest.php', 'tests/Unit/Security/Auth/PermissionDeniedPageTest.php', 'tests/Unit/Security/Auth/TemplateUserFailureTest.php', 'tests/Unit/Security/Auth/NoAuthenticationRecoveryTest.php', 'tests/Unit/Security/Auth/LocalLoginTimingTest.php', 'tests/Unit/Security/Auth/GuestProfileAccessTest.php'))),
+            child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'error_reporting=' . (E_ALL & ~E_DEPRECATED), '-d', 'xdebug.mode=off', '-r', 'require ' . var_export(__DIR__ . '/../Fixtures/auth-entry-probe-child.php', true) . ';'), $coverage_dir, child_coverage_registration(__FILE__, 'auth-entry-probe', $scenario, array('auth-entry-result-readback'), array('lib/auth.php'), array('tests/Fixtures/auth-entry-probe-child.php', 'tests/Unit/Security/Auth/RememberMePasswordChangeTest.php', 'tests/Unit/Security/Auth/PermissionDeniedPageTest.php', 'tests/Unit/Security/Auth/TemplateUserFailureTest.php', 'tests/Unit/Security/Auth/NoAuthenticationRecoveryTest.php', 'tests/Unit/Security/Auth/LocalLoginTimingTest.php', 'tests/Unit/Security/Auth/GuestProfileAccessTest.php'))),
             array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes
         );

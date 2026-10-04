@@ -7,6 +7,8 @@
 
 namespace Kadupul\Tests;
 
+require_once dirname(__DIR__, 1) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 /*
@@ -17,6 +19,8 @@ use PHPUnit\Framework\TestCase;
  */
 final class ThemeSelectionAllowlistTest extends TestCase
 {
+    use \PestCodeCoverageCompatibility;
+
     private string $root = '';
 
     protected function setUp(): void

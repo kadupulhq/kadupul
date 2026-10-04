@@ -5,12 +5,16 @@
 
 use PHPUnit\Framework\TestCase;
 
+require_once dirname(__DIR__, 1) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 final class AdminListNativeCoverageTest extends TestCase
 {
+    use \PestCodeCoverageCompatibility;
+
     private static bool $coverageEvidenceChecked = false;
     private static bool $gridCoverageEvidenceChecked = false;
 
-    /** @dataProvider listCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('listCases')]
     public function testNativeListsPreserveFiltersPaginationAndScopedRows(bool $group, array $request, array $expectedRows): void
     {
         $state = $this->render(array('group' => $group, 'request' => $request));
@@ -62,7 +66,7 @@ final class AdminListNativeCoverageTest extends TestCase
         );
     }
 
-    /** @dataProvider templateCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('templateCases')]
     public function testTemplateGridsUseTargetTypedExceptionsAndActualGraphCounts(bool $group, int $policy, string $associated, string $filter): void
     {
         $state = $this->render(array('group' => $group, 'grid' => true, 'policy' => $policy, 'associated' => $associated, 'request' => array('filter' => $filter)));
@@ -106,7 +110,7 @@ final class AdminListNativeCoverageTest extends TestCase
         return $cases;
     }
 
-    /** @dataProvider templateWorkCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('templateWorkCases')]
     public function testTemplateCountsAvoidGraphInventoryWorkAndPreserveRowTotals(bool $group, string $associated, array $request, array $expectedRows, array $expectedTotals, int $total): void
     {
         $state = $this->render(array('group' => $group, 'grid' => true, 'graph_work' => true, 'policy' => 1, 'associated' => $associated, 'request' => $request));

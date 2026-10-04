@@ -18,7 +18,7 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         return true;
     }
 
-    /** @dataProvider migrationIndexCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('migrationIndexCases')]
     public function testActualInstallerRecordsVersionOnlyForAUsableReferenceIndex(string $failure, bool $ready): void
     {
         $state = $this->runNative(['collector' => 'bulk', 'upgrade_entry' => true, 'failure' => $failure]);
@@ -40,7 +40,7 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         return ['creates missing index' => ['index-missing', true], 'existing full index' => ['', true], 'equivalent composite' => ['index-equivalent', true], 'wrong column' => ['index-wrong-column', false], 'wrong leading column' => ['index-composite', false], 'prefix' => ['index-prefix', false], 'unique' => ['index-unique', false], 'hidden' => ['index-hidden', false]];
     }
 
-    /** @dataProvider boundedBatchCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('boundedBatchCases')]
     public function testReferenceDeliveryUsesBoundedBatchesAndRetainsOldRowsOnRefusal(array $scenario, int $expectedRows, bool $success): void
     {
         $state = $this->runNative($scenario + ['collector' => 'bulk']);
@@ -81,7 +81,7 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         return ['2001 rows' => [['batch_rows' => 2001], 2001, true], 'payload limit' => [['batch_rows' => 200, 'name_bytes' => 6000], 200, true], 'parameter limit' => [['batch_rows' => 1000, 'extra_columns' => 64], 1000, true], 'late write' => [['batch_rows' => 2001, 'failure' => 'batch-late'], 1, false], 'late corruption' => [['batch_rows' => 2001, 'failure' => 'batch-corrupt'], 1, false], 'oversized row' => [['batch_rows' => 1, 'name_bytes' => 600000, 'failure' => 'batch-oversized'], 1, false], 'duplicate key' => [['batch_rows' => 1, 'failure' => 'batch-duplicate'], 1, false], 'empty replacement' => [['batch_rows' => 0], 0, true], 'excluded update field' => [['collector' => 'device', 'batch_rows' => 1, 'failure' => 'batch-excluded', 'exclude' => ['name']], 1, true]];
     }
 
-    /** @dataProvider remoteGuardPreflightScenarios */
+    #[\PHPUnit\Framework\Attributes\DataProvider('remoteGuardPreflightScenarios')]
     public function testGuardPreflightPreservesCollectorVersionBeforeEveryMutation(string $class, string $failure): void
     {
         $state = $this->runNative(array('collector' => 'bulk', 'failure' => $failure, 'entrypoint' => true, 'class' => $class));
@@ -92,7 +92,7 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         self::assertStringContainsString('schema version was retained', implode('\n', $state['log']));
     }
 
-    /** @dataProvider equivalentIndexClasses */
+    #[\PHPUnit\Framework\Attributes\DataProvider('equivalentIndexClasses')]
     public function testCollectorAcceptsAnEquivalentFullLeadingColumnIndex(string $class): void
     {
         $state = $this->runNative(array('collector' => 'bulk', 'failure' => 'index-equivalent', 'entrypoint' => true, 'class' => $class));
@@ -138,7 +138,7 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         self::assertSame(array(1, 2), array_map('intval', array_column($state['rows'], 'id')));
     }
 
-    /** @dataProvider sourceDefinitionInserts */
+    #[\PHPUnit\Framework\Attributes\DataProvider('sourceDefinitionInserts')]
     public function testReadCommittedSourceSnapshotBlocksDefinitionInsert(string $kind): void
     {
         $state = $this->runNative(array('collector' => 'device', 'failure' => '', 'snapshot_edit' => true, 'source_active' => true, 'source_insert' => $kind));
@@ -194,7 +194,7 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         }
     }
 
-    /** @dataProvider collectorScenarios */
+    #[\PHPUnit\Framework\Attributes\DataProvider('collectorScenarios')]
     public function testCollectorCopiesParentsBeforeDataDefinitions(string $mode, string $failure): void
     {
         $state = $this->runNative(array('collector' => $mode, 'failure' => $failure));
@@ -218,7 +218,7 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         }
     }
 
-    /** @dataProvider collectorEntryPointScenarios */
+    #[\PHPUnit\Framework\Attributes\DataProvider('collectorEntryPointScenarios')]
     public function testCollectorEntryPointsReportReplicationOutcome(string $mode, string $failure, string $class = 'all'): void
     {
         $state = $this->runNative(array('collector' => $mode, 'failure' => $failure, 'entrypoint' => true, 'class' => $class));
@@ -294,7 +294,7 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         return array_merge(self::collectorScenarios(), array('bulk retry-state' => array('bulk', 'retry-state'), 'device retry-state' => array('device', 'retry-state'), 'bulk-data retry-state' => array('bulk', 'retry-state', 'data'), 'bulk-data success' => array('bulk', '', 'data'), 'bulk connection failure' => array('bulk', 'connect'), 'bulk-data connection failure' => array('bulk', 'connect', 'data'), 'device connection failure' => array('device', 'connect'), 'device unavailable' => array('device', 'unavailable')));
     }
 
-    /** @dataProvider deletionOutcomes */
+    #[\PHPUnit\Framework\Attributes\DataProvider('deletionOutcomes')]
     public function testConcurrentWriterChecksParentAfterDeletionFinishes(string $outcome, string $writer): void
     {
         $state = $this->runNative(array('reference_guard' => $outcome, 'writer' => $writer));
@@ -313,7 +313,7 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         }
     }
 
-    /** @dataProvider editorOutcomes */
+    #[\PHPUnit\Framework\Attributes\DataProvider('editorOutcomes')]
     public function testConcurrentEditorCannotResurrectDeletedDefinitions(string $outcome, string $editor): void
     {
         $state = $this->runNative(array('reference_guard' => $outcome, 'editor' => $editor));

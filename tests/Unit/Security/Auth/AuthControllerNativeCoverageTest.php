@@ -5,13 +5,17 @@ declare(strict_types=1);
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 3) . '/Helpers/PestCodeCoverageCompatibility.php';
+
 use PHPUnit\Framework\TestCase;
 
 require_once dirname(__DIR__, 3) . '/Helpers/NativeChildCoverageEvidence.php';
 
 final class AuthControllerNativeCoverageTest extends TestCase
 {
-    /** @dataProvider loginCases */
+    use \PestCodeCoverageCompatibility;
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('loginCases')]
     public function testLoginPersistsAuthenticationDecision(array $scenario, array $expected): void
     {
         $state = $this->runController($scenario);
@@ -49,7 +53,7 @@ final class AuthControllerNativeCoverageTest extends TestCase
         );
     }
 
-    /** @dataProvider passwordCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('passwordCases')]
     public function testPasswordChangePreservesOrRevokesCredentials(array $request, bool $changed, string $message): void
     {
         $request = array_merge(array('action' => 'changepassword', 'password' => 'NewCorrect2!', 'password_confirm' => 'NewCorrect2!', 'current_password' => 'Correct1!'), $request);
@@ -81,7 +85,7 @@ final class AuthControllerNativeCoverageTest extends TestCase
         );
     }
 
-    /** @dataProvider logoutCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('logoutCases')]
     public function testLogoutClearsSessionAndRendersReason(string $action, string $reason): void
     {
         $state = $this->runController(array('mode' => 'logout', 'request' => array('action' => $action)));
