@@ -26,9 +26,9 @@ cmd_exec	./lib/functions.php:7329	            $shell = shell_exec(cacti_escapesh
 cmd_exec	./lib/functions.php:7331	            $shell = shell_exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' -v 2>&1');
 cmd_exec	./lib/functions.php:7581	            exec('id -nu', $o, $r);
 cmd_exec	./lib/functions.php:7591	            exec(sprintf('grep :%s: /etc/passwd | cut -d: -f1', (int) $uid), $o, $r);
-cmd_exec	./lib/functions.php:7894	 * shell_exec() callers that already assemble the command string.
-cmd_exec	./lib/functions.php:7936	    $process = proc_open($argv, $descriptors, $pipes);
-cmd_exec	./lib/functions.php:8005	 * shell_exec() and expect a string return value.
+cmd_exec	./lib/functions.php:7903	 * shell_exec() callers that already assemble the command string.
+cmd_exec	./lib/functions.php:7945	    $process = proc_open($argv, $descriptors, $pipes);
+cmd_exec	./lib/functions.php:8014	 * shell_exec() and expect a string return value.
 cmd_exec	./lib/installer.php:3637	            $results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:3673	                    shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:852	            $process = @proc_open(
@@ -269,30 +269,30 @@ dynamic_include	./include/auth.php:125	                require_once($config['bas
 dynamic_include	./include/auth.php:187	            require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/csrf.php:16	require_once($config['include_path'] . '/vendor/csrf/csrf-conf.php');
 dynamic_include	./include/csrf.php:51	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
-dynamic_include	./include/global.php:266	include_once($config['library_path'] . '/database.php');
-dynamic_include	./include/global.php:267	include_once($config['library_path'] . '/functions.php');
-dynamic_include	./include/global.php:268	include_once($config['library_path'] . '/headers_secure.php');
-dynamic_include	./include/global.php:269	include_once($config['include_path'] . '/global_constants.php');
-dynamic_include	./include/global.php:270	include_once($config['library_path'] . '/html.php');
-dynamic_include	./include/global.php:271	include_once($config['library_path'] . '/html_utility.php');
-dynamic_include	./include/global.php:272	include_once($config['library_path'] . '/html_validate.php');
-dynamic_include	./include/global.php:542	include_once($config['include_path'] . '/global_languages.php');
-dynamic_include	./include/global.php:543	include_once($config['library_path'] . '/auth.php');
-dynamic_include	./include/global.php:544	include_once($config['library_path'] . '/plugins.php');
-dynamic_include	./include/global.php:545	include_once($config['include_path'] . '/plugins.php');
-dynamic_include	./include/global.php:546	include_once($config['include_path'] . '/global_arrays.php');
-dynamic_include	./include/global.php:547	include_once($config['include_path'] . '/global_settings.php');
-dynamic_include	./include/global.php:548	include_once($config['include_path'] . '/global_form.php');
-dynamic_include	./include/global.php:549	include_once($config['library_path'] . '/html_form.php');
-dynamic_include	./include/global.php:550	include_once($config['library_path'] . '/html_filter.php');
-dynamic_include	./include/global.php:551	include_once($config['library_path'] . '/variables.php');
-dynamic_include	./include/global.php:552	include_once($config['library_path'] . '/mib_cache.php');
-dynamic_include	./include/global.php:553	include_once($config['library_path'] . '/poller.php');
-dynamic_include	./include/global.php:554	include_once($config['library_path'] . '/snmpagent.php');
-dynamic_include	./include/global.php:555	include_once($config['library_path'] . '/aggregate.php');
-dynamic_include	./include/global.php:556	include_once($config['library_path'] . '/api_automation.php');
-dynamic_include	./include/global.php:557	include_once($config['include_path'] . '/csrf.php');
-dynamic_include	./include/global.php:558	include_once($config['include_path'] . '/vendor/autoload.php');
+dynamic_include	./include/global.php:267	include_once($config['library_path'] . '/database.php');
+dynamic_include	./include/global.php:268	include_once($config['library_path'] . '/functions.php');
+dynamic_include	./include/global.php:269	include_once($config['library_path'] . '/headers_secure.php');
+dynamic_include	./include/global.php:270	include_once($config['include_path'] . '/global_constants.php');
+dynamic_include	./include/global.php:271	include_once($config['library_path'] . '/html.php');
+dynamic_include	./include/global.php:272	include_once($config['library_path'] . '/html_utility.php');
+dynamic_include	./include/global.php:273	include_once($config['library_path'] . '/html_validate.php');
+dynamic_include	./include/global.php:543	include_once($config['include_path'] . '/global_languages.php');
+dynamic_include	./include/global.php:544	include_once($config['library_path'] . '/auth.php');
+dynamic_include	./include/global.php:545	include_once($config['library_path'] . '/plugins.php');
+dynamic_include	./include/global.php:546	include_once($config['include_path'] . '/plugins.php');
+dynamic_include	./include/global.php:547	include_once($config['include_path'] . '/global_arrays.php');
+dynamic_include	./include/global.php:548	include_once($config['include_path'] . '/global_settings.php');
+dynamic_include	./include/global.php:549	include_once($config['include_path'] . '/global_form.php');
+dynamic_include	./include/global.php:550	include_once($config['library_path'] . '/html_form.php');
+dynamic_include	./include/global.php:551	include_once($config['library_path'] . '/html_filter.php');
+dynamic_include	./include/global.php:552	include_once($config['library_path'] . '/variables.php');
+dynamic_include	./include/global.php:553	include_once($config['library_path'] . '/mib_cache.php');
+dynamic_include	./include/global.php:554	include_once($config['library_path'] . '/poller.php');
+dynamic_include	./include/global.php:555	include_once($config['library_path'] . '/snmpagent.php');
+dynamic_include	./include/global.php:556	include_once($config['library_path'] . '/aggregate.php');
+dynamic_include	./include/global.php:557	include_once($config['library_path'] . '/api_automation.php');
+dynamic_include	./include/global.php:558	include_once($config['include_path'] . '/csrf.php');
+dynamic_include	./include/global.php:559	include_once($config['include_path'] . '/vendor/autoload.php');
 dynamic_include	./include/global_languages.php:156				require_once($providerFull);
 dynamic_include	./install/background.php:11	include_once($config['base_path'] . '/install/functions.php');
 dynamic_include	./install/background.php:12	include_once($config['base_path'] . '/lib/api_data_source.php');
