@@ -189,7 +189,7 @@ switch (get_request_var('action')) {
  *
  * @param int $host_id Device identifier.
  *
- * @return never
+ * @return void
  */
 function host_require_device_access($host_id)
 {

@@ -3478,6 +3478,76 @@ function get_allowed_management_device_ids_sql($user_id = 0): string
 }
 
 /**
+ * Authorize a web management selection without hydrating the device inventory.
+ * Each invocation reads current owners and policies. This is a read boundary,
+ * not serialization against later legacy or concurrent writes.
+ *
+ * @param list<mixed> $selection Original selection, including repeated IDs
+ * @return list<mixed> Allowed values in their original representation and order
+ */
+function get_allowed_management_selection(string $resource, array $selection): array
+{
+    if (!in_array($resource, array('graph', 'data'), true) || count($selection) > 10000) {
+        throw new RuntimeException('Invalid management selection.');
+    }
+    $ids = array();
+    foreach ($selection as $value) {
+        $id = auth_resource_id($value);
+        if ($id !== null && $id > 0) $ids[$id] = $id;
+    }
+    if (!$ids) return array();
+
+    $authenticated = read_config_option('auth_method') != 0;
+    $actor = auth_resource_id($_SESSION['sess_user_id'] ?? null);
+    if ($authenticated && ($actor === null || $actor === 0)) {
+        throw new RuntimeException('Management actor is unavailable.');
+    }
+    $account = static function () use ($authenticated, $actor): ?string {
+        if (!$authenticated) return null;
+        $row = db_fetch_row_prepared('SELECT reset_perms, enabled, locked FROM user_auth WHERE id = ?', array($actor));
+        if (($row['enabled'] ?? '') !== 'on' || ($row['locked'] ?? 'on') === 'on'
+            || !isset($row['reset_perms']) || !preg_match('/^[0-9]+$/D', (string) $row['reset_perms'])) {
+            throw new RuntimeException('Management actor could not be confirmed.');
+        }
+        return (string) $row['reset_perms'];
+    };
+
+    global $database_last_error;
+    $previous_error = $database_last_error ?? null;
+    $database_last_error = null;
+    try {
+        for ($attempt = 0; $attempt < 2; $attempt++) {
+            $generation = $account();
+            $devices = get_allowed_management_device_ids_sql();
+            $graphs = $resource === 'graph' ? get_allowed_management_graph_ids_sql() : '';
+            $table = $resource === 'graph' ? 'graph_local' : 'data_local';
+            $allowed = array();
+            foreach (array_chunk(array_values($ids), 1000) as $chunk) {
+                $rows = db_fetch_assoc("SELECT id FROM $table WHERE id IN (" . implode(',', $chunk) . ")
+                    AND (host_id = 0 OR (host_id > 0 AND host_id IN ($devices)))"
+                    . ($resource === 'graph' ? " AND id IN ($graphs)" : ''));
+                if (!is_array($rows) || !empty($database_last_error)) {
+                    throw new RuntimeException('Management ownership could not be confirmed.');
+                }
+                foreach ($rows as $row) $allowed[(int) $row['id']] = true;
+            }
+            $current_generation = $account();
+            if (!empty($database_last_error)) {
+                throw new RuntimeException('Management policy could not be confirmed.');
+            }
+            if ($generation !== $current_generation) continue;
+            return array_values(array_filter($selection, static function ($value) use ($allowed): bool {
+                $id = auth_resource_id($value);
+                return $id !== null && isset($allowed[$id]);
+            }));
+        }
+        throw new RuntimeException('Management policy changed repeatedly.');
+    } finally {
+        $database_last_error = $previous_error;
+    }
+}
+
+/**
  * get_allowed_sites - returns the list of sites that the user is allowed
  *   To access.  This function is generally intended for both listbox and table displays as
  *   well as other tasks.

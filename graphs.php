@@ -599,17 +599,13 @@ function form_actions()
             set_request_var('selected_items', serialize($selected_items));
         }
         if (is_array($selected_items) && $removal_scope === null) {
-            foreach ($selected_items as $graph_id) {
-                if ($removal_scope === null && !graph_edit_graph_is_allowed($graph_id)) {
-                    graph_edit_access_denied();
-                }
+            try {
+                $allowed = get_allowed_management_selection('graph', $selected_items);
+            } catch (Throwable $error) {
+                graph_edit_access_denied();
             }
-            $selected_items = array_values(array_filter(
-                $selected_items,
-                function ($graph_id) {
-                    return is_graph_allowed((int) $graph_id);
-                }
-            ));
+            if (count($allowed) !== count($selected_items)) graph_edit_access_denied();
+            $selected_items = $allowed;
             /* plugin action hooks read the request, so they must see the filtered list too */
             set_request_var('selected_items', serialize($selected_items));
             if (cacti_sizeof($selected_items) === 0) {
@@ -618,10 +614,13 @@ function form_actions()
         }
 
         if ($selected_items != false) {
-            foreach ($selected_items as $selected_item) {
-                if ($removal_scope === null && !graph_edit_graph_is_allowed($selected_item)) {
+            if ($removal_scope === null) {
+                try {
+                    $verified = get_allowed_management_selection('graph', $selected_items);
+                } catch (Throwable $error) {
                     graph_edit_access_denied();
                 }
+                if (count($verified) !== count($selected_items)) graph_edit_access_denied();
             }
 
             if (get_request_var('drp_action') == '1') { // delete
@@ -734,16 +733,25 @@ function form_actions()
     $graph_list = '';
     $graph      = array();
 
+    if ($removal_scope === null) {
+        $selection = array();
+        foreach ($_POST as $key => $value) {
+            if (preg_match('/^chk_([0-9]+)$/', $key, $match)) $selection[] = $match[1];
+        }
+        try {
+            $allowed = get_allowed_management_selection('graph', $selection);
+        } catch (Throwable $error) {
+            graph_edit_access_denied();
+        }
+        if (count($allowed) !== count($selection)) graph_edit_access_denied();
+    }
+
     /* loop through each of the graphs selected on the previous page and get more info about them */
     foreach ($_POST as $var => $val) {
         if (preg_match('/^chk_([0-9]+)$/', $var, $matches)) {
             /* ================= input validation ================= */
             input_validate_input_number($matches[1]);
             /* ==================================================== */
-
-            if ($removal_scope === null && !graph_edit_graph_is_allowed($matches[1])) {
-                graph_edit_access_denied();
-            }
 
             $graph_list .= '<li>' . html_escape(get_graph_title($matches[1])) . '</li>';
             $graph_array[$i] = $matches[1];

@@ -487,6 +487,92 @@ final class AuthPolicyNativeCoverageTest extends TestCase
         return [[true],[false]];
     }
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('managementMaximumCases')]
+    public function testManagementMaximumBatchHasBoundedFreshOwnerPolicyRows(string $resource, string $phase): void
+    {
+        $state = $this->runPolicy(['operation' => 'management-bulk', 'resource' => $resource,
+            'phase' => $phase, 'size' => 5000, 'hide_disabled' => 'on', 'config' => ['graph_auth_method' => 3]])['result'];
+        self::assertSame($phase === 'execute' ? 'execution' : 'confirmation', $state['stage']);
+        self::assertSame(range(1001, 6000), $state['selection']);
+        self::assertSame(0, $state['owner_queries']);
+        self::assertSame(array_fill(0, $phase === 'execute' ? 10 : 5, 1000), $state['eligibility_rows']);
+        self::assertLessThanOrEqual($resource === 'graph' ? 30 : 22, $state['queries']);
+        self::assertSame('preserved previous diagnostic', $state['error_restored']);
+        if ($phase === 'execute') {
+            $prefix = $resource === 'graph' ? 'graphs' : 'data_source';
+            self::assertSame([$prefix . '_action_execute', 'snmp', $prefix . '_action_bottom'], array_column($state['events'], 0));
+            foreach ($state['events'] as $event) self::assertSame(range(1001, 6000), $event[1]);
+            self::assertSame([], $state['title_ids']);
+        } else {
+            self::assertSame(range(1001, 6000), $state['title_ids']);
+            self::assertSame([], $state['events']);
+        }
+    }
+
+    public static function managementMaximumCases(): array
+    {
+        return [['graph', 'execute'], ['data', 'execute'], ['graph', 'confirmation'], ['data', 'confirmation']];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('managementAdmissionCases')]
+    public function testManagementBatchPreservesAdmissionAndFreshBoundaryContracts(string $resource, array $scenario, string $stage, ?array $selection): void
+    {
+        $state = $this->runPolicy(array_merge(['operation' => 'management-bulk', 'resource' => $resource,
+            'config' => ['graph_auth_method' => 3]], $scenario))['result'];
+        self::assertSame($stage, $state['stage']);
+        self::assertSame($selection, $state['selection']);
+        self::assertSame(0, $state['owner_queries']);
+        self::assertSame('preserved previous diagnostic', $state['error_restored']);
+        if ($stage === 'denied') {
+            self::assertSame([], $state['title_ids']);
+            if ($resource === 'graph') {
+                self::assertSame(['message'], array_column($state['events'], 0));
+            } elseif (($scenario['generation_change'] ?? '') === 'once') {
+                self::assertSame([['snmp', false], ['data_source_action_bottom', false]], $state['events']);
+            } else {
+                self::assertSame([], $state['events']);
+            }
+        }
+        if (($scenario['size'] ?? 0) === 10001) {
+            self::assertSame(0, $state['queries']);
+            self::assertSame([], $state['eligibility_rows']);
+        }
+        if (isset($scenario['generation_change'])) {
+            self::assertGreaterThan(0, $state['injected']);
+            self::assertLessThanOrEqual(2, count($state['eligibility_rows']));
+        }
+    }
+
+    public static function managementAdmissionCases(): array
+    {
+        $cases = [];
+        foreach (['graph', 'data'] as $resource) {
+            foreach (['execute', 'confirmation'] as $phase) {
+                $cases[$resource . ' oversized ' . $phase] = [$resource, ['size' => 10001, 'phase' => $phase], 'denied', null];
+            }
+            foreach (['actor_disabled', 'actor_locked', 'read_failure'] as $failure) {
+                $cases[$resource . ' ' . $failure] = [$resource, [$failure => true], 'denied', null];
+            }
+            foreach (['once', 'repeat'] as $change) {
+                $cases[$resource . ' generation ' . $change] = [$resource, ['generation_change' => $change], 'denied', null];
+            }
+            $cases[$resource . ' late chunk failure'] = [$resource, ['size' => 1001, 'read_failure' => 2], 'denied', null];
+            $cases[$resource . ' owner handoff'] = [$resource, ['restricted' => true, 'owner_change_between_boundaries' => true], 'denied', null];
+            $cases[$resource . ' duplicate representation'] = [$resource, ['selection' => ['01001', 1002, '1001 ', 1001]], 'execution', ['01001', 1002, '1001 ', 1001]];
+            $cases[$resource . ' unassigned'] = [$resource, ['owners' => [1001 => 0]], 'execution', [1001, 1002, 1003, 1004]];
+            $cases[$resource . ' disabled presentation host'] = [$resource, ['hide_disabled' => 'on'], 'execution', [1001, 1002, 1003, 1004]];
+            $cases[$resource . ' no authentication'] = [$resource, ['auth_method' => 0, 'anonymous' => true], 'execution', [1001, 1002, 1003, 1004]];
+        }
+        foreach ([['owners' => [1001 => 999]], ['owners' => [1001 => -1]], ['selection' => [1001, 9999]], ['selection' => [1001, -1, 0]]] as $index => $scenario) {
+            $cases['graph invalid ' . $index] = ['graph', $scenario, 'denied', null];
+            $cases['data invalid partial ' . $index] = ['data', $scenario, 'execution', $index < 2 ? [1002, 1003, 1004] : [1001]];
+        }
+        $cases['graph restricted mixed'] = ['graph', ['restricted' => true, 'owners' => [1001 => 201]], 'denied', null];
+        $cases['data restricted mixed'] = ['data', ['restricted' => true, 'owners' => [1001 => 201]], 'execution', [1002, 1003, 1004]];
+        $cases['data restricted confirmation'] = ['data', ['restricted' => true, 'owners' => [1001 => 201], 'phase' => 'confirmation'], 'confirmation', [1002, 1003, 1004]];
+        return $cases;
+    }
+
     private function runPolicy(array $scenario): array
     {
         $root = dirname(__DIR__, 4);
@@ -510,7 +596,15 @@ final class AuthPolicyNativeCoverageTest extends TestCase
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
                 require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
-                if (in_array($scenario['operation'], ['graph-cache-revocation', 'graph-image-cache'], true)) {
+                if ($scenario['operation'] === 'management-bulk') {
+                    require_once $root . '/tests/Helpers/ManagementBulkCoverageRegistration.php';
+                    $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), ManagementBulkCoverageRegistration::SOURCES, ManagementBulkCoverageRegistration::MARKERS, ['lib/auth.php']);
+                    if (!isset(self::$coverageEvidenceChecked['management-bulk'])) {
+                        self::assertSame(38, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), ManagementBulkCoverageRegistration::SOURCES, ManagementBulkCoverageRegistration::MARKERS, ['lib/auth.php'], 'lib/rrd.php'));
+                        self::$coverageEvidenceChecked['management-bulk'] = true;
+                    }
+                    $coverage->merge($childCoverage);
+                } elseif (in_array($scenario['operation'], ['graph-cache-revocation', 'graph-image-cache'], true)) {
                     require_once $root . '/tests/Helpers/GraphCacheCoverageRegistration.php';
                     $markers = ['native-policy-operation-returned', 'policy-session-observed', 'graph-cache-revocation-observed', 'graph-cache-query-budget-observed'];
                     if ($scenario['operation'] === 'graph-image-cache') $markers[] = 'graph-cache-image-dispatch-observed';
