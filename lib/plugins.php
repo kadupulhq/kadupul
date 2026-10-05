@@ -1214,13 +1214,22 @@ function plugin_draw_navigation_text($nav) {
 	return $nav;
 }
 
+function plugin_compatibility_version($info) {
+	$version = is_array($info) && isset($info['compat']) && is_string($info['compat']) ? trim($info['compat']) : '';
+
+	return $version !== '' && preg_match('/\\A[0-9]+(?:\\.[0-9]+){0,2}\\z/', $version) === 1 ? $version : false;
+}
+
 function plugin_is_compatible($plugin) {
 	global $config;
 
 	$info = plugin_load_info_file($config['base_path'] . '/plugins/' . $plugin . '/INFO');
-	$compatibility = is_array($info) && isset($info['compat']) && is_string($info['compat']) ? trim($info['compat']) : '';
+	if ($info === false) {
+		return array('compat' => false, 'requires' => __('Legacy Plugin'));
+	}
+	$compatibility = plugin_compatibility_version($info);
 
-	if ($compatibility === '' || preg_match('/\\A[0-9]+(?:\\.[0-9]+){0,2}\\z/', $compatibility) !== 1) {
+	if ($compatibility === false) {
 		return array('compat' => false, 'requires' => __('Plugin INFO must declare a valid compat version'));
 	}
 
@@ -1266,7 +1275,8 @@ function plugin_load_info_defaults($file, $info, $defaults = array()) {
 		$result['status'] = -3;
 	} elseif (strtolower($dir) != strtolower($result['name'])) {
 		$result['status'] = -2;
-	} elseif (!isset($result['compat']) || cacti_version_compare(CACTI_VERSION, $result['compat'], '<')) {
+	} elseif (plugin_compatibility_version($result) === false
+		|| version_compare(CACTI_VERSION, plugin_compatibility_version($result), '<')) {
 		$result['status'] = -1;
 	}
 
