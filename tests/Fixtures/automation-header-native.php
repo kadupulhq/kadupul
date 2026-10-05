@@ -12,8 +12,11 @@ require $argv[1] . '/include/global_constants.php';
 require $argv[1] . '/lib/api_automation.php';
 // These form choices contain no host placeholders; substitution is outside
 // this fixture's header-label contract and refuses unexpected placeholders.
-function null_out_substitutions($value) {
-    if (str_contains($value, '|')) { throw new RuntimeException('Unexpected choice substitution'); }
+function null_out_substitutions($value)
+{
+    if (str_contains($value, '|')) {
+        throw new RuntimeException('Unexpected choice substitution');
+    }
     return $value;
 }
 $db = new PDO('sqlite::memory:', null, null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
@@ -27,28 +30,49 @@ $query->execute(array($a['label'], '', ''));
 $query = $db->prepare('INSERT INTO automation_tree_rules VALUES (1,?)');
 $query->execute(array(TREE_ITEM_TYPE_HOST));
 function cacti_log(...$arguments) {}
-function raise_message(...$arguments) { $GLOBALS['automation_messages'][] = $arguments[0]; }
-function form_hidden_box($name, $value, $default) { print '<input type="hidden" name="' . html_escape($name) . '" value="' . html_escape($value) . '">'; }
-function validate_store_request_vars($filters, $prefix) {
+function raise_message(...$arguments)
+{
+    $GLOBALS['automation_messages'][] = $arguments[0];
+}
+function form_hidden_box($name, $value, $default)
+{
+    print '<input type="hidden" name="' . html_escape($name) . '" value="' . html_escape($value) . '">';
+}
+function validate_store_request_vars($filters, $prefix)
+{
     foreach ($filters as $name => $definition) {
         $GLOBALS['a']['request'][$name] ??= $definition['default'];
     }
 }
-function set_request_var($name, $value) { $GLOBALS['a']['request'][$name] = $value; }
-function db_fetch_assoc($sql, ...$arguments) { return $GLOBALS['db']->query($sql)->fetchAll(PDO::FETCH_ASSOC); }
-function db_fetch_assoc_prepared($sql, $parameters) {
+function set_request_var($name, $value)
+{
+    $GLOBALS['a']['request'][$name] = $value;
+}
+function db_fetch_assoc($sql, ...$arguments)
+{
+    return $GLOBALS['db']->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+}
+function db_fetch_assoc_prepared($sql, $parameters)
+{
     $query = $GLOBALS['db']->prepare($sql);
     $query->execute($parameters);
     return $query->fetchAll(PDO::FETCH_ASSOC);
 }
-function db_fetch_cell($sql) { return $GLOBALS['db']->query($sql)->fetchColumn(); }
-function db_column_exists($table, $column) {
+function db_fetch_cell($sql)
+{
+    return $GLOBALS['db']->query($sql)->fetchColumn();
+}
+function db_column_exists($table, $column)
+{
     if (!in_array($table, array('host', 'host_template', 'graph_local', 'graph_templates_graph', 'graph_templates'), true)) {
         throw new RuntimeException('Unexpected production column catalog');
     }
     return in_array($column, array_column(db_fetch_assoc('PRAGMA table_info(' . $table . ')'), 'name'), true);
 }
-function cacti_validate_sort_column($column, $columns, $default) { return in_array($column, $columns, true) ? $column : $default; }
+function cacti_validate_sort_column($column, $columns, $default)
+{
+    return in_array($column, $columns, true) ? $column : $default;
+}
 $item_rows = array(10 => '10');
 $GLOBALS['a']['request']['rows'] = 10;
 $item = $db->query('SELECT * FROM automation_tree_rule_items WHERE id=1')->fetch(PDO::FETCH_ASSOC);
