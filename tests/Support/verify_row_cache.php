@@ -94,6 +94,11 @@ function db_install_execute(string $sql): void
         ++$indexCreates;
     }
 }
+function db_install_fetch_cell(string $sql, array $params = array()): array
+{
+    // This harness isolates the row-cache upgrade; LDAP has its own suite.
+    return array('data' => false);
+}
 require $root . '/install/upgrades/1_2_31.php';
 upgrade_to_1_2_31();
 upgrade_to_1_2_31();

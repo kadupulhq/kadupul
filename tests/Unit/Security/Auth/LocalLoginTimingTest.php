@@ -63,7 +63,7 @@ PHP;
     }
 
     $program .= '$user = local_auth_login_process($scenario[\'username\']);';
-    $program .= 'print json_encode(array(\'user\' => $user, \'error\' => $error, \'hashes\' => $GLOBALS[\'hashes\']));';
+    $program .= 'print json_encode(array(\'user\' => $user, \'error\' => $error, \'error_msg\' => $error_msg, \'hashes\' => $GLOBALS[\'hashes\']));';
 
     $process = proc_open(
         array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, json_encode(array('username' => $username, 'password' => $password, 'state' => $state, 'legacy_hash' => $legacy_hash))),
@@ -89,6 +89,7 @@ test('an unknown username runs as many password verifications as a known one', f
         ->and($unknown['user'])->toBe(array())
         ->and($known['error'])->toBeTrue()
         ->and($unknown['error'])->toBeTrue()
+        ->and($known['error_msg'])->toBe($unknown['error_msg'])
         ->and($known['hashes'])->not->toBe(array())
         ->and(count($unknown['hashes']))->toBe(count($known['hashes']));
 })->with(array('wrong password' => 'guess', 'blank password' => ''));
@@ -158,6 +159,7 @@ test('native successful login preserves real bcrypt rehash and a raised timing f
         'call' => array('type' => 'local_auth_login_process', 'args' => array('alice')),
         'request' => array('login_password' => 'right'),
         'runtime_config' => array('auth_login_timing_floor_ms' => 1200),
+        'credential_database' => true,
         'users' => array(array(
             'id' => 42, 'username' => 'alice', 'realm' => 0, 'enabled' => 'on', 'locked' => '',
             'password' => password_hash('right', PASSWORD_BCRYPT, array('cost' => 10)),
@@ -167,7 +169,7 @@ test('native successful login preserves real bcrypt rehash and a raised timing f
     $result = auth_entry_probe_run($scenario);
     expect($result['stderr'])->toBe('')->and($result['return']['id'])->toBe(42)
         ->and($result['elapsed_seconds'])->toBeGreaterThanOrEqual(1.19);
-    $writes = array_values(array_filter($result['executed'], fn($write) => str_contains($write['sql'], 'SET password = ?')));
-    expect($writes)->toHaveCount(1)->and(password_verify('right', $writes[0]['params'][0]))->toBeTrue()
-        ->and(password_needs_rehash($writes[0]['params'][0], PASSWORD_DEFAULT))->toBeFalse();
+    expect(password_verify('right', $result['credential_password']))->toBeTrue()
+        ->and(password_needs_rehash($result['credential_password'], PASSWORD_DEFAULT))->toBeFalse()
+        ->and($result['credential_password'])->not->toBe($scenario['users'][0]['password']);
 });

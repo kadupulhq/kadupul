@@ -30,6 +30,8 @@
             <file>color.php</file>
             <file>vdef.php</file>
             <file>links.php</file>
+            <file>link.php</file>
+            <file>lib/auth.php</file>
             <file>lib/database.php</file>
             <file>lib/reference_write.php</file>
             <file>lib/functions.php</file>

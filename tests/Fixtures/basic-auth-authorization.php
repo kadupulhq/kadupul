@@ -26,6 +26,7 @@ $db->sqliteCreateFunction('FLOOR', 'floor');
 $db->exec('CREATE TABLE user_auth_cache (user_id INTEGER, hostname TEXT, last_update TEXT, token TEXT)');
 $db->exec('CREATE TABLE user_auth_row_cache (user_id INTEGER)');
 $db->exec('CREATE TABLE sessions (user_id INTEGER)');
+$db->exec('CREATE TABLE settings_user (user_id INTEGER, name TEXT, value TEXT, PRIMARY KEY(user_id,name))');
 $db->exec('CREATE TABLE user_domains (user_id INTEGER)');
 foreach (array(42, 43) as $id) {
     $query = $db->prepare('INSERT INTO user_auth_cache VALUES (?, ?, ?, ?)');
@@ -137,6 +138,8 @@ if (strpos($scenario, 'guest') !== false) unset($_SERVER['PHP_AUTH_USER']);
 $_SESSION = array();
 if (str_starts_with($scenario, 'existing_')) {
     $_SESSION['sess_user_id'] = 42;
+    // This fixture models a session established by a completed login.
+    auth_session_bind_credentials(42);
 }
 register_shutdown_function(function () {
     echo json_encode(array('events' => $GLOBALS['events'], 'user' => $_SESSION['sess_user_id'] ?? null, 'status' => http_response_code() ?: 200));

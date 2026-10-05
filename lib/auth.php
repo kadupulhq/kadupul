@@ -36,55 +36,92 @@ function auth_cookie_user_id($username, $realm_id)
  *
  * @return (void)
  */
-function clear_auth_cookie()
+function clear_auth_cookie($db = false, $expire = null, $remembered = null)
 {
     global $config;
 
-    $revoked = $_SESSION['sess_remember_token'] ?? null;
+    $tableExists = $db instanceof PDO ? static function ($name) use ($db) {
+        if ($db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite') {
+            $query = $db->prepare("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?");
+            $query->execute(array($name));
+        } else {
+            $query = $db->query('SHOW TABLES LIKE ' . $db->quote($name));
+        }
+        return $query->fetchColumn() !== false;
+    } : 'db_table_exists';
+    $execute = $db instanceof PDO ? static function ($sql, $parameters) use ($db) {
+        return $db->prepare($sql)->execute($parameters);
+    } : 'db_execute_prepared';
+    $fetchCell = $db instanceof PDO ? static function ($sql, $parameters) use ($db) {
+        $query = $db->prepare($sql);
+        $query->execute($parameters);
+        return $query->fetchColumn();
+    } : 'db_fetch_cell_prepared';
+    $expire ??= 'cacti_cookie_session_logout';
+
+    $revoked = is_array($remembered) ? ($remembered['session_token'] ?? null) : ($_SESSION['sess_remember_token'] ?? null);
+    $cookie = is_array($remembered) ? ($remembered['cookie'] ?? null) : ($_COOKIE['cacti_remembers'] ?? null);
     if (!is_array($revoked) || !isset($revoked['user_id'], $revoked['hash'])) {
         $revoked = null;
     }
     unset($_SESSION['sess_remember_token']);
-    if (is_array($revoked) && isset($revoked['user_id'], $revoked['hash']) && db_table_exists('user_auth_cache')) {
-        db_execute_prepared('DELETE FROM user_auth_cache WHERE user_id = ? AND token = ?', array($revoked['user_id'], $revoked['hash']));
-        cacti_cookie_session_logout();
+    if (is_array($revoked) && isset($revoked['user_id'], $revoked['hash']) && $tableExists('user_auth_cache')) {
+        $execute('DELETE FROM user_auth_cache WHERE user_id = ? AND token = ?', array($revoked['user_id'], $revoked['hash']));
+        $expire();
     }
 
-    if (isset($_COOKIE['cacti_remembers']) && db_table_exists('user_auth_cache')) {
-        if (!is_string($_COOKIE['cacti_remembers'])) {
-            cacti_cookie_session_logout();
+    if ($cookie !== null && $tableExists('user_auth_cache')) {
+        if (!is_string($cookie)) {
+            $expire();
 
             return;
         }
 
-        $parts = explode(',', $_COOKIE['cacti_remembers']);
+        $parts = explode(',', $cookie);
 
-        if (cacti_sizeof($parts) == 2) {
+        if (count($parts) == 2) {
             $user_id  = $parts[0];
             $realm_id = -1;
             $token    = $parts[1];
-        } elseif (cacti_sizeof($parts) == 3) {
+        } elseif (count($parts) == 3) {
             $user_id  = $parts[0];
             $realm_id = $parts[1];
             $token    = $parts[2];
         } else {
-            cacti_cookie_session_logout();
+            $expire();
 
             return;
         }
 
         // Legacy support which leaked usernames
         if (!is_numeric($user_id)) {
-            $user_id = auth_cookie_user_id($user_id, $realm_id);
+            if ($realm_id == -1) {
+                // Assume local realm for tokens without a realm_id
+                $user_id = $fetchCell(
+                    'SELECT id
+					FROM user_auth
+					WHERE username = ?
+					AND realm = 0',
+                    array($user_id)
+                );
+            } else {
+                $user_id = $fetchCell(
+                    'SELECT id
+					FROM user_auth
+					WHERE username = ?
+					AND realm = ?',
+                    array($user_id, $realm_id)
+                );
+            }
         }
 
         if ($user_id > 0) {
             $secret = hash('sha512', $token, false);
 
-            cacti_cookie_session_logout();
+            $expire();
 
             if (!is_array($revoked) || $revoked['user_id'] != $user_id || $revoked['hash'] !== $secret) {
-                db_execute_prepared(
+                $execute(
                     'DELETE FROM user_auth_cache
 				WHERE user_id = ?
 				AND token = ?',
@@ -362,163 +399,250 @@ function user_copy($template_user, $new_user, $template_realm = 0, $new_realm = 
     input_validate_input_number($new_realm);
     /* ==================================================== */
 
-    /* Check get template users array */
-    $user_auth = db_fetch_row_prepared(
-        'SELECT *
-		FROM user_auth
-		WHERE username = ?
-		AND realm = ?',
-        array($template_user, $template_realm)
-    );
+    $unit = null;
+    $hook_data = null;
+    try {
+        $unit = auth_membership_begin(array('user_auth', 'user_auth_perms', 'user_auth_realm', 'settings_user', 'settings_tree', 'user_auth_group', 'user_auth_group_members'));
+        $db = $unit['db'];
+        $copy = function () use ($db, $template_user, $new_user, $template_realm, $new_realm, $overwrite, $data_override, &$hook_data) {
+            /* Check get template users array */
+            $user_auth = auth_membership_rows(
+                $db,
+                'SELECT * FROM user_auth WHERE username = ? AND realm = ?',
+                array($template_user, $template_realm)
+            )[0] ?? array();
 
-    if (!cacti_sizeof($user_auth)) {
+            if (!cacti_sizeof($user_auth)) {
+                return false;
+            }
+
+            $template_id = $user_auth['id'];
+
+            /* Create update/insert for new/existing user */
+            $user_exist = auth_membership_rows(
+                $db,
+                'SELECT * FROM user_auth WHERE username = ? AND realm = ?',
+                array($new_user, $new_realm)
+            )[0] ?? array();
+
+            $destination_id = $user_exist['id'] ?? false;
+            auth_membership_lock_users($destination_id === false ? array($template_id) : array($template_id, $destination_id), true, $db);
+            $lock = $db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : '';
+            $user_auth = auth_membership_rows($db, 'SELECT * FROM user_auth WHERE username = ? AND realm = ?' . $lock, array($template_user, $template_realm))[0] ?? array();
+            $user_exist = auth_membership_rows($db, 'SELECT * FROM user_auth WHERE username = ? AND realm = ?' . $lock, array($new_user, $new_realm))[0] ?? array();
+            if ((int) ($user_auth['id'] ?? 0) !== (int) $template_id || ($user_exist['id'] ?? false) !== $destination_id) {
+                throw new RuntimeException('User copy identity changed before the copy');
+            }
+            // Capture every source component before replacing destination rows, including self-overwrite.
+            $copy_rows = array();
+            foreach (array('user_auth_perms', 'user_auth_realm', 'settings_user', 'settings_tree') as $table) {
+                $filter = $table === 'settings_user' ? " AND name != 'auth_credential_generation'" : '';
+                $copy_rows[$table] = auth_membership_rows($db, 'SELECT * FROM ' . $table . ' WHERE user_id = ?' . $filter . $lock, array($template_id));
+            }
+            $source_groups = auth_membership_rows($db, 'SELECT group_id FROM user_auth_group_members WHERE user_id = ?' . $lock, array($template_id));
+            $destination_groups = $destination_id === false ? array() : auth_membership_rows($db, 'SELECT group_id FROM user_auth_group_members WHERE user_id = ?' . $lock, array($destination_id));
+
+            if (cacti_sizeof($user_exist)) {
+                if ($overwrite) {
+                    /* Overwrite existing user */
+                    $user_auth['id']            = $user_exist['id'];
+                    $user_auth['username']      = $user_exist['username'];
+                    $user_auth['password']      = $user_exist['password'];
+                    $user_auth['realm']         = $user_exist['realm'];
+                    $user_auth['full_name']     = $user_exist['full_name'];
+                    $user_auth['email_address'] = $user_exist['email_address'];
+                    $user_auth['must_change_password'] = $user_exist['must_change_password'];
+                    $user_auth['enabled']       = $user_exist['enabled'];
+                    foreach (array('locked', 'failed_attempts', 'lastfail', 'password_history', 'lastlogin', 'lastchange') as $field) {
+                        $user_auth[$field] = $user_exist[$field];
+                    }
+                } else {
+                    /* User already exists, duplicate users are bad */
+                    raise_message(19);
+
+                    return false;
+                }
+            } else {
+                /* new user */
+                try {
+                    $random_password = bin2hex(random_bytes(16));
+                } catch (Exception $e) {
+                    cacti_log('FATAL: CSPRNG failed. Cannot generate secure placeholder password for user copy.', false, 'AUTH');
+
+                    return false;
+                }
+
+                $user_auth['id']            = 0;
+                $user_auth['username']      = $new_user;
+                $user_auth['enabled']       = 'on';
+                $user_auth['password']      = compat_password_hash($random_password, PASSWORD_DEFAULT);
+                $user_auth['email_address'] = '';
+                $user_auth['realm']         = $new_realm;
+
+                $user_auth['must_change_password'] = 'on';
+            }
+
+            /* Update data_override fields */
+            if (is_array($data_override)) {
+                foreach ($data_override as $field => $value) {
+                    if (isset($user_auth[$field]) && $field != 'id' && $field != 'username' && $field != 'reset_perms' && (!cacti_sizeof($user_exist) || !in_array($field, array('locked', 'failed_attempts', 'lastfail', 'password_history', 'lastlogin', 'lastchange'), true))) {
+                        $user_auth[$field] = $value;
+                    }
+                }
+            }
+
+            // Permission epochs are destination revocation metadata, not copied preferences.
+            $user_auth['reset_perms'] = $user_exist['reset_perms'] ?? 0;
+
+            /* Save the user */
+            $new_id = auth_user_copy_save($db, 'user_auth', $user_auth, !cacti_sizeof($user_exist));
+
+            /* Create/Update permissions and settings */
+            if (cacti_sizeof($user_exist) && $overwrite) {
+                auth_membership_execute($db, 'DELETE FROM user_auth_perms WHERE user_id = ?', array($user_exist['id']));
+                auth_membership_execute($db, 'DELETE FROM user_auth_realm WHERE user_id = ?', array($user_exist['id']));
+                auth_membership_execute($db, 'DELETE FROM settings_user WHERE user_id = ? AND name != \'auth_credential_generation\'', array($user_exist['id']));
+                auth_membership_execute($db, 'DELETE FROM settings_tree WHERE user_id = ?', array($user_exist['id']));
+            }
+
+            $user_auth_perms = $copy_rows['user_auth_perms'];
+
+            if (cacti_sizeof($user_auth_perms)) {
+                foreach ($user_auth_perms as $row) {
+                    $row['user_id'] = $new_id;
+                    auth_user_copy_save($db, 'user_auth_perms', $row);
+                }
+            }
+
+            $user_auth_realm = $copy_rows['user_auth_realm'];
+
+            if (cacti_sizeof($user_auth_realm)) {
+                foreach ($user_auth_realm as $row) {
+                    $row['user_id'] = $new_id;
+                    auth_user_copy_save($db, 'user_auth_realm', $row);
+                }
+            }
+
+            $settings_user = $copy_rows['settings_user'];
+
+            if (cacti_sizeof($settings_user)) {
+                foreach ($settings_user as $row) {
+                    $row['user_id'] = $new_id;
+                    auth_user_copy_save($db, 'settings_user', $row);
+                }
+            }
+
+            $settings_tree = $copy_rows['settings_tree'];
+
+            if (cacti_sizeof($settings_tree)) {
+                foreach ($settings_tree as $row) {
+                    $row['user_id'] = $new_id;
+                    auth_user_copy_save($db, 'settings_tree', $row);
+                }
+            }
+
+            /* Replace the complete destination set from one serialized source snapshot. */
+            $changes = array();
+            foreach ($destination_groups as $group) {
+                $changes[(int) $group['group_id']] = false;
+            }
+            foreach ($source_groups as $group) {
+                $changes[(int) $group['group_id']] = true;
+            }
+            user_group_change_memberships($new_id, $changes);
+
+            $hook_data = array('template_id' => $template_id, 'new_id' => $new_id);
+
+            return $new_id;
+        };
+        $result = $copy();
+        auth_membership_finish($unit, $result !== false);
+    } catch (Throwable $error) {
+        if ($unit !== null) {
+            if (!$unit['db']->inTransaction()) {
+                throw $error;
+            }
+            try {
+                auth_membership_finish($unit, false);
+            } catch (Throwable $cleanup_error) {
+                throw $error;
+            }
+        }
+        cacti_log('ERROR: User policy copy could not be completed.', false, 'AUTH');
         return false;
     }
-
-    $template_id = $user_auth['id'];
-
-    /* Create update/insert for new/existing user */
-    $user_exist = db_fetch_row_prepared(
-        'SELECT *
-		FROM user_auth
-		WHERE username = ?
-		AND realm = ?',
-        array($new_user, $new_realm)
-    );
-
-    if (cacti_sizeof($user_exist)) {
-        if ($overwrite) {
-            /* Overwrite existing user */
-            $user_auth['id']            = $user_exist['id'];
-            $user_auth['username']      = $user_exist['username'];
-            $user_auth['password']      = $user_exist['password'];
-            $user_auth['realm']         = $user_exist['realm'];
-            $user_auth['full_name']     = $user_exist['full_name'];
-            $user_auth['email_address'] = $user_exist['email_address'];
-            $user_auth['must_change_password'] = $user_exist['must_change_password'];
-            $user_auth['enabled']       = $user_exist['enabled'];
-        } else {
-            /* User already exists, duplicate users are bad */
-            raise_message(19);
-
-            return false;
-        }
-    } else {
-        /* new user */
-        try {
-            $random_password = bin2hex(random_bytes(16));
-        } catch (Exception $e) {
-            cacti_log('FATAL: CSPRNG failed. Cannot generate secure placeholder password for user copy.', false, 'AUTH');
-
-            return false;
-        }
-
-        $user_auth['id']            = 0;
-        $user_auth['username']      = $new_user;
-        $user_auth['enabled']       = 'on';
-        $user_auth['password']      = compat_password_hash($random_password, PASSWORD_DEFAULT);
-        $user_auth['email_address'] = '';
-        $user_auth['realm']         = $new_realm;
-
-        $user_auth['must_change_password'] = 'on';
+    if ($result !== false) {
+        api_plugin_hook_function('copy_user', $hook_data);
     }
+    return $result;
+}
 
-    /* Update data_override fields */
-    if (is_array($data_override)) {
-        foreach ($data_override as $field => $value) {
-            if (isset($user_auth[$field]) && $field != 'id' && $field != 'username') {
-                $user_auth[$field] = $value;
+/** Save a copy row with legacy value normalization and checked database receipts. */
+function auth_user_copy_save($db, $table, $row, $create = false)
+{
+    $keys = array('user_auth' => array('id'), 'user_auth_perms' => array('user_id', 'item_id', 'type'), 'user_auth_realm' => array('realm_id', 'user_id'), 'settings_user' => array('user_id', 'name'), 'settings_tree' => array('user_id', 'graph_tree_item_id'));
+    if (!isset($keys[$table])) {
+        throw new RuntimeException('Unsupported user copy table');
+    }
+    $columns = db_get_table_column_types($table, $db);
+    if (!is_array($columns) || $columns === array() || array_diff(array_keys($row), array_keys($columns)) !== array()) {
+        throw new RuntimeException('User copy columns could not be confirmed');
+    }
+    // Preserve sql_save's numeric empty/default normalization, including data_override.
+    $expected = $row;
+    foreach ($expected as $name => &$value) {
+        $column = $columns[$name];
+        $numeric = preg_match('/int|float|double|decimal/', $column['type']) === 1;
+        if ($numeric) {
+            if ($value == '') {
+                $value = $column['null'] === 'YES' || str_contains($column['extra'], 'auto_increment') || $column['default'] == '' ? 0 : $column['default'];
+            } elseif (empty($value) || !is_numeric($value)) {
+                $value = 0;
             }
         }
     }
-
-    /* Save the user */
-    $new_id = sql_save($user_auth, 'user_auth');
-
-    /* Create/Update permissions and settings */
-    if (cacti_sizeof($user_exist) && $overwrite) {
-        db_execute_prepared('DELETE FROM user_auth_perms WHERE user_id = ?', array($user_exist['id']));
-        db_execute_prepared('DELETE FROM user_auth_realm WHERE user_id = ?', array($user_exist['id']));
-        db_execute_prepared('DELETE FROM settings_user WHERE user_id = ?', array($user_exist['id']));
-        db_execute_prepared('DELETE FROM settings_tree WHERE user_id = ?', array($user_exist['id']));
-    }
-
-    $user_auth_perms = db_fetch_assoc_prepared(
-        'SELECT *
-		FROM user_auth_perms
-		WHERE user_id = ?',
-        array($template_id)
-    );
-
-    if (cacti_sizeof($user_auth_perms)) {
-        foreach ($user_auth_perms as $row) {
-            $row['user_id'] = $new_id;
-            sql_save($row, 'user_auth_perms', array('user_id', 'item_id', 'type'), false);
+    unset($value);
+    if ($create) {
+        // Create a fresh identity without updating an existing record.
+        unset($expected['id']);
+        $fields = implode(',', array_map(static fn($name) => '`' . $name . '`', array_keys($expected)));
+        auth_membership_execute($db, 'INSERT INTO user_auth (' . $fields . ') VALUES (' . implode(',', array_fill(0, count($expected), '?')) . ')', array_values($expected));
+        $id = $db->lastInsertId();
+        if (!is_string($id) || !ctype_digit($id) || (int) $id <= 0) {
+            throw new RuntimeException('Copied user identity could not be confirmed');
+        }
+        $expected['id'] = $id;
+    } else {
+        $fields = array_keys($expected);
+        $quoted = array_map(static fn($name) => '`' . $name . '`', $fields);
+        if ($table === 'user_auth') {
+            $assignments = implode(',', array_map(static fn($name) => '`' . $name . '` = ?', $fields));
+            auth_membership_execute($db, 'UPDATE user_auth SET ' . $assignments . ' WHERE id = ?', array_merge(array_values($expected), array($expected['id'])));
+            $id = $expected['id'];
+        } else {
+            $sql = 'INSERT INTO `' . $table . '` (' . implode(',', $quoted) . ') VALUES (' . implode(',', array_fill(0, count($fields), '?')) . ')';
+            if ($db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql') {
+                $sql .= ' ON DUPLICATE KEY UPDATE ' . implode(',', array_map(static fn($name) => '`' . $name . '` = VALUES(`' . $name . '`)', $fields));
+            } else {
+                $sql .= ' ON CONFLICT (' . implode(',', array_map(static fn($name) => '`' . $name . '`', $keys[$table])) . ') DO UPDATE SET ' . implode(',', array_map(static fn($name) => '`' . $name . '` = excluded.`' . $name . '`', $fields));
+            }
+            auth_membership_execute($db, $sql, array_values($expected));
         }
     }
-
-    $user_auth_realm = db_fetch_assoc_prepared(
-        'SELECT *
-		FROM user_auth_realm
-		WHERE user_id = ?',
-        array($template_id)
-    );
-
-    if (cacti_sizeof($user_auth_realm)) {
-        foreach ($user_auth_realm as $row) {
-            $row['user_id'] = $new_id;
-            sql_save($row, 'user_auth_realm', array('realm_id', 'user_id'), false);
+    $where = implode(' AND ', array_map(static fn($name) => '`' . $name . '` = ?', $keys[$table]));
+    $parameters = array_map(static fn($name) => $expected[$name], $keys[$table]);
+    $stored = auth_membership_rows($db, 'SELECT * FROM `' . $table . '` WHERE ' . $where, $parameters);
+    if (count($stored) !== 1) {
+        throw new RuntimeException('Copied user row could not be confirmed');
+    }
+    foreach ($expected as $name => $value) {
+        $actual = $stored[0][$name];
+        $numeric = preg_match('/int|float|double|decimal/', $columns[$name]['type']) === 1;
+        if ($numeric ? !is_numeric($actual) || (float) $actual !== (float) $value : ($value === null ? $actual !== null : $actual !== $value && (string) $actual !== (string) $value)) {
+            throw new RuntimeException('Copied user values could not be confirmed');
         }
     }
-
-    $settings_user = db_fetch_assoc_prepared(
-        'SELECT *
-		FROM settings_user
-		WHERE user_id = ?',
-        array($template_id)
-    );
-
-    if (cacti_sizeof($settings_user)) {
-        foreach ($settings_user as $row) {
-            $row['user_id'] = $new_id;
-            sql_save($row, 'settings_user', array('user_id', 'name'), false);
-        }
-    }
-
-    $settings_tree = db_fetch_assoc_prepared(
-        'SELECT *
-		FROM settings_tree
-		WHERE user_id = ?',
-        array($template_id)
-    );
-
-    if (cacti_sizeof($settings_tree)) {
-        foreach ($settings_tree as $row) {
-            $row['user_id'] = $new_id;
-            sql_save($row, 'settings_tree', array('user_id', 'graph_tree_item_id'), false);
-        }
-    }
-
-    /* apply group permissions for the user */
-    $groups = db_fetch_assoc_prepared(
-        'SELECT group_id
-		FROM user_auth_group_members
-		WHERE user_id = ?',
-        array($template_id)
-    );
-
-    if (cacti_sizeof($groups)) {
-        foreach ($groups as $g) {
-            $sql[] = '(' . $new_id . ', ' . $g['group_id'] . ')';
-        }
-
-        db_execute('INSERT IGNORE INTO user_auth_group_members
-			(user_id, group_id) VALUES ' . implode(',', $sql));
-    }
-
-    api_plugin_hook_function('copy_user', array('template_id' => $template_id, 'new_id' => $new_id));
-
-    return $new_id;
+    return $table === 'user_auth' ? $id : true;
 }
 
 
@@ -535,35 +659,32 @@ function user_remove($user_id)
     input_validate_input_number($user_id);
     /* ==================================================== */
 
-    /* check for guest or template user */
-    $username = db_fetch_cell_prepared(
-        'SELECT username
-		FROM user_auth
-		WHERE id = ?',
-        array($user_id)
-    );
+    /* the primary administrator, guest and template accounts stay */
+    if (is_template_account($user_id) || $user_id == get_guest_account()) {
+        raise_message(21);
 
-    if ($username != get_nfilter_request_var('username')) {
-        if (is_template_account($user_id)) {
-            raise_message(21);
-            return;
-        }
-
-        if ($user_id === get_guest_account()) {
-            raise_message(21);
-            return;
-        }
+        return;
     }
 
-    db_execute_prepared('DELETE FROM user_auth WHERE id = ?', array($user_id));
-    db_execute_prepared('DELETE FROM user_auth_realm WHERE user_id = ?', array($user_id));
-    db_execute_prepared('DELETE FROM user_auth_cache WHERE user_id = ?', array($user_id));
-    db_execute_prepared('DELETE FROM user_auth_perms WHERE user_id = ?', array($user_id));
-    db_execute_prepared('DELETE FROM user_auth_row_cache WHERE user_id = ?', array($user_id));
-    db_execute_prepared('DELETE FROM user_auth_group_members WHERE user_id = ?', array($user_id));
-    db_execute_prepared('DELETE FROM settings_user WHERE user_id = ?', array($user_id));
-    db_execute_prepared('DELETE FROM settings_tree WHERE user_id = ?', array($user_id));
-    db_execute_prepared('DELETE FROM sessions WHERE user_id = ?', array($user_id));
+    $unit = auth_membership_begin();
+    try {
+        auth_membership_lock_users(array($user_id));
+        $groups = db_fetch_assoc_prepared('SELECT group_id FROM user_auth_group_members WHERE user_id = ? FOR UPDATE', array($user_id));
+        auth_membership_lock_groups(array_column($groups, 'group_id'));
+        if (!db_execute_prepared('DELETE FROM user_auth WHERE id = ?', array($user_id))) {
+            throw new RuntimeException('Unable to remove user');
+        }
+        foreach (array('user_auth_realm', 'user_auth_cache', 'user_auth_perms', 'user_auth_row_cache', 'user_auth_group_members', 'settings_user', 'settings_tree', 'sessions') as $table) {
+            if (!db_execute_prepared('DELETE FROM ' . $table . ' WHERE user_id = ?', array($user_id))) {
+                throw new RuntimeException('Unable to remove user data');
+            }
+        }
+
+        auth_membership_finish($unit, true);
+    } catch (Throwable $error) {
+        auth_membership_finish($unit, false);
+        throw $error;
+    }
 
     api_plugin_hook_function('user_remove', $user_id);
 }
@@ -593,6 +714,265 @@ function cacti_auth_revoke_user_credentials($user_id)
     db_execute_prepared('DELETE FROM user_auth_cache WHERE user_id = ?', array($user_id));
     db_execute_prepared('DELETE FROM user_auth_row_cache WHERE user_id = ?', array($user_id));
     db_execute_prepared('DELETE FROM sessions WHERE user_id = ?', array($user_id));
+}
+
+/** Serialize a realm, permission or preference write with parent removal. */
+function user_group_execute_child($group_id, $sql, $params)
+{
+    if (!db_begin_transaction()) {
+        throw new RuntimeException('Unable to begin group policy transaction');
+    }
+    try {
+        if (!db_fetch_cell_prepared('SELECT id FROM user_auth_group WHERE id = ? FOR UPDATE', array($group_id))) {
+            throw new RuntimeException('Group removed before policy mutation');
+        }
+        if (!db_execute_prepared($sql, $params)) {
+            throw new RuntimeException('Unable to change group policy');
+        }
+        if (!db_commit_transaction()) {
+            throw new RuntimeException('Unable to commit group policy transaction');
+        }
+        return true;
+    } catch (Throwable $error) {
+        db_rollback_transaction();
+        throw $error;
+    }
+}
+
+/** Begin an isolated membership unit without taking ownership of a caller transaction. */
+function auth_membership_begin($tables = array())
+{
+    global $database_sessions, $database_hostname, $database_port, $database_default;
+    $db = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
+    if (!$db instanceof PDO) {
+        throw new RuntimeException('Membership changes require a database connection');
+    }
+    $owned = !$db->inTransaction();
+    $savepoint = 'kadupul_membership_' . bin2hex(random_bytes(8));
+    if ($owned) {
+        if (!db_begin_transaction($db)) {
+            throw new RuntimeException('Unable to begin membership transaction');
+        }
+    } else {
+        if ($db->exec('SAVEPOINT ' . $savepoint) === false) {
+            throw new RuntimeException('Unable to isolate membership changes');
+        }
+    }
+    $unit = array('db' => $db, 'owned' => $owned, 'savepoint' => $savepoint);
+    try {
+        if ($tables !== array() && $db->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'sqlite') {
+            if ($db->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'mysql') {
+                throw new RuntimeException('Unsupported membership database driver');
+            }
+            foreach (array_unique($tables) as $table) {
+                if (!in_array($table, array('user_auth', 'user_auth_group', 'user_auth_group_members', 'user_auth_group_realm', 'user_auth_group_perms', 'user_auth_perms', 'user_auth_realm', 'settings_user', 'settings_tree'), true)) {
+                    throw new RuntimeException('Unsupported membership table');
+                }
+                // Verify this session's actual tables while retaining metadata locks.
+                $query = $db->query('SELECT * FROM `' . $table . '` LIMIT 0');
+                if ($query === false || $query->errorCode() !== '00000') {
+                    throw new RuntimeException('Unable to inspect membership table');
+                }
+                $query->closeCursor();
+                $query = $db->query('SHOW CREATE TABLE `' . $table . '`');
+                if ($query === false || $query->errorCode() !== '00000') {
+                    throw new RuntimeException('Unable to inspect membership table');
+                }
+                $row = $query->fetch(PDO::FETCH_NUM);
+                if (!is_array($row) || $query->errorCode() !== '00000' || !isset($row[1]) || stripos($row[1], 'CREATE TEMPORARY TABLE') !== false || !preg_match('/\bENGINE=InnoDB\b/i', $row[1])) {
+                    throw new RuntimeException('Membership changes require persistent InnoDB tables');
+                }
+            }
+        }
+    } catch (Throwable $error) {
+        try {
+            auth_membership_finish($unit, false);
+        } catch (Throwable $cleanup_error) {
+            throw $error;
+        }
+        throw $error;
+    }
+    return $unit;
+}
+
+/** Complete only this unit; caller-owned changes remain pending. */
+function auth_membership_finish($unit, $commit)
+{
+    if ($unit['owned']) {
+        if ($commit ? !db_commit_transaction($unit['db']) : !db_rollback_transaction($unit['db'])) {
+            throw new RuntimeException('Unable to finish membership transaction');
+        }
+    } else {
+        if (!$commit) {
+            if ($unit['db']->exec('ROLLBACK TO SAVEPOINT ' . $unit['savepoint']) === false) {
+                throw new RuntimeException('Unable to roll back membership changes');
+            }
+        }
+        if ($unit['db']->exec('RELEASE SAVEPOINT ' . $unit['savepoint']) === false) {
+            throw new RuntimeException('Unable to release membership changes');
+        }
+    }
+}
+
+/** Lock users before any group, with a deterministic order shared by all membership writers. */
+function auth_membership_lock_users($ids, $required = true, $db = false)
+{
+    $ids = array_unique(array_map('intval', $ids));
+    sort($ids, SORT_NUMERIC);
+    foreach ($ids as $id) {
+        $exists = $db instanceof PDO
+            ? auth_membership_rows($db, 'SELECT id FROM user_auth WHERE id = ?' . ($db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : ''), array($id)) !== array()
+            : db_fetch_cell_prepared('SELECT id FROM user_auth WHERE id = ? FOR UPDATE', array($id));
+        if (!$exists && $required) {
+            throw new RuntimeException('Membership user no longer exists');
+        }
+    }
+}
+
+function auth_membership_lock_groups($ids, $db = false)
+{
+    $ids = array_unique(array_map('intval', $ids));
+    sort($ids, SORT_NUMERIC);
+    $existing = array();
+    foreach ($ids as $id) {
+        $exists = $db instanceof PDO
+            ? auth_membership_rows($db, 'SELECT id FROM user_auth_group WHERE id = ?' . ($db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : ''), array($id)) !== array()
+            : db_fetch_cell_prepared('SELECT id FROM user_auth_group WHERE id = ? FOR UPDATE', array($id));
+        if ($exists) {
+            $existing[$id] = true;
+        }
+    }
+    return $existing;
+}
+
+/** Distinguish a successful empty read from an unavailable membership snapshot. */
+function auth_membership_rows($db, $sql, $parameters)
+{
+    $query = $db->prepare($sql);
+    if ($query === false || !$query->execute($parameters) || $query->errorCode() !== '00000') {
+        throw new RuntimeException('Membership snapshot could not be confirmed');
+    }
+    $rows = $query->fetchAll(PDO::FETCH_ASSOC);
+    if (!is_array($rows) || $query->errorCode() !== '00000') {
+        throw new RuntimeException('Membership snapshot could not be confirmed');
+    }
+    return $rows;
+}
+
+/** Require an unambiguous write receipt on the captured membership connection. */
+function auth_membership_execute($db, $sql, $parameters)
+{
+    $query = $db->prepare($sql);
+    if ($query === false || !$query->execute($parameters) || $query->errorCode() !== '00000') {
+        throw new RuntimeException('Membership write could not be confirmed');
+    }
+}
+
+/** Advance and confirm the affected permission epochs within the membership unit. */
+function auth_membership_reset_users($unit, $ids, $required = true)
+{
+    $db = $unit['db'];
+    if (!$db instanceof PDO || !$db->inTransaction()) {
+        throw new RuntimeException('Membership epoch update requires its active transaction');
+    }
+    $ids = array_values(array_unique(array_map('intval', $ids)));
+    sort($ids, SORT_NUMERIC);
+    $lock = $db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : '';
+    foreach (array_chunk($ids, 1000) as $chunk) {
+        $placeholders = implode(',', array_fill(0, count($chunk), '?'));
+        $query = $db->prepare('SELECT id, reset_perms FROM user_auth WHERE id IN (' . $placeholders . ') ORDER BY id' . $lock);
+        if ($query === false || !$query->execute($chunk) || $query->errorCode() !== '00000') {
+            throw new RuntimeException('Unable to read membership permission epochs');
+        }
+        $rows = $query->fetchAll(PDO::FETCH_ASSOC);
+        if (!is_array($rows) || $query->errorCode() !== '00000') {
+            throw new RuntimeException('Unable to read membership permission epochs');
+        }
+        $epochs = array();
+        foreach ($rows as $row) {
+            $epoch = $row['reset_perms'];
+            if ((!is_int($epoch) && (!is_string($epoch) || !ctype_digit($epoch))) || (float) $epoch < 0 || (float) $epoch > 4294967295) {
+                throw new RuntimeException('Invalid membership permission epoch');
+            }
+            $epochs[(int) $row['id']] = (int) $epoch === 4294967295 ? 1 : (int) $epoch + 1;
+        }
+        if ($required && count($epochs) !== count($chunk)) {
+            throw new RuntimeException('Membership user disappeared before epoch update');
+        }
+        // Removal may discover an orphan membership; only surviving users have epochs.
+        if ($epochs === array()) {
+            continue;
+        }
+        $users = array_keys($epochs);
+        $placeholders = implode(',', array_fill(0, count($users), '?'));
+        $query = $db->prepare('UPDATE user_auth SET reset_perms = CASE WHEN reset_perms = 4294967295 THEN 1 ELSE reset_perms + 1 END WHERE id IN (' . $placeholders . ')');
+        if ($query === false || !$query->execute($users) || $query->errorCode() !== '00000') {
+            throw new RuntimeException('Unable to update membership permission epochs');
+        }
+        $query = $db->prepare('SELECT id, reset_perms FROM user_auth WHERE id IN (' . $placeholders . ') ORDER BY id');
+        if ($query === false || !$query->execute($users) || $query->errorCode() !== '00000') {
+            throw new RuntimeException('Unable to confirm membership permission epochs');
+        }
+        $stored = $query->fetchAll(PDO::FETCH_ASSOC);
+        if (!is_array($stored) || $query->errorCode() !== '00000' || count($stored) !== count($epochs)) {
+            throw new RuntimeException('Membership permission epochs were not confirmed');
+        }
+        foreach ($stored as $row) {
+            if (!isset($epochs[(int) $row['id']]) || (string) $row['reset_perms'] !== (string) $epochs[(int) $row['id']]) {
+                throw new RuntimeException('Membership permission epochs were not confirmed');
+            }
+        }
+    }
+    if (isset($_SESSION['sess_user_id']) && in_array((int) $_SESSION['sess_user_id'], $ids, true)) {
+        foreach (array('sess_user_realms', 'sess_user_config_array', 'sess_config_array', 'sess_auth_names') as $name) {
+            kill_session_var($name);
+        }
+    }
+}
+
+/** Replace from a locked source snapshot, or apply explicit changes, atomically. */
+function user_group_change_memberships($user_id, $changes, $template_id = false)
+{
+    $unit = auth_membership_begin(array('user_auth', 'user_auth_group', 'user_auth_group_members'));
+    try {
+        auth_membership_lock_users($template_id === false ? array($user_id) : array($user_id, $template_id), true, $unit['db']);
+        if ($template_id !== false) {
+            $lock = $unit['db']->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : '';
+            $previous = auth_membership_rows($unit['db'], 'SELECT group_id FROM user_auth_group_members WHERE user_id = ?' . $lock, array($user_id));
+            $source = auth_membership_rows($unit['db'], 'SELECT group_id FROM user_auth_group_members WHERE user_id = ?' . $lock, array($template_id));
+            $changes = array();
+            foreach ($previous as $group) {
+                $changes[(int) $group['group_id']] = false;
+            }
+            foreach ($source as $group) {
+                $changes[(int) $group['group_id']] = true;
+            }
+        }
+        $existing = auth_membership_lock_groups(array_keys($changes), $unit['db']);
+        ksort($changes, SORT_NUMERIC);
+        foreach ($changes as $group_id => $add) {
+            if (!$add || isset($existing[$group_id])) {
+                $sql = $add ? 'REPLACE INTO user_auth_group_members (group_id, user_id) VALUES (?, ?)' :
+                    'DELETE FROM user_auth_group_members WHERE group_id = ? AND user_id = ?';
+                auth_membership_execute($unit['db'], $sql, array($group_id, $user_id));
+            }
+        }
+        auth_membership_reset_users($unit, array($user_id));
+        auth_membership_finish($unit, true);
+    } catch (Throwable $error) {
+        auth_membership_finish($unit, false);
+        throw $error;
+    }
+}
+
+function user_group_update_membership($group_id, $user_id, $add)
+{
+    user_group_change_memberships($user_id, array((int) $group_id => (bool) $add));
+}
+
+function user_group_replace_memberships($user_id, $template_id)
+{
+    user_group_change_memberships($user_id, array(), $template_id);
 }
 
 /**
@@ -1170,8 +1550,10 @@ function is_realm_allowed($realm, $check_user = false)
                         kill_session_var('sess_simple_template_perms');
                     }
 
-                    print '<span style="display:none;">cactiRedirect</span>';
-                    exit;
+                    if (!defined('CACTI_LINK_SYNC_PERMISSIONS') || !CACTI_LINK_SYNC_PERMISSIONS) {
+                        print '<span style="display:none;">cactiRedirect</span>';
+                        exit;
+                    }
                 } else {
                     kill_session_var('sess_user_realms');
                     kill_session_var('sess_user_config_array');
@@ -3901,6 +4283,8 @@ function local_auth_login_process($username)
 {
     $started = hrtime(true);
     try {
+        global $error, $error_msg;
+
         $user = array();
 
         if (!api_plugin_hook_function('login_process', false)) {
@@ -3925,7 +4309,7 @@ function local_auth_login_process($username)
 
                 cacti_log("DEBUG: User '" . $username . "' password for rehash is " . ($valid ? '' : 'in') . 'valid', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
 
-                if ($valid) {
+                if ($valid && !$error) {
                     $user = db_fetch_row_prepared(
                         'SELECT *
 					FROM user_auth
@@ -3934,15 +4318,16 @@ function local_auth_login_process($username)
                         array($username)
                     );
 
-                    if (compat_password_needs_rehash($stored_pass, PASSWORD_DEFAULT)) {
+                    // Rehash only the local row that logged in; other realms may
+                    // reuse the username, and a refused login changes nothing.
+                    if (!$error && cacti_sizeof($user) && compat_password_needs_rehash($stored_pass, PASSWORD_DEFAULT)) {
                         $password = compat_password_hash($password, PASSWORD_DEFAULT);
                         db_check_password_length();
-                        db_execute_prepared(
-                            'UPDATE user_auth
-						SET password = ?
-						WHERE username = ?',
-                            array($password, $username)
-                        );
+                        if (!auth_rehash_password_preserving_sessions($user['id'], $stored_pass, $password)) {
+                            $error     = true;
+                            $error_msg = __('Access Denied!  Login Failed.');
+                            $user      = array();
+                        }
                     }
                 }
             } else {
@@ -4468,7 +4853,7 @@ function secpass_login_process($username)
 
     if (db_column_exists('user_auth', 'lastfail')) {
         $user = db_fetch_row_prepared(
-            "SELECT id, username, lastfail, failed_attempts, `locked`, enabled, password
+            "SELECT id, username, lastfail, failed_attempts, `locked`, enabled, password, password_change
 			FROM user_auth
 			WHERE username = ?
 			AND realm = 0",
@@ -4476,7 +4861,7 @@ function secpass_login_process($username)
         );
     } else {
         $user = db_fetch_row_prepared(
-            "SELECT id, username, password, enabled
+            "SELECT id, username, password, enabled, password_change
 			FROM user_auth
 			WHERE username = ?
 			AND realm = 0",
@@ -4501,7 +4886,7 @@ function secpass_login_process($username)
         if (trim($password) == '') {
             /* error */
             $error     = true;
-            $error_msg = __('Access Denied!  No password provided by user.');
+            $error_msg = __('Access Denied!  Login Failed.');
 
             cacti_log(sprintf('LOGIN FAILED: No password provided for user %s', $username), false, 'AUTH');
 
@@ -4534,31 +4919,47 @@ function secpass_login_process($username)
         $error_msg = __('Access Denied!  Login Failed.');
 
         cacti_log(sprintf('LOGIN FAILED: Invalid user %s specified.', $username), false, 'AUTH');
+
+        // Stop here: the complexity check below would answer differently
+        // for an unknown username than a wrong password does for a real one.
+        return array();
     }
 
     /**
      * Check if old password doesn't meet specifications and must be changed
      * This only applies to local logins where we store the actual hashed
      * password.
+     *
+     * The password is verified by now. The login completes and auth_login.php
+     * sends the user to the change page through must_change_password; leaving
+     * from here, before the session exists, sent them back to the login page
+     * every time.
      */
     if (read_config_option('secpass_forceold') == 'on') {
         $message = secpass_check_pass($password);
 
         if ($message != 'ok') {
-            db_execute_prepared(
-                "UPDATE user_auth
-				SET must_change_password = 'on'
-				WHERE username = ?
-				AND realm = 0
-				AND enabled = 'on'",
-                array($username)
-            );
+            if (($user['password_change'] ?? '') == 'on') {
+                db_execute_prepared(
+                    "UPDATE user_auth
+					SET must_change_password = 'on'
+					WHERE id = ?
+					AND realm = 0
+					AND enabled = 'on'",
+                    array($user['id'])
+                );
 
-            $error_msg = __('Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now.');
+                raise_message('forced_password', __('Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now.'), MESSAGE_LEVEL_INFO);
+            } else {
+                // The account could never reach a compliant password, so the
+                // rule is enforced by refusing it with the ordinary failure.
+                $error     = true;
+                $error_msg = __('Access Denied!  Login Failed.');
 
-            raise_message('forced_password', $error_msg, MESSAGE_LEVEL_INFO);
-            header('Location: auth_changepassword.php?header=false');
-            exit;
+                cacti_log(sprintf('LOGIN FAILED: User %s has a password that fails the complexity rules and may not change it.', $username), false, 'AUTH');
+
+                return array();
+            }
         }
     }
 
@@ -4627,10 +5028,14 @@ function secpass_check_history($id, $password)
             "SELECT password, password_history
 			FROM user_auth
 			WHERE id = ?
-			AND realm = 0
-			AND enabled = 'on'",
+			AND realm = 0",
             array($id)
         );
+
+        // A new account has no history to repeat.
+        if (!cacti_sizeof($user)) {
+            return true;
+        }
 
         if (compat_password_verify($password, $user['password'])) {
             return false;
@@ -4720,7 +5125,7 @@ function reset_user_perms($user_id)
         array($user_id)
     );
 
-    if ($user_id == $_SESSION['sess_user_id']) {
+    if (isset($_SESSION['sess_user_id']) && $user_id == $_SESSION['sess_user_id']) {
         kill_session_var('sess_user_realms');
         kill_session_var('sess_user_config_array');
         kill_session_var('sess_config_array');
@@ -5354,9 +5759,231 @@ function cacti_auth_transition($user_id, $reason = 'login')
     kill_session_var('sess_user_config_array');
     kill_session_var('sess_config_array');
 
+    auth_session_bind_credentials($user_id);
+
     cacti_log('NOTE: auth transition completed for user ' . $user_id . ' reason=' . $reason, false, 'AUTH', POLLER_VERBOSITY_MEDIUM);
 
     return true;
+}
+
+/**
+ * auth_session_credential_key - digest of an account's stored password hash.
+ *
+ * The digest identifies the stored representation without exposing it in
+ * session storage. Credential generations preserve bindings through a hash
+ * upgrade while a replacement password invalidates prior bindings.
+ *
+ * @param  (string|null) $password The account's stored password hash
+ *
+ * @return (string) The digest
+ */
+function auth_session_credential_key($password)
+{
+    return hash('sha256', (string) $password);
+}
+
+/**
+ * Read the credential generation only when it belongs to this password representation.
+ * A real password replacement naturally invalidates the mapping.
+ */
+function auth_session_credential_generation($user_id, $password, $db = false)
+{
+    global $database_sessions, $database_hostname, $database_port, $database_default;
+    if (!$db instanceof PDO && isset($database_hostname, $database_port, $database_default)) {
+        $db = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
+        if (!$db instanceof PDO) {
+            throw new RuntimeException('Credential generation read could not be confirmed.');
+        }
+    }
+    $fingerprint = auth_session_credential_key($password);
+    if ($db instanceof PDO) {
+        $lock = $db->inTransaction() && $db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' LOCK IN SHARE MODE' : '';
+        $query = $db->prepare("SELECT value FROM settings_user WHERE user_id = ? AND name = 'auth_credential_generation'" . $lock);
+        if ($query === false || !$query->execute(array($user_id)) || $query->errorCode() !== '00000') {
+            throw new RuntimeException('Credential generation read could not be confirmed.');
+        }
+        $mapping = $query->fetchColumn();
+        if ($query->errorCode() !== '00000') {
+            throw new RuntimeException('Credential generation read could not be confirmed.');
+        }
+    } else {
+        $mapping = db_fetch_cell_prepared("SELECT value FROM settings_user WHERE user_id = ? AND name = 'auth_credential_generation'", array($user_id));
+    }
+    if (is_string($mapping) && preg_match('/^[a-f0-9]{64}:[a-f0-9]{64}$/D', $mapping)) {
+        if (hash_equals($fingerprint, substr($mapping, 0, 64))) {
+            return substr($mapping, 65);
+        }
+        // The caller may have read the password before a rehash commit
+        // and the mapping after it. Read both live values together so
+        // successive upgrades do not revoke an unchanged credential.
+        $sql = "SELECT ua.password, su.value
+                FROM user_auth AS ua
+                LEFT JOIN settings_user AS su ON su.user_id = ua.id
+                    AND su.name = 'auth_credential_generation'
+                WHERE ua.id = ?";
+        if ($db instanceof PDO) {
+            $query = $db->prepare($sql . $lock);
+            if ($query === false || !$query->execute(array($user_id)) || $query->errorCode() !== '00000') {
+                throw new RuntimeException('Credential generation read could not be confirmed.');
+            }
+            $live = $query->fetch(PDO::FETCH_ASSOC) ?: array();
+            if ($query->errorCode() !== '00000') {
+                throw new RuntimeException('Credential generation read could not be confirmed.');
+            }
+        } else {
+            $live = db_fetch_row_prepared($sql, array($user_id));
+        }
+        if (!array_key_exists('password', $live)) {
+            return '';
+        }
+        $fingerprint = auth_session_credential_key($live['password']);
+        $mapping = $live['value'] ?? '';
+        if (is_string($mapping) && preg_match('/^[a-f0-9]{64}:[a-f0-9]{64}$/D', $mapping)
+            && hash_equals($fingerprint, substr($mapping, 0, 64))) {
+            return substr($mapping, 65);
+        }
+    }
+    return $fingerprint;
+}
+
+/**
+ * Upgrade a verified local hash without changing its credential generation.
+ * The account row serializes upgrades and password resets. Never commit or roll
+ * back a caller's transaction, and never upgrade a password replaced since verification.
+ */
+function auth_rehash_password_preserving_sessions($user_id, $verified_hash, $new_hash, $db = false)
+{
+    global $database_sessions, $database_hostname, $database_port, $database_default;
+    if (!is_string($verified_hash) || $verified_hash === '' || !is_string($new_hash) || $new_hash === '') {
+        return false;
+    }
+    if (!$db instanceof PDO) {
+        $db = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
+    }
+    if (!$db instanceof PDO || $db->inTransaction()) {
+        return false;
+    }
+    try {
+        $mysql = $db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql';
+        if ($mysql) {
+            $engines = $db->prepare('SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?');
+            foreach (array('user_auth', 'settings_user') as $table) {
+                $engines->execute(array($table));
+                if (strcasecmp((string) $engines->fetchColumn(), 'InnoDB') !== 0) {
+                    return false;
+                }
+            }
+        }
+        if (!$db->beginTransaction()) {
+            return false;
+        }
+        $query = $db->prepare('SELECT password FROM user_auth WHERE id = ? AND realm = 0 AND enabled = ? AND locked != ?' . ($mysql ? ' FOR UPDATE' : ''));
+        $query->execute(array($user_id, 'on', 'on'));
+        $current = $query->fetchColumn();
+        if (!is_string($current) || !hash_equals($verified_hash, $current)) {
+            $db->rollBack();
+            return false;
+        }
+        $generation = auth_session_credential_generation($user_id, $current, $db);
+        $query = $db->prepare("REPLACE INTO settings_user (user_id, name, value) VALUES (?, 'auth_credential_generation', ?)");
+        $query->execute(array($user_id, auth_session_credential_key($new_hash) . ':' . $generation));
+        $query = $db->prepare('UPDATE user_auth SET password = ? WHERE id = ? AND realm = 0 AND password = ?');
+        $query->execute(array($new_hash, $user_id, $verified_hash));
+        if ($query->rowCount() !== 1) {
+            $db->rollBack();
+            return false;
+        }
+        return $db->commit();
+    } catch (Throwable $error) {
+        if ($db->inTransaction()) {
+            $db->rollBack();
+        }
+        return false;
+    }
+}
+
+/**
+ * auth_session_bind_credentials - tie the current session to the account's
+ *   current password. Login calls it through cacti_auth_transition(), and a
+ *   user who changes their own password elsewhere calls it to keep the
+ *   session they made the change from.
+ *
+ * @param  (int) $user_id The account the session belongs to
+ *
+ * @return (void)
+ */
+function auth_session_bind_credentials($user_id)
+{
+    $password = db_fetch_cell_prepared(
+        'SELECT password
+		FROM user_auth
+		WHERE id = ?',
+        array($user_id)
+    );
+
+    if ($password !== false) {
+        $_SESSION['sess_user_credential'] = auth_session_credential_generation($user_id, $password);
+    }
+}
+
+/**
+ * auth_session_credentials_valid - check that the account's password has not
+ *   changed since the session was bound to it.
+ *
+ * A session opened before this check existed cannot prove which password
+ * authenticated it. It must sign in again instead of adopting the current hash.
+ *
+ * @param  (string|null) $password The account's stored password hash
+ *
+ * @return (bool) false when the password changed after the session was bound
+ */
+function auth_session_credentials_valid($password)
+{
+    if (!isset($_SESSION['sess_user_credential']) || !is_string($_SESSION['sess_user_credential'])
+        || preg_match('/\A[a-f0-9]{64}\z/D', $_SESSION['sess_user_credential']) !== 1) {
+        return false;
+    }
+    $key = auth_session_credential_generation($_SESSION['sess_user_id'] ?? 0, $password);
+
+    return hash_equals($_SESSION['sess_user_credential'], $key);
+}
+
+/**
+ * Recheck an existing legacy session before protected lookups. A rejected
+ * credential binding clears identity and starts a fresh session so the normal
+ * authentication middleware can continue its established sign-in flow.
+ *
+ * @return (int) 0 when eligible, 401 after credential revocation, 403 when suspended
+ */
+function auth_session_check_eligibility($auth_method)
+{
+    if ($auth_method == 0 || !isset($_SESSION['sess_user_id'])) {
+        return 0;
+    }
+
+    $session_user = db_fetch_row_prepared('SELECT enabled, locked, password FROM user_auth WHERE id = ?', array($_SESSION['sess_user_id']));
+    if (!$session_user || $session_user['locked'] === 'on' || ($session_user['enabled'] !== 'on' && (int) $_SESSION['sess_user_id'] !== (int) get_guest_account())) {
+        clear_auth_cookie();
+        unset($_COOKIE['cacti_remembers']);
+        cacti_cookie_logout();
+        cacti_session_destroy();
+
+        return 403;
+    }
+
+    if (!auth_session_credentials_valid($session_user['password'])) {
+        clear_auth_cookie();
+        unset($_COOKIE['cacti_remembers']);
+        cacti_log('NOTE: Session for user id ' . $_SESSION['sess_user_id'] . ' ended because its password binding is missing or changed', false, 'AUTH');
+
+        cacti_session_destroy();
+        cacti_session_start();
+        cacti_session_start(true);
+
+        return 401;
+    }
+
+    return 0;
 }
 
 /**

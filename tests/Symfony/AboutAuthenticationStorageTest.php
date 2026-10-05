@@ -30,7 +30,7 @@ final class AboutAuthenticationStorageTest extends TestCase
     {
         yield 'persistent Basic admitted' => [null, false];
         yield 'persistent remembered admitted' => [null, true];
-        foreach (['settings', 'user_auth', 'user_log', 'sessions'] as $table) {
+        foreach (['settings', 'user_auth', 'settings_user', 'user_log', 'sessions'] as $table) {
             yield $table . ' temporary InnoDB' => [$table, false];
         }
         yield 'remembered cache temporary InnoDB' => ['user_auth_cache', true];
@@ -56,7 +56,7 @@ final class AboutAuthenticationStorageTest extends TestCase
             $db->exec('SET SESSION sql_mode = ' . $db->quote($schemaMode));
             $sql = file_get_contents(dirname(__DIR__, 2) . '/cacti.sql');
             self::assertIsString($sql);
-            $tables = ['settings', 'user_auth', 'user_log', 'sessions', 'user_auth_cache'];
+            $tables = ['settings', 'user_auth', 'settings_user', 'user_log', 'sessions', 'user_auth_cache'];
             foreach ($tables as $table) {
                 self::assertSame(1, preg_match('/^CREATE TABLE `?' . preg_quote($table, '/') . '`? \(.*?^\) ENGINE=InnoDB[^;]*;/ms', $sql, $match));
                 $db->exec($match[0]);
@@ -116,6 +116,7 @@ final class AboutAuthenticationStorageTest extends TestCase
                 self::assertNull($error);
                 self::assertSame(42, $actor?->id);
                 self::assertSame(1, (int) $observed->query('SELECT COUNT(*) FROM sessions')->fetchColumn());
+                self::assertStringContainsString('sess_user_credential|s:64:"' . \auth_session_credential_key('') . '";', $observed->query('SELECT data FROM sessions')->fetchColumn());
                 self::assertSame(1, (int) $observed->query('SELECT COUNT(*) FROM user_log')->fetchColumn());
             } else {
                 self::assertInstanceOf(\RuntimeException::class, $error);

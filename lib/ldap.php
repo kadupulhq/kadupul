@@ -547,10 +547,7 @@ class Ldap
         }
 
         if ($this->encryption >= 1) {
-            $cert = read_config_option('ldap_tls_certificate');
-            if ($cert == '') {
-                $cert = LDAP_OPT_X_TLS_NEVER;
-            }
+            $cert = cacti_ldap_tls_require_cert();
 
             // For good measure, we will use both the php function and set the environment
             switch ($cert) {
@@ -1030,6 +1027,78 @@ class Ldap
         } else {
             return false;
         }
+    }
+}
+
+/**
+ * cacti_ldap_tls_require_cert - the TLS certificate requirement for LDAPS and
+ *   StartTLS connections.
+ *
+ * An unset or unknown value means Demand, so the directory's certificate is
+ * checked unless an administrator chose a weaker level in the settings.
+ *
+ * @return (int) one of the LDAP_OPT_X_TLS_* requirement levels
+ */
+function cacti_ldap_tls_require_cert()
+{
+    $cert = read_config_option('ldap_tls_certificate');
+
+    $levels = array(
+        LDAP_OPT_X_TLS_NEVER,
+        LDAP_OPT_X_TLS_HARD,
+        LDAP_OPT_X_TLS_DEMAND,
+        LDAP_OPT_X_TLS_ALLOW,
+        LDAP_OPT_X_TLS_TRY
+    );
+
+    if ((is_int($cert) || (is_string($cert) && ctype_digit($cert))) && in_array((int) $cert, $levels, true)) {
+        return (int) $cert;
+    }
+
+    return LDAP_OPT_X_TLS_DEMAND;
+}
+
+/**
+ * cacti_ldap_tls_settle_requirement - save a certificate requirement for an
+ *   install that has none.
+ *
+ * An install whose database already reports this version runs neither
+ * upgrade_to_1_2_31() nor the web installer, so neither can save Never for it.
+ * The login page calls this before any login instead. An install that uses
+ * LDAPS or StartTLS without a saved requirement has always run at Never and
+ * gets Never saved; any other install gets Demand saved, so encryption turned
+ * on later keeps the new default. A saved value is never replaced, and once a
+ * value is saved this only reads it.
+ *
+ * @return (void)
+ */
+function cacti_ldap_tls_settle_requirement()
+{
+    global $config;
+
+    $saved = db_fetch_cell_prepared('SELECT value FROM settings WHERE name = ?', array('ldap_tls_certificate'));
+
+    if ($saved !== false && $saved !== null && $saved !== '') {
+        return;
+    }
+
+    $global  = db_fetch_cell_prepared('SELECT value FROM settings WHERE name = ?', array('ldap_encryption'));
+    $domains = db_fetch_cell('SELECT COUNT(*) FROM user_domains_ldap WHERE encryption > 0');
+    $level   = ((int) $global > 0 || (int) $domains > 0) ? LDAP_OPT_X_TLS_NEVER : LDAP_OPT_X_TLS_DEMAND;
+
+    // The update only fills an empty row, so a value saved meanwhile wins.
+    db_execute_prepared(
+        "INSERT INTO settings (name, value) VALUES (?, ?)
+		ON DUPLICATE KEY UPDATE value = IF(value = '', VALUES(value), value)",
+        array('ldap_tls_certificate', (string) $level)
+    );
+
+    if (isset($_SESSION['sess_config_array']) && is_array($_SESSION['sess_config_array'])) {
+        unset($_SESSION['sess_config_array']['ldap_tls_certificate']);
+    }
+
+    if (isset($config['config_options_array']) && is_array($config['config_options_array'])) {
+        unset($config['config_options_array']['ldap_tls_certificate']);
     }
 }
 

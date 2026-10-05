@@ -25,7 +25,7 @@ final readonly class LegacyAboutAccess implements AuthenticatedAccess
         if (array_key_exists('sess_user_id', $snapshot)) {
             $id = $snapshot['sess_user_id'];
             $valid = is_int($id) || (is_string($id) && ctype_digit($id) && strlen($id) <= strlen((string) PHP_INT_MAX) && (strlen($id) < strlen((string) PHP_INT_MAX) || strcmp($id, (string) PHP_INT_MAX) <= 0));
-            $actor = $valid ? $this->authentication->existingActor((int) $id) : null;
+            $actor = $valid ? $this->authentication->existingActor((int) $id, $snapshot['sess_user_credential'] ?? null) : null;
             if ($actor === null) {
                 $this->session->revoke();
             }
