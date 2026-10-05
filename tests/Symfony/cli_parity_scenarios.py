@@ -161,12 +161,15 @@ def verify_tree_cli(harness, check):
               and duplicate_site['exit'] == 1 and 'Failed to create the node' in duplicate_site['stderr']
               and harness.sql(f"SELECT COUNT(*) FROM graph_tree_items WHERE graph_tree_id={tree_one}").strip() == count_before_duplicate,
               'tree CLI site placement preserves a valid header and rejects duplicates')
-        harness.sql(f"INSERT INTO graph_tree_items (graph_tree_id,parent,host_id,title) VALUES ({tree_one},0,{host_id},'host-parent'); INSERT INTO graph_tree_items (graph_tree_id,parent,title) VALUES ({tree_one},0,'')")
+        # Nonempty host/site labels isolate those guards from the separate
+        # empty-title guard, including rows created by the old site CLI.
+        harness.sql(f"INSERT INTO graph_tree_items (graph_tree_id,parent,host_id,title) VALUES ({tree_one},0,{host_id},'host-parent'); INSERT INTO graph_tree_items (graph_tree_id,parent,site_id,title) VALUES ({tree_one},0,{site_id},'site-parent'); INSERT INTO graph_tree_items (graph_tree_id,parent,title) VALUES ({tree_one},0,'')")
         host_parent = int(harness.sql(f"SELECT id FROM graph_tree_items WHERE graph_tree_id={tree_one} AND title='host-parent'").strip())
+        site_parent = int(harness.sql(f"SELECT id FROM graph_tree_items WHERE graph_tree_id={tree_one} AND title='site-parent'").strip())
         empty_parent = int(harness.sql(f"SELECT id FROM graph_tree_items WHERE graph_tree_id={tree_one} AND title='' AND host_id=0 AND site_id=0 AND local_graph_id=0").strip())
         rejected_parents = []
         before_rejections = harness.sql(f"SELECT COUNT(*) FROM graph_tree_items").strip()
-        for parent in (host_parent, site_item, empty_parent):
+        for parent in (host_parent, site_parent, empty_parent):
             rejected = run(harness, 'cli/add_tree.php', ['--type=node', '--node-type=header', f'--tree-id={tree_one}', f'--parent-node={parent}', '--name=forbidden-child'])
             rejected_parents.append(rejected['exit'] == 1 and 'not a header in tree' in rejected['stderr'])
         check(all(rejected_parents) and harness.sql('SELECT COUNT(*) FROM graph_tree_items').strip() == before_rejections,
@@ -234,7 +237,7 @@ $rejected = [
     api_tree_item_save(0, $tree, 1, $foreignParent, 'foreign-parent', 0, 0, 0, 1, 2, false) === false,
     api_tree_item_save(0, $tree, 1, $graphParent, 'graph-parent', 0, 0, 0, 1, 2, false) === false,
     api_tree_item_save(0, $tree, 1, {host_parent}, 'host-parent-child', 0, 0, 0, 1, 2, false) === false,
-    api_tree_item_save(0, $tree, 1, {site_item}, 'site-parent-child', 0, 0, 0, 1, 2, false) === false,
+    api_tree_item_save(0, $tree, 1, {site_parent}, 'site-parent-child', 0, 0, 0, 1, 2, false) === false,
     api_tree_item_save(0, $tree, 1, {empty_parent}, 'empty-parent-child', 0, 0, 0, 1, 2, false) === false,
     api_tree_item_save((int)$before['id'], $tree, 1, $foreignParent, 'changed', 0, 0, 0, 1, 2, false) === false,
     db_fetch_row_prepared('SELECT * FROM graph_tree_items WHERE id=?', [$before['id']]) === $before,
