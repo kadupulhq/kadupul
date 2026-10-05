@@ -570,12 +570,6 @@ function secpass_check_expired()
     }
 }
 
-/*
- * remove_files - remove all unwanted files; the list is given by table data_source_purge_action
- *
- * Returns false when the batch cannot continue.  A file that cannot be removed
- * is logged, left in the queue and counted in $retained instead.
- */
 /**
  * Check that a stored purge name is a relative path without traversal.
  *
@@ -641,6 +635,41 @@ function rrdcleaner_resolve_contained_path($path, $base)
     return $resolved;
 }
 
+/** Validate archive children before creating directories or replacing a file. */
+function rrdcleaner_archive_path_is_safe(string $path, string $base): bool
+{
+    $root = realpath($base);
+    if ($root === false || !is_dir($root)) {
+        return false;
+    }
+    $prefix = rtrim($base, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+    if (strpos($path, $prefix) !== 0) {
+        return false;
+    }
+    $relative = substr($path, strlen($prefix));
+    if (!rrdcleaner_is_safe_relative_path($relative)) {
+        return false;
+    }
+    $candidate = $root;
+    foreach (explode('/', $relative) as $part) {
+        $candidate .= DIRECTORY_SEPARATOR . $part;
+        clearstatcache(true, $candidate);
+        if (is_link($candidate)) {
+            return false;
+        }
+        if (file_exists($candidate) && rrdcleaner_resolve_contained_path($candidate, $root) === false) {
+            return false;
+        }
+    }
+    return true;
+}
+
+/*
+ * remove_files - remove all unwanted files; the list is given by table data_source_purge_action
+ *
+ * Returns false when the batch cannot continue.  A file that cannot be removed
+ * is logged, left in the queue and counted in $retained instead.
+ */
 function remove_files($file_array, &$retained = 0)
 {
     global $config, $debug, $archived, $purged;
@@ -679,6 +708,9 @@ function remove_files($file_array, &$retained = 0)
         }
 
         $rrd_archive = rtrim($rrd_archive, '/');
+        if (file_exists($rrd_archive) && !is_dir($rrd_archive)) {
+            return false;
+        }
         rrdclean_create_path($rrd_archive);
 
         if (realpath($rra_path) === false || realpath($rrd_archive) === false) {
@@ -707,8 +739,11 @@ function remove_files($file_array, &$retained = 0)
                 $resolved_source = false;
                 $source_missing  = false;
 
-                if (rrdcleaner_is_safe_relative_path($source_relative)) {
-                    $resolved_source = rrdcleaner_resolve_contained_path($real_file, $rra_path);
+                // Trusted directory links remain supported. Final file links
+                // are never targets; the lease checks and locks lexical parents.
+                if (rrdcleaner_is_safe_relative_path($source_relative) && !is_link($real_file)
+                    && rrd_maintenance_directory_is_trusted(dirname($real_file))) {
+                    $resolved_source = realpath($real_file);
 
                     // realpath() fails for a file that is already gone, such as
                     // one never polled. Skip the file operations for it, so a
@@ -726,8 +761,9 @@ function remove_files($file_array, &$retained = 0)
                     continue;
                 }
 
+                $lease_source_path = $real_file;
                 $real_file = $resolved_source;
-                $lease = rrd_maintenance_acquire_paths(array($real_file, $rrd_archive . '/.archive-root'));
+                $lease = rrd_maintenance_acquire_paths(array($lease_source_path, $rrd_archive . '/.archive-root'));
                 if ($lease === false) {
                     cacti_log('WARNING: RRDfile maintenance deferred; purge queue retained.', true, 'MAINT');
                     return false;
@@ -751,7 +787,7 @@ function remove_files($file_array, &$retained = 0)
                             $target_file = $rrd_archive . '/' . $relative_name;
                             $target_dir = dirname($target_file);
 
-                            if (!rrdcleaner_is_safe_relative_path($relative_name)) {
+                            if (!rrdcleaner_archive_path_is_safe($target_file, $rrd_archive)) {
                                 cacti_log('WARNING: RRDfile maintenance rejected an unsafe archive path; purge queue retained.', true, 'MAINT');
                                 $retained++;
                                 continue 2;
@@ -769,7 +805,7 @@ function remove_files($file_array, &$retained = 0)
                             }
 
                             $target_file = $resolved_target_dir . DIRECTORY_SEPARATOR . basename($target_file);
-                            if (file_exists($target_file) && rrdcleaner_resolve_contained_path($target_file, $rrd_archive) === false) {
+                            if (is_link($target_file) || (file_exists($target_file) && rrdcleaner_resolve_contained_path($target_file, $rrd_archive) === false)) {
                                 cacti_log('WARNING: RRDfile maintenance rejected an archive target symlink outside the archive directory; purge queue retained.', true, 'MAINT');
                                 $retained++;
                                 continue 2;
@@ -795,7 +831,7 @@ function remove_files($file_array, &$retained = 0)
                 $proxy_name = str_replace(array('<path_rra>', '<path_cacti>'), '', $file['name']);
                 $proxy_name = ltrim($proxy_name, '/');
 
-                if (!rrdcleaner_is_safe_relative_path($proxy_name)) {
+                if (!rrdcleaner_is_safe_relative_path($proxy_name) || strtolower(pathinfo($proxy_name, PATHINFO_EXTENSION)) !== 'rrd') {
                     cacti_log('WARNING: RRDfile maintenance rejected an unsafe RRDproxy path; purge queue retained.', true, 'MAINT');
                     $retained++;
                     continue;

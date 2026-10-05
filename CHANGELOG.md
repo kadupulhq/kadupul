@@ -13,7 +13,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Preserve cached HR-MIB disk allocation units with the `Bytes` suffix; reject fractional, non-finite and out-of-range Integer32 samples as unknown.
 
 - Preserve each graph item's numeric SHIFT or TICK value, including backward shifts; validate numeric fields only when rendering uses them.
-- Constrain RRD cleaner scans and purge paths to the configured storage roots.
+- Preserve trusted RRA directory links and custom configured roots during cleanup; retain final file links and unsafe proxy or archive targets without creating directories outside the archive.
 
 - Map complete exclamation-delimited poller field lists from PHP and Spine while preserving scalar exclamation marks and hexadecimal values, including hexadecimal-looking field names. Fixes #284.
 - Query the shipped `poller` table when checking multi-collector Boost settings, preserve the current system setting if that count fails, and normalize the bounded 120-minute fallback before master scheduling arithmetic. Fixes #270.
