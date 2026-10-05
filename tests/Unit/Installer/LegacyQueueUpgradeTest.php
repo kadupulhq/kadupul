@@ -56,6 +56,7 @@ function cacti_version_compare($a,$b,$op){return version_compare($a,$b,$op);}
 function cacti_sizeof($value){return is_array($value)?count($value):0;}
 function db_install_execute($sql){$GLOBALS['statements'][]=$sql;}
 function db_install_add_key(...$args){}
+function db_install_fetch_cell(...$args){return array('status'=>1,'data'=>false);}
 function db_index_exists(...$args){return true;}
 function db_fetch_assoc_prepared($sql,$params=[]){
     if(str_contains($sql,'information_schema.TABLES')){

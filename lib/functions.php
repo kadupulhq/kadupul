@@ -140,17 +140,18 @@ function save_user_settings($user = -1)
 
     foreach ($settings_user as $tab_short_name => $tab_fields) {
         foreach ($tab_fields as $field_name => $field_array) {
-            /* Check every field with a numeric default value and reset it to default if the inputted value is not numeric  */
-            if (isset($field_array['default']) && is_numeric($field_array['default']) && !is_numeric(get_nfilter_request_var($field_name))) {
-                set_request_var($field_name, $field_array['default']);
-            }
-
             if (isset($field_array['method'])) {
                 if ($field_array['method'] == 'checkbox') {
                     set_user_setting($field_name, (isset_request_var($field_name) ? 'on' : ''), $user);
                 } elseif ($field_array['method'] == 'checkbox_group') {
                     foreach ($field_array['items'] as $sub_field_name => $sub_field_array) {
-                        set_user_setting($sub_field_name, (isset_request_var($sub_field_name) ? 'on' : ''), $user);
+                        $sub_field_array['method'] = 'checkbox';
+                        $value = isset_request_var($sub_field_name) ? 'on' : '';
+                        if (user_setting_value_allowed($sub_field_array, $value)) {
+                            set_user_setting($sub_field_name, $value, $user);
+                        } else {
+                            $_SESSION['sess_error_fields'][$sub_field_name] = $sub_field_name;
+                        }
                     }
                 } elseif ($field_array['method'] == 'textbox_password') {
                     if (get_nfilter_request_var($field_name) != get_nfilter_request_var($field_name . '_confirm')) {
@@ -163,14 +164,77 @@ function save_user_settings($user = -1)
                 } elseif ((isset($field_array['items'])) && (is_array($field_array['items']))) {
                     foreach ($field_array['items'] as $sub_field_name => $sub_field_array) {
                         if (isset_request_var($sub_field_name)) {
-                            set_user_setting($sub_field_name, get_nfilter_request_var($sub_field_name), $user);
+                            if (user_setting_value_allowed($sub_field_array, get_nfilter_request_var($sub_field_name))) {
+                                set_user_setting($sub_field_name, get_nfilter_request_var($sub_field_name), $user);
+                            } else {
+                                $_SESSION['sess_error_fields'][$sub_field_name] = $sub_field_name;
+                            }
                         }
                     }
                 } elseif (isset_request_var($field_name)) {
-                    set_user_setting($field_name, get_nfilter_request_var($field_name), $user);
+                    if (user_setting_value_allowed($field_array, get_nfilter_request_var($field_name))) {
+                        set_user_setting($field_name, get_nfilter_request_var($field_name), $user);
+                    } else {
+                        $_SESSION['sess_error_fields'][$field_name] = $field_name;
+                        $_SESSION['sess_field_values'][$field_name] = get_nfilter_request_var($field_name);
+                    }
                 }
             }
         }
+    }
+}
+
+/**
+ * user_setting_value_allowed - check a submitted value against its user
+ *   setting definition before it is stored.
+ *
+ * Stored values reach script blocks, HTML attributes and font paths, so a
+ * setting may hold only what its form field could have sent.
+ *
+ * @param $field_array - the setting definition from $settings_user
+ * @param $value       - the submitted value
+ *
+ * @return             - true when the value may be stored
+ */
+function user_setting_value_allowed($field_array, $value)
+{
+    if (!is_scalar($value)) {
+        return false;
+    }
+
+    $value = (string) $value;
+
+    if (isset($field_array['default']) && $value === (string) $field_array['default']) {
+        return true;
+    }
+
+    switch ($field_array['method'] ?? '') {
+        case 'checkbox':
+            return $value === 'on' || $value === '';
+        case 'drop_array':
+        case 'drop_language':
+            return isset($field_array['array']) && is_array($field_array['array']) && array_key_exists($value, $field_array['array']);
+        case 'drop_sql':
+            foreach (db_fetch_assoc($field_array['sql']) as $row) {
+                if ((string) $row['id'] === $value) {
+                    return true;
+                }
+            }
+
+            return false;
+        case 'textbox':
+        case 'font':
+            if (isset($field_array['max_length']) && strlen($value) > $field_array['max_length']) {
+                return false;
+            }
+
+            if (isset($field_array['default']) && is_numeric($field_array['default'])) {
+                return is_numeric($value);
+            }
+
+            return preg_match('/[\x00-\x1f\x7f<>"\'`]/', $value) === 0;
+        default:
+            return false;
     }
 }
 
@@ -186,6 +250,11 @@ function save_user_settings($user = -1)
 function set_user_setting($config_name, $value, $user = -1)
 {
     global $settings_user;
+
+    // Authentication metadata is maintained atomically by the rehash helper.
+    if ($config_name === 'auth_credential_generation') {
+        return;
+    }
 
     if ($user == -1 && isset($_SESSION['sess_user_id'])) {
         $user = $_SESSION['sess_user_id'];
@@ -261,6 +330,10 @@ function user_setting_exists($config_name, $user_id)
 function clear_user_setting($config_name, $user = -1)
 {
     global $settings_user;
+
+    if ($config_name === 'auth_credential_generation') {
+        return;
+    }
 
     if ($user == -1) {
         $user = $_SESSION['sess_user_id'];
@@ -6370,147 +6443,6 @@ function padleft($pad = '', $value = '', $min = 2)
     return $result;
 }
 
-function get_classic_tabimage($text, $down = false)
-{
-    global $config, $dejavu_paths;
-
-    $images = array(
-        false => 'tab_template_blue.gif',
-        true  => 'tab_template_red.gif'
-    );
-
-    if ($text == '') return false;
-
-    $text = strtolower($text);
-
-    $possibles = array(
-        array('DejaVuSans-Bold.ttf', 9, true),
-        array('DejaVuSansCondensed-Bold.ttf', 9, false),
-        array('DejaVuSans-Bold.ttf', 9, false),
-        array('DejaVuSansCondensed-Bold.ttf', 9, false),
-        array('DejaVuSans-Bold.ttf', 8, false),
-        array('DejaVuSansCondensed-Bold.ttf', 8, false),
-        array('DejaVuSans-Bold.ttf', 7, false),
-        array('DejaVuSansCondensed-Bold.ttf', 7, true),
-    );
-
-    $y        = 30;
-    $x        = 44;
-    $wlimit   = 72;
-    $wrapsize = 12;
-
-    if (file_exists($config['base_path'] . '/images/' . $images[$down])) {
-        foreach ($dejavu_paths as $dejavupath) {
-            if (file_exists($dejavupath)) {
-                $font_path = $dejavupath;
-            }
-        }
-
-        $originalpath = getenv('GDFONTPATH');
-        putenv('GDFONTPATH=' . $font_path);
-
-        $template = imagecreatefromgif($config['base_path'] . '/images/' . $images[$down]);
-
-        $w = imagesx($template);
-        $h = imagesy($template);
-
-        $tab = imagecreatetruecolor($w, $h);
-        imagecopy($tab, $template, 0, 0, 0, 0, $w, $h);
-
-        $txcol = imagecolorat($tab, 0, 0);
-        imagecolortransparent($tab, $txcol);
-
-        $white = imagecolorallocate($tab, 255, 255, 255);
-        $ttf_functions = function_exists('imagettftext') && function_exists('imagettfbbox');
-
-        if ($ttf_functions) {
-            foreach ($possibles as $variation) {
-                $font     = $variation[0];
-                $fontsize = $variation[1];
-
-                $lines = array();
-
-                // if no wrapping is requested, or no wrapping is possible...
-                if ((!$variation[2]) || ($variation[2] && !str_contains($text, ' '))) {
-                    $bounds  = imagettfbbox($fontsize, 0, $font, $text);
-                    $w       = $bounds[4] - $bounds[0];
-                    $h       = $bounds[1] - $bounds[5];
-                    $realx   = $x - $w / 2 - 1;
-                    $lines[] = array($text, $font, $fontsize, $realx, $y);
-                    $maxw    = $w;
-                } else {
-                    $texts = explode("\n", wordwrap($text, $wrapsize), 2);
-                    $line  = 1;
-                    $maxw  = 0;
-                    foreach ($texts as $txt) {
-                        $bounds  = imagettfbbox($fontsize, 0, $font, $txt);
-                        $w       = $bounds[4] - $bounds[0];
-                        $h       = $bounds[1] - $bounds[5];
-                        $realx   = $x - $w / 2 - 1;
-                        $realy   = $y - $h * $line + 3;
-                        $lines[] = array($txt, $font, $fontsize, $realx, $realy);
-                        if ($maxw < $w) {
-                            $maxw = $w;
-                        }
-
-                        $line--;
-                    }
-                }
-
-                if ($maxw < $wlimit) break;
-            }
-        } else {
-            while ($text > '') {
-                for ($fontid = 5; $fontid > 0; $fontid--) {
-                    $fontw = imagefontwidth($fontid);
-                    $fonth = imagefontheight($fontid);
-                    $realx = ($w - ($fontw * strlen($text))) / 2;
-                    $realy = ($h - $fonth - 5);
-
-                    // Since we can't use FreeType, lets use a fixed location
-                    $lines = array();
-                    $lines[] = array($text, $fontid, 0, $realx, $realy);
-
-                    if ($realx > 10 && $realy > 0) break;
-                }
-
-                if ($fontid == 0) {
-                    $spacer = strrpos($text, ' ');
-                    if ($spacer === false) {
-                        $spacer = strlen($text) - 1;
-                    }
-                    $text = substr($text, 0, $spacer);
-                } else {
-                    break;
-                }
-            }
-        }
-
-
-        foreach ($lines as $line) {
-            if ($ttf_functions) {
-                imagettftext($tab, $line[2], 0, intval($line[3]), intval($line[4]), $white, $line[1], $line[0]);
-            } else {
-                imagestring($tab, $line[1], intval($line[3]), intval($line[4]), $line[0], $white);
-            }
-        }
-
-        putenv('GDFONTPATH=' . $originalpath);
-
-        imagetruecolortopalette($tab, true, 256);
-
-        // generate the image an return the data directly
-        ob_start();
-        imagegif($tab);
-        $image = ob_get_contents();
-        ob_end_clean();
-
-        return("data:image/gif;base64," . base64_encode($image));
-    } else {
-        return false;
-    }
-}
-
 function cacti_oid_numeric_format()
 {
     if (function_exists('snmp_set_oid_output_format')) {
@@ -8502,6 +8434,44 @@ function debounce_run_notification($id, $frequency = 7200)
     }
 
     return false;
+}
+
+/* debounce_run_notification() reads the setting and then writes it, so two
+   requests at the same moment can both send. Each statement here checks and
+   sets under the row lock, and the connection counts matched rows, so this
+   request wins only when it inserted the row or found it outside the window. */
+function debounce_claim_notification($id, $frequency = 7200)
+{
+    $full = 'debounce_' . $id;
+    $key  = substr($full, 0, 50);
+
+    if ($full !== $key) {
+        cacti_debug_backtrace("ERROR: debounce key was truncated from $full to $key");
+    }
+
+    $now = time();
+
+    db_execute_prepared(
+        'INSERT IGNORE INTO settings
+		(name, value) VALUES (?, ?)',
+        array($key, $now)
+    );
+
+    if (db_affected_rows() == 1) {
+        return true;
+    }
+
+    /* as in debounce_run_notification(), a value that is not a timestamp does
+       not hold the key. CASE keeps strict mode from casting such a value. */
+    db_execute_prepared(
+        'UPDATE settings
+		SET value = ?
+		WHERE name = ?
+		AND CASE WHEN value REGEXP \'^[0-9]+$\' THEN CAST(value AS UNSIGNED) < ? ELSE 1 END',
+        array($now, $key, $now - $frequency)
+    );
+
+    return (db_affected_rows() == 1);
 }
 
 function cacti_unserialize($strobj)

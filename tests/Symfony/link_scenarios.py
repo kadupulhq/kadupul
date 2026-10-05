@@ -70,6 +70,10 @@ def verify_links(harness, session, user_id, check):
         edit_fields = editor.fields | {'link[title]': 'Edited link', 'link[style]': 'TAB', 'link[filename]': '0', 'link[fileurl]':'ftp://example.org/a', 'link[consolesection]':'External Links','link[consolenewsection]':'','link[enabled]':'1','link[refresh]':'0'}
         stale = dict(edit_fields)
         check(post(base + f'/{link_id}/edit', edit_fields)[0] == 200, 'links edit supports legacy FTP URL')
+        with session.opener.open(harness.base + viewer) as response:
+            edited_viewer_body = response.read().decode()
+        check(response.status == 200 and 'id="content"' in edited_viewer_body and 'ftp://example.org/a' in edited_viewer_body and 'cactiRedirect' not in edited_viewer_body,
+              'first full-page viewer request after edit refreshes permissions and renders stored content')
         check(post(base + f'/{link_id}/edit', stale)[0] == 409, 'links stale edit rejected')
         def action(operation, ids):
             return base + '/action/' + operation + '?' + urlencode({'ids[]': ids}, doseq=True)

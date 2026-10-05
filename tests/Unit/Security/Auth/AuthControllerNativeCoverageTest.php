@@ -23,7 +23,9 @@ final class AuthControllerNativeCoverageTest extends TestCase
             self::assertSame($value, $state[$key], $key);
         }
         if (!$expected['error']) {
-            self::assertSame(array('sess_user_id' => 42), $state['session']);
+            self::assertSame(array('sess_user_id', 'sess_user_credential'), array_keys($state['session']));
+            self::assertSame(42, $state['session']['sess_user_id']);
+            self::assertTrue($state['credential_valid']);
             self::assertContains('ROTATE_SESSION', $state['events']);
         } else {
             self::assertArrayNotHasKey('sess_user_id', $state['session']);
@@ -51,6 +53,33 @@ final class AuthControllerNativeCoverageTest extends TestCase
         );
     }
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('forcedPasswordCases')]
+    public function testForcedComplexityRetainsAuthenticatedPasswordChangeHandoff(bool $allowed): void
+    {
+        $state = $this->runController(array('options' => array('secpass_forceold' => 'on', 'secpass_minlen' => 32),
+            'account' => array('password_change' => $allowed ? 'on' : '')));
+        self::assertSame(!$allowed, $state['error']);
+        self::assertSame($allowed ? 'on' : '', $state['must_change']);
+        if ($allowed) {
+            self::assertSame(42, $state['session']['sess_user_id']);
+            self::assertTrue($state['credential_valid']);
+            self::assertTrue($state['session']['sess_change_password'] ?? false);
+            self::assertContains('forced_password', $state['messages']);
+            self::assertSame(array(1), $state['audit']);
+        } else {
+            self::assertArrayNotHasKey('sess_user_id', $state['session']);
+            self::assertFalse($state['lastlogin']);
+            self::assertNotSame('', $state['error_message']);
+        }
+        self::assertSame(array(42, 43), $state['cache_users']);
+        self::assertSame(array(42, 43), $state['session_users']);
+    }
+
+    public static function forcedPasswordCases(): array
+    {
+        return array('password change permitted' => array(true), 'password change prohibited' => array(false));
+    }
+
     #[\PHPUnit\Framework\Attributes\DataProvider('passwordCases')]
     public function testPasswordChangePreservesOrRevokesCredentials(array $request, bool $changed, string $message): void
     {
@@ -66,7 +95,7 @@ final class AuthControllerNativeCoverageTest extends TestCase
             self::assertArrayNotHasKey('sess_user_id', $state['session']);
             self::assertArrayNotHasKey('sess_change_password', $state['session']);
         } else {
-            self::assertSame(array(), $state['audit']);
+            self::assertSame($request['current_password'] === 'Wrong1!' ? array(0) : array(), $state['audit']);
             self::assertStringContainsString($message, $state['password_error']);
             self::assertSame(42, $state['session']['sess_user_id']);
         }
