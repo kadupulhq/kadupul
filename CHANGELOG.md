@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Reject malformed schema-audit reports with controlled CI diagnostics; cover clean, failed, dirty, empty, and missing-baseline contracts.
+
 - Return failure from the legacy audit CLI when repair or export fails; report missing tables separately from attempted ALTER statements and preserve SQL comment prefixes in diagnostic plans.
 - Preserve recognized scriptless upgrade releases, reject missing required migrations, and confirm each intermediate database version before advancing or reporting success.
 - Report integer signedness drift for manual range review, preserve local text collations during unrelated schema repairs, and refuse index algorithms unsupported by the effective storage engine.

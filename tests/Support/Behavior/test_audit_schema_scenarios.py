@@ -57,6 +57,54 @@ class AuditBaselineScenariosTest(unittest.TestCase):
         self.addCleanup(patcher.stop)
         self.harness = ExportHarness()
 
+    def test_clean_audit_returns_actual_table_count(self):
+        self.harness.load['stdout'] = json.dumps({'status': 'ok', 'baseline': 'loaded',
+            'tables': [{'name': 'device', 'errors': 0, 'warnings': 0, 'findings': []},
+                       {'name': 'graph', 'errors': 0, 'warnings': 0, 'findings': []}]})
+        self.assertEqual({'status': 'ok', 'baseline': 'loaded', 'tables': 2, 'findings': 0},
+                         scenarios.assert_clean_schema_audit(self.harness, 'Installed'))
+
+    def test_clean_audit_rejects_failed_command_with_diagnostic(self):
+        self.harness.load = {'exit': 7, 'stdout': json.dumps({'status': 'failed',
+            'baseline': 'loaded', 'tables': [{'name': 'device', 'errors': 1,
+            'warnings': 0, 'findings': ['bad index']}]}), 'stderr': 'audit failed'}
+        with self.assertRaisesRegex(RuntimeError, 'command failed.*bad index.*audit failed'):
+            scenarios.assert_clean_schema_audit(self.harness, 'Installed')
+
+    def test_clean_audit_rejects_non_json(self):
+        self.harness.load['stdout'] = 'not JSON'
+        with self.assertRaisesRegex(RuntimeError, 'did not return JSON'):
+            scenarios.assert_clean_schema_audit(self.harness, 'Installed')
+
+    def test_clean_audit_rejects_invalid_or_empty_envelopes(self):
+        clean = {'status': 'ok', 'baseline': 'loaded', 'tables': [
+            {'name': 'device', 'errors': 0, 'warnings': 0, 'findings': []}]}
+        reports = [[], None, 'unexpected', {}, {**clean, 'status': 'failed'},
+                   {**clean, 'baseline': 'missing'}, {**clean, 'tables': []},
+                   {**clean, 'tables': None}, {**clean, 'tables': ['invalid']}]
+        for report in reports:
+            with self.subTest(report=report):
+                self.harness.load['stdout'] = json.dumps(report)
+                with self.assertRaisesRegex(RuntimeError, 'schema audit (found drift|has an invalid envelope)'):
+                    scenarios.assert_clean_schema_audit(self.harness, 'Installed')
+
+    def test_clean_audit_rejects_each_dirty_table_signal_and_names_table(self):
+        for field, value in (('errors', 1), ('warnings', 1), ('findings', ['bad index']),
+                             ('findings', None), ('findings', 1), ('findings', 'bad index')):
+            with self.subTest(field=field):
+                table = {'name': 'device', 'errors': 0, 'warnings': 0, 'findings': []}
+                table[field] = value
+                self.harness.load['stdout'] = json.dumps({'status': 'ok', 'baseline': 'loaded',
+                                                         'tables': [table]})
+                with self.assertRaisesRegex(RuntimeError, 'found drift.*device'):
+                    scenarios.assert_clean_schema_audit(self.harness, 'Installed')
+
+    def test_clean_audit_missing_baseline_fails_before_container_calls(self):
+        (self.root / 'docs/audit_schema.sql').unlink()
+        with self.assertRaisesRegex(RuntimeError, 'Checked-in audit schema is missing'):
+            scenarios.assert_clean_schema_audit(self.harness, 'Installed')
+        self.assertEqual([], self.harness.commands)
+
     def test_matching_export_inspects_both_files_and_returns_counts(self):
         result = scenarios.assert_baseline_reproducible(self.harness)
         self.assertEqual(1, result['columns'])

@@ -16,8 +16,12 @@ def assert_clean_schema_audit(harness, label):
     except json.JSONDecodeError as error:
         raise RuntimeError(label + ' schema audit did not return JSON: ' + _diagnostic(result)) from error
 
+    if not isinstance(report, dict):
+        raise RuntimeError(label + ' schema audit has an invalid envelope: ' + _diagnostic(result))
+
     tables = report.get('tables')
     findings = [finding for table in tables if isinstance(table, dict)
+                and isinstance(table.get('findings'), list)
                 for finding in table.get('findings', [])] if isinstance(tables, list) else []
     dirty = [table for table in tables if not isinstance(table, dict)
              or table.get('errors') != 0 or table.get('warnings') != 0
