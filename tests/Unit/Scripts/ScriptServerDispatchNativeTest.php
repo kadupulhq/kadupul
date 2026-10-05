@@ -21,19 +21,19 @@ test('native Script Server admits configured scripts and rejects unowned dispatc
         $scripts = $temporary . '/scripts';
     }
     file_put_contents($scripts . '/helper.php', '<?php function dispatch_helper(){return "unexpected-helper";}');
-    file_put_contents($scripts . '/selected.php', '<?php require_once __DIR__."/helper.php"; function dispatch_selected(){return "selected-ok";}');
+    file_put_contents($scripts . '/Selected.php', '<?php require_once __DIR__."/helper.php"; function dispatch_selected(){return "selected-ok";}');
     file_put_contents($scripts . '/other.php', '<?php function dispatch_other(){return "other-ok";}');
     foreach (['scripts_evil','plugins','lib'] as $directory) {
         file_put_contents($temporary . '/' . $directory . '/other.php', '<?php function unrelated_dispatch(){return "unexpected-other";}');
     }
     $configured = $layout === 'configured' ? $scripts : $temporary . '/missing-configured-root';
     if ($layout === 'missing') {
-        unlink($scripts . '/selected.php');
+        unlink($scripts . '/Selected.php');
         unlink($scripts . '/helper.php');
         unlink($scripts . '/other.php');
         rmdir($scripts);
     }
-    $bootstrap = '<?php $config=' . var_export(['cacti_server_os' => 'unix','base_path' => $temporary,'scripts_path' => $configured], true) . ';' . <<<'BOOT'
+    $bootstrap = '<?php $config=' . var_export(['cacti_server_os' => PHP_OS_FAMILY === 'Windows' ? 'win32' : 'unix','base_path' => $temporary,'scripts_path' => $configured], true) . ';' . <<<'BOOT'
 define('POLLER_VERBOSITY_DEBUG',5); define('POLLER_VERBOSITY_HIGH',3); define('POLLER_VERBOSITY_MEDIUM',2);
 function read_config_option($name){return 300;}
 function cacti_log($message,...$args){file_put_contents(__DIR__.'/logs', $message."\n", FILE_APPEND);}
@@ -48,9 +48,9 @@ BOOT;
     }
     $command[] = $copy;
     $requests = [
-        $scripts.'/selected.php dispatch_selected',
-        $scripts.'/selected.php dispatch_helper',
-        $scripts.'/selected.php strlen ignored',
+        $scripts.'/Selected.php dispatch_selected',
+        $scripts.'/Selected.php dispatch_helper',
+        $scripts.'/Selected.php strlen ignored',
         $scripts.'/other.php dispatch_selected',
         $scripts.'/other.php dispatch_other',
         $scripts.'/absent.php dispatch_selected',
