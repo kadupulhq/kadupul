@@ -182,3 +182,42 @@ test('a new data source without a device or template still saves', function () {
     expect($result['errors'])->toBe(array())
         ->and($result['saved'])->toHaveKeys(array('data_local', 'data_template_data', 'data_template_rrd'));
 });
+
+
+test('RRD save paths preserve a configured symlink root and reject repeated placeholders', function ($case, $accepted) {
+    $directory = sys_get_temp_dir() . '/rrd-root-' . bin2hex(random_bytes(8));
+    mkdir($directory, 0700);
+    mkdir($directory . '/actual', 0700);
+    symlink($directory . '/actual', $directory . '/configured');
+    try {
+        symlink($directory, $directory . '/actual/escape');
+        $path = match ($case) {
+            'configured' => $directory . '/configured/new.rrd',
+            'canonical' => $directory . '/actual/new.rrd',
+            'token' => '<path_rra>/new.rrd',
+            'nested' => '<path_rra>/missing/sub/new.rrd',
+            'bare' => 'new.rrd',
+            'outside' => $directory . '/new.rrd',
+            'nul' => '<path_rra>/new' . chr(0) . '.rrd',
+            'backslash' => '<path_rra>/new' . chr(92) . '.rrd',
+            'embedded' => 'prefix<path_rra>/new.rrd',
+            'baretoken' => '<path_rra>',
+            'repeat' => '<path_rra>/<path_rra>/new.rrd',
+            'traversal' => '<path_rra>/../new.rrd',
+            'escape' => '<path_rra>/escape/new.rrd',
+        };
+        $result = limit_save($this, 'data_sources.php', array('data_source_path' => $path), array('LIMIT_RRA_PATH' => $directory . '/configured'));
+        if ($accepted) {
+            expect($result['errors'])->toBe(array())
+                ->and($result['saved']['data_template_data']['data_source_path'] ?? null)->toBe($path);
+        } else {
+            expect($result['saved'])->toBe(array())
+                ->and($result['errors'])->toBe(array('data_source_path'));
+        }
+    } finally {
+        unlink($directory . '/actual/escape');
+        unlink($directory . '/configured');
+        rmdir($directory . '/actual');
+        rmdir($directory);
+    }
+})->with(array('configured root' => array('configured', true), 'canonical root' => array('canonical', true), 'placeholder' => array('token', true), 'repeated placeholder' => array('repeat', false), 'parent traversal' => array('traversal', false), 'escaping symlink' => array('escape', false), 'nested missing directory' => array('nested', true), 'bare filename' => array('bare', true), 'outside absolute' => array('outside', false), 'NUL byte' => array('nul', false), 'backslash' => array('backslash', false), 'embedded token' => array('embedded', false), 'bare token' => array('baretoken', false)));

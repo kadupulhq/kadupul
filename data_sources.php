@@ -245,6 +245,7 @@ function form_save()
         $save2['name']                        = form_input_validate(get_nfilter_request_var('name'), 'name', '', false, 3);
         $save2['data_source_path']            = form_input_validate(get_nfilter_request_var('data_source_path'), 'data_source_path', '', true, 3);
         if (!is_error_message() && !data_source_path_is_allowed($save2['data_source_path'])) {
+            $_SESSION['sess_error_fields']['data_source_path'] = 'data_source_path';
             raise_message(2);
         }
         $save2['active']                      = form_input_validate((isset_request_var('active') ? get_nfilter_request_var('active') : ''), 'active', '', true, 3);
@@ -1471,6 +1472,9 @@ function data_source_path_is_allowed($path)
 
     if (str_starts_with($path, '<path_rra>/')) {
         $relative = substr($path, strlen('<path_rra>/'));
+        if (str_contains($relative, '<path_rra>')) {
+            return false;
+        }
         $candidate = $base . '/' . $relative;
     } elseif (str_contains($path, '<path_rra>')) {
         return false;
@@ -1478,6 +1482,8 @@ function data_source_path_is_allowed($path)
         $candidate = $base . '/' . $path;
     } elseif (str_starts_with($path, $base . '/')) {
         $candidate = $path;
+    } elseif (str_starts_with($path, rtrim($config['rra_path'], '/') . '/')) {
+        $candidate = $base . '/' . substr($path, strlen(rtrim($config['rra_path'], '/')) + 1);
     } else {
         return false;
     }
