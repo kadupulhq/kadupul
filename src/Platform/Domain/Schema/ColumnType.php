@@ -61,11 +61,24 @@ final readonly class ColumnType
         $targetRank = array_search($this->base, $integers, true);
         $liveRank = array_search($live->base, $integers, true);
 
+        // An unsigned destination excludes negative values at every width.
+        if (($this->unsigned || $this->zerofill) && !($live->unsigned || $live->zerofill)) {
+            return true;
+        }
         if ($targetRank !== $liveRank) {
             return $targetRank < $liveRank;
         }
 
         return ($this->unsigned || $this->zerofill) !== ($live->unsigned || $live->zerofill);
+    }
+
+    /** Display width is not a value range; effective signedness is. */
+    public function changesIntegerSignedness(self $live): bool
+    {
+        $integers = [ColumnBase::Tinyint, ColumnBase::Smallint, ColumnBase::Mediumint, ColumnBase::Int, ColumnBase::Bigint];
+
+        return in_array($this->base, $integers, true) && in_array($live->base, $integers, true)
+            && ($this->unsigned || $this->zerofill) !== ($live->unsigned || $live->zerofill);
     }
 
     /** Digits before a decimal's point; MariaDB's default precision is 10. */

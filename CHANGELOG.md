@@ -7,6 +7,8 @@ follows [Semantic Versioning](VERSIONING.md).
 ## [Unreleased]
 
 - Preserve recognized scriptless upgrade releases, reject missing required migrations, and confirm each intermediate database version before advancing or reporting success.
+- Report integer signedness drift for manual range review, preserve local text collations during unrelated schema repairs, and refuse index algorithms unsupported by the effective storage engine.
+
 - Bound legacy Boost writer lock acquisition to 60 attempts; report contention and retain queued samples instead of waiting indefinitely.
 - Correct Settings help for graph permission combinations, auto scale limits, and CSP nonce reporting and enforcement. Fixes #222, #230, and #265.
 

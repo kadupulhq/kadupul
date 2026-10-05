@@ -140,7 +140,11 @@ final class IndexDrift
         // index columns. Detect these differences, but never rebuild by
         // silently dropping part of an index definition.
         $fullyRepresentable = array_all($parts, static fn(BaselineIndex $part): bool => $part->subPart === null && ($part->collation === null || $part->collation === 'A'));
+        // HASH can be coerced to BTREE on InnoDB/MyISAM while ALTER succeeds.
+        // Refuse before a hot primary key is dropped and endlessly rebuilt.
+        // MyISAM repairs convert the table to InnoDB, which also rejects HASH.
+        $supported = $algorithm !== IndexAlgorithm::Hash || strtoupper((string) $table->status->engine) === 'MEMORY';
 
-        return [$algorithm === null || !$named || !$fullyRepresentable ? new UnbuildableClause($text) : new RebuildIndex($drops, $primary, $unique, $key, $columns, $algorithm, $text)];
+        return [$algorithm === null || !$named || !$fullyRepresentable || !$supported ? new UnbuildableClause($text) : new RebuildIndex($drops, $primary, $unique, $key, $columns, $algorithm, $text)];
     }
 }

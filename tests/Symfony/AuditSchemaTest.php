@@ -175,10 +175,12 @@ final class AuditSchemaTest extends TestCase
 
         $audit = TableAudit::of($table, $baseline, PluginSchemaChanges::none(), true);
 
-        self::assertSame(1, $audit->errors);
+        self::assertSame(0, $audit->errors);
+        self::assertSame(1, $audit->warnings);
         self::assertStringContainsString("Attribute 'Collation'", $audit->findings[0]);
-        self::assertInstanceOf(UnbuildableClause::class, $audit->clauses[0]);
-        self::assertFalse($audit->alter($table->status)?->buildable());
+        self::assertStringContainsString('not converted', $audit->findings[0]);
+        self::assertSame([], $audit->clauses);
+        self::assertNull($audit->alter($table->status));
     }
 
     public function testPrefixIndexDriftIsReportedButRepairDoesNotDropThePrefix(): void

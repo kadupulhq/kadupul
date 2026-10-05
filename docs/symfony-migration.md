@@ -1223,11 +1223,16 @@ Known differences from `cli/audit_database.php`:
   when reading older installations. Column names use case-insensitive exact
   matching; underscores in names are not SQL `LIKE` wildcards.
 - A table in the baseline but missing from the live schema is reported as an
-  error. Repair does not recreate it. Column-collation drift and index drift
-  involving prefix lengths or descending columns are reported but block that
-  table's automatic ALTER until the repair builder can represent them without
-  changing their meaning. A supported BTREE/HASH type difference is rebuilt
-  from the baseline definition.
+  error. Repair does not recreate it. Compatible local character-column
+  collations remain reported for manual review and are preserved when repairing
+  other attributes; collation-only drift never schedules a conversion. Integer
+  signedness changes require manual range review and block automatic ALTER,
+  rather than being classified as local widening. Index drift involving prefix
+  lengths, descending columns or an algorithm unsupported by the storage engine
+  blocks automatic ALTER. HASH rebuilds require MEMORY; InnoDB/MyISAM cannot
+  silently substitute BTREE and repeatedly rebuild a primary key. Supported
+  index repairs confirm the actual stored columns, uniqueness and algorithm
+  before reporting success; DDL remains committed if confirmation later fails.
 - A repair statement is built from typed parts: names quoted, defaults as
   quoted literals, `FIRST` in capitals, one line. `--alters` and a failed
   repair print the original's statement text. A clause with no typed form

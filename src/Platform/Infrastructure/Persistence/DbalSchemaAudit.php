@@ -15,6 +15,7 @@ use Kadupul\Platform\Application\Port\TableCatalog;
 use Kadupul\Platform\Domain\Schema\AddColumn;
 use Kadupul\Platform\Domain\Schema\AlterClause;
 use Kadupul\Platform\Domain\Schema\DropIndex;
+use Kadupul\Platform\Domain\Schema\IndexAlgorithm;
 use Kadupul\Platform\Domain\Schema\LiveTable;
 use Kadupul\Platform\Domain\Schema\ModifyColumn;
 use Kadupul\Platform\Domain\Schema\PluginSchemaChanges;
@@ -97,11 +98,46 @@ final readonly class DbalSchemaAudit implements SchemaAudit
             return false;
         }
         $now = self::table($this->connections->for($target), $alter->table, $status);
-        if (!$now->sameShape($read) || !self::namesOnlyWhatIsListed($alter, $now)) {
+        if (!$now->sameShape($read) || !self::namesOnlyWhatIsListed($alter, $now)
+            || array_any($alter->clauses, static fn(AlterClause $clause): bool => $clause instanceof RebuildIndex
+                && $clause->using === IndexAlgorithm::Hash && strtoupper((string) $now->status->engine) !== 'MEMORY')) {
             return false;
         }
 
-        return $this->connections->execute($target, $statement);
+        if (!$this->connections->execute($target, $statement)) {
+            return false;
+        }
+        $indexes = array_values(array_filter($alter->clauses, static fn(AlterClause $clause): bool => $clause instanceof RebuildIndex || $clause instanceof DropIndex));
+        if ($indexes === []) {
+            return true;
+        }
+        // DDL commits implicitly. A successful call can still coerce an index
+        // algorithm; confirm the stored definition before reporting success.
+        $status = $this->connections->tableCatalog($target)->status($alter->table);
+        if ($status === null) {
+            return false;
+        }
+        $stored = self::table($this->connections->for($target), $alter->table, $status);
+
+        return array_all($indexes, static function (AlterClause $clause) use ($stored): bool {
+            $parts = array_values(array_filter($stored->indexes, static fn(array $part): bool => $part['Key_name'] === $clause->name));
+            if ($clause instanceof DropIndex) {
+                return $parts === [];
+            }
+            if (count($parts) !== count($clause->columns)) {
+                return false;
+            }
+            foreach ($clause->columns as $position => $column) {
+                $part = array_find($parts, static fn(array $part): bool => (int) $part['Seq_in_index'] === $position + 1);
+                if ($part === null || $part['Column_name'] !== $column
+                    || (int) $part['Non_unique'] !== ($clause->unique || $clause->primary ? 0 : 1)
+                    || strtoupper((string) $part['Index_type']) !== $clause->using->value
+                    || $part['Sub_part'] !== null || !in_array($part['Collation'], [null, 'A'], true)) {
+                    return false;
+                }
+            }
+            return true;
+        });
     }
 
     private static function table(Connection $db, string $name, TableStatus $status): LiveTable
