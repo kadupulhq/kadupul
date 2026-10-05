@@ -1,6 +1,12 @@
 """Exercise profile metadata and structural edits through the installed HTTP path."""
 from urllib.parse import urlencode
-from urllib.request import Request
+from urllib.error import HTTPError
+from urllib.request import Request, build_opener, HTTPRedirectHandler, HTTPCookieProcessor
+
+
+class NoRedirect(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
 
 
 def verify_data_source_profile_heartbeat(harness, session, check):
@@ -81,16 +87,22 @@ def verify_data_source_profile_heartbeat(harness, session, check):
         other_template = create_template('heartbeat-other-template')
         selected_local = create_local_data()
         other_local = create_local_data()
+        selected_untemplated = create_local_data()
+        other_untemplated = create_local_data()
 
         create_template_data(0, selected_template, selected_profile, 'selected template')
         create_template_data(selected_local, selected_template, selected_profile, 'selected local')
         create_template_data(0, other_template, other_profile, 'other template')
         create_template_data(other_local, other_template, other_profile, 'other local')
+        create_template_data(selected_untemplated, 0, selected_profile, 'selected untemplated')
+        create_template_data(other_untemplated, 0, other_profile, 'other untemplated')
 
         selected_template_rrd = create_rrd(0, selected_template, 'selected-template', 600)
         selected_local_rrd = create_rrd(selected_local, other_template, 'selected-local', 700)
         other_template_rrd = create_rrd(0, other_template, 'other-template', 1200)
         other_local_rrd = create_rrd(other_local, other_template, 'other-local', 1400)
+        selected_untemplated_rrd = create_rrd(selected_untemplated, 0, 'selected-plain', 700)
+        other_untemplated_rrd = create_rrd(other_untemplated, 0, 'other-plain', 1500)
 
         check(session.request(f'/data_source_profiles.php?action=edit&id={selected_profile}')['status'] == 200,
               'profile editor refreshes the authenticated CSRF token')
@@ -124,10 +136,36 @@ def verify_data_source_profile_heartbeat(harness, session, check):
         check(harness.sql(f'SELECT rrd_heartbeat FROM data_template_rrd WHERE id={other_local_rrd}').strip() == '1400',
               'unrelated local-source RRD heartbeat is unchanged')
 
+        check(harness.sql(f'SELECT rrd_heartbeat FROM data_template_rrd WHERE id={selected_untemplated_rrd}').strip() == '900'
+              and harness.sql(f'SELECT rrd_heartbeat FROM data_template_rrd WHERE id={other_untemplated_rrd}').strip() == '1500',
+              'non-templated local heartbeats update only for the selected profile')
         check('Changing the Heartbeat from this page' in warning_page and 'tune' in warning_page,
               'heartbeat save warns that existing RRD files still need tuning')
         check(not harness.rrd_calls(), 'heartbeat metadata save does not claim to tune existing RRD files')
 
+        harness.sql(f'UPDATE data_template_rrd SET rrd_heartbeat=777 WHERE id={selected_local_rrd}')
+        unchanged_page = save(selected_profile, 'heartbeat-selected-profile', heartbeat='900')
+        check(harness.sql(f'SELECT rrd_heartbeat FROM data_template_rrd WHERE id={selected_local_rrd}').strip() == '777'
+              and 'Changing the Heartbeat from this page' not in unchanged_page,
+              'unchanged heartbeat retains existing metadata and emits no tuning warning')
+        harness.sql(f'UPDATE data_template_rrd SET rrd_heartbeat=900 WHERE id={selected_local_rrd}')
+        cookies = next(handler.cookiejar for handler in session.opener.handlers
+                       if isinstance(handler, HTTPCookieProcessor))
+        no_redirect = build_opener(HTTPCookieProcessor(cookies), NoRedirect())
+        missing_token = Request(harness.base + '/data_source_profiles.php?action=save',
+            data=urlencode({'save_component_profile': '1', 'id': str(selected_profile),
+                            'name': 'csrf-should-not-save', 'heartbeat': '1200'}).encode())
+        try:
+            denied = no_redirect.open(missing_token, timeout=30)
+        except HTTPError as response:
+            denied = response
+        try:
+            check(denied.status == 302 and denied.headers['Location'].endswith('/data_source_profiles.php?action=save')
+                  and definition(selected_profile) == '300\t900\t0.5',
+                  'profile save rejects missing CSRF before persistence')
+        finally:
+            denied.close()
+        session.request(f'/data_source_profiles.php?action=edit&id={selected_profile}')
         forged = session.request('/data_source_profiles.php?action=save', {
             'save_component_profile': '1',
             'id': str(selected_profile),
@@ -149,9 +187,17 @@ def verify_data_source_profile_heartbeat(harness, session, check):
               'unchanged structural fields permit an in-use heartbeat save')
         check(functions(selected_profile) == '1\n4', 'unchanged in-use consolidation functions are retained')
         for field, value in [('x_files_factor', '0.25'), ('consolidation_function_id[]', ['2'])]:
-            save(selected_profile, 'heartbeat-selected-profile', heartbeat='1100', **{field: value})
+            log_offset = int(harness.command('php', '-r', 'echo filesize("log/cacti.log");')['stdout'])
+            refusal = save(selected_profile, 'heartbeat-selected-profile', heartbeat='1100', **{field: value})
+            new_warning = harness.command('php', '-r',
+                f'$log=fopen("log/cacti.log","r"); fseek($log,{log_offset}); echo strpos(stream_get_contents($log),"Refused to change") !== false ? "seen" : "missing"; fclose($log);')['stdout']
+            check('Profiles that are in use by Data Sources become read only' in refusal
+                  and new_warning == 'seen',
+                  'read-only refusal displays its error and records the operator warning: ' + field)
             check(definition(selected_profile) == '300\t1000\t0.5' and functions(selected_profile) == '1\n4',
                   'single forged structural field refuses the complete in-use save: ' + field)
+            check(harness.sql(f'SELECT rrd_heartbeat FROM data_template_rrd WHERE id={selected_local_rrd}').strip() == '1000',
+                  'single forged structural field leaves propagated heartbeat unchanged: ' + field)
 
         template_profile = create_profile('heartbeat-template-only', 600)
         template = create_template('heartbeat-only-template')
@@ -162,6 +208,11 @@ def verify_data_source_profile_heartbeat(harness, session, check):
               'template-only profile propagates heartbeat without local data sources')
         check('Changing the Heartbeat from this page' not in page,
               'template-only heartbeat save emits no existing-file tuning warning')
+
+        save(template_profile, 'heartbeat-template-only', step='60', heartbeat='120', x_files_factor='0.25',
+             **{'consolidation_function_id[]': ['2', '4']})
+        check(definition(template_profile) == '60\t120\t0.25' and functions(template_profile) == '2\n4',
+              'template-only profile accepts every structural field')
 
         unused = create_profile('heartbeat-unused', 600)
         save(unused, 'heartbeat-unused', **{'consolidation_function_id[]': ['2', '4']})

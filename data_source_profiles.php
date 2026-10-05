@@ -182,7 +182,7 @@ function form_save_profile_components()
                 }
             }
             if ($cfs !== null && $cfs !== array()) {
-                $current_cfs = db_fetch_assoc_prepared('SELECT consolidation_function_id FROM data_source_profiles_cf WHERE data_source_profile_id = ? ORDER BY consolidation_function_id', array(get_request_var('id')));
+                $current_cfs = db_fetch_assoc_prepared('SELECT consolidation_function_id FROM data_source_profiles_cf WHERE data_source_profile_id = ?', array(get_request_var('id')));
                 if (!is_array($current_cfs)) {
                     throw new RuntimeException('Profile consolidation lookup failed');
                 }
