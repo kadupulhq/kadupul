@@ -11,7 +11,7 @@ $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
 if (isset($argv[3])) {
     require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
-    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], array('lib/auth.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
+    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], array('lib/auth.php', 'lib/graph_item_choices.php', 'tests/Helpers/PhpSource.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
 }
 $config = ['cacti_db_version' => '1.2.33'];
 $db = new PDO('sqlite::memory:');
@@ -71,13 +71,18 @@ foreach ($scenario['exceptions'] ?? [] as $type) {
 $db->prepare('UPDATE user_auth SET policy_trees=? WHERE id=42')->execute([$scenario['tree_policy'] ?? 1]);
 $_SESSION = $scenario['anonymous'] ?? false ? [] : ['sess_user_id' => 42];
 $queries = 0;
+$querySql = [];
+$queryRowCounts = [];
 $logs = [];
 function db_fetch_assoc_prepared($sql, $params = [])
 {
     $GLOBALS['queries']++;
+    $GLOBALS['querySql'][] = $sql;
     $q = $GLOBALS['db']->prepare($sql);
     $q->execute($params);
-    return $q->fetchAll(PDO::FETCH_ASSOC);
+    $rows = $q->fetchAll(PDO::FETCH_ASSOC);
+    $GLOBALS['queryRowCounts'][] = ['choices' => str_contains($sql, 'data_template_rrd'), 'rows' => count($rows)];
+    return $rows;
 }
 function db_fetch_row_prepared($sql, $params = [])
 {
@@ -147,6 +152,79 @@ require $root . '/lib/auth.php';
 $result = null;
 $cached = null;
 switch ($scenario['operation']) {
+    case 'graph-item-choices':
+        require_once $root . '/tests/Helpers/PhpSource.php';
+        $apiSource = file_get_contents($root . '/lib/api_data_source.php');
+        if ($apiSource === false) throw new RuntimeException('Cannot read data-source authorization contract');
+        eval(test_php_function_source($apiSource, 'api_data_source_is_allowed'));
+        $db->exec("CREATE TABLE data_local(id INTEGER PRIMARY KEY, host_id INTEGER);
+CREATE TABLE data_template_data(local_data_id INTEGER PRIMARY KEY,name_cache TEXT);
+CREATE TABLE data_template_rrd(id INTEGER PRIMARY KEY,local_data_id INTEGER,data_source_name TEXT);
+INSERT INTO host(id,description,disabled) VALUES(100,'Allowed','on'),(101,'Foreign',''),(102,'Unattached','');
+INSERT INTO graph_local(id,host_id,graph_template_id) VALUES(100,100,100),(101,101,101);
+INSERT INTO graph_templates VALUES(100,'Allowed'),(101,'Foreign');
+INSERT INTO data_local VALUES(10,100),(11,101),(12,0),(13,102);
+INSERT INTO data_template_data VALUES(10,'Allowed source'),(11,'Foreign source'),(12,'Free source'),(13,'Unattached source');
+INSERT INTO data_template_rrd VALUES(20,10,'rate'),(21,11,'rate'),(22,12,'rate'),(23,13,'rate');");
+        if (empty($scenario['no_realm'])) {
+            $db->exec('INSERT INTO user_auth_realm VALUES(42,5)');
+        }
+        $db->exec('UPDATE user_auth SET policy_hosts=2,policy_graphs=2,policy_graph_templates=2 WHERE id=42');
+        foreach ([3,4] as $type) {
+            $db->prepare('INSERT INTO user_auth_perms VALUES(42,?,102)')->execute([$type]);
+        }
+        if (!empty($scenario['group_grant'])) {
+            $db->exec("INSERT INTO user_auth_group(id,enabled,policy_hosts,policy_graphs,policy_graph_templates) VALUES(9,'on',2,2,2);
+INSERT INTO user_auth_group_members VALUES(42,9);
+INSERT INTO user_auth_group_perms VALUES(9,3,100),(9,4,100);");
+        } else {
+            $db->exec('INSERT INTO user_auth_perms VALUES(42,3,100),(42,4,100)');
+        }
+        for ($i = 0; $i < ($scenario['device_count'] ?? 0); $i++) {
+            $db->prepare('INSERT INTO host(id,description) VALUES(?,?)')->execute([1000 + $i, 'Inventory ' . $i]);
+        }
+        for ($i = 0; $i < ($scenario['choice_count'] ?? 0); $i++) {
+            $id = 1000 + $i;
+            $db->prepare('INSERT INTO data_local VALUES(?,100)')->execute([$id]);
+            $db->prepare('INSERT INTO data_template_data VALUES(?,?)')->execute([$id, sprintf('Many %05d', $i)]);
+            $db->prepare('INSERT INTO data_template_rrd VALUES(?, ?,?)')->execute([$id,$id,'rate']);
+        }
+        if (!empty($scenario['allow_inventory'])) {
+            $db->exec('UPDATE user_auth SET policy_hosts=1 WHERE id=42; DELETE FROM user_auth_perms WHERE user_id=42 AND type=3; INSERT INTO user_auth_perms VALUES(42,3,101)');
+        }
+        $db->sqliteCreateFunction('CONCAT_WS', static fn($separator, ...$parts) => implode($separator, array_filter($parts, static fn($part) => $part !== null)));
+        function get_nfilter_request_var($name)
+        {
+            return $GLOBALS['scenario']['choices_request'][$name] ?? '';
+        }
+        function db_qstr($value)
+        {
+            return $GLOBALS['db']->quote($value);
+        }
+        function __esc($value)
+        {
+            return htmlspecialchars($value, ENT_QUOTES);
+        }
+        require $root . '/lib/graph_item_choices.php';
+        $before = $queries;
+        $querySql = [];
+        $queryRowCounts = [];
+        $choices = graph_item_choices();
+        $choiceQueries = $queries - $before;
+        $choiceSql = $querySql;
+        $policyRowCounts = array_column(array_filter($queryRowCounts, static fn($query) => !$query['choices']), 'rows');
+        $admitted = [];
+        foreach ([10,11,12,13] as $id) {
+            $admitted[$id] = api_data_source_is_allowed($id);
+        }
+        $result = ['choices' => $choices, 'status' => http_response_code() ?: 200, 'queries' => $choiceQueries,
+            'protected_reads' => count(array_filter($choiceSql, static fn($sql) => str_contains($sql, 'data_template_rrd'))),
+            'max_policy_rows' => $policyRowCounts === [] ? 0 : max($policyRowCounts),
+            'device_inventory_reads' => count(array_filter($choiceSql, static fn($sql) => str_contains($sql, 'SELECT h1.*'))),
+            'count_reads' => count(array_filter($choiceSql, static fn($sql) => str_contains($sql, 'COUNT(DISTINCT id)') && !str_contains($sql, ' h.id = '))),
+            'admitted' => $admitted];
+        unset($before);
+        break;
     case 'resource-ids':
     case 'device-filter-policy':
         $db->exec("INSERT INTO host(id,description,disabled,deleted) VALUES(100,'Target','on',''),(101,'Denied','on',''),(102,'Deleted','','on')");
@@ -314,4 +392,7 @@ INSERT INTO graph_templates_graph VALUES(100,'Fixture graph',500,120);");
         throw new InvalidArgumentException('Unknown policy operation.');
 }
 $nativeChildCoverageMarkers = array('native-policy-operation-returned', 'policy-session-observed');
+if ($scenario['operation'] === 'graph-item-choices') {
+    $nativeChildCoverageMarkers = array_merge($nativeChildCoverageMarkers, ['graph-choice-policy-returned', 'graph-choice-query-budget-observed']);
+}
 print json_encode(['result' => $result, 'cached' => $cached, 'session' => $_SESSION, 'extra_queries' => isset($before) ? $queries - $before : null, 'logs' => $logs], JSON_THROW_ON_ERROR);
