@@ -6,6 +6,7 @@
 namespace PollerAcknowledgement;
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/functions.php'), 'normalize_poller_multi_value_result'));
 eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/poller.php'), 'poller_delete_output_rows'));
 function db_affected_rows()
 {
