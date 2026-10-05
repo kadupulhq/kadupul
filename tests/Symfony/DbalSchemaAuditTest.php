@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -151,6 +153,26 @@ final class DbalSchemaAuditTest extends TestCase
             . 'ADD PRIMARY KEY (`a``b`) USING BTREE, '
             . 'DROP INDEX `x``y`, ADD INDEX `plain``z` (`c`) USING BTREE, '
             . 'ENGINE=InnoDB ROW_FORMAT=Dynamic CHARSET=latin1', $this->audit(self::offline())->statement(DatabaseTarget::Local, $alter));
+    }
+
+    /** @return iterable<string, array{?string, string}> */
+    public static function renderedCollations(): iterable
+    {
+        yield 'explicit column collation' => ['utf8mb4_unicode_ci', ' COLLATE `utf8mb4_unicode_ci`'];
+        yield 'omitted column collation' => [null, ''];
+        yield 'hostile name stays inside one quoted identifier' => ['utf8mb4`; DROP TABLE host; --', ' COLLATE `utf8mb4``; DROP TABLE host; --`'];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('renderedCollations')]
+    public function testBothColumnStatementsQuoteCollationBeforeNullability(?string $collation, string $rendered): void
+    {
+        $spec = new ColumnSpec('name', self::type('varchar(20)'), true, 'x', false, ColumnExtra::None, $collation);
+        $alter = new TableAlter('t', [new ModifyColumn($spec, 'legacy'), new AddColumn($spec, 'id', 'legacy')], self::innodb());
+
+        self::assertSame(
+            'ALTER TABLE `t` MODIFY COLUMN `name` varchar(20)' . $rendered . " NOT NULL DEFAULT 'x', ADD COLUMN `name` varchar(20)" . $rendered . " NOT NULL DEFAULT 'x' AFTER `id`, ROW_FORMAT=Dynamic CHARSET=utf8mb4",
+            $this->audit(self::offline())->statement(DatabaseTarget::Local, $alter),
+        );
     }
 
     public function testAnInnodbTableGetsNoEngineOption(): void

@@ -129,6 +129,55 @@ final class AuditSchemaSafetyTest extends TestCase
         self::assertInstanceOf($buildable ? RebuildIndex::class : UnbuildableClause::class, $audit->clauses[0]);
     }
 
+    /** @return iterable<string, array{string, string, string, string, bool, string}> */
+    public static function secondaryIndexDrift(): iterable
+    {
+        yield 'HASH live secondary becomes baseline BTREE' => ['HASH', 'A', '', '', true, 'Index_type'];
+        yield 'descending baseline cannot lose its direction' => ['BTREE', 'D', '', '', false, 'Collation'];
+        yield 'nullable metadata drift rebuilds only once' => ['BTREE', 'A', '', 'YES', true, 'Null'];
+    }
+
+    #[DataProvider('secondaryIndexDrift')]
+    public function testSecondaryIndexMetadataDriftRetainsOneExplicitRepair(
+        string $liveAlgorithm,
+        string $baselineDirection,
+        string $liveNull,
+        string $baselineNull,
+        bool $buildable,
+        string $attribute,
+    ): void {
+        $table = self::table('int(10) unsigned');
+        $index = ['Table' => 't', 'Non_unique' => '1', 'Key_name' => 'secondary', 'Seq_in_index' => '1', 'Column_name' => 'x', 'Collation' => 'A', 'Cardinality' => '999', 'Sub_part' => null, 'Packed' => null, 'Null' => $liveNull, 'Index_type' => $liveAlgorithm, 'Comment' => ''];
+        $table = new LiveTable('t', $table->status, $table->columns, [$index]);
+        $baseline = new AuditBaseline([self::baseline('int(10) unsigned')], [new BaselineIndex('t', 1, 'secondary', 1, 'x', $baselineDirection, 0, null, null, $baselineNull, 'BTREE', '')]);
+        $audit = TableAudit::of($table, $baseline, PluginSchemaChanges::none(), true);
+
+        self::assertSame(1, $audit->errors);
+        self::assertCount(1, $audit->findings);
+        self::assertStringContainsString("Attribute '" . $attribute . "' invalid", $audit->findings[0]);
+        self::assertCount(1, $audit->clauses);
+        self::assertSame($buildable, $audit->alter($table->status)->buildable());
+        self::assertInstanceOf($buildable ? RebuildIndex::class : UnbuildableClause::class, $audit->clauses[0]);
+        if ($buildable) {
+            self::assertSame(['secondary'], $audit->clauses[0]->drops);
+            self::assertSame("DROP INDEX `secondary`,\n   ADD INDEX `secondary` (`x`) USING BTREE", $audit->clauses[0]->legacy());
+        }
+    }
+
+    public function testCardinalityAloneNeverSchedulesAnIndexRebuild(): void
+    {
+        $table = self::table('int(10) unsigned');
+        $index = ['Table' => 't', 'Non_unique' => '1', 'Key_name' => 'secondary', 'Seq_in_index' => '1', 'Column_name' => 'x', 'Collation' => 'A', 'Cardinality' => '999', 'Sub_part' => null, 'Packed' => null, 'Null' => '', 'Index_type' => 'BTREE', 'Comment' => ''];
+        $table = new LiveTable('t', $table->status, $table->columns, [$index]);
+        $baseline = new AuditBaseline([self::baseline('int(10) unsigned')], [new BaselineIndex('t', 1, 'secondary', 1, 'x', 'A', 0, null, null, '', 'BTREE', '')]);
+        $audit = TableAudit::of($table, $baseline, PluginSchemaChanges::none(), true);
+
+        self::assertSame(0, $audit->errors);
+        self::assertSame([], $audit->findings);
+        self::assertSame([], $audit->clauses);
+        self::assertNull($audit->alter($table->status));
+    }
+
     private static function baseline(string $type, ?string $collation = null): BaselineColumn
     {
         return new BaselineColumn('t', 1, 'x', $type, 'NO', '', '0', '', $collation);
