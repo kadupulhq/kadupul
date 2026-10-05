@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 13:20-0700\n"
+"POT-Creation-Date: 2026-10-05 16:31-0700\n"
 "PO-Revision-Date: 2024-04-20 19:06-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -55,7 +55,7 @@ msgstr "이 프로그램은 유용 할 것이라는 희망으로 배포되었지
 #: host_templates.php:19 host_templates.php:462 host_templates.php:519
 #: include/global_arrays.php:1651 include/global_settings.php:232
 #: lib/api_automation.php:1323 lib/api_automation.php:1386
-#: lib/api_automation.php:1457 lib/html.php:1370 lib/html_form.php:1397
+#: lib/api_automation.php:1457 lib/html.php:1425 lib/html_form.php:1397
 #: lib/html_reports.php:1861 managers.php:13 pollers.php:18 tree.php:1627
 #: tree.php:1780 tree.php:1840 tree.php:1861 user_admin.php:17
 #: user_domains.php:15 user_group_admin.php:19
@@ -135,7 +135,7 @@ msgstr "다음 집계 그래프를 삭제하려면 &#39;계속&#39;을 클릭하
 #: host.php:479 host.php:493 host.php:507 host.php:516 host.php:545
 #: host.php:557 host_templates.php:212 host_templates.php:226
 #: host_templates.php:237 host_templates.php:289 host_templates.php:358
-#: lib/clog_webapi.php:225 lib/html.php:2650 lib/html_form.php:1396
+#: lib/clog_webapi.php:225 lib/html.php:2705 lib/html_form.php:1396
 #: lib/html_form.php:1413 lib/html_form.php:1424 lib/html_reports.php:614
 #: managers.php:1061 managers.php:1122 plugins.php:712 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:705
@@ -169,7 +169,7 @@ msgstr "취소"
 #: host.php:461 host.php:470 host.php:479 host.php:493 host.php:507
 #: host.php:516 host.php:545 host.php:557 host_templates.php:212
 #: host_templates.php:226 host_templates.php:237 host_templates.php:290
-#: host_templates.php:359 lib/clog_webapi.php:226 lib/html.php:2649
+#: host_templates.php:359 lib/clog_webapi.php:226 lib/html.php:2704
 #: lib/html_reports.php:556 managers.php:1061 managers.php:1122 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:705
 #: tree.php:714 tree.php:723 tree.php:732 user_admin.php:252 user_admin.php:292
@@ -326,7 +326,7 @@ msgstr "상세정보"
 msgid "Items"
 msgstr "아이템"
 
-#: aggregate_graphs.php:646 aggregate_graphs.php:652 lib/html.php:2093
+#: aggregate_graphs.php:646 aggregate_graphs.php:652 lib/html.php:2148
 #: lib/html_reports.php:1481
 msgid "Preview"
 msgstr "미리보기"
@@ -438,8 +438,8 @@ msgstr "검색"
 #: data_sources.php:1852 graph_view.php:488 graph_view.php:739
 #: graph_view.php:803 graphs.php:2010 graphs.php:2178 host.php:1792
 #: include/global_arrays.php:993 include/global_arrays.php:1228
-#: include/global_arrays.php:2011 lib/api_automation.php:283 lib/html.php:1817
-#: lib/html.php:1886 lib/html_graph.php:197 lib/html_tree.php:1022
+#: include/global_arrays.php:2011 lib/api_automation.php:283 lib/html.php:1872
+#: lib/html.php:1941 lib/html_graph.php:197 lib/html_tree.php:1022
 #: lib/html_tree.php:1378 tree.php:857 tree.php:2296 user_admin.php:801
 #: user_admin.php:1072 user_admin.php:2346 user_group_admin.php:900
 #: user_group_admin.php:1054 user_group_admin.php:2107 utilities.php:315
@@ -482,7 +482,7 @@ msgstr "집계의 일부"
 #: graphs_new.php:432 host.php:1671 host_templates.php:757
 #: lib/api_automation.php:187 lib/api_automation.php:471
 #: lib/api_automation.php:723 lib/api_automation.php:1087
-#: lib/clog_webapi.php:533 lib/html.php:1649 lib/html_filter.php:63
+#: lib/clog_webapi.php:533 lib/html.php:1704 lib/html_filter.php:63
 #: lib/html_graph.php:178 lib/html_reports.php:1977 lib/html_tree.php:1009
 #: managers.php:169 managers.php:529 managers.php:784 plugins.php:530
 #: pollers.php:914 tree.php:2172 user_admin.php:2149 user_admin.php:2346
@@ -626,7 +626,7 @@ msgstr "템플릿"
 #: host.php:1627 host.php:1691 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3803 lib/auth.php:3852
-#: lib/html.php:2172 lib/html.php:2200 lib/html.php:2239 lib/html.php:2273
+#: lib/html.php:2227 lib/html.php:2255 lib/html.php:2294 lib/html.php:2328
 #: lib/html_reports.php:977 lib/html_reports.php:981 lib/html_reports.php:1096
 #: lib/html_reports.php:1106 lib/html_reports.php:1956 managers.php:490
 #: managers.php:771
@@ -657,8 +657,8 @@ msgstr "일부"
 #: include/global_settings.php:1320 include/global_settings.php:1983
 #: lib/api_automation.php:48 lib/api_automation.php:431
 #: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3806
-#: lib/auth.php:3855 lib/auth.php:3901 lib/html.php:220 lib/html.php:2173
-#: lib/html.php:2198 lib/html.php:2240 lib/html.php:2274 lib/html_form.php:392
+#: lib/auth.php:3855 lib/auth.php:3901 lib/html.php:220 lib/html.php:2228
+#: lib/html.php:2253 lib/html.php:2295 lib/html.php:2329 lib/html_form.php:392
 #: lib/html_reports.php:988 lib/html_reports.php:992 lib/html_reports.php:1022
 #: lib/html_reports.php:1096 lib/html_reports.php:1102
 #: lib/html_reports.php:1106 lib/html_reports.php:1114
@@ -820,7 +820,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "비밀번호 변경 페이지에 문제가 있습니다. 즉시 Kadupul 관리자에게 문의하세요."
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4096 lib/html.php:2585
+#: include/global_form.php:1552 lib/functions.php:4096 lib/html.php:2640
 msgid "Change Password"
 msgstr "비밀번호 변경"
 
@@ -949,7 +949,7 @@ msgstr "로그인"
 
 #: auth_profile.php:61 include/global_settings.php:22
 #: include/global_settings.php:1184 include/global_settings.php:1501
-#: lib/html.php:2598 managers.php:24 user_admin.php:1740
+#: lib/html.php:2653 managers.php:24 user_admin.php:1740
 #: user_group_admin.php:1722
 msgid "General"
 msgstr "일반"
@@ -959,18 +959,18 @@ msgid "User Account Details"
 msgstr "사용자 계정 정보"
 
 #: auth_profile.php:308 include/global_arrays.php:857
-#: include/global_settings.php:2719 lib/html.php:2053 lib/html.php:2075
-#: lib/html.php:2579
+#: include/global_settings.php:2719 lib/html.php:2108 lib/html.php:2130
+#: lib/html.php:2634
 msgid "Tree View"
 msgstr "트리 보기"
 
-#: auth_profile.php:312 include/global_arrays.php:858 lib/html.php:2060
-#: lib/html.php:2084 lib/html.php:2580
+#: auth_profile.php:312 include/global_arrays.php:858 lib/html.php:2115
+#: lib/html.php:2139 lib/html.php:2635
 msgid "List View"
 msgstr "목록형식 보기"
 
-#: auth_profile.php:316 include/global_arrays.php:859 lib/html.php:2067
-#: lib/html.php:2581
+#: auth_profile.php:316 include/global_arrays.php:859 lib/html.php:2122
+#: lib/html.php:2636
 msgid "Preview View"
 msgstr "미리보기"
 
@@ -1141,7 +1141,7 @@ msgid "SNMP Name"
 msgstr "SNMP 이름"
 
 #: automation_devices.php:270 host.php:1644 include/global_form.php:1184
-#: include/global_settings.php:2301 lib/html.php:2269
+#: include/global_settings.php:2301 lib/html.php:2324
 msgid "Location"
 msgstr "위치"
 
@@ -1231,8 +1231,8 @@ msgstr "검색된 장치 제거"
 #: automation_snmp.php:552 automation_snmp.php:553 automation_snmp.php:554
 #: automation_snmp.php:555 automation_snmp.php:556 automation_snmp.php:557
 #: data_debug.php:633 data_source_profiles.php:61 host.php:1879
-#: lib/functions.php:6385 lib/functions.php:6390 lib/html.php:1258
-#: lib/html.php:1330 lib/html_reports.php:1742 lib/html_reports.php:1768
+#: lib/functions.php:6385 lib/functions.php:6390 lib/html.php:1313
+#: lib/html.php:1385 lib/html_reports.php:1742 lib/html_reports.php:1768
 #: lib/html_reports.php:1839 lib/html_reports.php:1840
 #: lib/html_reports.php:1841 lib/spikekill.php:1665 lib/spikekill.php:1666
 #: lib/spikekill.php:1713 lib/spikekill.php:1714 lib/spikekill.php:1715
@@ -1390,7 +1390,7 @@ msgstr "활성화"
 #: include/global_settings.php:1626 include/global_settings.php:1639
 #: include/global_settings.php:1664 include/global_settings.php:1678
 #: include/global_settings.php:1768 include/global_settings.php:2532
-#: lib/api_automation.php:28 lib/html.php:2675 lib/html_reports.php:1958
+#: lib/api_automation.php:28 lib/html.php:2730 lib/html_reports.php:1958
 #: lib/html_reports.php:2109 lib/html_utility.php:1317 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:935 user_domains.php:397
 #: user_group_admin.php:716 utilities.php:2119 utilities.php:2637
@@ -2279,7 +2279,7 @@ msgstr "없음"
 #: automation_snmp.php:562 automation_templates.php:512 cdef.php:591
 #: color_templates.php:96 data_queries.php:793 data_queries.php:900
 #: lib/api_automation.php:1310 lib/api_automation.php:1373
-#: lib/api_automation.php:1444 lib/html.php:1357 lib/html_reports.php:1854
+#: lib/api_automation.php:1444 lib/html.php:1412 lib/html_reports.php:1854
 #: lib/html_reports.php:1856 tree.php:2314 tree.php:2321
 msgid "Move Down"
 msgstr "아래로 이동"
@@ -2287,7 +2287,7 @@ msgstr "아래로 이동"
 #: automation_snmp.php:568 automation_templates.php:518 cdef.php:597
 #: color_templates.php:102 data_queries.php:798 data_queries.php:905
 #: lib/api_automation.php:1316 lib/api_automation.php:1379
-#: lib/api_automation.php:1450 lib/html.php:1363 lib/html_reports.php:1856
+#: lib/api_automation.php:1450 lib/html.php:1418 lib/html_reports.php:1856
 #: lib/html_reports.php:1858 tree.php:2318 tree.php:2322
 msgid "Move Up"
 msgstr "위로 이동"
@@ -2816,14 +2816,14 @@ msgid "Hex"
 msgstr "헥스"
 
 #: color_templates.php:79 lib/api_aggregate.php:2427 lib/api_aggregate.php:2430
-#: lib/api_aggregate.php:2434 lib/html.php:1283 lib/html.php:1285
+#: lib/api_aggregate.php:2434 lib/html.php:1338 lib/html.php:1340
 #: lib/html_reports.php:1845
 #, php-format
 msgid "Item # %d"
 msgstr "항목 # % d"
 
 #: color_templates.php:118 graph_templates_inputs.php:225
-#: lib/api_aggregate.php:2486 lib/html.php:1380
+#: lib/api_aggregate.php:2486 lib/html.php:1435
 msgid "No Items"
 msgstr "항목"
 
@@ -2977,7 +2977,7 @@ msgstr "데이터 소스 복구에 잘못된 데이터 소스 ID가 수신되었
 #: data_debug.php:452 data_debug.php:891 data_queries.php:716
 #: data_sources.php:1062 data_templates.php:718 graphs_items.php:405
 #: include/global_arrays.php:1005 include/global_form.php:960
-#: lib/api_aggregate.php:2338 lib/html.php:1228 rrdcheck.php:142
+#: lib/api_aggregate.php:2338 lib/html.php:1283 rrdcheck.php:142
 msgid "Data Source"
 msgstr "데이터 원본"
 
@@ -2985,7 +2985,7 @@ msgstr "데이터 원본"
 msgid "The Data Source to Debug"
 msgstr "디버깅 할 데이터 소스"
 
-#: data_debug.php:457 lib/html.php:2602 utilities.php:1031 utilities.php:1152
+#: data_debug.php:457 lib/html.php:2657 utilities.php:1031 utilities.php:1152
 msgid "User"
 msgstr "사용자"
 
@@ -3274,7 +3274,7 @@ msgid "Run checks on currently filtered Data Sources and preserve other results"
 msgstr "현재 필터링된 데이터 원본에 대한 검사를 실행하고 다른 결과 보존"
 
 #: data_debug.php:1082 data_sources.php:1488 data_templates.php:1101
-#: lib/html.php:2611
+#: lib/html.php:2666
 msgid "Profile"
 msgstr "프로필"
 
@@ -4061,8 +4061,8 @@ msgstr "이 데이터 템플릿에 주어진 이름입니다. 그래프 템플�
 #: data_sources.php:997 graph_view.php:817 graphs.php:1515
 #: include/global_arrays.php:954 include/global_arrays.php:1003
 #: include/global_arrays.php:1687 include/global_arrays.php:1856
-#: lib/api_automation.php:426 lib/functions.php:6021 lib/html.php:2168
-#: lib/html.php:2205 lib/html_reports.php:1109 utilities.php:1913
+#: lib/api_automation.php:426 lib/functions.php:6021 lib/html.php:2223
+#: lib/html.php:2260 lib/html_reports.php:1109 utilities.php:1913
 msgid "Device"
 msgstr "장치"
 
@@ -4435,7 +4435,7 @@ msgstr "그래프 템플릿 편집."
 msgid "Click to view just this Graph in Real-time"
 msgstr "실시간으로이 그래프 만 보려면 클릭하십시오."
 
-#: graph.php:270 lib/html.php:2576
+#: graph.php:270 lib/html.php:2631
 msgid "Utility View"
 msgstr "유틸리티보기"
 
@@ -4782,12 +4782,12 @@ msgstr "RTL Mode"
 msgid "Add Selected Graphs to Report"
 msgstr "선택한 그래프를 보고서에 추가"
 
-#: graph_view.php:1049 lib/html.php:2647
+#: graph_view.php:1049 lib/html.php:2702
 msgid "Ok"
 msgstr "확인"
 
 #: graph_xport.php:102 graph_xport.php:144 include/global_form.php:1809
-#: include/global_form.php:2077 lib/html.php:1949
+#: include/global_form.php:2077 lib/html.php:2004
 msgid "Title"
 msgstr "제목"
 
@@ -5114,7 +5114,7 @@ msgstr "[모든 장치]의 새로운 그래프"
 msgid "New Graphs for None Host Type"
 msgstr "없음 호스트 유형에 대한 새 그래프"
 
-#: graphs_new.php:367 lib/html.php:2574
+#: graphs_new.php:367 lib/html.php:2629
 msgid "Filter Settings Saved"
 msgstr "저장된 필터 설정"
 
@@ -5148,12 +5148,12 @@ msgstr "(만들 그래프 유형 선택)"
 msgid "Create"
 msgstr "생성"
 
-#: graphs_new.php:552 graphs_new.php:850 lib/html.php:1058 user_admin.php:1426
+#: graphs_new.php:552 graphs_new.php:850 lib/html.php:1105 user_admin.php:1426
 #: user_group_admin.php:1406
 msgid "Select All"
 msgstr "모두 선택"
 
-#: graphs_new.php:552 graphs_new.php:850 lib/html.php:947 lib/html.php:1058
+#: graphs_new.php:552 graphs_new.php:850 lib/html.php:994 lib/html.php:1105
 msgid "Select All Rows"
 msgstr "모든 행 선택"
 
@@ -5534,7 +5534,7 @@ msgstr "장치 템플릿 삭제"
 msgid "Undefined"
 msgstr "정의되지 않음"
 
-#: host.php:1588 include/global_settings.php:618 lib/html.php:2235
+#: host.php:1588 include/global_settings.php:618 lib/html.php:2290
 #: lib/html_reports.php:1090
 msgid "Site"
 msgstr "사이트"
@@ -6269,7 +6269,7 @@ msgstr "오른쪽"
 msgid "Justified"
 msgstr "양쪽 맞춤"
 
-#: include/global_arrays.php:585 lib/html.php:2673
+#: include/global_arrays.php:585 lib/html.php:2728
 msgid "Center"
 msgstr "중앙"
 
@@ -6583,7 +6583,7 @@ msgstr "헤더"
 
 #: include/global_arrays.php:953 include/global_arrays.php:1004
 #: include/global_arrays.php:1686 include/global_arrays.php:1855
-#: lib/html.php:2662
+#: lib/html.php:2717
 msgid "Graph"
 msgstr "그래프"
 
@@ -6749,7 +6749,7 @@ msgid "Configuration"
 msgstr "구성"
 
 #: include/global_arrays.php:1030 include/global_arrays.php:1052
-#: lib/html.php:2408 lib/html.php:2677
+#: lib/html.php:2463 lib/html.php:2732
 msgid "Settings"
 msgstr "설정"
 
@@ -6974,7 +6974,7 @@ msgstr "일반 관리"
 msgid "System Administration"
 msgstr "시스템 관리"
 
-#: include/global_arrays.php:1352 lib/html.php:1232
+#: include/global_arrays.php:1352 lib/html.php:1287
 msgid "CDEF"
 msgstr "CDEF"
 
@@ -7007,7 +7007,7 @@ msgstr "그래프 템플릿 항목"
 msgid "Graph Template Input"
 msgstr "그래프 템플릿 입력"
 
-#: include/global_arrays.php:1365 lib/html.php:1233
+#: include/global_arrays.php:1365 lib/html.php:1288
 msgid "VDEF"
 msgstr "VDEF"
 
@@ -7770,7 +7770,7 @@ msgid "List Mode"
 msgstr "목록 모드"
 
 #: include/global_arrays.php:2061 include/global_arrays.php:2067
-#: lib/functions.php:4318 lib/html.php:1809 lib/html.php:1874 lib/html.php:2595
+#: lib/functions.php:4318 lib/html.php:1864 lib/html.php:1929 lib/html.php:2650
 #: user_admin.php:1471 user_group_admin.php:1453
 msgid "Console"
 msgstr "콘솔"
@@ -7905,7 +7905,7 @@ msgstr "외부 링크"
 msgid "(Action)"
 msgstr "실행"
 
-#: include/global_arrays.php:2625 lib/html.php:2616
+#: include/global_arrays.php:2625 lib/html.php:2671
 msgid "About Kadupul"
 msgstr "Kadupul 소개"
 
@@ -7919,7 +7919,7 @@ msgid "Export Results"
 msgstr "내보내기 결과"
 
 #: include/global_arrays.php:2661 include/global_arrays.php:2691
-#: lib/html.php:1825 lib/html.php:1899
+#: lib/html.php:1880 lib/html.php:1954
 msgid "Reporting"
 msgstr "Reporting"
 
@@ -8700,7 +8700,7 @@ msgstr "범례 방향 (--legend-direction = &lt;direction&gt;)"
 msgid "Place the legend items in the given vertical order."
 msgstr "지정된 수직 순서로 범례 항목을 배치합니다."
 
-#: include/global_form.php:953 lib/api_aggregate.php:2339 lib/html.php:1229
+#: include/global_form.php:953 lib/api_aggregate.php:2339 lib/html.php:1284
 msgid "Graph Item Type"
 msgstr "그래프 항목 유형"
 
@@ -9841,7 +9841,7 @@ msgstr "단순으로 설정하면 그래프 및 데이터 소스는 새 그래�
 msgid "Simple"
 msgstr "단순"
 
-#: include/global_settings.php:428 lib/html.php:2664
+#: include/global_settings.php:428 lib/html.php:2719
 msgid "Advanced"
 msgstr "고급"
 
@@ -10257,7 +10257,7 @@ msgid "Theme Settings"
 msgstr "테마 설정"
 
 #: include/global_settings.php:851 include/global_settings.php:1061
-#: include/global_settings.php:2567 lib/html.php:2612
+#: include/global_settings.php:2567 lib/html.php:2667
 msgid "Theme"
 msgstr "테마"
 
@@ -11841,7 +11841,7 @@ msgstr "표준 편차"
 msgid "Variance Based w/Outliers Removed"
 msgstr "차이가 제거 된 Outliers가 제거 된 분산"
 
-#: include/global_settings.php:2417 lib/html.php:2382
+#: include/global_settings.php:2417 lib/html.php:2437
 msgid "Replacement Method"
 msgstr "교체 방법"
 
@@ -11849,15 +11849,15 @@ msgstr "교체 방법"
 msgid "There are three replacement methods.  The first method replaces the spike with the average of the data source in question.  The second method replaces the spike with a 'NaN'.  The last replaces the spike with the last known good value found."
 msgstr "세 가지 대체 방법이 있습니다. 첫 번째 방법은 스파이크를 문제의 데이터 소스 평균으로 바꿉니다. 두 번째 방법은 스파이크를 &#39;NaN&#39;으로 바꿉니다. 마지막으로 스파이크를 마지막으로 발견 된 양호한 값으로 대체합니다."
 
-#: include/global_settings.php:2422 lib/html.php:2378
+#: include/global_settings.php:2422 lib/html.php:2433
 msgid "Average"
 msgstr "평균"
 
-#: include/global_settings.php:2423 lib/html.php:2379
+#: include/global_settings.php:2423 lib/html.php:2434
 msgid "NaN's"
 msgstr "NaN"
 
-#: include/global_settings.php:2424 lib/html.php:2380
+#: include/global_settings.php:2424 lib/html.php:2435
 msgid "Last Known Good"
 msgstr "마지막으로 성공한 좋은 점"
 
@@ -12397,15 +12397,15 @@ msgstr "&#39;돌아 가기&#39;를 눌러 다른 그래프로 돌아가서 선�
 msgid "The Graphs chosen for the Aggregate Graph do not use Graph Templates.  Aggregate does not support creating Aggregate Graphs from non-templated graphs."
 msgstr "집계 그래프 용으로 선택된 그래프는 그래프 템플릿을 사용하지 않습니다. 집계는 템플릿이 아닌 그래프에서 집계 그래프를 만드는 것을 지원하지 않습니다."
 
-#: lib/api_aggregate.php:2337 lib/html.php:1226
+#: lib/api_aggregate.php:2337 lib/html.php:1281
 msgid "Graph Item"
 msgstr "그래프 항목"
 
-#: lib/api_aggregate.php:2340 lib/html.php:1230
+#: lib/api_aggregate.php:2340 lib/html.php:1285
 msgid "CF Type"
 msgstr "CF 유형"
 
-#: lib/api_aggregate.php:2341 lib/html.php:1235
+#: lib/api_aggregate.php:2341 lib/html.php:1290
 msgid "Item Color"
 msgstr "이이템 색상"
 
@@ -13422,11 +13422,11 @@ msgstr "일반 사용자로 로그인"
 msgid "guest"
 msgstr "명"
 
-#: lib/functions.php:4075 lib/functions.php:4100 lib/html.php:2601
+#: lib/functions.php:4075 lib/functions.php:4100 lib/html.php:2656
 msgid "User Community"
 msgstr "사용자 커뮤니티"
 
-#: lib/functions.php:4076 lib/functions.php:4101 lib/html.php:2603
+#: lib/functions.php:4076 lib/functions.php:4101 lib/html.php:2658
 #: lib/utility.php:1440
 msgid "Documentation"
 msgstr "문서"
@@ -13436,11 +13436,11 @@ msgstr "문서"
 msgid "Logged in as %s"
 msgstr "%s으로 로그인됨"
 
-#: lib/functions.php:4095 lib/html.php:2582
+#: lib/functions.php:4095 lib/html.php:2637
 msgid "Edit Profile"
 msgstr "프로필 수정"
 
-#: lib/functions.php:4105 lib/html.php:2586
+#: lib/functions.php:4105 lib/html.php:2641
 msgid "Logout"
 msgstr "로그아웃"
 
@@ -13612,7 +13612,7 @@ msgstr "데이터 쿼리 :"
 msgid "CSV Export of Graph Data"
 msgstr "그래프 데이터의 CSV 내보내기"
 
-#: lib/html.php:532 lib/html.php:2573
+#: lib/html.php:532 lib/html.php:2628
 msgid "Time Graph View"
 msgstr "시간 그래프보기"
 
@@ -13652,386 +13652,386 @@ msgstr "현재"
 msgid "No %s Found"
 msgstr " %s을 찾을 수 없습니다."
 
-#: lib/html.php:1227
+#: lib/html.php:1282
 msgid "#"
 msgstr "#"
 
-#: lib/html.php:1231
+#: lib/html.php:1286
 msgid "GPrint"
 msgstr "지프린트"
 
-#: lib/html.php:1234
+#: lib/html.php:1289
 msgid "Alpha %"
 msgstr "알파"
 
-#: lib/html.php:1291
+#: lib/html.php:1346
 msgid "No Source"
 msgstr "원본 없음"
 
-#: lib/html.php:1639
+#: lib/html.php:1694
 msgid "Choose an action"
 msgstr "작업선택"
 
-#: lib/html.php:1649
+#: lib/html.php:1704
 msgid "Execute Action"
 msgstr "액션 실행"
 
-#: lib/html.php:1830 lib/html.php:1909 managers.php:26 managers.php:219
+#: lib/html.php:1885 lib/html.php:1964 managers.php:26 managers.php:219
 msgid "Logs"
 msgstr "로그"
 
-#: lib/html.php:2036 user_admin.php:2346 user_admin.php:2352
+#: lib/html.php:2091 user_admin.php:2346 user_admin.php:2352
 msgid "Show All"
 msgstr "모두 보여주기"
 
-#: lib/html.php:2388
+#: lib/html.php:2443
 msgid "Standard Deviations"
 msgstr "표준 편차"
 
-#: lib/html.php:2394
+#: lib/html.php:2449
 msgid "Kills Per RRA"
 msgstr "RRA 당 Kills"
 
-#: lib/html.php:2400
+#: lib/html.php:2455
 msgid "Remove StdDev"
 msgstr "StdDev 제거"
 
-#: lib/html.php:2401
+#: lib/html.php:2456
 msgid "Gap Fill Range"
 msgstr "갭 필 범위"
 
-#: lib/html.php:2402 lib/spikekill.php:280
+#: lib/html.php:2457 lib/spikekill.php:280
 msgid "Float Range"
 msgstr "플로트 범위"
 
-#: lib/html.php:2404
+#: lib/html.php:2459
 msgid "Dry Run StdDev"
 msgstr "드라이 런 StdDev"
 
-#: lib/html.php:2405
+#: lib/html.php:2460
 msgid "Dry Run Gap Fill Range"
 msgstr "드라이 런 갭 충진 범위"
 
-#: lib/html.php:2406
+#: lib/html.php:2461
 msgid "Dry Run Float Range"
 msgstr "드라이 런 플로트 범위"
 
-#: lib/html.php:2569
+#: lib/html.php:2624
 msgid "Allow or limit the table columns to extend beyond the current windows limits."
 msgstr "현재 창 제한을 초과하여 확장하도록 테이블 열을 허용하거나 제한합니다."
 
-#: lib/html.php:2570 lib/html_filter.php:48
+#: lib/html.php:2625 lib/html_filter.php:48
 msgid "Enter a search term"
 msgstr "검색어 입력"
 
-#: lib/html.php:2571
+#: lib/html.php:2626
 msgid "Enter a regular expression"
 msgstr "정규 표현식 입력"
 
-#: lib/html.php:2572
+#: lib/html.php:2627
 msgid "No file selected"
 msgstr "선택된 파일이 없음"
 
-#: lib/html.php:2575 lib/html.php:2618
+#: lib/html.php:2630 lib/html.php:2673
 msgid "SpikeKill Results"
 msgstr "스파이크 킬 결과"
 
-#: lib/html.php:2577
+#: lib/html.php:2632
 msgid "Click to view just this Graph in Realtime"
 msgstr "실시간으로이 그래프 만 보려면 클릭하십시오."
 
-#: lib/html.php:2578
+#: lib/html.php:2633
 msgid "Click again to take this Graph out of Realtime"
 msgstr "이 그래프를 실시간으로 가져 오려면 다시 클릭하십시오."
 
-#: lib/html.php:2587
+#: lib/html.php:2642
 msgid "Standard Mode"
 msgstr "스캔 모드"
 
-#: lib/html.php:2588
+#: lib/html.php:2643
 msgid "Compact Mode"
 msgstr "줌 모드"
 
-#: lib/html.php:2589
+#: lib/html.php:2644
 msgid "Dark Color Mode"
 msgstr "색상 없음"
 
-#: lib/html.php:2590
+#: lib/html.php:2645
 msgid "Light Color Mode"
 msgstr "목록 모드"
 
-#: lib/html.php:2591
+#: lib/html.php:2646
 msgid "Use System Color"
 msgstr "이이템 색상"
 
-#: lib/html.php:2592
+#: lib/html.php:2647
 msgid "Ignore System Color"
 msgstr "이이템 색상"
 
-#: lib/html.php:2593
+#: lib/html.php:2648
 msgid "Help"
 msgstr "도움말"
 
-#: lib/html.php:2594
+#: lib/html.php:2649
 #, fuzzy
 msgid "Kadupul Home"
 msgstr "Kadupul 홈"
 
-#: lib/html.php:2596
+#: lib/html.php:2651
 msgid "Miscellaneous"
 msgstr "기타"
 
-#: lib/html.php:2597
+#: lib/html.php:2652
 msgid "Dashboards"
 msgstr "Dashboards"
 
-#: lib/html.php:2599
+#: lib/html.php:2654
 msgid "Charts"
 msgstr "차트"
 
-#: lib/html.php:2600
+#: lib/html.php:2655
 #, fuzzy
 msgid "Kadupul Project Page"
 msgstr "Kadupul 프로젝트 페이지"
 
-#: lib/html.php:2604
+#: lib/html.php:2659
 msgid "Spine"
 msgstr "스파인"
 
-#: lib/html.php:2605
+#: lib/html.php:2660
 msgid "RRDProxy"
 msgstr "RRD프록시"
 
-#: lib/html.php:2606
+#: lib/html.php:2661
 msgid "Keyboard"
 msgstr "키보드"
 
-#: lib/html.php:2607
+#: lib/html.php:2662
 msgid "Shortcuts"
 msgstr "바로가기"
 
-#: lib/html.php:2608
+#: lib/html.php:2663
 msgid "Contribute to the Kadupul Project"
 msgstr "Kadupul 로그 회전"
 
-#: lib/html.php:2609
+#: lib/html.php:2664
 msgid "Help in Developing"
 msgstr "개발에 도움"
 
-#: lib/html.php:2610
+#: lib/html.php:2665
 msgid "Donation & Sponsoring"
 msgstr "기부 및 후원"
 
-#: lib/html.php:2613
+#: lib/html.php:2668
 msgid "Client"
 msgstr "고객"
 
-#: lib/html.php:2614
+#: lib/html.php:2669
 msgid "Help in Translating"
 msgstr "번역에 도움"
 
-#: lib/html.php:2615
+#: lib/html.php:2670
 msgid "Report a bug"
 msgstr "버그 보고하기"
 
-#: lib/html.php:2617
+#: lib/html.php:2672
 #, fuzzy
 msgid "Kadupul"
 msgstr "Kadupul"
 
-#: lib/html.php:2619
+#: lib/html.php:2674
 msgid "Click to Show/Hide Filter"
 msgstr "클릭하여 필터 표시 / 숨기기"
 
-#: lib/html.php:2620
+#: lib/html.php:2675
 msgid "Clear Current Filter"
 msgstr "현재 필터 지우기"
 
-#: lib/html.php:2621
+#: lib/html.php:2676
 msgid "Clipboard"
 msgstr "클립보드"
 
-#: lib/html.php:2622
+#: lib/html.php:2677
 msgid "Clipboard ID"
 msgstr "클립 보드 ID"
 
-#: lib/html.php:2623
+#: lib/html.php:2678
 msgid "Copy operation is unavailable at this time"
 msgstr "현재 복사 작업을 사용할 수 없습니다."
 
-#: lib/html.php:2624
+#: lib/html.php:2679
 msgid "Failed to find data to copy!"
 msgstr "복사 할 데이터를 찾지 못했습니다!"
 
-#: lib/html.php:2625
+#: lib/html.php:2680
 msgid "Clipboard has been updated"
 msgstr "클립 보드가 업데이트되었습니다."
 
-#: lib/html.php:2626
+#: lib/html.php:2681
 msgid "Sorry, your clipboard could not be updated at this time"
 msgstr "죄송합니다. 현재 클립 보드를 업데이트 할 수 없습니다."
 
-#: lib/html.php:2630
+#: lib/html.php:2685
 msgid "Passphrase length meets 8 character minimum"
 msgstr "암호 길이가 최소 8자를 충족시킵니다."
 
-#: lib/html.php:2631
+#: lib/html.php:2686
 msgid "Passphrase too short"
 msgstr "암호가 너무 짧다."
 
-#: lib/html.php:2632
+#: lib/html.php:2687
 msgid "Passphrase matches but too short"
 msgstr "암호는 일치하지만 너무 짧습니다."
 
-#: lib/html.php:2633
+#: lib/html.php:2688
 msgid "Passphrase too short and not matching"
 msgstr "암호가 너무 짧고 일치하지 않습니다."
 
-#: lib/html.php:2634
+#: lib/html.php:2689
 msgid "Passphrases match"
 msgstr "암호가 일치 함"
 
-#: lib/html.php:2635
+#: lib/html.php:2690
 msgid "Passphrases do not match"
 msgstr "암호가 일치하지 않습니다."
 
-#: lib/html.php:2636
+#: lib/html.php:2691
 msgid "Sorry, we could not process your last action."
 msgstr "죄송합니다. 마지막 작업을 처리 할 수 없습니다."
 
-#: lib/html.php:2637
+#: lib/html.php:2692
 msgid "Error:"
 msgstr "오류:"
 
-#: lib/html.php:2638
+#: lib/html.php:2693
 msgid "Reason:"
 msgstr "이유:"
 
-#: lib/html.php:2639
+#: lib/html.php:2694
 msgid "Action failed"
 msgstr "작업이 실패했습니다."
 
-#: lib/html.php:2640 pollers.php:804
+#: lib/html.php:2695 pollers.php:804
 msgid "Connection Successful"
 msgstr "작업 성공"
 
-#: lib/html.php:2641 pollers.php:806
+#: lib/html.php:2696 pollers.php:806
 msgid "Connection Failed"
 msgstr "연결 실패"
 
-#: lib/html.php:2642
+#: lib/html.php:2697
 msgid "The response to the last action was unexpected."
 msgstr "마지막 행동에 대한 반응은 예상치 못했습니다."
 
-#: lib/html.php:2643
+#: lib/html.php:2698
 msgid "Some Actions failed"
 msgstr "일부 조치가 실패했습니다."
 
-#: lib/html.php:2644
+#: lib/html.php:2699
 msgid "Note, we could not process all your actions.  Details are below."
 msgstr "모든 행동을 처리 할 수는 없습니다. 세부 사항은 아래와 같습니다."
 
-#: lib/html.php:2645
+#: lib/html.php:2700
 msgid "Operation successful"
 msgstr "작업 성공"
 
-#: lib/html.php:2646
+#: lib/html.php:2701
 msgid "The Operation was successful.  Details are below."
 msgstr "작업이 성공적으로 완료되었습니다. 세부 사항은 아래와 같습니다."
 
-#: lib/html.php:2648
+#: lib/html.php:2703
 msgid "Pause"
 msgstr "일시 정지"
 
-#: lib/html.php:2651
+#: lib/html.php:2706
 msgid "Zoom In"
 msgstr "확대"
 
-#: lib/html.php:2652
+#: lib/html.php:2707
 msgid "Zoom Out"
 msgstr "축소"
 
-#: lib/html.php:2653
+#: lib/html.php:2708
 msgid "Zoom Out Factor"
 msgstr "축소 계수"
 
-#: lib/html.php:2654
+#: lib/html.php:2709
 msgid "Timestamps"
 msgstr "타임스탬프"
 
-#: lib/html.php:2655
+#: lib/html.php:2710
 msgid "2x"
 msgstr "2x"
 
-#: lib/html.php:2656
+#: lib/html.php:2711
 msgid "4x"
 msgstr "4 배"
 
-#: lib/html.php:2657
+#: lib/html.php:2712
 msgid "8x"
 msgstr "8x"
 
-#: lib/html.php:2658
+#: lib/html.php:2713
 msgid "16x"
 msgstr "16x"
 
-#: lib/html.php:2659
+#: lib/html.php:2714
 msgid "32x"
 msgstr "32 배"
 
-#: lib/html.php:2660
+#: lib/html.php:2715
 msgid "Zoom Out Positioning"
 msgstr "위치 조정 축소"
 
-#: lib/html.php:2661
+#: lib/html.php:2716
 msgid "Zoom Mode"
 msgstr "줌 모드"
 
-#: lib/html.php:2663
+#: lib/html.php:2718
 msgid "Quick"
 msgstr "빨리"
 
-#: lib/html.php:2665
+#: lib/html.php:2720
 msgid "Open in new tab"
 msgstr "새 탭으로 열기"
 
-#: lib/html.php:2666
+#: lib/html.php:2721
 msgid "Save graph"
 msgstr "그래프 저장"
 
-#: lib/html.php:2667
+#: lib/html.php:2722
 msgid "Copy graph"
 msgstr "그래프 복사"
 
-#: lib/html.php:2668
+#: lib/html.php:2723
 msgid "Copy graph link"
 msgstr "그래프 링크 복사"
 
-#: lib/html.php:2669
+#: lib/html.php:2724
 msgid "Always On"
 msgstr "항상 켬"
 
-#: lib/html.php:2670
+#: lib/html.php:2725
 msgid "Auto"
 msgstr "자동"
 
-#: lib/html.php:2671
+#: lib/html.php:2726
 msgid "Always Off"
 msgstr "항상 꺼짐"
 
-#: lib/html.php:2672
+#: lib/html.php:2727
 msgid "Begin with"
 msgstr "시작하다"
 
-#: lib/html.php:2674
+#: lib/html.php:2729
 msgid "End with"
 msgstr "종료일"
 
-#: lib/html.php:2676 lib/html_form.php:1432
+#: lib/html.php:2731 lib/html_form.php:1432
 msgid "Close"
 msgstr "닫기"
 
-#: lib/html.php:2678
+#: lib/html.php:2733
 msgid "3rd Mouse Button"
 msgstr "세 번째 마우스 버튼"
 
