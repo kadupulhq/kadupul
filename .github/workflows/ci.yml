@@ -28,6 +28,8 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y gettext
       - name: Verify every shipped source and compiled catalog
         run: mise exec python@3.12.12 -- python tests/security/verify_gettext_catalogs.py
+      - name: Verify test runner dispatch and missing-suite failures
+        run: mise exec python@3.12.12 -- python tests/tools/test_suite_runner.py
       - name: Verify catalog rejection and historical compatibility boundaries
         run: mise exec python@3.12.12 -- python tests/security/test_gettext_catalogs.py
 

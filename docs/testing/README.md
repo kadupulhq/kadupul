@@ -1,5 +1,8 @@
 # Behavioral characterization harness
 
+For the other native test runners and their separate dependencies, see the
+[main test suite guide](../../tests/README.md).
+
 This harness records what Cacti 1.2.31 actually does, so a later Kadupul
 rewrite can be checked against it. It is a specification captured by
 observation, not a correctness suite. Where Cacti behaves oddly, the harness

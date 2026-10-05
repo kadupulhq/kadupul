@@ -18,8 +18,24 @@ help: ## Show available targets
 .PHONY: test
 test: test-characterization ## Run the behavioral suite
 
-# The root composer.json has no test script, so composer test fails from here.
-# The in-process Pest suite installs separately from tests/composer.json.
+# composer test runs the Symfony PHPUnit suite. Pest installs separately
+# from tests/composer.json; see tests/README.md for all runner boundaries.
+
+.PHONY: test-symfony test-legacy test-database test-unit-coverage test-javascript test-themes test-runner-contracts
+test-symfony: ## Run the Symfony suite with application PHPUnit 10
+	./tests/bin/run symfony
+test-legacy: ## Run the explicit legacy regression suites with Pest 4
+	./tests/bin/run legacy
+test-database: ## Run database contracts against a prepared disposable database
+	./tests/bin/run database
+test-unit-coverage: ## Run the unit contribution to coverage (requires PCOV or Xdebug)
+	./tests/bin/run unit-coverage
+test-javascript: ## Run all native Unit JavaScript contracts
+	./tests/bin/run javascript
+test-themes: ## Run the local theme browser suite with its explicit JS config
+	./tests/bin/run themes
+test-runner-contracts: ## Verify runner dispatch and unavailable/empty-suite failures
+	mise exec -- python tests/tools/test_suite_runner.py
 
 .PHONY: test-characterization
 test-characterization: ## Verify observed behavior against the committed goldens

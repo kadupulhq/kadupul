@@ -7,16 +7,19 @@
  */
 
 /*
- * Smoke tests for issue #7133. Cheap structural checks that verify
- * lib/utility.php still parses, the touched functions exist, and the
+ * Source-contract tests for issue #7133. Structural checks that verify
+ * lib/utility.php retains the touched function signatures and the
  * four post-fix shapes are present. Runs without Kadupul's bootstrap.
  */
 
 $repoRoot = __DIR__ . '/../..';
 $utility  = file_get_contents("$repoRoot/lib/utility.php");
+if ($utility === false) {
+    throw new RuntimeException('Unable to read poller cache production source.');
+}
 require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
 
-test('lib/utility.php parses and contains the touched functions', function () use ($utility) {
+test('poller cache and collector propagation function signatures are retained', function () use ($utility) {
     expect($utility)->toContain('function update_poller_cache($data_source, $commit = false)');
     expect($utility)->toContain('function push_out_data_input_method($data_input_id)');
     expect($utility)->toContain('function push_out_host($host_id, $local_data_id = 0, $data_template_id = 0)');
