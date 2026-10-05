@@ -115,8 +115,8 @@ class Client:
     def login(self, username, password):
         self.request('index.php')
         result = self.request('index.php', {'action': 'login', 'login_username': username,
-                                            'login_password': password, 'realm': 'local'})
-        if 'login_username' in result['body'] and result['status'] == 200:
+                                            'login_password': password})
+        if result['status'] >= 400 or ('login_username' in result['body'] and result['status'] == 200):
             raise RuntimeError('Login failed for ' + username)
         return result
 
