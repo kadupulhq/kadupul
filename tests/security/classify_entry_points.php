@@ -212,7 +212,7 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php' => '0d9d146c13a1229cbb85593760bbb7ad62faeab4db3dd71b1d14dedbb3901199',
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationFileSessionHandler.php' => '941e8b6a6673a9a6956a1c6bf15397428f66a515c6b12fe812a31b1419b33a2a',
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'c07761a00231ff569cbff177dc4b401f631cc34239e90e83d62f8a0cec0b69ce',
-    'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => 'b233819dc23607a2d2ffd3231760ba2aeec52f39c2b1c8c564bf354681a90d93',
+    'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => '4743883f8c2b1dc9b07c91a66bccdfa39f92531b6acafc0474bed5f92824513c',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
     'config/services.yaml' => 'a5a72aeb49fa0167126f7bbaac00b17f8820a8ecaf7024521f5f81c059de7c70',
 ];
