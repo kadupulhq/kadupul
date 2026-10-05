@@ -23,10 +23,11 @@ export async function installFontAwesome(source, destination) {
   if (!/^\d+\.\d+\.\d+$/.test(version)) throw new Error(`Unexpected Font Awesome version: ${version}`);
 
   let css = await readFile(new URL('css/all.css', source), 'utf8');
-  // Preserve the legacy circle-thin alias used by existing screens/plugins.
+  // Preserve the legacy outline glyph used by existing screens/plugins.
+  // Font Awesome 4 drew circle-thin in the regular face, not the solid face.
   const anchor = '.fa-circle-notch {\n  --fa: "\\f1ce";\n}';
   if (css.split(anchor).length !== 2) throw new Error('Font Awesome compatibility patch no longer applies');
-  css = css.replace(anchor, anchor + '\n\n.fa.fa-circle-thin {\n  --fa: "\\f111";\n}');
+  css = css.replace(anchor, anchor + '\n\n.fa.fa-circle-thin {\n  --fa: "\\f111";\n  --fa-style: 400;\n}');
 
   const fonts = (await readdir(new URL('webfonts/', source))).filter((name) => name.endsWith('.woff2')).sort();
   let rewritten = 0;

@@ -372,7 +372,7 @@ dynamic_include	./lib/functions.php:5868	    require_once($config['include_path'
 dynamic_include	./lib/functions.php:5869	    require_once($config['include_path'] . '/vendor/phpmailer/src/PHPMailer.php');
 dynamic_include	./lib/functions.php:5870	    require_once($config['include_path'] . '/vendor/phpmailer/src/SMTP.php');
 dynamic_include	./lib/graph_variables.php:47		include_once($config['library_path'] . '/rrd.php');
-dynamic_include	./lib/html.php:1263	    include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/html.php:1290	    include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/html_tree.php:462		include_once($config['base_path'] . '/lib/data_query.php');
 dynamic_include	./lib/html_tree.php:76		include_once($config['library_path'] . '/data_query.php');
 dynamic_include	./lib/html_tree.php:806		include($config['include_path'] . '/global_arrays.php');
