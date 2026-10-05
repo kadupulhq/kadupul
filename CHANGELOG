@@ -1,6 +1,9 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Spike removal limits apply per archive in timestamp/data-source order, including NaN replacements; previews report the same capped counts as updates.
+-issue: Fixed graph line types ignore hidden width input and retain saved stack widths; editable stacked lines retain their existing validation.
+-issue: Theme JavaScript honors reduced-motion changes and stops active animations; keyboard skip links retain modern clipping support.
 -issue: Stop tree automation after rejected or failed parent creation, preserve earlier successful headers, and offer only valid headers in parent selectors
 -issue: Use plugin directory identity for compatibility checks, align listed compatibility with install validation, and reject malformed configured administrator IDs and failed realm reads
 -issue: Plugin install failures, including missing directories, exit nonzero while later plugins continue; schema-version write failures include the attempted version on stderr

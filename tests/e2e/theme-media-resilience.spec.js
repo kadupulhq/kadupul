@@ -20,7 +20,9 @@ const headers = ['include/top_header.php', 'include/top_graph_header.php', 'incl
 // Take the skip link from the header template so the test follows the markup that ships.
 function skipLink() {
   const source = fs.readFileSync(path.join(root, 'include/top_header.php'), 'utf8');
-  return source.match(/<a class='skip-link'[^>]*>[^<]*<\/a>/)[0];
+  const match = source.match(/<a class='skip-link'[^>]*>[^<]*<\/a>/);
+  expect(match, 'the shipped header must contain a skip link').not.toBeNull();
+  return match[0];
 }
 
 async function open(page, theme) {
@@ -59,6 +61,28 @@ for (const theme of themes) {
     test('reduced motion stops animations and transitions', async ({ page }) => {
       await page.emulateMedia({ reducedMotion: 'reduce' });
       await open(page, theme);
+      const errors = [];
+      page.on('pageerror', error => errors.push(error.message));
+      for (const script of ['/include/js/jquery.js', '/include/js/jquery-ui.js',
+        '/include/js/jquery.cookie.js', '/include/js/jquery.tablesorter.js', '/include/js/js.storage.js',
+        '/include/vendor/csrf/csrf-magic.js', '/include/layout.js', `/include/themes/${theme}/main.js`]) {
+        await page.addScriptTag({ url: script });
+      }
+      await page.evaluate(() => {
+        if (typeof setMenuVisibility === 'function') {
+          setMenuVisibility();
+          document.querySelector('#nav a.active').click();
+        } else {
+          themeReady();
+        }
+      });
+      expect(errors).toEqual([]);
+      expect(await page.evaluate(() => jQuery.fx.off)).toBe(true);
+      expect(await page.evaluate(() => jQuery(':animated').length)).toBe(0);
+      await page.emulateMedia({ reducedMotion: 'no-preference' });
+      await expect.poll(() => page.evaluate(() => jQuery.fx.off)).toBe(false);
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await expect.poll(() => page.evaluate(() => jQuery.fx.off)).toBe(true);
       const longest = await page.evaluate(() => {
         const seconds = value => Math.max(...value.split(',').map(part => {
           const number = parseFloat(part);
