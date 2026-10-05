@@ -29,8 +29,7 @@ CsrfMagic.prototype = {
     open: function(method, url, async, username, password) {
         var isLocalPost = false;
         try {
-            isLocalPost = method.toUpperCase() == 'POST' &&
-                new URL(url, window.location.href).origin === window.location.origin;
+            isLocalPost = method.toUpperCase() == 'POST' && CsrfMagic.isLocalUrl(url);
         } catch (error) {
             isLocalPost = false;
         }
@@ -117,26 +116,117 @@ CsrfMagic.process = function(base) {
 	}
 	return prepend;
 }
+// Controls named "action", "method", "elements", "getAttribute" or
+// "appendChild" shadow the form's own properties, so DOM methods are called
+// through their prototypes when available.
+CsrfMagic.invoke = function(type, node, method, args) {
+	var proto = window[type] && window[type].prototype;
+	return (proto && proto[method] ? proto[method] : node[method]).apply(node, args);
+}
+CsrfMagic.attribute = function(node, name) {
+	return CsrfMagic.invoke('Element', node, 'getAttribute', [name]);
+}
+// The browser resolves a relative URL against the document base, which a
+// <base href> can move to another origin. An element named "baseURI" shadows
+// document.baseURI, so the getter is taken from Node.prototype; without it,
+// only an unshadowed string is trusted.
+CsrfMagic.baseUrl = function() {
+	if (!window.document) return window.location.href;
+	var descriptor = window.Node && Object.getOwnPropertyDescriptor(window.Node.prototype, 'baseURI');
+	var base = descriptor && descriptor.get ? descriptor.get.call(document) : document.baseURI;
+	return typeof base === 'string' ? base : null;
+}
+CsrfMagic.isLocalUrl = function(url) {
+	try {
+		return new URL(url, CsrfMagic.baseUrl()).origin === window.location.origin;
+	} catch (error) {
+		return false;
+	}
+}
+// A missing or empty action submits to the current document.
+CsrfMagic.isLocalTarget = function(node, name) {
+	var target = CsrfMagic.attribute(node, name);
+	return target === null || target === '' || CsrfMagic.isLocalUrl(target);
+}
+CsrfMagic.tokenFields = function(form) {
+	var named = CsrfMagic.invoke('Document', document, 'getElementsByName', [csrfMagicName]);
+	var fields = [];
+	for (var i = 0; i < named.length; i++) {
+		if (named[i].form === form) fields.push(named[i]);
+	}
+	return fields;
+}
+CsrfMagic.hasForeignSubmitter = function(form) {
+	var controls = CsrfMagic.invoke('Document', document, 'querySelectorAll', ['[formaction]']);
+	for (var i = 0; i < controls.length; i++) {
+		if (controls[i].form === form && !CsrfMagic.isLocalTarget(controls[i], 'formaction')) return true;
+	}
+	return false;
+}
+// The action, a <base href> or the submitter's formaction can change after the
+// page loads, so whether the token fields go with a submission is decided when
+// it is sent.
+CsrfMagic.guard = function(form, submitter) {
+	var local = submitter && CsrfMagic.attribute(submitter, 'formaction') !== null
+		? CsrfMagic.isLocalTarget(submitter, 'formaction')
+		: CsrfMagic.isLocalTarget(form, 'action');
+	var fields = CsrfMagic.tokenFields(form);
+	for (var i = 0; i < fields.length; i++) {
+		fields[i].disabled = !local;
+	}
+}
+CsrfMagic.submit = function(event) {
+	var form = event.target;
+	if ('submitter' in event) {
+		CsrfMagic.guard(form, event.submitter);
+		return;
+	}
+	// Without SubmitEvent.submitter the button used is unknown, so a form with
+	// a button that posts elsewhere sends no token at all.
+	CsrfMagic.guard(form, null);
+	if (CsrfMagic.hasForeignSubmitter(form)) {
+		var fields = CsrfMagic.tokenFields(form);
+		for (var i = 0; i < fields.length; i++) {
+			fields[i].disabled = true;
+		}
+	}
+}
 // callback function for when everything on the page has loaded
 CsrfMagic.end = function() {
 	// This rewrites forms AGAIN, so in case buffering didn't work this
 	// certainly will.
+	var checksSubmitter = window.SubmitEvent && 'submitter' in SubmitEvent.prototype;
 	var forms = document.getElementsByTagName('form');
 	for (var i = 0; i < forms.length; i++) {
 		var form = forms[i];
-		if (form.method.toUpperCase() !== 'POST') continue;
-        try {
-            if (new URL(form.action, window.location.href).origin !== window.location.origin) continue;
-        } catch (error) {
-            continue;
-        }
-		if (form.elements[csrfMagicName]) continue;
+		if ((CsrfMagic.attribute(form, 'method') || '').toUpperCase() !== 'POST') continue;
+		if (!CsrfMagic.isLocalTarget(form, 'action')) continue;
+		// Without SubmitEvent.submitter the submit handler cannot tell which button was used.
+		if (!checksSubmitter && CsrfMagic.hasForeignSubmitter(form)) continue;
+		if (CsrfMagic.tokenFields(form).length) continue;
 		var input = document.createElement('input');
 		input.setAttribute('name',  csrfMagicName);
 		input.setAttribute('value', csrfMagicToken);
 		input.setAttribute('type',  'hidden');
-		form.appendChild(input);
+		CsrfMagic.invoke('Node', form, 'appendChild', [input]);
 	}
+}
+
+// form.submit() fires no submit event, so it is checked here instead.
+if (window.HTMLFormElement && HTMLFormElement.prototype.submit && !HTMLFormElement.prototype.csrf_submit) {
+	HTMLFormElement.prototype.csrf_submit = HTMLFormElement.prototype.submit;
+	HTMLFormElement.prototype.submit = function() {
+		CsrfMagic.guard(this, null);
+		return HTMLFormElement.prototype.csrf_submit.apply(this, arguments);
+	}
+}
+
+// The submit check is installed when this script loads in the page head, so
+// markup that keeps the parser from reaching CsrfMagic.end() cannot switch it
+// off. A page that loads the script twice still gets one listener.
+if (window.document && (window.EventTarget || document.addEventListener) && !window.csrfMagicSubmitListener) {
+	window.csrfMagicSubmitListener = true;
+	CsrfMagic.invoke('EventTarget', document, 'addEventListener', ['submit', CsrfMagic.submit, true]);
 }
 
 // Sets things up for Mozilla/Opera/nice browsers
@@ -146,16 +236,19 @@ if (window.XMLHttpRequest && window.XMLHttpRequest.prototype && '\v' != 'v') {
 	var x = XMLHttpRequest.prototype;
 	var c = CsrfMagic.prototype;
 
-	// Save the original functions
-	x.csrf_open = x.open;
-	x.csrf_send = x.send;
-	x.csrf_setRequestHeader = x.setRequestHeader;
+	// A second load would save the decorated open() as the original and recurse.
+	if (!x.csrf_open) {
+		// Save the original functions
+		x.csrf_open = x.open;
+		x.csrf_send = x.send;
+		x.csrf_setRequestHeader = x.setRequestHeader;
 
-	// Notice that CsrfMagic is itself an instantiatable object, but only
-	// open, send and setRequestHeader are necessary as decorators.
-	x.open = c.open;
-	x.send = c.send;
-	x.setRequestHeader = c.setRequestHeader;
+		// Notice that CsrfMagic is itself an instantiatable object, but only
+		// open, send and setRequestHeader are necessary as decorators.
+		x.open = c.open;
+		x.send = c.send;
+		x.setRequestHeader = c.setRequestHeader;
+	}
 } else {
 	// The only way we can do this is by modifying a library you have been
 	// using. We support YUI, script.aculo.us, prototype, MooTools,
@@ -167,8 +260,7 @@ if (window.XMLHttpRequest && window.XMLHttpRequest.prototype && '\v' != 'v') {
 		jQuery.ajax = function( s ) {
 			var isLocalPost = false;
 			try {
-				isLocalPost = s.type && s.type.toUpperCase() == 'POST' &&
-					new URL(s.url, window.location.href).origin === window.location.origin;
+				isLocalPost = s.type && s.type.toUpperCase() == 'POST' && CsrfMagic.isLocalUrl(s.url);
 			} catch (error) {
 				isLocalPost = false;
 			}

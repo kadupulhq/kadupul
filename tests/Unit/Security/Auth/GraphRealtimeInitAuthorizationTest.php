@@ -142,6 +142,12 @@ function db_fetch_cell_prepared($sql, $params = array(), $col_name = '', $log = 
 	return '1';
 }
 
+function is_realm_allowed($realm) {
+	$GLOBALS['calls']['realms'][] = $realm;
+
+	return in_array($realm, $GLOBALS['scenario']['realms'] ?? array(25), true);
+}
+
 function is_graph_allowed($local_graph_id, $user_id = 0) {
 	$GLOBALS['calls']['allowed'][] = $local_graph_id;
 
@@ -385,3 +391,34 @@ test('a cached image is not viewed for a zero or negative graph id', function ($
 
 	expect($run['stdout'])->toBe(base64_encode('ERRPNG:Permission Denied'));
 })->with(array('-1' => -1, '0' => 0));
+
+test('no graph is polled for a user without the Realtime realm', function () use ($realtimeRequest) {
+	foreach (array('init', 'timespan', 'interval', 'countdown') as $action) {
+		$run = graph_realtime_init_run(array('request' => array('action' => $action) + $realtimeRequest, 'allowed' => array(5), 'realms' => array(), 'config' => array('realtime_enabled' => 'on')));
+
+		expect($run['polls'])->toBe(array())
+			->and($run['calls']['graph'])->toBe(0)
+			->and($run['calls']['realms'])->toBe(array(25))
+			->and($run['response']['data'])->toBe(base64_encode('ERRPNG:Permission Denied'))
+			->and(array_keys($run['response']))->toBe(array('local_graph_id', 'top', 'left', 'ds_step', 'graph_start', 'size', 'thumbnails', 'data', 'image_format'));
+	}
+});
+
+test('a cached image is not viewed by a user without the Realtime realm', function () use ($viewRequest) {
+	$run = graph_realtime_init_run(array('request' => $viewRequest, 'allowed' => array(5), 'realms' => array(), 'cache' => array(5 => 'CACHEDPNG'), 'config' => array('realtime_enabled' => 'on')));
+
+	expect($run['stdout'])->toBe(base64_encode('ERRPNG:Permission Denied'));
+});
+
+test('a user with the Realtime realm is polled after the realm check', function () use ($realtimeRequest) {
+	$run = graph_realtime_init_run(array('request' => $realtimeRequest, 'allowed' => array(5), 'realms' => array(25), 'config' => array('realtime_enabled' => 'on')));
+
+	expect($run['calls']['realms'])->toBe(array(25))
+		->and($run['polls'])->toHaveCount(1);
+});
+
+test('the disabled message still wins over the realm check', function () use ($realtimeRequest) {
+	$run = graph_realtime_init_run(array('request' => $realtimeRequest, 'allowed' => array(5), 'realms' => array(), 'config' => array('realtime_enabled' => '')));
+
+	expect($run['response']['data'])->toBe(base64_encode('ERRPNG:Real-time has been disabled by your administrator.'));
+});

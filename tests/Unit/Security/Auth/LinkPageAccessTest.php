@@ -32,6 +32,7 @@ function html_escape($text) { return htmlspecialchars($text, ENT_QUOTES | ENT_SU
 function general_header() { echo "RENDERED\n"; }
 function top_header() { echo "RENDERED\n"; }
 function bottom_footer() {}
+function auth_session_enforce() { return false; }
 
 eval('namespace LinkPageRuntime; ' . $source);
 PHP;

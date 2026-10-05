@@ -18,11 +18,12 @@
  * lockout counting stays as it was: only a rejected password counts.
  */
 
-require_once dirname(__DIR__, 3) . '/Helpers/AuthEntryProbe.php';
+require_once dirname(__DIR__, 3) . '/Helpers/LdapDirectoryProbe.php';
 
 function ldap_login_run(array $scenario) : array {
 	$root = dirname(__DIR__, 4);
-	$body = cacti_test_function_source(file_get_contents($root . '/lib/auth.php'), 'ldap_login_process');
+	$auth = file_get_contents($root . '/lib/auth.php');
+	$body = cacti_test_function_source($auth, 'auth_log_username') . "\n\n" . cacti_test_function_source($auth, 'ldap_login_process');
 
 	$source = <<<'PHP'
 <?php
@@ -46,6 +47,11 @@ function cacti_log($string, $output = false, $environ = 'CMDPHP', $level = '') {
 	$GLOBALS['logs'][] = $string;
 }
 
+/* login throttling is off by default and has its own test */
+function auth_login_throttle_check($username, $realm) {
+	return false;
+}
+
 function auth_checkclear_lockout($username, $realm) {
 }
 
@@ -57,11 +63,18 @@ function auth_process_lockout($username, $realm) {
 	$GLOBALS['lockout_calls']++;
 }
 
-function cacti_ldap_search_dn($username) {
+function auth_ldap_equalize_failure($started) {
+}
+
+function read_config_option($name, $force = false) {
+	return $name == 'ldap_server' ? 'ldap.example.com' : '';
+}
+
+function cacti_ldap_search_dn($username, $dn = '', $host = '') {
 	return $GLOBALS['scenario']['search'];
 }
 
-function cacti_ldap_auth($username, $password, $dn) {
+function cacti_ldap_auth($username, $password = '', $dn = '', $host = '') {
 	return $GLOBALS['scenario']['auth'];
 }
 
@@ -73,6 +86,7 @@ $GLOBALS['scenario'] = $scenario;
 
 PHP;
 
+	$source .= ldap_directory_failover_source();
 	$source .= $body . "\n\n";
 	$source .= '$user = ldap_login_process($scenario[\'username\']);' . "\n";
 	$source .= 'print json_encode(array(\'error\' => $error, \'error_msg\' => $error_msg, \'user\' => $user, \'logs\' => $GLOBALS[\'logs\'], \'lockout_calls\' => $GLOBALS[\'lockout_calls\']));' . "\n";

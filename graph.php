@@ -341,7 +341,7 @@ case 'view':
 									print '<br/>';
 								}
 
-								if (read_config_option('realtime_enabled') == 'on' || is_realm_allowed(25)) {
+								if (read_config_option('realtime_enabled') == 'on' && is_realm_allowed(25)) {
 									$popup_flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE;
 									$popup_url = json_encode(
 									    $config['url_path'] . 'graph_realtime.php?top=0&left=0&local_graph_id='
@@ -405,7 +405,7 @@ case 'view':
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 
 	var originalWidth = null;
-	var refreshTime   = <?php print read_user_setting('page_refresh')*1000;?>;
+	var refreshTime   = <?php print (int) read_user_setting('page_refresh') * 1000;?>;
 	var graphTimeout  = null;
 
 	function initializeGraph() {

@@ -38,6 +38,44 @@ case 'save':
 	$errors = array();
 	$inserts = array();
 
+	if (isset($settings[get_request_var('tab')]['ldap_specific_password'])) {
+		$ldap_saved = array(
+			'server'     => read_config_option('ldap_server', true),
+			'port'       => read_config_option('ldap_port', true),
+			'port_ssl'   => read_config_option('ldap_port_ssl', true),
+			'encryption' => read_config_option('ldap_encryption', true)
+		);
+
+		$ldap_submitted = array(
+			'server'     => get_nfilter_request_var('ldap_server', $ldap_saved['server']),
+			'port'       => get_nfilter_request_var('ldap_port', $ldap_saved['port']),
+			'port_ssl'   => get_nfilter_request_var('ldap_port_ssl', $ldap_saved['port_ssl']),
+			'encryption' => get_nfilter_request_var('ldap_encryption', $ldap_saved['encryption'])
+		);
+
+		/* a password only counts as entered again when the loop below would save
+		 * it: the confirmation must match, and isempty_request_var() skips '0' */
+		$ldap_password = get_nfilter_request_var('ldap_specific_password');
+
+		if ($ldap_password != get_nfilter_request_var('ldap_specific_password_confirm') || empty($ldap_password)) {
+			$ldap_password = '';
+		}
+
+		if (ldap_bind_password_reentry_required($ldap_saved, $ldap_submitted, read_config_option('ldap_specific_password', true), $ldap_password)) {
+			$_SESSION['sess_error_fields']['ldap_specific_password'] = 'ldap_specific_password';
+
+			raise_message('ldap_password_reentry', __('Enter the Search Password again to change the LDAP Server, Port or Encryption.  Nothing was saved.'), MESSAGE_LEVEL_ERROR);
+
+			if (isset_request_var('header') && get_nfilter_request_var('header') == 'false') {
+				header('Location: settings.php?header=false&tab=' . get_request_var('tab'));
+			} else {
+				header('Location: settings.php?tab=' . get_request_var('tab'));
+			}
+
+			exit;
+		}
+	}
+
 	foreach ($settings[get_request_var('tab')] as $field_name => $field_array) {
 		if (($field_array['method'] == 'header') || ($field_array['method'] == 'spacer' )){
 			/* do nothing */
@@ -444,6 +482,11 @@ default:
 						FROM settings
 						WHERE name = ?',
 						array($field_name));
+				}
+
+				/* the saved search password stays on the server; a blank field keeps it */
+				if ($field_name == 'ldap_specific_password') {
+					$form_array[$field_name]['value'] = '';
 				}
 			}
 		}
@@ -1057,6 +1100,11 @@ default:
 			$('#row_secpass_lock_header').hide();
 			$('#row_secpass_lockfailed').hide();
 			$('#row_secpass_unlocktime').hide();
+			$('#row_secpass_throttle_header').hide();
+			$('#row_secpass_throttle').hide();
+			$('#row_secpass_throttle_login').hide();
+			$('#row_secpass_throttle_addr').hide();
+			$('#row_secpass_throttle_window').hide();
 			$('#row_basic_header').hide();
 			$('#row_basic_auth_fail_message').hide();
 			$('#row_path_basic_mapfile').hide();
@@ -1107,6 +1155,11 @@ default:
 			$('#row_secpass_lock_header').show();
 			$('#row_secpass_lockfailed').show();
 			$('#row_secpass_unlocktime').show();
+			$('#row_secpass_throttle_header').show();
+			$('#row_secpass_throttle').show();
+			$('#row_secpass_throttle_login').show();
+			$('#row_secpass_throttle_addr').show();
+			$('#row_secpass_throttle_window').show();
 			$('#row_basic_header').hide();
 			$('#row_basic_auth_fail_message').hide();
 			$('#row_path_basic_mapfile').hide();
@@ -1158,6 +1211,11 @@ default:
 			$('#row_secpass_lock_header').hide();
 			$('#row_secpass_lockfailed').hide();
 			$('#row_secpass_unlocktime').hide();
+			$('#row_secpass_throttle_header').hide();
+			$('#row_secpass_throttle').hide();
+			$('#row_secpass_throttle_login').hide();
+			$('#row_secpass_throttle_addr').hide();
+			$('#row_secpass_throttle_window').hide();
 			$('#row_basic_header').show();
 			$('#row_basic_auth_fail_message').show();
 			$('#row_path_basic_mapfile').show();
@@ -1209,6 +1267,11 @@ default:
 			$('#row_secpass_lock_header').show();
 			$('#row_secpass_lockfailed').show();
 			$('#row_secpass_unlocktime').show();
+			$('#row_secpass_throttle_header').show();
+			$('#row_secpass_throttle').show();
+			$('#row_secpass_throttle_login').show();
+			$('#row_secpass_throttle_addr').show();
+			$('#row_secpass_throttle_window').show();
 			$('#row_basic_header').hide();
 			$('#row_basic_auth_fail_message').hide();
 			$('#row_path_basic_mapfile').hide();
@@ -1260,6 +1323,11 @@ default:
 			$('#row_secpass_lock_header').show();
 			$('#row_secpass_lockfailed').show();
 			$('#row_secpass_unlocktime').show();
+			$('#row_secpass_throttle_header').show();
+			$('#row_secpass_throttle').show();
+			$('#row_secpass_throttle_login').show();
+			$('#row_secpass_throttle_addr').show();
+			$('#row_secpass_throttle_window').show();
 			$('#row_basic_header').hide();
 			$('#row_basic_auth_fail_message').hide();
 			$('#row_path_basic_mapfile').hide();
@@ -1313,6 +1381,11 @@ default:
 			$('#row_secpass_lock_header').show();
 			$('#row_secpass_lockfailed').show();
 			$('#row_secpass_unlocktime').show();
+			$('#row_secpass_throttle_header').show();
+			$('#row_secpass_throttle').show();
+			$('#row_secpass_throttle_login').show();
+			$('#row_secpass_throttle_addr').show();
+			$('#row_secpass_throttle_window').show();
 			$('#row_basic_header').hide();
 			$('#row_basic_auth_fail_message').hide();
 			$('#row_path_basic_mapfile').hide();

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="vendor/autoload.php" colors="true">
+    <testsuites>
+        <testsuite name="Native authorization policy database">
+            <file>./Unit/Security/Auth/EffectiveGraphPolicyDisplayTest.php</file>
+        </testsuite>
+    </testsuites>
+</phpunit>

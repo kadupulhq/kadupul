@@ -10,6 +10,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -62,7 +63,7 @@ print 'Template User: ' . $template_user . PHP_EOL;
 print 'New User:      ' . $new_user . PHP_EOL;
 
 /* Check that user exists */
-$user_auth = db_fetch_row("SELECT * FROM user_auth WHERE username = '" . $template_user . "' AND realm = 0");
+$user_auth = db_fetch_row_prepared('SELECT * FROM user_auth WHERE username = ? AND realm = 0', array($template_user));
 if (!cacti_sizeof($user_auth)) {
 	print "Error: Template user does not exist!" . PHP_EOL . PHP_EOL;
 	exit(1);
@@ -75,7 +76,7 @@ if (user_copy($template_user, $new_user) === false) {
 	exit(1);
 }
 
-$user_auth = db_fetch_row("SELECT * FROM user_auth WHERE username = '" . $new_user . "' AND realm = 0");
+$user_auth = db_fetch_row_prepared('SELECT * FROM user_auth WHERE username = ? AND realm = 0', array($new_user));
 if (!cacti_sizeof($user_auth)) {
 	print 'Error: User not copied!' . PHP_EOL . PHP_EOL;
 	exit(1);

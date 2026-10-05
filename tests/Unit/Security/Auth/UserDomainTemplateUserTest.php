@@ -53,6 +53,8 @@ function sql_save($save, $table, $key = "id") { $GLOBALS["writes"][] = "SAVE " .
 function db_execute($sql) { $GLOBALS["writes"][] = "CLEAR"; return true; }
 function db_execute_prepared($sql, $params = array()) { $GLOBALS["writes"][] = strtok(trim($sql), " "); return true; }
 function cacti_authorize_has_realm($user_id, $realm_id) { return in_array($user_id, $GLOBALS["db"]["realm1"]); }
+function cacti_sizeof($array) { return is_array($array) ? count($array) : 0; }
+function db_fetch_row_prepared($sql, $params = array()) { return array(); }
 function db_fetch_cell_prepared($sql, $params) {
 	$db = $GLOBALS["db"];
 	if (strpos($sql, "defdomain = 1") !== false) {

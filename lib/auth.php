@@ -170,25 +170,29 @@ function check_auth_cookie() {
 					FROM user_auth
 					WHERE id = ?
 					AND realm = 0
-					AND enabled = 'on'",
+					AND enabled = 'on'
+					AND locked != 'on'",
 					array($user_id));
 			} else {
 				$user_info = db_fetch_row_prepared("SELECT id, realm, username
 					FROM user_auth
 					WHERE id = ?
 					AND realm = ?
-					AND enabled = 'on'",
+					AND enabled = 'on'
+					AND locked != 'on'",
 					array($user_id, $realm_id));
 			}
 
 			if (cacti_sizeof($user_info)) {
 				$secret = hash('sha512', $token, false);
 
+				/* the cookie expires 30 days after the row is written, so an older row only serves a copied cookie */
 				$found  = db_fetch_cell_prepared('SELECT user_id
 					FROM user_auth_cache
 					WHERE user_id = ?
 					AND token = ?
-					AND hostname = ?',
+					AND hostname = ?
+					AND last_update >= NOW() - INTERVAL 30 DAY',
 					array($user_info['id'], $secret, get_client_addr())
 				);
 
@@ -320,7 +324,7 @@ function get_basic_auth_username() {
 			}
 
 			if (!$found) {
-				cacti_log("WARNING: Username $username not found in basic mapfile.", false, 'AUTH');
+				cacti_log("WARNING: Username " . auth_log_username($username) . " not found in basic mapfile.", false, 'AUTH');
 			}
 		}
 	}
@@ -419,7 +423,7 @@ function user_copy($template_user, $new_user, $template_realm = 0, $new_realm = 
 	if (cacti_sizeof($user_exist) && $overwrite) {
 		db_execute_prepared('DELETE FROM user_auth_perms WHERE user_id = ?', array($user_exist['id']));
 		db_execute_prepared('DELETE FROM user_auth_realm WHERE user_id = ?', array($user_exist['id']));
-		db_execute_prepared('DELETE FROM settings_user WHERE user_id = ?', array($user_exist['id']));
+		db_execute_prepared("DELETE FROM settings_user WHERE user_id = ? AND name != 'session_epoch'", array($user_exist['id']));
 		db_execute_prepared('DELETE FROM settings_tree WHERE user_id = ?', array($user_exist['id']));
 	}
 
@@ -447,9 +451,11 @@ function user_copy($template_user, $new_user, $template_realm = 0, $new_realm = 
 		}
 	}
 
-	$settings_user = db_fetch_assoc_prepared('SELECT *
+	/* the "logout everywhere" counter belongs to the account, not the template */
+	$settings_user = db_fetch_assoc_prepared("SELECT *
 		FROM settings_user
-		WHERE user_id = ?',
+		WHERE user_id = ?
+		AND name != 'session_epoch'",
 		array($template_id));
 
 	if (cacti_sizeof($settings_user)) {
@@ -504,22 +510,15 @@ function user_remove($user_id) {
 	input_validate_input_number($user_id);
 	/* ==================================================== */
 
-	/* check for guest or template user */
-	$username = db_fetch_cell_prepared('SELECT username
-		FROM user_auth
-		WHERE id = ?',
-		array($user_id));
+	/* template and guest accounts are never removable, whatever the request carries */
+	if (is_template_account($user_id)) {
+		raise_message(21);
+		return;
+	}
 
-	if ($username != get_nfilter_request_var('username')) {
-		if (is_template_account($user_id)) {
-			raise_message(21);
-			return;
-		}
-
-		if ($user_id === get_guest_account()) {
-			raise_message(21);
-			return;
-		}
+	if ((string) $user_id === (string) get_guest_account()) {
+		raise_message(21);
+		return;
 	}
 
 	db_execute_prepared('DELETE FROM user_auth WHERE id = ?', array($user_id));
@@ -2422,9 +2421,9 @@ function get_permission_string(&$graph, &$policies) {
 					}
 				} else {
 					if (!empty($graph["template$i"])) {
-						$rejected++;
-					} else {
 						$allowed++;
+					} else {
+						$rejected++;
 					}
 				}
 
@@ -3529,6 +3528,23 @@ function auth_get_username() {
 }
 
 /**
+ * auth_log_username - a login name as it may appear in a log line.  The name
+ *   comes from the request, so invalid UTF-8 is replaced, control, format and
+ *   line separator characters are removed, and it is cut to 64 characters to
+ *   keep one attempt from forging, reordering or flooding log lines.
+ *
+ * @param  (string) $username - the login name as submitted
+ *
+ * @return (string) the name to log
+ */
+function auth_log_username($username) {
+	$username = mb_convert_encoding((string) $username, 'UTF-8', 'UTF-8');
+	$username = preg_replace('/[\p{Cc}\p{Cf}\p{Zl}\p{Zp}]/u', '', $username);
+
+	return mb_substr($username, 0, 64, 'UTF-8');
+}
+
+/**
  * auth_checkclear_lockout - checks the lockout status of a user and unlocks if necessary
  *
  * @param  (string) $username The username of the user to check
@@ -3558,7 +3574,7 @@ function auth_checkclear_lockout($username, $realm) {
 				$secs_unlock = $unlock * 60;
 				$secs_fail = time() - $user['lastfail'];
 
-				cacti_log('DEBUG: User \'' . $username . '\' secs_fail = ' . $secs_fail . ', secs_unlock = ' . $secs_unlock, false, 'AUTH', POLLER_VERBOSITY_DEBUG);
+				cacti_log('DEBUG: User \'' . auth_log_username($username) . '\' secs_fail = ' . $secs_fail . ', secs_unlock = ' . $secs_unlock, false, 'AUTH', POLLER_VERBOSITY_DEBUG);
 
 				if ($unlock > 0 && ($secs_fail > $secs_unlock)) {
 					db_execute_prepared("UPDATE user_auth
@@ -3643,7 +3659,7 @@ function auth_process_lockout($username, $realm) {
 					array(time(), $username, $realm));
 
 				if ($user['enabled'] == '') {
-					cacti_log("LOGIN FAILED: Local Login Failed for user '" . $username . "' from IP Address '" . get_client_addr() . "'.  User account Disabled.", false, 'AUTH');
+					cacti_log("LOGIN FAILED: Local Login Failed for user '" . auth_log_username($username) . "' from IP Address '" . get_client_addr() . "'.  User account Disabled.", false, 'AUTH');
 
 					$error     = true;
 					$error_msg = __('Access Denied!  Login Disabled.');
@@ -3659,7 +3675,7 @@ function auth_process_lockout($username, $realm) {
 					AND enabled = 'on'",
 					array($username, $realm));
 
-				cacti_log("LOGIN FAILED: User '$username' failed authentication, incrementing lockout ($failed of $max)", false, 'AUTH', POLLER_VERBOSITY_LOW);
+				cacti_log("LOGIN FAILED: User '" . auth_log_username($username) . "' failed authentication, incrementing lockout ($failed of $max)", false, 'AUTH', POLLER_VERBOSITY_LOW);
 
 				if ($failed >= $max && $user['locked'] != 'on') {
 					db_execute_prepared("UPDATE user_auth
@@ -3678,24 +3694,207 @@ function auth_process_lockout($username, $realm) {
 					array($username, isset($user['id']) ? $user['id']:0, get_client_addr()));
 
 				if ($user['locked'] == 'on') {
-					cacti_log("LOGIN FAILED: Local Login Failed for user '" . $username . "' from IP Address '" . get_client_addr() . "'.  Account is locked out.", false, 'AUTH');
+					cacti_log("LOGIN FAILED: Local Login Failed for user '" . auth_log_username($username) . "' from IP Address '" . get_client_addr() . "'.  Account is locked out.", false, 'AUTH');
 
 					$error     = true;
 					$error_msg = __('Your account has been locked.  Please contact your Administrator.');
 				} else {
-					cacti_log("LOGIN FAILED: Local Login Failed for user '" . $username . "' from IP Address '" . get_client_addr() . "'.", false, 'AUTH');
+					cacti_log("LOGIN FAILED: Local Login Failed for user '" . auth_log_username($username) . "' from IP Address '" . get_client_addr() . "'.", false, 'AUTH');
 
 					$error     = true;
 					$error_msg = __('Access Denied!  Login Failed.');
 				}
 			} else {
-				cacti_log("LOGIN FAILED: Local Login Failed to find user '" . $username . "' from IP Address '" . get_client_addr() . "'.", false, 'AUTH');
+				cacti_log("LOGIN FAILED: Local Login Failed to find user '" . auth_log_username($username) . "' from IP Address '" . get_client_addr() . "'.", false, 'AUTH');
 
 				$error     = true;
 				$error_msg = __('Access Denied!  Login Failed.');
 			}
 		}
 	}
+}
+
+/**
+ * auth_login_throttle_keys - the throttle counters a login attempt belongs
+ *   to: the client address, with IPv6 grouped by /64 so one host cannot
+ *   rotate through its own prefix, and the login name in its realm.  Keys
+ *   are hashed so the table holds no login names.
+ *
+ *   user_auth matches names under utf8mb4_unicode_ci, which ignores case,
+ *   accents and trailing spaces, so every spelling that reaches one account
+ *   must land on one count.  The name is keyed on its collation weight.
+ *   WEIGHT_STRING() keeps trailing spaces while the PAD SPACE lookup ignores
+ *   them, and no-break, ideographic and other Unicode spaces weigh the same
+ *   as an ASCII space, so space weights are removed from the weight rather
+ *   than space characters from the name.  Directories also ignore leading
+ *   spaces and runs of spaces, so LDAP and Domains names drop those too.
+ *
+ * @param  (string) $username - the submitted login name
+ * @param  (int)    $realm    - the realm the attempt is checked against
+ *
+ * @return (array)  'addr' and 'login' keys
+ */
+function auth_login_throttle_keys($username, $realm) {
+	$addr   = get_client_addr();
+	$packed = @inet_pton($addr);
+
+	if ($packed !== false && strlen($packed) == 16) {
+		$mapped = str_repeat("\0", 10) . "\xff\xff";
+
+		/* ::ffff:192.0.2.1 and ::ffff:c000:201 are the same address. Count
+		 * them with the IPv4 form so the spelling does not split the counter. */
+		if (substr($packed, 0, 12) === $mapped) {
+			$addr = bin2hex(substr($packed, 12, 4));
+		} else {
+			$addr = bin2hex(substr($packed, 0, 8)) . '/64';
+		}
+	} elseif ($packed !== false && strlen($packed) == 4) {
+		$addr = bin2hex($packed);
+	}
+
+	$name   = (string) $username;
+	$weight = db_fetch_cell_prepared('SELECT HEX(WEIGHT_STRING(CONVERT(? USING utf8mb4) COLLATE utf8mb4_unicode_ci))',
+		array($name));
+
+	if ($weight != '') {
+		/* utf8mb4_unicode_ci weights come in 2 byte units; an ASCII space and
+		 * the Unicode spaces that compare equal to it all weigh 0209 */
+		$units = str_split(strtoupper($weight), 4);
+
+		while (cacti_sizeof($units) && end($units) === '0209') {
+			array_pop($units);
+		}
+
+		if ($realm != 0) {
+			$folded = array();
+
+			foreach ($units as $unit) {
+				if ($unit !== '0209' || (cacti_sizeof($folded) && end($folded) !== '0209')) {
+					$folded[] = $unit;
+				}
+			}
+
+			$units = $folded;
+		}
+
+		$weight = implode('', $units);
+	} else {
+		$name = (string) preg_replace('/\p{Zs}+$/u', '', $name);
+
+		if ($realm != 0) {
+			$name = (string) preg_replace('/^\p{Zs}+/u', '', preg_replace('/\p{Zs}+/u', ' ', $name));
+		}
+
+		$weight = mb_strtolower($name, 'UTF-8');
+	}
+
+	return array(
+		'addr'  => hash('sha256', 'addr|' . $addr),
+		'login' => hash('sha256', 'login|' . intval($realm) . '|' . $weight),
+	);
+}
+
+/**
+ * auth_login_throttle_check - when login throttling is on, counts this
+ *   attempt against the client address and the login name before any
+ *   password check or directory call, and refuses it once either count is
+ *   over its limit, even when the password is correct.  The count is taken
+ *   first and read back, so parallel requests cannot all pass under the
+ *   limit.  A successful login gives its count back through
+ *   auth_login_throttle_release().
+ *
+ *   With throttling off, nothing is read or written.
+ *
+ * @param  (string) $username - the submitted login name
+ * @param  (int)    $realm    - the realm the attempt is checked against
+ *
+ * @return (bool)   true if the attempt is refused
+ */
+function auth_login_throttle_check($username, $realm) {
+	global $error, $error_msg, $auth_login_throttle_held;
+
+	$auth_login_throttle_held = array();
+
+	if (read_config_option('secpass_throttle') != 'on') {
+		return false;
+	}
+
+	$now    = time();
+	$window = max(1, intval(read_config_option('secpass_throttle_window'))) * 60;
+	$limits = array(
+		'addr'  => max(1, intval(read_config_option('secpass_throttle_addr'))),
+		'login' => max(1, intval(read_config_option('secpass_throttle_login')))
+	);
+
+	$refused = false;
+
+	foreach (auth_login_throttle_keys($username, $realm) as $type => $key) {
+		/* addr is first. A client already over that limit must not add a
+		 * login-name row: unique names would grow the table until maintenance. */
+		if ($type === 'login' && $refused) {
+			break;
+		}
+
+		db_execute_prepared('INSERT INTO user_auth_throttle
+			(id, failures, window_start)
+			VALUES (?, 1, ?)
+			ON DUPLICATE KEY UPDATE
+			failures = IF(window_start <= ?, 1, failures + 1),
+			window_start = IF(window_start <= ?, VALUES(window_start), window_start)',
+			array($key, $now, $now - $window, $now - $window));
+
+		$auth_login_throttle_held[$type] = $key;
+
+		$failures = db_fetch_cell_prepared('SELECT failures
+			FROM user_auth_throttle
+			WHERE id = ?',
+			array($key));
+
+		if ($failures > $limits[$type]) {
+			$refused = true;
+		}
+	}
+
+	if ($refused) {
+		$error     = true;
+		$error_msg = __('Too many failed login attempts.  Please try again later.');
+
+		cacti_log(sprintf("LOGIN FAILED: Too many failed login attempts for user '%s' from IP Address '%s'.  Login throttled.", auth_log_username($username), get_client_addr()), false, 'AUTH');
+	}
+
+	return $refused;
+}
+
+/**
+ * auth_login_throttle_release - after a successful login, clears the count
+ *   for the login name and takes this attempt back off the address count.
+ *   Only the attempt's own count is returned, so one valid account cannot
+ *   clear the address count for guesses against others.
+ *
+ * @return (void)
+ */
+function auth_login_throttle_release() {
+	global $auth_login_throttle_held;
+
+	if (empty($auth_login_throttle_held)) {
+		return;
+	}
+
+	if (isset($auth_login_throttle_held['login'])) {
+		db_execute_prepared('DELETE FROM user_auth_throttle
+			WHERE id = ?',
+			array($auth_login_throttle_held['login']));
+	}
+
+	if (isset($auth_login_throttle_held['addr'])) {
+		db_execute_prepared('UPDATE user_auth_throttle
+			SET failures = failures - 1
+			WHERE id = ?
+			AND failures > 0',
+			array($auth_login_throttle_held['addr']));
+	}
+
+	$auth_login_throttle_held = array();
 }
 
 /**
@@ -3730,7 +3929,7 @@ function basic_auth_login_process($username) {
 		$error     = true;
 		$error_msg = __esc('%s authenticated by Web Server, but both Template and Guest Users are not defined in Cacti.', $username);
 
-		cacti_log("LOGIN FAILED: User '" . $username . "' authenticated by Web Server, but both Template and Guest Users are not defined in Cacti.  Exiting.", false, 'AUTH');
+		cacti_log("LOGIN FAILED: User '" . auth_log_username($username) . "' authenticated by Web Server, but both Template and Guest Users are not defined in Cacti.  Exiting.", false, 'AUTH');
 
 		auth_display_custom_error_message($error_msg);
 		exit;
@@ -3749,10 +3948,29 @@ function basic_auth_login_process($username) {
  * @return (array)  $user - The valid user information, or empty array if user must be created
  */
 function local_auth_login_process($username) {
+	global $error, $error_msg;
+
 	$user = array();
 
 	if (!api_plugin_hook_function('login_process', false)) {
+		if (auth_login_throttle_check($username, 0)) {
+			return array();
+		}
+
+		/* refuse before any hashing; legitimate passwords are far shorter */
+		if (auth_password_too_long(get_nfilter_request_var('login_password'))) {
+			$error     = true;
+			$error_msg = __('Access Denied!  Login Failed.');
+
+			cacti_log(sprintf('LOGIN FAILED: Password longer than 4096 bytes for user %s', auth_log_username($username)), false, 'AUTH');
+
+			return array();
+		}
+
 		$user = secpass_login_process($username);
+
+		/* a locked or disabled account that still knows its password was not authenticated */
+		$authenticated = cacti_sizeof($user) > 0;
 
 		/**
 		 * If the password needs to be rehashed for security purposes,
@@ -3769,7 +3987,7 @@ function local_auth_login_process($username) {
 
 			$valid = compat_password_verify($password, $stored_pass);
 
-			cacti_log("DEBUG: User '" . $username . "' password for rehash is " . ($valid ? '':'in') . 'valid', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
+			cacti_log("DEBUG: User '" . auth_log_username($username) . "' password for rehash is " . ($valid ? '':'in') . 'valid', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
 
 			if ($valid) {
 				$user = db_fetch_row_prepared('SELECT *
@@ -3778,18 +3996,20 @@ function local_auth_login_process($username) {
 					AND realm = 0',
 					array($username));
 
-				if (compat_password_needs_rehash($stored_pass, PASSWORD_DEFAULT)) {
+				/* the same username may exist in other realms; only this local row was verified */
+				if ($authenticated && cacti_sizeof($user) && compat_password_needs_rehash($stored_pass, PASSWORD_DEFAULT)) {
 					$password = compat_password_hash($password, PASSWORD_DEFAULT);
 					db_check_password_length();
 					db_execute_prepared('UPDATE user_auth
 						SET password = ?
-						WHERE username = ?',
-						array($password, $username));
+						WHERE id = ?
+						AND realm = 0',
+						array($password, $user['id']));
 				}
 			}
 		} else {
 			/* a known account verifies here a second time; keep unknown usernames level */
-			compat_password_verify((string) get_nfilter_request_var('login_password'), '$2y$10$VWBpVwPd5enH/FIf0bNNxO0d12/V8EZag/sNP.SQqsyYWyOFXvaV.');
+			compat_password_verify((string) get_nfilter_request_var('login_password'), auth_dummy_password_hash());
 		}
 	}
 
@@ -3808,6 +4028,7 @@ function local_auth_login_process($username) {
 function ldap_login_process($username) {
 	global $error, $error_msg;
 
+	$started  = hrtime(true);
 	$password = get_nfilter_request_var('login_password');
 
 	if ($username == '') {
@@ -3816,12 +4037,20 @@ function ldap_login_process($username) {
 
 		cacti_log('LOGIN FAILED: Empty LDAP Username provided', false, 'AUTH');
 
+		auth_ldap_equalize_failure($started);
+
+		return array();
+	}
+
+	if (auth_login_throttle_check($username, 3)) {
 		return array();
 	}
 
 	auth_checkclear_lockout($username, 3);
 
 	if (auth_process_lockout_check($username, 3)) {
+		auth_ldap_equalize_failure($started);
+
 		return array();
 	}
 
@@ -3829,12 +4058,26 @@ function ldap_login_process($username) {
 	$realm = 3;
 
 	if ($password != '') {
-		/* get user DN */
-		$ldap_dn_search_response = cacti_ldap_search_dn($username);
+		/* search and bind on one server, and move on only when that server cannot be reached */
+		foreach (preg_split('/\s+/', trim(read_config_option('ldap_server'))) as $ldap_server) {
+			$ldap_auth_response = false;
 
-		if ($ldap_dn_search_response['error_num'] == '0') {
-			$ldap_dn = $ldap_dn_search_response['dn'];
-		} else {
+			/* get user DN */
+			$ldap_dn_search_response = cacti_ldap_search_dn($username, '', $ldap_server);
+
+			if ($ldap_dn_search_response['error_num'] == '0') {
+				/* auth user with LDAP */
+				$ldap_auth_response = cacti_ldap_auth($username, $password, $ldap_dn_search_response['dn'], $ldap_server);
+
+				if (!cacti_ldap_bind_next_server($ldap_auth_response, !empty($ldap_dn_search_response['search_skipped']))) {
+					break;
+				}
+			} elseif (!cacti_ldap_search_next_server($ldap_dn_search_response)) {
+				break;
+			}
+		}
+
+		if ($ldap_auth_response === false) {
 			/* error searching */
 			$error     = true;
 			$error_msg = __('Access Denied!  Login Failed.');
@@ -3843,12 +4086,9 @@ function ldap_login_process($username) {
 		}
 
 		if (!$error) {
-			/* auth user with LDAP */
-			$ldap_auth_response = cacti_ldap_auth($username, $password, $ldap_dn);
-
 			if ($ldap_auth_response['error_num'] == '0') {
 				/* Locate user in database */
-				cacti_log("LOGIN: LDAP User '" . $username . "' Authenticated", false, 'AUTH');
+				cacti_log("LOGIN: LDAP User '" . auth_log_username($username) . "' Authenticated", false, 'AUTH');
 
 				$user = db_fetch_row_prepared('SELECT *
 					FROM user_auth
@@ -3872,9 +4112,13 @@ function ldap_login_process($username) {
 		$error     = true;
 		$error_msg = __('Access Denied!  No password provided by user.');
 
-		cacti_log(sprintf('LOGIN FAILED: LDAP No password provided for user %s', $username), false, 'AUTH');
+		cacti_log(sprintf('LOGIN FAILED: LDAP No password provided for user %s', auth_log_username($username)), false, 'AUTH');
 
 		auth_process_lockout($username, $realm);
+	}
+
+	if ($error) {
+		auth_ldap_equalize_failure($started);
 	}
 
 	return $user;
@@ -3892,6 +4136,7 @@ function ldap_login_process($username) {
 function domains_login_process($username) {
 	global $realm, $error, $error_msg;
 
+	$started  = hrtime(true);
 	$realm    = get_filter_request_var('realm');
 	$password = get_nfilter_request_var('login_password');
 
@@ -3901,6 +4146,8 @@ function domains_login_process($username) {
 
 		cacti_log('LOGIN FAILED: Empty Domains Username provided', false, 'AUTH');
 
+		auth_ldap_equalize_failure($started);
+
 		return array();
 	}
 
@@ -3908,25 +4155,48 @@ function domains_login_process($username) {
 		$error     = true;
 		$error_msg = __('Access Denied!  Login Failed.');
 
-		cacti_log(sprintf("LOGIN FAILED: Unknown Login Realm '%s' provided for user '%s' from IP address %s", $realm, $username, get_client_addr()), false, 'AUTH');
+		cacti_log(sprintf("LOGIN FAILED: Unknown Login Realm '%s' provided for user '%s' from IP address %s", $realm, auth_log_username($username), get_client_addr()), false, 'AUTH');
 
+		auth_ldap_equalize_failure($started);
+
+		return array();
+	}
+
+	if (auth_login_throttle_check($username, $realm)) {
 		return array();
 	}
 
 	auth_checkclear_lockout($username, $realm);
 
 	if (auth_process_lockout_check($username, $realm)) {
+		auth_ldap_equalize_failure($started);
+
 		return array();
 	}
 
 	$user = array();
 
 	if ($realm >= 1000 && $password != '') {
-		/* get user DN */
-		$ldap_dn_search_response = domains_ldap_search_dn($username, $realm);
-		if (is_array($ldap_dn_search_response) && $ldap_dn_search_response['error_num'] == '0') {
-			$ldap_dn = $ldap_dn_search_response['dn'];
-		} else {
+		/* search and bind on one server, and move on only when that server cannot be reached */
+		foreach (domains_ldap_servers($realm) as $ldap_server) {
+			$ldap_auth_response = null;
+
+			/* get user DN */
+			$ldap_dn_search_response = domains_ldap_search_dn($username, $realm, $ldap_server);
+
+			if (is_array($ldap_dn_search_response) && $ldap_dn_search_response['error_num'] == '0') {
+				/* auth user with LDAP */
+				$ldap_auth_response = domains_ldap_auth($username, $password, $ldap_dn_search_response['dn'], $realm, $ldap_server);
+
+				if (!cacti_ldap_bind_next_server($ldap_auth_response, !empty($ldap_dn_search_response['search_skipped']))) {
+					break;
+				}
+			} elseif (!cacti_ldap_search_next_server($ldap_dn_search_response)) {
+				break;
+			}
+		}
+
+		if ($ldap_auth_response === null) {
 			$error     = true;
 			$error_msg = __('Access Denied!  Login Failed.');
 
@@ -3934,9 +4204,6 @@ function domains_login_process($username) {
 		}
 
 		if (!$error) {
-			/* auth user with LDAP */
-			$ldap_auth_response = domains_ldap_auth($username, $password, $ldap_dn, $realm);
-
 			if (is_array($ldap_auth_response) && $ldap_auth_response['error_num'] == '0') {
 				/* User ok */
 				$domain_name = db_fetch_cell_prepared('SELECT domain_name
@@ -3945,7 +4212,7 @@ function domains_login_process($username) {
 					array($realm-1000));
 
 				/* Locate user in database */
-				cacti_log("LOGIN: LDAP User '$username' Authenticated from Domain '$domain_name'", false, 'AUTH');
+				cacti_log("LOGIN: LDAP User '" . auth_log_username($username) . "' Authenticated from Domain '$domain_name'", false, 'AUTH');
 
 				$user = db_fetch_row_prepared('SELECT *
 					FROM user_auth
@@ -3965,7 +4232,7 @@ function domains_login_process($username) {
 					array($template_user));
 
 				if (!cacti_sizeof($user) && $template_user > 0 && $username != '') {
-					cacti_log("NOTE: User '" . $username . "' does not exist, copying template user", false, 'AUTH');
+					cacti_log("NOTE: User '" . auth_log_username($username) . "' does not exist, copying template user", false, 'AUTH');
 
 					/* check that template user exists */
 					$user_template = db_fetch_row_prepared('SELECT *
@@ -4042,17 +4309,89 @@ function domains_login_process($username) {
 		$error     = true;
 		$error_msg = __('Access Denied!  No password provided by user.');
 
-		cacti_log(sprintf('LOGIN FAILED: LDAP No password provided for user %s', $username), false, 'AUTH');
+		cacti_log(sprintf('LOGIN FAILED: LDAP No password provided for user %s', auth_log_username($username)), false, 'AUTH');
 
 		auth_process_lockout($username, $realm);
 	} else {
 		$error     = true;
 		$error_msg = __('Access Denied!  Login Failed.');
 
-		cacti_log(sprintf("LOGIN FAILED: Login Realm '%s' is not an LDAP domain for user '%s' from IP address %s", $realm, $username, get_client_addr()), false, 'AUTH');
+		cacti_log(sprintf("LOGIN FAILED: Login Realm '%s' is not an LDAP domain for user '%s' from IP address %s", $realm, auth_log_username($username), get_client_addr()), false, 'AUTH');
+	}
+
+	if ($error) {
+		auth_ldap_equalize_failure($started);
 	}
 
 	return $user;
+}
+
+/**
+ * auth_ldap_equalize_failure - hold a failed LDAP or Domains login until one
+ *   second after it started.  An unknown user fails at the search, before any
+ *   bind, and would otherwise answer sooner than a wrong password.  Successful
+ *   logins never wait.
+ *
+ * @param  (int)  $started - hrtime(true) when the login began
+ *
+ * @return (void)
+ */
+function auth_ldap_equalize_failure($started) {
+	$remaining = 1000000000 - (hrtime(true) - $started);
+
+	if ($remaining > 0) {
+		usleep(intdiv($remaining + 999, 1000));
+	}
+}
+
+/**
+ * ldap_bind_password_reentry_required - a saved LDAP search password was given
+ *   for one server.  When the server, a port or the encryption changes and no
+ *   new password is typed, saving would send the old password to a server it
+ *   was never entered for, so the save must be refused.
+ *
+ * @param  (array)  $saved           - server, port, port_ssl and encryption in effect now
+ * @param  (array)  $submitted       - the same keys as the form would leave them
+ * @param  (string) $stored_password - the saved search password
+ * @param  (string) $new_password    - the search password typed into the form
+ *
+ * @return (bool)   true when the password must be entered again
+ */
+function ldap_bind_password_reentry_required($saved, $submitted, $stored_password, $new_password) {
+	if ($stored_password == '' || $new_password != '') {
+		return false;
+	}
+
+	foreach (array('server', 'port', 'port_ssl', 'encryption') as $key) {
+		$before = trim(preg_replace('/\s+/', ' ', (string) $saved[$key]));
+		$after  = trim(preg_replace('/\s+/', ' ', (string) $submitted[$key]));
+
+		if ($before !== $after) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * domains_ldap_servers - the servers a domain login tries, in order
+ *
+ * @param  (int)    $realm     - The LDAP Realm number
+ *
+ * @return (array)  $servers - The domain's servers, or the global list when it has none
+ */
+function domains_ldap_servers($realm) {
+	$servers = db_fetch_cell_prepared('SELECT server
+		FROM user_domains_ldap
+		WHERE domain_id = ?',
+		array($realm-1000));
+
+	if (empty($servers)) {
+		$servers = read_config_option('ldap_server');
+	}
+
+	return preg_split('/\s+/', trim($servers));
 }
 
 /**
@@ -4062,10 +4401,11 @@ function domains_login_process($username) {
  * @param  (string) $password  - The users password
  * @param  (string) $dn        - The domain name
  * @param  (int)    $realm     - The LDAP Realm number
+ * @param  (string) $host      - One server to use instead of the domain's list
  *
  * @return (array)  $response - The ldap response of false on a general error
  */
-function domains_ldap_auth($username, $password = '', $dn = '', $realm = 0) {
+function domains_ldap_auth($username, $password = '', $dn = '', $realm = 0, $host = '') {
 	$ldap = new Ldap;
 
 	if (!empty($username)) $ldap->username = $username;
@@ -4084,6 +4424,11 @@ function domains_ldap_auth($username, $password = '', $dn = '', $realm = 0) {
 		}
 
 		if (!empty($ld['server']))            $ldap->host              = $ld['server'];
+
+		if ($host != '') {
+			$ldap->host = $host;
+		}
+
 		if (!empty($ld['port']))              $ldap->port              = $ld['port'];
 		if (!empty($ld['port_ssl']))          $ldap->port_ssl          = $ld['port_ssl'];
 		if (!empty($ld['proto_version']))     $ldap->version           = $ld['proto_version'];
@@ -4107,7 +4452,7 @@ function domains_ldap_auth($username, $password = '', $dn = '', $realm = 0) {
 		if (!empty($ld['group_member_type'])) $ldap->group_member_type = $ld['group_member_type'];
 
 		/* If the server list is a space delimited set of servers
-		 * process each server until you get a bind, or fail
+		 * process each server until one answers, or fail
 		 */
 		$ldap_servers = preg_split('/\s+/', $ldap->host);
 
@@ -4116,7 +4461,7 @@ function domains_ldap_auth($username, $password = '', $dn = '', $realm = 0) {
 
 			$response = $ldap->Authenticate();
 
-			if ($response['error_num'] == 0) {
+			if (!cacti_ldap_bind_next_server($response, $ldap->mode == '0')) {
 				return $response;
 			}
 		}
@@ -4132,10 +4477,11 @@ function domains_ldap_auth($username, $password = '', $dn = '', $realm = 0) {
  *
  * @param  (string) $username  - The user to process
  * @param  (int)    $realm     - The LDAP Realm number
+ * @param  (string) $host      - One server to use instead of the domain's list
  *
  * @return (array)  $response - The ldap response, or false on general error
  */
-function domains_ldap_search_dn($username, $realm) {
+function domains_ldap_search_dn($username, $realm, $host = '') {
 	$ldap = new Ldap;
 
 	if (!empty($username)) $ldap->username = $username;
@@ -4148,6 +4494,11 @@ function domains_ldap_search_dn($username, $realm) {
 	if (cacti_sizeof($ld)) {
 		if (!empty($ld['dn']))                $ldap->dn                = $ld['dn'];
 		if (!empty($ld['server']))            $ldap->host              = $ld['server'];
+
+		if ($host != '') {
+			$ldap->host = $host;
+		}
+
 		if (!empty($ld['port']))              $ldap->port              = $ld['port'];
 		if (!empty($ld['port_ssl']))          $ldap->port_ssl          = $ld['port_ssl'];
 		if (!empty($ld['proto_version']))     $ldap->version           = $ld['proto_version'];
@@ -4171,7 +4522,7 @@ function domains_ldap_search_dn($username, $realm) {
 		if (!empty($ld['group_member_type'])) $ldap->group_member_type = $ld['group_member_type'];
 
 		/* If the server list is a space delimited set of servers
-		 * process each server until you get a bind, or fail
+		 * process each server until one answers, or fail
 		 */
 		$ldap_servers = preg_split('/\s+/', $ldap->host);
 
@@ -4180,7 +4531,7 @@ function domains_ldap_search_dn($username, $realm) {
 
 			$response = $ldap->Search();
 
-			if ($response['error_num'] == 0) {
+			if (!cacti_ldap_search_next_server($response)) {
 				return $response;
 			}
 		}
@@ -4229,7 +4580,7 @@ function domains_ldap_search_cn($username, $cn = array(), $realm = 0) {
 		if (!empty($ld['group_member_type'])) $ldap->group_member_type = $ld['group_member_type'];
 
 		/* If the server list is a space delimited set of servers
-		 * process each server until you get a bind, or fail
+		 * process each server until one answers, or fail
 		 */
 		$ldap_servers = preg_split('/\s+/', $ldap->host);
 
@@ -4238,7 +4589,7 @@ function domains_ldap_search_cn($username, $cn = array(), $realm = 0) {
 
 			$response = $ldap->Getcn();
 
-			if ($response['error_num'] == 0) {
+			if (!cacti_ldap_search_next_server($response)) {
 				return $response;
 			}
 		}
@@ -4280,13 +4631,13 @@ function secpass_login_process($username) {
 	}
 
 	if (db_column_exists('user_auth', 'lastfail')) {
-		$user = db_fetch_row_prepared("SELECT id, username, lastfail, failed_attempts, `locked`, enabled, password
+		$user = db_fetch_row_prepared("SELECT id, username, lastfail, failed_attempts, `locked`, enabled, password, password_change
 			FROM user_auth
 			WHERE username = ?
 			AND realm = 0",
 			array($username));
 	} else {
-		$user = db_fetch_row_prepared("SELECT id, username, password, enabled
+		$user = db_fetch_row_prepared("SELECT id, username, password, enabled, password_change
 			FROM user_auth
 			WHERE username = ?
 			AND realm = 0",
@@ -4295,10 +4646,15 @@ function secpass_login_process($username) {
 
 	if (cacti_sizeof($user)) {
 		if ($user['enabled'] != 'on') {
+			/* an enabled account verifies its password here; do the same work so timing does not reveal a disabled one */
+			if (trim($password) != '') {
+				compat_password_verify((string) $password, auth_dummy_password_hash());
+			}
+
 			$error     = true;
 			$error_msg = __('Access Denied!  Login Failed.');
 
-			cacti_log(sprintf('LOGIN FAILED: User %s, account disabled.', $username), false, 'AUTH');
+			cacti_log(sprintf('LOGIN FAILED: User %s, account disabled.', auth_log_username($username)), false, 'AUTH');
 
 			return array();
 		}
@@ -4308,14 +4664,14 @@ function secpass_login_process($username) {
 			$error     = true;
 			$error_msg = __('Access Denied!  No password provided by user.');
 
-			cacti_log(sprintf('LOGIN FAILED: No password provided for user %s', $username), false, 'AUTH');
+			cacti_log(sprintf('LOGIN FAILED: No password provided for user %s', auth_log_username($username)), false, 'AUTH');
 
 			$valid_pass = false;
 		} else {
 			$valid_pass = compat_password_verify($password, $user['password']);
 		}
 
-		cacti_log('DEBUG: User \'' . $username . '\' valid password = ' . $valid_pass, false, 'AUTH', POLLER_VERBOSITY_DEBUG);
+		cacti_log('DEBUG: User \'' . auth_log_username($username) . '\' valid password = ' . $valid_pass, false, 'AUTH', POLLER_VERBOSITY_DEBUG);
 
 		if (!$valid_pass) {
 			auth_process_lockout($username, 0);
@@ -4330,37 +4686,52 @@ function secpass_login_process($username) {
 	} else {
 		/* hash a fixed value exactly when a known account would, so timing does not reveal usernames */
 		if (trim($password) != '') {
-			compat_password_verify((string) $password, '$2y$10$VWBpVwPd5enH/FIf0bNNxO0d12/V8EZag/sNP.SQqsyYWyOFXvaV.');
+			compat_password_verify((string) $password, auth_dummy_password_hash());
 		}
 
 		/* error */
 		$error     = true;
 		$error_msg = __('Access Denied!  Login Failed.');
 
-		cacti_log(sprintf('LOGIN FAILED: Invalid user %s specified.', $username), false, 'AUTH');
+		cacti_log(sprintf('LOGIN FAILED: Invalid user %s specified.', auth_log_username($username)), false, 'AUTH');
+
+		/* an unknown username must fail exactly as a wrong password does */
+		return array();
 	}
 
 	/**
 	 * Check if old password doesn't meet specifications and must be changed
 	 * This only applies to local logins where we store the actual hashed
 	 * password.
+	 *
+	 * The login completes and auth_login.php sends the new session to the
+	 * forced change; redirecting before a session exists sent the user back
+	 * to the login page on every attempt.
 	 */
 	if (read_config_option('secpass_forceold') == 'on') {
 		$message = secpass_check_pass($password);
 
 		if ($message != 'ok') {
+			/* an account that may not change its password cannot finish the forced change */
+			if ($user['password_change'] != 'on') {
+				$error     = true;
+				$error_msg = __('Access Denied!  Login Failed.');
+
+				cacti_log(sprintf('LOGIN FAILED: User %s password does not meet the policy and the account may not change it.', auth_log_username($username)), false, 'AUTH');
+
+				return array();
+			}
+
 			db_execute_prepared("UPDATE user_auth
 				SET must_change_password = 'on'
-				WHERE username = ?
+				WHERE id = ?
 				AND realm = 0
 				AND enabled = 'on'",
-				array($username));
+				array($user['id']));
 
-			$error_msg = __('Your Cacti administrator has forced complex passwords for logins and your current Cacti password does not match the new requirements.  Therefore, you must change your password now.');
+			$user['must_change_password'] = 'on';
 
-			raise_message('forced_password', $error_msg, MESSAGE_LEVEL_INFO);
-			header('Location: auth_changepassword.php?header=false');
-			exit;
+			raise_message('forced_password', __('Your Cacti administrator has forced complex passwords for logins and your current Cacti password does not match the new requirements.  Therefore, you must change your password now.'), MESSAGE_LEVEL_INFO);
 		}
 	}
 
@@ -4385,6 +4756,10 @@ function secpass_login_process($username) {
  * @return (string) Either 'ok', or an error message to present to the user
  */
 function secpass_check_pass($password) {
+	if (auth_password_too_long($password)) {
+		return __('Password must be no longer than %d bytes!', 4096);
+	}
+
 	$minlen = read_config_option('secpass_minlen');
 	if (strlen($password) < $minlen) {
 		return __('Password must be at least %d characters!', $minlen);
@@ -4593,6 +4968,33 @@ function auth_perm_cache_check_reset($user_id) {
 }
 
 /**
+ * auth_password_too_long - whether a password is over the length any login
+ *   or password change accepts.  bcrypt reads only the first 72 bytes, so
+ *   the cap only bounds the work an oversized request causes.
+ *
+ * @param  (string) $password - the password as submitted
+ *
+ * @return (bool)   true when the password is too long
+ */
+function auth_password_too_long($password) {
+	return strlen((string) $password) > 4096;
+}
+
+/**
+ * auth_dummy_password_hash - a bcrypt hash that no password matches, at the
+ *   cost password_hash() gives new hashes on this PHP.  PHP 8.4 raised that
+ *   cost from 10 to 12 and logins rehash to it, so a fixed cost 10 dummy
+ *   would verify faster than a real account and reveal unknown usernames.
+ *
+ * @return (string) the dummy hash
+ */
+function auth_dummy_password_hash() {
+	$cost = defined('PASSWORD_BCRYPT_DEFAULT_COST') ? PASSWORD_BCRYPT_DEFAULT_COST : 10;
+
+	return sprintf('$2y$%02d$', $cost) . 'VWBpVwPd5enH/FIf0bNNxO0d12/V8EZag/sNP.SQqsyYWyOFXvaV.';
+}
+
+/**
  * compat_password_verify - if the secure function exists, verify against that
  *   first.  If that checks fails or does not exist, check against older md5
  *   version
@@ -4689,6 +5091,23 @@ function compat_password_needs_rehash($password, $algo, $options = array()) {
 	}
 
 	return true;
+}
+
+/**
+ * auth_legacy_md5_users - local accounts whose stored password is still an
+ *   unsalted MD5 digest.  A login rehashes it, so only accounts nobody has
+ *   logged into since the upgrade keep one.
+ *
+ * @return (array) id and username of each account, ordered by username
+ */
+function auth_legacy_md5_users() {
+	$users = db_fetch_assoc("SELECT id, username
+		FROM user_auth
+		WHERE realm = 0
+		AND password REGEXP '^[0-9a-fA-F]{32}$'
+		ORDER BY username");
+
+	return is_array($users) ? $users : array();
 }
 
 /**
@@ -4920,7 +5339,7 @@ function auth_basename($referer) {
 function auth_login_create_user_from_template($username, $realm) {
 	global $error, $error_msg;
 
-	cacti_log("NOTE: User '" . $username . "' does not exist, copying template user", false, 'AUTH');
+	cacti_log("NOTE: User '" . auth_log_username($username) . "' does not exist, copying template user", false, 'AUTH');
 
 	$user = array();
 
@@ -4983,7 +5402,7 @@ function auth_login_create_user_from_template($username, $realm) {
 
 		cacti_log("LOGIN FAILED: Template user id '" . read_config_option('user_template') . "' does not exist.", false, 'AUTH');
 
-		if ($auth_method == 2) {
+		if (read_config_option('auth_method') == 2) {
 			auth_display_custom_error_message($error_msg);
 			exit;
 		}
@@ -5133,7 +5552,255 @@ function cacti_auth_transition($user_id, $reason = 'login') {
 	kill_session_var('sess_user_config_array');
 	kill_session_var('sess_config_array');
 
+	auth_session_bind_credentials($user_id);
+
+	$epoch = auth_session_epoch($user_id);
+
+	if ($epoch === false) {
+		unset($_SESSION['sess_user_epoch']);
+	} else {
+		$_SESSION['sess_user_epoch'] = $epoch;
+	}
+
 	cacti_log('NOTE: auth transition completed for user ' . $user_id . ' reason=' . $reason, false, 'AUTH', POLLER_VERBOSITY_MEDIUM);
+
+	return true;
+}
+
+/**
+ * auth_session_credential_key - digest of the account's stored password hash.
+ *
+ * A session keeps this digest from its login, so changing or resetting the
+ * password ends every session opened before it. Deleting rows from the
+ * sessions table only does that for database sessions, and the default
+ * storage is PHP's file handler.
+ *
+ * @param  (int) $user_id The account the session belongs to
+ *
+ * @return (string|false) The digest, or false when the account can not be read
+ */
+function auth_session_credential_key($user_id) {
+	$password = db_fetch_cell_prepared('SELECT password
+		FROM user_auth
+		WHERE id = ?',
+		array($user_id));
+
+	if ($password === false || $password === null) {
+		return false;
+	}
+
+	return hash('sha256', (string) $password);
+}
+
+/**
+ * auth_session_bind_credentials - tie the current session to the account's
+ *   current password. Call it after login and after the session's own user
+ *   changes the password, so that session is the one that stays open.
+ *
+ * @param  (int) $user_id The account the session belongs to
+ *
+ * @return (void)
+ */
+function auth_session_bind_credentials($user_id) {
+	$key = auth_session_credential_key($user_id);
+
+	if ($key !== false) {
+		$_SESSION['sess_user_credential'] = $key;
+	}
+}
+
+/**
+ * auth_session_credentials_valid - check that the account's password has not
+ *   changed since this session was bound to it.
+ *
+ * An account that can not be read is left to the existing checks, as before.
+ * A session opened before this check existed is bound on its first request.
+ *
+ * @param  (int)         $user_id  The account the session belongs to
+ * @param  (string|null) $password The stored hash when the caller already read it
+ *
+ * @return (bool) false when the password changed after the session was bound
+ */
+function auth_session_credentials_valid($user_id, $password = null) {
+	if ($password === null) {
+		$key = auth_session_credential_key($user_id);
+	} else {
+		$key = hash('sha256', (string) $password);
+	}
+
+	if ($key === false) {
+		return true;
+	}
+
+	if (!isset($_SESSION['sess_user_credential'])) {
+		$_SESSION['sess_user_credential'] = $key;
+
+		return true;
+	}
+
+	if (!is_string($_SESSION['sess_user_credential'])) {
+		return false;
+	}
+
+	return hash_equals($_SESSION['sess_user_credential'], $key);
+}
+
+/**
+ * auth_session_epoch - the account's "logout everywhere" counter.
+ *
+ * It lives in settings_user so 1.2 needs no schema change. An account that
+ * never used the button has no row, which reads as 0.
+ *
+ * @param  (int) $user_id The account the session belongs to
+ *
+ * @return (string|false) The current counter, or false when the read failed
+ */
+function auth_session_epoch($user_id) {
+	$rows = db_fetch_assoc_prepared('SELECT value
+		FROM settings_user
+		WHERE user_id = ?
+		AND name = ?',
+		array($user_id, 'session_epoch'));
+
+	/* false is a failed query. No row is an account that has never logged
+	 * out everywhere, and that counter is 0. */
+	if ($rows === false) {
+		return false;
+	}
+
+	if (!isset($rows[0]['value']) || $rows[0]['value'] === null || $rows[0]['value'] === '') {
+		return '0';
+	}
+
+	return (string) $rows[0]['value'];
+}
+
+/**
+ * auth_session_epoch_advance - end every other session of the account, and
+ *   keep the current one by binding it to the new counter.
+ *
+ * @param  (int) $user_id The account the session belongs to
+ *
+ * @return (void)
+ */
+function auth_session_epoch_advance($user_id) {
+	db_execute_prepared("INSERT INTO settings_user
+		(user_id, name, value)
+		VALUES (?, 'session_epoch', '1')
+		ON DUPLICATE KEY UPDATE value = CAST(value AS UNSIGNED) + 1",
+		array($user_id));
+
+	$epoch = auth_session_epoch($user_id);
+
+	/* The counter moved, but this request could not read it back. Drop the
+	 * binding so the next readable request adopts the new counter instead of
+	 * treating the previous one as a logout. */
+	if ($epoch === false) {
+		unset($_SESSION['sess_user_epoch']);
+
+		return;
+	}
+
+	$_SESSION['sess_user_epoch'] = $epoch;
+}
+
+/**
+ * auth_session_end_reason - recheck, on every request, that the account
+ *   behind a session may still use it.
+ *
+ * Login and remember-me already refuse a disabled account; this applies the
+ * same rule to a session that was open when an administrator disabled or
+ * deleted it, and ends sessions that "logout everywhere" or a password change
+ * replaced, or that sat idle past session.gc_maxlifetime.
+ *
+ * A locked account keeps its open sessions, as in 1.2.31. The failed-login
+ * lockout sets the same flag, so anyone who knows a username could otherwise
+ * end that user's sessions. Login and remember-me still refuse it.
+ * The idle limit is the one PHP's session garbage collector and the
+ * client-side logout timer already use, so it does not shorten any session
+ * that would have survived before; it only stops a copied session ID from
+ * outliving a collector that runs late or not at all.
+ *
+ * The guest account is left to the existing checks. It is saved disabled,
+ * any visitor can lock it by failing to log in as it, and guest pages give
+ * every visitor a new guest session anyway.
+ *
+ * @param  (int) $user_id The account the session belongs to
+ *
+ * @return (string) Why the session must end, or '' when it may continue
+ */
+function auth_session_end_reason($user_id) {
+	if ($user_id == get_guest_account()) {
+		return auth_session_credentials_valid($user_id) ? '' : 'the password changed';
+	}
+
+	$account = db_fetch_row_prepared('SELECT enabled, password
+		FROM user_auth
+		WHERE id = ?',
+		array($user_id));
+
+	if (!cacti_sizeof($account)) {
+		return 'the account no longer exists';
+	}
+
+	if ($account['enabled'] != 'on') {
+		return 'the account is disabled';
+	}
+
+	if (!auth_session_credentials_valid($user_id, $account['password'])) {
+		return 'the password changed';
+	}
+
+	$epoch = auth_session_epoch($user_id);
+
+	/* A failed read is not counter 0. Mapping it to 0 would end every session
+	 * that is bound to a real counter, as if logout everywhere had run. */
+	if ($epoch !== false) {
+		/* a session opened before this check existed is bound on its first request, as the credential is */
+		if (!isset($_SESSION['sess_user_epoch']) || !is_string($_SESSION['sess_user_epoch'])) {
+			$_SESSION['sess_user_epoch'] = $epoch;
+		} elseif (!hash_equals($_SESSION['sess_user_epoch'], $epoch)) {
+			return 'the user logged out everywhere';
+		}
+	}
+
+	$now  = time();
+	$idle = (int) ini_get('session.gc_maxlifetime');
+
+	if ($idle > 0 && isset($_SESSION['sess_last_activity']) && is_int($_SESSION['sess_last_activity']) && $now - $_SESSION['sess_last_activity'] > $idle) {
+		return 'it was idle for longer than session.gc_maxlifetime';
+	}
+
+	$_SESSION['sess_last_activity'] = $now;
+
+	return '';
+}
+
+/**
+ * auth_session_enforce - end the current session when
+ *   auth_session_end_reason() says it may not continue.
+ *
+ * include/auth.php calls this on every request. Pages that load only
+ * include/global.php call it themselves.
+ *
+ * @return (bool) true when the session was ended
+ */
+function auth_session_enforce() {
+	if (empty($_SESSION['sess_user_id'])) {
+		return false;
+	}
+
+	$session_end = auth_session_end_reason($_SESSION['sess_user_id']);
+
+	if ($session_end == '') {
+		return false;
+	}
+
+	cacti_log('NOTE: Session for user id ' . $_SESSION['sess_user_id'] . ' ended because ' . $session_end, false, 'AUTH');
+
+	kill_session_var('sess_user_id');
+	cacti_session_destroy();
+	cacti_session_start(true);
 
 	return true;
 }

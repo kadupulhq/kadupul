@@ -2,6 +2,7 @@
 /*
   +-------------------------------------------------------------------------+
   | Copyright (C) 2004-2026 The Cacti Group                                 |
+  | Copyright (C) 2026 The Kadupul project and contributors                 |
   |                                                                         |
   | This program is free software; you can redistribute it and/or           |
   | modify it under the terms of the GNU General Public License             |
@@ -77,10 +78,67 @@ function cacti_db_session_read($id) {
 	return $session;
 }
 
+/**
+ * Keep the newer sess_last_activity when a slow request writes an older one.
+ *
+ * Database sessions have no request lock, so two requests for one session can
+ * finish out of order. The idle check reads this value, and an older write
+ * would expire a session whose newer request was still inside the limit.
+ *
+ * @param  (string) $stored The session blob already stored
+ * @param  (string) $data   The blob this request is about to store
+ *
+ * @return (string) $data, with sess_last_activity raised when the stored one is later
+ */
+function cacti_db_session_monotonic_activity($stored, $data) {
+	if (!is_string($stored) || !is_string($data)) {
+		return $data;
+	}
+
+	if (!preg_match('/(?:^|;)sess_last_activity\|i:(\d+);/', $stored, $old_activity)) {
+		return $data;
+	}
+
+	if (!preg_match('/(?:^|;)sess_last_activity\|i:(\d+);/', $data, $new_activity)) {
+		return $data;
+	}
+
+	if ((int) $old_activity[1] <= (int) $new_activity[1]) {
+		return $data;
+	}
+
+	$replaced = preg_replace(
+		'/((?:^|;)sess_last_activity\|i:)\d+;/',
+		'${1}' . $old_activity[1] . ';',
+		$data,
+		1
+	);
+
+	return is_string($replaced) ? $replaced : $data;
+}
+
 function cacti_db_session_write($id, $data) {
 	$access = time();
 
 	cacti_db_session_check();
+
+	$began = false;
+
+	try {
+		$began = db_begin_transaction();
+	} catch (Exception $e) {
+		$began = false;
+	}
+
+	if ($began) {
+		$stored = db_fetch_cell_prepared('SELECT data
+			FROM sessions
+			WHERE id = ?
+			FOR UPDATE',
+			array($id));
+		$data = cacti_db_session_monotonic_activity($stored, $data);
+	}
+
 
 	if (!isset($_SESSION['sess_user_id'])) {
 		session_decode($data);
@@ -105,16 +163,24 @@ function cacti_db_session_write($id, $data) {
 				user_agent = VALUES(user_agent),
 				transactions = transactions + 1',
 			array($id, $client_addr, $access, $data, $user_id, $user_agent));
-	} elseif (strpos($data, 'ses_user_id') !== false) {
-		db_execute_prepared('INSERT INTO sessions
-			(id, remote_addr, access, data, user_agent)
-			VALUES (?, ?, ?, ?, ?)
-			ON DUPLICATE KEY UPDATE
-				data = VALUES(data),
-				access = VALUES(access),
-				user_agent = VALUES(user_agent),
-				transactions = transactions + 1',
-			array($id, $client_addr, $access, $data, $user_agent));
+	} else {
+		/**
+		 * A session that dropped its login must store that, or the next read
+		 * restores the login.  The old test looked for 'ses_user_id', which
+		 * never matched, so the row kept its logged-in data.  Visitors who
+		 * never logged in still get no row.
+		 */
+		db_execute_prepared('UPDATE sessions
+			SET data = ?, access = ?, user_id = 0, user_agent = ?,
+				transactions = transactions + 1
+			WHERE id = ?',
+			array($data, $access, $user_agent, $id));
+	}
+
+	if ($began) {
+		if (!db_commit_transaction()) {
+			db_rollback_transaction();
+		}
 	}
 
 	return true;

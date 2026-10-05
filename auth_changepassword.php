@@ -42,6 +42,9 @@ switch ($action) {
 
 		break;
 	default:
+		/* this page loads global.php, not auth.php, so it runs the per-request session check itself */
+		auth_session_enforce();
+
 		/**
 		 * If the user is not logged in, redirect back to the page they came
 		 * of the login page.
@@ -126,6 +129,34 @@ case 'changepassword':
 	// Get current password as entered
 	$current_password = get_nfilter_request_var('current_password');
 
+	/**
+	 * Check the current password first, counting failures toward the login
+	 * lockout. The history and same-as-old checks below also test a guess
+	 * against the stored hash, so they may only run once it is known.
+	 */
+	auth_checkclear_lockout($user['username'], 0);
+
+	if (auth_process_lockout_check($user['username'], 0)) {
+		$bad_password = true;
+		$errorMessage = "<span class='badpassword_message'>" . __('Your account has been locked.  Please contact your Administrator.') . "</span>";
+		break;
+	}
+
+	if ((!empty($user['password']) || !empty($current_password)) && !compat_password_verify($current_password, $user['password'])) {
+		auth_process_lockout($user['username'], 0);
+
+		$bad_password = true;
+
+		/* the last allowed guess locks the account, so say that rather than ask for another try */
+		if (auth_process_lockout_check($user['username'], 0)) {
+			$errorMessage = "<span class='badpassword_message'>" . __('Your account has been locked.  Please contact your Administrator.') . "</span>";
+		} else {
+			$errorMessage = "<span class='badpassword_message'>" . __('Your current password is not correct. Please try again.') . "</span>";
+		}
+
+		break;
+	}
+
 	// Secpass checking
 	$error = secpass_check_pass($password);
 
@@ -147,13 +178,6 @@ case 'changepassword':
 	if ($password !== $password_confirm) {
 		$bad_password = true;
 		$errorMessage = "<span class='badpassword_message'>" . __('Your new passwords do not match, please retype.') . "</span>";
-		break;
-	}
-
-	// Compare current password with stored password
-	if ((!empty($user['password']) || !empty($current_password)) && !compat_password_verify($current_password, $user['password'])) {
-		$bad_password = true;
-		$errorMessage = "<span class='badpassword_message'>" . __('Your current password is not correct. Please try again.') . "</span>";
 		break;
 	}
 
@@ -282,41 +306,9 @@ if (isset_request_var('ref')) {
 
 	if (isset($ref_parts['user']) || isset($ref_parts['pass'])) {
 		$valid = false;
-	} elseif (!isset($ref_parts['host'])) {
-		$value = true;
 	} elseif (isset($ref_parts['host'])) {
-		$server_addr = $_SERVER['SERVER_ADDR'];
-		if (!filter_var($_SERVER['SERVER_NAME'], FILTER_VALIDATE_IP)) {
-			$server_info = dns_get_record($_SERVER['SERVER_NAME'], DNS_ANY);
-			$server_ref  = gethostbyname($ref_parts['host']);
-
-			if ($server_ref != $server_addr) {
-				$valid = false;
-			}
-
-			if (!$valid && cacti_sizeof($server_info)) {
-				foreach($server_info as $record) {
-					if (isset($record['host']) && $record['host'] == $server_ref) {
-						$valid = true;
-						break;
-					} elseif (isset($record['target']) && $record['target'] == $server_ref) {
-						$valid = true;
-						break;
-					} elseif (isset($record['ip']) && $record['ip'] == $server_addr) {
-						$valid = true;
-						break;
-					}
-				}
-			}
-		} else {
-			$server_ip   = gethostbyname($_SERVER['SERVER_NAME']);
-			$server_ref  = gethostbyname($ref_parts['host']);
-			if ($server_ip == $server_ref) {
-				$valid = true;
-			}
-		}
-	} else {
-		$valid = false;
+		/* compare names only; resolving a host the client chose sent DNS queries from the server */
+		$valid = validate_redirect_url(get_nfilter_request_var('ref'), '') !== '';
 	}
 
 	if (!$valid) {

@@ -277,12 +277,16 @@ function form_actions() {
 			$selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
 
 			if ($selected_items != false) {
+				$admin_user = read_config_option('admin_user');
+
 				if (get_nfilter_request_var('drp_action') == '1') { // delete
 					for ($i=0;($i<cacti_count($selected_items));$i++) {
-						if ($_SESSION['sess_user_id'] != $selected_items[$i]) {
-							user_remove($selected_items[$i]);
-						} else {
+						if ($_SESSION['sess_user_id'] == $selected_items[$i]) {
 							raise_message('attempt current', __('You are not allowed to delete the current login account'), MESSAGE_LEVEL_ERROR);
+						} elseif ($admin_user == $selected_items[$i]) {
+							raise_message('attempt admin', __('You are not allowed to delete the primary administrator account'), MESSAGE_LEVEL_ERROR);
+						} else {
+							user_remove($selected_items[$i]);
 						}
 					}
 				} elseif (get_nfilter_request_var('drp_action') == '3') { // enable
@@ -291,10 +295,12 @@ function form_actions() {
 					}
 				} elseif (get_nfilter_request_var('drp_action') == '4') { // disable
 					for ($i=0;($i<cacti_count($selected_items));$i++) {
-						if ($_SESSION['sess_user_id'] != $selected_items[$i]) {
-							user_disable($selected_items[$i]);
-						} else {
+						if ($_SESSION['sess_user_id'] == $selected_items[$i]) {
 							raise_message('attempt current', __('You are not allowed to disable the current login account'), MESSAGE_LEVEL_ERROR);
+						} elseif ($admin_user == $selected_items[$i]) {
+							raise_message('attempt admin', __('You are not allowed to disable the primary administrator account'), MESSAGE_LEVEL_ERROR);
+						} else {
+							user_disable($selected_items[$i]);
 						}
 					}
 				} elseif (get_nfilter_request_var('drp_action') == '5') { // batch copy
@@ -315,6 +321,13 @@ function form_actions() {
 					}
 					$copy_users = array();
 					foreach ($selected_items as $selected_id) {
+						/* a template overwrites realms, so it must not reach the operator or the primary admin */
+						if ($_SESSION['sess_user_id'] == $selected_id || $admin_user == $selected_id) {
+							raise_message('attempt protected', __('You are not allowed to overwrite the current login account or the primary administrator account'), MESSAGE_LEVEL_ERROR);
+							header('Location: user_admin.php?header=false');
+							exit;
+						}
+
 						$user = db_fetch_row_prepared('SELECT username, realm
 							FROM user_auth
 							WHERE id = ?', array($selected_id));
@@ -648,6 +661,11 @@ function form_save() {
 			$user_id = sql_save($save, 'user_auth');
 
 			if ($user_id) {
+				/* an administrator who changes their own password keeps this session */
+				if ($user_id == $_SESSION['sess_user_id'] && $password != $old_password) {
+					auth_session_bind_credentials($user_id);
+				}
+
 				/* revoke tokens and sessions the same way the bulk Disable action does;
 				 * template accounts are always saved disabled, so saving one must not log out guests */
 				if ($save['enabled'] != 'on' && !is_template_account($user_id)) {
@@ -2310,6 +2328,8 @@ function user() {
 
 	html_end_box();
 
+	user_legacy_hash_notice();
+
 	/* form the 'where' clause for our main sql query */
 	if (get_request_var('filter') != '') {
 		$sql_where = 'WHERE (
@@ -2458,6 +2478,31 @@ function user() {
 	draw_actions_dropdown($user_actions);
 
 	form_end();
+}
+
+/**
+ * user_legacy_hash_notice - names the local accounts that still store an MD5
+ *   password hash.  Login rehashes them, so the list holds only accounts
+ *   nobody has used since the upgrade; setting a new password clears one.
+ */
+function user_legacy_hash_notice() {
+	$users = auth_legacy_md5_users();
+
+	if (!cacti_sizeof($users)) {
+		return;
+	}
+
+	$names = array_column(array_slice($users, 0, 25), 'username');
+
+	if (cacti_sizeof($users) > 25) {
+		$names[] = __('and %d more', cacti_sizeof($users) - 25);
+	}
+
+	html_start_box(__('Legacy Password Hashes'), '100%', '', '3', 'center', '');
+
+	print "<tr class='even'><td>" . __esc('%d local account(s) still store an unsalted MD5 password hash: %s.  Each moves to a current hash the next time it logs in, or when you set a new password for it.', cacti_sizeof($users), implode(', ', $names)) . '</td></tr>';
+
+	html_end_box();
 }
 
 function process_graph_request_vars() {

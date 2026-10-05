@@ -2629,6 +2629,18 @@ CREATE TABLE `user_auth_cache` (
 ) ENGINE=InnoDB ROW_FORMAT=Dynamic COMMENT='Caches Remember Me Details';
 
 --
+-- Table structure for table `user_auth_throttle`
+--
+
+CREATE TABLE `user_auth_throttle` (
+  `id` char(64) NOT NULL DEFAULT '',
+  `failures` int(10) unsigned NOT NULL DEFAULT '0',
+  `window_start` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `window_start` (`window_start`)
+) ENGINE=InnoDB ROW_FORMAT=Dynamic COMMENT='Login attempt counts for optional login throttling';
+
+--
 -- Dumping data for table `user_auth`
 --
 

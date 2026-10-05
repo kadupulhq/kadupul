@@ -1692,6 +1692,50 @@ $settings = array(
 				'960'  => __('%d Hours', 16),
 				'1440' => __('1 Day') )
 		),
+		'secpass_throttle_header' => array(
+			'friendly_name' => __('Login Throttling'),
+			'method' => 'spacer',
+			'collapsible' => 'true'
+		),
+		'secpass_throttle' => array(
+			'friendly_name' => __('Throttle Logins'),
+			'description' => __('Refuse Local, LDAP and Domains logins from a client address, or for a login name, after too many attempts within the time window below, even if the password is correct.  Unlike Lock Accounts, the account itself is never locked, and logins resume once the window passes.  Web Basic Authentication and remember-me logins are not throttled.  If config.php sets proxy_headers, also list the proxies in $trusted_proxies, or a client can choose the address it is counted under.'),
+			'method' => 'checkbox',
+			'default' => ''
+		),
+		'secpass_throttle_login' => array(
+			'friendly_name' => __('Attempts per Login Name'),
+			'description' => __('Refuse further logins for a login name after this many attempts within the time window, from any address.  A successful login clears the count.'),
+			'method' => 'drop_array',
+			'default' => '10',
+			'array' => array(
+				'5'  => __('%d Attempts', 5),
+				'10' => __('%d Attempts', 10),
+				'20' => __('%d Attempts', 20),
+				'50' => __('%d Attempts', 50) )
+		),
+		'secpass_throttle_addr' => array(
+			'friendly_name' => __('Attempts per Client Address'),
+			'description' => __('Refuse further logins from a client address after this many failed attempts within the time window, whatever login name is used.  IPv6 addresses are counted by /64 network.'),
+			'method' => 'drop_array',
+			'default' => '50',
+			'array' => array(
+				'20'  => __('%d Attempts', 20),
+				'50'  => __('%d Attempts', 50),
+				'100' => __('%d Attempts', 100),
+				'200' => __('%d Attempts', 200) )
+		),
+		'secpass_throttle_window' => array(
+			'friendly_name' => __('Throttle Window'),
+			'description' => __('The period over which login attempts are counted.'),
+			'method' => 'drop_array',
+			'default' => '15',
+			'array' => array(
+				'5'  => __('%d Minutes', 5),
+				'15' => __('%d Minutes', 15),
+				'30' => __('%d Minutes', 30),
+				'60' => __('1 Hour') )
+		),
 		'ldap_general_header' => array(
 			'friendly_name' => __('LDAP General Settings'),
 			'method' => 'spacer'

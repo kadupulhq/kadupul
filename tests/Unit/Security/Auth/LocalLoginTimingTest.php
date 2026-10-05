@@ -26,8 +26,12 @@ $scenario = json_decode(stream_get_contents(STDIN), true);
 define('POLLER_VERBOSITY_DEBUG', 5);
 
 $GLOBALS['req']          = array('login_password' => $scenario['password']);
-$GLOBALS['users']        = array('alice' => array('id' => 42, 'username' => 'alice', 'enabled' => 'on', 'locked' => '', 'password' => 'known-hash'));
-$GLOBALS['verify_calls'] = 0;
+$GLOBALS['users']        = array(
+	'alice' => array('id' => 42, 'username' => 'alice', 'enabled' => 'on', 'locked' => '', 'password' => 'known-hash'),
+	'bob'   => array('id' => 43, 'username' => 'bob', 'enabled' => '', 'locked' => '', 'password' => 'known-hash'),
+);
+$GLOBALS['verify_calls']  = 0;
+$GLOBALS['verify_hashes'] = array();
 
 $error     = false;
 $error_msg = '';
@@ -83,6 +87,7 @@ function db_execute_prepared($sql, $params = array()) {
 
 function compat_password_verify($password, $hash) {
 	$GLOBALS['verify_calls']++;
+	$GLOBALS['verify_hashes'][] = $hash;
 
 	return $hash === 'known-hash' && $password === 'right';
 }
@@ -93,10 +98,14 @@ function compat_password_needs_rehash($password, $algo, $options = array()) {
 
 PHP;
 
+	$source .= cacti_test_function_source($auth, 'auth_log_username') . "\n\n";
+	$source .= cacti_test_function_source($auth, 'auth_dummy_password_hash') . "\n\n";
+	$source .= cacti_test_function_source($auth, 'auth_password_too_long') . "\n\n";
 	$source .= cacti_test_function_source($auth, 'secpass_login_process') . "\n\n";
+	$source .= cacti_test_function_source($auth, 'auth_login_throttle_check') . "\n\n";
 	$source .= cacti_test_function_source($auth, 'local_auth_login_process') . "\n\n";
 	$source .= "\$user = local_auth_login_process(\$scenario['username']);\n";
-	$source .= "print json_encode(array('user' => \$user, 'error' => \$error, 'verify_calls' => \$GLOBALS['verify_calls']));\n";
+	$source .= "print json_encode(array('user' => \$user, 'error' => \$error, 'verify_calls' => \$GLOBALS['verify_calls'], 'verify_hashes' => \$GLOBALS['verify_hashes'], 'default_hash_info' => password_get_info(password_hash('x', PASSWORD_DEFAULT))));\n";
 
 	return cacti_test_run_php_source($source, array('username' => $username, 'password' => $password));
 }
@@ -128,4 +137,27 @@ test('a correct password still returns the account', function () {
 
 	expect($result['user']['id'] ?? null)->toBe(42)
 		->and($result['error'])->toBeFalse();
+});
+
+test('a disabled account runs as many password verifications as an enabled one', function () {
+	$enabled  = local_login_timing_run('alice', 'guess');
+	$disabled = local_login_timing_run('bob', 'guess');
+
+	expect($disabled['user'])->toBe(array())
+		->and($disabled['error'])->toBeTrue()
+		->and($disabled['verify_calls'])->toBe($enabled['verify_calls']);
+});
+
+test('the dummy hash for an unknown username uses the cost of a new password hash', function () {
+	$unknown = local_login_timing_run('nobody', 'guess');
+
+	expect($unknown['verify_hashes'])->not->toBe(array());
+
+	foreach ($unknown['verify_hashes'] as $hash) {
+		$info = password_get_info($hash);
+
+		expect($info['algoName'])->toBe($unknown['default_hash_info']['algoName'])
+			->and($info['options'])->toBe($unknown['default_hash_info']['options'])
+			->and(password_verify('guess', $hash))->toBeFalse();
+	}
 });

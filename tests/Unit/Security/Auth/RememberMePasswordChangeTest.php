@@ -79,7 +79,14 @@ test('a remember-me login ends where the page after a password login ends', func
 	));
 
 	foreach (array($cookie, $password) as $result) {
-		expect($result['session'])->toBe(array('sess_user_id' => 42, 'sess_change_password' => true))
+		$session = $result['session'];
+		ksort($session);
+
+		/* only the request that already had a session records activity; SessionLifetimeTest covers it */
+		unset($session['sess_last_activity']);
+
+		/* both sessions are bound to the account's current password */
+		expect($session)->toBe(array('sess_change_password' => true, 'sess_user_credential' => hash('sha256', ''), 'sess_user_epoch' => '0', 'sess_user_id' => 42))
 			->and($result['events'])->not->toContain('login_page')
 			->and($result['page_continued'])->toBeFalse();
 	}
