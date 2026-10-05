@@ -55,8 +55,13 @@ if (defined('MEMBERSHIP_EPOCH_TEST_COVERAGE')) {
         $coverageFilter->includeFile($coverageRoot . '/' . $coverageFile);
     }
 }
-if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE')) {
+if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE') || defined('CLASSIC_TEXT_TABS_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
+}
+if (defined('GRAPH_TEMPLATE_RENDER_NATIVE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_graph.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
 }
 if (defined('PER_CS_REVIEW_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/rrdcleaner.php');
@@ -156,6 +161,9 @@ if (defined('REQUEST_CONTEXT_TEST_COVERAGE')) {
 if (defined('FORM_RENDERER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
 }
+if (defined('SNMP_SECURITY_NATIVE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/snmp.php');
+}
 if (defined('COLOR_DROPDOWN_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
 }
@@ -200,6 +208,9 @@ if (defined('IMPORT_PREVIEW_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/package_import.php');
     $coverageFilter->includeFile($coverageRoot . '/templates_import.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/import.php');
+}
+if (defined('HTML_RENDERER_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
 }
 if (defined('BULK_CSRF_CONTROLLER')) {
     $coverageFilter->includeFile(BULK_CSRF_CONTROLLER);

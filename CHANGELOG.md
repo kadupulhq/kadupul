@@ -73,6 +73,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Preserve negative integer `--units-exponent` values accepted by graph forms. Fixes #228.
 - Complete Inventory site editing, sorting, duplication and deletion through Symfony; retire the procedural Sites page while retaining safe legacy URL compatibility.
 - Refresh the Midwinter theme's bundled hotkeys-js to 3.13.15 and ua-parser-js to 1.0.41, matching the 1.2 LTS branch.
+- Draw the classic theme's Console, Graphs, Reporting, Logs and external-link tabs as translated text links styled in CSS instead of GIF images and GD-rendered pictures of text. Tab ids, link targets and accessible names are unchanged, but the Reporting and Logs tabs now read "reporting" and "logs" rather than the old "nectar" and "clog" pictures. The tabs also show a visible keyboard focus ring, and external-link titles in scripts the bundled DejaVu fonts lack, such as Chinese or Japanese, no longer render as empty boxes.
 Targeting `v1.3.0`, the first planned application release. See
 [VERSIONING.md](VERSIONING.md).
 
@@ -157,6 +158,8 @@ Targeting `v1.3.0`, the first planned application release. See
 - Fix blank and wrong Font Awesome 7 icons: the midwinter filter icon no longer shows a missing-glyph box, the multiselect collapse-all and expand-all buttons show their arrows, and the legacy `fa-circle-thin` class draws an outline circle again.
 
 - Give icon-only controls an accessible name: the Add and page help links, the tab menu buttons, the Console tab in themes that hide its text, and the Data Source troubleshooter's pass and fail icons.
+
+- Escape the values that graph views, start boxes, table headers and the spike removal menu print into HTML attributes and text. The realtime popup link now passes the graph URL to `window.open()` as encoded JavaScript strings, and the graph id is always a number. Forward-ported from lts/1.2.
 
 - Capture the RRDtool dump while transforming RRD files so repair utilities print nothing outside debug mode and print the modified XML only once in debug mode. Fixes #438.
 
