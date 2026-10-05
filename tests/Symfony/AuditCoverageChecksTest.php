@@ -15,7 +15,8 @@ require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
 
 final class AuditCoverageChecksTest extends TestCase
 {
-    private const array CHECKS = [
+    /** @var list<string> */
+    private const CHECKS = [
         'audit report with the audit schema missing: frozen original records its historical success exit on baseline failure',
         'audit report with the audit schema missing: native command fails without claiming a clean audit',
         'audit report with the audit schema missing: refused native audit preserves all schema and baseline state',
