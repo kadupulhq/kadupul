@@ -117,7 +117,21 @@ final class NativeChildCoverageEvidence
                 $reject($hitSources, 'completion marker is missing');
             }
             file_put_contents($report . '.json', $originalEvidence);
+            // Required-source rejection must not depend on which library
+            // declaration lines the coverage driver marks during bootstrap.
+            $withoutRequiredSource = unserialize($originalReport);
+            $withoutRequiredData = $withoutRequiredSource->getData();
+            $withoutRequiredLines = $withoutRequiredData->lineCoverage();
+            unset($withoutRequiredLines[realpath($root . '/' . $unexecutedSource)]);
+            $withoutRequiredData->setLineCoverage($withoutRequiredLines);
+            $withoutRequiredSource->setData($withoutRequiredData);
+            file_put_contents($report, serialize($withoutRequiredSource));
+            $changed = $evidence;
+            $changed['report'] = hash_file('sha256', $report);
+            file_put_contents($report . '.json', json_encode($changed, JSON_THROW_ON_ERROR));
             $reject([$unexecutedSource], 'was not executed');
+            file_put_contents($report, $originalReport);
+            file_put_contents($report . '.json', $originalEvidence);
             $reject(['index.php'], 'source is missing or stale');
             $injected = unserialize($originalReport);
             $injectedData = $injected->getData();
