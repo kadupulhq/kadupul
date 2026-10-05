@@ -29,6 +29,10 @@ if (!is_string($coveragePackageVersion)) {
     throw new RuntimeException('Unable to determine the active code-coverage version');
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('DEVICE_GRAPH_CALLER_TEST_COVERAGE')) {
+    foreach (array('lib/auth.php', 'lib/html_utility.php', 'graphs_new.php', 'host.php', 'graphs.php', 'lib/api_device.php', 'src/Inventory/Infrastructure/Legacy/LegacyDeviceSiteWriter.php') as $file) $coverageFilter->includeFile($coverageRoot . '/' . $file);
+}
+
 if (defined('POLLER_RESULT_HELPERS_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/path_helpers.php');
