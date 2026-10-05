@@ -139,23 +139,61 @@ function form_save_profile_components()
         set_request_var('profile_id', 0);
     }
 
-    if (get_request_var('id') > 0) {
-        $prev_heartbeat = db_fetch_cell_prepared(
-            'SELECT heartbeat
-			FROM data_source_profiles
-			WHERE id = ?',
-            array(get_request_var('id'))
-        );
+    $stored = array();
+    if (isset_request_var('save_component_profile') && get_request_var('id') > 0) {
+        $stored = db_fetch_row_prepared('SELECT id, step, heartbeat, x_files_factor FROM data_source_profiles WHERE id = ?', array(get_request_var('id')));
+        if (!is_array($stored) || !isset($stored['id'], $stored['step'], $stored['heartbeat'], $stored['x_files_factor'])) {
+            throw new RuntimeException('Profile definition lookup failed');
+        }
+        $prev_heartbeat = $stored['heartbeat'];
     } else {
         $prev_heartbeat = get_request_var('heartbeat');
     }
 
     if (isset_request_var('save_component_profile')) {
-        if (get_request_var('id') > 0 && profile_is_read_only(get_request_var('id'))
-            && (isset_request_var('step') || isset_request_var('x_files_factor') || isset_request_var('consolidation_function_id'))) {
-            profile_refuse_read_only(get_request_var('id'), 'the step, X-Files Factor or Consolidation Functions');
-
-            return;
+        $structure_is_read_only = get_request_var('id') > 0 && profile_is_read_only(get_request_var('id'));
+        $cfs = null;
+        if (isset_request_var('consolidation_function_id')) {
+            global $consolidation_functions;
+            $submitted_cfs = get_nfilter_request_var('consolidation_function_id');
+            if (!is_array($submitted_cfs) || count($submitted_cfs) > count($consolidation_functions)) {
+                throw new InvalidArgumentException('Invalid consolidation function selection');
+            }
+            $cfs = array();
+            foreach ($submitted_cfs as $cf) {
+                if ((!is_string($cf) && !is_int($cf)) || !ctype_digit((string) $cf) || !isset($consolidation_functions[(int) $cf])) {
+                    throw new InvalidArgumentException('Invalid consolidation function identity');
+                }
+                $cfs[] = (int) $cf;
+            }
+            $cfs = array_values(array_unique($cfs));
+            sort($cfs, SORT_NUMERIC);
+        }
+        if ($structure_is_read_only) {
+            $changed = false;
+            foreach (array('step', 'x_files_factor') as $field) {
+                if (isset_request_var($field)) {
+                    $submitted = get_nfilter_request_var($field);
+                    if ((!is_string($submitted) && !is_int($submitted) && !is_float($submitted))
+                        || !is_numeric($submitted) || !is_finite((float) $submitted)
+                        || (float) $submitted != (float) $stored[$field]) {
+                        $changed = true;
+                    }
+                }
+            }
+            if ($cfs !== null && $cfs !== array()) {
+                $current_cfs = db_fetch_assoc_prepared('SELECT consolidation_function_id FROM data_source_profiles_cf WHERE data_source_profile_id = ? ORDER BY consolidation_function_id', array(get_request_var('id')));
+                if (!is_array($current_cfs)) {
+                    throw new RuntimeException('Profile consolidation lookup failed');
+                }
+                $current_cfs = array_map('intval', array_column($current_cfs, 'consolidation_function_id'));
+                sort($current_cfs, SORT_NUMERIC);
+                $changed = $changed || $cfs !== $current_cfs;
+            }
+            if ($changed) {
+                profile_refuse_read_only(get_request_var('id'), 'the step, X-Files Factor or Consolidation Functions');
+                return;
+            }
         }
 
         $save['id']             = form_input_validate(get_request_var('id'), 'id', '^[0-9]+$', false, 3);
@@ -163,7 +201,7 @@ function form_save_profile_components()
 
         $save['name']           = form_input_validate(get_nfilter_request_var('name'), 'name', '', false, 3);
 
-        if (isset_request_var('step')) {
+        if (!$structure_is_read_only && isset_request_var('step')) {
             $save['step'] = form_input_validate(get_nfilter_request_var('step'), 'step', '', false, 3);
         }
 
@@ -171,7 +209,7 @@ function form_save_profile_components()
             $save['heartbeat'] = form_input_validate(get_nfilter_request_var('heartbeat'), 'heartbeat', '', false, 3);
         }
 
-        if (isset_request_var('x_files_factor')) {
+        if (!$structure_is_read_only && isset_request_var('x_files_factor')) {
             $save['x_files_factor'] = form_input_validate(get_nfilter_request_var('x_files_factor'), 'x_files_factor', '', false, 3);
         }
 
@@ -189,31 +227,13 @@ function form_save_profile_components()
             }
 
             if ($profile_id) {
-                if (isset_request_var('step')) {
-                    // Validate consolidation functions
-                    $cfs = get_nfilter_request_var('consolidation_function_id');
-                    if (cacti_sizeof($cfs) && !empty($cfs)) {
-                        foreach ($cfs as $cf) {
-                            input_validate_input_number($cf);
-                        }
-
-                        if (!db_execute_prepared('DELETE FROM data_source_profiles_cf
-							WHERE data_source_profile_id = ?
-							AND consolidation_function_id NOT IN (' . implode(',', $cfs) . ')', array($profile_id))) {
-                            throw new RuntimeException('Profile consolidation cleanup failed');
-                        }
+                if (!$structure_is_read_only && $cfs !== null && $cfs !== array()) {
+                    if (!db_execute_prepared('DELETE FROM data_source_profiles_cf WHERE data_source_profile_id = ? AND consolidation_function_id NOT IN (' . implode(',', array_fill(0, count($cfs), '?')) . ')', array_merge(array($profile_id), $cfs))) {
+                        throw new RuntimeException('Profile consolidation cleanup failed');
                     }
-
-
-                    // Validate consolidation functions
-                    $cfs = get_nfilter_request_var('consolidation_function_id');
-                    if (cacti_sizeof($cfs) && !empty($cfs)) {
-                        foreach ($cfs as $cf) {
-                            if (!db_execute_prepared('REPLACE INTO data_source_profiles_cf
-								(data_source_profile_id, consolidation_function_id)
-								VALUES (?, ?)', array($profile_id, $cf))) {
-                                throw new RuntimeException('Profile consolidation write failed');
-                            }
+                    foreach ($cfs as $cf) {
+                        if (!db_execute_prepared('REPLACE INTO data_source_profiles_cf (data_source_profile_id, consolidation_function_id) VALUES (?, ?)', array($profile_id, $cf))) {
+                            throw new RuntimeException('Profile consolidation write failed');
                         }
                     }
                 }
@@ -227,19 +247,21 @@ function form_save_profile_components()
                         array(get_request_var('id'))
                     );
 
-                    if ($existing) {
-                        if (!db_execute_prepared(
-                            'UPDATE data_template_rrd AS dtr
+                    if ((!is_int($existing) && !is_string($existing)) || !ctype_digit((string) $existing)) {
+                        throw new RuntimeException('Profile heartbeat usage lookup failed');
+                    }
+                    if (!db_execute_prepared(
+                        'UPDATE data_template_rrd AS dtr
 							INNER JOIN data_template_data AS dtd
 							ON dtd.local_data_id = dtr.local_data_id
-                            AND dtd.data_template_id = dtr.data_template_id
+                            AND (dtr.local_data_id > 0 OR dtd.data_template_id = dtr.data_template_id)
 							SET dtr.rrd_heartbeat = ?
 							WHERE dtd.data_source_profile_id = ?',
-                            array(get_request_var('heartbeat'), get_request_var('id'))
-                        )) {
-                            throw new RuntimeException('Data source heartbeat update failed');
-                        }
-
+                        array(get_request_var('heartbeat'), get_request_var('id'))
+                    )) {
+                        throw new RuntimeException('Data source heartbeat update failed');
+                    }
+                    if ((int) $existing > 0) {
                         raise_message('heartbeat_change', __('Changing the Heartbeat from this page, does not change the Heartbeat for your existing Data Sources.  Use RRDtool\'s \'tune\' function to make that change to your existing RRDfiles heartbeats, or run the CLI utility update_heartbeat.php to correct.<br>'), MESSAGE_LEVEL_WARN);
                     }
                 }
@@ -501,17 +523,17 @@ function profiles_not_in_use($selected_items)
  */
 function profile_is_read_only($profile_id)
 {
-    $in_use = db_fetch_cell_prepared(
-        'SELECT COUNT(*)
-        FROM data_template_data
-        WHERE data_source_profile_id = ?
-        AND local_data_id > 0',
-        array($profile_id)
-    );
-
-    if ($in_use === false || !is_numeric($in_use)) {
+    try {
+        $in_use = db_fetch_cell_prepared(
+            'SELECT COUNT(*) FROM data_template_data WHERE data_source_profile_id = ? AND local_data_id > 0',
+            array($profile_id)
+        );
+        if ((!is_int($in_use) && !is_string($in_use)) || !ctype_digit((string) $in_use)) {
+            throw new RuntimeException('Invalid profile usage count');
+        }
+    } catch (Throwable $error) {
         cacti_log('ERROR: Unable to check whether Data Source Profile ' . (int) $profile_id . ' is in use.', false, 'WEBUI');
-
+        raise_message('profile_usage_unavailable', __('Unable to verify Data Source Profile usage. Structural fields are read only.'), MESSAGE_LEVEL_WARN);
         return true;
     }
 

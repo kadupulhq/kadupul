@@ -1,4 +1,4 @@
-"""Keep profile heartbeat propagation scoped to the referenced data template."""
+"""Exercise profile metadata and structural edits through the installed HTTP path."""
 from urllib.parse import urlencode
 from urllib.request import Request
 
@@ -58,6 +58,22 @@ def verify_data_source_profile_heartbeat(harness, session, check):
         rrd_ids.append(rrd_id)
         return rrd_id
 
+    def save(profile_id, name, **fields):
+        submitted = {'save_component_profile': '1', 'id': str(profile_id),
+                     'name': name, '__csrf_magic': session.token, **fields}
+        request = Request(harness.base + '/data_source_profiles.php?action=save',
+                          data=urlencode(submitted, doseq=True).encode(),
+                          headers={'Origin': harness.base})
+        with session.opener.open(request, timeout=30) as response:
+            check(response.status == 200, 'profile submission returns a controlled page')
+            return response.read().decode('utf-8', errors='replace')
+
+    def definition(profile_id):
+        return harness.sql(f'SELECT step,heartbeat,x_files_factor FROM data_source_profiles WHERE id={profile_id}').strip()
+
+    def functions(profile_id):
+        return harness.sql(f'SELECT consolidation_function_id FROM data_source_profiles_cf WHERE data_source_profile_id={profile_id} ORDER BY consolidation_function_id').strip()
+
     try:
         selected_profile = create_profile('heartbeat-selected-profile', 600)
         other_profile = create_profile('heartbeat-other-profile', 1200)
@@ -72,10 +88,12 @@ def verify_data_source_profile_heartbeat(harness, session, check):
         create_template_data(other_local, other_template, other_profile, 'other local')
 
         selected_template_rrd = create_rrd(0, selected_template, 'selected-template', 600)
-        selected_local_rrd = create_rrd(selected_local, selected_template, 'selected-local', 700)
+        selected_local_rrd = create_rrd(selected_local, other_template, 'selected-local', 700)
         other_template_rrd = create_rrd(0, other_template, 'other-template', 1200)
         other_local_rrd = create_rrd(other_local, other_template, 'other-local', 1400)
 
+        check(session.request(f'/data_source_profiles.php?action=edit&id={selected_profile}')['status'] == 200,
+              'profile editor refreshes the authenticated CSRF token')
         harness.truncate_artifacts('rrd-argv.log', 'rrd-stdin.log')
         heartbeat_fields = {
             'save_component_profile': '1',
@@ -124,6 +142,50 @@ def verify_data_source_profile_heartbeat(harness, session, check):
               'server keeps read-only structural fields unchanged')
         check(harness.sql(f'SELECT rrd_heartbeat FROM data_template_rrd WHERE id={selected_local_rrd}').strip() == '900',
               'refused structural update leaves local-source heartbeat unchanged')
+        harness.sql(f'INSERT INTO data_source_profiles_cf VALUES ({selected_profile},1),({selected_profile},4)')
+        save(selected_profile, 'heartbeat-selected-profile', step='300', x_files_factor='0.5',
+             heartbeat='1000', **{'consolidation_function_id[]': ['1', '4']})
+        check(definition(selected_profile) == '300\t1000\t0.5',
+              'unchanged structural fields permit an in-use heartbeat save')
+        check(functions(selected_profile) == '1\n4', 'unchanged in-use consolidation functions are retained')
+        for field, value in [('x_files_factor', '0.25'), ('consolidation_function_id[]', ['2'])]:
+            save(selected_profile, 'heartbeat-selected-profile', heartbeat='1100', **{field: value})
+            check(definition(selected_profile) == '300\t1000\t0.5' and functions(selected_profile) == '1\n4',
+                  'single forged structural field refuses the complete in-use save: ' + field)
+
+        template_profile = create_profile('heartbeat-template-only', 600)
+        template = create_template('heartbeat-only-template')
+        create_template_data(0, template, template_profile, 'only template')
+        template_rrd = create_rrd(0, template, 'only-template', 600)
+        page = save(template_profile, 'heartbeat-template-only', heartbeat='800')
+        check(harness.sql(f'SELECT rrd_heartbeat FROM data_template_rrd WHERE id={template_rrd}').strip() == '800',
+              'template-only profile propagates heartbeat without local data sources')
+        check('Changing the Heartbeat from this page' not in page,
+              'template-only heartbeat save emits no existing-file tuning warning')
+
+        unused = create_profile('heartbeat-unused', 600)
+        save(unused, 'heartbeat-unused', **{'consolidation_function_id[]': ['2', '4']})
+        check(functions(unused) == '2\n4' and definition(unused) == '300\t600\t0.5',
+              'unused profile consolidation-only save is independent of step submission')
+        save(unused, 'heartbeat-unused', x_files_factor='0.25')
+        check(definition(unused) == '300\t600\t0.25' and functions(unused) == '2\n4',
+              'unused profile factor-only save retains interval and consolidation functions')
+        for malformed in ['2', ['99'], ['1e0'], ['1', '2', '3', '4', '1']]:
+            key = 'consolidation_function_id[]' if isinstance(malformed, list) else 'consolidation_function_id'
+            save(unused, 'malformed-should-not-save', heartbeat='1200', **{key: malformed})
+            check(definition(unused) == '300\t600\t0.25' and functions(unused) == '2\n4'
+                  and harness.sql(f'SELECT name FROM data_source_profiles WHERE id={unused}').strip() == 'heartbeat-unused',
+                  'malformed consolidation selection causes no partial writes: ' + repr(malformed))
+        save(unused, 'heartbeat-unused', step='60', heartbeat='120', x_files_factor='0.1',
+             **{'consolidation_function_id[]': ['1', '3']})
+        check(definition(unused) == '60\t120\t0.1' and functions(unused) == '1\n3',
+              'unused profile structural edits save normally')
+        save(0, 'heartbeat-http-created', step='300', heartbeat='600', x_files_factor='0.5',
+             **{'consolidation_function_id[]': ['1', '4']})
+        created = int(harness.sql("SELECT id FROM data_source_profiles WHERE name='heartbeat-http-created'").strip())
+        profile_ids.append(created)
+        check(definition(created) == '300\t600\t0.5' and functions(created) == '1\n4',
+              'new profile creation persists submitted structural fields')
     finally:
         if rrd_ids:
             harness.sql('DELETE FROM data_template_rrd WHERE id IN (' + ','.join(map(str, rrd_ids)) + ')')
@@ -134,4 +196,5 @@ def verify_data_source_profile_heartbeat(harness, session, check):
         for template_id in template_ids:
             harness.sql(f'DELETE FROM data_template WHERE id={template_id}')
         for profile_id in profile_ids:
+            harness.sql(f'DELETE FROM data_source_profiles_cf WHERE data_source_profile_id={profile_id}')
             harness.sql(f'DELETE FROM data_source_profiles WHERE id={profile_id}')
