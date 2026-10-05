@@ -34,10 +34,15 @@ if (in_array(getenv('ACK_FAIL'), array('mixed', 'page'), true)) {
 require_once dirname(__DIR__).'/Helpers/PhpSource.php';
 $functionSource = file_get_contents(dirname(__DIR__, 2).'/lib/functions.php');
 if ($functionSource === false) { throw new RuntimeException('Unable to read poller helper source'); }
-foreach (['normalize_poller_multi_value_result', 'array_rekey'] as $name) { eval(test_php_function_source($functionSource, $name)); }
-function is_hexadecimal($value) { return false; }
-foreach (array('SQL_NO_CACHE' => '', 'POLLER_VERBOSITY_HIGH' => 4) as $name => $value) {
+foreach (['normalize_poller_multi_value_result', 'array_rekey', 'is_hexadecimal', 'strip_alpha', 'prepare_validate_result'] as $name) { eval(test_php_function_source($functionSource, $name)); }
+function dsv_log(...$args) {}
+foreach (array('SQL_NO_CACHE' => '', 'POLLER_VERBOSITY_HIGH' => 4, 'POLLER_VERBOSITY_MEDIUM' => 3) as $name => $value) {
     define($name, $value);
+}
+if (in_array(getenv('ACK_FAIL'), array('multi-hex-bang', 'multi-php-hex-bang'), true)) {
+    $output = 'cd!12 ab!34';
+    if (getenv('ACK_FAIL') === 'multi-php-hex-bang' && prepare_validate_result($output) !== true) { throw new RuntimeException('Prepared field list was rejected'); }
+    $ack_db->prepare('UPDATE poller_output SET output=?')->execute(array($output));
 }
 function cacti_sizeof($value)
 {
@@ -78,6 +83,7 @@ function rrd_close($pipe) {}
 function db_fetch_assoc_prepared($sql, $params = array())
 {
     if (strpos($sql, 'poller_data_template_field_mappings') !== false) {
+        if (in_array(getenv('ACK_FAIL'), array('multi-hex-bang', 'multi-php-hex-bang'), true)) { return [['keyname' => '0_cd', 'data_source_name' => 'cd'], ['keyname' => '0_ab', 'data_source_name' => 'ab']]; }
         return getenv('ACK_FAIL') === 'multi-bang' ? [['keyname' => '0_users', 'data_source_name' => 'users'], ['keyname' => '0_load', 'data_source_name' => 'load']] : array();
     }
     $query = $GLOBALS['ack_db']->prepare($sql);

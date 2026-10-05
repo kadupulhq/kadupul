@@ -1992,7 +1992,7 @@ function normalize_poller_multi_value_result($result) {
  */
 function prepare_validate_result(&$result) {
 	/* first trim the string */
-	$result = normalize_poller_multi_value_result(trim($result, "'\"\n\r"));
+	$result = trim($result, "'\"\n\r");
 
 	/* clean off ugly non-numeric data */
 	if (is_numeric($result)) {
@@ -2009,20 +2009,25 @@ function prepare_validate_result(&$result) {
 		return hexdec(str_replace(array(':', ' ', '-'), '', $result));
 	} elseif (substr_count($result, ':') || substr_count($result, '!')) {
 		/* looking for name value pairs */
-		if (substr_count($result, ' ') == 0) {
+		$field_result = normalize_poller_multi_value_result($result);
+		/* Keep bang fields distinguishable from a scalar hexadecimal dump. */
+		if (!is_hexadecimal($field_result)) {
+			$result = $field_result;
+		}
+		if (substr_count($field_result, ' ') == 0) {
 			dsv_log('prepare_validate_result', 'data has no spaces', POLLER_VERBOSITY_MEDIUM);
 
 			return true;
 		} else {
 			$delim_cnt = 0;
 
-			if (substr_count($result, ':')) {
-				$delim_cnt = substr_count($result, ':');
-			} elseif (strstr($result, '!')) {
-				$delim_cnt = substr_count($result, '!');
+			if (substr_count($field_result, ':')) {
+				$delim_cnt = substr_count($field_result, ':');
+			} elseif (strstr($field_result, '!')) {
+				$delim_cnt = substr_count($field_result, '!');
 			}
 
-			$space_cnt = substr_count(trim($result), ' ');
+			$space_cnt = substr_count(trim($field_result), ' ');
 
 			dsv_log('prepare_validate_result', "data has $space_cnt spaces and $delim_cnt fields which is " . (($space_cnt + 1 == $delim_cnt) ? '' : 'NOT') . ' okay', POLLER_VERBOSITY_MEDIUM);
 

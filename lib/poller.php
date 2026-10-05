@@ -844,7 +844,8 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 		/* create an array keyed off of each .rrd file */
 		foreach ($results as $item) {
 			/* trim the default characters, but add single and double quotes */
-			$value            = normalize_poller_multi_value_result($item['output']);
+			$value            = $item['output'];
+			$normalized_value = normalize_poller_multi_value_result($value);
 			$unix_time        = $item['unix_time'];
 			$rrd_path         = $item['rrd_path'];
 			$rrd_name         = $item['rrd_name'];
@@ -878,8 +879,9 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 				} else {
 					$rrd_update_array[$rrd_path]['times'][$unix_time][$rrd_name] = 'U';
 				}
-			} elseif (strpos($value, ':') !== false) {
+			} elseif (strpos($normalized_value, ':') !== false) {
 				/* multiple value output */
+				$value = $normalized_value;
 				$values = preg_split('/\s+/', $value);
 
 				if ($data_template_id > 0) {
