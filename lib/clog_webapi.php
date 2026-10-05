@@ -188,6 +188,9 @@ function clog_view_logfile()
     }
 
     if ($clogAdmin && isset_request_var('purge_continue')) {
+        // Continue on the purge prompt deletes the log file and carries no
+        // action name for the global guard to match; the prompt posts it.
+        cacti_require_post_request();
         clog_purge_logfile();
         $logfile = read_config_option('path_cactilog');
     }
@@ -223,8 +226,12 @@ function clog_view_logfile()
 				<input type='button' class='ui-button ui-corner-all ui-widget' id='pc' name='purge_continue' value='" . __esc('Continue') . "' title='" . __esc('Purge Log') . "'>
 				<script type='text/javascript' " . CactiSecureHeaders::getNonceAttribute() . ">
 				$('#pc').on('click', function() {
-					strURL = location.pathname+'?purge_continue=1&header=false&filename=" . basename($logfile) . "';
-					loadPageNoHeader(strURL);
+					loadPageUsingPost(location.pathname, {
+						purge_continue: 1,
+						header: 'false',
+						filename: '" . basename($logfile) . "',
+						__csrf_magic: csrfMagicToken
+					});
 				});
 
 				$('#cancel').on('click', function() {

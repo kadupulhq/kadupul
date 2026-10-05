@@ -501,7 +501,7 @@ function setupDefaultElements() {
 		$(".break:first").detach().appendTo('#filterTableOnTop');
 		$(".navBarNavigation:first").detach().appendTo('#filterTableOnTop');
 		$( "#filterTableOnTop").addClass('sticky');
-		$('<div class="cactiTableFilter"><span><i class="far fa fa-sliders-h"></i></span></div>').prependTo('#filterTableOnTop .cactiTableTitle');
+		$('<div class="cactiTableFilter"><span><i class="fas fa-sliders"></i></span></div>').prependTo('#filterTableOnTop .cactiTableTitle');
 	}
 
 	// Add nice search filter to filters

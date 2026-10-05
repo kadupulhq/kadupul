@@ -16,6 +16,65 @@ use PHPUnit\Framework\TestCase;
 
 final class DeviceSnmpWriterTest extends TestCase
 {
+    #[\PHPUnit\Framework\Attributes\DataProvider('failures')]
+    public function testFailedOwnedCleanupPreservesTheActualWriteFailure(bool $rejectState): void
+    {
+        $pdo = new class ('sqlite::memory:') extends \PDO {
+            public int $rollbackAttempts = 0;
+            public int $stateFailureAttempts = 0;
+            public bool $rejectState = false;
+
+            public function inTransaction(): bool
+            {
+                $active = parent::inTransaction();
+                if ($active && $this->rejectState) {
+                    $this->stateFailureAttempts++;
+                    throw new \RuntimeException('fixture transaction state unavailable');
+                }
+                return $active;
+            }
+
+            public function fixtureIsActive(): bool
+            {
+                return parent::inTransaction();
+            }
+
+            public function rollBack(): bool
+            {
+                $this->rollbackAttempts++;
+                throw new \RuntimeException('fixture rollback unavailable');
+            }
+
+            public function finishFixture(): void
+            {
+                parent::rollBack();
+            }
+        };
+        $pdo->rejectState = $rejectState;
+        $fields = DeviceSnmpConfiguration::PUBLIC_DEFAULTS + DeviceSnmpConfiguration::CREDENTIAL_DEFAULTS;
+        $columns = implode(', ', array_map(static fn($field) => $field . ' TEXT', array_keys($fields)));
+        $pdo->exec("CREATE TABLE host (id INT, poller_id INT, deleted TEXT, $columns); CREATE TABLE host_snmp_query (host_id INT,reindex_method INT); CREATE TABLE poller_reindex (host_id INT)");
+        $pdo->prepare('INSERT INTO host VALUES (7,2,?,' . implode(',', array_fill(0, count($fields), '?')) . ')')->execute(['', ...array_values($fields)]);
+        $pdo->exec("INSERT INTO host_snmp_query VALUES (7,1); INSERT INTO poller_reindex VALUES (7); CREATE TRIGGER reject_cleanup BEFORE DELETE ON poller_reindex BEGIN SELECT RAISE(ABORT,'fixture original write rejection'); END");
+        try {
+            (new DeviceSnmpWriter())->apply($pdo, new DeviceState(7, 'fixture', '192.0.2.1', true, 0, 2, 0), new DeviceSnmpConfiguration(['snmp_version' => '0'] + $fields));
+            self::fail('Rejected write was accepted');
+        } catch (\Throwable $failure) {
+            self::assertInstanceOf(\PDOException::class, $failure);
+            self::assertStringContainsString('fixture original write rejection', $failure->getMessage());
+            self::assertSame($rejectState ? 0 : 1, $pdo->rollbackAttempts);
+            self::assertSame($rejectState ? 1 : 0, $pdo->stateFailureAttempts);
+            self::assertTrue($pdo->fixtureIsActive());
+        } finally {
+            if ($pdo->fixtureIsActive()) {
+                $pdo->finishFixture();
+            }
+        }
+        self::assertSame('2', $pdo->query('SELECT snmp_version FROM host WHERE id=7')->fetchColumn());
+        self::assertSame(1, (int) $pdo->query('SELECT reindex_method FROM host_snmp_query WHERE host_id=7')->fetchColumn());
+        self::assertSame(1, (int) $pdo->query('SELECT COUNT(*) FROM poller_reindex WHERE host_id=7')->fetchColumn());
+    }
+
     public static function failures(): array
     {
         return [[false], [true]];

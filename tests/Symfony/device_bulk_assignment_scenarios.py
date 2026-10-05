@@ -126,7 +126,7 @@ def verify_bulk_assignments(harness, session, check, poller):
         check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host WHERE id IN ({selected}) AND poller_id={poller}').strip() == '2', 'bulk collector confirms destination copies')
         # A cleanup attempt using stale destination ownership must not purge.
         cleanup_actor = int(harness.sql("SELECT id FROM user_auth WHERE username='admin'").strip())
-        cleanup_probe = harness.php('-r', 'require "include/global.php"; $db=$database_sessions["$database_hostname:$database_port:$database_default"]; try { (new \\Kadupul\\Inventory\\Infrastructure\\Legacy\\DeviceCollectorTransfer())->finish($db,' + str(cleanup_actor) + ',[],[' + str(ids[0]) + '=>' + str(poller) + '],1); echo "unexpected"; } catch (RuntimeException $e) { echo $e->getMessage(); }')
+        cleanup_probe = harness.php('-r', 'require "include/global.php"; $db=$database_sessions["$database_hostname:$database_port:$database_default"]; try { (new \\Kadupul\\Inventory\\Infrastructure\\Legacy\\DeviceCollectorTransfer(new \\Kadupul\\Platform\\Infrastructure\\Legacy\\NativeReferenceWriteTransactionRunner()))->finish($db,' + str(cleanup_actor) + ',[],[' + str(ids[0]) + '=>' + str(poller) + '],1); echo "unexpected"; } catch (RuntimeException $e) { echo $e->getMessage(); }')
         check(cleanup_probe['exit'] == 0 and cleanup_probe['stdout'] == 'Collector ownership changed before cleanup' and harness.sql(f'SELECT COUNT(*) FROM create_remote.host WHERE id IN ({selected})').strip() == '2', 'bulk collector cleanup rejects changed ownership before purging')
         # A later primary failure must leave the old polling copies available.
         rollback_owners = harness.sql(f'SELECT id,poller_id FROM host WHERE id IN ({selected}) ORDER BY id')
@@ -161,8 +161,22 @@ def verify_bulk_assignments(harness, session, check, poller):
             check(form.apply(form.fields() | {'device_bulk_assignment[target]': '1'}) == 502, 'bulk collector cleanup failure cannot report success')
             check(harness.sql(f'SELECT COUNT(*) FROM host WHERE id IN ({selected}) AND poller_id=1').strip() == '2' and harness.sql(f'SELECT COUNT(*) FROM poller_item WHERE host_id IN ({selected}) AND poller_id=1').strip() == '2', 'bulk collector cleanup failure retains committed destination ownership')
             check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host WHERE id IN ({selected})').strip() == '2', 'bulk collector cleanup failure leaves recoverable old copies')
+            receipt_names = ','.join(f"'poller_replicate_device_cleanup_{device}_{poller}'" for device in ids)
+            check(harness.sql(f'SELECT COUNT(*) FROM settings WHERE name IN ({receipt_names}) AND value=1').strip() == '2', 'bulk collector cleanup failure persists complete retry inventory')
+            check(form.apply(form.fields() | {'device_bulk_assignment[target]': '1'}) == 502, 'bulk collector same-target retry reports repeated cleanup failure')
+            check(harness.sql(f'SELECT COUNT(*) FROM settings WHERE name IN ({receipt_names}) AND value=1').strip() == '2', 'bulk collector failed retry retains complete cleanup inventory')
         finally:
             harness.sql('DROP TRIGGER create_remote.reject_bulk_cleanup')
+        harness.sql(f"DELIMITER $$\nCREATE TRIGGER reject_bulk_ack BEFORE DELETE ON settings FOR EACH ROW BEGIN IF OLD.name='poller_replicate_device_cleanup_{ids[1]}_{poller}' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='bulk receipt acknowledgement rejection'; END IF; END$$\nDELIMITER ;")
+        try:
+            check(form.apply(form.fields() | {'device_bulk_assignment[target]': '1'}) == 502, 'bulk collector later acknowledgement failure cannot report success')
+            check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host WHERE id IN ({selected})').strip() == '0' and harness.sql(f'SELECT COUNT(*) FROM settings WHERE name IN ({receipt_names}) AND value=1').strip() == '2', 'bulk collector failed acknowledgement rolls back all receipts after remote absence')
+        finally:
+            harness.sql('DROP TRIGGER reject_bulk_ack')
+        check(form.apply(form.fields() | {'device_bulk_assignment[target]': '1'}) == 200, 'bulk collector same-target retry completes pending cleanup')
+        check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host WHERE id IN ({selected})').strip() == '0' and harness.sql(f'SELECT COUNT(*) FROM create_remote.poller_item WHERE host_id IN ({selected})').strip() == '0', 'bulk collector successful retry removes old polling copies')
+        check(harness.sql(f'SELECT COUNT(*) FROM settings WHERE name IN ({receipt_names})').strip() == '0', 'bulk collector successful cleanup acknowledges complete retry inventory')
+        check(harness.sql(f'SELECT COUNT(*) FROM poller_command WHERE poller_id={poller} AND action=3 AND command IN ({selected})').strip() == '0', 'bulk collector verified cleanup publishes no redundant purge commands')
         check(form.apply(form.fields() | {'device_bulk_assignment[target]': str(poller)}) == 200, 'bulk collector recovers old residue by returning to remote')
         check(form.apply(form.fields() | {'device_bulk_assignment[target]': '1'}) == 200, 'bulk collector returns full selection to primary')
         check(harness.sql(f'SELECT COUNT(*) FROM host WHERE id IN ({selected}) AND poller_id=1').strip() == '2', 'bulk collector confirms primary ownership')

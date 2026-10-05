@@ -84,21 +84,21 @@ assert callable(module.prepare_database_failure_reports)
                     self.assertEqual(original[name], (self.directory / 'raw' / name).read_bytes())
 
     def test_missing_target_refuses_before_copying_reports(self):
-        with self.assertRaisesRegex(RuntimeError, 'requires real database-session'):
+        with self.assertRaisesRegex(RuntimeError, 'requires real required-source measurements'):
             SELFTEST.prepare_database_failure_reports(self.directory, self.scratch, SOURCE + '.missing', 'stale')
         self.assertEqual([], list((self.scratch / 'raw').iterdir()))
 
     def test_target_without_positive_execution_refuses_before_copying_reports(self):
         self.reports['coverage-second.json']['files'][SOURCE]['lines'] = {'10': 0, '11': -1}
         self.write_reports()
-        with self.assertRaisesRegex(RuntimeError, 'requires real database-session'):
+        with self.assertRaisesRegex(RuntimeError, 'requires real required-source measurements'):
             SELFTEST.prepare_database_failure_reports(self.directory, self.scratch, SOURCE, 'unmeasured')
         self.assertEqual([], list((self.scratch / 'raw').iterdir()))
 
     def test_empty_measurements_refuse(self):
         for path in (self.directory / 'raw').iterdir():
             path.unlink()
-        with self.assertRaisesRegex(RuntimeError, 'requires real database-session'):
+        with self.assertRaisesRegex(RuntimeError, 'requires real required-source measurements'):
             SELFTEST.prepare_database_failure_reports(self.directory, self.scratch, SOURCE, 'stale')
 
     def test_unknown_mutation_refuses_before_copying_reports(self):
