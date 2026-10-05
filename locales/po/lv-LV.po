@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.2.20\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-04 20:07-0700\n"
+"POT-Creation-Date: 2026-10-04 21:00-0700\n"
 "PO-Revision-Date: 2026-05-10 08:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -622,8 +622,8 @@ msgstr "Veidne"
 #: automation_devices.php:514 automation_devices.php:529
 #: automation_devices.php:544 automation_graph_rules.php:783
 #: automation_graph_rules.php:805 automation_tree_rules.php:831
-#: data_debug.php:1046 data_sources.php:1454 graph_templates_items.php:445
-#: graphs.php:1950 graphs_items.php:260 host.php:1592 host.php:1610
+#: data_debug.php:1046 data_sources.php:1454 graph_templates_items.php:446
+#: graphs.php:1950 graphs_items.php:261 host.php:1592 host.php:1610
 #: host.php:1627 host.php:1691 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3803 lib/auth.php:3852
@@ -641,9 +641,9 @@ msgstr "Jebkuru"
 #: automation_graph_rules.php:938 automation_graph_rules.php:939
 #: automation_networks.php:460 automation_tree_rules.php:959
 #: data_debug.php:1047 data_sources.php:999 data_sources.php:1455
-#: data_sources.php:1768 data_templates.php:1317 graph_templates_items.php:51
-#: graphs.php:1510 graphs.php:1519 graphs.php:1951 graphs_items.php:261
-#: graphs_items.php:381 host.php:255 host.php:1172 host.php:1183 host.php:1593
+#: data_sources.php:1768 data_templates.php:1317 graph_templates_items.php:52
+#: graphs.php:1510 graphs.php:1519 graphs.php:1951 graphs_items.php:262
+#: graphs_items.php:382 host.php:255 host.php:1172 host.php:1183 host.php:1593
 #: host.php:1628 include/global_arrays.php:523 include/global_arrays.php:581
 #: include/global_arrays.php:673 include/global_arrays.php:885
 #: include/global_arrays.php:1740 include/global_form.php:574
@@ -3000,7 +3000,7 @@ msgid "Data Source repair received an invalid Data Source ID."
 msgstr "Datu avota remonts saņēma nederīgu datu avota ID."
 
 #: data_debug.php:452 data_debug.php:891 data_queries.php:716
-#: data_sources.php:1062 data_templates.php:718 graphs_items.php:377
+#: data_sources.php:1062 data_templates.php:718 graphs_items.php:378
 #: include/global_arrays.php:1005 include/global_form.php:960
 #: lib/api_aggregate.php:2338 lib/html.php:1295 rrdcheck.php:142
 msgid "Data Source"
@@ -4530,39 +4530,39 @@ msgstr "Grafika dati"
 msgid "RRDtool Graph Syntax"
 msgstr "RRDtool grafikas sintakse"
 
-#: graph_image.php:171 graph_json.php:208 graph_realtime.php:266
+#: graph_image.php:171 graph_json.php:208 graph_realtime.php:264
 #: lib/rrd.php:2518
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul aptaujātajs vēl nav bijis palaists."
 
-#: graph_realtime.php:379
+#: graph_realtime.php:377
 msgid "Real-time has been disabled by your administrator."
 msgstr "Jūsu administrators ir atspējojis reāllaika režīmu."
 
-#: graph_realtime.php:386
+#: graph_realtime.php:384
 msgid "The Image Cache Directory does not exist.  Please first create it and set permissions and then attempt to open another Real-time graph."
 msgstr "Attēlu kešatmiņas direktorijs nepastāv. Lūdzu, vispirms izveidojiet to un iestatiet atļaujas un pēc tam mēģiniet atvērt citu reāllaika grafiku."
 
-#: graph_realtime.php:393
+#: graph_realtime.php:391
 msgid "The Image Cache Directory is not writable.  Please set permissions and then attempt to open another Real-time graph."
 msgstr "Attēlu kešatmiņas direktorijs nav ierakstāms. Lūdzu, iestatiet atļaujas un pēc tam mēģiniet atvērt citu reāllaika grafiku."
 
-#: graph_realtime.php:414
+#: graph_realtime.php:412
 #, fuzzy
 msgid "Kadupul Real-time Graphing"
 msgstr "Kadupul reāllaika diagrammas"
 
-#: graph_realtime.php:461 lib/html_graph.php:229 lib/html_reports.php:107
+#: graph_realtime.php:459 lib/html_graph.php:229 lib/html_reports.php:107
 #: lib/html_tree.php:1051
 msgid "Thumbnails"
 msgstr "Sīktēli"
 
-#: graph_realtime.php:465
+#: graph_realtime.php:463
 #, php-format
 msgid "%d seconds left."
 msgstr "Atlikušas %d sekundes."
 
-#: graph_realtime.php:481
+#: graph_realtime.php:479
 msgid " seconds left."
 msgstr " atlikušas sekundes."
 
@@ -4742,16 +4742,16 @@ msgstr "Maks.:"
 msgid "Min:"
 msgstr "Min.:"
 
-#: graph_templates_items.php:401
+#: graph_templates_items.php:402
 #, php-format
 msgid "Graph Template Items [edit graph: %s]"
 msgstr "Diagrammas veidnes vienumi [rediģēt diagrammu: %s]"
 
-#: graph_templates_items.php:440
+#: graph_templates_items.php:441
 msgid "Data Template Filter"
 msgstr "Datu veidņu filtrs"
 
-#: graph_templates_items.php:446
+#: graph_templates_items.php:447
 msgid "This filter will limit the Data Sources visible in the Data Source dropdown."
 msgstr "Šis filtrs ierobežos nolaižamajā izvēlnē Datu avots redzamos datu avotus."
 
@@ -5148,26 +5148,26 @@ msgstr "Šī grafika iekšējā datu bāzes ID. Noderīgs, veicot automatizāci
 msgid "Empty Graph"
 msgstr "Tukšs grafiks"
 
-#: graphs_items.php:239
+#: graphs_items.php:240
 msgid "Data Sources [No Device]"
 msgstr "Datu avoti [nav ierīces]"
 
-#: graphs_items.php:241
+#: graphs_items.php:242
 #, php-format
 msgid "Data Sources [%s]"
 msgstr "Datu avoti [%s]"
 
-#: graphs_items.php:256 include/global_arrays.php:1355
+#: graphs_items.php:257 include/global_arrays.php:1355
 #: include/global_form.php:1640
 msgid "Data Template"
 msgstr "Datu veidne"
 
-#: graphs_items.php:335
+#: graphs_items.php:336
 #, php-format
 msgid "Graph Items [graph: %s]"
 msgstr "Diagrammas vienumi [grafika: %s]"
 
-#: graphs_items.php:378
+#: graphs_items.php:379
 msgid "Choose the Data Source to associate with this Graph Item."
 msgstr "Izvēlieties datu avotu ar ko saistīt šo grafikas elementu."
 
@@ -12664,7 +12664,7 @@ msgstr "KĻŪDA: IP diapazoni diapazonā1-diapazons2 vairs netiek atbalstīti."
 #: lib/api_device.php:1367 lib/api_device.php:1554 lib/api_device.php:1558
 #: lib/api_device.php:1594 lib/api_device.php:1598 lib/api_device.php:1643
 #: lib/api_device.php:1647 lib/api_device.php:1708 lib/api_device.php:1712
-#: lib/utility.php:743
+#: lib/utility.php:744
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
 msgstr "Remote Poller %s nedarbojas, jums būs jāveic FullSync, tiklīdz tas atkal būs ieslēgts"
@@ -13525,7 +13525,7 @@ msgid "User Community"
 msgstr "Lietotāju kopiena"
 
 #: lib/functions.php:4076 lib/functions.php:4101 lib/html.php:2669
-#: lib/utility.php:1445
+#: lib/utility.php:1446
 msgid "Documentation"
 msgstr "Dokumentācija"
 
@@ -13671,11 +13671,11 @@ msgstr "%s %s"
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "BRĪDINĀJUMS: trūkst atslēgas Kadupul iekļaut failu %s.  Lūdzu, atrodiet un aizstājiet šo failu"
 
-#: lib/graph_item_editor.php:34
+#: lib/graph_item_editor.php:36
 msgid "Line Width"
 msgstr ""
 
-#: lib/graph_item_editor.php:39
+#: lib/graph_item_editor.php:41
 msgid "LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a positive width in pixels; integers or decimal values are supported."
 msgstr ""
 
@@ -16262,7 +16262,7 @@ msgstr "Nepieciešams: Kadupul >= %s"
 msgid "Not Stated"
 msgstr "Nav norādīts"
 
-#: lib/poller.php:1991 lib/poller.php:2236
+#: lib/poller.php:1998 lib/poller.php:2243
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 
@@ -16545,8 +16545,8 @@ msgstr ""
 msgid "RRD storage configuration requires attention"
 msgstr ""
 
-#: lib/snmp.php:226 lib/snmp.php:343 lib/snmp.php:455 lib/snmp.php:940
-#: lib/snmp.php:963
+#: lib/snmp.php:226 lib/snmp.php:343 lib/snmp.php:455 lib/snmp.php:913
+#: lib/snmp.php:936
 #, fuzzy, php-format
 msgid "SNMP Command is: %s"
 msgstr "SNMP opcijas [labot: %s]"
@@ -16863,192 +16863,192 @@ msgstr "Grafiks %s nav izveidots sliktu datu dēļ"
 msgid "NOTE: Graph not added for Data Query %s and index %s due to Data Source verification failure"
 msgstr "PIEZĪME: Grafiks nav pievienots %s datu vaicājumam un %s indeksam datu avota pārbaudes kļūmes dēļ"
 
-#: lib/utility.php:1153
+#: lib/utility.php:1154
 msgid "MySQL 5.6+ and MariaDB 10.0+ are great releases, and are very good versions to choose. Make sure you run the very latest release though which fixes a long standing low level networking issue that was causing spine many issues with reliability."
 msgstr "MySQL 5.6+ un MariaDB 10.0+ ir lieliski laidieni, un to izvēle ir ļoti laba. Noteikti izmantojiet jaunāko versiju, kas novērš ilgstošu zema līmeņa tīkla problēmu, kas izraisīja daudzas uzticamības problēmas."
 
-#: lib/utility.php:1165
+#: lib/utility.php:1166
 #, php-format
 msgid "It is STRONGLY recommended that you enable InnoDB in any %s version greater than 5.5.3."
 msgstr "Ir stingri ieteicams iespējot InnoDB jebkurā %s versijā, kas ir vecāka par 5.5.3."
 
-#: lib/utility.php:1178 lib/utility.php:1215
+#: lib/utility.php:1179 lib/utility.php:1216
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4_unicode_ci collation type as some characters take more than a single byte."
 msgstr "Izmantojot Kadupul citās valodās, nevis angļu valodā, ir svarīgi izmantot utf8mb4_unicode_ci salīdzināšanas veidu, jo dažas rakstzīmes aizņem vairāk nekā vienu baitu."
 
-#: lib/utility.php:1184 lib/utility.php:1190 lib/utility.php:1221
-#: lib/utility.php:1227
+#: lib/utility.php:1185 lib/utility.php:1191 lib/utility.php:1222
+#: lib/utility.php:1228
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4 character set as some characters take more than a single byte."
 msgstr "Izmantojot Kadupul citās valodās, nevis angļu valodā, ir svarīgi izmantot rakstzīmju kopu utf8mb4, jo dažas rakstzīmes aizņem vairāk nekā vienu baitu."
 
-#: lib/utility.php:1203
+#: lib/utility.php:1204
 #, php-format
 msgid "It is recommended that you enable InnoDB in any %s version greater than 5.1."
 msgstr "Ieteicams iespējot InnoDB jebkurā %s versijā, kas ir vecāka par 5.1."
 
-#: lib/utility.php:1236
+#: lib/utility.php:1237
 #, php-format
 msgid "Depending on the number of logins and use of spine data collector, %s will need many connections.  The calculation for spine is: total_connections = total_processes * (total_threads + script_servers + 1), then you must leave headroom for user connections, which will change depending on the number of concurrent login accounts."
 msgstr "Atkarībā no pieteikšanās reižu skaita un mugurkaula datu savācēja izmantošanas, %s būs nepieciešami daudzi savienojumi. Mugurkaula aprēķins ir šāds: total_connections = total_processes * (total_threads + script_servers + 1), tad jums ir jāatstāj brīva vieta lietotāju savienojumiem, kas mainīsies atkarībā no vienlaicīgo pieteikšanās kontu skaita."
 
-#: lib/utility.php:1241
+#: lib/utility.php:1242
 msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
 msgstr "Ja tiek saglabāta lielāka tabulas kešatmiņa, tad, izmantojot innodb_file_per_table, failu atvēršanas/aizvēršanas operāciju skaits ir mazāks."
 
-#: lib/utility.php:1246
+#: lib/utility.php:1247
 msgid "With Remote polling capabilities, large amounts of data will be synced from the main server to the remote pollers.  Therefore, keep this value at or above 16M."
 msgstr "Izmantojot attālās aptaujas iespējas, liels datu apjoms tiks sinhronizēts no galvenā servera uz attālajiem aptaujātājiem. Tāpēc saglabājiet šo vērtību 16 miljoni vai vairāk."
 
-#: lib/utility.php:1252
+#: lib/utility.php:1253
 #, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
 msgstr "Ja izmantojat Kadupul Performance Booster un izvēlaties atmiņas krātuves dzinēju, jums ir jābūt uzmanīgiem, lai izskalotu Performance Booster buferi, pirms sistēmā beigsies vieta atmiņas tabulā. Tas tiek darīts divos veidos, vispirms samazinot izvades kolonnas izmēru līdz pareizajam izmēram. Šī kolonna atrodas tabulās poller_output un poller_output_boost. Otra lieta, ko varat darīt, ir piešķirt vairāk atmiņas atmiņas tabulām. Mēs esam patvaļīgi izvēlējušies ieteicamo sistēmas atmiņas vērtību — 10%%, taču, ja izmantojat SSD disku diskus vai jums ir mazāka sistēma, varat ignorēt šo ieteikumu vai izvēlēties citu krātuves programmu. Varat redzēt paredzamo Performance Booster tabulu patēriņu sadaļā Console -> System Utilities -> View Boost Status."
 
-#: lib/utility.php:1258
+#: lib/utility.php:1259
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
 msgstr "Izpildot apakšvaicājumus, kuriem ir lielāks pagaidu tabulas izmērs, saglabājiet šīs pagaidu tabulas atmiņā."
 
-#: lib/utility.php:1264 lib/utility.php:1270
+#: lib/utility.php:1265 lib/utility.php:1271
 msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr ""
 
-#: lib/utility.php:1276
+#: lib/utility.php:1277
 #, php-format
 msgid "When using InnoDB storage it is important to keep your table spaces separate.  This makes managing the tables simpler for long time users of %s.  If you are running with this currently off, you can migrate to the per file storage by enabling the feature, and then running an alter statement on all InnoDB tables."
 msgstr "Izmantojot InnoDB krātuvi, ir svarīgi saglabāt tabulas vietas atsevišķi. Tas padara tabulu pārvaldību vienkāršāku ilgstošiem %s lietotājiem. Ja pašlaik izmantojat šo funkciju, varat migrēt uz katra faila krātuvi, iespējojot līdzekli un pēc tam izpildot paziņojumu par izmaiņām visās InnoDB tabulās."
 
-#: lib/utility.php:1282
+#: lib/utility.php:1283
 #, fuzzy
 msgid "When using innodb_file_per_table, it is important to set the innodb_file_format to Barracuda.  This setting will allow longer indexes important for certain Kadupul tables."
 msgstr "Izmantojot innodb_file_per_table, ir svarīgi iestatīt innodb_file_format uz Barracuda. Šis iestatījums ļaus izmantot garākus indeksus, kas ir svarīgi noteiktām Kadupul tabulām."
 
-#: lib/utility.php:1288
+#: lib/utility.php:1289
 msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
 msgstr "Ja jūsu tabulām ir ļoti lieli indeksi, jums ir jādarbojas ar Barracuda innodb_file_format un innodb_large_prefiksu, kas ir vienāds ar 1. Ja to neizdarīsit, spraudņi var nespēt pareizi izveidot tabulas."
 
-#: lib/utility.php:1294
+#: lib/utility.php:1295
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
 msgstr "InnoDB sistēmas atmiņā glabās pēc iespējas vairāk tabulu un indeksu. Tāpēc innodb_buffer_pool ir jāpadara pietiekami liels, lai tajā saglabātu pēc iespējas vairāk tabulu un indeksu. Pārbaudot direktorijas /var/lib/mysql/cacti lielumu, varēsiet noteikt šo vērtību. Mēs iesakām 25%% no jūsu sistēmas kopējās atmiņas, taču jūsu prasības atšķirsies atkarībā no sistēmas lieluma."
 
-#: lib/utility.php:1300
+#: lib/utility.php:1301
 #, fuzzy
 msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "Šiem iestatījumiem ir jāpaliek IESLĒGTA, ja vien jūsu Kadupul gadījumi nedarbojas ar ZFS vai FusionI/O, kuriem abiem ir iekšēja žurnāla ierakstīšana, lai pielāgotos pēkšņām sistēmas avārijām. Tomēr, ja jums ir ļoti laba jauda un jūsu sistēmas reti pazūd un jums ir dublējumkopijas, izslēdzot šo iestatījumu uz IZSLĒGTS, varat gandrīz par 50% ipalielināt datu bāzes veiktspēju."
 
-#: lib/utility.php:1305
+#: lib/utility.php:1306
 msgid "This is where metadata is stored. If you had a lot of tables, it would be useful to increase this."
 msgstr "Šeit tiek glabāti metadati. Ja jums būtu daudz tabulu, būtu lietderīgi to palielināt."
 
-#: lib/utility.php:1310
+#: lib/utility.php:1311
 msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "Negodīgiem vaicājumiem nevajadzētu, lai datubāze nonāktu bezsaistē citiem. Nogaliniet šos vaicājumus, pirms tie nogalina jūsu sistēmu."
 
-#: lib/utility.php:1315
+#: lib/utility.php:1316
 msgid "Maximum I/O performance happens when you use the O_DIRECT method to flush pages."
 msgstr "Maksimālā I/O veiktspēja tiek nodrošināta, ja lapu izskalošanai izmantojat metodi O_DIRECT."
 
-#: lib/utility.php:1325
+#: lib/utility.php:1326
 #, php-format
 msgid "Setting this value to 2 means that you will flush all transactions every second rather than at commit.  This allows %s to perform writing less often."
 msgstr "Šīs vērtības iestatīšana uz 2 nozīmē, ka visas transakcijas tiks izskalotas katru sekundi, nevis izpildes laikā. Tas ļauj %s rakstīt retāk."
 
-#: lib/utility.php:1330
+#: lib/utility.php:1331
 msgid "With modern SSD type storage, having multiple io threads is advantageous for applications with high io characteristics."
 msgstr "Izmantojot moderno SSD tipa krātuvi, vairāki io pavedieni ir izdevīgi lietojumprogrammām ar augstiem io parametriem."
 
-#: lib/utility.php:1338 lib/utility.php:1380
+#: lib/utility.php:1339 lib/utility.php:1381
 #, php-format
 msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "No %s %s varat kontrolēt, cik bieži %s izskalo darījumus diskā. Noklusējums ir 1 sekunde, bet augstās I/O sistēmās, iestatot vērtību, kas lielāka par 1, diska ievade/izvade var būt vairāk secīga."
 
-#: lib/utility.php:1343
+#: lib/utility.php:1344
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "Izmantojot moderno SSD tipa krātuvi, vairāki lasīšanas io pavedieni ir izdevīgi lietojumprogrammām ar augstiem io parametriem. Atkarībā no jūsu MariaDB/MySQL versijām šī vērtība var sasniegt pat 64. Taču mēģiniet saglabāt skaitli mazāku par kopējo SMT pavedienu skaitu datu bāzes serverī."
 
-#: lib/utility.php:1348
+#: lib/utility.php:1349
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "Izmantojot moderno SSD tipa krātuvi, vairāki rakstīšanas io pavedieni ir izdevīgi lietojumprogrammām ar augstiem io parametriem. Atkarībā no jūsu MariaDB/MySQL versijām šī vērtība var sasniegt pat 64. Taču mēģiniet saglabāt skaitli mazāku par kopējo SMT pavedienu skaitu datu bāzes serverī."
 
-#: lib/utility.php:1354
+#: lib/utility.php:1355
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
 msgstr "%s sadalīs innodb_buffer_pool atmiņas reģionos, lai uzlabotu veiktspēju MariaDB versijām, kas jaunākas par 10.5. Maksimālā vērtība ir 64. Ja jūsu innodb_buffer_pool ir mazāks par 1 GB, izmantojiet kopas lielumu, kas dalīts ar 128 MB. Turpiniet izmantot šo vienādojumu līdz maksimumam 64."
 
-#: lib/utility.php:1354
+#: lib/utility.php:1355
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s sadalīs innodb_buffer_pool atmiņas reģionos, lai uzlabotu veiktspēju MariaDB versijām, kas jaunākas par 10.5. Maksimālā vērtība ir 64. Ja jūsu innodb_buffer_pool ir mazāks par 1 GB, izmantojiet kopas lielumu, kas dalīts ar 128 MB. Turpiniet izmantot šo vienādojumu līdz maksimumam 64."
 
-#: lib/utility.php:1360 lib/utility.php:1396
+#: lib/utility.php:1361 lib/utility.php:1397
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
 msgstr "Ja jums ir SSD diski, izmantojiet šo ieteikumu. Ja jums ir fiziski cietie diski, izmantojiet 200 * aktīvo disku skaitu masīvā. Ja izmantojat NVMe vai PCIe Flash, var izmantot daudz lielākus skaitļus līdz 100 000."
 
-#: lib/utility.php:1366 lib/utility.php:1402
+#: lib/utility.php:1367 lib/utility.php:1403
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 2000 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 200000 can be used."
 msgstr "Ja jums ir SSD diski, izmantojiet šo ieteikumu. Ja jums ir fiziski cietie diski, izmantojiet 2000 * aktīvo disku skaitu masīvā. Ja izmantojat NVMe vai PCIe Flash, var izmantot daudz lielākus skaitļus līdz 200 000."
 
-#: lib/utility.php:1372 lib/utility.php:1408
+#: lib/utility.php:1373 lib/utility.php:1409
 msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this setting."
 msgstr "Ja jums ir SSD diski, izmantojiet šo ieteikumu. Pretējā gadījumā neiestatiet šo iestatījumu."
 
-#: lib/utility.php:1385
+#: lib/utility.php:1386
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics."
 msgstr "Izmantojot moderno SSD tipa krātuvi, vairāki lasīšanas io pavedieni ir izdevīgi lietojumprogrammām ar augstiem io parametriem."
 
-#: lib/utility.php:1390
+#: lib/utility.php:1391
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics."
 msgstr "Izmantojot moderno SSD tipa krātuvi, vairāki rakstīšanas io pavedieni ir izdevīgi lietojumprogrammām ar augstiem io parametriem."
 
-#: lib/utility.php:1421
+#: lib/utility.php:1422
 msgid "When using MariaDB 10.2.4 and above, this setting should be off if atomic writes are enabled.  Therefore, please enable atomic writes instead of the double write buffer as it will increase performance."
 msgstr "Ja izmantojat MariaDB 10.2.4 un jaunākas versijas, šim iestatījumam jābūt izslēgtam, ja ir iespējota atomu rakstīšana. Tāpēc, lūdzu, iespējojiet atomu rakstīšanu, nevis dubulto rakstīšanas buferi, jo tas palielinās veiktspēju."
 
-#: lib/utility.php:1428
+#: lib/utility.php:1429
 msgid "When using MariaDB 10.2.4 and above, you can use atomic writes over the doublewrite buffer to increase performance."
 msgstr "Izmantojot MariaDB 10.2.4 un jaunākas versijas, varat izmantot atomu ierakstus dubultā rakstīšanas buferī, lai palielinātu veiktspēju."
 
-#: lib/utility.php:1445
+#: lib/utility.php:1446
 #, php-format
 msgid "%s Tuning"
 msgstr "%s Noskaņošana"
 
-#: lib/utility.php:1445
+#: lib/utility.php:1446
 msgid "Note: Many changes below require a database restart"
 msgstr "Piezīme. Daudzām tālāk norādītajām izmaiņām ir nepieciešama datu bāzes restartēšana"
 
-#: lib/utility.php:1453
+#: lib/utility.php:1454
 msgid "Variable"
 msgstr "Variable"
 
-#: lib/utility.php:1454
+#: lib/utility.php:1455
 msgid "Current Value"
 msgstr "Pašreizējā vērtība (VVA)"
 
-#: lib/utility.php:1456
+#: lib/utility.php:1457
 msgid "Recommended Value"
 msgstr "Ieteicamā vērtība"
 
-#: lib/utility.php:1457
+#: lib/utility.php:1458
 msgid "Comments"
 msgstr "Komentāri"
 
-#: lib/utility.php:2051
+#: lib/utility.php:2052
 #, php-format
 msgid "PHP %s is the minimum version"
 msgstr "PHP %s ir minimālā versija"
 
-#: lib/utility.php:2053
+#: lib/utility.php:2054
 #, php-format
 msgid "A minimum of %s memory limit"
 msgstr "Minimālais atmiņas ierobežojums: %s"
 
-#: lib/utility.php:2055
+#: lib/utility.php:2056
 #, php-format
 msgid "A minimum of %s m execution time"
 msgstr "Vismaz %s min izpildes laiks"
 
-#: lib/utility.php:2057
+#: lib/utility.php:2058
 msgid "A valid timezone that matches MySQL and the system"
 msgstr "Derīga laika josla, kas atbilst MySQL un sistēmai"
 
@@ -17056,7 +17056,7 @@ msgstr "Derīga laika josla, kas atbilst MySQL un sistēmai"
 msgid "A useful name for this VDEF."
 msgstr "Noderīgs nosaukums šim VDEF."
 
-#: link.php:61
+#: link.php:64
 #, php-format
 msgid "External Link ID '%s' with Title '%s' attempted to inject an invalid URL and was blocked!"
 msgstr ""

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-04 20:07-0700\n"
+"POT-Creation-Date: 2026-10-04 21:00-0700\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -622,8 +622,8 @@ msgstr "Mẫu"
 #: automation_devices.php:514 automation_devices.php:529
 #: automation_devices.php:544 automation_graph_rules.php:783
 #: automation_graph_rules.php:805 automation_tree_rules.php:831
-#: data_debug.php:1046 data_sources.php:1454 graph_templates_items.php:445
-#: graphs.php:1950 graphs_items.php:260 host.php:1592 host.php:1610
+#: data_debug.php:1046 data_sources.php:1454 graph_templates_items.php:446
+#: graphs.php:1950 graphs_items.php:261 host.php:1592 host.php:1610
 #: host.php:1627 host.php:1691 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3803 lib/auth.php:3852
@@ -641,9 +641,9 @@ msgstr "Bất kỳ"
 #: automation_graph_rules.php:938 automation_graph_rules.php:939
 #: automation_networks.php:460 automation_tree_rules.php:959
 #: data_debug.php:1047 data_sources.php:999 data_sources.php:1455
-#: data_sources.php:1768 data_templates.php:1317 graph_templates_items.php:51
-#: graphs.php:1510 graphs.php:1519 graphs.php:1951 graphs_items.php:261
-#: graphs_items.php:381 host.php:255 host.php:1172 host.php:1183 host.php:1593
+#: data_sources.php:1768 data_templates.php:1317 graph_templates_items.php:52
+#: graphs.php:1510 graphs.php:1519 graphs.php:1951 graphs_items.php:262
+#: graphs_items.php:382 host.php:255 host.php:1172 host.php:1183 host.php:1593
 #: host.php:1628 include/global_arrays.php:523 include/global_arrays.php:581
 #: include/global_arrays.php:673 include/global_arrays.php:885
 #: include/global_arrays.php:1740 include/global_form.php:574
@@ -2972,7 +2972,7 @@ msgid "Data Source repair received an invalid Data Source ID."
 msgstr "Sửa chữa nguồn dữ liệu nhận được ID nguồn dữ liệu không hợp lệ."
 
 #: data_debug.php:452 data_debug.php:891 data_queries.php:716
-#: data_sources.php:1062 data_templates.php:718 graphs_items.php:377
+#: data_sources.php:1062 data_templates.php:718 graphs_items.php:378
 #: include/global_arrays.php:1005 include/global_form.php:960
 #: lib/api_aggregate.php:2338 lib/html.php:1295 rrdcheck.php:142
 msgid "Data Source"
@@ -4452,38 +4452,38 @@ msgstr "Dữ liệu đồ thị"
 msgid "RRDtool Graph Syntax"
 msgstr "Cú pháp đồ thị RRDtool"
 
-#: graph_image.php:171 graph_json.php:208 graph_realtime.php:266
+#: graph_image.php:171 graph_json.php:208 graph_realtime.php:264
 #: lib/rrd.php:2518
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller chưa chạy."
 
-#: graph_realtime.php:379
+#: graph_realtime.php:377
 msgid "Real-time has been disabled by your administrator."
 msgstr "Thời gian thực đã bị vô hiệu hóa bởi quản trị viên của bạn."
 
-#: graph_realtime.php:386
+#: graph_realtime.php:384
 msgid "The Image Cache Directory does not exist.  Please first create it and set permissions and then attempt to open another Real-time graph."
 msgstr "Thư mục bộ nhớ cache hình ảnh không tồn tại. Trước tiên hãy tạo nó và đặt quyền và sau đó thử mở một biểu đồ thời gian thực khác."
 
-#: graph_realtime.php:393
+#: graph_realtime.php:391
 msgid "The Image Cache Directory is not writable.  Please set permissions and then attempt to open another Real-time graph."
 msgstr "Thư mục bộ nhớ cache hình ảnh là không thể ghi. Vui lòng đặt quyền và sau đó thử mở một biểu đồ thời gian thực khác."
 
-#: graph_realtime.php:414
+#: graph_realtime.php:412
 msgid "Kadupul Real-time Graphing"
 msgstr "Vẽ đồ thị theo thời gian thực của Kadupul"
 
-#: graph_realtime.php:461 lib/html_graph.php:229 lib/html_reports.php:107
+#: graph_realtime.php:459 lib/html_graph.php:229 lib/html_reports.php:107
 #: lib/html_tree.php:1051
 msgid "Thumbnails"
 msgstr "Ảnh thu nhỏ"
 
-#: graph_realtime.php:465
+#: graph_realtime.php:463
 #, php-format
 msgid "%d seconds left."
 msgstr "% d giây còn lại."
 
-#: graph_realtime.php:481
+#: graph_realtime.php:479
 msgid " seconds left."
 msgstr "Vài giây còn lại."
 
@@ -4664,16 +4664,16 @@ msgstr "Tối đa:"
 msgid "Min:"
 msgstr "Tối thiểu:"
 
-#: graph_templates_items.php:401
+#: graph_templates_items.php:402
 #, php-format
 msgid "Graph Template Items [edit graph: %s]"
 msgstr "Mục mẫu biểu đồ [chỉnh sửa biểu đồ: %s]"
 
-#: graph_templates_items.php:440
+#: graph_templates_items.php:441
 msgid "Data Template Filter"
 msgstr "Mục mẫu dữ liệu"
 
-#: graph_templates_items.php:446
+#: graph_templates_items.php:447
 msgid "This filter will limit the Data Sources visible in the Data Source dropdown."
 msgstr "Bộ lọc này sẽ giới hạn Nguồn dữ liệu hiển thị trong menu thả xuống Nguồn dữ liệu."
 
@@ -5070,26 +5070,26 @@ msgstr "ID cơ sở dữ liệu nội bộ cho biểu đồ này. Hữu ích khi
 msgid "Empty Graph"
 msgstr "Sao chép biểu đồ"
 
-#: graphs_items.php:239
+#: graphs_items.php:240
 msgid "Data Sources [No Device]"
 msgstr "Nguồn dữ liệu [Không có thiết bị]"
 
-#: graphs_items.php:241
+#: graphs_items.php:242
 #, php-format
 msgid "Data Sources [%s]"
 msgstr "Nguồn dữ liệu [ %s]"
 
-#: graphs_items.php:256 include/global_arrays.php:1355
+#: graphs_items.php:257 include/global_arrays.php:1355
 #: include/global_form.php:1640
 msgid "Data Template"
 msgstr "Mẫu dữ liệu"
 
-#: graphs_items.php:335
+#: graphs_items.php:336
 #, php-format
 msgid "Graph Items [graph: %s]"
 msgstr "Mục đồ thị [đồ thị: %s]"
 
-#: graphs_items.php:378
+#: graphs_items.php:379
 msgid "Choose the Data Source to associate with this Graph Item."
 msgstr "Chọn Nguồn dữ liệu để liên kết với Mục đồ thị này."
 
@@ -12560,7 +12560,7 @@ msgstr "LỖI: Dải IP ở dạng dải1-dải2 không còn được hỗ trợ
 #: lib/api_device.php:1367 lib/api_device.php:1554 lib/api_device.php:1558
 #: lib/api_device.php:1594 lib/api_device.php:1598 lib/api_device.php:1643
 #: lib/api_device.php:1647 lib/api_device.php:1708 lib/api_device.php:1712
-#: lib/utility.php:743
+#: lib/utility.php:744
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
 msgstr ""
@@ -13420,7 +13420,7 @@ msgid "User Community"
 msgstr "Cộng Đồng Người Dùng"
 
 #: lib/functions.php:4076 lib/functions.php:4101 lib/html.php:2669
-#: lib/utility.php:1445
+#: lib/utility.php:1446
 msgid "Documentation"
 msgstr "Tài liệu"
 
@@ -13565,11 +13565,11 @@ msgstr "%s %s"
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr ""
 
-#: lib/graph_item_editor.php:34
+#: lib/graph_item_editor.php:36
 msgid "Line Width"
 msgstr ""
 
-#: lib/graph_item_editor.php:39
+#: lib/graph_item_editor.php:41
 msgid "LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a positive width in pixels; integers or decimal values are supported."
 msgstr ""
 
@@ -16141,7 +16141,7 @@ msgstr "Yêu cầu: Kadupul&gt; = %s"
 msgid "Not Stated"
 msgstr "Không nêu"
 
-#: lib/poller.php:1991 lib/poller.php:2236
+#: lib/poller.php:1998 lib/poller.php:2243
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 
@@ -16424,8 +16424,8 @@ msgstr ""
 msgid "RRD storage configuration requires attention"
 msgstr ""
 
-#: lib/snmp.php:226 lib/snmp.php:343 lib/snmp.php:455 lib/snmp.php:940
-#: lib/snmp.php:963
+#: lib/snmp.php:226 lib/snmp.php:343 lib/snmp.php:455 lib/snmp.php:913
+#: lib/snmp.php:936
 #, fuzzy, php-format
 msgid "SNMP Command is: %s"
 msgstr "Tùy chọn SNMP [chỉnh sửa: %s]"
@@ -16743,191 +16743,191 @@ msgstr "Tạo đồ thị"
 msgid "NOTE: Graph not added for Data Query %s and index %s due to Data Source verification failure"
 msgstr ""
 
-#: lib/utility.php:1153
+#: lib/utility.php:1154
 msgid "MySQL 5.6+ and MariaDB 10.0+ are great releases, and are very good versions to choose. Make sure you run the very latest release though which fixes a long standing low level networking issue that was causing spine many issues with reliability."
 msgstr "MySQL 5.6+ và MariaDB 10.0+ là những bản phát hành tuyệt vời và là phiên bản rất tốt để lựa chọn. Hãy chắc chắn rằng bạn chạy bản phát hành mới nhất mặc dù đã khắc phục được sự cố mạng cấp độ thấp đã gây ra nhiều vấn đề về độ tin cậy."
 
-#: lib/utility.php:1165
+#: lib/utility.php:1166
 #, php-format
 msgid "It is STRONGLY recommended that you enable InnoDB in any %s version greater than 5.5.3."
 msgstr "Bạn nên bật InnoDB ở bất kỳ phiên bản %s nào lớn hơn 5.1."
 
-#: lib/utility.php:1178 lib/utility.php:1215
+#: lib/utility.php:1179 lib/utility.php:1216
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4_unicode_ci collation type as some characters take more than a single byte."
 msgstr "Khi sử dụng Kadupul với các ngôn ngữ khác tiếng Anh, điều quan trọng là sử dụng loại đối chiếu utf8mb4_unicode_ci vì một số ký tự mất nhiều hơn một byte."
 
-#: lib/utility.php:1184 lib/utility.php:1190 lib/utility.php:1221
-#: lib/utility.php:1227
+#: lib/utility.php:1185 lib/utility.php:1191 lib/utility.php:1222
+#: lib/utility.php:1228
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4 character set as some characters take more than a single byte."
 msgstr "Khi sử dụng Kadupul với các ngôn ngữ khác tiếng Anh, điều quan trọng là sử dụng bộ ký tự utf8mb4 vì một số ký tự mất nhiều hơn một byte."
 
-#: lib/utility.php:1203
+#: lib/utility.php:1204
 #, php-format
 msgid "It is recommended that you enable InnoDB in any %s version greater than 5.1."
 msgstr "Bạn nên bật InnoDB ở bất kỳ phiên bản %s nào lớn hơn 5.1."
 
-#: lib/utility.php:1236
+#: lib/utility.php:1237
 #, php-format
 msgid "Depending on the number of logins and use of spine data collector, %s will need many connections.  The calculation for spine is: total_connections = total_processes * (total_threads + script_servers + 1), then you must leave headroom for user connections, which will change depending on the number of concurrent login accounts."
 msgstr "Tùy thuộc vào số lần đăng nhập và sử dụng trình thu thập dữ liệu cột sống, %s sẽ cần nhiều kết nối. Tính toán cho cột sống là: Total_connections = total_ Processes * (total_threads + script_servers + 1), sau đó bạn phải để lại khoảng trống cho các kết nối người dùng, sẽ thay đổi tùy thuộc vào số lượng tài khoản đăng nhập đồng thời."
 
-#: lib/utility.php:1241
+#: lib/utility.php:1242
 msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
 msgstr "Giữ bộ đệm của bảng lớn hơn có nghĩa là các thao tác mở / đóng tệp ít hơn khi sử dụng innodb_file_per_table."
 
-#: lib/utility.php:1246
+#: lib/utility.php:1247
 msgid "With Remote polling capabilities, large amounts of data will be synced from the main server to the remote pollers.  Therefore, keep this value at or above 16M."
 msgstr "Với khả năng bỏ phiếu từ xa, một lượng lớn dữ liệu sẽ được đồng bộ hóa từ máy chủ chính đến các công cụ bỏ phiếu từ xa. Do đó, giữ giá trị này ở mức hoặc trên 16M."
 
-#: lib/utility.php:1252
+#: lib/utility.php:1253
 #, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
 msgstr "Nếu sử dụng Kadupul Performance Booster và chọn công cụ lưu trữ bộ nhớ, bạn phải cẩn thận để xóa bộ đệm Performance Booster trước khi hệ thống hết dung lượng bảng nhớ. Điều này được thực hiện theo hai cách, đầu tiên là giảm kích thước cột đầu ra của bạn xuống đúng kích thước. Cột này nằm trong bảng pollerDefput và pollerDefput_boost. Điều thứ hai bạn có thể làm là phân bổ thêm bộ nhớ cho các bảng bộ nhớ. Chúng tôi đã tùy ý chọn giá trị đề xuất là 10 %% bộ nhớ hệ thống, nhưng nếu bạn đang sử dụng ổ đĩa SSD hoặc có hệ thống nhỏ hơn, bạn có thể bỏ qua đề xuất này hoặc chọn một công cụ lưu trữ khác. Bạn có thể thấy mức tiêu thụ dự kiến của các bảng Performance Booster trong Bảng điều khiển -&gt; Tiện ích hệ thống -&gt; Xem Trạng thái tăng."
 
-#: lib/utility.php:1258
+#: lib/utility.php:1259
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
 msgstr "Khi thực hiện các truy vấn con, có kích thước bảng tạm thời lớn hơn, hãy giữ các bảng tạm thời đó trong bộ nhớ."
 
-#: lib/utility.php:1264 lib/utility.php:1270
+#: lib/utility.php:1265 lib/utility.php:1271
 msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr ""
 
-#: lib/utility.php:1276
+#: lib/utility.php:1277
 #, php-format
 msgid "When using InnoDB storage it is important to keep your table spaces separate.  This makes managing the tables simpler for long time users of %s.  If you are running with this currently off, you can migrate to the per file storage by enabling the feature, and then running an alter statement on all InnoDB tables."
 msgstr "Khi sử dụng bộ lưu trữ InnoDB, điều quan trọng là phải tách biệt các không gian bảng của bạn. Điều này làm cho việc quản lý các bảng đơn giản hơn đối với người dùng %s trong thời gian dài. Nếu bạn đang chạy với tính năng này hiện đang tắt, bạn có thể di chuyển đến mỗi bộ lưu trữ tệp bằng cách bật tính năng và sau đó chạy câu lệnh thay đổi trên tất cả các bảng InnoDB."
 
-#: lib/utility.php:1282
+#: lib/utility.php:1283
 msgid "When using innodb_file_per_table, it is important to set the innodb_file_format to Barracuda.  This setting will allow longer indexes important for certain Kadupul tables."
 msgstr "Khi sử dụng innodb_file_per_table, điều quan trọng là phải đặt innodb_file_format thành Barracuda. Cài đặt này sẽ cho phép các chỉ mục dài hơn quan trọng đối với các bảng Kadupul nhất định."
 
-#: lib/utility.php:1288
+#: lib/utility.php:1289
 msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
 msgstr "Nếu các bảng của bạn có các chỉ mục rất lớn, bạn phải hoạt động với Barracuda innodb_file_format và innodb_large_prefix bằng 1. Việc không làm điều này có thể dẫn đến các plugin không thể tạo bảng đúng cách."
 
-#: lib/utility.php:1294
+#: lib/utility.php:1295
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
 msgstr "InnoDB sẽ giữ càng nhiều bảng và chỉ mục trong bộ nhớ hệ thống càng tốt. Do đó, bạn nên làm cho innodb_buffer_pool đủ lớn để chứa càng nhiều bảng và chỉ mục trong bộ nhớ. Kiểm tra kích thước của thư mục / var / lib / mysql / Kadupul sẽ giúp xác định giá trị này. Chúng tôi khuyến nghị 25 %% tổng bộ nhớ hệ thống của bạn, nhưng yêu cầu của bạn sẽ thay đổi tùy thuộc vào kích thước hệ thống của bạn."
 
-#: lib/utility.php:1300
+#: lib/utility.php:1301
 #, fuzzy
 msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "Cài đặt này sẽ duy trì BẬT trừ khi các phiên bản Kadupul của bạn đang chạy trên ZFS hoặc FusionI / O, cả hai đều có nhật ký nội bộ để khắc phục sự cố hệ thống đột ngột. Tuy nhiên, nếu bạn có sức mạnh rất tốt và hệ thống của bạn hiếm khi ngừng hoạt động và bạn có các bản sao lưu, việc chuyển cài đặt này thành TẮT có thể giúp bạn tăng hiệu suất cơ sở dữ liệu lên gần 50%."
 
-#: lib/utility.php:1305
+#: lib/utility.php:1306
 msgid "This is where metadata is stored. If you had a lot of tables, it would be useful to increase this."
 msgstr "Đây là nơi siêu dữ liệu được lưu trữ. Nếu bạn có nhiều bảng, sẽ rất hữu ích khi tăng cái này."
 
-#: lib/utility.php:1310
+#: lib/utility.php:1311
 msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "Các truy vấn giả không nên để cơ sở dữ liệu ngoại tuyến với người khác. Giết các truy vấn này trước khi chúng giết hệ thống của bạn."
 
-#: lib/utility.php:1315
+#: lib/utility.php:1316
 msgid "Maximum I/O performance happens when you use the O_DIRECT method to flush pages."
 msgstr "Hiệu suất I / O tối đa xảy ra khi bạn sử dụng phương pháp O_DIRECT để xóa trang."
 
-#: lib/utility.php:1325
+#: lib/utility.php:1326
 #, php-format
 msgid "Setting this value to 2 means that you will flush all transactions every second rather than at commit.  This allows %s to perform writing less often."
 msgstr "Đặt giá trị này thành 2 có nghĩa là bạn sẽ xóa tất cả các giao dịch mỗi giây thay vì tại cam kết. Điều này cho phép %s thực hiện viết ít thường xuyên hơn."
 
-#: lib/utility.php:1330
+#: lib/utility.php:1331
 msgid "With modern SSD type storage, having multiple io threads is advantageous for applications with high io characteristics."
 msgstr "Với lưu trữ loại SSD hiện đại, việc có nhiều luồng io là lợi thế cho các ứng dụng có đặc tính io cao."
 
-#: lib/utility.php:1338 lib/utility.php:1380
+#: lib/utility.php:1339 lib/utility.php:1381
 #, php-format
 msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "Kể từ %s %s, bạn có thể kiểm soát tần suất %s xóa các giao dịch vào đĩa. Mặc định là 1 giây, nhưng trong các hệ thống I / O cao, cài đặt giá trị lớn hơn 1 có thể cho phép I / O của đĩa được tuần tự hơn"
 
-#: lib/utility.php:1343
+#: lib/utility.php:1344
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "Với lưu trữ loại SSD hiện đại, việc có nhiều luồng io đọc là lợi thế cho các ứng dụng có đặc tính io cao."
 
-#: lib/utility.php:1348
+#: lib/utility.php:1349
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "Với lưu trữ loại SSD hiện đại, việc có nhiều luồng io ghi là lợi thế cho các ứng dụng có đặc tính io cao."
 
-#: lib/utility.php:1354
+#: lib/utility.php:1355
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
 msgstr "%s sẽ chia innodb_buffer_pool thành các vùng bộ nhớ để cải thiện hiệu suất. Giá trị tối đa là 64. Khi innodb_buffer_pool của bạn dưới 1GB, bạn nên sử dụng kích thước nhóm chia cho 128MB. Tiếp tục sử dụng phương trình này tối đa 64."
 
-#: lib/utility.php:1354
+#: lib/utility.php:1355
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s sẽ chia innodb_buffer_pool thành các vùng bộ nhớ để cải thiện hiệu suất. Giá trị tối đa là 64. Khi innodb_buffer_pool của bạn dưới 1GB, bạn nên sử dụng kích thước nhóm chia cho 128MB. Tiếp tục sử dụng phương trình này tối đa 64."
 
-#: lib/utility.php:1360 lib/utility.php:1396
+#: lib/utility.php:1361 lib/utility.php:1397
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
 msgstr "Nếu bạn có đĩa SSD, hãy sử dụng đề xuất này. Nếu bạn có ổ cứng vật lý, hãy sử dụng 200 * số lượng ổ đĩa hoạt động trong mảng. Nếu sử dụng NVMe hoặc PCIe Flash, có thể sử dụng số lượng lớn hơn nhiều tới 100000."
 
-#: lib/utility.php:1366 lib/utility.php:1402
+#: lib/utility.php:1367 lib/utility.php:1403
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 2000 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 200000 can be used."
 msgstr "Nếu bạn có đĩa SSD, hãy sử dụng đề xuất này. Nếu bạn có ổ đĩa cứng vật lý, hãy sử dụng 2000 * số lượng ổ đĩa hoạt động trong mảng. Nếu sử dụng NVMe hoặc PCIe Flash, có thể sử dụng số lượng lớn hơn nhiều tới 200000."
 
-#: lib/utility.php:1372 lib/utility.php:1408
+#: lib/utility.php:1373 lib/utility.php:1409
 msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this setting."
 msgstr "Nếu bạn có đĩa SSD, hãy sử dụng đề xuất này. Nếu không, không đặt cài đặt này."
 
-#: lib/utility.php:1385
+#: lib/utility.php:1386
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics."
 msgstr "Với lưu trữ loại SSD hiện đại, việc có nhiều luồng io đọc là lợi thế cho các ứng dụng có đặc tính io cao."
 
-#: lib/utility.php:1390
+#: lib/utility.php:1391
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics."
 msgstr "Với lưu trữ loại SSD hiện đại, việc có nhiều luồng io ghi là lợi thế cho các ứng dụng có đặc tính io cao."
 
-#: lib/utility.php:1421
+#: lib/utility.php:1422
 msgid "When using MariaDB 10.2.4 and above, this setting should be off if atomic writes are enabled.  Therefore, please enable atomic writes instead of the double write buffer as it will increase performance."
 msgstr "Khi sử dụng MariaDB 10.2.4 trở lên, cài đặt này sẽ bị tắt nếu tính năng ghi nguyên tử được bật. Do đó, hãy bật tính năng ghi nguyên tử thay vì bộ đệm ghi kép vì nó sẽ tăng hiệu suất."
 
-#: lib/utility.php:1428
+#: lib/utility.php:1429
 msgid "When using MariaDB 10.2.4 and above, you can use atomic writes over the doublewrite buffer to increase performance."
 msgstr "Khi sử dụng MariaDB 10.2.4 trở lên, bạn có thể sử dụng ghi nguyên tử trên bộ đệm viết đôi để tăng hiệu suất."
 
-#: lib/utility.php:1445
+#: lib/utility.php:1446
 #, php-format
 msgid "%s Tuning"
 msgstr "%s Điều chỉnh"
 
-#: lib/utility.php:1445
+#: lib/utility.php:1446
 msgid "Note: Many changes below require a database restart"
 msgstr "Lưu ý: Nhiều thay đổi dưới đây yêu cầu khởi động lại cơ sở dữ liệu"
 
-#: lib/utility.php:1453
+#: lib/utility.php:1454
 msgid "Variable"
 msgstr "Biến thể"
 
-#: lib/utility.php:1454
+#: lib/utility.php:1455
 msgid "Current Value"
 msgstr "Giá trị hiện tại"
 
-#: lib/utility.php:1456
+#: lib/utility.php:1457
 msgid "Recommended Value"
 msgstr "Giá trị đề xuất"
 
-#: lib/utility.php:1457
+#: lib/utility.php:1458
 msgid "Comments"
 msgstr "Bình luận"
 
-#: lib/utility.php:2051
+#: lib/utility.php:2052
 #, php-format
 msgid "PHP %s is the minimum version"
 msgstr "PHP %s là phiên bản tối thiểu"
 
-#: lib/utility.php:2053
+#: lib/utility.php:2054
 #, php-format
 msgid "A minimum of %s memory limit"
 msgstr "Giới hạn bộ nhớ tối thiểu %s MB"
 
-#: lib/utility.php:2055
+#: lib/utility.php:2056
 #, php-format
 msgid "A minimum of %s m execution time"
 msgstr "Tối thiểu %sm thời gian thực hiện"
 
-#: lib/utility.php:2057
+#: lib/utility.php:2058
 msgid "A valid timezone that matches MySQL and the system"
 msgstr "Một múi giờ hợp lệ phù hợp với MySQL và hệ thống"
 
@@ -16935,7 +16935,7 @@ msgstr "Một múi giờ hợp lệ phù hợp với MySQL và hệ thống"
 msgid "A useful name for this VDEF."
 msgstr "Một tên hữu ích cho VDEF này."
 
-#: link.php:61
+#: link.php:64
 #, php-format
 msgid "External Link ID '%s' with Title '%s' attempted to inject an invalid URL and was blocked!"
 msgstr ""
