@@ -480,6 +480,22 @@ final class AuditDatabaseCommandTest extends TestCase
         );
     }
 
+    public function testLegacyUpgradeDeprecationExplainsTheSeparateCommandOnceWithoutCronQuiet(): void
+    {
+        $previous = getenv('KADUPUL_CLI_QUIET_DEPRECATION');
+        try {
+            putenv('KADUPUL_CLI_QUIET_DEPRECATION=0');
+            $this->presentation->forLegacy(LegacyRequest::Run);
+            $tester = $this->tester();
+
+            self::assertSame(0, $tester->execute(['--upgrade' => true], ['capture_stderr_separately' => true]));
+            self::assertSame(1, substr_count($tester->getErrorOutput(), 'DEPRECATION: --upgrade in the audit command is retained for compatibility. Run php cli/upgrade_database.php separately before auditing.'));
+            self::assertStringContainsString('    --upgrade - Deprecated; run php cli/upgrade_database.php separately', $tester->getDisplay());
+        } finally {
+            putenv($previous === false ? 'KADUPUL_CLI_QUIET_DEPRECATION' : 'KADUPUL_CLI_QUIET_DEPRECATION=' . $previous);
+        }
+    }
+
     public function testLegacyMissingBaselineFailsWithoutCleanOrRepairSuccess(): void
     {
         foreach (['--report', '--repair', '--create'] as $mode) {

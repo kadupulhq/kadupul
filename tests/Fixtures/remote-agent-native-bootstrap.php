@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 2) . '/include/vendor/autoload.php';
+
 $mode = getenv('REMOTE_AGENT_TEST_MODE');
 $config = array('base_path' => getenv('REMOTE_AGENT_TEST_DIRECTORY'), 'poller_id' => str_contains($mode, 'collector') ? 2 : 1, 'connection' => 'offline');
 $config['url_path'] = '/';
@@ -181,6 +183,7 @@ function api_device_ping_device($host, $remote)
 function run_data_query($host, $query)
 {
     $GLOBALS['calls'][] = array('query', $host, $query);
+    return true;
 }
 function input_validate_input_number($value)
 {

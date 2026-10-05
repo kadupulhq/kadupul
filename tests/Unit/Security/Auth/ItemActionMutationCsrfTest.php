@@ -125,6 +125,8 @@ PHP;
     }
 }
 
+// Inventory actions use Symfony; DeviceActionCsrfTest exercises every rendered association
+// and maintenance action, CSRF rejection before mutation, and authorized writes.
 // External-link actions are covered by the Symfony Link presentation tests.
 // Data Input Methods, Palette and VDEF now use Symfony. Their presentation and authorization tests
 // cover legacy URL rejection, GET editors, POST mutations and CSRF failures.
@@ -173,16 +175,6 @@ function itemActionCases()
         array('host_templates.php', 'item_remove_dq', array()),
         array('tree.php', 'tree_up', array()),
         array('tree.php', 'tree_down', array()),
-        array('host.php', 'gt_add', array('host_id' => '1')),
-        array('host.php', 'gt_remove', array('host_id' => '1')),
-        array('host.php', 'query_add', array('host_id' => '1', 'reindex_method' => '1')),
-        array('host.php', 'query_remove', array('host_id' => '1')),
-        array('host.php', 'query_change', array('host_id' => '1', 'data_query_id' => '1', 'reindex_method' => '1')),
-        array('host.php', 'query_reload', array('host_id' => '1')),
-        array('host.php', 'query_verbose', array('host_id' => '1')),
-        array('host.php', 'enable_debug', array('host_id' => '1')),
-        array('host.php', 'disable_debug', array('host_id' => '1')),
-        array('host.php', 'repopulate', array('host_id' => '1')),
         array('tree.php', 'sortasc', array()),
         array('tree.php', 'sortdesc', array()),
         array('tree.php', 'copy_node', array('tree_id' => '1', 'id' => 'tbranch:2', 'parent' => 'tbranch:1', 'position' => '0')),
@@ -237,7 +229,6 @@ test('item editors and lists still open by GET', function ($controller, $action)
     array('data_sources.php', 'data_edit'), array('data_templates.php', 'template_edit'),
     array('graphs_items.php', 'item_edit'), array('graph_templates_items.php', 'item_edit'),
     array('host_templates.php', 'edit'), array('tree.php', 'edit'),
-    array('host.php', 'edit'),
     array('utilities.php', 'view_user_log'),
 ));
 
@@ -274,17 +265,9 @@ test('pages send the device, tree, rule, data source and utility actions by POST
     };
     $token = '[^;]*__csrf_magic\'?\s*:\s*csrfMagicToken';
 
-    foreach (array('query_add', 'gt_add', 'query_remove', 'gt_remove') as $action) {
-        expect($source('host.php'))->toMatch("/\\$\\.post\\('host\\.php\\?action=$action', \\{" . $token . '/');
-    }
-    expect($source('host.php'))->toMatch("/\\$\\.post\\('host\\.php\\?action=query_reload', \\{" . $token . '/')
-        ->toMatch("/loadPageUsingPostChecked\\('host\\.php\\?action=query_verbose', \\{" . $token . '/')
-        ->toMatch("/loadPageUsingPostChecked\\(urlPath\\+'host\\.php\\?action=query_change', \\{" . $token . '/')
-        ->not->toContain('hostPageLoad')
-        ->not->toMatch('/strURL[^;]*action=(?:gt|query)_/');
-    foreach (array('enable_debug', 'disable_debug', 'repopulate') as $action) {
-        expect($source('host.php'))->toMatch("/class='hyperLink cactiPostAction' href='#' data-url='\" \\. html_escape\\('host\\.php\\?action=$action&/");
-    }
+    expect($source('host.php'))->toContain('/config/bootstrap.php')
+        ->toContain('/app.php/inventory/devices/legacy');
+
     expect($source('graphs_new.php'))->toMatch("/class='cactiPostAction' href='#' data-navigation='fullpage' data-url='\" \\. html_escape\\('host\\.php\\?action=query_verbose&/");
 
     foreach (array('copy_node', 'create_node', 'delete_node', 'move_node', 'rename_node') as $action) {
