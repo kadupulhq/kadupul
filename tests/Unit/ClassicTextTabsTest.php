@@ -7,6 +7,8 @@ declare(strict_types=1);
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+require_once dirname(__DIR__) . '/Helpers/ChildProcessCoverage.php';
+
 /*
  * html_show_tabs_left() runs in a child process because lib/html.php expects
  * the application's global helpers, which the test stubs with a German
@@ -30,28 +32,62 @@ function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function db_fetch_assoc($sql) { return array(array('id' => 7, 'title' => 'Wiki <b>&'), array('id' => 9, 'title' => '監視')); }
 $config = array('url_path' => '/kadupul/', 'poller_id' => 1, 'connection' => 'online');
 $_SERVER['REQUEST_URI'] = $argv[3];
+ob_start();
 html_show_tabs_left();
+$html = ob_get_clean();
+if (substr_count($html, "class='classicTab") !== 6
+    || !str_contains($html, '>Konsole</a>')
+    || !str_contains($html, '>Wiki &lt;b&gt;&amp;</a>')) {
+    throw new RuntimeException('Native classic tab translation or escaping was not reached.');
+}
+$GLOBALS['nativeChildCoverageMarkers'] = array('classic-tabs-rendered', 'translated-console-rendered', 'external-label-escaped');
+print $html;
 PHP;
 
     $launcher ??= function_exists('proc_open') ? 'proc_open' : null;
     if ($launcher === null) {
         throw new RuntimeException('Unable to start classic tab renderer: proc_open is unavailable.');
     }
-    $pipes = array();
-    $process = $launcher(
-        array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, $root, $currentPage, $requestUri),
-        array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
-        $pipes
+    $registration = child_coverage_registration(
+        __FILE__,
+        'classic-tabs',
+        array($currentPage, $requestUri),
+        array('classic-tabs-rendered', 'translated-console-rendered', 'external-label-escaped'),
+        array('lib/html.php'),
+        array('lib/html.php')
     );
-    if (!is_resource($process)) {
-        throw new RuntimeException('Unable to start classic tab renderer process.');
-    }
-    $html = stream_get_contents($pipes[1]);
-    $errors = stream_get_contents($pipes[2]);
-    fclose($pipes[1]);
-    fclose($pipes[2]);
+    $registration['collectorPrelude'] = 'define("CLASSIC_TEXT_TABS_TEST_COVERAGE", true);';
+    $command = child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, $root, $currentPage, $requestUri), $coverageDirectory, $registration);
+    try {
+        $pipes = array();
+        $process = $launcher(
+            $command,
+            array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+            $pipes
+        );
+        if (!is_resource($process)) {
+            throw new RuntimeException('Unable to start classic tab renderer process.');
+        }
+        $html = stream_get_contents($pipes[1]);
+        $errors = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
 
-    return array(proc_close($process), $html, $errors);
+        $status = proc_close($process);
+        if ($status === 0 && $errors === '') {
+            child_coverage_collect($coverageDirectory);
+        }
+
+        return array($status, $html, $errors);
+    } finally {
+        if ($coverageDirectory !== null && is_dir($coverageDirectory)) {
+            foreach (glob($coverageDirectory . '/*.coverage*') ?: array() as $ownedReport) {
+                unlink($ownedReport);
+            }
+            rmdir($coverageDirectory);
+            unset($GLOBALS['child_coverage_registrations'][$coverageDirectory]);
+        }
+    }
 }
 
 test('classic tab renderer reports process startup failure before reading pipes', function () {
