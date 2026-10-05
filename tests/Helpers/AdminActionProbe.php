@@ -64,6 +64,7 @@ register_shutdown_function(function () {
         'headers' => $GLOBALS['sent_headers'],
         'printed' => $GLOBALS['printed'],
         'session' => $_SESSION,
+        'memberships' => $GLOBALS['permission_sql'] ? $GLOBALS['database_sessions']['probe:0:auth']->query('SELECT group_id,user_id FROM user_auth_group_members ORDER BY group_id,user_id')->fetchAll(PDO::FETCH_ASSOC) : array(),
         'epochs' => $GLOBALS['permission_sql'] ? $GLOBALS['database_sessions']['probe:0:auth']->query('SELECT id,reset_perms FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_KEY_PAIR) : array(),
     )));
 });
@@ -132,11 +133,15 @@ $database_hostname='probe';$database_port=0;$database_default='auth';$database_s
 if($GLOBALS['permission_sql']){
     $probeDb=$database_sessions['probe:0:auth'];
     $probeDb->exec('CREATE TABLE user_auth(id INTEGER PRIMARY KEY, reset_perms INTEGER NOT NULL DEFAULT 1,policy_graphs INTEGER DEFAULT 1,policy_trees INTEGER DEFAULT 1,policy_hosts INTEGER DEFAULT 1,policy_graph_templates INTEGER DEFAULT 1)');
-    $probeDb->exec('INSERT INTO user_auth(id) VALUES(42),(43)');
+    foreach($scenario['permission_users']??array(42,43) as $user){$query=$probeDb->prepare('INSERT INTO user_auth(id) VALUES(?)');$query->execute(array($user));}
     $probeDb->exec("CREATE TABLE user_auth_group(id INTEGER PRIMARY KEY,enabled TEXT DEFAULT '',policy_graphs INTEGER DEFAULT 1,policy_trees INTEGER DEFAULT 1,policy_hosts INTEGER DEFAULT 1,policy_graph_templates INTEGER DEFAULT 1)");
     foreach($scenario['permission_groups']??array(5,9) as $group){$query=$probeDb->prepare('INSERT INTO user_auth_group(id) VALUES(?)');$query->execute(array($group));}
     $probeDb->exec('CREATE TABLE user_auth_group_members(group_id INTEGER,user_id INTEGER,PRIMARY KEY(group_id,user_id))');
+    if(isset($scenario['membership_rows'])){
+        foreach($scenario['membership_rows'] as $row){$query=$probeDb->prepare('INSERT INTO user_auth_group_members VALUES(?,?)');$query->execute($row);}
+    }else{
     foreach($scenario['permission_groups']??array(5,9) as $group){$query=$probeDb->prepare('INSERT INTO user_auth_group_members VALUES(?,42),(?,43)');$query->execute(array($group,$group));}
+    }
     $probeDb->exec('CREATE TABLE user_auth_perms(user_id INTEGER,item_id INTEGER,type INTEGER,PRIMARY KEY(user_id,item_id,type))');
     $probeDb->exec('CREATE TABLE user_auth_group_perms(group_id INTEGER,item_id INTEGER,type INTEGER,PRIMARY KEY(group_id,item_id,type))');
     foreach(array(1,2,3,4) as $type){$probeDb->exec('INSERT INTO user_auth_perms VALUES(42,9,'.$type.')');foreach($scenario['permission_groups']??array(5,9) as $group){$query=$probeDb->prepare('INSERT INTO user_auth_group_perms VALUES(?,9,?)');$query->execute(array($group,$type));}}
