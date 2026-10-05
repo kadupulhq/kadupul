@@ -241,7 +241,7 @@ function form_save(): never
     }
 
     $local_graph_id = get_request_var('local_graph_id');
-    $host_id        = get_request_var('host_id');
+    $host_id        = auth_resource_id(get_request_var('host_id'));
     if (!empty($local_graph_id) && !graph_edit_graph_is_allowed($local_graph_id)) {
         graph_edit_access_denied();
     }
@@ -254,7 +254,7 @@ function form_save(): never
         }
     }
 
-    if (($host_id > 0) && !is_device_allowed($host_id)) {
+    if ($host_id === null || ($host_id > 0 && !is_device_allowed($host_id))) {
         graph_edit_access_denied();
     }
 
@@ -672,7 +672,8 @@ function form_actions()
             } elseif (get_request_var('drp_action') == '5') { // change host
                 get_filter_request_var('host_id');
                 $failures = false;
-                if (get_request_var('host_id') > 0 && !is_device_allowed(get_request_var('host_id'))) {
+                $host_id = auth_resource_id(get_request_var('host_id'));
+                if ($host_id === null || ($host_id > 0 && !is_device_allowed($host_id))) {
                     $selected_items = array();
                     raise_message('device_access_denied', __('The selected Device is not available.'), MESSAGE_LEVEL_ERROR);
                 }

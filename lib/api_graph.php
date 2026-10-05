@@ -678,7 +678,8 @@ function api_duplicate_graph($_local_graph_id, $_graph_template_id, $graph_title
 
 function api_graph_change_device($local_graph_id, $host_id)
 {
-    if (!is_graph_allowed($local_graph_id) || ($host_id > 0 && !is_device_allowed($host_id))) {
+    $host_id = auth_resource_id($host_id);
+    if ($host_id === null || !is_graph_allowed($local_graph_id) || ($host_id > 0 && !is_device_allowed($host_id))) {
         return false;
     }
 

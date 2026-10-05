@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 03:41-0700\n"
+"POT-Creation-Date: 2026-10-05 03:45-0700\n"
 "PO-Revision-Date: 2024-04-20 18:53-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -128,10 +128,10 @@ msgstr "לחץ על &#39;המשך&#39; כדי למחוק את הגרפים המ�
 #: data_templates.php:486 data_templates.php:498 data_templates.php:514
 #: gprint_presets.php:137 graph_templates.php:373 graph_templates.php:385
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
-#: graph_view.php:1043 graphs.php:876 graphs.php:892 graphs.php:903
-#: graphs.php:914 graphs.php:929 graphs.php:943 graphs.php:952 graphs.php:1154
-#: graphs.php:1197 graphs.php:1219 graphs.php:1250 graphs.php:1262
-#: graphs.php:1846 host.php:475 host.php:484 host.php:531 host.php:540
+#: graph_view.php:1043 graphs.php:877 graphs.php:893 graphs.php:904
+#: graphs.php:915 graphs.php:930 graphs.php:944 graphs.php:953 graphs.php:1155
+#: graphs.php:1198 graphs.php:1220 graphs.php:1251 graphs.php:1263
+#: graphs.php:1847 host.php:475 host.php:484 host.php:531 host.php:540
 #: host.php:549 host.php:565 host.php:579 host.php:588 host.php:619
 #: host.php:631 host_templates.php:222 host_templates.php:236
 #: host_templates.php:247 host_templates.php:302 host_templates.php:375
@@ -163,9 +163,9 @@ msgstr "ביטול"
 #: data_templates.php:486 data_templates.php:498 data_templates.php:514
 #: gprint_presets.php:137 graph_templates.php:373 graph_templates.php:385
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
-#: graphs.php:876 graphs.php:892 graphs.php:903 graphs.php:914 graphs.php:929
-#: graphs.php:943 graphs.php:952 graphs.php:1154 graphs.php:1197
-#: graphs.php:1219 graphs.php:1250 graphs.php:1262 host.php:475 host.php:484
+#: graphs.php:877 graphs.php:893 graphs.php:904 graphs.php:915 graphs.php:930
+#: graphs.php:944 graphs.php:953 graphs.php:1155 graphs.php:1198
+#: graphs.php:1220 graphs.php:1251 graphs.php:1263 host.php:475 host.php:484
 #: host.php:531 host.php:540 host.php:549 host.php:565 host.php:579
 #: host.php:588 host.php:619 host.php:631 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
@@ -181,7 +181,7 @@ msgid "Continue"
 msgstr "המשך"
 
 #: aggregate_graphs.php:370 aggregate_graphs.php:445 aggregate_graphs.php:470
-#: graphs.php:876
+#: graphs.php:877
 msgid "Delete Graph(s)"
 msgstr "מחק גרפים"
 
@@ -195,8 +195,8 @@ msgstr "כדי להעביר את הגרפים המצטברים להלן לצבי
 
 #: aggregate_graphs.php:406 aggregate_graphs.php:456 aggregate_graphs.php:504
 #: auth_changepassword.php:415 auth_profile.php:464 automation_networks.php:387
-#: automation_snmp.php:245 graphs.php:1156 graphs.php:1206 graphs.php:1209
-#: graphs.php:1253 graphs.php:1846 host.php:622 include/auth.php:309
+#: automation_snmp.php:245 graphs.php:1157 graphs.php:1207 graphs.php:1210
+#: graphs.php:1254 graphs.php:1847 host.php:622 include/auth.php:309
 #: lib/api_aggregate.php:2209 lib/api_aggregate.php:2224 lib/html_form.php:1422
 #: lib/html_reports.php:632 managers.php:1130 permission_denied.php:14
 #: permission_denied.php:16
@@ -244,29 +244,29 @@ msgstr "שם מצטבר:"
 msgid "New Aggregate"
 msgstr "צבירה חדשה"
 
-#: aggregate_graphs.php:485 graphs.php:1234 host.php:603
+#: aggregate_graphs.php:485 graphs.php:1235 host.php:603
 msgid "Click 'Continue' to add the selected Graphs to the Report below."
 msgstr "לחץ על &#39;המשך&#39; כדי להוסיף את הגרפים שנבחרו לדוח שלהלן."
 
-#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1238 host.php:607
+#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1239 host.php:607
 #: lib/html_reports.php:18 lib/html_reports.php:2133
 msgid "Report Name"
 msgstr "שם הדוח"
 
-#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1242 host.php:611
+#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1243 host.php:611
 #: lib/html_reports.php:1789
 msgid "Timespan"
 msgstr "זמן"
 
-#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1246 host.php:615
+#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1247 host.php:615
 msgid "Align"
 msgstr "יישור"
 
-#: aggregate_graphs.php:501 graphs.php:1250
+#: aggregate_graphs.php:501 graphs.php:1251
 msgid "Add Graphs to Report"
 msgstr "הוסף גרפים לדוח"
 
-#: aggregate_graphs.php:503 graphs.php:1252
+#: aggregate_graphs.php:503 graphs.php:1253
 msgid "You currently have no reports defined."
 msgstr "בשלב זה אין לך דוחות מוגדרים."
 
@@ -302,7 +302,7 @@ msgstr "לחץ על &#39;המשך&#39; כדי להציב את הגרפים המ�
 msgid "Destination Branch:"
 msgstr "סניף יעד:"
 
-#: aggregate_graphs.php:545 graphs.php:929
+#: aggregate_graphs.php:545 graphs.php:930
 msgid "Place Graph(s) on Tree"
 msgstr "גרף מקום על עץ"
 
@@ -357,15 +357,15 @@ msgstr "תצוגה מקדימה מצטברת [ %s]"
 msgid "Aggregate Preview %s"
 msgstr "תצוגה מקדימה מצטברת [ %s]"
 
-#: aggregate_graphs.php:763 graph.php:551 graphs.php:1679
+#: aggregate_graphs.php:763 graph.php:551 graphs.php:1680
 msgid "RRDtool Command:"
 msgstr "הפקודה RRDtool:"
 
-#: aggregate_graphs.php:765 graph.php:560 graphs.php:1683
+#: aggregate_graphs.php:765 graph.php:560 graphs.php:1684
 msgid "Not Checked"
 msgstr "אין צ&#39;קים"
 
-#: aggregate_graphs.php:765 graph.php:556 graphs.php:1681
+#: aggregate_graphs.php:765 graph.php:556 graphs.php:1682
 msgid "RRDtool Says:"
 msgstr "RRDtool אומר:"
 
@@ -374,24 +374,24 @@ msgstr "RRDtool אומר:"
 msgid "Aggregate Graph %s"
 msgstr "גרף מצטבר %s"
 
-#: aggregate_graphs.php:820 aggregate_templates.php:408 graphs.php:1020
+#: aggregate_graphs.php:820 aggregate_templates.php:408 graphs.php:1021
 msgid "Prefix Replacement Values"
 msgstr "דפוס החלפה"
 
-#: aggregate_graphs.php:821 aggregate_templates.php:409 graphs.php:1021
+#: aggregate_graphs.php:821 aggregate_templates.php:409 graphs.php:1022
 msgid "You may use these replacement values for the Prefix in the Aggregate Graph"
 msgstr "תוכל להשתמש בערכי החלפה אלה עבור הקידומת בגרף המצרף"
 
-#: aggregate_graphs.php:988 aggregate_templates.php:536 graphs.php:1103
+#: aggregate_graphs.php:988 aggregate_templates.php:536 graphs.php:1104
 #: lib/api_aggregate.php:2344
 msgid "Total"
 msgstr "סה\"כ"
 
-#: aggregate_graphs.php:992 aggregate_templates.php:540 graphs.php:1105
+#: aggregate_graphs.php:992 aggregate_templates.php:540 graphs.php:1106
 msgid "All Items"
 msgstr "כל הפריטים"
 
-#: aggregate_graphs.php:1010 graphs.php:1694 lib/api_aggregate.php:2504
+#: aggregate_graphs.php:1010 graphs.php:1695 lib/api_aggregate.php:2504
 msgid "Graph Configuration"
 msgstr "תצורת גרף"
 
@@ -417,7 +417,7 @@ msgstr "גרפים תואמים"
 #: color_templates.php:560 data_debug.php:1189 data_queries.php:1371
 #: data_source_profiles.php:1186 data_sources.php:1793 data_templates.php:1101
 #: gprint_presets.php:255 graph_templates.php:727 graph_view.php:667
-#: graphs.php:2100 graphs_new.php:526 host.php:1820 host_templates.php:795
+#: graphs.php:2101 graphs_new.php:526 host.php:1820 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
 #: lib/api_automation.php:480 lib/api_automation.php:708
 #: lib/clog_webapi.php:608 lib/html.php:268 lib/html_filter.php:46
@@ -436,7 +436,7 @@ msgstr "חיפוש"
 #: aggregate_graphs.php:1288 aggregate_graphs.php:1324
 #: aggregate_graphs.php:1587 color_templates.php:680 data_sources.php:1995
 #: data_sources.php:2134 graph_view.php:488 graph_view.php:739
-#: graph_view.php:803 graphs.php:2117 graphs.php:2316 host.php:1934
+#: graph_view.php:803 graphs.php:2118 graphs.php:2317 host.php:1934
 #: include/global_arrays.php:993 include/global_arrays.php:1229
 #: include/global_arrays.php:2012 lib/api_automation.php:283 lib/html.php:1996
 #: lib/html.php:2065 lib/html_graph.php:197 lib/html_tree.php:1022
@@ -454,7 +454,7 @@ msgstr "גרפים"
 #: data_debug.php:1199 data_queries.php:1381 data_source_profiles.php:1196
 #: data_source_profiles.php:1318 data_sources.php:1803 data_templates.php:1130
 #: gprint_presets.php:265 graph_templates.php:737 graph_view.php:743
-#: graphs.php:2121 graphs_new.php:536 host.php:1845 host_templates.php:805
+#: graphs.php:2122 graphs_new.php:536 host.php:1845 host_templates.php:805
 #: include/global_form.php:242 lib/api_automation.php:182
 #: lib/api_automation.php:490 lib/api_automation.php:718
 #: lib/api_automation.php:1082 lib/html_reports.php:2045 managers.php:154
@@ -478,7 +478,7 @@ msgstr "חלק מצטבר"
 #: automation_tree_rules.php:877 cdef.php:758 color_templates.php:598
 #: data_debug.php:1114 data_queries.php:1396 data_source_profiles.php:1217
 #: data_sources.php:1743 data_templates.php:1151 gprint_presets.php:283
-#: graph_templates.php:758 graph_view.php:675 graphs.php:2091
+#: graph_templates.php:758 graph_view.php:675 graphs.php:2092
 #: graphs_new.php:515 host.php:1810 host_templates.php:786
 #: lib/api_automation.php:187 lib/api_automation.php:471
 #: lib/api_automation.php:723 lib/api_automation.php:1087
@@ -496,7 +496,7 @@ msgstr "עבור"
 #: automation_templates.php:418 cdef.php:758 data_debug.php:1114
 #: data_queries.php:1396 data_source_profiles.php:1217 data_sources.php:1743
 #: data_templates.php:1151 gprint_presets.php:283 graph_templates.php:758
-#: graph_view.php:675 graphs.php:2091 graphs_new.php:515 host.php:1810
+#: graph_view.php:675 graphs.php:2092 graphs_new.php:515 host.php:1810
 #: host_templates.php:786 lib/html_graph.php:178 managers.php:169
 #: managers.php:529 managers.php:794 plugins.php:530 pollers.php:914
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
@@ -513,7 +513,7 @@ msgstr "הגדר / רענן מסננים"
 #: automation_tree_rules.php:878 cdef.php:759 color_templates.php:599
 #: data_debug.php:1115 data_queries.php:1397 data_source_profiles.php:1218
 #: data_sources.php:1744 data_templates.php:1152 gprint_presets.php:284
-#: graph_templates.php:759 graph_view.php:676 graphs.php:2092
+#: graph_templates.php:759 graph_view.php:676 graphs.php:2093
 #: graphs_new.php:516 host.php:1811 host_templates.php:787
 #: lib/api_automation.php:188 lib/api_automation.php:472
 #: lib/api_automation.php:724 lib/api_automation.php:1088
@@ -531,7 +531,7 @@ msgstr "נקה"
 #: automation_templates.php:419 cdef.php:759 data_debug.php:1115
 #: data_queries.php:1397 data_source_profiles.php:1218 data_sources.php:1744
 #: data_templates.php:1152 gprint_presets.php:284 graph_templates.php:759
-#: graph_view.php:676 graphs.php:2092 graphs_new.php:516 host.php:1811
+#: graph_view.php:676 graphs.php:2093 graphs_new.php:516 host.php:1811
 #: host_templates.php:787 lib/html_graph.php:179 lib/html_tree.php:1010
 #: managers.php:170 managers.php:530 managers.php:795 plugins.php:531
 #: pollers.php:915
@@ -542,7 +542,7 @@ msgstr "נקה"
 msgid "Clear Filters"
 msgstr "מחיקת מסננים"
 
-#: aggregate_graphs.php:1329 aggregate_graphs.php:1662 graphs.php:1183
+#: aggregate_graphs.php:1329 aggregate_graphs.php:1662 graphs.php:1184
 #: lib/api_automation.php:574 user_admin.php:809 user_group_admin.php:948
 msgid "Graph Title"
 msgstr "כותרת גרף"
@@ -550,7 +550,7 @@ msgstr "כותרת גרף"
 #: aggregate_graphs.php:1330 aggregate_graphs.php:1663
 #: automation_graph_rules.php:964 automation_tree_rules.php:971
 #: data_debug.php:499 data_queries.php:1482 data_sources.php:1989
-#: data_templates.php:1260 graph_templates.php:864 graphs.php:2332
+#: data_templates.php:1260 graph_templates.php:864 graphs.php:2333
 #: host.php:1928 host_templates.php:949 lib/api_automation.php:282
 #: pollers.php:995 tree.php:2306 user_admin.php:809 user_admin.php:924
 #: user_admin.php:1073 user_admin.php:1212 user_admin.php:1351
@@ -564,7 +564,7 @@ msgid "Included in Aggregate"
 msgstr "כלול במצטבר"
 
 #: aggregate_graphs.php:1332 aggregate_graphs.php:1665 graph_templates.php:881
-#: graph_view.php:832 graph_view.php:845 graphs.php:2350 lib/spikekill.php:1745
+#: graph_view.php:832 graph_view.php:845 graphs.php:2351 lib/spikekill.php:1745
 msgid "Size"
 msgstr "גודל"
 
@@ -594,7 +594,7 @@ msgstr "לא"
 msgid "Yes"
 msgstr "כן"
 
-#: aggregate_graphs.php:1354 graphs.php:2392 lib/api_automation.php:601
+#: aggregate_graphs.php:1354 graphs.php:2393 lib/api_automation.php:601
 msgid "No Graphs Found"
 msgstr "לא נמצאו גרפים"
 
@@ -608,7 +608,7 @@ msgid "Aggregate Graphs"
 msgstr "גרפים מצטברים"
 
 #: aggregate_graphs.php:1562 data_debug.php:1085 data_sources.php:1714
-#: graph_view.php:699 graphs.php:2053 host.php:1756
+#: graph_view.php:699 graphs.php:2054 host.php:1756
 #: include/global_arrays.php:2892 include/global_settings.php:610
 #: lib/api_automation.php:446 lib/html_graph.php:139 lib/html_tree.php:973
 #: rrdcleaner.php:381
@@ -622,7 +622,7 @@ msgstr "תבנית"
 #: automation_devices.php:564 automation_graph_rules.php:819
 #: automation_graph_rules.php:841 automation_tree_rules.php:855
 #: data_debug.php:1089 data_sources.php:1718 graph_templates_items.php:447
-#: graphs.php:2057 graphs_items.php:262 host.php:1719 host.php:1740
+#: graphs.php:2058 graphs_items.php:262 host.php:1719 host.php:1740
 #: host.php:1760 host.php:1830 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3868 lib/auth.php:3917
@@ -641,7 +641,7 @@ msgstr "הכל"
 #: automation_networks.php:460 automation_tree_rules.php:983
 #: data_debug.php:1090 data_sources.php:1086 data_sources.php:1719
 #: data_sources.php:2050 data_templates.php:1323 graph_templates_items.php:53
-#: graphs.php:1583 graphs.php:1592 graphs.php:2058 graphs_items.php:263
+#: graphs.php:1584 graphs.php:1593 graphs.php:2059 graphs_items.php:263
 #: graphs_items.php:383 host.php:294 host.php:1275 host.php:1286 host.php:1720
 #: host.php:1761 include/global_arrays.php:523 include/global_arrays.php:581
 #: include/global_arrays.php:673 include/global_arrays.php:885
@@ -679,7 +679,7 @@ msgstr "הכותרת של הגרפים המצטברים"
 msgid "The internal database identifier for this object"
 msgstr "מזהה מסד הנתונים הפנימי עבור אובייקט זה"
 
-#: aggregate_graphs.php:1664 graphs.php:1187
+#: aggregate_graphs.php:1664 graphs.php:1188
 msgid "Aggregate Template"
 msgstr "תבנית מצטברת"
 
@@ -758,7 +758,7 @@ msgstr "ניתן למחוק"
 msgid "Graphs Using"
 msgstr "גרפים באמצעות"
 
-#: aggregate_templates.php:709 graphs.php:2112 host_templates.php:730
+#: aggregate_templates.php:709 graphs.php:2113 host_templates.php:730
 #: include/global_arrays.php:958 include/global_arrays.php:1361
 #: include/global_form.php:1399 include/global_form.php:1635
 #: lib/html_reports.php:1181 tree.php:1944
@@ -1291,8 +1291,8 @@ msgstr "לחץ על &#39;המשך&#39; כדי למחוק את כללי התרש�
 msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Graph Rules."
 msgstr "לחץ על &#39;המשך&#39; כדי לשכפל את הכללים הבאים. ניתן לשנות את פורמט הכותרת עבור כללי התרשים החדשים."
 
-#: automation_graph_rules.php:305 automation_tree_rules.php:282 graphs.php:898
-#: graphs.php:909
+#: automation_graph_rules.php:305 automation_tree_rules.php:282 graphs.php:899
+#: graphs.php:910
 msgid "Title Format"
 msgstr "פורמט כותרת"
 
@@ -1367,7 +1367,7 @@ msgid "Graph Rules"
 msgstr "חוקי גרף"
 
 #: automation_graph_rules.php:815 automation_graph_rules.php:965
-#: graphs.php:2113 include/global_arrays.php:1364
+#: graphs.php:2114 include/global_arrays.php:1364
 #: include/global_arrays.php:2891 include/global_form.php:1645
 #: include/global_form.php:2207
 msgid "Data Query"
@@ -3326,7 +3326,7 @@ msgstr "פרופיל"
 
 #: data_debug.php:1129 data_debug.php:1148 data_debug.php:1159
 #: data_sources.php:1756 data_sources.php:1776 data_templates.php:1111
-#: graphs.php:2110 graphs_new.php:488 host.php:1784 host_templates.php:716
+#: graphs.php:2111 graphs_new.php:488 host.php:1784 host_templates.php:716
 #: host_templates.php:734 lib/clog_webapi.php:549 lib/html.php:227
 #: lib/html_reports.php:1138 lib/html_reports.php:2284 plugins.php:501
 #: settings.php:590 settings.php:612 settings.php:643 tree.php:914
@@ -4153,7 +4153,7 @@ msgstr "הפעל מצב מידע על מקור הנתונים."
 msgid "Edit Graph: '%s'."
 msgstr "ערוך תרשים: '{ 0 }'."
 
-#: data_sources.php:1000 graphs.php:1545
+#: data_sources.php:1000 graphs.php:1546
 msgid "Edit Device."
 msgstr "ערוך את המכשיר."
 
@@ -4177,7 +4177,7 @@ msgstr "תבנית נתונים נבחרת"
 msgid "The name given to this data template.  Please note that you may only change Graph Templates to a 100%$ compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "השם שניתן לתבנית נתונים זו. לידיעתך, תוכל לשנות רק תבניות גרף לתבנית גרף תואמת 100%, כלומר, היא כוללת מקורות נתונים זהים."
 
-#: data_sources.php:1084 graph_view.php:817 graphs.php:1588
+#: data_sources.php:1084 graph_view.php:817 graphs.php:1589
 #: include/global_arrays.php:954 include/global_arrays.php:1003
 #: include/global_arrays.php:1688 include/global_arrays.php:1857
 #: lib/api_automation.php:426 lib/functions.php:6195 lib/html.php:2347
@@ -4251,11 +4251,11 @@ msgstr "מקורות נתונים [ %s]"
 msgid "Bad Indexes"
 msgstr "אינדקס"
 
-#: data_sources.php:1785 graphs.php:2086
+#: data_sources.php:1785 graphs.php:2087
 msgid "Note that this query may take some time to run."
 msgstr "שים לב שאילתה זו עשויה להימשך זמן מה עד להופעה."
 
-#: data_sources.php:1785 graphs.php:2086
+#: data_sources.php:1785 graphs.php:2087
 msgid "Orphaned"
 msgstr "יתמות"
 
@@ -4860,12 +4860,12 @@ msgstr "כל הגרפים והתבניות"
 msgid "Not Templated"
 msgstr "לא בתבנית"
 
-#: graph_view.php:812 graph_view.php:840 graphs.php:2326
+#: graph_view.php:812 graph_view.php:840 graphs.php:2327
 #: include/global_form.php:1884 lib/html_reports.php:1201 tree.php:1021
 msgid "Graph Name"
 msgstr "שם תרשים"
 
-#: graph_view.php:814 graph_view.php:842 graphs.php:2329
+#: graph_view.php:814 graph_view.php:842 graphs.php:2330
 msgid "The Title of this Graph.  Generally programmatically generated from the Graph Template definition or Suggested Naming rules.  The max length of the Title is controlled under Settings->Visual."
 msgstr "כותרת גרף זה. בדרך כלל נוצר באופן שיטתי מהגדרת תבנית התרשים או הכללים למתן שמות לנתינה. האורך המרבי של הכותרת נשלט תחת הגדרות -&gt; Visual."
 
@@ -4873,23 +4873,23 @@ msgstr "כותרת גרף זה. בדרך כלל נוצר באופן שיטתי �
 msgid "The device for this Graph."
 msgstr "שם קבוצה זו."
 
-#: graph_view.php:822 graphs.php:2338
+#: graph_view.php:822 graphs.php:2339
 msgid "Source Type"
 msgstr "סוג מקור"
 
-#: graph_view.php:824 graphs.php:2341
+#: graph_view.php:824 graphs.php:2342
 msgid "The underlying source that this Graph was based upon."
 msgstr "המקור הבסיסי שהתבסס על גרף זה."
 
-#: graph_view.php:827 graphs.php:2344
+#: graph_view.php:827 graphs.php:2345
 msgid "Source Name"
 msgstr "שם המקור"
 
-#: graph_view.php:829 graphs.php:2347
+#: graph_view.php:829 graphs.php:2348
 msgid "The Graph Template or Data Query that this Graph was based upon."
 msgstr "תבנית הגרף או שאילתת הנתונים שהתבסס על גרף זה."
 
-#: graph_view.php:834 graph_view.php:847 graphs.php:2353
+#: graph_view.php:834 graph_view.php:847 graphs.php:2354
 msgid "The size of this Graph when not in Preview mode."
 msgstr "הגודל של תרשים זה כאשר לא במצב תצוגה מקדימה."
 
@@ -4960,23 +4960,23 @@ msgstr "פרטי התקציר"
 msgid "Download"
 msgstr "הורדה"
 
-#: graphs.php:36 graphs.php:892 include/global_arrays.php:2086
+#: graphs.php:36 graphs.php:893 include/global_arrays.php:2086
 msgid "Change Graph Template"
 msgstr "שינוי תבנית גרף"
 
-#: graphs.php:44 graphs.php:1154
+#: graphs.php:44 graphs.php:1155
 msgid "Create Aggregate Graph"
 msgstr "צור גרף מצטבר"
 
-#: graphs.php:45 graphs.php:1197
+#: graphs.php:45 graphs.php:1198
 msgid "Create Aggregate from Template"
 msgstr "צור צבירה מתוך תבנית"
 
-#: graphs.php:46 graphs.php:1219 host.php:34
+#: graphs.php:46 graphs.php:1220 host.php:34
 msgid "Apply Automation Rules"
 msgstr "החלת כללי אוטומציה"
 
-#: graphs.php:52 graphs.php:914
+#: graphs.php:52 graphs.php:915
 msgid "Convert to Graph Template"
 msgstr "המר לתבנית גרף"
 
@@ -4993,212 +4993,212 @@ msgstr "גרף שנוצר: %s"
 msgid "ERROR: No Data Source associated. Check Template"
 msgstr "שגיאה: אין מקור נתונים משויך. בדוק תבנית"
 
-#: graphs.php:677
+#: graphs.php:678
 msgid "The selected Device is not available."
 msgstr ""
 
-#: graphs.php:696
+#: graphs.php:697
 msgid "Aggregate graph creation could not be confirmed. Review the graph settings before retrying."
 msgstr ""
 
-#: graphs.php:843
+#: graphs.php:844
 msgid "Click 'Continue' to delete the following Graph(s).  Note that if you choose to Delete Data Sources, only those Data Sources not in use elsewhere will also be Deleted."
 msgstr "לחץ על &#39;המשך&#39; כדי למחוק את הגרפים הבאים. שים לב שאם תבחר למחוק מקורות נתונים, רק אותם מקורות נתונים שאינם בשימוש במקום אחר יימחקו."
 
-#: graphs.php:847
+#: graphs.php:848
 msgid "The following Data Source(s) are in use by these Graph(s)."
 msgstr "מקור הנתונים (ים) שלהלן נמצא בשימוש על ידי גרפים (ים) אלה."
 
-#: graphs.php:866
+#: graphs.php:867
 msgid "Delete all Data Source(s) referenced by these Graph(s) that are not in use elsewhere."
 msgstr "מחק את כל מקור הנתונים (ים) שמפנה אליהם גרפים (ים) אלה שאינם בשימוש במקומות אחרים."
 
-#: graphs.php:868
+#: graphs.php:869
 msgid "Leave the Data Source(s) untouched."
 msgstr "השאר את מקור הנתונים (ים) ללא שינוי."
 
-#: graphs.php:880
+#: graphs.php:881
 msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
 msgstr "בחר תבנית גרף ולחץ על &#39;המשך&#39; כדי לשנות את תבנית התרשים עבור הגרפים הבאים. שים לב, רק תבניות גרפיות תואמות יוצגו. תואם מזוהה על ידי בעלי מקורות נתונים זהים."
 
-#: graphs.php:882 graphs_new.php:606
+#: graphs.php:883 graphs_new.php:606
 msgid "New Graph Template"
 msgstr "תבנית גרפים חדשה"
 
-#: graphs.php:896
+#: graphs.php:897
 msgid "Click 'Continue' to duplicate the following Graph(s). You can optionally change the title format for the new Graph(s)."
 msgstr "לחץ על &#39;המשך&#39; כדי לשכפל את הגרפים הבאים. ניתן לשנות את פורמט הכותרת עבור הגרפים החדשים."
 
-#: graphs.php:899
+#: graphs.php:900
 msgid "<graph_title> (1)"
 msgstr "<graph_title> (1)"
 
-#: graphs.php:903
+#: graphs.php:904
 msgid "Duplicate Graph(s)"
 msgstr "גרפים כפולים (ים)"
 
-#: graphs.php:907
+#: graphs.php:908
 msgid "Click 'Continue' to convert the following Graph(s) into Graph Template(s).  You can optionally change the title format for the new Graph Template(s)."
 msgstr "לחץ על &#39;המשך&#39; כדי להמיר את הגרפים הבאים לתבניות גרף. ניתן לשנות את תבנית הכותרת עבור תבנית הגרפים החדשה."
 
-#: graphs.php:910
+#: graphs.php:911
 msgid "<graph_title> Template"
 msgstr "<graph_title> תבנית"
 
-#: graphs.php:918
+#: graphs.php:919
 msgid "Click 'Continue' to place the following Graph(s) under the Tree Branch selected below."
 msgstr "לחץ על &#39;המשך&#39; כדי להציב את הגרפים הבאים מתחת לעץ העץ שנבחר למטה."
 
-#: graphs.php:920
+#: graphs.php:921
 msgid "Destination Branch"
 msgstr "סניף יעד"
 
-#: graphs.php:933
+#: graphs.php:934
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
 msgstr "בחר מכשיר חדש עבור גרפים אלה ולחץ על &#39;המשך&#39;."
 
-#: graphs.php:935 include/global_arrays.php:987
+#: graphs.php:936 include/global_arrays.php:987
 msgid "New Device"
 msgstr "מכשיר חדש"
 
-#: graphs.php:943
+#: graphs.php:944
 msgid "Change Graph(s) Associated Device"
 msgstr "שינוי גרף משויך"
 
-#: graphs.php:947
+#: graphs.php:948
 msgid "Click 'Continue' to re-apply suggested naming to the following Graph(s)."
 msgstr "לחץ על &#39;המשך&#39; כדי להחיל מחדש את השמות המוצעים על הגרפים הבאים."
 
-#: graphs.php:952
+#: graphs.php:953
 msgid "Reapply Suggested Naming to Graph(s)"
 msgstr "החל מחדש את השמות המוצעים לגרפים (ים)"
 
-#: graphs.php:968
+#: graphs.php:969
 msgid "Click 'Continue' to create an Aggregate Graph from the selected Graph(s)."
 msgstr "לחץ על &#39;המשך&#39; כדי ליצור גרף מצטבר מהגרפים שנבחרו."
 
-#: graphs.php:977
+#: graphs.php:978
 msgid "The following Data Sources are in use by these Graphs:"
 msgstr "מקור הנתונים (ים) שלהלן נמצא בשימוש על ידי גרפים (ים) אלה."
 
-#: graphs.php:1038
+#: graphs.php:1039
 msgid "Please confirm"
 msgstr "אנא אשר"
 
-#: graphs.php:1176
+#: graphs.php:1177
 msgid "Select the Aggregate Template to use and press 'Continue' to create your Aggregate Graph.  Otherwise press 'Cancel' to return."
 msgstr "בחר את התבנית המצטברת שבה ברצונך להשתמש ולחץ על &#39;המשך&#39; כדי ליצור את התרשים המצטבר. אחרת, לחץ על &#39;ביטול&#39; כדי לחזור."
 
-#: graphs.php:1201
+#: graphs.php:1202
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
 msgstr "כיום אין תבניות מצטברות המוגדרות עבור תבנית גרף זו. ראשית, צור תחילה תבנית מצטברת עבור תבנית גרף התרשימים שנבחרה ונסה שוב, או פשוט קמט גרף מצטבר ללא תבנית."
 
-#: graphs.php:1202
+#: graphs.php:1203
 msgid "Press 'Return' to return and select different Graphs."
 msgstr "לחץ על &#39;Return&#39; כדי לחזור ולבחור גרפים שונים."
 
-#: graphs.php:1214
+#: graphs.php:1215
 msgid "Click 'Continue' to apply Automation Rules to the following Graphs."
 msgstr "לחץ על &#39;המשך&#39; כדי להחיל כללי אוטומציה על התרשימים הבאים."
 
-#: graphs.php:1301
+#: graphs.php:1302
 msgid "Graph Items [new]"
 msgstr "פריטים גרפיים [חדש]"
 
-#: graphs.php:1345
+#: graphs.php:1346
 #, php-format
 msgid "Graph Items [edit: %s]"
 msgstr "פריטים גרפיים [עריכה: %s]"
 
-#: graphs.php:1469
+#: graphs.php:1470
 #, php-format
 msgid "Graph [edit: %s]"
 msgstr "גרף [עריכה: %s]"
 
-#: graphs.php:1479
+#: graphs.php:1480
 msgid "Graph [new]"
 msgstr "גרף [חדש]"
 
-#: graphs.php:1504
+#: graphs.php:1505
 msgid "Turn Off Graph Debug Mode."
 msgstr "כיבוי גרף מצב באגים."
 
-#: graphs.php:1506
+#: graphs.php:1507
 msgid "Turn On Graph Debug Mode."
 msgstr "הפעל מצב גרף Debug."
 
-#: graphs.php:1528
+#: graphs.php:1529
 msgid "Edit Graph Template."
 msgstr "ערוך תבנית גרף."
 
-#: graphs.php:1540
+#: graphs.php:1541
 #, php-format
 msgid "Edit Data Source: '%s'."
 msgstr "מקורות נתונים [ %s]"
 
-#: graphs.php:1549
+#: graphs.php:1550
 msgid "Unlock Graph."
 msgstr "גרף נעילה."
 
-#: graphs.php:1551
+#: graphs.php:1552
 msgid "Lock Graph."
 msgstr "גרף נעל."
 
-#: graphs.php:1580
+#: graphs.php:1581
 msgid "Selected Graph Template"
 msgstr "תבנית גרף נבחרת"
 
-#: graphs.php:1581
+#: graphs.php:1582
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "בחר תבנית גרף כדי להחיל על תרשים זה. לידיעתך, תוכל לשנות רק תבניות גרפים לתבנית גרף תואמת 100 %%, ופירוש הדבר שהיא כוללת מקורות נתונים זהים."
 
-#: graphs.php:1589
+#: graphs.php:1590
 msgid "Choose the Device that this Graph belongs to."
 msgstr "בחר את ההתקן ששייך לגרף זה."
 
-#: graphs.php:1645
+#: graphs.php:1646
 msgid "Supplemental Graph Template Data"
 msgstr "נתונים גרפיים משלימים"
 
-#: graphs.php:1647
+#: graphs.php:1648
 msgid "Graph Fields"
 msgstr "שדות גרף"
 
-#: graphs.php:1648
+#: graphs.php:1649
 msgid "Graph Item Fields"
 msgstr "שדות שדה גרף"
 
-#: graphs.php:2026
+#: graphs.php:2027
 msgid "Graph Management [ Custom Graphs List Applied - Clear to Reset ]"
 msgstr "[רשימת גרפים מותאמים אישית - מסנן מתוך רשימה]"
 
-#: graphs.php:2028
+#: graphs.php:2029
 msgid "Graph Management [ All Devices ]"
 msgstr "גרפים חדשים עבור [כל המכשירים]"
 
-#: graphs.php:2030
+#: graphs.php:2031
 msgid "Graph Management [ Non Device Based ]"
 msgstr "ניהול קבוצת משתמשים [עריכה: %s]"
 
-#: graphs.php:2033
+#: graphs.php:2034
 #, php-format
 msgid "Graph Management [ %s ]"
 msgstr "ניהול גרפים [%s]"
 
-#: graphs.php:2106
+#: graphs.php:2107
 msgid "Graph Source"
 msgstr "תרשים, מקור נתונים"
 
-#: graphs.php:2111
+#: graphs.php:2112
 msgid "Non Templated"
 msgstr "לא בתבנית"
 
-#: graphs.php:2335
+#: graphs.php:2336
 msgid "The internal database ID for this Graph.  Useful when performing automation or debugging."
 msgstr "מזהה מסד הנתונים הפנימי עבור גרף זה. שימושי בעת ביצוע אוטומציה או איתור באגים."
 
-#: graphs.php:2379
+#: graphs.php:2380
 msgid "Empty Graph"
 msgstr "גרף העתק"
 
