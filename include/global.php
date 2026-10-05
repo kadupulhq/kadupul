@@ -186,6 +186,14 @@ if (!empty($path_csrf_secret)) {
     $config['path_csrf_secret'] = $path_csrf_secret;
 }
 
+if (isset($auth_login_timing_floor_ms)) {
+    $config['auth_login_timing_floor_ms'] = $auth_login_timing_floor_ms;
+}
+
+if (!empty($path_csrf_web_root)) {
+    $config['path_csrf_web_root'] = $path_csrf_web_root;
+}
+
 /* built-in snmp support */
 if ((isset($php_snmp_support) && $php_snmp_support == false) || !function_exists('snmpget')) {
     $config['php_snmp_support'] = false;
@@ -606,6 +614,7 @@ if ($config['is_web']) {
 
     /* Validate the action before any controller can normalize or dispatch it. */
     cacti_require_post_actions(array('save', 'update_data', 'changepassword'));
+    csrf_refuse_cross_site_actions();
 
     if (isset($_COOKIE['CactiTimeZone'])) {
         $gmt_offset = $_COOKIE['CactiTimeZone'];

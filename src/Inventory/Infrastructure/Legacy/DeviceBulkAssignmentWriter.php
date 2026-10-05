@@ -11,17 +11,20 @@ namespace Kadupul\Inventory\Infrastructure\Legacy;
 
 use Kadupul\Inventory\Domain\DeviceState;
 use Kadupul\Inventory\Domain\DeviceBulkAssignment;
+use Kadupul\Platform\Contract\ReferenceWriteTransactionRunner;
 use PDO;
 use RuntimeException;
 
 /** Legacy effects; authorization, locks and the primary transaction belong to the worker. */
 final class DeviceBulkAssignmentWriter
 {
+    public function __construct(private readonly ReferenceWriteTransactionRunner $transactions) {}
+
     public function apply(PDO $connection, array $connections, DeviceState $device, DeviceBulkAssignment $change): void
     {
         $target = $change->targetId;
         if ($change->kind === 'collector') {
-            (new DeviceCollectorTransfer())->apply($connection, $connections, $device->id, $device->pollerId, $target, true);
+            (new DeviceCollectorTransfer($this->transactions))->apply($connection, $connections, $device->id, $device->pollerId, $target, true);
             return;
         }
         $remote = $connections[$device->pollerId] ?? null;
