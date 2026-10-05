@@ -24,7 +24,8 @@ function __($text, ...$args) { return $args ? vsprintf($text, $args) : $text; }
 function read_config_option($name) { return ''; }
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function is_realm_allowed($realm) { return true; }
-function is_graph_allowed($id) { return (int) $id === 2; }
+// Keep the positive-ID guard independent of the authorization decision.
+function is_graph_allowed($id) { return (int) $id !== 3; }
 function db_fetch_assoc_prepared(...$args) { return array(array('local_data_id' => 2)); }
 function get_data_source_path(...$args) { return '/isolated/fixture.rrd'; }
 class spikekill {
@@ -56,7 +57,7 @@ PHP;
             . 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';' . $program;
     }
     try {
-        $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $program, $root, $method, $token, json_encode($spikeMethod), json_encode($dryrun), $graph), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $dir);
+        $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $program, $root, $method, $token, json_encode($spikeMethod, JSON_THROW_ON_ERROR), json_encode($dryrun, JSON_THROW_ON_ERROR), $graph), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $dir);
         if (!is_resource($process)) {
             throw new RuntimeException('Unable to start the isolated spike-removal request process.');
         }
@@ -109,4 +110,5 @@ PHP;
     array('POST', 'valid', 'stddev', 403, false, '3'),
     array('POST', 'valid', 'stddev', 403, true, '3'),
     array('POST', 'valid', 'stddev', 403, false, '0'),
+    array('POST', 'valid', 'stddev', 403, false, '-1'),
 ));

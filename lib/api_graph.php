@@ -683,14 +683,22 @@ function api_graph_change_device($local_graph_id, $host_id)
         return false;
     }
 
-    $dqgraph = db_fetch_cell_prepared(
-        'SELECT snmp_query_id
+    $graph = db_fetch_row_prepared(
+        'SELECT host_id, snmp_query_id
 		FROM graph_local
 		WHERE id = ?',
         array($local_graph_id)
     );
 
-    if (empty($dqgraph)) {
+    if (!is_array($graph) || !array_key_exists('host_id', $graph) || !array_key_exists('snmp_query_id', $graph)) {
+        return false;
+    }
+    $source_host_id = auth_resource_id($graph['host_id']);
+    if ($source_host_id === null || ($source_host_id > 0 && !is_device_allowed($source_host_id))) {
+        return false;
+    }
+
+    if (empty($graph['snmp_query_id'])) {
         db_execute_prepared(
             'UPDATE graph_local
 			SET host_id = ?
