@@ -527,9 +527,9 @@ function graph_drilldown_icons($local_graph_id, $type = 'graph_buttons', $tree_i
     );
 
     print "<div class='iconWrapper'>";
-    print "<a class='iconLink utils' href='#' role='link' id='graph_" . $local_graph_id . "_util'><img class='drillDown' src='" . $url_path . "images/cog.png' alt='' title='" . __esc('Graph Details, Zooming and Debugging Utilities') . "'></a><br>";
-    print "<a class='iconLink csvexport' href='#' role='link' id='graph_" . $local_graph_id . "_csv'><img class='drillDown' src='" . $url_path . "images/table_go.png' alt='' title='" . __esc('CSV Export of Graph Data') . "'></a><br>";
-    print "<a class='iconLink mrtg' href='#' role='link' id='graph_" . $local_graph_id . "_mrtg'><img class='drillDown' src='" . $url_path . "images/timeview.png' alt='' title='" . __esc('Time Graph View') . "'></a><br>";
+    print "<a class='iconLink utils' href='#' id='graph_" . $local_graph_id . "_util'><img class='drillDown' src='" . $url_path . "images/cog.png' alt='' title='" . __esc('Graph Details, Zooming and Debugging Utilities') . "'></a><br>";
+    print "<a class='iconLink csvexport' href='#' id='graph_" . $local_graph_id . "_csv'><img class='drillDown' src='" . $url_path . "images/table_go.png' alt='' title='" . __esc('CSV Export of Graph Data') . "'></a><br>";
+    print "<a class='iconLink mrtg' href='#' id='graph_" . $local_graph_id . "_mrtg'><img class='drillDown' src='" . $url_path . "images/timeview.png' alt='' title='" . __esc('Time Graph View') . "'></a><br>";
 
     if (is_realm_allowed(3)) {
         $host_id = (int) db_fetch_cell_prepared(
@@ -547,13 +547,13 @@ function graph_drilldown_icons($local_graph_id, $type = 'graph_buttons', $tree_i
     }
 
     if (is_realm_allowed(10) && $graph_template_id > 0) {
-        print "<a class='iconLink' role='link' title='" . __esc('Edit Graph Template') . "' href='" . html_escape($config['url_path'] . 'graph_templates.php?action=template_edit&id=' . $graph_template_id) . "'><img src='" . html_escape($config['url_path'] . 'images/template_edit.png') . "'></img></a>";
+        print "<a class='iconLink' title='" . __esc('Edit Graph Template') . "' href='" . html_escape($config['url_path'] . 'graph_templates.php?action=template_edit&id=' . $graph_template_id) . "'><img src='" . html_escape($config['url_path'] . 'images/template_edit.png') . "'></img></a>";
         print '<br/>';
     }
 
     if (read_config_option('realtime_enabled') == 'on' && is_realm_allowed(25)) {
         if (read_user_setting('realtime_mode') == '' || read_user_setting('realtime_mode') == '1') {
-            print "<a class='iconLink realtime' href='#' role='link' id='graph_" . $local_graph_id . "_realtime'><img class='drillDown' src='" . $url_path . "images/chart_curve_go.png' alt='' title='" . __esc('Click to view just this Graph in Real-time') . "'></a><br/>";
+            print "<a class='iconLink realtime' href='#' id='graph_" . $local_graph_id . "_realtime'><img class='drillDown' src='" . $url_path . "images/chart_curve_go.png' alt='' title='" . __esc('Click to view just this Graph in Real-time') . "'></a><br/>";
         } else {
             // Encode for JavaScript first, then for the attribute that carries it.
             $json_flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
@@ -671,23 +671,14 @@ function html_nav_bar($base_url, $max_pages, $current_page, $rows_per_page, $tot
     return $nav;
 }
 
-/* html_header_sort - draws a header row suitable for display inside of a box element.  When
-        a user selects a column header, the callback function "filename" will be called to handle
-        the sort the column and display the altered results.
-   @arg $header_items - an array containing a list of column items to display.  The
-        format is similar to the html_header, with the exception that it has three
-        dimensions associated with each element (db_column => display_text, default_sort_order)
-        alternatively (db_column => array('display' = 'blah', 'align' = 'blah', 'sort' = 'blah'))
-   @arg $sort_column - the value of current sort column.
-   @arg $sort_direction - the value the current sort direction.  The actual sort direction
-        will be opposite this direction if the user selects the same named column.
-   @arg $last_item_colspan - the TD 'colspan' to apply to the last cell in the row
-   @arg $url - a base url to redirect sort actions to
-   @arg $return_to - the id of the object to inject output into as a result of the sort action */
-function html_header_sort($header_items, $sort_column, $sort_direction, $last_item_colspan = 1, $url = '', $return_to = '')
+/**
+ * Register the columns and restore ordering for one sortable header.
+ * Each public renderer retains its own page counter and display behavior.
+ *
+ * @return array{0: string, 1: array} next direction and current ordering
+ */
+function html_header_sort_context($header_items, $sort_direction, $page_count)
 {
-    static $page_count = 0;
-
     $reg_page = $page_count . '_' . str_replace('.php', '', basename($_SERVER['SCRIPT_NAME']));
 
     if (isset_request_var('action')) {
@@ -729,6 +720,140 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
         $order_data = array(get_request_var('sort_column') => get_request_var('sort_direction'));
     }
 
+    return array($new_sort_direction, $order_data);
+}
+
+/**
+ * Resolve the shared display and sort metadata without altering label markup.
+ *
+ * @return array{0: mixed, 1: mixed, 2: string, 3: ?string, 4: mixed, 5: string, 6: string}
+ */
+function html_header_sort_item($db_column, $display_array, $sort_column, $sort_direction, $new_sort_direction, $order_data, $primarySort)
+{
+    $isSort = '';
+    if (isset($display_array['nohide'])) {
+        $nohide = 'nohide';
+    } else {
+        $nohide = '';
+    }
+
+    if (array_key_exists('display', $display_array)) {
+        $display_text = $display_array['display'];
+        if ($sort_column == $db_column) {
+            $icon      = $sort_direction;
+            $direction = $new_sort_direction;
+
+            if ($db_column == $primarySort) {
+                $isSort = 'primarySort';
+            } else {
+                $isSort = 'secondarySort';
+            }
+        } else {
+            if (isset($order_data[$db_column])) {
+                $icon = $order_data[$db_column];
+                if ($order_data[$db_column] == 'DESC') {
+                    $direction = 'ASC';
+                } else {
+                    $direction = 'DESC';
+                }
+
+                if ($db_column == $primarySort) {
+                    $isSort = 'primarySort';
+                } else {
+                    $isSort = 'secondarySort';
+                }
+            } else {
+                $icon = '';
+                if (isset($display_array['sort'])) {
+                    $direction = $display_array['sort'];
+                } else {
+                    $direction = 'ASC';
+                }
+            }
+        }
+
+        if (isset($display_array['align'])) {
+            $align = $display_array['align'];
+        } else {
+            $align = 'left';
+        }
+
+        if (isset($display_array['tip'])) {
+            $tip = $display_array['tip'];
+        } else {
+            $tip = '';
+        }
+    } else {
+        /* by default, you will always sort ascending, with the exception of an already sorted column */
+        if ($sort_column == $db_column) {
+            $icon         = $sort_direction;
+            $direction    = $new_sort_direction;
+            $display_text = $display_array[0];
+
+            if ($db_column == $primarySort) {
+                $isSort = 'primarySort';
+            } else {
+                $isSort = 'secondarySort';
+            }
+        } else {
+            if (isset($order_data[$db_column])) {
+                $icon = $order_data[$db_column];
+                if ($order_data[$db_column] == 'DESC') {
+                    $direction = 'ASC';
+                } else {
+                    $direction = 'DESC';
+                }
+
+                if ($db_column == $primarySort) {
+                    $isSort = 'primarySort';
+                } else {
+                    $isSort = 'secondarySort';
+                }
+            } else {
+                $icon = '';
+                $direction = $display_array[1];
+            }
+
+            $display_text = $display_array[0];
+        }
+
+        $align = 'left';
+        $tip   = '';
+    }
+
+    if (strtolower($icon) == 'asc') {
+        $icon = 'sort-asc';
+    } elseif (strtolower($icon) == 'desc') {
+        $icon = 'sort-desc';
+    } else {
+        $icon = 'sort';
+    }
+
+    $align = html_escape($align);
+
+    return array($display_text, $direction, $icon, $align, $tip, $nohide, $isSort);
+}
+
+/* html_header_sort - draws a header row suitable for display inside of a box element.  When
+        a user selects a column header, the callback function "filename" will be called to handle
+        the sort the column and display the altered results.
+   @arg $header_items - an array containing a list of column items to display.  The
+        format is similar to the html_header, with the exception that it has three
+        dimensions associated with each element (db_column => display_text, default_sort_order)
+        alternatively (db_column => array('display' = 'blah', 'align' = 'blah', 'sort' = 'blah'))
+   @arg $sort_column - the value of current sort column.
+   @arg $sort_direction - the value the current sort direction.  The actual sort direction
+        will be opposite this direction if the user selects the same named column.
+   @arg $last_item_colspan - the TD 'colspan' to apply to the last cell in the row
+   @arg $url - a base url to redirect sort actions to
+   @arg $return_to - the id of the object to inject output into as a result of the sort action */
+function html_header_sort($header_items, $sort_column, $sort_direction, $last_item_colspan = 1, $url = '', $return_to = '')
+{
+    static $page_count = 0;
+
+    [$new_sort_direction, $order_data] = html_header_sort_context($header_items, $sort_direction, $page_count);
+
+    $primarySort = null;
     foreach ($order_data as $key => $direction) {
         $primarySort = $key;
         break;
@@ -738,106 +863,15 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 
     $i = 1;
     foreach ($header_items as $db_column => $display_array) {
-        $isSort = '';
-        if (isset($display_array['nohide'])) {
-            $nohide = 'nohide';
-        } else {
-            $nohide = '';
-        }
-
-        if (array_key_exists('display', $display_array)) {
-            $display_text = $display_array['display'];
-            if ($sort_column == $db_column) {
-                $icon      = $sort_direction;
-                $direction = $new_sort_direction;
-
-                if ($db_column == $primarySort) {
-                    $isSort = 'primarySort';
-                } else {
-                    $isSort = 'secondarySort';
-                }
-            } else {
-                if (isset($order_data[$db_column])) {
-                    $icon = $order_data[$db_column];
-                    if ($order_data[$db_column] == 'DESC') {
-                        $direction = 'ASC';
-                    } else {
-                        $direction = 'DESC';
-                    }
-
-                    if ($db_column == $primarySort) {
-                        $isSort = 'primarySort';
-                    } else {
-                        $isSort = 'secondarySort';
-                    }
-                } else {
-                    $icon = '';
-                    if (isset($display_array['sort'])) {
-                        $direction = $display_array['sort'];
-                    } else {
-                        $direction = 'ASC';
-                    }
-                }
-            }
-
-            if (isset($display_array['align'])) {
-                $align = $display_array['align'];
-            } else {
-                $align = 'left';
-            }
-
-            if (isset($display_array['tip'])) {
-                $tip = $display_array['tip'];
-            } else {
-                $tip = '';
-            }
-        } else {
-            /* by default, you will always sort ascending, with the exception of an already sorted column */
-            if ($sort_column == $db_column) {
-                $icon         = $sort_direction;
-                $direction    = $new_sort_direction;
-                $display_text = $display_array[0];
-
-                if ($db_column == $primarySort) {
-                    $isSort = 'primarySort';
-                } else {
-                    $isSort = 'secondarySort';
-                }
-            } else {
-                if (isset($order_data[$db_column])) {
-                    $icon = $order_data[$db_column];
-                    if ($order_data[$db_column] == 'DESC') {
-                        $direction = 'ASC';
-                    } else {
-                        $direction = 'DESC';
-                    }
-
-                    if ($db_column == $primarySort) {
-                        $isSort = 'primarySort';
-                    } else {
-                        $isSort = 'secondarySort';
-                    }
-                } else {
-                    $icon = '';
-                    $direction = $display_array[1];
-                }
-
-                $display_text = $display_array[0];
-            }
-
-            $align = 'left';
-            $tip   = '';
-        }
-
-        if (strtolower($icon) == 'asc') {
-            $icon = 'sort-asc';
-        } elseif (strtolower($icon) == 'desc') {
-            $icon = 'sort-desc';
-        } else {
-            $icon = 'sort';
-        }
-
-        $align = html_escape($align);
+        [$display_text, $direction, $icon, $align, $tip, $nohide, $isSort] = html_header_sort_item(
+            $db_column,
+            $display_array,
+            $sort_column,
+            $sort_direction,
+            $new_sort_direction,
+            $order_data,
+            $primarySort
+        );
 
         if (($db_column == '') || (substr_count($db_column, 'nosort'))) {
             print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'" : '') . " class='$nohide $align' " . ((($i + 1) == cacti_count($header_items)) ? "colspan='" . html_escape($last_item_colspan) . "' " : '') . '>' . $display_text . '</th>';
@@ -871,47 +905,9 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 {
     static $page_count = 0;
 
-    $reg_page = $page_count . '_' . str_replace('.php', '', basename($_SERVER['SCRIPT_NAME']));
+    [$new_sort_direction, $order_data] = html_header_sort_context($header_items, $sort_direction, $page_count);
 
-    if (isset_request_var('action')) {
-        $reg_page .= '_' . get_nfilter_request_var('action');
-    }
-
-    if (isset_request_var('tab')) {
-        $reg_page .= '_' . get_nfilter_request_var('tab');
-    }
-
-    $valid_columns = [];
-    foreach (array_keys($header_items) as $key) {
-        if ($key !== '' && strpos((string) $key, 'nosort') === false) {
-            $valid_columns[] = $key;
-        }
-    }
-    $_SESSION['valid_sort_columns'][$reg_page] = $valid_columns;
-
-    /* reverse the sort direction */
-    if ($sort_direction == 'ASC') {
-        $new_sort_direction = 'DESC';
-    } else {
-        $new_sort_direction = 'ASC';
-    }
-
-    $page = $page_count . '_' . str_replace('.php', '', basename($_SERVER['SCRIPT_NAME']));
-
-    if (isset_request_var('action')) {
-        $page .= '_' . get_request_var('action');
-    }
-
-    if (isset_request_var('tab')) {
-        $page .= '_' . get_request_var('tab');
-    }
-
-    if (isset($_SESSION['sort_data'][$page])) {
-        $order_data = $_SESSION['sort_data'][$page];
-    } else {
-        $order_data = array(get_request_var('sort_column') => get_request_var('sort_direction'));
-    }
-
+    $primarySort = null;
     foreach ($order_data as $key => $direction) {
         $primarySort = $key;
         break;
@@ -925,107 +921,15 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
     print "<tr class='tableHeader'>";
 
     foreach ($header_items as $db_column => $display_array) {
-        $isSort = '';
-        if (isset($display_array['nohide'])) {
-            $nohide = 'nohide';
-        } else {
-            $nohide = '';
-        }
-
-        $icon   = '';
-        if (array_key_exists('display', $display_array)) {
-            $display_text = $display_array['display'];
-            if ($sort_column == $db_column) {
-                $icon      = $sort_direction;
-                $direction = $new_sort_direction;
-
-                if ($db_column == $primarySort) {
-                    $isSort = 'primarySort';
-                } else {
-                    $isSort = 'secondarySort';
-                }
-            } else {
-                if (isset($order_data[$db_column])) {
-                    $icon = $order_data[$db_column];
-                    if ($order_data[$db_column] == 'DESC') {
-                        $direction = 'ASC';
-                    } else {
-                        $direction = 'DESC';
-                    }
-
-                    if ($db_column == $primarySort) {
-                        $isSort = 'primarySort';
-                    } else {
-                        $isSort = 'secondarySort';
-                    }
-                } else {
-                    $icon = '';
-                    if (isset($display_array['sort'])) {
-                        $direction = $display_array['sort'];
-                    } else {
-                        $direction = 'ASC';
-                    }
-                }
-            }
-
-            if (isset($display_array['align'])) {
-                $align = $display_array['align'];
-            } else {
-                $align = 'left';
-            }
-
-            if (isset($display_array['tip'])) {
-                $tip = $display_array['tip'];
-            } else {
-                $tip = '';
-            }
-        } else {
-            /* by default, you will always sort ascending, with the exception of an already sorted column */
-            if ($sort_column == $db_column) {
-                $icon         = $sort_direction;
-                $direction    = $new_sort_direction;
-                $display_text = $display_array[0];
-
-                if ($db_column == $primarySort) {
-                    $isSort = 'primarySort';
-                } else {
-                    $isSort = 'secondarySort';
-                }
-            } else {
-                if (isset($order_data[$db_column])) {
-                    $icon = $order_data[$db_column];
-                    if ($order_data[$db_column] == 'DESC') {
-                        $direction = 'ASC';
-                    } else {
-                        $direction = 'DESC';
-                    }
-
-                    if ($db_column == $primarySort) {
-                        $isSort = 'primarySort';
-                    } else {
-                        $isSort = 'secondarySort';
-                    }
-                } else {
-                    $icon = '';
-                    $direction = $display_array[1];
-                }
-
-                $display_text = $display_array[0];
-            }
-
-            $align = 'left';
-            $tip   = '';
-        }
-
-        if (strtolower($icon) == 'asc') {
-            $icon = 'sort-asc';
-        } elseif (strtolower($icon) == 'desc') {
-            $icon = 'sort-desc';
-        } else {
-            $icon = 'sort';
-        }
-
-        $align = html_escape($align);
+        [$display_text, $direction, $icon, $align, $tip, $nohide, $isSort] = html_header_sort_item(
+            $db_column,
+            $display_array,
+            $sort_column,
+            $sort_direction,
+            $new_sort_direction,
+            $order_data,
+            $primarySort
+        );
 
         if (($db_column == '') || (substr_count($db_column, 'nosort'))) {
             print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'" : '') . " class='$align $nohide'>" . $display_text . '</th>';
@@ -1240,7 +1144,7 @@ function html_escape($string)
         $string = str_replace('`', '&#96;', $string);
         return htmlspecialchars($string, ENT_QUOTES | ENT_HTML5, $charset, false);
     } else {
-        return $string;
+        return null;
     }
 }
 
