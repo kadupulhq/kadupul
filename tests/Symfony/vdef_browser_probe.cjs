@@ -9,7 +9,7 @@ const v8ToIstanbul = require('../e2e/node_modules/v8-to-istanbul');
 const { createCoverageMap } = require('../e2e/node_modules/istanbul-lib-coverage');
 
 async function main(input) {
-    const snapshot = browserSourceSnapshot();
+    const snapshot = process.env.KADUPUL_BROWSER_COVERAGE ? browserSourceSnapshot() : null;
     const origin = new URL(input.base);
     assert.ok(['127.0.0.1', 'localhost', '[::1]'].includes(origin.hostname));
     assert.match(String(input.vdefId), /^[1-9][0-9]{0,7}$/);
