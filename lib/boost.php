@@ -360,7 +360,7 @@ function boost_check_correct_enabled() {
 	return true;
 }
 
-function boost_flush_output_batch($value_tuples, $conn = false) {
+function boost_flush_output_batch($value_tuples, $conn = false, bool $replace_existing = false) {
 	if (!cacti_sizeof($value_tuples)) {
 		return true;
 	}
@@ -373,8 +373,9 @@ function boost_flush_output_batch($value_tuples, $conn = false) {
 		$packet_limits[$conn_key] = !empty($row['Value']) ? (int) $row['Value'] : 1048576;
 	}
 
-	$sql_prefix = 'INSERT IGNORE INTO poller_output_boost (local_data_id, rrd_name, time, output) VALUES ';
-	$overhead   = strlen($sql_prefix) + 1;
+	$sql_prefix = ($replace_existing ? 'INSERT' : 'INSERT IGNORE') . ' INTO poller_output_boost (local_data_id, rrd_name, time, output) VALUES ';
+	$sql_suffix = $replace_existing ? ' ON DUPLICATE KEY UPDATE output=VALUES(output)' : '';
+	$overhead   = strlen($sql_prefix) + strlen($sql_suffix) + 1;
 	$out_buffer = '';
 	$out_length = 0;
 	$rows       = 0;
@@ -384,14 +385,14 @@ function boost_flush_output_batch($value_tuples, $conn = false) {
 
 		if ($out_length > 0 && ($out_length + $overhead + $tuple_length) > $packet_limits[$conn_key]) {
 			try {
-				$acknowledged = db_execute($sql_prefix . $out_buffer, true, $conn) !== false;
+				$acknowledged = db_execute($sql_prefix . $out_buffer . $sql_suffix, true, $conn) !== false;
 			} catch (Throwable $e) {
 				$acknowledged = false;
 			}
 
 			if (!$acknowledged) {
 				return false;
-			} elseif (db_affected_rows($conn) < $rows) {
+			} elseif (!$replace_existing && db_affected_rows($conn) < $rows) {
 				cacti_log('WARNING: Boost staging ignored one or more duplicate sample keys.', false, 'BOOST');
 			}
 
@@ -407,14 +408,14 @@ function boost_flush_output_batch($value_tuples, $conn = false) {
 
 	if ($out_buffer != '') {
 		try {
-			$acknowledged = db_execute($sql_prefix . $out_buffer, true, $conn) !== false;
+			$acknowledged = db_execute($sql_prefix . $out_buffer . $sql_suffix, true, $conn) !== false;
 		} catch (Throwable $e) {
 			$acknowledged = false;
 		}
 
 		if (!$acknowledged) {
 			return false;
-		} elseif (db_affected_rows($conn) < $rows) {
+		} elseif (!$replace_existing && db_affected_rows($conn) < $rows) {
 			cacti_log('WARNING: Boost staging ignored one or more duplicate sample keys.', false, 'BOOST');
 		}
 	}

@@ -142,15 +142,28 @@ function ss_host_disk($hostname = '', $host_id = 0, $snmp_auth = '', $cmd = 'ind
 					$snmp_auth_username, $snmp_auth_password, $snmp_auth_protocol, $snmp_priv_passphrase,
 					$snmp_priv_protocol, $snmp_context, $snmp_port, $snmp_timeout, $ping_retries, SNMP_POLLER);
 
-				/* RFC 2790 defines these values as nonnegative. Treat invalid
-				 * samples or allocation units as unknown instead of guessing an
-				 * unsigned wrap or reporting raw allocation units as bytes. */
-				if (!is_numeric($snmp_data) || (float) $snmp_data < 0
-					|| !ctype_digit((string) $sau) || (int) $sau < 1) {
+				if (!is_numeric($snmp_data) || !is_finite((float) $snmp_data)) {
 					return 'U';
 				}
+				// Preserve the legacy raw-sample fallback when allocation units have not been cached.
+				if ($sau === false || $sau === null) {
+					return $snmp_data;
+				}
+				// PHP SNMP walks retain the HOST-RESOURCES-MIB's optional Bytes suffix.
+				if (!is_scalar($sau) || !preg_match('/^([0-9]+)(?:\s+Bytes)?$/iD', trim((string) $sau), $units)
+					|| (float) $units[1] < 1 || !is_finite((float) $units[1])) {
+					return 'U';
+				}
+				// Retain LTS support for agents exposing an overflowing signed Integer32 counter.
+				if ((float) $snmp_data < 0) {
+					if ((float) $snmp_data < -2147483648 || floor((float) $snmp_data) != (float) $snmp_data) {
+						return 'U';
+					}
+					$snmp_data = (float) $snmp_data + 4294967296;
+				}
+				$bytes = $snmp_data * $units[1];
+				return is_finite((float) $bytes) ? $bytes : 'U';
 
-				return $snmp_data * $sau;
 			} else {
 				return cacti_snmp_get($hostname, $snmp_community, $oids[$arg] . ".$index", $snmp_version,
 					$snmp_auth_username, $snmp_auth_password, $snmp_auth_protocol, $snmp_priv_passphrase,
