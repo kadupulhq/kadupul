@@ -344,6 +344,11 @@ function user_setting_value_allowed($field_array, $value)
         case 'drop_array':
         case 'drop_language':
             return isset($field_array['array']) && is_array($field_array['array']) && array_key_exists($value, $field_array['array']);
+        case 'drop_callback':
+            if (!empty($field_array['none_value']) && $value === '0') {
+                return true;
+            }
+            // Fall through to the same SQL choices rendered by form_callback().
         case 'drop_sql':
             foreach (db_fetch_assoc($field_array['sql']) as $row) {
                 if ((string) $row['id'] === $value) {
@@ -352,6 +357,25 @@ function user_setting_value_allowed($field_array, $value)
             }
 
             return false;
+        case 'radio':
+            foreach ($field_array['items'] ?? array() as $item) {
+                if (isset($item['radio_value']) && $value === (string) $item['radio_value']) {
+                    return true;
+                }
+            }
+            return false;
+        case 'drop_files':
+            $directory = $field_array['directory'] ?? '';
+            if (!is_string($directory) || !is_dir($directory) || !is_readable($directory)) {
+                return false;
+            }
+            $files = scandir($directory);
+            return $files !== false && $value !== '.' && $value !== '..'
+                && in_array($value, $files, true)
+                && !in_array($value, $field_array['exclusions'] ?? array(), true)
+                && is_readable($directory . '/' . $value);
+        case 'textbox_password':
+            return !isset($field_array['max_length']) || strlen($value) <= $field_array['max_length'];
         case 'textbox':
         case 'font':
             if (isset($field_array['max_length']) && strlen($value) > $field_array['max_length']) {
