@@ -25,6 +25,7 @@ follows [Semantic Versioning](VERSIONING.md).
   `proxy_headers = true` mode no longer authorizes forwarded addresses.
 - Limit data source troubleshooting, repair, purge, and bulk operations to allowed devices.
 - Enforce device and graph access checks in Graph Management and Data Sources, including bulk confirmation lists and device reassignment.
+- Scope both AJAX graph-input data-source choice queries to the actor's device policy before returning names; retain authorized current choices and device-less sources without loading the full device inventory.
 - Skip unauthorized graph trees before name lookup on bulk-action confirmation pages.
 - Restrict new graph creation and data query reloads to allowed devices.
 - Require graph access before spike handling reads or rewrites an RRD.

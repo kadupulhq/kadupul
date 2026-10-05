@@ -80,6 +80,7 @@ if (defined('CLOG_LINKS_NATIVE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/clog_webapi.php');
 }
 if (defined('AUTH_POLICY_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/graph_item_choices.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
 }
 if (defined('HTML_REPORT_RENDER_TEST_COVERAGE')) {
