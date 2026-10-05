@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 10:19-0700\n"
+"POT-Creation-Date: 2026-10-05 10:38-0700\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -12300,7 +12300,7 @@ msgstr "Kết quả Ping"
 msgid "No Ping or SNMP Availability Check in Use"
 msgstr "Không có kiểm tra tính khả dụng của Ping hoặc SNMP"
 
-#: lib/api_tree.php:203
+#: lib/api_tree.php:204
 msgid "New Branch"
 msgstr "Chi nhánh mới"
 

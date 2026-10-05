@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 10:19-0700\n"
+"POT-Creation-Date: 2026-10-05 10:38-0700\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -14481,7 +14481,7 @@ msgstr "Ping結果"
 msgid "No Ping or SNMP Availability Check in Use"
 msgstr "無Ping或SNMP可用性檢查正在使用中"
 
-#: lib/api_tree.php:203
+#: lib/api_tree.php:204
 #, fuzzy
 msgid "New Branch"
 msgstr "新科"

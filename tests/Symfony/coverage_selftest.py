@@ -75,6 +75,7 @@ def prepare_wrapper_line_failure_reports(directory, scratch, anchor):
 
 def main():
     from cdef_legacy_page_scenarios import REQUIRED_CHECKS
+    from cli_parity_scenarios import TREE_CHECKS
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--php', default='php')
@@ -516,6 +517,8 @@ def main():
         'missing-audit-noop-upgrade-check': 'Incomplete Symfony integration checks',
         'missing-audit-required-upgrade-check': 'Incomplete Symfony integration checks',
     }
+    for index in range(len(TREE_CHECKS)):
+        failures['missing-tree-check-' + str(index)] = 'Incomplete Symfony integration checks'
     failures['missing-legacy-page-test-hash'] = 'Integration test source differs'
     failures['missing-selected-runner-check'] = 'Incomplete Symfony integration'
     for source in ['src/Platform/Contract/ReferenceWriteTransactionRunner.php',
@@ -731,6 +734,8 @@ def main():
                 evidence['source_sha256']['tests/Fixtures/legacy-cli/audit_database.php'] = '0' * 64
             elif case == 'cli-audit-native-test-hash':
                 evidence['source_sha256']['tests/Fixtures/native-cli/audit_database.php'] = '0' * 64
+            elif case.startswith('missing-tree-check-'):
+                evidence['checks'].remove(TREE_CHECKS[int(case.rsplit('-', 1)[1])])
             elif case == 'missing-audit-check':
                 evidence['checks'].remove('audit refuses an operator without the Installation/Upgrades realm')
             elif case == 'missing-audit-noop-upgrade-check':

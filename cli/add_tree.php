@@ -294,7 +294,7 @@ if (cacti_sizeof($parms)) {
                 exit(1);
             }
         } else if ($nodeType == 'site') {
-            # Blank out graphId, hostId fields and use the site name as the visible title
+            # Site labels and ordering use the current sites.name through siteId.
             $graphId        = 0;
             $hostId         = 0;
 
@@ -303,7 +303,7 @@ if (cacti_sizeof($parms)) {
                 exit(1);
             }
 
-            $name = $sites[$siteId]['name'];
+            $name = '';
         } else if ($nodeType == 'host') {
             # Blank out graphId, name fields
             $graphId        = 0;
