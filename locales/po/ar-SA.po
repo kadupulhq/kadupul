@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 14:44-0700\n"
+"POT-Creation-Date: 2026-10-05 15:45-0700\n"
 "PO-Revision-Date: 2024-05-25 11:07-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -49,7 +49,7 @@ msgstr "يتم توزيع هذا البرنامج على أمل أن يكون م
 #: automation_tree_rules.php:17 cdef.php:14 cdef.php:603 color_templates.php:13
 #: color_templates.php:109 data_queries.php:16 data_queries.php:863
 #: data_queries.php:972 data_queries.php:1252 data_source_profiles.php:16
-#: data_source_profiles.php:934 data_sources.php:23 data_sources.php:1246
+#: data_source_profiles.php:934 data_sources.php:23 data_sources.php:1249
 #: data_templates.php:19 data_templates.php:791 gprint_presets.php:12
 #: graph_templates.php:22 graph_templates.php:517 graphs.php:32 host.php:29
 #: host_templates.php:20 host_templates.php:485 host_templates.php:542
@@ -123,15 +123,15 @@ msgstr "انقر فوق &quot;متابعة&quot; لحذف الرسم البيا�
 #: color_templates.php:256 color_templates_items.php:327 data_queries.php:413
 #: data_queries.php:427 data_queries.php:611 data_source_profiles.php:416
 #: data_source_profiles.php:428 data_source_profiles.php:663
-#: data_sources.php:616 data_sources.php:628 data_sources.php:637
-#: data_sources.php:646 data_sources.php:655 data_sources.php:661
+#: data_sources.php:616 data_sources.php:631 data_sources.php:640
+#: data_sources.php:649 data_sources.php:658 data_sources.php:664
 #: data_templates.php:486 data_templates.php:498 data_templates.php:514
 #: gprint_presets.php:137 graph_templates.php:373 graph_templates.php:385
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
 #: graph_view.php:1043 graphs.php:886 graphs.php:902 graphs.php:913
-#: graphs.php:924 graphs.php:939 graphs.php:953 graphs.php:962 graphs.php:1164
-#: graphs.php:1207 graphs.php:1229 graphs.php:1260 graphs.php:1272
-#: graphs.php:1856 host.php:487 host.php:496 host.php:543 host.php:552
+#: graphs.php:924 graphs.php:939 graphs.php:956 graphs.php:965 graphs.php:1167
+#: graphs.php:1210 graphs.php:1232 graphs.php:1263 graphs.php:1275
+#: graphs.php:1859 host.php:487 host.php:496 host.php:543 host.php:552
 #: host.php:561 host.php:577 host.php:591 host.php:600 host.php:631
 #: host.php:643 host_templates.php:222 host_templates.php:236
 #: host_templates.php:247 host_templates.php:302 host_templates.php:375
@@ -158,14 +158,14 @@ msgstr "إلغاء"
 #: color_templates.php:256 color_templates_items.php:328 data_queries.php:413
 #: data_queries.php:427 data_queries.php:612 data_source_profiles.php:416
 #: data_source_profiles.php:428 data_source_profiles.php:664
-#: data_sources.php:616 data_sources.php:628 data_sources.php:637
-#: data_sources.php:646 data_sources.php:655 data_sources.php:661
+#: data_sources.php:616 data_sources.php:631 data_sources.php:640
+#: data_sources.php:649 data_sources.php:658 data_sources.php:664
 #: data_templates.php:486 data_templates.php:498 data_templates.php:514
 #: gprint_presets.php:137 graph_templates.php:373 graph_templates.php:385
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
 #: graphs.php:886 graphs.php:902 graphs.php:913 graphs.php:924 graphs.php:939
-#: graphs.php:953 graphs.php:962 graphs.php:1164 graphs.php:1207
-#: graphs.php:1229 graphs.php:1260 graphs.php:1272 host.php:487 host.php:496
+#: graphs.php:956 graphs.php:965 graphs.php:1167 graphs.php:1210
+#: graphs.php:1232 graphs.php:1263 graphs.php:1275 host.php:487 host.php:496
 #: host.php:543 host.php:552 host.php:561 host.php:577 host.php:591
 #: host.php:600 host.php:631 host.php:643 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
@@ -195,8 +195,8 @@ msgstr "لترحيل الرسوم البيانية الإجمالية أدناه
 
 #: aggregate_graphs.php:406 aggregate_graphs.php:456 aggregate_graphs.php:504
 #: auth_changepassword.php:415 auth_profile.php:464 automation_networks.php:387
-#: automation_snmp.php:245 graphs.php:1166 graphs.php:1216 graphs.php:1219
-#: graphs.php:1263 graphs.php:1856 host.php:634 include/auth.php:309
+#: automation_snmp.php:245 graphs.php:1169 graphs.php:1219 graphs.php:1222
+#: graphs.php:1266 graphs.php:1859 host.php:634 include/auth.php:309
 #: lib/api_aggregate.php:2209 lib/api_aggregate.php:2224 lib/html_form.php:1422
 #: lib/html_reports.php:632 managers.php:1130 permission_denied.php:14
 #: permission_denied.php:16
@@ -244,29 +244,29 @@ msgstr "الاسم الكلي:"
 msgid "New Aggregate"
 msgstr "مجموعة جديدة"
 
-#: aggregate_graphs.php:485 graphs.php:1244 host.php:615
+#: aggregate_graphs.php:485 graphs.php:1247 host.php:615
 msgid "Click 'Continue' to add the selected Graphs to the Report below."
 msgstr "انقر فوق &quot;متابعة&quot; لإضافة الرسومات البيانية المحددة إلى التقرير أدناه."
 
-#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1248 host.php:619
+#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1251 host.php:619
 #: lib/html_reports.php:18 lib/html_reports.php:2133
 msgid "Report Name"
 msgstr "اسم التقرير"
 
-#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1252 host.php:623
+#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1255 host.php:623
 #: lib/html_reports.php:1789
 msgid "Timespan"
 msgstr "زمن"
 
-#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1256 host.php:627
+#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1259 host.php:627
 msgid "Align"
 msgstr "محاذاة نص العنوان بطل"
 
-#: aggregate_graphs.php:501 graphs.php:1260
+#: aggregate_graphs.php:501 graphs.php:1263
 msgid "Add Graphs to Report"
 msgstr "إضافة الرسوم البيانية إلى التقرير"
 
-#: aggregate_graphs.php:503 graphs.php:1262
+#: aggregate_graphs.php:503 graphs.php:1265
 msgid "You currently have no reports defined."
 msgstr "ليس لديك حاليا أي تقارير محددة."
 
@@ -306,7 +306,7 @@ msgstr "فرع الوجهة:"
 msgid "Place Graph(s) on Tree"
 msgstr "ضع Graph (s) في شجرة"
 
-#: aggregate_graphs.php:625 data_sources.php:1232 lib/html_reports.php:1641
+#: aggregate_graphs.php:625 data_sources.php:1235 lib/html_reports.php:1641
 #: user_admin.php:1774
 #, php-format
 msgid "[edit: %s]"
@@ -357,15 +357,15 @@ msgstr "معاينة التجميع [٪ s]"
 msgid "Aggregate Preview %s"
 msgstr "معاينة مجمعة %s"
 
-#: aggregate_graphs.php:763 graph.php:551 graphs.php:1689
+#: aggregate_graphs.php:763 graph.php:551 graphs.php:1692
 msgid "RRDtool Command:"
 msgstr "الأمر RRDtool:"
 
-#: aggregate_graphs.php:765 graph.php:560 graphs.php:1693
+#: aggregate_graphs.php:765 graph.php:560 graphs.php:1696
 msgid "Not Checked"
 msgstr "لا الشيكات"
 
-#: aggregate_graphs.php:765 graph.php:556 graphs.php:1691
+#: aggregate_graphs.php:765 graph.php:556 graphs.php:1694
 msgid "RRDtool Says:"
 msgstr "RRDtool يقول:"
 
@@ -374,24 +374,24 @@ msgstr "RRDtool يقول:"
 msgid "Aggregate Graph %s"
 msgstr "انقر فوق &quot;متابعة&quot; لدمج الرسم البياني الإجمالي (الرسوم) التجميعية في Graph Aggregate واحد."
 
-#: aggregate_graphs.php:820 aggregate_templates.php:408 graphs.php:1030
+#: aggregate_graphs.php:820 aggregate_templates.php:408 graphs.php:1033
 msgid "Prefix Replacement Values"
 msgstr "نمط الاستبدال"
 
-#: aggregate_graphs.php:821 aggregate_templates.php:409 graphs.php:1031
+#: aggregate_graphs.php:821 aggregate_templates.php:409 graphs.php:1034
 msgid "You may use these replacement values for the Prefix in the Aggregate Graph"
 msgstr "يمكنك استخدام قيم الاستبدال هذه للبادئة في الرسم البياني التجميعي"
 
-#: aggregate_graphs.php:988 aggregate_templates.php:536 graphs.php:1113
+#: aggregate_graphs.php:988 aggregate_templates.php:536 graphs.php:1116
 #: lib/api_aggregate.php:2344
 msgid "Total"
 msgstr "الإجمالي"
 
-#: aggregate_graphs.php:992 aggregate_templates.php:540 graphs.php:1115
+#: aggregate_graphs.php:992 aggregate_templates.php:540 graphs.php:1118
 msgid "All Items"
 msgstr "كل العناصر"
 
-#: aggregate_graphs.php:1010 graphs.php:1704 lib/api_aggregate.php:2504
+#: aggregate_graphs.php:1010 graphs.php:1707 lib/api_aggregate.php:2504
 msgid "Graph Configuration"
 msgstr "تكوين الرسم البياني"
 
@@ -415,9 +415,9 @@ msgstr "مطابقة الرسوم البيانية"
 #: automation_networks.php:1224 automation_snmp.php:703
 #: automation_templates.php:393 automation_tree_rules.php:845 cdef.php:727
 #: color_templates.php:560 data_debug.php:1214 data_queries.php:1371
-#: data_source_profiles.php:1186 data_sources.php:1811 data_templates.php:1101
+#: data_source_profiles.php:1186 data_sources.php:1814 data_templates.php:1101
 #: gprint_presets.php:255 graph_templates.php:727 graph_view.php:667
-#: graphs.php:2111 graphs_new.php:526 host.php:1832 host_templates.php:795
+#: graphs.php:2114 graphs_new.php:526 host.php:1832 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
 #: lib/api_automation.php:480 lib/api_automation.php:708
 #: lib/clog_webapi.php:608 lib/html.php:268 lib/html_filter.php:46
@@ -434,9 +434,9 @@ msgid "Search"
 msgstr "بحث"
 
 #: aggregate_graphs.php:1288 aggregate_graphs.php:1324
-#: aggregate_graphs.php:1587 color_templates.php:680 data_sources.php:2001
-#: data_sources.php:2140 graph_view.php:488 graph_view.php:739
-#: graph_view.php:803 graphs.php:2128 graphs.php:2320 host.php:1946
+#: aggregate_graphs.php:1587 color_templates.php:680 data_sources.php:2004
+#: data_sources.php:2143 graph_view.php:488 graph_view.php:739
+#: graph_view.php:803 graphs.php:2131 graphs.php:2323 host.php:1946
 #: include/global_arrays.php:993 include/global_arrays.php:1229
 #: include/global_arrays.php:2012 lib/api_automation.php:283 lib/html.php:1902
 #: lib/html.php:1971 lib/html_graph.php:197 lib/html_tree.php:1022
@@ -452,9 +452,9 @@ msgstr "الرسوم"
 #: automation_snmp.php:713 automation_templates.php:403
 #: automation_tree_rules.php:865 cdef.php:737 color_templates.php:576
 #: data_debug.php:1224 data_queries.php:1381 data_source_profiles.php:1196
-#: data_source_profiles.php:1318 data_sources.php:1821 data_templates.php:1130
+#: data_source_profiles.php:1318 data_sources.php:1824 data_templates.php:1130
 #: gprint_presets.php:265 graph_templates.php:737 graph_view.php:743
-#: graphs.php:2132 graphs_new.php:536 host.php:1857 host_templates.php:805
+#: graphs.php:2135 graphs_new.php:536 host.php:1857 host_templates.php:805
 #: include/global_form.php:242 lib/api_automation.php:182
 #: lib/api_automation.php:490 lib/api_automation.php:718
 #: lib/api_automation.php:1082 lib/html_reports.php:2045 managers.php:154
@@ -477,8 +477,8 @@ msgstr "جزء من التجميع"
 #: automation_snmp.php:728 automation_templates.php:418
 #: automation_tree_rules.php:877 cdef.php:758 color_templates.php:598
 #: data_debug.php:1139 data_queries.php:1396 data_source_profiles.php:1217
-#: data_sources.php:1761 data_templates.php:1151 gprint_presets.php:283
-#: graph_templates.php:758 graph_view.php:675 graphs.php:2102
+#: data_sources.php:1764 data_templates.php:1151 gprint_presets.php:283
+#: graph_templates.php:758 graph_view.php:675 graphs.php:2105
 #: graphs_new.php:515 host.php:1822 host_templates.php:786
 #: lib/api_automation.php:187 lib/api_automation.php:471
 #: lib/api_automation.php:723 lib/api_automation.php:1087
@@ -494,9 +494,9 @@ msgstr "أذهب"
 #: aggregate_graphs.php:1303 aggregate_graphs.php:1596
 #: automation_devices.php:509 automation_snmp.php:728
 #: automation_templates.php:418 cdef.php:758 data_debug.php:1139
-#: data_queries.php:1396 data_source_profiles.php:1217 data_sources.php:1761
+#: data_queries.php:1396 data_source_profiles.php:1217 data_sources.php:1764
 #: data_templates.php:1151 gprint_presets.php:283 graph_templates.php:758
-#: graph_view.php:675 graphs.php:2102 graphs_new.php:515 host.php:1822
+#: graph_view.php:675 graphs.php:2105 graphs_new.php:515 host.php:1822
 #: host_templates.php:786 lib/html_graph.php:178 managers.php:169
 #: managers.php:529 managers.php:794 plugins.php:530 pollers.php:914
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
@@ -512,8 +512,8 @@ msgstr "مجموعة / تحديث الفلاتر"
 #: automation_snmp.php:729 automation_templates.php:419
 #: automation_tree_rules.php:878 cdef.php:759 color_templates.php:599
 #: data_debug.php:1140 data_queries.php:1397 data_source_profiles.php:1218
-#: data_sources.php:1762 data_templates.php:1152 gprint_presets.php:284
-#: graph_templates.php:759 graph_view.php:676 graphs.php:2103
+#: data_sources.php:1765 data_templates.php:1152 gprint_presets.php:284
+#: graph_templates.php:759 graph_view.php:676 graphs.php:2106
 #: graphs_new.php:516 host.php:1823 host_templates.php:787
 #: lib/api_automation.php:188 lib/api_automation.php:472
 #: lib/api_automation.php:724 lib/api_automation.php:1088
@@ -529,9 +529,9 @@ msgstr "واضح"
 
 #: aggregate_graphs.php:1304 aggregate_graphs.php:1597 automation_snmp.php:729
 #: automation_templates.php:419 cdef.php:759 data_debug.php:1140
-#: data_queries.php:1397 data_source_profiles.php:1218 data_sources.php:1762
+#: data_queries.php:1397 data_source_profiles.php:1218 data_sources.php:1765
 #: data_templates.php:1152 gprint_presets.php:284 graph_templates.php:759
-#: graph_view.php:676 graphs.php:2103 graphs_new.php:516 host.php:1823
+#: graph_view.php:676 graphs.php:2106 graphs_new.php:516 host.php:1823
 #: host_templates.php:787 lib/html_graph.php:179 lib/html_tree.php:1010
 #: managers.php:170 managers.php:530 managers.php:795 plugins.php:531
 #: pollers.php:915
@@ -542,15 +542,15 @@ msgstr "واضح"
 msgid "Clear Filters"
 msgstr "مسح الفلتر"
 
-#: aggregate_graphs.php:1329 aggregate_graphs.php:1662 graphs.php:1193
+#: aggregate_graphs.php:1329 aggregate_graphs.php:1662 graphs.php:1196
 #: lib/api_automation.php:574 user_admin.php:809 user_group_admin.php:948
 msgid "Graph Title"
 msgstr "عنوان الرسم البياني"
 
 #: aggregate_graphs.php:1330 aggregate_graphs.php:1663
 #: automation_graph_rules.php:964 automation_tree_rules.php:971
-#: data_debug.php:517 data_queries.php:1482 data_sources.php:1995
-#: data_templates.php:1260 graph_templates.php:864 graphs.php:2336
+#: data_debug.php:517 data_queries.php:1482 data_sources.php:1998
+#: data_templates.php:1260 graph_templates.php:864 graphs.php:2339
 #: host.php:1940 host_templates.php:949 lib/api_automation.php:282
 #: pollers.php:995 tree.php:2306 user_admin.php:809 user_admin.php:924
 #: user_admin.php:1073 user_admin.php:1212 user_admin.php:1351
@@ -564,14 +564,14 @@ msgid "Included in Aggregate"
 msgstr "المدرجة في التجميع"
 
 #: aggregate_graphs.php:1332 aggregate_graphs.php:1665 graph_templates.php:881
-#: graph_view.php:832 graph_view.php:845 graphs.php:2354 lib/spikekill.php:1745
+#: graph_view.php:832 graph_view.php:845 graphs.php:2357 lib/spikekill.php:1745
 msgid "Size"
 msgstr "مداخل خلفية الحجم"
 
 #: aggregate_graphs.php:1348 aggregate_templates.php:724
 #: automation_tree_rules.php:723 cdef.php:885 color_templates.php:704
 #: data_queries.php:1534 data_source_profiles.php:1398
-#: data_source_profiles.php:1399 data_sources.php:2082 data_sources.php:2083
+#: data_source_profiles.php:1399 data_sources.php:2085 data_sources.php:2086
 #: data_templates.php:1321 gprint_presets.php:430 graph_templates.php:921
 #: host_templates.php:997 include/global_settings.php:876
 #: include/global_settings.php:1927 lib/api_automation.php:1438 tree.php:2399
@@ -585,7 +585,7 @@ msgstr "لا"
 #: data_debug.php:781 data_debug.php:786 data_debug.php:791
 #: data_queries.php:1534 data_source_profiles.php:1397
 #: data_source_profiles.php:1398 data_source_profiles.php:1399
-#: data_sources.php:2082 data_sources.php:2083 data_templates.php:1321
+#: data_sources.php:2085 data_sources.php:2086 data_templates.php:1321
 #: gprint_presets.php:430 graph_templates.php:921 host_templates.php:997
 #: include/global_settings.php:875 include/global_settings.php:1926
 #: lib/api_automation.php:1438 lib/installer.php:2124 lib/installer.php:2152
@@ -594,7 +594,7 @@ msgstr "لا"
 msgid "Yes"
 msgstr "نعم"
 
-#: aggregate_graphs.php:1354 graphs.php:2396 lib/api_automation.php:601
+#: aggregate_graphs.php:1354 graphs.php:2399 lib/api_automation.php:601
 msgid "No Graphs Found"
 msgstr "لا توجد الرسوم البيانية"
 
@@ -607,8 +607,8 @@ msgstr "[تطبيق قائمة الرسم البياني المخصص - تصفي
 msgid "Aggregate Graphs"
 msgstr "الرسوم البيانية الإجمالية"
 
-#: aggregate_graphs.php:1562 data_debug.php:1110 data_sources.php:1730
-#: graph_view.php:699 graphs.php:2064 host.php:1768
+#: aggregate_graphs.php:1562 data_debug.php:1110 data_sources.php:1733
+#: graph_view.php:699 graphs.php:2067 host.php:1768
 #: include/global_arrays.php:2892 include/global_settings.php:610
 #: lib/api_automation.php:446 lib/html_graph.php:139 lib/html_tree.php:973
 #: rrdcleaner.php:381
@@ -621,8 +621,8 @@ msgstr "قالب"
 #: automation_devices.php:528 automation_devices.php:546
 #: automation_devices.php:564 automation_graph_rules.php:819
 #: automation_graph_rules.php:841 automation_tree_rules.php:855
-#: data_debug.php:1114 data_sources.php:1734 graph_templates_items.php:447
-#: graphs.php:2068 graphs_items.php:270 host.php:1731 host.php:1752
+#: data_debug.php:1114 data_sources.php:1737 graph_templates_items.php:447
+#: graphs.php:2071 graphs_items.php:270 host.php:1731 host.php:1752
 #: host.php:1772 host.php:1842 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3954 lib/auth.php:4003
@@ -639,11 +639,12 @@ msgstr "الجميع"
 #: aggregate_graphs.php:1567 aggregate_graphs.php:1677
 #: automation_graph_rules.php:974 automation_graph_rules.php:975
 #: automation_networks.php:460 automation_tree_rules.php:983
-#: data_debug.php:1115 data_sources.php:1100 data_sources.php:1735
-#: data_sources.php:2056 data_templates.php:1323 graph_templates_items.php:53
-#: graphs.php:1593 graphs.php:1602 graphs.php:2069 graphs_items.php:271
-#: graphs_items.php:391 host.php:294 host.php:1287 host.php:1298 host.php:1732
-#: host.php:1773 include/global_arrays.php:523 include/global_arrays.php:581
+#: data_debug.php:1115 data_sources.php:626 data_sources.php:1103
+#: data_sources.php:1738 data_sources.php:2059 data_templates.php:1323
+#: graph_templates_items.php:53 graphs.php:950 graphs.php:1596 graphs.php:1605
+#: graphs.php:2072 graphs_items.php:271 graphs_items.php:391 host.php:294
+#: host.php:1287 host.php:1298 host.php:1732 host.php:1773
+#: include/global_arrays.php:523 include/global_arrays.php:581
 #: include/global_arrays.php:673 include/global_arrays.php:885
 #: include/global_arrays.php:1741 include/global_form.php:574
 #: include/global_form.php:883 include/global_form.php:891
@@ -679,7 +680,7 @@ msgstr "عنوان الرسوم البيانية الإجمالية"
 msgid "The internal database identifier for this object"
 msgstr "معرف قاعدة البيانات الداخلية لهذا الكائن"
 
-#: aggregate_graphs.php:1664 graphs.php:1197
+#: aggregate_graphs.php:1664 graphs.php:1200
 msgid "Aggregate Template"
 msgstr "قالب التجميع"
 
@@ -747,7 +748,7 @@ msgid "Aggregate Templates that are in use can not be Deleted.  In use is define
 msgstr "لا يمكن حذف القوالب التجميعية قيد الاستخدام. يتم تعريف الاستخدام على أنه مرجع من قبل Aggregate."
 
 #: aggregate_templates.php:707 cdef.php:868 color_templates.php:675
-#: data_queries.php:1488 data_source_profiles.php:1323 data_sources.php:2013
+#: data_queries.php:1488 data_source_profiles.php:1323 data_sources.php:2016
 #: data_templates.php:1266 gprint_presets.php:390 graph_templates.php:870
 #: host_templates.php:955
 msgid "Deletable"
@@ -758,7 +759,7 @@ msgstr "به deletable"
 msgid "Graphs Using"
 msgstr "الرسوم البيانية عن طريق"
 
-#: aggregate_templates.php:709 graphs.php:2123 host_templates.php:730
+#: aggregate_templates.php:709 graphs.php:2126 host_templates.php:730
 #: include/global_arrays.php:958 include/global_arrays.php:1361
 #: include/global_form.php:1399 include/global_form.php:1635
 #: lib/html_reports.php:1181 tree.php:1944
@@ -1184,7 +1185,7 @@ msgstr "SNMP"
 #: automation_devices.php:280 automation_devices.php:524
 #: automation_graph_rules.php:837 automation_networks.php:1075
 #: automation_tree_rules.php:851 data_debug.php:523 data_debug.php:1169
-#: data_sources.php:1790 data_templates.php:1289 host.php:886 host.php:1015
+#: data_sources.php:1793 data_templates.php:1289 host.php:886 host.php:1015
 #: host.php:1838 host.php:1958 lib/api_automation.php:52
 #: lib/api_automation.php:53 lib/api_automation.php:280
 #: lib/api_automation.php:573 lib/api_automation.php:1199
@@ -1368,7 +1369,7 @@ msgid "Graph Rules"
 msgstr "قواعد الرسم البياني"
 
 #: automation_graph_rules.php:815 automation_graph_rules.php:965
-#: graphs.php:2124 include/global_arrays.php:1364
+#: graphs.php:2127 include/global_arrays.php:1364
 #: include/global_arrays.php:2891 include/global_form.php:1645
 #: include/global_form.php:2207
 msgid "Data Query"
@@ -1377,7 +1378,7 @@ msgstr "استعلام البيانات"
 #: automation_graph_rules.php:842 automation_graph_rules.php:967
 #: automation_graph_rules.php:983 automation_networks.php:535
 #: automation_tree_rules.php:856 automation_tree_rules.php:976
-#: automation_tree_rules.php:994 data_debug.php:1175 data_sources.php:1795
+#: automation_tree_rules.php:994 data_debug.php:1175 data_sources.php:1798
 #: host.php:1843 include/global_arrays.php:917 include/global_form.php:1527
 #: include/global_settings.php:345 include/global_settings.php:361
 #: lib/api_automation.php:27 lib/html_reports.php:2036
@@ -1392,7 +1393,7 @@ msgstr "مفعل"
 
 #: automation_graph_rules.php:843 automation_graph_rules.php:983
 #: automation_networks.php:1090 automation_tree_rules.php:857
-#: automation_tree_rules.php:994 data_debug.php:1176 data_sources.php:1796
+#: automation_tree_rules.php:994 data_debug.php:1176 data_sources.php:1799
 #: data_templates.php:1325 host.php:1844 include/global_arrays.php:916
 #: include/global_arrays.php:1573 include/global_arrays.php:1865
 #: include/global_settings.php:344 include/global_settings.php:360
@@ -1660,7 +1661,7 @@ msgstr "دقيقة %d"
 #: automation_networks.php:522 automation_networks.php:523
 #: automation_networks.php:524 automation_networks.php:525
 #: automation_networks.php:1212 automation_networks.php:1213
-#: data_sources.php:1554 include/global_arrays.php:711
+#: data_sources.php:1557 include/global_arrays.php:711
 #: include/global_arrays.php:712 include/global_arrays.php:713
 #: include/global_arrays.php:714 include/global_arrays.php:751
 #: include/global_arrays.php:752 include/global_arrays.php:754
@@ -2108,7 +2109,7 @@ msgstr "تحديث"
 
 #: automation_networks.php:1207 automation_networks.php:1208
 #: automation_networks.php:1209 automation_networks.php:1210
-#: data_sources.php:1550 include/global_arrays.php:709
+#: data_sources.php:1553 include/global_arrays.php:709
 #: include/global_arrays.php:745 include/global_arrays.php:746
 #: include/global_arrays.php:747 include/global_arrays.php:748
 #: include/global_arrays.php:749 include/global_arrays.php:750
@@ -2410,7 +2411,7 @@ msgstr "قوالب أتمتة [جديد]"
 msgid "Device Automation Templates"
 msgstr "قوالب أتمتة الجهاز"
 
-#: automation_templates.php:498 data_sources.php:2025 package_import.php:624
+#: automation_templates.php:498 data_sources.php:2028 package_import.php:624
 #: templates_import.php:242 user_admin.php:1212 user_group_admin.php:1231
 msgid "Template Name"
 msgstr "إسم القالب"
@@ -3053,7 +3054,7 @@ msgid "The requested Data Source is not available."
 msgstr ""
 
 #: data_debug.php:501 data_debug.php:959 data_queries.php:769
-#: data_sources.php:1163 data_templates.php:719 graphs_items.php:387
+#: data_sources.php:1166 data_templates.php:719 graphs_items.php:387
 #: include/global_arrays.php:1005 include/global_form.php:960
 #: lib/api_aggregate.php:2338 lib/html.php:1310 rrdcheck.php:142
 msgid "Data Source"
@@ -3104,7 +3105,7 @@ msgstr "وجود"
 msgid "Determines if the Data Source is located in the Poller Cache."
 msgstr "تحديد ما إذا كان مصدر البيانات موجودًا في مخزن Poller."
 
-#: data_debug.php:541 data_sources.php:2019 data_templates.php:1325
+#: data_debug.php:541 data_sources.php:2022 data_templates.php:1325
 #: plugins.php:32 plugins.php:503
 msgid "Active"
 msgstr "نشط"
@@ -3145,8 +3146,8 @@ msgstr "مناقشات جدلية"
 msgid "Summary of issues found for the Data Source."
 msgstr "أي مشاكل ملخص وجدت لمصدر البيانات."
 
-#: data_debug.php:646 data_debug.php:1220 data_sources.php:1817
-#: data_sources.php:1979 host.php:1952 include/global_arrays.php:994
+#: data_debug.php:646 data_debug.php:1220 data_sources.php:1820
+#: data_sources.php:1982 host.php:1952 include/global_arrays.php:994
 #: include/global_arrays.php:1040 include/global_arrays.php:2308
 #: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:325
@@ -3351,14 +3352,14 @@ msgstr "تشغيل الكل"
 msgid "Run checks on currently filtered Data Sources and preserve other results"
 msgstr "تشغيل عمليات التحقق من مصادر البيانات التي تمت تصفيتها حاليا والاحتفاظ بالنتائج الأخرى"
 
-#: data_debug.php:1150 data_sources.php:1770 data_templates.php:1107
+#: data_debug.php:1150 data_sources.php:1773 data_templates.php:1107
 #: lib/html.php:2727
 msgid "Profile"
 msgstr "الملف الشخصي"
 
 #: data_debug.php:1154 data_debug.php:1173 data_debug.php:1184
-#: data_sources.php:1774 data_sources.php:1794 data_templates.php:1111
-#: graphs.php:2121 graphs_new.php:488 host.php:1796 host_templates.php:716
+#: data_sources.php:1777 data_sources.php:1797 data_templates.php:1111
+#: graphs.php:2124 graphs_new.php:488 host.php:1796 host_templates.php:716
 #: host_templates.php:734 lib/clog_webapi.php:549 lib/html.php:227
 #: lib/html_reports.php:1138 lib/html_reports.php:2284 plugins.php:501
 #: settings.php:590 settings.php:612 settings.php:643 tree.php:914
@@ -4006,7 +4007,7 @@ msgstr "لا يمكن حذف الملفات الشخصية قيد الاستخد
 msgid "Read Only"
 msgstr "يقرأ فقط"
 
-#: data_source_profiles.php:1333 data_sources.php:2007
+#: data_source_profiles.php:1333 data_sources.php:2010
 #: include/global_settings.php:1234
 msgid "Poller Interval"
 msgstr "فاصل بولير"
@@ -4040,7 +4041,7 @@ msgstr "عدد قوالب البيانات باستخدام هذا الملف ا
 msgid "No Data Source Profiles Found"
 msgstr "لم يتم العثور على ملفات تعريف مصدر البيانات"
 
-#: data_sources.php:24 data_sources.php:628 graphs.php:42
+#: data_sources.php:24 data_sources.php:631 graphs.php:42
 msgid "Change Device"
 msgstr "تغيير الجهاز"
 
@@ -4123,7 +4124,7 @@ msgstr[5] ""
 msgid "New Device:"
 msgstr "جهاز جديد:"
 
-#: data_sources.php:632
+#: data_sources.php:635
 msgid "Click 'Continue' to enable the following Data Source."
 msgid_plural "Click 'Continue' to enable all following Data Sources."
 msgstr[0] "انقر فوق \"متابعة\" لتمكين مصدر البيانات التالي."
@@ -4133,7 +4134,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: data_sources.php:637
+#: data_sources.php:640
 #, fuzzy
 msgid "Enable Data Source"
 msgid_plural "Enable Data Sources"
@@ -4144,7 +4145,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: data_sources.php:641
+#: data_sources.php:644
 msgid "Click 'Continue' to disable the following Data Source."
 msgid_plural "Click 'Continue' to disable all following Data Sources."
 msgstr[0] "انقر فوق \"متابعة\" لتعطيل مصدر البيانات التالي."
@@ -4154,7 +4155,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: data_sources.php:646
+#: data_sources.php:649
 #, fuzzy
 msgid "Disable Data Source"
 msgid_plural "Disable Data Sources"
@@ -4165,7 +4166,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: data_sources.php:650
+#: data_sources.php:653
 msgid "Click 'Continue' to re-apply the suggested name to the following Data Source."
 msgid_plural "Click 'Continue' to re-apply the suggested names to all following Data Sources."
 msgstr[0] "انقر فوق \"متابعة\" لإعادة تطبيق الاسم المقترح على مصدر البيانات التالي."
@@ -4175,7 +4176,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: data_sources.php:655
+#: data_sources.php:658
 msgid "Reapply Suggested Naming to Data Source"
 msgid_plural "Reapply Suggested Naming to Data Sources"
 msgstr[0] "إعادة تطبيق التسمية المقترحة على مصدر البيانات"
@@ -4185,83 +4186,83 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: data_sources.php:743 data_templates.php:886
+#: data_sources.php:746 data_templates.php:886
 #, php-format
 msgid "Custom Data [data input: %s]"
 msgstr "البيانات المخصصة [إدخال البيانات: %s]"
 
-#: data_sources.php:778
+#: data_sources.php:781
 #, php-format
 msgid "(From Device: %s)"
 msgstr "(من الجهاز: %s)"
 
-#: data_sources.php:781
+#: data_sources.php:784
 msgid "(From Data Template)"
 msgstr "(من قالب البيانات)"
 
-#: data_sources.php:782
+#: data_sources.php:785
 msgid "Nothing Entered"
 msgstr "لا شيء دخل"
 
-#: data_sources.php:797 data_templates.php:970
+#: data_sources.php:800 data_templates.php:970
 msgid "No Input Fields for the Selected Data Input Source"
 msgstr "لا حقول الإدخال لمصدر إدخال البيانات المحددة"
 
-#: data_sources.php:945
+#: data_sources.php:948
 #, php-format
 msgid "Data Template Selection [edit: %s]"
 msgstr "اختيار قالب البيانات [عدل: %s]"
 
-#: data_sources.php:957
+#: data_sources.php:960
 msgid "Data Template Selection [new]"
 msgstr "اختيار قالب البيانات [جديد]"
 
-#: data_sources.php:998
+#: data_sources.php:1001
 msgid "Turn Off Data Source Debug Mode."
 msgstr "إيقاف تشغيل وضع Debug مصدر البيانات."
 
-#: data_sources.php:998
+#: data_sources.php:1001
 msgid "Turn On Data Source Debug Mode."
 msgstr "بدوره على وضع مصدر البيانات التصحيح."
 
-#: data_sources.php:999
+#: data_sources.php:1002
 msgid "Turn Off Data Source Info Mode."
 msgstr "إيقاف تشغيل وضع معلومات مصدر البيانات."
 
-#: data_sources.php:999
+#: data_sources.php:1002
 msgid "Turn On Data Source Info Mode."
 msgstr "قم بتشغيل وضع معلومات مصدر البيانات."
 
-#: data_sources.php:1010
+#: data_sources.php:1013
 #, php-format
 msgid "Edit Graph: '%s'."
 msgstr "تحرير الرسم البياني: \"%s\"."
 
-#: data_sources.php:1014 graphs.php:1555
+#: data_sources.php:1017 graphs.php:1558
 msgid "Edit Device."
 msgstr "تحرير الجهاز"
 
-#: data_sources.php:1017
+#: data_sources.php:1020
 msgid "Edit Data Template."
 msgstr "تحرير قالب البيانات."
 
-#: data_sources.php:1020
+#: data_sources.php:1023
 msgid "Disable Data Source."
 msgstr "تعطيل مصدر البيانات"
 
-#: data_sources.php:1020
+#: data_sources.php:1023
 msgid "Enable Data Source."
 msgstr "تمكين مصدر البيانات"
 
-#: data_sources.php:1090
+#: data_sources.php:1093
 msgid "Selected Data Template"
 msgstr "قالب البيانات المحدد"
 
-#: data_sources.php:1091
+#: data_sources.php:1094
 msgid "The name given to this data template.  Please note that you may only change Graph Templates to a 100%$ compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "الاسم المعطى لقالب البيانات هذا. يرجى ملاحظة أنه يمكنك فقط تغيير قوالب الرسم البياني إلى قالب الرسم البياني المتوافق بنسبة 100٪ ، مما يعني أنه يحتوي على مصادر بيانات متطابقة."
 
-#: data_sources.php:1098 graph_view.php:817 graphs.php:1598
+#: data_sources.php:1101 graph_view.php:817 graphs.php:1601
 #: include/global_arrays.php:954 include/global_arrays.php:1003
 #: include/global_arrays.php:1688 include/global_arrays.php:1857
 #: lib/api_automation.php:426 lib/functions.php:6195 lib/html.php:2253
@@ -4269,129 +4270,129 @@ msgstr "الاسم المعطى لقالب البيانات هذا. يرجى م�
 msgid "Device"
 msgstr "جهاز"
 
-#: data_sources.php:1099
+#: data_sources.php:1102
 msgid "Choose the Device that this Data Source belongs to."
 msgstr "اختر الجهاز الذي ينتمي إليه مصدر البيانات هذا."
 
-#: data_sources.php:1151
+#: data_sources.php:1154
 msgid "Supplemental Data Template Data"
 msgstr "بيانات قالب البيانات التكميلية"
 
-#: data_sources.php:1153
+#: data_sources.php:1156
 msgid "Data Source Fields"
 msgstr "حقول مصدر البيانات"
 
-#: data_sources.php:1154
+#: data_sources.php:1157
 msgid "Data Source Item Fields"
 msgstr "حقول عناصر مصدر البيانات"
 
-#: data_sources.php:1155
+#: data_sources.php:1158
 msgid "Custom Data"
 msgstr "البيانات المخصصة"
 
-#: data_sources.php:1261
+#: data_sources.php:1264
 #, php-format
 msgid "Data Source Item %s"
 msgstr "عنصر مصدر البيانات %s"
 
-#: data_sources.php:1264 data_templates.php:817 lib/import.php:2781
+#: data_sources.php:1267 data_templates.php:817 lib/import.php:2781
 #: package_import.php:598
 msgid "New"
 msgstr "جديد"
 
-#: data_sources.php:1323
+#: data_sources.php:1326
 msgid "Data Source Debug"
 msgstr "تصحيح مصدر البيانات"
 
-#: data_sources.php:1345
+#: data_sources.php:1348
 msgid "RRDtool Tune Info"
 msgstr "RRDtool معلومات اللحن"
 
-#: data_sources.php:1548 data_templates.php:1324 include/global_form.php:582
+#: data_sources.php:1551 data_templates.php:1324 include/global_form.php:582
 msgid "External"
 msgstr "خارجي"
 
-#: data_sources.php:1552 include/global_arrays.php:710
+#: data_sources.php:1555 include/global_arrays.php:710
 #: include/global_arrays.php:1207 include/global_arrays.php:1579
 #: include/global_arrays.php:1615 include/global_arrays.php:1633
 #: include/global_settings.php:1697 include/global_settings.php:2662
 msgid "1 Minute"
 msgstr "1 دقيقة"
 
-#: data_sources.php:1711
+#: data_sources.php:1714
 msgid "Data Sources [ All Devices ]"
 msgstr "مصادر البيانات [لا يوجد جهاز]"
 
-#: data_sources.php:1713
+#: data_sources.php:1716
 msgid "Data Sources [ Non Device Based ]"
 msgstr "مصادر البيانات [لا يوجد جهاز]"
 
-#: data_sources.php:1716
+#: data_sources.php:1719
 #, php-format
 msgid "Data Sources [ %s ]"
 msgstr "مصادر البيانات [ %s ]"
 
-#: data_sources.php:1797
+#: data_sources.php:1800
 msgid "Bad Indexes"
 msgstr "فهرس"
 
-#: data_sources.php:1803 graphs.php:2097
+#: data_sources.php:1806 graphs.php:2100
 msgid "Note that this query may take some time to run."
 msgstr "لاحظ أن هذا الاستعلام قد يستغرق بعض الوقت للتشغيل."
 
-#: data_sources.php:1803 graphs.php:2097
+#: data_sources.php:1806 graphs.php:2100
 msgid "Orphaned"
 msgstr "منفرد"
 
-#: data_sources.php:1989 utilities.php:2282
+#: data_sources.php:1992 utilities.php:2282
 msgid "Data Source Name"
 msgstr "اسم مصدر البيانات"
 
-#: data_sources.php:1992
+#: data_sources.php:1995
 msgid "The name of this Data Source. Generally programmatically generated from the Data Template definition."
 msgstr "اسم مصدر البيانات هذا. يتم إنشاؤه برمجيا بشكل عام من تعريف قالب البيانات."
 
-#: data_sources.php:1998
+#: data_sources.php:2001
 msgid "The internal database ID for this Data Source. Useful when performing automation or debugging."
 msgstr "معرف قاعدة البيانات الداخلية لمصدر البيانات هذا. مفيد عند تنفيذ التشغيل الآلي أو التصحيح."
 
-#: data_sources.php:2004
+#: data_sources.php:2007
 msgid "The number of Graphs and Aggregate Graphs that are using the Data Source."
 msgstr "عدد قوالب الرسومات البيانية التي تستخدم هذا الاستعلام عن البيانات."
 
-#: data_sources.php:2010
+#: data_sources.php:2013
 msgid "The frequency that data is collected for this Data Source."
 msgstr "معدل تكرار جمع البيانات لمصدر البيانات هذا."
 
-#: data_sources.php:2016
+#: data_sources.php:2019
 msgid "If this Data Source is no long in use by Graphs, it can be Deleted."
 msgstr "إذا لم يعد مصدر البيانات هذا قيد الاستخدام بواسطة الرسوم البيانية ، فيمكن حذفه."
 
-#: data_sources.php:2022
+#: data_sources.php:2025
 msgid "Whether or not data will be collected for this Data Source. Controlled at the Data Template level."
 msgstr "ما إذا كانت البيانات سيتم تجميعها لمصدر البيانات هذا أم لا. يتحكم في مستوى قالب البيانات."
 
-#: data_sources.php:2028
+#: data_sources.php:2031
 msgid "The Data Template that this Data Source was based upon."
 msgstr "قالب البيانات الذي يستند إليه مصدر البيانات هذا."
 
-#: data_sources.php:2069
+#: data_sources.php:2072
 msgid "Damaged Data Source Name"
 msgstr "اسم مصدر البيانات"
 
-#: data_sources.php:2089
+#: data_sources.php:2092
 msgid "No Data Sources Found"
 msgstr "لم يتم العثور على مصادر البيانات"
 
-#: data_sources.php:2142
+#: data_sources.php:2145
 msgid "No Graphs"
 msgstr "الرسوم"
 
-#: data_sources.php:2146 include/global_arrays.php:995
+#: data_sources.php:2149 include/global_arrays.php:995
 msgid "Aggregates"
 msgstr "المجاميع"
 
-#: data_sources.php:2148
+#: data_sources.php:2151
 msgid "No Aggregates"
 msgstr "المجاميع"
 
@@ -4946,12 +4947,12 @@ msgstr "جميع الرسوم البيانية والقوالب"
 msgid "Not Templated"
 msgstr "غير معبد"
 
-#: graph_view.php:812 graph_view.php:840 graphs.php:2330
+#: graph_view.php:812 graph_view.php:840 graphs.php:2333
 #: include/global_form.php:1884 lib/html_reports.php:1201 tree.php:1021
 msgid "Graph Name"
 msgstr "اسم الرسم البياني"
 
-#: graph_view.php:814 graph_view.php:842 graphs.php:2333
+#: graph_view.php:814 graph_view.php:842 graphs.php:2336
 msgid "The Title of this Graph.  Generally programmatically generated from the Graph Template definition or Suggested Naming rules.  The max length of the Title is controlled under Settings->Visual."
 msgstr "عنوان هذا الرسم البياني.  يتم إنشاؤها برمجيا بشكل عام من تعريف قالب الرسم البياني أو قواعد التسمية المقترحة.  يتم التحكم في الحد الأقصى لطول العنوان ضمن الإعدادات->مرئي."
 
@@ -4959,23 +4960,23 @@ msgstr "عنوان هذا الرسم البياني.  يتم إنشاؤها بر
 msgid "The device for this Graph."
 msgstr "اسم هذه المجموعة."
 
-#: graph_view.php:822 graphs.php:2342
+#: graph_view.php:822 graphs.php:2345
 msgid "Source Type"
 msgstr "نوع المصدر"
 
-#: graph_view.php:824 graphs.php:2345
+#: graph_view.php:824 graphs.php:2348
 msgid "The underlying source that this Graph was based upon."
 msgstr "المصدر الأساسي الذي يستند إليه هذا الرسم البياني."
 
-#: graph_view.php:827 graphs.php:2348
+#: graph_view.php:827 graphs.php:2351
 msgid "Source Name"
 msgstr "اسم المصدر"
 
-#: graph_view.php:829 graphs.php:2351
+#: graph_view.php:829 graphs.php:2354
 msgid "The Graph Template or Data Query that this Graph was based upon."
 msgstr "قالب الرسم البياني أو استعلام البيانات الذي يستند إليه هذا الرسم البياني."
 
-#: graph_view.php:834 graph_view.php:847 graphs.php:2357
+#: graph_view.php:834 graph_view.php:847 graphs.php:2360
 msgid "The size of this Graph when not in Preview mode."
 msgstr "حجم هذا الرسم البياني عندما لا يكون في وضع المعاينة."
 
@@ -5050,15 +5051,15 @@ msgstr "تحميل"
 msgid "Change Graph Template"
 msgstr "تغيير قالب الرسم البياني"
 
-#: graphs.php:45 graphs.php:1164
+#: graphs.php:45 graphs.php:1167
 msgid "Create Aggregate Graph"
 msgstr "قم بإنشاء Aggregate Graph"
 
-#: graphs.php:46 graphs.php:1207
+#: graphs.php:46 graphs.php:1210
 msgid "Create Aggregate from Template"
 msgstr "إنشاء تجميع من القالب"
 
-#: graphs.php:47 graphs.php:1229 host.php:34
+#: graphs.php:47 graphs.php:1232 host.php:34
 msgid "Apply Automation Rules"
 msgstr "تطبيق قواعد التشغيل الآلي"
 
@@ -5143,148 +5144,148 @@ msgstr "اختر جهازًا جديدًا لهذه الرسوم (الرسوم) 
 msgid "New Device"
 msgstr "جهاز جديد"
 
-#: graphs.php:953
+#: graphs.php:956
 msgid "Change Graph(s) Associated Device"
 msgstr "تغيير Graph (s) جهاز مرتبط"
 
-#: graphs.php:957
+#: graphs.php:960
 msgid "Click 'Continue' to re-apply suggested naming to the following Graph(s)."
 msgstr "انقر فوق &quot;متابعة&quot; لإعادة تطبيق التسمية المقترحة على Graph (s) التالي."
 
-#: graphs.php:962
+#: graphs.php:965
 msgid "Reapply Suggested Naming to Graph(s)"
 msgstr "إعادة تطبيق التسمية المقترحة إلى Graph (s)"
 
-#: graphs.php:978
+#: graphs.php:981
 msgid "Click 'Continue' to create an Aggregate Graph from the selected Graph(s)."
 msgstr "انقر فوق &quot;متابعة&quot; لإنشاء Aggregate Graph من القائمة (الرسوم) المحددة."
 
-#: graphs.php:987
+#: graphs.php:990
 msgid "The following Data Sources are in use by these Graphs:"
 msgstr "مصدر (مصادر) البيانات التالي قيد الاستخدام بواسطة Graph (s) هذه."
 
-#: graphs.php:1048
+#: graphs.php:1051
 msgid "Please confirm"
 msgstr "قم بالتآكيد."
 
-#: graphs.php:1186
+#: graphs.php:1189
 msgid "Select the Aggregate Template to use and press 'Continue' to create your Aggregate Graph.  Otherwise press 'Cancel' to return."
 msgstr "حدد قالب التجميع المراد استخدامه ثم اضغط على &quot;متابعة&quot; لإنشاء الرسم البياني الكلي الخاص بك. وإلا فاضغط على &quot;إلغاء&quot; للرجوع."
 
-#: graphs.php:1211
+#: graphs.php:1214
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
 msgstr "لا يوجد حاليًا أي قوالب مجمعة محددة لهذا القالب الرسم البياني. الرجاء إما إنشاء &quot;قالب تجميع&quot; للنموذج Graphs Graph المحددة وحاول مرة أخرى أو ببساطة قم بتجميع Aggregate Graph."
 
-#: graphs.php:1212
+#: graphs.php:1215
 msgid "Press 'Return' to return and select different Graphs."
 msgstr "اضغط على &quot;العودة&quot; للعودة واختيار الرسوم البيانية المختلفة."
 
-#: graphs.php:1224
+#: graphs.php:1227
 msgid "Click 'Continue' to apply Automation Rules to the following Graphs."
 msgstr "انقر فوق &quot;متابعة&quot; لتطبيق قواعد التنفيذ على الرسوم البيانية التالية."
 
-#: graphs.php:1311
+#: graphs.php:1314
 msgid "Graph Items [new]"
 msgstr "عناصر الرسم البياني [جديد]"
 
-#: graphs.php:1355
+#: graphs.php:1358
 #, php-format
 msgid "Graph Items [edit: %s]"
 msgstr "عناصر الرسم البياني [عدل: %s]"
 
-#: graphs.php:1479
+#: graphs.php:1482
 #, php-format
 msgid "Graph [edit: %s]"
 msgstr "الرسم البياني [عدل: %s]"
 
-#: graphs.php:1489
+#: graphs.php:1492
 msgid "Graph [new]"
 msgstr "الرسم البياني [جديد]"
 
-#: graphs.php:1514
+#: graphs.php:1517
 msgid "Turn Off Graph Debug Mode."
 msgstr "إيقاف وضع تصحيح الرسم البياني."
 
-#: graphs.php:1516
+#: graphs.php:1519
 msgid "Turn On Graph Debug Mode."
 msgstr "بدوره على وضع التصحيح الرسم البياني."
 
-#: graphs.php:1538
+#: graphs.php:1541
 msgid "Edit Graph Template."
 msgstr "تحرير قالب الرسم البياني."
 
-#: graphs.php:1550
+#: graphs.php:1553
 #, php-format
 msgid "Edit Data Source: '%s'."
 msgstr "تحرير مصدر البيانات: '%s'."
 
-#: graphs.php:1559
+#: graphs.php:1562
 msgid "Unlock Graph."
 msgstr "افتح الرسم البياني."
 
-#: graphs.php:1561
+#: graphs.php:1564
 msgid "Lock Graph."
 msgstr "قفل الرسم البياني."
 
-#: graphs.php:1590
+#: graphs.php:1593
 msgid "Selected Graph Template"
 msgstr "قالب الرسم البياني المحدد"
 
-#: graphs.php:1591
+#: graphs.php:1594
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "اختر قالب الرسم البياني لتطبيقه على هذا الرسم البياني. يرجى ملاحظة أنه يمكنك فقط تغيير قوالب الرسم البياني إلى قالب رسم بياني متوافق بنسبة 100٪ ، مما يعني أنه يحتوي على مصادر بيانات متطابقة."
 
-#: graphs.php:1599
+#: graphs.php:1602
 msgid "Choose the Device that this Graph belongs to."
 msgstr "اختر الجهاز الذي ينتمي إليه الرسم البياني هذا."
 
-#: graphs.php:1655
+#: graphs.php:1658
 msgid "Supplemental Graph Template Data"
 msgstr "بيانات قالب الرسم البياني التكميلي"
 
-#: graphs.php:1657
+#: graphs.php:1660
 msgid "Graph Fields"
 msgstr "حقول الرسم البياني"
 
-#: graphs.php:1658
+#: graphs.php:1661
 msgid "Graph Item Fields"
 msgstr "مجالات البند الرسم البياني"
 
-#: graphs.php:1902 spikekill.php:42
+#: graphs.php:1905 spikekill.php:42
 msgid "Graph access denied"
 msgstr ""
 
-#: graphs.php:2037
+#: graphs.php:2040
 msgid "Graph Management [ Custom Graphs List Applied - Clear to Reset ]"
 msgstr "[تطبيق قائمة الرسم البياني المخصص - تصفية قائمة FROM]"
 
-#: graphs.php:2039
+#: graphs.php:2042
 msgid "Graph Management [ All Devices ]"
 msgstr "رسومات بيانية جديدة لـ [جميع الأجهزة]"
 
-#: graphs.php:2041
+#: graphs.php:2044
 msgid "Graph Management [ Non Device Based ]"
 msgstr "إدارة مجموعة المستخدمين [تحرير:٪ s]"
 
-#: graphs.php:2044
+#: graphs.php:2047
 #, php-format
 msgid "Graph Management [ %s ]"
 msgstr "إدارة الرسم البياني [ %s ]"
 
-#: graphs.php:2117
+#: graphs.php:2120
 msgid "Graph Source"
 msgstr "مصدر الرسم البياني"
 
-#: graphs.php:2122
+#: graphs.php:2125
 msgid "Non Templated"
 msgstr "غير نموذجي"
 
-#: graphs.php:2339
+#: graphs.php:2342
 msgid "The internal database ID for this Graph.  Useful when performing automation or debugging."
 msgstr "معرف قاعدة البيانات الداخلي لهذا الرسم البياني. مفيد عند تنفيذ التشغيل الآلي أو التصحيح."
 
-#: graphs.php:2383
+#: graphs.php:2386
 msgid "Empty Graph"
 msgstr "نسخ الرسم البياني"
 
