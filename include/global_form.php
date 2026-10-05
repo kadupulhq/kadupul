@@ -1071,7 +1071,7 @@ $struct_graph_item = array(
 		'max_length' => '5',
 		'default' => '1.00',
 		'size' => '5',
-		'description' => __('LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a positive width in pixels; integers or decimal values are supported.'),
+		'description' => __('LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a width in pixels; integers or decimal values are supported.'),
 		),
 	'dashes' => array(
 		'friendly_name' => __('Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])'),

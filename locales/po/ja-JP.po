@@ -16699,7 +16699,8 @@ msgid "Standard Devs: %s"
 msgstr "標準偏差"
 
 #: lib/spikekill.php:389
-msgid "Variance %%%:    %s %%%"
+#, php-format
+msgid "Variance %%:    %s %%"
 msgstr ""
 
 #: lib/spikekill.php:393
@@ -20652,4 +20653,14 @@ msgstr ""
 #: plugins.php:848
 #, php-format
 msgid "Unable to Install Plugin: %s"
+msgstr ""
+
+#: include/global_form.php:1069
+msgid "Line Width"
+msgstr ""
+
+#: include/global_form.php:1074
+msgid ""
+"LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a width in "
+"pixels; integers or decimal values are supported."
 msgstr ""
