@@ -38,6 +38,68 @@ final class LegacyWorkerProcessTest extends TestCase
         self::assertSame(['output' => "before\n", 'errors' => '', 'ok' => true], $run);
     }
 
+    public function testProgressArrivesBeforeWorkerExitAndSplitMarkerNeverLeaks(): void
+    {
+        $this->worker('legacy-probe.php', <<<'PHP'
+$command = json_decode(stream_get_contents(STDIN), true, 512, JSON_THROW_ON_ERROR);
+fwrite(STDOUT, 'wait');
+fwrite(STDERR, "warning\n");
+fwrite(STDOUT, "ing\n");
+$deadline = microtime(true) + 3;
+while (!is_file($command['ack']) && microtime(true) < $deadline) {
+    usleep(10000);
+}
+if (!is_file($command['ack'])) { exit(3); }
+fwrite(STDOUT, 'PRO');
+usleep(10000);
+fwrite(STDOUT, 'BE={"status":"ok"}');
+file_put_contents($command['exit'], 'finished');
+PHP);
+        $ack = $this->root . '/ack';
+        $exit = $this->root . '/finished';
+        $events = [];
+        $run = new LegacyWorkerProcess($this->root)->run(
+            'legacy-probe.php',
+            'PROBE',
+            ['ack' => $ack, 'exit' => $exit],
+            5.0,
+            static function (string $type, string $chunk) use (&$events, $ack, $exit): void {
+                $events[$type] = ($events[$type] ?? '') . $chunk;
+                if ($type === Process::OUT && $chunk === "waiting\n") {
+                    self::assertFileDoesNotExist($exit);
+                    self::assertSame(3, file_put_contents($ack, 'ack'));
+                }
+            }
+        );
+        self::assertFileExists($exit);
+        self::assertSame(['output' => "waiting\n", 'errors' => "warning\n", 'ok' => true], $run);
+        self::assertSame("waiting\n", $events[Process::OUT]);
+        self::assertSame("warning\n", $events[Process::ERR]);
+        self::assertStringNotContainsString('PROBE', implode('', $events));
+    }
+
+    public function testStreamedProgressDoesNotTurnFailedExitOrMissingReceiptIntoSuccess(): void
+    {
+        foreach (['print "PROBE={\"status\":\"ok\"}\n"; exit(7);',
+            'print "PROBE={\"status\":\"failed\"}\n";',
+            'print "unfinished";'] as $body) {
+            $this->worker('legacy-probe.php', 'print "progress\n"; ' . $body);
+            $events = '';
+            $run = new LegacyWorkerProcess($this->root)->run(
+                'legacy-probe.php',
+                'PROBE',
+                [],
+                5.0,
+                static function (string $type, string $chunk) use (&$events): void {
+                    $events .= $chunk;
+                }
+            );
+            self::assertFalse($run['ok']);
+            self::assertStringStartsWith("progress\n", $events);
+            self::assertStringNotContainsString('PROBE', $events);
+        }
+    }
+
     /** @return iterable<string, array{string}> */
     public static function notWorkers(): iterable
     {
@@ -76,6 +138,18 @@ final class LegacyWorkerProcessTest extends TestCase
         $output = $this->upgrade()->run();
 
         self::assertSame(["01/02/2031 03:04:05 - UPGRADE NOTE: one\n---\n", "warning\n", true], [$output->stdout, $output->stderr, $output->completed]);
+    }
+
+    public function testInstallationUpgradeForwardsProgressAndRetainsItsFinalReceipt(): void
+    {
+        $this->worker('legacy-audit-upgrade.php', 'print "progress\n"; fwrite(STDERR, "diagnostic\n"); print "KADUPUL_UPGRADE_RESULT={\"status\":\"ok\"}\n";');
+        $events = [];
+        $output = $this->upgrade()->run(static function (string $type, string $chunk) use (&$events): void {
+            $events[$type] = ($events[$type] ?? '') . $chunk;
+        });
+        self::assertSame(["progress\n", "diagnostic\n", true, true], [$output->stdout, $output->stderr, $output->completed, $output->streamed]);
+        self::assertSame("progress\n", $events[Process::OUT]);
+        self::assertSame("diagnostic\n", $events[Process::ERR]);
     }
 
     public function testAnUpgradeWithoutItsMarkerOrWithAFailedExitDidNotComplete(): void

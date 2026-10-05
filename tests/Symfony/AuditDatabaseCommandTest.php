@@ -624,6 +624,56 @@ final class AuditDatabaseCommandTest extends TestCase
         self::assertSame(['database.audit', 'database-maintenance local:upgrade', 'succeeded'], $this->events()[0]);
     }
 
+    public function testStreamedUpgradeOutputIsDeliveredOnceAndJsonStaysParseable(): void
+    {
+        foreach (['legacy', 'human', 'json', 'json-single'] as $mode) {
+            $this->presentation = new CliPresentation();
+            if ($mode === 'legacy') {
+                $this->presentation->forLegacy(LegacyRequest::Run);
+            }
+            $upgrade = $this->createMock(InstallationUpgrade::class);
+            $upgrade->expects(self::once())->method('run')->willReturnCallback(
+                static function (?\Closure $progress): UpgradeOutput {
+                    self::assertInstanceOf(\Closure::class, $progress);
+                    $progress(Process::OUT, "upgrade progress\n");
+                    $progress(Process::ERR, "upgrade diagnostic\n");
+                    return new UpgradeOutput("upgrade progress\n", "upgrade diagnostic\n", true, true);
+                }
+            );
+            $tester = $this->tester($this->schema(true, '1.2.31'), null, false, $upgrade);
+            $input = ['--upgrade' => true, '--create' => true];
+            if (str_starts_with($mode, 'json')) {
+                $input['--json'] = true;
+            }
+            $quiet = getenv('KADUPUL_CLI_QUIET_DEPRECATION');
+            try {
+                if ($mode === 'json-single') {
+                    putenv('KADUPUL_CLI_QUIET_DEPRECATION=1');
+                }
+                self::assertSame(0, $tester->execute($input, ['capture_stderr_separately' => $mode !== 'json-single']));
+            } finally {
+                putenv($quiet === false ? 'KADUPUL_CLI_QUIET_DEPRECATION' : 'KADUPUL_CLI_QUIET_DEPRECATION=' . $quiet);
+            }
+            $display = $tester->getDisplay();
+            if ($mode === 'json-single') {
+                self::assertSame('ok', json_decode($display, true, 512, JSON_THROW_ON_ERROR)['status']);
+                self::assertStringNotContainsString('upgrade progress', $display);
+                self::assertStringNotContainsString('upgrade diagnostic', $display);
+                continue;
+            }
+            $errors = $tester->getErrorOutput();
+            self::assertSame(1, substr_count($errors, "upgrade diagnostic\n"));
+            if ($mode === 'json') {
+                self::assertSame('ok', json_decode($display, true, 512, JSON_THROW_ON_ERROR)['status']);
+                self::assertStringNotContainsString('upgrade progress', $display);
+                self::assertSame(1, substr_count($errors, "upgrade progress\n"));
+            } else {
+                self::assertSame(1, substr_count($display, "upgrade progress\n"));
+                self::assertStringNotContainsString('upgrade diagnostic', $display);
+            }
+        }
+    }
+
     /** A database behind the code, whose tables a failed upgrade must leave unread and unaltered. */
     private function unaltered(): SchemaAudit
     {

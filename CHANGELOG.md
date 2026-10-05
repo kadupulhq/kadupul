@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Stream audit upgrade progress before the worker exits, withhold protocol markers, preserve failure receipts, and keep JSON responses and final diagnostics free of duplicate output.
+
 - Reject malformed schema-audit reports with controlled CI diagnostics; cover clean, failed, dirty, empty, and missing-baseline contracts.
 
 - Return failure from the legacy audit CLI when repair or export fails; report missing tables separately from attempted ALTER statements and preserve SQL comment prefixes in diagnostic plans.

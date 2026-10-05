@@ -129,7 +129,7 @@ final class AuditDatabaseLegacyArguments extends LegacyArguments
         if ($report->outcome === AuditOutcome::UpgradeRequired) {
             return ['WARNING: Kadupul must be upgraded first.  Run php cli/upgrade_database.php before auditing'];
         }
-        $lines = self::split($report->upgrade?->stdout ?? '');
+        $lines = self::split($report->upgrade?->streamed ? '' : ($report->upgrade?->stdout ?? ''));
         if ($report->outcome === AuditOutcome::UpgradeFailed) {
             return [...$lines, 'FATAL: Kadupul Upgrade Failed.  The audit was not run.'];
         }

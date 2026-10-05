@@ -11,6 +11,9 @@ use Kadupul\Platform\Application\ReadModel\UpgradeOutput;
 
 interface InstallationUpgrade
 {
-    /** upgrade_database() as audit_database.php ran it: cli/upgrade_database.php, then every plugin's upgrade. */
-    public function run(): UpgradeOutput;
+    /**
+     * upgrade_database() as audit_database.php ran it: cli/upgrade_database.php, then every plugin's upgrade.
+     * @param ?\Closure(string, string): void $progress receives output/error stream type and progress bytes
+     */
+    public function run(?\Closure $progress = null): UpgradeOutput;
 }

@@ -48,9 +48,10 @@ final readonly class AuditDatabase
      * @param ?AuditMode $mode null when no mode was given, which prints the help after the version check
      * @param ?string $operator account to act as; null means the admin_user setting
      * @param bool $apply false reads the file and the schema and changes nothing, not even the two audit tables
+     * @param ?\Closure(string, string): void $progress optional upgrade progress; presentation controls its destination
      * @throws RemoteCollectorRefused before any lookup, when this installation is a remote collector
      */
-    public function __invoke(?AuditMode $mode, bool $upgrade, ?string $operator, bool $apply): AuditReport
+    public function __invoke(?AuditMode $mode, bool $upgrade, ?string $operator, bool $apply, ?\Closure $progress = null): AuditReport
     {
         // Checked here as well as by the command: "local" below is main only
         // on the primary, so this is what keeps the collector's copy unaltered.
@@ -69,7 +70,7 @@ final readonly class AuditDatabase
         }
         $upgraded = null;
         if ($behind && $apply) {
-            $upgraded = $this->upgrade->run();
+            $upgraded = $this->upgrade->run($progress);
             $this->audit->step($correlation, $scope->actor->id, self::ACTION, $scope->target, 'upgrade', $upgraded->completed);
             // The original went on after a failed core upgrade, so --repair
             // sent its ALTERs against a half upgraded schema.

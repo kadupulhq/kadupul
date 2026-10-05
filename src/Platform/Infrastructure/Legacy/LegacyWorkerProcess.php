@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -28,11 +30,12 @@ final readonly class LegacyWorkerProcess
     /**
      * @param array<string, mixed> $command
      * @param ?float $timeout seconds, or null for none
+     * @param ?\Closure(string, string): void $progress stdout lines except the protocol marker, and stderr chunks
      * @return array{output: string, errors: string, ok: bool} ok only when the worker exited 0 and its marker said "ok"
      * @throws \InvalidArgumentException when $script is not a bin/legacy-*.php worker name
      * @throws ProcessTimedOutException when the worker outlives $timeout; the worker is stopped first
      */
-    public function run(string $script, string $marker, array $command, ?float $timeout): array
+    public function run(string $script, string $marker, array $command, ?float $timeout, ?\Closure $progress = null): array
     {
         // Only a plain worker name, so no caller can reach another bin/ file
         // or climb out of bin/ with a path.
@@ -40,7 +43,25 @@ final readonly class LegacyWorkerProcess
             throw new \InvalidArgumentException('Not a legacy worker: ' . $script);
         }
         $process = new Process([$this->php, $this->projectDir . '/bin/' . $script], $this->projectDir, null, json_encode($command, JSON_THROW_ON_ERROR), $timeout);
-        $process->run();
+        $pending = '';
+        $callback = $progress === null ? null : static function (string $type, string $chunk) use ($progress, $marker, &$pending): void {
+            if ($type === Process::ERR) {
+                $progress($type, $chunk);
+                return;
+            }
+            $pending .= $chunk;
+            while (($newline = strpos($pending, "\n")) !== false) {
+                $line = substr($pending, 0, $newline + 1);
+                $pending = substr($pending, $newline + 1);
+                if (!str_starts_with($line, $marker . '=')) {
+                    $progress(Process::OUT, $line);
+                }
+            }
+        };
+        $process->run($callback);
+        if ($progress !== null && $pending !== '' && !str_starts_with($pending, $marker . '=')) {
+            $progress(Process::OUT, $pending);
+        }
         $output = $process->getOutput();
         $ok = false;
         $end = strrpos("\n" . $output, "\n" . $marker . '=');

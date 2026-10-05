@@ -11,5 +11,5 @@ namespace Kadupul\Platform\Application\ReadModel;
 final readonly class UpgradeOutput
 {
     /** @param bool $completed true only when the worker ran to the end and cli/upgrade_database.php exited 0 */
-    public function __construct(public string $stdout, public string $stderr, public bool $completed) {}
+    public function __construct(public string $stdout, public string $stderr, public bool $completed, public bool $streamed = false) {}
 }
