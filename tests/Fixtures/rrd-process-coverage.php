@@ -54,6 +54,11 @@ if (defined('MEMBERSHIP_EPOCH_TEST_COVERAGE')) {
 if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
 }
+if (defined('GRAPH_TEMPLATE_RENDER_NATIVE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_graph.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
+}
 if (defined('PER_CS_REVIEW_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/rrdcleaner.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/clog_webapi.php');

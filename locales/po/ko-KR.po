@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-04 21:00-0700\n"
+"POT-Creation-Date: 2026-10-05 09:08-0700\n"
 "PO-Revision-Date: 2024-04-20 19:06-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -16436,8 +16436,8 @@ msgstr ""
 msgid "RRD storage configuration requires attention"
 msgstr ""
 
-#: lib/snmp.php:226 lib/snmp.php:343 lib/snmp.php:455 lib/snmp.php:913
-#: lib/snmp.php:936
+#: lib/snmp.php:205 lib/snmp.php:294 lib/snmp.php:379 lib/snmp.php:871
+#: lib/snmp.php:894
 #, fuzzy, php-format
 msgid "SNMP Command is: %s"
 msgstr "SNMP 옵션 [편집 :  %s]"

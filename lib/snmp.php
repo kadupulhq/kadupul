@@ -192,7 +192,7 @@ function cacti_snmp_get(
         $hostname = cacti_format_ipv6_colon($hostname);
 
         $command = cacti_snmp_read_command(
-            read_config_option('path_snmpget'),
+            'path_snmpget',
             'fntevU' . ($value_output_format == SNMP_STRING_OUTPUT_HEX ? 'x' : ''),
             array($hostname, $port, $oid, $version, $community, $timeout_ms, $retries),
             array($auth_proto, $auth_user, $auth_pass, $priv_proto, $priv_pass, $context, $engineid)
@@ -281,7 +281,7 @@ function cacti_snmp_get_raw(
         $hostname = cacti_format_ipv6_colon($hostname);
 
         $command = cacti_snmp_read_command(
-            read_config_option('path_snmpget'),
+            'path_snmpget',
             'fntev' . ($value_output_format == SNMP_STRING_OUTPUT_HEX ? 'x' : ''),
             array($hostname, $port, $oid, $version, $community, $timeout_ms, $retries),
             array($auth_proto, $auth_user, $auth_pass, $priv_proto, $priv_pass, $context, $engineid)
@@ -366,7 +366,7 @@ function cacti_snmp_getnext(
         $hostname = cacti_format_ipv6_colon($hostname);
 
         $command = cacti_snmp_read_command(
-            read_config_option('path_snmpgetnext'),
+            'path_snmpgetnext',
             'fntevU' . ($value_output_format == SNMP_STRING_OUTPUT_HEX ? 'x' : ''),
             array($hostname, $port, $oid, $version, $community, $timeout_ms, $retries),
             array($auth_proto, $auth_user, $auth_pass, $priv_proto, $priv_pass, $context, $engineid)
@@ -400,14 +400,17 @@ function cacti_snmp_getnext(
 /**
  * Build the common get/raw/getnext request without changing output flags.
  *
+ * @param string $binary_option Configured executable option, read only after version admission.
  * @param array{0: mixed, 1: mixed, 2: mixed, 3: mixed, 4: mixed, 5: mixed, 6: mixed} $request Host, port, OID, version, community, timeout milliseconds and retries.
  * @param array{0: mixed, 1: mixed, 2: mixed, 3: mixed, 4: mixed, 5: mixed, 6: mixed} $security Authentication protocol/user/passphrase, privacy protocol/passphrase, context and engine ID.
  *
  * @return array<int, string>|null Null retains the unsupported-version return.
  */
-function cacti_snmp_read_command($binary, $output_options, array $request, array $security): ?array
+function cacti_snmp_read_command($binary_option, $output_options, array $request, array $security): ?array
 {
     list($hostname, $port, $oid, $version, $community, $timeout_ms, $retries) = $request;
+    /* net snmp want the timeout in seconds */
+    $timeout_s = (int) ceil($timeout_ms / 1000);
     if ($version == '1' || $version == '2') {
         $snmp_auth = array('-c', $community);
         if ($version == '2') {
@@ -422,11 +425,11 @@ function cacti_snmp_read_command($binary, $output_options, array $request, array
     }
 
     return cacti_snmp_build_binary_command(
-        $binary,
+        read_config_option($binary_option),
         $output_options,
         $snmp_auth,
         $version,
-        (int) ceil($timeout_ms / 1000),
+        $timeout_s,
         $retries,
         snmp_format_target($hostname, $port),
         $oid
