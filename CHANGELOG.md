@@ -141,6 +141,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Give icon-only controls an accessible name: the Add and page help links, the tab menu buttons, the Console tab in themes that hide its text, and the Data Source troubleshooter's pass and fail icons.
 
+- Escape the values that graph views, start boxes, table headers and the spike removal menu print into HTML attributes and text. The realtime popup link now passes the graph URL to `window.open()` as encoded JavaScript strings, and the graph id is always a number. Forward-ported from lts/1.2.
+
 - Capture the RRDtool dump while transforming RRD files so repair utilities print nothing outside debug mode and print the modified XML only once in debug mode. Fixes #438.
 
 - Honour forced-local storage for RRDtool file checks, structured paths, and Boost operations. With proxy storage configured, realtime polling could send proxy-only commands to local RRDtool and recreate an existing RRD. Fixes #444.
