@@ -83,12 +83,13 @@ if (!defined('POLLER_VERBOSITY_HIGH')) {
 if (!defined('SQL_NO_CACHE')) {
     define('SQL_NO_CACHE', '');
 }
-$source = file_get_contents(dirname(__DIR__, 4) . '/lib/poller.php');
-foreach (array('poller_cleanup_orphan_rows', 'poller_expire_incomplete_rows', 'process_poller_output') as $name) {
-    if (!preg_match('/^function ' . $name . '\(.*?^}\n/ms', $source, $match)) {
-        throw new \RuntimeException('Missing production poller function');
-    }
-    eval('namespace ' . __NAMESPACE__ . '; ' . $match[0]); // nosemgrep: php.lang.security.eval-use.eval-use
+require_once dirname(__DIR__, 3).'/Helpers/PhpSource.php';
+$functions = file_get_contents(dirname(__DIR__, 4).'/lib/functions.php');
+$source = file_get_contents(dirname(__DIR__, 4).'/lib/poller.php');
+if ($functions === false || $source === false) { throw new \RuntimeException('Unable to read production poller dependencies'); }
+eval('namespace '.__NAMESPACE__.';'.test_php_function_source($functions, 'normalize_poller_multi_value_result'));
+foreach (['poller_cleanup_orphan_rows', 'poller_expire_incomplete_rows', 'process_poller_output'] as $name) {
+    eval('namespace '.__NAMESPACE__.';'.test_php_function_source($source, $name));
 }
 
 test('failed Boost handoff retains source samples and skips direct RRD writes', function () {
@@ -257,7 +258,7 @@ test('an orphan-only queue is drained or explicitly deferred on lookup failure',
 
 test('an incomplete-only batch still diagnoses and cleans orphans without recursive draining', function () {
     $source = file_get_contents(dirname(__DIR__, 4) . '/lib/poller.php');
-    preg_match('/^function process_poller_output\(.*?^}\n/ms', $source, $match);
+    $match = [test_php_function_source($source, 'process_poller_output')];
     // A fresh function instance isolates the production one-shot warning flag.
     eval('namespace ' . __NAMESPACE__ . '; ' . str_replace('process_poller_output(', 'partial_only_poller_output(', $match[0])); // nosemgrep: php.lang.security.eval-use.eval-use
     $saved = $GLOBALS['config'] ?? null;

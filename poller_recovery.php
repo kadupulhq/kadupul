@@ -87,7 +87,7 @@ function recovery_delete_acknowledged_rows($rows, $conn) {
 		$params  = array();
 
 		foreach ($chunk as $row) {
-			$clauses[] = '(local_data_id = ? AND rrd_name = ? AND time = ? AND output = ?)';
+			$clauses[] = '(local_data_id = ? AND rrd_name = ? AND time = ? AND CAST(CONVERT(output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY))';
 			$params[]  = (int) $row['local_data_id'];
 			$params[]  = $row['rrd_name'];
 			$params[]  = $row['time'];
@@ -314,7 +314,7 @@ if ($run) {
 				$record_count = cacti_sizeof($sql_array);
 				cacti_log('RECOVERY: Writing ' . $record_count . ' records (' . $packet_size . ' bytes) to main (last slice).', false, 'POLLER');
 
-				if (!boost_flush_output_batch($sql_array, $remote_db_cnn_id)) {
+				if (!boost_flush_output_batch($sql_array, $remote_db_cnn_id, true)) {
 					cacti_log('RECOVERY ERROR: Main collector did not acknowledge the Boost batch; retaining local rows.', false, 'POLLER');
 					$transfer_failed = true;
 					break;

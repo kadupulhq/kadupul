@@ -1,9 +1,11 @@
--issue: Treat missing or invalid Host Resources allocation units and negative disk samples as unknown instead of reporting raw units, raising a type error, or guessing an unsigned wrap
--issue: Delete acknowledged recovery samples only when their buffered value is unchanged, so concurrent updates remain available for retry
--issue: Make the effective graph-policy display honor explicit template grants under Restrictive mode when the template policy defaults to Deny
 Cacti CHANGELOG
 
 1.2.32
+-issue: Make the effective graph-policy display honor explicit template grants under Restrictive mode when the template policy defaults to Deny
+-issue: Preserve formatted Host Resources Bytes allocation units, missing-cache fallback, and supported signed Integer32 overflow counters while rejecting non-finite samples and invalid units
+-issue: Recovery resends replace the main collector's staged value before local acknowledgement, and exact output comparisons preserve case, accent and trailing-space changes across supported collations
+-issue: Normalize complete bang-delimited multi-field poller output at every collector's shared handoff without rewriting scalar exclamation marks
+
 -issue: Spike removal limits apply per archive in timestamp/data-source order, including NaN replacements; previews report the same capped counts as updates.
 -issue: Fixed graph line types ignore hidden width input and retain saved stack widths; editable stacked lines retain their existing validation.
 -issue: Theme JavaScript honors reduced-motion changes and stops active animations; keyboard skip links retain modern clipping support.

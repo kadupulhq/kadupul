@@ -17,6 +17,9 @@ $ack_db->exec('CREATE TABLE poller_output_realtime(local_data_id INTEGER,rrd_nam
 $ack_db->exec("INSERT INTO $ack_table VALUES(1,'value','2020-01-01','42'" . ($ack_table === 'poller_output_realtime' ? ',1' : '') . ')');
 $ack_db->exec('CREATE TABLE poller_time(end_time TEXT)');
 $ack_db->exec("INSERT INTO poller_time VALUES('0000-00-00')");
+if (getenv('ACK_FAIL') === 'multi-bang') {
+    $ack_db->exec("UPDATE poller_output SET output='users!14 load!0.42'");
+}
 if (in_array(getenv('ACK_FAIL'), array('mixed', 'page'), true)) {
     $ack_db->exec('DELETE FROM poller_output');
     $ack_db->exec("INSERT INTO data_local VALUES(2,0); INSERT INTO poller_item VALUES(2,'value',1,'good.rrd')");
@@ -28,6 +31,10 @@ if (in_array(getenv('ACK_FAIL'), array('mixed', 'page'), true)) {
     $ack_db->exec("INSERT INTO poller_output VALUES(2,'value','2020-01-01','44')");
     $ack_db->commit();
 }
+require_once dirname(__DIR__).'/Helpers/PhpSource.php';
+$functionSource = file_get_contents(dirname(__DIR__, 2).'/lib/functions.php');
+if ($functionSource === false) { throw new RuntimeException('Unable to read poller helper source'); }
+foreach (['normalize_poller_multi_value_result', 'array_rekey'] as $name) { eval(test_php_function_source($functionSource, $name)); }
 function is_hexadecimal($value) { return false; }
 foreach (array('SQL_NO_CACHE' => '', 'POLLER_VERBOSITY_HIGH' => 4) as $name => $value) {
     define($name, $value);
@@ -56,10 +63,6 @@ function get_data_source_path(...$args)
 {
     return getenv('ACK_FIXTURE') . '/user_1_1.rrd';
 }
-function array_rekey($rows, ...$args)
-{
-    return $rows;
-}
 function dsstats_poller_output(...$args) { file_put_contents(getenv('ACK_FIXTURE') . '/dsstats_poller_output.jsonl', json_encode($args[count($args)-1]) . PHP_EOL, FILE_APPEND); }
 function dsdebug_poller_output(...$args) { file_put_contents(getenv('ACK_FIXTURE') . '/dsdebug_poller_output.jsonl', json_encode($args[count($args)-1]) . PHP_EOL, FILE_APPEND); }
 function api_plugin_hook_function(...$args) { file_put_contents(getenv('ACK_FIXTURE') . '/api_plugin_hook_function.jsonl', json_encode($args[count($args)-1]) . PHP_EOL, FILE_APPEND); }
@@ -75,7 +78,7 @@ function rrd_close($pipe) {}
 function db_fetch_assoc_prepared($sql, $params = array())
 {
     if (strpos($sql, 'poller_data_template_field_mappings') !== false) {
-        return array();
+        return getenv('ACK_FAIL') === 'multi-bang' ? [['keyname' => '0_users', 'data_source_name' => 'users'], ['keyname' => '0_load', 'data_source_name' => 'load']] : array();
     }
     $query = $GLOBALS['ack_db']->prepare($sql);
     $query->execute($params);

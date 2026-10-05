@@ -21,6 +21,7 @@ on:
       - 'tests/Helpers/PhpSource.php'
       - 'tests/HandOff/BoostDataHandOffTest.php'
       - 'tests/integration/BoostProcessTableMariaDbTest.php'
+      - 'tests/integration/BoostRecoveryRetryMariaDbTest.php'
       - 'tests/integration/DurablePollerQueueMariaDbTest.php'
       - 'tests/Unit/Core/Boost/**'
   workflow_dispatch:

@@ -20,8 +20,8 @@ require_once dirname(__DIR__, 2) . '/lib/boost.php';
 test('Boost hand-off batches expose database acknowledgement', function () {
 	$boost = boostSource('lib/boost.php');
 
-	expect($boost)->toContain('function boost_flush_output_batch($value_tuples, $conn = false)');
-	expect($boost)->toContain('$acknowledged = db_execute($sql_prefix . $out_buffer, true, $conn) !== false;');
+	expect($boost)->toContain('function boost_flush_output_batch($value_tuples, $conn = false, bool $replace_existing = false)');
+	expect($boost)->toContain('$acknowledged = db_execute($sql_prefix . $out_buffer . $sql_suffix, true, $conn) !== false;');
 	expect($boost)->toContain('$return_value = !boost_flush_output_batch($value_tuples, $conn);');
 });
 
@@ -29,8 +29,8 @@ test('Recovery deletes only the exact rows acknowledged by the main collector', 
 	$recovery = boostSource('poller_recovery.php');
 
 	expect($recovery)->toContain('function recovery_delete_acknowledged_rows($rows, $conn)');
-	expect($recovery)->toContain('(local_data_id = ? AND rrd_name = ? AND time = ? AND output = ?)');
-	expect($recovery)->toContain('if (!boost_flush_output_batch($sql_array, $remote_db_cnn_id))');
+	expect($recovery)->toContain('(local_data_id = ? AND rrd_name = ? AND time = ? AND CAST(CONVERT(output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY))');
+	expect($recovery)->toContain('if (!boost_flush_output_batch($sql_array, $remote_db_cnn_id, true))');
 	expect($recovery)->toContain('if (!recovery_delete_acknowledged_rows($rows, $local_db_cnn_id))');
 	expect($recovery)->not->toContain('DELETE FROM poller_output_boost WHERE time <=');
 });
