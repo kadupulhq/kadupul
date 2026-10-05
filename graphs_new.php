@@ -78,7 +78,7 @@ function save_default_query_option()
 function graphs_new_default_host_id()
 {
     $total_rows = 0;
-    $devices = get_allowed_devices('', 'description, hostname', '1', $total_rows);
+    $devices = get_allowed_management_devices('', 'description, hostname', '1', $total_rows);
 
     return cacti_sizeof($devices) ? (int) $devices[0]['id'] : 0;
 }

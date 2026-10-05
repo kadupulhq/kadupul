@@ -409,7 +409,7 @@ function debug_get_filter(&$sql_where, &$dd_join)
     }
 
     $device_rows = 0;
-    $allowed_devices = get_allowed_devices('', '', '', $device_rows);
+    $allowed_devices = get_allowed_management_devices('', '', '', $device_rows);
     $allowed_device_ids = array();
     foreach ($allowed_devices as $device) {
         $allowed_device_ids[] = (int) $device['id'];
@@ -553,7 +553,7 @@ function debug_wizard()
 
     if (isset_request_var('purge')) {
         $device_rows = 0;
-        $allowed_device_ids = array_map('intval', array_column(get_allowed_devices('', '', '', $device_rows), 'id'));
+        $allowed_device_ids = array_map('intval', array_column(get_allowed_management_devices('', '', '', $device_rows), 'id'));
 
         if (cacti_sizeof($allowed_device_ids)) {
             db_execute('DELETE dd

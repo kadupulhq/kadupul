@@ -28,7 +28,11 @@ $db->exec('CREATE TABLE user_auth_group_perms (group_id INTEGER, type INTEGER, i
 $db->exec('CREATE TABLE plugin_realms (id INTEGER, file TEXT, display TEXT)');
 $db->exec("CREATE TABLE graph_tree(id INTEGER PRIMARY KEY, enabled TEXT, name TEXT);
 CREATE TABLE graph_tree_items(id INTEGER PRIMARY KEY, graph_tree_id INTEGER, parent INTEGER, title TEXT DEFAULT '', local_graph_id INTEGER DEFAULT 0, host_id INTEGER DEFAULT 0, site_id INTEGER DEFAULT 0, host_grouping_type INTEGER DEFAULT 0, position INTEGER DEFAULT 0);
-CREATE TABLE host(id INTEGER PRIMARY KEY, site_id INTEGER, description TEXT);
+CREATE TABLE host(id INTEGER PRIMARY KEY, site_id INTEGER, description TEXT, host_template_id INTEGER DEFAULT 0, disabled TEXT DEFAULT '', deleted TEXT DEFAULT '');
+CREATE TABLE graph_local(id INTEGER PRIMARY KEY, host_id INTEGER, graph_template_id INTEGER, snmp_index TEXT DEFAULT '', snmp_query_id INTEGER DEFAULT 0);
+CREATE TABLE graph_templates_graph(local_graph_id INTEGER PRIMARY KEY, title_cache TEXT, width INTEGER, height INTEGER);
+CREATE TABLE graph_templates(id INTEGER PRIMARY KEY, name TEXT);
+CREATE TABLE host_template(id INTEGER PRIMARY KEY);
 CREATE TABLE sites(id INTEGER PRIMARY KEY, name TEXT);
 CREATE TABLE user_auth_row_cache(user_id INTEGER, class TEXT, hash TEXT, total_rows INTEGER, time TEXT, PRIMARY KEY(user_id,class,hash));
 CREATE TABLE reports(id INTEGER PRIMARY KEY,user_id INTEGER);
@@ -36,6 +40,7 @@ CREATE TABLE reports_items(id INTEGER PRIMARY KEY,report_id INTEGER);
 INSERT INTO graph_tree VALUES(100,'on','Visible'),(101,'','Disabled'),(102,'on','Other');
 INSERT INTO graph_tree_items(id,graph_tree_id,parent,title,position) VALUES(11,100,0,'Parent',2),(12,100,11,'Child',1),(13,102,0,'Other tree',1);
 INSERT INTO reports VALUES(1,42),(2,43); INSERT INTO reports_items VALUES(10,1),(20,2),(30,999);");
+$db->sqliteCreateFunction('IF', static fn($condition, $yes, $no) => $condition ? $yes : $no);
 $db->sqliteCreateFunction('UNIX_TIMESTAMP', static fn($value) => strtotime($value));
 $db->sqliteCreateFunction('FROM_UNIXTIME', static fn($value) => gmdate('Y-m-d H:i:s', $value));
 $db->exec("INSERT INTO plugin_realms VALUES (5, 'first.php,middle.php,last.php', 'Extension realm')");
@@ -105,6 +110,10 @@ function read_config_option($name)
 {
     return $name === 'auth_method' ? ($GLOBALS['scenario']['auth_method'] ?? 1) : ($GLOBALS['scenario']['config'][$name] ?? '');
 }
+function read_user_setting($name, ...$args)
+{
+    return $name === 'hide_disabled' ? ($GLOBALS['scenario']['hide_disabled'] ?? '') : '';
+}
 function cacti_version_compare($left, $right, $operator)
 {
     return version_compare($left, $right, $operator);
@@ -130,6 +139,15 @@ require $root . '/lib/auth.php';
 $result = null;
 $cached = null;
 switch ($scenario['operation']) {
+    case 'device-filter-policy':
+        $db->exec("INSERT INTO host(id,description,disabled,deleted) VALUES(100,'Target','on',''),(101,'Denied','on',''),(102,'Deleted','','on')");
+        $db->exec("INSERT INTO graph_local(id,host_id,graph_template_id) VALUES(100,100,0),(101,101,0),(102,102,0); INSERT INTO graph_templates_graph VALUES(100,'Target',100,100),(101,'Foreign',100,100),(102,'Deleted',100,100)");
+        $total = -1;
+        $visible = get_allowed_devices('', 'description', '', $total, 42);
+        $visible_graphs = get_allowed_graphs('', '', '', $total, 42);
+        $management = get_allowed_management_devices('', 'h1.id', '', $total, 42);
+        $result = ['view' => array_column($visible, 'id'), 'graph_view' => array_column($visible_graphs, 'local_graph_id'), 'management' => array_column($management, 'id'), 'target' => is_device_allowed(100, 42), 'foreign' => is_device_allowed(101, 42), 'deleted' => is_device_allowed(102, 42), 'missing' => is_device_allowed(999, 42), 'graphs' => [is_graph_allowed(100, 42), is_graph_allowed(101, 42), is_graph_allowed(102, 42), is_graph_allowed(999, 42)]];
+        break;
     case 'cache-owner-isolation':
         $db->exec('UPDATE user_auth SET policy_graphs=1,policy_graph_templates=1,policy_trees=1 WHERE id=42');
         $db->exec('UPDATE user_auth SET policy_graphs=2,policy_graph_templates=2,policy_trees=2 WHERE id=43');

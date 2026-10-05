@@ -10,7 +10,7 @@ require_once dirname(__DIR__, 2) . '/Helpers/PhpSource.php';
 // utilities.php runs its page on include, so the helper runs from source.
 eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 3) . '/utilities.php'), 'utilities_allowed_host_sql'));
 
-function get_allowed_devices($sql_where, $sql_order, $sql_limit, &$total_rows)
+function get_allowed_management_devices($sql_where, $sql_order, $sql_limit, &$total_rows)
 {
     return $GLOBALS['allowed_devices'];
 }
