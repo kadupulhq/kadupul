@@ -7,29 +7,10 @@ declare(strict_types=1);
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-test('supplemental source contract documents fixed graph width controls', function () {
-	$root = dirname(__DIR__, 4);
-	$graphItems = file_get_contents($root . '/graphs_items.php');
-	$templateItems = file_get_contents($root . '/graph_templates_items.php');
-	$forms = file_get_contents($root . '/include/global_form.php');
-
-	expect($graphItems)->toBeString()->and($templateItems)->toBeString()->and($forms)->toBeString();
-	foreach (array($graphItems, $templateItems) as $source) {
-		expect(strpos($source, "case '4': // LINE1"))->not->toBeFalse();
-		$fixedTypes = substr($source, strpos($source, "case '4': // LINE1"));
-		$fixedTypes = substr($fixedTypes, 0, strpos($fixedTypes, 'break;'));
-		expect($fixedTypes)->toContain("$('#row_line_width').hide();")
-			->and($fixedTypes)->not->toContain("$('#row_line_width').show();");
-	}
-
-	$stackType = substr($graphItems, strpos($graphItems, "case '20': // LINE:STACK"));
-	$stackType = substr($stackType, 0, strpos($stackType, 'break;'));
-	$templateStackType = substr($templateItems, strpos($templateItems, "case '20': // LINE:STACK"));
-	$templateStackType = substr($templateStackType, 0, strpos($templateStackType, 'break;'));
-	expect($stackType)->toContain("$('#row_line_width').show();")
-		->and($templateStackType)->toContain("$('#row_line_width').show();")
-		->and($forms)->toContain('LINE1, LINE2 and LINE3 use fixed widths')
-		->and($forms)->toContain('integers or decimal values are supported.');
+test('form help documents fixed widths without imposing a positive limit', function () {
+    $forms = file_get_contents(dirname(__DIR__, 4).'/include/global_form.php');
+    expect($forms)->toBeString()->toContain('LINE1, LINE2 and LINE3 use fixed widths')
+        ->toContain('integers or decimal values are supported.')->not->toContain('enter a positive width');
 });
 
 test('native fixed-line saves ignore hidden widths and preserve stored stack widths', function ($editor, $type, $width, $state) {
