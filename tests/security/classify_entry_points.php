@@ -68,6 +68,12 @@ const SELF_GATED = [
         'CSP violation report sink; browsers post reports without credentials',
         'anchor',
     ],
+    'graph_realtime.php' => [
+        'realm:25',
+        '$user_id < 1 || !is_realm_allowed(25)',
+        'guest identity from include/auth.php; own realm 25 check for every caller',
+        'refusal',
+    ],
     'link.php' => [
         'realm:10000+id',
         "is_realm_allowed(\$page['id'] + 10000)",

@@ -92,7 +92,7 @@ test('production graph item editors preserve fixed widths and source association
     array('graph_templates_items.php', 'save-5'), array('graph_templates_items.php', 'save-6'), array('graph_templates_items.php', 'save-20'), array('graph_templates_items.php', 'save-10'), array('graph_templates_items.php', 'save-15'),array('graphs_items.php','save'),array('graphs_items.php','item_edit'),array('graph_templates_items.php','save'),array('graph_templates_items.php','item_edit'),array('graph_templates_items.php','ajax_data_sources'),array('graph_templates_items.php','item_moveup'),array('graph_templates_items.php','item_movedown')));
 
 
-test('graph item numeric form validation follows the fields used by rendering', function ($script, $value, $shift, $type, $invalid) {
+test('graph item numeric form validation follows the fields used by rendering', function ($script, $value, $shift, $type, $invalid, $style = array(), $errorField = 'value') {
     $root = dirname(__DIR__, 2);
     $directory = sys_get_temp_dir() . '/graph-item-value-' . bin2hex(random_bytes(8));
     mkdir($directory, 0700);
@@ -115,7 +115,7 @@ test('graph item numeric form validation follows the fields used by rendering', 
     copy($root . '/' . $script, $directory . '/' . $script);
     try {
         $environment = array_replace(getenv(), array('GRAPH_ITEM_TEST_ROOT' => $root, 'GRAPH_ITEM_TEST_MODE' => 'save-' . $type,
-            'GRAPH_ITEM_TEST_VALIDATION' => '1', 'GRAPH_ITEM_TEST_PAYLOAD' => json_encode(array('value' => $value, 'shift' => $shift), JSON_THROW_ON_ERROR)));
+            'GRAPH_ITEM_TEST_VALIDATION' => '1', 'GRAPH_ITEM_TEST_PAYLOAD' => json_encode(array('value' => $value, 'shift' => $shift) + $style, JSON_THROW_ON_ERROR)));
         $process = proc_open(array(PHP_BINARY, '-d', 'error_reporting=24575', '-d', 'pcov.directory=/', $directory . '/' . $script), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $directory, $environment);
         expect($process)->toBeResource();
         $stdout = stream_get_contents($pipes[1]);
@@ -132,12 +132,15 @@ test('graph item numeric form validation follows the fields used by rendering', 
         }
         $validation = array_values(array_filter($calls, static fn($call) => $call[0] === 'validation'));
         expect($validation)->toHaveCount(1);
-        \PHPUnit\Framework\Assert::assertSame($invalid, isset($validation[0][1]['value']), json_encode($calls, JSON_THROW_ON_ERROR));
+        \PHPUnit\Framework\Assert::assertSame($invalid, isset($validation[0][1][$errorField]), json_encode($calls, JSON_THROW_ON_ERROR));
         $saves = array_values(array_filter($calls, static fn($call) => $call[0] === 'save'));
         if ($invalid) {
             expect($saves)->toBe(array());
         } else {
             expect($saves)->toHaveCount(1)->and($saves[0][1]['value'])->toBe($value);
+            foreach ($style as $field => $stored) {
+                expect($saves[0][1][$field])->toBe($stored);
+            }
         }
     } finally {
         foreach (array('/include', '/lib', '') as $suffix) {
@@ -151,6 +154,20 @@ test('graph item numeric form validation follows the fields used by rendering', 
     }
 })->with(function () {
     foreach (array('graphs_items.php', 'graph_templates_items.php') as $script) {
+        foreach (array(
+            array('alpha' => 'CC', 'dashes' => '5,3', 'dash_offset' => '2'),
+            array('alpha' => '80', 'dashes' => '2.5,1.5', 'dash_offset' => '1.5'),
+            array('alpha' => '', 'dashes' => '', 'dash_offset' => ''),
+        ) as $style) {
+            yield array($script, '1', '', 4, false, $style);
+        }
+        foreach (array('alpha' => array("80\nx", 'GG', 'FFF', "80\n"),
+            'dashes' => array("5\n3", '5;3', '5,,3', '5,', '-1,2'),
+            'dash_offset' => array("2\n", '-1', '1e3')) as $field => $values) {
+            foreach ($values as $styleValue) {
+                yield array($script, '1', '', 4, true, array($field => $styleValue), $field);
+            }
+        }
         foreach (array('3600', '-60', '.5', '') as $value) {
             yield array($script, $value, 'on', 4, false);
         }

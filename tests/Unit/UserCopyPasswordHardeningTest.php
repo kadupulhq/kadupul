@@ -1,4 +1,5 @@
 <?php
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -13,7 +14,9 @@
 
 require_once __DIR__ . '/../Helpers/PhpSource.php';
 $src = file_get_contents(__DIR__ . '/../../lib/auth.php');
-if ($src === false) { throw new RuntimeException('Unable to read user copy implementation'); }
+if ($src === false) {
+    throw new RuntimeException('Unable to read user copy implementation');
+}
 
 test('user_copy does not use mt_rand for password placeholder', function () use ($src) {
     $start = strpos($src, 'function user_copy(');

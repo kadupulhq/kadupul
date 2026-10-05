@@ -6,8 +6,11 @@
 function membership_replacement_schema(PDO $db, string $prefix): array
 {
     $tables = array('user_auth', 'user_auth_group', 'user_auth_group_members', 'user_auth_perms', 'user_auth_realm', 'settings_user', 'settings_tree');
-    $db->exec("CREATE TABLE {$prefix}_user_auth (id INT PRIMARY KEY, username VARCHAR(64), realm INT, enabled VARCHAR(2), locked VARCHAR(2), password VARCHAR(255), full_name VARCHAR(64), email_address VARCHAR(64), must_change_password VARCHAR(2), reset_perms BIGINT DEFAULT 0) ENGINE=InnoDB");
-    $db->exec("INSERT INTO {$prefix}_user_auth VALUES (7,'template',0,'on','','template-hash','','','',0),(42,'alice',0,'on','','alice-hash','','','',0),(43,'other',0,'on','','other-hash','','','',0)");
+    $schema = file_get_contents(dirname(__DIR__, 2) . '/cacti.sql');
+    expect($schema)->toBeString();
+    expect(preg_match('/CREATE TABLE user_auth \(.*?\) ENGINE=InnoDB[^;]*;/s', $schema, $definition))->toBe(1);
+    $db->exec(str_replace('CREATE TABLE user_auth (', "CREATE TABLE {$prefix}_user_auth (", $definition[0]));
+    $db->exec("INSERT INTO {$prefix}_user_auth (id,username,realm,enabled,locked,password,full_name,email_address,must_change_password,reset_perms) VALUES (7,'template',0,'on','','template-hash','','','',0),(42,'alice',0,'on','','alice-hash','','','',0),(43,'other',0,'on','','other-hash','','','',0)");
     $db->exec("CREATE TABLE {$prefix}_user_auth_group (id INT PRIMARY KEY) ENGINE=InnoDB");
     $db->exec("INSERT INTO {$prefix}_user_auth_group VALUES (1),(2),(3),(99)");
     $db->exec("CREATE TABLE {$prefix}_user_auth_group_members (group_id INT,user_id INT,PRIMARY KEY(group_id,user_id)) ENGINE=InnoDB");
@@ -36,6 +39,7 @@ function membership_replacement_result($process, array $pipes): array
     fclose($pipes[1]);
     fclose($pipes[2]);
     expect(proc_close($process))->toBe(0)->and($error)->toBe('');
+    expect(json_validate(trim($output)))->toBeTrue($output);
     return json_decode(trim($output), true, 512, JSON_THROW_ON_ERROR);
 }
 
@@ -79,7 +83,7 @@ test('Batch Copy serializes native concurrent destination membership edits befor
         $copy_state = membership_replacement_result($copy, $copy_pipes);
         $editor_state = membership_replacement_result($editor, $editor_pipes);
         $workers = array();
-        expect($locked)->toBeTrue()->and($copy_state['status'])->toBe('COMPLETE')
+        expect($locked)->toBeTrue()->and($copy_state['status'])->toBe('COMPLETE', $copy_state['failure'] ?? '')
             ->and($editor_state['status'])->toBe('COMPLETE')
             ->and($editor_state['members'])->toBe(array(array('group_id' => 2), array('group_id' => 99)))
             ->and((int) $editor_state['reset'])->toBeGreaterThan(0);

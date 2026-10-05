@@ -597,7 +597,6 @@ function form_save()
         if (!user_group_exists(get_filter_request_var('id'))) {
             user_group_refuse(get_filter_request_var('id'));
         }
-
         $refused = false;
 
         foreach ($settings_user as $tab_short_name => $tab_fields) {
