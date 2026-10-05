@@ -724,7 +724,7 @@ function html_header_sort_context($header_items, $sort_direction, $page_count)
 }
 
 /**
- * Resolve the shared display and sort metadata without altering label markup.
+ * Resolve the shared display and sort metadata before encoding at the output boundary.
  *
  * @return array{0: mixed, 1: mixed, 2: string, 3: ?string, 4: mixed, 5: string, 6: string}
  */
@@ -834,7 +834,10 @@ function html_header_sort_item($db_column, $display_array, $sort_column, $sort_d
     return array($display_text, $direction, $icon, $align, $tip, $nohide, $isSort);
 }
 
-/* Display labels in sortable headers are text, including plugin-provided labels. */
+/* Display labels in sortable headers are text, including plugin-provided labels.
+ * Explicit builtin encoding at output sinks retains html_escape normalization
+ * and its cached charset while keeping text and attribute contexts visible.
+ */
 
 /* html_header_sort - draws a header row suitable for display inside of a box element.  When
         a user selects a column header, the callback function "filename" will be called to handle
@@ -876,10 +879,33 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
         );
 
         if (($db_column == '') || (substr_count($db_column, 'nosort'))) {
-            print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'" : '') . " class='$nohide $align' " . ((($i + 1) == cacti_count($header_items)) ? "colspan='" . html_escape($last_item_colspan) . "' " : '') . '>' . html_escape($display_text) . '</th>';
+            print '<th '
+                . ($tip != '' ? "title='"
+                . htmlspecialchars((string) html_escape($tip), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "'" : '')
+                . " class='"
+                . htmlspecialchars("$nohide $align", ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "' "
+                . ((($i + 1) == cacti_count($header_items)) ? "colspan='"
+                . htmlspecialchars((string) html_escape($last_item_colspan), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "' " : '')
+                . '>'
+                . htmlspecialchars((string) html_escape($display_text), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . '</th>';
         } else {
-            print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'" : '') . " class='sortable $align $nohide $isSort'>";
-            print "<div class='sortinfo' sort-return='" . html_escape($return_to == '' ? 'main' : $return_to) . "' sort-page='" . html_escape($url == '' ? get_current_page(false) : $url) . "' sort-column='" . html_escape($db_column) . "' sort-direction='" . html_escape($direction) . "'><div class='textSubHeaderDark'>" . html_escape($display_text) . html_icon($icon, '', array('aria-hidden' => 'true')) . "</div></div></th>";
+            print '<th ' . ($tip != '' ? "title='" . htmlspecialchars((string) html_escape($tip), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false) . "'" : '') . " class='" . htmlspecialchars("sortable $align $nohide $isSort", ENT_QUOTES | ENT_HTML5, html_escape_charset(), false) . "'>";
+            print "<div class='sortinfo' sort-return='"
+                . htmlspecialchars((string) html_escape($return_to == '' ? 'main' : $return_to), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "' sort-page='"
+                . htmlspecialchars((string) html_escape($url == '' ? get_current_page(false) : $url), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "' sort-column='"
+                . htmlspecialchars((string) html_escape($db_column), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "' sort-direction='"
+                . htmlspecialchars((string) html_escape($direction), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "'><div class='textSubHeaderDark'>"
+                . htmlspecialchars((string) html_escape($display_text), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . html_icon($icon, '', array('aria-hidden' => 'true'))
+                . "</div></div></th>";
         }
 
         $i++;
@@ -934,15 +960,34 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
         );
 
         if (($db_column == '') || (substr_count($db_column, 'nosort'))) {
-            print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'" : '') . " class='$align $nohide'>" . html_escape($display_text) . '</th>';
+            print '<th '
+                . ($tip != '' ? "title='"
+                . htmlspecialchars((string) html_escape($tip), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "'" : '')
+                . " class='"
+                . htmlspecialchars("$align $nohide", ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "'>"
+                . htmlspecialchars((string) html_escape($display_text), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . '</th>';
         } else {
-            print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'" : '') . " class='sortable $align $nohide $isSort'>";
-            print "<div class='sortinfo' sort-return='" . html_escape($return_to == '' ? 'main' : $return_to) . "' sort-page='" . html_escape($form_action) . "' sort-column='" . html_escape($db_column) . "' sort-direction='" . html_escape($direction) . "'><div class='textSubHeaderDark'>" . html_escape($display_text) . html_icon($icon, '', array('aria-hidden' => 'true')) . "</div></div></th>";
+            print '<th ' . ($tip != '' ? "title='" . htmlspecialchars((string) html_escape($tip), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false) . "'" : '') . " class='" . htmlspecialchars("sortable $align $nohide $isSort", ENT_QUOTES | ENT_HTML5, html_escape_charset(), false) . "'>";
+            print "<div class='sortinfo' sort-return='"
+                . htmlspecialchars((string) html_escape($return_to == '' ? 'main' : $return_to), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "' sort-page='"
+                . htmlspecialchars((string) html_escape($form_action), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "' sort-column='"
+                . htmlspecialchars((string) html_escape($db_column), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "' sort-direction='"
+                . htmlspecialchars((string) html_escape($direction), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "'><div class='textSubHeaderDark'>"
+                . htmlspecialchars((string) html_escape($display_text), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . html_icon($icon, '', array('aria-hidden' => 'true'))
+                . "</div></div></th>";
         }
     }
 
-    $prefix      = html_escape($prefix);
-    $form_action = html_escape($form_action);
+    $prefix      = htmlspecialchars((string) html_escape($prefix), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false);
+    $form_action = htmlspecialchars((string) html_escape($form_action), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false);
 
     print "<th class='tableSubHeaderCheckbox'><input id='selectall' class='checkbox' type='checkbox' title='" . __esc('Select All Rows') . "' data-prefix='$prefix'><label class='formCheckboxLabel' title='" . __esc('Select All Rows') . "' for='selectall'></label></th>" . ($include_form ? "<th style='display:none;'><form id='$prefix' name='$prefix' method='post' action='$form_action'></th>" : '');
     print '</tr>';
@@ -1126,10 +1171,8 @@ function html_escape_request_var($string)
     return html_escape(get_request_var($string));
 }
 
-/* html_escape - sanitizes a string for display
-   @arg $string - string the string to escape
-   @returns $new_string - the escaped string to be returned. */
-function html_escape($string)
+/** Return the cached output charset shared by HTML text and attribute encoding. */
+function html_escape_charset(): string
 {
     static $charset;
 
@@ -1140,6 +1183,16 @@ function html_escape($string)
     if ($charset == '') {
         $charset = 'UTF-8';
     }
+
+    return $charset;
+}
+
+/* html_escape - sanitizes a string for display
+   @arg $string - string the string to escape
+   @returns $new_string - the escaped string to be returned. */
+function html_escape($string)
+{
+    $charset = html_escape_charset();
 
     // Grave Accent character can lead to xss
     if ($string !== null) {
