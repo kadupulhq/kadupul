@@ -210,6 +210,118 @@ final class LegacyCommandOutputTest extends TestCase
         return escapeshellarg(PHP_BINARY) . ' -r ' . escapeshellarg($code);
     }
 
+    public function testNativeSnmpCallsKeepArgumentsAndCompatibilityFlags(): void
+    {
+        [$coverage, $directory, $prelude] = $this->coverageProbe();
+        $root = dirname(__DIR__, 2);
+        $stub = '#!' . PHP_BINARY . "\n" . <<<'PHP'
+<?php
+file_put_contents(__DIR__ . '/arguments.jsonl', json_encode($argv, JSON_THROW_ON_ERROR) . "\n", FILE_APPEND);
+if (is_file(__DIR__ . '/error-only')) {
+    fwrite(STDERR, 'Timeout');
+    exit(1);
+}
+echo str_contains(basename($argv[0]), 'walk') ? ".1.3.6.1 = 42\n" : "42\n";
+PHP;
+        foreach (['get', 'getnext', 'walk', 'bulkwalk'] as $binary) {
+            self::assertNotFalse(file_put_contents($directory . '/snmp ' . $binary, $stub));
+            self::assertTrue(chmod($directory . '/snmp ' . $binary, 0700));
+        }
+        $program = <<<'PHP'
+require $argv[1] . '/include/vendor/autoload.php';
+require $argv[1] . '/include/global_constants.php';
+require $argv[1] . '/tests/Helpers/PhpSource.php';
+eval(test_php_function_source(file_get_contents($argv[1] . '/lib/functions.php'), 'cacti_format_ipv6_colon'));
+function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
+function cacti_escapeshellarg($value) { return escapeshellarg($value); }
+function cacti_log(...$arguments) {}
+function read_config_option($name) { return $GLOBALS['options'][$name] ?? ''; }
+$config = ['php_snmp_support' => false, 'include_path' => $argv[1] . '/include', 'cacti_server_os' => 'unix'];
+require $argv[1] . '/lib/snmp.php';
+$snmp_auth_protocols = ['SHA' => 'SHA'];
+$snmp_priv_protocols = ['AES' => 'AES'];
+$options = ['snmp_retries' => 2, 'oid_increasing_check_disable' => ''];
+foreach (['get', 'getnext', 'walk', 'bulkwalk'] as $binary) {
+    $options['path_snmp' . $binary] = $argv[2] . '/snmp ' . $binary;
+}
+$authentication = [];
+foreach ([['[None]', 'user', '', '[None]', '', '', ''],
+          ['SHA', 'user', 'auth', '[None]', '', '', ''],
+          ['SHA', 'user', 'auth', 'AES', 'priv', 'context', 'engine'],
+          ['SHA', 'u " & | ^', 'a " & | ^', 'AES', 'p " & | ^', 'c " & | ^', 'e " & | ^']] as $case) {
+    $authentication[] = [cacti_get_snmpv3_auth_arguments(...$case), cacti_get_snmpv3_auth(...$case)];
+}
+$targets = [snmp_format_target('192.0.2.1', 161), snmp_format_target('[2001:db8::1]', 1161), snmp_format_target('quoted host"', 161)];
+$results = [];
+foreach (['get', 'get_raw', 'getnext'] as $method) {
+    $function = 'cacti_snmp_' . $method;
+    $results[] = $function('host" name', 'community " & | ^', '.1.3.6.1', 2, '', '', '', '', '', '', 1161, 1501, 2, 'SNMP', '', SNMP_STRING_OUTPUT_HEX);
+}
+$results[] = cacti_snmp_get('::1', '', '.1.3.6.1', 3, 'user', 'auth', 'SHA', 'priv', 'AES', 'context', 161, 1501, 2, 'SNMP', 'engine');
+foreach ([1, 2] as $version) {
+    foreach ([1, 10] as $bulk) {
+        foreach (['', 'on'] as $increasing) {
+            $options['oid_increasing_check_disable'] = $increasing;
+            $results[] = cacti_snmp_walk('192.0.2.1', 'community " & | ^', '.1.3.6.1', $version, port: 161, timeout_ms: 1501, retries: 2, bulk_walk_size: $bulk);
+        }
+    }
+}
+touch($argv[2] . '/error-only');
+$emptyGet = cacti_snmp_get('192.0.2.1', 'community', '.1.3.6.1', 1);
+$emptyWalk = cacti_snmp_walk('192.0.2.1', 'community', '.1.3.6.1', 1);
+echo json_encode(['authentication' => $authentication, 'targets' => $targets, 'results' => $results, 'empty' => [$emptyGet, $emptyWalk]], JSON_THROW_ON_ERROR);
+PHP;
+        $code = $prelude . $program;
+        $process = new Process([PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $code, $root, $directory]);
+        $process->setTimeout(20);
+        try {
+            $process->run();
+            self::assertTrue($process->isSuccessful(), $process->getErrorOutput());
+            self::assertSame('TimeoutTimeout', $process->getErrorOutput());
+            $result = json_decode($process->getOutput(), true, 512, JSON_THROW_ON_ERROR);
+            self::assertSame(['192.0.2.1:161', 'udp6:[2001:db8::1]:1161', 'quoted host":161'], $result['targets']);
+            self::assertSame(['42', '42', '42', '42'], array_slice($result['results'], 0, 4));
+            self::assertSame(array_fill(0, 8, [['oid' => '.1.3.6.1', 'value' => '42']]), array_slice($result['results'], 4));
+            $expectedAuth = [
+                ['-u', 'user', '-l', 'noAuthNoPriv'],
+                ['-u', 'user', '-l', 'authNoPriv', '-a', 'SHA', '-A', 'auth'],
+                ['-u', 'user', '-l', 'authPriv', '-a', 'SHA', '-A', 'auth', '-X', 'priv', '-x', 'AES', '-n', 'context', '-e', 'engine'],
+                ['-u', 'u " & | ^', '-l', 'authPriv', '-a', 'SHA', '-A', 'a " & | ^', '-X', 'p " & | ^', '-x', 'AES', '-n', 'c " & | ^', '-e', 'e " & | ^'],
+            ];
+            foreach ($expectedAuth as $index => $arguments) {
+                self::assertSame($arguments, $result['authentication'][$index][0]);
+                self::assertSame($arguments, str_getcsv($result['authentication'][$index][1], ' ', "'", '\\'));
+            }
+            $record = file($directory . '/arguments.jsonl', FILE_IGNORE_NEW_LINES);
+            self::assertIsArray($record);
+            self::assertCount(14, $record);
+            $calls = array_map(static fn($line) => json_decode($line, true, 512, JSON_THROW_ON_ERROR), $record);
+            foreach (['get', 'get', 'getnext'] as $index => $binary) {
+                self::assertSame([$directory . '/snmp ' . $binary, '-O', $index === 1 ? 'fntevx' : 'fntevUx', '-c', 'community " & | ^', '-v', '2c', '-t', '2', '-r', '2', 'host" name:1161', '.1.3.6.1'], $calls[$index]);
+            }
+            self::assertSame([$directory . '/snmp get', '-O', 'fntevU', ...$expectedAuth[2], '-v', '3', '-t', '2', '-r', '2', 'udp6:[::1]:161', '.1.3.6.1'], $calls[3]);
+            $index = 4;
+            foreach ([1, 2] as $version) {
+                foreach ([1, 10] as $bulk) {
+                    foreach (['', 'on'] as $increasing) {
+                        $isBulk = $version === 2 && $bulk === 10;
+                        $extra = $isBulk ? ['-Cr10'] : [];
+                        if ($increasing === 'on') {
+                            $extra[] = '-Cc';
+                        }
+                        self::assertSame([$directory . '/snmp ' . ($isBulk ? 'bulkwalk' : 'walk'), '-O', 'QnU', '-c', 'community " & | ^', '-v', $version === 2 ? '2c' : '1', '-t', '2', '-r', '2', ...$extra, '192.0.2.1:161', '.1.3.6.1'], $calls[$index++]);
+                    }
+                }
+            }
+            // Preserve the established empty-output get contract; only walks
+            // return an array. Diagnostics must not become measurement values.
+            self::assertSame(['', []], $result['empty']);
+            $this->mergeProbeCoverage($coverage, $directory);
+        } finally {
+            $this->removeCoverageProbe($directory);
+        }
+    }
+
     /**
      * @return array{?SebastianBergmann\CodeCoverage\CodeCoverage,string,string}
      */
