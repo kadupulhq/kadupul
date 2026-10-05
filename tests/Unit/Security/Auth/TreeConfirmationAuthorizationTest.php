@@ -16,7 +16,7 @@ function runTreeConfirmationScenario(array $scenario, $coverage = null): array
     if (!mkdir($directory, 0700)) throw new RuntimeException('Cannot create tree fixture directory.');
     try {
         $encoded = json_encode($scenario, JSON_THROW_ON_ERROR);
-        $command = array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $root . '/tests/Fixtures/tree-confirmation-native.php', $encoded, $directory);
+        $command = array(PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $root . '/tests/Fixtures/tree-confirmation-native.php', $encoded, $directory);
         if ($coverage !== null) $command[] = 'coverage';
         $result = test_php_run($command);
         \PHPUnit\Framework\Assert::assertSame(0, $result['status'], $result['err'] . $result['out']);
@@ -66,17 +66,17 @@ test('tree confirmation renders persisted ownership and submits exactly the admi
         }
         if (!$admin) expect($trees[8]['modified_by'])->toBeNull()->and($trees[8]['locked'])->toBe(1);
     }
-})->with([1,2,3,4])->with([false,true]);
+})->with(['delete' => 1, 'publish' => 2, 'unpublish' => 3, 'unlock' => 4])->with(['owner' => false, 'administrator' => true]);
 
 test('all denied tree confirmations disclose no names and offer no hidden selection', function (int $action) {
     $state = runTreeConfirmationScenario(array('action' => $action, 'ids' => [8,999]), $this->getTestResultObject()->getCodeCoverage());
     expect($state['lookups'])->toBe([])->and($state['writes'])->toBe([])->and($state['messages'])->toBe([40]);
     expect($state['html'])->not->toContain('Foreign secret tree')->not->toContain('selected_items')->not->toContain("type='submit'");
     expect(array_column($state['trees'], 'id'))->toBe([7,8])->and($state['items'])->toBe([70,80]);
-})->with([1,2,3,4]);
+})->with(['delete' => 1, 'publish' => 2, 'unpublish' => 3, 'unlock' => 4]);
 
 test('forged tree submissions recheck persisted ownership before every bulk action', function (int $action) {
     $state = runTreeConfirmationScenario(array('action' => $action, 'ids' => [8,999], 'submit' => true), $this->getTestResultObject()->getCodeCoverage());
     expect($state['lookups'])->toBe([])->and($state['writes'])->toBe([])->and($state['settings'])->toBe([]);
     expect(array_column($state['trees'], 'id'))->toBe([7,8])->and($state['items'])->toBe([70,80]);
-})->with([1,2,3,4]);
+})->with(['delete' => 1, 'publish' => 2, 'unpublish' => 3, 'unlock' => 4]);
