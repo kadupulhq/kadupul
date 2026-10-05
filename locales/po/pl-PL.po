@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 04:22-0700\n"
+"POT-Creation-Date: 2026-10-05 04:43-0700\n"
 "PO-Revision-Date: 2024-04-20 19:13-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -622,7 +622,7 @@ msgstr "Szablon"
 #: automation_devices.php:564 automation_graph_rules.php:819
 #: automation_graph_rules.php:841 automation_tree_rules.php:855
 #: data_debug.php:1089 data_sources.php:1718 graph_templates_items.php:447
-#: graphs.php:2058 graphs_items.php:262 host.php:1719 host.php:1740
+#: graphs.php:2058 graphs_items.php:270 host.php:1719 host.php:1740
 #: host.php:1760 host.php:1830 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3868 lib/auth.php:3917
@@ -641,8 +641,8 @@ msgstr "Dowolny"
 #: automation_networks.php:460 automation_tree_rules.php:983
 #: data_debug.php:1090 data_sources.php:1086 data_sources.php:1719
 #: data_sources.php:2050 data_templates.php:1323 graph_templates_items.php:53
-#: graphs.php:1584 graphs.php:1593 graphs.php:2059 graphs_items.php:263
-#: graphs_items.php:383 host.php:294 host.php:1275 host.php:1286 host.php:1720
+#: graphs.php:1584 graphs.php:1593 graphs.php:2059 graphs_items.php:271
+#: graphs_items.php:391 host.php:294 host.php:1275 host.php:1286 host.php:1720
 #: host.php:1761 include/global_arrays.php:523 include/global_arrays.php:581
 #: include/global_arrays.php:673 include/global_arrays.php:885
 #: include/global_arrays.php:1741 include/global_form.php:574
@@ -3009,7 +3009,7 @@ msgid "The requested Data Source is not available."
 msgstr ""
 
 #: data_debug.php:483 data_debug.php:934 data_queries.php:769
-#: data_sources.php:1149 data_templates.php:719 graphs_items.php:379
+#: data_sources.php:1149 data_templates.php:719 graphs_items.php:387
 #: include/global_arrays.php:1005 include/global_form.php:960
 #: lib/api_aggregate.php:2338 lib/html.php:1404 rrdcheck.php:142
 msgid "Data Source"
@@ -5168,26 +5168,26 @@ msgstr "Wewnętrzny identyfikator bazy danych dla tego wykresu.  Przydatne podcz
 msgid "Empty Graph"
 msgstr "Kopiuj wykres"
 
-#: graphs_items.php:241
+#: graphs_items.php:249
 msgid "Data Sources [No Device]"
 msgstr "Źródła danych [Brak urządzenia]"
 
-#: graphs_items.php:243
+#: graphs_items.php:251
 #, php-format
 msgid "Data Sources [%s]"
 msgstr "Źródła danych [%s]"
 
-#: graphs_items.php:258 include/global_arrays.php:1356
+#: graphs_items.php:266 include/global_arrays.php:1356
 #: include/global_form.php:1640
 msgid "Data Template"
 msgstr "Szablon danych"
 
-#: graphs_items.php:337
+#: graphs_items.php:345
 #, php-format
 msgid "Graph Items [graph: %s]"
 msgstr "Elementy wykresu [wykres: %s]"
 
-#: graphs_items.php:380
+#: graphs_items.php:388
 msgid "Choose the Data Source to associate with this Graph Item."
 msgstr "Wybierz źródło danych, które ma być powiązane z tym elementem wykresu."
 
@@ -13644,11 +13644,11 @@ msgstr "%s %s"
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "OSTRZEŻENIE:  Brak pliku dołączonych Kadupul kluczy %s.  Znajdź i zastąp ten plik"
 
-#: lib/graph_item_editor.php:36
+#: lib/graph_item_editor.php:86
 msgid "Line Width"
 msgstr ""
 
-#: lib/graph_item_editor.php:41
+#: lib/graph_item_editor.php:91
 msgid "LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a positive width in pixels; integers or decimal values are supported."
 msgstr ""
 

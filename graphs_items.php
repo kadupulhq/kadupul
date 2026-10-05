@@ -27,8 +27,6 @@ switch (get_request_var('action')) {
         header('Location: graphs.php?header=false&action=graph_edit&id=' . get_request_var('local_graph_id'));
         break;
     case 'item_edit':
-        top_header();
-
         item_edit();
 
         bottom_footer();
@@ -56,6 +54,7 @@ switch (get_request_var('action')) {
 
         break;
     case 'ajax_graph_items':
+        graph_item_editor_require_host_filter();
         $sql_where = '';
 
         if (!isempty_request_var('host_id')) {
@@ -80,6 +79,8 @@ function form_save()
     if (isset_request_var('save_component_item')) {
         global $graph_item_types;
 
+        $associations = graph_item_editor_require_scope('graph_template_item_id', false);
+
         /* ================= input validation ================= */
         get_filter_request_var('sequence');
         get_filter_request_var('graph_type_id');
@@ -99,8 +100,8 @@ function form_save()
                 $sequence = get_sequence($sequence, 'sequence', 'graph_templates_item', array('local_graph_id' => get_nfilter_request_var('local_graph_id')));
             }
             $save['id']                           = get_nfilter_request_var('graph_template_item_id');
-            $save['graph_template_id']            = get_nfilter_request_var('graph_template_id');
-            $save['local_graph_template_item_id'] = get_nfilter_request_var('local_graph_template_item_id');
+            $save['graph_template_id']            = (int) $associations['graph_template_id'];
+            $save['local_graph_template_item_id'] = (int) $associations['local_graph_template_item_id'];
             $save['local_graph_id']               = get_nfilter_request_var('local_graph_id');
             $save['task_item_id']                 = form_input_validate(get_nfilter_request_var('task_item_id'), 'task_item_id', '^[0-9]+$', true, 3);
             $save['color_id']                     = form_input_validate((isset($item['color_id']) ? $item['color_id'] : get_nfilter_request_var('color_id')), 'color_id', '^[0-9]+$', true, 3);
@@ -146,6 +147,7 @@ function form_save()
 function item_movedown()
 {
     global $graph_item_types;
+    graph_item_editor_require_scope('id', true);
 
     /* ================= input validation ================= */
     get_filter_request_var('id');
@@ -165,6 +167,7 @@ function item_movedown()
 function item_moveup()
 {
     global $graph_item_types;
+    graph_item_editor_require_scope('id', true);
 
     /* ================= input validation ================= */
     get_filter_request_var('id');
@@ -183,11 +186,12 @@ function item_moveup()
 
 function item_remove()
 {
+    graph_item_editor_require_scope('id', true);
     /* ================= input validation ================= */
     get_filter_request_var('id');
     /* ==================================================== */
 
-    db_execute_prepared('DELETE FROM graph_templates_item WHERE id = ?', array(get_request_var('id')));
+    db_execute_prepared('DELETE FROM graph_templates_item WHERE id = ? AND local_graph_id = ?', array(get_request_var('id'), get_request_var('local_graph_id')));
 }
 
 function validate_item_vars()
@@ -215,6 +219,8 @@ function validate_item_vars()
 function item_edit()
 {
     global $struct_graph_item, $graph_item_types, $consolidation_functions;
+    graph_item_editor_require_scope('id', false);
+    graph_item_editor_require_host_filter();
 
     /* ================= input validation ================= */
     get_filter_request_var('id');
@@ -227,6 +233,8 @@ function item_edit()
     unset($struct_graph_item['data_template_id']);
 
     validate_item_vars();
+    graph_item_editor_require_host_filter();
+    top_header();
 
     $id = (!isempty_request_var('id') ? '&id=' . get_request_var('id') : '');
 
@@ -318,8 +326,8 @@ function item_edit()
         $template_item = db_fetch_row_prepared(
             'SELECT *
 			FROM graph_templates_item
-			WHERE id = ?',
-            array(get_request_var('id'))
+			WHERE id = ? AND local_graph_id = ?',
+            array(get_request_var('id'), get_request_var('local_graph_id'))
         );
     } else {
         $template_item = array();

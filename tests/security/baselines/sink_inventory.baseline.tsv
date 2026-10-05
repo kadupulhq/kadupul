@@ -803,11 +803,11 @@ header_redirect	./graphs.php:698	                    header('Location: graphs.ph
 header_redirect	./graphs.php:702	                header("Location: aggregate_graphs.php?header=false&action=edit&tab=details&id=$local_graph_id");
 header_redirect	./graphs.php:735	            header('Location: graphs.php?header=false&template_id=-1');
 header_redirect	./graphs.php:737	            header('Location: graphs.php?header=false');
-header_redirect	./graphs_items.php:133	            header('Location: graphs.php?header=false&action=item_edit&graph_template_item_id=' . (empty($graph_template_item_id) ? get_nfilter_request_var('graph_template_item_id') : $graph_template_item_id) . '&id=' . get_nfilter_request_var('local_graph_id'));
-header_redirect	./graphs_items.php:136	            header('Location: graphs.php?header=false&action=graph_edit&id=' . get_nfilter_request_var('local_graph_id'));
+header_redirect	./graphs_items.php:134	            header('Location: graphs.php?header=false&action=item_edit&graph_template_item_id=' . (empty($graph_template_item_id) ? get_nfilter_request_var('graph_template_item_id') : $graph_template_item_id) . '&id=' . get_nfilter_request_var('local_graph_id'));
+header_redirect	./graphs_items.php:137	            header('Location: graphs.php?header=false&action=graph_edit&id=' . get_nfilter_request_var('local_graph_id'));
 header_redirect	./graphs_items.php:27	        header('Location: graphs.php?header=false&action=graph_edit&id=' . get_request_var('local_graph_id'));
-header_redirect	./graphs_items.php:41	        header('Location: graphs.php?header=false&action=graph_edit&id=' . get_request_var('local_graph_id'));
-header_redirect	./graphs_items.php:48	        header('Location: graphs.php?header=false&action=graph_edit&id=' . get_request_var('local_graph_id'));
+header_redirect	./graphs_items.php:39	        header('Location: graphs.php?header=false&action=graph_edit&id=' . get_request_var('local_graph_id'));
+header_redirect	./graphs_items.php:46	        header('Location: graphs.php?header=false&action=graph_edit&id=' . get_request_var('local_graph_id'));
 header_redirect	./graphs_new.php:137	            header('Location: graphs_new.php?host_id=' . graphs_new_default_host_id() . '&header=false');
 header_redirect	./graphs_new.php:190	        header('Location: graphs_new.php?host_id=' . $host_id . '&header=false');
 header_redirect	./graphs_new.php:197	            header('Location: graphs_new.php?host_id=' . graphs_new_default_host_id() . '&header=false');
@@ -878,6 +878,7 @@ header_redirect	./lib/auth.php:5842	        header('Location: ' . $config['url_p
 header_redirect	./lib/clog_webapi.php:88	        header('Location: ' . get_current_page());
 header_redirect	./lib/functions.php:8782	    header('Location: ' . $save_url);
 header_redirect	./lib/functions.php:8806	    header('Location: ' . $safe_url, true, $status);
+header_redirect	./lib/graph_item_editor.php:40	    header('Location: graphs.php?header=false');
 header_redirect	./lib/html_graph.php:496	        header('Location: ' . $page . '?host_id=' . $host_id . '&header=false');
 header_redirect	./lib/html_reports.php:1631	            header('Location: reports.php');
 header_redirect	./lib/html_reports.php:231	        header('Location: ' . get_reports_page());
