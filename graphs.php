@@ -1879,7 +1879,8 @@ function graph_edit_graph_is_allowed($local_graph_id)
 function graph_edit_access_denied()
 {
     cacti_log('User attempted to access an unauthorized graph', false, 'AUTH');
-    header('Location: graphs.php');
+    raise_message('graph_access_denied', __('Graph access denied'), MESSAGE_LEVEL_ERROR);
+    header('Location: graphs.php?header=false');
     exit;
 }
 
