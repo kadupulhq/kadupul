@@ -488,3 +488,30 @@ test('sortable header metadata preserves primary secondary and default column ch
     'legacy secondary selected' => array(array('name' => 'ASC', 'second' => 'DESC'), 'second', 'DESC', 'DESC', 'ASC'),
     'legacy primary selected and named default' => array(array(), 'second', 'ASC', 'ASC', 'DESC'),
 ));
+
+
+test('cached empty sort order renders both header layouts without warnings', function () {
+    $call = <<<'CHILD'
+        set_error_handler(static function ($severity, $message, $file, $line) {
+            throw new ErrorException($message, 0, $severity, $file, $line);
+        });
+        $headers = array('name' => array('display' => 'Name'), 'second' => array('Second', 'DESC'));
+        print '<table>';
+        html_header_sort($headers, '', 'ASC');
+        html_header_sort_checkbox($headers, '', 'ASC');
+        print '</table>';
+        restore_error_handler();
+        CHILD;
+    $xpath = document(render(
+        $call,
+        array('session' => array('sort_data' => array('0_graphs' => array()))),
+        $this->getTestResultObject()->getCodeCoverage()
+    ));
+    expectNoInjection($xpath);
+    expect($xpath->query('//div[@class="sortinfo"]'))->toHaveCount(4)
+        ->and($xpath->query('//th[contains(@class,"primarySort") or contains(@class,"secondarySort")]'))->toHaveCount(0);
+    foreach (array(1, 2) as $row) {
+        expect($xpath->evaluate('string(//tr[' . $row . ']/th[1]/div/@sort-direction)'))->toBe('ASC')
+            ->and($xpath->evaluate('string(//tr[' . $row . ']/th[2]/div/@sort-direction)'))->toBe('DESC');
+    }
+});

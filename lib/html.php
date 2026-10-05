@@ -853,6 +853,7 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 
     [$new_sort_direction, $order_data] = html_header_sort_context($header_items, $sort_direction, $page_count);
 
+    $primarySort = null;
     foreach ($order_data as $key => $direction) {
         $primarySort = $key;
         break;
@@ -906,6 +907,7 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 
     [$new_sort_direction, $order_data] = html_header_sort_context($header_items, $sort_direction, $page_count);
 
+    $primarySort = null;
     foreach ($order_data as $key => $direction) {
         $primarySort = $key;
         break;
