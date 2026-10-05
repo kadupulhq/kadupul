@@ -14,7 +14,7 @@ $function = $page === 'aggregate_templates.php' ? 'aggregate_form_save' : ($page
 // This fixture checks response/delegation handoff. The native outer probe
 // separately verifies real SQL atomicity and rollback on both engines.
 $trace = ['messages' => [], 'items' => [], 'propagation' => 0, 'generation' => 0,
-    'creation' => [], 'graph_creation_arguments' => [], 'mutation_results' => []];
+    'creation' => [], 'graph_creation_arguments' => [], 'mutation_results' => [], 'scope_checks' => []];
 register_shutdown_function(static function (): void {
     echo json_encode($GLOBALS['trace'], JSON_THROW_ON_ERROR);
 });
@@ -164,6 +164,16 @@ eval(str_replace(
     test_php_function_source($aggregateSource, 'api_aggregate_create_from_request')
 ));
 if ($page === 'graphs.php') {
+    // Explicit authorization boundary port: this aggregate failure test admits
+    // only its fixed selected graph. Native policy suites cover real selection SQL.
+    function get_allowed_management_selection(string $resource, array $selection): array
+    {
+        $GLOBALS['trace']['scope_checks'][] = [$resource, $selection];
+        if ($resource !== 'graph' || $selection !== [11]) {
+            throw new RuntimeException('Unexpected aggregate authorization scope.');
+        }
+        return $selection;
+    }
     // This caller fixture grants only the selected graph and its persisted device.
     // Denial behavior is exercised by the branch's native authorization suite.
     function is_graph_allowed($id): bool

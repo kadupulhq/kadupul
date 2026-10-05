@@ -447,12 +447,11 @@ function form_actions()
             set_request_var('selected_items', serialize($selected_items));
         }
         if (is_array($selected_items) && $removal_scope === null) {
-            $selected_items = array_values(array_filter(
-                $selected_items,
-                function ($data_source_id) {
-                    return api_data_source_is_allowed((int) $data_source_id);
-                }
-            ));
+            try {
+                $selected_items = get_allowed_management_selection('data', $selected_items);
+            } catch (Throwable $error) {
+                data_source_access_denied();
+            }
             /* plugin action hooks read the request, so they must see the filtered list too */
             set_request_var('selected_items', serialize($selected_items));
             if (cacti_sizeof($selected_items) === 0) {
@@ -461,10 +460,13 @@ function form_actions()
         }
 
         if ($selected_items != false) {
-            foreach ($selected_items as $selected_item) {
-                if ($removal_scope === null && !data_source_device_is_allowed($selected_item)) {
+            if ($removal_scope === null) {
+                try {
+                    $verified = get_allowed_management_selection('data', $selected_items);
+                } catch (Throwable $error) {
                     data_source_access_denied();
                 }
+                if (count($verified) !== count($selected_items)) data_source_access_denied();
             }
 
             if (get_nfilter_request_var('drp_action') == '1') { /* delete */
@@ -526,6 +528,19 @@ function form_actions()
     $ds_list = '';
     $i = 0;
 
+    $allowed = array();
+    if ($removal_scope === null) {
+        $selection = array();
+        foreach ($_POST as $key => $value) {
+            if (preg_match('/^chk_([0-9]+)$/', $key, $match)) $selection[] = $match[1];
+        }
+        try {
+            $allowed = array_fill_keys(array_map('intval', get_allowed_management_selection('data', $selection)), true);
+        } catch (Throwable $error) {
+            data_source_access_denied();
+        }
+    }
+
     /* loop through each of the graphs selected on the previous page and get more info about them */
     foreach ($_POST as $var => $val) {
         if (preg_match('/^chk_([0-9]+)$/', $var, $matches)) {
@@ -533,12 +548,8 @@ function form_actions()
             input_validate_input_number($matches[1]);
             /* ==================================================== */
 
-            if ($removal_scope === null && !api_data_source_is_allowed($matches[1])) {
+            if ($removal_scope === null && !isset($allowed[(int) $matches[1]])) {
                 continue;
-            }
-
-            if ($removal_scope === null && !data_source_device_is_allowed($matches[1])) {
-                data_source_access_denied();
             }
 
             $ds_list .= '<li>' . html_escape(get_data_source_title($matches[1])) . '</li>';
@@ -609,7 +620,10 @@ function form_actions()
 					<p>" . __n('Choose a new Device for this Data Source and click \'Continue\'.', 'Choose a new Device for these Data Sources and click \'Continue\'', cacti_sizeof($ds_array)) . "</p>
 					<div class='itemlist'><ul>$ds_list</ul></div>
 					<p>" . __('New Device:') . "<br>";
-            form_dropdown('host_id', db_fetch_assoc("SELECT id, CONCAT_WS('',description,' (',hostname,')') AS name FROM host ORDER BY description, hostname"), 'name', 'id', '', '', '0');
+            $allowed_devices_sql = get_allowed_management_device_ids_sql();
+            $devices = db_fetch_assoc("SELECT id, CONCAT_WS('',description,' (',hostname,')') AS name
+                FROM host WHERE id IN ($allowed_devices_sql) ORDER BY description, hostname");
+            form_dropdown('host_id', $devices, 'name', 'id', '', __('None'), '0');
             print "</p>
 				</td>
 			</tr>";
@@ -1617,6 +1631,8 @@ function ds()
         set_request_var('host_id', '-2');
     }
 
+    $allowed_devices_sql = get_allowed_management_device_ids_sql();
+
     if (get_request_var('rows') == -1) {
         $rows = read_config_option('num_rows_table');
     } else {
@@ -1722,12 +1738,14 @@ function ds()
 							<option value='0'<?php if (get_request_var('template_id') == '0') {?> selected<?php }?>><?php print __('None');?></option>
 							<?php
 
-                            $templates = db_fetch_assoc('SELECT DISTINCT data_template.id, data_template.name
+                            $templates = db_fetch_assoc("SELECT DISTINCT data_template.id, data_template.name
 								FROM data_template
 								INNER JOIN data_template_data
 								ON data_template.id = data_template_data.data_template_id
+								INNER JOIN data_local AS dl ON dl.id = data_template_data.local_data_id
 								WHERE data_template_data.local_data_id > 0
-								ORDER BY data_template.name');
+                                AND (dl.host_id=0 OR dl.host_id IS NULL OR dl.host_id IN ($allowed_devices_sql))
+								ORDER BY data_template.name");
 
     if (cacti_sizeof($templates)) {
         foreach ($templates as $template) {
@@ -1835,27 +1853,15 @@ function ds()
         $sql_where1 = '';
     }
     $sql_where2 = '';
-    $allowed_device_rows = 0;
-    $allowed_devices = get_allowed_management_devices('', '', '', $allowed_device_rows);
-    $allowed_device_ids = array();
-    foreach ($allowed_devices as $allowed_device) {
-        $allowed_device_ids[] = (int) $allowed_device['id'];
-    }
-
     if (get_request_var('host_id') == '-1') {
-        if (cacti_sizeof($allowed_device_ids) > 0) {
-            $sql_where1 .= ($sql_where1 != '' ? ' AND ' : 'WHERE ') . '(dl.host_id IN (' . implode(',', $allowed_device_ids) . ') OR dl.host_id=0 OR dl.host_id IS NULL)';
-            $sql_where2 .= ' AND (gl.host_id IN (' . implode(',', $allowed_device_ids) . ') OR gl.host_id=0 OR gl.host_id IS NULL)';
-        } else {
-            $sql_where1 .= ($sql_where1 != '' ? ' AND ' : 'WHERE ') . '(dl.host_id=0 OR dl.host_id IS NULL)';
-            $sql_where2 .= ' AND (gl.host_id=0 OR gl.host_id IS NULL)';
-        }
+        $sql_where1 .= ($sql_where1 != '' ? ' AND ' : 'WHERE ') . "(dl.host_id IN ($allowed_devices_sql) OR dl.host_id=0 OR dl.host_id IS NULL)";
+        $sql_where2 .= " AND (gl.host_id IN ($allowed_devices_sql) OR gl.host_id=0 OR gl.host_id IS NULL)";
     } elseif (isempty_request_var('host_id')) {
         $sql_where1 .= ($sql_where1 != '' ? ' AND' : 'WHERE') . ' (dl.host_id=0 OR dl.host_id IS NULL)';
         $sql_where2 .= ' AND (gl.host_id=0 OR gl.host_id IS NULL)';
-    } elseif (!isempty_request_var('host_id')) {
+    } else {
         $host_id = get_filter_request_var('host_id');
-        if ($host_id > 0 && (!is_device_allowed($host_id) || !in_array($host_id, $allowed_device_ids, true))) {
+        if ($host_id <= 0 || !is_device_allowed($host_id)) {
             $sql_where1 .= ($sql_where1 != '' ? ' AND' : 'WHERE') . ' 1=0';
             $sql_where2 .= ' AND 1=0';
         } else {

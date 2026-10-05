@@ -8,20 +8,24 @@ namespace UtilitiesCacheDeviceScopeTest;
 require_once dirname(__DIR__, 2) . '/Helpers/PhpSource.php';
 
 // utilities.php runs its page on include, so the helper runs from source.
-eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 3) . '/utilities.php'), 'utilities_allowed_host_sql'));
+$source = file_get_contents(dirname(__DIR__, 3) . '/utilities.php');
+if ($source === false) throw new \RuntimeException('Cannot read the actual utility predicate helper');
+eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($source, 'utilities_allowed_host_sql'));
 
-function get_allowed_management_devices($sql_where, $sql_order, $sql_limit, &$total_rows)
+// Explicit SQL producer port. Full persisted policy and view handoff execute in
+// UtilityViewNativeCoverageTest; this check only verifies lossless delegation.
+function get_allowed_management_device_ids_sql()
 {
-    expect($total_rows)->toBe(-1);
-    return $GLOBALS['allowed_devices'];
+    $ids = array_map(static fn(array $device): int => (int) $device['id'], $GLOBALS['allowed_devices']);
+    return $ids === [] ? 'SELECT NULL AS id WHERE 1=0' : 'SELECT id FROM host WHERE id IN (' . implode(', ', $ids) . ')';
 }
 
-test('cache views are limited to the devices the user may see', function ($devices, $expected) {
+test('cache helper retains the qualified column and complete management SQL predicate', function ($devices, $expected) {
     $GLOBALS['allowed_devices'] = $devices;
 
     expect(utilities_allowed_host_sql('h.id'))->toBe($expected);
 })->with(array(
-    'some devices' => array(array(array('id' => '3'), array('id' => '5')), 'h.id IN (3, 5)'),
-    'no devices' => array(array(), '1=0'),
-    'non-numeric ids are cast' => array(array(array('id' => '7) OR (1')), 'h.id IN (7)'),
+    'some devices' => array(array(array('id' => '3'), array('id' => '5')), 'h.id IN (SELECT id FROM host WHERE id IN (3, 5))'),
+    'no devices' => array(array(), 'h.id IN (SELECT NULL AS id WHERE 1=0)'),
+    'legacy row port emits its typed identity' => array(array(array('id' => '7) OR (1')), 'h.id IN (SELECT id FROM host WHERE id IN (7))'),
 ));

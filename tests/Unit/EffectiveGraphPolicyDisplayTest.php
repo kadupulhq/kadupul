@@ -1,11 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 /*
- * SPDX-FileCopyrightText: 2026 The Cacti Group
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 use PHPUnit\Framework\TestCase;
+
+require_once __DIR__ . '/../Helpers/PhpSource.php';
 
 final class EffectiveGraphPolicyDisplayTest extends TestCase
 {
@@ -14,7 +18,7 @@ final class EffectiveGraphPolicyDisplayTest extends TestCase
         $source = file_get_contents(__DIR__ . '/../../lib/auth.php');
         self::assertIsString($source);
 
-        $function = $this->extractFunction($source, 'get_permission_string');
+        $function = test_php_function_source($source, 'get_permission_string');
         $cases = [];
 
         foreach ([1, 2, 3, 4] as $method) {
@@ -126,45 +130,4 @@ final class EffectiveGraphPolicyDisplayTest extends TestCase
         }
     }
 
-    private function extractFunction(string $source, string $functionName): string
-    {
-        $tokens = token_get_all($source);
-        $start = null;
-
-        foreach ($tokens as $index => $token) {
-            if (!is_array($token) || $token[0] !== T_FUNCTION) {
-                continue;
-            }
-
-            for ($nameIndex = $index + 1; $nameIndex < count($tokens); $nameIndex++) {
-                if (is_array($tokens[$nameIndex]) && $tokens[$nameIndex][0] === T_STRING) {
-                    if ($tokens[$nameIndex][1] === $functionName) {
-                        $start = $index;
-                        break 2;
-                    }
-                    break;
-                }
-            }
-        }
-
-        self::assertNotNull($start, $functionName . '() must exist');
-        $depth = 0;
-        $function = '';
-        $started = false;
-
-        for ($index = $start; $index < count($tokens); $index++) {
-            $token = $tokens[$index];
-            $text = is_array($token) ? $token[1] : $token;
-            $function .= $text;
-
-            if (!is_array($token) && $text === '{') {
-                $depth++;
-                $started = true;
-            } elseif (!is_array($token) && $text === '}' && $started && --$depth === 0) {
-                return $function;
-            }
-        }
-
-        self::fail('Could not extract ' . $functionName . '()');
-    }
 }

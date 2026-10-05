@@ -2098,7 +2098,7 @@ function utilities_view_poller_cache()
 							<option value='-1'<?php if (get_request_var('template_id') == '-1') {?> selected<?php }?>><?php print __('Any');?></option>
 							<option value='0'<?php if (get_request_var('template_id') == '0') {?> selected<?php }?>><?php print __('None');?></option>
 							<?php
-                            $sql_where = 'WHERE (dl.host_id = 0 OR ' . str_replace('h.id', 'dl.host_id', $allowed_host_sql) . ')';
+                            $sql_where = 'WHERE (dl.host_id = 0 OR ' . utilities_allowed_host_sql('dl.host_id') . ')';
     if (get_request_var('host_id') >= 0) {
         $sql_where .= ' AND dl.host_id = ' . get_request_var('host_id');
     }
@@ -2356,19 +2356,7 @@ function utilities_view_poller_cache()
  */
 function utilities_allowed_host_sql($column)
 {
-    $total_rows = -1;
-    $devices = get_allowed_management_devices('', '', -1, $total_rows);
-    $device_ids = array();
-
-    foreach ($devices as $device) {
-        $device_ids[] = (int) $device['id'];
-    }
-
-    if (empty($device_ids)) {
-        return '1=0';
-    }
-
-    return $column . ' IN (' . implode(', ', $device_ids) . ')';
+    return $column . ' IN (' . get_allowed_management_device_ids_sql() . ')';
 }
 
 /**

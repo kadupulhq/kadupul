@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 11:52-0700\n"
+"POT-Creation-Date: 2026-10-05 16:08-0700\n"
 "PO-Revision-Date: 2024-04-20 18:31-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -49,13 +49,13 @@ msgstr "Το πρόγραμμα αυτό διανέμεται με την ελπ
 #: automation_tree_rules.php:17 cdef.php:14 cdef.php:603 color_templates.php:13
 #: color_templates.php:109 data_queries.php:16 data_queries.php:863
 #: data_queries.php:972 data_queries.php:1252 data_source_profiles.php:16
-#: data_source_profiles.php:934 data_sources.php:23 data_sources.php:1235
+#: data_source_profiles.php:934 data_sources.php:23 data_sources.php:1249
 #: data_templates.php:19 data_templates.php:791 gprint_presets.php:12
 #: graph_templates.php:22 graph_templates.php:517 graphs.php:32
 #: host_templates.php:20 host_templates.php:485 host_templates.php:542
 #: include/global_arrays.php:1655 include/global_settings.php:232
 #: lib/api_automation.php:1323 lib/api_automation.php:1386
-#: lib/api_automation.php:1457 lib/html.php:1450 lib/html_form.php:1397
+#: lib/api_automation.php:1457 lib/html.php:1452 lib/html_form.php:1397
 #: lib/html_reports.php:1937 managers.php:13 pollers.php:18 tree.php:1688
 #: tree.php:1841 tree.php:1901 tree.php:1922 user_admin.php:17
 #: user_domains.php:15 user_group_admin.php:19
@@ -123,17 +123,17 @@ msgstr "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; γ�
 #: color_templates.php:256 color_templates_items.php:327 data_queries.php:413
 #: data_queries.php:427 data_queries.php:611 data_source_profiles.php:416
 #: data_source_profiles.php:428 data_source_profiles.php:663
-#: data_sources.php:605 data_sources.php:617 data_sources.php:626
-#: data_sources.php:635 data_sources.php:644 data_sources.php:650
+#: data_sources.php:616 data_sources.php:631 data_sources.php:640
+#: data_sources.php:649 data_sources.php:658 data_sources.php:664
 #: data_templates.php:486 data_templates.php:498 data_templates.php:514
 #: gprint_presets.php:137 graph_templates.php:373 graph_templates.php:385
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
-#: graph_view.php:1043 graphs.php:866 graphs.php:882 graphs.php:893
-#: graphs.php:904 graphs.php:919 graphs.php:933 graphs.php:942 graphs.php:1144
-#: graphs.php:1187 graphs.php:1209 graphs.php:1240 graphs.php:1252
-#: graphs.php:1836 host_templates.php:222 host_templates.php:236
+#: graph_view.php:1043 graphs.php:886 graphs.php:902 graphs.php:913
+#: graphs.php:924 graphs.php:939 graphs.php:956 graphs.php:965 graphs.php:1167
+#: graphs.php:1210 graphs.php:1232 graphs.php:1263 graphs.php:1275
+#: graphs.php:1859 host_templates.php:222 host_templates.php:236
 #: host_templates.php:247 host_templates.php:302 host_templates.php:375
-#: lib/clog_webapi.php:225 lib/html.php:2764 lib/html_form.php:1396
+#: lib/clog_webapi.php:225 lib/html.php:2766 lib/html_form.php:1396
 #: lib/html_form.php:1413 lib/html_form.php:1424 lib/html_reports.php:632
 #: managers.php:1066 managers.php:1127 plugins.php:712 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:762
@@ -156,16 +156,16 @@ msgstr "Ακύρωση"
 #: color_templates.php:256 color_templates_items.php:328 data_queries.php:413
 #: data_queries.php:427 data_queries.php:612 data_source_profiles.php:416
 #: data_source_profiles.php:428 data_source_profiles.php:664
-#: data_sources.php:605 data_sources.php:617 data_sources.php:626
-#: data_sources.php:635 data_sources.php:644 data_sources.php:650
+#: data_sources.php:616 data_sources.php:631 data_sources.php:640
+#: data_sources.php:649 data_sources.php:658 data_sources.php:664
 #: data_templates.php:486 data_templates.php:498 data_templates.php:514
 #: gprint_presets.php:137 graph_templates.php:373 graph_templates.php:385
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
-#: graphs.php:866 graphs.php:882 graphs.php:893 graphs.php:904 graphs.php:919
-#: graphs.php:933 graphs.php:942 graphs.php:1144 graphs.php:1187
-#: graphs.php:1209 graphs.php:1240 graphs.php:1252 host_templates.php:222
+#: graphs.php:886 graphs.php:902 graphs.php:913 graphs.php:924 graphs.php:939
+#: graphs.php:956 graphs.php:965 graphs.php:1167 graphs.php:1210
+#: graphs.php:1232 graphs.php:1263 graphs.php:1275 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
-#: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2763
+#: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2765
 #: lib/html_reports.php:574 managers.php:1066 managers.php:1127 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:762
 #: tree.php:771 tree.php:780 tree.php:789 user_admin.php:252 user_admin.php:292
@@ -177,7 +177,7 @@ msgid "Continue"
 msgstr "Συνέχεια"
 
 #: aggregate_graphs.php:370 aggregate_graphs.php:445 aggregate_graphs.php:470
-#: graphs.php:866
+#: graphs.php:886
 msgid "Delete Graph(s)"
 msgstr "Διαγραφή γραφήματος (ων)"
 
@@ -191,8 +191,8 @@ msgstr "Προκειμένου να μεταφερθούν οι συγκεντρ
 
 #: aggregate_graphs.php:406 aggregate_graphs.php:456 aggregate_graphs.php:504
 #: auth_changepassword.php:415 auth_profile.php:464 automation_networks.php:387
-#: automation_snmp.php:245 graphs.php:1146 graphs.php:1196 graphs.php:1199
-#: graphs.php:1243 graphs.php:1836 include/auth.php:309
+#: automation_snmp.php:245 graphs.php:1169 graphs.php:1219 graphs.php:1222
+#: graphs.php:1266 graphs.php:1859 include/auth.php:309
 #: lib/api_aggregate.php:2209 lib/api_aggregate.php:2224 lib/html_form.php:1422
 #: lib/html_reports.php:632 managers.php:1130 permission_denied.php:14
 #: permission_denied.php:16
@@ -240,29 +240,29 @@ msgstr "Συνολικό όνομα:"
 msgid "New Aggregate"
 msgstr "Νέα συνάθροιση"
 
-#: aggregate_graphs.php:485 graphs.php:1224
+#: aggregate_graphs.php:485 graphs.php:1247
 msgid "Click 'Continue' to add the selected Graphs to the Report below."
 msgstr "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να προσθέσετε τα επιλεγμένα Γραφήματα στην παρακάτω αναφορά."
 
-#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1228
+#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1251
 #: lib/html_reports.php:18 lib/html_reports.php:2133
 msgid "Report Name"
 msgstr "Όνομα αναφοράς"
 
-#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1232
+#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1255
 #: lib/html_reports.php:1789
 msgid "Timespan"
 msgstr "Χρόνος"
 
-#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1236
+#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1259
 msgid "Align"
 msgstr "Στοίχιση"
 
-#: aggregate_graphs.php:501 graphs.php:1240
+#: aggregate_graphs.php:501 graphs.php:1263
 msgid "Add Graphs to Report"
 msgstr "Προσθήκη γραφημάτων στην αναφορά"
 
-#: aggregate_graphs.php:503 graphs.php:1242
+#: aggregate_graphs.php:503 graphs.php:1265
 msgid "You currently have no reports defined."
 msgstr "Αυτήν τη στιγμή δεν έχετε ορίσει αναφορές."
 
@@ -298,11 +298,11 @@ msgstr "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; γ�
 msgid "Destination Branch:"
 msgstr "Υποκατάστημα προορισμού:"
 
-#: aggregate_graphs.php:545 graphs.php:919
+#: aggregate_graphs.php:545 graphs.php:939
 msgid "Place Graph(s) on Tree"
 msgstr "Τοποθετήστε το γράφημα στο δέντρο"
 
-#: aggregate_graphs.php:625 data_sources.php:1221 lib/html_reports.php:1641
+#: aggregate_graphs.php:625 data_sources.php:1235 lib/html_reports.php:1641
 #: user_admin.php:1774
 #, php-format
 msgid "[edit: %s]"
@@ -322,7 +322,7 @@ msgstr "Λεπτομέρειες"
 msgid "Items"
 msgstr "Στοιχεία"
 
-#: aggregate_graphs.php:646 aggregate_graphs.php:652 lib/html.php:2176
+#: aggregate_graphs.php:646 aggregate_graphs.php:652 lib/html.php:2178
 #: lib/html_reports.php:1545
 msgid "Preview"
 msgstr "Προεπισκόπηση"
@@ -353,15 +353,15 @@ msgstr "Συνολική προεπισκόπηση [ %s]"
 msgid "Aggregate Preview %s"
 msgstr "Συνολική προεπισκόπηση [ %s]"
 
-#: aggregate_graphs.php:763 graph.php:551 graphs.php:1669
+#: aggregate_graphs.php:763 graph.php:551 graphs.php:1692
 msgid "RRDtool Command:"
 msgstr "Εντολή RRDtool:"
 
-#: aggregate_graphs.php:765 graph.php:560 graphs.php:1673
+#: aggregate_graphs.php:765 graph.php:560 graphs.php:1696
 msgid "Not Checked"
 msgstr "Επιλεγμένο χρώμα αντικειμένου"
 
-#: aggregate_graphs.php:765 graph.php:556 graphs.php:1671
+#: aggregate_graphs.php:765 graph.php:556 graphs.php:1694
 msgid "RRDtool Says:"
 msgstr "RRDtool Λέει:"
 
@@ -370,24 +370,24 @@ msgstr "RRDtool Λέει:"
 msgid "Aggregate Graph %s"
 msgstr "Aggregate Graph %s"
 
-#: aggregate_graphs.php:820 aggregate_templates.php:408 graphs.php:1010
+#: aggregate_graphs.php:820 aggregate_templates.php:408 graphs.php:1033
 msgid "Prefix Replacement Values"
 msgstr "Αντικατάσταση μοτίβου"
 
-#: aggregate_graphs.php:821 aggregate_templates.php:409 graphs.php:1011
+#: aggregate_graphs.php:821 aggregate_templates.php:409 graphs.php:1034
 msgid "You may use these replacement values for the Prefix in the Aggregate Graph"
 msgstr "Μπορείτε να χρησιμοποιήσετε αυτές τις τιμές αντικατάστασης για το Πρόθεμα στο Συνολικό γράφημα"
 
-#: aggregate_graphs.php:988 aggregate_templates.php:536 graphs.php:1093
+#: aggregate_graphs.php:988 aggregate_templates.php:536 graphs.php:1116
 #: lib/api_aggregate.php:2344
 msgid "Total"
 msgstr "Σύνολο"
 
-#: aggregate_graphs.php:992 aggregate_templates.php:540 graphs.php:1095
+#: aggregate_graphs.php:992 aggregate_templates.php:540 graphs.php:1118
 msgid "All Items"
 msgstr "Όλα τα Είδη"
 
-#: aggregate_graphs.php:1010 graphs.php:1684 lib/api_aggregate.php:2504
+#: aggregate_graphs.php:1010 graphs.php:1707 lib/api_aggregate.php:2504
 msgid "Graph Configuration"
 msgstr "Διαμόρφωση γραφήματος"
 
@@ -410,10 +410,10 @@ msgstr "Ταίριασμα των γραφημάτων"
 #: automation_graph_rules.php:809 automation_networks.php:1180
 #: automation_networks.php:1224 automation_snmp.php:703
 #: automation_templates.php:393 automation_tree_rules.php:845 cdef.php:727
-#: color_templates.php:560 data_debug.php:1189 data_queries.php:1371
-#: data_source_profiles.php:1186 data_sources.php:1796 data_templates.php:1101
+#: color_templates.php:560 data_debug.php:1214 data_queries.php:1371
+#: data_source_profiles.php:1186 data_sources.php:1814 data_templates.php:1101
 #: gprint_presets.php:255 graph_templates.php:727 graph_view.php:667
-#: graphs.php:2090 graphs_new.php:526 host_templates.php:795
+#: graphs.php:2114 graphs_new.php:526 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
 #: lib/api_automation.php:480 lib/api_automation.php:708
 #: lib/clog_webapi.php:608 lib/html.php:268 lib/html_filter.php:46
@@ -424,18 +424,18 @@ msgstr "Ταίριασμα των γραφημάτων"
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:56
 #: tree.php:938 tree.php:973 tree.php:1008 tree.php:2217 user_admin.php:2074
 #: user_domains.php:643 user_group_admin.php:1993 utilities.php:1094
-#: utilities.php:1521 utilities.php:1832 utilities.php:2135 utilities.php:3137
-#: utilities.php:3399
+#: utilities.php:1521 utilities.php:1832 utilities.php:2135 utilities.php:3125
+#: utilities.php:3387
 msgid "Search"
 msgstr "Αναζήτηση"
 
 #: aggregate_graphs.php:1288 aggregate_graphs.php:1324
-#: aggregate_graphs.php:1587 color_templates.php:680 data_sources.php:1998
-#: data_sources.php:2137 graph_view.php:488 graph_view.php:739
-#: graph_view.php:803 graphs.php:2107 graphs.php:2306
+#: aggregate_graphs.php:1587 color_templates.php:680 data_sources.php:2004
+#: data_sources.php:2143 graph_view.php:488 graph_view.php:739
+#: graph_view.php:803 graphs.php:2131 graphs.php:2323
 #: include/global_arrays.php:994 include/global_arrays.php:1230
-#: include/global_arrays.php:2015 lib/api_automation.php:283 lib/html.php:1900
-#: lib/html.php:1969 lib/html_graph.php:197 lib/html_tree.php:1022
+#: include/global_arrays.php:2015 lib/api_automation.php:283 lib/html.php:1902
+#: lib/html.php:1971 lib/html_graph.php:197 lib/html_tree.php:1022
 #: lib/html_tree.php:1378 tree.php:917 tree.php:2366 user_admin.php:801
 #: user_admin.php:1073 user_admin.php:2347 user_group_admin.php:940
 #: user_group_admin.php:1095 user_group_admin.php:2148 utilities.php:320
@@ -447,10 +447,10 @@ msgstr "Γραφήματα"
 #: automation_graph_rules.php:851 automation_networks.php:1190
 #: automation_snmp.php:713 automation_templates.php:403
 #: automation_tree_rules.php:865 cdef.php:737 color_templates.php:576
-#: data_debug.php:1199 data_queries.php:1381 data_source_profiles.php:1196
-#: data_source_profiles.php:1318 data_sources.php:1806 data_templates.php:1130
+#: data_debug.php:1224 data_queries.php:1381 data_source_profiles.php:1196
+#: data_source_profiles.php:1318 data_sources.php:1824 data_templates.php:1130
 #: gprint_presets.php:265 graph_templates.php:737 graph_view.php:743
-#: graphs.php:2111 graphs_new.php:536 host_templates.php:805
+#: graphs.php:2135 graphs_new.php:536 host_templates.php:805
 #: include/global_form.php:242 lib/api_automation.php:182
 #: lib/api_automation.php:490 lib/api_automation.php:718
 #: lib/api_automation.php:1082 lib/html_reports.php:2045 managers.php:154
@@ -459,7 +459,7 @@ msgstr "Γραφήματα"
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:81
 #: tree.php:2227 user_admin.php:2135 user_domains.php:18 user_domains.php:653
 #: user_domains.php:739 user_group_admin.php:2003 utilities.php:1076
-#: utilities.php:1842 utilities.php:2166 utilities.php:3165 utilities.php:3441
+#: utilities.php:1842 utilities.php:2166 utilities.php:3153 utilities.php:3429
 msgid "Default"
 msgstr "Προεπιλογή"
 
@@ -472,12 +472,12 @@ msgstr "Μέρος του συνόλου"
 #: automation_graph_rules.php:863 automation_networks.php:1224
 #: automation_snmp.php:728 automation_templates.php:418
 #: automation_tree_rules.php:877 cdef.php:758 color_templates.php:598
-#: data_debug.php:1114 data_queries.php:1396 data_source_profiles.php:1217
-#: data_sources.php:1746 data_templates.php:1151 gprint_presets.php:283
-#: graph_templates.php:758 graph_view.php:675 graphs.php:2081
+#: data_debug.php:1139 data_queries.php:1396 data_source_profiles.php:1217
+#: data_sources.php:1764 data_templates.php:1151 gprint_presets.php:283
+#: graph_templates.php:758 graph_view.php:675 graphs.php:2105
 #: graphs_new.php:515 host_templates.php:786 lib/api_automation.php:187
 #: lib/api_automation.php:471 lib/api_automation.php:723
-#: lib/api_automation.php:1087 lib/clog_webapi.php:533 lib/html.php:1732
+#: lib/api_automation.php:1087 lib/clog_webapi.php:533 lib/html.php:1734
 #: lib/html_filter.php:63 lib/html_graph.php:178 lib/html_reports.php:2056
 #: lib/html_tree.php:1009 managers.php:169 managers.php:529 managers.php:794
 #: plugins.php:530 pollers.php:914 tree.php:2242 user_admin.php:2150
@@ -488,16 +488,16 @@ msgstr "Πήγαινε"
 
 #: aggregate_graphs.php:1303 aggregate_graphs.php:1596
 #: automation_devices.php:509 automation_snmp.php:728
-#: automation_templates.php:418 cdef.php:758 data_debug.php:1114
-#: data_queries.php:1396 data_source_profiles.php:1217 data_sources.php:1746
+#: automation_templates.php:418 cdef.php:758 data_debug.php:1139
+#: data_queries.php:1396 data_source_profiles.php:1217 data_sources.php:1764
 #: data_templates.php:1151 gprint_presets.php:283 graph_templates.php:758
-#: graph_view.php:675 graphs.php:2081 graphs_new.php:515 host_templates.php:786
+#: graph_view.php:675 graphs.php:2105 graphs_new.php:515 host_templates.php:786
 #: lib/html_graph.php:178 managers.php:169 managers.php:529 managers.php:794
 #: plugins.php:530 pollers.php:914
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
 #: tree.php:2242 user_admin.php:2150 user_domains.php:665
 #: user_group_admin.php:2018 utilities.php:1084 utilities.php:1470
-#: utilities.php:1823 utilities.php:2126 utilities.php:3173 utilities.php:3449
+#: utilities.php:1823 utilities.php:2126 utilities.php:3161 utilities.php:3437
 msgid "Set/Refresh Filters"
 msgstr "Ρύθμιση / Ανανέωση φίλτρων"
 
@@ -506,9 +506,9 @@ msgstr "Ρύθμιση / Ανανέωση φίλτρων"
 #: automation_graph_rules.php:864 automation_networks.php:1225
 #: automation_snmp.php:729 automation_templates.php:419
 #: automation_tree_rules.php:878 cdef.php:759 color_templates.php:599
-#: data_debug.php:1115 data_queries.php:1397 data_source_profiles.php:1218
-#: data_sources.php:1747 data_templates.php:1152 gprint_presets.php:284
-#: graph_templates.php:759 graph_view.php:676 graphs.php:2082
+#: data_debug.php:1140 data_queries.php:1397 data_source_profiles.php:1218
+#: data_sources.php:1765 data_templates.php:1152 gprint_presets.php:284
+#: graph_templates.php:759 graph_view.php:676 graphs.php:2106
 #: graphs_new.php:516 host_templates.php:787 lib/api_automation.php:188
 #: lib/api_automation.php:472 lib/api_automation.php:724
 #: lib/api_automation.php:1088 lib/clog_webapi.php:534 lib/html_filter.php:68
@@ -522,28 +522,28 @@ msgid "Clear"
 msgstr "Καθαρισμός"
 
 #: aggregate_graphs.php:1304 aggregate_graphs.php:1597 automation_snmp.php:729
-#: automation_templates.php:419 cdef.php:759 data_debug.php:1115
-#: data_queries.php:1397 data_source_profiles.php:1218 data_sources.php:1747
+#: automation_templates.php:419 cdef.php:759 data_debug.php:1140
+#: data_queries.php:1397 data_source_profiles.php:1218 data_sources.php:1765
 #: data_templates.php:1152 gprint_presets.php:284 graph_templates.php:759
-#: graph_view.php:676 graphs.php:2082 graphs_new.php:516 host_templates.php:787
+#: graph_view.php:676 graphs.php:2106 graphs_new.php:516 host_templates.php:787
 #: lib/html_graph.php:179 lib/html_tree.php:1010 managers.php:170
 #: managers.php:530 managers.php:795 plugins.php:531 pollers.php:915
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:96
 #: tree.php:2243 user_admin.php:2151 user_domains.php:666
 #: user_group_admin.php:2019 utilities.php:1085 utilities.php:1471
-#: utilities.php:1824 utilities.php:2127 utilities.php:3174 utilities.php:3450
+#: utilities.php:1824 utilities.php:2127 utilities.php:3162 utilities.php:3438
 msgid "Clear Filters"
 msgstr "Καθαρισμός Φίλτρων"
 
-#: aggregate_graphs.php:1329 aggregate_graphs.php:1662 graphs.php:1173
+#: aggregate_graphs.php:1329 aggregate_graphs.php:1662 graphs.php:1196
 #: lib/api_automation.php:574 user_admin.php:809 user_group_admin.php:948
 msgid "Graph Title"
 msgstr "Τίτλος γραφήματος"
 
 #: aggregate_graphs.php:1330 aggregate_graphs.php:1663
 #: automation_graph_rules.php:964 automation_tree_rules.php:971
-#: data_debug.php:499 data_queries.php:1482 data_sources.php:1992
-#: data_templates.php:1260 graph_templates.php:864 graphs.php:2322
+#: data_debug.php:517 data_queries.php:1482 data_sources.php:1998
+#: data_templates.php:1260 graph_templates.php:864 graphs.php:2339
 #: host_templates.php:949 lib/api_automation.php:282 pollers.php:995
 #: tree.php:2306 user_admin.php:809 user_admin.php:924 user_admin.php:1073
 #: user_admin.php:1212 user_admin.php:1351 user_group_admin.php:741
@@ -557,14 +557,14 @@ msgid "Included in Aggregate"
 msgstr "Συμπεριλαμβάνεται στο Σύνολο"
 
 #: aggregate_graphs.php:1332 aggregate_graphs.php:1665 graph_templates.php:881
-#: graph_view.php:832 graph_view.php:845 graphs.php:2340 lib/spikekill.php:1745
+#: graph_view.php:832 graph_view.php:845 graphs.php:2357 lib/spikekill.php:1745
 msgid "Size"
 msgstr "Μέγεθος"
 
 #: aggregate_graphs.php:1348 aggregate_templates.php:724
 #: automation_tree_rules.php:723 cdef.php:885 color_templates.php:704
 #: data_queries.php:1534 data_source_profiles.php:1398
-#: data_source_profiles.php:1399 data_sources.php:2079 data_sources.php:2080
+#: data_source_profiles.php:1399 data_sources.php:2085 data_sources.php:2086
 #: data_templates.php:1321 gprint_presets.php:430 graph_templates.php:921
 #: host_templates.php:997 include/global_settings.php:876
 #: include/global_settings.php:1927 lib/api_automation.php:1438 tree.php:2399
@@ -575,10 +575,10 @@ msgstr "Όχι"
 
 #: aggregate_graphs.php:1348 aggregate_templates.php:724
 #: automation_tree_rules.php:716 cdef.php:885 color_templates.php:704
-#: data_debug.php:756 data_debug.php:761 data_debug.php:766
+#: data_debug.php:781 data_debug.php:786 data_debug.php:791
 #: data_queries.php:1534 data_source_profiles.php:1397
 #: data_source_profiles.php:1398 data_source_profiles.php:1399
-#: data_sources.php:2079 data_sources.php:2080 data_templates.php:1321
+#: data_sources.php:2085 data_sources.php:2086 data_templates.php:1321
 #: gprint_presets.php:430 graph_templates.php:921 host_templates.php:997
 #: include/global_settings.php:875 include/global_settings.php:1926
 #: lib/api_automation.php:1438 lib/installer.php:2124 lib/installer.php:2152
@@ -587,7 +587,7 @@ msgstr "Όχι"
 msgid "Yes"
 msgstr "Ναι"
 
-#: aggregate_graphs.php:1354 graphs.php:2382 lib/api_automation.php:601
+#: aggregate_graphs.php:1354 graphs.php:2399 lib/api_automation.php:601
 msgid "No Graphs Found"
 msgstr "Δεν βρέθηκαν γραφήματα"
 
@@ -600,8 +600,8 @@ msgstr "[Εφαρμογή προσαρμοσμένης γραφήματος - Φ
 msgid "Aggregate Graphs"
 msgstr "Συγκεντρωτικά γραφήματα"
 
-#: aggregate_graphs.php:1562 data_debug.php:1085 data_sources.php:1717
-#: graph_view.php:699 graphs.php:2043 include/global_arrays.php:2895
+#: aggregate_graphs.php:1562 data_debug.php:1110 data_sources.php:1733
+#: graph_view.php:699 graphs.php:2067 include/global_arrays.php:2895
 #: include/global_settings.php:610 lib/api_automation.php:446
 #: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:381
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:59
@@ -613,43 +613,43 @@ msgstr "Πρότυπο"
 #: automation_devices.php:528 automation_devices.php:546
 #: automation_devices.php:564 automation_graph_rules.php:819
 #: automation_graph_rules.php:841 automation_tree_rules.php:855
-#: data_debug.php:1089 data_sources.php:1721 graph_templates_items.php:447
-#: graphs.php:2047 graphs_items.php:270 lib/api_automation.php:26
+#: data_debug.php:1114 data_sources.php:1737 graph_templates_items.php:447
+#: graphs.php:2071 graphs_items.php:270 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
-#: lib/api_automation.php:450 lib/auth.php:3882 lib/auth.php:3931
-#: lib/html.php:2255 lib/html.php:2283 lib/html.php:2322 lib/html.php:2356
+#: lib/api_automation.php:450 lib/auth.php:3954 lib/auth.php:4003
+#: lib/html.php:2257 lib/html.php:2285 lib/html.php:2324 lib/html.php:2358
 #: lib/html_reports.php:1030 lib/html_reports.php:1034
 #: lib/html_reports.php:1157 lib/html_reports.php:1167
 #: lib/html_reports.php:2035 managers.php:490 managers.php:781
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:61
 #: utilities.php:1064 utilities.php:1785 utilities.php:2098 utilities.php:2145
-#: utilities.php:2155 utilities.php:3147 utilities.php:3409 utilities.php:3425
+#: utilities.php:2155 utilities.php:3135 utilities.php:3397 utilities.php:3413
 msgid "Any"
 msgstr "Οποιοδήποτε"
 
 #: aggregate_graphs.php:1567 aggregate_graphs.php:1677
 #: automation_graph_rules.php:974 automation_graph_rules.php:975
 #: automation_networks.php:460 automation_tree_rules.php:983
-#: data_debug.php:1090 data_sources.php:1089 data_sources.php:1722
-#: data_sources.php:2053 data_templates.php:1323 graph_templates_items.php:53
-#: graphs.php:1573 graphs.php:1582 graphs.php:2048 graphs_items.php:271
-#: graphs_items.php:391 include/global_arrays.php:524
-#: include/global_arrays.php:582 include/global_arrays.php:674
-#: include/global_arrays.php:886 include/global_arrays.php:1744
-#: include/global_form.php:574 include/global_form.php:883
-#: include/global_form.php:891 include/global_form.php:899
-#: include/global_form.php:938 include/global_form.php:945
-#: include/global_form.php:971 include/global_form.php:1000
-#: include/global_form.php:1008 include/global_form.php:1186
-#: include/global_form.php:1205 include/global_form.php:1214
-#: include/global_form.php:2128 include/global_form.php:2170
-#: include/global_settings.php:614 include/global_settings.php:622
-#: include/global_settings.php:630 include/global_settings.php:1338
-#: include/global_settings.php:2001 lib/api_automation.php:48
-#: lib/api_automation.php:431 lib/api_automation.php:451
-#: lib/api_automation.php:589 lib/auth.php:3885 lib/auth.php:3934
-#: lib/auth.php:3980 lib/html.php:228 lib/html.php:2256 lib/html.php:2281
-#: lib/html.php:2323 lib/html.php:2357 lib/html_form.php:392
+#: data_debug.php:1115 data_sources.php:626 data_sources.php:1103
+#: data_sources.php:1738 data_sources.php:2059 data_templates.php:1323
+#: graph_templates_items.php:53 graphs.php:950 graphs.php:1596 graphs.php:1605
+#: graphs.php:2072 graphs_items.php:271 graphs_items.php:391
+#: include/global_arrays.php:524 include/global_arrays.php:582
+#: include/global_arrays.php:674 include/global_arrays.php:886
+#: include/global_arrays.php:1744 include/global_form.php:574
+#: include/global_form.php:883 include/global_form.php:891
+#: include/global_form.php:899 include/global_form.php:938
+#: include/global_form.php:945 include/global_form.php:971
+#: include/global_form.php:1000 include/global_form.php:1008
+#: include/global_form.php:1186 include/global_form.php:1205
+#: include/global_form.php:1214 include/global_form.php:2128
+#: include/global_form.php:2170 include/global_settings.php:614
+#: include/global_settings.php:622 include/global_settings.php:630
+#: include/global_settings.php:1338 include/global_settings.php:2001
+#: lib/api_automation.php:48 lib/api_automation.php:431
+#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3957
+#: lib/auth.php:4006 lib/auth.php:4052 lib/html.php:228 lib/html.php:2258
+#: lib/html.php:2283 lib/html.php:2325 lib/html.php:2359 lib/html_form.php:392
 #: lib/html_reports.php:1041 lib/html_reports.php:1045
 #: lib/html_reports.php:1081 lib/html_reports.php:1157
 #: lib/html_reports.php:1163 lib/html_reports.php:1167
@@ -670,7 +670,7 @@ msgstr "Ο τίτλος για τα συνολικά γραφήματα"
 msgid "The internal database identifier for this object"
 msgstr "Το αναγνωριστικό εσωτερικής βάσης δεδομένων για αυτό το αντικείμενο"
 
-#: aggregate_graphs.php:1664 graphs.php:1177
+#: aggregate_graphs.php:1664 graphs.php:1200
 msgid "Aggregate Template"
 msgstr "Συγκεντρωτικό πρότυπο"
 
@@ -738,7 +738,7 @@ msgid "Aggregate Templates that are in use can not be Deleted.  In use is define
 msgstr "Τα συγκεντρωτικά πρότυπα που χρησιμοποιούνται δεν μπορούν να διαγραφούν. Κατά τη χρήση ορίζεται ως αναφορά από ένα Σύνολο."
 
 #: aggregate_templates.php:707 cdef.php:868 color_templates.php:675
-#: data_queries.php:1488 data_source_profiles.php:1323 data_sources.php:2010
+#: data_queries.php:1488 data_source_profiles.php:1323 data_sources.php:2016
 #: data_templates.php:1266 gprint_presets.php:390 graph_templates.php:870
 #: host_templates.php:955
 msgid "Deletable"
@@ -749,7 +749,7 @@ msgstr "Δυνατότητα διαγραφής"
 msgid "Graphs Using"
 msgstr "Χρήση γραφημάτων"
 
-#: aggregate_templates.php:709 graphs.php:2102 host_templates.php:730
+#: aggregate_templates.php:709 graphs.php:2126 host_templates.php:730
 #: include/global_arrays.php:959 include/global_arrays.php:1364
 #: include/global_form.php:1399 include/global_form.php:1635
 #: lib/html_reports.php:1181 tree.php:1944
@@ -811,7 +811,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "Υπάρχουν προβλήματα με τη σελίδα Αλλαγή κωδικού πρόσβασης.  Επικοινωνήστε αμέσως με τον διαχειριστή του Kadupul."
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4270 lib/html.php:2699
+#: include/global_form.php:1552 lib/functions.php:4270 lib/html.php:2701
 msgid "Change Password"
 msgstr "Αλλαγή Κωδικού"
 
@@ -875,11 +875,11 @@ msgstr "Δεν επιτρέπεται η πρόσβαση, επικοινωνή�
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr "Δεν επιτρέπεται η πρόσβαση, επικοινωνήστε με τον διαχειριστή του Kadupul."
 
-#: auth_login.php:119 lib/auth.php:4296 lib/auth.php:4302 lib/auth.php:4407
-#: lib/auth.php:4458 lib/auth.php:4483 lib/auth.php:4506 lib/auth.php:4546
-#: lib/auth.php:4558 lib/auth.php:4581 lib/auth.php:4704 lib/auth.php:4724
-#: lib/auth.php:4936 lib/auth.php:4978 lib/auth.php:4988 lib/auth.php:5004
-#: lib/auth.php:5018 lib/auth.php:5056
+#: auth_login.php:119 lib/auth.php:4368 lib/auth.php:4374 lib/auth.php:4479
+#: lib/auth.php:4530 lib/auth.php:4555 lib/auth.php:4578 lib/auth.php:4618
+#: lib/auth.php:4630 lib/auth.php:4653 lib/auth.php:4776 lib/auth.php:4796
+#: lib/auth.php:5008 lib/auth.php:5050 lib/auth.php:5060 lib/auth.php:5076
+#: lib/auth.php:5090 lib/auth.php:5128
 msgid "Access Denied!  Login Failed."
 msgstr "Δεν επιτρέπεται η πρόσβαση, ο λογαριασμός χρήστη είναι απενεργοποιημένος."
 
@@ -946,7 +946,7 @@ msgstr "Σύνδεση"
 
 #: auth_profile.php:61 include/global_settings.php:22
 #: include/global_settings.php:1202 include/global_settings.php:1519
-#: lib/html.php:2712 managers.php:24 user_admin.php:1741
+#: lib/html.php:2714 managers.php:24 user_admin.php:1741
 #: user_group_admin.php:1763
 msgid "General"
 msgstr "Γενικά"
@@ -956,18 +956,18 @@ msgid "User Account Details"
 msgstr "Στοιχεία λογαριασμού χρήστη"
 
 #: auth_profile.php:313 include/global_arrays.php:858
-#: include/global_settings.php:2737 lib/html.php:2136 lib/html.php:2158
-#: lib/html.php:2693
+#: include/global_settings.php:2737 lib/html.php:2138 lib/html.php:2160
+#: lib/html.php:2695
 msgid "Tree View"
 msgstr "Προβολή δέντρου"
 
-#: auth_profile.php:317 include/global_arrays.php:859 lib/html.php:2143
-#: lib/html.php:2167 lib/html.php:2694
+#: auth_profile.php:317 include/global_arrays.php:859 lib/html.php:2145
+#: lib/html.php:2169 lib/html.php:2696
 msgid "List View"
 msgstr "Προβολή Λίστας"
 
-#: auth_profile.php:321 include/global_arrays.php:860 lib/html.php:2150
-#: lib/html.php:2695
+#: auth_profile.php:321 include/global_arrays.php:860 lib/html.php:2152
+#: lib/html.php:2697
 msgid "Preview View"
 msgstr "Προβολή προεπισκόπησης"
 
@@ -1137,7 +1137,7 @@ msgid "SNMP Name"
 msgstr "Όνομα SNMP"
 
 #: automation_devices.php:274 include/global_form.php:1184
-#: include/global_settings.php:2319 lib/html.php:2352
+#: include/global_settings.php:2319 lib/html.php:2354
 msgid "Location"
 msgstr "Τοποθεσία"
 
@@ -1169,8 +1169,8 @@ msgstr "SNMP (απλό πρωτόκολλο διαχείρισης δικτύο�
 
 #: automation_devices.php:280 automation_devices.php:524
 #: automation_graph_rules.php:837 automation_networks.php:1075
-#: automation_tree_rules.php:851 data_debug.php:505 data_debug.php:1144
-#: data_sources.php:1775 data_templates.php:1289 lib/api_automation.php:52
+#: automation_tree_rules.php:851 data_debug.php:523 data_debug.php:1169
+#: data_sources.php:1793 data_templates.php:1289 lib/api_automation.php:52
 #: lib/api_automation.php:53 lib/api_automation.php:280
 #: lib/api_automation.php:573 lib/api_automation.php:1199
 #: lib/html_reports.php:2031 lib/installer.php:2044 managers.php:216
@@ -1213,7 +1213,7 @@ msgstr "Εξαγωγή"
 msgid "Export to a file"
 msgstr "Εξαγωγή σε αρχείο"
 
-#: automation_devices.php:516 data_debug.php:1116 lib/clog_webapi.php:216
+#: automation_devices.php:516 data_debug.php:1141 lib/clog_webapi.php:216
 #: lib/clog_webapi.php:535 managers.php:796
 msgid "Purge"
 msgstr "Διαγραφή"
@@ -1225,8 +1225,8 @@ msgstr "Κατεβάστε τις ανακαλυφθείσες συσκευές"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:673 data_source_profiles.php:61 lib/functions.php:6559
-#: lib/functions.php:6564 lib/html.php:1338 lib/html.php:1410
+#: data_debug.php:698 data_source_profiles.php:61 lib/functions.php:6559
+#: lib/functions.php:6564 lib/html.php:1340 lib/html.php:1412
 #: lib/html_reports.php:1810 lib/html_reports.php:1838
 #: lib/html_reports.php:1915 lib/html_reports.php:1916
 #: lib/html_reports.php:1917 lib/spikekill.php:1734 lib/spikekill.php:1735
@@ -1235,8 +1235,8 @@ msgstr "Κατεβάστε τις ανακαλυφθείσες συσκευές"
 #: lib/spikekill.php:1806 lib/spikekill.php:1807 lib/spikekill.php:1808
 #: lib/spikekill.php:1809 lib/spikekill.php:1810 plugins.php:780
 #: pollers.php:1115 user_admin.php:2261 utilities.php:738 utilities.php:1190
-#: utilities.php:2769 utilities.php:2897 utilities.php:2905 utilities.php:2916
-#: utilities.php:2927 utilities.php:2952 utilities.php:3002 utilities.php:3238
+#: utilities.php:2757 utilities.php:2885 utilities.php:2893 utilities.php:2904
+#: utilities.php:2915 utilities.php:2940 utilities.php:2990 utilities.php:3226
 msgid "N/A"
 msgstr "Μη Διαθέσιμο"
 
@@ -1277,8 +1277,8 @@ msgstr "Πατήστε &#39;Συνέχεια&#39; για να διαγράψετ
 msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Graph Rules."
 msgstr "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να αντιγράψετε τους ακόλουθους Κανόνες. Μπορείτε να αλλάξετε προαιρετικά τη μορφή τίτλου για τους νέους κανόνες γραφήματος."
 
-#: automation_graph_rules.php:305 automation_tree_rules.php:282 graphs.php:888
-#: graphs.php:899
+#: automation_graph_rules.php:305 automation_tree_rules.php:282 graphs.php:908
+#: graphs.php:919
 msgid "Title Format"
 msgstr "Μορφή τίτλου:"
 
@@ -1353,7 +1353,7 @@ msgid "Graph Rules"
 msgstr "Κανόνες γραφήματος"
 
 #: automation_graph_rules.php:815 automation_graph_rules.php:965
-#: graphs.php:2103 include/global_arrays.php:1367
+#: graphs.php:2127 include/global_arrays.php:1367
 #: include/global_arrays.php:2894 include/global_form.php:1645
 #: include/global_form.php:2207
 msgid "Data Query"
@@ -1362,7 +1362,7 @@ msgstr "Ερώτημα δεδομένων"
 #: automation_graph_rules.php:842 automation_graph_rules.php:967
 #: automation_graph_rules.php:983 automation_networks.php:535
 #: automation_tree_rules.php:856 automation_tree_rules.php:976
-#: automation_tree_rules.php:994 data_debug.php:1150 data_sources.php:1780
+#: automation_tree_rules.php:994 data_debug.php:1175 data_sources.php:1798
 #: include/global_arrays.php:918 include/global_form.php:1527
 #: include/global_settings.php:345 include/global_settings.php:361
 #: lib/api_automation.php:27 lib/html_reports.php:2036
@@ -1371,13 +1371,13 @@ msgstr "Ερώτημα δεδομένων"
 #: user_admin.php:924 user_admin.php:936 user_admin.php:2248
 #: user_domains.php:335 user_domains.php:743 user_group_admin.php:76
 #: user_group_admin.php:741 user_group_admin.php:756 user_group_admin.php:2076
-#: utilities.php:2146 utilities.php:3020
+#: utilities.php:2146 utilities.php:3008
 msgid "Enabled"
 msgstr "Ενεργοποιημένο"
 
 #: automation_graph_rules.php:843 automation_graph_rules.php:983
 #: automation_networks.php:1090 automation_tree_rules.php:857
-#: automation_tree_rules.php:994 data_debug.php:1151 data_sources.php:1781
+#: automation_tree_rules.php:994 data_debug.php:1176 data_sources.php:1799
 #: data_templates.php:1325 include/global_arrays.php:917
 #: include/global_arrays.php:1576 include/global_arrays.php:1868
 #: include/global_settings.php:344 include/global_settings.php:360
@@ -1385,11 +1385,11 @@ msgstr "Ενεργοποιημένο"
 #: include/global_settings.php:1644 include/global_settings.php:1657
 #: include/global_settings.php:1682 include/global_settings.php:1696
 #: include/global_settings.php:1786 include/global_settings.php:2550
-#: lib/api_automation.php:28 lib/html.php:2789 lib/html_reports.php:2037
+#: lib/api_automation.php:28 lib/html.php:2791 lib/html_reports.php:2037
 #: lib/html_reports.php:2188 lib/html_utility.php:1317 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:936 user_domains.php:397
-#: user_group_admin.php:756 utilities.php:2147 utilities.php:2711
-#: utilities.php:3020
+#: user_group_admin.php:756 utilities.php:2147 utilities.php:2699
+#: utilities.php:3008
 msgid "Disabled"
 msgstr "Απενεργοποιημένο"
 
@@ -1538,7 +1538,7 @@ msgstr "Γενικές Ρυθμίσεις"
 #: lib/installer.php:2044 lib/installer.php:2117 lib/installer.php:2147
 #: lib/installer.php:2739 lib/installer.php:2827 lib/vdef.php:56
 #: managers.php:576 pollers.php:46 user_admin.php:924 user_domains.php:311
-#: utilities.php:864 utilities.php:3218
+#: utilities.php:864 utilities.php:3206
 msgid "Name"
 msgstr "Όνομα"
 
@@ -1645,7 +1645,7 @@ msgstr "% d λεπτά"
 #: automation_networks.php:522 automation_networks.php:523
 #: automation_networks.php:524 automation_networks.php:525
 #: automation_networks.php:1212 automation_networks.php:1213
-#: data_sources.php:1543 include/global_arrays.php:712
+#: data_sources.php:1557 include/global_arrays.php:712
 #: include/global_arrays.php:713 include/global_arrays.php:714
 #: include/global_arrays.php:715 include/global_arrays.php:752
 #: include/global_arrays.php:753 include/global_arrays.php:755
@@ -2066,12 +2066,12 @@ msgstr "Επόμενορξη"
 msgid "Last Started"
 msgstr "Τελευταίο ξεκίνησε"
 
-#: automation_networks.php:1110 data_debug.php:1015 data_debug.php:1040
-#: pollers.php:30 utilities.php:2702
+#: automation_networks.php:1110 data_debug.php:1040 data_debug.php:1065
+#: pollers.php:30 utilities.php:2690
 msgid "Running"
 msgstr "Τρέχουσες"
 
-#: automation_networks.php:1134 pollers.php:31 utilities.php:2700
+#: automation_networks.php:1134 pollers.php:31 utilities.php:2688
 msgid "Idle"
 msgstr "Στροφές βραδυπορίας"
 
@@ -2085,15 +2085,15 @@ msgstr "Ποτέ"
 msgid "No Networks Found"
 msgstr "Δεν βρέθηκαν δίκτυα"
 
-#: automation_networks.php:1201 data_debug.php:1165 lib/clog_webapi.php:588
+#: automation_networks.php:1201 data_debug.php:1190 lib/clog_webapi.php:588
 #: lib/html_graph.php:304 lib/html_tree.php:1120 lib/html_tree.php:1141
-#: pollers.php:890 utilities.php:1502 utilities.php:2622
+#: pollers.php:890 utilities.php:1502 utilities.php:2610
 msgid "Refresh"
 msgstr "Ανανέωση"
 
 #: automation_networks.php:1207 automation_networks.php:1208
 #: automation_networks.php:1209 automation_networks.php:1210
-#: data_sources.php:1539 include/global_arrays.php:710
+#: data_sources.php:1553 include/global_arrays.php:710
 #: include/global_arrays.php:746 include/global_arrays.php:747
 #: include/global_arrays.php:748 include/global_arrays.php:749
 #: include/global_arrays.php:750 include/global_arrays.php:751
@@ -2275,7 +2275,7 @@ msgstr "κανένα"
 #: automation_snmp.php:580 automation_templates.php:531 cdef.php:591
 #: color_templates.php:97 data_queries.php:849 data_queries.php:958
 #: lib/api_automation.php:1310 lib/api_automation.php:1373
-#: lib/api_automation.php:1444 lib/html.php:1437 lib/html_reports.php:1930
+#: lib/api_automation.php:1444 lib/html.php:1439 lib/html_reports.php:1930
 #: lib/html_reports.php:1932 tree.php:2384 tree.php:2391
 msgid "Move Down"
 msgstr "Προς τα κάτω"
@@ -2283,7 +2283,7 @@ msgstr "Προς τα κάτω"
 #: automation_snmp.php:586 automation_templates.php:537 cdef.php:597
 #: color_templates.php:103 data_queries.php:854 data_queries.php:963
 #: lib/api_automation.php:1316 lib/api_automation.php:1379
-#: lib/api_automation.php:1450 lib/html.php:1443 lib/html_reports.php:1932
+#: lib/api_automation.php:1450 lib/html.php:1445 lib/html_reports.php:1932
 #: lib/html_reports.php:1934 tree.php:2388 tree.php:2392
 msgid "Move Up"
 msgstr "Προς τα πάνω"
@@ -2395,7 +2395,7 @@ msgstr "Πρότυπα αυτοματισμού [νέο]"
 msgid "Device Automation Templates"
 msgstr "Πρότυπα αυτοματοποίησης συσκευών"
 
-#: automation_templates.php:498 data_sources.php:2022 package_import.php:624
+#: automation_templates.php:498 data_sources.php:2028 package_import.php:624
 #: templates_import.php:242 user_admin.php:1212 user_group_admin.php:1231
 msgid "Template Name"
 msgstr "Όνομα πρότυπου"
@@ -2468,8 +2468,8 @@ msgstr "Κριτήρια δημιουργίας δέντρου"
 msgid "Change Leaf Type"
 msgstr "Αλλαγή τύπου φύλλων"
 
-#: automation_tree_rules.php:740 lib/installer.php:4208 utilities.php:2764
-#: utilities.php:2765 utilities.php:2768 utilities.php:2769
+#: automation_tree_rules.php:740 lib/installer.php:4208 utilities.php:2752
+#: utilities.php:2753 utilities.php:2756 utilities.php:2757
 msgid "WARNING:"
 msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ:"
 
@@ -2814,14 +2814,14 @@ msgid "Hex"
 msgstr "Δεκαεξαδικό"
 
 #: color_templates.php:80 lib/api_aggregate.php:2427 lib/api_aggregate.php:2430
-#: lib/api_aggregate.php:2434 lib/html.php:1363 lib/html.php:1365
+#: lib/api_aggregate.php:2434 lib/html.php:1365 lib/html.php:1367
 #: lib/html_reports.php:1921
 #, php-format
 msgid "Item # %d"
 msgstr "Στοιχείο #%d"
 
 #: color_templates.php:119 graph_templates_inputs.php:225
-#: lib/api_aggregate.php:2486 lib/html.php:1460
+#: lib/api_aggregate.php:2486 lib/html.php:1462
 msgid "No Items"
 msgstr "Κανένα στοιχείο"
 
@@ -2954,342 +2954,342 @@ msgstr "Εκτέλεση ελέγχου"
 msgid "Delete Check"
 msgstr "Διαγραφή ελέγχου"
 
-#: data_debug.php:43
+#: data_debug.php:50
 msgid "Data Source debug started."
 msgstr "Αντιμετώπιση προβλημάτων πηγής δεδομένων"
 
-#: data_debug.php:46
+#: data_debug.php:53
 msgid "Data Source debug received an invalid Data Source ID."
 msgstr "Η επιδιόρθωση πηγής δεδομένων έλαβε ένα μη έγκυρο αναγνωριστικό προέλευσης δεδομένων."
 
-#: data_debug.php:55
+#: data_debug.php:67
 msgid "All RRDfile repairs succeeded."
 msgstr "Όλες οι επισκευές RRDfile πέτυχαν."
 
-#: data_debug.php:57
+#: data_debug.php:69
 msgid "One or more RRDfile repairs failed.  See Kadupul log for errors."
 msgstr "Μία ή περισσότερες επισκευές RRDfile απέτυχαν. Δείτε το αρχείο καταγραφής Kadupul για σφάλματα."
 
-#: data_debug.php:65
+#: data_debug.php:78
 msgid "Automatic Data Source debug being rerun after repair."
 msgstr "Η αυτόματη εντοπισμός σφαλμάτων πηγής δεδομένων επαναλαμβάνεται μετά την επισκευή."
 
-#: data_debug.php:69
+#: data_debug.php:82
 msgid "Data Source repair received an invalid Data Source ID."
 msgstr "Η επιδιόρθωση της προέλευσης δεδομένων έλαβε ένα μη έγκυρο αναγνωριστικό προέλευσης δεδομένων."
 
-#: data_debug.php:77
+#: data_debug.php:90 data_debug.php:164 lib/dsdebug.php:350
 msgid "The requested Data Source is not available."
 msgstr ""
 
-#: data_debug.php:483 data_debug.php:934 data_queries.php:769
-#: data_sources.php:1152 data_templates.php:719 graphs_items.php:387
+#: data_debug.php:501 data_debug.php:959 data_queries.php:769
+#: data_sources.php:1166 data_templates.php:719 graphs_items.php:387
 #: include/global_arrays.php:1006 include/global_form.php:960
-#: lib/api_aggregate.php:2338 lib/html.php:1308 rrdcheck.php:142
+#: lib/api_aggregate.php:2338 lib/html.php:1310 rrdcheck.php:142
 msgid "Data Source"
 msgstr "Ανεπεξέργαστη πηγή"
 
-#: data_debug.php:485
+#: data_debug.php:503
 msgid "The Data Source to Debug"
 msgstr "Η πηγή δεδομένων για την επιδιόρθωση"
 
-#: data_debug.php:488 lib/html.php:2716 utilities.php:1039 utilities.php:1160
+#: data_debug.php:506 lib/html.php:2718 utilities.php:1039 utilities.php:1160
 msgid "User"
 msgstr "Χρήστης"
 
-#: data_debug.php:490
+#: data_debug.php:508
 msgid "The User who requested the Debug."
 msgstr "Ο χρήστης που ζήτησε το Debug."
 
-#: data_debug.php:493
+#: data_debug.php:511
 msgid "Started"
 msgstr "Ξεκίνησε"
 
-#: data_debug.php:496
+#: data_debug.php:514
 msgid "The Date that the Debug was Started."
 msgstr "Η ημερομηνία που ξεκίνησε το Debug."
 
-#: data_debug.php:502
+#: data_debug.php:520
 msgid "The Data Source internal ID."
 msgstr "Το εσωτερικό αναγνωριστικό πηγής δεδομένων."
 
-#: data_debug.php:508
+#: data_debug.php:526
 msgid "The Status of the Data Source Debug Check."
 msgstr "Η κατάσταση του ελέγχου σφαλμάτων πηγής δεδομένων."
 
-#: data_debug.php:511 lib/installer.php:2498 lib/installer.php:2530
+#: data_debug.php:529 lib/installer.php:2498 lib/installer.php:2530
 #: package_import.php:596
 msgid "Writable"
 msgstr "Εγγράψιμος"
 
-#: data_debug.php:514
+#: data_debug.php:532
 msgid "Determines if the Data Collector or the Web Site have Write access."
 msgstr "Προσδιορίζει εάν ο συλλέκτης δεδομένων ή ο ιστότοπος έχουν πρόσβαση στην εγγραφή."
 
-#: data_debug.php:517 templates_import.php:216
+#: data_debug.php:535 templates_import.php:216
 msgid "Exists"
 msgstr "Υπάρχει"
 
-#: data_debug.php:520
+#: data_debug.php:538
 msgid "Determines if the Data Source is located in the Poller Cache."
 msgstr "Προσδιορίζει αν η πηγή δεδομένων βρίσκεται στην προσωρινή μνήμη Poller."
 
-#: data_debug.php:523 data_sources.php:2016 data_templates.php:1325
+#: data_debug.php:541 data_sources.php:2022 data_templates.php:1325
 #: plugins.php:32 plugins.php:503
 msgid "Active"
 msgstr "Ενεργό"
 
-#: data_debug.php:526
+#: data_debug.php:544
 msgid "Determines if the Data Source is Enabled."
 msgstr "Προσδιορίζει εάν είναι ενεργοποιημένη η πηγή δεδομένων."
 
-#: data_debug.php:529
+#: data_debug.php:547
 msgid "RRD Match"
 msgstr "Αγώνας RRD"
 
-#: data_debug.php:532
+#: data_debug.php:550
 msgid "Determines if the RRDfile matches the Data Source Template."
 msgstr "Προσδιορίζει αν το αρχείο RRD αντιστοιχεί στο πρότυπο προέλευσης δεδομένων."
 
-#: data_debug.php:535
+#: data_debug.php:553
 msgid "Valid Data"
 msgstr "Ισχύοντα δεδομένα"
 
-#: data_debug.php:538
+#: data_debug.php:556
 msgid "Determines if the RRDfile has been getting good recent Data."
 msgstr "Καθορίζει αν το αρχείο RRD έχει πάρει καλά πρόσφατα δεδομένα."
 
-#: data_debug.php:541
+#: data_debug.php:559
 msgid "RRD Updated"
 msgstr "RRD Ενημερώθηκε"
 
-#: data_debug.php:544
+#: data_debug.php:562
 msgid "Determines if the RRDfile has been written to properly."
 msgstr "Προσδιορίζει αν έχει καταχωρηθεί σωστά το αρχείο RRD."
 
-#: data_debug.php:547 data_debug.php:673 data_debug.php:864
+#: data_debug.php:565 data_debug.php:698 data_debug.php:889
 msgid "Issues"
 msgstr "Προβλήματα"
 
-#: data_debug.php:550
+#: data_debug.php:568
 msgid "Summary of issues found for the Data Source."
 msgstr "Οποιαδήποτε τυχόν περιληπτικά ζητήματα βρέθηκαν για την Πηγή δεδομένων."
 
-#: data_debug.php:621 data_debug.php:1195 data_sources.php:1802
-#: data_sources.php:1976 include/global_arrays.php:995
+#: data_debug.php:646 data_debug.php:1220 data_sources.php:1820
+#: data_sources.php:1982 include/global_arrays.php:995
 #: include/global_arrays.php:1041 include/global_arrays.php:2311
 #: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:325
 msgid "Data Sources"
 msgstr "Πηγές δεδομένων"
 
-#: data_debug.php:676 data_debug.php:1161
+#: data_debug.php:701 data_debug.php:1186
 msgid "Not Debugging"
 msgstr "Εντοπισμός Σφαλμάτων"
 
-#: data_debug.php:692
+#: data_debug.php:717
 msgid "No Checks"
 msgstr "Δεν υπάρχουν έλεγχοι"
 
-#: data_debug.php:743 lib/api_automation.php:757 lib/graphs.php:61
+#: data_debug.php:768 lib/api_automation.php:757 lib/graphs.php:61
 #: lib/graphs.php:85 templates_import.php:220
 msgid "Not Found"
 msgstr "Δεν βρέθηκε"
 
-#: data_debug.php:761 data_debug.php:766
+#: data_debug.php:786 data_debug.php:791
 msgid "Not Checked Yet"
 msgstr "Δεν υπάρχουν έλεγχοι"
 
-#: data_debug.php:784
+#: data_debug.php:809
 msgid "Issues found!  Waiting on RRDfile update"
 msgstr "Εντοπίστηκαν ζητήματα! Αναμονή για την ενημέρωση του RRDfile"
 
-#: data_debug.php:787
+#: data_debug.php:812
 msgid "No Initial found!  Waiting on RRDfile update"
 msgstr "Δεν βρέθηκε αρχικά! Αναμονή για την ενημέρωση του RRDfile"
 
-#: data_debug.php:791
+#: data_debug.php:816
 msgid "Waiting on analysis and RRDfile update"
 msgstr "Το ενημερωμένο αρχείο RRD ενημερώθηκε;"
 
-#: data_debug.php:798
+#: data_debug.php:823
 msgid "RRDfile Owner"
 msgstr "Ιδιοκτήτης RRDfile"
 
-#: data_debug.php:803
+#: data_debug.php:828
 msgid "Website runs as"
 msgstr "Ο ιστότοπος λειτουργεί ως"
 
-#: data_debug.php:808
+#: data_debug.php:833
 msgid "Poller runs as"
 msgstr "Ο Poller τρέχει ως"
 
-#: data_debug.php:813
+#: data_debug.php:838
 msgid "Is RRA Folder writeable by poller?"
 msgstr "Είναι ο φάκελος RRA εγγράψιμος από το poller;"
 
-#: data_debug.php:818
+#: data_debug.php:843
 msgid "Is RRDfile writeable by poller?"
 msgstr "Είναι το RRDfile εγγράψιμο από poller;"
 
-#: data_debug.php:823
+#: data_debug.php:848
 msgid "Does the RRDfile Exist?"
 msgstr "Υπάρχει το αρχείο RRD;"
 
-#: data_debug.php:828
+#: data_debug.php:853
 msgid "Is the Data Source set as Active?"
 msgstr "Η πηγή δεδομένων είναι ενεργή;"
 
-#: data_debug.php:833
+#: data_debug.php:858
 msgid "Did the poller receive valid data?"
 msgstr "Το poller έλαβε έγκυρα δεδομένα;"
 
-#: data_debug.php:838
+#: data_debug.php:863
 msgid "Was the RRDfile updated?"
 msgstr "Το ενημερωμένο αρχείο RRD ενημερώθηκε;"
 
-#: data_debug.php:844
+#: data_debug.php:869
 msgid "First Check TimeStamp"
 msgstr "Πρώτα έλεγχος χρόνου"
 
-#: data_debug.php:849
+#: data_debug.php:874
 msgid "Second Check TimeStamp"
 msgstr "Δεύτερο χρονικό σημείο ελέγχου"
 
-#: data_debug.php:854
+#: data_debug.php:879
 msgid "Were we able to convert the title?"
 msgstr "Μπορέσαμε να μετατρέψουμε τον τίτλο;"
 
-#: data_debug.php:859
+#: data_debug.php:884
 msgid "Data Source matches the RRDfile?"
 msgstr "Η πηγή δεδομένων δεν ερωτήθηκε"
 
-#: data_debug.php:873
+#: data_debug.php:898
 #, php-format
 msgid "Data Source Troubleshooter [ Auto Refreshing till Complete ] %s"
 msgstr "Αντιμετώπιση προβλημάτων πηγής δεδομένων [ %s]"
 
-#: data_debug.php:873 data_debug.php:875
+#: data_debug.php:898 data_debug.php:900
 msgid "Refresh Now"
 msgstr "Ανανέωση"
 
-#: data_debug.php:875
+#: data_debug.php:900
 #, php-format
 msgid "Data Source Troubleshooter [ Auto Refreshing till RRDfile Update ] %s"
 msgstr "Αντιμετώπιση προβλημάτων πηγής δεδομένων [ %s]"
 
-#: data_debug.php:877
+#: data_debug.php:902
 #, php-format
 msgid "Data Source Troubleshooter [ Analysis Complete! %s ]"
 msgstr "Αντιμετώπιση προβλημάτων πηγής δεδομένων [ %s]"
 
-#: data_debug.php:877
+#: data_debug.php:902
 msgid "Rerun Analysis"
 msgstr "Ανάλυση αναστροφής"
 
-#: data_debug.php:882
+#: data_debug.php:907
 msgid "Check"
 msgstr "Ελεγχος"
 
-#: data_debug.php:883 include/global_form.php:1018 lib/rrd.php:4176
-#: utilities.php:798 utilities.php:815 utilities.php:3218
+#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4176
+#: utilities.php:798 utilities.php:815 utilities.php:3206
 msgid "Value"
 msgstr "Αξία"
 
-#: data_debug.php:884
+#: data_debug.php:909
 msgid "Results"
 msgstr "Αποτελέσματα"
 
-#: data_debug.php:895
+#: data_debug.php:920
 msgid "<not set>"
 msgstr "Ορισμός ως Προεπιλογή"
 
-#: data_debug.php:930 data_debug.php:981
+#: data_debug.php:955 data_debug.php:1006
 msgid "Data Source Repair Recommendations"
 msgstr "Πεδία προέλευσης δεδομένων"
 
-#: data_debug.php:935
+#: data_debug.php:960
 msgid "Issue"
 msgstr "Πρόβλημα"
 
-#: data_debug.php:947
+#: data_debug.php:972
 #, php-format
 msgid "For attribute '%s', issue found '%s'"
 msgstr "Για το attrbitute ' %s', βρέθηκε το θέμα ' %s'"
 
-#: data_debug.php:962
+#: data_debug.php:987
 msgid "Apply Suggested Fixes"
 msgstr "Επαναπροσδιορισμός προτεινόμενων ονομάτων"
 
-#: data_debug.php:962
+#: data_debug.php:987
 #, php-format
 msgid "Repair Steps [ %s ]"
 msgstr "Βήματα επιδιόρθωσης [ %s]"
 
-#: data_debug.php:964
+#: data_debug.php:989
 msgid "Repair Steps [ Run Fix from Command Line ]"
 msgstr "Βήματα επιδιόρθωσης [Εκτέλεση επιδιόρθωσης από γραμμή εντολών]"
 
-#: data_debug.php:967
+#: data_debug.php:992
 msgid "Command"
 msgstr "Εντολή"
 
-#: data_debug.php:983
+#: data_debug.php:1008
 msgid "Waiting on Data Source Check to Complete"
 msgstr "Αναμονή για την Πηγή δεδομένων Έλεγχος για ολοκλήρωση"
 
-#: data_debug.php:1019 data_debug.php:1044 lib/graphs.php:41
+#: data_debug.php:1044 data_debug.php:1069 lib/graphs.php:41
 msgid "Not Applicable"
 msgstr "Μη διαθέσιμη"
 
-#: data_debug.php:1025 data_debug.php:1033 data_debug.php:1052
-#: data_debug.php:1149 utilities.php:1068 utilities.php:1198
+#: data_debug.php:1050 data_debug.php:1058 data_debug.php:1077
+#: data_debug.php:1174 utilities.php:1068 utilities.php:1198
 msgid "Failed"
 msgstr "Απέτυχε"
 
-#: data_debug.php:1029 data_debug.php:1031 data_debug.php:1048
+#: data_debug.php:1054 data_debug.php:1056 data_debug.php:1073
 #: lib/installer.php:2070
 msgid "Passed"
 msgstr "Πέτυχε"
 
-#: data_debug.php:1055 lib/installer.php:2073
+#: data_debug.php:1080 lib/installer.php:2073
 msgid "Warning"
 msgstr "Προσοχή"
 
-#: data_debug.php:1074
+#: data_debug.php:1099
 msgid "All Devices"
 msgstr "Όλες οι συσκευές"
 
-#: data_debug.php:1074
+#: data_debug.php:1099
 #, php-format
 msgid "Data Source Troubleshooter [ %s ]"
 msgstr "Αντιμετώπιση προβλημάτων πηγής δεδομένων [ %s]"
 
-#: data_debug.php:1074
+#: data_debug.php:1099
 msgid "No Device"
 msgstr "设备："
 
-#: data_debug.php:1116
+#: data_debug.php:1141
 msgid "Delete All Checks"
 msgstr "Διαγραφή ελέγχου"
 
-#: data_debug.php:1117
+#: data_debug.php:1142
 #, fuzzy
 msgid "Run All"
 msgstr "Εκτέλεση όλων"
 
-#: data_debug.php:1117
+#: data_debug.php:1142
 msgid "Run checks on currently filtered Data Sources and preserve other results"
 msgstr "Εκτελέστε ελέγχους στις τρέχουσες φιλτραρισμένες προελεύσεις δεδομένων και διατηρήστε άλλα αποτελέσματα"
 
-#: data_debug.php:1125 data_sources.php:1755 data_templates.php:1107
-#: lib/html.php:2725
+#: data_debug.php:1150 data_sources.php:1773 data_templates.php:1107
+#: lib/html.php:2727
 msgid "Profile"
 msgstr "Προφίλ"
 
-#: data_debug.php:1129 data_debug.php:1148 data_debug.php:1159
-#: data_sources.php:1759 data_sources.php:1779 data_templates.php:1111
-#: graphs.php:2100 graphs_new.php:488 host_templates.php:716
+#: data_debug.php:1154 data_debug.php:1173 data_debug.php:1184
+#: data_sources.php:1777 data_sources.php:1797 data_templates.php:1111
+#: graphs.php:2124 graphs_new.php:488 host_templates.php:716
 #: host_templates.php:734 lib/clog_webapi.php:549 lib/html.php:227
 #: lib/html_reports.php:1138 lib/html_reports.php:2284 plugins.php:501
 #: settings.php:590 settings.php:612 settings.php:643 tree.php:914
@@ -3298,7 +3298,7 @@ msgstr "Προφίλ"
 msgid "All"
 msgstr "Όλα"
 
-#: data_debug.php:1155 data_debug.php:1160
+#: data_debug.php:1180 data_debug.php:1185
 msgid "Debugging"
 msgstr "Εντοπισμός Σφαλμάτων"
 
@@ -3892,7 +3892,7 @@ msgstr "Τα προφίλ που χρησιμοποιούνται δεν μπο�
 msgid "Read Only"
 msgstr "Μόνο για ανάγνωση"
 
-#: data_source_profiles.php:1333 data_sources.php:2004
+#: data_source_profiles.php:1333 data_sources.php:2010
 #: include/global_settings.php:1234
 msgid "Poller Interval"
 msgstr "Πολλαπλό διάστημα"
@@ -3926,7 +3926,7 @@ msgstr "Ο αριθμός των προτύπων δεδομένων που χρ
 msgid "No Data Source Profiles Found"
 msgstr "Δεν βρέθηκαν προφίλ πηγών δεδομένων"
 
-#: data_sources.php:24 data_sources.php:617 graphs.php:42
+#: data_sources.php:24 data_sources.php:631 graphs.php:42
 msgid "Change Device"
 msgstr "Αλλαγή συσκευής"
 
@@ -3934,295 +3934,295 @@ msgstr "Αλλαγή συσκευής"
 msgid "Reapply Suggested Names"
 msgstr "Επαναπροσδιορισμός προτεινόμενων ονομάτων"
 
-#: data_sources.php:577
+#: data_sources.php:588
 msgid "Click 'Continue' to delete the following Data Source"
 msgid_plural "Click 'Continue' to delete following Data Sources"
 msgstr[0] "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να διαγράψετε την ακόλουθη Πηγή δεδομένων"
 msgstr[1] "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να διαγράψετε τις ακόλουθες Πηγές δεδομένων"
 
-#: data_sources.php:581
+#: data_sources.php:592
 msgid "The following graph is using these data sources:"
 msgid_plural "The following graphs are using these data sources:"
 msgstr[0] "Το παρακάτω γράφημα χρησιμοποιεί αυτές τις πηγές δεδομένων:"
 msgstr[1] "Τα παρακάτω γραφήματα χρησιμοποιούν αυτές τις πηγές δεδομένων:"
 
-#: data_sources.php:591
+#: data_sources.php:602
 msgid "Leave the <strong>Graph</strong> untouched."
 msgid_plural "Leave all <strong>Graphs</strong> untouched."
 msgstr[0] "Αφήστε το <strong>γράφημα</strong> ανέπαφο."
 msgstr[1] "Αφήστε όλα τα <strong>γράμματα</strong> ανέπαφα."
 
-#: data_sources.php:593
+#: data_sources.php:604
 msgid "Delete all <strong>Graph Items</strong> that reference this Data Source."
 msgid_plural "Delete all <strong>Graph Items</strong> that reference these Data Sources."
 msgstr[0] "Διαγράψτε όλα τα <strong>στοιχεία γραφήματος</strong> που αναφέρονται σε αυτήν την προέλευση δεδομένων."
 msgstr[1] "Διαγράψτε όλα τα <strong>στοιχεία γραφήματος</strong> που αναφέρονται σε αυτές τις Πηγές δεδομένων."
 
-#: data_sources.php:596
+#: data_sources.php:607
 msgid "Delete all <strong>Graphs</strong> that reference this Data Source."
 msgid_plural "Delete all <strong>Graphs</strong> that reference these Data Sources."
 msgstr[0] "Διαγράψτε όλους τους <strong>διαγράμματα</strong> που αναφέρονται σε αυτή την Πηγή δεδομένων."
 msgstr[1] "Διαγράψτε όλα τα <strong>Γραφήματα</strong> που αναφέρονται σε αυτές τις Πηγές Δεδομένων."
 
-#: data_sources.php:605
+#: data_sources.php:616
 msgid "Delete Data Source"
 msgid_plural "Delete Data Sources"
 msgstr[0] "Διαγραφή πηγής δεδομένων"
 msgstr[1] "Διαγραφή πηγών δεδομένων"
 
-#: data_sources.php:609
+#: data_sources.php:620
 msgid "Choose a new Device for this Data Source and click 'Continue'."
 msgid_plural "Choose a new Device for these Data Sources and click 'Continue'"
 msgstr[0] "Επιλέξτε μια νέα συσκευή για αυτήν την προέλευση δεδομένων και κάντε κλικ στο κουμπί &quot;Συνέχεια&quot;."
 msgstr[1] "Επιλέξτε μια νέα Συσκευή για αυτές τις Πηγές Δεδομένων και κάντε κλικ στο &#39;Συνέχεια&#39;"
 
-#: data_sources.php:611
+#: data_sources.php:622
 msgid "New Device:"
 msgstr "Νέα συσκευή"
 
-#: data_sources.php:621
+#: data_sources.php:635
 msgid "Click 'Continue' to enable the following Data Source."
 msgid_plural "Click 'Continue' to enable all following Data Sources."
 msgstr[0] "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να ενεργοποιήσετε την ακόλουθη Πηγή δεδομένων."
 msgstr[1] "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να ενεργοποιήσετε όλες τις ακόλουθες Πηγές δεδομένων."
 
-#: data_sources.php:626
+#: data_sources.php:640
 msgid "Enable Data Source"
 msgid_plural "Enable Data Sources"
 msgstr[0] "Ενεργοποιήστε την Πηγή δεδομένων"
 msgstr[1] "Ενεργοποιήστε τις Πηγές δεδομένων"
 
-#: data_sources.php:630
+#: data_sources.php:644
 msgid "Click 'Continue' to disable the following Data Source."
 msgid_plural "Click 'Continue' to disable all following Data Sources."
 msgstr[0] "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να απενεργοποιήσετε την ακόλουθη Πηγή δεδομένων."
 msgstr[1] "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να απενεργοποιήσετε όλες τις ακόλουθες Πηγές δεδομένων."
 
-#: data_sources.php:635
+#: data_sources.php:649
 msgid "Disable Data Source"
 msgid_plural "Disable Data Sources"
 msgstr[0] "Απενεργοποιήστε την Πηγή δεδομένων"
 msgstr[1] "Απενεργοποιήστε τις Πηγές Δεδομένων"
 
-#: data_sources.php:639
+#: data_sources.php:653
 msgid "Click 'Continue' to re-apply the suggested name to the following Data Source."
 msgid_plural "Click 'Continue' to re-apply the suggested names to all following Data Sources."
 msgstr[0] "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να εφαρμόσετε ξανά το προτεινόμενο όνομα στην ακόλουθη Πηγή δεδομένων."
 msgstr[1] "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να εφαρμόσετε ξανά τα προτεινόμενα ονόματα σε όλες τις ακόλουθες Πηγές δεδομένων."
 
-#: data_sources.php:644
+#: data_sources.php:658
 msgid "Reapply Suggested Naming to Data Source"
 msgid_plural "Reapply Suggested Naming to Data Sources"
 msgstr[0] "Επαναπροσδιορίστε την Προτεινόμενη Ονομασία στην Πηγή Δεδομένων"
 msgstr[1] "Επαναπροσδιορισμός προτεινόμενου ορισμού σε πηγές δεδομένων"
 
-#: data_sources.php:732 data_templates.php:886
+#: data_sources.php:746 data_templates.php:886
 #, php-format
 msgid "Custom Data [data input: %s]"
 msgstr "Προσαρμοσμένα δεδομένα [εισαγωγή δεδομένων: %s]"
 
-#: data_sources.php:767
+#: data_sources.php:781
 #, php-format
 msgid "(From Device: %s)"
 msgstr "(Από τη συσκευή: %s)"
 
-#: data_sources.php:770
+#: data_sources.php:784
 msgid "(From Data Template)"
 msgstr "(Από πρότυπο δεδομένων)"
 
-#: data_sources.php:771
+#: data_sources.php:785
 msgid "Nothing Entered"
 msgstr "Δεν εισήχθη τίποτα"
 
-#: data_sources.php:786 data_templates.php:970
+#: data_sources.php:800 data_templates.php:970
 msgid "No Input Fields for the Selected Data Input Source"
 msgstr "Δεν υπάρχουν πεδία εισαγωγής για την επιλεγμένη πηγή εισόδου δεδομένων"
 
-#: data_sources.php:934
+#: data_sources.php:948
 #, php-format
 msgid "Data Template Selection [edit: %s]"
 msgstr "Επιλογή προτύπου δεδομένων [επεξεργασία: %s]"
 
-#: data_sources.php:946
+#: data_sources.php:960
 msgid "Data Template Selection [new]"
 msgstr "Επιλογή προτύπου δεδομένων [new]"
 
-#: data_sources.php:987
+#: data_sources.php:1001
 msgid "Turn Off Data Source Debug Mode."
 msgstr "Απενεργοποίηση λειτουργίας κατάργησης πηγής δεδομένων."
 
-#: data_sources.php:987
+#: data_sources.php:1001
 msgid "Turn On Data Source Debug Mode."
 msgstr "Ενεργοποίηση λειτουργίας κατάργησης πηγής δεδομένων."
 
-#: data_sources.php:988
+#: data_sources.php:1002
 msgid "Turn Off Data Source Info Mode."
 msgstr "Απενεργοποιήστε τη λειτουργία Πληροφορίες πηγής δεδομένων."
 
-#: data_sources.php:988
+#: data_sources.php:1002
 msgid "Turn On Data Source Info Mode."
 msgstr "Ενεργοποίηση της λειτουργίας πληροφοριών πηγών δεδομένων."
 
-#: data_sources.php:999
+#: data_sources.php:1013
 #, php-format
 msgid "Edit Graph: '%s'."
 msgstr "Επεξεργασία γραφήματος: '%s'."
 
-#: data_sources.php:1003 graphs.php:1535
+#: data_sources.php:1017 graphs.php:1558
 msgid "Edit Device."
 msgstr "Επεξεργασία συσκευής"
 
-#: data_sources.php:1006
+#: data_sources.php:1020
 msgid "Edit Data Template."
 msgstr "Επεξεργασία προτύπου δεδομένων."
 
-#: data_sources.php:1009
+#: data_sources.php:1023
 msgid "Disable Data Source."
 msgstr "Απενεργοποιήστε την Πηγή δεδομένων"
 
-#: data_sources.php:1009
+#: data_sources.php:1023
 msgid "Enable Data Source."
 msgstr "Ενεργοποιήστε την Πηγή δεδομένων"
 
-#: data_sources.php:1079
+#: data_sources.php:1093
 msgid "Selected Data Template"
 msgstr "Επιλεγμένο πρότυπο δεδομένων"
 
-#: data_sources.php:1080
+#: data_sources.php:1094
 msgid "The name given to this data template.  Please note that you may only change Graph Templates to a 100%$ compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "Το όνομα που δίνεται σε αυτό το πρότυπο δεδομένων. Λάβετε υπόψη ότι μπορείτε να αλλάξετε μόνο πρότυπα γραφήματος σε ένα πρότυπο γραφήματος συμβατό με 100%, πράγμα που σημαίνει ότι περιλαμβάνει ίδιες πηγές δεδομένων."
 
-#: data_sources.php:1087 graph_view.php:817 graphs.php:1578
+#: data_sources.php:1101 graph_view.php:817 graphs.php:1601
 #: include/global_arrays.php:955 include/global_arrays.php:1004
 #: include/global_arrays.php:1691 include/global_arrays.php:1860
-#: lib/api_automation.php:426 lib/functions.php:6195 lib/html.php:2251
-#: lib/html.php:2288 lib/html_reports.php:1170 utilities.php:1934
+#: lib/api_automation.php:426 lib/functions.php:6195 lib/html.php:2253
+#: lib/html.php:2290 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
 msgstr "Συσκευή"
 
-#: data_sources.php:1088
+#: data_sources.php:1102
 msgid "Choose the Device that this Data Source belongs to."
 msgstr "Επιλέξτε τη συσκευή στην οποία ανήκει αυτή η πηγή δεδομένων."
 
-#: data_sources.php:1140
+#: data_sources.php:1154
 msgid "Supplemental Data Template Data"
 msgstr "Συμπληρωματικά δεδομένα προτύπου δεδομένων"
 
-#: data_sources.php:1142
+#: data_sources.php:1156
 msgid "Data Source Fields"
 msgstr "Πεδία προέλευσης δεδομένων"
 
-#: data_sources.php:1143
+#: data_sources.php:1157
 msgid "Data Source Item Fields"
 msgstr "Πεδία στοιχείων στοιχείων πηγών"
 
-#: data_sources.php:1144
+#: data_sources.php:1158
 msgid "Custom Data"
 msgstr "Προσαρμοσμένα δεδομένα"
 
-#: data_sources.php:1250
+#: data_sources.php:1264
 #, php-format
 msgid "Data Source Item %s"
 msgstr "Στοιχείο προέλευσης δεδομένων %s"
 
-#: data_sources.php:1253 data_templates.php:817 lib/import.php:2781
+#: data_sources.php:1267 data_templates.php:817 lib/import.php:2781
 #: package_import.php:598
 msgid "New"
 msgstr "Νέο"
 
-#: data_sources.php:1312
+#: data_sources.php:1326
 msgid "Data Source Debug"
 msgstr "Αντιμετώπιση προβλημάτων πηγής δεδομένων"
 
-#: data_sources.php:1334
+#: data_sources.php:1348
 msgid "RRDtool Tune Info"
 msgstr "RRDtool Tune Info"
 
-#: data_sources.php:1537 data_templates.php:1324 include/global_form.php:582
+#: data_sources.php:1551 data_templates.php:1324 include/global_form.php:582
 msgid "External"
 msgstr "Εξωτερικός"
 
-#: data_sources.php:1541 include/global_arrays.php:711
+#: data_sources.php:1555 include/global_arrays.php:711
 #: include/global_arrays.php:1208 include/global_arrays.php:1582
 #: include/global_arrays.php:1618 include/global_arrays.php:1636
 #: include/global_settings.php:1697 include/global_settings.php:2662
 msgid "1 Minute"
 msgstr "1 λεπτό"
 
-#: data_sources.php:1698
+#: data_sources.php:1714
 msgid "Data Sources [ All Devices ]"
 msgstr "Πηγές δεδομένων [Χωρίς συσκευή]"
 
-#: data_sources.php:1700
+#: data_sources.php:1716
 msgid "Data Sources [ Non Device Based ]"
 msgstr "Πηγές δεδομένων [Χωρίς συσκευή]"
 
-#: data_sources.php:1703
+#: data_sources.php:1719
 #, php-format
 msgid "Data Sources [ %s ]"
 msgstr "Πηγές δεδομένων [ %s]"
 
-#: data_sources.php:1782
+#: data_sources.php:1800
 msgid "Bad Indexes"
 msgstr "Δείκτης"
 
-#: data_sources.php:1788 graphs.php:2076
+#: data_sources.php:1806 graphs.php:2100
 msgid "Note that this query may take some time to run."
 msgstr "Λάβετε υπόψη ότι αυτό το ερώτημα μπορεί να χρειαστεί λίγο χρόνο για να εκτελεστεί."
 
-#: data_sources.php:1788 graphs.php:2076
+#: data_sources.php:1806 graphs.php:2100
 msgid "Orphaned"
 msgstr "Ορφανά"
 
-#: data_sources.php:1986 utilities.php:2282
+#: data_sources.php:1992 utilities.php:2282
 msgid "Data Source Name"
 msgstr "Όνομα πηγής δεδομένων"
 
-#: data_sources.php:1989
+#: data_sources.php:1995
 msgid "The name of this Data Source. Generally programmatically generated from the Data Template definition."
 msgstr "Το όνομα αυτής της πηγής δεδομένων. Γενικά δημιουργείται προγραμματικά από τον ορισμό του Προτύπου Δεδομένων."
 
-#: data_sources.php:1995
+#: data_sources.php:2001
 msgid "The internal database ID for this Data Source. Useful when performing automation or debugging."
 msgstr "Το αναγνωριστικό εσωτερικής βάσης δεδομένων για αυτήν την προέλευση δεδομένων. Χρήσιμη κατά την εκτέλεση αυτοματοποίησης ή εντοπισμού σφαλμάτων."
 
-#: data_sources.php:2001
+#: data_sources.php:2007
 msgid "The number of Graphs and Aggregate Graphs that are using the Data Source."
 msgstr "Ο αριθμός των προτύπων γραφημάτων που χρησιμοποιούν αυτό το ερώτημα δεδομένων."
 
-#: data_sources.php:2007
+#: data_sources.php:2013
 msgid "The frequency that data is collected for this Data Source."
 msgstr "Η συχνότητα που συλλέγονται τα δεδομένα για αυτήν την Πηγή Δεδομένων."
 
-#: data_sources.php:2013
+#: data_sources.php:2019
 msgid "If this Data Source is no long in use by Graphs, it can be Deleted."
 msgstr "Εάν αυτή η Πηγή Δεδομένων δεν χρησιμοποιείται πολύ από τα Γραφήματα, μπορεί να Διαγραφεί."
 
-#: data_sources.php:2019
+#: data_sources.php:2025
 msgid "Whether or not data will be collected for this Data Source. Controlled at the Data Template level."
 msgstr "Εάν θα συλλεχθούν ή όχι δεδομένα για αυτήν την Πηγή Δεδομένων. Ελέγχονται στο επίπεδο του προτύπου δεδομένων."
 
-#: data_sources.php:2025
+#: data_sources.php:2031
 msgid "The Data Template that this Data Source was based upon."
 msgstr "Το πρότυπο δεδομένων που βασίστηκε αυτή η προέλευση δεδομένων."
 
-#: data_sources.php:2066
+#: data_sources.php:2072
 msgid "Damaged Data Source Name"
 msgstr "Όνομα πηγής δεδομένων"
 
-#: data_sources.php:2086
+#: data_sources.php:2092
 msgid "No Data Sources Found"
 msgstr "Δεν βρέθηκαν πηγές δεδομένων"
 
-#: data_sources.php:2139
+#: data_sources.php:2145
 msgid "No Graphs"
 msgstr "Γραφήματα"
 
-#: data_sources.php:2143 include/global_arrays.php:996
+#: data_sources.php:2149 include/global_arrays.php:996
 msgid "Aggregates"
 msgstr "Μακροοικονομικά μεγέθη"
 
-#: data_sources.php:2145
+#: data_sources.php:2151
 msgid "No Aggregates"
 msgstr "Μακροοικονομικά μεγέθη"
 
@@ -4469,7 +4469,7 @@ msgstr "Επεξεργασία προτύπου γραφήματος."
 msgid "Click to view just this Graph in Real-time"
 msgstr "Κάντε κλικ για να δείτε μόνο αυτό το γράφημα σε πραγματικό χρόνο"
 
-#: graph.php:270 lib/html.php:2690
+#: graph.php:270 lib/html.php:2692
 msgid "Utility View"
 msgstr "Προβολή βοηθητικού προγράμματος"
 
@@ -4489,43 +4489,43 @@ msgstr "Δεδομένα γραφήματος"
 msgid "RRDtool Graph Syntax"
 msgstr "RRDtool Σύνταξη γραφήματος"
 
-#: graph_image.php:174 graph_json.php:208 graph_realtime.php:317
+#: graph_image.php:174 graph_json.php:208 graph_realtime.php:330
 #: lib/rrd.php:2524
 msgid "The Kadupul Poller has not run yet."
 msgstr "Ο Kadupul Poller δεν έχει τρέξει ακόμα."
 
-#: graph_realtime.php:34 graph_realtime.php:446 include/auth.php:316
-#: lib/functions.php:8206 permission_denied.php:29 permission_denied.php:36
+#: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
+#: lib/functions.php:8229 permission_denied.php:29 permission_denied.php:36
 msgid "Permission Denied"
 msgstr "Δεν επιτρέπεται η πρόσβαση"
 
-#: graph_realtime.php:71 graph_realtime.php:439
+#: graph_realtime.php:84 graph_realtime.php:452
 msgid "Real-time has been disabled by your administrator."
 msgstr "Ο πραγματικός χρόνος έχει απενεργοποιηθεί από το διαχειριστή σας."
 
-#: graph_realtime.php:453
+#: graph_realtime.php:466
 msgid "The Image Cache Directory does not exist.  Please first create it and set permissions and then attempt to open another Real-time graph."
 msgstr "Ο κατάλογος της προσωρινής μνήμης εικόνας δεν υπάρχει. Αρχικά, δημιουργήστε το και ορίστε δικαιώματα και στη συνέχεια επιχειρήστε να ανοίξετε ένα άλλο γράφημα πραγματικού χρόνου."
 
-#: graph_realtime.php:460
+#: graph_realtime.php:473
 msgid "The Image Cache Directory is not writable.  Please set permissions and then attempt to open another Real-time graph."
 msgstr "Ο κατάλογος της προσωρινής μνήμης εικόνας δεν είναι εγγράψιμος. Ρυθμίστε τα δικαιώματα και, στη συνέχεια, επιχειρήστε να ανοίξετε ένα άλλο γράφημα πραγματικού χρόνου."
 
-#: graph_realtime.php:481
+#: graph_realtime.php:494
 msgid "Kadupul Real-time Graphing"
 msgstr "Kadupul Graphing σε πραγματικό χρόνο"
 
-#: graph_realtime.php:528 lib/html_graph.php:229 lib/html_reports.php:107
+#: graph_realtime.php:541 lib/html_graph.php:229 lib/html_reports.php:107
 #: lib/html_tree.php:1051
 msgid "Thumbnails"
 msgstr "Μικρογραφίες"
 
-#: graph_realtime.php:532
+#: graph_realtime.php:545
 #, php-format
 msgid "%d seconds left."
 msgstr "% d δευτερόλεπτα αριστερά."
 
-#: graph_realtime.php:548
+#: graph_realtime.php:561
 msgid " seconds left."
 msgstr "δευτερόλεπτα."
 
@@ -4774,12 +4774,12 @@ msgstr "Όλες οι γραφικές παραστάσεις και τα πρό
 msgid "Not Templated"
 msgstr "Δεν είναι Templated"
 
-#: graph_view.php:812 graph_view.php:840 graphs.php:2316
+#: graph_view.php:812 graph_view.php:840 graphs.php:2333
 #: include/global_form.php:1884 lib/html_reports.php:1201 tree.php:1021
 msgid "Graph Name"
 msgstr "Όνομα γραφήματος"
 
-#: graph_view.php:814 graph_view.php:842 graphs.php:2319
+#: graph_view.php:814 graph_view.php:842 graphs.php:2336
 msgid "The Title of this Graph.  Generally programmatically generated from the Graph Template definition or Suggested Naming rules.  The max length of the Title is controlled under Settings->Visual."
 msgstr "Ο τίτλος αυτού του γραφήματος. Γενικά δημιουργείται προγραμματικά από τον ορισμό του προτύπου γραφικών ή τους προτεινόμενους κανόνες ονοματοδοσίας. Το μέγιστο μήκος του Τίτλου ελέγχεται από το Settings-&gt; Visual."
 
@@ -4787,23 +4787,23 @@ msgstr "Ο τίτλος αυτού του γραφήματος. Γενικά δ�
 msgid "The device for this Graph."
 msgstr "Το όνομα αυτής της ομάδας."
 
-#: graph_view.php:822 graphs.php:2328
+#: graph_view.php:822 graphs.php:2345
 msgid "Source Type"
 msgstr "Τυπος πηγης"
 
-#: graph_view.php:824 graphs.php:2331
+#: graph_view.php:824 graphs.php:2348
 msgid "The underlying source that this Graph was based upon."
 msgstr "Η υποκείμενη πηγή που βασίστηκε σε αυτό το γράφημα."
 
-#: graph_view.php:827 graphs.php:2334
+#: graph_view.php:827 graphs.php:2351
 msgid "Source Name"
 msgstr "#-#-#-#-#  gnome-dictionary.master.el.po (gnome-utils.gnome-2-26)  #-#-#-#-#Όνομα πηγής#-#-#-#-#  gtranslator.master.el.po (gtranslator 1.0)  #-#-#-#-#Πηγαίο Όνομα"
 
-#: graph_view.php:829 graphs.php:2337
+#: graph_view.php:829 graphs.php:2354
 msgid "The Graph Template or Data Query that this Graph was based upon."
 msgstr "Το πρότυπο γραφήματος ή το ερώτημα δεδομένων που βασίστηκε σε αυτό το γράφημα."
 
-#: graph_view.php:834 graph_view.php:847 graphs.php:2343
+#: graph_view.php:834 graph_view.php:847 graphs.php:2360
 msgid "The size of this Graph when not in Preview mode."
 msgstr "Το μέγεθος αυτού του γραφήματος όταν δεν βρίσκεται στη λειτουργία προεπισκόπησης."
 
@@ -4820,12 +4820,12 @@ msgstr "Λειτουργία προεπισκόπησης"
 msgid "Add Selected Graphs to Report"
 msgstr "Προσθήκη επιλεγμένων γραφημάτων στην αναφορά"
 
-#: graph_view.php:1049 lib/html.php:2761
+#: graph_view.php:1049 lib/html.php:2763
 msgid "Ok"
 msgstr "Εντάξει"
 
 #: graph_xport.php:102 graph_xport.php:144 include/global_form.php:1809
-#: include/global_form.php:2077 lib/html.php:2032
+#: include/global_form.php:2077 lib/html.php:2034
 msgid "Title"
 msgstr "Τίτλος"
 
@@ -4874,241 +4874,245 @@ msgstr "Συνοπτικές λεπτομέρειες"
 msgid "Download"
 msgstr "Λήψη"
 
-#: graphs.php:37 graphs.php:882 include/global_arrays.php:2089
+#: graphs.php:37 graphs.php:902 include/global_arrays.php:2089
 msgid "Change Graph Template"
 msgstr "Αλλαγή προτύπου γραφήματος"
 
-#: graphs.php:45 graphs.php:1144
+#: graphs.php:45 graphs.php:1167
 msgid "Create Aggregate Graph"
 msgstr "Δημιουργία συνολικού γραφήματος"
 
-#: graphs.php:46 graphs.php:1187
+#: graphs.php:46 graphs.php:1210
 msgid "Create Aggregate from Template"
 msgstr "Δημιουργία συνόλου από πρότυπο"
 
-#: graphs.php:47 graphs.php:1209
+#: graphs.php:47 graphs.php:1232
 msgid "Apply Automation Rules"
 msgstr "Εφαρμόστε τους Κανόνες Αυτοματισμού"
 
-#: graphs.php:53 graphs.php:904
+#: graphs.php:53 graphs.php:924
 msgid "Convert to Graph Template"
 msgstr "Μετατροπή σε πρότυπο γραφήματος"
 
-#: graphs.php:247
+#: graphs.php:259
 #, php-format
 msgid "Created graph: %s"
 msgstr "Δημιουργήθηκε γράφημα: %s"
 
-#: graphs.php:255 lib/template.php:2362 lib/template.php:2400
+#: graphs.php:267 lib/template.php:2363 lib/template.php:2401
 msgid "ERROR: No Data Source associated. Check Template"
 msgstr "ΣΦΑΛΜΑ: Δεν συσχετίστηκε πηγή δεδομένων. Ελέγξτε το πρότυπο"
 
-#: graphs.php:667
+#: graphs.php:678
 msgid "The selected Device is not available."
 msgstr ""
 
-#: graphs.php:686
+#: graphs.php:697
 msgid "Aggregate graph creation could not be confirmed. Review the graph settings before retrying."
 msgstr ""
 
-#: graphs.php:833
+#: graphs.php:853
 msgid "Click 'Continue' to delete the following Graph(s).  Note that if you choose to Delete Data Sources, only those Data Sources not in use elsewhere will also be Deleted."
 msgstr "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να διαγράψετε τους παρακάτω γραφοί. Λάβετε υπόψη ότι αν επιλέξετε Διαγραφή πηγών δεδομένων, θα διαγραφούν μόνο αυτές οι Πηγές δεδομένων που δεν χρησιμοποιούνται αλλού."
 
-#: graphs.php:837
+#: graphs.php:857
 msgid "The following Data Source(s) are in use by these Graph(s)."
 msgstr "Οι ακόλουθες πηγές δεδομένων χρησιμοποιούνται από αυτά τα γράμματα."
 
-#: graphs.php:856
+#: graphs.php:876
 msgid "Delete all Data Source(s) referenced by these Graph(s) that are not in use elsewhere."
 msgstr "Διαγράψτε όλες τις πηγές δεδομένων που αναφέρονται από αυτά τα γραφήματα που δεν χρησιμοποιούνται αλλού."
 
-#: graphs.php:858
+#: graphs.php:878
 msgid "Leave the Data Source(s) untouched."
 msgstr "Αφήστε την πηγή δεδομένων (ες) ανέπαφη."
 
-#: graphs.php:870
+#: graphs.php:890
 msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
 msgstr "Επιλέξτε ένα πρότυπο γραφήματος και κάντε κλικ στο κουμπί &#39;Συνέχεια&#39; για να αλλάξετε το πρότυπο γραφήματος για τους ακόλουθους γραφήμους. Σημειώστε ότι θα εμφανίζονται μόνο συμβατά πρότυπα γραφημάτων. Συμβατό αναγνωρίζεται από εκείνους που έχουν πανομοιότυπες πηγές δεδομένων."
 
-#: graphs.php:872 graphs_new.php:606
+#: graphs.php:892 graphs_new.php:606
 msgid "New Graph Template"
 msgstr "Νέο πρότυπο γραφήματος"
 
-#: graphs.php:886
+#: graphs.php:906
 msgid "Click 'Continue' to duplicate the following Graph(s). You can optionally change the title format for the new Graph(s)."
 msgstr "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να αντιγράψετε τα παρακάτω γράμματα. Μπορείτε να αλλάξετε προαιρετικά τη μορφή τίτλου για τα νέα γραφήματα."
 
-#: graphs.php:889
+#: graphs.php:909
 msgid "<graph_title> (1)"
 msgstr "<graph_title> (1)"
 
-#: graphs.php:893
+#: graphs.php:913
 msgid "Duplicate Graph(s)"
 msgstr "Διπλότυπο γράφημα"
 
-#: graphs.php:897
+#: graphs.php:917
 msgid "Click 'Continue' to convert the following Graph(s) into Graph Template(s).  You can optionally change the title format for the new Graph Template(s)."
 msgstr "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να μετατρέψετε τους ακόλουθους γραμματιστές σε πρότυπα γραφήματος. Μπορείτε να αλλάξετε προαιρετικά τη μορφή τίτλου για τα νέα πρότυπα γραφήματος."
 
-#: graphs.php:900
+#: graphs.php:920
 msgid "<graph_title> Template"
 msgstr "<graph_title> Πρότυπο"
 
-#: graphs.php:908
+#: graphs.php:928
 msgid "Click 'Continue' to place the following Graph(s) under the Tree Branch selected below."
 msgstr "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να τοποθετήσετε τα παρακάτω γραφήματα κάτω από τον κλάδο δέντρου που έχετε επιλέξει παρακάτω."
 
-#: graphs.php:910
+#: graphs.php:930
 msgid "Destination Branch"
 msgstr "Υποκατάστημα προορισμού"
 
-#: graphs.php:923
+#: graphs.php:943
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
 msgstr "Επιλέξτε μια νέα συσκευή για αυτά τα γραφήματα και κάντε κλικ στο κουμπί &quot;Συνέχεια&quot;."
 
-#: graphs.php:925 include/global_arrays.php:988
+#: graphs.php:945 include/global_arrays.php:988
 msgid "New Device"
 msgstr "Νέα συσκευή"
 
-#: graphs.php:933
+#: graphs.php:956
 msgid "Change Graph(s) Associated Device"
 msgstr "Αλλαγή σχετικής συσκευής γραφικών"
 
-#: graphs.php:937
+#: graphs.php:960
 msgid "Click 'Continue' to re-apply suggested naming to the following Graph(s)."
 msgstr "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να εφαρμόσετε ξανά την προτεινόμενη ονομασία στους ακόλουθους Γράφους."
 
-#: graphs.php:942
+#: graphs.php:965
 msgid "Reapply Suggested Naming to Graph(s)"
 msgstr "Επαναπροσδιορισμός Προτεινόμενου Ονοματολογίου σε Γράφημα"
 
-#: graphs.php:958
+#: graphs.php:981
 msgid "Click 'Continue' to create an Aggregate Graph from the selected Graph(s)."
 msgstr "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να δημιουργήσετε ένα συγκεντρωτικό γράφημα από τα επιλεγμένα γραφήματα."
 
-#: graphs.php:967
+#: graphs.php:990
 msgid "The following Data Sources are in use by these Graphs:"
 msgstr "Οι ακόλουθες πηγές δεδομένων χρησιμοποιούνται από αυτά τα γράμματα."
 
-#: graphs.php:1028
+#: graphs.php:1051
 msgid "Please confirm"
 msgstr "Επιβεβαίωση"
 
-#: graphs.php:1166
+#: graphs.php:1189
 msgid "Select the Aggregate Template to use and press 'Continue' to create your Aggregate Graph.  Otherwise press 'Cancel' to return."
 msgstr "Επιλέξτε το πρότυπο συγκεντρωτικού στοιχείου που θέλετε να χρησιμοποιήσετε και πατήστε &#39;Συνέχεια&#39; για να δημιουργήσετε το συνολικό σας γράφημα. Διαφορετικά πατήστε &#39;Ακύρωση&#39; για επιστροφή."
 
-#: graphs.php:1191
+#: graphs.php:1214
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
 msgstr "Προς το παρόν δεν υπάρχουν πρότυπα συσσωρευτών για αυτό το πρότυπο γραφήματος. Παρακαλούμε είτε να δημιουργήσετε πρώτα ένα πρότυπο συσσωρευτών για το επιλεγμένο πρότυπο γραφήματος γραφημάτων και να προσπαθήσετε ξανά είτε απλά να δημιουργήσετε ένα αφηρημένο συνολικό γράφημα."
 
-#: graphs.php:1192
+#: graphs.php:1215
 msgid "Press 'Return' to return and select different Graphs."
 msgstr "Πατήστε &quot;Επιστροφή&quot; για να επιστρέψετε και να επιλέξετε διαφορετικά γραφήματα."
 
-#: graphs.php:1204
+#: graphs.php:1227
 msgid "Click 'Continue' to apply Automation Rules to the following Graphs."
 msgstr "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να εφαρμόσετε τους Κανόνες αυτοματισμού στα παρακάτω γραφήματα."
 
-#: graphs.php:1291
+#: graphs.php:1314
 msgid "Graph Items [new]"
 msgstr "Στοιχεία γραφήματος [νέο]"
 
-#: graphs.php:1335
+#: graphs.php:1358
 #, php-format
 msgid "Graph Items [edit: %s]"
 msgstr "Στοιχεία γραφήματος [επεξεργασία: %s]"
 
-#: graphs.php:1459
+#: graphs.php:1482
 #, php-format
 msgid "Graph [edit: %s]"
 msgstr "Γράφημα [επεξεργασία: %s]"
 
-#: graphs.php:1469
+#: graphs.php:1492
 msgid "Graph [new]"
 msgstr "Γράφημα [νέο]"
 
-#: graphs.php:1494
+#: graphs.php:1517
 msgid "Turn Off Graph Debug Mode."
 msgstr "Απενεργοποίηση λειτουργίας κατάργησης γραφήματος."
 
-#: graphs.php:1496
+#: graphs.php:1519
 msgid "Turn On Graph Debug Mode."
 msgstr "Ενεργοποίηση λειτουργίας εντοπισμού σφαλμάτων γραφήματος."
 
-#: graphs.php:1518
+#: graphs.php:1541
 msgid "Edit Graph Template."
 msgstr "Επεξεργασία προτύπου γραφήματος."
 
-#: graphs.php:1530
+#: graphs.php:1553
 #, php-format
 msgid "Edit Data Source: '%s'."
 msgstr "Πηγές δεδομένων [ %s]"
 
-#: graphs.php:1539
+#: graphs.php:1562
 msgid "Unlock Graph."
 msgstr "Ξεκλείδωμα γραφήματος."
 
-#: graphs.php:1541
+#: graphs.php:1564
 msgid "Lock Graph."
 msgstr "Κλείδωμα γραφήματος."
 
-#: graphs.php:1570
+#: graphs.php:1593
 msgid "Selected Graph Template"
 msgstr "Επιλεγμένο πρότυπο γραφήματος"
 
-#: graphs.php:1571
+#: graphs.php:1594
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "Επιλέξτε ένα πρότυπο γραφήματος για εφαρμογή σε αυτό το γράφημα. Λάβετε υπόψη ότι μπορείτε να αλλάξετε μόνο τα πρότυπα γραφήματος σε ένα 100%% συμβατό πρότυπο γραφήματος, πράγμα που σημαίνει ότι περιλαμβάνει πανομοιότυπες πηγές δεδομένων."
 
-#: graphs.php:1579
+#: graphs.php:1602
 msgid "Choose the Device that this Graph belongs to."
 msgstr "Επιλέξτε τη συσκευή στην οποία ανήκει το συγκεκριμένο γράφημα."
 
-#: graphs.php:1635
+#: graphs.php:1658
 msgid "Supplemental Graph Template Data"
 msgstr "Συμπληρωματικά δεδομένα προτύπου γραφήματος"
 
-#: graphs.php:1637
+#: graphs.php:1660
 msgid "Graph Fields"
 msgstr "Πεδία γραφικών παραστάσεων"
 
-#: graphs.php:1638
+#: graphs.php:1661
 msgid "Graph Item Fields"
 msgstr "Πεδίο γραφικών Πεδία"
 
-#: graphs.php:2016
+#: graphs.php:1905 spikekill.php:42
+msgid "Graph access denied"
+msgstr ""
+
+#: graphs.php:2040
 msgid "Graph Management [ Custom Graphs List Applied - Clear to Reset ]"
 msgstr "[Εφαρμογή προσαρμοσμένης γραφήματος - Φίλτρο από λίστα]"
 
-#: graphs.php:2018
+#: graphs.php:2042
 msgid "Graph Management [ All Devices ]"
 msgstr "Νέα γραφήματα για [Όλες οι συσκευές]"
 
-#: graphs.php:2020
+#: graphs.php:2044
 msgid "Graph Management [ Non Device Based ]"
 msgstr "Διαχείριση ομάδας χρηστών [επεξεργασία: %s]"
 
-#: graphs.php:2023
+#: graphs.php:2047
 #, php-format
 msgid "Graph Management [ %s ]"
 msgstr "Διαχείριση γραφημάτων [ %s ]"
 
-#: graphs.php:2096
+#: graphs.php:2120
 msgid "Graph Source"
 msgstr "Γράφημα, Πηγή δεδομένων"
 
-#: graphs.php:2101
+#: graphs.php:2125
 msgid "Non Templated"
 msgstr "Δεν είναι Templated"
 
-#: graphs.php:2325
+#: graphs.php:2342
 msgid "The internal database ID for this Graph.  Useful when performing automation or debugging."
 msgstr "Το αναγνωριστικό εσωτερικής βάσης δεδομένων για αυτό το γράφημα. Χρήσιμη κατά την εκτέλεση αυτοματοποίησης ή εντοπισμού σφαλμάτων."
 
-#: graphs.php:2369
+#: graphs.php:2386
 msgid "Empty Graph"
 msgstr "Αντιγράψτε το γράφημα"
 
@@ -5156,7 +5160,7 @@ msgstr "Νέα γραφήματα για [Όλες οι συσκευές]"
 msgid "New Graphs for None Host Type"
 msgstr "Νέα γραφήματα για κανένα τύπο κεντρικού υπολογιστή"
 
-#: graphs_new.php:440 lib/html.php:2688
+#: graphs_new.php:440 lib/html.php:2690
 msgid "Filter Settings Saved"
 msgstr "Οι ρυθμίσεις φίλτρου αποθηκεύτηκαν"
 
@@ -5190,12 +5194,12 @@ msgstr "(Επιλέξτε έναν τύπο γραφήματος για δημι
 msgid "Create"
 msgstr "Δημιουργία"
 
-#: graphs_new.php:641 graphs_new.php:955 lib/html.php:1064 user_admin.php:1427
+#: graphs_new.php:641 graphs_new.php:955 lib/html.php:1066 user_admin.php:1427
 #: user_group_admin.php:1447
 msgid "Select All"
 msgstr "Επιλογή όλων"
 
-#: graphs_new.php:641 graphs_new.php:955 lib/html.php:953 lib/html.php:1064
+#: graphs_new.php:641 graphs_new.php:955 lib/html.php:955 lib/html.php:1066
 msgid "Select All Rows"
 msgstr "Επιλέξτε όλες τις γραμμές"
 
@@ -5426,16 +5430,16 @@ msgstr "Πρέπει να είστε συνδεδεμένοι για να απο
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "FATAL: Πρέπει να είστε συνδεδεμένοι για να αποκτήσετε πρόσβαση σε αυτή την περιοχή του Kadupul."
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5541
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5621
 #: permission_denied.php:14 permission_denied.php:16
 msgid "Login Again"
 msgstr "Σύνδεση Ξανά"
 
-#: include/auth.php:317 lib/functions.php:8207 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8230 permission_denied.php:38
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Αν νομίζετε ότι αυτό είναι λάθος. Επικοινωνήστε με τον διαχειριστή του Kadupul."
 
-#: include/auth.php:317 lib/functions.php:8207 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8230 permission_denied.php:38
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Δεν επιτρέπεται η πρόσβαση σε αυτήν την ενότητα του Kadupul."
 
@@ -5906,7 +5910,7 @@ msgstr "Δεξιά"
 msgid "Justified"
 msgstr "Πλήρης στοίχιση"
 
-#: include/global_arrays.php:586 lib/html.php:2787
+#: include/global_arrays.php:586 lib/html.php:2789
 msgid "Center"
 msgstr "Κέντρο"
 
@@ -6240,7 +6244,7 @@ msgstr "Κεφαλίδα"
 
 #: include/global_arrays.php:954 include/global_arrays.php:1005
 #: include/global_arrays.php:1690 include/global_arrays.php:1859
-#: lib/html.php:2776
+#: lib/html.php:2778
 msgid "Graph"
 msgstr "Γραφικό Σχήμα"
 
@@ -6406,7 +6410,7 @@ msgid "Configuration"
 msgstr "Παραμετροποίηση"
 
 #: include/global_arrays.php:1031 include/global_arrays.php:1053
-#: lib/html.php:2494 lib/html.php:2791
+#: lib/html.php:2496 lib/html.php:2793
 msgid "Settings"
 msgstr "Ρυθμίσεις"
 
@@ -6586,7 +6590,7 @@ msgstr "Sites / Συσκευές / Δεδομένα"
 msgid "Spike Handling"
 msgstr "Spike Kill Ρυθμίσεις"
 
-#: include/global_arrays.php:1244 utilities.php:2396
+#: include/global_arrays.php:1244 utilities.php:2384
 msgid "Log Administration"
 msgstr "Διαχείριση αρχείων καταγραφής"
 
@@ -6630,7 +6634,7 @@ msgstr "Γενική Διοίκηση"
 msgid "System Administration"
 msgstr "Διαχείριση συστήματος"
 
-#: include/global_arrays.php:1356 lib/html.php:1312
+#: include/global_arrays.php:1356 lib/html.php:1314
 msgid "CDEF"
 msgstr "CDEF"
 
@@ -6663,7 +6667,7 @@ msgstr "Στοιχείο πρότυπου γραφήματος"
 msgid "Graph Template Input"
 msgstr "Εισαγωγή προτύπου γραφήματος"
 
-#: include/global_arrays.php:1369 lib/html.php:1313
+#: include/global_arrays.php:1369 lib/html.php:1315
 msgid "VDEF"
 msgstr "VDEF"
 
@@ -6877,8 +6881,8 @@ msgstr "%s Ώρες"
 msgid "%d GByte"
 msgstr "% d GBytes"
 
-#: include/global_arrays.php:1612 utilities.php:2862 utilities.php:2863
-#: utilities.php:2912
+#: include/global_arrays.php:1612 utilities.php:2850 utilities.php:2851
+#: utilities.php:2900
 msgid "Unlimited"
 msgstr "Απεριόριστα"
 
@@ -7426,7 +7430,7 @@ msgid "List Mode"
 msgstr "Λειτουργία λίστας"
 
 #: include/global_arrays.php:2065 include/global_arrays.php:2071
-#: lib/functions.php:4492 lib/html.php:1892 lib/html.php:1957 lib/html.php:2709
+#: lib/functions.php:4492 lib/html.php:1894 lib/html.php:1959 lib/html.php:2711
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "Κονσόλα"
@@ -7522,11 +7526,11 @@ msgid "RRD Check"
 msgstr "Εκτέλεση ελέγχου"
 
 #: include/global_arrays.php:2461 include/global_arrays.php:2473
-#: utilities.php:2407
+#: utilities.php:2395
 msgid "View Poller Cache"
 msgstr "Προβολή πολικής προσωρινής αποθήκευσης"
 
-#: include/global_arrays.php:2467 utilities.php:2411
+#: include/global_arrays.php:2467 utilities.php:2399
 msgid "View Data Query Cache"
 msgstr "Προβολή δεδομένων προσωρινής αποθήκευσης ερωτήματος δεδομένων"
 
@@ -7534,7 +7538,7 @@ msgstr "Προβολή δεδομένων προσωρινής αποθήκευ�
 msgid "Clear Log"
 msgstr "Διαγραφή αρχείου καταγραφής"
 
-#: include/global_arrays.php:2491 utilities.php:2400
+#: include/global_arrays.php:2491 utilities.php:2388
 msgid "View User Log"
 msgstr "Δείτε το αρχείο καταγραφής χρήστη"
 
@@ -7542,19 +7546,19 @@ msgstr "Δείτε το αρχείο καταγραφής χρήστη"
 msgid "Clear User Log"
 msgstr "Εκκαθάριση αρχείου καταγραφής χρήστη"
 
-#: include/global_arrays.php:2503 utilities.php:2391 utilities.php:2392
+#: include/global_arrays.php:2503 utilities.php:2379 utilities.php:2380
 msgid "Technical Support"
 msgstr "Τεχνική υποστήριξη"
 
-#: include/global_arrays.php:2509 utilities.php:2582
+#: include/global_arrays.php:2509 utilities.php:2570
 msgid "Boost Status"
 msgstr "Κατάσταση ενίσχυσης"
 
-#: include/global_arrays.php:2515 utilities.php:2466
+#: include/global_arrays.php:2515 utilities.php:2454
 msgid "View SNMP Agent Cache"
 msgstr "Προβολή SNMP Agent Cache"
 
-#: include/global_arrays.php:2521 utilities.php:2477
+#: include/global_arrays.php:2521 utilities.php:2465
 msgid "View SNMP Agent Notification Log"
 msgstr "Προβολή αρχείου καταγραφής ειδοποιήσεων παραμέτρων παραμέτρων SNMP"
 
@@ -7578,7 +7582,7 @@ msgstr "Εξωτερική σύνδεση"
 msgid "(Action)"
 msgstr "Ενέργεια:"
 
-#: include/global_arrays.php:2629 lib/html.php:2730
+#: include/global_arrays.php:2629 lib/html.php:2732
 msgid "About Kadupul"
 msgstr "Σχετικά με το Kadupul"
 
@@ -7591,7 +7595,7 @@ msgid "Export Results"
 msgstr "Εξαγωγή Αποτελεσμάτων"
 
 #: include/global_arrays.php:2665 include/global_arrays.php:2695
-#: lib/html.php:1908 lib/html.php:1982
+#: lib/html.php:1910 lib/html.php:1984
 msgid "Reporting"
 msgstr "Αναφορές"
 
@@ -8372,7 +8376,7 @@ msgstr "Κατεύθυνση λεκτικού (- κατεύθυνση πρόσδ
 msgid "Place the legend items in the given vertical order."
 msgstr "Τοποθετήστε τα στοιχεία του θρύλου στη δοσμένη κάθετη σειρά."
 
-#: include/global_form.php:953 lib/api_aggregate.php:2339 lib/html.php:1309
+#: include/global_form.php:953 lib/api_aggregate.php:2339 lib/html.php:1311
 msgid "Graph Item Type"
 msgstr "Τύπος στοιχείου γραφήματος"
 
@@ -9521,7 +9525,7 @@ msgstr "Εάν είναι Απλή, τα Γραφήματα και οι Πηγέ
 msgid "Simple"
 msgstr "Απλό"
 
-#: include/global_settings.php:428 lib/html.php:2778
+#: include/global_settings.php:428 lib/html.php:2780
 msgid "Advanced"
 msgstr "Προχωρημένος"
 
@@ -9725,7 +9729,7 @@ msgstr "Γενικές προεπιλογές"
 msgid "The default Device Template used on all new Devices."
 msgstr "Το προεπιλεγμένο πρότυπο συσκευής χρησιμοποιείται σε όλες τις νέες συσκευές."
 
-#: include/global_settings.php:618 lib/html.php:2318 lib/html_reports.php:1151
+#: include/global_settings.php:618 lib/html.php:2320 lib/html_reports.php:1151
 msgid "Site"
 msgstr "Ιστοσελίδα"
 
@@ -9940,7 +9944,7 @@ msgid "Theme Settings"
 msgstr "Ρυθμίσεις Θέματος"
 
 #: include/global_settings.php:851 include/global_settings.php:1061
-#: include/global_settings.php:2585 lib/html.php:2726
+#: include/global_settings.php:2585 lib/html.php:2728
 msgid "Theme"
 msgstr "Θέμα"
 
@@ -11299,7 +11303,7 @@ msgstr "Ενεργοποιήστε το αρχείο εντοπισμού σφα
 msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost\tpoller process."
 msgstr "Εάν αυτό το πεδίο δεν είναι κενό, το Boost θα καταγράψει την έξοδο RRDupdate από τη διαδικασία του poller boost."
 
-#: include/global_settings.php:2180 utilities.php:3017
+#: include/global_settings.php:2180 utilities.php:3005
 msgid "Image Caching"
 msgstr "Image Caching"
 
@@ -11524,7 +11528,7 @@ msgstr "τυπική απόκλιση"
 msgid "Variance Based w/Outliers Removed"
 msgstr "Αλλαγές βασισμένες σε παραλλαγές w / Outliers"
 
-#: include/global_settings.php:2435 lib/html.php:2468
+#: include/global_settings.php:2435 lib/html.php:2470
 msgid "Replacement Method"
 msgstr "Μέθοδος αντικατάστασης"
 
@@ -11532,15 +11536,15 @@ msgstr "Μέθοδος αντικατάστασης"
 msgid "There are three replacement methods.  The first method replaces the spike with the average of the data source in question.  The second method replaces the spike with a 'NaN'.  The last replaces the spike with the last known good value found."
 msgstr "Υπάρχουν τρεις μέθοδοι αντικατάστασης. Η πρώτη μέθοδος αντικαθιστά την ακίδα με τον μέσο όρο της εν λόγω πηγής δεδομένων. Η δεύτερη μέθοδος αντικαθιστά την ακίδα με ένα &#39;NaN&#39;. Το τελευταίο αντικαθιστά την ακίδα με την τελευταία γνωστή καλή τιμή που βρέθηκε."
 
-#: include/global_settings.php:2440 lib/html.php:2464
+#: include/global_settings.php:2440 lib/html.php:2466
 msgid "Average"
 msgstr "Μέτριο"
 
-#: include/global_settings.php:2441 lib/html.php:2465
+#: include/global_settings.php:2441 lib/html.php:2467
 msgid "NaN's"
 msgstr "ΝαN&#39;s"
 
-#: include/global_settings.php:2442 lib/html.php:2466
+#: include/global_settings.php:2442 lib/html.php:2468
 msgid "Last Known Good"
 msgstr "Τελευταίο γνωστό καλό"
 
@@ -12064,15 +12068,15 @@ msgstr "Πατήστε &quot;Επιστροφή&quot; για να επιστρέ
 msgid "The Graphs chosen for the Aggregate Graph do not use Graph Templates.  Aggregate does not support creating Aggregate Graphs from non-templated graphs."
 msgstr "Τα διαγράμματα που επιλέγονται για το Σύνολο γραφήματος δεν χρησιμοποιούν πρότυπα γραφημάτων. Το Aggregate δεν υποστηρίζει τη δημιουργία συσσωρευμένων γραφημάτων από γραφήματα χωρίς προεπισκόπηση."
 
-#: lib/api_aggregate.php:2337 lib/html.php:1306
+#: lib/api_aggregate.php:2337 lib/html.php:1308
 msgid "Graph Item"
 msgstr "Στοιχείο γραφήματος"
 
-#: lib/api_aggregate.php:2340 lib/html.php:1310
+#: lib/api_aggregate.php:2340 lib/html.php:1312
 msgid "CF Type"
 msgstr "Τύπος CF"
 
-#: lib/api_aggregate.php:2341 lib/html.php:1315
+#: lib/api_aggregate.php:2341 lib/html.php:1317
 msgid "Item Color"
 msgstr "Χρώμα στοιχείου"
 
@@ -12109,14 +12113,14 @@ msgstr "αναληπτικό"
 #: lib/html_utility.php:1339 lib/import.php:342 lib/plugins.php:1499
 #: lib/plugins.php:1500 lib/rrd.php:4194 lib/rrd.php:4206 lib/spikekill.php:301
 #: package_import.php:522 package_import.php:600 utilities.php:211
-#: utilities.php:212 utilities.php:2765
+#: utilities.php:212 utilities.php:2753
 msgid "Unknown"
 msgstr "Άγνωστο"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
 #: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4171
-#: utilities.php:356 utilities.php:1480 utilities.php:3218
+#: utilities.php:356 utilities.php:1480 utilities.php:3206
 msgid "Type"
 msgstr "Τύπος"
 
@@ -12397,66 +12401,66 @@ msgstr "Κλαδί:"
 msgid "Device:"
 msgstr "设备："
 
-#: lib/auth.php:4200 lib/auth.php:4291
+#: lib/auth.php:4272 lib/auth.php:4363
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Δεν επιτρέπεται η πρόσβαση, επικοινωνήστε με τον διαχειριστή του Kadupul."
 
-#: lib/auth.php:4250
+#: lib/auth.php:4322
 msgid "Access Denied!  Login Disabled."
 msgstr "Δεν επιτρέπεται η πρόσβαση, ο λογαριασμός χρήστη είναι απενεργοποιημένος."
 
-#: lib/auth.php:4325
+#: lib/auth.php:4397
 msgid "Web Basic Authentication configured, but no username was passed from the web server. Please make sure you have authentication enabled on the web server."
 msgstr "Ο βασικός έλεγχος ταυτότητας Web έχει ρυθμιστεί, αλλά δεν μεταβιβάστηκε κανένα όνομα χρήστη από το διακομιστή ιστού. Βεβαιωθείτε ότι έχετε ενεργοποιήσει τον έλεγχο ταυτότητας στον διακομιστή ιστού."
 
-#: lib/auth.php:4341
+#: lib/auth.php:4413
 #, php-format
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "Το %s έχει πιστοποιηθεί από τον διακομιστή Web, αλλά και οι δύο χρήστες και οι χρήστες δεν έχουν οριστεί στο Kadupul."
 
-#: lib/auth.php:4518 lib/auth.php:4717
+#: lib/auth.php:4590 lib/auth.php:4789
 msgid "Access Denied!  No password provided by user."
 msgstr "Δεν επιτρέπεται η πρόσβαση! Δεν παρέχεται κωδικός πρόσβασης από τον χρήστη."
 
-#: lib/auth.php:4690 lib/auth.php:5748
+#: lib/auth.php:4762 lib/auth.php:5828
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "Δεν επιτρέπεται η πρόσβαση!  Το αναγνωριστικό χρήστη προτύπου %s δεν υπάρχει.  Επικοινωνήστε με τον διαχειριστή σας."
 
-#: lib/auth.php:4698
+#: lib/auth.php:4770
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:5051
+#: lib/auth.php:5123
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "Ο διαχειριστής του Kadupul έχει επιβάλει σύνθετους κωδικούς πρόσβασης για σύνδεση και ο τρέχων κωδικός πρόσβασης Kadupul δεν ταιριάζει με τις νέες απαιτήσεις. Επομένως, πρέπει να αλλάξετε τον κωδικό πρόσβασής σας τώρα."
 
-#: lib/auth.php:5091
+#: lib/auth.php:5163
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "Ο κωδικός πρόσβασης πρέπει να είναι τουλάχιστον% d χαρακτήρες!"
 
-#: lib/auth.php:5097
+#: lib/auth.php:5169
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "Ο κωδικός σας πρέπει να περιέχει τουλάχιστον έναν αριθμητικό χαρακτήρα!"
 
-#: lib/auth.php:5101
+#: lib/auth.php:5173
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "Ο κωδικός πρόσβασής σας πρέπει να περιέχει ένα μείγμα πεζών και κεφαλαίων χαρακτήρων!"
 
-#: lib/auth.php:5107
+#: lib/auth.php:5179
 msgid "Your password must contain at least 1 special character!"
 msgstr "Ο κωδικός σας πρέπει να περιέχει τουλάχιστον έναν ειδικό χαρακτήρα!"
 
-#: lib/auth.php:5534
+#: lib/auth.php:5614
 msgid "Kadupul Login Failure"
 msgstr "Εγγραφή Kadupul Clear"
 
-#: lib/auth.php:5834
+#: lib/auth.php:5914
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "Ο έλεγχος ταυτότητας δεν είχε οριστεί προηγουμένως. Επιχειρήθηκε να οριστεί σε Τοπικό έλεγχο ταυτότητας, αλλά δεν βρέθηκε λογαριασμός διαχειριστή."
 
-#: lib/boost.php:126 utilities.php:2914
+#: lib/boost.php:126 utilities.php:2902
 #, fuzzy, php-format
 msgid "%s MBytes"
 msgstr "MBytes"
@@ -12511,7 +12515,7 @@ msgid "Log [Total Lines: %d %s - Unfiltered]"
 msgstr "Αρχειοθέτηση [Συνολικές γραμμές:% d %s - Μη φιλτραρισμένες]"
 
 #: lib/clog_webapi.php:293 utilities.php:1559 utilities.php:1928
-#: utilities.php:2162 utilities.php:2275 utilities.php:3212 utilities.php:3437
+#: utilities.php:2162 utilities.php:2275 utilities.php:3200 utilities.php:3425
 msgid "Entries"
 msgstr "Εγγραφές"
 
@@ -13106,11 +13110,11 @@ msgstr "Είσοδος ως τακτικός χρήστης"
 msgid "guest"
 msgstr "άτομο"
 
-#: lib/functions.php:4249 lib/functions.php:4274 lib/html.php:2715
+#: lib/functions.php:4249 lib/functions.php:4274 lib/html.php:2717
 msgid "User Community"
 msgstr "Κοινότητα χρηστών"
 
-#: lib/functions.php:4250 lib/functions.php:4275 lib/html.php:2717
+#: lib/functions.php:4250 lib/functions.php:4275 lib/html.php:2719
 #: lib/utility.php:1446
 msgid "Documentation"
 msgstr "Τεκμηρίωση"
@@ -13120,11 +13124,11 @@ msgstr "Τεκμηρίωση"
 msgid "Logged in as %s"
 msgstr "Συνδεδεμένος ως %s"
 
-#: lib/functions.php:4269 lib/html.php:2696
+#: lib/functions.php:4269 lib/html.php:2698
 msgid "Edit Profile"
 msgstr "Επεξεργασία Προφίλ"
 
-#: lib/functions.php:4279 lib/html.php:2700
+#: lib/functions.php:4279 lib/html.php:2702
 msgid "Logout"
 msgstr "Αποσύνδεση"
 
@@ -13325,7 +13329,7 @@ msgstr "Ερώτημα δεδομένων:"
 msgid "CSV Export of Graph Data"
 msgstr "CSV Εξαγωγή δεδομένων γραφήματος"
 
-#: lib/html.php:540 lib/html.php:2687
+#: lib/html.php:540 lib/html.php:2689
 msgid "Time Graph View"
 msgstr "Προβολή χρονικού γραφήματος"
 
@@ -13365,383 +13369,383 @@ msgstr "Τρέχουσα σελίδα"
 msgid "No %s Found"
 msgstr "Δεν βρέθηκαν %s"
 
-#: lib/html.php:1307
+#: lib/html.php:1309
 msgid "#"
 msgstr "#"
 
-#: lib/html.php:1311
+#: lib/html.php:1313
 msgid "GPrint"
 msgstr "GPrint"
 
-#: lib/html.php:1314
+#: lib/html.php:1316
 msgid "Alpha %"
 msgstr "άλφα"
 
-#: lib/html.php:1371
+#: lib/html.php:1373
 msgid "No Source"
 msgstr "Πηγή"
 
-#: lib/html.php:1722
+#: lib/html.php:1724
 msgid "Choose an action"
 msgstr "Επιλέξτε μια ενέργεια"
 
-#: lib/html.php:1732
+#: lib/html.php:1734
 msgid "Execute Action"
 msgstr "Εκτέλεση ενέργειας"
 
-#: lib/html.php:1913 lib/html.php:1992 managers.php:26 managers.php:219
+#: lib/html.php:1915 lib/html.php:1994 managers.php:26 managers.php:219
 msgid "Logs"
 msgstr "Αρχεία καταγραφής"
 
-#: lib/html.php:2119 user_admin.php:2347 user_admin.php:2353
+#: lib/html.php:2121 user_admin.php:2347 user_admin.php:2353
 msgid "Show All"
 msgstr "Προβολή Όλων"
 
-#: lib/html.php:2474
+#: lib/html.php:2476
 msgid "Standard Deviations"
 msgstr "Τυπικές αποκλίσεις"
 
-#: lib/html.php:2480
+#: lib/html.php:2482
 msgid "Kills Per RRA"
 msgstr "Σκοτώνει ανά RRA"
 
-#: lib/html.php:2486
+#: lib/html.php:2488
 msgid "Remove StdDev"
 msgstr "Καταργήστε το StdDev"
 
-#: lib/html.php:2487
+#: lib/html.php:2489
 msgid "Gap Fill Range"
 msgstr "Εύρος πλήρωσης χάσματος"
 
-#: lib/html.php:2488 lib/spikekill.php:297
+#: lib/html.php:2490 lib/spikekill.php:297
 msgid "Float Range"
 msgstr "Εύρος πλεύσης"
 
-#: lib/html.php:2490
+#: lib/html.php:2492
 msgid "Dry Run StdDev"
 msgstr "Dry Run StdDev"
 
-#: lib/html.php:2491
+#: lib/html.php:2493
 msgid "Dry Run Gap Fill Range"
 msgstr "Σειρά γεμίσματος γεμίσματος ξηρής λειτουργίας"
 
-#: lib/html.php:2492
+#: lib/html.php:2494
 msgid "Dry Run Float Range"
 msgstr "Σειρά πλωτών επιφανειών ξηρής λειτουργίας"
 
-#: lib/html.php:2683
+#: lib/html.php:2685
 msgid "Allow or limit the table columns to extend beyond the current windows limits."
 msgstr "Επιτρέψτε ή περιορίστε τις στήλες πίνακα να επεκταθούν πέρα από τα τρέχοντα όρια παραθύρων."
 
-#: lib/html.php:2684 lib/html_filter.php:48
+#: lib/html.php:2686 lib/html_filter.php:48
 msgid "Enter a search term"
 msgstr "Εισαγάγετε έναν όρο αναζήτησης"
 
-#: lib/html.php:2685
+#: lib/html.php:2687
 msgid "Enter a regular expression"
 msgstr "Εισαγάγετε μια κανονική έκφραση"
 
-#: lib/html.php:2686
+#: lib/html.php:2688
 msgid "No file selected"
 msgstr "Δεν επιλέχθηκε αρχείο"
 
-#: lib/html.php:2689 lib/html.php:2732
+#: lib/html.php:2691 lib/html.php:2734
 msgid "SpikeKill Results"
 msgstr "SpikeKill Αποτελέσματα"
 
-#: lib/html.php:2691
+#: lib/html.php:2693
 msgid "Click to view just this Graph in Realtime"
 msgstr "Κάντε κλικ για να δείτε μόνο αυτό το γράφημα σε πραγματικό χρόνο"
 
-#: lib/html.php:2692
+#: lib/html.php:2694
 msgid "Click again to take this Graph out of Realtime"
 msgstr "Κάντε ξανά κλικ για να πάρετε αυτό το γράφημα από το Realtime"
 
-#: lib/html.php:2701
+#: lib/html.php:2703
 msgid "Standard Mode"
 msgstr "Λειτουργία σάρωσης"
 
-#: lib/html.php:2702
+#: lib/html.php:2704
 msgid "Compact Mode"
 msgstr "Λειτουργία ζουμ"
 
-#: lib/html.php:2703
+#: lib/html.php:2705
 msgid "Dark Color Mode"
 msgstr "Δεν βρέθηκαν χρώματα"
 
-#: lib/html.php:2704
+#: lib/html.php:2706
 msgid "Light Color Mode"
 msgstr "Λειτουργία λίστας"
 
-#: lib/html.php:2705
+#: lib/html.php:2707
 msgid "Use System Color"
 msgstr "Χρώμα στοιχείου"
 
-#: lib/html.php:2706
+#: lib/html.php:2708
 msgid "Ignore System Color"
 msgstr "Χρώμα στοιχείου"
 
-#: lib/html.php:2707
+#: lib/html.php:2709
 msgid "Help"
 msgstr "Βοήθεια"
 
-#: lib/html.php:2708
+#: lib/html.php:2710
 msgid "Kadupul Home"
 msgstr "Kadupul Home"
 
-#: lib/html.php:2710
+#: lib/html.php:2712
 msgid "Miscellaneous"
 msgstr "Διάφορα"
 
-#: lib/html.php:2711
+#: lib/html.php:2713
 msgid "Dashboards"
 msgstr "Απόκρυψη του ταμπλό του Kadupul"
 
-#: lib/html.php:2713
+#: lib/html.php:2715
 msgid "Charts"
 msgstr "Διαγράμματα"
 
-#: lib/html.php:2714
+#: lib/html.php:2716
 msgid "Kadupul Project Page"
 msgstr "Kadupul Project Page"
 
-#: lib/html.php:2718
+#: lib/html.php:2720
 msgid "Spine"
 msgstr "ΣΠΟΝΔΥΛΙΚΗ ΣΤΗΛΗ"
 
-#: lib/html.php:2719
+#: lib/html.php:2721
 msgid "RRDProxy"
 msgstr "RRDProxy"
 
-#: lib/html.php:2720
+#: lib/html.php:2722
 msgid "Keyboard"
 msgstr "Πληκτρολόγιο"
 
-#: lib/html.php:2721
+#: lib/html.php:2723
 msgid "Shortcuts"
 msgstr "Συντομεύσεις"
 
-#: lib/html.php:2722
+#: lib/html.php:2724
 msgid "Contribute to the Kadupul Project"
 msgstr "Περιστρέψτε το αρχείο καταγραφής Kadupul"
 
-#: lib/html.php:2723
+#: lib/html.php:2725
 msgid "Help in Developing"
 msgstr "Βοήθεια στην ανάπτυξη"
 
-#: lib/html.php:2724
+#: lib/html.php:2726
 msgid "Donation & Sponsoring"
 msgstr "Δωρεά & Χορηγίες"
 
-#: lib/html.php:2727
+#: lib/html.php:2729
 msgid "Client"
 msgstr "Πελάτης"
 
-#: lib/html.php:2728
+#: lib/html.php:2730
 msgid "Help in Translating"
 msgstr "Βοήθεια στη μετάφραση"
 
-#: lib/html.php:2729
+#: lib/html.php:2731
 msgid "Report a bug"
 msgstr "Αναφορά ενός σφάλματος"
 
-#: lib/html.php:2731
+#: lib/html.php:2733
 msgid "Kadupul"
 msgstr "Astrophytum asterias (I)"
 
-#: lib/html.php:2733
+#: lib/html.php:2735
 msgid "Click to Show/Hide Filter"
 msgstr "Κάντε κλικ για εμφάνιση / απόκρυψη φίλτρου"
 
-#: lib/html.php:2734
+#: lib/html.php:2736
 msgid "Clear Current Filter"
 msgstr "Διαγραφή τρέχοντος φίλτρου"
 
-#: lib/html.php:2735
+#: lib/html.php:2737
 msgid "Clipboard"
 msgstr "Πρόχειρο"
 
-#: lib/html.php:2736
+#: lib/html.php:2738
 msgid "Clipboard ID"
 msgstr "Αναγνωριστικό πρόχειρου"
 
-#: lib/html.php:2737
+#: lib/html.php:2739
 msgid "Copy operation is unavailable at this time"
 msgstr "Η λειτουργία αντιγραφής δεν είναι διαθέσιμη αυτή τη στιγμή"
 
-#: lib/html.php:2738
+#: lib/html.php:2740
 msgid "Failed to find data to copy!"
 msgstr "Αποτυχία εύρεσης δεδομένων για αντιγραφή!"
 
-#: lib/html.php:2739
+#: lib/html.php:2741
 msgid "Clipboard has been updated"
 msgstr "Το Πρόχειρο έχει ενημερωθεί"
 
-#: lib/html.php:2740
+#: lib/html.php:2742
 msgid "Sorry, your clipboard could not be updated at this time"
 msgstr "Λυπούμαστε, το πρόχειρο σας δεν ήταν δυνατό να ενημερωθεί αυτή τη στιγμή"
 
-#: lib/html.php:2744
+#: lib/html.php:2746
 msgid "Passphrase length meets 8 character minimum"
 msgstr "Το μήκος της διεύθυνσης πρόσβασης πληρεί ελάχιστο όριο 8 χαρακτήρων"
 
-#: lib/html.php:2745
+#: lib/html.php:2747
 msgid "Passphrase too short"
 msgstr "Η φράση πρόσβασης είναι πολύ μικρή"
 
-#: lib/html.php:2746
+#: lib/html.php:2748
 msgid "Passphrase matches but too short"
 msgstr "Η φράση πρόσβασης είναι πολύ μικρή"
 
-#: lib/html.php:2747
+#: lib/html.php:2749
 msgid "Passphrase too short and not matching"
 msgstr "Η φράση πρόσβασης είναι πολύ μικρή και δεν ταιριάζει"
 
-#: lib/html.php:2748
+#: lib/html.php:2750
 msgid "Passphrases match"
 msgstr "Ταίριασμα φράσεων"
 
-#: lib/html.php:2749
+#: lib/html.php:2751
 msgid "Passphrases do not match"
 msgstr "Οι φράσεις πρόσβασης δεν ταιριάζουν"
 
-#: lib/html.php:2750
+#: lib/html.php:2752
 msgid "Sorry, we could not process your last action."
 msgstr "Λυπούμαστε, δεν ήταν δυνατή η επεξεργασία της τελευταίας σας ενέργειας."
 
-#: lib/html.php:2751
+#: lib/html.php:2753
 msgid "Error:"
 msgstr "Σφάλμα :"
 
-#: lib/html.php:2752
+#: lib/html.php:2754
 msgid "Reason:"
 msgstr "Αιτία:"
 
-#: lib/html.php:2753
+#: lib/html.php:2755
 msgid "Action failed"
 msgstr "Η ενέργεια απέτυχε"
 
-#: lib/html.php:2754 pollers.php:804
+#: lib/html.php:2756 pollers.php:804
 msgid "Connection Successful"
 msgstr "Λειτουργία επιτυχής"
 
-#: lib/html.php:2755 pollers.php:806
+#: lib/html.php:2757 pollers.php:806
 msgid "Connection Failed"
 msgstr "Η σύνδεση απέτυχε"
 
-#: lib/html.php:2756
+#: lib/html.php:2758
 msgid "The response to the last action was unexpected."
 msgstr "Η απάντηση στην τελευταία ενέργεια ήταν απροσδόκητη."
 
-#: lib/html.php:2757
+#: lib/html.php:2759
 msgid "Some Actions failed"
 msgstr "Ορισμένες ενέργειες απέτυχαν"
 
-#: lib/html.php:2758
+#: lib/html.php:2760
 msgid "Note, we could not process all your actions.  Details are below."
 msgstr "Σημειώστε ότι δεν μπορούσαμε να επεξεργαστούμε όλες τις ενέργειές σας. Τα στοιχεία είναι παρακάτω."
 
-#: lib/html.php:2759
+#: lib/html.php:2761
 msgid "Operation successful"
 msgstr "Λειτουργία επιτυχής"
 
-#: lib/html.php:2760
+#: lib/html.php:2762
 msgid "The Operation was successful.  Details are below."
 msgstr "Η λειτουργία ήταν επιτυχής. Τα στοιχεία είναι παρακάτω."
 
-#: lib/html.php:2762
+#: lib/html.php:2764
 msgid "Pause"
 msgstr "Παύση"
 
-#: lib/html.php:2765
+#: lib/html.php:2767
 msgid "Zoom In"
 msgstr "Μεγέθυνση"
 
-#: lib/html.php:2766
+#: lib/html.php:2768
 msgid "Zoom Out"
 msgstr "Σμίκρινση"
 
-#: lib/html.php:2767
+#: lib/html.php:2769
 msgid "Zoom Out Factor"
 msgstr "Παράγοντας σμίκρυνσης"
 
-#: lib/html.php:2768
+#: lib/html.php:2770
 msgid "Timestamps"
 msgstr "Χρονοδιακόπτες"
 
-#: lib/html.php:2769
+#: lib/html.php:2771
 msgid "2x"
 msgstr "2x"
 
-#: lib/html.php:2770
+#: lib/html.php:2772
 msgid "4x"
 msgstr "4X"
 
-#: lib/html.php:2771
+#: lib/html.php:2773
 msgid "8x"
 msgstr "8x"
 
-#: lib/html.php:2772
+#: lib/html.php:2774
 msgid "16x"
 msgstr "16x"
 
-#: lib/html.php:2773
+#: lib/html.php:2775
 msgid "32x"
 msgstr "32x"
 
-#: lib/html.php:2774
+#: lib/html.php:2776
 msgid "Zoom Out Positioning"
 msgstr "Σμίκρυνση θέσης"
 
-#: lib/html.php:2775
+#: lib/html.php:2777
 msgid "Zoom Mode"
 msgstr "Λειτουργία ζουμ"
 
-#: lib/html.php:2777
+#: lib/html.php:2779
 msgid "Quick"
 msgstr "Προεπισκόπηση"
 
-#: lib/html.php:2779
+#: lib/html.php:2781
 msgid "Open in new tab"
 msgstr "Άνοιγμα σε νέα καρτέλα"
 
-#: lib/html.php:2780
+#: lib/html.php:2782
 msgid "Save graph"
 msgstr "Αποθήκευση γραφήματος"
 
-#: lib/html.php:2781
+#: lib/html.php:2783
 msgid "Copy graph"
 msgstr "Αντιγράψτε το γράφημα"
 
-#: lib/html.php:2782
+#: lib/html.php:2784
 msgid "Copy graph link"
 msgstr "Αντιγραφή συνδέσμου γραφημάτων"
 
-#: lib/html.php:2783
+#: lib/html.php:2785
 msgid "Always On"
 msgstr "Πάντα ενεργοί"
 
-#: lib/html.php:2784
+#: lib/html.php:2786
 msgid "Auto"
 msgstr "Αυτόματα"
 
-#: lib/html.php:2785
+#: lib/html.php:2787
 msgid "Always Off"
 msgstr "Πάντα ανενεργό"
 
-#: lib/html.php:2786
+#: lib/html.php:2788
 msgid "Begin with"
 msgstr "Ξεκινάω με"
 
-#: lib/html.php:2788
+#: lib/html.php:2790
 msgid "End with"
 msgstr "Ημερομηνία Λήξης"
 
-#: lib/html.php:2790 lib/html_form.php:1432
+#: lib/html.php:2792 lib/html_form.php:1432
 msgid "Close"
 msgstr "Κλείσιμο"
 
-#: lib/html.php:2792
+#: lib/html.php:2794
 msgid "3rd Mouse Button"
 msgstr "3ο κουμπί του ποντικιού"
 
@@ -16450,29 +16454,29 @@ msgstr ""
 msgid "WindKilled"
 msgstr ""
 
-#: lib/template.php:1645
+#: lib/template.php:1646
 msgid "Attempting to Create Graph from Non-Template"
 msgstr "Δημιουργία συνόλου από πρότυπο"
 
-#: lib/template.php:1659
+#: lib/template.php:1660
 msgid "Attempting to Create Graph from Removed Graph Template"
 msgstr "Απόπειρα δημιουργίας γραφήματος από καταργημένο πρότυπο γραφήματος"
 
-#: lib/template.php:2354 lib/template.php:2392
+#: lib/template.php:2355 lib/template.php:2393
 #, php-format
 msgid "Created: %s"
 msgstr "Δημιουργήθηκε: %s"
 
-#: lib/template.php:2372 lib/template.php:2403
+#: lib/template.php:2373 lib/template.php:2404
 msgid "ERROR: Whitelist Validation Failed. Check Data Input Method"
 msgstr "Σφάλμα: Η επικύρωση της λευκής λίστας απέτυχε. Ελέγξτε τη μέθοδο εισαγωγής δεδομένων"
 
-#: lib/template.php:2382
+#: lib/template.php:2383
 #, php-format
 msgid "Graph Not created for %s due to bad data"
 msgstr "Το γράφημα δεν δημιουργήθηκε για %s λόγω κακών δεδομένων"
 
-#: lib/template.php:2413
+#: lib/template.php:2414
 #, php-format
 msgid "NOTE: Graph not added for Data Query %s and index %s due to Data Source verification failure"
 msgstr "ΣΗΜΕΊΩΣΗ: Το γράφημα δεν προστέθηκε για το ερώτημα δεδομένων %s και το ευρετήριο %s λόγω αποτυχίας επαλήθευσης προέλευσης δεδομένων"
@@ -16853,7 +16857,7 @@ msgstr "Έκδοση%s"
 msgid "Notifications"
 msgstr "Ειδοποιήσεις"
 
-#: managers.php:135 utilities.php:2482
+#: managers.php:135 utilities.php:2470
 msgid "SNMP Notification Receivers"
 msgstr "Δέκτες ειδοποίησης SNMP"
 
@@ -16878,11 +16882,11 @@ msgstr "Δέκτης ειδοποιήσεων SNMP [επεξεργασία: %s]"
 msgid "SNMP Notification Receiver [new]"
 msgstr "Δέκτης ειδοποιήσεων SNMP [νέος]"
 
-#: managers.php:486 managers.php:578 utilities.php:3143 utilities.php:3218
+#: managers.php:486 managers.php:578 utilities.php:3131 utilities.php:3206
 msgid "MIB"
 msgstr "MIB"
 
-#: managers.php:577 utilities.php:1934 utilities.php:3218
+#: managers.php:577 utilities.php:1934 utilities.php:3206
 msgid "OID"
 msgstr "OID"
 
@@ -16890,7 +16894,7 @@ msgstr "OID"
 msgid "Kind"
 msgstr "Είδος"
 
-#: managers.php:580 utilities.php:3218
+#: managers.php:580 utilities.php:3206
 msgid "Max-Access"
 msgstr "Max-Access"
 
@@ -16902,23 +16906,23 @@ msgstr "Παρακολούθησα"
 msgid "No SNMP Notifications"
 msgstr "Δεν υπάρχουν ειδοποιήσεις SNMP"
 
-#: managers.php:777 utilities.php:3405
+#: managers.php:777 utilities.php:3393
 msgid "Severity"
 msgstr "Σοβαρότητα"
 
-#: managers.php:796 utilities.php:3451
+#: managers.php:796 utilities.php:3439
 msgid "Purge Notification Log"
 msgstr "Έγγραφο ειδοποίησης καθαρισμού"
 
-#: managers.php:843 utilities.php:3511
+#: managers.php:843 utilities.php:3499
 msgid "Time"
 msgstr "Ώρα"
 
-#: managers.php:844 utilities.php:3511
+#: managers.php:844 utilities.php:3499
 msgid "Notification"
 msgstr "Ειδοποίηση"
 
-#: managers.php:845 utilities.php:3511
+#: managers.php:845 utilities.php:3499
 msgid "Varbinds"
 msgstr "Varbinds"
 
@@ -16926,7 +16930,7 @@ msgstr "Varbinds"
 msgid "Severity Level"
 msgstr "Επίπεδο σοβαρότητας"
 
-#: managers.php:878 utilities.php:3533
+#: managers.php:878 utilities.php:3521
 msgid "No SNMP Notification Log Entries"
 msgstr "Δεν υπάρχουν καταχωρήσεις καταγραφής ειδοποιήσεων SNMP"
 
@@ -17710,7 +17714,7 @@ msgstr "Εκτέλεση ελέγχου"
 msgid "RRD check is disabled, please enable in Configuration -> Settings -> Data"
 msgstr "Ο έλεγχος RRD είναι απενεργοποιημένος, ενεργοποιήστε τον στη Διαμόρφωση -> Ρυθμίσεις -> Δεδομένα"
 
-#: rrdcheck.php:87 utilities.php:2456
+#: rrdcheck.php:87 utilities.php:2444
 msgid "RRDfile Checker"
 msgstr "RRDfile Cleaner"
 
@@ -18141,16 +18145,12 @@ msgstr "Η χώρα που συνδέεται με αυτόν τον ιστότ�
 msgid "No Sites Found"
 msgstr "Δεν βρέθηκαν ιστότοποι"
 
-#: spikekill.php:29
+#: spikekill.php:30
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "FATAL: Η μέθοδος Spike Kill &#39; %s&#39; είναι Μη έγκυρη"
 
-#: spikekill.php:41
-msgid "Graph access denied"
-msgstr ""
-
-#: spikekill.php:119
+#: spikekill.php:120
 msgid "FATAL: Spike Kill Not Allowed"
 msgstr "FATAL: Ο Spike Kill δεν επιτρέπεται"
 
@@ -19606,18 +19606,18 @@ msgid "Attempts"
 msgstr "Προσπάθειες"
 
 #: utilities.php:1084 utilities.php:1470 utilities.php:1823 utilities.php:2126
-#: utilities.php:3173 utilities.php:3449
+#: utilities.php:3161 utilities.php:3437
 msgctxt "Button: use filter settings"
 msgid "Go"
 msgstr "Πήγαινε"
 
 #: utilities.php:1085 utilities.php:1471 utilities.php:1824 utilities.php:2127
-#: utilities.php:3174 utilities.php:3450
+#: utilities.php:3162 utilities.php:3438
 msgctxt "Button: reset filter settings"
 msgid "Clear"
 msgstr "Καθαρισμός"
 
-#: utilities.php:1086 utilities.php:1472 utilities.php:3451
+#: utilities.php:1086 utilities.php:1472 utilities.php:3439
 msgctxt "Button: delete all table entries"
 msgid "Purge"
 msgstr "Διαγραφή"
@@ -19728,367 +19728,367 @@ msgstr "Script Server:"
 msgid "RRD:"
 msgstr "RRD:"
 
-#: utilities.php:2394
+#: utilities.php:2382
 msgid "Kadupul technical support page.  Used by developers and technical support persons to assist with issues in Kadupul.  Includes checks for common configuration issues."
 msgstr "Kadupul σελίδα τεχνικής υποστήριξης. Χρησιμοποιείται από προγραμματιστές και άτομα τεχνικής υποστήριξης για να βοηθήσουν σε θέματα στο Kadupul. Περιλαμβάνει ελέγχους για κοινά θέματα διαμόρφωσης."
 
-#: utilities.php:2398
+#: utilities.php:2386
 msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
 msgstr "Το αρχείο καταγραφής Kadupul αποθηκεύει στατιστικά στοιχεία, σφάλματα και άλλα μηνύματα ανάλογα με τις ρυθμίσεις του συστήματος. Αυτές οι πληροφορίες μπορούν να χρησιμοποιηθούν για τον εντοπισμό προβλημάτων με το poller και την εφαρμογή."
 
-#: utilities.php:2402
+#: utilities.php:2390
 msgid "Allows Administrators to browse the user log.  Administrators can filter and export the log as well."
 msgstr "Επιτρέπει στους διαχειριστές να περιηγούνται στο αρχείο καταγραφής χρηστών. Οι διαχειριστές μπορούν επίσης να φιλτράρουν και να εξάγουν το αρχείο καταγραφής."
 
-#: utilities.php:2406
+#: utilities.php:2394
 msgid "Poller Cache Administration"
 msgstr "Διαχείριση πολικής προσωρινής μνήμης"
 
-#: utilities.php:2409
+#: utilities.php:2397
 msgid "This is the data that is being passed to the poller each time it runs. This data is then in turn executed/interpreted and the results are fed into the RRDfiles for graphing or the database for display."
 msgstr "Αυτά είναι τα δεδομένα που μεταφέρονται στο poller κάθε φορά που εκτελείται. Αυτά τα δεδομένα μετά με τη σειρά τους εκτελούνται / ερμηνεύονται και τα αποτελέσματα τροφοδοτούνται στα RRDfiles για τη γραφική παράσταση ή τη βάση δεδομένων για εμφάνιση."
 
-#: utilities.php:2413
+#: utilities.php:2401
 msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTS as well as in CDEF's."
 msgstr "Η προσωρινή μνήμη ερωτήματος δεδομένων αποθηκεύει τις πληροφορίες που συλλέγονται από τους τύπους εισόδου δεδομένων ερωτήματος. Οι τιμές από αυτά τα πεδία μπορούν να χρησιμοποιηθούν στην περιοχή κειμένου του Graphs for Legends, Vertical Labels και GPRINTS καθώς και στα CDEF."
 
-#: utilities.php:2415
+#: utilities.php:2403
 msgid "Rebuild Poller Cache"
 msgstr "Ανασυγκρότηση της προσωρινής κρυφής μνήμης"
 
-#: utilities.php:2419
+#: utilities.php:2407
 msgid "The Poller Cache will be re-generated if you select this option. Use this option only in the event of a database crash if you are experiencing issues after the crash and have already run the database repair tools.  Alternatively, if you are having problems with a specific Device, simply re-save that Device to rebuild its Poller Cache.  There is also a command line interface equivalent to this command that is recommended for large systems."
 msgstr "Η Poller Cache θα επαναδημιουργηθεί αν επιλέξετε αυτήν την επιλογή. Χρησιμοποιήστε αυτήν την επιλογή μόνο σε περίπτωση συντριβής βάσης δεδομένων, εάν αντιμετωπίζετε ζητήματα μετά τη συντριβή και έχετε ήδη εκτελέσει τα εργαλεία επισκευής βάσης δεδομένων. Εναλλακτικά, εάν αντιμετωπίζετε προβλήματα με μια συγκεκριμένη συσκευή, απλά αποθηκεύστε εκ νέου τη Συσκευή για να δημιουργήσετε ξανά τη Poller Cache. Υπάρχει επίσης μια διεπαφή γραμμής εντολών ισοδύναμη με αυτήν την εντολή που συνιστάται για μεγάλα συστήματα. <i class=\"deviceDown\">ΣΗΜΕΙΩΣΗ: Σε μεγάλα συστήματα, αυτή η εντολή μπορεί να διαρκέσει αρκετά λεπτά έως ώρες για να ολοκληρωθεί και συνεπώς δεν πρέπει να τρέξει από το Kadupul UI. Μπορείτε απλά να εκτελέσετε &#39;php -q cli / rebuild_poller_cache.php --help&#39; στη γραμμή εντολών για περισσότερες πληροφορίες.</i>"
 
-#: utilities.php:2421
+#: utilities.php:2409
 msgid "NOTE: On large systems, this command may take several minutes to hours to complete and therefore should not be run from the Kadupul UI.  You can simply run 'php -q cli/rebuild_poller_cache.php --help' at the command line for more information."
 msgstr "ΣΗΜΕΊΩΣΗ: Σε μεγάλα συστήματα, αυτή η εντολή μπορεί να διαρκέσει αρκετά λεπτά έως ώρες για να ολοκληρωθεί και, ως εκ τούτου, δεν πρέπει να εκτελείται από το περιβάλλον εργασίας χρήστη Kadupul.  Μπορείτε απλά να εκτελέσετε το 'php -q cli/rebuild_poller_cache.php --help' στη γραμμή εντολών για περισσότερες πληροφορίες."
 
-#: utilities.php:2425
+#: utilities.php:2413
 msgid "Rebuild Resource Cache"
 msgstr "Επαναδημιουργία προσωρινής μνήμης πόρων"
 
-#: utilities.php:2429
+#: utilities.php:2417
 msgid "When operating multiple Data Collectors in Kadupul, Kadupul will attempt to maintain state for key files on all Data Collectors.  This includes all core, non-install related website and plugin files.  When you force a Resource Cache rebuild, Kadupul will clear the local Resource Cache, and then rebuild it at the next scheduled poller start.  This will trigger all Remote Data Collectors to recheck their website and plugin files for consistency."
 msgstr "Όταν χρησιμοποιείτε πολλαπλούς συλλέκτες δεδομένων στο Kadupul, ο Kadupul θα επιχειρήσει να διατηρήσει την κατάσταση για τα βασικά αρχεία σε όλους τους συλλέκτες δεδομένων. Αυτό περιλαμβάνει όλες τις βασικές ιστοσελίδες και αρχεία προσθηκών που δεν σχετίζονται με την εγκατάσταση. Όταν αναγκάζετε την ανασύσταση της προσωρινής μνήμης πόρων, ο Kadupul θα εκκαθαρίσει την τοπική προσωρινή μνήμη πόρων και, στη συνέχεια, θα την ανοικοδομήσει κατά την επόμενη προγραμματισμένη εκκίνηση του poller. Αυτό θα ενεργοποιήσει όλους τους συλλέκτες απομακρυσμένων δεδομένων για να ελέγξουν εκ νέου τον ιστοτόπο τους και τα αρχεία προσθηκών για λόγους συνέπειας."
 
-#: utilities.php:2433
+#: utilities.php:2421
 msgid "Boost Utilities"
 msgstr "Boost Utilities"
 
-#: utilities.php:2434
+#: utilities.php:2422
 msgid "View Boost Status"
 msgstr "Προβολή κατάστασης αύξησης"
 
-#: utilities.php:2436
+#: utilities.php:2424
 msgid "This menu pick allows you to view various boost settings and statistics associated with the current running Boost configuration."
 msgstr "Αυτή η επιλογή μενού σας επιτρέπει να δείτε διάφορες ρυθμίσεις ώθησης και στατιστικά στοιχεία που σχετίζονται με την τρέχουσα διαμόρφωση Boost."
 
-#: utilities.php:2440
+#: utilities.php:2428
 msgid "Data Source Statistics Utilities"
 msgstr "Στατιστικά στοιχεία πηγών δεδομένων"
 
-#: utilities.php:2441
+#: utilities.php:2429
 msgid "Purge Data Source Statistics"
 msgstr "Στατιστικά στοιχεία πηγών δεδομένων"
 
-#: utilities.php:2445
+#: utilities.php:2433
 msgid "This menu pick will purge all existing Data Source Statistics from the Database.  If Data Source Statistics is enabled, the Data Sources Statistics will start collection again on the next Data Collector pass."
 msgstr "Αυτή η επιλογή μενού θα εκκαθαρίσει όλα τα υπάρχοντα στατιστικά στοιχεία προέλευσης δεδομένων από τη βάση δεδομένων. Εάν είναι ενεργοποιημένη η Στατιστική Πηγής Δεδομένων, τα Στατιστικά Πηγών Δεδομένων θα αρχίσουν ξανά τη συλλογή τους στο επόμενο πάσο Συλλέκτη Δεδομένων."
 
-#: utilities.php:2450
+#: utilities.php:2438
 msgid "RRD Utilities"
 msgstr "RRD Utilities"
 
-#: utilities.php:2451
+#: utilities.php:2439
 msgid "RRDfile Cleaner"
 msgstr "RRDfile Cleaner"
 
-#: utilities.php:2454
+#: utilities.php:2442
 msgid "When you delete Data Sources from Kadupul, the corresponding RRDfiles are not removed automatically.  Use this utility to facilitate the removal of these old files."
 msgstr "Όταν διαγράφετε τις Πηγές Δεδομένων από τον Kadupul, τα αντίστοιχα αρχεία RRD δεν καταργούνται αυτόματα. Χρησιμοποιήστε αυτό το βοηθητικό πρόγραμμα για να διευκολύνετε την αφαίρεση αυτών των παλιών αρχείων."
 
-#: utilities.php:2459
+#: utilities.php:2447
 msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need enable rrdcheck in Configuration->Settings->Data"
 msgstr "Χρησιμοποιήστε αυτό το βοηθητικό πρόγραμμα για να εμφανίσετε προβλήματα με αρχεία που λείπουν ή τιμές που λείπουν σε αρχεία rrd. Χρειάζεται να ενεργοποιήσετε το rrdcheck στο Configuration->Settings->Data"
 
-#: utilities.php:2465
+#: utilities.php:2453
 msgid "SNMP Agent Utilities"
 msgstr "SNMPAgent Utilities"
 
-#: utilities.php:2469
+#: utilities.php:2457
 msgid "This shows all objects being handled by the SNMP Agent."
 msgstr "Αυτό δείχνει όλα τα αντικείμενα που χειρίζεται το SNMPAgent."
 
-#: utilities.php:2471
+#: utilities.php:2459
 msgid "Rebuild SNMP Agent Cache"
 msgstr "Ανακατασκευή της προσωρινής μνήμης SNMPAgent"
 
-#: utilities.php:2475
+#: utilities.php:2463
 msgid "The SNMP cache will be cleared and re-generated if you select this option. Note that it takes another poller run to restore the SNMP cache completely."
 msgstr "Η προσωρινή μνήμη SNMP θα εκκαθαριστεί και θα επανέλθει εάν επιλέξετε αυτήν την επιλογή. Λάβετε υπόψη ότι χρειάζεται να εκτελεστεί άλλη λειτουργία πολλικής αποκατάστασης για την πλήρη αποκατάσταση της προσωρινής μνήμης SNMP."
 
-#: utilities.php:2480
+#: utilities.php:2468
 msgid "This menu pick allows you to view the latest events SNMP Agent has handled in relation to the registered notification receivers."
 msgstr "Αυτή η επιλογή μενού σας επιτρέπει να δείτε τα τελευταία συμβάντα που έχει χειριστεί το SNMPAgent σε σχέση με τους καταχωρημένους δέκτες ειδοποίησης."
 
-#: utilities.php:2485
+#: utilities.php:2473
 msgid "Allows Administrators to maintain SNMP notification receivers."
 msgstr "Επιτρέπει στους διαχειριστές τη διατήρηση των δεκτών ειδοποίησης SNMP."
 
-#: utilities.php:2492
+#: utilities.php:2480
 msgid "Kadupul System Utilities"
 msgstr "Kadupul System Utilities"
 
-#: utilities.php:2608
+#: utilities.php:2596
 msgid "Refresh Interval"
 msgstr "Μεσοδιάστημα ανανέωσης"
 
-#: utilities.php:2704
+#: utilities.php:2692
 msgid "Overrun Warning"
 msgstr "Προειδοποίηση υπέρβασης"
 
-#: utilities.php:2706
+#: utilities.php:2694
 msgid "Timed Out"
 msgstr "Λήξη χρόνου"
 
-#: utilities.php:2708
+#: utilities.php:2696
 msgid "Other"
 msgstr "Άλλο"
 
-#: utilities.php:2764
+#: utilities.php:2752
 msgid "Cannot open directory"
 msgstr "Δεν είναι δυνατή η πρόσβαση στον κατάλογο"
 
-#: utilities.php:2768
+#: utilities.php:2756
 msgid "Directory Does NOT Exist!!"
 msgstr "Κατάλογος δεν υπάρχει!"
 
-#: utilities.php:2777
+#: utilities.php:2765
 msgid "Current Boost Status"
 msgstr "Κατάσταση τρέχουσας ώθησης"
 
-#: utilities.php:2781
+#: utilities.php:2769
 msgid "Boost On-demand Updating:"
 msgstr "Ενίσχυση Ενημέρωση κατ &#39;απαίτηση:"
 
-#: utilities.php:2785
+#: utilities.php:2773
 msgid "Running Processes:"
 msgstr "Συγχρόνες διαδικασίες"
 
-#: utilities.php:2790
+#: utilities.php:2778
 msgid "Total Poller Items:"
 msgstr "Poller Cache στοιχεία"
 
-#: utilities.php:2796
+#: utilities.php:2784
 msgid "Total Data Sources:"
 msgstr "Συνολικές πηγές δεδομένων:"
 
-#: utilities.php:2800
+#: utilities.php:2788
 msgid "Remaining Data Sources:"
 msgstr "Πηγή δεδομένων σφαλμάτων"
 
-#: utilities.php:2800
+#: utilities.php:2788
 msgid "TBD"
 msgstr "TBD"
 
-#: utilities.php:2804
+#: utilities.php:2792
 msgid "Queued Boost Records:"
 msgstr "Αναμενόμενες εγγραφές ώθησης:"
 
-#: utilities.php:2808
+#: utilities.php:2796
 msgid "Approximate in Process:"
 msgstr "Κατά προσέγγιση στη διαδικασία:"
 
-#: utilities.php:2811
+#: utilities.php:2799
 msgid "Total Boost Records:"
 msgstr "Συνολικές εγγραφές ώθησης:"
 
-#: utilities.php:2816
+#: utilities.php:2804
 msgid "Boost Storage Statistics"
 msgstr "Ενισχύστε τις στατιστικές αποθήκευσης"
 
-#: utilities.php:2820
+#: utilities.php:2808
 msgid "Database Engine:"
 msgstr "Μηχανή βάσης δεδομένων:"
 
-#: utilities.php:2824
+#: utilities.php:2812
 msgid "Current Boost Table(s) Size:"
 msgstr "Τρέχων Πίνακας Ενίσχυσης Μέγεθος:"
 
-#: utilities.php:2828
+#: utilities.php:2816
 msgid "Avg Bytes/Record:"
 msgstr "Avg Bytes / Εγγραφή:"
 
-#: utilities.php:2856
+#: utilities.php:2844
 #, php-format
 msgid "%d Bytes"
 msgstr "% d Bytes"
 
-#: utilities.php:2856
+#: utilities.php:2844
 msgid "Max Record Length:"
 msgstr "Μέγιστο μήκος εγγραφής:"
 
-#: utilities.php:2868
+#: utilities.php:2856
 msgid "Max Allowed Boost Table Size:"
 msgstr "Μέγιστο επιτρεπόμενο μέγεθος πίνακα ώθησης:"
 
-#: utilities.php:2872
+#: utilities.php:2860
 msgid "Estimated Maximum Records:"
 msgstr "Εκτιμώμενες μέγιστες εγγραφές:"
 
-#: utilities.php:2876
+#: utilities.php:2864
 msgid "Previous Runtime Statistics"
 msgstr "Στατιστικά χρόνου εκτέλεσης"
 
-#: utilities.php:2879
+#: utilities.php:2867
 msgid "Last Start Time:"
 msgstr "Τελευταία ώρα έναρξης:"
 
-#: utilities.php:2885
+#: utilities.php:2873
 msgid "Last End Time:"
 msgstr "Τελευταία ώρα έναρξης:"
 
-#: utilities.php:2885
+#: utilities.php:2873
 msgid "Never Run"
 msgstr "Ποτέ μην τρέχεις"
 
-#: utilities.php:2888
+#: utilities.php:2876
 msgid "Last Run Duration:"
 msgstr "Διάρκεια τελευταίας εκτέλεσης:"
 
-#: utilities.php:2891
+#: utilities.php:2879
 #, php-format
 msgid "%d minutes"
 msgstr "%d λεπτά"
 
-#: utilities.php:2891
+#: utilities.php:2879
 #, php-format
 msgid "%d seconds"
 msgstr "%d δευτερόλεπτα"
 
-#: utilities.php:2894
+#: utilities.php:2882
 #, php-format
 msgid "%0.2f percent of update frequency)"
 msgstr "% 0.2f τοις εκατό της συχνότητας ενημέρωσης)"
 
-#: utilities.php:2902
+#: utilities.php:2890
 msgid "RRD Updates:"
 msgstr "Ενημερώσεις RRD:"
 
-#: utilities.php:2905
+#: utilities.php:2893
 msgid "MBytes"
 msgstr "MBytes"
 
-#: utilities.php:2905
+#: utilities.php:2893
 msgid "Peak Poller Memory:"
 msgstr "Peak Poller Memory:"
 
-#: utilities.php:2919
+#: utilities.php:2907
 msgid "Max Poller Memory Allowed:"
 msgstr "Μέγιστη χωρητικότητα μνήμης:"
 
-#: utilities.php:2922
+#: utilities.php:2910
 msgid "Detailed Runtime Statistics"
 msgstr "Στατιστικά χρόνου εκτέλεσης"
 
-#: utilities.php:2940
+#: utilities.php:2928
 #, php-format
 msgid "Records: %s (ds rows), Time: %s (secs), GetRows: %s (secs), ResultsCycle: %s (secs), FileAndTemplate: %s (secs), LastUpdate: %s (secs), RRDUpdate: %s (secs), Delete: %s (secs)"
 msgstr "Εγγραφές: %s (σειρές ds), Ώρα: %s (δευτ.), GetRows: %s (δευτ.), ResultsCycle: %s (δευτ.), FileAndTemplate: %s (δευτ.), LastUpdate: %s (δευτ.), RRDUpdate: %s (δευτ.), Διαγραφή: %s (δευτ.)"
 
-#: utilities.php:2952
+#: utilities.php:2940
 msgid "Previous Runtime Timers:"
 msgstr "Λεπτομερείς χρονομετρητές χρόνου εκτέλεσης:"
 
-#: utilities.php:2991 utilities.php:2993
+#: utilities.php:2979 utilities.php:2981
 #, php-format
 msgid "Process: %d"
 msgstr "Διεργασία: %d"
 
-#: utilities.php:2991
+#: utilities.php:2979
 #, php-format
 msgid "Status: <span class=\"deviceUp\"><b>Running</b></span>, Remaining: %s (dses), CurrentRuntime: %s (secs), PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
 msgstr "Κατάσταση: <span class=\"deviceUp\"><b>Εκτέλεση</b></span>, Υπόλοιπο: %s (dses), Τρέχων χρόνος εκτέλεσης: %s (δευτ.), Προηγούμενος χρόνος εκτέλεσης: %s (δευτ.), Προηγούμενος επεξεργασμένος: %10s (σειρές ds)"
 
-#: utilities.php:2993
+#: utilities.php:2981
 #, php-format
 msgid "Status: <span class=\"deviceRecovering\"><b>Idle</b></span>, PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
 msgstr "Κατάσταση: <span class=\"deviceRecovering\"><b>Σε αδράνεια</b></span>, Προηγούμενος χρόνος εκτέλεσης: %s (δευτερόλεπτα), Προηγούμενος επεξεργασμένος: %10s (σειρές ds)"
 
-#: utilities.php:2999
+#: utilities.php:2987
 msgid "Run Time Configuration"
 msgstr "Εκτέλεση ρύθμισης ώρας"
 
-#: utilities.php:3002
+#: utilities.php:2990
 msgid "Update Frequency:"
 msgstr "Συχνότητα ενημέρωσης:"
 
-#: utilities.php:3005
+#: utilities.php:2993
 msgid "Concurrent Processes:"
 msgstr "Συγχρόνες διαδικασίες"
 
-#: utilities.php:3008
+#: utilities.php:2996
 msgid "Next Start Time:"
 msgstr "Επόμενη ώρα έναρξης:"
 
-#: utilities.php:3011
+#: utilities.php:2999
 msgid "Maximum Records:"
 msgstr "Μέγιστες εγγραφές:"
 
-#: utilities.php:3011
+#: utilities.php:2999
 msgid "Records"
 msgstr "Μητρώα"
 
-#: utilities.php:3014
+#: utilities.php:3002
 msgid "Maximum Allowed Runtime:"
 msgstr "Μέγιστος επιτρεπόμενος χρόνος εκτέλεσης:"
 
-#: utilities.php:3020
+#: utilities.php:3008
 msgid "Image Caching Status:"
 msgstr "Κατάσταση προσωρινής αποθήκευσης εικόνων:"
 
-#: utilities.php:3023
+#: utilities.php:3011
 msgid "Cache Directory:"
 msgstr "Κατάλογος Cache:"
 
-#: utilities.php:3026
+#: utilities.php:3014
 msgid "Cached Files:"
 msgstr "Αποθηκευμένα αρχεία:"
 
-#: utilities.php:3029
+#: utilities.php:3017
 msgid "Cached Files Size:"
 msgstr "Cached αρχεία Μέγεθος:"
 
-#: utilities.php:3128
+#: utilities.php:3116
 msgid "SNMP Agent Cache"
 msgstr "SNMPAgent Cache"
 
-#: utilities.php:3161
+#: utilities.php:3149
 msgid "OIDs"
 msgstr "OIDs"
 
-#: utilities.php:3238
+#: utilities.php:3226
 msgid "Column Data"
 msgstr "Στοιχεία στήλης"
 
-#: utilities.php:3238
+#: utilities.php:3226
 msgid "Scalar"
 msgstr "Βαθμωτό μέγεθος"
 
-#: utilities.php:3390
+#: utilities.php:3378
 msgid "SNMP Agent Notification Log"
 msgstr "Μητρώο ειδοποιήσεων SNMPAgent"
 
-#: utilities.php:3421 utilities.php:3511
+#: utilities.php:3409 utilities.php:3499
 msgid "Receiver"
 msgstr "Παραλήπτης"
 
-#: utilities.php:3503
+#: utilities.php:3491
 msgid "Log Entries"
 msgstr "Καταχωρίσεις καταγραφών"
 
-#: utilities.php:3518
+#: utilities.php:3506
 #, php-format
 msgid "Severity Level: %s"
 msgstr "Επίπεδο σοβαρότητας: %s"

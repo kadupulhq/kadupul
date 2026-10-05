@@ -22,6 +22,7 @@ if ($argv[2] === 'coverage') {
 $config = array('is_web' => false, 'base_path' => $root, 'include_path' => $root . '/include');
 require $root . '/include/global_constants.php';
 require $root . '/lib/functions.php';
+$config['config_options_array'] = array('selective_debug' => '', 'log_verbosity' => POLLER_VERBOSITY_NONE);
 // Read the shipped allowlist rather than a copy; global_arrays.php itself
 // needs the plugin API to load.
 preg_match('/\\$allowed_proxy_headers\s*=\s*array\((.*?)\);/s', file_get_contents($root . '/include/global_arrays.php'), $block);

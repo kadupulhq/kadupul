@@ -1,56 +1,56 @@
 <?php
 
+declare(strict_types=1);
+
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-/*
- * The graph page offered the Real-time button when real-time was enabled or
- * the user held the Real-time realm (25), so a user without the realm saw it
- * whenever real-time was on, and a realm holder saw it with real-time off.
- * graph_realtime.php refuses both, so the button now needs the setting and
- * the realm, as lib/html.php already requires for the graph list.
- *
- * The condition guarding the button is read from graph.php and evaluated in
- * this namespace with the setting and the realm stubbed.
- */
+require_once dirname(__DIR__, 3) . '/Helpers/PestCodeCoverageCompatibility.php';
+require_once dirname(__DIR__, 3) . '/Helpers/GraphZoomNativeHarness.php';
 
-namespace RealtimeButtonGateTest;
+use PHPUnit\Framework\TestCase;
 
-function read_config_option($name, $force = false)
+final class RealtimeButtonGateTest extends TestCase
 {
-    return $name === 'realtime_enabled' ? $GLOBALS['realtime_button']['enabled'] : '';
-}
+    use \PestCodeCoverageCompatibility;
 
-function is_realm_allowed($realm, $check_user = false)
-{
-    return $realm === 25 && $GLOBALS['realtime_button']['realm'];
-}
-
-function realtime_button_shown(string $enabled, bool $realm): bool
-{
-    static $condition = null;
-
-    if ($condition === null) {
-        $source = file_get_contents(dirname(__DIR__, 4) . '/graph.php');
-
-        if (!preg_match('/if \(([^{}]+)\) \{\s*print "<a class=\'iconLink\' href=\'#\' onclick=\\\\"window\.open\(\'" \. \$config\[\'url_path\'\] \. \'graph_realtime\.php/', $source, $match)) {
-            throw new \RuntimeException('The Real-time button condition was not found in graph.php');
+    public function testRenderedRealtimeButtonsRespectBothRealmsAndSetting(): void
+    {
+        foreach (array('', 'on') as $enabled) {
+            foreach (array(false, true) as $realtimeRealm) {
+                foreach (array(false, true) as $utilityRealm) {
+                    $realms = array();
+                    if ($realtimeRealm) {
+                        $realms[] = 25;
+                    }
+                    if ($utilityRealm) {
+                        $realms[] = 27;
+                    }
+                    $result = GraphZoomNativeHarness::run(array(
+                        'request' => array('action' => 'view'),
+                        'realtime_enabled' => $enabled,
+                        'realms' => $realms,
+                    ), $this->getTestResultObject()->getCodeCoverage());
+                    self::assertStringContainsString(' 200 ', $result['headers'][0]);
+                    self::assertStringContainsString("rra_id='5'", $result['html']);
+                    self::assertStringContainsString("rra_id='7'", $result['html']);
+                    self::assertDoesNotMatchRegularExpression('/PHP (Warning|Fatal error|Notice):/', $result['stderr']);
+                    $document = new DOMDocument();
+                    $previous = libxml_use_internal_errors(true);
+                    try {
+                        self::assertTrue($document->loadHTML($result['html']));
+                    } finally {
+                        libxml_clear_errors();
+                        libxml_use_internal_errors($previous);
+                    }
+                    $xpath = new DOMXPath($document);
+                    $buttons = $xpath->query('//a[img[@title="Click to view just this Graph in Real-time"]]');
+                    self::assertCount($enabled === 'on' && $realtimeRealm && $utilityRealm ? 2 : 0, $buttons);
+                    foreach ($buttons as $button) {
+                        self::assertStringContainsString("window.open('/cacti/graph_realtime.php?top=0&left=0&local_graph_id=4'", $button->getAttribute('onclick'));
+                    }
+                }
+            }
         }
-
-        $condition = $match[1];
     }
-
-    $GLOBALS['realtime_button'] = array('enabled' => $enabled, 'realm' => $realm);
-
-    // test-only eval of an expression read from this repository, not external input
-    return (bool) eval('namespace ' . __NAMESPACE__ . '; return ' . $condition . ';');
 }
-
-test('the Real-time button needs real-time enabled and the Real-time realm', function ($enabled, $realm, $shown) {
-    expect(realtime_button_shown($enabled, $realm))->toBe($shown);
-})->with(array(
-    'enabled with the realm'       => array('on', true, true),
-    'enabled without the realm'    => array('on', false, false),
-    'disabled with the realm'      => array('', true, false),
-    'disabled without the realm'   => array('', false, false),
-));

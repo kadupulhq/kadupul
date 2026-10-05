@@ -204,6 +204,9 @@ $disable_log_rotation = false;
  * header with exactly one client IP (no comma-separated chain). Requests from
  * other peers always use REMOTE_ADDR. CIDR ranges and multiple headers are not
  * supported. The old boolean true setting is ignored for security.
+ * Enable Debug log verbosity to diagnose ignored or rejected forwarding. One
+ * AUTH diagnostic per request names these settings without recording request
+ * header values or proxy/client addresses; normal verbosity stays silent.
  *
  * Example for a proxy that overwrites X-Forwarded-For:
  *   $proxy_trusted_addresses = array('192.0.2.10');

@@ -19,6 +19,15 @@ follows [Semantic Versioning](VERSIONING.md).
 - Return failure from the legacy audit CLI when repair or export fails; report missing tables separately from attempted ALTER statements and preserve SQL comment prefixes in diagnostic plans.
 - Preserve recognized scriptless upgrade releases, reject missing required migrations, and confirm each intermediate database version before advancing or reporting success.
 - Report integer signedness drift for manual range review, preserve local text collations during unrelated schema repairs, and refuse index algorithms unsupported by the effective storage engine.
+- Authorize non-deletion graph and data-source bulk selections with current owner/policy SQL in chunks of 1,000, retaining the established 10,000-object safety ceiling and supported 5,000-row UI batches.
+- Batch device management reuses the same bounded current-policy selection checks before protected names or action hooks. Malformed decimal, exponent and floating-point IDs are refused for graph/device selections and filtered from data-source selections; valid zero-padded or whitespace-normalized integer representations retain their order and duplicates.
+- Management graph/data list and count queries reuse policy ID subqueries instead of hydrating the complete device inventory. Graph lists apply the same graph/template policy as actions, and data-template filter choices derive only from admitted sources.
+- Main device management intentionally requires both the Devices realm and object policy access. Creating a device does not grant a new device permission; default-deny operators need an explicit applicable policy grant before managing the new device. LTS behavior is unchanged.
+
+- Display graph access refusals once after an AJAX-compatible redirect; preserve graph and device authorization before editor lookup or session locking.
+
+- Allow unrestricted administrators and device operators to purge unfinished unassigned and orphan troubleshooting checks; preserve device-scoped purge for restricted operators.
+
 - Authorize complete graph and data-source deletion scopes before reading dependent names or writing; retain safe confirmation choices and reject oversized dependency batches. Report collector or volatile-cache partial outcomes separately from local transaction cleanup.
 - Register graph-item choice sources in strict cookie and domain-authentication coverage evidence.
 
@@ -26,6 +35,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Correct Settings help for graph permission combinations, auto scale limits, and CSP nonce reporting and enforcement. Fixes #222, #230, and #265.
 
 - Preserve heartbeat propagation for template-only and local data sources; accept unchanged read-only fields and independently validate consolidation edits before writes.
+- Render sortable header labels as text, including stored automation fields and plugin `device_display_text` labels. Arbitrary label markup is now escaped; existing entities, generated sort icons and sorting callbacks are preserved.
 
 - Preserve existing NaN gaps while removing stddev and variance spikes; count only completed replacements against the per-archive limit and report the selected replacement mode. Fixes #238.
 
@@ -140,6 +150,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 - Return a nonzero status for refused upgrade start versions, missing upgrade scripts, migration errors, or failed version-marker writes. Fixes #240.
+- Check linked data-source and poller device owners before graph device reassignment and before graph form writes; denied, missing, or malformed child owners leave the graph and its children unchanged. Template-only references remain non-device records.
 - Validate installed font families after recognized Pango suffixes, reject names when fontconfig reports no installed fonts, and preserve complete multiword default descriptions through RRDProxy session setup.
 - Make the graph spike-removal menu reachable with Enter and Space, restore focus on Escape, and discard obsolete menu replies after script reloads.
 - Keep Paper Plane content links readable on hover; measure contrast using opacity groups and image-layer order, and reject new or worsened measured failures.

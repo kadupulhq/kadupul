@@ -41,7 +41,9 @@ function cacti_exec($binary, $args, &$output, $timeout) {
     return $GLOBALS['status'];
 }
 function rrdtool_function_graph(...$args) { $GLOBALS['rendered'] = true; $GLOBALS['format'] = $GLOBALS['graph_data_array']['image_format']; exit; }
-$config = array('base_path' => '/application path');
+$config = array('base_path' => '/application path', 'include_path' => $argv[1] . '/include', 'is_web' => false);
+$_SERVER['REQUEST_METHOD'] = 'GET';
+require $argv[1] . '/include/csrf.php';
 $step = json_decode($argv[3], true);
 $status = (int) $argv[5];
 $realmAllowed = json_decode($argv[8], true);
