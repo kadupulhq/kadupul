@@ -9,6 +9,10 @@ if (PHP_SAPI !== 'cli') {
 }
 $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
+if ($scenario['operation'] === 'spike-controller') {
+    require __DIR__ . '/spike-controller-native.php';
+    require_once $root . '/tests/Helpers/SpikeControllerCoverageRegistration.php';
+}
 if ($scenario['operation'] === 'graph-data-removal') require __DIR__ . '/graph-data-removal-native.php';
 if (isset($argv[3])) {
     require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
@@ -17,6 +21,10 @@ if (isset($argv[3])) {
         require_once $root . '/tests/Helpers/GraphCacheCoverageRegistration.php';
         $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], GraphCacheCoverageRegistration::SOURCES);
         define('GRAPH_CACHE_TEST_COVERAGE', true);
+    }
+    if ($scenario['operation'] === 'spike-controller') {
+        $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], SpikeControllerCoverageRegistration::SOURCES);
+        define('SPIKE_CSRF_TEST_COVERAGE', true);
     }
     if ($scenario['operation'] === 'graph-data-removal') {
         require_once $root . '/tests/Helpers/GraphDataRemovalCoverageRegistration.php';
@@ -88,6 +96,9 @@ $queryRowCounts = [];
 $logs = [];
 function db_fetch_assoc_prepared($sql, $params = [])
 {
+    if (($GLOBALS['scenario']['operation'] ?? '') === 'spike-controller' && str_contains($sql, 'SELECT DISTINCT data_template_rrd.local_data_id')) {
+        $GLOBALS['spikeLookupParameters'][] = $params;
+    }
     $GLOBALS['queries']++;
     $GLOBALS['querySql'][] = $sql;
     if (($GLOBALS['scenario']['operation'] ?? '') === 'graph-data-removal'
@@ -178,6 +189,9 @@ require $root . '/lib/auth.php';
 $result = null;
 $cached = null;
 switch ($scenario['operation']) {
+    case 'spike-controller':
+        spike_controller_fixture_run();
+        break;
     case 'graph-cache-revocation':
     case 'graph-image-cache':
         $result = graph_cache_fixture_run($scenario);
