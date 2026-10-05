@@ -21,7 +21,7 @@ ini_set('memory_limit', '-1');
 set_default_action();
 
 if (isset_request_var('purge')) {
-    // Purge truncates every check and carries no action name for the global
+    // Purge carries no action name for the global
     // guard to match; the Purge button still sends it as a same-origin GET.
     csrf_refuse_cross_site_get();
 }
@@ -552,15 +552,26 @@ function debug_wizard()
     );
 
     if (isset_request_var('purge')) {
-        $device_rows = 0;
-        $allowed_device_ids = array_map('intval', array_column(get_allowed_management_devices('', '', '', $device_rows), 'id'));
+        $user_id = auth_resource_id($_SESSION['sess_user_id'] ?? null);
+        $full_device_access = read_config_option('auth_method') == 0
+            || ($user_id !== null && $user_id > 0
+                && (cacti_authorize_is_admin($user_id) || get_simple_device_perms($user_id)));
 
-        if (cacti_sizeof($allowed_device_ids)) {
-            db_execute('DELETE dd
+        if ($full_device_access) {
+            // Unassigned and orphan checks have no device to join. Only an
+            // unrestricted operator may remove these unfinished checks.
+            db_execute('DELETE FROM data_debug');
+        } else {
+            $device_rows = 0;
+            $allowed_device_ids = array_map('intval', array_column(get_allowed_management_devices('', '', '', $device_rows), 'id'));
+
+            if (cacti_sizeof($allowed_device_ids)) {
+                db_execute('DELETE dd
 				FROM data_debug AS dd
 				INNER JOIN data_local AS dl
 				ON dd.datasource = dl.id
 				WHERE dl.host_id IN (' . implode(',', $allowed_device_ids) . ')');
+            }
         }
     }
 

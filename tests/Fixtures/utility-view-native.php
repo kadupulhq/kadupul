@@ -167,6 +167,9 @@ INSERT INTO processes VALUES('boost','child',1,NOW()),('other','child',2,NOW());
     $boost_max_runtime = array(60 => 'One hour');
     $tables = array_merge($tables, array('settings', 'poller_output_boost', 'poller_output_boost_local_data_ids', 'processes'));
 }
+if (isset($scenario['debug_purge_policy'])) {
+    require __DIR__ . '/debug-purge-policy.php';
+}
 $before = array();
 foreach ($tables as $table) {
     $before[$table] = $db->query('SELECT * FROM ' . $table)->fetchAll(PDO::FETCH_ASSOC);
@@ -249,40 +252,52 @@ function db_qstr($value)
 {
     return $GLOBALS['db']->quote($value);
 }
-function get_total_row_data($user, $sql, $params)
-{
-    $GLOBALS['total_rows'][] = (int) db_fetch_cell_prepared($sql, $params);
-    return end($GLOBALS['total_rows']);
+if (!isset($scenario['debug_purge_policy'])) {
+    function get_total_row_data($user, $sql, $params)
+    {
+        $GLOBALS['total_rows'][] = (int) db_fetch_cell_prepared($sql, $params);
+        return end($GLOBALS['total_rows']);
+    }
 }
-function get_allowed_sites($where)
-{
-    return db_fetch_assoc('SELECT * FROM sites ORDER BY name');
+
+if (!isset($scenario['debug_purge_policy'])) {
+    function get_allowed_sites($where)
+    {
+        return db_fetch_assoc('SELECT * FROM sites ORDER BY name');
+    }
 }
+
 function db_qstr_rlike($value)
 {
     // SQLite REGEXP has the same predicate role; this is a dialect boundary.
     return 'REGEXP ' . db_qstr($value);
 }
-function get_allowed_devices($where)
-{
-    $scope = '';
-    if (array_key_exists('allowed_devices', $GLOBALS['scenario'])) {
-        $ids = array_map('intval', $GLOBALS['scenario']['allowed_devices']);
-        $scope = ' WHERE ' . ($ids === array() ? '1=0' : 'id IN (' . implode(',', $ids) . ')');
+if (!isset($scenario['debug_purge_policy'])) {
+    function get_allowed_devices($where)
+    {
+        $scope = '';
+        if (array_key_exists('allowed_devices', $GLOBALS['scenario'])) {
+            $ids = array_map('intval', $GLOBALS['scenario']['allowed_devices']);
+            $scope = ' WHERE ' . ($ids === array() ? '1=0' : 'id IN (' . implode(',', $ids) . ')');
+        }
+        return db_fetch_assoc('SELECT * FROM host' . $scope . ' ORDER BY description');
     }
-    return db_fetch_assoc('SELECT * FROM host' . $scope . ' ORDER BY description');
 }
+
 // Keep selected-device checks consistent with this renderer fixture's isolated
 // permission list. Production authorization is verified in the auth suites.
-function is_device_allowed($device_id)
-{
-    foreach (get_allowed_management_devices('') as $device) {
-        if ((int) $device['id'] === (int) $device_id) {
-            return true;
+if (!isset($scenario['debug_purge_policy'])) {
+    function is_device_allowed($device_id)
+    {
+        foreach (get_allowed_management_devices('') as $device) {
+            if ((int) $device['id'] === (int) $device_id) {
+                return true;
+            }
         }
+        return false;
     }
-    return false;
 }
+
 function __($text, ...$args)
 {
     return $args ? vsprintf($text, $args) : $text;
@@ -335,6 +350,13 @@ final class CactiSecureHeaders
         return "nonce='utility-fixture'";
     }
 }
+if (!isset($scenario['debug_purge_policy'])) {
+    function get_allowed_management_devices(...$arguments)
+    {
+        return get_allowed_devices(...$arguments);
+    }
+}
+
 define('VALID_HOST_FIELDS', '(hostname)');
 require $root . '/include/global_constants.php';
 require $root . '/lib/functions.php';
@@ -342,6 +364,9 @@ require $root . '/lib/html.php';
 require $root . '/lib/html_utility.php';
 require $root . '/lib/html_form.php';
 require $root . '/lib/variables.php';
+if (isset($scenario['debug_purge_policy'])) {
+    require $root . '/lib/auth.php';
+}
 if ($managerView && ($_REQUEST['action'] ?? '') === 'actions') {
     // Registered before collector shutdown: observe committed data and request
     // admission before emitting the completion receipt after controller exit.
@@ -425,8 +450,3 @@ foreach ($tables as $table) {
 }
 // This CLI-only fixture emits a JSON protocol, with HTML characters escaped.
 fwrite(STDOUT, json_encode(array('icons' => $icons ?? array(), 'snmp_counts' => $GLOBALS['snmp_counts'] ?? array(), 'total_rows' => $GLOBALS['total_rows'] ?? array(), 'log_before' => $logBefore, 'log_after' => hash_file('sha256', $directory . '/cacti.log'), 'before' => $before, 'after' => $after, 'html' => $html, 'queries' => $queries, 'request' => $_REQUEST, 'session' => $_SESSION), JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));
-
-function get_allowed_management_devices(...$arguments)
-{
-    return get_allowed_devices(...$arguments);
-}

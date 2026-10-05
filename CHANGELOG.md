@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Allow unrestricted administrators and device operators to purge unfinished unassigned and orphan troubleshooting checks; preserve device-scoped purge for restricted operators.
+
 - Authorize complete graph and data-source deletion scopes before reading dependent names or writing; retain safe confirmation choices and reject oversized dependency batches. Report collector or volatile-cache partial outcomes separately from local transaction cleanup.
 - Register graph-item choice sources in strict cookie and domain-authentication coverage evidence.
 

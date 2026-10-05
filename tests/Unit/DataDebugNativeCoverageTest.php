@@ -183,6 +183,36 @@ final class DataDebugNativeCoverageTest extends TestCase
         );
     }
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('purgePolicyCases')]
+    public function testPurgeUsesActualPolicyAndPreservesForeignChecks(array $policy, array $remaining): void
+    {
+        $state = $this->render(['purge' => '1'], ['debug_purge_policy' => $policy]);
+        $before = array_column($state['before']['data_debug'], null, 'datasource');
+        $after = array_column($state['after']['data_debug'], null, 'datasource');
+        self::assertSame([101,102,103,105,106,999], array_keys($before));
+        self::assertSame($remaining, array_keys($after));
+        foreach ($after as $id => $row) {
+            self::assertSame($before[$id], $row);
+        }
+        foreach ($state['before'] as $table => $rows) {
+            if ($table !== 'data_debug') {
+                self::assertSame($rows, $state['after'][$table], $table);
+            }
+        }
+        self::assertSame('preserved', $state['session']['sentinel']);
+    }
+
+    public static function purgePolicyCases(): iterable
+    {
+        yield 'administrator with restricted graph-device policy can clear orphan checks' => [['admin' => true, 'exceptions' => [1]], []];
+        yield 'unrestricted device policy can clear unassigned and orphan checks' => [['policy_hosts' => 1], []];
+        yield 'authentication disabled retains full purge' => [['auth_method' => 0], []];
+        yield 'unrestricted user with no devices can clear unfinished orphans' => [['policy_hosts' => 1, 'empty_hosts' => true], []];
+        yield 'restricted operator removes only permitted device checks' => [['exceptions' => [1]], [103,105,106,999]];
+        yield 'default allow with denied device remains scoped' => [['policy_hosts' => 1, 'exceptions' => [2]], [103,105,106,999]];
+        yield 'restricted operator without allowed devices removes nothing' => [[], [101,102,103,105,106,999]];
+    }
+
     private function render(array $request, array $options = array()): array
     {
         $root = dirname(__DIR__, 2);
@@ -207,17 +237,20 @@ final class DataDebugNativeCoverageTest extends TestCase
                 self::assertCount(1, $reports);
                 // Independent complete inventory: original nine RRD defaults,
                 // real utility filter files and every executable fixture dependency.
-                $sources = array('config/icons.json', 'src/Platform/Contract/IconRegistry.php', 'composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php', 'tests/Unit/UtilityViewNativeCoverageTest.php', 'tests/Unit/DataDebugNativeCoverageTest.php', 'tests/Fixtures/data-debug-records.php', 'utilities.php', 'data_debug.php', 'rrdcleaner.php', 'lib/html.php', 'lib/html_utility.php', 'lib/functions.php', 'lib/clog_webapi.php', 'src/Platform/Infrastructure/Legacy/UtilityRows.php', 'include/global_constants.php', 'include/global_session.php', 'lib/html_form.php', 'lib/variables.php', 'src/Platform/Infrastructure/Legacy/HostDataSubstitution.php', 'lib/utility.php');
+                $sources = array('config/icons.json', 'src/Platform/Contract/IconRegistry.php', 'composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php', 'tests/Unit/UtilityViewNativeCoverageTest.php', 'tests/Unit/DataDebugNativeCoverageTest.php', 'tests/Fixtures/data-debug-records.php', 'utilities.php', 'data_debug.php', 'rrdcleaner.php', 'lib/html.php', 'lib/html_utility.php', 'lib/functions.php', 'lib/clog_webapi.php', 'src/Platform/Infrastructure/Legacy/UtilityRows.php', 'include/global_constants.php', 'include/global_session.php', 'lib/html_form.php', 'lib/variables.php', 'src/Platform/Infrastructure/Legacy/HostDataSubstitution.php', 'lib/utility.php', 'tests/Fixtures/debug-purge-policy.php', 'lib/auth.php', 'include/csrf.php', 'tests/Helpers/PhpSource.php');
                 $markers = array('utility-view-observed:' . ($options['view'] ?? 'debug'));
                 if (($options['view'] ?? 'debug') === 'debug-icons') {
                     $markers[] = 'debug-icons-rendered';
                 }
                 $hits = array(($options['view'] ?? 'debug') === 'cleaner' ? 'rrdcleaner.php' : 'data_debug.php', 'lib/html.php', 'lib/functions.php');
+                if (isset($options['debug_purge_policy'])) {
+                    $hits[] = 'lib/auth.php';
+                }
                 $child = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/utility-view-native.php', $scenario, $sources, $markers, $hits);
                 static $omissionsVerified = array();
-                $mode = $options['view'] ?? 'debug';
+                $mode = isset($options['debug_purge_policy']) ? 'debug-purge-policy' : ($options['view'] ?? 'debug');
                 if (!isset($omissionsVerified[$mode])) {
-                    self::assertSame(42 + count($markers), NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/utility-view-native.php', $scenario, $sources, $markers, $hits, 'lib/boost.php'));
+                    self::assertSame(46 + count($markers), NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/utility-view-native.php', $scenario, $sources, $markers, $hits, 'lib/boost.php'));
                     $omissionsVerified[$mode] = true;
                 }
                 $coverage->merge($child);
