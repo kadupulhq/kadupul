@@ -14,7 +14,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Constrain RRD cleaner scans and purge paths to the configured storage roots.
 
 - Map complete exclamation-delimited poller field lists from PHP and Spine while preserving scalar exclamation marks and hexadecimal values, including hexadecimal-looking field names. Fixes #284.
-- Query the shipped `poller` table when checking multi-collector Boost settings, preserve the current system setting if that count fails, and consistently convert the 120-minute fallback interval to seconds. Fixes #270.
+- Query the shipped `poller` table when checking multi-collector Boost settings, preserve the current system setting if that count fails, and normalize the bounded 120-minute fallback before master scheduling arithmetic. Fixes #270.
 - Enforce persistent CDEF reference integrity for legacy writers and atomic aggregate cache replacement; refuse online collector primary upgrades and confirm the final installation version before reporting success.
 - Roll back complete aggregate regeneration and creation on unconfirmed reads or writes, preserving caller transactions; reject malformed aggregate item selections before saving and report incomplete propagation.
 - Keep permission writes and session epochs consistent, including failed writes and absent deletions.
