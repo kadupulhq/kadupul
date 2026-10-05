@@ -279,7 +279,7 @@ final class AuditDatabaseCommandTest extends TestCase
         $this->presentation->forLegacy(LegacyRequest::Run);
         $tester = $this->tester($this->schema(false));
 
-        self::assertSame(0, $tester->execute(['--repair' => true, '--alters' => true]));
+        self::assertSame(1, $tester->execute(['--repair' => true, '--alters' => true]));
         self::assertSame(implode("\n", [
             '-- SUCCESS: Loaded the Audit Schema',
             sprintf('-- Scanning Table: %-45s', "'host'") . ' - Completed',
@@ -308,6 +308,26 @@ final class AuditDatabaseCommandTest extends TestCase
 
         self::assertSame(0, $tester->execute(['--repair' => true]));
         self::assertStringEndsWith("\n" . self::SEPARATOR . "\nExecuting Alter for Table : host - Success\n" . self::SEPARATOR . "\nRepair Completed!  All 1 Alters succeeded!\n", $tester->getDisplay());
+    }
+
+    public function testMissingTablesStayManualFindingsWithoutInventedFailedAlters(): void
+    {
+        foreach ([['--repair' => true], ['--alters' => true]] as $flags) {
+            $schema = $this->createMock(SchemaAudit::class);
+            $schema->method('codeVersion')->willReturn('1.3.0');
+            $schema->method('databaseVersion')->willReturn('1.3.0');
+            $schema->method('catalog')->willReturn(new AuditCatalog([], PluginSchemaChanges::none()));
+            $schema->expects(self::never())->method('statement');
+            $schema->expects(self::never())->method('alter');
+            $this->presentation->forLegacy(LegacyRequest::Run);
+            $tester = $this->tester($schema);
+            self::assertSame(isset($flags['--repair']) ? 1 : 0, $tester->execute($flags));
+            $prefix = isset($flags['--alters']) ? '-- ' : '';
+            self::assertSame(2, substr_count($tester->getDisplay(), $prefix . 'ERROR: Baseline table is missing; repair did not recreate it.'));
+            self::assertStringContainsString($prefix . 'Repair Completed!  No changes performed.', $tester->getDisplay());
+            self::assertStringContainsString($prefix . '2 baseline tables are missing and require manual repair.', $tester->getDisplay());
+            self::assertStringNotContainsString('Alters succeeded and', $tester->getDisplay());
+        }
     }
 
     /** The audit schema lists host.ping narrower than the server holds it. */
@@ -829,7 +849,7 @@ final class AuditDatabaseCommandTest extends TestCase
         // DbalAuditBaselineStore returns false for a failed, timed-out or unwritable dump.
         $this->presentation->forLegacy(LegacyRequest::Run);
         $legacy = $this->tester(null, $this->store(null, false));
-        self::assertSame(0, $legacy->execute(['--load' => true]));
+        self::assertSame(1, $legacy->execute(['--load' => true]));
         self::assertStringEndsWith("\nFinished Creating Audit Schema with ERROR\n\n", $legacy->getDisplay());
 
         $this->presentation = new CliPresentation();
