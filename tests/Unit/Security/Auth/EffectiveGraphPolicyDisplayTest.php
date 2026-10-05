@@ -29,18 +29,36 @@ function __($message) { return $message; }
 
 function connection(): \PDO {
     if (!getenv('AUTH_POLICY_NATIVE_DB')) { return new \PDO('sqlite::memory:'); }
+    static $db;
+    if ($db instanceof \PDO) { return $db; }
     $host = getenv('BOOST_DB_HOST') ?: '127.0.0.1';
     $port = getenv('BOOST_DB_PORT') ?: '3306';
     $name = getenv('BOOST_DB_NAME') ?: 'cacti_boost_contract';
-    return new \PDO("mysql:host=$host;port=$port;dbname=$name;charset=utf8mb4", getenv('BOOST_DB_USER') ?: 'root', getenv('BOOST_DB_PASSWORD') ?: '', [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    $db = new \PDO("mysql:host=$host;port=$port;dbname=$name;charset=utf8mb4", getenv('BOOST_DB_USER') ?: 'root', getenv('BOOST_DB_PASSWORD') ?: '', [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    // MySQL cannot join a temporary table more than once. Use an exclusively
+    // created, task-owned schema so the unchanged production joins are tested.
+    $schema = 'kadupul_auth_policy_'.bin2hex(random_bytes(12));
+    $db->exec('CREATE DATABASE `'.$schema.'`');
+    register_shutdown_function(static function () use ($db, $schema) {
+        $db->exec('DROP DATABASE `'.$schema.'`');
+    });
+    $db->exec('USE `'.$schema.'`');
+    createTables($db);
+    return $db;
+}
+function createTables(\PDO $db): void {
+    $db->exec('CREATE TABLE graph_local (id INTEGER, host_id INTEGER, graph_template_id INTEGER)');
+    $db->exec('CREATE TABLE host (id INTEGER, disabled VARCHAR(2))');
+    $db->exec('CREATE TABLE user_auth_perms (user_id INTEGER, item_id INTEGER, type INTEGER)');
+    $db->exec('CREATE TABLE user_auth_group_perms (group_id INTEGER, item_id INTEGER, type INTEGER)');
 }
 function evaluate(array $policies, array $exceptions, int $method): array {
     $db = connection();
-    $temporary = $db->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql' ? 'TEMPORARY ' : '';
-    $db->exec('CREATE '.$temporary.'TABLE graph_local (id INTEGER, host_id INTEGER, graph_template_id INTEGER)');
-    $db->exec('CREATE '.$temporary.'TABLE host (id INTEGER, disabled VARCHAR(2))');
-    $db->exec('CREATE '.$temporary.'TABLE user_auth_perms (user_id INTEGER, item_id INTEGER, type INTEGER)');
-    $db->exec('CREATE '.$temporary.'TABLE user_auth_group_perms (group_id INTEGER, item_id INTEGER, type INTEGER)');
+    if ($db->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'sqlite') {
+        createTables($db);
+    } else {
+        foreach (['graph_local', 'host', 'user_auth_perms', 'user_auth_group_perms'] as $table) { $db->exec('DELETE FROM '.$table); }
+    }
     $db->exec("INSERT INTO host VALUES (7, ''); INSERT INTO graph_local VALUES (11, 7, 13)");
     foreach ($exceptions as [$policy, $type]) {
         $p = $policies[$policy];
