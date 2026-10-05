@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Chinese Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 11:49-0700\n"
+"POT-Creation-Date: 2026-10-05 12:02-0700\n"
 "PO-Revision-Date: 2024-06-23 04:09+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -4474,7 +4474,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller 尚未运行."
 
 #: graph_realtime.php:34 graph_realtime.php:446 include/auth.php:316
-#: lib/functions.php:8206 permission_denied.php:29 permission_denied.php:36
+#: lib/functions.php:8229 permission_denied.php:29 permission_denied.php:36
 msgid "Permission Denied"
 msgstr "没有权限"
 
@@ -5811,11 +5811,11 @@ msgstr "FATAL: 您必须先登录才能访问Kadupul 的那个区域."
 msgid "Login Again"
 msgstr "重新登录"
 
-#: include/auth.php:317 lib/functions.php:8207 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8230 permission_denied.php:38
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "如果您觉得这是一个报错,请联系Kadupul 管理员."
 
-#: include/auth.php:317 lib/functions.php:8207 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8230 permission_denied.php:38
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "您不能访问Kadupul 的这个部分."
 

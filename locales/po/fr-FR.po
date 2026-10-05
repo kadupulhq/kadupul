@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 11:49-0700\n"
+"POT-Creation-Date: 2026-10-05 12:02-0700\n"
 "PO-Revision-Date: 2024-04-20 18:51-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -4503,7 +4503,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Le Kadupul Poller n'a pas encore couru."
 
 #: graph_realtime.php:34 graph_realtime.php:446 include/auth.php:316
-#: lib/functions.php:8206 permission_denied.php:29 permission_denied.php:36
+#: lib/functions.php:8229 permission_denied.php:29 permission_denied.php:36
 msgid "Permission Denied"
 msgstr "Permission refusée"
 
@@ -5840,11 +5840,11 @@ msgstr "FATAL : Vous devez être connecté pour accéder à cette section de Kad
 msgid "Login Again"
 msgstr "Se connecter de nouveau"
 
-#: include/auth.php:317 lib/functions.php:8207 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8230 permission_denied.php:38
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Si vous pensez que c'est une erreur. Veuillez contacter votre administrateur Kadupul."
 
-#: include/auth.php:317 lib/functions.php:8207 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8230 permission_denied.php:38
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Vous n'êtes pas autorisé à accéder à cette section de Kadupul."
 

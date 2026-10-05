@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Russian Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 11:49-0700\n"
+"POT-Creation-Date: 2026-10-05 12:02-0700\n"
 "PO-Revision-Date: 2024-12-06 19:24+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -4539,7 +4539,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Какти Поллер еще не сбежал."
 
 #: graph_realtime.php:34 graph_realtime.php:446 include/auth.php:316
-#: lib/functions.php:8206 permission_denied.php:29 permission_denied.php:36
+#: lib/functions.php:8229 permission_denied.php:29 permission_denied.php:36
 msgid "Permission Denied"
 msgstr "Доступ запрещён"
 
@@ -5879,11 +5879,11 @@ msgstr "Вы должны войти в систему, чтобы получи�
 msgid "Login Again"
 msgstr "Войти снова"
 
-#: include/auth.php:317 lib/functions.php:8207 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8230 permission_denied.php:38
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Если вы считаете, что это ошибка. Пожалуйста, свяжитесь с администратором Kadupul."
 
-#: include/auth.php:317 lib/functions.php:8207 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8230 permission_denied.php:38
 #, fuzzy
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Вам не разрешается доступ к этому разделу Kadupul."
