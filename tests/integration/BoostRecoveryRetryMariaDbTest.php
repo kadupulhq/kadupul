@@ -52,8 +52,13 @@ test('recovery publishes a retained changed value before deleting it on retry', 
     $local = connection();
     $main = connection();
     foreach ([$local, $main] as $conn) {
-        // Actual queue key/column types; private temporary tables isolate each collector connection.
-        $conn->exec('CREATE TEMPORARY TABLE poller_output_boost (local_data_id INT UNSIGNED NOT NULL, rrd_name VARCHAR(19) NOT NULL, time TIMESTAMP NOT NULL, output VARCHAR(512) NOT NULL, PRIMARY KEY(local_data_id,time,rrd_name)) ENGINE=InnoDB COLLATE='.$collation);
+        // The installed Cacti schema uses an explicit zero timestamp default.
+        // Preserve the remaining strict modes while allowing that legacy DDL.
+        $modes = explode(',', (string) $conn->query('SELECT @@SESSION.sql_mode')->fetchColumn());
+        $modes = array_values(array_diff($modes, ['NO_ZERO_DATE', 'NO_ZERO_IN_DATE']));
+        $conn->exec('SET SESSION sql_mode='.$conn->quote(implode(',', $modes)));
+        // Private tables retain the real defaults, including no implicit ON UPDATE.
+        $conn->exec("CREATE TEMPORARY TABLE poller_output_boost (local_data_id INT UNSIGNED NOT NULL DEFAULT 0, rrd_name VARCHAR(19) NOT NULL DEFAULT '', time TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00', output VARCHAR(512) NOT NULL, PRIMARY KEY(local_data_id,time,rrd_name)) ENGINE=InnoDB COLLATE=".$collation);
     }
     $GLOBALS['recovery_inject_failure'] = false;
     $GLOBALS['recovery_inject_delete_failure'] = false;
@@ -66,7 +71,8 @@ test('recovery publishes a retained changed value before deleting it on retry', 
     $local->prepare('UPDATE poller_output_boost SET output=? WHERE local_data_id=1')->execute([$replacement]);
     expect(recovery_delete_acknowledged_rows($captured, $local))->toBeTrue();
     $retained = rows($local);
-    expect($retained)->toHaveCount(1)->and($retained[0]['output'])->toBe($replacement);
+    expect($retained)->toHaveCount(1)->and($retained[0]['output'])->toBe($replacement)
+        ->and($retained[0]['time'])->toBe($captured[0]['time']);
     // A failed resend cannot acknowledge or remove the retained row.
     $GLOBALS['recovery_inject_failure'] = $main;
     expect(boost_flush_output_batch(values($main, $retained), $main, true))->toBeFalse();
