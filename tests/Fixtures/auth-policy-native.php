@@ -13,12 +13,18 @@ if ($scenario['operation'] === 'graph-data-removal') require __DIR__ . '/graph-d
 if (isset($argv[3])) {
     require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
     $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], array('lib/auth.php', 'lib/graph_item_choices.php', 'tests/Helpers/PhpSource.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
+    if (in_array($scenario['operation'], ['graph-cache-revocation', 'graph-image-cache'], true)) {
+        require_once $root . '/tests/Helpers/GraphCacheCoverageRegistration.php';
+        $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], GraphCacheCoverageRegistration::SOURCES);
+        define('GRAPH_CACHE_TEST_COVERAGE', true);
+    }
     if ($scenario['operation'] === 'graph-data-removal') {
         require_once $root . '/tests/Helpers/GraphDataRemovalCoverageRegistration.php';
         $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], GraphDataRemovalCoverageRegistration::SOURCES);
         define('GRAPH_DATA_REMOVAL_TEST_COVERAGE', true);
     }
 }
+if (in_array($scenario['operation'], ['graph-cache-revocation', 'graph-image-cache'], true)) require __DIR__ . '/graph-cache-native.php';
 $config = ['cacti_db_version' => '1.2.33'];
 $db = $scenario['operation'] === 'graph-data-removal' ? new GraphDataRemovalFixtureDatabase() : new PDO('sqlite::memory:');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -102,6 +108,7 @@ function db_fetch_row_prepared($sql, $params = [])
 }
 function db_fetch_cell_prepared($sql, $params = [])
 {
+    if (!empty($GLOBALS['graphCacheReadFailure']) && str_contains($sql, 'SELECT reset_perms')) return false;
     $rows = db_fetch_assoc_prepared($sql, $params);
     return $rows ? reset($rows[0]) : false;
 }
@@ -127,7 +134,7 @@ function kill_session_var($name)
 }
 function get_guest_account()
 {
-    return 0;
+    return ($GLOBALS['scenario']['actor'] ?? '') === 'guest' ? 42 : 0;
 }
 function db_table_exists($name)
 {
@@ -171,6 +178,10 @@ require $root . '/lib/auth.php';
 $result = null;
 $cached = null;
 switch ($scenario['operation']) {
+    case 'graph-cache-revocation':
+    case 'graph-image-cache':
+        $result = graph_cache_fixture_run($scenario);
+        break;
     case 'graph-data-removal':
         graph_data_removal_fixture_run();
         break;
@@ -414,6 +425,10 @@ INSERT INTO graph_templates_graph VALUES(100,'Fixture graph',500,120);");
         throw new InvalidArgumentException('Unknown policy operation.');
 }
 $nativeChildCoverageMarkers = array('native-policy-operation-returned', 'policy-session-observed');
+if (in_array($scenario['operation'], ['graph-cache-revocation', 'graph-image-cache'], true)) {
+    $nativeChildCoverageMarkers = array_merge($nativeChildCoverageMarkers, ['graph-cache-revocation-observed', 'graph-cache-query-budget-observed']);
+    if ($scenario['operation'] === 'graph-image-cache') $nativeChildCoverageMarkers[] = 'graph-cache-image-dispatch-observed';
+}
 if ($scenario['operation'] === 'graph-item-choices') {
     $nativeChildCoverageMarkers = array_merge($nativeChildCoverageMarkers, ['graph-choice-policy-returned', 'graph-choice-query-budget-observed']);
 }

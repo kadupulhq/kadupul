@@ -93,6 +93,104 @@ final class AuthPolicyNativeCoverageTest extends TestCase
         self::assertSame(array(42 => true, 43 => true), $state['session']['sess_simple_perms']);
         self::assertSame(array(42 => true, 43 => true), $state['session']['sess_simple_template_perms']);
     }
+    #[\PHPUnit\Framework\Attributes\DataProvider('graphCacheActors')]
+    public function testGraphCacheRechecksPersistedRevocationForEveryActor(string $actor, bool $keepAllowed): void
+    {
+        $state = $this->runPolicy(['operation' => 'graph-cache-revocation', 'actor' => $actor,
+            'keep_allowed' => $keepAllowed, 'config' => ['graph_auth_method' => 1]]);
+        self::assertSame([true, true, true], $state['result']['initial']);
+        self::assertSame(array_fill(0, 4, true), $state['result']['repeated']);
+        self::assertSame([$keepAllowed, $keepAllowed, false], $state['result']['after']);
+        self::assertSame(['policy_graphs' => 2, 'reset_perms' => 1], $state['result']['stored']);
+        self::assertGreaterThan(0, $state['result']['reset_queries']);
+    }
+
+    public static function graphCacheActors(): iterable
+    {
+        foreach (['session', 'guest', 'report'] as $actor) {
+            yield $actor . ' revoked' => [$actor, false];
+            yield $actor . ' retains explicit grant' => [$actor, true];
+        }
+    }
+
+    public function testGraphCacheRepeatedRenderingHasConstantQueriesPerGraph(): void
+    {
+        $small = $this->runPolicy(['operation' => 'graph-cache-revocation', 'repeat' => 1,
+            'config' => ['graph_auth_method' => 1]]);
+        $large = $this->runPolicy(['operation' => 'graph-cache-revocation', 'repeat' => 100,
+            'config' => ['graph_auth_method' => 1]]);
+        self::assertSame($small['result']['repeated_queries'] * 100, $large['result']['repeated_queries']);
+        self::assertLessThanOrEqual(6, $small['result']['repeated_queries']);
+        self::assertSame(array_fill(0, 100, true), $large['result']['repeated']);
+        self::assertSame([false, false, false], $large['result']['after']);
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('graphImageCacheActors')]
+    public function testGraphImageCollectorChecksLiveStoredPolicyBeforeTransport(string $actor, bool $keepAllowed): void
+    {
+        $state = $this->runPolicy(['operation' => 'graph-image-cache', 'actor' => $actor,
+            'keep_allowed' => $keepAllowed, 'config' => ['graph_auth_method' => 1]]);
+        self::assertTrue($state['result']['image']['session_closed']);
+        self::assertSame($keepAllowed ? 'REMOTE_IMAGE' : 'GRAPH ACCESS DENIED', $state['result']['image']['output']);
+        self::assertCount($keepAllowed ? 1 : 0, $state['result']['image']['remote_calls']);
+        if ($keepAllowed) {
+            self::assertSame(1, $state['result']['image']['remote_calls'][0][0]);
+            self::assertStringContainsString('effective_user=42', $state['result']['image']['remote_calls'][0][1]);
+        }
+    }
+
+    public static function graphImageCacheActors(): iterable
+    {
+        foreach (self::graphCacheActors() as $name => $case) {
+            if ($case[0] !== 'report') yield $name => $case;
+        }
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('graphCacheFailures')]
+    public function testGraphCacheRefusesMissingAccountsAndFailedGenerationReads(string $actor, string $failure, bool $image): void
+    {
+        $state = $this->runPolicy(['operation' => $image ? 'graph-image-cache' : 'graph-cache-revocation',
+            'actor' => $actor, 'failure' => $failure, 'config' => ['graph_auth_method' => 1]]);
+        self::assertTrue($state['result']['failed']);
+        self::assertSame('Permission generation could not be confirmed.', $state['result']['error']);
+        self::assertSame([], $state['result']['remote_calls']);
+        foreach ($state['result']['queries_after'] as $sql) {
+            self::assertStringNotContainsString('FROM graph_templates_graph', $sql);
+        }
+    }
+
+    public static function graphCacheFailures(): iterable
+    {
+        foreach (['session', 'guest', 'report'] as $actor) {
+            foreach (['missing', 'backend'] as $failure) {
+                yield $actor . ' ' . $failure => [$actor, $failure, false];
+                if ($actor !== 'report') yield $actor . ' image ' . $failure => [$actor, $failure, true];
+            }
+        }
+    }
+
+    public function testGraphCacheRetainsTrustedNegativeAndAuthDisabledZeroCallers(): void
+    {
+        foreach ([-1, 0] as $user) {
+            $state = $this->runPolicy(['operation' => 'graph-cache-revocation', 'compatibility' => $user,
+                'anonymous' => true, 'auth_method' => $user === 0 ? 0 : 1,
+                'config' => ['graph_auth_method' => 1]]);
+            self::assertSame([100], $state['result']['ids']);
+            self::assertSame(1, $state['result']['total']);
+            self::assertSame($user === 0 ? 0 : 1, $state['result']['generation_queries']);
+        }
+    }
+
+    public function testGraphCacheNormalizesMalformedLegacyResetCache(): void
+    {
+        foreach ([true, false, 'legacy', 7] as $cache) {
+            $state = $this->runPolicy(['operation' => 'graph-cache-revocation', 'actor' => 'report',
+                'reset_cache' => $cache, 'config' => ['graph_auth_method' => 1]]);
+            self::assertSame([false, false, false], $state['result']['after']);
+            self::assertSame([42 => 1], $state['session']['sess_perms_reset_key']);
+        }
+    }
+
     public function testDeviceAuthorizationDoesNotInheritGraphViewVisibility(): void
     {
         $state = $this->runPolicy(['operation' => 'device-filter-policy', 'hide_disabled' => 'on', 'policy' => 2, 'exceptions' => [3], 'config' => ['graph_auth_method' => 1]]);
@@ -180,7 +278,7 @@ final class AuthPolicyNativeCoverageTest extends TestCase
         self::assertSame(array_fill(0, 2, $expected), $state['cached']);
         self::assertSame(array(42 => $expected), $state['session']['sess_simple_perms']);
         self::assertSame(array(42 => $expected), $state['session']['sess_simple_template_perms']);
-        self::assertSame(0, $state['extra_queries']);
+        self::assertSame(2, $state['extra_queries']);
     }
 
     public static function simpleCases(): array
@@ -267,7 +365,7 @@ final class AuthPolicyNativeCoverageTest extends TestCase
         self::assertSame($expected, $state['result']);
         self::assertSame($expected, $state['cached']);
         self::assertSame(array(!empty($scenario['anonymous']) ? 0 : 42 => array(100 => $expected)), $state['session']['sess_tree_perms']);
-        self::assertSame(0, $state['extra_queries']);
+        self::assertSame(!empty($scenario['anonymous']) ? 0 : 1, $state['extra_queries']);
     }
 
     public static function treeCases(): array
@@ -412,13 +510,27 @@ final class AuthPolicyNativeCoverageTest extends TestCase
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
                 require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
-                $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('lib/auth.php', 'lib/graph_item_choices.php', 'tests/Helpers/PhpSource.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), $scenario['operation'] === 'revoked-account' ? array('permission-revocation-shutdown', 'credential-readback') : ($scenario['operation'] === 'graph-item-choices' ? array('native-policy-operation-returned', 'policy-session-observed', 'graph-choice-policy-returned', 'graph-choice-query-budget-observed') : array('native-policy-operation-returned', 'policy-session-observed')), $scenario['operation'] === 'graph-item-choices' ? array('lib/auth.php', 'lib/graph_item_choices.php') : array('lib/auth.php'));
-                $evidenceKind = $scenario['operation'] === 'revoked-account' ? 'shutdown' : ($scenario['operation'] === 'graph-item-choices' ? 'choices' : 'returned');
-                if (!isset(self::$coverageEvidenceChecked[$evidenceKind])) {
-                    self::assertSame($scenario['operation'] === 'graph-item-choices' ? 28 : 26, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('lib/auth.php', 'lib/graph_item_choices.php', 'tests/Helpers/PhpSource.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), $scenario['operation'] === 'revoked-account' ? array('permission-revocation-shutdown', 'credential-readback') : ($scenario['operation'] === 'graph-item-choices' ? array('native-policy-operation-returned', 'policy-session-observed', 'graph-choice-policy-returned', 'graph-choice-query-budget-observed') : array('native-policy-operation-returned', 'policy-session-observed')), $scenario['operation'] === 'graph-item-choices' ? array('lib/auth.php', 'lib/graph_item_choices.php') : array('lib/auth.php'), 'lib/rrd.php'));
-                    self::$coverageEvidenceChecked[$evidenceKind] = true;
+                if (in_array($scenario['operation'], ['graph-cache-revocation', 'graph-image-cache'], true)) {
+                    require_once $root . '/tests/Helpers/GraphCacheCoverageRegistration.php';
+                    $markers = ['native-policy-operation-returned', 'policy-session-observed', 'graph-cache-revocation-observed', 'graph-cache-query-budget-observed'];
+                    if ($scenario['operation'] === 'graph-image-cache') $markers[] = 'graph-cache-image-dispatch-observed';
+                    $hits = $scenario['operation'] === 'graph-image-cache' ? ['lib/auth.php', 'graph_image.php', 'lib/html_utility.php'] : ['lib/auth.php'];
+                    $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), GraphCacheCoverageRegistration::SOURCES, $markers, $hits);
+                    $kind = $scenario['operation'];
+                    if (!isset(self::$coverageEvidenceChecked[$kind])) {
+                        self::assertSame($kind === 'graph-image-cache' ? 34 : 33, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), GraphCacheCoverageRegistration::SOURCES, $markers, $hits, 'lib/rrd.php'));
+                        self::$coverageEvidenceChecked[$kind] = true;
+                    }
+                    $coverage->merge($childCoverage);
+                } else {
+                    $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('lib/auth.php', 'lib/graph_item_choices.php', 'tests/Helpers/PhpSource.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), $scenario['operation'] === 'revoked-account' ? array('permission-revocation-shutdown', 'credential-readback') : ($scenario['operation'] === 'graph-item-choices' ? array('native-policy-operation-returned', 'policy-session-observed', 'graph-choice-policy-returned', 'graph-choice-query-budget-observed') : array('native-policy-operation-returned', 'policy-session-observed')), $scenario['operation'] === 'graph-item-choices' ? array('lib/auth.php', 'lib/graph_item_choices.php') : array('lib/auth.php'));
+                    $evidenceKind = $scenario['operation'] === 'revoked-account' ? 'shutdown' : ($scenario['operation'] === 'graph-item-choices' ? 'choices' : 'returned');
+                    if (!isset(self::$coverageEvidenceChecked[$evidenceKind])) {
+                        self::assertSame($scenario['operation'] === 'graph-item-choices' ? 28 : 26, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('lib/auth.php', 'lib/graph_item_choices.php', 'tests/Helpers/PhpSource.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), $scenario['operation'] === 'revoked-account' ? array('permission-revocation-shutdown', 'credential-readback') : ($scenario['operation'] === 'graph-item-choices' ? array('native-policy-operation-returned', 'policy-session-observed', 'graph-choice-policy-returned', 'graph-choice-query-budget-observed') : array('native-policy-operation-returned', 'policy-session-observed')), $scenario['operation'] === 'graph-item-choices' ? array('lib/auth.php', 'lib/graph_item_choices.php') : array('lib/auth.php'), 'lib/rrd.php'));
+                        self::$coverageEvidenceChecked[$evidenceKind] = true;
+                    }
+                    $coverage->merge($childCoverage);
                 }
-                $coverage->merge($childCoverage);
             }
             return json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
         } finally {

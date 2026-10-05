@@ -88,6 +88,10 @@ if (defined('AUTH_POLICY_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/graph_item_choices.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
 }
+if (defined('GRAPH_CACHE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/graph_image.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+}
 if (defined('GRAPH_DATA_REMOVAL_TEST_COVERAGE')) {
     foreach (array('lib/graph_data_removal.php', 'lib/api_graph.php', 'lib/api_data_source.php',
         'src/Platform/Infrastructure/Legacy/LegacyReferenceWriteTransaction.php') as $coverageFile) {

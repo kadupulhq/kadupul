@@ -5296,9 +5296,9 @@ function auth_unknown_user_password_verify($password)
  *
  * The reset runs in another request or process, such as user_admin.php while
  * poller_reports.php is checking report owners, so the cached answers are tied
- * to the user's reset_perms value rather than cleared by the reset itself. The
- * signed-in user is left to is_realm_allowed(), which clears these caches for
- * that user on reset.
+ * to the user's reset_perms value rather than cleared by the reset itself.
+ * Guest-enabled image routes return from authentication before checking a
+ * realm, so the signed-in user's graph answers must be checked here too.
  *
  * @param  (int) $user_id The user whose cached answers are about to be used
  *
@@ -5306,8 +5306,12 @@ function auth_unknown_user_password_verify($password)
  */
 function auth_perm_cache_check_reset($user_id)
 {
-    if (empty($user_id) || (isset($_SESSION['sess_user_id']) && $user_id == $_SESSION['sess_user_id'])) {
+    if (empty($user_id)) {
         return;
+    }
+
+    if (isset($_SESSION['sess_perms_reset_key']) && !is_array($_SESSION['sess_perms_reset_key'])) {
+        unset($_SESSION['sess_perms_reset_key']);
     }
 
     $key = db_fetch_cell_prepared(
@@ -5316,6 +5320,10 @@ function auth_perm_cache_check_reset($user_id)
 		WHERE id = ?',
         array($user_id)
     );
+
+    if ($user_id > 0 && $key === false) {
+        throw new RuntimeException('Permission generation could not be confirmed.');
+    }
 
     if (isset($_SESSION['sess_perms_reset_key'][$user_id]) && $_SESSION['sess_perms_reset_key'][$user_id] == $key) {
         return;
