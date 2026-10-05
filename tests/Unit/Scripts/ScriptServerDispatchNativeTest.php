@@ -107,7 +107,9 @@ BOOT;
             proc_close($process);
         }
         foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($temporary, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST) as $entry) {
-            $entry->isDir() && !$entry->isLink() ? rmdir($entry->getPathname()) : unlink($entry->getPathname());
+            // Windows directory symlink entries are removed with rmdir; the iterator does not follow them.
+            $entry->isDir() && (PHP_OS_FAMILY === 'Windows' || !$entry->isLink())
+                ? rmdir($entry->getPathname()) : unlink($entry->getPathname());
         }
         rmdir($temporary);
     }
