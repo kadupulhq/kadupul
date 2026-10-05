@@ -116,7 +116,7 @@ test('graph item numeric form validation follows the fields used by rendering', 
     try {
         $environment = array_replace(getenv(), array('GRAPH_ITEM_TEST_ROOT' => $root, 'GRAPH_ITEM_TEST_MODE' => 'save-' . $type,
             'GRAPH_ITEM_TEST_VALIDATION' => '1', 'GRAPH_ITEM_TEST_PAYLOAD' => json_encode(array('value' => $value, 'shift' => $shift), JSON_THROW_ON_ERROR)));
-        $process = proc_open(array(PHP_BINARY, '-d', 'error_reporting=24575', $directory . '/' . $script), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $directory, $environment);
+        $process = proc_open(array(PHP_BINARY, '-d', 'error_reporting=24575', '-d', 'pcov.directory=/', $directory . '/' . $script), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $directory, $environment);
         expect($process)->toBeResource();
         $stdout = stream_get_contents($pipes[1]);
         $stderr = stream_get_contents($pipes[2]);
