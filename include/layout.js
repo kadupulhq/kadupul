@@ -22,6 +22,26 @@
  +-------------------------------------------------------------------------+
 */
 
+// jQuery animations must honor the same motion preference as theme CSS.
+(function () {
+	if (!window.matchMedia || !$.fx) {
+		return;
+	}
+	var preference = window.matchMedia('(prefers-reduced-motion: reduce)');
+	var updateMotion = function () {
+		$.fx.off = preference.matches;
+		if (preference.matches) {
+			$(':animated').stop(true, true);
+		}
+	};
+	updateMotion();
+	if (preference.addEventListener) {
+		preference.addEventListener('change', updateMotion);
+	} else if (preference.addListener) {
+		preference.addListener(updateMotion);
+	}
+})();
+
 const MESSAGE_LEVEL_NONE  = 0;
 const MESSAGE_LEVEL_INFO  = 1;
 const MESSAGE_LEVEL_WARN  = 2;
@@ -81,10 +101,10 @@ var faIcons = {
 		icon: '<i class="fas fa-undo" aria-hidden="true"></i>'
 	},
 	collapseAll: {
-		icon: '<i class="fas fa-double-angle-down" aria-hidden="true"></i>'
+		icon: '<i class="fas fa-angle-double-down" aria-hidden="true"></i>'
 	},
 	expandAll: {
-		icon: '<i class="fas fa-double-angle-right" aria-hidden="true"></i>'
+		icon: '<i class="fas fa-angle-double-right" aria-hidden="true"></i>'
 	},
 	collapse: {
 		icon: '<i class="fas fa-chevron-down" aria-hidden="true"></i>'

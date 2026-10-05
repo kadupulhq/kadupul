@@ -32,8 +32,14 @@ test('zoom refuses missing RRA and graph rows before using their fields', functi
     $GLOBALS['zoom_graph'] = false;
     expect(fn () => execute_zoom_branch($missing === 'all' ? array() : array($rra)))
         ->toThrow(ZoomRedirect::class, 'graph_view.php');
+    $expectedMessage = in_array($missing, array('all', 'rra'), true) ? 'graph_no_data' : 'graph_not_found';
+    $expectedText = $expectedMessage === 'graph_no_data'
+        ? 'This Graph has no RRA definition to zoom into; check its Data Source Profile.'
+        : 'The Graph you requested does not exist.';
     expect($GLOBALS['zoom_messages'])->toHaveCount(1)
-        ->and($GLOBALS['zoom_messages'][0][0])->toBe('graph_not_found');
+        ->and($GLOBALS['zoom_messages'][0][0])->toBe($expectedMessage)
+        ->and($GLOBALS['zoom_messages'][0][1])->toBe($expectedText)
+        ->and($GLOBALS['zoom_messages'][0][2])->toBe(MESSAGE_LEVEL_ERROR);
 })->with(array(array('all', 0), array('rra', 0), array('rra', 1), array('graph', 0), array('graph', 1)));
 
 test('valid zoom metadata continues into rendering', function () {

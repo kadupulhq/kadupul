@@ -545,6 +545,186 @@ test('atomic restore preserves RRD ownership and permissions', function () {
         ->and(file_get_contents($this->rrdfile))->toBe('restored-rrd-bytes');
 });
 
+/**
+ * Run updateXML() over dump rows for one window mode and return the values
+ * it wrote per row and the kill count.
+ *
+ * @param array<int, string>            $rows  dump rows
+ * @param array<int, array<string, mixed>> $stats per data source statistics
+ *
+ * @return array{0: array<int, array<int, string>>, 1: int}
+ */
+function spikekill_window_update($method, $avgnan, array $rows, array $stats) {
+	$class  = new ReflectionClass(spikekill::class);
+	$update = $class->getMethod('updateXML');
+	$update->setAccessible(true);
+	$kills  = $class->getProperty('total_kills');
+	$kills->setAccessible(true);
+
+	$instance = new spikekill('', $method, $avgnan, '1', '100', '200', '2', '500', '1');
+	$lines    = array();
+
+	foreach ($rows as $row) {
+		$lines[] = $row . "\n";
+	}
+
+	$lines[] = "</rra>\n";
+	$lines[] = "</database>\n";
+	$rra     = array($stats);
+	$updated = $update->invokeArgs($instance, array(&$lines, &$rra));
+	$values  = array();
+
+	foreach (array_slice($updated, 0, count($rows)) as $line) {
+		preg_match_all('/<v>\s*(.*?)<\/v>/', $line, $matches);
+		$values[] = $matches[1];
+	}
+
+	return array($values, $kills->getValue($instance));
+}
+
+test('float and fill window modes replace selected values with NaN', function () {
+	expect(spikekill_window_update(SPIKE_METHOD_FLOAT, 'nan', array('<row><timestamp>120</timestamp><v>10</v><v>20</v></row>'), array(array(), array())))
+		->toBe(array(array(array('NaN', 'NaN')), 2))
+		->and(spikekill_window_update(SPIKE_METHOD_FILL, 'nan', array('<row><timestamp>120</timestamp><v>10</v><v>0</v><v>NaN</v><v>5</v></row>'), array(array(), array(), array(), array())))
+		->toBe(array(array(array('10', 'NaN', 'NaN', '5')), 1));
+});
+
+test('NaN replacement covers the window bounds only and counts across rows', function () {
+	$rows = array();
+
+	foreach (array(99, 100, 200, 201) as $timestamp) {
+		$rows[] = '<row><timestamp>' . $timestamp . '</timestamp><v>10</v></row>';
+	}
+
+	expect(spikekill_window_update(SPIKE_METHOD_FLOAT, 'nan', $rows, array(array())))
+		->toBe(array(array(array('10'), array('NaN'), array('NaN'), array('10')), 2));
+});
+
+test('samples that are already unknown are not counted as NaN replacements', function () {
+	expect(spikekill_window_update(SPIKE_METHOD_FLOAT, 'nan', array('<row><timestamp>120</timestamp><v>NaN</v><v>nan</v></row>'), array(array(), array())))
+		->toBe(array(array(array('NaN', 'nan')), 0));
+});
+
+test('gap fill with avg and last still replaces only zero and unknown samples, as in 1.2.31', function () {
+	$row = array('<row><timestamp>120</timestamp><v>0</v><v>NaN</v><v>5</v></row>');
+	$avg = array_fill(0, 3, array('variance_avg' => 7));
+
+	expect(spikekill_window_update(SPIKE_METHOD_FILL, 'avg', $row, $avg))
+		->toBe(array(array(array(sprintf('%1.10e', 7), sprintf('%1.10e', 7), '5')), 2))
+		->and(spikekill_window_update(SPIKE_METHOD_FILL, 'last', $row, array_fill(0, 3, array('last' => '3'))))
+		->toBe(array(array(array('3', '3', '5')), 2))
+		->and(spikekill_window_update(SPIKE_METHOD_FILL, 'last', $row, array_fill(0, 3, array())))
+		->toBe(array(array(array('0', 'NaN', '5')), 0));
+});
+
+test('a NaN window that is already unknown is reported as having no spikes and is not rewritten', function ($method) {
+	$rows = '';
+
+	for ($i = 0; $i < 20; $i++) {
+		$value = ($i >= 10 && $i < 15) ? 'NaN' : '1.0000000000e+01';
+		$rows .= '<row><timestamp>' . (1000000000 + $i * 300) . '</timestamp><v>' . $value . '</v></row>' . "\n";
+	}
+
+	file_put_contents($this->dump_fixture, "<step>300</step>\n<name>traffic_in</name>\n<min>0</min>\n<max>1000000</max>\n<rra>\n<cf>AVERAGE</cf>\n<pdp_per_row>1</pdp_per_row>\n<database>\n" . $rows . "</database>\n</rra>\n");
+
+	$instance = new spikekill($this->rrdfile, $method, 'nan', '1', (string) (1000000000 + 10 * 300), (string) (1000000000 + 14 * 300), '2', '500', '100');
+
+	$instance->remove_spikes();
+
+	expect($instance->get_output(false))->toContain('No Window Spikes found')
+		->and($instance->get_output(false))->not->toContain('Remediated')
+		->and(file_exists($this->backup_dir . '/source.rrd'))->toBeFalse()
+		->and(file_get_contents($this->rrdfile))->toBe('original-rrd-bytes');
+})->with(array('float', 'fill'));
+
+test('replacement modes obey the archive budget and reset at real XML boundaries', function ($method, $mode, $limit, $spikes) {
+    $class = new ReflectionClass(spikekill::class);
+    $update = $class->getMethod('updateXML');
+    $update->setAccessible(true);
+    $totalKills = $class->getProperty('total_kills');
+    $totalKills->setAccessible(true);
+    $instance = new spikekill('', $method, $mode, '1', '100', '500', '2', '5', (string) $limit);
+    $output = array("<rrd>\n");
+    $rra = array();
+    foreach (array(0, 1) as $archive) {
+        $output[] = "<rra>\n<database>\n";
+        $output[] = "<row><timestamp>90</timestamp><v>1000</v></row>\n";
+        $output[] = "<row><timestamp>99</timestamp><v>5</v></row>\n";
+        for ($row = 0; $row < $spikes; $row++) {
+            $output[] = '<row><timestamp>'.(120 + $row * 60)."</timestamp><v>1000</v></row>\n";
+        }
+        $output[] = "</database>\n</rra>\n";
+        $rra[] = array(array('max_cutoff' => 10, 'min_cutoff' => -10, 'average' => 5,
+            'variance_avg' => 5, 'outwind_killed' => 0, 'stddev_killed' => $spikes, 'variance_killed' => $spikes));
+    }
+    $output[] = "</rrd>\n";
+    $updated = $update->invokeArgs($instance, array(&$output, &$rra));
+    $document = new DOMDocument();
+    expect($document->loadXML(implode('', $updated)))->toBeTrue();
+    $replacement = $mode === 'nan' ? 'NaN' : ($mode === 'avg' ? sprintf('%1.10e', 5) : '5');
+    foreach ($document->getElementsByTagName('database') as $database) {
+        $values = array();
+        foreach ($database->getElementsByTagName('v') as $value) {
+            $values[] = trim($value->textContent);
+        }
+        expect($values)->toBe(array_merge(array('1000', '5'),
+            array_fill(0, min($limit, $spikes), $replacement),
+            array_fill(0, max(0, $spikes - $limit), '1000')));
+    }
+    expect($totalKills->getValue($instance))->toBe(2 * min($limit, $spikes));
+    foreach ($rra as $statistics) {
+        expect($statistics[0][$method === SPIKE_METHOD_STDDEV ? 'stddev_killed' : 'variance_killed'])
+            ->toBe(min($limit, $spikes))->and($statistics[0]['outwind_killed'])->toBe(min($limit, $spikes));
+    }
+})->with(array(SPIKE_METHOD_STDDEV, SPIKE_METHOD_VARIANCE))
+    ->with(array('nan', 'avg', 'last'))->with(array(1, 3))->with(array(0, 3));
+
+test('last replacements without a prior value leave budget for another data source', function ($method) {
+    $instance = new spikekill('', $method, 'last', '1', '100', '500', '2', '5', '1');
+    $lines = ["<rrd>\n<rra>\n<database>\n", "<row><timestamp>99</timestamp><v>NaN</v><v>5</v></row>\n",
+        "<row><timestamp>120</timestamp><v>1000</v><v>1000</v></row>\n",
+        "<row><timestamp>180</timestamp><v>1000</v><v>1000</v></row>\n", "</database>\n</rra>\n</rrd>\n"];
+    $rra = [[['max_cutoff' => 10, 'min_cutoff' => -10, 'variance_avg' => 5, 'outwind_killed' => 0],
+        ['max_cutoff' => 10, 'min_cutoff' => -10, 'variance_avg' => 5, 'outwind_killed' => 0]]];
+    $update = new ReflectionMethod(spikekill::class, 'updateXML');
+    $update->setAccessible(true);
+    $output = $update->invokeArgs($instance, [&$lines, &$rra]);
+    $document = new DOMDocument();
+    expect($document->loadXML(implode('', $output)))->toBeTrue();
+    $values = [];
+    foreach ($document->getElementsByTagName('v') as $value) { $values[] = trim($value->textContent); }
+    expect($values)->toBe(['NaN', '5', '1000', '5', '1000', '1000']);
+    $total = new ReflectionProperty(spikekill::class, 'total_kills');
+    $total->setAccessible(true);
+    expect($total->getValue($instance))->toBe(1);
+})->with([SPIKE_METHOD_STDDEV, SPIKE_METHOD_VARIANCE]);
+
+test('dry-run and restore report the same capped removal count', function ($method, $dryrun) {
+    $rows = '';
+    for ($row = 0; $row < 100; $row++) {
+        $value = $row < 20 ? '1.0000000000e+05' : '1.0000000000e+01';
+        $rows .= '<row><timestamp>'.(1000000000 + $row * 300).'</timestamp><v>'.$value."</v></row>\n";
+    }
+    file_put_contents($this->dump_fixture, "<step>300</step>\n<name>traffic_in</name>\n<min>0</min>\n<max>1000000</max>\n<rra>\n<cf>AVERAGE</cf>\n<pdp_per_row>1</pdp_per_row>\n<database>\n".$rows."</database>\n</rra>\n");
+    $instance = new spikekill($this->rrdfile, $method, 'nan', '1', '', '', '2', '10', '5');
+    $instance->dryrun = $dryrun;
+    $instance->debug = true;
+    $instance->remove_spikes();
+    $total = new ReflectionProperty(spikekill::class, 'total_kills');
+    $total->setAccessible(true);
+    expect($total->getValue($instance))->toBe(5);
+    $document = new DOMDocument();
+    expect($document->loadHTML($instance->get_output()))->toBeTrue();
+    $xpath = new DOMXPath($document);
+    $cells = $xpath->query('//table[@id="spikekillData"]//tr[td]/td');
+    expect($cells->length)->toBe(16)->and($cells->item($method === 'stddev' ? 12 : 13)->textContent)->toBe('5');
+    expect(file_get_contents($this->rrdfile))->toBe($dryrun ? 'original-rrd-bytes' : 'restored-rrd-bytes');
+    if ($dryrun) {
+        expect($instance->get_output())->toContain('Dryrun requested')->not->toContain('Remediated');
+    } else {
+        expect($instance->get_output())->toContain('Total Spikes 5');
+    }
+})->with(array('stddev', 'variance'))->with(array(true, false));
 
 test('missing sample arrays preserve unavailable window statistics', function ($html) {
     $instance = spikekill_e2e_instance($this->rrdfile);

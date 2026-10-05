@@ -741,7 +741,19 @@ function boost_graph_cache_filename($cache_directory, $local_graph_id, $rra_id, 
 		}
 	}
 
+	/* per-user fonts change the rendered image, so those users must not share cache files */
+	$fonts = null;
+
+	if (read_config_option('font_method') == 0 && read_user_setting('custom_fonts') == 'on') {
+		$fonts = array();
+
+		foreach (array('title', 'axis', 'legend', 'unit', 'watermark') as $type) {
+			$fonts[$type] = array(read_user_setting($type . '_font'), read_user_setting($type . '_size'));
+		}
+	}
+
 	$cache_key = serialize(array(
+		'fonts'          => $fonts,
 		'theme'          => get_selected_theme(),
 		'local_graph_id' => (int) $local_graph_id,
 		'rra_id'         => (int) $rra_id,

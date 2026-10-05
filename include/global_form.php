@@ -1066,12 +1066,12 @@ $struct_graph_item = array(
 		'description' => __('Forces the legend to the next line after this item.')
 		),
 	'line_width' => array(
-		'friendly_name' => __('Line Width (decimal)'),
+		'friendly_name' => __('Line Width'),
 		'method' => 'textbox',
 		'max_length' => '5',
 		'default' => '1.00',
 		'size' => '5',
-		'description' => __('In case LINE was chosen, specify width of line here.  You must include a decimal precision, for example 2.00'),
+		'description' => __('LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a width in pixels; integers or decimal values are supported.'),
 		),
 	'dashes' => array(
 		'friendly_name' => __('Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])'),
@@ -2366,4 +2366,3 @@ $fields_automation_tree_rule_item_edit = array(
 );
 
 api_plugin_hook('config_form');
-

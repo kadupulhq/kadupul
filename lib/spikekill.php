@@ -386,7 +386,7 @@ class spikekill {
 		if ($this->method == SPIKE_METHOD_STDDEV) {
 			$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . __esc('Standard Devs: %s', $this->stddev) . ($this->html ? '</p>': PHP_EOL);
 		} elseif ($this->method == SPIKE_METHOD_VARIANCE) {
-			$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . __esc('Variance %%%:    %s %%%', number_format_i18n($this->percent * 100, 2)) . ($this->html ? '</p>': PHP_EOL);
+			$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . __esc('Variance %%:    %s %%', number_format_i18n($this->percent * 100, 2)) . ($this->html ? '</p>': PHP_EOL);
 		}
 
 		if ($this->out_start > 0) {
@@ -825,18 +825,6 @@ class spikekill {
 
 		$this->calculateOverallStatistics($rra, $samples);
 
-		/* debugging and/or status report */
-		if ($this->debug || $this->dryrun) {
-			if ($this->html) {
-				$this->strout .= "<div style='overflow-x:auto;'><table style='width:100%' class='spikekillData' id='spikekillData'>";
-			}
-
-			$this->outputStatistics($rra);
-
-			if ($this->html) {
-				$this->strout .= '</table></div><br>';
-			}
-		}
 
 		$new_output = '';
 		$continue   = false;
@@ -861,6 +849,20 @@ class spikekill {
 			$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
 				__esc("NOTE: No Spikes found in '%s'", $this->rrdfile) . ($this->html ? "</p>\n":"\n");
 		}
+
+		/* debugging and/or status report */
+		if ($this->debug || $this->dryrun) {
+			if ($this->html) {
+				$this->strout .= "<div style='overflow-x:auto;'><table style='width:100%' class='spikekillData' id='spikekillData'>";
+			}
+
+			$this->outputStatistics($rra);
+
+			if ($this->html) {
+				$this->strout .= '</table></div><br>';
+			}
+		}
+
 
 		/* finally update the file XML file and Reprocess the RRDfile */
 		$restored = true;
@@ -910,7 +912,6 @@ class spikekill {
 			}
 		}
 
-		$this->strout .= ($this->html ? "</table>":'');
 
 		if ($restored && !$this->dryrun && $this->total_kills > 0) {
 			cacti_log("WARNING: Removed '$this->total_kills' Spikes from '$this->rrdfile', Method:'$this->method'", false, 'WEBUI');
@@ -1621,6 +1622,11 @@ class spikekill {
 										if ($timestamp >= $this->out_start && $timestamp <= $this->out_end) {
 											$rra[$rra_num][$ds_num]['outwind_samples']++;
 
+											/* a sample that is already unknown needs no NaN replacement */
+											if ($this->avgnan == 'nan' && strcasecmp($sample, 'nan') === 0) {
+												continue;
+											}
+
 											if ($this->method == SPIKE_METHOD_FLOAT) {
 												$this->debug(sprintf("Window Float Found, Date:%s, Value:%s", date('Y-m-d H:i', $timestamp), $sample));
 
@@ -1839,8 +1845,10 @@ class spikekill {
 	private function updateXML(&$output, &$rra) {
 		$rra_num   = 0;
 		$ds_num    = 0;
+		$kills     = 0;
 		$last_num  = array();
 		$new_array = array();
+		$replacements = array();
 
 		if (cacti_sizeof($output)) {
 			foreach($output as $line) {
@@ -1863,11 +1871,12 @@ class spikekill {
 					/* initialize variables */
 					$ds_num         = 0;
 					$out_row        = '<row>';
-					$kills          = 0;
 
 					foreach($linearray as $dsvalue) {
 						/* peel off garbage */
 						$dsvalue = trim(str_replace('</row>', '', str_replace('</v>', '', $dsvalue)));
+
+						$kills_before = $this->total_kills;
 
 						switch($this->method) {
 							case SPIKE_METHOD_FLOAT:
@@ -1894,6 +1903,18 @@ class spikekill {
 										$this->debug($message);
 
 										$dsvalue = $rra[$rra_num][$ds_num]['last'];
+										$kills++;
+										$this->total_kills++;
+									} elseif ($this->avgnan == 'nan' && strcasecmp($dsvalue, 'nan') !== 0) {
+										$message = sprintf('Replacing dsvalue %s with NaN', $dsvalue);
+
+										if ($this->debug) {
+											cacti_log("DEBUG: $message", false, 'SPIKEKILL');
+										}
+
+										$this->debug($message);
+
+										$dsvalue = 'NaN';
 										$kills++;
 										$this->total_kills++;
 									}
@@ -1932,6 +1953,20 @@ class spikekill {
 											$kills++;
 											$this->total_kills++;
 										}
+									} elseif ($this->avgnan == 'nan') {
+										if ((!is_numeric($dsvalue) || $dsvalue == 0) && strcasecmp($dsvalue, 'nan') !== 0) {
+											$message = sprintf('Replacing dsvalue %s with NaN', $dsvalue);
+
+											if ($this->debug) {
+												cacti_log("DEBUG: $message", false, 'SPIKEKILL');
+											}
+
+											$this->debug($message);
+
+											$dsvalue = 'NaN';
+											$kills++;
+											$this->total_kills++;
+										}
 									}
 								} elseif ($this->debug) {
 									cacti_log("DEBUG: ignoring dsvalue {$dsvalue} as we are outside of the time range!", false, 'SPIKEKILL');
@@ -1964,6 +1999,8 @@ class spikekill {
 												}
 
 												$dsvalue = 'NaN';
+												$this->total_kills++;
+												$kills++;
 											}
 										}
 									}
@@ -2002,6 +2039,8 @@ class spikekill {
 												}
 
 												$dsvalue = 'NaN';
+												$this->total_kills++;
+												$kills++;
 											}
 										}
 									}
@@ -2010,6 +2049,10 @@ class spikekill {
 								}
 
 								break;
+						}
+
+						if ($this->total_kills > $kills_before) {
+							$replacements[$rra_num][$ds_num] = ($replacements[$rra_num][$ds_num] ?? 0) + 1;
 						}
 
 						$out_row .= '<v> ' . $dsvalue . '</v>';
@@ -2034,6 +2077,20 @@ class spikekill {
 					}
 
 					$new_array[] = $line;
+				}
+			}
+		}
+
+		/* Report the same budgeted replacements for previews and real updates. */
+		foreach ($rra as $archive => $sources) {
+			foreach ($sources as $source => $statistics) {
+				$replaced = $replacements[$archive][$source] ?? 0;
+				$field = $this->method == SPIKE_METHOD_STDDEV ? 'stddev_killed' : 'variance_killed';
+				if (($this->method == SPIKE_METHOD_STDDEV || $this->method == SPIKE_METHOD_VARIANCE) && isset($statistics[$field]) && is_numeric($statistics[$field])) {
+					$rra[$archive][$source][$field] = $replaced;
+				}
+				if (isset($statistics['outwind_killed']) && is_numeric($statistics['outwind_killed'])) {
+					$rra[$archive][$source]['outwind_killed'] = $this->out_start > 0 ? $replaced : 0;
 				}
 			}
 		}

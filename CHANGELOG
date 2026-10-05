@@ -1,6 +1,9 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Spike removal limits apply per archive in timestamp/data-source order, including NaN replacements; previews report the same capped counts as updates.
+-issue: Fixed graph line types ignore hidden width input and retain saved stack widths; editable stacked lines retain their existing validation.
+-issue: Theme JavaScript honors reduced-motion changes and stops active animations; keyboard skip links retain modern clipping support.
 -issue: Stop tree automation after rejected or failed parent creation, preserve earlier successful headers, and offer only valid headers in parent selectors
 -issue: Use plugin directory identity for compatibility checks, align listed compatibility with install validation, and reject malformed configured administrator IDs and failed realm reads
 -issue: Plugin install failures, including missing directories, exit nonzero while later plugins continue; schema-version write failures include the attempted version on stderr
@@ -12,6 +15,14 @@ Cacti CHANGELOG
 -issue: Classic no longer removes every window event handler on each page load, which stopped open user and ellipsis menus from closing on a click elsewhere
 -issue: The Midwinter ESC shortcut no longer throws an error outside fullscreen, and c+F1 no longer opens an alert reading [object KeyboardEvent]
 -issue: Midwinter no longer adds another set of shortcut, double-click, menu and colour-scheme listeners on every page load, so one shortcut press loads its page once and a system colour change no longer overrides a colour chosen by hand
+-issue: Thumbnail graphs no longer fail with a TypeError when the title font size is blank or not a number; the thumbnail scaling ran before the numeric check. A font size that is infinite or above 100 now falls back to the default instead of failing the graph or stretching it
+-issue: Include per-user font settings in the Boost PNG cache key, so a user with custom fonts neither receives nor serves another user's cached graph image
+-issue: Show the multiselect Collapse All and Expand All icons, which used fa-double-angle names that Font Awesome never defined
+-issue: Search the bundled DejaVu fonts on Windows, so classic theme external link tabs draw their label instead of logging font warnings
+-issue: Draw RRD error images with the bundled DejaVu Sans Bold when no regular DejaVu Sans is installed, wrap their text by character rather than byte so translated messages are not split mid-character, and give the bitmap fallback its real line height so lines no longer overlap or run past the frame
+-issue: Quote the default font sent to RRDproxy with the same escaping as other rrdtool arguments; a quote or line break in the setting broke the proxy command
+-issue: Remove ten files under include/fa left over from Font Awesome 5.0 and 5.1 that 5.15.4 does not ship and nothing loads
+-issue: Every theme now stops its animations and transitions when the browser asks for reduced motion, keeps selected rows, selected tabs and switch states visible in forced colors mode, and prints the whole page without the navigation chrome instead of only the part inside the scrolling viewport. The skip link, which the page header hid with an inline display:none, now appears when it receives keyboard focus. Screen rendering is unchanged
 -security: update Playwright and @playwright/test for E2E tests to 1.63.0 in package.json and the lockfile, addressing GHSA-7mvr-c777-76hp (browser download TLS verification) and the Snyk blame reporter command-injection advisory
 -issue: Preserve the system Boost setting when the active-collector count query fails, instead of treating a database error as proof that Boost can be disabled
 -issue: Render signed integer unit exponents once in graph commands. Previously stored negative unit exponents now take effect after upgrading; malformed values remain omitted
@@ -20,6 +31,10 @@ Cacti CHANGELOG
 -issue: Reject add_tree nodes with missing or cross-tree parents, non-header parents, or a missing tree, and return a failure exit code when the node is not created (fixes #236)
 -issue: Make plugin_manage --allperms grant existing plugin realms to the configured administrator and report failed grants. Fixes #224
 -security: Restrict Script Server includes to the scripts directory and dispatch only non-internal functions declared by the selected script file; prevents configured data-input methods from invoking unrelated application functions
+-issue: Say that the RRA definition is missing, rather than that the Graph does not exist, when a zoom request has no usable RRA. Fixes #369.
+-issue: Enforce the spike-removal replacement budget across every row and data source in an RRA, reset it only at the next RRA, and count NaN replacements. Fixes #238
+-issue: Apply `nan` replacements in the spike-removal window modes and count changed samples, so float and fill no longer report success without changing the selected samples. Fixes #237
+-issue: Hide the unused line-width field for fixed LINE1/2/3 graph items and clarify that the editable width applies to LINE:STACK
 -security: Validate the selected UI theme against installed theme directories before constructing paths, and bind graph-template ordering filters as parameters
 -issue: Build the RRD create definition once for both creators, which kept separate copies that drifted. Boost joined the RRA and consolidation rows around the data source profile rather than through it, so a deleted profile still produced RRA lines with an empty x-files factor where the poller found no RRA and refused; it left the RRA order undetermined when two profiles tie on rows times steps; and it said nothing at all when a data source had no RRA. The poller read the device row and its interface speed on every create, which only a |query_ maximum needs
 -issue: Keep graph-group lookups scoped to the local graph ID, preserve the configuration cache map when setting an option, keep invalid structured filters from becoming unrestricted, and scope user-setting existence cache entries to the user. Public helper signatures and valid filter behavior are unchanged

@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -34,7 +35,7 @@ if (!isset_request_var('headercontent')) {?>
 	<?php html_common_header($page_title);?>
 </head>
 <body>
-	<a class='skip-link' href='#main' style='display:none'>Skip to main</a>
+	<a class='skip-link' href='#main'>Skip to main</a>
 	<div id='cactiPageHead' class='cactiPageHead' role='banner'>
 		<div id='tabs'><?php html_show_tabs_left();?></div>
 		<div class='cactiGraphHeaderBackground'><div id='gtabs'><?php html_graph_tabs_right();?></div></div>

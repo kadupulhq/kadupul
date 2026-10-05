@@ -32,7 +32,7 @@ $rrdProxyRoot = dirname(__DIR__, 4);
  * @param array<int, string>            $touch - empty files to create in the work directory first
  * @param array<int, string>            $rrds  - RRD files to create in the work directory first
  */
-function rrd_proxy_channel_run(string $root, array $calls = array(), array $touch = array(), array $rrds = array(), $existsReply = null) : array {
+function rrd_proxy_channel_run(string $root, array $calls = array(), array $touch = array(), array $rrds = array(), $existsReply = null, string $defaultFont = '') : array {
 	require_once $root . '/include/vendor/autoload.php';
 
 	$work = sys_get_temp_dir() . '/cacti-rrdp-' . bin2hex(random_bytes(6));
@@ -64,6 +64,7 @@ function rrd_proxy_channel_run(string $root, array $calls = array(), array $touc
 		'calls'          => $calls,
 		'rrdtool'        => cacti_test_rrdtool_binary(),
 		'exists_reply'   => $existsReply,
+		'default_font'   => $defaultFont,
 	);
 
 	file_put_contents($work . '/keys.json', json_encode($keys));
@@ -220,6 +221,7 @@ $options = array(
 	'rsa_public_key'      => $keys['client_public'],
 	'rsa_private_key'     => $keys['client_private'],
 	'rrdp_load_balancing' => '',
+	'path_rrdtool_default_font' => $keys['default_font'],
 );
 
 function read_config_option($name, $force = false) {
@@ -413,4 +415,40 @@ test('the upstream setcnn timeout response is acknowledged over the encrypted pr
 test('a malformed proxy existence reply is unknown rather than evidence to recreate an RRD', function () use ($rrdProxyRoot) {
     $run = rrd_proxy_channel_run($rrdProxyRoot, array(array('path', 'file_exists', '{work}/plain.rrd')), array('plain.rrd'), array(), 'invalid OK u:0.00');
     expect($run['client']['calls'])->toBe(array(null));
+})->skip(!extension_loaded('sockets'), 'the sockets extension is not loaded');
+
+
+test('the RRDproxy default font is sent as one quoted argument', function (string $font, string $expected) use ($rrdProxyRoot) {
+	$run = rrd_proxy_channel_run($rrdProxyRoot, array(), array(), array(), null, $font);
+
+	expect($run['client'])->toBeArray()
+		->and($run['client']['connected'])->toBeTrue();
+
+	$commands = array_column($run['packets'], 'command');
+	$setenv   = array_values(array_filter($commands, function ($command) {
+		return strpos($command, 'setenv ') === 0;
+	}));
+
+	expect($setenv)->toBe(array('setenv RRD_DEFAULT_FONT ' . $expected))
+		->and($commands)->toContain('info t.rrd');
+
+	foreach ($run['packets'] as $packet) {
+		expect($packet['encrypted'])->toBeTrue();
+	}
+})->with(array(
+	/* the 1.2.31 form, unchanged for a value without an apostrophe */
+	'font name'  => array('DejaVu Sans', "'DejaVu Sans'"),
+	'font path'  => array('/usr/share/fonts/dejavu/DejaVuSans.ttf', "'/usr/share/fonts/dejavu/DejaVuSans.ttf'"),
+	'apostrophe' => array("Sans' --width=1234 '", "'Sans'\"'\"' --width=1234 '\"'\"''"),
+	'line break' => array("Sans\nsetcnn timeout off", "'Sanssetcnn timeout off'"),
+))->skip(!extension_loaded('sockets'), 'the sockets extension is not loaded');
+
+test('no default font command is sent when the setting is empty', function () use ($rrdProxyRoot) {
+	$run = rrd_proxy_channel_run($rrdProxyRoot);
+
+	expect($run['client']['connected'])->toBeTrue();
+
+	foreach (array_column($run['packets'], 'command') as $command) {
+		expect($command)->not->toStartWith('setenv ');
+	}
 })->skip(!extension_loaded('sockets'), 'the sockets extension is not loaded');

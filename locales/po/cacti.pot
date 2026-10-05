@@ -4545,8 +4545,12 @@ msgstr ""
 msgid "Viewing Graph"
 msgstr ""
 
-#: graph.php:116 graph.php:513 graph.php:537 graph.php:551 graph.php:606
+#: graph.php:116 graph.php:608
 msgid "The Graph you requested does not exist."
+msgstr ""
+
+#: graph.php:512
+msgid "This Graph has no RRA definition to zoom into; check its Data Source Profile."
 msgstr ""
 
 #: graph.php:301 lib/html.php:599
@@ -16690,7 +16694,8 @@ msgid "Standard Devs: %s"
 msgstr ""
 
 #: lib/spikekill.php:389
-msgid "Variance %%%:    %s %%%"
+#, php-format
+msgid "Variance %%:    %s %%"
 msgstr ""
 
 #: lib/spikekill.php:393
@@ -20598,4 +20603,14 @@ msgstr ""
 #: plugins.php:848
 #, php-format
 msgid "Unable to Install Plugin: %s"
+msgstr ""
+
+#: include/global_form.php:1069
+msgid "Line Width"
+msgstr ""
+
+#: include/global_form.php:1074
+msgid ""
+"LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a width in "
+"pixels; integers or decimal values are supported."
 msgstr ""
