@@ -234,6 +234,8 @@ jobs:
             --coverage-clover "$RUNNER_TEMP/cdef-api-coverage/native.xml"
           mise exec php@8.4.25 python@3.12.12 -- python tests/security/run_cdef_reference_contracts.py \
             --output "$RUNNER_TEMP/cdef-reference-proof"
+          mise exec php@8.4.25 python@3.12.12 -- python tests/security/run_graph_data_removal_contracts.py \
+            --output "$RUNNER_TEMP/graph-data-removal-proof"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
@@ -241,6 +243,7 @@ jobs:
           path: |
             ${{ runner.temp }}/cdef-api-coverage
             ${{ runner.temp }}/cdef-reference-proof
+            ${{ runner.temp }}/graph-data-removal-proof
           if-no-files-found: error
 
   php:
