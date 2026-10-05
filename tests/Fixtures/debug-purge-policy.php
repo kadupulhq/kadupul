@@ -23,6 +23,9 @@ $config['config_options_array']['auth_method'] = $policy['auth_method'] ?? 1;
 $config['config_options_array']['graph_auth_method'] = 3;
 $db->exec("ALTER TABLE user_auth ADD COLUMN policy_hosts INTEGER DEFAULT 2;
 ALTER TABLE user_auth ADD COLUMN policy_graphs INTEGER DEFAULT 2;
+ALTER TABLE user_auth ADD COLUMN enabled TEXT DEFAULT 'on';
+ALTER TABLE user_auth ADD COLUMN locked TEXT DEFAULT '';
+ALTER TABLE user_auth ADD COLUMN reset_perms INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE user_auth ADD COLUMN policy_graph_templates INTEGER DEFAULT 1;
 ALTER TABLE user_auth ADD COLUMN policy_trees INTEGER DEFAULT 1;
 INSERT INTO user_auth(id,username,full_name,realm) VALUES(99,'Operator','Operator',0);
@@ -55,3 +58,13 @@ if ($policy['empty_hosts'] ?? false) {
 }
 $db->exec("INSERT INTO settings_user VALUES(99,'hide_disabled','on')");
 $tables = array_merge($tables, ['user_auth_realm','user_auth_perms','user_auth_group','user_auth_group_members','user_auth_group_perms','graph_local','graph_templates','host_template']);
+
+if ($policy['null_host'] ?? false) $db->exec('INSERT INTO data_local(id,host_id,data_template_id) VALUES(107,NULL,0)');
+if (isset($policy['batch_count'])) {
+    $insertData = $db->prepare('INSERT INTO data_local(id,host_id,data_template_id) VALUES(?,1,10)');
+    for ($index = 0; $index < $policy['batch_count']; $index++) {
+        $id = 20000 + $index;
+        $insertData->execute([$id]);
+        $db->prepare("INSERT INTO data_debug(started,done,info,user,datasource,issue) VALUES(1700000000,0,'a:0:{}',2,?,'')")->execute([$id]);
+    }
+}

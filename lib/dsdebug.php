@@ -340,6 +340,19 @@ function dsdebug_is_data_source_allowed($id)
     return $host_id !== false && $host_id !== null && (int) $host_id > 0 && is_device_allowed((int) $host_id);
 }
 
+/** @param list<mixed> $selection @return list<mixed>|null */
+function dsdebug_authorize_data_source_selection(array $selection): ?array
+{
+    try {
+        return get_allowed_management_selection('debug', $selection);
+    } catch (RuntimeException $error) {
+        cacti_log('ERROR: Data Source debug selection denied because current permissions could not be confirmed.', false, 'DSDEBUG');
+        raise_message('debug_access_denied', __('The requested Data Source is not available.'), MESSAGE_LEVEL_ERROR);
+
+        return null;
+    }
+}
+
 function dsdebug_run_repair($id)
 {
     if (!dsdebug_is_data_source_allowed($id)) {

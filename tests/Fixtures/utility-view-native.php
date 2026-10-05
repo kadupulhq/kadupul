@@ -7,8 +7,9 @@ declare(strict_types=1);
 
 // Real controller, validator, HTML and SQL. Bootstrap, permission dropdown
 // visibility, translation, CSRF tokens and total-count caching are isolated boundaries;
-// this fixture does not exercise HTTP authentication or authorization.
-if (PHP_SAPI !== 'cli') {
+// The debug_purge_policy opt-in executes full persisted authorization policy.
+// HTTP authentication and installed CSRF admission remain explicit ports.
+if (PHP_SAPI !== 'cli' && !defined('UTILITY_NATIVE_HTTP_PORT')) {
     exit(1);
 }
 $root = dirname(__DIR__, 2);
@@ -170,6 +171,7 @@ INSERT INTO processes VALUES('boost','child',1,NOW()),('other','child',2,NOW());
 if (isset($scenario['debug_purge_policy'])) {
     require __DIR__ . '/debug-purge-policy.php';
 }
+if ($debugView && isset($scenario['debug_purge_policy']) && $_SERVER['REQUEST_METHOD'] === 'POST') $_POST = array_merge($_POST ?? [], $_REQUEST);
 $before = array();
 foreach ($tables as $table) {
     $before[$table] = $db->query('SELECT * FROM ' . $table)->fetchAll(PDO::FETCH_ASSOC);
@@ -182,6 +184,17 @@ function db_fetch_assoc_prepared($sql, $params = array())
         // MySQL resolves this ordering to the selected rc.name; SQLite treats
         // its quoted identifier as ambiguous with the joined template name.
         $sql = str_replace('ORDER BY `name`', 'ORDER BY rc.name', $sql);
+    }
+    if (str_starts_with($sql, 'SELECT id FROM data_local WHERE id IN (')) {
+        if ($GLOBALS['scenario']['debug_policy_failure'] ?? false) throw new RuntimeException('Owned policy read failure');
+        if (($GLOBALS['scenario']['debug_policy_revocation'] ?? false) && empty($GLOBALS['debug_revoked'])) {
+            $GLOBALS['debug_revoked'] = true;
+            $q = $GLOBALS['db']->prepare($sql);
+            $q->execute($params);
+            $rows = $q->fetchAll(PDO::FETCH_ASSOC);
+            $GLOBALS['db']->exec('UPDATE user_auth SET reset_perms=1 WHERE id=99; DELETE FROM user_auth_perms WHERE user_id=99');
+            return $rows;
+        }
     }
     $q = $GLOBALS['db']->prepare($sql);
     $q->execute($params);
@@ -242,6 +255,7 @@ function db_fetch_cell_prepared($sql, $params = array())
     if (str_contains($sql, 'SELECT COUNT(*)') && str_contains($sql, 'FROM host_snmp_cache')) {
         $GLOBALS['snmp_counts'][] = (int) $value;
     }
+    if (str_contains($sql, 'SELECT COUNT(*)') && str_contains($sql, 'FROM data_local AS dl')) $GLOBALS['debug_counts'][] = (int) $value;
     return $value;
 }
 function db_fetch_cell($sql)
@@ -324,6 +338,13 @@ function api_plugin_is_enabled($name)
     return false;
 }
 function db_close() {}
+function sql_save($row, $table)
+{
+    if ($table !== 'data_debug' || array_keys($row) !== ['id','datasource','info','started','user'] || $row['id'] !== 0) throw new RuntimeException('Unexpected debug persistence handoff');
+    $GLOBALS['debug_saves'][] = $row;
+    db_execute_prepared("INSERT INTO data_debug(datasource,info,started,user,done,issue) VALUES(?,?,?,?,0,'')", [$row['datasource'],$row['info'],$row['started'],$row['user']]);
+    return (int) $GLOBALS['db']->lastInsertId();
+}
 function csrf_get_tokens()
 {
     return 'isolated-csrf-boundary';
@@ -355,6 +376,17 @@ if (!isset($scenario['debug_purge_policy'])) {
     {
         return get_allowed_devices(...$arguments);
     }
+    function get_allowed_management_device_ids_sql()
+    {
+        // Default scenarios keep the existing explicit permission port.
+        $devices = get_allowed_devices('');
+        return 'SELECT id FROM host WHERE id IN (' . implode(',', array_column($devices, 'id') ?: [0]) . ')';
+    }
+    function get_allowed_management_selection($resource, $selection)
+    {
+        if ($resource !== 'debug') throw new RuntimeException('Unexpected fixture selection resource');
+        return array_values(array_filter($selection, 'dsdebug_is_data_source_allowed'));
+    }
 }
 
 define('VALID_HOST_FIELDS', '(hostname)');
@@ -366,6 +398,7 @@ require $root . '/lib/html_form.php';
 require $root . '/lib/variables.php';
 if (isset($scenario['debug_purge_policy'])) {
     require $root . '/lib/auth.php';
+    require $root . '/lib/html_validate.php';
 }
 if ($managerView && ($_REQUEST['action'] ?? '') === 'actions') {
     // Registered before collector shutdown: observe committed data and request
@@ -382,6 +415,16 @@ if ($managerView && ($_REQUEST['action'] ?? '') === 'actions') {
         fwrite(STDOUT, json_encode(array('before' => $before, 'after' => $after, 'queries' => $GLOBALS['queries'], 'status' => http_response_code(), 'request' => $_REQUEST, 'session' => $_SESSION), JSON_THROW_ON_ERROR));
     });
 }
+if ($debugView && isset($scenario['debug_purge_policy'])) {
+    register_shutdown_function(static function () use ($scenario, $db, $tables, $before, $logBefore, $directory): void {
+        if (defined('NATIVE_COVERAGE_COMPLETED')) return;
+        $html = ob_get_level() ? ob_get_clean() : '';
+        $after = [];
+        foreach ($tables as $table) $after[$table] = $db->query('SELECT * FROM ' . $table)->fetchAll(PDO::FETCH_ASSOC);
+        define('NATIVE_COVERAGE_COMPLETED', ['utility-view-observed:debug', 'debug-controller-outcome-observed']);
+        echo json_encode(['before' => $before, 'after' => $after, 'queries' => $GLOBALS['queries'], 'html' => $html, 'request' => $_REQUEST, 'session' => $_SESSION, 'log_before' => $logBefore, 'log_after' => hash_file('sha256', $directory . '/cacti.log')], JSON_THROW_ON_ERROR);
+    });
+}
 if (isset($argv[3])) {
     define('RRD_TEST_COVERAGE_DIRECTORY', $directory);
     define('UTILITY_VIEW_TEST_COVERAGE', true);
@@ -390,6 +433,7 @@ if (isset($argv[3])) {
     }
     if ($debugView || $cleanerView) {
         define('DATA_DEBUG_NATIVE_TEST_COVERAGE', true);
+        if (isset($scenario['debug_purge_policy'])) define('DEBUG_POLICY_TEST_COVERAGE', true);
     }
     require __DIR__ . '/rrd-process-coverage.php';
 }
@@ -438,8 +482,20 @@ if ($cleanerView) {
         'options' => \Kadupul\Platform\Infrastructure\Legacy\UtilityRows::renderOptions($scenario['choices'], $scenario['selected']),
     };
 }
+$dsdebugAdmission = [];
+$filterProbe = [];
+if ($debugView && isset($scenario['debug_purge_policy'])) {
+    foreach ($scenario['dsdebug_ids'] ?? [] as $id) $dsdebugAdmission[$id] = dsdebug_is_data_source_allowed($id);
+    if ($scenario['filter_probe'] ?? false) {
+        $queryStart = count($queries);
+        $probeWhere = $probeJoin = '';
+        debug_get_filter($probeWhere, $probeJoin);
+        $filterProbe = array_slice($queries, $queryStart);
+    }
+}
 $html = ob_get_clean();
 $completionMarkers = array('utility-view-observed:' . $scenario['view']);
+if ($scenario['debug_non_rendering'] ?? false) $completionMarkers[] = 'debug-controller-outcome-observed';
 if (defined('DEBUG_NATIVE_ICONS_RENDERED')) {
     $completionMarkers[] = 'debug-icons-rendered';
 }
@@ -449,4 +505,4 @@ foreach ($tables as $table) {
     $after[$table] = $db->query('SELECT * FROM ' . $table)->fetchAll(PDO::FETCH_ASSOC);
 }
 // This CLI-only fixture emits a JSON protocol, with HTML characters escaped.
-fwrite(STDOUT, json_encode(array('icons' => $icons ?? array(), 'snmp_counts' => $GLOBALS['snmp_counts'] ?? array(), 'total_rows' => $GLOBALS['total_rows'] ?? array(), 'log_before' => $logBefore, 'log_after' => hash_file('sha256', $directory . '/cacti.log'), 'before' => $before, 'after' => $after, 'html' => $html, 'queries' => $queries, 'request' => $_REQUEST, 'session' => $_SESSION), JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));
+fwrite(STDOUT, json_encode(array('debug_counts' => $GLOBALS['debug_counts'] ?? [], 'debug_saves' => $GLOBALS['debug_saves'] ?? [], 'dsdebug_admission' => $dsdebugAdmission, 'filter_probe' => $filterProbe, 'icons' => $icons ?? array(), 'snmp_counts' => $GLOBALS['snmp_counts'] ?? array(), 'total_rows' => $GLOBALS['total_rows'] ?? array(), 'log_before' => $logBefore, 'log_after' => hash_file('sha256', $directory . '/cacti.log'), 'before' => $before, 'after' => $after, 'html' => $html, 'queries' => $queries, 'request' => $_REQUEST, 'session' => $_SESSION), JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));
