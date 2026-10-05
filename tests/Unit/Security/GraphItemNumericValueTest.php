@@ -17,7 +17,7 @@ final class GraphItemNumericValueTest extends TestCase
     {
         $source = file_get_contents(dirname(__DIR__, 3) . '/lib/rrd.php');
         self::assertIsString($source);
-        eval(test_php_function_source($source, 'rrdtool_graph_item_numeric_value'));
+        eval('namespace ' . __NAMESPACE__ . ';' . test_php_function_source($source, 'rrdtool_graph_item_numeric_value'));
     }
 
     public function testOnlyOneNumericArgumentIsAccepted(): void
