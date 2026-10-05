@@ -29,7 +29,7 @@ if (!is_string($coveragePackageVersion)) {
     throw new RuntimeException('Unable to determine the active code-coverage version');
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
-if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE')) {
+if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE') || defined('CLASSIC_TEXT_TABS_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
 }
 if (defined('PER_CS_REVIEW_TEST_COVERAGE')) {
