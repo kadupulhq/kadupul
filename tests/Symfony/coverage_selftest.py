@@ -101,6 +101,7 @@ def main():
         'src/Platform/Infrastructure/Symfony/Controller/LegacyAboutController.php',
         'src/Platform/Infrastructure/Legacy/InstallationProductVersion.php',
         'vdef.php',
+        'data_source_profiles.php', 'lib/data_source_profile_integrity.php',
         'src/GraphDefinition/Infrastructure/Legacy/LegacyVdefEditor.php',
         'src/GraphDefinition/Infrastructure/Symfony/Controller/VdefItemController.php',
         'src/GraphDefinition/Infrastructure/Symfony/Controller/VdefActionController.php',
@@ -396,7 +397,11 @@ def main():
     maintenance_checks = ['maintenance enables debug through Symfony', 'maintenance confirms remote debug setting', 'maintenance SQL rejection cannot report success', 'maintenance failure rolls back primary debug settings', 'maintenance refreshes polling cache through Symfony', 'maintenance connectivity probes the real SNMP fixture', 'collector ping returns sanitized diagnostics', 'collector runquery returns sanitized diagnostics', 'maintenance executes reload-query against the SNMP fixture', 'maintenance executes reindex against the SNMP fixture', 'maintenance executes query-diagnostics against the SNMP fixture', 'maintenance rejects stale device settings']
     graph_checks = ['graph association adds through Symfony', 'graph association invokes plugin hook once with exact payload', 'graph association automation creates a graph', 'graph association removes through Symfony', 'graph association failure rolls back primary writes', 'graph association verifies remote template', 'graph association removal retains existing graphs']
     query_checks = ['query association adds through Symfony', 'query association removes through Symfony', 'query association failure rolls back primary writes', 'query reindex method changes through Symfony', 'query reindex method is verified on collector', 'query removal retains existing graphs', 'query removal clears associations cache and reindex state']
+    profile_checks = ['in-use profile heartbeat saves when the disabled step field is absent', 'selected template RRD heartbeat follows its profile', 'selected local-source RRD heartbeat follows its profile', 'unrelated template RRD heartbeat is unchanged', 'unrelated local-source RRD heartbeat is unchanged', 'unchanged structural fields permit an in-use heartbeat save', 'single forged structural field refuses the complete in-use save: x_files_factor', 'single forged structural field refuses the complete in-use save: consolidation_function_id[]', 'template-only profile propagates heartbeat without local data sources', 'unused profile consolidation-only save is independent of step submission', 'unused profile factor-only save retains interval and consolidation functions', 'new profile creation persists submitted structural fields', 'unused profile structural edits save normally', "malformed consolidation selection causes no partial writes: '2'", "malformed consolidation selection causes no partial writes: ['99']", "malformed consolidation selection causes no partial writes: ['1e0']", "malformed consolidation selection causes no partial writes: ['1', '2', '3', '4', '1']", 'template-only heartbeat save emits no existing-file tuning warning', 'non-templated local heartbeats update only for the selected profile', 'unchanged heartbeat retains existing metadata and emits no tuning warning', 'profile save rejects missing CSRF before persistence', 'template-only profile accepts every structural field', 'read-only refusal displays its error and records the operator warning: x_files_factor', 'single forged structural field leaves propagated heartbeat unchanged: x_files_factor', 'read-only refusal displays its error and records the operator warning: consolidation_function_id[]', 'single forged structural field leaves propagated heartbeat unchanged: consolidation_function_id[]']
     failures = {
+        'profile-heartbeat-test-hash': 'Integration test source differs',
+        'missing-profile-heartbeat-test-hash': 'Integration test source differs',
+        **{f'missing-profile-heartbeat-check-{index}': 'Incomplete Symfony integration' for index in range(len(profile_checks))},
         'data-source-profile-test-hash': 'Integration test source differs',
         'about-authentication-test-hash': 'Integration test source differs',
         'missing-data-source-profile-test-hash': 'Integration test source differs',
@@ -428,6 +433,7 @@ def main():
         'vdef-probe-hash': 'Integration test source differs',
         'vdef-browser-probe-hash': 'Integration test source differs',
         'vdef-browser-handler-hash': 'Integration test source differs',
+        'vdef-browser-receipt-helper-hash': 'Integration test source differs',
         'missing-vdef-selection-check-0': 'Incomplete Symfony integration',
         'missing-vdef-selection-check-1': 'Incomplete Symfony integration',
         'missing-vdef-selection-check-2': 'Incomplete Symfony integration',
@@ -617,12 +623,20 @@ def main():
                 evidence['source_sha256']['tests/Symfony/palette_sql_failure_probe.php'] = '0' * 64
             elif case == 'palette-test-hash':
                 evidence['source_sha256']['tests/Symfony/palette_color_scenarios.py'] = '0' * 64
+            elif case == 'profile-heartbeat-test-hash':
+                evidence['source_sha256']['tests/Symfony/data_source_profile_heartbeat_scenarios.py'] = '0' * 64
+            elif case == 'missing-profile-heartbeat-test-hash':
+                evidence['source_sha256'].pop('tests/Symfony/data_source_profile_heartbeat_scenarios.py')
+            elif case.startswith('missing-profile-heartbeat-check-'):
+                evidence['checks'].remove(profile_checks[int(case.rsplit('-', 1)[1])])
             elif case == 'missing-data-source-profile-test-hash':
                 evidence['source_sha256'].pop('tests/Symfony/data_source_profile_scenarios.py')
             elif case == 'vdef-probe-hash':
                 evidence['source_sha256']['tests/Symfony/vdef_transaction_probe.php'] = '0' * 64
             elif case == 'vdef-browser-probe-hash':
                 evidence['source_sha256']['tests/Symfony/vdef_browser_probe.cjs'] = '0' * 64
+            elif case == 'vdef-browser-receipt-helper-hash':
+                evidence['source_sha256']['tests/e2e/browser-coverage.js'] = '0' * 64
             elif case == 'vdef-browser-handler-hash':
                 evidence['source_sha256']['public/js/vdef-item.js'] = '0' * 64
             elif case.startswith('missing-vdef-selection-check-'):

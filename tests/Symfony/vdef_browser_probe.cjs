@@ -3,12 +3,13 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const crypto = require('node:crypto');
+const { publishVdefCoverage, browserSourceSnapshot } = require('../e2e/browser-coverage');
 const { chromium } = require('../e2e/node_modules/playwright');
 const v8ToIstanbul = require('../e2e/node_modules/v8-to-istanbul');
 const { createCoverageMap } = require('../e2e/node_modules/istanbul-lib-coverage');
 
 async function main(input) {
+    const snapshot = process.env.KADUPUL_BROWSER_COVERAGE ? browserSourceSnapshot() : null;
     const origin = new URL(input.base);
     assert.ok(['127.0.0.1', 'localhost', '[::1]'].includes(origin.hostname));
     assert.match(String(input.vdefId), /^[1-9][0-9]{0,7}$/);
@@ -107,8 +108,7 @@ async function main(input) {
         assert.ok(map.getCoverageSummary().lines.pct >= 80,
             `The actual VDEF browser handler coverage is incomplete: ${JSON.stringify(map.getCoverageSummary().lines)}; lines=${JSON.stringify(map.fileCoverageFor(sourceFile).getLineCoverage())}`);
         if (process.env.KADUPUL_BROWSER_COVERAGE) {
-            fs.mkdirSync(process.env.KADUPUL_BROWSER_COVERAGE, { recursive: true });
-            fs.writeFileSync(path.join(process.env.KADUPUL_BROWSER_COVERAGE, `${crypto.randomUUID()}.json`), JSON.stringify(map.toJSON()));
+            publishVdefCoverage(map, snapshot, `${process.env.KADUPUL_BROWSER_COVERAGE_SESSION}:${input.front}`);
         }
         console.log(JSON.stringify({ csp_handler_executed: true, custom_item_saved: true, script_measured: true, no_control_branch_measured: true }));
     } finally {

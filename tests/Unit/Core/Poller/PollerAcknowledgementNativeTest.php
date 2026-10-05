@@ -44,11 +44,12 @@ test('production poller files retain failed writes and preserve concurrent arriv
         if ($error !== '') {
             throw new RuntimeException($error . $output);
         }
-        expect(proc_close($process))->toBe(($failed && !(!$realtime && $failed === 'rejected')) && !in_array($failed, array('replace', 'replace-space', 'field-success', 'incomplete', 'incomplete-recent', 'page-success'), true) ? 1 : 0, $error . $output)->and($error)->toBe('');
+        expect(proc_close($process))->toBe(($failed && !(!$realtime && $failed === 'rejected')) && !in_array($failed, array('multi-bang', 'multi-hex-bang', 'multi-php-hex-bang', 'replace', 'replace-space', 'field-success', 'incomplete', 'incomplete-recent', 'page-success'), true) ? 1 : 0, $error . $output)->and($error)->toBe('');
         $expected = is_string($failed) ? array(array('output' => '42', 'remaining' => $failed === 'page' ? 120001 : 1)) : ($failed ? array('42','43') : array('43'));
         if (in_array($failed, array('select', 'handoff', 'init', 'init-function', 'busy', 'count'), true)) {
             $expected = array('42');
         }
+        if (is_string($failed) && str_starts_with($failed, 'multi-')) $expected = array('43');
         if ($failed === 'delete') {
             $expected = array('42', '43');
         }
@@ -135,6 +136,10 @@ test('production poller files retain failed writes and preserve concurrent arriv
                     expect($events)->toHaveCount(2);
                     expect(array_values($events[0]['fixture.rrd']['times']))->toBe(array(array('value' => '42')));
                     expect(array_values($events[1]['fixture.rrd']['times']))->toBe(array(array('value' => '43')));
+                } elseif (is_string($failed) && str_starts_with($failed, 'multi-')) {
+                    expect($events)->toHaveCount(1);
+                    $fields = $failed === 'multi-bang' ? array('users' => '14', 'load' => '0.42') : array('cd' => '12', 'ab' => '34');
+                    expect(array_values($events[0]['fixture.rrd']['times']))->toBe(array($fields));
                 } elseif ($failed === 'rejected') {
                     expect($events)->toHaveCount(1);
                     expect(array_values($events[0]['fixture.rrd']['times']))->toBe(array(array('value' => '45')));
@@ -158,4 +163,4 @@ test('production poller files retain failed writes and preserve concurrent arriv
             } rmdir($dir . $suffix);
         }
     }
-})->with(array(array(false,false),array(false,true),array(true,false),array(true,true),array(false,'replace-space'),array(true,'replace-space'),array(false,'replace'),array(true,'replace'),array(true,'delete'),array(false,'rejected'),array(true,'rejected'),array(false,'mixed'),array(false,'page'),array(false,'select'),array(false,'handoff'),array(false,'delete'),array(true,'init'),array(false,'init'),array(false,'busy'),array(false,'count'),array(false,false,true),array(false,true,true),array(false,'init',true),array(false,'rejected',true),array(true,'select'),array(true,'init-function'),array(true,'field-failure'),array(true,'field-success'),array(false,'incomplete'),array(false,'incomplete-recent'),array(false,'mismatch'),array(false,'tail-failure'),array(false,'page-success')));
+})->with(array('multi bang field mapping' => array(false,'multi-bang'), 'multi hex-like field mapping from Spine' => array(false,'multi-hex-bang'), 'multi hex-like field mapping from PHP collector' => array(false,'multi-php-hex-bang'),array(false,false),array(false,true),array(true,false),array(true,true),array(false,'replace-space'),array(true,'replace-space'),array(false,'replace'),array(true,'replace'),array(true,'delete'),array(false,'rejected'),array(true,'rejected'),array(false,'mixed'),array(false,'page'),array(false,'select'),array(false,'handoff'),array(false,'delete'),array(true,'init'),array(false,'init'),array(false,'busy'),array(false,'count'),array(false,false,true),array(false,true,true),array(false,'init',true),array(false,'rejected',true),array(true,'select'),array(true,'init-function'),array(true,'field-failure'),array(true,'field-success'),array(false,'incomplete'),array(false,'incomplete-recent'),array(false,'mismatch'),array(false,'tail-failure'),array(false,'page-success')));

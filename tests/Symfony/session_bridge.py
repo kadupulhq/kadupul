@@ -6,6 +6,7 @@ from pathlib import Path
 from types import SimpleNamespace
 import argparse
 import json
+import os
 import sys
 from urllib.error import HTTPError
 from urllib.request import Request
@@ -30,6 +31,8 @@ def main():
     parser.add_argument('--project', default='kadupul-symfony-auth')
     args = parser.parse_args()
     database_sessions = args.database_sessions
+    if os.environ.get('KADUPUL_BROWSER_COVERAGE'):
+        os.environ['KADUPUL_BROWSER_COVERAGE_SESSION'] = 'database' if database_sessions else 'files'
     harness = Harness(SimpleNamespace(project=args.project, target='symfony-auth'))
     command = harness.command
     def installer_allowance(*arguments, check=False):

@@ -67,7 +67,6 @@
             <exclude>./Unit/Issue7121InputStringRegressionTest.php</exclude>
             <exclude>./Unit/Issue7121SmokeTest.php</exclude>
             <exclude>./Unit/RedirectValidationTest.php</exclude>
-            <exclude>./Unit/SecurityScriptServerDataInputTest.php</exclude>
             <exclude>./handoff/RedirectDataHandoffTest.php</exclude>
             <exclude>./HandOff/RedirectDataHandoffTest.php</exclude>
             <exclude>./mutation/CactiInputStringRegexMutationTest.php</exclude>

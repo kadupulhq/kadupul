@@ -233,6 +233,7 @@ function update_poller_cache($data_source, $commit = false)
 
             if ($output_type !== '' && !ctype_digit($output_type)) {
                 /* Do not rebuild poller items for a malformed output type. */
+                cacti_log('WARNING: Invalid output_type for local_data_id ' . $data_source['id'] . ' and data_template_data_id ' . $data_input['data_template_data_id'] . '. Poller items omitted.', false, 'PCACHE');
                 $outputs = array();
             } else {
                 if ($output_type !== '') {
