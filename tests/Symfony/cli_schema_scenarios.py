@@ -94,12 +94,14 @@ def without_version(text, utility):
 
 
 def compare(harness, check, label, scripts, arguments, allowed, reset, snapshot, utility,
-            stdout=normalise, stderr_filter=None, shim_stderr_filter=None, log_filter=None, subject='schema'):
+            stdout=normalise, stderr_filter=None, shim_stderr_filter=None, log_filter=None, subject='schema',
+            original_stdout=None):
     """Run the original, then the shim, from equal starting states.
 
     reset() puts the state back to its start and snapshot() reads what the
     comparison looks at; subject names it in the check labels. stdout() masks
-    both outputs, stderr_filter() removes the original's own diagnostics, and
+    both outputs unless original_stdout supplies an explicit legacy expectation,
+    stderr_filter() removes the original's own diagnostics, and
     log_filter(), when given, masks both cacti.log extracts for a comparison.
     Returns the two results, both logs and both snapshots taken after the runs.
     """
@@ -116,7 +118,8 @@ def compare(harness, check, label, scripts, arguments, allowed, reset, snapshot,
     shim = run(harness, shim_script, arguments)
     after_shim = snapshot(harness)
     shim_log = log_lines(harness)[marks:]
-    expected, actual = stdout(original['stdout']), stdout(shim['stdout'])
+    expected = (original_stdout or stdout)(original['stdout'])
+    actual = stdout(shim['stdout'])
     expected_err = original['stderr'] if stderr_filter is None else stderr_filter(original['stderr'])
     actual_err = shim['stderr'] if shim_stderr_filter is None else shim_stderr_filter(shim['stderr'])
     if allowed == 'version line before the error':

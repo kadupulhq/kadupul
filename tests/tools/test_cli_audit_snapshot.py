@@ -81,6 +81,43 @@ class AuditSnapshotTest(unittest.TestCase):
         column_dump = "INSERT INTO `table_columns` VALUES ('host',1,'id','int(10)','NO','PRI','80','');\n"
         self.assertEqual(column_dump, audit.IMPORTED_CARDINALITY[1].sub(lambda match: 'MASKED', column_dump))
 
+    def test_recorded_collation_is_required_and_wrong_values_remain_visible(self):
+        recorded = {('poller_command', 'command'): 'utf8mb4_unicode_ci'}
+        legacy = "ALTER TABLE `poller_command`\n   MODIFY COLUMN `command` varchar(191) NOT NULL DEFAULT '',\n"
+        expected = legacy.replace(" NOT NULL", " COLLATE utf8mb4_unicode_ci NOT NULL")
+        self.assertEqual(expected, audit.with_recorded_collations(legacy, recorded))
+        self.assertEqual(expected, audit.with_recorded_collations(expected, recorded))
+        self.assertNotEqual(legacy, audit.with_recorded_collations(legacy, recorded))
+        wrong = expected.replace('utf8mb4_unicode_ci', 'utf8mb4_bin')
+        self.assertNotEqual(expected, audit.with_recorded_collations(wrong, recorded))
+
+    def test_legacy_index_only_rewrite_has_one_exact_scope(self):
+        legacy = "ALTER TABLE `poller_resource_cache`\n   MODIFY COLUMN `path` varchar(191),\n   ADD UNIQUE INDEX `path` (`path`) USING BTREE,\n"
+        expected = legacy.replace('   MODIFY COLUMN `path` varchar(191),\n', '')
+        self.assertEqual(expected, audit.without_legacy_index_only_modify(legacy))
+        for changed in (legacy.replace('poller_resource_cache', 'host'),
+                        legacy.replace('varchar(191)', 'varchar(190)'),
+                        legacy.replace('varchar(191)', 'varchar(191) NOT NULL'),
+                        legacy.replace('`path` varchar', '`attributes` varchar'),
+                        legacy.replace('varchar(191)', 'varchar(191) COLLATE utf8mb4_bin')):
+            with self.subTest(changed=changed):
+                self.assertEqual(changed, audit.without_legacy_index_only_modify(changed))
+        self.assertEqual(expected, audit.without_legacy_index_only_modify(expected))
+
+    def test_collation_extension_comparison_excludes_only_the_verified_shape(self):
+        records = [
+            'table_columns\ttable_collation\t9\tvarchar(64)\tYES\tNULL\t\n',
+            'table_columns\t9\ttable_collation\tvarchar(64)\tYES\t\tNULL\t\n',
+            "INSERT INTO `table_columns` VALUES ('table_columns',9,'table_collation','varchar(64)','YES','',NULL,'');\n",
+        ]
+        for record in records:
+            with self.subTest(record=record):
+                self.assertEqual('', audit.without_collation_extension_record(record))
+                for changed in (record.replace('varchar(64)', 'varchar(63)'),
+                                record.replace('YES', 'NO'), record.replace('table_collation', 'table_extra'),
+                                record.replace('NULL', "'changed'"), record.replace('9', '10')):
+                    self.assertEqual(changed, audit.without_collation_extension_record(changed))
+
     def test_non_index_data_changes_remain_visible(self):
         self.assertNotEqual(snapshot(INDEX), snapshot(INDEX, state='version\tchanged\n'))
 

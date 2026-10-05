@@ -209,6 +209,16 @@ def reset(harness, state, tables, version):
     as_root(harness, docs)
 
 
+def without_collation_extension_record(text):
+    """Exclude only the separately verified native audit metadata extension."""
+    records = {
+        'table_columns\ttable_collation\t9\tvarchar(64)\tYES\tNULL\t\n',
+        'table_columns\t9\ttable_collation\tvarchar(64)\tYES\t\tNULL\t\n',
+        "INSERT INTO `table_columns` VALUES ('table_columns',9,'table_collation','varchar(64)','YES','',NULL,'');\n",
+    }
+    return ''.join(line for line in text.splitlines(keepends=True) if line not in records)
+
+
 def dump_file(harness):
     """docs/ as a listing, and the dump without the line that dates it."""
     listing = harness.command('sh', '-c', f'ls -a {DOCS} 2>/dev/null || true')['stdout']
@@ -216,7 +226,7 @@ def dump_file(harness):
     if '`table_collation` varchar(64)' in dump:
         dump = dump.replace('  `table_collation` varchar(64) DEFAULT NULL,\n', '')
         dump = re.sub(r"^(INSERT INTO `table_columns` VALUES .+),(?:NULL|'[a-zA-Z0-9_]+')\);$", r'\1);', dump, flags=re.M)
-    return listing, dump
+    return listing, without_collation_extension_record(dump)
 
 
 def schema(harness, with_dump=True, imported=False):
@@ -247,7 +257,7 @@ def schema(harness, with_dump=True, imported=False):
     if imported:
         rows = IMPORTED_CARDINALITY[0].sub(r'\1N\2', rows)
         dump = IMPORTED_CARDINALITY[1].sub(r'\1N\2', dump)
-    return columns, indexes, options, rows, state, listing, dump
+    return without_collation_extension_record(columns), indexes, options, without_collation_extension_record(rows), state, listing, dump
 
 
 def masked(text):
@@ -260,6 +270,46 @@ def masked_audit(text):
                         '    --upgrade - Deprecated; run php cli/upgrade_database.php separately')
     return text.replace('Use the --upgrade option to perform that upgrade',
                         'Run php cli/upgrade_database.php before auditing')
+
+
+def with_recorded_collations(text, collations):
+    """Require native ALTER text to retain each backed-up column's collation.
+
+    The frozen legacy formatter omitted this attribute. Add the independently
+    recorded value to its expected SQL; an explicit, incorrect native value
+    remains unchanged and therefore fails the complete output comparison.
+    """
+    table = None
+    lines = []
+    for line in text.splitlines(keepends=True):
+        match = re.match(r'ALTER TABLE `([^`]+)`', line)
+        if match:
+            table = match[1]
+        match = re.match(r'(\s+(?:ADD|MODIFY) COLUMN `([^`]+)` [a-z]+(?:\([^)]*\))?(?: unsigned)?)(.*)', line)
+        if match and (table, match[2]) in collations and not match[3].startswith(' COLLATE '):
+            line = line[:len(match[1])] + ' COLLATE ' + collations[table, match[2]] + line[len(match[1]):]
+        lines.append(line)
+    return ''.join(lines)
+
+
+def without_legacy_index_only_modify(text):
+    """Omit the legacy Key-drift rewrite only for the unchanged fixture column.
+
+    The frozen audit compares SHOW COLUMNS Key and rebuilds the whole column
+    when its unique index is missing. Native audit handles Key through indexes;
+    verify_audit_cases checks the independent baseline and catalog attributes.
+    Native output is never passed through this legacy-only expectation.
+    """
+    table = None
+    lines = []
+    for line in text.splitlines(keepends=True):
+        match = re.match(r'ALTER TABLE `([^`]+)`', line)
+        if match:
+            table = match[1]
+        if table == FAILING and line == '   MODIFY COLUMN `path` varchar(191),\n':
+            continue
+        lines.append(line)
+    return ''.join(lines)
 
 
 def log_masked(lines):
@@ -294,7 +344,9 @@ def verify_audit(harness, check, admin):
     try:
         proposed = touched_tables(harness, version)
         backup(harness, [table for table in proposed if table not in tables])
-        tables = proposed
+        # Keep the explicitly backed-up host and missing-table fixtures too:
+        # shim-only cases mutate them even when the initial audit plans no DDL.
+        tables = sorted(set(tables) | set(proposed))
         # The supported compatibility entry point remains a separate production
         # implementation. Execute it as well as the native adapter and retain
         # its measured source in the coverage acceptance contract.
@@ -313,10 +365,22 @@ def verify_audit(harness, check, admin):
         harness.sql(''.join(f'DROP TABLE IF EXISTS {table};' for table in AUDIT_TABLES)
                     + f"UPDATE version SET cacti = '{version}'; DROP DATABASE IF EXISTS {BACKUP}")
         as_root(harness, f'rm -rf {DOCS} {PRISTINE} {UNTYPED} {CLIENT_CONFIG}; if [ -e {DOCS_ASIDE} ]; then mv {DOCS_ASIDE} {DOCS}; fi')
-    check(found(harness) == before, 'audit scenarios leave the schema, settings, grants and docs/ as they found them')
+    after = found(harness)
+    if after != before:
+        from difflib import unified_diff
+        for index in range(3):
+            print(''.join(unified_diff(before[0][index].splitlines(True), after[0][index].splitlines(True),
+                                       fromfile=f'before schema {index}', tofile=f'after schema {index}')), flush=True)
+    check(after == before, 'audit scenarios leave the schema, settings, grants and docs/ as they found them')
 
 
 def verify_audit_cases(harness, check, tables, version):
+    # BACKUP precedes the injected drift and is independent of the new audit
+    # baseline loader and native formatter.
+    collations = dict(((table, column), collation) for table, column, collation in
+                      (line.split('\t') for line in harness.sql(
+                          'SELECT TABLE_NAME, COLUMN_NAME, COLLATION_NAME FROM information_schema.COLUMNS '
+                          f"WHERE TABLE_SCHEMA = '{BACKUP}' AND COLLATION_NAME IS NOT NULL").splitlines()))
     for label, arguments, state in AUDIT_CASES:
         dumps = []
 
@@ -341,6 +405,22 @@ def verify_audit_cases(harness, check, tables, version):
             continue
         unparsed = label == UNPARSED
         stdout = (lambda text: LOAD_ERROR.sub('ERROR: <load error>', masked_audit(text), count=1)) if unparsed else masked_audit
+        previous_stdout = stdout
+        stdout = lambda text, previous_stdout=previous_stdout: with_recorded_collations(previous_stdout(text), collations)
+        original_stdout = None
+        if state == 'failing':
+            # The injected failure removes only the unique index on path. Prove
+            # that its type, null/default, extra and collation already match the
+            # checked-in baseline before excluding the frozen Key-only rewrite.
+            baseline = "INSERT INTO `table_columns` VALUES ('poller_resource_cache',4,'path','varchar(191)','YES','UNI',NULL,'','utf8mb4_unicode_ci');"
+            recorded = harness.sql(
+                "SELECT COLUMN_TYPE, IS_NULLABLE, IF(COLUMN_DEFAULT IS NULL OR COLUMN_DEFAULT = 'NULL', '<sql-null>', COLUMN_DEFAULT), "
+                "EXTRA, COLLATION_NAME, COLUMN_KEY FROM information_schema.COLUMNS "
+                f"WHERE TABLE_SCHEMA = '{BACKUP}' AND TABLE_NAME = '{FAILING}' AND COLUMN_NAME = 'path'").strip()
+            check(baseline in (Path(__file__).resolve().parents[2] / 'docs/audit_schema.sql').read_text()
+                  and recorded == 'varchar(191)\tYES\t<sql-null>\t\tutf8mb4_unicode_ci\tUNI',
+                  f'{label}: the recorded path column matches every baseline attribute before index drift')
+            original_stdout = lambda text: stdout(without_legacy_index_only_modify(text))
         stderr_filter = (lambda text: CLIENT_ERROR.sub('', text)) if unparsed else None
         shim_stderr_filter = stderr_filter
         if '--upgrade' in arguments:
@@ -352,8 +432,10 @@ def verify_audit_cases(harness, check, tables, version):
         snapshot = (lambda h: schema(h, with_dump=label != EXPORT_FAILS, imported=True)) if '--load' in arguments else schema
         ran = compare(harness, check, label, (AUDIT_ORIGINAL, AUDIT_SHIM), arguments, None, starting, snapshot, AUDIT_UTILITY,
                       stdout=stdout, stderr_filter=stderr_filter, shim_stderr_filter=shim_stderr_filter,
-                      log_filter=log_masked)
+                      log_filter=log_masked, original_stdout=original_stdout)
         original, shim = ran['original'], ran['shim']
+        check(with_recorded_collations(masked_audit(shim['stdout']), collations) == masked_audit(shim['stdout']),
+              f'{label}: native ALTER explicitly retains the recorded column collations')
         if '--upgrade' in arguments:
             check(UPGRADE_DEPRECATION in shim['stderr'],
                   f'{label}: deprecated upgrade flag explains the separate upgrade command')
@@ -394,6 +476,8 @@ def verify_audit_cases(harness, check, tables, version):
             check(shim['stdout'] == "Failed to create 'table_columns'" and shim['exit'] == 0,
                   f'{label}: shim stops without a trailing newline')
         if label == 'audit upgrade from the previous version':
+            check(harness.command('test', '-e', 'install/upgrades/1_2_32.php')['exit'] == 1,
+                  'audit upgrade traverses the registered no-op 1.2.32 without a schema script')
             check(harness.sql('SELECT cacti FROM version').strip() == version
                   and 'UPGRADE WARNING: Plugin compatibility_test lacks an upgrade function.\n' in shim['stdout']
                   and 'kadupul_parity_gone' not in harness.sql('SELECT directory FROM plugin_config'),
@@ -446,6 +530,15 @@ def verify_audit_new_rules(harness, check, tables, version):
     collation = harness.sql("SELECT table_collation FROM table_columns WHERE table_name='host' AND table_field='hostname'").strip()
     check(loaded['exit'] == 0 and collation == 'utf8mb4_unicode_ci',
           'audit --load persists the actual SHOW FULL COLUMNS collation')
+    extension = harness.sql(
+        "SELECT COLUMN_TYPE, IS_NULLABLE, IF(COLUMN_DEFAULT IS NULL OR COLUMN_DEFAULT = 'NULL', '<sql-null>', COLUMN_DEFAULT), EXTRA "
+        "FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() "
+        "AND TABLE_NAME='table_columns' AND COLUMN_NAME='table_collation'").rstrip('\n')
+    recorded = harness.sql(
+        "SELECT table_type, table_null, IF(table_default IS NULL, '<sql-null>', table_default), table_extra "
+        "FROM table_columns WHERE table_name='table_columns' AND table_field='table_collation'").rstrip('\n')
+    check(extension == recorded == 'varchar(64)\tYES\t<sql-null>\t',
+          'audit --load records the collation extension with its actual catalog attributes')
 
     reset(harness, 'clean', tables, version)
     harness.sql('ALTER TABLE host ALTER COLUMN poller_id SET DEFAULT 0')
@@ -471,6 +564,22 @@ def verify_audit_new_rules(harness, check, tables, version):
     missing_report = run(harness, AUDIT_SHIM, ['--report'])
     check(f"Table: '{MISSING_TABLE}' exists in the audit schema but is missing from the database" in missing_report['stdout'],
           'audit reports a baseline table removed from the live schema')
+    reset(harness, 'clean', tables, version)
+
+    migration = f'{ROOT}/install/upgrades/1_2_33.php'
+    aside = '/tmp/kadupul-audit-required-migration-20261004.php'
+    check(harness.command('test', '-e', aside)['exit'] == 1,
+          'audit required-migration refusal owns its temporary file')
+    as_root(harness, f'mv {migration} {aside}')
+    try:
+        harness.sql("UPDATE version SET cacti='1.2.32'")
+        refused = run(harness, 'cli/upgrade_database.php', [])
+        check(refused['exit'] == 1 and '1_2_33.php) not found' in refused['stdout']
+              and harness.sql('SELECT cacti FROM version').strip() == '1.2.32',
+              'audit upgrade still refuses a missing required migration without publishing its final version')
+    finally:
+        as_root(harness, f'mv {aside} {migration}')
+        harness.sql(f"UPDATE version SET cacti='{version}'")
     reset(harness, 'clean', tables, version)
 
 
