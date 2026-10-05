@@ -43,14 +43,14 @@ for storage in ('files', 'database'):
             CREATE TABLE settings (name TEXT PRIMARY KEY, value TEXT);
             CREATE TABLE settings_user (user_id INTEGER, name TEXT, value TEXT);
             INSERT INTO settings VALUES ('auth_method','2'),('auth_cache_enabled','on'),('guest_user','3'),('force_https','');
-            CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, realm INTEGER, enabled TEXT, locked TEXT, password TEXT);
+            CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, realm INTEGER, enabled TEXT, locked TEXT, password TEXT, must_change_password TEXT DEFAULT '', password_change TEXT DEFAULT 'on');
             CREATE TABLE user_auth_cache (id INTEGER PRIMARY KEY, user_id INTEGER, hostname TEXT, last_update TEXT DEFAULT CURRENT_TIMESTAMP, token TEXT);
             CREATE TABLE sessions (id TEXT PRIMARY KEY, remote_addr TEXT, access INTEGER, data BLOB, user_id INTEGER, user_agent TEXT, start_time TEXT DEFAULT CURRENT_TIMESTAMP, transactions INTEGER DEFAULT 1);
             CREATE TABLE user_log (username TEXT, user_id INTEGER, result INTEGER, ip TEXT, time TEXT, PRIMARY KEY (username,user_id,time));
         ''')
         password = secrets.token_hex(16)
         password_hash = subprocess.check_output(['mise', 'exec', 'php@8.4.25', '--', 'php', '-r', 'print password_hash($argv[1], PASSWORD_DEFAULT);', password], text=True)
-        connection.executemany('INSERT INTO user_auth VALUES (?,?,?,?,?,?)', [(1, 'about-basic', 2, 'on', '', password_hash), (2, 'about-remember', 0, 'on', '', password_hash), (3, 'guest', 0, 'on', '', password_hash)])
+        connection.executemany('INSERT INTO user_auth(id,username,realm,enabled,locked,password) VALUES (?,?,?,?,?,?)', [(1, 'about-basic', 2, 'on', '', password_hash), (2, 'about-remember', 0, 'on', '', password_hash), (3, 'guest', 0, 'on', '', password_hash)])
         token = secrets.token_hex(32)
         connection.execute('INSERT INTO user_auth_cache(user_id,hostname,token) VALUES (?,?,?)', (2, '127.0.0.1', hashlib.sha512(token.encode()).hexdigest()))
         connection.commit()
