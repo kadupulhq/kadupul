@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 03:34-0700\n"
+"POT-Creation-Date: 2026-10-05 03:41-0700\n"
 "PO-Revision-Date: 2024-04-20 18:53-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -321,7 +321,7 @@ msgstr "הגדרות גרף מצטברות"
 msgid "Details"
 msgstr "פרטים"
 
-#: aggregate_graphs.php:645 graphs_new.php:931 lib/html_reports.php:1545
+#: aggregate_graphs.php:645 graphs_new.php:933 lib/html_reports.php:1545
 #: utilities.php:361
 msgid "Items"
 msgstr "פריטים"
@@ -417,7 +417,7 @@ msgstr "גרפים תואמים"
 #: color_templates.php:560 data_debug.php:1189 data_queries.php:1371
 #: data_source_profiles.php:1186 data_sources.php:1793 data_templates.php:1101
 #: gprint_presets.php:255 graph_templates.php:727 graph_view.php:667
-#: graphs.php:2100 graphs_new.php:524 host.php:1820 host_templates.php:795
+#: graphs.php:2100 graphs_new.php:526 host.php:1820 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
 #: lib/api_automation.php:480 lib/api_automation.php:708
 #: lib/clog_webapi.php:608 lib/html.php:268 lib/html_filter.php:46
@@ -454,7 +454,7 @@ msgstr "גרפים"
 #: data_debug.php:1199 data_queries.php:1381 data_source_profiles.php:1196
 #: data_source_profiles.php:1318 data_sources.php:1803 data_templates.php:1130
 #: gprint_presets.php:265 graph_templates.php:737 graph_view.php:743
-#: graphs.php:2121 graphs_new.php:534 host.php:1845 host_templates.php:805
+#: graphs.php:2121 graphs_new.php:536 host.php:1845 host_templates.php:805
 #: include/global_form.php:242 lib/api_automation.php:182
 #: lib/api_automation.php:490 lib/api_automation.php:718
 #: lib/api_automation.php:1082 lib/html_reports.php:2045 managers.php:154
@@ -479,7 +479,7 @@ msgstr "חלק מצטבר"
 #: data_debug.php:1114 data_queries.php:1396 data_source_profiles.php:1217
 #: data_sources.php:1743 data_templates.php:1151 gprint_presets.php:283
 #: graph_templates.php:758 graph_view.php:675 graphs.php:2091
-#: graphs_new.php:513 host.php:1810 host_templates.php:786
+#: graphs_new.php:515 host.php:1810 host_templates.php:786
 #: lib/api_automation.php:187 lib/api_automation.php:471
 #: lib/api_automation.php:723 lib/api_automation.php:1087
 #: lib/clog_webapi.php:533 lib/html.php:1828 lib/html_filter.php:63
@@ -496,7 +496,7 @@ msgstr "עבור"
 #: automation_templates.php:418 cdef.php:758 data_debug.php:1114
 #: data_queries.php:1396 data_source_profiles.php:1217 data_sources.php:1743
 #: data_templates.php:1151 gprint_presets.php:283 graph_templates.php:758
-#: graph_view.php:675 graphs.php:2091 graphs_new.php:513 host.php:1810
+#: graph_view.php:675 graphs.php:2091 graphs_new.php:515 host.php:1810
 #: host_templates.php:786 lib/html_graph.php:178 managers.php:169
 #: managers.php:529 managers.php:794 plugins.php:530 pollers.php:914
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
@@ -514,7 +514,7 @@ msgstr "הגדר / רענן מסננים"
 #: data_debug.php:1115 data_queries.php:1397 data_source_profiles.php:1218
 #: data_sources.php:1744 data_templates.php:1152 gprint_presets.php:284
 #: graph_templates.php:759 graph_view.php:676 graphs.php:2092
-#: graphs_new.php:514 host.php:1811 host_templates.php:787
+#: graphs_new.php:516 host.php:1811 host_templates.php:787
 #: lib/api_automation.php:188 lib/api_automation.php:472
 #: lib/api_automation.php:724 lib/api_automation.php:1088
 #: lib/clog_webapi.php:534 lib/html_filter.php:68 lib/html_graph.php:179
@@ -531,7 +531,7 @@ msgstr "נקה"
 #: automation_templates.php:419 cdef.php:759 data_debug.php:1115
 #: data_queries.php:1397 data_source_profiles.php:1218 data_sources.php:1744
 #: data_templates.php:1152 gprint_presets.php:284 graph_templates.php:759
-#: graph_view.php:676 graphs.php:2092 graphs_new.php:514 host.php:1811
+#: graph_view.php:676 graphs.php:2092 graphs_new.php:516 host.php:1811
 #: host_templates.php:787 lib/html_graph.php:179 lib/html_tree.php:1010
 #: managers.php:170 managers.php:530 managers.php:795 plugins.php:531
 #: pollers.php:915
@@ -852,7 +852,7 @@ msgstr "סיסמה חדשה"
 msgid "Confirm new password"
 msgstr "אשר סיסמא חדשה"
 
-#: auth_changepassword.php:413 auth_profile.php:582 graphs_new.php:515
+#: auth_changepassword.php:413 auth_profile.php:582 graphs_new.php:517
 #: lib/html_form.php:1419 lib/html_form.php:1428 lib/html_graph.php:181
 #: lib/html_tree.php:1012 settings.php:553
 msgid "Save"
@@ -3326,7 +3326,7 @@ msgstr "פרופיל"
 
 #: data_debug.php:1129 data_debug.php:1148 data_debug.php:1159
 #: data_sources.php:1756 data_sources.php:1776 data_templates.php:1111
-#: graphs.php:2110 graphs_new.php:486 host.php:1784 host_templates.php:716
+#: graphs.php:2110 graphs_new.php:488 host.php:1784 host_templates.php:716
 #: host_templates.php:734 lib/clog_webapi.php:549 lib/html.php:227
 #: lib/html_reports.php:1138 lib/html_reports.php:2284 plugins.php:501
 #: settings.php:590 settings.php:612 settings.php:643 tree.php:914
@@ -3638,7 +3638,7 @@ msgstr "לא ניתן לאתר קובץ XML."
 msgid "Associated Graph Templates"
 msgstr "תבניות גרף משויכות"
 
-#: data_queries.php:1210 graph_templates.php:858 graphs_new.php:638
+#: data_queries.php:1210 graph_templates.php:858 graphs_new.php:640
 #: host.php:873 lib/api_automation.php:576
 msgid "Graph Template Name"
 msgstr "שם תבנית גרף"
@@ -3822,7 +3822,7 @@ msgstr "גרף Timespan"
 msgid "Steps"
 msgstr "שלבי הבישול/אפיה"
 
-#: data_source_profiles.php:900 graphs_new.php:530 include/global_form.php:284
+#: data_source_profiles.php:900 graphs_new.php:532 include/global_form.php:284
 #: lib/html.php:613 lib/html_filter.php:55 lib/installer.php:2827
 #: lib/rrd.php:4220 utilities.php:866 utilities.php:1834
 msgid "Rows"
@@ -4721,7 +4721,7 @@ msgid "Check this checkbox if you wish to allow the user to override the value o
 msgstr "סמן תיבה זו אם ברצונך לאפשר למשתמש לעקוף את הערך בצד ימין במהלך יצירת תרשים."
 
 #: graph_templates.php:718 graph_templates.php:733 graph_templates.php:900
-#: graphs_new.php:635 include/global_arrays.php:1236
+#: graphs_new.php:637 include/global_arrays.php:1236
 #: include/global_arrays.php:2236 lib/html_tree.php:541 user_admin.php:1204
 #: user_group_admin.php:1223
 msgid "Graph Templates"
@@ -4989,7 +4989,7 @@ msgstr "התקן"
 msgid "Created graph: %s"
 msgstr "גרף שנוצר: %s"
 
-#: graphs.php:303 lib/template.php:2361 lib/template.php:2399
+#: graphs.php:303 lib/template.php:2362 lib/template.php:2400
 msgid "ERROR: No Data Source associated. Check Template"
 msgstr "שגיאה: אין מקור נתונים משויך. בדוק תבנית"
 
@@ -5021,7 +5021,7 @@ msgstr "השאר את מקור הנתונים (ים) ללא שינוי."
 msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
 msgstr "בחר תבנית גרף ולחץ על &#39;המשך&#39; כדי לשנות את תבנית התרשים עבור הגרפים הבאים. שים לב, רק תבניות גרפיות תואמות יוצגו. תואם מזוהה על ידי בעלי מקורות נתונים זהים."
 
-#: graphs.php:882 graphs_new.php:604
+#: graphs.php:882 graphs_new.php:606
 msgid "New Graph Template"
 msgstr "תבנית גרפים חדשה"
 
@@ -5229,119 +5229,119 @@ msgstr "בחר את מקור הנתונים כדי לקשר עם פריט תרש
 msgid "Default Settings Saved"
 msgstr "הגדרות ברירת המחדל נשמרו"
 
-#: graphs_new.php:134 graphs_new.php:194 graphs_new.php:218 graphs_new.php:373
+#: graphs_new.php:136 graphs_new.php:196 graphs_new.php:220 graphs_new.php:375
 msgid "The requested device is not available."
 msgstr ""
 
-#: graphs_new.php:399
+#: graphs_new.php:401
 #, fuzzy, php-format
 msgid "New Graphs for [ %s ] (%s %s)"
 msgstr "גרפים חדשים עבור [{0 }]({ 1 }{ 2})"
 
-#: graphs_new.php:401
+#: graphs_new.php:403
 msgid "New Graphs for [ All Devices ]"
 msgstr "גרפים חדשים עבור [כל המכשירים]"
 
-#: graphs_new.php:408
+#: graphs_new.php:410
 msgid "New Graphs for None Host Type"
 msgstr "גרפים חדשים עבור אף סוג מארח"
 
-#: graphs_new.php:438 lib/html.php:2757
+#: graphs_new.php:440 lib/html.php:2757
 msgid "Filter Settings Saved"
 msgstr "הגדרות סינון נשמרו"
 
-#: graphs_new.php:482
+#: graphs_new.php:484
 msgid "Graph Types"
 msgstr "סוגי גרפים"
 
-#: graphs_new.php:487 include/global_settings.php:418
+#: graphs_new.php:489 include/global_settings.php:418
 msgid "Graph Template Based"
 msgstr "תבנית גרף מבוססת"
 
-#: graphs_new.php:515
+#: graphs_new.php:517
 msgid "Save Filters"
 msgstr "שמור מסננים"
 
-#: graphs_new.php:551
+#: graphs_new.php:553
 msgid "Edit this Device"
 msgstr "ערוך את המכשיר הזה"
 
-#: graphs_new.php:552 host.php:829
+#: graphs_new.php:554 host.php:829
 msgid "Create New Device"
 msgstr "צור התקן חדש"
 
-#: graphs_new.php:625
+#: graphs_new.php:627
 msgid "(Select a graph type to create)"
 msgstr "(בחר סוג תרשים ליצירת)"
 
-#: graphs_new.php:629 include/global_arrays.php:985
+#: graphs_new.php:631 include/global_arrays.php:985
 #: include/global_arrays.php:1063 lib/html_form.php:1417 lib/html_form.php:1430
 #: tree.php:1662
 msgid "Create"
 msgstr "צור"
 
-#: graphs_new.php:639 graphs_new.php:953 lib/html.php:1160 user_admin.php:1427
+#: graphs_new.php:641 graphs_new.php:955 lib/html.php:1160 user_admin.php:1427
 #: user_group_admin.php:1447
 msgid "Select All"
 msgstr "בחר הכל"
 
-#: graphs_new.php:639 graphs_new.php:953 lib/html.php:1049 lib/html.php:1160
+#: graphs_new.php:641 graphs_new.php:955 lib/html.php:1049 lib/html.php:1160
 msgid "Select All Rows"
 msgstr "בחר את כל השורות"
 
-#: graphs_new.php:755
+#: graphs_new.php:757
 #, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id of '%s'"
 msgstr "שגיאה בניתוח קובץ XML של משאב שאילתת נתונים עבור שאילתת נתונים '%s' עם המזהה '%s'"
 
-#: graphs_new.php:774
+#: graphs_new.php:776
 #, fuzzy, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id '%s'.  Field Name '%s' missing a 'direction' attribute"
 msgstr "שגיאה בניתוח קובץ XML של משאב שאילתת הנתונים עבור שאילתת הנתונים '{ 0 }' עם המזהה '{ 1 }'. שם השדה '{ 2 }' חסר מאפיין 'כיוון'"
 
-#: graphs_new.php:778
+#: graphs_new.php:780
 #, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id '%s'"
 msgstr "שגיאה בניתוח קובץ XML של משאב שאילתת נתונים עבור שאילתת נתונים '%s' עם המזהה '%s'"
 
-#: graphs_new.php:822
+#: graphs_new.php:824
 #, php-format
 msgid "Data Query [%s]"
 msgstr "שאילתת נתונים [ %s]"
 
-#: graphs_new.php:949
+#: graphs_new.php:951
 msgid "From there you can get more information."
 msgstr "משם אתה יכול לקבל מידע נוסף."
 
-#: graphs_new.php:949
+#: graphs_new.php:951
 msgid "This Data Query returned 0 rows, perhaps there was a problem executing this Data Query."
 msgstr "שאילתת נתונים זו החזירה 0 שורות, אולי היתה בעיה בביצוע שאילתה זו."
 
-#: graphs_new.php:949
+#: graphs_new.php:951
 msgid "You can run this Data Query in debug mode"
 msgstr "ניתן להפעיל את שאילתת הנתונים במצב איתור הבאגים"
 
-#: graphs_new.php:966
+#: graphs_new.php:968
 msgid "The index is disabled due to the Data Query having no associated Graph Templates."
 msgstr "האינדקס מושבת בגלל שאילתת הנתונים ללא תבניות גרפים משויכות."
 
-#: graphs_new.php:1018
+#: graphs_new.php:1020
 msgid "Search Returned no Rows."
 msgstr "חיפוש לא הוחזרו שורות."
 
-#: graphs_new.php:1023
+#: graphs_new.php:1025
 msgid "Error in Data Query.  This could be due to the following: File Permissions, or a missing or improperly formatted Data Query XML file."
 msgstr "שגיאה בשאילתת נתונים. זה יכול לנבוע מהדברים הבאים: הרשאות קובץ, או קובץ XML של שאילתת נתונים חסר או בפורמט שגוי."
 
-#: graphs_new.php:1051
+#: graphs_new.php:1053
 msgid "Select a Graph Type to Create"
 msgstr "בחר סוג תרשים ליצירת"
 
-#: graphs_new.php:1054
+#: graphs_new.php:1056
 msgid "Make selection default"
 msgstr "הפוך ברירת מחדל לבחירה"
 
-#: graphs_new.php:1054
+#: graphs_new.php:1056
 msgid "Set Default"
 msgstr "קבע כברירת מחדל"
 
@@ -16855,21 +16855,21 @@ msgstr "צור צבירה מתוך תבנית"
 msgid "Attempting to Create Graph from Removed Graph Template"
 msgstr "מנסה ליצור גרף מתבנית הגרפים שהוסרה"
 
-#: lib/template.php:2353 lib/template.php:2391
+#: lib/template.php:2354 lib/template.php:2392
 #, php-format
 msgid "Created: %s"
 msgstr "נוצר: %s"
 
-#: lib/template.php:2371 lib/template.php:2402
+#: lib/template.php:2372 lib/template.php:2403
 msgid "ERROR: Whitelist Validation Failed. Check Data Input Method"
 msgstr "שגיאה: ההיתרים נכשלו. בדוק שיטת קלט נתונים"
 
-#: lib/template.php:2381
+#: lib/template.php:2382
 #, php-format
 msgid "Graph Not created for %s due to bad data"
 msgstr "הגרף לא נוצר עבור %s עקב נתונים שגויים"
 
-#: lib/template.php:2412
+#: lib/template.php:2413
 #, php-format
 msgid "NOTE: Graph not added for Data Query %s and index %s due to Data Source verification failure"
 msgstr "הערה: הגרף לא נוסף עבור שאילתת נתונים %s ואינדקס %s עקב כשל באימות מקור נתונים"
