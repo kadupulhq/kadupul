@@ -116,7 +116,7 @@ test('every icon a theme script inserts exists in the shipped Font Awesome', fun
 					continue;
 				}
 
-				expect(strpos($css, ".$class:before") !== false)->toBeTrue("$theme uses $class");
+				expect(strpos($css, ".$class:before") !== false || strpos($css, ".$class::before") !== false)->toBeTrue("$theme uses $class");
 
 				/* The regular weight is a subset in the free set */
 				if (in_array('far', $classes, true) && !array_intersect(array('fa', 'fas'), $classes)) {

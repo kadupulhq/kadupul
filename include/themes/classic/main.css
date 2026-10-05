@@ -1944,6 +1944,7 @@ ul#nav {
 	padding: 0;
 	overflow: hidden;
 	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
 	white-space: nowrap;
 }
 
@@ -1956,6 +1957,7 @@ ul#nav {
 	padding: 5px 10px;
 	overflow: visible;
 	clip: auto;
+	clip-path: none;
 	z-index: 10000;
 	background-color: #FFFFFF;
 	color: #000000;

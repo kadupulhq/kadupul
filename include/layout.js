@@ -22,6 +22,26 @@
  +-------------------------------------------------------------------------+
 */
 
+// jQuery animations must honor the same motion preference as theme CSS.
+(function () {
+	if (!window.matchMedia || !$.fx) {
+		return;
+	}
+	var preference = window.matchMedia('(prefers-reduced-motion: reduce)');
+	var updateMotion = function () {
+		$.fx.off = preference.matches;
+		if (preference.matches) {
+			$(':animated').stop(true, true);
+		}
+	};
+	updateMotion();
+	if (preference.addEventListener) {
+		preference.addEventListener('change', updateMotion);
+	} else if (preference.addListener) {
+		preference.addListener(updateMotion);
+	}
+})();
+
 const MESSAGE_LEVEL_NONE  = 0;
 const MESSAGE_LEVEL_INFO  = 1;
 const MESSAGE_LEVEL_WARN  = 2;

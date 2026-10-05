@@ -637,48 +637,94 @@ test('a NaN window that is already unknown is reported as having no spikes and i
 		->and(file_get_contents($this->rrdfile))->toBe('original-rrd-bytes');
 })->with(array('float', 'fill'));
 
-test('NaN replacements obey the per-RRA limit and are counted', function () {
+test('replacement modes obey the archive budget and reset at real XML boundaries', function ($method, $mode, $limit, $spikes) {
     $class = new ReflectionClass(spikekill::class);
     $update = $class->getMethod('updateXML');
     $update->setAccessible(true);
     $totalKills = $class->getProperty('total_kills');
     $totalKills->setAccessible(true);
-    $instance = new spikekill('', SPIKE_METHOD_STDDEV, 'nan', '1', '', '', '2', '500', '1');
+    $instance = new spikekill('', $method, $mode, '1', '100', '500', '2', '5', (string) $limit);
+    $output = array("<rrd>\n");
+    $rra = array();
+    foreach (array(0, 1) as $archive) {
+        $output[] = "<rra>\n<database>\n";
+        $output[] = "<row><timestamp>90</timestamp><v>1000</v></row>\n";
+        $output[] = "<row><timestamp>99</timestamp><v>5</v></row>\n";
+        for ($row = 0; $row < $spikes; $row++) {
+            $output[] = '<row><timestamp>'.(120 + $row * 60)."</timestamp><v>1000</v></row>\n";
+        }
+        $output[] = "</database>\n</rra>\n";
+        $rra[] = array(array('max_cutoff' => 10, 'min_cutoff' => -10, 'average' => 5,
+            'variance_avg' => 5, 'outwind_killed' => 0, 'stddev_killed' => $spikes, 'variance_killed' => $spikes));
+    }
+    $output[] = "</rrd>\n";
+    $updated = $update->invokeArgs($instance, array(&$output, &$rra));
+    $document = new DOMDocument();
+    expect($document->loadXML(implode('', $updated)))->toBeTrue();
+    $replacement = $mode === 'nan' ? 'NaN' : ($mode === 'avg' ? sprintf('%1.10e', 5) : '5');
+    foreach ($document->getElementsByTagName('database') as $database) {
+        $values = array();
+        foreach ($database->getElementsByTagName('v') as $value) {
+            $values[] = trim($value->textContent);
+        }
+        expect($values)->toBe(array_merge(array('1000', '5'),
+            array_fill(0, min($limit, $spikes), $replacement),
+            array_fill(0, max(0, $spikes - $limit), '1000')));
+    }
+    expect($totalKills->getValue($instance))->toBe(2 * min($limit, $spikes));
+    foreach ($rra as $statistics) {
+        expect($statistics[0][$method === SPIKE_METHOD_STDDEV ? 'stddev_killed' : 'variance_killed'])
+            ->toBe(min($limit, $spikes))->and($statistics[0]['outwind_killed'])->toBe(min($limit, $spikes));
+    }
+})->with(array(SPIKE_METHOD_STDDEV, SPIKE_METHOD_VARIANCE))
+    ->with(array('nan', 'avg', 'last'))->with(array(1, 3))->with(array(0, 3));
 
-    $output = array(
+test('last replacements without a prior value leave budget for another data source', function ($method) {
+    $instance = new spikekill('', $method, 'last', '1', '100', '500', '2', '5', '1');
+    $lines = ["<rrd>\n<rra>\n<database>\n", "<row><timestamp>99</timestamp><v>NaN</v><v>5</v></row>\n",
         "<row><timestamp>120</timestamp><v>1000</v><v>1000</v></row>\n",
-        "<row><timestamp>180</timestamp><v>1000</v><v>1000</v></row>\n",
-        "</rra>\n",
-        "<row><timestamp>240</timestamp><v>1000</v><v>1000</v></row>\n",
-        "</rra>\n",
-        "</database>\n",
-    );
-    $rra = array(
-        array(
-            array('max_cutoff' => 10, 'min_cutoff' => -10, 'outwind_killed' => 0),
-            array('max_cutoff' => 10, 'min_cutoff' => -10, 'outwind_killed' => 0),
-        ),
-        array(
-            array('max_cutoff' => 10, 'min_cutoff' => -10, 'outwind_killed' => 0),
-            array('max_cutoff' => 10, 'min_cutoff' => -10, 'outwind_killed' => 0),
-        ),
-    );
+        "<row><timestamp>180</timestamp><v>1000</v><v>1000</v></row>\n", "</database>\n</rra>\n</rrd>\n"];
+    $rra = [[['max_cutoff' => 10, 'min_cutoff' => -10, 'variance_avg' => 5, 'outwind_killed' => 0],
+        ['max_cutoff' => 10, 'min_cutoff' => -10, 'variance_avg' => 5, 'outwind_killed' => 0]]];
+    $update = new ReflectionMethod(spikekill::class, 'updateXML');
+    $update->setAccessible(true);
+    $output = $update->invokeArgs($instance, [&$lines, &$rra]);
+    $document = new DOMDocument();
+    expect($document->loadXML(implode('', $output)))->toBeTrue();
+    $values = [];
+    foreach ($document->getElementsByTagName('v') as $value) { $values[] = trim($value->textContent); }
+    expect($values)->toBe(['NaN', '5', '1000', '5', '1000', '1000']);
+    $total = new ReflectionProperty(spikekill::class, 'total_kills');
+    $total->setAccessible(true);
+    expect($total->getValue($instance))->toBe(1);
+})->with([SPIKE_METHOD_STDDEV, SPIKE_METHOD_VARIANCE]);
 
-    $output = $update->invokeArgs($instance, array(&$output, &$rra));
-    preg_match_all('/<row>(.*?)<\/row>/', implode('', $output), $rows);
-    $values = array_map(static function ($row) {
-        preg_match_all('/<v>\s*(.*?)<\/v>/', $row, $matches);
-
-        return $matches[1];
-    }, $rows[1]);
-
-    expect($values)->toBe(array(
-        array('NaN', '1000'),
-        array('1000', '1000'),
-        array('NaN', '1000'),
-    ))->and($totalKills->getValue($instance))->toBe(2);
-});
-
+test('dry-run and restore report the same capped removal count', function ($method, $dryrun) {
+    $rows = '';
+    for ($row = 0; $row < 100; $row++) {
+        $value = $row < 20 ? '1.0000000000e+05' : '1.0000000000e+01';
+        $rows .= '<row><timestamp>'.(1000000000 + $row * 300).'</timestamp><v>'.$value."</v></row>\n";
+    }
+    file_put_contents($this->dump_fixture, "<step>300</step>\n<name>traffic_in</name>\n<min>0</min>\n<max>1000000</max>\n<rra>\n<cf>AVERAGE</cf>\n<pdp_per_row>1</pdp_per_row>\n<database>\n".$rows."</database>\n</rra>\n");
+    $instance = new spikekill($this->rrdfile, $method, 'nan', '1', '', '', '2', '10', '5');
+    $instance->dryrun = $dryrun;
+    $instance->debug = true;
+    $instance->remove_spikes();
+    $total = new ReflectionProperty(spikekill::class, 'total_kills');
+    $total->setAccessible(true);
+    expect($total->getValue($instance))->toBe(5);
+    $document = new DOMDocument();
+    expect($document->loadHTML($instance->get_output()))->toBeTrue();
+    $xpath = new DOMXPath($document);
+    $cells = $xpath->query('//table[@id="spikekillData"]//tr[td]/td');
+    expect($cells->length)->toBe(16)->and($cells->item($method === 'stddev' ? 12 : 13)->textContent)->toBe('5');
+    expect(file_get_contents($this->rrdfile))->toBe($dryrun ? 'original-rrd-bytes' : 'restored-rrd-bytes');
+    if ($dryrun) {
+        expect($instance->get_output())->toContain('Dryrun requested')->not->toContain('Remediated');
+    } else {
+        expect($instance->get_output())->toContain('Total Spikes 5');
+    }
+})->with(array('stddev', 'variance'))->with(array(true, false));
 
 test('missing sample arrays preserve unavailable window statistics', function ($html) {
     $instance = spikekill_e2e_instance($this->rrdfile);

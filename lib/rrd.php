@@ -5048,7 +5048,7 @@ function rrdtool_error_image_wrap($string, $width) {
 		return wordwrap($string, $width, "\n", true);
 	}
 
-	$count     = count($chars);
+	$count     = cacti_sizeof($chars);
 	$output    = '';
 	$laststart = 0;
 	$lastspace = 0;
@@ -5172,7 +5172,7 @@ function rrdtool_create_error_image($string, $width = '', $height = '') {
 
 	/* see the size of the string */
 	$string    = trim($string);
-	$maxstring = ceil((450 - (125 + 10)) / $char_width);
+	$maxstring = (int) ceil((450 - (125 + 10)) / $char_width);
 	$stringlen = strlen($string) * $font_size;
 	$padding   = 5;
 

@@ -2521,6 +2521,7 @@ circle {
     padding: 0;
     overflow: hidden;
     clip: rect(0 0 0 0);
+	clip-path: inset(50%);
     white-space: nowrap;
 }
 
@@ -2533,6 +2534,7 @@ circle {
     padding: 5px 10px;
     overflow: visible;
     clip: auto;
+	clip-path: none;
     z-index: 10000;
     background-color: var(--background-content);
     color: var(--text-color-highlight-a);
