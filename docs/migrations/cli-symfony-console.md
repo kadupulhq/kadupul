@@ -307,7 +307,14 @@ additions, which the original requires:
 - **Confirmation.** `--repair` is the one write mode that plans by default.
   It changes the schema only with `--force`, or after the operator has seen
   the plan on a terminal and answered yes to a question that defaults to no.
+  With `--upgrade`, an interactive repair first asks permission to upgrade,
+  verifies the resulting database version, and then shows the new repair
+  plan for a separate confirmation. Declining either question applies no
+  repair; an unsuccessful or unconfirmed upgrade stops before repair.
   The retained compatibility CLI keeps immediate repair.
+- **Upgrade deprecation.** Set `KADUPUL_CLI_QUIET_DEPRECATION=1` to suppress
+  the compatibility warning in existing cron jobs. This setting does not
+  suppress upgrade failures or change confirmation behavior.
 - **Transactions.** The audit's only row writes are the baseline inserts
   into private staging tables. They run in one transaction before both
   tables are published by an atomic rename. Failed inserts or publication

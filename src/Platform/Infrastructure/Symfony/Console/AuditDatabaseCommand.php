@@ -39,9 +39,9 @@ final readonly class AuditDatabaseCommand
     public function __invoke(SymfonyStyle $io, OutputInterface $output, #[MapInput] AuditDatabaseInput $input): int
     {
         $mode = $input->json ? OutputMode::Json : $this->presentation->mode;
-        if ($input->upgrade) {
+        if ($input->upgrade && getenv('KADUPUL_CLI_QUIET_DEPRECATION') !== '1') {
             $warning = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
-            $warning->writeln('DEPRECATION: --upgrade in the audit command is retained for compatibility. Run php cli/upgrade_database.php separately before auditing.');
+            $warning->writeln('DEPRECATION: --upgrade in the audit command is retained for compatibility. Run php cli/upgrade_database.php separately before auditing.', OutputInterface::OUTPUT_RAW);
         }
         $legacy = new AuditDatabaseLegacyArguments();
         // The shim repairs at once, as the script did. Under bin/console a
@@ -54,6 +54,34 @@ final readonly class AuditDatabaseCommand
         }
         if ($mode === OutputMode::Legacy) {
             return $this->legacy($output, $report, $legacy, $input->alters);
+        }
+        if ($ask && $mode === OutputMode::Human && $report->upgradePlanned) {
+            // Never ask the operator to approve a repair derived from the old
+            // schema, even when that schema happens to need no repairs yet.
+            if (!$io->confirm('Upgrade the database before preparing the repair plan?', false)) {
+                $io->note('Nothing was changed. Run php cli/upgrade_database.php before preparing a repair plan.');
+                return Command::SUCCESS;
+            }
+            $upgraded = $this->run($io, $output, $mode, $legacy, $input, true, true);
+            if (!$upgraded instanceof AuditReport) {
+                return $upgraded;
+            }
+            $output->write($upgraded->upgrade?->stdout ?? '', false, OutputInterface::OUTPUT_RAW);
+            $errors = $upgraded->upgrade?->stderr ?? '';
+            if ($errors !== '') {
+                ($output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output)->write($errors, false, OutputInterface::OUTPUT_RAW);
+            }
+            if ($upgraded->outcome === AuditOutcome::UpgradeFailed) {
+                return $this->report($io, $output, $mode, $upgraded);
+            }
+            $report = $this->run($io, $output, $mode, $legacy, $input, false);
+            if (!$report instanceof AuditReport) {
+                return $report;
+            }
+            if ($report->upgradePlanned) {
+                $io->error('The database version is still behind after the upgrade. No repair was applied.');
+                return Command::FAILURE;
+            }
         }
         $exit = $this->report($io, $output, $mode, $report);
         if (!$ask || $mode !== OutputMode::Human || $report->alters === []) {
@@ -70,7 +98,7 @@ final readonly class AuditDatabaseCommand
     }
 
     /** The use case's report, or the exit code of a run that ended before it. */
-    private function run(SymfonyStyle $io, OutputInterface $output, OutputMode $mode, AuditDatabaseLegacyArguments $legacy, AuditDatabaseInput $input, bool $apply): AuditReport|int
+    private function run(SymfonyStyle $io, OutputInterface $output, OutputMode $mode, AuditDatabaseLegacyArguments $legacy, AuditDatabaseInput $input, bool $apply, bool $upgradeOnly = false): AuditReport|int
     {
         try {
             // The script refused a remote collector before it read any argument, --help included.
@@ -83,8 +111,8 @@ final readonly class AuditDatabaseCommand
             }
             // A shim with no mode prints the help after the version check, as the
             // script did; under bin/console a missing mode is a usage error.
-            $auditMode = $input->mode();
-            $report = $auditMode === null && $mode !== OutputMode::Legacy ? null : ($this->audit)($auditMode, $input->upgrade, $input->as, $apply);
+            $auditMode = $upgradeOnly ? null : $input->mode();
+            $report = $auditMode === null && $mode !== OutputMode::Legacy && !$upgradeOnly ? null : ($this->audit)($auditMode, $input->upgrade, $input->as, $apply);
         } catch (RemoteCollectorRefused) {
             return $this->renderer->failure($io, $output, $mode, 'The audit runs on the main data collector only.', new CommandResult(
                 ['status' => 'failed', 'error' => 'main data collector only'],
