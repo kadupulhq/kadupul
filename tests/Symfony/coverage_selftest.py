@@ -506,6 +506,10 @@ def main():
         'cli-audit-native-test-hash': 'Integration test source differs',
         'missing-audit-check': 'Incomplete Symfony integration checks',
         'missing-retained-audit-check': 'Incomplete Symfony integration checks',
+        'missing-audit-index-only-check': 'Incomplete Symfony integration checks',
+        'missing-audit-extension-check': 'Incomplete Symfony integration checks',
+        'missing-audit-noop-upgrade-check': 'Incomplete Symfony integration checks',
+        'missing-audit-required-upgrade-check': 'Incomplete Symfony integration checks',
     }
     failures['missing-legacy-page-test-hash'] = 'Integration test source differs'
     failures['missing-selected-runner-check'] = 'Incomplete Symfony integration'
@@ -716,6 +720,14 @@ def main():
                 evidence['source_sha256']['tests/Fixtures/native-cli/audit_database.php'] = '0' * 64
             elif case == 'missing-audit-check':
                 evidence['checks'].remove('audit refuses an operator without the Installation/Upgrades realm')
+            elif case == 'missing-audit-noop-upgrade-check':
+                evidence['checks'].remove('audit upgrade traverses the registered no-op 1.2.32 without a schema script')
+            elif case == 'missing-audit-required-upgrade-check':
+                evidence['checks'].remove('audit upgrade still refuses a missing required migration without publishing its final version')
+            elif case == 'missing-audit-extension-check':
+                evidence['checks'].remove('audit --load records the collation extension with its actual catalog attributes')
+            elif case == 'missing-audit-index-only-check':
+                evidence['checks'].remove('audit repair with a failing alter: the recorded path column matches every baseline attribute before index drift')
             elif case == 'missing-retained-audit-check':
                 evidence['checks'].remove('retained audit compatibility report executes successfully')
             elif case == 'missing-device-creation-check':

@@ -41,6 +41,9 @@ final class SessionCredentialBindingTest extends TestCase
                     $requiredMarkers[] = 'response-dispatched';
                     $hitSources[] = 'src/IdentityAccess/Infrastructure/Symfony/CompleteSessionRevocation.php';
                 }
+                if ($scenario === 'disabled-rollback') {
+                    $requiredMarkers[] = 'rollback-resume-observed';
+                }
                 if (str_starts_with($scenario, 'about-')) {
                     $hitSources[] = 'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php';
                     $hitSources[] = 'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php';
@@ -97,6 +100,10 @@ final class SessionCredentialBindingTest extends TestCase
             if (str_ends_with($scenario, '-rollback')) {
                 self::assertTrue($state['refused_while_active']);
             }
+            if ($scenario === 'disabled-rollback') {
+                self::assertTrue($state['resume_while_active_denied']);
+                self::assertTrue($state['resume_after_rollback_denied']);
+            }
             if (str_ends_with($scenario, '-write')) {
                 self::assertSame(9, $state['initial']);
             }
@@ -116,7 +123,7 @@ final class SessionCredentialBindingTest extends TestCase
     public static function cases(): iterable
     {
         foreach (['file', 'database'] as $storage) {
-            foreach (['current' => true, 'unbound' => false, 'reset' => false, 'reset-write' => false, 'rehash' => true, 'rehash-write' => true, 'successive-rehash' => true, 'unbound-remembered' => false, 'unbound-remembered-name' => false, 'unbound-remembered-rollback' => false, 'unbound-remembered-marker-missing-rollback' => false, 'unbound-remembered-marker-malformed-rollback' => false, 'about-current' => true, 'about-unbound' => false, 'about-reset' => false, 'about-rehash' => true, 'about-restore-basic' => true, 'about-restore-remember' => true, 'about-restore-remember-policy-forced' => false, 'about-restore-remember-policy-must-off' => true, 'about-restore-remember-policy-change-off' => true, 'about-restore-remember-policy-nonlocal' => true, 'about-restore-basic-policy-forced' => true, 'empty' => false, 'malformed' => false, 'deleted-live' => false, 'about-empty' => false, 'about-malformed' => false, 'about-deleted-live' => false] as $scenario => $accepted) {
+            foreach (['disabled-rollback' => false, 'current' => true, 'unbound' => false, 'reset' => false, 'reset-write' => false, 'rehash' => true, 'rehash-write' => true, 'successive-rehash' => true, 'unbound-remembered' => false, 'unbound-remembered-name' => false, 'unbound-remembered-rollback' => false, 'unbound-remembered-marker-missing-rollback' => false, 'unbound-remembered-marker-malformed-rollback' => false, 'about-current' => true, 'about-unbound' => false, 'about-reset' => false, 'about-rehash' => true, 'about-restore-basic' => true, 'about-restore-remember' => true, 'about-restore-remember-policy-forced' => false, 'about-restore-remember-policy-must-off' => true, 'about-restore-remember-policy-change-off' => true, 'about-restore-remember-policy-nonlocal' => true, 'about-restore-basic-policy-forced' => true, 'empty' => false, 'malformed' => false, 'deleted-live' => false, 'about-empty' => false, 'about-malformed' => false, 'about-deleted-live' => false] as $scenario => $accepted) {
                 yield $storage . '-' . $scenario => [$scenario, $storage, $accepted];
             }
         }

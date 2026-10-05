@@ -249,6 +249,11 @@ foreach ($cacti_version_codes as $cacti_upgrade_version => $hash_code) {
         }
 
         $prev_cacti_version = $cacti_upgrade_version;
+    } elseif ($cacti_upgrade_version === '1.2.32') {
+        // Main's indexed-reference migration moved to 1.2.33 so deployed LTS
+        // 1.2.32 installations can reach it. This registered version has no
+        // schema script on main; every other missing migration remains fatal.
+        continue;
     } else {
         print 'Error: upgrade file (' . $upgrade_file . ') not found' . PHP_EOL;
         $upgrade_failed = true;
