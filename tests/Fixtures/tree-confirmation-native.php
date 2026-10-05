@@ -36,6 +36,7 @@ $db->exec("CREATE TABLE graph_tree(id INTEGER PRIMARY KEY, user_id INTEGER, name
     CREATE TABLE user_auth_realm(user_id INTEGER, realm_id INTEGER);
     INSERT INTO graph_tree VALUES(7,42,'Owned & tree','off',1,NULL,NULL),(8,43,'Foreign secret tree','off',1,NULL,NULL);
     INSERT INTO graph_tree_items VALUES(70,7),(80,8);");
+if ($scenario['ownerless'] ?? false) $db->exec("INSERT INTO graph_tree VALUES(9,0,'Unowned secret tree','off',1,NULL,NULL)");
 if ($scenario['admin'] ?? false) $db->exec('INSERT INTO user_auth_realm VALUES(42,1)');
 $lookups = $writes = $messages = $settings = array();
 session_id('tree-confirmation-native');

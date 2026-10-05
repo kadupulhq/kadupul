@@ -80,3 +80,13 @@ test('forged tree submissions recheck persisted ownership before every bulk acti
     expect($state['lookups'])->toBe([])->and($state['writes'])->toBe([])->and($state['settings'])->toBe([]);
     expect(array_column($state['trees'], 'id'))->toBe([7,8])->and($state['items'])->toBe([70,80]);
 })->with(['delete' => 1, 'publish' => 2, 'unpublish' => 3, 'unlock' => 4]);
+
+
+test('trees without an owner remain denied during actual bulk confirmation', function (int $action) {
+    $state = runTreeConfirmationScenario(array('action' => $action, 'ids' => [9], 'ownerless' => true), $this->getTestResultObject()->getCodeCoverage());
+    expect($state['lookups'])->toBe([])->and($state['writes'])->toBe([])->and($state['messages'])->toBe([40]);
+    expect($state['html'])->not->toContain('Unowned secret tree')->not->toContain('selected_items');
+    expect(array_column($state['trees'], 'id'))->toBe([7,8,9]);
+    expect(array_column($state['trees'], 'user_id'))->toBe([42,43,0]);
+    expect($state['items'])->toBe([70,80]);
+})->with(['delete' => 1, 'publish' => 2, 'unpublish' => 3, 'unlock' => 4]);
