@@ -50,6 +50,7 @@ foreach ([
 }
 
 beforeEach(function () {
+	$this->php80Timezone = date_default_timezone_get();
     $this->php80Session = $_SESSION ?? null;
     $this->php80HadSession = isset($_SESSION);
     $this->php80Datechar = $GLOBALS['datechar'] ?? null;
@@ -63,6 +64,7 @@ beforeEach(function () {
 });
 
 afterEach(function () {
+	date_default_timezone_set($this->php80Timezone);
     if ($this->php80HadSession) {
         $_SESSION = $this->php80Session;
     } else {
@@ -84,15 +86,16 @@ foreach (['m-d-Y', 'M-d-Y', 'd-m-Y', 'd-M-Y', 'Y-m-d', 'Y-M-d'] as $id => $forma
 $dateCases = array_merge($dateCases, [[null, 'm-d-Y'], [false, 'm-d-Y'], [true, 'M-d-Y'],
     ['', 'Y-m-d'], ['unknown', 'Y-m-d'], [99, 'Y-m-d'], [' 2 ', 'd-m-Y']]);
 
-test('date selectors preserve integer string and fallback settings', function ($setting, $expected) {
+test('date selectors preserve integer string and fallback settings', function ($setting, $expected, $timezone) {
+	date_default_timezone_set($timezone);
     $GLOBALS['php80_state']['options']['default_date_format'] = $setting;
     expect(Php80Modernization\date_time_format())->toBe($expected . ' H:i:s');
     $graph = ['graph_start' => 1767323045, 'graph_end' => 1767326645];
     $legend = Php80Modernization\rrdtool_function_format_graph_date($graph);
-    $start = str_replace(':', '\\:', gmdate($expected . ' H:i:s', $graph['graph_start']));
-    $end = str_replace(':', '\\:', gmdate($expected . ' H:i:s', $graph['graph_end']));
+    $start = str_replace(':', '\\:', date($expected . ' H:i:s', $graph['graph_start']));
+    $end = str_replace(':', '\\:', date($expected . ' H:i:s', $graph['graph_end']));
     expect($legend)->toContain('From ' . $start . ' To ' . $end);
-})->with($dateCases);
+})->with($dateCases)->with(['UTC', 'America/Los_Angeles']);
 
 test('date separators retain their fallback behavior', function ($separator, $expected) {
     $GLOBALS['php80_state']['options']['default_datechar'] = $separator;

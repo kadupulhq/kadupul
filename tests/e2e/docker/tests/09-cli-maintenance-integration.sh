@@ -99,6 +99,7 @@ tree_one=$(db_query "SELECT id FROM graph_tree WHERE name='cli-parent-check-one'
 tree_two=$(db_query "SELECT id FROM graph_tree WHERE name='cli-parent-check-two'")
 db_query "INSERT INTO graph_tree_items (graph_tree_id, parent, title) VALUES ($tree_one, 0, 'parent-one'), ($tree_two, 0, 'parent-two')"
 db_query "INSERT INTO graph_tree_items (graph_tree_id, parent, local_graph_id) VALUES ($tree_one, 0, 1)"
+db_query "INSERT INTO graph_tree_items (graph_tree_id,parent,title,host_id,site_id) VALUES ($tree_one,0,'',1,0),($tree_one,0,'site',0,1),($tree_one,0,'',0,0)"
 parent_one=$(db_query "SELECT id FROM graph_tree_items WHERE graph_tree_id=$tree_one AND title='parent-one'")
 parent_two=$(db_query "SELECT id FROM graph_tree_items WHERE graph_tree_id=$tree_two AND title='parent-two'")
 graph_item=$(db_query "SELECT id FROM graph_tree_items WHERE graph_tree_id=$tree_one AND local_graph_id=1")
@@ -111,10 +112,16 @@ root_parent=$(db_query "SELECT parent FROM graph_tree_items WHERE graph_tree_id=
 [[ "$root_parent" == '0' ]] || { echo "FAIL: root node has parent '$root_parent'" >&2; exit 1; }
 
 before=$(db_query "SELECT COUNT(*) FROM graph_tree_items WHERE graph_tree_id=$tree_one")
-for parent in 999999999 "$parent_two" "$graph_item"; do
+invalid_containers=$(db_query "SELECT id FROM graph_tree_items WHERE graph_tree_id=$tree_one AND (host_id>0 OR site_id>0 OR (title='' AND local_graph_id=0))")
+for parent in 999999999 "$parent_two" "$graph_item" $invalid_containers; do
 	if output=$(run_cli add_tree.php --type=node --node-type=header --tree-id="$tree_one" --parent-node="$parent" --name=invalid-child 2>&1); then
 		echo "FAIL: invalid parent $parent unexpectedly succeeded (output: $output)" >&2
 		exit 1
+	fi
+	if [[ "$parent" == '999999999' || "$parent" == "$parent_two" ]]; then
+		grep -q "parent-node $parent does not exist in tree $tree_one" <<<"$output" || { echo "FAIL: missing parent reason absent" >&2; exit 1; }
+	else
+		grep -q "parent-node $parent is not a header in tree $tree_one" <<<"$output" || { echo "FAIL: non-header parent reason absent" >&2; exit 1; }
 	fi
 	if grep -q 'Added Node' <<<"$output"; then
 		echo "FAIL: invalid parent $parent printed a success message" >&2
@@ -127,6 +134,7 @@ if output=$(run_cli add_tree.php --type=node --node-type=header --tree-id=999999
 	echo "FAIL: nonexistent tree unexpectedly succeeded (output: $output)" >&2
 	exit 1
 fi
+grep -q 'Supply an existing --tree-id' <<<"$output" || { echo 'FAIL: missing tree error reason absent' >&2; exit 1; }
 if grep -q 'Added Node' <<<"$output"; then
 	echo "FAIL: nonexistent tree printed a success message" >&2
 	exit 1

@@ -6,6 +6,8 @@ on:
     paths:
       - 'cli/**'
       - 'lib/api_tree.php'
+      - 'lib/api_automation.php'
+      - 'lib/html_tree.php'
       - 'lib/audit.php'
       - 'lib/data_query.php'
       - 'lib/maintenance_cli.php'
@@ -26,6 +28,8 @@ on:
     paths:
       - 'cli/**'
       - 'lib/api_tree.php'
+      - 'lib/api_automation.php'
+      - 'lib/html_tree.php'
       - 'lib/audit.php'
       - 'lib/data_query.php'
       - 'lib/maintenance_cli.php'

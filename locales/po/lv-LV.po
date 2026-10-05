@@ -20806,3 +20806,12 @@ msgstr "Nav VDEF"
 
 #~ msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
 #~ msgstr "Jūs neesat uzticējies šim pakotnes autoram.  Ja vēlaties importēt, atzīmējiet izvēles rūtiņu Automātiski uzticēties autoram"
+
+#: lib/plugins.php:1233
+msgid "Plugin INFO must declare a valid compat version"
+msgstr ""
+
+#: plugins.php:848
+#, php-format
+msgid "Unable to Install Plugin: %s"
+msgstr ""

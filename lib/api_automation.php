@@ -2655,6 +2655,9 @@ function automation_execute_device_create_tree($host_id) {
 			if (cacti_sizeof($matches)) {
 				/* create the bunch of header nodes */
 				$parent = create_all_header_nodes($host_id, $rule);
+				if ($parent === false) {
+					continue;
+				}
 				cacti_log($function . " Device[$host_id], rule: " . $rule['id'] . ', parent: ' . $parent, false, 'AUTOM8 TRACE', POLLER_VERBOSITY_HIGH);
 
 				/* now that all rule items have been executed, add the item itself */
@@ -2712,6 +2715,9 @@ function automation_execute_graph_create_tree($graph_id) {
 			if (cacti_sizeof($matches)) {
 				/* create the bunch of header nodes */
 				$parent = create_all_header_nodes($graph_id, $rule);
+				if ($parent === false) {
+					continue;
+				}
 				cacti_log($function . ' Graph[' . $graph_id . '], Rule: ' . $rule['id'] . ', Parent: ' . $parent, false, 'AUTOM8 TRACE', POLLER_VERBOSITY_HIGH);
 
 				/* now that all rule items have been executed, add the item itself */
@@ -2961,6 +2967,9 @@ function create_all_header_nodes($item_id, $rule) {
 
 
 			$parent_tree_item_id = create_multi_header_node($target, $rule, $tree_item, $parent_tree_item_id);
+			if ($parent_tree_item_id === false) {
+				return false;
+			}
 		}
 	}
 
@@ -2988,6 +2997,9 @@ function create_multi_header_node($object, $rule, $tree_item, $parent_tree_item_
 
 	if ($tree_item['field'] === AUTOMATION_TREE_ITEM_TYPE_STRING) {
 		$parent_tree_item_id = create_header_node($tree_item['search_pattern'], $rule, $tree_item, $parent_tree_item_id);
+		if (!$parent_tree_item_id) {
+			return false;
+		}
 		cacti_log($function . " called - object: '" . $object . "', Header: '" . $tree_item['search_pattern'] . "', hooked at: " . $parent_tree_item_id, false, 'AUTOM8 TRACE', POLLER_VERBOSITY_HIGH);
 	} else {
 		$replacement = automation_string_replace($tree_item['search_pattern'], $tree_item['replace_pattern'], $object);
@@ -2997,6 +3009,9 @@ function create_multi_header_node($object, $rule, $tree_item, $parent_tree_item_
 		for ($j=0; cacti_sizeof($replacement); $j++) {
 			$title = array_shift($replacement);
 			$parent_tree_item_id = create_header_node($title, $rule, $tree_item, $parent_tree_item_id);
+			if (!$parent_tree_item_id) {
+				return false;
+			}
 			cacti_log($function . " - object: '" . $object . "', Header: '" . $title . "', hooked at: " . $parent_tree_item_id, false, 'AUTOM8 TRACE', POLLER_VERBOSITY_HIGH);
 		}
 	}

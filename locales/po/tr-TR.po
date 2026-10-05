@@ -20721,3 +20721,12 @@ msgstr "VDEF yok"
 
 #~ msgid "Variance Outliers"
 #~ msgstr "Varyans Aykırı Değerleri"
+
+#: lib/plugins.php:1233
+msgid "Plugin INFO must declare a valid compat version"
+msgstr ""
+
+#: plugins.php:848
+#, php-format
+msgid "Unable to Install Plugin: %s"
+msgstr ""

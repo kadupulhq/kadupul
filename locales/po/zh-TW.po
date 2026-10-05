@@ -24051,3 +24051,12 @@ msgstr "沒有VDEF"
 #, fuzzy
 #~ msgid "Variance Outliers"
 #~ msgstr "方差異常值"
+
+#: lib/plugins.php:1233
+msgid "Plugin INFO must declare a valid compat version"
+msgstr ""
+
+#: plugins.php:848
+#, php-format
+msgid "Unable to Install Plugin: %s"
+msgstr ""

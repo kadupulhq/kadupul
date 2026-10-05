@@ -20727,3 +20727,12 @@ msgstr "Nessun VDEF"
 
 #~ msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
 #~ msgstr "Non ti sei fidato di questo autore del pacchetto.  Se si desidera importare, selezionare la casella di controllo Considera automaticamente attendibile l'autore"
+
+#: lib/plugins.php:1233
+msgid "Plugin INFO must declare a valid compat version"
+msgstr ""
+
+#: plugins.php:848
+#, php-format
+msgid "Unable to Install Plugin: %s"
+msgstr ""
