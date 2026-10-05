@@ -4,7 +4,7 @@ on:
   push:
     branches: [lts/1.2]
   pull_request:
-    branches: [lts/1.2]
+    branches: [lts/1.2, 'chore/consolidate-lts-*']
 
 permissions:
   contents: read

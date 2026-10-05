@@ -123,6 +123,7 @@ if (cacti_sizeof($parms)) {
 }
 
 print 'NOTE: ' . cacti_sizeof($plugins) . ' Plugins to be acted on.' . PHP_EOL;
+$exit_code = 0;
 
 if (cacti_sizeof($plugins)) {
 	foreach($plugins as $plugin) {
@@ -150,10 +151,13 @@ if (cacti_sizeof($plugins)) {
 
 								print "NOTE: Plugin $plugin enabled." . PHP_EOL;
 							}
-
+						} else {
+							print "ERROR: Plugin '$plugin' installation failed." . PHP_EOL;
+							$exit_code = 1;
 						}
 					} else {
-						print "WARNING: Plugin '$plugin' can not install.  Message is: $message" . PHP_EOL;
+						print "ERROR: Plugin '$plugin' can not install.  Message is: $message" . PHP_EOL;
+						$exit_code = 1;
 					}
 				} else {
 					$installed = true;
@@ -161,11 +165,14 @@ if (cacti_sizeof($plugins)) {
 					print "WARNING: Plugin '$plugin' already installed." . PHP_EOL;
 				}
 			} else {
-				print "WARNING: Plugin '$plugin' missing plugin directory.  Plugin not installed" . PHP_EOL;
+				print "ERROR: Plugin '$plugin' missing plugin directory.  Plugin not installed" . PHP_EOL;
+				$exit_code = 1;
 			}
 
 			if ($installed && $allperms) {
-				plugin_manage_install_allrealms($plugin);
+				if (!plugin_manage_install_allrealms($plugin)) {
+					$exit_code = 1;
+				}
 			}
 		} elseif ($uninstall || $disable || $enable) {
 			if ($disable) {
@@ -186,17 +193,74 @@ if (cacti_sizeof($plugins)) {
 	}
 }
 
+exit($exit_code);
+
 function plugin_manage_install_allrealms($plugin) {
-	print "NOTE: Enabling Plugin '$plugin' permissions for administrative accounts" . PHP_EOL;
+	$admin_user = read_config_option('admin_user');
+
+	$admin_id = is_int($admin_user) || is_string($admin_user) ? (string) $admin_user : '';
+	if (preg_match('/\A[1-9][0-9]*\z/', $admin_id) !== 1
+		|| strlen($admin_id) > 8 || (strlen($admin_id) === 8 && strcmp($admin_id, '16777215') > 0)) {
+		print "ERROR: Could not grant Plugin '$plugin' permissions: configured administrator is invalid." . PHP_EOL;
+
+		return false;
+	}
+
+	$admin = db_fetch_row_prepared('SELECT id
+		FROM user_auth
+		WHERE id = ?',
+		array((int) $admin_user));
+
+	if (empty($admin['id'])) {
+		print "ERROR: Could not grant Plugin '$plugin' permissions: configured administrator was not found." . PHP_EOL;
+
+		return false;
+	}
 
 	$realms = db_fetch_assoc_prepared('SELECT *
 		FROM plugin_realms
 		WHERE plugin = ?',
 		array($plugin));
+	if (!is_array($realms)) {
+		print "ERROR: Could not read Plugin '$plugin' permissions." . PHP_EOL;
+
+		return false;
+	}
+
+	$success = true;
 
 	foreach($realms as $realm) {
-		api_plugin_register_realm($plugin, $realm['file'], $realm['display'], 1);
+		// api_plugin_register_realm stores plugin realm IDs with this legacy offset.
+		$realm_id = (int) $realm['id'] + 100;
+		$granted = db_execute_prepared('REPLACE INTO user_auth_realm
+			(user_id, realm_id)
+			VALUES (?, ?)',
+			array((int) $admin_user, $realm_id));
+
+		if (!$granted) {
+			print "ERROR: Could not grant Plugin '$plugin' permission for realm {$realm['id']}." . PHP_EOL;
+			$success = false;
+
+			continue;
+		}
+
+		$verified = db_fetch_cell_prepared('SELECT 1
+			FROM user_auth_realm
+			WHERE user_id = ?
+			AND realm_id = ?',
+			array((int) $admin_user, $realm_id));
+
+		if (!$verified) {
+			print "ERROR: Could not verify Plugin '$plugin' permission for realm {$realm['id']}." . PHP_EOL;
+			$success = false;
+		}
 	}
+
+	if ($success) {
+		print "NOTE: Enabled Plugin '$plugin' permissions for the configured administrator." . PHP_EOL;
+	}
+
+	return $success;
 }
 
 /**

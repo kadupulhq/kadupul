@@ -16,6 +16,10 @@ db_query() {
 	"${DC[@]}" exec -T cacti-db mariadb -ucactiuser -pcactiuser cacti -Nse "$1"
 }
 
+cleanup_tree_fixtures() {
+	db_query "DELETE FROM graph_tree_items WHERE graph_tree_id IN (SELECT id FROM graph_tree WHERE name LIKE 'cli-parent-check-%'); DELETE FROM graph_tree WHERE name LIKE 'cli-parent-check-%';" || true
+}
+
 expect_cli_failure() {
 	local label="$1"
 	shift
@@ -86,4 +90,54 @@ if [[ "$other_count" != '1' || "$target_count" != '0' ]]; then
 fi
 
 echo '[09] targeted cache rebuild changed only the selected host'
+
+echo '[09] tree CLI rejects missing, foreign, and non-container parents'
+trap cleanup_tree_fixtures EXIT
+cleanup_tree_fixtures
+db_query "INSERT INTO graph_tree (name, sort_type) VALUES ('cli-parent-check-one', 1), ('cli-parent-check-two', 1)"
+tree_one=$(db_query "SELECT id FROM graph_tree WHERE name='cli-parent-check-one'")
+tree_two=$(db_query "SELECT id FROM graph_tree WHERE name='cli-parent-check-two'")
+db_query "INSERT INTO graph_tree_items (graph_tree_id, parent, title) VALUES ($tree_one, 0, 'parent-one'), ($tree_two, 0, 'parent-two')"
+db_query "INSERT INTO graph_tree_items (graph_tree_id, parent, local_graph_id) VALUES ($tree_one, 0, 1)"
+db_query "INSERT INTO graph_tree_items (graph_tree_id,parent,title,host_id,site_id) VALUES ($tree_one,0,'',1,0),($tree_one,0,'site',0,1),($tree_one,0,'',0,0)"
+parent_one=$(db_query "SELECT id FROM graph_tree_items WHERE graph_tree_id=$tree_one AND title='parent-one'")
+parent_two=$(db_query "SELECT id FROM graph_tree_items WHERE graph_tree_id=$tree_two AND title='parent-two'")
+graph_item=$(db_query "SELECT id FROM graph_tree_items WHERE graph_tree_id=$tree_one AND local_graph_id=1")
+
+run_cli add_tree.php --type=node --node-type=header --tree-id="$tree_one" --parent-node="$parent_one" --name=valid-child >/dev/null
+valid_parent=$(db_query "SELECT parent FROM graph_tree_items WHERE graph_tree_id=$tree_one AND title='valid-child'")
+[[ "$valid_parent" == "$parent_one" ]] || { echo "FAIL: valid nested node has parent '$valid_parent'" >&2; exit 1; }
+run_cli add_tree.php --type=node --node-type=header --tree-id="$tree_one" --parent-node=0 --name=root-child >/dev/null
+root_parent=$(db_query "SELECT parent FROM graph_tree_items WHERE graph_tree_id=$tree_one AND title='root-child'")
+[[ "$root_parent" == '0' ]] || { echo "FAIL: root node has parent '$root_parent'" >&2; exit 1; }
+
+before=$(db_query "SELECT COUNT(*) FROM graph_tree_items WHERE graph_tree_id=$tree_one")
+invalid_containers=$(db_query "SELECT id FROM graph_tree_items WHERE graph_tree_id=$tree_one AND (host_id>0 OR site_id>0 OR (title='' AND local_graph_id=0))")
+for parent in 999999999 "$parent_two" "$graph_item" $invalid_containers; do
+	if output=$(run_cli add_tree.php --type=node --node-type=header --tree-id="$tree_one" --parent-node="$parent" --name=invalid-child 2>&1); then
+		echo "FAIL: invalid parent $parent unexpectedly succeeded (output: $output)" >&2
+		exit 1
+	fi
+	if [[ "$parent" == '999999999' || "$parent" == "$parent_two" ]]; then
+		grep -q "parent-node $parent does not exist in tree $tree_one" <<<"$output" || { echo "FAIL: missing parent reason absent" >&2; exit 1; }
+	else
+		grep -q "parent-node $parent is not a header in tree $tree_one" <<<"$output" || { echo "FAIL: non-header parent reason absent" >&2; exit 1; }
+	fi
+	if grep -q 'Added Node' <<<"$output"; then
+		echo "FAIL: invalid parent $parent printed a success message" >&2
+		exit 1
+	fi
+done
+after=$(db_query "SELECT COUNT(*) FROM graph_tree_items WHERE graph_tree_id=$tree_one")
+[[ "$before" == "$after" ]] || { echo "FAIL: invalid parent requests inserted nodes ($before -> $after)" >&2; exit 1; }
+if output=$(run_cli add_tree.php --type=node --node-type=header --tree-id=999999999 --parent-node=0 --name=invalid-tree 2>&1); then
+	echo "FAIL: nonexistent tree unexpectedly succeeded (output: $output)" >&2
+	exit 1
+fi
+grep -q 'Supply an existing --tree-id' <<<"$output" || { echo 'FAIL: missing tree error reason absent' >&2; exit 1; }
+if grep -q 'Added Node' <<<"$output"; then
+	echo "FAIL: nonexistent tree printed a success message" >&2
+	exit 1
+fi
+echo 'PASS: tree CLI accepts root and valid nested placement and rejects invalid parents and trees without mutation'
 echo 'PASS: Docker CLI maintenance integration coverage'

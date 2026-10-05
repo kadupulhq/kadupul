@@ -1,0 +1,3 @@
+# Script Server security in 1.2.32
+
+Script Server 1.2.32 intentionally rejects unrelated application/plugin files and functions that are not declared by the selected script. This is the #521 security boundary: selecting an otherwise permitted script must not authorize a function already loaded from another file. Existing configured scripts_path and symlinked script roots remain supported. Wrappers must define the exported poller entry function in the selected script and may call included helpers from that function. Security refusals return U, preserve the request loop, and log the scripts-directory or selected-file reason rather than the historical broad base-path reason.

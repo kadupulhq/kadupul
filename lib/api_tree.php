@@ -816,6 +816,23 @@ function api_tree_item_save($id, $tree_id, $type, $parent_tree_item_id, $title, 
 	input_validate_input_number($tree_id);
 	input_validate_input_number($parent_tree_item_id);
 
+	if (!db_fetch_cell_prepared('SELECT id FROM graph_tree WHERE id = ?', array($tree_id))) {
+		raise_message(2);
+		return false;
+	}
+
+	if ($parent_tree_item_id > 0) {
+		$parent = db_fetch_row_prepared('SELECT title, local_graph_id, host_id, site_id
+			FROM graph_tree_items
+			WHERE id = ? AND graph_tree_id = ?', array($parent_tree_item_id, $tree_id));
+
+		if (!cacti_sizeof($parent) || $parent['title'] === '' || $parent['title'] === null
+			|| $parent['local_graph_id'] > 0 || $parent['host_id'] > 0 || $parent['site_id'] > 0) {
+			raise_message(2);
+			return false;
+		}
+	}
+
 	//api_tree_get_lock('tree-lock', 10);
 
 	if ($local_graph_id > 0) {

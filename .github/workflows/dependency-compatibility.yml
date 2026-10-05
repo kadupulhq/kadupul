@@ -9,7 +9,7 @@ on:
       - '.github/actions/setup-php-composer/**'
       - '.github/workflows/dependency-compatibility.yml'
   pull_request:
-    branches: ['1.2.x', 'lts/1.2']
+    branches: ['1.2.x', 'lts/1.2', 'chore/consolidate-lts-*']
     paths:
       - composer.json
       - composer.lock
