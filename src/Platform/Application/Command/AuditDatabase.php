@@ -96,9 +96,9 @@ final readonly class AuditDatabase
         // All modes use the same comparison rules; this flag controls only
         // whether the domain returns human-readable finding lines.
         $output = $mode === AuditMode::Report;
-        $liveNames = array_map(static fn(LiveTable $table): string => $table->name, $catalog->tables());
+        $liveNames = array_map(static fn(LiveTable $table): string => strtolower($table->name), $catalog->tables());
         $missing = array_values(array_filter($baseline->tableNames(), static fn(string $name): bool => !in_array($name, self::BASELINE_TABLES, true)
-            && !in_array($name, $liveNames, true)));
+            && !in_array(strtolower($name), $liveNames, true)));
         $tables = array_map(static fn(LiveTable $table): TableAudit => TableAudit::of($table, $baseline, $catalog->plugins, $output), $catalog->tables());
         foreach ($missing as $name) {
             $tables[] = TableAudit::missing($name);

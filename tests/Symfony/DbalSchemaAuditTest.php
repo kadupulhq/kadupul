@@ -255,6 +255,38 @@ final class DbalSchemaAuditTest extends TestCase
         }
     }
 
+    public function testLegacyBaselineRepairPreservesTheLiveCharacterCollation(): void
+    {
+        $db = $this->mariaDb();
+        try {
+            $db->executeStatement('CREATE TABLE ' . self::PROBE . " (name varchar(20) COLLATE utf8mb4_bin NOT NULL DEFAULT 'old') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+            $db->executeStatement('INSERT INTO ' . self::PROBE . " VALUES ('Alpha'), ('alpha')");
+            $adapter = $this->audit($db);
+            $catalog = $adapter->catalog(DatabaseTarget::Local);
+            $table = $catalog->table(self::PROBE);
+            self::assertNotNull($table);
+            // Eight-field legacy baselines omitted per-column collation.
+            $baseline = new AuditBaseline([new BaselineColumn(self::PROBE, 1, 'name', 'varchar(30)', 'NO', '', 'new', '')], []);
+            $audit = TableAudit::of($table, $baseline, $catalog->plugins, true);
+            $alter = $audit->alter($table->status);
+            self::assertNotNull($alter);
+            $statement = $adapter->statement(DatabaseTarget::Local, $alter);
+            self::assertNotNull($statement);
+            self::assertStringContainsString('COLLATE `utf8mb4_bin`', $statement);
+            self::assertTrue($adapter->alter(DatabaseTarget::Local, $alter, $table));
+            $column = $db->fetchAssociative('SHOW FULL COLUMNS FROM ' . self::PROBE);
+            self::assertSame('utf8mb4_bin', $column['Collation']);
+            self::assertSame('varchar(30)', $column['Type']);
+            self::assertSame('new', trim($column['Default'], "'"));
+            self::assertSame(1, (int) $db->fetchOne('SELECT COUNT(*) FROM ' . self::PROBE . " WHERE name = 'Alpha'"));
+            $updated = $adapter->catalog(DatabaseTarget::Local)->table(self::PROBE);
+            self::assertNotNull($updated);
+            self::assertSame([], TableAudit::of($updated, $baseline, $catalog->plugins, true)->clauses);
+        } finally {
+            $this->dropAll($db);
+        }
+    }
+
     /**
      * The original's lookups failed quietly and matched nothing here; the
      * adapter lets the fault through, so the audit fails instead of treating

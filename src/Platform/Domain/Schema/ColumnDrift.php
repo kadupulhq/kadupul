@@ -38,6 +38,15 @@ final class ColumnDrift
                 continue;
             }
             $dbc = $found->row();
+            // A legacy baseline did not record per-column collation. MODIFY
+            // resets omitted attributes, so retain the actual text collation
+            // when changing another attribute of a compatible character type.
+            $targetType = ColumnType::parse((string) $dbc['table_type']);
+            if ($dbc['table_collation'] === null && is_string($c['Collation'] ?? null)
+                && in_array($targetType?->base, [ColumnBase::Char, ColumnBase::Varchar, ColumnBase::Tinytext,
+                    ColumnBase::Text, ColumnBase::Mediumtext, ColumnBase::Longtext], true)) {
+                $dbc['table_collation'] = $c['Collation'];
+            }
             // The one departure from the original: a column wider than the
             // audit schema lists is never modified, since the MODIFY would
             // narrow it back.
