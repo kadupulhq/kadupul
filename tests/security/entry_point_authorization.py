@@ -441,7 +441,10 @@ def main():
             counted += 1
             response = Client(base).request(path)
             observed.setdefault('guest realtime without realm', []).append(path)
-            if response['status'] != 403 or response['body'].strip():
+            # The default action reports the existing denial message; init
+            # refuses silently. Neither response may render realtime controls.
+            denied_body = 'Permission Denied' if path == 'graph_realtime.php' else ''
+            if response['status'] != 403 or response['body'].strip() != denied_body or response['admin_layout']:
                 failures.append('guest realtime without realm was not stopped before rendering: ' + path)
         rig.sql("INSERT INTO user_auth_realm (user_id, realm_id) SELECT id, 25 FROM user_auth WHERE username = 'guest';")
         counted += 1
