@@ -84,6 +84,11 @@ if (defined('INPUT_STRING_VALIDATOR_TEST_COVERAGE')) {
 if (defined('CLOG_LINKS_NATIVE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/clog_webapi.php');
 }
+if (defined('TREE_CONFIRMATION_TEST_COVERAGE')) {
+    foreach (array('tree.php', 'lib/auth.php', 'lib/html_utility.php') as $coverageFile) {
+        $coverageFilter->includeFile($coverageRoot . '/' . $coverageFile);
+    }
+}
 if (defined('AUTH_POLICY_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/graph_item_choices.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');

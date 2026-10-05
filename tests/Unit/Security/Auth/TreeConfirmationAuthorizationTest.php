@@ -1,56 +1,82 @@
 <?php
 
+declare(strict_types=1);
+
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-test('tree bulk confirmation only looks up names of authorized trees', function () {
+require_once __DIR__ . '/../../../Helpers/PhpSource.php';
+require_once __DIR__ . '/../../../Helpers/NativeChildCoverageEvidence.php';
+require_once __DIR__ . '/../../../Helpers/TreeConfirmationCoverageRegistration.php';
+
+function runTreeConfirmationScenario(array $scenario, $coverage = null): array
+{
     $root = dirname(__DIR__, 4);
-    $dir = sys_get_temp_dir() . '/tree-confirm-' . bin2hex(random_bytes(8));
-    mkdir($dir . '/include', 0700, true);
-    file_put_contents($dir . '/include/auth.php', '<?php');
-    symlink($root . '/lib', $dir . '/lib');
-    $program = <<<'PHP'
-function csrf_startup() {
-    csrf_conf('rewrite', false);
-    csrf_conf('defer', true);
-    csrf_conf('auto-session', false);
-    csrf_conf('secret', 'isolated-tree-confirm-secret');
-}
-require $argv[1] . '/include/vendor/csrf/csrf-magic.php';
-require $argv[1] . '/lib/html_utility.php';
-require $argv[1] . '/include/global_constants.php';
-function __($value) { return $value; }
-function __x($context, $value) { return $value; }
-function read_config_option($name) { return ''; }
-function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
-function cacti_authorize_resource($user, $resource, $type) { return $user === 42 && $resource === 7 && $type === 'graph_tree'; }
-function db_fetch_cell_prepared($sql, $params = array()) { echo 'LOOKUP:' . implode(',', $params) . ';'; return 'tree'; }
-function top_header() { echo 'CONFIRM'; exit; }
-function get_current_page() { return 'tree.php'; }
-function input_validate_input_number($value) {}
-function html_escape($value) { return $value; }
-session_id('tree-confirm-test');
-$_SESSION = array('sess_user_id' => 42);
-$_SERVER['REQUEST_METHOD'] = 'POST';
-$_REQUEST = array('action' => 'actions', 'drp_action' => '1', 'chk_7' => 'on', 'chk_8' => 'on');
-$_POST = $_REQUEST;
-$_GET = array();
-$_POST['__csrf_magic'] = csrf_get_tokens();
-require $argv[1] . '/tree.php';
-PHP;
+    $directory = sys_get_temp_dir() . '/tree-confirm-' . bin2hex(random_bytes(8));
+    if (!mkdir($directory, 0700)) throw new RuntimeException('Cannot create tree fixture directory.');
     try {
-        $process = proc_open(array(PHP_BINARY, '-r', $program, $root), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $dir);
-        $stdout = stream_get_contents($pipes[1]);
-        $stderr = stream_get_contents($pipes[2]);
-        fclose($pipes[1]);
-        fclose($pipes[2]);
-        expect(proc_close($process))->toBe(0)
-            ->and($stderr)->toBe('')
-            ->and($stdout)->toBe('LOOKUP:7;CONFIRM');
+        $encoded = json_encode($scenario, JSON_THROW_ON_ERROR);
+        $command = array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $root . '/tests/Fixtures/tree-confirmation-native.php', $encoded, $directory);
+        if ($coverage !== null) $command[] = 'coverage';
+        $result = test_php_run($command);
+        \PHPUnit\Framework\Assert::assertSame(0, $result['status'], $result['err'] . $result['out']);
+        expect($result['err'])->toBe('');
+        if ($coverage !== null) {
+            $reports = glob($directory . '/*.coverage');
+            expect($reports)->toHaveCount(1);
+            $arguments = array($reports[0], $root, 'tests/Fixtures/tree-confirmation-native.php', $encoded, TreeConfirmationCoverageRegistration::SOURCES, TreeConfirmationCoverageRegistration::MARKERS, TreeConfirmationCoverageRegistration::HITS);
+            $child = NativeChildCoverageEvidence::load(...$arguments);
+            static $checked = false;
+            if (!$checked) {
+                expect(NativeChildCoverageEvidence::verifyRejections(...array_merge($arguments, array('lib/rrd.php'))))->toBe(count(TreeConfirmationCoverageRegistration::SOURCES) + 12);
+                $checked = true;
+            }
+            $coverage->merge($child);
+        }
+        return json_decode($result['out'], true, 512, JSON_THROW_ON_ERROR);
     } finally {
-        unlink($dir . '/lib');
-        unlink($dir . '/include/auth.php');
-        rmdir($dir . '/include');
-        rmdir($dir);
+        foreach (glob($directory . '/*.coverage*') as $file) unlink($file);
+        if (is_link($directory . '/lib')) unlink($directory . '/lib');
+        if (is_file($directory . '/include/auth.php')) unlink($directory . '/include/auth.php');
+        if (is_dir($directory . '/include')) rmdir($directory . '/include');
+        rmdir($directory);
     }
-});
+}
+
+test('tree confirmation renders persisted ownership and submits exactly the admitted ids', function (int $action, bool $admin) {
+    $state = runTreeConfirmationScenario(array('action' => $action, 'ids' => [7,8], 'admin' => $admin), $this->getTestResultObject()->getCodeCoverage());
+    expect($state['lookups'])->toBe($admin ? [7,8] : [7])->and($state['writes'])->toBe([])->and($state['messages'])->toBe([]);
+    $document = new DOMDocument();
+    $document->loadHTML($state['html'], LIBXML_NOERROR | LIBXML_NOWARNING);
+    $xpath = new DOMXPath($document);
+    $fields = $xpath->query('//form[@method="post" and @action="tree.php"]//input[@name="selected_items"]');
+    expect($fields->length)->toBe(1);
+    $ids = unserialize($fields->item(0)->getAttribute('value'), array('allowed_classes' => false));
+    expect($ids)->toBe($admin ? ['7','8'] : ['7']);
+    expect($xpath->query('//input[@type="submit"]')->length)->toBe(1);
+    if (!$admin) expect($state['html'])->not->toContain('Foreign secret tree');
+    $submitted = runTreeConfirmationScenario(array('action' => $action, 'ids' => $ids, 'admin' => $admin, 'submit' => true), $this->getTestResultObject()->getCodeCoverage());
+    $trees = array_column($submitted['trees'], null, 'id');
+    if ($action === 1) {
+        expect(array_keys($trees))->toBe($admin ? [] : [8])->and($submitted['items'])->toBe($admin ? [] : [80]);
+    } else {
+        foreach ($admin ? [7,8] : [7] as $id) {
+            expect($trees[$id][$action === 4 ? 'locked' : 'enabled'])->toBe($action === 4 ? 0 : ($action === 2 ? 'on' : 'off'));
+            expect($trees[$id]['modified_by'])->toBe(42);
+        }
+        if (!$admin) expect($trees[8]['modified_by'])->toBeNull()->and($trees[8]['locked'])->toBe(1);
+    }
+})->with([1,2,3,4])->with([false,true]);
+
+test('all denied tree confirmations disclose no names and offer no hidden selection', function (int $action) {
+    $state = runTreeConfirmationScenario(array('action' => $action, 'ids' => [8,999]), $this->getTestResultObject()->getCodeCoverage());
+    expect($state['lookups'])->toBe([])->and($state['writes'])->toBe([])->and($state['messages'])->toBe([40]);
+    expect($state['html'])->not->toContain('Foreign secret tree')->not->toContain('selected_items')->not->toContain("type='submit'");
+    expect(array_column($state['trees'], 'id'))->toBe([7,8])->and($state['items'])->toBe([70,80]);
+})->with([1,2,3,4]);
+
+test('forged tree submissions recheck persisted ownership before every bulk action', function (int $action) {
+    $state = runTreeConfirmationScenario(array('action' => $action, 'ids' => [8,999], 'submit' => true), $this->getTestResultObject()->getCodeCoverage());
+    expect($state['lookups'])->toBe([])->and($state['writes'])->toBe([])->and($state['settings'])->toBe([]);
+    expect(array_column($state['trees'], 'id'))->toBe([7,8])->and($state['items'])->toBe([70,80]);
+})->with([1,2,3,4]);
