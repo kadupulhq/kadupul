@@ -473,12 +473,15 @@ test('database upgrade reports rejected versions and completed migrations accura
     $cases = array(
         array('1.2.999', 1, 'Invalid', false, 'none'),
         array('0.6.0', 1, '0.6.x database', false, 'none'),
-        array('', 1, 'new database', false, 'none'),
+        array('', 1, '0.6.x database', false, 'none'),
         array($targetVersion, 0, 'already up to date', false, 'none'),
         array('1.2.30', 0, 'Upgrading from v1.2.30', $targetVersion, 'success'),
         array('1.2.30', 0, 'Upgrading from v1.2.30', $targetVersion, 'missing'),
         array('1.2.30', 1, 'fixture failure', '1.2.30.1', 'step-failure'),
         array('1.2.30', 1, 'Upgrading from v1.2.30', false, 'write-failure'),
+        array('1.2.30', 1, 'Upgrading from v1.2.30', '1.2.30.1', 'inner-write-failure'),
+        array('1.2.30', 1, 'upgrade function', '1.2.30.1', 'missing-function'),
+        array('1.2.30', 0, 'Upgrading from v1.2.30', $targetVersion, 'warning'),
     );
 
     foreach ($cases as [$version, $expectedStatus, $expectedOutput, $expectedSchemaVersion, $migrationOutcome]) {
@@ -488,7 +491,9 @@ test('database upgrade reports rejected versions and completed migrations accura
         }
         try {
             copy($root . '/cli/upgrade_database.php', $dir . '/cli/upgrade_database.php');
-            symlink($root . '/lib/rrd_maintenance.php', $dir . '/lib/rrd_maintenance.php');
+            if (!@symlink($root . '/lib/rrd_maintenance.php', $dir . '/lib/rrd_maintenance.php')) {
+                expect(copy($root . '/lib/rrd_maintenance.php', $dir . '/lib/rrd_maintenance.php'))->toBeTrue();
+            }
             foreach (array('lib/data_query.php', 'lib/poller.php', 'lib/utility.php', 'install/functions.php') as $file) {
                 file_put_contents($dir . '/' . $file, '<?php');
             }
@@ -498,7 +503,10 @@ test('database upgrade reports rejected versions and completed migrations accura
                 $body = $migrationOutcome === 'step-failure'
                     ? '$GLOBALS["database_upgrade_status"][' . var_export($targetVersion, true) . '] = array(array("status" => DB_STATUS_ERROR, "error" => "fixture failure", "sql" => "ALTER TABLE fixture"));'
                     : '';
-                file_put_contents($dir . '/install/upgrades/' . $upgradeFile . '.php', '<?php function ' . $upgradeFunction . '() {' . $body . '}');
+                if ($migrationOutcome === 'warning') {
+                    $body = '$GLOBALS["database_upgrade_status"][' . var_export($targetVersion, true) . '] = array(array("status" => DB_STATUS_WARNING, "error" => "fixture warning", "sql" => "ALTER TABLE fixture"));';
+                }
+                file_put_contents($dir . '/install/upgrades/' . $upgradeFile . '.php', $migrationOutcome === 'missing-function' ? '<?php' : '<?php function ' . $upgradeFunction . '() {' . $body . '}');
             }
             $fixture = '<?php $config = ' . var_export(array(
                 'base_path' => $dir,
@@ -512,7 +520,9 @@ test('database upgrade reports rejected versions and completed migrations accura
                 . 'define("DB_STATUS_SKIPPED", 2);'
                 . 'define("DB_STATUS_ERROR", 0);'
                 . 'define("DB_STATUS_SUCCESS", 1);'
+                . 'define("DB_STATUS_WARNING", 3);'
                 . '$GLOBALS["fail_version_write"] = ' . var_export($migrationOutcome === 'write-failure', true) . ';'
+                . '$GLOBALS["fail_inner_write"] = ' . var_export($migrationOutcome === 'inner-write-failure', true) . ';'
                 . 'function __($message) { return $message; }'
                 . 'function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }'
                 . 'function clean_up_lines($value) { return $value; }'
@@ -520,9 +530,11 @@ test('database upgrade reports rejected versions and completed migrations accura
                 . 'function get_cacti_version() { return $GLOBALS["fixture_version"]; }'
                 . 'function cacti_version_compare($left, $right, $operator) { return version_compare($left, $right, $operator); }'
                 . 'function db_fetch_cell_prepared(...$args) { return "InnoDB"; }'
-                . 'function db_execute_prepared(...$args) { if ($GLOBALS["fail_version_write"]) { return false; } file_put_contents(dirname(__DIR__) . "/schema-write", $args[1][0]); return true; }';
+                . 'function db_execute_prepared(...$args) { if ($GLOBALS["fail_version_write"] || ($GLOBALS["fail_inner_write"] && $args[1][0] === CACTI_VERSION)) { return false; } file_put_contents(dirname(__DIR__) . "/schema-write", $args[1][0]); return true; }';
             file_put_contents($dir . '/include/cli_check.php', $fixture);
-            $process = proc_open(array(PHP_BINARY, $dir . '/cli/upgrade_database.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+            $arguments = rrd_cli_coverage_arguments($this, $dir, $root, 'upgrade_database.php');
+            $process = proc_open(array_merge(array(PHP_BINARY), $arguments, array($dir . '/cli/upgrade_database.php')), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+            expect(is_resource($process))->toBeTrue();
             $output = stream_get_contents($pipes[1]);
             $error = stream_get_contents($pipes[2]);
             fclose($pipes[1]);
@@ -534,10 +546,10 @@ test('database upgrade reports rejected versions and completed migrations accura
             }
             expect($actualStatus)->toBe($expectedStatus)
                 ->and($output)->toContain($expectedOutput)
-                ->and($error)->toBe('')
+                ->and($error)->toBe(in_array($migrationOutcome, array('write-failure', 'inner-write-failure'), true) ? 'ERROR: Could not persist schema version ' . ($migrationOutcome === 'write-failure' ? '1.2.30.1' : $targetVersion) . PHP_EOL : '')
                 ->and(file_exists($dir . '/schema-write') ? file_get_contents($dir . '/schema-write') : false)->toBe($expectedSchemaVersion);
         } finally {
-            rrd_cli_fixture_remove($dir);
+            try { rrd_cli_merge_coverage($this, $dir); } finally { rrd_cli_fixture_remove($dir); }
         }
     }
 });

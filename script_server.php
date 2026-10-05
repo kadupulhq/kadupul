@@ -290,10 +290,16 @@ while (1) {
 			 * script file, so the path guard cannot be gated on the function
 			 * being undefined. include_once() is idempotent, so re-running it
 			 * on cached entries is a no-op. Script Server methods are confined
-			 * to the installation's scripts directory. */
+			 * to the installation's scripts directory and configured scripts_path. */
 			$real_include = realpath($include_file);
 			$script_root = realpath($config['base_path'] . DIRECTORY_SEPARATOR . 'scripts');
 			$allowed_roots = ($script_root === false) ? [] : [$script_root];
+			if (isset($config['scripts_path']) && is_string($config['scripts_path'])) {
+				$configured_root = realpath($config['scripts_path']);
+				if ($configured_root !== false && is_dir($configured_root)) {
+					$allowed_roots[] = $configured_root;
+				}
+			}
 
 			$path_ok = script_server_path_is_allowed($real_include, $allowed_roots);
 

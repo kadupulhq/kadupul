@@ -1,0 +1,50 @@
+name: Native Script Server dispatch
+on:
+  pull_request:
+    branches: [lts/1.2, 'chore/consolidate-lts-*']
+    paths:
+      - 'script_server.php'
+      - 'include/global.php'
+      - 'tests/Unit/Scripts/ScriptServerDispatchNativeTest.php'
+      - 'tests/fixtures/rrd-process-coverage.php'
+      - 'tests/composer.json'
+      - 'tests/composer.lock'
+      - 'tests/bootstrap-unit.php'
+      - 'tests/Pest.php'
+      - '.github/workflows/script-server-dispatch.yml'
+  push:
+    branches: [lts/1.2]
+    paths:
+      - 'script_server.php'
+      - 'include/global.php'
+      - 'tests/Unit/Scripts/ScriptServerDispatchNativeTest.php'
+      - 'tests/fixtures/rrd-process-coverage.php'
+      - 'tests/composer.json'
+      - 'tests/composer.lock'
+      - 'tests/bootstrap-unit.php'
+      - 'tests/Pest.php'
+      - '.github/workflows/script-server-dispatch.yml'
+permissions:
+  contents: read
+concurrency:
+  group: script-server-dispatch-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  windows:
+    name: Native dispatch Windows PHP 8.4
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240
+        with:
+          php-version: '8.4'
+          coverage: none
+      - name: Install locked test dependencies
+        working-directory: tests
+        run: composer install --no-interaction --no-progress --prefer-dist
+      - name: Exercise case normalization, symlinked roots, and the native dispatch loop
+        working-directory: tests
+        run: php vendor/bin/pest --configuration phpunit-unit.xml Unit/Scripts/ScriptServerDispatchNativeTest.php

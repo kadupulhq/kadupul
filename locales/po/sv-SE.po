@@ -20697,3 +20697,12 @@ msgstr "Inga VDEFs"
 
 #~ msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
 #~ msgstr "Du har inte litat på den här paketförfattaren.  Om du vill importera, markera kryssrutan Lita automatiskt på författare"
+
+#: lib/plugins.php:1233
+msgid "Plugin INFO must declare a valid compat version"
+msgstr ""
+
+#: plugins.php:848
+#, php-format
+msgid "Unable to Install Plugin: %s"
+msgstr ""

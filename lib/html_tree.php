@@ -53,6 +53,8 @@ function grow_dropdown_tree($tree_id, $parent = 0, $form_name = '', $selected_tr
 		WHERE gti.graph_tree_id = ?
 		AND gti.host_id = 0
 		AND gti.local_graph_id = 0
+		AND gti.site_id = 0
+		AND gti.title IS NOT NULL AND gti.title <> \'\'
 		AND parent = ?
 		ORDER BY parent, position',
 		array($tree_id, $parent));

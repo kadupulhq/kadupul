@@ -165,7 +165,7 @@ if (cacti_sizeof($plugins)) {
 					print "WARNING: Plugin '$plugin' already installed." . PHP_EOL;
 				}
 			} else {
-				print "WARNING: Plugin '$plugin' missing plugin directory.  Plugin not installed" . PHP_EOL;
+				print "ERROR: Plugin '$plugin' missing plugin directory.  Plugin not installed" . PHP_EOL;
 				$exit_code = 1;
 			}
 
@@ -198,7 +198,9 @@ exit($exit_code);
 function plugin_manage_install_allrealms($plugin) {
 	$admin_user = read_config_option('admin_user');
 
-	if (!is_numeric($admin_user) || (int) $admin_user < 1) {
+	$admin_id = is_int($admin_user) || is_string($admin_user) ? (string) $admin_user : '';
+	if (preg_match('/\A[1-9][0-9]*\z/', $admin_id) !== 1
+		|| strlen($admin_id) > 8 || (strlen($admin_id) === 8 && strcmp($admin_id, '16777215') > 0)) {
 		print "ERROR: Could not grant Plugin '$plugin' permissions: configured administrator is invalid." . PHP_EOL;
 
 		return false;
@@ -219,10 +221,16 @@ function plugin_manage_install_allrealms($plugin) {
 		FROM plugin_realms
 		WHERE plugin = ?',
 		array($plugin));
+	if (!is_array($realms)) {
+		print "ERROR: Could not read Plugin '$plugin' permissions." . PHP_EOL;
+
+		return false;
+	}
 
 	$success = true;
 
 	foreach($realms as $realm) {
+		// api_plugin_register_realm stores plugin realm IDs with this legacy offset.
 		$realm_id = (int) $realm['id'] + 100;
 		$granted = db_execute_prepared('REPLACE INTO user_auth_realm
 			(user_id, realm_id)
