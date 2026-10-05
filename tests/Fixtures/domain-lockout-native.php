@@ -11,7 +11,7 @@ if (PHP_SAPI !== 'cli') {
 $root = dirname(__DIR__, 2);
 require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
 if (getenv('DOMAIN_LOCKOUT_COVERAGE_DIRECTORY')) {
-    $sources = array('tests/Unit/HardeningAuth2026RegressionTest.php', 'composer.lock', 'tests/composer.lock', 'tests/Fixtures/domain-lockout-native.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/auth.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
+    $sources = array('tests/Unit/HardeningAuth2026RegressionTest.php', 'composer.lock', 'tests/composer.lock', 'tests/Fixtures/domain-lockout-native.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/auth.php', 'lib/graph_item_choices.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
     $scenario = json_encode(array('code' => $argv[1], 'text' => $argv[2]), JSON_THROW_ON_ERROR);
     $GLOBALS['nativeCoverageEvidence'] = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/domain-lockout-native.php', $scenario, $sources);
 }
