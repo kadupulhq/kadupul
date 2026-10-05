@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 09:42-0700\n"
+"POT-Creation-Date: 2026-10-05 10:19-0700\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -53,7 +53,7 @@ msgstr "This program is distributed in the hope that it will be useful, but WITH
 #: data_templates.php:19 data_templates.php:791 gprint_presets.php:12
 #: graph_templates.php:22 graph_templates.php:517 graphs.php:31
 #: host_templates.php:20 host_templates.php:485 host_templates.php:542
-#: include/global_arrays.php:1654 include/global_settings.php:232
+#: include/global_arrays.php:1655 include/global_settings.php:232
 #: lib/api_automation.php:1323 lib/api_automation.php:1386
 #: lib/api_automation.php:1457 lib/html.php:1546 lib/html_form.php:1397
 #: lib/html_reports.php:1937 managers.php:13 pollers.php:18 tree.php:1688
@@ -433,8 +433,8 @@ msgstr "खोजें"
 #: aggregate_graphs.php:1587 color_templates.php:680 data_sources.php:1995
 #: data_sources.php:2134 graph_view.php:488 graph_view.php:739
 #: graph_view.php:803 graphs.php:2069 graphs.php:2268
-#: include/global_arrays.php:993 include/global_arrays.php:1229
-#: include/global_arrays.php:2014 lib/api_automation.php:283 lib/html.php:1996
+#: include/global_arrays.php:994 include/global_arrays.php:1230
+#: include/global_arrays.php:2015 lib/api_automation.php:283 lib/html.php:1996
 #: lib/html.php:2065 lib/html_graph.php:197 lib/html_tree.php:1022
 #: lib/html_tree.php:1378 tree.php:917 tree.php:2366 user_admin.php:801
 #: user_admin.php:1073 user_admin.php:2347 user_group_admin.php:940
@@ -596,12 +596,12 @@ msgid " [ Custom Graphs List Applied - Clear to Reset ]"
 msgstr "[कस्टम ग्राफ सूची लागू - सूची से फ़िल्टर करें]"
 
 #: aggregate_graphs.php:1547 aggregate_graphs.php:1653
-#: include/global_arrays.php:2766
+#: include/global_arrays.php:2767
 msgid "Aggregate Graphs"
 msgstr "सकल रेखांकन"
 
 #: aggregate_graphs.php:1562 data_debug.php:1085 data_sources.php:1714
-#: graph_view.php:699 graphs.php:2005 include/global_arrays.php:2894
+#: graph_view.php:699 graphs.php:2005 include/global_arrays.php:2895
 #: include/global_settings.php:610 lib/api_automation.php:446
 #: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:381
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:59
@@ -633,9 +633,9 @@ msgstr "कोई भी@ label"
 #: data_debug.php:1090 data_sources.php:1086 data_sources.php:1719
 #: data_sources.php:2050 data_templates.php:1323 graph_templates_items.php:53
 #: graphs.php:1535 graphs.php:1544 graphs.php:2010 graphs_items.php:271
-#: graphs_items.php:391 include/global_arrays.php:523
-#: include/global_arrays.php:581 include/global_arrays.php:673
-#: include/global_arrays.php:885 include/global_arrays.php:1743
+#: graphs_items.php:391 include/global_arrays.php:524
+#: include/global_arrays.php:582 include/global_arrays.php:674
+#: include/global_arrays.php:886 include/global_arrays.php:1744
 #: include/global_form.php:574 include/global_form.php:883
 #: include/global_form.php:891 include/global_form.php:899
 #: include/global_form.php:938 include/global_form.php:945
@@ -713,13 +713,13 @@ msgid "Aggregate Template [new]"
 msgstr "सकल टेम्पलेट [नया]"
 
 #: aggregate_templates.php:598 aggregate_templates.php:697
-#: include/global_arrays.php:2748
+#: include/global_arrays.php:2749
 msgid "Aggregate Templates"
 msgstr "अलग-अलग टेम्प्लेट"
 
 #: aggregate_templates.php:612 automation_templates.php:399
 #: automation_templates.php:489 color_templates.php:685
-#: include/global_arrays.php:1002 include/global_arrays.php:1066
+#: include/global_arrays.php:1003 include/global_arrays.php:1067
 #: lib/installer.php:2738 user_admin.php:2365 user_group_admin.php:2160
 msgid "Templates"
 msgstr "टेम्पलेट्स"
@@ -750,7 +750,7 @@ msgid "Graphs Using"
 msgstr "रेखांकन का उपयोग करना"
 
 #: aggregate_templates.php:709 graphs.php:2064 host_templates.php:730
-#: include/global_arrays.php:958 include/global_arrays.php:1363
+#: include/global_arrays.php:959 include/global_arrays.php:1364
 #: include/global_form.php:1399 include/global_form.php:1635
 #: lib/html_reports.php:1181 tree.php:1944
 msgid "Graph Template"
@@ -931,7 +931,7 @@ msgstr "पासवर्ड"
 msgid "Local"
 msgstr "स्थानीय"
 
-#: auth_login.php:364 include/global_arrays.php:873 lib/auth.php:1047
+#: auth_login.php:364 include/global_arrays.php:874 lib/auth.php:1047
 #: lib/auth.php:1052
 msgid "LDAP"
 msgstr "एलडीएपी"
@@ -960,18 +960,18 @@ msgstr "सामान्य"
 msgid "User Account Details"
 msgstr "उपयोगकर्ता खाता विवरण"
 
-#: auth_profile.php:313 include/global_arrays.php:857
+#: auth_profile.php:313 include/global_arrays.php:858
 #: include/global_settings.php:2737 lib/html.php:2232 lib/html.php:2254
 #: lib/html.php:2789
 msgid "Tree View"
 msgstr "विस्तृत दृश्य"
 
-#: auth_profile.php:317 include/global_arrays.php:858 lib/html.php:2239
+#: auth_profile.php:317 include/global_arrays.php:859 lib/html.php:2239
 #: lib/html.php:2263 lib/html.php:2790
 msgid "List View"
 msgstr "सूची दृश्य"
 
-#: auth_profile.php:321 include/global_arrays.php:859 lib/html.php:2246
+#: auth_profile.php:321 include/global_arrays.php:860 lib/html.php:2246
 #: lib/html.php:2791
 msgid "Preview View"
 msgstr "पूर्वद्रिश्श द्रिश्श"
@@ -1121,8 +1121,8 @@ msgid "Delete Device(s)"
 msgstr "उपकरण हटाएं"
 
 #: automation_devices.php:262 automation_devices.php:578
-#: include/global_arrays.php:990 include/global_arrays.php:1046
-#: include/global_arrays.php:2328 lib/api_automation.php:178
+#: include/global_arrays.php:991 include/global_arrays.php:1047
+#: include/global_arrays.php:2329 lib/api_automation.php:178
 #: lib/api_automation.php:271 lib/api_automation.php:486
 #: lib/api_automation.php:563 lib/api_automation.php:1189 pollers.php:1031
 #: tree.php:916 tree.php:2360 user_admin.php:1065 user_admin.php:2359
@@ -1164,12 +1164,12 @@ msgstr "विवरण"
 msgid "OS"
 msgstr "OS"
 
-#: automation_devices.php:278 include/global_arrays.php:524
+#: automation_devices.php:278 include/global_arrays.php:525
 msgid "Uptime"
 msgstr "चालू रहने का समय"
 
 #: automation_devices.php:279 automation_devices.php:560
-#: include/global_arrays.php:1018 utilities.php:2156
+#: include/global_arrays.php:1019 utilities.php:2156
 msgid "SNMP"
 msgstr "SNMP"
 
@@ -1250,13 +1250,13 @@ msgstr "लागू नहीं"
 #: automation_tree_rules.php:14 cdef.php:15 color_templates.php:14
 #: data_queries.php:17 data_source_profiles.php:17 data_templates.php:20
 #: graph_templates.php:23 graphs.php:51 host_templates.php:21
-#: include/global_arrays.php:1651
+#: include/global_arrays.php:1652
 msgid "Duplicate"
 msgstr "डुप्लीकेट"
 
 #: automation_graph_rules.php:15 automation_networks.php:18
 #: automation_tree_rules.php:15 data_sources.php:25
-#: include/global_arrays.php:1652 include/global_settings.php:1787
+#: include/global_arrays.php:1653 include/global_settings.php:1787
 #: managers.php:14 managers.php:20 plugins.php:24 pollers.php:20
 #: user_admin.php:19 user_domains.php:17 user_domains.php:397
 #: user_group_admin.php:21
@@ -1265,7 +1265,7 @@ msgstr "सक्षम करें"
 
 #: automation_graph_rules.php:16 automation_networks.php:17
 #: automation_tree_rules.php:16 data_sources.php:26
-#: include/global_arrays.php:1653 managers.php:15 managers.php:19
+#: include/global_arrays.php:1654 managers.php:15 managers.php:19
 #: plugins.php:25 pollers.php:19 user_admin.php:20 user_domains.php:16
 #: user_group_admin.php:22
 msgid "Disable"
@@ -1353,14 +1353,14 @@ msgid "Graph Creation Criteria"
 msgstr "ग्राफ निर्माण मानदंड"
 
 #: automation_graph_rules.php:800 automation_graph_rules.php:847
-#: automation_graph_rules.php:954 include/global_arrays.php:1013
-#: include/global_arrays.php:2784
+#: automation_graph_rules.php:954 include/global_arrays.php:1014
+#: include/global_arrays.php:2785
 msgid "Graph Rules"
 msgstr "ग्राफ नियम"
 
 #: automation_graph_rules.php:815 automation_graph_rules.php:965
-#: graphs.php:2065 include/global_arrays.php:1366
-#: include/global_arrays.php:2893 include/global_form.php:1645
+#: graphs.php:2065 include/global_arrays.php:1367
+#: include/global_arrays.php:2894 include/global_form.php:1645
 #: include/global_form.php:2207
 msgid "Data Query"
 msgstr "डेटा क्वेरी"
@@ -1369,7 +1369,7 @@ msgstr "डेटा क्वेरी"
 #: automation_graph_rules.php:983 automation_networks.php:535
 #: automation_tree_rules.php:856 automation_tree_rules.php:976
 #: automation_tree_rules.php:994 data_debug.php:1150 data_sources.php:1777
-#: include/global_arrays.php:917 include/global_form.php:1527
+#: include/global_arrays.php:918 include/global_form.php:1527
 #: include/global_settings.php:345 include/global_settings.php:361
 #: lib/api_automation.php:27 lib/html_reports.php:2036
 #: lib/html_reports.php:2141 lib/html_reports.php:2152
@@ -1384,8 +1384,8 @@ msgstr "सक्षम"
 #: automation_graph_rules.php:843 automation_graph_rules.php:983
 #: automation_networks.php:1090 automation_tree_rules.php:857
 #: automation_tree_rules.php:994 data_debug.php:1151 data_sources.php:1778
-#: data_templates.php:1325 include/global_arrays.php:916
-#: include/global_arrays.php:1575 include/global_arrays.php:1867
+#: data_templates.php:1325 include/global_arrays.php:917
+#: include/global_arrays.php:1576 include/global_arrays.php:1868
 #: include/global_settings.php:344 include/global_settings.php:360
 #: include/global_settings.php:1370 include/global_settings.php:1630
 #: include/global_settings.php:1644 include/global_settings.php:1657
@@ -1483,7 +1483,7 @@ msgstr "डिबग मोड में खोज चलाएँ"
 msgid "Click 'Continue' to cancel on going Network Discovery(s)."
 msgstr "नेटवर्क डिस्कवरी को रद्द करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
 
-#: automation_networks.php:401 include/global_arrays.php:509
+#: automation_networks.php:401 include/global_arrays.php:510
 msgid "SNMP Get"
 msgstr "SNMP मिलता है"
 
@@ -1492,17 +1492,17 @@ msgid "Manual"
 msgstr "मैन्युअल"
 
 #: automation_networks.php:409 automation_networks.php:1064
-#: include/global_arrays.php:1881 include/global_settings.php:1371
+#: include/global_arrays.php:1882 include/global_settings.php:1371
 msgid "Daily"
 msgstr "प्रतिदिन"
 
 #: automation_networks.php:410 automation_networks.php:1065
-#: include/global_arrays.php:1882
+#: include/global_arrays.php:1883
 msgid "Weekly"
 msgstr "साप्ताहिक"
 
 #: automation_networks.php:411 automation_networks.php:1066
-#: include/global_arrays.php:1883
+#: include/global_arrays.php:1884
 msgid "Monthly"
 msgstr "मासिक"
 
@@ -1628,11 +1628,11 @@ msgstr "% d थ्रेड"
 #: automation_networks.php:505 automation_networks.php:506
 #: automation_networks.php:507 automation_networks.php:508
 #: automation_networks.php:509 automation_networks.php:510
-#: automation_networks.php:511 include/global_arrays.php:820
-#: include/global_arrays.php:821 include/global_arrays.php:822
-#: include/global_arrays.php:823 include/global_arrays.php:824
-#: include/global_arrays.php:825 include/global_arrays.php:826
-#: include/global_arrays.php:827 include/global_arrays.php:828
+#: automation_networks.php:511 include/global_arrays.php:821
+#: include/global_arrays.php:822 include/global_arrays.php:823
+#: include/global_arrays.php:824 include/global_arrays.php:825
+#: include/global_arrays.php:826 include/global_arrays.php:827
+#: include/global_arrays.php:828 include/global_arrays.php:829
 #, php-format
 msgid "%d Threads"
 msgstr "% d थ्रेड्स"
@@ -1653,19 +1653,19 @@ msgstr "% d मिनट"
 #: automation_networks.php:522 automation_networks.php:523
 #: automation_networks.php:524 automation_networks.php:525
 #: automation_networks.php:1212 automation_networks.php:1213
-#: data_sources.php:1540 include/global_arrays.php:711
-#: include/global_arrays.php:712 include/global_arrays.php:713
-#: include/global_arrays.php:714 include/global_arrays.php:751
-#: include/global_arrays.php:752 include/global_arrays.php:754
-#: include/global_arrays.php:755 include/global_arrays.php:756
-#: include/global_arrays.php:757 include/global_arrays.php:758
-#: include/global_arrays.php:759 include/global_arrays.php:1208
-#: include/global_arrays.php:1209 include/global_arrays.php:1582
-#: include/global_arrays.php:1586 include/global_arrays.php:1594
-#: include/global_arrays.php:1595 include/global_arrays.php:1619
-#: include/global_arrays.php:1620 include/global_arrays.php:1621
-#: include/global_arrays.php:1622 include/global_arrays.php:1623
-#: include/global_arrays.php:1636 include/global_settings.php:1698
+#: data_sources.php:1540 include/global_arrays.php:712
+#: include/global_arrays.php:713 include/global_arrays.php:714
+#: include/global_arrays.php:715 include/global_arrays.php:752
+#: include/global_arrays.php:753 include/global_arrays.php:755
+#: include/global_arrays.php:756 include/global_arrays.php:757
+#: include/global_arrays.php:758 include/global_arrays.php:759
+#: include/global_arrays.php:760 include/global_arrays.php:1209
+#: include/global_arrays.php:1210 include/global_arrays.php:1583
+#: include/global_arrays.php:1587 include/global_arrays.php:1595
+#: include/global_arrays.php:1596 include/global_arrays.php:1620
+#: include/global_arrays.php:1621 include/global_arrays.php:1622
+#: include/global_arrays.php:1623 include/global_arrays.php:1624
+#: include/global_arrays.php:1637 include/global_settings.php:1698
 #: include/global_settings.php:1699 include/global_settings.php:1700
 #: include/global_settings.php:1701 include/global_settings.php:1702
 #: include/global_settings.php:2663 include/global_settings.php:2942
@@ -1675,29 +1675,29 @@ msgstr "% d मिनट"
 msgid "%d Minutes"
 msgstr "% d मिनट"
 
-#: automation_networks.php:526 include/global_arrays.php:760
-#: include/global_arrays.php:770 include/global_arrays.php:1456
+#: automation_networks.php:526 include/global_arrays.php:761
+#: include/global_arrays.php:771 include/global_arrays.php:1457
 #, php-format
 msgid "%d Hour"
 msgstr "% d घंटा"
 
 #: automation_networks.php:527 automation_networks.php:528
 #: automation_networks.php:529 data_source_profiles.php:1123
-#: include/global_arrays.php:716 include/global_arrays.php:717
-#: include/global_arrays.php:718 include/global_arrays.php:719
-#: include/global_arrays.php:720 include/global_arrays.php:761
-#: include/global_arrays.php:762 include/global_arrays.php:763
-#: include/global_arrays.php:764 include/global_arrays.php:771
-#: include/global_arrays.php:772 include/global_arrays.php:773
-#: include/global_arrays.php:774 include/global_arrays.php:1457
-#: include/global_arrays.php:1458 include/global_arrays.php:1459
-#: include/global_arrays.php:1460 include/global_arrays.php:1527
-#: include/global_arrays.php:1528 include/global_arrays.php:1529
-#: include/global_arrays.php:1530 include/global_arrays.php:1531
-#: include/global_arrays.php:1548 include/global_arrays.php:1549
-#: include/global_arrays.php:1550 include/global_arrays.php:1551
-#: include/global_arrays.php:1552 include/global_arrays.php:1558
-#: include/global_arrays.php:1559 include/global_settings.php:1704
+#: include/global_arrays.php:717 include/global_arrays.php:718
+#: include/global_arrays.php:719 include/global_arrays.php:720
+#: include/global_arrays.php:721 include/global_arrays.php:762
+#: include/global_arrays.php:763 include/global_arrays.php:764
+#: include/global_arrays.php:765 include/global_arrays.php:772
+#: include/global_arrays.php:773 include/global_arrays.php:774
+#: include/global_arrays.php:775 include/global_arrays.php:1458
+#: include/global_arrays.php:1459 include/global_arrays.php:1460
+#: include/global_arrays.php:1461 include/global_arrays.php:1528
+#: include/global_arrays.php:1529 include/global_arrays.php:1530
+#: include/global_arrays.php:1531 include/global_arrays.php:1532
+#: include/global_arrays.php:1549 include/global_arrays.php:1550
+#: include/global_arrays.php:1551 include/global_arrays.php:1552
+#: include/global_arrays.php:1553 include/global_arrays.php:1559
+#: include/global_arrays.php:1560 include/global_settings.php:1704
 #: include/global_settings.php:1705 include/global_settings.php:1706
 #: include/global_settings.php:1707 include/global_settings.php:2946
 #: include/global_settings.php:2947
@@ -1807,37 +1807,37 @@ msgid "What Day(s) of the week will this Network Range be discovered."
 msgstr "सप्ताह का कौन सा दिन (दिन) इस नेटवर्क रेंज को खोजा जाएगा।"
 
 #: automation_networks.php:636 automation_networks.php:694
-#: include/global_arrays.php:1939
+#: include/global_arrays.php:1940
 msgid "Sunday"
 msgstr "रविवार"
 
 #: automation_networks.php:637 automation_networks.php:695
-#: include/global_arrays.php:1940
+#: include/global_arrays.php:1941
 msgid "Monday"
 msgstr "सोमवार"
 
 #: automation_networks.php:638 automation_networks.php:696
-#: include/global_arrays.php:1941
+#: include/global_arrays.php:1942
 msgid "Tuesday"
 msgstr "मंगलवार"
 
 #: automation_networks.php:639 automation_networks.php:697
-#: include/global_arrays.php:1942
+#: include/global_arrays.php:1943
 msgid "Wednesday"
 msgstr "बुधवार"
 
 #: automation_networks.php:640 automation_networks.php:698
-#: include/global_arrays.php:1943
+#: include/global_arrays.php:1944
 msgid "Thursday"
 msgstr "वृहस्पतिवार"
 
 #: automation_networks.php:641 automation_networks.php:699
-#: include/global_arrays.php:1944
+#: include/global_arrays.php:1945
 msgid "Friday"
 msgstr "शुक्रवार"
 
 #: automation_networks.php:642 automation_networks.php:700
-#: include/global_arrays.php:1945
+#: include/global_arrays.php:1946
 msgid "Saturday"
 msgstr "शनिवार"
 
@@ -1849,51 +1849,51 @@ msgstr "साल का महीना"
 msgid "What Months(s) of the Year will this Network Range be discovered."
 msgstr "इस नेटवर्क रेंज को वर्ष के कितने महीनों के लिए खोजा जाएगा।"
 
-#: automation_networks.php:652 include/global_arrays.php:1893
+#: automation_networks.php:652 include/global_arrays.php:1894
 msgid "January"
 msgstr "जनवरी"
 
-#: automation_networks.php:653 include/global_arrays.php:1894
+#: automation_networks.php:653 include/global_arrays.php:1895
 msgid "February"
 msgstr "फरवरी"
 
-#: automation_networks.php:654 include/global_arrays.php:1895
+#: automation_networks.php:654 include/global_arrays.php:1896
 msgid "March"
 msgstr "मार्च"
 
-#: automation_networks.php:655 include/global_arrays.php:1896
+#: automation_networks.php:655 include/global_arrays.php:1897
 msgid "April"
 msgstr "अप्रैल"
 
-#: automation_networks.php:656 include/global_arrays.php:1897
+#: automation_networks.php:656 include/global_arrays.php:1898
 msgid "May"
 msgstr "मई"
 
-#: automation_networks.php:657 include/global_arrays.php:1898
+#: automation_networks.php:657 include/global_arrays.php:1899
 msgid "June"
 msgstr "जून"
 
-#: automation_networks.php:658 include/global_arrays.php:1899
+#: automation_networks.php:658 include/global_arrays.php:1900
 msgid "July"
 msgstr "जुलाई"
 
-#: automation_networks.php:659 include/global_arrays.php:1900
+#: automation_networks.php:659 include/global_arrays.php:1901
 msgid "August"
 msgstr "अगस्त"
 
-#: automation_networks.php:660 include/global_arrays.php:1901
+#: automation_networks.php:660 include/global_arrays.php:1902
 msgid "September"
 msgstr "सितम्बर"
 
-#: automation_networks.php:661 include/global_arrays.php:1902
+#: automation_networks.php:661 include/global_arrays.php:1903
 msgid "October"
 msgstr "अक्टूबर"
 
-#: automation_networks.php:662 include/global_arrays.php:1903
+#: automation_networks.php:662 include/global_arrays.php:1904
 msgid "November"
 msgstr "नवम्बर"
 
-#: automation_networks.php:663 include/global_arrays.php:1904
+#: automation_networks.php:663 include/global_arrays.php:1905
 msgid "December"
 msgstr "दिसंबर"
 
@@ -2027,7 +2027,7 @@ msgid "Network Filters"
 msgstr "नेटवर्क फ़िल्टर"
 
 #: automation_networks.php:1054 automation_networks.php:1186
-#: include/global_arrays.php:1010
+#: include/global_arrays.php:1011
 msgid "Networks"
 msgstr "नेटवर्क"
 
@@ -2084,8 +2084,8 @@ msgstr "चल रहा है"
 msgid "Idle"
 msgstr "आइडल"
 
-#: automation_networks.php:1150 include/global_arrays.php:891
-#: include/global_arrays.php:1210 include/global_settings.php:2576
+#: automation_networks.php:1150 include/global_arrays.php:892
+#: include/global_arrays.php:1211 include/global_settings.php:2576
 #: lib/html_reports.php:2183 user_admin.php:2115
 msgid "Never"
 msgstr "कभी नहीं"
@@ -2102,19 +2102,19 @@ msgstr "रीफ्रैश करो"
 
 #: automation_networks.php:1207 automation_networks.php:1208
 #: automation_networks.php:1209 automation_networks.php:1210
-#: data_sources.php:1536 include/global_arrays.php:709
-#: include/global_arrays.php:745 include/global_arrays.php:746
-#: include/global_arrays.php:747 include/global_arrays.php:748
-#: include/global_arrays.php:749 include/global_arrays.php:750
-#: include/global_arrays.php:1203 include/global_arrays.php:1204
-#: include/global_arrays.php:1205 include/global_arrays.php:1206
-#: include/global_arrays.php:1576 include/global_arrays.php:1577
-#: include/global_arrays.php:1578 include/global_arrays.php:1579
-#: include/global_arrays.php:1580 include/global_arrays.php:1615
-#: include/global_arrays.php:1616 include/global_arrays.php:1628
-#: include/global_arrays.php:1629 include/global_arrays.php:1630
-#: include/global_arrays.php:1631 include/global_arrays.php:1632
-#: include/global_arrays.php:1633 include/global_arrays.php:1634
+#: data_sources.php:1536 include/global_arrays.php:710
+#: include/global_arrays.php:746 include/global_arrays.php:747
+#: include/global_arrays.php:748 include/global_arrays.php:749
+#: include/global_arrays.php:750 include/global_arrays.php:751
+#: include/global_arrays.php:1204 include/global_arrays.php:1205
+#: include/global_arrays.php:1206 include/global_arrays.php:1207
+#: include/global_arrays.php:1577 include/global_arrays.php:1578
+#: include/global_arrays.php:1579 include/global_arrays.php:1580
+#: include/global_arrays.php:1581 include/global_arrays.php:1616
+#: include/global_arrays.php:1617 include/global_arrays.php:1629
+#: include/global_arrays.php:1630 include/global_arrays.php:1631
+#: include/global_arrays.php:1632 include/global_arrays.php:1633
+#: include/global_arrays.php:1634 include/global_arrays.php:1635
 #: include/global_settings.php:1271 include/global_settings.php:1272
 #: include/global_settings.php:1273 include/global_settings.php:1274
 #: include/global_settings.php:2659 include/global_settings.php:2660
@@ -2349,7 +2349,7 @@ msgstr "फोलिंग ऑटोमेशन टेम्प्लेट क
 msgid "Delete Automation Template(s)"
 msgstr "स्वचालन खाका हटाएं"
 
-#: automation_templates.php:271 include/global_arrays.php:1367
+#: automation_templates.php:271 include/global_arrays.php:1368
 #: include/global_form.php:1211 include/global_form.php:1630
 #: lib/html_reports.php:1160
 msgid "Device Template"
@@ -2495,8 +2495,8 @@ msgid "Are you sure you wish to continue?"
 msgstr "पुष्टि करें कि आप आगे जारी रखना चाहते हैं?"
 
 #: automation_tree_rules.php:836 automation_tree_rules.php:861
-#: automation_tree_rules.php:961 include/global_arrays.php:1014
-#: include/global_arrays.php:2808
+#: automation_tree_rules.php:961 include/global_arrays.php:1015
+#: include/global_arrays.php:2809
 msgid "Tree Rules"
 msgstr "वृक्ष नियम"
 
@@ -2631,7 +2631,7 @@ msgstr "CDEF [संपादित करें: %s]"
 msgid "CDEF [new]"
 msgstr "CDEF [नया]"
 
-#: cdef.php:558 include/global_arrays.php:2154
+#: cdef.php:558 include/global_arrays.php:2155
 msgid "CDEF Items"
 msgstr "CDEF आइटम"
 
@@ -2648,8 +2648,8 @@ msgstr "आइटम #% d"
 msgid "Delete CDEF Item"
 msgstr "CDEF आइटम हटाएं"
 
-#: cdef.php:718 cdef.php:733 cdef.php:858 include/global_arrays.php:1019
-#: include/global_arrays.php:2136
+#: cdef.php:718 cdef.php:733 cdef.php:858 include/global_arrays.php:1020
+#: include/global_arrays.php:2137
 msgid "CDEFs"
 msgstr "CDEFs"
 
@@ -2817,7 +2817,7 @@ msgstr "समुच्चय"
 msgid "Color Item"
 msgstr "रंग की वस्तु"
 
-#: color_templates.php:60 include/global_arrays.php:1007
+#: color_templates.php:60 include/global_arrays.php:1008
 #: include/global_form.php:975 include/global_form.php:2089
 msgid "Color"
 msgstr "रंग"
@@ -2916,7 +2916,7 @@ msgid "Color Template '%s' had no Aggregate Templates or Graphs using this Color
 msgstr "कलर टेम्प्लेट '%s' में इस कलर टेम्प्लेट का उपयोग करने के लिए कोई एग्रीगेट टेम्पलेट या ग्राफ़ नहीं थे।"
 
 #: color_templates.php:552 color_templates.php:566 color_templates.php:661
-#: include/global_arrays.php:2724
+#: include/global_arrays.php:2725
 msgid "Color Templates"
 msgstr "रंग टेम्पलेट"
 
@@ -2998,7 +2998,7 @@ msgstr ""
 
 #: data_debug.php:483 data_debug.php:934 data_queries.php:769
 #: data_sources.php:1149 data_templates.php:719 graphs_items.php:387
-#: include/global_arrays.php:1005 include/global_form.php:960
+#: include/global_arrays.php:1006 include/global_form.php:960
 #: lib/api_aggregate.php:2338 lib/html.php:1404 rrdcheck.php:142
 msgid "Data Source"
 msgstr "डाटा स्रोत"
@@ -3090,8 +3090,8 @@ msgid "Summary of issues found for the Data Source."
 msgstr "डेटा स्रोत के लिए कोई सारांश समस्याएँ मिलीं।"
 
 #: data_debug.php:621 data_debug.php:1195 data_sources.php:1799
-#: data_sources.php:1973 include/global_arrays.php:994
-#: include/global_arrays.php:1040 include/global_arrays.php:2310
+#: data_sources.php:1973 include/global_arrays.php:995
+#: include/global_arrays.php:1041 include/global_arrays.php:2311
 #: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:325
 msgid "Data Sources"
@@ -3596,7 +3596,7 @@ msgstr "XML फ़ाइल सफलतापूर्वक स्थित �
 msgid "Could not locate XML file."
 msgstr "XML फ़ाइल नहीं मिली।"
 
-#: data_queries.php:1206 host_templates.php:466 include/global_arrays.php:2418
+#: data_queries.php:1206 host_templates.php:466 include/global_arrays.php:2419
 msgid "Associated Graph Templates"
 msgstr "संबद्ध ग्राफ़ टेम्पलेट"
 
@@ -3626,8 +3626,8 @@ msgid "Delete Associated Graph"
 msgstr "एसोसिएटेड ग्राफ़ हटाएं"
 
 #: data_queries.php:1362 data_queries.php:1377 data_queries.php:1512
-#: include/global_arrays.php:999 include/global_arrays.php:1226
-#: include/global_arrays.php:2400 lib/api_automation.php:1078
+#: include/global_arrays.php:1000 include/global_arrays.php:1227
+#: include/global_arrays.php:2401 lib/api_automation.php:1078
 msgid "Data Queries"
 msgstr "डेटा क्वेरी"
 
@@ -3655,7 +3655,7 @@ msgstr "इस डेटा क्वेरी का उपयोग करक�
 msgid "The number of Graphs Templates using this Data Query."
 msgstr "इस डेटा क्वेरी का उपयोग करके ग्राफ़ टेम्प्लेट की संख्या।"
 
-#: data_queries.php:1505 include/global_arrays.php:1359
+#: data_queries.php:1505 include/global_arrays.php:1360
 #: include/global_form.php:570 include/global_form.php:1380
 msgid "Data Input Method"
 msgstr "डेटा इनपुट विधि"
@@ -3805,12 +3805,12 @@ msgstr "डेटा स्रोत प्रति %s KBytes"
 msgid "Enter a valid number of Rows to obtain the RRA size."
 msgstr "RRA आकार प्राप्त करने के लिए पंक्तियों की एक मान्य संख्या दर्ज करें।"
 
-#: data_source_profiles.php:1088 include/global_arrays.php:787
-#: include/global_arrays.php:788 include/global_arrays.php:789
-#: include/global_arrays.php:790 include/global_arrays.php:791
-#: include/global_arrays.php:792 include/global_arrays.php:793
-#: include/global_arrays.php:794 include/global_arrays.php:795
-#: include/global_arrays.php:1473 include/global_settings.php:1636
+#: data_source_profiles.php:1088 include/global_arrays.php:788
+#: include/global_arrays.php:789 include/global_arrays.php:790
+#: include/global_arrays.php:791 include/global_arrays.php:792
+#: include/global_arrays.php:793 include/global_arrays.php:794
+#: include/global_arrays.php:795 include/global_arrays.php:796
+#: include/global_arrays.php:1474 include/global_settings.php:1636
 #, php-format
 msgid "%d Years"
 msgstr "% d वष"
@@ -3819,48 +3819,48 @@ msgstr "% d वष"
 msgid "1 Year"
 msgstr "1 वर्ष"
 
-#: data_source_profiles.php:1097 include/global_arrays.php:781
-#: include/global_arrays.php:1467 rrdcleaner.php:537
+#: data_source_profiles.php:1097 include/global_arrays.php:782
+#: include/global_arrays.php:1468 rrdcleaner.php:537
 #, php-format
 msgid "%d Month"
 msgstr "% d महीना"
 
-#: data_source_profiles.php:1097 include/global_arrays.php:782
-#: include/global_arrays.php:783 include/global_arrays.php:784
-#: include/global_arrays.php:785 include/global_arrays.php:1468
-#: include/global_arrays.php:1469 include/global_arrays.php:1470
-#: include/global_arrays.php:1471 rrdcleaner.php:538 rrdcleaner.php:539
+#: data_source_profiles.php:1097 include/global_arrays.php:783
+#: include/global_arrays.php:784 include/global_arrays.php:785
+#: include/global_arrays.php:786 include/global_arrays.php:1469
+#: include/global_arrays.php:1470 include/global_arrays.php:1471
+#: include/global_arrays.php:1472 rrdcleaner.php:538 rrdcleaner.php:539
 #: rrdcleaner.php:540
 #, php-format
 msgid "%d Months"
 msgstr "% d माह"
 
-#: data_source_profiles.php:1106 include/global_arrays.php:722
-#: include/global_arrays.php:778 include/global_arrays.php:1465
+#: data_source_profiles.php:1106 include/global_arrays.php:723
+#: include/global_arrays.php:779 include/global_arrays.php:1466
 #: rrdcleaner.php:533 rrdcleaner.php:534
 #, php-format
 msgid "%d Week"
 msgstr "% d वीक"
 
-#: data_source_profiles.php:1106 include/global_arrays.php:779
-#: include/global_arrays.php:780 include/global_arrays.php:1466
+#: data_source_profiles.php:1106 include/global_arrays.php:780
+#: include/global_arrays.php:781 include/global_arrays.php:1467
 #: include/global_settings.php:2950 include/global_settings.php:2951
 #: include/global_settings.php:2952 rrdcleaner.php:535 rrdcleaner.php:536
 #, php-format
 msgid "%d Weeks"
 msgstr "%d सप्ताह"
 
-#: data_source_profiles.php:1115 include/global_arrays.php:721
-#: include/global_arrays.php:765 include/global_arrays.php:775
-#: include/global_arrays.php:1461
+#: data_source_profiles.php:1115 include/global_arrays.php:722
+#: include/global_arrays.php:766 include/global_arrays.php:776
+#: include/global_arrays.php:1462
 #, php-format
 msgid "%d Day"
 msgstr "%d दिन"
 
-#: data_source_profiles.php:1115 include/global_arrays.php:766
-#: include/global_arrays.php:776 include/global_arrays.php:777
-#: include/global_arrays.php:1462 include/global_arrays.php:1463
-#: include/global_arrays.php:1464 include/global_settings.php:1631
+#: data_source_profiles.php:1115 include/global_arrays.php:767
+#: include/global_arrays.php:777 include/global_arrays.php:778
+#: include/global_arrays.php:1463 include/global_arrays.php:1464
+#: include/global_arrays.php:1465 include/global_settings.php:1631
 #: include/global_settings.php:1632 include/global_settings.php:1633
 #: include/global_settings.php:1634 include/global_settings.php:1645
 #: include/global_settings.php:1646 include/global_settings.php:1647
@@ -3869,16 +3869,16 @@ msgstr "%d दिन"
 msgid "%d Days"
 msgstr "%d दिन"
 
-#: data_source_profiles.php:1123 include/global_arrays.php:715
-#: include/global_arrays.php:1526 include/global_arrays.php:1547
-#: include/global_arrays.php:1557 include/global_arrays.php:1587
-#: include/global_arrays.php:1596 include/global_arrays.php:1624
+#: data_source_profiles.php:1123 include/global_arrays.php:716
+#: include/global_arrays.php:1527 include/global_arrays.php:1548
+#: include/global_arrays.php:1558 include/global_arrays.php:1588
+#: include/global_arrays.php:1597 include/global_arrays.php:1625
 #: include/global_settings.php:1406 include/global_settings.php:1703
 #: include/global_settings.php:2945
 msgid "1 Hour"
 msgstr "1 घंटा"
 
-#: data_source_profiles.php:1177 include/global_arrays.php:1233
+#: data_source_profiles.php:1177 include/global_arrays.php:1234
 msgid "Data Source Profiles"
 msgstr "डेटा स्रोत प्रोफ़ाइल"
 
@@ -4107,8 +4107,8 @@ msgid "The name given to this data template.  Please note that you may only chan
 msgstr "इस डेटा टेम्प्लेट को दिया गया नाम। कृपया ध्यान दें कि आप केवल ग्राफ़ टेम्पलेट को 100% $ संगत ग्राफ़ टेम्पलेट में बदल सकते हैं, जिसका अर्थ है कि इसमें समान डेटा स्रोत शामिल हैं।"
 
 #: data_sources.php:1084 graph_view.php:817 graphs.php:1540
-#: include/global_arrays.php:954 include/global_arrays.php:1003
-#: include/global_arrays.php:1690 include/global_arrays.php:1859
+#: include/global_arrays.php:955 include/global_arrays.php:1004
+#: include/global_arrays.php:1691 include/global_arrays.php:1860
 #: lib/api_automation.php:426 lib/functions.php:6195 lib/html.php:2347
 #: lib/html.php:2384 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
@@ -4156,9 +4156,9 @@ msgstr "RRDtool ट्यून जानकारी"
 msgid "External"
 msgstr "बाह्‌री"
 
-#: data_sources.php:1538 include/global_arrays.php:710
-#: include/global_arrays.php:1207 include/global_arrays.php:1581
-#: include/global_arrays.php:1617 include/global_arrays.php:1635
+#: data_sources.php:1538 include/global_arrays.php:711
+#: include/global_arrays.php:1208 include/global_arrays.php:1582
+#: include/global_arrays.php:1618 include/global_arrays.php:1636
 #: include/global_settings.php:1697 include/global_settings.php:2662
 msgid "1 Minute"
 msgstr "1 मिनट"
@@ -4232,7 +4232,7 @@ msgstr "कोई डेटा स्रोत नहीं मिला"
 msgid "No Graphs"
 msgstr "नए रेखांकन"
 
-#: data_sources.php:2140 include/global_arrays.php:995
+#: data_sources.php:2140 include/global_arrays.php:996
 msgid "Aggregates"
 msgstr "समुच्चय"
 
@@ -4340,7 +4340,7 @@ msgid "After you uncheck this checkbox and then Save the Data Template, any exis
 msgstr "आपके द्वारा इस चेकबॉक्स को अनचेक करने और फिर डेटा टेम्प्लेट को सहेजने के बाद, इस डेटा टेम्प्लेट पर आधारित कोई भी मौजूदा डेटा स्रोत अपना कस्टम डेटा खो देगा। इसके परिणामस्वरूप डेटा संग्रह और ग्राफ़ टूट सकते हैं"
 
 #: data_templates.php:1092 data_templates.php:1126 data_templates.php:1296
-#: include/global_arrays.php:1237 include/global_arrays.php:2292
+#: include/global_arrays.php:1238 include/global_arrays.php:2293
 msgid "Data Templates"
 msgstr "डेटा टेम्प्लेट"
 
@@ -4410,11 +4410,11 @@ msgstr "GPRINT प्रीसेट [संपादित करें: %s]"
 msgid "GPRINT Presets [new]"
 msgstr "GPRINT प्रीसेट [नया]"
 
-#: gprint_presets.php:246 include/global_arrays.php:2118
+#: gprint_presets.php:246 include/global_arrays.php:2119
 msgid "GPRINT Presets"
 msgstr "GPRINT प्रीसेट"
 
-#: gprint_presets.php:261 gprint_presets.php:408 include/global_arrays.php:1022
+#: gprint_presets.php:261 gprint_presets.php:408 include/global_arrays.php:1023
 msgid "GPRINTs"
 msgstr "GPRINTs"
 
@@ -4620,7 +4620,7 @@ msgstr "निम्नलिखित ग्राफ़ टेम्पले�
 msgid "Graph Template Items [edit: %s]"
 msgstr "ग्राफ़ टेम्पलेट आइटम [संपादित करें: %s]"
 
-#: graph_templates.php:497 include/global_arrays.php:2262
+#: graph_templates.php:497 include/global_arrays.php:2263
 msgid "Graph Item Inputs"
 msgstr "ग्राफ़ आइटम इनपुट"
 
@@ -4651,8 +4651,8 @@ msgid "Check this checkbox if you wish to allow the user to override the value o
 msgstr "यदि आप उपयोगकर्ता को ग्राफ़ निर्माण के दौरान दाईं ओर मूल्य को ओवरराइड करने की अनुमति देना चाहते हैं, तो इस चेकबॉक्स को जांचें।"
 
 #: graph_templates.php:718 graph_templates.php:733 graph_templates.php:900
-#: graphs_new.php:637 include/global_arrays.php:1236
-#: include/global_arrays.php:2238 lib/html_tree.php:541 user_admin.php:1204
+#: graphs_new.php:637 include/global_arrays.php:1237
+#: include/global_arrays.php:2239 lib/html_tree.php:541 user_admin.php:1204
 #: user_group_admin.php:1223
 msgid "Graph Templates"
 msgstr "ग्राफ टेम्पलेट"
@@ -4767,7 +4767,7 @@ msgstr "[कस्टम ग्राफ सूची लागू - सूच�
 msgid "View"
 msgstr "देखें"
 
-#: graph_view.php:677 graph_view.php:929 include/global_arrays.php:1215
+#: graph_view.php:677 graph_view.php:929 include/global_arrays.php:1216
 msgid "View Graphs"
 msgstr "रेखांकन देखें"
 
@@ -4784,7 +4784,7 @@ msgstr "रिपोर्ट"
 msgid "All Graphs & Templates"
 msgstr "सभी रेखांकन और टेम्पलेट"
 
-#: graph_view.php:704 include/global_arrays.php:2892 lib/graphs.php:40
+#: graph_view.php:704 include/global_arrays.php:2893 lib/graphs.php:40
 #: lib/graphs.php:49 lib/html.php:221 lib/html_graph.php:144
 #: lib/html_tree.php:978
 msgid "Not Templated"
@@ -4827,7 +4827,7 @@ msgstr "पूर्वावलोकन मोड में नहीं ह�
 msgid "Select the Report to add the selected Graphs to."
 msgstr "चयनित ग्राफ़ को जोड़ने के लिए रिपोर्ट का चयन करें।"
 
-#: graph_view.php:995 include/global_arrays.php:2038
+#: graph_view.php:995 include/global_arrays.php:2039
 #: include/global_settings.php:2733
 msgid "Preview Mode"
 msgstr "पूर्वावलोकन मोड"
@@ -4890,7 +4890,7 @@ msgstr "सारांश विवरण"
 msgid "Download"
 msgstr "डाउनलोड"
 
-#: graphs.php:36 graphs.php:844 include/global_arrays.php:2088
+#: graphs.php:36 graphs.php:844 include/global_arrays.php:2089
 msgid "Change Graph Template"
 msgstr "ग्राफ़ टेम्पलेट बदलें"
 
@@ -4983,7 +4983,7 @@ msgstr "गंतव्य शाखा"
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
 msgstr "इन ग्राफ़ के लिए एक नया उपकरण चुनें और &#39;जारी रखें&#39; पर क्लिक करें।"
 
-#: graphs.php:887 include/global_arrays.php:987
+#: graphs.php:887 include/global_arrays.php:988
 msgid "New Device"
 msgstr "नया यंत्र"
 
@@ -5137,7 +5137,7 @@ msgstr "डेटा स्रोत [कोई उपकरण नहीं]"
 msgid "Data Sources [%s]"
 msgstr "डेटा स्रोत [ %s]"
 
-#: graphs_items.php:266 include/global_arrays.php:1358
+#: graphs_items.php:266 include/global_arrays.php:1359
 #: include/global_form.php:1640
 msgid "Data Template"
 msgstr "डेटा टेम्प्लेट"
@@ -5200,8 +5200,8 @@ msgstr "नया डिवाइस बनाएं"
 msgid "(Select a graph type to create)"
 msgstr "(बनाने के लिए एक ग्राफ प्रकार का चयन करें)"
 
-#: graphs_new.php:631 include/global_arrays.php:985
-#: include/global_arrays.php:1063 lib/html_form.php:1417 lib/html_form.php:1430
+#: graphs_new.php:631 include/global_arrays.php:986
+#: include/global_arrays.php:1064 lib/html_form.php:1417 lib/html_form.php:1430
 #: tree.php:1662
 msgid "Create"
 msgstr "बनाएं"
@@ -5377,7 +5377,7 @@ msgid "Delete Item from Device Template"
 msgstr "उपकरण टेम्पलेट हटाएं"
 
 #: host_templates.php:703 host_templates.php:801 host_templates.php:968
-#: include/global_arrays.php:1238 include/global_arrays.php:2274
+#: include/global_arrays.php:1239 include/global_arrays.php:2275
 msgid "Device Templates"
 msgstr "डिवाइस टेम्पलेट"
 
@@ -5422,7 +5422,7 @@ msgstr "उपकरणों का उपयोग करना"
 msgid "The number of Devices using this Device Template."
 msgstr "इस उपकरण टेम्पलेट का उपयोग करने वाले उपकरणों की संख्या।"
 
-#: host_templates.php:993 include/global_arrays.php:1101
+#: host_templates.php:993 include/global_arrays.php:1102
 msgid "Unassigned"
 msgstr "असाइन नहीं किए गए"
 
@@ -5476,1432 +5476,1432 @@ msgstr "पिछली बार इस डेटा कलेक्टर क�
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "मुख्य डेटा कलेक्टर ऑफ़लाइन या रिकवरी स्टेटस पर चला गया है"
 
-#: include/global_arrays.php:138
+#: include/global_arrays.php:139
 msgid "Save Successful."
 msgstr "संग्रहण सफल।"
 
-#: include/global_arrays.php:141
+#: include/global_arrays.php:142
 msgid "Save Failed."
 msgstr "बचाव असफल हुआ।"
 
-#: include/global_arrays.php:144
+#: include/global_arrays.php:145
 msgid "Save Failed due to field input errors (Check red fields)."
 msgstr "फ़ील्ड इनपुट त्रुटियों के कारण विफल (लाल फ़ील्ड की जाँच करें)।"
 
-#: include/global_arrays.php:147
+#: include/global_arrays.php:148
 msgid "Passwords do not match, please retype."
 msgstr "पासवर्ड मेल नहीं खाते हैं, कृपया पुनः लिखें"
 
-#: include/global_arrays.php:150
+#: include/global_arrays.php:151
 msgid "You must select at least one field."
 msgstr "आपको कम से कम एक फ़ील्ड का चयन करना होगा।"
 
-#: include/global_arrays.php:153
+#: include/global_arrays.php:154
 msgid "You must have built in user authentication turned on to use this feature."
 msgstr "आपने इस सुविधा का उपयोग करने के लिए उपयोगकर्ता प्रमाणीकरण चालू किया होगा।"
 
-#: include/global_arrays.php:156
+#: include/global_arrays.php:157
 msgid "XML parse error."
 msgstr "XML पार्स त्रुटि।"
 
-#: include/global_arrays.php:159
+#: include/global_arrays.php:160
 msgid "The directory highlighted does not exist.  Please enter a valid directory."
 msgstr "हाइलाइट की गई निर्देशिका मौजूद नहीं है। कृपया एक वैध निर्देशिका दर्ज करें।"
 
-#: include/global_arrays.php:162
+#: include/global_arrays.php:163
 msgid "The Kadupul log file must have the extension '.log'"
 msgstr "Kadupul लॉग फ़ाइल में एक्सटेंशन होना चाहिए &#39;.log&#39;"
 
-#: include/global_arrays.php:165
+#: include/global_arrays.php:166
 msgid "Data Input for method does not appear to be whitelisted."
 msgstr "विधि के लिए डेटा इनपुट श्वेतसूची में प्रकट नहीं होता है"
 
-#: include/global_arrays.php:168
+#: include/global_arrays.php:169
 msgid "Data Source does not exist."
 msgstr "डेटा स्रोत मौजूद नहीं है।"
 
-#: include/global_arrays.php:171
+#: include/global_arrays.php:172
 msgid "Username already in use."
 msgstr "उपयोगकर्ता का नाम पहले से ही उपयोग में है।"
 
-#: include/global_arrays.php:174
+#: include/global_arrays.php:175
 msgid "The SNMP v3 Privacy Passphrases do not match"
 msgstr "SNMP v3 गोपनीयता पासफ़्रेज़ मेल नहीं खाते हैं"
 
-#: include/global_arrays.php:177
+#: include/global_arrays.php:178
 msgid "The SNMP v3 Authentication Passphrases do not match"
 msgstr "SNMP v3 प्रमाणीकरण पासफ़्रेज़ मेल नहीं खाते हैं"
 
-#: include/global_arrays.php:180
+#: include/global_arrays.php:181
 msgid "XML: Kadupul version does not exist."
 msgstr "XML: Kadupul संस्करण मौजूद नहीं है।"
 
-#: include/global_arrays.php:183
+#: include/global_arrays.php:184
 msgid "XML: Hash version does not exist."
 msgstr "XML: हैश संस्करण मौजूद नहीं है।"
 
-#: include/global_arrays.php:186
+#: include/global_arrays.php:187
 msgid "XML: Generated with a newer version of Kadupul."
 msgstr "XML: Kadupul के नए संस्करण के साथ उत्पन्न हुआ।"
 
-#: include/global_arrays.php:189
+#: include/global_arrays.php:190
 msgid "XML: Cannot locate type code."
 msgstr "XML: प्रकार कोड का पता नहीं लगा सकता।"
 
-#: include/global_arrays.php:192
+#: include/global_arrays.php:193
 msgid "Username already exists."
 msgstr "उपयोगकर्ता का नाम पहले से मौजूद है।"
 
-#: include/global_arrays.php:195
+#: include/global_arrays.php:196
 msgid "Username change not permitted for designated template or guest user."
 msgstr "नामित टेम्पलेट या अतिथि उपयोगकर्ता के लिए उपयोगकर्ता नाम परिवर्तन की अनुमति नहीं है।"
 
-#: include/global_arrays.php:198
+#: include/global_arrays.php:199
 msgid "User delete not permitted for designated template or guest user."
 msgstr "उपयोगकर्ता हटाए गए नामित टेम्पलेट या अतिथि उपयोगकर्ता के लिए अनुमत नहीं"
 
-#: include/global_arrays.php:201
+#: include/global_arrays.php:202
 msgid "User delete not permitted for designated graph export user."
 msgstr "उपयोगकर्ता को नामित ग्राफ़ निर्यात उपयोगकर्ता के लिए अनुमति नहीं"
 
-#: include/global_arrays.php:204
+#: include/global_arrays.php:205
 msgid "Data Template includes deleted Data Source Profile.  Please resave the Data Template with an existing Data Source Profile."
 msgstr "डेटा टेम्प्लेट में हटाए गए डेटा स्रोत प्रोफ़ाइल शामिल हैं। कृपया मौजूदा डेटा स्रोत प्रोफ़ाइल के साथ डेटा टेम्प्लेट को फिर से सहेजें।"
 
-#: include/global_arrays.php:207
+#: include/global_arrays.php:208
 msgid "Graph Template includes deleted GPrint Prefix.  Please run database repair script to identify and/or correct."
 msgstr "ग्राफ़ टेम्पलेट में हटाए गए GPrint उपसर्ग शामिल हैं। कृपया पहचानने और / या सही करने के लिए डेटाबेस मरम्मत स्क्रिप्ट चलाएं।"
 
-#: include/global_arrays.php:210
+#: include/global_arrays.php:211
 msgid "Graph Template includes deleted CDEFs.  Please run database repair script to identify and/or correct."
 msgstr "ग्राफ़ टेम्पलेट में हटाए गए सीडीईएफ शामिल हैं। कृपया पहचानने और / या सही करने के लिए डेटाबेस मरम्मत स्क्रिप्ट चलाएं।"
 
-#: include/global_arrays.php:213
+#: include/global_arrays.php:214
 msgid "Graph Template includes deleted Data Input Method.  Please run database repair script to identify."
 msgstr "ग्राफ़ टेम्प्लेट में हटाए गए डेटा इनपुट विधि शामिल हैं। कृपया पहचान करने के लिए डेटाबेस मरम्मत स्क्रिप्ट चलाएँ।"
 
-#: include/global_arrays.php:216
+#: include/global_arrays.php:217
 msgid "Data Template not found during Export.  Please run database repair script to identify."
 msgstr "निर्यात के दौरान डेटा टेम्पलेट नहीं मिला। कृपया पहचान करने के लिए डेटाबेस मरम्मत स्क्रिप्ट चलाएँ।"
 
-#: include/global_arrays.php:219
+#: include/global_arrays.php:220
 msgid "Device Template not found during Export.  Please run database repair script to identify."
 msgstr "निर्यात के दौरान उपकरण टेम्पलेट नहीं मिला। कृपया पहचान करने के लिए डेटाबेस मरम्मत स्क्रिप्ट चलाएँ।"
 
-#: include/global_arrays.php:222
+#: include/global_arrays.php:223
 msgid "Data Query not found during Export.  Please run database repair script to identify."
 msgstr "निर्यात के दौरान डेटा क्वेरी नहीं मिली। कृपया पहचान करने के लिए डेटाबेस मरम्मत स्क्रिप्ट चलाएँ।"
 
-#: include/global_arrays.php:225
+#: include/global_arrays.php:226
 msgid "Graph Template not found during Export.  Please run database repair script to identify."
 msgstr "निर्यात के दौरान ग्राफ़ टेम्पलेट नहीं मिला। कृपया पहचान करने के लिए डेटाबेस मरम्मत स्क्रिप्ट चलाएँ।"
 
-#: include/global_arrays.php:228
+#: include/global_arrays.php:229
 msgid "Graph not found.  Either it has been deleted or your database needs repair."
 msgstr "ग्राफ नहीं मिला। या तो इसे हटा दिया गया है या आपके डेटाबेस को मरम्मत की आवश्यकता है।"
 
-#: include/global_arrays.php:231
+#: include/global_arrays.php:232
 msgid "SNMPv3 Auth Passphrases must be 8 characters or greater."
 msgstr "SNMPv3 प्रामाणिक पासफ़्रेज़ 8 वर्ण या अधिक होने चाहिए।"
 
-#: include/global_arrays.php:234
+#: include/global_arrays.php:235
 msgid "Some Graphs not updated. Unable to change device for Data Query based Graphs."
 msgstr "कुछ ग्राफ़ अपडेट नहीं हुए। डेटा क्वेरी आधारित ग्राफ़ के लिए डिवाइस को बदलने में असमर्थ।"
 
-#: include/global_arrays.php:237
+#: include/global_arrays.php:238
 msgid "Unable to change device for Data Query based Graphs."
 msgstr "डेटा क्वेरी आधारित ग्राफ़ के लिए डिवाइस को बदलने में असमर्थ।"
 
-#: include/global_arrays.php:240
+#: include/global_arrays.php:241
 msgid "Some settings not saved. Check messages below.  Check red fields for errors."
 msgstr "कुछ सेटिंग्स सहेजे नहीं गए। नीचे संदेशों की जाँच करें। त्रुटियों के लिए लाल फ़ील्ड जांचें।"
 
-#: include/global_arrays.php:243
+#: include/global_arrays.php:244
 msgid "The file highlighted does not exist.  Please enter a valid file name."
 msgstr "हाइलाइट की गई फ़ाइल मौजूद नहीं है। कृपया एक मान्य फ़ाइल नाम दर्ज करें।"
 
-#: include/global_arrays.php:246
+#: include/global_arrays.php:247
 msgid "All User Settings have been returned to their default values."
 msgstr "सभी उपयोगकर्ता सेटिंग्स को उनके डिफ़ॉल्ट मानों पर वापस कर दिया गया है।"
 
-#: include/global_arrays.php:249
+#: include/global_arrays.php:250
 msgid "Suggested Field Name was not entered.  Please enter a field name and try again."
 msgstr "सुझाया गया फ़ील्ड नाम दर्ज नहीं किया गया था। कृपया एक फ़ील्ड नाम दर्ज करें और पुनः प्रयास करें।"
 
-#: include/global_arrays.php:252
+#: include/global_arrays.php:253
 msgid "Suggested Value was not entered.  Please enter a suggested value and try again."
 msgstr "सुझाया गया मान दर्ज नहीं किया गया था। कृपया सुझाया गया मान दर्ज करें और पुनः प्रयास करें।"
 
-#: include/global_arrays.php:255
+#: include/global_arrays.php:256
 msgid "You must select at least one object from the list."
 msgstr "आपको सूची में से कम से कम एक ऑब्जेक्ट का चयन करना होगा।"
 
-#: include/global_arrays.php:258
+#: include/global_arrays.php:259
 msgid "Device Template updated.  Remember to Sync Devices to push all changes to Devices that use this Device Template."
 msgstr "डिवाइस टेम्पलेट अपडेट किया गया। इस उपकरण टेम्पलेट का उपयोग करने वाले उपकरणों में सभी परिवर्तनों को धकेलने के लिए टेम्प्लेट टेम्पलेट को याद रखें"
 
-#: include/global_arrays.php:261
+#: include/global_arrays.php:262
 msgid "Save Successful. Settings replicated to Remote Data Collectors."
 msgstr "संग्रहण सफल। दूरस्थ डेटा कलेक्टरों के लिए प्रतिकृति सेटिंग्स"
 
-#: include/global_arrays.php:264
+#: include/global_arrays.php:265
 msgid "Save Failed.  Minimum Values must be less than Maximum Value."
 msgstr "बचाव असफल हुआ। न्यूनतम मान अधिकतम मूल्य से कम होना चाहिए।"
 
-#: include/global_arrays.php:267
+#: include/global_arrays.php:268
 msgid "Unable to change password.  User account not found."
 msgstr "पासवर्ड बदलने में असमर्थ। उपयोगकर्ता खाता नहीं मिला।"
 
-#: include/global_arrays.php:270
+#: include/global_arrays.php:271
 msgid "Data Input Saved.  You must update the Data Templates referencing this Data Input Method before creating Graphs or Data Sources."
 msgstr "डेटा इनपुट सहेजा गया। आपको ग्राफ़ या डेटा स्रोत बनाने से पहले इस डेटा इनपुट विधि को संदर्भित करने वाले डेटा टेम्प्लेट को अपडेट करना होगा।"
 
-#: include/global_arrays.php:273
+#: include/global_arrays.php:274
 msgid "Data Input Saved.  You must update the Data Templates referencing this Data Input Method before the Data Collectors will start using any new or modified Data Input - Input Fields."
 msgstr "डेटा इनपुट सहेजा गया। डेटा संग्राहक किसी भी नए या संशोधित डेटा इनपुट इनपुट फ़ील्ड का उपयोग करना शुरू करने से पहले आपको इस डेटा इनपुट विधि को संदर्भित करने वाले डेटा टेम्प्लेट को अपडेट करना होगा।"
 
-#: include/global_arrays.php:276
+#: include/global_arrays.php:277
 msgid "Data Input Field Saved.  You must update the Data Templates referencing this Data Input Method before creating Graphs or Data Sources."
 msgstr "डेटा इनपुट फ़ील्ड सहेजा गया। आपको ग्राफ़ या डेटा स्रोत बनाने से पहले इस डेटा इनपुट विधि को संदर्भित करने वाले डेटा टेम्प्लेट को अपडेट करना होगा।"
 
-#: include/global_arrays.php:279
+#: include/global_arrays.php:280
 msgid "Data Input Field Saved.  You must update the Data Templates referencing this Data Input Method before the Data Collectors will start using any new or modified Data Input - Input Fields."
 msgstr "डेटा इनपुट फ़ील्ड सहेजा गया। डेटा संग्राहक किसी भी नए या संशोधित डेटा इनपुट इनपुट फ़ील्ड का उपयोग करना शुरू करने से पहले आपको इस डेटा इनपुट विधि को संदर्भित करने वाले डेटा टेम्प्लेट को अपडेट करना होगा।"
 
-#: include/global_arrays.php:282
+#: include/global_arrays.php:283
 msgid "Log file specified is not a Kadupul log or archive file."
 msgstr "निर्दिष्ट लॉग फ़ाइल Kadupul लॉग या संग्रह फ़ाइल नहीं है।"
 
-#: include/global_arrays.php:285
+#: include/global_arrays.php:286
 msgid "Log file specified was Kadupul archive file and was removed."
 msgstr "निर्दिष्ट लॉग फ़ाइल Kadupul संग्रह फ़ाइल थी और हटा दी गई थी।"
 
-#: include/global_arrays.php:288
+#: include/global_arrays.php:289
 msgid "Kadupul log purged successfully"
 msgstr "Kadupul लॉग सफलतापूर्वक पूर्ण हुआ"
 
-#: include/global_arrays.php:291
+#: include/global_arrays.php:292
 msgid "If you force a password change, you must also allow the user to change their password."
 msgstr "यदि आप पासवर्ड बदलने के लिए बाध्य करते हैं, तो आपको उपयोगकर्ता को अपना पासवर्ड बदलने की अनुमति भी देनी चाहिए"
 
-#: include/global_arrays.php:294
+#: include/global_arrays.php:295
 msgid "You are not allowed to change your password."
 msgstr "आपको अपना पासवर्ड बदलने की अनुमति नहीं है।"
 
-#: include/global_arrays.php:297
+#: include/global_arrays.php:298
 msgid "Unable to determine size of password field, please check permissions of db user"
 msgstr "पासवर्ड फ़ील्ड का आकार निर्धारित करने में असमर्थ, कृपया db उपयोगकर्ता की अनुमतियां देखें"
 
-#: include/global_arrays.php:300
+#: include/global_arrays.php:301
 #, fuzzy
 msgid "Unable to increase size of password field, please check permission of db user"
 msgstr "पासवर्ड फ़ील्ड का आकार बढ़ाने में असमर्थ, db उपयोगकर्ता की अनुमति की जाँच करें"
 
-#: include/global_arrays.php:303
+#: include/global_arrays.php:304
 msgid "LDAP/AD based password change not supported."
 msgstr "LDAP / AD आधारित पासवर्ड परिवर्तन समर्थित नहीं है।"
 
-#: include/global_arrays.php:306
+#: include/global_arrays.php:307
 msgid "Password successfully changed."
 msgstr "कूटशब्द सफलतापूर्वक बदला गया"
 
-#: include/global_arrays.php:309
+#: include/global_arrays.php:310
 msgid "Unable to clear log, no write permissions"
 msgstr "लॉग साफ़ करने में असमर्थ, कोई लिखने की अनुमति नहीं"
 
-#: include/global_arrays.php:312
+#: include/global_arrays.php:313
 msgid "Unable to clear log, file does not exist"
 msgstr "लॉग साफ़ करने में असमर्थ, फ़ाइल मौजूद नहीं है"
 
-#: include/global_arrays.php:315
+#: include/global_arrays.php:316
 msgid "CSRF Timeout, refreshing page."
 msgstr "CSRF टाइमआउट, ताज़ा पृष्ठ।"
 
-#: include/global_arrays.php:318
+#: include/global_arrays.php:319
 msgid "CSRF Timeout occurred due to inactivity, page refreshed."
 msgstr "CSRF टाइमआउट निष्क्रियता के कारण हुआ, पृष्ठ ताज़ा हुआ।"
 
-#: include/global_arrays.php:321
+#: include/global_arrays.php:322
 msgid "Invalid timestamp. Select timestamp in the future."
 msgstr "अवैध टाइमस्टैम्प। भविष्य में टाइमस्टैम्प का चयन करें।"
 
-#: include/global_arrays.php:324
+#: include/global_arrays.php:325
 msgid "Data Collector(s) synchronized for offline operation"
 msgstr "डेटा कलेक्टर (ओं) को ऑफ़लाइन ऑपरेशन के लिए सिंक्रनाइज़ किया गया"
 
-#: include/global_arrays.php:327
+#: include/global_arrays.php:328
 msgid "Data Collector(s) not found when attempting synchronization"
 msgstr "सिंक्रनाइज़ेशन का प्रयास करते समय डेटा कलेक्टर (ओं) को नहीं मिला"
 
-#: include/global_arrays.php:330
+#: include/global_arrays.php:331
 msgid "Unable to establish MySQL connection with Remote Data Collector."
 msgstr "दूरस्थ डेटा संग्राहक के साथ MySQL कनेक्शन स्थापित करने में असमर्थ।"
 
-#: include/global_arrays.php:333
+#: include/global_arrays.php:334
 #, fuzzy
 msgid "Data Collector synchronization must be initiated from the main Kadupul server."
 msgstr "डेटा कलेक्टर सिंक्रनाइज़ेशन को मुख्य Kadupul सर्वर से शुरू किया जाना चाहिए।"
 
-#: include/global_arrays.php:336
+#: include/global_arrays.php:337
 #, fuzzy
 msgid "Synchronization does not include the Central Kadupul Database server."
 msgstr "सिंक्रनाइज़ेशन में सेंट्रल Kadupul डेटाबेस सर्वर शामिल नहीं है।"
 
-#: include/global_arrays.php:339
+#: include/global_arrays.php:340
 msgid "When saving a Remote Data Collector, the Database Hostname must be unique from all others."
 msgstr "रिमोट डेटा कलेक्टर को सहेजते समय, डेटाबेस होस्टनाम अन्य सभी से अद्वितीय होना चाहिए।"
 
-#: include/global_arrays.php:342
+#: include/global_arrays.php:343
 msgid "Your Remote Database Hostname must be something other than 'localhost' for each Remote Data Collector."
 msgstr "आपका रिमोट डेटाबेस होस्टनाम प्रत्येक दूरस्थ डेटा कलेक्टर के लिए &#39;लोकलहोस्ट&#39; के अलावा कुछ होना चाहिए।"
 
-#: include/global_arrays.php:345
+#: include/global_arrays.php:346
 msgid "Path variables on this page were only saved locally."
 msgstr "इस पृष्ठ पर पथ चर केवल स्थानीय रूप से सहेजे गए थे।"
 
-#: include/global_arrays.php:348
+#: include/global_arrays.php:349
 msgid "Report Saved"
 msgstr "रिपोर्ट सहेज ली गई"
 
-#: include/global_arrays.php:351
+#: include/global_arrays.php:352
 msgid "Report Save Failed"
 msgstr "रिपोर्ट सहेजें विफल"
 
-#: include/global_arrays.php:354
+#: include/global_arrays.php:355
 msgid "Report Item Saved"
 msgstr "रिपोर्ट आइटम सहेजा गया"
 
-#: include/global_arrays.php:357
+#: include/global_arrays.php:358
 msgid "Report Item Save Failed"
 msgstr "रिपोर्ट आइटम सहेजें विफल"
 
-#: include/global_arrays.php:360
+#: include/global_arrays.php:361
 msgid "Graph was not found attempting to Add to Report"
 msgstr "ग्राफ़ को रिपोर्ट करने के लिए जोड़ने का प्रयास नहीं किया गया था"
 
-#: include/global_arrays.php:363
+#: include/global_arrays.php:364
 msgid "Unable to Add Graphs.  Current user is not owner"
 msgstr "रेखांकन जोड़ने में असमर्थ। वर्तमान उपयोगकर्ता स्वामी नहीं है"
 
-#: include/global_arrays.php:366
+#: include/global_arrays.php:367
 msgid "Unable to Add all Graphs.  See error message for details."
 msgstr "सभी ग्राफ़ जोड़ने में असमर्थ। विवरण के लिए त्रुटि संदेश देखें।"
 
-#: include/global_arrays.php:369
+#: include/global_arrays.php:370
 msgid "You must select at least one Graph to add to a Report."
 msgstr "रिपोर्ट में जोड़ने के लिए आपको कम से कम एक ग्राफ़ चुनना होगा।"
 
-#: include/global_arrays.php:372
+#: include/global_arrays.php:373
 msgid "All Graphs have been added to the Report.  Duplicate Graphs with the same Timespan were skipped."
 msgstr "सभी ग्राफ़ रिपोर्ट में जोड़ दिए गए हैं। एक ही Timespan के साथ डुप्लिकेट रेखांकन छोड़ दिया गया।"
 
-#: include/global_arrays.php:375
+#: include/global_arrays.php:376
 msgid "Poller Resource Cache cleared.  Main Data Collector will rebuild at the next poller start, and Remote Data Collectors will sync afterwards."
 msgstr "पोलर संसाधन कैश को मंजूरी दी। मुख्य डेटा कलेक्टर अगले मतदाता शुरुआत में पुनर्निर्माण करेगा, और दूरस्थ डेटा कलेक्टर बाद में सिंक करेगा।"
 
-#: include/global_arrays.php:378
+#: include/global_arrays.php:379
 msgid "Permission Denied.  You do not have permission to the requested action."
 msgstr "अनुमति नहीं मिली। आपके पास अनुरोधित कार्रवाई की अनुमति नहीं है।"
 
-#: include/global_arrays.php:381
+#: include/global_arrays.php:382
 msgid "Page is not defined.  Therefore, it can not be displayed."
 msgstr "पेज परिभाषित नहीं है। इसलिए, इसे प्रदर्शित नहीं किया जा सकता है।"
 
-#: include/global_arrays.php:384
+#: include/global_arrays.php:385
 msgid "Unexpected error occurred"
 msgstr "अनपेक्षित त्रुटि हुई"
 
-#: include/global_arrays.php:499 include/global_arrays.php:922
+#: include/global_arrays.php:500 include/global_arrays.php:923
 msgid "Function"
 msgstr "फ़ंक्शन"
 
-#: include/global_arrays.php:500 include/global_arrays.php:924
+#: include/global_arrays.php:501 include/global_arrays.php:925
 msgid "Special Data Source"
 msgstr "विशेष डेटा स्रोत"
 
-#: include/global_arrays.php:501 include/global_arrays.php:926
+#: include/global_arrays.php:502 include/global_arrays.php:927
 msgid "Custom String"
 msgstr "कस्टम स्ट्रिंग"
 
-#: include/global_arrays.php:505 include/global_arrays.php:963
+#: include/global_arrays.php:506 include/global_arrays.php:964
 msgid "Current Graph Item Data Source"
 msgstr "वर्तमान ग्राफ आइटम डेटा स्रोत"
 
-#: include/global_arrays.php:510
+#: include/global_arrays.php:511
 msgid "SNMP Query"
 msgstr "SNMP क्वेरी"
 
-#: include/global_arrays.php:511 include/global_arrays.php:518
+#: include/global_arrays.php:512 include/global_arrays.php:519
 msgid "Script/Command"
 msgstr "स्क्रिप्ट / कमान"
 
-#: include/global_arrays.php:512
+#: include/global_arrays.php:513
 msgid "Script Query"
 msgstr "स्क्रिप्ट क्वेरी"
 
-#: include/global_arrays.php:513 include/global_arrays.php:519
+#: include/global_arrays.php:514 include/global_arrays.php:520
 #: utilities.php:2158
 msgid "Script Server"
 msgstr "स्क्रिप्ट सर्वर"
 
-#: include/global_arrays.php:514
+#: include/global_arrays.php:515
 msgid "Script Server Query"
 msgstr "स्क्रिप्ट सर्वर"
 
-#: include/global_arrays.php:525
+#: include/global_arrays.php:526
 msgid "Index Count"
 msgstr "सूचकांक गणना"
 
-#: include/global_arrays.php:526
+#: include/global_arrays.php:527
 msgid "Verify All"
 msgstr "सभी को सत्यापित करें"
 
-#: include/global_arrays.php:530
+#: include/global_arrays.php:531
 msgid "All Re-Indexing will be manual or managed through scripts or Device Automation."
 msgstr "सभी री-इंडेक्सिंग को स्क्रिप्ट या डिवाइस ऑटोमेशन के माध्यम से मैन्युअल या प्रबंधित किया जाएगा।"
 
-#: include/global_arrays.php:531
+#: include/global_arrays.php:532
 msgid "When the Devices SNMP uptime goes backward, a Re-Index will be performed."
 msgstr "जब डिवाइस SNMP अपटाइम पिछड़ जाता है, तो एक Re-Index किया जाएगा।"
 
-#: include/global_arrays.php:532
+#: include/global_arrays.php:533
 msgid "When the Data Query index count changes, a Re-Index will be performed."
 msgstr "जब डेटा क्वेरी इंडेक्स की गणना बदलती है, तो एक पुन: सूचकांक का प्रदर्शन किया जाएगा।"
 
-#: include/global_arrays.php:533
+#: include/global_arrays.php:534
 msgid "Every polling cycle, a Re-Index will be performed.  Very expensive."
 msgstr "हर मतदान चक्र, एक पुन: सूचकांक किया जाएगा। बहुत महंगा।"
 
-#: include/global_arrays.php:537
+#: include/global_arrays.php:538
 msgid "SNMP Field Name (Dropdown)"
 msgstr "SNMP फ़ील्ड नाम (ड्रॉपडाउन)"
 
-#: include/global_arrays.php:538
+#: include/global_arrays.php:539
 msgid "SNMP Field Value (From User)"
 msgstr "SNMP फ़ील्ड मान (उपयोगकर्ता से)"
 
-#: include/global_arrays.php:539
+#: include/global_arrays.php:540
 msgid "SNMP Output Type (Dropdown)"
 msgstr "SNMP आउटपुट टाइप (ड्रॉपडाउन)"
 
-#: include/global_arrays.php:563 include/global_arrays.php:569
+#: include/global_arrays.php:564 include/global_arrays.php:570
 msgid "Normal"
 msgstr "सामान्य"
 
-#: include/global_arrays.php:564
+#: include/global_arrays.php:565
 msgid "Light"
 msgstr "हल्का"
 
-#: include/global_arrays.php:565 include/global_arrays.php:570
+#: include/global_arrays.php:566 include/global_arrays.php:571
 msgid "Mono"
 msgstr "मोनो"
 
-#: include/global_arrays.php:574
+#: include/global_arrays.php:575
 msgid "North"
 msgstr "उत्तर"
 
-#: include/global_arrays.php:575
+#: include/global_arrays.php:576
 msgid "South"
 msgstr "दक्षिण"
 
-#: include/global_arrays.php:576
+#: include/global_arrays.php:577
 msgid "West"
 msgstr "पश्चिम"
 
-#: include/global_arrays.php:577
+#: include/global_arrays.php:578
 msgid "East"
 msgstr "पूर्व"
 
-#: include/global_arrays.php:582
+#: include/global_arrays.php:583
 msgid "Left"
 msgstr "बाएं"
 
-#: include/global_arrays.php:583
+#: include/global_arrays.php:584
 msgid "Right"
 msgstr "सही"
 
-#: include/global_arrays.php:584
+#: include/global_arrays.php:585
 msgid "Justified"
 msgstr "न्याययुक्त"
 
-#: include/global_arrays.php:585 lib/html.php:2883
+#: include/global_arrays.php:586 lib/html.php:2883
 msgid "Center"
 msgstr "केंद्र"
 
-#: include/global_arrays.php:589
+#: include/global_arrays.php:590
 msgid "Top -> Down"
 msgstr "शीर्ष -&gt; नीचे"
 
-#: include/global_arrays.php:590
+#: include/global_arrays.php:591
 msgid "Bottom -> Up"
 msgstr "निचला -&gt; ऊपर"
 
-#: include/global_arrays.php:594 tree.php:1766
+#: include/global_arrays.php:595 tree.php:1766
 msgid "Numeric"
 msgstr "संख्यावाचक"
 
-#: include/global_arrays.php:595
+#: include/global_arrays.php:596
 msgid "Timestamp"
 msgstr "टाइमस्टैम्प"
 
-#: include/global_arrays.php:596
+#: include/global_arrays.php:597
 msgid "Duration"
 msgstr "अवधि"
 
-#: include/global_arrays.php:634
+#: include/global_arrays.php:635
 msgid "Not In Use"
 msgstr "बेकार"
 
-#: include/global_arrays.php:635 include/global_arrays.php:636
-#: include/global_arrays.php:637 include/global_arrays.php:880
-#: include/global_arrays.php:881
+#: include/global_arrays.php:636 include/global_arrays.php:637
+#: include/global_arrays.php:638 include/global_arrays.php:881
+#: include/global_arrays.php:882
 #, php-format
 msgid "Version %d"
 msgstr "संस्करण% d"
 
-#: include/global_arrays.php:641 include/global_arrays.php:651
+#: include/global_arrays.php:642 include/global_arrays.php:652
 msgid "[None]"
 msgstr "कुछ भी नहीं"
 
-#: include/global_arrays.php:642
+#: include/global_arrays.php:643
 msgid "MD5"
 msgstr "एमडी5"
 
-#: include/global_arrays.php:643
+#: include/global_arrays.php:644
 msgid "SHA"
 msgstr "एसएचए"
 
-#: include/global_arrays.php:644
+#: include/global_arrays.php:645
 msgid "SHA-224"
 msgstr "एसएचए-224"
 
-#: include/global_arrays.php:645
+#: include/global_arrays.php:646
 msgid "SHA-256"
 msgstr "एसएचए-256"
 
-#: include/global_arrays.php:646
+#: include/global_arrays.php:647
 #, fuzzy
 msgid "SHA-384"
 msgstr "SHA-392"
 
-#: include/global_arrays.php:647
+#: include/global_arrays.php:648
 msgid "SHA-512"
 msgstr "एसएचए-512"
 
-#: include/global_arrays.php:652
+#: include/global_arrays.php:653
 msgid "DES"
 msgstr "डेस"
 
-#: include/global_arrays.php:653
+#: include/global_arrays.php:654
 msgid "AES"
 msgstr "डेस"
 
-#: include/global_arrays.php:654
+#: include/global_arrays.php:655
 msgid "AES-128"
 msgstr "एईएस 128"
 
-#: include/global_arrays.php:655
+#: include/global_arrays.php:656
 msgid "AES-192"
 msgstr "एईएस 192"
 
-#: include/global_arrays.php:656
+#: include/global_arrays.php:657
 msgid "AES-192-C"
 msgstr "एईएस 192"
 
-#: include/global_arrays.php:657
+#: include/global_arrays.php:658
 msgid "AES-256"
 msgstr "एईएस 256"
 
-#: include/global_arrays.php:658
+#: include/global_arrays.php:659
 msgid "AES-256-C"
 msgstr "एईएस 256"
 
-#: include/global_arrays.php:667
+#: include/global_arrays.php:668
 msgid "Logfile Only"
 msgstr "केवल लॉगफ़ाइल"
 
-#: include/global_arrays.php:668
+#: include/global_arrays.php:669
 msgid "Logfile and Syslog/Eventlog"
 msgstr "Logfile और Syslog / Eventlog"
 
-#: include/global_arrays.php:669
+#: include/global_arrays.php:670
 msgid "Syslog/Eventlog Only"
 msgstr "केवल Syslog / Eventlog"
 
-#: include/global_arrays.php:674
+#: include/global_arrays.php:675
 msgid "Ping and SNMP Uptime"
 msgstr "पिंग और SNMP अपटाइम"
 
-#: include/global_arrays.php:675
+#: include/global_arrays.php:676
 msgid "Ping or SNMP Uptime"
 msgstr "पिंग या SNMP अपटाइम"
 
-#: include/global_arrays.php:676
+#: include/global_arrays.php:677
 msgid "SNMP Uptime"
 msgstr "SNMP अपटाइम"
 
-#: include/global_arrays.php:677
+#: include/global_arrays.php:678
 msgid "SNMP Desc"
 msgstr "एसएनएमपी डेसक"
 
-#: include/global_arrays.php:678
+#: include/global_arrays.php:679
 msgid "SNMP getNext"
 msgstr "SNMP getNext"
 
-#: include/global_arrays.php:679
+#: include/global_arrays.php:680
 msgid "Ping"
 msgstr "पिंग"
 
-#: include/global_arrays.php:683
+#: include/global_arrays.php:684
 msgid "ICMP Ping"
 msgstr "ICMP पिंग"
 
-#: include/global_arrays.php:684
+#: include/global_arrays.php:685
 msgid "TCP Ping"
 msgstr "टीसीपी पिंग"
 
-#: include/global_arrays.php:685
+#: include/global_arrays.php:686
 #, fuzzy
 msgid "TCP Ping Closed"
 msgstr "टीसीपी पिंग"
 
-#: include/global_arrays.php:686
+#: include/global_arrays.php:687
 msgid "UDP Ping"
 msgstr "यूडीपी पिंग"
 
-#: include/global_arrays.php:690
+#: include/global_arrays.php:691
 msgid "NONE - Syslog Only if Selected"
 msgstr "कोई नहीं - यदि केवल चयनित है तो Syslog"
 
-#: include/global_arrays.php:691
+#: include/global_arrays.php:692
 msgid "LOW - Statistics and Errors"
 msgstr "कम - सांख्यिकी और त्रुटियां"
 
-#: include/global_arrays.php:692
+#: include/global_arrays.php:693
 msgid "MEDIUM - Statistics, Errors and Results"
 msgstr "मेडम - सांख्यिकी, त्रुटियां और परिणाम"
 
-#: include/global_arrays.php:693
+#: include/global_arrays.php:694
 msgid "HIGH - Statistics, Errors, Results and Major I/O Events"
 msgstr "उच्च - सांख्यिकी, त्रुटियां, परिणाम और प्रमुख I / O घटनाएँ"
 
-#: include/global_arrays.php:694
+#: include/global_arrays.php:695
 msgid "DEBUG - Statistics, Errors, Results, I/O and Program Flow"
 msgstr "DEBUG - सांख्यिकी, त्रुटियां, परिणाम, I / O और कार्यक्रम प्रवाह"
 
-#: include/global_arrays.php:695
+#: include/global_arrays.php:696
 msgid "DEVEL - Developer DEBUG Level"
 msgstr "डेवलपर - डेवलपर डेबग स्तर"
 
-#: include/global_arrays.php:708
+#: include/global_arrays.php:709
 msgid "Selected Poller Interval"
 msgstr "चयनित पोलर इंटरवल"
 
-#: include/global_arrays.php:726 include/global_arrays.php:727
-#: include/global_arrays.php:728 include/global_arrays.php:729
-#: include/global_arrays.php:799 include/global_arrays.php:800
-#: include/global_arrays.php:801 include/global_arrays.php:802
+#: include/global_arrays.php:727 include/global_arrays.php:728
+#: include/global_arrays.php:729 include/global_arrays.php:730
+#: include/global_arrays.php:800 include/global_arrays.php:801
+#: include/global_arrays.php:802 include/global_arrays.php:803
 #, php-format
 msgid "Every %d Seconds"
 msgstr "हर% d सेकंड"
 
-#: include/global_arrays.php:730 include/global_arrays.php:803
-#: include/global_arrays.php:848
+#: include/global_arrays.php:731 include/global_arrays.php:804
+#: include/global_arrays.php:849
 msgid "Every Minute"
 msgstr "हर मिनट"
 
-#: include/global_arrays.php:731 include/global_arrays.php:732
-#: include/global_arrays.php:733 include/global_arrays.php:734
-#: include/global_arrays.php:735 include/global_arrays.php:804
-#: include/global_arrays.php:809 include/global_arrays.php:849
+#: include/global_arrays.php:732 include/global_arrays.php:733
+#: include/global_arrays.php:734 include/global_arrays.php:735
+#: include/global_arrays.php:736 include/global_arrays.php:805
+#: include/global_arrays.php:810 include/global_arrays.php:850
 #, php-format
 msgid "Every %d Minutes"
 msgstr "प्रत्येक% d मिनट"
 
-#: include/global_arrays.php:736 include/global_arrays.php:810
+#: include/global_arrays.php:737 include/global_arrays.php:811
 msgid "Every Hour"
 msgstr "प्रत्येक घंटे"
 
-#: include/global_arrays.php:737 include/global_arrays.php:738
-#: include/global_arrays.php:739 include/global_arrays.php:740
-#: include/global_arrays.php:811 include/global_arrays.php:812
-#: include/global_arrays.php:813 include/global_arrays.php:814
-#: include/global_arrays.php:1869 include/global_arrays.php:1870
-#: include/global_arrays.php:1871 include/global_arrays.php:1872
-#: include/global_arrays.php:1873 include/global_settings.php:2551
+#: include/global_arrays.php:738 include/global_arrays.php:739
+#: include/global_arrays.php:740 include/global_arrays.php:741
+#: include/global_arrays.php:812 include/global_arrays.php:813
+#: include/global_arrays.php:814 include/global_arrays.php:815
+#: include/global_arrays.php:1870 include/global_arrays.php:1871
+#: include/global_arrays.php:1872 include/global_arrays.php:1873
+#: include/global_arrays.php:1874 include/global_settings.php:2551
 #: include/global_settings.php:2552
 #, php-format
 msgid "Every %d Hours"
 msgstr "हर %d घंटे में"
 
-#: include/global_arrays.php:741
+#: include/global_arrays.php:742
 #, php-format
 msgid "Every %d Day"
 msgstr "हर %d दिन"
 
-#: include/global_arrays.php:753
+#: include/global_arrays.php:754
 #, fuzzy, php-format
 msgid "%0.1f Minutes"
 msgstr "घंटे"
 
-#: include/global_arrays.php:786 include/global_arrays.php:1472
+#: include/global_arrays.php:787 include/global_arrays.php:1473
 #: include/global_settings.php:1635 rrdcleaner.php:541
 #, php-format
 msgid "%d Year"
 msgstr "% d वष"
 
-#: include/global_arrays.php:808
+#: include/global_arrays.php:809
 msgid "Disabled/Manual"
 msgstr "विकलांग / मैनुअल"
 
-#: include/global_arrays.php:815
+#: include/global_arrays.php:816
 msgid "Every day"
 msgstr "हर रोज"
 
-#: include/global_arrays.php:819
+#: include/global_arrays.php:820
 msgid "1 Thread"
 msgstr "% d थ्रेड"
 
-#: include/global_arrays.php:863
+#: include/global_arrays.php:864
 msgid "Builtin Authentication"
 msgstr "बिल्टइन ऑथेंटिकेशन"
 
-#: include/global_arrays.php:864
+#: include/global_arrays.php:865
 msgid "Web Basic Authentication"
 msgstr "वेब मूल प्रमाणीकरण"
 
-#: include/global_arrays.php:868
+#: include/global_arrays.php:869
 msgid "LDAP Authentication"
 msgstr "LDAP प्रमाणीकरण"
 
-#: include/global_arrays.php:869
+#: include/global_arrays.php:870
 msgid "Multiple LDAP/AD Domains"
 msgstr "एकाधिक LDAP / AD डोमेन"
 
-#: include/global_arrays.php:874
+#: include/global_arrays.php:875
 msgid "Active Directory"
 msgstr "सक्रिय निर्देशिका"
 
-#: include/global_arrays.php:886
+#: include/global_arrays.php:887
 msgid "LDAPS"
 msgstr "एलडीएपी"
 
-#: include/global_arrays.php:887
+#: include/global_arrays.php:888
 msgid "LDAP + TLS"
 msgstr "एलडीएपी + टीएलएस"
 
-#: include/global_arrays.php:892
+#: include/global_arrays.php:893
 msgid "Hard"
 msgstr "मुश्किल"
 
-#: include/global_arrays.php:893
+#: include/global_arrays.php:894
 msgid "Demand"
 msgstr "माँग"
 
-#: include/global_arrays.php:894 user_admin.php:653 user_group_admin.php:795
+#: include/global_arrays.php:895 user_admin.php:653 user_group_admin.php:795
 msgid "Allow"
 msgstr "अनुमति दें"
 
-#: include/global_arrays.php:895
+#: include/global_arrays.php:896
 msgid "Try"
 msgstr "प्रयत्न"
 
-#: include/global_arrays.php:899
+#: include/global_arrays.php:900
 msgid "No Searching"
 msgstr "कोई खोज नहीं"
 
-#: include/global_arrays.php:900
+#: include/global_arrays.php:901
 msgid "Anonymous Searching"
 msgstr "अनाम खोज"
 
-#: include/global_arrays.php:901
+#: include/global_arrays.php:902
 msgid "Specific Searching"
 msgstr "विशिष्ट खोज"
 
-#: include/global_arrays.php:918
+#: include/global_arrays.php:919
 msgid "Enabled (strict mode)"
 msgstr "सक्षम (सख्त मोड)"
 
-#: include/global_arrays.php:923 include/global_form.php:2132
+#: include/global_arrays.php:924 include/global_form.php:2132
 #: include/global_form.php:2174 lib/api_automation.php:1287
 #: lib/api_automation.php:1350
 msgid "Operator"
 msgstr "à¤µà¥à¤¯à¤à¥à¤¤à¤¿à¤à¤¤"
 
-#: include/global_arrays.php:925
+#: include/global_arrays.php:926
 msgid "Another CDEF"
 msgstr "एक और सीडीईएफ"
 
-#: include/global_arrays.php:944
+#: include/global_arrays.php:945
 msgid "Inherit Parent Sorting"
 msgstr "इनहेरिट पेरेंट सॉर्टिंग"
 
-#: include/global_arrays.php:945
+#: include/global_arrays.php:946
 msgid "Manual Ordering (No Sorting)"
 msgstr "मैनुअल ऑर्डरिंग (कोई छँटाई नहीं)"
 
-#: include/global_arrays.php:946
+#: include/global_arrays.php:947
 msgid "Alphabetic Ordering"
 msgstr "वर्णनात्मक आदेश"
 
-#: include/global_arrays.php:947
+#: include/global_arrays.php:948
 msgid "Natural Ordering"
 msgstr "प्राकृतिक आदेश"
 
-#: include/global_arrays.php:948
+#: include/global_arrays.php:949
 msgid "Numeric Ordering"
 msgstr "न्यूमेरिक ऑर्डरिंग"
 
-#: include/global_arrays.php:952 lib/rrd.php:4142
+#: include/global_arrays.php:953 lib/rrd.php:4142
 msgid "Header"
 msgstr "हेडर"
 
-#: include/global_arrays.php:953 include/global_arrays.php:1004
-#: include/global_arrays.php:1689 include/global_arrays.php:1858
+#: include/global_arrays.php:954 include/global_arrays.php:1005
+#: include/global_arrays.php:1690 include/global_arrays.php:1859
 #: lib/html.php:2872
 msgid "Graph"
 msgstr "काल ग्राफ"
 
-#: include/global_arrays.php:959 tree.php:1953
+#: include/global_arrays.php:960 tree.php:1953
 msgid "Data Query Index"
 msgstr "डेटा क्वेरी इंडेक्स"
 
-#: include/global_arrays.php:964
+#: include/global_arrays.php:965
 msgid "Current Graph Item Polling Interval"
 msgstr "वर्तमान ग्राफ आइटम मतदान अंतराल"
 
-#: include/global_arrays.php:965
+#: include/global_arrays.php:966
 msgid "All Data Sources (Do not Include Duplicates)"
 msgstr "सभी डेटा स्रोत (डुप्लिकेट शामिल न करें)"
 
-#: include/global_arrays.php:966
+#: include/global_arrays.php:967
 msgid "All Data Sources (Include Duplicates)"
 msgstr "सभी डेटा स्रोत (डुप्लिकेट शामिल करें)"
 
-#: include/global_arrays.php:967
+#: include/global_arrays.php:968
 msgid "All Similar Data Sources (Do not Include Duplicates)"
 msgstr "सभी समान डेटा स्रोत (डुप्लिकेट शामिल न करें)"
 
-#: include/global_arrays.php:968
+#: include/global_arrays.php:969
 msgid "All Similar Data Sources (Do not Include Duplicates) Polling Interval"
 msgstr "सभी समान डेटा स्रोत (डुप्लिकेट को शामिल न करें) मतदान अंतराल"
 
-#: include/global_arrays.php:969
+#: include/global_arrays.php:970
 msgid "All Similar Data Sources (Include Duplicates)"
 msgstr "सभी समान डेटा स्रोत (डुप्लिकेट शामिल करें)"
 
-#: include/global_arrays.php:970
+#: include/global_arrays.php:971
 msgid "Current Data Source Item: Minimum Value"
 msgstr "वर्तमान डेटा स्रोत आइटम: न्यूनतम मूल्य"
 
-#: include/global_arrays.php:971
+#: include/global_arrays.php:972
 msgid "Current Data Source Item: Maximum Value"
 msgstr "वर्तमान डेटा स्रोत आइटम: अधिकतम मूल्य"
 
-#: include/global_arrays.php:972
+#: include/global_arrays.php:973
 msgid "Graph: Lower Limit"
 msgstr "ग्राफ: निचली सीमा"
 
-#: include/global_arrays.php:973
+#: include/global_arrays.php:974
 msgid "Graph: Upper Limit"
 msgstr "ग्राफ़: ऊपरी सीमा"
 
-#: include/global_arrays.php:974
+#: include/global_arrays.php:975
 msgid "Count of All Data Sources (Do not Include Duplicates)"
 msgstr "सभी डेटा स्रोतों की गणना (डुप्लिकेट शामिल न करें)"
 
-#: include/global_arrays.php:975
+#: include/global_arrays.php:976
 msgid "Count of All Data Sources (Include Duplicates)"
 msgstr "सभी डेटा स्रोतों की गणना (डुप्लिकेट शामिल करें)"
 
-#: include/global_arrays.php:976
+#: include/global_arrays.php:977
 msgid "Count of All Similar Data Sources (Do not Include Duplicates)"
 msgstr "सभी समान डेटा स्रोतों की गणना (डुप्लिकेट शामिल न करें)"
 
-#: include/global_arrays.php:977
+#: include/global_arrays.php:978
 msgid "Count of All Similar Data Sources (Include Duplicates)"
 msgstr "सभी समान डेटा स्रोतों की गणना (डुप्लिकेट शामिल करें)"
 
-#: include/global_arrays.php:982 include/global_arrays.php:1062
+#: include/global_arrays.php:983 include/global_arrays.php:1063
 msgid "Main Console"
 msgstr "कंसोल"
 
-#: include/global_arrays.php:983
+#: include/global_arrays.php:984
 msgid "Console Page"
 msgstr "कंसोल पेज के ऊपर"
 
-#: include/global_arrays.php:986 lib/html_form_template.php:627
+#: include/global_arrays.php:987 lib/html_form_template.php:627
 #: lib/html_form_template.php:639
 msgid "New Graphs"
 msgstr "नए रेखांकन"
 
-#: include/global_arrays.php:989 include/global_arrays.php:1045
-#: include/global_arrays.php:1064
+#: include/global_arrays.php:990 include/global_arrays.php:1046
+#: include/global_arrays.php:1065
 msgid "Management"
 msgstr "प्रबंधन"
 
-#: include/global_arrays.php:991 tree.php:915 tree.php:2348
+#: include/global_arrays.php:992 tree.php:915 tree.php:2348
 msgid "Sites"
 msgstr "साइटां"
 
-#: include/global_arrays.php:992 include/global_arrays.php:1230 tree.php:2208
+#: include/global_arrays.php:993 include/global_arrays.php:1231 tree.php:2208
 #: tree.php:2223 tree.php:2290 user_admin.php:1343 user_admin.php:2371
 #: user_admin.php:2377 user_group_admin.php:1355 user_group_admin.php:2166
 msgid "Trees"
 msgstr "पेड़"
 
-#: include/global_arrays.php:997 include/global_arrays.php:1048
-#: include/global_arrays.php:1065
+#: include/global_arrays.php:998 include/global_arrays.php:1049
+#: include/global_arrays.php:1066
 msgid "Data Collection"
 msgstr "डेटा संग्रहण"
 
-#: include/global_arrays.php:998 include/global_arrays.php:1049
-#: include/global_arrays.php:2202 pollers.php:860
+#: include/global_arrays.php:999 include/global_arrays.php:1050
+#: include/global_arrays.php:2203 pollers.php:860
 msgid "Data Collectors"
 msgstr "डेटा संग्राहक"
 
-#: include/global_arrays.php:1000 include/global_arrays.php:1225
-#: include/global_arrays.php:2364
+#: include/global_arrays.php:1001 include/global_arrays.php:1226
+#: include/global_arrays.php:2365
 msgid "Data Input Methods"
 msgstr "डेटा इनपुट के तरीके"
 
-#: include/global_arrays.php:1006 include/global_arrays.php:2895
+#: include/global_arrays.php:1007 include/global_arrays.php:2896
 msgid "Aggregate"
 msgstr "कुल"
 
-#: include/global_arrays.php:1009 include/global_arrays.php:1067
-#: include/global_arrays.php:1222 include/global_settings.php:530
+#: include/global_arrays.php:1010 include/global_arrays.php:1068
+#: include/global_arrays.php:1223 include/global_settings.php:530
 msgid "Automation"
 msgstr "स्वचालन"
 
-#: include/global_arrays.php:1011
+#: include/global_arrays.php:1012
 msgid "Discovered Devices"
 msgstr "उपकरणों की खोज की"
 
-#: include/global_arrays.php:1012
+#: include/global_arrays.php:1013
 msgid "Device Rules"
 msgstr "डिवाइस नियम"
 
-#: include/global_arrays.php:1016 include/global_arrays.php:1068
-#: include/global_arrays.php:1234 lib/html_filter.php:160
+#: include/global_arrays.php:1017 include/global_arrays.php:1069
+#: include/global_arrays.php:1235 lib/html_filter.php:160
 #: lib/html_graph.php:243 lib/html_tree.php:1065
 msgid "Presets"
 msgstr "प्रीसेट"
 
-#: include/global_arrays.php:1017
+#: include/global_arrays.php:1018
 msgid "Data Profiles"
 msgstr "डेटा प्रोफाइल"
 
-#: include/global_arrays.php:1020 include/global_arrays.php:2526
+#: include/global_arrays.php:1021 include/global_arrays.php:2527
 msgid "VDEFs"
 msgstr "VDEFs"
 
-#: include/global_arrays.php:1021 include/global_arrays.php:2226
+#: include/global_arrays.php:1022 include/global_arrays.php:2227
 msgid "Colors"
 msgstr "रंग"
 
-#: include/global_arrays.php:1024 include/global_arrays.php:1069
+#: include/global_arrays.php:1025 include/global_arrays.php:1070
 msgid "Import/Export"
 msgstr "दरामद करो / बरामद करो"
 
-#: include/global_arrays.php:1025 include/global_arrays.php:1241
-#: include/global_arrays.php:2652
+#: include/global_arrays.php:1026 include/global_arrays.php:1242
+#: include/global_arrays.php:2653
 msgid "Import Templates"
 msgstr "आयात टेम्पलेट्स"
 
-#: include/global_arrays.php:1026 include/global_arrays.php:2658
+#: include/global_arrays.php:1027 include/global_arrays.php:2659
 msgid "Import Packages"
 msgstr "आयात टेम्पलेट्स"
 
-#: include/global_arrays.php:1027 include/global_arrays.php:1240
-#: include/global_arrays.php:2640 templates_export.php:142
+#: include/global_arrays.php:1028 include/global_arrays.php:1241
+#: include/global_arrays.php:2641 templates_export.php:142
 msgid "Export Templates"
 msgstr "निर्यात टेम्पलेट्स"
 
-#: include/global_arrays.php:1029 include/global_arrays.php:1051
-#: include/global_arrays.php:1070 lib/plugins.php:1443
+#: include/global_arrays.php:1030 include/global_arrays.php:1052
+#: include/global_arrays.php:1071 lib/plugins.php:1443
 msgid "Configuration"
 msgstr "कॉन्फ़िगरेशन"
 
-#: include/global_arrays.php:1030 include/global_arrays.php:1052
+#: include/global_arrays.php:1031 include/global_arrays.php:1053
 #: lib/html.php:2590 lib/html.php:2887
 msgid "Settings"
 msgstr "सेटिंग्स"
 
-#: include/global_arrays.php:1031 include/global_arrays.php:2580
+#: include/global_arrays.php:1032 include/global_arrays.php:2581
 #: user_admin.php:2131 user_admin.php:2236 user_group_admin.php:733
 #: user_group_admin.php:2172
 msgid "Users"
 msgstr "उपयोगकर्ता"
 
-#: include/global_arrays.php:1032 include/global_arrays.php:2610
+#: include/global_arrays.php:1033 include/global_arrays.php:2611
 msgid "User Groups"
 msgstr "यूसर समूह"
 
-#: include/global_arrays.php:1033 include/global_arrays.php:2598
+#: include/global_arrays.php:1034 include/global_arrays.php:2599
 #: user_domains.php:634 user_domains.php:728
 msgid "User Domains"
 msgstr "उपयोगकर्ता डोमेन"
 
-#: include/global_arrays.php:1035 include/global_arrays.php:1054
-#: include/global_arrays.php:1071 include/global_arrays.php:2454
+#: include/global_arrays.php:1036 include/global_arrays.php:1055
+#: include/global_arrays.php:1072 include/global_arrays.php:2455
 msgid "Utilities"
 msgstr "यूटिलिटीज"
 
-#: include/global_arrays.php:1036 include/global_arrays.php:1055
+#: include/global_arrays.php:1037 include/global_arrays.php:1056
 msgid "System Utilities"
 msgstr "प्रणाली उपयोगिता"
 
-#: include/global_arrays.php:1037 include/global_arrays.php:1072
-#: include/global_arrays.php:1115 include/global_arrays.php:1218
-#: include/global_arrays.php:2214 user_admin.php:1497 user_group_admin.php:1519
+#: include/global_arrays.php:1038 include/global_arrays.php:1073
+#: include/global_arrays.php:1116 include/global_arrays.php:1219
+#: include/global_arrays.php:2215 user_admin.php:1497 user_group_admin.php:1519
 msgid "External Links"
 msgstr "बाहरी कड़ियाँ"
 
-#: include/global_arrays.php:1039 include/global_arrays.php:1074
+#: include/global_arrays.php:1040 include/global_arrays.php:1075
 msgid "Troubleshooting"
 msgstr "ट्रबलशूटिङ"
 
-#: include/global_arrays.php:1073
+#: include/global_arrays.php:1074
 msgid "Support"
 msgstr "मदद"
 
-#: include/global_arrays.php:1078
+#: include/global_arrays.php:1079
 msgid "Access Points, Controllers"
 msgstr "ऐक्सेस पॉइंट, कंट्रोलर"
 
-#: include/global_arrays.php:1079
+#: include/global_arrays.php:1080
 msgid "Application Related"
 msgstr "स्वचालन नियम लागू करें"
 
-#: include/global_arrays.php:1080
+#: include/global_arrays.php:1081
 #, fuzzy
 msgid "Kadupul Related"
 msgstr "Kadupul रिपोर्ट"
 
-#: include/global_arrays.php:1081
+#: include/global_arrays.php:1082
 msgid "Database Related"
 msgstr "डाटाबेस"
 
-#: include/global_arrays.php:1082
+#: include/global_arrays.php:1083
 msgid "Facilities Related"
 msgstr "संबंधित सुविधाएँ"
 
-#: include/global_arrays.php:1083
+#: include/global_arrays.php:1084
 msgid "Generic Device"
 msgstr "जेनेरिक लॉग लेवल"
 
-#: include/global_arrays.php:1084
+#: include/global_arrays.php:1085
 msgid "HPC/Grid Computing"
 msgstr "ग्रिड विकल्प"
 
-#: include/global_arrays.php:1085
+#: include/global_arrays.php:1086
 msgid "Hypervisor Related"
 msgstr "हाइपरवाइजर से संबंधित"
 
-#: include/global_arrays.php:1086
+#: include/global_arrays.php:1087
 msgid "ILO, IPMI, iDrac, etc."
 msgstr "ILO, IPMI, iDrac, आदि।"
 
-#: include/global_arrays.php:1087
+#: include/global_arrays.php:1088
 msgid "Licensing Related"
 msgstr "लाइसेंसिंग से संबंधित"
 
-#: include/global_arrays.php:1088
+#: include/global_arrays.php:1089
 msgid "Linux Related"
 msgstr "लिनक्स से संबंधित"
 
-#: include/global_arrays.php:1089
+#: include/global_arrays.php:1090
 msgid "Load Balancer"
 msgstr "भार संतुलन"
 
-#: include/global_arrays.php:1090
+#: include/global_arrays.php:1091
 msgid "Network Switch"
 msgstr "नेटवर्क फ़िल्टर"
 
-#: include/global_arrays.php:1091
+#: include/global_arrays.php:1092
 msgid "Network Router"
 msgstr "नेटवर्क फ़िल्टर"
 
-#: include/global_arrays.php:1092
+#: include/global_arrays.php:1093
 msgid "NAS/SAN Related"
 msgstr "NAS/SAN से संबंधित"
 
-#: include/global_arrays.php:1093
+#: include/global_arrays.php:1094
 msgid "Network Firewalls"
 msgstr "नेटवर्क फ़िल्टर"
 
-#: include/global_arrays.php:1094
+#: include/global_arrays.php:1095
 msgid "Power Related PDUs/STS, etc."
 msgstr "बिजली से संबंधित पीडीयू/एसटीएस, आदि।"
 
-#: include/global_arrays.php:1095
+#: include/global_arrays.php:1096
 msgid "Printer Related"
 msgstr "डाटाबेस"
 
-#: include/global_arrays.php:1096
+#: include/global_arrays.php:1097
 msgid "Storage Related"
 msgstr "भंडारण से संबंधित"
 
-#: include/global_arrays.php:1097
+#: include/global_arrays.php:1098
 msgid "Telco Related"
 msgstr "टेम्पलेट का चयन करें"
 
-#: include/global_arrays.php:1098
+#: include/global_arrays.php:1099
 msgid "Web Server Related"
 msgstr "वेब सर्वर से संबंधित"
 
-#: include/global_arrays.php:1099
+#: include/global_arrays.php:1100
 msgid "Windows Related"
 msgstr "विंडोज से संबंधित"
 
-#: include/global_arrays.php:1100
+#: include/global_arrays.php:1101
 msgid "UPS Related"
 msgstr "यूपीएस से संबंधित"
 
-#: include/global_arrays.php:1124
+#: include/global_arrays.php:1125
 msgid "All Lines"
 msgstr "सभी लाइनें"
 
-#: include/global_arrays.php:1125 include/global_arrays.php:1126
-#: include/global_arrays.php:1127 include/global_arrays.php:1128
-#: include/global_arrays.php:1129 include/global_arrays.php:1130
-#: include/global_arrays.php:1131 include/global_arrays.php:1132
-#: include/global_arrays.php:1133 include/global_arrays.php:1134
-#: include/global_arrays.php:1135 include/global_arrays.php:1136
+#: include/global_arrays.php:1126 include/global_arrays.php:1127
+#: include/global_arrays.php:1128 include/global_arrays.php:1129
+#: include/global_arrays.php:1130 include/global_arrays.php:1131
+#: include/global_arrays.php:1132 include/global_arrays.php:1133
+#: include/global_arrays.php:1134 include/global_arrays.php:1135
+#: include/global_arrays.php:1136 include/global_arrays.php:1137
 #, php-format
 msgid "%d Lines"
 msgstr "% d लाइन्स"
 
-#: include/global_arrays.php:1214
+#: include/global_arrays.php:1215
 msgid "Console Access"
 msgstr "कंसोल एक्सेस"
 
-#: include/global_arrays.php:1216
+#: include/global_arrays.php:1217
 msgid "Realtime Graphs"
 msgstr "रीयलटाइम रेखांकन"
 
-#: include/global_arrays.php:1217
+#: include/global_arrays.php:1218
 msgid "Update Profile"
 msgstr "प्रोफ़ाइल अपडेट करें"
 
-#: include/global_arrays.php:1220
+#: include/global_arrays.php:1221
 msgid "Users/Groups"
 msgstr "यूसर समूह"
 
-#: include/global_arrays.php:1221
+#: include/global_arrays.php:1222
 msgid "Settings/Utilities"
 msgstr "सेटिंग्स / उपयोगिताएँ"
 
-#: include/global_arrays.php:1223
+#: include/global_arrays.php:1224
 msgid "Installation/Upgrades"
 msgstr "स्थापना / उन्नयन"
 
-#: include/global_arrays.php:1228
+#: include/global_arrays.php:1229
 msgid "Sites/Devices/Data"
 msgstr "साइटें / उपकरणों / डेटा"
 
-#: include/global_arrays.php:1231
+#: include/global_arrays.php:1232
 msgid "Spike Handling"
 msgstr "स्पाइक किल सेटिंग्स"
 
-#: include/global_arrays.php:1243 utilities.php:2396
+#: include/global_arrays.php:1244 utilities.php:2396
 msgid "Log Administration"
 msgstr "लॉग प्रशासन"
 
-#: include/global_arrays.php:1244
+#: include/global_arrays.php:1245
 msgid "Log Viewing"
 msgstr "लॉग देखने"
 
-#: include/global_arrays.php:1246
+#: include/global_arrays.php:1247
 msgid "Reports Administration"
 msgstr "लॉग प्रशासन"
 
-#: include/global_arrays.php:1247
+#: include/global_arrays.php:1248
 msgid "Reports Creation"
 msgstr "रिपोर्ट निर्माण"
 
-#: include/global_arrays.php:1248
+#: include/global_arrays.php:1249
 msgid "Show Graph Action Icons"
 msgstr "ग्राफ का शीर्षक दिखाएं"
 
-#: include/global_arrays.php:1249
+#: include/global_arrays.php:1250
 msgid "Show User Help Links"
 msgstr "उपयोगकर्ता सहायता लिंक दिखाएं"
 
-#: include/global_arrays.php:1250
+#: include/global_arrays.php:1251
 msgid "Plugin Administration"
 msgstr "लॉग प्रशासन"
 
-#: include/global_arrays.php:1254
+#: include/global_arrays.php:1255
 msgid "Normal User"
 msgstr "सामान्य उपयोगकर्ता"
 
-#: include/global_arrays.php:1255
+#: include/global_arrays.php:1256
 msgid "Template Editor"
 msgstr "खाका संपादक"
 
-#: include/global_arrays.php:1256
+#: include/global_arrays.php:1257
 msgid "General Administration"
 msgstr "सामान्य प्रशासन"
 
-#: include/global_arrays.php:1257
+#: include/global_arrays.php:1258
 msgid "System Administration"
 msgstr "तंत्र प्रशासन"
 
-#: include/global_arrays.php:1355 lib/html.php:1408
+#: include/global_arrays.php:1356 lib/html.php:1408
 msgid "CDEF"
 msgstr "CDEF"
 
-#: include/global_arrays.php:1356
+#: include/global_arrays.php:1357
 msgid "CDEF Item"
 msgstr "CDEF आइटम"
 
-#: include/global_arrays.php:1357
+#: include/global_arrays.php:1358
 msgid "GPRINT Preset"
 msgstr "GPRINT पूर्व निर्धारित"
 
-#: include/global_arrays.php:1360
+#: include/global_arrays.php:1361
 msgid "Data Input Field"
 msgstr "डेटा इनपुट फ़ील्ड"
 
-#: include/global_arrays.php:1361 include/global_form.php:579
+#: include/global_arrays.php:1362 include/global_form.php:579
 #: include/global_form.php:1679 package_import.php:862
 msgid "Data Source Profile"
 msgstr "डेटा स्रोत प्रोफ़ाइल"
 
-#: include/global_arrays.php:1362
+#: include/global_arrays.php:1363
 msgid "Data Template Item"
 msgstr "डेटा टेम्प्लेट आइटम"
 
-#: include/global_arrays.php:1364
+#: include/global_arrays.php:1365
 msgid "Graph Template Item"
 msgstr "ग्राफ टेम्पलेट आइटम"
 
-#: include/global_arrays.php:1365
+#: include/global_arrays.php:1366
 msgid "Graph Template Input"
 msgstr "ग्राफ टेम्पलेट इनपुट"
 
-#: include/global_arrays.php:1368 lib/html.php:1409
+#: include/global_arrays.php:1369 lib/html.php:1409
 msgid "VDEF"
 msgstr "VDEF"
 
-#: include/global_arrays.php:1369
+#: include/global_arrays.php:1370
 msgid "VDEF Item"
 msgstr "VDEF आइटम"
 
-#: include/global_arrays.php:1423
+#: include/global_arrays.php:1424
 msgid "Last Half Hour"
 msgstr "पिछले आधे घंटे"
 
-#: include/global_arrays.php:1424
+#: include/global_arrays.php:1425
 msgid "Last Hour"
 msgstr "पिछला घैंटा"
 
-#: include/global_arrays.php:1425 include/global_arrays.php:1426
-#: include/global_arrays.php:1427 include/global_arrays.php:1428
+#: include/global_arrays.php:1426 include/global_arrays.php:1427
+#: include/global_arrays.php:1428 include/global_arrays.php:1429
 #, php-format
 msgid "Last %d Hours"
 msgstr "अंतिम% d घंटे"
 
-#: include/global_arrays.php:1429
+#: include/global_arrays.php:1430
 msgid "Last Day"
 msgstr "आखरी दिन"
 
-#: include/global_arrays.php:1430 include/global_arrays.php:1431
-#: include/global_arrays.php:1432
+#: include/global_arrays.php:1431 include/global_arrays.php:1432
+#: include/global_arrays.php:1433
 #, php-format
 msgid "Last %d Days"
 msgstr "अंतिम% d दिन"
 
-#: include/global_arrays.php:1433
+#: include/global_arrays.php:1434
 msgid "Last Week"
 msgstr "पिछला खोज"
 
-#: include/global_arrays.php:1434
+#: include/global_arrays.php:1435
 #, php-format
 msgid "Last %d Weeks"
 msgstr "अंतिम% d सप्ताह"
 
-#: include/global_arrays.php:1435
+#: include/global_arrays.php:1436
 msgid "Last Month"
 msgstr "पिछले माह"
 
-#: include/global_arrays.php:1436 include/global_arrays.php:1437
-#: include/global_arrays.php:1438 include/global_arrays.php:1439
+#: include/global_arrays.php:1437 include/global_arrays.php:1438
+#: include/global_arrays.php:1439 include/global_arrays.php:1440
 #, php-format
 msgid "Last %d Months"
 msgstr "अंतिम% d महीने"
 
-#: include/global_arrays.php:1440
+#: include/global_arrays.php:1441
 msgid "Last Year"
 msgstr "पिछले साल"
 
-#: include/global_arrays.php:1441
+#: include/global_arrays.php:1442
 #, php-format
 msgid "Last %d Years"
 msgstr "अंतिम% d वर्ष"
 
-#: include/global_arrays.php:1442
+#: include/global_arrays.php:1443
 msgid "Day Shift"
 msgstr "दिन की शिफ़्ट"
 
-#: include/global_arrays.php:1443
+#: include/global_arrays.php:1444
 msgid "This Day"
 msgstr "हर रोज"
 
-#: include/global_arrays.php:1444
+#: include/global_arrays.php:1445
 msgid "This Week"
 msgstr "इस सप्ताह"
 
-#: include/global_arrays.php:1445
+#: include/global_arrays.php:1446
 msgid "This Month"
 msgstr "इस महीने@ label"
 
-#: include/global_arrays.php:1446
+#: include/global_arrays.php:1447
 msgid "This Year"
 msgstr "यह साल@ label"
 
-#: include/global_arrays.php:1447
+#: include/global_arrays.php:1448
 msgid "Previous Day"
 msgstr "पिछले दिन"
 
-#: include/global_arrays.php:1448
+#: include/global_arrays.php:1449
 msgid "Previous Week"
 msgstr "पिछला सप्ताह"
 
-#: include/global_arrays.php:1449
+#: include/global_arrays.php:1450
 msgid "Previous Month"
 msgstr "पिछला महीना"
 
-#: include/global_arrays.php:1450
+#: include/global_arrays.php:1451
 msgid "Previous Year"
 msgstr "पिछला साल"
 
-#: include/global_arrays.php:1455
+#: include/global_arrays.php:1456
 #, php-format
 msgid "%d Min"
 msgstr "% d मिन"
 
-#: include/global_arrays.php:1510
+#: include/global_arrays.php:1511
 msgid "Month Number, Day, Year"
 msgstr "महीना संख्या, दिन, वर्ष"
 
-#: include/global_arrays.php:1511
+#: include/global_arrays.php:1512
 msgid "Month Name, Day, Year"
 msgstr "माह का नाम, दिन, वर्ष"
 
-#: include/global_arrays.php:1512
+#: include/global_arrays.php:1513
 msgid "Day, Month Number, Year"
 msgstr "दिन, महीना संख्या, वर्ष"
 
-#: include/global_arrays.php:1513
+#: include/global_arrays.php:1514
 msgid "Day, Month Name, Year"
 msgstr "दिन, महीने का नाम, वर्ष"
 
-#: include/global_arrays.php:1514
+#: include/global_arrays.php:1515
 msgid "Year, Month Number, Day"
 msgstr "वर्ष, महीना संख्या, दिन"
 
-#: include/global_arrays.php:1515
+#: include/global_arrays.php:1516
 msgid "Year, Month Name, Day"
 msgstr "वर्ष, माह का नाम, दिन"
 
-#: include/global_arrays.php:1525 include/global_arrays.php:1556
+#: include/global_arrays.php:1526 include/global_arrays.php:1557
 msgid "After Boost"
 msgstr "बूस्ट के बाद"
 
-#: include/global_arrays.php:1535 include/global_arrays.php:1536
-#: include/global_arrays.php:1537 include/global_arrays.php:1538
-#: include/global_arrays.php:1539 include/global_arrays.php:1601
-#: include/global_arrays.php:1602
+#: include/global_arrays.php:1536 include/global_arrays.php:1537
+#: include/global_arrays.php:1538 include/global_arrays.php:1539
+#: include/global_arrays.php:1540 include/global_arrays.php:1602
+#: include/global_arrays.php:1603
 #, php-format
 msgid "%d MBytes"
 msgstr "% d एमबीटीज़"
 
-#: include/global_arrays.php:1540
+#: include/global_arrays.php:1541
 msgid "1 GByte"
 msgstr "1 जीबीटी"
 
-#: include/global_arrays.php:1541 include/global_arrays.php:1604
+#: include/global_arrays.php:1542 include/global_arrays.php:1605
 #: lib/boost.php:124
 #, php-format
 msgid "%s GBytes"
 msgstr "%s GBytes"
 
-#: include/global_arrays.php:1542 include/global_arrays.php:1543
-#: include/global_arrays.php:1605 include/global_arrays.php:1606
-#: include/global_arrays.php:1607 include/global_arrays.php:1608
-#: include/global_arrays.php:1609 include/global_arrays.php:1610
+#: include/global_arrays.php:1543 include/global_arrays.php:1544
+#: include/global_arrays.php:1606 include/global_arrays.php:1607
+#: include/global_arrays.php:1608 include/global_arrays.php:1609
+#: include/global_arrays.php:1610 include/global_arrays.php:1611
 #, php-format
 msgid "%d GBytes"
 msgstr "% d GBytes"
 
-#: include/global_arrays.php:1563
+#: include/global_arrays.php:1564
 msgid "2,000 Data Source Items"
 msgstr "2,000 डेटा स्रोत आइटम"
 
-#: include/global_arrays.php:1564
+#: include/global_arrays.php:1565
 msgid "5,000 Data Source Items"
 msgstr "5,000 डेटा स्रोत आइटम"
 
-#: include/global_arrays.php:1565
+#: include/global_arrays.php:1566
 msgid "10,000 Data Source Items"
 msgstr "10,000 डेटा स्रोत आइटम"
 
-#: include/global_arrays.php:1566
+#: include/global_arrays.php:1567
 msgid "15,000 Data Source Items"
 msgstr "15,000 डेटा स्रोत आइटम"
 
-#: include/global_arrays.php:1567
+#: include/global_arrays.php:1568
 msgid "25,000 Data Source Items"
 msgstr "25,000 डेटा स्रोत आइटम"
 
-#: include/global_arrays.php:1568
+#: include/global_arrays.php:1569
 msgid "50,000 Data Source Items (Default)"
 msgstr "50,000 डेटा स्रोत आइटम (डिफ़ॉल्ट)"
 
-#: include/global_arrays.php:1569
+#: include/global_arrays.php:1570
 msgid "100,000 Data Source Items"
 msgstr "100,000 डेटा स्रोत आइटम"
 
-#: include/global_arrays.php:1570
+#: include/global_arrays.php:1571
 msgid "200,000 Data Source Items"
 msgstr "200,000 डेटा स्रोत आइटम"
 
-#: include/global_arrays.php:1571
+#: include/global_arrays.php:1572
 msgid "400,000 Data Source Items"
 msgstr "400,000 डेटा स्रोत आइटम"
 
-#: include/global_arrays.php:1588
+#: include/global_arrays.php:1589
 msgid "2 Hours"
 msgstr "2 घंटे"
 
-#: include/global_arrays.php:1589
+#: include/global_arrays.php:1590
 msgid "4 Hours"
 msgstr "4 घंटे"
 
-#: include/global_arrays.php:1590
+#: include/global_arrays.php:1591
 msgid "6 Hours"
 msgstr "6 घंटे"
 
-#: include/global_arrays.php:1597 include/global_settings.php:1489
+#: include/global_arrays.php:1598 include/global_settings.php:1489
 #: include/global_settings.php:1490 include/global_settings.php:1491
 #, php-format
 msgid "%s Hours"
 msgstr "%s घंटे"
 
-#: include/global_arrays.php:1603
+#: include/global_arrays.php:1604
 #, php-format
 msgid "%d GByte"
 msgstr "% d GBytes"
 
-#: include/global_arrays.php:1611 utilities.php:2862 utilities.php:2863
+#: include/global_arrays.php:1612 utilities.php:2862 utilities.php:2863
 #: utilities.php:2912
 msgid "Unlimited"
 msgstr "अनसंभ"
 
-#: include/global_arrays.php:1618 include/global_settings.php:1388
+#: include/global_arrays.php:1619 include/global_settings.php:1388
 #: include/global_settings.php:1389 include/global_settings.php:1390
 #: include/global_settings.php:1391 include/global_settings.php:1401
 #: include/global_settings.php:1402 include/global_settings.php:1403
@@ -6917,760 +6917,760 @@ msgstr "अनसंभ"
 msgid "%s Minutes"
 msgstr "%s मिनट"
 
-#: include/global_arrays.php:1640
+#: include/global_arrays.php:1641
 msgid "1 Megabyte"
 msgstr "1 मेगाबाइट"
 
-#: include/global_arrays.php:1641 include/global_arrays.php:1642
-#: include/global_arrays.php:1643 include/global_arrays.php:1644
-#: include/global_arrays.php:1645 include/global_arrays.php:1646
+#: include/global_arrays.php:1642 include/global_arrays.php:1643
+#: include/global_arrays.php:1644 include/global_arrays.php:1645
+#: include/global_arrays.php:1646 include/global_arrays.php:1647
 #, php-format
 msgid "%d Megabytes"
 msgstr "% d मेगाबाइट्स"
 
-#: include/global_arrays.php:1650
+#: include/global_arrays.php:1651
 msgid "Send Now"
 msgstr "अभी भेजें"
 
-#: include/global_arrays.php:1658
+#: include/global_arrays.php:1659
 msgid "Take Ownership"
 msgstr "स्वामित्व लेने"
 
-#: include/global_arrays.php:1662
+#: include/global_arrays.php:1663
 msgid "Inline PNG Image"
 msgstr "इनलाइन PNG इमेज"
 
-#: include/global_arrays.php:1667
+#: include/global_arrays.php:1668
 msgid "Inline JPEG Image"
 msgstr "इनलाइन जेपीईजी इमेज"
 
-#: include/global_arrays.php:1668
+#: include/global_arrays.php:1669
 msgid "Inline GIF Image"
 msgstr "इनलाइन जीआईएफ इमेज"
 
-#: include/global_arrays.php:1671
+#: include/global_arrays.php:1672
 msgid "Attached PNG Image"
 msgstr "संलग्न पीएनजी छवि"
 
-#: include/global_arrays.php:1674
+#: include/global_arrays.php:1675
 msgid "Attached JPEG Image"
 msgstr "संलग्न JPEG छवि"
 
-#: include/global_arrays.php:1675
+#: include/global_arrays.php:1676
 msgid "Attached GIF Image"
 msgstr "संलग्न GIF छवि"
 
-#: include/global_arrays.php:1679
+#: include/global_arrays.php:1680
 msgid "Inline PNG Image, LN Style"
 msgstr "इनलाइन पीएनजी इमेज, एलएन स्टाइल"
 
-#: include/global_arrays.php:1681
+#: include/global_arrays.php:1682
 msgid "Inline JPEG Image, LN Style"
 msgstr "इनलाइन जेपीईजी इमेज, एलएन स्टाइल"
 
-#: include/global_arrays.php:1682
+#: include/global_arrays.php:1683
 msgid "Inline GIF Image, LN Style"
 msgstr "इनलाइन जीआईएफ इमेज, एलएन स्टाइल"
 
-#: include/global_arrays.php:1687
+#: include/global_arrays.php:1688
 msgid "Text"
 msgstr "टेक्स्ट"
 
-#: include/global_arrays.php:1688 include/global_form.php:2252
+#: include/global_arrays.php:1689 include/global_form.php:2252
 msgid "Tree"
 msgstr "वृक्षugiou"
 
-#: include/global_arrays.php:1691
+#: include/global_arrays.php:1692
 msgid "Horizontal Rule"
 msgstr "आड़ी पंक्ति -\\\\ hline"
 
-#: include/global_arrays.php:1695
+#: include/global_arrays.php:1696
 msgid "left"
 msgstr "बाएं"
 
-#: include/global_arrays.php:1696
+#: include/global_arrays.php:1697
 msgid "center"
 msgstr "बीच में@ title: column"
 
-#: include/global_arrays.php:1697
+#: include/global_arrays.php:1698
 msgid "right"
 msgstr "दायें"
 
-#: include/global_arrays.php:1701
+#: include/global_arrays.php:1702
 msgid "Minute(s)"
 msgstr "मिनट (रों)"
 
-#: include/global_arrays.php:1702
+#: include/global_arrays.php:1703
 msgid "Hour(s)"
 msgstr "घंटे)"
 
-#: include/global_arrays.php:1703
+#: include/global_arrays.php:1704
 msgid "Day(s)"
 msgstr "दिवस (रों)"
 
-#: include/global_arrays.php:1704
+#: include/global_arrays.php:1705
 msgid "Week(s)"
 msgstr "वीक (रों)"
 
-#: include/global_arrays.php:1705
+#: include/global_arrays.php:1706
 msgid "Month(s), Day of Month"
 msgstr "महीने (एस), महीने का दिन"
 
-#: include/global_arrays.php:1706
+#: include/global_arrays.php:1707
 msgid "Month(s), Day of Week"
 msgstr "महीने (दिन), सप्ताह का दिन"
 
-#: include/global_arrays.php:1707
+#: include/global_arrays.php:1708
 msgid "Year(s)"
 msgstr "वर्षों)"
 
-#: include/global_arrays.php:1711
+#: include/global_arrays.php:1712
 msgid "Keep Graph Types"
 msgstr "ग्राफ प्रकार रखें"
 
-#: include/global_arrays.php:1712
+#: include/global_arrays.php:1713
 msgid "Keep Type and STACK"
 msgstr "टाइप और STACK रखें"
 
-#: include/global_arrays.php:1713
+#: include/global_arrays.php:1714
 msgid "Convert to AREA/STACK Graph"
 msgstr "क्षेत्र / बैक ग्राफ़ में परिवर्तित करें"
 
-#: include/global_arrays.php:1714
+#: include/global_arrays.php:1715
 msgid "Convert to LINE1 Graph"
 msgstr "LINE1 ग्राफ़ में कनवर्ट करें"
 
-#: include/global_arrays.php:1715
+#: include/global_arrays.php:1716
 msgid "Convert to LINE2 Graph"
 msgstr "LINE2 ग्राफ़ में कनवर्ट करें"
 
-#: include/global_arrays.php:1716
+#: include/global_arrays.php:1717
 msgid "Convert to LINE3 Graph"
 msgstr "LINE3 ग्राफ़ में कनवर्ट करें"
 
-#: include/global_arrays.php:1717
+#: include/global_arrays.php:1718
 msgid "Convert to LINE1/STACK Graph"
 msgstr "LINE1 ग्राफ़ में कनवर्ट करें"
 
-#: include/global_arrays.php:1718
+#: include/global_arrays.php:1719
 msgid "Convert to LINE2/STACK Graph"
 msgstr "LINE2 ग्राफ़ में कनवर्ट करें"
 
-#: include/global_arrays.php:1719
+#: include/global_arrays.php:1720
 msgid "Convert to LINE3/STACK Graph"
 msgstr "LINE3 ग्राफ़ में कनवर्ट करें"
 
-#: include/global_arrays.php:1723
+#: include/global_arrays.php:1724
 msgid "No Totals"
 msgstr "नो टोटल"
 
-#: include/global_arrays.php:1724
+#: include/global_arrays.php:1725
 msgid "Print All Legend Items"
 msgstr "सभी लीजेंड आइटम प्रिंट करें"
 
-#: include/global_arrays.php:1725
+#: include/global_arrays.php:1726
 msgid "Print Totaling Legend Items Only"
 msgstr "केवल कुल किंवदंती आइटम प्रिंट करें"
 
-#: include/global_arrays.php:1729
+#: include/global_arrays.php:1730
 msgid "Total Similar Data Sources"
 msgstr "कुल समान डेटा स्रोत"
 
-#: include/global_arrays.php:1730
+#: include/global_arrays.php:1731
 msgid "Total All Data Sources"
 msgstr "कुल डेटा स्रोत"
 
-#: include/global_arrays.php:1734
+#: include/global_arrays.php:1735
 msgid "No Reordering"
 msgstr "कोई पुन: व्यवस्थित नहीं"
 
-#: include/global_arrays.php:1735
+#: include/global_arrays.php:1736
 msgid "Data Source, Graph"
 msgstr "डेटा स्रोत, ग्राफ़"
 
-#: include/global_arrays.php:1736
+#: include/global_arrays.php:1737
 msgid "Graph, Data Source"
 msgstr "ग्राफ, डेटा स्रोत"
 
-#: include/global_arrays.php:1737
+#: include/global_arrays.php:1738
 msgid "Base Graph Order"
 msgstr "रेखांकन है"
 
-#: include/global_arrays.php:1744
+#: include/global_arrays.php:1745
 msgid "contains"
 msgstr "रखता है"
 
-#: include/global_arrays.php:1745
+#: include/global_arrays.php:1746
 msgid "does not contain"
 msgstr "नहीं रखता है"
 
-#: include/global_arrays.php:1746
+#: include/global_arrays.php:1747
 msgid "begins with"
 msgstr "साथ शुरू होता है"
 
-#: include/global_arrays.php:1747
+#: include/global_arrays.php:1748
 msgid "does not begin with"
 msgstr "से शुरू नहीं होता है"
 
-#: include/global_arrays.php:1748
+#: include/global_arrays.php:1749
 msgid "ends with"
 msgstr "इससे समाप्त होता है"
 
-#: include/global_arrays.php:1749
+#: include/global_arrays.php:1750
 msgid "does not end with"
 msgstr "इससे समाप्त नहीं होता है"
 
-#: include/global_arrays.php:1750
+#: include/global_arrays.php:1751
 msgid "matches"
 msgstr "माचिस"
 
-#: include/global_arrays.php:1751
+#: include/global_arrays.php:1752
 msgid "is not equal to"
 msgstr "से समान नहीं है"
 
-#: include/global_arrays.php:1752
+#: include/global_arrays.php:1753
 msgid "is less than"
 msgstr "इससे छोटा है"
 
-#: include/global_arrays.php:1753
+#: include/global_arrays.php:1754
 msgid "is less than or equal"
 msgstr "से कम या बराबर है"
 
-#: include/global_arrays.php:1754
+#: include/global_arrays.php:1755
 msgid "is greater than"
 msgstr "इससे बड़ा है"
 
-#: include/global_arrays.php:1755
+#: include/global_arrays.php:1756
 msgid "is greater than or equal"
 msgstr "से अधिक या बराबर है"
 
-#: include/global_arrays.php:1756
+#: include/global_arrays.php:1757
 msgid "is unknown"
 msgstr "अज्ञात"
 
-#: include/global_arrays.php:1757
+#: include/global_arrays.php:1758
 msgid "is not unknown"
 msgstr "अज्ञात नहीं है"
 
-#: include/global_arrays.php:1758
+#: include/global_arrays.php:1759
 msgid "is empty"
 msgstr "खाली है"
 
-#: include/global_arrays.php:1759
+#: include/global_arrays.php:1760
 msgid "is not empty"
 msgstr "खाली नहीं है"
 
-#: include/global_arrays.php:1760
+#: include/global_arrays.php:1761
 msgid "matches regular expression"
 msgstr "नियमित अभिव्यक्ति से मेल खाता है"
 
-#: include/global_arrays.php:1761
+#: include/global_arrays.php:1762
 msgid "does not match regular expression"
 msgstr "नियमित अभिव्यक्ति से मेल नहीं खाता"
 
-#: include/global_arrays.php:1863
+#: include/global_arrays.php:1864
 msgid "Fixed String"
 msgstr "फिक्स्ड स्ट्रिंग"
 
-#: include/global_arrays.php:1868
+#: include/global_arrays.php:1869
 msgid "Every 1 Hour"
 msgstr "हर 1 घंटे में"
 
-#: include/global_arrays.php:1874
+#: include/global_arrays.php:1875
 msgid "Every Day"
 msgstr "हर रोज"
 
-#: include/global_arrays.php:1875
+#: include/global_arrays.php:1876
 msgid "Every Week"
 msgstr "प्रति सप्ताह"
 
-#: include/global_arrays.php:1876 include/global_arrays.php:1877
+#: include/global_arrays.php:1877 include/global_arrays.php:1878
 #, php-format
 msgid "Every %d Weeks"
 msgstr "हर% d वीक"
 
-#: include/global_arrays.php:1908
+#: include/global_arrays.php:1909
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jan"
 msgstr "जनवरी"
 
-#: include/global_arrays.php:1909
+#: include/global_arrays.php:1910
 msgctxt "A short textual representation of a month, three letters"
 msgid "Feb"
 msgstr "फरवरी"
 
-#: include/global_arrays.php:1910
+#: include/global_arrays.php:1911
 msgctxt "A short textual representation of a month, three letters"
 msgid "Mar"
 msgstr "मार्च"
 
-#: include/global_arrays.php:1911
+#: include/global_arrays.php:1912
 msgctxt "A short textual representation of a month, three letters"
 msgid "Apr"
 msgstr "अप्रैल"
 
-#: include/global_arrays.php:1912
+#: include/global_arrays.php:1913
 msgctxt "A short textual representation of a month, three letters"
 msgid "May"
 msgstr "मई"
 
-#: include/global_arrays.php:1913
+#: include/global_arrays.php:1914
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jun"
 msgstr "जून"
 
-#: include/global_arrays.php:1914
+#: include/global_arrays.php:1915
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jul"
 msgstr "जुलाई"
 
-#: include/global_arrays.php:1915
+#: include/global_arrays.php:1916
 msgctxt "A short textual representation of a month, three letters"
 msgid "Aug"
 msgstr "अगस्त"
 
-#: include/global_arrays.php:1916
+#: include/global_arrays.php:1917
 msgctxt "A short textual representation of a month, three letters"
 msgid "Sep"
 msgstr "सितं"
 
-#: include/global_arrays.php:1917
+#: include/global_arrays.php:1918
 msgctxt "A short textual representation of a month, three letters"
 msgid "Oct"
 msgstr "अक्टूबर"
 
-#: include/global_arrays.php:1918
+#: include/global_arrays.php:1919
 msgctxt "A short textual representation of a month, three letters"
 msgid "Nov"
 msgstr "नवम्बर"
 
-#: include/global_arrays.php:1919
+#: include/global_arrays.php:1920
 msgctxt "A short textual representation of a month, three letters"
 msgid "Dec"
 msgstr "दिसम्बर"
 
-#: include/global_arrays.php:1923
+#: include/global_arrays.php:1924
 msgid "Use the First Handler Found"
 msgstr "PHP गेटटेक्स्ट हैंडलर का प्रयोग करें"
 
-#: include/global_arrays.php:1927
+#: include/global_arrays.php:1928
 msgid "Use the PHP GetText Handler"
 msgstr "PHP गेटटेक्स्ट हैंडलर का प्रयोग करें"
 
-#: include/global_arrays.php:1931
+#: include/global_arrays.php:1932
 msgid "Use the Oscarotero GetText Handler"
 msgstr "ऑस्करोटेरो गेटटेक्स्ट हैंडलर का उपयोग करें"
 
-#: include/global_arrays.php:1935
+#: include/global_arrays.php:1936
 msgid "Use the MonoTranslator GetText Handler"
 msgstr "मोनोट्रांसलेटर गेटटेक्स्ट हैंडलर का उपयोग करें"
 
-#: include/global_arrays.php:1949
+#: include/global_arrays.php:1950
 msgctxt "A textual representation of a day, three letters"
 msgid "Sun"
 msgstr "रवि"
 
-#: include/global_arrays.php:1950
+#: include/global_arrays.php:1951
 msgctxt "A textual representation of a day, three letters"
 msgid "Mon"
 msgstr "सोम"
 
-#: include/global_arrays.php:1951
+#: include/global_arrays.php:1952
 msgctxt "A textual representation of a day, three letters"
 msgid "Tue"
 msgstr "मंगल"
 
-#: include/global_arrays.php:1952
+#: include/global_arrays.php:1953
 msgctxt "A textual representation of a day, three letters"
 msgid "Wed"
 msgstr "बुध"
 
-#: include/global_arrays.php:1953
+#: include/global_arrays.php:1954
 msgctxt "A textual representation of a day, three letters"
 msgid "Thu"
 msgstr "गुरु"
 
-#: include/global_arrays.php:1954
+#: include/global_arrays.php:1955
 msgctxt "A textual representation of a day, three letters"
 msgid "Fri"
 msgstr "शुक्र"
 
-#: include/global_arrays.php:1955
+#: include/global_arrays.php:1956
 msgctxt "A textual representation of a day, three letters"
 msgid "Sat"
 msgstr "शनि"
 
-#: include/global_arrays.php:1959
+#: include/global_arrays.php:1960
 msgid "Arabic"
 msgstr "अरबी"
 
-#: include/global_arrays.php:1960
+#: include/global_arrays.php:1961
 msgid "Bulgarian"
 msgstr "बल्गेरियन"
 
-#: include/global_arrays.php:1961
+#: include/global_arrays.php:1962
 msgid "Chinese (China)"
 msgstr "चीनी (चीन)"
 
-#: include/global_arrays.php:1962
+#: include/global_arrays.php:1963
 msgid "Chinese (Taiwan)"
 msgstr "चीनी (ताईवान)"
 
-#: include/global_arrays.php:1963
+#: include/global_arrays.php:1964
 msgid "Dutch"
 msgstr "डच"
 
-#: include/global_arrays.php:1964
+#: include/global_arrays.php:1965
 msgid "English"
 msgstr "English"
 
-#: include/global_arrays.php:1965
+#: include/global_arrays.php:1966
 msgid "French"
 msgstr "फ्रेंच"
 
-#: include/global_arrays.php:1966
+#: include/global_arrays.php:1967
 msgid "German"
 msgstr "जर्मन"
 
-#: include/global_arrays.php:1967
+#: include/global_arrays.php:1968
 msgid "Greek"
 msgstr "ग्रीक"
 
-#: include/global_arrays.php:1968
+#: include/global_arrays.php:1969
 msgid "Hebrew"
 msgstr "यहूदी"
 
-#: include/global_arrays.php:1969
+#: include/global_arrays.php:1970
 msgid "Hindi"
 msgstr "हिंदी"
 
-#: include/global_arrays.php:1970
+#: include/global_arrays.php:1971
 msgid "Italian"
 msgstr "इतालवी"
 
-#: include/global_arrays.php:1971
+#: include/global_arrays.php:1972
 msgid "Japanese"
 msgstr "जापानी"
 
-#: include/global_arrays.php:1972
+#: include/global_arrays.php:1973
 msgid "Korean"
 msgstr "कोरियाई"
 
-#: include/global_arrays.php:1973
+#: include/global_arrays.php:1974
 msgid "Polish"
 msgstr "पोलिश"
 
-#: include/global_arrays.php:1974
+#: include/global_arrays.php:1975
 msgid "Portuguese"
 msgstr "पुर्तगाली"
 
-#: include/global_arrays.php:1975
+#: include/global_arrays.php:1976
 msgid "Portuguese (Brazil)"
 msgstr "पुर्तगाली (ब्राजील)"
 
-#: include/global_arrays.php:1976
+#: include/global_arrays.php:1977
 msgid "Russian"
 msgstr "रूसी"
 
-#: include/global_arrays.php:1977
+#: include/global_arrays.php:1978
 msgid "Spanish"
 msgstr "स्पैनिश"
 
-#: include/global_arrays.php:1978
+#: include/global_arrays.php:1979
 msgid "Swedish"
 msgstr "स्वीडिश"
 
-#: include/global_arrays.php:1979
+#: include/global_arrays.php:1980
 msgid "Turkish"
 msgstr "तुर्की"
 
-#: include/global_arrays.php:1980
+#: include/global_arrays.php:1981
 msgid "Vietnamese"
 msgstr "विएतनामी"
 
-#: include/global_arrays.php:1984
+#: include/global_arrays.php:1985
 msgid "Classic"
 msgstr "प्रतिष्टित"
 
-#: include/global_arrays.php:1985
+#: include/global_arrays.php:1986
 msgid "Modern"
 msgstr "आधुनिक"
 
-#: include/global_arrays.php:1986
+#: include/global_arrays.php:1987
 msgid "Dark"
 msgstr "गहरा"
 
-#: include/global_arrays.php:1987
+#: include/global_arrays.php:1988
 msgid "Paper-plane"
 msgstr "कागज़ का हवाई जहाज"
 
-#: include/global_arrays.php:1988
+#: include/global_arrays.php:1989
 msgid "Paw"
 msgstr "पंजा"
 
-#: include/global_arrays.php:1989
+#: include/global_arrays.php:1990
 msgid "Sunrise"
 msgstr "सनराइज"
 
-#: include/global_arrays.php:1993
+#: include/global_arrays.php:1994
 msgid "[Fail]"
 msgstr "असफल"
 
-#: include/global_arrays.php:1994
+#: include/global_arrays.php:1995
 msgid "[Warning]"
 msgstr "चेतावनी:"
 
-#: include/global_arrays.php:1995
+#: include/global_arrays.php:1996
 msgid "[Restart]"
 msgstr "प्रतिबंधत"
 
-#: include/global_arrays.php:1996
+#: include/global_arrays.php:1997
 msgid "[Success]"
 msgstr "सफ़ल!"
 
-#: include/global_arrays.php:1997
+#: include/global_arrays.php:1998
 msgid "[Skipped]"
 msgstr "[छोड़ा गया]"
 
-#: include/global_arrays.php:2002 include/global_arrays.php:2008
+#: include/global_arrays.php:2003 include/global_arrays.php:2009
 msgid "User Profile (Edit)"
 msgstr "उपयोगकर्ता प्रोफ़ाइल (संपादित करें)"
 
-#: include/global_arrays.php:2020 include/global_arrays.php:2026
+#: include/global_arrays.php:2021 include/global_arrays.php:2027
 msgid "Tree Mode"
 msgstr "ट्री मोड"
 
-#: include/global_arrays.php:2032
+#: include/global_arrays.php:2033
 msgid "List Mode"
 msgstr "सूची मोड"
 
-#: include/global_arrays.php:2064 include/global_arrays.php:2070
+#: include/global_arrays.php:2065 include/global_arrays.php:2071
 #: lib/functions.php:4492 lib/html.php:1988 lib/html.php:2053 lib/html.php:2805
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "कंसोल"
 
-#: include/global_arrays.php:2076
+#: include/global_arrays.php:2077
 msgid "Graph Management"
 msgstr "ग्राफ प्रबंधन"
 
-#: include/global_arrays.php:2082 include/global_arrays.php:2124
-#: include/global_arrays.php:2142 include/global_arrays.php:2196
-#: include/global_arrays.php:2208 include/global_arrays.php:2220
-#: include/global_arrays.php:2232 include/global_arrays.php:2244
-#: include/global_arrays.php:2280 include/global_arrays.php:2298
-#: include/global_arrays.php:2316 include/global_arrays.php:2334
-#: include/global_arrays.php:2352 include/global_arrays.php:2376
-#: include/global_arrays.php:2412 include/global_arrays.php:2538
-#: include/global_arrays.php:2562 include/global_arrays.php:2586
-#: include/global_arrays.php:2604 include/global_arrays.php:2616
-#: include/global_arrays.php:2730 include/global_arrays.php:2754
-#: include/global_arrays.php:2772 include/global_arrays.php:2790
-#: include/global_arrays.php:2814
+#: include/global_arrays.php:2083 include/global_arrays.php:2125
+#: include/global_arrays.php:2143 include/global_arrays.php:2197
+#: include/global_arrays.php:2209 include/global_arrays.php:2221
+#: include/global_arrays.php:2233 include/global_arrays.php:2245
+#: include/global_arrays.php:2281 include/global_arrays.php:2299
+#: include/global_arrays.php:2317 include/global_arrays.php:2335
+#: include/global_arrays.php:2353 include/global_arrays.php:2377
+#: include/global_arrays.php:2413 include/global_arrays.php:2539
+#: include/global_arrays.php:2563 include/global_arrays.php:2587
+#: include/global_arrays.php:2605 include/global_arrays.php:2617
+#: include/global_arrays.php:2731 include/global_arrays.php:2755
+#: include/global_arrays.php:2773 include/global_arrays.php:2791
+#: include/global_arrays.php:2815
 msgid "(Edit)"
 msgstr "संपादित करें"
 
-#: include/global_arrays.php:2094 include/global_arrays.php:2160
-#: include/global_arrays.php:2250 include/global_arrays.php:2286
-#: include/global_arrays.php:2304 include/global_arrays.php:2322
-#: include/global_arrays.php:2340 include/global_arrays.php:2370
-#: include/global_arrays.php:2406 include/global_arrays.php:2436
-#: include/global_arrays.php:2532 include/global_arrays.php:2736
-#: include/global_arrays.php:2760 include/global_arrays.php:2778
-#: include/global_arrays.php:2796 include/global_arrays.php:2820
+#: include/global_arrays.php:2095 include/global_arrays.php:2161
+#: include/global_arrays.php:2251 include/global_arrays.php:2287
+#: include/global_arrays.php:2305 include/global_arrays.php:2323
+#: include/global_arrays.php:2341 include/global_arrays.php:2371
+#: include/global_arrays.php:2407 include/global_arrays.php:2437
+#: include/global_arrays.php:2533 include/global_arrays.php:2737
+#: include/global_arrays.php:2761 include/global_arrays.php:2779
+#: include/global_arrays.php:2797 include/global_arrays.php:2821
 #: lib/api_automation.php:1289 lib/api_automation.php:1352
 #: lib/api_automation.php:1422 lib/html_reports.php:1792 plugins.php:605
 msgid "Actions"
 msgstr "कार्रवाइयाँ"
 
-#: include/global_arrays.php:2100 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2101 lib/api_aggregate.php:2333
 msgid "Graph Items"
 msgstr "ग्राफ़ आइटम"
 
-#: include/global_arrays.php:2106
+#: include/global_arrays.php:2107
 msgid "Create New Graphs"
 msgstr "नए रेखांकन बनाएँ"
 
-#: include/global_arrays.php:2112
+#: include/global_arrays.php:2113
 msgid "Create Graphs from Data Query"
 msgstr "डेटा क्वेरी से ग्राफ़ बनाएँ"
 
-#: include/global_arrays.php:2130 include/global_arrays.php:2148
-#: include/global_arrays.php:2268 include/global_arrays.php:2358
-#: include/global_arrays.php:2382 include/global_arrays.php:2544
+#: include/global_arrays.php:2131 include/global_arrays.php:2149
+#: include/global_arrays.php:2269 include/global_arrays.php:2359
+#: include/global_arrays.php:2383 include/global_arrays.php:2545
 msgid "(Remove)"
 msgstr "हटाना"
 
-#: include/global_arrays.php:2166 include/global_arrays.php:2172
-#: include/global_arrays.php:2178 include/global_arrays.php:2184
-#: include/global_arrays.php:2478
+#: include/global_arrays.php:2167 include/global_arrays.php:2173
+#: include/global_arrays.php:2179 include/global_arrays.php:2185
+#: include/global_arrays.php:2479
 msgid "View Log"
 msgstr "लॉग देखिए"
 
-#: include/global_arrays.php:2190
+#: include/global_arrays.php:2191
 msgid "Graph Trees"
 msgstr "ग्राफ पेड़"
 
-#: include/global_arrays.php:2256 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2257 lib/api_aggregate.php:2333
 msgid "Graph Template Items"
 msgstr "ग्राफ टेम्पलेट आइटम"
 
-#: include/global_arrays.php:2346
+#: include/global_arrays.php:2347
 msgid "Round Robin Archives"
 msgstr "राउंड रॉबिन अभिलेखागार"
 
-#: include/global_arrays.php:2388
+#: include/global_arrays.php:2389
 msgid "Data Input Fields"
 msgstr "डेटा इनपुट फ़ील्ड"
 
-#: include/global_arrays.php:2394 include/global_arrays.php:2424
+#: include/global_arrays.php:2395 include/global_arrays.php:2425
 msgid "(Remove Item)"
 msgstr "(वस्तु निकालो)"
 
-#: include/global_arrays.php:2430 include/global_settings.php:217
+#: include/global_arrays.php:2431 include/global_settings.php:217
 #: rrdcleaner.php:323
 msgid "RRD Cleaner"
 msgstr "आरआरडी क्लीनर"
 
-#: include/global_arrays.php:2442
+#: include/global_arrays.php:2443
 msgid "List unused Files"
 msgstr "अप्रयुक्त फ़ाइलों की सूची बनाएं"
 
-#: include/global_arrays.php:2448
+#: include/global_arrays.php:2449
 msgid "RRD Check"
 msgstr "चेक चलाएं"
 
-#: include/global_arrays.php:2460 include/global_arrays.php:2472
+#: include/global_arrays.php:2461 include/global_arrays.php:2473
 #: utilities.php:2407
 msgid "View Poller Cache"
 msgstr "देखें पोलर कैश"
 
-#: include/global_arrays.php:2466 utilities.php:2411
+#: include/global_arrays.php:2467 utilities.php:2411
 msgid "View Data Query Cache"
 msgstr "डेटा क्वेरी कैश देखें"
 
-#: include/global_arrays.php:2484
+#: include/global_arrays.php:2485
 msgid "Clear Log"
 msgstr "अभिलेख साफ करो"
 
-#: include/global_arrays.php:2490 utilities.php:2400
+#: include/global_arrays.php:2491 utilities.php:2400
 msgid "View User Log"
 msgstr "उपयोगकर्ता लॉग देखें"
 
-#: include/global_arrays.php:2496
+#: include/global_arrays.php:2497
 msgid "Clear User Log"
 msgstr "उपयोगकर्ता लॉग साफ़ करें"
 
-#: include/global_arrays.php:2502 utilities.php:2391 utilities.php:2392
+#: include/global_arrays.php:2503 utilities.php:2391 utilities.php:2392
 msgid "Technical Support"
 msgstr "तकनीकी सहायता"
 
-#: include/global_arrays.php:2508 utilities.php:2582
+#: include/global_arrays.php:2509 utilities.php:2582
 msgid "Boost Status"
 msgstr "बूस्ट स्टेटस"
 
-#: include/global_arrays.php:2514 utilities.php:2466
+#: include/global_arrays.php:2515 utilities.php:2466
 msgid "View SNMP Agent Cache"
 msgstr "एसएनएमपी एजेंट कैश देखें"
 
-#: include/global_arrays.php:2520 utilities.php:2477
+#: include/global_arrays.php:2521 utilities.php:2477
 msgid "View SNMP Agent Notification Log"
 msgstr "एसएनएमपी एजेंट अधिसूचना लॉग देखें"
 
-#: include/global_arrays.php:2550
+#: include/global_arrays.php:2551
 msgid "VDEF Items"
 msgstr "VDEF आइटम"
 
-#: include/global_arrays.php:2556
+#: include/global_arrays.php:2557
 msgid "View SNMP Notification Receivers"
 msgstr "एसएनएमपी अधिसूचना प्राप्तियां देखें"
 
-#: include/global_arrays.php:2568
+#: include/global_arrays.php:2569
 #, fuzzy
 msgid "Kadupul Settings"
 msgstr "Kadupul सेटिंग्स"
 
-#: include/global_arrays.php:2574
+#: include/global_arrays.php:2575
 msgid "External Link"
 msgstr "बाहरी लिंक"
 
-#: include/global_arrays.php:2592 include/global_arrays.php:2622
+#: include/global_arrays.php:2593 include/global_arrays.php:2623
 msgid "(Action)"
 msgstr "कार्रवाई"
 
-#: include/global_arrays.php:2628 lib/html.php:2826
+#: include/global_arrays.php:2629 lib/html.php:2826
 #, fuzzy
 msgid "About Kadupul"
 msgstr "Kadupul के बारे में"
 
-#: include/global_arrays.php:2634
+#: include/global_arrays.php:2635
 #, fuzzy
 msgid "Kadupul Help"
 msgstr "Kadupul होम"
 
-#: include/global_arrays.php:2646
+#: include/global_arrays.php:2647
 msgid "Export Results"
 msgstr "परिणामों को एचटीएमएल के रूप में निर्यात करें"
 
-#: include/global_arrays.php:2664 include/global_arrays.php:2694
+#: include/global_arrays.php:2665 include/global_arrays.php:2695
 #: lib/html.php:2004 lib/html.php:2078
 msgid "Reporting"
 msgstr "रिपोर्टिंग"
 
-#: include/global_arrays.php:2670 include/global_arrays.php:2700
+#: include/global_arrays.php:2671 include/global_arrays.php:2701
 msgid "Report Add"
 msgstr "रिपोर्ट जोड़ें"
 
-#: include/global_arrays.php:2676 include/global_arrays.php:2706
+#: include/global_arrays.php:2677 include/global_arrays.php:2707
 msgid "Report Delete"
 msgstr "रिपोर्ट हटाएं"
 
-#: include/global_arrays.php:2682 include/global_arrays.php:2712
+#: include/global_arrays.php:2683 include/global_arrays.php:2713
 msgid "Report Edit"
 msgstr "रिपोर्ट संपादित करें"
 
-#: include/global_arrays.php:2688 include/global_arrays.php:2718
+#: include/global_arrays.php:2689 include/global_arrays.php:2719
 msgid "Report Edit Item"
 msgstr "रिपोर्ट संपादित करें आइटम"
 
-#: include/global_arrays.php:2742
+#: include/global_arrays.php:2743
 msgid "Color Template Items"
 msgstr "रंग टेम्पलेट आइटम"
 
-#: include/global_arrays.php:2802
+#: include/global_arrays.php:2803
 msgid "Graph Rule Items"
 msgstr "ग्राफ नियम आइटम"
 
-#: include/global_arrays.php:2826
+#: include/global_arrays.php:2827
 msgid "Tree Rule Items"
 msgstr "ट्री नियम आइटम"
 
-#: include/global_arrays.php:2857 include/global_arrays.php:2873
+#: include/global_arrays.php:2858 include/global_arrays.php:2874
 #: lib/api_device.php:1952
 msgid "days"
 msgstr "दिन"
 
-#: include/global_arrays.php:2858
+#: include/global_arrays.php:2859
 msgid "hrs"
 msgstr "घंटे"
 
-#: include/global_arrays.php:2859
+#: include/global_arrays.php:2860
 msgid "mins"
 msgstr "मिंट"
 
-#: include/global_arrays.php:2860
+#: include/global_arrays.php:2861
 msgid "secs"
 msgstr "सकिंट"
 
-#: include/global_arrays.php:2874 lib/api_device.php:1952
+#: include/global_arrays.php:2875 lib/api_device.php:1952
 msgid "hours"
 msgstr "घंटे"
 
-#: include/global_arrays.php:2875 lib/api_device.php:1952
+#: include/global_arrays.php:2876 lib/api_device.php:1952
 msgid "minutes"
 msgstr "मिनट"
 
-#: include/global_arrays.php:2876
+#: include/global_arrays.php:2877
 msgid "seconds"
 msgstr "सेकंड"
 
@@ -16226,6 +16226,10 @@ msgstr ""
 
 #: lib/rrd_maintenance.php:569
 msgid "RRD storage configuration requires attention"
+msgstr ""
+
+#: lib/schema_repair_integrity.php:25
+msgid "Forward schema repair could not be confirmed. Review the target schema and installer privileges before retrying."
 msgstr ""
 
 #: lib/snmp.php:234 lib/snmp.php:355 lib/snmp.php:471 lib/snmp.php:933

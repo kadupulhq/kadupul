@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
@@ -26,17 +28,24 @@ function upgrade_to_1_2_31()
 
     db_install_execute('ALTER TABLE settings_user MODIFY COLUMN name varchar(255) NOT NULL default ""');
 
+    upgrade_user_auth_row_cache_index();
+    // The historical baseline explicitly declared ON UPDATE. Share its repair
+    // with the forward step so already deployed 1.2.31-1.2.34 can reach it.
+    require_once dirname(__DIR__, 2) . '/lib/schema_repair_integrity.php';
+    schema_repair_integrity();
+    upgrade_poller_output_rejected();
+    upgrade_ldap_tls_requirement();
+}
+
+function upgrade_user_auth_row_cache_index(): void
+{
     if (!db_index_exists('user_auth_row_cache', 'class_time')) {
         db_install_execute('ALTER TABLE user_auth_row_cache ADD INDEX class_time (class, time)');
     }
+}
 
-    if (!db_index_exists('data_input_data', 'data_input_field_id')) {
-        db_install_execute('ALTER TABLE data_input_data ADD INDEX data_input_field_id (data_input_field_id)');
-    }
-
-    // Older MySQL and MariaDB schemas may have implicitly enabled ON UPDATE for this TIMESTAMP.
-    db_install_execute('ALTER TABLE aggregate_graphs MODIFY COLUMN created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP');
-
+function upgrade_poller_output_rejected(): void
+{
     /* Samples RRDtool keeps refusing are moved here instead of growing the queue. */
     db_install_execute('CREATE TABLE IF NOT EXISTS poller_output_rejected (
 		local_data_id int(10) unsigned NOT NULL default "0",
@@ -51,7 +60,6 @@ function upgrade_to_1_2_31()
 		KEY rrd_path (rrd_path))
 		ENGINE=InnoDB ROW_FORMAT=Dynamic');
 
-    upgrade_ldap_tls_requirement();
 }
 
 /**

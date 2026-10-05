@@ -38,6 +38,9 @@
             <file>lib/variables.php</file>
             <file>utilities.php</file>
             <file>cli/upgrade_database.php</file>
+            <file>lib/schema_repair_integrity.php</file>
+            <file>install/upgrades/1_2_31.php</file>
+            <file>install/upgrades/1_2_35.php</file>
         </include>
     </source>
 </phpunit>

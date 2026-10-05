@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.2.20\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 09:42-0700\n"
+"POT-Creation-Date: 2026-10-05 10:19-0700\n"
 "PO-Revision-Date: 2026-05-10 08:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -53,7 +53,7 @@ msgstr "Šī programma tiek izplatīta cerībā, ka kādam tā būs noderīga, t
 #: data_templates.php:19 data_templates.php:791 gprint_presets.php:12
 #: graph_templates.php:22 graph_templates.php:517 graphs.php:31
 #: host_templates.php:20 host_templates.php:485 host_templates.php:542
-#: include/global_arrays.php:1654 include/global_settings.php:232
+#: include/global_arrays.php:1655 include/global_settings.php:232
 #: lib/api_automation.php:1323 lib/api_automation.php:1386
 #: lib/api_automation.php:1457 lib/html.php:1546 lib/html_form.php:1397
 #: lib/html_reports.php:1937 managers.php:13 pollers.php:18 tree.php:1688
@@ -433,8 +433,8 @@ msgstr "Meklēt"
 #: aggregate_graphs.php:1587 color_templates.php:680 data_sources.php:1995
 #: data_sources.php:2134 graph_view.php:488 graph_view.php:739
 #: graph_view.php:803 graphs.php:2069 graphs.php:2268
-#: include/global_arrays.php:993 include/global_arrays.php:1229
-#: include/global_arrays.php:2014 lib/api_automation.php:283 lib/html.php:1996
+#: include/global_arrays.php:994 include/global_arrays.php:1230
+#: include/global_arrays.php:2015 lib/api_automation.php:283 lib/html.php:1996
 #: lib/html.php:2065 lib/html_graph.php:197 lib/html_tree.php:1022
 #: lib/html_tree.php:1378 tree.php:917 tree.php:2366 user_admin.php:801
 #: user_admin.php:1073 user_admin.php:2347 user_group_admin.php:940
@@ -596,12 +596,12 @@ msgid " [ Custom Graphs List Applied - Clear to Reset ]"
 msgstr " [ Pielietots pielāgots grafiku saraksts - Notīri, lai atiestatīt ]"
 
 #: aggregate_graphs.php:1547 aggregate_graphs.php:1653
-#: include/global_arrays.php:2766
+#: include/global_arrays.php:2767
 msgid "Aggregate Graphs"
 msgstr "Apkopotie grafiki"
 
 #: aggregate_graphs.php:1562 data_debug.php:1085 data_sources.php:1714
-#: graph_view.php:699 graphs.php:2005 include/global_arrays.php:2894
+#: graph_view.php:699 graphs.php:2005 include/global_arrays.php:2895
 #: include/global_settings.php:610 lib/api_automation.php:446
 #: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:381
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:59
@@ -633,9 +633,9 @@ msgstr "Jebkuru"
 #: data_debug.php:1090 data_sources.php:1086 data_sources.php:1719
 #: data_sources.php:2050 data_templates.php:1323 graph_templates_items.php:53
 #: graphs.php:1535 graphs.php:1544 graphs.php:2010 graphs_items.php:271
-#: graphs_items.php:391 include/global_arrays.php:523
-#: include/global_arrays.php:581 include/global_arrays.php:673
-#: include/global_arrays.php:885 include/global_arrays.php:1743
+#: graphs_items.php:391 include/global_arrays.php:524
+#: include/global_arrays.php:582 include/global_arrays.php:674
+#: include/global_arrays.php:886 include/global_arrays.php:1744
 #: include/global_form.php:574 include/global_form.php:883
 #: include/global_form.php:891 include/global_form.php:899
 #: include/global_form.php:938 include/global_form.php:945
@@ -713,13 +713,13 @@ msgid "Aggregate Template [new]"
 msgstr "Apkopotā veidne [jauna]"
 
 #: aggregate_templates.php:598 aggregate_templates.php:697
-#: include/global_arrays.php:2748
+#: include/global_arrays.php:2749
 msgid "Aggregate Templates"
 msgstr "Apkopotās veidnes"
 
 #: aggregate_templates.php:612 automation_templates.php:399
 #: automation_templates.php:489 color_templates.php:685
-#: include/global_arrays.php:1002 include/global_arrays.php:1066
+#: include/global_arrays.php:1003 include/global_arrays.php:1067
 #: lib/installer.php:2738 user_admin.php:2365 user_group_admin.php:2160
 msgid "Templates"
 msgstr "Veidnes"
@@ -750,7 +750,7 @@ msgid "Graphs Using"
 msgstr "Grafiki izmanto"
 
 #: aggregate_templates.php:709 graphs.php:2064 host_templates.php:730
-#: include/global_arrays.php:958 include/global_arrays.php:1363
+#: include/global_arrays.php:959 include/global_arrays.php:1364
 #: include/global_form.php:1399 include/global_form.php:1635
 #: lib/html_reports.php:1181 tree.php:1944
 msgid "Graph Template"
@@ -926,7 +926,7 @@ msgstr "Parole"
 msgid "Local"
 msgstr "Vietējais"
 
-#: auth_login.php:364 include/global_arrays.php:873 lib/auth.php:1047
+#: auth_login.php:364 include/global_arrays.php:874 lib/auth.php:1047
 #: lib/auth.php:1052
 msgid "LDAP"
 msgstr "LDAP"
@@ -956,18 +956,18 @@ msgstr "Pamata"
 msgid "User Account Details"
 msgstr "Lietotāja konta dati"
 
-#: auth_profile.php:313 include/global_arrays.php:857
+#: auth_profile.php:313 include/global_arrays.php:858
 #: include/global_settings.php:2737 lib/html.php:2232 lib/html.php:2254
 #: lib/html.php:2789
 msgid "Tree View"
 msgstr "Koka skats"
 
-#: auth_profile.php:317 include/global_arrays.php:858 lib/html.php:2239
+#: auth_profile.php:317 include/global_arrays.php:859 lib/html.php:2239
 #: lib/html.php:2263 lib/html.php:2790
 msgid "List View"
 msgstr "Saraksta skats"
 
-#: auth_profile.php:321 include/global_arrays.php:859 lib/html.php:2246
+#: auth_profile.php:321 include/global_arrays.php:860 lib/html.php:2246
 #: lib/html.php:2791
 msgid "Preview View"
 msgstr "Priekšskatījuma skats"
@@ -1116,8 +1116,8 @@ msgid "Delete Device(s)"
 msgstr "Dzēst ierīci(-es)"
 
 #: automation_devices.php:262 automation_devices.php:578
-#: include/global_arrays.php:990 include/global_arrays.php:1046
-#: include/global_arrays.php:2328 lib/api_automation.php:178
+#: include/global_arrays.php:991 include/global_arrays.php:1047
+#: include/global_arrays.php:2329 lib/api_automation.php:178
 #: lib/api_automation.php:271 lib/api_automation.php:486
 #: lib/api_automation.php:563 lib/api_automation.php:1189 pollers.php:1031
 #: tree.php:916 tree.php:2360 user_admin.php:1065 user_admin.php:2359
@@ -1159,12 +1159,12 @@ msgstr "Apraksts"
 msgid "OS"
 msgstr "OS"
 
-#: automation_devices.php:278 include/global_arrays.php:524
+#: automation_devices.php:278 include/global_arrays.php:525
 msgid "Uptime"
 msgstr "Darbības laiks"
 
 #: automation_devices.php:279 automation_devices.php:560
-#: include/global_arrays.php:1018 utilities.php:2156
+#: include/global_arrays.php:1019 utilities.php:2156
 msgid "SNMP"
 msgstr "SNMP"
 
@@ -1245,13 +1245,13 @@ msgstr "Nav pieejams"
 #: automation_tree_rules.php:14 cdef.php:15 color_templates.php:14
 #: data_queries.php:17 data_source_profiles.php:17 data_templates.php:20
 #: graph_templates.php:23 graphs.php:51 host_templates.php:21
-#: include/global_arrays.php:1651
+#: include/global_arrays.php:1652
 msgid "Duplicate"
 msgstr "Dublēt"
 
 #: automation_graph_rules.php:15 automation_networks.php:18
 #: automation_tree_rules.php:15 data_sources.php:25
-#: include/global_arrays.php:1652 include/global_settings.php:1787
+#: include/global_arrays.php:1653 include/global_settings.php:1787
 #: managers.php:14 managers.php:20 plugins.php:24 pollers.php:20
 #: user_admin.php:19 user_domains.php:17 user_domains.php:397
 #: user_group_admin.php:21
@@ -1260,7 +1260,7 @@ msgstr "Iespējot"
 
 #: automation_graph_rules.php:16 automation_networks.php:17
 #: automation_tree_rules.php:16 data_sources.php:26
-#: include/global_arrays.php:1653 managers.php:15 managers.php:19
+#: include/global_arrays.php:1654 managers.php:15 managers.php:19
 #: plugins.php:25 pollers.php:19 user_admin.php:20 user_domains.php:16
 #: user_group_admin.php:22
 msgid "Disable"
@@ -1348,14 +1348,14 @@ msgid "Graph Creation Criteria"
 msgstr "Grafika izveides kritēriji"
 
 #: automation_graph_rules.php:800 automation_graph_rules.php:847
-#: automation_graph_rules.php:954 include/global_arrays.php:1013
-#: include/global_arrays.php:2784
+#: automation_graph_rules.php:954 include/global_arrays.php:1014
+#: include/global_arrays.php:2785
 msgid "Graph Rules"
 msgstr "Grafika noteikumi"
 
 #: automation_graph_rules.php:815 automation_graph_rules.php:965
-#: graphs.php:2065 include/global_arrays.php:1366
-#: include/global_arrays.php:2893 include/global_form.php:1645
+#: graphs.php:2065 include/global_arrays.php:1367
+#: include/global_arrays.php:2894 include/global_form.php:1645
 #: include/global_form.php:2207
 msgid "Data Query"
 msgstr "Datu vaicājums"
@@ -1364,7 +1364,7 @@ msgstr "Datu vaicājums"
 #: automation_graph_rules.php:983 automation_networks.php:535
 #: automation_tree_rules.php:856 automation_tree_rules.php:976
 #: automation_tree_rules.php:994 data_debug.php:1150 data_sources.php:1777
-#: include/global_arrays.php:917 include/global_form.php:1527
+#: include/global_arrays.php:918 include/global_form.php:1527
 #: include/global_settings.php:345 include/global_settings.php:361
 #: lib/api_automation.php:27 lib/html_reports.php:2036
 #: lib/html_reports.php:2141 lib/html_reports.php:2152
@@ -1379,8 +1379,8 @@ msgstr "Iespējots"
 #: automation_graph_rules.php:843 automation_graph_rules.php:983
 #: automation_networks.php:1090 automation_tree_rules.php:857
 #: automation_tree_rules.php:994 data_debug.php:1151 data_sources.php:1778
-#: data_templates.php:1325 include/global_arrays.php:916
-#: include/global_arrays.php:1575 include/global_arrays.php:1867
+#: data_templates.php:1325 include/global_arrays.php:917
+#: include/global_arrays.php:1576 include/global_arrays.php:1868
 #: include/global_settings.php:344 include/global_settings.php:360
 #: include/global_settings.php:1370 include/global_settings.php:1630
 #: include/global_settings.php:1644 include/global_settings.php:1657
@@ -1478,7 +1478,7 @@ msgstr "Palaidiet atklāšanu atkļūdošanas režīmā"
 msgid "Click 'Continue' to cancel on going Network Discovery(s)."
 msgstr "Noklikšķiniet uz \"Turpināt\", lai atceltu tīkla atklāšanu(-s)."
 
-#: automation_networks.php:401 include/global_arrays.php:509
+#: automation_networks.php:401 include/global_arrays.php:510
 msgid "SNMP Get"
 msgstr "SNMP Get"
 
@@ -1487,17 +1487,17 @@ msgid "Manual"
 msgstr "Manuāli"
 
 #: automation_networks.php:409 automation_networks.php:1064
-#: include/global_arrays.php:1881 include/global_settings.php:1371
+#: include/global_arrays.php:1882 include/global_settings.php:1371
 msgid "Daily"
 msgstr "Katru dienu"
 
 #: automation_networks.php:410 automation_networks.php:1065
-#: include/global_arrays.php:1882
+#: include/global_arrays.php:1883
 msgid "Weekly"
 msgstr "Katru nedēļu"
 
 #: automation_networks.php:411 automation_networks.php:1066
-#: include/global_arrays.php:1883
+#: include/global_arrays.php:1884
 msgid "Monthly"
 msgstr "Ikmēneša"
 
@@ -1622,11 +1622,11 @@ msgstr "%d pavediens"
 #: automation_networks.php:505 automation_networks.php:506
 #: automation_networks.php:507 automation_networks.php:508
 #: automation_networks.php:509 automation_networks.php:510
-#: automation_networks.php:511 include/global_arrays.php:820
-#: include/global_arrays.php:821 include/global_arrays.php:822
-#: include/global_arrays.php:823 include/global_arrays.php:824
-#: include/global_arrays.php:825 include/global_arrays.php:826
-#: include/global_arrays.php:827 include/global_arrays.php:828
+#: automation_networks.php:511 include/global_arrays.php:821
+#: include/global_arrays.php:822 include/global_arrays.php:823
+#: include/global_arrays.php:824 include/global_arrays.php:825
+#: include/global_arrays.php:826 include/global_arrays.php:827
+#: include/global_arrays.php:828 include/global_arrays.php:829
 #, php-format
 msgid "%d Threads"
 msgstr "%d pavedieni"
@@ -1647,19 +1647,19 @@ msgstr "%d minūte"
 #: automation_networks.php:522 automation_networks.php:523
 #: automation_networks.php:524 automation_networks.php:525
 #: automation_networks.php:1212 automation_networks.php:1213
-#: data_sources.php:1540 include/global_arrays.php:711
-#: include/global_arrays.php:712 include/global_arrays.php:713
-#: include/global_arrays.php:714 include/global_arrays.php:751
-#: include/global_arrays.php:752 include/global_arrays.php:754
-#: include/global_arrays.php:755 include/global_arrays.php:756
-#: include/global_arrays.php:757 include/global_arrays.php:758
-#: include/global_arrays.php:759 include/global_arrays.php:1208
-#: include/global_arrays.php:1209 include/global_arrays.php:1582
-#: include/global_arrays.php:1586 include/global_arrays.php:1594
-#: include/global_arrays.php:1595 include/global_arrays.php:1619
-#: include/global_arrays.php:1620 include/global_arrays.php:1621
-#: include/global_arrays.php:1622 include/global_arrays.php:1623
-#: include/global_arrays.php:1636 include/global_settings.php:1698
+#: data_sources.php:1540 include/global_arrays.php:712
+#: include/global_arrays.php:713 include/global_arrays.php:714
+#: include/global_arrays.php:715 include/global_arrays.php:752
+#: include/global_arrays.php:753 include/global_arrays.php:755
+#: include/global_arrays.php:756 include/global_arrays.php:757
+#: include/global_arrays.php:758 include/global_arrays.php:759
+#: include/global_arrays.php:760 include/global_arrays.php:1209
+#: include/global_arrays.php:1210 include/global_arrays.php:1583
+#: include/global_arrays.php:1587 include/global_arrays.php:1595
+#: include/global_arrays.php:1596 include/global_arrays.php:1620
+#: include/global_arrays.php:1621 include/global_arrays.php:1622
+#: include/global_arrays.php:1623 include/global_arrays.php:1624
+#: include/global_arrays.php:1637 include/global_settings.php:1698
 #: include/global_settings.php:1699 include/global_settings.php:1700
 #: include/global_settings.php:1701 include/global_settings.php:1702
 #: include/global_settings.php:2663 include/global_settings.php:2942
@@ -1669,29 +1669,29 @@ msgstr "%d minūte"
 msgid "%d Minutes"
 msgstr "%d minūtes"
 
-#: automation_networks.php:526 include/global_arrays.php:760
-#: include/global_arrays.php:770 include/global_arrays.php:1456
+#: automation_networks.php:526 include/global_arrays.php:761
+#: include/global_arrays.php:771 include/global_arrays.php:1457
 #, php-format
 msgid "%d Hour"
 msgstr "%d stunda"
 
 #: automation_networks.php:527 automation_networks.php:528
 #: automation_networks.php:529 data_source_profiles.php:1123
-#: include/global_arrays.php:716 include/global_arrays.php:717
-#: include/global_arrays.php:718 include/global_arrays.php:719
-#: include/global_arrays.php:720 include/global_arrays.php:761
-#: include/global_arrays.php:762 include/global_arrays.php:763
-#: include/global_arrays.php:764 include/global_arrays.php:771
-#: include/global_arrays.php:772 include/global_arrays.php:773
-#: include/global_arrays.php:774 include/global_arrays.php:1457
-#: include/global_arrays.php:1458 include/global_arrays.php:1459
-#: include/global_arrays.php:1460 include/global_arrays.php:1527
-#: include/global_arrays.php:1528 include/global_arrays.php:1529
-#: include/global_arrays.php:1530 include/global_arrays.php:1531
-#: include/global_arrays.php:1548 include/global_arrays.php:1549
-#: include/global_arrays.php:1550 include/global_arrays.php:1551
-#: include/global_arrays.php:1552 include/global_arrays.php:1558
-#: include/global_arrays.php:1559 include/global_settings.php:1704
+#: include/global_arrays.php:717 include/global_arrays.php:718
+#: include/global_arrays.php:719 include/global_arrays.php:720
+#: include/global_arrays.php:721 include/global_arrays.php:762
+#: include/global_arrays.php:763 include/global_arrays.php:764
+#: include/global_arrays.php:765 include/global_arrays.php:772
+#: include/global_arrays.php:773 include/global_arrays.php:774
+#: include/global_arrays.php:775 include/global_arrays.php:1458
+#: include/global_arrays.php:1459 include/global_arrays.php:1460
+#: include/global_arrays.php:1461 include/global_arrays.php:1528
+#: include/global_arrays.php:1529 include/global_arrays.php:1530
+#: include/global_arrays.php:1531 include/global_arrays.php:1532
+#: include/global_arrays.php:1549 include/global_arrays.php:1550
+#: include/global_arrays.php:1551 include/global_arrays.php:1552
+#: include/global_arrays.php:1553 include/global_arrays.php:1559
+#: include/global_arrays.php:1560 include/global_settings.php:1704
 #: include/global_settings.php:1705 include/global_settings.php:1706
 #: include/global_settings.php:1707 include/global_settings.php:2946
 #: include/global_settings.php:2947
@@ -1801,37 +1801,37 @@ msgid "What Day(s) of the week will this Network Range be discovered."
 msgstr "Kurā(-ās) nedēļas dienā(-ās) tiks atklāts šis tīkla diapazons."
 
 #: automation_networks.php:636 automation_networks.php:694
-#: include/global_arrays.php:1939
+#: include/global_arrays.php:1940
 msgid "Sunday"
 msgstr "Svētdiena"
 
 #: automation_networks.php:637 automation_networks.php:695
-#: include/global_arrays.php:1940
+#: include/global_arrays.php:1941
 msgid "Monday"
 msgstr "Pirmdiena"
 
 #: automation_networks.php:638 automation_networks.php:696
-#: include/global_arrays.php:1941
+#: include/global_arrays.php:1942
 msgid "Tuesday"
 msgstr "Otrdiena"
 
 #: automation_networks.php:639 automation_networks.php:697
-#: include/global_arrays.php:1942
+#: include/global_arrays.php:1943
 msgid "Wednesday"
 msgstr "Trešdiena"
 
 #: automation_networks.php:640 automation_networks.php:698
-#: include/global_arrays.php:1943
+#: include/global_arrays.php:1944
 msgid "Thursday"
 msgstr "Ceturtdiena"
 
 #: automation_networks.php:641 automation_networks.php:699
-#: include/global_arrays.php:1944
+#: include/global_arrays.php:1945
 msgid "Friday"
 msgstr "Piektdiena"
 
 #: automation_networks.php:642 automation_networks.php:700
-#: include/global_arrays.php:1945
+#: include/global_arrays.php:1946
 msgid "Saturday"
 msgstr "Sestdiena"
 
@@ -1843,51 +1843,51 @@ msgstr "Gada mēneši"
 msgid "What Months(s) of the Year will this Network Range be discovered."
 msgstr "Kuros gada mēnešos šis tīkla diapazons tiks atklāts."
 
-#: automation_networks.php:652 include/global_arrays.php:1893
+#: automation_networks.php:652 include/global_arrays.php:1894
 msgid "January"
 msgstr "Janvāris"
 
-#: automation_networks.php:653 include/global_arrays.php:1894
+#: automation_networks.php:653 include/global_arrays.php:1895
 msgid "February"
 msgstr "Februāris"
 
-#: automation_networks.php:654 include/global_arrays.php:1895
+#: automation_networks.php:654 include/global_arrays.php:1896
 msgid "March"
 msgstr "Marts"
 
-#: automation_networks.php:655 include/global_arrays.php:1896
+#: automation_networks.php:655 include/global_arrays.php:1897
 msgid "April"
 msgstr "Aprīlis"
 
-#: automation_networks.php:656 include/global_arrays.php:1897
+#: automation_networks.php:656 include/global_arrays.php:1898
 msgid "May"
 msgstr "Maijs"
 
-#: automation_networks.php:657 include/global_arrays.php:1898
+#: automation_networks.php:657 include/global_arrays.php:1899
 msgid "June"
 msgstr "Jūnijs"
 
-#: automation_networks.php:658 include/global_arrays.php:1899
+#: automation_networks.php:658 include/global_arrays.php:1900
 msgid "July"
 msgstr "Jūlijs"
 
-#: automation_networks.php:659 include/global_arrays.php:1900
+#: automation_networks.php:659 include/global_arrays.php:1901
 msgid "August"
 msgstr "Augusts"
 
-#: automation_networks.php:660 include/global_arrays.php:1901
+#: automation_networks.php:660 include/global_arrays.php:1902
 msgid "September"
 msgstr "Septembris"
 
-#: automation_networks.php:661 include/global_arrays.php:1902
+#: automation_networks.php:661 include/global_arrays.php:1903
 msgid "October"
 msgstr "Oktobris"
 
-#: automation_networks.php:662 include/global_arrays.php:1903
+#: automation_networks.php:662 include/global_arrays.php:1904
 msgid "November"
 msgstr "Novembris"
 
-#: automation_networks.php:663 include/global_arrays.php:1904
+#: automation_networks.php:663 include/global_arrays.php:1905
 msgid "December"
 msgstr "Decembris"
 
@@ -2020,7 +2020,7 @@ msgid "Network Filters"
 msgstr "Tīkla filtri"
 
 #: automation_networks.php:1054 automation_networks.php:1186
-#: include/global_arrays.php:1010
+#: include/global_arrays.php:1011
 msgid "Networks"
 msgstr "Tīkli"
 
@@ -2077,8 +2077,8 @@ msgstr "Procesā"
 msgid "Idle"
 msgstr "Dīkstāvē"
 
-#: automation_networks.php:1150 include/global_arrays.php:891
-#: include/global_arrays.php:1210 include/global_settings.php:2576
+#: automation_networks.php:1150 include/global_arrays.php:892
+#: include/global_arrays.php:1211 include/global_settings.php:2576
 #: lib/html_reports.php:2183 user_admin.php:2115
 msgid "Never"
 msgstr "Nekad"
@@ -2095,19 +2095,19 @@ msgstr "Atsvaidzināt"
 
 #: automation_networks.php:1207 automation_networks.php:1208
 #: automation_networks.php:1209 automation_networks.php:1210
-#: data_sources.php:1536 include/global_arrays.php:709
-#: include/global_arrays.php:745 include/global_arrays.php:746
-#: include/global_arrays.php:747 include/global_arrays.php:748
-#: include/global_arrays.php:749 include/global_arrays.php:750
-#: include/global_arrays.php:1203 include/global_arrays.php:1204
-#: include/global_arrays.php:1205 include/global_arrays.php:1206
-#: include/global_arrays.php:1576 include/global_arrays.php:1577
-#: include/global_arrays.php:1578 include/global_arrays.php:1579
-#: include/global_arrays.php:1580 include/global_arrays.php:1615
-#: include/global_arrays.php:1616 include/global_arrays.php:1628
-#: include/global_arrays.php:1629 include/global_arrays.php:1630
-#: include/global_arrays.php:1631 include/global_arrays.php:1632
-#: include/global_arrays.php:1633 include/global_arrays.php:1634
+#: data_sources.php:1536 include/global_arrays.php:710
+#: include/global_arrays.php:746 include/global_arrays.php:747
+#: include/global_arrays.php:748 include/global_arrays.php:749
+#: include/global_arrays.php:750 include/global_arrays.php:751
+#: include/global_arrays.php:1204 include/global_arrays.php:1205
+#: include/global_arrays.php:1206 include/global_arrays.php:1207
+#: include/global_arrays.php:1577 include/global_arrays.php:1578
+#: include/global_arrays.php:1579 include/global_arrays.php:1580
+#: include/global_arrays.php:1581 include/global_arrays.php:1616
+#: include/global_arrays.php:1617 include/global_arrays.php:1629
+#: include/global_arrays.php:1630 include/global_arrays.php:1631
+#: include/global_arrays.php:1632 include/global_arrays.php:1633
+#: include/global_arrays.php:1634 include/global_arrays.php:1635
 #: include/global_settings.php:1271 include/global_settings.php:1272
 #: include/global_settings.php:1273 include/global_settings.php:1274
 #: include/global_settings.php:2659 include/global_settings.php:2660
@@ -2342,7 +2342,7 @@ msgstr "Noklikšķiniet uz 'Turpināt', lai dzēstu sekojošo(-ās) automatizāc
 msgid "Delete Automation Template(s)"
 msgstr "Dzēst automatizācijas veidni(-es)"
 
-#: automation_templates.php:271 include/global_arrays.php:1367
+#: automation_templates.php:271 include/global_arrays.php:1368
 #: include/global_form.php:1211 include/global_form.php:1630
 #: lib/html_reports.php:1160
 msgid "Device Template"
@@ -2488,8 +2488,8 @@ msgid "Are you sure you wish to continue?"
 msgstr "Vai tiešām vēlaties turpināt?"
 
 #: automation_tree_rules.php:836 automation_tree_rules.php:861
-#: automation_tree_rules.php:961 include/global_arrays.php:1014
-#: include/global_arrays.php:2808
+#: automation_tree_rules.php:961 include/global_arrays.php:1015
+#: include/global_arrays.php:2809
 msgid "Tree Rules"
 msgstr "Koku noteikumi"
 
@@ -2624,7 +2624,7 @@ msgstr "CDEF [labot: %s]"
 msgid "CDEF [new]"
 msgstr "CDEF [jauns]"
 
-#: cdef.php:558 include/global_arrays.php:2154
+#: cdef.php:558 include/global_arrays.php:2155
 msgid "CDEF Items"
 msgstr "CDEF preces"
 
@@ -2641,8 +2641,8 @@ msgstr "Elements #%d"
 msgid "Delete CDEF Item"
 msgstr "Dzēst CDEF elementu"
 
-#: cdef.php:718 cdef.php:733 cdef.php:858 include/global_arrays.php:1019
-#: include/global_arrays.php:2136
+#: cdef.php:718 cdef.php:733 cdef.php:858 include/global_arrays.php:1020
+#: include/global_arrays.php:2137
 msgid "CDEFs"
 msgstr "CDEF"
 
@@ -2812,7 +2812,7 @@ msgstr "Sinhronizēt apkopojumus"
 msgid "Color Item"
 msgstr "Krāsu elements"
 
-#: color_templates.php:60 include/global_arrays.php:1007
+#: color_templates.php:60 include/global_arrays.php:1008
 #: include/global_form.php:975 include/global_form.php:2089
 msgid "Color"
 msgstr "Krāsa"
@@ -2919,7 +2919,7 @@ msgid "Color Template '%s' had no Aggregate Templates or Graphs using this Color
 msgstr "Krāsu veidnei “%s” nebija apkopotu veidņu vai diagrammu, izmantojot šo krāsu veidni."
 
 #: color_templates.php:552 color_templates.php:566 color_templates.php:661
-#: include/global_arrays.php:2724
+#: include/global_arrays.php:2725
 msgid "Color Templates"
 msgstr "Krāsu veidnes"
 
@@ -3001,7 +3001,7 @@ msgstr ""
 
 #: data_debug.php:483 data_debug.php:934 data_queries.php:769
 #: data_sources.php:1149 data_templates.php:719 graphs_items.php:387
-#: include/global_arrays.php:1005 include/global_form.php:960
+#: include/global_arrays.php:1006 include/global_form.php:960
 #: lib/api_aggregate.php:2338 lib/html.php:1404 rrdcheck.php:142
 msgid "Data Source"
 msgstr "Datu avots"
@@ -3093,8 +3093,8 @@ msgid "Summary of issues found for the Data Source."
 msgstr "Datu avotam atrasto problēmu kopsavilkums."
 
 #: data_debug.php:621 data_debug.php:1195 data_sources.php:1799
-#: data_sources.php:1973 include/global_arrays.php:994
-#: include/global_arrays.php:1040 include/global_arrays.php:2310
+#: data_sources.php:1973 include/global_arrays.php:995
+#: include/global_arrays.php:1041 include/global_arrays.php:2311
 #: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:325
 msgid "Data Sources"
@@ -3606,7 +3606,7 @@ msgstr "XML fails ir veiksmīgi atrasts"
 msgid "Could not locate XML file."
 msgstr "Nevarēja atrast XML failu."
 
-#: data_queries.php:1206 host_templates.php:466 include/global_arrays.php:2418
+#: data_queries.php:1206 host_templates.php:466 include/global_arrays.php:2419
 msgid "Associated Graph Templates"
 msgstr "Saistītās grafiku veidnes"
 
@@ -3636,8 +3636,8 @@ msgid "Delete Associated Graph"
 msgstr "Dzēst saistīto grafiku"
 
 #: data_queries.php:1362 data_queries.php:1377 data_queries.php:1512
-#: include/global_arrays.php:999 include/global_arrays.php:1226
-#: include/global_arrays.php:2400 lib/api_automation.php:1078
+#: include/global_arrays.php:1000 include/global_arrays.php:1227
+#: include/global_arrays.php:2401 lib/api_automation.php:1078
 msgid "Data Queries"
 msgstr "Datu vaicājumi"
 
@@ -3665,7 +3665,7 @@ msgstr "Diagrammu skaits, kas izmanto šo datu vaicājumu."
 msgid "The number of Graphs Templates using this Data Query."
 msgstr "Grafiku veidņu skaits, kas izmanto šo datu vaicājumu."
 
-#: data_queries.php:1505 include/global_arrays.php:1359
+#: data_queries.php:1505 include/global_arrays.php:1360
 #: include/global_form.php:570 include/global_form.php:1380
 msgid "Data Input Method"
 msgstr "Datu ievades metode"
@@ -3820,12 +3820,12 @@ msgstr "%s KB baiti katram datu avotam"
 msgid "Enter a valid number of Rows to obtain the RRA size."
 msgstr "Ievadiet derīgu rindu skaitu, lai iegūtu RRA izmēru."
 
-#: data_source_profiles.php:1088 include/global_arrays.php:787
-#: include/global_arrays.php:788 include/global_arrays.php:789
-#: include/global_arrays.php:790 include/global_arrays.php:791
-#: include/global_arrays.php:792 include/global_arrays.php:793
-#: include/global_arrays.php:794 include/global_arrays.php:795
-#: include/global_arrays.php:1473 include/global_settings.php:1636
+#: data_source_profiles.php:1088 include/global_arrays.php:788
+#: include/global_arrays.php:789 include/global_arrays.php:790
+#: include/global_arrays.php:791 include/global_arrays.php:792
+#: include/global_arrays.php:793 include/global_arrays.php:794
+#: include/global_arrays.php:795 include/global_arrays.php:796
+#: include/global_arrays.php:1474 include/global_settings.php:1636
 #, php-format
 msgid "%d Years"
 msgstr "%d gadi"
@@ -3834,48 +3834,48 @@ msgstr "%d gadi"
 msgid "1 Year"
 msgstr "1 gads"
 
-#: data_source_profiles.php:1097 include/global_arrays.php:781
-#: include/global_arrays.php:1467 rrdcleaner.php:537
+#: data_source_profiles.php:1097 include/global_arrays.php:782
+#: include/global_arrays.php:1468 rrdcleaner.php:537
 #, php-format
 msgid "%d Month"
 msgstr "%d mēnesis"
 
-#: data_source_profiles.php:1097 include/global_arrays.php:782
-#: include/global_arrays.php:783 include/global_arrays.php:784
-#: include/global_arrays.php:785 include/global_arrays.php:1468
-#: include/global_arrays.php:1469 include/global_arrays.php:1470
-#: include/global_arrays.php:1471 rrdcleaner.php:538 rrdcleaner.php:539
+#: data_source_profiles.php:1097 include/global_arrays.php:783
+#: include/global_arrays.php:784 include/global_arrays.php:785
+#: include/global_arrays.php:786 include/global_arrays.php:1469
+#: include/global_arrays.php:1470 include/global_arrays.php:1471
+#: include/global_arrays.php:1472 rrdcleaner.php:538 rrdcleaner.php:539
 #: rrdcleaner.php:540
 #, php-format
 msgid "%d Months"
 msgstr "%d mēneši"
 
-#: data_source_profiles.php:1106 include/global_arrays.php:722
-#: include/global_arrays.php:778 include/global_arrays.php:1465
+#: data_source_profiles.php:1106 include/global_arrays.php:723
+#: include/global_arrays.php:779 include/global_arrays.php:1466
 #: rrdcleaner.php:533 rrdcleaner.php:534
 #, php-format
 msgid "%d Week"
 msgstr "%d nedēļa"
 
-#: data_source_profiles.php:1106 include/global_arrays.php:779
-#: include/global_arrays.php:780 include/global_arrays.php:1466
+#: data_source_profiles.php:1106 include/global_arrays.php:780
+#: include/global_arrays.php:781 include/global_arrays.php:1467
 #: include/global_settings.php:2950 include/global_settings.php:2951
 #: include/global_settings.php:2952 rrdcleaner.php:535 rrdcleaner.php:536
 #, php-format
 msgid "%d Weeks"
 msgstr "%d nedēļas"
 
-#: data_source_profiles.php:1115 include/global_arrays.php:721
-#: include/global_arrays.php:765 include/global_arrays.php:775
-#: include/global_arrays.php:1461
+#: data_source_profiles.php:1115 include/global_arrays.php:722
+#: include/global_arrays.php:766 include/global_arrays.php:776
+#: include/global_arrays.php:1462
 #, php-format
 msgid "%d Day"
 msgstr "%d diena"
 
-#: data_source_profiles.php:1115 include/global_arrays.php:766
-#: include/global_arrays.php:776 include/global_arrays.php:777
-#: include/global_arrays.php:1462 include/global_arrays.php:1463
-#: include/global_arrays.php:1464 include/global_settings.php:1631
+#: data_source_profiles.php:1115 include/global_arrays.php:767
+#: include/global_arrays.php:777 include/global_arrays.php:778
+#: include/global_arrays.php:1463 include/global_arrays.php:1464
+#: include/global_arrays.php:1465 include/global_settings.php:1631
 #: include/global_settings.php:1632 include/global_settings.php:1633
 #: include/global_settings.php:1634 include/global_settings.php:1645
 #: include/global_settings.php:1646 include/global_settings.php:1647
@@ -3884,16 +3884,16 @@ msgstr "%d diena"
 msgid "%d Days"
 msgstr "%d dienas"
 
-#: data_source_profiles.php:1123 include/global_arrays.php:715
-#: include/global_arrays.php:1526 include/global_arrays.php:1547
-#: include/global_arrays.php:1557 include/global_arrays.php:1587
-#: include/global_arrays.php:1596 include/global_arrays.php:1624
+#: data_source_profiles.php:1123 include/global_arrays.php:716
+#: include/global_arrays.php:1527 include/global_arrays.php:1548
+#: include/global_arrays.php:1558 include/global_arrays.php:1588
+#: include/global_arrays.php:1597 include/global_arrays.php:1625
 #: include/global_settings.php:1406 include/global_settings.php:1703
 #: include/global_settings.php:2945
 msgid "1 Hour"
 msgstr "1 stunda"
 
-#: data_source_profiles.php:1177 include/global_arrays.php:1233
+#: data_source_profiles.php:1177 include/global_arrays.php:1234
 msgid "Data Source Profiles"
 msgstr "Datu avotu profili"
 
@@ -4136,8 +4136,8 @@ msgid "The name given to this data template.  Please note that you may only chan
 msgstr "Šai datu veidnei piešķirtais nosaukums. Lūdzu, ņemiet vērā, ka diagrammas veidnes drīkst mainīt tikai uz 100%$ saderīgu diagrammu veidni, kas nozīmē, ka tajā ir iekļauti identiski datu avoti."
 
 #: data_sources.php:1084 graph_view.php:817 graphs.php:1540
-#: include/global_arrays.php:954 include/global_arrays.php:1003
-#: include/global_arrays.php:1690 include/global_arrays.php:1859
+#: include/global_arrays.php:955 include/global_arrays.php:1004
+#: include/global_arrays.php:1691 include/global_arrays.php:1860
 #: lib/api_automation.php:426 lib/functions.php:6195 lib/html.php:2347
 #: lib/html.php:2384 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
@@ -4185,9 +4185,9 @@ msgstr "Informācija par RRDtool melodiju"
 msgid "External"
 msgstr "Ārējais"
 
-#: data_sources.php:1538 include/global_arrays.php:710
-#: include/global_arrays.php:1207 include/global_arrays.php:1581
-#: include/global_arrays.php:1617 include/global_arrays.php:1635
+#: data_sources.php:1538 include/global_arrays.php:711
+#: include/global_arrays.php:1208 include/global_arrays.php:1582
+#: include/global_arrays.php:1618 include/global_arrays.php:1636
 #: include/global_settings.php:1697 include/global_settings.php:2662
 msgid "1 Minute"
 msgstr "1 minūte"
@@ -4261,7 +4261,7 @@ msgstr "Datu avoti nav atrasti"
 msgid "No Graphs"
 msgstr "Nav grafiku"
 
-#: data_sources.php:2140 include/global_arrays.php:995
+#: data_sources.php:2140 include/global_arrays.php:996
 msgid "Aggregates"
 msgstr "Agregāti"
 
@@ -4369,7 +4369,7 @@ msgid "After you uncheck this checkbox and then Save the Data Template, any exis
 msgstr "Kad noņemsiet atzīmi no šīs izvēles rūtiņas un pēc tam saglabāsiet datu veidni, visi esošie datu avoti, kuru pamatā ir šī datu veidne, zaudēs savus pielāgotos datus. Tas var izraisīt bojātu datu vākšanu un grafikus"
 
 #: data_templates.php:1092 data_templates.php:1126 data_templates.php:1296
-#: include/global_arrays.php:1237 include/global_arrays.php:2292
+#: include/global_arrays.php:1238 include/global_arrays.php:2293
 msgid "Data Templates"
 msgstr "Datu veidnes"
 
@@ -4439,11 +4439,11 @@ msgstr "GPRINT sākotnējie iestatījumi [rediģēt: %s]"
 msgid "GPRINT Presets [new]"
 msgstr "GPRINT sākotnējie iestatījumi [jauns]"
 
-#: gprint_presets.php:246 include/global_arrays.php:2118
+#: gprint_presets.php:246 include/global_arrays.php:2119
 msgid "GPRINT Presets"
 msgstr "GPRINT priekšiestatījumi"
 
-#: gprint_presets.php:261 gprint_presets.php:408 include/global_arrays.php:1022
+#: gprint_presets.php:261 gprint_presets.php:408 include/global_arrays.php:1023
 msgid "GPRINTs"
 msgstr "GPRINTi"
 
@@ -4648,7 +4648,7 @@ msgstr "Noklikšķiniet uz \"Turpināt\", lai veiktu savu grafiku ātru sinhroni
 msgid "Graph Template Items [edit: %s]"
 msgstr "Diagrammas veidnes vienumi [rediģēt: %s]"
 
-#: graph_templates.php:497 include/global_arrays.php:2262
+#: graph_templates.php:497 include/global_arrays.php:2263
 msgid "Graph Item Inputs"
 msgstr "Grafika elementu ievades"
 
@@ -4678,8 +4678,8 @@ msgid "Check this checkbox if you wish to allow the user to override the value o
 msgstr "Atzīmējiet šo izvēles rūtiņu, ja vēlaties ļaut lietotājam grafika izveides laikā ignorēt vērtību labajā pusē."
 
 #: graph_templates.php:718 graph_templates.php:733 graph_templates.php:900
-#: graphs_new.php:637 include/global_arrays.php:1236
-#: include/global_arrays.php:2238 lib/html_tree.php:541 user_admin.php:1204
+#: graphs_new.php:637 include/global_arrays.php:1237
+#: include/global_arrays.php:2239 lib/html_tree.php:541 user_admin.php:1204
 #: user_group_admin.php:1223
 msgid "Graph Templates"
 msgstr "Grafiku veidnes"
@@ -4794,7 +4794,7 @@ msgstr "[Lietots pielāgoto grafiku saraksts — filtrs no saraksta]"
 msgid "View"
 msgstr "Skats"
 
-#: graph_view.php:677 graph_view.php:929 include/global_arrays.php:1215
+#: graph_view.php:677 graph_view.php:929 include/global_arrays.php:1216
 msgid "View Graphs"
 msgstr "Skatīt grafikus"
 
@@ -4811,7 +4811,7 @@ msgstr "Paziņot par pārkāpumu"
 msgid "All Graphs & Templates"
 msgstr "Visi grafiki un veidnes"
 
-#: graph_view.php:704 include/global_arrays.php:2892 lib/graphs.php:40
+#: graph_view.php:704 include/global_arrays.php:2893 lib/graphs.php:40
 #: lib/graphs.php:49 lib/html.php:221 lib/html_graph.php:144
 #: lib/html_tree.php:978
 msgid "Not Templated"
@@ -4854,7 +4854,7 @@ msgstr "Šīs diagrammas lielums, kad tas nav priekšskatījuma režīmā."
 msgid "Select the Report to add the selected Graphs to."
 msgstr "Atlasiet pārskatu, kuram pievienot atlasītos grafikus."
 
-#: graph_view.php:995 include/global_arrays.php:2038
+#: graph_view.php:995 include/global_arrays.php:2039
 #: include/global_settings.php:2733
 msgid "Preview Mode"
 msgstr "Priekšskatījuma režīms"
@@ -4917,7 +4917,7 @@ msgstr "Kopsavilkuma detaļas"
 msgid "Download"
 msgstr "Lejupielādēt"
 
-#: graphs.php:36 graphs.php:844 include/global_arrays.php:2088
+#: graphs.php:36 graphs.php:844 include/global_arrays.php:2089
 msgid "Change Graph Template"
 msgstr "Mainīt diagrammas veidni"
 
@@ -5010,7 +5010,7 @@ msgstr "Galamērķa filiāle"
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
 msgstr "Izvēlieties jaunu ierīci šiem grafikiem un noklikšķiniet uz \"Turpināt\"."
 
-#: graphs.php:887 include/global_arrays.php:987
+#: graphs.php:887 include/global_arrays.php:988
 msgid "New Device"
 msgstr "Jauna ierīce"
 
@@ -5164,7 +5164,7 @@ msgstr "Datu avoti [nav ierīces]"
 msgid "Data Sources [%s]"
 msgstr "Datu avoti [%s]"
 
-#: graphs_items.php:266 include/global_arrays.php:1358
+#: graphs_items.php:266 include/global_arrays.php:1359
 #: include/global_form.php:1640
 msgid "Data Template"
 msgstr "Datu veidne"
@@ -5227,8 +5227,8 @@ msgstr "Izveidojiet jaunu ierīci"
 msgid "(Select a graph type to create)"
 msgstr "(Atlasiet izveidojamās diagrammas veidu)"
 
-#: graphs_new.php:631 include/global_arrays.php:985
-#: include/global_arrays.php:1063 lib/html_form.php:1417 lib/html_form.php:1430
+#: graphs_new.php:631 include/global_arrays.php:986
+#: include/global_arrays.php:1064 lib/html_form.php:1417 lib/html_form.php:1430
 #: tree.php:1662
 msgid "Create"
 msgstr "Izveidot"
@@ -5404,7 +5404,7 @@ msgid "Delete Item from Device Template"
 msgstr "Dzēst elementu no ierīces veidnes"
 
 #: host_templates.php:703 host_templates.php:801 host_templates.php:968
-#: include/global_arrays.php:1238 include/global_arrays.php:2274
+#: include/global_arrays.php:1239 include/global_arrays.php:2275
 msgid "Device Templates"
 msgstr "Ierīču veidnes"
 
@@ -5449,7 +5449,7 @@ msgstr "Izmantotās ierīces"
 msgid "The number of Devices using this Device Template."
 msgstr "To ierīču skaits, kurās tiek izmantota šī ierīces veidne."
 
-#: host_templates.php:993 include/global_arrays.php:1101
+#: host_templates.php:993 include/global_arrays.php:1102
 msgid "Unassigned"
 msgstr "Nepiešķirts"
 
@@ -5504,1431 +5504,1431 @@ msgstr "Galvenais datu apkopotājs atkal ir tiešsaistē"
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "Galvenais datu apkopotājs ir bezsaistē vai atgūtas"
 
-#: include/global_arrays.php:138
+#: include/global_arrays.php:139
 msgid "Save Successful."
 msgstr "Veiksmīgi saglabāts."
 
-#: include/global_arrays.php:141
+#: include/global_arrays.php:142
 msgid "Save Failed."
 msgstr "Neizdevās saglabāt."
 
-#: include/global_arrays.php:144
+#: include/global_arrays.php:145
 msgid "Save Failed due to field input errors (Check red fields)."
 msgstr "Saglabāt neizdevās lauka ievades kļūdu dēļ (pārbaudiet sarkanos laukus)."
 
-#: include/global_arrays.php:147
+#: include/global_arrays.php:148
 msgid "Passwords do not match, please retype."
 msgstr "Paroles nesakrīt, lūdzu, ievadiet vēlreiz."
 
-#: include/global_arrays.php:150
+#: include/global_arrays.php:151
 msgid "You must select at least one field."
 msgstr "Jums ir jāatlasa vismaz viens lauks."
 
-#: include/global_arrays.php:153
+#: include/global_arrays.php:154
 msgid "You must have built in user authentication turned on to use this feature."
 msgstr "Lai izmantotu šo funkciju, ir jābūt ieslēgtai lietotāja autentifikācijai."
 
-#: include/global_arrays.php:156
+#: include/global_arrays.php:157
 msgid "XML parse error."
 msgstr "XML parsēšanas kļūda."
 
-#: include/global_arrays.php:159
+#: include/global_arrays.php:160
 msgid "The directory highlighted does not exist.  Please enter a valid directory."
 msgstr "Izceltais direktorijs nepastāv. Lūdzu, ievadiet derīgu direktoriju."
 
-#: include/global_arrays.php:162
+#: include/global_arrays.php:163
 msgid "The Kadupul log file must have the extension '.log'"
 msgstr "Kadupul žurnāla failam jābūt ar '.log' paplašinājumu"
 
-#: include/global_arrays.php:165
+#: include/global_arrays.php:166
 msgid "Data Input for method does not appear to be whitelisted."
 msgstr "Šķiet, ka metodes datu ievade nav iekļauta baltajā sarakstā."
 
-#: include/global_arrays.php:168
+#: include/global_arrays.php:169
 msgid "Data Source does not exist."
 msgstr "Datu avots nepastāv."
 
-#: include/global_arrays.php:171
+#: include/global_arrays.php:172
 msgid "Username already in use."
 msgstr "Lietotājvārds jau tiek lietots."
 
-#: include/global_arrays.php:174
+#: include/global_arrays.php:175
 msgid "The SNMP v3 Privacy Passphrases do not match"
 msgstr "SNMP v3 konfidencialitātes ieejas frāzes nesakrīt"
 
-#: include/global_arrays.php:177
+#: include/global_arrays.php:178
 msgid "The SNMP v3 Authentication Passphrases do not match"
 msgstr "SNMP v3 autentifikācijas ieejas frāzes nesakrīt"
 
-#: include/global_arrays.php:180
+#: include/global_arrays.php:181
 msgid "XML: Kadupul version does not exist."
 msgstr "XML: Kadupul versija nepastāv."
 
-#: include/global_arrays.php:183
+#: include/global_arrays.php:184
 msgid "XML: Hash version does not exist."
 msgstr "XML: jaucējversija nepastāv."
 
-#: include/global_arrays.php:186
+#: include/global_arrays.php:187
 msgid "XML: Generated with a newer version of Kadupul."
 msgstr "XML: ģenerēts ar jaunāku Kadupul versiju."
 
-#: include/global_arrays.php:189
+#: include/global_arrays.php:190
 msgid "XML: Cannot locate type code."
 msgstr "XML: nevar atrast tipa kodu."
 
-#: include/global_arrays.php:192
+#: include/global_arrays.php:193
 msgid "Username already exists."
 msgstr "Lietotājvārds jau eksistē."
 
-#: include/global_arrays.php:195
+#: include/global_arrays.php:196
 msgid "Username change not permitted for designated template or guest user."
 msgstr "Lietotājvārda maiņa nav atļauta noteiktai veidnei vai vieslietotājam."
 
-#: include/global_arrays.php:198
+#: include/global_arrays.php:199
 msgid "User delete not permitted for designated template or guest user."
 msgstr "Lietotāja dzēšana nav atļauta noteiktai veidnei vai vieslietotājam."
 
-#: include/global_arrays.php:201
+#: include/global_arrays.php:202
 msgid "User delete not permitted for designated graph export user."
 msgstr "Lietotāja dzēšana nav atļauta norādītajam diagrammas izgūšanas lietotājam."
 
-#: include/global_arrays.php:204
+#: include/global_arrays.php:205
 msgid "Data Template includes deleted Data Source Profile.  Please resave the Data Template with an existing Data Source Profile."
 msgstr "Datu veidnē ir iekļauts dzēsts datu avota profils. Lūdzu, atkārtoti saglabājiet datu veidni ar esošu datu avota profilu."
 
-#: include/global_arrays.php:207
+#: include/global_arrays.php:208
 msgid "Graph Template includes deleted GPrint Prefix.  Please run database repair script to identify and/or correct."
 msgstr "Diagrammas veidnē ir dzēsts GPrint prefikss. Lūdzu, palaidiet datu bāzes labošanas skriptu, lai identificētu un/vai labotu."
 
-#: include/global_arrays.php:210
+#: include/global_arrays.php:211
 msgid "Graph Template includes deleted CDEFs.  Please run database repair script to identify and/or correct."
 msgstr "Diagrammas veidnē ir iekļauti dzēstie CDEF. Lūdzu, palaidiet datu bāzes labošanas skriptu, lai identificētu un/vai labotu."
 
-#: include/global_arrays.php:213
+#: include/global_arrays.php:214
 msgid "Graph Template includes deleted Data Input Method.  Please run database repair script to identify."
 msgstr "Diagrammas veidnē ir dzēsta datu ievades metode. Lūdzu, palaidiet datu bāzes labošanas skriptu, lai identificētu."
 
-#: include/global_arrays.php:216
+#: include/global_arrays.php:217
 msgid "Data Template not found during Export.  Please run database repair script to identify."
 msgstr "Izgūšanas laikā netika atrasta neviena datu veidne.  Lūdzu, palaidiet datubāzes labošanas skriptu, lai identificētu."
 
-#: include/global_arrays.php:219
+#: include/global_arrays.php:220
 msgid "Device Template not found during Export.  Please run database repair script to identify."
 msgstr "Izgūšanas laikā netika atrasta neviena ierīces veidne.  Lūdzu, palaidiet datubāzes labošanas skriptu, lai identificētu."
 
-#: include/global_arrays.php:222
+#: include/global_arrays.php:223
 msgid "Data Query not found during Export.  Please run database repair script to identify."
 msgstr "Izgūšanas laikā netika atrasts neviens datu vaicājums.  Lūdzu, palaidiet datubāzes labošanas skriptu, lai identificētu."
 
-#: include/global_arrays.php:225
+#: include/global_arrays.php:226
 msgid "Graph Template not found during Export.  Please run database repair script to identify."
 msgstr "Izgūšanas laikā netika atrasta neviena diagrammas veidne.  Lūdzu, palaidiet datubāzes labošanas skriptu, lai identificētu."
 
-#: include/global_arrays.php:228
+#: include/global_arrays.php:229
 msgid "Graph not found.  Either it has been deleted or your database needs repair."
 msgstr "Grafiks nav atrasts. Vai nu tas ir izdzēsts, vai arī jūsu datu bāzei ir nepieciešams remonts."
 
-#: include/global_arrays.php:231
+#: include/global_arrays.php:232
 msgid "SNMPv3 Auth Passphrases must be 8 characters or greater."
 msgstr "SNMPv3 autentifikācijas piekļuves frāzēm ir jābūt 8 vai vairāk rakstzīmēm."
 
-#: include/global_arrays.php:234
+#: include/global_arrays.php:235
 msgid "Some Graphs not updated. Unable to change device for Data Query based Graphs."
 msgstr "Daži grafiki nav atjaunināti. Nevar mainīt ierīci uz datu vaicājumu balstītiem grafikiem."
 
-#: include/global_arrays.php:237
+#: include/global_arrays.php:238
 msgid "Unable to change device for Data Query based Graphs."
 msgstr "Nevar mainīt ierīci uz datu vaicājumu balstītiem grafikiem."
 
-#: include/global_arrays.php:240
+#: include/global_arrays.php:241
 msgid "Some settings not saved. Check messages below.  Check red fields for errors."
 msgstr "Daži iestatījumi nav saglabāti. Pārbaudiet ziņojumus zemāk. Pārbaudiet, vai sarkanajos laukos nav kļūdu."
 
-#: include/global_arrays.php:243
+#: include/global_arrays.php:244
 msgid "The file highlighted does not exist.  Please enter a valid file name."
 msgstr "Izceltais fails neeksistē. Lūdzu, ievadiet derīgu faila nosaukumu."
 
-#: include/global_arrays.php:246
+#: include/global_arrays.php:247
 msgid "All User Settings have been returned to their default values."
 msgstr "Visi lietotāja iestatījumi ir atgriezti to noklusējuma vērtībās."
 
-#: include/global_arrays.php:249
+#: include/global_arrays.php:250
 msgid "Suggested Field Name was not entered.  Please enter a field name and try again."
 msgstr "Ieteiktais lauka nosaukums netika ievadīts. Lūdzu, ievadiet lauka nosaukumu un mēģiniet vēlreiz."
 
-#: include/global_arrays.php:252
+#: include/global_arrays.php:253
 msgid "Suggested Value was not entered.  Please enter a suggested value and try again."
 msgstr "Ieteiktā vērtība netika ievadīta. Lūdzu, ievadiet ieteikto vērtību un mēģiniet vēlreiz."
 
-#: include/global_arrays.php:255
+#: include/global_arrays.php:256
 msgid "You must select at least one object from the list."
 msgstr "No saraksta ir jāatlasa vismaz viens objekts."
 
-#: include/global_arrays.php:258
+#: include/global_arrays.php:259
 msgid "Device Template updated.  Remember to Sync Devices to push all changes to Devices that use this Device Template."
 msgstr "Ierīces veidne ir atjaunināta. Atcerieties sinhronizēt ierīces, lai visas izmaiņas nosūtītu ierīcēm, kurās tiek izmantota šī ierīces veidne."
 
-#: include/global_arrays.php:261
+#: include/global_arrays.php:262
 msgid "Save Successful. Settings replicated to Remote Data Collectors."
 msgstr "Saglabāt veiksmīgi. Iestatījumi ir replicēti attālos datu vāktājiem."
 
-#: include/global_arrays.php:264
+#: include/global_arrays.php:265
 msgid "Save Failed.  Minimum Values must be less than Maximum Value."
 msgstr "Saglabāt neizdevās. Minimālajām vērtībām ir jābūt mazākām par maksimālo vērtību."
 
-#: include/global_arrays.php:267
+#: include/global_arrays.php:268
 msgid "Unable to change password.  User account not found."
 msgstr "Nevar nomainīt paroli. Lietotāja konts nav atrasts."
 
-#: include/global_arrays.php:270
+#: include/global_arrays.php:271
 msgid "Data Input Saved.  You must update the Data Templates referencing this Data Input Method before creating Graphs or Data Sources."
 msgstr "Datu ievade saglabāta. Pirms diagrammu vai datu avotu izveides ir jāatjaunina datu veidnes, kas atsaucas uz šo datu ievades metodi."
 
-#: include/global_arrays.php:273
+#: include/global_arrays.php:274
 msgid "Data Input Saved.  You must update the Data Templates referencing this Data Input Method before the Data Collectors will start using any new or modified Data Input - Input Fields."
 msgstr "Datu ievade saglabāta. Jums ir jāatjaunina datu veidnes, kas atsaucas uz šo datu ievades metodi, pirms datu vācēji sāks izmantot jaunus vai modificētus datu ievades laukus."
 
-#: include/global_arrays.php:276
+#: include/global_arrays.php:277
 msgid "Data Input Field Saved.  You must update the Data Templates referencing this Data Input Method before creating Graphs or Data Sources."
 msgstr "Datu ievades lauks saglabāts. Pirms diagrammu vai datu avotu izveides ir jāatjaunina datu veidnes, kas atsaucas uz šo datu ievades metodi."
 
-#: include/global_arrays.php:279
+#: include/global_arrays.php:280
 msgid "Data Input Field Saved.  You must update the Data Templates referencing this Data Input Method before the Data Collectors will start using any new or modified Data Input - Input Fields."
 msgstr "Datu ievades lauks saglabāts. Jums ir jāatjaunina datu veidnes, kas atsaucas uz šo datu ievades metodi, pirms datu vācēji sāks izmantot jaunus vai modificētus datu ievades laukus."
 
-#: include/global_arrays.php:282
+#: include/global_arrays.php:283
 msgid "Log file specified is not a Kadupul log or archive file."
 msgstr "Norādītais žurnālfails nav Kadupul žurnāla vai arhīva fails."
 
-#: include/global_arrays.php:285
+#: include/global_arrays.php:286
 msgid "Log file specified was Kadupul archive file and was removed."
 msgstr "Norādītais žurnālfails bija Kadupul arhīva fails un tika noņemts."
 
-#: include/global_arrays.php:288
+#: include/global_arrays.php:289
 #, fuzzy
 msgid "Kadupul log purged successfully"
 msgstr "Kadupul baļķis veiksmīgi iztīrīts"
 
-#: include/global_arrays.php:291
+#: include/global_arrays.php:292
 msgid "If you force a password change, you must also allow the user to change their password."
 msgstr "Ja veicat piespiedu paroles maiņu, jums ir arī jāļauj lietotājam mainīt savu paroli."
 
-#: include/global_arrays.php:294
+#: include/global_arrays.php:295
 msgid "You are not allowed to change your password."
 msgstr "Jums nav atļauts mainīt savu paroli."
 
-#: include/global_arrays.php:297
+#: include/global_arrays.php:298
 msgid "Unable to determine size of password field, please check permissions of db user"
 msgstr "Nevar noteikt paroles lauka lielumu, lūdzu, pārbaudiet db lietotāja atļaujas"
 
-#: include/global_arrays.php:300
+#: include/global_arrays.php:301
 #, fuzzy
 msgid "Unable to increase size of password field, please check permission of db user"
 msgstr "Nevar palielināt paroles lauka lielumu, lūdzu, pārbaudiet db lietotāja atļauju"
 
-#: include/global_arrays.php:303
+#: include/global_arrays.php:304
 msgid "LDAP/AD based password change not supported."
 msgstr "LDAP/AD balstīta paroles maiņa netiek atbalstīta."
 
-#: include/global_arrays.php:306
+#: include/global_arrays.php:307
 msgid "Password successfully changed."
 msgstr "Parole veiksmīgi nomainīta."
 
-#: include/global_arrays.php:309
+#: include/global_arrays.php:310
 msgid "Unable to clear log, no write permissions"
 msgstr "Nevar notīrīt žurnālu, nav rakstīšanas atļauju"
 
-#: include/global_arrays.php:312
+#: include/global_arrays.php:313
 msgid "Unable to clear log, file does not exist"
 msgstr "Nevar notīrīt žurnālu, fails neeksistē"
 
-#: include/global_arrays.php:315
+#: include/global_arrays.php:316
 msgid "CSRF Timeout, refreshing page."
 msgstr "CSRF noildze, lapas atsvaidzināšana."
 
-#: include/global_arrays.php:318
+#: include/global_arrays.php:319
 msgid "CSRF Timeout occurred due to inactivity, page refreshed."
 msgstr "CSRF noildze radās neaktivitātes dēļ, lapa ir atsvaidzināta."
 
-#: include/global_arrays.php:321
+#: include/global_arrays.php:322
 msgid "Invalid timestamp. Select timestamp in the future."
 msgstr "Nederīgs laikspiedols. Izvēlieties laika zīmogu nākotnē."
 
-#: include/global_arrays.php:324
+#: include/global_arrays.php:325
 msgid "Data Collector(s) synchronized for offline operation"
 msgstr "Datu apkopotājs(-i), kas sinhronizēts(-i) darbībai bezsaistē"
 
-#: include/global_arrays.php:327
+#: include/global_arrays.php:328
 msgid "Data Collector(s) not found when attempting synchronization"
 msgstr "Mēģinot sinhronizēt, datu apkopotājs(-i) netika atrasts(-i)"
 
-#: include/global_arrays.php:330
+#: include/global_arrays.php:331
 msgid "Unable to establish MySQL connection with Remote Data Collector."
 msgstr "Nevar izveidot MySQL savienojumu ar attālo datu apkopotāju."
 
-#: include/global_arrays.php:333
+#: include/global_arrays.php:334
 msgid "Data Collector synchronization must be initiated from the main Kadupul server."
 msgstr "Datu apkopotāja sinhronizācija ir jāuzsāk no galvenā Kadupul servera."
 
-#: include/global_arrays.php:336
+#: include/global_arrays.php:337
 #, fuzzy
 msgid "Synchronization does not include the Central Kadupul Database server."
 msgstr "Sinhronizācija neietver centrālās Kadupul datu bāzes serveri."
 
-#: include/global_arrays.php:339
+#: include/global_arrays.php:340
 msgid "When saving a Remote Data Collector, the Database Hostname must be unique from all others."
 msgstr "Saglabājot attālo datu apkopotāju, datubāzes resursdatora nosaukumam ir jābūt unikālam salīdzinot ar visiem pārējiem."
 
-#: include/global_arrays.php:342
+#: include/global_arrays.php:343
 msgid "Your Remote Database Hostname must be something other than 'localhost' for each Remote Data Collector."
 msgstr "Jūsu attālās datubāzes resursdatora nosaukumam ir jābūt kaut kam citam, nevis 'localhost'. Tas ir spēkā katram attālajam datu apkopotājam."
 
-#: include/global_arrays.php:345
+#: include/global_arrays.php:346
 msgid "Path variables on this page were only saved locally."
 msgstr "Ceļa mainīgie šajā lapā tika saglabāti tikai lokāli."
 
-#: include/global_arrays.php:348
+#: include/global_arrays.php:349
 msgid "Report Saved"
 msgstr "Atskaite saglabāta"
 
-#: include/global_arrays.php:351
+#: include/global_arrays.php:352
 msgid "Report Save Failed"
 msgstr "Ziņot par neizdevušos saglabāšanu"
 
-#: include/global_arrays.php:354
+#: include/global_arrays.php:355
 msgid "Report Item Saved"
 msgstr "Ziņojuma elements saglabāts"
 
-#: include/global_arrays.php:357
+#: include/global_arrays.php:358
 msgid "Report Item Save Failed"
 msgstr "Ziņojuma elementa saglabāšana neizdevās"
 
-#: include/global_arrays.php:360
+#: include/global_arrays.php:361
 msgid "Graph was not found attempting to Add to Report"
 msgstr "Mēģinot pievienot pārskatam, grafiks netika atrasts"
 
-#: include/global_arrays.php:363
+#: include/global_arrays.php:364
 msgid "Unable to Add Graphs.  Current user is not owner"
 msgstr "Nevar pievienot grafikus. Pašreizējais lietotājs nav īpašnieks"
 
-#: include/global_arrays.php:366
+#: include/global_arrays.php:367
 msgid "Unable to Add all Graphs.  See error message for details."
 msgstr "Nevar pievienot visus grafikus. Plašāku informāciju skatiet kļūdas ziņojumā."
 
-#: include/global_arrays.php:369
+#: include/global_arrays.php:370
 msgid "You must select at least one Graph to add to a Report."
 msgstr "Jums ir jāatlasa vismaz viens grafiks, ko pievienot pārskatam."
 
-#: include/global_arrays.php:372
+#: include/global_arrays.php:373
 msgid "All Graphs have been added to the Report.  Duplicate Graphs with the same Timespan were skipped."
 msgstr "Visi grafiki ir pievienoti pārskatam. Diagrammu dublikāti ar tādu pašu laika posmu tika izlaisti."
 
-#: include/global_arrays.php:375
+#: include/global_arrays.php:376
 msgid "Poller Resource Cache cleared.  Main Data Collector will rebuild at the next poller start, and Remote Data Collectors will sync afterwards."
 msgstr "Aptaujātaja resursu kešatmiņa iztīrīta.  Galvenais datu apkopotājs tiks pārbūvēts nākamajā aptaujāšanas reizē, un attālie datu apkopotāji pēc tam sinhronizēsies."
 
-#: include/global_arrays.php:378
+#: include/global_arrays.php:379
 msgid "Permission Denied.  You do not have permission to the requested action."
 msgstr "Atļauja liegta. Jums nav atļaujas veikt pieprasīto darbību."
 
-#: include/global_arrays.php:381
+#: include/global_arrays.php:382
 msgid "Page is not defined.  Therefore, it can not be displayed."
 msgstr "Lapa nav definēta. Tāpēc to nevar parādīt."
 
-#: include/global_arrays.php:384
+#: include/global_arrays.php:385
 msgid "Unexpected error occurred"
 msgstr "Radās neparedzēta kļūda"
 
-#: include/global_arrays.php:499 include/global_arrays.php:922
+#: include/global_arrays.php:500 include/global_arrays.php:923
 msgid "Function"
 msgstr "Funkcija"
 
-#: include/global_arrays.php:500 include/global_arrays.php:924
+#: include/global_arrays.php:501 include/global_arrays.php:925
 msgid "Special Data Source"
 msgstr "Īpašs datu avots"
 
-#: include/global_arrays.php:501 include/global_arrays.php:926
+#: include/global_arrays.php:502 include/global_arrays.php:927
 msgid "Custom String"
 msgstr "Pielāgota virkne"
 
-#: include/global_arrays.php:505 include/global_arrays.php:963
+#: include/global_arrays.php:506 include/global_arrays.php:964
 msgid "Current Graph Item Data Source"
 msgstr "Pašreizējā grafika elementa datu avots"
 
-#: include/global_arrays.php:510
+#: include/global_arrays.php:511
 msgid "SNMP Query"
 msgstr "SNMP vaicājums"
 
-#: include/global_arrays.php:511 include/global_arrays.php:518
+#: include/global_arrays.php:512 include/global_arrays.php:519
 msgid "Script/Command"
 msgstr "Skripts/komanda"
 
-#: include/global_arrays.php:512
+#: include/global_arrays.php:513
 msgid "Script Query"
 msgstr "Skripta vaicājums"
 
-#: include/global_arrays.php:513 include/global_arrays.php:519
+#: include/global_arrays.php:514 include/global_arrays.php:520
 #: utilities.php:2158
 msgid "Script Server"
 msgstr "Skriptu serveris"
 
-#: include/global_arrays.php:514
+#: include/global_arrays.php:515
 msgid "Script Server Query"
 msgstr "Skriptu servera vaicājums"
 
-#: include/global_arrays.php:525
+#: include/global_arrays.php:526
 msgid "Index Count"
 msgstr "Indeksu skaits"
 
-#: include/global_arrays.php:526
+#: include/global_arrays.php:527
 msgid "Verify All"
 msgstr "Pārbaudīt visu"
 
-#: include/global_arrays.php:530
+#: include/global_arrays.php:531
 msgid "All Re-Indexing will be manual or managed through scripts or Device Automation."
 msgstr "Visa atkārtota indeksēšana tiks veikta manuāli vai pārvaldīta, izmantojot skriptus vai ierīces automatizāciju."
 
-#: include/global_arrays.php:531
+#: include/global_arrays.php:532
 msgid "When the Devices SNMP uptime goes backward, a Re-Index will be performed."
 msgstr "Kad ierīču SNMP darbspējas laiks pagriežas atpakaļ, tiks veikta atkārtota indeksēšana."
 
-#: include/global_arrays.php:532
+#: include/global_arrays.php:533
 msgid "When the Data Query index count changes, a Re-Index will be performed."
 msgstr "Kad mainās datu vaicājuma indeksa skaits, tiks veikta atkārtota indeksēšana."
 
-#: include/global_arrays.php:533
+#: include/global_arrays.php:534
 msgid "Every polling cycle, a Re-Index will be performed.  Very expensive."
 msgstr "Katrā aptaujas ciklā tiks veikta atkārtota indeksēšana. Ļoti dārgs."
 
-#: include/global_arrays.php:537
+#: include/global_arrays.php:538
 msgid "SNMP Field Name (Dropdown)"
 msgstr "SNMP lauka nosaukums (nolaižamā izvēlne)"
 
-#: include/global_arrays.php:538
+#: include/global_arrays.php:539
 msgid "SNMP Field Value (From User)"
 msgstr "SNMP lauka vērtība (no lietotāja)"
 
-#: include/global_arrays.php:539
+#: include/global_arrays.php:540
 msgid "SNMP Output Type (Dropdown)"
 msgstr "SNMP izvades veids (nolaižamā izvēlne)"
 
-#: include/global_arrays.php:563 include/global_arrays.php:569
+#: include/global_arrays.php:564 include/global_arrays.php:570
 msgid "Normal"
 msgstr "Parasts"
 
-#: include/global_arrays.php:564
+#: include/global_arrays.php:565
 msgid "Light"
 msgstr "Gaiša"
 
-#: include/global_arrays.php:565 include/global_arrays.php:570
+#: include/global_arrays.php:566 include/global_arrays.php:571
 msgid "Mono"
 msgstr "Mono"
 
-#: include/global_arrays.php:574
+#: include/global_arrays.php:575
 msgid "North"
 msgstr "Ziemeļi"
 
-#: include/global_arrays.php:575
+#: include/global_arrays.php:576
 msgid "South"
 msgstr "Dienvidi"
 
-#: include/global_arrays.php:576
+#: include/global_arrays.php:577
 msgid "West"
 msgstr "Rietumi"
 
-#: include/global_arrays.php:577
+#: include/global_arrays.php:578
 msgid "East"
 msgstr "Austrumi"
 
-#: include/global_arrays.php:582
+#: include/global_arrays.php:583
 msgid "Left"
 msgstr "Pa kreisi"
 
-#: include/global_arrays.php:583
+#: include/global_arrays.php:584
 msgid "Right"
 msgstr "Pa labi"
 
-#: include/global_arrays.php:584
+#: include/global_arrays.php:585
 msgid "Justified"
 msgstr "Pamatots"
 
-#: include/global_arrays.php:585 lib/html.php:2883
+#: include/global_arrays.php:586 lib/html.php:2883
 msgid "Center"
 msgstr "Centrs"
 
-#: include/global_arrays.php:589
+#: include/global_arrays.php:590
 msgid "Top -> Down"
 msgstr "Augšā -> Lejā"
 
-#: include/global_arrays.php:590
+#: include/global_arrays.php:591
 msgid "Bottom -> Up"
 msgstr "Apakšā -> Uz augšu"
 
-#: include/global_arrays.php:594 tree.php:1766
+#: include/global_arrays.php:595 tree.php:1766
 msgid "Numeric"
 msgstr "Skaitlis"
 
-#: include/global_arrays.php:595
+#: include/global_arrays.php:596
 msgid "Timestamp"
 msgstr "Laika zīmogs"
 
-#: include/global_arrays.php:596
+#: include/global_arrays.php:597
 msgid "Duration"
 msgstr "Ilgums"
 
-#: include/global_arrays.php:634
+#: include/global_arrays.php:635
 msgid "Not In Use"
 msgstr "Netiek lietots"
 
-#: include/global_arrays.php:635 include/global_arrays.php:636
-#: include/global_arrays.php:637 include/global_arrays.php:880
-#: include/global_arrays.php:881
+#: include/global_arrays.php:636 include/global_arrays.php:637
+#: include/global_arrays.php:638 include/global_arrays.php:881
+#: include/global_arrays.php:882
 #, php-format
 msgid "Version %d"
 msgstr "Versija %d"
 
-#: include/global_arrays.php:641 include/global_arrays.php:651
+#: include/global_arrays.php:642 include/global_arrays.php:652
 msgid "[None]"
 msgstr "[Nav]"
 
-#: include/global_arrays.php:642
+#: include/global_arrays.php:643
 msgid "MD5"
 msgstr "MD5"
 
-#: include/global_arrays.php:643
+#: include/global_arrays.php:644
 msgid "SHA"
 msgstr "SHA"
 
-#: include/global_arrays.php:644
+#: include/global_arrays.php:645
 msgid "SHA-224"
 msgstr "SHA-224"
 
-#: include/global_arrays.php:645
+#: include/global_arrays.php:646
 msgid "SHA-256"
 msgstr "SHA-256"
 
-#: include/global_arrays.php:646
+#: include/global_arrays.php:647
 #, fuzzy
 msgid "SHA-384"
 msgstr "SHA-392"
 
-#: include/global_arrays.php:647
+#: include/global_arrays.php:648
 msgid "SHA-512"
 msgstr "SHA-512"
 
-#: include/global_arrays.php:652
+#: include/global_arrays.php:653
 msgid "DES"
 msgstr "DES"
 
-#: include/global_arrays.php:653
+#: include/global_arrays.php:654
 msgid "AES"
 msgstr "DES"
 
-#: include/global_arrays.php:654
+#: include/global_arrays.php:655
 msgid "AES-128"
 msgstr "AES-128"
 
-#: include/global_arrays.php:655
+#: include/global_arrays.php:656
 msgid "AES-192"
 msgstr "AES-192"
 
-#: include/global_arrays.php:656
+#: include/global_arrays.php:657
 msgid "AES-192-C"
 msgstr "AES-192"
 
-#: include/global_arrays.php:657
+#: include/global_arrays.php:658
 msgid "AES-256"
 msgstr "AES-256"
 
-#: include/global_arrays.php:658
+#: include/global_arrays.php:659
 msgid "AES-256-C"
 msgstr "AES-256"
 
-#: include/global_arrays.php:667
+#: include/global_arrays.php:668
 msgid "Logfile Only"
 msgstr "Tikai žurnālfails"
 
-#: include/global_arrays.php:668
+#: include/global_arrays.php:669
 msgid "Logfile and Syslog/Eventlog"
 msgstr "Logfile un Syslog/Eventlog"
 
-#: include/global_arrays.php:669
+#: include/global_arrays.php:670
 msgid "Syslog/Eventlog Only"
 msgstr "Tikai sistēmas/notikumu žurnālus"
 
-#: include/global_arrays.php:674
+#: include/global_arrays.php:675
 msgid "Ping and SNMP Uptime"
 msgstr "Ping un SNMP darbības laiks"
 
-#: include/global_arrays.php:675
+#: include/global_arrays.php:676
 msgid "Ping or SNMP Uptime"
 msgstr "Ping vai SNMP darbības laiks"
 
-#: include/global_arrays.php:676
+#: include/global_arrays.php:677
 msgid "SNMP Uptime"
 msgstr "SNMP darbības laiks"
 
-#: include/global_arrays.php:677
+#: include/global_arrays.php:678
 msgid "SNMP Desc"
 msgstr "SNMP apraksts"
 
-#: include/global_arrays.php:678
+#: include/global_arrays.php:679
 msgid "SNMP getNext"
 msgstr "SNMP GetNext"
 
-#: include/global_arrays.php:679
+#: include/global_arrays.php:680
 msgid "Ping"
 msgstr "Ping"
 
-#: include/global_arrays.php:683
+#: include/global_arrays.php:684
 msgid "ICMP Ping"
 msgstr "ICMP Ping"
 
-#: include/global_arrays.php:684
+#: include/global_arrays.php:685
 msgid "TCP Ping"
 msgstr "TCP Ping"
 
-#: include/global_arrays.php:685
+#: include/global_arrays.php:686
 #, fuzzy
 msgid "TCP Ping Closed"
 msgstr "TCP Ping"
 
-#: include/global_arrays.php:686
+#: include/global_arrays.php:687
 msgid "UDP Ping"
 msgstr "UDP ping"
 
-#: include/global_arrays.php:690
+#: include/global_arrays.php:691
 msgid "NONE - Syslog Only if Selected"
 msgstr "NAV — Syslog tikai tad, ja ir atlasīts"
 
-#: include/global_arrays.php:691
+#: include/global_arrays.php:692
 msgid "LOW - Statistics and Errors"
 msgstr "LOW — statistika un kļūdas"
 
-#: include/global_arrays.php:692
+#: include/global_arrays.php:693
 msgid "MEDIUM - Statistics, Errors and Results"
 msgstr "MEDIUM — statistika, kļūdas un rezultāti"
 
-#: include/global_arrays.php:693
+#: include/global_arrays.php:694
 msgid "HIGH - Statistics, Errors, Results and Major I/O Events"
 msgstr "AUGSTS — statistika, kļūdas, rezultāti un galvenie ievades/izvades notikumi"
 
-#: include/global_arrays.php:694
+#: include/global_arrays.php:695
 msgid "DEBUG - Statistics, Errors, Results, I/O and Program Flow"
 msgstr "ATKLĀŠANA — statistika, kļūdas, rezultāti, ievade/izvade un programmu plūsma"
 
-#: include/global_arrays.php:695
+#: include/global_arrays.php:696
 msgid "DEVEL - Developer DEBUG Level"
 msgstr "DEVEL — izstrādātāja ATKLĀŠANAS līmenis"
 
-#: include/global_arrays.php:708
+#: include/global_arrays.php:709
 msgid "Selected Poller Interval"
 msgstr "Atlasītais Polera intervāls"
 
-#: include/global_arrays.php:726 include/global_arrays.php:727
-#: include/global_arrays.php:728 include/global_arrays.php:729
-#: include/global_arrays.php:799 include/global_arrays.php:800
-#: include/global_arrays.php:801 include/global_arrays.php:802
+#: include/global_arrays.php:727 include/global_arrays.php:728
+#: include/global_arrays.php:729 include/global_arrays.php:730
+#: include/global_arrays.php:800 include/global_arrays.php:801
+#: include/global_arrays.php:802 include/global_arrays.php:803
 #, php-format
 msgid "Every %d Seconds"
 msgstr "Ik pēc %d sekundēm"
 
-#: include/global_arrays.php:730 include/global_arrays.php:803
-#: include/global_arrays.php:848
+#: include/global_arrays.php:731 include/global_arrays.php:804
+#: include/global_arrays.php:849
 msgid "Every Minute"
 msgstr "Katru minūti"
 
-#: include/global_arrays.php:731 include/global_arrays.php:732
-#: include/global_arrays.php:733 include/global_arrays.php:734
-#: include/global_arrays.php:735 include/global_arrays.php:804
-#: include/global_arrays.php:809 include/global_arrays.php:849
+#: include/global_arrays.php:732 include/global_arrays.php:733
+#: include/global_arrays.php:734 include/global_arrays.php:735
+#: include/global_arrays.php:736 include/global_arrays.php:805
+#: include/global_arrays.php:810 include/global_arrays.php:850
 #, php-format
 msgid "Every %d Minutes"
 msgstr "Ik pēc %d minūtēm"
 
-#: include/global_arrays.php:736 include/global_arrays.php:810
+#: include/global_arrays.php:737 include/global_arrays.php:811
 msgid "Every Hour"
 msgstr "Katru stundu"
 
-#: include/global_arrays.php:737 include/global_arrays.php:738
-#: include/global_arrays.php:739 include/global_arrays.php:740
-#: include/global_arrays.php:811 include/global_arrays.php:812
-#: include/global_arrays.php:813 include/global_arrays.php:814
-#: include/global_arrays.php:1869 include/global_arrays.php:1870
-#: include/global_arrays.php:1871 include/global_arrays.php:1872
-#: include/global_arrays.php:1873 include/global_settings.php:2551
+#: include/global_arrays.php:738 include/global_arrays.php:739
+#: include/global_arrays.php:740 include/global_arrays.php:741
+#: include/global_arrays.php:812 include/global_arrays.php:813
+#: include/global_arrays.php:814 include/global_arrays.php:815
+#: include/global_arrays.php:1870 include/global_arrays.php:1871
+#: include/global_arrays.php:1872 include/global_arrays.php:1873
+#: include/global_arrays.php:1874 include/global_settings.php:2551
 #: include/global_settings.php:2552
 #, php-format
 msgid "Every %d Hours"
 msgstr "Ik pēc %d stundām"
 
-#: include/global_arrays.php:741
+#: include/global_arrays.php:742
 #, php-format
 msgid "Every %d Day"
 msgstr "Katru %d dienu"
 
-#: include/global_arrays.php:753
+#: include/global_arrays.php:754
 #, php-format
 msgid "%0.1f Minutes"
 msgstr "%0.1f minūtes"
 
-#: include/global_arrays.php:786 include/global_arrays.php:1472
+#: include/global_arrays.php:787 include/global_arrays.php:1473
 #: include/global_settings.php:1635 rrdcleaner.php:541
 #, php-format
 msgid "%d Year"
 msgstr "%d gads"
 
-#: include/global_arrays.php:808
+#: include/global_arrays.php:809
 msgid "Disabled/Manual"
 msgstr "Atspējots/manuāls"
 
-#: include/global_arrays.php:815
+#: include/global_arrays.php:816
 msgid "Every day"
 msgstr "Katru dienu"
 
-#: include/global_arrays.php:819
+#: include/global_arrays.php:820
 msgid "1 Thread"
 msgstr "1 pavediens"
 
-#: include/global_arrays.php:863
+#: include/global_arrays.php:864
 msgid "Builtin Authentication"
 msgstr "Iebūvēta autentifikācija"
 
-#: include/global_arrays.php:864
+#: include/global_arrays.php:865
 msgid "Web Basic Authentication"
 msgstr "Web pamata autentifikācija"
 
-#: include/global_arrays.php:868
+#: include/global_arrays.php:869
 msgid "LDAP Authentication"
 msgstr "LDAP autentifikācija"
 
-#: include/global_arrays.php:869
+#: include/global_arrays.php:870
 msgid "Multiple LDAP/AD Domains"
 msgstr "Vairāki LDAP/AD domēni"
 
-#: include/global_arrays.php:874
+#: include/global_arrays.php:875
 msgid "Active Directory"
 msgstr "Aktīvā Direktorija"
 
-#: include/global_arrays.php:886
+#: include/global_arrays.php:887
 msgid "LDAPS"
 msgstr "LDAPS"
 
-#: include/global_arrays.php:887
+#: include/global_arrays.php:888
 msgid "LDAP + TLS"
 msgstr "LDAP + TLS"
 
-#: include/global_arrays.php:892
+#: include/global_arrays.php:893
 msgid "Hard"
 msgstr "Grūti"
 
-#: include/global_arrays.php:893
+#: include/global_arrays.php:894
 msgid "Demand"
 msgstr "Pieprasījums"
 
-#: include/global_arrays.php:894 user_admin.php:653 user_group_admin.php:795
+#: include/global_arrays.php:895 user_admin.php:653 user_group_admin.php:795
 msgid "Allow"
 msgstr "Atļaut"
 
-#: include/global_arrays.php:895
+#: include/global_arrays.php:896
 msgid "Try"
 msgstr "Izmēģiniet"
 
-#: include/global_arrays.php:899
+#: include/global_arrays.php:900
 msgid "No Searching"
 msgstr "Nav meklēšanas"
 
-#: include/global_arrays.php:900
+#: include/global_arrays.php:901
 msgid "Anonymous Searching"
 msgstr "Anonīmā meklēšana"
 
-#: include/global_arrays.php:901
+#: include/global_arrays.php:902
 msgid "Specific Searching"
 msgstr "Specifiska meklēšana"
 
-#: include/global_arrays.php:918
+#: include/global_arrays.php:919
 msgid "Enabled (strict mode)"
 msgstr "Iespējots (stingrais režīms)"
 
-#: include/global_arrays.php:923 include/global_form.php:2132
+#: include/global_arrays.php:924 include/global_form.php:2132
 #: include/global_form.php:2174 lib/api_automation.php:1287
 #: lib/api_automation.php:1350
 msgid "Operator"
 msgstr "Operators"
 
-#: include/global_arrays.php:925
+#: include/global_arrays.php:926
 msgid "Another CDEF"
 msgstr "Vēl viens CDEF"
 
-#: include/global_arrays.php:944
+#: include/global_arrays.php:945
 msgid "Inherit Parent Sorting"
 msgstr "Pārmantot vecāku šķirošanu"
 
-#: include/global_arrays.php:945
+#: include/global_arrays.php:946
 msgid "Manual Ordering (No Sorting)"
 msgstr "Manuāla pasūtīšana (bez šķirošanas)"
 
-#: include/global_arrays.php:946
+#: include/global_arrays.php:947
 msgid "Alphabetic Ordering"
 msgstr "Alfabētiskā secība"
 
-#: include/global_arrays.php:947
+#: include/global_arrays.php:948
 msgid "Natural Ordering"
 msgstr "Dabiskā sakārtošana"
 
-#: include/global_arrays.php:948
+#: include/global_arrays.php:949
 msgid "Numeric Ordering"
 msgstr "Ciparu secība"
 
-#: include/global_arrays.php:952 lib/rrd.php:4142
+#: include/global_arrays.php:953 lib/rrd.php:4142
 msgid "Header"
 msgstr "Galvene"
 
-#: include/global_arrays.php:953 include/global_arrays.php:1004
-#: include/global_arrays.php:1689 include/global_arrays.php:1858
+#: include/global_arrays.php:954 include/global_arrays.php:1005
+#: include/global_arrays.php:1690 include/global_arrays.php:1859
 #: lib/html.php:2872
 msgid "Graph"
 msgstr "Grafiks"
 
-#: include/global_arrays.php:959 tree.php:1953
+#: include/global_arrays.php:960 tree.php:1953
 msgid "Data Query Index"
 msgstr "Datu vaicājumu indekss"
 
-#: include/global_arrays.php:964
+#: include/global_arrays.php:965
 msgid "Current Graph Item Polling Interval"
 msgstr "Pašreizējā grafika elementa aptaujas intervāls"
 
-#: include/global_arrays.php:965
+#: include/global_arrays.php:966
 msgid "All Data Sources (Do not Include Duplicates)"
 msgstr "Visi datu avoti (neiekļaut dublikātus)"
 
-#: include/global_arrays.php:966
+#: include/global_arrays.php:967
 msgid "All Data Sources (Include Duplicates)"
 msgstr "Visi datu avoti (ieskaitot dublikātus)"
 
-#: include/global_arrays.php:967
+#: include/global_arrays.php:968
 msgid "All Similar Data Sources (Do not Include Duplicates)"
 msgstr "Visi līdzīgi datu avoti (neietvert dublikātus)"
 
-#: include/global_arrays.php:968
+#: include/global_arrays.php:969
 msgid "All Similar Data Sources (Do not Include Duplicates) Polling Interval"
 msgstr "Visi līdzīgi datu avoti (neietvert dublikātus) Aptaujas intervāls"
 
-#: include/global_arrays.php:969
+#: include/global_arrays.php:970
 msgid "All Similar Data Sources (Include Duplicates)"
 msgstr "Visi līdzīgi datu avoti (ieskaitot dublikātus)"
 
-#: include/global_arrays.php:970
+#: include/global_arrays.php:971
 msgid "Current Data Source Item: Minimum Value"
 msgstr "Pašreizējais datu avota elements: Minimālā vērtība"
 
-#: include/global_arrays.php:971
+#: include/global_arrays.php:972
 msgid "Current Data Source Item: Maximum Value"
 msgstr "Pašreizējais datu avota elements: Maksimālā vērtība"
 
-#: include/global_arrays.php:972
+#: include/global_arrays.php:973
 msgid "Graph: Lower Limit"
 msgstr "Grafiks: apakšējā robeža"
 
-#: include/global_arrays.php:973
+#: include/global_arrays.php:974
 msgid "Graph: Upper Limit"
 msgstr "Grafiks: augšējā robeža"
 
-#: include/global_arrays.php:974
+#: include/global_arrays.php:975
 msgid "Count of All Data Sources (Do not Include Duplicates)"
 msgstr "Visu datu avotu skaits (neietvert dublikātus)"
 
-#: include/global_arrays.php:975
+#: include/global_arrays.php:976
 msgid "Count of All Data Sources (Include Duplicates)"
 msgstr "Visu datu avotu skaits (iekļaut dublikātus)"
 
-#: include/global_arrays.php:976
+#: include/global_arrays.php:977
 msgid "Count of All Similar Data Sources (Do not Include Duplicates)"
 msgstr "Visu līdzīgu datu avotu skaits (neietvert dublikātus)"
 
-#: include/global_arrays.php:977
+#: include/global_arrays.php:978
 msgid "Count of All Similar Data Sources (Include Duplicates)"
 msgstr "Visu līdzīgu datu avotu skaits (iekļaut dublikātus)"
 
-#: include/global_arrays.php:982 include/global_arrays.php:1062
+#: include/global_arrays.php:983 include/global_arrays.php:1063
 msgid "Main Console"
 msgstr "Galvenā konsole"
 
-#: include/global_arrays.php:983
+#: include/global_arrays.php:984
 msgid "Console Page"
 msgstr "Konsoles lapa"
 
-#: include/global_arrays.php:986 lib/html_form_template.php:627
+#: include/global_arrays.php:987 lib/html_form_template.php:627
 #: lib/html_form_template.php:639
 msgid "New Graphs"
 msgstr "Jauni grafiki"
 
-#: include/global_arrays.php:989 include/global_arrays.php:1045
-#: include/global_arrays.php:1064
+#: include/global_arrays.php:990 include/global_arrays.php:1046
+#: include/global_arrays.php:1065
 msgid "Management"
 msgstr "Vadība"
 
-#: include/global_arrays.php:991 tree.php:915 tree.php:2348
+#: include/global_arrays.php:992 tree.php:915 tree.php:2348
 msgid "Sites"
 msgstr "Atrašanās vietas"
 
-#: include/global_arrays.php:992 include/global_arrays.php:1230 tree.php:2208
+#: include/global_arrays.php:993 include/global_arrays.php:1231 tree.php:2208
 #: tree.php:2223 tree.php:2290 user_admin.php:1343 user_admin.php:2371
 #: user_admin.php:2377 user_group_admin.php:1355 user_group_admin.php:2166
 msgid "Trees"
 msgstr "Koki"
 
-#: include/global_arrays.php:997 include/global_arrays.php:1048
-#: include/global_arrays.php:1065
+#: include/global_arrays.php:998 include/global_arrays.php:1049
+#: include/global_arrays.php:1066
 msgid "Data Collection"
 msgstr "Datu apkopošana"
 
-#: include/global_arrays.php:998 include/global_arrays.php:1049
-#: include/global_arrays.php:2202 pollers.php:860
+#: include/global_arrays.php:999 include/global_arrays.php:1050
+#: include/global_arrays.php:2203 pollers.php:860
 msgid "Data Collectors"
 msgstr "Datu savācēji"
 
-#: include/global_arrays.php:1000 include/global_arrays.php:1225
-#: include/global_arrays.php:2364
+#: include/global_arrays.php:1001 include/global_arrays.php:1226
+#: include/global_arrays.php:2365
 msgid "Data Input Methods"
 msgstr "Datu ievades metodes"
 
-#: include/global_arrays.php:1006 include/global_arrays.php:2895
+#: include/global_arrays.php:1007 include/global_arrays.php:2896
 msgid "Aggregate"
 msgstr "Agregāts"
 
-#: include/global_arrays.php:1009 include/global_arrays.php:1067
-#: include/global_arrays.php:1222 include/global_settings.php:530
+#: include/global_arrays.php:1010 include/global_arrays.php:1068
+#: include/global_arrays.php:1223 include/global_settings.php:530
 msgid "Automation"
 msgstr "Automatizācija"
 
-#: include/global_arrays.php:1011
+#: include/global_arrays.php:1012
 msgid "Discovered Devices"
 msgstr "Atklātās ierīces"
 
-#: include/global_arrays.php:1012
+#: include/global_arrays.php:1013
 msgid "Device Rules"
 msgstr "Ierīces noteikumi"
 
-#: include/global_arrays.php:1016 include/global_arrays.php:1068
-#: include/global_arrays.php:1234 lib/html_filter.php:160
+#: include/global_arrays.php:1017 include/global_arrays.php:1069
+#: include/global_arrays.php:1235 lib/html_filter.php:160
 #: lib/html_graph.php:243 lib/html_tree.php:1065
 msgid "Presets"
 msgstr "Standarti"
 
-#: include/global_arrays.php:1017
+#: include/global_arrays.php:1018
 msgid "Data Profiles"
 msgstr "Datu profili"
 
-#: include/global_arrays.php:1020 include/global_arrays.php:2526
+#: include/global_arrays.php:1021 include/global_arrays.php:2527
 msgid "VDEFs"
 msgstr "VDEF"
 
-#: include/global_arrays.php:1021 include/global_arrays.php:2226
+#: include/global_arrays.php:1022 include/global_arrays.php:2227
 msgid "Colors"
 msgstr "Krāsas"
 
-#: include/global_arrays.php:1024 include/global_arrays.php:1069
+#: include/global_arrays.php:1025 include/global_arrays.php:1070
 msgid "Import/Export"
 msgstr "Ievietot/Izgūt"
 
-#: include/global_arrays.php:1025 include/global_arrays.php:1241
-#: include/global_arrays.php:2652
+#: include/global_arrays.php:1026 include/global_arrays.php:1242
+#: include/global_arrays.php:2653
 msgid "Import Templates"
 msgstr "Ievietot veidnes"
 
-#: include/global_arrays.php:1026 include/global_arrays.php:2658
+#: include/global_arrays.php:1027 include/global_arrays.php:2659
 msgid "Import Packages"
 msgstr "Ievietot pakotnes"
 
-#: include/global_arrays.php:1027 include/global_arrays.php:1240
-#: include/global_arrays.php:2640 templates_export.php:142
+#: include/global_arrays.php:1028 include/global_arrays.php:1241
+#: include/global_arrays.php:2641 templates_export.php:142
 msgid "Export Templates"
 msgstr "Izgūt veidnes"
 
-#: include/global_arrays.php:1029 include/global_arrays.php:1051
-#: include/global_arrays.php:1070 lib/plugins.php:1443
+#: include/global_arrays.php:1030 include/global_arrays.php:1052
+#: include/global_arrays.php:1071 lib/plugins.php:1443
 msgid "Configuration"
 msgstr "Konfigurācija"
 
-#: include/global_arrays.php:1030 include/global_arrays.php:1052
+#: include/global_arrays.php:1031 include/global_arrays.php:1053
 #: lib/html.php:2590 lib/html.php:2887
 msgid "Settings"
 msgstr "Iestatījumi"
 
-#: include/global_arrays.php:1031 include/global_arrays.php:2580
+#: include/global_arrays.php:1032 include/global_arrays.php:2581
 #: user_admin.php:2131 user_admin.php:2236 user_group_admin.php:733
 #: user_group_admin.php:2172
 msgid "Users"
 msgstr "Lietotāji"
 
-#: include/global_arrays.php:1032 include/global_arrays.php:2610
+#: include/global_arrays.php:1033 include/global_arrays.php:2611
 msgid "User Groups"
 msgstr "Lietotāju grupas"
 
-#: include/global_arrays.php:1033 include/global_arrays.php:2598
+#: include/global_arrays.php:1034 include/global_arrays.php:2599
 #: user_domains.php:634 user_domains.php:728
 msgid "User Domains"
 msgstr "Lietotāju domēni"
 
-#: include/global_arrays.php:1035 include/global_arrays.php:1054
-#: include/global_arrays.php:1071 include/global_arrays.php:2454
+#: include/global_arrays.php:1036 include/global_arrays.php:1055
+#: include/global_arrays.php:1072 include/global_arrays.php:2455
 msgid "Utilities"
 msgstr "Rīki"
 
-#: include/global_arrays.php:1036 include/global_arrays.php:1055
+#: include/global_arrays.php:1037 include/global_arrays.php:1056
 msgid "System Utilities"
 msgstr "Sistēmas utilītas"
 
-#: include/global_arrays.php:1037 include/global_arrays.php:1072
-#: include/global_arrays.php:1115 include/global_arrays.php:1218
-#: include/global_arrays.php:2214 user_admin.php:1497 user_group_admin.php:1519
+#: include/global_arrays.php:1038 include/global_arrays.php:1073
+#: include/global_arrays.php:1116 include/global_arrays.php:1219
+#: include/global_arrays.php:2215 user_admin.php:1497 user_group_admin.php:1519
 msgid "External Links"
 msgstr "Ārējās saites"
 
-#: include/global_arrays.php:1039 include/global_arrays.php:1074
+#: include/global_arrays.php:1040 include/global_arrays.php:1075
 msgid "Troubleshooting"
 msgstr "Problēmu novēršana"
 
-#: include/global_arrays.php:1073
+#: include/global_arrays.php:1074
 msgid "Support"
 msgstr "Atbalsts"
 
-#: include/global_arrays.php:1078
+#: include/global_arrays.php:1079
 msgid "Access Points, Controllers"
 msgstr "Piekļuves punkti, kontrolieri"
 
-#: include/global_arrays.php:1079
+#: include/global_arrays.php:1080
 msgid "Application Related"
 msgstr "Programmu saistīta"
 
-#: include/global_arrays.php:1080
+#: include/global_arrays.php:1081
 msgid "Kadupul Related"
 msgstr "Kadupul saistīta"
 
-#: include/global_arrays.php:1081
+#: include/global_arrays.php:1082
 msgid "Database Related"
 msgstr "Datu bāzes saistīta"
 
-#: include/global_arrays.php:1082
+#: include/global_arrays.php:1083
 msgid "Facilities Related"
 msgstr "Aprīkojumu saistīta"
 
-#: include/global_arrays.php:1083
+#: include/global_arrays.php:1084
 msgid "Generic Device"
 msgstr "Vispārēja ierīce"
 
-#: include/global_arrays.php:1084
+#: include/global_arrays.php:1085
 msgid "HPC/Grid Computing"
 msgstr "Augstas veiktspējas skaitļošana (HPC)/Režģa skaitļošana"
 
-#: include/global_arrays.php:1085
+#: include/global_arrays.php:1086
 msgid "Hypervisor Related"
 msgstr "Hipervizoru saistīta"
 
-#: include/global_arrays.php:1086
+#: include/global_arrays.php:1087
 msgid "ILO, IPMI, iDrac, etc."
 msgstr "ILO, IPMI, iDrac, utt."
 
-#: include/global_arrays.php:1087
+#: include/global_arrays.php:1088
 msgid "Licensing Related"
 msgstr "Licencēšanas saistīta"
 
-#: include/global_arrays.php:1088
+#: include/global_arrays.php:1089
 msgid "Linux Related"
 msgstr "Linux saistīta"
 
-#: include/global_arrays.php:1089
+#: include/global_arrays.php:1090
 msgid "Load Balancer"
 msgstr "Slodzes līdzsvarotājs"
 
-#: include/global_arrays.php:1090
+#: include/global_arrays.php:1091
 msgid "Network Switch"
 msgstr "Tīkla komutators"
 
-#: include/global_arrays.php:1091
+#: include/global_arrays.php:1092
 msgid "Network Router"
 msgstr "Tīkla maršrutētājs (rūteris)"
 
-#: include/global_arrays.php:1092
+#: include/global_arrays.php:1093
 msgid "NAS/SAN Related"
 msgstr "Nepārtraukta barošanas bloka (UPS) saistīta"
 
-#: include/global_arrays.php:1093
+#: include/global_arrays.php:1094
 msgid "Network Firewalls"
 msgstr "Tīkla ugunsmūris"
 
-#: include/global_arrays.php:1094
+#: include/global_arrays.php:1095
 msgid "Power Related PDUs/STS, etc."
 msgstr "Ar strāvu saistīti PDU/STS utt."
 
-#: include/global_arrays.php:1095
+#: include/global_arrays.php:1096
 msgid "Printer Related"
 msgstr "Linux saistīta"
 
-#: include/global_arrays.php:1096
+#: include/global_arrays.php:1097
 msgid "Storage Related"
 msgstr "Krātuves saistīta"
 
-#: include/global_arrays.php:1097
+#: include/global_arrays.php:1098
 msgid "Telco Related"
 msgstr "Telekomunikācijas uzņēmuma saistīta"
 
-#: include/global_arrays.php:1098
+#: include/global_arrays.php:1099
 msgid "Web Server Related"
 msgstr "Tīmekļa (Web) servera saistīta"
 
-#: include/global_arrays.php:1099
+#: include/global_arrays.php:1100
 msgid "Windows Related"
 msgstr "Windows saistīta"
 
-#: include/global_arrays.php:1100
+#: include/global_arrays.php:1101
 msgid "UPS Related"
 msgstr "Nepārtraukta barošanas bloka (UPS) saistīta"
 
-#: include/global_arrays.php:1124
+#: include/global_arrays.php:1125
 msgid "All Lines"
 msgstr "Visas rindas"
 
-#: include/global_arrays.php:1125 include/global_arrays.php:1126
-#: include/global_arrays.php:1127 include/global_arrays.php:1128
-#: include/global_arrays.php:1129 include/global_arrays.php:1130
-#: include/global_arrays.php:1131 include/global_arrays.php:1132
-#: include/global_arrays.php:1133 include/global_arrays.php:1134
-#: include/global_arrays.php:1135 include/global_arrays.php:1136
+#: include/global_arrays.php:1126 include/global_arrays.php:1127
+#: include/global_arrays.php:1128 include/global_arrays.php:1129
+#: include/global_arrays.php:1130 include/global_arrays.php:1131
+#: include/global_arrays.php:1132 include/global_arrays.php:1133
+#: include/global_arrays.php:1134 include/global_arrays.php:1135
+#: include/global_arrays.php:1136 include/global_arrays.php:1137
 #, php-format
 msgid "%d Lines"
 msgstr "%d rindas"
 
-#: include/global_arrays.php:1214
+#: include/global_arrays.php:1215
 msgid "Console Access"
 msgstr "Piekļuve konsolei"
 
-#: include/global_arrays.php:1216
+#: include/global_arrays.php:1217
 msgid "Realtime Graphs"
 msgstr "Reāllaika grafiki"
 
-#: include/global_arrays.php:1217
+#: include/global_arrays.php:1218
 msgid "Update Profile"
 msgstr "Atjaunināt profilu"
 
-#: include/global_arrays.php:1220
+#: include/global_arrays.php:1221
 msgid "Users/Groups"
 msgstr "Lietotāji/grupas"
 
-#: include/global_arrays.php:1221
+#: include/global_arrays.php:1222
 msgid "Settings/Utilities"
 msgstr "Iestatījumi/Utilītas"
 
-#: include/global_arrays.php:1223
+#: include/global_arrays.php:1224
 msgid "Installation/Upgrades"
 msgstr "Uzstādīšana/jauninājumi"
 
-#: include/global_arrays.php:1228
+#: include/global_arrays.php:1229
 msgid "Sites/Devices/Data"
 msgstr "Vietnes/Ierīces/Dati"
 
-#: include/global_arrays.php:1231
+#: include/global_arrays.php:1232
 msgid "Spike Handling"
 msgstr "Grafika pīķa pieauguma apstrāde"
 
-#: include/global_arrays.php:1243 utilities.php:2396
+#: include/global_arrays.php:1244 utilities.php:2396
 msgid "Log Administration"
 msgstr "Žurnāla administrēšana"
 
-#: include/global_arrays.php:1244
+#: include/global_arrays.php:1245
 msgid "Log Viewing"
 msgstr "Žurnāla apskate"
 
-#: include/global_arrays.php:1246
+#: include/global_arrays.php:1247
 msgid "Reports Administration"
 msgstr "Atskaites administrēšana"
 
-#: include/global_arrays.php:1247
+#: include/global_arrays.php:1248
 msgid "Reports Creation"
 msgstr "Atskaites izveide"
 
-#: include/global_arrays.php:1248
+#: include/global_arrays.php:1249
 msgid "Show Graph Action Icons"
 msgstr "Rādīt grafika darbību ikonas"
 
-#: include/global_arrays.php:1249
+#: include/global_arrays.php:1250
 msgid "Show User Help Links"
 msgstr "Rādīt lietotāja palīdzības saites"
 
-#: include/global_arrays.php:1250
+#: include/global_arrays.php:1251
 msgid "Plugin Administration"
 msgstr "Spraudņa administrēšana"
 
-#: include/global_arrays.php:1254
+#: include/global_arrays.php:1255
 msgid "Normal User"
 msgstr "Parasts lietotājs"
 
-#: include/global_arrays.php:1255
+#: include/global_arrays.php:1256
 msgid "Template Editor"
 msgstr "Veidņu redaktors"
 
-#: include/global_arrays.php:1256
+#: include/global_arrays.php:1257
 msgid "General Administration"
 msgstr "Pamatadministrācija"
 
-#: include/global_arrays.php:1257
+#: include/global_arrays.php:1258
 msgid "System Administration"
 msgstr "Sistēmas pārvaldīšana"
 
-#: include/global_arrays.php:1355 lib/html.php:1408
+#: include/global_arrays.php:1356 lib/html.php:1408
 msgid "CDEF"
 msgstr "CDEF"
 
-#: include/global_arrays.php:1356
+#: include/global_arrays.php:1357
 msgid "CDEF Item"
 msgstr "CDEF elements"
 
-#: include/global_arrays.php:1357
+#: include/global_arrays.php:1358
 msgid "GPRINT Preset"
 msgstr "GPRINT iepriekš iestatīts"
 
-#: include/global_arrays.php:1360
+#: include/global_arrays.php:1361
 msgid "Data Input Field"
 msgstr "Datu ievades lauks"
 
-#: include/global_arrays.php:1361 include/global_form.php:579
+#: include/global_arrays.php:1362 include/global_form.php:579
 #: include/global_form.php:1679 package_import.php:862
 msgid "Data Source Profile"
 msgstr "Datu avota profils"
 
-#: include/global_arrays.php:1362
+#: include/global_arrays.php:1363
 msgid "Data Template Item"
 msgstr "Datu veidnes elements"
 
-#: include/global_arrays.php:1364
+#: include/global_arrays.php:1365
 msgid "Graph Template Item"
 msgstr "Grafika veidnes elements"
 
-#: include/global_arrays.php:1365
+#: include/global_arrays.php:1366
 msgid "Graph Template Input"
 msgstr "Grafika veidnes ievade"
 
-#: include/global_arrays.php:1368 lib/html.php:1409
+#: include/global_arrays.php:1369 lib/html.php:1409
 msgid "VDEF"
 msgstr "VDEF"
 
-#: include/global_arrays.php:1369
+#: include/global_arrays.php:1370
 msgid "VDEF Item"
 msgstr "VDEF elements"
 
-#: include/global_arrays.php:1423
+#: include/global_arrays.php:1424
 msgid "Last Half Hour"
 msgstr "Pēdējā pusstunda"
 
-#: include/global_arrays.php:1424
+#: include/global_arrays.php:1425
 msgid "Last Hour"
 msgstr "Pēdējo stundu"
 
-#: include/global_arrays.php:1425 include/global_arrays.php:1426
-#: include/global_arrays.php:1427 include/global_arrays.php:1428
+#: include/global_arrays.php:1426 include/global_arrays.php:1427
+#: include/global_arrays.php:1428 include/global_arrays.php:1429
 #, php-format
 msgid "Last %d Hours"
 msgstr "Pēdējās %d stundas"
 
-#: include/global_arrays.php:1429
+#: include/global_arrays.php:1430
 msgid "Last Day"
 msgstr "Pēdējo dienu"
 
-#: include/global_arrays.php:1430 include/global_arrays.php:1431
-#: include/global_arrays.php:1432
+#: include/global_arrays.php:1431 include/global_arrays.php:1432
+#: include/global_arrays.php:1433
 #, php-format
 msgid "Last %d Days"
 msgstr "Pēdējās %d dienas"
 
-#: include/global_arrays.php:1433
+#: include/global_arrays.php:1434
 msgid "Last Week"
 msgstr "Pagājušo nedēļu"
 
-#: include/global_arrays.php:1434
+#: include/global_arrays.php:1435
 #, php-format
 msgid "Last %d Weeks"
 msgstr "Pēdējās %d nedēļas"
 
-#: include/global_arrays.php:1435
+#: include/global_arrays.php:1436
 msgid "Last Month"
 msgstr "Pagājušais mēnesis"
 
-#: include/global_arrays.php:1436 include/global_arrays.php:1437
-#: include/global_arrays.php:1438 include/global_arrays.php:1439
+#: include/global_arrays.php:1437 include/global_arrays.php:1438
+#: include/global_arrays.php:1439 include/global_arrays.php:1440
 #, php-format
 msgid "Last %d Months"
 msgstr "Pēdējie %d mēneši"
 
-#: include/global_arrays.php:1440
+#: include/global_arrays.php:1441
 msgid "Last Year"
 msgstr "Pagājušais gads"
 
-#: include/global_arrays.php:1441
+#: include/global_arrays.php:1442
 #, php-format
 msgid "Last %d Years"
 msgstr "Pēdējie %d gadi"
 
-#: include/global_arrays.php:1442
+#: include/global_arrays.php:1443
 msgid "Day Shift"
 msgstr "Dienas maiņa"
 
-#: include/global_arrays.php:1443
+#: include/global_arrays.php:1444
 msgid "This Day"
 msgstr "Šajā dienā"
 
-#: include/global_arrays.php:1444
+#: include/global_arrays.php:1445
 msgid "This Week"
 msgstr "Šajā nedēļā"
 
-#: include/global_arrays.php:1445
+#: include/global_arrays.php:1446
 msgid "This Month"
 msgstr "Šajā mēnesī"
 
-#: include/global_arrays.php:1446
+#: include/global_arrays.php:1447
 msgid "This Year"
 msgstr "Šis gads"
 
-#: include/global_arrays.php:1447
+#: include/global_arrays.php:1448
 msgid "Previous Day"
 msgstr "Iepriekšējā diena"
 
-#: include/global_arrays.php:1448
+#: include/global_arrays.php:1449
 msgid "Previous Week"
 msgstr "Iepriekšējā nedēļa"
 
-#: include/global_arrays.php:1449
+#: include/global_arrays.php:1450
 msgid "Previous Month"
 msgstr "Iepriekšējais mēnesis"
 
-#: include/global_arrays.php:1450
+#: include/global_arrays.php:1451
 msgid "Previous Year"
 msgstr "Iepriekšējais gads"
 
-#: include/global_arrays.php:1455
+#: include/global_arrays.php:1456
 #, php-format
 msgid "%d Min"
 msgstr "%d min"
 
-#: include/global_arrays.php:1510
+#: include/global_arrays.php:1511
 msgid "Month Number, Day, Year"
 msgstr "Mēneša numurs, diena, gads"
 
-#: include/global_arrays.php:1511
+#: include/global_arrays.php:1512
 msgid "Month Name, Day, Year"
 msgstr "Mēnesis Vārds, diena, gads"
 
-#: include/global_arrays.php:1512
+#: include/global_arrays.php:1513
 msgid "Day, Month Number, Year"
 msgstr "Diena, mēneša numurs, gads"
 
-#: include/global_arrays.php:1513
+#: include/global_arrays.php:1514
 msgid "Day, Month Name, Year"
 msgstr "Diena, mēneša nosaukums, gads"
 
-#: include/global_arrays.php:1514
+#: include/global_arrays.php:1515
 msgid "Year, Month Number, Day"
 msgstr "Gads, mēneša numurs, diena"
 
-#: include/global_arrays.php:1515
+#: include/global_arrays.php:1516
 msgid "Year, Month Name, Day"
 msgstr "Gads, mēnesis Vārds, diena"
 
-#: include/global_arrays.php:1525 include/global_arrays.php:1556
+#: include/global_arrays.php:1526 include/global_arrays.php:1557
 msgid "After Boost"
 msgstr "Pēc Boost"
 
-#: include/global_arrays.php:1535 include/global_arrays.php:1536
-#: include/global_arrays.php:1537 include/global_arrays.php:1538
-#: include/global_arrays.php:1539 include/global_arrays.php:1601
-#: include/global_arrays.php:1602
+#: include/global_arrays.php:1536 include/global_arrays.php:1537
+#: include/global_arrays.php:1538 include/global_arrays.php:1539
+#: include/global_arrays.php:1540 include/global_arrays.php:1602
+#: include/global_arrays.php:1603
 #, php-format
 msgid "%d MBytes"
 msgstr "%d MB"
 
-#: include/global_arrays.php:1540
+#: include/global_arrays.php:1541
 msgid "1 GByte"
 msgstr "1 GB baits"
 
-#: include/global_arrays.php:1541 include/global_arrays.php:1604
+#: include/global_arrays.php:1542 include/global_arrays.php:1605
 #: lib/boost.php:124
 #, php-format
 msgid "%s GBytes"
 msgstr "%s GBaiti"
 
-#: include/global_arrays.php:1542 include/global_arrays.php:1543
-#: include/global_arrays.php:1605 include/global_arrays.php:1606
-#: include/global_arrays.php:1607 include/global_arrays.php:1608
-#: include/global_arrays.php:1609 include/global_arrays.php:1610
+#: include/global_arrays.php:1543 include/global_arrays.php:1544
+#: include/global_arrays.php:1606 include/global_arrays.php:1607
+#: include/global_arrays.php:1608 include/global_arrays.php:1609
+#: include/global_arrays.php:1610 include/global_arrays.php:1611
 #, php-format
 msgid "%d GBytes"
 msgstr "%d GBaiti"
 
-#: include/global_arrays.php:1563
+#: include/global_arrays.php:1564
 msgid "2,000 Data Source Items"
 msgstr "2000 datu avota vienumu"
 
-#: include/global_arrays.php:1564
+#: include/global_arrays.php:1565
 msgid "5,000 Data Source Items"
 msgstr "5000 datu avota vienumu"
 
-#: include/global_arrays.php:1565
+#: include/global_arrays.php:1566
 msgid "10,000 Data Source Items"
 msgstr "10 000 datu avota vienumu"
 
-#: include/global_arrays.php:1566
+#: include/global_arrays.php:1567
 msgid "15,000 Data Source Items"
 msgstr "15 000 datu avota vienumu"
 
-#: include/global_arrays.php:1567
+#: include/global_arrays.php:1568
 msgid "25,000 Data Source Items"
 msgstr "25 000 datu avota vienumu"
 
-#: include/global_arrays.php:1568
+#: include/global_arrays.php:1569
 msgid "50,000 Data Source Items (Default)"
 msgstr "50 000 datu avota vienumu (noklusējums)"
 
-#: include/global_arrays.php:1569
+#: include/global_arrays.php:1570
 msgid "100,000 Data Source Items"
 msgstr "100 000 datu avota vienumu"
 
-#: include/global_arrays.php:1570
+#: include/global_arrays.php:1571
 msgid "200,000 Data Source Items"
 msgstr "200 000 datu avota vienumu"
 
-#: include/global_arrays.php:1571
+#: include/global_arrays.php:1572
 msgid "400,000 Data Source Items"
 msgstr "400 000 datu avota vienumu"
 
-#: include/global_arrays.php:1588
+#: include/global_arrays.php:1589
 msgid "2 Hours"
 msgstr "2 stundas"
 
-#: include/global_arrays.php:1589
+#: include/global_arrays.php:1590
 msgid "4 Hours"
 msgstr "4 stundas"
 
-#: include/global_arrays.php:1590
+#: include/global_arrays.php:1591
 msgid "6 Hours"
 msgstr "6 stundas"
 
-#: include/global_arrays.php:1597 include/global_settings.php:1489
+#: include/global_arrays.php:1598 include/global_settings.php:1489
 #: include/global_settings.php:1490 include/global_settings.php:1491
 #, php-format
 msgid "%s Hours"
 msgstr "%s stundas"
 
-#: include/global_arrays.php:1603
+#: include/global_arrays.php:1604
 #, php-format
 msgid "%d GByte"
 msgstr "%d GB baiti"
 
-#: include/global_arrays.php:1611 utilities.php:2862 utilities.php:2863
+#: include/global_arrays.php:1612 utilities.php:2862 utilities.php:2863
 #: utilities.php:2912
 msgid "Unlimited"
 msgstr "Neierobežots"
 
-#: include/global_arrays.php:1618 include/global_settings.php:1388
+#: include/global_arrays.php:1619 include/global_settings.php:1388
 #: include/global_settings.php:1389 include/global_settings.php:1390
 #: include/global_settings.php:1391 include/global_settings.php:1401
 #: include/global_settings.php:1402 include/global_settings.php:1403
@@ -6944,759 +6944,759 @@ msgstr "Neierobežots"
 msgid "%s Minutes"
 msgstr "%s minūtes"
 
-#: include/global_arrays.php:1640
+#: include/global_arrays.php:1641
 msgid "1 Megabyte"
 msgstr "1 megabaits"
 
-#: include/global_arrays.php:1641 include/global_arrays.php:1642
-#: include/global_arrays.php:1643 include/global_arrays.php:1644
-#: include/global_arrays.php:1645 include/global_arrays.php:1646
+#: include/global_arrays.php:1642 include/global_arrays.php:1643
+#: include/global_arrays.php:1644 include/global_arrays.php:1645
+#: include/global_arrays.php:1646 include/global_arrays.php:1647
 #, php-format
 msgid "%d Megabytes"
 msgstr "%d megabaiti"
 
-#: include/global_arrays.php:1650
+#: include/global_arrays.php:1651
 msgid "Send Now"
 msgstr "Sūtīt tagad"
 
-#: include/global_arrays.php:1658
+#: include/global_arrays.php:1659
 msgid "Take Ownership"
 msgstr "Kļūt par īpašnieku"
 
-#: include/global_arrays.php:1662
+#: include/global_arrays.php:1663
 msgid "Inline PNG Image"
 msgstr "Iekļauts PNG attēls"
 
-#: include/global_arrays.php:1667
+#: include/global_arrays.php:1668
 msgid "Inline JPEG Image"
 msgstr "Iekļauts JPEG attēls"
 
-#: include/global_arrays.php:1668
+#: include/global_arrays.php:1669
 msgid "Inline GIF Image"
 msgstr "Iekļauts GIF attēls"
 
-#: include/global_arrays.php:1671
+#: include/global_arrays.php:1672
 msgid "Attached PNG Image"
 msgstr "Pievienots PNG attēls"
 
-#: include/global_arrays.php:1674
+#: include/global_arrays.php:1675
 msgid "Attached JPEG Image"
 msgstr "Pievienots JPEG attēls"
 
-#: include/global_arrays.php:1675
+#: include/global_arrays.php:1676
 msgid "Attached GIF Image"
 msgstr "Pievienots GIF attēls"
 
-#: include/global_arrays.php:1679
+#: include/global_arrays.php:1680
 msgid "Inline PNG Image, LN Style"
 msgstr "Iekļauts PNG attēls, LN stils"
 
-#: include/global_arrays.php:1681
+#: include/global_arrays.php:1682
 msgid "Inline JPEG Image, LN Style"
 msgstr "Iekļauts JPEG attēls, LN stils"
 
-#: include/global_arrays.php:1682
+#: include/global_arrays.php:1683
 msgid "Inline GIF Image, LN Style"
 msgstr "Iekļauts GIF attēls, LN stils"
 
-#: include/global_arrays.php:1687
+#: include/global_arrays.php:1688
 msgid "Text"
 msgstr "Teksts"
 
-#: include/global_arrays.php:1688 include/global_form.php:2252
+#: include/global_arrays.php:1689 include/global_form.php:2252
 msgid "Tree"
 msgstr "Koks"
 
-#: include/global_arrays.php:1691
+#: include/global_arrays.php:1692
 msgid "Horizontal Rule"
 msgstr "Horizontālā kārtula"
 
-#: include/global_arrays.php:1695
+#: include/global_arrays.php:1696
 msgid "left"
 msgstr "pa kreisi"
 
-#: include/global_arrays.php:1696
+#: include/global_arrays.php:1697
 msgid "center"
 msgstr "centrs"
 
-#: include/global_arrays.php:1697
+#: include/global_arrays.php:1698
 msgid "right"
 msgstr "pa labi"
 
-#: include/global_arrays.php:1701
+#: include/global_arrays.php:1702
 msgid "Minute(s)"
 msgstr "minūte(s)"
 
-#: include/global_arrays.php:1702
+#: include/global_arrays.php:1703
 msgid "Hour(s)"
 msgstr "Stunda(s)"
 
-#: include/global_arrays.php:1703
+#: include/global_arrays.php:1704
 msgid "Day(s)"
 msgstr "Diena(s)"
 
-#: include/global_arrays.php:1704
+#: include/global_arrays.php:1705
 msgid "Week(s)"
 msgstr "Nedēļa(s)"
 
-#: include/global_arrays.php:1705
+#: include/global_arrays.php:1706
 msgid "Month(s), Day of Month"
 msgstr "Mēnesis(-i), mēneša diena"
 
-#: include/global_arrays.php:1706
+#: include/global_arrays.php:1707
 msgid "Month(s), Day of Week"
 msgstr "Mēnesis(-i), nedēļas diena"
 
-#: include/global_arrays.php:1707
+#: include/global_arrays.php:1708
 msgid "Year(s)"
 msgstr "Gads(-i)"
 
-#: include/global_arrays.php:1711
+#: include/global_arrays.php:1712
 msgid "Keep Graph Types"
 msgstr "Saglabājiet grafiku veidus"
 
-#: include/global_arrays.php:1712
+#: include/global_arrays.php:1713
 msgid "Keep Type and STACK"
 msgstr "Saglabāt veidu un KAUVI"
 
-#: include/global_arrays.php:1713
+#: include/global_arrays.php:1714
 msgid "Convert to AREA/STACK Graph"
 msgstr "Konvertēt uz AREA/STACK grafiku"
 
-#: include/global_arrays.php:1714
+#: include/global_arrays.php:1715
 msgid "Convert to LINE1 Graph"
 msgstr "Konvertēt uz LINE1 grafiku"
 
-#: include/global_arrays.php:1715
+#: include/global_arrays.php:1716
 msgid "Convert to LINE2 Graph"
 msgstr "Konvertēt uz LINE2 grafiku"
 
-#: include/global_arrays.php:1716
+#: include/global_arrays.php:1717
 msgid "Convert to LINE3 Graph"
 msgstr "Konvertēt uz LINE3 grafiku"
 
-#: include/global_arrays.php:1717
+#: include/global_arrays.php:1718
 msgid "Convert to LINE1/STACK Graph"
 msgstr "Konvertēt uz LINE1/STACK grafiku"
 
-#: include/global_arrays.php:1718
+#: include/global_arrays.php:1719
 msgid "Convert to LINE2/STACK Graph"
 msgstr "Konvertēt uz LINE2/STACK grafiku"
 
-#: include/global_arrays.php:1719
+#: include/global_arrays.php:1720
 msgid "Convert to LINE3/STACK Graph"
 msgstr "Konvertēt uz LINE3/STACK grafiku"
 
-#: include/global_arrays.php:1723
+#: include/global_arrays.php:1724
 msgid "No Totals"
 msgstr "Nav kopsummas"
 
-#: include/global_arrays.php:1724
+#: include/global_arrays.php:1725
 msgid "Print All Legend Items"
 msgstr "Drukāt visus leģendas vienumus"
 
-#: include/global_arrays.php:1725
+#: include/global_arrays.php:1726
 msgid "Print Totaling Legend Items Only"
 msgstr "Drukājiet tikai summējošos apzīmējumus"
 
-#: include/global_arrays.php:1729
+#: include/global_arrays.php:1730
 msgid "Total Similar Data Sources"
 msgstr "Līdzīgu datu avotu kopskaits"
 
-#: include/global_arrays.php:1730
+#: include/global_arrays.php:1731
 msgid "Total All Data Sources"
 msgstr "Visi datu avoti kopā"
 
-#: include/global_arrays.php:1734
+#: include/global_arrays.php:1735
 msgid "No Reordering"
 msgstr "Nav pārkārtošanas"
 
-#: include/global_arrays.php:1735
+#: include/global_arrays.php:1736
 msgid "Data Source, Graph"
 msgstr "Datu avots, grafiks"
 
-#: include/global_arrays.php:1736
+#: include/global_arrays.php:1737
 msgid "Graph, Data Source"
 msgstr "Grafiks, datu avots"
 
-#: include/global_arrays.php:1737
+#: include/global_arrays.php:1738
 msgid "Base Graph Order"
 msgstr "Bāzes grafiku secība"
 
-#: include/global_arrays.php:1744
+#: include/global_arrays.php:1745
 msgid "contains"
 msgstr "satur"
 
-#: include/global_arrays.php:1745
+#: include/global_arrays.php:1746
 msgid "does not contain"
 msgstr "nesatur"
 
-#: include/global_arrays.php:1746
+#: include/global_arrays.php:1747
 msgid "begins with"
 msgstr "sākas ar"
 
-#: include/global_arrays.php:1747
+#: include/global_arrays.php:1748
 msgid "does not begin with"
 msgstr "nesākas ar"
 
-#: include/global_arrays.php:1748
+#: include/global_arrays.php:1749
 msgid "ends with"
 msgstr "beidzas ar"
 
-#: include/global_arrays.php:1749
+#: include/global_arrays.php:1750
 msgid "does not end with"
 msgstr "nebeidzas ar"
 
-#: include/global_arrays.php:1750
+#: include/global_arrays.php:1751
 msgid "matches"
 msgstr "atbilst"
 
-#: include/global_arrays.php:1751
+#: include/global_arrays.php:1752
 msgid "is not equal to"
 msgstr "nav vienāds ar"
 
-#: include/global_arrays.php:1752
+#: include/global_arrays.php:1753
 msgid "is less than"
 msgstr "ir mazāks par"
 
-#: include/global_arrays.php:1753
+#: include/global_arrays.php:1754
 msgid "is less than or equal"
 msgstr "ir mazāks par vai vienāds"
 
-#: include/global_arrays.php:1754
+#: include/global_arrays.php:1755
 msgid "is greater than"
 msgstr "ir labāks par"
 
-#: include/global_arrays.php:1755
+#: include/global_arrays.php:1756
 msgid "is greater than or equal"
 msgstr "ir lielāks vai vienāds ar"
 
-#: include/global_arrays.php:1756
+#: include/global_arrays.php:1757
 msgid "is unknown"
 msgstr "nav zināms"
 
-#: include/global_arrays.php:1757
+#: include/global_arrays.php:1758
 msgid "is not unknown"
 msgstr "nav nezināms"
 
-#: include/global_arrays.php:1758
+#: include/global_arrays.php:1759
 msgid "is empty"
 msgstr "ir tukšs"
 
-#: include/global_arrays.php:1759
+#: include/global_arrays.php:1760
 msgid "is not empty"
 msgstr "nav tukšs"
 
-#: include/global_arrays.php:1760
+#: include/global_arrays.php:1761
 msgid "matches regular expression"
 msgstr "atbilst regulārai izteiksmei"
 
-#: include/global_arrays.php:1761
+#: include/global_arrays.php:1762
 msgid "does not match regular expression"
 msgstr "neatbilst regulārai izteiksmei"
 
-#: include/global_arrays.php:1863
+#: include/global_arrays.php:1864
 msgid "Fixed String"
 msgstr "Fiksēta virkne"
 
-#: include/global_arrays.php:1868
+#: include/global_arrays.php:1869
 msgid "Every 1 Hour"
 msgstr "Ik pēc 1 stundas"
 
-#: include/global_arrays.php:1874
+#: include/global_arrays.php:1875
 msgid "Every Day"
 msgstr "Katru dienu"
 
-#: include/global_arrays.php:1875
+#: include/global_arrays.php:1876
 msgid "Every Week"
 msgstr "Katru nedēļu"
 
-#: include/global_arrays.php:1876 include/global_arrays.php:1877
+#: include/global_arrays.php:1877 include/global_arrays.php:1878
 #, php-format
 msgid "Every %d Weeks"
 msgstr "Ik pēc %d nedēļām"
 
-#: include/global_arrays.php:1908
+#: include/global_arrays.php:1909
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jan"
 msgstr "Jan"
 
-#: include/global_arrays.php:1909
+#: include/global_arrays.php:1910
 msgctxt "A short textual representation of a month, three letters"
 msgid "Feb"
 msgstr "Feb"
 
-#: include/global_arrays.php:1910
+#: include/global_arrays.php:1911
 msgctxt "A short textual representation of a month, three letters"
 msgid "Mar"
 msgstr "Mar"
 
-#: include/global_arrays.php:1911
+#: include/global_arrays.php:1912
 msgctxt "A short textual representation of a month, three letters"
 msgid "Apr"
 msgstr "Apr"
 
-#: include/global_arrays.php:1912
+#: include/global_arrays.php:1913
 msgctxt "A short textual representation of a month, three letters"
 msgid "May"
 msgstr "Maijs"
 
-#: include/global_arrays.php:1913
+#: include/global_arrays.php:1914
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jun"
 msgstr "Jūn"
 
-#: include/global_arrays.php:1914
+#: include/global_arrays.php:1915
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jul"
 msgstr "Jūl"
 
-#: include/global_arrays.php:1915
+#: include/global_arrays.php:1916
 msgctxt "A short textual representation of a month, three letters"
 msgid "Aug"
 msgstr "Aug"
 
-#: include/global_arrays.php:1916
+#: include/global_arrays.php:1917
 msgctxt "A short textual representation of a month, three letters"
 msgid "Sep"
 msgstr "Sep"
 
-#: include/global_arrays.php:1917
+#: include/global_arrays.php:1918
 msgctxt "A short textual representation of a month, three letters"
 msgid "Oct"
 msgstr "Okt"
 
-#: include/global_arrays.php:1918
+#: include/global_arrays.php:1919
 msgctxt "A short textual representation of a month, three letters"
 msgid "Nov"
 msgstr "Nov"
 
-#: include/global_arrays.php:1919
+#: include/global_arrays.php:1920
 msgctxt "A short textual representation of a month, three letters"
 msgid "Dec"
 msgstr "Dec"
 
-#: include/global_arrays.php:1923
+#: include/global_arrays.php:1924
 msgid "Use the First Handler Found"
 msgstr "Izmantojiet pirmo atrasto apdarinātāju"
 
-#: include/global_arrays.php:1927
+#: include/global_arrays.php:1928
 msgid "Use the PHP GetText Handler"
 msgstr "Izmantojiet PHP GetText apdarinātāju"
 
-#: include/global_arrays.php:1931
+#: include/global_arrays.php:1932
 msgid "Use the Oscarotero GetText Handler"
 msgstr "Izmantojiet Oscarotero GetText apdarinātāju"
 
-#: include/global_arrays.php:1935
+#: include/global_arrays.php:1936
 msgid "Use the MonoTranslator GetText Handler"
 msgstr "Izmantojiet MonoTranslator GetText apdarinātāju"
 
-#: include/global_arrays.php:1949
+#: include/global_arrays.php:1950
 msgctxt "A textual representation of a day, three letters"
 msgid "Sun"
 msgstr "Sv"
 
-#: include/global_arrays.php:1950
+#: include/global_arrays.php:1951
 msgctxt "A textual representation of a day, three letters"
 msgid "Mon"
 msgstr "P"
 
-#: include/global_arrays.php:1951
+#: include/global_arrays.php:1952
 msgctxt "A textual representation of a day, three letters"
 msgid "Tue"
 msgstr "O"
 
-#: include/global_arrays.php:1952
+#: include/global_arrays.php:1953
 msgctxt "A textual representation of a day, three letters"
 msgid "Wed"
 msgstr "T"
 
-#: include/global_arrays.php:1953
+#: include/global_arrays.php:1954
 msgctxt "A textual representation of a day, three letters"
 msgid "Thu"
 msgstr "Cet"
 
-#: include/global_arrays.php:1954
+#: include/global_arrays.php:1955
 msgctxt "A textual representation of a day, three letters"
 msgid "Fri"
 msgstr "P"
 
-#: include/global_arrays.php:1955
+#: include/global_arrays.php:1956
 msgctxt "A textual representation of a day, three letters"
 msgid "Sat"
 msgstr "S"
 
-#: include/global_arrays.php:1959
+#: include/global_arrays.php:1960
 msgid "Arabic"
 msgstr "Arābu"
 
-#: include/global_arrays.php:1960
+#: include/global_arrays.php:1961
 msgid "Bulgarian"
 msgstr "Bulgāru"
 
-#: include/global_arrays.php:1961
+#: include/global_arrays.php:1962
 msgid "Chinese (China)"
 msgstr "Ķīniešu (Ķīna)"
 
-#: include/global_arrays.php:1962
+#: include/global_arrays.php:1963
 msgid "Chinese (Taiwan)"
 msgstr "Ķīniešu (Taivāna)"
 
-#: include/global_arrays.php:1963
+#: include/global_arrays.php:1964
 msgid "Dutch"
 msgstr "Holandiešu"
 
-#: include/global_arrays.php:1964
+#: include/global_arrays.php:1965
 msgid "English"
 msgstr "Angļu"
 
-#: include/global_arrays.php:1965
+#: include/global_arrays.php:1966
 msgid "French"
 msgstr "Franču"
 
-#: include/global_arrays.php:1966
+#: include/global_arrays.php:1967
 msgid "German"
 msgstr "Vācu"
 
-#: include/global_arrays.php:1967
+#: include/global_arrays.php:1968
 msgid "Greek"
 msgstr "grieķu valoda"
 
-#: include/global_arrays.php:1968
+#: include/global_arrays.php:1969
 msgid "Hebrew"
 msgstr "ebreju valoda"
 
-#: include/global_arrays.php:1969
+#: include/global_arrays.php:1970
 msgid "Hindi"
 msgstr "hindi"
 
-#: include/global_arrays.php:1970
+#: include/global_arrays.php:1971
 msgid "Italian"
 msgstr "Itāļu"
 
-#: include/global_arrays.php:1971
+#: include/global_arrays.php:1972
 msgid "Japanese"
 msgstr "Japāņu"
 
-#: include/global_arrays.php:1972
+#: include/global_arrays.php:1973
 msgid "Korean"
 msgstr "korejiešu"
 
-#: include/global_arrays.php:1973
+#: include/global_arrays.php:1974
 msgid "Polish"
 msgstr "Poļu"
 
-#: include/global_arrays.php:1974
+#: include/global_arrays.php:1975
 msgid "Portuguese"
 msgstr "Portugāļu"
 
-#: include/global_arrays.php:1975
+#: include/global_arrays.php:1976
 msgid "Portuguese (Brazil)"
 msgstr "Portugāļu (Brazīlija)"
 
-#: include/global_arrays.php:1976
+#: include/global_arrays.php:1977
 msgid "Russian"
 msgstr "Krievu"
 
-#: include/global_arrays.php:1977
+#: include/global_arrays.php:1978
 msgid "Spanish"
 msgstr "Spāņu"
 
-#: include/global_arrays.php:1978
+#: include/global_arrays.php:1979
 msgid "Swedish"
 msgstr "Zviedru"
 
-#: include/global_arrays.php:1979
+#: include/global_arrays.php:1980
 msgid "Turkish"
 msgstr "Turku"
 
-#: include/global_arrays.php:1980
+#: include/global_arrays.php:1981
 msgid "Vietnamese"
 msgstr "vjetnamietis"
 
-#: include/global_arrays.php:1984
+#: include/global_arrays.php:1985
 msgid "Classic"
 msgstr "Klasika"
 
-#: include/global_arrays.php:1985
+#: include/global_arrays.php:1986
 msgid "Modern"
 msgstr "Mūsdienīgs"
 
-#: include/global_arrays.php:1986
+#: include/global_arrays.php:1987
 msgid "Dark"
 msgstr "Tumša"
 
-#: include/global_arrays.php:1987
+#: include/global_arrays.php:1988
 msgid "Paper-plane"
 msgstr "Papīra lidmašīna"
 
-#: include/global_arrays.php:1988
+#: include/global_arrays.php:1989
 msgid "Paw"
 msgstr "Ķepa"
 
-#: include/global_arrays.php:1989
+#: include/global_arrays.php:1990
 msgid "Sunrise"
 msgstr "Saullēkts"
 
-#: include/global_arrays.php:1993
+#: include/global_arrays.php:1994
 msgid "[Fail]"
 msgstr "[Neizdevās]"
 
-#: include/global_arrays.php:1994
+#: include/global_arrays.php:1995
 msgid "[Warning]"
 msgstr "[Brīdinājums]"
 
-#: include/global_arrays.php:1995
+#: include/global_arrays.php:1996
 msgid "[Restart]"
 msgstr "Ierobežots"
 
-#: include/global_arrays.php:1996
+#: include/global_arrays.php:1997
 msgid "[Success]"
 msgstr "[Veiksme]"
 
-#: include/global_arrays.php:1997
+#: include/global_arrays.php:1998
 msgid "[Skipped]"
 msgstr "[Izlaists]"
 
-#: include/global_arrays.php:2002 include/global_arrays.php:2008
+#: include/global_arrays.php:2003 include/global_arrays.php:2009
 msgid "User Profile (Edit)"
 msgstr "Lietotāja profils (rediģēt)"
 
-#: include/global_arrays.php:2020 include/global_arrays.php:2026
+#: include/global_arrays.php:2021 include/global_arrays.php:2027
 msgid "Tree Mode"
 msgstr "Koka režīms"
 
-#: include/global_arrays.php:2032
+#: include/global_arrays.php:2033
 msgid "List Mode"
 msgstr "Saraksta režīms"
 
-#: include/global_arrays.php:2064 include/global_arrays.php:2070
+#: include/global_arrays.php:2065 include/global_arrays.php:2071
 #: lib/functions.php:4492 lib/html.php:1988 lib/html.php:2053 lib/html.php:2805
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "Konsole"
 
-#: include/global_arrays.php:2076
+#: include/global_arrays.php:2077
 msgid "Graph Management"
 msgstr "Grafiku pārvaldība"
 
-#: include/global_arrays.php:2082 include/global_arrays.php:2124
-#: include/global_arrays.php:2142 include/global_arrays.php:2196
-#: include/global_arrays.php:2208 include/global_arrays.php:2220
-#: include/global_arrays.php:2232 include/global_arrays.php:2244
-#: include/global_arrays.php:2280 include/global_arrays.php:2298
-#: include/global_arrays.php:2316 include/global_arrays.php:2334
-#: include/global_arrays.php:2352 include/global_arrays.php:2376
-#: include/global_arrays.php:2412 include/global_arrays.php:2538
-#: include/global_arrays.php:2562 include/global_arrays.php:2586
-#: include/global_arrays.php:2604 include/global_arrays.php:2616
-#: include/global_arrays.php:2730 include/global_arrays.php:2754
-#: include/global_arrays.php:2772 include/global_arrays.php:2790
-#: include/global_arrays.php:2814
+#: include/global_arrays.php:2083 include/global_arrays.php:2125
+#: include/global_arrays.php:2143 include/global_arrays.php:2197
+#: include/global_arrays.php:2209 include/global_arrays.php:2221
+#: include/global_arrays.php:2233 include/global_arrays.php:2245
+#: include/global_arrays.php:2281 include/global_arrays.php:2299
+#: include/global_arrays.php:2317 include/global_arrays.php:2335
+#: include/global_arrays.php:2353 include/global_arrays.php:2377
+#: include/global_arrays.php:2413 include/global_arrays.php:2539
+#: include/global_arrays.php:2563 include/global_arrays.php:2587
+#: include/global_arrays.php:2605 include/global_arrays.php:2617
+#: include/global_arrays.php:2731 include/global_arrays.php:2755
+#: include/global_arrays.php:2773 include/global_arrays.php:2791
+#: include/global_arrays.php:2815
 msgid "(Edit)"
 msgstr "(Rediģēt)"
 
-#: include/global_arrays.php:2094 include/global_arrays.php:2160
-#: include/global_arrays.php:2250 include/global_arrays.php:2286
-#: include/global_arrays.php:2304 include/global_arrays.php:2322
-#: include/global_arrays.php:2340 include/global_arrays.php:2370
-#: include/global_arrays.php:2406 include/global_arrays.php:2436
-#: include/global_arrays.php:2532 include/global_arrays.php:2736
-#: include/global_arrays.php:2760 include/global_arrays.php:2778
-#: include/global_arrays.php:2796 include/global_arrays.php:2820
+#: include/global_arrays.php:2095 include/global_arrays.php:2161
+#: include/global_arrays.php:2251 include/global_arrays.php:2287
+#: include/global_arrays.php:2305 include/global_arrays.php:2323
+#: include/global_arrays.php:2341 include/global_arrays.php:2371
+#: include/global_arrays.php:2407 include/global_arrays.php:2437
+#: include/global_arrays.php:2533 include/global_arrays.php:2737
+#: include/global_arrays.php:2761 include/global_arrays.php:2779
+#: include/global_arrays.php:2797 include/global_arrays.php:2821
 #: lib/api_automation.php:1289 lib/api_automation.php:1352
 #: lib/api_automation.php:1422 lib/html_reports.php:1792 plugins.php:605
 msgid "Actions"
 msgstr "Darbības"
 
-#: include/global_arrays.php:2100 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2101 lib/api_aggregate.php:2333
 msgid "Graph Items"
 msgstr "Grafika vienumi"
 
-#: include/global_arrays.php:2106
+#: include/global_arrays.php:2107
 msgid "Create New Graphs"
 msgstr "Izveidojiet jaunus grafikus"
 
-#: include/global_arrays.php:2112
+#: include/global_arrays.php:2113
 msgid "Create Graphs from Data Query"
 msgstr "Izveidojiet grafikus no datu vaicājuma"
 
-#: include/global_arrays.php:2130 include/global_arrays.php:2148
-#: include/global_arrays.php:2268 include/global_arrays.php:2358
-#: include/global_arrays.php:2382 include/global_arrays.php:2544
+#: include/global_arrays.php:2131 include/global_arrays.php:2149
+#: include/global_arrays.php:2269 include/global_arrays.php:2359
+#: include/global_arrays.php:2383 include/global_arrays.php:2545
 msgid "(Remove)"
 msgstr "(Noņemt)"
 
-#: include/global_arrays.php:2166 include/global_arrays.php:2172
-#: include/global_arrays.php:2178 include/global_arrays.php:2184
-#: include/global_arrays.php:2478
+#: include/global_arrays.php:2167 include/global_arrays.php:2173
+#: include/global_arrays.php:2179 include/global_arrays.php:2185
+#: include/global_arrays.php:2479
 msgid "View Log"
 msgstr "Skatīt žurnālu"
 
-#: include/global_arrays.php:2190
+#: include/global_arrays.php:2191
 msgid "Graph Trees"
 msgstr "Grafika koki"
 
-#: include/global_arrays.php:2256 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2257 lib/api_aggregate.php:2333
 msgid "Graph Template Items"
 msgstr "Grafika veidnes vienumi"
 
-#: include/global_arrays.php:2346
+#: include/global_arrays.php:2347
 msgid "Round Robin Archives"
 msgstr "Round Robin arhīvs"
 
-#: include/global_arrays.php:2388
+#: include/global_arrays.php:2389
 msgid "Data Input Fields"
 msgstr "Datu ievades lauki"
 
-#: include/global_arrays.php:2394 include/global_arrays.php:2424
+#: include/global_arrays.php:2395 include/global_arrays.php:2425
 msgid "(Remove Item)"
 msgstr "(Noņemt elementu)"
 
-#: include/global_arrays.php:2430 include/global_settings.php:217
+#: include/global_arrays.php:2431 include/global_settings.php:217
 #: rrdcleaner.php:323
 msgid "RRD Cleaner"
 msgstr "RRD tīrītājs"
 
-#: include/global_arrays.php:2442
+#: include/global_arrays.php:2443
 msgid "List unused Files"
 msgstr "Nelietoto failu saraksts"
 
-#: include/global_arrays.php:2448
+#: include/global_arrays.php:2449
 msgid "RRD Check"
 msgstr "Palaist pārbaudi"
 
-#: include/global_arrays.php:2460 include/global_arrays.php:2472
+#: include/global_arrays.php:2461 include/global_arrays.php:2473
 #: utilities.php:2407
 msgid "View Poller Cache"
 msgstr "Skatīt aptaujātāja kešatmiņu"
 
-#: include/global_arrays.php:2466 utilities.php:2411
+#: include/global_arrays.php:2467 utilities.php:2411
 msgid "View Data Query Cache"
 msgstr "Skatīt datu vaicājumu kešatmiņu"
 
-#: include/global_arrays.php:2484
+#: include/global_arrays.php:2485
 msgid "Clear Log"
 msgstr "Notīrīt žurnālu"
 
-#: include/global_arrays.php:2490 utilities.php:2400
+#: include/global_arrays.php:2491 utilities.php:2400
 msgid "View User Log"
 msgstr "Skatīt lietotāja žurnālu"
 
-#: include/global_arrays.php:2496
+#: include/global_arrays.php:2497
 msgid "Clear User Log"
 msgstr "Notīrīt lietotāja žurnālu"
 
-#: include/global_arrays.php:2502 utilities.php:2391 utilities.php:2392
+#: include/global_arrays.php:2503 utilities.php:2391 utilities.php:2392
 msgid "Technical Support"
 msgstr "Tehniskais atbalsts"
 
-#: include/global_arrays.php:2508 utilities.php:2582
+#: include/global_arrays.php:2509 utilities.php:2582
 msgid "Boost Status"
 msgstr "Pastiprināšanas statuss"
 
-#: include/global_arrays.php:2514 utilities.php:2466
+#: include/global_arrays.php:2515 utilities.php:2466
 msgid "View SNMP Agent Cache"
 msgstr "Skatiet SNMP aģenta kešatmiņu"
 
-#: include/global_arrays.php:2520 utilities.php:2477
+#: include/global_arrays.php:2521 utilities.php:2477
 msgid "View SNMP Agent Notification Log"
 msgstr "Skatīt SNMP aģenta paziņojumu žurnālu"
 
-#: include/global_arrays.php:2550
+#: include/global_arrays.php:2551
 msgid "VDEF Items"
 msgstr "VDEF preces"
 
-#: include/global_arrays.php:2556
+#: include/global_arrays.php:2557
 msgid "View SNMP Notification Receivers"
 msgstr "Skatiet SNMP paziņojumu uztvērējus"
 
-#: include/global_arrays.php:2568
+#: include/global_arrays.php:2569
 #, fuzzy
 msgid "Kadupul Settings"
 msgstr "Kadupul iestatījumi"
 
-#: include/global_arrays.php:2574
+#: include/global_arrays.php:2575
 msgid "External Link"
 msgstr "Ārējā saite"
 
-#: include/global_arrays.php:2592 include/global_arrays.php:2622
+#: include/global_arrays.php:2593 include/global_arrays.php:2623
 msgid "(Action)"
 msgstr "(Darbība)"
 
-#: include/global_arrays.php:2628 lib/html.php:2826
+#: include/global_arrays.php:2629 lib/html.php:2826
 msgid "About Kadupul"
 msgstr "Par Kadupul"
 
-#: include/global_arrays.php:2634
+#: include/global_arrays.php:2635
 #, fuzzy
 msgid "Kadupul Help"
 msgstr "Kadupul mājas"
 
-#: include/global_arrays.php:2646
+#: include/global_arrays.php:2647
 msgid "Export Results"
 msgstr "Izgūt rezultātus"
 
-#: include/global_arrays.php:2664 include/global_arrays.php:2694
+#: include/global_arrays.php:2665 include/global_arrays.php:2695
 #: lib/html.php:2004 lib/html.php:2078
 msgid "Reporting"
 msgstr "Ziņošana"
 
-#: include/global_arrays.php:2670 include/global_arrays.php:2700
+#: include/global_arrays.php:2671 include/global_arrays.php:2701
 msgid "Report Add"
 msgstr "Ziņojums Pievienot"
 
-#: include/global_arrays.php:2676 include/global_arrays.php:2706
+#: include/global_arrays.php:2677 include/global_arrays.php:2707
 msgid "Report Delete"
 msgstr "Ziņot par dzēšanu"
 
-#: include/global_arrays.php:2682 include/global_arrays.php:2712
+#: include/global_arrays.php:2683 include/global_arrays.php:2713
 msgid "Report Edit"
 msgstr "Pārskats Rediģēt"
 
-#: include/global_arrays.php:2688 include/global_arrays.php:2718
+#: include/global_arrays.php:2689 include/global_arrays.php:2719
 msgid "Report Edit Item"
 msgstr "Ziņot par vienumu rediģēšanu"
 
-#: include/global_arrays.php:2742
+#: include/global_arrays.php:2743
 msgid "Color Template Items"
 msgstr "Krāsu veidņu vienumi"
 
-#: include/global_arrays.php:2802
+#: include/global_arrays.php:2803
 msgid "Graph Rule Items"
 msgstr "Grafika kārtulas vienumi"
 
-#: include/global_arrays.php:2826
+#: include/global_arrays.php:2827
 msgid "Tree Rule Items"
 msgstr "Koka kārtulas vienumi"
 
-#: include/global_arrays.php:2857 include/global_arrays.php:2873
+#: include/global_arrays.php:2858 include/global_arrays.php:2874
 #: lib/api_device.php:1952
 msgid "days"
 msgstr "dienas"
 
-#: include/global_arrays.php:2858
+#: include/global_arrays.php:2859
 msgid "hrs"
 msgstr "st"
 
-#: include/global_arrays.php:2859
+#: include/global_arrays.php:2860
 msgid "mins"
 msgstr "min"
 
-#: include/global_arrays.php:2860
+#: include/global_arrays.php:2861
 msgid "secs"
 msgstr "sek"
 
-#: include/global_arrays.php:2874 lib/api_device.php:1952
+#: include/global_arrays.php:2875 lib/api_device.php:1952
 msgid "hours"
 msgstr "stundas"
 
-#: include/global_arrays.php:2875 lib/api_device.php:1952
+#: include/global_arrays.php:2876 lib/api_device.php:1952
 msgid "minutes"
 msgstr "minūtes"
 
-#: include/global_arrays.php:2876
+#: include/global_arrays.php:2877
 msgid "seconds"
 msgstr "sekundes"
 
@@ -16224,6 +16224,10 @@ msgstr ""
 
 #: lib/rrd_maintenance.php:569
 msgid "RRD storage configuration requires attention"
+msgstr ""
+
+#: lib/schema_repair_integrity.php:25
+msgid "Forward schema repair could not be confirmed. Review the target schema and installer privileges before retrying."
 msgstr ""
 
 #: lib/snmp.php:234 lib/snmp.php:355 lib/snmp.php:471 lib/snmp.php:933

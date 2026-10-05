@@ -86,7 +86,7 @@ ob_start();
 try {
     $result=$method->invoke($installer);
     require_once $root.'/install/upgrades/1_2_31.php';
-    upgrade_to_1_2_31();
+    upgrade_poller_output_rejected();
 }
 finally {
     ob_end_clean();
