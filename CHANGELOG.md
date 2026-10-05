@@ -32,6 +32,9 @@ follows [Semantic Versioning](VERSIONING.md).
 - Index RRD input-field references on fresh installations and through a registered schema upgrade from main 1.2.31 or LTS 1.2.32, keeping reference locks scoped to the selected fields.
 - Allow user settings and credential metadata to store the full user account ID range on fresh and upgraded databases.
 - Move External Links into the Navigation Symfony module with Twig forms, transactional viewing grants, stale-order protection and safe legacy redirects.
+- Revoke migrated-route sessions and their remember-me tokens after credential replacement, preserve caller transaction ownership during revocation and concurrent transparent hash upgrades, and retain Console section names equal to `0` in External Links.
+
+- Serialize database CSRF rotations on the primary and each collector, verify persisted keys, and bound the CLI worker to 30 seconds. Run database rotation on the primary collector; external-file rotation remains available on remote collectors.
 
 - Write device poll status back by device id, so devices that share a hostname no longer overwrite each other. Fixes #688.
 - Refresh DOMPurify to 3.4.16 and retain the application's sanitizer compatibility patches and source verification.
@@ -83,7 +86,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Validate replicated resource-cache paths against the installation tree, protect `include/config.php`, and run PHP syntax checks without a shell.
 - Restrict Script Server dispatch to PHP files under `scripts/` and only call functions declared by the selected file.
-- Validate graph-item dashes, dash offsets and alpha values before saving, and quote those fields and the SHIFT and TICK values when rendering graphs.
+- Validate dashes, dash offsets and alpha values on graph-item and graph-template-item edit pages, preserving fractional dash patterns and offsets. Filter and quote those fields and the SHIFT and TICK values when rendering graphs, including values stored through graph-input overrides and template imports.
 - Run binary SNMP get, getnext and walk commands through Symfony Process argument arrays, keeping hostnames and SNMP credentials intact as single arguments on Windows. Fixes #531.
 - Bind the data-query output type when rebuilding poller cache entries and skip malformed values, so stored field text cannot alter the SQL query. Fixes #533.
 - Validate graph-item TICK fractions and SHIFT offsets as single numeric tokens before saving or writing RRDtool pipe commands. Malformed legacy rows are skipped. Fixes #535.
@@ -106,6 +109,16 @@ Targeting `v1.3.0`, the first planned application release. See
 - Preserve both existing audit baseline tables until a staged import is validated and atomically installed; report failed imports and repairs with a nonzero CLI status. Fixes #242.
 - Invoke standard plugin upgrade callbacks during database audits and quote upgrade script paths and arguments.
 - Bind graph-template and local graph item ordering filters as parameters and preserve the non-classic theme fallback when available. Related to #476.
+- Bring the lts/1.2 authentication hardening to main. Leaving the retired no-authentication method now switches to local authentication without starting a session or clearing the administrator password; the administrator signs in and must choose a new password. The guest account can no longer open Edit Profile. Failed LDAP and domain logins show one generic message and keep the directory error in the log. A local login for an unknown username costs the same password hashing as one for a known username. A remember-me login with a pending forced password change goes to the change page, every logout path deletes the server-side remember-me token, and a malformed remember-me cookie is ignored.
+
+- Require sessions created before password binding was added to sign in again after upgrade; an unbound session cannot safely adopt a password changed while dormant.
+- Preserve authenticated sessions through transparent password hash upgrades using a credential generation stored in user settings. A password replacement changes the generation; rehashing preserves it atomically with the password update and refuses a concurrently replaced credential.
+- Check the directory's certificate on LDAPS and StartTLS connections by default. A new install starts at Demand, and an install that has a requirement stored keeps it. An existing install with no stored requirement that uses LDAPS or StartTLS, in the LDAP settings or on any domain, gets Never stored, the level it has always run at, so directory logins keep working: the web installer stores it during an upgrade, `cli/upgrade_database.php` stores it when upgrading from a version before 1.2.31, and an install whose database already reports 1.2.31 stores it at the first login attempt after the update. An existing install with no stored requirement and no LDAP encryption gets Demand stored at that point, so encryption turned on later checks the certificate. Administrators on Never or Allow should add the directory's CA and raise the setting, which now warns that those levels let anyone on the network path read LDAP passwords. Changing or resetting a password now ends the account's other sessions with file and database session storage. Group membership, group deletion and permission changes take effect in live sessions. With Force Complexity Upon Old Passwords on, a user whose password breaks the rules can finish logging in and is sent to the change page, an account that may not change its password is refused with the ordinary login failure, and an unknown username gets the same answer as a wrong password. A password an administrator sets in User Management must meet the complexity and history rules, the form's live check reports the rule a password breaks, and mismatched passwords stop the save. Wrong current passwords on the change password page count toward lockout, and a disabled or locked account can no longer use that page. Bulk Delete, Disable and Batch Copy leave the primary administrator and the acting account alone, and Batch Copy takes only a local account as its template. The User Management group filter accepts only a group number. User group changes that name a missing group are refused, and Copy carries the group's realms and permissions. Edit Profile stores only values a setting's field allows and needs the graph settings permission for graph settings; a refused value is marked on the form. The tree width and page refresh settings are printed as numbers on the Graphs page. Page error reports from help.php are limited per session and per user and escaped in the admin mail. A password rehash after login updates only the local account that logged in.
+
+- Refuse state-changing actions sent by a cross-site GET or by a method other than GET and POST; same-origin links and requests keep working. This covers table purges, rule quick edits, the RRD Cleaner rescan and the Data Debug purge; the SNMP notification receiver log purge, the SNMP Agent notification log purge and the log viewer purge now need a POST. Refuse a CSRF token whose time is not a number instead of failing with a PHP error, stop accepting CSRF tokens bound only to the client address, and keep the CSRF secret out of the document root: it comes from `$path_csrf_secret` outside the document root or from a random database setting, which `cli/refresh_csrf.php` now rotates.
+
+- Show the reason for a Remote Data Collector logout, close the script tag on the Permission Denied page, keep an anonymous visitor on the login page after the session lifetime, and show the Web Basic failure page when the template user is missing.
+
 - Use a stored or session UI theme only when it names an installed theme, and fall back to an installed theme otherwise. The configured default graph theme is checked the same way. An unset user no longer triggers a settings write during the fallback.
 - Refresh the Midwinter stylesheet cache-busting hashes for the core, compact and jQuery UI files, so browsers and proxies fetch the current CSS after an upgrade.
 
@@ -135,6 +148,10 @@ Targeting `v1.3.0`, the first planned application release. See
 - Escape device and network values before adding them to automation discovery HTML emails. Fixes #589.
 
 - Create the identity audit file with restrictive permissions without changing the process-wide umask, which could otherwise affect unrelated threaded requests. Fixes #382.
+- Fix blank and wrong Font Awesome 7 icons: the midwinter filter icon no longer shows a missing-glyph box, the multiselect collapse-all and expand-all buttons show their arrows, and the legacy `fa-circle-thin` class draws an outline circle again.
+
+- Give icon-only controls an accessible name: the Add and page help links, the tab menu buttons, the Console tab in themes that hide its text, and the Data Source troubleshooter's pass and fail icons.
+
 - Capture the RRDtool dump while transforming RRD files so repair utilities print nothing outside debug mode and print the modified XML only once in debug mode. Fixes #438.
 
 - Honour forced-local storage for RRDtool file checks, structured paths, and Boost operations. With proxy storage configured, realtime polling could send proxy-only commands to local RRDtool and recreate an existing RRD. Fixes #444.

@@ -71,7 +71,7 @@ const SELF_GATED = [
     'link.php' => [
         'realm:10000+id',
         "is_realm_allowed(\$page['id'] + 10000)",
-        'own realm check per external link id',
+        'persisted session eligibility before protected lookup; own realm check per external link id',
         'admission',
     ],
     'remote_agent.php' => [
@@ -170,6 +170,9 @@ const REVIEWED_FRAGMENT_CALLS = [
     'include/global_languages.php' => [
         ['get_list_of_locales()', 'declared in the same file; returns a literal locale map'],
     ],
+    'include/csrf.php' => [
+        ["csrf_token_is_well_formed(\$_POST['__csrf_magic'])", 'declared in the same file; splits the posted token string and returns whether its times are digits, writing nothing'],
+    ],
     'include/global_settings.php' => [
         ['$dir->read()', 'lists the theme directory opened by dir() on a fixed path'],
         ['$dir->close()', 'closes that directory handle'],
@@ -202,15 +205,16 @@ const ABOUT_ACCESS_ADAPTER = 'Kadupul\IdentityAccess\Infrastructure\Legacy\Legac
 // Complete reviewed native-identity and persistence handoff, plus its scoped
 // service binding. A changed helper or binding must be reviewed again.
 const ABOUT_AUTHENTICATION_SOURCES = [
-    'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php' => '4a17f2792e0a8e3d8650178ec0ee94e148a1f48263934f461fe7137669ada1ae',
-    'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php' => '133c42b831acf8274d46ad6f6f1f6947e1bc6348ed3ac23bbb333bb1c294e9c1',
+    'lib/auth.php' => '5f72c877cdc3f3c475570bae9abcf624ab64f8787a4786c4cf50fc969f254053',
+    'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php' => 'b405b4eabee2e7caf495e64710711eb152a2b6b4cffb60821f1fdd7fe17096c8',
+    'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php' => '61f8ea837055c09bd58d8146ea3c18a7ae37b34abfcbfb00427253c087cbdacf',
     'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php' => '4efc747fdc6521ee882efe65f4f98b90bf1649039348f3762548c1e45cdbe0a0',
-    'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php' => 'a1db787d701816d8bb226aa9bc9a30d2cf9b01ab33d8d54fb5e3c411385e7ba6',
+    'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php' => '0d9d146c13a1229cbb85593760bbb7ad62faeab4db3dd71b1d14dedbb3901199',
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationFileSessionHandler.php' => '941e8b6a6673a9a6956a1c6bf15397428f66a515c6b12fe812a31b1419b33a2a',
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'c07761a00231ff569cbff177dc4b401f631cc34239e90e83d62f8a0cec0b69ce',
-    'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => 'b6a7a0e78791fe7afb40c2702e76232654ae941349db9c95c4c6d579c2e8ef91',
+    'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => '4743883f8c2b1dc9b07c91a66bccdfa39f92531b6acafc0474bed5f92824513c',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => '7acd8fa93f3d07491c23934a58ad9f65ae8740586f499db52b9649f7db944046',
+    'config/services.yaml' => 'a5a72aeb49fa0167126f7bbaac00b17f8820a8ecaf7024521f5f81c059de7c70',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter
@@ -941,6 +945,42 @@ function auth_early_returns(string $root): array
     return $pages;
 }
 
+// The one shape include/auth.php uses to withdraw $guest_account from a page:
+// anonymous callers and the guest account itself get the login form there.
+const GUEST_REFUSAL = "isset(\$guest_account) && get_current_page() == %s && (empty(\$_SESSION['sess_user_id']) || \$_SESSION['sess_user_id'] == get_guest_account())";
+
+/**
+ * Pages include/auth.php refuses to the guest account even though they set
+ * $guest_account.
+ *
+ * @return list<string>
+ */
+function auth_guest_refusals(string $root): array
+{
+    $pages = [];
+    foreach (walk(program($root, 'include/auth.php') ?? [], false) as $node) {
+        if (!$node instanceof Stmt\If_ || $node->elseifs !== [] || $node->else !== null || count($node->stmts) !== 1) {
+            continue;
+        }
+        $unset = $node->stmts[0];
+        if (!$unset instanceof Stmt\Unset_ || count($unset->vars) !== 1 || !is_variable($unset->vars[0], 'guest_account')) {
+            continue;
+        }
+        foreach (walk($node->cond) as $page) {
+            if (!is_string_node($page)) {
+                continue;
+            }
+            $shape = (new ParserFactory())->createForNewestSupportedVersion()
+                ->parse('<?php ' . sprintf(GUEST_REFUSAL, var_export($page->value, true)) . ';');
+            if (same_node($node->cond, $shape[0]->expr)) {
+                $pages[] = $page->value;
+            }
+        }
+    }
+
+    return $pages;
+}
+
 /**
  * True when the statements reach exit, return or throw. At a page's top level
  * each of them ends the request. A break, continue or goto ahead of it, even
@@ -1056,10 +1096,11 @@ function preamble_clean(array $before, string $root, string $path): bool
 /**
  * @param array<string, int> $realms
  * @param list<string> $early
+ * @param list<string> $guest_refused
  * @param array<string, list<string>> $includers
  * @return array{0: string, 1: string}
  */
-function classify(string $root, string $path, array $realms, array $early, array $includers, array $functions): array
+function classify(string $root, string $path, array $realms, array $early, array $guest_refused, array $includers, array $functions): array
 {
     $stmts = program($root, $path);
     if ($stmts === null) {
@@ -1110,7 +1151,7 @@ function classify(string $root, string $path, array $realms, array $early, array
             if (!preamble_clean($before, $root, $path)) {
                 return ['unknown', 'statements with effects run before the auth include'];
             }
-            return auth_gate($path, $stmts, $before, $realms, $early);
+            return auth_gate($path, $stmts, $before, $realms, $early, $guest_refused);
         }
         if ($kind === 'symfony') {
             $expr = expression_of($stmt);
@@ -1155,9 +1196,10 @@ function classify(string $root, string $path, array $realms, array $early, array
  * @param list<Stmt> $before
  * @param array<string, int> $realms
  * @param list<string> $early
+ * @param list<string> $guest_refused
  * @return array{0: string, 1: string}
  */
-function auth_gate(string $path, array $stmts, array $before, array $realms, array $early): array
+function auth_gate(string $path, array $stmts, array $before, array $realms, array $early, array $guest_refused): array
 {
     // auth.php tests isset($guest_account), so any value but null opts in.
     $guest = false;
@@ -1167,7 +1209,14 @@ function auth_gate(string $path, array $stmts, array $before, array $realms, arr
             $guest = true;
         }
     }
-    $extras = $guest ? ['guest_account'] : [];
+    $name = basename($path);
+    $extras = [];
+    if ($guest && in_array($name, $guest_refused, true)) {
+        $guest = false;
+        $extras[] = 'guest_account withdrawn from anonymous and guest callers';
+    } elseif ($guest) {
+        $extras[] = 'guest_account';
+    }
     foreach (['auth_json', 'auth_text'] as $flag) {
         foreach (walk($stmts, false) as $node) {
             if ($node instanceof Expr\Assign && is_variable($node->var, $flag) && is_const($node->expr, 'true')) {
@@ -1177,7 +1226,6 @@ function auth_gate(string $path, array $stmts, array $before, array $realms, arr
         }
     }
     $suffix = $extras === [] ? '' : '; ' . implode(', ', $extras);
-    $name = basename($path);
     if (in_array($name, $early, true)) {
         return ['anonymous-allowed', 'include/auth.php returns before the session check' . $suffix];
     }
@@ -2427,11 +2475,12 @@ function main(): int
             $realms[$name] = $realm;
         }
         $early = auth_early_returns($root);
+        $guest_refused = auth_guest_refusals($root);
         $includers = includers($root, $files);
         $functions = declared_functions($root, $files);
         $rows = [];
         foreach ($request['served'] as $path) {
-            [$gate, $detail] = classify($root, $path, $realms, $early, $includers, $functions);
+            [$gate, $detail] = classify($root, $path, $realms, $early, $guest_refused, $includers, $functions);
             $rows[] = [$path, $gate, $detail];
         }
         array_push($rows, ...symfony_routes($root, $files));

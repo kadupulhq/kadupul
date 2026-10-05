@@ -243,11 +243,34 @@ final class DeviceCollectorReplicationTest extends TestCase
             self::assertStringEndsWith(' FOR UPDATE', $sql);
             $statement = $this->createMock(PDOStatement::class);
             $statement->method('execute')->willReturn(true);
+            $statement->method('errorCode')->willReturn('00000');
             $statement->method('fetchColumn')->willReturn(0);
             return $statement;
         });
         $snapshot = new DeviceRemoval(new DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), [11], [12]);
         (new DeviceCollectorReplication())->verifyPurged($db, 7, $snapshot, ['templates' => [101], 'rrds' => [102], 'graph_items' => [103]]);
+    }
+
+    #[DataProvider('unconfirmedCounts')]
+    public function testUnconfirmedNativeCountCannotConfirmCleanup(string $failure): void
+    {
+        $db = $this->removalDatabase();
+        $db->sqliteCreateFunction('SUBSTRING_INDEX', static fn(string $value): string => $value);
+        $db->setAttribute(PDO::ATTR_STATEMENT_CLASS, [CollectorCountReceiptStatement::class, [$failure]]);
+        if ($failure !== 'healthy') {
+            $this->expectException(\RuntimeException::class);
+            $this->expectExceptionMessage('Previous collector cleanup could not be confirmed');
+        }
+        (new DeviceCollectorReplication())->verifyPurged($db, 7);
+        self::assertSame(0, (int) $db->query('SELECT COUNT(*) FROM host')->fetchColumn());
+    }
+
+    public static function unconfirmedCounts(): iterable
+    {
+        yield ['healthy'];
+        yield ['late-false'];
+        yield ['late-sqlstate'];
+        yield ['noncanonical'];
     }
 
     #[DataProvider('placementIdentities')]
@@ -325,5 +348,32 @@ final class DeviceCollectorReplicationTest extends TestCase
         $read->method('fetchAll')->willReturn([]);
         $db->method('prepare')->willReturn($read);
         return $db;
+    }
+}
+
+/** Faults occur after the actual native COUNT read executes. */
+final class CollectorCountReceiptStatement extends PDOStatement
+{
+    private bool $fetched = false;
+
+    protected function __construct(private string $failure) {}
+
+    public function fetchColumn(int $column = 0): mixed
+    {
+        $result = parent::fetchColumn($column);
+        if (str_starts_with($this->queryString, 'SELECT COUNT(*) FROM host WHERE')) {
+            $this->fetched = true;
+            return match ($this->failure) {
+                'late-false' => false,
+                'noncanonical' => '0 unavailable',
+                default => $result,
+            };
+        }
+        return $result;
+    }
+
+    public function errorCode(): ?string
+    {
+        return $this->fetched && $this->failure === 'late-sqlstate' ? 'HY000' : parent::errorCode();
     }
 }

@@ -47,7 +47,7 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
     static $mode_count   = 0;
     static $beta_count   = 0;
 
-    if ($add_label === false) {
+    if ($add_label === false || trim((string) $add_label) === '') {
         $add_label = __('Add');
     }
 
@@ -107,12 +107,12 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
         }
 
         if ($help_file !== false && $help_count == 0 && is_realm_allowed(28)) {
-            print "<span class='cactiHelp' title='" . __esc('Get Page Help') . "'><a class='linkOverDark helpPage' data-page='" . html_escape(basename($help_file)) . "' href='#'><i class='far fa-question-circle'></i></a></span>";
+            print "<span class='cactiHelp' title='" . __esc('Get Page Help') . "'><a class='linkOverDark helpPage' data-page='" . html_escape(basename($help_file)) . "' href='#' aria-label='" . __esc('Get Page Help') . "'><i class='far fa-question-circle' aria-hidden='true'></i></a></span>";
             $help_count++;
         }
 
         if ($add_text != '' && !is_array($add_text)) {
-            print "<span class='cactiFilterAdd' title='$add_label'><a class='linkOverDark' href='" . html_escape($add_text) . "'><i class='fa fa-plus'></i></a></span>";
+            print "<span class='cactiFilterAdd' title='" . html_escape($add_label) . "'><a class='linkOverDark' href='" . html_escape(html_safe_href($add_text)) . "' aria-label='" . html_escape($add_label) . "'><i class='fa fa-plus' aria-hidden='true'></i></a></span>";
         } else {
             if (is_array($add_text)) {
                 if (cacti_sizeof($add_text)) {
@@ -130,7 +130,7 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
                         }
 
                         if (isset($icon['href'])) {
-                            $href = html_escape($icon['href']);
+                            $href = html_escape(html_safe_href($icon['href']));
                         } else {
                             $href = '#';
                         }
@@ -141,7 +141,11 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
                             $title = $add_label;
                         }
 
-                        print "<span class='cactiFilterAdd' title='$title'><a" . (isset($icon['id']) ? " id='" . $icon['id'] . "'" : '') . " class='$classo' href='$href'><i class='$classi'></i></a></span>";
+                        if (trim((string) $title) === '') {
+                            $title = $add_label;
+                        }
+
+                        print "<span class='cactiFilterAdd' title='" . html_escape($title) . "'><a" . (isset($icon['id']) ? " id='" . $icon['id'] . "'" : '') . " class='$classo' href='$href' aria-label='" . html_escape($title) . "'><i class='$classi' aria-hidden='true'></i></a></span>";
                     }
                 }
             } else {
@@ -285,7 +289,7 @@ function html_graph_area(&$graph_array, $no_graphs_message = '', $extra_url_args
 
     ?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
-	var refreshMSeconds = <?php print read_user_setting('page_refresh') * 1000;?>;
+	var refreshMSeconds = <?php print (int) read_user_setting('page_refresh') * 1000;?>;
 	var graph_start     = <?php print get_current_graph_start();?>;
 	var graph_end       = <?php print get_current_graph_end();?>;
 	</script>
@@ -383,7 +387,7 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = '', $extr
 
     ?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
-	var refreshMSeconds = <?php print read_user_setting('page_refresh') * 1000;?>;
+	var refreshMSeconds = <?php print (int) read_user_setting('page_refresh') * 1000;?>;
 	var graph_start     = <?php print get_current_graph_start();?>;
 	var graph_end       = <?php print get_current_graph_end();?>;
 	</script>
@@ -1213,6 +1217,29 @@ function html_escape($string)
     }
 }
 
+/* html_safe_href - returns a URL fit for an href attribute
+   @arg $url - the URL a caller wants to link to
+   @returns - $url unchanged when it is a relative reference or an http or
+     https URL, otherwise '#'
+
+   html_escape() keeps the attribute closed but leaves javascript: and data:
+   URLs runnable. It also keeps character references intact, and browsers
+   decode those and drop whitespace and control characters before they read
+   the scheme, so the check does the same. */
+function html_safe_href($url)
+{
+    // HTML accepts numeric references without a semicolon; PHP's decoder does not.
+    $probe = preg_replace('/&#(x[0-9a-f]+|[0-9]+);?/i', '&#$1;', (string) $url);
+    $probe = html_entity_decode($probe, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $probe = preg_replace('/[\x00-\x20\x7f]+/', '', $probe);
+
+    if (preg_match('/^([a-z][a-z0-9+.\-]*):/i', $probe, $scheme) && !in_array(strtolower($scheme[1]), array('http', 'https'), true)) {
+        return '#';
+    }
+
+    return $url;
+}
+
 /* html_split_string - takes a string and breaks it into a number of <br> separated segments
    @arg $string - string to be modified and returned
    @arg $length - the maximal string length to split to
@@ -1571,7 +1598,7 @@ function draw_menu($user_menu = '')
                 $glyph = '<i class="menu_glyph fa fa-folder"></i>';
             }
 
-            print "<li class='menuitem' role='menuitem' aria-haspopup='true' id='$id'><a class='menu_parent active' href='#'>$glyph<span>$header_name</span></a>";
+            print "<li class='menuitem' role='menuitem' aria-haspopup='menu' id='$id'><a class='menu_parent active' href='#'>$glyph<span>$header_name</span></a>";
             print "<ul role='menu' id='{$id}_div' style='display:block;'>";
 
             /* pass 2: loop through each top level item and render it */
@@ -2069,10 +2096,10 @@ function html_show_tabs_left()
                 $i++;
             }
 
-            print "<li><a id='$id' role='tab' class='lefttab" . (isset($tab['selected']) ? " selected' aria-selected='true'" : "' aria-selected='false'") . " href='" . html_escape($tab['url']) . "'><span class='fa glyph_$id'></span><span class='text_$id'>" . html_escape($tab['title']) . "</span></a><a id='menu-$id' class='maintabs-submenu' href='#'><i class='fa fa-angle-down'></i></a></li>";
+            print "<li><a id='$id' role='tab' class='lefttab" . (isset($tab['selected']) ? " selected' aria-selected='true'" : "' aria-selected='false'") . " href='" . html_escape($tab['url']) . "' aria-label='" . html_escape($tab['title']) . "'><span class='fa glyph_$id' aria-hidden='true'></span><span class='text_$id'>" . html_escape($tab['title']) . "</span></a><a id='menu-$id' class='maintabs-submenu' href='#' aria-label='" . html_escape($tab['title']) . "' aria-haspopup='menu'><i class='fa fa-angle-down' aria-hidden='true'></i></a></li>";
         }
 
-        print "<li class='ellipsis maintabs-submenu-ellipsis'><a id='menu-ellipsis' role='tab' aria-selected='false' class='submenu-ellipsis' href='#'><i class='fa fa-angle-down'></i></a></li>";
+        print "<li class='ellipsis maintabs-submenu-ellipsis'><a id='menu-ellipsis' role='tab' aria-selected='false' class='submenu-ellipsis' href='#' aria-label='" . __esc('Show All') . "' aria-haspopup='menu'><i class='fa fa-angle-down' aria-hidden='true'></i></a></li>";
 
         print '</ul></nav></div>';
     }

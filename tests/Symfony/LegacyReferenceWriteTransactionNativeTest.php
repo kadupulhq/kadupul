@@ -13,6 +13,8 @@ use Kadupul\Platform\Infrastructure\Legacy\LegacyReferenceWriteTransaction;
 use PHPUnit\Framework\TestCase;
 
 require_once dirname(__DIR__, 2) . '/lib/reference_write.php';
+require_once dirname(__DIR__, 2) . '/src/Platform/Contract/ReferenceWriteTransactionRunner.php';
+require_once dirname(__DIR__, 2) . '/src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php';
 
 final class LegacyReferenceWriteTransactionNativeTest extends TestCase
 {
@@ -233,6 +235,82 @@ final class LegacyReferenceWriteTransactionNativeTest extends TestCase
             return true;
         }, ['reference_rows']));
         self::assertFalse($called);
+    }
+
+    public function testRunnerUsesSelectedPdoAndPreservesCallerOwnership(): void
+    {
+        $runner = new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner();
+        self::assertInstanceOf(\Kadupul\Platform\Contract\ReferenceWriteTransactionRunner::class, $runner);
+        // An unrelated global connection must not replace the selected PDO.
+        $GLOBALS['database_sessions'] = ['owned-native:0:' . $this->schema => new \PDO('sqlite::memory:')];
+        self::assertSame(['committed' => true], $runner->run($this->database, function (): array {
+            self::assertTrue($this->database->inTransaction());
+            self::assertSame(1, $this->database->exec('INSERT INTO reference_rows VALUES (1,10)'));
+            return ['committed' => true];
+        }, ['reference_rows']));
+        self::assertFalse($this->database->inTransaction());
+        self::assertSame(10, $this->value());
+        self::assertTrue($this->database->beginTransaction());
+        $this->database->exec('INSERT INTO reference_rows VALUES (2,70)');
+        $original = new \RuntimeException('Selected native operation refused');
+        $observed = null;
+        try {
+            $runner->run($this->database, function () use ($original): void {
+                $this->database->exec('UPDATE reference_rows SET value=20 WHERE id=1');
+                throw $original;
+            }, ['reference_rows']);
+        } catch (\Throwable $failure) {
+            $observed = $failure;
+        }
+        self::assertSame($original, $observed);
+        self::assertTrue($this->database->inTransaction());
+        self::assertSame(10, $this->value());
+        self::assertSame(70, $this->value(2));
+        self::assertSame(1, $runner->run($this->database, fn(): int => $this->database->exec('UPDATE reference_rows SET value=50 WHERE id=1'), ['reference_rows']));
+        self::assertTrue($this->database->inTransaction());
+        self::assertSame(50, $this->value());
+        self::assertTrue($this->database->rollBack());
+        self::assertSame(10, $this->value());
+        self::assertSame(0, (int) $this->database->query('SELECT COUNT(*) FROM reference_rows WHERE id=2')->fetchColumn());
+    }
+
+    public function testRunnerPreservesFalseRefusalAndNativeException(): void
+    {
+        $runner = new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner();
+        $this->database->exec('INSERT INTO reference_rows VALUES (1,10)');
+        $observed = null;
+        try {
+            $runner->run($this->database, function (): bool {
+                $this->database->exec('UPDATE reference_rows SET value=20 WHERE id=1');
+                return false;
+            }, ['reference_rows']);
+        } catch (\RuntimeException $failure) {
+            $observed = $failure;
+        }
+        self::assertInstanceOf(\RuntimeException::class, $observed);
+        self::assertSame('A reference write could not be confirmed.', $observed->getMessage());
+        self::assertFalse($this->database->inTransaction());
+        self::assertSame(10, $this->value());
+        $original = $observed = null;
+        try {
+            $runner->run($this->database, function () use (&$original): void {
+                $this->database->exec('UPDATE reference_rows SET value=30 WHERE id=1');
+                try {
+                    $this->database->exec('INSERT INTO reference_rows VALUES (1,40)');
+                } catch (\PDOException $failure) {
+                    $original = $failure;
+                    throw $failure;
+                }
+            }, ['reference_rows']);
+        } catch (\PDOException $failure) {
+            $observed = $failure;
+        }
+        self::assertInstanceOf(\PDOException::class, $observed);
+        self::assertSame($original, $observed);
+        self::assertSame('23000', $observed->errorInfo[0]);
+        self::assertSame(1062, $observed->errorInfo[1]);
+        self::assertFalse($this->database->inTransaction());
+        self::assertSame(10, $this->value());
     }
 
     private function value(int $id = 1): int

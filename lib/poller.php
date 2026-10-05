@@ -1579,13 +1579,20 @@ function update_db_from_path($path, $type, $recursive = true)
 
         $pobject->close();
     } else {
-        $base_path = realpath($config['base_path']);
-        $real_path = realpath($path);
-        if ($base_path === false || $real_path === false || !cacti_path_is_within($real_path, $base_path)) {
+        // Cache-in reads deployment-owned files. Preserve the requested path
+        // for symlinked plugins; remotes still validate their write destination.
+        $base_path = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', $config['base_path']), '/');
+        $requested_path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
+        $prefix = $base_path . '/';
+        $within_base = DIRECTORY_SEPARATOR === '\\'
+            ? strncasecmp($requested_path, $prefix, strlen($prefix)) === 0
+            : str_starts_with($requested_path, $prefix);
+        if (!$within_base || !is_file($path)) {
+            cacti_log("NOTE: Skipping resource cache file outside the configured install path or unavailable: '$path'", false, 'REPLICATE');
             return;
         }
 
-        $relative_path = str_replace(DIRECTORY_SEPARATOR, '/', ltrim(substr($real_path, strlen($base_path)), DIRECTORY_SEPARATOR));
+        $relative_path = substr($requested_path, strlen($prefix));
         if (!should_ignore_from_replication($relative_path)) {
             $pathinfo = pathinfo($path);
             if (isset($pathinfo['extension'])) {
@@ -2860,6 +2867,10 @@ function should_ignore_from_replication($path)
 {
     if (!is_string($path) || $path === '' || strpos($path, "\0") !== false || strpos($path, '\\') !== false ||
         str_starts_with($path, '/') || preg_match('/^[a-zA-Z]:/', $path)) {
+        return true;
+    }
+
+    if (DIRECTORY_SEPARATOR === '\\' && str_contains($path, ':')) {
         return true;
     }
 

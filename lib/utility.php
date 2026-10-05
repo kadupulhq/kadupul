@@ -233,6 +233,7 @@ function update_poller_cache($data_source, $commit = false)
 
             if ($output_type !== '' && !ctype_digit($output_type)) {
                 /* Do not rebuild poller items for a malformed output type. */
+                cacti_log('WARNING: Invalid output_type for local_data_id ' . $data_source['id'] . ' and data_template_data_id ' . $data_input['data_template_data_id'] . '. Poller items omitted.', false, 'PCACHE');
                 $outputs = array();
             } else {
                 if ($output_type !== '') {
@@ -686,53 +687,15 @@ function push_out_data_input_method($data_input_id)
  */
 function poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items, $poller_id = 1)
 {
-    global $config;
+    global $config, $database_sessions, $database_hostname, $database_port, $database_default, $remote_db_cnn_id;
 
-    $ids    = '';
-    $raised = false;
-
-    /* set all fields present value to 0, to mark the outliers when we are all done */
-    if (cacti_sizeof($local_data_ids)) {
-        /* SECURITY: Cast all elements to integers to prevent SQL Injection */
-        $safe_ids = array_map('intval', $local_data_ids);
-        $ids      = implode(', ', $safe_ids);
-
-        if ($ids != '') {
-            db_execute_prepared(
-                "UPDATE poller_item
-				SET present = 0
-				WHERE poller_id = ?
-				AND local_data_id IN ($ids)",
-                array($poller_id)
-            );
-
-            if ($poller_id > 1) {
-                if (remote_poller_up($poller_id)) {
-                    if (($rcnn_id = poller_push_to_remote_db_connect($poller_id, true)) !== false) {
-                        db_execute_prepared(
-                            "UPDATE poller_item
-							SET present = 0
-							WHERE poller_id = ?
-							AND local_data_id IN ($ids)",
-                            array($poller_id),
-                            true,
-                            $rcnn_id
-                        );
-                    } else {
-                        raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
-                        $raised = true;
-                    }
-                } else {
-                    raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
-                    $raised = true;
-                }
-            }
-        }
-    } else {
-        /* don't mark anything in case we have no $local_data_ids =>
-         *this would flush the whole table at bottom of this function */
-    }
-
+    $primary = \Kadupul\Inventory\Infrastructure\Legacy\QueuedCollectorPurge::primary(
+        $config,
+        $database_sessions,
+        "$database_hostname:$database_port:$database_default",
+        $remote_db_cnn_id ?? null
+    );
+    $ids = array_values(array_filter(array_map('intval', (array) $local_data_ids), static fn($id) => $id > 0));
     /* setup the database call */
     $sql_prefix = 'INSERT INTO poller_item (local_data_id, poller_id, host_id, action, hostname, ' .
         'snmp_community, snmp_version, snmp_timeout, snmp_username, snmp_password, ' .
@@ -765,112 +728,38 @@ function poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items,
 		arg3 = VALUES(arg3),
 		present = 1';
 
-    /* use a reasonable insert buffer, the default is 1MByte */
-    $max_packet   = 256000;
 
-    /* setup some defaults */
-    $overhead     = strlen($sql_prefix) + strlen($sql_suffix);
-    $buf_len      = 0;
-    $buf_count    = 0;
-    $buffer       = '';
-
-    if (cacti_sizeof($poller_items)) {
-        foreach ($poller_items as $record) {
-            /* take care of invalid entries */
-            if ($record == '') {
-                continue;
+    $transactions = new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner();
+    $changed = (new \Kadupul\Inventory\Infrastructure\Legacy\PollerCacheBufferWrite($transactions))->write(
+        $primary,
+        $ids,
+        $poller_items,
+        (int) $poller_id,
+        $sql_prefix,
+        $sql_suffix,
+        static function () use ($poller_id) {
+            return remote_poller_up($poller_id) ? poller_push_to_remote_db_connect($poller_id, true) : false;
+        },
+        static function () use ($poller_id) {
+            raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
+        }
+    );
+    if ($changed !== null) {
+        if ($config['is_web']) {
+            if (!isset($_SESSION['sess_config_array']) || !is_array($_SESSION['sess_config_array'])) {
+                $_SESSION['sess_config_array'] = array();
             }
-
-            if ($buf_count == 0) {
-                $delim = ' ';
-            } else {
-                $delim = ', ';
+            $_SESSION['sess_config_array']['time_last_change_poller_item'] = $changed;
+        } else {
+            if (!isset($config['config_options_array']) || !is_array($config['config_options_array'])) {
+                $config['config_options_array'] = array();
             }
-
-            $buffer .= $delim . $record;
-
-            $buf_len += strlen($record);
-
-            if ($overhead + $buf_len > $max_packet - 1024) {
-                db_execute($sql_prefix . $buffer . $sql_suffix);
-
-                if ($poller_id > 1) {
-                    if (remote_poller_up($poller_id)) {
-                        if (($rcnn_id = poller_push_to_remote_db_connect($poller_id, true)) !== false) {
-                            db_execute($sql_prefix . $buffer . $sql_suffix, true, $rcnn_id);
-                        } elseif (!$raised) {
-                            raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
-                            $raised = true;
-                        }
-                    } elseif (!$raised) {
-                        raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
-                        $raised = true;
-                    }
-                }
-
-                $buffer    = '';
-                $buf_len   = 0;
-                $buf_count = 0;
-            } else {
-                $buf_count++;
-            }
+            $config['config_options_array']['time_last_change_poller_item'] = $changed;
+        }
+        if (!empty($config['DEBUG_SET_CONFIG_OPTION'])) {
+            file_put_contents(sys_get_temp_dir() . '/cacti-option.log', get_debug_prefix() . cacti_debug_backtrace('time_last_change_poller_item', false, false, 0, 1) . "\n", FILE_APPEND);
         }
     }
-
-    if ($buf_count > 0) {
-        db_execute($sql_prefix . $buffer . $sql_suffix);
-
-        if ($poller_id > 1) {
-            if (remote_poller_up($poller_id)) {
-                if (($rcnn_id = poller_push_to_remote_db_connect($poller_id, true)) !== false) {
-                    db_execute($sql_prefix . $buffer . $sql_suffix, true, $rcnn_id);
-                } else {
-                    raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
-                    $raised = true;
-                }
-            } elseif (!$raised) {
-                raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
-                $raised = true;
-            }
-        }
-    }
-
-    /* remove stale records FROM the poller cache */
-    if ($ids != '') {
-        db_execute_prepared(
-            "DELETE FROM poller_item
-			WHERE present = 0
-			AND poller_id = ?
-			AND local_data_id IN ($ids)",
-            array($poller_id)
-        );
-
-        if ($poller_id > 1) {
-            if (remote_poller_up($poller_id)) {
-                if (($rcnn_id = poller_push_to_remote_db_connect($poller_id, true)) !== false) {
-                    db_execute_prepared(
-                        "DELETE FROM poller_item
-						WHERE present = 0
-						AND poller_id = ?
-						AND local_data_id IN ($ids)",
-                        array($poller_id),
-                        true,
-                        $rcnn_id
-                    );
-                } elseif (!$raised) {
-                    raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
-                }
-            } elseif (!$raised) {
-                raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
-            }
-        }
-    }
-
-    /**
-     * Save the last time a device/site was created/updated
-     * for Caching.
-     */
-    set_config_option('time_last_change_poller_item', time());
 }
 
 /** for a given data template, update all input data and the poller cache

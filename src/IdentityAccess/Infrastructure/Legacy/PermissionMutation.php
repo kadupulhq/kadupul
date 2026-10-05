@@ -20,7 +20,7 @@ final class PermissionMutation
     private static ?PDO $batchConnection = null;
     /** @var list<string> */
     private static array $batchTables = array();
-    /** @var array<int, true> */
+    /** @var array<int, bool> */
     private static array $batchGroups = array();
     /** @var array<int, true> */
     private static array $batchInvalidated = array();
@@ -31,7 +31,7 @@ final class PermissionMutation
      *  @param list<string> $tables
      *  @param list<int> $groups
      */
-    public static function batch(array $tables, array $groups, callable $operation): void
+    public static function batch(array $tables, array $groups, callable $operation, bool $requireGroups = false): void
     {
         if (self::$batchConnection !== null) {
             throw new RuntimeException('Nested permission batch is not supported.');
@@ -51,8 +51,12 @@ final class PermissionMutation
             sort($groups, SORT_NUMERIC);
             $lock = $db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : '';
             foreach (array_unique($groups) as $group) {
-                self::rows($db, 'SELECT id FROM user_auth_group WHERE id = ?' . $lock, array($group));
-                self::$batchGroups[$group] = true;
+                $parents = self::rows($db, 'SELECT id FROM user_auth_group WHERE id = ?' . $lock, array($group));
+                $present = count($parents) === 1 && (int) $parents[0]['id'] === $group;
+                if ($requireGroups && !$present) {
+                    throw new MissingPermissionGroup($group);
+                }
+                self::$batchGroups[$group] = $present;
             }
             self::$batchConnection = $db;
             self::$batchTables = $tables;
@@ -65,10 +69,16 @@ final class PermissionMutation
                 self::control($db, 'RELEASE SAVEPOINT ' . $savepoint);
             }
         } catch (Throwable $error) {
+            if ($error instanceof MissingPermissionParent) {
+                $error->rollbackConfirmed = false;
+            }
             try {
                 self::rollback($db, $owned, $savepoint);
             } catch (Throwable) {
                 throw $error;
+            }
+            if ($error instanceof MissingPermissionParent) {
+                $error->rollbackConfirmed = true;
             }
             throw $error;
         } finally {
@@ -106,11 +116,19 @@ final class PermissionMutation
             // Both membership orientations serialize with group-policy changes.
             $membershipGroup = !$group && $table === 'user_auth_group_members' ? (int) $parameters[1] : null;
             if ($membershipGroup !== null && !isset(self::$batchGroups[$membershipGroup])) {
-                self::rows($db, 'SELECT id FROM user_auth_group WHERE id = ?' . $lock, array($membershipGroup));
+                $parents = self::rows($db, 'SELECT id FROM user_auth_group WHERE id = ?' . $lock, array($membershipGroup));
+                if (str_starts_with($sql, 'REPLACE INTO') && (count($parents) !== 1 || (int) $parents[0]['id'] !== $membershipGroup)) {
+                    throw new MissingPermissionGroup($membershipGroup);
+                }
+            } elseif ($membershipGroup !== null && str_starts_with($sql, 'REPLACE INTO') && !self::$batchGroups[$membershipGroup]) {
+                throw new MissingPermissionGroup($membershipGroup);
             }
             if ($group) {
-                if (!isset(self::$batchGroups[$principal])) {
-                    self::rows($db, 'SELECT id FROM user_auth_group WHERE id = ?' . $lock, array($principal));
+                if (!(self::$batchGroups[$principal] ?? false)) {
+                    $parents = self::rows($db, 'SELECT id FROM user_auth_group WHERE id = ?' . $lock, array($principal));
+                    if (count($parents) !== 1 || (int) $parents[0]['id'] !== $principal) {
+                        throw new MissingPermissionGroup($principal);
+                    }
                 }
                 if ($member !== null) {
                     $users = array($member);
@@ -130,6 +148,13 @@ final class PermissionMutation
                 foreach (self::rows($db, 'SELECT id, reset_perms FROM user_auth WHERE id IN (' . $placeholders . ') ORDER BY id' . $lock, $chunk) as $row) {
                     $epoch = self::epoch($row['reset_perms']);
                     $epochs[(int) $row['id']] = $epoch === 4294967295 ? 1 : $epoch + 1;
+                }
+            }
+
+            if ($table === 'user_auth_group_members' && str_starts_with($sql, 'REPLACE INTO')) {
+                $affectedUser = $group ? $member : $principal;
+                if ($affectedUser === null || (!isset($epochs[$affectedUser]) && !isset(self::$batchInvalidated[$affectedUser]))) {
+                    throw new MissingPermissionUser($affectedUser ?? 0);
                 }
             }
 
@@ -180,11 +205,17 @@ final class PermissionMutation
                 self::control($db, 'RELEASE SAVEPOINT ' . $savepoint);
             }
         } catch (Throwable $error) {
+            if ($error instanceof MissingPermissionParent) {
+                $error->rollbackConfirmed = false;
+            }
             try {
                 self::rollback($db, $owned, $savepoint);
             } catch (Throwable) {
                 // Preserve the original failure; never commit or roll back caller-owned work.
                 throw $error;
+            }
+            if ($error instanceof MissingPermissionParent) {
+                $error->rollbackConfirmed = true;
             }
             if ($error instanceof PDOException || $error instanceof PermissionEpochFailure) {
                 return false;
@@ -258,10 +289,14 @@ final class PermissionMutation
     private static function rows(PDO $db, string $sql, array $parameters): array
     {
         $query = $db->prepare($sql);
-        if ($query === false || !$query->execute($parameters)) {
+        if ($query === false || !$query->execute($parameters) || $query->errorCode() !== '00000') {
             throw new PermissionEpochFailure('Permission mutation read failed.');
         }
-        return $query->fetchAll(PDO::FETCH_ASSOC);
+        $rows = $query->fetchAll(PDO::FETCH_ASSOC);
+        if ($query->errorCode() !== '00000') {
+            throw new PermissionEpochFailure('Permission mutation read failed.');
+        }
+        return $rows;
     }
 
     private static function epoch(mixed $value): int
@@ -277,7 +312,7 @@ final class PermissionMutation
 
     private static function control(PDO $db, string $sql): void
     {
-        if ($db->exec($sql) === false) {
+        if ($db->exec($sql) === false || $db->errorCode() !== '00000') {
             throw new RuntimeException('Permission transaction control failed.');
         }
     }
@@ -288,7 +323,7 @@ final class PermissionMutation
             throw new RuntimeException('Permission transaction was lost.');
         }
         if ($owned) {
-            if (!$db->rollBack()) {
+            if (!$db->rollBack() || $db->inTransaction()) {
                 throw new RuntimeException('Permission mutation rollback failed.');
             }
         } else {
@@ -300,3 +335,27 @@ final class PermissionMutation
 
 /** Internal unsuccessful outcome, returned only after the unit has been undone. */
 final class PermissionEpochFailure extends RuntimeException {}
+
+/** Missing-parent outcomes are translated only after confirmed rollback. */
+abstract class MissingPermissionParent extends RuntimeException
+{
+    public bool $rollbackConfirmed = false;
+}
+
+/** A group operation requires its locked live parent. */
+final class MissingPermissionGroup extends MissingPermissionParent
+{
+    public function __construct(public readonly int $principal)
+    {
+        parent::__construct('Permission group does not exist.');
+    }
+}
+
+/** A membership addition requires its locked live account. */
+final class MissingPermissionUser extends MissingPermissionParent
+{
+    public function __construct(public readonly int $principal)
+    {
+        parent::__construct('Permission user does not exist.');
+    }
+}

@@ -29,7 +29,7 @@ require $root . '/include/vendor/csrf/csrf-magic.php';
 require $root . '/lib/html_utility.php';
 function read_config_option($key) { return '0'; }
 function db_execute_prepared(...$args) { echo 'MUTATION'; exit; }
-function db_fetch_row_prepared(...$args) { return array('id' => 42, 'realm' => 0, 'password_change' => 'on', 'password' => '', 'username' => 'test'); }
+function db_fetch_row_prepared(...$args) { return array('id' => 42, 'realm' => 0, 'password_change' => 'on', 'enabled' => 'on', 'locked' => '', 'password' => '', 'username' => 'test', 'locked' => ''); }
 function get_cacti_version() { return 'test'; }
 function cacti_sizeof($value) { return count($value); }
 function get_guest_account() { return 0; }
@@ -37,6 +37,7 @@ function secpass_check_pass($value) { return 'ok'; }
 function secpass_check_history(...$args) { return true; }
 function compat_password_verify(...$args) { return false; }
 function get_client_addr() { return '127.0.0.1'; }
+function auth_session_credentials_valid(...$args) { return true; }
 $config = array('url_path' => '/');
 session_id('profile-csrf-test-session');
 $_SESSION = array('sess_user_id' => 42);
@@ -151,6 +152,9 @@ $events = array();
 function raise_message($name) { $GLOBALS['events'][] = $name; }
 function is_urlencoded($value) { return urldecode($value) !== $value; }
 function sanitize_uri($value) { return $value; }
+function read_config_option($name, $force = false) { return $name === 'csrf_secret' ? str_repeat('ab', 32) : ''; }
+function set_config_option($name, $value, $remote = false) {}
+function cacti_log($message, $output = false, $environ = 'CMDPHP', $level = '') {}
 session_start();
 require $argv[1] . '/lib/html_utility.php';
 register_shutdown_function(function () { echo json_encode($GLOBALS['events']); session_destroy(); });

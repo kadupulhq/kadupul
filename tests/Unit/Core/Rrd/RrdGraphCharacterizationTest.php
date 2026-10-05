@@ -337,22 +337,41 @@ test('graph options match their golden for each scale and axis setting', functio
     rrd_characterization_golden('graph-options-rrdtool-1.3', explode(" \\\n", $old['results'][0]['returned']));
 });
 
-test('a generated graph command renders in RRDtool', function () {
+test('a generated graph command renders in RRDtool', function ($kind) {
     $binary = getenv('RRDTOOL_TEST_BINARY');
     if (!$binary || !is_executable($binary)) {
         $this->markTestSkipped('RRDTOOL_TEST_BINARY is required');
     }
-    $output = rrd_characterization_run($this, rrd_characterization_quoting_scenario());
+    if ($kind === 'quoted text') {
+        $scenario = rrd_characterization_quoting_scenario();
+    } else {
+        $scenario = rrd_characterization_graph_scenario(
+            array('graph_start' => 1700000000, 'graph_end' => 1700003600, 'output_filename' => '/dev/null'),
+            array('enable_rrdtool_gradient_support' => $kind === 'gradient' ? 'on' : ''),
+            array('title_cache' => 'Graph item styles', 'vertical_label' => 'bits/s'),
+            array(
+                rrd_characterization_item(1, 'AREA', rrd_characterization_ds('traffic_in') + array('hex' => '00CF00', 'alpha' => '80', 'shift' => 'on', 'value' => '60')),
+                rrd_characterization_item(2, 'LINE2', rrd_characterization_ds('traffic_out') + array('hex' => '002A97', 'alpha' => 'CC', 'dashes' => '2.5,1.5', 'dash_offset' => '1.5', 'shift' => 'on', 'value' => '-120')),
+                rrd_characterization_item(3, 'HRULE', array('hex' => 'FF9900', 'value' => '95', 'dashes' => '5,3', 'dash_offset' => '2')),
+                rrd_characterization_item(4, 'VRULE', array('hex' => '000000', 'value' => '1700001800', 'dashes' => '2.5,1.5', 'dash_offset' => '1.5')),
+            )
+        );
+    }
+    $output = rrd_characterization_run($this, $scenario);
     $graph = array_values(array_filter($output['results'][0]['sent'], function ($sent) {
         return strncmp($sent['stdin'], 'graph ', 6) === 0;
     }));
     expect($graph)->toHaveCount(1);
+    if ($kind !== 'quoted text') {
+        expect($graph[0]['stdin'])->toContain(":dashes='2.5,1.5'", ":dash-offset='1.5'", ":dashes='5,3'", "SHIFT:a:'60'", "SHIFT:b:'-120'");
+    }
 
     $directory = sys_get_temp_dir() . '/rrd-graph-roundtrip-' . bin2hex(random_bytes(8));
     mkdir($directory . '/rra', 0700, true);
     try {
         // Paths in the command are relative to the directory RRDtool runs in.
-        $create = "create 'rra/router'\"'\"'s traffic_11.rrd' --start 1699990000 --step 300 DS:traffic_in:GAUGE:600:U:U DS:traffic_out:GAUGE:600:U:U"
+        $create = ($kind === 'quoted text' ? "create 'rra/router'\"'\"'s traffic_11.rrd'" : 'create rra/router_traffic_11.rrd')
+            . ' --start 1699990000 --step 300 DS:traffic_in:GAUGE:600:U:U DS:traffic_out:GAUGE:600:U:U'
             . ' RRA:AVERAGE:0.5:1:100 RRA:MIN:0.5:1:100 RRA:MAX:0.5:1:100 RRA:LAST:0.5:1:100';
         // Fontconfig warns on stderr when it has no writable cache, as on CI
         // runners, so give it one inside the scratch directory.
@@ -378,7 +397,7 @@ test('a generated graph command renders in RRDtool', function () {
     // One OK for create and one for graph, which first prints the image size.
     expect(preg_match_all('/^OK u:/m', $stdout))->toBe(2);
     expect($stdout)->toMatch('/^\d+x\d+$/m');
-});
+})->with(array('quoted text', 'graph item styles', 'gradient'));
 
 test('VDEF-backed drawing lines render but do not become XPORT columns', function () {
     $binary = getenv('RRDTOOL_TEST_BINARY');
