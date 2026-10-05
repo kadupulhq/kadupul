@@ -37,6 +37,23 @@ if ($config['php_snmp_support']) {
 
 use phpsnmp\SNMP;
 
+/**
+ * Preserve the shared SNMPv3 session/request security negotiation.
+ *
+ * Privacy-disabled requests retain their original passphrase at the native
+ * API boundary; binary callers separately omit unused privacy arguments.
+ *
+ * @return array{0: string, 1: mixed} Security level and effective privacy protocol.
+ */
+function cacti_snmpv3_security_settings($auth_pass, $auth_proto, $priv_pass, $priv_proto): array
+{
+    if ($priv_proto == '[None]' || $priv_pass == '') {
+        return array($auth_pass == '' || $auth_proto == '[None]' ? 'noAuthNoPriv' : 'authNoPriv', '');
+    }
+
+    return array('authPriv', $priv_proto);
+}
+
 function cacti_snmp_session(
     $hostname,
     $community,
@@ -99,17 +116,7 @@ function cacti_snmp_session(
         return $session;
     }
 
-    if ($priv_proto == '[None]' || $priv_pass == '') {
-        if ($auth_pass == '' || $auth_proto == '[None]') {
-            $sec_level   = 'noAuthNoPriv';
-        } else {
-            $sec_level   = 'authNoPriv';
-        }
-
-        $priv_proto = '';
-    } else {
-        $sec_level = 'authPriv';
-    }
+    list($sec_level, $priv_proto) = cacti_snmpv3_security_settings($auth_pass, $auth_proto, $priv_pass, $priv_proto);
 
     try {
         $session->setSecurity($sec_level, $auth_proto, $auth_pass, $priv_proto, $priv_pass, $context, $engineid);
@@ -166,17 +173,7 @@ function cacti_snmp_get(
             } elseif ($version == '2') {
                 $snmp_value = @snmp2_get($hostname . ':' . $port, $community, $oid, $timeout_us, $retries);
             } else {
-                if ($priv_proto == '[None]' || $priv_pass == '') {
-                    if ($auth_pass == '' || $auth_proto == '[None]') {
-                        $sec_level   = 'noAuthNoPriv';
-                    } else {
-                        $sec_level   = 'authNoPriv';
-                    }
-
-                    $priv_proto = '';
-                } else {
-                    $sec_level = 'authPriv';
-                }
+                list($sec_level, $priv_proto) = cacti_snmpv3_security_settings($auth_pass, $auth_proto, $priv_pass, $priv_proto);
 
                 $snmp_value = @snmp3_get($hostname . ':' . $port, $auth_user, $sec_level, $auth_proto, $auth_pass, $priv_proto, $priv_pass, $oid, $timeout_us, $retries);
             }
@@ -194,33 +191,15 @@ function cacti_snmp_get(
         $snmp_value = '';
         $hostname = cacti_format_ipv6_colon($hostname);
 
-        /* net snmp want the timeout in seconds */
-        $timeout_s = (int) ceil($timeout_ms / 1000);
-
-        if ($version == '1' || $version == '2') {
-            $snmp_auth = array('-c', $community);
-            if ($version == '2') {
-                $version = '2c'; /* ucd/net snmp prefers this over '2' */
-            }
-        } elseif ($version == '3') {
-            $snmp_auth = cacti_get_snmpv3_auth_arguments($auth_proto, $auth_user, $auth_pass, $priv_proto, $priv_pass, $context, $engineid);
-        }
-
-        /* no valid snmp version has been set, get out */
-        if (empty($snmp_auth)) {
-            return;
-        }
-
-        $command = cacti_snmp_build_binary_command(
+        $command = cacti_snmp_read_command(
             read_config_option('path_snmpget'),
             'fntevU' . ($value_output_format == SNMP_STRING_OUTPUT_HEX ? 'x' : ''),
-            $snmp_auth,
-            $version,
-            $timeout_s,
-            $retries,
-            snmp_format_target($hostname, $port),
-            $oid
+            array($hostname, $port, $oid, $version, $community, $timeout_ms, $retries),
+            array($auth_proto, $auth_user, $auth_pass, $priv_proto, $priv_pass, $context, $engineid)
         );
+        if ($command === null) {
+            return;
+        }
 
         if (isset($_SESSION)) {
             debug_log_insert('data_query', __esc('SNMP Command is: %s', cacti_snmp_command_log_string($command)));
@@ -288,17 +267,7 @@ function cacti_snmp_get_raw(
         } elseif ($version == '2') {
             $snmp_value = @snmp2_get($hostname . ':' . $port, $community, $oid, $timeout_us, $retries);
         } else {
-            if ($priv_proto == '[None]' || $priv_pass == '') {
-                if ($auth_pass == '' || $auth_proto == '[None]') {
-                    $sec_level   = 'noAuthNoPriv';
-                } else {
-                    $sec_level   = 'authNoPriv';
-                }
-
-                $priv_proto = '';
-            } else {
-                $sec_level = 'authPriv';
-            }
+            list($sec_level, $priv_proto) = cacti_snmpv3_security_settings($auth_pass, $auth_proto, $priv_pass, $priv_proto);
 
             $snmp_value = @snmp3_get($hostname . ':' . $port, $auth_user, $sec_level, $auth_proto, $auth_pass, $priv_proto, $priv_pass, $oid, $timeout_us, $retries);
         }
@@ -311,33 +280,15 @@ function cacti_snmp_get_raw(
         $snmp_value = '';
         $hostname = cacti_format_ipv6_colon($hostname);
 
-        /* net snmp want the timeout in seconds */
-        $timeout_s = (int) ceil($timeout_ms / 1000);
-
-        if ($version == '1' || $version == '2') {
-            $snmp_auth = array('-c', $community);
-            if ($version == '2') {
-                $version = '2c'; /* ucd/net snmp prefers this over '2' */
-            }
-        } elseif ($version == '3') {
-            $snmp_auth = cacti_get_snmpv3_auth_arguments($auth_proto, $auth_user, $auth_pass, $priv_proto, $priv_pass, $context, $engineid);
-        }
-
-        /* no valid snmp version has been set, get out */
-        if (empty($snmp_auth)) {
-            return;
-        }
-
-        $command = cacti_snmp_build_binary_command(
+        $command = cacti_snmp_read_command(
             read_config_option('path_snmpget'),
             'fntev' . ($value_output_format == SNMP_STRING_OUTPUT_HEX ? 'x' : ''),
-            $snmp_auth,
-            $version,
-            $timeout_s,
-            $retries,
-            snmp_format_target($hostname, $port),
-            $oid
+            array($hostname, $port, $oid, $version, $community, $timeout_ms, $retries),
+            array($auth_proto, $auth_user, $auth_pass, $priv_proto, $priv_pass, $context, $engineid)
         );
+        if ($command === null) {
+            return;
+        }
 
         if (isset($_SESSION)) {
             debug_log_insert('data_query', __esc('SNMP Command is: %s', cacti_snmp_command_log_string($command)));
@@ -399,16 +350,7 @@ function cacti_snmp_getnext(
         } elseif ($version == '2') {
             $snmp_value = @snmp2_getnext($hostname . ':' . $port, $community, $oid, $timeout_us, $retries);
         } else {
-            if ($priv_proto == '[None]' || $priv_pass == '') {
-                if ($auth_pass == '' || $auth_proto == '[None]') {
-                    $sec_level   = 'noAuthNoPriv';
-                } else {
-                    $sec_level   = 'authNoPriv';
-                }
-                $priv_proto = '';
-            } else {
-                $sec_level = 'authPriv';
-            }
+            list($sec_level, $priv_proto) = cacti_snmpv3_security_settings($auth_pass, $auth_proto, $priv_pass, $priv_proto);
 
             $snmp_value = @snmp3_getnext($hostname . ':' . $port, $auth_user, $sec_level, $auth_proto, $auth_pass, $priv_proto, $priv_pass, $oid, $timeout_us, $retries);
         }
@@ -423,33 +365,15 @@ function cacti_snmp_getnext(
         $snmp_value = '';
         $hostname = cacti_format_ipv6_colon($hostname);
 
-        /* net snmp want the timeout in seconds */
-        $timeout_s = (int) ceil($timeout_ms / 1000);
-
-        if ($version == '1' || $version == '2') {
-            $snmp_auth = array('-c', $community);
-            if ($version == '2') {
-                $version = '2c'; /* ucd/net snmp prefers this over '2' */
-            }
-        } elseif ($version == '3') {
-            $snmp_auth = cacti_get_snmpv3_auth_arguments($auth_proto, $auth_user, $auth_pass, $priv_proto, $priv_pass, $context, $engineid);
-        }
-
-        /* no valid snmp version has been set, get out */
-        if (empty($snmp_auth)) {
-            return;
-        }
-
-        $command = cacti_snmp_build_binary_command(
+        $command = cacti_snmp_read_command(
             read_config_option('path_snmpgetnext'),
             'fntevU' . ($value_output_format == SNMP_STRING_OUTPUT_HEX ? 'x' : ''),
-            $snmp_auth,
-            $version,
-            $timeout_s,
-            $retries,
-            snmp_format_target($hostname, $port),
-            $oid
+            array($hostname, $port, $oid, $version, $community, $timeout_ms, $retries),
+            array($auth_proto, $auth_user, $auth_pass, $priv_proto, $priv_pass, $context, $engineid)
         );
+        if ($command === null) {
+            return;
+        }
 
         if (isset($_SESSION)) {
             debug_log_insert('data_query', __esc('SNMP Command is: %s', cacti_snmp_command_log_string($command)));
@@ -474,6 +398,42 @@ function cacti_snmp_getnext(
 }
 
 /**
+ * Build the common get/raw/getnext request without changing output flags.
+ *
+ * @param array{0: mixed, 1: mixed, 2: mixed, 3: mixed, 4: mixed, 5: mixed, 6: mixed} $request Host, port, OID, version, community, timeout milliseconds and retries.
+ * @param array{0: mixed, 1: mixed, 2: mixed, 3: mixed, 4: mixed, 5: mixed, 6: mixed} $security Authentication protocol/user/passphrase, privacy protocol/passphrase, context and engine ID.
+ *
+ * @return array<int, string>|null Null retains the unsupported-version return.
+ */
+function cacti_snmp_read_command($binary, $output_options, array $request, array $security): ?array
+{
+    list($hostname, $port, $oid, $version, $community, $timeout_ms, $retries) = $request;
+    if ($version == '1' || $version == '2') {
+        $snmp_auth = array('-c', $community);
+        if ($version == '2') {
+            $version = '2c'; /* ucd/net snmp prefers this over '2' */
+        }
+    } elseif ($version == '3') {
+        $snmp_auth = cacti_get_snmpv3_auth_arguments(...$security);
+    }
+
+    if (empty($snmp_auth)) {
+        return null;
+    }
+
+    return cacti_snmp_build_binary_command(
+        $binary,
+        $output_options,
+        $snmp_auth,
+        $version,
+        (int) ceil($timeout_ms / 1000),
+        $retries,
+        snmp_format_target($hostname, $port),
+        $oid
+    );
+}
+
+/**
  * Build argument-array options for a binary SNMPv3 request.
  *
  * @param string $auth_proto Authentication protocol key.
@@ -492,18 +452,13 @@ function cacti_get_snmpv3_auth_arguments($auth_proto, $auth_user, $auth_pass, $p
 
     $sec_details = array('-a', $snmp_auth_protocols[$auth_proto] ?? '', '-A', $auth_pass);
 
-    if ($priv_proto == '[None]' || $priv_pass == '') {
-        if ($auth_pass == '' || $auth_proto == '[None]') {
-            $sec_level   = 'noAuthNoPriv';
-            $sec_details = array();
-        } else {
-            $sec_level = 'authNoPriv';
-        }
-
-        $priv_proto = '';
-        $priv_pass  = '';
+    list($sec_level, $priv_proto) = cacti_snmpv3_security_settings($auth_pass, $auth_proto, $priv_pass, $priv_proto);
+    if ($sec_level === 'noAuthNoPriv') {
+        $sec_details = array();
+    }
+    if ($sec_level !== 'authPriv') {
+        $priv_pass = '';
     } else {
-        $sec_level  = 'authPriv';
         $priv_proto = $snmp_priv_protocols[$priv_proto] ?? '';
     }
 

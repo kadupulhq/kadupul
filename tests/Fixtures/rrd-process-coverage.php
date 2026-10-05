@@ -152,6 +152,9 @@ if (defined('REQUEST_CONTEXT_TEST_COVERAGE')) {
 if (defined('FORM_RENDERER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
 }
+if (defined('SNMP_SECURITY_NATIVE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/snmp.php');
+}
 if (defined('COLOR_DROPDOWN_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
 }
