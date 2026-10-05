@@ -134,3 +134,22 @@ test('auth_login.php redraws the login form after a domain login when no domain 
     expect($result['events'])->toBe(array('PROCESS', 'LOG_FAILED', 'REALMS_RENDERED'))
         ->and($result['error'])->toBeTrue();
 });
+
+
+test('the login entry point chooses local only for configured local selector values', function ($method, $realm, $dispatches, $events) {
+    $result = domains_login_realm_run($this, 'login', array(
+        'username' => 'alice', 'request' => array('action' => 'login', 'realm' => $realm, 'login_password' => 'secret'),
+        'config' => array('auth_method' => $method), 'process_error' => false, 'template' => 5, 'guest' => 6,
+    ));
+    expect($result['dispatches'])->toBe($dispatches)->and($result['events'])->toBe($events);
+})->with(array(
+    'Domains Local' => array('4', '0', array('local'), array('PROCESS', 'TEMPLATE')),
+    'LDAP Local' => array('3', '1', array('local'), array('PROCESS', 'TEMPLATE')),
+    'LDAP legacy Local' => array('3', '0', array('local'), array('PROCESS', 'TEMPLATE')),
+    'LDAP selector' => array('3', '2', array('ldap'), array('PROCESS', 'TEMPLATE')),
+    'Domain selector' => array('4', '1001', array('domain'), array('PROCESS', 'LOG_FAILED')),
+    'unknown Domains Local selector' => array('4', '1', array('domain'), array('PROCESS', 'LOG_FAILED')),
+    'negative Domains selector' => array('4', '-1', array(), array('INPUT_REJECTED')),
+    'fractional Domains selector' => array('4', '0.5', array(), array('INPUT_REJECTED')),
+    'array Domains selector' => array('4', array('0'), array(), array('INPUT_REJECTED')),
+));

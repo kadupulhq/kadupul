@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.3.0.-1\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 03:52-0700\n"
+"POT-Creation-Date: 2026-10-05 04:22-0700\n"
 "PO-Revision-Date: 2023-07-27 15:11+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -832,7 +832,7 @@ msgstr "Будь ласка введіть ваш поточний пароль 
 msgid "Please enter your new Kadupul password."
 msgstr "Будь ласка, введіть ваш новий пароль Kadupul."
 
-#: auth_changepassword.php:397 auth_login.php:336 auth_login.php:339
+#: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
 #: include/global_settings.php:1835 lib/functions.php:6200
 msgid "Username"
 msgstr "Ім'я користувача"
@@ -855,7 +855,7 @@ msgstr "Підтвердження нового паролю"
 msgid "Save"
 msgstr "Зберегти"
 
-#: auth_changepassword.php:424 auth_login.php:418
+#: auth_changepassword.php:424 auth_login.php:421
 #, fuzzy, php-format
 msgid "Version %s | %s"
 msgstr "Версія %s"
@@ -876,15 +876,15 @@ msgstr "Паролі не збігаються"
 msgid "Passwords Match"
 msgstr "Паролі збігаються"
 
-#: auth_login.php:66
+#: auth_login.php:69
 msgid "Kadupul no longer supports No Authentication mode. Please contact your System Administrator."
 msgstr "Доступ Заборонено, будь ласка зверніться до вашого Адміністратора Kadupul."
 
-#: auth_login.php:101
+#: auth_login.php:104
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr ""
 
-#: auth_login.php:116 lib/auth.php:4282 lib/auth.php:4288 lib/auth.php:4393
+#: auth_login.php:119 lib/auth.php:4282 lib/auth.php:4288 lib/auth.php:4393
 #: lib/auth.php:4444 lib/auth.php:4469 lib/auth.php:4492 lib/auth.php:4532
 #: lib/auth.php:4544 lib/auth.php:4567 lib/auth.php:4690 lib/auth.php:4710
 #: lib/auth.php:4922 lib/auth.php:4964 lib/auth.php:4974 lib/auth.php:4990
@@ -892,64 +892,64 @@ msgstr ""
 msgid "Access Denied!  Login Failed."
 msgstr ""
 
-#: auth_login.php:138
+#: auth_login.php:141
 msgid "User was Authenticated, but the Template Account is disabled.  Using Guest Account"
 msgstr ""
 
-#: auth_login.php:145
+#: auth_login.php:148
 #, fuzzy, php-format
 msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Administrator."
 msgstr "Доступ Заборонено, будь ласка зверніться до вашого Адміністратора Kadupul."
 
-#: auth_login.php:183
+#: auth_login.php:186
 msgid "Access Denied!  User account disabled."
 msgstr "Обліковий запис користувача Вимкнено"
 
-#: auth_login.php:194
+#: auth_login.php:197
 msgid "You do not have access to any area of Kadupul.  Contact your administrator."
 msgstr "Ви не маєте доступу до жодної частини Kadupul. Зверніться до вашого адміністратора."
 
-#: auth_login.php:221
+#: auth_login.php:224
 #, fuzzy
 msgid "Access Denied! User account locked."
 msgstr "Обліковий запис користувача Вимкнено"
 
-#: auth_login.php:309 lib/html_tree.php:147
+#: auth_login.php:312 lib/html_tree.php:147
 msgid "Login to Kadupul"
 msgstr "Вхід в Kadupul"
 
-#: auth_login.php:316
+#: auth_login.php:319
 msgid "User Login"
 msgstr "Логін користувача"
 
-#: auth_login.php:330
+#: auth_login.php:333
 msgid "Enter your Username and Password below"
 msgstr "Введіть ваше Ім'я користувача та пароль нижче"
 
-#: auth_login.php:344 include/global_form.php:1519 lib/functions.php:6201
+#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6201
 msgid "Password"
 msgstr ""
 
-#: auth_login.php:357 include/global_settings.php:2324 lib/auth.php:1014
+#: auth_login.php:360 include/global_settings.php:2324 lib/auth.php:1014
 #: lib/auth.php:1036 lib/auth.php:1046 lib/auth.php:1051 user_admin.php:2124
 msgid "Local"
 msgstr "Локально"
 
-#: auth_login.php:361 include/global_arrays.php:873 lib/auth.php:1047
+#: auth_login.php:364 include/global_arrays.php:873 lib/auth.php:1047
 #: lib/auth.php:1052
 msgid "LDAP"
 msgstr "LDAP"
 
-#: auth_login.php:380 user_admin.php:2119 user_admin.php:2249
+#: auth_login.php:383 user_admin.php:2119 user_admin.php:2249
 #: user_group_admin.php:741
 msgid "Realm"
 msgstr ""
 
-#: auth_login.php:397
+#: auth_login.php:400
 msgid "Keep me signed in"
 msgstr ""
 
-#: auth_login.php:403
+#: auth_login.php:406
 msgid "Login"
 msgstr "Логін користувача"
 
@@ -4540,7 +4540,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Поллер Kadupul ще не запускався."
 
 #: graph_realtime.php:34 graph_realtime.php:446 include/auth.php:316
-#: lib/functions.php:8199 permission_denied.php:29 permission_denied.php:36
+#: lib/functions.php:8206 permission_denied.php:29 permission_denied.php:36
 msgid "Permission Denied"
 msgstr ""
 
@@ -5881,11 +5881,11 @@ msgstr ""
 msgid "Login Again"
 msgstr ""
 
-#: include/auth.php:317 lib/functions.php:8200 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8207 permission_denied.php:38
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr ""
 
-#: include/auth.php:317 lib/functions.php:8200 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8207 permission_denied.php:38
 msgid "You are not permitted to access this section of Kadupul."
 msgstr ""
 

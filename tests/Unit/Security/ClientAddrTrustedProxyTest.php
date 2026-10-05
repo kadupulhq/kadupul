@@ -26,10 +26,11 @@ require $root . '/lib/functions.php';
 // needs the plugin API to load.
 preg_match('/\\$allowed_proxy_headers\s*=\s*array\((.*?)\);/s', file_get_contents($root . '/include/global_arrays.php'), $block);
 preg_match_all("/'([^']+)'/", $block[1], $names);
-$allowed_proxy_headers = $names[1];
+$defaultAllowed = $names[1];
 
 $results = array();
 foreach (json_decode(file_get_contents($argv[4]), true, 512, JSON_THROW_ON_ERROR) as $name => $case) {
+    $allowed_proxy_headers = array_key_exists('allowed', $case) ? $case['allowed'] : $defaultAllowed;
     $config['proxy_headers'] = $case['headers'];
     $config['proxy_trusted_addresses'] = $case['trusted'];
     $_SERVER = $case['server'];
@@ -125,4 +126,21 @@ test('forwarded client addresses are trusted only from configured proxies', func
         'header not allowed'   => false,
         'headers not array'    => false,
     ));
+});
+
+
+test('malformed forwarded header configuration returns false without warnings or exceptions', function () {
+    $cases = array();
+    foreach (array('null allowlist' => null, 'string allowlist' => 'HTTP_X_FORWARDED_FOR',
+        'nested allowlist' => array(array('HTTP_X_FORWARDED_FOR')), 'numeric allowlist' => array(12)) as $name => $allowed) {
+        $cases[$name] = array('headers' => array('HTTP_X_FORWARDED_FOR'), 'allowed' => $allowed,
+            'trusted' => array('192.0.2.10'), 'server' => array('REMOTE_ADDR' => '192.0.2.10', 'HTTP_X_FORWARDED_FOR' => '203.0.113.5'));
+    }
+    foreach (array('nested selection' => array(array()), 'numeric selection' => array(12)) as $name => $headers) {
+        $cases[$name] = array('headers' => $headers, 'trusted' => array('192.0.2.10'),
+            'server' => array('REMOTE_ADDR' => '192.0.2.10', 'HTTP_X_FORWARDED_FOR' => '203.0.113.5'));
+    }
+    $cases['empty forwarded value'] = array('headers' => array('HTTP_X_FORWARDED_FOR'), 'trusted' => array('192.0.2.10'),
+        'server' => array('REMOTE_ADDR' => '192.0.2.10', 'HTTP_X_FORWARDED_FOR' => ''));
+    expect(runClientAddrProbe($this->getTestResultObject()->getCodeCoverage(), $cases))->toBe(array_fill_keys(array_keys($cases), false));
 });
