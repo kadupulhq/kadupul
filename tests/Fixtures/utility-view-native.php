@@ -16,6 +16,7 @@ $root = dirname(__DIR__, 2);
 // Match the application's actual Composer bootstrap for semantic icons.
 require_once $root . '/include/vendor/autoload.php';
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
+if (isset($scenario['utility_policy'])) $scenario['debug_purge_policy'] = $scenario['utility_policy'];
 $managerView = $scenario['view'] === 'manager';
 $debugView = in_array($scenario['view'], array('debug', 'debug-icons'), true);
 $cleanerView = $scenario['view'] === 'cleaner';
@@ -134,7 +135,7 @@ INSERT INTO snmpagent_managers_notifications VALUES(1,'Name & <script>','','MIB-
     }
 }
 $tables = array('user_auth', 'user_log', 'host', 'snmp_query', 'host_snmp_cache', 'data_template', 'data_local', 'data_template_data', 'poller_item', 'settings_user', 'snmpagent_cache', 'snmpagent_managers', 'snmpagent_notifications_log');
-if ($debugView || $cleanerView) {
+if ($debugView || $cleanerView || isset($scenario['utility_policy'])) {
     require __DIR__ . '/data-debug-records.php';
 }
 if ($managerView) {
@@ -198,7 +199,12 @@ function db_fetch_assoc_prepared($sql, $params = array())
     }
     $q = $GLOBALS['db']->prepare($sql);
     $q->execute($params);
-    return $q->fetchAll(PDO::FETCH_ASSOC);
+    $rows = $q->fetchAll(PDO::FETCH_ASSOC);
+    if (str_contains($sql, 'SELECT h1.*')) {
+        $fromPolicyHelper = in_array('utilities_allowed_host_sql', array_column(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), 'function'), true);
+        $GLOBALS[$fromPolicyHelper ? 'policy_host_hydration' : 'presentation_host_hydration'][] = count($rows);
+    }
+    return $rows;
 }
 function db_fetch_row_prepared($sql, $params = array())
 {
@@ -216,7 +222,7 @@ function db_fetch_row($sql)
 }
 function db_table_exists($table)
 {
-    if ($GLOBALS['managerView'] || $GLOBALS['debugView'] || $GLOBALS['cleanerView']) {
+    if ($GLOBALS['managerView'] || $GLOBALS['debugView'] || $GLOBALS['cleanerView'] || isset($GLOBALS['scenario']['utility_policy'])) {
         return (bool) db_fetch_cell_prepared("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?", array($table));
     }
     return (bool) db_fetch_cell_prepared('SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA=SCHEMA() AND TABLE_NAME=?', array($table));
@@ -256,6 +262,7 @@ function db_fetch_cell_prepared($sql, $params = array())
         $GLOBALS['snmp_counts'][] = (int) $value;
     }
     if (str_contains($sql, 'SELECT COUNT(*)') && str_contains($sql, 'FROM data_local AS dl')) $GLOBALS['debug_counts'][] = (int) $value;
+    if (str_contains($sql, 'SELECT COUNT(*)') && (str_contains($sql, 'FROM host_snmp_cache') || str_contains($sql, 'FROM poller_item'))) $GLOBALS['utility_policy_counts'][] = (int) $value;
     return $value;
 }
 function db_fetch_cell($sql)
@@ -428,6 +435,7 @@ if ($debugView && isset($scenario['debug_purge_policy'])) {
 if (isset($argv[3])) {
     define('RRD_TEST_COVERAGE_DIRECTORY', $directory);
     define('UTILITY_VIEW_TEST_COVERAGE', true);
+    if (isset($scenario['utility_policy'])) define('UTILITY_CACHE_POLICY_NATIVE_TEST_COVERAGE', true);
     if ($managerView) {
         define('MANAGER_VIEW_NATIVE_TEST_COVERAGE', true);
     }
@@ -493,6 +501,17 @@ if ($debugView && isset($scenario['debug_purge_policy'])) {
         $filterProbe = array_slice($queries, $queryStart);
     }
 }
+$utilityPolicyProbe = [];
+if ($scenario['utility_policy_probe'] ?? false) {
+    $predicate = utilities_allowed_host_sql('h.id');
+    $utilityPolicyProbe['predicate'] = $predicate;
+    $utilityPolicyProbe['first_ids'] = array_column(db_fetch_assoc('SELECT h.id FROM host AS h WHERE ' . $predicate . ' ORDER BY h.id'), 'id');
+    if ($scenario['utility_policy_change'] ?? false) {
+        $db->exec('UPDATE user_auth SET reset_perms=1 WHERE id=99; DELETE FROM user_auth_perms WHERE user_id=99; INSERT INTO user_auth_perms VALUES(99,3,2)');
+        $predicate = utilities_allowed_host_sql('h.id');
+        $utilityPolicyProbe['second_ids'] = array_column(db_fetch_assoc('SELECT h.id FROM host AS h WHERE ' . $predicate . ' ORDER BY h.id'), 'id');
+    }
+}
 $html = ob_get_clean();
 $completionMarkers = array('utility-view-observed:' . $scenario['view']);
 if ($scenario['debug_non_rendering'] ?? false) $completionMarkers[] = 'debug-controller-outcome-observed';
@@ -505,4 +524,4 @@ foreach ($tables as $table) {
     $after[$table] = $db->query('SELECT * FROM ' . $table)->fetchAll(PDO::FETCH_ASSOC);
 }
 // This CLI-only fixture emits a JSON protocol, with HTML characters escaped.
-fwrite(STDOUT, json_encode(array('debug_counts' => $GLOBALS['debug_counts'] ?? [], 'debug_saves' => $GLOBALS['debug_saves'] ?? [], 'dsdebug_admission' => $dsdebugAdmission, 'filter_probe' => $filterProbe, 'icons' => $icons ?? array(), 'snmp_counts' => $GLOBALS['snmp_counts'] ?? array(), 'total_rows' => $GLOBALS['total_rows'] ?? array(), 'log_before' => $logBefore, 'log_after' => hash_file('sha256', $directory . '/cacti.log'), 'before' => $before, 'after' => $after, 'html' => $html, 'queries' => $queries, 'request' => $_REQUEST, 'session' => $_SESSION), JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));
+fwrite(STDOUT, json_encode(array('utility_policy_probe' => $utilityPolicyProbe, 'policy_host_hydration' => $GLOBALS['policy_host_hydration'] ?? [], 'utility_policy_counts' => $GLOBALS['utility_policy_counts'] ?? [], 'debug_counts' => $GLOBALS['debug_counts'] ?? [], 'debug_saves' => $GLOBALS['debug_saves'] ?? [], 'dsdebug_admission' => $dsdebugAdmission, 'filter_probe' => $filterProbe, 'icons' => $icons ?? array(), 'snmp_counts' => $GLOBALS['snmp_counts'] ?? array(), 'total_rows' => $GLOBALS['total_rows'] ?? array(), 'log_before' => $logBefore, 'log_after' => hash_file('sha256', $directory . '/cacti.log'), 'before' => $before, 'after' => $after, 'html' => $html, 'queries' => $queries, 'request' => $_REQUEST, 'session' => $_SESSION), JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));

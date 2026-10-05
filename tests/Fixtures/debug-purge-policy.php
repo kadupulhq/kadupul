@@ -68,3 +68,15 @@ if (isset($policy['batch_count'])) {
         $db->prepare("INSERT INTO data_debug(started,done,info,user,datasource,issue) VALUES(1700000000,0,'a:0:{}',2,?,'')")->execute([$id]);
     }
 }
+
+if (isset($scenario['utility_policy'])) {
+    // Real non-device poller producer, with its matching template/instance rows.
+    $db->exec("INSERT INTO data_template VALUES(30,'Non-device template');
+        UPDATE data_local SET data_template_id=30 WHERE id=105;
+        UPDATE data_template_data SET data_template_id=30,name_cache='Non-device DS',name='Non-device DS',active='on' WHERE local_data_id=105;
+        INSERT INTO poller_item VALUES(105,0,1,'none','non-device script','/none.rrd',0,'','');");
+    if (isset($policy['host_count'])) {
+        $insertHost = $db->prepare("INSERT INTO host(id,description,disabled,hostname,site_id) VALUES(?,?,'on','owned.example',1)");
+        for ($index = 0; $index < $policy['host_count']; $index++) $insertHost->execute([1000 + $index,'Owned host ' . $index]);
+    }
+}
