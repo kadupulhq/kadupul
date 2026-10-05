@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 test('plugin allperms grants existing realms only to the configured administrator', function () {
-    $application = dirname(__DIR__, 2);
+    $application = dirname(__DIR__, 3);
     $temporary = sys_get_temp_dir() . '/plugin-allperms-' . bin2hex(random_bytes(8));
     $plugin = 'allperms_fixture';
     $pluginDirectory = $temporary . '/plugins/' . $plugin;
@@ -21,10 +21,12 @@ function db_fetch_row_prepared($sql, $params = []) {
     return getenv('PLUGIN_ADMIN_EXISTS') === '1' ? ['id' => (int) $params[0]] : false;
 }
 function db_fetch_assoc_prepared($sql, $params = []) {
-    return [['id' => 12, 'plugin' => $params[0], 'file' => 'fixture.php', 'display' => 'Fixture']];
+    if (getenv('PLUGIN_REALMS') === 'failure') { return false; }
+    if (getenv('PLUGIN_REALMS') === 'empty') { return []; }
+    return array_map(static function ($id) use ($params) { return ['id' => $id, 'plugin' => $params[0]]; }, getenv('PLUGIN_REALMS') === 'two' ? [12, 13] : [$params[0] === 'second_fixture' ? 13 : 12]);
 }
 function db_execute_prepared($sql, $params = []) {
-    if (getenv('PLUGIN_GRANT_FAIL') === '1') {
+    if (getenv('PLUGIN_GRANT_FAIL') === '1' || (getenv('PLUGIN_GRANT_FAIL') === 'first' && $params[1] === 112)) {
         return false;
     }
     $state = json_decode(file_get_contents(getenv('PLUGIN_GRANTS')), true) ?: [];
@@ -35,6 +37,7 @@ function db_execute_prepared($sql, $params = []) {
 }
 function db_fetch_cell_prepared($sql, $params = []) {
     $state = json_decode(file_get_contents(getenv('PLUGIN_GRANTS')), true) ?: [];
+    if (getenv('PLUGIN_VERIFY_FAIL') === '1') { return false; }
     return isset($state[(int) $params[0] . ':' . (int) $params[1]]) ? 1 : false;
 }
 PHP;
@@ -54,13 +57,19 @@ PHP;
         'PLUGIN_ADMIN_USER' => '7',
         'PLUGIN_ADMIN_EXISTS' => '1',
         'PLUGIN_GRANT_FAIL' => '0',
+        'PLUGIN_REALMS' => 'one',
+        'PLUGIN_VERIFY_FAIL' => '0',
         'PLUGIN_GRANTS' => $grantsPath,
     ]);
 
     $run = static function (array $environment) use ($cli, $pluginDirectory, $plugin): array {
+        $arguments = [PHP_BINARY, $cli, '--plugin=' . $plugin, '--install', '--allperms'];
+        if (($environment['PLUGIN_MULTI'] ?? '') === '1') {
+            $arguments[] = '--plugin=second_fixture';
+        }
         $environment['PLUGIN_TEST_BASE_PATH'] = dirname(dirname($pluginDirectory));
         $process = proc_open(
-            [PHP_BINARY, $cli, '--plugin=' . $plugin, '--install', '--allperms'],
+            $arguments,
             [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']],
             $pipes,
             null,
@@ -99,6 +108,41 @@ PHP;
         $failedGrant = $run(array_merge($baseEnvironment, ['PLUGIN_GRANT_FAIL' => '1']));
         expect($failedGrant['status'])->toBe(1, json_encode($failedGrant));
         expect($failedGrant['stdout'])->toContain('Could not grant Plugin');
+        foreach (['', '0', 'abc', '7.5', '7e0', '01', '-1', '16777216', '4294967296', '999999999999999999999'] as $value) {
+            file_put_contents($grantsPath, '{}');
+            $result = $run(array_merge($baseEnvironment, ['PLUGIN_ADMIN_USER' => $value]));
+            expect($result['status'])->toBe(1, json_encode($result));
+            expect($result['stdout'])->toContain('administrator is invalid')->not->toContain('Enabled Plugin');
+            expect($result['stderr'])->toBe('');
+            expect(json_decode(file_get_contents($grantsPath), true))->toBe([]);
+        }
+        foreach (['1', '16777215'] as $value) {
+            file_put_contents($grantsPath, '{}');
+            $result = $run(array_merge($baseEnvironment, ['PLUGIN_ADMIN_USER' => $value]));
+            expect($result['status'])->toBe(0, json_encode($result));
+            expect(array_values(json_decode(file_get_contents($grantsPath), true)))->toBe([['user_id' => (int) $value, 'realm_id' => 112]]);
+        }
+        foreach ([['PLUGIN_REALMS' => 'failure'], ['PLUGIN_VERIFY_FAIL' => '1'], ['PLUGIN_REALMS' => 'two', 'PLUGIN_GRANT_FAIL' => 'first']] as $failure) {
+            file_put_contents($grantsPath, '{}');
+            $result = $run(array_merge($baseEnvironment, $failure));
+            expect($result['status'])->toBe(1, json_encode($result));
+            expect($result['stdout'])->toContain('ERROR:')->not->toContain('Enabled Plugin');
+            expect($result['stderr'])->toBe('');
+            $grants = array_values(json_decode(file_get_contents($grantsPath), true));
+            expect($grants)->toBe(isset($failure['PLUGIN_GRANT_FAIL']) ? [['user_id' => 7, 'realm_id' => 113]] : (isset($failure['PLUGIN_VERIFY_FAIL']) ? [['user_id' => 7, 'realm_id' => 112]] : []));
+        }
+        file_put_contents($grantsPath, '{}');
+        $result = $run(array_merge($baseEnvironment, ['PLUGIN_REALMS' => 'empty']));
+        expect($result['status'])->toBe(0, json_encode($result));
+        expect($result['stdout'])->toContain('Enabled Plugin');
+        expect(json_decode(file_get_contents($grantsPath), true))->toBe([]);
+
+        mkdir($temporary.'/plugins/second_fixture', 0700);
+        file_put_contents($grantsPath, '{}');
+        $result = $run(array_merge($baseEnvironment, ['PLUGIN_MULTI' => '1','PLUGIN_GRANT_FAIL' => 'first']));
+        expect($result['status'])->toBe(1, json_encode($result))->and($result['stderr'])->toBe('');
+        expect($result['stdout'])->toContain("Enabled Plugin 'second_fixture'")->not->toContain("Enabled Plugin 'allperms_fixture'");
+        expect(array_values(json_decode(file_get_contents($grantsPath), true)))->toBe([['user_id' => 7,'realm_id' => 113]]);
     } finally {
         foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($temporary, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST) as $entry) {
             $entry->isDir() ? rmdir($entry->getPathname()) : unlink($entry->getPathname());

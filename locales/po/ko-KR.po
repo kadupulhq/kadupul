@@ -20651,3 +20651,12 @@ msgstr "VDEF 없음"
 
 #~ msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
 #~ msgstr "이 패키지 작성자를 신뢰하지 않았습니다. 가져오려면 자동 신뢰 작성자 확인란을 선택합니다."
+
+#: lib/plugins.php:1233
+msgid "Plugin INFO must declare a valid compat version"
+msgstr ""
+
+#: plugins.php:848
+#, php-format
+msgid "Unable to Install Plugin: %s"
+msgstr ""

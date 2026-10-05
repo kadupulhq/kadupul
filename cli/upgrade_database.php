@@ -231,6 +231,7 @@ foreach ($cacti_version_codes as $cacti_upgrade_version => $hash_code)  {
 
 		if (cacti_version_compare($orig_cacti_version, $cacti_upgrade_version, '<')) {
 			if (db_execute_prepared("UPDATE version SET cacti = ?", array($cacti_upgrade_version)) === false) {
+				fwrite(STDERR, 'ERROR: Could not persist schema version ' . $cacti_upgrade_version . PHP_EOL);
 				$upgrade_failed = true;
 				break;
 			}
@@ -242,6 +243,7 @@ foreach ($cacti_version_codes as $cacti_upgrade_version => $hash_code)  {
 	}
 
 	if (db_execute_prepared("UPDATE version SET cacti = ?", array($cacti_upgrade_version)) === false) {
+		fwrite(STDERR, 'ERROR: Could not persist schema version ' . $cacti_upgrade_version . PHP_EOL);
 		$upgrade_failed = true;
 		break;
 	}

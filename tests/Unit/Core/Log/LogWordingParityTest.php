@@ -14,7 +14,7 @@
 
 /*
  * Operators match these log and console lines, so they keep their 1.2.31
- * text. The checks behind them are unchanged; only the wording is pinned.
+ * text except the explicit Script Server security boundary changes in 1.2.32.
  */
 
 function log_wording_source(string $file) : string {
@@ -32,16 +32,6 @@ dataset('1.2.31 wording', array(
 		'lib/functions.php',
 		"\"data has \$space_cnt spaces and \$delim_cnt fields which is \" . ((\$space_cnt + 1 == \$delim_cnt) ? '' : 'NOT') . ' okay'",
 		'fields; this is'
-	),
-	'script server file root' => array(
-		'script_server.php',
-		"cacti_log(\"WARNING: Script file '\$include_file' resolves outside scripts directory. Rejected.\", false, 'PHPSVR');",
-		'outside base path. Rejected.'
-	),
-	'script server function root' => array(
-		'script_server.php',
-		"cacti_log(\"WARNING: Function '\$function' was not defined by script file '\$include_file'. Rejected.\", false, 'PHPSVR');",
-		'defined outside base path'
 	),
 	'audit repair partial summary' => array(
 		'cli/audit_database.php',
@@ -71,6 +61,23 @@ test('log and console lines keep their 1.2.31 wording', function (string $file, 
 	expect($source)->toContain($expected)
 		->and($source)->not->toContain($replaced);
 })->with('1.2.31 wording');
+
+dataset('1.2.32 Script Server security wording', array(
+	'script server file root' => array(
+		'script_server.php',
+		"cacti_log(\"WARNING: Script file '\$include_file' resolves outside scripts directory. Rejected.\", false, 'PHPSVR');",
+		'outside base path. Rejected.'
+	),
+	'script server function root' => array(
+		'script_server.php',
+		"cacti_log(\"WARNING: Function '\$function' was not defined by script file '\$include_file'. Rejected.\", false, 'PHPSVR');",
+		'defined outside base path'
+	),
+));
+
+test('Script Server names the 1.2.32 security rejection accurately', function (string $file, string $expected, string $replaced) {
+    expect(log_wording_source($file))->toContain($expected)->not->toContain($replaced);
+})->with('1.2.32 Script Server security wording');
 
 test('the recovery write size is counted while the batch is built, as 1.2.31 did', function () {
 	$source = log_wording_source('poller_recovery.php');

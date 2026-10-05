@@ -3,6 +3,10 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Stop tree automation after rejected or failed parent creation, preserve earlier successful headers, and offer only valid headers in parent selectors
+-issue: Use plugin directory identity for compatibility checks, align listed compatibility with install validation, and reject malformed configured administrator IDs and failed realm reads
+-issue: Plugin install failures, including missing directories, exit nonzero while later plugins continue; schema-version write failures include the attempted version on stderr
+-security: Preserve configured scripts_path and symlinked script roots within the Script Server boundary; custom wrappers must declare their exported entry function in the selected script, and rejection logs describe this 1.2.32 policy (docs/script-server-security.md)
 -security: Show color names, data input field names, group names in permission reasons, and graph, device and site names in the tree editor as text; these places parsed the decoded names as markup
 -issue: Stop schema audits and repairs when docs/audit_schema.sql cannot be loaded, and preserve the existing audit baseline tables until a replacement loads successfully; CACTI_MYSQL_CLIENT optionally selects the database client executable
 -issue: Midwinter binds keyboard shortcuts once after a successful cached script revalidation, retaining working shortcuts across AJAX page loads
