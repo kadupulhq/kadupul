@@ -16,6 +16,7 @@ final class TreeConfirmationCoverageRegistration
         'tests/Helpers/NativeChildCoverageEvidence.php',
         'tests/Helpers/PhpSource.php',
         'tests/Helpers/TreeConfirmationCoverageRegistration.php',
+        'tests/Fixtures/tree-confirmation-native-router.php',
         'tests/Unit/Security/Auth/TreeConfirmationAuthorizationTest.php',
         'tree.php',
         'lib/auth.php',

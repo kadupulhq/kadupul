@@ -6,7 +6,8 @@ declare(strict_types=1);
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 // Execute the complete controller with persisted ownership. Page chrome and
-// the DB adapter are isolated; this does not exercise HTTP or MySQL locking.
+// the DB adapter are isolated. The owned loopback transport can verify actual
+// response headers; application bootstrap and MySQL locking remain outside it.
 $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
 $directory = $argv[2];
@@ -23,10 +24,14 @@ require $root . '/lib/auth.php';
 require $root . '/lib/html_utility.php';
 require $root . '/include/global_constants.php';
 foreach (array('sanitize_unserialize_selected_items', 'cacti_sizeof', 'escape_page_action') as $name) {
-    eval(test_php_function_source(file_get_contents($root . '/lib/functions.php'), $name)); // nosemgrep: php.lang.security.eval-use.eval-use
+    $source = file_get_contents($root . '/lib/functions.php');
+    if ($source === false) throw new RuntimeException('Cannot read actual tree function dependency.');
+    eval(test_php_function_source($source, $name)); // nosemgrep: php.lang.security.eval-use.eval-use
 }
 foreach (array('lib/database.php' => 'array_to_sql_or', 'lib/html.php' => 'html_escape') as $file => $name) {
-    eval(test_php_function_source(file_get_contents($root . '/' . $file), $name)); // nosemgrep: php.lang.security.eval-use.eval-use
+    $source = file_get_contents($root . '/' . $file);
+    if ($source === false) throw new RuntimeException('Cannot read actual tree source dependency.');
+    eval(test_php_function_source($source, $name)); // nosemgrep: php.lang.security.eval-use.eval-use
 }
 $db = new PDO('sqlite::memory:');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -144,6 +149,11 @@ register_shutdown_function(static function (): void {
         'items' => $GLOBALS['db']->query('SELECT id FROM graph_tree_items ORDER BY id')->fetchAll(PDO::FETCH_COLUMN));
     $encoded = json_encode($state, JSON_THROW_ON_ERROR);
     $GLOBALS['nativeChildCoverageMarkers'] = array('tree-controller-state-readback', 'tree-controller-output-readback');
+    if ($GLOBALS['scenario']['http'] ?? false) {
+        $state['response_headers'] = headers_list();
+        $encoded = json_encode($state, JSON_THROW_ON_ERROR);
+        $GLOBALS['nativeChildCoverageMarkers'][] = 'tree-controller-response-headers-readback';
+    }
     echo $encoded;
 });
 if (!mkdir($directory . '/include', 0700) || file_put_contents($directory . '/include/auth.php', '<?php') === false
