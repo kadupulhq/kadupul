@@ -41,12 +41,26 @@ if (in_array(getenv('ACK_FAIL'), array('incomplete', 'incomplete-recent'), true)
 if (getenv('ACK_FAIL') === 'incomplete-recent') {
     $ack_db->exec("UPDATE poller_output SET time='" . date('Y-m-d H:i:s') . "'");
 }
-function is_hexadecimal($value)
-{
-    return false;
-}
-foreach (array('SQL_NO_CACHE' => '', 'POLLER_VERBOSITY_HIGH' => 4) as $name => $value) {
+foreach (array('SQL_NO_CACHE' => '', 'POLLER_VERBOSITY_HIGH' => 4, 'POLLER_VERBOSITY_MEDIUM' => 3) as $name => $value) {
     define($name, $value);
+}
+require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
+$functionSource = file_get_contents(dirname(__DIR__, 2) . '/lib/functions.php');
+if (!is_string($functionSource)) throw new RuntimeException('Unable to read producer result helpers');
+foreach (['normalize_poller_multi_value_result', 'is_hexadecimal', 'strip_alpha', 'prepare_validate_result', 'array_rekey'] as $function) {
+    eval(test_php_function_source($functionSource, $function));
+}
+function dsv_log(...$arguments) {}
+if (str_starts_with(getenv('ACK_FAIL'), 'multi-')) {
+    $hexNames = getenv('ACK_FAIL') !== 'multi-bang';
+    $sample = $hexNames ? 'cd!12 ab!34' : 'users!14 load!0.42';
+    if (getenv('ACK_FAIL') === 'multi-php-hex-bang' && prepare_validate_result($sample) !== true) {
+        throw new RuntimeException('The actual PHP collector rejected a complete field list');
+    }
+    $query = $ack_db->prepare('UPDATE poller_output SET output=?,rrd_name=?');
+    $query->execute([$sample, '']);
+    $ack_db->exec("UPDATE poller_item SET rrd_num=2,rrd_name=''");
+    $GLOBALS['ack_multi_fields'] = $hexNames ? ['cd', 'ab'] : ['users', 'load'];
 }
 function cacti_sizeof($value)
 {
@@ -93,13 +107,6 @@ function get_data_source_path(...$args)
 {
     return getenv('ACK_FIXTURE') . '/user_1_1.rrd';
 }
-function array_rekey($rows, $key, $value)
-{
-    if (!$rows) {
-        return array();
-    }
-    return array_column($rows, $value, $key);
-}
 function dsstats_poller_output(...$args)
 {
     file_put_contents(getenv('ACK_FIXTURE') . '/dsstats_poller_output.jsonl', json_encode($args[count($args) - 1]) . PHP_EOL, FILE_APPEND);
@@ -135,6 +142,9 @@ function db_fetch_assoc_prepared($sql, $params = array())
         return getenv('ACK_FAIL') === 'field-failure' ? false : array(array('data_source_name' => 'value', 'data_name' => 'value'));
     }
     if (strpos($sql, 'poller_data_template_field_mappings') !== false) {
+        if (isset($GLOBALS['ack_multi_fields'])) {
+            return array_map(static fn($name) => ['keyname' => '0_' . $name, 'data_source_name' => $name], $GLOBALS['ack_multi_fields']);
+        }
         return array();
     }
     if (getenv('ACK_FAIL') === 'select' && (strpos($sql, 'FROM poller_output AS po') !== false || strpos($sql, 'FROM poller_output_realtime AS port') !== false)) {
