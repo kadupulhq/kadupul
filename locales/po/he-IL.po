@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-04 19:35-0700\n"
+"POT-Creation-Date: 2026-10-04 20:03-0700\n"
 "PO-Revision-Date: 2024-04-20 18:53-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -622,8 +622,8 @@ msgstr "תבנית"
 #: automation_devices.php:514 automation_devices.php:529
 #: automation_devices.php:544 automation_graph_rules.php:783
 #: automation_graph_rules.php:805 automation_tree_rules.php:831
-#: data_debug.php:1046 data_sources.php:1454 graph_templates_items.php:474
-#: graphs.php:1950 graphs_items.php:288 host.php:1592 host.php:1610
+#: data_debug.php:1046 data_sources.php:1454 graph_templates_items.php:445
+#: graphs.php:1950 graphs_items.php:260 host.php:1592 host.php:1610
 #: host.php:1627 host.php:1691 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3421 lib/auth.php:3470
@@ -642,8 +642,8 @@ msgstr "הכל"
 #: automation_networks.php:460 automation_tree_rules.php:959
 #: data_debug.php:1047 data_sources.php:999 data_sources.php:1455
 #: data_sources.php:1768 data_templates.php:1317 graph_templates_items.php:51
-#: graphs.php:1510 graphs.php:1519 graphs.php:1951 graphs_items.php:289
-#: graphs_items.php:409 host.php:255 host.php:1172 host.php:1183 host.php:1593
+#: graphs.php:1510 graphs.php:1519 graphs.php:1951 graphs_items.php:261
+#: graphs_items.php:381 host.php:255 host.php:1172 host.php:1183 host.php:1593
 #: host.php:1628 include/global_arrays.php:523 include/global_arrays.php:581
 #: include/global_arrays.php:673 include/global_arrays.php:885
 #: include/global_arrays.php:1740 include/global_form.php:574
@@ -3010,7 +3010,7 @@ msgid "Data Source repair received an invalid Data Source ID."
 msgstr "תיקון מקור הנתונים קיבל מזהה מקור נתונים לא חוקי."
 
 #: data_debug.php:452 data_debug.php:891 data_queries.php:716
-#: data_sources.php:1062 data_templates.php:718 graphs_items.php:405
+#: data_sources.php:1062 data_templates.php:718 graphs_items.php:377
 #: include/global_arrays.php:1005 include/global_form.php:960
 #: lib/api_aggregate.php:2338 lib/html.php:1295 rrdcheck.php:142
 msgid "Data Source"
@@ -3218,7 +3218,7 @@ msgstr "Rerun ניתוח"
 msgid "Check"
 msgstr "בדוק"
 
-#: data_debug.php:840 include/global_form.php:1018 lib/rrd.php:4089
+#: data_debug.php:840 include/global_form.php:1018 lib/rrd.php:4114
 #: utilities.php:793 utilities.php:810 utilities.php:3144
 msgid "Value"
 msgstr "ערך"
@@ -3805,7 +3805,7 @@ msgstr "שלבי הבישול/אפיה"
 
 #: data_source_profiles.php:822 graphs_new.php:449 include/global_form.php:284
 #: lib/html.php:592 lib/html_filter.php:55 lib/installer.php:2827
-#: lib/rrd.php:4131 utilities.php:861 utilities.php:1817
+#: lib/rrd.php:4156 utilities.php:861 utilities.php:1817
 msgid "Rows"
 msgstr "שורות"
 
@@ -4559,39 +4559,39 @@ msgstr "נתוני גרף"
 msgid "RRDtool Graph Syntax"
 msgstr "RRDtool גרף תחביר"
 
-#: graph_image.php:171 graph_json.php:208 graph_realtime.php:246
+#: graph_image.php:171 graph_json.php:208 graph_realtime.php:266
 #: lib/rrd.php:2518
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller עדיין לא רץ."
 
-#: graph_realtime.php:352
+#: graph_realtime.php:379
 msgid "Real-time has been disabled by your administrator."
 msgstr "בזמן אמת, מנהל המערכת שלך הושבת."
 
-#: graph_realtime.php:359
+#: graph_realtime.php:386
 msgid "The Image Cache Directory does not exist.  Please first create it and set permissions and then attempt to open another Real-time graph."
 msgstr "המדריך Cache Image אינו קיים. תחילה צור אותו והגדר הרשאות ולאחר מכן נסה לפתוח גרף נוסף בזמן אמת."
 
-#: graph_realtime.php:366
+#: graph_realtime.php:393
 msgid "The Image Cache Directory is not writable.  Please set permissions and then attempt to open another Real-time graph."
 msgstr "מדריך המטמון של התמונה אינו ניתן לכתיבה. הגדר הרשאות ולאחר מכן נסה לפתוח גרף נוסף בזמן אמת."
 
-#: graph_realtime.php:387
+#: graph_realtime.php:414
 #, fuzzy
 msgid "Kadupul Real-time Graphing"
 msgstr "Kadupul בזמן אמת גרפים"
 
-#: graph_realtime.php:434 lib/html_graph.php:220 lib/html_reports.php:107
+#: graph_realtime.php:461 lib/html_graph.php:220 lib/html_reports.php:107
 #: lib/html_tree.php:1051
 msgid "Thumbnails"
 msgstr "תמונות ממוזערות"
 
-#: graph_realtime.php:438
+#: graph_realtime.php:465
 #, php-format
 msgid "%d seconds left."
 msgstr "נותרו% d שניות."
 
-#: graph_realtime.php:454
+#: graph_realtime.php:481
 msgid " seconds left."
 msgstr "שניות נותרו."
 
@@ -4772,16 +4772,16 @@ msgstr "לכל היותר:"
 msgid "Min:"
 msgstr "מינימום:"
 
-#: graph_templates_items.php:430
+#: graph_templates_items.php:401
 #, php-format
 msgid "Graph Template Items [edit graph: %s]"
 msgstr "פריטי תבנית גרף [ערוך גרף: %s]"
 
-#: graph_templates_items.php:469
+#: graph_templates_items.php:440
 msgid "Data Template Filter"
 msgstr "פריט תבנית נתונים"
 
-#: graph_templates_items.php:475
+#: graph_templates_items.php:446
 msgid "This filter will limit the Data Sources visible in the Data Source dropdown."
 msgstr "מסנן זה יגביל את מקורות הנתונים הגלויים בתפריט הנפתח מקור נתונים."
 
@@ -5178,26 +5178,26 @@ msgstr "מזהה מסד הנתונים הפנימי עבור גרף זה. שימ
 msgid "Empty Graph"
 msgstr "גרף העתק"
 
-#: graphs_items.php:267
+#: graphs_items.php:239
 msgid "Data Sources [No Device]"
 msgstr "מקורות נתונים [ללא מכשיר]"
 
-#: graphs_items.php:269
+#: graphs_items.php:241
 #, php-format
 msgid "Data Sources [%s]"
 msgstr "מקורות נתונים [ %s]"
 
-#: graphs_items.php:284 include/global_arrays.php:1355
+#: graphs_items.php:256 include/global_arrays.php:1355
 #: include/global_form.php:1640
 msgid "Data Template"
 msgstr "תבנית נתונים"
 
-#: graphs_items.php:363
+#: graphs_items.php:335
 #, php-format
 msgid "Graph Items [graph: %s]"
 msgstr "גרף פריטים [גרף: %s]"
 
-#: graphs_items.php:406
+#: graphs_items.php:378
 msgid "Choose the Data Source to associate with this Graph Item."
 msgstr "בחר את מקור הנתונים כדי לקשר עם פריט תרשים זה."
 
@@ -5658,7 +5658,7 @@ msgstr "שחזור"
 
 #: host.php:1698 lib/api_automation.php:33 lib/auth.php:2604
 #: lib/clog_webapi.php:856 lib/html_utility.php:1339 lib/import.php:342
-#: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4107 lib/rrd.php:4119
+#: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4132 lib/rrd.php:4144
 #: lib/spikekill.php:284 package_import.php:522 package_import.php:600
 #: utilities.php:206 utilities.php:207 utilities.php:2691
 msgid "Unknown"
@@ -6680,7 +6680,7 @@ msgstr "הזמנה טבעית"
 msgid "Numeric Ordering"
 msgstr "הזמנה מספרית"
 
-#: include/global_arrays.php:952 lib/rrd.php:4055
+#: include/global_arrays.php:952 lib/rrd.php:4080
 msgid "Header"
 msgstr "כותרת"
 
@@ -8265,7 +8265,7 @@ msgstr "תדירות איסוף הנתונים ממקור הנתונים?"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "כמה זמן יכול להיות חסר נתונים לפני RRDtool רשומות נתונים לא ידועים. הגדל את הערך אם מקור הנתונים שלך אינו יציב וברצונך להעביר נתונים ישנים במקום להציג פערים בגרפים שלך. ערך זה מוכפל בפקטור X-Files כדי לקבוע את משך הזמן בפועל."
 
-#: include/global_form.php:226 lib/rrd.php:4134
+#: include/global_form.php:226 lib/rrd.php:4159
 msgid "X-Files Factor"
 msgstr "X- קבצים פקטור"
 
@@ -8827,7 +8827,7 @@ msgstr "אטימות / ערוץ אלפא"
 msgid "The opacity/alpha channel of the color."
 msgstr "ערוץ אטימות / אלפא של הצבע."
 
-#: include/global_form.php:989 lib/rrd.php:4130
+#: include/global_form.php:989 lib/rrd.php:4155
 msgid "Consolidation Function"
 msgstr "פונקציית איחוד"
 
@@ -12544,7 +12544,7 @@ msgstr "עקוף את הערך הזה"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1056 lib/html_reports.php:1721
-#: lib/html_reports.php:2061 lib/html_reports.php:2072 lib/rrd.php:4084
+#: lib/html_reports.php:2061 lib/html_reports.php:2072 lib/rrd.php:4109
 #: utilities.php:351 utilities.php:1468 utilities.php:3144
 msgid "Type"
 msgstr "סוג"
@@ -12680,7 +12680,7 @@ msgstr "שגיאה: טווחי IP בצורה של range1-range2 אינם נתמ�
 #: lib/api_device.php:1367 lib/api_device.php:1554 lib/api_device.php:1558
 #: lib/api_device.php:1594 lib/api_device.php:1598 lib/api_device.php:1643
 #: lib/api_device.php:1647 lib/api_device.php:1708 lib/api_device.php:1712
-#: lib/utility.php:738
+#: lib/utility.php:743
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
 msgstr "הסמן המרוחק %s מושבת, יהיה עליך לבצע FullSync ברגע שהוא יעלה שוב"
@@ -13539,7 +13539,7 @@ msgid "User Community"
 msgstr "קהילת המשתמשים"
 
 #: lib/functions.php:4003 lib/functions.php:4028 lib/html.php:2669
-#: lib/utility.php:1440
+#: lib/utility.php:1445
 msgid "Documentation"
 msgstr "תיעוד"
 
@@ -16266,7 +16266,7 @@ msgstr "דורש: Kadupul&gt; = %s"
 msgid "Not Stated"
 msgstr "לא צויין"
 
-#: lib/poller.php:1950 lib/poller.php:2195
+#: lib/poller.php:1991 lib/poller.php:2236
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 
@@ -16350,181 +16350,181 @@ msgstr ""
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "שגיאה: RRDfile %s לא ניתן לכתוב"
 
-#: lib/rrd.php:3844
+#: lib/rrd.php:3869
 #, fuzzy, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "גודל שלב RRDfile הנדרש הוא '{ 0 }' אך השלב הנצפה הוא '{ 1 }'"
 
-#: lib/rrd.php:3908
+#: lib/rrd.php:3933
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "סוג עבור מקור הנתונים &#39; %s&#39; צריך להיות &#39; %s&#39;"
 
-#: lib/rrd.php:3914
+#: lib/rrd.php:3939
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "פעימת הלב עבור מקור הנתונים &#39; %s&#39; צריכה להיות &#39; %s&#39;"
 
-#: lib/rrd.php:3926
+#: lib/rrd.php:3951
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "המינימום של RRD עבור מקור הנתונים &#39; %s&#39; צריך להיות &#39; %s&#39;"
 
-#: lib/rrd.php:3935
+#: lib/rrd.php:3960
 #, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "&#39; %s&#39; חסר בהגדרת Kadupul"
 
-#: lib/rrd.php:3949 lib/rrd.php:3950
+#: lib/rrd.php:3974 lib/rrd.php:3975
 #, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "ל- Kadupul RRA &#39; %s&#39; יש אותו CF / שלבים ( %s, %s) כ- &#39; %s&#39;"
 
-#: lib/rrd.php:3963 lib/rrd.php:3964
+#: lib/rrd.php:3988 lib/rrd.php:3989
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "קובץ ה- RRA &#39; %s&#39; כולל אותו CF / שלבים ( %s, %s) כ- &#39; %s&#39;"
 
-#: lib/rrd.php:3996
+#: lib/rrd.php:4021
 #, fuzzy, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr "ה - pdp_per_row של '{ 0 }' אינו חוקי עבור RRA '{ 1 }' צריך להיות '{ 2 }'. שקול למחוק ולאפשר ל - Kadupul ליצור מחדש RRDfile."
 
-#: lib/rrd.php:4000
+#: lib/rrd.php:4025
 #, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "XFF עבור Kadupul RRA id &#39; %s&#39; צריך להיות &#39; %s&#39;"
 
-#: lib/rrd.php:4004
+#: lib/rrd.php:4029
 #, fuzzy, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "מספר השורות עבור מזהה Kadupul RRA '{ 0 }' שגוי. מספר השורות הוא '{ 1 }' אבל צריך להיות '{ 2 }'"
 
-#: lib/rrd.php:4021
+#: lib/rrd.php:4046
 #, fuzzy, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "קובץ ה - RRA '{ 0 }' חסר Kadupul RRD הקיים"
 
-#: lib/rrd.php:4029
+#: lib/rrd.php:4054
 #, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "RRA &#39; %s&#39; חסר בהגדרת Kadupul"
 
-#: lib/rrd.php:4051
+#: lib/rrd.php:4076
 msgid "RRD File Information"
 msgstr "מידע על קובץ RRD"
 
-#: lib/rrd.php:4083
+#: lib/rrd.php:4108
 msgid "Data Source Items"
 msgstr "פריטי מקור נתונים"
 
-#: lib/rrd.php:4085
+#: lib/rrd.php:4110
 msgid "Minimal Heartbeat"
 msgstr "פעימות לב מינימליות"
 
-#: lib/rrd.php:4086
+#: lib/rrd.php:4111
 msgid "Min"
 msgstr "מינימום"
 
-#: lib/rrd.php:4087
+#: lib/rrd.php:4112
 msgid "Max"
 msgstr "מקסימום"
 
-#: lib/rrd.php:4088
+#: lib/rrd.php:4113
 msgid "Last DS"
 msgstr "DS האחרון"
 
-#: lib/rrd.php:4090
+#: lib/rrd.php:4115
 msgid "Unknown Sec"
 msgstr "Sec לא ידוע"
 
-#: lib/rrd.php:4129
+#: lib/rrd.php:4154
 msgid "Round Robin Archive"
 msgstr "סיבוב רובין ארכיון"
 
-#: lib/rrd.php:4132
+#: lib/rrd.php:4157
 msgid "Cur Row"
 msgstr "שורה"
 
-#: lib/rrd.php:4133
+#: lib/rrd.php:4158
 msgid "PDP per Row"
 msgstr "PDP לכל שורה"
 
-#: lib/rrd.php:4135
+#: lib/rrd.php:4160
 msgid "CDP Prep Value (0)"
 msgstr "CDP Prep Value (0)"
 
-#: lib/rrd.php:4136
+#: lib/rrd.php:4161
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP לא ידוע נקודות נתונים (0)"
 
-#: lib/rrd.php:4217
+#: lib/rrd.php:4242
 msgid "Errors Found"
 msgstr "אין %s"
 
-#: lib/rrd.php:4229
+#: lib/rrd.php:4254
 msgid "Optional Tuning Recommendations"
 msgstr "שדות מקור נתונים"
 
-#: lib/rrd.php:4254 lib/rrd.php:4257
+#: lib/rrd.php:4279 lib/rrd.php:4282
 #, php-format
 msgid "rename %s to %s"
 msgstr "שינוי שם %s ל - %s"
 
-#: lib/rrd.php:4349
+#: lib/rrd.php:4374
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "ERROR בעת כתיבת קובץ XML: %s"
 
-#: lib/rrd.php:4355
+#: lib/rrd.php:4380
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4361
+#: lib/rrd.php:4386
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "שגיאה: RRDfile %s לא ניתן לכתוב"
 
-#: lib/rrd.php:4382
+#: lib/rrd.php:4407
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "שגיאה בעת ניתוח XML של drd rdtool"
 
-#: lib/rrd.php:4418 lib/rrd.php:4437
+#: lib/rrd.php:4443 lib/rrd.php:4462
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "שגיאה בעת ניתוח XML של DDR"
 
-#: lib/rrd.php:4655
+#: lib/rrd.php:4680
 #, fuzzy, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRA (CF={ 0}, ROWS={ 1}, PDP_PER_ROW={ 2}, XFF={ 3}) הוסר מקובץ RRD"
 
-#: lib/rrd.php:4693
+#: lib/rrd.php:4718
 #, fuzzy, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF={ 0}, ROWS={ 1}, PDP_PER_ROW={ 2}, XFF={ 3}) הוספה לקובץ RRD"
 
-#: lib/rrd.php:4724 lib/rrd.php:4740
+#: lib/rrd.php:4749 lib/rrd.php:4765
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "לאתר אין גישה לכתיבה ל- %s, ייתכן שלא תוכל ליצור / לעדכן את RRD"
 
-#: lib/rrd.php:4736
+#: lib/rrd.php:4761
 msgid "(Custom)"
 msgstr "(מותאם אישית)"
 
-#: lib/rrd.php:4742
+#: lib/rrd.php:4767
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "פתיחת קובץ הנתונים נכשלה, ייתכן שהפוסטר עדיין לא פועל"
 
-#: lib/rrd.php:4745
+#: lib/rrd.php:4770
 msgid "RRA Folder"
 msgstr "תיקיית RRA"
 
-#: lib/rrd.php:4745
+#: lib/rrd.php:4770
 msgid "Root"
 msgstr "‫Root"
 
-#: lib/rrd.php:4859
+#: lib/rrd.php:4884
 msgid "Unknown RRDtool Error"
 msgstr "שגיאת RRDtool לא ידועה"
 
@@ -16549,8 +16549,8 @@ msgstr ""
 msgid "RRD storage configuration requires attention"
 msgstr ""
 
-#: lib/snmp.php:194 lib/snmp.php:294 lib/snmp.php:389 lib/snmp.php:734
-#: lib/snmp.php:749
+#: lib/snmp.php:226 lib/snmp.php:343 lib/snmp.php:455 lib/snmp.php:940
+#: lib/snmp.php:963
 #, fuzzy, php-format
 msgid "SNMP Command is: %s"
 msgstr "אפשרויות SNMP [עריכה: %s]"
@@ -16869,191 +16869,191 @@ msgstr "הגרף לא נוצר עבור %s עקב נתונים שגויים"
 msgid "NOTE: Graph not added for Data Query %s and index %s due to Data Source verification failure"
 msgstr "הערה: הגרף לא נוסף עבור שאילתת נתונים %s ואינדקס %s עקב כשל באימות מקור נתונים"
 
-#: lib/utility.php:1148
+#: lib/utility.php:1153
 msgid "MySQL 5.6+ and MariaDB 10.0+ are great releases, and are very good versions to choose. Make sure you run the very latest release though which fixes a long standing low level networking issue that was causing spine many issues with reliability."
 msgstr "MySQL 5.6 + ו MariaDB 10.0 + הם משחרר נהדר, והם גרסאות טובות מאוד לבחור. ודא שאתה מפעיל את המהדורה העדכנית ביותר על אף שתיקן ארוך עומד ברמה נמוכה בעיה ברשת שגורמת עמוד השדרה בעיות רבות עם אמינות."
 
-#: lib/utility.php:1160
+#: lib/utility.php:1165
 #, php-format
 msgid "It is STRONGLY recommended that you enable InnoDB in any %s version greater than 5.5.3."
 msgstr "מומלץ להפעיל את InnoDB בכל גרסת %s יותר מ -5.1."
 
-#: lib/utility.php:1173 lib/utility.php:1210
+#: lib/utility.php:1178 lib/utility.php:1215
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4_unicode_ci collation type as some characters take more than a single byte."
 msgstr "בעת שימוש ב- Kadupul עם שפות שאינן אנגלית, חשוב להשתמש בסוג utf8mb4_unicode_ci איסוף כמו כמה תווים לקחת יותר מאשר בית אחד."
 
-#: lib/utility.php:1179 lib/utility.php:1185 lib/utility.php:1216
-#: lib/utility.php:1222
+#: lib/utility.php:1184 lib/utility.php:1190 lib/utility.php:1221
+#: lib/utility.php:1227
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4 character set as some characters take more than a single byte."
 msgstr "בעת שימוש Kadupul עם שפות אחרות מאשר אנגלית, חשוב להשתמש בתו utf8mb4 להגדיר כמו תווים מסוימים לקחת יותר מאשר בתים בודדים."
 
-#: lib/utility.php:1198
+#: lib/utility.php:1203
 #, php-format
 msgid "It is recommended that you enable InnoDB in any %s version greater than 5.1."
 msgstr "מומלץ להפעיל את InnoDB בכל גרסת %s יותר מ -5.1."
 
-#: lib/utility.php:1231
+#: lib/utility.php:1236
 #, php-format
 msgid "Depending on the number of logins and use of spine data collector, %s will need many connections.  The calculation for spine is: total_connections = total_processes * (total_threads + script_servers + 1), then you must leave headroom for user connections, which will change depending on the number of concurrent login accounts."
 msgstr "בהתאם למספר כניסות ושימוש באספן נתונים בעמוד השדרה, %s יצטרכו חיבורים רבים. חישוב עמוד השדרה הוא: total_connections = total_processes * (total_threads + script_servers + 1), אז אתה חייב לעזוב את הראש עבור חיבורי משתמש, אשר ישתנה בהתאם למספר חשבונות כניסה בו זמנית."
 
-#: lib/utility.php:1236
+#: lib/utility.php:1241
 msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
 msgstr "שמירה על מטמון השולחן גדול יותר פירושו פחות קובץ לפתוח / לסגור פעולות בעת שימוש innodb_file_per_table."
 
-#: lib/utility.php:1241
+#: lib/utility.php:1246
 msgid "With Remote polling capabilities, large amounts of data will be synced from the main server to the remote pollers.  Therefore, keep this value at or above 16M."
 msgstr "עם יכולות הסריקה מרחוק, כמויות גדולות של נתונים יסונכרנו בין השרת הראשי לבין הסוקרים המרוחקים. לכן, שמור ערך זה מעל 16M או מעל."
 
-#: lib/utility.php:1247
+#: lib/utility.php:1252
 #, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
 msgstr "אם אתה משתמש Kadupul Booster ביצועים ובחירת זיכרון אחסון מנוע, אתה צריך להיות זהיר כדי לשטוף את חיץ Booster ביצועים לפני המערכת אוזל שטח שולחן הזיכרון. זה נעשה בשתי דרכים, הראשון הפחתת גודל עמודת הפלט שלך בדיוק את הגודל הנכון. עמודה זו נמצאת בטבלאות poller_output ו- poller_output_boost. הדבר השני שאתה יכול לעשות הוא להקצות זיכרון נוסף לטבלאות זיכרון. בחרנו באופן שרירותי ערך מומלץ של 10 %% מזיכרון המערכת, אך אם אתה משתמש בכונני דיסק SSD, או אם יש לך מערכת קטנה יותר, תוכל להתעלם מהמלצה זו או לבחור מנוע אחסון אחר. ייתכן שתראה את הצריכה הצפויה של טבלאות הביצועים Booster תחת Console -&gt; System Utilities -&gt; View Boost Status."
 
-#: lib/utility.php:1253
+#: lib/utility.php:1258
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
 msgstr "בעת ביצוע שאילתות משנה, כאשר יש גודל שולחן זמני גדול יותר, שמור את הטבלאות הזמניות בזיכרון."
 
-#: lib/utility.php:1259 lib/utility.php:1265
+#: lib/utility.php:1264 lib/utility.php:1270
 msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr ""
 
-#: lib/utility.php:1271
+#: lib/utility.php:1276
 #, php-format
 msgid "When using InnoDB storage it is important to keep your table spaces separate.  This makes managing the tables simpler for long time users of %s.  If you are running with this currently off, you can migrate to the per file storage by enabling the feature, and then running an alter statement on all InnoDB tables."
 msgstr "בעת שימוש באחסון InnoDB חשוב לשמור על מרווחי הטבלה נפרדים. זה עושה את ניהול טבלאות פשוט יותר עבור משתמשים זמן רב של %s. אם אתה פועל עם זה כרגע, אתה יכול להעביר לאחסון לפי קובץ על ידי הפעלת התכונה, ולאחר מכן מפעיל הצהרה לשנות על כל שולחנות InnoDB."
 
-#: lib/utility.php:1277
+#: lib/utility.php:1282
 msgid "When using innodb_file_per_table, it is important to set the innodb_file_format to Barracuda.  This setting will allow longer indexes important for certain Kadupul tables."
 msgstr "בעת שימוש innodb_file_per_table, חשוב להגדיר את innodb_file_format כדי Barracuda. הגדרה זו תאפשר אינדקסים ארוכים יותר חשוב עבור טבלאות Kadupul מסוימים."
 
-#: lib/utility.php:1283
+#: lib/utility.php:1288
 msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
 msgstr "אם לטבלאות שלכם יש אינדקסים גדולים מאוד, עליכם לפעול באמצעות Barracuda innodb_file_format ו- innodb_large_prefix שווה ל -1. אי ביצוע פעולה זו עלול לגרום לתוספים שלא יכולים ליצור טבלאות כראוי."
 
-#: lib/utility.php:1289
+#: lib/utility.php:1294
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
 msgstr "InnoDB תקיים כמה טבלאות ואינדקסים בזיכרון המערכת ככל האפשר. לכן, אתה צריך לעשות את innodb_buffer_pool גדול מספיק כדי להחזיק כמה שיותר שולחנות ואינדקס בזיכרון. בדיקת גודל הספרייה / var / lib / mysql / Kadupul תסייע בקביעת ערך זה. אנו ממליצים על 25 %% מהמערכת הכוללת של הזיכרון, אך הדרישות שלך ישתנו בהתאם לגודל המערכות שלך."
 
-#: lib/utility.php:1295
+#: lib/utility.php:1300
 #, fuzzy
 msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "הגדרות אלה צריכות להישאר פועלות אלא אם כן מופעי Kadupul שלך פועלים בשני ZFS או ב- FusionI / O, שלשניהם יש יומן פנימי כדי לאפשר קריסות מערכת פתאומיות. עם זאת, אם יש לך כוח טוב מאוד, והמערכות שלך לעתים נדירות נופלות ויש לך גיבויים, הפיכת הגדרה זו למצב OFF יכולה להביא לעלייה כמעט של 50% בביצועי מסד הנתונים."
 
-#: lib/utility.php:1300
+#: lib/utility.php:1305
 msgid "This is where metadata is stored. If you had a lot of tables, it would be useful to increase this."
 msgstr "זה המקום שבו מאוחסן מטה. אם היו לך הרבה שולחנות, זה יהיה שימושי כדי להגדיל את זה."
 
-#: lib/utility.php:1305
+#: lib/utility.php:1310
 msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "שאילתות רמאי לא צריך עבור מסד הנתונים ללכת לא מקוון לאחרים. להרוג שאילתות אלה לפני שהם הורגים את המערכת."
 
-#: lib/utility.php:1310
+#: lib/utility.php:1315
 msgid "Maximum I/O performance happens when you use the O_DIRECT method to flush pages."
 msgstr "ביצועי I / O מקסימליים מתרחשים כאשר אתה משתמש בשיטה O_DIRECT לשטיפת דפים."
 
-#: lib/utility.php:1320
+#: lib/utility.php:1325
 #, php-format
 msgid "Setting this value to 2 means that you will flush all transactions every second rather than at commit.  This allows %s to perform writing less often."
 msgstr "הגדרת ערך זה ל -2 פירושה שתשטוף את כל העסקאות בכל שנייה במקום בהתחייבות. זה מאפשר %s לבצע כתיבה בתדירות נמוכה יותר."
 
-#: lib/utility.php:1325
+#: lib/utility.php:1330
 msgid "With modern SSD type storage, having multiple io threads is advantageous for applications with high io characteristics."
 msgstr "עם אחסון מסוג SSD מודרני, בעל מספר רב של שרשורים io הוא יתרון עבור יישומים עם מאפיינים io גבוהה."
 
-#: lib/utility.php:1333 lib/utility.php:1375
+#: lib/utility.php:1338 lib/utility.php:1380
 #, php-format
 msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "החל מ- %s %s, באפשרותך לשלוט בתדירות של %s בעסקאות לדיסק. ברירת המחדל היא שנייה אחת, אך במערכות קלט / פלט גבוהות לערך גדול מ -1 ניתן לאפשר דיסק I / O להיות רציף יותר"
 
-#: lib/utility.php:1338
+#: lib/utility.php:1343
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "עם אחסון מסוג SSD המודרני, לאחר מספר פתילים io לקרוא הוא יתרון עבור יישומים עם מאפיינים io גבוהה."
 
-#: lib/utility.php:1343
+#: lib/utility.php:1348
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "עם אחסון מסוג SSD מודרני, בעל מספר רב של חוטי כתיבה io הוא יתרון עבור יישומים עם מאפיינים io גבוהה."
 
-#: lib/utility.php:1349
+#: lib/utility.php:1354
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
 msgstr "%s יחלק את innodb_buffer_pool לאזורי זיכרון כדי לשפר את הביצועים. הערך המרבי הוא 64. כאשר innodb_buffer_pool שלך הוא פחות מ 1GB, אתה צריך להשתמש בגודל הבריכה מחולק 128MB. המשך להשתמש במשוואה זו upto מקסימום של 64."
 
-#: lib/utility.php:1349
+#: lib/utility.php:1354
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s יחלק את innodb_buffer_pool לאזורי זיכרון כדי לשפר את הביצועים. הערך המרבי הוא 64. כאשר innodb_buffer_pool שלך הוא פחות מ 1GB, אתה צריך להשתמש בגודל הבריכה מחולק 128MB. המשך להשתמש במשוואה זו upto מקסימום של 64."
 
-#: lib/utility.php:1355 lib/utility.php:1391
+#: lib/utility.php:1360 lib/utility.php:1396
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
 msgstr "אם יש לך דיסקים SSD, השתמש הצעה זו. אם יש לך כוננים קשיחים פיזיים, השתמש 200 * מספר הכוננים הפעילים במערך. אם משתמשים ב- NVMe או ב- PCIe Flash, ניתן להשתמש במספרים גדולים בהרבה עד 100000."
 
-#: lib/utility.php:1361 lib/utility.php:1397
+#: lib/utility.php:1366 lib/utility.php:1402
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 2000 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 200000 can be used."
 msgstr "אם יש לך דיסקים SSD, השתמש הצעה זו. אם יש לך כוננים קשיחים פיזיים, השתמש ב- 2000 * מספר הכוננים הפעילים במערך. אם באמצעות NVMe או PCIe Flash, מספרים גדולים בהרבה כמו 200000 ניתן להשתמש."
 
-#: lib/utility.php:1367 lib/utility.php:1403
+#: lib/utility.php:1372 lib/utility.php:1408
 msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this setting."
 msgstr "אם יש לך דיסקים SSD, השתמש הצעה זו. אחרת, אל תגדיר הגדרה זו."
 
-#: lib/utility.php:1380
+#: lib/utility.php:1385
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics."
 msgstr "עם אחסון מסוג SSD המודרני, לאחר מספר פתילים io לקרוא הוא יתרון עבור יישומים עם מאפיינים io גבוהה."
 
-#: lib/utility.php:1385
+#: lib/utility.php:1390
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics."
 msgstr "עם אחסון מסוג SSD מודרני, בעל מספר רב של חוטי כתיבה io הוא יתרון עבור יישומים עם מאפיינים io גבוהה."
 
-#: lib/utility.php:1416
+#: lib/utility.php:1421
 msgid "When using MariaDB 10.2.4 and above, this setting should be off if atomic writes are enabled.  Therefore, please enable atomic writes instead of the double write buffer as it will increase performance."
 msgstr "בעת שימוש ב- MariaDB 10.2.4 ומעלה, הגדרה זו צריכה להיות כבויה אם כתיבה אטומית מופעלת. לכן, אנא הפעל כתיבה אטומית במקום מאגר הכתיבה הכפול מכיוון שהוא יגביר את הביצועים."
 
-#: lib/utility.php:1423
+#: lib/utility.php:1428
 msgid "When using MariaDB 10.2.4 and above, you can use atomic writes over the doublewrite buffer to increase performance."
 msgstr "בעת שימוש ב- MariaDB 10.2.4 ומעלה, באפשרותך להשתמש בכתיבות אטומיות מעל המאגר הכפול כדי להגדיל את הביצועים."
 
-#: lib/utility.php:1440
+#: lib/utility.php:1445
 #, php-format
 msgid "%s Tuning"
 msgstr "%s כוונון"
 
-#: lib/utility.php:1440
+#: lib/utility.php:1445
 msgid "Note: Many changes below require a database restart"
 msgstr "הערה: שינויים רבים להלן דורשים הפעלה מחדש של מסד נתונים"
 
-#: lib/utility.php:1448
+#: lib/utility.php:1453
 msgid "Variable"
 msgstr "משתנה"
 
-#: lib/utility.php:1449
+#: lib/utility.php:1454
 msgid "Current Value"
 msgstr "ערך נוכחי"
 
-#: lib/utility.php:1451
+#: lib/utility.php:1456
 msgid "Recommended Value"
 msgstr "ערך מומלץ"
 
-#: lib/utility.php:1452
+#: lib/utility.php:1457
 msgid "Comments"
 msgstr "תגובות"
 
-#: lib/utility.php:2046
+#: lib/utility.php:2051
 #, php-format
 msgid "PHP %s is the minimum version"
 msgstr "PHP %s הוא הגרסה המיטבית"
 
-#: lib/utility.php:2048
+#: lib/utility.php:2053
 #, php-format
 msgid "A minimum of %s memory limit"
 msgstr "מינימום של %s MB זיכרון מגבלה"
 
-#: lib/utility.php:2050
+#: lib/utility.php:2055
 #, php-format
 msgid "A minimum of %s m execution time"
 msgstr "זמן ביצוע מינימלי של %s מ'"
 
-#: lib/utility.php:2052
+#: lib/utility.php:2057
 msgid "A valid timezone that matches MySQL and the system"
 msgstr "אזור זמן חוקי התואם את MySQL ואת המערכת"
 

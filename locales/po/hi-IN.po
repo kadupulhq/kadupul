@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-04 19:35-0700\n"
+"POT-Creation-Date: 2026-10-04 20:03-0700\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -622,8 +622,8 @@ msgstr "खाका"
 #: automation_devices.php:514 automation_devices.php:529
 #: automation_devices.php:544 automation_graph_rules.php:783
 #: automation_graph_rules.php:805 automation_tree_rules.php:831
-#: data_debug.php:1046 data_sources.php:1454 graph_templates_items.php:474
-#: graphs.php:1950 graphs_items.php:288 host.php:1592 host.php:1610
+#: data_debug.php:1046 data_sources.php:1454 graph_templates_items.php:445
+#: graphs.php:1950 graphs_items.php:260 host.php:1592 host.php:1610
 #: host.php:1627 host.php:1691 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3421 lib/auth.php:3470
@@ -642,8 +642,8 @@ msgstr "कोई भी@ label"
 #: automation_networks.php:460 automation_tree_rules.php:959
 #: data_debug.php:1047 data_sources.php:999 data_sources.php:1455
 #: data_sources.php:1768 data_templates.php:1317 graph_templates_items.php:51
-#: graphs.php:1510 graphs.php:1519 graphs.php:1951 graphs_items.php:289
-#: graphs_items.php:409 host.php:255 host.php:1172 host.php:1183 host.php:1593
+#: graphs.php:1510 graphs.php:1519 graphs.php:1951 graphs_items.php:261
+#: graphs_items.php:381 host.php:255 host.php:1172 host.php:1183 host.php:1593
 #: host.php:1628 include/global_arrays.php:523 include/global_arrays.php:581
 #: include/global_arrays.php:673 include/global_arrays.php:885
 #: include/global_arrays.php:1740 include/global_form.php:574
@@ -2997,7 +2997,7 @@ msgid "Data Source repair received an invalid Data Source ID."
 msgstr "डेटा स्रोत की मरम्मत को एक अमान्य डेटा स्रोत आईडी प्राप्त हुआ।"
 
 #: data_debug.php:452 data_debug.php:891 data_queries.php:716
-#: data_sources.php:1062 data_templates.php:718 graphs_items.php:405
+#: data_sources.php:1062 data_templates.php:718 graphs_items.php:377
 #: include/global_arrays.php:1005 include/global_form.php:960
 #: lib/api_aggregate.php:2338 lib/html.php:1295 rrdcheck.php:142
 msgid "Data Source"
@@ -3205,7 +3205,7 @@ msgstr "रेरन विश्लेषण"
 msgid "Check"
 msgstr "जाँच करें"
 
-#: data_debug.php:840 include/global_form.php:1018 lib/rrd.php:4089
+#: data_debug.php:840 include/global_form.php:1018 lib/rrd.php:4114
 #: utilities.php:793 utilities.php:810 utilities.php:3144
 msgid "Value"
 msgstr "मूल्य"
@@ -3773,7 +3773,7 @@ msgstr "चरण"
 
 #: data_source_profiles.php:822 graphs_new.php:449 include/global_form.php:284
 #: lib/html.php:592 lib/html_filter.php:55 lib/installer.php:2827
-#: lib/rrd.php:4131 utilities.php:861 utilities.php:1817
+#: lib/rrd.php:4156 utilities.php:861 utilities.php:1817
 msgid "Rows"
 msgstr "पंक्तियाँ"
 
@@ -4501,40 +4501,40 @@ msgstr "ग्राफ डेटा"
 msgid "RRDtool Graph Syntax"
 msgstr "RRDtool ग्राफ़ सिंटैक्स"
 
-#: graph_image.php:171 graph_json.php:208 graph_realtime.php:246
+#: graph_image.php:171 graph_json.php:208 graph_realtime.php:266
 #: lib/rrd.php:2518
 #, fuzzy
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul पोलर अभी तक नहीं चला है।"
 
-#: graph_realtime.php:352
+#: graph_realtime.php:379
 msgid "Real-time has been disabled by your administrator."
 msgstr "वास्तविक-समय को आपके व्यवस्थापक द्वारा अक्षम कर दिया गया है।"
 
-#: graph_realtime.php:359
+#: graph_realtime.php:386
 msgid "The Image Cache Directory does not exist.  Please first create it and set permissions and then attempt to open another Real-time graph."
 msgstr "छवि कैश निर्देशिका मौजूद नहीं है। कृपया इसे पहले बनाएं और अनुमतियां सेट करें और फिर एक और रीयल-टाइम ग्राफ़ खोलने का प्रयास करें।"
 
-#: graph_realtime.php:366
+#: graph_realtime.php:393
 msgid "The Image Cache Directory is not writable.  Please set permissions and then attempt to open another Real-time graph."
 msgstr "छवि कैश निर्देशिका लेखन योग्य नहीं है। कृपया अनुमतियां सेट करें और फिर अन्य रीयल-टाइम ग्राफ़ खोलने का प्रयास करें।"
 
-#: graph_realtime.php:387
+#: graph_realtime.php:414
 #, fuzzy
 msgid "Kadupul Real-time Graphing"
 msgstr "Kadupul वास्तविक समय रेखांकन"
 
-#: graph_realtime.php:434 lib/html_graph.php:220 lib/html_reports.php:107
+#: graph_realtime.php:461 lib/html_graph.php:220 lib/html_reports.php:107
 #: lib/html_tree.php:1051
 msgid "Thumbnails"
 msgstr "थम्बनेल्स"
 
-#: graph_realtime.php:438
+#: graph_realtime.php:465
 #, php-format
 msgid "%d seconds left."
 msgstr "% d सेकंड बचे हैं।"
 
-#: graph_realtime.php:454
+#: graph_realtime.php:481
 msgid " seconds left."
 msgstr "सेकंड बचे हैं।"
 
@@ -4715,16 +4715,16 @@ msgstr "अधि.:"
 msgid "Min:"
 msgstr "न्यून.:"
 
-#: graph_templates_items.php:430
+#: graph_templates_items.php:401
 #, php-format
 msgid "Graph Template Items [edit graph: %s]"
 msgstr "ग्राफ टेम्पलेट आइटम [ग्राफ संपादित करें: %s]"
 
-#: graph_templates_items.php:469
+#: graph_templates_items.php:440
 msgid "Data Template Filter"
 msgstr "डेटा टेम्प्लेट आइटम"
 
-#: graph_templates_items.php:475
+#: graph_templates_items.php:446
 msgid "This filter will limit the Data Sources visible in the Data Source dropdown."
 msgstr "यह फ़िल्टर डेटा स्रोत ड्रॉपडाउन में दिखाई देने वाले डेटा स्रोतों को सीमित कर देगा।"
 
@@ -5121,26 +5121,26 @@ msgstr "इस ग्राफ के लिए आंतरिक डेटा�
 msgid "Empty Graph"
 msgstr "ग्राफ की प्रतिलिपि बनाएँ"
 
-#: graphs_items.php:267
+#: graphs_items.php:239
 msgid "Data Sources [No Device]"
 msgstr "डेटा स्रोत [कोई उपकरण नहीं]"
 
-#: graphs_items.php:269
+#: graphs_items.php:241
 #, php-format
 msgid "Data Sources [%s]"
 msgstr "डेटा स्रोत [ %s]"
 
-#: graphs_items.php:284 include/global_arrays.php:1355
+#: graphs_items.php:256 include/global_arrays.php:1355
 #: include/global_form.php:1640
 msgid "Data Template"
 msgstr "डेटा टेम्प्लेट"
 
-#: graphs_items.php:363
+#: graphs_items.php:335
 #, php-format
 msgid "Graph Items [graph: %s]"
 msgstr "ग्राफ आइटम [ग्राफ: %s]"
 
-#: graphs_items.php:406
+#: graphs_items.php:378
 msgid "Choose the Data Source to associate with this Graph Item."
 msgstr "इस ग्राफ़ आइटम के साथ संबद्ध करने के लिए डेटा स्रोत चुनें।"
 
@@ -5601,7 +5601,7 @@ msgstr "पुन: प्राप्त करना"
 
 #: host.php:1698 lib/api_automation.php:33 lib/auth.php:2604
 #: lib/clog_webapi.php:856 lib/html_utility.php:1339 lib/import.php:342
-#: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4107 lib/rrd.php:4119
+#: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4132 lib/rrd.php:4144
 #: lib/spikekill.php:284 package_import.php:522 package_import.php:600
 #: utilities.php:206 utilities.php:207 utilities.php:2691
 msgid "Unknown"
@@ -6626,7 +6626,7 @@ msgstr "प्राकृतिक आदेश"
 msgid "Numeric Ordering"
 msgstr "न्यूमेरिक ऑर्डरिंग"
 
-#: include/global_arrays.php:952 lib/rrd.php:4055
+#: include/global_arrays.php:952 lib/rrd.php:4080
 msgid "Header"
 msgstr "हेडर"
 
@@ -8212,7 +8212,7 @@ msgstr "वह आवृत्ति जो डेटा डेटा स्र�
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "RRDtool अज्ञात डेटा रिकॉर्ड करने से पहले कितनी देर तक डेटा गायब हो सकता है। यदि आपका डेटा स्रोत अस्थिर है और आप अपने ग्राफ़ में अंतराल दिखाने के बजाय पुराने डेटा को ले जाना चाहते हैं, तो यह मान बढ़ाएँ वास्तविक समय की वास्तविक मात्रा निर्धारित करने के लिए यह मान X-Files फैक्टर से गुणा किया जाता है।"
 
-#: include/global_form.php:226 lib/rrd.php:4134
+#: include/global_form.php:226 lib/rrd.php:4159
 msgid "X-Files Factor"
 msgstr "एक्स-फाइल्स फैक्टर"
 
@@ -8775,7 +8775,7 @@ msgstr "अपारदर्शिता / अल्फा चैनल"
 msgid "The opacity/alpha channel of the color."
 msgstr "रंग की अस्पष्टता / अल्फा चैनल।"
 
-#: include/global_form.php:989 lib/rrd.php:4130
+#: include/global_form.php:989 lib/rrd.php:4155
 msgid "Consolidation Function"
 msgstr "समेकन समारोह"
 
@@ -12515,7 +12515,7 @@ msgstr "इस मान को ओवरराइड करें"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1056 lib/html_reports.php:1721
-#: lib/html_reports.php:2061 lib/html_reports.php:2072 lib/rrd.php:4084
+#: lib/html_reports.php:2061 lib/html_reports.php:2072 lib/rrd.php:4109
 #: utilities.php:351 utilities.php:1468 utilities.php:3144
 msgid "Type"
 msgstr "प्रकार"
@@ -12651,7 +12651,7 @@ msgstr "त्रुटि: श्रेणी1-श्रेणी2 के र�
 #: lib/api_device.php:1367 lib/api_device.php:1554 lib/api_device.php:1558
 #: lib/api_device.php:1594 lib/api_device.php:1598 lib/api_device.php:1643
 #: lib/api_device.php:1647 lib/api_device.php:1708 lib/api_device.php:1712
-#: lib/utility.php:738
+#: lib/utility.php:743
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
 msgstr "रिमोट पोलर %s नीचे है, आपको एक बार फिर से ऊपर होने के बाद फुलसिंक करना होगा"
@@ -13510,7 +13510,7 @@ msgid "User Community"
 msgstr "उपयोगकर्ता समुदाय"
 
 #: lib/functions.php:4003 lib/functions.php:4028 lib/html.php:2669
-#: lib/utility.php:1440
+#: lib/utility.php:1445
 msgid "Documentation"
 msgstr "प्रलेखन"
 
@@ -16262,7 +16262,7 @@ msgstr "आवश्यकता है: Kadupul&gt; = %s"
 msgid "Not Stated"
 msgstr "नहीं बताया हुआ"
 
-#: lib/poller.php:1950 lib/poller.php:2195
+#: lib/poller.php:1991 lib/poller.php:2236
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 
@@ -16346,181 +16346,181 @@ msgstr ""
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "त्रुटि: RRDfile %s लिखने योग्य नहीं है"
 
-#: lib/rrd.php:3844
+#: lib/rrd.php:3869
 #, fuzzy, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "आवश्यक RRDfile चरण का आकार '{ 0 }' है, लेकिन देखा गया चरण '{ 1 }' है"
 
-#: lib/rrd.php:3908
+#: lib/rrd.php:3933
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "डेटा स्रोत &#39; %s&#39; के लिए टाइप &#39; %s&#39; होना चाहिए"
 
-#: lib/rrd.php:3914
+#: lib/rrd.php:3939
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "डेटा स्रोत &#39; %s&#39; के लिए दिल की धड़कन &#39; %s&#39; होनी चाहिए"
 
-#: lib/rrd.php:3926
+#: lib/rrd.php:3951
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "डेटा स्रोत &#39; %s&#39; के लिए RRD न्यूनतम &#39; %s&#39; होना चाहिए"
 
-#: lib/rrd.php:3935
+#: lib/rrd.php:3960
 #, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "Kadupul की परिभाषा में डीएस &#39; %s&#39; गायब है"
 
-#: lib/rrd.php:3949 lib/rrd.php:3950
+#: lib/rrd.php:3974 lib/rrd.php:3975
 #, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Kadupul RRA &#39; %s&#39; में &#39; %s&#39; के समान CF / चरण ( %s, %s) हैं"
 
-#: lib/rrd.php:3963 lib/rrd.php:3964
+#: lib/rrd.php:3988 lib/rrd.php:3989
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "फ़ाइल RRA &#39; %s&#39; में &#39; %s&#39; के समान CF / चरण ( %s, %s) है"
 
-#: lib/rrd.php:3996
+#: lib/rrd.php:4021
 #, fuzzy, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr "'{ 0 }' का pdp_per_row RRA '{ 1 }' के लिए अमान्य है '{ 2 }' होना चाहिए। Kadupul को RRDfile को फिर से बनाने के लिए हटाने और अनुमति देने पर विचार करें।"
 
-#: lib/rrd.php:4000
+#: lib/rrd.php:4025
 #, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "Kadupul RRA आईडी &#39; %s&#39; के लिए XFF &#39; %s&#39; होना चाहिए"
 
-#: lib/rrd.php:4004
+#: lib/rrd.php:4029
 #, fuzzy, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Kadupul RRA id '{ 0 }' के लिए पंक्तियों की संख्या गलत है। पंक्तियों की संख्या '{ 1 }' है लेकिन '{ 2 }' होनी चाहिए"
 
-#: lib/rrd.php:4021
+#: lib/rrd.php:4046
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "आरआरडीएफाइल में आरआरए &#39; %s&#39; गायब है"
 
-#: lib/rrd.php:4029
+#: lib/rrd.php:4054
 #, fuzzy, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "Ract &#39; %s&#39; Kadupul परिभाषा में गायब है"
 
-#: lib/rrd.php:4051
+#: lib/rrd.php:4076
 msgid "RRD File Information"
 msgstr "आरआरडी फ़ाइल जानकारी"
 
-#: lib/rrd.php:4083
+#: lib/rrd.php:4108
 msgid "Data Source Items"
 msgstr "डेटा स्रोत आइटम"
 
-#: lib/rrd.php:4085
+#: lib/rrd.php:4110
 msgid "Minimal Heartbeat"
 msgstr "मिनिमल हार्टबीट"
 
-#: lib/rrd.php:4086
+#: lib/rrd.php:4111
 msgid "Min"
 msgstr "कम से कम"
 
-#: lib/rrd.php:4087
+#: lib/rrd.php:4112
 msgid "Max"
 msgstr "अधिकतम"
 
-#: lib/rrd.php:4088
+#: lib/rrd.php:4113
 msgid "Last DS"
 msgstr "अंतिम डी.एस."
 
-#: lib/rrd.php:4090
+#: lib/rrd.php:4115
 msgid "Unknown Sec"
 msgstr "अज्ञात सेक"
 
-#: lib/rrd.php:4129
+#: lib/rrd.php:4154
 msgid "Round Robin Archive"
 msgstr "राउंड रॉबिन आर्काइव"
 
-#: lib/rrd.php:4132
+#: lib/rrd.php:4157
 msgid "Cur Row"
 msgstr "कर रो"
 
-#: lib/rrd.php:4133
+#: lib/rrd.php:4158
 msgid "PDP per Row"
 msgstr "प्रति पंक्ति पीडीपी"
 
-#: lib/rrd.php:4135
+#: lib/rrd.php:4160
 msgid "CDP Prep Value (0)"
 msgstr "सीडीपी तैयारी मूल्य (0)"
 
-#: lib/rrd.php:4136
+#: lib/rrd.php:4161
 msgid "CDP Unknown Data points (0)"
 msgstr "सीडीपी अज्ञात डेटा अंक (0)"
 
-#: lib/rrd.php:4217
+#: lib/rrd.php:4242
 msgid "Errors Found"
 msgstr "कोई %s मिला"
 
-#: lib/rrd.php:4229
+#: lib/rrd.php:4254
 msgid "Optional Tuning Recommendations"
 msgstr "डेटा स्रोत फ़ील्ड"
 
-#: lib/rrd.php:4254 lib/rrd.php:4257
+#: lib/rrd.php:4279 lib/rrd.php:4282
 #, php-format
 msgid "rename %s to %s"
 msgstr "%s का नाम बदलकर %s करें"
 
-#: lib/rrd.php:4349
+#: lib/rrd.php:4374
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "XML फ़ाइल लिखते समय ERROR: %s"
 
-#: lib/rrd.php:4355
+#: lib/rrd.php:4380
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4361
+#: lib/rrd.php:4386
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "त्रुटि: RRDfile %s लिखने योग्य नहीं है"
 
-#: lib/rrd.php:4382
+#: lib/rrd.php:4407
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "Rrdtool डंप के XML को पार्स करते समय त्रुटि"
 
-#: lib/rrd.php:4418 lib/rrd.php:4437
+#: lib/rrd.php:4443 lib/rrd.php:4462
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "RRDtool डंप के XML को पार्स करते समय त्रुटि"
 
-#: lib/rrd.php:4655
+#: lib/rrd.php:4680
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "आरआरडी फ़ाइल से हटाए गए RRA (CF = %s, ROWS =% d, PDP_PER_ROW =% d, XFF =% 1.2f)"
 
-#: lib/rrd.php:4693
+#: lib/rrd.php:4718
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_ROW =% d, XFF =% 1.2f) RRD फाइल में जोड़"
 
-#: lib/rrd.php:4724 lib/rrd.php:4740
+#: lib/rrd.php:4749 lib/rrd.php:4765
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "वेबसाइट में %s तक लिखने की सुविधा नहीं है, RRDs बनाने / अपडेट करने में असमर्थ हो सकता है"
 
-#: lib/rrd.php:4736
+#: lib/rrd.php:4761
 msgid "(Custom)"
 msgstr "(अनुकूलित)"
 
-#: lib/rrd.php:4742
+#: lib/rrd.php:4767
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "डेटा फ़ाइल खोलने में विफल, पराग अभी तक नहीं चला है"
 
-#: lib/rrd.php:4745
+#: lib/rrd.php:4770
 msgid "RRA Folder"
 msgstr "आरआरए फोल्डर"
 
-#: lib/rrd.php:4745
+#: lib/rrd.php:4770
 msgid "Root"
 msgstr "जड़"
 
-#: lib/rrd.php:4859
+#: lib/rrd.php:4884
 msgid "Unknown RRDtool Error"
 msgstr "अज्ञात RRDtool त्रुटि"
 
@@ -16545,8 +16545,8 @@ msgstr ""
 msgid "RRD storage configuration requires attention"
 msgstr ""
 
-#: lib/snmp.php:194 lib/snmp.php:294 lib/snmp.php:389 lib/snmp.php:734
-#: lib/snmp.php:749
+#: lib/snmp.php:226 lib/snmp.php:343 lib/snmp.php:455 lib/snmp.php:940
+#: lib/snmp.php:963
 #, fuzzy, php-format
 msgid "SNMP Command is: %s"
 msgstr "SNMP विकल्प [संपादित करें: %s]"
@@ -16865,193 +16865,193 @@ msgstr "खराब डेटा के कारण %s के लिए ग्
 msgid "NOTE: Graph not added for Data Query %s and index %s due to Data Source verification failure"
 msgstr "नोट: डेटा स्रोत सत्यापन विफलता के कारण डेटा क्वेरी %s और इंडेक्स %s के लिए ग्राफ़ नहीं जोड़ा गया"
 
-#: lib/utility.php:1148
+#: lib/utility.php:1153
 msgid "MySQL 5.6+ and MariaDB 10.0+ are great releases, and are very good versions to choose. Make sure you run the very latest release though which fixes a long standing low level networking issue that was causing spine many issues with reliability."
 msgstr "MySQL 5.6+ और MariaDB 10.0+ महान रिलीज़ हैं, और चुनने के लिए बहुत अच्छे संस्करण हैं। सुनिश्चित करें कि आप बहुत नवीनतम रिलीज़ चलाते हैं, जो लंबे समय तक निचले स्तर की नेटवर्किंग समस्या को ठीक करता है जो विश्वसनीयता के साथ कई मुद्दों को जन्म दे रहा था।"
 
-#: lib/utility.php:1160
+#: lib/utility.php:1165
 #, php-format
 msgid "It is STRONGLY recommended that you enable InnoDB in any %s version greater than 5.5.3."
 msgstr "यह अनुशंसा की जाती है कि आप InnoDB को 5.1 से अधिक किसी भी %s संस्करण में सक्षम करें"
 
-#: lib/utility.php:1173 lib/utility.php:1210
+#: lib/utility.php:1178 lib/utility.php:1215
 #, fuzzy
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4_unicode_ci collation type as some characters take more than a single byte."
 msgstr "अंग्रेजी के अलावा अन्य भाषाओं के साथ Kadupul का उपयोग करते समय, utf8mb4_unicode_ci कोलेशन प्रकार का उपयोग करना महत्वपूर्ण है क्योंकि कुछ वर्ण एक से अधिक बाइट लेते हैं।"
 
-#: lib/utility.php:1179 lib/utility.php:1185 lib/utility.php:1216
-#: lib/utility.php:1222
+#: lib/utility.php:1184 lib/utility.php:1190 lib/utility.php:1221
+#: lib/utility.php:1227
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4 character set as some characters take more than a single byte."
 msgstr "अंग्रेजी के अलावा अन्य भाषाओं के साथ Kadupul का उपयोग करते समय, utf8mb4 वर्ण सेट का उपयोग करना महत्वपूर्ण है क्योंकि कुछ वर्ण एक से अधिक बाइट लेते हैं।"
 
-#: lib/utility.php:1198
+#: lib/utility.php:1203
 #, php-format
 msgid "It is recommended that you enable InnoDB in any %s version greater than 5.1."
 msgstr "यह अनुशंसा की जाती है कि आप InnoDB को 5.1 से अधिक किसी भी %s संस्करण में सक्षम करें"
 
-#: lib/utility.php:1231
+#: lib/utility.php:1236
 #, php-format
 msgid "Depending on the number of logins and use of spine data collector, %s will need many connections.  The calculation for spine is: total_connections = total_processes * (total_threads + script_servers + 1), then you must leave headroom for user connections, which will change depending on the number of concurrent login accounts."
 msgstr "लॉगइन की संख्या और रीढ़ डेटा कलेक्टर के उपयोग के आधार पर, %s को कई कनेक्शनों की आवश्यकता होगी। रीढ़ के लिए गणना है: Total_connections = total_processes * (total_threads + script_servers + 1), फिर आपको उपयोगकर्ता कनेक्शन के लिए हेडरूम छोड़ना होगा, जो समवर्ती लॉगिन खातों की संख्या के आधार पर बदल जाएगा।"
 
-#: lib/utility.php:1236
+#: lib/utility.php:1241
 msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
 msgstr "टेबल कैश को बड़ा रखने का मतलब है मासूम_फाइल_पर_टेबल का उपयोग करते समय कम फ़ाइल खुला / बंद संचालन।"
 
-#: lib/utility.php:1241
+#: lib/utility.php:1246
 msgid "With Remote polling capabilities, large amounts of data will be synced from the main server to the remote pollers.  Therefore, keep this value at or above 16M."
 msgstr "दूरस्थ मतदान क्षमताओं के साथ, बड़ी मात्रा में डेटा मुख्य सर्वर से दूरस्थ मतदाताओं के लिए सिंक किया जाएगा। इसलिए, यह मान 16M या उससे अधिक रखें।"
 
-#: lib/utility.php:1247
+#: lib/utility.php:1252
 #, fuzzy, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
 msgstr "अगर Kadupul परफॉर्मेंस बूस्टर का उपयोग कर रहे हैं और मेमोरी स्टोरेज इंजन का चयन कर रहे हैं, तो आपको सिस्टम को मेमोरी टेबल स्पेस से बाहर चलाने से पहले अपने प्रदर्शन बूस्टर बफर को फ्लश करना होगा। यह दो तरीके से किया जाता है, पहले अपने आउटपुट कॉलम के आकार को केवल सही आकार तक कम करना। यह स्तंभ तालिकाओं में है पोटर_आउट, और पोलर_आउटपुट_बॉस्ट। दूसरी चीज जो आप कर सकते हैं वह है मेमोरी टेबल को अधिक मेमोरी आवंटित करना। हमने मनमाने ढंग से सिस्टम मेमोरी के 10 %% के अनुशंसित मूल्य को चुना है, लेकिन यदि आप SSD डिस्क ड्राइव का उपयोग कर रहे हैं, या आपके पास एक छोटा सिस्टम है, तो आप इस अनुशंसा को अनदेखा कर सकते हैं या किसी भिन्न संग्रहण इंजन का चयन कर सकते हैं। कंसोल -&gt; सिस्टम यूटिलिटीज़ -&gt; बूस्ट स्थिति देखें के तहत आप प्रदर्शन बूस्टर तालिकाओं की अपेक्षित खपत देख सकते हैं।"
 
-#: lib/utility.php:1253
+#: lib/utility.php:1258
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
 msgstr "उप-श्रेणियों को निष्पादित करते समय, एक बड़ा अस्थायी तालिका आकार, उन अस्थायी तालिकाओं को स्मृति में रखें।"
 
-#: lib/utility.php:1259 lib/utility.php:1265
+#: lib/utility.php:1264 lib/utility.php:1270
 msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr ""
 
-#: lib/utility.php:1271
+#: lib/utility.php:1276
 #, php-format
 msgid "When using InnoDB storage it is important to keep your table spaces separate.  This makes managing the tables simpler for long time users of %s.  If you are running with this currently off, you can migrate to the per file storage by enabling the feature, and then running an alter statement on all InnoDB tables."
 msgstr "InnoDB भंडारण का उपयोग करते समय अपने टेबल रिक्त स्थान को अलग रखना महत्वपूर्ण है। यह %s के लंबे समय के उपयोगकर्ताओं के लिए तालिकाओं के प्रबंधन को सरल बनाता है। यदि आप वर्तमान में इस बंद के साथ चल रहे हैं, तो आप फ़ीचर को सक्षम करके प्रति फ़ाइल संग्रहण पर माइग्रेट कर सकते हैं, और फिर सभी InnoDB तालिकाओं पर एक परिवर्तन स्टेटमेंट चला सकते हैं।"
 
-#: lib/utility.php:1277
+#: lib/utility.php:1282
 #, fuzzy
 msgid "When using innodb_file_per_table, it is important to set the innodb_file_format to Barracuda.  This setting will allow longer indexes important for certain Kadupul tables."
 msgstr "Innodb_file_per_table का उपयोग करते समय, बारकोडुडा में innodb_file_format को सेट करना महत्वपूर्ण है। यह सेटिंग कुछ विशेष Kadupul तालिकाओं के लिए लंबे समय तक अनुक्रमित करने की अनुमति देगा।"
 
-#: lib/utility.php:1283
+#: lib/utility.php:1288
 msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
 msgstr "यदि आपकी तालिकाओं में बहुत बड़ी अनुक्रमणिकाएँ हैं, तो आपको बाराकुडा innodb_file_format और innodb_large_prefix के साथ 1 के बराबर काम करना होगा। ऐसा करने में विफलता उन प्लगइन्स का परिणाम हो सकती है जो ठीक से तालिकाएँ नहीं बना सकते हैं।"
 
-#: lib/utility.php:1289
+#: lib/utility.php:1294
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
 msgstr "InnoDB जितना संभव हो उतना सिस्टम मेमोरी में टेबल और इंडेक्स रखेगा। इसलिए, आपको innodb_buffer_pool को पर्याप्त रूप से बड़ा करना चाहिए ताकि स्मृति में तालिकाओं और अनुक्रमणिका को पकड़ सकें। / Var / lib / mysql / Kadupul निर्देशिका के आकार की जाँच करने से इस मान को निर्धारित करने में मदद मिलेगी। हम आपके सिस्टम की कुल मेमोरी के 25%% की अनुशंसा कर रहे हैं, लेकिन आपकी आवश्यकताओं को आपके सिस्टम के आकार के आधार पर अलग-अलग किया जाएगा।"
 
-#: lib/utility.php:1295
+#: lib/utility.php:1300
 #, fuzzy
 msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "जब तक आपका Kadupul इंस्टेंसेस ZFS या FusionI / O पर नहीं चल रहा हो, तब तक यह सेटिंग ऑन रहना चाहिए, जिसमें दोनों के पास अचानक सिस्टम क्रैश होने की आंतरिक जर्नलिंग हो। हालाँकि, यदि आपके पास बहुत अच्छी शक्ति है, और आपके सिस्टम शायद ही कभी चलते हैं और आपके पास बैकअप है, तो इस सेटिंग को बंद करने से आप डेटाबेस प्रदर्शन में लगभग 50% की वृद्धि कर सकते हैं।"
 
-#: lib/utility.php:1300
+#: lib/utility.php:1305
 msgid "This is where metadata is stored. If you had a lot of tables, it would be useful to increase this."
 msgstr "यह वह जगह है जहाँ मेटाडेटा संग्रहीत किया जाता है। यदि आपके पास बहुत सी मेजें हैं, तो इसे बढ़ाना उपयोगी होगा।"
 
-#: lib/utility.php:1305
+#: lib/utility.php:1310
 msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "दुष्ट प्रश्नों को डेटाबेस के लिए दूसरों के लिए ऑफ़लाइन नहीं जाना चाहिए। आपके सिस्टम को मारने से पहले इन प्रश्नों को मार दें।"
 
-#: lib/utility.php:1310
+#: lib/utility.php:1315
 msgid "Maximum I/O performance happens when you use the O_DIRECT method to flush pages."
 msgstr "अधिकतम I / O प्रदर्शन तब होता है जब आप पृष्ठों को फ्लश करने के लिए O_DIRECT पद्धति का उपयोग करते हैं।"
 
-#: lib/utility.php:1320
+#: lib/utility.php:1325
 #, php-format
 msgid "Setting this value to 2 means that you will flush all transactions every second rather than at commit.  This allows %s to perform writing less often."
 msgstr "इस मान को 2 पर सेट करने का मतलब है कि आप हर लेनदेन को प्रतिबद्ध होने के बजाय हर पल फ्लश करेंगे। यह %s को कम बार लेखन करने की अनुमति देता है।"
 
-#: lib/utility.php:1325
+#: lib/utility.php:1330
 msgid "With modern SSD type storage, having multiple io threads is advantageous for applications with high io characteristics."
 msgstr "आधुनिक एसएसडी प्रकार के भंडारण के साथ, कई io थ्रेड्स होना उच्च io विशेषताओं वाले अनुप्रयोगों के लिए फायदेमंद है।"
 
-#: lib/utility.php:1333 lib/utility.php:1375
+#: lib/utility.php:1338 lib/utility.php:1380
 #, php-format
 msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "%s %s के रूप में, आप यह नियंत्रित कर सकते हैं कि कितनी बार %s डिस्क में लेनदेन को फ्लश करता है। डिफ़ॉल्ट 1 सेकंड है, लेकिन उच्च I / O सिस्टम में 1 से अधिक मूल्य के लिए सेटिंग डिस्क I / O को अधिक अनुक्रमिक होने की अनुमति दे सकती है"
 
-#: lib/utility.php:1338
+#: lib/utility.php:1343
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "आधुनिक एसएसडी प्रकार के भंडारण के साथ, कई पढ़े गए io थ्रेड्स उच्च io विशेषताओं वाले अनुप्रयोगों के लिए फायदेमंद होते हैं।"
 
-#: lib/utility.php:1343
+#: lib/utility.php:1348
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "आधुनिक SSD प्रकार के भंडारण के साथ, कई io सूत्र होने से उच्च io विशेषताओं वाले अनुप्रयोगों के लिए फायदेमंद है।"
 
-#: lib/utility.php:1349
+#: lib/utility.php:1354
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
 msgstr "प्रदर्शन सुधारने के लिए %s innodb_buffer_pool को मेमोरी क्षेत्रों में विभाजित करेगा। अधिकतम मूल्य 64 है। जब आपका innodb_buffer_pool 1GB से कम है, तो आपको 128MB से विभाजित पूल आकार का उपयोग करना चाहिए। 64 के अधिकतम तक इस समीकरण का उपयोग करना जारी रखें।"
 
-#: lib/utility.php:1349
+#: lib/utility.php:1354
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "प्रदर्शन सुधारने के लिए %s innodb_buffer_pool को मेमोरी क्षेत्रों में विभाजित करेगा। अधिकतम मूल्य 64 है। जब आपका innodb_buffer_pool 1GB से कम है, तो आपको 128MB से विभाजित पूल आकार का उपयोग करना चाहिए। 64 के अधिकतम तक इस समीकरण का उपयोग करना जारी रखें।"
 
-#: lib/utility.php:1355 lib/utility.php:1391
+#: lib/utility.php:1360 lib/utility.php:1396
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
 msgstr "यदि आपके पास SSD डिस्क हैं, तो इस सुझाव का उपयोग करें। यदि आपके पास भौतिक हार्ड ड्राइव हैं, तो सरणी में 200 * सक्रिय ड्राइव की संख्या का उपयोग करें। यदि NVMe या PCIe Flash का उपयोग किया जाता है, तो 100000 जितनी बड़ी संख्या का उपयोग किया जा सकता है।"
 
-#: lib/utility.php:1361 lib/utility.php:1397
+#: lib/utility.php:1366 lib/utility.php:1402
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 2000 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 200000 can be used."
 msgstr "यदि आपके पास SSD डिस्क हैं, तो इस सुझाव का उपयोग करें। यदि आपके पास भौतिक हार्ड ड्राइव हैं, तो ऐरे में 2000 * सक्रिय ड्राइव की संख्या का उपयोग करें। यदि NVMe या PCIe Flash का उपयोग किया जाता है, तो 200000 जितनी बड़ी संख्या का उपयोग किया जा सकता है।"
 
-#: lib/utility.php:1367 lib/utility.php:1403
+#: lib/utility.php:1372 lib/utility.php:1408
 msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this setting."
 msgstr "यदि आपके पास SSD डिस्क हैं, तो इस सुझाव का उपयोग करें। अन्यथा, यह सेटिंग सेट न करें।"
 
-#: lib/utility.php:1380
+#: lib/utility.php:1385
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics."
 msgstr "आधुनिक एसएसडी प्रकार के भंडारण के साथ, कई पढ़े गए io थ्रेड्स उच्च io विशेषताओं वाले अनुप्रयोगों के लिए फायदेमंद होते हैं।"
 
-#: lib/utility.php:1385
+#: lib/utility.php:1390
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics."
 msgstr "आधुनिक SSD प्रकार के भंडारण के साथ, कई io सूत्र होने से उच्च io विशेषताओं वाले अनुप्रयोगों के लिए फायदेमंद है।"
 
-#: lib/utility.php:1416
+#: lib/utility.php:1421
 msgid "When using MariaDB 10.2.4 and above, this setting should be off if atomic writes are enabled.  Therefore, please enable atomic writes instead of the double write buffer as it will increase performance."
 msgstr "मारियाडीबी 10.2.4 और इसके बाद के संस्करण का उपयोग करते समय, परमाणु लेखन सक्षम होने पर यह सेटिंग बंद होनी चाहिए। इसलिए, कृपया डबल राइट बफर के बजाय एटॉमिक राइट्स को सक्षम करें क्योंकि यह प्रदर्शन को बढ़ाएगा।"
 
-#: lib/utility.php:1423
+#: lib/utility.php:1428
 msgid "When using MariaDB 10.2.4 and above, you can use atomic writes over the doublewrite buffer to increase performance."
 msgstr "मारियाडीबी 10.2.4 और इसके बाद के संस्करण का उपयोग करते समय, आप प्रदर्शन को बढ़ाने के लिए डबलराइट बफर पर परमाणु लेखन का उपयोग कर सकते हैं।"
 
-#: lib/utility.php:1440
+#: lib/utility.php:1445
 #, php-format
 msgid "%s Tuning"
 msgstr "%s ट्यूनिंग"
 
-#: lib/utility.php:1440
+#: lib/utility.php:1445
 msgid "Note: Many changes below require a database restart"
 msgstr "नोट: नीचे कई बदलावों के लिए डेटाबेस रीस्टार्ट की आवश्यकता होती है"
 
-#: lib/utility.php:1448
+#: lib/utility.php:1453
 msgid "Variable"
 msgstr "परिवर्तनशील"
 
-#: lib/utility.php:1449
+#: lib/utility.php:1454
 msgid "Current Value"
 msgstr "वर्तमान मूल्य"
 
-#: lib/utility.php:1451
+#: lib/utility.php:1456
 msgid "Recommended Value"
 msgstr "अनुशंसित मूल्य"
 
-#: lib/utility.php:1452
+#: lib/utility.php:1457
 msgid "Comments"
 msgstr "टिप्पणि"
 
-#: lib/utility.php:2046
+#: lib/utility.php:2051
 #, php-format
 msgid "PHP %s is the minimum version"
 msgstr "PHP %s mimimum संस्करण है"
 
-#: lib/utility.php:2048
+#: lib/utility.php:2053
 #, php-format
 msgid "A minimum of %s memory limit"
 msgstr "न्यूनतम %s एमबी मेमोरी सीमा"
 
-#: lib/utility.php:2050
+#: lib/utility.php:2055
 #, php-format
 msgid "A minimum of %s m execution time"
 msgstr "कम से कम %sm निष्पादन का समय"
 
-#: lib/utility.php:2052
+#: lib/utility.php:2057
 msgid "A valid timezone that matches MySQL and the system"
 msgstr "एक मान्य समयक्षेत्र जो MySQL और सिस्टम से मेल खाता है"
 
