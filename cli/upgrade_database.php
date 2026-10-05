@@ -208,6 +208,7 @@ print 'Upgrading from v' . $old_cacti_version . PHP_EOL;
 $prev_cacti_version = $old_cacti_version;
 $orig_cacti_version = get_cacti_version();
 $upgrade_failed = false;
+require_once __DIR__ . '/../lib/installer.php';
 
 // loop through versions from old version to the current, performing updates for each version in the chain
 foreach ($cacti_version_codes as $cacti_upgrade_version => $hash_code) {
@@ -239,20 +240,8 @@ foreach ($cacti_version_codes as $cacti_upgrade_version => $hash_code) {
             break;
         }
 
-        if (CACTI_VERSION != $cacti_upgrade_version && cacti_version_compare($orig_cacti_version, $cacti_upgrade_version, '<')) {
-            if (db_execute_prepared("UPDATE version SET cacti = ?", array($cacti_upgrade_version)) === false) {
-                $upgrade_failed = true;
-                break;
-            }
-
-            $orig_cacti_version = $cacti_upgrade_version;
-        }
-
         $prev_cacti_version = $cacti_upgrade_version;
-    } elseif ($cacti_upgrade_version === '1.2.32') {
-        // Main's indexed-reference migration moved to 1.2.33 so deployed LTS
-        // 1.2.32 installations can reach it. This registered version has no
-        // schema script on main; every other missing migration remains fatal.
+    } elseif (Installer::isDatabaseUpgradeNoop($cacti_upgrade_version)) {
         continue;
     } else {
         print 'Error: upgrade file (' . $upgrade_file . ') not found' . PHP_EOL;
@@ -277,11 +266,12 @@ foreach ($cacti_version_codes as $cacti_upgrade_version => $hash_code) {
             exit(1);
         }
     } else {
-        if (db_execute_prepared("UPDATE version SET cacti = ?", array($cacti_upgrade_version)) === false) {
+        if (!Installer::recordUpgradeVersion($cacti_upgrade_version)) {
+            fwrite(STDERR, "Database version $cacti_upgrade_version could not be confirmed; retry from the last confirmed version.\n");
             $upgrade_failed = true;
             break;
         }
-
+        $orig_cacti_version = $cacti_upgrade_version;
     }
 
     if (CACTI_VERSION == $cacti_upgrade_version) {

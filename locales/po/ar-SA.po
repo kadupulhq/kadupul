@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 08:26-0700\n"
+"POT-Creation-Date: 2026-10-05 08:41-0700\n"
 "PO-Revision-Date: 2024-05-25 11:07-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -582,7 +582,7 @@ msgstr "لا"
 #: gprint_presets.php:430 graph_templates.php:921 host_templates.php:997
 #: include/global_settings.php:875 include/global_settings.php:1926
 #: lib/api_automation.php:1438 lib/installer.php:2124 lib/installer.php:2152
-#: lib/installer.php:3953 tree.php:2399 tree.php:2400 user_admin.php:2267
+#: lib/installer.php:3984 tree.php:2399 tree.php:2400 user_admin.php:2267
 #: user_domains.php:754 user_domains.php:758 user_group_admin.php:2084
 msgid "Yes"
 msgstr "نعم"
@@ -2472,7 +2472,7 @@ msgstr "معايير إنشاء الشجرة"
 msgid "Change Leaf Type"
 msgstr "تغيير نوع ورقة"
 
-#: automation_tree_rules.php:740 lib/installer.php:4177 utilities.php:2764
+#: automation_tree_rules.php:740 lib/installer.php:4208 utilities.php:2764
 #: utilities.php:2765 utilities.php:2768 utilities.php:2769
 msgid "WARNING:"
 msgstr "تحذير:"
@@ -12210,7 +12210,7 @@ msgid "Please wait while the installation system for Kadupul Version %s initiali
 msgstr "يرجى الانتظار حتى تتم تهيئة نظام التثبيت لإصدار Kadupul %s. يجب تمكين جافا سكريبت حتى يعمل هذا."
 
 #: install/install.php:101 lib/html_utility.php:1336 lib/installer.php:2085
-#: lib/installer.php:4093
+#: lib/installer.php:4124
 msgid "Error"
 msgstr "خطأ"
 
@@ -14971,7 +14971,7 @@ msgid "Location checks"
 msgstr "الشيكات الموقع"
 
 #: lib/installer.php:2028 lib/installer.php:2179 lib/installer.php:2183
-#: lib/installer.php:2339 lib/installer.php:2344 lib/installer.php:4197
+#: lib/installer.php:2339 lib/installer.php:2344 lib/installer.php:4228
 msgid "ERROR:"
 msgstr "خطأ:"
 
@@ -15611,224 +15611,234 @@ msgstr ""
 msgid "Finished %s Process for v%s"
 msgstr "انتهت عملية %s ل v%s"
 
-#: lib/installer.php:3410
+#: lib/installer.php:3434
 #, php-format
 msgid "Found %s templates to install"
 msgstr "العثور على قوالب %s للتثبيت"
 
-#: lib/installer.php:3420
+#: lib/installer.php:3444
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "على وشك استيراد الحزمة # %s '%s'."
 
-#: lib/installer.php:3429
+#: lib/installer.php:3453
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "نجح استيراد الحزمة # %s '%s' ضمن الملف الشخصي \"%s\""
 
-#: lib/installer.php:3435
+#: lib/installer.php:3459
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "فشل استيراد الحزمة # %s '%s' ضمن الملف الشخصي '%s'"
 
-#: lib/installer.php:3452
+#: lib/installer.php:3476
 #, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "قالب أتمتة التعيين لقالب الجهاز '%s'"
 
-#: lib/installer.php:3473
+#: lib/installer.php:3497
 msgid "No templates were selected for import"
 msgstr "لم يتم تحديد أي قوالب للاستيراد"
 
-#: lib/installer.php:3483
+#: lib/installer.php:3507
 msgid "Updating remote configuration file"
 msgstr "في انتظار التكوين"
 
-#: lib/installer.php:3518
+#: lib/installer.php:3542
 #, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "تعيين ملف تعريف مصدر البيانات الافتراضي إلى %s (%s)"
 
-#: lib/installer.php:3546
+#: lib/installer.php:3570
 #, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "فشل في العثور على ملف التعريف المحدد (%s) ، لم يتم إجراء أي تغييرات"
 
-#: lib/installer.php:3555
+#: lib/installer.php:3579
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "تحديث شبكة الأتمتة (%s) ، الوضع \"%s\" = > \"%s\" ، الشبكة الفرعية \"%s\" = > %s\""
 
-#: lib/installer.php:3565
+#: lib/installer.php:3589
 msgid "Failed to find automation network, no changes were made"
 msgstr "فشل العثور على شبكة الأتمتة ، ولم يتم إجراء أي تغييرات"
 
-#: lib/installer.php:3569
+#: lib/installer.php:3593
 msgid "Adding extra snmp settings for automation"
 msgstr "إضافة إعدادات snmp إضافية للأتمتة"
 
-#: lib/installer.php:3575
+#: lib/installer.php:3599
 #, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "تحديد تعيين خيار التنفيذ التلقائي %s"
 
-#: lib/installer.php:3588
+#: lib/installer.php:3612
 #, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "تحديث مجموعة خيارات التنفيذ التلقائي %s"
 
-#: lib/installer.php:3591
+#: lib/installer.php:3615
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "تم تحديث مجموعة خيارات التنفيذ التلقائي بنجاح %s"
 
-#: lib/installer.php:3593
+#: lib/installer.php:3617
 #, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "تعيين خيار أتمتة إعادة التسلسل %s"
 
-#: lib/installer.php:3601
+#: lib/installer.php:3625
 #, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "فشل تحديث مجموعة خيارات التنفيذ التلقائي %s"
 
-#: lib/installer.php:3604
+#: lib/installer.php:3628
 msgid "Failed to find any automation option set"
 msgstr "تعذّر العثور على البيانات لنسخها!"
 
-#: lib/installer.php:3634
+#: lib/installer.php:3658
 #, fuzzy, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "قالب الجهاز لجهاز Kadupul الأول هو %s"
 
-#: lib/installer.php:3664
+#: lib/installer.php:3688
 msgid "Creating Graphs for Default Device"
 msgstr "إنشاء الرسوم البيانية لهذا الجهاز"
 
-#: lib/installer.php:3671
+#: lib/installer.php:3695
 msgid "Adding Device to Default Tree"
 msgstr "افتراضيات الجهاز"
 
-#: lib/installer.php:3679
+#: lib/installer.php:3703
 msgid "No templated graphs for Default Device were found"
 msgstr "لم يتم العثور على الرسوم البيانية القوالب للجهاز الافتراضي"
 
-#: lib/installer.php:3683
+#: lib/installer.php:3707
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "تحذير: لم يتم العثور على نموذج الجهاز لنظام التشغيل الخاص بك. ستحتاج إلى استيراد قوالب الأجهزة أو حزم Kadupul لمراقبة خادم Kadupul."
 
-#: lib/installer.php:3690
+#: lib/installer.php:3714
 msgid "Running first-time data query for local host"
 msgstr "تشغيل استعلام بيانات لأول مرة للمضيف المحلي"
 
-#: lib/installer.php:3698
+#: lib/installer.php:3722
 msgid "Repopulating poller cache"
 msgstr "إعادة بناء بولير"
 
-#: lib/installer.php:3703
+#: lib/installer.php:3727
 msgid "Repopulating SNMP Agent cache"
 msgstr "إعادة بناء SNMPAgent ذاكرة التخزين المؤقت"
 
-#: lib/installer.php:3708
+#: lib/installer.php:3732
 msgid "Generating RSA Key Pair"
 msgstr "توليد زوج مفاتيح RSA"
 
-#: lib/installer.php:3719
+#: lib/installer.php:3743
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "تم العثور على جداول %s للتحويل"
 
-#: lib/installer.php:3726
+#: lib/installer.php:3750
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "تحويل الجدول # %s '%s'"
 
-#: lib/installer.php:3734
+#: lib/installer.php:3758
 #, php-format
 msgid "Converting Table #%s '%s' failed in-process: %s"
 msgstr ""
 
-#: lib/installer.php:3742
+#: lib/installer.php:3766
 msgid "No tables where found or selected for conversion"
 msgstr "لم يتم العثور على جداول أو تحديدها للتحويل"
 
-#: lib/installer.php:3754
+#: lib/installer.php:3778
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "تم التبديل من %s إلى %s"
 
-#: lib/installer.php:3758
+#: lib/installer.php:3782
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "ملاحظة: استخدام ملف مؤقت لذاكرة التخزين المؤقت ديسيبل: %s"
 
-#: lib/installer.php:3780
+#: lib/installer.php:3804
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "الترقية من v%s (DB %s) إلى v%s"
 
-#: lib/installer.php:3788
+#: lib/installer.php:3812
 #, php-format
-msgid "WARNING: Failed to find upgrade function for v%s"
-msgstr "تحذير: فشل العثور على وظيفة الترقية ل v%s"
+msgid "ERROR: Failed to find upgrade function for v%s"
+msgstr ""
 
-#: lib/installer.php:3851
+#: lib/installer.php:3821
+#, php-format
+msgid "ERROR: Database version %s could not be confirmed; retry from the last confirmed version."
+msgstr ""
+
+#: lib/installer.php:3830
+#, php-format
+msgid "ERROR: Required upgrade file for v%s was not found."
+msgstr ""
+
+#: lib/installer.php:3882
 msgid "Install aborted due to no EULA acceptance"
 msgstr "تم إحباط التثبيت بسبب عدم قبول اتفاقية ترخيص المستخدم النهائي"
 
-#: lib/installer.php:3875
+#: lib/installer.php:3906
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "بدأت الخلفية بالفعل في %s ، وتم تخطي هذه المحاولة في %s"
 
-#: lib/installer.php:3899
+#: lib/installer.php:3930
 #, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "حدث استثناء أثناء التثبيت: # %s - %s"
 
-#: lib/installer.php:3918
+#: lib/installer.php:3949
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "بدأ التثبيت في %s ، واكتمل في %s"
 
-#: lib/installer.php:3955
+#: lib/installer.php:3986
 msgid "Both"
 msgstr "كلاهما"
 
-#: lib/installer.php:3955
+#: lib/installer.php:3986
 #, fuzzy, php-format
 msgid "No - %s"
 msgstr "%s %s"
 
-#: lib/installer.php:3960
+#: lib/installer.php:3991
 #, php-format
 msgid "%s - N/A"
 msgstr "%s - غير متوفر"
 
-#: lib/installer.php:3960 lib/installer.php:3962
+#: lib/installer.php:3991 lib/installer.php:3993
 msgid "Web"
 msgstr "شبكة الويب"
 
-#: lib/installer.php:3962 lib/installer.php:3965
+#: lib/installer.php:3993 lib/installer.php:3996
 #, fuzzy, php-format
 msgid "%s - No"
 msgstr "%s %s"
 
-#: lib/installer.php:3965
+#: lib/installer.php:3996
 msgid "Cli"
 msgstr "كلاسيكي"
 
-#: lib/installer.php:3971
+#: lib/installer.php:4002
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "إعداد خيار PHP %s = %s"
 
-#: lib/installer.php:3977
+#: lib/installer.php:4008
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "فشل في تعيين خيار PHP %s ، هل %s (يجب أن يكون %s)"
 
-#: lib/installer.php:4014
+#: lib/installer.php:4045
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "لم يتم العثور على جامعي البيانات عن بعد للمزامنة الكاملة"
 

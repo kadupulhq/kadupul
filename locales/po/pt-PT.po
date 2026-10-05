@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 08:26-0700\n"
+"POT-Creation-Date: 2026-10-05 08:41-0700\n"
 "PO-Revision-Date: 2024-04-20 19:18-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -582,7 +582,7 @@ msgstr "Não"
 #: gprint_presets.php:430 graph_templates.php:921 host_templates.php:997
 #: include/global_settings.php:875 include/global_settings.php:1926
 #: lib/api_automation.php:1438 lib/installer.php:2124 lib/installer.php:2152
-#: lib/installer.php:3953 tree.php:2399 tree.php:2400 user_admin.php:2267
+#: lib/installer.php:3984 tree.php:2399 tree.php:2400 user_admin.php:2267
 #: user_domains.php:754 user_domains.php:758 user_group_admin.php:2084
 msgid "Yes"
 msgstr "Sim"
@@ -2467,7 +2467,7 @@ msgstr "Critérios de criação de árvore"
 msgid "Change Leaf Type"
 msgstr "Modificar tipo de folha"
 
-#: automation_tree_rules.php:740 lib/installer.php:4177 utilities.php:2764
+#: automation_tree_rules.php:740 lib/installer.php:4208 utilities.php:2764
 #: utilities.php:2765 utilities.php:2768 utilities.php:2769
 msgid "WARNING:"
 msgstr "ADVERTÊNCIA:"
@@ -12030,7 +12030,7 @@ msgid "Please wait while the installation system for Kadupul Version %s initiali
 msgstr "Por favor aguarde enquanto o sistema de instalação do Kadupul Version %s inicializa.  Você deve ter o JavaScript habilitado para que isso funcione."
 
 #: install/install.php:101 lib/html_utility.php:1336 lib/installer.php:2085
-#: lib/installer.php:4093
+#: lib/installer.php:4124
 msgid "Error"
 msgstr "Erro"
 
@@ -14776,7 +14776,7 @@ msgid "Location checks"
 msgstr "Verificações de localização"
 
 #: lib/installer.php:2028 lib/installer.php:2179 lib/installer.php:2183
-#: lib/installer.php:2339 lib/installer.php:2344 lib/installer.php:4197
+#: lib/installer.php:2339 lib/installer.php:2344 lib/installer.php:4228
 msgid "ERROR:"
 msgstr "ERRO:"
 
@@ -15416,224 +15416,234 @@ msgstr ""
 msgid "Finished %s Process for v%s"
 msgstr "Processo%s concluído para v%s"
 
-#: lib/installer.php:3410
+#: lib/installer.php:3434
 #, php-format
 msgid "Found %s templates to install"
 msgstr "Encontrados%s modelos para instalar"
 
-#: lib/installer.php:3420
+#: lib/installer.php:3444
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "Sobre a importação do pacote #%s '%s'."
 
-#: lib/installer.php:3429
+#: lib/installer.php:3453
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "A importação do pacote #%s '%s' no perfil '%s' foi bem-sucedida"
 
-#: lib/installer.php:3435
+#: lib/installer.php:3459
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "Falha na importação do pacote #%s '%s' no perfil '%s'"
 
-#: lib/installer.php:3452
+#: lib/installer.php:3476
 #, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "Modelo de Automação de Mapeamento para Modelo de Dispositivo '%s'"
 
-#: lib/installer.php:3473
+#: lib/installer.php:3497
 msgid "No templates were selected for import"
 msgstr "Nenhum modelo foi selecionado para importação"
 
-#: lib/installer.php:3483
+#: lib/installer.php:3507
 msgid "Updating remote configuration file"
 msgstr "Aguardando Configuração"
 
-#: lib/installer.php:3518
+#: lib/installer.php:3542
 #, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "Definindo o perfil de fonte de dados padrão para %s (%s)"
 
-#: lib/installer.php:3546
+#: lib/installer.php:3570
 #, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "Falha ao encontrar o perfil selecionado (%s), nenhuma alteração foi feita"
 
-#: lib/installer.php:3555
+#: lib/installer.php:3579
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "Atualizando a rede de automação (%s), modo \"%s\" => \"%s\", sub-rede \"%s\" =>%s \""
 
-#: lib/installer.php:3565
+#: lib/installer.php:3589
 msgid "Failed to find automation network, no changes were made"
 msgstr "Falha ao encontrar a rede de automação, nenhuma alteração foi feita"
 
-#: lib/installer.php:3569
+#: lib/installer.php:3593
 msgid "Adding extra snmp settings for automation"
 msgstr "Adicionando configurações snmp extras para automação"
 
-#: lib/installer.php:3575
+#: lib/installer.php:3599
 #, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "Seleção do Conjunto de Opções de Automação %s"
 
-#: lib/installer.php:3588
+#: lib/installer.php:3612
 #, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "Atualizando o conjunto de opções de automação %s"
 
-#: lib/installer.php:3591
+#: lib/installer.php:3615
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "Conjunto de opções de automação atualizado com sucesso%s"
 
-#: lib/installer.php:3593
+#: lib/installer.php:3617
 #, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "Conjunto de Opções de Automação de Resequenciamento %s"
 
-#: lib/installer.php:3601
+#: lib/installer.php:3625
 #, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "Falha ao atualizar o Conjunto de Opções de Automação %s"
 
-#: lib/installer.php:3604
+#: lib/installer.php:3628
 msgid "Failed to find any automation option set"
 msgstr "Falha ao encontrar dados para copiar!"
 
-#: lib/installer.php:3634
+#: lib/installer.php:3658
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "Modelos de dispositivo [editar: %s]"
 
-#: lib/installer.php:3664
+#: lib/installer.php:3688
 msgid "Creating Graphs for Default Device"
 msgstr "Criar gráficos para este dispositivo"
 
-#: lib/installer.php:3671
+#: lib/installer.php:3695
 msgid "Adding Device to Default Tree"
 msgstr "Predefinições do dispositivo"
 
-#: lib/installer.php:3679
+#: lib/installer.php:3703
 msgid "No templated graphs for Default Device were found"
 msgstr "Não foram encontrados gráficos de modelo para o dispositivo padrão"
 
-#: lib/installer.php:3683
+#: lib/installer.php:3707
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "AVISO: Modelo de dispositivo para o sistema operacional não encontrado. Você precisará importar modelos de dispositivos ou pacotes Kadupul para monitorar seu servidor Kadupul."
 
-#: lib/installer.php:3690
+#: lib/installer.php:3714
 msgid "Running first-time data query for local host"
 msgstr "Executando uma consulta de dados pela primeira vez para o host local"
 
-#: lib/installer.php:3698
+#: lib/installer.php:3722
 msgid "Repopulating poller cache"
 msgstr "Reconstruir o cache do Poller"
 
-#: lib/installer.php:3703
+#: lib/installer.php:3727
 msgid "Repopulating SNMP Agent cache"
 msgstr "Reconstruir Cache SNMPAgent"
 
-#: lib/installer.php:3708
+#: lib/installer.php:3732
 msgid "Generating RSA Key Pair"
 msgstr "Gerando par de chaves RSA"
 
-#: lib/installer.php:3719
+#: lib/installer.php:3743
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "Encontradas%s tabelas para converter"
 
-#: lib/installer.php:3726
+#: lib/installer.php:3750
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "Convertendo tabela #%s '%s'"
 
-#: lib/installer.php:3734
+#: lib/installer.php:3758
 #, php-format
 msgid "Converting Table #%s '%s' failed in-process: %s"
 msgstr ""
 
-#: lib/installer.php:3742
+#: lib/installer.php:3766
 msgid "No tables where found or selected for conversion"
 msgstr "Nenhuma tabela foi encontrada ou selecionada para conversão"
 
-#: lib/installer.php:3754
+#: lib/installer.php:3778
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "Alterado de%s para%s"
 
-#: lib/installer.php:3758
+#: lib/installer.php:3782
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "NOTA: Usando arquivo temporário para cache db:%s"
 
-#: lib/installer.php:3780
+#: lib/installer.php:3804
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "Atualizando de v%s (DB%s) para v%s"
 
-#: lib/installer.php:3788
+#: lib/installer.php:3812
 #, php-format
-msgid "WARNING: Failed to find upgrade function for v%s"
-msgstr "AVISO: falha ao encontrar a função de atualização para v%s"
+msgid "ERROR: Failed to find upgrade function for v%s"
+msgstr ""
 
-#: lib/installer.php:3851
+#: lib/installer.php:3821
+#, php-format
+msgid "ERROR: Database version %s could not be confirmed; retry from the last confirmed version."
+msgstr ""
+
+#: lib/installer.php:3830
+#, php-format
+msgid "ERROR: Required upgrade file for v%s was not found."
+msgstr ""
+
+#: lib/installer.php:3882
 msgid "Install aborted due to no EULA acceptance"
 msgstr "Instalação interrompida devido a nenhuma aceitação do EULA"
 
-#: lib/installer.php:3875
+#: lib/installer.php:3906
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "O fundo já foi iniciado em%s, essa tentativa em%s foi ignorada"
 
-#: lib/installer.php:3899
+#: lib/installer.php:3930
 #, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "Ocorreu uma exceção durante a instalação: #%s - %s"
 
-#: lib/installer.php:3918
+#: lib/installer.php:3949
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "A instalação foi iniciada em %s, concluída em %s"
 
-#: lib/installer.php:3955
+#: lib/installer.php:3986
 msgid "Both"
 msgstr "Ambos"
 
-#: lib/installer.php:3955
+#: lib/installer.php:3986
 #, fuzzy, php-format
 msgid "No - %s"
 msgstr "Hora(s)"
 
-#: lib/installer.php:3960
+#: lib/installer.php:3991
 #, fuzzy, php-format
 msgid "%s - N/A"
 msgstr "N/A"
 
-#: lib/installer.php:3960 lib/installer.php:3962
+#: lib/installer.php:3991 lib/installer.php:3993
 msgid "Web"
 msgstr "Web"
 
-#: lib/installer.php:3962 lib/installer.php:3965
+#: lib/installer.php:3993 lib/installer.php:3996
 #, fuzzy, php-format
 msgid "%s - No"
 msgstr "Hora(s)"
 
-#: lib/installer.php:3965
+#: lib/installer.php:3996
 msgid "Cli"
 msgstr "Clássico"
 
-#: lib/installer.php:3971
+#: lib/installer.php:4002
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "Configurando a opção PHP%s =%s"
 
-#: lib/installer.php:3977
+#: lib/installer.php:4008
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "Falha ao definir a opção do PHP%s, é%s (deve ser%s)"
 
-#: lib/installer.php:4014
+#: lib/installer.php:4045
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "Coletor(es) de dados não encontrado(s) na tentativa de sincronização"
 

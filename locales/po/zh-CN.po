@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Chinese Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 08:26-0700\n"
+"POT-Creation-Date: 2026-10-05 08:41-0700\n"
 "PO-Revision-Date: 2024-06-23 04:09+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -582,7 +582,7 @@ msgstr "否"
 #: gprint_presets.php:430 graph_templates.php:921 host_templates.php:997
 #: include/global_settings.php:875 include/global_settings.php:1926
 #: lib/api_automation.php:1438 lib/installer.php:2124 lib/installer.php:2152
-#: lib/installer.php:3953 tree.php:2399 tree.php:2400 user_admin.php:2267
+#: lib/installer.php:3984 tree.php:2399 tree.php:2400 user_admin.php:2267
 #: user_domains.php:754 user_domains.php:758 user_group_admin.php:2084
 msgid "Yes"
 msgstr "是"
@@ -2467,7 +2467,7 @@ msgstr "树创建标准"
 msgid "Change Leaf Type"
 msgstr "改变叶子类型"
 
-#: automation_tree_rules.php:740 lib/installer.php:4177 utilities.php:2764
+#: automation_tree_rules.php:740 lib/installer.php:4208 utilities.php:2764
 #: utilities.php:2765 utilities.php:2768 utilities.php:2769
 msgid "WARNING:"
 msgstr "WARNING:"
@@ -12000,7 +12000,7 @@ msgid "Please wait while the installation system for Kadupul Version %s initiali
 msgstr "Kadupul Version %s 的安装程序初始化时请耐心等待.您必须开启JavaScript 才能进行."
 
 #: install/install.php:101 lib/html_utility.php:1336 lib/installer.php:2085
-#: lib/installer.php:4093
+#: lib/installer.php:4124
 msgid "Error"
 msgstr "错误"
 
@@ -14743,7 +14743,7 @@ msgid "Location checks"
 msgstr "位置检查"
 
 #: lib/installer.php:2028 lib/installer.php:2179 lib/installer.php:2183
-#: lib/installer.php:2339 lib/installer.php:2344 lib/installer.php:4197
+#: lib/installer.php:2339 lib/installer.php:2344 lib/installer.php:4228
 msgid "ERROR:"
 msgstr "ERROR:"
 
@@ -15382,224 +15382,234 @@ msgstr ""
 msgid "Finished %s Process for v%s"
 msgstr "已完成%s针对v%s的进程"
 
-#: lib/installer.php:3410
+#: lib/installer.php:3434
 #, php-format
 msgid "Found %s templates to install"
 msgstr "找到了要安装的%s模板"
 
-#: lib/installer.php:3420
+#: lib/installer.php:3444
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "即将导入软件包#%s '%s'。"
 
-#: lib/installer.php:3429
+#: lib/installer.php:3453
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "已成功在配置文件'%s'下导入软件包#%s '%s'"
 
-#: lib/installer.php:3435
+#: lib/installer.php:3459
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "在配置文件'%s'下导入软件包#%s '%s'失败"
 
-#: lib/installer.php:3452
+#: lib/installer.php:3476
 #, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "设备模板'%s'的映射自动化模板"
 
-#: lib/installer.php:3473
+#: lib/installer.php:3497
 msgid "No templates were selected for import"
 msgstr "未选择要导入的模板"
 
-#: lib/installer.php:3483
+#: lib/installer.php:3507
 msgid "Updating remote configuration file"
 msgstr "等待配置"
 
-#: lib/installer.php:3518
+#: lib/installer.php:3542
 #, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "设置默认数据源配置文件%s (%s)"
 
-#: lib/installer.php:3546
+#: lib/installer.php:3570
 #, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "找不到选定的配置文件(%s)，未进行任何更改"
 
-#: lib/installer.php:3555
+#: lib/installer.php:3579
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "更新自动化网络(%s)，模式\"%s =>'%s'，子网'%s' =>%s\""
 
-#: lib/installer.php:3565
+#: lib/installer.php:3589
 msgid "Failed to find automation network, no changes were made"
 msgstr "找不到自动化网络，未进行任何更改"
 
-#: lib/installer.php:3569
+#: lib/installer.php:3593
 msgid "Adding extra snmp settings for automation"
 msgstr "添加额外的snmp设置以实现自动化"
 
-#: lib/installer.php:3575
+#: lib/installer.php:3599
 #, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "正在选择自动化选项集%s"
 
-#: lib/installer.php:3588
+#: lib/installer.php:3612
 #, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "正在更新自动化选项集%s"
 
-#: lib/installer.php:3591
+#: lib/installer.php:3615
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "成功更新了自动化选项集%s"
 
-#: lib/installer.php:3593
+#: lib/installer.php:3617
 #, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "重新排序自动化选项集%s"
 
-#: lib/installer.php:3601
+#: lib/installer.php:3625
 #, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "无法更新自动化选项集%s"
 
-#: lib/installer.php:3604
+#: lib/installer.php:3628
 msgid "Failed to find any automation option set"
 msgstr "无法找到要复制的数据"
 
-#: lib/installer.php:3634
+#: lib/installer.php:3658
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "设备模板 [编辑: %s]"
 
-#: lib/installer.php:3664
+#: lib/installer.php:3688
 msgid "Creating Graphs for Default Device"
 msgstr "为设备创建图形"
 
-#: lib/installer.php:3671
+#: lib/installer.php:3695
 msgid "Adding Device to Default Tree"
 msgstr "设备默认值"
 
-#: lib/installer.php:3679
+#: lib/installer.php:3703
 msgid "No templated graphs for Default Device were found"
 msgstr "找不到默认设备的模板化图"
 
-#: lib/installer.php:3683
+#: lib/installer.php:3707
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "警告：找不到您的操作系统的设备模板。您将需要导入设备模板或Kadupul软件包以监视您的Kadupul服务器。"
 
-#: lib/installer.php:3690
+#: lib/installer.php:3714
 msgid "Running first-time data query for local host"
 msgstr "运行本地主机的首次数据查询"
 
-#: lib/installer.php:3698
+#: lib/installer.php:3722
 msgid "Repopulating poller cache"
 msgstr "重建poller 缓存"
 
-#: lib/installer.php:3703
+#: lib/installer.php:3727
 msgid "Repopulating SNMP Agent cache"
 msgstr "重建SNMPAgent 缓存"
 
-#: lib/installer.php:3708
+#: lib/installer.php:3732
 msgid "Generating RSA Key Pair"
 msgstr "生成RSA密钥对"
 
-#: lib/installer.php:3719
+#: lib/installer.php:3743
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "找到要转换的%s表"
 
-#: lib/installer.php:3726
+#: lib/installer.php:3750
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "转换表#%s '%s'"
 
-#: lib/installer.php:3734
+#: lib/installer.php:3758
 #, php-format
 msgid "Converting Table #%s '%s' failed in-process: %s"
 msgstr ""
 
-#: lib/installer.php:3742
+#: lib/installer.php:3766
 msgid "No tables where found or selected for conversion"
 msgstr "没有找到或选择要转换的表"
 
-#: lib/installer.php:3754
+#: lib/installer.php:3778
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "从%s切换到%s"
 
-#: lib/installer.php:3758
+#: lib/installer.php:3782
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "注意：使用临时文件进行数据库高速缓存：%s"
 
-#: lib/installer.php:3780
+#: lib/installer.php:3804
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "从v%s（数据库%s）升级到v%s"
 
-#: lib/installer.php:3788
+#: lib/installer.php:3812
 #, php-format
-msgid "WARNING: Failed to find upgrade function for v%s"
-msgstr "警告：无法找到v%s的升级功能"
+msgid "ERROR: Failed to find upgrade function for v%s"
+msgstr ""
 
-#: lib/installer.php:3851
+#: lib/installer.php:3821
+#, php-format
+msgid "ERROR: Database version %s could not be confirmed; retry from the last confirmed version."
+msgstr ""
+
+#: lib/installer.php:3830
+#, php-format
+msgid "ERROR: Required upgrade file for v%s was not found."
+msgstr ""
+
+#: lib/installer.php:3882
 msgid "Install aborted due to no EULA acceptance"
 msgstr "由于未接受EULA，安装被中止"
 
-#: lib/installer.php:3875
+#: lib/installer.php:3906
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "后台已在%s开始，此尝试已在%s跳过"
 
-#: lib/installer.php:3899
+#: lib/installer.php:3930
 #, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "安装期间发生异常: #%s - %s"
 
-#: lib/installer.php:3918
+#: lib/installer.php:3949
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "安装在 %s 开始,在 %s 完成"
 
-#: lib/installer.php:3955
+#: lib/installer.php:3986
 msgid "Both"
 msgstr "两者"
 
-#: lib/installer.php:3955
+#: lib/installer.php:3986
 #, php-format
 msgid "No - %s"
 msgstr "否-%s"
 
-#: lib/installer.php:3960
+#: lib/installer.php:3991
 #, php-format
 msgid "%s - N/A"
 msgstr "%s-不适用"
 
-#: lib/installer.php:3960 lib/installer.php:3962
+#: lib/installer.php:3991 lib/installer.php:3993
 msgid "Web"
 msgstr "网页"
 
-#: lib/installer.php:3962 lib/installer.php:3965
+#: lib/installer.php:3993 lib/installer.php:3996
 #, php-format
 msgid "%s - No"
 msgstr "%s - 否"
 
-#: lib/installer.php:3965
+#: lib/installer.php:3996
 msgid "Cli"
 msgstr "如果您选择此选项，则将重新生成轮询缓存。如果在崩溃后遇到问题并且已经运行数据库修复工具，则只有在发生数据库崩溃的情况下才使用此选项;或者，如果您遇到问题 使用特定的设备，只需重新保存该设备以重建其轮询缓存即可。还有一个与此命令等效的命令行界面，建议用于大型系统。<i class = “deviceDown ”>注意：在大型系统 ，这个命令可能需要几分钟到几个小时才能完成，因此不应该从Kadupul UI运行。您可以在命令行运行'php -q cli / rebuild_poller_cache.php --help'以获取更多信息。</ i>"
 
-#: lib/installer.php:3971
+#: lib/installer.php:4002
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "设置PHP选项%s =%s"
 
-#: lib/installer.php:3977
+#: lib/installer.php:4008
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "无法设置PHP选项%s，为%s（应为%s）"
 
-#: lib/installer.php:4014
+#: lib/installer.php:4045
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "尝试同步时未找到数据采集器"
 

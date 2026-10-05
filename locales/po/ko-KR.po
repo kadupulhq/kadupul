@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 08:26-0700\n"
+"POT-Creation-Date: 2026-10-05 08:41-0700\n"
 "PO-Revision-Date: 2024-04-20 19:06-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -582,7 +582,7 @@ msgstr "아니오"
 #: gprint_presets.php:430 graph_templates.php:921 host_templates.php:997
 #: include/global_settings.php:875 include/global_settings.php:1926
 #: lib/api_automation.php:1438 lib/installer.php:2124 lib/installer.php:2152
-#: lib/installer.php:3953 tree.php:2399 tree.php:2400 user_admin.php:2267
+#: lib/installer.php:3984 tree.php:2399 tree.php:2400 user_admin.php:2267
 #: user_domains.php:754 user_domains.php:758 user_group_admin.php:2084
 msgid "Yes"
 msgstr "예"
@@ -2469,7 +2469,7 @@ msgstr "트리 생성 기준"
 msgid "Change Leaf Type"
 msgstr "리프 유형 변경"
 
-#: automation_tree_rules.php:740 lib/installer.php:4177 utilities.php:2764
+#: automation_tree_rules.php:740 lib/installer.php:4208 utilities.php:2764
 #: utilities.php:2765 utilities.php:2768 utilities.php:2769
 msgid "WARNING:"
 msgstr "경고:"
@@ -12007,7 +12007,7 @@ msgid "Please wait while the installation system for Kadupul Version %s initiali
 msgstr "Kadupul Version  %s의 설치 시스템이 초기화되는 동안 기다려주십시오. 이 기능을 사용하려면 JavaScript를 활성화해야합니다."
 
 #: install/install.php:101 lib/html_utility.php:1336 lib/installer.php:2085
-#: lib/installer.php:4093
+#: lib/installer.php:4124
 msgid "Error"
 msgstr "오류"
 
@@ -14759,7 +14759,7 @@ msgid "Location checks"
 msgstr "위치 확인"
 
 #: lib/installer.php:2028 lib/installer.php:2179 lib/installer.php:2183
-#: lib/installer.php:2339 lib/installer.php:2344 lib/installer.php:4197
+#: lib/installer.php:2339 lib/installer.php:2344 lib/installer.php:4228
 msgid "ERROR:"
 msgstr "오류:"
 
@@ -15399,224 +15399,234 @@ msgstr ""
 msgid "Finished %s Process for v%s"
 msgstr "v %s에 대한 %s 프로세스 완료"
 
-#: lib/installer.php:3410
+#: lib/installer.php:3434
 #, php-format
 msgid "Found %s templates to install"
 msgstr "설치할 %s 템플릿을 찾았습니다."
 
-#: lib/installer.php:3420
+#: lib/installer.php:3444
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "패키지 # %s '%s'을 (를) 가져 오려고합니다."
 
-#: lib/installer.php:3429
+#: lib/installer.php:3453
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "프로필 '%s'에서 패키지 # %s '%s'을 (를) 가져 왔습니다."
 
-#: lib/installer.php:3435
+#: lib/installer.php:3459
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "프로필 '%s'에서 패키지 # %s '%s'을 (를) 가져 오지 못했습니다."
 
-#: lib/installer.php:3452
+#: lib/installer.php:3476
 #, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "장치 템플릿 '%s' 에 대한 매핑 자동화 템플릿"
 
-#: lib/installer.php:3473
+#: lib/installer.php:3497
 msgid "No templates were selected for import"
 msgstr "가져올 템플릿을 선택하지 않았습니다"
 
-#: lib/installer.php:3483
+#: lib/installer.php:3507
 msgid "Updating remote configuration file"
 msgstr "구성 대기 중"
 
-#: lib/installer.php:3518
+#: lib/installer.php:3542
 #, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "기본 데이터 원본 프로필을 %s (%s) (으) 로 설정"
 
-#: lib/installer.php:3546
+#: lib/installer.php:3570
 #, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "선택한 프로필 (%s) 을 찾지 못했습니다. 변경 사항이 없습니다"
 
-#: lib/installer.php:3555
+#: lib/installer.php:3579
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "자동화 네트워크 (%s) 업데이트, 모드 \"%s\"=> \"%s\", 서브넷 \"%s\"=> %s \""
 
-#: lib/installer.php:3565
+#: lib/installer.php:3589
 msgid "Failed to find automation network, no changes were made"
 msgstr "자동화 네트워크를 찾지 못했습니다. 변경 사항이 없습니다."
 
-#: lib/installer.php:3569
+#: lib/installer.php:3593
 msgid "Adding extra snmp settings for automation"
 msgstr "자동화를위한 추가 snmp 설정 추가"
 
-#: lib/installer.php:3575
+#: lib/installer.php:3599
 #, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "자동화 옵션 세트 %s 선택"
 
-#: lib/installer.php:3588
+#: lib/installer.php:3612
 #, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "자동화 옵션 세트 업데이트 %s"
 
-#: lib/installer.php:3591
+#: lib/installer.php:3615
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "자동화 옵션 세트 %s을 (를) 성공적으로 업데이트했습니다"
 
-#: lib/installer.php:3593
+#: lib/installer.php:3617
 #, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "재확인 자동화 옵션 세트 %s"
 
-#: lib/installer.php:3601
+#: lib/installer.php:3625
 #, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "자동화 옵션 세트 %s 업데이트 실패"
 
-#: lib/installer.php:3604
+#: lib/installer.php:3628
 msgid "Failed to find any automation option set"
 msgstr "복사 할 데이터를 찾지 못했습니다!"
 
-#: lib/installer.php:3634
+#: lib/installer.php:3658
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "장치 템플릿 [편집 :  %s]"
 
-#: lib/installer.php:3664
+#: lib/installer.php:3688
 msgid "Creating Graphs for Default Device"
 msgstr "이 장치에 대한 그래프 만들기"
 
-#: lib/installer.php:3671
+#: lib/installer.php:3695
 msgid "Adding Device to Default Tree"
 msgstr "장치 기본값"
 
-#: lib/installer.php:3679
+#: lib/installer.php:3703
 msgid "No templated graphs for Default Device were found"
 msgstr "기본 장치에 대한 템플릿 그래프가 없습니다."
 
-#: lib/installer.php:3683
+#: lib/installer.php:3707
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "경고 : 운영 체제의 장치 템플릿을 찾을 수 없습니다. Kadupul 서버를 모니터하려면 디바이스 템플리트 또는 Kadupul 패키지를 가져와야합니다."
 
-#: lib/installer.php:3690
+#: lib/installer.php:3714
 msgid "Running first-time data query for local host"
 msgstr "로컬 호스트에 대한 최초 데이터 쿼리 실행"
 
-#: lib/installer.php:3698
+#: lib/installer.php:3722
 msgid "Repopulating poller cache"
 msgstr "폴러 캐시 다시 작성"
 
-#: lib/installer.php:3703
+#: lib/installer.php:3727
 msgid "Repopulating SNMP Agent cache"
 msgstr "SNMPAgent 캐시 다시 작성"
 
-#: lib/installer.php:3708
+#: lib/installer.php:3732
 msgid "Generating RSA Key Pair"
 msgstr "RSA 키 페어 생성"
 
-#: lib/installer.php:3719
+#: lib/installer.php:3743
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "변환 할 %s 테이블을 찾았습니다."
 
-#: lib/installer.php:3726
+#: lib/installer.php:3750
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "테이블 # %s '%s'변환 중"
 
-#: lib/installer.php:3734
+#: lib/installer.php:3758
 #, php-format
 msgid "Converting Table #%s '%s' failed in-process: %s"
 msgstr ""
 
-#: lib/installer.php:3742
+#: lib/installer.php:3766
 msgid "No tables where found or selected for conversion"
 msgstr "변환을 위해 찾거나 선택한 테이블이 없습니다."
 
-#: lib/installer.php:3754
+#: lib/installer.php:3778
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "%s에서 %s (으)로 전환"
 
-#: lib/installer.php:3758
+#: lib/installer.php:3782
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "참고 : db 캐시에 임시 파일 사용 : %s"
 
-#: lib/installer.php:3780
+#: lib/installer.php:3804
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "v %s (DB %s)에서 v %s로 업그레이드"
 
-#: lib/installer.php:3788
+#: lib/installer.php:3812
 #, php-format
-msgid "WARNING: Failed to find upgrade function for v%s"
-msgstr "경고 : v %s의 업그레이드 기능을 찾지 못했습니다"
+msgid "ERROR: Failed to find upgrade function for v%s"
+msgstr ""
 
-#: lib/installer.php:3851
+#: lib/installer.php:3821
+#, php-format
+msgid "ERROR: Database version %s could not be confirmed; retry from the last confirmed version."
+msgstr ""
+
+#: lib/installer.php:3830
+#, php-format
+msgid "ERROR: Required upgrade file for v%s was not found."
+msgstr ""
+
+#: lib/installer.php:3882
 msgid "Install aborted due to no EULA acceptance"
 msgstr "EULA 승인이 없어 설치가 중단되었습니다."
 
-#: lib/installer.php:3875
+#: lib/installer.php:3906
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "백그라운드가 이미 %s에서 시작되었습니다. %s에서의이 시도는 생략되었습니다."
 
-#: lib/installer.php:3899
+#: lib/installer.php:3930
 #, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "설치 중 예외 발생: # %s - %s"
 
-#: lib/installer.php:3918
+#: lib/installer.php:3949
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "설치가  %s에서 시작되어  %s에서 완료되었습니다."
 
-#: lib/installer.php:3955
+#: lib/installer.php:3986
 msgid "Both"
 msgstr "모두"
 
-#: lib/installer.php:3955
+#: lib/installer.php:3986
 #, fuzzy, php-format
 msgid "No - %s"
 msgstr "분"
 
-#: lib/installer.php:3960
+#: lib/installer.php:3991
 #, fuzzy, php-format
 msgid "%s - N/A"
 msgstr "해당 없음"
 
-#: lib/installer.php:3960 lib/installer.php:3962
+#: lib/installer.php:3991 lib/installer.php:3993
 msgid "Web"
 msgstr "웹"
 
-#: lib/installer.php:3962 lib/installer.php:3965
+#: lib/installer.php:3993 lib/installer.php:3996
 #, fuzzy, php-format
 msgid "%s - No"
 msgstr "분"
 
-#: lib/installer.php:3965
+#: lib/installer.php:3996
 msgid "Cli"
 msgstr "CLI"
 
-#: lib/installer.php:3971
+#: lib/installer.php:4002
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "PHP 옵션 설정 %s = %s"
 
-#: lib/installer.php:3977
+#: lib/installer.php:4008
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "PHP 옵션 %s을 (를) 설정하지 못했습니다. %s (%s 여야 함)"
 
-#: lib/installer.php:4014
+#: lib/installer.php:4045
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "동기화를 시도 할 때 데이터 수집기를 찾을 수 없습니다."
 
