@@ -106,6 +106,10 @@ BOOT;
             proc_terminate($process);
             proc_close($process);
         }
+        if ($layout === 'symlink') {
+            // Remove the owned directory link before its target can become dangling.
+            PHP_OS_FAMILY === 'Windows' ? rmdir($temporary.'/scripts') : unlink($temporary.'/scripts');
+        }
         foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($temporary, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST) as $entry) {
             // Windows directory symlink entries are removed with rmdir; the iterator does not follow them.
             $entry->isDir() && (PHP_OS_FAMILY === 'Windows' || !$entry->isLink())
