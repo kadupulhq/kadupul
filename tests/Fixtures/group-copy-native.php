@@ -60,6 +60,9 @@ if (($argv[3] ?? '') === 'coverage') {
     }
     $GLOBALS['nativeChildCoverageSnapshot'] = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/group-copy-native.php', $scenario, $sources);
     define('GROUP_COPY_TEST_COVERAGE', true);
+    if (str_starts_with($scenario, 'wiring-')) {
+        define('GROUP_COPY_UNIT_TEST_COVERAGE', true);
+    }
     define('RRD_TEST_COVERAGE_DIRECTORY', $directory);
     require $root . '/tests/Fixtures/rrd-process-coverage.php';
 }
