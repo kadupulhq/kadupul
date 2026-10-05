@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 import subprocess
 import tempfile
+import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -75,6 +76,93 @@ def main():
              str(args.unit.resolve()), str(fixture_coverage)],
             capture_output=True, text=True, check=True, timeout=60)
         temporary = json.loads(fixture.stdout)
+        # Renamed copies cannot be reconstructed by the suffix fallback. A
+        # corrupt associated manifest must fail before publishing any report.
+        temporary_manifest = Path(temporary['manifest'])
+        valid_mapping = temporary_manifest.read_text()
+        stale_mapping = json.loads(valid_mapping)
+        stale_mapping['sha256'] = '0' * 64
+        temporary_manifest.write_text(json.dumps(stale_mapping))
+        output.write_text('original unit coverage')
+        invalid = subprocess.run(
+            [args.php, str(ROOT / 'tests/Support/Behavior/merge_poller_coverage.php'),
+             str(fixture_coverage), str(args.integration.resolve()), str(output)],
+            capture_output=True, text=True, timeout=60)
+        if invalid.returncode == 0 or output.read_text() != 'original unit coverage' \
+                or 'Invalid associated coverage source mapping' not in invalid.stdout + invalid.stderr \
+                or Path(temporary['copy']).exists() or not temporary_manifest.exists():
+            raise RuntimeError('temporary-source-invalid-manifest: invalid mapping was consumed or published')
+        print('PASS temporary-source-invalid-manifest', flush=True)
+        for case in ('outside-copy', 'traversal-copy', 'outside-source'):
+            invalid_mapping = json.loads(valid_mapping)
+            if case == 'outside-copy':
+                invalid_mapping['copy'] = '/coverage-map-outside/' + Path(temporary['copy']).name
+            elif case == 'traversal-copy':
+                copy_path = Path(temporary['copy'])
+                invalid_mapping['copy'] = str(copy_path.parent / '..' / copy_path.parent.name / copy_path.name)
+            else:
+                invalid_mapping['source'] = str(root / 'observations.json')
+            temporary_manifest.write_text(json.dumps(invalid_mapping))
+            output.write_text('original unit coverage')
+            rejected = subprocess.run(
+                [args.php, str(ROOT / 'tests/Support/Behavior/merge_poller_coverage.php'),
+                 str(fixture_coverage), str(args.integration.resolve()), str(output)],
+                capture_output=True, text=True, timeout=60)
+            error = 'Invalid associated coverage source mapping' if case == 'outside-source' \
+                else 'Unmapped temporary coverage source'
+            if rejected.returncode == 0 or output.read_text() != 'original unit coverage' \
+                    or error not in rejected.stdout + rejected.stderr \
+                    or Path(temporary['copy']).exists() or not temporary_manifest.exists():
+                raise RuntimeError(f'temporary-source-{case}: invalid mapping was consumed or published')
+            print(f'PASS temporary-source-{case}', flush=True)
+        temporary_manifest.write_text(valid_mapping)
+
+        unrelated_fixture = subprocess.run(
+            [args.php, str(ROOT / 'tests/Support/Behavior/coverage_source_map_fixture.php'),
+             str(args.unit.resolve()), str(root / 'unrelated-coverage.php'), 'named'],
+            capture_output=True, text=True, check=True, timeout=60)
+        unrelated = json.loads(unrelated_fixture.stdout)
+        unrelated_manifest = Path(unrelated['manifest'])
+        unrelated_mapping = json.loads(unrelated_manifest.read_text())
+        unrelated_copy = Path(unrelated['copy'])
+        unrelated_copy.parent.mkdir(parents=True)
+        unrelated_source = Path(unrelated_mapping['source']).read_bytes()
+        unrelated_copy.write_bytes(unrelated_source)
+        paired_coverage = root / 'paired-coverage.php'
+        paired_fixture = subprocess.run(
+            [args.php, str(ROOT / 'tests/Support/Behavior/coverage_source_map_fixture.php'),
+             str(root / 'unrelated-coverage.php'), str(paired_coverage), 'named'],
+            capture_output=True, text=True, check=True, timeout=60)
+        paired = json.loads(paired_fixture.stdout)
+        output.write_text('original unit coverage')
+        try:
+            result = subprocess.run(
+                [args.php, str(ROOT / 'tests/Support/Behavior/merge_poller_coverage.php'),
+                 str(paired_coverage), str(args.integration.resolve()), str(output)],
+                capture_output=True, text=True, timeout=60)
+            if not unrelated_manifest.exists() or not unrelated_copy.exists() \
+                    or unrelated_copy.read_bytes() != unrelated_source:
+                raise RuntimeError('temporary-source-unrelated: another artifact lost its retained source or manifest')
+            if result.returncode != 0 or Path(paired['copy']).exists() or Path(paired['manifest']).exists():
+                raise RuntimeError('temporary-source-unrelated: associated mapping was not consumed successfully')
+            print('PASS temporary-source-unrelated', flush=True)
+            handoff_output = root / 'handoff.xml'
+            handoff = subprocess.run(
+                [args.php, str(ROOT / 'tests/Support/Behavior/merge_poller_coverage.php'),
+                 str(root / 'unrelated-coverage.php'), str(args.integration.resolve()), str(handoff_output)],
+                capture_output=True, text=True, timeout=60)
+            if handoff.returncode != 0 or unrelated_manifest.exists() or unrelated_copy.exists():
+                raise RuntimeError('temporary-source-handoff: the preserved artifact cannot complete its own merge')
+            print('PASS temporary-source-handoff', flush=True)
+        finally:
+            unrelated_copy.unlink(missing_ok=True)
+            unrelated_manifest.unlink(missing_ok=True)
+            if unrelated_copy.parent.exists():
+                unrelated_copy.parent.rmdir()
+            if unrelated_copy.parent.parent.exists():
+                unrelated_copy.parent.parent.rmdir()
+            Path(paired['manifest']).unlink(missing_ok=True)
+            Path(paired['copy']).unlink(missing_ok=True)
         output.write_text('original unit coverage')
         result = subprocess.run(
             [args.php, str(ROOT / 'tests/Support/Behavior/merge_poller_coverage.php'),
@@ -86,6 +174,12 @@ def main():
             raise RuntimeError('temporary-source-restore: combined report was not published')
         if Path(temporary['copy']).exists() or Path(temporary['manifest']).exists():
             raise RuntimeError('temporary-source-restore: temporary source or manifest was not cleaned')
+        report_files = ET.parse(output).findall('.//file')
+        canonical_source = json.loads(valid_mapping)['source']
+        matching_source = [file for file in report_files if file.get('name') == canonical_source]
+        if len(matching_source) != 1 or any(file.get('name') == temporary['copy'] for file in report_files) \
+                or not any(int(line.get('count', '0')) > 0 for line in matching_source[0].findall('line')):
+            raise RuntimeError('temporary-source-restore: measured coverage was lost or the copied path leaked into Clover')
         print('PASS temporary-source-restore', flush=True)
 
 
