@@ -102,13 +102,14 @@ function render(string $call, array $arguments, ?object $coverage): string
         function aggregate_build_children_url($id) { return ''; }
         function db_fetch_cell_prepared($sql, $args) { return $GLOBALS['a']['cell'] ?? 0; }
         function api_plugin_hook($name, $args = array()) {}
-        function isset_request_var($name) { return false; }
+        function isset_request_var($name) { return array_key_exists($name, $GLOBALS['a']['request'] ?? array()); }
         function isempty_request_var($name) { return true; }
-        function get_nfilter_request_var($name) { return ''; }
-        function get_request_var($name) { return ''; }
+        function get_nfilter_request_var($name) { return $GLOBALS['a']['request'][$name] ?? ''; }
+        function get_request_var($name) { return $GLOBALS['a']['request'][$name] ?? ''; }
         function clean_up_name($name) { return $name; }
         class CactiSecureHeaders { public static function getNonceAttribute() { return 'nonce="fixture"'; } }
         $_SERVER['SCRIPT_NAME'] = '/graphs.php';
+        $_SESSION = $a['session'] ?? array();
         require $argv[1] . '/lib/html.php';
         PHP;
     $program .= "\n" . $call;
@@ -411,3 +412,79 @@ test('spike menu labels stay text while nested menu markup remains functional', 
     expect($xpath->query('//li[@id="child"]/span')->item(0)->textContent)->toBe('Child & label');
     expect($xpath->query('//li[@id="child"]/span/i')->item(0)->getAttribute('class'))->toBe('fa fa-check');
 })->with(PAYLOADS);
+
+
+test('HTML escaping preserves null scalar and existing entity contracts', function () {
+    $values = array(null, false, true, 0, 1.5, '', 'plain', '&amp;&#39;&quot;', "a`b", "<tag>\"'");
+    $output = render(
+        'print json_encode(array_map("html_escape", $a["values"]), JSON_THROW_ON_ERROR);',
+        array('values' => $values),
+        $this->getTestResultObject()->getCodeCoverage()
+    );
+    expect(json_decode($output, true, 512, JSON_THROW_ON_ERROR))
+        ->toBe(array(null, '', '1', '0', '1.5', '', 'plain', '&amp;&#39;&quot;', 'a&#96;b', '&lt;tag&gt;&quot;&apos;'));
+});
+
+test('both sortable headers restore cached order and retain independent page counters', function () {
+    $call = <<<'PHP'
+        $headers = array('name' => array('display' => '<strong>Name</strong>', 'sort' => 'ASC'),
+            'second' => array('Second', 'DESC'), 'nosort' => array('display' => 'Fixed'));
+        ob_start();
+        print '<table>';
+        html_header_sort($headers, 'name', 'ASC');
+        html_header_sort_checkbox($headers, 'name', 'ASC');
+        html_header_sort($headers, '', 'DESC');
+        html_header_sort_checkbox($headers, '', 'DESC');
+        print '</table>';
+        $html = ob_get_clean();
+        print json_encode(array('html' => $html, 'session' => $_SESSION), JSON_THROW_ON_ERROR);
+        PHP;
+    $result = json_decode(render(
+        $call,
+        array('request' => array('action' => 'edit', 'tab' => 'general'),
+            'session' => array('sort_data' => array('0_graphs_edit_general' => array('second' => 'DESC', 'name' => 'ASC')))),
+        $this->getTestResultObject()->getCodeCoverage()
+    ), true, 512, JSON_THROW_ON_ERROR);
+    expect($result['session']['valid_sort_columns'])->toBe(array(
+        '0_graphs_edit_general' => array('name', 'second'), '1_graphs_edit_general' => array('name', 'second')));
+    $xpath = document($result['html']);
+    expectNoInjection($xpath);
+    expect($xpath->query('//tr'))->toHaveCount(4)
+        ->and($xpath->query('//strong[text()="Name"]'))->toHaveCount(4)
+        ->and($xpath->query('//div[@class="sortinfo"]'))->toHaveCount(8);
+    foreach (array(1, 2) as $row) {
+        expect($xpath->evaluate('string(//tr[' . $row . ']/th[1]/@class)'))->toContain('secondarySort')
+            ->and($xpath->evaluate('string(//tr[' . $row . ']/th[2]/@class)'))->toContain('primarySort')
+            ->and($xpath->evaluate('string(//tr[' . $row . ']/th[1]/div/@sort-direction)'))->toBe('DESC')
+            ->and($xpath->evaluate('string(//tr[' . $row . ']/th[2]/div/@sort-direction)'))->toBe('ASC')
+            ->and($xpath->evaluate('string(//tr[' . $row . ']/th[1]/div/@sort-page)'))->toBe('graphs.php');
+    }
+});
+
+test('sortable header metadata preserves primary secondary and default column choices', function (array $ordering, string $selected, string $direction, string $nameDirection, string $secondDirection) {
+    $call = <<<'CHILD'
+        $headers = array('name' => array('display' => 'Name', 'align' => 'center', 'tip' => 'Name hint', 'nohide' => true),
+            'second' => array('Second', 'DESC'));
+        print '<table>';
+        html_header_sort($headers, $a['selected'], $a['direction']);
+        html_header_sort_checkbox($headers, $a['selected'], $a['direction']);
+        print '</table>';
+        CHILD;
+    $arguments = array('selected' => $selected, 'direction' => $direction);
+    if ($ordering !== array()) {
+        $arguments['session'] = array('sort_data' => array('0_graphs' => $ordering));
+    }
+    $xpath = document(render($call, $arguments, $this->getTestResultObject()->getCodeCoverage()));
+    expectNoInjection($xpath);
+    foreach (array(1, 2) as $row) {
+        expect($xpath->evaluate('string(//tr[' . $row . ']/th[1]/@title)'))->toBe('Name hint')
+            ->and($xpath->evaluate('string(//tr[' . $row . ']/th[1]/@class)'))->toContain('nohide')
+            ->and($xpath->evaluate('string(//tr[' . $row . ']/th[1]/div/@sort-direction)'))->toBe($nameDirection)
+            ->and($xpath->evaluate('string(//tr[' . $row . ']/th[2]/div/@sort-direction)'))->toBe($secondDirection);
+    }
+})->with(array(
+    'named primary selected' => array(array('name' => 'ASC', 'second' => 'DESC'), 'name', 'ASC', 'DESC', 'ASC'),
+    'cached named primary and legacy secondary' => array(array('name' => 'ASC', 'second' => 'DESC'), '', 'DESC', 'DESC', 'ASC'),
+    'legacy secondary selected' => array(array('name' => 'ASC', 'second' => 'DESC'), 'second', 'DESC', 'DESC', 'ASC'),
+    'legacy primary selected and named default' => array(array(), 'second', 'ASC', 'ASC', 'DESC'),
+));
