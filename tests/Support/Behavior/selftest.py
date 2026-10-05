@@ -1047,6 +1047,23 @@ def provenance_contract():
     print('provenance records modified and untracked harnesses and hashes the actual fixture inputs')
 
 
+def local_login_form_contract():
+    # The fresh-install local login form has no realm selector. Do not invent
+    # a string realm that the production integer boundary must reject.
+    session = harness.Session('http://fixture.invalid')
+    calls = []
+    def request(path, fields=None):
+        calls.append((path, fields))
+        session.token = 'fixture-csrf'
+        return {'login_form': fields is None, 'admin_layout': fields is not None}
+    with patch.object(session, 'request', side_effect=request):
+        result = session.login('fixture-password')
+    assert calls == [('/index.php', None), ('/index.php', {
+        'action': 'login', 'login_username': 'admin',
+        'login_password': 'fixture-password', '__csrf_magic': 'fixture-csrf'})]
+    assert result == {'login_form': False, 'admin_layout': True}
+
+
 def main():
     failures = []
 
@@ -1069,6 +1086,8 @@ def main():
     native_worker_boundary()
     recording_guards()
     separate_application_outputs()
+    local_login_form_contract()
+    print('local login submits the actual fresh-install form without an invented realm')
     source_provenance_failure_contract()
     provenance_contract()
     application_input_boundary_contract()

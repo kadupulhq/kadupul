@@ -349,7 +349,8 @@ $pages = array(
     'data_queries-item_edit' => $page('data_queries.php', array('action' => 'item_edit', 'snmp_query_id' => '1')),
     'data_source_profiles-edit' => $page('data_source_profiles.php', array('action' => 'edit')),
     'data_source_profiles-item_edit' => $page('data_source_profiles.php', array('action' => 'item_edit', 'profile_id' => '1')),
-    'data_sources-ds_edit' => $page('data_sources.php', array('action' => 'ds_edit'), array(
+    // Match the rendered Add link: Any listing scope opens a new None/device-less source.
+    'data_sources-ds_edit' => $page('data_sources.php', array('action' => 'ds_edit', 'host_id' => '0'), array(
         array('sql' => 'SELECT id, name FROM data_template ORDER BY name', 'rows' => array(array('id' => '4', 'name' => 'Interface - Traffic <in/out>'), array('id' => '9', 'name' => 'Unix - Load Average'))),
     )),
     'data_templates-template_edit' => $page('data_templates.php', array('action' => 'template_edit')),
@@ -359,7 +360,11 @@ $pages = array(
     'graphs-graph_edit' => $page('graphs.php', array('action' => 'graph_edit'), array(
         array('sql' => 'FROM graph_templates AS gt WHERE id NOT IN', 'rows' => array(array('id' => '3', 'name' => 'Interface - Traffic <bits>'), array('id' => '8', 'name' => 'Unix - Load Average'))),
     )),
-    'graphs_items-item_edit' => $page('graphs_items.php', array('action' => 'item_edit', 'local_graph_id' => '1')),
+    'graphs_items-item_edit' => $page('graphs_items.php', array('action' => 'item_edit', 'local_graph_id' => '1'), array(
+        // The actual authorization and ownership lookups precede this new-item renderer.
+        array('sql' => 'SELECT COUNT(*) FROM graph_templates_graph AS gtg', 'rows' => array(array('COUNT(*)' => '1'))),
+        array('sql' => 'SELECT id, host_id, graph_template_id FROM graph_local WHERE id = ?', 'params' => array(1), 'rows' => array(array('id' => '1', 'host_id' => '0', 'graph_template_id' => '0'))),
+    )),
     'reports_admin-edit' => $page('reports_admin.php', array('action' => 'edit')),
     'reports_admin-item_edit' => $page('reports_admin.php', array('action' => 'item_edit', 'id' => '4'), array(
         array('sql' => 'SELECT user_id FROM reports WHERE id = ?', 'params' => array(4), 'rows' => array(array('user_id' => '1'))),
