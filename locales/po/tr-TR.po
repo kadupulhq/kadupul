@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 03:24-0700\n"
+"POT-Creation-Date: 2026-10-05 03:34-0700\n"
 "PO-Revision-Date: 2024-04-20 19:24-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -142,8 +142,8 @@ msgstr "Aşağıdaki Toplam Grafiği / Grafikleri silmek için &#39;Devam Et&#39
 #: tree.php:771 tree.php:780 tree.php:789 user_admin.php:252 user_admin.php:292
 #: user_admin.php:303 user_admin.php:314 user_admin.php:337
 #: user_domains.php:220 user_domains.php:229 user_domains.php:238
-#: user_domains.php:247 user_group_admin.php:451 user_group_admin.php:470
-#: user_group_admin.php:481 user_group_admin.php:492
+#: user_domains.php:247 user_group_admin.php:460 user_group_admin.php:479
+#: user_group_admin.php:490 user_group_admin.php:501
 msgid "Cancel"
 msgstr "İptal"
 
@@ -175,8 +175,8 @@ msgstr "İptal"
 #: tree.php:771 tree.php:780 tree.php:789 user_admin.php:252 user_admin.php:292
 #: user_admin.php:303 user_admin.php:314 user_admin.php:337
 #: user_domains.php:220 user_domains.php:229 user_domains.php:238
-#: user_domains.php:247 user_group_admin.php:451 user_group_admin.php:470
-#: user_group_admin.php:481 user_group_admin.php:492
+#: user_domains.php:247 user_group_admin.php:460 user_group_admin.php:479
+#: user_group_admin.php:490 user_group_admin.php:501
 msgid "Continue"
 msgstr "Devam et"
 
@@ -427,7 +427,7 @@ msgstr "Grafik Eşleştirme"
 #: settings.php:598 settings.php:615 settings.php:674
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:56
 #: tree.php:938 tree.php:973 tree.php:1008 tree.php:2217 user_admin.php:2074
-#: user_domains.php:643 user_group_admin.php:1984 utilities.php:1094
+#: user_domains.php:643 user_group_admin.php:1993 utilities.php:1094
 #: utilities.php:1521 utilities.php:1828 utilities.php:2129 utilities.php:3131
 #: utilities.php:3393
 msgid "Search"
@@ -441,8 +441,8 @@ msgstr "Ara"
 #: include/global_arrays.php:2012 lib/api_automation.php:283 lib/html.php:1996
 #: lib/html.php:2065 lib/html_graph.php:197 lib/html_tree.php:1022
 #: lib/html_tree.php:1378 tree.php:917 tree.php:2366 user_admin.php:801
-#: user_admin.php:1073 user_admin.php:2347 user_group_admin.php:931
-#: user_group_admin.php:1086 user_group_admin.php:2139 utilities.php:320
+#: user_admin.php:1073 user_admin.php:2347 user_group_admin.php:940
+#: user_group_admin.php:1095 user_group_admin.php:2148 utilities.php:320
 msgid "Graphs"
 msgstr "Grafikler"
 
@@ -462,7 +462,7 @@ msgstr "Grafikler"
 #: rrdcleaner.php:549
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:81
 #: tree.php:2227 user_admin.php:2135 user_domains.php:18 user_domains.php:653
-#: user_domains.php:739 user_group_admin.php:1994 utilities.php:1076
+#: user_domains.php:739 user_group_admin.php:2003 utilities.php:1076
 #: utilities.php:1838 utilities.php:2160 utilities.php:3159 utilities.php:3435
 msgid "Default"
 msgstr "Varsayılan"
@@ -501,7 +501,7 @@ msgstr "Git"
 #: managers.php:529 managers.php:794 plugins.php:530 pollers.php:914
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
 #: tree.php:2242 user_admin.php:2150 user_domains.php:665
-#: user_group_admin.php:2009 utilities.php:1084 utilities.php:1470
+#: user_group_admin.php:2018 utilities.php:1084 utilities.php:1470
 #: utilities.php:1819 utilities.php:2120 utilities.php:3167 utilities.php:3443
 msgid "Set/Refresh Filters"
 msgstr "Filtreleri Ayarla / Yenile"
@@ -537,13 +537,13 @@ msgstr "Temizle"
 #: pollers.php:915
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:96
 #: tree.php:2243 user_admin.php:2151 user_domains.php:666
-#: user_group_admin.php:2010 utilities.php:1085 utilities.php:1471
+#: user_group_admin.php:2019 utilities.php:1085 utilities.php:1471
 #: utilities.php:1820 utilities.php:2121 utilities.php:3168 utilities.php:3444
 msgid "Clear Filters"
 msgstr "Filtreleri Temizle"
 
 #: aggregate_graphs.php:1329 aggregate_graphs.php:1662 graphs.php:1183
-#: lib/api_automation.php:574 user_admin.php:809 user_group_admin.php:939
+#: lib/api_automation.php:574 user_admin.php:809 user_group_admin.php:948
 msgid "Graph Title"
 msgstr "Grafik Başlığı"
 
@@ -554,8 +554,8 @@ msgstr "Grafik Başlığı"
 #: host.php:1928 host_templates.php:949 lib/api_automation.php:282
 #: pollers.php:995 tree.php:2306 user_admin.php:809 user_admin.php:924
 #: user_admin.php:1073 user_admin.php:1212 user_admin.php:1351
-#: user_group_admin.php:732 user_group_admin.php:939 user_group_admin.php:1086
-#: user_group_admin.php:1222 user_group_admin.php:1354
+#: user_group_admin.php:741 user_group_admin.php:948 user_group_admin.php:1095
+#: user_group_admin.php:1231 user_group_admin.php:1363
 msgid "ID"
 msgstr "ID"
 
@@ -576,7 +576,7 @@ msgstr "Boyut"
 #: host_templates.php:997 include/global_settings.php:876
 #: include/global_settings.php:1927 lib/api_automation.php:1438 tree.php:2399
 #: tree.php:2400 user_admin.php:2269 user_domains.php:758
-#: user_group_admin.php:2077
+#: user_group_admin.php:2086
 msgid "No"
 msgstr "Hayır"
 
@@ -590,7 +590,7 @@ msgstr "Hayır"
 #: include/global_settings.php:875 include/global_settings.php:1926
 #: lib/api_automation.php:1438 lib/installer.php:2124 lib/installer.php:2152
 #: lib/installer.php:3953 tree.php:2399 tree.php:2400 user_admin.php:2267
-#: user_domains.php:754 user_domains.php:758 user_group_admin.php:2075
+#: user_domains.php:754 user_domains.php:758 user_group_admin.php:2084
 msgid "Yes"
 msgstr "Evet"
 
@@ -729,7 +729,7 @@ msgstr "Toplu Şablonlar"
 #: aggregate_templates.php:612 automation_templates.php:399
 #: automation_templates.php:489 color_templates.php:685
 #: include/global_arrays.php:1002 include/global_arrays.php:1066
-#: lib/installer.php:2738 user_admin.php:2365 user_group_admin.php:2151
+#: lib/installer.php:2738 user_admin.php:2365 user_group_admin.php:2160
 msgid "Templates"
 msgstr "Şablonlar"
 
@@ -943,7 +943,7 @@ msgid "LDAP"
 msgstr "LDAP"
 
 #: auth_login.php:380 user_admin.php:2119 user_admin.php:2249
-#: user_group_admin.php:732
+#: user_group_admin.php:741
 msgid "Realm"
 msgstr "Ülke:"
 
@@ -958,7 +958,7 @@ msgstr "Giriş"
 #: auth_profile.php:61 include/global_settings.php:22
 #: include/global_settings.php:1202 include/global_settings.php:1519
 #: lib/html.php:2781 managers.php:24 user_admin.php:1741
-#: user_group_admin.php:1754
+#: user_group_admin.php:1763
 msgid "General"
 msgstr "Genel"
 
@@ -992,7 +992,7 @@ msgstr "Bu kullanıcı için giriş adı."
 
 #: auth_profile.php:342 include/global_form.php:1503
 #: include/global_settings.php:1871 user_admin.php:2247 user_domains.php:482
-#: user_group_admin.php:732 utilities.php:1161
+#: user_group_admin.php:741 utilities.php:1161
 msgid "Full Name"
 msgstr "Ad Soyad"
 
@@ -1032,7 +1032,7 @@ msgstr "Her Yerde Oturumu Kapat"
 msgid "Clear all your Login Session Tokens."
 msgstr "Tüm Oturum Açma Simgelerinizi temizleyin."
 
-#: auth_profile.php:398 user_admin.php:1748 user_group_admin.php:1761
+#: auth_profile.php:398 user_admin.php:1748 user_group_admin.php:1770
 msgid "User Settings"
 msgstr "Kullanıcı Ayarları"
 
@@ -1131,8 +1131,8 @@ msgstr "Aygıtları Sil"
 #: lib/api_automation.php:178 lib/api_automation.php:271
 #: lib/api_automation.php:486 lib/api_automation.php:563
 #: lib/api_automation.php:1189 pollers.php:1031 tree.php:916 tree.php:2360
-#: user_admin.php:1065 user_admin.php:2359 user_group_admin.php:1078
-#: user_group_admin.php:2145 utilities.php:315
+#: user_admin.php:1065 user_admin.php:2359 user_group_admin.php:1087
+#: user_group_admin.php:2154 utilities.php:315
 msgid "Devices"
 msgstr "Cihazlar"
 
@@ -1162,7 +1162,7 @@ msgstr "İletişim"
 #: include/global_form.php:1739 lib/api_automation.php:278
 #: lib/api_automation.php:1196 lib/installer.php:2044 lib/installer.php:2739
 #: managers.php:214 user_admin.php:924 user_admin.php:1073
-#: user_group_admin.php:1086 user_group_admin.php:2063
+#: user_group_admin.php:1095 user_group_admin.php:2072
 msgid "Description"
 msgstr "Açıklama"
 
@@ -1189,7 +1189,7 @@ msgstr "SNMP"
 #: lib/html_reports.php:2031 lib/installer.php:2044 managers.php:216
 #: package_import.php:542 package_import.php:627 plugins.php:497
 #: plugins.php:623 pollers.php:1007 templates_import.php:206
-#: templates_import.php:245 user_admin.php:1073 user_group_admin.php:1086
+#: templates_import.php:245 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:2135
 msgid "Status"
 msgstr "Durum"
@@ -1383,7 +1383,7 @@ msgstr "Veri sorgusu"
 #: lib/html_reports.php:2188 managers.php:241 managers.php:612
 #: user_admin.php:924 user_admin.php:936 user_admin.php:2248
 #: user_domains.php:335 user_domains.php:743 user_group_admin.php:76
-#: user_group_admin.php:732 user_group_admin.php:747 user_group_admin.php:2067
+#: user_group_admin.php:741 user_group_admin.php:756 user_group_admin.php:2076
 #: utilities.php:2140 utilities.php:3014
 msgid "Enabled"
 msgstr "Etkin"
@@ -1401,7 +1401,7 @@ msgstr "Etkin"
 #: lib/api_automation.php:28 lib/html.php:2858 lib/html_reports.php:2037
 #: lib/html_reports.php:2188 lib/html_utility.php:1317 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:936 user_domains.php:397
-#: user_group_admin.php:747 utilities.php:2141 utilities.php:2705
+#: user_group_admin.php:756 utilities.php:2141 utilities.php:2705
 #: utilities.php:3014
 msgid "Disabled"
 msgstr "Devre dışı"
@@ -2410,7 +2410,7 @@ msgid "Device Automation Templates"
 msgstr "Cihaz Otomasyonu Şablonları"
 
 #: automation_templates.php:498 data_sources.php:2019 package_import.php:624
-#: templates_import.php:242 user_admin.php:1212 user_group_admin.php:1222
+#: templates_import.php:242 user_admin.php:1212 user_group_admin.php:1231
 msgid "Template Name"
 msgstr "Şablon Adı"
 
@@ -3094,7 +3094,7 @@ msgstr "Veri Kaynağı için bulunan tüm özet konular."
 #: data_debug.php:621 data_debug.php:1195 data_sources.php:1799
 #: data_sources.php:1973 host.php:1940 include/global_arrays.php:994
 #: include/global_arrays.php:1040 include/global_arrays.php:2308
-#: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1086
+#: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:325
 msgid "Data Sources"
 msgstr "Veri Kaynakları"
@@ -4655,7 +4655,7 @@ msgstr "Grafik oluşturma sırasında kullanıcının sağdaki değeri geçersiz
 #: graph_templates.php:718 graph_templates.php:733 graph_templates.php:900
 #: graphs_new.php:635 include/global_arrays.php:1236
 #: include/global_arrays.php:2236 lib/html_tree.php:541 user_admin.php:1204
-#: user_group_admin.php:1214
+#: user_group_admin.php:1223
 msgid "Graph Templates"
 msgstr "Grafik Şablonları"
 
@@ -5213,7 +5213,7 @@ msgid "Create"
 msgstr "Oluştur"
 
 #: graphs_new.php:639 graphs_new.php:953 lib/html.php:1160 user_admin.php:1427
-#: user_group_admin.php:1438
+#: user_group_admin.php:1447
 msgid "Select All"
 msgstr "Tümünü Seç"
 
@@ -5636,7 +5636,7 @@ msgstr "Bu cihazın gönderileceği isim."
 #: lib/api_automation.php:279 lib/api_automation.php:571
 #: lib/api_automation.php:890 lib/api_automation.php:1197 managers.php:217
 #: pollers.php:115 pollers.php:1001 user_admin.php:1073
-#: user_group_admin.php:1086
+#: user_group_admin.php:1095
 msgid "Hostname"
 msgstr "Sunucu Adı"
 
@@ -6590,7 +6590,7 @@ msgstr "Zor"
 msgid "Demand"
 msgstr "Talep"
 
-#: include/global_arrays.php:894 user_admin.php:653 user_group_admin.php:786
+#: include/global_arrays.php:894 user_admin.php:653 user_group_admin.php:795
 msgid "Allow"
 msgstr "İzin Ver"
 
@@ -6738,7 +6738,7 @@ msgstr "Siteler"
 
 #: include/global_arrays.php:992 include/global_arrays.php:1230 tree.php:2208
 #: tree.php:2223 tree.php:2290 user_admin.php:1343 user_admin.php:2371
-#: user_admin.php:2377 user_group_admin.php:1346 user_group_admin.php:2157
+#: user_admin.php:2377 user_group_admin.php:1355 user_group_admin.php:2166
 msgid "Trees"
 msgstr "Ağaç"
 
@@ -6821,8 +6821,8 @@ msgid "Settings"
 msgstr "Ayarlar"
 
 #: include/global_arrays.php:1031 include/global_arrays.php:2578
-#: user_admin.php:2131 user_admin.php:2236 user_group_admin.php:724
-#: user_group_admin.php:2163
+#: user_admin.php:2131 user_admin.php:2236 user_group_admin.php:733
+#: user_group_admin.php:2172
 msgid "Users"
 msgstr "Kullanıcılar"
 
@@ -6846,7 +6846,7 @@ msgstr "Sistem Araçları"
 
 #: include/global_arrays.php:1037 include/global_arrays.php:1072
 #: include/global_arrays.php:1115 include/global_arrays.php:1218
-#: include/global_arrays.php:2212 user_admin.php:1497 user_group_admin.php:1510
+#: include/global_arrays.php:2212 user_admin.php:1497 user_group_admin.php:1519
 msgid "External Links"
 msgstr "Dış bağlantılar"
 
@@ -7838,7 +7838,7 @@ msgstr "Liste Modu"
 
 #: include/global_arrays.php:2062 include/global_arrays.php:2068
 #: lib/functions.php:4492 lib/html.php:1988 lib/html.php:2053 lib/html.php:2778
-#: user_admin.php:1472 user_group_admin.php:1485
+#: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "Konsol"
 
@@ -18112,16 +18112,16 @@ msgid "Messages"
 msgstr "Mesajlar"
 
 #: rrdcheck.php:245 rrdcleaner.php:564 user_domains.php:665
-#: user_group_admin.php:2009 user_group_admin.php:2139
-#: user_group_admin.php:2145 user_group_admin.php:2151
-#: user_group_admin.php:2157 user_group_admin.php:2163
+#: user_group_admin.php:2018 user_group_admin.php:2148
+#: user_group_admin.php:2154 user_group_admin.php:2160
+#: user_group_admin.php:2166 user_group_admin.php:2172
 msgctxt "filter: use"
 msgid "Go"
 msgstr "Git"
 
-#: rrdcheck.php:246 rrdcleaner.php:565 user_group_admin.php:2010
-#: user_group_admin.php:2139 user_group_admin.php:2145
-#: user_group_admin.php:2151 user_group_admin.php:2157
+#: rrdcheck.php:246 rrdcleaner.php:565 user_group_admin.php:2019
+#: user_group_admin.php:2148 user_group_admin.php:2154
+#: user_group_admin.php:2160 user_group_admin.php:2166
 msgctxt "filter: reset"
 msgid "Clear"
 msgstr "Temizle"
@@ -18812,7 +18812,7 @@ msgstr "Azalan Ağaçları Sırala"
 msgid "Sort Trees Descending"
 msgstr "Azalan Ağaçları Sırala"
 
-#: tree.php:2300 user_admin.php:1351 user_group_admin.php:1354
+#: tree.php:2300 user_admin.php:1351 user_group_admin.php:1363
 msgid "Tree Name"
 msgstr "Ağaç adı"
 
@@ -18976,27 +18976,27 @@ msgstr "Kullanıcı Ayarlarını Sıfırla"
 msgid "Set a new password to move this account to the Local realm."
 msgstr ""
 
-#: user_admin.php:654 user_group_admin.php:787
+#: user_admin.php:654 user_group_admin.php:796
 msgid "Deny"
 msgstr "Reddet"
 
-#: user_admin.php:685 user_group_admin.php:806
+#: user_admin.php:685 user_group_admin.php:815
 msgid "<b>Note:</b> System Graph Policy is 'Permissive' meaning the User must have access to at least one of Graph, Device, or Graph Template to gain access to the Graph"
 msgstr "<b>Not:</b> Sistem Grafiği Politikası &#39;İzin Vericidir&#39; anlamına gelir, yani Kullanıcı Grafiğe erişmek için Grafik, Aygıt veya Grafik Şablonundan en az birine erişebilmelidir."
 
-#: user_admin.php:687 user_group_admin.php:808
+#: user_admin.php:687 user_group_admin.php:817
 msgid "<b>Note:</b> System Graph Policy is 'Restrictive' meaning the User must have access to either the Graph or the Device and Graph Template to gain access to the Graph"
 msgstr "<b>Not:</b> Sistem Grafiği Politikası &#39;Kısıtlayıcı&#39;dır; yani, Grafiğe erişebilmek için Kullanıcının Grafiğe veya Cihaz ve Grafik Şablonuna erişebilmesi gerekir"
 
-#: user_admin.php:689 user_group_admin.php:810
+#: user_admin.php:689 user_group_admin.php:819
 msgid "<b>Note:</b> System Graph Policy is 'Device' meaning the User must have access to the Graph or Device to gain access to the Graph"
 msgstr "<b>Not:</b> Sistem Grafiği Politikası &#39;Kısıtlayıcı&#39;dır; yani, Grafiğe erişebilmek için Kullanıcının Grafiğe veya Cihaz ve Grafik Şablonuna erişebilmesi gerekir"
 
-#: user_admin.php:691 user_group_admin.php:812
+#: user_admin.php:691 user_group_admin.php:821
 msgid "<b>Note:</b> System Graph Policy is 'Graph Template' meaning the User must have access to the Graph or Graph Template to gain access to the Graph"
 msgstr "<b>Not:</b> Sistem Grafiği Politikası &#39;İzin Vericidir&#39; anlamına gelir, yani Kullanıcı Grafiğe erişmek için Grafik, Aygıt veya Grafik Şablonundan en az birine erişebilmelidir."
 
-#: user_admin.php:695 user_group_admin.php:820
+#: user_admin.php:695 user_group_admin.php:829
 msgid "Default Graph Policy"
 msgstr "Varsayılan Grafik Politikası"
 
@@ -19005,42 +19005,42 @@ msgid "Default Graph Policy for this User"
 msgstr "Bu Kullanıcı için Varsayılan Grafik Politikası"
 
 #: user_admin.php:705 user_admin.php:986 user_admin.php:1155
-#: user_admin.php:1291 user_group_admin.php:830 user_group_admin.php:1016
-#: user_group_admin.php:1164 user_group_admin.php:1298
+#: user_admin.php:1291 user_group_admin.php:839 user_group_admin.php:1025
+#: user_group_admin.php:1173 user_group_admin.php:1307
 msgid "Update"
 msgstr "Güncelle"
 
 #: user_admin.php:809 user_admin.php:1073 user_admin.php:1212
-#: user_admin.php:1351 user_group_admin.php:939 user_group_admin.php:1086
-#: user_group_admin.php:1222 user_group_admin.php:1354
+#: user_admin.php:1351 user_group_admin.php:948 user_group_admin.php:1095
+#: user_group_admin.php:1231 user_group_admin.php:1363
 msgid "Effective Policy"
 msgstr "Etkili Politika"
 
-#: user_admin.php:823 user_group_admin.php:953
+#: user_admin.php:823 user_group_admin.php:962
 msgid "No Matching Graphs Found"
 msgstr "Eşleşen Grafik Bulunamadı"
 
 #: user_admin.php:838 user_admin.php:844 user_admin.php:1118
 #: user_admin.php:1124 user_admin.php:1254 user_admin.php:1260
-#: user_admin.php:1392 user_admin.php:1398 user_group_admin.php:968
-#: user_group_admin.php:974 user_group_admin.php:1130 user_group_admin.php:1136
-#: user_group_admin.php:1264 user_group_admin.php:1270
-#: user_group_admin.php:1394 user_group_admin.php:1400
+#: user_admin.php:1392 user_admin.php:1398 user_group_admin.php:977
+#: user_group_admin.php:983 user_group_admin.php:1139 user_group_admin.php:1145
+#: user_group_admin.php:1273 user_group_admin.php:1279
+#: user_group_admin.php:1403 user_group_admin.php:1409
 msgid "Revoke Access"
 msgstr "Erişimi Kaldır"
 
 #: user_admin.php:839 user_admin.php:843 user_admin.php:1119
 #: user_admin.php:1123 user_admin.php:1255 user_admin.php:1259
 #: user_admin.php:1393 user_admin.php:1397 user_group_admin.php:51
-#: user_group_admin.php:969 user_group_admin.php:973 user_group_admin.php:1131
-#: user_group_admin.php:1135 user_group_admin.php:1265
-#: user_group_admin.php:1269 user_group_admin.php:1395
-#: user_group_admin.php:1399
+#: user_group_admin.php:978 user_group_admin.php:982 user_group_admin.php:1140
+#: user_group_admin.php:1144 user_group_admin.php:1274
+#: user_group_admin.php:1278 user_group_admin.php:1404
+#: user_group_admin.php:1408
 msgid "Grant Access"
 msgstr "Erişim Ver"
 
-#: user_admin.php:916 user_admin.php:2353 user_group_admin.php:1990
-#: user_group_admin.php:2052
+#: user_admin.php:916 user_admin.php:2353 user_group_admin.php:1999
+#: user_group_admin.php:2061
 msgid "Groups"
 msgstr "Gruplar"
 
@@ -19052,19 +19052,19 @@ msgstr "Üye"
 msgid "Policies (Graph/Device/Template)"
 msgstr "Politikalar (Grafik / Cihaz / Şablon)"
 
-#: user_admin.php:933 user_group_admin.php:745
+#: user_admin.php:933 user_group_admin.php:754
 msgid "Non Member"
 msgstr "Üye olmayan"
 
 #: user_admin.php:935 user_admin.php:2291 user_admin.php:2292
-#: user_admin.php:2293 user_group_admin.php:2084 user_group_admin.php:2085
-#: user_group_admin.php:2086
+#: user_admin.php:2293 user_group_admin.php:2093 user_group_admin.php:2094
+#: user_group_admin.php:2095
 msgid "ALLOW"
 msgstr "İzin Ver"
 
 #: user_admin.php:935 user_admin.php:2291 user_admin.php:2292
-#: user_admin.php:2293 user_group_admin.php:2084 user_group_admin.php:2085
-#: user_group_admin.php:2086
+#: user_admin.php:2293 user_group_admin.php:2093 user_group_admin.php:2094
+#: user_group_admin.php:2095
 msgid "DENY"
 msgstr "İZİN VERMEMEK"
 
@@ -19080,7 +19080,7 @@ msgstr "Üyelik Atama"
 msgid "Remove Membership"
 msgstr "Üyeliği Kaldır"
 
-#: user_admin.php:976 user_group_admin.php:1006
+#: user_admin.php:976 user_group_admin.php:1015
 msgid "Default Device Policy"
 msgstr "Varsayılan Cihaz Politikası"
 
@@ -19090,25 +19090,25 @@ msgstr "Bu Kullanıcı için Varsayılan Cihaz Politikası"
 
 #: user_admin.php:1084 user_admin.php:1092 user_admin.php:1223
 #: user_admin.php:1231 user_admin.php:1362 user_admin.php:1370
-#: user_group_admin.php:1097 user_group_admin.php:1105
-#: user_group_admin.php:1233 user_group_admin.php:1241
-#: user_group_admin.php:1365 user_group_admin.php:1373
+#: user_group_admin.php:1106 user_group_admin.php:1114
+#: user_group_admin.php:1242 user_group_admin.php:1250
+#: user_group_admin.php:1374 user_group_admin.php:1382
 msgid "Access Granted"
 msgstr "Erişim Verildi"
 
 #: user_admin.php:1086 user_admin.php:1090 user_admin.php:1225
 #: user_admin.php:1229 user_admin.php:1364 user_admin.php:1368
-#: user_group_admin.php:1099 user_group_admin.php:1103
-#: user_group_admin.php:1235 user_group_admin.php:1239
-#: user_group_admin.php:1367 user_group_admin.php:1371
+#: user_group_admin.php:1108 user_group_admin.php:1112
+#: user_group_admin.php:1244 user_group_admin.php:1248
+#: user_group_admin.php:1376 user_group_admin.php:1380
 msgid "Access Restricted"
 msgstr "Erişim Sınırlı"
 
-#: user_admin.php:1103 user_group_admin.php:1116
+#: user_admin.php:1103 user_group_admin.php:1125
 msgid "No Matching Devices Found"
 msgstr "Eşleşen Cihaz Bulunamadı"
 
-#: user_admin.php:1145 user_group_admin.php:1154
+#: user_admin.php:1145 user_group_admin.php:1163
 msgid "Default Graph Template Policy"
 msgstr "Varsayılan Grafik Şablonu Politikası"
 
@@ -19116,15 +19116,15 @@ msgstr "Varsayılan Grafik Şablonu Politikası"
 msgid "Default Graph Template Policy for this User"
 msgstr "Bu Kullanıcı için Varsayılan Grafik Şablonu Politikası"
 
-#: user_admin.php:1212 user_group_admin.php:1222
+#: user_admin.php:1212 user_group_admin.php:1231
 msgid "Total Graphs"
 msgstr "Toplam Grafik"
 
-#: user_admin.php:1239 user_group_admin.php:1249
+#: user_admin.php:1239 user_group_admin.php:1258
 msgid "No Matching Graph Templates Found"
 msgstr "Eşleşen Grafik Şablonu Bulunamadı"
 
-#: user_admin.php:1281 user_group_admin.php:1288
+#: user_admin.php:1281 user_group_admin.php:1297
 msgid "Default Tree Policy"
 msgstr "Varsayılan Ağaç Politikası"
 
@@ -19132,44 +19132,44 @@ msgstr "Varsayılan Ağaç Politikası"
 msgid "Default Tree Policy for this User"
 msgstr "Bu Kullanıcı için Varsayılan Ağaç Politikası"
 
-#: user_admin.php:1377 user_group_admin.php:1380
+#: user_admin.php:1377 user_group_admin.php:1389
 msgid "No Matching Trees Found"
 msgstr "Eşleşen Ağaç Bulunamadı"
 
-#: user_admin.php:1426 user_group_admin.php:1437
+#: user_admin.php:1426 user_group_admin.php:1446
 msgid "User Permissions"
 msgstr "Kullanıcı İzinleri"
 
-#: user_admin.php:1473 user_group_admin.php:1486
+#: user_admin.php:1473 user_group_admin.php:1495
 msgid "Top Tab"
 msgstr "Üst Sekme"
 
-#: user_admin.php:1474 user_group_admin.php:1487
+#: user_admin.php:1474 user_group_admin.php:1496
 msgid "Bottom Console"
 msgstr "Alt Konsol"
 
-#: user_admin.php:1475 user_group_admin.php:1488
+#: user_admin.php:1475 user_group_admin.php:1497
 msgid "Top Console"
 msgstr "Üst Konsol"
 
-#: user_admin.php:1479 user_group_admin.php:1492
+#: user_admin.php:1479 user_group_admin.php:1501
 msgid "External Link Permissions"
 msgstr "Dış Bağlantı İzinleri"
 
-#: user_admin.php:1550 user_group_admin.php:1561
+#: user_admin.php:1550 user_group_admin.php:1570
 msgid "Plugin Permissions"
 msgstr "Eklenti izinleri"
 
-#: user_admin.php:1567 user_group_admin.php:1578
+#: user_admin.php:1567 user_group_admin.php:1587
 msgid "Legacy Permissions"
 msgstr "Kullanıcı İzinleri"
 
-#: user_admin.php:1626 user_group_admin.php:1639
+#: user_admin.php:1626 user_group_admin.php:1648
 #, php-format
 msgid "User Settings %s"
 msgstr "Kullanıcı Ayarları %s"
 
-#: user_admin.php:1742 user_group_admin.php:1756
+#: user_admin.php:1742 user_group_admin.php:1765
 msgid "Permissions"
 msgstr "İzinler"
 
@@ -19177,19 +19177,19 @@ msgstr "İzinler"
 msgid "Group Membership"
 msgstr "Grup üyeliği"
 
-#: user_admin.php:1744 user_group_admin.php:1757
+#: user_admin.php:1744 user_group_admin.php:1766
 msgid "Graph Perms"
 msgstr "Grafik İzinleri"
 
-#: user_admin.php:1745 user_group_admin.php:1758
+#: user_admin.php:1745 user_group_admin.php:1767
 msgid "Device Perms"
 msgstr "Cihaz İzinleri"
 
-#: user_admin.php:1746 user_group_admin.php:1759
+#: user_admin.php:1746 user_group_admin.php:1768
 msgid "Template Perms"
 msgstr "Şablon İzinleri"
 
-#: user_admin.php:1747 user_group_admin.php:1760
+#: user_admin.php:1747 user_group_admin.php:1769
 msgid "Tree Perms"
 msgstr "Ağaç Perma"
 
@@ -19255,15 +19255,15 @@ msgstr "Alan Adı"
 msgid "User ID"
 msgstr "Kullanıcı ID"
 
-#: user_admin.php:2250 user_group_admin.php:2064
+#: user_admin.php:2250 user_group_admin.php:2073
 msgid "Graph Policy"
 msgstr "Grafik Politikası"
 
-#: user_admin.php:2251 user_group_admin.php:2065
+#: user_admin.php:2251 user_group_admin.php:2074
 msgid "Device Policy"
 msgstr "Cihaz Politikası"
 
-#: user_admin.php:2252 user_group_admin.php:2066
+#: user_admin.php:2252 user_group_admin.php:2075
 msgid "Template Policy"
 msgstr "Şablon Politikası"
 
@@ -19275,7 +19275,7 @@ msgstr "Kullanım dışı"
 msgid "No Users Found"
 msgstr "Kullanıcı Bulunamadı"
 
-#: user_admin.php:2347 user_group_admin.php:2139
+#: user_admin.php:2347 user_group_admin.php:2148
 #, php-format
 msgid "Graph Permissions %s"
 msgstr "Grafik İzinleri %s"
@@ -19285,23 +19285,23 @@ msgstr "Grafik İzinleri %s"
 msgid "Group Membership %s"
 msgstr "Grup Üyeliği %s"
 
-#: user_admin.php:2359 user_group_admin.php:2145
+#: user_admin.php:2359 user_group_admin.php:2154
 #, php-format
 msgid "Devices Permission %s"
 msgstr "Cihaz İzni %s"
 
 #: user_admin.php:2359 user_admin.php:2365 user_admin.php:2371
-#: user_admin.php:2377 user_group_admin.php:2139 user_group_admin.php:2145
-#: user_group_admin.php:2151 user_group_admin.php:2157
+#: user_admin.php:2377 user_group_admin.php:2148 user_group_admin.php:2154
+#: user_group_admin.php:2160 user_group_admin.php:2166
 msgid "Only Show Exceptions"
 msgstr "İstisnaları Göster"
 
-#: user_admin.php:2365 user_group_admin.php:2151
+#: user_admin.php:2365 user_group_admin.php:2160
 #, php-format
 msgid "Template Permission %s"
 msgstr "Şablon İzni %s"
 
-#: user_admin.php:2371 user_admin.php:2377 user_group_admin.php:2157
+#: user_admin.php:2371 user_admin.php:2377 user_group_admin.php:2166
 #, php-format
 msgid "Tree Permission %s"
 msgstr "Ağaç İzni %s"
@@ -19469,7 +19469,7 @@ msgstr "Varsayılan Grafik Ekranını Göster"
 msgid "Restrict Access"
 msgstr "Erişim Kısıtlamaları"
 
-#: user_group_admin.php:62 user_group_admin.php:2061
+#: user_group_admin.php:62 user_group_admin.php:2070
 msgid "Group Name"
 msgstr "Grup Adı"
 
@@ -19525,129 +19525,133 @@ msgstr "Bu Grubun Kullanıcıları Grafik Önizlemesine Erişebilmeli mi?"
 msgid "What to do when a User from this User Group logs in."
 msgstr "Bu Kullanıcı Grubundaki bir kullanıcı oturum açtığında ne yapmalı."
 
-#: user_group_admin.php:397
+#: user_group_admin.php:269
+msgid "The copied Group Name must not exceed 20 characters, including the numeric suffix."
+msgstr ""
+
+#: user_group_admin.php:406
 msgid "The Group Prefix may only contain letters, numbers, spaces and the characters . _ \\ @ -"
 msgstr ""
 
-#: user_group_admin.php:446
+#: user_group_admin.php:455
 msgid "Click 'Continue' to delete the following User Group"
 msgid_plural "Click 'Continue' to delete following User Groups"
 msgstr[0] "Aşağıdaki Kullanıcı Grubunu silmek için &#39;Devam Et&#39;i tıklayın."
 msgstr[1] "Aşağıdaki Kullanıcı Gruplarını silmek için &#39;Devam Et&#39;i tıklayın."
 
-#: user_group_admin.php:451
+#: user_group_admin.php:460
 msgid "Delete User Group"
 msgid_plural "Delete User Groups"
 msgstr[0] "Kullanıcı Grubunu Sil"
 msgstr[1] "Kullanıcı Gruplarını Sil"
 
-#: user_group_admin.php:459
+#: user_group_admin.php:468
 msgid "Click 'Continue' to Copy the following User Group to a new User Group."
 msgid_plural "Click 'Continue' to Copy following User Groups to new User Groups."
 msgstr[0] "Aşağıdaki Kullanıcı Grubunu yeni bir Kullanıcı Grubuna kopyalamak için &#39;Devam Et&#39;i tıklayın."
 msgstr[1] "Aşağıdaki Kullanıcı Gruplarını yeni Kullanıcı Gruplarına kopyalamak için &#39;Devam Et&#39;i tıklayın."
 
-#: user_group_admin.php:465
+#: user_group_admin.php:474
 msgid "Group Prefix:"
 msgstr "Grup Öneki:"
 
-#: user_group_admin.php:466
+#: user_group_admin.php:475
 msgid "New Group"
 msgstr "Yeni Grup"
 
-#: user_group_admin.php:470
+#: user_group_admin.php:479
 msgid "Copy User Group"
 msgid_plural "Copy User Groups"
 msgstr[0] "Kullanıcı Grubunu Kopyala"
 msgstr[1] "Kullanıcı Gruplarını Kopyala"
 
-#: user_group_admin.php:476
+#: user_group_admin.php:485
 msgid "Click 'Continue' to enable the following User Group."
 msgid_plural "Click 'Continue' to enable following User Groups."
 msgstr[0] "Aşağıdaki Kullanıcı Grubunu etkinleştirmek için &#39;Devam Et&#39;i tıklayın."
 msgstr[1] "Aşağıdaki Kullanıcı Gruplarını etkinleştirmek için &#39;Devam Et&#39;i tıklayın."
 
-#: user_group_admin.php:481
+#: user_group_admin.php:490
 msgid "Enable User Group"
 msgid_plural "Enable User Groups"
 msgstr[0] "Kullanıcı Grubunu Etkinleştir"
 msgstr[1] "Kullanıcı Gruplarını Etkinleştir"
 
-#: user_group_admin.php:487
+#: user_group_admin.php:496
 msgid "Click 'Continue' to disable the following User Group."
 msgid_plural "Click 'Continue' to disable following User Groups."
 msgstr[0] "Aşağıdaki Kullanıcı Grubunu devre dışı bırakmak için &#39;Devam Et&#39;i tıklayın."
 msgstr[1] "Aşağıdaki Kullanıcı Gruplarını devre dışı bırakmak için &#39;Devam Et&#39;i tıklayın."
 
-#: user_group_admin.php:492
+#: user_group_admin.php:501
 msgid "Disable User Group"
 msgid_plural "Disable User Groups"
 msgstr[0] "Kullanıcı Grubunu Devre Dışı Bırak"
 msgstr[1] "Kullanıcı Gruplarını Devre Dışı Bırak"
 
-#: user_group_admin.php:732
+#: user_group_admin.php:741
 msgid "Login Name"
 msgstr "Giriş Adı"
 
-#: user_group_admin.php:732
+#: user_group_admin.php:741
 msgid "Membership"
 msgstr "Üyelik"
 
-#: user_group_admin.php:743
+#: user_group_admin.php:752
 msgid "Group Member"
 msgstr "Grup üyesi"
 
-#: user_group_admin.php:753
+#: user_group_admin.php:762
 msgid "No Matching Group Members Found"
 msgstr "Eşleşen Grup Üyesi Bulunamadı"
 
-#: user_group_admin.php:767
+#: user_group_admin.php:776
 msgid "Add to Group"
 msgstr "Grup ekle"
 
-#: user_group_admin.php:768
+#: user_group_admin.php:777
 msgid "Remove from Group"
 msgstr "Gruptan Kaldır"
 
-#: user_group_admin.php:825 user_group_admin.php:1011
+#: user_group_admin.php:834 user_group_admin.php:1020
 msgid "Default Graph Policy for this User Group"
 msgstr "Bu Kullanıcı Grubu için Varsayılan Grafik Politikası"
 
-#: user_group_admin.php:1159
+#: user_group_admin.php:1168
 msgid "Default Graph Template Policy for this User Group"
 msgstr "Bu Kullanıcı Grubu için Varsayılan Grafik Şablonu Politikası"
 
-#: user_group_admin.php:1293
+#: user_group_admin.php:1302
 msgid "Default Tree Policy for this User Group"
 msgstr "Bu Kullanıcı Grubu için Varsayılan Ağaç Politikası"
 
-#: user_group_admin.php:1755 user_group_admin.php:2062
+#: user_group_admin.php:1764 user_group_admin.php:2071
 msgid "Members"
 msgstr "Üyeler"
 
-#: user_group_admin.php:1774
+#: user_group_admin.php:1783
 #, php-format
 msgid "User Group Management [edit: %s]"
 msgstr "Kullanıcı Grubu Yönetimi [değiştir: %s]"
 
-#: user_group_admin.php:1776
+#: user_group_admin.php:1785
 msgid "User Group Management [new]"
 msgstr "Kullanıcı Grubu Yönetimi [yeni]"
 
-#: user_group_admin.php:1969
+#: user_group_admin.php:1978
 msgid "User Group Management"
 msgstr "Kullanıcı Grubu Yönetimi"
 
-#: user_group_admin.php:2092
+#: user_group_admin.php:2101
 msgid "No User Groups Found"
 msgstr "Kullanıcı Grubu Bulunamadı"
 
-#: user_group_admin.php:2163
+#: user_group_admin.php:2172
 msgctxt "filter reset"
 msgid "Clear"
 msgstr "Temizle"
 
-#: user_group_admin.php:2163
+#: user_group_admin.php:2172
 msgid "Show Members"
 msgstr "Üyeleri Göster"
 

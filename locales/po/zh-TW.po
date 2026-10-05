@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 03:24-0700\n"
+"POT-Creation-Date: 2026-10-05 03:34-0700\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -152,8 +152,8 @@ msgstr "單擊“繼續”以刪除以下聚合圖。"
 #: tree.php:771 tree.php:780 tree.php:789 user_admin.php:252 user_admin.php:292
 #: user_admin.php:303 user_admin.php:314 user_admin.php:337
 #: user_domains.php:220 user_domains.php:229 user_domains.php:238
-#: user_domains.php:247 user_group_admin.php:451 user_group_admin.php:470
-#: user_group_admin.php:481 user_group_admin.php:492
+#: user_domains.php:247 user_group_admin.php:460 user_group_admin.php:479
+#: user_group_admin.php:490 user_group_admin.php:501
 #, fuzzy
 msgid "Cancel"
 msgstr "取消"
@@ -186,8 +186,8 @@ msgstr "取消"
 #: tree.php:771 tree.php:780 tree.php:789 user_admin.php:252 user_admin.php:292
 #: user_admin.php:303 user_admin.php:314 user_admin.php:337
 #: user_domains.php:220 user_domains.php:229 user_domains.php:238
-#: user_domains.php:247 user_group_admin.php:451 user_group_admin.php:470
-#: user_group_admin.php:481 user_group_admin.php:492
+#: user_domains.php:247 user_group_admin.php:460 user_group_admin.php:479
+#: user_group_admin.php:490 user_group_admin.php:501
 #, fuzzy
 msgid "Continue"
 msgstr "繼續"
@@ -467,7 +467,7 @@ msgstr "匹配圖"
 #: settings.php:598 settings.php:615 settings.php:674
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:56
 #: tree.php:938 tree.php:973 tree.php:1008 tree.php:2217 user_admin.php:2074
-#: user_domains.php:643 user_group_admin.php:1984 utilities.php:1094
+#: user_domains.php:643 user_group_admin.php:1993 utilities.php:1094
 #: utilities.php:1521 utilities.php:1828 utilities.php:2129 utilities.php:3131
 #: utilities.php:3393
 #, fuzzy
@@ -482,8 +482,8 @@ msgstr "搜尋"
 #: include/global_arrays.php:2012 lib/api_automation.php:283 lib/html.php:1996
 #: lib/html.php:2065 lib/html_graph.php:197 lib/html_tree.php:1022
 #: lib/html_tree.php:1378 tree.php:917 tree.php:2366 user_admin.php:801
-#: user_admin.php:1073 user_admin.php:2347 user_group_admin.php:931
-#: user_group_admin.php:1086 user_group_admin.php:2139 utilities.php:320
+#: user_admin.php:1073 user_admin.php:2347 user_group_admin.php:940
+#: user_group_admin.php:1095 user_group_admin.php:2148 utilities.php:320
 #, fuzzy
 msgid "Graphs"
 msgstr "圖表"
@@ -504,7 +504,7 @@ msgstr "圖表"
 #: rrdcleaner.php:549
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:81
 #: tree.php:2227 user_admin.php:2135 user_domains.php:18 user_domains.php:653
-#: user_domains.php:739 user_group_admin.php:1994 utilities.php:1076
+#: user_domains.php:739 user_group_admin.php:2003 utilities.php:1076
 #: utilities.php:1838 utilities.php:2160 utilities.php:3159 utilities.php:3435
 #, fuzzy
 msgid "Default"
@@ -546,7 +546,7 @@ msgstr "送出"
 #: managers.php:529 managers.php:794 plugins.php:530 pollers.php:914
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
 #: tree.php:2242 user_admin.php:2150 user_domains.php:665
-#: user_group_admin.php:2009 utilities.php:1084 utilities.php:1470
+#: user_group_admin.php:2018 utilities.php:1084 utilities.php:1470
 #: utilities.php:1819 utilities.php:2120 utilities.php:3167 utilities.php:3443
 #, fuzzy
 msgid "Set/Refresh Filters"
@@ -584,14 +584,14 @@ msgstr "清除"
 #: pollers.php:915
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:96
 #: tree.php:2243 user_admin.php:2151 user_domains.php:666
-#: user_group_admin.php:2010 utilities.php:1085 utilities.php:1471
+#: user_group_admin.php:2019 utilities.php:1085 utilities.php:1471
 #: utilities.php:1820 utilities.php:2121 utilities.php:3168 utilities.php:3444
 #, fuzzy
 msgid "Clear Filters"
 msgstr "清除過濾器"
 
 #: aggregate_graphs.php:1329 aggregate_graphs.php:1662 graphs.php:1183
-#: lib/api_automation.php:574 user_admin.php:809 user_group_admin.php:939
+#: lib/api_automation.php:574 user_admin.php:809 user_group_admin.php:948
 #, fuzzy
 msgid "Graph Title"
 msgstr "圖標題"
@@ -603,8 +603,8 @@ msgstr "圖標題"
 #: host.php:1928 host_templates.php:949 lib/api_automation.php:282
 #: pollers.php:995 tree.php:2306 user_admin.php:809 user_admin.php:924
 #: user_admin.php:1073 user_admin.php:1212 user_admin.php:1351
-#: user_group_admin.php:732 user_group_admin.php:939 user_group_admin.php:1086
-#: user_group_admin.php:1222 user_group_admin.php:1354
+#: user_group_admin.php:741 user_group_admin.php:948 user_group_admin.php:1095
+#: user_group_admin.php:1231 user_group_admin.php:1363
 #, fuzzy
 msgid "ID"
 msgstr "ID"
@@ -628,7 +628,7 @@ msgstr "尺寸"
 #: host_templates.php:997 include/global_settings.php:876
 #: include/global_settings.php:1927 lib/api_automation.php:1438 tree.php:2399
 #: tree.php:2400 user_admin.php:2269 user_domains.php:758
-#: user_group_admin.php:2077
+#: user_group_admin.php:2086
 #, fuzzy
 msgid "No"
 msgstr "否"
@@ -643,7 +643,7 @@ msgstr "否"
 #: include/global_settings.php:875 include/global_settings.php:1926
 #: lib/api_automation.php:1438 lib/installer.php:2124 lib/installer.php:2152
 #: lib/installer.php:3953 tree.php:2399 tree.php:2400 user_admin.php:2267
-#: user_domains.php:754 user_domains.php:758 user_group_admin.php:2075
+#: user_domains.php:754 user_domains.php:758 user_group_admin.php:2084
 #, fuzzy
 msgid "Yes"
 msgstr "是"
@@ -796,7 +796,7 @@ msgstr "聚合模板"
 #: aggregate_templates.php:612 automation_templates.php:399
 #: automation_templates.php:489 color_templates.php:685
 #: include/global_arrays.php:1002 include/global_arrays.php:1066
-#: lib/installer.php:2738 user_admin.php:2365 user_group_admin.php:2151
+#: lib/installer.php:2738 user_admin.php:2365 user_group_admin.php:2160
 #, fuzzy
 msgid "Templates"
 msgstr "模板"
@@ -1040,7 +1040,7 @@ msgid "LDAP"
 msgstr "LDAP"
 
 #: auth_login.php:380 user_admin.php:2119 user_admin.php:2249
-#: user_group_admin.php:732
+#: user_group_admin.php:741
 #, fuzzy
 msgid "Realm"
 msgstr "領域"
@@ -1058,7 +1058,7 @@ msgstr "登入"
 #: auth_profile.php:61 include/global_settings.php:22
 #: include/global_settings.php:1202 include/global_settings.php:1519
 #: lib/html.php:2781 managers.php:24 user_admin.php:1741
-#: user_group_admin.php:1754
+#: user_group_admin.php:1763
 #, fuzzy
 msgid "General"
 msgstr "一般"
@@ -1099,7 +1099,7 @@ msgstr "此用戶的登錄名。"
 
 #: auth_profile.php:342 include/global_form.php:1503
 #: include/global_settings.php:1871 user_admin.php:2247 user_domains.php:482
-#: user_group_admin.php:732 utilities.php:1161
+#: user_group_admin.php:741 utilities.php:1161
 #, fuzzy
 msgid "Full Name"
 msgstr "全名"
@@ -1149,7 +1149,7 @@ msgstr "註銷無處不在"
 msgid "Clear all your Login Session Tokens."
 msgstr "清除所有登錄會話令牌。"
 
-#: auth_profile.php:398 user_admin.php:1748 user_group_admin.php:1761
+#: auth_profile.php:398 user_admin.php:1748 user_group_admin.php:1770
 #, fuzzy
 msgid "User Settings"
 msgstr "使用者設定"
@@ -1261,8 +1261,8 @@ msgstr "刪除設備"
 #: lib/api_automation.php:178 lib/api_automation.php:271
 #: lib/api_automation.php:486 lib/api_automation.php:563
 #: lib/api_automation.php:1189 pollers.php:1031 tree.php:916 tree.php:2360
-#: user_admin.php:1065 user_admin.php:2359 user_group_admin.php:1078
-#: user_group_admin.php:2145 utilities.php:315
+#: user_admin.php:1065 user_admin.php:2359 user_group_admin.php:1087
+#: user_group_admin.php:2154 utilities.php:315
 #, fuzzy
 msgid "Devices"
 msgstr "設備"
@@ -1298,7 +1298,7 @@ msgstr "聯絡"
 #: include/global_form.php:1739 lib/api_automation.php:278
 #: lib/api_automation.php:1196 lib/installer.php:2044 lib/installer.php:2739
 #: managers.php:214 user_admin.php:924 user_admin.php:1073
-#: user_group_admin.php:1086 user_group_admin.php:2063
+#: user_group_admin.php:1095 user_group_admin.php:2072
 #, fuzzy
 msgid "Description"
 msgstr "描述"
@@ -1329,7 +1329,7 @@ msgstr "SNMP"
 #: lib/html_reports.php:2031 lib/installer.php:2044 managers.php:216
 #: package_import.php:542 package_import.php:627 plugins.php:497
 #: plugins.php:623 pollers.php:1007 templates_import.php:206
-#: templates_import.php:245 user_admin.php:1073 user_group_admin.php:1086
+#: templates_import.php:245 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:2135
 #, fuzzy
 msgid "Status"
@@ -1545,7 +1545,7 @@ msgstr "數據查詢"
 #: lib/html_reports.php:2188 managers.php:241 managers.php:612
 #: user_admin.php:924 user_admin.php:936 user_admin.php:2248
 #: user_domains.php:335 user_domains.php:743 user_group_admin.php:76
-#: user_group_admin.php:732 user_group_admin.php:747 user_group_admin.php:2067
+#: user_group_admin.php:741 user_group_admin.php:756 user_group_admin.php:2076
 #: utilities.php:2140 utilities.php:3014
 #, fuzzy
 msgid "Enabled"
@@ -1564,7 +1564,7 @@ msgstr "啟用"
 #: lib/api_automation.php:28 lib/html.php:2858 lib/html_reports.php:2037
 #: lib/html_reports.php:2188 lib/html_utility.php:1317 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:936 user_domains.php:397
-#: user_group_admin.php:747 utilities.php:2141 utilities.php:2705
+#: user_group_admin.php:756 utilities.php:2141 utilities.php:2705
 #: utilities.php:3014
 #, fuzzy
 msgid "Disabled"
@@ -2748,7 +2748,7 @@ msgid "Device Automation Templates"
 msgstr "設備自動化模板"
 
 #: automation_templates.php:498 data_sources.php:2019 package_import.php:624
-#: templates_import.php:242 user_admin.php:1212 user_group_admin.php:1222
+#: templates_import.php:242 user_admin.php:1212 user_group_admin.php:1231
 #, fuzzy
 msgid "Template Name"
 msgstr "模板名稱"
@@ -3530,7 +3530,7 @@ msgstr "發現數據源的任何摘要問題。"
 #: data_debug.php:621 data_debug.php:1195 data_sources.php:1799
 #: data_sources.php:1973 host.php:1940 include/global_arrays.php:994
 #: include/global_arrays.php:1040 include/global_arrays.php:2308
-#: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1086
+#: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:325
 #, fuzzy
 msgid "Data Sources"
@@ -5299,7 +5299,7 @@ msgstr "如果您希望允許用戶在創建圖表期間覆蓋右側的值，請
 #: graph_templates.php:718 graph_templates.php:733 graph_templates.php:900
 #: graphs_new.php:635 include/global_arrays.php:1236
 #: include/global_arrays.php:2236 lib/html_tree.php:541 user_admin.php:1204
-#: user_group_admin.php:1214
+#: user_group_admin.php:1223
 #, fuzzy
 msgid "Graph Templates"
 msgstr "圖表模板"
@@ -5946,7 +5946,7 @@ msgid "Create"
 msgstr "創建"
 
 #: graphs_new.php:639 graphs_new.php:953 lib/html.php:1160 user_admin.php:1427
-#: user_group_admin.php:1438
+#: user_group_admin.php:1447
 #, fuzzy
 msgid "Select All"
 msgstr "全選"
@@ -6433,7 +6433,7 @@ msgstr "引用此設備的名稱。"
 #: lib/api_automation.php:279 lib/api_automation.php:571
 #: lib/api_automation.php:890 lib/api_automation.php:1197 managers.php:217
 #: pollers.php:115 pollers.php:1001 user_admin.php:1073
-#: user_group_admin.php:1086
+#: user_group_admin.php:1095
 #, fuzzy
 msgid "Hostname"
 msgstr "主機名稱"
@@ -7568,7 +7568,7 @@ msgstr "困難"
 msgid "Demand"
 msgstr "提出需求"
 
-#: include/global_arrays.php:894 user_admin.php:653 user_group_admin.php:786
+#: include/global_arrays.php:894 user_admin.php:653 user_group_admin.php:795
 #, fuzzy
 msgid "Allow"
 msgstr "允許"
@@ -7751,7 +7751,7 @@ msgstr "網站"
 
 #: include/global_arrays.php:992 include/global_arrays.php:1230 tree.php:2208
 #: tree.php:2223 tree.php:2290 user_admin.php:1343 user_admin.php:2371
-#: user_admin.php:2377 user_group_admin.php:1346 user_group_admin.php:2157
+#: user_admin.php:2377 user_group_admin.php:1355 user_group_admin.php:2166
 #, fuzzy
 msgid "Trees"
 msgstr "樹木"
@@ -7851,8 +7851,8 @@ msgid "Settings"
 msgstr "設定"
 
 #: include/global_arrays.php:1031 include/global_arrays.php:2578
-#: user_admin.php:2131 user_admin.php:2236 user_group_admin.php:724
-#: user_group_admin.php:2163
+#: user_admin.php:2131 user_admin.php:2236 user_group_admin.php:733
+#: user_group_admin.php:2172
 #, fuzzy
 msgid "Users"
 msgstr "使用者"
@@ -7881,7 +7881,7 @@ msgstr "系統工具"
 
 #: include/global_arrays.php:1037 include/global_arrays.php:1072
 #: include/global_arrays.php:1115 include/global_arrays.php:1218
-#: include/global_arrays.php:2212 user_admin.php:1497 user_group_admin.php:1510
+#: include/global_arrays.php:2212 user_admin.php:1497 user_group_admin.php:1519
 #, fuzzy
 msgid "External Links"
 msgstr "外部連結"
@@ -9060,7 +9060,7 @@ msgstr "列表模式"
 
 #: include/global_arrays.php:2062 include/global_arrays.php:2068
 #: lib/functions.php:4492 lib/html.php:1988 lib/html.php:2053 lib/html.php:2778
-#: user_admin.php:1472 user_group_admin.php:1485
+#: user_admin.php:1472 user_group_admin.php:1494
 #, fuzzy
 msgid "Console"
 msgstr "控制台"
@@ -20987,17 +20987,17 @@ msgid "Messages"
 msgstr ""
 
 #: rrdcheck.php:245 rrdcleaner.php:564 user_domains.php:665
-#: user_group_admin.php:2009 user_group_admin.php:2139
-#: user_group_admin.php:2145 user_group_admin.php:2151
-#: user_group_admin.php:2157 user_group_admin.php:2163
+#: user_group_admin.php:2018 user_group_admin.php:2148
+#: user_group_admin.php:2154 user_group_admin.php:2160
+#: user_group_admin.php:2166 user_group_admin.php:2172
 #, fuzzy
 msgctxt "filter: use"
 msgid "Go"
 msgstr "送出"
 
-#: rrdcheck.php:246 rrdcleaner.php:565 user_group_admin.php:2010
-#: user_group_admin.php:2139 user_group_admin.php:2145
-#: user_group_admin.php:2151 user_group_admin.php:2157
+#: rrdcheck.php:246 rrdcleaner.php:565 user_group_admin.php:2019
+#: user_group_admin.php:2148 user_group_admin.php:2154
+#: user_group_admin.php:2160 user_group_admin.php:2166
 #, fuzzy
 msgctxt "filter: reset"
 msgid "Clear"
@@ -21799,7 +21799,7 @@ msgstr "排序樹升序"
 msgid "Sort Trees Descending"
 msgstr "排序樹降序"
 
-#: tree.php:2300 user_admin.php:1351 user_group_admin.php:1354
+#: tree.php:2300 user_admin.php:1351 user_group_admin.php:1363
 #, fuzzy
 msgid "Tree Name"
 msgstr "樹名"
@@ -21983,30 +21983,30 @@ msgstr "重置用戶設置"
 msgid "Set a new password to move this account to the Local realm."
 msgstr ""
 
-#: user_admin.php:654 user_group_admin.php:787
+#: user_admin.php:654 user_group_admin.php:796
 #, fuzzy
 msgid "Deny"
 msgstr "拒絕"
 
-#: user_admin.php:685 user_group_admin.php:806
+#: user_admin.php:685 user_group_admin.php:815
 #, fuzzy
 msgid "<b>Note:</b> System Graph Policy is 'Permissive' meaning the User must have access to at least one of Graph, Device, or Graph Template to gain access to the Graph"
 msgstr "<b>注意：</b>系統圖策略是“允許的”意味著用戶必須能夠訪問圖形，設備或圖形模板中的至少一個才能訪問圖形"
 
-#: user_admin.php:687 user_group_admin.php:808
+#: user_admin.php:687 user_group_admin.php:817
 #, fuzzy
 msgid "<b>Note:</b> System Graph Policy is 'Restrictive' meaning the User must have access to either the Graph or the Device and Graph Template to gain access to the Graph"
 msgstr "<b>注意：</b>系統圖策略是“限制性”，意味著用戶必須能夠訪問圖表或設備和圖表模板才能訪問圖表"
 
-#: user_admin.php:689 user_group_admin.php:810
+#: user_admin.php:689 user_group_admin.php:819
 msgid "<b>Note:</b> System Graph Policy is 'Device' meaning the User must have access to the Graph or Device to gain access to the Graph"
 msgstr "<b>注意：</b>系統圖策略是“限制性”，意味著用戶必須能夠訪問圖表或設備和圖表模板才能訪問圖表"
 
-#: user_admin.php:691 user_group_admin.php:812
+#: user_admin.php:691 user_group_admin.php:821
 msgid "<b>Note:</b> System Graph Policy is 'Graph Template' meaning the User must have access to the Graph or Graph Template to gain access to the Graph"
 msgstr "<b>注意：</b>系統圖策略是“允許的”意味著用戶必須能夠訪問圖形，設備或圖形模板中的至少一個才能訪問圖形"
 
-#: user_admin.php:695 user_group_admin.php:820
+#: user_admin.php:695 user_group_admin.php:829
 #, fuzzy
 msgid "Default Graph Policy"
 msgstr "默認圖表策略"
@@ -22017,30 +22017,30 @@ msgid "Default Graph Policy for this User"
 msgstr "此用戶的默認圖表策略"
 
 #: user_admin.php:705 user_admin.php:986 user_admin.php:1155
-#: user_admin.php:1291 user_group_admin.php:830 user_group_admin.php:1016
-#: user_group_admin.php:1164 user_group_admin.php:1298
+#: user_admin.php:1291 user_group_admin.php:839 user_group_admin.php:1025
+#: user_group_admin.php:1173 user_group_admin.php:1307
 #, fuzzy
 msgid "Update"
 msgstr "更新"
 
 #: user_admin.php:809 user_admin.php:1073 user_admin.php:1212
-#: user_admin.php:1351 user_group_admin.php:939 user_group_admin.php:1086
-#: user_group_admin.php:1222 user_group_admin.php:1354
+#: user_admin.php:1351 user_group_admin.php:948 user_group_admin.php:1095
+#: user_group_admin.php:1231 user_group_admin.php:1363
 #, fuzzy
 msgid "Effective Policy"
 msgstr "有效政策"
 
-#: user_admin.php:823 user_group_admin.php:953
+#: user_admin.php:823 user_group_admin.php:962
 #, fuzzy
 msgid "No Matching Graphs Found"
 msgstr "找不到匹配的圖形"
 
 #: user_admin.php:838 user_admin.php:844 user_admin.php:1118
 #: user_admin.php:1124 user_admin.php:1254 user_admin.php:1260
-#: user_admin.php:1392 user_admin.php:1398 user_group_admin.php:968
-#: user_group_admin.php:974 user_group_admin.php:1130 user_group_admin.php:1136
-#: user_group_admin.php:1264 user_group_admin.php:1270
-#: user_group_admin.php:1394 user_group_admin.php:1400
+#: user_admin.php:1392 user_admin.php:1398 user_group_admin.php:977
+#: user_group_admin.php:983 user_group_admin.php:1139 user_group_admin.php:1145
+#: user_group_admin.php:1273 user_group_admin.php:1279
+#: user_group_admin.php:1403 user_group_admin.php:1409
 #, fuzzy
 msgid "Revoke Access"
 msgstr "撤銷使用權限"
@@ -22048,16 +22048,16 @@ msgstr "撤銷使用權限"
 #: user_admin.php:839 user_admin.php:843 user_admin.php:1119
 #: user_admin.php:1123 user_admin.php:1255 user_admin.php:1259
 #: user_admin.php:1393 user_admin.php:1397 user_group_admin.php:51
-#: user_group_admin.php:969 user_group_admin.php:973 user_group_admin.php:1131
-#: user_group_admin.php:1135 user_group_admin.php:1265
-#: user_group_admin.php:1269 user_group_admin.php:1395
-#: user_group_admin.php:1399
+#: user_group_admin.php:978 user_group_admin.php:982 user_group_admin.php:1140
+#: user_group_admin.php:1144 user_group_admin.php:1274
+#: user_group_admin.php:1278 user_group_admin.php:1404
+#: user_group_admin.php:1408
 #, fuzzy
 msgid "Grant Access"
 msgstr "授與權限"
 
-#: user_admin.php:916 user_admin.php:2353 user_group_admin.php:1990
-#: user_group_admin.php:2052
+#: user_admin.php:916 user_admin.php:2353 user_group_admin.php:1999
+#: user_group_admin.php:2061
 #, fuzzy
 msgid "Groups"
 msgstr "群組"
@@ -22072,21 +22072,21 @@ msgstr "會員"
 msgid "Policies (Graph/Device/Template)"
 msgstr "政策（圖表/設備/模板）"
 
-#: user_admin.php:933 user_group_admin.php:745
+#: user_admin.php:933 user_group_admin.php:754
 #, fuzzy
 msgid "Non Member"
 msgstr "非會員"
 
 #: user_admin.php:935 user_admin.php:2291 user_admin.php:2292
-#: user_admin.php:2293 user_group_admin.php:2084 user_group_admin.php:2085
-#: user_group_admin.php:2086
+#: user_admin.php:2293 user_group_admin.php:2093 user_group_admin.php:2094
+#: user_group_admin.php:2095
 #, fuzzy
 msgid "ALLOW"
 msgstr "允許"
 
 #: user_admin.php:935 user_admin.php:2291 user_admin.php:2292
-#: user_admin.php:2293 user_group_admin.php:2084 user_group_admin.php:2085
-#: user_group_admin.php:2086
+#: user_admin.php:2293 user_group_admin.php:2093 user_group_admin.php:2094
+#: user_group_admin.php:2095
 #, fuzzy
 msgid "DENY"
 msgstr "拒絕"
@@ -22106,7 +22106,7 @@ msgstr "分配會員資格"
 msgid "Remove Membership"
 msgstr "刪除會員資格"
 
-#: user_admin.php:976 user_group_admin.php:1006
+#: user_admin.php:976 user_group_admin.php:1015
 #, fuzzy
 msgid "Default Device Policy"
 msgstr "默認設備策略"
@@ -22118,28 +22118,28 @@ msgstr "此用戶的默認設備策略"
 
 #: user_admin.php:1084 user_admin.php:1092 user_admin.php:1223
 #: user_admin.php:1231 user_admin.php:1362 user_admin.php:1370
-#: user_group_admin.php:1097 user_group_admin.php:1105
-#: user_group_admin.php:1233 user_group_admin.php:1241
-#: user_group_admin.php:1365 user_group_admin.php:1373
+#: user_group_admin.php:1106 user_group_admin.php:1114
+#: user_group_admin.php:1242 user_group_admin.php:1250
+#: user_group_admin.php:1374 user_group_admin.php:1382
 #, fuzzy
 msgid "Access Granted"
 msgstr "授予訪問權限"
 
 #: user_admin.php:1086 user_admin.php:1090 user_admin.php:1225
 #: user_admin.php:1229 user_admin.php:1364 user_admin.php:1368
-#: user_group_admin.php:1099 user_group_admin.php:1103
-#: user_group_admin.php:1235 user_group_admin.php:1239
-#: user_group_admin.php:1367 user_group_admin.php:1371
+#: user_group_admin.php:1108 user_group_admin.php:1112
+#: user_group_admin.php:1244 user_group_admin.php:1248
+#: user_group_admin.php:1376 user_group_admin.php:1380
 #, fuzzy
 msgid "Access Restricted"
 msgstr "訪問受限制"
 
-#: user_admin.php:1103 user_group_admin.php:1116
+#: user_admin.php:1103 user_group_admin.php:1125
 #, fuzzy
 msgid "No Matching Devices Found"
 msgstr "找不到匹配的設備"
 
-#: user_admin.php:1145 user_group_admin.php:1154
+#: user_admin.php:1145 user_group_admin.php:1163
 #, fuzzy
 msgid "Default Graph Template Policy"
 msgstr "默認圖表模板策略"
@@ -22149,17 +22149,17 @@ msgstr "默認圖表模板策略"
 msgid "Default Graph Template Policy for this User"
 msgstr "此用戶的默認圖表模板策略"
 
-#: user_admin.php:1212 user_group_admin.php:1222
+#: user_admin.php:1212 user_group_admin.php:1231
 #, fuzzy
 msgid "Total Graphs"
 msgstr "總圖表"
 
-#: user_admin.php:1239 user_group_admin.php:1249
+#: user_admin.php:1239 user_group_admin.php:1258
 #, fuzzy
 msgid "No Matching Graph Templates Found"
 msgstr "找不到匹配的圖表模板"
 
-#: user_admin.php:1281 user_group_admin.php:1288
+#: user_admin.php:1281 user_group_admin.php:1297
 #, fuzzy
 msgid "Default Tree Policy"
 msgstr "默認樹策略"
@@ -22169,52 +22169,52 @@ msgstr "默認樹策略"
 msgid "Default Tree Policy for this User"
 msgstr "此用戶的默認樹策略"
 
-#: user_admin.php:1377 user_group_admin.php:1380
+#: user_admin.php:1377 user_group_admin.php:1389
 #, fuzzy
 msgid "No Matching Trees Found"
 msgstr "找不到匹配的樹木"
 
-#: user_admin.php:1426 user_group_admin.php:1437
+#: user_admin.php:1426 user_group_admin.php:1446
 #, fuzzy
 msgid "User Permissions"
 msgstr "使用者權限"
 
-#: user_admin.php:1473 user_group_admin.php:1486
+#: user_admin.php:1473 user_group_admin.php:1495
 #, fuzzy
 msgid "Top Tab"
 msgstr "頂部標籤"
 
-#: user_admin.php:1474 user_group_admin.php:1487
+#: user_admin.php:1474 user_group_admin.php:1496
 #, fuzzy
 msgid "Bottom Console"
 msgstr "底部控制台"
 
-#: user_admin.php:1475 user_group_admin.php:1488
+#: user_admin.php:1475 user_group_admin.php:1497
 #, fuzzy
 msgid "Top Console"
 msgstr "頂級控制台"
 
-#: user_admin.php:1479 user_group_admin.php:1492
+#: user_admin.php:1479 user_group_admin.php:1501
 #, fuzzy
 msgid "External Link Permissions"
 msgstr "外部鏈接權限"
 
-#: user_admin.php:1550 user_group_admin.php:1561
+#: user_admin.php:1550 user_group_admin.php:1570
 #, fuzzy
 msgid "Plugin Permissions"
 msgstr "插件權限"
 
-#: user_admin.php:1567 user_group_admin.php:1578
+#: user_admin.php:1567 user_group_admin.php:1587
 #, fuzzy
 msgid "Legacy Permissions"
 msgstr "使用者權限"
 
-#: user_admin.php:1626 user_group_admin.php:1639
+#: user_admin.php:1626 user_group_admin.php:1648
 #, fuzzy, php-format
 msgid "User Settings %s"
 msgstr "用戶設置%s"
 
-#: user_admin.php:1742 user_group_admin.php:1756
+#: user_admin.php:1742 user_group_admin.php:1765
 #, fuzzy
 msgid "Permissions"
 msgstr "權限"
@@ -22224,22 +22224,22 @@ msgstr "權限"
 msgid "Group Membership"
 msgstr "集團成員"
 
-#: user_admin.php:1744 user_group_admin.php:1757
+#: user_admin.php:1744 user_group_admin.php:1766
 #, fuzzy
 msgid "Graph Perms"
 msgstr "圖形燙髮"
 
-#: user_admin.php:1745 user_group_admin.php:1758
+#: user_admin.php:1745 user_group_admin.php:1767
 #, fuzzy
 msgid "Device Perms"
 msgstr "設備燙髮"
 
-#: user_admin.php:1746 user_group_admin.php:1759
+#: user_admin.php:1746 user_group_admin.php:1768
 #, fuzzy
 msgid "Template Perms"
 msgstr "模板燙髮"
 
-#: user_admin.php:1747 user_group_admin.php:1760
+#: user_admin.php:1747 user_group_admin.php:1769
 #, fuzzy
 msgid "Tree Perms"
 msgstr "樹燙"
@@ -22311,17 +22311,17 @@ msgstr "網域"
 msgid "User ID"
 msgstr "使用者 ID"
 
-#: user_admin.php:2250 user_group_admin.php:2064
+#: user_admin.php:2250 user_group_admin.php:2073
 #, fuzzy
 msgid "Graph Policy"
 msgstr "圖政策"
 
-#: user_admin.php:2251 user_group_admin.php:2065
+#: user_admin.php:2251 user_group_admin.php:2074
 #, fuzzy
 msgid "Device Policy"
 msgstr "設備政策"
 
-#: user_admin.php:2252 user_group_admin.php:2066
+#: user_admin.php:2252 user_group_admin.php:2075
 #, fuzzy
 msgid "Template Policy"
 msgstr "模板政策"
@@ -22336,7 +22336,7 @@ msgstr "無法預約(已額滿)"
 msgid "No Users Found"
 msgstr "找不到使用者"
 
-#: user_admin.php:2347 user_group_admin.php:2139
+#: user_admin.php:2347 user_group_admin.php:2148
 #, fuzzy, php-format
 msgid "Graph Permissions %s"
 msgstr "圖表權限%s"
@@ -22346,24 +22346,24 @@ msgstr "圖表權限%s"
 msgid "Group Membership %s"
 msgstr "集團成員%s"
 
-#: user_admin.php:2359 user_group_admin.php:2145
+#: user_admin.php:2359 user_group_admin.php:2154
 #, fuzzy, php-format
 msgid "Devices Permission %s"
 msgstr "設備權限%s"
 
 #: user_admin.php:2359 user_admin.php:2365 user_admin.php:2371
-#: user_admin.php:2377 user_group_admin.php:2139 user_group_admin.php:2145
-#: user_group_admin.php:2151 user_group_admin.php:2157
+#: user_admin.php:2377 user_group_admin.php:2148 user_group_admin.php:2154
+#: user_group_admin.php:2160 user_group_admin.php:2166
 #, fuzzy
 msgid "Only Show Exceptions"
 msgstr "顯示例外"
 
-#: user_admin.php:2365 user_group_admin.php:2151
+#: user_admin.php:2365 user_group_admin.php:2160
 #, fuzzy, php-format
 msgid "Template Permission %s"
 msgstr "模板權限%s"
 
-#: user_admin.php:2371 user_admin.php:2377 user_group_admin.php:2157
+#: user_admin.php:2371 user_admin.php:2377 user_group_admin.php:2166
 #, fuzzy, php-format
 msgid "Tree Permission %s"
 msgstr "樹權限%s"
@@ -22557,7 +22557,7 @@ msgstr "顯示默認的圖形屏幕"
 msgid "Restrict Access"
 msgstr "限制訪問"
 
-#: user_group_admin.php:62 user_group_admin.php:2061
+#: user_group_admin.php:62 user_group_admin.php:2070
 #, fuzzy
 msgid "Group Name"
 msgstr "群組名稱"
@@ -22627,136 +22627,140 @@ msgstr "該組用戶是否可以訪問圖表預覽？"
 msgid "What to do when a User from this User Group logs in."
 msgstr "當此用戶組中的用戶登錄時該怎麼辦。"
 
-#: user_group_admin.php:397
+#: user_group_admin.php:269
+msgid "The copied Group Name must not exceed 20 characters, including the numeric suffix."
+msgstr ""
+
+#: user_group_admin.php:406
 msgid "The Group Prefix may only contain letters, numbers, spaces and the characters . _ \\ @ -"
 msgstr ""
 
-#: user_group_admin.php:446
+#: user_group_admin.php:455
 msgid "Click 'Continue' to delete the following User Group"
 msgid_plural "Click 'Continue' to delete following User Groups"
 msgstr[0] "單擊“繼續”以刪除以下用戶組"
 
-#: user_group_admin.php:451
+#: user_group_admin.php:460
 msgid "Delete User Group"
 msgid_plural "Delete User Groups"
 msgstr[0] "刪除用戶組"
 
-#: user_group_admin.php:459
+#: user_group_admin.php:468
 msgid "Click 'Continue' to Copy the following User Group to a new User Group."
 msgid_plural "Click 'Continue' to Copy following User Groups to new User Groups."
 msgstr[0] "單擊“繼續”將以下用戶組複製到新用戶組。"
 
-#: user_group_admin.php:465
+#: user_group_admin.php:474
 msgid "Group Prefix:"
 msgstr "組前綴："
 
-#: user_group_admin.php:466
+#: user_group_admin.php:475
 #, fuzzy
 msgid "New Group"
 msgstr "新增群組"
 
-#: user_group_admin.php:470
+#: user_group_admin.php:479
 msgid "Copy User Group"
 msgid_plural "Copy User Groups"
 msgstr[0] "複製用戶組"
 
-#: user_group_admin.php:476
+#: user_group_admin.php:485
 msgid "Click 'Continue' to enable the following User Group."
 msgid_plural "Click 'Continue' to enable following User Groups."
 msgstr[0] "單擊“繼續”以啟用以下用戶組。"
 
-#: user_group_admin.php:481
+#: user_group_admin.php:490
 msgid "Enable User Group"
 msgid_plural "Enable User Groups"
 msgstr[0] "啟用用戶組"
 
-#: user_group_admin.php:487
+#: user_group_admin.php:496
 msgid "Click 'Continue' to disable the following User Group."
 msgid_plural "Click 'Continue' to disable following User Groups."
 msgstr[0] "單擊“繼續”以禁用以下用戶組。"
 
-#: user_group_admin.php:492
+#: user_group_admin.php:501
 msgid "Disable User Group"
 msgid_plural "Disable User Groups"
 msgstr[0] "禁用用戶組"
 
-#: user_group_admin.php:732
+#: user_group_admin.php:741
 #, fuzzy
 msgid "Login Name"
 msgstr "登錄名稱"
 
-#: user_group_admin.php:732
+#: user_group_admin.php:741
 #, fuzzy
 msgid "Membership"
 msgstr "會員"
 
-#: user_group_admin.php:743
+#: user_group_admin.php:752
 #, fuzzy
 msgid "Group Member"
 msgstr "群組成員"
 
-#: user_group_admin.php:753
+#: user_group_admin.php:762
 #, fuzzy
 msgid "No Matching Group Members Found"
 msgstr "找不到匹配組成員"
 
-#: user_group_admin.php:767
+#: user_group_admin.php:776
 #, fuzzy
 msgid "Add to Group"
 msgstr "增加至群組"
 
-#: user_group_admin.php:768
+#: user_group_admin.php:777
 #, fuzzy
 msgid "Remove from Group"
 msgstr "從群組中刪除"
 
-#: user_group_admin.php:825 user_group_admin.php:1011
+#: user_group_admin.php:834 user_group_admin.php:1020
 #, fuzzy
 msgid "Default Graph Policy for this User Group"
 msgstr "此用戶組的默認圖表策略"
 
-#: user_group_admin.php:1159
+#: user_group_admin.php:1168
 #, fuzzy
 msgid "Default Graph Template Policy for this User Group"
 msgstr "此用戶組的默認圖表模板策略"
 
-#: user_group_admin.php:1293
+#: user_group_admin.php:1302
 #, fuzzy
 msgid "Default Tree Policy for this User Group"
 msgstr "此用戶組的默認樹策略"
 
-#: user_group_admin.php:1755 user_group_admin.php:2062
+#: user_group_admin.php:1764 user_group_admin.php:2071
 #, fuzzy
 msgid "Members"
 msgstr "會員"
 
-#: user_group_admin.php:1774
+#: user_group_admin.php:1783
 #, fuzzy, php-format
 msgid "User Group Management [edit: %s]"
 msgstr "用戶組管理[編輯：%s]"
 
-#: user_group_admin.php:1776
+#: user_group_admin.php:1785
 #, fuzzy
 msgid "User Group Management [new]"
 msgstr "用戶組管理[新]"
 
-#: user_group_admin.php:1969
+#: user_group_admin.php:1978
 #, fuzzy
 msgid "User Group Management"
 msgstr "用戶組管理"
 
-#: user_group_admin.php:2092
+#: user_group_admin.php:2101
 #, fuzzy
 msgid "No User Groups Found"
 msgstr "找不到用戶組"
 
-#: user_group_admin.php:2163
+#: user_group_admin.php:2172
 #, fuzzy
 msgctxt "filter reset"
 msgid "Clear"
 msgstr "清除"
 
-#: user_group_admin.php:2163
+#: user_group_admin.php:2172
 #, fuzzy
 msgid "Show Members"
 msgstr "顯示會員"

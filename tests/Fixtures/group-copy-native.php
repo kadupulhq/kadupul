@@ -19,11 +19,12 @@ if (str_starts_with($scenario, 'wiring-')) {
 require $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
 $db = null;
 $messages = array();
+$message_texts = array();
 $status = null;
 $cause = null;
 $dispatch = false;
 // Observe actual persisted outcomes before the collector shutdown writer runs.
-register_shutdown_function(static function () use (&$db, &$messages, &$status, &$cause, $directory, $scenario): void {
+register_shutdown_function(static function () use (&$db, &$messages, &$message_texts, &$status, &$cause, $directory, $scenario): void {
     if (!$db instanceof PDO) {
         return;
     }
@@ -32,6 +33,7 @@ register_shutdown_function(static function () use (&$db, &$messages, &$status, &
     $state['status'] = $status;
     $state['cause'] = $cause;
     $state['messages'] = $messages;
+    $state['message_texts'] = $message_texts;
     $state['transaction'] = $db->inTransaction();
     $state['persisted_before_fault'] = $db->persistedFault;
     $state['parent_insert_refused'] = $db->parentInsertRefused;
@@ -170,6 +172,9 @@ function input_validate_input_number($value)
 function raise_message($code, ...$args)
 {
     $GLOBALS['messages'][] = $code;
+    if (isset($args[0])) {
+        $GLOBALS['message_texts'][] = $args[0];
+    }
 }
 function api_plugin_hook_function($name, $value = null)
 {
@@ -232,8 +237,8 @@ mkdir($directory . '/include', 0700);
 file_put_contents($directory . '/include/auth.php', '<?php');
 chdir($directory);
 require $root . '/user_group_admin.php';
-if (str_contains($scenario, 'bulk')) {
-    $_POST = array('selected_items' => serialize(str_contains($scenario, 'success-first') ? array(7,5) : array(5,7)), 'drp_action' => '2', 'group_prefix' => 'Copied');
+if (str_contains($scenario, 'bulk') || $scenario === 'wiring-length-action') {
+    $_POST = array('selected_items' => serialize(str_contains($scenario, 'success-first') ? array(7,5) : array(5,7)), 'drp_action' => '2', 'group_prefix' => $scenario === 'wiring-length-action' ? str_repeat('A', 19) : 'Copied');
     $dispatch = true;
     form_actions();
 }
