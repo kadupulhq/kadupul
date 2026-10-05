@@ -49,4 +49,12 @@ ob_start();
 html_spikekill_js();
 $script = ob_get_clean();
 $nonce = CactiSecureHeaders::getNonce();
-echo json_encode(['icons' => $icons, 'script' => $script, 'nonce' => $nonce, 'csp' => CactiSecureHeaders::buildCspPolicy('nonce', $nonce, '')], JSON_THROW_ON_ERROR);
+$nonceAttribute = htmlspecialchars($nonce, ENT_QUOTES, 'UTF-8');
+// Compose the complete private fixture response here. Its markup and scripts
+// come from the repository renderer; no request or external page data enters it.
+$page = '<!doctype html><html><head><link rel="stylesheet" href="/include/themes/dark/main.css">'
+    . '<link rel="stylesheet" href="/include/themes/dark/jquery-ui.css">'
+    . '<script nonce="' . $nonceAttribute . '" src="/include/js/jquery.js"></script>'
+    . '<script nonce="' . $nonceAttribute . '" src="/include/js/jquery-ui.js"></script>'
+    . '</head><body>' . $icons . $script . $script . '</body></html>';
+echo json_encode(['icons' => $icons, 'script' => $script, 'nonce' => $nonce, 'html' => $page, 'csp' => CactiSecureHeaders::buildCspPolicy('nonce', $nonce, '')], JSON_THROW_ON_ERROR);
