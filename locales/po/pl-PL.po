@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-03 21:25-0700\n"
+"POT-Creation-Date: 2026-10-04 23:39-0700\n"
 "PO-Revision-Date: 2024-04-20 19:13-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -49,7 +49,7 @@ msgstr "Ten program jest rozpowszechniany w nadziei, że będzie przydatny, ale 
 #: automation_tree_rules.php:17 cdef.php:14 cdef.php:603 color_templates.php:13
 #: color_templates.php:109 data_queries.php:16 data_queries.php:863
 #: data_queries.php:972 data_queries.php:1252 data_source_profiles.php:16
-#: data_source_profiles.php:912 data_sources.php:22 data_sources.php:1229
+#: data_source_profiles.php:934 data_sources.php:22 data_sources.php:1229
 #: data_templates.php:19 data_templates.php:791 gprint_presets.php:12
 #: graph_templates.php:22 graph_templates.php:517 graphs.php:31 host.php:29
 #: host_templates.php:20 host_templates.php:485 host_templates.php:542
@@ -121,8 +121,8 @@ msgstr "Kliknij \"Kontynuuj\", aby usunąć następujący(e) zagregowany wykres(
 #: automation_templates.php:160 automation_tree_rules.php:309 cdef.php:235
 #: cdef.php:247 cdef.php:305 color_templates.php:235 color_templates.php:247
 #: color_templates.php:256 color_templates_items.php:327 data_queries.php:413
-#: data_queries.php:427 data_queries.php:611 data_source_profiles.php:394
-#: data_source_profiles.php:406 data_source_profiles.php:641
+#: data_queries.php:427 data_queries.php:611 data_source_profiles.php:416
+#: data_source_profiles.php:428 data_source_profiles.php:663
 #: data_sources.php:601 data_sources.php:613 data_sources.php:622
 #: data_sources.php:631 data_sources.php:640 data_sources.php:646
 #: data_templates.php:486 data_templates.php:498 data_templates.php:514
@@ -156,8 +156,8 @@ msgstr "Anuluj"
 #: automation_templates.php:160 automation_tree_rules.php:309 cdef.php:235
 #: cdef.php:247 cdef.php:306 color_templates.php:235 color_templates.php:247
 #: color_templates.php:256 color_templates_items.php:328 data_queries.php:413
-#: data_queries.php:427 data_queries.php:612 data_source_profiles.php:394
-#: data_source_profiles.php:406 data_source_profiles.php:642
+#: data_queries.php:427 data_queries.php:612 data_source_profiles.php:416
+#: data_source_profiles.php:428 data_source_profiles.php:664
 #: data_sources.php:601 data_sources.php:613 data_sources.php:622
 #: data_sources.php:631 data_sources.php:640 data_sources.php:646
 #: data_templates.php:486 data_templates.php:498 data_templates.php:514
@@ -415,7 +415,7 @@ msgstr "Pasujące wykresy"
 #: automation_networks.php:1224 automation_snmp.php:703
 #: automation_templates.php:393 automation_tree_rules.php:845 cdef.php:727
 #: color_templates.php:560 data_debug.php:1189 data_queries.php:1371
-#: data_source_profiles.php:1164 data_sources.php:1783 data_templates.php:1101
+#: data_source_profiles.php:1186 data_sources.php:1783 data_templates.php:1101
 #: gprint_presets.php:255 graph_templates.php:727 graph_view.php:667
 #: graphs.php:2100 graphs_new.php:524 host.php:1820 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
@@ -427,7 +427,7 @@ msgstr "Pasujące wykresy"
 #: settings.php:598 settings.php:615 settings.php:674
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:56
 #: tree.php:938 tree.php:973 tree.php:1008 tree.php:2217 user_admin.php:2074
-#: user_domains.php:643 user_group_admin.php:1985 utilities.php:1094
+#: user_domains.php:643 user_group_admin.php:1984 utilities.php:1094
 #: utilities.php:1521 utilities.php:1828 utilities.php:2129 utilities.php:3131
 #: utilities.php:3393
 msgid "Search"
@@ -441,8 +441,8 @@ msgstr "Szukaj"
 #: include/global_arrays.php:2012 lib/api_automation.php:283 lib/html.php:1996
 #: lib/html.php:2065 lib/html_graph.php:197 lib/html_tree.php:1022
 #: lib/html_tree.php:1378 tree.php:917 tree.php:2366 user_admin.php:801
-#: user_admin.php:1073 user_admin.php:2347 user_group_admin.php:932
-#: user_group_admin.php:1087 user_group_admin.php:2140 utilities.php:320
+#: user_admin.php:1073 user_admin.php:2347 user_group_admin.php:931
+#: user_group_admin.php:1086 user_group_admin.php:2139 utilities.php:320
 msgid "Graphs"
 msgstr "Wykresy"
 
@@ -451,8 +451,8 @@ msgstr "Wykresy"
 #: automation_graph_rules.php:851 automation_networks.php:1190
 #: automation_snmp.php:713 automation_templates.php:403
 #: automation_tree_rules.php:865 cdef.php:737 color_templates.php:576
-#: data_debug.php:1199 data_queries.php:1381 data_source_profiles.php:1174
-#: data_source_profiles.php:1296 data_sources.php:1793 data_templates.php:1130
+#: data_debug.php:1199 data_queries.php:1381 data_source_profiles.php:1196
+#: data_source_profiles.php:1318 data_sources.php:1793 data_templates.php:1130
 #: gprint_presets.php:265 graph_templates.php:737 graph_view.php:743
 #: graphs.php:2121 graphs_new.php:534 host.php:1845 host_templates.php:805
 #: include/global_form.php:242 lib/api_automation.php:182
@@ -462,7 +462,7 @@ msgstr "Wykresy"
 #: rrdcleaner.php:549
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:81
 #: tree.php:2227 user_admin.php:2135 user_domains.php:18 user_domains.php:653
-#: user_domains.php:739 user_group_admin.php:1995 utilities.php:1076
+#: user_domains.php:739 user_group_admin.php:1994 utilities.php:1076
 #: utilities.php:1838 utilities.php:2160 utilities.php:3159 utilities.php:3435
 msgid "Default"
 msgstr "Domyślny"
@@ -476,7 +476,7 @@ msgstr "Część wykresu zagregowanego"
 #: automation_graph_rules.php:863 automation_networks.php:1224
 #: automation_snmp.php:728 automation_templates.php:418
 #: automation_tree_rules.php:877 cdef.php:758 color_templates.php:598
-#: data_debug.php:1114 data_queries.php:1396 data_source_profiles.php:1195
+#: data_debug.php:1114 data_queries.php:1396 data_source_profiles.php:1217
 #: data_sources.php:1733 data_templates.php:1151 gprint_presets.php:283
 #: graph_templates.php:758 graph_view.php:675 graphs.php:2091
 #: graphs_new.php:513 host.php:1810 host_templates.php:786
@@ -494,14 +494,14 @@ msgstr "Idź"
 #: aggregate_graphs.php:1303 aggregate_graphs.php:1596
 #: automation_devices.php:509 automation_snmp.php:728
 #: automation_templates.php:418 cdef.php:758 data_debug.php:1114
-#: data_queries.php:1396 data_source_profiles.php:1195 data_sources.php:1733
+#: data_queries.php:1396 data_source_profiles.php:1217 data_sources.php:1733
 #: data_templates.php:1151 gprint_presets.php:283 graph_templates.php:758
 #: graph_view.php:675 graphs.php:2091 graphs_new.php:513 host.php:1810
 #: host_templates.php:786 lib/html_graph.php:178 managers.php:169
 #: managers.php:529 managers.php:794 plugins.php:530 pollers.php:914
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
 #: tree.php:2242 user_admin.php:2150 user_domains.php:665
-#: user_group_admin.php:2010 utilities.php:1084 utilities.php:1470
+#: user_group_admin.php:2009 utilities.php:1084 utilities.php:1470
 #: utilities.php:1819 utilities.php:2120 utilities.php:3167 utilities.php:3443
 msgid "Set/Refresh Filters"
 msgstr "Ustaw / odśwież filtry"
@@ -511,7 +511,7 @@ msgstr "Ustaw / odśwież filtry"
 #: automation_graph_rules.php:864 automation_networks.php:1225
 #: automation_snmp.php:729 automation_templates.php:419
 #: automation_tree_rules.php:878 cdef.php:759 color_templates.php:599
-#: data_debug.php:1115 data_queries.php:1397 data_source_profiles.php:1196
+#: data_debug.php:1115 data_queries.php:1397 data_source_profiles.php:1218
 #: data_sources.php:1734 data_templates.php:1152 gprint_presets.php:284
 #: graph_templates.php:759 graph_view.php:676 graphs.php:2092
 #: graphs_new.php:514 host.php:1811 host_templates.php:787
@@ -529,7 +529,7 @@ msgstr "Wyczyść"
 
 #: aggregate_graphs.php:1304 aggregate_graphs.php:1597 automation_snmp.php:729
 #: automation_templates.php:419 cdef.php:759 data_debug.php:1115
-#: data_queries.php:1397 data_source_profiles.php:1196 data_sources.php:1734
+#: data_queries.php:1397 data_source_profiles.php:1218 data_sources.php:1734
 #: data_templates.php:1152 gprint_presets.php:284 graph_templates.php:759
 #: graph_view.php:676 graphs.php:2092 graphs_new.php:514 host.php:1811
 #: host_templates.php:787 lib/html_graph.php:179 lib/html_tree.php:1010
@@ -537,13 +537,13 @@ msgstr "Wyczyść"
 #: pollers.php:915
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:96
 #: tree.php:2243 user_admin.php:2151 user_domains.php:666
-#: user_group_admin.php:2011 utilities.php:1085 utilities.php:1471
+#: user_group_admin.php:2010 utilities.php:1085 utilities.php:1471
 #: utilities.php:1820 utilities.php:2121 utilities.php:3168 utilities.php:3444
 msgid "Clear Filters"
 msgstr "Wyczyść filtry"
 
 #: aggregate_graphs.php:1329 aggregate_graphs.php:1662 graphs.php:1183
-#: lib/api_automation.php:574 user_admin.php:809 user_group_admin.php:940
+#: lib/api_automation.php:574 user_admin.php:809 user_group_admin.php:939
 msgid "Graph Title"
 msgstr "Tytuł wykresu"
 
@@ -554,8 +554,8 @@ msgstr "Tytuł wykresu"
 #: host.php:1928 host_templates.php:949 lib/api_automation.php:282
 #: pollers.php:995 tree.php:2306 user_admin.php:809 user_admin.php:924
 #: user_admin.php:1073 user_admin.php:1212 user_admin.php:1351
-#: user_group_admin.php:733 user_group_admin.php:940 user_group_admin.php:1087
-#: user_group_admin.php:1223 user_group_admin.php:1355
+#: user_group_admin.php:732 user_group_admin.php:939 user_group_admin.php:1086
+#: user_group_admin.php:1222 user_group_admin.php:1354
 msgid "ID"
 msgstr "ID"
 
@@ -570,27 +570,27 @@ msgstr "Rozmiar"
 
 #: aggregate_graphs.php:1348 aggregate_templates.php:724
 #: automation_tree_rules.php:723 cdef.php:885 color_templates.php:704
-#: data_queries.php:1534 data_source_profiles.php:1376
-#: data_source_profiles.php:1377 data_sources.php:2066 data_sources.php:2067
+#: data_queries.php:1534 data_source_profiles.php:1398
+#: data_source_profiles.php:1399 data_sources.php:2066 data_sources.php:2067
 #: data_templates.php:1321 gprint_presets.php:430 graph_templates.php:921
 #: host_templates.php:997 include/global_settings.php:876
 #: include/global_settings.php:1927 lib/api_automation.php:1438 tree.php:2399
 #: tree.php:2400 user_admin.php:2269 user_domains.php:758
-#: user_group_admin.php:2078
+#: user_group_admin.php:2077
 msgid "No"
 msgstr "Nie"
 
 #: aggregate_graphs.php:1348 aggregate_templates.php:724
 #: automation_tree_rules.php:716 cdef.php:885 color_templates.php:704
 #: data_debug.php:756 data_debug.php:761 data_debug.php:766
-#: data_queries.php:1534 data_source_profiles.php:1375
-#: data_source_profiles.php:1376 data_source_profiles.php:1377
+#: data_queries.php:1534 data_source_profiles.php:1397
+#: data_source_profiles.php:1398 data_source_profiles.php:1399
 #: data_sources.php:2066 data_sources.php:2067 data_templates.php:1321
 #: gprint_presets.php:430 graph_templates.php:921 host_templates.php:997
 #: include/global_settings.php:875 include/global_settings.php:1926
 #: lib/api_automation.php:1438 lib/installer.php:2124 lib/installer.php:2152
 #: lib/installer.php:3953 tree.php:2399 tree.php:2400 user_admin.php:2267
-#: user_domains.php:754 user_domains.php:758 user_group_admin.php:2076
+#: user_domains.php:754 user_domains.php:758 user_group_admin.php:2075
 msgid "Yes"
 msgstr "Tak"
 
@@ -729,7 +729,7 @@ msgstr "Szablony zagregowane"
 #: aggregate_templates.php:612 automation_templates.php:399
 #: automation_templates.php:489 color_templates.php:685
 #: include/global_arrays.php:1002 include/global_arrays.php:1066
-#: lib/installer.php:2738 user_admin.php:2365 user_group_admin.php:2152
+#: lib/installer.php:2738 user_admin.php:2365 user_group_admin.php:2151
 msgid "Templates"
 msgstr "Szablony"
 
@@ -747,7 +747,7 @@ msgid "Aggregate Templates that are in use can not be Deleted.  In use is define
 msgstr "Zagregowane szablony, które są w użyciu, nie mogą być usunięte.  W użyciu jest zdefiniowany jako powoływany przez Aggregate."
 
 #: aggregate_templates.php:707 cdef.php:868 color_templates.php:675
-#: data_queries.php:1488 data_source_profiles.php:1301 data_sources.php:1997
+#: data_queries.php:1488 data_source_profiles.php:1323 data_sources.php:1997
 #: data_templates.php:1266 gprint_presets.php:390 graph_templates.php:870
 #: host_templates.php:955
 msgid "Deletable"
@@ -820,7 +820,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "Wystąpiły problemy ze stroną Zmień hasło.  Natychmiast skontaktuj się z administratorem Kadupul."
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4226 lib/html.php:2768
+#: include/global_form.php:1552 lib/functions.php:4270 lib/html.php:2768
 msgid "Change Password"
 msgstr "Zmień hasło"
 
@@ -833,7 +833,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "Proszę podać aktualne hasło i nowe<br> hasło."
 
 #: auth_changepassword.php:397 auth_login.php:336 auth_login.php:339
-#: include/global_settings.php:1835 lib/functions.php:6156
+#: include/global_settings.php:1835 lib/functions.php:6200
 msgid "Username"
 msgstr "Nazwa użytkownika"
 
@@ -926,7 +926,7 @@ msgstr "Nazwa użytkownika"
 msgid "Enter your Username and Password below"
 msgstr "Wprowadź poniżej swoją nazwę użytkownika i hasło"
 
-#: auth_login.php:344 include/global_form.php:1519 lib/functions.php:6157
+#: auth_login.php:344 include/global_form.php:1519 lib/functions.php:6201
 msgid "Password"
 msgstr "Hasło"
 
@@ -941,7 +941,7 @@ msgid "LDAP"
 msgstr "LDAP"
 
 #: auth_login.php:380 user_admin.php:2119 user_admin.php:2249
-#: user_group_admin.php:733
+#: user_group_admin.php:732
 msgid "Realm"
 msgstr "Królestwo"
 
@@ -956,7 +956,7 @@ msgstr "Zaloguj się"
 #: auth_profile.php:61 include/global_settings.php:22
 #: include/global_settings.php:1202 include/global_settings.php:1519
 #: lib/html.php:2781 managers.php:24 user_admin.php:1741
-#: user_group_admin.php:1755
+#: user_group_admin.php:1754
 msgid "General"
 msgstr "Ogólne"
 
@@ -990,7 +990,7 @@ msgstr "Nazwa użytkownika."
 
 #: auth_profile.php:342 include/global_form.php:1503
 #: include/global_settings.php:1871 user_admin.php:2247 user_domains.php:482
-#: user_group_admin.php:733 utilities.php:1161
+#: user_group_admin.php:732 utilities.php:1161
 msgid "Full Name"
 msgstr "Imię i nazwisko"
 
@@ -1030,7 +1030,7 @@ msgstr "Wyloguj się wszędzie"
 msgid "Clear all your Login Session Tokens."
 msgstr "Wyczyść wszystkie żetony sesji logowania."
 
-#: auth_profile.php:398 user_admin.php:1748 user_group_admin.php:1762
+#: auth_profile.php:398 user_admin.php:1748 user_group_admin.php:1761
 msgid "User Settings"
 msgstr "Ustawienia użytkownika"
 
@@ -1129,8 +1129,8 @@ msgstr "Usuń urządzenie(-a)"
 #: lib/api_automation.php:178 lib/api_automation.php:271
 #: lib/api_automation.php:486 lib/api_automation.php:563
 #: lib/api_automation.php:1189 pollers.php:1031 tree.php:916 tree.php:2360
-#: user_admin.php:1065 user_admin.php:2359 user_group_admin.php:1079
-#: user_group_admin.php:2146 utilities.php:315
+#: user_admin.php:1065 user_admin.php:2359 user_group_admin.php:1078
+#: user_group_admin.php:2145 utilities.php:315
 msgid "Devices"
 msgstr "Urządzenia"
 
@@ -1160,7 +1160,7 @@ msgstr "Kontakt"
 #: include/global_form.php:1739 lib/api_automation.php:278
 #: lib/api_automation.php:1196 lib/installer.php:2044 lib/installer.php:2739
 #: managers.php:214 user_admin.php:924 user_admin.php:1073
-#: user_group_admin.php:1087 user_group_admin.php:2064
+#: user_group_admin.php:1086 user_group_admin.php:2063
 msgid "Description"
 msgstr "Opis"
 
@@ -1187,7 +1187,7 @@ msgstr "Agent SNMP"
 #: lib/html_reports.php:2031 lib/installer.php:2044 managers.php:216
 #: package_import.php:542 package_import.php:627 plugins.php:497
 #: plugins.php:623 pollers.php:1007 templates_import.php:206
-#: templates_import.php:245 user_admin.php:1073 user_group_admin.php:1087
+#: templates_import.php:245 user_admin.php:1073 user_group_admin.php:1086
 #: utilities.php:2135
 msgid "Status"
 msgstr "Status"
@@ -1237,7 +1237,7 @@ msgstr "Wyczyść odkryte urządzenia"
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
 #: data_debug.php:673 data_source_profiles.php:61 host.php:2021
-#: lib/functions.php:6515 lib/functions.php:6520 lib/html.php:1434
+#: lib/functions.php:6559 lib/functions.php:6564 lib/html.php:1434
 #: lib/html.php:1506 lib/html_reports.php:1810 lib/html_reports.php:1838
 #: lib/html_reports.php:1915 lib/html_reports.php:1916
 #: lib/html_reports.php:1917 lib/spikekill.php:1734 lib/spikekill.php:1735
@@ -1381,7 +1381,7 @@ msgstr "Zapytanie o dane"
 #: lib/html_reports.php:2188 managers.php:241 managers.php:612
 #: user_admin.php:924 user_admin.php:936 user_admin.php:2248
 #: user_domains.php:335 user_domains.php:743 user_group_admin.php:76
-#: user_group_admin.php:733 user_group_admin.php:748 user_group_admin.php:2068
+#: user_group_admin.php:732 user_group_admin.php:747 user_group_admin.php:2067
 #: utilities.php:2140 utilities.php:3014
 msgid "Enabled"
 msgstr "Włączone"
@@ -1399,7 +1399,7 @@ msgstr "Włączone"
 #: lib/api_automation.php:28 lib/html.php:2858 lib/html_reports.php:2037
 #: lib/html_reports.php:2188 lib/html_utility.php:1317 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:936 user_domains.php:397
-#: user_group_admin.php:748 utilities.php:2141 utilities.php:2705
+#: user_group_admin.php:747 utilities.php:2141 utilities.php:2705
 #: utilities.php:3014
 msgid "Disabled"
 msgstr "Wyłączone"
@@ -1536,7 +1536,7 @@ msgid "General Settings"
 msgstr "Ustawienia główne"
 
 #: automation_networks.php:439 automation_snmp.php:511 data_queries.php:817
-#: data_queries.php:924 data_queries.php:1209 data_source_profiles.php:874
+#: data_queries.php:924 data_queries.php:1209 data_source_profiles.php:896
 #: graph_templates.php:500 include/global_form.php:201
 #: include/global_form.php:267 include/global_form.php:324
 #: include/global_form.php:344 include/global_form.php:385
@@ -1685,7 +1685,7 @@ msgid "%d Hour"
 msgstr "%d godzina"
 
 #: automation_networks.php:527 automation_networks.php:528
-#: automation_networks.php:529 data_source_profiles.php:1101
+#: automation_networks.php:529 data_source_profiles.php:1123
 #: include/global_arrays.php:716 include/global_arrays.php:717
 #: include/global_arrays.php:718 include/global_arrays.php:719
 #: include/global_arrays.php:720 include/global_arrays.php:761
@@ -2228,7 +2228,7 @@ msgstr "Wersja"
 msgid "Community"
 msgstr "Społeczność"
 
-#: automation_snmp.php:543 lib/functions.php:6152
+#: automation_snmp.php:543 lib/functions.php:6196
 msgid "Port"
 msgstr "Port"
 
@@ -2406,7 +2406,7 @@ msgid "Device Automation Templates"
 msgstr "Szablony automatyki urządzeń"
 
 #: automation_templates.php:498 data_sources.php:2009 package_import.php:624
-#: templates_import.php:242 user_admin.php:1212 user_group_admin.php:1223
+#: templates_import.php:242 user_admin.php:1212 user_group_admin.php:1222
 msgid "Template Name"
 msgstr "Nazwa Szablonu"
 
@@ -2525,8 +2525,8 @@ msgstr "DNO BRUZDY"
 msgid "No Tree Rules Found"
 msgstr "Nie znaleziono zasad dotyczących drzew"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6662 lib/functions.php:6732
-#: lib/functions.php:6828 lib/functions.php:7482 poller.php:417 poller.php:584
+#: cactid.php:27 help.php:54 lib/functions.php:6706 lib/functions.php:6776
+#: lib/functions.php:6872 lib/functions.php:7526 poller.php:417 poller.php:584
 #: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
 #: poller_automation.php:37 poller_boost.php:387
 msgid "Kadupul System Warning"
@@ -2575,7 +2575,7 @@ msgstr[0] "Kliknij „Kontynuuj”, aby zduplikować następujący CDEF. Opcjona
 msgstr[1] ""
 msgstr[2] ""
 
-#: cdef.php:241 color_templates.php:241 data_source_profiles.php:400
+#: cdef.php:241 color_templates.php:241 data_source_profiles.php:422
 #: data_templates.php:492 graph_templates.php:379 host_templates.php:228
 msgid "Title Format:"
 msgstr "Format tytułu"
@@ -2660,7 +2660,7 @@ msgstr "CDEFs"
 msgid "CDEF Name"
 msgstr "Nazwa CDEF"
 
-#: cdef.php:867 data_source_profiles.php:1293
+#: cdef.php:867 data_source_profiles.php:1315
 msgid "The name of this CDEF."
 msgstr "Nazwa tego CDEF."
 
@@ -2672,7 +2672,7 @@ msgstr "CDEF-y, które są w użyciu, nie mogą być usunięte.  W użyciu jest 
 msgid "The number of Graphs using this CDEF."
 msgstr "Liczba wykresów wykorzystujących to CDEF."
 
-#: cdef.php:870 data_queries.php:1499 data_source_profiles.php:1329
+#: cdef.php:870 data_queries.php:1499 data_source_profiles.php:1351
 #: gprint_presets.php:401
 msgid "Templates Using"
 msgstr "Szablony Korzystanie z"
@@ -2685,12 +2685,12 @@ msgstr "Liczba szablonów wykresów wykorzystujących to CDEF."
 msgid "No CDEFs"
 msgstr "Brak CDEF"
 
-#: cli/refresh_csrf.php:104 lib/functions.php:673 settings.php:295
+#: cli/refresh_csrf.php:104 lib/functions.php:692 settings.php:295
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
 msgstr "Ustawienia zapisać do programu Data Collector %d Failed."
 
-#: cli/refresh_csrf.php:105 lib/functions.php:686 settings.php:307
+#: cli/refresh_csrf.php:105 lib/functions.php:705 settings.php:307
 #, php-format
 msgid "Settings save to Data Collector %d Failed."
 msgstr "Ustawienia zapisać do programu Data Collector %d Failed."
@@ -3104,7 +3104,7 @@ msgstr "Wszelkie podsumowujące kwestie znalezione dla źródła danych."
 #: data_debug.php:621 data_debug.php:1195 data_sources.php:1789
 #: data_sources.php:1963 host.php:1940 include/global_arrays.php:994
 #: include/global_arrays.php:1040 include/global_arrays.php:2308
-#: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1087
+#: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1086
 #: utilities.php:325
 msgid "Data Sources"
 msgstr "Źródła danych"
@@ -3689,144 +3689,148 @@ msgstr "Metoda wprowadzania danych stosowana do gromadzenia danych dla źródeł
 msgid "No Data Queries Found"
 msgstr "Nie znaleziono zapytań o dane"
 
-#: data_source_profiles.php:243
+#: data_source_profiles.php:265
 msgid "Changing the Heartbeat from this page, does not change the Heartbeat for your existing Data Sources.  Use RRDtool's 'tune' function to make that change to your existing RRDfiles heartbeats, or run the CLI utility update_heartbeat.php to correct.<br>"
 msgstr "Zmiana tętna na tej stronie nie zmienia tętna dla istniejących źródeł danych.  Użyj funkcji „Tune” RRDtool, aby wprowadzić tę zmianę w istniejących biciach serca RRDfiles, lub uruchom narzędzie CLI update_heartbeat.php, aby poprawić.<br>"
 
-#: data_source_profiles.php:324 data_source_profiles.php:477
+#: data_source_profiles.php:346 data_source_profiles.php:499
 msgid "Unable to verify Data Source Profile usage. No profiles were deleted."
 msgstr ""
 
-#: data_source_profiles.php:349
+#: data_source_profiles.php:371
 msgid "Unable to safely delete the selected Data Source Profiles. No profiles were deleted."
 msgstr ""
 
-#: data_source_profiles.php:389
+#: data_source_profiles.php:411
 msgid "Click 'Continue' to delete the following Data Source Profile"
 msgid_plural "Click 'Continue' to delete following Data Source Profiles"
 msgstr[0] "Kliknij „Kontynuuj”, aby usunąć następujący profil źródła danych"
 msgstr[1] ""
 msgstr[2] ""
 
-#: data_source_profiles.php:394
+#: data_source_profiles.php:416
 msgid "Delete Data Source Profile"
 msgid_plural "Delete Data Source Profiles"
 msgstr[0] "Usuń profil źródła danych"
 msgstr[1] ""
 msgstr[2] ""
 
-#: data_source_profiles.php:398
+#: data_source_profiles.php:420
 msgid "Click 'Continue' to duplicate the following Data Source Profile. You can optionally change the title format for the new Data Source Profile"
 msgid_plural "Click 'Continue' to duplicate following Data Source Profiles. You can optionally change the title format for the new Data Source Profiles."
 msgstr[0] "Kliknij „Kontynuuj”, aby zduplikować następujący profil źródła danych. Opcjonalnie możesz zmienić format tytułu dla nowego profilu źródła danych"
 msgstr[1] ""
 msgstr[2] ""
 
-#: data_source_profiles.php:406
+#: data_source_profiles.php:428
 msgid "Duplicate Data Source Profile"
 msgid_plural "Duplicate Date Source Profiles"
 msgstr[0] "Zduplikowany profil źródła danych"
 msgstr[1] ""
 msgstr[2] ""
 
-#: data_source_profiles.php:485
+#: data_source_profiles.php:507
 msgid "Data Source Profiles in use by Data Templates or Data Sources can not be deleted."
 msgstr ""
 
-#: data_source_profiles.php:531 data_source_profiles.php:1308
+#: data_source_profiles.php:536
+msgid "Unable to verify Data Source Profile usage. Structural fields are read only."
+msgstr ""
+
+#: data_source_profiles.php:553 data_source_profiles.php:1330
 msgid "Profiles that are in use by Data Sources become read only for now."
 msgstr "Profile, które są używane przez Źródła danych, są odczytywane tylko na razie."
 
-#: data_source_profiles.php:548 data_source_profiles.php:609
+#: data_source_profiles.php:570 data_source_profiles.php:631
 #, fuzzy
 msgid "Unable to duplicate Data Source Profile.  Check Kadupul Log for errors."
 msgstr "Jedna lub więcej napraw plików RRD nie powiodło się.  Informacje o błędach można znaleźć w dzienniku Kadupul."
 
-#: data_source_profiles.php:635
+#: data_source_profiles.php:657
 msgid "Click 'Continue' to delete the following Data Source Profile RRA."
 msgstr "Kliknąć \"Continue\" (Kontynuuj), aby usunąć następujący profil źródła danych RRA."
 
-#: data_source_profiles.php:636
+#: data_source_profiles.php:658
 #, php-format
 msgid "Profile Name: %s"
 msgstr "Nazwa profilu: %s"
 
-#: data_source_profiles.php:642
+#: data_source_profiles.php:664
 msgid "Remove Data Source Profile RRA"
 msgstr "Usuń profil źródła danych RRA"
 
-#: data_source_profiles.php:697 data_source_profiles.php:718
+#: data_source_profiles.php:719 data_source_profiles.php:740
 msgid "Each Insert is New Row"
 msgstr "Każda wkładka jest nowym wierszem"
 
-#: data_source_profiles.php:746
+#: data_source_profiles.php:768
 msgid "(Some Elements Read Only)"
 msgstr "(tylko niektóre elementy do odczytu)"
 
-#: data_source_profiles.php:746
+#: data_source_profiles.php:768
 #, php-format
 msgid "RRA [edit: %s %s]"
 msgstr "RRA [edytuj: %s %s]"
 
-#: data_source_profiles.php:847
+#: data_source_profiles.php:869
 #, php-format
 msgid "Data Source Profile [edit: %s]"
 msgstr "Profil źródła danych [edytuj: %s]"
 
-#: data_source_profiles.php:849
+#: data_source_profiles.php:871
 msgid "Data Source Profile [new]"
 msgstr "Profil źródła danych [nowy]"
 
-#: data_source_profiles.php:868
+#: data_source_profiles.php:890
 msgid "Data Source Profile RRAs (press save to update timespans)"
 msgstr "Profil źródłowy danych RRA (naciśnij przycisk Zapisz, aby zaktualizować zakres czasowy)"
 
-#: data_source_profiles.php:870
+#: data_source_profiles.php:892
 msgid "Data Source Profile RRAs (Read Only)"
 msgstr "Profil źródła danych RRA (tylko do odczytu)"
 
-#: data_source_profiles.php:875 include/global_form.php:300
+#: data_source_profiles.php:897 include/global_form.php:300
 msgid "Data Retention"
 msgstr "Zatrzymanie wskazania"
 
-#: data_source_profiles.php:876 include/global_settings.php:1006
+#: data_source_profiles.php:898 include/global_settings.php:1006
 #: lib/html_reports.php:1212
 msgid "Graph Timespan"
 msgstr "Czas trwania wykresu"
 
-#: data_source_profiles.php:877
+#: data_source_profiles.php:899
 msgid "Steps"
 msgstr "Kroki"
 
-#: data_source_profiles.php:878 graphs_new.php:530 include/global_form.php:284
+#: data_source_profiles.php:900 graphs_new.php:530 include/global_form.php:284
 #: lib/html.php:613 lib/html_filter.php:55 lib/installer.php:2827
 #: lib/rrd.php:4220 utilities.php:866 utilities.php:1834
 msgid "Rows"
 msgstr "Wiersze"
 
-#: data_source_profiles.php:935
+#: data_source_profiles.php:957
 msgid "Select Consolidation Function(s)"
 msgstr "Wybierz funkcję(-e) konsolidacji"
 
-#: data_source_profiles.php:975
+#: data_source_profiles.php:997
 msgid "Delete Data Source Profile Item"
 msgstr "Usuń pozycję profilu źródła danych"
 
-#: data_source_profiles.php:1040
+#: data_source_profiles.php:1062
 #, php-format
 msgid "%s KBytes per Data Sources and %s Bytes for the Header"
 msgstr "%s KBajtów na źródła danych i %s bajtów dla nagłówka"
 
-#: data_source_profiles.php:1049
+#: data_source_profiles.php:1071
 #, php-format
 msgid "%s KBytes per Data Source"
 msgstr "%s KBajtów na źródło danych"
 
-#: data_source_profiles.php:1051
+#: data_source_profiles.php:1073
 msgid "Enter a valid number of Rows to obtain the RRA size."
 msgstr "Wprowadź prawidłową liczbę wierszy, aby uzyskać rozmiar RRA."
 
-#: data_source_profiles.php:1066 include/global_arrays.php:787
+#: data_source_profiles.php:1088 include/global_arrays.php:787
 #: include/global_arrays.php:788 include/global_arrays.php:789
 #: include/global_arrays.php:790 include/global_arrays.php:791
 #: include/global_arrays.php:792 include/global_arrays.php:793
@@ -3836,17 +3840,17 @@ msgstr "Wprowadź prawidłową liczbę wierszy, aby uzyskać rozmiar RRA."
 msgid "%d Years"
 msgstr "%d Lata"
 
-#: data_source_profiles.php:1066
+#: data_source_profiles.php:1088
 msgid "1 Year"
 msgstr "1 Rok"
 
-#: data_source_profiles.php:1075 include/global_arrays.php:781
+#: data_source_profiles.php:1097 include/global_arrays.php:781
 #: include/global_arrays.php:1465 rrdcleaner.php:537
 #, php-format
 msgid "%d Month"
 msgstr "%d miesiąc"
 
-#: data_source_profiles.php:1075 include/global_arrays.php:782
+#: data_source_profiles.php:1097 include/global_arrays.php:782
 #: include/global_arrays.php:783 include/global_arrays.php:784
 #: include/global_arrays.php:785 include/global_arrays.php:1466
 #: include/global_arrays.php:1467 include/global_arrays.php:1468
@@ -3856,14 +3860,14 @@ msgstr "%d miesiąc"
 msgid "%d Months"
 msgstr "%d miesiące"
 
-#: data_source_profiles.php:1084 include/global_arrays.php:722
+#: data_source_profiles.php:1106 include/global_arrays.php:722
 #: include/global_arrays.php:778 include/global_arrays.php:1463
 #: rrdcleaner.php:533 rrdcleaner.php:534
 #, php-format
 msgid "%d Week"
 msgstr "%d Tydzień"
 
-#: data_source_profiles.php:1084 include/global_arrays.php:779
+#: data_source_profiles.php:1106 include/global_arrays.php:779
 #: include/global_arrays.php:780 include/global_arrays.php:1464
 #: include/global_settings.php:2946 include/global_settings.php:2947
 #: include/global_settings.php:2948 rrdcleaner.php:535 rrdcleaner.php:536
@@ -3871,14 +3875,14 @@ msgstr "%d Tydzień"
 msgid "%d Weeks"
 msgstr "%d tygodni"
 
-#: data_source_profiles.php:1093 include/global_arrays.php:721
+#: data_source_profiles.php:1115 include/global_arrays.php:721
 #: include/global_arrays.php:765 include/global_arrays.php:775
 #: include/global_arrays.php:1459
 #, php-format
 msgid "%d Day"
 msgstr "%d dzień"
 
-#: data_source_profiles.php:1093 include/global_arrays.php:766
+#: data_source_profiles.php:1115 include/global_arrays.php:766
 #: include/global_arrays.php:776 include/global_arrays.php:777
 #: include/global_arrays.php:1460 include/global_arrays.php:1461
 #: include/global_arrays.php:1462 include/global_settings.php:1631
@@ -3890,7 +3894,7 @@ msgstr "%d dzień"
 msgid "%d Days"
 msgstr "%d dni"
 
-#: data_source_profiles.php:1101 include/global_arrays.php:715
+#: data_source_profiles.php:1123 include/global_arrays.php:715
 #: include/global_arrays.php:1524 include/global_arrays.php:1545
 #: include/global_arrays.php:1555 include/global_arrays.php:1585
 #: include/global_arrays.php:1594 include/global_arrays.php:1622
@@ -3899,65 +3903,65 @@ msgstr "%d dni"
 msgid "1 Hour"
 msgstr "1 Godzina"
 
-#: data_source_profiles.php:1155 include/global_arrays.php:1233
+#: data_source_profiles.php:1177 include/global_arrays.php:1233
 msgid "Data Source Profiles"
 msgstr "Profile źródeł danych"
 
-#: data_source_profiles.php:1170 data_source_profiles.php:1336
+#: data_source_profiles.php:1192 data_source_profiles.php:1358
 msgid "Profiles"
 msgstr "Profile"
 
-#: data_source_profiles.php:1190 data_templates.php:1146
+#: data_source_profiles.php:1212 data_templates.php:1146
 msgid "Has Data Sources"
 msgstr "posiada źródła danych"
 
-#: data_source_profiles.php:1290
+#: data_source_profiles.php:1312
 msgid "Data Source Profile Name"
 msgstr "Profil źródła danych Nazwa źródła"
 
-#: data_source_profiles.php:1298
+#: data_source_profiles.php:1320
 msgid "Is this the default Profile for all new Data Templates?"
 msgstr "Czy jest to domyślny profil dla wszystkich nowych szablonów danych?"
 
-#: data_source_profiles.php:1303
+#: data_source_profiles.php:1325
 msgid "Profiles that are in use cannot be Deleted. In use is defined as being referenced by a Data Source or a Data Template."
 msgstr "Profile, które są w użyciu, nie mogą być usunięte. W użyciu jest zdefiniowany jako odniesienie przez źródło danych lub szablon danych."
 
-#: data_source_profiles.php:1306 include/global_form.php:360
+#: data_source_profiles.php:1328 include/global_form.php:360
 msgid "Read Only"
 msgstr "Tylko do odczytu"
 
-#: data_source_profiles.php:1311 data_sources.php:1991
+#: data_source_profiles.php:1333 data_sources.php:1991
 #: include/global_settings.php:1234
 msgid "Poller Interval"
 msgstr "Wybrany okres pomiędzy kolejnymi pomiarami"
 
-#: data_source_profiles.php:1314
+#: data_source_profiles.php:1336
 msgid "The Polling Frequency for the Profile"
 msgstr "Częstotliwość sondażu dla profilu"
 
-#: data_source_profiles.php:1317 include/global_form.php:218
+#: data_source_profiles.php:1339 include/global_form.php:218
 #: include/global_form.php:639 pollers.php:35
 msgid "Heartbeat"
 msgstr "Heartbeat"
 
-#: data_source_profiles.php:1320
+#: data_source_profiles.php:1342
 msgid "The Amount of Time, in seconds, without good data before Data is stored as Unknown"
 msgstr "Ilość czasu, w sekundach, bez dobrych danych, zanim dane zostaną zapisane jako nieznane"
 
-#: data_source_profiles.php:1323 data_templates.php:1271
+#: data_source_profiles.php:1345 data_templates.php:1271
 msgid "Data Sources Using"
 msgstr "Źródła danych Korzystanie z"
 
-#: data_source_profiles.php:1326
+#: data_source_profiles.php:1348
 msgid "The number of Data Sources using this Profile."
 msgstr "Liczba źródeł danych korzystających z tego profilu."
 
-#: data_source_profiles.php:1332
+#: data_source_profiles.php:1354
 msgid "The number of Data Templates using this Profile."
 msgstr "Liczba szablonów danych korzystających z tego profilu."
 
-#: data_source_profiles.php:1386
+#: data_source_profiles.php:1408
 msgid "No Data Source Profiles Found"
 msgstr "Nie znaleziono profili źródłowych danych"
 
@@ -4143,7 +4147,7 @@ msgstr "Nazwa nadana temu szablonowi danych.  Należy pamiętać, że szablony w
 #: data_sources.php:1081 graph_view.php:817 graphs.php:1588
 #: include/global_arrays.php:954 include/global_arrays.php:1003
 #: include/global_arrays.php:1688 include/global_arrays.php:1857
-#: lib/api_automation.php:426 lib/functions.php:6151 lib/html.php:2347
+#: lib/api_automation.php:426 lib/functions.php:6195 lib/html.php:2347
 #: lib/html.php:2384 lib/html_reports.php:1170 utilities.php:1930
 msgid "Device"
 msgstr "Urządzenie"
@@ -4537,43 +4541,43 @@ msgstr "Dane z wykresu"
 msgid "RRDtool Graph Syntax"
 msgstr "RRDtool Graph Syntax"
 
-#: graph_image.php:174 graph_json.php:208 graph_realtime.php:319
+#: graph_image.php:174 graph_json.php:208 graph_realtime.php:317
 #: lib/rrd.php:2526
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller jeszcze nie działa."
 
-#: graph_realtime.php:36 graph_realtime.php:448 include/auth.php:316
-#: lib/functions.php:8155 permission_denied.php:29 permission_denied.php:36
+#: graph_realtime.php:34 graph_realtime.php:446 include/auth.php:316
+#: lib/functions.php:8199 permission_denied.php:29 permission_denied.php:36
 msgid "Permission Denied"
 msgstr "Brak uprawnień"
 
-#: graph_realtime.php:73 graph_realtime.php:441
+#: graph_realtime.php:71 graph_realtime.php:439
 msgid "Real-time has been disabled by your administrator."
 msgstr "Czas rzeczywisty został wyłączony przez administratora."
 
-#: graph_realtime.php:455
+#: graph_realtime.php:453
 msgid "The Image Cache Directory does not exist.  Please first create it and set permissions and then attempt to open another Real-time graph."
 msgstr "Katalog pamięci podręcznej obrazu nie istnieje.  Najpierw utwórz go i ustaw uprawnienia, a następnie spróbuj otworzyć kolejny wykres w czasie rzeczywistym."
 
-#: graph_realtime.php:462
+#: graph_realtime.php:460
 msgid "The Image Cache Directory is not writable.  Please set permissions and then attempt to open another Real-time graph."
 msgstr "Katalog pamięci podręcznej obrazu nie jest zapisywalny.  Proszę ustawić uprawnienia, a następnie spróbować otworzyć inny wykres w czasie rzeczywistym."
 
-#: graph_realtime.php:483
+#: graph_realtime.php:481
 msgid "Kadupul Real-time Graphing"
 msgstr "Wykres w czasie rzeczywistym"
 
-#: graph_realtime.php:530 lib/html_graph.php:229 lib/html_reports.php:107
+#: graph_realtime.php:528 lib/html_graph.php:229 lib/html_reports.php:107
 #: lib/html_tree.php:1051
 msgid "Thumbnails"
 msgstr "Miniaturki"
 
-#: graph_realtime.php:534
+#: graph_realtime.php:532
 #, php-format
 msgid "%d seconds left."
 msgstr "pozostały %d sekund."
 
-#: graph_realtime.php:550
+#: graph_realtime.php:548
 msgid " seconds left."
 msgstr "pozostały sekundy."
 
@@ -4685,7 +4689,7 @@ msgstr "Zaznacz to pole wyboru, jeśli chcesz zezwolić użytkownikowi na zmian�
 #: graph_templates.php:718 graph_templates.php:733 graph_templates.php:900
 #: graphs_new.php:635 include/global_arrays.php:1236
 #: include/global_arrays.php:2236 lib/html_tree.php:541 user_admin.php:1204
-#: user_group_admin.php:1215
+#: user_group_admin.php:1214
 msgid "Graph Templates"
 msgstr "Szablony wykresów"
 
@@ -5243,7 +5247,7 @@ msgid "Create"
 msgstr "Utwórz"
 
 #: graphs_new.php:639 graphs_new.php:953 lib/html.php:1160 user_admin.php:1427
-#: user_group_admin.php:1439
+#: user_group_admin.php:1438
 msgid "Select All"
 msgstr "Zaznacz wszystko"
 
@@ -5529,7 +5533,7 @@ msgstr "Dodaj szablon wykresu do urządzenia"
 msgid "Data Query Debug Information"
 msgstr "Zapytanie o dane Informacje o debugowaniu"
 
-#: host.php:981 lib/functions.php:4903 tree.php:1804 tree.php:1878
+#: host.php:981 lib/functions.php:4947 tree.php:1804 tree.php:1878
 #: tree.php:1986 user_admin.php:18 user_group_admin.php:20
 msgid "Copy"
 msgstr "Kopiuj"
@@ -5568,7 +5572,7 @@ msgstr " [%d Pozycje, %d Rzędów]"
 msgid "Fail"
 msgstr "Błąd"
 
-#: host.php:1066 lib/functions.php:6166 lib/functions.php:6171
+#: host.php:1066 lib/functions.php:6210 lib/functions.php:6215
 msgid "Success"
 msgstr "Sukces"
 
@@ -5666,7 +5670,7 @@ msgstr "Nazwa, pod jaką to urządzenie będzie się odnosić."
 #: lib/api_automation.php:279 lib/api_automation.php:571
 #: lib/api_automation.php:890 lib/api_automation.php:1197 managers.php:217
 #: pollers.php:115 pollers.php:1001 user_admin.php:1073
-#: user_group_admin.php:1087
+#: user_group_admin.php:1086
 msgid "Hostname"
 msgstr "Nazwa hosta"
 
@@ -5884,11 +5888,11 @@ msgstr "FATAL: Aby uzyskać dostęp do tego obszaru Kadupul, musisz być zalogow
 msgid "Login Again"
 msgstr "Zaloguj się ponownie"
 
-#: include/auth.php:317 lib/functions.php:8156 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8200 permission_denied.php:38
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Jeśli uważasz, że jest to błąd. Prosimy o kontakt z administratorem Kadupul."
 
-#: include/auth.php:317 lib/functions.php:8156 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8200 permission_denied.php:38
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Nie wolno Ci uzyskać dostępu do tej sekcji Kadupul."
 
@@ -6613,7 +6617,7 @@ msgstr "Trudny"
 msgid "Demand"
 msgstr "Demand"
 
-#: include/global_arrays.php:894 user_admin.php:653 user_group_admin.php:787
+#: include/global_arrays.php:894 user_admin.php:653 user_group_admin.php:786
 msgid "Allow"
 msgstr "Zezwól"
 
@@ -6761,7 +6765,7 @@ msgstr "Lokalizacje"
 
 #: include/global_arrays.php:992 include/global_arrays.php:1230 tree.php:2208
 #: tree.php:2223 tree.php:2290 user_admin.php:1343 user_admin.php:2371
-#: user_admin.php:2377 user_group_admin.php:1347 user_group_admin.php:2158
+#: user_admin.php:2377 user_group_admin.php:1346 user_group_admin.php:2157
 msgid "Trees"
 msgstr "Trees"
 
@@ -6844,8 +6848,8 @@ msgid "Settings"
 msgstr "Ustawienia"
 
 #: include/global_arrays.php:1031 include/global_arrays.php:2578
-#: user_admin.php:2131 user_admin.php:2236 user_group_admin.php:725
-#: user_group_admin.php:2164
+#: user_admin.php:2131 user_admin.php:2236 user_group_admin.php:724
+#: user_group_admin.php:2163
 msgid "Users"
 msgstr "Użytkownicy"
 
@@ -6869,7 +6873,7 @@ msgstr "Narzędzia systemowe"
 
 #: include/global_arrays.php:1037 include/global_arrays.php:1072
 #: include/global_arrays.php:1115 include/global_arrays.php:1218
-#: include/global_arrays.php:2212 user_admin.php:1497 user_group_admin.php:1511
+#: include/global_arrays.php:2212 user_admin.php:1497 user_group_admin.php:1510
 msgid "External Links"
 msgstr "Linki zewnętrzne"
 
@@ -7859,8 +7863,8 @@ msgid "List Mode"
 msgstr "Tryb listy"
 
 #: include/global_arrays.php:2062 include/global_arrays.php:2068
-#: lib/functions.php:4448 lib/html.php:1988 lib/html.php:2053 lib/html.php:2778
-#: user_admin.php:1472 user_group_admin.php:1486
+#: lib/functions.php:4492 lib/html.php:1988 lib/html.php:2053 lib/html.php:2778
+#: user_admin.php:1472 user_group_admin.php:1485
 msgid "Console"
 msgstr "Konsola"
 
@@ -9525,7 +9529,7 @@ msgstr "Dane"
 msgid "Visual"
 msgstr "Wizualny"
 
-#: include/global_settings.php:28 lib/functions.php:6155 lib/functions.php:6160
+#: include/global_settings.php:28 lib/functions.php:6199 lib/functions.php:6204
 msgid "Authentication"
 msgstr "Uwierzytelnianie"
 
@@ -9561,11 +9565,11 @@ msgstr "Czcionki wykresów"
 msgid "PHP Mail() Function"
 msgstr "PHP Mail() Funkcja"
 
-#: include/global_settings.php:69 lib/functions.php:6136
+#: include/global_settings.php:69 lib/functions.php:6180
 msgid "Sendmail"
 msgstr "Sendmail"
 
-#: include/global_settings.php:70 lib/functions.php:6142
+#: include/global_settings.php:70 lib/functions.php:6186
 msgid "SMTP"
 msgstr "SMTP"
 
@@ -11480,7 +11484,7 @@ msgstr "Ile znaków będzie dozwolonych, zanim wiersz w wiadomości e-mail zosta
 msgid "Sendmail Options"
 msgstr "Opcje wysyłania wiadomości e-mail"
 
-#: include/global_settings.php:1956 lib/functions.php:6136
+#: include/global_settings.php:1956 lib/functions.php:6180
 msgid "Sendmail Path"
 msgstr "Ścieżka wysyłania poczty"
 
@@ -12639,7 +12643,7 @@ msgstr "BŁĄD: zakresy adresów IP w postaci range1-range2 nie są już obsług
 #: lib/api_device.php:1373 lib/api_device.php:1560 lib/api_device.php:1564
 #: lib/api_device.php:1600 lib/api_device.php:1604 lib/api_device.php:1649
 #: lib/api_device.php:1653 lib/api_device.php:1714 lib/api_device.php:1718
-#: lib/utility.php:743
+#: lib/utility.php:744
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
 msgstr "Zdalna ankieta %s jest wyłączona, należy przeprowadzić pełną synchronizację po jej ponownym uruchomieniu"
@@ -12708,8 +12712,8 @@ msgstr "Lokalizacja:"
 msgid "Contact:"
 msgstr "Kontakt:"
 
-#: lib/api_device.php:1982 lib/functions.php:6169 lib/functions.php:6171
-#: lib/functions.php:6175
+#: lib/api_device.php:1982 lib/functions.php:6213 lib/functions.php:6215
+#: lib/functions.php:6219
 msgid "Ping Results"
 msgstr "Wyniki Pingu"
 
@@ -13466,185 +13470,185 @@ msgstr "Nie znaleziono żadnych problemów"
 msgid "RRDfile not created yet"
 msgstr "RRD Plik nieaktualizowany po głosowaniu"
 
-#: lib/functions.php:1221 lib/functions.php:1303
+#: lib/functions.php:1240 lib/functions.php:1322
 msgid "Message Not Found."
 msgstr "Wiadomość nie została znaleziona."
 
-#: lib/functions.php:1718
+#: lib/functions.php:1737
 #, php-format
 msgid "Error %s is not readable"
 msgstr "Błąd %s nie jest czytelny"
 
-#: lib/functions.php:4202
+#: lib/functions.php:4246
 msgid "Logged in a Guest"
 msgstr "Zalogowany jako"
 
-#: lib/functions.php:4202 lib/functions.php:4220
+#: lib/functions.php:4246 lib/functions.php:4264
 msgid "Logged in as"
 msgstr "Zalogowany jako"
 
-#: lib/functions.php:4202
+#: lib/functions.php:4246
 msgid "Login as Regular User"
 msgstr "Login jako zwykły użytkownik"
 
-#: lib/functions.php:4202
+#: lib/functions.php:4246
 msgid "guest"
 msgstr "Gość"
 
-#: lib/functions.php:4205 lib/functions.php:4230 lib/html.php:2784
+#: lib/functions.php:4249 lib/functions.php:4274 lib/html.php:2784
 msgid "User Community"
 msgstr "Społeczność użytkowników"
 
-#: lib/functions.php:4206 lib/functions.php:4231 lib/html.php:2786
-#: lib/utility.php:1445
+#: lib/functions.php:4250 lib/functions.php:4275 lib/html.php:2786
+#: lib/utility.php:1446
 msgid "Documentation"
 msgstr "Dokumentacja"
 
-#: lib/functions.php:4223
+#: lib/functions.php:4267
 #, php-format
 msgid "Logged in as %s"
 msgstr "Zalogowany jako: %s"
 
-#: lib/functions.php:4225 lib/html.php:2765
+#: lib/functions.php:4269 lib/html.php:2765
 msgid "Edit Profile"
 msgstr "Edytuj profil"
 
-#: lib/functions.php:4235 lib/html.php:2769
+#: lib/functions.php:4279 lib/html.php:2769
 msgid "Logout"
 msgstr "Wyloguj"
 
-#: lib/functions.php:4389
+#: lib/functions.php:4433
 msgid "Leaf"
 msgstr "Liść"
 
-#: lib/functions.php:4413 lib/html_tree.php:648 lib/html_tree.php:684
+#: lib/functions.php:4457 lib/html_tree.php:648 lib/html_tree.php:684
 #: lib/html_tree.php:913 lib/html_tree.php:921 lib/html_tree.php:1522
 msgid "Non Query Based"
 msgstr "Nieoparte na zapytaniach"
 
-#: lib/functions.php:4451
+#: lib/functions.php:4495
 #, php-format
 msgid "Link %s"
 msgstr "Łącze %s"
 
-#: lib/functions.php:5705
+#: lib/functions.php:5749
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Błąd mailingowy: Nie <b>TO</b> adres ustawiony! <br>Jeśli korzystasz z linku <i>Test Mail</i>, ustaw ustawienie <b>Alert e-mail</b>."
 
-#: lib/functions.php:6099
+#: lib/functions.php:6143
 #, php-format
 msgid "Authentication failed: %s"
 msgstr "Uwierzytelnienie nie powiodło się: %s"
 
-#: lib/functions.php:6103
+#: lib/functions.php:6147
 #, php-format
 msgid "HELO failed: %s"
 msgstr "HELO nie powiodło się: %s"
 
-#: lib/functions.php:6106
+#: lib/functions.php:6150
 #, php-format
 msgid "Connect failed: %s"
 msgstr "Połączenie nieudane: %s"
 
-#: lib/functions.php:6109
+#: lib/functions.php:6153
 msgid "SMTP error: "
 msgstr "Błąd SMTP:"
 
-#: lib/functions.php:6123
+#: lib/functions.php:6167
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "Jest to wiadomość testowa wygenerowana z Kadupul.  Ta wiadomość została wysłana w celu przetestowania konfiguracji ustawień poczty."
 
-#: lib/functions.php:6124
+#: lib/functions.php:6168
 msgid "Your email settings are currently set as follows"
 msgstr "Ustawienia poczty e-mail są obecnie ustawione w następujący sposób"
 
-#: lib/functions.php:6125
+#: lib/functions.php:6169
 msgid "Method"
 msgstr "Metoda"
 
-#: lib/functions.php:6127
+#: lib/functions.php:6171
 msgid "Checking Configuration...<br>"
 msgstr "Sprawdzanie konfiguracji....<br>"
 
-#: lib/functions.php:6134
+#: lib/functions.php:6178
 msgid "PHP's Mailer Class"
 msgstr "Klasa pocztowa PHP"
 
-#: lib/functions.php:6140
+#: lib/functions.php:6184
 msgid "Method: SMTP"
 msgstr "Metoda: SMTP"
 
-#: lib/functions.php:6157
+#: lib/functions.php:6201
 msgid "Not Shown for Security Reasons"
 msgstr "Nie pokazywana z powodów związanych z bezpieczeństwem"
 
-#: lib/functions.php:6158
+#: lib/functions.php:6202
 msgid "Security"
 msgstr "Bezpieczeństwo"
 
-#: lib/functions.php:6166
+#: lib/functions.php:6210
 msgid "Ping Results:"
 msgstr "Wyniki Ping:"
 
-#: lib/functions.php:6175
+#: lib/functions.php:6219
 msgid "Bypassed"
 msgstr "Ominięty"
 
-#: lib/functions.php:6184
+#: lib/functions.php:6228
 msgid "Creating Message Text..."
 msgstr "Tworzenie tekstu wiadomości...."
 
-#: lib/functions.php:6187
+#: lib/functions.php:6231
 msgid "Sending Message..."
 msgstr "Wysyłanie wiadomości...."
 
-#: lib/functions.php:6191
+#: lib/functions.php:6235
 msgid "Kadupul Test Message"
 msgstr "Komunikat z testu Kadupul"
 
-#: lib/functions.php:6193
+#: lib/functions.php:6237
 msgid "Success!"
 msgstr "Sukces!"
 
-#: lib/functions.php:6196
+#: lib/functions.php:6240
 msgid "Message Not Sent due to ping failure."
 msgstr "Komunikat Nie wysłany z powodu awarii ping."
 
-#: lib/functions.php:6662 lib/functions.php:6732
+#: lib/functions.php:6706 lib/functions.php:6776
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul disabled plugin %s z powodu następującego błędu: %s!  Więcej informacji na ten temat można znaleźć w pliku dziennika Kadupul."
 
-#: lib/functions.php:6828
+#: lib/functions.php:6872
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "OSTRZEŻENIE: PollerID:%s ma nieprawidłową nazwę hosta:%s.  Czy nie jest osiągalny przez DNS!"
 
-#: lib/functions.php:7252 lib/functions.php:7254
+#: lib/functions.php:7296 lib/functions.php:7298
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:7252
+#: lib/functions.php:7296
 #, php-format
 msgid "Version %s %s"
 msgstr "Wersja %s %s"
 
-#: lib/functions.php:7254
+#: lib/functions.php:7298
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7482
+#: lib/functions.php:7526
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "OSTRZEŻENIE:  Brak pliku dołączonych Kadupul kluczy %s.  Znajdź i zastąp ten plik"
 
-#: lib/graph_item_editor.php:34
+#: lib/graph_item_editor.php:36
 msgid "Line Width"
 msgstr ""
 
-#: lib/graph_item_editor.php:39
+#: lib/graph_item_editor.php:41
 msgid "LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a positive width in pixels; integers or decimal values are supported."
 msgstr ""
 
@@ -16215,7 +16219,7 @@ msgstr "Wymaga: Kadupul >= %s"
 msgid "Not Stated"
 msgstr "Nie podano"
 
-#: lib/poller.php:1991 lib/poller.php:2236
+#: lib/poller.php:2000 lib/poller.php:2245
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 
@@ -16498,8 +16502,8 @@ msgstr ""
 msgid "RRD storage configuration requires attention"
 msgstr ""
 
-#: lib/snmp.php:226 lib/snmp.php:343 lib/snmp.php:455 lib/snmp.php:940
-#: lib/snmp.php:963
+#: lib/snmp.php:226 lib/snmp.php:343 lib/snmp.php:455 lib/snmp.php:913
+#: lib/snmp.php:936
 #, fuzzy, php-format
 msgid "SNMP Command is: %s"
 msgstr "Opcje SNMP [edytuj: %s]"
@@ -16818,191 +16822,191 @@ msgstr "Wykres nie został utworzony dla %s z powodu złych danych"
 msgid "NOTE: Graph not added for Data Query %s and index %s due to Data Source verification failure"
 msgstr "UWAGA: Nie dodano wykresu dla zapytania o dane %s i indeksu %s z powodu niepowodzenia weryfikacji źródła danych"
 
-#: lib/utility.php:1153
+#: lib/utility.php:1154
 msgid "MySQL 5.6+ and MariaDB 10.0+ are great releases, and are very good versions to choose. Make sure you run the very latest release though which fixes a long standing low level networking issue that was causing spine many issues with reliability."
 msgstr "MySQL 5.6+ i MariaDB 10.0+ to świetne wydania i są to bardzo dobre wersje do wyboru. Upewnij się, że uruchomiłeś najnowszą wersję, ale która rozwiązuje długotrwały problem sieci niskiego poziomu, który powodował wiele problemów z niezawodnością kręgosłupa."
 
-#: lib/utility.php:1165
+#: lib/utility.php:1166
 #, php-format
 msgid "It is STRONGLY recommended that you enable InnoDB in any %s version greater than 5.5.3."
 msgstr "Zaleca się włączenie InnoDB w dowolnej wersji %s większej niż 5.1."
 
-#: lib/utility.php:1178 lib/utility.php:1215
+#: lib/utility.php:1179 lib/utility.php:1216
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4_unicode_ci collation type as some characters take more than a single byte."
 msgstr "W przypadku używania Kadupul w językach innych niż angielski, ważne jest, aby używać kolacji utf8mb4_unicode_ci, ponieważ niektóre znaki przyjmują więcej niż jeden bajt."
 
-#: lib/utility.php:1184 lib/utility.php:1190 lib/utility.php:1221
-#: lib/utility.php:1227
+#: lib/utility.php:1185 lib/utility.php:1191 lib/utility.php:1222
+#: lib/utility.php:1228
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4 character set as some characters take more than a single byte."
 msgstr "W przypadku używania Kadupul w językach innych niż angielski, ważne jest, aby używać zestawu znaków utf8mb4, ponieważ niektóre znaki przyjmują więcej niż jeden bajt."
 
-#: lib/utility.php:1203
+#: lib/utility.php:1204
 #, php-format
 msgid "It is recommended that you enable InnoDB in any %s version greater than 5.1."
 msgstr "Zaleca się włączenie InnoDB w dowolnej wersji %s większej niż 5.1."
 
-#: lib/utility.php:1236
+#: lib/utility.php:1237
 #, php-format
 msgid "Depending on the number of logins and use of spine data collector, %s will need many connections.  The calculation for spine is: total_connections = total_processes * (total_threads + script_servers + 1), then you must leave headroom for user connections, which will change depending on the number of concurrent login accounts."
 msgstr "W zależności od liczby logowań i wykorzystania kolektora danych kręgosłupa, %s będzie potrzebował wielu połączeń.  Obliczenia dla kręgosłupa to: total_connections = total_processes * (total_threads + script_servers + 1), następnie musisz zostawić miejsce na połączenia użytkowników, które będzie się zmieniać w zależności od liczby jednoczesnych kont logowania."
 
-#: lib/utility.php:1241
+#: lib/utility.php:1242
 msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
 msgstr "Przechowywanie w pamięci podręcznej tabeli większej oznacza mniej operacji otwierania/zamykania pliku przy użyciu innodb_file_per_table."
 
-#: lib/utility.php:1246
+#: lib/utility.php:1247
 msgid "With Remote polling capabilities, large amounts of data will be synced from the main server to the remote pollers.  Therefore, keep this value at or above 16M."
 msgstr "Dzięki możliwości zdalnej ankiety duże ilości danych zostaną zsynchronizowane z głównym serwerem i zdalnymi ankieterami.  Dlatego należy utrzymać tę wartość na poziomie lub powyżej 16M."
 
-#: lib/utility.php:1252
+#: lib/utility.php:1253
 #, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
 msgstr ""
 
-#: lib/utility.php:1258
+#: lib/utility.php:1259
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
 msgstr "Podczas wykonywania pod-zapytań, mając większy rozmiar tabeli tymczasowej, należy zachować te tymczasowe tabele w pamięci."
 
-#: lib/utility.php:1264 lib/utility.php:1270
+#: lib/utility.php:1265 lib/utility.php:1271
 msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr ""
 
-#: lib/utility.php:1276
+#: lib/utility.php:1277
 #, php-format
 msgid "When using InnoDB storage it is important to keep your table spaces separate.  This makes managing the tables simpler for long time users of %s.  If you are running with this currently off, you can migrate to the per file storage by enabling the feature, and then running an alter statement on all InnoDB tables."
 msgstr "W przypadku korzystania z pamięci masowej InnoDB ważne jest, aby przestrzenie przy stole były oddzielone.  Ułatwia to zarządzanie tabelami przez długi czas użytkownikom %s.  Jeśli z tym aktualnie wyłączone, można migrować do pamięci masowej na plik, włączając tę funkcję, a następnie uruchamiając polecenie alter na wszystkich tabelach InnoDB."
 
-#: lib/utility.php:1282
+#: lib/utility.php:1283
 msgid "When using innodb_file_per_table, it is important to set the innodb_file_format to Barracuda.  This setting will allow longer indexes important for certain Kadupul tables."
 msgstr "W przypadku używania innodb_file_per_table, ważne jest, aby ustawić format innodb_file_format na Barracuda.  To ustawienie pozwala na dłuższe indeksy ważne dla niektórych tabel Kadupul."
 
-#: lib/utility.php:1288
+#: lib/utility.php:1289
 msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
 msgstr "Jeśli Twoje tabele mają bardzo duże indeksy, musisz ustawić wartość Barracuda innodb_file_format oraz innodb_large_prefix jako 1. Nieustawienie tego może skutkować niepoprawnym utworzeniem tabel przez wtyczki."
 
-#: lib/utility.php:1294
+#: lib/utility.php:1295
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
 msgstr ""
 
-#: lib/utility.php:1300
+#: lib/utility.php:1301
 #, fuzzy
 msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "To ustawienie powinno pozostać WŁĄCZONE, chyba że instancje Kadupul działają na ZFS lub FusionI / O, które mają wewnętrzne rejestrowanie w celu obsługi nagłych awarii systemu. Jeśli jednak masz bardzo dobrą moc, a twoje systemy rzadko się psują i masz kopie zapasowe, przełączenie tego ustawienia na WYŁ. Może dać ci prawie 50% wzrost wydajności bazy danych."
 
-#: lib/utility.php:1305
+#: lib/utility.php:1306
 msgid "This is where metadata is stored. If you had a lot of tables, it would be useful to increase this."
 msgstr "W tym miejscu przechowywane są metadane. Jeśli miałbyś dużo stołów, warto byłoby to zwiększyć."
 
-#: lib/utility.php:1310
+#: lib/utility.php:1311
 msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "Zapytania Rogue nie powinny być tak skonstruowane, aby baza danych nie przechodziła w tryb offline do innych.  Usuń te pytania zanim zabiją Twój system."
 
-#: lib/utility.php:1315
+#: lib/utility.php:1316
 msgid "Maximum I/O performance happens when you use the O_DIRECT method to flush pages."
 msgstr "Maksymalna wydajność We/Wy ma miejsce, gdy używasz metody O_DIRECT do spłukiwania stron."
 
-#: lib/utility.php:1325
+#: lib/utility.php:1326
 #, php-format
 msgid "Setting this value to 2 means that you will flush all transactions every second rather than at commit.  This allows %s to perform writing less often."
 msgstr "Ustawienie tej wartości na 2 oznacza, że będziesz spłukiwać wszystkie transakcje co sekundę, a nie na commit.  Dzięki temu %s może rzadziej zajmować się pisaniem."
 
-#: lib/utility.php:1330
+#: lib/utility.php:1331
 msgid "With modern SSD type storage, having multiple io threads is advantageous for applications with high io characteristics."
 msgstr "Dzięki nowoczesnej pamięci masowej typu SSD, posiadanie wielu gwintów io jest korzystne w zastosowaniach o wysokiej charakterystyce io."
 
-#: lib/utility.php:1338 lib/utility.php:1380
+#: lib/utility.php:1339 lib/utility.php:1381
 #, php-format
 msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "W %s %s, można kontrolować, jak często %s przepłukuje transakcje na dysk.  Domyślnie jest to 1 sekunda, ale w systemach o wysokim poziomie We/Wy ustawienie wartości większej niż 1 może pozwolić na to, aby we/wy dysku były bardziej sekwencyjne."
 
-#: lib/utility.php:1343
+#: lib/utility.php:1344
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "Dzięki nowoczesnej pamięci masowej typu SSD, posiadanie wielu wątków io read jest korzystne w zastosowaniach o wysokiej charakterystyce io."
 
-#: lib/utility.php:1348
+#: lib/utility.php:1349
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "Dzięki nowoczesnej pamięci masowej typu SSD, posiadanie wielu wątków zapisu io jest korzystne w zastosowaniach o wysokiej charakterystyce io."
 
-#: lib/utility.php:1354
+#: lib/utility.php:1355
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
 msgstr "%s podzieli innodb_buffer_pool na regiony pamięci w celu poprawy wydajności.  Maksymalna wartość to 64.  Kiedy Twój innodb_buffer_pool jest mniejszy niż 1GB, powinieneś użyć puli o wielkości podzielonej przez 128MB.  Kontynuuj używanie tego równania do maksymalnie 64."
 
-#: lib/utility.php:1354
+#: lib/utility.php:1355
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s podzieli innodb_buffer_pool na regiony pamięci w celu poprawy wydajności.  Maksymalna wartość to 64.  Kiedy Twój innodb_buffer_pool jest mniejszy niż 1GB, powinieneś użyć puli o wielkości podzielonej przez 128MB.  Kontynuuj używanie tego równania do maksymalnie 64."
 
-#: lib/utility.php:1360 lib/utility.php:1396
+#: lib/utility.php:1361 lib/utility.php:1397
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
 msgstr "Jeśli posiadasz dyski SSD, skorzystaj z tej sugestii.  Jeśli posiadasz fizyczne dyski twarde, użyj 200 * liczby aktywnych dysków w tablicy.  W przypadku korzystania z NVMe lub PCIe Flash można używać znacznie większych liczb, nawet do 100000."
 
-#: lib/utility.php:1366 lib/utility.php:1402
+#: lib/utility.php:1367 lib/utility.php:1403
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 2000 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 200000 can be used."
 msgstr "Jeśli posiadasz dyski SSD, skorzystaj z tej sugestii.  Jeśli posiadasz fizyczne dyski twarde, użyj 2000 * liczby aktywnych dysków w tablicy.  W przypadku korzystania z NVMe lub PCIe Flash można używać znacznie większych liczb, nawet do 200000."
 
-#: lib/utility.php:1372 lib/utility.php:1408
+#: lib/utility.php:1373 lib/utility.php:1409
 msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this setting."
 msgstr "Jeśli posiadasz dyski SSD, skorzystaj z tej sugestii. W przeciwnym razie nie należy ustawiać tego ustawienia."
 
-#: lib/utility.php:1385
+#: lib/utility.php:1386
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics."
 msgstr "Dzięki nowoczesnej pamięci masowej typu SSD, posiadanie wielu wątków io read jest korzystne w zastosowaniach o wysokiej charakterystyce io."
 
-#: lib/utility.php:1390
+#: lib/utility.php:1391
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics."
 msgstr "Dzięki nowoczesnej pamięci masowej typu SSD, posiadanie wielu wątków zapisu io jest korzystne w zastosowaniach o wysokiej charakterystyce io."
 
-#: lib/utility.php:1421
+#: lib/utility.php:1422
 msgid "When using MariaDB 10.2.4 and above, this setting should be off if atomic writes are enabled.  Therefore, please enable atomic writes instead of the double write buffer as it will increase performance."
 msgstr "W przypadku korzystania z MariaDB 10.2.4 i nowszych to ustawienie powinno być wyłączone, jeśli włączone są zapisy atomowe. Dlatego należy włączyć zapisy atomowe zamiast podwójnego bufora zapisu, ponieważ zwiększy to wydajność."
 
-#: lib/utility.php:1428
+#: lib/utility.php:1429
 msgid "When using MariaDB 10.2.4 and above, you can use atomic writes over the doublewrite buffer to increase performance."
 msgstr "Korzystając z MariaDB 10.2.4 i nowszych, można użyć zapisów atomowych w buforze podwójnego zapisu, aby zwiększyć wydajność."
 
-#: lib/utility.php:1445
+#: lib/utility.php:1446
 #, php-format
 msgid "%s Tuning"
 msgstr "%s Tuning"
 
-#: lib/utility.php:1445
+#: lib/utility.php:1446
 msgid "Note: Many changes below require a database restart"
 msgstr "Uwaga: Wiele poniższych zmian wymaga ponownego uruchomienia bazy danych"
 
-#: lib/utility.php:1453
+#: lib/utility.php:1454
 msgid "Variable"
 msgstr "Zmienna"
 
-#: lib/utility.php:1454
+#: lib/utility.php:1455
 msgid "Current Value"
 msgstr "Obecna Wartość"
 
-#: lib/utility.php:1456
+#: lib/utility.php:1457
 msgid "Recommended Value"
 msgstr "Wartość zalecana"
 
-#: lib/utility.php:1457
+#: lib/utility.php:1458
 msgid "Comments"
 msgstr "Komentarze"
 
-#: lib/utility.php:2051
+#: lib/utility.php:2052
 #, php-format
 msgid "PHP %s is the minimum version"
 msgstr "PHP %s jest wersją minimalną"
 
-#: lib/utility.php:2053
+#: lib/utility.php:2054
 #, php-format
 msgid "A minimum of %s memory limit"
 msgstr "Minimalny limit pamięci %s"
 
-#: lib/utility.php:2055
+#: lib/utility.php:2056
 #, php-format
 msgid "A minimum of %s m execution time"
 msgstr "Minimalny czas wykonania %s m"
 
-#: lib/utility.php:2057
+#: lib/utility.php:2058
 msgid "A valid timezone that matches MySQL and the system"
 msgstr "Prawidłowa strefa czasowa, która pasuje do MySQL i systemu"
 
@@ -18111,16 +18115,16 @@ msgid "Messages"
 msgstr "Wiadomości"
 
 #: rrdcheck.php:245 rrdcleaner.php:564 user_domains.php:665
-#: user_group_admin.php:2010 user_group_admin.php:2140
-#: user_group_admin.php:2146 user_group_admin.php:2152
-#: user_group_admin.php:2158 user_group_admin.php:2164
+#: user_group_admin.php:2009 user_group_admin.php:2139
+#: user_group_admin.php:2145 user_group_admin.php:2151
+#: user_group_admin.php:2157 user_group_admin.php:2163
 msgctxt "filter: use"
 msgid "Go"
 msgstr "Idź"
 
-#: rrdcheck.php:246 rrdcleaner.php:565 user_group_admin.php:2011
-#: user_group_admin.php:2140 user_group_admin.php:2146
-#: user_group_admin.php:2152 user_group_admin.php:2158
+#: rrdcheck.php:246 rrdcleaner.php:565 user_group_admin.php:2010
+#: user_group_admin.php:2139 user_group_admin.php:2145
+#: user_group_admin.php:2151 user_group_admin.php:2157
 msgctxt "filter: reset"
 msgid "Clear"
 msgstr "Wyczyść"
@@ -18824,7 +18828,7 @@ msgstr "Sortowanie rosnących drzew"
 msgid "Sort Trees Descending"
 msgstr "Sortowanie drzew opadających"
 
-#: tree.php:2300 user_admin.php:1351 user_group_admin.php:1355
+#: tree.php:2300 user_admin.php:1351 user_group_admin.php:1354
 msgid "Tree Name"
 msgstr "Nazwa drzewa"
 
@@ -18988,27 +18992,27 @@ msgstr "Resetuj ustawienia użytkownika (użytkowników)"
 msgid "Set a new password to move this account to the Local realm."
 msgstr ""
 
-#: user_admin.php:654 user_group_admin.php:788
+#: user_admin.php:654 user_group_admin.php:787
 msgid "Deny"
 msgstr "Odrzuć"
 
-#: user_admin.php:685 user_group_admin.php:807
+#: user_admin.php:685 user_group_admin.php:806
 msgid "<b>Note:</b> System Graph Policy is 'Permissive' meaning the User must have access to at least one of Graph, Device, or Graph Template to gain access to the Graph"
 msgstr "<b>Note:</b> System Graph Policy is 'Permissive' meaning the User must have access to least one of Graph, Device, or Graph Template to gain access to the Graph"
 
-#: user_admin.php:687 user_group_admin.php:809
+#: user_admin.php:687 user_group_admin.php:808
 msgid "<b>Note:</b> System Graph Policy is 'Restrictive' meaning the User must have access to either the Graph or the Device and Graph Template to gain access to the Graph"
 msgstr "<b>Note:</b> System Graph Policy is 'Restrictive' meaning the User must have access to the Graph or the Device and Graph Template to gain access to the Graph"
 
-#: user_admin.php:689 user_group_admin.php:811
+#: user_admin.php:689 user_group_admin.php:810
 msgid "<b>Note:</b> System Graph Policy is 'Device' meaning the User must have access to the Graph or Device to gain access to the Graph"
 msgstr "<b>Note:</b> System Graph Policy is 'Restrictive' meaning the User must have access to the Graph or the Device and Graph Template to gain access to the Graph"
 
-#: user_admin.php:691 user_group_admin.php:813
+#: user_admin.php:691 user_group_admin.php:812
 msgid "<b>Note:</b> System Graph Policy is 'Graph Template' meaning the User must have access to the Graph or Graph Template to gain access to the Graph"
 msgstr "<b>Note:</b> System Graph Policy is 'Permissive' meaning the User must have access to least one of Graph, Device, or Graph Template to gain access to the Graph"
 
-#: user_admin.php:695 user_group_admin.php:821
+#: user_admin.php:695 user_group_admin.php:820
 msgid "Default Graph Policy"
 msgstr "Domyślna polityka graficzna"
 
@@ -19017,42 +19021,42 @@ msgid "Default Graph Policy for this User"
 msgstr "Domyślna polityka graficzna dla tego użytkownika"
 
 #: user_admin.php:705 user_admin.php:986 user_admin.php:1155
-#: user_admin.php:1291 user_group_admin.php:831 user_group_admin.php:1017
-#: user_group_admin.php:1165 user_group_admin.php:1299
+#: user_admin.php:1291 user_group_admin.php:830 user_group_admin.php:1016
+#: user_group_admin.php:1164 user_group_admin.php:1298
 msgid "Update"
 msgstr "Aktualizuj"
 
 #: user_admin.php:809 user_admin.php:1073 user_admin.php:1212
-#: user_admin.php:1351 user_group_admin.php:940 user_group_admin.php:1087
-#: user_group_admin.php:1223 user_group_admin.php:1355
+#: user_admin.php:1351 user_group_admin.php:939 user_group_admin.php:1086
+#: user_group_admin.php:1222 user_group_admin.php:1354
 msgid "Effective Policy"
 msgstr "Skuteczna polityka"
 
-#: user_admin.php:823 user_group_admin.php:954
+#: user_admin.php:823 user_group_admin.php:953
 msgid "No Matching Graphs Found"
 msgstr "Nie znaleziono pasujących wykresów"
 
 #: user_admin.php:838 user_admin.php:844 user_admin.php:1118
 #: user_admin.php:1124 user_admin.php:1254 user_admin.php:1260
-#: user_admin.php:1392 user_admin.php:1398 user_group_admin.php:969
-#: user_group_admin.php:975 user_group_admin.php:1131 user_group_admin.php:1137
-#: user_group_admin.php:1265 user_group_admin.php:1271
-#: user_group_admin.php:1395 user_group_admin.php:1401
+#: user_admin.php:1392 user_admin.php:1398 user_group_admin.php:968
+#: user_group_admin.php:974 user_group_admin.php:1130 user_group_admin.php:1136
+#: user_group_admin.php:1264 user_group_admin.php:1270
+#: user_group_admin.php:1394 user_group_admin.php:1400
 msgid "Revoke Access"
 msgstr "Odwołaj dostęp"
 
 #: user_admin.php:839 user_admin.php:843 user_admin.php:1119
 #: user_admin.php:1123 user_admin.php:1255 user_admin.php:1259
 #: user_admin.php:1393 user_admin.php:1397 user_group_admin.php:51
-#: user_group_admin.php:970 user_group_admin.php:974 user_group_admin.php:1132
-#: user_group_admin.php:1136 user_group_admin.php:1266
-#: user_group_admin.php:1270 user_group_admin.php:1396
-#: user_group_admin.php:1400
+#: user_group_admin.php:969 user_group_admin.php:973 user_group_admin.php:1131
+#: user_group_admin.php:1135 user_group_admin.php:1265
+#: user_group_admin.php:1269 user_group_admin.php:1395
+#: user_group_admin.php:1399
 msgid "Grant Access"
 msgstr "Dodaj dostęp"
 
-#: user_admin.php:916 user_admin.php:2353 user_group_admin.php:1991
-#: user_group_admin.php:2053
+#: user_admin.php:916 user_admin.php:2353 user_group_admin.php:1990
+#: user_group_admin.php:2052
 msgid "Groups"
 msgstr "Grupy"
 
@@ -19064,19 +19068,19 @@ msgstr "Członek"
 msgid "Policies (Graph/Device/Template)"
 msgstr "Polityka (wykres/urządzenie/wzór)"
 
-#: user_admin.php:933 user_group_admin.php:746
+#: user_admin.php:933 user_group_admin.php:745
 msgid "Non Member"
 msgstr "Nie-członkowie"
 
 #: user_admin.php:935 user_admin.php:2291 user_admin.php:2292
-#: user_admin.php:2293 user_group_admin.php:2085 user_group_admin.php:2086
-#: user_group_admin.php:2087
+#: user_admin.php:2293 user_group_admin.php:2084 user_group_admin.php:2085
+#: user_group_admin.php:2086
 msgid "ALLOW"
 msgstr "Zezwól"
 
 #: user_admin.php:935 user_admin.php:2291 user_admin.php:2292
-#: user_admin.php:2293 user_group_admin.php:2085 user_group_admin.php:2086
-#: user_group_admin.php:2087
+#: user_admin.php:2293 user_group_admin.php:2084 user_group_admin.php:2085
+#: user_group_admin.php:2086
 msgid "DENY"
 msgstr "Odrzuć"
 
@@ -19092,7 +19096,7 @@ msgstr "Przyznanie członkostwa"
 msgid "Remove Membership"
 msgstr "Usuń sprzedajacego"
 
-#: user_admin.php:976 user_group_admin.php:1007
+#: user_admin.php:976 user_group_admin.php:1006
 msgid "Default Device Policy"
 msgstr "Domyślna polityka dotycząca urządzeń"
 
@@ -19102,25 +19106,25 @@ msgstr "Domyślna polityka urządzenia dla tego użytkownika"
 
 #: user_admin.php:1084 user_admin.php:1092 user_admin.php:1223
 #: user_admin.php:1231 user_admin.php:1362 user_admin.php:1370
-#: user_group_admin.php:1098 user_group_admin.php:1106
-#: user_group_admin.php:1234 user_group_admin.php:1242
-#: user_group_admin.php:1366 user_group_admin.php:1374
+#: user_group_admin.php:1097 user_group_admin.php:1105
+#: user_group_admin.php:1233 user_group_admin.php:1241
+#: user_group_admin.php:1365 user_group_admin.php:1373
 msgid "Access Granted"
 msgstr "Przyznany dostęp"
 
 #: user_admin.php:1086 user_admin.php:1090 user_admin.php:1225
 #: user_admin.php:1229 user_admin.php:1364 user_admin.php:1368
-#: user_group_admin.php:1100 user_group_admin.php:1104
-#: user_group_admin.php:1236 user_group_admin.php:1240
-#: user_group_admin.php:1368 user_group_admin.php:1372
+#: user_group_admin.php:1099 user_group_admin.php:1103
+#: user_group_admin.php:1235 user_group_admin.php:1239
+#: user_group_admin.php:1367 user_group_admin.php:1371
 msgid "Access Restricted"
 msgstr "Ograniczony dostęp"
 
-#: user_admin.php:1103 user_group_admin.php:1117
+#: user_admin.php:1103 user_group_admin.php:1116
 msgid "No Matching Devices Found"
 msgstr "Nie znaleziono pasujących urządzeń"
 
-#: user_admin.php:1145 user_group_admin.php:1155
+#: user_admin.php:1145 user_group_admin.php:1154
 msgid "Default Graph Template Policy"
 msgstr "Domyślna polityka szablonów wykresów"
 
@@ -19128,15 +19132,15 @@ msgstr "Domyślna polityka szablonów wykresów"
 msgid "Default Graph Template Policy for this User"
 msgstr "Domyślna polityka szablonu wykresu dla tego użytkownika"
 
-#: user_admin.php:1212 user_group_admin.php:1223
+#: user_admin.php:1212 user_group_admin.php:1222
 msgid "Total Graphs"
 msgstr "Wykresy ogółem"
 
-#: user_admin.php:1239 user_group_admin.php:1250
+#: user_admin.php:1239 user_group_admin.php:1249
 msgid "No Matching Graph Templates Found"
 msgstr "Nie znaleziono pasujących szablonów wykresów"
 
-#: user_admin.php:1281 user_group_admin.php:1289
+#: user_admin.php:1281 user_group_admin.php:1288
 msgid "Default Tree Policy"
 msgstr "Polityka dotycząca drzew domyślnych"
 
@@ -19144,44 +19148,44 @@ msgstr "Polityka dotycząca drzew domyślnych"
 msgid "Default Tree Policy for this User"
 msgstr "Domyślna Polityka Drzewa dla tego użytkownika"
 
-#: user_admin.php:1377 user_group_admin.php:1381
+#: user_admin.php:1377 user_group_admin.php:1380
 msgid "No Matching Trees Found"
 msgstr "Nie znaleziono pasujących drzew"
 
-#: user_admin.php:1426 user_group_admin.php:1438
+#: user_admin.php:1426 user_group_admin.php:1437
 msgid "User Permissions"
 msgstr "Uprawnienia użytkownika"
 
-#: user_admin.php:1473 user_group_admin.php:1487
+#: user_admin.php:1473 user_group_admin.php:1486
 msgid "Top Tab"
 msgstr "Górna zakładka"
 
-#: user_admin.php:1474 user_group_admin.php:1488
+#: user_admin.php:1474 user_group_admin.php:1487
 msgid "Bottom Console"
 msgstr "Konsola dolna"
 
-#: user_admin.php:1475 user_group_admin.php:1489
+#: user_admin.php:1475 user_group_admin.php:1488
 msgid "Top Console"
 msgstr "Konsola górna"
 
-#: user_admin.php:1479 user_group_admin.php:1493
+#: user_admin.php:1479 user_group_admin.php:1492
 msgid "External Link Permissions"
 msgstr "Pozwolenia na połączenia zewnętrzne"
 
-#: user_admin.php:1550 user_group_admin.php:1562
+#: user_admin.php:1550 user_group_admin.php:1561
 msgid "Plugin Permissions"
 msgstr "Zezwolenia na korzystanie z wtyczek"
 
-#: user_admin.php:1567 user_group_admin.php:1579
+#: user_admin.php:1567 user_group_admin.php:1578
 msgid "Legacy Permissions"
 msgstr "Pozwolenia dla użytkowników"
 
-#: user_admin.php:1626 user_group_admin.php:1640
+#: user_admin.php:1626 user_group_admin.php:1639
 #, php-format
 msgid "User Settings %s"
 msgstr "Ustawienia użytkownika %s"
 
-#: user_admin.php:1742 user_group_admin.php:1757
+#: user_admin.php:1742 user_group_admin.php:1756
 msgid "Permissions"
 msgstr "Uprawnienia"
 
@@ -19189,19 +19193,19 @@ msgstr "Uprawnienia"
 msgid "Group Membership"
 msgstr "Członkostwo w grupie"
 
-#: user_admin.php:1744 user_group_admin.php:1758
+#: user_admin.php:1744 user_group_admin.php:1757
 msgid "Graph Perms"
 msgstr "Wykresy Permamenty"
 
-#: user_admin.php:1745 user_group_admin.php:1759
+#: user_admin.php:1745 user_group_admin.php:1758
 msgid "Device Perms"
 msgstr "Wydajność urządzenia"
 
-#: user_admin.php:1746 user_group_admin.php:1760
+#: user_admin.php:1746 user_group_admin.php:1759
 msgid "Template Perms"
 msgstr "Szablony Perms"
 
-#: user_admin.php:1747 user_group_admin.php:1761
+#: user_admin.php:1747 user_group_admin.php:1760
 msgid "Tree Perms"
 msgstr "Permamenty drzew"
 
@@ -19267,15 +19271,15 @@ msgstr "Domena"
 msgid "User ID"
 msgstr "Identyfikator użytkownika"
 
-#: user_admin.php:2250 user_group_admin.php:2065
+#: user_admin.php:2250 user_group_admin.php:2064
 msgid "Graph Policy"
 msgstr "Polityka graficzna"
 
-#: user_admin.php:2251 user_group_admin.php:2066
+#: user_admin.php:2251 user_group_admin.php:2065
 msgid "Device Policy"
 msgstr "Polityka dotycząca urządzeń"
 
-#: user_admin.php:2252 user_group_admin.php:2067
+#: user_admin.php:2252 user_group_admin.php:2066
 msgid "Template Policy"
 msgstr "Wzór polityki"
 
@@ -19287,7 +19291,7 @@ msgstr "Niedostępne"
 msgid "No Users Found"
 msgstr "Nie znaleziono użytkowników"
 
-#: user_admin.php:2347 user_group_admin.php:2140
+#: user_admin.php:2347 user_group_admin.php:2139
 #, php-format
 msgid "Graph Permissions %s"
 msgstr "Wykres Uprawnienia %s"
@@ -19297,23 +19301,23 @@ msgstr "Wykres Uprawnienia %s"
 msgid "Group Membership %s"
 msgstr "Członkostwo w grupie"
 
-#: user_admin.php:2359 user_group_admin.php:2146
+#: user_admin.php:2359 user_group_admin.php:2145
 #, php-format
 msgid "Devices Permission %s"
 msgstr "Uprawnienia urządzeń %s"
 
 #: user_admin.php:2359 user_admin.php:2365 user_admin.php:2371
-#: user_admin.php:2377 user_group_admin.php:2140 user_group_admin.php:2146
-#: user_group_admin.php:2152 user_group_admin.php:2158
+#: user_admin.php:2377 user_group_admin.php:2139 user_group_admin.php:2145
+#: user_group_admin.php:2151 user_group_admin.php:2157
 msgid "Only Show Exceptions"
 msgstr "Pokaż wyjątki"
 
-#: user_admin.php:2365 user_group_admin.php:2152
+#: user_admin.php:2365 user_group_admin.php:2151
 #, php-format
 msgid "Template Permission %s"
 msgstr "Uprawnienia szablonu %s"
 
-#: user_admin.php:2371 user_admin.php:2377 user_group_admin.php:2158
+#: user_admin.php:2371 user_admin.php:2377 user_group_admin.php:2157
 #, php-format
 msgid "Tree Permission %s"
 msgstr "Uprawnienia drzewa %s"
@@ -19486,7 +19490,7 @@ msgstr "Pokaż domyślny ekran wykresu"
 msgid "Restrict Access"
 msgstr "Ogranicz dostęp"
 
-#: user_group_admin.php:62 user_group_admin.php:2062
+#: user_group_admin.php:62 user_group_admin.php:2061
 msgid "Group Name"
 msgstr "Nazwa grupy"
 
@@ -19611,69 +19615,69 @@ msgstr[0] "Wyłącz grupę użytkowników"
 msgstr[1] ""
 msgstr[2] ""
 
-#: user_group_admin.php:733
+#: user_group_admin.php:732
 msgid "Login Name"
 msgstr "Nazwa uzytkownika "
 
-#: user_group_admin.php:733
+#: user_group_admin.php:732
 msgid "Membership"
 msgstr "Członkostwo"
 
-#: user_group_admin.php:744
+#: user_group_admin.php:743
 msgid "Group Member"
 msgstr "Członek grupy"
 
-#: user_group_admin.php:754
+#: user_group_admin.php:753
 msgid "No Matching Group Members Found"
 msgstr "Nie znaleziono pasujących członków grupy"
 
-#: user_group_admin.php:768
+#: user_group_admin.php:767
 msgid "Add to Group"
 msgstr "Dodaj do grupy"
 
-#: user_group_admin.php:769
+#: user_group_admin.php:768
 msgid "Remove from Group"
 msgstr "Usuń z grupy"
 
-#: user_group_admin.php:826 user_group_admin.php:1012
+#: user_group_admin.php:825 user_group_admin.php:1011
 msgid "Default Graph Policy for this User Group"
 msgstr "Domyślna polityka graficzna dla tej grupy użytkowników"
 
-#: user_group_admin.php:1160
+#: user_group_admin.php:1159
 msgid "Default Graph Template Policy for this User Group"
 msgstr "Domyślna polityka szablonu wykresu dla tej grupy użytkowników"
 
-#: user_group_admin.php:1294
+#: user_group_admin.php:1293
 msgid "Default Tree Policy for this User Group"
 msgstr "Domyślna polityka drzewa domyślnego dla tej grupy użytkowników"
 
-#: user_group_admin.php:1756 user_group_admin.php:2063
+#: user_group_admin.php:1755 user_group_admin.php:2062
 msgid "Members"
 msgstr "Członkowie"
 
-#: user_group_admin.php:1775
+#: user_group_admin.php:1774
 #, php-format
 msgid "User Group Management [edit: %s]"
 msgstr "Zarządzanie grupą użytkowników [edytuj: %s]"
 
-#: user_group_admin.php:1777
+#: user_group_admin.php:1776
 msgid "User Group Management [new]"
 msgstr "Zarządzanie grupą użytkowników [nowe]"
 
-#: user_group_admin.php:1970
+#: user_group_admin.php:1969
 msgid "User Group Management"
 msgstr "Zarządzanie grupami użytkowników"
 
-#: user_group_admin.php:2093
+#: user_group_admin.php:2092
 msgid "No User Groups Found"
 msgstr "Nie znaleziono grup użytkowników"
 
-#: user_group_admin.php:2164
+#: user_group_admin.php:2163
 msgctxt "filter reset"
 msgid "Clear"
 msgstr "Wyczyść"
 
-#: user_group_admin.php:2164
+#: user_group_admin.php:2163
 msgid "Show Members"
 msgstr "Pokaż Członków"
 

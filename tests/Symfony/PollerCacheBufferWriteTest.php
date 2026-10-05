@@ -173,6 +173,85 @@ final class PollerCacheBufferWriteTest extends TestCase
         self::assertFalse($this->remote->inTransaction());
     }
 
+    public function testActualQueryOutputTypeSelectionAndMalformedCommitCleanup(): void
+    {
+        $root = dirname(__DIR__, 2);
+        $coverage = \PHPUnit\Runner\CodeCoverage::instance()->isActive()
+            ? \PHPUnit\Runner\CodeCoverage::instance()->codeCoverage() : null;
+        $directory = sys_get_temp_dir() . '/output-type-coverage-' . bin2hex(random_bytes(8));
+        self::assertTrue(mkdir($directory, 0700));
+        $environment = array_merge(getenv(), [
+            'KADUPUL_OUTPUT_TYPE_DSN' => self::$dsns['primary'],
+            'KADUPUL_OUTPUT_TYPE_USER' => self::$user,
+            'KADUPUL_OUTPUT_TYPE_PASSWORD' => self::$password,
+            'KADUPUL_OUTPUT_TYPE_COVERAGE' => $coverage === null ? '' : $directory,
+        ]);
+        $process = new \Symfony\Component\Process\Process([PHP_BINARY, '-d', 'zend.exception_ignore_args=1', '-d', 'pcov.directory=' . $root,
+            '-d', 'pcov.exclude=~/(include/vendor|tests)/~',
+            $root . '/tests/Fixtures/poller-output-type-native.php', $root], $root, $environment);
+        $process->setTimeout(30);
+        try {
+            $process->run();
+            self::assertTrue($process->isSuccessful(), $process->getErrorOutput());
+            self::assertSame('', $process->getErrorOutput());
+            $result = json_decode($process->getOutput(), true, 512, JSON_THROW_ON_ERROR);
+            self::assertSame(['traffic_in'], $result['selected']['13']);
+            self::assertSame(['traffic_in', 'traffic_out'], $result['selected']['empty']);
+            self::assertSame(['traffic_in', 'traffic_out'], $result['selected']['missing']);
+            foreach (['1 OR 1=1', ' 13', '-1', '1e3'] as $invalid) {
+                self::assertSame([], $result['selected'][$invalid]);
+                self::assertSame([], $result['committed'][$invalid]);
+                self::assertSame(0, $result['queries'][$invalid]);
+            }
+            self::assertSame(['traffic_in'], $result['committed']['13']);
+            self::assertSame(['traffic_in', 'traffic_out'], $result['committed']['empty']);
+            self::assertSame(['traffic_in', 'traffic_out'], $result['committed']['missing']);
+            self::assertSame([17, 11, '13'], $result['parameters']['13']);
+            self::assertSame([17, 11], $result['parameters']['empty']);
+            self::assertSame([17, 11], $result['parameters']['missing']);
+            self::assertSame(8, count($result['warnings']));
+            foreach ($result['warnings'] as $warning) {
+                self::assertSame('PCACHE', $warning[1]);
+                self::assertStringContainsString('local_data_id 11 and data_template_data_id 21', $warning[0]);
+            }
+            if ($coverage !== null) {
+                require_once dirname(__DIR__) . '/Helpers/NativeChildCoverageEvidence.php';
+                $reports = glob($directory . '/*.coverage');
+                self::assertCount(1, $reports);
+                $sources = ['lib/utility.php', 'lib/database.php', 'lib/api_poller.php', 'lib/data_query.php', 'lib/xml.php', 'lib/functions.php',
+                    'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php',
+                    'src/Inventory/Infrastructure/Legacy/PollerCacheBufferWrite.php', 'src/Inventory/Infrastructure/Legacy/QueuedCollectorPurge.php',
+                    'src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php', 'src/Platform/Infrastructure/Legacy/LegacyReferenceWriteTransaction.php',
+                    'cacti.sql', 'resource/snmp_queries/interface.xml', 'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Fixtures/rrd-process-coverage.php'];
+                $markers = ['selection-valid', 'selection-empty', 'selection-missing', 'malformed-refused', 'commit-cleanup', 'operator-warning'];
+                $hits = ['lib/utility.php', 'lib/database.php', 'lib/api_poller.php', 'lib/data_query.php', 'lib/xml.php',
+                    'src/Inventory/Infrastructure/Legacy/PollerCacheBufferWrite.php', 'src/Inventory/Infrastructure/Legacy/QueuedCollectorPurge.php',
+                    'src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php', 'src/Platform/Infrastructure/Legacy/LegacyReferenceWriteTransaction.php'];
+                $arguments = [$reports[0], $root, 'tests/Fixtures/poller-output-type-native.php', 'query-output-types-v1', $sources, $markers, $hits];
+                $measured = \NativeChildCoverageEvidence::load(...$arguments);
+                $warningLine = null;
+                foreach (file($root . '/lib/utility.php') as $line => $text) {
+                    if (str_contains($text, 'WARNING: Invalid output_type for local_data_id')) {
+                        $warningLine = $line + 1;
+                        break;
+                    }
+                }
+                self::assertIsInt($warningLine);
+                self::assertNotEmpty($measured->getData()->lineCoverage()[realpath($root . '/lib/utility.php')][$warningLine] ?? [], 'The changed malformed-output diagnostic must execute.');
+                self::assertSame(
+                    count($sources) + count($markers) + 10,
+                    \NativeChildCoverageEvidence::verifyRejections(...[...$arguments, 'lib/boost.php'])
+                );
+                $coverage->merge($measured);
+            }
+        } finally {
+            foreach (glob($directory . '/*') as $file) {
+                unlink($file);
+            }
+            rmdir($directory);
+        }
+    }
+
     public function testActualCommonWrapperUsesCapturedPrimaryAndDefaultHostZero(): void
     {
         if (!function_exists('poller_update_poller_cache_from_buffer')) {

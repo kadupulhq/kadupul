@@ -7,13 +7,19 @@ follows [Semantic Versioning](VERSIONING.md).
 ## [Unreleased]
 
 - Bound legacy Boost writer lock acquisition to 60 attempts; report contention and retain queued samples instead of waiting indefinitely.
+- Correct Settings help for graph permission combinations, auto scale limits, and CSP nonce reporting and enforcement. Fixes #222, #230, and #265.
+
+- Preserve heartbeat propagation for template-only and local data sources; accept unchanged read-only fields and independently validate consolidation edits before writes.
+
+- Preserve existing NaN gaps while removing stddev and variance spikes; count only completed replacements against the per-archive limit and report the selected replacement mode. Fixes #238.
+
+- Preserve cached HR-MIB disk allocation units with the `Bytes` suffix; reject fractional, non-finite and out-of-range Integer32 samples as unknown.
 
 - Preserve each graph item's numeric SHIFT or TICK value, including backward shifts; validate numeric fields only when rendering uses them.
-- Constrain RRD cleaner scans and purge paths to the configured storage roots.
+- Preserve trusted RRA directory links and custom configured roots during cleanup; retain final file links and unsafe proxy or archive targets without creating directories outside the archive.
 
-- Normalize accepted exclamation-delimited multi-value poller output to the colon format consumed by the field mapper. Fixes #284.
-- Query the shipped `poller` table when checking multi-collector Boost settings, preserve the current system setting if that count fails, and consistently convert the 120-minute fallback interval to seconds. Fixes #270.
-- Correct Settings help for graph permission combinations, auto scale limits, and CSP nonce reporting and enforcement. Fixes #222, #230, and #265.
+- Map complete exclamation-delimited poller field lists from PHP and Spine while preserving scalar exclamation marks and hexadecimal values, including hexadecimal-looking field names. Fixes #284.
+- Query the shipped `poller` table when checking multi-collector Boost settings, preserve the current system setting if that count fails, and normalize the bounded 120-minute fallback before master scheduling arithmetic. Fixes #270.
 - Trust forwarded client IPs only when the TCP peer is an explicitly configured
   proxy and exactly one allowlisted header contains one IP address. The unsafe
   `proxy_headers = true` mode no longer authorizes forwarded addresses.
@@ -110,7 +116,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Validate replicated resource-cache paths against the installation tree, protect `include/config.php`, and run PHP syntax checks without a shell.
 - Restrict Script Server dispatch to PHP files under `scripts/` and only call functions declared by the selected file.
-- Validate graph-item dashes, dash offsets and alpha values before saving, and quote those fields and the SHIFT and TICK values when rendering graphs.
+- Validate dashes, dash offsets and alpha values on graph-item and graph-template-item edit pages, preserving fractional dash patterns and offsets. Filter and quote those fields and the SHIFT and TICK values when rendering graphs, including values stored through graph-input overrides and template imports.
 - Run binary SNMP get, getnext and walk commands through Symfony Process argument arrays, keeping hostnames and SNMP credentials intact as single arguments on Windows. Fixes #531.
 - Bind the data-query output type when rebuilding poller cache entries and skip malformed values, so stored field text cannot alter the SQL query. Fixes #533.
 - Validate graph-item TICK fractions and SHIFT offsets as single numeric tokens before saving or writing RRDtool pipe commands. Malformed legacy rows are skipped. Fixes #535.

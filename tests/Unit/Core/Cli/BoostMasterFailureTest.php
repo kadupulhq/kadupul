@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-test('Boost master retains archives and retries when any child result fails', function ($failed, $updates, $expectedExit) {
+test('Boost master retains archives and retries when any child result fails', function ($failed, $updates, $expectedExit, $interval = 1) {
     $source = file_get_contents(dirname(__DIR__, 4) . '/poller_boost.php');
     $start = strpos($source, 'if ($child == false) {');
     $end = strpos($source, "} else {\n    cacti_log('INFO: Boost register child process", $start);
@@ -16,7 +16,7 @@ namespace BoostMasterProbe;
 $child = false; $forcerun = true; $rrd_updates = -1; $run_failed = false;
 $config = array('poller_id' => 1); $options = array(); $effects = array();
 function sleep($seconds) {}
-function read_config_option($key) { return $key === 'boost_last_run_time' ? 1234 : 1; }
+function read_config_option($key) { if ($key === 'boost_rrd_update_interval') { return $GLOBALS['options'][$key] ?? $GLOBALS['interval']; } return $key === 'boost_last_run_time' ? 1234 : 1; }
 function set_config_option($key, $value) { $GLOBALS['options'][$key] = $value; }
 function cacti_sizeof($rows) { return count($rows); }
 function cacti_log(...$args) {}
@@ -45,7 +45,7 @@ register_shutdown_function(function () { echo json_encode(array($GLOBALS['option
 FIXTURE;
     $file = tempnam(sys_get_temp_dir(), 'boost-master-');
     try {
-        file_put_contents($file, $bootstrap . "\n" . '$failed = ' . var_export($failed, true) . '; $updates = ' . var_export($updates, true) . ';' . $master);
+        file_put_contents($file, $bootstrap . "\n" . test_php_function_source($source, 'boost_interval_seconds') . "\n" . '$interval = ' . var_export($interval, true) . '; $failed = ' . var_export($failed, true) . '; $updates = ' . var_export($updates, true) . ';' . $master);
         $process = proc_open(array(PHP_BINARY, $file), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
         $output = stream_get_contents($pipes[1]);
         $error = stream_get_contents($pipes[2]);
@@ -65,11 +65,15 @@ FIXTURE;
                 ->and($options['boost_poller_status'])->toStartWith('complete')
                 ->and(isset($options['boost_next_run_time']))->toBeTrue()
                 ->and($effects)->toContain('drop', 'statistics', 'bottom');
+            if ($interval !== 1) {
+                expect($options['boost_rrd_update_interval'])->toBe(120);
+                expect($options['boost_next_run_time'] - $options['boost_last_run_time'])->toBe(7200);
+            }
         }
     } finally {
         unlink($file);
     }
-})->with(array(array(1, 9, 1), array(2, -2, 1), array(false, 10, 1), array(null, 10, 1), array(0, null, 1), array('0', '10', 0), array(0, 10, 0)));
+})->with(array(array(1, 9, 1), array(2, -2, 1), array(false, 10, 1), array(null, 10, 1), array(0, null, 1), array('0', '10', 0), array(0, 10, 0), array(0, 10, 0, 'abc'), array(0, 10, 0, null), array(0, 10, 0, -5)));
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 eval('namespace BoostWorkerSupervision; function unregister_process(...$args) {$GLOBALS["boost_reaped"][]=$args;}' . test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/poller_boost.php'), 'boost_wait_children'));

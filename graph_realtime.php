@@ -27,10 +27,8 @@ get_filter_request_var('left');
 /* ==================================================== */
 
 $user_id = (int) ($_SESSION['sess_user_id'] ?? 0);
-$guest_user_id = (int) get_guest_account();
-$is_guest = $user_id > 0 && $user_id === $guest_user_id;
 
-if (!$is_guest && !is_realm_allowed(25)) {
+if ($user_id < 1 || !is_realm_allowed(25)) {
     http_response_code(403);
     if (get_request_var('action') === '') {
         print __('Permission Denied');

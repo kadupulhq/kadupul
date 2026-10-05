@@ -3,6 +3,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -200,12 +201,15 @@ function ss_host_disk($hostname = '', $host_id = 0, $snmp_auth = '', $cmd = 'ind
                 /* RFC 2790 defines these values as nonnegative. Treat invalid
                  * samples or allocation units as unknown instead of guessing an
                  * unsigned wrap or reporting raw allocation units as bytes. */
-                if (!is_numeric($snmp_data) || (float) $snmp_data < 0
-                    || !ctype_digit((string) $sau) || (int) $sau < 1) {
+                if ((!is_string($snmp_data) && !is_int($snmp_data))
+                    || !ctype_digit((string) $snmp_data) || $snmp_data > 2147483647
+                    || (!is_string($sau) && !is_int($sau))
+                    || !preg_match('/^([0-9]+)(?:\s+Bytes)?$/iD', trim((string) $sau), $units)
+                    || $units[1] < 1 || $units[1] > 2147483647) {
                     return 'U';
                 }
 
-                return $snmp_data * $sau;
+                return (int) $snmp_data * (int) $units[1];
             } else {
                 return cacti_snmp_get(
                     $hostname,

@@ -62,6 +62,10 @@ function db_fetch_row_prepared($sql, $params = array())
 {
     return db_fetch_assoc_prepared($sql, $params)[0] ?? array();
 }
+function db_fetch_assoc($sql, $log = false, $connection = null)
+{
+    return ($connection ?? $GLOBALS['db'])->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+}
 function db_fetch_cell_prepared($sql, $params = array())
 {
     $query = $GLOBALS['db']->prepare(membership_probe_sql($sql));
@@ -109,6 +113,16 @@ function kill_session_var($name)
 {
     unset($_SESSION[$name]);
 }
+function cacti_log($message, ...$args)
+{
+    $GLOBALS['probe_logs'][] = $message;
+}
+require_once __DIR__ . '/../Helpers/PhpSource.php';
+$database_source = file_get_contents(dirname(__DIR__, 2) . '/lib/database.php');
+if ($database_source === false) {
+    throw new RuntimeException('Cannot read production database helpers');
+}
+eval(test_php_function_source($database_source, 'db_get_table_column_types'));
 require dirname(__DIR__, 2) . '/lib/auth.php';
 $nested = !empty($scenario['nested']);
 if ($nested) {
@@ -117,9 +131,12 @@ if ($nested) {
 }
 print 'READY:' . ($db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql' ? $db->query('SELECT CONNECTION_ID()')->fetchColumn() : 0) . "\n";
 flush();
+$failure = null;
 try {
     if ($scenario['action'] === 'copy') {
-        user_copy('template', 'alice', 0, 0, true);
+        if (user_copy('template', 'alice', 0, 0, true) === false) {
+            throw new RuntimeException(implode('; ', $GLOBALS['probe_logs'] ?? array()));
+        }
     } elseif ($scenario['action'] === 'replace') {
         user_group_replace_memberships(42, 7);
     } else {
@@ -128,8 +145,9 @@ try {
     $status = 'COMPLETE';
 } catch (Throwable $error) {
     $status = 'REFUSED';
+    $failure = $error->getMessage();
 }
-$state = array('status' => $status, 'transaction' => $db->inTransaction(), 'members' => db_fetch_assoc_prepared('SELECT group_id FROM user_auth_group_members WHERE user_id = ? ORDER BY group_id', array(42)), 'caller' => db_fetch_cell_prepared('SELECT full_name FROM user_auth WHERE id = ?', array(43)), 'reset' => db_fetch_cell_prepared('SELECT reset_perms FROM user_auth WHERE id = ?', array(42)), 'session' => $_SESSION);
+$state = array('status' => $status, 'failure' => $failure, 'transaction' => $db->inTransaction(), 'members' => db_fetch_assoc_prepared('SELECT group_id FROM user_auth_group_members WHERE user_id = ? ORDER BY group_id', array(42)), 'caller' => db_fetch_cell_prepared('SELECT full_name FROM user_auth WHERE id = ?', array(43)), 'reset' => db_fetch_cell_prepared('SELECT reset_perms FROM user_auth WHERE id = ?', array(42)), 'session' => $_SESSION);
 if ($nested) {
     $db->rollBack();
 }

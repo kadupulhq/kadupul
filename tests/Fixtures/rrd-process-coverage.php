@@ -5,7 +5,7 @@
 
 // Loaded only when the parent PHPUnit run is collecting real coverage.
 $coverageRoot = dirname(__DIR__, 2);
-if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE') || defined('SYMFONY_SESSION_TEST_COVERAGE') || defined('DATA_INPUT_LIST_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('MEMBERSHIP_EPOCH_TEST_COVERAGE') || (defined('GROUP_COPY_TEST_COVERAGE') && !defined('GROUP_COPY_UNIT_TEST_COVERAGE')) || defined('USER_COPY_TEST_COVERAGE')) {
+if (defined('POLLER_OUTPUT_TYPE_TEST_COVERAGE') || defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE') || defined('SYMFONY_SESSION_TEST_COVERAGE') || defined('DATA_INPUT_LIST_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('MEMBERSHIP_EPOCH_TEST_COVERAGE') || (defined('GROUP_COPY_TEST_COVERAGE') && !defined('GROUP_COPY_UNIT_TEST_COVERAGE')) || defined('USER_COPY_TEST_COVERAGE')) {
     require_once $coverageRoot . '/include/vendor/autoload.php';
     // Symfony's module suite uses the application's PHPUnit 11 / code-coverage
     // 10 stack. Child reports are serialized into that parent process, so they
@@ -29,6 +29,17 @@ if (!is_string($coveragePackageVersion)) {
     throw new RuntimeException('Unable to determine the active code-coverage version');
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('POLLER_RESULT_HELPERS_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/path_helpers.php');
+}
+if (defined('POLLER_OUTPUT_TYPE_TEST_COVERAGE')) {
+    foreach (['lib/utility.php', 'lib/database.php', 'lib/api_poller.php', 'lib/data_query.php', 'lib/xml.php',
+        'src/Inventory/Infrastructure/Legacy/PollerCacheBufferWrite.php', 'src/Inventory/Infrastructure/Legacy/QueuedCollectorPurge.php',
+        'src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php', 'src/Platform/Infrastructure/Legacy/LegacyReferenceWriteTransaction.php'] as $coverageFile) {
+        $coverageFilter->includeFile($coverageRoot . '/' . $coverageFile);
+    }
+}
 if (defined('USER_COPY_TEST_COVERAGE')) {
     foreach (array('lib/auth.php', 'lib/database.php', 'lib/html_validate.php') as $coverageFile) {
         $coverageFilter->includeFile($coverageRoot . '/' . $coverageFile);
@@ -64,37 +75,6 @@ if (defined('INPUT_WHITELIST_TEST_COVERAGE')) {
 }
 if (defined('INPUT_STRING_VALIDATOR_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
-}
-if (defined('PERMISSION_FILTER_TEST_COVERAGE')) {
-    $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
-    $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
-    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php');
-    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php');
-    $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
-}
-if (defined('PERMISSION_REQUEST_TEST_COVERAGE')) {
-    $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
-    $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
-    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
-    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
-    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRequests.php');
-}
-if (defined('ADMIN_LIST_TEST_COVERAGE')) {
-    $coverageFilter->includeFile($coverageRoot . '/src/Platform/Contract/IconRegistry.php');
-    $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
-    $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
-    $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
-    $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
-    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
-    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php');
-}
-if (defined('REALM_RENDER_TEST_COVERAGE')) {
-    $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
-    $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
-    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRealms.php');
-    $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
-    $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
-    $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
 }
 if (defined('CLOG_LINKS_NATIVE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/clog_webapi.php');
@@ -187,6 +167,7 @@ if (defined('PLUGIN_COMPAT_TEST_COVERAGE')) {
 }
 if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/snmp.php');
 }
 if (defined('FORCE_HTTPS_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
@@ -258,6 +239,9 @@ if (defined('DATA_SOURCE_LIMIT_TEST_COVERAGE')) {
 if (defined('DOMAINS_LOGIN_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
     $coverageFilter->includeFile($coverageRoot . '/auth_login.php');
+}
+if (defined('REALTIME_AUTH_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/graph_realtime.php');
 }
 if (defined('BASIC_AUTH_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/include/auth.php');
@@ -340,6 +324,7 @@ if (defined('PERMISSION_REQUEST_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRequests.php');
 }
 if (defined('ADMIN_LIST_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/src/Platform/Contract/IconRegistry.php');
     $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
     $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
@@ -373,7 +358,7 @@ if (defined('DATA_INPUT_LIST_TEST_COVERAGE')) {
     }
     $dataInputListEvidence = NativeChildCoverageEvidence::snapshot($coverageRoot, 'tests/Fixtures/data-input-list-native.php', DATA_INPUT_LIST_NATIVE_SCENARIO, $listSources);
 }
-if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE') || defined('PER_CS_REVIEW_TEST_COVERAGE') || defined('UTILITY_VIEW_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('HELPER_UNION_TEST_COVERAGE') || defined('STRING_PREDICATE_TEST_COVERAGE') || defined('PHP80_STRING_NATIVE_TEST_COVERAGE') || defined('CLOG_LINKS_NATIVE_TEST_COVERAGE')) {
+if (defined('MAINTENANCE_PURGE_TEST_COVERAGE') || defined('HTML_RENDERER_NATIVE_TEST_COVERAGE') || defined('PER_CS_REVIEW_TEST_COVERAGE') || defined('UTILITY_VIEW_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('HELPER_UNION_TEST_COVERAGE') || defined('STRING_PREDICATE_TEST_COVERAGE') || defined('PHP80_STRING_NATIVE_TEST_COVERAGE') || defined('CLOG_LINKS_NATIVE_TEST_COVERAGE')) {
     require_once $coverageRoot . '/tests/Helpers/NativeChildCoverageEvidence.php';
     $nativeSources = array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php');
     foreach ($coverageFilter->files() as $file) {
@@ -385,8 +370,12 @@ if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE') || defined('PER_CS_REVIEW_TEST
         $nativeSources = array_merge($nativeSources, array('config/icons.json', 'src/Platform/Contract/IconRegistry.php'));
         $coverageFilter->includeFile($coverageRoot . '/src/Platform/Contract/IconRegistry.php');
     }
-    $nativeScenario = $argv[1];
-    if (defined('CLOG_LINKS_NATIVE_TEST_COVERAGE')) {
+    $nativeScenario = defined('MAINTENANCE_PURGE_TEST_COVERAGE') ? MAINTENANCE_PURGE_NATIVE_SCENARIO : $argv[1];
+    if (defined('MAINTENANCE_PURGE_TEST_COVERAGE')) {
+        $nativeProducer = 'tests/Unit/Core/Rrd/MaintenancePurgeNativeTest.php';
+        $nativeSources[] = $nativeProducer;
+        $nativeScenario = MAINTENANCE_PURGE_NATIVE_SCENARIO;
+    } elseif (defined('CLOG_LINKS_NATIVE_TEST_COVERAGE')) {
         $nativeSources = array_merge($nativeSources, array('tests/Unit/ClogLinksNativeCoverageTest.php', 'tests/Helpers/PhpSource.php', 'lib/functions.php', 'lib/html.php'));
         $nativeProducer = 'tests/Fixtures/clog-links-native.php';
     } elseif (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE')) {
@@ -476,15 +465,15 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile, 
         if (file_put_contents($childCoverageFile, $serializedCoverage) !== strlen($serializedCoverage)) {
             throw new RuntimeException('Unable to preserve child process coverage');
         }
-        if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')
-            && file_put_contents($childCoverageFile . '.version', $coveragePackageVersion . PHP_EOL) === false) {
-            throw new RuntimeException('Unable to preserve child coverage version');
-        }
         if (defined('SYMFONY_SESSION_TEST_COVERAGE')) {
             if (!defined('SYMFONY_SESSION_NATIVE_COMPLETED')) {
                 throw new RuntimeException('Native session scenario did not complete.');
             }
             NativeChildCoverageEvidence::write($childCoverageFile, dirname(__DIR__, 2), $GLOBALS['sessionCoverageEvidence'], SYMFONY_SESSION_NATIVE_COMPLETED);
+        }
+        if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')
+            && file_put_contents($childCoverageFile . '.version', $coveragePackageVersion . PHP_EOL) === false) {
+            throw new RuntimeException('Unable to preserve child coverage version');
         }
         if (isset($GLOBALS['whitelistCoverageEvidence'])) {
             if (!defined('INPUT_WHITELIST_NATIVE_COMPLETED')) {

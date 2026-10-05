@@ -265,11 +265,6 @@ function save_user_settings($user = -1)
                 continue;
             }
 
-            /* Check every field with a numeric default value and reset it to default if the inputted value is not numeric  */
-            if (isset($field_array['default']) && is_numeric($field_array['default']) && (!is_numeric(get_nfilter_request_var($field_name)) || !settings_value_passes_filter($field_name, get_nfilter_request_var($field_name), true))) {
-                set_request_var($field_name, $field_array['default']);
-            }
-
             if (isset($field_array['method'])) {
                 if ($field_array['method'] == 'checkbox') {
                     set_user_setting($field_name, (isset_request_var($field_name) ? 'on' : ''), $user);
@@ -302,7 +297,7 @@ function save_user_settings($user = -1)
                         }
                     }
                 } elseif (isset_request_var($field_name)) {
-                    if (settings_value_passes_filter($field_name, get_nfilter_request_var($field_name), true) && user_setting_value_allowed($field_array, get_nfilter_request_var($field_name))) {
+                    if (user_setting_value_allowed($field_array, get_nfilter_request_var($field_name)) && settings_value_passes_filter($field_name, get_nfilter_request_var($field_name), true)) {
                         set_user_setting($field_name, get_nfilter_request_var($field_name), $user);
                     } else {
                         $_SESSION['sess_error_fields'][$field_name] = $field_name;
@@ -2288,6 +2283,26 @@ function is_hex_string(&$result)
     return true;
 }
 
+/** Normalize complete multi-field lists without rewriting scalar exclamation marks. */
+function normalize_poller_multi_value_result($result)
+{
+    if (strpos($result, '!') === false) {
+        return $result;
+    }
+    $fields = preg_split('/\s+/', trim($result));
+    if ($fields === false || cacti_sizeof($fields) < 2) {
+        return $result;
+    }
+    foreach ($fields as $field) {
+        if (!preg_match('/^[^\s:!]+[:!][^\s:!]+$/D', $field)) {
+            return $result;
+        }
+    }
+    return implode(' ', array_map(static function ($field) {
+        return str_replace('!', ':', $field);
+    }, $fields));
+}
+
 /**
  * prepare_validate_result - determines if the result value is valid or not.  If not valid returns a "U"
  *
@@ -2298,7 +2313,7 @@ function is_hex_string(&$result)
 function prepare_validate_result(&$result)
 {
     /* first trim the string */
-    $result = str_replace('!', ':', trim($result, "'\"\n\r"));
+    $result = trim($result, "'\"\n\r");
 
     /* clean off ugly non-numeric data */
     if (is_numeric($result)) {
@@ -2312,23 +2327,28 @@ function prepare_validate_result(&$result)
     } elseif (is_hexadecimal($result)) {
         dsv_log('prepare_validate_result', 'data is hex', POLLER_VERBOSITY_MEDIUM);
 
-        return hexdec($result);
+        return hexdec(str_replace(array(':', ' ', '-'), '', $result));
     } elseif (substr_count($result, ':') || substr_count($result, '!')) {
         /* looking for name value pairs */
-        if (substr_count($result, ' ') == 0) {
+        $field_result = normalize_poller_multi_value_result($result);
+        // Keep ambiguous bang fields distinguishable from a scalar hex dump at the queue consumer.
+        if (!is_hexadecimal($field_result)) {
+            $result = $field_result;
+        }
+        if (substr_count($field_result, ' ') == 0) {
             dsv_log('prepare_validate_result', 'data has no spaces', POLLER_VERBOSITY_MEDIUM);
 
             return true;
         } else {
             $delim_cnt = 0;
 
-            if (substr_count($result, ':')) {
-                $delim_cnt = substr_count($result, ':');
-            } elseif (strstr($result, '!')) {
-                $delim_cnt = substr_count($result, '!');
+            if (substr_count($field_result, ':')) {
+                $delim_cnt = substr_count($field_result, ':');
+            } elseif (strstr($field_result, '!')) {
+                $delim_cnt = substr_count($field_result, '!');
             }
 
-            $space_cnt = substr_count(trim($result), ' ');
+            $space_cnt = substr_count(trim($field_result), ' ');
 
             dsv_log('prepare_validate_result', "data has $space_cnt spaces and $delim_cnt fields which is " . (($space_cnt + 1 == $delim_cnt) ? '' : 'NOT') . ' okay', POLLER_VERBOSITY_MEDIUM);
 
