@@ -21,6 +21,9 @@ final class SpikeControllerNativeOutcomeTest extends TestCase
     private function runController(array $scenario): array
     {
         $scenario += ['operation' => 'spike-controller', 'config' => ['graph_auth_method' => 1]];
+        $validation = ($scenario['graph_id'] ?? '') === '2abc';
+        $markers = array_merge(SpikeControllerCoverageRegistration::MARKERS, $validation ? ['actual-spike-validation-rendered'] : []);
+        $hits = array_merge(SpikeControllerCoverageRegistration::HITS, $validation ? ['lib/html_validate.php'] : []);
         $root = dirname(__DIR__, 4);
         $directory = sys_get_temp_dir() . '/spike-controller-evidence-' . bin2hex(random_bytes(8));
         if (!mkdir($directory, 0700)) throw new RuntimeException('Cannot create owned spike evidence directory.');
@@ -43,21 +46,21 @@ final class SpikeControllerNativeOutcomeTest extends TestCase
                     'tests/Fixtures/auth-policy-native.php',
                     $json,
                     SpikeControllerCoverageRegistration::SOURCES,
-                    SpikeControllerCoverageRegistration::MARKERS,
-                    SpikeControllerCoverageRegistration::HITS
+                    $markers,
+                    $hits
                 );
-                if (!self::$evidenceChecked) {
-                    self::assertSame(37, NativeChildCoverageEvidence::verifyRejections(
+                if (!self::$evidenceChecked || $validation) {
+                    self::assertSame(count(SpikeControllerCoverageRegistration::SOURCES) + 10 + count($markers), NativeChildCoverageEvidence::verifyRejections(
                         $reports[0],
                         $root,
                         'tests/Fixtures/auth-policy-native.php',
                         $json,
                         SpikeControllerCoverageRegistration::SOURCES,
-                        SpikeControllerCoverageRegistration::MARKERS,
-                        SpikeControllerCoverageRegistration::HITS,
-                        'lib/rrd.php'
+                        $markers,
+                        $hits,
+                        $validation ? 'lib/html_validate.php' : 'lib/rrd.php'
                     ));
-                    $this->assertStaleEvidenceRejected($reports[0], $root, $json);
+                    $this->assertStaleEvidenceRejected($reports[0], $root, $json, $markers, $hits);
                     self::$evidenceChecked = true;
                 }
                 $coverage->merge($child);
@@ -71,7 +74,7 @@ final class SpikeControllerNativeOutcomeTest extends TestCase
         }
     }
 
-    private function assertStaleEvidenceRejected(string $report, string $root, string $scenario): void
+    private function assertStaleEvidenceRejected(string $report, string $root, string $scenario, array $markers, array $hits): void
     {
         $original = file_get_contents($report . '.json');
         self::assertIsString($original);
@@ -94,8 +97,8 @@ final class SpikeControllerNativeOutcomeTest extends TestCase
                         'tests/Fixtures/auth-policy-native.php',
                         $scenario,
                         SpikeControllerCoverageRegistration::SOURCES,
-                        SpikeControllerCoverageRegistration::MARKERS,
-                        SpikeControllerCoverageRegistration::HITS
+                        $markers,
+                        $hits
                     );
                     self::fail('Stale spike ' . $kind . ' evidence was admitted.');
                 } catch (RuntimeException $error) {
@@ -155,5 +158,38 @@ final class SpikeControllerNativeOutcomeTest extends TestCase
         yield 'persisted denied graph dryrun' => ['101', true];
         yield 'nonexistent graph normal' => ['999', false];
         yield 'nonexistent graph dryrun' => ['999', true];
+    }
+
+    #[DataProvider('absentOrEmptyIdentityCases')]
+    public function testMissingAndEmptyGraphIdentityProduceHistoricalDenialWithoutProtectedReads(array $scenario, mixed $identity): void
+    {
+        $state = $this->runController($scenario);
+        self::assertSame(403, $state['status']);
+        self::assertSame(['local_graph_id' => $identity, 'results' => 'Graph access denied'], $state['response']);
+        self::assertSame([], $state['lookup_parameters']);
+        self::assertSame([], $state['path_calls']);
+        self::assertSame([], $state['processor_calls']);
+        self::assertSame([], $state['validation_diagnostics']);
+    }
+
+    public static function absentOrEmptyIdentityCases(): iterable
+    {
+        yield 'absent graph parameter retains null denial identity' => [['omit_graph_id' => true], null];
+        yield 'empty graph parameter retains empty denial identity' => [['graph_id' => ''], ''];
+    }
+
+    public function testMalformedGraphIdentityUsesActualValidationRendererBeforeSourceAndProcessorAccess(): void
+    {
+        $state = $this->runController(['graph_id' => '2abc']);
+        self::assertSame(200, $state['status']); // The historical renderer exits without setting an HTTP status.
+        self::assertNull($state['response']);
+        self::assertSame("<table style='width:100%;text-align:center;'><tr><td>Validation error for variable local_graph_id with a value of 2abc.  See backtrace below for more details.</td></tr></table>", $state['raw_response']);
+        self::assertCount(1, $state['validation_diagnostics']);
+        self::assertStringContainsString('Variable:local_graph_id, Value:2abc', $state['validation_diagnostics'][0][0]);
+        self::assertTrue($state['validation_diagnostics'][0][1]);
+        self::assertSame(1, $state['validation_footer']);
+        self::assertSame([], $state['lookup_parameters']);
+        self::assertSame([], $state['path_calls']);
+        self::assertSame([], $state['processor_calls']);
     }
 }

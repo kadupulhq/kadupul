@@ -48,6 +48,27 @@ function __(string $message, mixed ...$arguments): string
     return $arguments ? vsprintf($message, $arguments) : $message;
 }
 
+/** Native validation renderer uses these owned presentation/diagnostic ports. */
+function __esc(string $message, mixed ...$arguments): string
+{
+    return htmlspecialchars(__($message, ...$arguments), ENT_QUOTES);
+}
+
+function get_client_addr(): string
+{
+    return '192.0.2.42';
+}
+
+function cacti_debug_backtrace(string $message, bool $display): void
+{
+    $GLOBALS['spikeValidationDiagnostics'][] = [$message, $display];
+}
+
+function bottom_footer(): void
+{
+    $GLOBALS['spikeValidationFooter']++;
+}
+
 function csrf_startup(): void
 {
     csrf_conf('rewrite', false);
@@ -61,6 +82,13 @@ function spike_controller_fixture_run(): never
     global $db, $scenario, $root, $config;
     require $root . '/include/vendor/csrf/csrf-magic.php';
     require $root . '/lib/html_utility.php';
+    require $root . '/lib/html_validate.php';
+    require_once $root . '/tests/Helpers/PhpSource.php';
+    $htmlSource = file_get_contents($root . '/lib/html.php');
+    if (!is_string($htmlSource)) throw new RuntimeException('Cannot read native HTML escaping source.');
+    eval(test_php_function_source($htmlSource, 'html_escape'));
+    $GLOBALS['spikeValidationDiagnostics'] = [];
+    $GLOBALS['spikeValidationFooter'] = 0;
     require $root . '/include/global_constants.php';
     $db->exec("INSERT INTO user_auth_realm VALUES(42,1043);
         INSERT INTO host(id,description,host_template_id) VALUES(110,'spike host',120),(111,'denied host',121);
@@ -78,6 +106,7 @@ function spike_controller_fixture_run(): never
     session_id('owned-spike-controller-test');
     $_SERVER['REQUEST_METHOD'] = 'POST';
     $_REQUEST = ['local_graph_id' => $scenario['graph_id'] ?? '100'];
+    if ($scenario['omit_graph_id'] ?? false) unset($_REQUEST['local_graph_id']);
     foreach (['method','dryrun','avgnan','outlier-start','outlier-end'] as $field) {
         if (array_key_exists($field, $scenario)) $_REQUEST[$field] = $scenario[$field];
     }
@@ -105,10 +134,12 @@ function spike_controller_fixture_run(): never
             $call['arguments'] = json_decode($call['arguments'], true, 512, JSON_THROW_ON_ERROR);
         }
         unset($call);
-        $state = ['status' => http_response_code() ?: 200, 'response' => json_decode($response, true, 512, JSON_THROW_ON_ERROR),
+        $state = ['status' => http_response_code() ?: 200, 'response' => $GLOBALS['spikeValidationDiagnostics'] === [] ? json_decode($response, true, 512, JSON_THROW_ON_ERROR) : null, 'raw_response' => $response,
+            'validation_diagnostics' => $GLOBALS['spikeValidationDiagnostics'], 'validation_footer' => $GLOBALS['spikeValidationFooter'],
             'lookup_parameters' => $GLOBALS['spikeLookupParameters'], 'path_calls' => $GLOBALS['spikePathCalls'], 'processor_calls' => $calls,
             'policy_rows' => $db->query('SELECT user_id,type,item_id FROM user_auth_perms')->fetchAll(PDO::FETCH_ASSOC)];
         $GLOBALS['nativeChildCoverageMarkers'] = SpikeControllerCoverageRegistration::MARKERS;
+        if ($GLOBALS['spikeValidationDiagnostics'] !== []) $GLOBALS['nativeChildCoverageMarkers'][] = 'actual-spike-validation-rendered';
         if (!chdir($previous)) throw new RuntimeException('Cannot restore controller fixture directory.');
         foreach (['include/auth.php','lib/spikekill.php'] as $path) unlink($directory . '/' . $path);
         rmdir($directory . '/include');

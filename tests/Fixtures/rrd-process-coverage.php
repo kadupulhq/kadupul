@@ -218,6 +218,7 @@ if (defined('AGGREGATE_QUERY_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/api_aggregate.php');
 }
 if (defined('SPIKE_CSRF_TEST_COVERAGE')) {
+    if (defined('SPIKE_CONTROLLER_VALIDATION_TEST_COVERAGE')) $coverageFilter->includeFile($coverageRoot . '/lib/html_validate.php');
     $coverageFilter->includeFile($coverageRoot . '/spikekill.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
 }

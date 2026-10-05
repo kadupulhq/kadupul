@@ -37,6 +37,7 @@ if (isset($argv[3])) {
     if ($scenario['operation'] === 'spike-controller') {
         $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], SpikeControllerCoverageRegistration::SOURCES);
         define('SPIKE_CSRF_TEST_COVERAGE', true);
+        define('SPIKE_CONTROLLER_VALIDATION_TEST_COVERAGE', true);
     }
     if ($scenario['operation'] === 'graph-data-removal') {
         require_once $root . '/tests/Helpers/GraphDataRemovalCoverageRegistration.php';
