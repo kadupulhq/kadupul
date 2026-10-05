@@ -37,8 +37,7 @@ function profile_setting_definitions(): array
 function profile_setting_run(string $function, array $request, bool $graph_settings = true, string $page = 'auth_profile.php'): array
 {
     $functions = file_get_contents(dirname(__DIR__, 4) . '/lib/functions.php');
-    $stubs = test_php_function_source($functions, 'settings_value_passes_filter') . "\n"
-        . test_php_function_source($functions, 'user_setting_value_allowed') . "\n"
+    $stubs = test_php_function_source($functions, 'user_setting_value_allowed') . "\n"
         . test_php_function_source($functions, 'save_user_settings') . "\n"
         . 'function is_view_allowed($realm) { return ' . var_export($graph_settings, true) . ' && $realm === "graph_settings"; }' . "\n"
         . 'function set_user_setting($name, $value, $user = -1) { $GLOBALS["executed"][] = array("sql" => "set_user_setting", "params" => array($name, $value, $user)); }';
