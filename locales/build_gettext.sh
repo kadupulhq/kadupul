@@ -56,4 +56,12 @@ for file in `ls -1 locales/po/*.po`;do
   msgfmt --check-format ${file} -o locales/LC_MESSAGES/${ofile}.mo
 done
 
+if mise exec python@3.12.12 -- python locales/merge_historical_compatibility.py; then
+	:
+else
+	status=$?
+	echo "ERROR: historical compatibility merge failed; extracted catalog artifacts remain incomplete" >&2
+	exit "$status"
+fi
+
 exit 0

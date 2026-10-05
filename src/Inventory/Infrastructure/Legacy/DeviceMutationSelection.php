@@ -14,7 +14,7 @@ use RuntimeException;
 /** Read and lock the common device scope before a legacy mutation worker acts. */
 final class DeviceMutationSelection
 {
-    public function lock(PDO $connection, int $actorId, array $ids, callable $markStatus, array $additionalSites = [], array $additionalPollers = []): array
+    public function lock(PDO $connection, int $actorId, array $ids, callable $markStatus, array $additionalSites = [], array $additionalPollers = [], array $cleanupPollers = []): array
     {
         if (!(new DeviceWriteAuthorization())->allows($connection, $actorId)) {
             $markStatus('denied');
@@ -61,12 +61,15 @@ final class DeviceMutationSelection
             $markStatus('missing');
             throw new RuntimeException('Devices unavailable');
         }
-        $pollers = array_unique([...array_map(static fn($row) => (int) $row['poller_id'], $rows), ...array_map('intval', $additionalPollers)]);
+        $pollers = array_unique([...array_map(static fn($row) => (int) $row['poller_id'], $rows), ...array_map('intval', $additionalPollers), ...array_map('intval', $cleanupPollers)]);
         sort($pollers, SORT_NUMERIC);
         foreach ($pollers as $pollerId) {
             $lockedPoller = $read($connection, 'SELECT id, disabled FROM poller WHERE id = ? FOR UPDATE', [$pollerId]);
             if (in_array($pollerId, array_map('intval', $additionalPollers), true) && (count($lockedPoller) !== 1 || $lockedPoller[0]['disabled'] !== '')) {
                 throw new RuntimeException('Assignment collector unavailable');
+            }
+            if (in_array($pollerId, $cleanupPollers, true) && (count($lockedPoller) !== 1 || $lockedPoller[0]['disabled'] !== '')) {
+                throw new RuntimeException('Pending cleanup collector unavailable');
             }
         }
 

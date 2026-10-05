@@ -522,16 +522,9 @@ class Installer implements JsonSerializable
             'scripts'        => $config['base_path'] . '/scripts',
         );
 
-        $csrf_path = $config['base_path'] . '/include/vendor/csrf/csrf-secret.php';
         if (!empty($config['path_csrf_secret'])) {
-            $csrf_path = $config['path_csrf_secret'];
+            $install_paths['csrf'] = cacti_csrf_external_secret_path($config['path_csrf_secret']);
         }
-
-        if (is_dir($csrf_path)) {
-            $csrf_path = rtrim($csrf_path === null ? '' : $csrf_path, '/') . '/csrf-secret.php';
-        }
-
-        $install_paths['csrf'] = $csrf_path;
 
         $always_paths = array(
             'sys_temp'  => sys_get_temp_dir(),
@@ -702,7 +695,13 @@ class Installer implements JsonSerializable
         $this->setProgress(Installer::PROGRESS_CSRF_BEGIN);
 
         if (!empty($config['path_csrf_secret'])) {
-            $path_csrf_secret = $config['path_csrf_secret'];
+            $path_csrf_secret = cacti_csrf_external_secret_path($config['path_csrf_secret']);
+            if (!cacti_csrf_external_path_is_safe($path_csrf_secret)) {
+                log_install_high('csrf', 'setCSRFSecret(): External secret path is not outside the document root');
+                $this->setProgress(Installer::PROGRESS_CSRF_END);
+
+                return;
+            }
             log_install_debug('csrf', 'setCSRFSecret(): secret ' . $path_csrf_secret);
 
             $secret = @file_exists($path_csrf_secret) ? file_get_contents($path_csrf_secret) : '';

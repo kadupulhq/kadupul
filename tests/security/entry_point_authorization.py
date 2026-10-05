@@ -85,14 +85,19 @@ class Client:
         self.base = base
         self.jar = http.cookiejar.CookieJar()
         self.opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(self.jar), NoRedirect())
-        self.token = None
+        # The installer signs tokens with a per-session secret and every other
+        # page with the stored one (cacti_csrf_load_secret()), so a token from
+        # one side fails csrf-magic on the other and the page's own gate never
+        # runs. Keep one token per side.
+        self.tokens = {}
 
     def request(self, path, fields=None):
         data = None
+        scope = path.startswith('install/')
         if fields is not None:
             fields = dict(fields)
-            if self.token:
-                fields['__csrf_magic'] = self.token
+            if self.tokens.get(scope):
+                fields['__csrf_magic'] = self.tokens[scope]
             data = urllib.parse.urlencode(fields).encode()
         try:
             response = self.opener.open(self.base + '/' + path, data=data, timeout=60)
@@ -102,7 +107,7 @@ class Client:
         token = re.search(r"name=['\"]__csrf_magic['\"] value=['\"]([^'\"]+)", body) \
             or re.search(r"csrfMagicToken\s*=\s*['\"]([^'\"]+)", body)
         if token:
-            self.token = token[1]
+            self.tokens[scope] = token[1]
         return {'status': response.status, 'location': response.headers.get('Location') or '', 'body': body,
                 'symfony': path.startswith(('app.php', 'public/index.php')),
                 'admin_layout': bool(re.search(r"(?:id=['\"]main_logo|class=['\"]cactiPageHead)", body))}
