@@ -49,6 +49,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         $sourcePaths[] = 'src/Platform/Contract/ReferenceWriteTransactionRunner.php';
         $sourcePaths[] = 'src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php';
         $sourcePaths[] = 'tests/Symfony/cdef_legacy_page_scenarios.py';
+        $sourcePaths[] = 'tests/e2e/browser-coverage.js';
         $sourcePaths[] = 'public/js/vdef-item.js';
         $sourcePaths[] = 'tests/Fixtures/plugins/compatibility_test/setup.php';
         // cli_parity_scenarios.py and cli_schema_scenarios.py compare the shims

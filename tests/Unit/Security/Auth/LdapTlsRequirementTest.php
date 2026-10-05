@@ -90,7 +90,7 @@ PHP;
 
     // Reproduce extension-provided constants even on a runtime without LDAP.
     $program = "if (!defined('LDAP_OPT_X_TLS_NEVER')) { define('LDAP_OPT_X_TLS_NEVER', 0); }\n" . $program;
-    $program .= "\n" . test_php_function_source($source, 'upgrade_ldap_tls_requirement') . "\n";
+    $program .= "\nrequire " . var_export(dirname(__DIR__, 4) . '/install/upgrades/1_2_31.php', true) . ';';
     $program .= 'upgrade_ldap_tls_requirement(); print json_encode($GLOBALS[\'writes\']);';
 
     return ldap_tls_child($program, array('settings' => $settings, 'domains' => $encrypted_domains));
