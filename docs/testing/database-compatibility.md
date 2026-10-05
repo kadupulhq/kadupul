@@ -48,3 +48,21 @@ live and archive tables; native consumer tests verify the selected-row bindings.
 The LTS matrix includes three expiry cases with different PHP and database
 timezones. Incomplete-sample expiry uses the database clock; complete unwritten
 samples and the exact retention boundary remain queued.
+
+## Membership transaction restarts
+
+The native group-deletion race reproduces MariaDB 11.8.8 error 1020 when a
+locking membership read follows a discovery snapshot and a concurrent insert.
+A successful read-only round trip refreshes PDO transaction status after this
+error, because the failed statement may leave the driver reporting a transaction
+that MariaDB already aborted. Group removal retries this exact database error
+only in its own unit, after that
+unit is rolled back, within the existing eight-attempt limit. Exhaustion retains
+the database error. It does not retry or restart a caller-owned transaction.
+
+Savepoints preserve unrelated caller writes when the engine leaves the outer
+transaction active. An engine-level transaction abort cannot be undone by a
+savepoint: the helper propagates the failure and leaves the transaction aborted.
+The native caller race checks both engine outcomes, retains the group and its
+members, and verifies that no retry or implicit commit occurs. The membership
+replacement contract separately checks ordinary savepoint success and rollback.

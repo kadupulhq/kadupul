@@ -71,11 +71,12 @@ final class NativeAuthenticationSessionTest extends TestCase
         $request = Request::create('/about');
         try {
             try {
-                $id = $sessions->establish(9, $request, '127.0.0.1');
+                $id = $sessions->establish(9, $request, '127.0.0.1', hash('sha256', 'fixture-password'));
                 self::assertTrue($admitted, 'Failed native persistence must never publish a credential.');
                 self::assertSame(PHP_SESSION_NONE, session_status());
                 self::assertSame(1, (int) $pdo->query('SELECT COUNT(*) FROM sessions')->fetchColumn());
                 self::assertStringContainsString('sess_user_id|i:9;', (string) $pdo->query('SELECT data FROM sessions')->fetchColumn());
+                self::assertStringContainsString('sess_user_credential|s:64:"' . hash('sha256', 'fixture-password') . '";', (string) $pdo->query('SELECT data FROM sessions')->fetchColumn());
                 $sessions->publish($id, $request);
                 $sessions->revoke($id, $request);
             } catch (\Throwable $failure) {
@@ -109,9 +110,10 @@ final class NativeAuthenticationSessionTest extends TestCase
         $sessions = new NativeAuthenticationSession($configuration, $database);
         $request = Request::create('/about');
         try {
-            $id = $sessions->establish(9, $request, '127.0.0.1');
+            $id = $sessions->establish(9, $request, '127.0.0.1', hash('sha256', 'fixture-password'));
             self::assertSame($length, strlen($id));
             self::assertStringContainsString('sess_user_id|i:9;', file_get_contents($directory . '/sess_' . $id));
+            self::assertStringContainsString('sess_user_credential|s:64:"' . hash('sha256', 'fixture-password') . '";', file_get_contents($directory . '/sess_' . $id));
             $sessions->publish($id, $request);
             $sessions->revoke($id, $request);
             self::assertSame([], glob($directory . '/sess_*'));
@@ -134,10 +136,55 @@ final class NativeAuthenticationSessionTest extends TestCase
         $database = $this->createMock(DatabaseConnection::class);
         $database->expects(self::never())->method('get');
         try {
-            (new NativeAuthenticationSession($configuration, $database))->establish(9, Request::create('/about'), '127.0.0.1');
+            (new NativeAuthenticationSession($configuration, $database))->establish(9, Request::create('/about'), '127.0.0.1', hash('sha256', 'fixture-password'));
             self::fail('A configured ID larger than VARCHAR(32) must be refused.');
         } catch (RuntimeException $failure) {
             self::assertSame('Configured authentication session ID exceeds storage capacity.', $failure->getMessage());
+            self::assertSame(PHP_SESSION_NONE, session_status());
+            self::assertSame('', session_id());
+        }
+    }
+
+    public static function invalidCredentials(): iterable
+    {
+        yield 'empty' => [''];
+        yield 'short' => ['generation'];
+        yield 'uppercase' => [str_repeat('A', 64)];
+        yield 'nonhexadecimal' => [str_repeat('g', 64)];
+        yield 'trailing whitespace' => [str_repeat('a', 64) . ' '];
+    }
+
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    #[DataProvider('invalidCredentials')]
+    public function testMalformedCredentialIsRefusedBeforeAnySessionWrite(string $credential): void
+    {
+        $configuration = $this->createMock(LegacyConfiguration::class);
+        $configuration->expects(self::never())->method('values');
+        $database = $this->createMock(DatabaseConnection::class);
+        $database->expects(self::never())->method('get');
+        try {
+            (new NativeAuthenticationSession($configuration, $database))->establish(9, Request::create('/about'), '127.0.0.1', $credential);
+            self::fail('A malformed generation must not initialize or write a session.');
+        } catch (RuntimeException $failure) {
+            self::assertSame('Authentication session cannot be established.', $failure->getMessage());
+            self::assertSame(PHP_SESSION_NONE, session_status());
+            self::assertSame('', session_id());
+        }
+    }
+
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    public function testOmittedCredentialCannotUseTheFormerSessionApi(): void
+    {
+        $configuration = $this->createMock(LegacyConfiguration::class);
+        $configuration->expects(self::never())->method('values');
+        $database = $this->createMock(DatabaseConnection::class);
+        $database->expects(self::never())->method('get');
+        try {
+            (new NativeAuthenticationSession($configuration, $database))->establish(9, Request::create('/about'), '127.0.0.1');
+            self::fail('An omitted generation must not initialize or write a session.');
+        } catch (ArgumentCountError) {
             self::assertSame(PHP_SESSION_NONE, session_status());
             self::assertSame('', session_id());
         }

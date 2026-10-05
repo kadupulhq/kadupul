@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-04 20:03-0700\n"
+"POT-Creation-Date: 2026-10-05 10:11-0700\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -128,7 +128,7 @@ msgstr "Nhấp vào &#39;Tiếp tục&#39; để xóa (các) Biểu đồ Tổng
 #: data_templates.php:485 data_templates.php:497 data_templates.php:513
 #: gprint_presets.php:137 graph_templates.php:361 graph_templates.php:371
 #: graph_templates.php:393 graph_templates.php:402 graph_templates.php:411
-#: graph_view.php:1040 graphs.php:814 graphs.php:830 graphs.php:841
+#: graph_view.php:1043 graphs.php:814 graphs.php:830 graphs.php:841
 #: graphs.php:852 graphs.php:867 graphs.php:881 graphs.php:890 graphs.php:1092
 #: graphs.php:1135 graphs.php:1157 graphs.php:1188 graphs.php:1200
 #: graphs.php:1773 host.php:405 host.php:414 host.php:461 host.php:470
@@ -139,11 +139,11 @@ msgstr "Nhấp vào &#39;Tiếp tục&#39; để xóa (các) Biểu đồ Tổng
 #: lib/html_form.php:1413 lib/html_form.php:1424 lib/html_reports.php:614
 #: managers.php:1061 managers.php:1122 plugins.php:712 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:705
-#: tree.php:714 tree.php:723 tree.php:732 user_admin.php:233 user_admin.php:273
-#: user_admin.php:284 user_admin.php:295 user_admin.php:318
+#: tree.php:714 tree.php:723 tree.php:732 user_admin.php:252 user_admin.php:292
+#: user_admin.php:303 user_admin.php:314 user_admin.php:337
 #: user_domains.php:220 user_domains.php:229 user_domains.php:238
-#: user_domains.php:247 user_group_admin.php:345 user_group_admin.php:364
-#: user_group_admin.php:375 user_group_admin.php:386
+#: user_domains.php:247 user_group_admin.php:441 user_group_admin.php:460
+#: user_group_admin.php:471 user_group_admin.php:482
 msgid "Cancel"
 msgstr "Hủy"
 
@@ -172,11 +172,11 @@ msgstr "Hủy"
 #: host_templates.php:359 lib/clog_webapi.php:226 lib/html.php:2716
 #: lib/html_reports.php:556 managers.php:1061 managers.php:1122 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:705
-#: tree.php:714 tree.php:723 tree.php:732 user_admin.php:233 user_admin.php:273
-#: user_admin.php:284 user_admin.php:295 user_admin.php:318
+#: tree.php:714 tree.php:723 tree.php:732 user_admin.php:252 user_admin.php:292
+#: user_admin.php:303 user_admin.php:314 user_admin.php:337
 #: user_domains.php:220 user_domains.php:229 user_domains.php:238
-#: user_domains.php:247 user_group_admin.php:345 user_group_admin.php:364
-#: user_group_admin.php:375 user_group_admin.php:386
+#: user_domains.php:247 user_group_admin.php:441 user_group_admin.php:460
+#: user_group_admin.php:471 user_group_admin.php:482
 msgid "Continue"
 msgstr "Tiếp tục"
 
@@ -194,9 +194,9 @@ msgid "In order to migrate the Aggregate Graphs below to a Template based Aggreg
 msgstr "Để di chuyển Biểu đồ tổng hợp bên dưới sang Tập hợp dựa trên mẫu, họ chỉ phải sử dụng một Mẫu biểu đồ. Vui lòng nhấn &#39;Trở về&#39; và sau đó chỉ chọn Biểu đồ tổng hợp sử dụng cùng một Mẫu biểu đồ."
 
 #: aggregate_graphs.php:406 aggregate_graphs.php:456 aggregate_graphs.php:504
-#: auth_changepassword.php:380 auth_profile.php:453 automation_networks.php:387
+#: auth_changepassword.php:415 auth_profile.php:459 automation_networks.php:387
 #: automation_snmp.php:239 graphs.php:1094 graphs.php:1144 graphs.php:1147
-#: graphs.php:1191 graphs.php:1773 host.php:548 include/auth.php:314
+#: graphs.php:1191 graphs.php:1773 host.php:548 include/auth.php:309
 #: lib/api_aggregate.php:2209 lib/api_aggregate.php:2224 lib/html_form.php:1422
 #: lib/html_reports.php:614 managers.php:1125 permission_denied.php:14
 #: permission_denied.php:16
@@ -248,17 +248,17 @@ msgstr "Tập hợp mới"
 msgid "Click 'Continue' to add the selected Graphs to the Report below."
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để thêm Đồ thị đã chọn vào Báo cáo bên dưới."
 
-#: aggregate_graphs.php:489 graph_view.php:898 graphs.php:1176 host.php:533
+#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1176 host.php:533
 #: lib/html_reports.php:18 lib/html_reports.php:2054
 msgid "Report Name"
 msgstr "Tên report"
 
-#: aggregate_graphs.php:493 graph_view.php:905 graphs.php:1180 host.php:537
+#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1180 host.php:537
 #: lib/html_reports.php:1723
 msgid "Timespan"
 msgstr "Thời gian"
 
-#: aggregate_graphs.php:497 graph_view.php:912 graphs.php:1184 host.php:541
+#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1184 host.php:541
 msgid "Align"
 msgstr "Căn chỉnh"
 
@@ -307,7 +307,7 @@ msgid "Place Graph(s) on Tree"
 msgstr "Đặt đồ thị trên cây"
 
 #: aggregate_graphs.php:625 data_sources.php:1131 lib/html_reports.php:1576
-#: user_admin.php:1694
+#: user_admin.php:1773
 #, php-format
 msgid "[edit: %s]"
 msgstr "[chỉnh sửa: %s]"
@@ -416,18 +416,18 @@ msgstr "Kết hợp đồ thị"
 #: automation_templates.php:377 automation_tree_rules.php:821 cdef.php:727
 #: color_templates.php:559 data_debug.php:1146 data_queries.php:1292
 #: data_source_profiles.php:1108 data_sources.php:1529 data_templates.php:1095
-#: gprint_presets.php:255 graph_templates.php:704 graph_view.php:664
+#: gprint_presets.php:255 graph_templates.php:704 graph_view.php:667
 #: graphs.php:1993 graphs_new.php:443 host.php:1681 host_templates.php:766
 #: lib/api_automation.php:42 lib/api_automation.php:43
 #: lib/api_automation.php:480 lib/api_automation.php:708
 #: lib/clog_webapi.php:608 lib/html.php:257 lib/html_filter.php:46
-#: lib/html_graph.php:185 lib/html_reports.php:1946 lib/html_tree.php:119
+#: lib/html_graph.php:191 lib/html_reports.php:1946 lib/html_tree.php:119
 #: lib/html_tree.php:967 managers.php:144 managers.php:504 managers.php:761
 #: plugins.php:491 pollers.php:869 rrdcheck.php:210 rrdcleaner.php:523
 #: settings.php:539 settings.php:556 settings.php:615
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:56
-#: tree.php:878 tree.php:913 tree.php:948 tree.php:2150 user_admin.php:1995
-#: user_domains.php:643 user_group_admin.php:1827 utilities.php:1086
+#: tree.php:878 tree.php:913 tree.php:948 tree.php:2150 user_admin.php:2073
+#: user_domains.php:643 user_group_admin.php:1952 utilities.php:1086
 #: utilities.php:1509 utilities.php:1811 utilities.php:2107 utilities.php:3063
 #: utilities.php:3325
 msgid "Search"
@@ -435,14 +435,14 @@ msgstr "Tìm kiếm"
 
 #: aggregate_graphs.php:1288 aggregate_graphs.php:1324
 #: aggregate_graphs.php:1587 color_templates.php:679 data_sources.php:1713
-#: data_sources.php:1852 graph_view.php:485 graph_view.php:736
-#: graph_view.php:800 graphs.php:2010 graphs.php:2178 host.php:1792
+#: data_sources.php:1852 graph_view.php:488 graph_view.php:739
+#: graph_view.php:803 graphs.php:2010 graphs.php:2178 host.php:1792
 #: include/global_arrays.php:993 include/global_arrays.php:1228
 #: include/global_arrays.php:2011 lib/api_automation.php:283 lib/html.php:1884
-#: lib/html.php:1953 lib/html_graph.php:191 lib/html_tree.php:1022
-#: lib/html_tree.php:1378 tree.php:857 tree.php:2296 user_admin.php:722
-#: user_admin.php:993 user_admin.php:2265 user_group_admin.php:775
-#: user_group_admin.php:929 user_group_admin.php:1982 utilities.php:315
+#: lib/html.php:1953 lib/html_graph.php:197 lib/html_tree.php:1022
+#: lib/html_tree.php:1378 tree.php:857 tree.php:2296 user_admin.php:801
+#: user_admin.php:1072 user_admin.php:2346 user_group_admin.php:900
+#: user_group_admin.php:1054 user_group_admin.php:2107 utilities.php:315
 msgid "Graphs"
 msgstr "Đồ thị"
 
@@ -453,7 +453,7 @@ msgstr "Đồ thị"
 #: automation_tree_rules.php:841 cdef.php:737 color_templates.php:575
 #: data_debug.php:1156 data_queries.php:1302 data_source_profiles.php:1118
 #: data_source_profiles.php:1240 data_sources.php:1539 data_templates.php:1124
-#: gprint_presets.php:265 graph_templates.php:714 graph_view.php:740
+#: gprint_presets.php:265 graph_templates.php:714 graph_view.php:743
 #: graphs.php:2014 graphs_new.php:453 host.php:1706 host_templates.php:776
 #: include/global_form.php:242 lib/api_automation.php:182
 #: lib/api_automation.php:490 lib/api_automation.php:718
@@ -461,8 +461,8 @@ msgstr "Đồ thị"
 #: managers.php:514 plugins.php:515 pollers.php:879 rrdcheck.php:233
 #: rrdcleaner.php:549
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:81
-#: tree.php:2160 user_admin.php:2056 user_domains.php:18 user_domains.php:653
-#: user_domains.php:739 user_group_admin.php:1837 utilities.php:1068
+#: tree.php:2160 user_admin.php:2134 user_domains.php:18 user_domains.php:653
+#: user_domains.php:739 user_group_admin.php:1962 utilities.php:1068
 #: utilities.php:1821 utilities.php:2138 utilities.php:3091 utilities.php:3367
 msgid "Default"
 msgstr "Mặc định"
@@ -478,16 +478,16 @@ msgstr "Một phần của cốt liệu"
 #: automation_tree_rules.php:853 cdef.php:758 color_templates.php:597
 #: data_debug.php:1071 data_queries.php:1314 data_source_profiles.php:1139
 #: data_sources.php:1479 data_templates.php:1145 gprint_presets.php:283
-#: graph_templates.php:732 graph_view.php:672 graphs.php:1984
+#: graph_templates.php:732 graph_view.php:675 graphs.php:1984
 #: graphs_new.php:432 host.php:1671 host_templates.php:757
 #: lib/api_automation.php:187 lib/api_automation.php:471
 #: lib/api_automation.php:723 lib/api_automation.php:1087
 #: lib/clog_webapi.php:533 lib/html.php:1716 lib/html_filter.php:63
-#: lib/html_graph.php:172 lib/html_reports.php:1977 lib/html_tree.php:1009
+#: lib/html_graph.php:178 lib/html_reports.php:1977 lib/html_tree.php:1009
 #: managers.php:169 managers.php:529 managers.php:784 plugins.php:530
-#: pollers.php:914 tree.php:2172 user_admin.php:2071 user_admin.php:2265
-#: user_admin.php:2271 user_admin.php:2277 user_admin.php:2283
-#: user_admin.php:2289 user_admin.php:2295
+#: pollers.php:914 tree.php:2172 user_admin.php:2149 user_admin.php:2346
+#: user_admin.php:2352 user_admin.php:2358 user_admin.php:2364
+#: user_admin.php:2370 user_admin.php:2376
 msgid "Go"
 msgstr "Đi"
 
@@ -496,12 +496,12 @@ msgstr "Đi"
 #: automation_templates.php:399 cdef.php:758 data_debug.php:1071
 #: data_queries.php:1314 data_source_profiles.php:1139 data_sources.php:1479
 #: data_templates.php:1145 gprint_presets.php:283 graph_templates.php:732
-#: graph_view.php:672 graphs.php:1984 graphs_new.php:432 host.php:1671
-#: host_templates.php:757 lib/html_graph.php:172 managers.php:169
+#: graph_view.php:675 graphs.php:1984 graphs_new.php:432 host.php:1671
+#: host_templates.php:757 lib/html_graph.php:178 managers.php:169
 #: managers.php:529 managers.php:784 plugins.php:530 pollers.php:914
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
-#: tree.php:2172 user_admin.php:2071 user_domains.php:665
-#: user_group_admin.php:1852 utilities.php:1076 utilities.php:1458
+#: tree.php:2172 user_admin.php:2149 user_domains.php:665
+#: user_group_admin.php:1977 utilities.php:1076 utilities.php:1458
 #: utilities.php:1802 utilities.php:2098 utilities.php:3099 utilities.php:3375
 msgid "Set/Refresh Filters"
 msgstr "Đặt / Làm mới Bộ lọc"
@@ -513,16 +513,16 @@ msgstr "Đặt / Làm mới Bộ lọc"
 #: automation_tree_rules.php:854 cdef.php:759 color_templates.php:598
 #: data_debug.php:1072 data_queries.php:1315 data_source_profiles.php:1140
 #: data_sources.php:1480 data_templates.php:1146 gprint_presets.php:284
-#: graph_templates.php:733 graph_view.php:673 graphs.php:1985
+#: graph_templates.php:733 graph_view.php:676 graphs.php:1985
 #: graphs_new.php:433 host.php:1672 host_templates.php:758
 #: lib/api_automation.php:188 lib/api_automation.php:472
 #: lib/api_automation.php:724 lib/api_automation.php:1088
-#: lib/clog_webapi.php:534 lib/html_filter.php:68 lib/html_graph.php:173
-#: lib/html_graph.php:290 lib/html_reports.php:1978 lib/html_tree.php:1010
+#: lib/clog_webapi.php:534 lib/html_filter.php:68 lib/html_graph.php:179
+#: lib/html_graph.php:305 lib/html_reports.php:1978 lib/html_tree.php:1010
 #: lib/html_tree.php:1121 managers.php:170 managers.php:530 managers.php:785
-#: plugins.php:531 pollers.php:915 tree.php:2173 user_admin.php:2072
-#: user_admin.php:2265 user_admin.php:2271 user_admin.php:2277
-#: user_admin.php:2283 user_admin.php:2289 user_admin.php:2295
+#: plugins.php:531 pollers.php:915 tree.php:2173 user_admin.php:2150
+#: user_admin.php:2346 user_admin.php:2352 user_admin.php:2358
+#: user_admin.php:2364 user_admin.php:2370 user_admin.php:2376
 #: user_domains.php:666
 msgid "Clear"
 msgstr "Xóa"
@@ -531,19 +531,19 @@ msgstr "Xóa"
 #: automation_templates.php:400 cdef.php:759 data_debug.php:1072
 #: data_queries.php:1315 data_source_profiles.php:1140 data_sources.php:1480
 #: data_templates.php:1146 gprint_presets.php:284 graph_templates.php:733
-#: graph_view.php:673 graphs.php:1985 graphs_new.php:433 host.php:1672
-#: host_templates.php:758 lib/html_graph.php:173 lib/html_tree.php:1010
+#: graph_view.php:676 graphs.php:1985 graphs_new.php:433 host.php:1672
+#: host_templates.php:758 lib/html_graph.php:179 lib/html_tree.php:1010
 #: managers.php:170 managers.php:530 managers.php:785 plugins.php:531
 #: pollers.php:915
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:96
-#: tree.php:2173 user_admin.php:2072 user_domains.php:666
-#: user_group_admin.php:1853 utilities.php:1077 utilities.php:1459
+#: tree.php:2173 user_admin.php:2150 user_domains.php:666
+#: user_group_admin.php:1978 utilities.php:1077 utilities.php:1459
 #: utilities.php:1803 utilities.php:2099 utilities.php:3100 utilities.php:3376
 msgid "Clear Filters"
 msgstr "Xóa bộ lọc"
 
 #: aggregate_graphs.php:1329 aggregate_graphs.php:1662 graphs.php:1121
-#: lib/api_automation.php:574 user_admin.php:730 user_group_admin.php:783
+#: lib/api_automation.php:574 user_admin.php:809 user_group_admin.php:908
 msgid "Graph Title"
 msgstr "Tiêu đề đồ thị"
 
@@ -552,10 +552,10 @@ msgstr "Tiêu đề đồ thị"
 #: data_debug.php:468 data_queries.php:1400 data_sources.php:1707
 #: data_templates.php:1254 graph_templates.php:838 graphs.php:2194
 #: host.php:1786 host_templates.php:917 lib/api_automation.php:282
-#: pollers.php:995 tree.php:2236 user_admin.php:730 user_admin.php:844
-#: user_admin.php:993 user_admin.php:1132 user_admin.php:1271
-#: user_group_admin.php:576 user_group_admin.php:783 user_group_admin.php:929
-#: user_group_admin.php:1065 user_group_admin.php:1197
+#: pollers.php:995 tree.php:2236 user_admin.php:809 user_admin.php:923
+#: user_admin.php:1072 user_admin.php:1211 user_admin.php:1350
+#: user_group_admin.php:701 user_group_admin.php:908 user_group_admin.php:1054
+#: user_group_admin.php:1190 user_group_admin.php:1322
 msgid "ID"
 msgstr "ID"
 
@@ -564,7 +564,7 @@ msgid "Included in Aggregate"
 msgstr "Bao gồm trong cốt liệu"
 
 #: aggregate_graphs.php:1332 aggregate_graphs.php:1665 graph_templates.php:855
-#: graph_view.php:829 graph_view.php:842 graphs.php:2212 lib/spikekill.php:1674
+#: graph_view.php:832 graph_view.php:845 graphs.php:2212 lib/spikekill.php:1674
 msgid "Size"
 msgstr "Kích thước"
 
@@ -575,8 +575,8 @@ msgstr "Kích thước"
 #: data_templates.php:1315 gprint_presets.php:430 graph_templates.php:895
 #: host_templates.php:965 include/global_settings.php:876
 #: include/global_settings.php:1909 lib/api_automation.php:1438 tree.php:2329
-#: tree.php:2330 user_admin.php:2187 user_domains.php:758
-#: user_group_admin.php:1920
+#: tree.php:2330 user_admin.php:2268 user_domains.php:758
+#: user_group_admin.php:2045
 msgid "No"
 msgstr "Không"
 
@@ -589,8 +589,8 @@ msgstr "Không"
 #: gprint_presets.php:430 graph_templates.php:895 host_templates.php:965
 #: include/global_settings.php:875 include/global_settings.php:1908
 #: lib/api_automation.php:1438 lib/installer.php:2124 lib/installer.php:2152
-#: lib/installer.php:3953 tree.php:2329 tree.php:2330 user_admin.php:2185
-#: user_domains.php:754 user_domains.php:758 user_group_admin.php:1918
+#: lib/installer.php:3953 tree.php:2329 tree.php:2330 user_admin.php:2266
+#: user_domains.php:754 user_domains.php:758 user_group_admin.php:2043
 msgid "Yes"
 msgstr "Có"
 
@@ -608,9 +608,9 @@ msgid "Aggregate Graphs"
 msgstr "Đồ thị tổng hợp"
 
 #: aggregate_graphs.php:1562 data_debug.php:1042 data_sources.php:1450
-#: graph_view.php:696 graphs.php:1946 host.php:1623
+#: graph_view.php:699 graphs.php:1946 host.php:1623
 #: include/global_arrays.php:2891 include/global_settings.php:610
-#: lib/api_automation.php:446 lib/html_graph.php:135 lib/html_tree.php:973
+#: lib/api_automation.php:446 lib/html_graph.php:139 lib/html_tree.php:973
 #: rrdcleaner.php:381
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:59
 #: utilities.php:2065
@@ -625,7 +625,7 @@ msgstr "Mẫu"
 #: graphs.php:1950 graphs_items.php:288 host.php:1592 host.php:1610
 #: host.php:1627 host.php:1691 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
-#: lib/api_automation.php:450 lib/auth.php:3421 lib/auth.php:3470
+#: lib/api_automation.php:450 lib/auth.php:3803 lib/auth.php:3852
 #: lib/html.php:2239 lib/html.php:2267 lib/html.php:2306 lib/html.php:2340
 #: lib/html_reports.php:977 lib/html_reports.php:981 lib/html_reports.php:1096
 #: lib/html_reports.php:1106 lib/html_reports.php:1956 managers.php:490
@@ -656,8 +656,8 @@ msgstr "Bất kỳ"
 #: include/global_settings.php:622 include/global_settings.php:630
 #: include/global_settings.php:1320 include/global_settings.php:1983
 #: lib/api_automation.php:48 lib/api_automation.php:431
-#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3424
-#: lib/auth.php:3473 lib/auth.php:3519 lib/html.php:217 lib/html.php:2240
+#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3806
+#: lib/auth.php:3855 lib/auth.php:3901 lib/html.php:217 lib/html.php:2240
 #: lib/html.php:2265 lib/html.php:2307 lib/html.php:2341 lib/html_form.php:392
 #: lib/html_reports.php:988 lib/html_reports.php:992 lib/html_reports.php:1022
 #: lib/html_reports.php:1096 lib/html_reports.php:1102
@@ -729,7 +729,7 @@ msgstr "Mẫu tổng hợp"
 #: aggregate_templates.php:612 automation_templates.php:383
 #: automation_templates.php:470 color_templates.php:684
 #: include/global_arrays.php:1002 include/global_arrays.php:1065
-#: lib/installer.php:2738 user_admin.php:2283 user_group_admin.php:1994
+#: lib/installer.php:2738 user_admin.php:2364 user_group_admin.php:2119
 msgid "Templates"
 msgstr "Giao diện"
 
@@ -769,282 +769,282 @@ msgstr "Mẫu biểu đồ"
 msgid "No Aggregate Templates Found"
 msgstr "Không tìm thấy mẫu tổng hợp"
 
-#: auth_changepassword.php:128
-msgid "You cannot use a previously entered password!"
-msgstr "Bạn không thể sử dụng mật khẩu đã nhập trước đó!"
-
-#: auth_changepassword.php:135
-msgid "Your new passwords do not match, please retype."
-msgstr "Mật khẩu mới của bạn không khớp, vui lòng nhập lại."
-
-#: auth_changepassword.php:142
+#: auth_changepassword.php:153
 msgid "Your current password is not correct. Please try again."
 msgstr "Mật khẩu hiện tại của bạn không chính xác. Vui lòng thử lại."
 
-#: auth_changepassword.php:149
+#: auth_changepassword.php:170 user_admin.php:461
+msgid "You cannot use a previously entered password!"
+msgstr "Bạn không thể sử dụng mật khẩu đã nhập trước đó!"
+
+#: auth_changepassword.php:177
+msgid "Your new passwords do not match, please retype."
+msgstr "Mật khẩu mới của bạn không khớp, vui lòng nhập lại."
+
+#: auth_changepassword.php:184
 msgid "Your new password cannot be the same as the old password. Please try again."
 msgstr "Mật khẩu mới của bạn không thể giống với mật khẩu cũ. Vui lòng thử lại."
 
-#: auth_changepassword.php:248
+#: auth_changepassword.php:283
 msgid "Forced password change"
 msgstr "Buộc thay đổi mật khẩu"
 
-#: auth_changepassword.php:252
+#: auth_changepassword.php:287
 msgid "Password requirements include:"
 msgstr "Yêu cầu mật khẩu bao gồm:"
 
-#: auth_changepassword.php:256
+#: auth_changepassword.php:291
 #, php-format
 msgid "Must be at least %d characters in length"
 msgstr "Phải có ít nhất% d ký tự"
 
-#: auth_changepassword.php:260
+#: auth_changepassword.php:295
 msgid "Must include mixed case"
 msgstr "Phải bao gồm cả trường hợp hỗn hợp"
 
-#: auth_changepassword.php:264
+#: auth_changepassword.php:299
 msgid "Must include at least 1 number"
 msgstr "Phải bao gồm ít nhất 1 số"
 
-#: auth_changepassword.php:268
+#: auth_changepassword.php:303
 msgid "Must include at least 1 special character"
 msgstr "Phải bao gồm ít nhất 1 ký tự đặc biệt"
 
-#: auth_changepassword.php:272
+#: auth_changepassword.php:307
 #, php-format
 msgid "Cannot be reused for %d password changes"
 msgstr "Không thể được sử dụng lại để thay đổi mật khẩu% d"
 
-#: auth_changepassword.php:325
+#: auth_changepassword.php:360
 msgid "There are problems with the Change Password page.  Contact your Kadupul administrator right away."
 msgstr ""
 
-#: auth_changepassword.php:335 auth_changepassword.php:342
-#: include/global_form.php:1552 lib/functions.php:4023 lib/html.php:2652
+#: auth_changepassword.php:370 auth_changepassword.php:377
+#: include/global_form.php:1552 lib/functions.php:4096 lib/html.php:2652
 msgid "Change Password"
 msgstr "Thay đổi mật khẩu"
 
-#: auth_changepassword.php:352
+#: auth_changepassword.php:387
 #, fuzzy
 msgid "Please enter your current password and your new<br>Kadupul password."
 msgstr "Vui lòng nhập mật khẩu hiện tại của bạn và mới <br> Mật khẩu Kadupul."
 
-#: auth_changepassword.php:354
+#: auth_changepassword.php:389
 #, fuzzy
 msgid "Please enter your new Kadupul password."
 msgstr "Vui lòng nhập mật khẩu hiện tại của bạn và mới <br> Mật khẩu Kadupul."
 
-#: auth_changepassword.php:362 auth_login.php:326 auth_login.php:329
-#: include/global_settings.php:1817 lib/functions.php:5953
+#: auth_changepassword.php:397 auth_login.php:329 auth_login.php:332
+#: include/global_settings.php:1817 lib/functions.php:6026
 msgid "Username"
 msgstr "Tên đăng nhập"
 
-#: auth_changepassword.php:365
+#: auth_changepassword.php:400
 msgid "Current password"
 msgstr "Mật khẩu hiện tại"
 
-#: auth_changepassword.php:370
+#: auth_changepassword.php:405
 msgid "New password"
 msgstr "Mật khẩu mới"
 
-#: auth_changepassword.php:374
+#: auth_changepassword.php:409
 msgid "Confirm new password"
 msgstr "Xác nhận mật khẩu mới"
 
-#: auth_changepassword.php:378 auth_profile.php:571 graphs_new.php:434
-#: lib/html_form.php:1419 lib/html_form.php:1428 lib/html_graph.php:175
+#: auth_changepassword.php:413 auth_profile.php:577 graphs_new.php:434
+#: lib/html_form.php:1419 lib/html_form.php:1428 lib/html_graph.php:181
 #: lib/html_tree.php:1012 settings.php:494
 msgid "Save"
 msgstr "Lưu"
 
-#: auth_changepassword.php:389 auth_login.php:407
+#: auth_changepassword.php:424 auth_login.php:410
 #, php-format
 msgid "Version %s | %s"
 msgstr "Phiên bản %s %s"
 
-#: auth_changepassword.php:402 user_admin.php:1760
+#: auth_changepassword.php:437 user_admin.php:1839
 msgid "Password Too Short"
 msgstr "Mật khẩu quá ngắn"
 
-#: auth_changepassword.php:408 user_admin.php:1765
+#: auth_changepassword.php:443 user_admin.php:1844
 msgid "Password Validation Passes"
 msgstr "Xác thực mật khẩu"
 
-#: auth_changepassword.php:424 user_admin.php:1779
+#: auth_changepassword.php:459 user_admin.php:1858
 msgid "Passwords do Not Match"
 msgstr "Mất khẩu không hợp lệ"
 
-#: auth_changepassword.php:428 user_admin.php:1782
+#: auth_changepassword.php:463 user_admin.php:1861
 msgid "Passwords Match"
 msgstr "Kết hợp mật khẩu"
 
-#: auth_login.php:63
+#: auth_login.php:66
 msgid "Kadupul no longer supports No Authentication mode. Please contact your System Administrator."
 msgstr "Truy cập bị từ chối, vui lòng liên hệ với bạn Quản trị viên Kadupul."
 
-#: auth_login.php:98
+#: auth_login.php:101
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr "Truy cập bị từ chối, vui lòng liên hệ với bạn Quản trị viên Kadupul."
 
-#: auth_login.php:128
+#: auth_login.php:131
 msgid "User was Authenticated, but the Template Account is disabled.  Using Guest Account"
 msgstr "Người dùng đã được Xác thực, nhưng Tài khoản Mẫu bị vô hiệu hóa. Sử dụng tài khoản khách"
 
-#: auth_login.php:135
+#: auth_login.php:138
 #, fuzzy, php-format
 msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Administrator."
 msgstr "Truy cập bị từ chối, vui lòng liên hệ với bạn Quản trị viên Kadupul."
 
-#: auth_login.php:173
+#: auth_login.php:176
 msgid "Access Denied!  User account disabled."
 msgstr "Truy cập bị từ chối, tài khoản người dùng bị vô hiệu hóa."
 
-#: auth_login.php:184
+#: auth_login.php:187
 msgid "You do not have access to any area of Kadupul.  Contact your administrator."
 msgstr "Nếu bạn cảm thấy rằng đây là một lỗi. Vui lòng liên hệ với Quản trị viên Kadupul của bạn."
 
-#: auth_login.php:211
+#: auth_login.php:214
 #, fuzzy
 msgid "Access Denied! User account locked."
 msgstr "Truy cập bị từ chối, tài khoản người dùng bị vô hiệu hóa."
 
-#: auth_login.php:299 lib/html_tree.php:147
+#: auth_login.php:302 lib/html_tree.php:147
 msgid "Login to Kadupul"
 msgstr "Đăng nhập vào Kadupul"
 
-#: auth_login.php:306
+#: auth_login.php:309
 msgid "User Login"
 msgstr "Đăng nhập"
 
-#: auth_login.php:320
+#: auth_login.php:323
 msgid "Enter your Username and Password below"
 msgstr "Nhập tên người dùng và mật khẩu của bạn dưới đây"
 
-#: auth_login.php:334 include/global_form.php:1519 lib/functions.php:5954
+#: auth_login.php:337 include/global_form.php:1519 lib/functions.php:6027
 msgid "Password"
 msgstr "Mật khẩu"
 
-#: auth_login.php:347 include/global_settings.php:2306 lib/auth.php:634
-#: lib/auth.php:656 lib/auth.php:666 lib/auth.php:671 user_admin.php:2045
+#: auth_login.php:350 include/global_settings.php:2306 lib/auth.php:1014
+#: lib/auth.php:1036 lib/auth.php:1046 lib/auth.php:1051 user_admin.php:2123
 msgid "Local"
 msgstr "Địa phương"
 
-#: auth_login.php:351 include/global_arrays.php:873 lib/auth.php:667
-#: lib/auth.php:672
+#: auth_login.php:354 include/global_arrays.php:873 lib/auth.php:1047
+#: lib/auth.php:1052
 msgid "LDAP"
 msgstr "LDAP"
 
-#: auth_login.php:369 user_admin.php:2040 user_admin.php:2167
-#: user_group_admin.php:576
+#: auth_login.php:372 user_admin.php:2118 user_admin.php:2248
+#: user_group_admin.php:701
 msgid "Realm"
 msgstr "Địa hạt:"
 
-#: auth_login.php:386
+#: auth_login.php:389
 msgid "Keep me signed in"
 msgstr "Lưu đăng nhập"
 
-#: auth_login.php:392
+#: auth_login.php:395
 msgid "Login"
 msgstr "Đăng nhập"
 
 #: auth_profile.php:61 include/global_settings.php:22
 #: include/global_settings.php:1184 include/global_settings.php:1501
-#: lib/html.php:2665 managers.php:24 user_admin.php:1661
-#: user_group_admin.php:1597
+#: lib/html.php:2665 managers.php:24 user_admin.php:1740
+#: user_group_admin.php:1722
 msgid "General"
 msgstr "Chung"
 
-#: auth_profile.php:286
+#: auth_profile.php:292
 msgid "User Account Details"
 msgstr "Chi tiết tài khoản người dùng"
 
-#: auth_profile.php:302 include/global_arrays.php:857
+#: auth_profile.php:308 include/global_arrays.php:857
 #: include/global_settings.php:2719 lib/html.php:2120 lib/html.php:2142
 #: lib/html.php:2646
 msgid "Tree View"
 msgstr "Xem dạng sơ đồ cây"
 
-#: auth_profile.php:306 include/global_arrays.php:858 lib/html.php:2127
+#: auth_profile.php:312 include/global_arrays.php:858 lib/html.php:2127
 #: lib/html.php:2151 lib/html.php:2647
 msgid "List View"
 msgstr "Xem danh sách"
 
-#: auth_profile.php:310 include/global_arrays.php:859 lib/html.php:2134
+#: auth_profile.php:316 include/global_arrays.php:859 lib/html.php:2134
 #: lib/html.php:2648
 msgid "Preview View"
 msgstr "Xem trước"
 
-#: auth_profile.php:323 include/global_form.php:1495 user_admin.php:2163
+#: auth_profile.php:329 include/global_form.php:1495 user_admin.php:2244
 msgid "User Name"
 msgstr "Tên người dùng"
 
-#: auth_profile.php:324 include/global_form.php:1496
+#: auth_profile.php:330 include/global_form.php:1496
 msgid "The login name for this user."
 msgstr "Tên đăng nhập cho người dùng này."
 
-#: auth_profile.php:331 include/global_form.php:1503
-#: include/global_settings.php:1853 user_admin.php:2165 user_domains.php:482
-#: user_group_admin.php:576 utilities.php:1153
+#: auth_profile.php:337 include/global_form.php:1503
+#: include/global_settings.php:1853 user_admin.php:2246 user_domains.php:482
+#: user_group_admin.php:701 utilities.php:1153
 msgid "Full Name"
 msgstr "Họ và tên"
 
-#: auth_profile.php:332 include/global_form.php:1504
+#: auth_profile.php:338 include/global_form.php:1504
 msgid "A more descriptive name for this user, that can include spaces or special characters."
 msgstr "Một tên mô tả nhiều hơn cho người dùng này, có thể bao gồm khoảng trắng hoặc ký tự đặc biệt."
 
-#: auth_profile.php:339 include/global_form.php:1511
+#: auth_profile.php:345 include/global_form.php:1511
 msgid "Email Address"
 msgstr "Địa chỉ Email"
 
-#: auth_profile.php:340
+#: auth_profile.php:346
 msgid "An Email Address you be reached at."
 msgstr "Địa chỉ Email bạn có thể truy cập tại."
 
-#: auth_profile.php:347 auth_profile.php:349
+#: auth_profile.php:353 auth_profile.php:355
 msgid "Clear User Settings"
 msgstr "Xóa cài đặt người dùng"
 
-#: auth_profile.php:348
+#: auth_profile.php:354
 msgid "Return all User Settings to Default values."
 msgstr "Trả lại tất cả Cài đặt người dùng về giá trị Mặc định."
 
-#: auth_profile.php:354 auth_profile.php:356
+#: auth_profile.php:360 auth_profile.php:362
 msgid "Clear Private Data"
 msgstr "Xóa dữ liệu riêng tư"
 
-#: auth_profile.php:355
+#: auth_profile.php:361
 msgid "Clear Private Data including Column sizing."
 msgstr "Xóa dữ liệu cá nhân bao gồm kích thước cột."
 
-#: auth_profile.php:365 auth_profile.php:367
+#: auth_profile.php:371 auth_profile.php:373
 msgid "Logout Everywhere"
 msgstr "Thoát khỏi mọi nơi"
 
-#: auth_profile.php:366
+#: auth_profile.php:372
 msgid "Clear all your Login Session Tokens."
 msgstr "Xóa tất cả các Mã thông báo phiên đăng nhập của bạn."
 
-#: auth_profile.php:387 user_admin.php:1668 user_group_admin.php:1604
+#: auth_profile.php:393 user_admin.php:1747 user_group_admin.php:1729
 msgid "User Settings"
 msgstr "Thiết lập người dùng"
 
-#: auth_profile.php:482
+#: auth_profile.php:488
 msgid "Private Data Cleared"
 msgstr "Xóa dữ liệu cá nhân"
 
-#: auth_profile.php:482
+#: auth_profile.php:488
 msgid "Your Private Data has been cleared."
 msgstr "Dữ liệu cá nhân của bạn đã bị xóa."
 
-#: auth_profile.php:504
+#: auth_profile.php:510
 msgid "All your login sessions have been cleared."
 msgstr "Tất cả các phiên đăng nhập của bạn đã bị xóa."
 
-#: auth_profile.php:504
+#: auth_profile.php:510
 msgid "User Sessions Cleared"
 msgstr "Phiên người dùng đã bị xóa"
 
-#: auth_profile.php:588
+#: auth_profile.php:594
 msgid "Reset"
 msgstr "Đặt lại"
 
@@ -1123,8 +1123,8 @@ msgstr "Xóa thiết bị"
 #: lib/api_automation.php:178 lib/api_automation.php:271
 #: lib/api_automation.php:486 lib/api_automation.php:563
 #: lib/api_automation.php:1189 pollers.php:1031 tree.php:856 tree.php:2290
-#: user_admin.php:985 user_admin.php:2277 user_group_admin.php:921
-#: user_group_admin.php:1988 utilities.php:310
+#: user_admin.php:1064 user_admin.php:2358 user_group_admin.php:1046
+#: user_group_admin.php:2113 utilities.php:310
 msgid "Devices"
 msgstr "Thiết bị"
 
@@ -1153,8 +1153,8 @@ msgstr "Liên hệ"
 #: include/global_form.php:1169 include/global_form.php:1363
 #: include/global_form.php:1739 lib/api_automation.php:278
 #: lib/api_automation.php:1196 lib/installer.php:2044 lib/installer.php:2739
-#: managers.php:214 user_admin.php:844 user_admin.php:993
-#: user_group_admin.php:929 user_group_admin.php:1906
+#: managers.php:214 user_admin.php:923 user_admin.php:1072
+#: user_group_admin.php:1054 user_group_admin.php:2031
 msgid "Description"
 msgstr "Mô tả"
 
@@ -1181,7 +1181,7 @@ msgstr "SNMP"
 #: lib/html_reports.php:1952 lib/installer.php:2044 managers.php:216
 #: package_import.php:542 package_import.php:627 plugins.php:497
 #: plugins.php:623 pollers.php:1007 templates_import.php:206
-#: templates_import.php:245 user_admin.php:993 user_group_admin.php:929
+#: templates_import.php:245 user_admin.php:1072 user_group_admin.php:1054
 #: utilities.php:2113
 msgid "Status"
 msgstr "Trạng thái"
@@ -1231,7 +1231,7 @@ msgstr "Thiết bị phát hiện"
 #: automation_snmp.php:552 automation_snmp.php:553 automation_snmp.php:554
 #: automation_snmp.php:555 automation_snmp.php:556 automation_snmp.php:557
 #: data_debug.php:633 data_source_profiles.php:61 host.php:1879
-#: lib/functions.php:6312 lib/functions.php:6317 lib/html.php:1325
+#: lib/functions.php:6385 lib/functions.php:6390 lib/html.php:1325
 #: lib/html.php:1397 lib/html_reports.php:1742 lib/html_reports.php:1768
 #: lib/html_reports.php:1839 lib/html_reports.php:1840
 #: lib/html_reports.php:1841 lib/spikekill.php:1665 lib/spikekill.php:1666
@@ -1239,7 +1239,7 @@ msgstr "Thiết bị phát hiện"
 #: lib/spikekill.php:1716 lib/spikekill.php:1717 lib/spikekill.php:1718
 #: lib/spikekill.php:1719 lib/spikekill.php:1720 lib/spikekill.php:1721
 #: lib/spikekill.php:1722 lib/spikekill.php:1723 plugins.php:780
-#: pollers.php:1115 user_admin.php:2179 utilities.php:733 utilities.php:1182
+#: pollers.php:1115 user_admin.php:2260 utilities.php:733 utilities.php:1182
 #: utilities.php:2695 utilities.php:2823 utilities.php:2831 utilities.php:2842
 #: utilities.php:2853 utilities.php:2878 utilities.php:2928 utilities.php:3164
 msgid "N/A"
@@ -1373,9 +1373,9 @@ msgstr "Truy vấn dữ liệu"
 #: lib/api_automation.php:27 lib/html_reports.php:1957
 #: lib/html_reports.php:2062 lib/html_reports.php:2073
 #: lib/html_reports.php:2109 managers.php:241 managers.php:612
-#: user_admin.php:844 user_admin.php:856 user_admin.php:2166
+#: user_admin.php:923 user_admin.php:935 user_admin.php:2247
 #: user_domains.php:335 user_domains.php:743 user_group_admin.php:76
-#: user_group_admin.php:576 user_group_admin.php:591 user_group_admin.php:1910
+#: user_group_admin.php:701 user_group_admin.php:716 user_group_admin.php:2035
 #: utilities.php:2118 utilities.php:2946
 msgid "Enabled"
 msgstr "Bật"
@@ -1392,8 +1392,8 @@ msgstr "Bật"
 #: include/global_settings.php:1768 include/global_settings.php:2532
 #: lib/api_automation.php:28 lib/html.php:2742 lib/html_reports.php:1958
 #: lib/html_reports.php:2109 lib/html_utility.php:1317 managers.php:241
-#: managers.php:612 pollers.php:33 user_admin.php:856 user_domains.php:397
-#: user_group_admin.php:591 utilities.php:2119 utilities.php:2637
+#: managers.php:612 pollers.php:33 user_admin.php:935 user_domains.php:397
+#: user_group_admin.php:716 utilities.php:2119 utilities.php:2637
 #: utilities.php:2946
 msgid "Disabled"
 msgstr "Vô hiệu hóa"
@@ -1542,7 +1542,7 @@ msgstr "Cài đặt chung"
 #: include/global_form.php:2199 include/global_form.php:2244
 #: lib/installer.php:2044 lib/installer.php:2117 lib/installer.php:2147
 #: lib/installer.php:2739 lib/installer.php:2827 lib/vdef.php:56
-#: managers.php:576 pollers.php:46 user_admin.php:844 user_domains.php:311
+#: managers.php:576 pollers.php:46 user_admin.php:923 user_domains.php:311
 #: utilities.php:859 utilities.php:3144
 msgid "Name"
 msgstr "Tên"
@@ -2081,7 +2081,7 @@ msgstr "Rảnh rỗi"
 
 #: automation_networks.php:1150 include/global_arrays.php:891
 #: include/global_arrays.php:1209 include/global_settings.php:2558
-#: lib/html_reports.php:2104 user_admin.php:2036
+#: lib/html_reports.php:2104 user_admin.php:2114
 msgid "Never"
 msgstr "Không bao giờ"
 
@@ -2090,7 +2090,7 @@ msgid "No Networks Found"
 msgstr "Không tìm thấy kết nối mạng"
 
 #: automation_networks.php:1201 data_debug.php:1122 lib/clog_webapi.php:588
-#: lib/html_graph.php:289 lib/html_tree.php:1120 lib/html_tree.php:1141
+#: lib/html_graph.php:304 lib/html_tree.php:1120 lib/html_tree.php:1141
 #: pollers.php:890 utilities.php:1490 utilities.php:2548
 msgid "Refresh"
 msgstr "Làm mới"
@@ -2213,7 +2213,7 @@ msgstr "Tùy chọn SNMP tự động hóa"
 msgid "Item"
 msgstr "Mục"
 
-#: automation_snmp.php:523 include/auth.php:346 include/global_settings.php:679
+#: automation_snmp.php:523 include/auth.php:341 include/global_settings.php:679
 #: package_import.php:504 permission_denied.php:43 plugins.php:641
 msgid "Version"
 msgstr "Phiên bản"
@@ -2222,7 +2222,7 @@ msgstr "Phiên bản"
 msgid "Community"
 msgstr "Cộng đồng"
 
-#: automation_snmp.php:525 lib/functions.php:5949
+#: automation_snmp.php:525 lib/functions.php:6022
 msgid "Port"
 msgstr "Cổng"
 
@@ -2400,7 +2400,7 @@ msgid "Device Automation Templates"
 msgstr "Mẫu tự động hóa thiết bị"
 
 #: automation_templates.php:479 data_sources.php:1737 package_import.php:624
-#: templates_import.php:242 user_admin.php:1132 user_group_admin.php:1065
+#: templates_import.php:242 user_admin.php:1211 user_group_admin.php:1190
 msgid "Template Name"
 msgstr "Tên mẫu"
 
@@ -2519,8 +2519,8 @@ msgstr "Root"
 msgid "No Tree Rules Found"
 msgstr "Không tìm thấy quy tắc cây"
 
-#: cactid.php:27 help.php:28 lib/functions.php:6459 lib/functions.php:6529
-#: lib/functions.php:6625 lib/functions.php:7279 poller.php:417 poller.php:584
+#: cactid.php:27 help.php:54 lib/functions.php:6532 lib/functions.php:6602
+#: lib/functions.php:6698 lib/functions.php:7352 poller.php:417 poller.php:584
 #: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
 #: poller_automation.php:37 poller_boost.php:387
 msgid "Kadupul System Warning"
@@ -2669,12 +2669,12 @@ msgstr "Số lượng mẫu biểu đồ sử dụng CDEF này."
 msgid "No CDEFs"
 msgstr "Không có CDEF"
 
-#: cli/refresh_csrf.php:104 lib/functions.php:470 settings.php:251
+#: cli/refresh_csrf.php:104 lib/functions.php:543 settings.php:251
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
 msgstr "Cài đặt lưu vào Trình thu thập dữ liệu% d Không thành công."
 
-#: cli/refresh_csrf.php:105 lib/functions.php:483 settings.php:263
+#: cli/refresh_csrf.php:105 lib/functions.php:556 settings.php:263
 #, php-format
 msgid "Settings save to Data Collector %d Failed."
 msgstr "Cài đặt lưu vào Trình thu thập dữ liệu% d Không thành công."
@@ -3066,7 +3066,7 @@ msgstr "Bất kỳ vấn đề tóm tắt nào được tìm thấy cho Nguồn 
 #: data_debug.php:581 data_debug.php:1152 data_sources.php:1535
 #: data_sources.php:1691 host.php:1798 include/global_arrays.php:994
 #: include/global_arrays.php:1040 include/global_arrays.php:2307
-#: lib/api_automation.php:284 user_admin.php:993 user_group_admin.php:929
+#: lib/api_automation.php:284 user_admin.php:1072 user_group_admin.php:1054
 #: utilities.php:320
 msgid "Data Sources"
 msgstr "Nguồn dữ liệu"
@@ -3280,7 +3280,7 @@ msgstr "Hồ sơ"
 #: host_templates.php:707 lib/clog_webapi.php:549 lib/html.php:216
 #: lib/html_reports.php:1077 lib/html_reports.php:2200 plugins.php:501
 #: settings.php:531 settings.php:553 settings.php:584 tree.php:854
-#: user_admin.php:2005 user_admin.php:2030 user_admin.php:2044
+#: user_admin.php:2083 user_admin.php:2108 user_admin.php:2122
 #: utilities.php:1035 utilities.php:1472
 msgid "All"
 msgstr "Tất cả"
@@ -4054,10 +4054,10 @@ msgstr "Mẫu dữ liệu đã chọn"
 msgid "The name given to this data template.  Please note that you may only change Graph Templates to a 100%$ compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "Tên được đặt cho mẫu dữ liệu này. Xin lưu ý rằng bạn chỉ có thể thay đổi Mẫu biểu đồ thành Mẫu biểu đồ tương thích 100% $, có nghĩa là nó bao gồm Nguồn dữ liệu giống hệt nhau."
 
-#: data_sources.php:997 graph_view.php:814 graphs.php:1515
+#: data_sources.php:997 graph_view.php:817 graphs.php:1515
 #: include/global_arrays.php:954 include/global_arrays.php:1003
 #: include/global_arrays.php:1687 include/global_arrays.php:1856
-#: lib/api_automation.php:426 lib/functions.php:5948 lib/html.php:2235
+#: lib/api_automation.php:426 lib/functions.php:6021 lib/html.php:2235
 #: lib/html.php:2272 lib/html_reports.php:1109 utilities.php:1913
 msgid "Device"
 msgstr "Thiết bị"
@@ -4472,7 +4472,7 @@ msgstr "Thư mục bộ nhớ cache hình ảnh là không thể ghi. Vui lòng 
 msgid "Kadupul Real-time Graphing"
 msgstr "Vẽ đồ thị theo thời gian thực của Kadupul"
 
-#: graph_realtime.php:434 lib/html_graph.php:220 lib/html_reports.php:107
+#: graph_realtime.php:434 lib/html_graph.php:229 lib/html_reports.php:107
 #: lib/html_tree.php:1051
 msgid "Thumbnails"
 msgstr "Ảnh thu nhỏ"
@@ -4593,8 +4593,8 @@ msgstr "Chọn hộp kiểm này nếu bạn muốn cho phép người dùng ghi
 
 #: graph_templates.php:695 graph_templates.php:710 graph_templates.php:874
 #: graphs_new.php:548 include/global_arrays.php:1235
-#: include/global_arrays.php:2235 lib/html_tree.php:541 user_admin.php:1124
-#: user_group_admin.php:1057
+#: include/global_arrays.php:2235 lib/html_tree.php:541 user_admin.php:1203
+#: user_group_admin.php:1182
 msgid "Graph Templates"
 msgstr "Mẫu đồ thị"
 
@@ -4676,108 +4676,108 @@ msgstr "Mục mẫu dữ liệu"
 msgid "This filter will limit the Data Sources visible in the Data Source dropdown."
 msgstr "Bộ lọc này sẽ giới hạn Nguồn dữ liệu hiển thị trong menu thả xuống Nguồn dữ liệu."
 
-#: graph_view.php:304
+#: graph_view.php:307
 msgid "YOU DO NOT HAVE RIGHTS FOR TREE VIEW"
 msgstr "BẠN KHÔNG CÓ QUYỀN CHO TREE XEM"
 
-#: graph_view.php:393
+#: graph_view.php:396
 msgid "YOU DO NOT HAVE RIGHTS FOR PREVIEW VIEW"
 msgstr "BẠN KHÔNG CÓ QUYỀN XEM TRƯỚC"
 
-#: graph_view.php:411
+#: graph_view.php:414
 msgid "Graph Preview Filters"
 msgstr "Bộ lọc xem trước đồ thị"
 
-#: graph_view.php:411
+#: graph_view.php:414
 msgid "[ Custom Graph List Applied - Filtering from List ]"
 msgstr "[Danh sách biểu đồ tùy chỉnh được áp dụng - Lọc từ danh sách]"
 
-#: graph_view.php:512
+#: graph_view.php:515
 msgid "YOU DO NOT HAVE RIGHTS FOR LIST VIEW"
 msgstr "BẠN KHÔNG CÓ QUYỀN CHO DANH SÁCH XEM"
 
-#: graph_view.php:656
+#: graph_view.php:659
 msgid "Graph List View Filters"
 msgstr "Danh sách đồ thị Xem bộ lọc"
 
-#: graph_view.php:656
+#: graph_view.php:659
 msgid "[ Custom Graph List Applied - Filter FROM List ]"
 msgstr "[Danh sách biểu đồ tùy chỉnh được áp dụng - Bộ lọc TỪ danh sách]"
 
-#: graph_view.php:674 graph_view.php:926
+#: graph_view.php:677 graph_view.php:929
 msgid "View"
 msgstr "Xem"
 
-#: graph_view.php:674 graph_view.php:926 include/global_arrays.php:1214
+#: graph_view.php:677 graph_view.php:929 include/global_arrays.php:1214
 msgid "View Graphs"
 msgstr "Xem đồ thị"
 
-#: graph_view.php:676
+#: graph_view.php:679
 msgid "Add to a Report"
 msgstr "Thêm vào báo cáo"
 
-#: graph_view.php:676
+#: graph_view.php:679
 msgid "Report"
 msgstr "Báo cáo"
 
-#: graph_view.php:700 lib/html.php:202 lib/html.php:207 lib/html_graph.php:139
+#: graph_view.php:703 lib/html.php:202 lib/html.php:207 lib/html_graph.php:143
 #: lib/html_tree.php:977
 msgid "All Graphs & Templates"
 msgstr "Tất cả đồ thị và mẫu"
 
-#: graph_view.php:701 include/global_arrays.php:2889 lib/graphs.php:40
-#: lib/graphs.php:49 lib/html.php:210 lib/html_graph.php:140
+#: graph_view.php:704 include/global_arrays.php:2889 lib/graphs.php:40
+#: lib/graphs.php:49 lib/html.php:210 lib/html_graph.php:144
 #: lib/html_tree.php:978
 msgid "Not Templated"
 msgstr "Không khuôn mẫu"
 
-#: graph_view.php:809 graph_view.php:837 graphs.php:2188
+#: graph_view.php:812 graph_view.php:840 graphs.php:2188
 #: include/global_form.php:1884 lib/html_reports.php:1140 tree.php:961
 msgid "Graph Name"
 msgstr "Tên đồ thị"
 
-#: graph_view.php:811 graph_view.php:839 graphs.php:2191
+#: graph_view.php:814 graph_view.php:842 graphs.php:2191
 msgid "The Title of this Graph.  Generally programmatically generated from the Graph Template definition or Suggested Naming rules.  The max length of the Title is controlled under Settings->Visual."
 msgstr "Tiêu đề của đồ thị này. Thường được lập trình tạo từ định nghĩa Mẫu biểu đồ hoặc quy tắc Đặt tên được đề xuất. Độ dài tối đa của Tiêu đề được kiểm soát trong Cài đặt-&gt; Trực quan."
 
-#: graph_view.php:816
+#: graph_view.php:819
 msgid "The device for this Graph."
 msgstr "Tên của nhóm này."
 
-#: graph_view.php:819 graphs.php:2200
+#: graph_view.php:822 graphs.php:2200
 msgid "Source Type"
 msgstr "Loại nguồn"
 
-#: graph_view.php:821 graphs.php:2203
+#: graph_view.php:824 graphs.php:2203
 msgid "The underlying source that this Graph was based upon."
 msgstr "Nguồn cơ bản mà đồ thị này dựa trên."
 
-#: graph_view.php:824 graphs.php:2206
+#: graph_view.php:827 graphs.php:2206
 msgid "Source Name"
 msgstr "Tên Nguồn"
 
-#: graph_view.php:826 graphs.php:2209
+#: graph_view.php:829 graphs.php:2209
 msgid "The Graph Template or Data Query that this Graph was based upon."
 msgstr "Mẫu biểu đồ hoặc Truy vấn dữ liệu mà Biểu đồ này dựa trên."
 
-#: graph_view.php:831 graph_view.php:844 graphs.php:2215
+#: graph_view.php:834 graph_view.php:847 graphs.php:2215
 msgid "The size of this Graph when not in Preview mode."
 msgstr "Kích thước của đồ thị này khi không ở chế độ Xem trước."
 
-#: graph_view.php:895
+#: graph_view.php:898
 msgid "Select the Report to add the selected Graphs to."
 msgstr "Chọn Báo cáo để thêm Đồ thị đã chọn vào."
 
-#: graph_view.php:992 include/global_arrays.php:2035
+#: graph_view.php:995 include/global_arrays.php:2035
 #: include/global_settings.php:2715
 msgid "Preview Mode"
 msgstr "Chế độ xem trước"
 
-#: graph_view.php:1032
+#: graph_view.php:1035
 msgid "Add Selected Graphs to Report"
 msgstr "Thêm đồ thị được chọn vào báo cáo"
 
-#: graph_view.php:1046 lib/html.php:2714
+#: graph_view.php:1049 lib/html.php:2714
 msgid "Ok"
 msgstr "Đồng ý"
 
@@ -5143,8 +5143,8 @@ msgstr "(Chọn một loại biểu đồ để tạo)"
 msgid "Create"
 msgstr "Tạo"
 
-#: graphs_new.php:552 graphs_new.php:850 lib/html.php:1125 user_admin.php:1347
-#: user_group_admin.php:1281
+#: graphs_new.php:552 graphs_new.php:850 lib/html.php:1125 user_admin.php:1426
+#: user_group_admin.php:1406
 msgid "Select All"
 msgstr "Chọn tất cả"
 
@@ -5208,12 +5208,12 @@ msgstr "Đặt mặc định lựa chọn"
 msgid "Set Default"
 msgstr "Thiết lập mặc định"
 
-#: help.php:28
+#: help.php:54
 #, php-format
 msgid "WARNING: Kadupul Page:%s for User:%s Generated a Fatal Error %d!"
 msgstr ""
 
-#: help.php:52
+#: help.php:79
 #, php-format
 msgid "The document page '%s' could not be reached locally."
 msgstr ""
@@ -5430,7 +5430,7 @@ msgstr "Thêm mẫu biểu đồ vào thiết bị"
 msgid "Data Query Debug Information"
 msgstr "Truy vấn dữ liệu Thông tin gỡ lỗi"
 
-#: host.php:882 lib/functions.php:4700 tree.php:1743 tree.php:1817
+#: host.php:882 lib/functions.php:4773 tree.php:1743 tree.php:1817
 #: tree.php:1925 user_admin.php:18 user_group_admin.php:20
 msgid "Copy"
 msgstr "Sao chép"
@@ -5469,7 +5469,7 @@ msgstr "[% d Mục,% d Hàng]"
 msgid "Fail"
 msgstr "Không Đạt"
 
-#: host.php:966 lib/functions.php:5963 lib/functions.php:5968
+#: host.php:966 lib/functions.php:6036 lib/functions.php:6041
 msgid "Success"
 msgstr "Thành công"
 
@@ -5547,7 +5547,7 @@ msgstr "Không lên"
 msgid "Recovering"
 msgstr "Phục hồi"
 
-#: host.php:1698 lib/api_automation.php:33 lib/auth.php:2604
+#: host.php:1698 lib/api_automation.php:33 lib/auth.php:2986
 #: lib/clog_webapi.php:856 lib/html_utility.php:1339 lib/import.php:342
 #: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4107 lib/rrd.php:4119
 #: lib/spikekill.php:284 package_import.php:522 package_import.php:600
@@ -5566,7 +5566,8 @@ msgstr "Tên mà Thiết bị này sẽ được gọi."
 #: host.php:1780 include/global_form.php:1176 include/global_form.php:1747
 #: lib/api_automation.php:279 lib/api_automation.php:571
 #: lib/api_automation.php:890 lib/api_automation.php:1197 managers.php:217
-#: pollers.php:115 pollers.php:1001 user_admin.php:993 user_group_admin.php:929
+#: pollers.php:115 pollers.php:1001 user_admin.php:1072
+#: user_group_admin.php:1054
 msgid "Hostname"
 msgstr "Tên máy chủ"
 
@@ -5767,45 +5768,45 @@ msgstr ""
 msgid "No Device Templates Found"
 msgstr "Không tìm thấy mẫu thiết bị nào"
 
-#: include/auth.php:199
+#: include/auth.php:194
 msgid "Not Logged In"
 msgstr "Chưa đăng nhập"
 
-#: include/auth.php:200
+#: include/auth.php:195
 msgid "You must be logged in to access this area of Kadupul."
 msgstr "Bạn phải đăng nhập để truy cập vào khu vực này của Kadupul."
 
-#: include/auth.php:205
+#: include/auth.php:200
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "FATAL: Bạn phải đăng nhập để truy cập vào khu vực này của Kadupul."
 
-#: include/auth.php:314 include/auth.php:316 lib/auth.php:4996
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5401
 #: permission_denied.php:14 permission_denied.php:16
 msgid "Login Again"
 msgstr "Đăng nhập lại"
 
-#: include/auth.php:321 lib/functions.php:7943 permission_denied.php:29
+#: include/auth.php:316 lib/functions.php:8016 permission_denied.php:29
 #: permission_denied.php:36
 msgid "Permission Denied"
 msgstr "Quyền bị từ chối"
 
-#: include/auth.php:322 lib/functions.php:7944 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8017 permission_denied.php:38
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Nếu bạn cảm thấy rằng đây là một lỗi. Vui lòng liên hệ với Quản trị viên Kadupul của bạn."
 
-#: include/auth.php:322 lib/functions.php:7944 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8017 permission_denied.php:38
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Bạn không được phép truy cập vào phần này của Kadupul."
 
-#: include/auth.php:325
+#: include/auth.php:320
 msgid "Installation In Progress"
 msgstr "Đang cài đặt"
 
-#: include/auth.php:326
+#: include/auth.php:321
 msgid "Only Kadupul Administrators with Install/Upgrade privilege may login at this time"
 msgstr "Chỉ Quản trị viên Kadupul có đặc quyền Cài đặt / Nâng cấp mới có thể đăng nhập"
 
-#: include/auth.php:326
+#: include/auth.php:321
 msgid "There is an Installation or Upgrade in progress."
 msgstr "Có một cài đặt hoặc nâng cấp trong tiến trình."
 
@@ -6518,7 +6519,7 @@ msgstr "Khó"
 msgid "Demand"
 msgstr "Yêu cầu"
 
-#: include/global_arrays.php:894 user_admin.php:574 user_group_admin.php:630
+#: include/global_arrays.php:894 user_admin.php:653 user_group_admin.php:755
 msgid "Allow"
 msgstr "Cho phép"
 
@@ -6665,8 +6666,8 @@ msgid "Sites"
 msgstr "Websites"
 
 #: include/global_arrays.php:992 include/global_arrays.php:1229 tree.php:2141
-#: tree.php:2156 tree.php:2220 user_admin.php:1263 user_admin.php:2289
-#: user_admin.php:2295 user_group_admin.php:1189 user_group_admin.php:2000
+#: tree.php:2156 tree.php:2220 user_admin.php:1342 user_admin.php:2370
+#: user_admin.php:2376 user_group_admin.php:1314 user_group_admin.php:2125
 msgid "Trees"
 msgstr "Cây"
 
@@ -6704,7 +6705,7 @@ msgstr "Quy tắc thiết bị"
 
 #: include/global_arrays.php:1016 include/global_arrays.php:1067
 #: include/global_arrays.php:1233 lib/html_filter.php:160
-#: lib/html_graph.php:234 lib/html_tree.php:1065
+#: lib/html_graph.php:243 lib/html_tree.php:1065
 msgid "Presets"
 msgstr "Đặt trước"
 
@@ -6749,8 +6750,8 @@ msgid "Settings"
 msgstr "Cài đặt"
 
 #: include/global_arrays.php:1031 include/global_arrays.php:2577
-#: user_admin.php:2052 user_admin.php:2154 user_group_admin.php:568
-#: user_group_admin.php:2006
+#: user_admin.php:2130 user_admin.php:2235 user_group_admin.php:693
+#: user_group_admin.php:2131
 msgid "Users"
 msgstr "Người dùng"
 
@@ -6774,7 +6775,7 @@ msgstr "Tiện ích hệ thống"
 
 #: include/global_arrays.php:1037 include/global_arrays.php:1071
 #: include/global_arrays.php:1114 include/global_arrays.php:1217
-#: include/global_arrays.php:2211 user_admin.php:1417 user_group_admin.php:1353
+#: include/global_arrays.php:2211 user_admin.php:1496 user_group_admin.php:1478
 msgid "External Links"
 msgstr "Liên kết Bên ngoài"
 
@@ -7765,8 +7766,8 @@ msgid "List Mode"
 msgstr "Chế độ danh sách"
 
 #: include/global_arrays.php:2061 include/global_arrays.php:2067
-#: lib/functions.php:4245 lib/html.php:1876 lib/html.php:1941 lib/html.php:2662
-#: user_admin.php:1392 user_group_admin.php:1328
+#: lib/functions.php:4318 lib/html.php:1876 lib/html.php:1941 lib/html.php:2662
+#: user_admin.php:1471 user_group_admin.php:1453
 msgid "Console"
 msgstr "ÄÃ³ng"
 
@@ -9432,7 +9433,7 @@ msgstr "Dữ liệu"
 msgid "Visual"
 msgstr "Hình ảnh"
 
-#: include/global_settings.php:28 lib/functions.php:5952 lib/functions.php:5957
+#: include/global_settings.php:28 lib/functions.php:6025 lib/functions.php:6030
 msgid "Authentication"
 msgstr "Xác thực"
 
@@ -9468,11 +9469,11 @@ msgstr "Phông chữ đồ thị"
 msgid "PHP Mail() Function"
 msgstr "Hàm PHP Mail ()"
 
-#: include/global_settings.php:69 lib/functions.php:5933
+#: include/global_settings.php:69 lib/functions.php:6006
 msgid "Sendmail"
 msgstr "Gửi thư"
 
-#: include/global_settings.php:70 lib/functions.php:5939
+#: include/global_settings.php:70 lib/functions.php:6012
 msgid "SMTP"
 msgstr "SMTP"
 
@@ -11189,8 +11190,8 @@ msgid "TLS Certificate Requirements"
 msgstr "Yêu cầu chứng chỉ TLS"
 
 #: include/global_settings.php:1757
-msgid "Should LDAP verify TLS Certificates when received by the Client."
-msgstr "LDAP có nên xác minh Chứng chỉ TLS khi Khách hàng nhận được không."
+msgid "Should LDAP verify TLS Certificates when received by the Client.  Demand and Hard refuse a server whose certificate does not verify.  Never and Allow skip that check, so anyone on the network path can pose as the directory and read the passwords sent to it."
+msgstr ""
 
 #: include/global_settings.php:1763 user_domains.php:393
 msgid "Referrals"
@@ -11384,7 +11385,7 @@ msgstr "Đây là số lượng ký tự sẽ được phép trước khi một 
 msgid "Sendmail Options"
 msgstr "Tùy chọn gửi thư"
 
-#: include/global_settings.php:1938 lib/functions.php:5933
+#: include/global_settings.php:1938 lib/functions.php:6006
 msgid "Sendmail Path"
 msgstr "Đường dẫn gửi thư"
 
@@ -12135,8 +12136,8 @@ msgstr "1 cột"
 #: include/global_settings.php:2735 include/global_settings.php:2745
 #: include/global_settings.php:2746 include/global_settings.php:2747
 #: include/global_settings.php:2748 include/global_settings.php:2749
-#: lib/html_graph.php:210 lib/html_graph.php:211 lib/html_graph.php:212
-#: lib/html_graph.php:213 lib/html_graph.php:214 lib/html_tree.php:1041
+#: lib/html_graph.php:219 lib/html_graph.php:220 lib/html_graph.php:221
+#: lib/html_graph.php:222 lib/html_graph.php:223 lib/html_tree.php:1041
 #: lib/html_tree.php:1042 lib/html_tree.php:1043 lib/html_tree.php:1044
 #: lib/html_tree.php:1045
 #, php-format
@@ -12315,12 +12316,12 @@ msgstr "<strong>LƯU Ý:</strong> Bạn đã đăng nhập vào Bộ thu thập 
 msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
 msgstr "<strong>LƯU Ý: Cho</strong> đến nay, không có Plugin Kadupul lõi nào được thiết kế lại để hoạt động với Bộ thu thập dữ liệu từ xa. Do đó, các Plugin như MacTrack và HMIB, yêu cầu truy cập trực tiếp vào thiết bị sẽ không hoạt động với Bộ thu thập dữ liệu từ xa tại thời điểm này. Tuy nhiên, các plugin như Thold sẽ hoạt động miễn là Trình thu thập dữ liệu từ xa ở chế độ <b>&#39;trực tuyến&#39;</b> ."
 
-#: install/functions.php:635
+#: install/functions.php:675
 #, php-format
 msgid "Path for %s"
 msgstr "Đường dẫn cho %s"
 
-#: install/functions.php:822
+#: install/functions.php:862
 msgid "New Poller"
 msgstr "Xe đẩy mới"
 
@@ -12627,8 +12628,8 @@ msgstr "Địa điểm:"
 msgid "Contact:"
 msgstr "Liên hệ:"
 
-#: lib/api_device.php:1976 lib/functions.php:5966 lib/functions.php:5968
-#: lib/functions.php:5972
+#: lib/api_device.php:1976 lib/functions.php:6039 lib/functions.php:6041
+#: lib/functions.php:6045
 msgid "Ping Results"
 msgstr "Kết quả Ping"
 
@@ -12640,125 +12641,126 @@ msgstr "Không có kiểm tra tính khả dụng của Ping hoặc SNMP"
 msgid "New Branch"
 msgstr "Chi nhánh mới"
 
-#: lib/auth.php:673
+#: lib/auth.php:1053
 msgid "Web Basic"
 msgstr "Cơ bản về web"
 
-#: lib/auth.php:2433
+#: lib/auth.php:2815
 msgid "Device:(Hide Disabled)"
 msgstr "Thiết bị bị vô hiệu hóa"
 
-#: lib/auth.php:2451 lib/auth.php:2453 lib/auth.php:2459 lib/auth.php:2461
+#: lib/auth.php:2833 lib/auth.php:2835 lib/auth.php:2841 lib/auth.php:2843
 #, fuzzy, php-format
 msgid "Graph:(%s%s)"
 msgstr "Đồ thị"
 
-#: lib/auth.php:2474 lib/auth.php:2480 lib/auth.php:2547 lib/auth.php:2549
-#: lib/auth.php:2553 lib/auth.php:2555
+#: lib/auth.php:2856 lib/auth.php:2862 lib/auth.php:2929 lib/auth.php:2931
+#: lib/auth.php:2935 lib/auth.php:2937
 #, fuzzy, php-format
 msgid "Device:(%s%s)"
 msgstr "Thiết bị"
 
-#: lib/auth.php:2488 lib/auth.php:2494 lib/auth.php:2563 lib/auth.php:2565
-#: lib/auth.php:2569 lib/auth.php:2571
+#: lib/auth.php:2870 lib/auth.php:2876 lib/auth.php:2945 lib/auth.php:2947
+#: lib/auth.php:2951 lib/auth.php:2953
 #, fuzzy, php-format
 msgid "Template:(%s%s)"
 msgstr "Giao diện"
 
-#: lib/auth.php:2501
+#: lib/auth.php:2883
 #, fuzzy, php-format
 msgid "Graph+Device+Template:(%s%s)"
 msgstr "Mẫu thiết bị:"
 
-#: lib/auth.php:2538 lib/auth.php:2540
+#: lib/auth.php:2920 lib/auth.php:2922
 #, fuzzy, php-format
 msgid "Device+Template:(%s%s)"
 msgstr "Mẫu thiết bị:"
 
-#: lib/auth.php:2584 lib/auth.php:2591 lib/auth.php:2600
+#: lib/auth.php:2966 lib/auth.php:2973 lib/auth.php:2982
 msgid "Restricted By: "
 msgstr "Hạn chế"
 
-#: lib/auth.php:2588
+#: lib/auth.php:2970
 msgid "Granted By: "
 msgstr "Dành được bởi:"
 
-#: lib/auth.php:2595
+#: lib/auth.php:2977
 msgid "Granted"
 msgstr "Chấp thuận quyền truy cập"
 
-#: lib/auth.php:2597 lib/auth.php:2602
+#: lib/auth.php:2979 lib/auth.php:2984
 msgid "Restricted"
 msgstr "Hạn chế"
 
-#: lib/auth.php:2836 lib/auth.php:2871
+#: lib/auth.php:3218 lib/auth.php:3253
 msgid "Branch:"
 msgstr "Chi nhánh:"
 
-#: lib/auth.php:2845 lib/auth.php:2879 lib/html_tree.php:949
+#: lib/auth.php:3227 lib/auth.php:3261 lib/html_tree.php:949
 #: lib/reports.php:1081
 msgid "Device:"
 msgstr "Thiết bị:"
 
-#: lib/auth.php:3739 lib/auth.php:3830
+#: lib/auth.php:4121 lib/auth.php:4212
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Truy cập bị từ chối, vui lòng liên hệ với bạn Quản trị viên Kadupul."
 
-#: lib/auth.php:3789
+#: lib/auth.php:4171
 msgid "Access Denied!  Login Disabled."
 msgstr "Truy cập bị từ chối, tài khoản người dùng bị vô hiệu hóa."
 
-#: lib/auth.php:3835 lib/auth.php:3841 lib/auth.php:3994 lib/auth.php:4019
-#: lib/auth.php:4042 lib/auth.php:4082 lib/auth.php:4106 lib/auth.php:4223
-#: lib/auth.php:4452 lib/auth.php:4494 lib/auth.php:4520 lib/auth.php:4534
+#: lib/auth.php:4217 lib/auth.php:4223 lib/auth.php:4328 lib/auth.php:4379
+#: lib/auth.php:4404 lib/auth.php:4427 lib/auth.php:4467 lib/auth.php:4491
+#: lib/auth.php:4608 lib/auth.php:4837 lib/auth.php:4879 lib/auth.php:4889
+#: lib/auth.php:4905 lib/auth.php:4919 lib/auth.php:4957
 msgid "Access Denied!  Login Failed."
 msgstr "Truy cập bị từ chối, tài khoản người dùng bị vô hiệu hóa."
 
-#: lib/auth.php:3864
+#: lib/auth.php:4246
 msgid "Web Basic Authentication configured, but no username was passed from the web server. Please make sure you have authentication enabled on the web server."
 msgstr "Xác thực cơ bản Web được định cấu hình, nhưng không có tên người dùng nào được chuyển từ máy chủ web. Vui lòng đảm bảo rằng bạn đã bật xác thực trên máy chủ web."
 
-#: lib/auth.php:3880
+#: lib/auth.php:4262
 #, php-format
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "%s được xác thực bởi Máy chủ Web, nhưng cả Người dùng mẫu và Khách không được xác định trong Kadupul."
 
-#: lib/auth.php:4054 lib/auth.php:4238 lib/auth.php:4504
+#: lib/auth.php:4439 lib/auth.php:4623
 msgid "Access Denied!  No password provided by user."
 msgstr "Truy cập bị Từ chối! Không có mật khẩu được cung cấp bởi người dùng."
 
-#: lib/auth.php:4215 lib/auth.php:5203
+#: lib/auth.php:4600 lib/auth.php:5608
 #, fuzzy, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "Truy cập bị từ chối, vui lòng liên hệ với bạn Quản trị viên Kadupul."
 
-#: lib/auth.php:4557
+#: lib/auth.php:4952
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "Quản trị viên Kadupul của bạn đã buộc mật khẩu phức tạp để đăng nhập và mật khẩu Kadupul hiện tại của bạn không phù hợp với yêu cầu mới. Do đó, bạn phải thay đổi mật khẩu của bạn bây giờ."
 
-#: lib/auth.php:4591
+#: lib/auth.php:4992
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "Mật khẩu phải có ít nhất% d ký tự!"
 
-#: lib/auth.php:4597
+#: lib/auth.php:4998
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "Mật khẩu của bạn phải chứa ít nhất 1 ký tự số!"
 
-#: lib/auth.php:4601
+#: lib/auth.php:5002
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "Mật khẩu của bạn phải chứa hỗn hợp các ký tự chữ thường và chữ hoa!"
 
-#: lib/auth.php:4607
+#: lib/auth.php:5008
 msgid "Your password must contain at least 1 special character!"
 msgstr "Mật khẩu của bạn phải chứa ít nhất 1 ký tự đặc biệt!"
 
-#: lib/auth.php:4989
+#: lib/auth.php:5394
 #, fuzzy
 msgid "Kadupul Login Failure"
 msgstr "Nhật ký Kadupul đã bị xóa"
 
-#: lib/auth.php:5289
+#: lib/auth.php:5694
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "Xác thực trước đó chưa được đặt. Đã cố gắng đặt thành Xác thực cục bộ, nhưng không tìm thấy tài khoản Quản trị viên nào."
 
@@ -13387,177 +13389,177 @@ msgstr "Không tìm thấy vấn đề"
 msgid "RRDfile not created yet"
 msgstr "Tệp RRD không được cập nhật sau khi bỏ phiếu"
 
-#: lib/functions.php:1018 lib/functions.php:1100
+#: lib/functions.php:1091 lib/functions.php:1173
 msgid "Message Not Found."
 msgstr "Không tìm thấy tin nhắn."
 
-#: lib/functions.php:1515
+#: lib/functions.php:1588
 #, php-format
 msgid "Error %s is not readable"
 msgstr "Lỗi %s không đọc được"
 
-#: lib/functions.php:3999
+#: lib/functions.php:4072
 msgid "Logged in a Guest"
 msgstr "Đăng nhập như"
 
-#: lib/functions.php:3999 lib/functions.php:4017
+#: lib/functions.php:4072 lib/functions.php:4090
 msgid "Logged in as"
 msgstr "Đăng nhập như"
 
-#: lib/functions.php:3999
+#: lib/functions.php:4072
 msgid "Login as Regular User"
 msgstr "Đăng nhập như người dùng thông thường"
 
-#: lib/functions.php:3999
+#: lib/functions.php:4072
 msgid "guest"
 msgstr "khách"
 
-#: lib/functions.php:4002 lib/functions.php:4027 lib/html.php:2668
+#: lib/functions.php:4075 lib/functions.php:4100 lib/html.php:2668
 msgid "User Community"
 msgstr "Cộng Đồng Người Dùng"
 
-#: lib/functions.php:4003 lib/functions.php:4028 lib/html.php:2670
+#: lib/functions.php:4076 lib/functions.php:4101 lib/html.php:2670
 #: lib/utility.php:1440
 msgid "Documentation"
 msgstr "Tài liệu"
 
-#: lib/functions.php:4020
+#: lib/functions.php:4093
 #, php-format
 msgid "Logged in as %s"
 msgstr "Đăng nhập như %s"
 
-#: lib/functions.php:4022 lib/html.php:2649
+#: lib/functions.php:4095 lib/html.php:2649
 msgid "Edit Profile"
 msgstr "Chỉnh sửa hồ sơ"
 
-#: lib/functions.php:4032 lib/html.php:2653
+#: lib/functions.php:4105 lib/html.php:2653
 msgid "Logout"
 msgstr "Đăng xuất"
 
-#: lib/functions.php:4186
+#: lib/functions.php:4259
 msgid "Leaf"
 msgstr "Lá"
 
-#: lib/functions.php:4210 lib/html_tree.php:648 lib/html_tree.php:684
+#: lib/functions.php:4283 lib/html_tree.php:648 lib/html_tree.php:684
 #: lib/html_tree.php:913 lib/html_tree.php:921 lib/html_tree.php:1522
 msgid "Non Query Based"
 msgstr "Không dựa trên truy vấn"
 
-#: lib/functions.php:4248
+#: lib/functions.php:4321
 #, php-format
 msgid "Link %s"
 msgstr "Liên kết %s"
 
-#: lib/functions.php:5502
+#: lib/functions.php:5575
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Lỗi Mailer: Không có địa chỉ <b>TO</b> được đặt !! <br> Nếu sử dụng liên kết <i>Kiểm tra Thư</i> , vui lòng đặt cài đặt <b>e-mail Thông báo</b> ."
 
-#: lib/functions.php:5896
+#: lib/functions.php:5969
 #, php-format
 msgid "Authentication failed: %s"
 msgstr "Xác thực thất bại: %s"
 
-#: lib/functions.php:5900
+#: lib/functions.php:5973
 #, php-format
 msgid "HELO failed: %s"
 msgstr "Helo thất bại: %s"
 
-#: lib/functions.php:5903
+#: lib/functions.php:5976
 #, php-format
 msgid "Connect failed: %s"
 msgstr "Kết nối thất bại: %s"
 
-#: lib/functions.php:5906
+#: lib/functions.php:5979
 msgid "SMTP error: "
 msgstr "Lỗi SMTP:"
 
-#: lib/functions.php:5920
+#: lib/functions.php:5993
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "Đây là một thông báo thử nghiệm được tạo ra từ Kadupul. Thông báo này đã được gửi để kiểm tra cấu hình Cài đặt thư của bạn."
 
-#: lib/functions.php:5921
+#: lib/functions.php:5994
 msgid "Your email settings are currently set as follows"
 msgstr "Cài đặt email của bạn hiện được đặt như sau"
 
-#: lib/functions.php:5922
+#: lib/functions.php:5995
 msgid "Method"
 msgstr "Phương thức"
 
-#: lib/functions.php:5924
+#: lib/functions.php:5997
 msgid "Checking Configuration...<br>"
 msgstr "Kiểm tra cấu hình ... <br>"
 
-#: lib/functions.php:5931
+#: lib/functions.php:6004
 msgid "PHP's Mailer Class"
 msgstr "Lớp thư của PHP"
 
-#: lib/functions.php:5937
+#: lib/functions.php:6010
 msgid "Method: SMTP"
 msgstr "Phương thức: SMTP"
 
-#: lib/functions.php:5954
+#: lib/functions.php:6027
 msgid "Not Shown for Security Reasons"
 msgstr "Không hiển thị vì lý do bảo mật"
 
-#: lib/functions.php:5955
+#: lib/functions.php:6028
 msgid "Security"
 msgstr "Bảo mật"
 
-#: lib/functions.php:5963
+#: lib/functions.php:6036
 msgid "Ping Results:"
 msgstr "Kết quả Ping:"
 
-#: lib/functions.php:5972
+#: lib/functions.php:6045
 msgid "Bypassed"
 msgstr "Bỏ qua"
 
-#: lib/functions.php:5981
+#: lib/functions.php:6054
 msgid "Creating Message Text..."
 msgstr "Tạo tin nhắn văn bản ..."
 
-#: lib/functions.php:5984
+#: lib/functions.php:6057
 msgid "Sending Message..."
 msgstr "Đang gửi tin nhắn…"
 
-#: lib/functions.php:5988
+#: lib/functions.php:6061
 #, fuzzy
 msgid "Kadupul Test Message"
 msgstr "Thông báo kiểm tra Kadupul"
 
-#: lib/functions.php:5990
+#: lib/functions.php:6063
 msgid "Success!"
 msgstr "Thành công!"
 
-#: lib/functions.php:5993
+#: lib/functions.php:6066
 msgid "Message Not Sent due to ping failure."
 msgstr "Tin nhắn không được gửi do lỗi ping."
 
-#: lib/functions.php:6459 lib/functions.php:6529
+#: lib/functions.php:6532 lib/functions.php:6602
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul đã tắt plugin %s do lỗi sau: %s! Xem logfile Kadupul để biết thêm chi tiết."
 
-#: lib/functions.php:6625
+#: lib/functions.php:6698
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr ""
 
-#: lib/functions.php:7049 lib/functions.php:7051
+#: lib/functions.php:7122 lib/functions.php:7124
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:7049
+#: lib/functions.php:7122
 #, php-format
 msgid "Version %s %s"
 msgstr "Phiên bản %s %s"
 
-#: lib/functions.php:7051
+#: lib/functions.php:7124
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7279
+#: lib/functions.php:7352
 #, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr ""
@@ -13670,7 +13672,7 @@ msgstr "Thực thi hành động"
 msgid "Logs"
 msgstr "Nhật ký"
 
-#: lib/html.php:2103 user_admin.php:2265 user_admin.php:2271
+#: lib/html.php:2103 user_admin.php:2346 user_admin.php:2352
 msgid "Show All"
 msgstr "Hiển thị tất cả"
 
@@ -14114,99 +14116,99 @@ msgstr ""
 msgid "Data Query Data Sources must be created through %s"
 msgstr "Truy vấn dữ liệu Nguồn dữ liệu phải được tạo qua %s"
 
-#: lib/html_graph.php:175 lib/html_tree.php:1012
+#: lib/html_graph.php:181 lib/html_tree.php:1012
 msgid "Save the current Graphs, Columns, Thumbnail, Preset, and Timeshift preferences to your profile"
 msgstr "Lưu các tùy chọn Biểu đồ, Cột, Hình thu nhỏ, Cài đặt sẵn và Timeshift hiện tại vào hồ sơ của bạn"
 
-#: lib/html_graph.php:205 lib/html_tree.php:1036
+#: lib/html_graph.php:214 lib/html_tree.php:1036
 msgid "Columns"
 msgstr "Cột"
 
-#: lib/html_graph.php:209 lib/html_tree.php:1040
+#: lib/html_graph.php:218 lib/html_tree.php:1040
 #, php-format
 msgid "%d Column"
 msgstr "% d Cột"
 
-#: lib/html_graph.php:239 lib/html_tree.php:1070
+#: lib/html_graph.php:248 lib/html_tree.php:1070
 msgid "Custom"
 msgstr "Tùy chỉnh"
 
-#: lib/html_graph.php:253 lib/html_reports.php:2059 lib/html_reports.php:2070
+#: lib/html_graph.php:265 lib/html_reports.php:2059 lib/html_reports.php:2070
 #: lib/html_tree.php:1084
 msgid "From"
 msgstr "Từ"
 
-#: lib/html_graph.php:258 lib/html_tree.php:1089
+#: lib/html_graph.php:270 lib/html_tree.php:1089
 msgid "Start Date Selector"
 msgstr "Ngày bắt đầu chọn"
 
-#: lib/html_graph.php:262 lib/html_reports.php:2060 lib/html_reports.php:2071
+#: lib/html_graph.php:274 lib/html_reports.php:2060 lib/html_reports.php:2071
 #: lib/html_tree.php:1093
 msgid "To"
 msgstr "Đến"
 
-#: lib/html_graph.php:267 lib/html_tree.php:1098
+#: lib/html_graph.php:279 lib/html_tree.php:1098
 msgid "End Date Selector"
 msgstr "Bộ chọn ngày kết thúc"
 
-#: lib/html_graph.php:272 lib/html_tree.php:1103
+#: lib/html_graph.php:284 lib/html_tree.php:1103
 msgid "Shift Time Backward"
 msgstr "Thay đổi thời gian lùi"
 
-#: lib/html_graph.php:273 lib/html_tree.php:1104
+#: lib/html_graph.php:285 lib/html_tree.php:1104
 msgid "Define Shifting Interval"
 msgstr "Xác định khoảng thời gian thay đổi"
 
-#: lib/html_graph.php:284 lib/html_tree.php:1115
+#: lib/html_graph.php:299 lib/html_tree.php:1115
 msgid "Shift Time Forward"
 msgstr "Chuyển thời gian chuyển tiếp"
 
-#: lib/html_graph.php:289 lib/html_tree.php:1120
+#: lib/html_graph.php:304 lib/html_tree.php:1120
 msgid "Refresh selected time span"
 msgstr "Làm mới khoảng thời gian đã chọn"
 
-#: lib/html_graph.php:290 lib/html_tree.php:1121
+#: lib/html_graph.php:305 lib/html_tree.php:1121
 msgid "Return to the default time span"
 msgstr "Quay trở lại khoảng thời gian mặc định"
 
-#: lib/html_graph.php:298 lib/html_tree.php:1129
+#: lib/html_graph.php:313 lib/html_tree.php:1129
 msgid "Window"
 msgstr "Window"
 
-#: lib/html_graph.php:310 utilities.php:338
+#: lib/html_graph.php:325 utilities.php:338
 msgid "Interval"
 msgstr "Interval"
 
-#: lib/html_graph.php:322 lib/html_tree.php:1153
+#: lib/html_graph.php:337 lib/html_tree.php:1153
 msgid "Stop"
 msgstr "Dừng"
 
-#: lib/html_graph.php:517 lib/html_graph.php:547
+#: lib/html_graph.php:536 lib/html_graph.php:570
 #, php-format
 msgid "Create Graph from %s"
 msgstr "Tạo đồ thị từ %s"
 
-#: lib/html_graph.php:545
+#: lib/html_graph.php:568
 #, php-format
 msgid "Create %s Graphs from %s"
 msgstr "Tạo đồ thị %s từ %s"
 
-#: lib/html_graph.php:586
+#: lib/html_graph.php:613
 #, php-format
 msgid "Graph [Template: %s]"
 msgstr "Biểu đồ [Mẫu: %s]"
 
-#: lib/html_graph.php:588
+#: lib/html_graph.php:615
 #, php-format
 msgid "Graph Items [Template: %s]"
 msgstr "Mục đồ thị [Mẫu: %s]"
 
-#: lib/html_graph.php:593
+#: lib/html_graph.php:620
 #, php-format
 msgid "Data Source [Template: %s]"
 msgstr "Nguồn dữ liệu [Bản mẫu: %s]"
 
-#: lib/html_graph.php:603
+#: lib/html_graph.php:632
 #, php-format
 msgid "Custom Data [Template: %s]"
 msgstr "Dữ liệu tùy chỉnh [Mẫu: %s]"
@@ -14534,7 +14536,7 @@ msgstr "Sự kiện"
 msgid "Send Report"
 msgstr "Gửi báo cáo"
 
-#: lib/html_reports.php:1579 lib/import.php:2866 user_admin.php:1696
+#: lib/html_reports.php:1579 lib/import.php:2866 user_admin.php:1775
 msgid "[new]"
 msgstr "[Mới]"
 
@@ -16931,7 +16933,7 @@ msgstr "Một múi giờ hợp lệ phù hợp với MySQL và hệ thống"
 msgid "A useful name for this VDEF."
 msgstr "Một tên hữu ích cho VDEF này."
 
-#: link.php:44
+#: link.php:61
 #, php-format
 msgid "External Link ID '%s' with Title '%s' attempted to inject an invalid URL and was blocked!"
 msgstr ""
@@ -18009,16 +18011,16 @@ msgid "Messages"
 msgstr ""
 
 #: rrdcheck.php:245 rrdcleaner.php:564 user_domains.php:665
-#: user_group_admin.php:1852 user_group_admin.php:1982
-#: user_group_admin.php:1988 user_group_admin.php:1994
-#: user_group_admin.php:2000 user_group_admin.php:2006
+#: user_group_admin.php:1977 user_group_admin.php:2107
+#: user_group_admin.php:2113 user_group_admin.php:2119
+#: user_group_admin.php:2125 user_group_admin.php:2131
 msgctxt "filter: use"
 msgid "Go"
 msgstr "Đi"
 
-#: rrdcheck.php:246 rrdcleaner.php:565 user_group_admin.php:1853
-#: user_group_admin.php:1982 user_group_admin.php:1988
-#: user_group_admin.php:1994 user_group_admin.php:2000
+#: rrdcheck.php:246 rrdcleaner.php:565 user_group_admin.php:1978
+#: user_group_admin.php:2107 user_group_admin.php:2113
+#: user_group_admin.php:2119 user_group_admin.php:2125
 msgctxt "filter: reset"
 msgid "Clear"
 msgstr "Xóa"
@@ -18693,7 +18695,7 @@ msgstr "Sắp xếp cây tăng dần"
 msgid "Sort Trees Descending"
 msgstr "Sắp xếp cây giảm dần"
 
-#: tree.php:2230 user_admin.php:1271 user_group_admin.php:1197
+#: tree.php:2230 user_admin.php:1350 user_group_admin.php:1322
 msgid "Tree Name"
 msgstr "Tên cây"
 
@@ -18769,403 +18771,420 @@ msgstr "Không tìm thấy cây"
 msgid "Batch Copy"
 msgstr "Sao chép hàng loạt"
 
-#: user_admin.php:143
+#: user_admin.php:138
 msgid "You are not allowed to delete the current login account"
 msgstr "Bạn không được phép thay đổi mật khẩu của bạn."
 
-#: user_admin.php:155
+#: user_admin.php:148
 msgid "You are not allowed to disable the current login account"
 msgstr "Bạn không được phép thay đổi mật khẩu của bạn."
 
-#: user_admin.php:228
+#: user_admin.php:150
+msgid "You are not allowed to disable the primary administrator account"
+msgstr ""
+
+#: user_admin.php:180
+msgid "You are not allowed to overwrite the current login account"
+msgstr ""
+
+#: user_admin.php:184
+msgid "You are not allowed to overwrite the primary administrator account"
+msgstr ""
+
+#: user_admin.php:247
 msgid "Click 'Continue' to delete the selected User(s)."
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để xóa (các) Người dùng đã chọn."
 
-#: user_admin.php:233
+#: user_admin.php:252
 msgid "Delete User(s)"
 msgstr "Xóa người dùng"
 
-#: user_admin.php:243
+#: user_admin.php:262
 msgid "Click 'Continue' to copy the selected User to a new User below."
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để sao chép Người dùng đã chọn sang Người dùng mới bên dưới."
 
-#: user_admin.php:248
+#: user_admin.php:267
 msgid "Template Username:"
 msgstr "Tên người dùng mẫu:"
 
-#: user_admin.php:253
+#: user_admin.php:272
 msgid "Username:"
 msgstr "Tên đăng nhập:"
 
-#: user_admin.php:260
+#: user_admin.php:279
 msgid "Full Name:"
 msgstr "Tên đầy đủ:"
 
-#: user_admin.php:267
+#: user_admin.php:286
 msgid "Realm:"
 msgstr "Địa hạt:"
 
-#: user_admin.php:273
+#: user_admin.php:292
 msgid "Copy User"
 msgstr "Sao chép người dùng"
 
-#: user_admin.php:279
+#: user_admin.php:298
 msgid "Click 'Continue' to enable the selected User(s)."
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để bật (các) Người dùng đã chọn."
 
-#: user_admin.php:284
+#: user_admin.php:303
 msgid "Enable User(s)"
 msgstr "Cho phép người dùng"
 
-#: user_admin.php:290
+#: user_admin.php:309
 msgid "Click 'Continue' to disable the selected User(s)."
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để tắt (các) Người dùng đã chọn."
 
-#: user_admin.php:295
+#: user_admin.php:314
 msgid "Disable User(s)"
 msgstr "Vô hiệu hóa người dùng"
 
-#: user_admin.php:303
+#: user_admin.php:322
 msgid "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original users Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để ghi đè cài đặt Người dùng bằng mẫu đã chọn Cài đặt và quyền của Người dùng. Người dùng ban đầu Tên đầy đủ, Mật khẩu, Địa hạt và trạng thái Bật sẽ được giữ lại, tất cả các trường khác sẽ được ghi đè từ Người dùng Mẫu."
 
-#: user_admin.php:307
+#: user_admin.php:326
 msgid "Template User:"
 msgstr "Người dùng mẫu:"
 
-#: user_admin.php:313
+#: user_admin.php:332
 msgid "User(s) to update:"
 msgstr "Người dùng để cập nhật:"
 
-#: user_admin.php:318
+#: user_admin.php:337
 msgid "Reset User(s) Settings"
 msgstr "Đặt lại cài đặt người dùng"
 
-#: user_admin.php:575 user_group_admin.php:631
+#: user_admin.php:477
+msgid "Set a new password to move this account to the Local realm."
+msgstr ""
+
+#: user_admin.php:654 user_group_admin.php:756
 msgid "Deny"
 msgstr "Từ chối"
 
-#: user_admin.php:606 user_group_admin.php:650
+#: user_admin.php:685 user_group_admin.php:775
 msgid "<b>Note:</b> System Graph Policy is 'Permissive' meaning the User must have access to at least one of Graph, Device, or Graph Template to gain access to the Graph"
 msgstr "<b>Lưu ý:</b> Chính sách biểu đồ hệ thống là &#39;Cho phép&#39; nghĩa là Người dùng phải có quyền truy cập vào ít nhất một Biểu đồ, Thiết bị hoặc Mẫu biểu đồ để có quyền truy cập vào Biểu đồ"
 
-#: user_admin.php:608 user_group_admin.php:652
+#: user_admin.php:687 user_group_admin.php:777
 msgid "<b>Note:</b> System Graph Policy is 'Restrictive' meaning the User must have access to either the Graph or the Device and Graph Template to gain access to the Graph"
 msgstr "<b>Lưu ý:</b> Chính sách biểu đồ hệ thống là &#39;Hạn chế&#39; nghĩa là Người dùng phải có quyền truy cập vào Biểu đồ hoặc Mẫu thiết bị và Biểu đồ để có quyền truy cập vào Biểu đồ"
 
-#: user_admin.php:610 user_group_admin.php:654
+#: user_admin.php:689 user_group_admin.php:779
 msgid "<b>Note:</b> System Graph Policy is 'Device' meaning the User must have access to the Graph or Device to gain access to the Graph"
 msgstr "<b>Lưu ý:</b> Chính sách biểu đồ hệ thống là &#39;Hạn chế&#39; nghĩa là Người dùng phải có quyền truy cập vào Biểu đồ hoặc Mẫu thiết bị và Biểu đồ để có quyền truy cập vào Biểu đồ"
 
-#: user_admin.php:612 user_group_admin.php:656
+#: user_admin.php:691 user_group_admin.php:781
 msgid "<b>Note:</b> System Graph Policy is 'Graph Template' meaning the User must have access to the Graph or Graph Template to gain access to the Graph"
 msgstr "<b>Lưu ý:</b> Chính sách biểu đồ hệ thống là &#39;Cho phép&#39; nghĩa là Người dùng phải có quyền truy cập vào ít nhất một Biểu đồ, Thiết bị hoặc Mẫu biểu đồ để có quyền truy cập vào Biểu đồ"
 
-#: user_admin.php:616 user_group_admin.php:664
+#: user_admin.php:695 user_group_admin.php:789
 msgid "Default Graph Policy"
 msgstr "Chính sách đồ thị mặc định"
 
-#: user_admin.php:621
+#: user_admin.php:700
 msgid "Default Graph Policy for this User"
 msgstr "Chính sách đồ thị mặc định cho người dùng này"
 
-#: user_admin.php:626 user_admin.php:906 user_admin.php:1075
-#: user_admin.php:1211 user_group_admin.php:674 user_group_admin.php:859
-#: user_group_admin.php:1007 user_group_admin.php:1141
+#: user_admin.php:705 user_admin.php:985 user_admin.php:1154
+#: user_admin.php:1290 user_group_admin.php:799 user_group_admin.php:984
+#: user_group_admin.php:1132 user_group_admin.php:1266
 msgid "Update"
 msgstr "Cập nhật"
 
-#: user_admin.php:730 user_admin.php:993 user_admin.php:1132
-#: user_admin.php:1271 user_group_admin.php:783 user_group_admin.php:929
-#: user_group_admin.php:1065 user_group_admin.php:1197
+#: user_admin.php:809 user_admin.php:1072 user_admin.php:1211
+#: user_admin.php:1350 user_group_admin.php:908 user_group_admin.php:1054
+#: user_group_admin.php:1190 user_group_admin.php:1322
 msgid "Effective Policy"
 msgstr "Chính sách hiệu quả"
 
-#: user_admin.php:744 user_group_admin.php:797
+#: user_admin.php:823 user_group_admin.php:922
 msgid "No Matching Graphs Found"
 msgstr "Không tìm thấy đồ thị phù hợp"
 
-#: user_admin.php:759 user_admin.php:765 user_admin.php:1038
-#: user_admin.php:1044 user_admin.php:1174 user_admin.php:1180
-#: user_admin.php:1312 user_admin.php:1318 user_group_admin.php:812
-#: user_group_admin.php:818 user_group_admin.php:973 user_group_admin.php:979
-#: user_group_admin.php:1107 user_group_admin.php:1113
-#: user_group_admin.php:1237 user_group_admin.php:1243
+#: user_admin.php:838 user_admin.php:844 user_admin.php:1117
+#: user_admin.php:1123 user_admin.php:1253 user_admin.php:1259
+#: user_admin.php:1391 user_admin.php:1397 user_group_admin.php:937
+#: user_group_admin.php:943 user_group_admin.php:1098 user_group_admin.php:1104
+#: user_group_admin.php:1232 user_group_admin.php:1238
+#: user_group_admin.php:1362 user_group_admin.php:1368
 msgid "Revoke Access"
 msgstr "Thu hồi truy cập"
 
-#: user_admin.php:760 user_admin.php:764 user_admin.php:1039
-#: user_admin.php:1043 user_admin.php:1175 user_admin.php:1179
-#: user_admin.php:1313 user_admin.php:1317 user_group_admin.php:51
-#: user_group_admin.php:813 user_group_admin.php:817 user_group_admin.php:974
-#: user_group_admin.php:978 user_group_admin.php:1108 user_group_admin.php:1112
-#: user_group_admin.php:1238 user_group_admin.php:1242
+#: user_admin.php:839 user_admin.php:843 user_admin.php:1118
+#: user_admin.php:1122 user_admin.php:1254 user_admin.php:1258
+#: user_admin.php:1392 user_admin.php:1396 user_group_admin.php:51
+#: user_group_admin.php:938 user_group_admin.php:942 user_group_admin.php:1099
+#: user_group_admin.php:1103 user_group_admin.php:1233
+#: user_group_admin.php:1237 user_group_admin.php:1363
+#: user_group_admin.php:1367
 msgid "Grant Access"
 msgstr "Cấp phép truy cập"
 
-#: user_admin.php:836 user_admin.php:2271 user_group_admin.php:1833
-#: user_group_admin.php:1895
+#: user_admin.php:915 user_admin.php:2352 user_group_admin.php:1958
+#: user_group_admin.php:2020
 msgid "Groups"
 msgstr "Nhóm"
 
-#: user_admin.php:844 user_admin.php:853
+#: user_admin.php:923 user_admin.php:932
 msgid "Member"
 msgstr "Thành viên"
 
-#: user_admin.php:844
+#: user_admin.php:923
 msgid "Policies (Graph/Device/Template)"
 msgstr "Chính sách (Biểu đồ / Thiết bị / Mẫu)"
 
-#: user_admin.php:853 user_group_admin.php:589
+#: user_admin.php:932 user_group_admin.php:714
 msgid "Non Member"
 msgstr "Không phải thành viên"
 
-#: user_admin.php:855 user_admin.php:2209 user_admin.php:2210
-#: user_admin.php:2211 user_group_admin.php:1927 user_group_admin.php:1928
-#: user_group_admin.php:1929
+#: user_admin.php:934 user_admin.php:2290 user_admin.php:2291
+#: user_admin.php:2292 user_group_admin.php:2052 user_group_admin.php:2053
+#: user_group_admin.php:2054
 msgid "ALLOW"
 msgstr "Cho phép"
 
-#: user_admin.php:855 user_admin.php:2209 user_admin.php:2210
-#: user_admin.php:2211 user_group_admin.php:1927 user_group_admin.php:1928
-#: user_group_admin.php:1929
+#: user_admin.php:934 user_admin.php:2290 user_admin.php:2291
+#: user_admin.php:2292 user_group_admin.php:2052 user_group_admin.php:2053
+#: user_group_admin.php:2054
 msgid "DENY"
 msgstr "Từ chối"
 
-#: user_admin.php:861
+#: user_admin.php:940
 msgid "No Matching User Groups Found"
 msgstr "Không tìm thấy nhóm người dùng phù hợp"
 
-#: user_admin.php:875
+#: user_admin.php:954
 msgid "Assign Membership"
 msgstr "Chỉ định thành viên"
 
-#: user_admin.php:876
+#: user_admin.php:955
 msgid "Remove Membership"
 msgstr "Xóa tư cách thành viên"
 
-#: user_admin.php:896 user_group_admin.php:849
+#: user_admin.php:975 user_group_admin.php:974
 msgid "Default Device Policy"
 msgstr "Chính sách thiết bị mặc định"
 
-#: user_admin.php:901
+#: user_admin.php:980
 msgid "Default Device Policy for this User"
 msgstr "Chính sách thiết bị mặc định cho người dùng này"
 
-#: user_admin.php:1004 user_admin.php:1012 user_admin.php:1143
-#: user_admin.php:1151 user_admin.php:1282 user_admin.php:1290
-#: user_group_admin.php:940 user_group_admin.php:948 user_group_admin.php:1076
-#: user_group_admin.php:1084 user_group_admin.php:1208
-#: user_group_admin.php:1216
+#: user_admin.php:1083 user_admin.php:1091 user_admin.php:1222
+#: user_admin.php:1230 user_admin.php:1361 user_admin.php:1369
+#: user_group_admin.php:1065 user_group_admin.php:1073
+#: user_group_admin.php:1201 user_group_admin.php:1209
+#: user_group_admin.php:1333 user_group_admin.php:1341
 msgid "Access Granted"
 msgstr "Chấp thuận quyền truy cập"
 
-#: user_admin.php:1006 user_admin.php:1010 user_admin.php:1145
-#: user_admin.php:1149 user_admin.php:1284 user_admin.php:1288
-#: user_group_admin.php:942 user_group_admin.php:946 user_group_admin.php:1078
-#: user_group_admin.php:1082 user_group_admin.php:1210
-#: user_group_admin.php:1214
+#: user_admin.php:1085 user_admin.php:1089 user_admin.php:1224
+#: user_admin.php:1228 user_admin.php:1363 user_admin.php:1367
+#: user_group_admin.php:1067 user_group_admin.php:1071
+#: user_group_admin.php:1203 user_group_admin.php:1207
+#: user_group_admin.php:1335 user_group_admin.php:1339
 msgid "Access Restricted"
 msgstr "Khu phận sự"
 
-#: user_admin.php:1023 user_group_admin.php:959
+#: user_admin.php:1102 user_group_admin.php:1084
 msgid "No Matching Devices Found"
 msgstr "Không tìm thấy thiết bị phù hợp"
 
-#: user_admin.php:1065 user_group_admin.php:997
+#: user_admin.php:1144 user_group_admin.php:1122
 msgid "Default Graph Template Policy"
 msgstr "Chính sách mẫu biểu đồ mặc định"
 
-#: user_admin.php:1070
+#: user_admin.php:1149
 msgid "Default Graph Template Policy for this User"
 msgstr "Chính sách mẫu biểu đồ mặc định cho người dùng này"
 
-#: user_admin.php:1132 user_group_admin.php:1065
+#: user_admin.php:1211 user_group_admin.php:1190
 msgid "Total Graphs"
 msgstr "Tổng đồ thị"
 
-#: user_admin.php:1159 user_group_admin.php:1092
+#: user_admin.php:1238 user_group_admin.php:1217
 msgid "No Matching Graph Templates Found"
 msgstr "Không tìm thấy mẫu đồ thị phù hợp"
 
-#: user_admin.php:1201 user_group_admin.php:1131
+#: user_admin.php:1280 user_group_admin.php:1256
 msgid "Default Tree Policy"
 msgstr "Chính sách cây mặc định"
 
-#: user_admin.php:1206
+#: user_admin.php:1285
 msgid "Default Tree Policy for this User"
 msgstr "Chính sách cây mặc định cho người dùng này"
 
-#: user_admin.php:1297 user_group_admin.php:1223
+#: user_admin.php:1376 user_group_admin.php:1348
 msgid "No Matching Trees Found"
 msgstr "Không tìm thấy cây phù hợp"
 
-#: user_admin.php:1346 user_group_admin.php:1280
+#: user_admin.php:1425 user_group_admin.php:1405
 msgid "User Permissions"
 msgstr "Quyền Người dùng"
 
-#: user_admin.php:1393 user_group_admin.php:1329
+#: user_admin.php:1472 user_group_admin.php:1454
 msgid "Top Tab"
 msgstr "Tab hàng đầu"
 
-#: user_admin.php:1394 user_group_admin.php:1330
+#: user_admin.php:1473 user_group_admin.php:1455
 msgid "Bottom Console"
 msgstr "Bảng điều khiển dưới cùng"
 
-#: user_admin.php:1395 user_group_admin.php:1331
+#: user_admin.php:1474 user_group_admin.php:1456
 msgid "Top Console"
 msgstr "Bảng điều khiển hàng đầu"
 
-#: user_admin.php:1399 user_group_admin.php:1335
+#: user_admin.php:1478 user_group_admin.php:1460
 msgid "External Link Permissions"
 msgstr "Quyền liên kết ngoài"
 
-#: user_admin.php:1470 user_group_admin.php:1404
+#: user_admin.php:1549 user_group_admin.php:1529
 msgid "Plugin Permissions"
 msgstr "Quyền Plugin"
 
-#: user_admin.php:1487 user_group_admin.php:1421
+#: user_admin.php:1566 user_group_admin.php:1546
 msgid "Legacy Permissions"
 msgstr "Quyền Người dùng"
 
-#: user_admin.php:1546 user_group_admin.php:1482
+#: user_admin.php:1625 user_group_admin.php:1607
 #, php-format
 msgid "User Settings %s"
 msgstr "Cài đặt người dùng %s"
 
-#: user_admin.php:1662 user_group_admin.php:1599
+#: user_admin.php:1741 user_group_admin.php:1724
 msgid "Permissions"
 msgstr "Quyền hạn"
 
-#: user_admin.php:1663
+#: user_admin.php:1742
 msgid "Group Membership"
 msgstr "Thành viên nhóm"
 
-#: user_admin.php:1664 user_group_admin.php:1600
+#: user_admin.php:1743 user_group_admin.php:1725
 msgid "Graph Perms"
 msgstr "Perm đồ thị"
 
-#: user_admin.php:1665 user_group_admin.php:1601
+#: user_admin.php:1744 user_group_admin.php:1726
 msgid "Device Perms"
 msgstr "Giấy phép thiết bị"
 
-#: user_admin.php:1666 user_group_admin.php:1602
+#: user_admin.php:1745 user_group_admin.php:1727
 msgid "Template Perms"
 msgstr "Giấy phép mẫu"
 
-#: user_admin.php:1667 user_group_admin.php:1603
+#: user_admin.php:1746 user_group_admin.php:1728
 msgid "Tree Perms"
 msgstr "Cây uốn"
 
-#: user_admin.php:1687
+#: user_admin.php:1766
 #, fuzzy
 msgid "User not found."
 msgstr "Không tìm thấy tập tin"
 
-#: user_admin.php:1726
+#: user_admin.php:1805
 #, php-format
 msgid "User Management %s"
 msgstr "Quản lý người dùng %s"
 
-#: user_admin.php:1980
+#: user_admin.php:2058
 msgid "User Management"
 msgstr "Quản lý Người dùng"
 
-#: user_admin.php:2001
+#: user_admin.php:2079
 #, fuzzy
 msgid "Group"
 msgstr "Nhóm"
 
-#: user_admin.php:2026 user_admin.php:2171
+#: user_admin.php:2104 user_admin.php:2252
 msgid "Last Login"
 msgstr "Lân đăng nhập cuối"
 
-#: user_admin.php:2031
+#: user_admin.php:2109
 #, fuzzy
 msgid "< 1 Week Ago"
 msgstr "1 Tuần"
 
-#: user_admin.php:2032
+#: user_admin.php:2110
 msgid "< 1 Month Ago"
 msgstr ""
 
-#: user_admin.php:2033
+#: user_admin.php:2111
 msgid "> 1 Month Ago"
 msgstr ""
 
-#: user_admin.php:2034
+#: user_admin.php:2112
 #, fuzzy
 msgid "> 2 Months Ago"
 msgstr "% d Tháng"
 
-#: user_admin.php:2035
+#: user_admin.php:2113
 #, fuzzy
 msgid "> 4 Months Ago"
 msgstr "% d Tháng"
 
-#: user_admin.php:2046
+#: user_admin.php:2124
 msgid "Basic"
 msgstr "Cơ bản"
 
-#: user_admin.php:2047
+#: user_admin.php:2125
 msgid "LDAP/AD"
 msgstr "LDAP"
 
-#: user_admin.php:2048
+#: user_admin.php:2126
 msgid "Domain"
 msgstr "Tên miền"
 
-#: user_admin.php:2164
+#: user_admin.php:2245
 msgid "User ID"
 msgstr "ID người dùng"
 
-#: user_admin.php:2168 user_group_admin.php:1907
+#: user_admin.php:2249 user_group_admin.php:2032
 msgid "Graph Policy"
 msgstr "Chính sách đồ thị"
 
-#: user_admin.php:2169 user_group_admin.php:1908
+#: user_admin.php:2250 user_group_admin.php:2033
 msgid "Device Policy"
 msgstr "Chính sách thiết bị"
 
-#: user_admin.php:2170 user_group_admin.php:1909
+#: user_admin.php:2251 user_group_admin.php:2034
 msgid "Template Policy"
 msgstr "Chính sách mẫu"
 
-#: user_admin.php:2193
+#: user_admin.php:2274
 msgid "Unavailable"
 msgstr "Không có sẵn"
 
-#: user_admin.php:2218
+#: user_admin.php:2299
 msgid "No Users Found"
 msgstr "Không tìm thấy người dùng"
 
-#: user_admin.php:2265 user_group_admin.php:1982
+#: user_admin.php:2346 user_group_admin.php:2107
 #, php-format
 msgid "Graph Permissions %s"
 msgstr "Quyền đồ thị %s"
 
-#: user_admin.php:2271
+#: user_admin.php:2352
 #, fuzzy, php-format
 msgid "Group Membership %s"
 msgstr "Thành viên nhóm"
 
-#: user_admin.php:2277 user_group_admin.php:1988
+#: user_admin.php:2358 user_group_admin.php:2113
 #, php-format
 msgid "Devices Permission %s"
 msgstr "Quyền thiết bị %s"
 
-#: user_admin.php:2277 user_admin.php:2283 user_admin.php:2289
-#: user_admin.php:2295 user_group_admin.php:1982 user_group_admin.php:1988
-#: user_group_admin.php:1994 user_group_admin.php:2000
+#: user_admin.php:2358 user_admin.php:2364 user_admin.php:2370
+#: user_admin.php:2376 user_group_admin.php:2107 user_group_admin.php:2113
+#: user_group_admin.php:2119 user_group_admin.php:2125
 msgid "Only Show Exceptions"
 msgstr "Hiển thị ngoại lệ"
 
-#: user_admin.php:2283 user_group_admin.php:1994
+#: user_admin.php:2364 user_group_admin.php:2119
 #, php-format
 msgid "Template Permission %s"
 msgstr "Cho phép mẫu %s"
 
-#: user_admin.php:2289 user_admin.php:2295 user_group_admin.php:2000
+#: user_admin.php:2370 user_admin.php:2376 user_group_admin.php:2125
 #, php-format
 msgid "Tree Permission %s"
 msgstr "Giấy phép cây %s"
@@ -19328,7 +19347,7 @@ msgstr "Hiển thị màn hình đồ thị mặc định"
 msgid "Restrict Access"
 msgstr "Hạn chế truy cập"
 
-#: user_group_admin.php:62 user_group_admin.php:1904
+#: user_group_admin.php:62 user_group_admin.php:2029
 msgid "Group Name"
 msgstr "Tên Hội nhóm"
 
@@ -19384,117 +19403,117 @@ msgstr "Người dùng của Nhóm này có nên truy cập vào Bản xem trư�
 msgid "What to do when a User from this User Group logs in."
 msgstr "Phải làm gì khi Người dùng trong Nhóm Người dùng này đăng nhập."
 
-#: user_group_admin.php:340
+#: user_group_admin.php:436
 msgid "Click 'Continue' to delete the following User Group"
 msgid_plural "Click 'Continue' to delete following User Groups"
 msgstr[0] "Nhấp vào &#39;Tiếp tục&#39; để xóa Nhóm người dùng sau"
 
-#: user_group_admin.php:345
+#: user_group_admin.php:441
 msgid "Delete User Group"
 msgid_plural "Delete User Groups"
 msgstr[0] "Xóa nhóm người dùng"
 
-#: user_group_admin.php:353
+#: user_group_admin.php:449
 msgid "Click 'Continue' to Copy the following User Group to a new User Group."
 msgid_plural "Click 'Continue' to Copy following User Groups to new User Groups."
 msgstr[0] "Nhấp vào &#39;Tiếp tục&#39; để Sao chép Nhóm người dùng sau vào Nhóm người dùng mới."
 
-#: user_group_admin.php:359
+#: user_group_admin.php:455
 msgid "Group Prefix:"
 msgstr "Tiền tố nhóm:"
 
-#: user_group_admin.php:360
+#: user_group_admin.php:456
 msgid "New Group"
 msgstr "Nhóm Mới"
 
-#: user_group_admin.php:364
+#: user_group_admin.php:460
 msgid "Copy User Group"
 msgid_plural "Copy User Groups"
 msgstr[0] "Sao chép nhóm người dùng"
 
-#: user_group_admin.php:370
+#: user_group_admin.php:466
 msgid "Click 'Continue' to enable the following User Group."
 msgid_plural "Click 'Continue' to enable following User Groups."
 msgstr[0] "Nhấp vào &#39;Tiếp tục&#39; để bật Nhóm người dùng sau."
 
-#: user_group_admin.php:375
+#: user_group_admin.php:471
 msgid "Enable User Group"
 msgid_plural "Enable User Groups"
 msgstr[0] "Kích hoạt nhóm người dùng"
 
-#: user_group_admin.php:381
+#: user_group_admin.php:477
 msgid "Click 'Continue' to disable the following User Group."
 msgid_plural "Click 'Continue' to disable following User Groups."
 msgstr[0] "Nhấp vào &#39;Tiếp tục&#39; để tắt Nhóm người dùng sau."
 
-#: user_group_admin.php:386
+#: user_group_admin.php:482
 msgid "Disable User Group"
 msgid_plural "Disable User Groups"
 msgstr[0] "Vô hiệu hóa nhóm người dùng"
 
-#: user_group_admin.php:576
+#: user_group_admin.php:701
 msgid "Login Name"
 msgstr "Tên đăng nhập"
 
-#: user_group_admin.php:576
+#: user_group_admin.php:701
 msgid "Membership"
 msgstr "Thành viên"
 
-#: user_group_admin.php:587
+#: user_group_admin.php:712
 msgid "Group Member"
 msgstr "Nhóm Thành viên"
 
-#: user_group_admin.php:597
+#: user_group_admin.php:722
 msgid "No Matching Group Members Found"
 msgstr "Không tìm thấy thành viên nhóm phù hợp"
 
-#: user_group_admin.php:611
+#: user_group_admin.php:736
 msgid "Add to Group"
 msgstr "Thêm vào nhóm"
 
-#: user_group_admin.php:612
+#: user_group_admin.php:737
 msgid "Remove from Group"
 msgstr "Bỏ khỏi nhóm"
 
-#: user_group_admin.php:669 user_group_admin.php:854
+#: user_group_admin.php:794 user_group_admin.php:979
 msgid "Default Graph Policy for this User Group"
 msgstr "Chính sách đồ thị mặc định cho nhóm người dùng này"
 
-#: user_group_admin.php:1002
+#: user_group_admin.php:1127
 msgid "Default Graph Template Policy for this User Group"
 msgstr "Chính sách mẫu biểu đồ mặc định cho nhóm người dùng này"
 
-#: user_group_admin.php:1136
+#: user_group_admin.php:1261
 msgid "Default Tree Policy for this User Group"
 msgstr "Chính sách cây mặc định cho nhóm người dùng này"
 
-#: user_group_admin.php:1598 user_group_admin.php:1905
+#: user_group_admin.php:1723 user_group_admin.php:2030
 msgid "Members"
 msgstr "Thành viên"
 
-#: user_group_admin.php:1617
+#: user_group_admin.php:1742
 #, php-format
 msgid "User Group Management [edit: %s]"
 msgstr "Quản lý nhóm người dùng [chỉnh sửa: %s]"
 
-#: user_group_admin.php:1619
+#: user_group_admin.php:1744
 msgid "User Group Management [new]"
 msgstr "Quản lý nhóm người dùng [mới]"
 
-#: user_group_admin.php:1812
+#: user_group_admin.php:1937
 msgid "User Group Management"
 msgstr "Quản lý nhóm người dùng"
 
-#: user_group_admin.php:1935
+#: user_group_admin.php:2060
 msgid "No User Groups Found"
 msgstr "Không tìm thấy nhóm người dùng"
 
-#: user_group_admin.php:2006
+#: user_group_admin.php:2131
 msgctxt "filter reset"
 msgid "Clear"
 msgstr "Xóa"
 
-#: user_group_admin.php:2006
+#: user_group_admin.php:2131
 msgid "Show Members"
 msgstr "Hiển thị thành viên"
 

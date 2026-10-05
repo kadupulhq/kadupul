@@ -1243,7 +1243,7 @@ final class AuthenticatedOnly {
                          'AuthenticationFileSessionHandler',
                          'AuthenticationDatabaseSessionHandler', 'SharedSession',
                          'ReadOnlyDatabaseSessionHandler')
-        ] + ['config/services.yaml']
+        ] + ['config/services.yaml', 'lib/auth.php']
         originals = {}
         for relative in about_bundle:
             target = root / relative

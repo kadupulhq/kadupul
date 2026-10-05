@@ -43,4 +43,38 @@ function upgrade_to_1_2_31()
 		PRIMARY KEY (local_data_id, rrd_name, time),
 		KEY rrd_path (rrd_path))
 		ENGINE=InnoDB ROW_FORMAT=Dynamic');
+
+    upgrade_ldap_tls_requirement();
+}
+
+/**
+ * upgrade_ldap_tls_requirement - keep the certificate check an install already
+ *   ran with.
+ *
+ * The TLS certificate requirement now defaults to Demand. An install that uses
+ * LDAPS or StartTLS without a saved requirement never checked the directory's
+ * certificate, and switching it to Demand would fail every LDAP login until an
+ * administrator adds the CA. Those installs get Never saved explicitly, which
+ * they can raise in the settings. Installs that saved a value keep it, and
+ * installs without LDAP encryption get the new default.
+ *
+ * The web installer stores the same value earlier, through
+ * prime_ldap_tls_default(); this step covers cli/upgrade_database.php.
+ *
+ * @return (void)
+ */
+function upgrade_ldap_tls_requirement()
+{
+    $saved = db_install_fetch_cell('SELECT value FROM settings WHERE name = ?', array('ldap_tls_certificate'));
+
+    if ($saved['data'] !== false && $saved['data'] !== null && $saved['data'] !== '') {
+        return;
+    }
+
+    $global = db_install_fetch_cell('SELECT value FROM settings WHERE name = ?', array('ldap_encryption'));
+    $domains = db_install_fetch_cell('SELECT COUNT(*) FROM user_domains_ldap WHERE encryption > 0');
+
+    if ((int) $global['data'] > 0 || (int) $domains['data'] > 0) {
+        db_install_execute('REPLACE INTO settings (name, value) VALUES (?, ?)', array('ldap_tls_certificate', (string) LDAP_OPT_X_TLS_NEVER));
+    }
 }

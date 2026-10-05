@@ -57,6 +57,9 @@ if (get_nfilter_request_var('action') == 'login' || $auth_method == 2) {
 
     cacti_log("DEBUG: User '" . $username . "' attempting to login with realm " . $frv_realm . ", using method " . $auth_method, false, 'AUTH', POLLER_VERBOSITY_DEBUG);
 
+    /* an existing install keeps the certificate check it ran with */
+    cacti_ldap_tls_settle_requirement();
+
     switch ($auth_method) {
         case '0': // No authentication, should not be reachable
             $error     = true;
