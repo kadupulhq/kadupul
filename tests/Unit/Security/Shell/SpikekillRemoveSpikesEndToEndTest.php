@@ -772,3 +772,81 @@ test('web spike removal identifies untrusted storage without suggesting polling 
         chmod($this->rrd_dir, 0700);
     }
 });
+
+
+test('actual XML spike updates preserve gaps and thresholds and count only replacements within each archive budget', function ($method, $mode, $lastAvailable) {
+    $class = new ReflectionClass(spikekill::class);
+    $instance = $class->newInstanceWithoutConstructor();
+    $instance->method = $method;
+    $instance->avgnan = $mode;
+    $instance->out_start = 200;
+    $instance->out_end = 500;
+    $instance->percent = 0;
+    $instance->numspike = 1;
+    $instance->debug = false;
+    $update = $class->getMethod('updateXML');
+    $output = [];
+    $rra = [];
+    foreach ([['5', '7'], ['8', '9']] as $archive => $last) {
+        if ($lastAvailable) $output[] = '<row><timestamp>100</timestamp><v>' . $last[0] . '</v><v>' . $last[1] . '</v></row>';
+        $output[] = '<row><timestamp>200</timestamp><v>NaN</v><v>NaN</v></row>';
+        $output[] = '<row><timestamp>250</timestamp><v>10</v><v>10</v></row>';
+        $output[] = '<row><timestamp>300</timestamp><v>1000</v><v>1000</v></row>';
+        $output[] = '<row><timestamp>350</timestamp><v>1000</v><v>1000</v></row>';
+        $output[] = '</rra>';
+        $rra[] = array_fill(0, 2, ['average' => 10, 'variance_avg' => 10, 'max_cutoff' => 10, 'min_cutoff' => -10, 'outwind_killed' => 0]);
+    }
+    $result = $update->invokeArgs($instance, [&$output, &$rra]);
+    $rows = [];
+    foreach ($result as $line) {
+        if (str_contains($line, '<v>')) {
+            preg_match_all('/<v>\s*(.*?)<\/v>/', $line, $match);
+            $rows[] = $match[1];
+        }
+    }
+    $expected = [];
+    $replacementAvailable = $mode !== 'last' || $lastAvailable;
+    foreach ([['5', '7'], ['8', '9']] as $last) {
+        if ($lastAvailable) $expected[] = $last;
+        $expected[] = ['NaN', 'NaN'];
+        $expected[] = ['10', '10'];
+        $replacement = $mode === 'avg' ? '1.0000000000e+1' : ($mode === 'nan' ? 'NaN' : $last[0]);
+        $expected[] = [$replacementAvailable ? $replacement : '1000', '1000'];
+        $expected[] = ['1000', '1000'];
+    }
+    expect($rows)->toBe($expected);
+    expect($class->getProperty('total_kills')->getValue($instance))->toBe($replacementAvailable ? 2 : 0);
+    if ($method === SPIKE_METHOD_STDDEV) {
+        expect(array_column($rra[0], 'outwind_killed'))->toBe([$replacementAvailable ? 1 : 0, 0]);
+        expect(array_column($rra[1], 'outwind_killed'))->toBe([$replacementAvailable ? 1 : 0, 0]);
+    }
+})->with([SPIKE_METHOD_STDDEV, SPIKE_METHOD_VARIANCE])->with(['avg', 'last', 'nan'])->with([false, true]);
+
+
+test('statistics count only finite numeric spikes before the XML update', function ($method) {
+    $class = new ReflectionClass(spikekill::class);
+    $instance = $class->newInstanceWithoutConstructor();
+    $instance->method = $method;
+    $instance->out_start = 200;
+    $instance->out_end = 500;
+    $instance->percent = 0;
+    $instance->stddev = 1;
+    $class->getProperty('ds_min')->setValue($instance, [0]);
+    $class->getProperty('ds_max')->setValue($instance, [10]);
+    $rra = [[['sumofsamples' => 20, 'numsamples' => 2, 'variance_avg' => 10]]];
+    $samples = [[[200 => 'NaN', 250 => '10', 300 => '1000']]];
+    $class->getMethod('calculateOverallStatistics')->invokeArgs($instance, [&$rra, &$samples]);
+    expect($rra[0][0]['stddev_killed'])->toBe($method === SPIKE_METHOD_STDDEV ? 1 : 0);
+    expect($rra[0][0]['variance_killed'])->toBe($method === SPIKE_METHOD_VARIANCE ? 1 : 0);
+    expect($rra[0][0]['numnksamples'])->toBe(1);
+    expect($rra[0][0]['sumnksamples'])->toBe(10);
+})->with([SPIKE_METHOD_STDDEV, SPIKE_METHOD_VARIANCE]);
+
+test('the actual spike-removal output identifies the selected replacement mode', function ($mode, $label) {
+    $instance = spikekill_e2e_instance($this->rrdfile);
+    $instance->avgnan = $mode;
+    $instance->out_start = 1000000000;
+    $instance->out_end = 1000010000;
+    $instance->remove_spikes();
+    expect($instance->get_output())->toContain('Replacing with ' . $label);
+})->with([['avg', 'Average'], ['last', 'Last'], ['nan', 'NaN']]);

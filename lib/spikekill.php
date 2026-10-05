@@ -459,7 +459,7 @@ class spikekill
         $bakfile_stat = false;
 
         if (!empty($this->out_start) && !$this->dryrun) {
-            $this->strout .= ($this->html ? "<p class='spikekillNote'>" : '') . "NOTE: Removing Outliers in Range and Replacing with Last" . ($this->html ? "</p>\n" : "\n");
+            $this->strout .= ($this->html ? "<p class='spikekillNote'>" : '') . sprintf('NOTE: Removing Outliers in Range and Replacing with %s', array('avg' => 'Average', 'last' => 'Last', 'nan' => 'NaN')[$this->avgnan]) . ($this->html ? "</p>\n" : "\n");
         }
 
         if ($this->method == SPIKE_METHOD_VARIANCE) {
@@ -1571,7 +1571,7 @@ class spikekill
                                                 $rra[$rra_num][$ds_num]['outwind_samples']++;
                                             }
 
-                                            if (($sample > $rra[$rra_num][$ds_num]['max_cutoff']) || ($sample < $rra[$rra_num][$ds_num]['min_cutoff'])) {
+                                            if (is_numeric($sample) && is_finite((float) $sample) && (($sample > $rra[$rra_num][$ds_num]['max_cutoff']) || ($sample < $rra[$rra_num][$ds_num]['min_cutoff']))) {
                                                 $this->debug(sprintf("StdDev Found, Date:%s, Value:%.2e, StandardDev:%.2e, StdDevLimit:%.2e", date('Y-m-d H:i', $timestamp), $sample, $rra[$rra_num][$ds_num]['stddev'], ($rra[$rra_num][$ds_num]['max_cutoff'] * (1 + $this->percent))));
 
                                                 $rra[$rra_num][$ds_num]['stddev_killed']++;
@@ -1595,7 +1595,7 @@ class spikekill
                                                 $rra[$rra_num][$ds_num]['outwind_samples']++;
                                             }
 
-                                            if ($sample > ($rra[$rra_num][$ds_num]['variance_avg'] * (1 + $this->percent))) {
+                                            if (is_numeric($sample) && is_finite((float) $sample) && $sample > ($rra[$rra_num][$ds_num]['variance_avg'] * (1 + $this->percent))) {
                                                 $this->debug(sprintf("Variance Found, Date:%s, Value:%.2e, VarianceDev:%.2e, VarianceLimit:%.2e", date('Y-m-d H:i', $timestamp), $sample, $rra[$rra_num][$ds_num]['variance_avg'], ($rra[$rra_num][$ds_num]['variance_avg'] * (1 + $this->percent))));
 
                                                 $rra[$rra_num][$ds_num]['variance_killed']++;
@@ -1931,7 +1931,7 @@ class spikekill
                                 break;
                             case SPIKE_METHOD_VARIANCE:
                                 if ($this->out_start == 0 || ($timestamp >= $this->out_start && $timestamp <= $this->out_end)) {
-                                    if ($dsvalue > (1 + $this->percent) * (float) $rra[$rra_num][$ds_num]['variance_avg']) {
+                                    if (is_numeric($dsvalue) && is_finite((float) $dsvalue) && $dsvalue > (1 + $this->percent) * (float) $rra[$rra_num][$ds_num]['variance_avg']) {
                                         if ($kills < $this->numspike) {
                                             $replacement = $this->replaceWindowSpike(
                                                 $dsvalue,
@@ -1952,36 +1952,14 @@ class spikekill
                                 break;
                             case SPIKE_METHOD_STDDEV:
                                 if ($this->out_start == 0 || ($timestamp >= $this->out_start && $timestamp <= $this->out_end)) {
-                                    if (($dsvalue > $rra[$rra_num][$ds_num]['max_cutoff']) ||
-                                        ($dsvalue < $rra[$rra_num][$ds_num]['min_cutoff'])) {
+                                    if (is_numeric($dsvalue) && is_finite((float) $dsvalue) &&
+                                        (($dsvalue > $rra[$rra_num][$ds_num]['max_cutoff']) ||
+                                        ($dsvalue < $rra[$rra_num][$ds_num]['min_cutoff']))) {
                                         if ($kills < $this->numspike) {
-                                            $rra[$rra_num][$ds_num]['outwind_killed']++;
-
-                                            if ($this->avgnan == 'avg') {
-                                                if ($this->debug) {
-                                                    cacti_log("DEBUG: replacing dsvalue {$dsvalue} with average {$rra[$rra_num][$ds_num]['average']}", false, 'SPIKEKILL');
-                                                }
-
-                                                $dsvalue = sprintf('%1.10e', $rra[$rra_num][$ds_num]['average']);
-
-                                                $this->total_kills++;
-                                                $kills++;
-                                            } elseif ($this->avgnan == 'last' && isset($last_num[$ds_num])) {
-                                                if ($this->debug) {
-                                                    cacti_log("DEBUG: replacing dsvalue {$dsvalue} with last value {$last_num[$ds_num]}", false, 'SPIKEKILL');
-                                                }
-
-                                                $dsvalue = $last_num[$ds_num];
-                                                $this->total_kills++;
-                                                $kills++;
-                                            } elseif ($this->avgnan == 'nan') {
-                                                if ($this->debug) {
-                                                    cacti_log("DEBUG: replacing dsvalue {$dsvalue} with NaN", false, 'SPIKEKILL');
-                                                }
-
-                                                $dsvalue = 'NaN';
-                                                $this->total_kills++;
-                                                $kills++;
+                                            $replacement = $this->replaceWindowSpike($dsvalue, $this->avgnan === 'avg' ? $rra[$rra_num][$ds_num]['average'] : null, $last_num, $ds_num, $kills);
+                                            if ($replacement !== null) {
+                                                $dsvalue = $replacement;
+                                                $rra[$rra_num][$ds_num]['outwind_killed']++;
                                             }
                                         }
                                     }
