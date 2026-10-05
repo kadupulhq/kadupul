@@ -457,6 +457,29 @@ final class AuditDatabaseCommandTest extends TestCase
         self::assertStringContainsString('DEPRECATION:', $none->getErrorOutput());
     }
 
+    public function testLegacyUpgradeDeprecationHonorsTheCronQuietSetting(): void
+    {
+        $previous = getenv('KADUPUL_CLI_QUIET_DEPRECATION');
+        try {
+            putenv('KADUPUL_CLI_QUIET_DEPRECATION=1');
+            $this->presentation->forLegacy(LegacyRequest::Run);
+            $tester = $this->tester();
+
+            self::assertSame(0, $tester->execute(['--upgrade' => true, '--report' => true], ['capture_stderr_separately' => true]));
+            self::assertSame('', $tester->getErrorOutput());
+        } finally {
+            putenv($previous === false ? 'KADUPUL_CLI_QUIET_DEPRECATION' : 'KADUPUL_CLI_QUIET_DEPRECATION=' . $previous);
+        }
+    }
+
+    public function testLegacyHelpNamesTheSeparateUpgradeCommand(): void
+    {
+        self::assertContains(
+            '    --upgrade - Deprecated; run php cli/upgrade_database.php separately',
+            (new AuditDatabaseLegacyArguments())->help()
+        );
+    }
+
     public function testLegacyMissingBaselineFailsWithoutCleanOrRepairSuccess(): void
     {
         foreach (['--report', '--repair', '--create'] as $mode) {
@@ -662,6 +685,79 @@ final class AuditDatabaseCommandTest extends TestCase
         self::assertSame(0, $tester->execute(['--repair' => true, '--force' => true]));
         self::assertStringContainsString('host: altered', $tester->getDisplay());
         self::assertStringNotContainsString('Run these statements now?', $tester->getDisplay());
+    }
+
+    public function testInteractiveUpgradePrecedesTheConfirmedRepairPlan(): void
+    {
+        foreach ([false, true] as $oldDrift) {
+            $upgraded = false;
+            $schema = $this->createMock(SchemaAudit::class);
+            $schema->method('codeVersion')->willReturn('1.3.0');
+            // Capture mutable upgrade state rather than a snapshot.
+            $schema->method('databaseVersion')->willReturnCallback(static function () use (&$upgraded): string {
+                return $upgraded ? '1.3.0' : '1.2.31';
+            });
+            $schema->method('catalog')->willReturnCallback(static function () use (&$upgraded, $oldDrift): AuditCatalog {
+                return new AuditCatalog([
+                    new LiveTable('host', new TableStatus('InnoDB', 'utf8mb4_unicode_ci', 'Dynamic', 0), [
+                        ['Field' => 'ping', 'Type' => $upgraded ? 'smallint(5) unsigned' : 'int(10) unsigned',
+                            'Null' => 'NO', 'Key' => '', 'Default' => $oldDrift || $upgraded ? null : '400', 'Extra' => ''],
+                    ], []),
+                    new LiveTable('settings', new TableStatus('InnoDB', 'utf8mb4_unicode_ci', 'Dynamic', 0), [
+                        ['Field' => 'name', 'Type' => 'varchar(75)', 'Null' => 'NO', 'Key' => '', 'Default' => '', 'Extra' => ''],
+                    ], []),
+                ], PluginSchemaChanges::none());
+            });
+            $schema->method('statement')->willReturnCallback(static function () use (&$upgraded): string {
+                return $upgraded ? 'ALTER TABLE host POST_UPGRADE_PLAN' : 'ALTER TABLE host STALE_PLAN';
+            });
+            $schema->expects(self::once())->method('alter')->willReturnCallback(static function ($target, $alter, LiveTable $read) use (&$upgraded): bool {
+                self::assertTrue($upgraded);
+                self::assertSame('smallint(5) unsigned', $read->columns[0]['Type']);
+                return true;
+            });
+            $upgrade = $this->createMock(InstallationUpgrade::class);
+            $upgrade->expects(self::once())->method('run')->willReturnCallback(static function () use (&$upgraded): UpgradeOutput {
+                $upgraded = true;
+                return new UpgradeOutput("upgrade complete\n", '', true);
+            });
+            $tester = $this->tester($schema, null, false, $upgrade);
+            $tester->setInputs(['yes', 'yes']);
+
+            self::assertSame(0, $tester->execute(['--repair' => true, '--upgrade' => true]));
+            self::assertStringContainsString('Upgrade the database before preparing the repair plan?', $tester->getDisplay());
+            self::assertStringContainsString('POST_UPGRADE_PLAN', $tester->getDisplay());
+            self::assertStringNotContainsString('STALE_PLAN', $tester->getDisplay());
+            self::assertStringContainsString('host: altered', $tester->getDisplay());
+        }
+    }
+
+    public function testInteractiveUpgradeRefusalAndUnconfirmedOutcomesDoNotRepair(): void
+    {
+        foreach (['declined', 'failed', 'unconfirmed'] as $outcome) {
+            $schema = $this->createMock(SchemaAudit::class);
+            $schema->method('codeVersion')->willReturn('1.3.0');
+            $schema->method('databaseVersion')->willReturn('1.2.31');
+            $schema->method('catalog')->willReturn($this->schema()->catalog(DatabaseTarget::Local));
+            $schema->method('statement')->willReturn('ALTER TABLE host UNCONFIRMED_PLAN');
+            $schema->expects(self::never())->method('alter');
+            $upgrade = $this->createMock(InstallationUpgrade::class);
+            $upgrade->expects($outcome === 'declined' ? self::never() : self::once())->method('run')
+                ->willReturn(new UpgradeOutput("upgrade output\n", "upgrade diagnostic\n", $outcome !== 'failed'));
+            $tester = $this->tester($schema, null, false, $upgrade);
+            $tester->setInputs([$outcome === 'declined' ? 'no' : 'yes', 'yes']);
+
+            self::assertSame(
+                $outcome === 'declined' ? 0 : 1,
+                $tester->execute(['--repair' => true, '--upgrade' => true], ['capture_stderr_separately' => true])
+            );
+            self::assertStringNotContainsString('UNCONFIRMED_PLAN', $tester->getDisplay());
+            self::assertStringNotContainsString('Run these statements now?', $tester->getDisplay());
+            if ($outcome !== 'declined') {
+                self::assertStringContainsString('upgrade output', $tester->getDisplay());
+                self::assertStringContainsString('upgrade diagnostic', $tester->getErrorOutput());
+            }
+        }
     }
 
     public function testHumanUpgradeRequiredGoesToStderr(): void

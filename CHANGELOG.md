@@ -34,6 +34,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Limit Data Query Cache and Poller Cache views to devices the current user may access, including their default Any filters.
 - Report schema audit drift for defaults, collations, indexes, and missing tables without treating a stale fork baseline as automatically repairable. Fixes #454.
 - Preserve text-column collation when repairing from an older schema baseline, and match missing-table checks to the baseline's case-insensitive table identity.
+- Confirm an interactive database upgrade before preparing and confirming its resulting repair plan; stop repair on failed or unconfirmed upgrades and honor the cron setting for quiet upgrade deprecation warnings.
 - Enforce persistent CDEF reference integrity for legacy writers and atomic aggregate cache replacement; refuse online collector primary upgrades and confirm the final installation version before reporting success.
 - Roll back complete aggregate regeneration and creation on unconfirmed reads or writes, preserving caller transactions; reject malformed aggregate item selections before saving and report incomplete propagation.
 - Keep permission writes and session epochs consistent, including failed writes and absent deletions.
