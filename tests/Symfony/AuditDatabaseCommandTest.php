@@ -38,6 +38,7 @@ use Kadupul\Platform\Infrastructure\Symfony\Console\LegacyRequest;
 use Kadupul\Platform\Infrastructure\Symfony\Console\ResultRenderer;
 use Kadupul\Tests\Fixtures\ConsoleOperatorDatabase;
 use Kadupul\Tests\Fixtures\MaintenanceOperator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\MockClock;
 use Symfony\Component\Console\Command\Command;
@@ -158,6 +159,68 @@ final class AuditDatabaseCommandTest extends TestCase
             'due to ambiguous use of the column.',
             self::SEPARATOR,
         ]) . "\n", $tester->getDisplay());
+    }
+
+    /** @return iterable<string, array{string, string}> */
+    public static function manualReviewSummaries(): iterable
+    {
+        yield 'fixable default and missing table' => ['mixed', 'Some errors are fixable using --repair; other differences need manual review.'];
+        yield 'unsupported extra only' => ['unbuildable', 'Audit found differences that automatic repair will not apply.'];
+        yield 'collation warning only' => ['warnings', 'Audit found differences that automatic repair will not apply.'];
+        yield 'missing table only' => ['missing', 'Audit found differences that automatic repair will not apply.'];
+    }
+
+    #[DataProvider('manualReviewSummaries')]
+    public function testLegacyReportDistinguishesFixableErrorsFromManualReview(string $scenario, string $summary): void
+    {
+        // #617: exercise actual domain findings through the locked command harness.
+        $store = $this->createMock(AuditBaselineStore::class);
+        $type = $scenario === 'warnings' ? 'varchar(20)' : 'int(10)';
+        $baseline = [new BaselineColumn(
+            'host',
+            1,
+            'x',
+            $type,
+            'NO',
+            '',
+            '0',
+            $scenario === 'unbuildable' ? 'unsupported_extra' : '',
+            $scenario === 'warnings' ? 'utf8mb4_unicode_ci' : null
+        )];
+        if ($scenario === 'mixed') {
+            $baseline[] = new BaselineColumn('settings', 1, 'name', 'varchar(75)', 'NO', '', '', '');
+        }
+        $store->method('read')->willReturn(new AuditBaseline($baseline, []));
+        $store->method('replace')->willReturn(true);
+        $schema = $this->createMock(SchemaAudit::class);
+        $schema->method('codeVersion')->willReturn('1.3.0');
+        $schema->method('databaseVersion')->willReturn('1.3.0');
+        $tables = $scenario === 'missing' ? [] : [new LiveTable('host', new TableStatus('InnoDB', 'utf8mb4_general_ci', 'Dynamic', 0), [
+            ['Field' => 'x', 'Type' => $type, 'Null' => 'NO', 'Key' => '', 'Default' => $scenario === 'mixed' ? null : '0',
+                'Extra' => '', 'Collation' => $scenario === 'warnings' ? 'utf8mb4_bin' : null],
+        ], [])];
+        $schema->method('catalog')->willReturn(new AuditCatalog($tables, PluginSchemaChanges::none()));
+        $schema->expects(self::never())->method('statement');
+        $schema->expects(self::never())->method('alter');
+        $this->presentation->forLegacy(LegacyRequest::Run);
+        $tester = $this->tester($schema, $store);
+        // The historical report shim exits successfully after displaying differences.
+        self::assertSame(0, $tester->execute(['--report' => true]));
+        $display = $tester->getDisplay();
+        self::assertStringEndsWith(self::SEPARATOR . "\n" . $summary . "\n" . self::SEPARATOR . "\n", $display);
+        self::assertSame(1, substr_count($display, $summary));
+        self::assertStringNotContainsString('Audit was clean', $display);
+        self::assertStringNotContainsString('Executing Alter', $display);
+        if ($scenario === 'warnings') {
+            self::assertStringContainsString("Attribute 'Collation'", $display);
+            self::assertStringContainsString('ERRORS: 0, WARNINGS: 1', $display);
+        } else {
+            self::assertStringContainsString('ERRORS: 1, WARNINGS: 0', $display);
+        }
+        if (in_array($scenario, ['mixed', 'missing'], true)) {
+            $missing = $scenario === 'mixed' ? 'settings' : 'host';
+            self::assertStringContainsString(self::checking($missing) . "\nERROR Table: '" . $missing . "' exists in the audit schema but is missing from the database; it was not recreated\n\nERRORS: 1, WARNINGS: 0\n", $display);
+        }
     }
 
     public function testLegacyAuditStopsWhenTheCanonicalBaselineCannotBeLoaded(): void

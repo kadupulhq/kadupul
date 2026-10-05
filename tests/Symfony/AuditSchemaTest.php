@@ -152,6 +152,46 @@ final class AuditSchemaTest extends TestCase
         self::assertCount(1, $audit->widened);
     }
 
+    /** @return iterable<string, array{string, string, string, string, string}> */
+    public static function numericDefaultClauses(): iterable
+    {
+        yield 'nullable numeric literal' => ['int(10)', 'YES', '5', " DEFAULT '5'", '5'];
+        yield 'nullable empty remains empty' => ['int(10)', 'YES', '', ' DEFAULT ""', ''];
+        yield 'not null legacy integer width supplies zero' => ['int(10)', 'NO', '', ' DEFAULT "0"', '0'];
+        yield 'not null unsigned without display width preserves empty' => ['int unsigned', 'NO', '', " DEFAULT ''", ''];
+    }
+
+    #[DataProvider('numericDefaultClauses')]
+    public function testNumericDefaultDriftPreservesLegacyTextAndTypedDefault(string $type, string $nullable, string $default, string $suffix, string $typedDefault): void
+    {
+        // #617: do not normalize an empty default merely because the type is numeric.
+        // The legacy producer's int( display-width branch supplies zero only there.
+        $baseline = self::baseline('t', [$type, $nullable, '', $default, '']);
+        $live = self::live('t', [$type, $nullable, '', null, '']);
+        $audit = ColumnDrift::audit($live, $baseline, PluginSchemaChanges::none(), true);
+        self::assertSame(1, $audit['errors']);
+        self::assertSame(0, $audit['warnings']);
+        self::assertCount(1, $audit['clauses']);
+        $clause = $audit['clauses'][0];
+        self::assertInstanceOf(ModifyColumn::class, $clause);
+        self::assertSame('MODIFY COLUMN `x` ' . $type . ($nullable === 'NO' ? ' NOT NULL' : '') . $suffix, $clause->legacy());
+        self::assertSame($typedDefault, $clause->spec->default);
+        self::assertSame($nullable === 'NO', $clause->spec->notNull);
+        self::assertFalse($clause->spec->defaultNow);
+        self::assertSame($type, $clause->spec->type->sql());
+    }
+
+    public function testIntegerDisplayWidthOmissionAloneDoesNotProduceDrift(): void
+    {
+        $audit = ColumnDrift::audit(
+            self::live('t', ['int unsigned', 'NO', '', '0', '']),
+            self::baseline('t', ['int(10) unsigned', 'NO', '', '0', '']),
+            PluginSchemaChanges::none(),
+            true
+        );
+        self::assertSame(['lines' => [], 'errors' => 0, 'warnings' => 0, 'clauses' => [], 'widened' => []], $audit);
+    }
+
     public function testNullAndEmptyStringDefaultsAreDifferentAndRepairPreservesTheEmptyDefault(): void
     {
         $result = ColumnDrift::audit(
