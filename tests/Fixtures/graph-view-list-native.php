@@ -135,3 +135,8 @@ register_shutdown_function(function () {
 });
 chdir($directory);
 require $controller;
+
+function get_allowed_management_devices(...$arguments)
+{
+    return get_allowed_devices(...$arguments);
+}

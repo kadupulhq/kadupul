@@ -2351,7 +2351,7 @@ function utilities_view_poller_cache()
 function utilities_allowed_host_sql($column)
 {
     $total_rows = 0;
-    $devices = get_allowed_devices('', '', -1, $total_rows);
+    $devices = get_allowed_management_devices('', '', -1, $total_rows);
     $device_ids = array();
 
     foreach ($devices as $device) {

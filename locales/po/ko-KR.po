@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-04 23:50-0700\n"
+"POT-Creation-Date: 2026-10-05 03:17-0700\n"
 "PO-Revision-Date: 2024-04-20 19:06-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -49,7 +49,7 @@ msgstr "이 프로그램은 유용 할 것이라는 희망으로 배포되었지
 #: automation_tree_rules.php:17 cdef.php:14 cdef.php:603 color_templates.php:13
 #: color_templates.php:109 data_queries.php:16 data_queries.php:863
 #: data_queries.php:972 data_queries.php:1252 data_source_profiles.php:16
-#: data_source_profiles.php:934 data_sources.php:22 data_sources.php:1229
+#: data_source_profiles.php:934 data_sources.php:22 data_sources.php:1230
 #: data_templates.php:19 data_templates.php:791 gprint_presets.php:12
 #: graph_templates.php:22 graph_templates.php:517 graphs.php:31
 #: host_templates.php:20 host_templates.php:485 host_templates.php:542
@@ -123,8 +123,8 @@ msgstr "다음 집계 그래프를 삭제하려면 &#39;계속&#39;을 클릭하
 #: color_templates.php:256 color_templates_items.php:327 data_queries.php:413
 #: data_queries.php:427 data_queries.php:611 data_source_profiles.php:416
 #: data_source_profiles.php:428 data_source_profiles.php:663
-#: data_sources.php:601 data_sources.php:613 data_sources.php:622
-#: data_sources.php:631 data_sources.php:640 data_sources.php:646
+#: data_sources.php:602 data_sources.php:614 data_sources.php:623
+#: data_sources.php:632 data_sources.php:641 data_sources.php:647
 #: data_templates.php:486 data_templates.php:498 data_templates.php:514
 #: gprint_presets.php:137 graph_templates.php:373 graph_templates.php:385
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
@@ -156,8 +156,8 @@ msgstr "취소"
 #: color_templates.php:256 color_templates_items.php:328 data_queries.php:413
 #: data_queries.php:427 data_queries.php:612 data_source_profiles.php:416
 #: data_source_profiles.php:428 data_source_profiles.php:664
-#: data_sources.php:601 data_sources.php:613 data_sources.php:622
-#: data_sources.php:631 data_sources.php:640 data_sources.php:646
+#: data_sources.php:602 data_sources.php:614 data_sources.php:623
+#: data_sources.php:632 data_sources.php:641 data_sources.php:647
 #: data_templates.php:486 data_templates.php:498 data_templates.php:514
 #: gprint_presets.php:137 graph_templates.php:373 graph_templates.php:385
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
@@ -302,7 +302,7 @@ msgstr "대상 브랜치"
 msgid "Place Graph(s) on Tree"
 msgstr "트리에 그래프 놓기"
 
-#: aggregate_graphs.php:625 data_sources.php:1215 lib/html_reports.php:1641
+#: aggregate_graphs.php:625 data_sources.php:1216 lib/html_reports.php:1641
 #: user_admin.php:1774
 #, php-format
 msgid "[edit: %s]"
@@ -411,7 +411,7 @@ msgstr "매칭 그래프"
 #: automation_networks.php:1224 automation_snmp.php:703
 #: automation_templates.php:393 automation_tree_rules.php:845 cdef.php:727
 #: color_templates.php:560 data_debug.php:1189 data_queries.php:1371
-#: data_source_profiles.php:1186 data_sources.php:1783 data_templates.php:1101
+#: data_source_profiles.php:1186 data_sources.php:1789 data_templates.php:1101
 #: gprint_presets.php:255 graph_templates.php:727 graph_view.php:667
 #: graphs.php:2100 graphs_new.php:524 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
@@ -430,8 +430,8 @@ msgid "Search"
 msgstr "검색"
 
 #: aggregate_graphs.php:1288 aggregate_graphs.php:1324
-#: aggregate_graphs.php:1587 color_templates.php:680 data_sources.php:1985
-#: data_sources.php:2124 graph_view.php:488 graph_view.php:739
+#: aggregate_graphs.php:1587 color_templates.php:680 data_sources.php:1991
+#: data_sources.php:2130 graph_view.php:488 graph_view.php:739
 #: graph_view.php:803 graphs.php:2117 graphs.php:2316
 #: include/global_arrays.php:993 include/global_arrays.php:1229
 #: include/global_arrays.php:2014 lib/api_automation.php:283 lib/html.php:1996
@@ -448,7 +448,7 @@ msgstr "그래프 "
 #: automation_snmp.php:713 automation_templates.php:403
 #: automation_tree_rules.php:865 cdef.php:737 color_templates.php:576
 #: data_debug.php:1199 data_queries.php:1381 data_source_profiles.php:1196
-#: data_source_profiles.php:1318 data_sources.php:1793 data_templates.php:1130
+#: data_source_profiles.php:1318 data_sources.php:1799 data_templates.php:1130
 #: gprint_presets.php:265 graph_templates.php:737 graph_view.php:743
 #: graphs.php:2121 graphs_new.php:534 host_templates.php:805
 #: include/global_form.php:242 lib/api_automation.php:182
@@ -473,7 +473,7 @@ msgstr "집계의 일부"
 #: automation_snmp.php:728 automation_templates.php:418
 #: automation_tree_rules.php:877 cdef.php:758 color_templates.php:598
 #: data_debug.php:1114 data_queries.php:1396 data_source_profiles.php:1217
-#: data_sources.php:1733 data_templates.php:1151 gprint_presets.php:283
+#: data_sources.php:1739 data_templates.php:1151 gprint_presets.php:283
 #: graph_templates.php:758 graph_view.php:675 graphs.php:2091
 #: graphs_new.php:513 host_templates.php:786 lib/api_automation.php:187
 #: lib/api_automation.php:471 lib/api_automation.php:723
@@ -489,7 +489,7 @@ msgstr "가기"
 #: aggregate_graphs.php:1303 aggregate_graphs.php:1596
 #: automation_devices.php:509 automation_snmp.php:728
 #: automation_templates.php:418 cdef.php:758 data_debug.php:1114
-#: data_queries.php:1396 data_source_profiles.php:1217 data_sources.php:1733
+#: data_queries.php:1396 data_source_profiles.php:1217 data_sources.php:1739
 #: data_templates.php:1151 gprint_presets.php:283 graph_templates.php:758
 #: graph_view.php:675 graphs.php:2091 graphs_new.php:513 host_templates.php:786
 #: lib/html_graph.php:178 managers.php:169 managers.php:529 managers.php:794
@@ -507,7 +507,7 @@ msgstr "필터 설정 / 새로 고침"
 #: automation_snmp.php:729 automation_templates.php:419
 #: automation_tree_rules.php:878 cdef.php:759 color_templates.php:599
 #: data_debug.php:1115 data_queries.php:1397 data_source_profiles.php:1218
-#: data_sources.php:1734 data_templates.php:1152 gprint_presets.php:284
+#: data_sources.php:1740 data_templates.php:1152 gprint_presets.php:284
 #: graph_templates.php:759 graph_view.php:676 graphs.php:2092
 #: graphs_new.php:514 host_templates.php:787 lib/api_automation.php:188
 #: lib/api_automation.php:472 lib/api_automation.php:724
@@ -523,7 +523,7 @@ msgstr "지우기"
 
 #: aggregate_graphs.php:1304 aggregate_graphs.php:1597 automation_snmp.php:729
 #: automation_templates.php:419 cdef.php:759 data_debug.php:1115
-#: data_queries.php:1397 data_source_profiles.php:1218 data_sources.php:1734
+#: data_queries.php:1397 data_source_profiles.php:1218 data_sources.php:1740
 #: data_templates.php:1152 gprint_presets.php:284 graph_templates.php:759
 #: graph_view.php:676 graphs.php:2092 graphs_new.php:514 host_templates.php:787
 #: lib/html_graph.php:179 lib/html_tree.php:1010 managers.php:170
@@ -542,7 +542,7 @@ msgstr "그래프 제목"
 
 #: aggregate_graphs.php:1330 aggregate_graphs.php:1663
 #: automation_graph_rules.php:964 automation_tree_rules.php:971
-#: data_debug.php:499 data_queries.php:1482 data_sources.php:1979
+#: data_debug.php:499 data_queries.php:1482 data_sources.php:1985
 #: data_templates.php:1260 graph_templates.php:864 graphs.php:2332
 #: host_templates.php:949 lib/api_automation.php:282 pollers.php:995
 #: tree.php:2306 user_admin.php:809 user_admin.php:924 user_admin.php:1073
@@ -564,7 +564,7 @@ msgstr "크기"
 #: aggregate_graphs.php:1348 aggregate_templates.php:724
 #: automation_tree_rules.php:723 cdef.php:885 color_templates.php:704
 #: data_queries.php:1534 data_source_profiles.php:1398
-#: data_source_profiles.php:1399 data_sources.php:2066 data_sources.php:2067
+#: data_source_profiles.php:1399 data_sources.php:2072 data_sources.php:2073
 #: data_templates.php:1321 gprint_presets.php:430 graph_templates.php:921
 #: host_templates.php:997 include/global_settings.php:876
 #: include/global_settings.php:1927 lib/api_automation.php:1438 tree.php:2399
@@ -578,7 +578,7 @@ msgstr "아니오"
 #: data_debug.php:756 data_debug.php:761 data_debug.php:766
 #: data_queries.php:1534 data_source_profiles.php:1397
 #: data_source_profiles.php:1398 data_source_profiles.php:1399
-#: data_sources.php:2066 data_sources.php:2067 data_templates.php:1321
+#: data_sources.php:2072 data_sources.php:2073 data_templates.php:1321
 #: gprint_presets.php:430 graph_templates.php:921 host_templates.php:997
 #: include/global_settings.php:875 include/global_settings.php:1926
 #: lib/api_automation.php:1438 lib/installer.php:2124 lib/installer.php:2152
@@ -600,7 +600,7 @@ msgstr "[사용자 정의 그래프 목록 적용 - 필터 FROM 목록]"
 msgid "Aggregate Graphs"
 msgstr "집계 그래프"
 
-#: aggregate_graphs.php:1562 data_debug.php:1085 data_sources.php:1704
+#: aggregate_graphs.php:1562 data_debug.php:1085 data_sources.php:1710
 #: graph_view.php:699 graphs.php:2053 include/global_arrays.php:2894
 #: include/global_settings.php:610 lib/api_automation.php:446
 #: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:381
@@ -613,10 +613,10 @@ msgstr "템플릿"
 #: automation_devices.php:528 automation_devices.php:546
 #: automation_devices.php:564 automation_graph_rules.php:819
 #: automation_graph_rules.php:841 automation_tree_rules.php:855
-#: data_debug.php:1089 data_sources.php:1708 graph_templates_items.php:447
+#: data_debug.php:1089 data_sources.php:1714 graph_templates_items.php:447
 #: graphs.php:2057 graphs_items.php:262 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
-#: lib/api_automation.php:450 lib/auth.php:3824 lib/auth.php:3873
+#: lib/api_automation.php:450 lib/auth.php:3826 lib/auth.php:3875
 #: lib/html.php:2351 lib/html.php:2379 lib/html.php:2418 lib/html.php:2452
 #: lib/html_reports.php:1030 lib/html_reports.php:1034
 #: lib/html_reports.php:1157 lib/html_reports.php:1167
@@ -630,8 +630,8 @@ msgstr "일부"
 #: aggregate_graphs.php:1567 aggregate_graphs.php:1677
 #: automation_graph_rules.php:974 automation_graph_rules.php:975
 #: automation_networks.php:460 automation_tree_rules.php:983
-#: data_debug.php:1090 data_sources.php:1083 data_sources.php:1709
-#: data_sources.php:2040 data_templates.php:1323 graph_templates_items.php:53
+#: data_debug.php:1090 data_sources.php:1084 data_sources.php:1715
+#: data_sources.php:2046 data_templates.php:1323 graph_templates_items.php:53
 #: graphs.php:1583 graphs.php:1592 graphs.php:2058 graphs_items.php:263
 #: graphs_items.php:383 include/global_arrays.php:523
 #: include/global_arrays.php:581 include/global_arrays.php:673
@@ -647,8 +647,8 @@ msgstr "일부"
 #: include/global_settings.php:630 include/global_settings.php:1338
 #: include/global_settings.php:2001 lib/api_automation.php:48
 #: lib/api_automation.php:431 lib/api_automation.php:451
-#: lib/api_automation.php:589 lib/auth.php:3827 lib/auth.php:3876
-#: lib/auth.php:3922 lib/html.php:228 lib/html.php:2352 lib/html.php:2377
+#: lib/api_automation.php:589 lib/auth.php:3829 lib/auth.php:3878
+#: lib/auth.php:3924 lib/html.php:228 lib/html.php:2352 lib/html.php:2377
 #: lib/html.php:2419 lib/html.php:2453 lib/html_form.php:392
 #: lib/html_reports.php:1041 lib/html_reports.php:1045
 #: lib/html_reports.php:1081 lib/html_reports.php:1157
@@ -738,7 +738,7 @@ msgid "Aggregate Templates that are in use can not be Deleted.  In use is define
 msgstr "사용중인 집계 템플릿은 삭제할 수 없습니다. 사용 중은 집계에 의해 참조되는 것으로 정의됩니다."
 
 #: aggregate_templates.php:707 cdef.php:868 color_templates.php:675
-#: data_queries.php:1488 data_source_profiles.php:1323 data_sources.php:1997
+#: data_queries.php:1488 data_source_profiles.php:1323 data_sources.php:2003
 #: data_templates.php:1266 gprint_presets.php:390 graph_templates.php:870
 #: host_templates.php:955
 msgid "Deletable"
@@ -877,11 +877,11 @@ msgstr "액세스가 거부되었습니다. Kadupul 관리자에게 연락하십
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr "액세스가 거부되었습니다. Kadupul 관리자에게 연락하십시오."
 
-#: auth_login.php:116 lib/auth.php:4238 lib/auth.php:4244 lib/auth.php:4349
-#: lib/auth.php:4400 lib/auth.php:4425 lib/auth.php:4448 lib/auth.php:4488
-#: lib/auth.php:4500 lib/auth.php:4523 lib/auth.php:4646 lib/auth.php:4666
-#: lib/auth.php:4878 lib/auth.php:4920 lib/auth.php:4930 lib/auth.php:4946
-#: lib/auth.php:4960 lib/auth.php:4998
+#: auth_login.php:116 lib/auth.php:4240 lib/auth.php:4246 lib/auth.php:4351
+#: lib/auth.php:4402 lib/auth.php:4427 lib/auth.php:4450 lib/auth.php:4490
+#: lib/auth.php:4502 lib/auth.php:4525 lib/auth.php:4648 lib/auth.php:4668
+#: lib/auth.php:4880 lib/auth.php:4922 lib/auth.php:4932 lib/auth.php:4948
+#: lib/auth.php:4962 lib/auth.php:5000
 msgid "Access Denied!  Login Failed."
 msgstr "액세스가 거부되었으며 사용자 계정이 비활성화되었습니다."
 
@@ -1172,7 +1172,7 @@ msgstr "SNMP"
 #: automation_devices.php:280 automation_devices.php:524
 #: automation_graph_rules.php:837 automation_networks.php:1075
 #: automation_tree_rules.php:851 data_debug.php:505 data_debug.php:1144
-#: data_sources.php:1762 data_templates.php:1289 lib/api_automation.php:52
+#: data_sources.php:1768 data_templates.php:1289 lib/api_automation.php:52
 #: lib/api_automation.php:53 lib/api_automation.php:280
 #: lib/api_automation.php:573 lib/api_automation.php:1199
 #: lib/html_reports.php:2031 lib/installer.php:2044 managers.php:216
@@ -1364,7 +1364,7 @@ msgstr "데이터 쿼리"
 #: automation_graph_rules.php:842 automation_graph_rules.php:967
 #: automation_graph_rules.php:983 automation_networks.php:535
 #: automation_tree_rules.php:856 automation_tree_rules.php:976
-#: automation_tree_rules.php:994 data_debug.php:1150 data_sources.php:1767
+#: automation_tree_rules.php:994 data_debug.php:1150 data_sources.php:1773
 #: include/global_arrays.php:917 include/global_form.php:1527
 #: include/global_settings.php:345 include/global_settings.php:361
 #: lib/api_automation.php:27 lib/html_reports.php:2036
@@ -1379,7 +1379,7 @@ msgstr "활성화"
 
 #: automation_graph_rules.php:843 automation_graph_rules.php:983
 #: automation_networks.php:1090 automation_tree_rules.php:857
-#: automation_tree_rules.php:994 data_debug.php:1151 data_sources.php:1768
+#: automation_tree_rules.php:994 data_debug.php:1151 data_sources.php:1774
 #: data_templates.php:1325 include/global_arrays.php:916
 #: include/global_arrays.php:1575 include/global_arrays.php:1867
 #: include/global_settings.php:344 include/global_settings.php:360
@@ -1647,7 +1647,7 @@ msgstr "%d 분"
 #: automation_networks.php:522 automation_networks.php:523
 #: automation_networks.php:524 automation_networks.php:525
 #: automation_networks.php:1212 automation_networks.php:1213
-#: data_sources.php:1530 include/global_arrays.php:711
+#: data_sources.php:1536 include/global_arrays.php:711
 #: include/global_arrays.php:712 include/global_arrays.php:713
 #: include/global_arrays.php:714 include/global_arrays.php:751
 #: include/global_arrays.php:752 include/global_arrays.php:754
@@ -2094,7 +2094,7 @@ msgstr "새로고침"
 
 #: automation_networks.php:1207 automation_networks.php:1208
 #: automation_networks.php:1209 automation_networks.php:1210
-#: data_sources.php:1526 include/global_arrays.php:709
+#: data_sources.php:1532 include/global_arrays.php:709
 #: include/global_arrays.php:745 include/global_arrays.php:746
 #: include/global_arrays.php:747 include/global_arrays.php:748
 #: include/global_arrays.php:749 include/global_arrays.php:750
@@ -2396,7 +2396,7 @@ msgstr "자동화 템플릿 [신규]"
 msgid "Device Automation Templates"
 msgstr "장치 자동화 템플릿"
 
-#: automation_templates.php:498 data_sources.php:2009 package_import.php:624
+#: automation_templates.php:498 data_sources.php:2015 package_import.php:624
 #: templates_import.php:242 user_admin.php:1212 user_group_admin.php:1222
 msgid "Template Name"
 msgstr "템플릿 이름"
@@ -2976,7 +2976,7 @@ msgid "The requested Data Source is not available."
 msgstr ""
 
 #: data_debug.php:483 data_debug.php:934 data_queries.php:769
-#: data_sources.php:1146 data_templates.php:719 graphs_items.php:379
+#: data_sources.php:1147 data_templates.php:719 graphs_items.php:379
 #: include/global_arrays.php:1005 include/global_form.php:960
 #: lib/api_aggregate.php:2338 lib/html.php:1404 rrdcheck.php:142
 msgid "Data Source"
@@ -3027,7 +3027,7 @@ msgstr "기존"
 msgid "Determines if the Data Source is located in the Poller Cache."
 msgstr "데이터 소스가 폴러 캐시에 있는지 확인합니다."
 
-#: data_debug.php:523 data_sources.php:2003 data_templates.php:1325
+#: data_debug.php:523 data_sources.php:2009 data_templates.php:1325
 #: plugins.php:32 plugins.php:503
 msgid "Active"
 msgstr "활성화"
@@ -3068,8 +3068,8 @@ msgstr "쟁점들"
 msgid "Summary of issues found for the Data Source."
 msgstr "데이터 소스에 대해 발견 된 모든 요약 문제."
 
-#: data_debug.php:621 data_debug.php:1195 data_sources.php:1789
-#: data_sources.php:1963 include/global_arrays.php:994
+#: data_debug.php:621 data_debug.php:1195 data_sources.php:1795
+#: data_sources.php:1969 include/global_arrays.php:994
 #: include/global_arrays.php:1040 include/global_arrays.php:2310
 #: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1086
 #: utilities.php:325
@@ -3274,13 +3274,13 @@ msgstr "모두 실행"
 msgid "Run checks on currently filtered Data Sources and preserve other results"
 msgstr "현재 필터링된 데이터 원본에 대한 검사를 실행하고 다른 결과 보존"
 
-#: data_debug.php:1125 data_sources.php:1742 data_templates.php:1107
+#: data_debug.php:1125 data_sources.php:1748 data_templates.php:1107
 #: lib/html.php:2794
 msgid "Profile"
 msgstr "프로필"
 
 #: data_debug.php:1129 data_debug.php:1148 data_debug.php:1159
-#: data_sources.php:1746 data_sources.php:1766 data_templates.php:1111
+#: data_sources.php:1752 data_sources.php:1772 data_templates.php:1111
 #: graphs.php:2110 graphs_new.php:486 host_templates.php:716
 #: host_templates.php:734 lib/clog_webapi.php:549 lib/html.php:227
 #: lib/html_reports.php:1138 lib/html_reports.php:2284 plugins.php:501
@@ -3874,7 +3874,7 @@ msgstr "사용중인 프로필은 삭제할 수 없습니다. 사용 중은 데�
 msgid "Read Only"
 msgstr "읽기 전용"
 
-#: data_source_profiles.php:1333 data_sources.php:1991
+#: data_source_profiles.php:1333 data_sources.php:1997
 #: include/global_settings.php:1234
 msgid "Poller Interval"
 msgstr "폴러 간격"
@@ -3908,7 +3908,7 @@ msgstr "이 프로필을 사용하는 데이터 템플릿의 수입니다."
 msgid "No Data Source Profiles Found"
 msgstr "데이터 소스 프로필을 찾을 수 없음"
 
-#: data_sources.php:23 data_sources.php:613 graphs.php:41
+#: data_sources.php:23 data_sources.php:614 graphs.php:41
 msgid "Change Device"
 msgstr "기기 변경"
 
@@ -3916,152 +3916,152 @@ msgstr "기기 변경"
 msgid "Reapply Suggested Names"
 msgstr "제안 된 이름 재 적용"
 
-#: data_sources.php:576
+#: data_sources.php:577
 msgid "Click 'Continue' to delete the following Data Source"
 msgid_plural "Click 'Continue' to delete following Data Sources"
 msgstr[0] "다음 데이터 소스를 삭제하려면 &#39;계속&#39;을 클릭하십시오."
 
-#: data_sources.php:580
+#: data_sources.php:581
 msgid "The following graph is using these data sources:"
 msgid_plural "The following graphs are using these data sources:"
 msgstr[0] "다음 그래프는이 데이터 소스를 사용하고 있습니다."
 
-#: data_sources.php:589
+#: data_sources.php:590
 msgid "Leave the <strong>Graph</strong> untouched."
 msgid_plural "Leave all <strong>Graphs</strong> untouched."
 msgstr[0] "<strong>그래프를</strong> 그대로 둡니다."
 
-#: data_sources.php:591
+#: data_sources.php:592
 msgid "Delete all <strong>Graph Items</strong> that reference this Data Source."
 msgid_plural "Delete all <strong>Graph Items</strong> that reference these Data Sources."
 msgstr[0] "이 데이터 소스를 참조하는 모든 <strong>그래프 항목</strong> 을 삭제하십시오."
 
-#: data_sources.php:593
+#: data_sources.php:594
 msgid "Delete all <strong>Graphs</strong> that reference this Data Source."
 msgid_plural "Delete all <strong>Graphs</strong> that reference these Data Sources."
 msgstr[0] "이 데이터 소스를 참조하는 모든 <strong>그래프</strong> 를 삭제하십시오."
 
-#: data_sources.php:601
+#: data_sources.php:602
 msgid "Delete Data Source"
 msgid_plural "Delete Data Sources"
 msgstr[0] "데이터 소스 삭제"
 
-#: data_sources.php:605
+#: data_sources.php:606
 msgid "Choose a new Device for this Data Source and click 'Continue'."
 msgid_plural "Choose a new Device for these Data Sources and click 'Continue'"
 msgstr[0] "이 데이터 소스에 대한 새 장치를 선택하고 &#39;계속&#39;을 클릭하십시오."
 
-#: data_sources.php:607
+#: data_sources.php:608
 msgid "New Device:"
 msgstr "새 기기"
 
-#: data_sources.php:617
+#: data_sources.php:618
 msgid "Click 'Continue' to enable the following Data Source."
 msgid_plural "Click 'Continue' to enable all following Data Sources."
 msgstr[0] "&#39;계속&#39;을 클릭하여 다음 데이터 소스를 활성화하십시오."
 
-#: data_sources.php:622
+#: data_sources.php:623
 msgid "Enable Data Source"
 msgid_plural "Enable Data Sources"
 msgstr[0] "데이터 소스 사용"
 
-#: data_sources.php:626
+#: data_sources.php:627
 msgid "Click 'Continue' to disable the following Data Source."
 msgid_plural "Click 'Continue' to disable all following Data Sources."
 msgstr[0] "&#39;계속&#39;을 클릭하여 다음 데이터 소스를 비활성화하십시오."
 
-#: data_sources.php:631
+#: data_sources.php:632
 msgid "Disable Data Source"
 msgid_plural "Disable Data Sources"
 msgstr[0] "데이터 원본 사용 안 함"
 
-#: data_sources.php:635
+#: data_sources.php:636
 msgid "Click 'Continue' to re-apply the suggested name to the following Data Source."
 msgid_plural "Click 'Continue' to re-apply the suggested names to all following Data Sources."
 msgstr[0] "제안 된 이름을 다음 데이터 소스에 다시 적용하려면 &#39;계속&#39;을 클릭하십시오."
 
-#: data_sources.php:640
+#: data_sources.php:641
 msgid "Reapply Suggested Naming to Data Source"
 msgid_plural "Reapply Suggested Naming to Data Sources"
 msgstr[0] "데이터 소스에 제안 된 이름 다시 적용"
 
-#: data_sources.php:728 data_templates.php:886
+#: data_sources.php:729 data_templates.php:886
 #, php-format
 msgid "Custom Data [data input: %s]"
 msgstr "맞춤 데이터 [데이터 입력 :  %s]"
 
-#: data_sources.php:763
+#: data_sources.php:764
 #, php-format
 msgid "(From Device: %s)"
 msgstr "(장치에서 :  %s)"
 
-#: data_sources.php:766
+#: data_sources.php:767
 msgid "(From Data Template)"
 msgstr "(데이터 템플릿에서)"
 
-#: data_sources.php:767
+#: data_sources.php:768
 msgid "Nothing Entered"
 msgstr "입력 한 내용 없음"
 
-#: data_sources.php:782 data_templates.php:970
+#: data_sources.php:783 data_templates.php:970
 msgid "No Input Fields for the Selected Data Input Source"
 msgstr "선택한 데이터 입력 소스에 대한 입력 필드가 없습니다."
 
-#: data_sources.php:930
+#: data_sources.php:931
 #, php-format
 msgid "Data Template Selection [edit: %s]"
 msgstr "데이터 템플릿 선택 [편집 :  %s]"
 
-#: data_sources.php:940
+#: data_sources.php:941
 msgid "Data Template Selection [new]"
 msgstr "데이터 템플릿 선택 [신규]"
 
-#: data_sources.php:981
+#: data_sources.php:982
 msgid "Turn Off Data Source Debug Mode."
 msgstr "데이터 소스 디버그 모드를 끕니다."
 
-#: data_sources.php:981
+#: data_sources.php:982
 msgid "Turn On Data Source Debug Mode."
 msgstr "데이터 소스 디버그 모드를 켭니다."
 
-#: data_sources.php:982
+#: data_sources.php:983
 msgid "Turn Off Data Source Info Mode."
 msgstr "데이터 소스 정보 모드를 끕니다."
 
-#: data_sources.php:982
+#: data_sources.php:983
 msgid "Turn On Data Source Info Mode."
 msgstr "데이터 소스 정보 모드를 켭니다."
 
-#: data_sources.php:993
+#: data_sources.php:994
 #, php-format
 msgid "Edit Graph: '%s'."
 msgstr "그래프 편집: '%s'."
 
-#: data_sources.php:997 graphs.php:1545
+#: data_sources.php:998 graphs.php:1545
 msgid "Edit Device."
 msgstr "장치 편집."
 
-#: data_sources.php:1000
+#: data_sources.php:1001
 msgid "Edit Data Template."
 msgstr "데이터 템플릿 편집."
 
-#: data_sources.php:1003
+#: data_sources.php:1004
 msgid "Disable Data Source."
 msgstr "데이터 원본 사용 안 함"
 
-#: data_sources.php:1003
+#: data_sources.php:1004
 msgid "Enable Data Source."
 msgstr "데이터 소스 사용"
 
-#: data_sources.php:1073
+#: data_sources.php:1074
 msgid "Selected Data Template"
 msgstr "선택한 데이터 템플릿"
 
-#: data_sources.php:1074
+#: data_sources.php:1075
 msgid "The name given to this data template.  Please note that you may only change Graph Templates to a 100%$ compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "이 데이터 템플릿에 주어진 이름입니다. 그래프 템플릿은 100 % $ 호환 그래프 템플릿으로 만 변경할 수 있습니다. 즉, 동일한 데이터 소스가 포함되어 있음을 의미합니다."
 
-#: data_sources.php:1081 graph_view.php:817 graphs.php:1588
+#: data_sources.php:1082 graph_view.php:817 graphs.php:1588
 #: include/global_arrays.php:954 include/global_arrays.php:1003
 #: include/global_arrays.php:1690 include/global_arrays.php:1859
 #: lib/api_automation.php:426 lib/functions.php:6195 lib/html.php:2347
@@ -4069,129 +4069,129 @@ msgstr "이 데이터 템플릿에 주어진 이름입니다. 그래프 템플�
 msgid "Device"
 msgstr "장치"
 
-#: data_sources.php:1082
+#: data_sources.php:1083
 msgid "Choose the Device that this Data Source belongs to."
 msgstr "이 데이터 소스가 속한 장치를 선택하십시오."
 
-#: data_sources.php:1134
+#: data_sources.php:1135
 msgid "Supplemental Data Template Data"
 msgstr "추가 데이터 템플릿 데이터"
 
-#: data_sources.php:1136
+#: data_sources.php:1137
 msgid "Data Source Fields"
 msgstr "데이터 소스 필드"
 
-#: data_sources.php:1137
+#: data_sources.php:1138
 msgid "Data Source Item Fields"
 msgstr "데이터 소스 항목 필드"
 
-#: data_sources.php:1138
+#: data_sources.php:1139
 msgid "Custom Data"
 msgstr "맞춤 데이터"
 
-#: data_sources.php:1244
+#: data_sources.php:1245
 #, php-format
 msgid "Data Source Item %s"
 msgstr "데이터 소스 항목  %s"
 
-#: data_sources.php:1247 data_templates.php:817 lib/import.php:2781
+#: data_sources.php:1248 data_templates.php:817 lib/import.php:2781
 #: package_import.php:598
 msgid "New"
 msgstr "신규"
 
-#: data_sources.php:1306
+#: data_sources.php:1307
 msgid "Data Source Debug"
 msgstr "데이터 소스 디버그"
 
-#: data_sources.php:1328
+#: data_sources.php:1329
 msgid "RRDtool Tune Info"
 msgstr "RRDtool Tune Info"
 
-#: data_sources.php:1524 data_templates.php:1324 include/global_form.php:582
+#: data_sources.php:1530 data_templates.php:1324 include/global_form.php:582
 msgid "External"
 msgstr "외부"
 
-#: data_sources.php:1528 include/global_arrays.php:710
+#: data_sources.php:1534 include/global_arrays.php:710
 #: include/global_arrays.php:1207 include/global_arrays.php:1581
 #: include/global_arrays.php:1617 include/global_arrays.php:1635
 #: include/global_settings.php:1697 include/global_settings.php:2662
 msgid "1 Minute"
 msgstr "1분"
 
-#: data_sources.php:1685
+#: data_sources.php:1691
 msgid "Data Sources [ All Devices ]"
 msgstr "데이터 소스 [기기 없음]"
 
-#: data_sources.php:1687
+#: data_sources.php:1693
 msgid "Data Sources [ Non Device Based ]"
 msgstr "데이터 소스 [기기 없음]"
 
-#: data_sources.php:1690
+#: data_sources.php:1696
 #, php-format
 msgid "Data Sources [ %s ]"
 msgstr "데이터 소스 [ %s]"
 
-#: data_sources.php:1769
+#: data_sources.php:1775
 msgid "Bad Indexes"
 msgstr "색인"
 
-#: data_sources.php:1775 graphs.php:2086
+#: data_sources.php:1781 graphs.php:2086
 msgid "Note that this query may take some time to run."
 msgstr "이 쿼리를 실행하는 데 시간이 걸릴 수 있습니다."
 
-#: data_sources.php:1775 graphs.php:2086
+#: data_sources.php:1781 graphs.php:2086
 msgid "Orphaned"
 msgstr "고아"
 
-#: data_sources.php:1973 utilities.php:2276
+#: data_sources.php:1979 utilities.php:2276
 msgid "Data Source Name"
 msgstr "데이터 원본 이름"
 
-#: data_sources.php:1976
+#: data_sources.php:1982
 msgid "The name of this Data Source. Generally programmatically generated from the Data Template definition."
 msgstr "이 데이터 소스의 이름입니다. 일반적으로 데이터 템플릿 정의에서 프로그래밍 방식으로 생성됩니다."
 
-#: data_sources.php:1982
+#: data_sources.php:1988
 msgid "The internal database ID for this Data Source. Useful when performing automation or debugging."
 msgstr "이 데이터 소스의 내부 데이터베이스 ID입니다. 자동화 또는 디버깅을 수행 할 때 유용합니다."
 
-#: data_sources.php:1988
+#: data_sources.php:1994
 msgid "The number of Graphs and Aggregate Graphs that are using the Data Source."
 msgstr "이 데이터 쿼리를 사용하는 그래프 템플릿 수입니다."
 
-#: data_sources.php:1994
+#: data_sources.php:2000
 msgid "The frequency that data is collected for this Data Source."
 msgstr "이 데이터 소스에 대해 수집 된 데이터의 빈도입니다."
 
-#: data_sources.php:2000
+#: data_sources.php:2006
 msgid "If this Data Source is no long in use by Graphs, it can be Deleted."
 msgstr "이 데이터 소스가 그래프에서 오랫동안 사용되지 않으면 삭제 될 수 있습니다."
 
-#: data_sources.php:2006
+#: data_sources.php:2012
 msgid "Whether or not data will be collected for this Data Source. Controlled at the Data Template level."
 msgstr "이 데이터 소스에 대해 데이터 수집 여부. 데이터 템플릿 수준에서 제어됩니다."
 
-#: data_sources.php:2012
+#: data_sources.php:2018
 msgid "The Data Template that this Data Source was based upon."
 msgstr "이 데이터 소스의 기반이 된 데이터 템플릿입니다."
 
-#: data_sources.php:2053
+#: data_sources.php:2059
 msgid "Damaged Data Source Name"
 msgstr "데이터 원본 이름"
 
-#: data_sources.php:2073
+#: data_sources.php:2079
 msgid "No Data Sources Found"
 msgstr "데이터 소스 없음"
 
-#: data_sources.php:2126
+#: data_sources.php:2132
 msgid "No Graphs"
 msgstr "그래프 "
 
-#: data_sources.php:2130 include/global_arrays.php:995
+#: data_sources.php:2136 include/global_arrays.php:995
 msgid "Aggregates"
 msgstr "집합"
 
-#: data_sources.php:2132
+#: data_sources.php:2138
 msgid "No Aggregates"
 msgstr "집합"
 
@@ -5400,7 +5400,7 @@ msgstr "Kadupul의이 영역에 액세스하려면 로그인해야합니다."
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "치명적 : Kadupul의이 영역에 액세스하려면 로그인해야합니다."
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5483
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5485
 #: permission_denied.php:14 permission_denied.php:16
 msgid "Login Again"
 msgstr "다시 로그인"
@@ -12082,7 +12082,7 @@ msgstr "위로"
 msgid "Recovering"
 msgstr "복구 중"
 
-#: lib/api_automation.php:33 lib/auth.php:3007 lib/clog_webapi.php:856
+#: lib/api_automation.php:33 lib/auth.php:3004 lib/clog_webapi.php:856
 #: lib/html_utility.php:1354 lib/import.php:342 lib/plugins.php:1499
 #: lib/plugins.php:1500 lib/rrd.php:4196 lib/rrd.php:4208 lib/spikekill.php:301
 #: package_import.php:522 package_import.php:600 utilities.php:211
@@ -12318,119 +12318,119 @@ msgstr "새로운 지회"
 msgid "Web Basic"
 msgstr "웹 기본"
 
-#: lib/auth.php:2836
+#: lib/auth.php:2833
 msgid "Device:(Hide Disabled)"
 msgstr "기기가 사용 중지되었습니다."
 
-#: lib/auth.php:2854 lib/auth.php:2856 lib/auth.php:2862 lib/auth.php:2864
+#: lib/auth.php:2851 lib/auth.php:2853 lib/auth.php:2859 lib/auth.php:2861
 #, fuzzy, php-format
 msgid "Graph:(%s%s)"
 msgstr "그래프: (%s% 초)"
 
-#: lib/auth.php:2877 lib/auth.php:2883 lib/auth.php:2950 lib/auth.php:2952
-#: lib/auth.php:2956 lib/auth.php:2958
+#: lib/auth.php:2874 lib/auth.php:2880 lib/auth.php:2947 lib/auth.php:2949
+#: lib/auth.php:2953 lib/auth.php:2955
 #, fuzzy, php-format
 msgid "Device:(%s%s)"
 msgstr "장치: (%s% 초)"
 
-#: lib/auth.php:2891 lib/auth.php:2897 lib/auth.php:2966 lib/auth.php:2968
-#: lib/auth.php:2972 lib/auth.php:2974
+#: lib/auth.php:2888 lib/auth.php:2894 lib/auth.php:2963 lib/auth.php:2965
+#: lib/auth.php:2969 lib/auth.php:2971
 #, fuzzy, php-format
 msgid "Template:(%s%s)"
 msgstr "템플릿: (%s% 초)"
 
-#: lib/auth.php:2904
+#: lib/auth.php:2901
 #, fuzzy, php-format
 msgid "Graph+Device+Template:(%s%s)"
 msgstr "그래프 + 장치 + 템플릿: (%s% 초)"
 
-#: lib/auth.php:2941 lib/auth.php:2943
+#: lib/auth.php:2938 lib/auth.php:2940
 #, fuzzy, php-format
 msgid "Device+Template:(%s%s)"
 msgstr "장치 + 템플릿: (%s% 초)"
 
-#: lib/auth.php:2987 lib/auth.php:2994 lib/auth.php:3003
+#: lib/auth.php:2984 lib/auth.php:2991 lib/auth.php:3000
 msgid "Restricted By: "
 msgstr "제한됨"
 
-#: lib/auth.php:2991
+#: lib/auth.php:2988
 msgid "Granted By: "
 msgstr "부여 :"
 
-#: lib/auth.php:2998
+#: lib/auth.php:2995
 msgid "Granted"
 msgstr "허락된"
 
-#: lib/auth.php:3000 lib/auth.php:3005
+#: lib/auth.php:2997 lib/auth.php:3002
 msgid "Restricted"
 msgstr "제한됨"
 
-#: lib/auth.php:3239 lib/auth.php:3274
+#: lib/auth.php:3236 lib/auth.php:3271
 msgid "Branch:"
 msgstr "분기:"
 
-#: lib/auth.php:3248 lib/auth.php:3282 lib/html_tree.php:949
+#: lib/auth.php:3245 lib/auth.php:3279 lib/html_tree.php:949
 #: lib/reports.php:1114
 msgid "Device:"
 msgstr "장치:"
 
-#: lib/auth.php:4142 lib/auth.php:4233
+#: lib/auth.php:4144 lib/auth.php:4235
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "액세스가 거부되었습니다. Kadupul 관리자에게 연락하십시오."
 
-#: lib/auth.php:4192
+#: lib/auth.php:4194
 msgid "Access Denied!  Login Disabled."
 msgstr "액세스가 거부되었으며 사용자 계정이 비활성화되었습니다."
 
-#: lib/auth.php:4267
+#: lib/auth.php:4269
 msgid "Web Basic Authentication configured, but no username was passed from the web server. Please make sure you have authentication enabled on the web server."
 msgstr "웹 기본 인증이 구성되었지만 사용자 이름이 웹 서버에서 전달되지 않았습니다. 웹 서버에서 인증을 사용하도록 설정했는지 확인하십시오."
 
-#: lib/auth.php:4283
+#: lib/auth.php:4285
 #, php-format
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "%s은 (는) Web Server에 의해 인증되었지만 Kadupul에는 템플릿과 게스트 사용자가 모두 정의되어 있지 않습니다."
 
-#: lib/auth.php:4460 lib/auth.php:4659
+#: lib/auth.php:4462 lib/auth.php:4661
 msgid "Access Denied!  No password provided by user."
 msgstr "접근 불가! 사용자가 제공한 비밀번호가 없습니다."
 
-#: lib/auth.php:4632 lib/auth.php:5690
+#: lib/auth.php:4634 lib/auth.php:5692
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "액세스가 거부되었습니다! 템플릿 사용자 ID %s 이 (가) 존재하지 않습니다. 관리자에게 문의하십시오."
 
-#: lib/auth.php:4640
+#: lib/auth.php:4642
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:4993
+#: lib/auth.php:4995
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "Kadupul 관리자가 로그인을 위해 복잡한 비밀번호를 설정했으며 현재 Kadupul 비밀번호가 새로운 요구 사항과 일치하지 않습니다. 따라서 지금 비밀번호를 변경해야합니다."
 
-#: lib/auth.php:5033
+#: lib/auth.php:5035
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "비밀번호는 % d 자 이상이어야합니다!"
 
-#: lib/auth.php:5039
+#: lib/auth.php:5041
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "비밀번호는 숫자가 1 자 이상이어야합니다!"
 
-#: lib/auth.php:5043
+#: lib/auth.php:5045
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "암호에는 소문자와 대문자가 혼합되어 있어야합니다."
 
-#: lib/auth.php:5049
+#: lib/auth.php:5051
 msgid "Your password must contain at least 1 special character!"
 msgstr "비밀번호는 적어도 1 개의 특수 문자를 포함해야합니다!"
 
-#: lib/auth.php:5476
+#: lib/auth.php:5478
 #, fuzzy
 msgid "Kadupul Login Failure"
 msgstr "Kadupul 로그 지워짐"
 
-#: lib/auth.php:5776
+#: lib/auth.php:5778
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "인증이 이전에 설정되지 않았습니다. 로컬 인증으로 설정하려고 했지만 관리 계정을 찾을 수 없습니다."
 

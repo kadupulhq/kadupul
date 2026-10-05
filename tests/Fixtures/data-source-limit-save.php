@@ -23,7 +23,7 @@ if (getenv('LIMIT_COVERAGE') === '1') {
 
 $config = array(
     'cacti_server_os' => 'unix', 'is_web' => true, 'poller_id' => 1, 'base_path' => $root, 'url_path' => '/',
-    'library_path' => $root . '/lib', 'include_path' => $root . '/include', 'rra_path' => $root . '/rra',
+    'library_path' => $root . '/lib', 'include_path' => $root . '/include', 'rra_path' => getenv('LIMIT_RRA_PATH') ?: $root . '/rra',
     'config_options_array' => array('log_destination' => 0, 'log_verbosity' => 1),
 );
 $saved = array();
