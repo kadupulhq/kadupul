@@ -149,6 +149,19 @@ REFUSE = "if (!remote_client_authorized()) {\n\t%s\n}\n"
 SESSION_SWITCH = "switch ($_GET['a']) {\n\tcase 'x':\n\t\t%s\n\tdefault:\n\t\tif (!isset($_SESSION['sess_user_id'])) {\n\t\t\texit;\n\t\t}\n}\n"
 REALM_IF = "if (is_realm_allowed($page['id'] + 10000)) {\n\tprint 1;\n}%s\n"
 SELF_GATED_SHAPES = {
+    'realtime guest has an explicit realm refusal': (
+        'graph_realtime.php', "<?php\n$guest_account = true;\n" + AUTH +
+        "if ($user_id < 1 || !is_realm_allowed(25)) { http_response_code(403); exit; }\n", 'realm:25'),
+    'realtime guest exemption is not the reviewed realm guard': (
+        'graph_realtime.php', "<?php\n$guest_account = true;\n" + AUTH +
+        "if (!$is_guest && !is_realm_allowed(25)) { http_response_code(403); exit; }\n", 'unknown'),
+    'realtime guard comment grants nothing': (
+        'graph_realtime.php', "<?php\n$guest_account = true;\n" + AUTH +
+        "// if ($user_id < 1 || !is_realm_allowed(25)) { exit; }\n", 'unknown'),
+    'realtime guard in a function grants nothing': (
+        'graph_realtime.php', "<?php\n$guest_account = true;\n" + AUTH +
+        "function f() { if ($user_id < 1 || !is_realm_allowed(25)) { exit; } }\n", 'unknown'),
+
     'refusal that exits': ('remote_agent.php', BOOT + REFUSE % 'exit;', 'anonymous-allowed'),
     'refusal that returns': ('remote_agent.php', BOOT + REFUSE % 'return;', 'anonymous-allowed'),
     'refusal that throws': ('remote_agent.php', BOOT + REFUSE % 'throw new Exception();', 'anonymous-allowed'),
