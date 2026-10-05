@@ -13,23 +13,24 @@ use RuntimeException;
 
 require_once dirname(__DIR__, 2) . '/Helpers/NativeChildCoverageEvidence.php';
 
-function rendererCoverageSources(): array
+function rendererCoverageSources(bool $automation = false): array
 {
-    return array(
+    $sources = array(
         'lib/html.php', 'tests/Fixtures/rrd-process-coverage.php',
         'tests/Helpers/NativeChildCoverageEvidence.php', 'composer.lock', 'tests/composer.lock',
         'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php',
         'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php',
         'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php',
     );
+    return $automation ? array_merge($sources, array('tests/Fixtures/automation-header-native.php', 'lib/api_automation.php', 'include/global_constants.php')) : $sources;
 }
 
 /** Mutate only the owned authentic report and a temporary source, restoring all artifacts. */
-function verifyRendererEvidenceFailures(string $report, string $root, string $scenario, array $sources, array $markers): void
+function verifyRendererEvidenceFailures(string $report, string $root, string $scenario, array $sources, array $markers, array $hits): void
 {
     $originalReport = file_get_contents($report);
     $originalEvidence = file_get_contents($report . '.json');
-    $load = fn() => \NativeChildCoverageEvidence::load($report, $root, 'tests/Unit/Security/HtmlRendererOutputTest.php', $scenario, $sources, $markers, array('lib/html.php'));
+    $load = fn() => \NativeChildCoverageEvidence::load($report, $root, 'tests/Unit/Security/HtmlRendererOutputTest.php', $scenario, $sources, $markers, $hits);
     $temporarySource = dirname($report) . '/source.php';
     try {
         $changed = json_decode($originalEvidence, true, 512, JSON_THROW_ON_ERROR);
@@ -114,21 +115,25 @@ function render(string $call, array $arguments, ?object $coverage): string
         PHP;
     $program .= "\n" . $call;
     $scenario = json_encode(array($call, $arguments), JSON_THROW_ON_ERROR);
+    $automation = $arguments['automation'] ?? false;
+    $sources = rendererCoverageSources($automation);
+    $markers = array('renderer-call-completed', 'renderer-html-produced');
+    $hits = array('lib/html.php');
+    if ($automation) {
+        $markers[] = 'automation-stored-label-rendered';
+        $hits[] = 'lib/api_automation.php';
+    }
     if ($coverage !== null) {
         // The child registers its producer and sources before any measured execution.
         $program = 'define("HTML_RENDERER_TEST_COVERAGE",true);'
             . 'define("RRD_TEST_COVERAGE_DIRECTORY",' . var_export($directory, true) . ');'
             . 'require ' . var_export($root . '/tests/Helpers/NativeChildCoverageEvidence.php', true) . ';'
             . '$GLOBALS["nativeChildCoverageSnapshot"] = NativeChildCoverageEvidence::snapshot($argv[1],'
-            . '"tests/Unit/Security/HtmlRendererOutputTest.php", $argv[3], array('
-            . '"lib/html.php", "tests/Fixtures/rrd-process-coverage.php",'
-            . '"tests/Helpers/NativeChildCoverageEvidence.php", "composer.lock", "tests/composer.lock",'
-            . '"lib/rrd.php", "src/Graphing/Infrastructure/Rrd/ProxyCipher.php", "lib/dsdebug.php",'
-            . '"lib/rrd_maintenance.php", "lib/poller.php", "lib/boost.php",'
-            . '"lib/api_data_source.php", "lib/rrdcheck.php", "lib/dsstats.php"));'
+            . '"tests/Unit/Security/HtmlRendererOutputTest.php", $argv[3], ' . var_export($sources, true) . ');'
+            . ($automation ? 'define("HTML_AUTOMATION_LABEL_TEST_COVERAGE",true);' : '')
             . 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';'
             . 'ob_start();' . $program
-            . '$GLOBALS["nativeChildCoverageMarkers"] = array("renderer-call-completed");'
+            . '$GLOBALS["nativeChildCoverageMarkers"][] = "renderer-call-completed";'
             . 'if (strlen(ob_get_contents()) > 0) { $GLOBALS["nativeChildCoverageMarkers"][] = "renderer-html-produced"; }'
             . 'ob_end_flush();';
     }
@@ -160,14 +165,13 @@ function render(string $call, array $arguments, ?object $coverage): string
                 throw new RuntimeException('Native renderer coverage report is missing or ambiguous.');
             }
             $report = $reports[0];
-            $sources = rendererCoverageSources();
-            $markers = array('renderer-call-completed', 'renderer-html-produced');
-            $child = \NativeChildCoverageEvidence::load($report, $root, 'tests/Unit/Security/HtmlRendererOutputTest.php', $scenario, $sources, $markers, array('lib/html.php'));
-            static $evidenceChecked = false;
-            if (!$evidenceChecked) {
-                expect(\NativeChildCoverageEvidence::verifyRejections($report, $root, 'tests/Unit/Security/HtmlRendererOutputTest.php', $scenario, $sources, $markers, array('lib/html.php'), 'tests/Helpers/NativeChildCoverageEvidence.php'))->toBe(26);
-                verifyRendererEvidenceFailures($report, $root, $scenario, $sources, $markers);
-                $evidenceChecked = true;
+            $child = \NativeChildCoverageEvidence::load($report, $root, 'tests/Unit/Security/HtmlRendererOutputTest.php', $scenario, $sources, $markers, $hits);
+            static $evidenceChecked = array();
+            $evidenceKind = $automation ? 'automation' : 'renderer';
+            if (!isset($evidenceChecked[$evidenceKind])) {
+                expect(\NativeChildCoverageEvidence::verifyRejections($report, $root, 'tests/Unit/Security/HtmlRendererOutputTest.php', $scenario, $sources, $markers, $hits, 'tests/Helpers/NativeChildCoverageEvidence.php'))->toBe(count($sources) + count($markers) + 10);
+                verifyRendererEvidenceFailures($report, $root, $scenario, $sources, $markers, $hits);
+                $evidenceChecked[$evidenceKind] = true;
             }
             $coverage->merge($child);
         }
@@ -450,7 +454,8 @@ test('both sortable headers restore cached order and retain independent page cou
     $xpath = document($result['html']);
     expectNoInjection($xpath);
     expect($xpath->query('//tr'))->toHaveCount(4)
-        ->and($xpath->query('//strong[text()="Name"]'))->toHaveCount(4)
+        ->and($xpath->query('//strong'))->toHaveCount(0)
+        ->and($xpath->query('//div[@class="textSubHeaderDark"][starts-with(text(),"<strong>Name</strong>")]'))->toHaveCount(4)
         ->and($xpath->query('//div[@class="sortinfo"]'))->toHaveCount(8);
     foreach (array(1, 2) as $row) {
         expect($xpath->evaluate('string(//tr[' . $row . ']/th[1]/@class)'))->toContain('secondarySort')
@@ -515,3 +520,43 @@ test('cached empty sort order renders both header layouts without warnings', fun
             ->and($xpath->evaluate('string(//tr[' . $row . ']/th[2]/div/@sort-direction)'))->toBe('DESC');
     }
 });
+
+
+test('sortable and fixed header labels are text in both layouts', function ($payload) {
+    $call = <<<'CHILD'
+        $headers = array('name' => array('display' => $a['label'], 'align' => 'center', 'tip' => 'Header hint'),
+            'second' => array($a['label'], 'DESC'), 'nosort' => array('display' => $a['label']),
+            'nosort2' => array($a['label'], 'ASC'));
+        print '<table>';
+        html_header_sort($headers, 'name', 'ASC', 2, 'graphs.php?action=edit&id=1', 'main');
+        html_header_sort_checkbox($headers, 'name', 'ASC', true, 'graphs.php?action=edit&id=1', 'main');
+        print '</table>';
+        CHILD;
+    $xpath = document(render($call, array('label' => $payload), $this->getTestResultObject()->getCodeCoverage()));
+    expectNoInjection($xpath);
+    expect($xpath->query('//tr'))->toHaveCount(2)->and($xpath->query('//div[@class="sortinfo"]'))->toHaveCount(4);
+    foreach (array(1, 2) as $row) {
+        foreach (array(1, 2, 3, 4) as $column) {
+            expect($xpath->evaluate('string((//tr[' . $row . ']/th[' . $column . ']//text())[1])'))->toBe(decoded($payload));
+        }
+        $sort = $xpath->query('//tr[' . $row . ']/th[1]/div')->item(0);
+        expect($sort->getAttribute('sort-page'))->toBe('graphs.php?action=edit&id=1')
+            ->and($sort->getAttribute('sort-column'))->toBe('name')->and($sort->getAttribute('sort-direction'))->toBe('DESC');
+    }
+    expect($xpath->query('//i[contains(@class,"fa-sort")]'))->toHaveCount(4);
+})->with(PAYLOADS);
+
+test('matching-tree headers encode the actual persisted automation field', function ($label) {
+    $html = render(
+        'require $argv[1] . "/tests/Fixtures/automation-header-native.php";',
+        array('label' => $label, 'automation' => true),
+        $this->getTestResultObject()->getCodeCoverage()
+    );
+    $xpath = document($html);
+    expectNoInjection($xpath);
+    expect($xpath->query('//div[@sort-column="source"]'))->toHaveCount(1)
+        ->and($xpath->evaluate('string((//div[@sort-column="source"]//text())[1])'))->toBe(decoded($label))
+        ->and($xpath->evaluate('string(//div[@sort-column="source"]/@sort-page)'))->toContain('automation_tree_rules.php?action=item_edit&id=1')
+        ->and($xpath->query('//select[@id="host_template_id"]'))->toHaveCount(1)
+        ->and($xpath->query('//select[@id="host_status"]'))->toHaveCount(1);
+})->with(array('stored markup' => array('<img src=x onerror=alert(1)>'), 'valid producer' => array('h.hostname'), 'existing entities' => array('Host &amp; label')));
