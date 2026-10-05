@@ -122,84 +122,6 @@ final class DeviceGraphCallerNativeTest extends TestCase
         yield 'no authentication keeps first device' => [['auth_method' => 0],11,'A denied device'];
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('hostActionCases')]
-    public function testIndividualHostControllersRefuseBeforeTheirActualSink(string $action, string $sink, ?int $host, bool $allowed): void
-    {
-        $field = in_array($action, ['edit','ping_host'], true) ? 'id' : 'host_id';
-        $state = $this->runCaller(['page' => 'host.php','method' => in_array($action, ['edit','ping_host'], true) ? 'GET' : 'POST','fields' => ['action' => $action,$field => $host,'id' => in_array($action, ['edit','ping_host'], true) ? $host : ($action === 'gt_remove' ? 5 : 7),'snmp_query_id' => 7,'data_query_id' => 7,'graph_template_id' => 5,'reindex_method' => 1]]);
-        if ($allowed) self::assertContains($sink, array_column($state['events'], 0));
-        else {
-            self::assertSame([], $state['events']);
-            if ($action === 'repopulate' && ($host === 0 || $host === null)) self::assertSame('repopulate_error', $state['messages'][0][0]);
-            else {
-                self::assertContains('Location: permission_denied.php', $state['headers']);
-                self::assertSame('AUTH', $state['logs'][0][1]);
-            }
-        }
-    }
-
-    public static function hostActionCases(): iterable
-    {
-        foreach (['ping_host' => 'ping','enable_debug' => 'debug-enable','disable_debug' => 'debug-disable','repopulate' => 'repopulate','query_add' => 'query-add','query_reload' => 'query','query_verbose' => 'query','query_remove' => 'query-remove','query_change' => 'query-change','gt_add' => 'gt-add','gt_remove' => 'gt-remove'] as $action => $sink) {
-            foreach ([12 => true,13 => false,0 => false] as $host => $allowed) yield $action . ' ' . $host => [$action,$sink,$host,$allowed];
-            yield $action . ' omitted' => [$action,$sink,null,false];
-        }
-    }
-
-    #[\PHPUnit\Framework\Attributes\DataProvider('editCases')]
-    public function testActualEditControllerAdmitsBlankCreateAndRefusesForeignDetails(?int $id, bool $allowed): void
-    {
-        $fields = ['action' => 'edit'];
-        if ($id !== null) $fields['id'] = $id;
-        $state = $this->runCaller(['page' => 'host.php','method' => 'GET','fields' => $fields]);
-        if ($allowed) {
-            self::assertStringContainsString('<form', $state['html']);
-            self::assertStringContainsString($id ? 'B allowed disabled device' : 'Device [new]', $state['html']);
-        } else {
-            self::assertSame([], $state['events']);
-            self::assertStringNotContainsString('<form', $state['html']);
-            self::assertContains('Location: permission_denied.php', $state['headers']);
-        }
-    }
-
-    public static function editCases(): iterable
-    {
-        yield 'allowed' => [12,true];
-        yield 'foreign' => [13,false];
-        yield 'zero create' => [0,true];
-        yield 'omitted create' => [null,true];
-    }
-
-    public function testHostFormSaveSkipsHookAndRetainsOriginalRedirectOnApiFailure(): void
-    {
-        $state = $this->runCaller(['page' => 'host.php','api' => true,'api_form' => true,'api_save_failure' => true,'fields' => ['action' => 'save','id' => 12,'host_template_id' => 0,'save_component_host' => 1,'description' => 'Changed','hostname' => 'localhost']]);
-        self::assertSame(['hook'], array_column($state['events'], 0));
-        self::assertSame('api_device_save', $state['events'][0][1]);
-        self::assertSame(12, (int) $state['events'][0][2]['id']);
-        self::assertNull($state['api_error']);
-        self::assertSame('B allowed disabled device', $state['hosts'][1]['description']);
-        self::assertContains('Location: host.php?header=false&action=edit&id=12', $state['headers']);
-    }
-
-    #[\PHPUnit\Framework\Attributes\DataProvider('bulkCases')]
-    public function testWholeBulkControllerGuardsEveryModeBeforeBatchHooks(string $mode, string $sink, bool $allowed): void
-    {
-        $selection = $allowed ? [12] : [12,13];
-        $state = $this->runCaller(['page' => 'host.php','fields' => ['action' => 'actions','drp_action' => $mode,'selected_items' => serialize($selection),'tree_id' => 20,'tree_item_id' => 0,'delete_type' => 2,'report_id' => 1,'timespan' => 1,'align' => 1]]);
-        if ($allowed) {
-            self::assertContains($sink, array_column($state['events'], 0));
-            self::assertContains('Location: host.php?header=false', $state['headers']);
-        } else {
-            self::assertSame([], $state['events']);
-            self::assertContains('Location: permission_denied.php', $state['headers']);
-            self::assertSame('AUTH', $state['logs'][0][1]);
-        }
-    }
-    public static function bulkCases(): iterable
-    {
-        foreach (['1' => 'bulk-delete','2' => 'bulk-enable','3' => 'bulk-disable','4' => 'bulk-change','5' => 'bulk-clear','6' => 'bulk-automation','7' => 'bulk-sync','8' => 'bulk-report','tr_20' => 'bulk-tree','plugin' => 'hook'] as $mode => $sink) foreach ([true,false] as $allowed) yield $mode . ' ' . ($allowed ? 'admitted' : 'mixed refused') => [(string) $mode,$sink,$allowed];
-    }
-
     #[\PHPUnit\Framework\Attributes\DataProvider('directCreateCases')]
     public function testDirectGraphCreateControllerAuthorizesDeviceBeforeTemplateReadAndCreation(int $host, bool $allowed): void
     {
@@ -234,27 +156,6 @@ final class DeviceGraphCallerNativeTest extends TestCase
         self::assertSame('12', $xpath->evaluate('string(//input[@name="host_id"]/@value)'));
         self::assertSame(['cg' => [5 => [5 => true]]], unserialize($xpath->evaluate('string(//input[@name="selected_graphs_array"]/@value)'), ['allowed_classes' => false]));
         self::assertSame('1', $xpath->evaluate('string(//input[@name="save_component_new_graphs"]/@value)'));
-    }
-
-    #[\PHPUnit\Framework\Attributes\DataProvider('hostSaveCases')]
-    public function testActualHostSaveRefusesForeignAndAdmitsCreateBeforeSaveHook(int $id, bool $allowed): void
-    {
-        $state = $this->runCaller(['page' => 'host.php','fields' => ['action' => 'save','id' => $id,'host_template_id' => 0,'save_component_host' => 1,'description' => 'Changed','hostname' => 'localhost']]);
-        if ($allowed) {
-            self::assertSame('device-save', $state['events'][0][0]);
-            self::assertSame('host_save', $state['events'][1][1]);
-            self::assertSame('Changed', $state['hosts'][$id === 0 ? 3 : 1]['description']);
-        } else {
-            self::assertSame([], $state['events']);
-            self::assertSame('C denied device', $state['hosts'][2]['description']);
-            self::assertContains('Location: permission_denied.php', $state['headers']);
-        }
-    }
-    public static function hostSaveCases(): iterable
-    {
-        yield 'existing' => [12,true];
-        yield 'denied' => [13,false];
-        yield 'create' => [0,true];
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('apiCases')]

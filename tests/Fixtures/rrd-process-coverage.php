@@ -33,6 +33,13 @@ if (defined('DATA_SOURCE_CONTROLLER_TEST_COVERAGE')) {
     foreach (array('lib/auth.php', 'lib/html_utility.php', 'data_sources.php', 'graphs.php') as $file) $coverageFilter->includeFile($coverageRoot . '/' . $file);
 }
 
+if (defined('DEVICE_ROUTE_TEST_COVERAGE')) {
+    require_once $coverageRoot . '/tests/Helpers/DeviceRouteCoverageRegistration.php';
+    foreach (DeviceRouteCoverageRegistration::MEASURED as $file) $coverageFilter->includeFile($coverageRoot . '/' . $file);
+    $coverageFilter->includeFile($coverageRoot . '/host.php');
+    if (defined('RRD_TEST_CLI_COVERAGE_COPY')) $coverageFilter->includeFile(RRD_TEST_CLI_COVERAGE_COPY);
+}
+
 if (defined('DEVICE_GRAPH_CALLER_TEST_COVERAGE')) {
     foreach (array('lib/auth.php', 'lib/html_utility.php', 'graphs_new.php', 'host.php', 'graphs.php', 'lib/api_graph.php', 'lib/api_device.php', 'src/Inventory/Infrastructure/Legacy/LegacyDeviceSiteWriter.php') as $file) $coverageFilter->includeFile($coverageRoot . '/' . $file);
 }
