@@ -7813,9 +7813,16 @@ function get_client_addr()
     if (!is_array($headers) || count($headers) !== 1) {
         return false;
     }
-    $headers = array_values(array_intersect($headers, $allowed_proxy_headers));
-    $header = $headers[0] ?? null;
-    if (!is_string($header) || $header === 'REMOTE_ADDR' || !isset($_SERVER[$header])) {
+    if (!is_array($allowed_proxy_headers)) {
+        return false;
+    }
+    foreach ($allowed_proxy_headers as $allowed_header) {
+        if (!is_string($allowed_header)) {
+            return false;
+        }
+    }
+    $header = reset($headers);
+    if (!is_string($header) || !in_array($header, $allowed_proxy_headers, true) || $header === 'REMOTE_ADDR' || !isset($_SERVER[$header])) {
         return false;
     }
 

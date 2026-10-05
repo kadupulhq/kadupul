@@ -36,7 +36,7 @@ function csrf_check($fatal)
     return $GLOBALS['scenario']['csrf_valid'] ?? false;
 }
 session_start();
-$_SESSION = array('sess_user_id' => 99, 'sentinel' => 'preserved');
+$_SESSION = array_merge(array('sess_user_id' => 99, 'sentinel' => 'preserved'), $scenario['session'] ?? array());
 $config = array('base_path' => $root, 'poller_id' => 1, 'connection' => 'online', 'url_path' => '/', 'is_web' => false, 'cacti_version' => 'native', 'cacti_server_os' => 'unix', 'config_options_array' => array('num_rows_table' => 2, 'selected_theme' => 'classic', 'autocomplete_enabled' => '', 'path_cactilog' => $directory . '/cacti.log', 'path_stderrlog' => $directory . '/stderr.log', 'max_display_rows' => 2, 'log_refresh_interval' => 300, 'guest_user' => 0, 'auth_method' => 0));
 $no_session_write = array('utilities.php', 'managers.php');
 $messages = array();
@@ -99,6 +99,12 @@ INSERT INTO data_template VALUES(10,'Template & <script>'),(20,'Other template')
 INSERT INTO data_local VALUES(101,1,10),(102,1,10),(103,2,20),(104,2,0);
 INSERT INTO data_template_data VALUES(101,10,'Alpha DS & <script>','on'),(102,10,'Beta DS','on'),(103,20,'Gamma DS',''),(104,0,'Delta DS','on');
 INSERT INTO poller_item VALUES(101,1,0,'alpha','OID & <script>','/a & <script>.rrd',2,'public & <script>',''),(102,1,0,'alpha','OID-v3','/b.rrd',3,'','v3 & <script>'),(103,2,1,'beta','script & <script>','/c.rrd',0,'',''),(104,2,2,'beta','server & <script>','/d.rrd',0,'','');");
+if ($scenario['non_device'] ?? false) {
+    $db->exec("INSERT INTO data_template VALUES(30,'Non-device template');
+INSERT INTO data_local VALUES(105,0,30);
+INSERT INTO data_template_data VALUES(105,30,'Non-device DS','on');
+INSERT INTO poller_item VALUES(105,0,1,'none','non-device script','/none.rrd',0,'','');");
+}
 if ($scenario['same_name_realms'] ?? false) {
     $db->exec("INSERT INTO user_auth VALUES(3, 'Shared Name', 'Original Account', 0),(4, 'Shared Name', 'Foreign Account', 9);
 INSERT INTO user_log VALUES(3, 'Shared Name', '2026-09-05', 1, '192.0.2.5'),(3, 'Shared Name', '2026-09-06', 1, '192.0.2.6'),(4, 'Shared Name', '2026-09-07', 1, '192.0.2.7');");
@@ -229,7 +235,11 @@ function db_fetch_cell_prepared($sql, $params = array())
     $GLOBALS['queries'][] = array($sql, $params);
     $q = $GLOBALS['db']->prepare($sql);
     $q->execute($params);
-    return $q->fetchColumn();
+    $value = $q->fetchColumn();
+    if (str_contains($sql, 'SELECT COUNT(*)') && str_contains($sql, 'FROM host_snmp_cache')) {
+        $GLOBALS['snmp_counts'][] = (int) $value;
+    }
+    return $value;
 }
 function db_fetch_cell($sql)
 {
@@ -255,7 +265,12 @@ function db_qstr_rlike($value)
 }
 function get_allowed_devices($where)
 {
-    return db_fetch_assoc('SELECT * FROM host ORDER BY description');
+    $scope = '';
+    if (array_key_exists('allowed_devices', $GLOBALS['scenario'])) {
+        $ids = array_map('intval', $GLOBALS['scenario']['allowed_devices']);
+        $scope = ' WHERE ' . ($ids === array() ? '1=0' : 'id IN (' . implode(',', $ids) . ')');
+    }
+    return db_fetch_assoc('SELECT * FROM host' . $scope . ' ORDER BY description');
 }
 // Keep selected-device checks consistent with this renderer fixture's isolated
 // permission list. Production authorization is verified in the auth suites.
@@ -409,7 +424,7 @@ foreach ($tables as $table) {
     $after[$table] = $db->query('SELECT * FROM ' . $table)->fetchAll(PDO::FETCH_ASSOC);
 }
 // This CLI-only fixture emits a JSON protocol, with HTML characters escaped.
-fwrite(STDOUT, json_encode(array('icons' => $icons ?? array(), 'total_rows' => $GLOBALS['total_rows'] ?? array(), 'log_before' => $logBefore, 'log_after' => hash_file('sha256', $directory . '/cacti.log'), 'before' => $before, 'after' => $after, 'html' => $html, 'queries' => $queries, 'request' => $_REQUEST, 'session' => $_SESSION), JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));
+fwrite(STDOUT, json_encode(array('icons' => $icons ?? array(), 'snmp_counts' => $GLOBALS['snmp_counts'] ?? array(), 'total_rows' => $GLOBALS['total_rows'] ?? array(), 'log_before' => $logBefore, 'log_after' => hash_file('sha256', $directory . '/cacti.log'), 'before' => $before, 'after' => $after, 'html' => $html, 'queries' => $queries, 'request' => $_REQUEST, 'session' => $_SESSION), JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));
 
 function get_allowed_management_devices(...$arguments)
 {

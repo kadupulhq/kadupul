@@ -296,7 +296,7 @@ class Session:
         if not self.token:
             raise RuntimeError('Login form lacks CSRF token')
         return self.request('/index.php', {'action': 'login', 'login_username': 'admin',
-                            'login_password': password, 'realm': 'local', '__csrf_magic': self.token})
+                            'login_password': password, '__csrf_magic': self.token})
 
 
 class Harness:

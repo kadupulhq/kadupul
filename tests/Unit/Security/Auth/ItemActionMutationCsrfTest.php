@@ -27,6 +27,8 @@ function csrf_startup() {
 }
 require $argv[1] . '/include/vendor/csrf/csrf-magic.php';
 require $argv[1] . '/lib/html_utility.php';
+require_once $argv[1] . '/tests/Helpers/PhpSource.php';
+eval(test_php_function_source(file_get_contents($argv[1] . '/lib/auth.php'), 'auth_resource_id'));
 require $argv[1] . '/include/global_constants.php';
 $config = array('base_path' => $argv[1], 'include_path' => $argv[1] . '/include', 'library_path' => $argv[1] . '/lib',
     'url_path' => '/', 'poller_id' => 1, 'php_snmp_support' => false);
@@ -37,6 +39,7 @@ function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function api_plugin_hook($name) {}
 function api_plugin_hook_function($name, $value = null) { return $value; }
 function is_device_allowed($id) { return (int) $id === 1; }
+function is_graph_allowed($id) { return (int) $id === 1; }
 function get_current_page() { return 'tree.php'; }
 function get_graph_group($id) { return array(1); }
 function get_graph_parent($id) { return 1; }
@@ -59,7 +62,20 @@ function db_fetch_cell_prepared(...$args) {
     handler_reached();
 }
 function db_fetch_row(...$args) { handler_reached(); }
-function db_fetch_row_prepared(...$args) { handler_reached(); }
+function db_fetch_row_prepared($sql, ...$args) {
+    // The graph item GET now authorizes persisted ownership before its header.
+    // Preserve the read-editor assertion by admitting those two actual guards;
+    // POST cases still stop at the first handler query.
+    if ($GLOBALS['argv'][2] === 'graphs_items.php' && $GLOBALS['argv'][3] === 'GET') {
+        if ($sql === 'SELECT id, host_id, graph_template_id FROM graph_local WHERE id = ?') {
+            return array('id' => 1, 'host_id' => 1, 'graph_template_id' => 1);
+        }
+        if ($sql === 'SELECT id, graph_template_id, local_graph_template_item_id FROM graph_templates_item WHERE id = ? AND local_graph_id = ?') {
+            return array('id' => 1, 'graph_template_id' => 1, 'local_graph_template_item_id' => 1);
+        }
+    }
+    handler_reached();
+}
 function db_fetch_assoc(...$args) { handler_reached(); }
 function db_fetch_assoc_prepared(...$args) { handler_reached(); }
 function db_column_exists(...$args) { handler_reached(); }
@@ -125,8 +141,8 @@ PHP;
     }
 }
 
-// Inventory actions use Symfony; DeviceAssociationPresentationTest, DeviceQueryAssociationPresentationTest
-// and DeviceMaintenancePresentationTest exercise rendered forms, CSRF rejection and authorized writes.
+// Inventory actions use Symfony; DeviceActionCsrfTest exercises every rendered association
+// and maintenance action, CSRF rejection before mutation, and authorized writes.
 // External-link actions are covered by the Symfony Link presentation tests.
 // Data Input Methods, Palette and VDEF now use Symfony. Their presentation and authorization tests
 // cover legacy URL rejection, GET editors, POST mutations and CSRF failures.

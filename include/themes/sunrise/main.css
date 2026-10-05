@@ -1166,6 +1166,14 @@ legend, .loginHeading {
 	display: inline-block;
 }
 
+button.iconLink.spikekill {
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	cursor: pointer;
+}
+
 .piinstall, .pienable, .pidisable, .piuninstall, .pierror {
 	padding: 0px 3px !important;
 }

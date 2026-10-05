@@ -79,11 +79,45 @@ test('the profile page leaves a font size it refuses unsaved', function () {
 
 // RRDtool 1.3 and later hand the value to Pango, which ignores a file path and
 // silently draws its fallback font.
-test('font settings ask for a Pango font description, not a font file', function () {
-    $source = file_get_contents(dirname(__DIR__, 4) . '/include/global_settings.php');
+test('loaded System and profile font settings ask for Pango descriptions', function () {
+    $result = rrd_characterization_run($this, array('options' => rrd_characterization_options(), 'calls' => array(
+        array('fn' => 'rrd_characterization_setting_definitions', 'args' => array()),
+    )))['results'][0];
+    expect($result['diagnostics'])->toBe(array());
+    $definitions = $result['returned'];
+    $systemFonts = array();
+    foreach ($definitions['system'] as $section) {
+        foreach ($section as $name => $definition) {
+            if (($definition['method'] ?? '') === 'font') {
+                $systemFonts[$name] = $definition;
+            }
+        }
+    }
+    expect(array_keys($systemFonts))->toBe(array('path_rrdtool_default_font', 'title_font', 'legend_font', 'axis_font', 'unit_font'));
+    foreach (array_merge(array_values($systemFonts), array_values(array_filter($definitions['user']['fonts'], static fn($setting) => ($setting['method'] ?? '') === 'font'))) as $definition) {
+        expect($definition['placeholder'])->toBe('Enter a Pango font description')
+            ->and($definition['description'])->toContain('Pango font description')
+            ->and($definition['options']['options'])->toBe('graph_font_name_filter');
+    }
+    expect(array_keys(array_filter($definitions['user']['fonts'], static fn($setting) => ($setting['method'] ?? '') === 'font')))
+        ->toBe(array('title_font', 'legend_font', 'axis_font', 'unit_font'));
+});
 
-    expect($source)->not->toMatch('/True Type Font file|Font File|The font file|Pangon/')
-        ->and(substr_count($source, 'Enter a Pango font description'))->toBe(4);
+test('loaded CSP settings advertise supported reporting and explain direct enforcement', function () {
+    $result = rrd_characterization_run($this, array('options' => rrd_characterization_options(), 'calls' => array(
+        array('fn' => 'rrd_characterization_setting_definitions', 'args' => array()),
+    )))['results'][0];
+    expect($result['diagnostics'])->toBe(array());
+    $policy = null;
+    foreach ($result['returned']['system'] as $section) {
+        if (isset($section['content_security_policy_script'])) {
+            $policy = $section['content_security_policy_script'];
+        }
+    }
+    expect($policy)->not->toBeNull();
+    expect(array_keys($policy['array']))->toBe(array(0, 'unsafe-eval', 'nonce-report'))
+        ->and($policy['array']['nonce-report'])->toBe('Nonce Mode - Reporting Only')
+        ->and($policy['description'])->toContain('without blocking them', 'enforcing nonce mode through direct configuration');
 });
 
 // The per-user labels reuse the System labels so existing translations still apply.

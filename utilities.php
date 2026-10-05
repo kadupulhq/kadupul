@@ -1708,7 +1708,10 @@ function utilities_view_snmp_cache()
     validate_store_request_vars($filters, 'sess_usnmp');
     /* ================= input validation ================= */
     if (get_request_var('host_id') > 0 && !is_device_allowed(get_request_var('host_id'))) {
-        utilities_device_access_denied();
+        set_request_var('host_id', -1);
+        $_SESSION['sess_usnmp_host_id'] = -1;
+        set_request_var('page', 1);
+        $_SESSION['sess_usnmp_page'] = 1;
     }
     $allowed_host_sql = utilities_allowed_host_sql('h.id');
 
@@ -1782,13 +1785,14 @@ function utilities_view_snmp_cache()
 							<option value='-1'<?php if (get_request_var('host_id') == '-1') {?> selected<?php }?>><?php print __('Any');?></option>
 							<?php
                             if (get_request_var('host_id') == -1) {
-                                $snmp_queries = db_fetch_assoc('SELECT DISTINCT sq.id, sq.name
+                                $snmp_queries = db_fetch_assoc("SELECT DISTINCT sq.id, sq.name
 									FROM host_snmp_cache AS hsc
 									INNER JOIN snmp_query AS sq
 									ON hsc.snmp_query_id = sq.id
 									INNER JOIN host AS h
 									ON hsc.host_id = h.id
-									ORDER by sq.name');
+									WHERE $allowed_host_sql
+									ORDER by sq.name");
                             } else {
                                 $snmp_queries = db_fetch_assoc_prepared(
                                     "SELECT DISTINCT sq.id, sq.name
@@ -2020,7 +2024,10 @@ function utilities_view_poller_cache()
     validate_store_request_vars($filters, 'sess_poller');
     /* ================= input validation ================= */
     if (get_request_var('host_id') > 0 && !is_device_allowed(get_request_var('host_id'))) {
-        utilities_device_access_denied();
+        set_request_var('host_id', -1);
+        $_SESSION['sess_poller_host_id'] = -1;
+        set_request_var('page', 1);
+        $_SESSION['sess_poller_page'] = 1;
     }
     $allowed_host_sql = utilities_allowed_host_sql('h.id');
 
@@ -2091,11 +2098,10 @@ function utilities_view_poller_cache()
 							<option value='-1'<?php if (get_request_var('template_id') == '-1') {?> selected<?php }?>><?php print __('Any');?></option>
 							<option value='0'<?php if (get_request_var('template_id') == '0') {?> selected<?php }?>><?php print __('None');?></option>
 							<?php
-                            if (get_request_var('host_id') > 0) {
-                                $sql_where = 'WHERE dl.host_id = ' . get_request_var('host_id');
-                            } else {
-                                $sql_where = '';
-                            }
+                            $sql_where = 'WHERE (dl.host_id = 0 OR ' . str_replace('h.id', 'dl.host_id', $allowed_host_sql) . ')';
+    if (get_request_var('host_id') >= 0) {
+        $sql_where .= ' AND dl.host_id = ' . get_request_var('host_id');
+    }
 
     $templates = db_fetch_assoc("SELECT DISTINCT dt.id, dt.name
 								FROM data_template AS dt
@@ -2350,7 +2356,7 @@ function utilities_view_poller_cache()
  */
 function utilities_allowed_host_sql($column)
 {
-    $total_rows = 0;
+    $total_rows = -1;
     $devices = get_allowed_management_devices('', '', -1, $total_rows);
     $device_ids = array();
 

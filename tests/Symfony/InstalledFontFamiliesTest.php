@@ -55,6 +55,22 @@ final class InstalledFontFamiliesTest extends TestCase
         yield 'accents' => ["Caf\u{e9} Sans", true];
         yield 'a family that is not installed' => ['Roboto Mono', false];
         yield 'a longer name that starts like one' => ['DejaVuSansCondensed', false];
+        yield 'a malformed style suffix' => ['DejaVu Sans B-o-l-d', false];
+        yield 'an invalid named style value' => ['DejaVu Sans style=Bold', false];
+        yield 'an oversized named weight' => ['DejaVu Sans weight=2147483648', false];
+        yield 'a valid named numeric weight' => ['DejaVu Sans weight=900', true];
+        yield 'negative zero is a nonnegative Pango size' => ['DejaVu Sans -0', true];
+        yield 'negative zero is a nonnegative Pango field value' => ['DejaVu Sans style=-0', true];
+        yield 'a negative Pango size remains part of the family' => ['DejaVu Sans -1', false];
+        yield 'a negative Pango field remains part of the family' => ['DejaVu Sans style=-1', false];
+        yield 'unknown suffix' => ['DejaVu Sans Typo', false];
+        yield 'unknown suffix after a style' => ['DejaVu Sans Bold Typo', false];
+        yield 'unknown suffix before a style' => ['DejaVu Sans Typo Bold', false];
+        yield 'recognized nonhyphenated styles and absolute size' => ['DejaVu Sans SemiBold Condensed 9.5px', true];
+        yield 'variation coordinates' => ['DejaVu Sans Bold 10 @wght=600,wdth=80', true];
+        yield 'a later known family cannot erase an unknown suffix' => ['Ubuntu, DejaVu Sans Typo', false];
+        yield 'an earlier family is not shortened by trailing styles' => ['DejaVu Sans Typo, Ubuntu Bold', false];
+        yield 'a trailing comma disambiguates a family name' => ['Noto Sans CJK JP Regular,', true];
         yield 'a style alone' => ['Bold', false];
         yield 'the end of a name that holds a comma' => ['Inc Sans', false];
     }
@@ -79,13 +95,21 @@ final class InstalledFontFamiliesTest extends TestCase
     public static function unanswered(): iterable
     {
         yield 'fc-list fails' => [self::LISTING, 1];
-        yield 'fontconfig knows no fonts' => ['', 0];
     }
 
     #[DataProvider('unanswered')]
     public function testAnUnansweredListingIsUnknownRatherThanEmpty(string $output, int $status): void
     {
         self::assertNull((new InstalledFontFamilies($this->fcList($output, $status)))->contains('DejaVu Sans'));
+    }
+
+    public function testASuccessfulEmptyListingRejectsFamiliesAndAliases(): void
+    {
+        $families = new InstalledFontFamilies($this->fcList(''));
+        self::assertFalse($families->contains('DejaVu Sans'));
+        self::assertFalse($families->contains('An Arbitrary Font'));
+        self::assertFalse($families->contains('monospace'));
+        self::assertSame("--format\n%{family}\\n\n", file_get_contents($this->root . '/calls'));
     }
 
     public function testNoFcListIsUnknown(): void

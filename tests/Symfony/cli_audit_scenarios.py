@@ -437,8 +437,8 @@ def verify_audit_cases(harness, check, tables, version):
         check(with_recorded_collations(masked_audit(shim['stdout']), collations) == masked_audit(shim['stdout']),
               f'{label}: native ALTER explicitly retains the recorded column collations')
         if '--upgrade' in arguments:
-            check(UPGRADE_DEPRECATION in shim['stderr'],
-                  f'{label}: deprecated upgrade flag explains the separate upgrade command')
+            check(UPGRADE_DEPRECATION not in shim['stderr'],
+                  f'{label}: cron quiet setting suppresses the deprecated upgrade warning')
         if label == 'audit upgrade required':
             check('php cli/upgrade_database.php' in shim['stdout'],
                   'audit upgrade required: points to the standalone upgrade command')
@@ -488,6 +488,9 @@ def verify_audit_cases(harness, check, tables, version):
 def verify_audit_shim_only(harness, check, admin, tables, version):
     reset(harness, 'drifted', tables, version)
     start = schema(harness)
+    verify_upgrade_deprecation(harness, check)
+    check(schema(harness) == start,
+          'audit upgrade deprecation probes with no audit mode preserve the schema')
     verify_refusals(harness, check, admin, AUDIT_SHIM, ['--repair'], schema, start, 'audit')
     # Flags only bin/console offers, and --as in any form but --as=NAME, are
     # refused before the kernel boots; the original ignored them and ran.
@@ -521,6 +524,16 @@ def verify_audit_shim_only(harness, check, admin, tables, version):
           'audit --repair through bin/console without --force plans the repair and changes nothing')
     verify_remote_collector(harness, check, start)
     verify_audit_new_rules(harness, check, tables, version)
+
+
+def verify_upgrade_deprecation(harness, check):
+    quiet = run(harness, AUDIT_SHIM, ['--upgrade'])
+    explained = run(harness, AUDIT_SHIM, ['--upgrade'], env='KADUPUL_CLI_QUIET_DEPRECATION=0')
+    check(quiet['exit'] == explained['exit'] == 0 and quiet['stdout'] == explained['stdout'],
+          'audit upgrade deprecation setting preserves the command outcome and help')
+    check(quiet['stderr'] == '', 'audit cron quiet setting suppresses compatibility deprecations')
+    check(explained['stderr'].count(UPGRADE_DEPRECATION) == 1,
+          'audit default upgrade deprecation explains the separate upgrade command exactly once')
 
 
 def verify_audit_new_rules(harness, check, tables, version):

@@ -123,7 +123,7 @@ const scenarios: Scenario[] = [
 			const cell = page.locator('td.graphDrillDown').first();
 			await cell.scrollIntoViewIfNeeded();
 			await cell.hover();
-			await page.locator('span.spikekill').first().click();
+			await page.locator('button.spikekill').first().click();
 			await page.waitForSelector('.spikekillMenu', { state: 'visible' });
 		},
 	},

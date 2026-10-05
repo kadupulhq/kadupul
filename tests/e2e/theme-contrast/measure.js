@@ -47,8 +47,8 @@
 		return '#' + h(c.r) + h(c.g) + h(c.b) + (c.a < 1 ? h(c.a * 255) : '');
 	}
 
-	// Opacity composites a whole subtree, so fold every ancestor's opacity into
-	// the alpha of anything painted inside it.
+	// Cumulative opacity is used only for visibility. Paint opacity is applied
+	// once to each completed subtree below, rather than to its individual layers.
 	// Cleared on every pointer move and focus change by the callers below,
 	// since hover and focus can change any ancestor's opacity.
 	let opacities = new WeakMap();
@@ -281,7 +281,6 @@
 	// this parser cannot follow contributes every stop, so the worst decides.
 	function layersOf(el, x, y) {
 		const style = getComputedStyle(el);
-		const opacity = cumulativeOpacity(el);
 		const layers = [];
 		let image = false;
 		let gradient = false;
@@ -294,15 +293,15 @@
 					const at = sized && x !== undefined ? gradientAt(img, paintBox(el, style), x, y) : null;
 					const stops = at ? [at] : (img.match(/rgba?\([^)]+\)/g) || []).map(parseColor);
 					if (stops.length) {
-						layers.push(stops.map((c) => ({ ...c, a: c.a * opacity })));
+						layers.push(stops);
 					}
 				} else if (/url\(/.test(img)) {
 					image = true;
+					layers.push([{ r: 0, g: 0, b: 0, a: 0, image: true }]);
 				}
 			}
 		}
 		const fill = parseColor(style.backgroundColor);
-		fill.a *= opacity;
 		if (fill.a > 0) {
 			layers.push([fill]);
 		}
@@ -356,37 +355,70 @@
 				start = skipSelf ? idx + 1 : idx;
 			}
 		}
-		const layers = [];
-		let image = false;
-		let opaque = false;
-		let gradient = false;
-		for (let i = start; i < stack.length && !opaque; i++) {
-			const el = stack[i];
-			if (self && skipSelf && self.contains(el)) {
-				continue;
-			}
-			const found = layersOf(el, x, y);
-			gradient = gradient || found.gradient;
-			image = image || (found.image && found.layers.length === 0 && layers.length === 0);
-			for (const layer of found.layers) {
-				layers.push(layer);
-				if (layer.every((c) => c.a >= 0.999)) {
-					opaque = true;
-					break;
-				}
-			}
-		}
-		const list = layers.reverse().reduce(
-			(below, layer) => layer.flatMap((top) => below.map((bottom) => over(top, bottom))),
-			opaque ? [{ r: 0, g: 0, b: 0, a: 0 }] : canvasColors(x, y),
-		);
-		return { list: list.map((c) => ({ ...c, a: 1 })), image, gradient };
-	}
+        // Rebuild the paint ancestry, including non-hit ancestors whose opacity
+        // still groups their overflowing descendants. Hit order gives sibling
+        // paint order; each node flattens its own layers and children first.
+        const nodes = new Map();
+        function nodeFor(el) {
+            if (!nodes.has(el)) {
+                const node = { el, children: [], paint: null, opacity: parseFloat(getComputedStyle(el).opacity) };
+                nodes.set(el, node);
+                if (el.parentElement) nodeFor(el.parentElement).children.push(node);
+            }
+            return nodes.get(el);
+        }
+        for (const el of stack.slice(start).reverse()) {
+            if (self && skipSelf && self.contains(el)) continue;
+            nodeFor(el).paint = layersOf(el, x, y);
+        }
+        if (self) nodeFor(self);
+        const roots = [...nodes.values()].filter((node) => !node.el.parentElement);
+        const transparent = { r: 0, g: 0, b: 0, a: 0 };
+        const flatten = (node, foreground) => {
+            let candidates = [{ color: transparent, image: false, gradient: false }];
+            for (const layer of (node.paint?.layers || []).slice().reverse()) {
+                candidates = layer.flatMap((top) => candidates.map((below) => ({
+                    color: over(top, below.color),
+                    image: !!top.image || (top.a < 0.999 && below.image),
+                    gradient: !!node.paint.gradient || below.gradient,
+                })));
+            }
+            for (const child of node.children) {
+                const painted = flatten(child, foreground);
+                candidates = painted.flatMap((top) => candidates.map((below) => ({
+                    color: over(top.color, below.color),
+                    image: top.image || (top.color.a < 0.999 && below.image),
+                    gradient: top.gradient || below.gradient,
+                })));
+            }
+            if (foreground && node.el === self) {
+                candidates = candidates.map((below) => ({ ...below, color: over(foreground, below.color) }));
+            }
+            return candidates.map((candidate) => ({ ...candidate, color: { ...candidate.color, a: candidate.color.a * node.opacity } }));
+        };
+        function paint(foreground) {
+            let candidates = [{ color: WHITE, image: false, gradient: false }];
+            for (const root of roots) {
+                candidates = flatten(root, foreground).flatMap((top) => candidates.map((below) => ({
+                    color: over(top.color, below.color),
+                    image: top.image || (top.color.a < 0.999 && below.image),
+                    gradient: top.gradient || below.gradient,
+                })));
+            }
+            return candidates;
+        }
+        const backgrounds = paint(null);
+        return {
+            list: backgrounds.map((candidate, index) => ({ ...candidate.color, paint: (foreground) => paint(foreground)[index].color })),
+            image: backgrounds.some((candidate) => candidate.image),
+            gradient: backgrounds.some((candidate) => candidate.gradient),
+        };
+    }
 
 	function worst(fg, backgrounds) {
 		let best = null;
 		for (const bg of backgrounds) {
-			const painted = over(fg, bg);
+			const painted = bg.paint ? bg.paint(fg) : over(fg, bg);
 			const r = ratio(painted, bg);
 			if (!best || r < best.ratio) {
 				best = { ratio: r, fg: painted, bg };
@@ -507,7 +539,6 @@
 				continue;
 			}
 			const fg = parseColor(style.webkitTextFillColor && style.webkitTextFillColor !== style.color ? style.webkitTextFillColor : style.color);
-			fg.a *= cumulativeOpacity(el);
 			const bgs = backgroundsAt(point.x, point.y, el, false);
 			const shows = (x, y) => {
 				const hit = document.elementFromPoint(x, y);

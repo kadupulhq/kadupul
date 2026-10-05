@@ -21,10 +21,41 @@ if (str_starts_with($mode, 'invalid-')) {
     $request['action'] = 'save';
     $request[substr($mode, 8)] = "FF\ninvalid";
 }
-if (getenv('GRAPH_ITEM_TEST_VALIDATION') === '1') {
+if (getenv('GRAPH_ITEM_TEST_VALIDATION') === '1' || getenv('GRAPH_ITEM_TEST_SECURITY') === '1') {
     $request = array_replace($request, json_decode(getenv('GRAPH_ITEM_TEST_PAYLOAD'), true, 512, JSON_THROW_ON_ERROR));
 }
+foreach ($request['__unset_request_vars'] ?? array() as $name) {
+    unset($request[$name]);
+}
+unset($request['__unset_request_vars']);
 $calls = array();
+$security = getenv('GRAPH_ITEM_TEST_SECURITY') === '1';
+$security_database = new PDO('sqlite::memory:');
+$security_database->exec('CREATE TABLE graph_local (id INTEGER PRIMARY KEY, host_id INTEGER, graph_template_id INTEGER);
+CREATE TABLE graph_templates_item (id INTEGER PRIMARY KEY, local_graph_id INTEGER, graph_template_id INTEGER, local_graph_template_item_id INTEGER);
+INSERT INTO graph_local VALUES (4,1,3),(5,2,3),(6,0,0),(7,-1,0);
+INSERT INTO graph_templates_item VALUES (8,4,3,10),(9,5,3,11),(10,6,0,0);');
+function is_graph_allowed($id)
+{
+    return in_array($id, array(4,5,6,7), true);
+}
+function is_device_allowed($id)
+{
+    return $id === 1;
+}
+function cacti_log($message, $output = false, $facility = '')
+{
+    $GLOBALS['calls'][] = array('denied', $message, $facility);
+}
+function graph_item_security_query($sql, $params)
+{
+    if ($GLOBALS['security']) {
+        $GLOBALS['calls'][] = array('read', preg_replace('/\s+/', ' ', $sql), $params);
+    }
+    $statement = $GLOBALS['security_database']->prepare($sql);
+    $statement->execute($params);
+    return $statement->fetch(PDO::FETCH_ASSOC) ?: array();
+}
 $graph_item_types = array(1 => 'COMMENT', 2 => 'HRULE', 3 => 'VRULE', 7 => 'AREA', 4 => 'LINE1', 5 => 'LINE2', 6 => 'LINE3', 9 => 'GPRINT', 10 => 'LEGEND', 15 => 'LEGEND_CAMM', 20 => 'LINE:STACK', 30 => 'TIC');
 $struct_graph_item = array('task_item_id' => array('default' => 0), 'alpha' => array(), 'line_width' => graph_item_editor_line_width_field());
 $consolidation_functions = array();
@@ -74,7 +105,16 @@ function html_escape($text)
     return htmlspecialchars($text, ENT_QUOTES);
 }
 function html_host_filter(...$args) {}
-function top_header() {}
+function get_allowed_ajax_graph_items($include_none, $where)
+{
+    $GLOBALS['calls'][] = array('picker', $include_none, $where);
+}
+function top_header()
+{
+    if ($GLOBALS['security']) {
+        $GLOBALS['calls'][] = array('header');
+    }
+}
 function bottom_footer() {}
 function form_start(...$args) {}
 function html_start_box(...$args) {}
@@ -85,7 +125,12 @@ function draw_edit_form($form)
 {
     $GLOBALS['calls'][] = array('form', $form);
 }
-function validate_store_request_vars(...$args) {}
+function validate_store_request_vars(...$args)
+{
+    if ($GLOBALS['security']) {
+        $GLOBALS['calls'][] = array('session');
+    }
+}
 function load_current_session_value(...$args) {}
 function kill_session_var(...$args) {}
 function read_config_option($key)
@@ -143,6 +188,9 @@ function db_fetch_cell_prepared($sql, $params)
 }
 function db_fetch_row_prepared($sql, $params)
 {
+    if (str_contains($sql, 'SELECT id, host_id, graph_template_id FROM graph_local') || str_contains($sql, 'SELECT id, graph_template_id, local_graph_template_item_id FROM graph_templates_item')) {
+        return graph_item_security_query($sql, $params);
+    }
     if (str_contains($sql, 'SELECT task_item_id')) {
         return array('task_item_id' => 6);
     }
@@ -151,6 +199,10 @@ function db_fetch_row_prepared($sql, $params)
 function db_execute_prepared($sql, $params)
 {
     $GLOBALS['calls'][] = array('execute', preg_replace('/\s+/', ' ', $sql), $params);
+    if ($GLOBALS['security'] && str_starts_with($sql, 'DELETE FROM graph_templates_item')) {
+        $statement = $GLOBALS['security_database']->prepare($sql);
+        $statement->execute($params);
+    }
 }
 function db_fetch_insert_id()
 {
@@ -162,6 +214,7 @@ function get_hash_graph_template(...$args)
 }
 require_once $root . '/tests/Helpers/PhpSource.php';
 eval(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'form_input_validate'));
+eval(test_php_function_source(file_get_contents($root . '/lib/auth.php'), 'auth_resource_id'));
 function is_error_message()
 {
     return !empty($_SESSION['sess_error_fields']);
@@ -208,6 +261,9 @@ register_shutdown_function(function () {
     }
     if (getenv('GRAPH_ITEM_TEST_VALIDATION') === '1') {
         $GLOBALS['calls'][] = array('validation', $_SESSION['sess_error_fields'] ?? array());
+    }
+    if ($GLOBALS['security']) {
+        $GLOBALS['calls'][] = array('remaining', $GLOBALS['security_database']->query('SELECT id FROM graph_templates_item ORDER BY id')->fetchAll(PDO::FETCH_COLUMN));
     }
     print "\nRESULT:" . json_encode($GLOBALS['calls'], JSON_THROW_ON_ERROR);
 });
