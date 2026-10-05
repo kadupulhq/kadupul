@@ -259,12 +259,17 @@ function api_auth_user_setting_valid($name, $field, $value) {
 		case 'drop_array':
 		case 'drop_language':
 			return isset($field['array']) && is_array($field['array']) && array_key_exists($value, $field['array']);
+		case 'drop_callback':
 		case 'drop_sql':
 			if (isset($field['default']) && $value === (string) $field['default']) {
 				return true;
 			}
 
-			if (!ctype_digit($value)) {
+			if ($field['method'] === 'drop_callback' && !empty($field['none_value']) && $value === '0') {
+				return true;
+			}
+
+			if ($field['method'] === 'drop_sql' && !ctype_digit($value)) {
 				return false;
 			}
 
@@ -284,6 +289,25 @@ function api_auth_user_setting_valid($name, $field, $value) {
 			}
 
 			return false;
+		case 'radio':
+			foreach ($field['items'] ?? array() as $item) {
+				if (isset($item['radio_value']) && $value === (string) $item['radio_value']) {
+					return true;
+				}
+			}
+
+			return false;
+		case 'drop_files':
+			$directory = $field['directory'] ?? '';
+			if (!is_string($directory) || !is_dir($directory) || !is_readable($directory)) {
+				return false;
+			}
+			$files = scandir($directory);
+			return $files !== false && $value !== '.' && $value !== '..'
+				&& in_array($value, $files, true)
+				&& !in_array($value, $field['exclusions'] ?? array(), true)
+				&& is_readable($directory . '/' . $value);
+		case 'textbox_password':
 		case 'textbox':
 			/* save_user_settings() treats a field with a numeric default as numeric */
 			if (isset($field['default']) && is_numeric($field['default'])) {

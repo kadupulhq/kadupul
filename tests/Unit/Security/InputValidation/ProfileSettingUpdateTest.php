@@ -57,6 +57,8 @@ $settings_user = array(
 	),
 );
 
+if (isset($scenario['field'])) { $settings_user['plugins'][$scenario['name']] = $scenario['field']; }
+
 function is_view_allowed($view) {
 	return $view == 'graph_settings' && $GLOBALS['scenario']['graph_settings'];
 }
@@ -86,7 +88,7 @@ function kill_session_var($name) {
 PHP;
 }
 
-function profile_setting_update(string $name, $value, bool $graph_settings = true) : array {
+function profile_setting_update(string $name, $value, bool $graph_settings = true, ?array $field = null) : array {
 	$profile = file_get_contents(dirname(__DIR__, 4) . '/auth_profile.php');
 	$source  = profile_setting_prelude();
 
@@ -97,7 +99,7 @@ function profile_setting_update(string $name, $value, bool $graph_settings = tru
 	$source .= "api_auth_update_user_setting(\$scenario['name'], \$scenario['value']);\n";
 	$source .= "print json_encode(array('writes' => \$GLOBALS['writes']));\n";
 
-	return cacti_test_run_php_source($source, array('name' => $name, 'value' => $value, 'graph_settings' => $graph_settings))['writes'];
+	return cacti_test_run_php_source($source, array('name' => $name, 'value' => $value, 'graph_settings' => $graph_settings, 'field' => $field))['writes'];
 }
 
 test('values the settings form offers are saved', function () {
@@ -250,5 +252,34 @@ test('the settings form drops a drop-down value it could not submit and saves th
 		foreach (array_diff_key($validForm, array($name => true)) as $other => $kept) {
 			expect($result['saved'][$other] ?? null)->toBe(array($kept, 42), $other);
 		}
+	}
+});
+
+
+test('plugin fields save offered values and refuse values their form cannot submit', function ($field, $accepted, $refused) {
+	expect(profile_setting_update('plugin_setting', $accepted, true, $field))->toBe(array(array('plugin_setting', $accepted, 42)))
+		->and(profile_setting_update('plugin_setting', $refused, true, $field))->toBe(array())
+		->and(profile_setting_update('plugin_setting', $accepted, false, $field))->toBe(array());
+})->with(array(
+	'callback' => array(array('method' => 'drop_callback', 'sql' => 'SELECT id, name FROM plugin_choices'), '2', '99'),
+	'radio' => array(array('method' => 'radio', 'items' => array(array('radio_value' => 'safe', 'radio_caption' => 'Safe'))), 'safe', 'absent'),
+	'password' => array(array('method' => 'textbox_password', 'max_length' => 8), 'sample', 'oversized'),
+));
+
+test('plugin file selections match the rendered directory and exclusions', function () {
+	$directory = sys_get_temp_dir() . '/kadupul-profile-files-' . bin2hex(random_bytes(8));
+	expect(mkdir($directory, 0700))->toBeTrue();
+	try {
+		expect(file_put_contents($directory . '/offered', 'fixture'))->toBe(7)
+			->and(file_put_contents($directory . '/excluded', 'fixture'))->toBe(7);
+		$field = array('method' => 'drop_files', 'directory' => $directory, 'exclusions' => array('excluded'));
+		expect(profile_setting_update('plugin_file', 'offered', true, $field))->toBe(array(array('plugin_file', 'offered', 42)));
+		foreach (array('excluded', 'missing', '.', '..', '../offered') as $value) {
+			expect(profile_setting_update('plugin_file', $value, true, $field))->toBe(array());
+		}
+		expect(profile_setting_update('plugin_file', 'offered', false, $field))->toBe(array());
+	} finally {
+		foreach (array('offered', 'excluded') as $file) { if (is_file($directory . '/' . $file)) { unlink($directory . '/' . $file); } }
+		rmdir($directory);
 	}
 });
