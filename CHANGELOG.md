@@ -60,6 +60,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Preserve negative integer `--units-exponent` values accepted by graph forms. Fixes #228.
 - Complete Inventory site editing, sorting, duplication and deletion through Symfony; retire the procedural Sites page while retaining safe legacy URL compatibility.
 - Refresh the Midwinter theme's bundled hotkeys-js to 3.13.15 and ua-parser-js to 1.0.41, matching the 1.2 LTS branch.
+- Draw the classic theme's Console, Graphs, Reporting, Logs and external-link tabs as translated text links styled in CSS instead of GIF images and GD-rendered pictures of text. Tab ids, link targets and accessible names are unchanged, but the Reporting and Logs tabs now read "reporting" and "logs" rather than the old "nectar" and "clog" pictures. The tabs also show a visible keyboard focus ring, and external-link titles in scripts the bundled DejaVu fonts lack, such as Chinese or Japanese, no longer render as empty boxes.
 Targeting `v1.3.0`, the first planned application release. See
 [VERSIONING.md](VERSIONING.md).
 

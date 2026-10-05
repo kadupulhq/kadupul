@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 08:28-0700\n"
+"POT-Creation-Date: 2026-10-05 10:12-0700\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -135,7 +135,7 @@ msgstr "निम्नलिखित एग्रीगेट ग्राफ 
 #: host.php:479 host.php:493 host.php:507 host.php:516 host.php:545
 #: host.php:557 host_templates.php:212 host_templates.php:226
 #: host_templates.php:237 host_templates.php:289 host_templates.php:358
-#: lib/clog_webapi.php:225 lib/html.php:2647 lib/html_form.php:1396
+#: lib/clog_webapi.php:225 lib/html.php:2648 lib/html_form.php:1396
 #: lib/html_form.php:1413 lib/html_form.php:1424 lib/html_reports.php:614
 #: managers.php:1061 managers.php:1122 plugins.php:712 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:705
@@ -169,7 +169,7 @@ msgstr "कैंसिल करें"
 #: host.php:461 host.php:470 host.php:479 host.php:493 host.php:507
 #: host.php:516 host.php:545 host.php:557 host_templates.php:212
 #: host_templates.php:226 host_templates.php:237 host_templates.php:290
-#: host_templates.php:359 lib/clog_webapi.php:226 lib/html.php:2646
+#: host_templates.php:359 lib/clog_webapi.php:226 lib/html.php:2647
 #: lib/html_reports.php:556 managers.php:1061 managers.php:1122 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:705
 #: tree.php:714 tree.php:723 tree.php:732 user_admin.php:233 user_admin.php:273
@@ -326,7 +326,7 @@ msgstr "विवरण"
 msgid "Items"
 msgstr "वस्तुएं"
 
-#: aggregate_graphs.php:646 aggregate_graphs.php:652 lib/html.php:2090
+#: aggregate_graphs.php:646 aggregate_graphs.php:652 lib/html.php:2091
 #: lib/html_reports.php:1481
 msgid "Preview"
 msgstr "पूर्वावलोकन"
@@ -438,12 +438,11 @@ msgstr "खोजें"
 #: data_sources.php:1852 graph_view.php:485 graph_view.php:736
 #: graph_view.php:800 graphs.php:2010 graphs.php:2178 host.php:1792
 #: include/global_arrays.php:993 include/global_arrays.php:1228
-#: include/global_arrays.php:2011 lib/api_automation.php:283 lib/html.php:1803
-#: lib/html.php:1805 lib/html.php:1883 lib/html_graph.php:191
-#: lib/html_tree.php:1022 lib/html_tree.php:1378 tree.php:857 tree.php:2296
-#: user_admin.php:722 user_admin.php:993 user_admin.php:2265
-#: user_group_admin.php:775 user_group_admin.php:929 user_group_admin.php:1982
-#: utilities.php:315
+#: include/global_arrays.php:2011 lib/api_automation.php:283 lib/html.php:1815
+#: lib/html.php:1884 lib/html_graph.php:191 lib/html_tree.php:1022
+#: lib/html_tree.php:1378 tree.php:857 tree.php:2296 user_admin.php:722
+#: user_admin.php:993 user_admin.php:2265 user_group_admin.php:775
+#: user_group_admin.php:929 user_group_admin.php:1982 utilities.php:315
 msgid "Graphs"
 msgstr "रेखांकन"
 
@@ -627,7 +626,7 @@ msgstr "खाका"
 #: host.php:1627 host.php:1691 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3421 lib/auth.php:3470
-#: lib/html.php:2169 lib/html.php:2197 lib/html.php:2236 lib/html.php:2270
+#: lib/html.php:2170 lib/html.php:2198 lib/html.php:2237 lib/html.php:2271
 #: lib/html_reports.php:977 lib/html_reports.php:981 lib/html_reports.php:1096
 #: lib/html_reports.php:1106 lib/html_reports.php:1956 managers.php:490
 #: managers.php:771
@@ -658,8 +657,8 @@ msgstr "कोई भी@ label"
 #: include/global_settings.php:1320 include/global_settings.php:1983
 #: lib/api_automation.php:48 lib/api_automation.php:431
 #: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3424
-#: lib/auth.php:3473 lib/auth.php:3519 lib/html.php:220 lib/html.php:2170
-#: lib/html.php:2195 lib/html.php:2237 lib/html.php:2271 lib/html_form.php:392
+#: lib/auth.php:3473 lib/auth.php:3519 lib/html.php:220 lib/html.php:2171
+#: lib/html.php:2196 lib/html.php:2238 lib/html.php:2272 lib/html_form.php:392
 #: lib/html_reports.php:988 lib/html_reports.php:992 lib/html_reports.php:1022
 #: lib/html_reports.php:1096 lib/html_reports.php:1102
 #: lib/html_reports.php:1106 lib/html_reports.php:1114
@@ -822,7 +821,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "पासवर्ड बदलें पेज में समस्याएँ हैं। अपने Kadupul एडमिनिस्ट्रेटर से तुरंत संपर्क करें।"
 
 #: auth_changepassword.php:335 auth_changepassword.php:342
-#: include/global_form.php:1552 lib/functions.php:4023 lib/html.php:2582
+#: include/global_form.php:1552 lib/functions.php:4023 lib/html.php:2583
 msgid "Change Password"
 msgstr "पासवर्ड बदलें"
 
@@ -953,7 +952,7 @@ msgstr "लॉगिन"
 
 #: auth_profile.php:61 include/global_settings.php:22
 #: include/global_settings.php:1184 include/global_settings.php:1501
-#: lib/html.php:2595 managers.php:24 user_admin.php:1661
+#: lib/html.php:2596 managers.php:24 user_admin.php:1661
 #: user_group_admin.php:1597
 msgid "General"
 msgstr "सामान्य"
@@ -963,18 +962,18 @@ msgid "User Account Details"
 msgstr "उपयोगकर्ता खाता विवरण"
 
 #: auth_profile.php:302 include/global_arrays.php:857
-#: include/global_settings.php:2719 lib/html.php:2050 lib/html.php:2072
-#: lib/html.php:2576
+#: include/global_settings.php:2719 lib/html.php:2051 lib/html.php:2073
+#: lib/html.php:2577
 msgid "Tree View"
 msgstr "विस्तृत दृश्य"
 
-#: auth_profile.php:306 include/global_arrays.php:858 lib/html.php:2057
-#: lib/html.php:2081 lib/html.php:2577
+#: auth_profile.php:306 include/global_arrays.php:858 lib/html.php:2058
+#: lib/html.php:2082 lib/html.php:2578
 msgid "List View"
 msgstr "सूची दृश्य"
 
-#: auth_profile.php:310 include/global_arrays.php:859 lib/html.php:2064
-#: lib/html.php:2578
+#: auth_profile.php:310 include/global_arrays.php:859 lib/html.php:2065
+#: lib/html.php:2579
 msgid "Preview View"
 msgstr "पूर्वद्रिश्श द्रिश्श"
 
@@ -1146,7 +1145,7 @@ msgid "SNMP Name"
 msgstr "SNMP का नाम"
 
 #: automation_devices.php:270 host.php:1644 include/global_form.php:1184
-#: include/global_settings.php:2301 lib/html.php:2266
+#: include/global_settings.php:2301 lib/html.php:2267
 msgid "Location"
 msgstr "स्थान"
 
@@ -1395,7 +1394,7 @@ msgstr "सक्षम"
 #: include/global_settings.php:1626 include/global_settings.php:1639
 #: include/global_settings.php:1664 include/global_settings.php:1678
 #: include/global_settings.php:1768 include/global_settings.php:2532
-#: lib/api_automation.php:28 lib/html.php:2672 lib/html_reports.php:1958
+#: lib/api_automation.php:28 lib/html.php:2673 lib/html_reports.php:1958
 #: lib/html_reports.php:2109 lib/html_utility.php:1317 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:856 user_domains.php:397
 #: user_group_admin.php:591 utilities.php:2119 utilities.php:2637
@@ -2528,8 +2527,8 @@ msgstr "बूट्सConstellation name (optional)"
 msgid "No Tree Rules Found"
 msgstr "कोई ट्री नियम नहीं मिला"
 
-#: cactid.php:27 help.php:28 lib/functions.php:6600 lib/functions.php:6670
-#: lib/functions.php:6766 lib/functions.php:7420 poller.php:417 poller.php:584
+#: cactid.php:27 help.php:28 lib/functions.php:6459 lib/functions.php:6529
+#: lib/functions.php:6625 lib/functions.php:7279 poller.php:417 poller.php:584
 #: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
 #: poller_automation.php:37 poller_boost.php:387
 #, fuzzy
@@ -3007,7 +3006,7 @@ msgstr "डाटा स्रोत"
 msgid "The Data Source to Debug"
 msgstr "डेटा स्रोत डीबग करने के लिए"
 
-#: data_debug.php:457 lib/html.php:2599 utilities.php:1031 utilities.php:1152
+#: data_debug.php:457 lib/html.php:2600 utilities.php:1031 utilities.php:1152
 msgid "User"
 msgstr "उपयोगकर्ता "
 
@@ -3296,7 +3295,7 @@ msgid "Run checks on currently filtered Data Sources and preserve other results"
 msgstr "फ़िलहाल फ़िल्टर किए गए डेटा स्रोतों की जाँच करें और अन्य परिणामों को सुरक्षित रखें"
 
 #: data_debug.php:1082 data_sources.php:1488 data_templates.php:1101
-#: lib/html.php:2608
+#: lib/html.php:2609
 msgid "Profile"
 msgstr "प्रोफाइल"
 
@@ -4107,8 +4106,8 @@ msgstr "इस डेटा टेम्प्लेट को दिया ग�
 #: data_sources.php:997 graph_view.php:814 graphs.php:1515
 #: include/global_arrays.php:954 include/global_arrays.php:1003
 #: include/global_arrays.php:1687 include/global_arrays.php:1856
-#: lib/api_automation.php:426 lib/functions.php:5948 lib/html.php:2165
-#: lib/html.php:2202 lib/html_reports.php:1109 utilities.php:1913
+#: lib/api_automation.php:426 lib/functions.php:5948 lib/html.php:2166
+#: lib/html.php:2203 lib/html_reports.php:1109 utilities.php:1913
 msgid "Device"
 msgstr "डिवाइस"
 
@@ -4481,7 +4480,7 @@ msgstr "ग्राफ़ टेम्पलेट संपादित कर
 msgid "Click to view just this Graph in Real-time"
 msgstr "वास्तविक समय में केवल इस ग्राफ़ को देखने के लिए क्लिक करें"
 
-#: graph.php:270 lib/html.php:2573
+#: graph.php:270 lib/html.php:2574
 msgid "Utility View"
 msgstr "उपयोगिता देखें"
 
@@ -4829,12 +4828,12 @@ msgstr "पूर्वावलोकन मोड"
 msgid "Add Selected Graphs to Report"
 msgstr "रिपोर्ट में चयनित ग्राफ़ जोड़ें"
 
-#: graph_view.php:1046 lib/html.php:2644
+#: graph_view.php:1046 lib/html.php:2645
 msgid "Ok"
 msgstr "ठीक"
 
 #: graph_xport.php:102 graph_xport.php:144 include/global_form.php:1809
-#: include/global_form.php:2077 lib/html.php:1946
+#: include/global_form.php:2077 lib/html.php:1947
 msgid "Title"
 msgstr "शीर्षक"
 
@@ -5161,7 +5160,7 @@ msgstr "[सभी उपकरणों] के लिए नए रेखा�
 msgid "New Graphs for None Host Type"
 msgstr "कोई भी होस्ट प्रकार के लिए नए रेखांकन"
 
-#: graphs_new.php:367 lib/html.php:2571
+#: graphs_new.php:367 lib/html.php:2572
 msgid "Filter Settings Saved"
 msgstr "फ़िल्टर सेटिंग्स सहेजे गए"
 
@@ -5581,7 +5580,7 @@ msgstr "उपकरण टेम्पलेट हटाएं"
 msgid "Undefined"
 msgstr "अपरिभाशत"
 
-#: host.php:1588 include/global_settings.php:618 lib/html.php:2232
+#: host.php:1588 include/global_settings.php:618 lib/html.php:2233
 #: lib/html_reports.php:1090
 msgid "Site"
 msgstr "साइट"
@@ -5836,17 +5835,17 @@ msgstr "FATAL: Kadupul के इस क्षेत्र तक पहुं�
 msgid "Login Again"
 msgstr "फिर से लॉगिन करें"
 
-#: include/auth.php:321 lib/functions.php:8084 permission_denied.php:29
+#: include/auth.php:321 lib/functions.php:7943 permission_denied.php:29
 #: permission_denied.php:36
 msgid "Permission Denied"
 msgstr "अनुमति अस्वीकृत"
 
-#: include/auth.php:322 lib/functions.php:8085 permission_denied.php:38
+#: include/auth.php:322 lib/functions.php:7944 permission_denied.php:38
 #, fuzzy
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "यदि आपको लगता है कि यह एक त्रुटि है। कृपया अपने Kadupul प्रशासक से संपर्क करें।"
 
-#: include/auth.php:322 lib/functions.php:8085 permission_denied.php:38
+#: include/auth.php:322 lib/functions.php:7944 permission_denied.php:38
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "आपको Kadupul के इस अनुभाग तक पहुंचने की अनुमति नहीं है।"
 
@@ -6318,7 +6317,7 @@ msgstr "सही"
 msgid "Justified"
 msgstr "न्याययुक्त"
 
-#: include/global_arrays.php:585 lib/html.php:2670
+#: include/global_arrays.php:585 lib/html.php:2671
 msgid "Center"
 msgstr "केंद्र"
 
@@ -6632,7 +6631,7 @@ msgstr "हेडर"
 
 #: include/global_arrays.php:953 include/global_arrays.php:1004
 #: include/global_arrays.php:1686 include/global_arrays.php:1855
-#: lib/html.php:2659
+#: lib/html.php:2660
 msgid "Graph"
 msgstr "काल ग्राफ"
 
@@ -6798,7 +6797,7 @@ msgid "Configuration"
 msgstr "कॉन्फ़िगरेशन"
 
 #: include/global_arrays.php:1030 include/global_arrays.php:1052
-#: lib/html.php:2405 lib/html.php:2674
+#: lib/html.php:2406 lib/html.php:2675
 msgid "Settings"
 msgstr "सेटिंग्स"
 
@@ -7819,7 +7818,7 @@ msgid "List Mode"
 msgstr "सूची मोड"
 
 #: include/global_arrays.php:2061 include/global_arrays.php:2067
-#: lib/functions.php:4245 lib/html.php:1794 lib/html.php:1871 lib/html.php:2592
+#: lib/functions.php:4245 lib/html.php:1807 lib/html.php:1872 lib/html.php:2593
 #: user_admin.php:1392 user_group_admin.php:1328
 msgid "Console"
 msgstr "कंसोल"
@@ -7954,7 +7953,7 @@ msgstr "बाहरी लिंक"
 msgid "(Action)"
 msgstr "कार्रवाई"
 
-#: include/global_arrays.php:2625 lib/html.php:2613
+#: include/global_arrays.php:2625 lib/html.php:2614
 #, fuzzy
 msgid "About Kadupul"
 msgstr "Kadupul के बारे में"
@@ -7969,7 +7968,7 @@ msgid "Export Results"
 msgstr "परिणामों को एचटीएमएल के रूप में निर्यात करें"
 
 #: include/global_arrays.php:2661 include/global_arrays.php:2691
-#: lib/html.php:1815 lib/html.php:1817 lib/html.php:1896
+#: lib/html.php:1823 lib/html.php:1897
 msgid "Reporting"
 msgstr "रिपोर्टिंग"
 
@@ -9900,7 +9899,7 @@ msgstr "यदि सरल, रेखांकन और डेटा स्र
 msgid "Simple"
 msgstr "सरल"
 
-#: include/global_settings.php:428 lib/html.php:2661
+#: include/global_settings.php:428 lib/html.php:2662
 msgid "Advanced"
 msgstr "उन्नत"
 
@@ -10320,7 +10319,7 @@ msgid "Theme Settings"
 msgstr "विषय सेटिंग"
 
 #: include/global_settings.php:851 include/global_settings.php:1061
-#: include/global_settings.php:2567 lib/html.php:2609
+#: include/global_settings.php:2567 lib/html.php:2610
 msgid "Theme"
 msgstr "थीम"
 
@@ -11920,7 +11919,7 @@ msgstr "मानक विचलन"
 msgid "Variance Based w/Outliers Removed"
 msgstr "वर्जन आधारित डब्ल्यू / आउटलेर्स को हटा दिया गया"
 
-#: include/global_settings.php:2417 lib/html.php:2379
+#: include/global_settings.php:2417 lib/html.php:2380
 msgid "Replacement Method"
 msgstr "प्रतिस्थापन विधि"
 
@@ -11928,15 +11927,15 @@ msgstr "प्रतिस्थापन विधि"
 msgid "There are three replacement methods.  The first method replaces the spike with the average of the data source in question.  The second method replaces the spike with a 'NaN'.  The last replaces the spike with the last known good value found."
 msgstr "तीन प्रतिस्थापन तरीके हैं। पहली विधि स्पाइक को प्रश्न में डेटा स्रोत के औसत से बदल देती है। दूसरी विधि स्पाइक को &#39;NaN&#39; से बदल देती है। अंतिम स्पाइक को अंतिम ज्ञात अच्छे मान के साथ बदलता है।"
 
-#: include/global_settings.php:2422 lib/html.php:2375
+#: include/global_settings.php:2422 lib/html.php:2376
 msgid "Average"
 msgstr "औसत"
 
-#: include/global_settings.php:2423 lib/html.php:2376
+#: include/global_settings.php:2423 lib/html.php:2377
 msgid "NaN's"
 msgstr "NaN के"
 
-#: include/global_settings.php:2424 lib/html.php:2377
+#: include/global_settings.php:2424 lib/html.php:2378
 msgid "Last Known Good"
 msgstr "आखिरी ज्ञात अच्छाई"
 
@@ -13505,11 +13504,11 @@ msgstr "नियमित उपयोगकर्ता के रूप म�
 msgid "guest"
 msgstr "अतिथि"
 
-#: lib/functions.php:4002 lib/functions.php:4027 lib/html.php:2598
+#: lib/functions.php:4002 lib/functions.php:4027 lib/html.php:2599
 msgid "User Community"
 msgstr "उपयोगकर्ता समुदाय"
 
-#: lib/functions.php:4003 lib/functions.php:4028 lib/html.php:2600
+#: lib/functions.php:4003 lib/functions.php:4028 lib/html.php:2601
 #: lib/utility.php:1440
 msgid "Documentation"
 msgstr "प्रलेखन"
@@ -13519,11 +13518,11 @@ msgstr "प्रलेखन"
 msgid "Logged in as %s"
 msgstr "के रूप में दाखिल%s"
 
-#: lib/functions.php:4022 lib/html.php:2579
+#: lib/functions.php:4022 lib/html.php:2580
 msgid "Edit Profile"
 msgstr "संपादित करें"
 
-#: lib/functions.php:4032 lib/html.php:2583
+#: lib/functions.php:4032 lib/html.php:2584
 msgid "Logout"
 msgstr "लॉगआउट"
 
@@ -13626,32 +13625,32 @@ msgstr "सफ़ल!"
 msgid "Message Not Sent due to ping failure."
 msgstr "पिंग विफलता के कारण संदेश नहीं भेजा गया।"
 
-#: lib/functions.php:6600 lib/functions.php:6670
+#: lib/functions.php:6459 lib/functions.php:6529
 #, fuzzy, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "निम्न त्रुटि के कारण Kadupul अक्षम प्लगइन %s: %s! अधिक जानकारी के लिए Kadupul logfile देखें।"
 
-#: lib/functions.php:6766
+#: lib/functions.php:6625
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "चेतावनी: PollerID:%s का एक अमान्य होस्टनाम है:%s।  क्या यह DNS के माध्यम से उपलब्ध नहीं है!"
 
-#: lib/functions.php:7190 lib/functions.php:7192
+#: lib/functions.php:7049 lib/functions.php:7051
 #, php-format
 msgid "- Beta %s"
 msgstr "- बीटा %s"
 
-#: lib/functions.php:7190
+#: lib/functions.php:7049
 #, php-format
 msgid "Version %s %s"
 msgstr "संस्करण %s %s"
 
-#: lib/functions.php:7192
+#: lib/functions.php:7051
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7420
+#: lib/functions.php:7279
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "चेतावनी:  कुंजी Kadupul फ़ाइल %s लापता शामिल करें।  कृपया इस फ़ाइल का पता लगाएँ और उसे बदलें"
@@ -13696,7 +13695,7 @@ msgstr "डेटा क्वेरी:"
 msgid "CSV Export of Graph Data"
 msgstr "ग्राफ डेटा का CSV निर्यात"
 
-#: lib/html.php:532 lib/html.php:2570
+#: lib/html.php:532 lib/html.php:2571
 msgid "Time Graph View"
 msgstr "समय ग्राफ़ देखें"
 
@@ -13760,364 +13759,363 @@ msgstr "एक क्रिया चुनें"
 msgid "Execute Action"
 msgstr "कार्रवाई निष्पादित करें"
 
-#: lib/html.php:1824 lib/html.php:1826 lib/html.php:1906 managers.php:26
-#: managers.php:219
+#: lib/html.php:1828 lib/html.php:1907 managers.php:26 managers.php:219
 msgid "Logs"
 msgstr "लॉग्स"
 
-#: lib/html.php:2033 user_admin.php:2265 user_admin.php:2271
+#: lib/html.php:2034 user_admin.php:2265 user_admin.php:2271
 msgid "Show All"
 msgstr "सभी दिखाएँ"
 
-#: lib/html.php:2385
+#: lib/html.php:2386
 msgid "Standard Deviations"
 msgstr "मानक विचलन"
 
-#: lib/html.php:2391
+#: lib/html.php:2392
 msgid "Kills Per RRA"
 msgstr "प्रति आरआरए को मारता है"
 
-#: lib/html.php:2397
+#: lib/html.php:2398
 msgid "Remove StdDev"
 msgstr "StdDev निकालें"
 
-#: lib/html.php:2398
+#: lib/html.php:2399
 msgid "Gap Fill Range"
 msgstr "गैप भराव रेंज"
 
-#: lib/html.php:2399 lib/spikekill.php:280
+#: lib/html.php:2400 lib/spikekill.php:280
 msgid "Float Range"
 msgstr "फ्लोट रेंज"
 
-#: lib/html.php:2401
+#: lib/html.php:2402
 msgid "Dry Run StdDev"
 msgstr "सूखा रन StdDev"
 
-#: lib/html.php:2402
+#: lib/html.php:2403
 msgid "Dry Run Gap Fill Range"
 msgstr "ड्राई रन गैप फिल रेंज"
 
-#: lib/html.php:2403
+#: lib/html.php:2404
 msgid "Dry Run Float Range"
 msgstr "ड्राई रन फ्लोट रेंज"
 
-#: lib/html.php:2566
+#: lib/html.php:2567
 msgid "Allow or limit the table columns to extend beyond the current windows limits."
 msgstr "वर्तमान विंडो सीमाओं से परे विस्तार करने के लिए टेबल कॉलम को अनुमति दें या सीमित करें।"
 
-#: lib/html.php:2567 lib/html_filter.php:48
+#: lib/html.php:2568 lib/html_filter.php:48
 msgid "Enter a search term"
 msgstr "एक खोज शब्द दर्ज करें"
 
-#: lib/html.php:2568
+#: lib/html.php:2569
 msgid "Enter a regular expression"
 msgstr "एक नियमित अभिव्यक्ति दर्ज करें"
 
-#: lib/html.php:2569
+#: lib/html.php:2570
 msgid "No file selected"
 msgstr "कोई फ़ाइल चयनित नहीं"
 
-#: lib/html.php:2572 lib/html.php:2615
+#: lib/html.php:2573 lib/html.php:2616
 msgid "SpikeKill Results"
 msgstr "SpikeKill परिणाम"
 
-#: lib/html.php:2574
+#: lib/html.php:2575
 msgid "Click to view just this Graph in Realtime"
 msgstr "रियलटाइम में बस इस ग्राफ को देखने के लिए क्लिक करें"
 
-#: lib/html.php:2575
+#: lib/html.php:2576
 msgid "Click again to take this Graph out of Realtime"
 msgstr "रीयलटाइम के इस ग्राफ को बाहर निकालने के लिए फिर से क्लिक करें"
 
-#: lib/html.php:2584
+#: lib/html.php:2585
 msgid "Standard Mode"
 msgstr "बारीकी से जांच करने की प्रणाली"
 
-#: lib/html.php:2585
+#: lib/html.php:2586
 msgid "Compact Mode"
 msgstr "ज़ूम मोड"
 
-#: lib/html.php:2586
+#: lib/html.php:2587
 msgid "Dark Color Mode"
 msgstr "कोई रंग नहीं मिला"
 
-#: lib/html.php:2587
+#: lib/html.php:2588
 msgid "Light Color Mode"
 msgstr "सूची मोड"
 
-#: lib/html.php:2588
+#: lib/html.php:2589
 msgid "Use System Color"
 msgstr "आइटम रंग"
 
-#: lib/html.php:2589
+#: lib/html.php:2590
 msgid "Ignore System Color"
 msgstr "आइटम रंग"
 
-#: lib/html.php:2590
+#: lib/html.php:2591
 msgid "Help"
 msgstr "मदद"
 
-#: lib/html.php:2591
+#: lib/html.php:2592
 #, fuzzy
 msgid "Kadupul Home"
 msgstr "Kadupul होम"
 
-#: lib/html.php:2593
+#: lib/html.php:2594
 msgid "Miscellaneous"
 msgstr "其他"
 
-#: lib/html.php:2594
+#: lib/html.php:2595
 msgid "Dashboards"
 msgstr "कैक्टि डैशबोर्ड छिपाएँ"
 
-#: lib/html.php:2596
+#: lib/html.php:2597
 msgid "Charts"
 msgstr "चार्ट"
 
-#: lib/html.php:2597
+#: lib/html.php:2598
 #, fuzzy
 msgid "Kadupul Project Page"
 msgstr "Kadupul प्रोजेक्ट पेज"
 
-#: lib/html.php:2601
+#: lib/html.php:2602
 msgid "Spine"
 msgstr "रीढ़ की हड्डी"
 
-#: lib/html.php:2602
+#: lib/html.php:2603
 msgid "RRDProxy"
 msgstr "आरआरडीप्रॉक्सी"
 
-#: lib/html.php:2603
+#: lib/html.php:2604
 msgid "Keyboard"
 msgstr "कीबोर्ड"
 
-#: lib/html.php:2604
+#: lib/html.php:2605
 msgid "Shortcuts"
 msgstr "अल्प मार्ग"
 
-#: lib/html.php:2605
+#: lib/html.php:2606
 #, fuzzy
 msgid "Contribute to the Kadupul Project"
 msgstr "Kadupul लॉग को घुमाएं"
 
-#: lib/html.php:2606
+#: lib/html.php:2607
 msgid "Help in Developing"
 msgstr "विकास में मदद"
 
-#: lib/html.php:2607
+#: lib/html.php:2608
 msgid "Donation & Sponsoring"
 msgstr "दान और प्रायोजन"
 
-#: lib/html.php:2610
+#: lib/html.php:2611
 msgid "Client"
 msgstr "ग्राहक"
 
-#: lib/html.php:2611
+#: lib/html.php:2612
 msgid "Help in Translating"
 msgstr "अनुवाद करने में सहायता"
 
-#: lib/html.php:2612
+#: lib/html.php:2613
 msgid "Report a bug"
 msgstr "किसी बग की रिपोर्ट करें"
 
-#: lib/html.php:2614
+#: lib/html.php:2615
 #, fuzzy
 msgid "Kadupul"
 msgstr "Kadupul"
 
-#: lib/html.php:2616
+#: lib/html.php:2617
 msgid "Click to Show/Hide Filter"
 msgstr "फ़िल्टर दिखाने / छिपाने के लिए क्लिक करें"
 
-#: lib/html.php:2617
+#: lib/html.php:2618
 msgid "Clear Current Filter"
 msgstr "वर्तमान फ़िल्टर साफ़ करें"
 
-#: lib/html.php:2618
+#: lib/html.php:2619
 msgid "Clipboard"
 msgstr "क्लिपबोर्ड से... (C)"
 
-#: lib/html.php:2619
+#: lib/html.php:2620
 msgid "Clipboard ID"
 msgstr "क्लिपबोर्ड आईडी"
 
-#: lib/html.php:2620
+#: lib/html.php:2621
 msgid "Copy operation is unavailable at this time"
 msgstr "इस समय प्रतिलिपि संचालन अनुपलब्ध है"
 
-#: lib/html.php:2621
+#: lib/html.php:2622
 msgid "Failed to find data to copy!"
 msgstr "कॉपी करने के लिए डेटा खोजने में विफल!"
 
-#: lib/html.php:2622
+#: lib/html.php:2623
 msgid "Clipboard has been updated"
 msgstr "क्लिपबोर्ड को अपडेट कर दिया गया है"
 
-#: lib/html.php:2623
+#: lib/html.php:2624
 msgid "Sorry, your clipboard could not be updated at this time"
 msgstr "क्षमा करें, इस समय आपका क्लिपबोर्ड अपडेट नहीं किया जा सका"
 
-#: lib/html.php:2627
+#: lib/html.php:2628
 msgid "Passphrase length meets 8 character minimum"
 msgstr "पासफ़्रेज़ की लंबाई न्यूनतम 8 वर्णों से मिलती है"
 
-#: lib/html.php:2628
+#: lib/html.php:2629
 msgid "Passphrase too short"
 msgstr "पासफ़्रेज़ बहुत छोटा है"
 
-#: lib/html.php:2629
+#: lib/html.php:2630
 msgid "Passphrase matches but too short"
 msgstr "पासफ़्रेज़ मैच करता है लेकिन बहुत कम"
 
-#: lib/html.php:2630
+#: lib/html.php:2631
 msgid "Passphrase too short and not matching"
 msgstr "पासफ़्रेज़ बहुत छोटा और मेल नहीं खाता"
 
-#: lib/html.php:2631
+#: lib/html.php:2632
 msgid "Passphrases match"
 msgstr "पासफ़्रेज़ मेल खाते हैं"
 
-#: lib/html.php:2632
+#: lib/html.php:2633
 msgid "Passphrases do not match"
 msgstr "पासफ़्रेज़ मेल नहीं खाते हैं"
 
-#: lib/html.php:2633
+#: lib/html.php:2634
 msgid "Sorry, we could not process your last action."
 msgstr "क्षमा करें, हम आपकी अंतिम क्रिया को संसाधित नहीं कर सके।"
 
-#: lib/html.php:2634
+#: lib/html.php:2635
 msgid "Error:"
 msgstr "त्रुटी:"
 
-#: lib/html.php:2635
+#: lib/html.php:2636
 msgid "Reason:"
 msgstr "कारण:"
 
-#: lib/html.php:2636
+#: lib/html.php:2637
 msgid "Action failed"
 msgstr "क्रिया: विफल रही है"
 
-#: lib/html.php:2637 pollers.php:804
+#: lib/html.php:2638 pollers.php:804
 msgid "Connection Successful"
 msgstr "ऑपरेशन सफल रहा"
 
-#: lib/html.php:2638 pollers.php:806
+#: lib/html.php:2639 pollers.php:806
 msgid "Connection Failed"
 msgstr "कनेक्शन असफल"
 
-#: lib/html.php:2639
+#: lib/html.php:2640
 msgid "The response to the last action was unexpected."
 msgstr "अंतिम क्रिया की प्रतिक्रिया अप्रत्याशित थी।"
 
-#: lib/html.php:2640
+#: lib/html.php:2641
 msgid "Some Actions failed"
 msgstr "कुछ क्रियाएं विफल रहीं"
 
-#: lib/html.php:2641
+#: lib/html.php:2642
 msgid "Note, we could not process all your actions.  Details are below."
 msgstr "ध्यान दें, हम आपके सभी कार्यों को संसाधित नहीं कर सके। विवरण नीचे हैं।"
 
-#: lib/html.php:2642
+#: lib/html.php:2643
 msgid "Operation successful"
 msgstr "ऑपरेशन सफल रहा"
 
-#: lib/html.php:2643
+#: lib/html.php:2644
 msgid "The Operation was successful.  Details are below."
 msgstr "ऑपरेशन सफल रहा। विवरण नीचे हैं।"
 
-#: lib/html.php:2645
+#: lib/html.php:2646
 msgid "Pause"
 msgstr "पॉज़"
 
-#: lib/html.php:2648
+#: lib/html.php:2649
 msgid "Zoom In"
 msgstr "ज़ूम इन करो"
 
-#: lib/html.php:2649
+#: lib/html.php:2650
 msgid "Zoom Out"
 msgstr "ज़ूम आउट करो"
 
-#: lib/html.php:2650
+#: lib/html.php:2651
 msgid "Zoom Out Factor"
 msgstr "जूम आउट फैक्टर"
 
-#: lib/html.php:2651
+#: lib/html.php:2652
 msgid "Timestamps"
 msgstr "मुहर"
 
-#: lib/html.php:2652
+#: lib/html.php:2653
 msgid "2x"
 msgstr "2x"
 
-#: lib/html.php:2653
+#: lib/html.php:2654
 msgid "4x"
 msgstr "4x"
 
-#: lib/html.php:2654
+#: lib/html.php:2655
 msgid "8x"
 msgstr "8x"
 
-#: lib/html.php:2655
+#: lib/html.php:2656
 msgid "16x"
 msgstr "16x"
 
-#: lib/html.php:2656
+#: lib/html.php:2657
 msgid "32x"
 msgstr "32x"
 
-#: lib/html.php:2657
+#: lib/html.php:2658
 msgid "Zoom Out Positioning"
 msgstr "ज़ूम आउट पोजिशनिंग"
 
-#: lib/html.php:2658
+#: lib/html.php:2659
 msgid "Zoom Mode"
 msgstr "ज़ूम मोड"
 
-#: lib/html.php:2660
+#: lib/html.php:2661
 msgid "Quick"
 msgstr "तेज"
 
-#: lib/html.php:2662
+#: lib/html.php:2663
 msgid "Open in new tab"
 msgstr "नए टैब में खोलें"
 
-#: lib/html.php:2663
+#: lib/html.php:2664
 msgid "Save graph"
 msgstr "ग्राफ को बचाएं"
 
-#: lib/html.php:2664
+#: lib/html.php:2665
 msgid "Copy graph"
 msgstr "ग्राफ की प्रतिलिपि बनाएँ"
 
-#: lib/html.php:2665
+#: lib/html.php:2666
 msgid "Copy graph link"
 msgstr "ग्राफ लिंक कॉपी करें"
 
-#: lib/html.php:2666
+#: lib/html.php:2667
 msgid "Always On"
 msgstr "हमेशा चालू"
 
-#: lib/html.php:2667
+#: lib/html.php:2668
 msgid "Auto"
 msgstr "आपही"
 
-#: lib/html.php:2668
+#: lib/html.php:2669
 msgid "Always Off"
 msgstr "हमेशा बंद"
 
-#: lib/html.php:2669
+#: lib/html.php:2670
 msgid "Begin with"
 msgstr "से शुरू"
 
-#: lib/html.php:2671
+#: lib/html.php:2672
 msgid "End with"
 msgstr "अंतिम दिनांक"
 
-#: lib/html.php:2673 lib/html_form.php:1432
+#: lib/html.php:2674 lib/html_form.php:1432
 msgid "Close"
 msgstr "बंद"
 
-#: lib/html.php:2675
+#: lib/html.php:2676
 msgid "3rd Mouse Button"
 msgstr "3 माउस बटन"
 
