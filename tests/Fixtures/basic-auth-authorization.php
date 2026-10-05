@@ -9,9 +9,13 @@ $scenario = $argv[2];
 $mode = $argv[3];
 require $root . '/lib/auth.php';
 define('CACTI_VERSION', str_starts_with($mode, 'realtime') ? '1.2.31' : 'test');
-define('OPER_MODE_NATIVE', 0);
-define('OPER_MODE_RESKIN', 1);
-define('POLLER_VERBOSITY_MEDIUM', 3);
+if (str_starts_with($mode, 'realtime')) {
+    require $root . '/include/global_constants.php';
+} else {
+    define('OPER_MODE_NATIVE', 0);
+    define('OPER_MODE_RESKIN', 1);
+    define('POLLER_VERBOSITY_MEDIUM', 3);
+}
 $config = array('cacti_db_version' => 'test', 'url_path' => '/', 'base_path' => $root);
 $user_auth_realm_filenames = array('user_admin.php' => 7);
 $auth_text = true;
@@ -67,6 +71,7 @@ if ($scenario === 'allowed') {
 }
 function read_config_option($key)
 {
+    if ($key === 'path_php_binary') return PHP_BINARY;
     if ($key === 'realtime_cache_path') return getcwd() . '/cache';
     if ($key === 'guest_user' && str_starts_with($GLOBALS['mode'], 'realtime')) return strpos($GLOBALS['scenario'], 'guest') !== false ? 'fixture' : 'configured-guest';
     return array('auth_method' => '2', 'auth_cache_enabled' => 'on', 'admin_user' => 1, 'graph_auth_method' => 1)[$key] ?? '';
@@ -229,11 +234,11 @@ if (str_starts_with($mode, 'realtime')) {
     $db->exec("INSERT INTO user_auth(id,username,realm,enabled,locked) VALUES(43,'configured-guest',0,'','')");
     $db->exec('CREATE TABLE user_auth_perms (user_id INTEGER, type INTEGER, item_id INTEGER)');
     $db->exec('CREATE TABLE user_auth_group_perms (group_id INTEGER, type INTEGER, item_id INTEGER)');
-    $db->exec('CREATE TABLE graph_templates_graph (local_graph_id INTEGER, title_cache TEXT, width INTEGER, height INTEGER)');
+    $db->exec('CREATE TABLE graph_templates_graph (local_graph_id INTEGER, title_cache TEXT, width INTEGER, height INTEGER, image_format_id INTEGER)');
     $db->exec('CREATE TABLE graph_local (id INTEGER, graph_template_id INTEGER, host_id INTEGER, snmp_index TEXT, snmp_query_id INTEGER)');
     $db->exec('CREATE TABLE graph_templates (id INTEGER, name TEXT)');
     $db->exec('CREATE TABLE host (id INTEGER, description TEXT, disabled TEXT, deleted TEXT)');
-    $db->exec("INSERT INTO graph_templates_graph VALUES(7,'Fixture',425,125)");
+    $db->exec("INSERT INTO graph_templates_graph VALUES(7,'Fixture',425,125,1)");
     $db->exec("INSERT INTO graph_local VALUES(7,0,0,'',0)");
     $db->sqliteCreateFunction('IF', static fn($condition, $yes, $no) => $condition ? $yes : $no);
     if (str_ends_with($scenario, '_allowed') || str_contains($scenario, '_graph_')) $db->exec('INSERT INTO user_auth_realm VALUES(42,25)');
@@ -259,7 +264,33 @@ if (str_starts_with($mode, 'realtime')) {
     {
         return $default;
     }
-    $_REQUEST = ['action' => $mode === 'realtime_default' ? '' : 'view', 'local_graph_id' => '7'];
+    if ($mode === 'realtime_init') {
+        function isempty_request_var($name)
+        {
+            return !isset($_REQUEST[$name]) || $_REQUEST[$name] === '';
+        }
+        function load_current_session_value($name, $session, $default)
+        {
+            $_REQUEST[$name] = $_REQUEST[$name] ?? $_SESSION[$session] ?? $default;
+            $_SESSION[$session] = $_REQUEST[$name];
+        }
+        function cacti_exec($binary, $arguments, &$output, $timeout)
+        {
+            if ($binary !== PHP_BINARY || $arguments !== ['-q', $GLOBALS['root'] . '/poller_realtime.php', '--graph=7', '--interval=10', '--poller_id=bootstrap'] || $timeout !== null) {
+                throw new RuntimeException('Unexpected authorized realtime worker handoff');
+            }
+            $GLOBALS['events'][] = 'POLLER';
+            return 0;
+        }
+        function rrdtool_function_graph(...$arguments)
+        {
+            $GLOBALS['events'][] = 'RENDER';
+            exit;
+        }
+    }
+    $_REQUEST = ['action' => match ($mode) {
+        'realtime_default' => '', 'realtime_init' => 'init', default => 'view'
+    }, 'local_graph_id' => '7'];
     ob_start();
 }
 $_SERVER['PHP_AUTH_USER'] = 'fixture';
@@ -273,7 +304,8 @@ if (str_starts_with($scenario, 'existing_')) {
 register_shutdown_function(function () {
     $result = array('events' => $GLOBALS['events'], 'user' => $_SESSION['sess_user_id'] ?? null, 'status' => http_response_code() ?: 200);
     if (str_starts_with($GLOBALS['mode'], 'realtime')) {
-        $result['body'] = ob_get_clean();
+        $result['body'] = '';
+        while (ob_get_level()) $result['body'] = ob_get_clean() . $result['body'];
         $GLOBALS['nativeChildCoverageMarkers'] = ['realtime-bootstrap-completed'];
     }
     echo json_encode($result);

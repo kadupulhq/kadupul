@@ -116,7 +116,7 @@ test('realtime realm guard uses the real guest bootstrap and persisted permissio
     $coverage = $this->getTestResultObject()->getCodeCoverage();
     $sources = ['include/auth.php', 'lib/auth.php', 'graph_realtime.php', 'user_admin.php', 'lib/functions.php',
         'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php',
-        'tests/Helpers/PhpSource.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Fixtures/rrd-process-coverage.php'];
+        'include/global_constants.php', 'tests/Helpers/PhpSource.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Fixtures/rrd-process-coverage.php'];
     $prelude = '';
     if ($coverage !== null) {
         require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
@@ -149,8 +149,8 @@ test('realtime realm guard uses the real guest bootstrap and persisted permissio
         $result = json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
         expect($result['user'])->toBe(42);
         expect($result['status'])->toBe($allowed ? 200 : 403);
-        expect($result['body'])->toBe($allowed ? base64_encode('REALTIME_AUTHORIZED_IMAGE') : '');
-        expect($result['events'])->toBe([]);
+        expect($result['body'])->toBe($allowed && $mode === 'realtime_view' ? base64_encode('REALTIME_AUTHORIZED_IMAGE') : '');
+        expect($result['events'])->toBe($allowed && $mode === 'realtime_init' ? ['POLLER', 'RENDER'] : []);
         if ($coverage !== null) {
             $reports = glob($dir . '/*.coverage');
             expect($reports)->toHaveCount(1);
@@ -170,6 +170,9 @@ test('realtime realm guard uses the real guest bootstrap and persisted permissio
         rmdir($dir);
     }
 })->with([
+    'logged-in init beside configured guest denied' => ['existing_denied', 'realtime_init', false],
+    'logged-in init beside configured guest allowed' => ['existing_allowed', 'realtime_init', true],
+    'logged-in default beside configured guest denied' => ['existing_denied', 'realtime_default', false],
     'configured guest without realm' => ['guest_denied', 'realtime_view', false],
     'configured guest with realm' => ['guest_allowed', 'realtime_view', true],
     'guest with realm cannot read a denied graph' => ['guest_graph_denied', 'realtime_view', false],
