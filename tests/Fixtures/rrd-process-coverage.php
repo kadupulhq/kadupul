@@ -229,6 +229,9 @@ if (defined('DATA_SOURCE_LIMIT_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/data_templates.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
+if (defined('REALTIME_AUTH_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/graph_realtime.php');
+}
 if (defined('BASIC_AUTH_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/include/auth.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
