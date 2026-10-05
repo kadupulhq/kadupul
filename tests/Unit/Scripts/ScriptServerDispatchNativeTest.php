@@ -17,7 +17,8 @@ test('native Script Server admits configured scripts and rejects unowned dispatc
     $scripts = $layout === 'configured' ? $temporary . '/relocated' : $temporary . '/scripts';
     if ($layout === 'symlink') {
         rmdir($temporary . '/scripts');
-        expect(symlink($temporary . '/relocated', $temporary . '/scripts'))->toBeTrue();
+        expect(symlink(realpath($temporary . '/relocated'), $temporary . '/scripts'))->toBeTrue();
+        $this->assertSame(realpath($temporary . '/relocated'), realpath($temporary . '/scripts'), 'The owned script-root link must resolve before dispatch.');
         $scripts = $temporary . '/scripts';
     }
     file_put_contents($scripts . '/helper.php', '<?php function dispatch_helper(){return "unexpected-helper";}');
@@ -89,7 +90,7 @@ BOOT;
         }
         $expected = ['selected-ok','U','U','U','other-ok','U','U','U','U','U','U'];
         $logs = file_get_contents($temporary.'/include/logs');
-        expect($lines)->toBe($layout === 'missing' ? array_fill(0, count($requests), 'U') : $expected, $logs);
+        $this->assertSame($layout === 'missing' ? array_fill(0, count($requests), 'U') : $expected, $lines, $logs);
         expect($logs)->toContain('could not be resolved. Rejected.');
         if ($layout !== 'missing') {
             expect($logs)->toContain('was not defined by script file')->toContain('Refusing to dispatch PHP internal function')
