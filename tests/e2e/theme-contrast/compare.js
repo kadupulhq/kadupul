@@ -47,12 +47,17 @@ if (themes.length === 0 || themes.join() !== Object.keys(after).sort().join()) {
 }
 
 for (const theme of themes) {
-	const was = new Map((before[theme] || []).map((f) => [id(f), f]));
+	if (!Array.isArray(before[theme]) || !Array.isArray(after[theme]) || before[theme].length === 0 || after[theme].length === 0
+		|| [...before[theme], ...after[theme]].some(f => !f || !Number.isFinite(f.ratio) || !Number.isFinite(f.required))) {
+        console.error(`${theme}: missing, empty, or malformed contrast report`);
+		process.exit(2);
+	}
+	const was = new Map(before[theme].map((f) => [id(f), f]));
 	const now = after[theme] || [];
 	const failed = now.filter(failing);
-	const broken = failed.filter((f) => was.has(id(f)) && !failing(was.get(id(f))));
+	const broken = failed.filter((f) => !was.has(id(f)) || !failing(was.get(id(f))) || f.ratio + 0.005 < was.get(id(f)).ratio);
 	regressions += broken.length;
-	console.log(`${theme}: ${(before[theme] || []).filter(failing).length} -> ${failed.length} failures, ${broken.length} new`);
+    console.log(`${theme}: ${(before[theme] || []).filter(failing).length} -> ${failed.length} failures, ${broken.length} regressions`);
 	for (const f of list ? failed : broken) {
 		console.log('  ' + (broken.includes(f) ? 'NEW ' : '') + describe(f));
 	}

@@ -206,6 +206,14 @@ foreach ($scenario['require'] ?? array() as $file) {
     require $root . '/' . $file;
 }
 
+/** Return settings as the real include produced them, for UI contract tests. */
+function rrd_characterization_setting_definitions(): array
+{
+    global $settings, $settings_user;
+
+    return array('system' => $settings, 'user' => $settings_user);
+}
+
 $plugins_integrated = array();
 $_COOKIE = $scenario['cookies'] ?? array();
 

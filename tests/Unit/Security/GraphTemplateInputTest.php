@@ -8,7 +8,7 @@ function runGraphInputProbe($program, array $arguments = array(), $coverage = nu
     $root = dirname(__DIR__, 3);
     $directory = sys_get_temp_dir() . '/graph-input-' . bin2hex(random_bytes(8));
     mkdir($directory . '/include', 0700, true);
-    file_put_contents($directory . '/include/auth.php', '<?php');
+    file_put_contents($directory . '/include/auth.php', '<?php require_once ' . var_export($root . '/tests/Helpers/PhpSource.php', true) . ';eval(test_php_function_source(file_get_contents(' . var_export($root . '/lib/auth.php', true) . '), ' . var_export('auth_resource_id', true) . '));');
     symlink($root . '/lib', $directory . '/lib');
     if ($coverage !== null) {
         $program = 'define("GRAPH_INPUT_TEST_COVERAGE",true);'
@@ -241,8 +241,11 @@ function read_config_option($key) { return '0'; }
 function is_graph_allowed($id) { return (int) $id === 1; }
 function is_device_allowed($id) { return (int) $id === 1; }
 function cacti_log(...$args) { $GLOBALS['denied'] = true; }
+function raise_message(...$args) { $GLOBALS['denied'] = true; }
+function snmpagent_graphs_action_bottom($args) { if ($args[1] !== array()) { throw new RuntimeException('Denied selections reached SNMP handoff'); } }
 register_shutdown_function(function () { echo empty($GLOBALS['denied']) ? 'ALLOWED' : 'DENIED'; });
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
+function cacti_count($value) { return cacti_sizeof($value); }
 function __($text, ...$args) { return $text; }
 function api_plugin_hook_function($name, $value) { return $value; }
 function form_input_validate($value, ...$args) { return $value; }
@@ -268,6 +271,8 @@ PHP;
     expect(runGraphInputProbe($program, array(json_encode($request))))->toBe('DENIED');
 })->with(array(
     'foreign graph' => array(array('action' => 'save', 'save_component_graph' => '1', 'local_graph_id' => '3')),
+    'negative bulk destination' => array(array('action' => 'actions', 'drp_action' => '5', 'host_id' => '-1', 'selected_items' => serialize(array(1)))),
+    'negative target device' => array(array('action' => 'save', 'save_component_graph' => '1', 'host_id' => '-1')),
     'foreign target device' => array(array('action' => 'save', 'save_component_graph' => '1', 'host_id' => '5')),
     'foreign graph row' => array(array('action' => 'save', 'save_component_graph' => '1', 'graph_template_graph_id' => '11')),
     'bulk action on a foreign graph' => array(array('action' => 'actions', 'drp_action' => '1', 'selected_items' => serialize(array(1, 3)))),

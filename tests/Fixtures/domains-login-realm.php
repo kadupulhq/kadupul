@@ -21,11 +21,13 @@ define('FILTER_VALIDATE_IS_NUMERIC_ARRAY', 100000);
 define('FILTER_VALIDATE_IS_NUMERIC_LIST', 100001);
 
 $events = array();
+$dispatches = array();
 $_REQUEST = $scenario['request'];
 
 register_shutdown_function(function () {
     echo json_encode(array(
         'events'    => $GLOBALS['events'],
+        'dispatches' => $GLOBALS['dispatches'],
         'error'     => $GLOBALS['error'] ?? null,
         'error_msg' => $GLOBALS['error_msg'] ?? null,
         'user'      => $GLOBALS['result'] ?? null,
@@ -67,6 +69,12 @@ function __esc(...$args)
     return __(...$args);
 }
 
+function die_html_input_error($variable = '', $value = '', $message = '')
+{
+    $GLOBALS['events'][] = 'INPUT_REJECTED';
+    exit;
+}
+
 if ($mode === 'process') {
     require $root . '/lib/html_utility.php';
     require $root . '/lib/auth.php';
@@ -102,11 +110,6 @@ if ($mode === 'process') {
         }
     }
 
-    function die_html_input_error($variable = '', $value = '', $message = '')
-    {
-        $GLOBALS['events'][] = 'INPUT_REJECTED';
-        exit;
-    }
 
     class DomainCopyPDO extends PDO
     {
@@ -265,14 +268,17 @@ if ($mode === 'process') {
     }
     function domains_login_process($username)
     {
+        $GLOBALS['dispatches'][] = 'domain';
         return stub_login_process();
     }
     function ldap_login_process($username)
     {
+        $GLOBALS['dispatches'][] = 'ldap';
         return stub_login_process();
     }
     function local_auth_login_process($username)
     {
+        $GLOBALS['dispatches'][] = 'local';
         return stub_login_process();
     }
     function get_template_account($username = '')
@@ -337,5 +343,7 @@ if ($mode === 'process') {
         ob_start();
     }
 
+    require_once $root . '/tests/Helpers/PhpSource.php';
+    eval(test_php_function_source(file_get_contents($root . '/lib/auth.php'), 'auth_resource_id'));
     require $root . '/auth_login.php';
 }

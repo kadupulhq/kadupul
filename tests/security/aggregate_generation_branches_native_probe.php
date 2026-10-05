@@ -125,6 +125,8 @@ function graphApiControls(PDO $database, PDO $observer): void
     callerAssert(api_duplicate_graph(0, 16000001, 'Invalid copy') === false && (int) $observer->query('SELECT COUNT(*) FROM graph_templates')->fetchColumn() === $before, 'invalid input column refuses a template clone before a parent write');
     callerAssert(api_duplicate_graph(0, 16000999, 'Missing copy') === false, 'missing template clone refuses');
 
+    // The source host must exist for the real current-device authorization check.
+    $database->exec("INSERT INTO host(id,hostname,description) VALUES(1,'native-source.example','Native source device')");
     $database->exec("INSERT INTO graph_local(id,graph_template_id,host_id,snmp_query_id,snmp_query_graph_id,snmp_index) VALUES(16000101,16000001,1,1,50001,'native'),(16000102,0,0,0,0,''),(16000103,1,1,0,0,'')");
     $database->exec("INSERT INTO graph_templates_graph(local_graph_id,graph_template_id,title,title_cache) VALUES(16000101,16000001,'Old title','Old title'),(16000102,0,'No template','No template'),(16000103,1,'Simple title','Simple title')");
     $database->exec("INSERT INTO host_snmp_cache(host_id,snmp_query_id,field_name,field_value,snmp_index,oid) VALUES(1,1,'ifDescr','Native interface','native','1.3.6.1.2.1.2.2.1.2.1')");

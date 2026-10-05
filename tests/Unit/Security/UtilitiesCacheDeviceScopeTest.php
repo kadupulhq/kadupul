@@ -12,6 +12,7 @@ eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_con
 
 function get_allowed_management_devices($sql_where, $sql_order, $sql_limit, &$total_rows)
 {
+    expect($total_rows)->toBe(-1);
     return $GLOBALS['allowed_devices'];
 }
 

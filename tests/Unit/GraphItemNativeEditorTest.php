@@ -187,3 +187,103 @@ test('graph item numeric form validation follows the fields used by rendering', 
         }
     }
 });
+
+// Exercise the shipped endpoint with persisted ownership rows and recording policy boundaries.
+test('graph item endpoint authorizes graph and device before scoped ownership and mutations', function ($action, $payload, $admitted) {
+    $root = dirname(__DIR__, 2);
+    $directory = sys_get_temp_dir() . '/graph-item-scope-' . bin2hex(random_bytes(8));
+    mkdir($directory, 0700);
+    mkdir($directory . '/include', 0700);
+    mkdir($directory . '/lib', 0700);
+    copy($root . '/graphs_items.php', $directory . '/graphs_items.php');
+    foreach (array('poller', 'utility') as $name) {
+        file_put_contents($directory . '/lib/' . $name . '.php', '<?php');
+    }
+    file_put_contents($directory . '/lib/graph_item_editor.php', '<?php require_once ' . var_export($root . '/lib/graph_item_editor.php', true) . ';');
+    $coverage = $this->getTestResultObject()->getCodeCoverage();
+    $bootstrap = '<?php define("GRAPH_ITEM_EDITOR_TEST_COVERAGE", true); ';
+    if ($coverage !== null) {
+        foreach (array('RRD_TEST_COVERAGE_DIRECTORY' => $directory, 'RRD_TEST_CLI_COVERAGE_COPY' => $directory . '/graphs_items.php', 'RRD_TEST_CLI_COVERAGE_SOURCE' => $root . '/graphs_items.php') as $name => $value) {
+            $bootstrap .= 'define(' . var_export($name, true) . ',' . var_export($value, true) . ');';
+        }
+        $bootstrap .= 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    $bootstrap .= 'require ' . var_export($root . '/tests/Fixtures/graph-item-native-bootstrap.php', true) . ';';
+    file_put_contents($directory . '/include/auth.php', $bootstrap);
+    try {
+        $environment = array_replace(getenv(), array('GRAPH_ITEM_TEST_ROOT' => $root, 'GRAPH_ITEM_TEST_MODE' => $action,
+            'GRAPH_ITEM_TEST_SECURITY' => '1', 'GRAPH_ITEM_TEST_PAYLOAD' => json_encode(array('action' => $action) + $payload, JSON_THROW_ON_ERROR)));
+        $process = proc_open(array(PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'display_errors=stderr', '-d', 'pcov.directory=/', $directory . '/graphs_items.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $directory, $environment);
+        expect($process)->toBeResource();
+        $stdout = stream_get_contents($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        \PHPUnit\Framework\Assert::assertSame(0, proc_close($process), $stderr . $stdout);
+        expect($stderr)->toBe('');
+        $calls = json_decode(substr($stdout, strrpos($stdout, 'RESULT:') + 7), true, 512, JSON_THROW_ON_ERROR);
+        $denials = array_values(array_filter($calls, static fn($call) => $call[0] === 'denied'));
+        $mutations = array_values(array_filter($calls, static fn($call) => in_array($call[0], array('save', 'execute', 'move', 'move-single', 'form', 'picker'), true)));
+        $remaining = array_values(array_filter($calls, static fn($call) => $call[0] === 'remaining'))[0][1];
+        if (!$admitted) {
+            expect($denials)->toHaveCount(1)->and($denials[0][2])->toBe('AUTH');
+            expect($mutations)->toBeEmpty()->and($remaining)->toBe(array(8, 9, 10));
+            expect(array_filter($calls, static fn($call) => in_array($call[0], array('header', 'session'), true)))->toBeEmpty();
+            $reads = array_values(array_filter($calls, static fn($call) => $call[0] === 'read'));
+            if (($payload['local_graph_id'] ?? 4) === 3 || is_array($payload['local_graph_id'] ?? 4)) {
+                expect($reads)->toBeEmpty();
+            }
+            if (($payload['local_graph_id'] ?? 4) === 5) {
+                expect($reads)->toHaveCount(1);
+            }
+        } else {
+            expect($denials)->toBeEmpty()->and($mutations)->toHaveCount(1);
+            if ($action === 'save') {
+                $row = $mutations[0][1];
+                expect($row['graph_template_id'])->toBe(($payload['graph_template_item_id'] ?? 8) === 0 ? 0 : 3)
+                    ->and($row['local_graph_template_item_id'])->toBe(($payload['graph_template_item_id'] ?? 8) === 0 ? 0 : 10);
+            } elseif ($action === 'item_remove') {
+                expect($remaining)->toBe(array(9, 10));
+            }
+        }
+        if ($coverage !== null) {
+            $reports = glob($directory . '/*.coverage');
+            expect($reports)->toHaveCount(1);
+            $coverage->merge(unserialize(file_get_contents($reports[0])));
+        }
+    } finally {
+        foreach (array('/include', '/lib', '') as $suffix) {
+            foreach (glob($directory . $suffix . '/*') as $file) {
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
+            rmdir($directory . $suffix);
+        }
+    }
+})->with(function () {
+    foreach (array('save', 'item_remove', 'item_moveup', 'item_movedown', 'item_edit') as $action) {
+        yield $action . ' allowed' => array($action, array(), true);
+        yield $action . ' hidden graph' => array($action, array('local_graph_id' => 3), false);
+        yield $action . ' denied current device' => array($action, array('local_graph_id' => 5, 'id' => 9, 'graph_template_item_id' => 9), false);
+        yield $action . ' foreign item' => array($action, array('id' => 9, 'graph_template_item_id' => 9), false);
+        yield $action . ' missing item' => array($action, array('id' => 999, 'graph_template_item_id' => 999), false);
+        yield $action . ' malformed graph' => array($action, array('local_graph_id' => array(4)), false);
+    }
+    yield 'device-less item' => array('item_edit', array('local_graph_id' => 6, 'id' => 10), true);
+    yield 'actual create link omits item and device IDs' => array('item_edit', array('__unset_request_vars' => array('id', 'host_id')), true);
+    yield 'device-less create link omits item and device IDs' => array('item_edit', array('local_graph_id' => 6, '__unset_request_vars' => array('id', 'host_id')), true);
+    yield 'zero graph cannot select template items' => array('item_edit', array('local_graph_id' => 0), false);
+    yield 'negative current device' => array('item_edit', array('local_graph_id' => 7), false);
+    yield 'create item ignores submitted template associations' => array('save', array('graph_template_item_id' => 0, 'graph_template_id' => 999, 'local_graph_template_item_id' => 999), true);
+    yield 'existing item retains stored template associations' => array('save', array('graph_template_id' => 999, 'local_graph_template_item_id' => 999), true);
+    yield 'foreign renderer host filter' => array('item_edit', array('host_id' => 2), false);
+    yield 'authorized AJAX device filter' => array('ajax_graph_items', array('host_id' => 1), true);
+    yield 'foreign AJAX device filter' => array('ajax_graph_items', array('host_id' => 2), false);
+    yield 'malformed AJAX device filter' => array('ajax_graph_items', array('host_id' => array(1)), false);
+    yield 'omitted AJAX device filter' => array('ajax_graph_items', array('__unset_request_vars' => array('host_id')), true);
+    foreach (array('item_remove', 'item_moveup', 'item_movedown') as $action) {
+        yield $action . ' zero item' => array($action, array('id' => 0), false);
+        yield $action . ' malformed item' => array($action, array('id' => '8e0'), false);
+    }
+});

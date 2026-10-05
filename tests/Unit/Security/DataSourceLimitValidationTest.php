@@ -163,7 +163,7 @@ test('a data source page stores nothing for a limit that fails validation', func
 ));
 
 test('a data source save for a device outside the user\'s scope stores nothing', function () {
-    $result = limit_save($this, 'data_sources.php', array(), array('LIMIT_DEVICE_DENIED' => '1'));
+    $result = limit_save($this, 'data_sources.php', array(), array('LIMIT_DEVICE_DENIED' => '1', 'LIMIT_SOURCE_HOST' => '12'));
 
     expect($result['saved'])->toBe(array());
 });
@@ -193,7 +193,7 @@ test('RRD save paths preserve a configured symlink root and reject repeated plac
         symlink($directory, $directory . '/actual/escape');
         $path = match ($case) {
             'configured' => $directory . '/configured/new.rrd',
-            'canonical' => $directory . '/actual/new.rrd',
+            'canonical' => realpath($directory . '/actual') . '/new.rrd',
             'token' => '<path_rra>/new.rrd',
             'nested' => '<path_rra>/missing/sub/new.rrd',
             'bare' => 'new.rrd',
@@ -221,3 +221,42 @@ test('RRD save paths preserve a configured symlink root and reject repeated plac
         rmdir($directory);
     }
 })->with(array('configured root' => array('configured', true), 'canonical root' => array('canonical', true), 'placeholder' => array('token', true), 'repeated placeholder' => array('repeat', false), 'parent traversal' => array('traversal', false), 'escaping symlink' => array('escape', false), 'nested missing directory' => array('nested', true), 'bare filename' => array('bare', true), 'outside absolute' => array('outside', false), 'NUL byte' => array('nul', false), 'backslash' => array('backslash', false), 'embedded token' => array('embedded', false), 'bare token' => array('baretoken', false)));
+
+
+test('the edit plugin runs only after existing or new source authorization', function ($id, $host, $denied, $admitted) {
+    $result = limit_save($this, 'data_sources.php', array('action' => 'ds_edit', 'id' => $id, 'host_id' => $host), array('LIMIT_EDIT_HOOK' => '1', 'LIMIT_SOURCE_HOST' => $host, 'LIMIT_DEVICE_DENIED' => $denied ? '1' : '0'));
+    expect($result['hooks'])->toBe($admitted ? array(array('data_source_edit_top')) : array())
+        ->and($result['saved'])->toBe(array());
+})->with(array(
+    'existing admitted' => array('5', '12', false, true),
+    'existing denied' => array('5', '13', true, false),
+    'existing non-device without visible devices' => array('5', '0', true, true),
+    'new admitted' => array('0', '12', false, true),
+    'new denied' => array('0', '13', true, false),
+    'new non-device without visible devices' => array('0', '0', true, true),
+    'new negative target' => array('0', '-1', false, false),
+));
+
+
+test('an existing non-device source can save without any visible device', function () {
+    $result = limit_save($this, 'data_sources.php', array(), array('LIMIT_DEVICE_DENIED' => '1'));
+    expect($result['saved'])->toHaveKeys(array('data_local', 'data_template_data', 'data_template_rrd'));
+});
+
+test('a negative destination device stops the save independently of source authorization', function () {
+    $result = limit_save($this, 'data_sources.php', array('host_id' => '-1'), array('LIMIT_SOURCE_HOST' => '0'));
+    expect($result['saved'])->toBe(array());
+});
+
+test('RRD row ownership is checked independently of the owned data row', function ($templated) {
+    $fields = array('current_rrd' => '9');
+    if ($templated) {
+        $fields['_data_template_id'] = $fields['data_template_id'] = '2';
+    }
+    $result = limit_save($this, 'data_sources.php', $fields, array('LIMIT_RRD_OWNER' => '6', 'LIMIT_DATA_OWNER' => '5'));
+    if ($templated) {
+        expect($result['saved'])->toHaveKeys(array('data_local', 'data_template_data'));
+    } else {
+        expect($result['saved'])->toBe(array());
+    }
+})->with(array('untemplated rejects foreign item' => array(false), 'templated ignores unused current item' => array(true)));

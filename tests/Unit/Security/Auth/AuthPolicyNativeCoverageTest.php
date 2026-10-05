@@ -26,6 +26,14 @@ final class AuthPolicyNativeCoverageTest extends TestCase
         $state = $this->runPolicy(['operation' => 'device-filter-policy', 'hide_disabled' => 'on']);
         self::assertSame(['view' => [], 'graph_view' => [], 'management' => [100, 101, 102], 'target' => true, 'foreign' => true, 'deleted' => true, 'missing' => false, 'graphs' => [true, true, true, false]], $state['result']);
     }
+    public function testMalformedResourceIdentifiersAreDeniedBeforePolicyQueries(): void
+    {
+        $state = $this->runPolicy(['operation' => 'resource-ids']);
+        self::assertSame(array_fill(0, 10, [false, false]), $state['result']['refused']);
+        self::assertSame(array_fill(0, 9, [[], 0, [], 0]), $state['result']['invalid_lists']);
+        self::assertSame(0, $state['result']['invalid_queries']);
+        self::assertSame(array_fill(0, 4, [true, true]), $state['result']['admitted']);
+    }
     private static array $coverageEvidenceChecked = [];
 
     #[\PHPUnit\Framework\Attributes\DataProvider('realmCases')]
@@ -109,6 +117,72 @@ final class AuthPolicyNativeCoverageTest extends TestCase
             'typed direct exceptions' => [['exceptions' => [1, 3, 4]], false],
             'typed group exceptions do not simplify deny policy' => [['policy' => 2, 'groups' => [['exceptions' => [1, 3, 4]]]], false],
             'foreign group exceptions ignored with direct default' => [['groups' => [['user' => 43, 'exceptions' => [1, 3, 4]]]], true],
+        ];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('graphMatrix')]
+    public function testGraphPermissionDescriptionsMatchActualQueriesAndSingleGraphAuthorization(array $scenario, bool $allowed): void
+    {
+        $state = $this->runPolicy(array_merge(['operation' => 'graphs'], $scenario));
+        self::assertSame([
+            'policy_rows' => $allowed ? [100] : [],
+            'allowed_rows' => $allowed ? [100] : [],
+            'total' => $allowed ? 1 : 0,
+            'allowed' => $allowed,
+            'missing' => false,
+        ], $state['result']);
+        self::assertSame([], $state['logs']);
+    }
+
+    public static function graphMatrix(): iterable
+    {
+        // Expected decisions are the documented truth table, exercised through
+        // persisted permission exceptions and all three production entry points.
+        $grants = [
+            'none' => [[], [false, false, false, false]],
+            'graph only' => [[1], [true, true, true, true]],
+            'device only' => [[3], [true, false, true, false]],
+            'template only' => [[4], [true, false, false, true]],
+            'device and template' => [[3, 4], [true, true, true, true]],
+            'graph and device' => [[1, 3], [true, true, true, true]],
+            'graph and template' => [[1, 4], [true, true, true, true]],
+            'all' => [[1, 3, 4], [true, true, true, true]],
+        ];
+        foreach ([1, 2] as $policy) {
+            foreach ($grants as $name => [$types, $decisions]) {
+                $exceptions = $policy === 2 ? $types : array_values(array_diff([1, 3, 4], $types));
+                foreach ([1, 2, 3, 4] as $mode) {
+                    foreach (['user', 'group'] as $source) {
+                        $scenario = ['config' => ['graph_auth_method' => $mode], 'policy' => $source === 'user' ? $policy : 2];
+                        if ($source === 'user') {
+                            $scenario['graph_exceptions'] = $exceptions;
+                        } else {
+                            $scenario['groups'] = [['graph_policy' => $policy, 'graph_exceptions' => $exceptions]];
+                        }
+                        yield "$source policy $policy mode $mode $name" => [$scenario, $decisions[$mode - 1]];
+                    }
+                }
+            }
+        }
+        yield 'restrictive does not combine grants from two groups' => [
+            ['policy' => 2, 'config' => ['graph_auth_method' => 2], 'groups' => [
+                ['graph_exceptions' => [3]], ['graph_exceptions' => [4]],
+            ]], false,
+        ];
+        yield 'restrictive does not combine user and group grants' => [
+            ['policy' => 2, 'config' => ['graph_auth_method' => 2], 'graph_exceptions' => [3], 'groups' => [
+                ['graph_exceptions' => [4]],
+            ]], false,
+        ];
+        yield 'disabled group cannot grant restrictive access' => [
+            ['policy' => 2, 'config' => ['graph_auth_method' => 2], 'groups' => [
+                ['enabled' => '', 'graph_exceptions' => [1, 3, 4]],
+            ]], false,
+        ];
+        yield 'foreign membership cannot grant restrictive access' => [
+            ['policy' => 2, 'config' => ['graph_auth_method' => 2], 'groups' => [
+                ['user' => 43, 'graph_exceptions' => [1, 3, 4]],
+            ]], false,
         ];
     }
 

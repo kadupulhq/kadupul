@@ -349,6 +349,54 @@ final class UtilityViewNativeCoverageTest extends TestCase
         );
     }
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('scopedCacheCases')]
+    public function testCacheSelectorsAndRowsUseTheSameAdmittedDeviceScope(string $view, array $allowed, array $request, array $session): void
+    {
+        $state = $this->render(array('view' => $view, 'request' => $request, 'session' => $session,
+            'allowed_devices' => $allowed, 'non_device' => true));
+        $document = new DOMDocument();
+        self::assertTrue($document->loadHTML($state['html'], LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_NONET));
+        $xpath = new DOMXPath($document);
+        $selector = $view === 'snmp' ? 'snmp_query_id' : 'template_id';
+        self::assertCount(0, $xpath->query('//select[@id="' . $selector . '"]/option[@value="20"]'));
+        self::assertStringNotContainsString($view === 'snmp' ? 'OID-foreign' : 'Gamma DS', $state['html']);
+        $prefix = $view === 'snmp' ? 'sess_usnmp' : 'sess_poller';
+        $effectiveHost = ($request['host_id'] ?? -1) === 0 ? 0 : -1;
+        self::assertSame((string) $effectiveHost, (string) $state['request']['host_id']);
+        self::assertSame((string) $effectiveHost, (string) $state['session'][$prefix . '_host_id']);
+        self::assertSame($state['before'], $state['after']);
+        if ($allowed !== array() && $effectiveHost !== 0) {
+            self::assertCount(1, $xpath->query('//select[@id="' . $selector . '"]/option[@value="10"]'));
+            self::assertStringContainsString($view === 'snmp' ? 'OID-alpha' : 'Alpha DS', $state['html']);
+        } else {
+            self::assertCount(0, $xpath->query('//select[@id="' . $selector . '"]/option[@value="10"]'));
+        }
+        if ($view === 'poller') {
+            self::assertCount(1, $xpath->query('//select[@id="template_id"]/option[@value="30"]'));
+            self::assertSame(array($allowed === array() || $effectiveHost === 0 ? 1 : 3), $state['total_rows']);
+            if ($allowed === array() || $effectiveHost === 0) {
+                self::assertStringContainsString('Non-device DS', $state['html']);
+            }
+        } else {
+            self::assertSame(array($allowed === array() ? 0 : 2), $state['snmp_counts']);
+        }
+    }
+
+    public static function scopedCacheCases(): iterable
+    {
+        foreach (array('snmp', 'poller') as $view) {
+            $prefix = $view === 'snmp' ? 'sess_usnmp' : 'sess_poller';
+            yield $view . ' Any' => array($view, array(1), array(), array());
+            yield $view . ' stale saved filter' => array($view, array(1), array(), array($prefix . '_host_id' => 2));
+            yield $view . ' denied explicit filter' => array($view, array(1), array('host_id' => 2), array());
+            yield $view . ' no allowed devices' => array($view, array(), array(), array());
+            if ($view === 'poller') {
+                yield $view . ' None' => array($view, array(1), array('host_id' => 0), array());
+                yield $view . ' None without devices' => array($view, array(), array('host_id' => 0), array());
+            }
+        }
+    }
+
     private function render(array $scenario): array
     {
         $root = dirname(__DIR__, 2);

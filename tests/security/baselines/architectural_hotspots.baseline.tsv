@@ -26,9 +26,9 @@ cmd_exec	./lib/functions.php:7469	            $shell = shell_exec(cacti_escapesh
 cmd_exec	./lib/functions.php:7471	            $shell = shell_exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' -v 2>&1');
 cmd_exec	./lib/functions.php:7721	            exec('id -nu', $o, $r);
 cmd_exec	./lib/functions.php:7731	            exec(sprintf('grep :%s: /etc/passwd | cut -d: -f1', (int) $uid), $o, $r);
-cmd_exec	./lib/functions.php:8043	 * shell_exec() callers that already assemble the command string.
-cmd_exec	./lib/functions.php:8085	    $process = proc_open($argv, $descriptors, $pipes);
-cmd_exec	./lib/functions.php:8154	 * shell_exec() and expect a string return value.
+cmd_exec	./lib/functions.php:8050	 * shell_exec() callers that already assemble the command string.
+cmd_exec	./lib/functions.php:8092	    $process = proc_open($argv, $descriptors, $pipes);
+cmd_exec	./lib/functions.php:8161	 * shell_exec() and expect a string return value.
 cmd_exec	./lib/installer.php:3636	            $results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:3672	                    shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:851	            $process = @proc_open(
@@ -409,19 +409,19 @@ dynamic_include	./lib/reports.php:445	    include_once($config['base_path'] . '/
 dynamic_include	./lib/reports.php:446	    include_once($config['base_path'] . '/lib/html_reports.php');
 dynamic_include	./lib/reports.php:734	    include_once($config['library_path'] . '/html_tree.php');
 dynamic_include	./lib/reports.php:814	    include_once($config['base_path'] . '/lib/time.php');
-dynamic_include	./lib/rrd.php:1583	    include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/rrd.php:1923	    include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/rrd.php:2012	    include_once($config['library_path'] . '/boost.php');
-dynamic_include	./lib/rrd.php:2237	    include_once($config['library_path'] . '/cdef.php');
-dynamic_include	./lib/rrd.php:2238	    include_once($config['library_path'] . '/vdef.php');
-dynamic_include	./lib/rrd.php:2239	    include_once($config['library_path'] . '/graph_variables.php');
-dynamic_include	./lib/rrd.php:2240	    include_once($config['library_path'] . '/boost.php');
-dynamic_include	./lib/rrd.php:2241	    include_once($config['library_path'] . '/xml.php');
-dynamic_include	./lib/rrd.php:2242	    include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/rrd.php:3437	        include($rrdtheme);
-dynamic_include	./lib/rrd.php:3507	    include($rrdtheme);
-dynamic_include	./lib/rrd.php:4138	    include_once($config['library_path'] . '/time.php');
-dynamic_include	./lib/rrd.php:5035	        include($themefile);
+dynamic_include	./lib/rrd.php:1581	    include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/rrd.php:1921	    include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/rrd.php:2010	    include_once($config['library_path'] . '/boost.php');
+dynamic_include	./lib/rrd.php:2235	    include_once($config['library_path'] . '/cdef.php');
+dynamic_include	./lib/rrd.php:2236	    include_once($config['library_path'] . '/vdef.php');
+dynamic_include	./lib/rrd.php:2237	    include_once($config['library_path'] . '/graph_variables.php');
+dynamic_include	./lib/rrd.php:2238	    include_once($config['library_path'] . '/boost.php');
+dynamic_include	./lib/rrd.php:2239	    include_once($config['library_path'] . '/xml.php');
+dynamic_include	./lib/rrd.php:2240	    include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/rrd.php:3435	        include($rrdtheme);
+dynamic_include	./lib/rrd.php:3505	    include($rrdtheme);
+dynamic_include	./lib/rrd.php:4136	    include_once($config['library_path'] . '/time.php');
+dynamic_include	./lib/rrd.php:5033	        include($themefile);
 dynamic_include	./lib/rrdcheck.php:754	        include_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./lib/rrdcheck.php:785	        include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/snmp.php:33	    include_once($config['include_path'] . '/vendor/phpsnmp/extension.php');
@@ -537,7 +537,7 @@ sort_order_input	./automation_snmp.php:535				ORDER BY sequence', array(get_requ
 sort_order_input	./data_queries.php:912						ORDER BY field_name, sequence', array(get_request_var('id'), $data_template['id']));
 sort_order_input	./graph_templates.php:506			ORDER BY name', array(get_request_var('id')));
 sort_order_input	./graph_templates_inputs.php:187			ORDER BY gti.sequence", array(get_request_var('id'), get_request_var('graph_template_id')));
-sort_order_input	./graphs.php:1327				ORDER BY gti.sequence", array(get_request_var('id')));
+sort_order_input	./graphs.php:1328				ORDER BY gti.sequence", array(get_request_var('id')));
 sort_order_input	./host_templates.php:474				ORDER BY graph_templates.name', array(get_request_var('id')));
 sort_order_input	./host_templates.php:512									ORDER BY gt.name', array(get_request_var('id'))), 'name', 'id', '', '', '');?>
 sort_order_input	./host_templates.php:531				ORDER BY snmp_query.name', array(get_request_var('id')));

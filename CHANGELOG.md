@@ -123,7 +123,9 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 - Return a nonzero status for refused upgrade start versions, missing upgrade scripts, migration errors, or failed version-marker writes. Fixes #240.
-
+- Validate installed font families after recognized Pango suffixes, reject names when fontconfig reports no installed fonts, and preserve complete multiword default descriptions through RRDProxy session setup.
+- Make the graph spike-removal menu reachable with Enter and Space, restore focus on Escape, and discard obsolete menu replies after script reloads.
+- Keep Paper Plane content links readable on hover; measure contrast using opacity groups and image-layer order, and reject new or worsened measured failures.
 - Invalidate the affected user or group members' permission caches after removing a typed permission exception.
 - Rebuild dependent poller caches once when updating a Data Input whitelist, with the worker retaining propagation failure reporting.
 
@@ -207,7 +209,7 @@ Targeting `v1.3.0`, the first planned application release. See
 - Recheck data-source profile references when a bulk deletion is submitted, preserving definitions still used by templates or sources while allowing unused profiles in the same selection to be removed.
 - Escape device and network values before adding them to automation discovery HTML emails. Fixes #589.
 
-- Show a keyboard focus ring in every theme. Links and buttons clicked with the mouse show no ring; text fields now show it on click as well, as browsers apply :focus-visible there. In modern, paper-plane and midwinter the ring carries a contrasting halo, so one ring reads on both the light and dark panels. Keep switch checkboxes and radios reachable by Tab, let keyboard users reach the dark theme's graph utility icons, and bring text, icons, focus rings and the edges of fields, menus and switches to WCAG AA contrast on every page state: at rest, hovered, focused and in selected rows. Midwinter now takes its status, icon and control colours from per-mode variables. `tests/e2e/tests/theme-contrast.spec.ts` measures this on real pages in every theme. The themes also style `h1.loginHeading` like the login legend, ready for the login markup change.
+- Show a keyboard focus ring in every theme. Links and buttons clicked with the mouse show no ring; text fields now show it on click as well, as browsers apply :focus-visible there. In modern, paper-plane and midwinter the ring carries a contrasting halo, so one ring reads on both the light and dark panels. Keep switch checkboxes and radios reachable by Tab, let keyboard users reach the dark theme's graph utility icons, and improve contrast for text, icons, focus rings and the edges of fields, menus and switches at rest, hovered, focused and in selected rows. Midwinter now takes its status, icon and control colours from per-mode variables. `tests/e2e/tests/theme-contrast.spec.ts` measures real pages in every theme; focused declaration tests cover the changed dark, paper-plane and sunrise palettes. These checks do not establish AA conformance for every page. The themes also style `h1.loginHeading` like the login legend, ready for the login markup change.
 
 - Create the identity audit file with restrictive permissions without changing the process-wide umask, which could otherwise affect unrelated threaded requests. Fixes #382.
 - Fix blank and wrong Font Awesome 7 icons: the midwinter filter icon no longer shows a missing-glyph box, the multiselect collapse-all and expand-all buttons show their arrows, and the legacy `fa-circle-thin` class draws an outline circle again.

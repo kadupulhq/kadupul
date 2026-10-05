@@ -11,13 +11,18 @@ namespace SnmpNotificationTooltipTest;
 
 $root = dirname(__DIR__, 3);
 
-if (!preg_match('/^function html_escape\\(.*?^\\}/ms', file_get_contents($root . '/lib/html.php'), $match)) {
-    throw new \RuntimeException('Missing html_escape()');
+require_once $root . '/tests/Helpers/PhpSource.php';
+$html = file_get_contents($root . '/lib/html.php');
+if ($html === false) {
+    throw new \RuntimeException('Unreadable html_escape() source');
 }
-eval('namespace SnmpNotificationTooltipTest; ' . $match[0]);
+eval('namespace SnmpNotificationTooltipTest; ' . \test_php_function_source($html, 'html_escape'));
 
 $managers = file_get_contents($root . '/managers.php');
-$managerLogs = substr($managers, (int) strpos($managers, "\nfunction manager_logs("));
+if ($managers === false) {
+    throw new \RuntimeException('Unreadable manager_logs() source');
+}
+$managerLogs = \test_php_function_source($managers, 'manager_logs');
 
 if (!preg_match('/^            if \\(\\$item\\[\'description\'\\]\\) \\{.*?^            \\}$/ms', $managerLogs, $match)) {
     throw new \RuntimeException('Missing notification cell in manager_logs()');

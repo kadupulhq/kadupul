@@ -163,10 +163,16 @@ try {
     $token = webToken($body);
     $step = 1;
     $repaired = false;
+    $nextTemplates = null;
     $deadline = microtime(true) + 300;
     while (microtime(true) < $deadline) {
+        $stepFields = ['Step' => $step, 'Eula' => 1, 'AutomationMode' => 0];
+        if ($nextTemplates !== null) {
+            $stepFields['Templates'] = $nextTemplates;
+            $nextTemplates = null;
+        }
         [$status, $body] = webRequest($base . 'step_json.php', $cookies, ['__csrf_magic' => $token,
-            'data' => ['Step' => $step, 'Eula' => 1, 'AutomationMode' => 0]]);
+            'data' => $stepFields]);
         $data = json_decode($body, true);
         if ($status !== 200 || !is_array($data) || !isset($data['Step'], $data['Next'])) {
             throw new RuntimeException('The actual web step did not return its JSON contract: HTTP ' . $status . '.');
@@ -210,6 +216,19 @@ try {
         if (in_array((int) $data['Step'], [6, 10], true)) {
             installerAssert(str_contains($data['Html'], 'id="confirm"'), 'actual web installer renders explicit acknowledgement at step ' . (int) $data['Step']);
         }
+        if ((int) $data['Step'] === 8) {
+            // Exercise the actual template-selection handoff while keeping this
+            // CDEF contract probe independent of importing every vendor package.
+            $availableTemplates = $data['StepData']['Templates'] ?? null;
+            $selectedTemplate = 'chk_template_Local_Linux_Machine_xml_gz';
+            installerAssert(
+                is_array($availableTemplates) && array_key_exists($selectedTemplate, $availableTemplates)
+                && str_contains($data['Html'], $selectedTemplate),
+                'actual web installer renders the selected Local Linux template'
+            );
+            $nextTemplates = array_fill_keys(array_keys($availableTemplates), false);
+            $nextTemplates[$selectedTemplate] = true;
+        }
         $step = (int) $data['Next']['Step'];
     }
     installerAssert(!$failureUpgrade || $repaired, 'upgrade failure fixture reaches real failure and repaired retry');
@@ -217,6 +236,10 @@ try {
     installerAssert(
         $database->query('SELECT cacti FROM version')->fetchColumn() === trim(file_get_contents($root . '/include/cacti_version')),
         'actual web Installer records the current version'
+    );
+    installerAssert(
+        (int) $database->query("SELECT COUNT(*) FROM host_template WHERE name = 'Local Linux Machine'")->fetchColumn() === 1,
+        'actual web Installer imports the selected device template'
     );
     require $root . '/lib/cdef_reference.php';
     installerAssert(

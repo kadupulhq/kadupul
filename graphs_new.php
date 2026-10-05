@@ -86,12 +86,14 @@ function graphs_new_default_host_id()
 /**
  * Check whether the current user may use a device for graph creation.
  *
- * @param int $host_id Device ID
+ * @param int $host_id Device ID, or zero for a non-device template graph
+ * @param bool $requires_device Whether this action requires a real device
  * @return bool
  */
-function graphs_new_host_is_allowed($host_id)
+function graphs_new_host_is_allowed($host_id, bool $requires_device = false)
 {
-    return (int) $host_id > 0 && is_device_allowed((int) $host_id);
+    $host_id = auth_resource_id($host_id);
+    return $host_id !== null && ($host_id === 0 ? !$requires_device : is_device_allowed($host_id));
 }
 
 function save_user_filter()
@@ -214,7 +216,7 @@ function host_reload_query()
     /* ==================================================== */
 
     $host_id = get_request_var('host_id');
-    if (!graphs_new_host_is_allowed($host_id)) {
+    if (!graphs_new_host_is_allowed($host_id, true)) {
         raise_message('new_graph_access_denied', __('The requested device is not available.'), MESSAGE_LEVEL_ERROR);
         return false;
     }

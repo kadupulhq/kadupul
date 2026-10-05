@@ -93,7 +93,14 @@ final class HtmlRendererNativeCoverageTest extends TestCase
         self::assertSame('/native/host.php?action=edit&id=1', $xpath->query('//a[@id="graph_11_de"]')->item(0)->getAttribute('href'));
         self::assertSame('/native/graph_templates.php?action=template_edit&id=21', $xpath->query('//a[@title="Edit Graph Template"]')->item(0)->getAttribute('href'));
         self::assertCount(1, $xpath->query('//a[@id="graph_11_realtime"]'));
-        self::assertCount(1, $xpath->query('//span[@id="graph_11_sk"]'));
+        $spikeButtons = $xpath->query('//button[@id="graph_11_sk"]');
+        self::assertCount(1, $spikeButtons);
+        $spikeButton = $spikeButtons->item(0);
+        self::assertSame('button', $spikeButton->getAttribute('type'));
+        self::assertSame('Kill Spikes in Graphs', $spikeButton->getAttribute('aria-label'));
+        self::assertSame('menu', $spikeButton->getAttribute('aria-haspopup'));
+        self::assertSame('false', $spikeButton->getAttribute('aria-expanded'));
+        self::assertSame('11', $spikeButton->getAttribute('data-graph'));
         self::assertSame(array(array('native_graph_buttons', array('hook' => 'native_graph_buttons', 'local_graph_id' => 11, 'rra' => 0, 'view_type' => 'tree', 'tree_id' => 7, 'branch_id' => 8))), $state['hooks']);
         self::assertSame(array(11), $state['queries'][0][1]);
         self::assertSame(array(11), $state['queries'][1][1]);

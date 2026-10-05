@@ -7,11 +7,13 @@ namespace DataTemplateFieldTooltipTest;
 
 $root = dirname(__DIR__, 3);
 
+require_once $root . '/tests/Helpers/PhpSource.php';
 foreach (array('lib/html.php' => 'html_escape', 'lib/html_utility.php' => 'display_tooltip') as $file => $helper) {
-    if (!preg_match('/^function ' . $helper . '\\(.*?^\\}/ms', file_get_contents($root . '/' . $file), $match)) {
-        throw new \RuntimeException('Missing helper: ' . $helper);
+    $contents = file_get_contents($root . '/' . $file);
+    if ($contents === false) {
+        throw new \RuntimeException('Unreadable helper source: ' . $file);
     }
-    eval('namespace DataTemplateFieldTooltipTest; ' . $match[0]);
+    eval('namespace DataTemplateFieldTooltipTest; ' . \test_php_function_source($contents, $helper));
 }
 
 // The custom data rows in template_edit() choose the tooltip text here.

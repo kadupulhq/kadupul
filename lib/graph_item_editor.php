@@ -5,6 +5,56 @@ declare(strict_types=1);
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+/** Authorize a concrete graph before reading its item associations or changing them. */
+function graph_item_editor_require_scope(string $item_key, bool $require_existing): array
+{
+    $graph_id = auth_resource_id(get_nfilter_request_var('local_graph_id'));
+    $item_id = !$require_existing && $item_key === 'id' && !isset_request_var($item_key)
+        ? 0 : auth_resource_id(get_nfilter_request_var($item_key));
+    if ($graph_id === null || $graph_id === 0 || $item_id === null || ($require_existing && $item_id === 0) || !is_graph_allowed($graph_id)) {
+        graph_item_editor_access_denied();
+    }
+
+    $graph = db_fetch_row_prepared('SELECT id, host_id, graph_template_id FROM graph_local WHERE id = ?', array($graph_id));
+    $host_id = auth_resource_id($graph['host_id'] ?? null);
+    if (empty($graph) || $host_id === null || ($host_id > 0 && !is_device_allowed($host_id))) {
+        graph_item_editor_access_denied();
+    }
+
+    $item = array('graph_template_id' => 0, 'local_graph_template_item_id' => 0);
+    if ($item_id > 0) {
+        $item = db_fetch_row_prepared('SELECT id, graph_template_id, local_graph_template_item_id FROM graph_templates_item WHERE id = ? AND local_graph_id = ?', array($item_id, $graph_id));
+        if (empty($item)) {
+            graph_item_editor_access_denied();
+        }
+    }
+
+    set_request_var('local_graph_id', $graph_id);
+    set_request_var($item_key, $item_id);
+    return $item;
+}
+
+function graph_item_editor_access_denied(): never
+{
+    cacti_log('Unauthorized graph item request.', false, 'AUTH');
+    header('Location: graphs.php?header=false');
+    exit;
+}
+
+/** The picker may select any authorized device; -1 is its display-only Any sentinel. */
+function graph_item_editor_require_host_filter(): void
+{
+    $value = get_nfilter_request_var('host_id');
+    if ($value === '' || $value === '-1' || $value === -1) {
+        return;
+    }
+    $host_id = auth_resource_id($value);
+    if ($host_id === null || ($host_id > 0 && !is_device_allowed($host_id))) {
+        graph_item_editor_access_denied();
+    }
+    set_request_var('host_id', $host_id);
+}
+
 /** Keep the graph and template editors' legend expansion in sync. */
 function graph_item_editor_legend_items(string $type, bool $translate): array
 {
