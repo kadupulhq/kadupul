@@ -62,7 +62,7 @@ Cacti CHANGELOG
 -issue: Enforce the spike-removal replacement budget across every row and data source in an RRA, reset it only at the next RRA, and count NaN replacements. Fixes #238
 -issue: Apply `nan` replacements in the spike-removal window modes and count changed samples, so float and fill no longer report success without changing the selected samples. Fixes #237
 -issue: Hide the unused line-width field for fixed LINE1/2/3 graph items and clarify that the editable width applies to LINE:STACK
--issue: Normalize accepted exclamation-delimited multi-value poller output to the colon format consumed by the field mapper. Fixes #284.
+-issue: Map complete exclamation-delimited poller field lists without misclassifying hexadecimal-looking field names; preserve scalar hexadecimal values. Fixes #284.
 -issue: Save an editable profile heartbeat without requiring the disabled step field, and keep structural fields read only for profiles used by local data sources
 -issue: Match the data template as well as local_data_id when propagating a profile heartbeat, so unrelated template rows sharing the zero local-data sentinel remain unchanged
 -issue: Refuse to delete a data source profile when its usage lookup fails, so a database error cannot be mistaken for an unused profile
