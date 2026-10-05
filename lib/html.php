@@ -834,6 +834,8 @@ function html_header_sort_item($db_column, $display_array, $sort_column, $sort_d
     return array($display_text, $direction, $icon, $align, $tip, $nohide, $isSort);
 }
 
+/* Display labels in sortable headers are text, including plugin-provided labels. */
+
 /* html_header_sort - draws a header row suitable for display inside of a box element.  When
         a user selects a column header, the callback function "filename" will be called to handle
         the sort the column and display the altered results.
@@ -874,10 +876,10 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
         );
 
         if (($db_column == '') || (substr_count($db_column, 'nosort'))) {
-            print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'" : '') . " class='$nohide $align' " . ((($i + 1) == cacti_count($header_items)) ? "colspan='" . html_escape($last_item_colspan) . "' " : '') . '>' . $display_text . '</th>';
+            print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'" : '') . " class='$nohide $align' " . ((($i + 1) == cacti_count($header_items)) ? "colspan='" . html_escape($last_item_colspan) . "' " : '') . '>' . html_escape($display_text) . '</th>';
         } else {
             print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'" : '') . " class='sortable $align $nohide $isSort'>";
-            print "<div class='sortinfo' sort-return='" . html_escape($return_to == '' ? 'main' : $return_to) . "' sort-page='" . html_escape($url == '' ? get_current_page(false) : $url) . "' sort-column='" . html_escape($db_column) . "' sort-direction='" . html_escape($direction) . "'><div class='textSubHeaderDark'>" . $display_text . html_icon($icon, '', array('aria-hidden' => 'true')) . "</div></div></th>";
+            print "<div class='sortinfo' sort-return='" . html_escape($return_to == '' ? 'main' : $return_to) . "' sort-page='" . html_escape($url == '' ? get_current_page(false) : $url) . "' sort-column='" . html_escape($db_column) . "' sort-direction='" . html_escape($direction) . "'><div class='textSubHeaderDark'>" . html_escape($display_text) . html_icon($icon, '', array('aria-hidden' => 'true')) . "</div></div></th>";
         }
 
         $i++;
@@ -932,10 +934,10 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
         );
 
         if (($db_column == '') || (substr_count($db_column, 'nosort'))) {
-            print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'" : '') . " class='$align $nohide'>" . $display_text . '</th>';
+            print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'" : '') . " class='$align $nohide'>" . html_escape($display_text) . '</th>';
         } else {
             print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'" : '') . " class='sortable $align $nohide $isSort'>";
-            print "<div class='sortinfo' sort-return='" . html_escape($return_to == '' ? 'main' : $return_to) . "' sort-page='" . html_escape($form_action) . "' sort-column='" . html_escape($db_column) . "' sort-direction='" . html_escape($direction) . "'><div class='textSubHeaderDark'>" . $display_text . html_icon($icon, '', array('aria-hidden' => 'true')) . "</div></div></th>";
+            print "<div class='sortinfo' sort-return='" . html_escape($return_to == '' ? 'main' : $return_to) . "' sort-page='" . html_escape($form_action) . "' sort-column='" . html_escape($db_column) . "' sort-direction='" . html_escape($direction) . "'><div class='textSubHeaderDark'>" . html_escape($display_text) . html_icon($icon, '', array('aria-hidden' => 'true')) . "</div></div></th>";
         }
     }
 
