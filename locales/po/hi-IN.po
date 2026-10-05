@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 04:43-0700\n"
+"POT-Creation-Date: 2026-10-05 04:50-0700\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -135,7 +135,7 @@ msgstr "निम्नलिखित एग्रीगेट ग्राफ 
 #: host.php:549 host.php:565 host.php:579 host.php:588 host.php:619
 #: host.php:631 host_templates.php:222 host_templates.php:236
 #: host_templates.php:247 host_templates.php:302 host_templates.php:375
-#: lib/clog_webapi.php:225 lib/html.php:2833 lib/html_form.php:1396
+#: lib/clog_webapi.php:225 lib/html.php:2860 lib/html_form.php:1396
 #: lib/html_form.php:1413 lib/html_form.php:1424 lib/html_reports.php:632
 #: managers.php:1066 managers.php:1127 plugins.php:712 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:762
@@ -169,7 +169,7 @@ msgstr "कैंसिल करें"
 #: host.php:531 host.php:540 host.php:549 host.php:565 host.php:579
 #: host.php:588 host.php:619 host.php:631 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
-#: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2832
+#: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2859
 #: lib/html_reports.php:574 managers.php:1066 managers.php:1127 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:762
 #: tree.php:771 tree.php:780 tree.php:789 user_admin.php:252 user_admin.php:292
@@ -821,7 +821,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "पासवर्ड बदलें पेज में समस्याएँ हैं। अपने Kadupul एडमिनिस्ट्रेटर से तुरंत संपर्क करें।"
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4270 lib/html.php:2768
+#: include/global_form.php:1552 lib/functions.php:4270 lib/html.php:2795
 msgid "Change Password"
 msgstr "पासवर्ड बदलें"
 
@@ -960,7 +960,7 @@ msgstr "लॉगिन"
 
 #: auth_profile.php:61 include/global_settings.php:22
 #: include/global_settings.php:1202 include/global_settings.php:1519
-#: lib/html.php:2781 managers.php:24 user_admin.php:1741
+#: lib/html.php:2808 managers.php:24 user_admin.php:1741
 #: user_group_admin.php:1763
 msgid "General"
 msgstr "सामान्य"
@@ -971,17 +971,17 @@ msgstr "उपयोगकर्ता खाता विवरण"
 
 #: auth_profile.php:313 include/global_arrays.php:857
 #: include/global_settings.php:2737 lib/html.php:2232 lib/html.php:2254
-#: lib/html.php:2762
+#: lib/html.php:2789
 msgid "Tree View"
 msgstr "विस्तृत दृश्य"
 
 #: auth_profile.php:317 include/global_arrays.php:858 lib/html.php:2239
-#: lib/html.php:2263 lib/html.php:2763
+#: lib/html.php:2263 lib/html.php:2790
 msgid "List View"
 msgstr "सूची दृश्य"
 
 #: auth_profile.php:321 include/global_arrays.php:859 lib/html.php:2246
-#: lib/html.php:2764
+#: lib/html.php:2791
 msgid "Preview View"
 msgstr "पूर्वद्रिश्श द्रिश्श"
 
@@ -1402,7 +1402,7 @@ msgstr "सक्षम"
 #: include/global_settings.php:1644 include/global_settings.php:1657
 #: include/global_settings.php:1682 include/global_settings.php:1696
 #: include/global_settings.php:1786 include/global_settings.php:2550
-#: lib/api_automation.php:28 lib/html.php:2858 lib/html_reports.php:2037
+#: lib/api_automation.php:28 lib/html.php:2885 lib/html_reports.php:2037
 #: lib/html_reports.php:2188 lib/html_utility.php:1317 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:936 user_domains.php:397
 #: user_group_admin.php:756 utilities.php:2147 utilities.php:2711
@@ -1679,8 +1679,8 @@ msgstr "% d मिनट"
 #: include/global_arrays.php:1634 include/global_settings.php:1698
 #: include/global_settings.php:1699 include/global_settings.php:1700
 #: include/global_settings.php:1701 include/global_settings.php:1702
-#: include/global_settings.php:2663 include/global_settings.php:2938
-#: include/global_settings.php:2939 include/global_settings.php:2940
+#: include/global_settings.php:2663 include/global_settings.php:2942
+#: include/global_settings.php:2943 include/global_settings.php:2944
 #: pollers.php:902 pollers.php:903
 #, php-format
 msgid "%d Minutes"
@@ -1710,8 +1710,8 @@ msgstr "% d घंटा"
 #: include/global_arrays.php:1550 include/global_arrays.php:1556
 #: include/global_arrays.php:1557 include/global_settings.php:1704
 #: include/global_settings.php:1705 include/global_settings.php:1706
-#: include/global_settings.php:1707 include/global_settings.php:2942
-#: include/global_settings.php:2943
+#: include/global_settings.php:1707 include/global_settings.php:2946
+#: include/global_settings.php:2947
 #, php-format
 msgid "%d Hours"
 msgstr "% d घंटे"
@@ -3018,7 +3018,7 @@ msgstr "डाटा स्रोत"
 msgid "The Data Source to Debug"
 msgstr "डेटा स्रोत डीबग करने के लिए"
 
-#: data_debug.php:488 lib/html.php:2785 utilities.php:1039 utilities.php:1160
+#: data_debug.php:488 lib/html.php:2812 utilities.php:1039 utilities.php:1160
 msgid "User"
 msgstr "उपयोगकर्ता "
 
@@ -3216,7 +3216,7 @@ msgstr "रेरन विश्लेषण"
 msgid "Check"
 msgstr "जाँच करें"
 
-#: data_debug.php:883 include/global_form.php:1018 lib/rrd.php:4178
+#: data_debug.php:883 include/global_form.php:1018 lib/rrd.php:4176
 #: utilities.php:798 utilities.php:815 utilities.php:3218
 msgid "Value"
 msgstr "मूल्य"
@@ -3307,7 +3307,7 @@ msgid "Run checks on currently filtered Data Sources and preserve other results"
 msgstr "फ़िलहाल फ़िल्टर किए गए डेटा स्रोतों की जाँच करें और अन्य परिणामों को सुरक्षित रखें"
 
 #: data_debug.php:1125 data_sources.php:1752 data_templates.php:1107
-#: lib/html.php:2794
+#: lib/html.php:2821
 msgid "Profile"
 msgstr "प्रोफाइल"
 
@@ -3792,7 +3792,7 @@ msgstr "चरण"
 
 #: data_source_profiles.php:900 graphs_new.php:532 include/global_form.php:284
 #: lib/html.php:613 lib/html_filter.php:55 lib/installer.php:2827
-#: lib/rrd.php:4220 utilities.php:866 utilities.php:1838
+#: lib/rrd.php:4218 utilities.php:866 utilities.php:1838
 msgid "Rows"
 msgstr "पंक्तियाँ"
 
@@ -3857,8 +3857,8 @@ msgstr "% d वीक"
 
 #: data_source_profiles.php:1106 include/global_arrays.php:779
 #: include/global_arrays.php:780 include/global_arrays.php:1464
-#: include/global_settings.php:2946 include/global_settings.php:2947
-#: include/global_settings.php:2948 rrdcleaner.php:535 rrdcleaner.php:536
+#: include/global_settings.php:2950 include/global_settings.php:2951
+#: include/global_settings.php:2952 rrdcleaner.php:535 rrdcleaner.php:536
 #, php-format
 msgid "%d Weeks"
 msgstr "%d सप्ताह"
@@ -3887,7 +3887,7 @@ msgstr "%d दिन"
 #: include/global_arrays.php:1555 include/global_arrays.php:1585
 #: include/global_arrays.php:1594 include/global_arrays.php:1622
 #: include/global_settings.php:1406 include/global_settings.php:1703
-#: include/global_settings.php:2941
+#: include/global_settings.php:2945
 msgid "1 Hour"
 msgstr "1 घंटा"
 
@@ -4496,7 +4496,7 @@ msgstr "ग्राफ़ टेम्पलेट संपादित कर
 msgid "Click to view just this Graph in Real-time"
 msgstr "वास्तविक समय में केवल इस ग्राफ़ को देखने के लिए क्लिक करें"
 
-#: graph.php:270 lib/html.php:2759
+#: graph.php:270 lib/html.php:2786
 msgid "Utility View"
 msgstr "उपयोगिता देखें"
 
@@ -4517,7 +4517,7 @@ msgid "RRDtool Graph Syntax"
 msgstr "RRDtool ग्राफ़ सिंटैक्स"
 
 #: graph_image.php:174 graph_json.php:208 graph_realtime.php:317
-#: lib/rrd.php:2526
+#: lib/rrd.php:2524
 #, fuzzy
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul पोलर अभी तक नहीं चला है।"
@@ -4849,7 +4849,7 @@ msgstr "पूर्वावलोकन मोड"
 msgid "Add Selected Graphs to Report"
 msgstr "रिपोर्ट में चयनित ग्राफ़ जोड़ें"
 
-#: graph_view.php:1049 lib/html.php:2830
+#: graph_view.php:1049 lib/html.php:2857
 msgid "Ok"
 msgstr "ठीक"
 
@@ -5189,7 +5189,7 @@ msgstr "[सभी उपकरणों] के लिए नए रेखा�
 msgid "New Graphs for None Host Type"
 msgstr "कोई भी होस्ट प्रकार के लिए नए रेखांकन"
 
-#: graphs_new.php:440 lib/html.php:2757
+#: graphs_new.php:440 lib/html.php:2784
 msgid "Filter Settings Saved"
 msgstr "फ़िल्टर सेटिंग्स सहेजे गए"
 
@@ -5629,7 +5629,7 @@ msgstr "पुन: प्राप्त करना"
 
 #: host.php:1837 lib/api_automation.php:33 lib/auth.php:3041
 #: lib/clog_webapi.php:856 lib/html_utility.php:1339 lib/import.php:342
-#: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4196 lib/rrd.php:4208
+#: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4194 lib/rrd.php:4206
 #: lib/spikekill.php:301 package_import.php:522 package_import.php:600
 #: utilities.php:211 utilities.php:212 utilities.php:2765
 msgid "Unknown"
@@ -6342,7 +6342,7 @@ msgstr "सही"
 msgid "Justified"
 msgstr "न्याययुक्त"
 
-#: include/global_arrays.php:585 lib/html.php:2856
+#: include/global_arrays.php:585 lib/html.php:2883
 msgid "Center"
 msgstr "केंद्र"
 
@@ -6650,13 +6650,13 @@ msgstr "प्राकृतिक आदेश"
 msgid "Numeric Ordering"
 msgstr "न्यूमेरिक ऑर्डरिंग"
 
-#: include/global_arrays.php:952 lib/rrd.php:4144
+#: include/global_arrays.php:952 lib/rrd.php:4142
 msgid "Header"
 msgstr "हेडर"
 
 #: include/global_arrays.php:953 include/global_arrays.php:1004
 #: include/global_arrays.php:1687 include/global_arrays.php:1856
-#: lib/html.php:2845
+#: lib/html.php:2872
 msgid "Graph"
 msgstr "काल ग्राफ"
 
@@ -6822,7 +6822,7 @@ msgid "Configuration"
 msgstr "कॉन्फ़िगरेशन"
 
 #: include/global_arrays.php:1030 include/global_arrays.php:1052
-#: lib/html.php:2590 lib/html.php:2860
+#: lib/html.php:2590 lib/html.php:2887
 msgid "Settings"
 msgstr "सेटिंग्स"
 
@@ -7843,7 +7843,7 @@ msgid "List Mode"
 msgstr "सूची मोड"
 
 #: include/global_arrays.php:2062 include/global_arrays.php:2068
-#: lib/functions.php:4492 lib/html.php:1988 lib/html.php:2053 lib/html.php:2778
+#: lib/functions.php:4492 lib/html.php:1988 lib/html.php:2053 lib/html.php:2805
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "कंसोल"
@@ -7978,7 +7978,7 @@ msgstr "बाहरी लिंक"
 msgid "(Action)"
 msgstr "कार्रवाई"
 
-#: include/global_arrays.php:2626 lib/html.php:2799
+#: include/global_arrays.php:2626 lib/html.php:2826
 #, fuzzy
 msgid "About Kadupul"
 msgstr "Kadupul के बारे में"
@@ -8236,7 +8236,7 @@ msgstr "वह आवृत्ति जो डेटा डेटा स्र�
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "RRDtool अज्ञात डेटा रिकॉर्ड करने से पहले कितनी देर तक डेटा गायब हो सकता है। यदि आपका डेटा स्रोत अस्थिर है और आप अपने ग्राफ़ में अंतराल दिखाने के बजाय पुराने डेटा को ले जाना चाहते हैं, तो यह मान बढ़ाएँ वास्तविक समय की वास्तविक मात्रा निर्धारित करने के लिए यह मान X-Files फैक्टर से गुणा किया जाता है।"
 
-#: include/global_form.php:226 lib/rrd.php:4223
+#: include/global_form.php:226 lib/rrd.php:4221
 msgid "X-Files Factor"
 msgstr "एक्स-फाइल्स फैक्टर"
 
@@ -8567,7 +8567,7 @@ msgid "Auto Scale"
 msgstr "आटो स्केल"
 
 #: include/global_form.php:754
-msgid "When enabled, the selected Auto Scale Option determines which limits RRDtool uses: mode 1 ignores both limits, mode 2 keeps the lower limit, mode 3 keeps the upper limit, and mode 4 keeps both limits. When disabled, the configured lower and upper limits are used directly. Rigid Boundaries controls whether values outside those limits expand the graph range."
+msgid "When enabled, the selected Auto Scale Option determines which limits RRDtool uses: --alt-autoscale ignores both limits, --alt-autoscale-max keeps the lower limit, --alt-autoscale-min keeps the upper limit, and --alt-autoscale (accepting both limits) keeps both limits. When disabled, the configured lower and upper limits are used directly. Rigid Boundaries controls whether values outside those limits expand the graph range."
 msgstr ""
 
 #: include/global_form.php:758
@@ -8799,7 +8799,7 @@ msgstr "अपारदर्शिता / अल्फा चैनल"
 msgid "The opacity/alpha channel of the color."
 msgstr "रंग की अस्पष्टता / अल्फा चैनल।"
 
-#: include/global_form.php:989 lib/rrd.php:4219
+#: include/global_form.php:989 lib/rrd.php:4217
 msgid "Consolidation Function"
 msgstr "समेकन समारोह"
 
@@ -9924,7 +9924,7 @@ msgstr "यदि सरल, रेखांकन और डेटा स्र
 msgid "Simple"
 msgstr "सरल"
 
-#: include/global_settings.php:428 lib/html.php:2847
+#: include/global_settings.php:428 lib/html.php:2874
 msgid "Advanced"
 msgstr "उन्नत"
 
@@ -10344,7 +10344,7 @@ msgid "Theme Settings"
 msgstr "विषय सेटिंग"
 
 #: include/global_settings.php:851 include/global_settings.php:1061
-#: include/global_settings.php:2585 lib/html.php:2795
+#: include/global_settings.php:2585 lib/html.php:2822
 msgid "Theme"
 msgstr "थीम"
 
@@ -10577,9 +10577,11 @@ msgstr ""
 
 #: include/global_settings.php:1068 include/global_settings.php:1087
 #: include/global_settings.php:1106 include/global_settings.php:1125
-#: include/global_settings.php:1144
-msgid "Enter Valid Font Config Value"
-msgstr "मान्य फ़ॉन्ट कॉन्फ़िगरेशन मान दर्ज करें"
+#: include/global_settings.php:1144 include/global_settings.php:2852
+#: include/global_settings.php:2870 include/global_settings.php:2888
+#: include/global_settings.php:2906
+msgid "Enter a Pango font description"
+msgstr ""
 
 #: include/global_settings.php:1074 include/global_settings.php:2840
 msgid "Title Font Size"
@@ -10597,15 +10599,15 @@ msgstr "शीर्षक फ़ॉन्ट सेटिंग"
 msgid "The font to use for Graph Titles.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
 msgstr ""
 
-#: include/global_settings.php:1093 include/global_settings.php:2857
+#: include/global_settings.php:1093 include/global_settings.php:2858
 msgid "Legend Font Size"
 msgstr "किंवदंती फ़ॉन्ट आकार"
 
-#: include/global_settings.php:1094 include/global_settings.php:2858
+#: include/global_settings.php:1094 include/global_settings.php:2859
 msgid "The size of the font used for Graph Legend items"
 msgstr "ग्राफ लीजेंड आइटम के लिए उपयोग किए जाने वाले फ़ॉन्ट का आकार"
 
-#: include/global_settings.php:1103 include/global_settings.php:2866
+#: include/global_settings.php:1103 include/global_settings.php:2867
 msgid "Legend Font Setting"
 msgstr "किंवदंती फ़ॉन्ट सेटिंग"
 
@@ -10613,15 +10615,15 @@ msgstr "किंवदंती फ़ॉन्ट सेटिंग"
 msgid "The font to use for Graph Legends.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
 msgstr ""
 
-#: include/global_settings.php:1112 include/global_settings.php:2874
+#: include/global_settings.php:1112 include/global_settings.php:2876
 msgid "Axis Font Size"
 msgstr "अक्ष फ़ॉन्ट आकार"
 
-#: include/global_settings.php:1113 include/global_settings.php:2875
+#: include/global_settings.php:1113 include/global_settings.php:2877
 msgid "The size of the font used for Graph Axis"
 msgstr "ग्राफ एक्सिस के लिए प्रयुक्त फ़ॉन्ट का आकार"
 
-#: include/global_settings.php:1122 include/global_settings.php:2883
+#: include/global_settings.php:1122 include/global_settings.php:2885
 msgid "Axis Font Setting"
 msgstr "अक्ष फ़ॉन्ट सेटिंग"
 
@@ -10629,15 +10631,15 @@ msgstr "अक्ष फ़ॉन्ट सेटिंग"
 msgid "The font to use for Graph Axis items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
 msgstr ""
 
-#: include/global_settings.php:1131 include/global_settings.php:2891
+#: include/global_settings.php:1131 include/global_settings.php:2894
 msgid "Unit Font Size"
 msgstr "यूनिट फ़ॉन्ट आकार"
 
-#: include/global_settings.php:1132 include/global_settings.php:2892
+#: include/global_settings.php:1132 include/global_settings.php:2895
 msgid "The size of the font used for Graph Units"
 msgstr "ग्राफ इकाइयों के लिए उपयोग किए जाने वाले फ़ॉन्ट का आकार"
 
-#: include/global_settings.php:1141 include/global_settings.php:2900
+#: include/global_settings.php:1141 include/global_settings.php:2903
 msgid "Unit Font Setting"
 msgstr "यूनिट फ़ॉन्ट सेटिंग"
 
@@ -11216,7 +11218,7 @@ msgstr "ऑटो अनलॉक"
 msgid "An account will automatically be unlocked after this many minutes.  Even if the correct password is entered, the account will not unlock until this time limit has been met.  Max of 1440 minutes (1 Day)"
 msgstr "कई मिनटों के बाद एक खाता अपने आप अनलॉक हो जाएगा। यदि सही पासवर्ड दर्ज किया गया है, तो भी यह समय सीमा पूरी नहीं होने तक खाता अनलॉक नहीं होगा। अधिकतम 1440 मिनट (1 दिन)"
 
-#: include/global_settings.php:1708 include/global_settings.php:2944
+#: include/global_settings.php:1708 include/global_settings.php:2948
 msgid "1 Day"
 msgstr "1 दिन"
 
@@ -12322,47 +12324,47 @@ msgstr "चुनें कि क्या अपने स्वयं के 
 msgid "The Pango font description to use for Graph Titles, such as DejaVu Sans Bold"
 msgstr ""
 
-#: include/global_settings.php:2867
+#: include/global_settings.php:2868
 msgid "The Pango font description to use for Graph Legend items, such as DejaVu Sans Mono"
 msgstr ""
 
-#: include/global_settings.php:2884
+#: include/global_settings.php:2886
 msgid "The Pango font description to use for Graph Axis items, such as DejaVu Sans"
 msgstr ""
 
-#: include/global_settings.php:2901
+#: include/global_settings.php:2904
 msgid "The Pango font description to use for Graph Unit items, such as DejaVu Sans"
 msgstr ""
 
-#: include/global_settings.php:2917
+#: include/global_settings.php:2921
 msgid "Realtime View Mode"
 msgstr "रीयलटाइम व्यू मोड"
 
-#: include/global_settings.php:2918
+#: include/global_settings.php:2922
 msgid "How do you wish to view Realtime Graphs?"
 msgstr "आप रियलटाइम ग्राफ़ कैसे देखना चाहते हैं?"
 
-#: include/global_settings.php:2921
+#: include/global_settings.php:2925
 msgid "Inline"
 msgstr "इनलाइन"
 
-#: include/global_settings.php:2922
+#: include/global_settings.php:2926
 msgid "New Window"
 msgstr "नया विंडोComment"
 
-#: include/global_settings.php:2937
+#: include/global_settings.php:2941
 msgid "System Setting"
 msgstr "उपयोक्ता विन्यास"
 
-#: include/global_settings.php:2945
+#: include/global_settings.php:2949
 msgid "1 Week"
 msgstr "% d वीक"
 
-#: include/global_settings.php:2958
+#: include/global_settings.php:2962
 msgid "Auto Log Out Time"
 msgstr "स्वचालित लॉगआउट"
 
-#: include/global_settings.php:2959
+#: include/global_settings.php:2963
 msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no affect when Authentication Cookies are enabled."
 msgstr "केवल कंसोल एक्सेस वाले उपयोगकर्ताओं के लिए, स्वचालित रूप से लॉग आउट होने से पहले यह उपयोगकर्ता कितने समय तक लॉग इन रह सकता है। ध्यान दें कि यदि आप एक घंटे से अधिक समय से सक्रिय नहीं हैं, तो आपको अपना ब्राउज़र रीफ़्रेश करना पड़ सकता है। यह भी ध्यान दें कि प्रमाणीकरण कुकीज़ सक्षम होने पर इस सेटिंग का कोई प्रभाव नहीं पड़ता है।"
 
@@ -12523,7 +12525,7 @@ msgstr "इस मान को ओवरराइड करें"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
-#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4173
+#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4171
 #: utilities.php:356 utilities.php:1480 utilities.php:3218
 msgid "Type"
 msgstr "प्रकार"
@@ -13511,11 +13513,11 @@ msgstr "नियमित उपयोगकर्ता के रूप म�
 msgid "guest"
 msgstr "अतिथि"
 
-#: lib/functions.php:4249 lib/functions.php:4274 lib/html.php:2784
+#: lib/functions.php:4249 lib/functions.php:4274 lib/html.php:2811
 msgid "User Community"
 msgstr "उपयोगकर्ता समुदाय"
 
-#: lib/functions.php:4250 lib/functions.php:4275 lib/html.php:2786
+#: lib/functions.php:4250 lib/functions.php:4275 lib/html.php:2813
 #: lib/utility.php:1446
 msgid "Documentation"
 msgstr "प्रलेखन"
@@ -13525,11 +13527,11 @@ msgstr "प्रलेखन"
 msgid "Logged in as %s"
 msgstr "के रूप में दाखिल%s"
 
-#: lib/functions.php:4269 lib/html.php:2765
+#: lib/functions.php:4269 lib/html.php:2792
 msgid "Edit Profile"
 msgstr "संपादित करें"
 
-#: lib/functions.php:4279 lib/html.php:2769
+#: lib/functions.php:4279 lib/html.php:2796
 msgid "Logout"
 msgstr "लॉगआउट"
 
@@ -13702,7 +13704,7 @@ msgstr "डेटा क्वेरी:"
 msgid "CSV Export of Graph Data"
 msgstr "ग्राफ डेटा का CSV निर्यात"
 
-#: lib/html.php:540 lib/html.php:2756
+#: lib/html.php:540 lib/html.php:2783
 msgid "Time Graph View"
 msgstr "समय ग्राफ़ देखें"
 
@@ -13806,323 +13808,323 @@ msgstr "ड्राई रन गैप फिल रेंज"
 msgid "Dry Run Float Range"
 msgstr "ड्राई रन फ्लोट रेंज"
 
-#: lib/html.php:2752
+#: lib/html.php:2779
 msgid "Allow or limit the table columns to extend beyond the current windows limits."
 msgstr "वर्तमान विंडो सीमाओं से परे विस्तार करने के लिए टेबल कॉलम को अनुमति दें या सीमित करें।"
 
-#: lib/html.php:2753 lib/html_filter.php:48
+#: lib/html.php:2780 lib/html_filter.php:48
 msgid "Enter a search term"
 msgstr "एक खोज शब्द दर्ज करें"
 
-#: lib/html.php:2754
+#: lib/html.php:2781
 msgid "Enter a regular expression"
 msgstr "एक नियमित अभिव्यक्ति दर्ज करें"
 
-#: lib/html.php:2755
+#: lib/html.php:2782
 msgid "No file selected"
 msgstr "कोई फ़ाइल चयनित नहीं"
 
-#: lib/html.php:2758 lib/html.php:2801
+#: lib/html.php:2785 lib/html.php:2828
 msgid "SpikeKill Results"
 msgstr "SpikeKill परिणाम"
 
-#: lib/html.php:2760
+#: lib/html.php:2787
 msgid "Click to view just this Graph in Realtime"
 msgstr "रियलटाइम में बस इस ग्राफ को देखने के लिए क्लिक करें"
 
-#: lib/html.php:2761
+#: lib/html.php:2788
 msgid "Click again to take this Graph out of Realtime"
 msgstr "रीयलटाइम के इस ग्राफ को बाहर निकालने के लिए फिर से क्लिक करें"
 
-#: lib/html.php:2770
+#: lib/html.php:2797
 msgid "Standard Mode"
 msgstr "बारीकी से जांच करने की प्रणाली"
 
-#: lib/html.php:2771
+#: lib/html.php:2798
 msgid "Compact Mode"
 msgstr "ज़ूम मोड"
 
-#: lib/html.php:2772
+#: lib/html.php:2799
 msgid "Dark Color Mode"
 msgstr "कोई रंग नहीं मिला"
 
-#: lib/html.php:2773
+#: lib/html.php:2800
 msgid "Light Color Mode"
 msgstr "सूची मोड"
 
-#: lib/html.php:2774
+#: lib/html.php:2801
 msgid "Use System Color"
 msgstr "आइटम रंग"
 
-#: lib/html.php:2775
+#: lib/html.php:2802
 msgid "Ignore System Color"
 msgstr "आइटम रंग"
 
-#: lib/html.php:2776
+#: lib/html.php:2803
 msgid "Help"
 msgstr "मदद"
 
-#: lib/html.php:2777
+#: lib/html.php:2804
 #, fuzzy
 msgid "Kadupul Home"
 msgstr "Kadupul होम"
 
-#: lib/html.php:2779
+#: lib/html.php:2806
 msgid "Miscellaneous"
 msgstr "其他"
 
-#: lib/html.php:2780
+#: lib/html.php:2807
 msgid "Dashboards"
 msgstr "कैक्टि डैशबोर्ड छिपाएँ"
 
-#: lib/html.php:2782
+#: lib/html.php:2809
 msgid "Charts"
 msgstr "चार्ट"
 
-#: lib/html.php:2783
+#: lib/html.php:2810
 #, fuzzy
 msgid "Kadupul Project Page"
 msgstr "Kadupul प्रोजेक्ट पेज"
 
-#: lib/html.php:2787
+#: lib/html.php:2814
 msgid "Spine"
 msgstr "रीढ़ की हड्डी"
 
-#: lib/html.php:2788
+#: lib/html.php:2815
 msgid "RRDProxy"
 msgstr "आरआरडीप्रॉक्सी"
 
-#: lib/html.php:2789
+#: lib/html.php:2816
 msgid "Keyboard"
 msgstr "कीबोर्ड"
 
-#: lib/html.php:2790
+#: lib/html.php:2817
 msgid "Shortcuts"
 msgstr "अल्प मार्ग"
 
-#: lib/html.php:2791
+#: lib/html.php:2818
 #, fuzzy
 msgid "Contribute to the Kadupul Project"
 msgstr "Kadupul लॉग को घुमाएं"
 
-#: lib/html.php:2792
+#: lib/html.php:2819
 msgid "Help in Developing"
 msgstr "विकास में मदद"
 
-#: lib/html.php:2793
+#: lib/html.php:2820
 msgid "Donation & Sponsoring"
 msgstr "दान और प्रायोजन"
 
-#: lib/html.php:2796
+#: lib/html.php:2823
 msgid "Client"
 msgstr "ग्राहक"
 
-#: lib/html.php:2797
+#: lib/html.php:2824
 msgid "Help in Translating"
 msgstr "अनुवाद करने में सहायता"
 
-#: lib/html.php:2798
+#: lib/html.php:2825
 msgid "Report a bug"
 msgstr "किसी बग की रिपोर्ट करें"
 
-#: lib/html.php:2800
+#: lib/html.php:2827
 #, fuzzy
 msgid "Kadupul"
 msgstr "Kadupul"
 
-#: lib/html.php:2802
+#: lib/html.php:2829
 msgid "Click to Show/Hide Filter"
 msgstr "फ़िल्टर दिखाने / छिपाने के लिए क्लिक करें"
 
-#: lib/html.php:2803
+#: lib/html.php:2830
 msgid "Clear Current Filter"
 msgstr "वर्तमान फ़िल्टर साफ़ करें"
 
-#: lib/html.php:2804
+#: lib/html.php:2831
 msgid "Clipboard"
 msgstr "क्लिपबोर्ड से... (C)"
 
-#: lib/html.php:2805
+#: lib/html.php:2832
 msgid "Clipboard ID"
 msgstr "क्लिपबोर्ड आईडी"
 
-#: lib/html.php:2806
+#: lib/html.php:2833
 msgid "Copy operation is unavailable at this time"
 msgstr "इस समय प्रतिलिपि संचालन अनुपलब्ध है"
 
-#: lib/html.php:2807
+#: lib/html.php:2834
 msgid "Failed to find data to copy!"
 msgstr "कॉपी करने के लिए डेटा खोजने में विफल!"
 
-#: lib/html.php:2808
+#: lib/html.php:2835
 msgid "Clipboard has been updated"
 msgstr "क्लिपबोर्ड को अपडेट कर दिया गया है"
 
-#: lib/html.php:2809
+#: lib/html.php:2836
 msgid "Sorry, your clipboard could not be updated at this time"
 msgstr "क्षमा करें, इस समय आपका क्लिपबोर्ड अपडेट नहीं किया जा सका"
 
-#: lib/html.php:2813
+#: lib/html.php:2840
 msgid "Passphrase length meets 8 character minimum"
 msgstr "पासफ़्रेज़ की लंबाई न्यूनतम 8 वर्णों से मिलती है"
 
-#: lib/html.php:2814
+#: lib/html.php:2841
 msgid "Passphrase too short"
 msgstr "पासफ़्रेज़ बहुत छोटा है"
 
-#: lib/html.php:2815
+#: lib/html.php:2842
 msgid "Passphrase matches but too short"
 msgstr "पासफ़्रेज़ मैच करता है लेकिन बहुत कम"
 
-#: lib/html.php:2816
+#: lib/html.php:2843
 msgid "Passphrase too short and not matching"
 msgstr "पासफ़्रेज़ बहुत छोटा और मेल नहीं खाता"
 
-#: lib/html.php:2817
+#: lib/html.php:2844
 msgid "Passphrases match"
 msgstr "पासफ़्रेज़ मेल खाते हैं"
 
-#: lib/html.php:2818
+#: lib/html.php:2845
 msgid "Passphrases do not match"
 msgstr "पासफ़्रेज़ मेल नहीं खाते हैं"
 
-#: lib/html.php:2819
+#: lib/html.php:2846
 msgid "Sorry, we could not process your last action."
 msgstr "क्षमा करें, हम आपकी अंतिम क्रिया को संसाधित नहीं कर सके।"
 
-#: lib/html.php:2820
+#: lib/html.php:2847
 msgid "Error:"
 msgstr "त्रुटी:"
 
-#: lib/html.php:2821
+#: lib/html.php:2848
 msgid "Reason:"
 msgstr "कारण:"
 
-#: lib/html.php:2822
+#: lib/html.php:2849
 msgid "Action failed"
 msgstr "क्रिया: विफल रही है"
 
-#: lib/html.php:2823 pollers.php:804
+#: lib/html.php:2850 pollers.php:804
 msgid "Connection Successful"
 msgstr "ऑपरेशन सफल रहा"
 
-#: lib/html.php:2824 pollers.php:806
+#: lib/html.php:2851 pollers.php:806
 msgid "Connection Failed"
 msgstr "कनेक्शन असफल"
 
-#: lib/html.php:2825
+#: lib/html.php:2852
 msgid "The response to the last action was unexpected."
 msgstr "अंतिम क्रिया की प्रतिक्रिया अप्रत्याशित थी।"
 
-#: lib/html.php:2826
+#: lib/html.php:2853
 msgid "Some Actions failed"
 msgstr "कुछ क्रियाएं विफल रहीं"
 
-#: lib/html.php:2827
+#: lib/html.php:2854
 msgid "Note, we could not process all your actions.  Details are below."
 msgstr "ध्यान दें, हम आपके सभी कार्यों को संसाधित नहीं कर सके। विवरण नीचे हैं।"
 
-#: lib/html.php:2828
+#: lib/html.php:2855
 msgid "Operation successful"
 msgstr "ऑपरेशन सफल रहा"
 
-#: lib/html.php:2829
+#: lib/html.php:2856
 msgid "The Operation was successful.  Details are below."
 msgstr "ऑपरेशन सफल रहा। विवरण नीचे हैं।"
 
-#: lib/html.php:2831
+#: lib/html.php:2858
 msgid "Pause"
 msgstr "पॉज़"
 
-#: lib/html.php:2834
+#: lib/html.php:2861
 msgid "Zoom In"
 msgstr "ज़ूम इन करो"
 
-#: lib/html.php:2835
+#: lib/html.php:2862
 msgid "Zoom Out"
 msgstr "ज़ूम आउट करो"
 
-#: lib/html.php:2836
+#: lib/html.php:2863
 msgid "Zoom Out Factor"
 msgstr "जूम आउट फैक्टर"
 
-#: lib/html.php:2837
+#: lib/html.php:2864
 msgid "Timestamps"
 msgstr "मुहर"
 
-#: lib/html.php:2838
+#: lib/html.php:2865
 msgid "2x"
 msgstr "2x"
 
-#: lib/html.php:2839
+#: lib/html.php:2866
 msgid "4x"
 msgstr "4x"
 
-#: lib/html.php:2840
+#: lib/html.php:2867
 msgid "8x"
 msgstr "8x"
 
-#: lib/html.php:2841
+#: lib/html.php:2868
 msgid "16x"
 msgstr "16x"
 
-#: lib/html.php:2842
+#: lib/html.php:2869
 msgid "32x"
 msgstr "32x"
 
-#: lib/html.php:2843
+#: lib/html.php:2870
 msgid "Zoom Out Positioning"
 msgstr "ज़ूम आउट पोजिशनिंग"
 
-#: lib/html.php:2844
+#: lib/html.php:2871
 msgid "Zoom Mode"
 msgstr "ज़ूम मोड"
 
-#: lib/html.php:2846
+#: lib/html.php:2873
 msgid "Quick"
 msgstr "तेज"
 
-#: lib/html.php:2848
+#: lib/html.php:2875
 msgid "Open in new tab"
 msgstr "नए टैब में खोलें"
 
-#: lib/html.php:2849
+#: lib/html.php:2876
 msgid "Save graph"
 msgstr "ग्राफ को बचाएं"
 
-#: lib/html.php:2850
+#: lib/html.php:2877
 msgid "Copy graph"
 msgstr "ग्राफ की प्रतिलिपि बनाएँ"
 
-#: lib/html.php:2851
+#: lib/html.php:2878
 msgid "Copy graph link"
 msgstr "ग्राफ लिंक कॉपी करें"
 
-#: lib/html.php:2852
+#: lib/html.php:2879
 msgid "Always On"
 msgstr "हमेशा चालू"
 
-#: lib/html.php:2853
+#: lib/html.php:2880
 msgid "Auto"
 msgstr "आपही"
 
-#: lib/html.php:2854
+#: lib/html.php:2881
 msgid "Always Off"
 msgstr "हमेशा बंद"
 
-#: lib/html.php:2855
+#: lib/html.php:2882
 msgid "Begin with"
 msgstr "से शुरू"
 
-#: lib/html.php:2857
+#: lib/html.php:2884
 msgid "End with"
 msgstr "अंतिम दिनांक"
 
-#: lib/html.php:2859 lib/html_form.php:1432
+#: lib/html.php:2886 lib/html_form.php:1432
 msgid "Close"
 msgstr "बंद"
 
-#: lib/html.php:2861
+#: lib/html.php:2888
 msgid "3rd Mouse Button"
 msgstr "3 माउस बटन"
 
@@ -16338,194 +16340,194 @@ msgstr "रिपोर्ट ग्राफ़ आइटम &#39; <i> %s</i> &
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "छोड़ी गई रिपोर्ट ग्राफ की वस्तु &#39; <i> %s</i> &#39; पहले से ही मौजूद है"
 
-#: lib/rrd.php:2149
+#: lib/rrd.php:2147
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2152
+#: lib/rrd.php:2150
 msgid "The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2523
+#: lib/rrd.php:2521
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "त्रुटि: RRDfile %s लिखने योग्य नहीं है"
 
-#: lib/rrd.php:3933
+#: lib/rrd.php:3931
 #, fuzzy, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "आवश्यक RRDfile चरण का आकार '{ 0 }' है, लेकिन देखा गया चरण '{ 1 }' है"
 
-#: lib/rrd.php:3997
+#: lib/rrd.php:3995
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "डेटा स्रोत &#39; %s&#39; के लिए टाइप &#39; %s&#39; होना चाहिए"
 
-#: lib/rrd.php:4003
+#: lib/rrd.php:4001
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "डेटा स्रोत &#39; %s&#39; के लिए दिल की धड़कन &#39; %s&#39; होनी चाहिए"
 
-#: lib/rrd.php:4015
+#: lib/rrd.php:4013
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "डेटा स्रोत &#39; %s&#39; के लिए RRD न्यूनतम &#39; %s&#39; होना चाहिए"
 
-#: lib/rrd.php:4024
+#: lib/rrd.php:4022
 #, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "Kadupul की परिभाषा में डीएस &#39; %s&#39; गायब है"
 
-#: lib/rrd.php:4038 lib/rrd.php:4039
+#: lib/rrd.php:4036 lib/rrd.php:4037
 #, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Kadupul RRA &#39; %s&#39; में &#39; %s&#39; के समान CF / चरण ( %s, %s) हैं"
 
-#: lib/rrd.php:4052 lib/rrd.php:4053
+#: lib/rrd.php:4050 lib/rrd.php:4051
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "फ़ाइल RRA &#39; %s&#39; में &#39; %s&#39; के समान CF / चरण ( %s, %s) है"
 
-#: lib/rrd.php:4085
+#: lib/rrd.php:4083
 #, fuzzy, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr "'{ 0 }' का pdp_per_row RRA '{ 1 }' के लिए अमान्य है '{ 2 }' होना चाहिए। Kadupul को RRDfile को फिर से बनाने के लिए हटाने और अनुमति देने पर विचार करें।"
 
-#: lib/rrd.php:4089
+#: lib/rrd.php:4087
 #, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "Kadupul RRA आईडी &#39; %s&#39; के लिए XFF &#39; %s&#39; होना चाहिए"
 
-#: lib/rrd.php:4093
+#: lib/rrd.php:4091
 #, fuzzy, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Kadupul RRA id '{ 0 }' के लिए पंक्तियों की संख्या गलत है। पंक्तियों की संख्या '{ 1 }' है लेकिन '{ 2 }' होनी चाहिए"
 
-#: lib/rrd.php:4110
+#: lib/rrd.php:4108
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "आरआरडीएफाइल में आरआरए &#39; %s&#39; गायब है"
 
-#: lib/rrd.php:4118
+#: lib/rrd.php:4116
 #, fuzzy, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "Ract &#39; %s&#39; Kadupul परिभाषा में गायब है"
 
-#: lib/rrd.php:4140
+#: lib/rrd.php:4138
 msgid "RRD File Information"
 msgstr "आरआरडी फ़ाइल जानकारी"
 
-#: lib/rrd.php:4172
+#: lib/rrd.php:4170
 msgid "Data Source Items"
 msgstr "डेटा स्रोत आइटम"
 
-#: lib/rrd.php:4174
+#: lib/rrd.php:4172
 msgid "Minimal Heartbeat"
 msgstr "मिनिमल हार्टबीट"
 
-#: lib/rrd.php:4175
+#: lib/rrd.php:4173
 msgid "Min"
 msgstr "कम से कम"
 
-#: lib/rrd.php:4176
+#: lib/rrd.php:4174
 msgid "Max"
 msgstr "अधिकतम"
 
-#: lib/rrd.php:4177
+#: lib/rrd.php:4175
 msgid "Last DS"
 msgstr "अंतिम डी.एस."
 
-#: lib/rrd.php:4179
+#: lib/rrd.php:4177
 msgid "Unknown Sec"
 msgstr "अज्ञात सेक"
 
-#: lib/rrd.php:4218
+#: lib/rrd.php:4216
 msgid "Round Robin Archive"
 msgstr "राउंड रॉबिन आर्काइव"
 
-#: lib/rrd.php:4221
+#: lib/rrd.php:4219
 msgid "Cur Row"
 msgstr "कर रो"
 
-#: lib/rrd.php:4222
+#: lib/rrd.php:4220
 msgid "PDP per Row"
 msgstr "प्रति पंक्ति पीडीपी"
 
-#: lib/rrd.php:4224
+#: lib/rrd.php:4222
 msgid "CDP Prep Value (0)"
 msgstr "सीडीपी तैयारी मूल्य (0)"
 
-#: lib/rrd.php:4225
+#: lib/rrd.php:4223
 msgid "CDP Unknown Data points (0)"
 msgstr "सीडीपी अज्ञात डेटा अंक (0)"
 
-#: lib/rrd.php:4306
+#: lib/rrd.php:4304
 msgid "Errors Found"
 msgstr "कोई %s मिला"
 
-#: lib/rrd.php:4318
+#: lib/rrd.php:4316
 msgid "Optional Tuning Recommendations"
 msgstr "डेटा स्रोत फ़ील्ड"
 
-#: lib/rrd.php:4343 lib/rrd.php:4346
+#: lib/rrd.php:4341 lib/rrd.php:4344
 #, php-format
 msgid "rename %s to %s"
 msgstr "%s का नाम बदलकर %s करें"
 
-#: lib/rrd.php:4438
+#: lib/rrd.php:4436
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "XML फ़ाइल लिखते समय ERROR: %s"
 
-#: lib/rrd.php:4444
+#: lib/rrd.php:4442
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4450
+#: lib/rrd.php:4448
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "त्रुटि: RRDfile %s लिखने योग्य नहीं है"
 
-#: lib/rrd.php:4471
+#: lib/rrd.php:4469
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "Rrdtool डंप के XML को पार्स करते समय त्रुटि"
 
-#: lib/rrd.php:4507 lib/rrd.php:4526
+#: lib/rrd.php:4505 lib/rrd.php:4524
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "RRDtool डंप के XML को पार्स करते समय त्रुटि"
 
-#: lib/rrd.php:4744
+#: lib/rrd.php:4742
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "आरआरडी फ़ाइल से हटाए गए RRA (CF = %s, ROWS =% d, PDP_PER_ROW =% d, XFF =% 1.2f)"
 
-#: lib/rrd.php:4782
+#: lib/rrd.php:4780
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_ROW =% d, XFF =% 1.2f) RRD फाइल में जोड़"
 
-#: lib/rrd.php:4813 lib/rrd.php:4829
+#: lib/rrd.php:4811 lib/rrd.php:4827
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "वेबसाइट में %s तक लिखने की सुविधा नहीं है, RRDs बनाने / अपडेट करने में असमर्थ हो सकता है"
 
-#: lib/rrd.php:4825
+#: lib/rrd.php:4823
 msgid "(Custom)"
 msgstr "(अनुकूलित)"
 
-#: lib/rrd.php:4831
+#: lib/rrd.php:4829
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "डेटा फ़ाइल खोलने में विफल, पराग अभी तक नहीं चला है"
 
-#: lib/rrd.php:4834
+#: lib/rrd.php:4832
 msgid "RRA Folder"
 msgstr "आरआरए फोल्डर"
 
-#: lib/rrd.php:4834
+#: lib/rrd.php:4832
 msgid "Root"
 msgstr "जड़"
 
-#: lib/rrd.php:4914
+#: lib/rrd.php:4912
 msgid "Unknown RRDtool Error"
 msgstr "अज्ञात RRDtool त्रुटि"
 

@@ -111,10 +111,10 @@ include/csrf.php	anonymous-allowed	fragment without bootstrap, reviewed at bc25f
 include/global.php	web-server-denied	nginx; apache .htaccess
 include/global_arrays.php	anonymous-allowed	fragment without bootstrap, reviewed at 7e957ef68e4b; included by include/global.php, lib/api_aggregate.php, lib/boost.php
 include/global_constants.php	anonymous-allowed	fragment without bootstrap, reviewed at 44950e59dd15; included by include/global.php
-include/global_form.php	anonymous-allowed	fragment without bootstrap, reviewed at 95a0b48968a8; included by include/global.php
+include/global_form.php	anonymous-allowed	fragment without bootstrap, reviewed at ecb0178c09d6; included by include/global.php
 include/global_languages.php	anonymous-allowed	fragment without bootstrap, reviewed at 614a6beac129; included by include/global.php
 include/global_session.php	anonymous-allowed	fragment without bootstrap, reviewed at 89b8966e06b4; included by auth_changepassword.php, auth_login.php, graph_realtime.php
-include/global_settings.php	anonymous-allowed	fragment without bootstrap, reviewed at 3756352b126a; included by include/global.php
+include/global_settings.php	anonymous-allowed	fragment without bootstrap, reviewed at 4c0dbff3c97b; included by include/global.php
 include/index.php	anonymous-allowed	redirect-only
 include/js/LC_MESSAGES/index.php	anonymous-allowed	redirect-only
 include/js/index.php	anonymous-allowed	redirect-only

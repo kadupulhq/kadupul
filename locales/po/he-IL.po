@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 04:43-0700\n"
+"POT-Creation-Date: 2026-10-05 04:50-0700\n"
 "PO-Revision-Date: 2024-04-20 18:53-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -135,7 +135,7 @@ msgstr "לחץ על &#39;המשך&#39; כדי למחוק את הגרפים המ�
 #: host.php:549 host.php:565 host.php:579 host.php:588 host.php:619
 #: host.php:631 host_templates.php:222 host_templates.php:236
 #: host_templates.php:247 host_templates.php:302 host_templates.php:375
-#: lib/clog_webapi.php:225 lib/html.php:2833 lib/html_form.php:1396
+#: lib/clog_webapi.php:225 lib/html.php:2860 lib/html_form.php:1396
 #: lib/html_form.php:1413 lib/html_form.php:1424 lib/html_reports.php:632
 #: managers.php:1066 managers.php:1127 plugins.php:712 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:762
@@ -169,7 +169,7 @@ msgstr "ביטול"
 #: host.php:531 host.php:540 host.php:549 host.php:565 host.php:579
 #: host.php:588 host.php:619 host.php:631 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
-#: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2832
+#: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2859
 #: lib/html_reports.php:574 managers.php:1066 managers.php:1127 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:762
 #: tree.php:771 tree.php:780 tree.php:789 user_admin.php:252 user_admin.php:292
@@ -821,7 +821,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "יש בעיות בדף שינוי סיסמה.  צור קשר עם מנהל Kadupul שלך באופן מיידי."
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4270 lib/html.php:2768
+#: include/global_form.php:1552 lib/functions.php:4270 lib/html.php:2795
 msgid "Change Password"
 msgstr "שנה סיסמה"
 
@@ -958,7 +958,7 @@ msgstr "התחבר"
 
 #: auth_profile.php:61 include/global_settings.php:22
 #: include/global_settings.php:1202 include/global_settings.php:1519
-#: lib/html.php:2781 managers.php:24 user_admin.php:1741
+#: lib/html.php:2808 managers.php:24 user_admin.php:1741
 #: user_group_admin.php:1763
 msgid "General"
 msgstr "כללי"
@@ -969,17 +969,17 @@ msgstr "פרטי חשבון משתמש"
 
 #: auth_profile.php:313 include/global_arrays.php:857
 #: include/global_settings.php:2737 lib/html.php:2232 lib/html.php:2254
-#: lib/html.php:2762
+#: lib/html.php:2789
 msgid "Tree View"
 msgstr "תצוגת עצים"
 
 #: auth_profile.php:317 include/global_arrays.php:858 lib/html.php:2239
-#: lib/html.php:2263 lib/html.php:2763
+#: lib/html.php:2263 lib/html.php:2790
 msgid "List View"
 msgstr "תצוגת רשימה"
 
 #: auth_profile.php:321 include/global_arrays.php:859 lib/html.php:2246
-#: lib/html.php:2764
+#: lib/html.php:2791
 msgid "Preview View"
 msgstr "הצג תצוגה מקדימה"
 
@@ -1399,7 +1399,7 @@ msgstr "מאופשר"
 #: include/global_settings.php:1644 include/global_settings.php:1657
 #: include/global_settings.php:1682 include/global_settings.php:1696
 #: include/global_settings.php:1786 include/global_settings.php:2550
-#: lib/api_automation.php:28 lib/html.php:2858 lib/html_reports.php:2037
+#: lib/api_automation.php:28 lib/html.php:2885 lib/html_reports.php:2037
 #: lib/html_reports.php:2188 lib/html_utility.php:1317 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:936 user_domains.php:397
 #: user_group_admin.php:756 utilities.php:2147 utilities.php:2711
@@ -1675,8 +1675,8 @@ msgstr "‫%d דקה"
 #: include/global_arrays.php:1634 include/global_settings.php:1698
 #: include/global_settings.php:1699 include/global_settings.php:1700
 #: include/global_settings.php:1701 include/global_settings.php:1702
-#: include/global_settings.php:2663 include/global_settings.php:2938
-#: include/global_settings.php:2939 include/global_settings.php:2940
+#: include/global_settings.php:2663 include/global_settings.php:2942
+#: include/global_settings.php:2943 include/global_settings.php:2944
 #: pollers.php:902 pollers.php:903
 #, php-format
 msgid "%d Minutes"
@@ -1706,8 +1706,8 @@ msgstr "‫%d שעה"
 #: include/global_arrays.php:1550 include/global_arrays.php:1556
 #: include/global_arrays.php:1557 include/global_settings.php:1704
 #: include/global_settings.php:1705 include/global_settings.php:1706
-#: include/global_settings.php:1707 include/global_settings.php:2942
-#: include/global_settings.php:2943
+#: include/global_settings.php:1707 include/global_settings.php:2946
+#: include/global_settings.php:2947
 #, php-format
 msgid "%d Hours"
 msgstr "%d לפני מספר ימים"
@@ -3031,7 +3031,7 @@ msgstr "מקור"
 msgid "The Data Source to Debug"
 msgstr "מקור הנתונים לאיתור באגים"
 
-#: data_debug.php:488 lib/html.php:2785 utilities.php:1039 utilities.php:1160
+#: data_debug.php:488 lib/html.php:2812 utilities.php:1039 utilities.php:1160
 msgid "User"
 msgstr "משתמש"
 
@@ -3229,7 +3229,7 @@ msgstr "Rerun ניתוח"
 msgid "Check"
 msgstr "בדוק"
 
-#: data_debug.php:883 include/global_form.php:1018 lib/rrd.php:4178
+#: data_debug.php:883 include/global_form.php:1018 lib/rrd.php:4176
 #: utilities.php:798 utilities.php:815 utilities.php:3218
 msgid "Value"
 msgstr "ערך"
@@ -3320,7 +3320,7 @@ msgid "Run checks on currently filtered Data Sources and preserve other results"
 msgstr "הרץ בדיקות על מקורות הנתונים המסוננים כעת ושמור על תוצאות אחרות"
 
 #: data_debug.php:1125 data_sources.php:1752 data_templates.php:1107
-#: lib/html.php:2794
+#: lib/html.php:2821
 msgid "Profile"
 msgstr "פרופיל"
 
@@ -3824,7 +3824,7 @@ msgstr "שלבי הבישול/אפיה"
 
 #: data_source_profiles.php:900 graphs_new.php:532 include/global_form.php:284
 #: lib/html.php:613 lib/html_filter.php:55 lib/installer.php:2827
-#: lib/rrd.php:4220 utilities.php:866 utilities.php:1838
+#: lib/rrd.php:4218 utilities.php:866 utilities.php:1838
 msgid "Rows"
 msgstr "שורות"
 
@@ -3889,8 +3889,8 @@ msgstr "% d שבוע"
 
 #: data_source_profiles.php:1106 include/global_arrays.php:779
 #: include/global_arrays.php:780 include/global_arrays.php:1464
-#: include/global_settings.php:2946 include/global_settings.php:2947
-#: include/global_settings.php:2948 rrdcleaner.php:535 rrdcleaner.php:536
+#: include/global_settings.php:2950 include/global_settings.php:2951
+#: include/global_settings.php:2952 rrdcleaner.php:535 rrdcleaner.php:536
 #, php-format
 msgid "%d Weeks"
 msgstr "% d שבועות"
@@ -3919,7 +3919,7 @@ msgstr "%d ימים"
 #: include/global_arrays.php:1555 include/global_arrays.php:1585
 #: include/global_arrays.php:1594 include/global_arrays.php:1622
 #: include/global_settings.php:1406 include/global_settings.php:1703
-#: include/global_settings.php:2941
+#: include/global_settings.php:2945
 msgid "1 Hour"
 msgstr "שעה אחת"
 
@@ -4554,7 +4554,7 @@ msgstr "ערוך תבנית גרף."
 msgid "Click to view just this Graph in Real-time"
 msgstr "לחץ כדי להציג רק תרשים זה בזמן אמת"
 
-#: graph.php:270 lib/html.php:2759
+#: graph.php:270 lib/html.php:2786
 msgid "Utility View"
 msgstr "תצוגת השירות"
 
@@ -4575,7 +4575,7 @@ msgid "RRDtool Graph Syntax"
 msgstr "RRDtool גרף תחביר"
 
 #: graph_image.php:174 graph_json.php:208 graph_realtime.php:317
-#: lib/rrd.php:2526
+#: lib/rrd.php:2524
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller עדיין לא רץ."
 
@@ -4906,7 +4906,7 @@ msgstr "מצב תצוגה מקדימה"
 msgid "Add Selected Graphs to Report"
 msgstr "הוסף גרפים נבחרים לדוח"
 
-#: graph_view.php:1049 lib/html.php:2830
+#: graph_view.php:1049 lib/html.php:2857
 msgid "Ok"
 msgstr "OK"
 
@@ -5246,7 +5246,7 @@ msgstr "גרפים חדשים עבור [כל המכשירים]"
 msgid "New Graphs for None Host Type"
 msgstr "גרפים חדשים עבור אף סוג מארח"
 
-#: graphs_new.php:440 lib/html.php:2757
+#: graphs_new.php:440 lib/html.php:2784
 msgid "Filter Settings Saved"
 msgstr "הגדרות סינון נשמרו"
 
@@ -5686,7 +5686,7 @@ msgstr "שחזור"
 
 #: host.php:1837 lib/api_automation.php:33 lib/auth.php:3041
 #: lib/clog_webapi.php:856 lib/html_utility.php:1339 lib/import.php:342
-#: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4196 lib/rrd.php:4208
+#: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4194 lib/rrd.php:4206
 #: lib/spikekill.php:301 package_import.php:522 package_import.php:600
 #: utilities.php:211 utilities.php:212 utilities.php:2765
 msgid "Unknown"
@@ -6396,7 +6396,7 @@ msgstr "ימין"
 msgid "Justified"
 msgstr "מילוי שורות"
 
-#: include/global_arrays.php:585 lib/html.php:2856
+#: include/global_arrays.php:585 lib/html.php:2883
 msgid "Center"
 msgstr "מרכז"
 
@@ -6704,13 +6704,13 @@ msgstr "הזמנה טבעית"
 msgid "Numeric Ordering"
 msgstr "הזמנה מספרית"
 
-#: include/global_arrays.php:952 lib/rrd.php:4144
+#: include/global_arrays.php:952 lib/rrd.php:4142
 msgid "Header"
 msgstr "כותרת"
 
 #: include/global_arrays.php:953 include/global_arrays.php:1004
 #: include/global_arrays.php:1687 include/global_arrays.php:1856
-#: lib/html.php:2845
+#: lib/html.php:2872
 msgid "Graph"
 msgstr "Symbol for file attachment annotations"
 
@@ -6876,7 +6876,7 @@ msgid "Configuration"
 msgstr "הגדרות תצורה"
 
 #: include/global_arrays.php:1030 include/global_arrays.php:1052
-#: lib/html.php:2590 lib/html.php:2860
+#: lib/html.php:2590 lib/html.php:2887
 msgid "Settings"
 msgstr "הגדרות"
 
@@ -7897,7 +7897,7 @@ msgid "List Mode"
 msgstr "מצב רשימה"
 
 #: include/global_arrays.php:2062 include/global_arrays.php:2068
-#: lib/functions.php:4492 lib/html.php:1988 lib/html.php:2053 lib/html.php:2778
+#: lib/functions.php:4492 lib/html.php:1988 lib/html.php:2053 lib/html.php:2805
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "מסוף"
@@ -8031,7 +8031,7 @@ msgstr "קישור חיצוני"
 msgid "(Action)"
 msgstr "פעולה:"
 
-#: include/global_arrays.php:2626 lib/html.php:2799
+#: include/global_arrays.php:2626 lib/html.php:2826
 #, fuzzy
 msgid "About Kadupul"
 msgstr "על Kadupul"
@@ -8289,7 +8289,7 @@ msgstr "תדירות איסוף הנתונים ממקור הנתונים?"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "כמה זמן יכול להיות חסר נתונים לפני RRDtool רשומות נתונים לא ידועים. הגדל את הערך אם מקור הנתונים שלך אינו יציב וברצונך להעביר נתונים ישנים במקום להציג פערים בגרפים שלך. ערך זה מוכפל בפקטור X-Files כדי לקבוע את משך הזמן בפועל."
 
-#: include/global_form.php:226 lib/rrd.php:4223
+#: include/global_form.php:226 lib/rrd.php:4221
 msgid "X-Files Factor"
 msgstr "X- קבצים פקטור"
 
@@ -8619,7 +8619,7 @@ msgid "Auto Scale"
 msgstr "סולם אוטומטי"
 
 #: include/global_form.php:754
-msgid "When enabled, the selected Auto Scale Option determines which limits RRDtool uses: mode 1 ignores both limits, mode 2 keeps the lower limit, mode 3 keeps the upper limit, and mode 4 keeps both limits. When disabled, the configured lower and upper limits are used directly. Rigid Boundaries controls whether values outside those limits expand the graph range."
+msgid "When enabled, the selected Auto Scale Option determines which limits RRDtool uses: --alt-autoscale ignores both limits, --alt-autoscale-max keeps the lower limit, --alt-autoscale-min keeps the upper limit, and --alt-autoscale (accepting both limits) keeps both limits. When disabled, the configured lower and upper limits are used directly. Rigid Boundaries controls whether values outside those limits expand the graph range."
 msgstr ""
 
 #: include/global_form.php:758
@@ -8851,7 +8851,7 @@ msgstr "אטימות / ערוץ אלפא"
 msgid "The opacity/alpha channel of the color."
 msgstr "ערוץ אטימות / אלפא של הצבע."
 
-#: include/global_form.php:989 lib/rrd.php:4219
+#: include/global_form.php:989 lib/rrd.php:4217
 msgid "Consolidation Function"
 msgstr "פונקציית איחוד"
 
@@ -9970,7 +9970,7 @@ msgstr "אם מוגדר פשוט, גרפים ומקורות נתונים נית�
 msgid "Simple"
 msgstr "פשוט"
 
-#: include/global_settings.php:428 lib/html.php:2847
+#: include/global_settings.php:428 lib/html.php:2874
 msgid "Advanced"
 msgstr "מתקדם"
 
@@ -10387,7 +10387,7 @@ msgid "Theme Settings"
 msgstr "הגדרות עיצוב"
 
 #: include/global_settings.php:851 include/global_settings.php:1061
-#: include/global_settings.php:2585 lib/html.php:2795
+#: include/global_settings.php:2585 lib/html.php:2822
 msgid "Theme"
 msgstr "תבנית"
 
@@ -10619,9 +10619,11 @@ msgstr ""
 
 #: include/global_settings.php:1068 include/global_settings.php:1087
 #: include/global_settings.php:1106 include/global_settings.php:1125
-#: include/global_settings.php:1144
-msgid "Enter Valid Font Config Value"
-msgstr "הזן ערך תקף של גופן חוקי"
+#: include/global_settings.php:1144 include/global_settings.php:2852
+#: include/global_settings.php:2870 include/global_settings.php:2888
+#: include/global_settings.php:2906
+msgid "Enter a Pango font description"
+msgstr ""
 
 #: include/global_settings.php:1074 include/global_settings.php:2840
 msgid "Title Font Size"
@@ -10639,15 +10641,15 @@ msgstr "הגדרת גופן כותרת"
 msgid "The font to use for Graph Titles.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
 msgstr ""
 
-#: include/global_settings.php:1093 include/global_settings.php:2857
+#: include/global_settings.php:1093 include/global_settings.php:2858
 msgid "Legend Font Size"
 msgstr "גודל גופן מקרא"
 
-#: include/global_settings.php:1094 include/global_settings.php:2858
+#: include/global_settings.php:1094 include/global_settings.php:2859
 msgid "The size of the font used for Graph Legend items"
 msgstr "גודלו של הגופן המשמש לפריטי Legend"
 
-#: include/global_settings.php:1103 include/global_settings.php:2866
+#: include/global_settings.php:1103 include/global_settings.php:2867
 msgid "Legend Font Setting"
 msgstr "הגדרת גופן מקרא"
 
@@ -10655,15 +10657,15 @@ msgstr "הגדרת גופן מקרא"
 msgid "The font to use for Graph Legends.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
 msgstr ""
 
-#: include/global_settings.php:1112 include/global_settings.php:2874
+#: include/global_settings.php:1112 include/global_settings.php:2876
 msgid "Axis Font Size"
 msgstr "גודל גופן ציר"
 
-#: include/global_settings.php:1113 include/global_settings.php:2875
+#: include/global_settings.php:1113 include/global_settings.php:2877
 msgid "The size of the font used for Graph Axis"
 msgstr "גודל הגופן המשמש לציר גרף"
 
-#: include/global_settings.php:1122 include/global_settings.php:2883
+#: include/global_settings.php:1122 include/global_settings.php:2885
 msgid "Axis Font Setting"
 msgstr "הגדרת גופן ציר"
 
@@ -10671,15 +10673,15 @@ msgstr "הגדרת גופן ציר"
 msgid "The font to use for Graph Axis items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
 msgstr ""
 
-#: include/global_settings.php:1131 include/global_settings.php:2891
+#: include/global_settings.php:1131 include/global_settings.php:2894
 msgid "Unit Font Size"
 msgstr "גודל גופן יחידה"
 
-#: include/global_settings.php:1132 include/global_settings.php:2892
+#: include/global_settings.php:1132 include/global_settings.php:2895
 msgid "The size of the font used for Graph Units"
 msgstr "גודל הגופן המשמש ליחידות גרפים"
 
-#: include/global_settings.php:1141 include/global_settings.php:2900
+#: include/global_settings.php:1141 include/global_settings.php:2903
 msgid "Unit Font Setting"
 msgstr "הגדרת גופן יחידה"
 
@@ -11252,7 +11254,7 @@ msgstr "ביטול נעילה אוטומטית"
 msgid "An account will automatically be unlocked after this many minutes.  Even if the correct password is entered, the account will not unlock until this time limit has been met.  Max of 1440 minutes (1 Day)"
 msgstr "חשבון יבוטל באופן אוטומטי לאחר מספר דקות. גם אם הוזן הסיסמא הנכונה, החשבון לא יבטל את הנעילה עד להגבלת מגבלת הזמן הזו. מקסימום של 1440 דקות (יום אחד)"
 
-#: include/global_settings.php:1708 include/global_settings.php:2944
+#: include/global_settings.php:1708 include/global_settings.php:2948
 msgid "1 Day"
 msgstr "יום אחד"
 
@@ -12353,47 +12355,47 @@ msgstr "בחר אם להשתמש בגופנים ובגופני גופנים מו
 msgid "The Pango font description to use for Graph Titles, such as DejaVu Sans Bold"
 msgstr ""
 
-#: include/global_settings.php:2867
+#: include/global_settings.php:2868
 msgid "The Pango font description to use for Graph Legend items, such as DejaVu Sans Mono"
 msgstr ""
 
-#: include/global_settings.php:2884
+#: include/global_settings.php:2886
 msgid "The Pango font description to use for Graph Axis items, such as DejaVu Sans"
 msgstr ""
 
-#: include/global_settings.php:2901
+#: include/global_settings.php:2904
 msgid "The Pango font description to use for Graph Unit items, such as DejaVu Sans"
 msgstr ""
 
-#: include/global_settings.php:2917
+#: include/global_settings.php:2921
 msgid "Realtime View Mode"
 msgstr "מצב צפייה בזמן אמת"
 
-#: include/global_settings.php:2918
+#: include/global_settings.php:2922
 msgid "How do you wish to view Realtime Graphs?"
 msgstr "כיצד ברצונך להציג גרפים בזמן אמת?"
 
-#: include/global_settings.php:2921
+#: include/global_settings.php:2925
 msgid "Inline"
 msgstr "בשורה"
 
-#: include/global_settings.php:2922
+#: include/global_settings.php:2926
 msgid "New Window"
 msgstr "בחלון חדש"
 
-#: include/global_settings.php:2937
+#: include/global_settings.php:2941
 msgid "System Setting"
 msgstr "הגדרות משתמש"
 
-#: include/global_settings.php:2945
+#: include/global_settings.php:2949
 msgid "1 Week"
 msgstr "שבוע"
 
-#: include/global_settings.php:2958
+#: include/global_settings.php:2962
 msgid "Auto Log Out Time"
 msgstr "יציאה אוטומטית"
 
-#: include/global_settings.php:2959
+#: include/global_settings.php:2963
 msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no affect when Authentication Cookies are enabled."
 msgstr "למשתמשים עם גישה למסוף בלבד, כמה זמן משתמש זה יכול להישאר מחובר לפני שהוא מתנתק אוטומטית. שים לב שאם לא היית פעיל יותר משעה, ייתכן שיהיה עליך לרענן את הדפדפן שלך. שים לב גם שהגדרה זו לא משפיעה על הפעלת קובצי Cookie לאימות."
 
@@ -12552,7 +12554,7 @@ msgstr "עקוף את הערך הזה"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
-#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4173
+#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4171
 #: utilities.php:356 utilities.php:1480 utilities.php:3218
 msgid "Type"
 msgstr "סוג"
@@ -13540,11 +13542,11 @@ msgstr "התחבר כמשתמש רגיל"
 msgid "guest"
 msgstr "אורח"
 
-#: lib/functions.php:4249 lib/functions.php:4274 lib/html.php:2784
+#: lib/functions.php:4249 lib/functions.php:4274 lib/html.php:2811
 msgid "User Community"
 msgstr "קהילת המשתמשים"
 
-#: lib/functions.php:4250 lib/functions.php:4275 lib/html.php:2786
+#: lib/functions.php:4250 lib/functions.php:4275 lib/html.php:2813
 #: lib/utility.php:1446
 msgid "Documentation"
 msgstr "תיעוד"
@@ -13554,11 +13556,11 @@ msgstr "תיעוד"
 msgid "Logged in as %s"
 msgstr "מחובר כ %s"
 
-#: lib/functions.php:4269 lib/html.php:2765
+#: lib/functions.php:4269 lib/html.php:2792
 msgid "Edit Profile"
 msgstr "ערוך פרופיל"
 
-#: lib/functions.php:4279 lib/html.php:2769
+#: lib/functions.php:4279 lib/html.php:2796
 msgid "Logout"
 msgstr "התנתק"
 
@@ -13730,7 +13732,7 @@ msgstr "שאילתת נתונים:"
 msgid "CSV Export of Graph Data"
 msgstr "CSV ייצוא נתוני גרף"
 
-#: lib/html.php:540 lib/html.php:2756
+#: lib/html.php:540 lib/html.php:2783
 msgid "Time Graph View"
 msgstr "תצוגת תרשים זמן"
 
@@ -13834,321 +13836,321 @@ msgstr "יבש פער פער מילוי טווח"
 msgid "Dry Run Float Range"
 msgstr "יבש טווח הפעלה Float"
 
-#: lib/html.php:2752
+#: lib/html.php:2779
 msgid "Allow or limit the table columns to extend beyond the current windows limits."
 msgstr "אפשר או הגבל את עמודות הטבלה לחריגה ממגבלות החלונות הנוכחיות."
 
-#: lib/html.php:2753 lib/html_filter.php:48
+#: lib/html.php:2780 lib/html_filter.php:48
 msgid "Enter a search term"
 msgstr "הזן מונח חיפוש"
 
-#: lib/html.php:2754
+#: lib/html.php:2781
 msgid "Enter a regular expression"
 msgstr "הזן ביטוי רגיל"
 
-#: lib/html.php:2755
+#: lib/html.php:2782
 msgid "No file selected"
 msgstr "לא נבחר קובץ"
 
-#: lib/html.php:2758 lib/html.php:2801
+#: lib/html.php:2785 lib/html.php:2828
 msgid "SpikeKill Results"
 msgstr "תוצאות SpikeKill"
 
-#: lib/html.php:2760
+#: lib/html.php:2787
 msgid "Click to view just this Graph in Realtime"
 msgstr "לחץ כדי להציג רק תרשים זה בזמן אמת"
 
-#: lib/html.php:2761
+#: lib/html.php:2788
 msgid "Click again to take this Graph out of Realtime"
 msgstr "לחץ שוב כדי לקחת את זה גרף מתוך זמן אמת"
 
-#: lib/html.php:2770
+#: lib/html.php:2797
 msgid "Standard Mode"
 msgstr "מצב סריקה"
 
-#: lib/html.php:2771
+#: lib/html.php:2798
 msgid "Compact Mode"
 msgstr "מצב זום"
 
-#: lib/html.php:2772
+#: lib/html.php:2799
 msgid "Dark Color Mode"
 msgstr "לא נמצאו צבעים"
 
-#: lib/html.php:2773
+#: lib/html.php:2800
 msgid "Light Color Mode"
 msgstr "מצב רשימה"
 
-#: lib/html.php:2774
+#: lib/html.php:2801
 msgid "Use System Color"
 msgstr "צבע פריט"
 
-#: lib/html.php:2775
+#: lib/html.php:2802
 msgid "Ignore System Color"
 msgstr "צבע פריט"
 
-#: lib/html.php:2776
+#: lib/html.php:2803
 msgid "Help"
 msgstr "עזרה"
 
-#: lib/html.php:2777
+#: lib/html.php:2804
 #, fuzzy
 msgid "Kadupul Home"
 msgstr "בית Kadupul"
 
-#: lib/html.php:2779
+#: lib/html.php:2806
 msgid "Miscellaneous"
 msgstr "שונות"
 
-#: lib/html.php:2780
+#: lib/html.php:2807
 msgid "Dashboards"
 msgstr "לוחות בקרה"
 
-#: lib/html.php:2782
+#: lib/html.php:2809
 msgid "Charts"
 msgstr "גרף"
 
-#: lib/html.php:2783
+#: lib/html.php:2810
 msgid "Kadupul Project Page"
 msgstr "דף הפרויקט של Kadupul"
 
-#: lib/html.php:2787
+#: lib/html.php:2814
 msgid "Spine"
 msgstr "עַמוּד הַשִׁדרָה"
 
-#: lib/html.php:2788
+#: lib/html.php:2815
 msgid "RRDProxy"
 msgstr "RRDProxy"
 
-#: lib/html.php:2789
+#: lib/html.php:2816
 msgid "Keyboard"
 msgstr "מקלדת"
 
-#: lib/html.php:2790
+#: lib/html.php:2817
 msgid "Shortcuts"
 msgstr "קיצורי דרך"
 
-#: lib/html.php:2791
+#: lib/html.php:2818
 #, fuzzy
 msgid "Contribute to the Kadupul Project"
 msgstr "סובב את יומן Kadupul"
 
-#: lib/html.php:2792
+#: lib/html.php:2819
 msgid "Help in Developing"
 msgstr "עזרה בפיתוח"
 
-#: lib/html.php:2793
+#: lib/html.php:2820
 msgid "Donation & Sponsoring"
 msgstr "תרומה וחסות"
 
-#: lib/html.php:2796
+#: lib/html.php:2823
 msgid "Client"
 msgstr "לקוח"
 
-#: lib/html.php:2797
+#: lib/html.php:2824
 msgid "Help in Translating"
 msgstr "עזרה בתרגום"
 
-#: lib/html.php:2798
+#: lib/html.php:2825
 msgid "Report a bug"
 msgstr "דווח על באג"
 
-#: lib/html.php:2800
+#: lib/html.php:2827
 msgid "Kadupul"
 msgstr "צבריים"
 
-#: lib/html.php:2802
+#: lib/html.php:2829
 msgid "Click to Show/Hide Filter"
 msgstr "לחץ כדי להציג / להסתיר מסנן"
 
-#: lib/html.php:2803
+#: lib/html.php:2830
 msgid "Clear Current Filter"
 msgstr "נקה מסנן נוכחי"
 
-#: lib/html.php:2804
+#: lib/html.php:2831
 msgid "Clipboard"
 msgstr "לוח עריכה"
 
-#: lib/html.php:2805
+#: lib/html.php:2832
 msgid "Clipboard ID"
 msgstr "מזהה לוח"
 
-#: lib/html.php:2806
+#: lib/html.php:2833
 msgid "Copy operation is unavailable at this time"
 msgstr "פעולת העתק אינה זמינה בשלב זה"
 
-#: lib/html.php:2807
+#: lib/html.php:2834
 msgid "Failed to find data to copy!"
 msgstr "נכשל הניסיון למצוא נתונים להעתקה!"
 
-#: lib/html.php:2808
+#: lib/html.php:2835
 msgid "Clipboard has been updated"
 msgstr "הלוח עודכן"
 
-#: lib/html.php:2809
+#: lib/html.php:2836
 msgid "Sorry, your clipboard could not be updated at this time"
 msgstr "מצטערים, לא ניתן לעדכן את הלוח שלך בשלב זה"
 
-#: lib/html.php:2813
+#: lib/html.php:2840
 msgid "Passphrase length meets 8 character minimum"
 msgstr "אורך משפט הסיסמה עומד על 8 תווים לפחות"
 
-#: lib/html.php:2814
+#: lib/html.php:2841
 msgid "Passphrase too short"
 msgstr "משפט הסיסמה קצר מדי"
 
-#: lib/html.php:2815
+#: lib/html.php:2842
 msgid "Passphrase matches but too short"
 msgstr "ביטוי הסיסמה תואם אך קצר מדי"
 
-#: lib/html.php:2816
+#: lib/html.php:2843
 msgid "Passphrase too short and not matching"
 msgstr "משפט הסיסמה קצר מדי ולא תואם"
 
-#: lib/html.php:2817
+#: lib/html.php:2844
 msgid "Passphrases match"
 msgstr "ביטוי סיסמאות"
 
-#: lib/html.php:2818
+#: lib/html.php:2845
 msgid "Passphrases do not match"
 msgstr "ביטויי סיסמה אינם תואמים"
 
-#: lib/html.php:2819
+#: lib/html.php:2846
 msgid "Sorry, we could not process your last action."
 msgstr "מצטערים, לא הצלחנו לעבד את הפעולה האחרונה שלך."
 
-#: lib/html.php:2820
+#: lib/html.php:2847
 msgid "Error:"
 msgstr "שגיאה:"
 
-#: lib/html.php:2821
+#: lib/html.php:2848
 msgid "Reason:"
 msgstr "סיבה:"
 
-#: lib/html.php:2822
+#: lib/html.php:2849
 msgid "Action failed"
 msgstr "פעולה: נכשל"
 
-#: lib/html.php:2823 pollers.php:804
+#: lib/html.php:2850 pollers.php:804
 msgid "Connection Successful"
 msgstr "בוצע בהצלחה"
 
-#: lib/html.php:2824 pollers.php:806
+#: lib/html.php:2851 pollers.php:806
 msgid "Connection Failed"
 msgstr "האימות נכשל"
 
-#: lib/html.php:2825
+#: lib/html.php:2852
 msgid "The response to the last action was unexpected."
 msgstr "התגובה לפעולה האחרונה היתה בלתי צפויה."
 
-#: lib/html.php:2826
+#: lib/html.php:2853
 msgid "Some Actions failed"
 msgstr "פעולות מסוימות נכשלו"
 
-#: lib/html.php:2827
+#: lib/html.php:2854
 msgid "Note, we could not process all your actions.  Details are below."
 msgstr "שים לב, לא הצלחנו לעבד את כל הפעולות שלך. פרטים להלן."
 
-#: lib/html.php:2828
+#: lib/html.php:2855
 msgid "Operation successful"
 msgstr "בוצע בהצלחה"
 
-#: lib/html.php:2829
+#: lib/html.php:2856
 msgid "The Operation was successful.  Details are below."
 msgstr "המבצע היה מוצלח. פרטים להלן."
 
-#: lib/html.php:2831
+#: lib/html.php:2858
 msgid "Pause"
 msgstr "עצירה"
 
-#: lib/html.php:2834
+#: lib/html.php:2861
 msgid "Zoom In"
 msgstr "הגדלת תצוגה"
 
-#: lib/html.php:2835
+#: lib/html.php:2862
 msgid "Zoom Out"
 msgstr "הרחקה"
 
-#: lib/html.php:2836
+#: lib/html.php:2863
 msgid "Zoom Out Factor"
 msgstr "פקטור התרחקות"
 
-#: lib/html.php:2837
+#: lib/html.php:2864
 msgid "Timestamps"
 msgstr "חותם זמן"
 
-#: lib/html.php:2838
+#: lib/html.php:2865
 msgid "2x"
 msgstr "2×"
 
-#: lib/html.php:2839
+#: lib/html.php:2866
 msgid "4x"
 msgstr "4x"
 
-#: lib/html.php:2840
+#: lib/html.php:2867
 msgid "8x"
 msgstr "8x"
 
-#: lib/html.php:2841
+#: lib/html.php:2868
 msgid "16x"
 msgstr "16x"
 
-#: lib/html.php:2842
+#: lib/html.php:2869
 msgid "32x"
 msgstr "32x"
 
-#: lib/html.php:2843
+#: lib/html.php:2870
 msgid "Zoom Out Positioning"
 msgstr "הגדלה מיקום"
 
-#: lib/html.php:2844
+#: lib/html.php:2871
 msgid "Zoom Mode"
 msgstr "מצב זום"
 
-#: lib/html.php:2846
+#: lib/html.php:2873
 msgid "Quick"
 msgstr "מהר"
 
-#: lib/html.php:2848
+#: lib/html.php:2875
 msgid "Open in new tab"
 msgstr "לפתוח  בלשונית חדשה"
 
-#: lib/html.php:2849
+#: lib/html.php:2876
 msgid "Save graph"
 msgstr "שמור תרשים"
 
-#: lib/html.php:2850
+#: lib/html.php:2877
 msgid "Copy graph"
 msgstr "גרף העתק"
 
-#: lib/html.php:2851
+#: lib/html.php:2878
 msgid "Copy graph link"
 msgstr "קישור גרף העתק"
 
-#: lib/html.php:2852
+#: lib/html.php:2879
 msgid "Always On"
 msgstr "תמיד מופעל"
 
-#: lib/html.php:2853
+#: lib/html.php:2880
 msgid "Auto"
 msgstr "אוטומטי"
 
-#: lib/html.php:2854
+#: lib/html.php:2881
 msgid "Always Off"
 msgstr "תמיד כבוי"
 
-#: lib/html.php:2855
+#: lib/html.php:2882
 msgid "Begin with"
 msgstr "התחל עם"
 
-#: lib/html.php:2857
+#: lib/html.php:2884
 msgid "End with"
 msgstr "תאריך סיום"
 
-#: lib/html.php:2859 lib/html_form.php:1432
+#: lib/html.php:2886 lib/html_form.php:1432
 msgid "Close"
 msgstr "סגור"
 
-#: lib/html.php:2861
+#: lib/html.php:2888
 msgid "3rd Mouse Button"
 msgstr "לחצן העכבר השלישי"
 
@@ -16342,194 +16344,194 @@ msgstr "נכשל הוספת פריט גרף דוח &#39; <i> %s</i> &#39; כבר
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "דלג על דוח גרף פריט &#39; <i> %s</i> &#39; כבר קיים"
 
-#: lib/rrd.php:2149
+#: lib/rrd.php:2147
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2152
+#: lib/rrd.php:2150
 msgid "The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2523
+#: lib/rrd.php:2521
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "שגיאה: RRDfile %s לא ניתן לכתוב"
 
-#: lib/rrd.php:3933
+#: lib/rrd.php:3931
 #, fuzzy, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "גודל שלב RRDfile הנדרש הוא '{ 0 }' אך השלב הנצפה הוא '{ 1 }'"
 
-#: lib/rrd.php:3997
+#: lib/rrd.php:3995
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "סוג עבור מקור הנתונים &#39; %s&#39; צריך להיות &#39; %s&#39;"
 
-#: lib/rrd.php:4003
+#: lib/rrd.php:4001
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "פעימת הלב עבור מקור הנתונים &#39; %s&#39; צריכה להיות &#39; %s&#39;"
 
-#: lib/rrd.php:4015
+#: lib/rrd.php:4013
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "המינימום של RRD עבור מקור הנתונים &#39; %s&#39; צריך להיות &#39; %s&#39;"
 
-#: lib/rrd.php:4024
+#: lib/rrd.php:4022
 #, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "&#39; %s&#39; חסר בהגדרת Kadupul"
 
-#: lib/rrd.php:4038 lib/rrd.php:4039
+#: lib/rrd.php:4036 lib/rrd.php:4037
 #, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "ל- Kadupul RRA &#39; %s&#39; יש אותו CF / שלבים ( %s, %s) כ- &#39; %s&#39;"
 
-#: lib/rrd.php:4052 lib/rrd.php:4053
+#: lib/rrd.php:4050 lib/rrd.php:4051
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "קובץ ה- RRA &#39; %s&#39; כולל אותו CF / שלבים ( %s, %s) כ- &#39; %s&#39;"
 
-#: lib/rrd.php:4085
+#: lib/rrd.php:4083
 #, fuzzy, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr "ה - pdp_per_row של '{ 0 }' אינו חוקי עבור RRA '{ 1 }' צריך להיות '{ 2 }'. שקול למחוק ולאפשר ל - Kadupul ליצור מחדש RRDfile."
 
-#: lib/rrd.php:4089
+#: lib/rrd.php:4087
 #, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "XFF עבור Kadupul RRA id &#39; %s&#39; צריך להיות &#39; %s&#39;"
 
-#: lib/rrd.php:4093
+#: lib/rrd.php:4091
 #, fuzzy, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "מספר השורות עבור מזהה Kadupul RRA '{ 0 }' שגוי. מספר השורות הוא '{ 1 }' אבל צריך להיות '{ 2 }'"
 
-#: lib/rrd.php:4110
+#: lib/rrd.php:4108
 #, fuzzy, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "קובץ ה - RRA '{ 0 }' חסר Kadupul RRD הקיים"
 
-#: lib/rrd.php:4118
+#: lib/rrd.php:4116
 #, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "RRA &#39; %s&#39; חסר בהגדרת Kadupul"
 
-#: lib/rrd.php:4140
+#: lib/rrd.php:4138
 msgid "RRD File Information"
 msgstr "מידע על קובץ RRD"
 
-#: lib/rrd.php:4172
+#: lib/rrd.php:4170
 msgid "Data Source Items"
 msgstr "פריטי מקור נתונים"
 
-#: lib/rrd.php:4174
+#: lib/rrd.php:4172
 msgid "Minimal Heartbeat"
 msgstr "פעימות לב מינימליות"
 
-#: lib/rrd.php:4175
+#: lib/rrd.php:4173
 msgid "Min"
 msgstr "מינימום"
 
-#: lib/rrd.php:4176
+#: lib/rrd.php:4174
 msgid "Max"
 msgstr "מקסימום"
 
-#: lib/rrd.php:4177
+#: lib/rrd.php:4175
 msgid "Last DS"
 msgstr "DS האחרון"
 
-#: lib/rrd.php:4179
+#: lib/rrd.php:4177
 msgid "Unknown Sec"
 msgstr "Sec לא ידוע"
 
-#: lib/rrd.php:4218
+#: lib/rrd.php:4216
 msgid "Round Robin Archive"
 msgstr "סיבוב רובין ארכיון"
 
-#: lib/rrd.php:4221
+#: lib/rrd.php:4219
 msgid "Cur Row"
 msgstr "שורה"
 
-#: lib/rrd.php:4222
+#: lib/rrd.php:4220
 msgid "PDP per Row"
 msgstr "PDP לכל שורה"
 
-#: lib/rrd.php:4224
+#: lib/rrd.php:4222
 msgid "CDP Prep Value (0)"
 msgstr "CDP Prep Value (0)"
 
-#: lib/rrd.php:4225
+#: lib/rrd.php:4223
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP לא ידוע נקודות נתונים (0)"
 
-#: lib/rrd.php:4306
+#: lib/rrd.php:4304
 msgid "Errors Found"
 msgstr "אין %s"
 
-#: lib/rrd.php:4318
+#: lib/rrd.php:4316
 msgid "Optional Tuning Recommendations"
 msgstr "שדות מקור נתונים"
 
-#: lib/rrd.php:4343 lib/rrd.php:4346
+#: lib/rrd.php:4341 lib/rrd.php:4344
 #, php-format
 msgid "rename %s to %s"
 msgstr "שינוי שם %s ל - %s"
 
-#: lib/rrd.php:4438
+#: lib/rrd.php:4436
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "ERROR בעת כתיבת קובץ XML: %s"
 
-#: lib/rrd.php:4444
+#: lib/rrd.php:4442
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4450
+#: lib/rrd.php:4448
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "שגיאה: RRDfile %s לא ניתן לכתוב"
 
-#: lib/rrd.php:4471
+#: lib/rrd.php:4469
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "שגיאה בעת ניתוח XML של drd rdtool"
 
-#: lib/rrd.php:4507 lib/rrd.php:4526
+#: lib/rrd.php:4505 lib/rrd.php:4524
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "שגיאה בעת ניתוח XML של DDR"
 
-#: lib/rrd.php:4744
+#: lib/rrd.php:4742
 #, fuzzy, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRA (CF={ 0}, ROWS={ 1}, PDP_PER_ROW={ 2}, XFF={ 3}) הוסר מקובץ RRD"
 
-#: lib/rrd.php:4782
+#: lib/rrd.php:4780
 #, fuzzy, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF={ 0}, ROWS={ 1}, PDP_PER_ROW={ 2}, XFF={ 3}) הוספה לקובץ RRD"
 
-#: lib/rrd.php:4813 lib/rrd.php:4829
+#: lib/rrd.php:4811 lib/rrd.php:4827
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "לאתר אין גישה לכתיבה ל- %s, ייתכן שלא תוכל ליצור / לעדכן את RRD"
 
-#: lib/rrd.php:4825
+#: lib/rrd.php:4823
 msgid "(Custom)"
 msgstr "(מותאם אישית)"
 
-#: lib/rrd.php:4831
+#: lib/rrd.php:4829
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "פתיחת קובץ הנתונים נכשלה, ייתכן שהפוסטר עדיין לא פועל"
 
-#: lib/rrd.php:4834
+#: lib/rrd.php:4832
 msgid "RRA Folder"
 msgstr "תיקיית RRA"
 
-#: lib/rrd.php:4834
+#: lib/rrd.php:4832
 msgid "Root"
 msgstr "‫Root"
 
-#: lib/rrd.php:4914
+#: lib/rrd.php:4912
 msgid "Unknown RRDtool Error"
 msgstr "שגיאת RRDtool לא ידועה"
 

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 04:43-0700\n"
+"POT-Creation-Date: 2026-10-05 04:50-0700\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -145,7 +145,7 @@ msgstr "單擊“繼續”以刪除以下聚合圖。"
 #: host.php:549 host.php:565 host.php:579 host.php:588 host.php:619
 #: host.php:631 host_templates.php:222 host_templates.php:236
 #: host_templates.php:247 host_templates.php:302 host_templates.php:375
-#: lib/clog_webapi.php:225 lib/html.php:2833 lib/html_form.php:1396
+#: lib/clog_webapi.php:225 lib/html.php:2860 lib/html_form.php:1396
 #: lib/html_form.php:1413 lib/html_form.php:1424 lib/html_reports.php:632
 #: managers.php:1066 managers.php:1127 plugins.php:712 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:762
@@ -180,7 +180,7 @@ msgstr "取消"
 #: host.php:531 host.php:540 host.php:549 host.php:565 host.php:579
 #: host.php:588 host.php:619 host.php:631 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
-#: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2832
+#: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2859
 #: lib/html_reports.php:574 managers.php:1066 managers.php:1127 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:762
 #: tree.php:771 tree.php:780 tree.php:789 user_admin.php:252 user_admin.php:292
@@ -904,7 +904,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr ""
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4270 lib/html.php:2768
+#: include/global_form.php:1552 lib/functions.php:4270 lib/html.php:2795
 #, fuzzy
 msgid "Change Password"
 msgstr "更改密碼"
@@ -1057,7 +1057,7 @@ msgstr "登入"
 
 #: auth_profile.php:61 include/global_settings.php:22
 #: include/global_settings.php:1202 include/global_settings.php:1519
-#: lib/html.php:2781 managers.php:24 user_admin.php:1741
+#: lib/html.php:2808 managers.php:24 user_admin.php:1741
 #: user_group_admin.php:1763
 #, fuzzy
 msgid "General"
@@ -1070,19 +1070,19 @@ msgstr "用戶帳戶明細"
 
 #: auth_profile.php:313 include/global_arrays.php:857
 #: include/global_settings.php:2737 lib/html.php:2232 lib/html.php:2254
-#: lib/html.php:2762
+#: lib/html.php:2789
 #, fuzzy
 msgid "Tree View"
 msgstr "樹狀圖"
 
 #: auth_profile.php:317 include/global_arrays.php:858 lib/html.php:2239
-#: lib/html.php:2263 lib/html.php:2763
+#: lib/html.php:2263 lib/html.php:2790
 #, fuzzy
 msgid "List View"
 msgstr "清單檢視"
 
 #: auth_profile.php:321 include/global_arrays.php:859 lib/html.php:2246
-#: lib/html.php:2764
+#: lib/html.php:2791
 #, fuzzy
 msgid "Preview View"
 msgstr "預覽視圖"
@@ -1561,7 +1561,7 @@ msgstr "啟用"
 #: include/global_settings.php:1644 include/global_settings.php:1657
 #: include/global_settings.php:1682 include/global_settings.php:1696
 #: include/global_settings.php:1786 include/global_settings.php:2550
-#: lib/api_automation.php:28 lib/html.php:2858 lib/html_reports.php:2037
+#: lib/api_automation.php:28 lib/html.php:2885 lib/html_reports.php:2037
 #: lib/html_reports.php:2188 lib/html_utility.php:1317 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:936 user_domains.php:397
 #: user_group_admin.php:756 utilities.php:2147 utilities.php:2711
@@ -1873,8 +1873,8 @@ msgstr "%d 分鐘"
 #: include/global_arrays.php:1634 include/global_settings.php:1698
 #: include/global_settings.php:1699 include/global_settings.php:1700
 #: include/global_settings.php:1701 include/global_settings.php:1702
-#: include/global_settings.php:2663 include/global_settings.php:2938
-#: include/global_settings.php:2939 include/global_settings.php:2940
+#: include/global_settings.php:2663 include/global_settings.php:2942
+#: include/global_settings.php:2943 include/global_settings.php:2944
 #: pollers.php:902 pollers.php:903
 #, fuzzy, php-format
 msgid "%d Minutes"
@@ -1904,8 +1904,8 @@ msgstr "%d 小時"
 #: include/global_arrays.php:1550 include/global_arrays.php:1556
 #: include/global_arrays.php:1557 include/global_settings.php:1704
 #: include/global_settings.php:1705 include/global_settings.php:1706
-#: include/global_settings.php:1707 include/global_settings.php:2942
-#: include/global_settings.php:2943
+#: include/global_settings.php:1707 include/global_settings.php:2946
+#: include/global_settings.php:2947
 #, fuzzy, php-format
 msgid "%d Hours"
 msgstr "%d 小時"
@@ -3426,7 +3426,7 @@ msgstr "資料來源"
 msgid "The Data Source to Debug"
 msgstr "要調試的數據源"
 
-#: data_debug.php:488 lib/html.php:2785 utilities.php:1039 utilities.php:1160
+#: data_debug.php:488 lib/html.php:2812 utilities.php:1039 utilities.php:1160
 #, fuzzy
 msgid "User"
 msgstr "使用者"
@@ -3667,7 +3667,7 @@ msgstr "重新運行分析"
 msgid "Check"
 msgstr "檢查"
 
-#: data_debug.php:883 include/global_form.php:1018 lib/rrd.php:4178
+#: data_debug.php:883 include/global_form.php:1018 lib/rrd.php:4176
 #: utilities.php:798 utilities.php:815 utilities.php:3218
 #, fuzzy
 msgid "Value"
@@ -3774,7 +3774,7 @@ msgid "Run checks on currently filtered Data Sources and preserve other results"
 msgstr ""
 
 #: data_debug.php:1125 data_sources.php:1752 data_templates.php:1107
-#: lib/html.php:2794
+#: lib/html.php:2821
 #, fuzzy
 msgid "Profile"
 msgstr "個人資料"
@@ -4323,7 +4323,7 @@ msgstr "步驟"
 
 #: data_source_profiles.php:900 graphs_new.php:532 include/global_form.php:284
 #: lib/html.php:613 lib/html_filter.php:55 lib/installer.php:2827
-#: lib/rrd.php:4220 utilities.php:866 utilities.php:1838
+#: lib/rrd.php:4218 utilities.php:866 utilities.php:1838
 #, fuzzy
 msgid "Rows"
 msgstr "行"
@@ -4392,8 +4392,8 @@ msgstr "%d週"
 
 #: data_source_profiles.php:1106 include/global_arrays.php:779
 #: include/global_arrays.php:780 include/global_arrays.php:1464
-#: include/global_settings.php:2946 include/global_settings.php:2947
-#: include/global_settings.php:2948 rrdcleaner.php:535 rrdcleaner.php:536
+#: include/global_settings.php:2950 include/global_settings.php:2951
+#: include/global_settings.php:2952 rrdcleaner.php:535 rrdcleaner.php:536
 #, fuzzy, php-format
 msgid "%d Weeks"
 msgstr "%d週"
@@ -4422,7 +4422,7 @@ msgstr "%d 天"
 #: include/global_arrays.php:1555 include/global_arrays.php:1585
 #: include/global_arrays.php:1594 include/global_arrays.php:1622
 #: include/global_settings.php:1406 include/global_settings.php:1703
-#: include/global_settings.php:2941
+#: include/global_settings.php:2945
 #, fuzzy
 msgid "1 Hour"
 msgstr "1小時"
@@ -5111,7 +5111,7 @@ msgstr "編輯圖表模板。"
 msgid "Click to view just this Graph in Real-time"
 msgstr "單擊以實時查看此圖表"
 
-#: graph.php:270 lib/html.php:2759
+#: graph.php:270 lib/html.php:2786
 #, fuzzy
 msgid "Utility View"
 msgstr "實用視圖"
@@ -5135,7 +5135,7 @@ msgid "RRDtool Graph Syntax"
 msgstr "RRDtool圖形語法"
 
 #: graph_image.php:174 graph_json.php:208 graph_realtime.php:317
-#: lib/rrd.php:2526
+#: lib/rrd.php:2524
 #, fuzzy
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller尚未運行。"
@@ -5516,7 +5516,7 @@ msgstr "預覽模式"
 msgid "Add Selected Graphs to Report"
 msgstr "將所選圖表添加到報告中"
 
-#: graph_view.php:1049 lib/html.php:2830
+#: graph_view.php:1049 lib/html.php:2857
 #, fuzzy
 msgid "Ok"
 msgstr "確定"
@@ -5903,7 +5903,7 @@ msgstr "[所有設備]的新圖表"
 msgid "New Graphs for None Host Type"
 msgstr "無主機類型的新圖"
 
-#: graphs_new.php:440 lib/html.php:2757
+#: graphs_new.php:440 lib/html.php:2784
 #, fuzzy
 msgid "Filter Settings Saved"
 msgstr "過濾器設置已保存"
@@ -6412,7 +6412,7 @@ msgstr "正在復原"
 
 #: host.php:1837 lib/api_automation.php:33 lib/auth.php:3041
 #: lib/clog_webapi.php:856 lib/html_utility.php:1339 lib/import.php:342
-#: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4196 lib/rrd.php:4208
+#: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4194 lib/rrd.php:4206
 #: lib/spikekill.php:301 package_import.php:522 package_import.php:600
 #: utilities.php:211 utilities.php:212 utilities.php:2765
 #, fuzzy
@@ -7278,7 +7278,7 @@ msgstr "右"
 msgid "Justified"
 msgstr "左右對齊"
 
-#: include/global_arrays.php:585 lib/html.php:2856
+#: include/global_arrays.php:585 lib/html.php:2883
 #, fuzzy
 msgid "Center"
 msgstr "置中"
@@ -7635,14 +7635,14 @@ msgstr "自然排序"
 msgid "Numeric Ordering"
 msgstr "數字訂購"
 
-#: include/global_arrays.php:952 lib/rrd.php:4144
+#: include/global_arrays.php:952 lib/rrd.php:4142
 #, fuzzy
 msgid "Header"
 msgstr "頁首"
 
 #: include/global_arrays.php:953 include/global_arrays.php:1004
 #: include/global_arrays.php:1687 include/global_arrays.php:1856
-#: lib/html.php:2845
+#: lib/html.php:2872
 #, fuzzy
 msgid "Graph"
 msgstr "圖表"
@@ -7845,7 +7845,7 @@ msgid "Configuration"
 msgstr "組態"
 
 #: include/global_arrays.php:1030 include/global_arrays.php:1052
-#: lib/html.php:2590 lib/html.php:2860
+#: lib/html.php:2590 lib/html.php:2887
 #, fuzzy
 msgid "Settings"
 msgstr "設定"
@@ -9059,7 +9059,7 @@ msgid "List Mode"
 msgstr "列表模式"
 
 #: include/global_arrays.php:2062 include/global_arrays.php:2068
-#: lib/functions.php:4492 lib/html.php:1988 lib/html.php:2053 lib/html.php:2778
+#: lib/functions.php:4492 lib/html.php:1988 lib/html.php:2053 lib/html.php:2805
 #: user_admin.php:1472 user_group_admin.php:1494
 #, fuzzy
 msgid "Console"
@@ -9221,7 +9221,7 @@ msgstr "外部連結"
 msgid "(Action)"
 msgstr "動作"
 
-#: include/global_arrays.php:2626 lib/html.php:2799
+#: include/global_arrays.php:2626 lib/html.php:2826
 #, fuzzy
 msgid "About Kadupul"
 msgstr "關於Kadupul"
@@ -9528,7 +9528,7 @@ msgstr "從數據源收集數據的頻率？"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "在RRDtool記錄未知數據之前，數據可以丟失多長時間。如果您的數據源不穩定並且您希望繼承舊數據而不是在圖表中顯示間隙，請增加此值。此值乘以X-Files因子以確定實際的時間量。"
 
-#: include/global_form.php:226 lib/rrd.php:4223
+#: include/global_form.php:226 lib/rrd.php:4221
 #, fuzzy
 msgid "X-Files Factor"
 msgstr "X檔案因子"
@@ -9935,7 +9935,7 @@ msgid "Auto Scale"
 msgstr "自動縮放"
 
 #: include/global_form.php:754
-msgid "When enabled, the selected Auto Scale Option determines which limits RRDtool uses: mode 1 ignores both limits, mode 2 keeps the lower limit, mode 3 keeps the upper limit, and mode 4 keeps both limits. When disabled, the configured lower and upper limits are used directly. Rigid Boundaries controls whether values outside those limits expand the graph range."
+msgid "When enabled, the selected Auto Scale Option determines which limits RRDtool uses: --alt-autoscale ignores both limits, --alt-autoscale-max keeps the lower limit, --alt-autoscale-min keeps the upper limit, and --alt-autoscale (accepting both limits) keeps both limits. When disabled, the configured lower and upper limits are used directly. Rigid Boundaries controls whether values outside those limits expand the graph range."
 msgstr ""
 
 #: include/global_form.php:758
@@ -10220,7 +10220,7 @@ msgstr "不透明度/ Alpha通道"
 msgid "The opacity/alpha channel of the color."
 msgstr "顏色的不透明度/ alpha通道。"
 
-#: include/global_form.php:989 lib/rrd.php:4219
+#: include/global_form.php:989 lib/rrd.php:4217
 #, fuzzy
 msgid "Consolidation Function"
 msgstr "合併功能"
@@ -11588,7 +11588,7 @@ msgstr "如果設置為“簡單”，則只能從“新建圖形”創建圖形
 msgid "Simple"
 msgstr "簡單"
 
-#: include/global_settings.php:428 lib/html.php:2847
+#: include/global_settings.php:428 lib/html.php:2874
 #, fuzzy
 msgid "Advanced"
 msgstr "進階"
@@ -12084,7 +12084,7 @@ msgid "Theme Settings"
 msgstr "主題設定"
 
 #: include/global_settings.php:851 include/global_settings.php:1061
-#: include/global_settings.php:2585 lib/html.php:2795
+#: include/global_settings.php:2585 lib/html.php:2822
 #, fuzzy
 msgid "Theme"
 msgstr "佈景主題"
@@ -12366,10 +12366,11 @@ msgstr ""
 
 #: include/global_settings.php:1068 include/global_settings.php:1087
 #: include/global_settings.php:1106 include/global_settings.php:1125
-#: include/global_settings.php:1144
-#, fuzzy
-msgid "Enter Valid Font Config Value"
-msgstr "輸入有效字體配置值"
+#: include/global_settings.php:1144 include/global_settings.php:2852
+#: include/global_settings.php:2870 include/global_settings.php:2888
+#: include/global_settings.php:2906
+msgid "Enter a Pango font description"
+msgstr ""
 
 #: include/global_settings.php:1074 include/global_settings.php:2840
 #, fuzzy
@@ -12390,17 +12391,17 @@ msgstr "標題字體設置"
 msgid "The font to use for Graph Titles.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
 msgstr ""
 
-#: include/global_settings.php:1093 include/global_settings.php:2857
+#: include/global_settings.php:1093 include/global_settings.php:2858
 #, fuzzy
 msgid "Legend Font Size"
 msgstr "圖例字體大小"
 
-#: include/global_settings.php:1094 include/global_settings.php:2858
+#: include/global_settings.php:1094 include/global_settings.php:2859
 #, fuzzy
 msgid "The size of the font used for Graph Legend items"
 msgstr "Graph Legend項目使用的字體大小"
 
-#: include/global_settings.php:1103 include/global_settings.php:2866
+#: include/global_settings.php:1103 include/global_settings.php:2867
 #, fuzzy
 msgid "Legend Font Setting"
 msgstr "圖例字體設置"
@@ -12409,17 +12410,17 @@ msgstr "圖例字體設置"
 msgid "The font to use for Graph Legends.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
 msgstr ""
 
-#: include/global_settings.php:1112 include/global_settings.php:2874
+#: include/global_settings.php:1112 include/global_settings.php:2876
 #, fuzzy
 msgid "Axis Font Size"
 msgstr "軸字體大小"
 
-#: include/global_settings.php:1113 include/global_settings.php:2875
+#: include/global_settings.php:1113 include/global_settings.php:2877
 #, fuzzy
 msgid "The size of the font used for Graph Axis"
 msgstr "用於Graph Axis的字體大小"
 
-#: include/global_settings.php:1122 include/global_settings.php:2883
+#: include/global_settings.php:1122 include/global_settings.php:2885
 #, fuzzy
 msgid "Axis Font Setting"
 msgstr "軸字體設置"
@@ -12428,17 +12429,17 @@ msgstr "軸字體設置"
 msgid "The font to use for Graph Axis items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
 msgstr ""
 
-#: include/global_settings.php:1131 include/global_settings.php:2891
+#: include/global_settings.php:1131 include/global_settings.php:2894
 #, fuzzy
 msgid "Unit Font Size"
 msgstr "單位字體大小"
 
-#: include/global_settings.php:1132 include/global_settings.php:2892
+#: include/global_settings.php:1132 include/global_settings.php:2895
 #, fuzzy
 msgid "The size of the font used for Graph Units"
 msgstr "圖形單位使用的字體大小"
 
-#: include/global_settings.php:1141 include/global_settings.php:2900
+#: include/global_settings.php:1141 include/global_settings.php:2903
 #, fuzzy
 msgid "Unit Font Setting"
 msgstr "單位字體設置"
@@ -13089,7 +13090,7 @@ msgstr "自動解鎖"
 msgid "An account will automatically be unlocked after this many minutes.  Even if the correct password is entered, the account will not unlock until this time limit has been met.  Max of 1440 minutes (1 Day)"
 msgstr "在這麼多分鐘後，帳戶將自動解鎖。即使輸入了正確的密碼，在達到此時間限制之前，帳戶也不會解鎖。最多1440分鐘（1天）"
 
-#: include/global_settings.php:1708 include/global_settings.php:2944
+#: include/global_settings.php:1708 include/global_settings.php:2948
 #, fuzzy
 msgid "1 Day"
 msgstr "1天"
@@ -14395,54 +14396,54 @@ msgstr "選擇是使用自己的自定義字體和字體大小還是使用系統
 msgid "The Pango font description to use for Graph Titles, such as DejaVu Sans Bold"
 msgstr ""
 
-#: include/global_settings.php:2867
+#: include/global_settings.php:2868
 msgid "The Pango font description to use for Graph Legend items, such as DejaVu Sans Mono"
 msgstr ""
 
-#: include/global_settings.php:2884
+#: include/global_settings.php:2886
 msgid "The Pango font description to use for Graph Axis items, such as DejaVu Sans"
 msgstr ""
 
-#: include/global_settings.php:2901
+#: include/global_settings.php:2904
 msgid "The Pango font description to use for Graph Unit items, such as DejaVu Sans"
 msgstr ""
 
-#: include/global_settings.php:2917
+#: include/global_settings.php:2921
 #, fuzzy
 msgid "Realtime View Mode"
 msgstr "實時查看模式"
 
-#: include/global_settings.php:2918
+#: include/global_settings.php:2922
 #, fuzzy
 msgid "How do you wish to view Realtime Graphs?"
 msgstr "您如何查看實時圖表？"
 
-#: include/global_settings.php:2921
+#: include/global_settings.php:2925
 #, fuzzy
 msgid "Inline"
 msgstr "內嵌"
 
-#: include/global_settings.php:2922
+#: include/global_settings.php:2926
 #, fuzzy
 msgid "New Window"
 msgstr "新視窗"
 
-#: include/global_settings.php:2937
+#: include/global_settings.php:2941
 #, fuzzy
 msgid "System Setting"
 msgstr "使用者設定"
 
-#: include/global_settings.php:2945
+#: include/global_settings.php:2949
 #, fuzzy
 msgid "1 Week"
 msgstr "1周"
 
-#: include/global_settings.php:2958
+#: include/global_settings.php:2962
 #, fuzzy
 msgid "Auto Log Out Time"
 msgstr "自動註銷"
 
-#: include/global_settings.php:2959
+#: include/global_settings.php:2963
 msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no affect when Authentication Cookies are enabled."
 msgstr "對於僅具有控制台訪問權限的用戶，此用戶在自動註銷之前可以保持登錄狀態的時間。請注意，如果您已經超過一個小時沒有活動，則可能需要刷新瀏覽器。另請注意，此設置在啟用身份驗證 Cookie 時沒有影響。"
 
@@ -14626,7 +14627,7 @@ msgstr "覆蓋此值"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
-#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4173
+#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4171
 #: utilities.php:356 utilities.php:1480 utilities.php:3218
 #, fuzzy
 msgid "Type"
@@ -15733,12 +15734,12 @@ msgstr "以普通用戶身份登錄"
 msgid "guest"
 msgstr "客人"
 
-#: lib/functions.php:4249 lib/functions.php:4274 lib/html.php:2784
+#: lib/functions.php:4249 lib/functions.php:4274 lib/html.php:2811
 #, fuzzy
 msgid "User Community"
 msgstr "用戶社區"
 
-#: lib/functions.php:4250 lib/functions.php:4275 lib/html.php:2786
+#: lib/functions.php:4250 lib/functions.php:4275 lib/html.php:2813
 #: lib/utility.php:1446
 #, fuzzy
 msgid "Documentation"
@@ -15749,12 +15750,12 @@ msgstr "文件"
 msgid "Logged in as %s"
 msgstr "已使用 %s 名義登入"
 
-#: lib/functions.php:4269 lib/html.php:2765
+#: lib/functions.php:4269 lib/html.php:2792
 #, fuzzy
 msgid "Edit Profile"
 msgstr "編輯個人資料"
 
-#: lib/functions.php:4279 lib/html.php:2769
+#: lib/functions.php:4279 lib/html.php:2796
 #, fuzzy
 msgid "Logout"
 msgstr "登出"
@@ -15952,7 +15953,7 @@ msgstr "數據查詢："
 msgid "CSV Export of Graph Data"
 msgstr "圖形數據的CSV導出"
 
-#: lib/html.php:540 lib/html.php:2756
+#: lib/html.php:540 lib/html.php:2783
 #, fuzzy
 msgid "Time Graph View"
 msgstr "時間圖表視圖"
@@ -16074,392 +16075,392 @@ msgstr "幹運行間隙填充範圍"
 msgid "Dry Run Float Range"
 msgstr "幹運行浮動範圍"
 
-#: lib/html.php:2752
+#: lib/html.php:2779
 #, fuzzy
 msgid "Allow or limit the table columns to extend beyond the current windows limits."
 msgstr "允許或限製表列以超出當前窗口限制。"
 
-#: lib/html.php:2753 lib/html_filter.php:48
+#: lib/html.php:2780 lib/html_filter.php:48
 #, fuzzy
 msgid "Enter a search term"
 msgstr "輸入搜索字詞"
 
-#: lib/html.php:2754
+#: lib/html.php:2781
 #, fuzzy
 msgid "Enter a regular expression"
 msgstr "輸入正則表達式"
 
-#: lib/html.php:2755
+#: lib/html.php:2782
 #, fuzzy
 msgid "No file selected"
 msgstr "尚未選取檔案"
 
-#: lib/html.php:2758 lib/html.php:2801
+#: lib/html.php:2785 lib/html.php:2828
 #, fuzzy
 msgid "SpikeKill Results"
 msgstr "SpikeKill結果"
 
-#: lib/html.php:2760
+#: lib/html.php:2787
 #, fuzzy
 msgid "Click to view just this Graph in Realtime"
 msgstr "單擊以實時查看此圖表"
 
-#: lib/html.php:2761
+#: lib/html.php:2788
 #, fuzzy
 msgid "Click again to take this Graph out of Realtime"
 msgstr "再次單擊可使此圖表脫離實時"
 
-#: lib/html.php:2770
+#: lib/html.php:2797
 #, fuzzy
 msgid "Standard Mode"
 msgstr "掃描模式"
 
-#: lib/html.php:2771
+#: lib/html.php:2798
 #, fuzzy
 msgid "Compact Mode"
 msgstr "縮放模式"
 
-#: lib/html.php:2772
+#: lib/html.php:2799
 #, fuzzy
 msgid "Dark Color Mode"
 msgstr "找不到顏色"
 
-#: lib/html.php:2773
+#: lib/html.php:2800
 #, fuzzy
 msgid "Light Color Mode"
 msgstr "列表模式"
 
-#: lib/html.php:2774
+#: lib/html.php:2801
 #, fuzzy
 msgid "Use System Color"
 msgstr "項目顏色"
 
-#: lib/html.php:2775
+#: lib/html.php:2802
 #, fuzzy
 msgid "Ignore System Color"
 msgstr "項目顏色"
 
-#: lib/html.php:2776
+#: lib/html.php:2803
 #, fuzzy
 msgid "Help"
 msgstr "說明"
 
-#: lib/html.php:2777
+#: lib/html.php:2804
 #, fuzzy
 msgid "Kadupul Home"
 msgstr "Kadupul之家"
 
-#: lib/html.php:2779
+#: lib/html.php:2806
 #, fuzzy
 msgid "Miscellaneous"
 msgstr "雜項"
 
-#: lib/html.php:2780
+#: lib/html.php:2807
 msgid "Dashboards"
 msgstr "儀表板"
 
-#: lib/html.php:2782
+#: lib/html.php:2809
 #, fuzzy
 msgid "Charts"
 msgstr "圖表"
 
-#: lib/html.php:2783
+#: lib/html.php:2810
 #, fuzzy
 msgid "Kadupul Project Page"
 msgstr "Kadupul項目"
 
-#: lib/html.php:2787
+#: lib/html.php:2814
 #, fuzzy
 msgid "Spine"
 msgstr "脊柱"
 
-#: lib/html.php:2788
+#: lib/html.php:2815
 msgid "RRDProxy"
 msgstr "RRD代理"
 
-#: lib/html.php:2789
+#: lib/html.php:2816
 #, fuzzy
 msgid "Keyboard"
 msgstr "鍵盤"
 
-#: lib/html.php:2790
+#: lib/html.php:2817
 #, fuzzy
 msgid "Shortcuts"
 msgstr "快捷鍵"
 
-#: lib/html.php:2791
+#: lib/html.php:2818
 #, fuzzy
 msgid "Contribute to the Kadupul Project"
 msgstr "旋轉Kadupul日誌"
 
-#: lib/html.php:2792
+#: lib/html.php:2819
 msgid "Help in Developing"
 msgstr "幫助開發"
 
-#: lib/html.php:2793
+#: lib/html.php:2820
 msgid "Donation & Sponsoring"
 msgstr "捐贈與讚助"
 
-#: lib/html.php:2796
+#: lib/html.php:2823
 #, fuzzy
 msgid "Client"
 msgstr "客戶"
 
-#: lib/html.php:2797
+#: lib/html.php:2824
 msgid "Help in Translating"
 msgstr "幫助翻譯"
 
-#: lib/html.php:2798
+#: lib/html.php:2825
 #, fuzzy
 msgid "Report a bug"
 msgstr "回報臭蟲"
 
-#: lib/html.php:2800
+#: lib/html.php:2827
 #, fuzzy
 msgid "Kadupul"
 msgstr "Kadupul"
 
-#: lib/html.php:2802
+#: lib/html.php:2829
 #, fuzzy
 msgid "Click to Show/Hide Filter"
 msgstr "單擊以顯示/隱藏篩選器"
 
-#: lib/html.php:2803
+#: lib/html.php:2830
 #, fuzzy
 msgid "Clear Current Filter"
 msgstr "清除電流濾波器"
 
-#: lib/html.php:2804
+#: lib/html.php:2831
 #, fuzzy
 msgid "Clipboard"
 msgstr "剪貼板"
 
-#: lib/html.php:2805
+#: lib/html.php:2832
 #, fuzzy
 msgid "Clipboard ID"
 msgstr "剪貼板ID"
 
-#: lib/html.php:2806
+#: lib/html.php:2833
 #, fuzzy
 msgid "Copy operation is unavailable at this time"
 msgstr "此時復制操作不可用"
 
-#: lib/html.php:2807
+#: lib/html.php:2834
 #, fuzzy
 msgid "Failed to find data to copy!"
 msgstr "無法找到要復制的數據！"
 
-#: lib/html.php:2808
+#: lib/html.php:2835
 #, fuzzy
 msgid "Clipboard has been updated"
 msgstr "剪貼板已更新"
 
-#: lib/html.php:2809
+#: lib/html.php:2836
 #, fuzzy
 msgid "Sorry, your clipboard could not be updated at this time"
 msgstr "抱歉，您的剪貼板目前無法更新"
 
-#: lib/html.php:2813
+#: lib/html.php:2840
 #, fuzzy
 msgid "Passphrase length meets 8 character minimum"
 msgstr "密碼長度最少為8個字符"
 
-#: lib/html.php:2814
+#: lib/html.php:2841
 #, fuzzy
 msgid "Passphrase too short"
 msgstr "密碼太短了"
 
-#: lib/html.php:2815
+#: lib/html.php:2842
 #, fuzzy
 msgid "Passphrase matches but too short"
 msgstr "密碼短語但匹配太短"
 
-#: lib/html.php:2816
+#: lib/html.php:2843
 #, fuzzy
 msgid "Passphrase too short and not matching"
 msgstr "密碼太短而且不匹配"
 
-#: lib/html.php:2817
+#: lib/html.php:2844
 #, fuzzy
 msgid "Passphrases match"
 msgstr "密碼匹配"
 
-#: lib/html.php:2818
+#: lib/html.php:2845
 #, fuzzy
 msgid "Passphrases do not match"
 msgstr "密碼短語不匹配"
 
-#: lib/html.php:2819
+#: lib/html.php:2846
 #, fuzzy
 msgid "Sorry, we could not process your last action."
 msgstr "抱歉，我們無法處理您的上一個操作。"
 
-#: lib/html.php:2820
+#: lib/html.php:2847
 #, fuzzy
 msgid "Error:"
 msgstr "錯誤:"
 
-#: lib/html.php:2821
+#: lib/html.php:2848
 #, fuzzy
 msgid "Reason:"
 msgstr "原因："
 
-#: lib/html.php:2822
+#: lib/html.php:2849
 #, fuzzy
 msgid "Action failed"
 msgstr "行動失敗了"
 
-#: lib/html.php:2823 pollers.php:804
+#: lib/html.php:2850 pollers.php:804
 #, fuzzy
 msgid "Connection Successful"
 msgstr "操作成功"
 
-#: lib/html.php:2824 pollers.php:806
+#: lib/html.php:2851 pollers.php:806
 #, fuzzy
 msgid "Connection Failed"
 msgstr "連線失敗"
 
-#: lib/html.php:2825
+#: lib/html.php:2852
 #, fuzzy
 msgid "The response to the last action was unexpected."
 msgstr "對最後一次行動的回應是出乎意料的。"
 
-#: lib/html.php:2826
+#: lib/html.php:2853
 #, fuzzy
 msgid "Some Actions failed"
 msgstr "一些行動失敗了"
 
-#: lib/html.php:2827
+#: lib/html.php:2854
 #, fuzzy
 msgid "Note, we could not process all your actions.  Details are below."
 msgstr "請注意，我們無法處理您的所有操作。詳情如下。"
 
-#: lib/html.php:2828
+#: lib/html.php:2855
 #, fuzzy
 msgid "Operation successful"
 msgstr "操作成功"
 
-#: lib/html.php:2829
+#: lib/html.php:2856
 #, fuzzy
 msgid "The Operation was successful.  Details are below."
 msgstr "該行動是成功的。詳情如下。"
 
-#: lib/html.php:2831
+#: lib/html.php:2858
 #, fuzzy
 msgid "Pause"
 msgstr "暫停"
 
-#: lib/html.php:2834
+#: lib/html.php:2861
 #, fuzzy
 msgid "Zoom In"
 msgstr "放大"
 
-#: lib/html.php:2835
+#: lib/html.php:2862
 #, fuzzy
 msgid "Zoom Out"
 msgstr "縮小"
 
-#: lib/html.php:2836
+#: lib/html.php:2863
 #, fuzzy
 msgid "Zoom Out Factor"
 msgstr "縮小因子"
 
-#: lib/html.php:2837
+#: lib/html.php:2864
 #, fuzzy
 msgid "Timestamps"
 msgstr "時間戳"
 
-#: lib/html.php:2838
+#: lib/html.php:2865
 #, fuzzy
 msgid "2x"
 msgstr "2 倍"
 
-#: lib/html.php:2839
+#: lib/html.php:2866
 #, fuzzy
 msgid "4x"
 msgstr "4 倍"
 
-#: lib/html.php:2840
+#: lib/html.php:2867
 #, fuzzy
 msgid "8x"
 msgstr "8X"
 
-#: lib/html.php:2841
+#: lib/html.php:2868
 #, fuzzy
 msgid "16x"
 msgstr "16x"
 
-#: lib/html.php:2842
+#: lib/html.php:2869
 #, fuzzy
 msgid "32x"
 msgstr "32X"
 
-#: lib/html.php:2843
+#: lib/html.php:2870
 #, fuzzy
 msgid "Zoom Out Positioning"
 msgstr "縮小定位"
 
-#: lib/html.php:2844
+#: lib/html.php:2871
 #, fuzzy
 msgid "Zoom Mode"
 msgstr "縮放模式"
 
-#: lib/html.php:2846
+#: lib/html.php:2873
 #, fuzzy
 msgid "Quick"
 msgstr "快"
 
-#: lib/html.php:2848
+#: lib/html.php:2875
 #, fuzzy
 msgid "Open in new tab"
 msgstr "打開一個新標籤"
 
-#: lib/html.php:2849
+#: lib/html.php:2876
 #, fuzzy
 msgid "Save graph"
 msgstr "保存圖表"
 
-#: lib/html.php:2850
+#: lib/html.php:2877
 #, fuzzy
 msgid "Copy graph"
 msgstr "複製圖"
 
-#: lib/html.php:2851
+#: lib/html.php:2878
 #, fuzzy
 msgid "Copy graph link"
 msgstr "複製圖錶鍊接"
 
-#: lib/html.php:2852
+#: lib/html.php:2879
 #, fuzzy
 msgid "Always On"
 msgstr "永遠在線"
 
-#: lib/html.php:2853
+#: lib/html.php:2880
 #, fuzzy
 msgid "Auto"
 msgstr "自動"
 
-#: lib/html.php:2854
+#: lib/html.php:2881
 #, fuzzy
 msgid "Always Off"
 msgstr "總是關閉"
 
-#: lib/html.php:2855
+#: lib/html.php:2882
 #, fuzzy
 msgid "Begin with"
 msgstr "首先"
 
-#: lib/html.php:2857
+#: lib/html.php:2884
 #, fuzzy
 msgid "End with"
 msgstr "結束日期"
 
-#: lib/html.php:2859 lib/html_form.php:1432
+#: lib/html.php:2886 lib/html_form.php:1432
 #, fuzzy
 msgid "Close"
 msgstr "關閉"
 
-#: lib/html.php:2861
+#: lib/html.php:2888
 #, fuzzy
 msgid "3rd Mouse Button"
 msgstr "第三個鼠標按鈕"
@@ -18991,212 +18992,212 @@ msgstr "添加報表圖項&#39; <i>%s</i> &#39;失敗已經存在"
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "已跳過的報告圖表項&#39; <i>%s</i> &#39;已存在"
 
-#: lib/rrd.php:2149
+#: lib/rrd.php:2147
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2152
+#: lib/rrd.php:2150
 msgid "The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2523
+#: lib/rrd.php:2521
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "錯誤：RRDfile%s不可寫"
 
-#: lib/rrd.php:3933
+#: lib/rrd.php:3931
 #, fuzzy, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "必需的RRD步長為&#39;%s&#39;"
 
-#: lib/rrd.php:3997
+#: lib/rrd.php:3995
 #, fuzzy, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "數據源&#39;%s&#39;的類型應為&#39;%s&#39;"
 
-#: lib/rrd.php:4003
+#: lib/rrd.php:4001
 #, fuzzy, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "數據源&#39;%s&#39;的心跳應為&#39;%s&#39;"
 
-#: lib/rrd.php:4015
+#: lib/rrd.php:4013
 #, fuzzy, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "數據源&#39;%s&#39;的RRD最小值應為&#39;%s&#39;"
 
-#: lib/rrd.php:4024
+#: lib/rrd.php:4022
 #, fuzzy, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "Kadupul定義中缺少DS&#39;%s&#39;"
 
-#: lib/rrd.php:4038 lib/rrd.php:4039
+#: lib/rrd.php:4036 lib/rrd.php:4037
 #, fuzzy, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Kadupul RRA&#39;%s&#39;與&#39;%s&#39;具有相同的CF /步數（%s，%s）"
 
-#: lib/rrd.php:4052 lib/rrd.php:4053
+#: lib/rrd.php:4050 lib/rrd.php:4051
 #, fuzzy, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "文件RRA&#39;%s&#39;與&#39;%s&#39;具有相同的CF /步數（%s，%s）"
 
-#: lib/rrd.php:4085
+#: lib/rrd.php:4083
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr ""
 
-#: lib/rrd.php:4089
+#: lib/rrd.php:4087
 #, fuzzy, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "KadupulRRA id&#39;%s&#39;的XFF應為&#39;%s&#39;"
 
-#: lib/rrd.php:4093
+#: lib/rrd.php:4091
 #, fuzzy, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Kadupul RRA id&#39;%s&#39;的行數應為&#39;%s&#39;"
 
-#: lib/rrd.php:4110
+#: lib/rrd.php:4108
 #, fuzzy, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "RRD文件中缺少RRA&#39;%s&#39;"
 
-#: lib/rrd.php:4118
+#: lib/rrd.php:4116
 #, fuzzy, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "Kadupul定義中缺少RRA&#39;%s&#39;"
 
-#: lib/rrd.php:4140
+#: lib/rrd.php:4138
 #, fuzzy
 msgid "RRD File Information"
 msgstr "RRD文件信息"
 
-#: lib/rrd.php:4172
+#: lib/rrd.php:4170
 #, fuzzy
 msgid "Data Source Items"
 msgstr "數據源項目"
 
-#: lib/rrd.php:4174
+#: lib/rrd.php:4172
 #, fuzzy
 msgid "Minimal Heartbeat"
 msgstr "最小的心跳"
 
-#: lib/rrd.php:4175
+#: lib/rrd.php:4173
 #, fuzzy
 msgid "Min"
 msgstr "最小"
 
-#: lib/rrd.php:4176
+#: lib/rrd.php:4174
 #, fuzzy
 msgid "Max"
 msgstr "最大"
 
-#: lib/rrd.php:4177
+#: lib/rrd.php:4175
 #, fuzzy
 msgid "Last DS"
 msgstr "最後一個DS"
 
-#: lib/rrd.php:4179
+#: lib/rrd.php:4177
 #, fuzzy
 msgid "Unknown Sec"
 msgstr "未知的秒"
 
-#: lib/rrd.php:4218
+#: lib/rrd.php:4216
 #, fuzzy
 msgid "Round Robin Archive"
 msgstr "Round Robin Archive"
 
-#: lib/rrd.php:4221
+#: lib/rrd.php:4219
 #, fuzzy
 msgid "Cur Row"
 msgstr "Cur Row"
 
-#: lib/rrd.php:4222
+#: lib/rrd.php:4220
 #, fuzzy
 msgid "PDP per Row"
 msgstr "每行PDP"
 
-#: lib/rrd.php:4224
+#: lib/rrd.php:4222
 #, fuzzy
 msgid "CDP Prep Value (0)"
 msgstr "CDP準備值（0）"
 
-#: lib/rrd.php:4225
+#: lib/rrd.php:4223
 #, fuzzy
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP未知數據點（0）"
 
-#: lib/rrd.php:4306
+#: lib/rrd.php:4304
 msgid "Errors Found"
 msgstr "沒有 %s 找到"
 
-#: lib/rrd.php:4318
+#: lib/rrd.php:4316
 msgid "Optional Tuning Recommendations"
 msgstr "數據源字段"
 
-#: lib/rrd.php:4343 lib/rrd.php:4346
+#: lib/rrd.php:4341 lib/rrd.php:4344
 #, fuzzy, php-format
 msgid "rename %s to %s"
 msgstr "將%s重命名為%s"
 
-#: lib/rrd.php:4438
+#: lib/rrd.php:4436
 #, fuzzy, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "編寫XML文件時出錯：%s"
 
-#: lib/rrd.php:4444
+#: lib/rrd.php:4442
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4450
+#: lib/rrd.php:4448
 #, fuzzy, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "錯誤：RRDfile%s不可寫"
 
-#: lib/rrd.php:4471
+#: lib/rrd.php:4469
 #, fuzzy
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "解析rrdtool轉儲的XML時出錯"
 
-#: lib/rrd.php:4507 lib/rrd.php:4526
+#: lib/rrd.php:4505 lib/rrd.php:4524
 #, fuzzy
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "解析rrdtool轉儲的XML時出錯"
 
-#: lib/rrd.php:4744
+#: lib/rrd.php:4742
 #, fuzzy, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "從RRD文件中刪除RRA（CF=%s，ROWS=%d，PDP_PER_ROW =%d，XFF =%1.2f）"
 
-#: lib/rrd.php:4782
+#: lib/rrd.php:4780
 #, fuzzy, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA（CF =%s，ROWS =%d，PDP_PER_ROW =%d，XFF =%1.2f）添加到RRD文件"
 
-#: lib/rrd.php:4813 lib/rrd.php:4829
+#: lib/rrd.php:4811 lib/rrd.php:4827
 #, fuzzy, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "網站沒有%s的寫入權限，可能無法創建/更新RRD"
 
-#: lib/rrd.php:4825
+#: lib/rrd.php:4823
 #, fuzzy
 msgid "(Custom)"
 msgstr "自訂"
 
-#: lib/rrd.php:4831
+#: lib/rrd.php:4829
 #, fuzzy
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "無法打開數據文件，輪詢器可能尚未運行"
 
-#: lib/rrd.php:4834
+#: lib/rrd.php:4832
 #, fuzzy
 msgid "RRA Folder"
 msgstr "RRA文件夾"
 
-#: lib/rrd.php:4834
+#: lib/rrd.php:4832
 #, fuzzy
 msgid "Root"
 msgstr "根部"
 
-#: lib/rrd.php:4914
+#: lib/rrd.php:4912
 #, fuzzy
 msgid "Unknown RRDtool Error"
 msgstr "未知的RRDtool錯誤"

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 04:43-0700\n"
+"POT-Creation-Date: 2026-10-05 04:50-0700\n"
 "PO-Revision-Date: 2024-04-20 18:23-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -132,7 +132,7 @@ msgstr "Кликнете върху „Напред“, за да изтриет
 #: host.php:549 host.php:565 host.php:579 host.php:588 host.php:619
 #: host.php:631 host_templates.php:222 host_templates.php:236
 #: host_templates.php:247 host_templates.php:302 host_templates.php:375
-#: lib/clog_webapi.php:225 lib/html.php:2833 lib/html_form.php:1396
+#: lib/clog_webapi.php:225 lib/html.php:2860 lib/html_form.php:1396
 #: lib/html_form.php:1413 lib/html_form.php:1424 lib/html_reports.php:632
 #: managers.php:1066 managers.php:1127 plugins.php:712 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:762
@@ -166,7 +166,7 @@ msgstr "Отказ"
 #: host.php:531 host.php:540 host.php:549 host.php:565 host.php:579
 #: host.php:588 host.php:619 host.php:631 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
-#: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2832
+#: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2859
 #: lib/html_reports.php:574 managers.php:1066 managers.php:1127 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:762
 #: tree.php:771 tree.php:780 tree.php:789 user_admin.php:252 user_admin.php:292
@@ -818,7 +818,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "Възникнаха проблеми със страницата Промяна на паролата.  Свържете се незабавно с вашия администратор на Kadupul."
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4270 lib/html.php:2768
+#: include/global_form.php:1552 lib/functions.php:4270 lib/html.php:2795
 msgid "Change Password"
 msgstr "Промяна на паролата"
 
@@ -953,7 +953,7 @@ msgstr "Вход"
 
 #: auth_profile.php:61 include/global_settings.php:22
 #: include/global_settings.php:1202 include/global_settings.php:1519
-#: lib/html.php:2781 managers.php:24 user_admin.php:1741
+#: lib/html.php:2808 managers.php:24 user_admin.php:1741
 #: user_group_admin.php:1763
 msgid "General"
 msgstr "Основни"
@@ -964,17 +964,17 @@ msgstr "Данни за потребителския акаунт"
 
 #: auth_profile.php:313 include/global_arrays.php:857
 #: include/global_settings.php:2737 lib/html.php:2232 lib/html.php:2254
-#: lib/html.php:2762
+#: lib/html.php:2789
 msgid "Tree View"
 msgstr "Дървовиден изглед"
 
 #: auth_profile.php:317 include/global_arrays.php:858 lib/html.php:2239
-#: lib/html.php:2263 lib/html.php:2763
+#: lib/html.php:2263 lib/html.php:2790
 msgid "List View"
 msgstr "Списък"
 
 #: auth_profile.php:321 include/global_arrays.php:859 lib/html.php:2246
-#: lib/html.php:2764
+#: lib/html.php:2791
 msgid "Preview View"
 msgstr "Преглед на изгледа"
 
@@ -1394,7 +1394,7 @@ msgstr "Разрешен"
 #: include/global_settings.php:1644 include/global_settings.php:1657
 #: include/global_settings.php:1682 include/global_settings.php:1696
 #: include/global_settings.php:1786 include/global_settings.php:2550
-#: lib/api_automation.php:28 lib/html.php:2858 lib/html_reports.php:2037
+#: lib/api_automation.php:28 lib/html.php:2885 lib/html_reports.php:2037
 #: lib/html_reports.php:2188 lib/html_utility.php:1317 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:936 user_domains.php:397
 #: user_group_admin.php:756 utilities.php:2147 utilities.php:2711
@@ -1669,8 +1669,8 @@ msgstr "%d минута"
 #: include/global_arrays.php:1634 include/global_settings.php:1698
 #: include/global_settings.php:1699 include/global_settings.php:1700
 #: include/global_settings.php:1701 include/global_settings.php:1702
-#: include/global_settings.php:2663 include/global_settings.php:2938
-#: include/global_settings.php:2939 include/global_settings.php:2940
+#: include/global_settings.php:2663 include/global_settings.php:2942
+#: include/global_settings.php:2943 include/global_settings.php:2944
 #: pollers.php:902 pollers.php:903
 #, php-format
 msgid "%d Minutes"
@@ -1700,8 +1700,8 @@ msgstr "%d час"
 #: include/global_arrays.php:1550 include/global_arrays.php:1556
 #: include/global_arrays.php:1557 include/global_settings.php:1704
 #: include/global_settings.php:1705 include/global_settings.php:1706
-#: include/global_settings.php:1707 include/global_settings.php:2942
-#: include/global_settings.php:2943
+#: include/global_settings.php:1707 include/global_settings.php:2946
+#: include/global_settings.php:2947
 #, php-format
 msgid "%d Hours"
 msgstr "%d часа"
@@ -3002,7 +3002,7 @@ msgstr "Източник на данни"
 msgid "The Data Source to Debug"
 msgstr "Източникът на данни за отстраняване на грешки"
 
-#: data_debug.php:488 lib/html.php:2785 utilities.php:1039 utilities.php:1160
+#: data_debug.php:488 lib/html.php:2812 utilities.php:1039 utilities.php:1160
 msgid "User"
 msgstr "Потребител"
 
@@ -3200,7 +3200,7 @@ msgstr "Повторно анализиране"
 msgid "Check"
 msgstr "Проверка"
 
-#: data_debug.php:883 include/global_form.php:1018 lib/rrd.php:4178
+#: data_debug.php:883 include/global_form.php:1018 lib/rrd.php:4176
 #: utilities.php:798 utilities.php:815 utilities.php:3218
 msgid "Value"
 msgstr "Стойност"
@@ -3291,7 +3291,7 @@ msgid "Run checks on currently filtered Data Sources and preserve other results"
 msgstr "Извършете проверки на филтрираните в момента източници на данни и запазете други резултати"
 
 #: data_debug.php:1125 data_sources.php:1752 data_templates.php:1107
-#: lib/html.php:2794
+#: lib/html.php:2821
 msgid "Profile"
 msgstr "Профил"
 
@@ -3775,7 +3775,7 @@ msgstr "Стъпки при Приготвяне"
 
 #: data_source_profiles.php:900 graphs_new.php:532 include/global_form.php:284
 #: lib/html.php:613 lib/html_filter.php:55 lib/installer.php:2827
-#: lib/rrd.php:4220 utilities.php:866 utilities.php:1838
+#: lib/rrd.php:4218 utilities.php:866 utilities.php:1838
 msgid "Rows"
 msgstr "Редове"
 
@@ -3840,8 +3840,8 @@ msgstr "% d Седмица"
 
 #: data_source_profiles.php:1106 include/global_arrays.php:779
 #: include/global_arrays.php:780 include/global_arrays.php:1464
-#: include/global_settings.php:2946 include/global_settings.php:2947
-#: include/global_settings.php:2948 rrdcleaner.php:535 rrdcleaner.php:536
+#: include/global_settings.php:2950 include/global_settings.php:2951
+#: include/global_settings.php:2952 rrdcleaner.php:535 rrdcleaner.php:536
 #, php-format
 msgid "%d Weeks"
 msgstr "% d седмици"
@@ -3870,7 +3870,7 @@ msgstr "% d дни"
 #: include/global_arrays.php:1555 include/global_arrays.php:1585
 #: include/global_arrays.php:1594 include/global_arrays.php:1622
 #: include/global_settings.php:1406 include/global_settings.php:1703
-#: include/global_settings.php:2941
+#: include/global_settings.php:2945
 msgid "1 Hour"
 msgstr "1 час"
 
@@ -4479,7 +4479,7 @@ msgstr "Редактиране на шаблона на графиката."
 msgid "Click to view just this Graph in Real-time"
 msgstr "Кликнете, за да видите само тази графика в реално време"
 
-#: graph.php:270 lib/html.php:2759
+#: graph.php:270 lib/html.php:2786
 msgid "Utility View"
 msgstr "Помощна програма"
 
@@ -4500,7 +4500,7 @@ msgid "RRDtool Graph Syntax"
 msgstr "Синтаксис на графиката RRDtool"
 
 #: graph_image.php:174 graph_json.php:208 graph_realtime.php:317
-#: lib/rrd.php:2526
+#: lib/rrd.php:2524
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller все още не работи."
 
@@ -4830,7 +4830,7 @@ msgstr "Общ изглед"
 msgid "Add Selected Graphs to Report"
 msgstr "Добавете избрани графики в отчета"
 
-#: graph_view.php:1049 lib/html.php:2830
+#: graph_view.php:1049 lib/html.php:2857
 msgid "Ok"
 msgstr "Добре"
 
@@ -5170,7 +5170,7 @@ msgstr "Нови графики за [Всички устройства]"
 msgid "New Graphs for None Host Type"
 msgstr "Нови графики за никой тип хост"
 
-#: graphs_new.php:440 lib/html.php:2757
+#: graphs_new.php:440 lib/html.php:2784
 msgid "Filter Settings Saved"
 msgstr "Настройките на филтъра са запазени"
 
@@ -5610,7 +5610,7 @@ msgstr "Възстановяване"
 
 #: host.php:1837 lib/api_automation.php:33 lib/auth.php:3041
 #: lib/clog_webapi.php:856 lib/html_utility.php:1339 lib/import.php:342
-#: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4196 lib/rrd.php:4208
+#: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4194 lib/rrd.php:4206
 #: lib/spikekill.php:301 package_import.php:522 package_import.php:600
 #: utilities.php:211 utilities.php:212 utilities.php:2765
 msgid "Unknown"
@@ -6321,7 +6321,7 @@ msgstr "Дясно"
 msgid "Justified"
 msgstr "Justified"
 
-#: include/global_arrays.php:585 lib/html.php:2856
+#: include/global_arrays.php:585 lib/html.php:2883
 msgid "Center"
 msgstr "Център"
 
@@ -6629,13 +6629,13 @@ msgstr "Естествен ред"
 msgid "Numeric Ordering"
 msgstr "Цифрова поръчка"
 
-#: include/global_arrays.php:952 lib/rrd.php:4144
+#: include/global_arrays.php:952 lib/rrd.php:4142
 msgid "Header"
 msgstr "Хедър"
 
 #: include/global_arrays.php:953 include/global_arrays.php:1004
 #: include/global_arrays.php:1687 include/global_arrays.php:1856
-#: lib/html.php:2845
+#: lib/html.php:2872
 msgid "Graph"
 msgstr "Графика"
 
@@ -6801,7 +6801,7 @@ msgid "Configuration"
 msgstr "Конфигурация"
 
 #: include/global_arrays.php:1030 include/global_arrays.php:1052
-#: lib/html.php:2590 lib/html.php:2860
+#: lib/html.php:2590 lib/html.php:2887
 msgid "Settings"
 msgstr "Настойки"
 
@@ -7821,7 +7821,7 @@ msgid "List Mode"
 msgstr "Списъчен изглед"
 
 #: include/global_arrays.php:2062 include/global_arrays.php:2068
-#: lib/functions.php:4492 lib/html.php:1988 lib/html.php:2053 lib/html.php:2778
+#: lib/functions.php:4492 lib/html.php:1988 lib/html.php:2053 lib/html.php:2805
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "Административна конзола"
@@ -7955,7 +7955,7 @@ msgstr "Външна връзка"
 msgid "(Action)"
 msgstr "Действие"
 
-#: include/global_arrays.php:2626 lib/html.php:2799
+#: include/global_arrays.php:2626 lib/html.php:2826
 msgid "About Kadupul"
 msgstr "За Kadupul"
 
@@ -8212,7 +8212,7 @@ msgstr "Честотата, която данните ще се събират �
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "Колко време може да липсват данни, преди RRDtool да запише неизвестни данни. Увеличете тази стойност, ако вашият източник на данни е нестабилен и искате да пренесете стари данни, вместо да показвате пропуски в графиките си. Тази стойност се умножава по X-Files Factor, за да се определи действителното време."
 
-#: include/global_form.php:226 lib/rrd.php:4223
+#: include/global_form.php:226 lib/rrd.php:4221
 msgid "X-Files Factor"
 msgstr "Фактор на Х-Файлове"
 
@@ -8542,7 +8542,7 @@ msgid "Auto Scale"
 msgstr "Автомащаб"
 
 #: include/global_form.php:754
-msgid "When enabled, the selected Auto Scale Option determines which limits RRDtool uses: mode 1 ignores both limits, mode 2 keeps the lower limit, mode 3 keeps the upper limit, and mode 4 keeps both limits. When disabled, the configured lower and upper limits are used directly. Rigid Boundaries controls whether values outside those limits expand the graph range."
+msgid "When enabled, the selected Auto Scale Option determines which limits RRDtool uses: --alt-autoscale ignores both limits, --alt-autoscale-max keeps the lower limit, --alt-autoscale-min keeps the upper limit, and --alt-autoscale (accepting both limits) keeps both limits. When disabled, the configured lower and upper limits are used directly. Rigid Boundaries controls whether values outside those limits expand the graph range."
 msgstr ""
 
 #: include/global_form.php:758
@@ -8774,7 +8774,7 @@ msgstr "Непрозрачност / Алфа канал"
 msgid "The opacity/alpha channel of the color."
 msgstr "Непрозрачността / алфа каналът на цвета."
 
-#: include/global_form.php:989 lib/rrd.php:4219
+#: include/global_form.php:989 lib/rrd.php:4217
 msgid "Consolidation Function"
 msgstr "Консолидационна функция"
 
@@ -9892,7 +9892,7 @@ msgstr "Ако е зададено на Simple, графиките и източ
 msgid "Simple"
 msgstr "Обикновен"
 
-#: include/global_settings.php:428 lib/html.php:2847
+#: include/global_settings.php:428 lib/html.php:2874
 msgid "Advanced"
 msgstr "Разширено"
 
@@ -10310,7 +10310,7 @@ msgid "Theme Settings"
 msgstr "Настройки на темата"
 
 #: include/global_settings.php:851 include/global_settings.php:1061
-#: include/global_settings.php:2585 lib/html.php:2795
+#: include/global_settings.php:2585 lib/html.php:2822
 msgid "Theme"
 msgstr "Теми:"
 
@@ -10541,9 +10541,11 @@ msgstr ""
 
 #: include/global_settings.php:1068 include/global_settings.php:1087
 #: include/global_settings.php:1106 include/global_settings.php:1125
-#: include/global_settings.php:1144
-msgid "Enter Valid Font Config Value"
-msgstr "Въведете валидна стойност на конфигурацията на шрифта"
+#: include/global_settings.php:1144 include/global_settings.php:2852
+#: include/global_settings.php:2870 include/global_settings.php:2888
+#: include/global_settings.php:2906
+msgid "Enter a Pango font description"
+msgstr ""
 
 #: include/global_settings.php:1074 include/global_settings.php:2840
 msgid "Title Font Size"
@@ -10561,15 +10563,15 @@ msgstr "Настройка на шрифта на заглавието"
 msgid "The font to use for Graph Titles.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
 msgstr ""
 
-#: include/global_settings.php:1093 include/global_settings.php:2857
+#: include/global_settings.php:1093 include/global_settings.php:2858
 msgid "Legend Font Size"
 msgstr "Размер на шрифта на легендата"
 
-#: include/global_settings.php:1094 include/global_settings.php:2858
+#: include/global_settings.php:1094 include/global_settings.php:2859
 msgid "The size of the font used for Graph Legend items"
 msgstr "Размерът на шрифта, използван за елементите на графичната легенда"
 
-#: include/global_settings.php:1103 include/global_settings.php:2866
+#: include/global_settings.php:1103 include/global_settings.php:2867
 msgid "Legend Font Setting"
 msgstr "Легенда за настройка на шрифта"
 
@@ -10577,15 +10579,15 @@ msgstr "Легенда за настройка на шрифта"
 msgid "The font to use for Graph Legends.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
 msgstr ""
 
-#: include/global_settings.php:1112 include/global_settings.php:2874
+#: include/global_settings.php:1112 include/global_settings.php:2876
 msgid "Axis Font Size"
 msgstr "Размер на шрифта на ос"
 
-#: include/global_settings.php:1113 include/global_settings.php:2875
+#: include/global_settings.php:1113 include/global_settings.php:2877
 msgid "The size of the font used for Graph Axis"
 msgstr "Размерът на шрифта, използван за Графичната ос"
 
-#: include/global_settings.php:1122 include/global_settings.php:2883
+#: include/global_settings.php:1122 include/global_settings.php:2885
 msgid "Axis Font Setting"
 msgstr "Настройка на шрифт на ос"
 
@@ -10593,15 +10595,15 @@ msgstr "Настройка на шрифт на ос"
 msgid "The font to use for Graph Axis items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
 msgstr ""
 
-#: include/global_settings.php:1131 include/global_settings.php:2891
+#: include/global_settings.php:1131 include/global_settings.php:2894
 msgid "Unit Font Size"
 msgstr "Размер на шрифта на единица"
 
-#: include/global_settings.php:1132 include/global_settings.php:2892
+#: include/global_settings.php:1132 include/global_settings.php:2895
 msgid "The size of the font used for Graph Units"
 msgstr "Размерът на шрифта, използван за единиците графики"
 
-#: include/global_settings.php:1141 include/global_settings.php:2900
+#: include/global_settings.php:1141 include/global_settings.php:2903
 msgid "Unit Font Setting"
 msgstr "Настройка на шрифт на единица"
 
@@ -11171,7 +11173,7 @@ msgstr "Автоматично отключване"
 msgid "An account will automatically be unlocked after this many minutes.  Even if the correct password is entered, the account will not unlock until this time limit has been met.  Max of 1440 minutes (1 Day)"
 msgstr "Профилът автоматично ще бъде отключен след толкова минути. Дори ако въведете правилната парола, сметката няма да се отключи, докато този срок не бъде спазен. Максимум 1440 минути (1 ден)"
 
-#: include/global_settings.php:1708 include/global_settings.php:2944
+#: include/global_settings.php:1708 include/global_settings.php:2948
 msgid "1 Day"
 msgstr "1 ден"
 
@@ -12269,47 +12271,47 @@ msgstr "Изберете дали да използвате свои собст�
 msgid "The Pango font description to use for Graph Titles, such as DejaVu Sans Bold"
 msgstr ""
 
-#: include/global_settings.php:2867
+#: include/global_settings.php:2868
 msgid "The Pango font description to use for Graph Legend items, such as DejaVu Sans Mono"
 msgstr ""
 
-#: include/global_settings.php:2884
+#: include/global_settings.php:2886
 msgid "The Pango font description to use for Graph Axis items, such as DejaVu Sans"
 msgstr ""
 
-#: include/global_settings.php:2901
+#: include/global_settings.php:2904
 msgid "The Pango font description to use for Graph Unit items, such as DejaVu Sans"
 msgstr ""
 
-#: include/global_settings.php:2917
+#: include/global_settings.php:2921
 msgid "Realtime View Mode"
 msgstr "Режим на преглед в реално време"
 
-#: include/global_settings.php:2918
+#: include/global_settings.php:2922
 msgid "How do you wish to view Realtime Graphs?"
 msgstr "Как искате да видите графиките в реално време?"
 
-#: include/global_settings.php:2921
+#: include/global_settings.php:2925
 msgid "Inline"
 msgstr "В редица"
 
-#: include/global_settings.php:2922
+#: include/global_settings.php:2926
 msgid "New Window"
 msgstr "В нов прозорец"
 
-#: include/global_settings.php:2937
+#: include/global_settings.php:2941
 msgid "System Setting"
 msgstr "Настройки на потребителя"
 
-#: include/global_settings.php:2945
+#: include/global_settings.php:2949
 msgid "1 Week"
 msgstr "1 Седмица"
 
-#: include/global_settings.php:2958
+#: include/global_settings.php:2962
 msgid "Auto Log Out Time"
 msgstr "Автоматично излизане"
 
-#: include/global_settings.php:2959
+#: include/global_settings.php:2963
 msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no affect when Authentication Cookies are enabled."
 msgstr "Само за потребители с достъп до конзолата, колко дълго този потребител може да остане влязъл, преди да излезе автоматично. Имайте предвид, че ако не сте били активни повече от час, може да се наложи да опресните браузъра си. Също така имайте предвид, че тази настройка няма ефект, когато бисквитките за удостоверяване са активирани."
 
@@ -12469,7 +12471,7 @@ msgstr "Замяна на тази стойност"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
-#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4173
+#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4171
 #: utilities.php:356 utilities.php:1480 utilities.php:3218
 msgid "Type"
 msgstr "Тип"
@@ -13457,11 +13459,11 @@ msgstr "Влезте като обикновен потребител"
 msgid "guest"
 msgstr "гост"
 
-#: lib/functions.php:4249 lib/functions.php:4274 lib/html.php:2784
+#: lib/functions.php:4249 lib/functions.php:4274 lib/html.php:2811
 msgid "User Community"
 msgstr "Потребителска общност"
 
-#: lib/functions.php:4250 lib/functions.php:4275 lib/html.php:2786
+#: lib/functions.php:4250 lib/functions.php:4275 lib/html.php:2813
 #: lib/utility.php:1446
 msgid "Documentation"
 msgstr "Документация"
@@ -13471,11 +13473,11 @@ msgstr "Документация"
 msgid "Logged in as %s"
 msgstr "Влезли сте като %s"
 
-#: lib/functions.php:4269 lib/html.php:2765
+#: lib/functions.php:4269 lib/html.php:2792
 msgid "Edit Profile"
 msgstr "Редактирай Профила"
 
-#: lib/functions.php:4279 lib/html.php:2769
+#: lib/functions.php:4279 lib/html.php:2796
 msgid "Logout"
 msgstr "Изход"
 
@@ -13646,7 +13648,7 @@ msgstr "Вземане на данни"
 msgid "CSV Export of Graph Data"
 msgstr "CSV експортиране на графични данни"
 
-#: lib/html.php:540 lib/html.php:2756
+#: lib/html.php:540 lib/html.php:2783
 msgid "Time Graph View"
 msgstr "Графичен изглед на времето"
 
@@ -13750,321 +13752,321 @@ msgstr "Обхват за запълване на празни пролуки"
 msgid "Dry Run Float Range"
 msgstr "Диапазон на поплавъка за суха работа"
 
-#: lib/html.php:2752
+#: lib/html.php:2779
 msgid "Allow or limit the table columns to extend beyond the current windows limits."
 msgstr "Позволете или ограничете колоните на таблицата да надхвърлят текущите ограничения на Windows."
 
-#: lib/html.php:2753 lib/html_filter.php:48
+#: lib/html.php:2780 lib/html_filter.php:48
 msgid "Enter a search term"
 msgstr "Въведете дума за търсене"
 
-#: lib/html.php:2754
+#: lib/html.php:2781
 msgid "Enter a regular expression"
 msgstr "Въведете регулярен израз"
 
-#: lib/html.php:2755
+#: lib/html.php:2782
 msgid "No file selected"
 msgstr "Не е избран файл"
 
-#: lib/html.php:2758 lib/html.php:2801
+#: lib/html.php:2785 lib/html.php:2828
 msgid "SpikeKill Results"
 msgstr "SpikeKill Резултати"
 
-#: lib/html.php:2760
+#: lib/html.php:2787
 msgid "Click to view just this Graph in Realtime"
 msgstr "Кликнете, за да видите само тази графика в реално време"
 
-#: lib/html.php:2761
+#: lib/html.php:2788
 msgid "Click again to take this Graph out of Realtime"
 msgstr "Кликнете отново, за да извадите графиката от Realtime"
 
-#: lib/html.php:2770
+#: lib/html.php:2797
 msgid "Standard Mode"
 msgstr "Режим на сканиране"
 
-#: lib/html.php:2771
+#: lib/html.php:2798
 msgid "Compact Mode"
 msgstr "Режим на мащабиране"
 
-#: lib/html.php:2772
+#: lib/html.php:2799
 msgid "Dark Color Mode"
 msgstr "Общ изглед"
 
-#: lib/html.php:2773
+#: lib/html.php:2800
 msgid "Light Color Mode"
 msgstr "Списъчен изглед"
 
-#: lib/html.php:2774
+#: lib/html.php:2801
 msgid "Use System Color"
 msgstr "Цвят на артикула"
 
-#: lib/html.php:2775
+#: lib/html.php:2802
 msgid "Ignore System Color"
 msgstr "Цвят на артикула"
 
-#: lib/html.php:2776
+#: lib/html.php:2803
 msgid "Help"
 msgstr "Помощ"
 
-#: lib/html.php:2777
+#: lib/html.php:2804
 #, fuzzy
 msgid "Kadupul Home"
 msgstr "Kadupul вкъщи"
 
-#: lib/html.php:2779
+#: lib/html.php:2806
 msgid "Miscellaneous"
 msgstr "Разни"
 
-#: lib/html.php:2780
+#: lib/html.php:2807
 msgid "Dashboards"
 msgstr "Скриване на таблото за управление на Какту"
 
-#: lib/html.php:2782
+#: lib/html.php:2809
 msgid "Charts"
 msgstr "Графики"
 
-#: lib/html.php:2783
+#: lib/html.php:2810
 msgid "Kadupul Project Page"
 msgstr "Страница"
 
-#: lib/html.php:2787
+#: lib/html.php:2814
 msgid "Spine"
 msgstr "Гръбнак"
 
-#: lib/html.php:2788
+#: lib/html.php:2815
 msgid "RRDProxy"
 msgstr "RRDProxy"
 
-#: lib/html.php:2789
+#: lib/html.php:2816
 msgid "Keyboard"
 msgstr "Клавиатура"
 
-#: lib/html.php:2790
+#: lib/html.php:2817
 msgid "Shortcuts"
 msgstr "Преки пътища"
 
-#: lib/html.php:2791
+#: lib/html.php:2818
 msgid "Contribute to the Kadupul Project"
 msgstr "Завъртете дневника Kadupul"
 
-#: lib/html.php:2792
+#: lib/html.php:2819
 msgid "Help in Developing"
 msgstr "Помощ при разработването"
 
-#: lib/html.php:2793
+#: lib/html.php:2820
 msgid "Donation & Sponsoring"
 msgstr "Дарение и спонсорство"
 
-#: lib/html.php:2796
+#: lib/html.php:2823
 msgid "Client"
 msgstr "Клиент"
 
-#: lib/html.php:2797
+#: lib/html.php:2824
 msgid "Help in Translating"
 msgstr "Помощ при превода"
 
-#: lib/html.php:2798
+#: lib/html.php:2825
 msgid "Report a bug"
 msgstr "Доклад за дефект…"
 
-#: lib/html.php:2800
+#: lib/html.php:2827
 #, fuzzy
 msgid "Kadupul"
 msgstr "Kadupul"
 
-#: lib/html.php:2802
+#: lib/html.php:2829
 msgid "Click to Show/Hide Filter"
 msgstr "Кликнете върху Показване / скриване на филтъра"
 
-#: lib/html.php:2803
+#: lib/html.php:2830
 msgid "Clear Current Filter"
 msgstr "Изчистване на текущия филтър"
 
-#: lib/html.php:2804
+#: lib/html.php:2831
 msgid "Clipboard"
 msgstr "Клипборд"
 
-#: lib/html.php:2805
+#: lib/html.php:2832
 msgid "Clipboard ID"
 msgstr "ID на клипборда"
 
-#: lib/html.php:2806
+#: lib/html.php:2833
 msgid "Copy operation is unavailable at this time"
 msgstr "Понастоящем операцията за копиране не е налице"
 
-#: lib/html.php:2807
+#: lib/html.php:2834
 msgid "Failed to find data to copy!"
 msgstr "Неуспешно намиране на данни за копиране!"
 
-#: lib/html.php:2808
+#: lib/html.php:2835
 msgid "Clipboard has been updated"
 msgstr "Клипбордът е актуализиран"
 
-#: lib/html.php:2809
+#: lib/html.php:2836
 msgid "Sorry, your clipboard could not be updated at this time"
 msgstr "За съжаление в момента клипбордът ви не може да бъде актуализиран"
 
-#: lib/html.php:2813
+#: lib/html.php:2840
 msgid "Passphrase length meets 8 character minimum"
 msgstr "Дължината на паролата отговаря на минимум 8 знака"
 
-#: lib/html.php:2814
+#: lib/html.php:2841
 msgid "Passphrase too short"
 msgstr "Паролата е твърде кратка"
 
-#: lib/html.php:2815
+#: lib/html.php:2842
 msgid "Passphrase matches but too short"
 msgstr "Съвпадения с парола, но твърде кратка"
 
-#: lib/html.php:2816
+#: lib/html.php:2843
 msgid "Passphrase too short and not matching"
 msgstr "Паролата за прекалено кратка и не съвпадаща"
 
-#: lib/html.php:2817
+#: lib/html.php:2844
 msgid "Passphrases match"
 msgstr "Съвпадение на фрази за достъп"
 
-#: lib/html.php:2818
+#: lib/html.php:2845
 msgid "Passphrases do not match"
 msgstr "Паролите не съвпадат"
 
-#: lib/html.php:2819
+#: lib/html.php:2846
 msgid "Sorry, we could not process your last action."
 msgstr "За съжаление не можахме да обработим последното ви действие."
 
-#: lib/html.php:2820
+#: lib/html.php:2847
 msgid "Error:"
 msgstr "Грешка:"
 
-#: lib/html.php:2821
+#: lib/html.php:2848
 msgid "Reason:"
 msgstr "Причина:"
 
-#: lib/html.php:2822
+#: lib/html.php:2849
 msgid "Action failed"
 msgstr "Неуспешно действие"
 
-#: lib/html.php:2823 pollers.php:804
+#: lib/html.php:2850 pollers.php:804
 msgid "Connection Successful"
 msgstr "Операцията е успешна"
 
-#: lib/html.php:2824 pollers.php:806
+#: lib/html.php:2851 pollers.php:806
 msgid "Connection Failed"
 msgstr "Свързването е неуспешно."
 
-#: lib/html.php:2825
+#: lib/html.php:2852
 msgid "The response to the last action was unexpected."
 msgstr "Отговорът на последното действие беше неочакван."
 
-#: lib/html.php:2826
+#: lib/html.php:2853
 msgid "Some Actions failed"
 msgstr "Някои действия бяха неуспешни"
 
-#: lib/html.php:2827
+#: lib/html.php:2854
 msgid "Note, we could not process all your actions.  Details are below."
 msgstr "Забележете, че не можем да обработим всички ваши действия. Подробностите са по-долу."
 
-#: lib/html.php:2828
+#: lib/html.php:2855
 msgid "Operation successful"
 msgstr "Операцията е успешна"
 
-#: lib/html.php:2829
+#: lib/html.php:2856
 msgid "The Operation was successful.  Details are below."
 msgstr "Операцията беше успешна. Подробностите са по-долу."
 
-#: lib/html.php:2831
+#: lib/html.php:2858
 msgid "Pause"
 msgstr "Пауза"
 
-#: lib/html.php:2834
+#: lib/html.php:2861
 msgid "Zoom In"
 msgstr "Zoom In"
 
-#: lib/html.php:2835
+#: lib/html.php:2862
 msgid "Zoom Out"
 msgstr "Zoom Out"
 
-#: lib/html.php:2836
+#: lib/html.php:2863
 msgid "Zoom Out Factor"
 msgstr "Намаляване на фактора"
 
-#: lib/html.php:2837
+#: lib/html.php:2864
 msgid "Timestamps"
 msgstr "Показване на времето"
 
-#: lib/html.php:2838
+#: lib/html.php:2865
 msgid "2x"
 msgstr "2x"
 
-#: lib/html.php:2839
+#: lib/html.php:2866
 msgid "4x"
 msgstr "4x"
 
-#: lib/html.php:2840
+#: lib/html.php:2867
 msgid "8x"
 msgstr "8x"
 
-#: lib/html.php:2841
+#: lib/html.php:2868
 msgid "16x"
 msgstr "16x"
 
-#: lib/html.php:2842
+#: lib/html.php:2869
 msgid "32x"
 msgstr "32x"
 
-#: lib/html.php:2843
+#: lib/html.php:2870
 msgid "Zoom Out Positioning"
 msgstr "Намаляване на позиционирането"
 
-#: lib/html.php:2844
+#: lib/html.php:2871
 msgid "Zoom Mode"
 msgstr "Режим на мащабиране"
 
-#: lib/html.php:2846
+#: lib/html.php:2873
 msgid "Quick"
 msgstr "Бързо"
 
-#: lib/html.php:2848
+#: lib/html.php:2875
 msgid "Open in new tab"
 msgstr "Отвори в нов раздел"
 
-#: lib/html.php:2849
+#: lib/html.php:2876
 msgid "Save graph"
 msgstr "Запазване на графиката"
 
-#: lib/html.php:2850
+#: lib/html.php:2877
 msgid "Copy graph"
 msgstr "Копиране на графиката"
 
-#: lib/html.php:2851
+#: lib/html.php:2878
 msgid "Copy graph link"
 msgstr "Копирайте връзката на графиката"
 
-#: lib/html.php:2852
+#: lib/html.php:2879
 msgid "Always On"
 msgstr "Винаги включен"
 
-#: lib/html.php:2853
+#: lib/html.php:2880
 msgid "Auto"
 msgstr "Автоматично"
 
-#: lib/html.php:2854
+#: lib/html.php:2881
 msgid "Always Off"
 msgstr "Винаги изключен"
 
-#: lib/html.php:2855
+#: lib/html.php:2882
 msgid "Begin with"
 msgstr "Започни с"
 
-#: lib/html.php:2857
+#: lib/html.php:2884
 msgid "End with"
 msgstr "Крайна дата"
 
-#: lib/html.php:2859 lib/html_form.php:1432
+#: lib/html.php:2886 lib/html_form.php:1432
 msgid "Close"
 msgstr "Затвори"
 
-#: lib/html.php:2861
+#: lib/html.php:2888
 msgid "3rd Mouse Button"
 msgstr "Трети бутон на мишката"
 
@@ -16254,194 +16256,194 @@ msgstr "Неуспешно добавяне на елемент от графи�
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "Елементът на графиката „Пропуснати“ „ <i> %s</i> “ вече е налице"
 
-#: lib/rrd.php:2149
+#: lib/rrd.php:2147
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2152
+#: lib/rrd.php:2150
 msgid "The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2523
+#: lib/rrd.php:2521
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "ГРЕШКА: RRDfile %s не може да се запише"
 
-#: lib/rrd.php:3933
+#: lib/rrd.php:3931
 #, fuzzy, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "Необходимият размер на RRD файла е „{ 0 }“, но наблюдаваната стъпка е „{ 1 }“"
 
-#: lib/rrd.php:3997
+#: lib/rrd.php:3995
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "Типът за източник на данни „ %s“ трябва да бъде „ %s“"
 
-#: lib/rrd.php:4003
+#: lib/rrd.php:4001
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "Сърцето за източник на данни „ %s“ трябва да бъде „ %s“"
 
-#: lib/rrd.php:4015
+#: lib/rrd.php:4013
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "RRD минимум за източник на данни &#39; %s&#39; трябва да бъде &#39; %s&#39;"
 
-#: lib/rrd.php:4024
+#: lib/rrd.php:4022
 #, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "DS &#39; %s&#39; липсва в определението Kadupul"
 
-#: lib/rrd.php:4038 lib/rrd.php:4039
+#: lib/rrd.php:4036 lib/rrd.php:4037
 #, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Kadupul RRA &#39; %s&#39; има същите CF / стъпки ( %s, %s) като &#39; %s&#39;"
 
-#: lib/rrd.php:4052 lib/rrd.php:4053
+#: lib/rrd.php:4050 lib/rrd.php:4051
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Файлът RRA &#39; %s&#39; има същите стъпки ( %s, %s) като &#39; %s&#39;"
 
-#: lib/rrd.php:4085
+#: lib/rrd.php:4083
 #, fuzzy, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr "Pdp_per_row на „{ 0 }“ е невалиден за RRA „{ 1 }“ трябва да бъде „{ 2 }“. Помислете дали да не изтриете и позволите на Kadupul да пресъздадат RRD файла."
 
-#: lib/rrd.php:4089
+#: lib/rrd.php:4087
 #, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "XFF за id Kadupul RRA &#39; %s&#39; трябва да бъде &#39; %s&#39;"
 
-#: lib/rrd.php:4093
+#: lib/rrd.php:4091
 #, fuzzy, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Броят редове за Kadupul RRA ID '{ 0 }' е неправилен.  Броят на редовете е „{ 1 }“, но трябва да бъде „{ 2 }“"
 
-#: lib/rrd.php:4110
+#: lib/rrd.php:4108
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "RRA &#39; %s&#39; липсва в RRDfile"
 
-#: lib/rrd.php:4118
+#: lib/rrd.php:4116
 #, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "RRA &#39; %s&#39; липсва в дефиницията на Kadupul"
 
-#: lib/rrd.php:4140
+#: lib/rrd.php:4138
 msgid "RRD File Information"
 msgstr "Информация за RRD файла"
 
-#: lib/rrd.php:4172
+#: lib/rrd.php:4170
 msgid "Data Source Items"
 msgstr "Елементи на източника на данни"
 
-#: lib/rrd.php:4174
+#: lib/rrd.php:4172
 msgid "Minimal Heartbeat"
 msgstr "Минимален пулс"
 
-#: lib/rrd.php:4175
+#: lib/rrd.php:4173
 msgid "Min"
 msgstr "мин."
 
-#: lib/rrd.php:4176
+#: lib/rrd.php:4174
 msgid "Max"
 msgstr "Максимум"
 
-#: lib/rrd.php:4177
+#: lib/rrd.php:4175
 msgid "Last DS"
 msgstr "Последен DS"
 
-#: lib/rrd.php:4179
+#: lib/rrd.php:4177
 msgid "Unknown Sec"
 msgstr "Неизвестен раздел"
 
-#: lib/rrd.php:4218
+#: lib/rrd.php:4216
 msgid "Round Robin Archive"
 msgstr "Кръг Робин Архив"
 
-#: lib/rrd.php:4221
+#: lib/rrd.php:4219
 msgid "Cur Row"
 msgstr "Cur Row"
 
-#: lib/rrd.php:4222
+#: lib/rrd.php:4220
 msgid "PDP per Row"
 msgstr "PDP на ред"
 
-#: lib/rrd.php:4224
+#: lib/rrd.php:4222
 msgid "CDP Prep Value (0)"
 msgstr "CDP Предварителна стойност (0)"
 
-#: lib/rrd.php:4225
+#: lib/rrd.php:4223
 msgid "CDP Unknown Data points (0)"
 msgstr "Точки на неизвестни данни за CDP (0)"
 
-#: lib/rrd.php:4306
+#: lib/rrd.php:4304
 msgid "Errors Found"
 msgstr "Няма намерени %s"
 
-#: lib/rrd.php:4318
+#: lib/rrd.php:4316
 msgid "Optional Tuning Recommendations"
 msgstr "Полета на източника на данни"
 
-#: lib/rrd.php:4343 lib/rrd.php:4346
+#: lib/rrd.php:4341 lib/rrd.php:4344
 #, php-format
 msgid "rename %s to %s"
 msgstr "преименувайте %s на %s"
 
-#: lib/rrd.php:4438
+#: lib/rrd.php:4436
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "ГРЕШКА при писане на XML файл: %s"
 
-#: lib/rrd.php:4444
+#: lib/rrd.php:4442
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4450
+#: lib/rrd.php:4448
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "ГРЕШКА: RRDfile %s не може да се запише"
 
-#: lib/rrd.php:4471
+#: lib/rrd.php:4469
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "Грешка при анализирането на XML на dump на rrdtool"
 
-#: lib/rrd.php:4507 lib/rrd.php:4526
+#: lib/rrd.php:4505 lib/rrd.php:4524
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "Грешка при анализиране на XML на RRDtool"
 
-#: lib/rrd.php:4744
+#: lib/rrd.php:4742
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_ROW =% d, XFF =% 1.2f) са премахнати от RRD файла"
 
-#: lib/rrd.php:4782
+#: lib/rrd.php:4780
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_ROW =% d, XFF =% 1.2f) добавяне към RRD файла"
 
-#: lib/rrd.php:4813 lib/rrd.php:4829
+#: lib/rrd.php:4811 lib/rrd.php:4827
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "Уебсайтът няма достъп за запис до %s, може да не е в състояние да създаде / актуализира RRD"
 
-#: lib/rrd.php:4825
+#: lib/rrd.php:4823
 msgid "(Custom)"
 msgstr "(Потребителска)"
 
-#: lib/rrd.php:4831
+#: lib/rrd.php:4829
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "Неуспешно отваряне на файл с данни, полърът може да не е стартирал още"
 
-#: lib/rrd.php:4834
+#: lib/rrd.php:4832
 msgid "RRA Folder"
 msgstr "RRA Папка"
 
-#: lib/rrd.php:4834
+#: lib/rrd.php:4832
 msgid "Root"
 msgstr "Root"
 
-#: lib/rrd.php:4914
+#: lib/rrd.php:4912
 msgid "Unknown RRDtool Error"
 msgstr "Неизвестна грешка на RRDtool"
 

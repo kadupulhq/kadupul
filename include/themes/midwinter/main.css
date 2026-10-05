@@ -10,7 +10,7 @@
 @import url('./css/pre/keyframes.css?v=19c1c6828ae8704261070431637cacb17c8a3637243e7f9d62a74d079bae8529');
 
 /* Cacti core */
-@import url('./css/media/core.css?v=d79a4a77f0ccdeebc95d967cb2dc84f98546e2af03721c20ee3eabf5a8bb858f') all;
+@import url('./css/media/core.css?v=cbf9c9a8076184c8a2e905b939678162fcf367c1988301fee3acd438fb7f2394') all;
 @import url('./css/media/core-portrait.css?v=72acf3f7e1a0541f72feb38970dfa9f0ecc45391c735de4ce183a2641035d416') screen and (max-width: 600px);
 @import url('./css/media/core-landscape.css?v=91c66ccf6eddda1e6e07edac0954f71b38c0134529a60cb4a85655df80b7c5ef') screen and (min-width: 601px);
 @import url('./css/media/print.css?v=c2339d8a7e8b32d655d71af788b944dac62c6c4c4653f5b9430f9b16bd3c1700') print;

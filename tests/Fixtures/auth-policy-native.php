@@ -53,6 +53,14 @@ foreach ($scenario['groups'] ?? [] as $index => $group) {
     $db->prepare('INSERT INTO user_auth_group_members VALUES (?, ?)')->execute([$group['user'] ?? 42, $id]);
     $db->prepare('INSERT INTO user_auth_group_realm VALUES (?, 21)')->execute([$id]);
     $db->prepare('UPDATE user_auth_group SET policy_trees=? WHERE id=?')->execute([$group['tree_policy'] ?? 1, $id]);
+    if ($scenario['operation'] === 'graphs') {
+        $policy = $group['graph_policy'] ?? 2;
+        $db->prepare('UPDATE user_auth_group SET policy_graphs=?,policy_hosts=?,policy_graph_templates=? WHERE id=?')->execute([$policy, $policy, $policy, $id]);
+        foreach ($group['graph_exceptions'] ?? [] as $type) {
+            $item = [1 => 100, 3 => 101, 4 => 102][$type];
+            $db->prepare('INSERT INTO user_auth_group_perms VALUES (?, ?, ?)')->execute([$id, $type, $item]);
+        }
+    }
     foreach ($group['exceptions'] ?? [] as $type) {
         $db->prepare('INSERT INTO user_auth_group_perms VALUES (?, ?, 100)')->execute([$id, $type]);
     }
@@ -180,6 +188,30 @@ switch ($scenario['operation']) {
         $db->exec('UPDATE user_auth SET policy_graphs=1,policy_graph_templates=1,policy_trees=1,reset_perms=1 WHERE id=43');
         $result[] = $answers(43);
         $result[] = $answers(42);
+        break;
+    case 'graphs':
+        // Persist the graph/host/template relationships used by the production
+        // query. Distinct IDs catch a permission joined to the wrong resource.
+        $db->exec("INSERT INTO host(id,description) VALUES(101,'Fixture host');
+INSERT INTO graph_templates VALUES(102,'Fixture template');
+INSERT INTO graph_local VALUES(100,101,102,'interface',1);
+INSERT INTO graph_templates_graph VALUES(100,'Fixture graph',500,120);");
+        $db->sqliteCreateFunction('IF', static fn($condition, $yes, $no) => $condition ? $yes : $no);
+        foreach ($scenario['graph_exceptions'] ?? [] as $type) {
+            $item = [1 => 100, 3 => 101, 4 => 102][$type];
+            $db->prepare('INSERT INTO user_auth_perms VALUES (42, ?, ?)')->execute([$type, $item]);
+        }
+        $where = get_policy_where($scenario['config']['graph_auth_method'], get_policies(42), '');
+        $query = 'SELECT gl.id FROM graph_local AS gl LEFT JOIN host AS h ON h.id=gl.host_id ' . $where;
+        $total = 0;
+        $rows = get_allowed_graphs('', '', '', $total, 42, 100);
+        $result = [
+            'policy_rows' => array_column(db_fetch_assoc($query), 'id'),
+            'allowed_rows' => array_column($rows, 'local_graph_id'),
+            'total' => $total,
+            'allowed' => is_graph_allowed(100, 42),
+            'missing' => is_graph_allowed(999, 42),
+        ];
         break;
     case 'branch':
         if (!empty($scenario['graph'])) {

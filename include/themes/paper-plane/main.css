@@ -117,6 +117,11 @@ a:hover {
 	color: #333333;
 }
 
+/* Content links sit on the dark canvas; light panels retain their own hover. */
+.cactiContent a:hover:not(:is(.tableRowGraph td, .cactiInstallArea, #tree_edit, .logoutArea, .textAreaNotes) *) {
+	color: #9db7ff;
+}
+
 /* The install wizard text sits on #E5E5E5, where the light link colour measures 2.64:1. */
 .cactiInstallArea p a, .cactiInstallArea p a:active, .cactiInstallArea p a:visited {
 	color: #2d4ca8;
@@ -1179,6 +1184,14 @@ legend, .loginHeading {
 	width: 20px;
 	line-height: 20px;
 	display: inline-block;
+}
+
+button.iconLink.spikekill {
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	cursor: pointer;
 }
 
 .piinstall, .pienable, .pidisable, .piuninstall, .pierror {
