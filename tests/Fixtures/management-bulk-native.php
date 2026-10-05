@@ -25,7 +25,9 @@ function management_bulk_fixture_run(): never
     $title = $db->prepare('INSERT INTO graph_templates_graph(local_graph_id,title_cache,width,height) VALUES(?,?,100,100)');
     $data = $db->prepare('INSERT INTO data_local VALUES(?,101)');
     $name = $db->prepare('INSERT INTO native_resource_titles VALUES(?,?)');
+    $device = $db->prepare("INSERT INTO host(id,description,disabled) VALUES(?,?,'on')");
     foreach ($ids as $id) {
+        if ($scenario['resource'] === 'device') $device->execute([$id, 'Record ' . $id]);
         $graph->execute([$id]);
         $title->execute([$id,'Record ' . $id]);
         $data->execute([$id]);
@@ -43,6 +45,7 @@ function management_bulk_fixture_run(): never
     if ($scenario['actor_locked'] ?? false) $db->exec("UPDATE user_auth SET locked='on' WHERE id=42");
     if ($scenario['actor_disabled'] ?? false) $db->exec("UPDATE user_auth SET enabled='' WHERE id=42");
     $selection = $scenario['selection'] ?? $ids;
+    if ($scenario['integral_float'] ?? false) $selection[0] = (float) $selection[0];
     $_REQUEST = ['action' => 'actions', 'drp_action' => 'native_budget_probe', 'header' => 'false'];
     $_POST = ['action' => 'actions','drp_action' => 'native_budget_probe'];
     if (($scenario['phase'] ?? 'execute') === 'execute') {
@@ -72,7 +75,8 @@ function management_bulk_fixture_run(): never
     });
     $paths = ['graphs.php' => $scenario['resource'] === 'graph' ? ['graph_edit_graph_is_allowed', 'graph_edit_access_denied', 'form_actions'] : [],
         'data_sources.php' => $scenario['resource'] === 'data' ? ['data_source_device_is_allowed', 'data_source_access_denied', 'form_actions'] : [],
-        'lib/api_data_source.php' => $scenario['resource'] === 'data' ? ['api_data_source_is_allowed'] : []];
+        'lib/api_data_source.php' => $scenario['resource'] === 'data' ? ['api_data_source_is_allowed'] : [],
+        'host.php' => $scenario['resource'] === 'device' ? ['host_require_device_access', 'form_actions'] : []];
     foreach ($paths as $path => $names) {
         $source = file_get_contents($root . '/' . $path);
         if ($source === false) throw new RuntimeException('Cannot read actual action source.');
@@ -188,6 +192,11 @@ function snmpagent_graphs_action_bottom(array $value): void
     $GLOBALS['bulkFixture']['events'][] = ['snmp',$value[1]];
 }
 function snmpagent_data_source_action_bottom(array $value): void
+{
+    $GLOBALS['bulkFixture']['events'][] = ['snmp',$value[1]];
+}
+
+function snmpagent_device_action_bottom(array $value): void
 {
     $GLOBALS['bulkFixture']['events'][] = ['snmp',$value[1]];
 }

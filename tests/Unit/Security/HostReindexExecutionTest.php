@@ -29,6 +29,12 @@ function __($text, ...$args) { return $args ? vsprintf($text, $args) : $text; }
 function api_plugin_hook_function($name, $value) { return $value; }
 function api_plugin_hook($name) {}
 function is_device_allowed($hostId) { return (int) $hostId === 7; }
+// Same isolated policy port as the single-device cases; the batch SQL itself
+// is exercised with persisted policies by AuthPolicyNativeCoverageTest.
+function get_allowed_management_selection($resource, $items) {
+    if ($resource !== 'device' || count($items) > 10000) throw new RuntimeException('Invalid device selection');
+    return array_values(array_filter($items, 'is_device_allowed'));
+}
 function cacti_log(...$args) { $GLOBALS['events'][] = 'denied'; }
 function input_validate_input_number($value) {}
 function sanitize_unserialize_selected_items($items) { return unserialize($items); }

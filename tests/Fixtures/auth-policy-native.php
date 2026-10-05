@@ -115,8 +115,9 @@ function db_fetch_assoc_prepared($sql, $params = [])
     $q->execute($params);
     $rows = $q->fetchAll(PDO::FETCH_ASSOC);
     $bulk = ($GLOBALS['scenario']['operation'] ?? '') === 'management-bulk';
-    $eligibility = str_starts_with($sql, 'SELECT id FROM graph_local ') || str_starts_with($sql, 'SELECT id FROM data_local ');
+    $eligibility = str_starts_with($sql, 'SELECT id FROM graph_local ') || str_starts_with($sql, 'SELECT id FROM data_local ') || str_starts_with($sql, 'SELECT id FROM host ');
     $GLOBALS['queryRowCounts'][] = ['choices' => str_contains($sql, 'data_template_rrd'), 'rows' => count($rows), 'bulk_eligibility' => $bulk && $eligibility];
+    if ($bulk && str_starts_with($sql, 'SELECT description FROM host WHERE id')) $GLOBALS['bulkFixture']['title_ids'][] = (int) $params[0];
     if ($bulk && $eligibility) {
         management_bulk_fixture_after_query($sql);
         $failure = $GLOBALS['scenario']['read_failure'] ?? 0;

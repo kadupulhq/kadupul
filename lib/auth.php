@@ -3487,7 +3487,7 @@ function get_allowed_management_device_ids_sql($user_id = 0): string
  */
 function get_allowed_management_selection(string $resource, array $selection): array
 {
-    if (!in_array($resource, array('graph', 'data'), true) || count($selection) > 10000) {
+    if (!in_array($resource, array('graph', 'data', 'device'), true) || count($selection) > 10000) {
         throw new RuntimeException('Invalid management selection.');
     }
     $ids = array();
@@ -3520,11 +3520,11 @@ function get_allowed_management_selection(string $resource, array $selection): a
             $generation = $account();
             $devices = get_allowed_management_device_ids_sql();
             $graphs = $resource === 'graph' ? get_allowed_management_graph_ids_sql() : '';
-            $table = $resource === 'graph' ? 'graph_local' : 'data_local';
+            $table = $resource === 'graph' ? 'graph_local' : ($resource === 'data' ? 'data_local' : 'host');
             $allowed = array();
             foreach (array_chunk(array_values($ids), 1000) as $chunk) {
                 $rows = db_fetch_assoc("SELECT id FROM $table WHERE id IN (" . implode(',', $chunk) . ")
-                    AND (host_id = 0 OR (host_id > 0 AND host_id IN ($devices)))"
+                    AND " . ($resource === 'device' ? "id IN ($devices)" : "(host_id = 0 OR (host_id > 0 AND host_id IN ($devices)))")
                     . ($resource === 'graph' ? " AND id IN ($graphs)" : ''));
                 if (!is_array($rows) || !empty($database_last_error)) {
                     throw new RuntimeException('Management ownership could not be confirmed.');

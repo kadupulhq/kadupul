@@ -567,10 +567,65 @@ final class AuthPolicyNativeCoverageTest extends TestCase
             $cases['graph invalid ' . $index] = ['graph', $scenario, 'denied', null];
             $cases['data invalid partial ' . $index] = ['data', $scenario, 'execution', $index < 2 ? [1002, 1003, 1004] : [1001]];
         }
+        foreach (['decimal text' => '1001.0', 'exponent text' => '1.001e3', 'fractional float' => 1001.5] as $name => $value) {
+            $cases['graph malformed numeric ' . $name] = ['graph', ['selection' => [$value, 1002]], 'denied', null];
+            $cases['data malformed numeric ' . $name] = ['data', ['selection' => [$value, 1002]], 'execution', [1002]];
+        }
+        $cases['graph integral float'] = ['graph', ['integral_float' => true], 'denied', null];
+        $cases['data integral float'] = ['data', ['integral_float' => true], 'execution', [1002, 1003, 1004]];
         $cases['graph restricted mixed'] = ['graph', ['restricted' => true, 'owners' => [1001 => 201]], 'denied', null];
         $cases['data restricted mixed'] = ['data', ['restricted' => true, 'owners' => [1001 => 201]], 'execution', [1002, 1003, 1004]];
         $cases['data restricted confirmation'] = ['data', ['restricted' => true, 'owners' => [1001 => 201], 'phase' => 'confirmation'], 'confirmation', [1002, 1003, 1004]];
         return $cases;
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('managementDeviceCases')]
+    public function testDeviceManagementUsesBoundedCurrentPolicyBeforeNamesAndHandoff(array $scenario, string $stage, ?array $selection): void
+    {
+        $state = $this->runPolicy(array_merge(['operation' => 'management-bulk', 'resource' => 'device',
+            'config' => ['graph_auth_method' => 3]], $scenario))['result'];
+        self::assertSame($stage, $state['stage']);
+        self::assertSame($selection, $state['selection']);
+        self::assertSame('preserved previous diagnostic', $state['error_restored']);
+        if ($stage === 'denied') {
+            self::assertSame([], $state['events']);
+            self::assertSame([], $state['title_ids']);
+            if (($scenario['size'] ?? 0) === 10001) self::assertSame(0, $state['queries']);
+        } elseif (($scenario['size'] ?? 0) === 5000) {
+            self::assertSame(array_fill(0, 5, 1000), $state['eligibility_rows']);
+            $confirmation = ($scenario['phase'] ?? '') === 'confirmation';
+            self::assertLessThanOrEqual($confirmation ? 5011 : 11, $state['queries']);
+            self::assertSame($confirmation ? range(1001, 6000) : [], $state['title_ids']);
+            self::assertSame($confirmation ? [] : ['device_action_execute', 'snmp', 'device_action_bottom'], array_column($state['events'], 0));
+            foreach ($state['events'] as $event) self::assertSame(range(1001, 6000), $event[1]);
+        }
+    }
+
+    public static function managementDeviceCases(): array
+    {
+        return [
+            'maximum execution' => [['size' => 5000], 'execution', range(1001, 6000)],
+            'maximum confirmation' => [['size' => 5000, 'phase' => 'confirmation'], 'confirmation', range(1001, 6000)],
+            'oversized execution' => [['size' => 10001], 'denied', null],
+            'oversized confirmation' => [['size' => 10001, 'phase' => 'confirmation'], 'denied', null],
+            'disabled actor' => [['actor_disabled' => true], 'denied', null],
+            'locked actor' => [['actor_locked' => true], 'denied', null],
+            'read failure' => [['read_failure' => true], 'denied', null],
+            'late chunk failure' => [['size' => 1001, 'read_failure' => 2], 'denied', null],
+            'generation once' => [['generation_change' => 'once'], 'denied', null],
+            'generation repeat' => [['generation_change' => 'repeat'], 'denied', null],
+            'zero identifier' => [['selection' => [0, 1001]], 'denied', null],
+            'decimal identifier' => [['selection' => ['1001.0', 1002]], 'denied', null],
+            'exponent identifier' => [['selection' => ['1.001e3', 1002]], 'denied', null],
+            'fractional float identifier' => [['selection' => [1001.5, 1002]], 'denied', null],
+            'integral float identifier' => [['integral_float' => true], 'denied', null],
+            'negative identifier' => [['selection' => [-1, 1001]], 'denied', null],
+            'missing device' => [['selection' => [9999, 1001]], 'denied', null],
+            'restricted device' => [['restricted' => true], 'denied', null],
+            'duplicate representation' => [['selection' => ['01001', 1002, '1001 ', 1001]], 'execution', ['01001', 1002, '1001 ', 1001]],
+            'no authentication' => [['auth_method' => 0, 'anonymous' => true], 'execution', [1001, 1002, 1003, 1004]],
+            'hidden disabled devices remain manageable' => [['hide_disabled' => 'on'], 'execution', [1001, 1002, 1003, 1004]],
+        ];
     }
 
     private function runPolicy(array $scenario): array
@@ -600,7 +655,7 @@ final class AuthPolicyNativeCoverageTest extends TestCase
                     require_once $root . '/tests/Helpers/ManagementBulkCoverageRegistration.php';
                     $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), ManagementBulkCoverageRegistration::SOURCES, ManagementBulkCoverageRegistration::MARKERS, ['lib/auth.php']);
                     if (!isset(self::$coverageEvidenceChecked['management-bulk'])) {
-                        self::assertSame(38, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), ManagementBulkCoverageRegistration::SOURCES, ManagementBulkCoverageRegistration::MARKERS, ['lib/auth.php'], 'lib/rrd.php'));
+                        self::assertSame(39, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), ManagementBulkCoverageRegistration::SOURCES, ManagementBulkCoverageRegistration::MARKERS, ['lib/auth.php'], 'lib/rrd.php'));
                         self::$coverageEvidenceChecked['management-bulk'] = true;
                     }
                     $coverage->merge($childCoverage);

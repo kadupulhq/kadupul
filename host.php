@@ -375,9 +375,12 @@ function form_actions()
         $selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
 
         if ($selected_items != false) {
-            foreach ($selected_items as $selected_item) {
-                host_require_device_access($selected_item);
+            try {
+                $allowed = get_allowed_management_selection('device', $selected_items);
+            } catch (Throwable $error) {
+                host_require_device_access(0);
             }
+            if (count($allowed) !== count($selected_items)) host_require_device_access(0);
 
             if (get_request_var('drp_action') == '2') { // Enable Selected Devices
                 api_device_enable_devices($selected_items);
@@ -440,14 +443,23 @@ function form_actions()
     $host_list = '';
     $host_array = array();
 
+    $selection = array();
+    foreach ($_POST as $key => $value) {
+        if (preg_match('/^chk_([0-9]+)$/', $key, $match)) $selection[] = $match[1];
+    }
+    try {
+        $allowed = get_allowed_management_selection('device', $selection);
+    } catch (Throwable $error) {
+        host_require_device_access(0);
+    }
+    if (count($allowed) !== count($selection)) host_require_device_access(0);
+
     /* loop through each of the host templates selected on the previous page and get more info about them */
     foreach ($_POST as $var => $val) {
         if (preg_match('/^chk_([0-9]+)$/', $var, $matches)) {
             /* ================= input validation ================= */
             input_validate_input_number($matches[1]);
             /* ==================================================== */
-
-            host_require_device_access($matches[1]);
 
             $host_list .= '<li>' . html_escape(db_fetch_cell_prepared('SELECT description FROM host WHERE id = ?', array($matches[1]))) . '</li>';
             $host_array[] = $matches[1];

@@ -11,7 +11,7 @@ final class ManagementBulkCoverageRegistration
         'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php',
         'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php',
         'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php',
-        'graphs.php', 'data_sources.php', 'lib/functions.php', 'include/global_constants.php',
+        'graphs.php', 'data_sources.php', 'host.php', 'lib/functions.php', 'include/global_constants.php',
         'tests/Fixtures/management-bulk-native.php', 'tests/Helpers/ManagementBulkCoverageRegistration.php',
         'tests/Unit/Security/Auth/AuthPolicyNativeCoverageTest.php', 'composer.lock', 'tests/composer.lock', 'cacti.sql'];
     public const MARKERS = ['native-policy-operation-returned', 'policy-session-observed', 'management-batch-observed', 'management-handoff-observed'];
