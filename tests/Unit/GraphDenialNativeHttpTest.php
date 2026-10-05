@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 final class GraphDenialNativeHttpTest extends TestCase
 {
     #[\PHPUnit\Framework\Attributes\DataProvider('requests')]
-    public function testWholeControllerPreservesAjaxDestinationAndOneTimeDenial(string $action, int $id, bool $denied): void
+    public function testWholeControllerPreservesAjaxDestinationAndOneTimeDenial(string $action, ?int $id, bool $denied, ?int $host = null): void
     {
         $root = dirname(__DIR__, 2);
         $directory = sys_get_temp_dir() . '/graph-denial-' . bin2hex(random_bytes(8));
@@ -64,7 +64,7 @@ final class GraphDenialNativeHttpTest extends TestCase
                 self::assertNotFalse($body);
                 return [$body, $http_response_header];
             };
-            [$body, $headers] = $request('graphs.php?action=' . $action . '&header=false&id=' . $id);
+            [$body, $headers] = $request('graphs.php?' . http_build_query(['action' => $action, 'header' => 'false'] + ($id === null ? [] : ['id' => $id]) + ($host === null ? [] : ['host_id' => $host])));
             $cookies = array_values(array_filter($headers, static fn(string $value): bool => str_starts_with($value, 'Set-Cookie: PHPSESSID=')));
             self::assertCount(1, $cookies);
             $cookie = explode(';', substr($cookies[0], strlen('Set-Cookie: ')), 2)[0];
@@ -88,7 +88,23 @@ final class GraphDenialNativeHttpTest extends TestCase
                 self::assertStringContainsString(' 200 ', $headers[0]);
                 self::assertJson($body, $body);
                 $state = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
-                self::assertSame('admitted-editor', $state['stage']);
+                self::assertSame($action === 'item' ? 'admitted-item-view' : ($id === null ? 'admitted-new-editor' : 'admitted-editor'), $state['stage']);
+                if ($id === null) {
+                    self::assertArrayNotHasKey('id', $state['request']);
+                    self::assertSame('1', $state['request']['host_id']);
+                    self::assertSame(['form_target' => 'graphs.php'], $state['render']);
+                    self::assertSame([], $state['reads']);
+                    self::assertArrayNotHasKey('sess_graph_lock_id', $state['session']);
+                } elseif ($action === 'item') {
+                    self::assertSame([['id' => 10, 'sequence' => 1, 'text_format' => 'Admitted item']], $state['render']['items']);
+                    self::assertSame('Graph Items [edit: Admitted graph]', $state['render']['box'][0]);
+                    self::assertSame('graphs_items.php?action=item_edit&host_id=1&local_graph_id=1', $state['render']['box'][5]);
+                    self::assertSame('graphs_items.php', $state['render']['target']);
+                    self::assertSame('host_id=1&local_graph_id=1', $state['render']['anchor']);
+                    self::assertFalse($state['render']['templated']);
+                    self::assertCount(1, $state['reads']);
+                    self::assertSame(['1'], $state['reads'][0][1]);
+                }
                 self::assertSame([], $state['message']);
                 self::assertArrayNotHasKey('native_log', $state['session']);
                 if ($action === 'lock' || $action === 'unlock') {
@@ -123,7 +139,9 @@ final class GraphDenialNativeHttpTest extends TestCase
             yield $action . ' denied graph' => [$action,9,true];
             yield $action . ' denied device' => [$action,2,true];
         }
-        foreach (['graph_edit','lock','unlock'] as $action) {
+        yield 'new editor denied device' => ['graph_edit',null,true,2];
+        yield 'new editor admitted device' => ['graph_edit',null,false,1];
+        foreach (['graph_edit','item','lock','unlock'] as $action) {
             yield $action . ' admitted' => [$action,1,false];
         }
     }

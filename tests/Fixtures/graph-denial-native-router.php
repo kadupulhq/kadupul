@@ -112,6 +112,7 @@ function native_graph_denial_observe(string $stage): never
     header('Content-Type: application/json');
     echo json_encode(['stage' => $stage, 'header_rendered' => $GLOBALS['header_rendered'],
         'message' => json_decode(display_output_messages(), true, 512, JSON_THROW_ON_ERROR),
+        'request' => $_REQUEST, 'render' => $GLOBALS['native_render'] ?? [], 'reads' => $GLOBALS['native_reads'] ?? [],
         'session' => $_SESSION, 'rows' => $GLOBALS['db']->query('SELECT * FROM graph_local ORDER BY id')->fetchAll(PDO::FETCH_ASSOC)], JSON_THROW_ON_ERROR);
     exit;
 }
@@ -124,12 +125,40 @@ function db_fetch_cell_prepared(string $sql, array $params = []): mixed
     if (str_contains($sql, 'SELECT local_graph_template_graph_id')) {
         native_graph_denial_observe('admitted-editor');
     }
-    if (!str_contains($sql, 'SELECT host_id FROM graph_local')) {
+    if (str_contains($sql, 'SELECT graph_template_id')) return 0;
+    if (!preg_match('/SELECT host_id\s+FROM graph_local/', $sql)) {
         throw new RuntimeException('Unexpected protected query');
     }
     $statement = $GLOBALS['db']->prepare($sql);
     $statement->execute($params);
     return $statement->fetchColumn();
+}
+function db_fetch_assoc_prepared(string $sql, array $params = []): array
+{
+    if (!str_contains($sql, 'FROM graph_templates_item AS gti') || $params !== ['1']) {
+        throw new RuntimeException('Unexpected graph item read');
+    }
+    $GLOBALS['native_reads'][] = [$sql, $params];
+    return [['id' => 10, 'sequence' => 1, 'text_format' => 'Admitted item']];
+}
+function get_graph_title(mixed $id): string
+{
+    if ((int) $id !== 1) throw new RuntimeException('Unexpected graph title read');
+    return 'Admitted graph';
+}
+function html_start_box(mixed ...$arguments): void
+{
+    $GLOBALS['native_render']['box'] = $arguments;
+}
+function draw_graph_items_list(array $items, string $target, string $anchor, bool $templated): never
+{
+    $GLOBALS['native_render'] += ['items' => $items, 'target' => $target, 'anchor' => $anchor, 'templated' => $templated];
+    native_graph_denial_observe('admitted-item-view');
+}
+function form_start(string $target): never
+{
+    $GLOBALS['native_render']['form_target'] = $target;
+    native_graph_denial_observe('admitted-new-editor');
 }
 function db_fetch_row_prepared(string $sql, array $params = []): never
 {
