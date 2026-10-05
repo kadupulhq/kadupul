@@ -139,6 +139,7 @@ function db_fetch_assoc_prepared($sql, $params = [])
     if (($GLOBALS['scenario']['operation'] ?? '') === 'management-list' && str_contains($sql, 'GROUP BY id, name')) {
         $sql = str_replace('GROUP BY id, name', 'GROUP BY 1, 2', $sql);
     }
+    if (($GLOBALS['scenario']['operation'] ?? '') === 'management-list') $sql = str_replace(' RLIKE ', ' REGEXP ', $sql);
     $q = $GLOBALS['db']->prepare($sql);
     $q->execute($params);
     $rows = $q->fetchAll(PDO::FETCH_ASSOC);

@@ -641,6 +641,10 @@ final class AuthPolicyNativeCoverageTest extends TestCase
         $actual = [];
         foreach ($xpath->query('//input[starts-with(@name,"chk_")]') as $input) $actual[] = (int) substr($input->getAttribute('name'), 4);
         self::assertSame($ids, $actual);
+        // Request normalization keeps positive client IDs; SQL separately scopes visibility.
+        $normalizedRequests = ['1001,1002,0,ordinary,1003' => '1001,1002,1003', '1002,0,ordinary' => '1002', '0,ordinary' => '0'];
+        $requested = $scenario['request']['local_graph_ids'] ?? '';
+        if (isset($normalizedRequests[$requested])) self::assertSame($normalizedRequests[$requested], $state['request']['local_graph_ids']);
         foreach ($xpath->query('//*[@data-total]') as $total) self::assertSame($totalRows ?? count($ids), (int) $total->getAttribute('data-total'));
         self::assertGreaterThan(0, $xpath->query('//*[@data-total]')->length);
         self::assertStringNotContainsString('Denied record', $state['html']);
@@ -685,6 +689,19 @@ final class AuthPolicyNativeCoverageTest extends TestCase
             'graph maximum custom repeated IDs' => ['graph', ['custom_maximum' => true, 'request' => ['local_graph_ids' => implode(',', array_fill(0, 5000, '01001'))]], [1001]],
             'graph custom malformed numeric IDs' => ['graph', ['request' => ['local_graph_ids' => '1001.5,1e3,1003']], [1003]],
             'graph custom permitted plus denied' => ['graph', ['request' => ['local_graph_ids' => '1001,1002,1003']], [1001,1003]],
+            'graph Any with ordinary name filter' => ['graph', ['request' => ['host_id' => -1, 'rfilter' => '^Allowed record$']], [1001]],
+            'graph permitted device with ordinary name filter' => ['graph', ['request' => ['host_id' => 101, 'rfilter' => '^Allowed record$']], [1001]],
+            'graph permitted device filter excludes nonmatching name' => ['graph', ['request' => ['host_id' => 101, 'rfilter' => '^Non-device record$']], []],
+            'graph denied device with ordinary name filter' => ['graph', ['request' => ['host_id' => 201, 'rfilter' => 'record$']], []],
+            'graph direct excluded host sentinel' => ['graph', ['request' => ['host_id' => -2]], []],
+            'graph excluded host sentinel with ordinary name filter' => ['graph', ['request' => ['host_id' => -2, 'rfilter' => 'record$']], []],
+            'graph None with ordinary name filter' => ['graph', ['request' => ['host_id' => 0, 'rfilter' => '^Non-device record$']], [1003]],
+            'graph custom mixed permitted denied zero and text IDs' => ['graph', ['request' => ['local_graph_ids' => '1001,1002,0,ordinary,1003']], [1001,1003]],
+            'graph custom denied-only projection remains empty' => ['graph', ['request' => ['local_graph_ids' => '1002,0,ordinary']], []],
+            'graph custom nonpositive and text IDs use zero fallback' => ['graph', ['request' => ['local_graph_ids' => '0,ordinary']], []],
+            'data defensive NULL read projection Any' => ['data', ['null_read_projection' => true], [1001,1003]],
+            'data defensive NULL read projection without permitted devices' => ['data', ['null_read_projection' => true, 'empty_devices' => true], [1003]],
+            'data defensive NULL read projection None' => ['data', ['null_read_projection' => true, 'request' => ['host_id' => 0]], [1003]],
         ];
     }
 
@@ -787,7 +804,7 @@ final class AuthPolicyNativeCoverageTest extends TestCase
                     $hits = ['lib/auth.php', $scenario['resource'] === 'graph' ? 'graphs.php' : 'data_sources.php'];
                     $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), ManagementListCoverageRegistration::SOURCES, ManagementListCoverageRegistration::MARKERS, $hits);
                     if (!isset(self::$coverageEvidenceChecked['management-list'])) {
-                        self::assertSame(43, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), ManagementListCoverageRegistration::SOURCES, ManagementListCoverageRegistration::MARKERS, $hits, 'lib/rrd.php'));
+                        self::assertSame(44, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), ManagementListCoverageRegistration::SOURCES, ManagementListCoverageRegistration::MARKERS, $hits, 'lib/rrd.php'));
                         self::$coverageEvidenceChecked['management-list'] = true;
                     }
                     $coverage->merge($childCoverage);

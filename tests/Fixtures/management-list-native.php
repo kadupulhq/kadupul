@@ -11,6 +11,18 @@ function management_list_fixture_run(): never
 {
     global $root, $db, $scenario, $config, $item_rows, $graph_sources, $sampling_intervals;
     require_once $root . '/include/global_constants.php';
+    require_once $root . '/tests/Helpers/PhpSource.php';
+    // Preserve the production RLIKE predicate; only its SQLite operator/runtime differs.
+    $db->sqliteCreateFunction('REGEXP', static function ($pattern, $value): int {
+        $result = preg_match('~' . str_replace('~', '\\~', (string) $pattern) . '~u', (string) $value);
+        if ($result === false) throw new RuntimeException('Invalid owned filter pattern');
+        return $result;
+    });
+    foreach (['db_qstr', 'db_qstr_rlike'] as $name) eval(test_php_function_source(file_get_contents($root . '/lib/database.php'), $name));
+    $GLOBALS['database_hostname'] = 'owned';
+    $GLOBALS['database_port'] = '0';
+    $GLOBALS['database_default'] = 'fixture';
+    $GLOBALS['database_sessions'] = ['owned:0:fixture' => $db];
     $db->sqliteCreateFunction('CONCAT', static fn(...$parts): string => implode('', $parts));
     $db->exec("ALTER TABLE host ADD hostname TEXT DEFAULT ''; ALTER TABLE graph_local ADD snmp_query_graph_id INTEGER DEFAULT 0;
         ALTER TABLE graph_templates_graph ADD id INTEGER; ALTER TABLE graph_templates_graph ADD graph_template_id INTEGER DEFAULT 0;
@@ -33,6 +45,8 @@ function management_list_fixture_run(): never
     }
     $db->exec('UPDATE user_auth SET policy_hosts=2,policy_graphs=2,policy_graph_templates=2 WHERE id=42;
         INSERT INTO user_auth_perms VALUES(42,3,101),(42,1,1001),(42,4,102),(42,1,1003),(42,4,302)');
+    // Defensive SQLite read-projection edge: cacti.sql host_id is NOT NULL DEFAULT 0.
+    if ($scenario['null_read_projection'] ?? false) $db->exec('UPDATE data_local SET host_id=NULL WHERE id=1003');
     if ($scenario['empty_devices'] ?? false) $db->exec('DELETE FROM user_auth_perms');
     if ($scenario['deny_graph'] ?? false) $db->exec('DELETE FROM user_auth_perms WHERE type=1 AND item_id=1001');
     if ($scenario['deny_template'] ?? false) {
