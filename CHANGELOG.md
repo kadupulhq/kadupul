@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Verify authenticated graph-tree confirmation and native automation placement handoffs, including rejected foreign/non-header parents and admitted destinations; require their measured behavior checks.
+
 - Keep CLI site tree nodes consistent with web placement by storing their site identity without a copied title; verify parent, duplicate, and malformed-input refusals through the actual CLI/API and require their measured behavior checks.
 
 - Make the missing input-field index and aggregate creation timestamp repairs reachable from deployed 1.2.31–1.2.34 through the main 1.2.35 upgrade step; confirm native schema changes and preserve a retryable version on failure.
