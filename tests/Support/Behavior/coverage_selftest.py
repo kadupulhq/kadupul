@@ -8,7 +8,6 @@ import json
 from pathlib import Path
 import subprocess
 import tempfile
-import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -174,11 +173,46 @@ def main():
             raise RuntimeError('temporary-source-restore: combined report was not published')
         if Path(temporary['copy']).exists() or Path(temporary['manifest']).exists():
             raise RuntimeError('temporary-source-restore: temporary source or manifest was not cleaned')
-        report_files = ET.parse(output).findall('.//file')
         canonical_source = json.loads(valid_mapping)['source']
-        matching_source = [file for file in report_files if file.get('name') == canonical_source]
-        if len(matching_source) != 1 or any(file.get('name') == temporary['copy'] for file in report_files) \
-                or not any(int(line.get('count', '0')) > 0 for line in matching_source[0].findall('line')):
+        # Use the installed native XMLReader with network access and entity
+        # substitution disabled; generated Clover must contain no DTD.
+        clover_check = r'''
+libxml_use_internal_errors(true);
+libxml_clear_errors();
+$reader = new XMLReader();
+if (!$reader->open($argv[1], null, LIBXML_NONET)) { exit(1); }
+if (!$reader->setParserProperty(XMLReader::LOADDTD, false)
+    || !$reader->setParserProperty(XMLReader::SUBST_ENTITIES, false)) { exit(1); }
+$matches = 0; $alias = false; $hit = false; $inside = false;
+while ($reader->read()) {
+    if ($reader->nodeType === XMLReader::DOC_TYPE) { exit(1); }
+    if ($reader->nodeType === XMLReader::ELEMENT && $reader->name === 'file') {
+        $inside = $reader->getAttribute('name') === $argv[2];
+        $matches += $inside ? 1 : 0;
+        $alias = $alias || $reader->getAttribute('name') === $argv[3];
+    } elseif ($reader->nodeType === XMLReader::END_ELEMENT && $reader->name === 'file') {
+        $inside = false;
+    } elseif ($inside && $reader->nodeType === XMLReader::ELEMENT && $reader->name === 'line') {
+        $hit = $hit || (int) $reader->getAttribute('count') > 0;
+    }
+}
+$reader->close();
+exit($matches === 1 && !$alias && $hit && libxml_get_errors() === [] ? 0 : 1);
+'''
+        parser_fixture = root / 'clover-parser-control.xml'
+        minimal_clover = '<clover><project><file name="/measured.php"><line count="1"/></file></project></clover>'
+        for xml, expected in ((minimal_clover, 0), ('<!DOCTYPE clover>' + minimal_clover, 1)):
+            parser_fixture.write_text(xml)
+            parser_control = subprocess.run(
+                [args.php, '-r', clover_check, str(parser_fixture), '/measured.php', '/alias.php'],
+                capture_output=True, text=True, timeout=60)
+            if parser_control.returncode != expected:
+                raise RuntimeError('temporary-source-safe-xml-parser: valid report or DTD refusal failed')
+        print('PASS temporary-source-safe-xml-parser', flush=True)
+        checked_clover = subprocess.run(
+            [args.php, '-r', clover_check, str(output), canonical_source, temporary['copy']],
+            capture_output=True, text=True, timeout=60)
+        if checked_clover.returncode != 0:
             raise RuntimeError('temporary-source-restore: measured coverage was lost or the copied path leaked into Clover')
         print('PASS temporary-source-restore', flush=True)
 
