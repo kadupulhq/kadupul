@@ -333,6 +333,7 @@ def main():
         'vdef-probe-hash': 'Integration test source differs',
         'vdef-browser-probe-hash': 'Integration test source differs',
         'vdef-browser-handler-hash': 'Integration test source differs',
+        'vdef-browser-receipt-helper-hash': 'Integration test source differs',
         'missing-vdef-selection-check-0': 'Incomplete Symfony integration',
         'missing-vdef-selection-check-1': 'Incomplete Symfony integration',
         'missing-vdef-selection-check-2': 'Incomplete Symfony integration',
@@ -501,6 +502,8 @@ def main():
                 evidence['source_sha256']['tests/Symfony/vdef_transaction_probe.php'] = '0' * 64
             elif case == 'vdef-browser-probe-hash':
                 evidence['source_sha256']['tests/Symfony/vdef_browser_probe.cjs'] = '0' * 64
+            elif case == 'vdef-browser-receipt-helper-hash':
+                evidence['source_sha256']['tests/e2e/browser-coverage.js'] = '0' * 64
             elif case == 'vdef-browser-handler-hash':
                 evidence['source_sha256']['public/js/vdef-item.js'] = '0' * 64
             elif case.startswith('missing-vdef-selection-check-'):

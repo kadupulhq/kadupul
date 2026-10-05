@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -103,6 +105,83 @@ final class HtmlRendererNativeCoverageTest extends TestCase
         self::assertCount(1, $xpath->query('//div[@id="native_edit1"]'));
         self::assertSame('native.php?action=add', $xpath->query('//a[@id="add-item"]')->item(0)->getAttribute('href'));
         self::assertStringContainsString('linkOverDark', $xpath->query('//a[@id="add-item"]')->item(0)->getAttribute('class'));
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('addLabelCases')]
+    public function testActualBlankAddLabelsKeepTranslatedNamesAndLinkBehavior(array $addText, string $label, string $expected): void
+    {
+        $text = $addText['single'] ?? $addText;
+        $xpath = $this->document($this->render(array('kind' => 'box', 'add_text' => $text, 'add_label' => $label, 'translations' => array('Add' => 'Ajouter')))['html']);
+        $link = $xpath->query('//span[@class="cactiFilterAdd"]/a')->item(0);
+        self::assertSame($expected, $link->getAttribute('aria-label'));
+        self::assertSame($expected, $link->parentNode->getAttribute('title'));
+        self::assertSame('native.php?action=add', $link->getAttribute('href'));
+        self::assertStringContainsString('linkOverDark', $link->getAttribute('class'));
+        self::assertSame('true', $link->getElementsByTagName('i')->item(0)->getAttribute('aria-hidden'));
+        self::assertCount(0, $xpath->query('//script'));
+    }
+
+    public static function addLabelCases(): array
+    {
+        $icon = array('id' => 'add-item', 'href' => 'native.php?action=add', 'callback' => true, 'class' => 'fa fa-plus');
+        return array(
+            array(array('single' => 'native.php?action=add'), '', 'Ajouter'),
+            array(array('single' => 'native.php?action=add'), " \t\n", 'Ajouter'),
+            array(array($icon + array('title' => '')), 'Create', 'Create'),
+            array(array($icon + array('title' => " \t\n")), 'Create', 'Create'),
+            array(array($icon), " \t\n", 'Ajouter'),
+            array(array($icon + array('title' => '  Create & View  ')), '', '  Create & View  '),
+        );
+    }
+
+    public function testActualHelpControlKeepsTranslatedNameAndDocumentTarget(): void
+    {
+        $xpath = $this->document($this->render(array('kind' => 'box', 'page' => 'graphs.php', 'realms' => array(28), 'translations' => array('Get Page Help' => 'Aide des graphiques')))['html']);
+        $link = $xpath->query('//a[contains(@class,"helpPage")]')->item(0);
+        self::assertSame('Aide des graphiques', $link->getAttribute('aria-label'));
+        self::assertSame('Graphs.html', $link->getAttribute('data-page'));
+        self::assertSame('#', $link->getAttribute('href'));
+        self::assertSame('true', $link->getElementsByTagName('i')->item(0)->getAttribute('aria-hidden'));
+        $denied = $this->document($this->render(array('kind' => 'box', 'page' => 'graphs.php'))['html']);
+        self::assertCount(0, $denied->query('//a[contains(@class,"helpPage")]'));
+    }
+
+    public function testActualBoxRefusesUnsupportedLinkScheme(): void
+    {
+        $state = $this->render(array('kind' => 'box', 'add_text' => 'ftp://example.test/native'));
+        $document = new DOMDocument();
+        self::assertTrue($document->loadHTML($state['html'], LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING));
+        $links = (new DOMXPath($document))->query('//a[@aria-label="Add"]');
+        self::assertCount(1, $links);
+        self::assertSame('#', $links->item(0)->getAttribute('href'));
+        self::assertStringNotContainsString('ftp:', $state['html']);
+    }
+
+    public function testActualTabsKeepNamesSelectionAndExternalLinkVisibility(): void
+    {
+        $state = $this->render(array('kind' => 'tabs', 'theme' => 'midwinter', 'realms' => array(8, 10001)));
+        $xpath = $this->document($state['html']);
+        $tab = $xpath->query('//a[@id="tab-console"]')->item(0);
+        self::assertSame('Console', $tab->getAttribute('aria-label'));
+        self::assertSame('true', $tab->getAttribute('aria-selected'));
+        self::assertSame('/native/index.php', $tab->getAttribute('href'));
+        self::assertSame('true', $tab->getElementsByTagName('span')->item(0)->getAttribute('aria-hidden'));
+        self::assertSame('Console', $xpath->query('//a[@id="menu-tab-console"]')->item(0)->getAttribute('aria-label'));
+        self::assertSame('Show All', $xpath->query('//a[@id="menu-ellipsis"]')->item(0)->getAttribute('aria-label'));
+        self::assertSame('Operator & Tools', $xpath->query('//a[@id="tab-link1"]')->item(0)->getAttribute('aria-label'));
+        self::assertCount(0, $xpath->query('//a[@id="tab-link2"]'));
+        self::assertNotEmpty($state['queries']);
+        $denied = $this->document($this->render(array('kind' => 'tabs', 'theme' => 'midwinter'))['html']);
+        self::assertCount(0, $denied->query('//a[@id="tab-console" or @id="tab-link1"]'));
+    }
+
+    public function testActualMenuKeepsNamedHeaderAndRealmScopedChildren(): void
+    {
+        $xpath = $this->document($this->render(array('kind' => 'menu', 'realms' => array(8)))['html']);
+        self::assertSame('Console', $xpath->query('//li[@id="menu_console"]/a/span')->item(0)->textContent);
+        self::assertSame('Native Device', $xpath->query('//a[@href="/native/native.php"]')->item(0)->textContent);
+        $denied = $this->document($this->render(array('kind' => 'menu'))['html']);
+        self::assertCount(0, $denied->query('//li[@id="menu_console"]'));
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('headerCases')]
