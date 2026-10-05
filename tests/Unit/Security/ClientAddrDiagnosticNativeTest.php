@@ -33,7 +33,11 @@ test('proxy configuration diagnostics preserve native caller outcomes and never 
             ->and($state['poller'])->toBe($authorized ? 2 : 0)->and($state['writes'])->toBe(1)
             ->and($state['session'])->toBe(['remote_addr' => $client === false ? '' : $client, 'user_id' => 42, 'data' => 'fixture-session']);
         $authLines = array_values(array_filter(explode("\n", $state['logs']), static fn(string $line): bool => str_contains($line, 'AUTH ')));
-        expect($authLines)->toHaveCount($diagnostic ? 1 : 0);
+        expect($authLines)->toHaveCount(($diagnostic ? 1 : 0) + (!empty($scenario['audit']) ? 2 : 0));
+        if (!empty($scenario['audit'])) {
+            expect($state['audit'])->toBe([['username' => 'owned-user', 'user_id' => 42, 'result' => 0, 'ip' => '']]);
+            expect($state['audit_parameters'])->toBe([['owned-user', 42, false]]);
+        }
         if ($diagnostic) {
             expect($authLines[0])->toContain('proxy_trusted_addresses', 'proxy_headers', 'Legacy boolean')
                 ->not->toContain('192.0.2.10', '198.51.100.7', '203.0.113.5', 'request-secret', 'HTTP_X_FORWARDED_FOR');
@@ -42,13 +46,19 @@ test('proxy configuration diagnostics preserve native caller outcomes and never 
         if ($coverage !== null) {
             $reports = glob($directory . '/*.coverage');
             expect($reports)->toHaveCount(1);
-            $sources = ['composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Helpers/PhpSource.php', 'tests/Unit/Security/ClientAddrDiagnosticNativeTest.php', 'include/global_constants.php', 'include/session.php', 'remote_agent.php', 'lib/remote_agent_auth.php', 'lib/functions.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'];
+            $sources = ['composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Helpers/PhpSource.php', 'tests/Unit/Security/ClientAddrDiagnosticNativeTest.php', 'include/global_constants.php', 'include/session.php', 'lib/auth.php', 'lib/graph_item_choices.php', 'cacti.sql', 'remote_agent.php', 'lib/remote_agent_auth.php', 'lib/functions.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'];
+            $markers = ['client-address-and-caller-outcomes-readback', 'actual-auth-log-readback', 'persisted-session-address-readback'];
+            $hits = ['lib/functions.php'];
+            if (!empty($scenario['audit'])) {
+                $markers[] = 'actual-user-log-address-readback';
+                $hits[] = 'lib/auth.php';
+            }
             $arguments = [$reports[0], $root, 'tests/Fixtures/client-addr-diagnostic-native.php', $encoded, $sources,
-                ['client-address-and-caller-outcomes-readback', 'actual-auth-log-readback', 'persisted-session-address-readback'], ['lib/functions.php']];
+                $markers, $hits];
             $measured = NativeChildCoverageEvidence::load(...$arguments);
             static $verifiedOmissions = false;
-            if (!$verifiedOmissions) {
-                expect(NativeChildCoverageEvidence::verifyRejections(...array_merge($arguments, ['lib/rrd.php'])))->toBe(count($sources) + 13);
+            if (!$verifiedOmissions || !empty($scenario['audit'])) {
+                expect(NativeChildCoverageEvidence::verifyRejections(...array_merge($arguments, ['lib/rrd.php'])))->toBe(count($sources) + 10 + count($markers));
                 $verifiedOmissions = true;
             }
             $coverage->merge($measured);
@@ -71,6 +81,7 @@ test('proxy configuration diagnostics preserve native caller outcomes and never 
         'malformed trusted address setting' => [$case(['trusted' => '192.0.2.10']), '192.0.2.10', true],
         'untrusted peer' => [$case(['server' => ['REMOTE_ADDR' => '198.51.100.7', 'HTTP_X_FORWARDED_FOR' => '203.0.113.5']]), '198.51.100.7', true],
         'missing trusted header' => [$case(['server' => ['REMOTE_ADDR' => '192.0.2.10']]), false, true],
+        'chained trusted header audit producer' => [$case(['audit' => true, 'server' => ['REMOTE_ADDR' => '192.0.2.10', 'HTTP_X_FORWARDED_FOR' => '203.0.113.5, request-secret']]), false, true],
         'chained trusted header' => [$case(['server' => ['REMOTE_ADDR' => '192.0.2.10', 'HTTP_X_FORWARDED_FOR' => '203.0.113.5, request-secret']]), false, true],
         'invalid trusted header' => [$case(['server' => ['REMOTE_ADDR' => '192.0.2.10', 'HTTP_X_FORWARDED_FOR' => 'request-secret']]), false, true],
         'empty trusted header' => [$case(['server' => ['REMOTE_ADDR' => '192.0.2.10', 'HTTP_X_FORWARDED_FOR' => '']]), false, true],
