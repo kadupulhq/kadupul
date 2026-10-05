@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 13:50-0700\n"
+"POT-Creation-Date: 2026-10-05 14:44-0700\n"
 "PO-Revision-Date: 2024-04-20 19:13-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -128,10 +128,10 @@ msgstr "Kliknij \"Kontynuuj\", aby usunąć następujący(e) zagregowany wykres(
 #: data_templates.php:486 data_templates.php:498 data_templates.php:514
 #: gprint_presets.php:137 graph_templates.php:373 graph_templates.php:385
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
-#: graph_view.php:1043 graphs.php:874 graphs.php:890 graphs.php:901
-#: graphs.php:912 graphs.php:927 graphs.php:941 graphs.php:950 graphs.php:1152
-#: graphs.php:1195 graphs.php:1217 graphs.php:1248 graphs.php:1260
-#: graphs.php:1844 host.php:487 host.php:496 host.php:543 host.php:552
+#: graph_view.php:1043 graphs.php:886 graphs.php:902 graphs.php:913
+#: graphs.php:924 graphs.php:939 graphs.php:953 graphs.php:962 graphs.php:1164
+#: graphs.php:1207 graphs.php:1229 graphs.php:1260 graphs.php:1272
+#: graphs.php:1856 host.php:487 host.php:496 host.php:543 host.php:552
 #: host.php:561 host.php:577 host.php:591 host.php:600 host.php:631
 #: host.php:643 host_templates.php:222 host_templates.php:236
 #: host_templates.php:247 host_templates.php:302 host_templates.php:375
@@ -163,9 +163,9 @@ msgstr "Anuluj"
 #: data_templates.php:486 data_templates.php:498 data_templates.php:514
 #: gprint_presets.php:137 graph_templates.php:373 graph_templates.php:385
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
-#: graphs.php:874 graphs.php:890 graphs.php:901 graphs.php:912 graphs.php:927
-#: graphs.php:941 graphs.php:950 graphs.php:1152 graphs.php:1195
-#: graphs.php:1217 graphs.php:1248 graphs.php:1260 host.php:487 host.php:496
+#: graphs.php:886 graphs.php:902 graphs.php:913 graphs.php:924 graphs.php:939
+#: graphs.php:953 graphs.php:962 graphs.php:1164 graphs.php:1207
+#: graphs.php:1229 graphs.php:1260 graphs.php:1272 host.php:487 host.php:496
 #: host.php:543 host.php:552 host.php:561 host.php:577 host.php:591
 #: host.php:600 host.php:631 host.php:643 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
@@ -181,7 +181,7 @@ msgid "Continue"
 msgstr "Kontynuuj"
 
 #: aggregate_graphs.php:370 aggregate_graphs.php:445 aggregate_graphs.php:470
-#: graphs.php:874
+#: graphs.php:886
 msgid "Delete Graph(s)"
 msgstr "Usuń wykres(y)"
 
@@ -195,8 +195,8 @@ msgstr "W celu migracji poniższych wykresów zagregowanych do wykresu zagregowa
 
 #: aggregate_graphs.php:406 aggregate_graphs.php:456 aggregate_graphs.php:504
 #: auth_changepassword.php:415 auth_profile.php:464 automation_networks.php:387
-#: automation_snmp.php:245 graphs.php:1154 graphs.php:1204 graphs.php:1207
-#: graphs.php:1251 graphs.php:1844 host.php:634 include/auth.php:309
+#: automation_snmp.php:245 graphs.php:1166 graphs.php:1216 graphs.php:1219
+#: graphs.php:1263 graphs.php:1856 host.php:634 include/auth.php:309
 #: lib/api_aggregate.php:2209 lib/api_aggregate.php:2224 lib/html_form.php:1422
 #: lib/html_reports.php:632 managers.php:1130 permission_denied.php:14
 #: permission_denied.php:16
@@ -244,29 +244,29 @@ msgstr "Nazwa agregacji:"
 msgid "New Aggregate"
 msgstr "Nowa agregacja"
 
-#: aggregate_graphs.php:485 graphs.php:1232 host.php:615
+#: aggregate_graphs.php:485 graphs.php:1244 host.php:615
 msgid "Click 'Continue' to add the selected Graphs to the Report below."
 msgstr "Kliknij 'Kontynuuj', aby dodać wybrane wykresy do poniższego raportu."
 
-#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1236 host.php:619
+#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1248 host.php:619
 #: lib/html_reports.php:18 lib/html_reports.php:2133
 msgid "Report Name"
 msgstr "Nazwa raportu"
 
-#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1240 host.php:623
+#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1252 host.php:623
 #: lib/html_reports.php:1789
 msgid "Timespan"
 msgstr "Czas"
 
-#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1244 host.php:627
+#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1256 host.php:627
 msgid "Align"
 msgstr "Wyrównanie"
 
-#: aggregate_graphs.php:501 graphs.php:1248
+#: aggregate_graphs.php:501 graphs.php:1260
 msgid "Add Graphs to Report"
 msgstr "Dodaj wykresy do raportu"
 
-#: aggregate_graphs.php:503 graphs.php:1250
+#: aggregate_graphs.php:503 graphs.php:1262
 msgid "You currently have no reports defined."
 msgstr "Obecnie nie zdefiniowano żadnych raportów."
 
@@ -302,7 +302,7 @@ msgstr "Kliknij 'Kontynuuj', aby umieścić poniższą wykres(y) zagregowany(e) 
 msgid "Destination Branch:"
 msgstr "Oddział docelowy:"
 
-#: aggregate_graphs.php:545 graphs.php:927
+#: aggregate_graphs.php:545 graphs.php:939
 msgid "Place Graph(s) on Tree"
 msgstr "Umieść wykres(y) na drzewie"
 
@@ -357,15 +357,15 @@ msgstr "Zagregowany Podgląd [%s]"
 msgid "Aggregate Preview %s"
 msgstr "Zagregowany Podgląd [%s]"
 
-#: aggregate_graphs.php:763 graph.php:551 graphs.php:1677
+#: aggregate_graphs.php:763 graph.php:551 graphs.php:1689
 msgid "RRDtool Command:"
 msgstr "Komendy RRDtool:"
 
-#: aggregate_graphs.php:765 graph.php:560 graphs.php:1681
+#: aggregate_graphs.php:765 graph.php:560 graphs.php:1693
 msgid "Not Checked"
 msgstr "Nie zaznaczono"
 
-#: aggregate_graphs.php:765 graph.php:556 graphs.php:1679
+#: aggregate_graphs.php:765 graph.php:556 graphs.php:1691
 msgid "RRDtool Says:"
 msgstr "RRDtool mówi:"
 
@@ -374,24 +374,24 @@ msgstr "RRDtool mówi:"
 msgid "Aggregate Graph %s"
 msgstr "Wykres zagregowany %s"
 
-#: aggregate_graphs.php:820 aggregate_templates.php:408 graphs.php:1018
+#: aggregate_graphs.php:820 aggregate_templates.php:408 graphs.php:1030
 msgid "Prefix Replacement Values"
 msgstr "Wzór zastępczy"
 
-#: aggregate_graphs.php:821 aggregate_templates.php:409 graphs.php:1019
+#: aggregate_graphs.php:821 aggregate_templates.php:409 graphs.php:1031
 msgid "You may use these replacement values for the Prefix in the Aggregate Graph"
 msgstr "Możesz użyć tych wartości zastępczych dla prefiksu na wykresie agregacyjnym"
 
-#: aggregate_graphs.php:988 aggregate_templates.php:536 graphs.php:1101
+#: aggregate_graphs.php:988 aggregate_templates.php:536 graphs.php:1113
 #: lib/api_aggregate.php:2344
 msgid "Total"
 msgstr "Razem"
 
-#: aggregate_graphs.php:992 aggregate_templates.php:540 graphs.php:1103
+#: aggregate_graphs.php:992 aggregate_templates.php:540 graphs.php:1115
 msgid "All Items"
 msgstr "Wszystkie pozycje"
 
-#: aggregate_graphs.php:1010 graphs.php:1692 lib/api_aggregate.php:2504
+#: aggregate_graphs.php:1010 graphs.php:1704 lib/api_aggregate.php:2504
 msgid "Graph Configuration"
 msgstr "Konfiguracja wykresu"
 
@@ -414,10 +414,10 @@ msgstr "Pasujące wykresy"
 #: automation_graph_rules.php:809 automation_networks.php:1180
 #: automation_networks.php:1224 automation_snmp.php:703
 #: automation_templates.php:393 automation_tree_rules.php:845 cdef.php:727
-#: color_templates.php:560 data_debug.php:1200 data_queries.php:1371
+#: color_templates.php:560 data_debug.php:1214 data_queries.php:1371
 #: data_source_profiles.php:1186 data_sources.php:1811 data_templates.php:1101
 #: gprint_presets.php:255 graph_templates.php:727 graph_view.php:667
-#: graphs.php:2099 graphs_new.php:526 host.php:1832 host_templates.php:795
+#: graphs.php:2111 graphs_new.php:526 host.php:1832 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
 #: lib/api_automation.php:480 lib/api_automation.php:708
 #: lib/clog_webapi.php:608 lib/html.php:268 lib/html_filter.php:46
@@ -428,15 +428,15 @@ msgstr "Pasujące wykresy"
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:56
 #: tree.php:938 tree.php:973 tree.php:1008 tree.php:2217 user_admin.php:2074
 #: user_domains.php:643 user_group_admin.php:1993 utilities.php:1094
-#: utilities.php:1521 utilities.php:1832 utilities.php:2135 utilities.php:3137
-#: utilities.php:3399
+#: utilities.php:1521 utilities.php:1832 utilities.php:2135 utilities.php:3125
+#: utilities.php:3387
 msgid "Search"
 msgstr "Szukaj"
 
 #: aggregate_graphs.php:1288 aggregate_graphs.php:1324
 #: aggregate_graphs.php:1587 color_templates.php:680 data_sources.php:2001
 #: data_sources.php:2140 graph_view.php:488 graph_view.php:739
-#: graph_view.php:803 graphs.php:2116 graphs.php:2308 host.php:1946
+#: graph_view.php:803 graphs.php:2128 graphs.php:2320 host.php:1946
 #: include/global_arrays.php:993 include/global_arrays.php:1229
 #: include/global_arrays.php:2012 lib/api_automation.php:283 lib/html.php:1902
 #: lib/html.php:1971 lib/html_graph.php:197 lib/html_tree.php:1022
@@ -451,10 +451,10 @@ msgstr "Wykresy"
 #: automation_graph_rules.php:851 automation_networks.php:1190
 #: automation_snmp.php:713 automation_templates.php:403
 #: automation_tree_rules.php:865 cdef.php:737 color_templates.php:576
-#: data_debug.php:1210 data_queries.php:1381 data_source_profiles.php:1196
+#: data_debug.php:1224 data_queries.php:1381 data_source_profiles.php:1196
 #: data_source_profiles.php:1318 data_sources.php:1821 data_templates.php:1130
 #: gprint_presets.php:265 graph_templates.php:737 graph_view.php:743
-#: graphs.php:2120 graphs_new.php:536 host.php:1857 host_templates.php:805
+#: graphs.php:2132 graphs_new.php:536 host.php:1857 host_templates.php:805
 #: include/global_form.php:242 lib/api_automation.php:182
 #: lib/api_automation.php:490 lib/api_automation.php:718
 #: lib/api_automation.php:1082 lib/html_reports.php:2045 managers.php:154
@@ -463,7 +463,7 @@ msgstr "Wykresy"
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:81
 #: tree.php:2227 user_admin.php:2135 user_domains.php:18 user_domains.php:653
 #: user_domains.php:739 user_group_admin.php:2003 utilities.php:1076
-#: utilities.php:1842 utilities.php:2166 utilities.php:3165 utilities.php:3441
+#: utilities.php:1842 utilities.php:2166 utilities.php:3153 utilities.php:3429
 msgid "Default"
 msgstr "Domyślny"
 
@@ -476,9 +476,9 @@ msgstr "Część wykresu zagregowanego"
 #: automation_graph_rules.php:863 automation_networks.php:1224
 #: automation_snmp.php:728 automation_templates.php:418
 #: automation_tree_rules.php:877 cdef.php:758 color_templates.php:598
-#: data_debug.php:1125 data_queries.php:1396 data_source_profiles.php:1217
+#: data_debug.php:1139 data_queries.php:1396 data_source_profiles.php:1217
 #: data_sources.php:1761 data_templates.php:1151 gprint_presets.php:283
-#: graph_templates.php:758 graph_view.php:675 graphs.php:2090
+#: graph_templates.php:758 graph_view.php:675 graphs.php:2102
 #: graphs_new.php:515 host.php:1822 host_templates.php:786
 #: lib/api_automation.php:187 lib/api_automation.php:471
 #: lib/api_automation.php:723 lib/api_automation.php:1087
@@ -493,16 +493,16 @@ msgstr "Idź"
 
 #: aggregate_graphs.php:1303 aggregate_graphs.php:1596
 #: automation_devices.php:509 automation_snmp.php:728
-#: automation_templates.php:418 cdef.php:758 data_debug.php:1125
+#: automation_templates.php:418 cdef.php:758 data_debug.php:1139
 #: data_queries.php:1396 data_source_profiles.php:1217 data_sources.php:1761
 #: data_templates.php:1151 gprint_presets.php:283 graph_templates.php:758
-#: graph_view.php:675 graphs.php:2090 graphs_new.php:515 host.php:1822
+#: graph_view.php:675 graphs.php:2102 graphs_new.php:515 host.php:1822
 #: host_templates.php:786 lib/html_graph.php:178 managers.php:169
 #: managers.php:529 managers.php:794 plugins.php:530 pollers.php:914
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
 #: tree.php:2242 user_admin.php:2150 user_domains.php:665
 #: user_group_admin.php:2018 utilities.php:1084 utilities.php:1470
-#: utilities.php:1823 utilities.php:2126 utilities.php:3173 utilities.php:3449
+#: utilities.php:1823 utilities.php:2126 utilities.php:3161 utilities.php:3437
 msgid "Set/Refresh Filters"
 msgstr "Ustaw / odśwież filtry"
 
@@ -511,9 +511,9 @@ msgstr "Ustaw / odśwież filtry"
 #: automation_graph_rules.php:864 automation_networks.php:1225
 #: automation_snmp.php:729 automation_templates.php:419
 #: automation_tree_rules.php:878 cdef.php:759 color_templates.php:599
-#: data_debug.php:1126 data_queries.php:1397 data_source_profiles.php:1218
+#: data_debug.php:1140 data_queries.php:1397 data_source_profiles.php:1218
 #: data_sources.php:1762 data_templates.php:1152 gprint_presets.php:284
-#: graph_templates.php:759 graph_view.php:676 graphs.php:2091
+#: graph_templates.php:759 graph_view.php:676 graphs.php:2103
 #: graphs_new.php:516 host.php:1823 host_templates.php:787
 #: lib/api_automation.php:188 lib/api_automation.php:472
 #: lib/api_automation.php:724 lib/api_automation.php:1088
@@ -528,29 +528,29 @@ msgid "Clear"
 msgstr "Wyczyść"
 
 #: aggregate_graphs.php:1304 aggregate_graphs.php:1597 automation_snmp.php:729
-#: automation_templates.php:419 cdef.php:759 data_debug.php:1126
+#: automation_templates.php:419 cdef.php:759 data_debug.php:1140
 #: data_queries.php:1397 data_source_profiles.php:1218 data_sources.php:1762
 #: data_templates.php:1152 gprint_presets.php:284 graph_templates.php:759
-#: graph_view.php:676 graphs.php:2091 graphs_new.php:516 host.php:1823
+#: graph_view.php:676 graphs.php:2103 graphs_new.php:516 host.php:1823
 #: host_templates.php:787 lib/html_graph.php:179 lib/html_tree.php:1010
 #: managers.php:170 managers.php:530 managers.php:795 plugins.php:531
 #: pollers.php:915
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:96
 #: tree.php:2243 user_admin.php:2151 user_domains.php:666
 #: user_group_admin.php:2019 utilities.php:1085 utilities.php:1471
-#: utilities.php:1824 utilities.php:2127 utilities.php:3174 utilities.php:3450
+#: utilities.php:1824 utilities.php:2127 utilities.php:3162 utilities.php:3438
 msgid "Clear Filters"
 msgstr "Wyczyść filtry"
 
-#: aggregate_graphs.php:1329 aggregate_graphs.php:1662 graphs.php:1181
+#: aggregate_graphs.php:1329 aggregate_graphs.php:1662 graphs.php:1193
 #: lib/api_automation.php:574 user_admin.php:809 user_group_admin.php:948
 msgid "Graph Title"
 msgstr "Tytuł wykresu"
 
 #: aggregate_graphs.php:1330 aggregate_graphs.php:1663
 #: automation_graph_rules.php:964 automation_tree_rules.php:971
-#: data_debug.php:499 data_queries.php:1482 data_sources.php:1995
-#: data_templates.php:1260 graph_templates.php:864 graphs.php:2324
+#: data_debug.php:517 data_queries.php:1482 data_sources.php:1995
+#: data_templates.php:1260 graph_templates.php:864 graphs.php:2336
 #: host.php:1940 host_templates.php:949 lib/api_automation.php:282
 #: pollers.php:995 tree.php:2306 user_admin.php:809 user_admin.php:924
 #: user_admin.php:1073 user_admin.php:1212 user_admin.php:1351
@@ -564,7 +564,7 @@ msgid "Included in Aggregate"
 msgstr "Wchodzące w skład wykresu zagregowanego"
 
 #: aggregate_graphs.php:1332 aggregate_graphs.php:1665 graph_templates.php:881
-#: graph_view.php:832 graph_view.php:845 graphs.php:2342 lib/spikekill.php:1745
+#: graph_view.php:832 graph_view.php:845 graphs.php:2354 lib/spikekill.php:1745
 msgid "Size"
 msgstr "Rozmiar"
 
@@ -582,7 +582,7 @@ msgstr "Nie"
 
 #: aggregate_graphs.php:1348 aggregate_templates.php:724
 #: automation_tree_rules.php:716 cdef.php:885 color_templates.php:704
-#: data_debug.php:767 data_debug.php:772 data_debug.php:777
+#: data_debug.php:781 data_debug.php:786 data_debug.php:791
 #: data_queries.php:1534 data_source_profiles.php:1397
 #: data_source_profiles.php:1398 data_source_profiles.php:1399
 #: data_sources.php:2082 data_sources.php:2083 data_templates.php:1321
@@ -594,7 +594,7 @@ msgstr "Nie"
 msgid "Yes"
 msgstr "Tak"
 
-#: aggregate_graphs.php:1354 graphs.php:2384 lib/api_automation.php:601
+#: aggregate_graphs.php:1354 graphs.php:2396 lib/api_automation.php:601
 msgid "No Graphs Found"
 msgstr "Nie znaleziono wykresów"
 
@@ -607,8 +607,8 @@ msgstr "Stosowana lista wykresów niestandardowych - filtr z listy ]"
 msgid "Aggregate Graphs"
 msgstr "Wykresy zagregowane"
 
-#: aggregate_graphs.php:1562 data_debug.php:1096 data_sources.php:1730
-#: graph_view.php:699 graphs.php:2052 host.php:1768
+#: aggregate_graphs.php:1562 data_debug.php:1110 data_sources.php:1730
+#: graph_view.php:699 graphs.php:2064 host.php:1768
 #: include/global_arrays.php:2892 include/global_settings.php:610
 #: lib/api_automation.php:446 lib/html_graph.php:139 lib/html_tree.php:973
 #: rrdcleaner.php:381
@@ -621,27 +621,27 @@ msgstr "Szablon"
 #: automation_devices.php:528 automation_devices.php:546
 #: automation_devices.php:564 automation_graph_rules.php:819
 #: automation_graph_rules.php:841 automation_tree_rules.php:855
-#: data_debug.php:1100 data_sources.php:1734 graph_templates_items.php:447
-#: graphs.php:2056 graphs_items.php:270 host.php:1731 host.php:1752
+#: data_debug.php:1114 data_sources.php:1734 graph_templates_items.php:447
+#: graphs.php:2068 graphs_items.php:270 host.php:1731 host.php:1752
 #: host.php:1772 host.php:1842 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
-#: lib/api_automation.php:450 lib/auth.php:3952 lib/auth.php:4001
+#: lib/api_automation.php:450 lib/auth.php:3954 lib/auth.php:4003
 #: lib/html.php:2257 lib/html.php:2285 lib/html.php:2324 lib/html.php:2358
 #: lib/html_reports.php:1030 lib/html_reports.php:1034
 #: lib/html_reports.php:1157 lib/html_reports.php:1167
 #: lib/html_reports.php:2035 managers.php:490 managers.php:781
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:61
 #: utilities.php:1064 utilities.php:1785 utilities.php:2098 utilities.php:2145
-#: utilities.php:2155 utilities.php:3147 utilities.php:3409 utilities.php:3425
+#: utilities.php:2155 utilities.php:3135 utilities.php:3397 utilities.php:3413
 msgid "Any"
 msgstr "Dowolny"
 
 #: aggregate_graphs.php:1567 aggregate_graphs.php:1677
 #: automation_graph_rules.php:974 automation_graph_rules.php:975
 #: automation_networks.php:460 automation_tree_rules.php:983
-#: data_debug.php:1101 data_sources.php:1100 data_sources.php:1735
+#: data_debug.php:1115 data_sources.php:1100 data_sources.php:1735
 #: data_sources.php:2056 data_templates.php:1323 graph_templates_items.php:53
-#: graphs.php:1581 graphs.php:1590 graphs.php:2057 graphs_items.php:271
+#: graphs.php:1593 graphs.php:1602 graphs.php:2069 graphs_items.php:271
 #: graphs_items.php:391 host.php:294 host.php:1287 host.php:1298 host.php:1732
 #: host.php:1773 include/global_arrays.php:523 include/global_arrays.php:581
 #: include/global_arrays.php:673 include/global_arrays.php:885
@@ -656,8 +656,8 @@ msgstr "Dowolny"
 #: include/global_settings.php:622 include/global_settings.php:630
 #: include/global_settings.php:1338 include/global_settings.php:2001
 #: lib/api_automation.php:48 lib/api_automation.php:431
-#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3955
-#: lib/auth.php:4004 lib/auth.php:4050 lib/html.php:228 lib/html.php:2258
+#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3957
+#: lib/auth.php:4006 lib/auth.php:4052 lib/html.php:228 lib/html.php:2258
 #: lib/html.php:2283 lib/html.php:2325 lib/html.php:2359 lib/html_form.php:392
 #: lib/html_reports.php:1041 lib/html_reports.php:1045
 #: lib/html_reports.php:1081 lib/html_reports.php:1157
@@ -679,7 +679,7 @@ msgstr "Tytuł wykresów zagregowanych"
 msgid "The internal database identifier for this object"
 msgstr "Wewnętrzny identyfikator bazy danych dla tego obiektu"
 
-#: aggregate_graphs.php:1664 graphs.php:1185
+#: aggregate_graphs.php:1664 graphs.php:1197
 msgid "Aggregate Template"
 msgstr "Szablon zagregowany"
 
@@ -758,7 +758,7 @@ msgstr "Możliwe do usunięcia"
 msgid "Graphs Using"
 msgstr "Wykresy korzystające z"
 
-#: aggregate_templates.php:709 graphs.php:2111 host_templates.php:730
+#: aggregate_templates.php:709 graphs.php:2123 host_templates.php:730
 #: include/global_arrays.php:958 include/global_arrays.php:1361
 #: include/global_form.php:1399 include/global_form.php:1635
 #: lib/html_reports.php:1181 tree.php:1944
@@ -884,11 +884,11 @@ msgstr "Odmowa dostępu, prosimy o kontakt z administratorem Kadupul."
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr "Odmowa dostępu, prosimy o kontakt z administratorem Kadupul."
 
-#: auth_login.php:119 lib/auth.php:4366 lib/auth.php:4372 lib/auth.php:4477
-#: lib/auth.php:4528 lib/auth.php:4553 lib/auth.php:4576 lib/auth.php:4616
-#: lib/auth.php:4628 lib/auth.php:4651 lib/auth.php:4774 lib/auth.php:4794
-#: lib/auth.php:5006 lib/auth.php:5048 lib/auth.php:5058 lib/auth.php:5074
-#: lib/auth.php:5088 lib/auth.php:5126
+#: auth_login.php:119 lib/auth.php:4368 lib/auth.php:4374 lib/auth.php:4479
+#: lib/auth.php:4530 lib/auth.php:4555 lib/auth.php:4578 lib/auth.php:4618
+#: lib/auth.php:4630 lib/auth.php:4653 lib/auth.php:4776 lib/auth.php:4796
+#: lib/auth.php:5008 lib/auth.php:5050 lib/auth.php:5060 lib/auth.php:5076
+#: lib/auth.php:5090 lib/auth.php:5128
 msgid "Access Denied!  Login Failed."
 msgstr "Odmowa dostępu, konto użytkownika wyłączone."
 
@@ -1179,7 +1179,7 @@ msgstr "Agent SNMP"
 
 #: automation_devices.php:280 automation_devices.php:524
 #: automation_graph_rules.php:837 automation_networks.php:1075
-#: automation_tree_rules.php:851 data_debug.php:505 data_debug.php:1155
+#: automation_tree_rules.php:851 data_debug.php:523 data_debug.php:1169
 #: data_sources.php:1790 data_templates.php:1289 host.php:886 host.php:1015
 #: host.php:1838 host.php:1958 lib/api_automation.php:52
 #: lib/api_automation.php:53 lib/api_automation.php:280
@@ -1224,7 +1224,7 @@ msgstr "Eksport"
 msgid "Export to a file"
 msgstr "Eksport do pliku"
 
-#: automation_devices.php:516 data_debug.php:1127 lib/clog_webapi.php:216
+#: automation_devices.php:516 data_debug.php:1141 lib/clog_webapi.php:216
 #: lib/clog_webapi.php:535 managers.php:796
 msgid "Purge"
 msgstr "Oczyszczanie"
@@ -1236,7 +1236,7 @@ msgstr "Wyczyść odkryte urządzenia"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:684 data_source_profiles.php:61 host.php:2033
+#: data_debug.php:698 data_source_profiles.php:61 host.php:2033
 #: lib/functions.php:6559 lib/functions.php:6564 lib/html.php:1340
 #: lib/html.php:1412 lib/html_reports.php:1810 lib/html_reports.php:1838
 #: lib/html_reports.php:1915 lib/html_reports.php:1916
@@ -1246,8 +1246,8 @@ msgstr "Wyczyść odkryte urządzenia"
 #: lib/spikekill.php:1806 lib/spikekill.php:1807 lib/spikekill.php:1808
 #: lib/spikekill.php:1809 lib/spikekill.php:1810 plugins.php:780
 #: pollers.php:1115 user_admin.php:2261 utilities.php:738 utilities.php:1190
-#: utilities.php:2769 utilities.php:2897 utilities.php:2905 utilities.php:2916
-#: utilities.php:2927 utilities.php:2952 utilities.php:3002 utilities.php:3238
+#: utilities.php:2757 utilities.php:2885 utilities.php:2893 utilities.php:2904
+#: utilities.php:2915 utilities.php:2940 utilities.php:2990 utilities.php:3226
 msgid "N/A"
 msgstr "N/D"
 
@@ -1288,8 +1288,8 @@ msgstr "Naciśnij 'Dalej', aby usunąć następujące Reguły wykresu."
 msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Graph Rules."
 msgstr "Kliknąć \"Kontynuuj\", aby powtórzyć następującą(-e) regułę(-y). Możesz opcjonalnie zmienić format tytułu dla nowych reguł wykresu."
 
-#: automation_graph_rules.php:305 automation_tree_rules.php:282 graphs.php:896
-#: graphs.php:907
+#: automation_graph_rules.php:305 automation_tree_rules.php:282 graphs.php:908
+#: graphs.php:919
 msgid "Title Format"
 msgstr "Format tytułu"
 
@@ -1364,7 +1364,7 @@ msgid "Graph Rules"
 msgstr "Reguły wykresów"
 
 #: automation_graph_rules.php:815 automation_graph_rules.php:965
-#: graphs.php:2112 include/global_arrays.php:1364
+#: graphs.php:2124 include/global_arrays.php:1364
 #: include/global_arrays.php:2891 include/global_form.php:1645
 #: include/global_form.php:2207
 msgid "Data Query"
@@ -1373,7 +1373,7 @@ msgstr "Zapytanie o dane"
 #: automation_graph_rules.php:842 automation_graph_rules.php:967
 #: automation_graph_rules.php:983 automation_networks.php:535
 #: automation_tree_rules.php:856 automation_tree_rules.php:976
-#: automation_tree_rules.php:994 data_debug.php:1161 data_sources.php:1795
+#: automation_tree_rules.php:994 data_debug.php:1175 data_sources.php:1795
 #: host.php:1843 include/global_arrays.php:917 include/global_form.php:1527
 #: include/global_settings.php:345 include/global_settings.php:361
 #: lib/api_automation.php:27 lib/html_reports.php:2036
@@ -1382,13 +1382,13 @@ msgstr "Zapytanie o dane"
 #: user_admin.php:924 user_admin.php:936 user_admin.php:2248
 #: user_domains.php:335 user_domains.php:743 user_group_admin.php:76
 #: user_group_admin.php:741 user_group_admin.php:756 user_group_admin.php:2076
-#: utilities.php:2146 utilities.php:3020
+#: utilities.php:2146 utilities.php:3008
 msgid "Enabled"
 msgstr "Włączone"
 
 #: automation_graph_rules.php:843 automation_graph_rules.php:983
 #: automation_networks.php:1090 automation_tree_rules.php:857
-#: automation_tree_rules.php:994 data_debug.php:1162 data_sources.php:1796
+#: automation_tree_rules.php:994 data_debug.php:1176 data_sources.php:1796
 #: data_templates.php:1325 host.php:1844 include/global_arrays.php:916
 #: include/global_arrays.php:1573 include/global_arrays.php:1865
 #: include/global_settings.php:344 include/global_settings.php:360
@@ -1399,8 +1399,8 @@ msgstr "Włączone"
 #: lib/api_automation.php:28 lib/html.php:2791 lib/html_reports.php:2037
 #: lib/html_reports.php:2188 lib/html_utility.php:1317 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:936 user_domains.php:397
-#: user_group_admin.php:756 utilities.php:2147 utilities.php:2711
-#: utilities.php:3020
+#: user_group_admin.php:756 utilities.php:2147 utilities.php:2699
+#: utilities.php:3008
 msgid "Disabled"
 msgstr "Wyłączone"
 
@@ -1549,7 +1549,7 @@ msgstr "Ustawienia główne"
 #: lib/installer.php:2044 lib/installer.php:2117 lib/installer.php:2147
 #: lib/installer.php:2739 lib/installer.php:2827 lib/vdef.php:56
 #: managers.php:576 pollers.php:46 user_admin.php:924 user_domains.php:311
-#: utilities.php:864 utilities.php:3218
+#: utilities.php:864 utilities.php:3206
 msgid "Name"
 msgstr "Nazwa"
 
@@ -2076,12 +2076,12 @@ msgstr "Następny start"
 msgid "Last Started"
 msgstr "Ostatnio uruchomiony"
 
-#: automation_networks.php:1110 data_debug.php:1026 data_debug.php:1051
-#: pollers.php:30 utilities.php:2702
+#: automation_networks.php:1110 data_debug.php:1040 data_debug.php:1065
+#: pollers.php:30 utilities.php:2690
 msgid "Running"
 msgstr "Pracuje"
 
-#: automation_networks.php:1134 pollers.php:31 utilities.php:2700
+#: automation_networks.php:1134 pollers.php:31 utilities.php:2688
 msgid "Idle"
 msgstr "Bezczynny"
 
@@ -2095,9 +2095,9 @@ msgstr "Nigdy"
 msgid "No Networks Found"
 msgstr "Nie znaleziono sieci"
 
-#: automation_networks.php:1201 data_debug.php:1176 lib/clog_webapi.php:588
+#: automation_networks.php:1201 data_debug.php:1190 lib/clog_webapi.php:588
 #: lib/html_graph.php:304 lib/html_tree.php:1120 lib/html_tree.php:1141
-#: pollers.php:890 utilities.php:1502 utilities.php:2622
+#: pollers.php:890 utilities.php:1502 utilities.php:2610
 msgid "Refresh"
 msgstr "Odśwież"
 
@@ -2478,8 +2478,8 @@ msgstr "Kryteria tworzenia drzew"
 msgid "Change Leaf Type"
 msgstr "Zmień typ skrzydła"
 
-#: automation_tree_rules.php:740 lib/installer.php:4177 utilities.php:2764
-#: utilities.php:2765 utilities.php:2768 utilities.php:2769
+#: automation_tree_rules.php:740 lib/installer.php:4177 utilities.php:2752
+#: utilities.php:2753 utilities.php:2756 utilities.php:2757
 msgid "WARNING:"
 msgstr "OSTRZEŻENIE:"
 
@@ -2979,129 +2979,129 @@ msgstr "Kontrola działania"
 msgid "Delete Check"
 msgstr "Usuń listę kontrolną"
 
-#: data_debug.php:43
+#: data_debug.php:50
 msgid "Data Source debug started."
 msgstr "Źródło danych Debug"
 
-#: data_debug.php:46
+#: data_debug.php:53
 msgid "Data Source debug received an invalid Data Source ID."
 msgstr "Debug źródła danych otrzymał nieprawidłowy identyfikator źródła danych."
 
-#: data_debug.php:55
+#: data_debug.php:67
 msgid "All RRDfile repairs succeeded."
 msgstr "Wszystkie naprawy plików RRDfile zakończyły się sukcesem."
 
-#: data_debug.php:57
+#: data_debug.php:69
 #, fuzzy
 msgid "One or more RRDfile repairs failed.  See Kadupul log for errors."
 msgstr "Jedna lub więcej napraw plików RRD nie powiodło się.  Informacje o błędach można znaleźć w dzienniku Kadupul."
 
-#: data_debug.php:65
+#: data_debug.php:78
 msgid "Automatic Data Source debug being rerun after repair."
 msgstr "Automatyczny debuger źródła danych po naprawie."
 
-#: data_debug.php:69
+#: data_debug.php:82
 msgid "Data Source repair received an invalid Data Source ID."
 msgstr "Naprawa źródła danych otrzymała nieprawidłowy identyfikator źródła danych."
 
-#: data_debug.php:77
+#: data_debug.php:90 data_debug.php:164 lib/dsdebug.php:350
 msgid "The requested Data Source is not available."
 msgstr ""
 
-#: data_debug.php:483 data_debug.php:945 data_queries.php:769
+#: data_debug.php:501 data_debug.php:959 data_queries.php:769
 #: data_sources.php:1163 data_templates.php:719 graphs_items.php:387
 #: include/global_arrays.php:1005 include/global_form.php:960
 #: lib/api_aggregate.php:2338 lib/html.php:1310 rrdcheck.php:142
 msgid "Data Source"
 msgstr "Źródło danych"
 
-#: data_debug.php:485
+#: data_debug.php:503
 msgid "The Data Source to Debug"
 msgstr "Źródło danych do debugowania"
 
-#: data_debug.php:488 lib/html.php:2718 utilities.php:1039 utilities.php:1160
+#: data_debug.php:506 lib/html.php:2718 utilities.php:1039 utilities.php:1160
 msgid "User"
 msgstr "Użytkownik"
 
-#: data_debug.php:490
+#: data_debug.php:508
 msgid "The User who requested the Debug."
 msgstr "Użytkownik, który poprosił o Debug."
 
-#: data_debug.php:493
+#: data_debug.php:511
 msgid "Started"
 msgstr "Rozpoczęte "
 
-#: data_debug.php:496
+#: data_debug.php:514
 msgid "The Date that the Debug was Started."
 msgstr "Data rozpoczęcia debugowania."
 
-#: data_debug.php:502
+#: data_debug.php:520
 msgid "The Data Source internal ID."
 msgstr "Wewnętrzny identyfikator źródła danych."
 
-#: data_debug.php:508
+#: data_debug.php:526
 msgid "The Status of the Data Source Debug Check."
 msgstr "Status debugowania źródła danych."
 
-#: data_debug.php:511 lib/installer.php:2498 lib/installer.php:2530
+#: data_debug.php:529 lib/installer.php:2498 lib/installer.php:2530
 #: package_import.php:596
 msgid "Writable"
 msgstr "Zapisywalny"
 
-#: data_debug.php:514
+#: data_debug.php:532
 msgid "Determines if the Data Collector or the Web Site have Write access."
 msgstr "Określa, czy zbieracz danych lub witryna internetowa mają dostęp do zapisu."
 
-#: data_debug.php:517 templates_import.php:216
+#: data_debug.php:535 templates_import.php:216
 msgid "Exists"
 msgstr "Istnieje"
 
-#: data_debug.php:520
+#: data_debug.php:538
 msgid "Determines if the Data Source is located in the Poller Cache."
 msgstr "Określa, czy źródło danych znajduje się w pamięci podręcznej Poller Cache."
 
-#: data_debug.php:523 data_sources.php:2019 data_templates.php:1325
+#: data_debug.php:541 data_sources.php:2019 data_templates.php:1325
 #: plugins.php:32 plugins.php:503
 msgid "Active"
 msgstr "Aktywny"
 
-#: data_debug.php:526
+#: data_debug.php:544
 msgid "Determines if the Data Source is Enabled."
 msgstr "Określa, czy źródło danych jest włączone."
 
-#: data_debug.php:529
+#: data_debug.php:547
 msgid "RRD Match"
 msgstr "RRD Match"
 
-#: data_debug.php:532
+#: data_debug.php:550
 msgid "Determines if the RRDfile matches the Data Source Template."
 msgstr "Określa, czy plik RRD odpowiada szablonowi źródła danych."
 
-#: data_debug.php:535
+#: data_debug.php:553
 msgid "Valid Data"
 msgstr "Ważne dane"
 
-#: data_debug.php:538
+#: data_debug.php:556
 msgid "Determines if the RRDfile has been getting good recent Data."
 msgstr "Określa, czy plik RRDfile pobiera dobre ostatnie dane."
 
-#: data_debug.php:541
+#: data_debug.php:559
 msgid "RRD Updated"
 msgstr "Aktualizacja RRD"
 
-#: data_debug.php:544
+#: data_debug.php:562
 msgid "Determines if the RRDfile has been written to properly."
 msgstr "Określa, czy plik RRD został prawidłowo zapisany."
 
-#: data_debug.php:547 data_debug.php:684 data_debug.php:875
+#: data_debug.php:565 data_debug.php:698 data_debug.php:889
 msgid "Issues"
 msgstr "Problemy"
 
-#: data_debug.php:550
+#: data_debug.php:568
 msgid "Summary of issues found for the Data Source."
 msgstr "Wszelkie podsumowujące kwestie znalezione dla źródła danych."
 
-#: data_debug.php:632 data_debug.php:1206 data_sources.php:1817
+#: data_debug.php:646 data_debug.php:1220 data_sources.php:1817
 #: data_sources.php:1979 host.php:1952 include/global_arrays.php:994
 #: include/global_arrays.php:1040 include/global_arrays.php:2308
 #: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1095
@@ -3109,213 +3109,213 @@ msgstr "Wszelkie podsumowujące kwestie znalezione dla źródła danych."
 msgid "Data Sources"
 msgstr "Źródła danych"
 
-#: data_debug.php:687 data_debug.php:1172
+#: data_debug.php:701 data_debug.php:1186
 msgid "Not Debugging"
 msgstr "Debugowanie"
 
-#: data_debug.php:703
+#: data_debug.php:717
 msgid "No Checks"
 msgstr "Sprawdza"
 
-#: data_debug.php:754 lib/api_automation.php:757 lib/graphs.php:61
+#: data_debug.php:768 lib/api_automation.php:757 lib/graphs.php:61
 #: lib/graphs.php:85 templates_import.php:220
 msgid "Not Found"
 msgstr "Nie znaleziono"
 
-#: data_debug.php:772 data_debug.php:777
+#: data_debug.php:786 data_debug.php:791
 msgid "Not Checked Yet"
 msgstr "Brak kontroli"
 
-#: data_debug.php:795
+#: data_debug.php:809
 msgid "Issues found!  Waiting on RRDfile update"
 msgstr "Znaleziono problemy!  Oczekiwanie na aktualizację RRDfile"
 
-#: data_debug.php:798
+#: data_debug.php:812
 msgid "No Initial found!  Waiting on RRDfile update"
 msgstr "Nie znaleziono początkowego!  Oczekiwanie na aktualizację RRDfile"
 
-#: data_debug.php:802
+#: data_debug.php:816
 msgid "Waiting on analysis and RRDfile update"
 msgstr "Czy plik RRD został zaktualizowany?"
 
-#: data_debug.php:809
+#: data_debug.php:823
 msgid "RRDfile Owner"
 msgstr "Właściciel pliku RRD"
 
-#: data_debug.php:814
+#: data_debug.php:828
 msgid "Website runs as"
 msgstr "Strona działa jako"
 
-#: data_debug.php:819
+#: data_debug.php:833
 msgid "Poller runs as"
 msgstr "Poller działa jak"
 
-#: data_debug.php:824
+#: data_debug.php:838
 msgid "Is RRA Folder writeable by poller?"
 msgstr "Czy folder RRA może być napisany przez ankietera?"
 
-#: data_debug.php:829
+#: data_debug.php:843
 msgid "Is RRDfile writeable by poller?"
 msgstr "Czy plik RRDfile może być zapisywany przez ankietera?"
 
-#: data_debug.php:834
+#: data_debug.php:848
 msgid "Does the RRDfile Exist?"
 msgstr "Czy istnieje plik RRD?"
 
-#: data_debug.php:839
+#: data_debug.php:853
 msgid "Is the Data Source set as Active?"
 msgstr "Czy źródło danych jest aktywne?"
 
-#: data_debug.php:844
+#: data_debug.php:858
 msgid "Did the poller receive valid data?"
 msgstr "Czy ankieter otrzymał ważne dane?"
 
-#: data_debug.php:849
+#: data_debug.php:863
 msgid "Was the RRDfile updated?"
 msgstr "Czy plik RRD został zaktualizowany?"
 
-#: data_debug.php:855
+#: data_debug.php:869
 msgid "First Check TimeStamp"
 msgstr "Pierwszy znacznik czasu kontroli"
 
-#: data_debug.php:860
+#: data_debug.php:874
 msgid "Second Check TimeStamp"
 msgstr "Drugi znacznik czasu kontroli"
 
-#: data_debug.php:865
+#: data_debug.php:879
 msgid "Were we able to convert the title?"
 msgstr "Czy byliśmy w stanie przekonwertować tytuł?"
 
-#: data_debug.php:870
+#: data_debug.php:884
 msgid "Data Source matches the RRDfile?"
 msgstr "Źródło danych nie zostało poddane badaniu"
 
-#: data_debug.php:884
+#: data_debug.php:898
 #, php-format
 msgid "Data Source Troubleshooter [ Auto Refreshing till Complete ] %s"
 msgstr "Źródło danych Troubleshooter [%s]"
 
-#: data_debug.php:884 data_debug.php:886
+#: data_debug.php:898 data_debug.php:900
 msgid "Refresh Now"
 msgstr "Odśwież teraz"
 
-#: data_debug.php:886
+#: data_debug.php:900
 #, php-format
 msgid "Data Source Troubleshooter [ Auto Refreshing till RRDfile Update ] %s"
 msgstr "Źródło danych Troubleshooter [%s]"
 
-#: data_debug.php:888
+#: data_debug.php:902
 #, php-format
 msgid "Data Source Troubleshooter [ Analysis Complete! %s ]"
 msgstr "Źródło danych Troubleshooter [%s]"
 
-#: data_debug.php:888
+#: data_debug.php:902
 msgid "Rerun Analysis"
 msgstr "Analiza Rerun"
 
-#: data_debug.php:893
+#: data_debug.php:907
 msgid "Check"
 msgstr "Sprawdź"
 
-#: data_debug.php:894 include/global_form.php:1018 lib/rrd.php:4176
-#: utilities.php:798 utilities.php:815 utilities.php:3218
+#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4176
+#: utilities.php:798 utilities.php:815 utilities.php:3206
 msgid "Value"
 msgstr "Wartość"
 
-#: data_debug.php:895
+#: data_debug.php:909
 msgid "Results"
 msgstr "Wyniki"
 
-#: data_debug.php:906
+#: data_debug.php:920
 msgid "<not set>"
 msgstr "Nie ustawiono"
 
-#: data_debug.php:941 data_debug.php:992
+#: data_debug.php:955 data_debug.php:1006
 msgid "Data Source Repair Recommendations"
 msgstr "Pola z danymi źródłowymi"
 
-#: data_debug.php:946
+#: data_debug.php:960
 msgid "Issue"
 msgstr "Problem"
 
-#: data_debug.php:958
+#: data_debug.php:972
 #, php-format
 msgid "For attribute '%s', issue found '%s'"
 msgstr "Dla attrbitutowego \"%s\", znaleziono \"%s"
 
-#: data_debug.php:973
+#: data_debug.php:987
 msgid "Apply Suggested Fixes"
 msgstr "Ponownie zastosuj sugerowane nazwy"
 
-#: data_debug.php:973
+#: data_debug.php:987
 #, php-format
 msgid "Repair Steps [ %s ]"
 msgstr "Kroki naprawcze [ %s]"
 
-#: data_debug.php:975
+#: data_debug.php:989
 msgid "Repair Steps [ Run Fix from Command Line ]"
 msgstr "Kroki naprawcze [ Usuń naprawę z linii poleceń]."
 
-#: data_debug.php:978
+#: data_debug.php:992
 msgid "Command"
 msgstr "Komenda"
 
-#: data_debug.php:994
+#: data_debug.php:1008
 msgid "Waiting on Data Source Check to Complete"
 msgstr "Czekając na sprawdzenie źródła danych, aby zakończyć"
 
-#: data_debug.php:1030 data_debug.php:1055 lib/graphs.php:41
+#: data_debug.php:1044 data_debug.php:1069 lib/graphs.php:41
 msgid "Not Applicable"
 msgstr "Nie dotyczy"
 
-#: data_debug.php:1036 data_debug.php:1044 data_debug.php:1063
-#: data_debug.php:1160 utilities.php:1068 utilities.php:1198
+#: data_debug.php:1050 data_debug.php:1058 data_debug.php:1077
+#: data_debug.php:1174 utilities.php:1068 utilities.php:1198
 msgid "Failed"
 msgstr "Błąd"
 
-#: data_debug.php:1040 data_debug.php:1042 data_debug.php:1059
+#: data_debug.php:1054 data_debug.php:1056 data_debug.php:1073
 #: lib/installer.php:2070
 msgid "Passed"
 msgstr "Zaliczone"
 
-#: data_debug.php:1066 lib/installer.php:2073
+#: data_debug.php:1080 lib/installer.php:2073
 msgid "Warning"
 msgstr "Ostrzeżenie"
 
-#: data_debug.php:1085
+#: data_debug.php:1099
 msgid "All Devices"
 msgstr "Wszystkie urządzenia"
 
-#: data_debug.php:1085
+#: data_debug.php:1099
 #, php-format
 msgid "Data Source Troubleshooter [ %s ]"
 msgstr "Źródło danych Troubleshooter [%s]"
 
-#: data_debug.php:1085
+#: data_debug.php:1099
 msgid "No Device"
 msgstr "Brak urządzenia"
 
-#: data_debug.php:1127
+#: data_debug.php:1141
 msgid "Delete All Checks"
 msgstr "Usuń zaznaczenie Sprawdź"
 
-#: data_debug.php:1128
+#: data_debug.php:1142
 #, fuzzy
 msgid "Run All"
 msgstr "URUCHOM WSZYSTKO"
 
-#: data_debug.php:1128
+#: data_debug.php:1142
 msgid "Run checks on currently filtered Data Sources and preserve other results"
 msgstr "Przeprowadź kontrole aktualnie filtrowanych źródeł danych i zachowaj inne wyniki"
 
-#: data_debug.php:1136 data_sources.php:1770 data_templates.php:1107
+#: data_debug.php:1150 data_sources.php:1770 data_templates.php:1107
 #: lib/html.php:2727
 msgid "Profile"
 msgstr "Profil"
 
-#: data_debug.php:1140 data_debug.php:1159 data_debug.php:1170
+#: data_debug.php:1154 data_debug.php:1173 data_debug.php:1184
 #: data_sources.php:1774 data_sources.php:1794 data_templates.php:1111
-#: graphs.php:2109 graphs_new.php:488 host.php:1796 host_templates.php:716
+#: graphs.php:2121 graphs_new.php:488 host.php:1796 host_templates.php:716
 #: host_templates.php:734 lib/clog_webapi.php:549 lib/html.php:227
 #: lib/html_reports.php:1138 lib/html_reports.php:2284 plugins.php:501
 #: settings.php:590 settings.php:612 settings.php:643 tree.php:914
@@ -3324,7 +3324,7 @@ msgstr "Profil"
 msgid "All"
 msgstr "Wszystkie"
 
-#: data_debug.php:1166 data_debug.php:1171
+#: data_debug.php:1180 data_debug.php:1185
 msgid "Debugging"
 msgstr "Debugowanie"
 
@@ -4120,7 +4120,7 @@ msgstr "Włącz tryb Info źródła danych."
 msgid "Edit Graph: '%s'."
 msgstr "Edytuj wykres: '%s'."
 
-#: data_sources.php:1014 graphs.php:1543
+#: data_sources.php:1014 graphs.php:1555
 msgid "Edit Device."
 msgstr "Edytuj urządzenie"
 
@@ -4144,7 +4144,7 @@ msgstr "Wybrany szablon danych"
 msgid "The name given to this data template.  Please note that you may only change Graph Templates to a 100%$ compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "Nazwa nadana temu szablonowi danych.  Należy pamiętać, że szablony wykresów można zmieniać tylko na szablony kompatybilne ze standardem 100%$, co oznacza, że zawierają one identyczne źródła danych."
 
-#: data_sources.php:1098 graph_view.php:817 graphs.php:1586
+#: data_sources.php:1098 graph_view.php:817 graphs.php:1598
 #: include/global_arrays.php:954 include/global_arrays.php:1003
 #: include/global_arrays.php:1688 include/global_arrays.php:1857
 #: lib/api_automation.php:426 lib/functions.php:6195 lib/html.php:2253
@@ -4218,11 +4218,11 @@ msgstr "Źródła danych [%s]"
 msgid "Bad Indexes"
 msgstr "Indeks"
 
-#: data_sources.php:1803 graphs.php:2085
+#: data_sources.php:1803 graphs.php:2097
 msgid "Note that this query may take some time to run."
 msgstr "Pamiętaj, że uruchomienie tego zapytania może zająć trochę czasu."
 
-#: data_sources.php:1803 graphs.php:2085
+#: data_sources.php:1803 graphs.php:2097
 msgid "Orphaned"
 msgstr "Sieroctwo"
 
@@ -4826,12 +4826,12 @@ msgstr "Wszystkie wykresy i szablony"
 msgid "Not Templated"
 msgstr "Urządzenia nieszablonowe"
 
-#: graph_view.php:812 graph_view.php:840 graphs.php:2318
+#: graph_view.php:812 graph_view.php:840 graphs.php:2330
 #: include/global_form.php:1884 lib/html_reports.php:1201 tree.php:1021
 msgid "Graph Name"
 msgstr "Nazwa wykresu"
 
-#: graph_view.php:814 graph_view.php:842 graphs.php:2321
+#: graph_view.php:814 graph_view.php:842 graphs.php:2333
 msgid "The Title of this Graph.  Generally programmatically generated from the Graph Template definition or Suggested Naming rules.  The max length of the Title is controlled under Settings->Visual."
 msgstr "Tytuł tego wykresu.  Ogólnie rzecz biorąc, programowo generowane na podstawie definicji szablonu wykresu lub sugerowanych reguł nazewnictwa.  Maksymalna długość tytułu jest kontrolowana w zakładce Ustawienia->Wizualne."
 
@@ -4839,23 +4839,23 @@ msgstr "Tytuł tego wykresu.  Ogólnie rzecz biorąc, programowo generowane na p
 msgid "The device for this Graph."
 msgstr "Nazwa tej grupy."
 
-#: graph_view.php:822 graphs.php:2330
+#: graph_view.php:822 graphs.php:2342
 msgid "Source Type"
 msgstr "Typ źródła"
 
-#: graph_view.php:824 graphs.php:2333
+#: graph_view.php:824 graphs.php:2345
 msgid "The underlying source that this Graph was based upon."
 msgstr "Podstawowe źródło, na którym oparto ten wykres."
 
-#: graph_view.php:827 graphs.php:2336
+#: graph_view.php:827 graphs.php:2348
 msgid "Source Name"
 msgstr "Nazwa źródła"
 
-#: graph_view.php:829 graphs.php:2339
+#: graph_view.php:829 graphs.php:2351
 msgid "The Graph Template or Data Query that this Graph was based upon."
 msgstr "Szablon wykresu lub zapytanie o dane, na podstawie którego powstał wykres."
 
-#: graph_view.php:834 graph_view.php:847 graphs.php:2345
+#: graph_view.php:834 graph_view.php:847 graphs.php:2357
 msgid "The size of this Graph when not in Preview mode."
 msgstr "Rozmiar wykresu, gdy nie jest on wyświetlany w trybie podglądu."
 
@@ -4926,245 +4926,245 @@ msgstr "Podsumowujące szczegóły"
 msgid "Download"
 msgstr "Pobierz"
 
-#: graphs.php:37 graphs.php:890 include/global_arrays.php:2086
+#: graphs.php:37 graphs.php:902 include/global_arrays.php:2086
 msgid "Change Graph Template"
 msgstr "Zmień szablon wykresu"
 
-#: graphs.php:45 graphs.php:1152
+#: graphs.php:45 graphs.php:1164
 msgid "Create Aggregate Graph"
 msgstr "Tworzenie wykresu agregatu"
 
-#: graphs.php:46 graphs.php:1195
+#: graphs.php:46 graphs.php:1207
 msgid "Create Aggregate from Template"
 msgstr "Tworzenie agregatu z szablonu"
 
-#: graphs.php:47 graphs.php:1217 host.php:34
+#: graphs.php:47 graphs.php:1229 host.php:34
 msgid "Apply Automation Rules"
 msgstr "Zastosuj zasady automatyzacji"
 
-#: graphs.php:53 graphs.php:912
+#: graphs.php:53 graphs.php:924
 msgid "Convert to Graph Template"
 msgstr "Konwersja do szablonu wykresu"
 
-#: graphs.php:247
+#: graphs.php:259
 #, php-format
 msgid "Created graph: %s"
 msgstr "Utworzony wykres: %s"
 
-#: graphs.php:255 lib/template.php:2362 lib/template.php:2400
+#: graphs.php:267 lib/template.php:2363 lib/template.php:2401
 msgid "ERROR: No Data Source associated. Check Template"
 msgstr "ERROR: Brak źródła danych. Szablon kontrolny"
 
-#: graphs.php:666
+#: graphs.php:678
 msgid "The selected Device is not available."
 msgstr ""
 
-#: graphs.php:685
+#: graphs.php:697
 msgid "Aggregate graph creation could not be confirmed. Review the graph settings before retrying."
 msgstr ""
 
-#: graphs.php:841
+#: graphs.php:853
 msgid "Click 'Continue' to delete the following Graph(s).  Note that if you choose to Delete Data Sources, only those Data Sources not in use elsewhere will also be Deleted."
 msgstr "Kliknij \"Continue\" (Kontynuuj), aby usunąć poniższy wykres (wykresy).  Należy pamiętać, że jeśli wybierzesz opcję Usuń źródła danych, zostaną usunięte tylko te źródła danych, które nie są używane gdzie indziej."
 
-#: graphs.php:845
+#: graphs.php:857
 msgid "The following Data Source(s) are in use by these Graph(s)."
 msgstr "Poniższe źródła danych są wykorzystywane przez te wykresy."
 
-#: graphs.php:864
+#: graphs.php:876
 msgid "Delete all Data Source(s) referenced by these Graph(s) that are not in use elsewhere."
 msgstr "Usuń wszystkie źródła danych, do których odwołuje się wykres (wykresy), a które nie są używane gdzie indziej."
 
-#: graphs.php:866
+#: graphs.php:878
 msgid "Leave the Data Source(s) untouched."
 msgstr "Pozostaw źródło(-a) danych nietknięte."
 
-#: graphs.php:878
+#: graphs.php:890
 msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
 msgstr "Wybierz szablon wykresu i kliknij 'Dalej', aby zmienić szablon wykresu dla następujących wykresów. Należy pamiętać, że wyświetlane będą tylko kompatybilne szablony wykresów.  Kompatybilność jest identyfikowana przez osoby posiadające identyczne źródła danych."
 
-#: graphs.php:880 graphs_new.php:606
+#: graphs.php:892 graphs_new.php:606
 msgid "New Graph Template"
 msgstr "Nowy szablon wykresu"
 
-#: graphs.php:894
+#: graphs.php:906
 msgid "Click 'Continue' to duplicate the following Graph(s). You can optionally change the title format for the new Graph(s)."
 msgstr "Kliknij 'Kontynuuj', aby skopiować poniższy wykres (wykresy). Opcjonalnie można zmienić format tytułu dla nowego wykresu (wykresów)."
 
-#: graphs.php:897
+#: graphs.php:909
 msgid "<graph_title> (1)"
 msgstr "<graf_title> (1)"
 
-#: graphs.php:901
+#: graphs.php:913
 msgid "Duplicate Graph(s)"
 msgstr "Duplikat Wykres(y)"
 
-#: graphs.php:905
+#: graphs.php:917
 msgid "Click 'Continue' to convert the following Graph(s) into Graph Template(s).  You can optionally change the title format for the new Graph Template(s)."
 msgstr "Kliknij 'Kontynuuj', aby przekonwertować poniższy wykres(y) na szablon(y) wykresu(ów).  Opcjonalnie można zmienić format tytułu dla nowego szablonu wykresu (nowych szablonów wykresów)."
 
-#: graphs.php:908
+#: graphs.php:920
 msgid "<graph_title> Template"
 msgstr "<graf_title> Szablon"
 
-#: graphs.php:916
+#: graphs.php:928
 msgid "Click 'Continue' to place the following Graph(s) under the Tree Branch selected below."
 msgstr "Kliknij 'Kontynuuj', aby umieścić następujący wykres (wykresy) pod wybranym poniżej oddziałem drzewa."
 
-#: graphs.php:918
+#: graphs.php:930
 msgid "Destination Branch"
 msgstr "Oddział docelowy"
 
-#: graphs.php:931
+#: graphs.php:943
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
 msgstr "Wybierz nowe urządzenie dla tych wykresów i kliknij \"Continue\"."
 
-#: graphs.php:933 include/global_arrays.php:987
+#: graphs.php:945 include/global_arrays.php:987
 msgid "New Device"
 msgstr "Nowy produkt"
 
-#: graphs.php:941
+#: graphs.php:953
 msgid "Change Graph(s) Associated Device"
 msgstr "Zmiana wykresu(-ów) powiązanego(-ych) urządzenia"
 
-#: graphs.php:945
+#: graphs.php:957
 msgid "Click 'Continue' to re-apply suggested naming to the following Graph(s)."
 msgstr "Kliknij 'Kontynuuj', aby ponownie zastosować sugerowane nazewnictwo do następującego wykresu (wykresów)."
 
-#: graphs.php:950
+#: graphs.php:962
 msgid "Reapply Suggested Naming to Graph(s)"
 msgstr "Ponowne zastosowanie sugerowanego nazewnictwa do wykresu(-ów)"
 
-#: graphs.php:966
+#: graphs.php:978
 msgid "Click 'Continue' to create an Aggregate Graph from the selected Graph(s)."
 msgstr "Kliknij 'Kontynuuj', aby utworzyć wykres zagregowany z wybranego wykresu (wykresów)."
 
-#: graphs.php:975
+#: graphs.php:987
 msgid "The following Data Sources are in use by these Graphs:"
 msgstr "Poniższe źródła danych są wykorzystywane przez te wykresy."
 
-#: graphs.php:1036
+#: graphs.php:1048
 msgid "Please confirm"
 msgstr "Proszę potwierdzić"
 
-#: graphs.php:1174
+#: graphs.php:1186
 msgid "Select the Aggregate Template to use and press 'Continue' to create your Aggregate Graph.  Otherwise press 'Cancel' to return."
 msgstr "Wybierz szablon agregatu do użycia i naciśnij 'Dalej', aby utworzyć wykres agregatu.  W przeciwnym razie naciśnij 'Anuluj', aby powrócić."
 
-#: graphs.php:1199
+#: graphs.php:1211
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
 msgstr "Obecnie nie ma zdefiniowanych szablonów zagregowanych dla tego szablonu wykresu.  Proszę najpierw utworzyć szablon zagregowanego wykresu dla wybranego szablonu wykresu i spróbować ponownie, lub po prostu zagnieść niewzorcowany wykres zagregowany."
 
-#: graphs.php:1200
+#: graphs.php:1212
 msgid "Press 'Return' to return and select different Graphs."
 msgstr "Naciśnij 'Return', aby powrócić i wybrać różne wykresy."
 
-#: graphs.php:1212
+#: graphs.php:1224
 msgid "Click 'Continue' to apply Automation Rules to the following Graphs."
 msgstr "Kliknij 'Kontynuuj', aby zastosować Reguły Automatyki do następujących wykresów."
 
-#: graphs.php:1299
+#: graphs.php:1311
 msgid "Graph Items [new]"
 msgstr "Elementy wykresu [nowe]"
 
-#: graphs.php:1343
+#: graphs.php:1355
 #, php-format
 msgid "Graph Items [edit: %s]"
 msgstr "Elementy wykresu [edytuj: %s]"
 
-#: graphs.php:1467
+#: graphs.php:1479
 #, php-format
 msgid "Graph [edit: %s]"
 msgstr "Wykres [edytuj: %s]"
 
-#: graphs.php:1477
+#: graphs.php:1489
 msgid "Graph [new]"
 msgstr "Wykres [nowy]"
 
-#: graphs.php:1502
+#: graphs.php:1514
 msgid "Turn Off Graph Debug Mode."
 msgstr "Wyłącz tryb debugowania wykresu."
 
-#: graphs.php:1504
+#: graphs.php:1516
 msgid "Turn On Graph Debug Mode."
 msgstr "Włącz tryb debugowania wykresu."
 
-#: graphs.php:1526
+#: graphs.php:1538
 msgid "Edit Graph Template."
 msgstr "Edycja szablonu wykresu."
 
-#: graphs.php:1538
+#: graphs.php:1550
 #, php-format
 msgid "Edit Data Source: '%s'."
 msgstr "Źródła danych [%s]"
 
-#: graphs.php:1547
+#: graphs.php:1559
 msgid "Unlock Graph."
 msgstr "Odblokuj wykres."
 
-#: graphs.php:1549
+#: graphs.php:1561
 msgid "Lock Graph."
 msgstr "Wykres blokady."
 
-#: graphs.php:1578
+#: graphs.php:1590
 msgid "Selected Graph Template"
 msgstr "Wybrany szablon wykresu"
 
-#: graphs.php:1579
+#: graphs.php:1591
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "Wybierz szablon wykresu, który zostanie zastosowany do tego wykresu. Należy pamiętać, że szablony wykresów można zmienić tylko na 100%% zgodnych szablonów wykresów, co oznacza, że zawierają one identyczne źródła danych."
 
-#: graphs.php:1587
+#: graphs.php:1599
 msgid "Choose the Device that this Graph belongs to."
 msgstr "Wybierz urządzenie, do którego należy ten wykres."
 
-#: graphs.php:1643
+#: graphs.php:1655
 msgid "Supplemental Graph Template Data"
 msgstr "Uzupełniający szablon wykresu Dane"
 
-#: graphs.php:1645
+#: graphs.php:1657
 msgid "Graph Fields"
 msgstr "Pola wykresów"
 
-#: graphs.php:1646
+#: graphs.php:1658
 msgid "Graph Item Fields"
 msgstr "Pola elementów wykresu"
 
-#: graphs.php:1890 spikekill.php:42
+#: graphs.php:1902 spikekill.php:42
 msgid "Graph access denied"
 msgstr ""
 
-#: graphs.php:2025
+#: graphs.php:2037
 msgid "Graph Management [ Custom Graphs List Applied - Clear to Reset ]"
 msgstr "Stosowana lista wykresów niestandardowych - filtr z listy ]"
 
-#: graphs.php:2027
+#: graphs.php:2039
 msgid "Graph Management [ All Devices ]"
 msgstr "Nowe wykresy dla [ Wszystkie urządzenia]"
 
-#: graphs.php:2029
+#: graphs.php:2041
 msgid "Graph Management [ Non Device Based ]"
 msgstr "Zarządzanie grupą użytkowników [edytuj: %s]"
 
-#: graphs.php:2032
+#: graphs.php:2044
 #, php-format
 msgid "Graph Management [ %s ]"
 msgstr "Zarządzanie wykresami [ %s ]"
 
-#: graphs.php:2105
+#: graphs.php:2117
 msgid "Graph Source"
 msgstr "Wykres, Źródło danych"
 
-#: graphs.php:2110
+#: graphs.php:2122
 msgid "Non Templated"
 msgstr "Urządzenia nieszablonowe"
 
-#: graphs.php:2327
+#: graphs.php:2339
 msgid "The internal database ID for this Graph.  Useful when performing automation or debugging."
 msgstr "Wewnętrzny identyfikator bazy danych dla tego wykresu.  Przydatne podczas automatyzacji lub debugowania."
 
-#: graphs.php:2371
+#: graphs.php:2383
 msgid "Empty Graph"
 msgstr "Kopiuj wykres"
 
@@ -5477,7 +5477,7 @@ msgid "Repopulate Poller Cache"
 msgstr "Odbudować pamięć podręczną Pollera"
 
 #: host.php:827 include/global_arrays.php:2458 include/global_arrays.php:2470
-#: utilities.php:2407
+#: utilities.php:2395
 msgid "View Poller Cache"
 msgstr "Zobacz pamięć podręczną Poller Cache"
 
@@ -5654,7 +5654,7 @@ msgstr "Odzyskiwanie"
 #: lib/clog_webapi.php:856 lib/html_utility.php:1339 lib/import.php:342
 #: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4194 lib/rrd.php:4206
 #: lib/spikekill.php:301 package_import.php:522 package_import.php:600
-#: utilities.php:211 utilities.php:212 utilities.php:2765
+#: utilities.php:211 utilities.php:212 utilities.php:2753
 msgid "Unknown"
 msgstr "Nieznany"
 
@@ -5883,7 +5883,7 @@ msgstr "Aby uzyskać dostęp do tego obszaru Kadupul, musisz być zalogowany."
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "FATAL: Aby uzyskać dostęp do tego obszaru Kadupul, musisz być zalogowany."
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5619
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5621
 #: permission_denied.php:14 permission_denied.php:16
 msgid "Login Again"
 msgstr "Zaloguj się ponownie"
@@ -7023,7 +7023,7 @@ msgstr "Miejsca/urządzenia/Dane"
 msgid "Spike Handling"
 msgstr "Ustawienia uśmiercania szpiku"
 
-#: include/global_arrays.php:1243 utilities.php:2396
+#: include/global_arrays.php:1243 utilities.php:2384
 msgid "Log Administration"
 msgstr "Administracja dzienników"
 
@@ -7314,8 +7314,8 @@ msgstr "%s Godziny"
 msgid "%d GByte"
 msgstr "%d GBytes"
 
-#: include/global_arrays.php:1609 utilities.php:2862 utilities.php:2863
-#: utilities.php:2912
+#: include/global_arrays.php:1609 utilities.php:2850 utilities.php:2851
+#: utilities.php:2900
 msgid "Unlimited"
 msgstr "Bez limitu"
 
@@ -7945,7 +7945,7 @@ msgstr "Lista niewykorzystanych plików"
 msgid "RRD Check"
 msgstr "Kontrola działania"
 
-#: include/global_arrays.php:2464 utilities.php:2411
+#: include/global_arrays.php:2464 utilities.php:2399
 msgid "View Data Query Cache"
 msgstr "Wyświetlanie zapytań o dane w pamięci podręcznej"
 
@@ -7953,7 +7953,7 @@ msgstr "Wyświetlanie zapytań o dane w pamięci podręcznej"
 msgid "Clear Log"
 msgstr "Wyczyść dziennik"
 
-#: include/global_arrays.php:2488 utilities.php:2400
+#: include/global_arrays.php:2488 utilities.php:2388
 msgid "View User Log"
 msgstr "Wyświetlanie dziennika użytkownika"
 
@@ -7961,19 +7961,19 @@ msgstr "Wyświetlanie dziennika użytkownika"
 msgid "Clear User Log"
 msgstr "Wyczyść dziennik użytkownika"
 
-#: include/global_arrays.php:2500 utilities.php:2391 utilities.php:2392
+#: include/global_arrays.php:2500 utilities.php:2379 utilities.php:2380
 msgid "Technical Support"
 msgstr "Pomoc techniczna"
 
-#: include/global_arrays.php:2506 utilities.php:2582
+#: include/global_arrays.php:2506 utilities.php:2570
 msgid "Boost Status"
 msgstr "Stan \"Boost"
 
-#: include/global_arrays.php:2512 utilities.php:2466
+#: include/global_arrays.php:2512 utilities.php:2454
 msgid "View SNMP Agent Cache"
 msgstr "Zobacz pamięć podręczną agenta SNMP"
 
-#: include/global_arrays.php:2518 utilities.php:2477
+#: include/global_arrays.php:2518 utilities.php:2465
 msgid "View SNMP Agent Notification Log"
 msgstr "Zobacz dziennik powiadomień agenta SNMP"
 
@@ -11710,7 +11710,7 @@ msgstr "Boost Debug Log"
 msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost\tpoller process."
 msgstr "Jeśli to pole nie jest puste, Boost zapisze dane wyjściowe RRDupdate z procesu boost poller."
 
-#: include/global_settings.php:2180 utilities.php:3017
+#: include/global_settings.php:2180 utilities.php:3005
 msgid "Image Caching"
 msgstr "Buforowanie obrazu"
 
@@ -12510,7 +12510,7 @@ msgstr "Nadpisz tę wartość"
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
 #: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4171
-#: utilities.php:356 utilities.php:1480 utilities.php:3218
+#: utilities.php:356 utilities.php:1480 utilities.php:3206
 msgid "Type"
 msgstr "Typ"
 
@@ -12787,67 +12787,67 @@ msgstr "Oddział:"
 msgid "Device:"
 msgstr "Urządzenie:"
 
-#: lib/auth.php:4270 lib/auth.php:4361
+#: lib/auth.php:4272 lib/auth.php:4363
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Odmowa dostępu, prosimy o kontakt z administratorem Kadupul."
 
-#: lib/auth.php:4320
+#: lib/auth.php:4322
 msgid "Access Denied!  Login Disabled."
 msgstr "Odmowa dostępu, konto użytkownika wyłączone."
 
-#: lib/auth.php:4395
+#: lib/auth.php:4397
 msgid "Web Basic Authentication configured, but no username was passed from the web server. Please make sure you have authentication enabled on the web server."
 msgstr "Web Basic Authentication skonfigurowane, ale żadna nazwa użytkownika nie została przekazana z serwera WWW. Upewnij się, że masz włączone uwierzytelnianie na serwerze WWW."
 
-#: lib/auth.php:4411
+#: lib/auth.php:4413
 #, php-format
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "%s uwierzytelnione przez serwer WWW, ale zarówno użytkownicy szablonów, jak i użytkownicy goszczący nie są definiowani w Kadupul."
 
-#: lib/auth.php:4588 lib/auth.php:4787
+#: lib/auth.php:4590 lib/auth.php:4789
 msgid "Access Denied!  No password provided by user."
 msgstr "Brak dostępu! Brak hasła podanego przez użytkownika."
 
-#: lib/auth.php:4760 lib/auth.php:5826
+#: lib/auth.php:4762 lib/auth.php:5828
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "Odmowa dostępu! Identyfikator użytkownika szablonu %s nie istnieje.  Skontaktuj się z administratorem."
 
-#: lib/auth.php:4768
+#: lib/auth.php:4770
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:5121
+#: lib/auth.php:5123
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "Twój Administrator Kadupul wymusił silne hasła do logowania i Twoje obecne hasło nie spełnia nowych wymagań. W związku z tym musisz teraz zmienić hasło."
 
-#: lib/auth.php:5161
+#: lib/auth.php:5163
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "Hasło musi zawierać co najmniej %d znaków!"
 
-#: lib/auth.php:5167
+#: lib/auth.php:5169
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "Twoje hasło musi zawierać co najmniej 1 znak numeryczny!"
 
-#: lib/auth.php:5171
+#: lib/auth.php:5173
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "Twoje hasło musi zawierać kombinację małych i dużych liter!"
 
-#: lib/auth.php:5177
+#: lib/auth.php:5179
 msgid "Your password must contain at least 1 special character!"
 msgstr "Twoje hasło musi zawierać co najmniej 1 znak specjalny!"
 
-#: lib/auth.php:5612
+#: lib/auth.php:5614
 #, fuzzy
 msgid "Kadupul Login Failure"
 msgstr "Kadupul oczyszczone z kłód"
 
-#: lib/auth.php:5912
+#: lib/auth.php:5914
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "Uwierzytelnianie nie było wcześniej ustawione. Próbowano ustawić uwierzytelnianie lokalne, ale nie znaleziono konta administratora."
 
-#: lib/boost.php:126 utilities.php:2914
+#: lib/boost.php:126 utilities.php:2902
 #, fuzzy, php-format
 msgid "%s MBytes"
 msgstr " MBajty"
@@ -12902,7 +12902,7 @@ msgid "Log [Total Lines: %d %s - Unfiltered]"
 msgstr "Kłoda [Linie ogółem: %d %s - niefiltrowane]."
 
 #: lib/clog_webapi.php:293 utilities.php:1559 utilities.php:1928
-#: utilities.php:2162 utilities.php:2275 utilities.php:3212 utilities.php:3437
+#: utilities.php:2162 utilities.php:2275 utilities.php:3200 utilities.php:3425
 msgid "Entries"
 msgstr "Wpisy"
 
@@ -16817,29 +16817,29 @@ msgstr ""
 msgid "WindKilled"
 msgstr ""
 
-#: lib/template.php:1645
+#: lib/template.php:1646
 msgid "Attempting to Create Graph from Non-Template"
 msgstr "Tworzenie agregatu z szablonu"
 
-#: lib/template.php:1659
+#: lib/template.php:1660
 msgid "Attempting to Create Graph from Removed Graph Template"
 msgstr "Próba stworzenia Wykresu z usuniętego szablonu Wykresu"
 
-#: lib/template.php:2354 lib/template.php:2392
+#: lib/template.php:2355 lib/template.php:2393
 #, php-format
 msgid "Created: %s"
 msgstr "Utworzono: %s"
 
-#: lib/template.php:2372 lib/template.php:2403
+#: lib/template.php:2373 lib/template.php:2404
 msgid "ERROR: Whitelist Validation Failed. Check Data Input Method"
 msgstr "ERROR: Walidacja białej listy nie powiodła się. Sprawdź metodę wprowadzania danych"
 
-#: lib/template.php:2382
+#: lib/template.php:2383
 #, php-format
 msgid "Graph Not created for %s due to bad data"
 msgstr "Wykres nie został utworzony dla %s z powodu złych danych"
 
-#: lib/template.php:2413
+#: lib/template.php:2414
 #, php-format
 msgid "NOTE: Graph not added for Data Query %s and index %s due to Data Source verification failure"
 msgstr "UWAGA: Nie dodano wykresu dla zapytania o dane %s i indeksu %s z powodu niepowodzenia weryfikacji źródła danych"
@@ -17220,7 +17220,7 @@ msgstr "Wersja %s"
 msgid "Notifications"
 msgstr "Powiadomienia"
 
-#: managers.php:135 utilities.php:2482
+#: managers.php:135 utilities.php:2470
 msgid "SNMP Notification Receivers"
 msgstr "Odbiorniki powiadomień SNMP"
 
@@ -17245,11 +17245,11 @@ msgstr "Odbiornik powiadomień SNMP [edytuj: %s]"
 msgid "SNMP Notification Receiver [new]"
 msgstr "Odbiornik powiadomienia SNMP [nowy]"
 
-#: managers.php:486 managers.php:578 utilities.php:3143 utilities.php:3218
+#: managers.php:486 managers.php:578 utilities.php:3131 utilities.php:3206
 msgid "MIB"
 msgstr "MIB"
 
-#: managers.php:577 utilities.php:1934 utilities.php:3218
+#: managers.php:577 utilities.php:1934 utilities.php:3206
 msgid "OID"
 msgstr "OID"
 
@@ -17257,7 +17257,7 @@ msgstr "OID"
 msgid "Kind"
 msgstr "Rodzaj"
 
-#: managers.php:580 utilities.php:3218
+#: managers.php:580 utilities.php:3206
 msgid "Max-Access"
 msgstr "Maksymalny dostęp"
 
@@ -17269,23 +17269,23 @@ msgstr "Wszystkie monitorowane urządzenia"
 msgid "No SNMP Notifications"
 msgstr "Nr SNMP Powiadomienia"
 
-#: managers.php:777 utilities.php:3405
+#: managers.php:777 utilities.php:3393
 msgid "Severity"
 msgstr "Istotność"
 
-#: managers.php:796 utilities.php:3451
+#: managers.php:796 utilities.php:3439
 msgid "Purge Notification Log"
 msgstr "Dziennik zawiadamiania o oczyszczeniu"
 
-#: managers.php:843 utilities.php:3511
+#: managers.php:843 utilities.php:3499
 msgid "Time"
 msgstr "Czas"
 
-#: managers.php:844 utilities.php:3511
+#: managers.php:844 utilities.php:3499
 msgid "Notification"
 msgstr "Powiadomienie"
 
-#: managers.php:845 utilities.php:3511
+#: managers.php:845 utilities.php:3499
 msgid "Varbinds"
 msgstr "Warbindy"
 
@@ -17293,7 +17293,7 @@ msgstr "Warbindy"
 msgid "Severity Level"
 msgstr "Poziom dotkliwości"
 
-#: managers.php:878 utilities.php:3533
+#: managers.php:878 utilities.php:3521
 msgid "No SNMP Notification Log Entries"
 msgstr "Nr SNMP Notification Log Entries (Wpisy w dzienniku zgłoszeniowym SNMP)"
 
@@ -18085,7 +18085,7 @@ msgstr "Kontrola działania"
 msgid "RRD check is disabled, please enable in Configuration -> Settings -> Data"
 msgstr "Kontrola RRD jest wyłączona, włącz w Konfiguracji -> Ustawienia -> Dane"
 
-#: rrdcheck.php:87 utilities.php:2456
+#: rrdcheck.php:87 utilities.php:2444
 msgid "RRDfile Checker"
 msgstr "Środek czyszczący RRDfile"
 
@@ -20000,18 +20000,18 @@ msgid "Attempts"
 msgstr "Próby"
 
 #: utilities.php:1084 utilities.php:1470 utilities.php:1823 utilities.php:2126
-#: utilities.php:3173 utilities.php:3449
+#: utilities.php:3161 utilities.php:3437
 msgctxt "Button: use filter settings"
 msgid "Go"
 msgstr "Idź"
 
 #: utilities.php:1085 utilities.php:1471 utilities.php:1824 utilities.php:2127
-#: utilities.php:3174 utilities.php:3450
+#: utilities.php:3162 utilities.php:3438
 msgctxt "Button: reset filter settings"
 msgid "Clear"
 msgstr "Wyczyść"
 
-#: utilities.php:1086 utilities.php:1472 utilities.php:3451
+#: utilities.php:1086 utilities.php:1472 utilities.php:3439
 msgctxt "Button: delete all table entries"
 msgid "Purge"
 msgstr "Oczyszczanie"
@@ -20123,367 +20123,367 @@ msgstr "Serwer skryptów"
 msgid "RRD:"
 msgstr "RRD:"
 
-#: utilities.php:2394
+#: utilities.php:2382
 msgid "Kadupul technical support page.  Used by developers and technical support persons to assist with issues in Kadupul.  Includes checks for common configuration issues."
 msgstr "Strona wsparcia technicznego Kadupul.  Wykorzystywane przez programistów i osoby zajmujące się wsparciem technicznym do pomocy w kwestiach związanych z Kadupul.  Zawiera sprawdzenia wspólnych problemów konfiguracyjnych."
 
-#: utilities.php:2398
+#: utilities.php:2386
 msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
 msgstr "Kadupul Log przechowuje statystyki, błędy i inne komunikaty w zależności od ustawień systemu.  Informacje te mogą być wykorzystane do identyfikacji problemów z ankieterami i aplikacją."
 
-#: utilities.php:2402
+#: utilities.php:2390
 msgid "Allows Administrators to browse the user log.  Administrators can filter and export the log as well."
 msgstr "Umożliwia administratorom przeglądanie dziennika użytkownika.  Administratorzy mogą również filtrować i eksportować dziennik."
 
-#: utilities.php:2406
+#: utilities.php:2394
 msgid "Poller Cache Administration"
 msgstr "Administracja Poller Cache"
 
-#: utilities.php:2409
+#: utilities.php:2397
 msgid "This is the data that is being passed to the poller each time it runs. This data is then in turn executed/interpreted and the results are fed into the RRDfiles for graphing or the database for display."
 msgstr "Są to dane, które są przekazywane do ankietera przy każdym uruchomieniu. Dane te są następnie wykonywane/interpretowane, a wyniki są wprowadzane do plików RRD do wykresów lub do bazy danych do wyświetlania."
 
-#: utilities.php:2413
+#: utilities.php:2401
 msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTS as well as in CDEF's."
 msgstr "W pamięci podręcznej Data Query Cache przechowywane są informacje zebrane z typów danych wejściowych Data Query. Wartości z tych pól mogą być używane w obszarze tekstowym Graphs for Legends, Vertical Labels i GPRINTS, jak również w CDEF's."
 
-#: utilities.php:2415
+#: utilities.php:2403
 msgid "Rebuild Poller Cache"
 msgstr "Odbudować pamięć podręczną Pollera"
 
-#: utilities.php:2419
+#: utilities.php:2407
 msgid "The Poller Cache will be re-generated if you select this option. Use this option only in the event of a database crash if you are experiencing issues after the crash and have already run the database repair tools.  Alternatively, if you are having problems with a specific Device, simply re-save that Device to rebuild its Poller Cache.  There is also a command line interface equivalent to this command that is recommended for large systems."
 msgstr "Po wybraniu tej opcji Poller Cache zostanie wygenerowany ponownie. Użyj tej opcji tylko w przypadku awarii bazy danych, jeśli występują problemy po awarii i zostały już uruchomione narzędzia do naprawy bazy danych.  Alternatywnie, jeśli masz problemy z określonym urządzeniem, po prostu ponownie zapisz to urządzenie, aby odbudować pamięć podręczną Poller Cache.  Istnieje również interfejs wiersza poleceń odpowiadający tej komendzie, który jest zalecany dla dużych systemów.  <i class=\"deviceDown\">NOTE: W dużych systemach komenda ta może trwać kilka minut do godzin i dlatego nie powinna być uruchamiana z Kadupul UI.  Możesz po prostu uruchomić 'php -q cli/rebuild_poller_cache.php --help' w wierszu poleceń, aby uzyskać więcej informacji.</i>"
 
-#: utilities.php:2421
+#: utilities.php:2409
 msgid "NOTE: On large systems, this command may take several minutes to hours to complete and therefore should not be run from the Kadupul UI.  You can simply run 'php -q cli/rebuild_poller_cache.php --help' at the command line for more information."
 msgstr "UWAGA: W dużych systemach wykonanie tego polecenia może zająć od kilku minut do godzin i dlatego nie powinno być uruchamiane z interfejsu użytkownika Kadupul.  Możesz po prostu uruchomić 'php -q cli/rebuild_poller_cache.php --help' w wierszu poleceń, aby uzyskać więcej informacji."
 
-#: utilities.php:2425
+#: utilities.php:2413
 msgid "Rebuild Resource Cache"
 msgstr "Odbudować pamięć podręczną zasobów"
 
-#: utilities.php:2429
+#: utilities.php:2417
 msgid "When operating multiple Data Collectors in Kadupul, Kadupul will attempt to maintain state for key files on all Data Collectors.  This includes all core, non-install related website and plugin files.  When you force a Resource Cache rebuild, Kadupul will clear the local Resource Cache, and then rebuild it at the next scheduled poller start.  This will trigger all Remote Data Collectors to recheck their website and plugin files for consistency."
 msgstr "Podczas pracy z wieloma kolektorami danych w Kadupul, Kadupul będzie starał się utrzymać stan plików kluczowych dla wszystkich kolektorów danych.  Obejmuje to wszystkie podstawowe, nie związane z instalacją strony internetowej i plików pluginów.  Kiedy wymusi się odbudowę pamięci podręcznej Resource Cache, Kadupul wyczyści lokalną pamięć podręczną Resource Cache, a następnie odbuduje ją przy następnym planowanym starcie ankietera.  Spowoduje to, że wszystkie zdalne zbieracze danych będą ponownie sprawdzać swoją stronę internetową i pliki pluginów pod kątem spójności."
 
-#: utilities.php:2433
+#: utilities.php:2421
 msgid "Boost Utilities"
 msgstr "Zwiększenie użyteczności publicznej"
 
-#: utilities.php:2434
+#: utilities.php:2422
 msgid "View Boost Status"
 msgstr "Wyświetlanie statusu Boost"
 
-#: utilities.php:2436
+#: utilities.php:2424
 msgid "This menu pick allows you to view various boost settings and statistics associated with the current running Boost configuration."
 msgstr "Ten wybór menu pozwala na przeglądanie różnych ustawień wzmocnienia i statystyk związanych z bieżącą konfiguracją Boost."
 
-#: utilities.php:2440
+#: utilities.php:2428
 msgid "Data Source Statistics Utilities"
 msgstr "Źródła danych Statystyka"
 
-#: utilities.php:2441
+#: utilities.php:2429
 msgid "Purge Data Source Statistics"
 msgstr "Źródła danych Statystyka"
 
-#: utilities.php:2445
+#: utilities.php:2433
 msgid "This menu pick will purge all existing Data Source Statistics from the Database.  If Data Source Statistics is enabled, the Data Sources Statistics will start collection again on the next Data Collector pass."
 msgstr "Ten wybór menu usunie wszystkie istniejące statystyki źródła danych z bazy danych. Jeśli włączono statystyki źródła danych, statystyki źródeł danych zaczną ponownie zbierać dane przy następnym przejściu modułu gromadzącego dane."
 
-#: utilities.php:2450
+#: utilities.php:2438
 msgid "RRD Utilities"
 msgstr "Przedsiębiorstwa użyteczności publicznej RRD"
 
-#: utilities.php:2451
+#: utilities.php:2439
 msgid "RRDfile Cleaner"
 msgstr "Środek czyszczący RRDfile"
 
-#: utilities.php:2454
+#: utilities.php:2442
 msgid "When you delete Data Sources from Kadupul, the corresponding RRDfiles are not removed automatically.  Use this utility to facilitate the removal of these old files."
 msgstr "Po usunięciu źródeł danych z Kadupul odpowiednie pliki RRD nie są automatycznie usuwane.  Użyj tego narzędzia, aby ułatwić usunięcie tych starych plików."
 
-#: utilities.php:2459
+#: utilities.php:2447
 msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need enable rrdcheck in Configuration->Settings->Data"
 msgstr "Użyj tego narzędzia, aby wyświetlić problemy z brakującymi plikami rrd lub brakującymi wartościami w plikach rrd. Musisz włączyć rrdcheck w Configuration->Settings->Data"
 
-#: utilities.php:2465
+#: utilities.php:2453
 msgid "SNMP Agent Utilities"
 msgstr "Przedsiębiorstwa użyteczności publicznej SNMPAgent"
 
-#: utilities.php:2469
+#: utilities.php:2457
 msgid "This shows all objects being handled by the SNMP Agent."
 msgstr "Pokazuje to wszystkie obiekty obsługiwane przez SNMPAgent."
 
-#: utilities.php:2471
+#: utilities.php:2459
 msgid "Rebuild SNMP Agent Cache"
 msgstr "Odbudować pamięć podręczną SNMPAgent"
 
-#: utilities.php:2475
+#: utilities.php:2463
 msgid "The SNMP cache will be cleared and re-generated if you select this option. Note that it takes another poller run to restore the SNMP cache completely."
 msgstr "Po wybraniu tej opcji pamięć podręczna SNMP zostanie wyczyszczona i wygenerowana ponownie. Zauważ, że do całkowitego przywrócenia pamięci podręcznej SNMP potrzebny jest kolejny tester."
 
-#: utilities.php:2480
+#: utilities.php:2468
 msgid "This menu pick allows you to view the latest events SNMP Agent has handled in relation to the registered notification receivers."
 msgstr "Ten wybór menu pozwala na przeglądanie najnowszych zdarzeń obsługiwanych przez SNMPAgent w odniesieniu do zarejestrowanych odbiorników powiadomień."
 
-#: utilities.php:2485
+#: utilities.php:2473
 msgid "Allows Administrators to maintain SNMP notification receivers."
 msgstr "Umożliwia administratorom obsługę odbiorników powiadomień SNMP."
 
-#: utilities.php:2492
+#: utilities.php:2480
 msgid "Kadupul System Utilities"
 msgstr "Narzędzia systemu Kadupul"
 
-#: utilities.php:2608
+#: utilities.php:2596
 msgid "Refresh Interval"
 msgstr "Interwał odświeżania"
 
-#: utilities.php:2704
+#: utilities.php:2692
 msgid "Overrun Warning"
 msgstr "Ostrzeżenie przed przekroczeniem"
 
-#: utilities.php:2706
+#: utilities.php:2694
 msgid "Timed Out"
 msgstr "Czas oczekiwania"
 
-#: utilities.php:2708
+#: utilities.php:2696
 msgid "Other"
 msgstr "Inne"
 
-#: utilities.php:2764
+#: utilities.php:2752
 msgid "Cannot open directory"
 msgstr "Nie można otworzyć katalogu"
 
-#: utilities.php:2768
+#: utilities.php:2756
 msgid "Directory Does NOT Exist!!"
 msgstr "Katalog NIE istnieje!"
 
-#: utilities.php:2777
+#: utilities.php:2765
 msgid "Current Boost Status"
 msgstr "Aktualny status boost"
 
-#: utilities.php:2781
+#: utilities.php:2769
 msgid "Boost On-demand Updating:"
 msgstr "Boost On-demand Updating na żądanie:"
 
-#: utilities.php:2785
+#: utilities.php:2773
 msgid "Running Processes:"
 msgstr "Procesy równoległe"
 
-#: utilities.php:2790
+#: utilities.php:2778
 msgid "Total Poller Items:"
 msgstr "Elementy pamięci podręcznej Poller Cache"
 
-#: utilities.php:2796
+#: utilities.php:2784
 msgid "Total Data Sources:"
 msgstr "Źródła danych ogółem:"
 
-#: utilities.php:2800
+#: utilities.php:2788
 msgid "Remaining Data Sources:"
 msgstr "Debugowanie Źródło danych"
 
-#: utilities.php:2800
+#: utilities.php:2788
 msgid "TBD"
 msgstr "Tbd"
 
-#: utilities.php:2804
+#: utilities.php:2792
 msgid "Queued Boost Records:"
 msgstr "Oczekujące rekordów Boost:"
 
-#: utilities.php:2808
+#: utilities.php:2796
 msgid "Approximate in Process:"
 msgstr "Przybliżony w procesie:"
 
-#: utilities.php:2811
+#: utilities.php:2799
 msgid "Total Boost Records:"
 msgstr "Total Boost Records:"
 
-#: utilities.php:2816
+#: utilities.php:2804
 msgid "Boost Storage Statistics"
 msgstr "Statystyki Boost Storage"
 
-#: utilities.php:2820
+#: utilities.php:2808
 msgid "Database Engine:"
 msgstr "Silnik bazy danych:"
 
-#: utilities.php:2824
+#: utilities.php:2812
 msgid "Current Boost Table(s) Size:"
 msgstr "Aktualna tabela(-i) zwiększenia rozmiaru:"
 
-#: utilities.php:2828
+#: utilities.php:2816
 msgid "Avg Bytes/Record:"
 msgstr "Avg Bajtów/Record:"
 
-#: utilities.php:2856
+#: utilities.php:2844
 #, php-format
 msgid "%d Bytes"
 msgstr "%d Bajty"
 
-#: utilities.php:2856
+#: utilities.php:2844
 msgid "Max Record Length:"
 msgstr "Maks. długość rekordu:"
 
-#: utilities.php:2868
+#: utilities.php:2856
 msgid "Max Allowed Boost Table Size:"
 msgstr "Maksymalny dozwolony rozmiar stołu Boost:"
 
-#: utilities.php:2872
+#: utilities.php:2860
 msgid "Estimated Maximum Records:"
 msgstr "Szacowane rekordy maksymalne:"
 
-#: utilities.php:2876
+#: utilities.php:2864
 msgid "Previous Runtime Statistics"
 msgstr "Statystyki dotyczące czasu pracy"
 
-#: utilities.php:2879
+#: utilities.php:2867
 msgid "Last Start Time:"
 msgstr "Ostatnia godzina rozpoczęcia:"
 
-#: utilities.php:2885
+#: utilities.php:2873
 msgid "Last End Time:"
 msgstr "Ostatnia godzina rozpoczęcia:"
 
-#: utilities.php:2885
+#: utilities.php:2873
 msgid "Never Run"
 msgstr "Nigdy nie biegać"
 
-#: utilities.php:2888
+#: utilities.php:2876
 msgid "Last Run Duration:"
 msgstr "Czas trwania ostatniego badania:"
 
-#: utilities.php:2891
+#: utilities.php:2879
 #, php-format
 msgid "%d minutes"
 msgstr "%d minut"
 
-#: utilities.php:2891
+#: utilities.php:2879
 #, php-format
 msgid "%d seconds"
 msgstr "%d sek."
 
-#: utilities.php:2894
+#: utilities.php:2882
 #, php-format
 msgid "%0.2f percent of update frequency)"
 msgstr "%0.2f procent częstotliwości aktualizacji)"
 
-#: utilities.php:2902
+#: utilities.php:2890
 msgid "RRD Updates:"
 msgstr "Aktualizacje RRD:"
 
-#: utilities.php:2905
+#: utilities.php:2893
 msgid "MBytes"
 msgstr "MBajty"
 
-#: utilities.php:2905
+#: utilities.php:2893
 msgid "Peak Poller Memory:"
 msgstr "Pamięć Pollera Szczytowego:"
 
-#: utilities.php:2919
+#: utilities.php:2907
 msgid "Max Poller Memory Allowed:"
 msgstr "Max Poller Memory Allowed:"
 
-#: utilities.php:2922
+#: utilities.php:2910
 msgid "Detailed Runtime Statistics"
 msgstr "Statystyki dotyczące czasu pracy"
 
-#: utilities.php:2940
+#: utilities.php:2928
 #, php-format
 msgid "Records: %s (ds rows), Time: %s (secs), GetRows: %s (secs), ResultsCycle: %s (secs), FileAndTemplate: %s (secs), LastUpdate: %s (secs), RRDUpdate: %s (secs), Delete: %s (secs)"
 msgstr "Rekordy: %s (wiersze ds), czas: %s (sekundy), GetRows: %s (sekundy), ResultsCycle: %s (sekundy), FileAndTemplate: %s (sekundy), LastUpdate: %s (sekundy), RRDUpdate: %s (sekundy), Delete: %s (sekundy)"
 
-#: utilities.php:2952
+#: utilities.php:2940
 msgid "Previous Runtime Timers:"
 msgstr "Szczegółowe Timery Runtime:"
 
-#: utilities.php:2991 utilities.php:2993
+#: utilities.php:2979 utilities.php:2981
 #, fuzzy, php-format
 msgid "Process: %d"
 msgstr "<g x=1 id=\"7693\">0 </g><g x=2 id=\"7696\">Process</g>"
 
-#: utilities.php:2991
+#: utilities.php:2979
 #, php-format
 msgid "Status: <span class=\"deviceUp\"><b>Running</b></span>, Remaining: %s (dses), CurrentRuntime: %s (secs), PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
 msgstr "Status: <span class=\"deviceUp\"><b>Running</b></span>, Remaining: %s (dses), CurrentRuntime: %s (secs), PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
 
-#: utilities.php:2993
+#: utilities.php:2981
 #, php-format
 msgid "Status: <span class=\"deviceRecovering\"><b>Idle</b></span>, PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
 msgstr "Status: <span class=\"deviceRecovering\"><b>Bezczynny</b></span>, PrevRuntime: %s (sek.), PrevProcessed: %10s (wiersze ds)"
 
-#: utilities.php:2999
+#: utilities.php:2987
 msgid "Run Time Configuration"
 msgstr "Konfiguracja czasu pracy"
 
-#: utilities.php:3002
+#: utilities.php:2990
 msgid "Update Frequency:"
 msgstr "Częstotliwość aktualizacji:"
 
-#: utilities.php:3005
+#: utilities.php:2993
 msgid "Concurrent Processes:"
 msgstr "Procesy równoległe"
 
-#: utilities.php:3008
+#: utilities.php:2996
 msgid "Next Start Time:"
 msgstr "Następna godzina rozpoczęcia:"
 
-#: utilities.php:3011
+#: utilities.php:2999
 msgid "Maximum Records:"
 msgstr "Maksymalna liczba rekordów"
 
-#: utilities.php:3011
+#: utilities.php:2999
 msgid "Records"
 msgstr "Rekordy"
 
-#: utilities.php:3014
+#: utilities.php:3002
 msgid "Maximum Allowed Runtime:"
 msgstr "Maksymalny dozwolony czas rundy:"
 
-#: utilities.php:3020
+#: utilities.php:3008
 msgid "Image Caching Status:"
 msgstr "Status buforowania obrazu:"
 
-#: utilities.php:3023
+#: utilities.php:3011
 msgid "Cache Directory:"
 msgstr "Katalog w pamięci podręcznej:"
 
-#: utilities.php:3026
+#: utilities.php:3014
 msgid "Cached Files:"
 msgstr "Pliki z buforowanymi plikami:"
 
-#: utilities.php:3029
+#: utilities.php:3017
 msgid "Cached Files Size:"
 msgstr "Rozmiar plików z buforowanymi plikami:"
 
-#: utilities.php:3128
+#: utilities.php:3116
 msgid "SNMP Agent Cache"
 msgstr "SNMPAgent Cache"
 
-#: utilities.php:3161
+#: utilities.php:3149
 msgid "OIDs"
 msgstr "OID-y"
 
-#: utilities.php:3238
+#: utilities.php:3226
 msgid "Column Data"
 msgstr "Kolumna Dane"
 
-#: utilities.php:3238
+#: utilities.php:3226
 msgid "Scalar"
 msgstr "Skalar"
 
-#: utilities.php:3390
+#: utilities.php:3378
 msgid "SNMP Agent Notification Log"
 msgstr "Dziennik zgłoszeniowy SNMPAgent"
 
-#: utilities.php:3421 utilities.php:3511
+#: utilities.php:3409 utilities.php:3499
 msgid "Receiver"
 msgstr "Odbiorca"
 
-#: utilities.php:3503
+#: utilities.php:3491
 msgid "Log Entries"
 msgstr "Wpisy do rejestru"
 
-#: utilities.php:3518
+#: utilities.php:3506
 #, php-format
 msgid "Severity Level: %s"
 msgstr "Poziom dotkliwości: %s"
