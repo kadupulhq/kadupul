@@ -5,7 +5,7 @@
 
 // Loaded only when the parent PHPUnit run is collecting real coverage.
 $coverageRoot = dirname(__DIR__, 2);
-if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE') || defined('SYMFONY_SESSION_TEST_COVERAGE') || defined('DATA_INPUT_LIST_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('MEMBERSHIP_EPOCH_TEST_COVERAGE') || defined('GROUP_COPY_TEST_COVERAGE') || defined('USER_COPY_TEST_COVERAGE')) {
+if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE') || defined('SYMFONY_SESSION_TEST_COVERAGE') || defined('DATA_INPUT_LIST_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('MEMBERSHIP_EPOCH_TEST_COVERAGE') || (defined('GROUP_COPY_TEST_COVERAGE') && !defined('GROUP_COPY_UNIT_TEST_COVERAGE')) || defined('USER_COPY_TEST_COVERAGE')) {
     require_once $coverageRoot . '/include/vendor/autoload.php';
     // Symfony's module suite uses the application's PHPUnit 11 / code-coverage
     // 10 stack. Child reports are serialized into that parent process, so they
@@ -231,7 +231,7 @@ if (defined('PAGE_FLAG_TEST_COVERAGE_SOURCE')) {
 }
 if (defined('AUTH_HARDENING_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
-    foreach (array('include/csrf.php', 'lib/csrf_rotation.php', 'include/auth.php', 'include/global_session.php', 'lib/auth.php', 'lib/functions.php', 'lib/clog_webapi.php', 'logout.php', 'data_debug.php', 'managers.php', 'utilities.php', 'rrdcleaner.php', 'cli/refresh_csrf.php', 'auth_changepassword.php', 'lib/ldap.php', 'install/functions.php') as $coverageFile) {
+    foreach (array('include/csrf.php', 'lib/csrf_rotation.php', 'include/auth.php', 'include/global_session.php', 'lib/auth.php', 'lib/functions.php', 'lib/clog_webapi.php', 'logout.php', 'data_debug.php', 'managers.php', 'utilities.php', 'rrdcleaner.php', 'cli/refresh_csrf.php', 'auth_changepassword.php', 'lib/ldap.php', 'install/functions.php', 'install/upgrades/1_2_31.php') as $coverageFile) {
         $coverageFilter->includeFile($coverageRoot . '/' . $coverageFile);
     }
 }
