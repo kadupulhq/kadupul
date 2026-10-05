@@ -567,7 +567,7 @@ function graph_drilldown_icons($local_graph_id, $type = 'graph_buttons', $tree_i
     }
 
     if (is_realm_allowed(1043)) {
-        print "<span class='iconLink spikekill' data-graph='" . $local_graph_id . "' id='graph_" . $local_graph_id . "_sk'><img id='sk" . $local_graph_id . "' class='drillDown' src='" . $url_path . "images/spikekill.gif' title='" . __esc('Kill Spikes in Graphs') . "'></span>";
+        print "<button type='button' class='iconLink spikekill' aria-haspopup='menu' aria-expanded='false' aria-label='" . __esc('Kill Spikes in Graphs') . "' data-graph='" . $local_graph_id . "' id='graph_" . $local_graph_id . "_sk'><img id='sk" . $local_graph_id . "' class='drillDown' src='" . $url_path . "images/spikekill.gif' alt='' title='" . __esc('Kill Spikes in Graphs') . "'></button>";
         print '<br/>';
     }
 
@@ -2587,25 +2587,48 @@ function html_spikekill_js()
     ?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 	spikeKillOpen = false;
+    var spikeKillGeneration = (typeof spikeKillGeneration === 'undefined' ? 0 : spikeKillGeneration) + 1;
 	$(function() {
-		$(document).on('click', function() {
+        var generation = spikeKillGeneration;
+        var previousTrigger = $('button.spikekill[aria-expanded="true"]');
+        var restoreFocus = $('.spikekillMenu').is(':focus') || $('.spikekillMenu').has(document.activeElement).length > 0;
+        $('.spikekillMenu').menu('destroy').parent().remove();
+        $('button.spikekill').attr('aria-expanded', 'false');
+        if (restoreFocus) previousTrigger.trigger('focus');
+		$(document).off('click.spikeKill').on('click.spikeKill', function() {
 			if (spikeKillOpen) {
-				$(this).find('.spikekillMenu').menu('destroy').parent().remove();
+				$('.spikekillMenu').menu('destroy').parent().remove();
+				$('button.spikekill').attr('aria-expanded', 'false');
 				spikeKillOpen = false;
 			}
 		});
 
-		$('span.spikekill').children().contextmenu(function() {
+		$('button.spikekill').off('contextmenu.spikeKill').on('contextmenu.spikeKill', function() {
 			return false;
 		});
 
-		$('span.spikekill').on('click', function() {
+		$(document).off('keydown.spikeKill').on('keydown.spikeKill', function(event) {
+			if (event.key === 'Escape' && spikeKillOpen) {
+				var trigger = $('button.spikekill[aria-expanded="true"]');
+				$('.spikekillMenu').menu('destroy').parent().remove();
+				spikeKillOpen = false;
+				trigger.attr('aria-expanded', 'false').trigger('focus');
+			}
+		});
+
+		$('button.spikekill').off('click.spikeKill').on('click.spikeKill', function(event) {
+			event.stopPropagation();
+			var trigger = $(this);
 			if (spikeKillOpen == false) {
-				local_graph_id = $(this).attr('data-graph');
+				var local_graph_id = trigger.attr('data-graph');
+                trigger.prop('disabled', true);
 
 				$.get('?action=spikemenu&local_graph_id='+local_graph_id)
 					.done(function(data) {
-						$('#sk'+local_graph_id).after(data);
+                        if (generation !== spikeKillGeneration) return;
+                        $('.spikekillMenu').menu('destroy').parent().remove();
+                        $('button.spikekill').attr('aria-expanded', 'false');
+						trigger.after(data);
 
 						menuAnchor = $('#sk'+local_graph_id).offset().left;
 						pageWidth  = $(document).width();
@@ -2626,14 +2649,18 @@ function html_spikekill_js()
 						spikeKillActions();
 
 						spikeKillOpen = true;
+						trigger.attr('aria-expanded', 'true');
+						$('.spikekillMenu').trigger('focus');
 					})
 					.fail(function(data) {
-						getPresentHTTPError(data);
-					});
+						if (generation === spikeKillGeneration) getPresentHTTPError(data);
+					})
+                    .always(function() { trigger.prop('disabled', false); });
 
 			} else {
 				spikeKillOpen = false;
-				$(this).find('.spikekillMenu').menu('destroy').parent().remove();
+				$('.spikekillMenu').menu('destroy').parent().remove();
+				$('button.spikekill').attr('aria-expanded', 'false');
 			}
 		});
 	});

@@ -221,7 +221,12 @@ test('graph drill-down icons keep identifiers numeric and the realtime popup ins
 
     expectNoInjection($xpath, 1);
     expect($xpath->query('//a[@class="iconLink utils"]')->item(0)->getAttribute('id'))->toBe('graph_7_util');
-    expect($xpath->query('//span[@class="iconLink spikekill"]')->item(0)->getAttribute('data-graph'))->toBe('7');
+    $spikeControl = $xpath->query('//button[@class="iconLink spikekill"]')->item(0);
+    expect($spikeControl->getAttribute('data-graph'))->toBe('7');
+    expect($spikeControl->getAttribute('type'))->toBe('button');
+    expect($spikeControl->getAttribute('aria-label'))->toBe('Kill Spikes in Graphs');
+    expect($spikeControl->getAttribute('aria-haspopup'))->toBe('menu');
+    expect($spikeControl->getAttribute('aria-expanded'))->toBe('false');
     expect($xpath->query('//img[@id="de5_0"]')->length)->toBe(1);
     foreach ($xpath->query('//img[@class="drillDown"]') as $image) {
         expect($image->getAttribute('src'))->toStartWith(decoded('/k' . $payload . '/images/'));

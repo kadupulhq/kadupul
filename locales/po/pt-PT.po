@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-04 23:29-0700\n"
+"POT-Creation-Date: 2026-10-05 03:16-0700\n"
 "PO-Revision-Date: 2024-04-20 19:18-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -135,7 +135,7 @@ msgstr "Clique em 'Continuar' para eliminar o(s) seguinte(s) Gráfico(s) Agregad
 #: host.php:509 host.php:525 host.php:539 host.php:548 host.php:579
 #: host.php:591 host_templates.php:221 host_templates.php:235
 #: host_templates.php:246 host_templates.php:301 host_templates.php:374
-#: lib/clog_webapi.php:225 lib/html.php:2825 lib/html_form.php:1396
+#: lib/clog_webapi.php:225 lib/html.php:2852 lib/html_form.php:1396
 #: lib/html_form.php:1413 lib/html_form.php:1424 lib/html_reports.php:632
 #: managers.php:1061 managers.php:1122 plugins.php:712 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:753
@@ -169,7 +169,7 @@ msgstr "Cancelar"
 #: host.php:491 host.php:500 host.php:509 host.php:525 host.php:539
 #: host.php:548 host.php:579 host.php:591 host_templates.php:221
 #: host_templates.php:235 host_templates.php:246 host_templates.php:302
-#: host_templates.php:375 lib/clog_webapi.php:226 lib/html.php:2824
+#: host_templates.php:375 lib/clog_webapi.php:226 lib/html.php:2851
 #: lib/html_reports.php:574 managers.php:1061 managers.php:1122 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:753
 #: tree.php:762 tree.php:771 tree.php:780 user_admin.php:252 user_admin.php:292
@@ -820,7 +820,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "Há problemas com a página Alterar Senha.  Contacte o seu administrador Kadupul imediatamente."
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4244 lib/html.php:2760
+#: include/global_form.php:1552 lib/functions.php:4244 lib/html.php:2787
 msgid "Change Password"
 msgstr "Alterar palavra passe"
 
@@ -947,7 +947,7 @@ msgstr "Entrar"
 
 #: auth_profile.php:61 include/global_settings.php:22
 #: include/global_settings.php:1202 include/global_settings.php:1519
-#: lib/html.php:2773 managers.php:24 user_admin.php:1740
+#: lib/html.php:2800 managers.php:24 user_admin.php:1740
 #: user_group_admin.php:1742
 msgid "General"
 msgstr "Geral"
@@ -958,17 +958,17 @@ msgstr "Detalhes da Conta do Usuário"
 
 #: auth_profile.php:313 include/global_arrays.php:857
 #: include/global_settings.php:2737 lib/html.php:2224 lib/html.php:2246
-#: lib/html.php:2754
+#: lib/html.php:2781
 msgid "Tree View"
 msgstr "Visualização de Pastas"
 
 #: auth_profile.php:317 include/global_arrays.php:858 lib/html.php:2231
-#: lib/html.php:2255 lib/html.php:2755
+#: lib/html.php:2255 lib/html.php:2782
 msgid "List View"
 msgstr "Ver em lista"
 
 #: auth_profile.php:321 include/global_arrays.php:859 lib/html.php:2238
-#: lib/html.php:2756
+#: lib/html.php:2783
 msgid "Preview View"
 msgstr "Visualizar Visão Antecipada"
 
@@ -1388,7 +1388,7 @@ msgstr "Activado"
 #: include/global_settings.php:1644 include/global_settings.php:1657
 #: include/global_settings.php:1682 include/global_settings.php:1696
 #: include/global_settings.php:1786 include/global_settings.php:2550
-#: lib/api_automation.php:28 lib/html.php:2850 lib/html_reports.php:2037
+#: lib/api_automation.php:28 lib/html.php:2877 lib/html_reports.php:2037
 #: lib/html_reports.php:2188 lib/html_utility.php:1317 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:935 user_domains.php:397
 #: user_group_admin.php:736 utilities.php:2119 utilities.php:2637
@@ -1663,8 +1663,8 @@ msgstr "%d Minuto"
 #: include/global_arrays.php:1634 include/global_settings.php:1698
 #: include/global_settings.php:1699 include/global_settings.php:1700
 #: include/global_settings.php:1701 include/global_settings.php:1702
-#: include/global_settings.php:2663 include/global_settings.php:2938
-#: include/global_settings.php:2939 include/global_settings.php:2940
+#: include/global_settings.php:2663 include/global_settings.php:2942
+#: include/global_settings.php:2943 include/global_settings.php:2944
 #: pollers.php:902 pollers.php:903
 #, php-format
 msgid "%d Minutes"
@@ -1694,8 +1694,8 @@ msgstr "%d hora"
 #: include/global_arrays.php:1550 include/global_arrays.php:1556
 #: include/global_arrays.php:1557 include/global_settings.php:1704
 #: include/global_settings.php:1705 include/global_settings.php:1706
-#: include/global_settings.php:1707 include/global_settings.php:2942
-#: include/global_settings.php:2943
+#: include/global_settings.php:1707 include/global_settings.php:2946
+#: include/global_settings.php:2947
 #, php-format
 msgid "%d Hours"
 msgstr "%d horas"
@@ -2991,7 +2991,7 @@ msgstr "Fonte de Dados"
 msgid "The Data Source to Debug"
 msgstr "A Fonte de Dados para Debug"
 
-#: data_debug.php:457 lib/html.php:2777 utilities.php:1031 utilities.php:1152
+#: data_debug.php:457 lib/html.php:2804 utilities.php:1031 utilities.php:1152
 msgid "User"
 msgstr "Utilizador"
 
@@ -3189,7 +3189,7 @@ msgstr "Análise de repetição"
 msgid "Check"
 msgstr "Data de Entrada"
 
-#: data_debug.php:840 include/global_form.php:1018 lib/rrd.php:4178
+#: data_debug.php:840 include/global_form.php:1018 lib/rrd.php:4176
 #: utilities.php:793 utilities.php:810 utilities.php:3144
 msgid "Value"
 msgstr "Valor"
@@ -3281,7 +3281,7 @@ msgid "Run checks on currently filtered Data Sources and preserve other results"
 msgstr "Executar verificações nas Fontes de Dados atualmente filtradas e preservar outros resultados"
 
 #: data_debug.php:1082 data_sources.php:1488 data_templates.php:1101
-#: lib/html.php:2786
+#: lib/html.php:2813
 msgid "Profile"
 msgstr "Perfil"
 
@@ -3765,7 +3765,7 @@ msgstr "Passos"
 
 #: data_source_profiles.php:900 graphs_new.php:469 include/global_form.php:284
 #: lib/html.php:605 lib/html_filter.php:55 lib/installer.php:2827
-#: lib/rrd.php:4220 utilities.php:861 utilities.php:1817
+#: lib/rrd.php:4218 utilities.php:861 utilities.php:1817
 msgid "Rows"
 msgstr "Linhas"
 
@@ -3830,8 +3830,8 @@ msgstr "%d Semana"
 
 #: data_source_profiles.php:1106 include/global_arrays.php:779
 #: include/global_arrays.php:780 include/global_arrays.php:1464
-#: include/global_settings.php:2946 include/global_settings.php:2947
-#: include/global_settings.php:2948 rrdcleaner.php:535 rrdcleaner.php:536
+#: include/global_settings.php:2950 include/global_settings.php:2951
+#: include/global_settings.php:2952 rrdcleaner.php:535 rrdcleaner.php:536
 #, php-format
 msgid "%d Weeks"
 msgstr "%d Semanas"
@@ -3860,7 +3860,7 @@ msgstr "%d Dias"
 #: include/global_arrays.php:1555 include/global_arrays.php:1585
 #: include/global_arrays.php:1594 include/global_arrays.php:1622
 #: include/global_settings.php:1406 include/global_settings.php:1703
-#: include/global_settings.php:2941
+#: include/global_settings.php:2945
 msgid "1 Hour"
 msgstr "1 Hora"
 
@@ -4469,7 +4469,7 @@ msgstr "Editar modelo de gráfico."
 msgid "Click to view just this Graph in Real-time"
 msgstr "Clique para ver apenas este gráfico em tempo real"
 
-#: graph.php:270 lib/html.php:2751
+#: graph.php:270 lib/html.php:2778
 msgid "Utility View"
 msgstr "Vista Utilitária"
 
@@ -4490,7 +4490,7 @@ msgid "RRDtool Graph Syntax"
 msgstr "Sintaxe do Gráfico RRDtool"
 
 #: graph_image.php:171 graph_json.php:208 graph_realtime.php:264
-#: lib/rrd.php:2526
+#: lib/rrd.php:2524
 msgid "The Kadupul Poller has not run yet."
 msgstr "O Kadupul Poller ainda não fugiu."
 
@@ -4815,7 +4815,7 @@ msgstr "Pré-Visualização"
 msgid "Add Selected Graphs to Report"
 msgstr "Adicionar gráficos selecionados ao relatório"
 
-#: graph_view.php:1049 lib/html.php:2822
+#: graph_view.php:1049 lib/html.php:2849
 msgid "Ok"
 msgstr "OK"
 
@@ -5147,7 +5147,7 @@ msgstr "Novos Gráficos para [ Todos os Dispositivos]"
 msgid "New Graphs for None Host Type"
 msgstr "Novos Gráficos para Nenhum Tipo de Host"
 
-#: graphs_new.php:382 lib/html.php:2749
+#: graphs_new.php:382 lib/html.php:2776
 msgid "Filter Settings Saved"
 msgstr "Definições de Filtro Guardadas"
 
@@ -5587,7 +5587,7 @@ msgstr "Recuperando"
 
 #: host.php:1768 lib/api_automation.php:33 lib/auth.php:2986
 #: lib/clog_webapi.php:856 lib/html_utility.php:1339 lib/import.php:342
-#: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4196 lib/rrd.php:4208
+#: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4194 lib/rrd.php:4206
 #: lib/spikekill.php:301 package_import.php:522 package_import.php:600
 #: utilities.php:206 utilities.php:207 utilities.php:2691
 msgid "Unknown"
@@ -6302,7 +6302,7 @@ msgstr "Direita"
 msgid "Justified"
 msgstr "Justificado"
 
-#: include/global_arrays.php:585 lib/html.php:2848
+#: include/global_arrays.php:585 lib/html.php:2875
 msgid "Center"
 msgstr "Centro"
 
@@ -6610,13 +6610,13 @@ msgstr "Ordenação Natural"
 msgid "Numeric Ordering"
 msgstr "Ordenação Numérica"
 
-#: include/global_arrays.php:952 lib/rrd.php:4144
+#: include/global_arrays.php:952 lib/rrd.php:4142
 msgid "Header"
 msgstr "Cabeçalho"
 
 #: include/global_arrays.php:953 include/global_arrays.php:1004
 #: include/global_arrays.php:1687 include/global_arrays.php:1856
-#: lib/html.php:2837
+#: lib/html.php:2864
 msgid "Graph"
 msgstr "Graph (Gráfico)"
 
@@ -6782,7 +6782,7 @@ msgid "Configuration"
 msgstr "Configuração"
 
 #: include/global_arrays.php:1030 include/global_arrays.php:1052
-#: lib/html.php:2582 lib/html.php:2852
+#: lib/html.php:2582 lib/html.php:2879
 msgid "Settings"
 msgstr "Configurações"
 
@@ -7802,7 +7802,7 @@ msgid "List Mode"
 msgstr "Modo de Listagem"
 
 #: include/global_arrays.php:2062 include/global_arrays.php:2068
-#: lib/functions.php:4466 lib/html.php:1980 lib/html.php:2045 lib/html.php:2770
+#: lib/functions.php:4466 lib/html.php:1980 lib/html.php:2045 lib/html.php:2797
 #: user_admin.php:1471 user_group_admin.php:1473
 msgid "Console"
 msgstr "Console"
@@ -7936,7 +7936,7 @@ msgstr "Link Externo"
 msgid "(Action)"
 msgstr "Acção:"
 
-#: include/global_arrays.php:2626 lib/html.php:2791
+#: include/global_arrays.php:2626 lib/html.php:2818
 msgid "About Kadupul"
 msgstr "Sobre Kadupul"
 
@@ -8192,7 +8192,7 @@ msgstr "A frequência com que os dados serão coletados da Fonte de Dados?"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "Durante quanto tempo podem faltar dados antes de o RRDtool registar dados desconhecidos.  Aumente este valor se a sua fonte de dados for instável e pretender transportar dados antigos em vez de mostrar lacunas nos seus gráficos.  Este valor é multiplicado pelo Fator de Arquivos X para determinar a quantidade de tempo real."
 
-#: include/global_form.php:226 lib/rrd.php:4223
+#: include/global_form.php:226 lib/rrd.php:4221
 msgid "X-Files Factor"
 msgstr "Fator de Arquivos X"
 
@@ -8522,7 +8522,7 @@ msgid "Auto Scale"
 msgstr "Escala Automática"
 
 #: include/global_form.php:754
-msgid "When enabled, the selected Auto Scale Option determines which limits RRDtool uses: mode 1 ignores both limits, mode 2 keeps the lower limit, mode 3 keeps the upper limit, and mode 4 keeps both limits. When disabled, the configured lower and upper limits are used directly. Rigid Boundaries controls whether values outside those limits expand the graph range."
+msgid "When enabled, the selected Auto Scale Option determines which limits RRDtool uses: --alt-autoscale ignores both limits, --alt-autoscale-max keeps the lower limit, --alt-autoscale-min keeps the upper limit, and --alt-autoscale (accepting both limits) keeps both limits. When disabled, the configured lower and upper limits are used directly. Rigid Boundaries controls whether values outside those limits expand the graph range."
 msgstr ""
 
 #: include/global_form.php:758
@@ -8754,7 +8754,7 @@ msgstr "Opacidade/Canal Alfa"
 msgid "The opacity/alpha channel of the color."
 msgstr "O canal opacidade/alfa da cor."
 
-#: include/global_form.php:989 lib/rrd.php:4219
+#: include/global_form.php:989 lib/rrd.php:4217
 msgid "Consolidation Function"
 msgstr "Função de consolidação"
 
@@ -9870,7 +9870,7 @@ msgstr "Se definido como Simples, Gráficos e Fontes de Dados só podem ser cria
 msgid "Simple"
 msgstr "Simples"
 
-#: include/global_settings.php:428 lib/html.php:2839
+#: include/global_settings.php:428 lib/html.php:2866
 msgid "Advanced"
 msgstr "Avançadas"
 
@@ -10286,7 +10286,7 @@ msgid "Theme Settings"
 msgstr "Configurações do tema"
 
 #: include/global_settings.php:851 include/global_settings.php:1061
-#: include/global_settings.php:2585 lib/html.php:2787
+#: include/global_settings.php:2585 lib/html.php:2814
 msgid "Theme"
 msgstr "Tema"
 
@@ -10517,9 +10517,11 @@ msgstr ""
 
 #: include/global_settings.php:1068 include/global_settings.php:1087
 #: include/global_settings.php:1106 include/global_settings.php:1125
-#: include/global_settings.php:1144
-msgid "Enter Valid Font Config Value"
-msgstr "Entrar valor de configuração de fonte válido"
+#: include/global_settings.php:1144 include/global_settings.php:2852
+#: include/global_settings.php:2870 include/global_settings.php:2888
+#: include/global_settings.php:2906
+msgid "Enter a Pango font description"
+msgstr ""
 
 #: include/global_settings.php:1074 include/global_settings.php:2840
 msgid "Title Font Size"
@@ -10537,15 +10539,15 @@ msgstr "Definição da fonte do título"
 msgid "The font to use for Graph Titles.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
 msgstr ""
 
-#: include/global_settings.php:1093 include/global_settings.php:2857
+#: include/global_settings.php:1093 include/global_settings.php:2858
 msgid "Legend Font Size"
 msgstr "Tamanho da fonte da legenda"
 
-#: include/global_settings.php:1094 include/global_settings.php:2858
+#: include/global_settings.php:1094 include/global_settings.php:2859
 msgid "The size of the font used for Graph Legend items"
 msgstr "O tamanho da fonte usada para os itens da Legenda do Gráfico"
 
-#: include/global_settings.php:1103 include/global_settings.php:2866
+#: include/global_settings.php:1103 include/global_settings.php:2867
 msgid "Legend Font Setting"
 msgstr "Definição da fonte da legenda"
 
@@ -10553,15 +10555,15 @@ msgstr "Definição da fonte da legenda"
 msgid "The font to use for Graph Legends.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
 msgstr ""
 
-#: include/global_settings.php:1112 include/global_settings.php:2874
+#: include/global_settings.php:1112 include/global_settings.php:2876
 msgid "Axis Font Size"
 msgstr "Tamanho da Fonte do Eixo"
 
-#: include/global_settings.php:1113 include/global_settings.php:2875
+#: include/global_settings.php:1113 include/global_settings.php:2877
 msgid "The size of the font used for Graph Axis"
 msgstr "O tamanho da fonte usada para Graph Axis"
 
-#: include/global_settings.php:1122 include/global_settings.php:2883
+#: include/global_settings.php:1122 include/global_settings.php:2885
 msgid "Axis Font Setting"
 msgstr "Definição da fonte do eixo"
 
@@ -10569,15 +10571,15 @@ msgstr "Definição da fonte do eixo"
 msgid "The font to use for Graph Axis items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
 msgstr ""
 
-#: include/global_settings.php:1131 include/global_settings.php:2891
+#: include/global_settings.php:1131 include/global_settings.php:2894
 msgid "Unit Font Size"
 msgstr "Tamanho da fonte da unidade"
 
-#: include/global_settings.php:1132 include/global_settings.php:2892
+#: include/global_settings.php:1132 include/global_settings.php:2895
 msgid "The size of the font used for Graph Units"
 msgstr "O tamanho da fonte usada para as unidades de gráfico"
 
-#: include/global_settings.php:1141 include/global_settings.php:2900
+#: include/global_settings.php:1141 include/global_settings.php:2903
 msgid "Unit Font Setting"
 msgstr "Definição da fonte da unidade"
 
@@ -11148,7 +11150,7 @@ msgstr "Auto Unlock"
 msgid "An account will automatically be unlocked after this many minutes.  Even if the correct password is entered, the account will not unlock until this time limit has been met.  Max of 1440 minutes (1 Day)"
 msgstr "Uma conta será desbloqueada automaticamente após tantos minutos.  Mesmo que a senha correta seja inserida, a conta não será desbloqueada até que esse limite de tempo seja atingido.  Máximo de 1440 minutos (1 dia)"
 
-#: include/global_settings.php:1708 include/global_settings.php:2944
+#: include/global_settings.php:1708 include/global_settings.php:2948
 msgid "1 Day"
 msgstr "1 Dia"
 
@@ -12243,47 +12245,47 @@ msgstr "Escolha entre usar suas próprias fontes e tamanhos de fonte personaliza
 msgid "The Pango font description to use for Graph Titles, such as DejaVu Sans Bold"
 msgstr ""
 
-#: include/global_settings.php:2867
+#: include/global_settings.php:2868
 msgid "The Pango font description to use for Graph Legend items, such as DejaVu Sans Mono"
 msgstr ""
 
-#: include/global_settings.php:2884
+#: include/global_settings.php:2886
 msgid "The Pango font description to use for Graph Axis items, such as DejaVu Sans"
 msgstr ""
 
-#: include/global_settings.php:2901
+#: include/global_settings.php:2904
 msgid "The Pango font description to use for Graph Unit items, such as DejaVu Sans"
 msgstr ""
 
-#: include/global_settings.php:2917
+#: include/global_settings.php:2921
 msgid "Realtime View Mode"
 msgstr "Modo de visualização em tempo real"
 
-#: include/global_settings.php:2918
+#: include/global_settings.php:2922
 msgid "How do you wish to view Realtime Graphs?"
 msgstr "Como você deseja visualizar gráficos em tempo real?"
 
-#: include/global_settings.php:2921
+#: include/global_settings.php:2925
 msgid "Inline"
 msgstr "Mesma linha"
 
-#: include/global_settings.php:2922
+#: include/global_settings.php:2926
 msgid "New Window"
 msgstr "Nova Janela"
 
-#: include/global_settings.php:2937
+#: include/global_settings.php:2941
 msgid "System Setting"
 msgstr "Configurações de Utilizador"
 
-#: include/global_settings.php:2945
+#: include/global_settings.php:2949
 msgid "1 Week"
 msgstr "1 Semana"
 
-#: include/global_settings.php:2958
+#: include/global_settings.php:2962
 msgid "Auto Log Out Time"
 msgstr "Logout automático"
 
-#: include/global_settings.php:2959
+#: include/global_settings.php:2963
 msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no affect when Authentication Cookies are enabled."
 msgstr "Para usuários com acesso apenas ao console, por quanto tempo esse usuário pode permanecer conectado antes de ser desconectado automaticamente. Observe que se você não estiver ativo por mais de uma hora, pode ser necessário atualizar seu navegador. Observe também que essa configuração não tem efeito quando os cookies de autenticação estão habilitados."
 
@@ -12442,7 +12444,7 @@ msgstr "Substituir este valor"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
-#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4173
+#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4171
 #: utilities.php:351 utilities.php:1468 utilities.php:3144
 msgid "Type"
 msgstr "Tipo"
@@ -13432,11 +13434,11 @@ msgstr "Login como usuário regular"
 msgid "guest"
 msgstr "Pessoa"
 
-#: lib/functions.php:4223 lib/functions.php:4248 lib/html.php:2776
+#: lib/functions.php:4223 lib/functions.php:4248 lib/html.php:2803
 msgid "User Community"
 msgstr "Comunidade de usuários"
 
-#: lib/functions.php:4224 lib/functions.php:4249 lib/html.php:2778
+#: lib/functions.php:4224 lib/functions.php:4249 lib/html.php:2805
 #: lib/utility.php:1446
 msgid "Documentation"
 msgstr "Documentação"
@@ -13446,11 +13448,11 @@ msgstr "Documentação"
 msgid "Logged in as %s"
 msgstr "Sessão iniciada como %s"
 
-#: lib/functions.php:4243 lib/html.php:2757
+#: lib/functions.php:4243 lib/html.php:2784
 msgid "Edit Profile"
 msgstr "Editar Perfil"
 
-#: lib/functions.php:4253 lib/html.php:2761
+#: lib/functions.php:4253 lib/html.php:2788
 msgid "Logout"
 msgstr "Sair"
 
@@ -13621,7 +13623,7 @@ msgstr "Consulta de dados:"
 msgid "CSV Export of Graph Data"
 msgstr "Exportação de dados do gráfico CSV"
 
-#: lib/html.php:532 lib/html.php:2748
+#: lib/html.php:532 lib/html.php:2775
 msgid "Time Graph View"
 msgstr "Visualização do gráfico de tempo"
 
@@ -13725,320 +13727,320 @@ msgstr "Dry Run Gap Fill Range"
 msgid "Dry Run Float Range"
 msgstr "Faixa de flutuação de funcionamento a seco"
 
-#: lib/html.php:2744
+#: lib/html.php:2771
 msgid "Allow or limit the table columns to extend beyond the current windows limits."
 msgstr "Permitir ou limitar as colunas da tabela para se estender além dos limites atuais das janelas."
 
-#: lib/html.php:2745 lib/html_filter.php:48
+#: lib/html.php:2772 lib/html_filter.php:48
 msgid "Enter a search term"
 msgstr "Introduza o termo a pesquisar"
 
-#: lib/html.php:2746
+#: lib/html.php:2773
 msgid "Enter a regular expression"
 msgstr "Entrar uma expressão regular"
 
-#: lib/html.php:2747
+#: lib/html.php:2774
 msgid "No file selected"
 msgstr "Nenhum ficheiro seleccionado"
 
-#: lib/html.php:2750 lib/html.php:2793
+#: lib/html.php:2777 lib/html.php:2820
 msgid "SpikeKill Results"
 msgstr "Resultados SpikeKill"
 
-#: lib/html.php:2752
+#: lib/html.php:2779
 msgid "Click to view just this Graph in Realtime"
 msgstr "Clique para ver apenas este gráfico em tempo real"
 
-#: lib/html.php:2753
+#: lib/html.php:2780
 msgid "Click again to take this Graph out of Realtime"
 msgstr "Clique novamente para retirar este gráfico do Realtime"
 
-#: lib/html.php:2762
+#: lib/html.php:2789
 msgid "Standard Mode"
 msgstr "Modo de digitalização"
 
-#: lib/html.php:2763
+#: lib/html.php:2790
 msgid "Compact Mode"
 msgstr "Modo Zoom"
 
-#: lib/html.php:2764
+#: lib/html.php:2791
 msgid "Dark Color Mode"
 msgstr "Nenhuma cor encontrada"
 
-#: lib/html.php:2765
+#: lib/html.php:2792
 msgid "Light Color Mode"
 msgstr "Modo de Listagem"
 
-#: lib/html.php:2766
+#: lib/html.php:2793
 msgid "Use System Color"
 msgstr "Cor do Item"
 
-#: lib/html.php:2767
+#: lib/html.php:2794
 msgid "Ignore System Color"
 msgstr "Cor do Item"
 
-#: lib/html.php:2768
+#: lib/html.php:2795
 msgid "Help"
 msgstr "Ajuda"
 
-#: lib/html.php:2769
+#: lib/html.php:2796
 msgid "Kadupul Home"
 msgstr "Casa Kadupul"
 
-#: lib/html.php:2771
+#: lib/html.php:2798
 msgid "Miscellaneous"
 msgstr "Diversos"
 
-#: lib/html.php:2772
+#: lib/html.php:2799
 msgid "Dashboards"
 msgstr "Painéis"
 
-#: lib/html.php:2774
+#: lib/html.php:2801
 msgid "Charts"
 msgstr "Gráficos"
 
-#: lib/html.php:2775
+#: lib/html.php:2802
 msgid "Kadupul Project Page"
 msgstr "Página do Projeto Kadupul"
 
-#: lib/html.php:2779
+#: lib/html.php:2806
 msgid "Spine"
 msgstr "Coluna vertebral"
 
-#: lib/html.php:2780
+#: lib/html.php:2807
 msgid "RRDProxy"
 msgstr "RRD Proxy"
 
-#: lib/html.php:2781
+#: lib/html.php:2808
 msgid "Keyboard"
 msgstr "Teclado"
 
-#: lib/html.php:2782
+#: lib/html.php:2809
 msgid "Shortcuts"
 msgstr "Atalhos"
 
-#: lib/html.php:2783
+#: lib/html.php:2810
 msgid "Contribute to the Kadupul Project"
 msgstr "Rodar o Kadupul Log"
 
-#: lib/html.php:2784
+#: lib/html.php:2811
 msgid "Help in Developing"
 msgstr "Ajuda no Desenvolvimento"
 
-#: lib/html.php:2785
+#: lib/html.php:2812
 msgid "Donation & Sponsoring"
 msgstr "Doação e patrocínio"
 
-#: lib/html.php:2788
+#: lib/html.php:2815
 msgid "Client"
 msgstr "Cliente"
 
-#: lib/html.php:2789
+#: lib/html.php:2816
 msgid "Help in Translating"
 msgstr "Ajuda na tradução"
 
-#: lib/html.php:2790
+#: lib/html.php:2817
 msgid "Report a bug"
 msgstr "Reportar um erro"
 
-#: lib/html.php:2792
+#: lib/html.php:2819
 #, fuzzy
 msgid "Kadupul"
 msgstr "Kadupul"
 
-#: lib/html.php:2794
+#: lib/html.php:2821
 msgid "Click to Show/Hide Filter"
 msgstr "Clique para mostrar/ocultar o filtro"
 
-#: lib/html.php:2795
+#: lib/html.php:2822
 msgid "Clear Current Filter"
 msgstr "Limpar filtro de corrente"
 
-#: lib/html.php:2796
+#: lib/html.php:2823
 msgid "Clipboard"
 msgstr "Área de transferência"
 
-#: lib/html.php:2797
+#: lib/html.php:2824
 msgid "Clipboard ID"
 msgstr "ID da área de transferência"
 
-#: lib/html.php:2798
+#: lib/html.php:2825
 msgid "Copy operation is unavailable at this time"
 msgstr "A operação de cópia não está disponível neste momento"
 
-#: lib/html.php:2799
+#: lib/html.php:2826
 msgid "Failed to find data to copy!"
 msgstr "Falha ao encontrar dados para copiar!"
 
-#: lib/html.php:2800
+#: lib/html.php:2827
 msgid "Clipboard has been updated"
 msgstr "A área de transferência foi atualizada"
 
-#: lib/html.php:2801
+#: lib/html.php:2828
 msgid "Sorry, your clipboard could not be updated at this time"
 msgstr "Desculpe, sua área de transferência não pôde ser atualizada neste momento"
 
-#: lib/html.php:2805
+#: lib/html.php:2832
 msgid "Passphrase length meets 8 character minimum"
 msgstr "Comprimento da frase secreta com um mínimo de 8 caracteres"
 
-#: lib/html.php:2806
+#: lib/html.php:2833
 msgid "Passphrase too short"
 msgstr "Senha muito curta"
 
-#: lib/html.php:2807
+#: lib/html.php:2834
 msgid "Passphrase matches but too short"
 msgstr "Fósforos com senhas, mas muito curtos"
 
-#: lib/html.php:2808
+#: lib/html.php:2835
 msgid "Passphrase too short and not matching"
 msgstr "A frase-chave é muito curta e não coincide"
 
-#: lib/html.php:2809
+#: lib/html.php:2836
 msgid "Passphrases match"
 msgstr "Combinação de senhas"
 
-#: lib/html.php:2810
+#: lib/html.php:2837
 msgid "Passphrases do not match"
 msgstr "As senhas não coincidem"
 
-#: lib/html.php:2811
+#: lib/html.php:2838
 msgid "Sorry, we could not process your last action."
 msgstr "Desculpe, não conseguimos processar a sua última acção."
 
-#: lib/html.php:2812
+#: lib/html.php:2839
 msgid "Error:"
 msgstr "Erro:"
 
-#: lib/html.php:2813
+#: lib/html.php:2840
 msgid "Reason:"
 msgstr "Motivo:"
 
-#: lib/html.php:2814
+#: lib/html.php:2841
 msgid "Action failed"
 msgstr "Acção falhada"
 
-#: lib/html.php:2815 pollers.php:804
+#: lib/html.php:2842 pollers.php:804
 msgid "Connection Successful"
 msgstr "Operação bem sucedida"
 
-#: lib/html.php:2816 pollers.php:806
+#: lib/html.php:2843 pollers.php:806
 msgid "Connection Failed"
 msgstr "A LigaÃ§Ã£o Falhou"
 
-#: lib/html.php:2817
+#: lib/html.php:2844
 msgid "The response to the last action was unexpected."
 msgstr "A resposta à última acção foi inesperada."
 
-#: lib/html.php:2818
+#: lib/html.php:2845
 msgid "Some Actions failed"
 msgstr "Algumas ações falharam"
 
-#: lib/html.php:2819
+#: lib/html.php:2846
 msgid "Note, we could not process all your actions.  Details are below."
 msgstr "Note que não podemos processar todas as suas ações. Detalhes abaixo."
 
-#: lib/html.php:2820
+#: lib/html.php:2847
 msgid "Operation successful"
 msgstr "Operação bem sucedida"
 
-#: lib/html.php:2821
+#: lib/html.php:2848
 msgid "The Operation was successful.  Details are below."
 msgstr "A Operação foi um sucesso.  Os detalhes estão abaixo."
 
-#: lib/html.php:2823
+#: lib/html.php:2850
 msgid "Pause"
 msgstr "Suspender"
 
-#: lib/html.php:2826
+#: lib/html.php:2853
 msgid "Zoom In"
 msgstr "Zoom para dentro"
 
-#: lib/html.php:2827
+#: lib/html.php:2854
 msgid "Zoom Out"
 msgstr "Menos Zoom"
 
-#: lib/html.php:2828
+#: lib/html.php:2855
 msgid "Zoom Out Factor"
 msgstr "Fator de redução do zoom"
 
-#: lib/html.php:2829
+#: lib/html.php:2856
 msgid "Timestamps"
 msgstr "Marca temporal"
 
-#: lib/html.php:2830
+#: lib/html.php:2857
 msgid "2x"
 msgstr "2x"
 
-#: lib/html.php:2831
+#: lib/html.php:2858
 msgid "4x"
 msgstr "4x"
 
-#: lib/html.php:2832
+#: lib/html.php:2859
 msgid "8x"
 msgstr "8x"
 
-#: lib/html.php:2833
+#: lib/html.php:2860
 msgid "16x"
 msgstr "16x"
 
-#: lib/html.php:2834
+#: lib/html.php:2861
 msgid "32x"
 msgstr "32x"
 
-#: lib/html.php:2835
+#: lib/html.php:2862
 msgid "Zoom Out Positioning"
 msgstr "Reduzir o Posicionamento"
 
-#: lib/html.php:2836
+#: lib/html.php:2863
 msgid "Zoom Mode"
 msgstr "Modo Zoom"
 
-#: lib/html.php:2838
+#: lib/html.php:2865
 msgid "Quick"
 msgstr "Dicas rápidas de auto-ajuda"
 
-#: lib/html.php:2840
+#: lib/html.php:2867
 msgid "Open in new tab"
 msgstr "Abrir em novo separador"
 
-#: lib/html.php:2841
+#: lib/html.php:2868
 msgid "Save graph"
 msgstr "Salvar gráfico"
 
-#: lib/html.php:2842
+#: lib/html.php:2869
 msgid "Copy graph"
 msgstr "Copiar gráfico"
 
-#: lib/html.php:2843
+#: lib/html.php:2870
 msgid "Copy graph link"
 msgstr "Copiar link do gráfico"
 
-#: lib/html.php:2844
+#: lib/html.php:2871
 msgid "Always On"
 msgstr "Sempre ligado"
 
-#: lib/html.php:2845
+#: lib/html.php:2872
 msgid "Auto"
 msgstr "Auto"
 
-#: lib/html.php:2846
+#: lib/html.php:2873
 msgid "Always Off"
 msgstr "Sempre Desligados"
 
-#: lib/html.php:2847
+#: lib/html.php:2874
 msgid "Begin with"
 msgstr "Comece com"
 
-#: lib/html.php:2849
+#: lib/html.php:2876
 msgid "End with"
 msgstr "Data de Fim"
 
-#: lib/html.php:2851 lib/html_form.php:1432
+#: lib/html.php:2878 lib/html_form.php:1432
 msgid "Close"
 msgstr "Fechar"
 
-#: lib/html.php:2853
+#: lib/html.php:2880
 msgid "3rd Mouse Button"
 msgstr "Botão do 3º Mouse"
 
@@ -16227,194 +16229,194 @@ msgstr "Falha ao adicionar o item '<i>%s</i>' do gráfico de relatório Já exis
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "Item do gráfico de relatório ignorado '<i>%s</i>' Já existe"
 
-#: lib/rrd.php:2149
+#: lib/rrd.php:2147
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2152
+#: lib/rrd.php:2150
 msgid "The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2523
+#: lib/rrd.php:2521
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "ERRO: RRDfile %s não graváveis"
 
-#: lib/rrd.php:3933
+#: lib/rrd.php:3931
 #, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "O tamanho da etapa RRDfile necessário é '%s' , mas a etapa observada é '%s'"
 
-#: lib/rrd.php:3997
+#: lib/rrd.php:3995
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "Tipo para Fonte de Dados: \"%s\" deve ser \"%s\"."
 
-#: lib/rrd.php:4003
+#: lib/rrd.php:4001
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "Ritmo cardíaco para Fonte de Dados '%s' deve ser '%s'."
 
-#: lib/rrd.php:4015
+#: lib/rrd.php:4013
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "RRD mínimo para Fonte de Dados \"%s\" deve ser \"%s\"."
 
-#: lib/rrd.php:4024
+#: lib/rrd.php:4022
 #, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "DS '%s' em falta na definição de Kadupul"
 
-#: lib/rrd.php:4038 lib/rrd.php:4039
+#: lib/rrd.php:4036 lib/rrd.php:4037
 #, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Kadupul RRA \"%s\" tem o mesmo FC/etapas (%s, %s) que \"%s\"."
 
-#: lib/rrd.php:4052 lib/rrd.php:4053
+#: lib/rrd.php:4050 lib/rrd.php:4051
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Arquivo RRA '%s' tem o mesmo CF/etapas (%s, %s) que '%s'."
 
-#: lib/rrd.php:4085
+#: lib/rrd.php:4083
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr "A pdp_per_row de '%s' é inválida para RRA '%s' deve ser '%s'.  Considere excluir e permitir que o Kadupul recrie o arquivo RRD."
 
-#: lib/rrd.php:4089
+#: lib/rrd.php:4087
 #, fuzzy, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "XFF para Kadupul RRA id \"%s\" deve ser \"%s\"."
 
-#: lib/rrd.php:4093
+#: lib/rrd.php:4091
 #, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "O número de linhas para o ID Kadupul RRA '%s' está incorreto.  O número de linhas é '%s', mas deve ser '%s'"
 
-#: lib/rrd.php:4110
+#: lib/rrd.php:4108
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "RRA '%s' em falta no ficheiro RRD"
 
-#: lib/rrd.php:4118
+#: lib/rrd.php:4116
 #, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "RRA '%s' em falta na definição de Kadupul"
 
-#: lib/rrd.php:4140
+#: lib/rrd.php:4138
 msgid "RRD File Information"
 msgstr "Informações sobre o arquivo RRD"
 
-#: lib/rrd.php:4172
+#: lib/rrd.php:4170
 msgid "Data Source Items"
 msgstr "Itens de origem de dados"
 
-#: lib/rrd.php:4174
+#: lib/rrd.php:4172
 msgid "Minimal Heartbeat"
 msgstr "Batimento cardíaco mínimo"
 
-#: lib/rrd.php:4175
+#: lib/rrd.php:4173
 msgid "Min"
 msgstr "Min"
 
-#: lib/rrd.php:4176
+#: lib/rrd.php:4174
 msgid "Max"
 msgstr "Máximo"
 
-#: lib/rrd.php:4177
+#: lib/rrd.php:4175
 msgid "Last DS"
 msgstr "Último DS"
 
-#: lib/rrd.php:4179
+#: lib/rrd.php:4177
 msgid "Unknown Sec"
 msgstr "Desconhecido Sec"
 
-#: lib/rrd.php:4218
+#: lib/rrd.php:4216
 msgid "Round Robin Archive"
 msgstr "Arquivo Round Robin"
 
-#: lib/rrd.php:4221
+#: lib/rrd.php:4219
 msgid "Cur Row"
 msgstr "Linha Cur"
 
-#: lib/rrd.php:4222
+#: lib/rrd.php:4220
 msgid "PDP per Row"
 msgstr "PDP por linha"
 
-#: lib/rrd.php:4224
+#: lib/rrd.php:4222
 msgid "CDP Prep Value (0)"
 msgstr "Valor de preparação do CDP (0)"
 
-#: lib/rrd.php:4225
+#: lib/rrd.php:4223
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP Desconhecido Pontos de dados (0)"
 
-#: lib/rrd.php:4306
+#: lib/rrd.php:4304
 msgid "Errors Found"
 msgstr "Nenhum %s foi encontrado"
 
-#: lib/rrd.php:4318
+#: lib/rrd.php:4316
 msgid "Optional Tuning Recommendations"
 msgstr "Campos de origem de dados"
 
-#: lib/rrd.php:4343 lib/rrd.php:4346
+#: lib/rrd.php:4341 lib/rrd.php:4344
 #, php-format
 msgid "rename %s to %s"
 msgstr "renomear %s para %s"
 
-#: lib/rrd.php:4438
+#: lib/rrd.php:4436
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "ERROR ao escrever um ficheiro XML: %s"
 
-#: lib/rrd.php:4444
+#: lib/rrd.php:4442
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4450
+#: lib/rrd.php:4448
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "ERRO: RRDfile %s não graváveis"
 
-#: lib/rrd.php:4471
+#: lib/rrd.php:4469
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "Erro ao analisar o XML de rrdtool dump"
 
-#: lib/rrd.php:4507 lib/rrd.php:4526
+#: lib/rrd.php:4505 lib/rrd.php:4524
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "Erro ao analisar o XML do RRDtool dump"
 
-#: lib/rrd.php:4744
+#: lib/rrd.php:4742
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removido do arquivo RRD"
 
-#: lib/rrd.php:4782
+#: lib/rrd.php:4780
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adicionando ao arquivo RRD"
 
-#: lib/rrd.php:4813 lib/rrd.php:4829
+#: lib/rrd.php:4811 lib/rrd.php:4827
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "Website não tem acesso de escrita a %s, pode ser incapaz de criar/atualizar RRDs"
 
-#: lib/rrd.php:4825
+#: lib/rrd.php:4823
 msgid "(Custom)"
 msgstr "Personalizado"
 
-#: lib/rrd.php:4831
+#: lib/rrd.php:4829
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "Falha ao abrir o arquivo de dados, o poller pode ainda não ter sido executado"
 
-#: lib/rrd.php:4834
+#: lib/rrd.php:4832
 msgid "RRA Folder"
 msgstr "Pasta RRA"
 
-#: lib/rrd.php:4834
+#: lib/rrd.php:4832
 msgid "Root"
 msgstr "Raiz"
 
-#: lib/rrd.php:4914
+#: lib/rrd.php:4912
 msgid "Unknown RRDtool Error"
 msgstr "Erro desconhecido do RRDtool"
 

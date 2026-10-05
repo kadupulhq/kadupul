@@ -1155,6 +1155,14 @@ legend, .loginHeading {
 	display: inline-block;
 }
 
+button.iconLink.spikekill {
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	cursor: pointer;
+}
+
 .noLinkEditMain {
 	color: #267019;
 	text-decoration: none;
