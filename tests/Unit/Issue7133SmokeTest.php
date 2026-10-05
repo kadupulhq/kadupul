@@ -14,6 +14,7 @@
 
 $repoRoot = __DIR__ . '/../..';
 $utility  = file_get_contents("$repoRoot/lib/utility.php");
+require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
 
 test('lib/utility.php parses and contains the touched functions', function () use ($utility) {
     expect($utility)->toContain('function update_poller_cache($data_source, $commit = false)');
@@ -46,15 +47,13 @@ test('update_poller_cache logs the whitelist failure on the elseif branch', func
 });
 
 test('push_out_data_input_method always-appends after boundary flush', function () use ($utility) {
-    $start = strpos($utility, 'function push_out_data_input_method');
-    $slice = substr($utility, $start, 1500);
+    $slice = test_php_function_source($utility, 'push_out_data_input_method');
     expect($slice)->toContain('$_my_local_data_ids[] = $data_source[\'id\'];');
     expect($slice)->toContain('$poller_items = array_merge($poller_items, update_poller_cache($data_source));');
 });
 
 test('push_out_host derives poller_id branchwise and groups host_id=0 by poller', function () use ($utility) {
-    $start = strpos($utility, 'function push_out_host(');
-    $slice = substr($utility, $start, 8000);
+    $slice = test_php_function_source($utility, 'push_out_host');
     expect($slice)->toContain('if ($host_id > 0) {');
     expect($slice)->toContain('elseif (cacti_sizeof($local_data_ids))');
     expect($slice)->toContain('$ids_by_poller');
