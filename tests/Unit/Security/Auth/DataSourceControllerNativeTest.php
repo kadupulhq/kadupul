@@ -178,4 +178,32 @@ final class DataSourceControllerNativeTest extends TestCase
         }
     }
 
+    #[DataProvider('confirmationPages')]
+    public function testChangeDeviceConfirmationRendersOnlyPermittedDestinationsAndSelectedNone(string $page, int $action, int $selected): void
+    {
+        $state = DataSourceControllerNativeHarness::run(['page' => $page, 'native_dropdown' => true, 'fields' => ['action' => 'actions', 'drp_action' => $action, 'chk_' . $selected => 'on']], $this->getTestResultObject()->getCodeCoverage());
+        self::assertNull($state['fatal']);
+        self::assertDoesNotMatchRegularExpression('/PHP (?:Warning|Fatal|Notice)|Uncaught/', $state['stderr']);
+        self::assertSame($state['initial'], $state['persisted']);
+        $dom = new DOMDocument();
+        @$dom->loadHTML($state['html']);
+        $xpath = new DOMXPath($dom);
+        $options = [];
+        foreach ($xpath->query('//select[@name="host_id"]/option') as $option) $options[$option->getAttribute('value')] = $option->textContent;
+        self::assertSame([0 => 'None', 12 => 'B allowed disabled device (allowed)', 14 => 'D allowed enabled device (enabled)'], $options);
+        self::assertSame('0', $xpath->evaluate('string(//select[@name="host_id"]/option[@selected]/@value)'));
+        self::assertStringNotContainsString('A denied device', $state['html']);
+        self::assertStringNotContainsString('C denied device', $state['html']);
+        self::assertStringNotContainsString('foreign-a', $state['html']);
+        self::assertStringNotContainsString('foreign-c', $state['html']);
+        self::assertSame(serialize([(string) $selected]), $xpath->evaluate('string(//input[@name="selected_items"]/@value)'));
+        self::assertSame([], array_filter($state['events'], static fn($event) => $event[0] === 'leaf-port'));
+    }
+
+    public static function confirmationPages(): iterable
+    {
+        yield 'data-source Change Device' => ['data_sources.php', 3, 21];
+        yield 'graph Change Device' => ['graphs.php', 5, 101];
+    }
+
 }

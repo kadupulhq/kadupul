@@ -17,7 +17,8 @@ final class DataSourceControllerNativeHarness
         try {
             file_put_contents($directory . '/include/auth.php', '<?php require ' . var_export($root . '/tests/Fixtures/data-source-controller-native.php', true) . ';');
             foreach (['api_aggregate','api_automation','api_data_source','api_device','api_graph','api_tree','data_query','graphs','html_graph','html_form_template','html_tree','ping','poller','reports','rrd','snmp','sort','template','utility','variables'] as $name) file_put_contents($directory . '/lib/' . $name . '.php', '<?php');
-            $page = 'data_sources.php';
+            $page = $scenario['page'] ?? 'data_sources.php';
+            if (!in_array($page, ['data_sources.php', 'graphs.php'], true)) throw new RuntimeException('Unsupported owned controller');
             file_put_contents($directory . '/router.php', '<?php try { require ' . var_export($root . '/' . $page, true) . '; } catch (DeviceGraphFixtureCompleted $done) {}');
             $socket = stream_socket_server('tcp://127.0.0.1:0', $errorCode, $error);
             if ($socket === false) throw new RuntimeException($error);
@@ -59,7 +60,7 @@ final class DataSourceControllerNativeHarness
             if ($coverage !== null) {
                 $reports = glob($directory . '/*.coverage');
                 if (count($reports) !== 1) throw new RuntimeException('Native caller coverage missing');
-                $hits = ['lib/html_utility.php', 'data_sources.php'];
+                $hits = ['lib/html_utility.php', $page];
                 if (($fields['action'] ?? '') === 'actions' || in_array((int) (($fields['id'] ?? 0) ?: ($fields['host_id'] ?? 0)), [12, 13, 21, 22, 31, 32], true)) $hits[] = 'lib/auth.php';
                 $child = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/data-source-controller-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), DataSourceControllerCoverageRegistration::SOURCES, DataSourceControllerCoverageRegistration::MARKERS, $hits);
                 static $verified = false;

@@ -312,11 +312,13 @@ function form_hidden_box($name, $value, $default)
 {
     echo '<input type="hidden" name="' . html_escape($name) . '" value="' . html_escape($value) . '">';
 }
+if (!($scenario['native_dropdown'] ?? false)) {
 function form_dropdown($name, $items, $label, $id, ...$args)
 {
     echo '<select name="' . html_escape($name) . '">';
     foreach ($items as $item) echo '<option value="' . html_escape($item[$id]) . '">' . html_escape($item[$label]) . '</option>';
     echo '</select>';
+}
 }
 function form_save_button($return)
 {

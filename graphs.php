@@ -944,7 +944,10 @@ function form_actions()
 					<div class='itemlist'><ul>$graph_list</ul></div>
 					<p>" . __('New Device') . "<br>";
 
-            form_dropdown('host_id', db_fetch_assoc("SELECT id,CONCAT_WS('',description,' (',hostname,')') as name FROM host ORDER BY description,hostname"), 'name', 'id', '', '', '0');
+            $allowed_devices_sql = get_allowed_management_device_ids_sql();
+            $devices = db_fetch_assoc("SELECT id, CONCAT_WS('',description,' (',hostname,')') AS name
+                FROM host WHERE id IN ($allowed_devices_sql) ORDER BY description, hostname");
+            form_dropdown('host_id', $devices, 'name', 'id', '', __('None'), '0');
 
             print "</p>
 				</td>

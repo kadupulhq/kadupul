@@ -30,7 +30,7 @@ if (!is_string($coveragePackageVersion)) {
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
 if (defined('DATA_SOURCE_CONTROLLER_TEST_COVERAGE')) {
-    foreach (array('lib/auth.php', 'lib/html_utility.php', 'data_sources.php') as $file) $coverageFilter->includeFile($coverageRoot . '/' . $file);
+    foreach (array('lib/auth.php', 'lib/html_utility.php', 'data_sources.php', 'graphs.php') as $file) $coverageFilter->includeFile($coverageRoot . '/' . $file);
 }
 
 if (defined('DEVICE_GRAPH_CALLER_TEST_COVERAGE')) {

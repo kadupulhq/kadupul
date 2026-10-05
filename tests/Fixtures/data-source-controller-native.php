@@ -64,6 +64,21 @@ function get_data_source_title($id)
     return db_fetch_cell_prepared('SELECT name FROM data_template_data WHERE local_data_id=?', [$id]);
 }
 if (($scenario['fields']['action'] ?? '') === 'ds_enable' || (($scenario['fields']['action'] ?? '') === 'actions' && (int) ($scenario['fields']['drp_action'] ?? 0) === 6)) $db->exec("UPDATE data_template_data SET active=''");
+if ($scenario['native_dropdown'] ?? false) {
+    // Bootstrap field substitution is a fixture port; labels have no substitution tokens.
+    define('VALID_HOST_FIELDS', '(hostname|host_id)');
+    foreach (['form_dropdown' => 'lib/html_form.php', 'html_create_list' => 'lib/html.php', 'null_out_substitutions' => 'lib/variables.php', 'escape_page_action' => 'lib/functions.php'] as $name => $file) eval(test_php_function_source(file_get_contents($root . '/' . $file), $name));
+    $db->sqliteCreateFunction('CONCAT_WS', static fn($separator, ...$values) => implode($separator, array_filter($values, static fn($value) => $value !== null)));
+    $db->exec("CREATE TABLE graph_tree(id INTEGER PRIMARY KEY,name TEXT);
+        INSERT INTO graph_local(id,host_id,graph_template_id) VALUES(101,12,5);
+        INSERT INTO graph_templates_graph(id,local_graph_id,graph_template_id,title_cache) VALUES(201,101,5,'Allowed graph');
+        INSERT INTO user_auth_perms VALUES(42,1,101),(42,3,14);
+        INSERT INTO host(id,description,hostname,disabled) VALUES(14,'D allowed enabled device','enabled','');");
+}
+function __n($one, $many, $count)
+{
+    return $count === 1 ? $one : $many;
+}
 $initial = [];
 foreach (['data_local','data_template_data','data_template_rrd','graph_templates_item'] as $table) $initial[$table] = $db->query('SELECT * FROM ' . $table . ' ORDER BY id')->fetchAll(PDO::FETCH_ASSOC);
 if ($collectCoverage) {
