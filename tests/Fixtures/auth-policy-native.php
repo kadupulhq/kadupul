@@ -17,6 +17,7 @@ if ($scenario['operation'] === 'spike-controller') {
     require __DIR__ . '/spike-controller-native.php';
     require_once $root . '/tests/Helpers/SpikeControllerCoverageRegistration.php';
 }
+if ($scenario['operation'] === 'management-list') require __DIR__ . '/management-list-native.php';
 if ($scenario['operation'] === 'management-bulk') require __DIR__ . '/management-bulk-native.php';
 if ($scenario['operation'] === 'graph-data-removal') require __DIR__ . '/graph-data-removal-native.php';
 if (isset($argv[3])) {
@@ -24,6 +25,11 @@ if (isset($argv[3])) {
     $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], array('lib/auth.php', 'lib/graph_item_choices.php', 'tests/Helpers/PhpSource.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
     if ($scenario['operation'] === 'graph-policy-display') {
         $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], GraphPolicyDisplayCoverageRegistration::SOURCES);
+    }
+    if ($scenario['operation'] === 'management-list') {
+        require_once $root . '/tests/Helpers/ManagementListCoverageRegistration.php';
+        $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], ManagementListCoverageRegistration::SOURCES);
+        define('MANAGEMENT_LIST_TEST_COVERAGE', true);
     }
     if ($scenario['operation'] === 'management-bulk') {
         require_once $root . '/tests/Helpers/ManagementBulkCoverageRegistration.php';
@@ -118,6 +124,11 @@ function db_fetch_assoc_prepared($sql, $params = [])
         && !empty($GLOBALS['scenario']['read_failure']) && str_contains($sql, $GLOBALS['scenario']['read_failure'])) {
         $GLOBALS['database_last_error'] = 'fixture read failure';
         return array();
+    }
+    // MySQL gives SELECT aliases precedence in GROUP BY; SQLite otherwise
+    // resolves this normalizer's id against its joined input columns.
+    if (($GLOBALS['scenario']['operation'] ?? '') === 'management-list' && str_contains($sql, 'GROUP BY id, name')) {
+        $sql = str_replace('GROUP BY id, name', 'GROUP BY 1, 2', $sql);
     }
     $q = $GLOBALS['db']->prepare($sql);
     $q->execute($params);
@@ -219,6 +230,9 @@ switch ($scenario['operation']) {
         break;
     case 'spike-controller':
         spike_controller_fixture_run();
+        break;
+    case 'management-list':
+        management_list_fixture_run();
         break;
     case 'management-bulk':
         management_bulk_fixture_run();

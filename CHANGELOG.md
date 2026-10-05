@@ -8,6 +8,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Authorize non-deletion graph and data-source bulk selections with current owner/policy SQL in chunks of 1,000, retaining the established 10,000-object safety ceiling and supported 5,000-row UI batches.
 - Batch device management reuses the same bounded current-policy selection checks before protected names or action hooks. Malformed decimal, exponent and floating-point IDs are refused for graph/device selections and filtered from data-source selections; valid zero-padded or whitespace-normalized integer representations retain their order and duplicates.
+- Management graph/data list and count queries reuse policy ID subqueries instead of hydrating the complete device inventory. Graph lists apply the same graph/template policy as actions, and data-template filter choices derive only from admitted sources.
 - Main device management intentionally requires both the Devices realm and object policy access. Creating a device does not grant a new device permission; default-deny operators need an explicit applicable policy grant before managing the new device. LTS behavior is unchanged.
 
 - Display graph access refusals once after an AJAX-compatible redirect; preserve graph and device authorization before editor lookup or session locking.

@@ -93,6 +93,10 @@ if (defined('AUTH_POLICY_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/graph_item_choices.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
 }
+if (defined('MANAGEMENT_LIST_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/graphs.php');
+    $coverageFilter->includeFile($coverageRoot . '/data_sources.php');
+}
 if (defined('GRAPH_CACHE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/graph_image.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');

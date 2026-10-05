@@ -628,6 +628,66 @@ final class AuthPolicyNativeCoverageTest extends TestCase
         ];
     }
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('managementListCases')]
+    public function testManagementListsUseActualPolicyAndMatchingCountBeforeRendering(string $resource, array $scenario, array $ids, ?int $totalRows = null): void
+    {
+        $state = $this->runPolicy(array_merge(['operation' => 'management-list', 'resource' => $resource,
+            'config' => ['graph_auth_method' => 1]], $scenario));
+        self::assertTrue($state['completed']);
+        self::assertStringNotContainsString('Fatal error', $state['html']);
+        $document = new DOMDocument();
+        self::assertTrue($document->loadHTML($state['html'], LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_NONET));
+        $xpath = new DOMXPath($document);
+        $actual = [];
+        foreach ($xpath->query('//input[starts-with(@name,"chk_")]') as $input) $actual[] = (int) substr($input->getAttribute('name'), 4);
+        self::assertSame($ids, $actual);
+        foreach ($xpath->query('//*[@data-total]') as $total) self::assertSame($totalRows ?? count($ids), (int) $total->getAttribute('data-total'));
+        self::assertGreaterThan(0, $xpath->query('//*[@data-total]')->length);
+        self::assertStringNotContainsString('Denied record', $state['html']);
+        if ($scenario['deny_template'] ?? false) {
+            self::assertSame(in_array(1001, $ids, true), $state['admission']['graph1001']);
+            self::assertTrue($state['admission']['device101']);
+        }
+        $inventories = array_filter($state['queries'], static fn(string $sql): bool => str_contains($sql, 'SELECT h1.*'));
+        self::assertSame([], array_values($inventories));
+        if (($scenario['device_count'] ?? false) || ($scenario['custom_maximum'] ?? false)) {
+            self::assertLessThanOrEqual(50, count($state['queries']));
+            self::assertLessThanOrEqual(3, max(array_column($state['row_counts'], 'rows')));
+        }
+    }
+
+    public static function managementListCases(): array
+    {
+        return [
+            'graph permitted disabled and nondevice' => ['graph', [], [1001,1003]],
+            'data permitted disabled and nondevice' => ['data', [], [1001,1003]],
+            'graph hide-disabled management' => ['graph', ['hide_disabled' => 'on'], [1001,1003]],
+            'data hide-disabled management' => ['data', ['hide_disabled' => 'on'], [1001,1003]],
+            'graph permissive policy parity' => ['graph', ['deny_template' => true, 'config' => ['graph_auth_method' => 1]], [1001,1003,1004]],
+            'graph restrictive policy parity' => ['graph', ['deny_template' => true, 'config' => ['graph_auth_method' => 2]], [1003,1004]],
+            'graph device policy parity' => ['graph', ['deny_template' => true, 'config' => ['graph_auth_method' => 3]], [1001,1003,1004]],
+            'graph template policy parity' => ['graph', ['deny_template' => true, 'config' => ['graph_auth_method' => 4]], [1003,1004]],
+            'graph no admitted device or graph' => ['graph', ['empty_devices' => true], []],
+            'data no admitted device keeps nondevice' => ['data', ['empty_devices' => true], [1003]],
+            'graph explicit permitted device' => ['graph', ['request' => ['host_id' => 101]], [1001]],
+            'data explicit permitted device' => ['data', ['request' => ['host_id' => 101]], [1001]],
+            'graph explicit denied device' => ['graph', ['request' => ['host_id' => 201]], []],
+            'data explicit denied device' => ['data', ['request' => ['host_id' => 201]], []],
+            'graph explicit nondevice' => ['graph', ['request' => ['host_id' => 0]], [1003]],
+            'data explicit nondevice' => ['data', ['request' => ['host_id' => 0]], [1003]],
+            'graph custom missing owner remains excluded' => ['graph', ['orphan_graph' => true, 'request' => ['local_graph_ids' => '1001,1003,1005']], [1001,1003]],
+            'graph maximum inventory' => ['graph', ['device_count' => 20000], [1001,1003]],
+            'data maximum inventory' => ['data', ['device_count' => 20000], [1001,1003]],
+            'graph next page' => ['graph', ['request' => ['rows' => 1, 'page' => 2]], [1003], 2],
+            'data next page' => ['data', ['request' => ['rows' => 1, 'page' => 2]], [1003], 2],
+            'graph configured rows sentinel' => ['graph', ['request' => ['rows' => -1], 'config' => ['graph_auth_method' => 1, 'num_rows_table' => 20]], [1001,1003]],
+            'data configured rows sentinel' => ['data', ['request' => ['rows' => -1], 'config' => ['graph_auth_method' => 1, 'num_rows_table' => 20]], [1001,1003]],
+            'graph maximum custom repeated IDs' => ['graph', ['custom_maximum' => true, 'request' => ['local_graph_ids' => implode(',', array_fill(0, 5000, '01001'))]], [1001]],
+            'graph custom malformed numeric IDs' => ['graph', ['request' => ['local_graph_ids' => '1001.5,1e3,1003']], [1003]],
+            'graph custom permitted plus denied' => ['graph', ['request' => ['local_graph_ids' => '1001,1002,1003']], [1001,1003]],
+        ];
+    }
+
     private function runPolicy(array $scenario): array
     {
         $root = dirname(__DIR__, 4);
@@ -651,7 +711,16 @@ final class AuthPolicyNativeCoverageTest extends TestCase
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
                 require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
-                if ($scenario['operation'] === 'management-bulk') {
+                if ($scenario['operation'] === 'management-list') {
+                    require_once $root . '/tests/Helpers/ManagementListCoverageRegistration.php';
+                    $hits = ['lib/auth.php', $scenario['resource'] === 'graph' ? 'graphs.php' : 'data_sources.php'];
+                    $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), ManagementListCoverageRegistration::SOURCES, ManagementListCoverageRegistration::MARKERS, $hits);
+                    if (!isset(self::$coverageEvidenceChecked['management-list'])) {
+                        self::assertSame(43, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), ManagementListCoverageRegistration::SOURCES, ManagementListCoverageRegistration::MARKERS, $hits, 'lib/rrd.php'));
+                        self::$coverageEvidenceChecked['management-list'] = true;
+                    }
+                    $coverage->merge($childCoverage);
+                } elseif ($scenario['operation'] === 'management-bulk') {
                     require_once $root . '/tests/Helpers/ManagementBulkCoverageRegistration.php';
                     $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), ManagementBulkCoverageRegistration::SOURCES, ManagementBulkCoverageRegistration::MARKERS, ['lib/auth.php']);
                     if (!isset(self::$coverageEvidenceChecked['management-bulk'])) {

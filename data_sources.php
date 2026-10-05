@@ -1628,6 +1628,8 @@ function ds()
         set_request_var('host_id', '-2');
     }
 
+    $allowed_devices_sql = get_allowed_management_device_ids_sql();
+
     if (get_request_var('rows') == -1) {
         $rows = read_config_option('num_rows_table');
     } else {
@@ -1733,12 +1735,14 @@ function ds()
 							<option value='0'<?php if (get_request_var('template_id') == '0') {?> selected<?php }?>><?php print __('None');?></option>
 							<?php
 
-                            $templates = db_fetch_assoc('SELECT DISTINCT data_template.id, data_template.name
+                            $templates = db_fetch_assoc("SELECT DISTINCT data_template.id, data_template.name
 								FROM data_template
 								INNER JOIN data_template_data
 								ON data_template.id = data_template_data.data_template_id
+								INNER JOIN data_local AS dl ON dl.id = data_template_data.local_data_id
 								WHERE data_template_data.local_data_id > 0
-								ORDER BY data_template.name');
+                                AND (dl.host_id=0 OR dl.host_id IS NULL OR dl.host_id IN ($allowed_devices_sql))
+								ORDER BY data_template.name");
 
     if (cacti_sizeof($templates)) {
         foreach ($templates as $template) {
@@ -1846,27 +1850,15 @@ function ds()
         $sql_where1 = '';
     }
     $sql_where2 = '';
-    $allowed_device_rows = 0;
-    $allowed_devices = get_allowed_management_devices('', '', '', $allowed_device_rows);
-    $allowed_device_ids = array();
-    foreach ($allowed_devices as $allowed_device) {
-        $allowed_device_ids[] = (int) $allowed_device['id'];
-    }
-
     if (get_request_var('host_id') == '-1') {
-        if (cacti_sizeof($allowed_device_ids) > 0) {
-            $sql_where1 .= ($sql_where1 != '' ? ' AND ' : 'WHERE ') . '(dl.host_id IN (' . implode(',', $allowed_device_ids) . ') OR dl.host_id=0 OR dl.host_id IS NULL)';
-            $sql_where2 .= ' AND (gl.host_id IN (' . implode(',', $allowed_device_ids) . ') OR gl.host_id=0 OR gl.host_id IS NULL)';
-        } else {
-            $sql_where1 .= ($sql_where1 != '' ? ' AND ' : 'WHERE ') . '(dl.host_id=0 OR dl.host_id IS NULL)';
-            $sql_where2 .= ' AND (gl.host_id=0 OR gl.host_id IS NULL)';
-        }
+        $sql_where1 .= ($sql_where1 != '' ? ' AND ' : 'WHERE ') . "(dl.host_id IN ($allowed_devices_sql) OR dl.host_id=0 OR dl.host_id IS NULL)";
+        $sql_where2 .= " AND (gl.host_id IN ($allowed_devices_sql) OR gl.host_id=0 OR gl.host_id IS NULL)";
     } elseif (isempty_request_var('host_id')) {
         $sql_where1 .= ($sql_where1 != '' ? ' AND' : 'WHERE') . ' (dl.host_id=0 OR dl.host_id IS NULL)';
         $sql_where2 .= ' AND (gl.host_id=0 OR gl.host_id IS NULL)';
-    } elseif (!isempty_request_var('host_id')) {
+    } else {
         $host_id = get_filter_request_var('host_id');
-        if ($host_id > 0 && (!is_device_allowed($host_id) || !in_array($host_id, $allowed_device_ids, true))) {
+        if ($host_id <= 0 || !is_device_allowed($host_id)) {
             $sql_where1 .= ($sql_where1 != '' ? ' AND' : 'WHERE') . ' 1=0';
             $sql_where2 .= ' AND 1=0';
         } else {

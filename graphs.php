@@ -2142,18 +2142,14 @@ function graph_management()
     /* form the 'where' clause for our main sql query */
     $sql_where  = '';
     $sql_where2 = '';
-    $allowed_device_rows = 0;
-    $allowed_devices = get_allowed_management_devices('', '', '', $allowed_device_rows);
-    $allowed_device_ids = array();
-    foreach ($allowed_devices as $allowed_device) {
-        $allowed_device_ids[] = (int) $allowed_device['id'];
-    }
+    $allowed_devices_sql = get_allowed_management_device_ids_sql();
+    $allowed_graphs_sql = get_allowed_management_graph_ids_sql();
     if (get_request_var('local_graph_ids') != '') {
         $requested_graph_ids = explode(',', get_request_var('local_graph_ids'));
         $allowed_requested_graph_ids = array();
         foreach ($requested_graph_ids as $requested_graph_id) {
-            $requested_graph_id = (int) $requested_graph_id;
-            if ($requested_graph_id > 0 && is_graph_allowed($requested_graph_id)) {
+            $requested_graph_id = auth_resource_id($requested_graph_id);
+            if ($requested_graph_id !== null && $requested_graph_id > 0) {
                 $allowed_requested_graph_ids[] = $requested_graph_id;
             }
         }
@@ -2167,23 +2163,20 @@ function graph_management()
         $sql_where2 .= " AND (gl.id = " . (int) get_request_var('rfilter') . ")";
     }
 
+    // The list and its count use the same policy as the mutation boundary.
+    $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . "gl.id IN ($allowed_graphs_sql)";
+    $sql_where2 .= " AND gl.id IN ($allowed_graphs_sql)";
     if (get_request_var('host_id') == '-1') {
-        if (get_request_var('local_graph_ids') != '') {
-            /* The custom graph IDs were checked individually above. */
-        } elseif (cacti_sizeof($allowed_device_ids) > 0) {
-            $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . ' (gl.host_id IN (' . implode(',', $allowed_device_ids) . ') OR gl.host_id=0)';
-            $sql_where2 .= ' AND (gl.host_id IN (' . implode(',', $allowed_device_ids) . ') OR gl.host_id=0)';
-        } else {
-            $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . ' gl.host_id=0';
-            $sql_where2 .= ' AND gl.host_id=0';
-        }
+        $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . "(gl.host_id IN ($allowed_devices_sql) OR gl.host_id=0)";
+        $sql_where2 .= " AND (gl.host_id IN ($allowed_devices_sql) OR gl.host_id=0)";
     } elseif (isempty_request_var('host_id')) {
-        $sql_where  .= ($sql_where != '' ? ' AND ' : 'WHERE ') . ' gl.host_id=0';
+        $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . ' gl.host_id=0';
         $sql_where2 .= ' AND gl.host_id=0';
-    } elseif (!isempty_request_var('host_id')) {
+    } else {
         $host_id = get_filter_request_var('host_id');
-        if (!is_device_allowed($host_id) || !in_array($host_id, $allowed_device_ids, true)) {
+        if ($host_id <= 0 || !is_device_allowed($host_id)) {
             $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . '1=0';
+            $sql_where2 .= ' AND 1=0';
         } else {
             $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . 'gl.host_id=' . (int) $host_id;
             $sql_where2 .= ' AND gl.host_id=' . (int) $host_id;
