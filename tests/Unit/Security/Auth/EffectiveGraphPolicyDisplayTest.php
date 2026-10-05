@@ -33,24 +33,38 @@ function connection(): \PDO {
     if ($db instanceof \PDO) { return $db; }
     $host = getenv('BOOST_DB_HOST') ?: '127.0.0.1';
     $port = getenv('BOOST_DB_PORT') ?: '3306';
-    $name = getenv('BOOST_DB_NAME') ?: 'cacti_boost_contract';
-    $db = new \PDO("mysql:host=$host;port=$port;dbname=$name;charset=utf8mb4", getenv('BOOST_DB_USER') ?: 'root', getenv('BOOST_DB_PASSWORD') ?: '', [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
-    // MySQL cannot join a temporary table more than once. Use an exclusively
-    // created, task-owned schema so the unchanged production joins are tested.
-    $schema = 'kadupul_auth_policy_'.bin2hex(random_bytes(12));
-    $db->exec('CREATE DATABASE `'.$schema.'`');
-    register_shutdown_function(static function () use ($db, $schema) {
-        $db->exec('DROP DATABASE `'.$schema.'`');
+    $name = getenv('AUTH_POLICY_DB_NAME') ?: (getenv('BOOST_DB_NAME') ?: 'cacti_boost_contract');
+    $connection = new \PDO("mysql:host=$host;port=$port;dbname=$name;charset=utf8mb4", getenv('BOOST_DB_USER') ?: 'root', getenv('BOOST_DB_PASSWORD') ?: '', [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    // MySQL cannot reopen a temporary table in these production joins. CI
+    // provisions an empty dedicated schema with grants limited to that schema.
+    $schema = getenv('AUTH_POLICY_DB_NAME');
+    if (!$schema) {
+        $schema = 'kadupul_auth_policy_'.bin2hex(random_bytes(12));
+        $connection->exec('CREATE DATABASE `'.$schema.'`');
+        $connection->exec('USE `'.$schema.'`');
+    }
+    $created = [];
+    register_shutdown_function(static function () use ($connection, &$created, $schema) {
+        foreach (array_reverse($created) as $table) { $connection->exec('DROP TABLE `'.$table.'`'); }
+        if (!getenv('AUTH_POLICY_DB_NAME')) { $connection->exec('DROP DATABASE `'.$schema.'`'); }
     });
-    $db->exec('USE `'.$schema.'`');
-    createTables($db);
+    foreach (tableDefinitions() as $table => $columns) {
+        $connection->exec('CREATE TABLE '.$table.' ('.$columns.')');
+        $created[] = $table;
+    }
+    $db = $connection;
     return $db;
 }
+function tableDefinitions(): array {
+    return [
+        'graph_local' => 'id INTEGER, host_id INTEGER, graph_template_id INTEGER',
+        'host' => 'id INTEGER, disabled VARCHAR(2)',
+        'user_auth_perms' => 'user_id INTEGER, item_id INTEGER, type INTEGER',
+        'user_auth_group_perms' => 'group_id INTEGER, item_id INTEGER, type INTEGER',
+    ];
+}
 function createTables(\PDO $db): void {
-    $db->exec('CREATE TABLE graph_local (id INTEGER, host_id INTEGER, graph_template_id INTEGER)');
-    $db->exec('CREATE TABLE host (id INTEGER, disabled VARCHAR(2))');
-    $db->exec('CREATE TABLE user_auth_perms (user_id INTEGER, item_id INTEGER, type INTEGER)');
-    $db->exec('CREATE TABLE user_auth_group_perms (group_id INTEGER, item_id INTEGER, type INTEGER)');
+    foreach (tableDefinitions() as $table => $columns) { $db->exec('CREATE TABLE '.$table.' ('.$columns.')'); }
 }
 function evaluate(array $policies, array $exceptions, int $method): array {
     $db = connection();
