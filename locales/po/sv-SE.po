@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 03:45-0700\n"
+"POT-Creation-Date: 2026-10-05 03:52-0700\n"
 "PO-Revision-Date: 2026-03-16 13:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -314,7 +314,7 @@ msgid "Aggregate Graph does not Exist"
 msgstr "Aggregerad graf existerar inte"
 
 #: aggregate_graphs.php:644 aggregate_graphs.php:651 lib/html_reports.php:1545
-#: lib/html_reports.php:1547 utilities.php:2278
+#: lib/html_reports.php:1547 utilities.php:2284
 msgid "Details"
 msgstr "Detaljer"
 
@@ -425,8 +425,8 @@ msgstr "Matchande grafer"
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:56
 #: tree.php:938 tree.php:973 tree.php:1008 tree.php:2217 user_admin.php:2074
 #: user_domains.php:643 user_group_admin.php:1993 utilities.php:1094
-#: utilities.php:1521 utilities.php:1828 utilities.php:2129 utilities.php:3131
-#: utilities.php:3393
+#: utilities.php:1521 utilities.php:1832 utilities.php:2135 utilities.php:3137
+#: utilities.php:3399
 msgid "Search"
 msgstr "Sök"
 
@@ -460,7 +460,7 @@ msgstr "Diagram"
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:81
 #: tree.php:2227 user_admin.php:2135 user_domains.php:18 user_domains.php:653
 #: user_domains.php:739 user_group_admin.php:2003 utilities.php:1076
-#: utilities.php:1838 utilities.php:2160 utilities.php:3159 utilities.php:3435
+#: utilities.php:1842 utilities.php:2166 utilities.php:3165 utilities.php:3441
 msgid "Default"
 msgstr "Standard"
 
@@ -499,7 +499,7 @@ msgstr "Start"
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
 #: tree.php:2242 user_admin.php:2150 user_domains.php:665
 #: user_group_admin.php:2018 utilities.php:1084 utilities.php:1470
-#: utilities.php:1819 utilities.php:2120 utilities.php:3167 utilities.php:3443
+#: utilities.php:1823 utilities.php:2126 utilities.php:3173 utilities.php:3449
 msgid "Set/Refresh Filters"
 msgstr "Ställ in/uppdatera filter"
 
@@ -535,7 +535,7 @@ msgstr "Rensa"
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:96
 #: tree.php:2243 user_admin.php:2151 user_domains.php:666
 #: user_group_admin.php:2019 utilities.php:1085 utilities.php:1471
-#: utilities.php:1820 utilities.php:2121 utilities.php:3168 utilities.php:3444
+#: utilities.php:1824 utilities.php:2127 utilities.php:3174 utilities.php:3450
 msgid "Clear Filters"
 msgstr "Töm filter"
 
@@ -610,7 +610,7 @@ msgstr "Aggregerade grafer"
 #: lib/api_automation.php:446 lib/html_graph.php:139 lib/html_tree.php:973
 #: rrdcleaner.php:381
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:59
-#: utilities.php:2087
+#: utilities.php:2094
 msgid "Template"
 msgstr "Mall"
 
@@ -628,8 +628,8 @@ msgstr "Mall"
 #: lib/html_reports.php:1157 lib/html_reports.php:1167
 #: lib/html_reports.php:2035 managers.php:490 managers.php:781
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:61
-#: utilities.php:1064 utilities.php:1782 utilities.php:2091 utilities.php:2139
-#: utilities.php:2149 utilities.php:3141 utilities.php:3403 utilities.php:3419
+#: utilities.php:1064 utilities.php:1785 utilities.php:2098 utilities.php:2145
+#: utilities.php:2155 utilities.php:3147 utilities.php:3409 utilities.php:3425
 msgid "Any"
 msgstr "Alla"
 
@@ -664,7 +664,7 @@ msgstr "Alla"
 #: lib/html_reports.php:1467 lib/html_reports.php:1472 package_import.php:686
 #: settings.php:591 settings.php:613 settings.php:644
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:62
-#: templates_import.php:298 templates_import.php:330 utilities.php:2092
+#: templates_import.php:298 templates_import.php:330 utilities.php:2099
 msgid "None"
 msgstr "Ingen"
 
@@ -1170,7 +1170,7 @@ msgid "Uptime"
 msgstr "Upptid"
 
 #: automation_devices.php:279 automation_devices.php:560
-#: include/global_arrays.php:1018 utilities.php:2150
+#: include/global_arrays.php:1018 utilities.php:2156
 msgid "SNMP"
 msgstr "SNMP"
 
@@ -1185,7 +1185,7 @@ msgstr "SNMP"
 #: package_import.php:542 package_import.php:627 plugins.php:497
 #: plugins.php:623 pollers.php:1007 templates_import.php:206
 #: templates_import.php:245 user_admin.php:1073 user_group_admin.php:1095
-#: utilities.php:2135
+#: utilities.php:2141
 msgid "Status"
 msgstr "Status"
 
@@ -1243,8 +1243,8 @@ msgstr "Rensning av upptäckta enheter"
 #: lib/spikekill.php:1806 lib/spikekill.php:1807 lib/spikekill.php:1808
 #: lib/spikekill.php:1809 lib/spikekill.php:1810 plugins.php:780
 #: pollers.php:1115 user_admin.php:2261 utilities.php:738 utilities.php:1190
-#: utilities.php:2763 utilities.php:2891 utilities.php:2899 utilities.php:2910
-#: utilities.php:2921 utilities.php:2946 utilities.php:2996 utilities.php:3232
+#: utilities.php:2769 utilities.php:2897 utilities.php:2905 utilities.php:2916
+#: utilities.php:2927 utilities.php:2952 utilities.php:3002 utilities.php:3238
 msgid "N/A"
 msgstr "Inte tillgänglig"
 
@@ -1379,7 +1379,7 @@ msgstr "Datafrågeställning"
 #: user_admin.php:924 user_admin.php:936 user_admin.php:2248
 #: user_domains.php:335 user_domains.php:743 user_group_admin.php:76
 #: user_group_admin.php:741 user_group_admin.php:756 user_group_admin.php:2076
-#: utilities.php:2140 utilities.php:3014
+#: utilities.php:2146 utilities.php:3020
 msgid "Enabled"
 msgstr "Aktiverad"
 
@@ -1396,8 +1396,8 @@ msgstr "Aktiverad"
 #: lib/api_automation.php:28 lib/html.php:2858 lib/html_reports.php:2037
 #: lib/html_reports.php:2188 lib/html_utility.php:1317 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:936 user_domains.php:397
-#: user_group_admin.php:756 utilities.php:2141 utilities.php:2705
-#: utilities.php:3014
+#: user_group_admin.php:756 utilities.php:2147 utilities.php:2711
+#: utilities.php:3020
 msgid "Disabled"
 msgstr "Inaktiverad"
 
@@ -1546,7 +1546,7 @@ msgstr "Allmänna inställningar"
 #: lib/installer.php:2044 lib/installer.php:2117 lib/installer.php:2147
 #: lib/installer.php:2739 lib/installer.php:2827 lib/vdef.php:56
 #: managers.php:576 pollers.php:46 user_admin.php:924 user_domains.php:311
-#: utilities.php:864 utilities.php:3212
+#: utilities.php:864 utilities.php:3218
 msgid "Name"
 msgstr "Namn"
 
@@ -2074,11 +2074,11 @@ msgid "Last Started"
 msgstr "Senast startad"
 
 #: automation_networks.php:1110 data_debug.php:1015 data_debug.php:1040
-#: pollers.php:30 utilities.php:2696
+#: pollers.php:30 utilities.php:2702
 msgid "Running"
 msgstr "Kör"
 
-#: automation_networks.php:1134 pollers.php:31 utilities.php:2694
+#: automation_networks.php:1134 pollers.php:31 utilities.php:2700
 msgid "Idle"
 msgstr "Overksam"
 
@@ -2094,7 +2094,7 @@ msgstr "Inga nätverk hittades"
 
 #: automation_networks.php:1201 data_debug.php:1165 lib/clog_webapi.php:588
 #: lib/html_graph.php:304 lib/html_tree.php:1120 lib/html_tree.php:1141
-#: pollers.php:890 utilities.php:1502 utilities.php:2616
+#: pollers.php:890 utilities.php:1502 utilities.php:2622
 msgid "Refresh"
 msgstr "Uppdatera"
 
@@ -2265,7 +2265,7 @@ msgstr "Priv Protokoll"
 msgid "Context"
 msgstr "Sammanhang"
 
-#: automation_snmp.php:553 data_queries.php:1213 utilities.php:2145
+#: automation_snmp.php:553 data_queries.php:1213 utilities.php:2151
 msgid "Action"
 msgstr "Åtgärd"
 
@@ -2475,8 +2475,8 @@ msgstr "Kriterier för skapande av träd"
 msgid "Change Leaf Type"
 msgstr "Ändra bladtyp"
 
-#: automation_tree_rules.php:740 lib/installer.php:4177 utilities.php:2758
-#: utilities.php:2759 utilities.php:2762 utilities.php:2763
+#: automation_tree_rules.php:740 lib/installer.php:4177 utilities.php:2764
+#: utilities.php:2765 utilities.php:2768 utilities.php:2769
 msgid "WARNING:"
 msgstr "VARNING:"
 
@@ -3199,7 +3199,7 @@ msgid "Check"
 msgstr "Kontrollera"
 
 #: data_debug.php:883 include/global_form.php:1018 lib/rrd.php:4178
-#: utilities.php:798 utilities.php:815 utilities.php:3212
+#: utilities.php:798 utilities.php:815 utilities.php:3218
 msgid "Value"
 msgstr "Värde"
 
@@ -3542,7 +3542,7 @@ msgid "No Suggested Values Found"
 msgstr "Inga föreslagna värden hittades"
 
 #: data_queries.php:881 data_queries.php:991 include/global_form.php:2124
-#: include/global_form.php:2166 lib/api_automation.php:1417 utilities.php:1930
+#: include/global_form.php:2166 lib/api_automation.php:1417 utilities.php:1934
 msgid "Field Name"
 msgstr "Fältnamn"
 
@@ -3626,7 +3626,7 @@ msgstr "Ta bort associerad graf"
 msgid "Data Queries"
 msgstr "Frågor om data"
 
-#: data_queries.php:1476 host.php:1001 utilities.php:1930
+#: data_queries.php:1476 host.php:1001 utilities.php:1934
 msgid "Data Query Name"
 msgstr "Namn på datafråga"
 
@@ -3773,7 +3773,7 @@ msgstr "Steg"
 
 #: data_source_profiles.php:900 graphs_new.php:532 include/global_form.php:284
 #: lib/html.php:613 lib/html_filter.php:55 lib/installer.php:2827
-#: lib/rrd.php:4220 utilities.php:866 utilities.php:1834
+#: lib/rrd.php:4220 utilities.php:866 utilities.php:1838
 msgid "Rows"
 msgstr "Rader"
 
@@ -4104,7 +4104,7 @@ msgstr "Namnet som ges till denna datamall.  Observera att du endast kan ändra 
 #: include/global_arrays.php:954 include/global_arrays.php:1003
 #: include/global_arrays.php:1688 include/global_arrays.php:1857
 #: lib/api_automation.php:426 lib/functions.php:6195 lib/html.php:2347
-#: lib/html.php:2384 lib/html_reports.php:1170 utilities.php:1930
+#: lib/html.php:2384 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
 msgstr "Enhet"
 
@@ -4182,7 +4182,7 @@ msgstr "Observera att det kan ta lite tid att köra den här frågan."
 msgid "Orphaned"
 msgstr "Föräldralös"
 
-#: data_sources.php:1983 utilities.php:2276
+#: data_sources.php:1983 utilities.php:2282
 msgid "Data Source Name"
 msgstr "Datakällans namn"
 
@@ -5433,7 +5433,7 @@ msgid "Repopulate Poller Cache"
 msgstr "Fylla på Poller-cachen på nytt"
 
 #: host.php:815 include/global_arrays.php:2458 include/global_arrays.php:2470
-#: utilities.php:2401
+#: utilities.php:2407
 msgid "View Poller Cache"
 msgstr "Visa Poller Cache"
 
@@ -5610,11 +5610,11 @@ msgstr "Återhämtar"
 #: lib/clog_webapi.php:856 lib/html_utility.php:1339 lib/import.php:342
 #: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4196 lib/rrd.php:4208
 #: lib/spikekill.php:301 package_import.php:522 package_import.php:600
-#: utilities.php:211 utilities.php:212 utilities.php:2759
+#: utilities.php:211 utilities.php:212 utilities.php:2765
 msgid "Unknown"
 msgstr "Okänd"
 
-#: host.php:1916 lib/api_automation.php:570 tree.php:987 utilities.php:2277
+#: host.php:1916 lib/api_automation.php:570 tree.php:987 utilities.php:2283
 msgid "Device Description"
 msgstr "Beskrivning av enhet"
 
@@ -6234,7 +6234,7 @@ msgid "Script Query"
 msgstr "Skriptfråga"
 
 #: include/global_arrays.php:513 include/global_arrays.php:519
-#: utilities.php:2152
+#: utilities.php:2158
 msgid "Script Server"
 msgstr "Skriptserver"
 
@@ -6976,7 +6976,7 @@ msgstr "Webbplatser/enheter/data"
 msgid "Spike Handling"
 msgstr "Spikhantering"
 
-#: include/global_arrays.php:1243 utilities.php:2390
+#: include/global_arrays.php:1243 utilities.php:2396
 msgid "Log Administration"
 msgstr "Administration av loggar"
 
@@ -7267,8 +7267,8 @@ msgstr "%s timmar"
 msgid "%d GByte"
 msgstr "%d GByte"
 
-#: include/global_arrays.php:1609 utilities.php:2856 utilities.php:2857
-#: utilities.php:2906
+#: include/global_arrays.php:1609 utilities.php:2862 utilities.php:2863
+#: utilities.php:2912
 msgid "Unlimited"
 msgstr "Obegränsad"
 
@@ -7898,7 +7898,7 @@ msgstr "Lista oanvända filer"
 msgid "RRD Check"
 msgstr "RRD-kontroll"
 
-#: include/global_arrays.php:2464 utilities.php:2405
+#: include/global_arrays.php:2464 utilities.php:2411
 msgid "View Data Query Cache"
 msgstr "Visa data Query Cache"
 
@@ -7906,7 +7906,7 @@ msgstr "Visa data Query Cache"
 msgid "Clear Log"
 msgstr "Töm logg"
 
-#: include/global_arrays.php:2488 utilities.php:2394
+#: include/global_arrays.php:2488 utilities.php:2400
 msgid "View User Log"
 msgstr "Visa användarlogg"
 
@@ -7914,19 +7914,19 @@ msgstr "Visa användarlogg"
 msgid "Clear User Log"
 msgstr "Rensa användarlogg"
 
-#: include/global_arrays.php:2500 utilities.php:2385 utilities.php:2386
+#: include/global_arrays.php:2500 utilities.php:2391 utilities.php:2392
 msgid "Technical Support"
 msgstr "Teknisk support"
 
-#: include/global_arrays.php:2506 utilities.php:2576
+#: include/global_arrays.php:2506 utilities.php:2582
 msgid "Boost Status"
 msgstr "Boost-status"
 
-#: include/global_arrays.php:2512 utilities.php:2460
+#: include/global_arrays.php:2512 utilities.php:2466
 msgid "View SNMP Agent Cache"
 msgstr "Visa SNMP Agent Cache"
 
-#: include/global_arrays.php:2518 utilities.php:2471
+#: include/global_arrays.php:2518 utilities.php:2477
 msgid "View SNMP Agent Notification Log"
 msgstr "Visa SNMP-agentens anmälningslogg"
 
@@ -11653,7 +11653,7 @@ msgstr "Boost felsökningslogg"
 msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost\tpoller process."
 msgstr "Om det här fältet inte är tomt kommer Boost att logga RRDupdate-utmatning från boost poller-processen."
 
-#: include/global_settings.php:2180 utilities.php:3011
+#: include/global_settings.php:2180 utilities.php:3017
 msgid "Image Caching"
 msgstr "Cachelagring av bilder"
 
@@ -12452,7 +12452,7 @@ msgstr "Åsidosätt detta värde"
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
 #: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4173
-#: utilities.php:356 utilities.php:1480 utilities.php:3212
+#: utilities.php:356 utilities.php:1480 utilities.php:3218
 msgid "Type"
 msgstr "Typ"
 
@@ -12788,7 +12788,7 @@ msgstr "Felaktig inloggning för Kadupul"
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "Autentisering var tidigare inte inställd.  Försökte ställa in lokal autentisering, men inget administrativt konto hittades."
 
-#: lib/boost.php:126 utilities.php:2908
+#: lib/boost.php:126 utilities.php:2914
 #, php-format
 msgid "%s MBytes"
 msgstr "%s MByte"
@@ -12842,8 +12842,8 @@ msgstr "Logga [Totalt antal rader: %d %s - Filter aktivt]"
 msgid "Log [Total Lines: %d %s - Unfiltered]"
 msgstr "Logga [Totalt antal rader: %d %s - Ofiltrerad]"
 
-#: lib/clog_webapi.php:293 utilities.php:1559 utilities.php:1924
-#: utilities.php:2156 utilities.php:2269 utilities.php:3206 utilities.php:3431
+#: lib/clog_webapi.php:293 utilities.php:1559 utilities.php:1928
+#: utilities.php:2162 utilities.php:2275 utilities.php:3212 utilities.php:3437
 msgid "Entries"
 msgstr "Poster"
 
@@ -17123,7 +17123,7 @@ msgstr "Version %s"
 msgid "Notifications"
 msgstr "Aviseringar"
 
-#: managers.php:135 utilities.php:2476
+#: managers.php:135 utilities.php:2482
 msgid "SNMP Notification Receivers"
 msgstr "SNMP-meddelandemottagare"
 
@@ -17148,11 +17148,11 @@ msgstr "SNMP-meddelandemottagare [redigera: %s]"
 msgid "SNMP Notification Receiver [new]"
 msgstr "SNMP-meddelandemottagare [ny]"
 
-#: managers.php:486 managers.php:578 utilities.php:3137 utilities.php:3212
+#: managers.php:486 managers.php:578 utilities.php:3143 utilities.php:3218
 msgid "MIB"
 msgstr "MIB"
 
-#: managers.php:577 utilities.php:1930 utilities.php:3212
+#: managers.php:577 utilities.php:1934 utilities.php:3218
 msgid "OID"
 msgstr "OID"
 
@@ -17160,7 +17160,7 @@ msgstr "OID"
 msgid "Kind"
 msgstr "Typ"
 
-#: managers.php:580 utilities.php:3212
+#: managers.php:580 utilities.php:3218
 msgid "Max-Access"
 msgstr "Max-åtkomst"
 
@@ -17172,23 +17172,23 @@ msgstr "Övervakad"
 msgid "No SNMP Notifications"
 msgstr "Inga SNMP-meddelanden"
 
-#: managers.php:777 utilities.php:3399
+#: managers.php:777 utilities.php:3405
 msgid "Severity"
 msgstr "Allvarlighetsgrad"
 
-#: managers.php:796 utilities.php:3445
+#: managers.php:796 utilities.php:3451
 msgid "Purge Notification Log"
 msgstr "Rensning av meddelandelogg"
 
-#: managers.php:843 utilities.php:3505
+#: managers.php:843 utilities.php:3511
 msgid "Time"
 msgstr "Tid"
 
-#: managers.php:844 utilities.php:3505
+#: managers.php:844 utilities.php:3511
 msgid "Notification"
 msgstr "Avisering"
 
-#: managers.php:845 utilities.php:3505
+#: managers.php:845 utilities.php:3511
 msgid "Varbinds"
 msgstr "Varbinds"
 
@@ -17196,7 +17196,7 @@ msgstr "Varbinds"
 msgid "Severity Level"
 msgstr "Allvarlighetsgrad"
 
-#: managers.php:878 utilities.php:3527
+#: managers.php:878 utilities.php:3533
 msgid "No SNMP Notification Log Entries"
 msgstr "Inga loggposter för SNMP-meddelanden"
 
@@ -17975,7 +17975,7 @@ msgstr "RRD-kontroll"
 msgid "RRD check is disabled, please enable in Configuration -> Settings -> Data"
 msgstr "RRD-kontrollen är inaktiverad, aktivera den i Konfiguration -> Inställningar -> Data"
 
-#: rrdcheck.php:87 utilities.php:2450
+#: rrdcheck.php:87 utilities.php:2456
 msgid "RRDfile Checker"
 msgstr "RRDfile-kontroll"
 
@@ -19861,19 +19861,19 @@ msgstr "Framgång - Lösenordsbyte"
 msgid "Attempts"
 msgstr "Försök"
 
-#: utilities.php:1084 utilities.php:1470 utilities.php:1819 utilities.php:2120
-#: utilities.php:3167 utilities.php:3443
+#: utilities.php:1084 utilities.php:1470 utilities.php:1823 utilities.php:2126
+#: utilities.php:3173 utilities.php:3449
 msgctxt "Button: use filter settings"
 msgid "Go"
 msgstr "Start"
 
-#: utilities.php:1085 utilities.php:1471 utilities.php:1820 utilities.php:2121
-#: utilities.php:3168 utilities.php:3444
+#: utilities.php:1085 utilities.php:1471 utilities.php:1824 utilities.php:2127
+#: utilities.php:3174 utilities.php:3450
 msgctxt "Button: reset filter settings"
 msgid "Clear"
 msgstr "Rensa"
 
-#: utilities.php:1086 utilities.php:1472 utilities.php:3445
+#: utilities.php:1086 utilities.php:1472 utilities.php:3451
 msgctxt "Button: delete all table entries"
 msgid "Purge"
 msgstr "Rensa"
@@ -19924,427 +19924,427 @@ msgstr "Felmeddelande: Det går inte att rensa loggen, inga skrivbehörigheter."
 msgid "Error: Unable to clear log, file does not exist."
 msgstr "Felmeddelande: Det går inte att rensa loggen, filen finns inte."
 
-#: utilities.php:1768
+#: utilities.php:1771
 msgid "Data Query Cache Items"
 msgstr "Cache-objekt för datafrågor"
 
-#: utilities.php:1778
+#: utilities.php:1781
 msgid "Query Name"
 msgstr "Frågans namn"
 
-#: utilities.php:1852
+#: utilities.php:1856
 msgid "Allow the search term to include the index column"
 msgstr "Tillåt att söktermen inkluderar indexkolumnen"
 
-#: utilities.php:1855
+#: utilities.php:1859
 msgid "Include Index"
 msgstr "Inkludera index"
 
-#: utilities.php:1930
+#: utilities.php:1934
 msgid "Field Value"
 msgstr "Fältvärde"
 
-#: utilities.php:1930
+#: utilities.php:1934
 msgid "Index"
 msgstr "Index"
 
-#: utilities.php:2077
+#: utilities.php:2084
 msgid "Poller Cache Items"
 msgstr "Poller Cache-objekt"
 
-#: utilities.php:2151
+#: utilities.php:2157
 msgid "Script"
 msgstr "Skript"
 
-#: utilities.php:2304 utilities.php:2309
+#: utilities.php:2310 utilities.php:2315
 msgid "SNMP Version:"
 msgstr "SNMP-version:"
 
-#: utilities.php:2305
+#: utilities.php:2311
 msgid "Community:"
 msgstr "Gemenskap:"
 
-#: utilities.php:2306 utilities.php:2310
+#: utilities.php:2312 utilities.php:2316
 msgid "OID:"
 msgstr "OID:"
 
-#: utilities.php:2310
+#: utilities.php:2316
 msgid "User:"
 msgstr "Användare:"
 
-#: utilities.php:2313
+#: utilities.php:2319
 msgid "Script:"
 msgstr "Skript:"
 
-#: utilities.php:2315
+#: utilities.php:2321
 msgid "Script Server:"
 msgstr "Script Server:"
 
-#: utilities.php:2329
+#: utilities.php:2335
 msgid "RRD:"
 msgstr "RRD:"
 
-#: utilities.php:2388
+#: utilities.php:2394
 msgid "Kadupul technical support page.  Used by developers and technical support persons to assist with issues in Kadupul.  Includes checks for common configuration issues."
 msgstr "Sidan för teknisk support för Kadupul.  Används av utvecklare och teknisk support för att hjälpa till med problem i Kadupul.  Innehåller kontroller för vanliga konfigurationsproblem."
 
-#: utilities.php:2392
+#: utilities.php:2398
 msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
 msgstr "Kadupul Log lagrar statistik, felmeddelanden och andra meddelanden beroende på systeminställningarna.  Denna information kan användas för att identifiera problem med pollern och programmet."
 
-#: utilities.php:2396
+#: utilities.php:2402
 msgid "Allows Administrators to browse the user log.  Administrators can filter and export the log as well."
 msgstr "Ger administratörer möjlighet att bläddra i användarloggen.  Administratörer kan även filtrera och exportera loggen."
 
-#: utilities.php:2400
+#: utilities.php:2406
 msgid "Poller Cache Administration"
 msgstr "Administration av Poller Cache"
 
-#: utilities.php:2403
+#: utilities.php:2409
 msgid "This is the data that is being passed to the poller each time it runs. This data is then in turn executed/interpreted and the results are fed into the RRDfiles for graphing or the database for display."
 msgstr "Detta är de data som skickas till pollern varje gång den körs. Dessa data exekveras/tolkas sedan i sin tur och resultaten matas in i RRD-filerna för grafisk framställning eller i databasen för visning."
 
-#: utilities.php:2407
+#: utilities.php:2413
 msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTS as well as in CDEF's."
 msgstr "Data Query Cache lagrar information som samlats in från Data Query-ingångstyper. Värdena från dessa fält kan användas i textområdet i grafer för Legends, Vertical Labels och GPRINTS samt i CDEF:er."
 
-#: utilities.php:2409
+#: utilities.php:2415
 msgid "Rebuild Poller Cache"
 msgstr "Återuppbygga Poller Cache"
 
-#: utilities.php:2413
+#: utilities.php:2419
 msgid "The Poller Cache will be re-generated if you select this option. Use this option only in the event of a database crash if you are experiencing issues after the crash and have already run the database repair tools.  Alternatively, if you are having problems with a specific Device, simply re-save that Device to rebuild its Poller Cache.  There is also a command line interface equivalent to this command that is recommended for large systems."
 msgstr "Poller-cachen kommer att genereras på nytt om du väljer detta alternativ. Använd detta alternativ endast i händelse av en databaskrasch om du upplever problem efter kraschen och redan har kört databasreparationsverktygen.  Alternativt, om du har problem med en viss enhet, kan du helt enkelt spara om den enheten för att återuppbygga dess Poller Cache.  Det finns också ett kommandoradsgränssnitt som motsvarar detta kommando och som rekommenderas för stora system."
 
-#: utilities.php:2415
+#: utilities.php:2421
 msgid "NOTE: On large systems, this command may take several minutes to hours to complete and therefore should not be run from the Kadupul UI.  You can simply run 'php -q cli/rebuild_poller_cache.php --help' at the command line for more information."
 msgstr "OBS: På stora system kan det här kommandot ta flera minuter till timmar att slutföra och bör därför inte köras från Kadupul UI.  Du kan helt enkelt köra \"php -q cli/rebuild_poller_cache.php --help\" på kommandoraden för mer information."
 
-#: utilities.php:2419
+#: utilities.php:2425
 msgid "Rebuild Resource Cache"
 msgstr "Återuppbygga resurscache"
 
-#: utilities.php:2423
+#: utilities.php:2429
 msgid "When operating multiple Data Collectors in Kadupul, Kadupul will attempt to maintain state for key files on all Data Collectors.  This includes all core, non-install related website and plugin files.  When you force a Resource Cache rebuild, Kadupul will clear the local Resource Cache, and then rebuild it at the next scheduled poller start.  This will trigger all Remote Data Collectors to recheck their website and plugin files for consistency."
 msgstr "När du använder flera datainsamlare i Kadupul kommer Kadupul att försöka upprätthålla tillståndet för nyckelfiler på alla datainsamlare.  Detta inkluderar alla kärnfiler, icke-installationsrelaterade plats- och insticksmodul-filer.  När du tvingar fram en återuppbyggnad av resurscachen kommer Kadupul att rensa den lokala resurscachen och sedan återuppbygga den vid nästa schemalagda pollerstart.  Detta kommer att få alla fjärrdatainsamlare att kontrollera att deras plats- och insticksmodul-filer är konsekventa."
 
-#: utilities.php:2427
+#: utilities.php:2433
 msgid "Boost Utilities"
 msgstr "Boost Verktyg"
 
-#: utilities.php:2428
+#: utilities.php:2434
 msgid "View Boost Status"
 msgstr "Visa Boost-status"
 
-#: utilities.php:2430
+#: utilities.php:2436
 msgid "This menu pick allows you to view various boost settings and statistics associated with the current running Boost configuration."
 msgstr "Med detta menyval kan du visa olika Boost-inställningar och statistik som är kopplade till den aktuella Boost-konfigurationen."
 
-#: utilities.php:2434
+#: utilities.php:2440
 msgid "Data Source Statistics Utilities"
 msgstr "Verktyg för datakälla och statistik"
 
-#: utilities.php:2435
+#: utilities.php:2441
 msgid "Purge Data Source Statistics"
 msgstr "Rensning av datakällans statistik"
 
-#: utilities.php:2439
+#: utilities.php:2445
 msgid "This menu pick will purge all existing Data Source Statistics from the Database.  If Data Source Statistics is enabled, the Data Sources Statistics will start collection again on the next Data Collector pass."
 msgstr "Detta menyval rensar bort all befintlig datakällstatistik från databasen.  Om Data Source Statistics är aktiverat kommer Data Sources Statistics att börja samlas in igen vid nästa passering av datainsamlaren."
 
-#: utilities.php:2444
+#: utilities.php:2450
 msgid "RRD Utilities"
 msgstr "RRD Utilities"
 
-#: utilities.php:2445
+#: utilities.php:2451
 msgid "RRDfile Cleaner"
 msgstr "RRDfile Cleaner"
 
-#: utilities.php:2448
+#: utilities.php:2454
 msgid "When you delete Data Sources from Kadupul, the corresponding RRDfiles are not removed automatically.  Use this utility to facilitate the removal of these old files."
 msgstr "När du tar bort datakällor från Kadupul tas inte motsvarande RRD-filer automatiskt bort. Använd det här verktyget för att underlätta avlägsnandet av dessa gamla filer."
 
-#: utilities.php:2453
+#: utilities.php:2459
 msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need enable rrdcheck in Configuration->Settings->Data"
 msgstr "Använd det här verktyget för att visa problem med saknade rrd-filer eller saknade värden i rrdfiler. Du måste aktivera rrdcheck i Konfiguration->Inställningar->Data"
 
-#: utilities.php:2459
+#: utilities.php:2465
 msgid "SNMP Agent Utilities"
 msgstr "SNMP Agent Verktyg"
 
-#: utilities.php:2463
+#: utilities.php:2469
 msgid "This shows all objects being handled by the SNMP Agent."
 msgstr "Här visas alla objekt som hanteras av SNMP-agenten."
 
-#: utilities.php:2465
+#: utilities.php:2471
 msgid "Rebuild SNMP Agent Cache"
 msgstr "Återskapa SNMP Agent Cache"
 
-#: utilities.php:2469
+#: utilities.php:2475
 msgid "The SNMP cache will be cleared and re-generated if you select this option. Note that it takes another poller run to restore the SNMP cache completely."
 msgstr "SNMP-cachen rensas och genereras på nytt om du väljer det här alternativet. Observera att det tar ytterligare en pollerkörning innan SNMP-cachen är helt återställd."
 
-#: utilities.php:2474
+#: utilities.php:2480
 msgid "This menu pick allows you to view the latest events SNMP Agent has handled in relation to the registered notification receivers."
 msgstr "Med detta menyval kan du visa de senaste händelserna som SNMP Agent har hanterat i förhållande till de registrerade meddelandemottagarna."
 
-#: utilities.php:2479
+#: utilities.php:2485
 msgid "Allows Administrators to maintain SNMP notification receivers."
 msgstr "Tillåter administratörer att behålla SNMP-mottagningsmottagare."
 
-#: utilities.php:2486
+#: utilities.php:2492
 msgid "Kadupul System Utilities"
 msgstr "Kadupul System Verktyg"
 
-#: utilities.php:2602
+#: utilities.php:2608
 msgid "Refresh Interval"
 msgstr "Ladda om interval"
 
-#: utilities.php:2698
+#: utilities.php:2704
 msgid "Overrun Warning"
 msgstr "Varning för överkörning"
 
-#: utilities.php:2700
+#: utilities.php:2706
 msgid "Timed Out"
 msgstr "Tidsbestämd"
 
-#: utilities.php:2702
+#: utilities.php:2708
 msgid "Other"
 msgstr "Annat"
 
-#: utilities.php:2758
+#: utilities.php:2764
 msgid "Cannot open directory"
 msgstr "Det går inte att öppna katalogen"
 
-#: utilities.php:2762
+#: utilities.php:2768
 msgid "Directory Does NOT Exist!!"
 msgstr "Directory existerar INTE!!!"
 
-#: utilities.php:2771
+#: utilities.php:2777
 msgid "Current Boost Status"
 msgstr "Aktuell Boost-status"
 
-#: utilities.php:2775
+#: utilities.php:2781
 msgid "Boost On-demand Updating:"
 msgstr "Öka uppdatering på begäran:"
 
-#: utilities.php:2779
+#: utilities.php:2785
 msgid "Running Processes:"
 msgstr "Löpande processer:"
 
-#: utilities.php:2784
+#: utilities.php:2790
 msgid "Total Poller Items:"
 msgstr "Totalt Poller-artiklar:"
 
-#: utilities.php:2790
+#: utilities.php:2796
 msgid "Total Data Sources:"
 msgstr "Totalt Datakällor:"
 
-#: utilities.php:2794
+#: utilities.php:2800
 msgid "Remaining Data Sources:"
 msgstr "Återstående datakällor:"
 
-#: utilities.php:2794
+#: utilities.php:2800
 msgid "TBD"
 msgstr "TBD"
 
-#: utilities.php:2798
+#: utilities.php:2804
 msgid "Queued Boost Records:"
 msgstr "Köade Boost-poster:"
 
-#: utilities.php:2802
+#: utilities.php:2808
 msgid "Approximate in Process:"
 msgstr "Ungefärlig i process:"
 
-#: utilities.php:2805
+#: utilities.php:2811
 msgid "Total Boost Records:"
 msgstr "Totalt antal Boost-poster:"
 
-#: utilities.php:2810
+#: utilities.php:2816
 msgid "Boost Storage Statistics"
 msgstr "Öka lagringsstatistiken"
 
-#: utilities.php:2814
+#: utilities.php:2820
 msgid "Database Engine:"
 msgstr "Databasmotor:"
 
-#: utilities.php:2818
+#: utilities.php:2824
 msgid "Current Boost Table(s) Size:"
 msgstr "Nuvarande Boost Table(s) Storlek:"
 
-#: utilities.php:2822
+#: utilities.php:2828
 msgid "Avg Bytes/Record:"
 msgstr "Genomsnittligt antal byte/rekord:"
 
-#: utilities.php:2850
+#: utilities.php:2856
 #, php-format
 msgid "%d Bytes"
 msgstr "%d Byte"
 
-#: utilities.php:2850
+#: utilities.php:2856
 msgid "Max Record Length:"
 msgstr "Max inspelningslängd:"
 
-#: utilities.php:2862
+#: utilities.php:2868
 msgid "Max Allowed Boost Table Size:"
 msgstr "Max tillåten storlek på Boost Table:"
 
-#: utilities.php:2866
+#: utilities.php:2872
 msgid "Estimated Maximum Records:"
 msgstr "Beräknad maximal registrering:"
 
-#: utilities.php:2870
+#: utilities.php:2876
 msgid "Previous Runtime Statistics"
 msgstr "Föregående körtidsstatistik"
 
-#: utilities.php:2873
+#: utilities.php:2879
 msgid "Last Start Time:"
 msgstr "Senaste starttid:"
 
-#: utilities.php:2879
+#: utilities.php:2885
 msgid "Last End Time:"
 msgstr "Sista sluttid:"
 
-#: utilities.php:2879
+#: utilities.php:2885
 msgid "Never Run"
 msgstr "Kör aldrig"
 
-#: utilities.php:2882
+#: utilities.php:2888
 msgid "Last Run Duration:"
 msgstr "Sista körningen Varaktighet:"
 
-#: utilities.php:2885
+#: utilities.php:2891
 #, php-format
 msgid "%d minutes"
 msgstr "%d minuter"
 
-#: utilities.php:2885
+#: utilities.php:2891
 #, php-format
 msgid "%d seconds"
 msgstr "%d sekunder"
 
-#: utilities.php:2888
+#: utilities.php:2894
 #, php-format
 msgid "%0.2f percent of update frequency)"
 msgstr "%0.2f procent av uppdateringsfrekvensen)"
 
-#: utilities.php:2896
+#: utilities.php:2902
 msgid "RRD Updates:"
 msgstr "RRD uppdateringar:"
 
-#: utilities.php:2899
+#: utilities.php:2905
 msgid "MBytes"
 msgstr "MByte"
 
-#: utilities.php:2899
+#: utilities.php:2905
 msgid "Peak Poller Memory:"
 msgstr "Peak Poller Memory:"
 
-#: utilities.php:2913
+#: utilities.php:2919
 msgid "Max Poller Memory Allowed:"
 msgstr "Max tillåtet minne för poller:"
 
-#: utilities.php:2916
+#: utilities.php:2922
 msgid "Detailed Runtime Statistics"
 msgstr "Detaljerad körtidsstatistik"
 
-#: utilities.php:2934
+#: utilities.php:2940
 #, php-format
 msgid "Records: %s (ds rows), Time: %s (secs), GetRows: %s (secs), ResultsCycle: %s (secs), FileAndTemplate: %s (secs), LastUpdate: %s (secs), RRDUpdate: %s (secs), Delete: %s (secs)"
 msgstr "Poster: %s (ds rader), Tid: %s (sekunder), GetRows: %s (secs), ResultsCycle: %s (secs), FileAndTemplate: %s (secs), LastUpdate: %s (secs), RRDUpdate: %s (secs), Delete: %s (sekunder)"
 
-#: utilities.php:2946
+#: utilities.php:2952
 msgid "Previous Runtime Timers:"
 msgstr "Föregående Runtime Timers:"
 
-#: utilities.php:2985 utilities.php:2987
+#: utilities.php:2991 utilities.php:2993
 #, php-format
 msgid "Process: %d"
 msgstr "Process: %d"
 
-#: utilities.php:2985
+#: utilities.php:2991
 #, php-format
 msgid "Status: <span class=\"deviceUp\"><b>Running</b></span>, Remaining: %s (dses), CurrentRuntime: %s (secs), PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
 msgstr "Status: <span class=\"deviceUp\"><b>Körs</b></span>, Återstår: %s (dses), CurrentRuntime: %s (secs), PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
 
-#: utilities.php:2987
+#: utilities.php:2993
 #, php-format
 msgid "Status: <span class=\"deviceRecovering\"><b>Idle</b></span>, PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
 msgstr "Status: <span class=\"deviceRecovering\"><b>Inaktiv</b></span>, PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
 
-#: utilities.php:2993
+#: utilities.php:2999
 msgid "Run Time Configuration"
 msgstr "Konfiguration av körtid"
 
-#: utilities.php:2996
+#: utilities.php:3002
 msgid "Update Frequency:"
 msgstr "Uppdateringsfrekvens:"
 
-#: utilities.php:2999
+#: utilities.php:3005
 msgid "Concurrent Processes:"
 msgstr "Samtidiga processer:"
 
-#: utilities.php:3002
+#: utilities.php:3008
 msgid "Next Start Time:"
 msgstr "Nästa starttid:"
 
-#: utilities.php:3005
+#: utilities.php:3011
 msgid "Maximum Records:"
 msgstr "Maximalt antal poster:"
 
-#: utilities.php:3005
+#: utilities.php:3011
 msgid "Records"
 msgstr "Poster"
 
-#: utilities.php:3008
+#: utilities.php:3014
 msgid "Maximum Allowed Runtime:"
 msgstr "Maximal tillåten körtid:"
 
-#: utilities.php:3014
+#: utilities.php:3020
 msgid "Image Caching Status:"
 msgstr "Cachelagring av bilder Status:"
 
-#: utilities.php:3017
+#: utilities.php:3023
 msgid "Cache Directory:"
 msgstr "Cache-katalog:"
 
-#: utilities.php:3020
+#: utilities.php:3026
 msgid "Cached Files:"
 msgstr "Cachade filer:"
 
-#: utilities.php:3023
+#: utilities.php:3029
 msgid "Cached Files Size:"
 msgstr "Cachade filer Storlek:"
 
-#: utilities.php:3122
+#: utilities.php:3128
 msgid "SNMP Agent Cache"
 msgstr "SNMP Agent Cache"
 
-#: utilities.php:3155
+#: utilities.php:3161
 msgid "OIDs"
 msgstr "OID:er"
 
-#: utilities.php:3232
+#: utilities.php:3238
 msgid "Column Data"
 msgstr "Kolumn Data"
 
-#: utilities.php:3232
+#: utilities.php:3238
 msgid "Scalar"
 msgstr "Skalär"
 
-#: utilities.php:3384
+#: utilities.php:3390
 msgid "SNMP Agent Notification Log"
 msgstr "SNMP Agent Notifieringslogg"
 
-#: utilities.php:3415 utilities.php:3505
+#: utilities.php:3421 utilities.php:3511
 msgid "Receiver"
 msgstr "Mottagare"
 
-#: utilities.php:3497
+#: utilities.php:3503
 msgid "Log Entries"
 msgstr "App loggnoteringar"
 
-#: utilities.php:3512
+#: utilities.php:3518
 #, php-format
 msgid "Severity Level: %s"
 msgstr "Allvarlighetsgrad: %s"

@@ -975,7 +975,7 @@ header_redirect	./user_group_admin.php:649	        header('Location: user_group_
 header_redirect	./user_group_admin.php:656	    header('Location: user_group_admin.php?action=edit&header=false&tab=general&id=' . get_nfilter_request_var('id'));
 header_redirect	./user_group_admin.php:685	    header('Location: user_group_admin.php?action=edit&header=false&tab=gperms&id=' . get_request_var('group_id'));
 header_redirect	./utilities.php:1309	        header('Location: utilities.php?action=view_logfile&filename=' . $logbase);
-header_redirect	./utilities.php:2376	    header('Location: permission_denied.php');
+header_redirect	./utilities.php:2382	    header('Location: permission_denied.php');
 header_redirect	./utilities.php:33	        header('Location: utilities.php?action=view_poller_cache');
 header_redirect	./utilities.php:38	        header('Location: utilities.php?header=false');
 header_redirect	./utilities.php:87	        header('Location: utilities.php');

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 03:45-0700\n"
+"POT-Creation-Date: 2026-10-05 03:52-0700\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -340,7 +340,7 @@ msgid "Aggregate Graph does not Exist"
 msgstr "聚合圖設置"
 
 #: aggregate_graphs.php:644 aggregate_graphs.php:651 lib/html_reports.php:1545
-#: lib/html_reports.php:1547 utilities.php:2278
+#: lib/html_reports.php:1547 utilities.php:2284
 #, fuzzy
 msgid "Details"
 msgstr "詳細資料"
@@ -468,8 +468,8 @@ msgstr "匹配圖"
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:56
 #: tree.php:938 tree.php:973 tree.php:1008 tree.php:2217 user_admin.php:2074
 #: user_domains.php:643 user_group_admin.php:1993 utilities.php:1094
-#: utilities.php:1521 utilities.php:1828 utilities.php:2129 utilities.php:3131
-#: utilities.php:3393
+#: utilities.php:1521 utilities.php:1832 utilities.php:2135 utilities.php:3137
+#: utilities.php:3399
 #, fuzzy
 msgid "Search"
 msgstr "搜尋"
@@ -505,7 +505,7 @@ msgstr "圖表"
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:81
 #: tree.php:2227 user_admin.php:2135 user_domains.php:18 user_domains.php:653
 #: user_domains.php:739 user_group_admin.php:2003 utilities.php:1076
-#: utilities.php:1838 utilities.php:2160 utilities.php:3159 utilities.php:3435
+#: utilities.php:1842 utilities.php:2166 utilities.php:3165 utilities.php:3441
 #, fuzzy
 msgid "Default"
 msgstr "默认"
@@ -547,7 +547,7 @@ msgstr "送出"
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
 #: tree.php:2242 user_admin.php:2150 user_domains.php:665
 #: user_group_admin.php:2018 utilities.php:1084 utilities.php:1470
-#: utilities.php:1819 utilities.php:2120 utilities.php:3167 utilities.php:3443
+#: utilities.php:1823 utilities.php:2126 utilities.php:3173 utilities.php:3449
 #, fuzzy
 msgid "Set/Refresh Filters"
 msgstr "設置/刷新過濾器"
@@ -585,7 +585,7 @@ msgstr "清除"
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:96
 #: tree.php:2243 user_admin.php:2151 user_domains.php:666
 #: user_group_admin.php:2019 utilities.php:1085 utilities.php:1471
-#: utilities.php:1820 utilities.php:2121 utilities.php:3168 utilities.php:3444
+#: utilities.php:1824 utilities.php:2127 utilities.php:3174 utilities.php:3450
 #, fuzzy
 msgid "Clear Filters"
 msgstr "清除過濾器"
@@ -670,7 +670,7 @@ msgstr "聚合圖"
 #: lib/api_automation.php:446 lib/html_graph.php:139 lib/html_tree.php:973
 #: rrdcleaner.php:381
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:59
-#: utilities.php:2087
+#: utilities.php:2094
 #, fuzzy
 msgid "Template"
 msgstr "模板"
@@ -689,8 +689,8 @@ msgstr "模板"
 #: lib/html_reports.php:1157 lib/html_reports.php:1167
 #: lib/html_reports.php:2035 managers.php:490 managers.php:781
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:61
-#: utilities.php:1064 utilities.php:1782 utilities.php:2091 utilities.php:2139
-#: utilities.php:2149 utilities.php:3141 utilities.php:3403 utilities.php:3419
+#: utilities.php:1064 utilities.php:1785 utilities.php:2098 utilities.php:2145
+#: utilities.php:2155 utilities.php:3147 utilities.php:3409 utilities.php:3425
 #, fuzzy
 msgid "Any"
 msgstr "任何"
@@ -726,7 +726,7 @@ msgstr "任何"
 #: lib/html_reports.php:1467 lib/html_reports.php:1472 package_import.php:686
 #: settings.php:591 settings.php:613 settings.php:644
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:62
-#: templates_import.php:298 templates_import.php:330 utilities.php:2092
+#: templates_import.php:298 templates_import.php:330 utilities.php:2099
 #, fuzzy
 msgid "None"
 msgstr "無"
@@ -1314,7 +1314,7 @@ msgid "Uptime"
 msgstr "運行時間"
 
 #: automation_devices.php:279 automation_devices.php:560
-#: include/global_arrays.php:1018 utilities.php:2150
+#: include/global_arrays.php:1018 utilities.php:2156
 #, fuzzy
 msgid "SNMP"
 msgstr "SNMP"
@@ -1330,7 +1330,7 @@ msgstr "SNMP"
 #: package_import.php:542 package_import.php:627 plugins.php:497
 #: plugins.php:623 pollers.php:1007 templates_import.php:206
 #: templates_import.php:245 user_admin.php:1073 user_group_admin.php:1095
-#: utilities.php:2135
+#: utilities.php:2141
 #, fuzzy
 msgid "Status"
 msgstr "狀態"
@@ -1399,8 +1399,8 @@ msgstr "清除發現的設備"
 #: lib/spikekill.php:1806 lib/spikekill.php:1807 lib/spikekill.php:1808
 #: lib/spikekill.php:1809 lib/spikekill.php:1810 plugins.php:780
 #: pollers.php:1115 user_admin.php:2261 utilities.php:738 utilities.php:1190
-#: utilities.php:2763 utilities.php:2891 utilities.php:2899 utilities.php:2910
-#: utilities.php:2921 utilities.php:2946 utilities.php:2996 utilities.php:3232
+#: utilities.php:2769 utilities.php:2897 utilities.php:2905 utilities.php:2916
+#: utilities.php:2927 utilities.php:2952 utilities.php:3002 utilities.php:3238
 #, fuzzy
 msgid "N/A"
 msgstr "不适用"
@@ -1546,7 +1546,7 @@ msgstr "數據查詢"
 #: user_admin.php:924 user_admin.php:936 user_admin.php:2248
 #: user_domains.php:335 user_domains.php:743 user_group_admin.php:76
 #: user_group_admin.php:741 user_group_admin.php:756 user_group_admin.php:2076
-#: utilities.php:2140 utilities.php:3014
+#: utilities.php:2146 utilities.php:3020
 #, fuzzy
 msgid "Enabled"
 msgstr "啟用"
@@ -1564,8 +1564,8 @@ msgstr "啟用"
 #: lib/api_automation.php:28 lib/html.php:2858 lib/html_reports.php:2037
 #: lib/html_reports.php:2188 lib/html_utility.php:1317 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:936 user_domains.php:397
-#: user_group_admin.php:756 utilities.php:2141 utilities.php:2705
-#: utilities.php:3014
+#: user_group_admin.php:756 utilities.php:2147 utilities.php:2711
+#: utilities.php:3020
 #, fuzzy
 msgid "Disabled"
 msgstr "停用"
@@ -1731,7 +1731,7 @@ msgstr "一般設定"
 #: lib/installer.php:2044 lib/installer.php:2117 lib/installer.php:2147
 #: lib/installer.php:2739 lib/installer.php:2827 lib/vdef.php:56
 #: managers.php:576 pollers.php:46 user_admin.php:924 user_domains.php:311
-#: utilities.php:864 utilities.php:3212
+#: utilities.php:864 utilities.php:3218
 #, fuzzy
 msgid "Name"
 msgstr "名稱"
@@ -2368,12 +2368,12 @@ msgid "Last Started"
 msgstr "最後開始"
 
 #: automation_networks.php:1110 data_debug.php:1015 data_debug.php:1040
-#: pollers.php:30 utilities.php:2696
+#: pollers.php:30 utilities.php:2702
 #, fuzzy
 msgid "Running"
 msgstr "運行"
 
-#: automation_networks.php:1134 pollers.php:31 utilities.php:2694
+#: automation_networks.php:1134 pollers.php:31 utilities.php:2700
 #, fuzzy
 msgid "Idle"
 msgstr "閒置"
@@ -2392,7 +2392,7 @@ msgstr "找不到網絡"
 
 #: automation_networks.php:1201 data_debug.php:1165 lib/clog_webapi.php:588
 #: lib/html_graph.php:304 lib/html_tree.php:1120 lib/html_tree.php:1141
-#: pollers.php:890 utilities.php:1502 utilities.php:2616
+#: pollers.php:890 utilities.php:1502 utilities.php:2622
 #, fuzzy
 msgid "Refresh"
 msgstr "重新整理"
@@ -2589,7 +2589,7 @@ msgstr "特權協議"
 msgid "Context"
 msgstr "上下文"
 
-#: automation_snmp.php:553 data_queries.php:1213 utilities.php:2145
+#: automation_snmp.php:553 data_queries.php:1213 utilities.php:2151
 #, fuzzy
 msgid "Action"
 msgstr "動作"
@@ -2830,8 +2830,8 @@ msgstr "樹創建標準"
 msgid "Change Leaf Type"
 msgstr "改變葉子類型"
 
-#: automation_tree_rules.php:740 lib/installer.php:4177 utilities.php:2758
-#: utilities.php:2759 utilities.php:2762 utilities.php:2763
+#: automation_tree_rules.php:740 lib/installer.php:4177 utilities.php:2764
+#: utilities.php:2765 utilities.php:2768 utilities.php:2769
 #, fuzzy
 msgid "WARNING:"
 msgstr "警告："
@@ -3668,7 +3668,7 @@ msgid "Check"
 msgstr "檢查"
 
 #: data_debug.php:883 include/global_form.php:1018 lib/rrd.php:4178
-#: utilities.php:798 utilities.php:815 utilities.php:3212
+#: utilities.php:798 utilities.php:815 utilities.php:3218
 #, fuzzy
 msgid "Value"
 msgstr "值"
@@ -4058,7 +4058,7 @@ msgid "No Suggested Values Found"
 msgstr "未找到建議值"
 
 #: data_queries.php:881 data_queries.php:991 include/global_form.php:2124
-#: include/global_form.php:2166 lib/api_automation.php:1417 utilities.php:1930
+#: include/global_form.php:2166 lib/api_automation.php:1417 utilities.php:1934
 #, fuzzy
 msgid "Field Name"
 msgstr "字段名稱"
@@ -4159,7 +4159,7 @@ msgstr "刪除關聯圖表"
 msgid "Data Queries"
 msgstr "數據查詢"
 
-#: data_queries.php:1476 host.php:1001 utilities.php:1930
+#: data_queries.php:1476 host.php:1001 utilities.php:1934
 #, fuzzy
 msgid "Data Query Name"
 msgstr "數據查詢名稱"
@@ -4323,7 +4323,7 @@ msgstr "步驟"
 
 #: data_source_profiles.php:900 graphs_new.php:532 include/global_form.php:284
 #: lib/html.php:613 lib/html_filter.php:55 lib/installer.php:2827
-#: lib/rrd.php:4220 utilities.php:866 utilities.php:1834
+#: lib/rrd.php:4220 utilities.php:866 utilities.php:1838
 #, fuzzy
 msgid "Rows"
 msgstr "行"
@@ -4677,7 +4677,7 @@ msgstr "為此數據模板指定的名稱。請注意，您只能將圖形模板
 #: include/global_arrays.php:954 include/global_arrays.php:1003
 #: include/global_arrays.php:1688 include/global_arrays.php:1857
 #: lib/api_automation.php:426 lib/functions.php:6195 lib/html.php:2347
-#: lib/html.php:2384 lib/html_reports.php:1170 utilities.php:1930
+#: lib/html.php:2384 lib/html_reports.php:1170 utilities.php:1934
 #, fuzzy
 msgid "Device"
 msgstr "裝置"
@@ -4770,7 +4770,7 @@ msgstr "請注意，此查詢可能需要一些時間才能運行。"
 msgid "Orphaned"
 msgstr "孤"
 
-#: data_sources.php:1983 utilities.php:2276
+#: data_sources.php:1983 utilities.php:2282
 #, fuzzy
 msgid "Data Source Name"
 msgstr "數據源名稱"
@@ -6199,7 +6199,7 @@ msgid "Repopulate Poller Cache"
 msgstr "重建輪詢器緩存"
 
 #: host.php:815 include/global_arrays.php:2458 include/global_arrays.php:2470
-#: utilities.php:2401
+#: utilities.php:2407
 #, fuzzy
 msgid "View Poller Cache"
 msgstr "查看輪詢器緩存"
@@ -6414,12 +6414,12 @@ msgstr "正在復原"
 #: lib/clog_webapi.php:856 lib/html_utility.php:1339 lib/import.php:342
 #: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4196 lib/rrd.php:4208
 #: lib/spikekill.php:301 package_import.php:522 package_import.php:600
-#: utilities.php:211 utilities.php:212 utilities.php:2759
+#: utilities.php:211 utilities.php:212 utilities.php:2765
 #, fuzzy
 msgid "Unknown"
 msgstr "未知"
 
-#: host.php:1916 lib/api_automation.php:570 tree.php:987 utilities.php:2277
+#: host.php:1916 lib/api_automation.php:570 tree.php:987 utilities.php:2283
 #, fuzzy
 msgid "Device Description"
 msgstr "設備描述"
@@ -7173,7 +7173,7 @@ msgid "Script Query"
 msgstr "腳本查詢"
 
 #: include/global_arrays.php:513 include/global_arrays.php:519
-#: utilities.php:2152
+#: utilities.php:2158
 #, fuzzy
 msgid "Script Server"
 msgstr "腳本服務器"
@@ -8044,7 +8044,7 @@ msgstr "網站/設備/數據"
 msgid "Spike Handling"
 msgstr "秒殺設置"
 
-#: include/global_arrays.php:1243 utilities.php:2390
+#: include/global_arrays.php:1243 utilities.php:2396
 #, fuzzy
 msgid "Log Administration"
 msgstr "日誌管理"
@@ -8390,8 +8390,8 @@ msgstr "%s小時"
 msgid "%d GByte"
 msgstr "%d GBytes"
 
-#: include/global_arrays.php:1609 utilities.php:2856 utilities.php:2857
-#: utilities.php:2906
+#: include/global_arrays.php:1609 utilities.php:2862 utilities.php:2863
+#: utilities.php:2912
 #, fuzzy
 msgid "Unlimited"
 msgstr "無限"
@@ -9156,7 +9156,7 @@ msgstr "列出未使用的文件"
 msgid "RRD Check"
 msgstr "運行檢查"
 
-#: include/global_arrays.php:2464 utilities.php:2405
+#: include/global_arrays.php:2464 utilities.php:2411
 #, fuzzy
 msgid "View Data Query Cache"
 msgstr "查看數據查詢緩存"
@@ -9166,7 +9166,7 @@ msgstr "查看數據查詢緩存"
 msgid "Clear Log"
 msgstr "清除日誌"
 
-#: include/global_arrays.php:2488 utilities.php:2394
+#: include/global_arrays.php:2488 utilities.php:2400
 #, fuzzy
 msgid "View User Log"
 msgstr "查看用戶日誌"
@@ -9176,22 +9176,22 @@ msgstr "查看用戶日誌"
 msgid "Clear User Log"
 msgstr "清除用戶日誌"
 
-#: include/global_arrays.php:2500 utilities.php:2385 utilities.php:2386
+#: include/global_arrays.php:2500 utilities.php:2391 utilities.php:2392
 #, fuzzy
 msgid "Technical Support"
 msgstr "การสนับสนุนทางเทคนิค"
 
-#: include/global_arrays.php:2506 utilities.php:2576
+#: include/global_arrays.php:2506 utilities.php:2582
 #, fuzzy
 msgid "Boost Status"
 msgstr "提升狀態"
 
-#: include/global_arrays.php:2512 utilities.php:2460
+#: include/global_arrays.php:2512 utilities.php:2466
 #, fuzzy
 msgid "View SNMP Agent Cache"
 msgstr "查看SNMP代理緩存"
 
-#: include/global_arrays.php:2518 utilities.php:2471
+#: include/global_arrays.php:2518 utilities.php:2477
 #, fuzzy
 msgid "View SNMP Agent Notification Log"
 msgstr "查看SNMP代理通知日誌"
@@ -13683,7 +13683,7 @@ msgstr "提升調試日誌"
 msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost\tpoller process."
 msgstr "如果此字段為非空白，則Boost將記錄來自boost poller進程的RRDupdate輸出。"
 
-#: include/global_settings.php:2180 utilities.php:3011
+#: include/global_settings.php:2180 utilities.php:3017
 #, fuzzy
 msgid "Image Caching"
 msgstr "圖像緩存"
@@ -14627,7 +14627,7 @@ msgstr "覆蓋此值"
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
 #: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4173
-#: utilities.php:356 utilities.php:1480 utilities.php:3212
+#: utilities.php:356 utilities.php:1480 utilities.php:3218
 #, fuzzy
 msgid "Type"
 msgstr "類型"
@@ -15020,7 +15020,7 @@ msgstr "Kadupul Log清除"
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "之前未設置身份驗證。嘗試設置為本地身份驗證，但未找到管理員帳戶。"
 
-#: lib/boost.php:126 utilities.php:2908
+#: lib/boost.php:126 utilities.php:2914
 #, fuzzy, php-format
 msgid "%s MBytes"
 msgstr "%d MBytes"
@@ -15080,8 +15080,8 @@ msgstr "記錄[總行數：%d%s  - 過濾器有效]"
 msgid "Log [Total Lines: %d %s - Unfiltered]"
 msgstr "記錄[總行數：%d%s  - 未過濾]"
 
-#: lib/clog_webapi.php:293 utilities.php:1559 utilities.php:1924
-#: utilities.php:2156 utilities.php:2269 utilities.php:3206 utilities.php:3431
+#: lib/clog_webapi.php:293 utilities.php:1559 utilities.php:1928
+#: utilities.php:2162 utilities.php:2275 utilities.php:3212 utilities.php:3437
 #, fuzzy
 msgid "Entries"
 msgstr "留言"
@@ -19976,7 +19976,7 @@ msgstr "版本 %s"
 msgid "Notifications"
 msgstr "通知"
 
-#: managers.php:135 utilities.php:2476
+#: managers.php:135 utilities.php:2482
 #, fuzzy
 msgid "SNMP Notification Receivers"
 msgstr "SNMP通知接收器"
@@ -20006,12 +20006,12 @@ msgstr "SNMP通知接收器[編輯：%s]"
 msgid "SNMP Notification Receiver [new]"
 msgstr "SNMP通知接收器[新]"
 
-#: managers.php:486 managers.php:578 utilities.php:3137 utilities.php:3212
+#: managers.php:486 managers.php:578 utilities.php:3143 utilities.php:3218
 #, fuzzy
 msgid "MIB"
 msgstr "MIB"
 
-#: managers.php:577 utilities.php:1930 utilities.php:3212
+#: managers.php:577 utilities.php:1934 utilities.php:3218
 #, fuzzy
 msgid "OID"
 msgstr "OID"
@@ -20021,7 +20021,7 @@ msgstr "OID"
 msgid "Kind"
 msgstr "屬性"
 
-#: managers.php:580 utilities.php:3212
+#: managers.php:580 utilities.php:3218
 #, fuzzy
 msgid "Max-Access"
 msgstr "最大權限"
@@ -20036,27 +20036,27 @@ msgstr "監控"
 msgid "No SNMP Notifications"
 msgstr "沒有SNMP通知"
 
-#: managers.php:777 utilities.php:3399
+#: managers.php:777 utilities.php:3405
 #, fuzzy
 msgid "Severity"
 msgstr "重要性"
 
-#: managers.php:796 utilities.php:3445
+#: managers.php:796 utilities.php:3451
 #, fuzzy
 msgid "Purge Notification Log"
 msgstr "清除通知日誌"
 
-#: managers.php:843 utilities.php:3505
+#: managers.php:843 utilities.php:3511
 #, fuzzy
 msgid "Time"
 msgstr "時間"
 
-#: managers.php:844 utilities.php:3505
+#: managers.php:844 utilities.php:3511
 #, fuzzy
 msgid "Notification"
 msgstr "通知"
 
-#: managers.php:845 utilities.php:3505
+#: managers.php:845 utilities.php:3511
 #, fuzzy
 msgid "Varbinds"
 msgstr "變量綁定"
@@ -20066,7 +20066,7 @@ msgstr "變量綁定"
 msgid "Severity Level"
 msgstr "嚴重程度"
 
-#: managers.php:878 utilities.php:3527
+#: managers.php:878 utilities.php:3533
 #, fuzzy
 msgid "No SNMP Notification Log Entries"
 msgstr "沒有SNMP通知日誌條目"
@@ -20934,7 +20934,7 @@ msgstr "運行檢查"
 msgid "RRD check is disabled, please enable in Configuration -> Settings -> Data"
 msgstr ""
 
-#: rrdcheck.php:87 utilities.php:2450
+#: rrdcheck.php:87 utilities.php:2456
 msgid "RRDfile Checker"
 msgstr "RRDfile清理器"
 
@@ -23110,21 +23110,21 @@ msgstr "成功 -  Pswd"
 msgid "Attempts"
 msgstr "嘗試"
 
-#: utilities.php:1084 utilities.php:1470 utilities.php:1819 utilities.php:2120
-#: utilities.php:3167 utilities.php:3443
+#: utilities.php:1084 utilities.php:1470 utilities.php:1823 utilities.php:2126
+#: utilities.php:3173 utilities.php:3449
 #, fuzzy
 msgctxt "Button: use filter settings"
 msgid "Go"
 msgstr "送出"
 
-#: utilities.php:1085 utilities.php:1471 utilities.php:1820 utilities.php:2121
-#: utilities.php:3168 utilities.php:3444
+#: utilities.php:1085 utilities.php:1471 utilities.php:1824 utilities.php:2127
+#: utilities.php:3174 utilities.php:3450
 #, fuzzy
 msgctxt "Button: reset filter settings"
 msgid "Clear"
 msgstr "清除"
 
-#: utilities.php:1086 utilities.php:1472 utilities.php:3445
+#: utilities.php:1086 utilities.php:1472 utilities.php:3451
 #, fuzzy
 msgctxt "Button: delete all table entries"
 msgid "Purge"
@@ -23185,512 +23185,512 @@ msgstr "錯誤：無法清除日誌，沒有寫入權限。"
 msgid "Error: Unable to clear log, file does not exist."
 msgstr "錯誤：無法清除日誌，文件不存在。"
 
-#: utilities.php:1768
+#: utilities.php:1771
 #, fuzzy
 msgid "Data Query Cache Items"
 msgstr "數據查詢緩存項"
 
-#: utilities.php:1778
+#: utilities.php:1781
 #, fuzzy
 msgid "Query Name"
 msgstr "查詢名稱"
 
-#: utilities.php:1852
+#: utilities.php:1856
 #, fuzzy
 msgid "Allow the search term to include the index column"
 msgstr "允許搜索詞包含索引列"
 
-#: utilities.php:1855
+#: utilities.php:1859
 #, fuzzy
 msgid "Include Index"
 msgstr "包括索引"
 
-#: utilities.php:1930
+#: utilities.php:1934
 #, fuzzy
 msgid "Field Value"
 msgstr "[计]字段值"
 
-#: utilities.php:1930
+#: utilities.php:1934
 #, fuzzy
 msgid "Index"
 msgstr "索引"
 
-#: utilities.php:2077
+#: utilities.php:2084
 #, fuzzy
 msgid "Poller Cache Items"
 msgstr "輪詢緩存項目"
 
-#: utilities.php:2151
+#: utilities.php:2157
 #, fuzzy
 msgid "Script"
 msgstr "腳本"
 
-#: utilities.php:2304 utilities.php:2309
+#: utilities.php:2310 utilities.php:2315
 #, fuzzy
 msgid "SNMP Version:"
 msgstr "SNMP版本："
 
-#: utilities.php:2305
+#: utilities.php:2311
 #, fuzzy
 msgid "Community:"
 msgstr "社群"
 
-#: utilities.php:2306 utilities.php:2310
+#: utilities.php:2312 utilities.php:2316
 #, fuzzy
 msgid "OID:"
 msgstr "OID："
 
-#: utilities.php:2310
+#: utilities.php:2316
 #, fuzzy
 msgid "User:"
 msgstr "使用者："
 
-#: utilities.php:2313
+#: utilities.php:2319
 #, fuzzy
 msgid "Script:"
 msgstr "腳本"
 
-#: utilities.php:2315
+#: utilities.php:2321
 #, fuzzy
 msgid "Script Server:"
 msgstr "腳本服務器："
 
-#: utilities.php:2329
+#: utilities.php:2335
 #, fuzzy
 msgid "RRD:"
 msgstr "RRD："
 
-#: utilities.php:2388
+#: utilities.php:2394
 #, fuzzy
 msgid "Kadupul technical support page.  Used by developers and technical support persons to assist with issues in Kadupul.  Includes checks for common configuration issues."
 msgstr "Kadupul技術支持頁面。開發人員和技術支持人員使用它來協助Kadupul中的問題。包括對常見配置問題的檢查。"
 
-#: utilities.php:2392
+#: utilities.php:2398
 #, fuzzy
 msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
 msgstr "Kadupul Log根據系統設置存儲統計信息，錯誤和其他消息。此信息可用於識別輪詢器和應用程序的問題。"
 
-#: utilities.php:2396
+#: utilities.php:2402
 #, fuzzy
 msgid "Allows Administrators to browse the user log.  Administrators can filter and export the log as well."
 msgstr "允許管理員瀏覽用戶日誌。管理員也可以過濾和導出日誌。"
 
-#: utilities.php:2400
+#: utilities.php:2406
 #, fuzzy
 msgid "Poller Cache Administration"
 msgstr "輪詢緩存管理"
 
-#: utilities.php:2403
+#: utilities.php:2409
 #, fuzzy
 msgid "This is the data that is being passed to the poller each time it runs. This data is then in turn executed/interpreted and the results are fed into the RRDfiles for graphing or the database for display."
 msgstr "這是每次運行時傳遞給輪詢器的數據。然後依次執行/解釋該數據，並將結果輸入RRD文件以供圖形化或數據庫顯示。"
 
-#: utilities.php:2407
+#: utilities.php:2413
 #, fuzzy
 msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTS as well as in CDEF's."
 msgstr "數據查詢緩存存儲從數據查詢輸入類型收集的信息。這些字段中的值可用於圖表圖例，垂直標籤和GPRINTS以及CDEF中。"
 
-#: utilities.php:2409
+#: utilities.php:2415
 #, fuzzy
 msgid "Rebuild Poller Cache"
 msgstr "重建輪詢器緩存"
 
-#: utilities.php:2413
+#: utilities.php:2419
 msgid "The Poller Cache will be re-generated if you select this option. Use this option only in the event of a database crash if you are experiencing issues after the crash and have already run the database repair tools.  Alternatively, if you are having problems with a specific Device, simply re-save that Device to rebuild its Poller Cache.  There is also a command line interface equivalent to this command that is recommended for large systems."
 msgstr "如果選擇此選項，將重新生成輪詢器緩存。如果在崩潰後遇到問題並且已經運行數據庫修復工具，則僅在發生數據庫崩潰時使用此選項。或者，如果您遇到特定設備的問題，只需重新保存該設備即可重建其輪詢器緩存。還有一個與此命令等效的命令行界面，建議用於大型系統。 <i class=\"deviceDown\">注意：在大型系統上，此命令可能需要幾分鐘到幾小時才能完成，因此不應從Kadupul UI運行。您可以在命令行中運行&#39;php -q cli / rebuild_poller_cache.php --help&#39;以獲取更多信息。</i>"
 
-#: utilities.php:2415
+#: utilities.php:2421
 msgid "NOTE: On large systems, this command may take several minutes to hours to complete and therefore should not be run from the Kadupul UI.  You can simply run 'php -q cli/rebuild_poller_cache.php --help' at the command line for more information."
 msgstr ""
 
-#: utilities.php:2419
+#: utilities.php:2425
 #, fuzzy
 msgid "Rebuild Resource Cache"
 msgstr "重建資源緩存"
 
-#: utilities.php:2423
+#: utilities.php:2429
 #, fuzzy
 msgid "When operating multiple Data Collectors in Kadupul, Kadupul will attempt to maintain state for key files on all Data Collectors.  This includes all core, non-install related website and plugin files.  When you force a Resource Cache rebuild, Kadupul will clear the local Resource Cache, and then rebuild it at the next scheduled poller start.  This will trigger all Remote Data Collectors to recheck their website and plugin files for consistency."
 msgstr "在Kadupul中操作多個數據收集器時，Kadupul將嘗試維護所有數據收集器上的密鑰文件的狀態。這包括所有核心，非安裝相關的網站和插件文件。強制執行資源緩存重建時，Kadupul將清除本地資源緩存，然後在下一個計劃的輪詢器啟動時重建它。這將觸發所有遠程數據收集器重新檢查其網站和插件文件的一致性。"
 
-#: utilities.php:2427
+#: utilities.php:2433
 #, fuzzy
 msgid "Boost Utilities"
 msgstr "增加公用事業"
 
-#: utilities.php:2428
+#: utilities.php:2434
 #, fuzzy
 msgid "View Boost Status"
 msgstr "查看提升狀態"
 
-#: utilities.php:2430
+#: utilities.php:2436
 #, fuzzy
 msgid "This menu pick allows you to view various boost settings and statistics associated with the current running Boost configuration."
 msgstr "此菜單選項允許您查看與當前運行的Boost配置相關的各種增強設置和統計信息。"
 
-#: utilities.php:2434
+#: utilities.php:2440
 #, fuzzy
 msgid "Data Source Statistics Utilities"
 msgstr "數據來源統計"
 
-#: utilities.php:2435
+#: utilities.php:2441
 #, fuzzy
 msgid "Purge Data Source Statistics"
 msgstr "數據來源統計"
 
-#: utilities.php:2439
+#: utilities.php:2445
 #, fuzzy
 msgid "This menu pick will purge all existing Data Source Statistics from the Database.  If Data Source Statistics is enabled, the Data Sources Statistics will start collection again on the next Data Collector pass."
 msgstr "該菜單選項將清除數據庫中所有現有的數據源統計信息。如果啟用了數據源統計信息，則數據源統計信息將在下一次數據收集器傳遞時再次開始收集。"
 
-#: utilities.php:2444
+#: utilities.php:2450
 msgid "RRD Utilities"
 msgstr "RRD公用事業"
 
-#: utilities.php:2445
+#: utilities.php:2451
 #, fuzzy
 msgid "RRDfile Cleaner"
 msgstr "RRDfile清理器"
 
-#: utilities.php:2448
+#: utilities.php:2454
 msgid "When you delete Data Sources from Kadupul, the corresponding RRDfiles are not removed automatically.  Use this utility to facilitate the removal of these old files."
 msgstr "從Kadupul刪除數據源時，不會自動刪除相應的RRD文件。使用此實用程序可以方便地刪除這些舊文件。"
 
-#: utilities.php:2453
+#: utilities.php:2459
 msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need enable rrdcheck in Configuration->Settings->Data"
 msgstr ""
 
-#: utilities.php:2459
+#: utilities.php:2465
 #, fuzzy
 msgid "SNMP Agent Utilities"
 msgstr "SNMPAgent實用程序"
 
-#: utilities.php:2463
+#: utilities.php:2469
 #, fuzzy
 msgid "This shows all objects being handled by the SNMP Agent."
 msgstr "這顯示了SNMPAgent正在處理的所有對象。"
 
-#: utilities.php:2465
+#: utilities.php:2471
 #, fuzzy
 msgid "Rebuild SNMP Agent Cache"
 msgstr "重建SNMPAgent緩存"
 
-#: utilities.php:2469
+#: utilities.php:2475
 #, fuzzy
 msgid "The SNMP cache will be cleared and re-generated if you select this option. Note that it takes another poller run to restore the SNMP cache completely."
 msgstr "如果選擇此選項，將清除並重新生成SNMP緩存。請注意，需要另一個輪詢器運行才能完全恢復SNMP緩存。"
 
-#: utilities.php:2474
+#: utilities.php:2480
 #, fuzzy
 msgid "This menu pick allows you to view the latest events SNMP Agent has handled in relation to the registered notification receivers."
 msgstr "此菜單選項允許您查看SNMPAgent針對已註冊的通知接收器處理的最新事件。"
 
-#: utilities.php:2479
+#: utilities.php:2485
 msgid "Allows Administrators to maintain SNMP notification receivers."
 msgstr "允許管理員維護SNMP通知接收器。"
 
-#: utilities.php:2486
+#: utilities.php:2492
 #, fuzzy
 msgid "Kadupul System Utilities"
 msgstr "Kadupul系統工具"
 
-#: utilities.php:2602
+#: utilities.php:2608
 #, fuzzy
 msgid "Refresh Interval"
 msgstr "刷新間隔"
 
-#: utilities.php:2698
+#: utilities.php:2704
 #, fuzzy
 msgid "Overrun Warning"
 msgstr "超限警告"
 
-#: utilities.php:2700
+#: utilities.php:2706
 #, fuzzy
 msgid "Timed Out"
 msgstr "逾時"
 
-#: utilities.php:2702
+#: utilities.php:2708
 #, fuzzy
 msgid "Other"
 msgstr "其他"
 
-#: utilities.php:2758
+#: utilities.php:2764
 #, fuzzy
 msgid "Cannot open directory"
 msgstr "無法打開目錄"
 
-#: utilities.php:2762
+#: utilities.php:2768
 #, fuzzy
 msgid "Directory Does NOT Exist!!"
 msgstr "目錄不存在!!"
 
-#: utilities.php:2771
+#: utilities.php:2777
 #, fuzzy
 msgid "Current Boost Status"
 msgstr "當前的升壓狀態"
 
-#: utilities.php:2775
+#: utilities.php:2781
 #, fuzzy
 msgid "Boost On-demand Updating:"
 msgstr "提升按需更新："
 
-#: utilities.php:2779
+#: utilities.php:2785
 #, fuzzy
 msgid "Running Processes:"
 msgstr "並發進程"
 
-#: utilities.php:2784
+#: utilities.php:2790
 #, fuzzy
 msgid "Total Poller Items:"
 msgstr "輪詢緩存項目"
 
-#: utilities.php:2790
+#: utilities.php:2796
 #, fuzzy
 msgid "Total Data Sources:"
 msgstr "總數據來源："
 
-#: utilities.php:2794
+#: utilities.php:2800
 #, fuzzy
 msgid "Remaining Data Sources:"
 msgstr "調試數據源"
 
-#: utilities.php:2794
+#: utilities.php:2800
 #, fuzzy
 msgid "TBD"
 msgstr "有待完善"
 
-#: utilities.php:2798
+#: utilities.php:2804
 #, fuzzy
 msgid "Queued Boost Records:"
 msgstr "等待提升記錄："
 
-#: utilities.php:2802
+#: utilities.php:2808
 msgid "Approximate in Process:"
 msgstr "過程中的大約："
 
-#: utilities.php:2805
+#: utilities.php:2811
 #, fuzzy
 msgid "Total Boost Records:"
 msgstr "總提升記錄："
 
-#: utilities.php:2810
+#: utilities.php:2816
 #, fuzzy
 msgid "Boost Storage Statistics"
 msgstr "提升存儲統計"
 
-#: utilities.php:2814
+#: utilities.php:2820
 #, fuzzy
 msgid "Database Engine:"
 msgstr "數據庫引擎："
 
-#: utilities.php:2818
+#: utilities.php:2824
 #, fuzzy
 msgid "Current Boost Table(s) Size:"
 msgstr "當前升壓表尺寸："
 
-#: utilities.php:2822
+#: utilities.php:2828
 #, fuzzy
 msgid "Avg Bytes/Record:"
 msgstr "平均字節數/記錄："
 
-#: utilities.php:2850
+#: utilities.php:2856
 #, fuzzy, php-format
 msgid "%d Bytes"
 msgstr "%d字節"
 
-#: utilities.php:2850
+#: utilities.php:2856
 #, fuzzy
 msgid "Max Record Length:"
 msgstr "最大記錄長度："
 
-#: utilities.php:2862
+#: utilities.php:2868
 #, fuzzy
 msgid "Max Allowed Boost Table Size:"
 msgstr "最大允許增強表大小："
 
-#: utilities.php:2866
+#: utilities.php:2872
 #, fuzzy
 msgid "Estimated Maximum Records:"
 msgstr "估計的最大記錄："
 
-#: utilities.php:2870
+#: utilities.php:2876
 msgid "Previous Runtime Statistics"
 msgstr "運行時統計信息"
 
-#: utilities.php:2873
+#: utilities.php:2879
 #, fuzzy
 msgid "Last Start Time:"
 msgstr "上次開始時間："
 
-#: utilities.php:2879
+#: utilities.php:2885
 msgid "Last End Time:"
 msgstr "上次開始時間："
 
-#: utilities.php:2879
+#: utilities.php:2885
 #, fuzzy
 msgid "Never Run"
 msgstr "從不運行"
 
-#: utilities.php:2882
+#: utilities.php:2888
 #, fuzzy
 msgid "Last Run Duration:"
 msgstr "上次運行時間："
 
-#: utilities.php:2885
+#: utilities.php:2891
 #, fuzzy, php-format
 msgid "%d minutes"
 msgstr "%d 分鐘"
 
-#: utilities.php:2885
+#: utilities.php:2891
 #, fuzzy, php-format
 msgid "%d seconds"
 msgstr "%d 秒"
 
-#: utilities.php:2888
+#: utilities.php:2894
 #, fuzzy, php-format
 msgid "%0.2f percent of update frequency)"
 msgstr "%0.2f 更新頻率）"
 
-#: utilities.php:2896
+#: utilities.php:2902
 #, fuzzy
 msgid "RRD Updates:"
 msgstr "RRD更新："
 
-#: utilities.php:2899
+#: utilities.php:2905
 #, fuzzy
 msgid "MBytes"
 msgstr "兆字節"
 
-#: utilities.php:2899
+#: utilities.php:2905
 #, fuzzy
 msgid "Peak Poller Memory:"
 msgstr "峰值輪詢記憶："
 
-#: utilities.php:2913
+#: utilities.php:2919
 #, fuzzy
 msgid "Max Poller Memory Allowed:"
 msgstr "允許的最大輪詢內存："
 
-#: utilities.php:2916
+#: utilities.php:2922
 #, fuzzy
 msgid "Detailed Runtime Statistics"
 msgstr "運行時統計信息"
 
-#: utilities.php:2934
+#: utilities.php:2940
 #, php-format
 msgid "Records: %s (ds rows), Time: %s (secs), GetRows: %s (secs), ResultsCycle: %s (secs), FileAndTemplate: %s (secs), LastUpdate: %s (secs), RRDUpdate: %s (secs), Delete: %s (secs)"
 msgstr ""
 
-#: utilities.php:2946
+#: utilities.php:2952
 msgid "Previous Runtime Timers:"
 msgstr "詳細的運行時間計時器："
 
-#: utilities.php:2985 utilities.php:2987
+#: utilities.php:2991 utilities.php:2993
 #, fuzzy, php-format
 msgid "Process: %d"
 msgstr "1流程"
 
-#: utilities.php:2985
+#: utilities.php:2991
 #, php-format
 msgid "Status: <span class=\"deviceUp\"><b>Running</b></span>, Remaining: %s (dses), CurrentRuntime: %s (secs), PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
 msgstr ""
 
-#: utilities.php:2987
+#: utilities.php:2993
 #, php-format
 msgid "Status: <span class=\"deviceRecovering\"><b>Idle</b></span>, PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
 msgstr ""
 
-#: utilities.php:2993
+#: utilities.php:2999
 #, fuzzy
 msgid "Run Time Configuration"
 msgstr "運行時配置"
 
-#: utilities.php:2996
+#: utilities.php:3002
 #, fuzzy
 msgid "Update Frequency:"
 msgstr "更新頻率："
 
-#: utilities.php:2999
+#: utilities.php:3005
 #, fuzzy
 msgid "Concurrent Processes:"
 msgstr "並發進程"
 
-#: utilities.php:3002
+#: utilities.php:3008
 #, fuzzy
 msgid "Next Start Time:"
 msgstr "下一個開始時間："
 
-#: utilities.php:3005
+#: utilities.php:3011
 #, fuzzy
 msgid "Maximum Records:"
 msgstr "最大記錄："
 
-#: utilities.php:3005
+#: utilities.php:3011
 #, fuzzy
 msgid "Records"
 msgstr "資料"
 
-#: utilities.php:3008
+#: utilities.php:3014
 #, fuzzy
 msgid "Maximum Allowed Runtime:"
 msgstr "最大允許運行時間："
 
-#: utilities.php:3014
+#: utilities.php:3020
 #, fuzzy
 msgid "Image Caching Status:"
 msgstr "圖像緩存狀態："
 
-#: utilities.php:3017
+#: utilities.php:3023
 #, fuzzy
 msgid "Cache Directory:"
 msgstr "緩存目錄："
 
-#: utilities.php:3020
+#: utilities.php:3026
 #, fuzzy
 msgid "Cached Files:"
 msgstr "緩存文件："
 
-#: utilities.php:3023
+#: utilities.php:3029
 #, fuzzy
 msgid "Cached Files Size:"
 msgstr "緩存文件大小："
 
-#: utilities.php:3122
+#: utilities.php:3128
 #, fuzzy
 msgid "SNMP Agent Cache"
 msgstr "SNMPAgent緩存"
 
-#: utilities.php:3155
+#: utilities.php:3161
 #, fuzzy
 msgid "OIDs"
 msgstr "的OID"
 
-#: utilities.php:3232
+#: utilities.php:3238
 #, fuzzy
 msgid "Column Data"
 msgstr "列數據"
 
-#: utilities.php:3232
+#: utilities.php:3238
 #, fuzzy
 msgid "Scalar"
 msgstr "純量"
 
-#: utilities.php:3384
+#: utilities.php:3390
 #, fuzzy
 msgid "SNMP Agent Notification Log"
 msgstr "SNMPAgent通知日誌"
 
-#: utilities.php:3415 utilities.php:3505
+#: utilities.php:3421 utilities.php:3511
 #, fuzzy
 msgid "Receiver"
 msgstr "接收人/裝置"
 
-#: utilities.php:3497
+#: utilities.php:3503
 #, fuzzy
 msgid "Log Entries"
 msgstr "紀錄細節"
 
-#: utilities.php:3512
+#: utilities.php:3518
 #, fuzzy, php-format
 msgid "Severity Level: %s"
 msgstr "嚴重級別：%s"

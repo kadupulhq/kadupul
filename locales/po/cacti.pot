@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.2.34\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 03:45-0700\n"
+"POT-Creation-Date: 2026-10-05 03:52-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -292,7 +292,7 @@ msgid "Aggregate Graph does not Exist"
 msgstr ""
 
 #: aggregate_graphs.php:644 aggregate_graphs.php:651 lib/html_reports.php:1545
-#: lib/html_reports.php:1547 utilities.php:2278
+#: lib/html_reports.php:1547 utilities.php:2284
 msgid "Details"
 msgstr ""
 
@@ -401,7 +401,7 @@ msgstr ""
 #: settings.php:598 settings.php:615 settings.php:674 tree.php:938 tree.php:973
 #: tree.php:1008 tree.php:2217 user_admin.php:2074 user_domains.php:643
 #: user_group_admin.php:1993 utilities.php:1094 utilities.php:1521
-#: utilities.php:1828 utilities.php:2129 utilities.php:3131 utilities.php:3393
+#: utilities.php:1832 utilities.php:2135 utilities.php:3137 utilities.php:3399
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:56
 msgid "Search"
 msgstr ""
@@ -434,8 +434,8 @@ msgstr ""
 #: managers.php:514 plugins.php:515 pollers.php:879 rrdcheck.php:233
 #: rrdcleaner.php:549 tree.php:2227 user_admin.php:2135 user_domains.php:18
 #: user_domains.php:653 user_domains.php:739 user_group_admin.php:2003
-#: utilities.php:1076 utilities.php:1838 utilities.php:2160 utilities.php:3159
-#: utilities.php:3435
+#: utilities.php:1076 utilities.php:1842 utilities.php:2166 utilities.php:3165
+#: utilities.php:3441
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:81
 msgid "Default"
 msgstr ""
@@ -474,7 +474,7 @@ msgstr ""
 #: managers.php:529 managers.php:794 plugins.php:530 pollers.php:914
 #: tree.php:2242 user_admin.php:2150 user_domains.php:665
 #: user_group_admin.php:2018 utilities.php:1084 utilities.php:1470
-#: utilities.php:1819 utilities.php:2120 utilities.php:3167 utilities.php:3443
+#: utilities.php:1823 utilities.php:2126 utilities.php:3173 utilities.php:3449
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
 msgid "Set/Refresh Filters"
 msgstr ""
@@ -509,7 +509,7 @@ msgstr ""
 #: managers.php:170 managers.php:530 managers.php:795 plugins.php:531
 #: pollers.php:915 tree.php:2243 user_admin.php:2151 user_domains.php:666
 #: user_group_admin.php:2019 utilities.php:1085 utilities.php:1471
-#: utilities.php:1820 utilities.php:2121 utilities.php:3168 utilities.php:3444
+#: utilities.php:1824 utilities.php:2127 utilities.php:3174 utilities.php:3450
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:96
 msgid "Clear Filters"
 msgstr ""
@@ -583,7 +583,7 @@ msgstr ""
 #: graph_view.php:699 graphs.php:2054 host.php:1756
 #: include/global_arrays.php:2892 include/global_settings.php:610
 #: lib/api_automation.php:446 lib/html_graph.php:139 lib/html_tree.php:973
-#: rrdcleaner.php:381 utilities.php:2087
+#: rrdcleaner.php:381 utilities.php:2094
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:59
 msgid "Template"
 msgstr ""
@@ -601,8 +601,8 @@ msgstr ""
 #: lib/html_reports.php:1030 lib/html_reports.php:1034
 #: lib/html_reports.php:1157 lib/html_reports.php:1167
 #: lib/html_reports.php:2035 managers.php:490 managers.php:781
-#: utilities.php:1064 utilities.php:1782 utilities.php:2091 utilities.php:2139
-#: utilities.php:2149 utilities.php:3141 utilities.php:3403 utilities.php:3419
+#: utilities.php:1064 utilities.php:1785 utilities.php:2098 utilities.php:2145
+#: utilities.php:2155 utilities.php:3147 utilities.php:3409 utilities.php:3425
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:61
 msgid "Any"
 msgstr ""
@@ -637,7 +637,7 @@ msgstr ""
 #: lib/html_reports.php:1206 lib/html_reports.php:1462
 #: lib/html_reports.php:1467 lib/html_reports.php:1472 package_import.php:686
 #: settings.php:591 settings.php:613 settings.php:644 templates_import.php:298
-#: templates_import.php:330 utilities.php:2092
+#: templates_import.php:330 utilities.php:2099
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:62
 msgid "None"
 msgstr ""
@@ -1142,7 +1142,7 @@ msgid "Uptime"
 msgstr ""
 
 #: automation_devices.php:279 automation_devices.php:560
-#: include/global_arrays.php:1018 utilities.php:2150
+#: include/global_arrays.php:1018 utilities.php:2156
 msgid "SNMP"
 msgstr ""
 
@@ -1157,7 +1157,7 @@ msgstr ""
 #: package_import.php:542 package_import.php:627 plugins.php:497
 #: plugins.php:623 pollers.php:1007 templates_import.php:206
 #: templates_import.php:245 user_admin.php:1073 user_group_admin.php:1095
-#: utilities.php:2135
+#: utilities.php:2141
 msgid "Status"
 msgstr ""
 
@@ -1215,8 +1215,8 @@ msgstr ""
 #: lib/spikekill.php:1806 lib/spikekill.php:1807 lib/spikekill.php:1808
 #: lib/spikekill.php:1809 lib/spikekill.php:1810 plugins.php:780
 #: pollers.php:1115 user_admin.php:2261 utilities.php:738 utilities.php:1190
-#: utilities.php:2763 utilities.php:2891 utilities.php:2899 utilities.php:2910
-#: utilities.php:2921 utilities.php:2946 utilities.php:2996 utilities.php:3232
+#: utilities.php:2769 utilities.php:2897 utilities.php:2905 utilities.php:2916
+#: utilities.php:2927 utilities.php:2952 utilities.php:3002 utilities.php:3238
 msgid "N/A"
 msgstr ""
 
@@ -1351,7 +1351,7 @@ msgstr ""
 #: user_admin.php:924 user_admin.php:936 user_admin.php:2248
 #: user_domains.php:335 user_domains.php:743 user_group_admin.php:76
 #: user_group_admin.php:741 user_group_admin.php:756 user_group_admin.php:2076
-#: utilities.php:2140 utilities.php:3014
+#: utilities.php:2146 utilities.php:3020
 msgid "Enabled"
 msgstr ""
 
@@ -1368,8 +1368,8 @@ msgstr ""
 #: lib/api_automation.php:28 lib/html.php:2858 lib/html_reports.php:2037
 #: lib/html_reports.php:2188 lib/html_utility.php:1317 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:936 user_domains.php:397
-#: user_group_admin.php:756 utilities.php:2141 utilities.php:2705
-#: utilities.php:3014
+#: user_group_admin.php:756 utilities.php:2147 utilities.php:2711
+#: utilities.php:3020
 msgid "Disabled"
 msgstr ""
 
@@ -1517,7 +1517,7 @@ msgstr ""
 #: lib/installer.php:2044 lib/installer.php:2117 lib/installer.php:2147
 #: lib/installer.php:2739 lib/installer.php:2827 lib/vdef.php:56
 #: managers.php:576 pollers.php:46 user_admin.php:924 user_domains.php:311
-#: utilities.php:864 utilities.php:3212
+#: utilities.php:864 utilities.php:3218
 msgid "Name"
 msgstr ""
 
@@ -2045,11 +2045,11 @@ msgid "Last Started"
 msgstr ""
 
 #: automation_networks.php:1110 data_debug.php:1015 data_debug.php:1040
-#: pollers.php:30 utilities.php:2696
+#: pollers.php:30 utilities.php:2702
 msgid "Running"
 msgstr ""
 
-#: automation_networks.php:1134 pollers.php:31 utilities.php:2694
+#: automation_networks.php:1134 pollers.php:31 utilities.php:2700
 msgid "Idle"
 msgstr ""
 
@@ -2065,7 +2065,7 @@ msgstr ""
 
 #: automation_networks.php:1201 data_debug.php:1165 lib/clog_webapi.php:588
 #: lib/html_graph.php:304 lib/html_tree.php:1120 lib/html_tree.php:1141
-#: pollers.php:890 utilities.php:1502 utilities.php:2616
+#: pollers.php:890 utilities.php:1502 utilities.php:2622
 msgid "Refresh"
 msgstr ""
 
@@ -2236,7 +2236,7 @@ msgstr ""
 msgid "Context"
 msgstr ""
 
-#: automation_snmp.php:553 data_queries.php:1213 utilities.php:2145
+#: automation_snmp.php:553 data_queries.php:1213 utilities.php:2151
 msgid "Action"
 msgstr ""
 
@@ -2445,8 +2445,8 @@ msgstr ""
 msgid "Change Leaf Type"
 msgstr ""
 
-#: automation_tree_rules.php:740 lib/installer.php:4177 utilities.php:2758
-#: utilities.php:2759 utilities.php:2762 utilities.php:2763
+#: automation_tree_rules.php:740 lib/installer.php:4177 utilities.php:2764
+#: utilities.php:2765 utilities.php:2768 utilities.php:2769
 msgid "WARNING:"
 msgstr ""
 
@@ -3050,7 +3050,7 @@ msgid "Check"
 msgstr ""
 
 #: data_debug.php:883 include/global_form.php:1018 lib/rrd.php:4178
-#: utilities.php:798 utilities.php:815 utilities.php:3212
+#: utilities.php:798 utilities.php:815 utilities.php:3218
 msgid "Value"
 msgstr ""
 
@@ -3235,7 +3235,7 @@ msgid "No Suggested Values Found"
 msgstr ""
 
 #: data_queries.php:881 data_queries.php:991 include/global_form.php:2124
-#: include/global_form.php:2166 lib/api_automation.php:1417 utilities.php:1930
+#: include/global_form.php:2166 lib/api_automation.php:1417 utilities.php:1934
 msgid "Field Name"
 msgstr ""
 
@@ -3319,7 +3319,7 @@ msgstr ""
 msgid "Data Queries"
 msgstr ""
 
-#: data_queries.php:1476 host.php:1001 utilities.php:1930
+#: data_queries.php:1476 host.php:1001 utilities.php:1934
 msgid "Data Query Name"
 msgstr ""
 
@@ -3466,7 +3466,7 @@ msgstr ""
 
 #: data_source_profiles.php:900 graphs_new.php:532 include/global_form.php:284
 #: lib/html.php:613 lib/html_filter.php:55 lib/installer.php:2827
-#: lib/rrd.php:4220 utilities.php:866 utilities.php:1834
+#: lib/rrd.php:4220 utilities.php:866 utilities.php:1838
 msgid "Rows"
 msgstr ""
 
@@ -3797,7 +3797,7 @@ msgstr ""
 #: include/global_arrays.php:954 include/global_arrays.php:1003
 #: include/global_arrays.php:1688 include/global_arrays.php:1857
 #: lib/api_automation.php:426 lib/functions.php:6195 lib/html.php:2347
-#: lib/html.php:2384 lib/html_reports.php:1170 utilities.php:1930
+#: lib/html.php:2384 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
 msgstr ""
 
@@ -3875,7 +3875,7 @@ msgstr ""
 msgid "Orphaned"
 msgstr ""
 
-#: data_sources.php:1983 utilities.php:2276
+#: data_sources.php:1983 utilities.php:2282
 msgid "Data Source Name"
 msgstr ""
 
@@ -5104,7 +5104,7 @@ msgid "Repopulate Poller Cache"
 msgstr ""
 
 #: host.php:815 include/global_arrays.php:2458 include/global_arrays.php:2470
-#: utilities.php:2401
+#: utilities.php:2407
 msgid "View Poller Cache"
 msgstr ""
 
@@ -5281,11 +5281,11 @@ msgstr ""
 #: lib/clog_webapi.php:856 lib/html_utility.php:1339 lib/import.php:342
 #: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4196 lib/rrd.php:4208
 #: lib/spikekill.php:301 package_import.php:522 package_import.php:600
-#: utilities.php:211 utilities.php:212 utilities.php:2759
+#: utilities.php:211 utilities.php:212 utilities.php:2765
 msgid "Unknown"
 msgstr ""
 
-#: host.php:1916 lib/api_automation.php:570 tree.php:987 utilities.php:2277
+#: host.php:1916 lib/api_automation.php:570 tree.php:987 utilities.php:2283
 msgid "Device Description"
 msgstr ""
 
@@ -5904,7 +5904,7 @@ msgid "Script Query"
 msgstr ""
 
 #: include/global_arrays.php:513 include/global_arrays.php:519
-#: utilities.php:2152
+#: utilities.php:2158
 msgid "Script Server"
 msgstr ""
 
@@ -6646,7 +6646,7 @@ msgstr ""
 msgid "Spike Handling"
 msgstr ""
 
-#: include/global_arrays.php:1243 utilities.php:2390
+#: include/global_arrays.php:1243 utilities.php:2396
 msgid "Log Administration"
 msgstr ""
 
@@ -6937,8 +6937,8 @@ msgstr ""
 msgid "%d GByte"
 msgstr ""
 
-#: include/global_arrays.php:1609 utilities.php:2856 utilities.php:2857
-#: utilities.php:2906
+#: include/global_arrays.php:1609 utilities.php:2862 utilities.php:2863
+#: utilities.php:2912
 msgid "Unlimited"
 msgstr ""
 
@@ -7568,7 +7568,7 @@ msgstr ""
 msgid "RRD Check"
 msgstr ""
 
-#: include/global_arrays.php:2464 utilities.php:2405
+#: include/global_arrays.php:2464 utilities.php:2411
 msgid "View Data Query Cache"
 msgstr ""
 
@@ -7576,7 +7576,7 @@ msgstr ""
 msgid "Clear Log"
 msgstr ""
 
-#: include/global_arrays.php:2488 utilities.php:2394
+#: include/global_arrays.php:2488 utilities.php:2400
 msgid "View User Log"
 msgstr ""
 
@@ -7584,19 +7584,19 @@ msgstr ""
 msgid "Clear User Log"
 msgstr ""
 
-#: include/global_arrays.php:2500 utilities.php:2385 utilities.php:2386
+#: include/global_arrays.php:2500 utilities.php:2391 utilities.php:2392
 msgid "Technical Support"
 msgstr ""
 
-#: include/global_arrays.php:2506 utilities.php:2576
+#: include/global_arrays.php:2506 utilities.php:2582
 msgid "Boost Status"
 msgstr ""
 
-#: include/global_arrays.php:2512 utilities.php:2460
+#: include/global_arrays.php:2512 utilities.php:2466
 msgid "View SNMP Agent Cache"
 msgstr ""
 
-#: include/global_arrays.php:2518 utilities.php:2471
+#: include/global_arrays.php:2518 utilities.php:2477
 msgid "View SNMP Agent Notification Log"
 msgstr ""
 
@@ -11301,7 +11301,7 @@ msgstr ""
 msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost\tpoller process."
 msgstr ""
 
-#: include/global_settings.php:2180 utilities.php:3011
+#: include/global_settings.php:2180 utilities.php:3017
 msgid "Image Caching"
 msgstr ""
 
@@ -12100,7 +12100,7 @@ msgstr ""
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
 #: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4173
-#: utilities.php:356 utilities.php:1480 utilities.php:3212
+#: utilities.php:356 utilities.php:1480 utilities.php:3218
 msgid "Type"
 msgstr ""
 
@@ -12436,7 +12436,7 @@ msgstr ""
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr ""
 
-#: lib/boost.php:126 utilities.php:2908
+#: lib/boost.php:126 utilities.php:2914
 #, php-format
 msgid "%s MBytes"
 msgstr ""
@@ -12490,8 +12490,8 @@ msgstr ""
 msgid "Log [Total Lines: %d %s - Unfiltered]"
 msgstr ""
 
-#: lib/clog_webapi.php:293 utilities.php:1559 utilities.php:1924
-#: utilities.php:2156 utilities.php:2269 utilities.php:3206 utilities.php:3431
+#: lib/clog_webapi.php:293 utilities.php:1559 utilities.php:1928
+#: utilities.php:2162 utilities.php:2275 utilities.php:3212 utilities.php:3437
 msgid "Entries"
 msgstr ""
 
@@ -16619,7 +16619,7 @@ msgstr ""
 msgid "Notifications"
 msgstr ""
 
-#: managers.php:135 utilities.php:2476
+#: managers.php:135 utilities.php:2482
 msgid "SNMP Notification Receivers"
 msgstr ""
 
@@ -16644,11 +16644,11 @@ msgstr ""
 msgid "SNMP Notification Receiver [new]"
 msgstr ""
 
-#: managers.php:486 managers.php:578 utilities.php:3137 utilities.php:3212
+#: managers.php:486 managers.php:578 utilities.php:3143 utilities.php:3218
 msgid "MIB"
 msgstr ""
 
-#: managers.php:577 utilities.php:1930 utilities.php:3212
+#: managers.php:577 utilities.php:1934 utilities.php:3218
 msgid "OID"
 msgstr ""
 
@@ -16656,7 +16656,7 @@ msgstr ""
 msgid "Kind"
 msgstr ""
 
-#: managers.php:580 utilities.php:3212
+#: managers.php:580 utilities.php:3218
 msgid "Max-Access"
 msgstr ""
 
@@ -16668,23 +16668,23 @@ msgstr ""
 msgid "No SNMP Notifications"
 msgstr ""
 
-#: managers.php:777 utilities.php:3399
+#: managers.php:777 utilities.php:3405
 msgid "Severity"
 msgstr ""
 
-#: managers.php:796 utilities.php:3445
+#: managers.php:796 utilities.php:3451
 msgid "Purge Notification Log"
 msgstr ""
 
-#: managers.php:843 utilities.php:3505
+#: managers.php:843 utilities.php:3511
 msgid "Time"
 msgstr ""
 
-#: managers.php:844 utilities.php:3505
+#: managers.php:844 utilities.php:3511
 msgid "Notification"
 msgstr ""
 
-#: managers.php:845 utilities.php:3505
+#: managers.php:845 utilities.php:3511
 msgid "Varbinds"
 msgstr ""
 
@@ -16692,7 +16692,7 @@ msgstr ""
 msgid "Severity Level"
 msgstr ""
 
-#: managers.php:878 utilities.php:3527
+#: managers.php:878 utilities.php:3533
 msgid "No SNMP Notification Log Entries"
 msgstr ""
 
@@ -17465,7 +17465,7 @@ msgstr ""
 msgid "RRD check is disabled, please enable in Configuration -> Settings -> Data"
 msgstr ""
 
-#: rrdcheck.php:87 utilities.php:2450
+#: rrdcheck.php:87 utilities.php:2456
 msgid "RRDfile Checker"
 msgstr ""
 
@@ -19128,19 +19128,19 @@ msgstr ""
 msgid "Attempts"
 msgstr ""
 
-#: utilities.php:1084 utilities.php:1470 utilities.php:1819 utilities.php:2120
-#: utilities.php:3167 utilities.php:3443
+#: utilities.php:1084 utilities.php:1470 utilities.php:1823 utilities.php:2126
+#: utilities.php:3173 utilities.php:3449
 msgctxt "Button: use filter settings"
 msgid "Go"
 msgstr ""
 
-#: utilities.php:1085 utilities.php:1471 utilities.php:1820 utilities.php:2121
-#: utilities.php:3168 utilities.php:3444
+#: utilities.php:1085 utilities.php:1471 utilities.php:1824 utilities.php:2127
+#: utilities.php:3174 utilities.php:3450
 msgctxt "Button: reset filter settings"
 msgid "Clear"
 msgstr ""
 
-#: utilities.php:1086 utilities.php:1472 utilities.php:3445
+#: utilities.php:1086 utilities.php:1472 utilities.php:3451
 msgctxt "Button: delete all table entries"
 msgid "Purge"
 msgstr ""
@@ -19191,427 +19191,427 @@ msgstr ""
 msgid "Error: Unable to clear log, file does not exist."
 msgstr ""
 
-#: utilities.php:1768
+#: utilities.php:1771
 msgid "Data Query Cache Items"
 msgstr ""
 
-#: utilities.php:1778
+#: utilities.php:1781
 msgid "Query Name"
 msgstr ""
 
-#: utilities.php:1852
+#: utilities.php:1856
 msgid "Allow the search term to include the index column"
 msgstr ""
 
-#: utilities.php:1855
+#: utilities.php:1859
 msgid "Include Index"
 msgstr ""
 
-#: utilities.php:1930
+#: utilities.php:1934
 msgid "Field Value"
 msgstr ""
 
-#: utilities.php:1930
+#: utilities.php:1934
 msgid "Index"
 msgstr ""
 
-#: utilities.php:2077
+#: utilities.php:2084
 msgid "Poller Cache Items"
 msgstr ""
 
-#: utilities.php:2151
+#: utilities.php:2157
 msgid "Script"
 msgstr ""
 
-#: utilities.php:2304 utilities.php:2309
+#: utilities.php:2310 utilities.php:2315
 msgid "SNMP Version:"
 msgstr ""
 
-#: utilities.php:2305
+#: utilities.php:2311
 msgid "Community:"
 msgstr ""
 
-#: utilities.php:2306 utilities.php:2310
+#: utilities.php:2312 utilities.php:2316
 msgid "OID:"
 msgstr ""
 
-#: utilities.php:2310
+#: utilities.php:2316
 msgid "User:"
 msgstr ""
 
-#: utilities.php:2313
+#: utilities.php:2319
 msgid "Script:"
 msgstr ""
 
-#: utilities.php:2315
+#: utilities.php:2321
 msgid "Script Server:"
 msgstr ""
 
-#: utilities.php:2329
+#: utilities.php:2335
 msgid "RRD:"
 msgstr ""
 
-#: utilities.php:2388
+#: utilities.php:2394
 msgid "Kadupul technical support page.  Used by developers and technical support persons to assist with issues in Kadupul.  Includes checks for common configuration issues."
 msgstr ""
 
-#: utilities.php:2392
+#: utilities.php:2398
 msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
 msgstr ""
 
-#: utilities.php:2396
+#: utilities.php:2402
 msgid "Allows Administrators to browse the user log.  Administrators can filter and export the log as well."
 msgstr ""
 
-#: utilities.php:2400
+#: utilities.php:2406
 msgid "Poller Cache Administration"
 msgstr ""
 
-#: utilities.php:2403
+#: utilities.php:2409
 msgid "This is the data that is being passed to the poller each time it runs. This data is then in turn executed/interpreted and the results are fed into the RRDfiles for graphing or the database for display."
 msgstr ""
 
-#: utilities.php:2407
+#: utilities.php:2413
 msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTS as well as in CDEF's."
 msgstr ""
 
-#: utilities.php:2409
+#: utilities.php:2415
 msgid "Rebuild Poller Cache"
 msgstr ""
 
-#: utilities.php:2413
+#: utilities.php:2419
 msgid "The Poller Cache will be re-generated if you select this option. Use this option only in the event of a database crash if you are experiencing issues after the crash and have already run the database repair tools.  Alternatively, if you are having problems with a specific Device, simply re-save that Device to rebuild its Poller Cache.  There is also a command line interface equivalent to this command that is recommended for large systems."
 msgstr ""
 
-#: utilities.php:2415
+#: utilities.php:2421
 msgid "NOTE: On large systems, this command may take several minutes to hours to complete and therefore should not be run from the Kadupul UI.  You can simply run 'php -q cli/rebuild_poller_cache.php --help' at the command line for more information."
 msgstr ""
 
-#: utilities.php:2419
+#: utilities.php:2425
 msgid "Rebuild Resource Cache"
 msgstr ""
 
-#: utilities.php:2423
+#: utilities.php:2429
 msgid "When operating multiple Data Collectors in Kadupul, Kadupul will attempt to maintain state for key files on all Data Collectors.  This includes all core, non-install related website and plugin files.  When you force a Resource Cache rebuild, Kadupul will clear the local Resource Cache, and then rebuild it at the next scheduled poller start.  This will trigger all Remote Data Collectors to recheck their website and plugin files for consistency."
 msgstr ""
 
-#: utilities.php:2427
+#: utilities.php:2433
 msgid "Boost Utilities"
 msgstr ""
 
-#: utilities.php:2428
+#: utilities.php:2434
 msgid "View Boost Status"
 msgstr ""
 
-#: utilities.php:2430
+#: utilities.php:2436
 msgid "This menu pick allows you to view various boost settings and statistics associated with the current running Boost configuration."
 msgstr ""
 
-#: utilities.php:2434
+#: utilities.php:2440
 msgid "Data Source Statistics Utilities"
 msgstr ""
 
-#: utilities.php:2435
+#: utilities.php:2441
 msgid "Purge Data Source Statistics"
 msgstr ""
 
-#: utilities.php:2439
+#: utilities.php:2445
 msgid "This menu pick will purge all existing Data Source Statistics from the Database.  If Data Source Statistics is enabled, the Data Sources Statistics will start collection again on the next Data Collector pass."
 msgstr ""
 
-#: utilities.php:2444
+#: utilities.php:2450
 msgid "RRD Utilities"
 msgstr ""
 
-#: utilities.php:2445
+#: utilities.php:2451
 msgid "RRDfile Cleaner"
 msgstr ""
 
-#: utilities.php:2448
+#: utilities.php:2454
 msgid "When you delete Data Sources from Kadupul, the corresponding RRDfiles are not removed automatically.  Use this utility to facilitate the removal of these old files."
 msgstr ""
 
-#: utilities.php:2453
+#: utilities.php:2459
 msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need enable rrdcheck in Configuration->Settings->Data"
 msgstr ""
 
-#: utilities.php:2459
+#: utilities.php:2465
 msgid "SNMP Agent Utilities"
 msgstr ""
 
-#: utilities.php:2463
+#: utilities.php:2469
 msgid "This shows all objects being handled by the SNMP Agent."
 msgstr ""
 
-#: utilities.php:2465
+#: utilities.php:2471
 msgid "Rebuild SNMP Agent Cache"
 msgstr ""
 
-#: utilities.php:2469
+#: utilities.php:2475
 msgid "The SNMP cache will be cleared and re-generated if you select this option. Note that it takes another poller run to restore the SNMP cache completely."
 msgstr ""
 
-#: utilities.php:2474
+#: utilities.php:2480
 msgid "This menu pick allows you to view the latest events SNMP Agent has handled in relation to the registered notification receivers."
 msgstr ""
 
-#: utilities.php:2479
+#: utilities.php:2485
 msgid "Allows Administrators to maintain SNMP notification receivers."
 msgstr ""
 
-#: utilities.php:2486
+#: utilities.php:2492
 msgid "Kadupul System Utilities"
 msgstr ""
 
-#: utilities.php:2602
+#: utilities.php:2608
 msgid "Refresh Interval"
 msgstr ""
 
-#: utilities.php:2698
+#: utilities.php:2704
 msgid "Overrun Warning"
 msgstr ""
 
-#: utilities.php:2700
+#: utilities.php:2706
 msgid "Timed Out"
 msgstr ""
 
-#: utilities.php:2702
+#: utilities.php:2708
 msgid "Other"
 msgstr ""
 
-#: utilities.php:2758
+#: utilities.php:2764
 msgid "Cannot open directory"
 msgstr ""
 
-#: utilities.php:2762
+#: utilities.php:2768
 msgid "Directory Does NOT Exist!!"
 msgstr ""
 
-#: utilities.php:2771
+#: utilities.php:2777
 msgid "Current Boost Status"
 msgstr ""
 
-#: utilities.php:2775
+#: utilities.php:2781
 msgid "Boost On-demand Updating:"
 msgstr ""
 
-#: utilities.php:2779
+#: utilities.php:2785
 msgid "Running Processes:"
 msgstr ""
 
-#: utilities.php:2784
+#: utilities.php:2790
 msgid "Total Poller Items:"
 msgstr ""
 
-#: utilities.php:2790
+#: utilities.php:2796
 msgid "Total Data Sources:"
 msgstr ""
 
-#: utilities.php:2794
+#: utilities.php:2800
 msgid "Remaining Data Sources:"
 msgstr ""
 
-#: utilities.php:2794
+#: utilities.php:2800
 msgid "TBD"
 msgstr ""
 
-#: utilities.php:2798
+#: utilities.php:2804
 msgid "Queued Boost Records:"
 msgstr ""
 
-#: utilities.php:2802
+#: utilities.php:2808
 msgid "Approximate in Process:"
 msgstr ""
 
-#: utilities.php:2805
+#: utilities.php:2811
 msgid "Total Boost Records:"
 msgstr ""
 
-#: utilities.php:2810
+#: utilities.php:2816
 msgid "Boost Storage Statistics"
 msgstr ""
 
-#: utilities.php:2814
+#: utilities.php:2820
 msgid "Database Engine:"
 msgstr ""
 
-#: utilities.php:2818
+#: utilities.php:2824
 msgid "Current Boost Table(s) Size:"
 msgstr ""
 
-#: utilities.php:2822
+#: utilities.php:2828
 msgid "Avg Bytes/Record:"
 msgstr ""
 
-#: utilities.php:2850
+#: utilities.php:2856
 #, php-format
 msgid "%d Bytes"
 msgstr ""
 
-#: utilities.php:2850
+#: utilities.php:2856
 msgid "Max Record Length:"
 msgstr ""
 
-#: utilities.php:2862
+#: utilities.php:2868
 msgid "Max Allowed Boost Table Size:"
 msgstr ""
 
-#: utilities.php:2866
+#: utilities.php:2872
 msgid "Estimated Maximum Records:"
 msgstr ""
 
-#: utilities.php:2870
+#: utilities.php:2876
 msgid "Previous Runtime Statistics"
 msgstr ""
 
-#: utilities.php:2873
+#: utilities.php:2879
 msgid "Last Start Time:"
 msgstr ""
 
-#: utilities.php:2879
+#: utilities.php:2885
 msgid "Last End Time:"
 msgstr ""
 
-#: utilities.php:2879
+#: utilities.php:2885
 msgid "Never Run"
 msgstr ""
 
-#: utilities.php:2882
+#: utilities.php:2888
 msgid "Last Run Duration:"
 msgstr ""
 
-#: utilities.php:2885
+#: utilities.php:2891
 #, php-format
 msgid "%d minutes"
 msgstr ""
 
-#: utilities.php:2885
+#: utilities.php:2891
 #, php-format
 msgid "%d seconds"
 msgstr ""
 
-#: utilities.php:2888
+#: utilities.php:2894
 #, php-format
 msgid "%0.2f percent of update frequency)"
 msgstr ""
 
-#: utilities.php:2896
+#: utilities.php:2902
 msgid "RRD Updates:"
 msgstr ""
 
-#: utilities.php:2899
+#: utilities.php:2905
 msgid "MBytes"
 msgstr ""
 
-#: utilities.php:2899
+#: utilities.php:2905
 msgid "Peak Poller Memory:"
 msgstr ""
 
-#: utilities.php:2913
+#: utilities.php:2919
 msgid "Max Poller Memory Allowed:"
 msgstr ""
 
-#: utilities.php:2916
+#: utilities.php:2922
 msgid "Detailed Runtime Statistics"
 msgstr ""
 
-#: utilities.php:2934
+#: utilities.php:2940
 #, php-format
 msgid "Records: %s (ds rows), Time: %s (secs), GetRows: %s (secs), ResultsCycle: %s (secs), FileAndTemplate: %s (secs), LastUpdate: %s (secs), RRDUpdate: %s (secs), Delete: %s (secs)"
 msgstr ""
 
-#: utilities.php:2946
+#: utilities.php:2952
 msgid "Previous Runtime Timers:"
 msgstr ""
 
-#: utilities.php:2985 utilities.php:2987
+#: utilities.php:2991 utilities.php:2993
 #, php-format
 msgid "Process: %d"
 msgstr ""
 
-#: utilities.php:2985
+#: utilities.php:2991
 #, php-format
 msgid "Status: <span class=\"deviceUp\"><b>Running</b></span>, Remaining: %s (dses), CurrentRuntime: %s (secs), PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
 msgstr ""
 
-#: utilities.php:2987
+#: utilities.php:2993
 #, php-format
 msgid "Status: <span class=\"deviceRecovering\"><b>Idle</b></span>, PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
 msgstr ""
 
-#: utilities.php:2993
+#: utilities.php:2999
 msgid "Run Time Configuration"
 msgstr ""
 
-#: utilities.php:2996
+#: utilities.php:3002
 msgid "Update Frequency:"
 msgstr ""
 
-#: utilities.php:2999
+#: utilities.php:3005
 msgid "Concurrent Processes:"
 msgstr ""
 
-#: utilities.php:3002
+#: utilities.php:3008
 msgid "Next Start Time:"
 msgstr ""
 
-#: utilities.php:3005
+#: utilities.php:3011
 msgid "Maximum Records:"
 msgstr ""
 
-#: utilities.php:3005
+#: utilities.php:3011
 msgid "Records"
 msgstr ""
 
-#: utilities.php:3008
+#: utilities.php:3014
 msgid "Maximum Allowed Runtime:"
 msgstr ""
 
-#: utilities.php:3014
+#: utilities.php:3020
 msgid "Image Caching Status:"
 msgstr ""
 
-#: utilities.php:3017
+#: utilities.php:3023
 msgid "Cache Directory:"
 msgstr ""
 
-#: utilities.php:3020
+#: utilities.php:3026
 msgid "Cached Files:"
 msgstr ""
 
-#: utilities.php:3023
+#: utilities.php:3029
 msgid "Cached Files Size:"
 msgstr ""
 
-#: utilities.php:3122
+#: utilities.php:3128
 msgid "SNMP Agent Cache"
 msgstr ""
 
-#: utilities.php:3155
+#: utilities.php:3161
 msgid "OIDs"
 msgstr ""
 
-#: utilities.php:3232
+#: utilities.php:3238
 msgid "Column Data"
 msgstr ""
 
-#: utilities.php:3232
+#: utilities.php:3238
 msgid "Scalar"
 msgstr ""
 
-#: utilities.php:3384
+#: utilities.php:3390
 msgid "SNMP Agent Notification Log"
 msgstr ""
 
-#: utilities.php:3415 utilities.php:3505
+#: utilities.php:3421 utilities.php:3511
 msgid "Receiver"
 msgstr ""
 
-#: utilities.php:3497
+#: utilities.php:3503
 msgid "Log Entries"
 msgstr ""
 
-#: utilities.php:3512
+#: utilities.php:3518
 #, php-format
 msgid "Severity Level: %s"
 msgstr ""

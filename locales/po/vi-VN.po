@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 03:45-0700\n"
+"POT-Creation-Date: 2026-10-05 03:52-0700\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -317,7 +317,7 @@ msgid "Aggregate Graph does not Exist"
 msgstr "Cài đặt đồ thị tổng hợp"
 
 #: aggregate_graphs.php:644 aggregate_graphs.php:651 lib/html_reports.php:1545
-#: lib/html_reports.php:1547 utilities.php:2278
+#: lib/html_reports.php:1547 utilities.php:2284
 msgid "Details"
 msgstr "Chi tiết"
 
@@ -428,8 +428,8 @@ msgstr "Kết hợp đồ thị"
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:56
 #: tree.php:938 tree.php:973 tree.php:1008 tree.php:2217 user_admin.php:2074
 #: user_domains.php:643 user_group_admin.php:1993 utilities.php:1094
-#: utilities.php:1521 utilities.php:1828 utilities.php:2129 utilities.php:3131
-#: utilities.php:3393
+#: utilities.php:1521 utilities.php:1832 utilities.php:2135 utilities.php:3137
+#: utilities.php:3399
 msgid "Search"
 msgstr "Tìm kiếm"
 
@@ -463,7 +463,7 @@ msgstr "Đồ thị"
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:81
 #: tree.php:2227 user_admin.php:2135 user_domains.php:18 user_domains.php:653
 #: user_domains.php:739 user_group_admin.php:2003 utilities.php:1076
-#: utilities.php:1838 utilities.php:2160 utilities.php:3159 utilities.php:3435
+#: utilities.php:1842 utilities.php:2166 utilities.php:3165 utilities.php:3441
 msgid "Default"
 msgstr "Mặc định"
 
@@ -502,7 +502,7 @@ msgstr "Đi"
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
 #: tree.php:2242 user_admin.php:2150 user_domains.php:665
 #: user_group_admin.php:2018 utilities.php:1084 utilities.php:1470
-#: utilities.php:1819 utilities.php:2120 utilities.php:3167 utilities.php:3443
+#: utilities.php:1823 utilities.php:2126 utilities.php:3173 utilities.php:3449
 msgid "Set/Refresh Filters"
 msgstr "Đặt / Làm mới Bộ lọc"
 
@@ -538,7 +538,7 @@ msgstr "Xóa"
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:96
 #: tree.php:2243 user_admin.php:2151 user_domains.php:666
 #: user_group_admin.php:2019 utilities.php:1085 utilities.php:1471
-#: utilities.php:1820 utilities.php:2121 utilities.php:3168 utilities.php:3444
+#: utilities.php:1824 utilities.php:2127 utilities.php:3174 utilities.php:3450
 msgid "Clear Filters"
 msgstr "Xóa bộ lọc"
 
@@ -613,7 +613,7 @@ msgstr "Đồ thị tổng hợp"
 #: lib/api_automation.php:446 lib/html_graph.php:139 lib/html_tree.php:973
 #: rrdcleaner.php:381
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:59
-#: utilities.php:2087
+#: utilities.php:2094
 msgid "Template"
 msgstr "Mẫu"
 
@@ -631,8 +631,8 @@ msgstr "Mẫu"
 #: lib/html_reports.php:1157 lib/html_reports.php:1167
 #: lib/html_reports.php:2035 managers.php:490 managers.php:781
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:61
-#: utilities.php:1064 utilities.php:1782 utilities.php:2091 utilities.php:2139
-#: utilities.php:2149 utilities.php:3141 utilities.php:3403 utilities.php:3419
+#: utilities.php:1064 utilities.php:1785 utilities.php:2098 utilities.php:2145
+#: utilities.php:2155 utilities.php:3147 utilities.php:3409 utilities.php:3425
 msgid "Any"
 msgstr "Bất kỳ"
 
@@ -667,7 +667,7 @@ msgstr "Bất kỳ"
 #: lib/html_reports.php:1467 lib/html_reports.php:1472 package_import.php:686
 #: settings.php:591 settings.php:613 settings.php:644
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:62
-#: templates_import.php:298 templates_import.php:330 utilities.php:2092
+#: templates_import.php:298 templates_import.php:330 utilities.php:2099
 msgid "None"
 msgstr "Không"
 
@@ -1175,7 +1175,7 @@ msgid "Uptime"
 msgstr "Thời gian hoạt động"
 
 #: automation_devices.php:279 automation_devices.php:560
-#: include/global_arrays.php:1018 utilities.php:2150
+#: include/global_arrays.php:1018 utilities.php:2156
 msgid "SNMP"
 msgstr "SNMP"
 
@@ -1190,7 +1190,7 @@ msgstr "SNMP"
 #: package_import.php:542 package_import.php:627 plugins.php:497
 #: plugins.php:623 pollers.php:1007 templates_import.php:206
 #: templates_import.php:245 user_admin.php:1073 user_group_admin.php:1095
-#: utilities.php:2135
+#: utilities.php:2141
 msgid "Status"
 msgstr "Trạng thái"
 
@@ -1248,8 +1248,8 @@ msgstr "Thiết bị phát hiện"
 #: lib/spikekill.php:1806 lib/spikekill.php:1807 lib/spikekill.php:1808
 #: lib/spikekill.php:1809 lib/spikekill.php:1810 plugins.php:780
 #: pollers.php:1115 user_admin.php:2261 utilities.php:738 utilities.php:1190
-#: utilities.php:2763 utilities.php:2891 utilities.php:2899 utilities.php:2910
-#: utilities.php:2921 utilities.php:2946 utilities.php:2996 utilities.php:3232
+#: utilities.php:2769 utilities.php:2897 utilities.php:2905 utilities.php:2916
+#: utilities.php:2927 utilities.php:2952 utilities.php:3002 utilities.php:3238
 msgid "N/A"
 msgstr "N/A"
 
@@ -1384,7 +1384,7 @@ msgstr "Truy vấn dữ liệu"
 #: user_admin.php:924 user_admin.php:936 user_admin.php:2248
 #: user_domains.php:335 user_domains.php:743 user_group_admin.php:76
 #: user_group_admin.php:741 user_group_admin.php:756 user_group_admin.php:2076
-#: utilities.php:2140 utilities.php:3014
+#: utilities.php:2146 utilities.php:3020
 msgid "Enabled"
 msgstr "Bật"
 
@@ -1401,8 +1401,8 @@ msgstr "Bật"
 #: lib/api_automation.php:28 lib/html.php:2858 lib/html_reports.php:2037
 #: lib/html_reports.php:2188 lib/html_utility.php:1317 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:936 user_domains.php:397
-#: user_group_admin.php:756 utilities.php:2141 utilities.php:2705
-#: utilities.php:3014
+#: user_group_admin.php:756 utilities.php:2147 utilities.php:2711
+#: utilities.php:3020
 msgid "Disabled"
 msgstr "Vô hiệu hóa"
 
@@ -1551,7 +1551,7 @@ msgstr "Cài đặt chung"
 #: lib/installer.php:2044 lib/installer.php:2117 lib/installer.php:2147
 #: lib/installer.php:2739 lib/installer.php:2827 lib/vdef.php:56
 #: managers.php:576 pollers.php:46 user_admin.php:924 user_domains.php:311
-#: utilities.php:864 utilities.php:3212
+#: utilities.php:864 utilities.php:3218
 msgid "Name"
 msgstr "Tên"
 
@@ -2079,11 +2079,11 @@ msgid "Last Started"
 msgstr "Bắt đầu lần cuối"
 
 #: automation_networks.php:1110 data_debug.php:1015 data_debug.php:1040
-#: pollers.php:30 utilities.php:2696
+#: pollers.php:30 utilities.php:2702
 msgid "Running"
 msgstr "Đang chạy"
 
-#: automation_networks.php:1134 pollers.php:31 utilities.php:2694
+#: automation_networks.php:1134 pollers.php:31 utilities.php:2700
 msgid "Idle"
 msgstr "Rảnh rỗi"
 
@@ -2099,7 +2099,7 @@ msgstr "Không tìm thấy kết nối mạng"
 
 #: automation_networks.php:1201 data_debug.php:1165 lib/clog_webapi.php:588
 #: lib/html_graph.php:304 lib/html_tree.php:1120 lib/html_tree.php:1141
-#: pollers.php:890 utilities.php:1502 utilities.php:2616
+#: pollers.php:890 utilities.php:1502 utilities.php:2622
 msgid "Refresh"
 msgstr "Làm mới"
 
@@ -2270,7 +2270,7 @@ msgstr "Giao thức riêng"
 msgid "Context"
 msgstr "Ngữ cảnh"
 
-#: automation_snmp.php:553 data_queries.php:1213 utilities.php:2145
+#: automation_snmp.php:553 data_queries.php:1213 utilities.php:2151
 msgid "Action"
 msgstr "Hành động"
 
@@ -2480,8 +2480,8 @@ msgstr "Tiêu chí tạo cây"
 msgid "Change Leaf Type"
 msgstr "Thay đổi loại lá"
 
-#: automation_tree_rules.php:740 lib/installer.php:4177 utilities.php:2758
-#: utilities.php:2759 utilities.php:2762 utilities.php:2763
+#: automation_tree_rules.php:740 lib/installer.php:4177 utilities.php:2764
+#: utilities.php:2765 utilities.php:2768 utilities.php:2769
 msgid "WARNING:"
 msgstr "LƯU Ý:"
 
@@ -3192,7 +3192,7 @@ msgid "Check"
 msgstr "Kiểm tra"
 
 #: data_debug.php:883 include/global_form.php:1018 lib/rrd.php:4178
-#: utilities.php:798 utilities.php:815 utilities.php:3212
+#: utilities.php:798 utilities.php:815 utilities.php:3218
 msgid "Value"
 msgstr "Giá trị"
 
@@ -3529,7 +3529,7 @@ msgid "No Suggested Values Found"
 msgstr "Không tìm thấy giá trị đề xuất"
 
 #: data_queries.php:881 data_queries.php:991 include/global_form.php:2124
-#: include/global_form.php:2166 lib/api_automation.php:1417 utilities.php:1930
+#: include/global_form.php:2166 lib/api_automation.php:1417 utilities.php:1934
 msgid "Field Name"
 msgstr "Tên trường"
 
@@ -3613,7 +3613,7 @@ msgstr "Xóa đồ thị liên kết"
 msgid "Data Queries"
 msgstr "Truy vấn dữ liệu"
 
-#: data_queries.php:1476 host.php:1001 utilities.php:1930
+#: data_queries.php:1476 host.php:1001 utilities.php:1934
 msgid "Data Query Name"
 msgstr "Tên truy vấn dữ liệu"
 
@@ -3756,7 +3756,7 @@ msgstr "Bước"
 
 #: data_source_profiles.php:900 graphs_new.php:532 include/global_form.php:284
 #: lib/html.php:613 lib/html_filter.php:55 lib/installer.php:2827
-#: lib/rrd.php:4220 utilities.php:866 utilities.php:1834
+#: lib/rrd.php:4220 utilities.php:866 utilities.php:1838
 msgid "Rows"
 msgstr "Hàng"
 
@@ -4074,7 +4074,7 @@ msgstr "Tên được đặt cho mẫu dữ liệu này. Xin lưu ý rằng bạ
 #: include/global_arrays.php:954 include/global_arrays.php:1003
 #: include/global_arrays.php:1688 include/global_arrays.php:1857
 #: lib/api_automation.php:426 lib/functions.php:6195 lib/html.php:2347
-#: lib/html.php:2384 lib/html_reports.php:1170 utilities.php:1930
+#: lib/html.php:2384 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
 msgstr "Thiết bị"
 
@@ -4152,7 +4152,7 @@ msgstr "Lưu ý rằng truy vấn này có thể mất một chút thời gian �
 msgid "Orphaned"
 msgstr "Mồ côi"
 
-#: data_sources.php:1983 utilities.php:2276
+#: data_sources.php:1983 utilities.php:2282
 msgid "Data Source Name"
 msgstr "Tên nguồn dữ liệu"
 
@@ -5403,7 +5403,7 @@ msgid "Repopulate Poller Cache"
 msgstr "Rebuild Pug Cache"
 
 #: host.php:815 include/global_arrays.php:2458 include/global_arrays.php:2470
-#: utilities.php:2401
+#: utilities.php:2407
 msgid "View Poller Cache"
 msgstr "Xem Cache Poller"
 
@@ -5580,11 +5580,11 @@ msgstr "Phục hồi"
 #: lib/clog_webapi.php:856 lib/html_utility.php:1339 lib/import.php:342
 #: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4196 lib/rrd.php:4208
 #: lib/spikekill.php:301 package_import.php:522 package_import.php:600
-#: utilities.php:211 utilities.php:212 utilities.php:2759
+#: utilities.php:211 utilities.php:212 utilities.php:2765
 msgid "Unknown"
 msgstr "Không xác định"
 
-#: host.php:1916 lib/api_automation.php:570 tree.php:987 utilities.php:2277
+#: host.php:1916 lib/api_automation.php:570 tree.php:987 utilities.php:2283
 msgid "Device Description"
 msgstr "Mô tả thiết bị"
 
@@ -6205,7 +6205,7 @@ msgid "Script Query"
 msgstr "Truy vấn tập lệnh"
 
 #: include/global_arrays.php:513 include/global_arrays.php:519
-#: utilities.php:2152
+#: utilities.php:2158
 msgid "Script Server"
 msgstr "Máy chủ tập lệnh"
 
@@ -6950,7 +6950,7 @@ msgstr "Trang web / Thiết bị / Dữ liệu"
 msgid "Spike Handling"
 msgstr "Cài đặt Spike Kill"
 
-#: include/global_arrays.php:1243 utilities.php:2390
+#: include/global_arrays.php:1243 utilities.php:2396
 msgid "Log Administration"
 msgstr "Quản trị đăng nhập"
 
@@ -7241,8 +7241,8 @@ msgstr "%s giờ"
 msgid "%d GByte"
 msgstr "% d GByte"
 
-#: include/global_arrays.php:1609 utilities.php:2856 utilities.php:2857
-#: utilities.php:2906
+#: include/global_arrays.php:1609 utilities.php:2862 utilities.php:2863
+#: utilities.php:2912
 msgid "Unlimited"
 msgstr "Không giới hạn"
 
@@ -7872,7 +7872,7 @@ msgstr "Liệt kê các tập tin không sử dụng"
 msgid "RRD Check"
 msgstr "Chạy kiểm tra"
 
-#: include/global_arrays.php:2464 utilities.php:2405
+#: include/global_arrays.php:2464 utilities.php:2411
 msgid "View Data Query Cache"
 msgstr "Xem Cache truy vấn dữ liệu"
 
@@ -7880,7 +7880,7 @@ msgstr "Xem Cache truy vấn dữ liệu"
 msgid "Clear Log"
 msgstr "Xóa Log"
 
-#: include/global_arrays.php:2488 utilities.php:2394
+#: include/global_arrays.php:2488 utilities.php:2400
 msgid "View User Log"
 msgstr "Xem nhật ký người dùng"
 
@@ -7888,19 +7888,19 @@ msgstr "Xem nhật ký người dùng"
 msgid "Clear User Log"
 msgstr "Xóa nhật ký người dùng"
 
-#: include/global_arrays.php:2500 utilities.php:2385 utilities.php:2386
+#: include/global_arrays.php:2500 utilities.php:2391 utilities.php:2392
 msgid "Technical Support"
 msgstr "Hỗ trợ Kỹ thuật"
 
-#: include/global_arrays.php:2506 utilities.php:2576
+#: include/global_arrays.php:2506 utilities.php:2582
 msgid "Boost Status"
 msgstr "Tăng trạng thái"
 
-#: include/global_arrays.php:2512 utilities.php:2460
+#: include/global_arrays.php:2512 utilities.php:2466
 msgid "View SNMP Agent Cache"
 msgstr "Xem bộ đệm SNMP Agent"
 
-#: include/global_arrays.php:2518 utilities.php:2471
+#: include/global_arrays.php:2518 utilities.php:2477
 msgid "View SNMP Agent Notification Log"
 msgstr "Xem Nhật ký thông báo đại lý SNMP"
 
@@ -11633,7 +11633,7 @@ msgstr "Tăng nhật ký gỡ lỗi"
 msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost\tpoller process."
 msgstr "Nếu trường này không trống, Boost sẽ ghi lại đầu ra RRDupdate từ quá trình pug boost."
 
-#: include/global_settings.php:2180 utilities.php:3011
+#: include/global_settings.php:2180 utilities.php:3017
 msgid "Image Caching"
 msgstr "Bộ nhớ đệm hình ảnh"
 
@@ -12432,7 +12432,7 @@ msgstr "Ghi đè giá trị này"
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
 #: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4173
-#: utilities.php:356 utilities.php:1480 utilities.php:3212
+#: utilities.php:356 utilities.php:1480 utilities.php:3218
 msgid "Type"
 msgstr "Loại"
 
@@ -12769,7 +12769,7 @@ msgstr "Nhật ký Kadupul đã bị xóa"
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "Xác thực trước đó chưa được đặt. Đã cố gắng đặt thành Xác thực cục bộ, nhưng không tìm thấy tài khoản Quản trị viên nào."
 
-#: lib/boost.php:126 utilities.php:2908
+#: lib/boost.php:126 utilities.php:2914
 #, fuzzy, php-format
 msgid "%s MBytes"
 msgstr "% d MByte"
@@ -12823,8 +12823,8 @@ msgstr "Nhật ký [Tổng số dòng:% d %s - Bộ lọc hoạt động]"
 msgid "Log [Total Lines: %d %s - Unfiltered]"
 msgstr "Nhật ký [Tổng số dòng:% d %s - Chưa được lọc]"
 
-#: lib/clog_webapi.php:293 utilities.php:1559 utilities.php:1924
-#: utilities.php:2156 utilities.php:2269 utilities.php:3206 utilities.php:3431
+#: lib/clog_webapi.php:293 utilities.php:1559 utilities.php:1928
+#: utilities.php:2162 utilities.php:2275 utilities.php:3212 utilities.php:3437
 msgid "Entries"
 msgstr "Mục"
 
@@ -17123,7 +17123,7 @@ msgstr "Phiên bản %s"
 msgid "Notifications"
 msgstr "Thông báo"
 
-#: managers.php:135 utilities.php:2476
+#: managers.php:135 utilities.php:2482
 msgid "SNMP Notification Receivers"
 msgstr "Người nhận thông báo SNMP"
 
@@ -17148,11 +17148,11 @@ msgstr "Trình nhận thông báo SNMP [chỉnh sửa: %s]"
 msgid "SNMP Notification Receiver [new]"
 msgstr "Bộ thu thông báo SNMP [mới]"
 
-#: managers.php:486 managers.php:578 utilities.php:3137 utilities.php:3212
+#: managers.php:486 managers.php:578 utilities.php:3143 utilities.php:3218
 msgid "MIB"
 msgstr "MIB"
 
-#: managers.php:577 utilities.php:1930 utilities.php:3212
+#: managers.php:577 utilities.php:1934 utilities.php:3218
 msgid "OID"
 msgstr "OID"
 
@@ -17160,7 +17160,7 @@ msgstr "OID"
 msgid "Kind"
 msgstr "Loại"
 
-#: managers.php:580 utilities.php:3212
+#: managers.php:580 utilities.php:3218
 msgid "Max-Access"
 msgstr "Truy cập tối đa"
 
@@ -17172,23 +17172,23 @@ msgstr "Theo dõi"
 msgid "No SNMP Notifications"
 msgstr "Không có thông báo SNMP"
 
-#: managers.php:777 utilities.php:3399
+#: managers.php:777 utilities.php:3405
 msgid "Severity"
 msgstr "Mức độ nghiêm trọng"
 
-#: managers.php:796 utilities.php:3445
+#: managers.php:796 utilities.php:3451
 msgid "Purge Notification Log"
 msgstr "Nhật ký thanh lọc"
 
-#: managers.php:843 utilities.php:3505
+#: managers.php:843 utilities.php:3511
 msgid "Time"
 msgstr "Thời gian"
 
-#: managers.php:844 utilities.php:3505
+#: managers.php:844 utilities.php:3511
 msgid "Notification"
 msgstr "Thông báo"
 
-#: managers.php:845 utilities.php:3505
+#: managers.php:845 utilities.php:3511
 msgid "Varbinds"
 msgstr "Giống chó"
 
@@ -17196,7 +17196,7 @@ msgstr "Giống chó"
 msgid "Severity Level"
 msgstr "Mức độ nghiêm trọng"
 
-#: managers.php:878 utilities.php:3527
+#: managers.php:878 utilities.php:3533
 msgid "No SNMP Notification Log Entries"
 msgstr "Không có mục nhật ký thông báo SNMP"
 
@@ -17964,7 +17964,7 @@ msgstr "Chạy kiểm tra"
 msgid "RRD check is disabled, please enable in Configuration -> Settings -> Data"
 msgstr ""
 
-#: rrdcheck.php:87 utilities.php:2450
+#: rrdcheck.php:87 utilities.php:2456
 msgid "RRDfile Checker"
 msgstr "Chất tẩy rửa RRDfile"
 
@@ -19830,19 +19830,19 @@ msgstr "Thành công - Pswd"
 msgid "Attempts"
 msgstr "Cố gắng"
 
-#: utilities.php:1084 utilities.php:1470 utilities.php:1819 utilities.php:2120
-#: utilities.php:3167 utilities.php:3443
+#: utilities.php:1084 utilities.php:1470 utilities.php:1823 utilities.php:2126
+#: utilities.php:3173 utilities.php:3449
 msgctxt "Button: use filter settings"
 msgid "Go"
 msgstr "Đi"
 
-#: utilities.php:1085 utilities.php:1471 utilities.php:1820 utilities.php:2121
-#: utilities.php:3168 utilities.php:3444
+#: utilities.php:1085 utilities.php:1471 utilities.php:1824 utilities.php:2127
+#: utilities.php:3174 utilities.php:3450
 msgctxt "Button: reset filter settings"
 msgid "Clear"
 msgstr "Xóa"
 
-#: utilities.php:1086 utilities.php:1472 utilities.php:3445
+#: utilities.php:1086 utilities.php:1472 utilities.php:3451
 msgctxt "Button: delete all table entries"
 msgid "Purge"
 msgstr "Gỡ"
@@ -19895,427 +19895,427 @@ msgstr "Lỗi: Không thể xóa nhật ký, không có quyền ghi."
 msgid "Error: Unable to clear log, file does not exist."
 msgstr "Lỗi: Không thể xóa nhật ký, tệp không tồn tại."
 
-#: utilities.php:1768
+#: utilities.php:1771
 msgid "Data Query Cache Items"
 msgstr "Mục truy vấn dữ liệu"
 
-#: utilities.php:1778
+#: utilities.php:1781
 msgid "Query Name"
 msgstr "Tên truy vấn"
 
-#: utilities.php:1852
+#: utilities.php:1856
 msgid "Allow the search term to include the index column"
 msgstr "Cho phép thuật ngữ tìm kiếm bao gồm cột chỉ mục"
 
-#: utilities.php:1855
+#: utilities.php:1859
 msgid "Include Index"
 msgstr "Bao gồm chỉ số"
 
-#: utilities.php:1930
+#: utilities.php:1934
 msgid "Field Value"
 msgstr "Giá trị trường"
 
-#: utilities.php:1930
+#: utilities.php:1934
 msgid "Index"
 msgstr "Lập chỉ mục"
 
-#: utilities.php:2077
+#: utilities.php:2084
 msgid "Poller Cache Items"
 msgstr "Các mục Pug Cache"
 
-#: utilities.php:2151
+#: utilities.php:2157
 msgid "Script"
 msgstr "Kịch bản"
 
-#: utilities.php:2304 utilities.php:2309
+#: utilities.php:2310 utilities.php:2315
 msgid "SNMP Version:"
 msgstr "Phiên bản SNMP:"
 
-#: utilities.php:2305
+#: utilities.php:2311
 msgid "Community:"
 msgstr "Cộng đồng"
 
-#: utilities.php:2306 utilities.php:2310
+#: utilities.php:2312 utilities.php:2316
 msgid "OID:"
 msgstr "OID:"
 
-#: utilities.php:2310
+#: utilities.php:2316
 msgid "User:"
 msgstr "Thành viên: "
 
-#: utilities.php:2313
+#: utilities.php:2319
 msgid "Script:"
 msgstr "Tập lệnh:"
 
-#: utilities.php:2315
+#: utilities.php:2321
 msgid "Script Server:"
 msgstr "Máy chủ tập lệnh:"
 
-#: utilities.php:2329
+#: utilities.php:2335
 msgid "RRD:"
 msgstr "RRD:"
 
-#: utilities.php:2388
+#: utilities.php:2394
 msgid "Kadupul technical support page.  Used by developers and technical support persons to assist with issues in Kadupul.  Includes checks for common configuration issues."
 msgstr "Trang hỗ trợ kỹ thuật Kadupul. Được sử dụng bởi các nhà phát triển và người hỗ trợ kỹ thuật để hỗ trợ các vấn đề trong Kadupul. Bao gồm kiểm tra các vấn đề cấu hình phổ biến."
 
-#: utilities.php:2392
+#: utilities.php:2398
 msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
 msgstr "Nhật ký Kadupul lưu trữ thống kê, lỗi và thông báo khác tùy thuộc vào cài đặt hệ thống. Thông tin này có thể được sử dụng để xác định các vấn đề với pug và ứng dụng."
 
-#: utilities.php:2396
+#: utilities.php:2402
 msgid "Allows Administrators to browse the user log.  Administrators can filter and export the log as well."
 msgstr "Cho phép Quản trị viên duyệt nhật ký người dùng. Quản trị viên có thể lọc và xuất nhật ký là tốt."
 
-#: utilities.php:2400
+#: utilities.php:2406
 msgid "Poller Cache Administration"
 msgstr "Quản trị bộ đệm"
 
-#: utilities.php:2403
+#: utilities.php:2409
 msgid "This is the data that is being passed to the poller each time it runs. This data is then in turn executed/interpreted and the results are fed into the RRDfiles for graphing or the database for display."
 msgstr "Đây là dữ liệu đang được truyền cho pug mỗi khi nó chạy. Dữ liệu này sau đó lần lượt được thực thi / diễn giải và kết quả được đưa vào RRDfiles để vẽ đồ thị hoặc cơ sở dữ liệu để hiển thị."
 
-#: utilities.php:2407
+#: utilities.php:2413
 msgid "The Data Query Cache stores information gathered from Data Query input types. The values from these fields can be used in the text area of Graphs for Legends, Vertical Labels, and GPRINTS as well as in CDEF's."
 msgstr "Cache truy vấn dữ liệu lưu trữ thông tin được thu thập từ các loại đầu vào Truy vấn dữ liệu. Các giá trị từ các trường này có thể được sử dụng trong vùng văn bản của Đồ thị cho Huyền thoại, Nhãn dọc và GPRINTS cũng như trong CDEF."
 
-#: utilities.php:2409
+#: utilities.php:2415
 msgid "Rebuild Poller Cache"
 msgstr "Rebuild Pug Cache"
 
-#: utilities.php:2413
+#: utilities.php:2419
 msgid "The Poller Cache will be re-generated if you select this option. Use this option only in the event of a database crash if you are experiencing issues after the crash and have already run the database repair tools.  Alternatively, if you are having problems with a specific Device, simply re-save that Device to rebuild its Poller Cache.  There is also a command line interface equivalent to this command that is recommended for large systems."
 msgstr "Bộ đệm Poller sẽ được tạo lại nếu bạn chọn tùy chọn này. Chỉ sử dụng tùy chọn này trong trường hợp xảy ra sự cố cơ sở dữ liệu nếu bạn gặp sự cố sau sự cố và đã chạy các công cụ sửa chữa cơ sở dữ liệu. Ngoài ra, nếu bạn gặp sự cố với một Thiết bị cụ thể, chỉ cần lưu lại Thiết bị đó để xây dựng lại Bộ đệm ẩn của thiết bị. Ngoài ra còn có một giao diện dòng lệnh tương đương với lệnh này được khuyến nghị cho các hệ thống lớn. <i class=\"deviceDown\">LƯU Ý: Trên các hệ thống lớn, lệnh này có thể mất vài phút đến vài giờ để hoàn thành và do đó không nên chạy từ Giao diện người dùng Kadupul. Bạn chỉ có thể chạy &#39;php -q cli / construcild_poller_cache.php --help&#39; tại dòng lệnh để biết thêm thông tin.</i>"
 
-#: utilities.php:2415
+#: utilities.php:2421
 msgid "NOTE: On large systems, this command may take several minutes to hours to complete and therefore should not be run from the Kadupul UI.  You can simply run 'php -q cli/rebuild_poller_cache.php --help' at the command line for more information."
 msgstr ""
 
-#: utilities.php:2419
+#: utilities.php:2425
 msgid "Rebuild Resource Cache"
 msgstr "Xây dựng lại bộ đệm tài nguyên"
 
-#: utilities.php:2423
+#: utilities.php:2429
 msgid "When operating multiple Data Collectors in Kadupul, Kadupul will attempt to maintain state for key files on all Data Collectors.  This includes all core, non-install related website and plugin files.  When you force a Resource Cache rebuild, Kadupul will clear the local Resource Cache, and then rebuild it at the next scheduled poller start.  This will trigger all Remote Data Collectors to recheck their website and plugin files for consistency."
 msgstr "Khi vận hành nhiều Trình thu thập dữ liệu trong Kadupul, Kadupul sẽ cố gắng duy trì trạng thái cho các tệp chính trên tất cả các Trình thu thập dữ liệu. Điều này bao gồm tất cả các tập tin trang web và plugin không cốt lõi, không cài đặt. Khi bạn buộc xây dựng lại Bộ đệm tài nguyên, Kadupul sẽ xóa Bộ đệm tài nguyên cục bộ, sau đó xây dựng lại khi bắt đầu trình lên lịch trình tiếp theo. Điều này sẽ kích hoạt tất cả các Trình thu thập dữ liệu từ xa để kiểm tra lại các tập tin trang web và plugin của họ để thống nhất."
 
-#: utilities.php:2427
+#: utilities.php:2433
 msgid "Boost Utilities"
 msgstr "Tăng cường tiện ích"
 
-#: utilities.php:2428
+#: utilities.php:2434
 msgid "View Boost Status"
 msgstr "Xem trạng thái tăng"
 
-#: utilities.php:2430
+#: utilities.php:2436
 msgid "This menu pick allows you to view various boost settings and statistics associated with the current running Boost configuration."
 msgstr "Lựa chọn menu này cho phép bạn xem các cài đặt và thống kê tăng khác nhau liên quan đến cấu hình Boost đang chạy."
 
-#: utilities.php:2434
+#: utilities.php:2440
 msgid "Data Source Statistics Utilities"
 msgstr "Thống kê nguồn dữ liệu"
 
-#: utilities.php:2435
+#: utilities.php:2441
 msgid "Purge Data Source Statistics"
 msgstr "Thống kê nguồn dữ liệu"
 
-#: utilities.php:2439
+#: utilities.php:2445
 msgid "This menu pick will purge all existing Data Source Statistics from the Database.  If Data Source Statistics is enabled, the Data Sources Statistics will start collection again on the next Data Collector pass."
 msgstr "Menu chọn này sẽ lọc tất cả các Thống kê nguồn dữ liệu hiện có khỏi Cơ sở dữ liệu. Nếu Thống kê nguồn dữ liệu được bật, Thống kê nguồn dữ liệu sẽ bắt đầu thu thập lại trên thẻ thu thập dữ liệu tiếp theo."
 
-#: utilities.php:2444
+#: utilities.php:2450
 msgid "RRD Utilities"
 msgstr "Tiện ích RRD"
 
-#: utilities.php:2445
+#: utilities.php:2451
 msgid "RRDfile Cleaner"
 msgstr "Chất tẩy rửa RRDfile"
 
-#: utilities.php:2448
+#: utilities.php:2454
 msgid "When you delete Data Sources from Kadupul, the corresponding RRDfiles are not removed automatically.  Use this utility to facilitate the removal of these old files."
 msgstr "Khi bạn xóa Nguồn dữ liệu khỏi Kadupul, RRDfiles tương ứng sẽ không bị xóa tự động. Sử dụng tiện ích này để tạo điều kiện cho việc loại bỏ các tập tin cũ."
 
-#: utilities.php:2453
+#: utilities.php:2459
 msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need enable rrdcheck in Configuration->Settings->Data"
 msgstr ""
 
-#: utilities.php:2459
+#: utilities.php:2465
 msgid "SNMP Agent Utilities"
 msgstr "Tiện ích SNMPAgent"
 
-#: utilities.php:2463
+#: utilities.php:2469
 msgid "This shows all objects being handled by the SNMP Agent."
 msgstr "Điều này cho thấy tất cả các đối tượng đang được SNMPAgent xử lý."
 
-#: utilities.php:2465
+#: utilities.php:2471
 msgid "Rebuild SNMP Agent Cache"
 msgstr "Xây dựng lại bộ nhớ cache SNMPAgent"
 
-#: utilities.php:2469
+#: utilities.php:2475
 msgid "The SNMP cache will be cleared and re-generated if you select this option. Note that it takes another poller run to restore the SNMP cache completely."
 msgstr "Bộ đệm SNMP sẽ bị xóa và tạo lại nếu bạn chọn tùy chọn này. Lưu ý rằng phải mất một lần chạy khác để khôi phục hoàn toàn bộ đệm SNMP."
 
-#: utilities.php:2474
+#: utilities.php:2480
 msgid "This menu pick allows you to view the latest events SNMP Agent has handled in relation to the registered notification receivers."
 msgstr "Lựa chọn menu này cho phép bạn xem các sự kiện mới nhất SNMPAgent đã xử lý liên quan đến các máy thu thông báo đã đăng ký."
 
-#: utilities.php:2479
+#: utilities.php:2485
 msgid "Allows Administrators to maintain SNMP notification receivers."
 msgstr "Cho phép Quản trị viên duy trì máy thu thông báo SNMP."
 
-#: utilities.php:2486
+#: utilities.php:2492
 msgid "Kadupul System Utilities"
 msgstr "Tiện ích hệ thống Kadupul"
 
-#: utilities.php:2602
+#: utilities.php:2608
 msgid "Refresh Interval"
 msgstr "Thời gian cập nhật"
 
-#: utilities.php:2698
+#: utilities.php:2704
 msgid "Overrun Warning"
 msgstr "Cảnh báo tràn ngập"
 
-#: utilities.php:2700
+#: utilities.php:2706
 msgid "Timed Out"
 msgstr "Hết giờ"
 
-#: utilities.php:2702
+#: utilities.php:2708
 msgid "Other"
 msgstr "Khác"
 
-#: utilities.php:2758
+#: utilities.php:2764
 msgid "Cannot open directory"
 msgstr "Không thể mở thư mục"
 
-#: utilities.php:2762
+#: utilities.php:2768
 msgid "Directory Does NOT Exist!!"
 msgstr "Thư mục KHÔNG tồn tại !!"
 
-#: utilities.php:2771
+#: utilities.php:2777
 msgid "Current Boost Status"
 msgstr "Trạng thái tăng hiện tại"
 
-#: utilities.php:2775
+#: utilities.php:2781
 msgid "Boost On-demand Updating:"
 msgstr "Tăng cường cập nhật theo yêu cầu:"
 
-#: utilities.php:2779
+#: utilities.php:2785
 msgid "Running Processes:"
 msgstr "Quy trình đồng thời"
 
-#: utilities.php:2784
+#: utilities.php:2790
 msgid "Total Poller Items:"
 msgstr "Các mục Pug Cache"
 
-#: utilities.php:2790
+#: utilities.php:2796
 msgid "Total Data Sources:"
 msgstr "Tổng nguồn dữ liệu:"
 
-#: utilities.php:2794
+#: utilities.php:2800
 msgid "Remaining Data Sources:"
 msgstr "Gỡ lỗi nguồn dữ liệu"
 
-#: utilities.php:2794
+#: utilities.php:2800
 msgid "TBD"
 msgstr "TBD"
 
-#: utilities.php:2798
+#: utilities.php:2804
 msgid "Queued Boost Records:"
 msgstr "Hồ sơ Boost đang chờ xử lý:"
 
-#: utilities.php:2802
+#: utilities.php:2808
 msgid "Approximate in Process:"
 msgstr "Khoảng trong quá trình:"
 
-#: utilities.php:2805
+#: utilities.php:2811
 msgid "Total Boost Records:"
 msgstr "Tổng số bản ghi Boost:"
 
-#: utilities.php:2810
+#: utilities.php:2816
 msgid "Boost Storage Statistics"
 msgstr "Tăng số liệu thống kê lưu trữ"
 
-#: utilities.php:2814
+#: utilities.php:2820
 msgid "Database Engine:"
 msgstr "Cơ sở dữ liệu:"
 
-#: utilities.php:2818
+#: utilities.php:2824
 msgid "Current Boost Table(s) Size:"
 msgstr "Kích thước bảng tăng hiện tại:"
 
-#: utilities.php:2822
+#: utilities.php:2828
 msgid "Avg Bytes/Record:"
 msgstr "Trung bình byte / bản ghi:"
 
-#: utilities.php:2850
+#: utilities.php:2856
 #, php-format
 msgid "%d Bytes"
 msgstr "% d byte"
 
-#: utilities.php:2850
+#: utilities.php:2856
 msgid "Max Record Length:"
 msgstr "Độ dài bản ghi tối đa:"
 
-#: utilities.php:2862
+#: utilities.php:2868
 msgid "Max Allowed Boost Table Size:"
 msgstr "Kích thước bảng Boost tối đa được phép:"
 
-#: utilities.php:2866
+#: utilities.php:2872
 msgid "Estimated Maximum Records:"
 msgstr "Hồ sơ tối đa dự kiến:"
 
-#: utilities.php:2870
+#: utilities.php:2876
 msgid "Previous Runtime Statistics"
 msgstr "Thống kê thời gian chạy"
 
-#: utilities.php:2873
+#: utilities.php:2879
 msgid "Last Start Time:"
 msgstr "Thời gian bắt đầu cuối cùng:"
 
-#: utilities.php:2879
+#: utilities.php:2885
 msgid "Last End Time:"
 msgstr "Thời gian bắt đầu cuối cùng:"
 
-#: utilities.php:2879
+#: utilities.php:2885
 msgid "Never Run"
 msgstr "Không bao giờ chạy"
 
-#: utilities.php:2882
+#: utilities.php:2888
 msgid "Last Run Duration:"
 msgstr "Thời lượng chạy lần cuối:"
 
-#: utilities.php:2885
+#: utilities.php:2891
 #, php-format
 msgid "%d minutes"
 msgstr "%d phút"
 
-#: utilities.php:2885
+#: utilities.php:2891
 #, php-format
 msgid "%d seconds"
 msgstr "% d giây"
 
-#: utilities.php:2888
+#: utilities.php:2894
 #, fuzzy, php-format
 msgid "%0.2f percent of update frequency)"
 msgstr "% 0,2f phần trăm tần suất cập nhật)"
 
-#: utilities.php:2896
+#: utilities.php:2902
 msgid "RRD Updates:"
 msgstr "Cập nhật RRD:"
 
-#: utilities.php:2899
+#: utilities.php:2905
 msgid "MBytes"
 msgstr "MByte"
 
-#: utilities.php:2899
+#: utilities.php:2905
 msgid "Peak Poller Memory:"
 msgstr "Bộ nhớ Pug đỉnh:"
 
-#: utilities.php:2913
+#: utilities.php:2919
 msgid "Max Poller Memory Allowed:"
 msgstr "Bộ nhớ Max Poller được phép:"
 
-#: utilities.php:2916
+#: utilities.php:2922
 msgid "Detailed Runtime Statistics"
 msgstr "Thống kê thời gian chạy"
 
-#: utilities.php:2934
+#: utilities.php:2940
 #, php-format
 msgid "Records: %s (ds rows), Time: %s (secs), GetRows: %s (secs), ResultsCycle: %s (secs), FileAndTemplate: %s (secs), LastUpdate: %s (secs), RRDUpdate: %s (secs), Delete: %s (secs)"
 msgstr ""
 
-#: utilities.php:2946
+#: utilities.php:2952
 msgid "Previous Runtime Timers:"
 msgstr "Bộ đếm thời gian chạy chi tiết:"
 
-#: utilities.php:2985 utilities.php:2987
+#: utilities.php:2991 utilities.php:2993
 #, fuzzy, php-format
 msgid "Process: %d"
 msgstr "1 quá trình"
 
-#: utilities.php:2985
+#: utilities.php:2991
 #, php-format
 msgid "Status: <span class=\"deviceUp\"><b>Running</b></span>, Remaining: %s (dses), CurrentRuntime: %s (secs), PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
 msgstr ""
 
-#: utilities.php:2987
+#: utilities.php:2993
 #, php-format
 msgid "Status: <span class=\"deviceRecovering\"><b>Idle</b></span>, PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
 msgstr ""
 
-#: utilities.php:2993
+#: utilities.php:2999
 msgid "Run Time Configuration"
 msgstr "Chạy cấu hình thời gian"
 
-#: utilities.php:2996
+#: utilities.php:3002
 msgid "Update Frequency:"
 msgstr "Tần số cập nhật:"
 
-#: utilities.php:2999
+#: utilities.php:3005
 msgid "Concurrent Processes:"
 msgstr "Quy trình đồng thời"
 
-#: utilities.php:3002
+#: utilities.php:3008
 msgid "Next Start Time:"
 msgstr "Thời gian bắt đầu tiếp theo:"
 
-#: utilities.php:3005
+#: utilities.php:3011
 msgid "Maximum Records:"
 msgstr "Bản ghi tối đa"
 
-#: utilities.php:3005
+#: utilities.php:3011
 msgid "Records"
 msgstr "Bản ghi"
 
-#: utilities.php:3008
+#: utilities.php:3014
 msgid "Maximum Allowed Runtime:"
 msgstr "Thời gian chạy tối đa được phép:"
 
-#: utilities.php:3014
+#: utilities.php:3020
 msgid "Image Caching Status:"
 msgstr "Tình trạng bộ nhớ đệm hình ảnh:"
 
-#: utilities.php:3017
+#: utilities.php:3023
 msgid "Cache Directory:"
 msgstr "Thư mục bộ đệm:"
 
-#: utilities.php:3020
+#: utilities.php:3026
 msgid "Cached Files:"
 msgstr "Tập tin lưu trữ:"
 
-#: utilities.php:3023
+#: utilities.php:3029
 msgid "Cached Files Size:"
 msgstr "Kích thước tệp được lưu trong bộ nhớ cache:"
 
-#: utilities.php:3122
+#: utilities.php:3128
 msgid "SNMP Agent Cache"
 msgstr "Bộ nhớ cache SNMPAgent"
 
-#: utilities.php:3155
+#: utilities.php:3161
 msgid "OIDs"
 msgstr "OID"
 
-#: utilities.php:3232
+#: utilities.php:3238
 msgid "Column Data"
 msgstr "Dữ liệu cột"
 
-#: utilities.php:3232
+#: utilities.php:3238
 msgid "Scalar"
 msgstr "Đại lượng vô hướng"
 
-#: utilities.php:3384
+#: utilities.php:3390
 msgid "SNMP Agent Notification Log"
 msgstr "Nhật ký thông báo SNMPAgent"
 
-#: utilities.php:3415 utilities.php:3505
+#: utilities.php:3421 utilities.php:3511
 msgid "Receiver"
 msgstr "Người nhận"
 
-#: utilities.php:3497
+#: utilities.php:3503
 msgid "Log Entries"
 msgstr "Đăng nhập"
 
-#: utilities.php:3512
+#: utilities.php:3518
 #, php-format
 msgid "Severity Level: %s"
 msgstr "Mức độ nghiêm trọng: %s"
