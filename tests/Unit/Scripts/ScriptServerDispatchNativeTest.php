@@ -88,8 +88,8 @@ BOOT;
             expect(array_pop($lines))->toBe('PHP Script Server Shutdown request received, exiting');
         }
         $expected = ['selected-ok','U','U','U','other-ok','U','U','U','U','U','U'];
-        expect($lines)->toBe($layout === 'missing' ? array_fill(0, count($requests), 'U') : $expected);
         $logs = file_get_contents($temporary.'/include/logs');
+        expect($lines)->toBe($layout === 'missing' ? array_fill(0, count($requests), 'U') : $expected, $logs);
         expect($logs)->toContain('could not be resolved. Rejected.');
         if ($layout !== 'missing') {
             expect($logs)->toContain('was not defined by script file')->toContain('Refusing to dispatch PHP internal function')
