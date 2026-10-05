@@ -844,7 +844,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 		/* create an array keyed off of each .rrd file */
 		foreach ($results as $item) {
 			/* trim the default characters, but add single and double quotes */
-			$value            = $item['output'];
+			$value            = normalize_poller_multi_value_result($item['output']);
 			$unix_time        = $item['unix_time'];
 			$rrd_path         = $item['rrd_path'];
 			$rrd_name         = $item['rrd_name'];

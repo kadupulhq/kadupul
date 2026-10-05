@@ -147,7 +147,13 @@ function form_save() {
 
 		if (isset_request_var('step')) {
 			$save['step']           = form_input_validate(get_nfilter_request_var('step'), 'step', '', false, 3);
-			$save['heartbeat']      = form_input_validate(get_nfilter_request_var('heartbeat'), 'heartbeat', '', false, 3);
+		}
+
+		if (isset_request_var('heartbeat')) {
+			$save['heartbeat'] = form_input_validate(get_nfilter_request_var('heartbeat'), 'heartbeat', '', false, 3);
+		}
+
+		if (isset_request_var('x_files_factor')) {
 			$save['x_files_factor'] = form_input_validate(get_nfilter_request_var('x_files_factor'), 'x_files_factor', '', false, 3);
 		}
 
@@ -185,7 +191,7 @@ function form_save() {
 					}
 				}
 
-				if ($prev_heartbeat != get_request_var('heartbeat')) {
+				if (isset_request_var('heartbeat') && $prev_heartbeat != get_request_var('heartbeat')) {
 					$existing = db_fetch_cell_prepared('SELECT COUNT(*)
 						FROM data_template_data
 						WHERE data_source_profile_id = ?
@@ -196,6 +202,7 @@ function form_save() {
 						db_execute_prepared('UPDATE data_template_rrd AS dtr
 							INNER JOIN data_template_data AS dtd
 							ON dtd.local_data_id = dtr.local_data_id
+							AND dtd.data_template_id = dtr.data_template_id
 							SET dtr.rrd_heartbeat = ?
 							WHERE dtd.data_source_profile_id = ?',
 							array(get_request_var('heartbeat'), get_request_var('id')));
@@ -285,11 +292,23 @@ function form_save() {
 /* A profile is read only once a Data Source uses it, because its RRDfiles
    already hold the step, the consolidation functions and the RRAs. */
 function profile_is_read_only($profile_id) {
-	return db_fetch_cell_prepared('SELECT COUNT(*)
-		FROM data_template_data
-		WHERE data_source_profile_id = ?
-		AND local_data_id > 0',
-		array($profile_id)) > 0;
+	try {
+		$in_use = db_fetch_cell_prepared('SELECT COUNT(*)
+			FROM data_template_data
+			WHERE data_source_profile_id = ?
+			AND local_data_id > 0',
+			array($profile_id));
+	} catch (\Throwable $e) {
+		$in_use = false;
+	}
+
+	if ($in_use === false || !is_numeric($in_use)) {
+		cacti_log('ERROR: Unable to check whether Data Source Profile ' . (int) $profile_id . ' is in use.', false, 'WEBUI');
+
+		return true;
+	}
+
+	return (int) $in_use > 0;
 }
 
 function profile_refuse_read_only($profile_id, $what) {
@@ -410,10 +429,24 @@ function profiles_not_in_use($selected_items) {
 	$unused = array();
 
 	foreach ($selected_items as $profile_id) {
-		$in_use = db_fetch_cell_prepared('SELECT COUNT(*)
-			FROM data_template_data
-			WHERE data_source_profile_id = ?',
-			array($profile_id));
+		try {
+			$in_use = db_fetch_cell_prepared('SELECT COUNT(*)
+				FROM data_template_data
+				WHERE data_source_profile_id = ?',
+				array($profile_id));
+		} catch (\Throwable $e) {
+			cacti_log('ERROR: Unable to check usage of Data Source Profile ' . (int) $profile_id . ': ' . $e->getMessage(), false, 'WEBUI');
+			raise_message('profile_delete_failed', __('Unable to verify Data Source Profile usage. No profiles were deleted.'), MESSAGE_LEVEL_ERROR);
+
+			return false;
+		}
+
+		if ($in_use === false || !is_numeric($in_use)) {
+			cacti_log('ERROR: Unable to check usage of Data Source Profile ' . (int) $profile_id . '.', false, 'WEBUI');
+			raise_message('profile_delete_failed', __('Unable to verify Data Source Profile usage. No profiles were deleted.'), MESSAGE_LEVEL_ERROR);
+
+			return false;
+		}
 
 		if ($in_use > 0) {
 			cacti_log('WARNING: Refused to delete Data Source Profile ' . (int) $profile_id . ' in use by Data Templates or Data Sources for user ' . $_SESSION['sess_user_id'], false, 'WEBUI');

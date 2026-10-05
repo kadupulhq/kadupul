@@ -11,6 +11,8 @@
  +-------------------------------------------------------------------------+
 */
 
+require_once dirname(__DIR__, 3).'/Helpers/PhpSource.php';
+
 $root = dirname(__DIR__, 4);
 
 function boostRecoveryTestReset(array $overrides = array()) {
@@ -35,29 +37,8 @@ function boostRecoveryTestLoadFunction($root) {
 	$source = file_get_contents($root . '/poller_recovery.php');
 	expect($source)->not->toBeFalse();
 
-	$start = strpos($source, 'function recovery_delete_acknowledged_rows(');
-	expect($start)->not->toBeFalse();
+	$function = test_php_function_source($source, 'recovery_delete_acknowledged_rows');
 
-	$body  = strpos($source, '{', $start);
-	$depth = 0;
-	$end   = false;
-
-	for ($offset = $body, $length = strlen($source); $offset < $length; $offset++) {
-		if ($source[$offset] === '{') {
-			$depth++;
-		} elseif ($source[$offset] === '}') {
-			$depth--;
-
-			if ($depth === 0) {
-				$end = $offset + 1;
-				break;
-			}
-		}
-	}
-
-	expect($end)->not->toBeFalse();
-
-	$function = substr($source, $start, $end - $start);
 	$function = str_replace(array(
 		'recovery_delete_acknowledged_rows',
 		'db_execute_prepared',
@@ -77,6 +58,7 @@ function boostRecoveryTestRows($count) {
 			'local_data_id' => $index,
 			'rrd_name'      => 'ds_' . $index,
 			'time'          => sprintf('2026-01-01 00:%02d:%02d', intdiv($index, 60) % 60, $index % 60),
+			'output'        => 'value_' . $index,
 		);
 	}
 
@@ -93,7 +75,7 @@ test('an empty acknowledged set performs no delete', function () {
 		->and($GLOBALS['boost_recovery_test_state']['calls'])->toBe(array());
 });
 
-test('recovery deletes exact primary-key triples with bound parameters', function () {
+test('recovery deletes only unchanged acknowledged rows with bound parameters', function () {
 	$rows = boostRecoveryTestRows(2);
 
 	expect(boostRecoveryTestDelete($rows, 'local'))->toBeTrue()
@@ -101,10 +83,10 @@ test('recovery deletes exact primary-key triples with bound parameters', functio
 
 	$call = $GLOBALS['boost_recovery_test_state']['calls'][0];
 
-	expect(substr_count($call['sql'], '(local_data_id = ? AND rrd_name = ? AND time = ?)'))->toBe(2)
+	expect(substr_count($call['sql'], '(local_data_id = ? AND rrd_name = ? AND time = ? AND CAST(CONVERT(output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY))'))->toBe(2)
 		->and($call['params'])->toBe(array(
-			1, 'ds_1', $rows[0]['time'],
-			2, 'ds_2', $rows[1]['time'],
+			1, 'ds_1', $rows[0]['time'], 'value_1',
+			2, 'ds_2', $rows[1]['time'], 'value_2',
 		))
 		->and($call['conn'])->toBe('local');
 });
@@ -112,9 +94,9 @@ test('recovery deletes exact primary-key triples with bound parameters', functio
 test('recovery chunks exact deletes at five hundred rows', function () {
 	expect(boostRecoveryTestDelete(boostRecoveryTestRows(1001), 'local'))->toBeTrue()
 		->and($GLOBALS['boost_recovery_test_state']['calls'])->toHaveCount(3)
-		->and($GLOBALS['boost_recovery_test_state']['calls'][0]['params'])->toHaveCount(1500)
-		->and($GLOBALS['boost_recovery_test_state']['calls'][1]['params'])->toHaveCount(1500)
-		->and($GLOBALS['boost_recovery_test_state']['calls'][2]['params'])->toHaveCount(3);
+		->and($GLOBALS['boost_recovery_test_state']['calls'][0]['params'])->toHaveCount(2000)
+		->and($GLOBALS['boost_recovery_test_state']['calls'][1]['params'])->toHaveCount(2000)
+		->and($GLOBALS['boost_recovery_test_state']['calls'][2]['params'])->toHaveCount(4);
 });
 
 test('recovery stops deleting immediately after a failed chunk', function () {

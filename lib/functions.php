@@ -1964,6 +1964,25 @@ function is_hex_string(&$result) {
 	return true;
 }
 
+/** Normalize complete multi-field lists without rewriting scalar exclamation marks. */
+function normalize_poller_multi_value_result($result) {
+	if (strpos($result, '!') === false) {
+		return $result;
+	}
+	$fields = preg_split('/\s+/', trim($result));
+	if ($fields === false || cacti_sizeof($fields) < 2) {
+		return $result;
+	}
+	foreach ($fields as $field) {
+		if (!preg_match('/^[^\s:!]+[:!][^\s:!]+$/D', $field)) {
+			return $result;
+		}
+	}
+	return implode(' ', array_map(static function ($field) {
+		return str_replace('!', ':', $field);
+	}, $fields));
+}
+
 /**
  * prepare_validate_result - determines if the result value is valid or not.  If not valid returns a "U"
  *
@@ -1973,7 +1992,7 @@ function is_hex_string(&$result) {
  */
 function prepare_validate_result(&$result) {
 	/* first trim the string */
-	$result = trim($result, "'\"\n\r");
+	$result = normalize_poller_multi_value_result(trim($result, "'\"\n\r"));
 
 	/* clean off ugly non-numeric data */
 	if (is_numeric($result)) {
@@ -1987,7 +2006,7 @@ function prepare_validate_result(&$result) {
 	} elseif (is_hexadecimal($result)) {
 		dsv_log('prepare_validate_result', 'data is hex', POLLER_VERBOSITY_MEDIUM);
 
-		return hexdec($result);
+		return hexdec(str_replace(array(':', ' ', '-'), '', $result));
 	} elseif (substr_count($result, ':') || substr_count($result, '!')) {
 		/* looking for name value pairs */
 		if (substr_count($result, ' ') == 0) {

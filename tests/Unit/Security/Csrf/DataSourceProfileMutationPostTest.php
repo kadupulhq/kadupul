@@ -32,7 +32,7 @@ namespace DataSourceProfileMutationPostTest;
  * @param array<string, string> $request Other request variables.
  * @param array<string, string> $server  Request headers as $_SERVER keys.
  * @param array<int, string>    $real    Page functions to run as written.
- * @param array<string, array>  $usage   Profile id => Data Template and Data Source counts.
+ * @param array<string, array{0: int, 1: int}|false|'exception'|string|null> $usage Profile id => usage counts, a raw lookup result, or the exception sentinel.
  * @param array<string, int>    $rras    RRA id => the profile that owns it.
  *
  * @return string What the handlers printed, then the response code.
@@ -72,6 +72,7 @@ function run_profiles($method, $action, array $request = array(), array $server 
 		namespace DataSourceProfileRuntime;
 
 		const MESSAGE_LEVEL_ERROR = 3;
+		const MESSAGE_LEVEL_WARN = 2;
 		function get_request_var($v) { return isset($_REQUEST[$v]) ? $_REQUEST[$v] : ""; }
 		function get_filter_request_var($v, $f = null, $o = array()) { return get_request_var($v); }
 		function get_nfilter_request_var($v) { return get_request_var($v); }
@@ -92,7 +93,14 @@ function run_profiles($method, $action, array $request = array(), array $server 
 				return (isset($GLOBALS["rras"][$p[0]]) && (string) $GLOBALS["rras"][$p[0]] === (string) $p[1]) ? 1 : 0;
 			}
 
-			$u = isset($GLOBALS["usage"][$p[0]]) ? $GLOBALS["usage"][$p[0]] : array(0, 0);
+			$u = array_key_exists($p[0], $GLOBALS["usage"]) ? $GLOBALS["usage"][$p[0]] : array(0, 0);
+			if ($u === "exception") {
+				throw new \\RuntimeException("usage lookup failed");
+			}
+
+			if (!is_array($u)) {
+				return $u;
+			}
 
 			return strpos($s, "local_data_id > 0") !== false ? $u[1] : $u[0] + $u[1];
 		}
@@ -187,6 +195,94 @@ test('deleting profiles skips every profile a Data Template or a Data Source use
 		->and($output)->not->toContain('Refused');
 });
 
+test('profile deletion fails closed when a usage lookup fails', function () {
+	foreach (array(false, 'exception') as $failure) {
+		$output = run_profiles('POST', 'actions', array('selected_items' => 'a:1:{i:0;i:3;}', 'drp_action' => '1'), array(), array('form_actions', 'profiles_not_in_use'), array('3' => $failure));
+
+		expect($output)->toContain('MESSAGE:profile_delete_failed')
+			->and($output)->not->toContain('EXEC:DELETE FROM data_source_profiles')
+			->and($output)->not->toContain('EXEC:DELETE FROM data_source_profiles_rra')
+			->and($output)->not->toContain('EXEC:DELETE FROM data_source_profiles_cf');
+	}
+});
+
+test('a failed usage lookup in a multi-profile delete deletes none of them', function () {
+	foreach (array(false, 'exception') as $failure) {
+		foreach (array('a:2:{i:0;i:4;i:1;i:3;}', 'a:2:{i:0;i:3;i:1;i:4;}') as $selected) {
+			$output = run_profiles('POST', 'actions', array('selected_items' => $selected, 'drp_action' => '1'), array(), array('form_actions', 'profiles_not_in_use'), array('3' => $failure, '4' => array(0, 0)));
+
+			expect($output)->toContain('MESSAGE:profile_delete_failed')
+				->and($output)->not->toContain('EXEC:DELETE FROM data_source_profiles')
+				->and($output)->toContain("HEADER:Location: data_source_profiles.php?header=false\n");
+		}
+	}
+});
+
+test('a usage lookup that returns no number fails closed, and numeric strings keep the 1.2.31 result', function () {
+	foreach (array('', null) as $failure) {
+		$output = run_profiles('POST', 'actions', array('selected_items' => 'a:1:{i:0;i:3;}', 'drp_action' => '1'), array(), array('form_actions', 'profiles_not_in_use'), array('3' => $failure));
+
+		expect($output)->toContain('MESSAGE:profile_delete_failed')
+			->and($output)->not->toContain('EXEC:DELETE');
+	}
+
+	$unused = run_profiles('POST', 'actions', array('selected_items' => 'a:1:{i:0;i:3;}', 'drp_action' => '1'), array(), array('form_actions', 'profiles_not_in_use'), array('3' => '0'));
+
+	expect($unused)->toContain("EXEC:DELETE FROM data_source_profiles WHERE (id IN(3))\n")
+		->and($unused)->not->toContain('MESSAGE:profile_delete_failed');
+
+	$used = run_profiles('POST', 'actions', array('selected_items' => 'a:1:{i:0;i:3;}', 'drp_action' => '1'), array(), array('form_actions', 'profiles_not_in_use'), array('3' => '1'));
+
+	expect($used)->toContain('MESSAGE:profile_in_use')
+		->and($used)->not->toContain('EXEC:DELETE');
+});
+
+test('profile heartbeat propagation joins on both local data and template identity', function () {
+	$output = run_profiles(
+		'POST',
+		'save',
+		array('save_component_profile' => '1', 'id' => '3', 'name' => 'p', 'heartbeat' => '900'),
+		array(),
+		array('form_save', 'profile_is_read_only', 'profile_refuse_read_only'),
+		array('3' => array(0, 1))
+	);
+
+	expect($output)->toContain('EXEC:UPDATE data_template_rrd AS dtr')
+		->and($output)->toContain('ON dtd.local_data_id = dtr.local_data_id AND dtd.data_template_id = dtr.data_template_id')
+		->and($output)->not->toContain('ON dtd.local_data_id = dtr.local_data_id SET');
+});
+
+test('saving an in-use profile heartbeat does not require the disabled step field', function () {
+	$output = run_profiles(
+		'POST',
+		'save',
+		array('save_component_profile' => '1', 'id' => '3', 'name' => 'p', 'heartbeat' => '900'),
+		array(),
+		array('form_save', 'profile_is_read_only', 'profile_refuse_read_only'),
+		array('3' => array(0, 1))
+	);
+
+	expect($output)->toContain('SAVE:data_source_profiles:{"id":"3","hash":"hash","name":"p","heartbeat":"900"}')
+		->and($output)->toContain('EXEC:UPDATE data_template_rrd AS dtr')
+		->and($output)->toContain('MESSAGE:heartbeat_change')
+		->and($output)->not->toContain('"step"');
+});
+
+test('profile structural fields stay read only when the usage lookup fails', function () {
+	$output = run_profiles(
+		'POST',
+		'save',
+		array('save_component_profile' => '1', 'id' => '3', 'name' => 'p', 'step' => '60', 'heartbeat' => '900'),
+		array(),
+		array('form_save', 'profile_is_read_only', 'profile_refuse_read_only'),
+		array('3' => false)
+	);
+
+	expect($output)->toContain('MESSAGE:profile_read_only')
+		->and($output)->not->toContain('SAVE:')
+		->and($output)->not->toContain('EXEC:UPDATE data_template_rrd');
+});
+
 test('RRA removal refuses any GET, an RRA of another profile and a read only profile', function () {
 	expect_refused('item_remove', array('id' => '7', 'profile_id' => '3'));
 
@@ -232,7 +328,7 @@ test('saving a read only profile refuses the fields its edit page disables', fun
 
 	$output = run_profiles('POST', 'save', array('save_component_profile' => '1', 'id' => '3', 'name' => 'renamed', 'heartbeat' => '300'), array(), $save, array('3' => array(0, 1)));
 
-	expect($output)->toContain('SAVE:data_source_profiles:{"id":"3","hash":"hash","name":"renamed"}')
+	expect($output)->toContain('SAVE:data_source_profiles:{"id":"3","hash":"hash","name":"renamed","heartbeat":"300"}')
 		->and($output)->not->toContain('Refused');
 
 	/* Data Templates alone leave the profile editable, as the edit page does. */
@@ -263,6 +359,20 @@ test('saving an RRA refuses one of another profile, and a new or resized RRA of 
 
 	expect($output)->toContain('SAVE:data_source_profiles_rra:{"id":"7","name":"r","data_source_profile_id":"3","timespan":"86400"}')
 		->and($output)->not->toContain('Refused');
+
+	/* a usage lookup that fails reads as in use, so only the name and timespan of an owned RRA still save */
+	foreach (array(false, 'exception') as $failure) {
+		foreach (array(array('id' => '0', 'steps' => '300', 'rows' => '600'), array('id' => '7', 'steps' => '600'), array('id' => '7', 'rows' => '900')) as $locked) {
+			$output = run_profiles('POST', 'save', array('save_component_rra' => '1', 'profile_id' => '3', 'name' => 'r', 'timespan' => '86400') + $locked, array(), $save, array('3' => $failure), array('7' => 3));
+
+			expect($output)->toContain('MESSAGE:profile_read_only')
+				->and($output)->not->toContain('SAVE:data_source_profiles_rra');
+		}
+
+		$output = run_profiles('POST', 'save', array('save_component_rra' => '1', 'id' => '7', 'profile_id' => '3', 'name' => 'r', 'timespan' => '86400'), array(), $save, array('3' => $failure), array('7' => 3));
+
+		expect($output)->toContain('SAVE:data_source_profiles_rra:{"id":"7","name":"r","data_source_profile_id":"3","timespan":"86400"}');
+	}
 
 	$output = run_profiles('POST', 'save', array('save_component_rra' => '1', 'id' => '0', 'profile_id' => '3', 'name' => 'r', 'timespan' => '86400', 'steps' => '600', 'rows' => '700'), array(), $save, array('3' => array(2, 0)));
 

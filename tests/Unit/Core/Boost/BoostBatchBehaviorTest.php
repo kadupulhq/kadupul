@@ -152,3 +152,16 @@ test('ignored duplicate keys are acknowledged but logged', function () {
 		->and($GLOBALS['boost_batch_test_state']['logs'])->toHaveCount(1)
 		->and($GLOBALS['boost_batch_test_state']['logs'][0][0])->toContain('duplicate sample keys');
 });
+
+test('recovery replacements include their upsert suffix in the packet budget', function () {
+    boostBatchTestReset(['packet_limit' => 200, 'affected_rows' => 0]);
+    $tuples = ["(1,'alpha','2026-01-01 00:00:00','1111111111')", "(2,'beta','2026-01-01 00:00:01','2222222222')", "(3,'gamma','2026-01-01 00:00:02','3333333333')"];
+    expect(boostBatchTestFlush($tuples, new stdClass(), true))->toBeTrue();
+    $queries = $GLOBALS['boost_batch_test_state']['queries'];
+    expect($queries)->toHaveCount(3)->and($GLOBALS['boost_batch_test_state']['logs'])->toBe([]);
+    foreach ($queries as $index => $query) {
+        expect($query)->toStartWith('INSERT INTO poller_output_boost')->toContain($tuples[$index])
+            ->toEndWith(' ON DUPLICATE KEY UPDATE output=VALUES(output)');
+        expect(strlen($query))->toBeLessThanOrEqual(200);
+    }
+});
