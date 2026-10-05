@@ -22,7 +22,7 @@ final class DeviceCollectorCleanupTest extends TestCase
         $primary->expects(self::never())->method('beginTransaction');
         $primary->expects(self::never())->method('prepare');
         $primary->expects(self::never())->method('commit');
-        (new DeviceCollectorTransfer())->finish($primary, 42, [], [7 => 1, 8 => 3], 3);
+        (new DeviceCollectorTransfer(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->finish($primary, 42, [], [7 => 1, 8 => 3], 3);
     }
 
     public function testCleanupNeverTakesOverACallerTransaction(): void
@@ -34,7 +34,7 @@ final class DeviceCollectorCleanupTest extends TestCase
         $primary->expects(self::never())->method('commit');
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Collector cleanup transaction unavailable');
-        (new DeviceCollectorTransfer())->finish($primary, 42, [], [7 => 2], 1);
+        (new DeviceCollectorTransfer(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->finish($primary, 42, [], [7 => 2], 1);
     }
 
     public function testRejectedTransactionCannotReadOrPurge(): void
@@ -44,6 +44,6 @@ final class DeviceCollectorCleanupTest extends TestCase
         $primary->expects(self::once())->method('beginTransaction')->willReturn(false);
         $primary->expects(self::never())->method('prepare');
         $this->expectException(RuntimeException::class);
-        (new DeviceCollectorTransfer())->finish($primary, 42, [], [7 => 2], 1);
+        (new DeviceCollectorTransfer(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner()))->finish($primary, 42, [], [7 => 2], 1);
     }
 }

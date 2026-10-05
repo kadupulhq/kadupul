@@ -21,6 +21,8 @@ $rra_path = $config['rra_path'] . '/';
 set_default_action();
 
 if (isset_request_var('rescan')) {
+    // A rescan rebuilds the RRD file list after the global guard has run.
+    csrf_refuse_cross_site_get();
     set_request_var('action', 'restart');
 }
 

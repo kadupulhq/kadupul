@@ -53,8 +53,8 @@ app.php/links/new	symfony:navigation_link_create	methods=GET|HEAD|POST; ConsoleA
 app.php/links/{id}/edit	symfony:navigation_link_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8
 app.php/session	symfony:session	methods=GET|HEAD; ConsoleAccess realm 8; reviewed at c1e137157c2e: answers 401 with no identity when the actor is null
 auth_changepassword.php	authenticated	own session check; action=checkpass answers anonymously with the password policy verdict; reviewed at ff7ac6fa6c55
-auth_login.php	anonymous-allowed	login handler; include/auth.php includes it after bootstrap, so a direct request stops at the first undefined function; reviewed at 783892662d44
-auth_profile.php	guest-or-realm:20	include/auth.php; guest_account
+auth_login.php	anonymous-allowed	login handler; include/auth.php includes it after bootstrap, so a direct request stops at the first undefined function; reviewed at 7daec21be402
+auth_profile.php	realm:20	include/auth.php; guest_account withdrawn from anonymous and guest callers
 automation_devices.php	realm:23	include/auth.php
 automation_graph_rules.php	realm:23	include/auth.php
 automation_networks.php	realm:23	include/auth.php
@@ -88,7 +88,7 @@ gprint_presets.php	realm:5	include/auth.php
 graph.php	guest-or-realm:7	include/auth.php; guest_account
 graph_image.php	guest-or-realm:7	include/auth.php; guest_account, auth_text
 graph_json.php	guest-or-realm:7	include/auth.php; guest_account, auth_json
-graph_realtime.php	guest-or-realm:25	include/auth.php; guest_account
+graph_realtime.php	realm:25	guest identity from include/auth.php; own realm 25 check for every caller; reviewed at b5481a7c85f5
 graph_templates.php	realm:10	include/auth.php
 graph_templates_inputs.php	realm:10	include/auth.php
 graph_templates_items.php	realm:10	include/auth.php
@@ -107,14 +107,16 @@ include/bottom_footer.php	anonymous-allowed	fragment without bootstrap, reviewed
 include/cli_check.php	cli-only	guard: php_sapi_name() check
 include/config.php	web-server-denied	nginx; apache .htaccess
 include/content/index.php	anonymous-allowed	redirect-only
-include/csrf.php	anonymous-allowed	fragment without bootstrap, reviewed at 80bc61dab43e; included by include/global.php
+include/csrf.php	anonymous-allowed	fragment without bootstrap, reviewed at bc25ffb52c48; included by include/global.php
+include/csrf.php	anonymous-allowed	fragment without bootstrap, reviewed at bc25ffb52c48; included by include/global.php
+include/csrf.php	anonymous-allowed	fragment without bootstrap, reviewed at bc25ffb52c48; included by include/global.php
 include/global.php	web-server-denied	nginx; apache .htaccess
 include/global_arrays.php	anonymous-allowed	fragment without bootstrap, reviewed at 7e957ef68e4b; included by include/global.php, lib/api_aggregate.php, lib/boost.php
 include/global_constants.php	anonymous-allowed	fragment without bootstrap, reviewed at 44950e59dd15; included by include/global.php
 include/global_form.php	anonymous-allowed	fragment without bootstrap, reviewed at 95a0b48968a8; included by include/global.php
 include/global_languages.php	anonymous-allowed	fragment without bootstrap, reviewed at 614a6beac129; included by include/global.php
-include/global_session.php	anonymous-allowed	fragment without bootstrap, reviewed at 0db939a69dc9; included by auth_changepassword.php, auth_login.php, graph_realtime.php
-include/global_settings.php	anonymous-allowed	fragment without bootstrap, reviewed at f1bbfe6405f9; included by include/global.php
+include/global_session.php	anonymous-allowed	fragment without bootstrap, reviewed at 89b8966e06b4; included by auth_changepassword.php, auth_login.php, graph_realtime.php
+include/global_settings.php	anonymous-allowed	fragment without bootstrap, reviewed at 3756352b126a; included by include/global.php
 include/index.php	anonymous-allowed	redirect-only
 include/js/LC_MESSAGES/index.php	anonymous-allowed	redirect-only
 include/js/index.php	anonymous-allowed	redirect-only
@@ -224,7 +226,7 @@ install/upgrades/1_2_7.php	anonymous-allowed	inert: declarations and literal ass
 install/upgrades/1_2_8.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/index.php	anonymous-allowed	redirect-only
 lib/	web-server-denied	nginx; apache .htaccess
-link.php	realm:10000+id	own realm check per external link id; reviewed at 929a564cf868
+link.php	realm:10000+id	persisted session eligibility before protected lookup; own realm check per external link id; reviewed at e18bb8d99318
 links.php	symfony:forward	forwards to app.php/links/legacy
 locales/LC_MESSAGES/index.php	anonymous-allowed	redirect-only
 locales/index.php	anonymous-allowed	redirect-only
@@ -279,6 +281,8 @@ tools/	web-server-denied	nginx; apache .htaccess
 tree.php	realm:4	include/auth.php
 user_admin.php	realm:1	include/auth.php
 user_domains.php	realm:1	include/auth.php
+user_group_admin.php	realm:1	include/auth.php
+user_group_admin.php	realm:1	include/auth.php
 user_group_admin.php	realm:1	include/auth.php
 utilities.php	realm:15	include/auth.php
 var/	web-server-denied	nginx; apache .htaccess

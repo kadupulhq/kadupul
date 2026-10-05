@@ -85,14 +85,19 @@ class Client:
         self.base = base
         self.jar = http.cookiejar.CookieJar()
         self.opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(self.jar), NoRedirect())
-        self.token = None
+        # The installer signs tokens with a per-session secret and every other
+        # page with the stored one (cacti_csrf_load_secret()), so a token from
+        # one side fails csrf-magic on the other and the page's own gate never
+        # runs. Keep one token per side.
+        self.tokens = {}
 
     def request(self, path, fields=None):
         data = None
+        scope = path.startswith('install/')
         if fields is not None:
             fields = dict(fields)
-            if self.token:
-                fields['__csrf_magic'] = self.token
+            if self.tokens.get(scope):
+                fields['__csrf_magic'] = self.tokens[scope]
             data = urllib.parse.urlencode(fields).encode()
         try:
             response = self.opener.open(self.base + '/' + path, data=data, timeout=60)
@@ -102,7 +107,7 @@ class Client:
         token = re.search(r"name=['\"]__csrf_magic['\"] value=['\"]([^'\"]+)", body) \
             or re.search(r"csrfMagicToken\s*=\s*['\"]([^'\"]+)", body)
         if token:
-            self.token = token[1]
+            self.tokens[scope] = token[1]
         return {'status': response.status, 'location': response.headers.get('Location') or '', 'body': body,
                 'symfony': path.startswith(('app.php', 'public/index.php')),
                 'admin_layout': bool(re.search(r"(?:id=['\"]main_logo|class=['\"]cactiPageHead)", body))}
@@ -422,11 +427,29 @@ def main():
             observed.setdefault('web-server-denied status:%d' % response['status'], []).append(path)
 
         # Guest pass: with a guest user set as the Settings page stores it,
-        # exactly the guest-or-* pages admit an anonymous caller.
+        # guest-or-* pages admit an anonymous caller; realtime additionally requires realm 25.
         rig.sql("INSERT INTO settings (name, value) SELECT 'guest_user', id FROM user_auth WHERE username = 'guest' "
                 "ON DUPLICATE KEY UPDATE `value` = VALUES(`value`);")
         if rig.sql("SELECT value FROM settings WHERE name = 'guest_user'").strip() in ('', '0'):
             raise RuntimeError('guest_user was not set for the guest pass')
+        # Realtime is a guest-capable identity path with a separate realm gate.
+        # Prove the empty-action and init denials, then admit the same guest
+        # with realm 25; never label all guest-capable pages automatically open.
+        rig.sql("SET @guest = (SELECT id FROM user_auth WHERE username = 'guest');"
+                "DELETE FROM user_auth_realm WHERE user_id = @guest AND realm_id = 25;")
+        for path in ('graph_realtime.php', 'graph_realtime.php?action=init&local_graph_id=1'):
+            counted += 1
+            response = Client(base).request(path)
+            observed.setdefault('guest realtime without realm', []).append(path)
+            if response['status'] != 403 or response['body'].strip():
+                failures.append('guest realtime without realm was not stopped before rendering: ' + path)
+        rig.sql("INSERT INTO user_auth_realm (user_id, realm_id) SELECT id, 25 FROM user_auth WHERE username = 'guest';")
+        counted += 1
+        response = Client(base).request('graph_realtime.php')
+        observed.setdefault('guest realtime with realm', []).append('graph_realtime.php')
+        if response['status'] != 200 or refusal(response) is not None:
+            failures.append('guest realtime with realm was not admitted')
+        rig.sql("DELETE FROM user_auth_realm WHERE realm_id = 25 AND user_id = (SELECT id FROM user_auth WHERE username = 'guest');")
         for entry, gate, detail in rows:
             if gate == 'symfony:forward':
                 gate, detail = routes['app.php' + detail.rsplit('app.php', 1)[1]]

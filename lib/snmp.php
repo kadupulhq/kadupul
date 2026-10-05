@@ -580,46 +580,19 @@ function cacti_snmp_command_log_string(array $arguments)
     return implode(' ', array_map('cacti_escapeshellarg', $arguments));
 }
 
+/**
+ * @deprecated Retained for plugins using the legacy shell-string contract.
+ *             Core binary callers use cacti_get_snmpv3_auth_arguments().
+ */
 function cacti_get_snmpv3_auth($auth_proto, $auth_user, $auth_pass, $priv_proto, $priv_pass, $context, $engineid)
 {
-    global $snmp_priv_protocols, $snmp_auth_protocols;
-
-    $sec_details = ' -a ' . snmp_escape_string($snmp_auth_protocols[$auth_proto]) . ' -A ' . snmp_escape_string($auth_pass);
-
-    if ($priv_proto == '[None]' || $priv_pass == '') {
-        if ($auth_pass == '' || $auth_proto == '[None]') {
-            $sec_level   = 'noAuthNoPriv';
-            $sec_details = '';
-        } else {
-            $sec_level   = 'authNoPriv';
-        }
-
-        $priv_proto = '';
-        $priv_pass  = '';
-    } else {
-        $sec_level  = 'authPriv';
-        $priv_proto = $snmp_priv_protocols[$priv_proto];
-        $priv_pass  = '-X ' . snmp_escape_string($priv_pass) . ' -x ' . snmp_escape_string($priv_proto);
+    $arguments = cacti_get_snmpv3_auth_arguments($auth_proto, $auth_user, $auth_pass, $priv_proto, $priv_pass, $context, $engineid);
+    $parts = array();
+    foreach ($arguments as $index => $argument) {
+        $parts[] = $index % 2 === 0 ? $argument : snmp_escape_string($argument);
     }
 
-    if ($context != '') {
-        $context = '-n ' . snmp_escape_string($context);
-    } else {
-        $context = '';
-    }
-
-    if ($engineid != '') {
-        $engineid = '-e ' . snmp_escape_string($engineid);
-    } else {
-        $engineid = '';
-    }
-
-    return trim('-u ' . snmp_escape_string($auth_user) .
-        ' -l ' . snmp_escape_string($sec_level) .
-        ' ' . $sec_details .
-        ' ' . $priv_pass .
-        ' ' . $context .
-        ' ' . $engineid);
+    return implode(' ', $parts);
 }
 
 function cacti_snmp_timeout_ms($session, $info)

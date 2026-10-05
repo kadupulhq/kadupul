@@ -22,7 +22,7 @@ def prepare_database_failure_reports(directory, scratch, source, mutation):
         raise RuntimeError('Unexpected scratch coverage reports')
     if not any(1 in (report['files'] or {}).get(source, {}).get('lines', {}).values()
                for _, report in reports):
-        raise RuntimeError('Self-test requires real database-session authentication measurements')
+        raise RuntimeError('Self-test requires real required-source measurements')
     for path, report in reports:
         destination = scratch / 'raw' / path.name
         shutil.copyfile(path, destination)
@@ -34,6 +34,43 @@ def prepare_database_failure_reports(directory, scratch, source, mutation):
         else:
             observation['sha256'] = '0' * 64
         destination.write_text(json.dumps(report))
+
+
+def buffered_wrapper_line():
+    statement = r'$changed = (new \Kadupul\Inventory\Infrastructure\Legacy\PollerCacheBufferWrite($transactions))->write('
+    matches = [number for number, line in enumerate((ROOT / 'lib/utility.php').read_text().splitlines(), 1)
+               if line.strip() == statement]
+    if len(matches) != 1:
+        raise RuntimeError('Self-test requires a unique physical buffered-cache caller statement')
+    return matches[0]
+
+
+def prepare_wrapper_line_failure_reports(directory, scratch, anchor):
+    """Remove only the real caller line from every copied physical report."""
+    source = '/var/www/html/lib/utility.php'
+    helper = '/var/www/html/src/Inventory/Infrastructure/Legacy/PollerCacheBufferWrite.php'
+    actual_anchor = other_utility = actual_helper = False
+    reports = sorted((directory / 'raw').glob('coverage-*.json'))
+    if not reports:
+        raise RuntimeError('Self-test requires real buffered-cache caller reports')
+    for path in reports:
+        if path.is_symlink() or not path.is_file():
+            raise RuntimeError('Unexpected physical coverage report')
+        report = json.loads(path.read_text())
+        observation = (report['files'] or {}).get(source)
+        actual_helper |= 1 in (report['files'] or {}).get(helper, {}).get('lines', {}).values()
+        destination = scratch / 'raw' / path.name
+        if observation is None:
+            shutil.copyfile(path, destination)
+            continue
+        lines = observation['lines']
+        actual_anchor |= lines.get(str(anchor)) == 1
+        other_utility |= any(hit == 1 for line, hit in lines.items() if line != str(anchor))
+        # All other identities, hashes, observations and helper hits stay intact.
+        lines.pop(str(anchor), None)
+        destination.write_text(json.dumps(report))
+    if not actual_anchor or not other_utility or not actual_helper:
+        raise RuntimeError('Self-test requires real caller, other utility and helper hits')
 
 
 def main():
@@ -64,6 +101,7 @@ def main():
         'src/Platform/Infrastructure/Symfony/Controller/LegacyAboutController.php',
         'src/Platform/Infrastructure/Legacy/InstallationProductVersion.php',
         'vdef.php',
+        'data_source_profiles.php', 'lib/data_source_profile_integrity.php',
         'src/GraphDefinition/Infrastructure/Legacy/LegacyVdefEditor.php',
         'src/GraphDefinition/Infrastructure/Symfony/Controller/VdefItemController.php',
         'src/GraphDefinition/Infrastructure/Symfony/Controller/VdefActionController.php',
@@ -129,6 +167,9 @@ def main():
         'src/Inventory/Application/Query/ListDeviceAssignmentTargets.php',
         'src/Inventory/Infrastructure/Legacy/DeviceBulkAssignmentWriter.php',
         'src/Inventory/Infrastructure/Legacy/DeviceCollectorTransfer.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceCollectorCleanup.php',
+        'src/Inventory/Infrastructure/Legacy/PollerCacheBufferWrite.php',
+        'src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php',
         'src/Inventory/Infrastructure/Symfony/Form/DeviceBulkAssignmentType.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceBulkAssignmentController.php',
         'src/Inventory/Application/Command/ChangeDevicesSnmp.php',
@@ -227,12 +268,16 @@ def main():
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsCommand.php',
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsInput.php',
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsLegacyArguments.php')]
-    legacy_pages = ('graphs.php', 'cdef.php', 'aggregate_templates.php', 'color_templates.php', 'aggregate_graphs.php')
+    legacy_pages = ('graphs.php', 'cdef.php', 'aggregate_templates.php', 'color_templates.php', 'aggregate_graphs.php', 'lib/utility.php')
+    wrapper_line = buffered_wrapper_line()
     required += [prefix + path for path in legacy_pages]
     for path in (args.files / 'raw').glob('coverage-*.json'):
         report = json.loads(path.read_text())
         for source in required:
-            if 1 in (report['files'] or {}).get(source, {}).get('lines', {}).values():
+            observation = (report['files'] or {}).get(source, {})
+            lines = observation.get('lines', {})
+            if (1 in lines.values() and
+                    (source != prefix + 'lib/utility.php' or lines.get(str(wrapper_line)) == 1)):
                 measured['files'][source] = report['files'][source]
     if set(measured['files']) != set(required):
         raise RuntimeError('Self-test requires real HTTP and worker measurements')
@@ -253,7 +298,15 @@ def main():
     assignment_checks += ['bulk site preserves preflight remote disabled state', 'bulk template preserves preflight remote disabled state']
     assignment_checks += ['bulk collector cleanup rejects changed ownership before purging', 'bulk collector cleanup failure cannot report success', 'bulk collector cleanup failure retains committed destination ownership', 'bulk collector cleanup failure leaves recoverable old copies', 'bulk collector recovers old residue by returning to remote']
     collector_cleanup_checks = ['collector cleanup failure retains committed primary ownership and polling rows', 'collector cleanup failure leaves a recoverable old host copy', 'collector cleanup failure emits no success audit', 'collector reassignment recovers old host and polling residue through confirmed moves']
+    assignment_checks += ['collector cleanup failure persists old-owner retry receipt', 'collector same-target retry reports repeated cleanup failure', 'collector failed retry retains old copy and receipt', 'collector disabled pending owner refuses cleanup retry', 'collector unavailable cleanup retains retry receipt', 'collector successful same-target retry removes old dependent copies', 'collector successful cleanup acknowledges retry receipt', 'bulk collector cleanup failure persists complete retry inventory', 'bulk collector same-target retry reports repeated cleanup failure', 'bulk collector failed retry retains complete cleanup inventory', 'bulk collector same-target retry completes pending cleanup', 'bulk collector successful retry removes old polling copies', 'bulk collector successful cleanup acknowledges complete retry inventory']
+    assignment_checks += ['collector verified cleanup publishes no redundant purge command', 'bulk collector verified cleanup publishes no redundant purge commands']
+    assignment_checks += ['selected PDO runner preserves primary and collector identities and caller-owned work']
+    assignment_checks += ['collector acknowledgement failure cannot report success after remote cleanup', 'collector failed acknowledgement retains receipt despite verified remote absence', 'bulk collector later acknowledgement failure cannot report success', 'bulk collector failed acknowledgement rolls back all receipts after remote absence']
+    profile_checks = ['in-use profile heartbeat saves when the disabled step field is absent', 'selected template RRD heartbeat follows its profile', 'selected local-source RRD heartbeat follows its profile', 'unrelated template RRD heartbeat is unchanged', 'unrelated local-source RRD heartbeat is unchanged', 'unchanged structural fields permit an in-use heartbeat save', 'single forged structural field refuses the complete in-use save: x_files_factor', 'single forged structural field refuses the complete in-use save: consolidation_function_id[]', 'template-only profile propagates heartbeat without local data sources', 'unused profile consolidation-only save is independent of step submission', 'unused profile factor-only save retains interval and consolidation functions', 'new profile creation persists submitted structural fields', 'unused profile structural edits save normally', "malformed consolidation selection causes no partial writes: '2'", "malformed consolidation selection causes no partial writes: ['99']", "malformed consolidation selection causes no partial writes: ['1e0']", "malformed consolidation selection causes no partial writes: ['1', '2', '3', '4', '1']", 'template-only heartbeat save emits no existing-file tuning warning', 'non-templated local heartbeats update only for the selected profile', 'unchanged heartbeat retains existing metadata and emits no tuning warning', 'profile save rejects missing CSRF before persistence', 'template-only profile accepts every structural field', 'read-only refusal displays its error and records the operator warning: x_files_factor', 'single forged structural field leaves propagated heartbeat unchanged: x_files_factor', 'read-only refusal displays its error and records the operator warning: consolidation_function_id[]', 'single forged structural field leaves propagated heartbeat unchanged: consolidation_function_id[]']
     failures = {
+        'profile-heartbeat-test-hash': 'Integration test source differs',
+        'missing-profile-heartbeat-test-hash': 'Integration test source differs',
+        **{f'missing-profile-heartbeat-check-{index}': 'Incomplete Symfony integration' for index in range(len(profile_checks))},
         'data-source-profile-test-hash': 'Integration test source differs',
         'about-authentication-test-hash': 'Integration test source differs',
         'missing-data-source-profile-test-hash': 'Integration test source differs',
@@ -285,6 +338,7 @@ def main():
         'vdef-probe-hash': 'Integration test source differs',
         'vdef-browser-probe-hash': 'Integration test source differs',
         'vdef-browser-handler-hash': 'Integration test source differs',
+        'vdef-browser-receipt-helper-hash': 'Integration test source differs',
         'missing-vdef-selection-check-0': 'Incomplete Symfony integration',
         'missing-vdef-selection-check-1': 'Incomplete Symfony integration',
         'missing-vdef-selection-check-2': 'Incomplete Symfony integration',
@@ -353,6 +407,11 @@ def main():
         'missing-widen-check': 'Incomplete Symfony integration checks',
     }
     failures['missing-legacy-page-test-hash'] = 'Integration test source differs'
+    failures['missing-selected-runner-check'] = 'Incomplete Symfony integration'
+    for source in ['src/Platform/Contract/ReferenceWriteTransactionRunner.php',
+                   'src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php']:
+        failures['missing-runner-registration-' + source] = 'Integration test source differs'
+        failures['stale-runner-registration-' + source] = 'Integration test source differs'
     failures['stale-legacy-page-test-hash'] = 'Integration test source differs'
     for index in range(len(REQUIRED_CHECKS)):
         failures['missing-legacy-page-check-' + str(index)] = 'Incomplete Symfony integration'
@@ -392,6 +451,12 @@ def main():
             worker = data['files'][required[0]]
             if case == 'source-hash':
                 worker['sha256'] = '0' * 64
+            elif case == 'missing-selected-runner-check':
+                evidence['checks'].remove('selected PDO runner preserves primary and collector identities and caller-owned work')
+            elif case.startswith('missing-runner-registration-'):
+                evidence['source_sha256'].pop(case.removeprefix('missing-runner-registration-'))
+            elif case.startswith('stale-runner-registration-'):
+                evidence['source_sha256'][case.removeprefix('stale-runner-registration-')] = '0' * 64
             elif case == 'data-source-profile-test-hash':
                 evidence['source_sha256']['tests/Symfony/data_source_profile_scenarios.py'] = '0' * 64
             elif case == 'about-authentication-test-hash':
@@ -436,12 +501,20 @@ def main():
                 evidence['source_sha256']['tests/Symfony/palette_sql_failure_probe.php'] = '0' * 64
             elif case == 'palette-test-hash':
                 evidence['source_sha256']['tests/Symfony/palette_color_scenarios.py'] = '0' * 64
+            elif case == 'profile-heartbeat-test-hash':
+                evidence['source_sha256']['tests/Symfony/data_source_profile_heartbeat_scenarios.py'] = '0' * 64
+            elif case == 'missing-profile-heartbeat-test-hash':
+                evidence['source_sha256'].pop('tests/Symfony/data_source_profile_heartbeat_scenarios.py')
+            elif case.startswith('missing-profile-heartbeat-check-'):
+                evidence['checks'].remove(profile_checks[int(case.rsplit('-', 1)[1])])
             elif case == 'missing-data-source-profile-test-hash':
                 evidence['source_sha256'].pop('tests/Symfony/data_source_profile_scenarios.py')
             elif case == 'vdef-probe-hash':
                 evidence['source_sha256']['tests/Symfony/vdef_transaction_probe.php'] = '0' * 64
             elif case == 'vdef-browser-probe-hash':
                 evidence['source_sha256']['tests/Symfony/vdef_browser_probe.cjs'] = '0' * 64
+            elif case == 'vdef-browser-receipt-helper-hash':
+                evidence['source_sha256']['tests/e2e/browser-coverage.js'] = '0' * 64
             elif case == 'vdef-browser-handler-hash':
                 evidence['source_sha256']['public/js/vdef-item.js'] = '0' * 64
             elif case.startswith('missing-vdef-selection-check-'):
@@ -604,6 +677,72 @@ def main():
                 if output.read_text() != 'previous report':
                     raise RuntimeError('Invalid database measurements replaced the previous report')
                 print('PASS database-' + mutation + '-' + source.rsplit('/', 1)[-1], flush=True)
+
+
+    runner_source = prefix + 'src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php'
+    runner_registrations = ['src/Platform/Contract/ReferenceWriteTransactionRunner.php',
+                            'src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php']
+    for handler, directory in [('files', args.files), ('database', args.database)]:
+        with tempfile.TemporaryDirectory(prefix='symfony-selected-runner-negative-') as temporary:
+            scratch = Path(temporary)
+            (scratch / 'raw').mkdir()
+            original_manifest = json.loads((directory / 'observations.json').read_text())
+            mutations = [('measurement', mutation, runner_source) for mutation in ('unmeasured', 'stale')]
+            mutations += [('registration', mutation, source) for source in runner_registrations
+                          for mutation in ('missing', 'stale')]
+            mutations += [('marker', 'missing', 'selected PDO runner preserves primary and collector identities and caller-owned work')]
+            for kind, mutation, source in mutations:
+                evidence = copy.deepcopy(original_manifest)
+                if kind == 'measurement':
+                    prepare_database_failure_reports(directory, scratch, source, mutation)
+                    expected = 'Missing measured execution' if mutation == 'unmeasured' else 'Covered source differs'
+                else:
+                    for path in (directory / 'raw').glob('coverage-*.json'):
+                        shutil.copyfile(path, scratch / 'raw' / path.name)
+                    if kind == 'registration':
+                        if mutation == 'missing':
+                            evidence['source_sha256'].pop(source)
+                        else:
+                            evidence['source_sha256'][source] = '0' * 64
+                        expected = 'Integration test source differs'
+                    else:
+                        evidence['checks'].remove(source)
+                        expected = 'Incomplete Symfony integration'
+                (scratch / 'observations.json').write_text(json.dumps(evidence))
+                output = scratch / 'result.xml'
+                output.write_text('previous report')
+                files = scratch if handler == 'files' else args.files.resolve()
+                database = scratch if handler == 'database' else args.database.resolve()
+                result = subprocess.run([args.php, str(ROOT / 'tests/Symfony/merge_coverage.php'),
+                                         str(args.unit.resolve()), str(files), str(database),
+                                         str(args.offline.resolve()), str(output)],
+                                        capture_output=True, text=True, timeout=60)
+                if result.returncode == 0 or expected not in result.stdout + result.stderr:
+                    raise RuntimeError(f'{handler} runner {kind} {mutation}: unexpected result: {result.stdout} {result.stderr}')
+                if output.read_text() != 'previous report':
+                    raise RuntimeError('Invalid runner evidence replaced the previous report')
+                print('PASS ' + handler + '-runner-' + kind + '-' + mutation + '-' + source.rsplit('/', 1)[-1], flush=True)
+
+    for handler, directory in [('files', args.files), ('database', args.database)]:
+        with tempfile.TemporaryDirectory(prefix='symfony-physical-wrapper-negative-') as temporary:
+            scratch = Path(temporary)
+            (scratch / 'raw').mkdir()
+            shutil.copyfile(directory / 'observations.json', scratch / 'observations.json')
+            prepare_wrapper_line_failure_reports(directory, scratch, wrapper_line)
+            output = scratch / 'result.xml'
+            output.write_text('previous report')
+            files = scratch if handler == 'files' else args.files.resolve()
+            database = scratch if handler == 'database' else args.database.resolve()
+            result = subprocess.run([args.php, str(ROOT / 'tests/Symfony/merge_coverage.php'),
+                                     str(args.unit.resolve()), str(files), str(database),
+                                     str(args.offline.resolve()), str(output)],
+                                    capture_output=True, text=True, timeout=60)
+            expected = 'Missing physical buffered-cache caller execution: lib/utility.php'
+            if result.returncode == 0 or expected not in result.stdout + result.stderr:
+                raise RuntimeError(f'{handler} physical caller omission: unexpected merge result: {result.stdout} {result.stderr}')
+            if output.read_text() != 'previous report':
+                raise RuntimeError('Missing physical caller replaced the previous report')
+            print('PASS ' + handler + '-missing-physical-buffered-cache-caller', flush=True)
 
 
 if __name__ == '__main__':

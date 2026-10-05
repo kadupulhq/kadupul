@@ -197,7 +197,7 @@ switch (get_request_var('action')) {
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 
 	var originalWidth = null;
-	var refreshTime   = <?php print read_user_setting('page_refresh') * 1000;?>;
+	var refreshTime   = <?php print (int) read_user_setting('page_refresh') * 1000;?>;
 	var graphTimeout  = null;
 
 	function initializeGraph() {

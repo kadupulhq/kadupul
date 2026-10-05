@@ -2951,8 +2951,8 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 
             /* initialize dash support */
             $dash = '';
-            $graph_item_dashes = !empty($graph_item['dashes']) && preg_match('/^[0-9]+[,0-9]*$/D', (string) $graph_item['dashes']) === 1 ? rrdtool_pipe_quote($graph_item['dashes']) : '';
-            $graph_item_dash_offset = !empty($graph_item['dash_offset']) && preg_match('/^[0-9]+$/D', (string) $graph_item['dash_offset']) === 1 ? rrdtool_pipe_quote($graph_item['dash_offset']) : '';
+            $graph_item_dashes = !empty($graph_item['dashes']) && preg_match('/^[0-9]+(?:\.[0-9]+)?(?:,[0-9]+(?:\.[0-9]+)?)*\z/', (string) $graph_item['dashes']) === 1 ? rrdtool_pipe_quote($graph_item['dashes']) : '';
+            $graph_item_dash_offset = !empty($graph_item['dash_offset']) && preg_match('/^[0-9]+(?:\.[0-9]+)?\z/', (string) $graph_item['dash_offset']) === 1 ? rrdtool_pipe_quote($graph_item['dash_offset']) : '';
             if ($graph_item['graph_type_id'] == GRAPH_ITEM_TYPE_LINE1 ||
                 $graph_item['graph_type_id'] == GRAPH_ITEM_TYPE_LINE2 ||
                 $graph_item['graph_type_id'] == GRAPH_ITEM_TYPE_LINE3 ||

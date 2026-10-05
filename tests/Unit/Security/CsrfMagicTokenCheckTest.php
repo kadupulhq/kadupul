@@ -44,7 +44,7 @@ require $argv[1] . '/lib/functions.php';
 require $argv[1] . '/lib/html_utility.php';
 function __($message) { return $message; }
 $messages = array('csrf_timeout' => array('message' => 'Session expired', 'type' => 'error'));
-$config = array('base_path' => $argv[1], 'include_path' => $argv[1] . '/include', 'url_path' => '/kadupul/', 'is_web' => true, 'path_csrf_secret' => $argv[2] . '/owned-secret.php');
+$config = array('base_path' => $argv[1], 'include_path' => $argv[1] . '/include', 'url_path' => '/kadupul/', 'is_web' => true, 'path_csrf_web_root' => $argv[1], 'path_csrf_secret' => $argv[2] . '/owned-secret.php');
 $_SERVER['REQUEST_METHOD'] = 'GET';
 $_SERVER['REQUEST_URI'] = '/kadupul/graphs.php?probe-query-value';
 $_SERVER['SERVER_NAME'] = 'example.test';
@@ -52,6 +52,7 @@ $_SERVER['SERVER_PORT'] = 80;
 $_GET = array('probe-get-key' => 'probe-get-value');
 $_POST = array();
 session_start(array('save_path' => $argv[2], 'use_cookies' => 0));
+file_put_contents($argv[2] . '/owned-secret.php', '<?php $secret = ' . var_export(str_repeat('a', 64), true) . ';');
 require $argv[1] . '/include/csrf.php';
 csrf_conf('log_file', $argv[2] . '/csrf.log');
 PHP;
@@ -264,60 +265,66 @@ test('the complete rotation CLI uses the installed publisher and reports its res
     $repository = dirname(__DIR__, 3);
     $root = sys_get_temp_dir() . '/csrf-rotation-result-' . bin2hex(random_bytes(8));
     mkdir($root, 0700);
-    foreach (array('/cli', '/include', '/lib', '/keys') as $directory) {
+    foreach (array('/cli', '/include', '/lib') as $directory) {
         mkdir($root . $directory, 0700);
     }
+    mkdir($root . '-keys', 0700);
     $old = '<?php $secret = "working-fixture-secret";' . PHP_EOL;
     try {
         $source = file_get_contents($repository . '/cli/refresh_csrf.php');
         expect($source)->toBeString();
         file_put_contents($root . '/cli/refresh_csrf.php', $source);
-        file_put_contents($root . '/keys/working.php', $old);
+        file_put_contents($root . '-keys/working.php', $old);
         file_put_contents($root . '/lib/poller.php', '<?php');
         file_put_contents($root . '/lib/utility.php', '<?php');
         $bootstrap = <<<'PHP'
 <?php
-$config = array('base_path' => dirname(__DIR__), 'path_csrf_secret' => dirname(__DIR__) . '/keys/working.php');
+$config = array('base_path' => dirname(__DIR__), 'path_csrf_web_root' => dirname(__DIR__), 'path_csrf_secret' => dirname(__DIR__) . '-keys/working.php');
 function cacti_sizeof($items) { return count($items); }
 function csrf_startup() { csrf_conf('disable', true); csrf_conf('rewrite', false); }
 PHP;
         $bootstrap .= PHP_EOL . 'require ' . var_export($repository . '/include/vendor/csrf/csrf-magic.php', true) . ';';
+        foreach (array('cacti_csrf_external_secret_path', 'cacti_csrf_external_path_is_safe') as $function) {
+            $bootstrap .= test_php_function_source(file_get_contents($repository . '/include/csrf.php'), $function);
+        }
         file_put_contents($root . '/include/cli_check.php', $bootstrap);
         if ($blocked) {
-            chmod($root . '/keys', 0500);
-            if (is_writable($root . '/keys')) {
+            chmod($root . '-keys', 0500);
+            if (is_writable($root . '-keys')) {
                 test()->markTestSkipped('This host bypasses directory mode restrictions; exclusive-create refusal cannot be exercised');
             }
         }
         $coverage = $this->getTestResultObject()->getCodeCoverage();
         $mode = $blocked ? 'blocked' : 'success';
         $command = $coverage === null ? array(PHP_BINARY, $root . '/cli/refresh_csrf.php')
-            : CsrfRotationCoverage::prepare($repository, $root, $root . '/keys/working.php', $mode);
+            : CsrfRotationCoverage::prepare($repository, $root, $root . '-keys/working.php', $mode);
         $result = test_php_run($command);
         expect($result['status'])->toBe($blocked ? 1 : 0)
             ->and($result['err'])->toBe('')
             ->and($result['out'])->not->toContain('working-fixture-secret')
-            ->and(glob($root . '/keys/.csrf-secret-*'))->toBe(array());
-        $contents = file_get_contents($root . '/keys/working.php');
+            ->and(glob($root . '-keys/.csrf-secret-*'))->toBe(array());
+        $contents = file_get_contents($root . '-keys/working.php');
         if ($blocked) {
-            expect($result['out'])->toContain('FATAL: Unable to write new csrf_secret.php file.')
+            expect($result['out'])->toContain('FATAL: Unable to atomically replace the configured csrf_secret.php file.')
                 ->and($contents)->toBe($old);
         } else {
             expect($result['out'])->toContain('NOTE: New csrf_secret.php file written.')
                 ->and($contents)->not->toBe($old)
                 ->and(preg_match('/\A<\?php \$secret = \'[0-9a-f]{64}\';\R\z/', $contents))->toBe(1)
-                ->and(fileperms($root . '/keys/working.php') & 0777)->toBe(0640);
+                ->and(fileperms($root . '-keys/working.php') & 0777)->toBe(0640);
         }
         CsrfRotationCoverage::merge($coverage, $repository, $root, $mode);
     } finally {
         CsrfRotationCoverage::cleanup($root);
-        chmod($root . '/keys', 0700);
-        foreach (array('/cli/refresh_csrf.php', '/include/cli_check.php', '/lib/poller.php', '/lib/utility.php', '/keys/working.php') as $file) {
+        chmod($root . '-keys', 0700);
+        foreach (array('/cli/refresh_csrf.php', '/include/cli_check.php', '/lib/poller.php', '/lib/utility.php') as $file) {
             if (file_exists($root . $file)) {
                 unlink($root . $file);
             }
         }
-        foreach (array('/cli', '/include', '/lib', '/keys', '') as $directory) {
+        unlink($root . '-keys/working.php');
+        rmdir($root . '-keys');
+        foreach (array('/cli', '/include', '/lib', '') as $directory) {
             rmdir($root . $directory);
         }
     }

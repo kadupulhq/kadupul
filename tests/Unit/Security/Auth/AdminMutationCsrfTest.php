@@ -8,7 +8,7 @@ require_once dirname(__DIR__, 3) . '/Helpers/NativeChildCoverageEvidence.php';
 /** @return list<string> */
 function admin_mutation_coverage_sources(): array
 {
-    return array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Unit/Security/Auth/AdminMutationCsrfTest.php', 'include/global_constants.php', 'include/vendor/csrf/csrf-magic.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php', 'plugins.php', 'user_admin.php', 'user_group_admin.php', 'lib/html_utility.php', 'lib/auth.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
+    return array('composer.lock', 'tests/composer.lock', 'tests/Helpers/PhpSource.php', 'lib/functions.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Unit/Security/Auth/AdminMutationCsrfTest.php', 'include/global_constants.php', 'include/vendor/csrf/csrf-magic.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php', 'plugins.php', 'user_admin.php', 'user_group_admin.php', 'lib/html_utility.php', 'lib/auth.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
 }
 
 function admin_mutation_coverage_program(): string
@@ -20,7 +20,7 @@ $GLOBALS['nativeChildCoverageSnapshot'] = NativeChildCoverageEvidence::snapshot(
     $root,
     'tests/Unit/Security/Auth/AdminMutationCsrfTest.php',
     json_encode(array($adminCsrfScenario, hash_file('sha256', __FILE__)), JSON_THROW_ON_ERROR),
-    array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Unit/Security/Auth/AdminMutationCsrfTest.php', 'include/global_constants.php', 'include/vendor/csrf/csrf-magic.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php', 'plugins.php', 'user_admin.php', 'user_group_admin.php', 'lib/html_utility.php', 'lib/auth.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php')
+    array('composer.lock', 'tests/composer.lock', 'tests/Helpers/PhpSource.php', 'lib/functions.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Unit/Security/Auth/AdminMutationCsrfTest.php', 'include/global_constants.php', 'include/vendor/csrf/csrf-magic.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php', 'plugins.php', 'user_admin.php', 'user_group_admin.php', 'lib/html_utility.php', 'lib/auth.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php')
 );
 $GLOBALS['nativeChildCoverageMarkers'] = array();
 define('ADMIN_MUTATION_TEST_COVERAGE', true);
@@ -229,8 +229,23 @@ function db_execute_prepared($sql, $parameters = array(), ...$options) {
     return $result;
 }
 function db_affected_rows($connection = null) { return $GLOBALS['affected']; }
+function db_fetch_assoc_prepared($sql, $parameters = array()) {
+    $statement = $GLOBALS['db']->prepare($sql);
+    $statement->execute($parameters);
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
+}
+function db_execute($sql) { return db_execute_prepared($sql); }
+$db->sqliteCreateFunction('RAND', static fn() => 0.5);
+$db->sqliteCreateFunction('FLOOR', static fn($value) => floor($value), 1);
+function db_begin_transaction($connection = null) { return ($connection ?? $GLOBALS['db'])->beginTransaction(); }
+function db_commit_transaction($connection = null) { return ($connection ?? $GLOBALS['db'])->commit(); }
+function db_rollback_transaction($connection = null) { return ($connection ?? $GLOBALS['db'])->rollBack(); }
+require $argv[1] . '/lib/auth.php';
+require $argv[1] . '/tests/Helpers/PhpSource.php';
+eval(test_php_function_source(file_get_contents($argv[1] . '/lib/functions.php'), 'array_rekey'));
 function sanitize_unserialize_selected_items($value) { $GLOBALS['adminCsrfMutationObserved'] = true; echo 'WRITE'; exit; }
 function db_fetch_assoc($sql) { return array(array('directory' => '2')); }
+function db_fetch_cell_prepared(...$args) { return 1; }
 function sanitize_search_string($value) { return $value; }
 function api_plugin_install($id) { $GLOBALS['adminCsrfMutationObserved'] = true; echo 'WRITE'; exit; }
 function api_plugin_uninstall($id) { $GLOBALS['adminCsrfMutationObserved'] = true; echo 'WRITE'; exit; }

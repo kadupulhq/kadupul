@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -45,8 +47,8 @@ function graph_item_editor_rrd_fields(mixed $alpha): array
 {
     return array(
         'alpha' => form_input_validate($alpha, 'alpha', '^[a-fA-F0-9]{2}\\z', true, 3),
-        'dashes' => form_input_validate(isset_request_var('dashes') ? get_nfilter_request_var('dashes') : '', 'dashes', '^[0-9]+[,0-9]*\\z', true, 3),
-        'dash_offset' => form_input_validate(isset_request_var('dash_offset') ? get_nfilter_request_var('dash_offset') : '', 'dash_offset', '^[0-9]+\\z', true, 3),
+        'dashes' => form_input_validate(isset_request_var('dashes') ? get_nfilter_request_var('dashes') : '', 'dashes', '^[0-9]+(?:\\.[0-9]+)?(?:,[0-9]+(?:\\.[0-9]+)?)*\\z', true, 3),
+        'dash_offset' => form_input_validate(isset_request_var('dash_offset') ? get_nfilter_request_var('dash_offset') : '', 'dash_offset', '^[0-9]+(?:\\.[0-9]+)?\\z', true, 3),
     );
 }
 

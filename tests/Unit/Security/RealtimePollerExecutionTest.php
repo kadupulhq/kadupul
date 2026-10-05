@@ -3,11 +3,13 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-test('realtime controller validates permissions and identifiers before using shell-free poller arguments', function ($id, $step, $hash, $status, $expected, $action = 'init', $stepSource = 'setting', $realmAllowed = true, $graphAllowed = true, $userId = 42, $imageFormat = null) {
+test('realtime controller validates permissions and identifiers before using shell-free poller arguments', function ($id, $step, $hash, $status, $expected, $action = 'init', $stepSource = 'setting', $realmAllowed = true, $graphAllowed = true, $userId = 42, $imageFormat = null, $guestId = 0) {
     $root = dirname(__DIR__, 3);
     $dir = sys_get_temp_dir() . '/realtime-exec-' . bin2hex(random_bytes(8));
     mkdir($dir . '/include', 0700, true);
     mkdir($dir . '/lib', 0700);
+    mkdir($dir . '/cache', 0700);
+    file_put_contents($dir . '/cache/user_abc123_lgi_7.png', 'authorized-cache-sentinel');
     file_put_contents($dir . '/include/auth.php', '<?php');
     file_put_contents($dir . '/lib/rrd.php', '<?php');
     $program = <<<'PHP'
@@ -23,7 +25,7 @@ function read_config_option($name) {
 }
 function db_fetch_row_prepared(...$args) { return array(); }
 function db_fetch_cell_prepared(...$args) { return '1'; }
-function get_guest_account() { return 0; }
+function get_guest_account() { return $GLOBALS['guestId']; }
 function is_realm_allowed($realm) { return $realm === 25 && $GLOBALS['realmAllowed']; }
 function is_graph_allowed($id, $user) { return $id === 7 && $user === $GLOBALS['userId'] && $GLOBALS['graphAllowed']; }
 function cacti_log(...$args) {}
@@ -44,6 +46,8 @@ $status = (int) $argv[5];
 $realmAllowed = json_decode($argv[8], true);
 $graphAllowed = json_decode($argv[9], true);
 $userId = (int) $argv[10];
+$guestId = (int) $argv[12];
+$action = $argv[6];
 $_SESSION = array('sess_user_id' => $userId, 'sess_realtime_hash' => json_decode($argv[4], true));
 $_REQUEST = array('action' => $argv[6], 'local_graph_id' => json_decode($argv[2], true));
 if ($argv[7] === 'request') $_REQUEST['ds_step'] = $step;
@@ -52,9 +56,11 @@ if ($argv[11] !== 'null') $_REQUEST['image_format'] = json_decode($argv[11], tru
 $called = false;
 $rendered = false;
 register_shutdown_function(function () {
-    while (ob_get_level()) ob_end_clean();
-    echo json_encode(array('status' => http_response_code() ?: 200, 'called' => $GLOBALS['called'], 'rendered' => $GLOBALS['rendered']) + (isset($_REQUEST['image_format']) ? array('format' => $GLOBALS['format'] ?? null) : array()));
+    $body = '';
+    while (ob_get_level()) $body = ob_get_clean() . $body;
+    echo json_encode(array('status' => http_response_code() ?: 200, 'called' => $GLOBALS['called'], 'rendered' => $GLOBALS['rendered']) + (isset($_REQUEST['image_format']) ? array('format' => $GLOBALS['format'] ?? null) : array()) + ($GLOBALS['action'] === 'view' ? array('cache' => $body) : array()));
 });
+ob_start();
 require $argv[1] . '/graph_realtime.php';
 PHP;
     $coverage = $this->getTestResultObject()->getCodeCoverage();
@@ -68,7 +74,7 @@ PHP;
             array(PHP_BINARY, '-d', 'pcov.directory=' . $root,
                 '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $program, $root,
                 json_encode($id), json_encode($step), json_encode($hash), (string) $status, $action, $stepSource,
-                json_encode($realmAllowed), json_encode($graphAllowed), (string) $userId, json_encode($imageFormat)),
+                json_encode($realmAllowed), json_encode($graphAllowed), (string) $userId, json_encode($imageFormat), (string) $guestId),
             array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes,
             $dir
@@ -87,7 +93,8 @@ PHP;
             'status' => $expected,
             'called' => in_array($expected, array(200, 503), true) && $action !== 'view',
             'rendered' => $expected === 200 && $action !== 'view',
-        ) + ($imageFormat !== null ? array('format' => strtolower($imageFormat) === 'svg' ? 'svg+xml' : 'png') : array()));
+        ) + ($imageFormat !== null ? array('format' => strtolower($imageFormat) === 'svg' ? 'svg+xml' : 'png') : array())
+            + ($action === 'view' ? array('cache' => $expected === 200 ? base64_encode('authorized-cache-sentinel') : '') : array()));
         if ($coverage !== null) {
             foreach (glob($dir . '/*.coverage') as $file) {
                 $coverage->merge(unserialize(file_get_contents($file)));
@@ -98,12 +105,23 @@ PHP;
         unlink($dir . '/lib/rrd.php');
         rmdir($dir . '/include');
         rmdir($dir . '/lib');
+        unlink($dir . '/cache/user_abc123_lgi_7.png');
+        rmdir($dir . '/cache');
         foreach (glob($dir . '/*.coverage') as $file) {
             unlink($file);
         }
         rmdir($dir);
     }
 })->with(array(
+    'guest denied realm before poller' => array('7', '10', 'abc123', 0, 403, 'init', 'setting', false, true, 42, null, 42),
+    'guest denied graph before poller' => array('7', '10', 'abc123', 0, 403, 'init', 'setting', true, false, 42, null, 42),
+    'guest denied realm before cache' => array('7', '10', 'abc123', 0, 403, 'view', 'setting', false, true, 42, null, 42),
+    'guest denied graph before cache' => array('7', '10', 'abc123', 0, 403, 'view', 'setting', true, false, 42, null, 42),
+    'guest denied default page' => array('7', '10', 'abc123', 0, 403, '', 'setting', false, true, 42, null, 42),
+    'authorized guest poller' => array('7', '10', 'abc123', 0, 200, 'init', 'setting', true, true, 42, null, 42),
+    'authorized guest cache' => array('7', '10', 'abc123', 0, 200, 'view', 'setting', true, true, 42, null, 42),
+    'missing identity cannot start poller' => array('7', '10', 'abc123', 0, 403, 'init', 'setting', true, true, 0),
+    'missing guest never bypasses realm' => array('7', '10', 'abc123', 0, 403, 'init', 'setting', false, true, 42, null, 0),
     array('7', '10', 'abc123', 0, 200, 'init', 'setting', true, true, 42, 'unexpected'),
     array('7', '10', 'abc123', 0, 200, 'init', 'setting', true, true, 42, 'svg'),
     array('7', '10', 'abc123', 0, 200, 'init', 'setting', true, true, 42, 'PNG'),

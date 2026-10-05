@@ -25,7 +25,8 @@ final class LegacyLinkStoreTest extends TestCase
     protected function setUp(): void
     {
         $this->db = new \PDO('sqlite::memory:', options: [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
-        $this->db->exec("CREATE TABLE external_links (id INTEGER PRIMARY KEY AUTOINCREMENT, sortorder INTEGER, title TEXT, contentfile TEXT, style TEXT, extendedstyle TEXT, enabled TEXT, refresh INTEGER);
+        $this->db->exec("CREATE TABLE user_auth(id INTEGER PRIMARY KEY, reset_perms INTEGER NOT NULL DEFAULT 0 CHECK(reset_perms BETWEEN 0 AND 4294967295)); INSERT INTO user_auth(id) VALUES(1);
+            CREATE TABLE external_links (id INTEGER PRIMARY KEY AUTOINCREMENT, sortorder INTEGER, title TEXT, contentfile TEXT, style TEXT, extendedstyle TEXT, enabled TEXT, refresh INTEGER);
             CREATE TABLE user_auth_realm (user_id INTEGER, realm_id INTEGER, PRIMARY KEY(user_id,realm_id)); CREATE TABLE user_auth_group_realm (group_id INTEGER, realm_id INTEGER);
             CREATE TABLE settings (name TEXT, value TEXT); INSERT INTO settings VALUES ('num_rows_table','25');");
         $database = new readonly class ($this->db) implements DatabaseConnection {

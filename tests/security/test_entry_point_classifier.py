@@ -116,6 +116,22 @@ NEW_FRAGMENT_EFFECTS = {
 HALTING = "<?php\nrequire_once($config['include_path'] . '/vendor/csrf/csrf-conf.php');\nsystem($_GET['c']);\n"
 NOT_HALTING = "<?php\nrequire_once(__DIR__ . '/vendor/csrf/csrf-conf.php');\nsystem($_GET['c']);\n"
 FRAGMENT_INCLUDES_DECLARATIONS = "<?php\ninclude('./lib/declarations.php');\n"
+# include/csrf.php refuses a malformed token before the halting require.
+CSRF_TOKEN_CHECK = ("<?php\nfunction csrf_token_is_well_formed($tokens) {\n\treturn true;\n}\n"
+                    "if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && !csrf_token_is_well_formed(%s)) {\n"
+                    "\thttp_response_code(403);\n\texit;\n}\n"
+                    "require_once($config['include_path'] . '/vendor/csrf/csrf-conf.php');\n")
+# include/auth.php withdraws $guest_account from one page, nested as it ships.
+GUEST_REFUSAL = ("<?php\nif ($auth_method != 0) {\n\tif (%s) {\n\t\tunset($guest_account);\n\t}\n}\n")
+GUEST_REFUSAL_CASES = {
+    'withdrawn from the page': ("isset($guest_account) && get_current_page() == 'page.php' && "
+                                "(empty($_SESSION['sess_user_id']) || $_SESSION['sess_user_id'] == get_guest_account())", 'realm:3'),
+    'withdrawn from another page': ("isset($guest_account) && get_current_page() == 'other.php' && "
+                                    "(empty($_SESSION['sess_user_id']) || $_SESSION['sess_user_id'] == get_guest_account())",
+                                    'guest-or-realm:3'),
+    'withdrawn only from logged-in guests': ("isset($guest_account) && get_current_page() == 'page.php' && "
+                                             "$_SESSION['sess_user_id'] == get_guest_account()", 'guest-or-realm:3'),
+}
 FRAGMENT_HALTS = "<?php\n$x = helper();\nunlink($_GET['f']);\n"
 FRAGMENT_TEXT = "<?php\n$label = 'PHP Mail() and `quoted` text';\necho 'PHP Mail() and `quoted` text', 1;\n"
 RUNTIME = "<?php\nif (PHP_VERSION_ID < 80400) {\n\t$message = 'too old';\n\techo $message;\n\texit(1);\n}\n"
@@ -133,6 +149,19 @@ REFUSE = "if (!remote_client_authorized()) {\n\t%s\n}\n"
 SESSION_SWITCH = "switch ($_GET['a']) {\n\tcase 'x':\n\t\t%s\n\tdefault:\n\t\tif (!isset($_SESSION['sess_user_id'])) {\n\t\t\texit;\n\t\t}\n}\n"
 REALM_IF = "if (is_realm_allowed($page['id'] + 10000)) {\n\tprint 1;\n}%s\n"
 SELF_GATED_SHAPES = {
+    'realtime guest has an explicit realm refusal': (
+        'graph_realtime.php', "<?php\n$guest_account = true;\n" + AUTH +
+        "if ($user_id < 1 || !is_realm_allowed(25)) { http_response_code(403); exit; }\n", 'realm:25'),
+    'realtime guest exemption is not the reviewed realm guard': (
+        'graph_realtime.php', "<?php\n$guest_account = true;\n" + AUTH +
+        "if (!$is_guest && !is_realm_allowed(25)) { http_response_code(403); exit; }\n", 'unknown'),
+    'realtime guard comment grants nothing': (
+        'graph_realtime.php', "<?php\n$guest_account = true;\n" + AUTH +
+        "// if ($user_id < 1 || !is_realm_allowed(25)) { exit; }\n", 'unknown'),
+    'realtime guard in a function grants nothing': (
+        'graph_realtime.php', "<?php\n$guest_account = true;\n" + AUTH +
+        "function f() { if ($user_id < 1 || !is_realm_allowed(25)) { exit; } }\n", 'unknown'),
+
     'refusal that exits': ('remote_agent.php', BOOT + REFUSE % 'exit;', 'anonymous-allowed'),
     'refusal that returns': ('remote_agent.php', BOOT + REFUSE % 'return;', 'anonymous-allowed'),
     'refusal that throws': ('remote_agent.php', BOOT + REFUSE % 'throw new Exception();', 'anonymous-allowed'),
@@ -1084,6 +1113,11 @@ def main():
             got = gate(root, 'include/csrf.php', source)[0]
             if got != expected:
                 failures.append('include/csrf.php with %s: expected %s, got %s' % (source.splitlines()[1], expected, got))
+        for argument, expected in (("$_POST['__csrf_magic']", 'anonymous-allowed'), ("$_GET['c']", 'unknown')):
+            count += 1
+            got = gate(root, 'include/csrf.php', CSRF_TOKEN_CHECK % argument)[0]
+            if got != expected:
+                failures.append('include/csrf.php checking %s: expected %s, got %s' % (argument, expected, got))
         (root / 'include/csrf.php').unlink()
         # The one reviewed non-literal output, only where it was reviewed.
         count += 1
@@ -1134,6 +1168,14 @@ def main():
         got = gate(root, 'open.php', "<?php\n$guest_account = true;\n" + AUTH)[0]
         if got != 'guest-or-authenticated':
             failures.append('guest page with realm -1: expected guest-or-authenticated, got %s' % got)
+        for case, (condition, expected) in GUEST_REFUSAL_CASES.items():
+            count += 1
+            (root / 'include/auth.php').write_text(GUEST_REFUSAL % condition)
+            got = gate(root, 'page.php', "<?php\n$guest_account = true;\n" + AUTH)[0]
+            if got != expected:
+                failures.append('guest flag %s: expected %s, got %s' % (case, expected, got))
+        (root / 'include/auth.php').write_text('<?php\n')
+        (root / 'page.php').unlink()
 
     with tempfile.TemporaryDirectory(prefix='entry-classifier-routes-') as directory:
         root = tree(directory)
@@ -1214,7 +1256,7 @@ final class AuthenticatedOnly {
                          'AuthenticationFileSessionHandler',
                          'AuthenticationDatabaseSessionHandler', 'SharedSession',
                          'ReadOnlyDatabaseSessionHandler')
-        ] + ['config/services.yaml']
+        ] + ['config/services.yaml', 'lib/auth.php']
         originals = {}
         for relative in about_bundle:
             target = root / relative

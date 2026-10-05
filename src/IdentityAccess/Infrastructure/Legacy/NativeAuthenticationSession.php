@@ -17,9 +17,9 @@ final readonly class NativeAuthenticationSession
 {
     public function __construct(private LegacyConfiguration $configuration, private DatabaseConnection $database) {}
 
-    public function establish(int $user, Request $request, string $ip): string
+    public function establish(int $user, Request $request, string $ip, string $credential): string
     {
-        if ($user <= 0 || session_status() !== PHP_SESSION_NONE || headers_sent()) {
+        if ($user <= 0 || preg_match('/\A[a-f0-9]{64}\z/D', $credential) !== 1 || session_status() !== PHP_SESSION_NONE || headers_sent()) {
             throw new \RuntimeException('Authentication session cannot be established.');
         }
         $config = $this->configuration->values();
@@ -53,7 +53,7 @@ final readonly class NativeAuthenticationSession
                 throw new \RuntimeException('Authentication session could not be rotated.');
             }
             $created = session_id();
-            $_SESSION = ['sess_user_id' => $user, 'cacti_cwd' => $config['root']];
+            $_SESSION = ['sess_user_id' => $user, 'sess_user_credential' => $credential, 'cacti_cwd' => $config['root']];
             session_write_close();
             if (session_status() !== PHP_SESSION_NONE || !$handler->written) {
                 throw new \RuntimeException('Authentication session was not persisted.');

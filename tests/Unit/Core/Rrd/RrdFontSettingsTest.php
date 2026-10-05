@@ -50,11 +50,15 @@ test('the profile page leaves a font size it refuses unsaved', function () {
     $root = dirname(__DIR__, 4);
     $script = 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'settings_value_passes_filter'), true) . ');'
         . rrd_font_settings_filters($root)
+        . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'user_setting_value_allowed'), true) . ');'
         . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/auth_profile.php'), 'api_auth_update_user_setting'), true) . ');'
         . <<<'PHP'
         $writes = array();
+        function user_group_exists($id) { return $id === "3"; }
+        function user_group_execute_child($id, $sql, $params) { return db_execute_prepared($sql, $params); }
         function db_execute_prepared($sql, $params) { $GLOBALS['writes'][] = $params; }
         function kill_session_var($name) {}
+        function is_view_allowed($name) { return true; }
         $settings = array();
         $settings_user = array('fonts' => array('title_size' => array('method' => 'textbox', 'default' => '12', 'filter' => FILTER_CALLBACK, 'options' => array('options' => 'graph_font_size_filter'))));
         $_SESSION['sess_user_id'] = 5;
@@ -107,6 +111,8 @@ test('group graph settings store the default for a font size they refuse', funct
         function get_request_var($name) { return $_REQUEST[$name]; }
         function get_filter_request_var($name) { return $_REQUEST[$name]; }
         function get_nfilter_request_var($name, $default = '') { return $_REQUEST[$name] ?? $default; }
+        function user_group_exists($id) { return $id === "3"; }
+        function user_group_execute_child($id, $sql, $params) { return db_execute_prepared($sql, $params); }
         function db_execute_prepared($sql, $params) { $GLOBALS['writes'][] = $params; }
         function kill_session_var($name) {}
         function reset_group_perms($id) {}
@@ -144,6 +150,7 @@ test('saving all user settings stores the default for a font size they refuse', 
     $root = dirname(__DIR__, 4);
     $script = 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'settings_value_passes_filter'), true) . ');'
         . rrd_font_settings_filters($root)
+        . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'user_setting_value_allowed'), true) . ');'
         . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'save_user_settings'), true) . ');'
         . <<<'PHP'
         $writes = array();
@@ -275,6 +282,8 @@ function rrd_font_settings_save(array $requests, array $stored): array
         function get_nfilter_request_var($name) { return $_REQUEST[$name] ?? ""; }
         function isset_request_var($name) { return isset($_REQUEST[$name]); }
         function db_qstr($value) { return "\'" . $value . "\'"; }
+        function user_group_exists($id) { return $id === "3"; }
+        function user_group_execute_child($id, $sql, $params) { return db_execute_prepared($sql, $params); }
         function db_execute_prepared($sql, $params) { $GLOBALS["writes"][$params[0]] = $params[1]; }
         function db_execute($sql) {}
         function db_fetch_assoc($sql) { return array(); }
@@ -366,6 +375,8 @@ test('user and group graph settings keep a font that is not installed unsaved', 
         . $settings_user . $request . '
         $writes = array();
         $messages = array();
+        function user_group_exists($id) { return $id === "3"; }
+        function user_group_execute_child($id, $sql, $params) { return db_execute_prepared($sql, $params); }
         function db_execute_prepared($sql, $params) { $GLOBALS["writes"][] = $params; }
         function kill_session_var($name) {}
         function reset_group_perms($id) {}
@@ -374,6 +385,7 @@ test('user and group graph settings keep a font that is not installed unsaved', 
         form_save();';
     $user = rrd_font_settings_name_filter($root)
         . 'eval(' . var_export(test_php_function_source($functions, 'settings_value_passes_filter'), true) . ');'
+        . 'eval(' . var_export(test_php_function_source($functions, 'user_setting_value_allowed'), true) . ');'
         . 'eval(' . var_export(test_php_function_source($functions, 'save_user_settings'), true) . ');'
         . $settings_user . $request . '
         $writes = array();

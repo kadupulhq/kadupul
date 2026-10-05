@@ -89,6 +89,7 @@ function html_start_box(...$args) {}
 function html_end_box(...$args) {}
 function db_qstr($value)
 {
+    if (isset($GLOBALS['scanDb'])) return $GLOBALS['scanDb']->quote($value);
     return "'" . str_replace("'", "''", $value) . "'";
 }
 function db_fetch_cell(...$args)
@@ -110,15 +111,59 @@ class CactiSecureHeaders
         return '';
     }
 }
+function read_config_option($key, ...$arguments)
+{
+    return $key === 'storage_location' && $GLOBALS['mode'] === 'scan-proxy' ? 1 : '';
+}
+function rrd_init(...$arguments)
+{
+    return 'scan-pipe';
+}
+function rrd_close(...$arguments) {}
+function rrdtool_execute($command, ...$arguments)
+{
+    return $command === 'rrd-list' ? $GLOBALS['scanResponse'] : true;
+}
+function db_execute($sql)
+{
+    if (str_contains($sql, 'SELECT local_data_id')) return true;
+    $GLOBALS['scanBatches'][] = substr_count($sql, ',0)');
+    $sql = str_replace(
+        'ON DUPLICATE KEY UPDATE size=VALUES(size), last_mod=VALUES(last_mod)',
+        'ON CONFLICT(name) DO UPDATE SET size=excluded.size, last_mod=excluded.last_mod',
+        $sql
+    );
+    return $GLOBALS['scanDb']->exec($sql) !== false;
+}
 function html_nav_bar($url, ...$args)
 {
     while (ob_get_level()) {
         ob_end_clean();
     }
-    define('NATIVE_COVERAGE_COMPLETED', array('cleaner-production-observed'));
-    echo json_encode(array('url' => $url));
+    if (str_starts_with($GLOBALS['mode'], 'scan-')) {
+        $GLOBALS['scanDb'] = new PDO('sqlite::memory:');
+        $GLOBALS['scanDb']->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $GLOBALS['scanDb']->exec('CREATE TABLE data_source_purge_temp (name TEXT PRIMARY KEY, size INTEGER, last_mod TEXT, in_cacti INTEGER)');
+        $GLOBALS['scanBatches'] = [];
+        $rows = json_decode($GLOBALS['argv'][3], true, flags: JSON_THROW_ON_ERROR);
+        $GLOBALS['scanResponse'] = implode("\r\n", array_map(fn($row) => $GLOBALS['rra_path'] . $row[0] . ',' . $row[1] . ',' . $row[2], $rows));
+        if ($GLOBALS['mode'] === 'scan-local') {
+            foreach ($rows as $row) {
+                file_put_contents($GLOBALS['config']['rra_path'] . '/' . $row[0], str_repeat('x', $row[1]));
+                touch($GLOBALS['config']['rra_path'] . '/' . $row[0], $row[2]);
+            }
+        }
+        get_files();
+        define('NATIVE_COVERAGE_COMPLETED', [$GLOBALS['mode'] . '-production-observed']);
+        echo json_encode(['rows' => $GLOBALS['scanDb']->query('SELECT name,size,last_mod,in_cacti FROM data_source_purge_temp ORDER BY name')->fetchAll(PDO::FETCH_ASSOC), 'batches' => $GLOBALS['scanBatches']]);
+    } else {
+        define('NATIVE_COVERAGE_COMPLETED', array('cleaner-production-observed'));
+        echo json_encode(array('url' => $url));
+    }
     exit;
 }
+define('RRDTOOL_OUTPUT_NULL', 0);
+define('RRDTOOL_OUTPUT_STDOUT', 1);
 define('MAX_DISPLAY_PAGES', 20);
 $item_rows = array();
 chdir($directory);
