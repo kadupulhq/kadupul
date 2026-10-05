@@ -236,6 +236,15 @@ if (defined('BASIC_AUTH_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
     $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
 }
+if (defined('PAGE_FLAG_TEST_COVERAGE_SOURCE')) {
+    $coverageFilter->includeFile(PAGE_FLAG_TEST_COVERAGE_SOURCE);
+}
+if (defined('AUTH_HARDENING_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+    foreach (array('include/csrf.php', 'include/auth.php', 'include/global_session.php', 'lib/auth.php', 'lib/functions.php', 'lib/clog_webapi.php', 'logout.php', 'data_debug.php', 'managers.php', 'utilities.php', 'rrdcleaner.php', 'cli/refresh_csrf.php', 'lib/csrf_rotation.php') as $coverageFile) {
+        $coverageFilter->includeFile($coverageRoot . '/' . $coverageFile);
+    }
+}
 if (defined('MIB_CACHE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/mib_cache.php');
 }
@@ -441,6 +450,7 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile, 
             NativeChildCoverageEvidence::write($childCoverageFile, dirname(__DIR__, 2), $GLOBALS['dataInputListEvidence'], DATA_INPUT_LIST_NATIVE_COMPLETED);
         }
         if (isset($GLOBALS['nativeChildCoverageSnapshot'])) {
+            require_once dirname(__DIR__) . '/Helpers/NativeChildCoverageEvidence.php';
             NativeChildCoverageEvidence::write($childCoverageFile, dirname(__DIR__, 2), $GLOBALS['nativeChildCoverageSnapshot'], $GLOBALS['nativeChildCoverageMarkers'] ?? array());
         }
         if (isset($GLOBALS['nativeCoverageEvidence'])) {

@@ -9,12 +9,15 @@ declare(strict_types=1);
 
 namespace Kadupul\Inventory\Infrastructure\Legacy;
 
+use Kadupul\Platform\Contract\ReferenceWriteTransactionRunner;
 use PDO;
 use RuntimeException;
 
 /** Shared collector move effects; callers own locks, authorization and transactions. */
 final class DeviceCollectorTransfer
 {
+    public function __construct(private readonly ReferenceWriteTransactionRunner $transactions) {}
+
     public function apply(PDO $connection, array $connections, int $deviceId, int $previous, int $target, bool $deferPreviousCleanup = false): void
     {
         if ($previous === $target) {
@@ -92,51 +95,73 @@ final class DeviceCollectorTransfer
      * @param array<int, PDO> $connections
      * @param array<int, int> $previousOwners
      */
-    public function finish(PDO $connection, int $actorId, array $connections, array $previousOwners, int $target): void
+    public function finish(PDO $connection, int $actorId, array $connections, array $previousOwners, int $target, ?array $receipts = null): void
     {
         $previousOwners = array_filter($previousOwners, static fn(int $previous): bool => $previous > 1 && $previous !== $target);
-        if ($previousOwners === []) {
+        if ($receipts === [] || ($receipts === null && $previousOwners === [])) {
             return;
         }
         if ($connection->inTransaction() || !$connection->beginTransaction()) {
-            throw new RuntimeException('Collector cleanup transaction unavailable');
+            throw new RuntimeException("Collector cleanup transaction unavailable");
         }
         try {
-            $ids = array_keys($previousOwners);
-            sort($ids, SORT_NUMERIC);
-            $locked = (new DeviceMutationSelection())->lock($connection, $actorId, $ids, static function (string $status): void {}, [], array_values(array_unique([...array_values($previousOwners), $target])));
-            foreach ($locked['rows'] as $index => $row) {
-                if ((int) $row['poller_id'] !== $target || (int) $row['site_id'] !== (int) $locked['associations'][$index]['site_id']) {
-                    throw new RuntimeException('Collector ownership changed before cleanup');
+            $this->transactions->run($connection, function () use ($connection, $actorId, $connections, $previousOwners, $target, $receipts): bool {
+                $pending = $receipts ?? array_map(static fn(int $owner): array => [$owner => $target], $previousOwners);
+                $ids = array_keys($pending);
+                sort($ids, SORT_NUMERIC);
+                $owners = [];
+                foreach ($pending as $receipt) {
+                    $owners = [...$owners, ...array_keys($receipt)];
                 }
-            }
-            foreach ($ids as $id) {
-                $this->cleanupPrevious($connections, $id, $previousOwners[$id], $target);
-            }
-            if (!$connection->commit()) {
-                throw new RuntimeException('Collector cleanup commit failed');
+                $owners = array_values(array_unique($owners));
+                sort($owners, SORT_NUMERIC);
+                $locked = (new DeviceMutationSelection())->lock($connection, $actorId, $ids, static function (string $status): void {}, [], [$target], $owners);
+                foreach ($locked["rows"] as $index => $row) {
+                    if ((int) $row["poller_id"] !== $target || (int) $row["site_id"] !== (int) $locked["associations"][$index]["site_id"]) {
+                        throw new RuntimeException("Collector ownership changed before cleanup");
+                    }
+                }
+                $journal = new DeviceCollectorCleanup($this->transactions);
+                if ($receipts !== null && $journal->pending($connection, $ids, true) !== $receipts) {
+                    throw new RuntimeException("Collector cleanup ownership changed");
+                }
+                foreach ($pending as $id => $receipt) {
+                    foreach ($receipt as $owner => $expected) {
+                        if ($expected !== $target || $owner === $target || !isset($connections[$owner])) {
+                            throw new RuntimeException("Collector cleanup ownership changed");
+                        }
+                        $this->cleanupPrevious($connections, $id, $owner, $target, $receipts === null);
+                        if ($receipts !== null) {
+                            $journal->acknowledge($connection, $id, $owner, $target);
+                        }
+                    }
+                }
+                return true;
+            }, ["host", "poller", "settings"]);
+            if (!$connection->commit() || $connection->inTransaction()) {
+                throw new RuntimeException("Collector cleanup commit failed");
             }
         } catch (\Throwable $failure) {
-            if ($connection->inTransaction()) {
-                try {
+            try {
+                if ($connection->inTransaction()) {
                     $connection->rollBack();
-                } catch (\Throwable) {
-                    // Preserve the original cleanup failure.
                 }
+            } catch (\Throwable) {
+                // Preserve the original cleanup failure, including state-probe errors.
             }
             throw $failure;
         }
     }
 
     /** Remove the old copy only after the caller has committed primary ownership. */
-    public function cleanupPrevious(array $connections, int $deviceId, int $previous, int $target): void
+    public function cleanupPrevious(array $connections, int $deviceId, int $previous, int $target, bool $queuePurge = true): void
     {
         if ($previous <= 1 || $previous === $target) {
             return;
         }
         $verifier = new DeviceCollectorReplication();
         $verifier->purgeDependents($connections[$previous], $deviceId);
-        api_device_purge_from_remote($deviceId, $previous);
+        api_device_purge_from_remote($deviceId, $previous, null, $connections[$previous], $queuePurge);
         $verifier->verifyPurged($connections[$previous], $deviceId);
     }
 
