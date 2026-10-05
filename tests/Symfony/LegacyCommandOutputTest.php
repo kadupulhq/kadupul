@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -74,6 +76,72 @@ final class LegacyCommandOutputTest extends TestCase
         self::assertSame(['value', 'last', "trailing  \t\0"], $expected);
         self::assertSame($expected, (new LegacyCommandOutput())->lines($command));
         self::assertSame($expected, exec_into_array($command));
+    }
+
+    public function testArgumentArrayOutputWithoutFinalNewlineMatchesNativeExec(): void
+    {
+        $payload = 'echo "first\\r\\nlast \\t";';
+        $expected = [];
+        exec(self::phpCommand($payload), $expected);
+        self::assertSame(['first', 'last'], $expected);
+        self::assertSame($expected, (new LegacyCommandOutput())->linesFromArguments([PHP_BINARY, '-r', $payload]));
+    }
+
+    public function testMissingArgumentExecutableDoesNotInvokeAShell(): void
+    {
+        $directory = sys_get_temp_dir() . '/command-no-shell-' . bin2hex(random_bytes(8));
+        self::assertTrue(mkdir($directory, 0700));
+        try {
+            self::assertSame([], (new LegacyCommandOutput())->linesFromArguments([
+                $directory . '/missing; touch ' . $directory . '/marker',
+            ]));
+            self::assertFileDoesNotExist($directory . '/marker');
+        } finally {
+            rmdir($directory);
+        }
+    }
+
+    public function testStderrOnlyCommandUnderWebSapiReturnsNoOutput(): void
+    {
+        [$coverage, $directory, $prelude] = $this->coverageProbe();
+        $router = $directory . '/router.php';
+        $autoload = var_export(dirname(__DIR__, 2) . '/include/vendor/autoload.php', true);
+        $arguments = var_export([PHP_BINARY, '-r', 'fwrite(STDERR, "native-web-diagnostic"); exit(1);'], true);
+        self::assertNotFalse(file_put_contents($router, '<?php ' . $prelude . 'require ' . $autoload . ';'
+            . 'echo json_encode([PHP_SAPI, defined("STDERR"), '
+            . '(new \\Kadupul\\Platform\\Infrastructure\\Legacy\\LegacyCommandOutput())->linesFromArguments('
+            . $arguments . ')], JSON_THROW_ON_ERROR);'));
+        $socket = stream_socket_server('tcp://127.0.0.1:0', $error, $message);
+        self::assertIsResource($socket, $message);
+        $address = stream_socket_get_name($socket, false);
+        self::assertIsString($address);
+        fclose($socket);
+        $server = new Process([PHP_BINARY, '-d', 'pcov.directory=' . dirname(__DIR__, 2),
+            '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-S', $address, $router]);
+        $server->start();
+        try {
+            $response = false;
+            $deadline = microtime(true) + 10;
+            do {
+                $connection = @stream_socket_client('tcp://' . $address, $error, $message, 0.1);
+                if (is_resource($connection)) {
+                    stream_set_timeout($connection, 5);
+                    fwrite($connection, "GET / HTTP/1.0\r\nHost: localhost\r\n\r\n");
+                    $response = stream_get_contents($connection);
+                    fclose($connection);
+                    break;
+                }
+                usleep(10000);
+            } while ($server->isRunning() && microtime(true) < $deadline);
+            self::assertIsString($response, $server->getErrorOutput());
+            self::assertStringContainsString('200 OK', $response);
+            self::assertSame(['cli-server', false, []], json_decode(explode("\r\n\r\n", $response, 2)[1], true, 512, JSON_THROW_ON_ERROR));
+            self::assertStringContainsString('native-web-diagnostic', $server->getErrorOutput());
+            $this->mergeProbeCoverage($coverage, $directory);
+        } finally {
+            $server->stop();
+            $this->removeCoverageProbe($directory);
+        }
     }
 
     public function testChildStderrIsForwardedLikeNativeExec(): void

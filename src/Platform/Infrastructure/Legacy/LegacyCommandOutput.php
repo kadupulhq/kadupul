@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -63,11 +65,28 @@ final readonly class LegacyCommandOutput
     private function readLines(Process $process): array
     {
         $process->setTimeout(null);
-        $process->run(static function (string $type, string $data): void {
-            if ($type === Process::ERR) {
-                fwrite(STDERR, $data);
+        // Web SAPIs do not define the CLI STDERR constant. Keep diagnostics
+        // on the process error stream without mixing them into SNMP results.
+        $stderr = fopen('php://stderr', 'wb');
+        try {
+            $process->run(static function (string $type, string $data) use ($stderr): void {
+                if ($type !== Process::ERR || !is_resource($stderr)) {
+                    return;
+                }
+
+                while ($data !== '') {
+                    $written = fwrite($stderr, $data);
+                    if ($written === false || $written === 0) {
+                        break;
+                    }
+                    $data = substr($data, $written);
+                }
+            });
+        } finally {
+            if (is_resource($stderr)) {
+                fclose($stderr);
             }
-        });
+        }
         $output = $process->getOutput();
 
         if ($output === '') {
