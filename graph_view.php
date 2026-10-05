@@ -1,6 +1,7 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -228,10 +229,12 @@ switch (get_nfilter_request_var('action')) {
 
         top_graph_header();
 
+        // These settings are user-editable and land in a nonce-carrying
+        // script block, where CSP would run anything they contain.
         ?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
-	minTreeWidth = <?php print read_user_setting('min_tree_width');?>;
-	maxTreeWidth = <?php print read_user_setting('max_tree_width');?>;
+	minTreeWidth = <?php print (int) read_user_setting('min_tree_width');?>;
+	maxTreeWidth = <?php print (int) read_user_setting('max_tree_width');?>;
 	</script>
 	<?php
 
@@ -332,7 +335,7 @@ switch (get_nfilter_request_var('action')) {
 		/* these are all global variables */
 		refreshIsLogout = false;
 		refreshPage     = <?php print json_encode(str_replace('tree_content', 'tree', validate_redirect_url($_SERVER['REQUEST_URI'] ?? '')), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>;
-		refreshMSeconds = <?php print read_user_setting('page_refresh') * 1000;?>;
+		refreshMSeconds = <?php print (int) read_user_setting('page_refresh') * 1000;?>;
 		pageAction      = 'tree';
 		navHeight       = $('.cactiTreeNavigationArea').height();
 		windowHeight    = $(window).height();

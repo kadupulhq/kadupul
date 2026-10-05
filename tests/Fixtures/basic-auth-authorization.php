@@ -20,12 +20,17 @@ $db = new PDO('sqlite::memory:');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $db->exec("CREATE TABLE user_auth (id INTEGER, username TEXT, realm INTEGER, enabled TEXT, locked TEXT, password TEXT DEFAULT '', password_history TEXT DEFAULT '', reset_perms INTEGER)");
 $db->exec("INSERT INTO user_auth (id, username, realm, enabled, locked) VALUES (42, 'fixture', 2, 'on', '')");
-$db->sqliteCreateFunction('NOW', function () { return '2026-09-20'; });
-$db->sqliteCreateFunction('RAND', function () { return 0.5; });
+$db->sqliteCreateFunction('NOW', function () {
+    return '2026-09-20';
+});
+$db->sqliteCreateFunction('RAND', function () {
+    return 0.5;
+});
 $db->sqliteCreateFunction('FLOOR', 'floor');
 $db->exec('CREATE TABLE user_auth_cache (user_id INTEGER, hostname TEXT, last_update TEXT, token TEXT)');
 $db->exec('CREATE TABLE user_auth_row_cache (user_id INTEGER)');
 $db->exec('CREATE TABLE sessions (user_id INTEGER)');
+$db->exec('CREATE TABLE settings_user (user_id INTEGER, name TEXT, value TEXT, PRIMARY KEY(user_id,name))');
 $db->exec('CREATE TABLE user_domains (user_id INTEGER)');
 foreach (array(42, 43) as $id) {
     $query = $db->prepare('INSERT INTO user_auth_cache VALUES (?, ?, ?, ?)');
@@ -60,45 +65,107 @@ if ($scenario === 'allowed') {
         $db->exec("UPDATE user_auth_group SET enabled = ''");
     }
 }
-function read_config_option($key) {
+function read_config_option($key)
+{
     return array('auth_method' => '2', 'auth_cache_enabled' => 'on', 'admin_user' => 1)[$key] ?? '';
 }
-function get_current_page() { return $GLOBALS['mode'] === 'logout' ? 'logout.php' : 'user_admin.php'; }
-function get_guest_account() { return strpos($GLOBALS['scenario'], 'guest') !== false ? 42 : 0; }
-function get_template_account($id) { return 0; }
-function get_client_addr() { return '127.0.0.1'; }
-function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
-function kill_session_var($key) { unset($_SESSION[$key]); }
+function get_current_page()
+{
+    return $GLOBALS['mode'] === 'logout' ? 'logout.php' : 'user_admin.php';
+}
+function get_guest_account()
+{
+    return strpos($GLOBALS['scenario'], 'guest') !== false ? 42 : 0;
+}
+function get_template_account($id)
+{
+    return 0;
+}
+function get_client_addr()
+{
+    return '127.0.0.1';
+}
+function cacti_sizeof($value)
+{
+    return is_array($value) ? count($value) : 0;
+}
+function kill_session_var($key)
+{
+    unset($_SESSION[$key]);
+}
 function cacti_log(...$args) {}
-function cacti_cookie_logout() { $GLOBALS['events'][] = 'CLEAR_COOKIES'; }
-function cacti_session_destroy() { $_SESSION = array(); $GLOBALS['events'][] = 'DESTROY_SESSION'; }
-function cacti_cookie_session_logout() { $GLOBALS['events'][] = 'CLEAR_REMEMBER'; }
-function cacti_cookie_session_set(...$args) { $GLOBALS['events'][] = 'SET_REMEMBER'; }
-function input_validate_input_number($value) { if (!is_numeric($value)) throw new RuntimeException('Invalid test ID'); }
-function __($value) { return $value; }
-function get_nfilter_request_var($name, $default = '') { return $_REQUEST[$name] ?? $default; }
-function get_filter_request_var($name) { return get_nfilter_request_var($name); }
-function get_request_var($name) { return get_nfilter_request_var($name); }
-function isset_request_var($name) { return isset($_REQUEST[$name]); }
+function cacti_cookie_logout()
+{
+    $GLOBALS['events'][] = 'CLEAR_COOKIES';
+}
+function cacti_session_destroy()
+{
+    $_SESSION = array();
+    $GLOBALS['events'][] = 'DESTROY_SESSION';
+}
+function cacti_cookie_session_logout()
+{
+    $GLOBALS['events'][] = 'CLEAR_REMEMBER';
+}
+function cacti_cookie_session_set(...$args)
+{
+    $GLOBALS['events'][] = 'SET_REMEMBER';
+}
+function input_validate_input_number($value)
+{
+    if (!is_numeric($value)) throw new RuntimeException('Invalid test ID');
+}
+function __($value)
+{
+    return $value;
+}
+function get_nfilter_request_var($name, $default = '')
+{
+    return $_REQUEST[$name] ?? $default;
+}
+function get_filter_request_var($name)
+{
+    return get_nfilter_request_var($name);
+}
+function get_request_var($name)
+{
+    return get_nfilter_request_var($name);
+}
+function isset_request_var($name)
+{
+    return isset($_REQUEST[$name]);
+}
 function set_default_action() {}
 // This persistence fixture mocks request helpers. The real method/token guard
 // is exercised separately by AdminMutationCsrfTest against the real controller.
-function cacti_require_post_actions(array $actions) {
+function cacti_require_post_actions(array $actions)
+{
     if (in_array($_REQUEST['action'] ?? '', $actions, true)
         && (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST' || ($_POST['__csrf_magic'] ?? '') !== 'auth-fixture-token')) {
         throw new RuntimeException('Authentication fixture requires an intentional POST');
     }
 }
-function form_input_validate($value, ...$args) { return $value; }
-function is_error_message() { return str_ends_with($GLOBALS['scenario'], 'validation_error'); }
-function raise_message($id) { $GLOBALS['events'][] = 'MESSAGE:' . $id; }
-function sql_save($save, $table) {
+function form_input_validate($value, ...$args)
+{
+    return $value;
+}
+function is_error_message()
+{
+    return str_ends_with($GLOBALS['scenario'], 'validation_error');
+}
+function raise_message($id)
+{
+    $GLOBALS['events'][] = 'MESSAGE:' . $id;
+}
+function sql_save($save, $table)
+{
     if (str_ends_with($GLOBALS['scenario'], 'save_failed')) return false;
     $query = $GLOBALS['db']->prepare('UPDATE user_auth SET enabled = ? WHERE id = ?');
     $query->execute(array($save['enabled'], $save['id']));
     return $save['id'];
 }
-function api_plugin_hook_function($hook, ...$args) {
+function api_plugin_hook_function($hook, ...$args)
+{
     if ($hook === 'user_admin_setup_sql_save') {
         $save = $args[0];
         if ($GLOBALS['scenario'] === 'plugin_disabled') $save['enabled'] = '';
@@ -111,20 +178,26 @@ function api_plugin_hook_function($hook, ...$args) {
     }
     return OPER_MODE_NATIVE;
 }
-function db_fetch_row_prepared($sql, $params = array()) {
+function db_fetch_row_prepared($sql, $params = array())
+{
     $query = $GLOBALS['db']->prepare($sql);
     $query->execute($params);
     return $query->fetch(PDO::FETCH_ASSOC);
 }
-function db_fetch_cell_prepared($sql, $params = array()) {
+function db_fetch_cell_prepared($sql, $params = array())
+{
     if (strpos($sql, 'AS authorized') !== false) $GLOBALS['events'][] = 'REALM_CHECK';
     if (strpos($sql, 'FROM user_auth_cache') !== false) $GLOBALS['events'][] = 'COOKIE_CHECK';
     $query = $GLOBALS['db']->prepare($sql);
     $query->execute($params);
     return $query->fetchColumn();
 }
-function db_table_exists($name) { return true; }
-function db_execute_prepared($sql, $params = array()) {
+function db_table_exists($name)
+{
+    return true;
+}
+function db_execute_prepared($sql, $params = array())
+{
     if (strpos($sql, 'INSERT IGNORE INTO user_log') !== false) {
         $GLOBALS['events'][] = 'LOGIN_LOG';
         return true;
@@ -137,6 +210,8 @@ if (strpos($scenario, 'guest') !== false) unset($_SERVER['PHP_AUTH_USER']);
 $_SESSION = array();
 if (str_starts_with($scenario, 'existing_')) {
     $_SESSION['sess_user_id'] = 42;
+    // This fixture models a session established by a completed login.
+    auth_session_bind_credentials(42);
 }
 register_shutdown_function(function () {
     echo json_encode(array('events' => $GLOBALS['events'], 'user' => $_SESSION['sess_user_id'] ?? null, 'status' => http_response_code() ?: 200));

@@ -19,7 +19,7 @@
 {% if link.enabled %}
 {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Encoded integer identifier appended to fixed internal legacy viewing entry; no stored URL is used as href. #}
 <a href="{{ viewPath }}?id={{ link.id }}">{{ 'View Page'|trans }}</a>{% endif %}</td>
-<td>{{ link.contentfile }}</td><td>{{ link.title }}</td><td>{{ link.style|trans }}{% if link.style == 'CONSOLE' %} ({{ link.extendedstyle ?: 'External Links'|trans }}){% endif %}</td><td>{{ (link.enabled ? 'Yes' : 'No')|trans }}</td><td>{{ link.sortorder }}
+<td>{{ link.contentfile }}</td><td>{{ link.title }}</td><td>{{ link.style|trans }}{% if link.style == 'CONSOLE' %} ({{ link.extendedstyle != '' ? link.extendedstyle : 'External Links'|trans }}){% endif %}</td><td>{{ (link.enabled ? 'Yes' : 'No')|trans }}</td><td>{{ link.sortorder }}
 {% if filters.sort_column == 'sortorder' %}{% for operation in ['up','down'] %}
 {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed route, enumerated operation and integer selected link identifier. #}
 <a href="{{ path('navigation_link_action', {operation: operation, ids: [link.id]}) }}">{{ operation|trans }}</a>{% endfor %}{% endif %}</td></tr>

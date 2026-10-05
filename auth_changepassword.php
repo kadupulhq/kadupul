@@ -63,6 +63,28 @@ $user = db_fetch_row_prepared(
     array($_SESSION['sess_user_id'])
 );
 
+/* A session opened before the last password change or reset is not logged in. */
+if (cacti_sizeof($user) && !auth_session_credentials_valid($user['password'])) {
+    clear_auth_cookie();
+    unset($_COOKIE['cacti_remembers']);
+    kill_session_var('sess_change_password');
+    kill_session_var('sess_user_id');
+
+    cacti_header('index.php');
+
+    exit;
+}
+
+/* This page does not load include/auth.php, so it checks account eligibility itself. */
+if (cacti_sizeof($user) && ($user['enabled'] != 'on' || $user['locked'] == 'on')) {
+    kill_session_var('sess_change_password');
+    kill_session_var('sess_user_id');
+
+    cacti_header('index.php');
+
+    exit;
+}
+
 $version = get_cacti_version();
 
 if (!cacti_sizeof($user) || $user['realm'] != 0) {
@@ -112,6 +134,26 @@ switch ($action) {
         // Get current password as entered
         $current_password = get_nfilter_request_var('current_password');
 
+        // Compare current password with stored password. This runs first
+        // because the history and reuse checks below also test a guess
+        // against the stored hash, and every miss counts toward lockout.
+        if ((!empty($user['password']) || !empty($current_password)) && !compat_password_verify($current_password, $user['password'])) {
+            auth_process_lockout($user['username'], 0);
+
+            if (db_fetch_cell_prepared('SELECT `locked` FROM user_auth WHERE id = ?', array($user_id)) == 'on') {
+                kill_session_var('sess_change_password');
+                kill_session_var('sess_user_id');
+
+                cacti_header('index.php');
+
+                exit;
+            }
+
+            $bad_password = true;
+            $errorMessage = "<span class='badpassword_message'>" . __('Your current password is not correct. Please try again.') . "</span>";
+            break;
+        }
+
         // Secpass checking
         $error = secpass_check_pass($password);
 
@@ -133,13 +175,6 @@ switch ($action) {
         if ($password !== $password_confirm) {
             $bad_password = true;
             $errorMessage = "<span class='badpassword_message'>" . __('Your new passwords do not match, please retype.') . "</span>";
-            break;
-        }
-
-        // Compare current password with stored password
-        if ((!empty($user['password']) || !empty($current_password)) && !compat_password_verify($current_password, $user['password'])) {
-            $bad_password = true;
-            $errorMessage = "<span class='badpassword_message'>" . __('Your current password is not correct. Please try again.') . "</span>";
             break;
         }
 
