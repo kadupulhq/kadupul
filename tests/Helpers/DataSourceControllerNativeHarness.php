@@ -60,7 +60,7 @@ final class DataSourceControllerNativeHarness
                 $reports = glob($directory . '/*.coverage');
                 if (count($reports) !== 1) throw new RuntimeException('Native caller coverage missing');
                 $hits = ['lib/html_utility.php', 'data_sources.php'];
-                if (in_array((int) (($fields['id'] ?? 0) ?: ($fields['host_id'] ?? 0)), [12, 13, 21, 22, 31, 32], true)) $hits[] = 'lib/auth.php';
+                if (($fields['action'] ?? '') === 'actions' || in_array((int) (($fields['id'] ?? 0) ?: ($fields['host_id'] ?? 0)), [12, 13, 21, 22, 31, 32], true)) $hits[] = 'lib/auth.php';
                 $child = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/data-source-controller-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), DataSourceControllerCoverageRegistration::SOURCES, DataSourceControllerCoverageRegistration::MARKERS, $hits);
                 static $verified = false;
                 if (!$verified) {

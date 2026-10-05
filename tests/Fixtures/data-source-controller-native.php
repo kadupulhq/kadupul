@@ -14,10 +14,10 @@ eval(test_php_function_source(file_get_contents($root . '/lib/functions.php'), '
 
 $db->exec("ALTER TABLE data_local ADD COLUMN data_template_id INTEGER DEFAULT 0;
 CREATE TABLE data_template(id INTEGER PRIMARY KEY,name TEXT);
-CREATE TABLE data_template_data(id INTEGER PRIMARY KEY,local_data_id INTEGER,data_template_id INTEGER,data_input_id INTEGER,name TEXT,active TEXT);
+CREATE TABLE data_template_data(id INTEGER PRIMARY KEY,local_data_id INTEGER,data_template_id INTEGER,data_input_id INTEGER,name TEXT,active TEXT,name_cache TEXT DEFAULT 'Original cache');
 CREATE TABLE data_template_rrd(id INTEGER PRIMARY KEY,local_data_id INTEGER,data_template_id INTEGER DEFAULT 0,rrd_maximum TEXT,rrd_minimum TEXT,rrd_heartbeat INTEGER,data_source_type_id INTEGER,data_source_name TEXT);
-INSERT INTO data_local VALUES(21,12,0),(22,13,0);
-INSERT INTO data_template_data VALUES(41,21,0,0,'Allowed source','on'),(42,22,0,0,'Denied source','on');
+INSERT INTO data_local VALUES(21,12,0),(22,13,0),(23,0,0);
+INSERT INTO data_template_data(id,local_data_id,data_template_id,data_input_id,name,active) VALUES(41,21,0,0,'Allowed source','on'),(42,22,0,0,'Denied source','on'),(43,23,0,0,'Non-device source','on');
 INSERT INTO data_template_rrd VALUES(31,21,0,'100','0',600,1,'allowed'),(32,22,0,'100','0',600,1,'denied'),(33,99,0,'100','0',600,1,'orphan');
 INSERT INTO graph_templates_item VALUES(51,5,0,31),(52,5,0,32);");
 function db_fetch_insert_id()
@@ -26,17 +26,44 @@ function db_fetch_insert_id()
 }
 function api_data_source_disable($id)
 {
+    $GLOBALS['events'][] = ['leaf-port', __FUNCTION__, (int) $id];
     db_execute_prepared("UPDATE data_template_data SET active='' WHERE local_data_id=?", [$id]);
 }
 function api_data_source_enable($id)
 {
+    $GLOBALS['events'][] = ['leaf-port', __FUNCTION__, (int) $id];
     db_execute_prepared("UPDATE data_template_data SET active='on' WHERE local_data_id=?", [$id]);
+}
+// Explicit API leaf ports: controller policy and argument handoff are physical;
+// these SQLite effects do not claim production API/collector execution.
+function api_data_source_change_host($ids, $host)
+{
+    $GLOBALS['events'][] = ['leaf-port', __FUNCTION__, array_map('intval', $ids), (int) $host];
+    foreach ($ids as $id) db_execute_prepared('UPDATE data_local SET host_id=? WHERE id=?', [$host,$id]);
+}
+function api_reapply_suggested_data_source_data($id)
+{
+    $GLOBALS['events'][] = ['leaf-port', __FUNCTION__, (int) $id];
+    db_execute_prepared("UPDATE data_template_data SET name='Suggested source' WHERE local_data_id=?", [$id]);
+}
+function update_data_source_title_cache($id)
+{
+    $GLOBALS['events'][] = ['leaf-port', __FUNCTION__, (int) $id];
+    db_execute_prepared('UPDATE data_template_data SET name_cache=name WHERE local_data_id=?', [$id]);
+}
+function snmpagent_data_source_action_bottom($args)
+{
+    $GLOBALS['events'][] = ['snmpagent-bottom', $args];
+}
+function cacti_count($value)
+{
+    return is_countable($value) ? count($value) : 0;
 }
 function get_data_source_title($id)
 {
     return db_fetch_cell_prepared('SELECT name FROM data_template_data WHERE local_data_id=?', [$id]);
 }
-if (($scenario['fields']['action'] ?? '') === 'ds_enable') $db->exec("UPDATE data_template_data SET active=''");
+if (($scenario['fields']['action'] ?? '') === 'ds_enable' || (($scenario['fields']['action'] ?? '') === 'actions' && (int) ($scenario['fields']['drp_action'] ?? 0) === 6)) $db->exec("UPDATE data_template_data SET active=''");
 $initial = [];
 foreach (['data_local','data_template_data','data_template_rrd','graph_templates_item'] as $table) $initial[$table] = $db->query('SELECT * FROM ' . $table . ' ORDER BY id')->fetchAll(PDO::FETCH_ASSOC);
 if ($collectCoverage) {
@@ -48,6 +75,7 @@ if ($collectCoverage) {
 register_shutdown_function(static function () use ($directory, $db, $initial) {
     $state = json_decode(file_get_contents($directory . '/state.json'), true, 512, JSON_THROW_ON_ERROR);
     $state['initial'] = $initial;
+    $state['filtered_selection'] = get_nfilter_request_var('selected_items');
     foreach (array_keys($initial) as $table) $state['persisted'][$table] = $db->query('SELECT * FROM ' . $table . ' ORDER BY id')->fetchAll(PDO::FETCH_ASSOC);
     file_put_contents($directory . '/state.json', json_encode($state, JSON_THROW_ON_ERROR));
     if ($state['fatal'] === null) $GLOBALS['nativeChildCoverageMarkers'] = ['data-source-outcome-observed', 'data-source-persisted-state-observed'];
