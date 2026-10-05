@@ -115,11 +115,17 @@ final readonly class DbalSchemaAudit implements SchemaAudit
         }
         // DDL commits implicitly. A successful call can still coerce an index
         // algorithm; confirm the stored definition before reporting success.
-        $status = $this->connections->tableCatalog($target)->status($alter->table);
-        if ($status === null) {
+        try {
+            $status = $this->connections->tableCatalog($target)->status($alter->table);
+            if ($status === null) {
+                return false;
+            }
+            $stored = self::table($this->connections->for($target), $alter->table, $status);
+        } catch (\Doctrine\DBAL\Exception $error) {
+            // The DDL is already committed; the caller reports failed
+            // confirmation rather than losing the structured ALTER outcome.
             return false;
         }
-        $stored = self::table($this->connections->for($target), $alter->table, $status);
 
         return array_all($indexes, static function (AlterClause $clause) use ($stored): bool {
             $parts = array_values(array_filter($stored->indexes, static fn(array $part): bool => $part['Key_name'] === $clause->name));

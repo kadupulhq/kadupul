@@ -170,27 +170,41 @@ final class AuditSchemaSafetyDatabaseTest extends TestCase
         }
     }
 
-    /** @return iterable<string, array{bool}> */
+    /** @return iterable<string, array{bool, bool}> */
     public static function indexOutcomes(): iterable
     {
-        yield 'stored index confirmed' => [false];
-        yield 'index disappears before readback' => [true];
+        yield 'stored index confirmed' => [false, false];
+        yield 'index disappears before readback' => [true, false];
+        yield 'actual metadata fetch fails after committed DDL' => [false, true];
     }
 
     #[DataProvider('indexOutcomes')]
-    public function testActualIndexWriteMustSurviveTheReadbackBeforeSuccess(bool $removeAfterWrite): void
+    public function testActualIndexWriteMustSurviveTheReadbackBeforeSuccess(bool $removeAfterWrite, bool $failReadback): void
     {
         $original = $this->realMariaDb();
         $db = new class ($original->getParams(), $original->getDriver(), $original->getConfiguration()) extends Connection {
             public bool $removeAfterWrite = false;
+            public bool $failReadback = false;
+            private bool $altered = false;
             public function executeStatement(string $sql, array $params = [], array $types = []): int|string
             {
                 $result = parent::executeStatement($sql, $params, $types);
+                $this->altered = $this->altered || str_starts_with($sql, 'ALTER TABLE');
                 if ($this->removeAfterWrite && str_starts_with($sql, 'ALTER TABLE')) {
                     $this->removeAfterWrite = false;
                     parent::executeStatement('ALTER TABLE kadupul_schema_safety_probe DROP INDEX confirmed');
                 }
                 return $result;
+            }
+            public function fetchAllAssociative(string $query, array $params = [], array $types = []): array
+            {
+                if ($this->failReadback && $this->altered && str_starts_with($query, 'SHOW INDEXES')) {
+                    $this->failReadback = false;
+                    // A genuine driver metadata error at the new late-read
+                    // phase, with the actual newly stored index still intact.
+                    return parent::fetchAllAssociative('SHOW INDEXES FROM kadupul_schema_safety_absent');
+                }
+                return parent::fetchAllAssociative($query, $params, $types);
             }
         };
         $original->close();
@@ -202,7 +216,8 @@ final class AuditSchemaSafetyDatabaseTest extends TestCase
             $before = $adapter->catalog(DatabaseTarget::Local)->table($table);
             $alter = new TableAlter($table, [new RebuildIndex([], false, false, 'confirmed', ['x'], IndexAlgorithm::Btree, 'legacy')], $before->status);
             $db->removeAfterWrite = $removeAfterWrite;
-            self::assertSame(!$removeAfterWrite, $adapter->alter(DatabaseTarget::Local, $alter, $before));
+            $db->failReadback = $failReadback;
+            self::assertSame(!$removeAfterWrite && !$failReadback, $adapter->alter(DatabaseTarget::Local, $alter, $before));
             $stored = $db->fetchAllAssociative("SHOW INDEXES FROM $table");
             self::assertCount($removeAfterWrite ? 0 : 1, $stored);
             if (!$removeAfterWrite) {
