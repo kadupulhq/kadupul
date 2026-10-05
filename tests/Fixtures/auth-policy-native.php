@@ -9,6 +9,10 @@ if (PHP_SAPI !== 'cli') {
 }
 $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
+if ($scenario['operation'] === 'graph-policy-display') {
+    require __DIR__ . '/graph-policy-display-native.php';
+    require_once $root . '/tests/Helpers/GraphPolicyDisplayCoverageRegistration.php';
+}
 if ($scenario['operation'] === 'spike-controller') {
     require __DIR__ . '/spike-controller-native.php';
     require_once $root . '/tests/Helpers/SpikeControllerCoverageRegistration.php';
@@ -18,6 +22,9 @@ if ($scenario['operation'] === 'graph-data-removal') require __DIR__ . '/graph-d
 if (isset($argv[3])) {
     require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
     $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], array('lib/auth.php', 'lib/graph_item_choices.php', 'tests/Helpers/PhpSource.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
+    if ($scenario['operation'] === 'graph-policy-display') {
+        $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], GraphPolicyDisplayCoverageRegistration::SOURCES);
+    }
     if ($scenario['operation'] === 'management-bulk') {
         require_once $root . '/tests/Helpers/ManagementBulkCoverageRegistration.php';
         $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], ManagementBulkCoverageRegistration::SOURCES);
@@ -206,6 +213,9 @@ require $root . '/lib/auth.php';
 $result = null;
 $cached = null;
 switch ($scenario['operation']) {
+    case 'graph-policy-display':
+        $result = graph_policy_display_fixture_run();
+        break;
     case 'spike-controller':
         spike_controller_fixture_run();
         break;
@@ -459,6 +469,7 @@ INSERT INTO graph_templates_graph VALUES(100,'Fixture graph',500,120);");
         throw new InvalidArgumentException('Unknown policy operation.');
 }
 $nativeChildCoverageMarkers = array('native-policy-operation-returned', 'policy-session-observed');
+if ($scenario['operation'] === 'graph-policy-display') $nativeChildCoverageMarkers[] = 'persisted-policy-display-compared';
 if (in_array($scenario['operation'], ['graph-cache-revocation', 'graph-image-cache'], true)) {
     $nativeChildCoverageMarkers = array_merge($nativeChildCoverageMarkers, ['graph-cache-revocation-observed', 'graph-cache-query-budget-observed']);
     if ($scenario['operation'] === 'graph-image-cache') $nativeChildCoverageMarkers[] = 'graph-cache-image-dispatch-observed';
