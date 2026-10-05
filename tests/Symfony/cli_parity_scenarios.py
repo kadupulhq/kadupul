@@ -23,6 +23,11 @@ TREE_CHECKS = [
     'site tree nodes render renamed site identity and current devices',
     'tree CLI rejects invalid site identity with a diagnostic and no writes',
     'tree API rejects all non-header parents and preserves rejected updates',
+    'authenticated graph tree placement renders its selected graph and destination',
+    'authenticated graph tree placement rejects a foreign parent without writes',
+    'authenticated graph tree placement admits one graph under a valid header',
+    'automation tree placement rejects a host parent without writes',
+    'automation tree placement admits one host under a valid header',
 ]
 # Only the wall-clock time of day may differ between two runs; the date
 # layout and its separator come from settings and are compared as written.
@@ -90,6 +95,8 @@ def verify_tree_cli(harness, check):
     old_host_site = None
     old_host_disabled = None
     site_id = None
+    placement_graph = None
+    parent_graph = None
     harness.sql(f"DELETE FROM graph_tree_items WHERE graph_tree_id IN (SELECT id FROM graph_tree WHERE name LIKE '{prefix}-%'); "
                 f"DELETE FROM graph_tree WHERE name LIKE '{prefix}-%';")
     try:
@@ -104,10 +111,11 @@ def verify_tree_cli(harness, check):
         tree_one = int(harness.sql(f"SELECT id FROM graph_tree WHERE name = '{prefix}-one'").strip())
         tree_two = int(harness.sql(f"SELECT id FROM graph_tree WHERE name = '{prefix}-two'").strip())
         harness.sql(f"INSERT INTO graph_tree_items (graph_tree_id, parent, title) VALUES ({tree_one}, 0, 'parent-one'), ({tree_two}, 0, 'parent-two')")
-        harness.sql(f"INSERT INTO graph_tree_items (graph_tree_id, parent, local_graph_id) VALUES ({tree_one}, 0, 1)")
+        parent_graph = int(harness.sql(f'INSERT INTO graph_local (host_id) VALUES ({host_id}); SELECT LAST_INSERT_ID()').strip())
+        harness.sql(f"INSERT INTO graph_tree_items (graph_tree_id, parent, local_graph_id) VALUES ({tree_one}, 0, {parent_graph})")
         parent_one = int(harness.sql(f"SELECT id FROM graph_tree_items WHERE graph_tree_id = {tree_one} AND title = 'parent-one'").strip())
         parent_two = int(harness.sql(f"SELECT id FROM graph_tree_items WHERE graph_tree_id = {tree_two} AND title = 'parent-two'").strip())
-        graph_item = int(harness.sql(f"SELECT id FROM graph_tree_items WHERE graph_tree_id = {tree_one} AND local_graph_id = 1").strip())
+        graph_item = int(harness.sql(f"SELECT id FROM graph_tree_items WHERE graph_tree_id = {tree_one} AND local_graph_id = {parent_graph}").strip())
 
         valid = run(harness, 'cli/add_tree.php', ['--type=node', '--node-type=header', f'--tree-id={tree_one}',
                                                   f'--parent-node={parent_one}', '--name=valid-child'])
@@ -223,6 +231,49 @@ def verify_tree_cli(harness, check):
         check(duplicate_host['exit'] == 1 and 'Failed to create the node' in duplicate_host['stderr'],
               'tree CLI reports duplicate node rejection as a failed command')
 
+        # Exercise the actual cookie-authenticated legacy confirmation flow;
+        # the foreign branch is a tampered submitted value, not a UI choice.
+        from cdef_legacy_page_scenarios import request as rendered_request
+        placement_graph = int(harness.sql(
+            f'INSERT INTO graph_local (host_id) VALUES ({host_id}); SELECT LAST_INSERT_ID()'
+        ).strip())
+        harness.sql(f"INSERT INTO graph_templates_graph (local_graph_id,title,title_cache) VALUES ({placement_graph},'native tree placement graph','native tree placement graph')")
+        _, _, listing = rendered_request(session, '/graphs.php')
+        confirmation_status, confirmation_body, fields = rendered_request(session, '/graphs.php', {
+            'action': 'actions', 'drp_action': f'tr_{tree_one}',
+            f'chk_{placement_graph}': 'on', '__csrf_magic': listing.get('__csrf_magic', session.token),
+        })
+        check(confirmation_status == 200 and 'native tree placement graph' in confirmation_body
+              and fields.get('tree_id') == str(tree_one) and fields.get('drp_action') == f'tr_{tree_one}'
+              and 'selected_items' in fields and 'tree_item_id' in fields and bool(fields.get('__csrf_magic')),
+              'authenticated graph tree placement renders its selected graph and destination')
+        before_web = harness.sql('SELECT COUNT(*) FROM graph_tree_items').strip()
+        foreign_fields = dict(fields, tree_item_id=str(parent_two))
+        foreign_status, _, _ = rendered_request(session, '/graphs.php', foreign_fields)
+        check(foreign_status == 200 and harness.sql('SELECT COUNT(*) FROM graph_tree_items').strip() == before_web
+              and harness.sql(f'SELECT COUNT(*) FROM graph_tree_items WHERE local_graph_id={placement_graph}').strip() == '0',
+              'authenticated graph tree placement rejects a foreign parent without writes')
+        # Refresh the real form after the redirect; keep its selected-items and token.
+        _, _, fields = rendered_request(session, '/graphs.php', {
+            'action': 'actions', 'drp_action': f'tr_{tree_one}',
+            f'chk_{placement_graph}': 'on', '__csrf_magic': session.token,
+        })
+        admitted_status, _, _ = rendered_request(session, '/graphs.php', dict(fields, tree_item_id=str(parent_one)))
+        check(admitted_status == 200 and harness.sql(f'SELECT COUNT(*) FROM graph_tree_items WHERE local_graph_id={placement_graph}').strip() == '1'
+              and harness.sql(f'SELECT graph_tree_id,parent FROM graph_tree_items WHERE local_graph_id={placement_graph}').strip() == f'{tree_one}\t{parent_one}',
+              'authenticated graph tree placement admits one graph under a valid header')
+
+        automation_probe = 'tests/Symfony/tree_automation_probe.php'
+        install_original(harness, automation_probe)
+        before_automation = harness.sql('SELECT COUNT(*) FROM graph_tree_items').strip()
+        automation_rejected = run(harness, automation_probe, [str(host_id), str(host_parent)])
+        check(automation_rejected['exit'] == 0 and harness.sql('SELECT COUNT(*) FROM graph_tree_items').strip() == before_automation,
+              'automation tree placement rejects a host parent without writes')
+        automation_admitted = run(harness, automation_probe, [str(host_id), str(parent_one)])
+        check(automation_admitted['exit'] == 0 and harness.sql(f'SELECT COUNT(*) FROM graph_tree_items WHERE host_id={host_id} AND graph_tree_id={tree_one} AND parent={parent_one}').strip() == '1'
+              and int(harness.sql('SELECT COUNT(*) FROM graph_tree_items').strip()) == int(before_automation) + 1,
+              'automation tree placement admits one host under a valid header')
+
         api_probe = f'''\
 require '/var/www/html/include/cli_check.php';
 require_once '/var/www/html/lib/api_automation_tools.php';
@@ -252,6 +303,10 @@ echo json_encode($rejected);
                     f"DELETE FROM graph_tree WHERE name LIKE '{prefix}-%';")
         if host_id is not None:
             harness.sql(f"UPDATE host SET site_id = {old_host_site}, disabled = '{old_host_disabled}' WHERE id = {host_id}")
+        if placement_graph is not None:
+            harness.sql(f'DELETE FROM graph_templates_graph WHERE local_graph_id={placement_graph}; DELETE FROM graph_local WHERE id={placement_graph}')
+        if parent_graph is not None:
+            harness.sql(f'DELETE FROM graph_local WHERE id={parent_graph}')
         if site_id is not None:
             harness.sql(f"DELETE FROM sites WHERE id = {site_id}")
 

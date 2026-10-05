@@ -25,6 +25,11 @@ final class TreeCoverageChecksTest extends TestCase
         'site tree nodes render renamed site identity and current devices',
         'tree CLI rejects invalid site identity with a diagnostic and no writes',
         'tree API rejects all non-header parents and preserves rejected updates',
+        'authenticated graph tree placement renders its selected graph and destination',
+        'authenticated graph tree placement rejects a foreign parent without writes',
+        'authenticated graph tree placement admits one graph under a valid header',
+        'automation tree placement rejects a host parent without writes',
+        'automation tree placement admits one host under a valid header',
     ];
 
     public static function setUpBeforeClass(): void

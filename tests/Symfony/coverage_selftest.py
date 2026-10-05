@@ -358,7 +358,7 @@ def main():
         'src/Platform/Infrastructure/Symfony/Console/AuditDatabaseCommand.php',
         'src/Platform/Infrastructure/Legacy/LegacyInstallationUpgrade.php',
         'src/Platform/Infrastructure/Legacy/LegacyWorkerProcess.php')]
-    legacy_pages = ('graphs.php', 'cdef.php', 'aggregate_templates.php', 'color_templates.php', 'aggregate_graphs.php', 'lib/utility.php')
+    legacy_pages = ('graphs.php', 'cdef.php', 'aggregate_templates.php', 'color_templates.php', 'aggregate_graphs.php', 'lib/utility.php', 'lib/api_automation.php')
     wrapper_line = buffered_wrapper_line()
     required += [prefix + path for path in legacy_pages]
     for path in (args.files / 'raw').glob('coverage-*.json'):
