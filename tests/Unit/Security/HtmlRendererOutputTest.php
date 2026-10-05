@@ -560,3 +560,43 @@ test('matching-tree headers encode the actual persisted automation field', funct
         ->and($xpath->query('//select[@id="host_template_id"]'))->toHaveCount(1)
         ->and($xpath->query('//select[@id="host_status"]'))->toHaveCount(1);
 })->with(array('stored markup' => array('<img src=x onerror=alert(1)>'), 'valid producer' => array('h.hostname'), 'existing entities' => array('Host &amp; label')));
+
+
+test('explicit header encoding preserves cached charset entities and scalar labels', function (string $initial, string $later, string $byte) {
+    $call = <<<'CHILD'
+        ini_set('default_charset', $a['initial']);
+        $value = hex2bin($a['byte']) . ' &amp;&apos;&#96; "\'';
+        $expected = html_escape($value);
+        ini_set('default_charset', $a['later']);
+        $headers = array('name' => array('display' => $value, 'align' => 'left', 'tip' => $value),
+            'nosort' => array('display' => $value, 'tip' => $value));
+        ob_start();
+        html_header_sort($headers, 'name', 'ASC', 1, $value, $value);
+        html_header_sort_checkbox($headers, 'name', 'ASC', true, $value, $value, $value);
+        $html = ob_get_clean();
+        print json_encode(array('html' => bin2hex($html), 'expected' => bin2hex($expected),
+            'charset' => html_escape_charset(), 'null' => html_escape(null)), JSON_THROW_ON_ERROR);
+        CHILD;
+    $result = json_decode(render(
+        $call,
+        array('initial' => $initial, 'later' => $later, 'byte' => $byte),
+        $this->getTestResultObject()->getCodeCoverage()
+    ), true, 512, JSON_THROW_ON_ERROR);
+    $html = hex2bin($result['html']);
+    $expected = hex2bin($result['expected']);
+    expect($result['charset'])->toBe($initial === '' ? 'UTF-8' : $initial)
+        ->and($result['null'])->toBeNull()
+        ->and(substr_count($html, "title='" . $expected . "'"))->toBe(4)
+        ->and(substr_count($html, "sort-page='" . $expected . "'"))->toBe(2)
+        ->and(substr_count($html, "sort-return='" . $expected . "'"))->toBe(2)
+        ->and(substr_count($html, ">" . $expected . "<"))->toBe(4)
+        ->and($html)->toContain(
+            "class='fa fa-sort-up'",
+            "data-prefix='" . $expected . "'",
+            "action='" . $expected . "'"
+        );
+})->with(array(
+    'UTF-8 cached across configuration change' => array('UTF-8', 'ISO-8859-1', 'c3a9'),
+    'Latin-1 cached across configuration change' => array('ISO-8859-1', 'UTF-8', 'e9'),
+    'empty charset uses UTF-8 fallback' => array('', 'ISO-8859-1', 'c3a9'),
+));
