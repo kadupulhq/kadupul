@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 require_once dirname(__DIR__, 2) . '/Helpers/PestCodeCoverageCompatibility.php';
+require_once dirname(__DIR__, 2) . '/Helpers/PhpSource.php';
 
 use PHPUnit\Framework\TestCase;
 
@@ -129,6 +130,9 @@ final class AuditNativeContractTest extends TestCase
             $copy = $directory . '/cli/audit_database.php';
             copy($root . '/cli/audit_database.php', $copy);
             copy($root . '/tests/Fixtures/audit-native-bootstrap.php', $directory . '/include/cli_check.php');
+            $source = file_get_contents($root . '/lib/database.php');
+            self::assertIsString($source);
+            file_put_contents($directory . '/include/cli_check.php', "\nrequire_once " . var_export($root . '/include/vendor/autoload.php', true) . ';' . test_php_function_source($source, 'db_client_ssl_option'), FILE_APPEND);
             $client = $directory . '/client.php';
             file_put_contents($client, str_replace('#!/usr/bin/env php', '#!' . PHP_BINARY, file_get_contents($root . '/tests/Fixtures/audit-native-client.php')));
             chmod($client, 0700);

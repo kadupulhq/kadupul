@@ -9,6 +9,7 @@ $database_username = 'fixture';
 $database_password = 'fixture password with quotes \" and spaces';
 $database_hostname = 'localhost';
 $database_port = '3306';
+$database_ssl = false;
 define('CACTI_VERSION', getenv('AUDIT_TEST_VERSION'));
 define('COPYRIGHT_YEARS', '2004-2026');
 $db = new PDO('sqlite:' . getenv('AUDIT_TEST_SQLITE'));

@@ -41,6 +41,7 @@ test('maintenance CLI entrypoints validate arguments and return status for suppo
     }
 
     file_put_contents($dir . '/include/cli_check.php', '<?php ' . $prelude
+        . 'require_once ' . var_export($root . '/include/vendor/autoload.php', true) . ';'
         . '$config = array("base_path" => dirname(__DIR__), "poller_id" => 1);'
         . 'if (is_file(dirname(__DIR__) . "/bin/mysql")) putenv("CACTI_MYSQL_CLIENT=" . dirname(__DIR__) . "/bin/mysql");'
         . 'define("CACTI_VERSION", "fixture"); define("COPYRIGHT_YEARS", "2026");'
