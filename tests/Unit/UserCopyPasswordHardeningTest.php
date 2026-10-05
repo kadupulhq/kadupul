@@ -11,13 +11,15 @@
  * hashed value and sets must_change_password='on' for the copied user.
  */
 
+require_once __DIR__ . '/../Helpers/PhpSource.php';
 $src = file_get_contents(__DIR__ . '/../../lib/auth.php');
+if ($src === false) { throw new RuntimeException('Unable to read user copy implementation'); }
 
 test('user_copy does not use mt_rand for password placeholder', function () use ($src) {
     $start = strpos($src, 'function user_copy(');
     expect($start)->not->toBeFalse();
 
-    $body = substr($src, $start, 3000);
+    $body = test_php_function_source($src, 'user_copy');
     expect($body)->not->toContain('mt_rand(');
 });
 
@@ -25,7 +27,7 @@ test('user_copy uses random_bytes for CSPRNG password placeholder', function () 
     $start = strpos($src, 'function user_copy(');
     expect($start)->not->toBeFalse();
 
-    $body = substr($src, $start, 3000);
+    $body = test_php_function_source($src, 'user_copy');
     expect($body)->toContain('random_bytes(');
 });
 
@@ -33,7 +35,7 @@ test('user_copy hashes the placeholder with compat_password_hash', function () u
     $start = strpos($src, 'function user_copy(');
     expect($start)->not->toBeFalse();
 
-    $body = substr($src, $start, 3000);
+    $body = test_php_function_source($src, 'user_copy');
     expect($body)->toContain('compat_password_hash(');
     expect($body)->toContain('PASSWORD_DEFAULT');
 });
@@ -42,7 +44,7 @@ test('user_copy sets must_change_password to on', function () use ($src) {
     $start = strpos($src, 'function user_copy(');
     expect($start)->not->toBeFalse();
 
-    $body = substr($src, $start, 3000);
+    $body = test_php_function_source($src, 'user_copy');
     expect($body)->toContain("'must_change_password'");
     expect($body)->toContain("'on'");
 });
