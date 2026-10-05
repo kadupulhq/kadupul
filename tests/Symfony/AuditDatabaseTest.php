@@ -77,12 +77,27 @@ final class AuditDatabaseTest extends TestCase
         return new AuditBaseline([new BaselineColumn('poller_command', 1, 'poller_id', 'int(10) unsigned', 'NO', '', '7', '')], []);
     }
 
-    private function schema(string $version = '1.3.0'): SchemaAudit&MockObject
+    public function testCaseInsensitiveBaselineMatchingDoesNotInventAMissingTable(): void
+    {
+        $live = new LiveTable('Host', new TableStatus('InnoDB', 'utf8mb4_unicode_ci', 'Dynamic', 0), [
+            ['Field' => 'id', 'Type' => 'int', 'Null' => 'NO', 'Key' => '', 'Default' => '0', 'Extra' => ''],
+        ], []);
+        $schema = $this->schema('1.3.0', new AuditCatalog([$live], PluginSchemaChanges::none()));
+        $baseline = new AuditBaseline([new BaselineColumn('host', 1, 'id', 'int', 'NO', '', '0', '')], []);
+
+        $report = $this->audit($schema, $this->store($baseline))(AuditMode::Report, false, null, false);
+
+        self::assertSame(['Host'], array_map(static fn(TableAudit $table): string => $table->table, $report->tables));
+        self::assertSame([], $report->alters);
+        self::assertSame(0, $report->tables[0]->errors);
+    }
+
+    private function schema(string $version = '1.3.0', ?AuditCatalog $catalog = null): SchemaAudit&MockObject
     {
         $schema = $this->createMock(SchemaAudit::class);
         $schema->method('codeVersion')->willReturn('1.3.0');
         $schema->method('databaseVersion')->willReturn($version);
-        $schema->method('catalog')->willReturn(self::catalog());
+        $schema->method('catalog')->willReturn($catalog ?? self::catalog());
         $schema->method('statement')->willReturn('ALTER TABLE `poller_command` typed');
 
         return $schema;
