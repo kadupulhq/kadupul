@@ -25,4 +25,5 @@ PROBE;
     'foreign device' => array(array('host_id' => '13'), false),
     'missing data source' => array(array(), false),
     'no device' => array(array('host_id' => '0'), true),
+    'invalid negative device' => array(array('host_id' => '-1'), false),
 ));

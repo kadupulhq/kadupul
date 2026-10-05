@@ -26,6 +26,14 @@ final class AuthPolicyNativeCoverageTest extends TestCase
         $state = $this->runPolicy(['operation' => 'device-filter-policy', 'hide_disabled' => 'on']);
         self::assertSame(['view' => [], 'graph_view' => [], 'management' => [100, 101, 102], 'target' => true, 'foreign' => true, 'deleted' => true, 'missing' => false, 'graphs' => [true, true, true, false]], $state['result']);
     }
+    public function testMalformedResourceIdentifiersAreDeniedBeforePolicyQueries(): void
+    {
+        $state = $this->runPolicy(['operation' => 'resource-ids']);
+        self::assertSame(array_fill(0, 10, [false, false]), $state['result']['refused']);
+        self::assertSame(array_fill(0, 9, [[], 0, [], 0]), $state['result']['invalid_lists']);
+        self::assertSame(0, $state['result']['invalid_queries']);
+        self::assertSame(array_fill(0, 4, [true, true]), $state['result']['admitted']);
+    }
     private static array $coverageEvidenceChecked = [];
 
     #[\PHPUnit\Framework\Attributes\DataProvider('realmCases')]

@@ -139,9 +139,33 @@ require $root . '/lib/auth.php';
 $result = null;
 $cached = null;
 switch ($scenario['operation']) {
+    case 'resource-ids':
     case 'device-filter-policy':
         $db->exec("INSERT INTO host(id,description,disabled,deleted) VALUES(100,'Target','on',''),(101,'Denied','on',''),(102,'Deleted','','on')");
         $db->exec("INSERT INTO graph_local(id,host_id,graph_template_id) VALUES(100,100,0),(101,101,0),(102,102,0); INSERT INTO graph_templates_graph VALUES(100,'Target',100,100),(101,'Foreign',100,100),(102,'Deleted',100,100)");
+        if ($scenario['operation'] === 'resource-ids') {
+            $before = $queries;
+            $refused = [];
+            $invalid_lists = [];
+            foreach ([0, -1, '', [], 1.5, '1e2', '100a', (string) PHP_INT_MAX . '0', null, false] as $id) {
+                try {
+                    $refused[] = [is_device_allowed($id, 42), is_graph_allowed($id, 42)];
+                    if ($id !== 0) {
+                        $device_rows = $graph_rows = -2;
+                        $invalid_lists[] = [get_allowed_devices('', '', '', $device_rows, 42, $id), $device_rows, get_allowed_graphs('', '', '', $graph_rows, 42, $id), $graph_rows];
+                    }
+                } catch (Throwable $error) {
+                    $refused[] = get_class($error);
+                }
+            }
+            $invalid_queries = $queries - $before;
+            $admitted = [];
+            foreach ([100, '100', '0100', '100 '] as $id) {
+                $admitted[] = [is_device_allowed($id, 42), is_graph_allowed($id, 42)];
+            }
+            $result = ['refused' => $refused, 'invalid_lists' => $invalid_lists, 'invalid_queries' => $invalid_queries, 'admitted' => $admitted];
+            break;
+        }
         $total = -1;
         $visible = get_allowed_devices('', 'description', '', $total, 42);
         $visible_graphs = get_allowed_graphs('', '', '', $total, 42);

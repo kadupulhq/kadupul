@@ -1056,6 +1056,30 @@ function get_auth_realms($login = false)
 }
 
 /**
+ * Normalize persisted resource identifiers before authorization SQL.
+ * Zero is retained for callers that support creating a new resource.
+ */
+function auth_resource_id($value): ?int
+{
+    if (!is_int($value) && !is_string($value)) {
+        return null;
+    }
+    if (is_string($value)) {
+        if (str_contains($value, "\0")) {
+            return null;
+        }
+        $value = trim($value);
+        if (preg_match('/\A[0-9]+\z/D', $value) !== 1) {
+            return null;
+        }
+        $value = ltrim($value, '0');
+        $value = $value === '' ? '0' : $value;
+    }
+    $parsed = filter_var($value, FILTER_VALIDATE_INT, array('options' => array('min_range' => 0)));
+    return $parsed === false ? null : $parsed;
+}
+
+/**
  * is_graph_allowed - checks graph permission independently of graph view preferences
  *
  * @param  (int) $local_graph_id - the ID of the graph to check permissions for
@@ -1064,6 +1088,10 @@ function get_auth_realms($login = false)
  */
 function is_graph_allowed($local_graph_id, $user_id = 0)
 {
+    $local_graph_id = auth_resource_id($local_graph_id);
+    if ($local_graph_id === null || $local_graph_id === 0) {
+        return false;
+    }
     $rows  = 0;
 
     get_allowed_graphs('', '', '', $rows, $user_id, $local_graph_id, false);
@@ -1312,6 +1340,10 @@ function is_tree_allowed($tree_id, $user_id = 0)
  */
 function is_device_allowed($device_id, $user_id = 0)
 {
+    $device_id = auth_resource_id($device_id);
+    if ($device_id === null || $device_id === 0) {
+        return false;
+    }
     $total_rows = -2;
     get_allowed_devices('', '', '', $total_rows, $user_id, $device_id, false);
     return ($total_rows > 0);
@@ -1961,6 +1993,11 @@ function get_allowed_tree_header_graphs($tree_id, $leaf_id = 0, $sql_where = '',
  */
 function get_allowed_graphs($sql_where = '', $sql_order = 'gtg.title_cache', $sql_limit = '', &$total_rows = 0, $user_id = 0, $graph_id = 0, $apply_view_filters = true)
 {
+    $graph_id = auth_resource_id($graph_id);
+    if ($graph_id === null) {
+        $total_rows = 0;
+        return array();
+    }
     if (!auth_valid_user($user_id)) {
         return array();
     }
@@ -3313,6 +3350,11 @@ function get_allowed_branches($sql_where = '', $sql_order = 'name', $sql_limit =
  */
 function get_allowed_devices($sql_where = '', $sql_order = 'description', $sql_limit = '', &$total_rows = 0, $user_id = 0, $device_id = 0, $apply_view_filters = true)
 {
+    $device_id = auth_resource_id($device_id);
+    if ($device_id === null) {
+        $total_rows = 0;
+        return array();
+    }
     if (!auth_valid_user($user_id)) {
         return array();
     }

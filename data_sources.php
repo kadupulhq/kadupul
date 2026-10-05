@@ -883,8 +883,6 @@ function ds_edit()
     get_filter_request_var('host_id');
     /* ==================================================== */
 
-    api_plugin_hook('data_source_edit_top');
-
     $use_data_template = true;
     $data_template     = array();
 
@@ -896,9 +894,11 @@ function ds_edit()
             array(get_request_var('id'))
         );
 
-        if (empty($data_local) || !is_device_allowed($data_local['host_id'])) {
+        if (empty($data_local) || !data_source_device_id_is_allowed($data_local['host_id'])) {
             data_source_access_denied();
         }
+
+        api_plugin_hook('data_source_edit_top');
 
         $data = db_fetch_row_prepared(
             'SELECT *
@@ -937,6 +937,8 @@ function ds_edit()
         if (!data_source_device_id_is_allowed(get_request_var('host_id'))) {
             data_source_access_denied();
         }
+
+        api_plugin_hook('data_source_edit_top');
 
         $header_label = __('Data Template Selection [new]');
 
@@ -1363,7 +1365,7 @@ function data_source_device_is_allowed($local_data_id)
 {
     $host_id = db_fetch_cell_prepared('SELECT host_id FROM data_local WHERE id = ?', array($local_data_id));
 
-    return $host_id !== false && $host_id !== null && is_device_allowed($host_id);
+    return $host_id !== false && $host_id !== null && ((int) $host_id === 0 || ((int) $host_id > 0 && is_device_allowed($host_id)));
 }
 
 /**
@@ -1375,10 +1377,12 @@ function data_source_device_is_allowed($local_data_id)
  */
 function data_source_device_id_is_allowed($host_id)
 {
-    // Device "None" (0), or the "Any" filter value (-1) carried into a new
-    // data source, names no device to protect.
-    if ((int) $host_id <= 0) {
+    // Only None (0) is a persisted device-less destination. Any (-1) is a list filter.
+    if ((int) $host_id === 0) {
         return true;
+    }
+    if ((int) $host_id < 0) {
+        return false;
     }
 
     $found_host_id = db_fetch_cell_prepared('SELECT id FROM host WHERE id = ?', array($host_id));

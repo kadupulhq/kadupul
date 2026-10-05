@@ -200,7 +200,7 @@ function api_data_source_is_allowed($local_data_id)
         return false;
     }
 
-    return (int) $data_source['host_id'] <= 0 || is_device_allowed((int) $data_source['host_id']);
+    return (int) $data_source['host_id'] === 0 || ((int) $data_source['host_id'] > 0 && is_device_allowed((int) $data_source['host_id']));
 }
 
 function api_data_source_remove_multi($local_data_ids, $propagate_remote = true, $verify_reviewed_scope = null)
