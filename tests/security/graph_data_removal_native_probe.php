@@ -57,6 +57,8 @@ final class RemovalProbeDatabase extends PDO
 }
 $database = new RemovalProbeDatabase($dsn, getenv('KADUPUL_REFERENCE_TEST_USER') ?: '', getenv('KADUPUL_REFERENCE_TEST_PASSWORD') ?: '', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,PDO::ATTR_EMULATE_PREPARES => false));
 echo 'RUNTIME php=' . PHP_VERSION . ' server=' . $database->query('SELECT VERSION()')->fetchColumn() . "\n";
+$caseMode = $database->query('SELECT @@lower_case_table_names')->fetchColumn();
+echo 'SCHEMA_CASE_MODE ' . $caseMode . "\n";
 
 function removalProbeAssert(bool $condition, string $message): void
 {
@@ -75,7 +77,8 @@ function removalProbeSnapshot(PDO $database): array
     return $state;
 }
 
-$cases = array('aggregate_success','aggregate_parent_denied','aggregate_sibling_denied','aggregate_source_denied','shared_selected_sources','shared_external_source','late_local_failure','source_cache_success','source_cache_failure','source_commit_failure');
+$cases = array('aggregate_success','aggregate_parent_denied','aggregate_sibling_denied','aggregate_source_denied','shared_selected_sources','shared_external_source','late_local_failure','source_cache_success','source_cache_failure','source_commit_failure','schema_case_equivalent','schema_different');
+if (($argv[1] ?? '') === '--schema-only') $cases = array('schema_case_equivalent','schema_different');
 foreach ($cases as $case) {
     foreach (array(false,true) as $callerOwned) {
         if ($callerOwned && $case === 'source_commit_failure') continue; // A savepoint never owns the outer commit.
@@ -114,6 +117,10 @@ foreach ($cases as $case) {
             }
             if (str_starts_with($case, 'shared_')) $database->exec('UPDATE graph_templates_item SET task_item_id=16000101 WHERE local_graph_id=15000003');
             if ($case === 'late_local_failure') $database->exec("CREATE TRIGGER owned_removal_failure BEFORE DELETE ON graph_local FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Owned late deletion failure'");
+            if ($case === 'schema_case_equivalent' || $case === 'schema_different') {
+                $database_default = $case === 'schema_case_equivalent' ? strtoupper($schema) : $schema . '_different';
+                $database_sessions = array("$database_hostname:$database_port:$database_default" => $database);
+            }
             $before = removalProbeSnapshot($database);
             $database->exec('CREATE TABLE caller_work(value INTEGER) ENGINE=InnoDB');
             if ($callerOwned) {
@@ -135,10 +142,12 @@ foreach ($cases as $case) {
             } catch (Throwable $error) {
                 $failed = true;
                 $failureMessage = $error->getMessage();
-                if (!in_array($case, array('aggregate_parent_denied','aggregate_sibling_denied','aggregate_source_denied','late_local_failure','source_cache_failure','source_commit_failure'), true)) echo 'UNEXPECTED_FAILURE ' . $error->getMessage() . "\n";
+                if (!in_array($case, array('aggregate_parent_denied','aggregate_sibling_denied','aggregate_source_denied','late_local_failure','source_cache_failure','source_commit_failure','schema_different'), true)
+                    && !($case === 'schema_case_equivalent' && !in_array($caseMode, array(1,2,'1','2'), true))) echo 'UNEXPECTED_FAILURE ' . $error->getMessage() . "\n";
             }
             $database->fault = '';
-            $expectedFailure = in_array($case, array('aggregate_parent_denied','aggregate_sibling_denied','aggregate_source_denied','late_local_failure','source_cache_failure','source_commit_failure'), true);
+            $expectedFailure = in_array($case, array('aggregate_parent_denied','aggregate_sibling_denied','aggregate_source_denied','late_local_failure','source_cache_failure','source_commit_failure','schema_different'), true)
+                || ($case === 'schema_case_equivalent' && !in_array($caseMode, array(1,2,'1','2'), true));
             removalProbeAssert($failed === $expectedFailure, "$case expected admission/failure owned=" . (int) $callerOwned);
             removalProbeAssert($database->inTransaction() === $callerOwned, "$case preserves transaction ownership");
             removalProbeAssert((int) $database->query('SELECT COUNT(*) FROM caller_work')->fetchColumn() === ($callerOwned ? 1 : 0), "$case preserves caller work");

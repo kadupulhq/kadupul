@@ -291,4 +291,23 @@ final class GraphDataRemovalNativeTest extends TestCase
         self::assertStringContainsString('selected_items', $preview['html']);
         self::assertSame([], $preview['writes']);
     }
+
+    public function testConfiguredSchemaCaseEquivalenceFollowsActualEngineMode(): void
+    {
+        foreach ([1,2] as $mode) {
+            $state = $this->runCascade(['resource' => 'graph','configured_schema' => 'AUTH','schema_case_mode' => $mode]);
+            self::assertSame([], $state['messages']);
+            self::assertSame([201,202,203], $state['graphs']);
+        }
+        foreach ([['configured_schema' => 'AUTH','schema_case_mode' => 0],
+            ['configured_schema' => 'other','schema_case_mode' => 2],
+            ['configured_schema' => 'AUTH','schema_case_mode' => 'invalid'],
+            ['configured_schema' => 'AUTH','schema_case_mode' => 2,'schema_metadata_failure' => true]] as $case) {
+            $state = $this->runCascade(['resource' => 'graph'] + $case);
+            self::assertSame([200,201,202,203], $state['graphs']);
+            self::assertSame([], $state['hooks']);
+            self::assertSame([], $state['writes']);
+            self::assertCount(1, $state['messages']);
+        }
+    }
 }

@@ -23,7 +23,7 @@ def manifest():
 def validate_output(text):
     if text.splitlines().count('GRAPH_DATA_REMOVAL_NATIVE_COMPLETE') != 1:
         raise RuntimeError('Missing or duplicate native completion marker.')
-    if sum(' expected admission/failure owned=' in line for line in text.splitlines()) != 19:
+    if sum(' expected admission/failure owned=' in line for line in text.splitlines()) != 23:
         raise RuntimeError('Incomplete native removal case discovery.')
     for marker, count in (
         ('PASS aggregate_success regenerates aggregate parent through production code', 2),
@@ -32,6 +32,9 @@ def validate_output(text):
         ('PASS source_cache_failure reports cache invalidation separately from persistent cleanup', 2),
         ('PASS source_commit_failure reports cache invalidation separately from persistent cleanup', 1),
         ('PASS source_cache_success caller rollback cannot restore MEMORY cache', 1),
+        ('PASS schema_case_equivalent expected admission/failure owned=0', 1),
+        ('PASS schema_case_equivalent expected admission/failure owned=1', 1),
+        ('PASS schema_different preserves exact persisted rows', 2),
     ):
         if text.splitlines().count(marker) != count:
             raise RuntimeError('Missing or duplicate removal invariant marker: ' + marker)
@@ -75,7 +78,10 @@ def run(output):
         ]
         for prefix in ('PASS aggregate_success regenerates', 'PASS shared_selected_sources removes',
                        'PASS shared_external_source retains', 'PASS source_cache_failure reports',
-                       'PASS source_commit_failure reports', 'PASS source_cache_success caller rollback cannot'):
+                       'PASS source_commit_failure reports', 'PASS source_cache_success caller rollback cannot',
+                       'PASS schema_case_equivalent expected admission/failure owned=0',
+                       'PASS schema_case_equivalent expected admission/failure owned=1',
+                       'PASS schema_different preserves exact persisted rows'):
             marker = next(line for line in lines if line.startswith(prefix))
             mutations.extend(('\n'.join(line for line in lines if line != marker), result.stdout + '\n' + marker + '\n'))
         for mutation in mutations:
@@ -91,7 +97,7 @@ def run(output):
         report['verified'] = True
     finally:
         (output / 'results.json').write_text(json.dumps(report, indent=2) + '\n')
-    print('PASS 19 native removal cases on unchanged source')
+    print('PASS 23 native removal cases on unchanged source')
 
 
 if __name__ == '__main__':

@@ -361,11 +361,23 @@ final class GraphDataRemovalScope
     {
         if ($this->database === null) return;
         global $database_sessions, $database_hostname, $database_port, $database_default;
+        if (!is_string($database_default) || $database_default === '') throw new RuntimeException('Removal schema unavailable.');
         if (($database_sessions["$database_hostname:$database_port:$database_default"] ?? null) !== $this->database) throw new RuntimeException('Removal connection changed.');
         $statement = $this->database->query('SELECT DATABASE()');
-        if ($statement === false) throw new RuntimeException('Removal schema unavailable.');
+        if ($statement === false || $this->database->errorCode() !== '00000') throw new RuntimeException('Removal schema unavailable.');
         $schema = $statement->fetchColumn();
-        if (!$statement->closeCursor() || $schema !== $database_default) throw new RuntimeException('Removal schema changed.');
+        $state = $statement->errorCode();
+        if (!$statement->closeCursor() || $statement->errorCode() !== '00000' || $state !== '00000' || !is_string($schema) || $schema === '') {
+            throw new RuntimeException('Removal schema unavailable.');
+        }
+        if ($schema === $database_default) return;
+        // Match the established aggregate schema contract on case-folding engines.
+        $statement = $this->database->prepare('SELECT @@lower_case_table_names');
+        if ($statement === false || !$statement->execute() || $statement->errorCode() !== '00000') throw new RuntimeException('Removal schema metadata unavailable.');
+        $mode = $statement->fetchColumn();
+        $state = $statement->errorCode();
+        if (!$statement->closeCursor() || $statement->errorCode() !== '00000' || $state !== '00000') throw new RuntimeException('Removal schema metadata unavailable.');
+        if (!in_array($mode, array(1,2,'1','2'), true) || strtolower($schema) !== strtolower($database_default)) throw new RuntimeException('Removal schema changed.');
     }
 
     public static function checked(Closure $operation): mixed

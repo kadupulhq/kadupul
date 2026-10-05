@@ -22,6 +22,10 @@ final class GraphDataRemovalFixtureDatabase extends PDO
     public function prepare(string $query, array $options = []): PDOStatement|false
     {
         $GLOBALS['removalFixtureNativeQueries'] = ($GLOBALS['removalFixtureNativeQueries'] ?? 0) + 1;
+        if ($query === 'SELECT @@lower_case_table_names') {
+            if ($GLOBALS['scenario']['schema_metadata_failure'] ?? false) return false;
+            $query = 'SELECT ' . $this->quote((string) ($GLOBALS['scenario']['schema_case_mode'] ?? 0));
+        }
         $query = str_replace(' FOR UPDATE', '', $query);
         $query = preg_replace('/ON DUPLICATE KEY UPDATE `?value`?\s*=\s*VALUES\(`?value`?\)/i', 'ON CONFLICT(name) DO UPDATE SET value=excluded.value', $query);
         if (preg_match('/REPLACE INTO settings\s+SET value = \?, name=\x27([^\x27]+)\x27/s', $query, $match)) {
@@ -56,8 +60,8 @@ function graph_data_removal_fixture_run(): never
     require_once $root . '/include/global_constants.php';
     $database_hostname = 'fixture';
     $database_port = 0;
-    $database_default = 'auth';
-    $database_sessions = array('fixture:0:auth' => $db);
+    $database_default = $scenario['configured_schema'] ?? 'auth';
+    $database_sessions = array('fixture:0:' . $database_default => $db);
     $config['base_path'] = $root;
     $db->exec("ALTER TABLE host ADD COLUMN poller_id INTEGER DEFAULT 1;
         ALTER TABLE reports_items ADD COLUMN local_graph_id INTEGER DEFAULT 0;
