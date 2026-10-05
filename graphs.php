@@ -12,6 +12,7 @@ include_once('./lib/api_aggregate.php');
 include_once('./lib/api_automation.php');
 include_once('./lib/api_data_source.php');
 include_once('./lib/api_graph.php');
+require_once __DIR__ . '/lib/graph_data_removal.php';
 include_once('./lib/api_tree.php');
 include_once('./lib/data_query.php');
 include_once('./lib/graphs.php');
@@ -563,12 +564,43 @@ function form_actions()
     get_filter_request_var('drp_action', FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/^([a-zA-Z0-9_]+)$/')));
     /* ==================================================== */
 
+    $removal_scope = null;
+    $removal_preview = null;
+    if (get_nfilter_request_var('drp_action') == '1') {
+        try {
+            $selection = array();
+            if (isset_request_var('selected_items')) {
+                $selection = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
+                $mode = isset_request_var('delete_type') ? get_nfilter_request_var('delete_type') : 1;
+            } else {
+                foreach ($_POST as $key => $value) {
+                    if (preg_match('/^chk_([0-9]+)$/D', $key, $match)) $selection[] = $match[1];
+                }
+                $mode = 1;
+            }
+            if (!is_array($selection)) throw new RuntimeException('Invalid removal selection.');
+            $removal_scope = GraphDataRemovalScope::review('graph', $selection, $mode);
+            if (!isset_request_var('selected_items')) {
+                try {
+                    $removal_preview = GraphDataRemovalScope::review('graph', $selection, 2);
+                } catch (GraphDataRemovalAccessDenied|GraphDataRemovalBatchTooLarge) {
+                    // The graph-only action remains reachable; dependent names stay private.
+                }
+            }
+        } catch (Throwable $error) {
+            graph_data_removal_failed('graph', $error);
+        }
+    }
     /* if we are to save this form, instead of display it */
     if (isset_request_var('selected_items')) {
         $selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
-        if (is_array($selected_items)) {
+        if ($removal_scope !== null) {
+            $selected_items = $removal_scope->selectedIds();
+            set_request_var('selected_items', serialize($selected_items));
+        }
+        if (is_array($selected_items) && $removal_scope === null) {
             foreach ($selected_items as $graph_id) {
-                if (!graph_edit_graph_is_allowed($graph_id)) {
+                if ($removal_scope === null && !graph_edit_graph_is_allowed($graph_id)) {
                     graph_edit_access_denied();
                 }
             }
@@ -587,7 +619,7 @@ function form_actions()
 
         if ($selected_items != false) {
             foreach ($selected_items as $selected_item) {
-                if (!graph_edit_graph_is_allowed($selected_item)) {
+                if ($removal_scope === null && !graph_edit_graph_is_allowed($selected_item)) {
                     graph_edit_access_denied();
                 }
             }
@@ -597,7 +629,13 @@ function form_actions()
                     set_request_var('delete_type', 1);
                 }
 
-                api_delete_graphs($selected_items, get_filter_request_var('delete_type'));
+                try {
+                    $removal_scope->run(static function () use ($removal_scope, &$selected_items): void {
+                        api_delete_graphs($selected_items, get_filter_request_var('delete_type'), $removal_scope->dataIds(), array($removal_scope, 'verify'), $removal_scope);
+                    });
+                } catch (Throwable $error) {
+                    graph_data_removal_failed('graph', $error);
+                }
             } elseif (get_request_var('drp_action') == '2') { // change graph template
                 $gt_id_unparsed      = get_nfilter_request_var('graph_template_id');
                 $gt_id_prev_unparsed = get_nfilter_request_var('graph_template_id_prev');
@@ -703,7 +741,7 @@ function form_actions()
             input_validate_input_number($matches[1]);
             /* ==================================================== */
 
-            if (!graph_edit_graph_is_allowed($matches[1])) {
+            if ($removal_scope === null && !graph_edit_graph_is_allowed($matches[1])) {
                 graph_edit_access_denied();
             }
 
@@ -736,7 +774,7 @@ function form_actions()
     if (isset($graph_array) && cacti_sizeof($graph_array)) {
         if (get_request_var('drp_action') == '1') { // delete
             /* find out which (if any) data sources are being used by this graph, so we can tell the user */
-            if (isset($graph_array) && cacti_sizeof($graph_array)) {
+            if (isset($graph_array) && cacti_sizeof($graph_array) && $removal_preview !== null) {
                 $data_sources = array_rekey(
                     db_fetch_assoc('SELECT DISTINCT dtd.local_data_id, dtd.name_cache
 						FROM data_template_data AS dtd

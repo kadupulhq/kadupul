@@ -1991,7 +1991,7 @@ function get_allowed_tree_header_graphs($tree_id, $leaf_id = 0, $sql_where = '',
  *
  * @return (array) Array of allowed graphs
  */
-function get_allowed_graphs($sql_where = '', $sql_order = 'gtg.title_cache', $sql_limit = '', &$total_rows = 0, $user_id = 0, $graph_id = 0, $apply_view_filters = true)
+function get_allowed_graphs($sql_where = '', $sql_order = 'gtg.title_cache', $sql_limit = '', &$total_rows = 0, $user_id = 0, $graph_id = 0, $apply_view_filters = true, $return_ids_sql = false)
 {
     $graph_id = auth_resource_id($graph_id);
     if ($graph_id === null) {
@@ -2050,6 +2050,15 @@ function get_allowed_graphs($sql_where = '', $sql_order = 'gtg.title_cache', $sq
         $sql_where = get_policy_where($graph_auth_method, $policies, $sql_where);
     }
 
+    if ($return_ids_sql) {
+        return "SELECT gl.id
+            FROM graph_templates_graph AS gtg
+            INNER JOIN graph_local AS gl ON gl.id=gtg.local_graph_id
+            LEFT JOIN graph_templates AS gt ON gt.id=gl.graph_template_id
+            LEFT JOIN host AS h ON h.id=gl.host_id
+            $sql_where";
+    }
+
     $graphs = db_fetch_assoc("SELECT gtg.local_graph_id, h.description, gt.name AS template_name,
 		gtg.title_cache, gtg.width, gtg.height, gl.snmp_index, gl.snmp_query_id, gl.host_id, h.disabled,
 		IF(gl.graph_template_id=0, 0, IF(gl.snmp_query_id=0, 2, 1)) AS graph_source
@@ -2081,6 +2090,15 @@ function get_allowed_graphs($sql_where = '', $sql_order = 'gtg.title_cache', $sq
     }
 
     return $graphs;
+}
+
+/** Return management graph policy without reading titles or populating row caches. */
+function get_allowed_management_graph_ids_sql($user_id = 0): string
+{
+    $total_rows = -1;
+    $sql = get_allowed_graphs('', '', '', $total_rows, $user_id, 0, false, true);
+
+    return is_string($sql) ? $sql : 'SELECT NULL AS id WHERE 1=0';
 }
 
 /**

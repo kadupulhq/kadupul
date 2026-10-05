@@ -162,7 +162,7 @@ test('domain bind failures enforce the configured lockout using numeric error co
             $reports = glob($directory . '/*.coverage');
             expect($reports)->toHaveCount(1);
             $root = dirname(__DIR__, 2);
-            $sources = array('tests/Unit/HardeningAuth2026RegressionTest.php', 'composer.lock', 'tests/composer.lock', 'tests/Fixtures/domain-lockout-native.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/auth.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
+            $sources = array('tests/Unit/HardeningAuth2026RegressionTest.php', 'composer.lock', 'tests/composer.lock', 'tests/Fixtures/domain-lockout-native.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/auth.php', 'lib/graph_item_choices.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
             $scenario = json_encode(array('code' => (string) $code, 'text' => $text), JSON_THROW_ON_ERROR);
             $arguments = array($reports[0], $root, 'tests/Fixtures/domain-lockout-native.php', $scenario, $sources, array('domain-lockout-persisted-state-readback'), array('lib/auth.php'));
             $measured = NativeChildCoverageEvidence::load(...$arguments);

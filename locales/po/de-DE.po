@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul German Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 11:14-0700\n"
+"POT-Creation-Date: 2026-10-05 11:52-0700\n"
 "PO-Revision-Date: 2024-05-25 15:08+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -56,9 +56,9 @@ msgstr "Dieses Programm wird verteilt in der Hoffnung, dass es nützlich ist, ab
 #: automation_tree_rules.php:17 cdef.php:14 cdef.php:603 color_templates.php:13
 #: color_templates.php:109 data_queries.php:16 data_queries.php:863
 #: data_queries.php:972 data_queries.php:1252 data_source_profiles.php:16
-#: data_source_profiles.php:934 data_sources.php:22 data_sources.php:1232
+#: data_source_profiles.php:934 data_sources.php:23 data_sources.php:1235
 #: data_templates.php:19 data_templates.php:791 gprint_presets.php:12
-#: graph_templates.php:22 graph_templates.php:517 graphs.php:31
+#: graph_templates.php:22 graph_templates.php:517 graphs.php:32
 #: host_templates.php:20 host_templates.php:485 host_templates.php:542
 #: include/global_arrays.php:1655 include/global_settings.php:232
 #: lib/api_automation.php:1323 lib/api_automation.php:1386
@@ -73,7 +73,7 @@ msgstr "Löschen"
 msgid "Convert to Normal Graph"
 msgstr "In normale Grafik konvertieren"
 
-#: aggregate_graphs.php:29 graphs.php:43
+#: aggregate_graphs.php:29 graphs.php:44
 msgid "Place Graphs on Report"
 msgstr "Graphen auf Bericht platzieren"
 
@@ -93,7 +93,7 @@ msgstr "Mit Aggregat assoziieren"
 msgid "Disassociate with Aggregate"
 msgstr "Von Gruppe trennen"
 
-#: aggregate_graphs.php:70 graphs.php:150
+#: aggregate_graphs.php:70 graphs.php:151
 #, php-format
 msgid "Place on a Tree (%s)"
 msgstr "Auf einem Baum platzieren (%s)"
@@ -130,15 +130,15 @@ msgstr "Klicken Sie auf \"Weiter\", um die folgende(n) Aggregat-Graph(en) zu lö
 #: color_templates.php:256 color_templates_items.php:327 data_queries.php:413
 #: data_queries.php:427 data_queries.php:611 data_source_profiles.php:416
 #: data_source_profiles.php:428 data_source_profiles.php:663
-#: data_sources.php:602 data_sources.php:614 data_sources.php:623
-#: data_sources.php:632 data_sources.php:641 data_sources.php:647
+#: data_sources.php:605 data_sources.php:617 data_sources.php:626
+#: data_sources.php:635 data_sources.php:644 data_sources.php:650
 #: data_templates.php:486 data_templates.php:498 data_templates.php:514
 #: gprint_presets.php:137 graph_templates.php:373 graph_templates.php:385
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
-#: graph_view.php:1043 graphs.php:828 graphs.php:844 graphs.php:855
-#: graphs.php:866 graphs.php:881 graphs.php:895 graphs.php:904 graphs.php:1106
-#: graphs.php:1149 graphs.php:1171 graphs.php:1202 graphs.php:1214
-#: graphs.php:1798 host_templates.php:222 host_templates.php:236
+#: graph_view.php:1043 graphs.php:866 graphs.php:882 graphs.php:893
+#: graphs.php:904 graphs.php:919 graphs.php:933 graphs.php:942 graphs.php:1144
+#: graphs.php:1187 graphs.php:1209 graphs.php:1240 graphs.php:1252
+#: graphs.php:1836 host_templates.php:222 host_templates.php:236
 #: host_templates.php:247 host_templates.php:302 host_templates.php:375
 #: lib/clog_webapi.php:225 lib/html.php:2764 lib/html_form.php:1396
 #: lib/html_form.php:1413 lib/html_form.php:1424 lib/html_reports.php:632
@@ -163,14 +163,14 @@ msgstr "Abbrechen"
 #: color_templates.php:256 color_templates_items.php:328 data_queries.php:413
 #: data_queries.php:427 data_queries.php:612 data_source_profiles.php:416
 #: data_source_profiles.php:428 data_source_profiles.php:664
-#: data_sources.php:602 data_sources.php:614 data_sources.php:623
-#: data_sources.php:632 data_sources.php:641 data_sources.php:647
+#: data_sources.php:605 data_sources.php:617 data_sources.php:626
+#: data_sources.php:635 data_sources.php:644 data_sources.php:650
 #: data_templates.php:486 data_templates.php:498 data_templates.php:514
 #: gprint_presets.php:137 graph_templates.php:373 graph_templates.php:385
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
-#: graphs.php:828 graphs.php:844 graphs.php:855 graphs.php:866 graphs.php:881
-#: graphs.php:895 graphs.php:904 graphs.php:1106 graphs.php:1149
-#: graphs.php:1171 graphs.php:1202 graphs.php:1214 host_templates.php:222
+#: graphs.php:866 graphs.php:882 graphs.php:893 graphs.php:904 graphs.php:919
+#: graphs.php:933 graphs.php:942 graphs.php:1144 graphs.php:1187
+#: graphs.php:1209 graphs.php:1240 graphs.php:1252 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
 #: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2763
 #: lib/html_reports.php:574 managers.php:1066 managers.php:1127 pollers.php:549
@@ -184,7 +184,7 @@ msgid "Continue"
 msgstr "Fortsetzen"
 
 #: aggregate_graphs.php:370 aggregate_graphs.php:445 aggregate_graphs.php:470
-#: graphs.php:828
+#: graphs.php:866
 msgid "Delete Graph(s)"
 msgstr "Graph(en) löschen"
 
@@ -198,8 +198,8 @@ msgstr "Um die untenstehenden Aggregatdiagramme in ein vorlagenbasiertes Aggrega
 
 #: aggregate_graphs.php:406 aggregate_graphs.php:456 aggregate_graphs.php:504
 #: auth_changepassword.php:415 auth_profile.php:464 automation_networks.php:387
-#: automation_snmp.php:245 graphs.php:1108 graphs.php:1158 graphs.php:1161
-#: graphs.php:1205 graphs.php:1798 include/auth.php:309
+#: automation_snmp.php:245 graphs.php:1146 graphs.php:1196 graphs.php:1199
+#: graphs.php:1243 graphs.php:1836 include/auth.php:309
 #: lib/api_aggregate.php:2209 lib/api_aggregate.php:2224 lib/html_form.php:1422
 #: lib/html_reports.php:632 managers.php:1130 permission_denied.php:14
 #: permission_denied.php:16
@@ -247,29 +247,29 @@ msgstr "Aggregatname:"
 msgid "New Aggregate"
 msgstr "Neues Aggregat"
 
-#: aggregate_graphs.php:485 graphs.php:1186
+#: aggregate_graphs.php:485 graphs.php:1224
 msgid "Click 'Continue' to add the selected Graphs to the Report below."
 msgstr "Klicken Sie auf 'Weiter', um die ausgewählten Diagramme zum Bericht unten hinzuzufügen."
 
-#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1190
+#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1228
 #: lib/html_reports.php:18 lib/html_reports.php:2133
 msgid "Report Name"
 msgstr "Name des Berichts"
 
-#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1194
+#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1232
 #: lib/html_reports.php:1789
 msgid "Timespan"
 msgstr "Zeitspanne"
 
-#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1198
+#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1236
 msgid "Align"
 msgstr "Ausrichten"
 
-#: aggregate_graphs.php:501 graphs.php:1202
+#: aggregate_graphs.php:501 graphs.php:1240
 msgid "Add Graphs to Report"
 msgstr "Grafiken zum Bericht hinzufügen"
 
-#: aggregate_graphs.php:503 graphs.php:1204
+#: aggregate_graphs.php:503 graphs.php:1242
 msgid "You currently have no reports defined."
 msgstr "Sie haben derzeit keine Berichte definiert."
 
@@ -305,11 +305,11 @@ msgstr "Klicken Sie auf \"Weiter\", um die folgenden Aggregatdiagramme unter dem
 msgid "Destination Branch:"
 msgstr "Ziel Zweig:"
 
-#: aggregate_graphs.php:545 graphs.php:881
+#: aggregate_graphs.php:545 graphs.php:919
 msgid "Place Graph(s) on Tree"
 msgstr "Graph(e) auf dem Baum platzieren"
 
-#: aggregate_graphs.php:625 data_sources.php:1218 lib/html_reports.php:1641
+#: aggregate_graphs.php:625 data_sources.php:1221 lib/html_reports.php:1641
 #: user_admin.php:1774
 #, php-format
 msgid "[edit: %s]"
@@ -360,15 +360,15 @@ msgstr "Aggregatvorschau[%s]"
 msgid "Aggregate Preview %s"
 msgstr "Aggregatvorschau[%s]"
 
-#: aggregate_graphs.php:763 graph.php:551 graphs.php:1631
+#: aggregate_graphs.php:763 graph.php:551 graphs.php:1669
 msgid "RRDtool Command:"
 msgstr "RRDtool Befehl:"
 
-#: aggregate_graphs.php:765 graph.php:560 graphs.php:1635
+#: aggregate_graphs.php:765 graph.php:560 graphs.php:1673
 msgid "Not Checked"
 msgstr "Nicht geprüft"
 
-#: aggregate_graphs.php:765 graph.php:556 graphs.php:1633
+#: aggregate_graphs.php:765 graph.php:556 graphs.php:1671
 msgid "RRDtool Says:"
 msgstr "RRDtool sagt:"
 
@@ -377,24 +377,24 @@ msgstr "RRDtool sagt:"
 msgid "Aggregate Graph %s"
 msgstr "Klicken Sie auf 'Weiter', um die folgende(n) Aggregatgrafik(en) zu einer einzigen Aggregatgrafik zu kombinieren."
 
-#: aggregate_graphs.php:820 aggregate_templates.php:408 graphs.php:972
+#: aggregate_graphs.php:820 aggregate_templates.php:408 graphs.php:1010
 msgid "Prefix Replacement Values"
 msgstr "Ersatzmuster"
 
-#: aggregate_graphs.php:821 aggregate_templates.php:409 graphs.php:973
+#: aggregate_graphs.php:821 aggregate_templates.php:409 graphs.php:1011
 msgid "You may use these replacement values for the Prefix in the Aggregate Graph"
 msgstr "Sie können diese Ersatzwerte für das Präfix im Aggregatdiagramm verwenden"
 
-#: aggregate_graphs.php:988 aggregate_templates.php:536 graphs.php:1055
+#: aggregate_graphs.php:988 aggregate_templates.php:536 graphs.php:1093
 #: lib/api_aggregate.php:2344
 msgid "Total"
 msgstr "Gesamt"
 
-#: aggregate_graphs.php:992 aggregate_templates.php:540 graphs.php:1057
+#: aggregate_graphs.php:992 aggregate_templates.php:540 graphs.php:1095
 msgid "All Items"
 msgstr "Alle Einträge"
 
-#: aggregate_graphs.php:1010 graphs.php:1646 lib/api_aggregate.php:2504
+#: aggregate_graphs.php:1010 graphs.php:1684 lib/api_aggregate.php:2504
 msgid "Graph Configuration"
 msgstr "Graph Konfiguration"
 
@@ -418,9 +418,9 @@ msgstr "Keine passenden Diagramme gefunden"
 #: automation_networks.php:1224 automation_snmp.php:703
 #: automation_templates.php:393 automation_tree_rules.php:845 cdef.php:727
 #: color_templates.php:560 data_debug.php:1189 data_queries.php:1371
-#: data_source_profiles.php:1186 data_sources.php:1793 data_templates.php:1101
+#: data_source_profiles.php:1186 data_sources.php:1796 data_templates.php:1101
 #: gprint_presets.php:255 graph_templates.php:727 graph_view.php:667
-#: graphs.php:2052 graphs_new.php:526 host_templates.php:795
+#: graphs.php:2090 graphs_new.php:526 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
 #: lib/api_automation.php:480 lib/api_automation.php:708
 #: lib/clog_webapi.php:608 lib/html.php:268 lib/html_filter.php:46
@@ -437,9 +437,9 @@ msgid "Search"
 msgstr "Suche"
 
 #: aggregate_graphs.php:1288 aggregate_graphs.php:1324
-#: aggregate_graphs.php:1587 color_templates.php:680 data_sources.php:1995
-#: data_sources.php:2134 graph_view.php:488 graph_view.php:739
-#: graph_view.php:803 graphs.php:2069 graphs.php:2268
+#: aggregate_graphs.php:1587 color_templates.php:680 data_sources.php:1998
+#: data_sources.php:2137 graph_view.php:488 graph_view.php:739
+#: graph_view.php:803 graphs.php:2107 graphs.php:2306
 #: include/global_arrays.php:994 include/global_arrays.php:1230
 #: include/global_arrays.php:2015 lib/api_automation.php:283 lib/html.php:1900
 #: lib/html.php:1969 lib/html_graph.php:197 lib/html_tree.php:1022
@@ -455,9 +455,9 @@ msgstr "Diagramme"
 #: automation_snmp.php:713 automation_templates.php:403
 #: automation_tree_rules.php:865 cdef.php:737 color_templates.php:576
 #: data_debug.php:1199 data_queries.php:1381 data_source_profiles.php:1196
-#: data_source_profiles.php:1318 data_sources.php:1803 data_templates.php:1130
+#: data_source_profiles.php:1318 data_sources.php:1806 data_templates.php:1130
 #: gprint_presets.php:265 graph_templates.php:737 graph_view.php:743
-#: graphs.php:2073 graphs_new.php:536 host_templates.php:805
+#: graphs.php:2111 graphs_new.php:536 host_templates.php:805
 #: include/global_form.php:242 lib/api_automation.php:182
 #: lib/api_automation.php:490 lib/api_automation.php:718
 #: lib/api_automation.php:1082 lib/html_reports.php:2045 managers.php:154
@@ -481,8 +481,8 @@ msgstr "Teil des Aggregats"
 #: automation_snmp.php:728 automation_templates.php:418
 #: automation_tree_rules.php:877 cdef.php:758 color_templates.php:598
 #: data_debug.php:1114 data_queries.php:1396 data_source_profiles.php:1217
-#: data_sources.php:1743 data_templates.php:1151 gprint_presets.php:283
-#: graph_templates.php:758 graph_view.php:675 graphs.php:2043
+#: data_sources.php:1746 data_templates.php:1151 gprint_presets.php:283
+#: graph_templates.php:758 graph_view.php:675 graphs.php:2081
 #: graphs_new.php:515 host_templates.php:786 lib/api_automation.php:187
 #: lib/api_automation.php:471 lib/api_automation.php:723
 #: lib/api_automation.php:1087 lib/clog_webapi.php:533 lib/html.php:1732
@@ -497,9 +497,9 @@ msgstr "Los"
 #: aggregate_graphs.php:1303 aggregate_graphs.php:1596
 #: automation_devices.php:509 automation_snmp.php:728
 #: automation_templates.php:418 cdef.php:758 data_debug.php:1114
-#: data_queries.php:1396 data_source_profiles.php:1217 data_sources.php:1743
+#: data_queries.php:1396 data_source_profiles.php:1217 data_sources.php:1746
 #: data_templates.php:1151 gprint_presets.php:283 graph_templates.php:758
-#: graph_view.php:675 graphs.php:2043 graphs_new.php:515 host_templates.php:786
+#: graph_view.php:675 graphs.php:2081 graphs_new.php:515 host_templates.php:786
 #: lib/html_graph.php:178 managers.php:169 managers.php:529 managers.php:794
 #: plugins.php:530 pollers.php:914
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
@@ -516,8 +516,8 @@ msgstr "Filter setzen/auffrischen"
 #: automation_snmp.php:729 automation_templates.php:419
 #: automation_tree_rules.php:878 cdef.php:759 color_templates.php:599
 #: data_debug.php:1115 data_queries.php:1397 data_source_profiles.php:1218
-#: data_sources.php:1744 data_templates.php:1152 gprint_presets.php:284
-#: graph_templates.php:759 graph_view.php:676 graphs.php:2044
+#: data_sources.php:1747 data_templates.php:1152 gprint_presets.php:284
+#: graph_templates.php:759 graph_view.php:676 graphs.php:2082
 #: graphs_new.php:516 host_templates.php:787 lib/api_automation.php:188
 #: lib/api_automation.php:472 lib/api_automation.php:724
 #: lib/api_automation.php:1088 lib/clog_webapi.php:534 lib/html_filter.php:68
@@ -532,9 +532,9 @@ msgstr "Löschen"
 
 #: aggregate_graphs.php:1304 aggregate_graphs.php:1597 automation_snmp.php:729
 #: automation_templates.php:419 cdef.php:759 data_debug.php:1115
-#: data_queries.php:1397 data_source_profiles.php:1218 data_sources.php:1744
+#: data_queries.php:1397 data_source_profiles.php:1218 data_sources.php:1747
 #: data_templates.php:1152 gprint_presets.php:284 graph_templates.php:759
-#: graph_view.php:676 graphs.php:2044 graphs_new.php:516 host_templates.php:787
+#: graph_view.php:676 graphs.php:2082 graphs_new.php:516 host_templates.php:787
 #: lib/html_graph.php:179 lib/html_tree.php:1010 managers.php:170
 #: managers.php:530 managers.php:795 plugins.php:531 pollers.php:915
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:96
@@ -544,15 +544,15 @@ msgstr "Löschen"
 msgid "Clear Filters"
 msgstr "Filter löschen"
 
-#: aggregate_graphs.php:1329 aggregate_graphs.php:1662 graphs.php:1135
+#: aggregate_graphs.php:1329 aggregate_graphs.php:1662 graphs.php:1173
 #: lib/api_automation.php:574 user_admin.php:809 user_group_admin.php:948
 msgid "Graph Title"
 msgstr "Graph Titel"
 
 #: aggregate_graphs.php:1330 aggregate_graphs.php:1663
 #: automation_graph_rules.php:964 automation_tree_rules.php:971
-#: data_debug.php:499 data_queries.php:1482 data_sources.php:1989
-#: data_templates.php:1260 graph_templates.php:864 graphs.php:2284
+#: data_debug.php:499 data_queries.php:1482 data_sources.php:1992
+#: data_templates.php:1260 graph_templates.php:864 graphs.php:2322
 #: host_templates.php:949 lib/api_automation.php:282 pollers.php:995
 #: tree.php:2306 user_admin.php:809 user_admin.php:924 user_admin.php:1073
 #: user_admin.php:1212 user_admin.php:1351 user_group_admin.php:741
@@ -566,14 +566,14 @@ msgid "Included in Aggregate"
 msgstr "Im Aggregat enthalten"
 
 #: aggregate_graphs.php:1332 aggregate_graphs.php:1665 graph_templates.php:881
-#: graph_view.php:832 graph_view.php:845 graphs.php:2302 lib/spikekill.php:1745
+#: graph_view.php:832 graph_view.php:845 graphs.php:2340 lib/spikekill.php:1745
 msgid "Size"
 msgstr "Größe"
 
 #: aggregate_graphs.php:1348 aggregate_templates.php:724
 #: automation_tree_rules.php:723 cdef.php:885 color_templates.php:704
 #: data_queries.php:1534 data_source_profiles.php:1398
-#: data_source_profiles.php:1399 data_sources.php:2076 data_sources.php:2077
+#: data_source_profiles.php:1399 data_sources.php:2079 data_sources.php:2080
 #: data_templates.php:1321 gprint_presets.php:430 graph_templates.php:921
 #: host_templates.php:997 include/global_settings.php:876
 #: include/global_settings.php:1927 lib/api_automation.php:1438 tree.php:2399
@@ -587,7 +587,7 @@ msgstr "Nein"
 #: data_debug.php:756 data_debug.php:761 data_debug.php:766
 #: data_queries.php:1534 data_source_profiles.php:1397
 #: data_source_profiles.php:1398 data_source_profiles.php:1399
-#: data_sources.php:2076 data_sources.php:2077 data_templates.php:1321
+#: data_sources.php:2079 data_sources.php:2080 data_templates.php:1321
 #: gprint_presets.php:430 graph_templates.php:921 host_templates.php:997
 #: include/global_settings.php:875 include/global_settings.php:1926
 #: lib/api_automation.php:1438 lib/installer.php:2124 lib/installer.php:2152
@@ -596,7 +596,7 @@ msgstr "Nein"
 msgid "Yes"
 msgstr "Ja"
 
-#: aggregate_graphs.php:1354 graphs.php:2344 lib/api_automation.php:601
+#: aggregate_graphs.php:1354 graphs.php:2382 lib/api_automation.php:601
 msgid "No Graphs Found"
 msgstr "Kein Graph gefunden"
 
@@ -609,8 +609,8 @@ msgstr "[ Angewandte benutzerdefinierte Grafikliste - Filter aus der Liste ]"
 msgid "Aggregate Graphs"
 msgstr "Die ausgewählten Aggregatdiagramme stellen Elemente aus mehr als einer Grafikvorlage dar."
 
-#: aggregate_graphs.php:1562 data_debug.php:1085 data_sources.php:1714
-#: graph_view.php:699 graphs.php:2005 include/global_arrays.php:2895
+#: aggregate_graphs.php:1562 data_debug.php:1085 data_sources.php:1717
+#: graph_view.php:699 graphs.php:2043 include/global_arrays.php:2895
 #: include/global_settings.php:610 lib/api_automation.php:446
 #: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:381
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:59
@@ -622,10 +622,10 @@ msgstr "Vorlage"
 #: automation_devices.php:528 automation_devices.php:546
 #: automation_devices.php:564 automation_graph_rules.php:819
 #: automation_graph_rules.php:841 automation_tree_rules.php:855
-#: data_debug.php:1089 data_sources.php:1718 graph_templates_items.php:447
-#: graphs.php:2009 graphs_items.php:270 lib/api_automation.php:26
+#: data_debug.php:1089 data_sources.php:1721 graph_templates_items.php:447
+#: graphs.php:2047 graphs_items.php:270 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
-#: lib/api_automation.php:450 lib/auth.php:3864 lib/auth.php:3913
+#: lib/api_automation.php:450 lib/auth.php:3882 lib/auth.php:3931
 #: lib/html.php:2255 lib/html.php:2283 lib/html.php:2322 lib/html.php:2356
 #: lib/html_reports.php:1030 lib/html_reports.php:1034
 #: lib/html_reports.php:1157 lib/html_reports.php:1167
@@ -639,9 +639,9 @@ msgstr "Beliebig"
 #: aggregate_graphs.php:1567 aggregate_graphs.php:1677
 #: automation_graph_rules.php:974 automation_graph_rules.php:975
 #: automation_networks.php:460 automation_tree_rules.php:983
-#: data_debug.php:1090 data_sources.php:1086 data_sources.php:1719
-#: data_sources.php:2050 data_templates.php:1323 graph_templates_items.php:53
-#: graphs.php:1535 graphs.php:1544 graphs.php:2010 graphs_items.php:271
+#: data_debug.php:1090 data_sources.php:1089 data_sources.php:1722
+#: data_sources.php:2053 data_templates.php:1323 graph_templates_items.php:53
+#: graphs.php:1573 graphs.php:1582 graphs.php:2048 graphs_items.php:271
 #: graphs_items.php:391 include/global_arrays.php:524
 #: include/global_arrays.php:582 include/global_arrays.php:674
 #: include/global_arrays.php:886 include/global_arrays.php:1744
@@ -656,8 +656,8 @@ msgstr "Beliebig"
 #: include/global_settings.php:630 include/global_settings.php:1338
 #: include/global_settings.php:2001 lib/api_automation.php:48
 #: lib/api_automation.php:431 lib/api_automation.php:451
-#: lib/api_automation.php:589 lib/auth.php:3867 lib/auth.php:3916
-#: lib/auth.php:3962 lib/html.php:228 lib/html.php:2256 lib/html.php:2281
+#: lib/api_automation.php:589 lib/auth.php:3885 lib/auth.php:3934
+#: lib/auth.php:3980 lib/html.php:228 lib/html.php:2256 lib/html.php:2281
 #: lib/html.php:2323 lib/html.php:2357 lib/html_form.php:392
 #: lib/html_reports.php:1041 lib/html_reports.php:1045
 #: lib/html_reports.php:1081 lib/html_reports.php:1157
@@ -679,7 +679,7 @@ msgstr "Der Titel für die Aggregatdiagramme"
 msgid "The internal database identifier for this object"
 msgstr "Der interne Datenbank-Identifikator für dieses Objekt"
 
-#: aggregate_graphs.php:1664 graphs.php:1139
+#: aggregate_graphs.php:1664 graphs.php:1177
 msgid "Aggregate Template"
 msgstr "Aggregatvorlage:"
 
@@ -747,7 +747,7 @@ msgid "Aggregate Templates that are in use can not be Deleted.  In use is define
 msgstr "Aggregatvorlagen, die verwendet werden, können nicht gelöscht werden.  Im Gebrauch ist definiert als von einem Aggregat referenziert."
 
 #: aggregate_templates.php:707 cdef.php:868 color_templates.php:675
-#: data_queries.php:1488 data_source_profiles.php:1323 data_sources.php:2007
+#: data_queries.php:1488 data_source_profiles.php:1323 data_sources.php:2010
 #: data_templates.php:1266 gprint_presets.php:390 graph_templates.php:870
 #: host_templates.php:955
 msgid "Deletable"
@@ -758,7 +758,7 @@ msgstr "Löschbar"
 msgid "Graphs Using"
 msgstr "Diagramme mit"
 
-#: aggregate_templates.php:709 graphs.php:2064 host_templates.php:730
+#: aggregate_templates.php:709 graphs.php:2102 host_templates.php:730
 #: include/global_arrays.php:959 include/global_arrays.php:1364
 #: include/global_form.php:1399 include/global_form.php:1635
 #: lib/html_reports.php:1181 tree.php:1944
@@ -884,11 +884,11 @@ msgstr "Zugriff verweigert, bitte kontaktieren Sie Ihren Kadupul Administrator."
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr "Zugriff verweigert, bitte kontaktieren Sie Ihren Kadupul Administrator."
 
-#: auth_login.php:119 lib/auth.php:4278 lib/auth.php:4284 lib/auth.php:4389
-#: lib/auth.php:4440 lib/auth.php:4465 lib/auth.php:4488 lib/auth.php:4528
-#: lib/auth.php:4540 lib/auth.php:4563 lib/auth.php:4686 lib/auth.php:4706
-#: lib/auth.php:4918 lib/auth.php:4960 lib/auth.php:4970 lib/auth.php:4986
-#: lib/auth.php:5000 lib/auth.php:5038
+#: auth_login.php:119 lib/auth.php:4296 lib/auth.php:4302 lib/auth.php:4407
+#: lib/auth.php:4458 lib/auth.php:4483 lib/auth.php:4506 lib/auth.php:4546
+#: lib/auth.php:4558 lib/auth.php:4581 lib/auth.php:4704 lib/auth.php:4724
+#: lib/auth.php:4936 lib/auth.php:4978 lib/auth.php:4988 lib/auth.php:5004
+#: lib/auth.php:5018 lib/auth.php:5056
 msgid "Access Denied!  Login Failed."
 msgstr "Zugriff verweigert, Benutzerkonto deaktiviert."
 
@@ -1182,7 +1182,7 @@ msgstr "SNMP"
 #: automation_devices.php:280 automation_devices.php:524
 #: automation_graph_rules.php:837 automation_networks.php:1075
 #: automation_tree_rules.php:851 data_debug.php:505 data_debug.php:1144
-#: data_sources.php:1772 data_templates.php:1289 lib/api_automation.php:52
+#: data_sources.php:1775 data_templates.php:1289 lib/api_automation.php:52
 #: lib/api_automation.php:53 lib/api_automation.php:280
 #: lib/api_automation.php:573 lib/api_automation.php:1199
 #: lib/html_reports.php:2031 lib/installer.php:2044 managers.php:216
@@ -1255,13 +1255,13 @@ msgstr "Nicht verfügbar"
 #: automation_graph_rules.php:14 automation_snmp.php:15
 #: automation_tree_rules.php:14 cdef.php:15 color_templates.php:14
 #: data_queries.php:17 data_source_profiles.php:17 data_templates.php:20
-#: graph_templates.php:23 graphs.php:51 host_templates.php:21
+#: graph_templates.php:23 graphs.php:52 host_templates.php:21
 #: include/global_arrays.php:1652
 msgid "Duplicate"
 msgstr "Duplizieren"
 
 #: automation_graph_rules.php:15 automation_networks.php:18
-#: automation_tree_rules.php:15 data_sources.php:25
+#: automation_tree_rules.php:15 data_sources.php:26
 #: include/global_arrays.php:1653 include/global_settings.php:1787
 #: managers.php:14 managers.php:20 plugins.php:24 pollers.php:20
 #: user_admin.php:19 user_domains.php:17 user_domains.php:397
@@ -1270,7 +1270,7 @@ msgid "Enable"
 msgstr "Aktivieren"
 
 #: automation_graph_rules.php:16 automation_networks.php:17
-#: automation_tree_rules.php:16 data_sources.php:26
+#: automation_tree_rules.php:16 data_sources.php:27
 #: include/global_arrays.php:1654 managers.php:15 managers.php:19
 #: plugins.php:25 pollers.php:19 user_admin.php:20 user_domains.php:16
 #: user_group_admin.php:22
@@ -1289,8 +1289,8 @@ msgstr "Klicken Sie auf \"Fortfahren\", um die folgenden Grafikregeln zu lösche
 msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Graph Rules."
 msgstr "Klicken Sie auf \"Weiter\", um die folgende(n) Regel(n) zu duplizieren. Optional können Sie das Titelformat für die neuen Graphenregeln ändern."
 
-#: automation_graph_rules.php:305 automation_tree_rules.php:282 graphs.php:850
-#: graphs.php:861
+#: automation_graph_rules.php:305 automation_tree_rules.php:282 graphs.php:888
+#: graphs.php:899
 msgid "Title Format"
 msgstr "Titelformat"
 
@@ -1365,7 +1365,7 @@ msgid "Graph Rules"
 msgstr "Diagramm-Regeln"
 
 #: automation_graph_rules.php:815 automation_graph_rules.php:965
-#: graphs.php:2065 include/global_arrays.php:1367
+#: graphs.php:2103 include/global_arrays.php:1367
 #: include/global_arrays.php:2894 include/global_form.php:1645
 #: include/global_form.php:2207
 msgid "Data Query"
@@ -1374,7 +1374,7 @@ msgstr "Datenabfrage"
 #: automation_graph_rules.php:842 automation_graph_rules.php:967
 #: automation_graph_rules.php:983 automation_networks.php:535
 #: automation_tree_rules.php:856 automation_tree_rules.php:976
-#: automation_tree_rules.php:994 data_debug.php:1150 data_sources.php:1777
+#: automation_tree_rules.php:994 data_debug.php:1150 data_sources.php:1780
 #: include/global_arrays.php:918 include/global_form.php:1527
 #: include/global_settings.php:345 include/global_settings.php:361
 #: lib/api_automation.php:27 lib/html_reports.php:2036
@@ -1389,7 +1389,7 @@ msgstr "Aktiviert"
 
 #: automation_graph_rules.php:843 automation_graph_rules.php:983
 #: automation_networks.php:1090 automation_tree_rules.php:857
-#: automation_tree_rules.php:994 data_debug.php:1151 data_sources.php:1778
+#: automation_tree_rules.php:994 data_debug.php:1151 data_sources.php:1781
 #: data_templates.php:1325 include/global_arrays.php:917
 #: include/global_arrays.php:1576 include/global_arrays.php:1868
 #: include/global_settings.php:344 include/global_settings.php:360
@@ -1658,7 +1658,7 @@ msgstr "%d Minute"
 #: automation_networks.php:522 automation_networks.php:523
 #: automation_networks.php:524 automation_networks.php:525
 #: automation_networks.php:1212 automation_networks.php:1213
-#: data_sources.php:1540 include/global_arrays.php:712
+#: data_sources.php:1543 include/global_arrays.php:712
 #: include/global_arrays.php:713 include/global_arrays.php:714
 #: include/global_arrays.php:715 include/global_arrays.php:752
 #: include/global_arrays.php:753 include/global_arrays.php:755
@@ -2106,7 +2106,7 @@ msgstr "Aktualisieren"
 
 #: automation_networks.php:1207 automation_networks.php:1208
 #: automation_networks.php:1209 automation_networks.php:1210
-#: data_sources.php:1536 include/global_arrays.php:710
+#: data_sources.php:1539 include/global_arrays.php:710
 #: include/global_arrays.php:746 include/global_arrays.php:747
 #: include/global_arrays.php:748 include/global_arrays.php:749
 #: include/global_arrays.php:750 include/global_arrays.php:751
@@ -2408,7 +2408,7 @@ msgstr "Automatisierungsvorlagen[neu]"
 msgid "Device Automation Templates"
 msgstr "Vorlagen für die Geräteautomatisierung"
 
-#: automation_templates.php:498 data_sources.php:2019 package_import.php:624
+#: automation_templates.php:498 data_sources.php:2022 package_import.php:624
 #: templates_import.php:242 user_admin.php:1212 user_group_admin.php:1231
 msgid "Template Name"
 msgstr "Template Name"
@@ -3000,7 +3000,7 @@ msgid "The requested Data Source is not available."
 msgstr ""
 
 #: data_debug.php:483 data_debug.php:934 data_queries.php:769
-#: data_sources.php:1149 data_templates.php:719 graphs_items.php:387
+#: data_sources.php:1152 data_templates.php:719 graphs_items.php:387
 #: include/global_arrays.php:1006 include/global_form.php:960
 #: lib/api_aggregate.php:2338 lib/html.php:1308 rrdcheck.php:142
 msgid "Data Source"
@@ -3051,7 +3051,7 @@ msgstr "Existiert"
 msgid "Determines if the Data Source is located in the Poller Cache."
 msgstr "Legt fest, ob sich die Datenquelle im Poller-Cache befindet."
 
-#: data_debug.php:523 data_sources.php:2013 data_templates.php:1325
+#: data_debug.php:523 data_sources.php:2016 data_templates.php:1325
 #: plugins.php:32 plugins.php:503
 msgid "Active"
 msgstr "Aktiv"
@@ -3092,8 +3092,8 @@ msgstr "Probleme"
 msgid "Summary of issues found for the Data Source."
 msgstr "Alle zusammenfassenden Probleme, die für die Datenquelle gefunden wurden."
 
-#: data_debug.php:621 data_debug.php:1195 data_sources.php:1799
-#: data_sources.php:1973 include/global_arrays.php:995
+#: data_debug.php:621 data_debug.php:1195 data_sources.php:1802
+#: data_sources.php:1976 include/global_arrays.php:995
 #: include/global_arrays.php:1041 include/global_arrays.php:2311
 #: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:325
@@ -3298,14 +3298,14 @@ msgstr "Alle durchführen"
 msgid "Run checks on currently filtered Data Sources and preserve other results"
 msgstr "Führen Sie Überprüfungen der aktuell gefilterten Datenquellen durch und bewahren Sie andere Ergebnisse auf"
 
-#: data_debug.php:1125 data_sources.php:1752 data_templates.php:1107
+#: data_debug.php:1125 data_sources.php:1755 data_templates.php:1107
 #: lib/html.php:2725
 msgid "Profile"
 msgstr "Profil"
 
 #: data_debug.php:1129 data_debug.php:1148 data_debug.php:1159
-#: data_sources.php:1756 data_sources.php:1776 data_templates.php:1111
-#: graphs.php:2062 graphs_new.php:488 host_templates.php:716
+#: data_sources.php:1759 data_sources.php:1779 data_templates.php:1111
+#: graphs.php:2100 graphs_new.php:488 host_templates.php:716
 #: host_templates.php:734 lib/clog_webapi.php:549 lib/html.php:227
 #: lib/html_reports.php:1138 lib/html_reports.php:2284 plugins.php:501
 #: settings.php:590 settings.php:612 settings.php:643 tree.php:914
@@ -3909,7 +3909,7 @@ msgstr "Profile, die verwendet werden, können nicht gelöscht werden. Im Gebrau
 msgid "Read Only"
 msgstr "Schreibzugriff"
 
-#: data_source_profiles.php:1333 data_sources.php:2001
+#: data_source_profiles.php:1333 data_sources.php:2004
 #: include/global_settings.php:1234
 msgid "Poller Interval"
 msgstr "Poller-Intervall"
@@ -3943,11 +3943,11 @@ msgstr "Die Anzahl der Datenvorlagen, die dieses Profil verwenden."
 msgid "No Data Source Profiles Found"
 msgstr "Keine Datenquellenprofile gefunden"
 
-#: data_sources.php:23 data_sources.php:614 graphs.php:41
+#: data_sources.php:24 data_sources.php:617 graphs.php:42
 msgid "Change Device"
 msgstr "Gerät wechseln"
 
-#: data_sources.php:24 graphs.php:42
+#: data_sources.php:25 graphs.php:43
 msgid "Reapply Suggested Names"
 msgstr "Namensregeln erneut anwenden"
 
@@ -3963,153 +3963,153 @@ msgid_plural "The following graphs are using these data sources:"
 msgstr[0] "Die folgende Grafik zeigt die Verwendung dieser Datenquellen:"
 msgstr[1] "Die folgenden Grafiken verwenden diese Datenquellen:"
 
-#: data_sources.php:590
+#: data_sources.php:591
 msgid "Leave the <strong>Graph</strong> untouched."
 msgid_plural "Leave all <strong>Graphs</strong> untouched."
 msgstr[0] "Lassen Sie die <starke>Grafik</starke> unberührt."
 msgstr[1] "Lassen Sie alle <stark>Grafiken</stark> unberührt."
 
-#: data_sources.php:592
+#: data_sources.php:593
 msgid "Delete all <strong>Graph Items</strong> that reference this Data Source."
 msgid_plural "Delete all <strong>Graph Items</strong> that reference these Data Sources."
 msgstr[0] "Löschen Sie alle <strong>Graph Items</strong>, die auf diese Datenquelle verweisen."
 msgstr[1] "Löschen Sie alle <strong>Graph Items</strong>, die auf diese Datenquellen verweisen."
 
-#: data_sources.php:594
+#: data_sources.php:596
 msgid "Delete all <strong>Graphs</strong> that reference this Data Source."
 msgid_plural "Delete all <strong>Graphs</strong> that reference these Data Sources."
 msgstr[0] "Löschen Sie alle <strong>Graphen</strong>, die auf diese Datenquelle verweisen."
 msgstr[1] "Löschen Sie alle <strong>Graphen</strong>, die auf diese Datenquellen verweisen."
 
-#: data_sources.php:602
+#: data_sources.php:605
 msgid "Delete Data Source"
 msgid_plural "Delete Data Sources"
 msgstr[0] "Datenquelle löschen"
 msgstr[1] "Datenquellen löschen"
 
-#: data_sources.php:606
+#: data_sources.php:609
 msgid "Choose a new Device for this Data Source and click 'Continue'."
 msgid_plural "Choose a new Device for these Data Sources and click 'Continue'"
 msgstr[0] "Wählen Sie ein neues Gerät für diese Datenquelle und klicken Sie auf \"Weiter\"."
 msgstr[1] "Wählen Sie ein neues Gerät für diese Datenquellen und klicken Sie auf'Weiter'."
 
-#: data_sources.php:608
+#: data_sources.php:611
 msgid "New Device:"
 msgstr "Neues Gerät:"
 
-#: data_sources.php:618
+#: data_sources.php:621
 msgid "Click 'Continue' to enable the following Data Source."
 msgid_plural "Click 'Continue' to enable all following Data Sources."
 msgstr[0] "Klicken Sie auf \"Weiter\", um die folgende Datenquelle zu aktivieren."
 msgstr[1] "Klicken Sie auf \"Weiter\", um alle folgenden Datenquellen zu aktivieren."
 
-#: data_sources.php:623
+#: data_sources.php:626
 msgid "Enable Data Source"
 msgid_plural "Enable Data Sources"
 msgstr[0] "Datenquelle aktivieren"
 msgstr[1] "Datenquellen aktivieren"
 
-#: data_sources.php:627
+#: data_sources.php:630
 msgid "Click 'Continue' to disable the following Data Source."
 msgid_plural "Click 'Continue' to disable all following Data Sources."
 msgstr[0] "Klicken Sie auf \"Weiter\", um die folgende Datenquelle zu deaktivieren."
 msgstr[1] "Klicken Sie auf \"Weiter\", um alle folgenden Datenquellen zu deaktivieren."
 
-#: data_sources.php:632
+#: data_sources.php:635
 msgid "Disable Data Source"
 msgid_plural "Disable Data Sources"
 msgstr[0] "Datenquelle deaktivieren"
 msgstr[1] "Datenquellen deaktivieren"
 
-#: data_sources.php:636
+#: data_sources.php:639
 msgid "Click 'Continue' to re-apply the suggested name to the following Data Source."
 msgid_plural "Click 'Continue' to re-apply the suggested names to all following Data Sources."
 msgstr[0] "Klicken Sie auf \"Weiter\", um den vorgeschlagenen Namen erneut auf die folgende Datenquelle anzuwenden."
 msgstr[1] "Klicken Sie auf \"Weiter\", um die vorgeschlagenen Namen erneut auf alle folgenden Datenquellen anzuwenden."
 
-#: data_sources.php:641
+#: data_sources.php:644
 msgid "Reapply Suggested Naming to Data Source"
 msgid_plural "Reapply Suggested Naming to Data Sources"
 msgstr[0] "Wiederholung der vorgeschlagenen Benennung für die Datenquelle"
 msgstr[1] "Empfohlene Benennung auf Datenquellen erneut anwenden"
 
-#: data_sources.php:729 data_templates.php:886
+#: data_sources.php:732 data_templates.php:886
 #, php-format
 msgid "Custom Data [data input: %s]"
 msgstr "Benutzerdefinierte Daten (Dateneingabe: %s)"
 
-#: data_sources.php:764
+#: data_sources.php:767
 #, php-format
 msgid "(From Device: %s)"
 msgstr "(Vom Gerät: %s)"
 
-#: data_sources.php:767
+#: data_sources.php:770
 msgid "(From Data Template)"
 msgstr "(Aus Datenvorlage)"
 
-#: data_sources.php:768
+#: data_sources.php:771
 msgid "Nothing Entered"
 msgstr "Nichts eingegeben"
 
-#: data_sources.php:783 data_templates.php:970
+#: data_sources.php:786 data_templates.php:970
 msgid "No Input Fields for the Selected Data Input Source"
 msgstr "Keine Eingabefelder für die gewählte Dateneingabe Quelle"
 
-#: data_sources.php:931
+#: data_sources.php:934
 #, php-format
 msgid "Data Template Selection [edit: %s]"
 msgstr "Auswahl der Datenvorlage[Bearbeiten: %s]"
 
-#: data_sources.php:943
+#: data_sources.php:946
 msgid "Data Template Selection [new]"
 msgstr "Auswahl der Datenvorlage[neu]]."
 
-#: data_sources.php:984
+#: data_sources.php:987
 msgid "Turn Off Data Source Debug Mode."
 msgstr "Schalten Sie den Datenquellen-Debug-Modus aus."
 
-#: data_sources.php:984
+#: data_sources.php:987
 msgid "Turn On Data Source Debug Mode."
 msgstr "Schalten Sie den Datenquellen-Debug-Modus ein."
 
-#: data_sources.php:985
+#: data_sources.php:988
 msgid "Turn Off Data Source Info Mode."
 msgstr "Schalten Sie den Info-Modus der Datenquelle aus."
 
-#: data_sources.php:985
+#: data_sources.php:988
 msgid "Turn On Data Source Info Mode."
 msgstr "Schalten Sie den Info-Modus der Datenquelle ein."
 
-#: data_sources.php:996
+#: data_sources.php:999
 #, php-format
 msgid "Edit Graph: '%s'."
 msgstr "Diagramm bearbeiten: '%s'."
 
-#: data_sources.php:1000 graphs.php:1497
+#: data_sources.php:1003 graphs.php:1535
 msgid "Edit Device."
 msgstr "Gerät bearbeiten"
 
-#: data_sources.php:1003
+#: data_sources.php:1006
 msgid "Edit Data Template."
 msgstr "Datenvorlage bearbeiten."
 
-#: data_sources.php:1006
+#: data_sources.php:1009
 msgid "Disable Data Source."
 msgstr "Datenquelle deaktivieren"
 
-#: data_sources.php:1006
+#: data_sources.php:1009
 msgid "Enable Data Source."
 msgstr "Datenquelle aktivieren"
 
-#: data_sources.php:1076
+#: data_sources.php:1079
 msgid "Selected Data Template"
 msgstr "Ausgewählte Datenvorlage"
 
-#: data_sources.php:1077
+#: data_sources.php:1080
 msgid "The name given to this data template.  Please note that you may only change Graph Templates to a 100%$ compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "Der Name, der dieser Datenvorlage gegeben wurde.  Bitte beachten Sie, dass Sie Grafikvorlagen nur in eine 100%$ kompatible Grafikvorlage ändern dürfen, d.h. sie enthält identische Datenquellen."
 
-#: data_sources.php:1084 graph_view.php:817 graphs.php:1540
+#: data_sources.php:1087 graph_view.php:817 graphs.php:1578
 #: include/global_arrays.php:955 include/global_arrays.php:1004
 #: include/global_arrays.php:1691 include/global_arrays.php:1860
 #: lib/api_automation.php:426 lib/functions.php:6195 lib/html.php:2251
@@ -4117,129 +4117,129 @@ msgstr "Der Name, der dieser Datenvorlage gegeben wurde.  Bitte beachten Sie, da
 msgid "Device"
 msgstr "Zielsysteme"
 
-#: data_sources.php:1085
+#: data_sources.php:1088
 msgid "Choose the Device that this Data Source belongs to."
 msgstr "Wählen Sie das Gerät, zu dem diese Datenquelle gehört."
 
-#: data_sources.php:1137
+#: data_sources.php:1140
 msgid "Supplemental Data Template Data"
 msgstr "Ergänzende Datenvorlagendaten"
 
-#: data_sources.php:1139
+#: data_sources.php:1142
 msgid "Data Source Fields"
 msgstr "Felder für Datenquellen"
 
-#: data_sources.php:1140
+#: data_sources.php:1143
 msgid "Data Source Item Fields"
 msgstr "Eingabefeld der Datenquelle"
 
-#: data_sources.php:1141
+#: data_sources.php:1144
 msgid "Custom Data"
 msgstr "Zusätzliche Daten"
 
-#: data_sources.php:1247
+#: data_sources.php:1250
 #, php-format
 msgid "Data Source Item %s"
 msgstr "Datenquellenelement %s"
 
-#: data_sources.php:1250 data_templates.php:817 lib/import.php:2781
+#: data_sources.php:1253 data_templates.php:817 lib/import.php:2781
 #: package_import.php:598
 msgid "New"
 msgstr "Neu"
 
-#: data_sources.php:1309
+#: data_sources.php:1312
 msgid "Data Source Debug"
 msgstr "Fehleranalyse für Datenquellen"
 
-#: data_sources.php:1331
+#: data_sources.php:1334
 msgid "RRDtool Tune Info"
 msgstr "RRDtool Tune-Info"
 
-#: data_sources.php:1534 data_templates.php:1324 include/global_form.php:582
+#: data_sources.php:1537 data_templates.php:1324 include/global_form.php:582
 msgid "External"
 msgstr "Extern"
 
-#: data_sources.php:1538 include/global_arrays.php:711
+#: data_sources.php:1541 include/global_arrays.php:711
 #: include/global_arrays.php:1208 include/global_arrays.php:1582
 #: include/global_arrays.php:1618 include/global_arrays.php:1636
 #: include/global_settings.php:1697 include/global_settings.php:2662
 msgid "1 Minute"
 msgstr "1 Minute"
 
-#: data_sources.php:1695
+#: data_sources.php:1698
 msgid "Data Sources [ All Devices ]"
 msgstr "Datenquellen[Kein Gerät]"
 
-#: data_sources.php:1697
+#: data_sources.php:1700
 msgid "Data Sources [ Non Device Based ]"
 msgstr "Datenquellen[Kein Gerät]"
 
-#: data_sources.php:1700
+#: data_sources.php:1703
 #, php-format
 msgid "Data Sources [ %s ]"
 msgstr "Datenquellen[%s]"
 
-#: data_sources.php:1779
+#: data_sources.php:1782
 msgid "Bad Indexes"
 msgstr "Index"
 
-#: data_sources.php:1785 graphs.php:2038
+#: data_sources.php:1788 graphs.php:2076
 msgid "Note that this query may take some time to run."
 msgstr "Beachten Sie, dass die Ausführung dieser Abfrage einige Zeit in Anspruch nehmen kann."
 
-#: data_sources.php:1785 graphs.php:2038
+#: data_sources.php:1788 graphs.php:2076
 msgid "Orphaned"
 msgstr "Waise"
 
-#: data_sources.php:1983 utilities.php:2282
+#: data_sources.php:1986 utilities.php:2282
 msgid "Data Source Name"
 msgstr "Name der Datenquelle"
 
-#: data_sources.php:1986
+#: data_sources.php:1989
 msgid "The name of this Data Source. Generally programmatically generated from the Data Template definition."
 msgstr "Der Name dieser Datenquelle. Im Allgemeinen programmgesteuert aus der Definition der Datenvorlage generiert."
 
-#: data_sources.php:1992
+#: data_sources.php:1995
 msgid "The internal database ID for this Data Source. Useful when performing automation or debugging."
 msgstr "Die interne Datenbank-ID für diese Datenquelle. Nützlich bei der Automatisierung oder beim Debuggen."
 
-#: data_sources.php:1998
+#: data_sources.php:2001
 msgid "The number of Graphs and Aggregate Graphs that are using the Data Source."
 msgstr "Die Anzahl der Grafikvorlagen, die diese Datenabfrage verwenden."
 
-#: data_sources.php:2004
+#: data_sources.php:2007
 msgid "The frequency that data is collected for this Data Source."
 msgstr "Die Häufigkeit, mit der Daten für diese Datenquelle gesammelt werden."
 
-#: data_sources.php:2010
+#: data_sources.php:2013
 msgid "If this Data Source is no long in use by Graphs, it can be Deleted."
 msgstr "Wenn diese Datenquelle von Graphen nicht mehr verwendet wird, kann sie gelöscht werden."
 
-#: data_sources.php:2016
+#: data_sources.php:2019
 msgid "Whether or not data will be collected for this Data Source. Controlled at the Data Template level."
 msgstr "Ob für diese Datenquelle Daten erhoben werden oder nicht. Wird auf der Ebene der Datenvorlage gesteuert."
 
-#: data_sources.php:2022
+#: data_sources.php:2025
 msgid "The Data Template that this Data Source was based upon."
 msgstr "Die Datenvorlage, auf der diese Datenquelle basiert."
 
-#: data_sources.php:2063
+#: data_sources.php:2066
 msgid "Damaged Data Source Name"
 msgstr "Name der Datenquelle"
 
-#: data_sources.php:2083
+#: data_sources.php:2086
 msgid "No Data Sources Found"
 msgstr "Keine Datenquellen gefunden"
 
-#: data_sources.php:2136
+#: data_sources.php:2139
 msgid "No Graphs"
 msgstr "Keine Diagramme"
 
-#: data_sources.php:2140 include/global_arrays.php:996
+#: data_sources.php:2143 include/global_arrays.php:996
 msgid "Aggregates"
 msgstr "Aggregate"
 
-#: data_sources.php:2142
+#: data_sources.php:2145
 msgid "No Aggregates"
 msgstr "Aggregate"
 
@@ -4793,12 +4793,12 @@ msgstr "Alle Grafiken & Vorlagen"
 msgid "Not Templated"
 msgstr "Nicht templatisiert"
 
-#: graph_view.php:812 graph_view.php:840 graphs.php:2278
+#: graph_view.php:812 graph_view.php:840 graphs.php:2316
 #: include/global_form.php:1884 lib/html_reports.php:1201 tree.php:1021
 msgid "Graph Name"
 msgstr "Name"
 
-#: graph_view.php:814 graph_view.php:842 graphs.php:2281
+#: graph_view.php:814 graph_view.php:842 graphs.php:2319
 msgid "The Title of this Graph.  Generally programmatically generated from the Graph Template definition or Suggested Naming rules.  The max length of the Title is controlled under Settings->Visual."
 msgstr "Der Titel dieses Diagramms.  Im Allgemeinen programmgesteuert generiert aus der Definition der Grafikvorlage oder den Regeln für die vorgeschlagene Benennung.  Die maximale Länge des Titels wird unter Einstellungen->Visuell gesteuert."
 
@@ -4806,23 +4806,23 @@ msgstr "Der Titel dieses Diagramms.  Im Allgemeinen programmgesteuert generiert 
 msgid "The device for this Graph."
 msgstr "Der Name dieser Gruppe."
 
-#: graph_view.php:822 graphs.php:2290
+#: graph_view.php:822 graphs.php:2328
 msgid "Source Type"
 msgstr "Quelle"
 
-#: graph_view.php:824 graphs.php:2293
+#: graph_view.php:824 graphs.php:2331
 msgid "The underlying source that this Graph was based upon."
 msgstr "Die zugrunde liegende Quelle, auf der dieses Diagramm basiert."
 
-#: graph_view.php:827 graphs.php:2296
+#: graph_view.php:827 graphs.php:2334
 msgid "Source Name"
 msgstr "Quellname"
 
-#: graph_view.php:829 graphs.php:2299
+#: graph_view.php:829 graphs.php:2337
 msgid "The Graph Template or Data Query that this Graph was based upon."
 msgstr "Die Grafikvorlage oder Datenabfrage, auf der dieses Diagramm basiert."
 
-#: graph_view.php:834 graph_view.php:847 graphs.php:2305
+#: graph_view.php:834 graph_view.php:847 graphs.php:2343
 msgid "The size of this Graph when not in Preview mode."
 msgstr "Die Größe dieses Diagramms, wenn es sich nicht im Vorschaumodus befindet."
 
@@ -4893,241 +4893,241 @@ msgstr "Zusammenfassende Details"
 msgid "Download"
 msgstr "Download"
 
-#: graphs.php:36 graphs.php:844 include/global_arrays.php:2089
+#: graphs.php:37 graphs.php:882 include/global_arrays.php:2089
 msgid "Change Graph Template"
 msgstr "Wechseln der Diagramm Schablone"
 
-#: graphs.php:44 graphs.php:1106
+#: graphs.php:45 graphs.php:1144
 msgid "Create Aggregate Graph"
 msgstr "Aggregatdiagramm erstellen"
 
-#: graphs.php:45 graphs.php:1149
+#: graphs.php:46 graphs.php:1187
 msgid "Create Aggregate from Template"
 msgstr "Aggregat aus Vorlage erstellen"
 
-#: graphs.php:46 graphs.php:1171
+#: graphs.php:47 graphs.php:1209
 msgid "Apply Automation Rules"
 msgstr "Automatisierungsregeln anwenden"
 
-#: graphs.php:52 graphs.php:866
+#: graphs.php:53 graphs.php:904
 msgid "Convert to Graph Template"
 msgstr "Umwandeln in Diagramm Schablone"
 
-#: graphs.php:246
+#: graphs.php:247
 #, php-format
 msgid "Created graph: %s"
 msgstr "Erstellter Graph: %s"
 
-#: graphs.php:254 lib/template.php:2362 lib/template.php:2400
+#: graphs.php:255 lib/template.php:2362 lib/template.php:2400
 msgid "ERROR: No Data Source associated. Check Template"
 msgstr "FEHLER: Keine Datenquelle zugeordnet. Vorlage prüfen"
 
-#: graphs.php:629
+#: graphs.php:667
 msgid "The selected Device is not available."
 msgstr ""
 
-#: graphs.php:648
+#: graphs.php:686
 msgid "Aggregate graph creation could not be confirmed. Review the graph settings before retrying."
 msgstr ""
 
-#: graphs.php:795
+#: graphs.php:833
 msgid "Click 'Continue' to delete the following Graph(s).  Note that if you choose to Delete Data Sources, only those Data Sources not in use elsewhere will also be Deleted."
 msgstr "Klicken Sie auf \"Weiter\", um die folgenden Grafiken zu löschen.  Beachten Sie, dass bei der Option Datenquellen löschen auch nur die Datenquellen gelöscht werden, die an anderer Stelle nicht verwendet werden."
 
-#: graphs.php:799
+#: graphs.php:837
 msgid "The following Data Source(s) are in use by these Graph(s)."
 msgstr "Die folgenden Datenquellen werden von diesen Grafiken verwendet."
 
-#: graphs.php:818
+#: graphs.php:856
 msgid "Delete all Data Source(s) referenced by these Graph(s) that are not in use elsewhere."
 msgstr "Löschen Sie alle Datenquellen, auf die in diesen Grafiken verwiesen wird, die an anderer Stelle nicht verwendet werden."
 
-#: graphs.php:820
+#: graphs.php:858
 msgid "Leave the Data Source(s) untouched."
 msgstr "Lassen Sie die Datenquelle(n) unberührt."
 
-#: graphs.php:832
+#: graphs.php:870
 msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
 msgstr "Wählen Sie eine Grafikvorlage aus und klicken Sie auf \"Weiter\", um die Grafikvorlage für die folgenden Grafiken zu ändern. Bitte beachten Sie, dass nur kompatible Grafikvorlagen angezeigt werden.  Kompatibel wird durch Personen mit identischen Datenquellen identifiziert."
 
-#: graphs.php:834 graphs_new.php:606
+#: graphs.php:872 graphs_new.php:606
 msgid "New Graph Template"
 msgstr "Neue Grafikvorlage"
 
-#: graphs.php:848
+#: graphs.php:886
 msgid "Click 'Continue' to duplicate the following Graph(s). You can optionally change the title format for the new Graph(s)."
 msgstr "Klicken Sie auf \"Weiter\", um die folgenden Grafiken zu duplizieren. Sie können optional das Titelformat für die neuen Grafiken ändern."
 
-#: graphs.php:851
+#: graphs.php:889
 msgid "<graph_title> (1)"
 msgstr "<graph_name>(1)"
 
-#: graphs.php:855
+#: graphs.php:893
 msgid "Duplicate Graph(s)"
 msgstr "Doppelte Grafik(en)"
 
-#: graphs.php:859
+#: graphs.php:897
 msgid "Click 'Continue' to convert the following Graph(s) into Graph Template(s).  You can optionally change the title format for the new Graph Template(s)."
 msgstr "Klicken Sie auf \"Weiter\", um die folgenden Grafiken in Grafikvorlagen zu konvertieren.  Sie können optional das Titelformat für die neue(n) Grafikvorlage(n) ändern."
 
-#: graphs.php:862
+#: graphs.php:900
 msgid "<graph_title> Template"
 msgstr "<graph_title> Schablone"
 
-#: graphs.php:870
+#: graphs.php:908
 msgid "Click 'Continue' to place the following Graph(s) under the Tree Branch selected below."
 msgstr "Klicken Sie auf \"Weiter\", um die folgenden Grafiken unter dem unten ausgewählten Baumzweig zu platzieren."
 
-#: graphs.php:872
+#: graphs.php:910
 msgid "Destination Branch"
 msgstr "Ziel Zweig:"
 
-#: graphs.php:885
+#: graphs.php:923
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
 msgstr "Wählen Sie ein neues Gerät für diese Grafiken aus und klicken Sie auf \"Weiter\"."
 
-#: graphs.php:887 include/global_arrays.php:988
+#: graphs.php:925 include/global_arrays.php:988
 msgid "New Device"
 msgstr "Neues Zielsystem"
 
-#: graphs.php:895
+#: graphs.php:933
 msgid "Change Graph(s) Associated Device"
 msgstr "Grafik(en) ändern Zugehöriges Gerät ändern"
 
-#: graphs.php:899
+#: graphs.php:937
 msgid "Click 'Continue' to re-apply suggested naming to the following Graph(s)."
 msgstr "Klicken Sie auf \"Weiter\", um die vorgeschlagene Benennung für die folgenden Grafiken erneut anzuwenden."
 
-#: graphs.php:904
+#: graphs.php:942
 msgid "Reapply Suggested Naming to Graph(s)"
 msgstr "Wiederholen Sie die vorgeschlagene Benennung auf die Grafik(en)."
 
-#: graphs.php:920
+#: graphs.php:958
 msgid "Click 'Continue' to create an Aggregate Graph from the selected Graph(s)."
 msgstr "Klicken Sie auf \"Fortfahren\", um aus den ausgewählten Grafiken ein Aggregatdiagramm zu erstellen."
 
-#: graphs.php:929
+#: graphs.php:967
 msgid "The following Data Sources are in use by these Graphs:"
 msgstr "Die folgenden Datenquellen werden durch folgende Graphen genutzt:"
 
-#: graphs.php:990
+#: graphs.php:1028
 msgid "Please confirm"
 msgstr "Bitte bestätigen"
 
-#: graphs.php:1128
+#: graphs.php:1166
 msgid "Select the Aggregate Template to use and press 'Continue' to create your Aggregate Graph.  Otherwise press 'Cancel' to return."
 msgstr "Wählen Sie die zu verwendende Aggregatvorlage aus und klicken Sie auf \"Weiter\", um Ihr Aggregatdiagramm zu erstellen.  Andernfalls drücken Sie'Abbrechen', um zurückzukehren."
 
-#: graphs.php:1153
+#: graphs.php:1191
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
 msgstr "Für diese Grafikvorlage sind derzeit keine Aggregatvorlagen definiert.  Bitte erstellen Sie entweder zuerst eine Aggregatvorlage für die ausgewählte Grafikvorlage und versuchen Sie es erneut, oder falten Sie einfach eine nicht vorbereitete Aggregatvorlage."
 
-#: graphs.php:1154
+#: graphs.php:1192
 msgid "Press 'Return' to return and select different Graphs."
 msgstr "Drücken Sie'Return', um zurückzukehren und verschiedene Grafiken auszuwählen."
 
-#: graphs.php:1166
+#: graphs.php:1204
 msgid "Click 'Continue' to apply Automation Rules to the following Graphs."
 msgstr "Klicken Sie auf \"Weiter\", um die Automatisierungsregeln auf die folgenden Diagramme anzuwenden."
 
-#: graphs.php:1253
+#: graphs.php:1291
 msgid "Graph Items [new]"
 msgstr "Graphische Elemente[neu]"
 
-#: graphs.php:1297
+#: graphs.php:1335
 #, php-format
 msgid "Graph Items [edit: %s]"
 msgstr "Grafikelemente [bearbeiten: %s]"
 
-#: graphs.php:1421
+#: graphs.php:1459
 #, php-format
 msgid "Graph [edit: %s]"
 msgstr "Grafik [bearbeiten: %s]"
 
-#: graphs.php:1431
+#: graphs.php:1469
 msgid "Graph [new]"
 msgstr "Grafik[neu]"
 
-#: graphs.php:1456
+#: graphs.php:1494
 msgid "Turn Off Graph Debug Mode."
 msgstr "Schalten Sie den Grafik-Debug-Modus aus."
 
-#: graphs.php:1458
+#: graphs.php:1496
 msgid "Turn On Graph Debug Mode."
 msgstr "Schalten Sie den Grafik-Debug-Modus ein."
 
-#: graphs.php:1480
+#: graphs.php:1518
 msgid "Edit Graph Template."
 msgstr "Grafikvorlage bearbeiten."
 
-#: graphs.php:1492
+#: graphs.php:1530
 #, fuzzy, php-format
 msgid "Edit Data Source: '%s'."
 msgstr "Datenquelle bearbeiten"
 
-#: graphs.php:1501
+#: graphs.php:1539
 msgid "Unlock Graph."
 msgstr "Grafik freischalten."
 
-#: graphs.php:1503
+#: graphs.php:1541
 msgid "Lock Graph."
 msgstr "Grafik sperren."
 
-#: graphs.php:1532
+#: graphs.php:1570
 msgid "Selected Graph Template"
 msgstr "Ausgewählte Diagramm Schablonen"
 
-#: graphs.php:1533
+#: graphs.php:1571
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "Wählen Sie eine Diagrammvorlage aus, die auf dieses Diagramm angewendet werden soll. Bitte beachten Sie, dass Sie nur Graphenvorlagen in eine 100%% kompatible Graphenvorlage ändern können, was bedeutet, dass sie identische Datenquellen enthält."
 
-#: graphs.php:1541
+#: graphs.php:1579
 msgid "Choose the Device that this Graph belongs to."
 msgstr "Wählen Sie das Gerät, zu dem dieser Graph gehört."
 
-#: graphs.php:1597
+#: graphs.php:1635
 msgid "Supplemental Graph Template Data"
 msgstr "Zusätzliche Daten für Diagramm Schablonen"
 
-#: graphs.php:1599
+#: graphs.php:1637
 msgid "Graph Fields"
 msgstr "Diagramm Felder"
 
-#: graphs.php:1600
+#: graphs.php:1638
 msgid "Graph Item Fields"
 msgstr "Graph Element Felder"
 
-#: graphs.php:1978
+#: graphs.php:2016
 msgid "Graph Management [ Custom Graphs List Applied - Clear to Reset ]"
 msgstr "[ Angewandte benutzerdefinierte Grafikliste - Filter aus der Liste ]"
 
-#: graphs.php:1980
+#: graphs.php:2018
 msgid "Graph Management [ All Devices ]"
 msgstr "Neue Grafiken für [ Alle Geräte ]"
 
-#: graphs.php:1982
+#: graphs.php:2020
 msgid "Graph Management [ Non Device Based ]"
 msgstr "Benutzergruppenverwaltung[Bearbeiten: %s]"
 
-#: graphs.php:1985
+#: graphs.php:2023
 #, fuzzy, php-format
 msgid "Graph Management [ %s ]"
 msgstr "Diagrammverwaltung"
 
-#: graphs.php:2058
+#: graphs.php:2096
 msgid "Graph Source"
 msgstr "Grafik, Datenquelle"
 
-#: graphs.php:2063
+#: graphs.php:2101
 msgid "Non Templated"
 msgstr "Nicht templatisiert"
 
-#: graphs.php:2287
+#: graphs.php:2325
 msgid "The internal database ID for this Graph.  Useful when performing automation or debugging."
 msgstr "Die interne Datenbank-ID für dieses Diagramm.  Nützlich bei der Automatisierung oder beim Debuggen."
 
-#: graphs.php:2331
+#: graphs.php:2369
 msgid "Empty Graph"
 msgstr "Nur Diagramm"
 
@@ -5447,7 +5447,7 @@ msgstr "Du musst eingeloggt sein, um diesen Bereich von Kadupul zu betreten."
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "FATAL: Du musst eingeloggt sein, um Zugang zu diesem Bereich von Kadupul zu erhalten."
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5523
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5541
 #: permission_denied.php:14 permission_denied.php:16
 msgid "Login Again"
 msgstr "Neu Anmelden"
@@ -12158,7 +12158,7 @@ msgstr "Nicht aktiv"
 msgid "Recovering"
 msgstr "Wiederherstellend"
 
-#: lib/api_automation.php:33 lib/auth.php:3041 lib/clog_webapi.php:856
+#: lib/api_automation.php:33 lib/auth.php:3059 lib/clog_webapi.php:856
 #: lib/html_utility.php:1339 lib/import.php:342 lib/plugins.php:1499
 #: lib/plugins.php:1500 lib/rrd.php:4194 lib/rrd.php:4206 lib/spikekill.php:301
 #: package_import.php:522 package_import.php:600 utilities.php:211
@@ -12394,119 +12394,119 @@ msgstr "Neue Niederlassung"
 msgid "Web Basic"
 msgstr "Einfache Webanmeldung"
 
-#: lib/auth.php:2870
+#: lib/auth.php:2888
 msgid "Device:(Hide Disabled)"
 msgstr "Gerät ist deaktiviert"
 
-#: lib/auth.php:2888 lib/auth.php:2890 lib/auth.php:2896 lib/auth.php:2898
+#: lib/auth.php:2906 lib/auth.php:2908 lib/auth.php:2914 lib/auth.php:2916
 #, php-format
 msgid "Graph:(%s%s)"
 msgstr "Diagramm:(%s%s)"
 
-#: lib/auth.php:2911 lib/auth.php:2917 lib/auth.php:2984 lib/auth.php:2986
-#: lib/auth.php:2990 lib/auth.php:2992
+#: lib/auth.php:2929 lib/auth.php:2935 lib/auth.php:3002 lib/auth.php:3004
+#: lib/auth.php:3008 lib/auth.php:3010
 #, php-format
 msgid "Device:(%s%s)"
 msgstr "Gerät:(%s%s)"
 
-#: lib/auth.php:2925 lib/auth.php:2931 lib/auth.php:3000 lib/auth.php:3002
-#: lib/auth.php:3006 lib/auth.php:3008
+#: lib/auth.php:2943 lib/auth.php:2949 lib/auth.php:3018 lib/auth.php:3020
+#: lib/auth.php:3024 lib/auth.php:3026
 #, php-format
 msgid "Template:(%s%s)"
 msgstr "Vorlage:(%s%s)"
 
-#: lib/auth.php:2938
+#: lib/auth.php:2956
 #, php-format
 msgid "Graph+Device+Template:(%s%s)"
 msgstr "Diagramm+Gerät+Vorlage:(%s%s)"
 
-#: lib/auth.php:2975 lib/auth.php:2977
+#: lib/auth.php:2993 lib/auth.php:2995
 #, php-format
 msgid "Device+Template:(%s%s)"
 msgstr "Gerät+Vorlage:(%s%s)"
 
-#: lib/auth.php:3021 lib/auth.php:3028 lib/auth.php:3037
+#: lib/auth.php:3039 lib/auth.php:3046 lib/auth.php:3055
 msgid "Restricted By: "
 msgstr "Eingeschränkt"
 
-#: lib/auth.php:3025
+#: lib/auth.php:3043
 msgid "Granted By: "
 msgstr "Zugriff gewährt"
 
-#: lib/auth.php:3032
+#: lib/auth.php:3050
 msgid "Granted"
 msgstr "Gewährt"
 
-#: lib/auth.php:3034 lib/auth.php:3039
+#: lib/auth.php:3052 lib/auth.php:3057
 msgid "Restricted"
 msgstr "Eingeschränkt"
 
-#: lib/auth.php:3273 lib/auth.php:3308
+#: lib/auth.php:3291 lib/auth.php:3326
 msgid "Branch:"
 msgstr "Filiale:"
 
-#: lib/auth.php:3282 lib/auth.php:3316 lib/html_tree.php:949
+#: lib/auth.php:3300 lib/auth.php:3334 lib/html_tree.php:949
 #: lib/reports.php:1114
 msgid "Device:"
 msgstr "Zielsystem:"
 
-#: lib/auth.php:4182 lib/auth.php:4273
+#: lib/auth.php:4200 lib/auth.php:4291
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Zugriff verweigert, bitte kontaktieren Sie Ihren Kadupul Administrator."
 
-#: lib/auth.php:4232
+#: lib/auth.php:4250
 msgid "Access Denied!  Login Disabled."
 msgstr "Zugriff verweigert, Benutzerkonto deaktiviert."
 
-#: lib/auth.php:4307
+#: lib/auth.php:4325
 msgid "Web Basic Authentication configured, but no username was passed from the web server. Please make sure you have authentication enabled on the web server."
 msgstr "Web-Standardauthentifizierung konfiguriert, aber kein Benutzername wurde vom Web-Server übergeben. Bitte stellen Sie sicher, dass Sie die Authentifizierung auf dem Server aktiviert haben."
 
-#: lib/auth.php:4323
+#: lib/auth.php:4341
 #, php-format
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "%s, die vom Webserver authentifiziert werden, aber sowohl Template- als auch Gastbenutzer sind in Kadupul nicht definiert."
 
-#: lib/auth.php:4500 lib/auth.php:4699
+#: lib/auth.php:4518 lib/auth.php:4717
 msgid "Access Denied!  No password provided by user."
 msgstr "Zugriff verweigert! Kein Passwort vom Benutzer bereitgestellt."
 
-#: lib/auth.php:4672 lib/auth.php:5730
+#: lib/auth.php:4690 lib/auth.php:5748
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "Zugriff verweigert! Vorlagenbenutzer-ID %s existiert nicht.  Bitte wenden Sie sich an Ihren Administrator."
 
-#: lib/auth.php:4680
+#: lib/auth.php:4698
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:5033
+#: lib/auth.php:5051
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "Ihr Kadupul-Administrator hat komplexe Kennwörter für Anmeldungen erzwungen, und Ihr aktuelles Kadupul-Kennwort entspricht nicht den neuen Anforderungen. Daher müssen Sie jetzt Ihr Passwort ändern."
 
-#: lib/auth.php:5073
+#: lib/auth.php:5091
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "Das Passwort muss mindestens %d Zeichen enthalten!"
 
-#: lib/auth.php:5079
+#: lib/auth.php:5097
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "Dein Passwort muss mindestens 1 numerische Zeichen enthalten!"
 
-#: lib/auth.php:5083
+#: lib/auth.php:5101
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "Dein Passwort muss eine Mischung aus Kleinbuchstaben und Großbuchstaben enthalten!"
 
-#: lib/auth.php:5089
+#: lib/auth.php:5107
 msgid "Your password must contain at least 1 special character!"
 msgstr "Dein Passwort muss mindestens 1 Sonderzeichen enthalten!"
 
-#: lib/auth.php:5516
+#: lib/auth.php:5534
 #, fuzzy
 msgid "Kadupul Login Failure"
 msgstr "Kadupul gelöscht"
 
-#: lib/auth.php:5816
+#: lib/auth.php:5834
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "Die Authentifizierung war zuvor nicht eingestellt. Es wurde versucht, die lokale Authentifizierung festzulegen, aber es wurde kein Administratorkonto gefunden."
 
@@ -13319,6 +13319,22 @@ msgstr "%s %s"
 #, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "WARNUNG:  Key Kadupul Include Datei %s fehlt.  Bitte suchen und ersetzen Sie diese Datei"
+
+#: lib/graph_data_removal.php:443
+msgid "The removal dependency scope exceeds the supported batch. Select fewer records and try again."
+msgstr ""
+
+#: lib/graph_data_removal.php:445
+msgid "The removal failed. Persistent transaction cleanup was attempted separately; volatile statistics caches may have been invalidated. Reload and reconcile any collector changes before retrying."
+msgstr ""
+
+#: lib/graph_data_removal.php:447
+msgid "The removal failed and collector changes may be partial. Reconcile collectors before retrying."
+msgstr ""
+
+#: lib/graph_data_removal.php:448
+msgid "The removal could not be completed. Reload and review the selection before retrying."
+msgstr ""
 
 #: lib/graph_item_choices.php:42
 msgid "No Device - "

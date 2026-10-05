@@ -9,12 +9,18 @@ if (PHP_SAPI !== 'cli') {
 }
 $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
+if ($scenario['operation'] === 'graph-data-removal') require __DIR__ . '/graph-data-removal-native.php';
 if (isset($argv[3])) {
     require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
     $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], array('lib/auth.php', 'lib/graph_item_choices.php', 'tests/Helpers/PhpSource.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
+    if ($scenario['operation'] === 'graph-data-removal') {
+        require_once $root . '/tests/Helpers/GraphDataRemovalCoverageRegistration.php';
+        $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], GraphDataRemovalCoverageRegistration::SOURCES);
+        define('GRAPH_DATA_REMOVAL_TEST_COVERAGE', true);
+    }
 }
 $config = ['cacti_db_version' => '1.2.33'];
-$db = new PDO('sqlite::memory:');
+$db = $scenario['operation'] === 'graph-data-removal' ? new GraphDataRemovalFixtureDatabase() : new PDO('sqlite::memory:');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $db->exec('CREATE TABLE user_auth (id INTEGER, reset_perms INTEGER, enabled TEXT DEFAULT \'on\', locked TEXT DEFAULT \'\', show_tree TEXT, show_list TEXT, show_preview TEXT, graph_settings TEXT, policy_hosts INTEGER, policy_graphs INTEGER, policy_graph_templates INTEGER, policy_trees INTEGER DEFAULT 1)');
 $db->prepare('INSERT INTO user_auth(id,reset_perms,show_tree,show_list,show_preview,graph_settings,policy_hosts,policy_graphs,policy_graph_templates) VALUES (42, 0, ?, ?, ?, ?, ?, ?, ?)')->execute(array_merge(array_fill(0, 4, $scenario['view_default'] ?? ''), array_fill(0, 3, $scenario['policy'] ?? 1)));
@@ -78,6 +84,11 @@ function db_fetch_assoc_prepared($sql, $params = [])
 {
     $GLOBALS['queries']++;
     $GLOBALS['querySql'][] = $sql;
+    if (($GLOBALS['scenario']['operation'] ?? '') === 'graph-data-removal'
+        && !empty($GLOBALS['scenario']['read_failure']) && str_contains($sql, $GLOBALS['scenario']['read_failure'])) {
+        $GLOBALS['database_last_error'] = 'fixture read failure';
+        return array();
+    }
     $q = $GLOBALS['db']->prepare($sql);
     $q->execute($params);
     $rows = $q->fetchAll(PDO::FETCH_ASSOC);
@@ -104,6 +115,9 @@ function db_fetch_cell($sql)
 }
 function db_execute_prepared($sql, $params = [])
 {
+    if (($GLOBALS['scenario']['operation'] ?? '') === 'graph-data-removal') {
+        return graph_data_removal_fixture_execute($sql, $params, func_get_args()[3] ?? false);
+    }
     $query = $GLOBALS['db']->prepare($sql);
     return $query->execute($params);
 }
@@ -133,6 +147,11 @@ function cacti_version_compare($left, $right, $operator)
 }
 function array_rekey($rows, $key, $value)
 {
+    if (is_array($value)) {
+        $result = array();
+        foreach ($rows as $row) $result[$row[$key]] = array_intersect_key($row, array_flip($value));
+        return $result;
+    }
     return array_column($rows, $value, $key);
 }
 function cacti_sizeof($rows)
@@ -152,6 +171,9 @@ require $root . '/lib/auth.php';
 $result = null;
 $cached = null;
 switch ($scenario['operation']) {
+    case 'graph-data-removal':
+        graph_data_removal_fixture_run();
+        break;
     case 'graph-item-choices':
         require_once $root . '/tests/Helpers/PhpSource.php';
         $apiSource = file_get_contents($root . '/lib/api_data_source.php');

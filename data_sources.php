@@ -11,6 +11,7 @@ cacti_require_post_actions(array('actions', 'rrd_add', 'rrd_remove', 'ds_enable'
 include_once('./lib/api_data_source.php');
 include_once('./lib/api_device.php');
 include_once('./lib/api_graph.php');
+require_once __DIR__ . '/lib/graph_data_removal.php';
 include_once('./lib/data_query.php');
 include_once('./lib/html_form_template.php');
 include_once('./lib/poller.php');
@@ -405,10 +406,47 @@ function form_actions()
     get_filter_request_var('drp_action', FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/^([a-zA-Z0-9_]+)$/')));
     /* ==================================================== */
 
+    $removal_scope = null;
+    $removal_preview = null;
+    $removal_item_preview = null;
+    if (get_nfilter_request_var('drp_action') == '1') {
+        try {
+            $selection = array();
+            if (isset_request_var('selected_items')) {
+                $selection = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
+                $mode = isset_request_var('delete_type') ? get_nfilter_request_var('delete_type') : 1;
+            } else {
+                foreach ($_POST as $key => $value) {
+                    if (preg_match('/^chk_([0-9]+)$/D', $key, $match)) $selection[] = $match[1];
+                }
+                $mode = 1;
+            }
+            if (!is_array($selection)) throw new RuntimeException('Invalid removal selection.');
+            $removal_scope = GraphDataRemovalScope::review('data', $selection, $mode);
+            if (!isset_request_var('selected_items')) {
+                try {
+                    $removal_item_preview = GraphDataRemovalScope::review('data', $selection, 2);
+                } catch (GraphDataRemovalAccessDenied|GraphDataRemovalBatchTooLarge) {
+                    // Items and whole graphs have different aggregate dependency scopes.
+                }
+                try {
+                    $removal_preview = GraphDataRemovalScope::review('data', $selection, 3);
+                } catch (GraphDataRemovalAccessDenied|GraphDataRemovalBatchTooLarge) {
+                    // Source-only deletion does not authorize dependent graph names or writes.
+                }
+            }
+        } catch (Throwable $error) {
+            graph_data_removal_failed('data', $error);
+        }
+    }
     /* if we are to save this form, instead of display it */
     if (isset_request_var('selected_items')) {
         $selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
-        if (is_array($selected_items)) {
+        if ($removal_scope !== null) {
+            $selected_items = $removal_scope->selectedIds();
+            set_request_var('selected_items', serialize($selected_items));
+        }
+        if (is_array($selected_items) && $removal_scope === null) {
             $selected_items = array_values(array_filter(
                 $selected_items,
                 function ($data_source_id) {
@@ -424,7 +462,7 @@ function form_actions()
 
         if ($selected_items != false) {
             foreach ($selected_items as $selected_item) {
-                if (!data_source_device_is_allowed($selected_item)) {
+                if ($removal_scope === null && !data_source_device_is_allowed($selected_item)) {
                     data_source_access_denied();
                 }
             }
@@ -436,57 +474,19 @@ function form_actions()
                     get_filter_request_var('delete_type');
                 }
 
-                switch (get_request_var('delete_type')) {
-                    case '2': /* delete all graph items tied to this data source */
-                        $data_template_rrds = array_rekey(db_fetch_assoc('SELECT id
-							FROM data_template_rrd
-							WHERE ' . array_to_sql_or($selected_items, 'local_data_id')), 'id', 'id');
-
-                        $poller_ids = db_fetch_assoc('SELECT DISTINCT poller_id
-							FROM host AS h
-							INNER JOIN data_local AS dl
-							ON dl.host_id=h.id
-							WHERE poller_id > 1
-							AND id IN (' . implode(', ', $selected_items) . ')');
-
-                        api_plugin_hook_function('graph_items_remove', $data_template_rrds);
-
-                        /* loop through each data source item */
-                        if (cacti_sizeof($data_template_rrds) > 0) {
-                            db_execute('DELETE FROM graph_templates_item
-								WHERE task_item_id IN (' . implode(',', $data_template_rrds) . ')
-								AND local_graph_id > 0');
-
-                            if (cacti_sizeof($poller_ids)) {
-                                foreach ($poller_ids as $poller_id) {
-                                    if (($rcnn_id = poller_push_to_remote_db_connect($poller_id, true)) !== false) {
-                                        db_execute('DELETE FROM graph_templates_item
-											WHERE task_item_id IN (' . implode(',', $data_template_rrds) . ')
-											AND local_graph_id > 0', true, $rcnn_id);
-                                    }
-                                }
-                            }
+                try {
+                    $removal_scope->run(static function () use ($removal_scope, $selected_items): void {
+                        if (get_request_var('delete_type') == '2') {
+                            $removal_scope->deleteGraphItems();
+                        } elseif (get_request_var('delete_type') == '3') {
+                            $graphs = $removal_scope->graphsFromSources();
+                            api_graph_remove_multi($graphs, false, array($removal_scope, 'verify'), $removal_scope);
                         }
-
-                        break;
-                    case '3': /* delete all graphs tied to this data source */
-                        $graphs = array_rekey(db_fetch_assoc('SELECT
-							graph_templates_graph.local_graph_id
-							FROM (data_template_rrd,graph_templates_item,graph_templates_graph)
-							WHERE graph_templates_item.task_item_id=data_template_rrd.id
-							AND graph_templates_item.local_graph_id=graph_templates_graph.local_graph_id
-							AND ' . array_to_sql_or($selected_items, 'data_template_rrd.local_data_id') . '
-							AND graph_templates_graph.local_graph_id > 0
-							GROUP BY graph_templates_graph.local_graph_id'), 'local_graph_id', 'local_graph_id');
-
-                        if (cacti_sizeof($graphs) > 0) {
-                            api_graph_remove_multi($graphs);
-                        }
-
-                        break;
+                        api_data_source_remove_multi($selected_items, true, array($removal_scope, 'verify'), $removal_scope);
+                    });
+                } catch (Throwable $error) {
+                    graph_data_removal_failed('data', $error);
                 }
-
-                api_data_source_remove_multi($selected_items);
             } elseif (get_nfilter_request_var('drp_action') == '3') { // change host
                 get_filter_request_var('host_id');
 
@@ -533,11 +533,11 @@ function form_actions()
             input_validate_input_number($matches[1]);
             /* ==================================================== */
 
-            if (!api_data_source_is_allowed($matches[1])) {
+            if ($removal_scope === null && !api_data_source_is_allowed($matches[1])) {
                 continue;
             }
 
-            if (!data_source_device_is_allowed($matches[1])) {
+            if ($removal_scope === null && !data_source_device_is_allowed($matches[1])) {
                 data_source_access_denied();
             }
 
@@ -559,7 +559,7 @@ function form_actions()
             $graphs = array();
 
             /* find out which (if any) graphs are using this data source, so we can tell the user */
-            if (isset($ds_array)) {
+            if (isset($ds_array) && $removal_item_preview !== null) {
                 $graphs = db_fetch_assoc('SELECT
 					graph_templates_graph.local_graph_id,
 					graph_templates_graph.title_cache
@@ -587,12 +587,15 @@ function form_actions()
                 print '</ul></div>';
                 print '<br>';
 
-                form_radio_button('delete_type', '3', '1', __n('Leave the <strong>Graph</strong> untouched.', 'Leave all <strong>Graphs</strong> untouched.', cacti_sizeof($graphs)), '1');
+                $default_delete_type = $removal_preview !== null ? '3' : '1';
+                form_radio_button('delete_type', $default_delete_type, '1', __n('Leave the <strong>Graph</strong> untouched.', 'Leave all <strong>Graphs</strong> untouched.', cacti_sizeof($graphs)), '1');
                 print '<br>';
-                form_radio_button('delete_type', '3', '2', __n('Delete all <strong>Graph Items</strong> that reference this Data Source.', 'Delete all <strong>Graph Items</strong> that reference these Data Sources.', cacti_sizeof($ds_array)), '1');
+                form_radio_button('delete_type', $default_delete_type, '2', __n('Delete all <strong>Graph Items</strong> that reference this Data Source.', 'Delete all <strong>Graph Items</strong> that reference these Data Sources.', cacti_sizeof($ds_array)), '1');
                 print '<br>';
-                form_radio_button('delete_type', '3', '3', __n('Delete all <strong>Graphs</strong> that reference this Data Source.', 'Delete all <strong>Graphs</strong> that reference these Data Sources.', cacti_sizeof($ds_array)), '1');
-                print '<br>';
+                if ($removal_preview !== null) {
+                    form_radio_button('delete_type', '3', '3', __n('Delete all <strong>Graphs</strong> that reference this Data Source.', 'Delete all <strong>Graphs</strong> that reference these Data Sources.', cacti_sizeof($ds_array)), '1');
+                    print '<br>';
+                }
                 print '</td></tr>';
             }
 
