@@ -68,6 +68,8 @@ final class DeviceGraphCallerNativeHarness
                 $action = $fields['action'] ?? '';
                 $hostId = $fields[in_array($action, ['edit','save','ping_host'], true) ? 'id' : 'host_id'] ?? 0;
                 if ($page !== 'host.php' || $action === 'actions' || $hostId > 0) $hits[] = 'lib/auth.php';
+                if (($scenario['graph_handoff'] ?? false) && !($scenario['deny_graph'] ?? false) && isset($fields['host_id'])
+                    && ($fields['host_id'] === 0 || ($action === 'actions' && $fields['host_id'] === 12))) $hits[] = 'lib/api_graph.php';
                 if ($scenario['api'] ?? false) {
                     $apiId = $scenario['id'] ?? $fields['id'] ?? 12;
                     $hits = ['lib/api_device.php'];

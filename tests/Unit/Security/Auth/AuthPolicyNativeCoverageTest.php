@@ -688,6 +688,68 @@ final class AuthPolicyNativeCoverageTest extends TestCase
         ];
     }
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('graphDeviceChildCases')]
+    public function testGraphDeviceChangeReviewsEveryChildBeforeAnyMutation(array $scenario, bool $accepted): void
+    {
+        $state = $this->runPolicy(array_merge(['operation' => 'graph-device-change','policy' => 2,
+            'config' => ['graph_auth_method' => 1]], $scenario))['result'];
+        self::assertSame(!($scenario['deny_graph'] ?? false), $state['admission']['graph']);
+        if ($scenario['deny_graph'] ?? false) self::assertTrue($state['admission']['source']);
+        self::assertFalse($state['admission']['foreign']);
+        self::assertSame($accepted, $state['status']);
+        self::assertSame('preserved prior diagnostic', $state['diagnostic']);
+        self::assertSame($accepted ? [1001] : [], $state['titles']);
+        if (($scenario['size'] ?? 0) === 5000) {
+            self::assertLessThanOrEqual(60, $state['queries']);
+            self::assertCount(5, array_filter($state['sql'], static fn(string $sql): bool => str_contains($sql, 'SELECT id FROM data_local')));
+            $chunkRows = [];
+            foreach ($state['sql'] as $index => $sql) {
+                if (str_contains($sql, 'SELECT id FROM data_local')) $chunkRows[] = $state['rows'][$index]['rows'];
+            }
+            self::assertSame(array_fill(0, 5, 1000), $chunkRows);
+        }
+        if (($scenario['size'] ?? 0) === 10001) {
+            self::assertSame([], array_values(array_filter($state['sql'], static fn(string $sql): bool => str_contains($sql, 'SELECT id FROM data_local'))));
+        }
+        if (!$accepted) {
+            self::assertSame($state['before'], $state['after']);
+            self::assertSame([], $state['writes']);
+        } else {
+            $destination = $scenario['destination'] ?? 0;
+            self::assertSame($destination, $state['after']['graph'][0]['host_id']);
+            foreach ($state['after']['data'] as $row) self::assertSame($destination, $row['host_id']);
+            foreach ($state['after']['poller'] as $row) {
+                self::assertSame($row['local_data_id'] === 0 ? 201 : $destination, $row['host_id']);
+            }
+        }
+    }
+
+    public static function graphDeviceChildCases(): array
+    {
+        return [
+            'persisted graph policy refused' => [['deny_graph' => true, 'config' => ['graph_auth_method' => 2]], false],
+            'foreign child' => [['children' => [[5001,201,201]]],false],
+            'foreign source without poller' => [['children' => [[5001,201,null]]],false],
+            'later foreign child' => [['children' => [[5001,101,101],[5002,201,201]]],false],
+            'foreign poller child' => [['children' => [[5001,101,201]]],false],
+            'missing child' => [['missing' => true],false],
+            'negative child owner' => [['children' => [[5001,-1,null]]],false],
+            'malformed adapter child owner' => [['children' => [[5001,'invalid',null]]],false],
+            'data read failure' => [['read_failure' => 'data'],false],
+            'poller read failure' => [['read_failure' => 'poller'],false],
+            'snmp remains refused' => [['snmp' => 1],false],
+            'allowed child' => [[],true],
+            'allowed destination' => [['destination' => 12],true],
+            'nondevice source' => [['source' => 0],true],
+            'nondevice child' => [['children' => [[5001,0,0]]],true],
+            'duplicate child' => [['children' => [[5001,101,101],[5001,101,101]]],true],
+            'template reference' => [['children' => [[0,null,201]]],true],
+            'maximum linked sources' => [['size' => 5000],true],
+            'oversized linked sources' => [['size' => 10001],false],
+            'no children' => [['children' => []],true],
+        ];
+    }
+
     private function runPolicy(array $scenario): array
     {
         $root = dirname(__DIR__, 4);
@@ -711,7 +773,16 @@ final class AuthPolicyNativeCoverageTest extends TestCase
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
                 require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
-                if ($scenario['operation'] === 'management-list') {
+                if ($scenario['operation'] === 'graph-device-change') {
+                    require_once $root . '/tests/Helpers/GraphDeviceChangeCoverageRegistration.php';
+                    $hits = ['lib/auth.php','lib/api_graph.php'];
+                    $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), GraphDeviceChangeCoverageRegistration::SOURCES, GraphDeviceChangeCoverageRegistration::MARKERS, $hits);
+                    if (!isset(self::$coverageEvidenceChecked['graph-device-change'])) {
+                        self::assertSame(46, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), GraphDeviceChangeCoverageRegistration::SOURCES, GraphDeviceChangeCoverageRegistration::MARKERS, $hits, 'lib/rrd.php'));
+                        self::$coverageEvidenceChecked['graph-device-change'] = true;
+                    }
+                    $coverage->merge($childCoverage);
+                } elseif ($scenario['operation'] === 'management-list') {
                     require_once $root . '/tests/Helpers/ManagementListCoverageRegistration.php';
                     $hits = ['lib/auth.php', $scenario['resource'] === 'graph' ? 'graphs.php' : 'data_sources.php'];
                     $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), ManagementListCoverageRegistration::SOURCES, ManagementListCoverageRegistration::MARKERS, $hits);

@@ -17,6 +17,7 @@ if ($scenario['operation'] === 'spike-controller') {
     require __DIR__ . '/spike-controller-native.php';
     require_once $root . '/tests/Helpers/SpikeControllerCoverageRegistration.php';
 }
+if ($scenario['operation'] === 'graph-device-change') require __DIR__ . '/graph-device-change-native.php';
 if ($scenario['operation'] === 'management-list') require __DIR__ . '/management-list-native.php';
 if ($scenario['operation'] === 'management-bulk') require __DIR__ . '/management-bulk-native.php';
 if ($scenario['operation'] === 'graph-data-removal') require __DIR__ . '/graph-data-removal-native.php';
@@ -25,6 +26,11 @@ if (isset($argv[3])) {
     $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], array('lib/auth.php', 'lib/graph_item_choices.php', 'tests/Helpers/PhpSource.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
     if ($scenario['operation'] === 'graph-policy-display') {
         $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], GraphPolicyDisplayCoverageRegistration::SOURCES);
+    }
+    if ($scenario['operation'] === 'graph-device-change') {
+        require_once $root . '/tests/Helpers/GraphDeviceChangeCoverageRegistration.php';
+        $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], GraphDeviceChangeCoverageRegistration::SOURCES);
+        define('GRAPH_DEVICE_CHANGE_TEST_COVERAGE', true);
     }
     if ($scenario['operation'] === 'management-list') {
         require_once $root . '/tests/Helpers/ManagementListCoverageRegistration.php';
@@ -118,6 +124,9 @@ function db_fetch_assoc_prepared($sql, $params = [])
     if (($GLOBALS['scenario']['operation'] ?? '') === 'spike-controller' && str_contains($sql, 'SELECT DISTINCT data_template_rrd.local_data_id')) {
         $GLOBALS['spikeLookupParameters'][] = $params;
     }
+    if (($GLOBALS['scenario']['operation'] ?? '') === 'graph-device-change' && !empty($GLOBALS['scenario']['read_failure']) && str_contains($sql, $GLOBALS['scenario']['read_failure'] === 'data' ? 'SELECT DISTINCT dtr.local_data_id' : 'SELECT DISTINCT pi.host_id')) {
+        throw new RuntimeException('Fixture child metadata read failure.');
+    }
     $GLOBALS['queries']++;
     $GLOBALS['querySql'][] = $sql;
     if (($GLOBALS['scenario']['operation'] ?? '') === 'graph-data-removal'
@@ -169,6 +178,7 @@ function db_fetch_cell($sql)
 }
 function db_execute_prepared($sql, $params = [])
 {
+    if (($GLOBALS['scenario']['operation'] ?? '') === 'graph-device-change') $GLOBALS['graphDeviceWrites'][] = [$sql, $params];
     if (($GLOBALS['scenario']['operation'] ?? '') === 'graph-data-removal') {
         return graph_data_removal_fixture_execute($sql, $params, func_get_args()[3] ?? false);
     }
@@ -455,6 +465,9 @@ INSERT INTO graph_templates_graph VALUES(100,'Fixture graph',500,120);");
         $db->exec('DELETE FROM user_auth_group_perms');
         $cached = is_tree_allowed(100);
         break;
+    case 'graph-device-change':
+        $result = native_graph_device_change();
+        break;
     case 'policies':
         $result = get_policies(42);
         break;
@@ -485,6 +498,7 @@ INSERT INTO graph_templates_graph VALUES(100,'Fixture graph',500,120);");
 }
 $nativeChildCoverageMarkers = array('native-policy-operation-returned', 'policy-session-observed');
 if ($scenario['operation'] === 'graph-policy-display') $nativeChildCoverageMarkers[] = 'persisted-policy-display-compared';
+if ($scenario['operation'] === 'graph-device-change') $nativeChildCoverageMarkers[] = 'graph-device-child-scope-observed';
 if (in_array($scenario['operation'], ['graph-cache-revocation', 'graph-image-cache'], true)) {
     $nativeChildCoverageMarkers = array_merge($nativeChildCoverageMarkers, ['graph-cache-revocation-observed', 'graph-cache-query-budget-observed']);
     if ($scenario['operation'] === 'graph-image-cache') $nativeChildCoverageMarkers[] = 'graph-cache-image-dispatch-observed';

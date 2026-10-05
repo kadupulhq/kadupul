@@ -2,6 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -685,7 +686,8 @@ function api_duplicate_graph($_local_graph_id, $_graph_template_id, $graph_title
     }
 }
 
-function api_graph_change_device($local_graph_id, $host_id)
+/** @return list<array{local_data_id: int|string, host_id: int|string|null}>|false */
+function api_graph_device_change_scope(mixed $local_graph_id, mixed $host_id): array|false
 {
     $host_id = auth_resource_id($host_id);
     if ($host_id === null || !is_graph_allowed($local_graph_id) || ($host_id > 0 && !is_device_allowed($host_id))) {
@@ -708,45 +710,114 @@ function api_graph_change_device($local_graph_id, $host_id)
     }
 
     if (empty($graph['snmp_query_id'])) {
-        db_execute_prepared(
-            'UPDATE graph_local
-			SET host_id = ?
-			WHERE id = ?',
-            array($host_id, $local_graph_id)
-        );
-
-        update_graph_title_cache($local_graph_id);
-
-        /* update the data sources as well */
-        $data_ids = db_fetch_assoc_prepared(
-            'SELECT DISTINCT dtr.local_data_id
-			FROM graph_templates_item AS gti
-			INNER JOIN data_template_rrd AS dtr
-			ON gti.task_item_id=dtr.id
-			WHERE gti.local_graph_id = ?',
-            array($local_graph_id)
-        );
-
-        if (cacti_sizeof($data_ids)) {
+        // A graph may reference a source owned by another device. Review the
+        // whole handoff before changing the graph, its title, or any child.
+        $previous_error = $GLOBALS['database_last_error'] ?? null;
+        $GLOBALS['database_last_error'] = '';
+        try {
+            $data_ids = db_fetch_assoc_prepared(
+                'SELECT DISTINCT dtr.local_data_id, dl.host_id
+                FROM graph_templates_item AS gti
+                INNER JOIN data_template_rrd AS dtr ON gti.task_item_id=dtr.id
+                LEFT JOIN data_local AS dl ON dl.id=dtr.local_data_id
+                WHERE gti.local_graph_id = ? LIMIT 10001',
+                array($local_graph_id)
+            );
+            if (!is_array($data_ids) || count($data_ids) > 10000 || !empty($GLOBALS['database_last_error'])) {
+                return false;
+            }
+            $persisted_ids = array();
             foreach ($data_ids as $data_id) {
-                db_execute_prepared(
-                    'UPDATE data_local
-					SET host_id = ?
-					WHERE id = ?',
-                    array($host_id, $data_id['local_data_id'])
-                );
-
-                db_execute_prepared(
-                    'UPDATE poller_item
-					SET host_id = ?
-					WHERE local_data_id = ?',
-                    array($host_id, $data_id['local_data_id'])
-                );
+                $id = auth_resource_id($data_id['local_data_id'] ?? null);
+                if ($id === null) {
+                    return false;
+                }
+                // local_data_id=0 denotes a template, not a persisted source.
+                if ($id === 0) {
+                    continue;
+                }
+                $owner = auth_resource_id($data_id['host_id'] ?? null);
+                if ($owner === null) {
+                    return false;
+                }
+                $persisted_ids[$id] = $id;
+            }
+            $persisted_ids = array_values($persisted_ids);
+            if (get_allowed_management_selection('data', $persisted_ids) !== $persisted_ids) {
+                return false;
+            }
+            $allowed_devices_sql = get_allowed_management_device_ids_sql();
+            $poller_owners = db_fetch_assoc_prepared(
+                "SELECT DISTINCT pi.host_id, CASE WHEN pi.host_id = 0 OR pi.host_id IN ($allowed_devices_sql) THEN 1 ELSE 0 END AS allowed
+                FROM poller_item AS pi
+                INNER JOIN data_template_rrd AS dtr ON pi.local_data_id=dtr.local_data_id
+                INNER JOIN graph_templates_item AS gti ON gti.task_item_id=dtr.id
+                WHERE gti.local_graph_id = ? AND dtr.local_data_id > 0 LIMIT 10001",
+                array($local_graph_id)
+            );
+            if (!is_array($poller_owners) || count($poller_owners) > 10000 || !empty($GLOBALS['database_last_error'])) {
+                return false;
+            }
+            foreach ($poller_owners as $poller_owner) {
+                $owner = auth_resource_id($poller_owner['host_id'] ?? null);
+                if ($owner === null || (int) ($poller_owner['allowed'] ?? 0) !== 1) {
+                    return false;
+                }
+            }
+        } catch (Throwable $error) {
+            return false;
+        } finally {
+            if ($previous_error === null) {
+                unset($GLOBALS['database_last_error']);
+            } else {
+                $GLOBALS['database_last_error'] = $previous_error;
             }
         }
 
-        return true;
+        return $data_ids;
     }
 
     return false;
+}
+
+function api_graph_change_device($local_graph_id, $host_id)
+{
+    $host_id = auth_resource_id($host_id);
+    $data_ids = api_graph_device_change_scope($local_graph_id, $host_id);
+    if ($data_ids === false) {
+        return false;
+    }
+
+    db_execute_prepared(
+        'UPDATE graph_local
+			SET host_id = ?
+			WHERE id = ?',
+        array($host_id, $local_graph_id)
+    );
+
+    update_graph_title_cache($local_graph_id);
+
+    /* update the previously reviewed persisted data sources as well */
+    if (cacti_sizeof($data_ids)) {
+        foreach ($data_ids as $data_id) {
+            if ((int) $data_id['local_data_id'] === 0) {
+                continue;
+            }
+            db_execute_prepared(
+                'UPDATE data_local
+					SET host_id = ?
+					WHERE id = ?',
+                array($host_id, $data_id['local_data_id'])
+            );
+
+            db_execute_prepared(
+                'UPDATE poller_item
+					SET host_id = ?
+					WHERE local_data_id = ?',
+                array($host_id, $data_id['local_data_id'])
+            );
+        }
+    }
+
+    return true;
 }

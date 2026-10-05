@@ -127,6 +127,7 @@ function db_fetch_cell($sql)
 }
 function db_execute_prepared($sql, $params = [])
 {
+    if ($GLOBALS['scenario']['graph_handoff'] ?? false) $GLOBALS['graphHandoffWrites'][] = [$sql, $params];
     if (preg_match("/^REPLACE INTO settings SET value = \?, name='([a-z0-9_]+)'$/D", $sql, $match)) {
         $sql = 'REPLACE INTO settings(name,value) VALUES(?,?)';
         $params = [$match[1],$params[0]];
@@ -388,12 +389,15 @@ register_shutdown_function(static function () use ($directory, $db) {
     $state = ['fatal' => $fatal,'events' => $GLOBALS['events'],'messages' => $GLOBALS['messages'],'logs' => $GLOBALS['logs'],'reads' => $GLOBALS['reads'],'session' => $_SESSION,'api_result' => $GLOBALS['deviceApiResult'] ?? null,'api_error' => $GLOBALS['deviceApiError'] ?? null,'sapi' => PHP_SAPI,
         'hosts' => $db->query('SELECT * FROM host ORDER BY id')->fetchAll(PDO::FETCH_ASSOC),'graphs' => $db->query('SELECT * FROM graph_local')->fetchAll(PDO::FETCH_ASSOC),'data' => $db->query('SELECT * FROM data_local')->fetchAll(PDO::FETCH_ASSOC),
         'query' => $db->query('SELECT * FROM host_snmp_query')->fetchAll(PDO::FETCH_ASSOC),'cache' => $db->query('SELECT * FROM host_snmp_cache')->fetchAll(PDO::FETCH_ASSOC)];
+    if ($GLOBALS['scenario']['graph_handoff'] ?? false) $state += graph_handoff_fixture_state();
     file_put_contents($directory . '/state.json', json_encode($state, JSON_THROW_ON_ERROR));
     if ($fatal === null || !in_array($fatal['type'], [E_ERROR,E_PARSE,E_COMPILE_ERROR,E_CORE_ERROR], true)) $GLOBALS['nativeChildCoverageMarkers'] = ['caller-outcome-observed','caller-persisted-state-observed'];
 });
 // Controllers load their empty module ports relative to the owned cwd. Template
 // creation is an explicit persistence handoff, not an RRDtool integration claim.
 foreach (['lib/template.php' => ['create_save_graph'],'lib/html_graph.php' => ['html_graph_new_graphs']] as $file => $functions) foreach ($functions as $name) eval(test_php_function_source(file_get_contents($root . '/' . $file), $name));
+
+if ($scenario['graph_handoff'] ?? false) require $root . '/tests/Fixtures/graph-save-dependent-native.php';
 
 if ($scenario['api'] ?? false) {
     require_once $root . '/src/Inventory/Infrastructure/Legacy/LegacyDeviceSiteWriter.php';
@@ -422,6 +426,7 @@ function form_input_validate($value, ...$args)
 }
 function sql_save($fields, $table, $key = 'id', $replace = true, $connection = false)
 {
+    if ($GLOBALS['scenario']['graph_handoff'] ?? false) return graph_handoff_fixture_save($fields, $table);
     if ($table !== 'host' || $connection !== $GLOBALS['db'] || !$connection->inTransaction()) throw new RuntimeException('Invalid native device write boundary');
     if ($GLOBALS['scenario']['api_save_failure'] ?? false) return false;
     $id = (int) $fields['id'];

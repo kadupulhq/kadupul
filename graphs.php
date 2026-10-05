@@ -210,6 +210,18 @@ function form_save(): never
         graph_edit_access_denied();
     }
 
+    $device_change_required = false;
+    if (isset_request_var('save_component_graph') && !empty($local_graph_id)) {
+        $stored_host_id = auth_resource_id(db_fetch_cell_prepared('SELECT host_id FROM graph_local WHERE id = ?', array($local_graph_id)));
+        if ($stored_host_id === null) {
+            graph_edit_access_denied();
+        }
+        $device_change_required = $stored_host_id !== $host_id;
+        if ($device_change_required && api_graph_device_change_scope($local_graph_id, $host_id) === false) {
+            graph_edit_access_denied();
+        }
+    }
+
     $gt_id_unparsed      = get_nfilter_request_var('graph_template_id');
     $gt_id_prev_unparsed = get_nfilter_request_var('graph_template_id_prev');
     parse_validate_graph_template_id('graph_template_id');
@@ -333,7 +345,7 @@ function form_save(): never
             update_graph_title_cache($local_graph_id);
 
             /* if the host id changes, then update the graph items association too */
-            if (get_request_var('host_id') != get_request_var('host_id_prev')) {
+            if ($device_change_required) {
                 if (!api_graph_change_device($local_graph_id, get_request_var('host_id'))) {
                     raise_message(34);
                 }

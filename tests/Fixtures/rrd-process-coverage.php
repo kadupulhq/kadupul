@@ -34,7 +34,7 @@ if (defined('DATA_SOURCE_CONTROLLER_TEST_COVERAGE')) {
 }
 
 if (defined('DEVICE_GRAPH_CALLER_TEST_COVERAGE')) {
-    foreach (array('lib/auth.php', 'lib/html_utility.php', 'graphs_new.php', 'host.php', 'graphs.php', 'lib/api_device.php', 'src/Inventory/Infrastructure/Legacy/LegacyDeviceSiteWriter.php') as $file) $coverageFilter->includeFile($coverageRoot . '/' . $file);
+    foreach (array('lib/auth.php', 'lib/html_utility.php', 'graphs_new.php', 'host.php', 'graphs.php', 'lib/api_graph.php', 'lib/api_device.php', 'src/Inventory/Infrastructure/Legacy/LegacyDeviceSiteWriter.php') as $file) $coverageFilter->includeFile($coverageRoot . '/' . $file);
 }
 
 if (defined('POLLER_RESULT_HELPERS_TEST_COVERAGE')) {
@@ -99,6 +99,10 @@ if (defined('TREE_CONFIRMATION_TEST_COVERAGE')) {
 }
 if (defined('AUTH_POLICY_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/graph_item_choices.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
+}
+if (defined('GRAPH_DEVICE_CHANGE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/api_graph.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
 }
 if (defined('MANAGEMENT_LIST_TEST_COVERAGE')) {
