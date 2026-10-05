@@ -64,7 +64,7 @@ final class GraphDenialNativeHttpTest extends TestCase
                 self::assertNotFalse($body);
                 return [$body, $http_response_header];
             };
-            [$body, $headers] = $request('graphs.php?' . http_build_query(['action' => $action, 'header' => 'false'] + ($id === null ? [] : ['id' => $id]) + ($host === null ? [] : ['host_id' => $host])));
+            [$body, $headers] = $request('graphs.php?' . http_build_query(['action' => $action, 'header' => 'false', 'receipt_label' => "A <label> & 'quoted' \"name\" café"] + ($id === null ? [] : ['id' => $id]) + ($host === null ? [] : ['host_id' => $host])));
             $cookies = array_values(array_filter($headers, static fn(string $value): bool => str_starts_with($value, 'Set-Cookie: PHPSESSID=')));
             self::assertCount(1, $cookies);
             $cookie = explode(';', substr($cookies[0], strlen('Set-Cookie: ')), 2)[0];
@@ -75,6 +75,8 @@ final class GraphDenialNativeHttpTest extends TestCase
                 self::assertSame('', $body);
                 [$body, $headers] = $request('graphs.php?header=false', $cookie);
                 self::assertStringContainsString(' 200 ', $headers[0]);
+                self::assertContains('Content-Type: application/json', $headers);
+                self::assertContains('X-Content-Type-Options: nosniff', $headers);
                 self::assertJson($body, $body);
                 $state = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
                 self::assertSame('destination', $state['stage']);
@@ -86,8 +88,12 @@ final class GraphDenialNativeHttpTest extends TestCase
                 self::assertSame([], json_decode($repeat, true, 512, JSON_THROW_ON_ERROR)['message']);
             } else {
                 self::assertStringContainsString(' 200 ', $headers[0]);
+                self::assertContains('Content-Type: application/json', $headers);
+                self::assertContains('X-Content-Type-Options: nosniff', $headers);
                 self::assertJson($body, $body);
                 $state = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
+                self::assertSame("A <label> & 'quoted' \"name\" café", $state['request']['receipt_label']);
+                self::assertStringNotContainsString('<label>', $body);
                 self::assertSame($action === 'item' ? 'admitted-item-view' : ($id === null ? 'admitted-new-editor' : 'admitted-editor'), $state['stage']);
                 if ($id === null) {
                     self::assertArrayNotHasKey('id', $state['request']);

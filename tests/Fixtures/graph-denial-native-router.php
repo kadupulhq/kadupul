@@ -110,10 +110,23 @@ function bottom_footer(): void {}
 function native_graph_denial_observe(string $stage): never
 {
     header('Content-Type: application/json');
-    echo json_encode(['stage' => $stage, 'header_rendered' => $GLOBALS['header_rendered'],
+    header('X-Content-Type-Options: nosniff');
+    $payload = json_encode(['stage' => $stage, 'header_rendered' => $GLOBALS['header_rendered'],
         'message' => json_decode(display_output_messages(), true, 512, JSON_THROW_ON_ERROR),
         'request' => $_REQUEST, 'render' => $GLOBALS['native_render'] ?? [], 'reads' => $GLOBALS['native_reads'] ?? [],
-        'session' => $_SESSION, 'rows' => $GLOBALS['db']->query('SELECT * FROM graph_local ORDER BY id')->fetchAll(PDO::FETCH_ASSOC)], JSON_THROW_ON_ERROR);
+        'session' => $_SESSION, 'rows' => $GLOBALS['db']->query('SELECT * FROM graph_local ORDER BY id')->fetchAll(PDO::FETCH_ASSOC)], JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+    $output = fopen('php://output', 'wb');
+    if ($output === false) throw new RuntimeException('Cannot open native JSON response');
+    try {
+        $offset = 0;
+        while ($offset < strlen($payload)) {
+            $written = fwrite($output, substr($payload, $offset));
+            if ($written === false || $written === 0) throw new RuntimeException('Incomplete native JSON response');
+            $offset += $written;
+        }
+    } finally {
+        fclose($output);
+    }
     exit;
 }
 function validate_store_request_vars(mixed ...$arguments): never

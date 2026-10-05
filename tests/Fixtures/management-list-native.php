@@ -76,7 +76,13 @@ function management_list_fixture_run(): never
         rmdir($directory . '/lib');
         unlink($directory . '/include/auth.php');
         rmdir($directory . '/include');
-        print json_encode(['completed' => $GLOBALS['managementListCompleted'] ?? false, 'admission' => $GLOBALS['listAdmission'], 'html' => $html, 'request' => $_REQUEST, 'queries' => $GLOBALS['querySql'], 'row_counts' => $GLOBALS['queryRowCounts']], JSON_THROW_ON_ERROR);
+        $payload = json_encode(['completed' => $GLOBALS['managementListCompleted'] ?? false, 'admission' => $GLOBALS['listAdmission'], 'html' => $html, 'request' => $_REQUEST, 'queries' => $GLOBALS['querySql'], 'row_counts' => $GLOBALS['queryRowCounts']], JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+        $offset = 0;
+        while ($offset < strlen($payload)) {
+            $written = fwrite(STDOUT, substr($payload, $offset));
+            if ($written === false || $written === 0) throw new RuntimeException('Incomplete native management JSON receipt');
+            $offset += $written;
+        }
     });
     require $root . '/' . ($scenario['resource'] === 'graph' ? 'graphs.php' : 'data_sources.php');
     $GLOBALS['managementListCompleted'] = true;
