@@ -36,7 +36,18 @@ final class GraphZoomNativeHarness
             fclose($pipes[0]);
             $ready = false;
             for ($attempt = 0; $attempt < 100; $attempt++) {
-                $probe = @fsockopen('tcp://' . $address, -1, $errorCode, $error, 0.1);
+                $priorHandler = null;
+                $priorHandler = set_error_handler(static function (int $severity, string $message, string $file, int $line) use (&$priorHandler): bool {
+                    if ($severity === E_WARNING && str_starts_with($message, 'fsockopen(): Unable to connect') && str_contains($message, '(Connection refused)')) {
+                        return true;
+                    }
+                    return $priorHandler === null ? false : (bool) $priorHandler($severity, $message, $file, $line);
+                });
+                try {
+                    $probe = fsockopen('tcp://' . $address, -1, $errorCode, $error, 0.1);
+                } finally {
+                    restore_error_handler();
+                }
                 if (is_resource($probe)) {
                     fclose($probe);
                     $ready = true;

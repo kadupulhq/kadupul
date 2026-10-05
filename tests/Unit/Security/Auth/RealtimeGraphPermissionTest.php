@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+require_once dirname(__DIR__, 3) . '/Helpers/ChildProcessCoverage.php';
+
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -30,6 +34,8 @@ function realtime_gate_run(array $options): array
         'graph_allowed' => true,
         'method'  => 'GET',
         'request' => array(),
+        'headers' => array(),
+        'session' => array('sess_user_id' => 42, 'sess_realtime_hash' => 'abc123'),
     );
 
     $root = dirname(__DIR__, 4);
@@ -39,18 +45,22 @@ function realtime_gate_run(array $options): array
     mkdir($dir . '/lib', 0700);
     mkdir($dir . '/cache', 0700);
     file_put_contents($dir . '/include/auth.php', '<?php');
+    file_put_contents($dir . '/include/global_session.php', '<?php');
     file_put_contents($dir . '/lib/rrd.php', '<?php');
     file_put_contents($dir . '/cache/user_abc123_lgi_7.png', 'CACHED');
 
     $program = <<<'PHP'
 require $argv[1] . '/include/global_constants.php';
 require $argv[1] . '/lib/html_utility.php';
+require $argv[1] . '/lib/headers_secure.php';
 $options = json_decode($argv[2], true);
+function generate_hash() { $GLOBALS['trace']['hashes']++; return 'abc123'; }
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function die_html_input_error(...$args) { http_response_code(400); exit; }
 function read_user_setting($name, $default = null) { return $default; }
 function set_user_setting($name, $value) { $GLOBALS['trace']['saved'][$name] = $value; }
 function read_config_option($name) {
+    if ($name === 'realtime_interval') return 10;
     if ($name === 'realtime_enabled') return $GLOBALS['options']['enabled'];
     if ($name === 'path_php_binary') return '/usr/bin/php';
     return getcwd() . '/cache';
@@ -69,26 +79,36 @@ function is_graph_allowed($local_graph_id, $user) {
 function rrdtool_create_error_image($message) { return 'ERROR:' . $message; }
 function cacti_exec($binary, $args, &$output, $timeout) { $GLOBALS['trace']['polled'] = true; return 0; }
 function rrdtool_function_graph(...$args) { $GLOBALS['trace']['rendered'] = true; return 'IMAGE'; }
+function html_common_header($title) { echo '<title>' . htmlspecialchars($title, ENT_QUOTES) . '</title>'; }
 function get_selected_theme() { return 'modern'; }
-$config = array('base_path' => '/application');
-$trace = array('polled' => false, 'rendered' => false, 'saved' => array(), 'graph_checks' => array());
-$_SESSION = array('sess_user_id' => 42, 'sess_realtime_hash' => 'abc123');
+$config = array('base_path' => getcwd(), 'url_path' => '/cacti/', 'include_path' => $argv[1] . '/include', 'is_web' => false);
+$trace = array('hashes' => 0, 'polled' => false, 'rendered' => false, 'saved' => array(), 'graph_checks' => array());
+$_SESSION = $options['session'];
+$before = $_SESSION;
+$realtime_window = array(60 => '1 minute');
+$realtime_refresh = array(10 => '10 seconds', 20 => '20 seconds');
 $_REQUEST = array('action' => $options['action'], 'local_graph_id' => $options['graph']) + $options['request'];
 $_SERVER['REQUEST_METHOD'] = $options['method'];
+$_SERVER['SERVER_NAME'] = 'kadupul.example.com';
+foreach ($options['headers'] as $name => $value) { $_SERVER[$name] = $value; }
+require $argv[1] . '/include/csrf.php';
 register_shutdown_function(function () {
     $output = '';
     while (ob_get_level()) {
         $output = ob_get_clean() . $output;
     }
-    echo json_encode($GLOBALS['trace'] + array('status' => http_response_code() ?: 200, 'output' => $output));
+    echo json_encode($GLOBALS['trace'] + array('status' => http_response_code() ?: 200, 'output' => $output, 'before' => $GLOBALS['before'], 'session' => $_SESSION));
+    $GLOBALS['nativeChildCoverageMarkers'][] = 'realtime-state-readback';
 });
 ob_start();
 require $argv[1] . '/graph_realtime.php';
 PHP;
 
+    $registration = child_coverage_registration(__FILE__, 'realtime-controller', $options, array('realtime-state-readback'), array('graph_realtime.php', 'include/csrf.php', 'lib/html_utility.php'), array('include/global_constants.php', 'graph_realtime.php', 'lib/headers_secure.php'));
+    $registration['collectorPrelude'] = 'define("REALTIME_AUTH_TEST_COVERAGE", true);';
     try {
         $process = proc_open(
-            array(PHP_BINARY, '-r', $program, $root, json_encode($options)),
+            child_coverage_command(array(PHP_BINARY, '-r', $program, $root, json_encode($options)), $coverage_dir, $registration),
             array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes,
             $dir
@@ -107,10 +127,12 @@ PHP;
             throw new RuntimeException($stderr . $stdout);
         }
 
+        child_coverage_collect($coverage_dir);
         return json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
     } finally {
         unlink($dir . '/cache/user_abc123_lgi_7.png');
         unlink($dir . '/include/auth.php');
+        unlink($dir . '/include/global_session.php');
         unlink($dir . '/lib/rrd.php');
         rmdir($dir . '/cache');
         rmdir($dir . '/include');
@@ -223,3 +245,67 @@ test('opening the real-time page saves preferences only from a POST', function (
         ->and($get['saved'])->toBe(array())
         ->and($post['saved'])->toBe(array('realtime_interval' => 30, 'realtime_gwindow' => 300, 'realtime_size' => 50, 'realtime_nolegend' => 'true'));
 })->with('preference request');
+
+dataset('realtime transient controls', array(
+    'initialize' => array('init', array()),
+    'timespan' => array('timespan', array('graph_start' => '-600')),
+    'interval' => array('interval', array('ds_step' => '20')),
+    'countdown' => array('countdown', array()),
+    'unknown default dispatch' => array('unknown', array('size' => '150')),
+    'page interval' => array('', array('ds_step' => '20')),
+    'page timespan' => array('', array('graph_start' => '-600')),
+    'page size' => array('', array('size' => '150')),
+    'page legend' => array('', array('graph_nolegend' => 'true')),
+));
+
+test('foreign realtime controls refuse before transient state, graph lookup or work', function ($action, $request) {
+    $run = realtime_gate_run(array('action' => $action, 'request' => $request,
+        'enabled' => in_array($action, array('init', 'timespan', 'interval', 'countdown'), true) ? 'on' : '',
+        'session' => array('sess_user_id' => 42, 'sess_realtime_ds_step' => '10'),
+        'headers' => array('HTTP_ORIGIN' => 'https://foreign.example.com')));
+    expect($run['status'])->toBe(405)->and($run['session'])->toBe($run['before'])
+        ->and($run['hashes'])->toBe(0)->and($run['graph_checks'])->toBe(array())->and($run['polled'])->toBeFalse()
+        ->and($run['rendered'])->toBeFalse()->and($run['saved'])->toBe(array())->and($run['output'])->toBe('');
+})->with('realtime transient controls');
+
+test('same-site cross-origin realtime polling is refused', function () {
+    $run = realtime_gate_run(array('headers' => array('HTTP_SEC_FETCH_SITE' => 'same-site')));
+    expect($run['status'])->toBe(405)->and($run['session'])->toBe($run['before'])
+        ->and($run['polled'])->toBeFalse()->and($run['graph_checks'])->toBe(array());
+});
+
+test('supported realtime GET polling remains admitted', function ($headers) {
+    $run = realtime_gate_run(array('action' => 'interval', 'request' => array('ds_step' => '20'), 'headers' => $headers));
+    expect($run['status'])->toBe(200)->and($run['polled'])->toBeTrue()
+        ->and($run['session']['sess_realtime_ds_step'])->toBe(20)->and($run['saved'])->toBe(array());
+})->with(array(
+    'header-less caller' => array(array()),
+    'same-origin fetch' => array(array('HTTP_SEC_FETCH_SITE' => 'same-origin')),
+    'origin fallback' => array(array('HTTP_ORIGIN' => 'https://kadupul.example.com')),
+    'subdirectory referer' => array(array('HTTP_REFERER' => 'https://kadupul.example.com/cacti/graph.php?local_graph_id=7')),
+));
+
+test('read-only cached view preserves compatibility with foreign requests', function () {
+    $run = realtime_gate_run(array('action' => 'view', 'headers' => array('HTTP_ORIGIN' => 'https://foreign.example.com')));
+    expect($run['status'])->toBe(200)->and(base64_decode($run['output'], true))->toBe('CACHED')
+        ->and($run['session'])->toBe($run['before'])->and($run['polled'])->toBeFalse()->and($run['saved'])->toBe(array());
+});
+
+test('untouched realtime page GET preserves ordinary display compatibility', function () {
+    $run = realtime_gate_run(array('action' => '', 'enabled' => '', 'headers' => array('HTTP_ORIGIN' => 'https://foreign.example.com')));
+    expect($run['status'])->toBe(200)->and($run['output'])->toContain('Real-time has been disabled')
+        ->and($run['saved'])->toBe(array())->and($run['polled'])->toBeFalse();
+});
+
+
+test('enabled untouched realtime page GET renders its normal controls', function () {
+    $run = realtime_gate_run(array('action' => '', 'headers' => array('HTTP_ORIGIN' => 'https://foreign.example.com')));
+    expect($run['status'])->toBe(200)->and($run['output'])->toContain("id='gform'", "value='/cacti/'", "id='local_graph_id'")
+        ->and($run['saved'])->toBe(array())->and($run['polled'])->toBeFalse();
+});
+
+test('same-origin page selection remains transient', function () {
+    $run = realtime_gate_run(array('action' => '', 'request' => array('size' => '50'), 'headers' => array('HTTP_SEC_FETCH_SITE' => 'same-origin')));
+    expect($run['status'])->toBe(200)->and($run['session']['sess_realtime_size'])->toBe(50)
+        ->and($run['saved'])->toBe(array())->and($run['polled'])->toBeFalse()->and($run['output'])->toContain("id='gform'");
+});

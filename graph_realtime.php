@@ -10,6 +10,19 @@ $guest_account = true;
 include('./include/auth.php');
 include_once('./lib/rrd.php');
 
+/* Polling and explicit display controls update transient session state even on
+ * GET. Admit their legacy same-origin requests before initializing the realtime
+ * hash, looking up graphs, changing preferences or invoking the collector.
+ * Cached-image reads and untouched page navigation retain their GET behavior.
+ */
+$realtime_action = get_nfilter_request_var('action');
+if (in_array($realtime_action, array('init', 'timespan', 'interval', 'countdown'), true)
+    || (!in_array($realtime_action, array('init', 'timespan', 'interval', 'countdown', 'view'), true)
+        && (isset_request_var('ds_step') || isset_request_var('graph_start')
+            || isset_request_var('size') || isset_request_var('graph_nolegend')))) {
+    csrf_refuse_cross_site_get();
+}
+
 $config['force_storage_location_local'] = true;
 
 /* ================= input validation ================= */

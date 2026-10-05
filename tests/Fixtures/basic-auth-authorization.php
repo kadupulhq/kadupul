@@ -311,6 +311,10 @@ register_shutdown_function(function () {
     echo json_encode($result);
 });
 if (str_starts_with($mode, 'realtime')) {
+    $config['include_path'] = $root . '/include';
+    $config['is_web'] = false;
+    $_SERVER['REQUEST_METHOD'] = 'GET';
+    require $root . '/include/csrf.php';
     require $root . '/include/auth.php';
     $_SESSION['sess_realtime_hash'] = 'bootstrap';
     require $root . '/graph_realtime.php';
