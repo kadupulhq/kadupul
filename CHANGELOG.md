@@ -82,7 +82,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Validate replicated resource-cache paths against the installation tree, protect `include/config.php`, and run PHP syntax checks without a shell.
 - Restrict Script Server dispatch to PHP files under `scripts/` and only call functions declared by the selected file.
-- Validate graph-item dashes, dash offsets and alpha values before saving, and quote those fields and the SHIFT and TICK values when rendering graphs.
+- Validate dashes, dash offsets and alpha values on graph-item and graph-template-item edit pages, preserving fractional dash patterns and offsets. Filter and quote those fields and the SHIFT and TICK values when rendering graphs, including values stored through graph-input overrides and template imports.
 - Run binary SNMP get, getnext and walk commands through Symfony Process argument arrays, keeping hostnames and SNMP credentials intact as single arguments on Windows. Fixes #531.
 - Bind the data-query output type when rebuilding poller cache entries and skip malformed values, so stored field text cannot alter the SQL query. Fixes #533.
 - Validate graph-item TICK fractions and SHIFT offsets as single numeric tokens before saving or writing RRDtool pipe commands. Malformed legacy rows are skipped. Fixes #535.
