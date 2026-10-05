@@ -14,8 +14,14 @@ async function measurement(page, markup) {
 for (const nested of [false, true]) {
   test(`contrast follows browser ${nested ? 'nested' : 'single'} opacity groups`, async ({ page }, info) => {
     const inner = nested ? 'background:red;opacity:.5;' : '';
-    const reading = await measurement(page, `<div style="background:black;opacity:.5;width:240px;height:110px"><div style="${inner}height:100px"><span id="text" style="color:white;font:64px Arial">IIII</span></div></div>`);
-    const shot = await page.screenshot();
+    const markup = `<div style="background:black;opacity:.5;width:240px;height:110px"><div style="${inner}height:100px"><span id="text" style="color:white;font:64px Arial">IIII</span></div></div>`;
+    const reading = await measurement(page, markup);
+    // Keep the .5 model regression, but use an exactly representable 8-bit
+    // alpha for the independent pixel oracle. Chromium compositor backends
+    // quantize the .5 midpoint differently; no contrast/assertion bound changes.
+    const pixels = await measurement(page, markup.replaceAll('opacity:.5', `opacity:${127 / 255}`));
+    expect(pixels).toMatchObject({ bg: reading.bg, fg: reading.fg });
+    const shot = await page.screenshot({ path: info.outputPath('opacity-browser-pixels.png') });
     await info.attach('opacity-browser-pixels', { body: shot, contentType: 'image/png' });
     const png = PNG.sync.read(shot);
     const offset = (80 * png.width + 10) * 4;
@@ -79,7 +85,7 @@ test('production spike control accepts Enter and Space under enforcing CSP and r
   page.on('console', message => { if (message.text().includes('Content Security Policy')) violations.push(message.text()); });
   await page.route('**/spike-native', route => route.fulfill({
     headers: { 'Content-Security-Policy': output.csp }, contentType: 'text/html',
-    body: `<!doctype html><html><head><link rel="stylesheet" href="/include/themes/dark/main.css"><link rel="stylesheet" href="/include/themes/dark/jquery-ui.css"><script nonce="${output.nonce}" src="/include/js/jquery.js"></script><script nonce="${output.nonce}" src="/include/js/jquery-ui.js"></script></head><body>${output.icons}${output.script}${output.script}</body></html>`,
+    body: output.html,
   }));
   let requests = 0;
   let releasePending;
