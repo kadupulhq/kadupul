@@ -1056,7 +1056,7 @@ function get_auth_realms($login = false)
 }
 
 /**
- * is_graph_allowed - determines whether the current user is allowed to view a certain graph
+ * is_graph_allowed - checks graph permission independently of graph view preferences
  *
  * @param  (int) $local_graph_id - the ID of the graph to check permissions for
  *
@@ -1066,7 +1066,7 @@ function is_graph_allowed($local_graph_id, $user_id = 0)
 {
     $rows  = 0;
 
-    get_allowed_graphs('', '', '', $rows, $user_id, $local_graph_id);
+    get_allowed_graphs('', '', '', $rows, $user_id, $local_graph_id, false);
 
     return ($rows > 0);
 }
@@ -1303,7 +1303,7 @@ function is_tree_allowed($tree_id, $user_id = 0)
 }
 
 /**
- * is_device_allowed - determines whether the current user is allowed to view a certain device
+ * is_device_allowed - checks device permission independently of graph view preferences
  *
  * @param  (int)  $device_id - the ID of the device to check permissions for
  * @param  (int)  If checking a user, specify the user_id otherwise for the current user leave blank
@@ -1313,7 +1313,7 @@ function is_tree_allowed($tree_id, $user_id = 0)
 function is_device_allowed($device_id, $user_id = 0)
 {
     $total_rows = -2;
-    get_allowed_devices('', '', '', $total_rows, $user_id, $device_id);
+    get_allowed_devices('', '', '', $total_rows, $user_id, $device_id, false);
     return ($total_rows > 0);
 }
 
@@ -1959,7 +1959,7 @@ function get_allowed_tree_header_graphs($tree_id, $leaf_id = 0, $sql_where = '',
  *
  * @return (array) Array of allowed graphs
  */
-function get_allowed_graphs($sql_where = '', $sql_order = 'gtg.title_cache', $sql_limit = '', &$total_rows = 0, $user_id = 0, $graph_id = 0)
+function get_allowed_graphs($sql_where = '', $sql_order = 'gtg.title_cache', $sql_limit = '', &$total_rows = 0, $user_id = 0, $graph_id = 0, $apply_view_filters = true)
 {
     if (!auth_valid_user($user_id)) {
         return array();
@@ -1993,15 +1993,12 @@ function get_allowed_graphs($sql_where = '', $sql_order = 'gtg.title_cache', $sq
         $sql_where .= ($sql_where != '' ? ' AND ' : ' ') . " gl.id = $graph_id";
     }
 
-    if (read_user_setting('hide_disabled', false, false, $user_id) == 'on') {
+    if ($apply_view_filters && read_user_setting('hide_disabled', false, false, $user_id) == 'on') {
         $sql_where .= ($sql_where != '' ? ' AND ' : '') . '(h.disabled = "" OR h.disabled IS NULL)';
     }
 
-    if ($sql_where != '') {
-        $sql_where = "WHERE ((h.id > 0 AND h.deleted = '') OR h.id IS NULL) AND $sql_where";
-    } else {
-        $sql_where = "WHERE ((h.id > 0 AND h.deleted = '') OR h.id IS NULL)";
-    }
+    $graph_visibility = $apply_view_filters ? "((h.id > 0 AND h.deleted = '') OR h.id IS NULL)" : '1 = 1';
+    $sql_where = 'WHERE ' . $graph_visibility . ($sql_where !== '' ? ' AND ' . $sql_where : '');
 
     /* see if permissions are simple */
     $simple_perms = get_simple_graph_perms($user_id);
@@ -3314,7 +3311,7 @@ function get_allowed_branches($sql_where = '', $sql_order = 'name', $sql_limit =
  *
  * @return (array)  An array of permitted devices
  */
-function get_allowed_devices($sql_where = '', $sql_order = 'description', $sql_limit = '', &$total_rows = 0, $user_id = 0, $device_id = 0)
+function get_allowed_devices($sql_where = '', $sql_order = 'description', $sql_limit = '', &$total_rows = 0, $user_id = 0, $device_id = 0, $apply_view_filters = true)
 {
     if (!auth_valid_user($user_id)) {
         return array();
@@ -3350,15 +3347,12 @@ function get_allowed_devices($sql_where = '', $sql_order = 'description', $sql_l
         $sql_order = "ORDER BY $sql_order";
     }
 
-    if (read_user_setting('hide_disabled', false, false, $user_id) == 'on') {
+    if ($apply_view_filters && read_user_setting('hide_disabled', false, false, $user_id) == 'on') {
         $sql_where .= ($sql_where != '' ? ' AND ' : '') . '(h.disabled = "" OR h.disabled IS NULL)';
     }
 
-    if ($sql_where != '') {
-        $sql_where = "WHERE ((h.id > 0 AND h.deleted = '') OR h.id IS NULL) AND $sql_where";
-    } else {
-        $sql_where = "WHERE ((h.id > 0 AND h.deleted = '') OR h.id IS NULL) ";
-    }
+    $device_visibility = $apply_view_filters ? "((h.id > 0 AND h.deleted = '') OR h.id IS NULL)" : 'h.id > 0';
+    $sql_where = 'WHERE ' . $device_visibility . ($sql_where !== '' ? ' AND ' . $sql_where : '');
 
     if ($device_id > 0) {
         $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . " h.id = $device_id";
@@ -3417,6 +3411,14 @@ function get_allowed_devices($sql_where = '', $sql_order = 'description', $sql_l
     }
 
     return $host_list;
+}
+
+/**
+ * Return permitted devices for console management, independently of graph view filters.
+ */
+function get_allowed_management_devices($sql_where = '', $sql_order = 'description', $sql_limit = '', &$total_rows = 0, $user_id = 0, $device_id = 0)
+{
+    return get_allowed_devices($sql_where, $sql_order, $sql_limit, $total_rows, $user_id, $device_id, false);
 }
 
 /**

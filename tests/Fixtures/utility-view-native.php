@@ -261,7 +261,7 @@ function get_allowed_devices($where)
 // permission list. Production authorization is verified in the auth suites.
 function is_device_allowed($device_id)
 {
-    foreach (get_allowed_devices('') as $device) {
+    foreach (get_allowed_management_devices('') as $device) {
         if ((int) $device['id'] === (int) $device_id) {
             return true;
         }
@@ -410,3 +410,8 @@ foreach ($tables as $table) {
 }
 // This CLI-only fixture emits a JSON protocol, with HTML characters escaped.
 fwrite(STDOUT, json_encode(array('icons' => $icons ?? array(), 'total_rows' => $GLOBALS['total_rows'] ?? array(), 'log_before' => $logBefore, 'log_after' => hash_file('sha256', $directory . '/cacti.log'), 'before' => $before, 'after' => $after, 'html' => $html, 'queries' => $queries, 'request' => $_REQUEST, 'session' => $_SESSION), JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));
+
+function get_allowed_management_devices(...$arguments)
+{
+    return get_allowed_devices(...$arguments);
+}

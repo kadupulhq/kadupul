@@ -19,6 +19,13 @@ final class AuthPolicyNativeCoverageTest extends TestCase
         self::assertSame(array(42 => true, 43 => true), $state['session']['sess_simple_perms']);
         self::assertSame(array(42 => true, 43 => true), $state['session']['sess_simple_template_perms']);
     }
+    public function testDeviceAuthorizationDoesNotInheritGraphViewVisibility(): void
+    {
+        $state = $this->runPolicy(['operation' => 'device-filter-policy', 'hide_disabled' => 'on', 'policy' => 2, 'exceptions' => [3], 'config' => ['graph_auth_method' => 1]]);
+        self::assertSame(['view' => [], 'graph_view' => [], 'management' => [100], 'target' => true, 'foreign' => false, 'deleted' => false, 'missing' => false, 'graphs' => [true, false, false, false]], $state['result']);
+        $state = $this->runPolicy(['operation' => 'device-filter-policy', 'hide_disabled' => 'on']);
+        self::assertSame(['view' => [], 'graph_view' => [], 'management' => [100, 101, 102], 'target' => true, 'foreign' => true, 'deleted' => true, 'missing' => false, 'graphs' => [true, true, true, false]], $state['result']);
+    }
     private static array $coverageEvidenceChecked = [];
 
     #[\PHPUnit\Framework\Attributes\DataProvider('realmCases')]

@@ -1829,7 +1829,7 @@ function ds()
     }
     $sql_where2 = '';
     $allowed_device_rows = 0;
-    $allowed_devices = get_allowed_devices('', '', '', $allowed_device_rows);
+    $allowed_devices = get_allowed_management_devices('', '', '', $allowed_device_rows);
     $allowed_device_ids = array();
     foreach ($allowed_devices as $allowed_device) {
         $allowed_device_ids[] = (int) $allowed_device['id'];
