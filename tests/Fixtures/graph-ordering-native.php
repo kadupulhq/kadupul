@@ -37,6 +37,8 @@ if ($mysql) {
 $database->exec($tablePrefix . 'graph_templates_item (id INTEGER PRIMARY KEY, sequence INTEGER, graph_template_id INTEGER, local_graph_id INTEGER, local_graph_template_item_id INTEGER DEFAULT 0, graph_type_id INTEGER, text_format VARCHAR(255) DEFAULT "", hard_return VARCHAR(2) DEFAULT "", task_item_id INTEGER DEFAULT 0, hash VARCHAR(64) DEFAULT "")');
 $database->exec($tablePrefix . 'graph_template_input (id INTEGER PRIMARY KEY, graph_template_id INTEGER, name TEXT, column_name TEXT)');
 $database->exec($tablePrefix . 'graph_template_input_defs (graph_template_input_id INTEGER, graph_template_item_id INTEGER)');
+$database->exec($tablePrefix . 'graph_local (id INTEGER PRIMARY KEY, host_id INTEGER, graph_template_id INTEGER)');
+$database->exec('INSERT INTO graph_local (id,host_id,graph_template_id) VALUES (3,11,2),(4,12,2)');
 $database->exec('INSERT INTO graph_templates_item (id,sequence,graph_template_id,local_graph_id,graph_type_id) VALUES (1,1,2,0,9),(2,2,2,0,9),(3,1,2,3,9),(4,2,2,3,9),(5,1,2,4,9),(6,50,2,4,9),(7,1,8,0,9),(8,2,8,0,9)');
 $queries = array();
 $saved = array();
@@ -88,6 +90,17 @@ require $root . '/include/global_constants.php';
 $messages = array(1 => array('message' => 'Saved', 'level' => MESSAGE_LEVEL_INFO), 2 => array('message' => 'Failed', 'level' => MESSAGE_LEVEL_ERROR));
 require $root . '/lib/functions.php';
 require $root . '/lib/html_utility.php';
+require_once $root . '/tests/Helpers/PhpSource.php';
+eval(test_php_function_source(file_get_contents($root . '/lib/auth.php'), 'auth_resource_id'));
+// Policy decisions are isolated boundaries; graph ownership and all ordering SQL are real.
+function is_graph_allowed($graph_id): bool
+{
+    return $graph_id === 3;
+}
+function is_device_allowed($host_id): bool
+{
+    return $host_id === 11;
+}
 session_save_path($directory);
 session_start();
 $_SESSION['sess_user_id'] = 7;
