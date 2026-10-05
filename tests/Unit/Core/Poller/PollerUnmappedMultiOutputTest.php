@@ -5,6 +5,9 @@
 namespace PollerUnmappedMultiOutput;
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+$functions = file_get_contents(dirname(__DIR__, 4) . '/lib/functions.php');
+if ($functions === false) { throw new \RuntimeException('Unable to read shared poller dependencies'); }
+eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($functions, 'normalize_poller_multi_value_result'));
 $source = file_get_contents(dirname(__DIR__, 4) . '/lib/poller.php');
 foreach (array('poller_delete_output_rows', 'poller_cleanup_orphan_rows', 'poller_expire_incomplete_rows', 'process_poller_output') as $function) {
     eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($source, $function));
