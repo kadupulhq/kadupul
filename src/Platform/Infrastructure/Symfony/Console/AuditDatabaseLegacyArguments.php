@@ -129,7 +129,7 @@ final class AuditDatabaseLegacyArguments extends LegacyArguments
         if ($report->outcome === AuditOutcome::UpgradeRequired) {
             return ['WARNING: Kadupul must be upgraded first.  Run php cli/upgrade_database.php before auditing'];
         }
-        $lines = self::split($report->upgrade?->stdout ?? '');
+        $lines = self::split($report->upgrade?->streamed ? '' : ($report->upgrade?->stdout ?? ''));
         if ($report->outcome === AuditOutcome::UpgradeFailed) {
             return [...$lines, 'FATAL: Kadupul Upgrade Failed.  The audit was not run.'];
         }
@@ -210,7 +210,7 @@ final class AuditDatabaseLegacyArguments extends LegacyArguments
         foreach ($report->tables as $table) {
             $lines[] = sprintf($prefix . 'Scanning Table: %-45s', "'" . $table->table . "'") . ' - Completed';
             if ($table->status === AuditTableStatus::Missing) {
-                $lines[] = 'ERROR: Baseline table is missing; repair did not recreate it.';
+                $lines[] = $prefix . 'ERROR: Baseline table is missing; repair did not recreate it.';
             }
             foreach ($table->widened as $column) {
                 $lines[] = $prefix . $column->line();
@@ -245,13 +245,16 @@ final class AuditDatabaseLegacyArguments extends LegacyArguments
                 $lines = [...$lines, 'Executing Alter for Table : ' . $alter['table'] . ' - Failed', ...self::split($alter['legacy'] . "\n")];
             }
         }
-        $bad += count(array_filter($report->tables, static fn(TableAudit $table): bool => $table->status === AuditTableStatus::Missing));
+        $missing = count(array_filter($report->tables, static fn(TableAudit $table): bool => $table->status === AuditTableStatus::Missing));
         $lines[] = self::SEPARATOR;
         $lines[] = match (true) {
             $good === 0 && $bad === 0 => $prefix . 'Repair Completed!  No changes performed.',
             $bad > 0 => 'Repair Completed!  ' . $good . ' Alters succeeded and ' . $bad . ' failed!',
             default => 'Repair Completed!  All ' . $good . ' Alters succeeded!',
         };
+        if ($missing > 0) {
+            $lines[] = $prefix . $missing . ' baseline tables are missing and require manual repair.';
+        }
 
         return $lines;
     }

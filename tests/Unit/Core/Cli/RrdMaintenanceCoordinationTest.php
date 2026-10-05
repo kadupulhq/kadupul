@@ -569,6 +569,10 @@ test('database upgrade reports rejected versions and completed migrations accura
         array('1.2.30', 1, 'fixture failure', false, 'step-failure'),
         array('1.2.30', 1, 'Upgrading from v1.2.30', false, 'write-failure'),
         array('1.2.30', 1, 'Upgrading from v1.2.30', false, 'contract-refusal'),
+        array('1.2.28', 0, 'Upgrading from v1.2.28', true, 'noop-chain'),
+        array('1.2.28', 1, 'Upgrading from v1.2.28', false, 'noop-first-write-failure'),
+        array('1.2.28', 1, 'Upgrading from v1.2.28', false, 'noop-second-write-failure'),
+        array('1.2.30', 1, 'upgrade function (', false, 'missing-function'),
     );
 
     foreach ($cases as [$version, $expectedStatus, $expectedOutput, $expectSchemaWrite, $migrationOutcome]) {
@@ -585,13 +589,22 @@ test('database upgrade reports rejected versions and completed migrations accura
             foreach (array('lib/data_query.php', 'lib/poller.php', 'lib/utility.php', 'install/functions.php') as $file) {
                 file_put_contents($dir . '/' . $file, '<?php');
             }
-            if ($version === '1.2.30' && $migrationOutcome !== 'missing') {
+            if (in_array($version, array('1.2.28', '1.2.30'), true) && $migrationOutcome !== 'missing') {
                 $upgradeFile = str_replace('.', '_', $targetVersion);
                 $upgradeFunction = 'upgrade_to_' . $upgradeFile;
                 $body = $migrationOutcome === 'step-failure'
                     ? '$GLOBALS["database_upgrade_status"][' . var_export($targetVersion, true) . '] = array(array("status" => DB_STATUS_ERROR, "error" => "fixture failure", "sql" => "ALTER TABLE fixture"));'
                     : '';
                 file_put_contents($dir . '/install/upgrades/' . $upgradeFile . '.php', '<?php function ' . $upgradeFunction . '() {' . $body . '}');
+                if ($migrationOutcome === 'missing-function') {
+                    file_put_contents($dir . '/install/upgrades/' . $upgradeFile . '.php', '<?php // Required migration function is deliberately absent.');
+                }
+                if (str_starts_with($migrationOutcome, 'noop-')) {
+                    foreach (array('1.2.31', '1.2.33') as $step) {
+                        $name = str_replace('.', '_', $step);
+                        file_put_contents($dir . '/install/upgrades/' . $name . '.php', '<?php function upgrade_to_' . $name . '() {}');
+                    }
+                }
             }
             $fixture = '<?php $config = ' . var_export(array(
                 'base_path' => $dir,
@@ -602,7 +615,7 @@ test('database upgrade reports rejected versions and completed migrations accura
                 'poller_id' => $migrationOutcome === 'contract-refusal' ? 1 : 2,
                 'cacti_server_os' => 'unix',
             ), true) . ';'
-                . '$cacti_version_codes = ' . var_export(array('1.2.30' => 'old', $targetVersion => 'new'), true) . ';'
+                . '$cacti_version_codes = ' . var_export(str_starts_with($migrationOutcome, 'noop-') ? array_fill_keys(array('1.2.28', '1.2.29', '1.2.30', '1.2.31', '1.2.32', '1.2.33', $targetVersion), 'fixture') : array('1.2.30' => 'old', $targetVersion => 'new'), true) . ';'
                 . '$GLOBALS["fixture_version"] = ' . var_export($version, true) . ';'
                 . 'define("CACTI_VERSION", ' . var_export($targetVersion, true) . ');'
                 . 'define("DB_STATUS_SKIPPED", 2);'
@@ -613,6 +626,8 @@ test('database upgrade reports rejected versions and completed migrations accura
                 . '$versionWriter=new PDO("sqlite:".dirname(__DIR__)."/version.sqlite",null,null,array(PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION));'
                 . '$versionWriter->exec("CREATE TABLE version (cacti TEXT)");'
                 . '$insertVersion=$versionWriter->prepare("INSERT INTO version VALUES (?)");$insertVersion->execute(array($GLOBALS["fixture_version"]));'
+                . '$versionWriter->exec("CREATE TABLE version_log (value TEXT); CREATE TRIGGER record_version AFTER UPDATE ON version BEGIN INSERT INTO version_log VALUES (NEW.cacti); END");'
+                . (in_array($migrationOutcome, array('noop-first-write-failure', 'noop-second-write-failure'), true) ? '$versionWriter->exec("CREATE TRIGGER reject_intermediate BEFORE UPDATE ON version WHEN NEW.cacti=\'' . ($migrationOutcome === 'noop-first-write-failure' ? '1.2.31' : '1.2.33') . '\' BEGIN SELECT RAISE(ABORT, \'intermediate rejection\'); END");' : '')
                 . '$database_sessions=array("fixture:0:owned"=>$versionWriter);'
                 . 'if($GLOBALS["fail_version_write"]){$versionWriter->exec("CREATE TRIGGER reject_version BEFORE UPDATE ON version BEGIN SELECT RAISE(ABORT, \"fixture version rejection\"); END");}'
                 . 'function __($message) { return $message; }'
@@ -647,8 +662,15 @@ test('database upgrade reports rejected versions and completed migrations accura
                 ->and(file_exists($dir . '/schema-write'))->toBeFalse('The final marker must use the actual confirmed version writer.');
             $observer = new PDO('sqlite:' . $dir . '/version.sqlite');
             expect($observer->query('SELECT cacti FROM version')->fetchAll(PDO::FETCH_COLUMN))
-                ->toBe(array($expectSchemaWrite ? $targetVersion : $version));
-            if ($migrationOutcome === 'write-failure') {
+                ->toBe(array($migrationOutcome === 'noop-second-write-failure' ? '1.2.31' : ($expectSchemaWrite ? $targetVersion : $version)));
+            if (str_starts_with($migrationOutcome, 'noop-')) {
+                $expectedMarkers = $migrationOutcome === 'noop-chain' ? array('1.2.31', '1.2.33', $targetVersion) : ($migrationOutcome === 'noop-second-write-failure' ? array('1.2.31') : array());
+                expect($observer->query('SELECT value FROM version_log ORDER BY rowid')->fetchAll(PDO::FETCH_COLUMN))
+                    ->toBe($expectedMarkers, 'Record each confirmed migration once and stop before an unconfirmed marker.');
+            }
+            if (in_array($migrationOutcome, array('noop-first-write-failure', 'noop-second-write-failure'), true)) {
+                expect($error)->toContain('could not be confirmed; retry from the last confirmed version');
+            } elseif ($migrationOutcome === 'write-failure') {
                 expect($error)->toContain('The final database version could not be confirmed');
             } elseif ($migrationOutcome === 'contract-refusal') {
                 expect($error)->toContain('CDEF reference contract installation could not be confirmed');

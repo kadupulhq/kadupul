@@ -23,14 +23,14 @@ final readonly class LegacyInstallationUpgrade implements InstallationUpgrade
     public function __construct(private LegacyWorkerProcess $worker) {}
 
     #[\Override]
-    public function run(): UpgradeOutput
+    public function run(?\Closure $progress = null): UpgradeOutput
     {
         // No timeout, deliberately: an upgrade stopped half way leaves the
         // schema between two versions, and the script's exec call never
         // stopped one. The run can block for as long as a plugin's upgrade
         // takes, and the operator's only way out is to interrupt it.
-        $result = $this->worker->run(self::WORKER, self::MARKER, [], null);
+        $result = $this->worker->run(self::WORKER, self::MARKER, [], null, $progress);
 
-        return new UpgradeOutput($result['output'], $result['errors'], $result['ok']);
+        return new UpgradeOutput($result['output'], $result['errors'], $result['ok'], $progress !== null);
     }
 }

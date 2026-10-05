@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -38,18 +40,26 @@ final class ColumnDrift
                 continue;
             }
             $dbc = $found->row();
-            // A legacy baseline did not record per-column collation. MODIFY
-            // resets omitted attributes, so retain the actual text collation
-            // when changing another attribute of a compatible character type.
+            // MODIFY resets omitted attributes. Preserve the actual text
+            // collation for compatible character types, including when a
+            // newer baseline records a different installation's collation.
             $targetType = ColumnType::parse((string) $dbc['table_type']);
-            if ($dbc['table_collation'] === null && is_string($c['Collation'] ?? null)
+            if (is_string($c['Collation'] ?? null)
                 && in_array($targetType?->base, [ColumnBase::Char, ColumnBase::Varchar, ColumnBase::Tinytext,
                     ColumnBase::Text, ColumnBase::Mediumtext, ColumnBase::Longtext], true)) {
                 $dbc['table_collation'] = $c['Collation'];
             }
-            // The one departure from the original: a column wider than the
-            // audit schema lists is never modified, since the MODIFY would
-            // narrow it back.
+            $liveType = ColumnType::parse(strtolower(trim((string) $c['Type'])));
+            if ($targetType !== null && $liveType !== null && $targetType->changesIntegerSignedness($liveType)) {
+                if ($output) {
+                    $lines[] = "ERROR Col: '" . $c['Field'] . "', integer signedness differs. Audit schema: '" . $dbc['table_type'] . "', Is: '" . $c['Type'] . "'. Manual range review is required; not modified.";
+                }
+                $clauses[] = new UnbuildableClause('MODIFY COLUMN `' . $c['Field'] . '` ' . $dbc['table_type']);
+                $errors++;
+                continue;
+            }
+            // A column wider than the audit schema lists is never modified,
+            // since the MODIFY would narrow it back.
             $wider = self::widened($c, $dbc);
             $differs = false;
             foreach (self::ATTRIBUTES as $dbcol => $col) {
@@ -77,15 +87,19 @@ final class ColumnDrift
                 }
             }
             if ($found->collation !== null && array_key_exists('Collation', $c) && $found->collation !== $c['Collation']) {
+                $preserved = is_string($c['Collation']) && $dbc['table_collation'] === $c['Collation'];
                 if ($output) {
-                    $lines[] = "ERROR Col: '" . $c['Field'] . "', Attribute 'Collation' invalid. Should be: '" . $found->collation . "', Is: '" . ($c['Collation'] ?? 'NULL') . "'";
+                    $lines[] = ($preserved ? 'WARNING' : 'ERROR') . " Col: '" . $c['Field'] . "', Attribute 'Collation' differs. Audit schema: '" . $found->collation . "', Is: '" . ($c['Collation'] ?? 'NULL') . "'. Manual review is required; not converted.";
                 }
-                // A collation change may rewrite or reject stored text. The
-                // generic column DDL does not preserve this attribute, so repair
-                // must stop for the table instead of silently choosing one.
-                $clauses[] = new UnbuildableClause('MODIFY COLUMN `' . $c['Field'] . '` COLLATE ' . $found->collation);
-                $altered[] = $found->field;
-                $errors++;
+                if ($preserved) {
+                    // The local collation remains visible, but no conversion
+                    // clause blocks unrelated repairs that preserve it.
+                    $warnings++;
+                } else {
+                    $clauses[] = new UnbuildableClause('MODIFY COLUMN `' . $c['Field'] . '` COLLATE ' . $found->collation);
+                    $altered[] = $found->field;
+                    $errors++;
+                }
             }
             if ($differs && $wider !== null) {
                 if ($output) {

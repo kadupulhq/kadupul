@@ -100,8 +100,8 @@ function db_install_fetch_cell(string $sql, array $params = array()): array
     return array('data' => false);
 }
 require $root . '/install/upgrades/1_2_31.php';
-upgrade_to_1_2_31();
-upgrade_to_1_2_31();
+upgrade_user_auth_row_cache_index();
+upgrade_user_auth_row_cache_index();
 if ($indexCreates !== 1 || !db_index_exists('user_auth_row_cache', 'class_time')) {
     throw new RuntimeException('Index upgrade is not idempotent.');
 }

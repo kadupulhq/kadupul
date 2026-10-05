@@ -66,8 +66,10 @@ final readonly class AuditDatabaseCommand
             if (!$upgraded instanceof AuditReport) {
                 return $upgraded;
             }
-            $output->write($upgraded->upgrade?->stdout ?? '', false, OutputInterface::OUTPUT_RAW);
-            $errors = $upgraded->upgrade?->stderr ?? '';
+            if (!$upgraded->upgrade?->streamed) {
+                $output->write($upgraded->upgrade?->stdout ?? '', false, OutputInterface::OUTPUT_RAW);
+            }
+            $errors = $upgraded->upgrade?->streamed ? '' : ($upgraded->upgrade?->stderr ?? '');
             if ($errors !== '') {
                 ($output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output)->write($errors, false, OutputInterface::OUTPUT_RAW);
             }
@@ -112,7 +114,23 @@ final readonly class AuditDatabaseCommand
             // A shim with no mode prints the help after the version check, as the
             // script did; under bin/console a missing mode is a usage error.
             $auditMode = $upgradeOnly ? null : $input->mode();
-            $report = $auditMode === null && $mode !== OutputMode::Legacy && !$upgradeOnly ? null : ($this->audit)($auditMode, $input->upgrade, $input->as, $apply);
+            $report = $auditMode === null && $mode !== OutputMode::Legacy && !$upgradeOnly ? null : ($this->audit)(
+                $auditMode,
+                $input->upgrade,
+                $input->as,
+                $apply,
+                static function (string $type, string $chunk) use ($output, $mode): void {
+                    // A single-stream output cannot carry progress without
+                    // corrupting its JSON envelope; keep the final receipt.
+                    if ($mode === OutputMode::Json && !$output instanceof ConsoleOutputInterface) {
+                        return;
+                    }
+                    $destination = $type === \Symfony\Component\Process\Process::ERR || $mode === OutputMode::Json
+                        ? ($output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output)
+                        : $output;
+                    $destination->write($chunk, false, OutputInterface::OUTPUT_RAW);
+                }
+            );
         } catch (RemoteCollectorRefused) {
             return $this->renderer->failure($io, $output, $mode, 'The audit runs on the main data collector only.', new CommandResult(
                 ['status' => 'failed', 'error' => 'main data collector only'],
@@ -129,15 +147,16 @@ final readonly class AuditDatabaseCommand
 
     private function legacy(OutputInterface $output, AuditReport $report, AuditDatabaseLegacyArguments $legacy, bool $alters): int
     {
-        // The original passed the upgrade script's stderr through as it ran; here it follows the upgrade.
-        $stderr = $report->upgrade?->stderr ?? '';
+        // Stand-in upgrades without streaming still need their captured diagnostics.
+        $stderr = $report->upgrade?->streamed ? '' : ($report->upgrade?->stderr ?? '');
         if ($stderr !== '') {
             ($output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output)->write($stderr, false, OutputInterface::OUTPUT_RAW);
         }
         $lines = $legacy->report($report, $alters, $report->outcome === AuditOutcome::NoMode ? $this->version->line(self::UTILITY) : '');
         // An unusable baseline cannot produce a successful audit outcome.
         $failedBaseline = in_array($report->baseline, [BaselineOutcome::FileMissing, BaselineOutcome::Unparsable, BaselineOutcome::LoadFailed, BaselineOutcome::CreateFailed], true);
-        $exit = $failedBaseline || in_array($report->outcome, [AuditOutcome::UpgradeRequired, AuditOutcome::UpgradeFailed], true) ? Command::FAILURE : Command::SUCCESS;
+        $failedWrite = in_array($report->mode, [AuditMode::Repair, AuditMode::Load], true) && $report->failed() > 0;
+        $exit = $failedBaseline || $failedWrite || in_array($report->outcome, [AuditOutcome::UpgradeRequired, AuditOutcome::UpgradeFailed], true) ? Command::FAILURE : Command::SUCCESS;
 
         return $this->renderer->render(new CommandResult([], $lines, $exit, $report->baseline !== BaselineOutcome::CreateFailed), OutputMode::Legacy, $output);
     }

@@ -129,58 +129,9 @@ switch (get_request_var('action')) {
 
 function get_ajax_graph_items()
 {
-    $rrd_id  = get_filter_request_var('rrd_id');
-    $host_id = get_filter_request_var('host_id');
+    require_once __DIR__ . '/lib/graph_item_choices.php';
 
-    if ($host_id > 0) {
-        $sql_where = ' AND data_local.host_id=' . $host_id;
-    } else {
-        $sql_where = '';
-    }
-
-    if (get_request_var('term') != '') {
-        $sql_where .= ' HAVING name LIKE "%' . trim(db_qstr(get_request_var('term')), "'") . '%"';
-    }
-
-    $items  = db_fetch_assoc_prepared(
-        "SELECT *
-		FROM (SELECT data_template_rrd.id AS id,
-			CONCAT_WS('',
-			CASE
-			WHEN host.description IS NULL THEN '" . __esc('No Device - ') . "'
-			WHEN host.description IS NOT NULL THEN ''
-			END,
-			data_template_data.name_cache,' (',data_template_rrd.data_source_name,')') AS name
-			FROM (data_template_data,data_template_rrd,data_local)
-			LEFT JOIN host ON (data_local.host_id=host.id)
-			WHERE data_template_rrd.local_data_id=data_local.id
-			AND data_template_data.local_data_id=data_local.id
-			AND data_template_rrd.id = ?
-		) AS a
-		UNION
-		SELECT *
-		FROM (SELECT data_template_rrd.id AS id,
-			CONCAT_WS('',
-			CASE
-			WHEN host.description IS NULL THEN '" . __esc('No Device - ') . "'
-			WHEN host.description IS NOT NULL THEN ''
-			END,
-			data_template_data.name_cache,' (',data_template_rrd.data_source_name,')') AS name
-			FROM (data_template_data,data_template_rrd,data_local)
-			LEFT JOIN host ON (data_local.host_id=host.id)
-			WHERE data_template_rrd.local_data_id=data_local.id
-			AND data_template_data.local_data_id=data_local.id
-			$sql_where
-			ORDER BY name
-		) AS b
-		LIMIT " . read_config_option('autocomplete_rows'),
-        array($rrd_id)
-    );
-
-    foreach ($items as $key => $item) {
-        $items[$key]['label'] = $item['name'];
-    }
-
+    $items = graph_item_choices();
     header('Content-Type: application/json');
     print json_encode($items);
 }

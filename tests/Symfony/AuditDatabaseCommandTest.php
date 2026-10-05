@@ -38,6 +38,7 @@ use Kadupul\Platform\Infrastructure\Symfony\Console\LegacyRequest;
 use Kadupul\Platform\Infrastructure\Symfony\Console\ResultRenderer;
 use Kadupul\Tests\Fixtures\ConsoleOperatorDatabase;
 use Kadupul\Tests\Fixtures\MaintenanceOperator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\MockClock;
 use Symfony\Component\Console\Command\Command;
@@ -160,6 +161,68 @@ final class AuditDatabaseCommandTest extends TestCase
         ]) . "\n", $tester->getDisplay());
     }
 
+    /** @return iterable<string, array{string, string}> */
+    public static function manualReviewSummaries(): iterable
+    {
+        yield 'fixable default and missing table' => ['mixed', 'Some errors are fixable using --repair; other differences need manual review.'];
+        yield 'unsupported extra only' => ['unbuildable', 'Audit found differences that automatic repair will not apply.'];
+        yield 'collation warning only' => ['warnings', 'Audit found differences that automatic repair will not apply.'];
+        yield 'missing table only' => ['missing', 'Audit found differences that automatic repair will not apply.'];
+    }
+
+    #[DataProvider('manualReviewSummaries')]
+    public function testLegacyReportDistinguishesFixableErrorsFromManualReview(string $scenario, string $summary): void
+    {
+        // #617: exercise actual domain findings through the locked command harness.
+        $store = $this->createMock(AuditBaselineStore::class);
+        $type = $scenario === 'warnings' ? 'varchar(20)' : 'int(10)';
+        $baseline = [new BaselineColumn(
+            'host',
+            1,
+            'x',
+            $type,
+            'NO',
+            '',
+            '0',
+            $scenario === 'unbuildable' ? 'unsupported_extra' : '',
+            $scenario === 'warnings' ? 'utf8mb4_unicode_ci' : null
+        )];
+        if ($scenario === 'mixed') {
+            $baseline[] = new BaselineColumn('settings', 1, 'name', 'varchar(75)', 'NO', '', '', '');
+        }
+        $store->method('read')->willReturn(new AuditBaseline($baseline, []));
+        $store->method('replace')->willReturn(true);
+        $schema = $this->createMock(SchemaAudit::class);
+        $schema->method('codeVersion')->willReturn('1.3.0');
+        $schema->method('databaseVersion')->willReturn('1.3.0');
+        $tables = $scenario === 'missing' ? [] : [new LiveTable('host', new TableStatus('InnoDB', 'utf8mb4_general_ci', 'Dynamic', 0), [
+            ['Field' => 'x', 'Type' => $type, 'Null' => 'NO', 'Key' => '', 'Default' => $scenario === 'mixed' ? null : '0',
+                'Extra' => '', 'Collation' => $scenario === 'warnings' ? 'utf8mb4_bin' : null],
+        ], [])];
+        $schema->method('catalog')->willReturn(new AuditCatalog($tables, PluginSchemaChanges::none()));
+        $schema->expects(self::never())->method('statement');
+        $schema->expects(self::never())->method('alter');
+        $this->presentation->forLegacy(LegacyRequest::Run);
+        $tester = $this->tester($schema, $store);
+        // The historical report shim exits successfully after displaying differences.
+        self::assertSame(0, $tester->execute(['--report' => true]));
+        $display = $tester->getDisplay();
+        self::assertStringEndsWith(self::SEPARATOR . "\n" . $summary . "\n" . self::SEPARATOR . "\n", $display);
+        self::assertSame(1, substr_count($display, $summary));
+        self::assertStringNotContainsString('Audit was clean', $display);
+        self::assertStringNotContainsString('Executing Alter', $display);
+        if ($scenario === 'warnings') {
+            self::assertStringContainsString("Attribute 'Collation'", $display);
+            self::assertStringContainsString('ERRORS: 0, WARNINGS: 1', $display);
+        } else {
+            self::assertStringContainsString('ERRORS: 1, WARNINGS: 0', $display);
+        }
+        if (in_array($scenario, ['mixed', 'missing'], true)) {
+            $missing = $scenario === 'mixed' ? 'settings' : 'host';
+            self::assertStringContainsString(self::checking($missing) . "\nERROR Table: '" . $missing . "' exists in the audit schema but is missing from the database; it was not recreated\n\nERRORS: 1, WARNINGS: 0\n", $display);
+        }
+    }
+
     public function testLegacyAuditStopsWhenTheCanonicalBaselineCannotBeLoaded(): void
     {
         foreach (['missing', 'unparsable', 'reload'] as $failure) {
@@ -279,7 +342,7 @@ final class AuditDatabaseCommandTest extends TestCase
         $this->presentation->forLegacy(LegacyRequest::Run);
         $tester = $this->tester($this->schema(false));
 
-        self::assertSame(0, $tester->execute(['--repair' => true, '--alters' => true]));
+        self::assertSame(1, $tester->execute(['--repair' => true, '--alters' => true]));
         self::assertSame(implode("\n", [
             '-- SUCCESS: Loaded the Audit Schema',
             sprintf('-- Scanning Table: %-45s', "'host'") . ' - Completed',
@@ -308,6 +371,26 @@ final class AuditDatabaseCommandTest extends TestCase
 
         self::assertSame(0, $tester->execute(['--repair' => true]));
         self::assertStringEndsWith("\n" . self::SEPARATOR . "\nExecuting Alter for Table : host - Success\n" . self::SEPARATOR . "\nRepair Completed!  All 1 Alters succeeded!\n", $tester->getDisplay());
+    }
+
+    public function testMissingTablesStayManualFindingsWithoutInventedFailedAlters(): void
+    {
+        foreach ([['--repair' => true], ['--alters' => true]] as $flags) {
+            $schema = $this->createMock(SchemaAudit::class);
+            $schema->method('codeVersion')->willReturn('1.3.0');
+            $schema->method('databaseVersion')->willReturn('1.3.0');
+            $schema->method('catalog')->willReturn(new AuditCatalog([], PluginSchemaChanges::none()));
+            $schema->expects(self::never())->method('statement');
+            $schema->expects(self::never())->method('alter');
+            $this->presentation->forLegacy(LegacyRequest::Run);
+            $tester = $this->tester($schema);
+            self::assertSame(isset($flags['--repair']) ? 1 : 0, $tester->execute($flags));
+            $prefix = isset($flags['--alters']) ? '-- ' : '';
+            self::assertSame(2, substr_count($tester->getDisplay(), $prefix . 'ERROR: Baseline table is missing; repair did not recreate it.'));
+            self::assertStringContainsString($prefix . 'Repair Completed!  No changes performed.', $tester->getDisplay());
+            self::assertStringContainsString($prefix . '2 baseline tables are missing and require manual repair.', $tester->getDisplay());
+            self::assertStringNotContainsString('Alters succeeded and', $tester->getDisplay());
+        }
     }
 
     /** The audit schema lists host.ping narrower than the server holds it. */
@@ -539,6 +622,56 @@ final class AuditDatabaseCommandTest extends TestCase
         self::assertSame("01/02/2031 03:04:05 - UPGRADE NOTE: Upgrading Kadupul, this will take a few minutes.\nSUCCESS: Loaded the Audit Schema\n", $tester->getDisplay());
         self::assertSame("DEPRECATION: --upgrade in the audit command is retained for compatibility. Run php cli/upgrade_database.php separately before auditing.\nPHP Warning: x\n", $tester->getErrorOutput());
         self::assertSame(['database.audit', 'database-maintenance local:upgrade', 'succeeded'], $this->events()[0]);
+    }
+
+    public function testStreamedUpgradeOutputIsDeliveredOnceAndJsonStaysParseable(): void
+    {
+        foreach (['legacy', 'human', 'json', 'json-single'] as $mode) {
+            $this->presentation = new CliPresentation();
+            if ($mode === 'legacy') {
+                $this->presentation->forLegacy(LegacyRequest::Run);
+            }
+            $upgrade = $this->createMock(InstallationUpgrade::class);
+            $upgrade->expects(self::once())->method('run')->willReturnCallback(
+                static function (?\Closure $progress): UpgradeOutput {
+                    self::assertInstanceOf(\Closure::class, $progress);
+                    $progress(Process::OUT, "upgrade progress\n");
+                    $progress(Process::ERR, "upgrade diagnostic\n");
+                    return new UpgradeOutput("upgrade progress\n", "upgrade diagnostic\n", true, true);
+                }
+            );
+            $tester = $this->tester($this->schema(true, '1.2.31'), null, false, $upgrade);
+            $input = ['--upgrade' => true, '--create' => true];
+            if (str_starts_with($mode, 'json')) {
+                $input['--json'] = true;
+            }
+            $quiet = getenv('KADUPUL_CLI_QUIET_DEPRECATION');
+            try {
+                if ($mode === 'json-single') {
+                    putenv('KADUPUL_CLI_QUIET_DEPRECATION=1');
+                }
+                self::assertSame(0, $tester->execute($input, ['capture_stderr_separately' => $mode !== 'json-single']));
+            } finally {
+                putenv($quiet === false ? 'KADUPUL_CLI_QUIET_DEPRECATION' : 'KADUPUL_CLI_QUIET_DEPRECATION=' . $quiet);
+            }
+            $display = $tester->getDisplay();
+            if ($mode === 'json-single') {
+                self::assertSame('ok', json_decode($display, true, 512, JSON_THROW_ON_ERROR)['status']);
+                self::assertStringNotContainsString('upgrade progress', $display);
+                self::assertStringNotContainsString('upgrade diagnostic', $display);
+                continue;
+            }
+            $errors = $tester->getErrorOutput();
+            self::assertSame(1, substr_count($errors, "upgrade diagnostic\n"));
+            if ($mode === 'json') {
+                self::assertSame('ok', json_decode($display, true, 512, JSON_THROW_ON_ERROR)['status']);
+                self::assertStringNotContainsString('upgrade progress', $display);
+                self::assertSame(1, substr_count($errors, "upgrade progress\n"));
+            } else {
+                self::assertSame(1, substr_count($display, "upgrade progress\n"));
+                self::assertStringNotContainsString('upgrade diagnostic', $display);
+            }
+        }
     }
 
     /** A database behind the code, whose tables a failed upgrade must leave unread and unaltered. */
@@ -829,7 +962,7 @@ final class AuditDatabaseCommandTest extends TestCase
         // DbalAuditBaselineStore returns false for a failed, timed-out or unwritable dump.
         $this->presentation->forLegacy(LegacyRequest::Run);
         $legacy = $this->tester(null, $this->store(null, false));
-        self::assertSame(0, $legacy->execute(['--load' => true]));
+        self::assertSame(1, $legacy->execute(['--load' => true]));
         self::assertStringEndsWith("\nFinished Creating Audit Schema with ERROR\n\n", $legacy->getDisplay());
 
         $this->presentation = new CliPresentation();

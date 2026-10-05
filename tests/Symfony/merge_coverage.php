@@ -9,6 +9,16 @@ use SebastianBergmann\CodeCoverage\CodeCoverage;
 use SebastianBergmann\CodeCoverage\Data\RawCodeCoverageData;
 use SebastianBergmann\CodeCoverage\Report\Clover;
 
+/** @param array<string, mixed> $manifest @param list<string> $checks */
+function require_symfony_integration_checks(array $manifest, array $checks): void
+{
+    foreach ($checks as $check) {
+        if (!in_array($check, $manifest['checks'] ?? [], true)) {
+            throw new RuntimeException('Incomplete Symfony integration checks');
+        }
+    }
+}
+
 $root = dirname(__DIR__, 2);
 require $root . '/include/vendor/autoload.php';
 if ($argc !== 6) {
@@ -66,6 +76,18 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         }
     }
     $checks = $handler === 'none' ? ['disconnected archive verified', 'dependency repair verified', 'invalid manifest and symlink rejected'] : [
+        'tree CLI creates a node under an existing header in its tree',
+        'tree CLI permits root placement',
+        'tree CLI rejects a nonexistent parent without inserting a node',
+        'tree CLI rejects a parent from another tree without inserting a node',
+        'tree CLI rejects a graph item as a parent without inserting a node',
+        'tree CLI rejects host site and empty header parents without writes',
+        'tree CLI rejects missing tree and malformed parent grammar without writes',
+        'tree CLI stores the complete site identity without a copied title',
+        'tree CLI site placement preserves a valid header and rejects duplicates',
+        'site tree nodes render renamed site identity and current devices',
+        'tree CLI rejects invalid site identity with a diagnostic and no writes',
+        'tree API rejects all non-header parents and preserves rejected updates',
         'selected PDO runner preserves primary and collector identities and caller-owned work',
         'system page size fixture restores original absence and value',
         'profile deletion confirmation page renders',
@@ -589,11 +611,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             'installed legacy CDEF aggregate and color page scenarios completed cleanup',
         ]);
     }
-    foreach ($checks as $check) {
-        if (!in_array($check, $manifest['checks'] ?? [], true)) {
-            throw new RuntimeException('Incomplete Symfony integration checks');
-        }
-    }
+    require_symfony_integration_checks($manifest, $checks);
     $reports = glob($argv[$argument] . '/raw/coverage-*.json');
     if (!$reports) {
         throw new RuntimeException('Missing integration coverage reports');

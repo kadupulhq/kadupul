@@ -1223,11 +1223,27 @@ Known differences from `cli/audit_database.php`:
   when reading older installations. Column names use case-insensitive exact
   matching; underscores in names are not SQL `LIKE` wildcards.
 - A table in the baseline but missing from the live schema is reported as an
-  error. Repair does not recreate it. Column-collation drift and index drift
-  involving prefix lengths or descending columns are reported but block that
-  table's automatic ALTER until the repair builder can represent them without
-  changing their meaning. A supported BTREE/HASH type difference is rebuilt
-  from the baseline definition.
+  error. Repair does not recreate it. Compatible local character-column
+  collations remain reported for manual review and are preserved when repairing
+  other attributes; collation-only drift never schedules a conversion. Integer
+  signedness changes require manual range review and block automatic ALTER,
+  rather than being classified as local widening. Index drift involving prefix
+  lengths, descending columns or an algorithm unsupported by the storage engine
+  blocks automatic ALTER. HASH rebuilds require MEMORY; InnoDB/MyISAM cannot
+  silently substitute BTREE and repeatedly rebuild a primary key. Supported
+  index repairs confirm the actual stored columns, uniqueness and algorithm
+  before reporting success; DDL remains committed if confirmation later fails.
+  Main's 1.2.35 upgrade also makes the input-field index and aggregate-created
+  timestamp repairs reachable for databases already at 1.2.31 through 1.2.34.
+  Both 1.2.31 and 1.2.35 share the checked repair: an already correct schema
+  performs no DDL, each change is read back on the established connection, and
+  failed confirmation keeps the last confirmed version available for retry.
+  Unsupported index definitions or timestamp precision/nullability/defaults
+  require manual review before either change. Removing ON UPDATE from a
+  timestamp with an operator column comment also requires manual review;
+  this step does not silently rewrite those attributes. Earlier DDL may remain
+  committed after a later failure. Fresh-install SQL and the audit baseline
+  already contain the intended definitions and remain unchanged.
 - A repair statement is built from typed parts: names quoted, defaults as
   quoted literals, `FIRST` in capitals, one line. `--alters` and a failed
   repair print the original's statement text. A clause with no typed form

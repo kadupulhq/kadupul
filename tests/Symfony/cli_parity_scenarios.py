@@ -10,6 +10,20 @@ QUIET = 'KADUPUL_CLI_QUIET_DEPRECATION=1'
 ORIGINAL = 'tests/Fixtures/legacy-cli/analyze_database.php'
 SHIM = 'cli/analyze_database.php'
 COMPLETE = 'ANALYSIS STATS: Analyzing Kadupul Tables Complete'
+TREE_CHECKS = [
+    'tree CLI creates a node under an existing header in its tree',
+    'tree CLI permits root placement',
+    'tree CLI rejects a nonexistent parent without inserting a node',
+    'tree CLI rejects a parent from another tree without inserting a node',
+    'tree CLI rejects a graph item as a parent without inserting a node',
+    'tree CLI rejects host site and empty header parents without writes',
+    'tree CLI rejects missing tree and malformed parent grammar without writes',
+    'tree CLI stores the complete site identity without a copied title',
+    'tree CLI site placement preserves a valid header and rejects duplicates',
+    'site tree nodes render renamed site identity and current devices',
+    'tree CLI rejects invalid site identity with a diagnostic and no writes',
+    'tree API rejects all non-header parents and preserves rejected updates',
+]
 # Only the wall-clock time of day may differ between two runs; the date
 # layout and its separator come from settings and are compared as written.
 CLOCK = re.compile(r'^(\S+) \d{2}:\d{2}:\d{2} - ')
@@ -134,9 +148,40 @@ def verify_tree_cli(harness, check):
         valid_site = run(harness, 'cli/add_tree.php', ['--type=node', '--node-type=site', f'--tree-id={tree_one}',
                                                        f'--site-id={site_id}'])
         site_item = int(harness.sql(f"SELECT id FROM graph_tree_items WHERE graph_tree_id = {tree_one} AND site_id = {site_id}").strip())
-        site_title = harness.sql(f"SELECT title FROM graph_tree_items WHERE id = {site_item}").strip()
-        check(valid_site['exit'] == 0 and site_title == site_name,
-              'tree CLI stores the selected site and uses its name as the node title')
+        site_row = harness.sql(f"SELECT graph_tree_id,parent,title,local_graph_id,host_id,site_id,host_grouping_type,sort_children_type FROM graph_tree_items WHERE id = {site_item}").rstrip('\n').split('\t')
+        check(valid_site['exit'] == 0 and site_row == [str(tree_one), '0', '', '0', '0', str(site_id), '1', '2'],
+              'tree CLI stores the complete site identity without a copied title')
+        under_header = run(harness, 'cli/add_tree.php', ['--type=node', '--node-type=site', f'--tree-id={tree_one}',
+                                                          f'--site-id={site_id}', f'--parent-node={parent_one}'])
+        header_row = harness.sql(f"SELECT parent,title,local_graph_id,host_id,site_id FROM graph_tree_items WHERE graph_tree_id={tree_one} AND parent={parent_one} AND site_id={site_id}").rstrip('\n').split('\t')
+        count_before_duplicate = harness.sql(f"SELECT COUNT(*) FROM graph_tree_items WHERE graph_tree_id={tree_one}").strip()
+        duplicate_site = run(harness, 'cli/add_tree.php', ['--type=node', '--node-type=site', f'--tree-id={tree_one}',
+                                                            f'--site-id={site_id}', f'--parent-node={parent_one}'])
+        check(under_header['exit'] == 0 and header_row == [str(parent_one), '', '0', '0', str(site_id)]
+              and duplicate_site['exit'] == 1 and 'Failed to create the node' in duplicate_site['stderr']
+              and harness.sql(f"SELECT COUNT(*) FROM graph_tree_items WHERE graph_tree_id={tree_one}").strip() == count_before_duplicate,
+              'tree CLI site placement preserves a valid header and rejects duplicates')
+        # Nonempty host/site labels isolate those guards from the separate
+        # empty-title guard, including rows created by the old site CLI.
+        harness.sql(f"INSERT INTO graph_tree_items (graph_tree_id,parent,host_id,title) VALUES ({tree_one},0,{host_id},'host-parent'); INSERT INTO graph_tree_items (graph_tree_id,parent,site_id,title) VALUES ({tree_one},0,{site_id},'site-parent'); INSERT INTO graph_tree_items (graph_tree_id,parent,title) VALUES ({tree_one},0,'')")
+        host_parent = int(harness.sql(f"SELECT id FROM graph_tree_items WHERE graph_tree_id={tree_one} AND title='host-parent'").strip())
+        site_parent = int(harness.sql(f"SELECT id FROM graph_tree_items WHERE graph_tree_id={tree_one} AND title='site-parent'").strip())
+        empty_parent = int(harness.sql(f"SELECT id FROM graph_tree_items WHERE graph_tree_id={tree_one} AND title='' AND host_id=0 AND site_id=0 AND local_graph_id=0").strip())
+        rejected_parents = []
+        before_rejections = harness.sql(f"SELECT COUNT(*) FROM graph_tree_items").strip()
+        for parent in (host_parent, site_parent, empty_parent):
+            rejected = run(harness, 'cli/add_tree.php', ['--type=node', '--node-type=header', f'--tree-id={tree_one}', f'--parent-node={parent}', '--name=forbidden-child'])
+            rejected_parents.append(rejected['exit'] == 1 and 'not a header in tree' in rejected['stderr'])
+        check(all(rejected_parents) and harness.sql('SELECT COUNT(*) FROM graph_tree_items').strip() == before_rejections,
+              'tree CLI rejects host site and empty header parents without writes')
+        grammar = [(['--parent-node=abc', f'--tree-id={tree_one}'], 'non-negative integer'),
+                   (['--parent-node=0'], 'existing --tree-id')]
+        grammar_results = [run(harness, 'cli/add_tree.php', ['--type=node', '--node-type=header', '--name=invalid-grammar', *args]) for args, _ in grammar]
+        check(all(result['exit'] == 1 and message in result['stderr'] for result, (_, message) in zip(grammar_results, grammar))
+              and harness.sql('SELECT COUNT(*) FROM graph_tree_items').strip() == before_rejections,
+              'tree CLI rejects missing tree and malformed parent grammar without writes')
+        renamed_site = site_name + '-renamed'
+        harness.sql(f"UPDATE sites SET name='{renamed_site}' WHERE id={site_id}")
 
         from harness import Session
         session = Session(harness.base)
@@ -145,15 +190,23 @@ def verify_tree_cli(harness, check):
             harness.base + f'/graph_view.php?action=get_node&id=tree_anchor-{tree_one}&tree_id=0'
         )
         rendered = tree_response.read().decode('utf-8', errors='replace')
-        check(not login['login_form'] and f'tbranch-{site_item}-site-{site_id}' in rendered and description in rendered,
-              'site tree nodes render current devices assigned to that site')
+        check(not login['login_form'] and f'tbranch-{site_item}-site-{site_id}' in rendered and description in rendered
+              and renamed_site in rendered and harness.sql(f"SELECT title FROM graph_tree_items WHERE id={site_item}").rstrip('\n') == '',
+              'site tree nodes render renamed site identity and current devices')
 
         before_invalid_site = harness.sql(f"SELECT COUNT(*) FROM graph_tree_items WHERE graph_tree_id = {tree_one}").strip()
         invalid_site = run(harness, 'cli/add_tree.php', ['--type=node', '--node-type=site', f'--tree-id={tree_one}',
                                                          '--site-id=999999999'])
         after_invalid_site = harness.sql(f"SELECT COUNT(*) FROM graph_tree_items WHERE graph_tree_id = {tree_one}").strip()
-        check(invalid_site['exit'] == 1 and before_invalid_site == after_invalid_site,
+        check(invalid_site['exit'] == 1 and 'No such site-id' in invalid_site['stdout'] and before_invalid_site == after_invalid_site,
               'tree CLI rejects a nonexistent site without creating a blank row')
+        invalid_sites = [run(harness, 'cli/add_tree.php', ['--type=node', '--node-type=site', f'--tree-id={tree_one}', *args])
+                         for args in (['--site-id=abc'], [])]
+        missing_site_tree = run(harness, 'cli/add_tree.php', ['--type=node', '--node-type=site', f'--site-id={site_id}'])
+        check(all(result['exit'] == 1 and 'No such site-id' in result['stdout'] for result in invalid_sites)
+              and missing_site_tree['exit'] == 1 and 'existing --tree-id' in missing_site_tree['stderr']
+              and harness.sql(f"SELECT COUNT(*) FROM graph_tree_items WHERE graph_tree_id={tree_one}").strip() == before_invalid_site,
+              'tree CLI rejects invalid site identity with a diagnostic and no writes')
         invalid_tree_id = run(harness, 'cli/add_tree.php', ['--type=node', '--node-type=header', '--tree-id=not-a-number',
                                                             '--parent-node=0', '--name=invalid-tree-id'])
         check(invalid_tree_id['exit'] == 1 and 'existing --tree-id' in invalid_tree_id['stderr'],
@@ -177,17 +230,23 @@ require_once '/var/www/html/lib/api_tree.php';
 $tree = {tree_one};
 $foreignParent = {parent_two};
 $graphParent = {graph_item};
+$before = db_fetch_row_prepared('SELECT * FROM graph_tree_items WHERE graph_tree_id=? AND title=?', [$tree, 'valid-child']);
 $rejected = [
     api_tree_item_save(0, 999999999, 1, 0, 'missing-tree', 0, 0, 0, 1, 2, false) === false,
     api_tree_item_save(0, $tree, 1, 999999999, 'missing-parent', 0, 0, 0, 1, 2, false) === false,
     api_tree_item_save(0, $tree, 1, $foreignParent, 'foreign-parent', 0, 0, 0, 1, 2, false) === false,
     api_tree_item_save(0, $tree, 1, $graphParent, 'graph-parent', 0, 0, 0, 1, 2, false) === false,
+    api_tree_item_save(0, $tree, 1, {host_parent}, 'host-parent-child', 0, 0, 0, 1, 2, false) === false,
+    api_tree_item_save(0, $tree, 1, {site_parent}, 'site-parent-child', 0, 0, 0, 1, 2, false) === false,
+    api_tree_item_save(0, $tree, 1, {empty_parent}, 'empty-parent-child', 0, 0, 0, 1, 2, false) === false,
+    api_tree_item_save((int)$before['id'], $tree, 1, $foreignParent, 'changed', 0, 0, 0, 1, 2, false) === false,
+    db_fetch_row_prepared('SELECT * FROM graph_tree_items WHERE id=?', [$before['id']]) === $before,
 ];
 echo json_encode($rejected);
 '''
         api_result = harness.command('php', '-r', api_probe)
-        check(api_result['exit'] == 0 and api_result['stdout'].strip() == '[true,true,true,true]',
-              'tree API rejects missing trees and non-header parents')
+        check(api_result['exit'] == 0 and api_result['stdout'].strip() == '[true,true,true,true,true,true,true,true,true]',
+              'tree API rejects all non-header parents and preserves rejected updates')
     finally:
         harness.sql(f"DELETE FROM graph_tree_items WHERE graph_tree_id IN (SELECT id FROM graph_tree WHERE name LIKE '{prefix}-%'); "
                     f"DELETE FROM graph_tree WHERE name LIKE '{prefix}-%';")

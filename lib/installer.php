@@ -3311,8 +3311,32 @@ class Installer implements JsonSerializable
         }
     }
 
+    /** Historical registered releases shipped without a database migration. */
+    public static function isDatabaseUpgradeNoop(string $version): bool
+    {
+        // Keep this explicit: absence of an arbitrary required script is an error.
+        // These releases retain the migrations supplied by their preceding release.
+        return in_array($version, array(
+            '0.8', '0.8.3a', '0.8.5a', '0.8.6b', '0.8.6c', '0.8.6f', '0.8.6j',
+            '0.8.7d', '0.8.7e', '0.8.7f', '0.8.7g', '0.8.7i',
+            '0.8.8a', '0.8.8b', '0.8.8c', '0.8.8d', '0.8.8e', '0.8.8f', '0.8.8g', '0.8.8h',
+            '1.0.1', '1.0.2', '1.0.3', '1.0.6',
+            '1.1.0', '1.1.1', '1.1.3', '1.1.5', '1.1.9', '1.1.10', '1.1.12', '1.1.13',
+            '1.1.15', '1.1.16', '1.1.18', '1.1.19', '1.1.21', '1.1.22', '1.1.23', '1.1.24',
+            '1.1.25', '1.1.27', '1.1.29', '1.1.30', '1.1.32', '1.1.33', '1.1.38',
+            '1.2.4', '1.2.6', '1.2.9', '1.2.10', '1.2.12', '1.2.13', '1.2.16', '1.2.18',
+            '1.2.24', '1.2.28', '1.2.29', '1.2.30', '1.2.32',
+        ), true);
+    }
+
     /** Confirm the final marker without destroying a failed upgrade's retry state. */
     public static function recordInstalledVersion(): bool
+    {
+        return self::recordUpgradeVersion(CACTI_VERSION);
+    }
+
+    /** Confirm one completed migration without advancing past its retry boundary. */
+    public static function recordUpgradeVersion(string $version): bool
     {
         global $database_sessions, $database_hostname, $database_port, $database_default;
         $db = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
@@ -3368,12 +3392,12 @@ class Installer implements JsonSerializable
                 throw new RuntimeException('Database version snapshot could not be confirmed.');
             }
             $sql = $rows === [] ? 'INSERT INTO version (cacti) VALUES (?)' : 'UPDATE version SET cacti = ?';
-            if (($write = $db->prepare($sql)) === false || !$write->execute(array(CACTI_VERSION))
+            if (($write = $db->prepare($sql)) === false || !$write->execute(array($version))
                 || $write->errorCode() !== '00000' || $db->errorCode() !== '00000') {
                 throw new RuntimeException('Database version write could not be confirmed.');
             }
             $confirmed = $db->query('SELECT cacti FROM version');
-            if ($confirmed === false || $confirmed->fetchAll(PDO::FETCH_COLUMN) !== array(CACTI_VERSION)
+            if ($confirmed === false || $confirmed->fetchAll(PDO::FETCH_COLUMN) !== array($version)
                 || $confirmed->errorCode() !== '00000' || $db->errorCode() !== '00000') {
                 throw new RuntimeException('Database version readback could not be confirmed.');
             }
@@ -3785,19 +3809,26 @@ class Installer implements JsonSerializable
                     print PHP_EOL;
                     $ver_status = $this->checkDatabaseUpgrade($cacti_upgrade_version);
                 } else {
-                    log_install_always('', __('WARNING: Failed to find upgrade function for v%s', $cacti_upgrade_version));
-                    $ver_status = DB_STATUS_WARNING;
+                    log_install_always('', __('ERROR: Failed to find upgrade function for v%s', $cacti_upgrade_version));
+                    $ver_status = DB_STATUS_ERROR;
                 }
 
                 /* Only update database version if database successfully upgraded */
                 if ($ver_status != DB_STATUS_ERROR) {
                     if (cacti_version_compare($orig_cacti_version, $cacti_upgrade_version, '<')
                         && cacti_version_compare($cacti_upgrade_version, CACTI_VERSION, '<')) {
-                        db_execute("UPDATE version SET cacti = '" . $cacti_upgrade_version . "'");
-                        $orig_cacti_version = $cacti_upgrade_version;
+                        if (!self::recordUpgradeVersion($cacti_upgrade_version)) {
+                            log_install_always('', __('ERROR: Database version %s could not be confirmed; retry from the last confirmed version.', $cacti_upgrade_version));
+                            $ver_status = DB_STATUS_ERROR;
+                        } else {
+                            $orig_cacti_version = $cacti_upgrade_version;
+                        }
                     }
                     $prev_cacti_version = $cacti_upgrade_version;
                 }
+            } elseif (!self::isDatabaseUpgradeNoop($cacti_upgrade_version)) {
+                log_install_always('', __('ERROR: Required upgrade file for v%s was not found.', $cacti_upgrade_version));
+                $ver_status = DB_STATUS_ERROR;
             }
 
             if ($failure > $ver_status) {

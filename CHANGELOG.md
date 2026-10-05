@@ -6,6 +6,18 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Keep CLI site tree nodes consistent with web placement by storing their site identity without a copied title; verify parent, duplicate, and malformed-input refusals through the actual CLI/API and require their measured behavior checks.
+
+- Make the missing input-field index and aggregate creation timestamp repairs reachable from deployed 1.2.31–1.2.34 through the main 1.2.35 upgrade step; confirm native schema changes and preserve a retryable version on failure.
+
+- Stream audit upgrade progress before the worker exits, withhold protocol markers, preserve failure receipts, and keep JSON responses and final diagnostics free of duplicate output.
+
+- Reject malformed schema-audit reports with controlled CI diagnostics; cover clean, failed, dirty, empty, and missing-baseline contracts.
+
+- Return failure from the legacy audit CLI when repair or export fails; report missing tables separately from attempted ALTER statements and preserve SQL comment prefixes in diagnostic plans.
+- Preserve recognized scriptless upgrade releases, reject missing required migrations, and confirm each intermediate database version before advancing or reporting success.
+- Report integer signedness drift for manual range review, preserve local text collations during unrelated schema repairs, and refuse index algorithms unsupported by the effective storage engine.
+
 - Bound legacy Boost writer lock acquisition to 60 attempts; report contention and retain queued samples instead of waiting indefinitely.
 - Correct Settings help for graph permission combinations, auto scale limits, and CSP nonce reporting and enforcement. Fixes #222, #230, and #265.
 
@@ -25,6 +37,7 @@ follows [Semantic Versioning](VERSIONING.md).
   `proxy_headers = true` mode no longer authorizes forwarded addresses.
 - Limit data source troubleshooting, repair, purge, and bulk operations to allowed devices.
 - Enforce device and graph access checks in Graph Management and Data Sources, including bulk confirmation lists and device reassignment.
+- Scope both AJAX graph-input data-source choice queries to the actor's device policy before returning names; retain authorized current choices and device-less sources without loading the full device inventory.
 - Skip unauthorized graph trees before name lookup on bulk-action confirmation pages.
 - Restrict new graph creation and data query reloads to allowed devices.
 - Require graph access before spike handling reads or rewrites an RRD.

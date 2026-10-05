@@ -11,6 +11,80 @@ final class AuthPolicyNativeCoverageTest extends TestCase
 {
     use \PestCodeCoverageCompatibility;
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('graphItemChoiceCases')]
+    public function testGraphInputChoicesUseActualActorAndDataSourcePolicies(array $scenario, array $ids, int $status): void
+    {
+        $state = $this->runPolicy(array_merge(['operation' => 'graph-item-choices', 'hide_disabled' => 'on',
+            'config' => ['graph_auth_method' => 3, 'autocomplete_rows' => 30]], $scenario));
+        self::assertSame($status, $state['result']['status']);
+        $actual = array_column($state['result']['choices'], 'id');
+        sort($actual);
+        self::assertSame($ids, $actual);
+        self::assertSame([10 => true, 11 => false, 12 => true, 13 => !in_array($scenario['config']['graph_auth_method'] ?? 3, [2,4], true)], $state['result']['admitted']);
+        foreach ($state['result']['choices'] as $choice) {
+            self::assertSame($choice['name'], $choice['label']);
+        }
+        self::assertSame($status === 200 ? 1 : 0, $state['result']['protected_reads']);
+        self::assertSame(0, $state['result']['count_reads']);
+        self::assertSame(0, $state['result']['device_inventory_reads']);
+        self::assertLessThanOrEqual(20, $state['result']['queries']);
+    }
+
+    public function testGraphInputChoicesHaveConstantQueryBudgetAtConfiguredMaximum(): void
+    {
+        $small = $this->runPolicy(['operation' => 'graph-item-choices', 'choice_count' => 1,
+            'config' => ['graph_auth_method' => 3, 'autocomplete_rows' => 5000]]);
+        $large = $this->runPolicy(['operation' => 'graph-item-choices', 'choice_count' => 6000, 'device_count' => 20000, 'allow_inventory' => true,
+            'config' => ['graph_auth_method' => 3, 'autocomplete_rows' => 5000]]);
+        self::assertCount(5000, $large['result']['choices']);
+        self::assertSame($small['result']['queries'], $large['result']['queries']);
+        self::assertSame(1, $large['result']['protected_reads']);
+        self::assertSame(0, $large['result']['count_reads']);
+        self::assertSame(0, $large['result']['device_inventory_reads']);
+        self::assertLessThanOrEqual(5, $large['result']['max_policy_rows']);
+        self::assertNotContains(21, array_column($large['result']['choices'], 'id'));
+    }
+
+    public function testGraphInputChoicesRejectInvalidConfiguredLimitsBeforeListing(): void
+    {
+        foreach ([0, -1, '1e3', '1.5', '5001', '5000 UNION SELECT 1', null, []] as $limit) {
+            $state = $this->runPolicy(['operation' => 'graph-item-choices',
+                'config' => ['graph_auth_method' => 3, 'autocomplete_rows' => $limit]]);
+            self::assertSame(500, $state['result']['status']);
+            self::assertSame([], $state['result']['choices']);
+            self::assertSame(0, $state['result']['protected_reads']);
+            self::assertSame(0, $state['result']['device_inventory_reads']);
+        }
+    }
+
+    public static function graphItemChoiceCases(): iterable
+    {
+        yield 'Any includes disabled, unattached and non-device sources' => [[], [20,22,23], 200];
+        yield 'zero filter preserves Any' => [['choices_request' => ['host_id' => 0]], [20,22,23], 200];
+        yield 'allowed host filter' => [['choices_request' => ['host_id' => 100]], [20], 200];
+        yield 'denied host' => [['choices_request' => ['host_id' => 101]], [], 403];
+        yield 'denied pinned source' => [['choices_request' => ['host_id' => 100, 'rrd_id' => 21]], [20], 200];
+        yield 'allowed pinned cross-host bypasses search' => [['choices_request' => ['host_id' => 102, 'rrd_id' => 20, 'term' => 'absent']], [20], 200];
+        yield 'unattached source search' => [['choices_request' => ['term' => 'Unattached']], [23], 200];
+        yield 'device-less pinned bypasses host filter' => [['choices_request' => ['host_id' => 100, 'rrd_id' => 22]], [20,22], 200];
+        yield 'missing pinned source' => [['choices_request' => ['rrd_id' => 999]], [20,22,23], 200];
+        yield 'no management realm' => [['no_realm' => true], [], 403];
+        foreach (['host_id', 'rrd_id', 'term'] as $field) {
+            yield 'array ' . $field => [['choices_request' => [$field => []]], [], 400];
+        }
+        foreach (['host_id', 'rrd_id'] as $field) {
+            foreach ([-1, '1e2', '1.5', '100x'] as $invalid) {
+                yield $field . ' malformed ' . $invalid => [['choices_request' => [$field => $invalid]], [], 400];
+            }
+        }
+        for ($method = 1; $method <= 4; $method++) {
+            foreach ([false,true] as $group) {
+                yield 'actual method ' . $method . ' group ' . (int) $group => [['group_grant' => $group,
+                    'config' => ['graph_auth_method' => $method, 'autocomplete_rows' => 30]], in_array($method, [2,4], true) ? [20,22] : [20,22,23], 200];
+            }
+        }
+    }
+
     public function testRealPermissionCachesSeparateOwnersAndRecheckAdministrativeResets(): void
     {
         $state = $this->runPolicy(array('operation' => 'cache-owner-isolation'));
@@ -338,10 +412,10 @@ final class AuthPolicyNativeCoverageTest extends TestCase
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
                 require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
-                $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('lib/auth.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), $scenario['operation'] === 'revoked-account' ? array('permission-revocation-shutdown', 'credential-readback') : array('native-policy-operation-returned', 'policy-session-observed'), array('lib/auth.php'));
-                $evidenceKind = $scenario['operation'] === 'revoked-account' ? 'shutdown' : 'returned';
+                $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('lib/auth.php', 'lib/graph_item_choices.php', 'tests/Helpers/PhpSource.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), $scenario['operation'] === 'revoked-account' ? array('permission-revocation-shutdown', 'credential-readback') : ($scenario['operation'] === 'graph-item-choices' ? array('native-policy-operation-returned', 'policy-session-observed', 'graph-choice-policy-returned', 'graph-choice-query-budget-observed') : array('native-policy-operation-returned', 'policy-session-observed')), $scenario['operation'] === 'graph-item-choices' ? array('lib/auth.php', 'lib/graph_item_choices.php') : array('lib/auth.php'));
+                $evidenceKind = $scenario['operation'] === 'revoked-account' ? 'shutdown' : ($scenario['operation'] === 'graph-item-choices' ? 'choices' : 'returned');
                 if (!isset(self::$coverageEvidenceChecked[$evidenceKind])) {
-                    self::assertSame(24, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('lib/auth.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), $scenario['operation'] === 'revoked-account' ? array('permission-revocation-shutdown', 'credential-readback') : array('native-policy-operation-returned', 'policy-session-observed'), array('lib/auth.php'), 'lib/rrd.php'));
+                    self::assertSame($scenario['operation'] === 'graph-item-choices' ? 28 : 26, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('lib/auth.php', 'lib/graph_item_choices.php', 'tests/Helpers/PhpSource.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), $scenario['operation'] === 'revoked-account' ? array('permission-revocation-shutdown', 'credential-readback') : ($scenario['operation'] === 'graph-item-choices' ? array('native-policy-operation-returned', 'policy-session-observed', 'graph-choice-policy-returned', 'graph-choice-query-budget-observed') : array('native-policy-operation-returned', 'policy-session-observed')), $scenario['operation'] === 'graph-item-choices' ? array('lib/auth.php', 'lib/graph_item_choices.php') : array('lib/auth.php'), 'lib/rrd.php'));
                     self::$coverageEvidenceChecked[$evidenceKind] = true;
                 }
                 $coverage->merge($childCoverage);

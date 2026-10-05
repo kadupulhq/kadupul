@@ -3346,9 +3346,10 @@ function get_allowed_branches($sql_where = '', $sql_order = 'name', $sql_limit =
  * @param  (int)    The number of rows found, to be returned to the caller
  * @param  (int)    If checking a user, specify the user_id otherwise for the current user leave blank
  *
- * @return (array)  An array of permitted devices
+ * @param bool $return_device_ids_sql Return the policy SQL for a bounded caller query instead of fetching devices
+ * @return array|string Permitted device rows, or an ID-only query when explicitly requested
  */
-function get_allowed_devices($sql_where = '', $sql_order = 'description', $sql_limit = '', &$total_rows = 0, $user_id = 0, $device_id = 0, $apply_view_filters = true)
+function get_allowed_devices($sql_where = '', $sql_order = 'description', $sql_limit = '', &$total_rows = 0, $user_id = 0, $device_id = 0, $apply_view_filters = true, $return_device_ids_sql = false)
 {
     $device_id = auth_resource_id($device_id);
     if ($device_id === null) {
@@ -3409,42 +3410,28 @@ function get_allowed_devices($sql_where = '', $sql_order = 'description', $sql_l
         $sql_where = get_policy_where($graph_auth_method, $policies, $sql_where);
     }
 
+    $device_ids_sql = "SELECT h.id
+        FROM host AS h
+        LEFT JOIN graph_local AS gl ON h.id=gl.host_id
+        LEFT JOIN graph_templates AS gt ON gt.id=gl.graph_template_id
+        LEFT JOIN host_template AS ht ON h.host_template_id=ht.id
+        $sql_where";
+
+    if ($return_device_ids_sql) {
+        return "SELECT DISTINCT id FROM ($device_ids_sql) AS allowed_devices";
+    }
+
     if ($total_rows != -2) {
         $host_list = db_fetch_assoc("SELECT h1.*
-			FROM host AS h1
-			INNER JOIN (
-				SELECT DISTINCT id
-				FROM (
-					SELECT h.id
-					FROM host AS h
-					LEFT JOIN graph_local AS gl
-					ON h.id=gl.host_id
-					LEFT JOIN graph_templates AS gt
-					ON gt.id=gl.graph_template_id
-					LEFT JOIN host_template AS ht
-					ON h.host_template_id=ht.id
-					$sql_where
-				) AS rs1
-			) AS rs2
-			ON rs2.id=h1.id
-			$sql_order
-			$sql_limit");
+            FROM host AS h1
+            INNER JOIN (SELECT DISTINCT id FROM ($device_ids_sql) AS rs1) AS rs2
+            ON rs2.id=h1.id
+            $sql_order
+            $sql_limit");
     }
 
     if ($total_rows >= 0 || $total_rows == -2) {
-        $sql = "SELECT COUNT(DISTINCT id)
-			FROM (
-				SELECT h.id
-				FROM host AS h
-				LEFT JOIN graph_local AS gl
-				ON h.id=gl.host_id
-				LEFT JOIN graph_templates AS gt
-				ON gt.id=gl.graph_template_id
-				LEFT JOIN host_template AS ht
-				ON h.host_template_id=ht.id
-				$sql_where
-			) AS rower";
-
+        $sql = "SELECT COUNT(DISTINCT id) FROM ($device_ids_sql) AS rower";
         if ($device_id == 0) {
             $total_rows = get_total_row_data($user_id, $sql, array(), 'device');
         } else {
@@ -3461,6 +3448,15 @@ function get_allowed_devices($sql_where = '', $sql_order = 'description', $sql_l
 function get_allowed_management_devices($sql_where = '', $sql_order = 'description', $sql_limit = '', &$total_rows = 0, $user_id = 0, $device_id = 0)
 {
     return get_allowed_devices($sql_where, $sql_order, $sql_limit, $total_rows, $user_id, $device_id, false);
+}
+
+/** Return the same management-device policy as SQL, without hydrating device rows. */
+function get_allowed_management_device_ids_sql($user_id = 0): string
+{
+    $total_rows = -1;
+    $sql = get_allowed_devices('', '', '', $total_rows, $user_id, 0, false, true);
+
+    return is_string($sql) ? $sql : 'SELECT NULL AS id WHERE 1=0';
 }
 
 /**
