@@ -79,6 +79,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         // Bind the bodyless contract without inventing coverage for its declaration.
         $sourcePaths[] = 'src/Platform/Contract/ReferenceWriteTransactionRunner.php';
         $sourcePaths[] = 'src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php';
+        $sourcePaths[] = 'src/Platform/Infrastructure/Legacy/LegacyUpgradePluginLifecycle.php';
         $sourcePaths[] = 'tests/Symfony/cdef_legacy_page_scenarios.py';
         $sourcePaths[] = 'tests/e2e/browser-coverage.js';
         $sourcePaths[] = 'public/js/vdef-item.js';
@@ -913,6 +914,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsLegacyArguments.php',
         'cli/audit_database.php',
         'bin/legacy-audit-upgrade.php',
+        'src/Platform/Infrastructure/Legacy/LegacyUpgradePluginLifecycle.php',
         'src/Platform/Domain/Schema/AuditMode.php',
         'src/Platform/Domain/Schema/BaselineColumn.php',
         'src/Platform/Domain/Schema/BaselineIndex.php',

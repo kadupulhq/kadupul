@@ -270,6 +270,18 @@ print "plugin says hi\n";
         ]) . "\n", file_get_contents($this->root . '/calls.log'));
     }
 
+    public function testSharedOrderingPreservesThePluginIncludeContext(): void
+    {
+        $this->install('["thold" => ["status" => 1, "version" => "1"]]', 0);
+        $this->plugin('thold', '2', 'if (!isset($preorder, $p) || $plugins !== $preorder || $p !== $config["base_path"] . "/plugins/thold") { throw new RuntimeException("Legacy plugin include ordering context changed"); } function plugin_thold_upgrade() { print "ordering context retained\n"; }');
+
+        $run = $this->upgrade()->run();
+
+        self::assertTrue($run->completed);
+        self::assertStringContainsString('ordering context retained', $run->stdout);
+        self::assertSame("core warning\n", $run->stderr);
+    }
+
     public function testTheRealWorkerPrintsAFailedCoreUpgradeAsExecReturnedItAndFails(): void
     {
         $this->install('[]', 3);

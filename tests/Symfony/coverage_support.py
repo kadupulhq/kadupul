@@ -39,7 +39,8 @@ def publish_coverage(output, database_sessions, checks):
     sources.append('cdef_legacy_page_scenarios.py')
     source_paths = [f'tests/Symfony/{name}' for name in sources] + ['tests/e2e/browser-coverage.js', 'public/js/vdef-item.js', 'tests/Fixtures/plugins/compatibility_test/setup.php', 'tests/Fixtures/legacy-cli/analyze_database.php', 'tests/Fixtures/legacy-cli/convert_tables.php', 'tests/Fixtures/legacy-cli/fix_mediumint.php', 'tests/Fixtures/legacy-cli/audit_database.php', 'tests/Fixtures/native-cli/audit_database.php']
     source_paths += ['src/Platform/Contract/ReferenceWriteTransactionRunner.php',
-                     'src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php']
+                     'src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php',
+                     'src/Platform/Infrastructure/Legacy/LegacyUpgradePluginLifecycle.php']
     evidence = {'suite': 'symfony-http',
                 'session_handler': 'database' if database_sessions else 'files',
                 'checks': checks,
