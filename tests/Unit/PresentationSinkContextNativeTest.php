@@ -43,7 +43,7 @@ test('actual presentation consumers preserve encoded links and reject malformed 
         }
         $xpath = new \DOMXPath($dom);
         expect($xpath->query('//label//label | //script[@data-injected]')->length)->toBe(0);
-        if (isset($case['filter'])) {
+        if (isset($case['filter']) && !($case['invalid'] ?? false)) {
             expect($result['filter_value'])->toBe($case['filter']['expected']);
             expect($result['filter_present'])->toBe($case['filter']['expected_present']);
         }
@@ -118,4 +118,9 @@ test('actual presentation consumers preserve encoded links and reject malformed 
     'undefined integer retains empty sentinel' => [['page' => 'automation_snmp.php','request' => ['action' => 'edit'],'filter' => ['present' => true,'value' => 'undefined','mode' => 'integer','options' => [],'expected' => '','expected_present' => true]]],
     'fractional SNMP identifier retains rejection' => [['page' => 'automation_snmp.php','invalid' => true,'request' => ['action' => 'edit','id' => '1.5']]],
     'exponent color identifier retains rejection' => [['page' => 'color_templates.php','invalid' => true,'request' => ['action' => 'template_edit','color_template_id' => '1e2']]],
+    'numeric string required-array flag preserves values' => [['page' => 'automation_snmp.php','request' => ['action' => 'edit'],'filter' => ['present' => true,'value' => ['1','2'],'mode' => 'integer','options' => ['flags' => 'FILTER_REQUIRE_ARRAY'],'string_flags' => true,'expected' => [1,2],'expected_present' => true]]],
+    'numeric string forced-array flag preserves scalar' => [['page' => 'automation_snmp.php','request' => ['action' => 'edit'],'filter' => ['present' => true,'value' => '7','mode' => 'integer','options' => ['flags' => 'FILTER_FORCE_ARRAY'],'string_flags' => true,'expected' => [7],'expected_present' => true]]],
+    'numeric string integer filter retains scalar' => [['page' => 'automation_snmp.php','request' => ['action' => 'edit'],'filter' => ['present' => true,'value' => '17','mode' => 'integer-string','options' => [],'expected' => 17,'expected_present' => true]]],
+    'numeric string integer filter rejects empty array' => [['page' => 'automation_snmp.php','invalid' => true,'request' => ['action' => 'edit'],'filter' => ['present' => true,'value' => [],'mode' => 'integer-string','options' => []]]],
+    'numeric string integer filter and array flag preserve values' => [['page' => 'automation_snmp.php','request' => ['action' => 'edit'],'filter' => ['present' => true,'value' => ['1','2'],'mode' => 'integer-string','options' => ['flags' => 'FILTER_REQUIRE_ARRAY'],'string_flags' => true,'expected' => [1,2],'expected_present' => true]]],
 ]);

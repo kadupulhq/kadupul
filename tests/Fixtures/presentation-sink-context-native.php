@@ -71,9 +71,10 @@ $GLOBALS['nativePresentationBootstrap'] = static function () use ($native,$case)
         $spec=$case['filter'];
         if ($spec['present']) set_request_var('_native_identifier',$spec['value']);
         else unset_request_var('_native_identifier');
-        $mode=$spec['mode']==='numeric-array' ? FILTER_VALIDATE_IS_NUMERIC_ARRAY : FILTER_VALIDATE_INT;
+        $mode=$spec['mode']==='numeric-array' ? FILTER_VALIDATE_IS_NUMERIC_ARRAY : ($spec['mode']==='integer-string' ? (string) FILTER_VALIDATE_INT : FILTER_VALIDATE_INT);
         $options=$spec['options']??[];
-        if (isset($options['flags']) && is_string($options['flags'])) $options['flags']=constant($options['flags']);
+        if (isset($options['flags']) && is_string($options['flags']) && defined($options['flags'])) $options['flags']=constant($options['flags']);
+        if ($spec['string_flags']??false) $options['flags']=(string)$options['flags'];
         $GLOBALS['nativeFilterValue']=get_filter_request_var('_native_identifier',$mode,$options);
         $GLOBALS['nativeFilterPresent']=isset_request_var('_native_identifier');
     }
@@ -98,7 +99,7 @@ $GLOBALS['nativePresentationObserver'] = static function (array &$result) use ($
     if ($invalid) {
         if (!str_contains($result['html'],'Validation error for variable') || $moduleQueries!==[]) throw new RuntimeException('Malformed identifier outcome: ' . json_encode(['queries'=>$native->queries,'validation'=>str_contains($result['html'],'Validation error for variable')]));
     } elseif (isset($case['request']['id']) && $case['request']['id']!=='0' && $native->queries===[]) throw new RuntimeException('Admitted presentation did not read actual persisted records');
-    if (isset($case['filter'])) {
+    if (isset($case['filter']) && !$invalid) {
         $result['filter_value']=$GLOBALS['nativeFilterValue'];
         $result['filter_present']=$GLOBALS['nativeFilterPresent'];
     }
