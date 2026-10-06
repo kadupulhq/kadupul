@@ -256,6 +256,18 @@ try {
                         $db->exec("UPDATE user_auth SET realm=1 WHERE id=9");
                         $_COOKIE['cacti_remembers'] = '9,1,fixture-remembered-token';
                     }
+                    if ($databaseSessions && $scenario === 'about-restore-remember-policy-forced') {
+                        // A valid but older row makes the supported expiry touch observable
+                        // without relying on crossing a wall-clock second during the request.
+                        $lifetime = (int) ini_get('session.gc_maxlifetime');
+                        if ($lifetime < 2) {
+                            throw new RuntimeException('The native session fixture requires a valid expiry window.');
+                        }
+                        $seededAccess = time() - min(60, $lifetime - 1);
+                        $db->prepare('UPDATE sessions SET access = ? WHERE id = ?')->execute([$seededAccess, $id]);
+                        $db->prepare('INSERT INTO sessions(id,data,access,remote_addr,user_id,user_agent) VALUES(?,?,?,?,?,?)')
+                            ->execute([str_repeat('b', 32), 'adjacent-session-payload', $seededAccess, '127.0.0.2', 10, 'adjacent-agent']);
+                    }
                     $policyBefore = ['generation_reads' => $db->generationReads, 'file_payload_sha256' => is_file($directory . '/sess_' . $id) ? hash_file('sha256', $directory . '/sess_' . $id) : null, 'session_id' => $id, 'sessions' => $db->query('SELECT * FROM sessions ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'tokens' => $db->query('SELECT * FROM user_auth_cache ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'logs' => $db->query('SELECT * FROM user_log')->fetchAll(PDO::FETCH_ASSOC)];
                 }
                 $requests->pop();
@@ -267,7 +279,9 @@ try {
                 public function record(\Kadupul\IdentityAccess\Contract\AuditEvent $event): void {}
             };
             $browser = new \Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyBrowserAuthentication($requests, $connection, $configuration, new \Kadupul\IdentityAccess\Infrastructure\Legacy\NativeAuthenticationSession($configuration, $connection), $audit);
+            $requestStarted = time();
             $actor = (new \Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAboutAccess($session, $browser))->authenticatedActor();
+            $requestFinished = time();
             $accepted = $actor?->id === 9;
             $unauthenticated = !$accepted;
             if ($policyCase) {
@@ -352,4 +366,4 @@ if ($restore && $accepted && $legacyValid === true && $nextConsole === true) {
     $completionMarkers[] = 'restore-handoff-observed';
 }
 define('SYMFONY_SESSION_NATIVE_COMPLETED', $completionMarkers);
-fwrite(STDOUT, json_encode(['resume_while_active_denied' => $resumeWhileActiveDenied, 'resume_after_rollback_denied' => $resumeAfterRollbackDenied, 'policy_before' => $policyBefore ?? null, 'policy_after' => $policyAfter ?? null, 'accepted' => $accepted, 'unauthenticated' => $unauthenticated, 'initial' => $initial, 'revoked' => $revoked, 'transition' => $transition, 'refused_while_active' => $refusedWhileActive, 'legacy_valid' => $legacyValid ?? null, 'next_console' => $nextConsole ?? null], JSON_THROW_ON_ERROR));
+fwrite(STDOUT, json_encode(['request_started' => $requestStarted ?? null, 'request_finished' => $requestFinished ?? null, 'resume_while_active_denied' => $resumeWhileActiveDenied, 'resume_after_rollback_denied' => $resumeAfterRollbackDenied, 'policy_before' => $policyBefore ?? null, 'policy_after' => $policyAfter ?? null, 'accepted' => $accepted, 'unauthenticated' => $unauthenticated, 'initial' => $initial, 'revoked' => $revoked, 'transition' => $transition, 'refused_while_active' => $refusedWhileActive, 'legacy_valid' => $legacyValid ?? null, 'next_console' => $nextConsole ?? null], JSON_THROW_ON_ERROR));
