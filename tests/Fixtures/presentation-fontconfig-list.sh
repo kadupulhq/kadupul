@@ -4,4 +4,5 @@
 set -eu
 [ "$#" -eq 2 ]
 [ "$1" = '--format' ]
+[ "$2" = '%{family}\n' ]
 printf 'Native Serif\nNative Sans\n'
