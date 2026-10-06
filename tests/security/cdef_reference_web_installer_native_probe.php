@@ -80,7 +80,14 @@ function webToken(string $body): string
 $failureUpgrade = ($argv[1] ?? '') === 'failure-upgrade';
 $initialVersion = $failureUpgrade ? '1.2.33' : 'new_install';
 $root = dirname(__DIR__, 2);
-$currentVersion = trim(file_get_contents($root . '/include/cacti_version'));
+$currentVersionSource = file_get_contents($root . '/include/cacti_version');
+if ($currentVersionSource === false) {
+    throw new RuntimeException('The current installer version file could not be read.');
+}
+$currentVersion = trim($currentVersionSource);
+if (strlen($currentVersion) > 32 || preg_match('/\A[0-9]+(?:\.[0-9]+){2}(?:[-a-zA-Z0-9]+)?\z/', $currentVersion) !== 1) {
+    throw new RuntimeException('The current installer version has an unsupported format.');
+}
 $lastConfirmedVersion = '1.2.34';
 if ($failureUpgrade) {
     installerAssert(version_compare($currentVersion, $lastConfirmedVersion, '>'), 'the final web version follows the admitted intermediate migration');
@@ -263,7 +270,7 @@ try {
     installerAssert(!$failureUpgrade || $repaired, 'upgrade failure fixture reaches real failure and repaired retry');
     installerAssert(isset($data) && (int) $data['Step'] === 98, 'actual web background Installer reaches completion');
     installerAssert(
-        $database->query('SELECT cacti FROM version')->fetchColumn() === trim(file_get_contents($root . '/include/cacti_version')),
+        $database->query('SELECT cacti FROM version')->fetchColumn() === $currentVersion,
         'actual web Installer records the current version'
     );
     installerAssert(
