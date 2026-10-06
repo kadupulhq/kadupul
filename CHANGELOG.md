@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Preserve completed or failed installer worker state when a concurrent status poll hydrates an unchanged step; retain explicit transitions, navigation, and retry defaults.
+
 - Install the pinned Python test dependency in an isolated environment before Snyk scans all repository projects.
 
 - Reduce repeated native test coverage parsing while preserving complete uncovered-source reports and strict subprocess evidence checks.
