@@ -571,11 +571,7 @@ def verify_audit_new_rules(harness, check, tables, version):
 
     reset(harness, 'clean', tables, version)
     harness.sql('ALTER TABLE host MODIFY hostname varchar(100) COLLATE utf8mb4_bin DEFAULT NULL')
-    planned = run(harness, 'bin/console', ['kadupul:database:audit', '--repair', '--dry-run', '--json'])
-    report = json.loads(planned['stdout']) if planned['exit'] == 0 else {}
-    host_alter = next((alter for alter in report.get('alters', []) if alter['table'] == 'host'), {})
-    check(host_alter.get('result') == 'planned' and host_alter.get('statement') is None,
-          'audit detects column-collation drift but does not plan a generic modify')
+    verify_preserved_host_collation(harness, check)
 
     reset(harness, 'clean', tables, version)
     harness.sql(f'DROP TABLE {MISSING_TABLE}')
@@ -599,6 +595,40 @@ def verify_audit_new_rules(harness, check, tables, version):
         as_root(harness, f'mv {aside} {migration}')
         harness.sql(f"UPDATE version SET cacti='{version}'")
     reset(harness, 'clean', tables, version)
+
+
+def verify_preserved_host_collation(harness, check):
+    """A compatible local collation is a warning, with no automatic host ALTER."""
+    metadata = (
+        "SELECT COLUMN_TYPE, COLLATION_NAME, IS_NULLABLE, "
+        "IF(COLUMN_DEFAULT IS NULL OR COLUMN_DEFAULT = 'NULL', '<sql-null>', COLUMN_DEFAULT), EXTRA "
+        "FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() "
+        "AND TABLE_NAME='host' AND COLUMN_NAME='hostname'")
+    before = harness.sql(metadata).rstrip('\n')
+    check(before == 'varchar(100)\tutf8mb4_bin\tYES\t<sql-null>\t',
+          'audit local-collation fixture has the intended type, collation and default')
+    reported = run(harness, 'bin/console', ['kadupul:database:audit', '--report', '--json'])
+    report = json.loads(reported['stdout']) if reported['exit'] == 0 else {}
+    host = next((table for table in report.get('tables', []) if table['name'] == 'host'), {})
+    check(reported['exit'] == 0 and reported['stderr'] == '' and host.get('errors') == 0
+          and host.get('warnings', 0) >= 1
+          and any(finding.startswith("WARNING Col: 'hostname', Attribute 'Collation'")
+                  and 'utf8mb4_unicode_ci' in finding and 'utf8mb4_bin' in finding
+                  and 'not converted' in finding for finding in host.get('findings', [])),
+          'audit report identifies compatible hostname collation drift without converting it')
+    for flags in (['--dry-run'], ['--force']):
+        result = run(harness, 'bin/console', ['kadupul:database:audit', '--repair', *flags, '--json'])
+        report = json.loads(result['stdout']) if result['exit'] == 0 else {}
+        host = next((table for table in report.get('tables', []) if table['name'] == 'host'), {})
+        check(result['exit'] == 0 and result['stderr'] == '' and host.get('errors') == 0
+              and host.get('warnings', 0) >= 1,
+              'audit reports the compatible hostname collation as a preserved warning ' + flags[0])
+        alters = report.get('alters', [])
+        check('alters' in report and all(alter['table'] != 'host'
+              and 'ALTER TABLE `host`' not in alter.get('statement', '') for alter in alters),
+              'audit detects column-collation drift but does not plan a generic modify ' + flags[0])
+        check(harness.sql(metadata).rstrip('\n') == before,
+              'audit preserves stored hostname type, collation, nullability, default and extra ' + flags[0])
 
 
 def verify_remote_collector(harness, check, start):

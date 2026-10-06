@@ -80,6 +80,18 @@ function webToken(string $body): string
 $failureUpgrade = ($argv[1] ?? '') === 'failure-upgrade';
 $initialVersion = $failureUpgrade ? '1.2.33' : 'new_install';
 $root = dirname(__DIR__, 2);
+$currentVersionSource = file_get_contents($root . '/include/cacti_version');
+if ($currentVersionSource === false) {
+    throw new RuntimeException('The current installer version file could not be read.');
+}
+$currentVersion = trim($currentVersionSource);
+if (strlen($currentVersion) > 32 || preg_match('/\A[0-9]+(?:\.[0-9]+){2}(?:[-a-zA-Z0-9]+)?\z/', $currentVersion) !== 1) {
+    throw new RuntimeException('The current installer version has an unsupported format.');
+}
+$lastConfirmedVersion = '1.2.34';
+if ($failureUpgrade) {
+    installerAssert(version_compare($currentVersion, $lastConfirmedVersion, '>'), 'the final web version follows the admitted intermediate migration');
+}
 if (!is_file($root . '/.cdef-reference-task-owned-candidate')
     || hash_file('sha256', $root . '/include/config.php') !== hash_file('sha256', $root . '/tests/Fixtures/cdef-reference-runtime-config.php')) {
     throw new RuntimeException('An exact marked task-owned installer candidate is required.');
@@ -206,9 +218,19 @@ try {
                 === 'The primary CDEF reference contract could not be installed. Review the schema and installer privileges before retrying.',
                 'actual web background upgrade reports native contract failure'
             );
+            // The actual 1.2.34 migration is confirmed before the final CDEF
+            // contract refuses 1.2.35; preserve that last successful marker.
+            $failedVersion = $database->query('SELECT cacti FROM version')->fetchColumn();
+            $observedVersion = is_string($failedVersion) && strlen($failedVersion) <= 32
+                && preg_match('/\A[0-9]+(?:\.[0-9]+){2}\z/', $failedVersion) === 1 ? $failedVersion : 'unexpected';
+            $versionDiagnostic = 'WEB_VERSION ' . json_encode(['initial' => $initialVersion,
+                'confirmed' => $observedVersion, 'target' => $currentVersion], JSON_THROW_ON_ERROR) . "\n";
+            if (fwrite(STDOUT, $versionDiagnostic) !== strlen($versionDiagnostic)) {
+                throw new RuntimeException('Cannot preserve the sanitized web version diagnostic.');
+            }
             installerAssert(
-                $database->query('SELECT cacti FROM version')->fetchColumn() === '1.2.33',
-                'failed actual 1.2.33 web upgrade retains retryable previous version'
+                $failedVersion === $lastConfirmedVersion,
+                'failed actual web upgrade retains the last confirmed intermediate version'
             );
             $database->exec("DELETE FROM cdef_items WHERE cdef_id=15000001");
             $repaired = true;
@@ -248,7 +270,7 @@ try {
     installerAssert(!$failureUpgrade || $repaired, 'upgrade failure fixture reaches real failure and repaired retry');
     installerAssert(isset($data) && (int) $data['Step'] === 98, 'actual web background Installer reaches completion');
     installerAssert(
-        $database->query('SELECT cacti FROM version')->fetchColumn() === trim(file_get_contents($root . '/include/cacti_version')),
+        $database->query('SELECT cacti FROM version')->fetchColumn() === $currentVersion,
         'actual web Installer records the current version'
     );
     installerAssert(

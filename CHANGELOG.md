@@ -156,7 +156,7 @@ Targeting `v1.3.0`, the first planned application release. See
 - Deprecate `cli/audit_database.php --upgrade` and direct operators to run `php cli/upgrade_database.php` separately. Retain the flag for compatibility and print a warning to stderr. Part of #457.
 
 ### Fixed
-- Return a nonzero status for refused upgrade start versions, missing upgrade scripts, migration errors, or failed version-marker writes. Fixes #240.
+- Return a nonzero status for refused upgrade start versions, missing required migration scripts, migration errors, or failed version-marker writes. Fixes #240.
 - Check linked data-source and poller device owners before graph device reassignment and before graph form writes; denied, missing, or malformed child owners leave the graph and its children unchanged. Template-only references remain non-device records.
 - Validate installed font families after recognized Pango suffixes, reject names when fontconfig reports no installed fonts, and preserve complete multiword default descriptions through RRDProxy session setup.
 - Make the graph spike-removal menu reachable with Enter and Space, restore focus on Escape, and discard obsolete menu replies after script reloads.
