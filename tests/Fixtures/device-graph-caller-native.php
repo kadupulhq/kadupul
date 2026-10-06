@@ -18,7 +18,7 @@ require_once $root . '/lib/html_utility.php';
 require_once $root . '/lib/auth.php';
 require_once $root . '/lib/graph_template_input.php';
 foreach (['check_changed','get_current_page'] as $function) eval(test_php_function_source(file_get_contents($root . '/lib/functions.php'), $function));
-foreach (['html_escape','html_escape_request_var'] as $function) eval(test_php_function_source(file_get_contents($root . '/lib/html.php'), $function));
+foreach (['html_escape_charset','html_escape','html_escape_request_var'] as $function) eval(test_php_function_source(file_get_contents($root . '/lib/html.php'), $function));
 $events = $messages = $logs = $reads = [];
 $db = new PDO('sqlite:' . $directory . '/fixture.sqlite', null, null, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
 $db->sqliteCreateFunction('UNIX_TIMESTAMP', static fn($value) => strtotime($value));

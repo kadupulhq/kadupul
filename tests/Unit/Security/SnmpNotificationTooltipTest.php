@@ -16,7 +16,9 @@ $html = file_get_contents($root . '/lib/html.php');
 if ($html === false) {
     throw new \RuntimeException('Unreadable html_escape() source');
 }
-eval('namespace SnmpNotificationTooltipTest; ' . \test_php_function_source($html, 'html_escape'));
+foreach (array('html_escape_charset', 'html_escape') as $helper) {
+    eval('namespace SnmpNotificationTooltipTest; ' . \test_php_function_source($html, $helper));
+}
 
 $managers = file_get_contents($root . '/managers.php');
 if ($managers === false) {

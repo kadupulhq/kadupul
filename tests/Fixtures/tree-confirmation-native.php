@@ -28,10 +28,12 @@ foreach (array('sanitize_unserialize_selected_items', 'cacti_sizeof', 'escape_pa
     if ($source === false) throw new RuntimeException('Cannot read actual tree function dependency.');
     eval(test_php_function_source($source, $name)); // nosemgrep: php.lang.security.eval-use.eval-use
 }
-foreach (array('lib/database.php' => 'array_to_sql_or', 'lib/html.php' => 'html_escape') as $file => $name) {
+foreach (array('lib/database.php' => array('array_to_sql_or'), 'lib/html.php' => array('html_escape_charset', 'html_escape')) as $file => $names) {
     $source = file_get_contents($root . '/' . $file);
     if ($source === false) throw new RuntimeException('Cannot read actual tree source dependency.');
-    eval(test_php_function_source($source, $name)); // nosemgrep: php.lang.security.eval-use.eval-use
+    foreach ($names as $name) {
+        eval(test_php_function_source($source, $name)); // nosemgrep: php.lang.security.eval-use.eval-use
+    }
 }
 $db = new PDO('sqlite::memory:');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
