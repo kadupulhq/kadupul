@@ -72,7 +72,36 @@ jobs:
         uses: snyk/actions/setup@b075801f26076be9bb50521154cafab73f44da0c
         with:
           snyk-version: v1.1307.4
+      - name: Verify complete-project report guard
+        run: mise exec python@3.12.12 -- python -m unittest discover -s tests/security -p test_snyk_project_report.py -v
       - name: Test Composer and npm dependencies
-        run: snyk test --all-projects --dev --severity-threshold=high
+        id: dependency_scan
+        run: |
+          scan_dir=$(mktemp -d "$RUNNER_TEMP/snyk-completion.XXXXXX")
+          echo "receipt-path=$scan_dir/completion.json" >> "$GITHUB_OUTPUT"
+          # --print-deps is documented and selects the pinned legacy testing path.
+          # Keep package trees, policies and provider errors out of public logs.
+          trap 'rm -f -- "$scan_dir/report.json" "$scan_dir/scan.log"' EXIT
+          set +e
+          snyk test --all-projects --dev --severity-threshold=high --print-deps \
+            --json-file-output="$scan_dir/report.json" > "$scan_dir/scan.log" 2>&1
+          scan_status=$?
+          mise exec python@3.12.12 -- python tests/security/verify_snyk_project_report.py \
+            "$scan_dir/report.json" --checkout "$GITHUB_WORKSPACE" \
+            --cli-exit "$scan_status" --scan-log "$scan_dir/scan.log" \
+            --receipt "$scan_dir/completion.json"
+          report_status=$?
+          set -e
+          if [ "$scan_status" -ne 0 ]; then
+            exit "$scan_status"
+          fi
+          exit "$report_status"
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      - name: Retain safe dependency scan completion evidence
+        if: ${{ always() && steps.dependency_scan.outputs.receipt-path != '' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: snyk-project-completion
+          path: ${{ steps.dependency_scan.outputs.receipt-path }}
+          if-no-files-found: error
