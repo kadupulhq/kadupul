@@ -222,6 +222,8 @@ async function loadDarkGraphMenu(page) {
     window.searchFilter = 'Search'; window.searchRFilter = 'Filter'; window.noFileSelected = 'No file';
   });
   await page.addScriptTag({ url: '/include/themes/dark/main.js' });
+  // Exercise the legitimate pointer-inside state when graph handlers initialize.
+  await page.locator('#dd1').hover();
   await page.evaluate(() => {
     // This owned graph-only fixture isolates unrelated navigation/page sizing.
     // Keep the actual themeReady graph handlers and shared layout state intact.
@@ -230,6 +232,9 @@ async function loadDarkGraphMenu(page) {
     window.setNavigationScroll = () => {};
     themeReady();
   });
+  // A hover within an already-entered cell does not emit another mouseenter.
+  // Leave after binding so the test performs a real outside-to-graph transition.
+  await page.locator('#outside').hover();
 }
 
 test('dark graph hover retains handoff leave reinitialization and keyboard focus', async ({ page }) => {
