@@ -360,6 +360,9 @@ if (defined('PROFILE_SECURITY_TEST_COVERAGE')) {
 if (defined('GRAPH_ITEM_EDITOR_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/graph_item_editor.php');
 }
+if (defined('AUDIT_PLUGIN_LIFECYCLE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyUpgradePluginLifecycle.php');
+}
 if (defined('RRD_TEST_CLI_COVERAGE_COPY')) {
     $coverageFilter->includeFile(RRD_TEST_CLI_COVERAGE_COPY);
 }
@@ -483,6 +486,13 @@ if (defined('MAINTENANCE_PURGE_TEST_COVERAGE') || defined('HTML_RENDERER_NATIVE_
         $nativeProducer = 'tests/Fixtures/helper-union-native.php';
     }
     $nativeCoverageEvidence = NativeChildCoverageEvidence::snapshot($coverageRoot, $nativeProducer, $nativeScenario, $nativeSources);
+}
+if (defined('AUDIT_PLUGIN_LIFECYCLE_TEST_COVERAGE')) {
+    // This producer executes the byte-identical CLI copy and the real shared
+    // lifecycle through Composer. The parent suite retains its complete filter.
+    $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+    $coverageFilter->includeFile(RRD_TEST_CLI_COVERAGE_COPY);
+    $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyUpgradePluginLifecycle.php');
 }
 $childCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
     (new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($coverageFilter),
