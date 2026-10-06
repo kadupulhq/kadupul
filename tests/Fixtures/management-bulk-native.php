@@ -5,8 +5,9 @@ declare(strict_types=1);
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-// Complete action functions, real policy functions and SQLite queries. Authentication,
-// CSRF admission, plugins and confirmation rendering are explicit fixture ports.
+// Graph/data action functions and direct device selection policy use real SQLite queries.
+// Authentication, CSRF admission, plugins and confirmation rendering are fixture ports.
+// Device HTTP workflows are migrated and verified by DeviceRouteNativeTest.
 function management_bulk_fixture_run(): never
 {
     global $root, $db, $scenario, $queries, $querySql, $queryRowCounts, $config;
@@ -73,10 +74,21 @@ function management_bulk_fixture_run(): never
         $GLOBALS['nativeChildCoverageMarkers'] = ['native-policy-operation-returned','policy-session-observed','management-batch-observed','management-handoff-observed'];
         print json_encode(['result' => $state,'session' => $_SESSION], JSON_THROW_ON_ERROR);
     });
+    if ($scenario['resource'] === 'device') {
+        // No device caller of this shared helper remains after the platform migration.
+        // Test its retained policy contract directly; do not invent legacy hooks or
+        // reconstruct the removed host.php action functions.
+        try {
+            $GLOBALS['bulkFixture']['selection'] = get_allowed_management_selection('device', $selection);
+            $GLOBALS['bulkFixture']['stage'] = 'policy';
+        } catch (RuntimeException $error) {
+            $GLOBALS['bulkFixture']['policy_error'] = $error->getMessage();
+        }
+        exit;
+    }
     $paths = ['graphs.php' => $scenario['resource'] === 'graph' ? ['graph_edit_graph_is_allowed', 'graph_edit_access_denied', 'form_actions'] : [],
         'data_sources.php' => $scenario['resource'] === 'data' ? ['data_source_device_is_allowed', 'data_source_access_denied', 'form_actions'] : [],
-        'lib/api_data_source.php' => $scenario['resource'] === 'data' ? ['api_data_source_is_allowed'] : [],
-        'host.php' => $scenario['resource'] === 'device' ? ['host_require_device_access', 'form_actions'] : []];
+        'lib/api_data_source.php' => $scenario['resource'] === 'data' ? ['api_data_source_is_allowed'] : []];
     foreach ($paths as $path => $names) {
         $source = file_get_contents($root . '/' . $path);
         if ($source === false) throw new RuntimeException('Cannot read actual action source.');
