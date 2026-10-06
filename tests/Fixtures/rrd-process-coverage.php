@@ -66,6 +66,10 @@ if (defined('MEMBERSHIP_EPOCH_TEST_COVERAGE')) {
 if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE') || defined('CLASSIC_TEXT_TABS_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
 }
+if (defined('FONT_SETTINGS_NATIVE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/settings.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/graph_fonts.php');
+}
 if (defined('GRAPH_TEMPLATE_RENDER_NATIVE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html_graph.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
