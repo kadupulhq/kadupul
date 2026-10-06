@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -37,6 +39,55 @@ function observation_members($group)
     return $members;
 }
 
+/** @param array{pid: int, running: bool, ...} $status */
+function observation_diagnostics(int $group, array $status, ?int $exit_code): void
+{
+    $processes = array();
+    $known_scripts = array('poller.php', 'cmd.php', 'poller_commands.php', 'poller_boost.php',
+        'poller_maintenance.php', 'poller_reindex_hosts.php', 'poller_output_empty.php',
+        'script_server.php', 'ss_host.php');
+    foreach (observation_members($group) as $pid) {
+        $stat = @file_get_contents('/proc/' . $pid . '/stat');
+        if ($stat === false) {
+            continue;
+        }
+        $fields = explode(' ', substr($stat, strrpos($stat, ')') + 2));
+        if (!isset($fields[2]) || (int) $fields[2] !== $group || $fields[0] === 'Z') {
+            continue;
+        }
+        $script = null;
+        // Only a recognized first script argument may be rendered. Later
+        // arguments and environment values can contain credentials.
+        $command = @file_get_contents('/proc/' . $pid . '/cmdline', false, null, 0, 8192);
+        if ($command !== false) {
+            $arguments = explode("\0", $command);
+            $php_interpreter = preg_match('/^php(?:[0-9]+(?:\.[0-9]+)*)?$/D', basename($arguments[0])) === 1;
+            for ($index = 1; $php_interpreter && $index < count($arguments); $index++) {
+                $argument = $arguments[$index];
+                if (in_array($argument, array('-d', '-c'), true)) {
+                    $index++;
+                    continue;
+                }
+                if (in_array($argument, array('-r', '-B', '-R', '-E'), true)) {
+                    break;
+                }
+                if ($argument === '' || $argument[0] === '-') {
+                    continue;
+                }
+                $basename = basename($argument);
+                $script = in_array($basename, $known_scripts, true) ? $basename : null;
+                break;
+            }
+        }
+        $processes[] = array('pid' => $pid, 'parent' => (int) $fields[1], 'group' => (int) $fields[2],
+            'state' => $fields[0], 'role' => $pid === $status['pid'] ? 'observed-parent' : 'descendant',
+            'script' => $script);
+    }
+    fwrite(STDERR, 'POLLER_OBSERVATION_DIAGNOSTIC ' . json_encode(array(
+        'group' => $group, 'observed_pid' => $status['pid'], 'parent_running' => $status['running'],
+        'parent_exit' => $exit_code, 'processes' => $processes), JSON_THROW_ON_ERROR) . "\n");
+}
+
 $child = proc_open(array_merge(array(PHP_BINARY), array_slice($argv, 2)), array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
 if (!is_resource($child)) {
     fwrite(STDERR, "Cannot start the observed PHP process.\n");
@@ -60,6 +111,8 @@ do {
     }
     usleep(10000);
 } while (microtime(true) < $deadline);
+
+observation_diagnostics($group, $status, $exit_code);
 
 // Do not signal ourselves: retain control of the incomplete completion channel.
 // Re-scan membership while terminating so late-forked descendants are included.
