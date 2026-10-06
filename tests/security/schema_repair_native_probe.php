@@ -15,7 +15,7 @@ $cliSource = file_get_contents(__DIR__ . '/cdef_reference_installer_failure_nati
 if (!is_string($webSource) || !is_string($cliSource)) {
     throw new RuntimeException('The actual native installer harness sources are required.');
 }
-foreach (['installerAssert', 'installerSeed', 'webRequest', 'webToken'] as $function) {
+foreach (['installerAssert', 'installerSeed', 'webRequest', 'webToken', 'webLifecycleDiagnostics'] as $function) {
     eval(test_php_function_source($webSource, $function));
 }
 eval(test_php_function_source($cliSource, 'installerRun'));
@@ -86,7 +86,13 @@ $server = null;
 $fixtureAccount = null;
 $restoreTrust = null;
 $probeFailure = null;
+$installerLogPath = $root . '/log/cacti.log';
+$initialInstallerLogBytes = 0;
 try {
+    $initialInstallerLogBytes = is_file($installerLogPath) ? filesize($installerLogPath) : 0;
+    if ($initialInstallerLogBytes === false) {
+        throw new RuntimeException('Cannot inspect owned installer log boundary.');
+    }
     echo 'SERVER ' . $database->query('SELECT VERSION()')->fetchColumn() . "\n";
     $database->exec("CREATE DATABASE `$schema`");
     $created = true;
@@ -248,6 +254,19 @@ try {
             'data' => $stepFields]);
         $data = json_decode($body, true);
         if ($status !== 200 || !is_array($data) || !isset($data['Step'], $data['Next'])) {
+            // Locate PHP output that corrupts the response without retaining
+            // form values, credentials, tokens or exception arguments.
+            $diagnostic = ['http_status' => $status, 'json_error' => json_last_error(), 'php_locations' => []];
+            $plain = strip_tags(substr($body, 0, 8192));
+            if (preg_match_all('/\bin ([^\r\n]+?\.php) on line ([0-9]+)/', $plain, $locations, PREG_SET_ORDER) !== false) {
+                foreach (array_slice($locations, 0, 10) as $location) {
+                    $file = realpath($location[1]);
+                    if ($file !== false && str_starts_with($file, realpath($root) . DIRECTORY_SEPARATOR)) {
+                        $diagnostic['php_locations'][] = ['file' => basename($file), 'line' => (int) $location[2]];
+                    }
+                }
+            }
+            echo 'WEB_RESPONSE_DIAGNOSTIC ' . json_encode($diagnostic, JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE) . "\n";
             throw new RuntimeException('The actual web step did not return its JSON contract: HTTP ' . $status . '.');
         }
         echo 'WEB step=' . (int) $data['Step'] . ' next=' . (int) $data['Next']['Step'] . ' enabled=' . (int) $data['Next']['Enabled'] . "\n";
@@ -331,6 +350,9 @@ try {
     $probeFailure = $error;
     throw $error;
 } finally {
+    if ($created && $mode === 'web') {
+        webLifecycleDiagnostics($database, $installerLogPath, $initialInstallerLogBytes);
+    }
     $trustRestoreFailed = false;
     if ($restoreTrust !== null) {
         try {

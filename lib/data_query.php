@@ -863,6 +863,45 @@ function query_debug_timer_stop($section, $message)
     return $delta;
 }
 
+/**
+ * Fetch an input field using its existing output-format transport contract.
+ *
+ * @param array<string, mixed> $host Persisted SNMP connection settings.
+ * @param array<string, mixed> $field_array Parsed data-query field metadata.
+ */
+function data_query_snmp_get_field(array $host, array $field_array, mixed $session, mixed $oid): mixed
+{
+    if (isset($field_array['output_format'])) {
+        if ($field_array['output_format'] == 'hex') {
+            $value_output_format = SNMP_STRING_OUTPUT_HEX;
+        } elseif ($field_array['output_format'] == 'ascii') {
+            $value_output_format = SNMP_STRING_OUTPUT_ASCII;
+        } else {
+            $value_output_format = SNMP_STRING_OUTPUT_GUESS;
+        }
+
+        return cacti_snmp_get(
+            $host['hostname'],
+            $host['snmp_community'],
+            $oid,
+            $host['snmp_version'],
+            $host['snmp_username'],
+            $host['snmp_password'],
+            $host['snmp_auth_protocol'],
+            $host['snmp_priv_passphrase'],
+            $host['snmp_priv_protocol'],
+            $host['snmp_context'],
+            $host['snmp_port'],
+            $host['snmp_timeout'],
+            SNMP_POLLER,
+            $host['snmp_engine_id'],
+            $value_output_format
+        );
+    } else {
+        return cacti_snmp_session_get($session, $oid);
+    }
+}
+
 function query_snmp_host($host_id, $snmp_query_id)
 {
     global $config, $data_query_rewrite_indexes_cache;
@@ -1128,35 +1167,7 @@ function query_snmp_host($host_id, $snmp_query_id)
                         query_debug_timer_offset('data_query', __esc('oid_rewrite at OID: \'%s\' new OID: \'%s\'', $orig_oid, $oid));
                     }
 
-                    if (isset($field_array['output_format'])) {
-                        if ($field_array['output_format'] == 'hex') {
-                            $value_output_format = SNMP_STRING_OUTPUT_HEX;
-                        } elseif ($field_array['output_format'] == 'ascii') {
-                            $value_output_format = SNMP_STRING_OUTPUT_ASCII;
-                        } else {
-                            $value_output_format = SNMP_STRING_OUTPUT_GUESS;
-                        }
-
-                        $value = cacti_snmp_get(
-                            $host['hostname'],
-                            $host['snmp_community'],
-                            $oid,
-                            $host['snmp_version'],
-                            $host['snmp_username'],
-                            $host['snmp_password'],
-                            $host['snmp_auth_protocol'],
-                            $host['snmp_priv_passphrase'],
-                            $host['snmp_priv_protocol'],
-                            $host['snmp_context'],
-                            $host['snmp_port'],
-                            $host['snmp_timeout'],
-                            SNMP_POLLER,
-                            $host['snmp_engine_id'],
-                            $value_output_format
-                        );
-                    } else {
-                        $value = cacti_snmp_session_get($session, $oid);
-                    }
+                    $value = data_query_snmp_get_field($host, $field_array, $session, $oid);
 
                     query_debug_timer_offset('data_query', __esc('Executing SNMP get for data @ \'%s\' [value=\'%s\']', $oid, $value));
 
@@ -1325,35 +1336,7 @@ function query_snmp_host($host_id, $snmp_query_id)
                     $oid = $field_array['oid'] . '.' . $index;
                     $oid .= isset($field_array['oid_suffix']) ? ('.' . $field_array['oid_suffix']) : '';
 
-                    if (isset($field_array['output_format'])) {
-                        if ($field_array['output_format'] == 'hex') {
-                            $value_output_format = SNMP_STRING_OUTPUT_HEX;
-                        } elseif ($field_array['output_format'] == 'ascii') {
-                            $value_output_format = SNMP_STRING_OUTPUT_ASCII;
-                        } else {
-                            $value_output_format = SNMP_STRING_OUTPUT_GUESS;
-                        }
-
-                        $value = cacti_snmp_get(
-                            $host['hostname'],
-                            $host['snmp_community'],
-                            $oid,
-                            $host['snmp_version'],
-                            $host['snmp_username'],
-                            $host['snmp_password'],
-                            $host['snmp_auth_protocol'],
-                            $host['snmp_priv_passphrase'],
-                            $host['snmp_priv_protocol'],
-                            $host['snmp_context'],
-                            $host['snmp_port'],
-                            $host['snmp_timeout'],
-                            SNMP_POLLER,
-                            $host['snmp_engine_id'],
-                            $value_output_format
-                        );
-                    } else {
-                        $value = cacti_snmp_session_get($session, $oid);
-                    }
+                    $value = data_query_snmp_get_field($host, $field_array, $session, $oid);
 
                     $value = preg_replace('/' . str_replace('VALUE/REGEXP:', '', $field_array['source']) . '/', "\\1", $value);
 

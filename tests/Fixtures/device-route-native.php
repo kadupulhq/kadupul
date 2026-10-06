@@ -37,11 +37,16 @@ if (getenv('DEVICE_ROUTE_COVERAGE') === '1') {
     $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/device-route-native.php', $encoded, DeviceRouteCoverageRegistration::SOURCES);
     define('DEVICE_ROUTE_TEST_COVERAGE', true);
     define('RRD_TEST_COVERAGE_DIRECTORY', $directory);
-    if ($scenario['kind'] === 'wrapper') {
+    if (in_array($scenario['kind'], ['wrapper', 'presentation'], true)) {
         define('RRD_TEST_CLI_COVERAGE_COPY', $directory . '/host.php');
         define('RRD_TEST_CLI_COVERAGE_SOURCE', $root . '/host.php');
     }
     require $root . '/tests/Fixtures/rrd-process-coverage.php';
+}
+
+if ($scenario['kind'] === 'presentation') {
+    require $root . '/tests/Fixtures/device-presentation-native.php';
+    exit;
 }
 
 if ($scenario['kind'] === 'destinations') {
@@ -75,27 +80,42 @@ $pdo->exec('CREATE TABLE settings (name TEXT, value TEXT); CREATE TABLE fixture_
 $before = $pdo->query('SELECT * FROM fixture_device ORDER BY id')->fetchAll(PDO::FETCH_ASSOC);
 $database = new class ($pdo) implements Kadupul\Platform\Contract\DatabaseConnection {
     public function __construct(private PDO $pdo) {}
-    public function get(): PDO { return $this->pdo; }
+    public function get(): PDO
+    {
+        return $this->pdo;
+    }
 };
 $configuration = new class implements Kadupul\Platform\Contract\LegacyConfiguration {
-    public function values(): array { return ['forced_locale' => 'en-US']; }
+    public function values(): array
+    {
+        return ['forced_locale' => 'en-US'];
+    }
 };
 $access = new class ($scenario['access']) implements Kadupul\IdentityAccess\Contract\ConsoleAccess {
     public function __construct(private string $mode) {}
-    public function consoleActor(): ?Kadupul\IdentityAccess\Contract\Actor {
+    public function consoleActor(): ?Kadupul\IdentityAccess\Contract\Actor
+    {
         return $this->mode === 'anonymous' ? null : new Kadupul\IdentityAccess\Contract\Actor(42, 'operator');
     }
-    public function canManageDevices(Kadupul\IdentityAccess\Contract\Actor $actor): bool { return $this->mode === 'manager'; }
+    public function canManageDevices(Kadupul\IdentityAccess\Contract\Actor $actor): bool
+    {
+        return $this->mode === 'manager';
+    }
 };
 $locations = new class implements Kadupul\Inventory\Application\Port\DeviceLocations {
-    public function matching(int $actorId, string $term): array { throw new RuntimeException('Unexpected protected location lookup'); }
+    public function matching(int $actorId, string $term): array
+    {
+        throw new RuntimeException('Unexpected protected location lookup');
+    }
 };
 $container->set(Kadupul\Platform\Contract\DatabaseConnection::class, $database);
 $container->set(Kadupul\Platform\Contract\LegacyConfiguration::class, $configuration);
 $container->set(Kadupul\IdentityAccess\Contract\ConsoleAccess::class, $access);
 $container->set(Kadupul\Inventory\Application\Port\DeviceLocations::class, $locations);
 $response = null;
-$container->get('event_dispatcher')->addListener('kernel.response', static function ($event) use (&$response): void { $response = $event->getResponse(); });
+$container->get('event_dispatcher')->addListener('kernel.response', static function ($event) use (&$response): void {
+    $response = $event->getResponse();
+});
 $GLOBALS['deviceRouteKernel'] = $kernel;
 $_GET = $scenario['method'] === 'GET' ? $scenario['fields'] : [];
 $_POST = $scenario['method'] === 'POST' ? $scenario['fields'] : [];
