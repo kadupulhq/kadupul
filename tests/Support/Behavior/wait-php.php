@@ -64,15 +64,22 @@ function observation_diagnostics(int $group, array $status, ?int $exit_code): vo
             $php_interpreter = preg_match('/^php(?:[0-9]+(?:\.[0-9]+)*)?$/D', basename($arguments[0])) === 1;
             for ($index = 1; $php_interpreter && $index < count($arguments); $index++) {
                 $argument = $arguments[$index];
-                if (in_array($argument, array('-d', '-c'), true)) {
+                if (in_array($argument, array('-d', '--define', '-c', '--php-ini'), true)) {
                     $index++;
                     continue;
                 }
-                if (in_array($argument, array('-r', '-B', '-R', '-E'), true)) {
-                    break;
-                }
-                if ($argument === '' || $argument[0] === '-') {
+                if (str_starts_with($argument, '--define=') || str_starts_with($argument, '--php-ini=') ||
+                    (strlen($argument) > 2 && (str_starts_with($argument, '-d') || str_starts_with($argument, '-c')))) {
                     continue;
+                }
+                if (in_array($argument, array('-f', '--file'), true)) {
+                    $argument = $arguments[$index + 1] ?? '';
+                } elseif (str_starts_with($argument, '--file=')) {
+                    $argument = substr($argument, strlen('--file='));
+                } elseif ($argument === '' || $argument[0] === '-') {
+                    // Inline code and unrecognized option grammars cannot
+                    // establish a first script identity. Never scan past them.
+                    break;
                 }
                 $basename = basename($argument);
                 $script = in_array($basename, $known_scripts, true) ? $basename : null;

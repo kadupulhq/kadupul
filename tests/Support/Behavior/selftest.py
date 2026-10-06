@@ -956,6 +956,76 @@ def native_worker_boundary():
             assert not stat.exists() or stat.read_text().rsplit(')', 1)[1].split()[0] == 'Z'
             time.sleep(2.2)
             assert not late.exists(), 'timed-out worker continued mutating artifacts'
+        # Real PHP option parsing must not turn configuration, inline code,
+        # or a later application argument into a script identity.
+        known = Path(directory) / 'poller.php'
+        unknown = Path(directory) / 'parent.php'
+        body = '<?php file_put_contents(' + json.dumps(str(pidfile)) + ', getmypid()); sleep(3);'
+        known.write_text(body)
+        unknown.write_text(body)
+        config_directory = Path(directory) / 'configuration'
+        config_directory.mkdir()
+        config = config_directory / 'poller.php'
+        config.write_text('display_errors=0\n')
+        inline = 'file_put_contents(' + json.dumps(str(pidfile)) + ', getmypid()); sleep(3);'
+        option_cases = (
+            (['--file=' + str(unknown), 'poller.php'], None),
+            (['--file', str(unknown), 'poller.php'], None),
+            (['-f', str(unknown), 'poller.php'], None),
+            (['--php-ini', str(config), str(unknown), 'poller.php'], None),
+            (['--php-ini=' + str(config), str(unknown), 'poller.php'], None),
+            (['--define', 'display_errors=0', str(known)], 'poller.php'),
+            (['--define=display_errors=0', str(known)], 'poller.php'),
+            (['--run', inline, 'poller.php'], None),
+            (['--run=' + inline, 'poller.php'], None),
+            (['-r' + inline, 'poller.php'], None),
+            (['-e', str(known)], None),
+            (['-f', str(known), 'private-argument'], 'poller.php'),
+            (['--file=' + str(known), 'private-argument'], 'poller.php'),
+        )
+        for options, expected_script in option_cases:
+            (Path(directory) / 'status').unlink()
+            pidfile.unlink(missing_ok=True)
+            result = subprocess.run(['php', '-d', 'auto_prepend_file=', str(Path(__file__).with_name('wait-php.php')),
+                                     str(Path(directory) / 'status'), '-d', 'auto_prepend_file=', *options],
+                                    capture_output=True, text=True, timeout=10,
+                                    env={**os.environ, 'HARNESS_OBSERVATION_TIMEOUT': '1'})
+            assert result.returncode == 70 and 'workers terminated' in result.stderr, result
+            lines = [line.removeprefix('POLLER_OBSERVATION_DIAGNOSTIC ')
+                     for line in result.stderr.splitlines() if line.startswith('POLLER_OBSERVATION_DIAGNOSTIC ')]
+            assert len(lines) == 1, result.stderr
+            diagnostic = json.loads(lines[0])
+            pid = int(pidfile.read_text())
+            matching = [process for process in diagnostic['processes'] if process['pid'] == pid]
+            assert len(matching) == 1 and matching[0]['script'] == expected_script, diagnostic
+            assert diagnostic['parent_running'] is True and diagnostic['parent_exit'] is None, diagnostic
+            assert str(directory) not in result.stderr and 'private-argument' not in result.stderr
+            assert (Path(directory) / 'status').read_text() == ''
+        # PHP's bare -- reads code from stdin; its following argv is not a
+        # script filename even when it names a real allowlisted fixture file.
+        (Path(directory) / 'status').unlink()
+        pidfile.unlink()
+        result = subprocess.run(['php', '-d', 'auto_prepend_file=', str(Path(__file__).with_name('wait-php.php')),
+                                 str(Path(directory) / 'status'), '-d', 'auto_prepend_file=', '--', str(known)],
+                                input=body, capture_output=True, text=True, timeout=10,
+                                env={**os.environ, 'HARNESS_OBSERVATION_TIMEOUT': '1'})
+        assert result.returncode == 70 and 'workers terminated' in result.stderr, result
+        lines = [line.removeprefix('POLLER_OBSERVATION_DIAGNOSTIC ')
+                 for line in result.stderr.splitlines() if line.startswith('POLLER_OBSERVATION_DIAGNOSTIC ')]
+        assert len(lines) == 1, result.stderr
+        diagnostic = json.loads(lines[0])
+        pid = int(pidfile.read_text())
+        matching = [process for process in diagnostic['processes'] if process['pid'] == pid]
+        assert len(matching) == 1 and matching[0]['script'] is None, diagnostic
+        assert (Path(directory) / 'status').read_text() == ''
+        # PHP itself refuses unsupported options normally: that real exit is
+        # complete, and no timeout classification is emitted.
+        (Path(directory) / 'status').unlink()
+        result = subprocess.run(['php', '-d', 'auto_prepend_file=', str(Path(__file__).with_name('wait-php.php')),
+                                 str(Path(directory) / 'status'), '--unknown-observation-option', str(known)],
+                                capture_output=True, text=True, timeout=10)
+        assert result.returncode != 0 and 'POLLER_OBSERVATION_DIAGNOSTIC ' not in result.stderr, result
+        assert (Path(directory) / 'status').read_text() == 'complete\n'
     print('process-group boundary waits for delayed grandchildren and distinguishes application exit 70')
 
 
