@@ -171,6 +171,7 @@ final class LegacyFormGoldenFiles
     private const OPEN_FOR_INCLUDE = 0x80;
 
     public static $root;
+    public static int $transformedIncludes = 0;
     public $context;
     private $handle;
 
@@ -191,6 +192,7 @@ final class LegacyFormGoldenFiles
             $real = realpath($path);
             if (($options & self::OPEN_FOR_INCLUDE) && $real !== false && str_ends_with($real, '.php')
                 && str_starts_with($real, self::$root . '/') && !str_starts_with($real, self::$root . '/include/vendor/')) {
+                self::$transformedIncludes++;
                 $this->handle = fopen('php://memory', 'r+');
                 fwrite($this->handle, legacy_form_golden_freeze(file_get_contents($real)));
                 rewind($this->handle);
@@ -332,8 +334,12 @@ final class LegacyFormGoldenFiles
 }
 
 LegacyFormGoldenFiles::$root = $root;
-stream_wrapper_unregister('file');
-stream_wrapper_register('file', LegacyFormGoldenFiles::class);
+// Native presentation coverage executes the original file bytes and clock.
+// Existing golden recordings retain their historical patched-clock mode.
+if (!defined('PRESENTATION_PAGE_NATIVE')) {
+    stream_wrapper_unregister('file');
+    stream_wrapper_register('file', LegacyFormGoldenFiles::class);
+}
 // '<DIR>' in a scenario stands for this run's directory, where it may create files.
 $scenario = json_decode(strtr(file_get_contents($directory . '/scenario.json'), array('<DIR>' => $directory)), true, 512, JSON_THROW_ON_ERROR);
 foreach ($scenario['files'] ?? array() as $file) {
@@ -715,10 +721,14 @@ register_shutdown_function(function () use ($root, $directory, $capture_level, &
             $value = preg_replace('/\b(sid|cookie|key|user|ip):[0-9a-f]{40,128},[0-9]+/', '$1:<CSRF>', strtr($value, $replace));
         }
     });
+    if (defined('PRESENTATION_PAGE_NATIVE') && isset($GLOBALS['nativePresentationObserver'])) {
+        ($GLOBALS['nativePresentationObserver'])($result);
+    }
     echo json_encode($result, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 });
 
-if (class_exists('Composer\\Autoload\\ClassLoader', false)) {
+if (class_exists('Composer\\Autoload\\ClassLoader', false)
+    && (!defined('PRESENTATION_PAGE_NATIVE') || isset(Composer\Autoload\ClassLoader::getRegisteredLoaders()[$root . '/include/vendor']))) {
     throw new RuntimeException('Composer loaded before the production CSRF boundary');
 }
 require $root . '/include/csrf.php';
