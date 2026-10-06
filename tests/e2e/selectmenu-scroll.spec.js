@@ -185,15 +185,18 @@ test('realtime graph activation preserves loading glyph response and original im
   await page.addStyleTag({ url: '/include/fa/css/all.css' });
   for (const file of ['include/js/js.storage.js', 'include/js/jquery.cookie.js', 'include/js/pace.js', 'include/js/jquery.zoom.js', 'include/realtime.js']) await page.addScriptTag({ url: '/' + file });
   const requests = [];
+  const envelopes = [];
+  const csrfToken = 'owned-realtime-csrf-token';
   const image = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+a6r0AAAAASUVORK5CYII=';
   await page.route('**/graph_realtime.php?**', async route => {
     requests.push(new URL(route.request().url()));
+    envelopes.push({ method: route.request().method(), fields: [...new URLSearchParams(route.request().postData() || '')] });
     await route.fulfill({ status: 200, contentType: 'text/plain', body: JSON.stringify({ local_graph_id: 7, image_format: 'png', data: image }) });
   });
-  await page.evaluate(() => {
-    Object.assign(window, { urlPath: '/', realtimeClickOn: 'Start realtime', realtimeClickOff: 'Stop realtime', refreshMSeconds: 600000, refreshIsLogout: false, timeOffset: 0 });
+  await page.evaluate(token => {
+    Object.assign(window, { csrfMagicToken: token, urlPath: '/', realtimeClickOn: 'Start realtime', realtimeClickOff: 'Stop realtime', refreshMSeconds: 600000, refreshIsLogout: false, timeOffset: 0 });
     initializeGraphs();
-  });
+  }, csrfToken);
   const before = await page.locator('#wrapper_7').innerHTML();
   await page.locator('#graph_7_realtime').click();
   await expect(page.locator('#graph_7_realtime i')).toHaveClass('drillDown ' + icons.loading);
@@ -201,6 +204,7 @@ test('realtime graph activation preserves loading glyph response and original im
   await expect(page.locator('#graph_7')).toHaveAttribute('src', 'data:image/png;base64,' + image);
   await expect(page.locator('#realtime')).toBeVisible();
   expect(requests).toHaveLength(1);
+  expect(envelopes).toEqual([{ method: 'POST', fields: [['__csrf_magic', csrfToken]] }]);
   expect(['local_graph_id', 'graph_start', 'ds_step'].map(key => requests[0].searchParams.get(key))).toEqual(['7', '-60', '60']);
   await page.locator('#graph_7_realtime').click();
   expect(await page.locator('#wrapper_7').innerHTML()).toBe(before);

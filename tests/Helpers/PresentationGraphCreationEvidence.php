@@ -25,7 +25,7 @@ final class PresentationGraphCreationEvidence
 
     public static function tables(): array
     {
-        return array('host', 'host_template', 'host_graph', 'graph_local', 'graph_templates', 'user_auth', 'user_auth_realm', 'settings_user','plugin_hooks','plugin_config','user_auth_group_realm','user_auth_group','user_auth_group_members','snmp_query','snmp_query_graph','host_snmp_query','host_snmp_cache');
+        return array('host', 'host_template', 'host_graph', 'graph_local', 'graph_templates', 'user_auth', 'user_auth_realm', 'user_auth_perms', 'user_auth_group_perms', 'settings_user','plugin_hooks','plugin_config','user_auth_group_realm','user_auth_group','user_auth_group_members','snmp_query','snmp_query_graph','host_snmp_query','host_snmp_cache');
     }
 
     public static function snapshot(PDO $database): array
