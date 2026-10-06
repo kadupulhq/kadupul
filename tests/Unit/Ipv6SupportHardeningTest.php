@@ -31,9 +31,11 @@ test('snmp_format_target forces udp6 for IPv6', function () use ($snmpSource) {
 });
 
 test('binary SNMP source retains target normalization through the shared request builder', function () use ($snmpSource) {
-    foreach (array('cacti_snmp_get', 'cacti_snmp_get_raw', 'cacti_snmp_getnext') as $caller) {
-        expect(test_php_function_source($snmpSource, $caller))->toContain('cacti_snmp_read_command(');
+    foreach (array('cacti_snmp_get', 'cacti_snmp_get_raw', 'cacti_snmp_getnext_request') as $caller) {
+        expect(test_php_function_source($snmpSource, $caller))->toContain('cacti_snmp_read_binary_value(');
     }
+    expect(test_php_function_source($snmpSource, 'cacti_snmp_getnext'))->toContain('cacti_snmp_getnext_request(');
+    expect(test_php_function_source($snmpSource, 'cacti_snmp_read_binary_value'))->toContain('cacti_snmp_read_command(');
     foreach (array('cacti_snmp_read_command', 'cacti_snmp_walk') as $builder) {
         expect(test_php_function_source($snmpSource, $builder))->toContain('snmp_format_target($hostname, $port)');
     }
