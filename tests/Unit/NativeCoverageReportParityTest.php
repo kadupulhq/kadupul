@@ -10,9 +10,11 @@ namespace Kadupul\Tests\NativeCoverageReportParity;
 test('native admission preserves complete final coverage and strict evidence', function (string $vendor, string $uncovered): void {
     $root = dirname(__DIR__, 2);
     $process = proc_open(
-        [PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-d', 'display_errors=stderr', $root . '/tests/Fixtures/native-coverage-parity.php', $vendor, $uncovered],
+        [PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'pcov.enabled=1', '-d', 'xdebug.mode=coverage', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-d', 'display_errors=stderr', $root . '/tests/Fixtures/native-coverage-parity.php', $vendor, $uncovered],
         [1 => ['pipe', 'w'], 2 => ['pipe', 'w']],
-        $pipes
+        $pipes,
+        null,
+        array_replace(getenv(), ['XDEBUG_MODE' => 'coverage'])
     );
     if (!is_resource($process)) {
         throw new \RuntimeException('Cannot start native coverage parity process.');
