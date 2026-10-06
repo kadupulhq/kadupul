@@ -7,144 +7,84 @@ declare(strict_types=1);
 
 namespace Kadupul\Tests\DevicePresentationNative;
 
-require_once __DIR__ . '/../Helpers/NativeDevicePresentation.php';
+require_once __DIR__ . '/../Helpers/DeviceRouteNativeHarness.php';
+require_once __DIR__ . '/../Helpers/DeviceRouteCoverageRegistration.php';
 require_once __DIR__ . '/../Helpers/NativeChildCoverageEvidence.php';
 
-test('device presentation retains persisted selections and reachable actions', function (array $case, array $expected): void {
-    $root = dirname(__DIR__, 2);
-    $directory = sys_get_temp_dir() . '/device-presentation-native-' . bin2hex(random_bytes(8));
-    expect(mkdir($directory, 0700))->toBeTrue();
-    $coverage = $this->getTestResultObject()->getCodeCoverage();
-    $input = json_encode($case, JSON_THROW_ON_ERROR);
-    $environment = getenv();
-    $environment['DEVICE_PRESENTATION_COVERAGE'] = $coverage === null ? '0' : '1';
-    try {
-        $process = proc_open(
-            [PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'display_errors=stderr',
-                '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~',
-                $root . '/tests/Fixtures/device-presentation-native.php', $root, $directory, $input],
-            [0 => ['file', '/dev/null', 'r'], 1 => ['pipe', 'w'], 2 => ['file', $directory . '/stderr', 'w']],
-            $pipes,
-            $root,
-            $environment
-        );
-        expect(is_resource($process))->toBeTrue();
-        $output = stream_get_contents($pipes[1]);
-        fclose($pipes[1]);
-        $exit = proc_close($process);
-        $errors = file_get_contents($directory . '/stderr');
-        expect($exit)->toBe(0, $errors)->and($errors)->toBe('');
-        $result = json_decode($output, true, 512, JSON_THROW_ON_ERROR);
-        expect($result['diagnostics'])->toBe([])->and($result['device_queries'])->not->toBeEmpty();
-        if (isset($expected['errors'])) {
-            expect(array_keys($result['session']['sess_error_fields'] ?? []))->toBe($expected['errors']);
+test('migrated device presentation retains current routes and persisted selections', function (array $case, array $expected): void {
+    $state = \DeviceRouteNativeHarness::run(['kind' => 'presentation'] + $case, $this->getTestResultObject()->getCodeCoverage());
+    expect($state['stderr'])->toBe('')->and($state['before'])->toBe($state['after']);
+    expect($state['legacy']['status'])->toBe($expected['legacy'] ?? 302);
+    expect(count($state['statements']))->toBeLessThanOrEqual(30);
+    if (($expected['legacy'] ?? 302) === 409) {
+        expect($state['legacy']['html'])->toContain('legacy form has expired')->and($state['legacy']['location'])->toBeNull()->and($state['responses'])->toBe([]);
+        foreach ($state['statements'] as $sql) expect($sql)->not->toMatch('/\b(?:FROM|JOIN)\s+(?:host|graph_local|data_local)\b/i');
+    }
+    if (isset($expected['query'])) {
+        parse_str($expected['query'], $query);
+        parse_str(parse_url($state['legacy']['location'], PHP_URL_QUERY) ?? '', $actual);
+        foreach ($query as $key => $value) expect($actual[$key] ?? null)->toBe($value);
+    }
+    if (isset($expected['locations'])) {
+        expect(json_decode($state['legacy']['html'], true, 512, JSON_THROW_ON_ERROR))->toBe($expected['locations']);
+    }
+    if (isset($expected['ids'])) {
+        $json = json_decode($state['responses'][0]['html'], true, 512, JSON_THROW_ON_ERROR);
+        expect($state['responses'][0]['status'])->toBe(200)->and(array_column($json['devices'], 'id'))->toBe($expected['ids']);
+        expect($json['pageSize'])->toBe(25)->and($json['hasNext'])->toBe($expected['hasNext'] ?? false);
+        foreach ($state['rendered_lists'] as $list) {
+            expect($list['status'])->toBe(200);
+            $html = $list['html'];
+            expect($html)->toContain('/inventory/devices')->toContain('Devices');
+            foreach ($json['devices'] as $device) expect($html)->toContain(htmlspecialchars($device['description'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'));
         }
+
+    }
+    if (isset($expected['form'])) {
+        $html = $state['responses'][0]['html'];
+        expect($state['responses'][0]['status'])->toBe(200);
         $document = new \DOMDocument();
         $prior = libxml_use_internal_errors(true);
         try {
-            expect($document->loadHTML('<?xml encoding="UTF-8">' . ($result['html'] === '' || isset($expected['locations']) ? '<html><body></body></html>' : $result['html'])))->toBeTrue();
+            expect($document->loadHTML('<?xml encoding="UTF-8">' . $html))->toBeTrue();
         } finally {
             libxml_clear_errors();
             libxml_use_internal_errors($prior);
         }
         $xpath = new \DOMXPath($document);
-        if (isset($expected['locations'])) {
-            expect(json_decode($result['html'], true, 512, JSON_THROW_ON_ERROR))->toBe($expected['locations']);
-        } elseif (isset($expected['errors'])) {
-            expect($result['html'])->toBe('');
-        } elseif (isset($expected['confirm'])) {
-            expect($xpath->evaluate('string(//input[@name="action"]/@value)'))->toBe('actions');
-            expect($xpath->evaluate('string(//input[@name="drp_action"]/@value)'))->toBe((string) $expected['confirm']);
-            $selected = unserialize($xpath->evaluate('string(//input[@name="selected_items"]/@value)'), ['allowed_classes' => false]);
-            expect($selected)->toBe(['7', '8']);
-            expect($xpath->query('//input[@type="submit" and @value="Continue"]')->length)->toBe(1);
-            expect($document->textContent)->toContain('Device & alpha')->toContain('Beta');
-        } elseif (isset($expected['ids'])) {
-            expect($result['row_cache'])->toHaveCount(1);
-            $cache = $result['row_cache'][0];
-            expect((int) $cache['user_id'])->toBe(1)->and($cache['class'])->toBe('device');
-            expect((int) $cache['total_rows'])->toBe($expected['total'] ?? count($expected['ids']));
-            expect($result['count_hashes'])->toBe([$cache['hash']]);
-            expect(strtotime($cache['time']))->not->toBeFalse();
-            $actual = [];
-            foreach ($xpath->query('//input[@type="checkbox" and starts-with(@name,"chk_")]') as $checkbox) {
-                $actual[] = (int) substr($checkbox->getAttribute('name'), 4);
-            }
-            expect($actual)->toBe($expected['ids']);
-            expect($xpath->query('//form[@id="chk" and @action="host.php" and @method="post"]')->length)->toBe(1);
-        } else {
-            expect($xpath->query('//form[@id="host_form" and @action="host.php" and @method="post"]')->length)->toBe(1);
-            expect($xpath->evaluate('string(//input[@name="id"]/@value)'))->toBe((string) $expected['id']);
-            expect($xpath->evaluate('string(//input[@name="action"]/@value)'))->toBe('save');
-            if ($expected['id'] > 0) {
-                expect($xpath->evaluate('string(//input[@name="description"]/@value)'))->toBe('Device & alpha');
-                expect($xpath->query('//a[contains(@href,"graphs_new.php") and contains(@href,"host_id=7")]')->length)->toBe(1);
-                expect($xpath->query('//button[@data-post-action="true" and contains(@data-url,"action=reindex") and contains(@data-url,"host_id=7")]')->length)->toBe(1);
-            }
-        }
+        expect($xpath->query('//form[@name="' . $expected['form'] . '" and @method="post"]')->length)->toBe(1);
+        expect($xpath->query('//input[@name="' . $expected['form'] . '[_token]"]')->length)->toBe(1);
         foreach ($expected['text'] ?? [] as $text) expect($document->textContent)->toContain($text);
-        foreach ($expected['attributes'] ?? [] as $selector => $count) expect($xpath->query($selector)->length)->toBe($count);
-        if (!isset($expected['ids'])) expect($result['row_cache'])->toBe([]);
-        expect(count($result['device_queries']))->toBeLessThanOrEqual(12);
-        if ($coverage !== null) {
-            $sources = \NativeDevicePresentation::sources();
-            $markers = \NativeDevicePresentation::markers();
-            $report = $directory . '/device.coverage';
-            $hits = isset($expected['errors']) || isset($expected['locations']) ? ['host.php', 'lib/functions.php'] : ['host.php', 'lib/html_form.php'];
-            $child = \NativeChildCoverageEvidence::load($report, $root, 'tests/Fixtures/device-presentation-native.php', $input, $sources, $markers, $hits);
-            if (!empty($expected['controls'])) {
-                expect(\NativeChildCoverageEvidence::verifyRejections($report, $root, 'tests/Fixtures/device-presentation-native.php', $input, $sources, $markers, ['host.php', 'lib/html_form.php'], 'cli/refresh_csrf.php'))->toBe(count($sources) + count($markers) + 10);
-            }
-            $coverage->merge($child);
-        }
-    } finally {
-        $entries = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
-        foreach ($entries as $entry) $entry->isDir() && !$entry->isLink() ? rmdir($entry->getPathname()) : unlink($entry->getPathname());
-        rmdir($directory);
     }
 })->with(function (): array {
-    $host = ['id' => 7, 'description' => 'Device & alpha', 'hostname' => 'example.test', 'snmp_version' => 0, 'availability_method' => 0];
-    $rows = ['host' => [$host, array_replace($host, ['id' => 8, 'description' => 'Beta', 'disabled' => 'on', 'site_id' => 0, 'host_template_id' => 1, 'status' => 1]),
-        array_replace($host, ['id' => 9, 'description' => 'Hidden deleted', 'deleted' => 'on'])],
-        'sites' => [['id' => 1, 'name' => 'Main & site']], 'poller' => [['id' => 1, 'name' => 'Main']],
-        'host_template' => [['id' => 1, 'name' => 'Template & alpha']]];
-    $cases = ['empty list' => [['request' => []], ['ids' => [], 'text' => ['No Devices Found']]],
-        'new editor' => [['request' => ['action' => 'edit']], ['id' => 0]],
-        'existing editor' => [['request' => ['action' => 'edit', 'id' => 7], 'rows' => $rows], ['id' => 7]],
-        'all undeleted devices' => [['request' => [], 'rows' => $rows], ['ids' => [8, 7], 'controls' => true]],
-        'description search' => [['request' => ['filter' => 'alpha'], 'rows' => $rows], ['ids' => [7]]],
-        'enabled devices' => [['request' => ['host_status' => -3], 'rows' => $rows], ['ids' => [7]]],
-        'disabled devices' => [['request' => ['host_status' => -2], 'rows' => $rows], ['ids' => [8]]],
-        'site omission sentinel' => [['request' => ['site_id' => 0], 'rows' => $rows], ['ids' => [8]]],
-        'template identity' => [['request' => ['host_template_id' => 1], 'rows' => $rows], ['ids' => [8]]],
-        'second page' => [['request' => ['rows' => 1, 'page' => 2], 'rows' => $rows], ['ids' => [7], 'total' => 2]]];
-    $associated = $rows + ['graph_templates' => [['id' => 4, 'name' => 'Traffic & alpha']],
-        'host_graph' => [['host_id' => 7, 'graph_template_id' => 4]], 'graph_local' => [['id' => 11, 'host_id' => 7, 'graph_template_id' => 4]],
-        'snmp_query' => [['id' => 3, 'name' => 'Interfaces & alpha', 'data_input_id' => 1]],
-        'host_snmp_query' => [['host_id' => 7, 'snmp_query_id' => 3, 'reindex_method' => 0]]];
-    $cases['persisted graph and query associations'] = [['request' => ['action' => 'edit', 'id' => 7], 'rows' => $associated], ['id' => 7,
-        'text' => ['Traffic & alpha', 'Is Being Graphed', 'Interfaces & alpha', '[0 Items, 0 Rows]'],
-        'attributes' => ['//a[contains(@href,"graphs.php?action=graph_edit") and contains(@href,"id=11")]' => 1,
-            '//span[@id="reload3" and @data-id="3"]' => 1, '//span[@id="remove3" and @data-id="3"]' => 1]]];
-    foreach ([1, 2, 3, 4, 5, 6, 7] as $action) {
-        $cases['bulk confirmation ' . $action] = [['request' => ['action' => 'actions', 'drp_action' => (string) $action],
-            'post' => ['chk_7' => 'on', 'chk_8' => 'on'], 'rows' => $rows], ['confirm' => $action]];
-    }
-    $save = array_replace($host, ['action' => 'save', 'save_component_host' => '1', 'description' => '', 'host_template_id' => '0',
-        'snmp_port' => '161', 'snmp_timeout' => '500', 'poller_id' => '1', 'site_id' => '1', 'max_oids' => '10', 'bulk_walk_size' => '-1',
-        'ping_method' => '0', 'ping_port' => '0', 'ping_timeout' => '500', 'ping_retries' => '2', 'device_threads' => '1']);
-    $cases['invalid save preserves existing device'] = [['request' => $save, 'post' => [], 'rows' => $rows], ['errors' => ['description']]];
-    $locations = $rows;
-    $locations['host'][0]['location'] = 'Rack A';
-    $locations['host'][1]['location'] = 'Rack B';
-    $cases['AJAX location choices'] = [['request' => ['action' => 'ajax_locations', 'term' => 'Rack'], 'session' => ['cur_device_id' => 7], 'rows' => $locations],
-        ['locations' => [['label' => 'Rack A', 'value' => 'Rack A', 'id' => 'Rack A'], ['label' => 'Rack B', 'value' => 'Rack B', 'id' => 'Rack B']]]];
-    $cases['AJAX locations scoped to persisted site'] = [['request' => ['action' => 'ajax_locations', 'term' => 'Rack'], 'session' => ['cur_device_id' => 7],
-        'settings' => ['site_location_filter' => 'on'], 'rows' => $locations], ['locations' => [['label' => 'Rack A', 'value' => 'Rack A', 'id' => 'Rack A']]]];
-    $cases['AJAX missing location retains entered choice'] = [['request' => ['action' => 'ajax_locations', 'term' => 'New rack'], 'session' => ['cur_device_id' => 7], 'rows' => $locations],
-        ['locations' => [['label' => 'New rack', 'value' => 'New rack', 'id' => 'New rack'], ['label' => 'None', 'value' => '', 'id' => 'None']]]];
-    $cases['persisted site selection'] = [['request' => ['site_id' => 1], 'rows' => $rows], ['ids' => [7], 'attributes' => ['//select[@id="site_id"]/option[@value="1" and @selected]' => 1]]];
-    $cases['persisted collector selection'] = [['request' => ['poller_id' => 1], 'rows' => $rows], ['ids' => [8, 7], 'attributes' => ['//select[@id="poller_id"]/option[@value="1" and @selected]' => 1]]];
-    $cases['persisted location selection'] = [['request' => ['location' => 'Rack A'], 'rows' => $locations], ['ids' => [7], 'attributes' => ['//select[@id="location"]/option[@value="Rack A" and @selected]' => 1]]];
+    $host = ['id' => 7, 'description' => 'Device & alpha', 'hostname' => 'example.test', 'site_id' => 1, 'location' => 'Rack A', 'snmp_version' => 0, 'availability_method' => 0];
+    $rows = ['host' => [$host, array_replace($host, ['id' => 8, 'description' => 'Beta', 'disabled' => 'on', 'site_id' => 0, 'host_template_id' => 1, 'status' => 1, 'location' => 'Rack B']), array_replace($host, ['id' => 9, 'description' => 'Hidden deleted', 'deleted' => 'on'])], 'sites' => [['id' => 1, 'name' => 'Main & site']], 'poller' => [['id' => 1, 'name' => 'Main']], 'host_template' => [['id' => 1, 'name' => 'Template & alpha']]];
+    $list = static fn(array $fields, string $path, array $ids, array $seed = []): array => [['fields' => $fields, 'rows' => $seed ?: $rows, 'json' => true], ['ids' => $ids, 'query' => parse_url($path, PHP_URL_QUERY) ?? '']];
+    $cases = [
+        'empty list' => [['fields' => [], 'json' => true], ['ids' => []]],
+        'new editor' => [['fields' => ['action' => 'edit'], 'rows' => $rows], ['form' => 'device_create']],
+        'existing editor' => [['fields' => ['action' => 'edit', 'id' => '7'], 'rows' => $rows], ['form' => 'device_edit', 'text' => ['Main & site']]],
+        'all undeleted devices' => $list([], '/inventory/devices.json', [8, 7]),
+        'description search' => $list(['filter' => 'alpha'], '/inventory/devices.json?q=alpha', [7]),
+        'enabled devices' => $list(['host_status' => '-3'], '/inventory/devices.json?state=enabled', [7]),
+        'disabled devices' => $list(['host_status' => '-2'], '/inventory/devices.json?status=disabled', [8]),
+        'site omission sentinel' => $list(['site_id' => '0'], '/inventory/devices.json?site=0', [8]),
+        'template identity' => $list(['host_template_id' => '1'], '/inventory/devices.json?template=1', [8]),
+    ];
+    $page = $rows;
+    $page['host'] = [];
+    for ($i = 0; $i < 28; $i++) $page['host'][] = array_replace($host, ['id' => 100 + $i, 'description' => sprintf('Page %02d', $i)]);
+    $cases['second page uses current bounded size and rejects old rows one'] = [['fields' => ['rows' => '1', 'page' => '2'], 'rows' => $page, 'paths' => ['/inventory/devices.json?page=2&size=25']], ['legacy' => 400, 'ids' => [125, 126, 127]]];
+    $associated = $rows + ['graph_templates' => [['id' => 4, 'name' => 'Traffic & alpha']], 'host_graph' => [['host_id' => 7, 'graph_template_id' => 4]], 'snmp_query' => [['id' => 3, 'name' => 'Interfaces & alpha', 'data_input_id' => 1]], 'host_snmp_query' => [['host_id' => 7, 'snmp_query_id' => 3, 'reindex_method' => 0]]];
+    $cases['persisted associations use dedicated current forms'] = [['fields' => ['action' => 'query_add', 'host_id' => '7'], 'rows' => $associated], ['form' => 'device_association', 'text' => ['Interfaces & alpha']]];
+    foreach (range(1, 7) as $mode) $cases['legacy bulk confirmation ' . $mode . ' expires'] = [['fields' => ['action' => 'actions', 'drp_action' => (string) $mode, 'chk_7' => 'on', 'chk_8' => 'on'], 'method' => 'POST', 'rows' => $rows], ['legacy' => 409]];
+    $cases['invalid legacy save preserves existing device'] = [['fields' => ['action' => 'save', 'id' => '7', 'description' => ''], 'method' => 'POST', 'rows' => $rows], ['legacy' => 409]];
+    $cases['AJAX location choices use label value contract'] = [['fields' => ['action' => 'ajax_locations', 'term' => 'Rack'], 'rows' => $rows], ['legacy' => 200, 'locations' => [['label' => 'Rack A', 'value' => 'Rack A'], ['label' => 'Rack B', 'value' => 'Rack B']]]];
+    $scoped = $rows + ['user_auth_perms' => [['user_id' => 42, 'item_id' => 8, 'type' => 3]]];
+    $cases['AJAX locations follow current actor visibility rather than remembered site'] = [['fields' => ['action' => 'ajax_locations', 'term' => 'Rack'], 'rows' => $scoped], ['legacy' => 200, 'locations' => [['label' => 'Rack A', 'value' => 'Rack A']]]];
+    $cases['AJAX missing location returns no fabricated choices'] = [['fields' => ['action' => 'ajax_locations', 'term' => 'New rack'], 'rows' => $rows], ['legacy' => 200, 'locations' => []]];
+    $cases['persisted site selection'] = $list(['site_id' => '1'], '/inventory/devices.json?site=1', [7]);
+    $cases['persisted collector selection'] = $list(['poller_id' => '1'], '/inventory/devices.json?collector=1', [8, 7]);
+    $cases['persisted location selection'] = $list(['location' => 'Rack A'], '/inventory/devices.json?location_mode=exact&location=Rack%20A', [7]);
     return $cases;
 });

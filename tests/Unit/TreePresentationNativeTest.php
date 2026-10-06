@@ -102,7 +102,7 @@ test('tree presentation retains persisted ordering selections and edit controls'
         'new tree editor' => [['request' => ['action' => 'edit']], ['id' => 0]],
         'existing unlocked editor' => [['request' => ['action' => 'edit', 'id' => 7], 'rows' => $rows], ['id' => 7, 'attributes' => ['//input[@id="lock"]' => 1]]],
         'three persisted ordered trees' => [['request' => [], 'rows' => $rows], ['ids' => [7, 8, 9], 'controls' => true,
-            'attributes' => ['//a[contains(@href,"action=tree_down") and contains(@href,"id=7")]' => 1, '//a[contains(@href,"action=tree_up") and contains(@href,"id=9")]' => 1]]],
+            'attributes' => ['//a[contains(concat(" ",normalize-space(@class)," ")," cactiPostAction ") and @href="#" and contains(@data-url,"action=tree_down") and contains(@data-url,"id=7")]' => 1, '//a[contains(concat(" ",normalize-space(@class)," ")," cactiPostAction ") and @href="#" and contains(@data-url,"action=tree_up") and contains(@data-url,"id=9")]' => 1]]],
         'tree name search' => [['request' => ['filter' => 'alpha'], 'rows' => $rows], ['ids' => [7]]],
         'second tree page' => [['request' => ['rows' => 1, 'page' => 2], 'rows' => $rows], ['ids' => [8], 'total' => 3]],
         'reverse tree order' => [['request' => ['sort_column' => 'name', 'sort_direction' => 'DESC'], 'rows' => $rows], ['ids' => [7, 9, 8]]]];
