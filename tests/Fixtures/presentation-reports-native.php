@@ -163,6 +163,9 @@ $GLOBALS['nativePresentationObserver'] = static function (array $rendered) use (
         if ($after !== $expected) {
             throw new RuntimeException('Report operation changed unexpected persisted rows');
         }
+        if (($GLOBALS['diagnostics'] ?? array()) !== array()) {
+            throw new RuntimeException('Actual presentation caller emitted unexpected diagnostics: ' . implode('; ', $GLOBALS['diagnostics']));
+        }
         $outcomeBytes = json_encode(array('case' => $case, 'before' => $before, 'after' => $after, 'html' => $html), JSON_THROW_ON_ERROR);
         if (file_put_contents($directory . '/outcome.json', $outcomeBytes) !== strlen($outcomeBytes)) {
             throw new RuntimeException('Cannot retain actual persisted report outcome');

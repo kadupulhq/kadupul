@@ -135,6 +135,9 @@ $GLOBALS['nativePresentationObserver'] = static function (array $rendered) use (
                 'actual' => $after, 'queries' => $mutationQueries, 'budget' => $budget), JSON_THROW_ON_ERROR));
             throw new RuntimeException('Persisted presentation outcome/query budget mismatch: ' . $case);
         }
+        if (($GLOBALS['diagnostics'] ?? array()) !== array()) {
+            throw new RuntimeException('Actual presentation caller emitted unexpected diagnostics: ' . implode('; ', $GLOBALS['diagnostics']));
+        }
         $outcome = json_encode(array('case' => $case, 'before' => $before, 'after' => $after, 'queries' => $mutationQueries), JSON_THROW_ON_ERROR);
         if (file_put_contents($directory . '/outcome.json', $outcome) !== strlen($outcome)) {
             throw new RuntimeException('Cannot retain persisted native outcome');

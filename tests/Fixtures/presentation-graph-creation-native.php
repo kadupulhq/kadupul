@@ -172,6 +172,9 @@ $GLOBALS['nativePresentationObserver'] = static function (array $rendered) use (
         if ($after !== $before) {
             throw new RuntimeException('Graph rendering changed stored metadata');
         }
+        if (($GLOBALS['diagnostics'] ?? array()) !== array()) {
+            throw new RuntimeException('Actual presentation caller emitted unexpected diagnostics: ' . implode('; ', $GLOBALS['diagnostics']));
+        }
         $bytes = json_encode(array('case' => $case,'before' => $before,'after' => $after,'html' => $html), JSON_THROW_ON_ERROR);
         if (file_put_contents($directory . '/outcome.json', $bytes) !== strlen($bytes)) {
             throw new RuntimeException('Cannot retain graph render outcome');
@@ -186,7 +189,7 @@ if (getenv('PRESENTATION_GRAPH_CREATION_COVERAGE') === '1') {
     $testLoader = require $root . '/tests/vendor/autoload.php';
     require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
     $filter = new SebastianBergmann\CodeCoverage\Filter();
-    foreach (array('graphs_new.php', 'lib/database.php', 'lib/html.php') as $source) {
+    foreach (array('graphs_new.php', 'lib/database.php', 'lib/html.php', 'lib/data_query.php', 'lib/xml.php', 'lib/path_helpers.php') as $source) {
         $filter->includeFile($root . '/' . $source);
     }
     $coverage = new SebastianBergmann\CodeCoverage\CodeCoverage((new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($filter), $filter);
