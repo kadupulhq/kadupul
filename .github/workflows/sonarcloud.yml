@@ -176,7 +176,7 @@ jobs:
           KADUPUL_BROWSER_COVERAGE: ${{ runner.temp }}/browser-layout-coverage
         run: |
           set -euo pipefail
-          node tests/e2e/node_modules/@playwright/test/cli.js test --config=tests/e2e/playwright.config.js selectmenu-scroll.spec.js midwinter-listeners.spec.js html-sink-escaping.spec.js
+          node tests/e2e/node_modules/@playwright/test/cli.js test --config=tests/e2e/playwright.config.js layout-interactions.spec.js midwinter-listeners.spec.js html-sink-escaping.spec.js
           node tests/e2e/browser-coverage.js "$KADUPUL_BROWSER_COVERAGE" var/browser-coverage.lcov
           test -s var/browser-coverage.lcov
 
