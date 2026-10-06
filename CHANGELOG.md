@@ -6,7 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
-- Reuse dark graph hover timer callbacks without allocating private helpers; preserve shared element snapshots and keyboard access. Prefer the native own-property API for icon lookups while retaining the older-browser fallback.
+- Inline dark graph hover helpers while preserving timer element snapshots and keyboard access. Prefer the native own-property API for icon lookups while retaining the older-browser fallback.
 
 - Bound legacy Boost writer lock acquisition to 60 attempts; report contention and retain queued samples instead of waiting indefinitely.
 - Correct Settings help for graph permission combinations, auto scale limits, and CSP nonce reporting and enforcement. Fixes #222, #230, and #265.
