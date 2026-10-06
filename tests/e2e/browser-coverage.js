@@ -258,6 +258,17 @@ function verifyRegistryRejections(directory) {
       fs.unlinkSync(path.join(owned, first));
       fs.unlinkSync(path.join(owned, `${first}.receipt`));
     });
+    for (const scenario of scenarios['html-sink-escaping.spec.js']) {
+      refuse(() => {
+        const missing = reports.find(file => {
+          const receipt = JSON.parse(fs.readFileSync(path.join(owned, `${file}.receipt`)));
+          return receipt.producer === 'tests/e2e/html-sink-escaping.spec.js' && receipt.scenario === scenario;
+        });
+        if (!missing) throw new Error('Missing HTML sink scenario control input');
+        fs.unlinkSync(path.join(owned, missing));
+        fs.unlinkSync(path.join(owned, `${missing}.receipt`));
+      });
+    }
     refuse(() => {
       fs.copyFileSync(path.join(owned, first), path.join(owned, 'duplicate.json'));
       fs.copyFileSync(path.join(owned, `${first}.receipt`), path.join(owned, 'duplicate.json.receipt'));
