@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Install the pinned Python test dependency in an isolated environment before Snyk scans all repository projects.
+
 - Reduce repeated native test coverage parsing while preserving complete uncovered-source reports and strict subprocess evidence checks.
 
 - Preserve heartbeat propagation for template-only and local data sources; accept unchanged read-only fields and independently validate consolidation edits before writes.
