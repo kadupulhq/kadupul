@@ -5,7 +5,8 @@
 Each case restores the same starting state, runs the frozen original, restores
 it again, runs the shim, and compares stdout, stderr, the exit code, the
 schema, the audit tables, docs/audit_schema.sql and cacti.log, whole lines
-with only the time of day masked.
+with only the time of day masked. Failed repairs and failed exports explicitly
+require the frozen original's exit 0 and the native command's exit 1.
 """
 import json
 from pathlib import Path
@@ -430,9 +431,13 @@ def verify_audit_cases(harness, check, tables, version):
         # The original truncated the file before its dump failed, so a failed
         # export compares the file on its own below.
         snapshot = (lambda h: schema(h, with_dump=label != EXPORT_FAILS, imported=True)) if '--load' in arguments else schema
+        # The frozen CLI unconditionally exits 0 after these failed writes.
+        # The native report counts them as failures; absent docs skips export
+        # (exported=None), so that case retains strict exit parity.
+        expected_exits = (0, 1) if state in ('failing', 'untyped index', 'dump denied') else None
         ran = compare(harness, check, label, (AUDIT_ORIGINAL, AUDIT_SHIM), arguments, None, starting, snapshot, AUDIT_UTILITY,
                       stdout=stdout, stderr_filter=stderr_filter, shim_stderr_filter=shim_stderr_filter,
-                      log_filter=log_masked, original_stdout=original_stdout)
+                      log_filter=log_masked, original_stdout=original_stdout, expected_exits=expected_exits)
         original, shim = ran['original'], ran['shim']
         check(with_recorded_collations(masked_audit(shim['stdout']), collations) == masked_audit(shim['stdout']),
               f'{label}: native ALTER explicitly retains the recorded column collations')

@@ -1324,7 +1324,8 @@ Known differences from `cli/audit_database.php`:
 - `--load` writes `docs/audit_schema.sql` only when the dump program
   succeeds. The original truncated the file first.
 - A failed export prints the original's `Finished Creating Audit Schema
-  with ERROR` and exits 0; under `--json` it reads `partial`, with
+  with ERROR` and exits 1 in legacy presentation as well as other modes;
+  the frozen original exited 0. Under `--json` it reads `partial`, with
   `exported: false`, and exits 1. A dump program that exits non-zero logs
   the original's `DBCALL ERROR: mysqldump failed with exit code <n> for
   database '<db>'`. The dump is stopped after 300 seconds, where the

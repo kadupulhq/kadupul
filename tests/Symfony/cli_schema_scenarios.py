@@ -4,6 +4,7 @@
 
 Each case runs the frozen original and the shim from the same starting schema
 and compares stdout, stderr, the exit code and the schema each leaves behind.
+Exit parity is strict unless a caller specifies both expected exit codes.
 
 The widen cases also compare cacti.log, whole lines with only the time of day
 masked.
@@ -95,7 +96,7 @@ def without_version(text, utility):
 
 def compare(harness, check, label, scripts, arguments, allowed, reset, snapshot, utility,
             stdout=normalise, stderr_filter=None, shim_stderr_filter=None, log_filter=None, subject='schema',
-            original_stdout=None):
+            original_stdout=None, expected_exits: tuple[int, int] | None = None):
     """Run the original, then the shim, from equal starting states.
 
     reset() puts the state back to its start and snapshot() reads what the
@@ -103,7 +104,9 @@ def compare(harness, check, label, scripts, arguments, allowed, reset, snapshot,
     both outputs unless original_stdout supplies an explicit legacy expectation,
     stderr_filter() removes the original's own diagnostics, and
     log_filter(), when given, masks both cacti.log extracts for a comparison.
-    Returns the two results, both logs and both snapshots taken after the runs.
+    expected_exits, when given, requires that exact (original, shim) exit pair;
+    otherwise exit codes must match. Returns the two results, both logs and
+    both snapshots taken after the runs.
     """
     original_script, shim_script = scripts
     reset(harness)
@@ -130,7 +133,12 @@ def compare(harness, check, label, scripts, arguments, allowed, reset, snapshot,
     same = allowed == SECOND_LOOP_ALLOWED or after_shim == after_original
     if actual != expected or actual_err != expected_err or not same:
         print(f'{label}: original {original!r}\n{label}: shim {shim!r}', flush=True)
-    check(shim['exit'] == original['exit'], f'{label}: shim exit code matches the original')
+    if expected_exits is None:
+        check(shim['exit'] == original['exit'], f'{label}: shim exit code matches the original')
+    else:
+        original_exit, shim_exit = expected_exits
+        check(original['exit'] == original_exit, f'{label}: frozen original exit code is {original_exit}')
+        check(shim['exit'] == shim_exit, f'{label}: native exit code is {shim_exit}')
     check(actual == expected, f'{label}: shim stdout matches the original')
     check(actual_err == expected_err, f'{label}: shim stderr matches the original')
     if allowed != SECOND_LOOP_ALLOWED:

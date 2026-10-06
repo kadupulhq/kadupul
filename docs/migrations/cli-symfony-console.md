@@ -285,7 +285,8 @@ are the first.
   the audit schema rejects is a bug and fails the command. Run write commands as the web server's user, so that
   `log/kadupul-audit.jsonl` and `log/cacti.log` stay writable by web requests.
 - **Exit codes and results.** In legacy mode the exit code is the original's,
-  including 0 after its own validation errors and after failed statements.
+  including 0 after its own validation errors and after failed statements,
+  except for the intentional audit failure outcomes documented below.
   Under `bin/console` it is 0 when every statement succeeded, 1 when any
   failed, the run stopped or the operator was refused, and 2 for invalid
   input. JSON `status` is `ok`,
@@ -416,3 +417,12 @@ The installed parity harness invokes the native audit through a test-only
 `LegacyCli` bridge while the production compatibility CLI remains supported.
 Canonical imports retain the dump table comments; live-schema `--load` keeps
 the comments created by the compatibility CLI.
+
+The native audit intentionally returns exit 1 after a failed repair (including
+an unbuildable, untyped index clause) or a failed export. The frozen original
+returned exit 0 for these failures. The installed parity comparator requires
+the exact `(0, 1)` exit pair only for its `failing`, `untyped index` and
+`dump denied` states; output, errors, schema, files and logs still compare.
+A missing `docs/` directory skips export (`exported: null`), with no failed
+operation counted, and retains exit 0 in legacy presentation. Other parity
+cases continue to require equal exit codes unless separately documented.

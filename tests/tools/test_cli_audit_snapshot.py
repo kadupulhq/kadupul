@@ -1,13 +1,16 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""Verify audit snapshot comparisons omit only numeric engine estimates."""
+"""Verify audit comparisons preserve state and require explicit exit contracts."""
+from contextlib import redirect_stdout
+from io import StringIO
 from pathlib import Path
 import sys
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'Symfony'))
 import cli_audit_scenarios as audit
+import cli_schema_scenarios as schema
 
 
 INDEX = ['settings', '0', 'PRIMARY', '1', 'name', 'A', '80', 'NULL', 'NULL', '', 'BTREE', '']
@@ -120,6 +123,74 @@ class AuditSnapshotTest(unittest.TestCase):
 
     def test_non_index_data_changes_remain_visible(self):
         self.assertNotEqual(snapshot(INDEX), snapshot(INDEX, state='version\tchanged\n'))
+
+
+class AuditExitComparisonTest(unittest.TestCase):
+    def compare(self, original_exit=0, native_exit=1, expected_exits=None,
+                stdout='same output', stderr='', state='same schema', log='same log'):
+        original = {'exit': original_exit, 'stdout': 'same output', 'stderr': ''}
+        native = {'exit': native_exit, 'stdout': stdout, 'stderr': stderr}
+        snapshot = Mock(side_effect=[('start',), ('same schema',), ('start',), (state,)])
+        with patch.object(schema, 'run', side_effect=[original, native]), \
+                patch.object(schema, 'log_lines', side_effect=[[], ['same log'], [], [log]]):
+            return schema.compare(object(), lambda condition, label: self.assertTrue(condition, label),
+                                  'audit failed write', ('original.php', 'native.php'), ['--repair'],
+                                  None, Mock(), snapshot, 'audit', stdout=lambda text: text,
+                                  log_filter=lambda lines: lines, expected_exits=expected_exits)
+
+    def test_explicit_failure_pair_admits_exact_historical_and_native_exits(self):
+        compared = self.compare(expected_exits=(0, 1))
+        self.assertEqual(0, compared['original']['exit'])
+        self.assertEqual(1, compared['shim']['exit'])
+
+    def test_default_retains_strict_exit_parity(self):
+        for exit_code in (0, 1):
+            with self.subTest(exit=exit_code):
+                self.compare(original_exit=exit_code, native_exit=exit_code)
+        with self.assertRaisesRegex(AssertionError, 'matches the original'):
+            self.compare()
+
+    def test_explicit_pair_rejects_changed_original_or_native_exit(self):
+        for original, native in ((1, 1), (0, 0), (0, 2), (2, 1)):
+            with self.subTest(original=original, native=native):
+                with self.assertRaisesRegex(AssertionError, 'exit code is'):
+                    self.compare(original_exit=original, native_exit=native, expected_exits=(0, 1))
+
+    def test_explicit_exit_contract_preserves_other_comparisons(self):
+        for field, value, diagnostic in (('stdout', 'different', 'stdout'),
+                                         ('stderr', 'different', 'stderr'),
+                                         ('state', 'different', 'schema'),
+                                         ('log', 'different', 'logs')):
+            with self.subTest(field=field):
+                with redirect_stdout(StringIO()), self.assertRaisesRegex(AssertionError, diagnostic):
+                    self.compare(expected_exits=(0, 1), **{field: value})
+
+    def test_audit_caller_selects_only_the_three_intentional_failure_states(self):
+        class Compared(Exception):
+            pass
+
+        for label, arguments, state in audit.AUDIT_CASES:
+            # These baseline-refusal cases have their own direct outcome checks.
+            if state in ('no dump', 'unparsable', 'create denied'):
+                continue
+            harness = Mock()
+            harness.sql.side_effect = lambda query: (
+                'varchar(191)\tYES\t<sql-null>\t\tutf8mb4_unicode_ci\tUNI'
+                if 'COLUMN_TYPE' in query else '')
+            with self.subTest(state=state), patch.object(audit, 'AUDIT_CASES', [(label, arguments, state)]), \
+                    patch.object(audit, 'compare', side_effect=Compared) as comparator:
+                with self.assertRaises(Compared):
+                    audit.verify_audit_cases(harness, lambda condition, message: self.assertTrue(condition, message), [], '1.2.35')
+                self.assertEqual((0, 1) if state in ('failing', 'untyped index', 'dump denied') else None,
+                                 comparator.call_args.kwargs['expected_exits'])
+
+    def test_reset_state_still_has_to_match(self):
+        with patch.object(schema, 'run', return_value={'exit': 0, 'stdout': '', 'stderr': ''}), \
+                patch.object(schema, 'log_lines', return_value=[]):
+            with self.assertRaisesRegex(AssertionError, 'same schema'):
+                schema.compare(object(), lambda condition, label: self.assertTrue(condition, label),
+                               'audit failed write', ('original.php', 'native.php'), [], None, Mock(),
+                               Mock(side_effect=['start', 'after', 'wrong start']), 'audit', expected_exits=(0, 1))
 
 
 if __name__ == '__main__':
