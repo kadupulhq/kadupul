@@ -490,12 +490,24 @@ final class DataDebugNativeCoverageTest extends TestCase
         $directory = sys_get_temp_dir() . '/manager-view-' . bin2hex(random_bytes(8));
         $coverage = $this->getTestResultObject()->getCodeCoverage();
         $scenario = json_encode(array_merge(array('view' => 'debug', 'request' => $request), $options), JSON_THROW_ON_ERROR);
-        $command = array(PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'error_reporting=24575', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $root . '/tests/Fixtures/utility-view-native.php', $scenario, $directory);
+        $command = array(PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'error_reporting=24575', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $root . '/tests/Fixtures/utility-view-native.php', '--scenario-stdin', $directory);
         if ($coverage !== null) {
             $command[] = 'coverage';
         }
+        $scenarioInput = tmpfile();
+        self::assertIsResource($scenarioInput);
         try {
-            $process = proc_open($command, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+            // An owned temporary stream preserves the 10,000-record protocol
+            // across Linux's per-argument limit without a pipe-write deadlock.
+            $written = 0;
+            while ($written < strlen($scenario)) {
+                $bytes = fwrite($scenarioInput, substr($scenario, $written));
+                self::assertNotFalse($bytes);
+                self::assertGreaterThan(0, $bytes);
+                $written += $bytes;
+            }
+            self::assertTrue(rewind($scenarioInput));
+            $process = proc_open($command, array(0 => $scenarioInput, 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
             self::assertIsResource($process);
             $output = stream_get_contents($pipes[1]);
             $error = stream_get_contents($pipes[2]);
@@ -531,6 +543,7 @@ final class DataDebugNativeCoverageTest extends TestCase
             }
             return json_decode($output, true, 512, JSON_THROW_ON_ERROR);
         } finally {
+            fclose($scenarioInput);
             foreach (glob($directory . '/*.coverage*') as $report) {
                 unlink($report);
             }

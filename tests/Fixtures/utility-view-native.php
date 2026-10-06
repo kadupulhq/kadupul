@@ -15,7 +15,19 @@ if (PHP_SAPI !== 'cli' && !defined('UTILITY_NATIVE_HTTP_PORT')) {
 $root = dirname(__DIR__, 2);
 // Match the application's actual Composer bootstrap for semantic icons.
 require_once $root . '/include/vendor/autoload.php';
-$scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
+$encodedScenario = $argv[1];
+if ($encodedScenario === '--scenario-stdin') {
+    if (PHP_SAPI !== 'cli') {
+        throw new RuntimeException('Fixture standard-input scenarios require CLI.');
+    }
+    // Bound the owned fixture protocol without placing a large request in argv.
+    $encodedScenario = stream_get_contents(STDIN, 1048577);
+    if ($encodedScenario === false || strlen($encodedScenario) > 1048576) {
+        throw new RuntimeException('Fixture scenario input is unavailable or oversized.');
+    }
+    $argv[1] = $encodedScenario; // Preserve exact original coverage scenario binding.
+}
+$scenario = json_decode($encodedScenario, true, 512, JSON_THROW_ON_ERROR);
 if (isset($scenario['utility_policy'])) $scenario['debug_purge_policy'] = $scenario['utility_policy'];
 $managerView = $scenario['view'] === 'manager';
 $debugView = in_array($scenario['view'], array('debug', 'debug-icons'), true);

@@ -795,7 +795,10 @@ final class AuthPolicyNativeCoverageTest extends TestCase
                     $hits = ['lib/auth.php','lib/api_graph.php'];
                     $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), GraphDeviceChangeCoverageRegistration::SOURCES, GraphDeviceChangeCoverageRegistration::MARKERS, $hits);
                     if (!isset(self::$coverageEvidenceChecked['graph-device-change'])) {
-                        self::assertSame(46, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), GraphDeviceChangeCoverageRegistration::SOURCES, GraphDeviceChangeCoverageRegistration::MARKERS, $hits, 'lib/rrd.php'));
+                        // Four identity fields, the producer, five report/hit
+                        // controls, and every registered source and marker.
+                        $expectedControls = 10 + count(GraphDeviceChangeCoverageRegistration::SOURCES) + count(GraphDeviceChangeCoverageRegistration::MARKERS);
+                        self::assertSame($expectedControls, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/auth-policy-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), GraphDeviceChangeCoverageRegistration::SOURCES, GraphDeviceChangeCoverageRegistration::MARKERS, $hits, 'lib/rrd.php'));
                         self::$coverageEvidenceChecked['graph-device-change'] = true;
                     }
                     $coverage->merge($childCoverage);
