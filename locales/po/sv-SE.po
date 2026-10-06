@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-06 06:29-0700\n"
+"POT-Creation-Date: 2026-10-06 07:06-0700\n"
 "PO-Revision-Date: 2026-03-16 13:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -1053,14 +1053,14 @@ msgstr "Ta bort enhet"
 #: automation_devices.php:39 automation_devices.php:294
 #: automation_devices.php:406 automation_devices.php:417
 #: automation_devices.php:679 automation_devices.php:680
-#: lib/api_automation.php:31 lib/html_utility.php:1327 pollers.php:32
+#: lib/api_automation.php:31 lib/html_utility.php:1335 pollers.php:32
 msgid "Down"
 msgstr "Ner"
 
 #: automation_devices.php:40 automation_devices.php:294
 #: automation_devices.php:408 automation_devices.php:419
 #: automation_devices.php:679 automation_devices.php:680
-#: lib/api_automation.php:30 lib/html_utility.php:1333
+#: lib/api_automation.php:30 lib/html_utility.php:1341
 msgid "Up"
 msgstr "Upp"
 
@@ -1383,7 +1383,7 @@ msgstr "Aktiverad"
 #: include/global_settings.php:1677 include/global_settings.php:1691
 #: include/global_settings.php:1781 include/global_settings.php:2545
 #: lib/api_automation.php:28 lib/html.php:2844 lib/html_reports.php:2037
-#: lib/html_reports.php:2188 lib/html_utility.php:1317 managers.php:241
+#: lib/html_reports.php:2188 lib/html_utility.php:1325 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:936 user_domains.php:397
 #: user_group_admin.php:756 utilities.php:2147 utilities.php:2699
 #: utilities.php:3008
@@ -12014,7 +12014,7 @@ msgstr "Initierar"
 msgid "Please wait while the installation system for Kadupul Version %s initializes. You must have JavaScript enabled for this to work."
 msgstr "Vänligen vänta medan installationssystemet för Kadupul Version %s initialiseras. Du måste ha JavaScript aktiverat för att detta ska fungera."
 
-#: install/install.php:101 lib/html_utility.php:1336 lib/installer.php:2085
+#: install/install.php:101 lib/html_utility.php:1344 lib/installer.php:2085
 #: lib/installer.php:4124
 msgid "Error"
 msgstr "Fel"
@@ -12087,13 +12087,13 @@ msgstr "Åsidosätt detta värde"
 msgid "Not Up"
 msgstr "Inte uppe"
 
-#: lib/api_automation.php:32 lib/html.php:65 lib/html_utility.php:1330
+#: lib/api_automation.php:32 lib/html.php:65 lib/html_utility.php:1338
 #: pollers.php:34
 msgid "Recovering"
 msgstr "Återhämtar"
 
 #: lib/api_automation.php:33 lib/auth.php:3059 lib/clog_webapi.php:856
-#: lib/html_utility.php:1339 lib/import.php:342 lib/plugins.php:1499
+#: lib/html_utility.php:1347 lib/import.php:342 lib/plugins.php:1499
 #: lib/plugins.php:1500 lib/rrd.php:4194 lib/rrd.php:4206 lib/spikekill.php:301
 #: package_import.php:522 package_import.php:600 utilities.php:211
 #: utilities.php:212 utilities.php:2753
@@ -14427,40 +14427,40 @@ msgstr "(Icke-grafisk mall)"
 msgid "Selected"
 msgstr "Vald"
 
-#: lib/html_utility.php:540 lib/html_utility.php:762
+#: lib/html_utility.php:548 lib/html_utility.php:770
 #, php-format
 msgid "The regular expression \"%s\" is not valid. Error is %s"
 msgstr "Det reguljära uttrycket \"%s\" är inte giltigt. Felet är %s"
 
-#: lib/html_utility.php:1242
+#: lib/html_utility.php:1250
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
 msgstr "Kadupuls reguljära uttryck är av säkerhetsskäl begränsade till 50 tecken."
 
-#: lib/html_utility.php:1246
+#: lib/html_utility.php:1254
 msgid "Kadupul regular expressions can not includes the semi-color character."
 msgstr "Kadupul reguljära uttryck kan inte innehålla halvfärgstecknet."
 
-#: lib/html_utility.php:1266
+#: lib/html_utility.php:1274
 msgid "There was an internal error!"
 msgstr "Det uppstod ett internt fel!"
 
-#: lib/html_utility.php:1267
+#: lib/html_utility.php:1275
 msgid "Backtrack limit was exhausted!"
 msgstr "Backtrack-gränsen var utmattad!"
 
-#: lib/html_utility.php:1268
+#: lib/html_utility.php:1276
 msgid "Recursion limit was exhausted!"
 msgstr "Rekursionsgränsen var uttömd!"
 
-#: lib/html_utility.php:1269
+#: lib/html_utility.php:1277
 msgid "Bad UTF-8 error!"
 msgstr "Dåligt UTF-8-fel!"
 
-#: lib/html_utility.php:1270
+#: lib/html_utility.php:1278
 msgid "Bad UTF-8 offset error!"
 msgstr "Felaktig UTF-8-offset!"
 
-#: lib/html_utility.php:1321
+#: lib/html_utility.php:1329
 msgid "Down (Thold)"
 msgstr "Ner (Thold)"
 

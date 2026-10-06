@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-06 06:29-0700\n"
+"POT-Creation-Date: 2026-10-06 07:06-0700\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -1183,7 +1183,7 @@ msgstr "刪除設備"
 #: automation_devices.php:39 automation_devices.php:294
 #: automation_devices.php:406 automation_devices.php:417
 #: automation_devices.php:679 automation_devices.php:680
-#: lib/api_automation.php:31 lib/html_utility.php:1327 pollers.php:32
+#: lib/api_automation.php:31 lib/html_utility.php:1335 pollers.php:32
 #, fuzzy
 msgid "Down"
 msgstr "向下"
@@ -1191,7 +1191,7 @@ msgstr "向下"
 #: automation_devices.php:40 automation_devices.php:294
 #: automation_devices.php:408 automation_devices.php:419
 #: automation_devices.php:679 automation_devices.php:680
-#: lib/api_automation.php:30 lib/html_utility.php:1333
+#: lib/api_automation.php:30 lib/html_utility.php:1341
 #, fuzzy
 msgid "Up"
 msgstr "向上"
@@ -1551,7 +1551,7 @@ msgstr "啟用"
 #: include/global_settings.php:1677 include/global_settings.php:1691
 #: include/global_settings.php:1781 include/global_settings.php:2545
 #: lib/api_automation.php:28 lib/html.php:2844 lib/html_reports.php:2037
-#: lib/html_reports.php:2188 lib/html_utility.php:1317 managers.php:241
+#: lib/html_reports.php:2188 lib/html_utility.php:1325 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:936 user_domains.php:397
 #: user_group_admin.php:756 utilities.php:2147 utilities.php:2699
 #: utilities.php:3008
@@ -14113,7 +14113,7 @@ msgstr "初始化"
 msgid "Please wait while the installation system for Kadupul Version %s initializes. You must have JavaScript enabled for this to work."
 msgstr "請等待Kadupul Version%s的安裝系統初始化。您必須啟用JavaScript才能使用此功能。"
 
-#: install/install.php:101 lib/html_utility.php:1336 lib/installer.php:2085
+#: install/install.php:101 lib/html_utility.php:1344 lib/installer.php:2085
 #: lib/installer.php:4124
 #, fuzzy
 msgid "Error"
@@ -14202,14 +14202,14 @@ msgstr "覆蓋此值"
 msgid "Not Up"
 msgstr "不起來"
 
-#: lib/api_automation.php:32 lib/html.php:65 lib/html_utility.php:1330
+#: lib/api_automation.php:32 lib/html.php:65 lib/html_utility.php:1338
 #: pollers.php:34
 #, fuzzy
 msgid "Recovering"
 msgstr "正在復原"
 
 #: lib/api_automation.php:33 lib/auth.php:3059 lib/clog_webapi.php:856
-#: lib/html_utility.php:1339 lib/import.php:342 lib/plugins.php:1499
+#: lib/html_utility.php:1347 lib/import.php:342 lib/plugins.php:1499
 #: lib/plugins.php:1500 lib/rrd.php:4194 lib/rrd.php:4206 lib/spikekill.php:301
 #: package_import.php:522 package_import.php:600 utilities.php:211
 #: utilities.php:212 utilities.php:2753
@@ -16910,45 +16910,45 @@ msgstr "（非圖表模板）"
 msgid "Selected"
 msgstr "已選取"
 
-#: lib/html_utility.php:540 lib/html_utility.php:762
+#: lib/html_utility.php:548 lib/html_utility.php:770
 #, fuzzy, php-format
 msgid "The regular expression \"%s\" is not valid. Error is %s"
 msgstr "搜索字詞“%s”無效。錯誤是%s"
 
-#: lib/html_utility.php:1242
+#: lib/html_utility.php:1250
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
 msgstr ""
 
-#: lib/html_utility.php:1246
+#: lib/html_utility.php:1254
 msgid "Kadupul regular expressions can not includes the semi-color character."
 msgstr ""
 
-#: lib/html_utility.php:1266
+#: lib/html_utility.php:1274
 #, fuzzy
 msgid "There was an internal error!"
 msgstr "有一個內部錯誤！"
 
-#: lib/html_utility.php:1267
+#: lib/html_utility.php:1275
 #, fuzzy
 msgid "Backtrack limit was exhausted!"
 msgstr "Backtrack限制已經用盡！"
 
-#: lib/html_utility.php:1268
+#: lib/html_utility.php:1276
 #, fuzzy
 msgid "Recursion limit was exhausted!"
 msgstr "遞歸限制已用盡！"
 
-#: lib/html_utility.php:1269
+#: lib/html_utility.php:1277
 #, fuzzy
 msgid "Bad UTF-8 error!"
 msgstr "糟糕的UTF-8錯誤！"
 
-#: lib/html_utility.php:1270
+#: lib/html_utility.php:1278
 #, fuzzy
 msgid "Bad UTF-8 offset error!"
 msgstr "錯誤的UTF-8偏移錯誤！"
 
-#: lib/html_utility.php:1321
+#: lib/html_utility.php:1329
 msgid "Down (Thold)"
 msgstr "下載"
 
