@@ -9,11 +9,28 @@ $root = getenv('DEVICE_ROUTE_ROOT');
 $directory = getenv('DEVICE_ROUTE_DIRECTORY');
 $encoded = getenv('DEVICE_ROUTE_SCENARIO');
 $scenario = json_decode($encoded, true, 512, JSON_THROW_ON_ERROR);
-require $root . '/tests/vendor/autoload.php';
+// Cached Symfony containers include the application's contract files directly.
+// Load those contracts from the application stack; keep PHPUnit/coverage on the
+// parent's locked test stack without redirecting framework namespaces there.
 require $root . '/include/vendor/autoload.php';
+if (!interface_exists(Psr\Container\ContainerInterface::class)) throw new RuntimeException('Application container contract missing');
+require $root . '/tests/vendor/autoload.php';
 $loader = Composer\Autoload\ClassLoader::getRegisteredLoaders()[$root . '/tests/vendor'];
 $loader->unregister();
-$loader->register(true);
+$loader->register(false);
+spl_autoload_register(static function (string $class) use ($loader): void {
+    foreach (['PHPUnit\\', 'SebastianBergmann\\', 'Pest\\', 'NunoMaduro\\', 'TheSeer\\', 'PhpParser\\', 'DeepCopy\\'] as $prefix) {
+        if (str_starts_with($class, $prefix)) {
+            $loader->loadClass($class);
+            return;
+        }
+    }
+}, true, true);
+if ((new ReflectionClass(Psr\Container\ContainerInterface::class))->getFileName() !== realpath($root . '/include/vendor/psr/container/src/ContainerInterface.php')
+    || (new ReflectionClass(PHPUnit\Framework\TestCase::class))->getFileName() !== realpath($root . '/tests/vendor/phpunit/phpunit/src/Framework/TestCase.php')
+    || (new ReflectionClass(SebastianBergmann\CodeCoverage\CodeCoverage::class))->getFileName() !== realpath($root . '/tests/vendor/phpunit/php-code-coverage/src/CodeCoverage.php')) {
+    throw new RuntimeException('Native application/test dependency boundary changed');
+}
 require $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
 require $root . '/tests/Helpers/DeviceRouteCoverageRegistration.php';
 if (getenv('DEVICE_ROUTE_COVERAGE') === '1') {
