@@ -563,6 +563,93 @@ test('atomic restore preserves RRD ownership and permissions', function () {
         ->and(file_get_contents($this->rrdfile))->toBe('restored-rrd-bytes');
 });
 
+test('float and fill window modes replace selected values with NaN', function () {
+    $class = new ReflectionClass(spikekill::class);
+    $update = $class->getMethod('updateXML');
+    $update->setAccessible(true);
+    $totalKills = $class->getProperty('total_kills');
+    $totalKills->setAccessible(true);
+
+    $cases = array(
+        array(SPIKE_METHOD_FLOAT, '<row><timestamp>120</timestamp><v>10</v><v>20</v></row>', array('NaN', 'NaN'), 2),
+        array(SPIKE_METHOD_FILL, '<row><timestamp>120</timestamp><v>10</v><v>0</v><v>NaN</v></row>', array('10', 'NaN', 'NaN'), 1),
+    );
+
+    foreach ($cases as $case) {
+        list($method, $row, $expectedValues, $expectedKills) = $case;
+        $instance = new spikekill('', $method, 'nan', '1', '100', '200', '2', '500', '1');
+        $output = array($row . "\n", "</rra>\n", "</database>\n");
+        $rra = array(array(array(), array(), array()));
+        $output = $update->invokeArgs($instance, array(&$output, &$rra));
+
+        preg_match_all('/<v>\s*(.*?)<\/v>/', $output[0], $matches);
+        expect($matches[1])->toBe($expectedValues)
+            ->and($totalKills->getValue($instance))->toBe($expectedKills);
+    }
+});
+
+test('window spike replacement handles an unavailable last sample without counting it', function () {
+    $instance = new spikekill('', SPIKE_METHOD_STDDEV, 'last', '1', '', '', '2', '500', '1');
+    $class = new ReflectionClass(spikekill::class);
+    $replace = $class->getMethod('replaceWindowSpike');
+    $replace->setAccessible(true);
+    $totalKills = $class->getProperty('total_kills');
+    $totalKills->setAccessible(true);
+    $kills = 0;
+
+    $arguments = array('10', 12, array(0 => '8'), 0, &$kills);
+    expect($replace->invokeArgs($instance, $arguments))->toBe('8')
+        ->and($kills)->toBe(1)
+        ->and($totalKills->getValue($instance))->toBe(1);
+
+    $arguments = array('10', 12, array(), 0, &$kills);
+    expect($replace->invokeArgs($instance, $arguments))->toBeNull()
+        ->and($kills)->toBe(1)
+        ->and($totalKills->getValue($instance))->toBe(1);
+});
+
+test('NaN replacements obey the per-RRA limit and are counted', function () {
+    $class = new ReflectionClass(spikekill::class);
+    $update = $class->getMethod('updateXML');
+    $update->setAccessible(true);
+    $totalKills = $class->getProperty('total_kills');
+    $totalKills->setAccessible(true);
+    $instance = new spikekill('', SPIKE_METHOD_STDDEV, 'nan', '1', '', '', '2', '500', '1');
+
+    $output = array(
+        "<row><timestamp>120</timestamp><v>1000</v><v>1000</v></row>\n",
+        "<row><timestamp>180</timestamp><v>1000</v><v>1000</v></row>\n",
+        "</rra>\n",
+        "<row><timestamp>240</timestamp><v>1000</v><v>1000</v></row>\n",
+        "</rra>\n",
+        "</database>\n",
+    );
+    $rra = array(
+        array(
+            array('max_cutoff' => 10, 'min_cutoff' => -10, 'outwind_killed' => 0),
+            array('max_cutoff' => 10, 'min_cutoff' => -10, 'outwind_killed' => 0),
+        ),
+        array(
+            array('max_cutoff' => 10, 'min_cutoff' => -10, 'outwind_killed' => 0),
+            array('max_cutoff' => 10, 'min_cutoff' => -10, 'outwind_killed' => 0),
+        ),
+    );
+
+    $output = $update->invokeArgs($instance, array(&$output, &$rra));
+    preg_match_all('/<row>(.*?)<\/row>/', implode('', $output), $rows);
+    $values = array_map(static function ($row) {
+        preg_match_all('/<v>\s*(.*?)<\/v>/', $row, $matches);
+
+        return $matches[1];
+    }, $rows[1]);
+
+    expect($values)->toBe(array(
+        array('NaN', '1000'),
+        array('1000', '1000'),
+        array('NaN', '1000'),
+    ))->and($totalKills->getValue($instance))->toBe(2);
+});
+
 
 test('missing sample arrays preserve unavailable window statistics', function ($html) {
     $instance = spikekill_e2e_instance($this->rrdfile);
@@ -685,3 +772,81 @@ test('web spike removal identifies untrusted storage without suggesting polling 
         chmod($this->rrd_dir, 0700);
     }
 });
+
+
+test('actual XML spike updates preserve gaps and thresholds and count only replacements within each archive budget', function ($method, $mode, $lastAvailable) {
+    $class = new ReflectionClass(spikekill::class);
+    $instance = $class->newInstanceWithoutConstructor();
+    $instance->method = $method;
+    $instance->avgnan = $mode;
+    $instance->out_start = 200;
+    $instance->out_end = 500;
+    $instance->percent = 0;
+    $instance->numspike = 1;
+    $instance->debug = false;
+    $update = $class->getMethod('updateXML');
+    $output = [];
+    $rra = [];
+    foreach ([['5', '7'], ['8', '9']] as $archive => $last) {
+        if ($lastAvailable) $output[] = '<row><timestamp>100</timestamp><v>' . $last[0] . '</v><v>' . $last[1] . '</v></row>';
+        $output[] = '<row><timestamp>200</timestamp><v>NaN</v><v>NaN</v></row>';
+        $output[] = '<row><timestamp>250</timestamp><v>10</v><v>10</v></row>';
+        $output[] = '<row><timestamp>300</timestamp><v>1000</v><v>1000</v></row>';
+        $output[] = '<row><timestamp>350</timestamp><v>1000</v><v>1000</v></row>';
+        $output[] = '</rra>';
+        $rra[] = array_fill(0, 2, ['average' => 10, 'variance_avg' => 10, 'max_cutoff' => 10, 'min_cutoff' => -10, 'outwind_killed' => 0]);
+    }
+    $result = $update->invokeArgs($instance, [&$output, &$rra]);
+    $rows = [];
+    foreach ($result as $line) {
+        if (str_contains($line, '<v>')) {
+            preg_match_all('/<v>\s*(.*?)<\/v>/', $line, $match);
+            $rows[] = $match[1];
+        }
+    }
+    $expected = [];
+    $replacementAvailable = $mode !== 'last' || $lastAvailable;
+    foreach ([['5', '7'], ['8', '9']] as $last) {
+        if ($lastAvailable) $expected[] = $last;
+        $expected[] = ['NaN', 'NaN'];
+        $expected[] = ['10', '10'];
+        $replacement = $mode === 'avg' ? '1.0000000000e+1' : ($mode === 'nan' ? 'NaN' : $last[0]);
+        $expected[] = [$replacementAvailable ? $replacement : '1000', '1000'];
+        $expected[] = ['1000', '1000'];
+    }
+    expect($rows)->toBe($expected);
+    expect($class->getProperty('total_kills')->getValue($instance))->toBe($replacementAvailable ? 2 : 0);
+    if ($method === SPIKE_METHOD_STDDEV) {
+        expect(array_column($rra[0], 'outwind_killed'))->toBe([$replacementAvailable ? 1 : 0, 0]);
+        expect(array_column($rra[1], 'outwind_killed'))->toBe([$replacementAvailable ? 1 : 0, 0]);
+    }
+})->with([SPIKE_METHOD_STDDEV, SPIKE_METHOD_VARIANCE])->with(['avg', 'last', 'nan'])->with([false, true]);
+
+
+test('statistics count only finite numeric spikes before the XML update', function ($method) {
+    $class = new ReflectionClass(spikekill::class);
+    $instance = $class->newInstanceWithoutConstructor();
+    $instance->method = $method;
+    $instance->out_start = 200;
+    $instance->out_end = 500;
+    $instance->percent = 0;
+    $instance->stddev = 1;
+    $class->getProperty('ds_min')->setValue($instance, [0]);
+    $class->getProperty('ds_max')->setValue($instance, [10]);
+    $rra = [[['sumofsamples' => 20, 'numsamples' => 2, 'variance_avg' => 10]]];
+    $samples = [[[200 => 'NaN', 250 => '10', 300 => '1000']]];
+    $class->getMethod('calculateOverallStatistics')->invokeArgs($instance, [&$rra, &$samples]);
+    expect($rra[0][0]['stddev_killed'])->toBe($method === SPIKE_METHOD_STDDEV ? 1 : 0);
+    expect($rra[0][0]['variance_killed'])->toBe($method === SPIKE_METHOD_VARIANCE ? 1 : 0);
+    expect($rra[0][0]['numnksamples'])->toBe(1);
+    expect($rra[0][0]['sumnksamples'])->toBe(10);
+})->with([SPIKE_METHOD_STDDEV, SPIKE_METHOD_VARIANCE]);
+
+test('the actual spike-removal output identifies the selected replacement mode', function ($mode, $label) {
+    $instance = spikekill_e2e_instance($this->rrdfile);
+    $instance->avgnan = $mode;
+    $instance->out_start = 1000000000;
+    $instance->out_end = 1000010000;
+    $instance->remove_spikes();
+    expect($instance->get_output())->toContain('Replacing with ' . $label);
+})->with([['avg', 'Average'], ['last', 'Last'], ['nan', 'NaN']]);

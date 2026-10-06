@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.2.34\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 22:39-0700\n"
+"POT-Creation-Date: 2026-10-05 22:49-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,7 +24,7 @@ msgstr ""
 #: automation_tree_rules.php:16 cdef.php:14 cdef.php:603 color_templates.php:12
 #: color_templates.php:108 data_queries.php:15 data_queries.php:807
 #: data_queries.php:914 data_queries.php:1174 data_source_profiles.php:16
-#: data_source_profiles.php:856 data_sources.php:21 data_sources.php:1145
+#: data_source_profiles.php:934 data_sources.php:21 data_sources.php:1145
 #: data_templates.php:18 data_templates.php:790 gprint_presets.php:12
 #: graph_templates.php:22 graph_templates.php:500 graphs.php:31 host.php:26
 #: host_templates.php:19 host_templates.php:462 host_templates.php:519
@@ -96,8 +96,8 @@ msgstr ""
 #: automation_templates.php:151 automation_tree_rules.php:303 cdef.php:235
 #: cdef.php:247 cdef.php:305 color_templates.php:234 color_templates.php:246
 #: color_templates.php:255 color_templates_items.php:281 data_queries.php:396
-#: data_queries.php:410 data_queries.php:574 data_source_profiles.php:380
-#: data_source_profiles.php:392 data_source_profiles.php:585
+#: data_queries.php:410 data_queries.php:574 data_source_profiles.php:416
+#: data_source_profiles.php:428 data_source_profiles.php:663
 #: data_sources.php:541 data_sources.php:553 data_sources.php:562
 #: data_sources.php:571 data_sources.php:580 data_sources.php:586
 #: data_templates.php:485 data_templates.php:497 data_templates.php:513
@@ -131,8 +131,8 @@ msgstr ""
 #: automation_templates.php:151 automation_tree_rules.php:303 cdef.php:235
 #: cdef.php:247 cdef.php:306 color_templates.php:234 color_templates.php:246
 #: color_templates.php:255 color_templates_items.php:282 data_queries.php:396
-#: data_queries.php:410 data_queries.php:575 data_source_profiles.php:380
-#: data_source_profiles.php:392 data_source_profiles.php:586
+#: data_queries.php:410 data_queries.php:575 data_source_profiles.php:416
+#: data_source_profiles.php:428 data_source_profiles.php:664
 #: data_sources.php:541 data_sources.php:553 data_sources.php:562
 #: data_sources.php:571 data_sources.php:580 data_sources.php:586
 #: data_templates.php:485 data_templates.php:497 data_templates.php:513
@@ -389,7 +389,7 @@ msgstr ""
 #: automation_networks.php:1224 automation_snmp.php:684
 #: automation_templates.php:377 automation_tree_rules.php:821 cdef.php:727
 #: color_templates.php:559 data_debug.php:1146 data_queries.php:1292
-#: data_source_profiles.php:1108 data_sources.php:1529 data_templates.php:1095
+#: data_source_profiles.php:1186 data_sources.php:1529 data_templates.php:1095
 #: gprint_presets.php:255 graph_templates.php:704 graph_view.php:667
 #: graphs.php:1993 graphs_new.php:443 host.php:1681 host_templates.php:766
 #: lib/api_automation.php:42 lib/api_automation.php:43
@@ -424,8 +424,8 @@ msgstr ""
 #: automation_graph_rules.php:815 automation_networks.php:1190
 #: automation_snmp.php:694 automation_templates.php:387
 #: automation_tree_rules.php:841 cdef.php:737 color_templates.php:575
-#: data_debug.php:1156 data_queries.php:1302 data_source_profiles.php:1118
-#: data_source_profiles.php:1240 data_sources.php:1539 data_templates.php:1124
+#: data_debug.php:1156 data_queries.php:1302 data_source_profiles.php:1196
+#: data_source_profiles.php:1318 data_sources.php:1539 data_templates.php:1124
 #: gprint_presets.php:265 graph_templates.php:714 graph_view.php:743
 #: graphs.php:2014 graphs_new.php:453 host.php:1706 host_templates.php:776
 #: include/global_form.php:242 lib/api_automation.php:182
@@ -449,7 +449,7 @@ msgstr ""
 #: automation_graph_rules.php:827 automation_networks.php:1224
 #: automation_snmp.php:706 automation_templates.php:399
 #: automation_tree_rules.php:853 cdef.php:758 color_templates.php:597
-#: data_debug.php:1071 data_queries.php:1314 data_source_profiles.php:1139
+#: data_debug.php:1071 data_queries.php:1314 data_source_profiles.php:1217
 #: data_sources.php:1479 data_templates.php:1145 gprint_presets.php:283
 #: graph_templates.php:732 graph_view.php:675 graphs.php:1984
 #: graphs_new.php:432 host.php:1671 host_templates.php:757
@@ -467,7 +467,7 @@ msgstr ""
 #: aggregate_graphs.php:1303 aggregate_graphs.php:1596
 #: automation_devices.php:495 automation_snmp.php:706
 #: automation_templates.php:399 cdef.php:758 data_debug.php:1071
-#: data_queries.php:1314 data_source_profiles.php:1139 data_sources.php:1479
+#: data_queries.php:1314 data_source_profiles.php:1217 data_sources.php:1479
 #: data_templates.php:1145 gprint_presets.php:283 graph_templates.php:732
 #: graph_view.php:675 graphs.php:1984 graphs_new.php:432 host.php:1671
 #: host_templates.php:757 lib/html_graph.php:178 managers.php:169
@@ -484,7 +484,7 @@ msgstr ""
 #: automation_graph_rules.php:828 automation_networks.php:1225
 #: automation_snmp.php:707 automation_templates.php:400
 #: automation_tree_rules.php:854 cdef.php:759 color_templates.php:598
-#: data_debug.php:1072 data_queries.php:1315 data_source_profiles.php:1140
+#: data_debug.php:1072 data_queries.php:1315 data_source_profiles.php:1218
 #: data_sources.php:1480 data_templates.php:1146 gprint_presets.php:284
 #: graph_templates.php:733 graph_view.php:676 graphs.php:1985
 #: graphs_new.php:433 host.php:1672 host_templates.php:758
@@ -502,7 +502,7 @@ msgstr ""
 
 #: aggregate_graphs.php:1304 aggregate_graphs.php:1597 automation_snmp.php:707
 #: automation_templates.php:400 cdef.php:759 data_debug.php:1072
-#: data_queries.php:1315 data_source_profiles.php:1140 data_sources.php:1480
+#: data_queries.php:1315 data_source_profiles.php:1218 data_sources.php:1480
 #: data_templates.php:1146 gprint_presets.php:284 graph_templates.php:733
 #: graph_view.php:676 graphs.php:1985 graphs_new.php:433 host.php:1672
 #: host_templates.php:758 lib/html_graph.php:179 lib/html_tree.php:1010
@@ -536,14 +536,14 @@ msgid "Included in Aggregate"
 msgstr ""
 
 #: aggregate_graphs.php:1332 aggregate_graphs.php:1665 graph_templates.php:855
-#: graph_view.php:832 graph_view.php:845 graphs.php:2212 lib/spikekill.php:1674
+#: graph_view.php:832 graph_view.php:845 graphs.php:2212 lib/spikekill.php:1745
 msgid "Size"
 msgstr ""
 
 #: aggregate_graphs.php:1348 aggregate_templates.php:724
 #: automation_tree_rules.php:700 cdef.php:885 color_templates.php:703
-#: data_queries.php:1452 data_source_profiles.php:1320
-#: data_source_profiles.php:1321 data_sources.php:1794 data_sources.php:1795
+#: data_queries.php:1452 data_source_profiles.php:1398
+#: data_source_profiles.php:1399 data_sources.php:1794 data_sources.php:1795
 #: data_templates.php:1315 gprint_presets.php:430 graph_templates.php:895
 #: host_templates.php:965 include/global_settings.php:876
 #: include/global_settings.php:1909 lib/api_automation.php:1438 tree.php:2329
@@ -555,8 +555,8 @@ msgstr ""
 #: aggregate_graphs.php:1348 aggregate_templates.php:724
 #: automation_tree_rules.php:693 cdef.php:885 color_templates.php:703
 #: data_debug.php:713 data_debug.php:718 data_debug.php:723
-#: data_queries.php:1452 data_source_profiles.php:1319
-#: data_source_profiles.php:1320 data_source_profiles.php:1321
+#: data_queries.php:1452 data_source_profiles.php:1397
+#: data_source_profiles.php:1398 data_source_profiles.php:1399
 #: data_sources.php:1794 data_sources.php:1795 data_templates.php:1315
 #: gprint_presets.php:430 graph_templates.php:895 host_templates.php:965
 #: include/global_settings.php:875 include/global_settings.php:1908
@@ -717,7 +717,7 @@ msgid "Aggregate Templates that are in use can not be Deleted.  In use is define
 msgstr ""
 
 #: aggregate_templates.php:707 cdef.php:868 color_templates.php:674
-#: data_queries.php:1406 data_source_profiles.php:1245 data_sources.php:1725
+#: data_queries.php:1406 data_source_profiles.php:1323 data_sources.php:1725
 #: data_templates.php:1260 gprint_presets.php:390 graph_templates.php:844
 #: host_templates.php:923
 msgid "Deletable"
@@ -790,7 +790,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr ""
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4096 lib/html.php:2640
+#: include/global_form.php:1552 lib/functions.php:4121 lib/html.php:2640
 msgid "Change Password"
 msgstr ""
 
@@ -803,7 +803,7 @@ msgid "Please enter your new Kadupul password."
 msgstr ""
 
 #: auth_changepassword.php:397 auth_login.php:329 auth_login.php:332
-#: include/global_settings.php:1817 lib/functions.php:6026
+#: include/global_settings.php:1817 lib/functions.php:6051
 msgid "Username"
 msgstr ""
 
@@ -887,7 +887,7 @@ msgstr ""
 msgid "Enter your Username and Password below"
 msgstr ""
 
-#: auth_login.php:337 include/global_form.php:1519 lib/functions.php:6027
+#: auth_login.php:337 include/global_form.php:1519 lib/functions.php:6052
 msgid "Password"
 msgstr ""
 
@@ -1198,14 +1198,14 @@ msgstr ""
 #: automation_snmp.php:552 automation_snmp.php:553 automation_snmp.php:554
 #: automation_snmp.php:555 automation_snmp.php:556 automation_snmp.php:557
 #: data_debug.php:633 data_source_profiles.php:61 host.php:1879
-#: lib/functions.php:6385 lib/functions.php:6390 lib/html.php:1313
+#: lib/functions.php:6410 lib/functions.php:6415 lib/html.php:1313
 #: lib/html.php:1385 lib/html_reports.php:1742 lib/html_reports.php:1768
 #: lib/html_reports.php:1839 lib/html_reports.php:1840
-#: lib/html_reports.php:1841 lib/spikekill.php:1665 lib/spikekill.php:1666
-#: lib/spikekill.php:1713 lib/spikekill.php:1714 lib/spikekill.php:1715
-#: lib/spikekill.php:1716 lib/spikekill.php:1717 lib/spikekill.php:1718
-#: lib/spikekill.php:1719 lib/spikekill.php:1720 lib/spikekill.php:1721
-#: lib/spikekill.php:1722 lib/spikekill.php:1723 plugins.php:780
+#: lib/html_reports.php:1841 lib/spikekill.php:1734 lib/spikekill.php:1735
+#: lib/spikekill.php:1800 lib/spikekill.php:1801 lib/spikekill.php:1802
+#: lib/spikekill.php:1803 lib/spikekill.php:1804 lib/spikekill.php:1805
+#: lib/spikekill.php:1806 lib/spikekill.php:1807 lib/spikekill.php:1808
+#: lib/spikekill.php:1809 lib/spikekill.php:1810 plugins.php:780
 #: pollers.php:1115 user_admin.php:2260 utilities.php:733 utilities.php:1182
 #: utilities.php:2695 utilities.php:2823 utilities.php:2831 utilities.php:2842
 #: utilities.php:2853 utilities.php:2878 utilities.php:2928 utilities.php:3164
@@ -1496,7 +1496,7 @@ msgid "General Settings"
 msgstr ""
 
 #: automation_networks.php:439 automation_snmp.php:493 data_queries.php:761
-#: data_queries.php:866 data_queries.php:1133 data_source_profiles.php:818
+#: data_queries.php:866 data_queries.php:1133 data_source_profiles.php:896
 #: graph_templates.php:483 include/global_form.php:201
 #: include/global_form.php:267 include/global_form.php:324
 #: include/global_form.php:344 include/global_form.php:385
@@ -1645,7 +1645,7 @@ msgid "%d Hour"
 msgstr ""
 
 #: automation_networks.php:527 automation_networks.php:528
-#: automation_networks.php:529 data_source_profiles.php:1045
+#: automation_networks.php:529 data_source_profiles.php:1123
 #: include/global_arrays.php:716 include/global_arrays.php:717
 #: include/global_arrays.php:718 include/global_arrays.php:719
 #: include/global_arrays.php:720 include/global_arrays.php:761
@@ -2188,7 +2188,7 @@ msgstr ""
 msgid "Community"
 msgstr ""
 
-#: automation_snmp.php:525 lib/functions.php:6022
+#: automation_snmp.php:525 lib/functions.php:6047
 msgid "Port"
 msgstr ""
 
@@ -2484,8 +2484,8 @@ msgstr ""
 msgid "No Tree Rules Found"
 msgstr ""
 
-#: cactid.php:27 help.php:54 lib/functions.php:6532 lib/functions.php:6602
-#: lib/functions.php:6698 lib/functions.php:7352 poller.php:417 poller.php:584
+#: cactid.php:27 help.php:54 lib/functions.php:6557 lib/functions.php:6627
+#: lib/functions.php:6723 lib/functions.php:7377 poller.php:417 poller.php:584
 #: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
 #: poller_automation.php:37 poller_boost.php:387
 msgid "Kadupul System Warning"
@@ -2529,7 +2529,7 @@ msgid_plural "Click 'Continue' to duplicate the following CDEFs. You can optiona
 msgstr[0] ""
 msgstr[1] ""
 
-#: cdef.php:241 color_templates.php:240 data_source_profiles.php:386
+#: cdef.php:241 color_templates.php:240 data_source_profiles.php:422
 #: data_templates.php:491 graph_templates.php:367 host_templates.php:218
 msgid "Title Format:"
 msgstr ""
@@ -2613,7 +2613,7 @@ msgstr ""
 msgid "CDEF Name"
 msgstr ""
 
-#: cdef.php:867 data_source_profiles.php:1237
+#: cdef.php:867 data_source_profiles.php:1315
 msgid "The name of this CDEF."
 msgstr ""
 
@@ -2625,7 +2625,7 @@ msgstr ""
 msgid "The number of Graphs using this CDEF."
 msgstr ""
 
-#: cdef.php:870 data_queries.php:1417 data_source_profiles.php:1273
+#: cdef.php:870 data_queries.php:1417 data_source_profiles.php:1351
 #: gprint_presets.php:401
 msgid "Templates Using"
 msgstr ""
@@ -3344,135 +3344,143 @@ msgstr ""
 msgid "No Data Queries Found"
 msgstr ""
 
-#: data_source_profiles.php:229
+#: data_source_profiles.php:265
 msgid "Changing the Heartbeat from this page, does not change the Heartbeat for your existing Data Sources.  Use RRDtool's 'tune' function to make that change to your existing RRDfiles heartbeats, or run the CLI utility update_heartbeat.php to correct.<br>"
 msgstr ""
 
-#: data_source_profiles.php:310 data_source_profiles.php:463
+#: data_source_profiles.php:346 data_source_profiles.php:499
 msgid "Unable to verify Data Source Profile usage. No profiles were deleted."
 msgstr ""
 
-#: data_source_profiles.php:335
+#: data_source_profiles.php:371
 msgid "Unable to safely delete the selected Data Source Profiles. No profiles were deleted."
 msgstr ""
 
-#: data_source_profiles.php:375
+#: data_source_profiles.php:411
 msgid "Click 'Continue' to delete the following Data Source Profile"
 msgid_plural "Click 'Continue' to delete following Data Source Profiles"
 msgstr[0] ""
 msgstr[1] ""
 
-#: data_source_profiles.php:380
+#: data_source_profiles.php:416
 msgid "Delete Data Source Profile"
 msgid_plural "Delete Data Source Profiles"
 msgstr[0] ""
 msgstr[1] ""
 
-#: data_source_profiles.php:384
+#: data_source_profiles.php:420
 msgid "Click 'Continue' to duplicate the following Data Source Profile. You can optionally change the title format for the new Data Source Profile"
 msgid_plural "Click 'Continue' to duplicate following Data Source Profiles. You can optionally change the title format for the new Data Source Profiles."
 msgstr[0] ""
 msgstr[1] ""
 
-#: data_source_profiles.php:392
+#: data_source_profiles.php:428
 msgid "Duplicate Data Source Profile"
 msgid_plural "Duplicate Date Source Profiles"
 msgstr[0] ""
 msgstr[1] ""
 
-#: data_source_profiles.php:471
+#: data_source_profiles.php:507
 msgid "Data Source Profiles in use by Data Templates or Data Sources can not be deleted."
 msgstr ""
 
-#: data_source_profiles.php:492 data_source_profiles.php:553
+#: data_source_profiles.php:536
+msgid "Unable to verify Data Source Profile usage. Structural fields are read only."
+msgstr ""
+
+#: data_source_profiles.php:553 data_source_profiles.php:1330
+msgid "Profiles that are in use by Data Sources become read only for now."
+msgstr ""
+
+#: data_source_profiles.php:570 data_source_profiles.php:631
 msgid "Unable to duplicate Data Source Profile.  Check Kadupul Log for errors."
 msgstr ""
 
-#: data_source_profiles.php:579
+#: data_source_profiles.php:657
 msgid "Click 'Continue' to delete the following Data Source Profile RRA."
 msgstr ""
 
-#: data_source_profiles.php:580
+#: data_source_profiles.php:658
 #, php-format
 msgid "Profile Name: %s"
 msgstr ""
 
-#: data_source_profiles.php:586
+#: data_source_profiles.php:664
 msgid "Remove Data Source Profile RRA"
 msgstr ""
 
-#: data_source_profiles.php:641 data_source_profiles.php:662
+#: data_source_profiles.php:719 data_source_profiles.php:740
 msgid "Each Insert is New Row"
 msgstr ""
 
-#: data_source_profiles.php:690
+#: data_source_profiles.php:768
 msgid "(Some Elements Read Only)"
 msgstr ""
 
-#: data_source_profiles.php:690
+#: data_source_profiles.php:768
 #, php-format
 msgid "RRA [edit: %s %s]"
 msgstr ""
 
-#: data_source_profiles.php:791
+#: data_source_profiles.php:869
 #, php-format
 msgid "Data Source Profile [edit: %s]"
 msgstr ""
 
-#: data_source_profiles.php:793
+#: data_source_profiles.php:871
 msgid "Data Source Profile [new]"
 msgstr ""
 
-#: data_source_profiles.php:812
+#: data_source_profiles.php:890
 msgid "Data Source Profile RRAs (press save to update timespans)"
 msgstr ""
 
-#: data_source_profiles.php:814
+#: data_source_profiles.php:892
 msgid "Data Source Profile RRAs (Read Only)"
 msgstr ""
 
-#: data_source_profiles.php:819 include/global_form.php:300
+#: data_source_profiles.php:897 include/global_form.php:300
 msgid "Data Retention"
 msgstr ""
 
-#: data_source_profiles.php:820 include/global_settings.php:1006
+#: data_source_profiles.php:898 include/global_settings.php:1006
 #: lib/html_reports.php:1151
 msgid "Graph Timespan"
 msgstr ""
 
-#: data_source_profiles.php:821
+#: data_source_profiles.php:899
 msgid "Steps"
 msgstr ""
 
-#: data_source_profiles.php:822 graphs_new.php:449 include/global_form.php:284
+#: data_source_profiles.php:900 graphs_new.php:449 include/global_form.php:284
 #: lib/html.php:605 lib/html_filter.php:55 lib/installer.php:2827
 #: lib/rrd.php:4156 utilities.php:861 utilities.php:1817
 msgid "Rows"
 msgstr ""
 
-#: data_source_profiles.php:879
+#: data_source_profiles.php:957
 msgid "Select Consolidation Function(s)"
 msgstr ""
 
-#: data_source_profiles.php:919
+#: data_source_profiles.php:997
 msgid "Delete Data Source Profile Item"
 msgstr ""
 
-#: data_source_profiles.php:984
+#: data_source_profiles.php:1062
 #, php-format
 msgid "%s KBytes per Data Sources and %s Bytes for the Header"
 msgstr ""
 
-#: data_source_profiles.php:993
+#: data_source_profiles.php:1071
 #, php-format
 msgid "%s KBytes per Data Source"
 msgstr ""
 
-#: data_source_profiles.php:995
+#: data_source_profiles.php:1073
 msgid "Enter a valid number of Rows to obtain the RRA size."
 msgstr ""
 
-#: data_source_profiles.php:1010 include/global_arrays.php:787
+#: data_source_profiles.php:1088 include/global_arrays.php:787
 #: include/global_arrays.php:788 include/global_arrays.php:789
 #: include/global_arrays.php:790 include/global_arrays.php:791
 #: include/global_arrays.php:792 include/global_arrays.php:793
@@ -3482,17 +3490,17 @@ msgstr ""
 msgid "%d Years"
 msgstr ""
 
-#: data_source_profiles.php:1010
+#: data_source_profiles.php:1088
 msgid "1 Year"
 msgstr ""
 
-#: data_source_profiles.php:1019 include/global_arrays.php:781
+#: data_source_profiles.php:1097 include/global_arrays.php:781
 #: include/global_arrays.php:1464 rrdcleaner.php:537
 #, php-format
 msgid "%d Month"
 msgstr ""
 
-#: data_source_profiles.php:1019 include/global_arrays.php:782
+#: data_source_profiles.php:1097 include/global_arrays.php:782
 #: include/global_arrays.php:783 include/global_arrays.php:784
 #: include/global_arrays.php:785 include/global_arrays.php:1465
 #: include/global_arrays.php:1466 include/global_arrays.php:1467
@@ -3502,14 +3510,14 @@ msgstr ""
 msgid "%d Months"
 msgstr ""
 
-#: data_source_profiles.php:1028 include/global_arrays.php:722
+#: data_source_profiles.php:1106 include/global_arrays.php:722
 #: include/global_arrays.php:778 include/global_arrays.php:1462
 #: rrdcleaner.php:533 rrdcleaner.php:534
 #, php-format
 msgid "%d Week"
 msgstr ""
 
-#: data_source_profiles.php:1028 include/global_arrays.php:779
+#: data_source_profiles.php:1106 include/global_arrays.php:779
 #: include/global_arrays.php:780 include/global_arrays.php:1463
 #: include/global_settings.php:2912 include/global_settings.php:2913
 #: include/global_settings.php:2914 rrdcleaner.php:535 rrdcleaner.php:536
@@ -3517,14 +3525,14 @@ msgstr ""
 msgid "%d Weeks"
 msgstr ""
 
-#: data_source_profiles.php:1037 include/global_arrays.php:721
+#: data_source_profiles.php:1115 include/global_arrays.php:721
 #: include/global_arrays.php:765 include/global_arrays.php:775
 #: include/global_arrays.php:1458
 #, php-format
 msgid "%d Day"
 msgstr ""
 
-#: data_source_profiles.php:1037 include/global_arrays.php:766
+#: data_source_profiles.php:1115 include/global_arrays.php:766
 #: include/global_arrays.php:776 include/global_arrays.php:777
 #: include/global_arrays.php:1459 include/global_arrays.php:1460
 #: include/global_arrays.php:1461 include/global_settings.php:1613
@@ -3536,7 +3544,7 @@ msgstr ""
 msgid "%d Days"
 msgstr ""
 
-#: data_source_profiles.php:1045 include/global_arrays.php:715
+#: data_source_profiles.php:1123 include/global_arrays.php:715
 #: include/global_arrays.php:1523 include/global_arrays.php:1544
 #: include/global_arrays.php:1554 include/global_arrays.php:1584
 #: include/global_arrays.php:1593 include/global_arrays.php:1621
@@ -3545,69 +3553,65 @@ msgstr ""
 msgid "1 Hour"
 msgstr ""
 
-#: data_source_profiles.php:1099 include/global_arrays.php:1232
+#: data_source_profiles.php:1177 include/global_arrays.php:1232
 msgid "Data Source Profiles"
 msgstr ""
 
-#: data_source_profiles.php:1114 data_source_profiles.php:1280
+#: data_source_profiles.php:1192 data_source_profiles.php:1358
 msgid "Profiles"
 msgstr ""
 
-#: data_source_profiles.php:1134 data_templates.php:1140
+#: data_source_profiles.php:1212 data_templates.php:1140
 msgid "Has Data Sources"
 msgstr ""
 
-#: data_source_profiles.php:1234
+#: data_source_profiles.php:1312
 msgid "Data Source Profile Name"
 msgstr ""
 
-#: data_source_profiles.php:1242
+#: data_source_profiles.php:1320
 msgid "Is this the default Profile for all new Data Templates?"
 msgstr ""
 
-#: data_source_profiles.php:1247
+#: data_source_profiles.php:1325
 msgid "Profiles that are in use cannot be Deleted. In use is defined as being referenced by a Data Source or a Data Template."
 msgstr ""
 
-#: data_source_profiles.php:1250 include/global_form.php:360
+#: data_source_profiles.php:1328 include/global_form.php:360
 msgid "Read Only"
 msgstr ""
 
-#: data_source_profiles.php:1252
-msgid "Profiles that are in use by Data Sources become read only for now."
-msgstr ""
-
-#: data_source_profiles.php:1255 data_sources.php:1719
+#: data_source_profiles.php:1333 data_sources.php:1719
 #: include/global_settings.php:1216
 msgid "Poller Interval"
 msgstr ""
 
-#: data_source_profiles.php:1258
+#: data_source_profiles.php:1336
 msgid "The Polling Frequency for the Profile"
 msgstr ""
 
-#: data_source_profiles.php:1261 include/global_form.php:218
+#: data_source_profiles.php:1339 include/global_form.php:218
 #: include/global_form.php:639 pollers.php:35
 msgid "Heartbeat"
 msgstr ""
 
-#: data_source_profiles.php:1264
+#: data_source_profiles.php:1342
 msgid "The Amount of Time, in seconds, without good data before Data is stored as Unknown"
 msgstr ""
 
-#: data_source_profiles.php:1267 data_templates.php:1265
+#: data_source_profiles.php:1345 data_templates.php:1265
 msgid "Data Sources Using"
 msgstr ""
 
-#: data_source_profiles.php:1270
+#: data_source_profiles.php:1348
 msgid "The number of Data Sources using this Profile."
 msgstr ""
 
-#: data_source_profiles.php:1276
+#: data_source_profiles.php:1354
 msgid "The number of Data Templates using this Profile."
 msgstr ""
 
-#: data_source_profiles.php:1330
+#: data_source_profiles.php:1408
 msgid "No Data Source Profiles Found"
 msgstr ""
 
@@ -3780,7 +3784,7 @@ msgstr ""
 #: data_sources.php:997 graph_view.php:817 graphs.php:1515
 #: include/global_arrays.php:954 include/global_arrays.php:1003
 #: include/global_arrays.php:1687 include/global_arrays.php:1856
-#: lib/api_automation.php:426 lib/functions.php:6021 lib/html.php:2223
+#: lib/api_automation.php:426 lib/functions.php:6046 lib/html.php:2223
 #: lib/html.php:2260 lib/html_reports.php:1109 utilities.php:1913
 msgid "Device"
 msgstr ""
@@ -5131,7 +5135,7 @@ msgstr ""
 msgid "Data Query Debug Information"
 msgstr ""
 
-#: host.php:882 lib/functions.php:4773 tree.php:1743 tree.php:1817
+#: host.php:882 lib/functions.php:4798 tree.php:1743 tree.php:1817
 #: tree.php:1925 user_admin.php:18 user_group_admin.php:20
 msgid "Copy"
 msgstr ""
@@ -5170,7 +5174,7 @@ msgstr ""
 msgid "Fail"
 msgstr ""
 
-#: host.php:966 lib/functions.php:6036 lib/functions.php:6041
+#: host.php:966 lib/functions.php:6061 lib/functions.php:6066
 msgid "Success"
 msgstr ""
 
@@ -5251,7 +5255,7 @@ msgstr ""
 #: host.php:1698 lib/api_automation.php:33 lib/auth.php:2986
 #: lib/clog_webapi.php:856 lib/html_utility.php:1339 lib/import.php:342
 #: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4132 lib/rrd.php:4144
-#: lib/spikekill.php:284 package_import.php:522 package_import.php:600
+#: lib/spikekill.php:301 package_import.php:522 package_import.php:600
 #: utilities.php:206 utilities.php:207 utilities.php:2691
 msgid "Unknown"
 msgstr ""
@@ -5486,16 +5490,16 @@ msgstr ""
 msgid "Login Again"
 msgstr ""
 
-#: include/auth.php:316 lib/functions.php:8016 permission_denied.php:29
+#: include/auth.php:316 lib/functions.php:8041 permission_denied.php:29
 #: permission_denied.php:36
 msgid "Permission Denied"
 msgstr ""
 
-#: include/auth.php:317 lib/functions.php:8017 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8042 permission_denied.php:38
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr ""
 
-#: include/auth.php:317 lib/functions.php:8017 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8042 permission_denied.php:38
 msgid "You are not permitted to access this section of Kadupul."
 msgstr ""
 
@@ -7462,7 +7466,7 @@ msgid "List Mode"
 msgstr ""
 
 #: include/global_arrays.php:2061 include/global_arrays.php:2067
-#: lib/functions.php:4318 lib/html.php:1864 lib/html.php:1929 lib/html.php:2650
+#: lib/functions.php:4343 lib/html.php:1864 lib/html.php:1929 lib/html.php:2650
 #: user_admin.php:1471 user_group_admin.php:1453
 msgid "Console"
 msgstr ""
@@ -9117,7 +9121,7 @@ msgstr ""
 msgid "Visual"
 msgstr ""
 
-#: include/global_settings.php:28 lib/functions.php:6025 lib/functions.php:6030
+#: include/global_settings.php:28 lib/functions.php:6050 lib/functions.php:6055
 msgid "Authentication"
 msgstr ""
 
@@ -9153,11 +9157,11 @@ msgstr ""
 msgid "PHP Mail() Function"
 msgstr ""
 
-#: include/global_settings.php:69 lib/functions.php:6006
+#: include/global_settings.php:69 lib/functions.php:6031
 msgid "Sendmail"
 msgstr ""
 
-#: include/global_settings.php:70 lib/functions.php:6012
+#: include/global_settings.php:70 lib/functions.php:6037
 msgid "SMTP"
 msgstr ""
 
@@ -11053,7 +11057,7 @@ msgstr ""
 msgid "Sendmail Options"
 msgstr ""
 
-#: include/global_settings.php:1938 lib/functions.php:6006
+#: include/global_settings.php:1938 lib/functions.php:6031
 msgid "Sendmail Path"
 msgstr ""
 
@@ -12296,8 +12300,8 @@ msgstr ""
 msgid "Contact:"
 msgstr ""
 
-#: lib/api_device.php:1976 lib/functions.php:6039 lib/functions.php:6041
-#: lib/functions.php:6045
+#: lib/api_device.php:1976 lib/functions.php:6064 lib/functions.php:6066
+#: lib/functions.php:6070
 msgid "Ping Results"
 msgstr ""
 
@@ -13065,167 +13069,167 @@ msgstr ""
 msgid "Error %s is not readable"
 msgstr ""
 
-#: lib/functions.php:4072
+#: lib/functions.php:4097
 msgid "Logged in a Guest"
 msgstr ""
 
-#: lib/functions.php:4072 lib/functions.php:4090
+#: lib/functions.php:4097 lib/functions.php:4115
 msgid "Logged in as"
 msgstr ""
 
-#: lib/functions.php:4072
+#: lib/functions.php:4097
 msgid "Login as Regular User"
 msgstr ""
 
-#: lib/functions.php:4072
+#: lib/functions.php:4097
 msgid "guest"
 msgstr ""
 
-#: lib/functions.php:4075 lib/functions.php:4100 lib/html.php:2656
+#: lib/functions.php:4100 lib/functions.php:4125 lib/html.php:2656
 msgid "User Community"
 msgstr ""
 
-#: lib/functions.php:4076 lib/functions.php:4101 lib/html.php:2658
+#: lib/functions.php:4101 lib/functions.php:4126 lib/html.php:2658
 #: lib/utility.php:1446
 msgid "Documentation"
 msgstr ""
 
-#: lib/functions.php:4093
+#: lib/functions.php:4118
 #, php-format
 msgid "Logged in as %s"
 msgstr ""
 
-#: lib/functions.php:4095 lib/html.php:2637
+#: lib/functions.php:4120 lib/html.php:2637
 msgid "Edit Profile"
 msgstr ""
 
-#: lib/functions.php:4105 lib/html.php:2641
+#: lib/functions.php:4130 lib/html.php:2641
 msgid "Logout"
 msgstr ""
 
-#: lib/functions.php:4259
+#: lib/functions.php:4284
 msgid "Leaf"
 msgstr ""
 
-#: lib/functions.php:4283 lib/html_tree.php:648 lib/html_tree.php:684
+#: lib/functions.php:4308 lib/html_tree.php:648 lib/html_tree.php:684
 #: lib/html_tree.php:913 lib/html_tree.php:921 lib/html_tree.php:1522
 msgid "Non Query Based"
 msgstr ""
 
-#: lib/functions.php:4321
+#: lib/functions.php:4346
 #, php-format
 msgid "Link %s"
 msgstr ""
 
-#: lib/functions.php:5575
+#: lib/functions.php:5600
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr ""
 
-#: lib/functions.php:5969
+#: lib/functions.php:5994
 #, php-format
 msgid "Authentication failed: %s"
 msgstr ""
 
-#: lib/functions.php:5973
+#: lib/functions.php:5998
 #, php-format
 msgid "HELO failed: %s"
 msgstr ""
 
-#: lib/functions.php:5976
+#: lib/functions.php:6001
 #, php-format
 msgid "Connect failed: %s"
 msgstr ""
 
-#: lib/functions.php:5979
+#: lib/functions.php:6004
 msgid "SMTP error: "
 msgstr ""
 
-#: lib/functions.php:5993
+#: lib/functions.php:6018
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr ""
 
-#: lib/functions.php:5994
+#: lib/functions.php:6019
 msgid "Your email settings are currently set as follows"
 msgstr ""
 
-#: lib/functions.php:5995
+#: lib/functions.php:6020
 msgid "Method"
 msgstr ""
 
-#: lib/functions.php:5997
+#: lib/functions.php:6022
 msgid "Checking Configuration...<br>"
 msgstr ""
 
-#: lib/functions.php:6004
+#: lib/functions.php:6029
 msgid "PHP's Mailer Class"
 msgstr ""
 
-#: lib/functions.php:6010
+#: lib/functions.php:6035
 msgid "Method: SMTP"
 msgstr ""
 
-#: lib/functions.php:6027
+#: lib/functions.php:6052
 msgid "Not Shown for Security Reasons"
 msgstr ""
 
-#: lib/functions.php:6028
+#: lib/functions.php:6053
 msgid "Security"
 msgstr ""
 
-#: lib/functions.php:6036
+#: lib/functions.php:6061
 msgid "Ping Results:"
 msgstr ""
 
-#: lib/functions.php:6045
+#: lib/functions.php:6070
 msgid "Bypassed"
 msgstr ""
 
-#: lib/functions.php:6054
+#: lib/functions.php:6079
 msgid "Creating Message Text..."
 msgstr ""
 
-#: lib/functions.php:6057
+#: lib/functions.php:6082
 msgid "Sending Message..."
 msgstr ""
 
-#: lib/functions.php:6061
+#: lib/functions.php:6086
 msgid "Kadupul Test Message"
 msgstr ""
 
-#: lib/functions.php:6063
+#: lib/functions.php:6088
 msgid "Success!"
 msgstr ""
 
-#: lib/functions.php:6066
+#: lib/functions.php:6091
 msgid "Message Not Sent due to ping failure."
 msgstr ""
 
-#: lib/functions.php:6532 lib/functions.php:6602
+#: lib/functions.php:6557 lib/functions.php:6627
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr ""
 
-#: lib/functions.php:6698
+#: lib/functions.php:6723
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr ""
 
-#: lib/functions.php:7122 lib/functions.php:7124
+#: lib/functions.php:7147 lib/functions.php:7149
 #, php-format
 msgid "- Beta %s"
 msgstr ""
 
-#: lib/functions.php:7122
+#: lib/functions.php:7147
 #, php-format
 msgid "Version %s %s"
 msgstr ""
 
-#: lib/functions.php:7124
+#: lib/functions.php:7149
 #, php-format
 msgid "%s %s"
 msgstr ""
 
-#: lib/functions.php:7352
+#: lib/functions.php:7377
 #, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr ""
@@ -13358,7 +13362,7 @@ msgstr ""
 msgid "Gap Fill Range"
 msgstr ""
 
-#: lib/html.php:2457 lib/spikekill.php:280
+#: lib/html.php:2457 lib/spikekill.php:297
 msgid "Float Range"
 msgstr ""
 
@@ -15793,7 +15797,7 @@ msgstr ""
 msgid "Not Stated"
 msgstr ""
 
-#: lib/poller.php:1998 lib/poller.php:2243
+#: lib/poller.php:2000 lib/poller.php:2245
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 
@@ -16081,279 +16085,279 @@ msgstr ""
 msgid "SNMP Command is: %s"
 msgstr ""
 
-#: lib/spikekill.php:170
+#: lib/spikekill.php:187
 msgid "FATAL: You must specify an RRDfile!"
 msgstr ""
 
-#: lib/spikekill.php:174
+#: lib/spikekill.php:191
 #, php-format
 msgid "FATAL: File '%s' does not exist."
 msgstr ""
 
-#: lib/spikekill.php:186 lib/spikekill.php:399
+#: lib/spikekill.php:203 lib/spikekill.php:417
 #, php-format
 msgid "FATAL: File '%s' is not a regular file."
 msgstr ""
 
-#: lib/spikekill.php:188
+#: lib/spikekill.php:205
 #, php-format
 msgid "FATAL: File '%s' is not writable by '%s'."
 msgstr ""
 
-#: lib/spikekill.php:254
+#: lib/spikekill.php:271
 msgid "FATAL: Standard Deviation must be a positive integer."
 msgstr ""
 
-#: lib/spikekill.php:262 lib/spikekill.php:1674
+#: lib/spikekill.php:279 lib/spikekill.php:1751
 msgid "StdDev"
 msgstr ""
 
-#: lib/spikekill.php:268 lib/spikekill.php:1674
+#: lib/spikekill.php:285 lib/spikekill.php:1752
 msgid "Variance"
 msgstr ""
 
-#: lib/spikekill.php:274
+#: lib/spikekill.php:291
 msgid "Gap Fill"
 msgstr ""
 
-#: lib/spikekill.php:286
+#: lib/spikekill.php:303
 msgid "FATAL: You must specify either 'stddev', 'variance', 'float', or 'fill' as methods."
 msgstr ""
 
-#: lib/spikekill.php:301
+#: lib/spikekill.php:318
 msgid "FATAL: The outlier-start and outlier-end arguments must be in the format of YYYY-MM-DD HH:MM or a unix timestamp."
 msgstr ""
 
-#: lib/spikekill.php:305
+#: lib/spikekill.php:322
 msgid "FATAL: The number of outliers to exclude must be a positive integer."
 msgstr ""
 
-#: lib/spikekill.php:313
+#: lib/spikekill.php:330
 msgid "FATAL: Percent deviation must be a positive floating point number."
 msgstr ""
 
-#: lib/spikekill.php:319
+#: lib/spikekill.php:336
 msgid "FATAL: Number of spikes to remove must be a positive integer"
 msgstr ""
 
-#: lib/spikekill.php:324
+#: lib/spikekill.php:341
 msgid "FATAL: Outlier time range requires outlier-start and outlier-end to be specified."
 msgstr ""
 
-#: lib/spikekill.php:330
+#: lib/spikekill.php:347
 msgid "FATAL: Outlier time range requires outlier-start to be less than outlier-end."
 msgstr ""
 
-#: lib/spikekill.php:335
+#: lib/spikekill.php:352
 msgid "FATAL: The 'float' removal method requires the specification of a start and end date."
 msgstr ""
 
-#: lib/spikekill.php:339
+#: lib/spikekill.php:356
 msgid "FATAL: The 'gapfill' removal method requires the specification of a start and end date."
 msgstr ""
 
-#: lib/spikekill.php:348
+#: lib/spikekill.php:365
 msgid "FATAL: You must specify either 'last', 'avg' or 'nan' as a replacement method."
 msgstr ""
 
-#: lib/spikekill.php:351
+#: lib/spikekill.php:368
 msgid "Spike Kill Settings Used for Analysis/Correction"
 msgstr ""
 
-#: lib/spikekill.php:357
+#: lib/spikekill.php:374
 #, php-format
 msgid "Method:        %s"
 msgstr ""
 
-#: lib/spikekill.php:358
+#: lib/spikekill.php:375
 #, php-format
 msgid "RRDfile:       %s"
 msgstr ""
 
-#: lib/spikekill.php:359
+#: lib/spikekill.php:376
 #, php-format
 msgid "Repair Type:   %s"
 msgstr ""
 
-#: lib/spikekill.php:362
+#: lib/spikekill.php:379
 #, php-format
 msgid "Num Outliers:  %s"
 msgstr ""
 
-#: lib/spikekill.php:363
+#: lib/spikekill.php:380
 #, php-format
 msgid "Max Kills:     %s"
 msgstr ""
 
-#: lib/spikekill.php:365
+#: lib/spikekill.php:382
 msgid "Max Kills:     Unlimited"
 msgstr ""
 
-#: lib/spikekill.php:369
+#: lib/spikekill.php:386
 #, php-format
 msgid "Standard Devs: %s"
 msgstr ""
 
-#: lib/spikekill.php:371
+#: lib/spikekill.php:388
 msgid "Variance %%%:    %s %%%"
 msgstr ""
 
-#: lib/spikekill.php:375
+#: lib/spikekill.php:392
 #, php-format
 msgid "Window Start:  %s (%s)"
 msgstr ""
 
-#: lib/spikekill.php:376
+#: lib/spikekill.php:393
 #, php-format
 msgid "Window End:    %s (%s)"
 msgstr ""
 
-#: lib/spikekill.php:378
+#: lib/spikekill.php:395
 msgid "Window Range:  All"
 msgstr ""
 
-#: lib/spikekill.php:393
+#: lib/spikekill.php:411
 msgid "FATAL: Stop external RRD writers and disable RRDCACHED_ADDRESS before spike removal."
 msgstr ""
 
-#: lib/spikekill.php:406
+#: lib/spikekill.php:424
 msgid "FATAL: RRD storage is busy. Retry after polling completes."
 msgstr ""
 
-#: lib/spikekill.php:407
+#: lib/spikekill.php:425
 msgid "FATAL: RRD storage is untrusted or unavailable. Run cli/upgrade_database.php --check-rrd-storage as the web service account and correct its storage configuration."
 msgstr ""
 
-#: lib/spikekill.php:459
+#: lib/spikekill.php:478
 #, php-format
 msgid "FATAL: Unable to safely create a temporary XML file in '%s'!"
 msgstr ""
 
-#: lib/spikekill.php:508 lib/spikekill.php:530
+#: lib/spikekill.php:527 lib/spikekill.php:551
 msgid "FATAL: RRD source identity changed or could not be verified safely."
 msgstr ""
 
-#: lib/spikekill.php:538
+#: lib/spikekill.php:559
 msgid "FATAL: RRDtool Command Failed.  Please verify that the RRDtool path is valid in Settings->Paths!"
 msgstr ""
 
-#: lib/spikekill.php:554
+#: lib/spikekill.php:575
 msgid "FATAL: RRDtool returned an empty dump. The RRD file was not modified."
 msgstr ""
 
-#: lib/spikekill.php:582
+#: lib/spikekill.php:603
 #, php-format
 msgid "FATAL: RRDfile Backup of '%s' to '%s' FAILED!"
 msgstr ""
 
-#: lib/spikekill.php:796
+#: lib/spikekill.php:817
 #, php-format
 msgid "NOTE: Searching for Spikes in XML file '%s'"
 msgstr ""
 
-#: lib/spikekill.php:799
+#: lib/spikekill.php:820
 #, php-format
 msgid "NOTE: Limited to Time Window: %s through %s"
 msgstr ""
 
-#: lib/spikekill.php:806
+#: lib/spikekill.php:827
 msgid "NOTE: Dryrun requested.  No updates performed"
 msgstr ""
 
-#: lib/spikekill.php:842
+#: lib/spikekill.php:863
 #, php-format
 msgid "NOTE: No Window Spikes found in '%s'"
 msgstr ""
 
-#: lib/spikekill.php:845
+#: lib/spikekill.php:866
 #, php-format
 msgid "NOTE: No Spikes found in '%s'"
 msgstr ""
 
-#: lib/spikekill.php:858
+#: lib/spikekill.php:879
 #, php-format
 msgid "NOTE: Spikes Found and Remediated.  Total Spikes %s"
 msgstr ""
 
-#: lib/spikekill.php:862
+#: lib/spikekill.php:883
 #, php-format
 msgid "FATAL: Unable to restore '%s' from '%s'"
 msgstr ""
 
-#: lib/spikekill.php:872
+#: lib/spikekill.php:893
 #, php-format
 msgid "FATAL: Unable to backup '%s'"
 msgstr ""
 
-#: lib/spikekill.php:882
+#: lib/spikekill.php:903
 #, php-format
 msgid "FATAL: Unable to write XML file '%s'"
 msgstr ""
 
-#: lib/spikekill.php:891
+#: lib/spikekill.php:912
 msgid "NOTE: No Spikes Found."
 msgstr ""
 
-#: lib/spikekill.php:952
+#: lib/spikekill.php:974
 #, php-format
 msgid "NOTE: Re-Importing '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:1043
+#: lib/spikekill.php:1067
 #, php-format
 msgid "NOTE: Backing Up '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:1674
-msgid "Avg"
-msgstr ""
-
-#: lib/spikekill.php:1674
-msgid "CF"
-msgstr ""
-
-#: lib/spikekill.php:1674
+#: lib/spikekill.php:1746
 msgid "DS"
 msgstr ""
 
-#: lib/spikekill.php:1674
-msgid "NonNan"
+#: lib/spikekill.php:1747
+msgid "CF"
 msgstr ""
 
-#: lib/spikekill.php:1674
+#: lib/spikekill.php:1748
 msgid "Samples"
 msgstr ""
 
-#: lib/spikekill.php:1675
-msgid "MaxStdDev"
+#: lib/spikekill.php:1749
+msgid "NonNan"
 msgstr ""
 
-#: lib/spikekill.php:1675
+#: lib/spikekill.php:1750
+msgid "Avg"
+msgstr ""
+
+#: lib/spikekill.php:1753
 msgid "MaxValue"
 msgstr ""
 
-#: lib/spikekill.php:1675
-msgid "MinStdDev"
-msgstr ""
-
-#: lib/spikekill.php:1675
+#: lib/spikekill.php:1754
 msgid "MinValue"
 msgstr ""
 
-#: lib/spikekill.php:1675
+#: lib/spikekill.php:1755
+msgid "MaxStdDev"
+msgstr ""
+
+#: lib/spikekill.php:1756
+msgid "MinStdDev"
+msgstr ""
+
+#: lib/spikekill.php:1757
 msgid "StdKilled"
 msgstr ""
 
-#: lib/spikekill.php:1675
+#: lib/spikekill.php:1758
 msgid "VarKilled"
 msgstr ""
 
-#: lib/spikekill.php:1675
-msgid "WindKilled"
+#: lib/spikekill.php:1759
+msgid "WindSamples"
 msgstr ""
 
-#: lib/spikekill.php:1675
-msgid "WindSamples"
+#: lib/spikekill.php:1760
+msgid "WindKilled"
 msgstr ""
 
 #: lib/template.php:1482

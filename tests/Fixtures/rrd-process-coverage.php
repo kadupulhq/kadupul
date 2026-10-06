@@ -29,6 +29,10 @@ if (!is_string($coveragePackageVersion)) {
     throw new RuntimeException('Unable to determine the active code-coverage version');
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('POLLER_RESULT_HELPERS_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/path_helpers.php');
+}
 if (defined('POLLER_OUTPUT_TYPE_TEST_COVERAGE')) {
     foreach (['lib/utility.php', 'lib/database.php', 'lib/api_poller.php', 'lib/data_query.php', 'lib/xml.php',
         'src/Inventory/Infrastructure/Legacy/PollerCacheBufferWrite.php', 'src/Inventory/Infrastructure/Legacy/QueuedCollectorPurge.php',
@@ -360,7 +364,7 @@ if (defined('DATA_INPUT_LIST_TEST_COVERAGE')) {
     }
     $dataInputListEvidence = NativeChildCoverageEvidence::snapshot($coverageRoot, 'tests/Fixtures/data-input-list-native.php', DATA_INPUT_LIST_NATIVE_SCENARIO, $listSources);
 }
-if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE') || defined('PER_CS_REVIEW_TEST_COVERAGE') || defined('UTILITY_VIEW_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('HELPER_UNION_TEST_COVERAGE') || defined('STRING_PREDICATE_TEST_COVERAGE') || defined('PHP80_STRING_NATIVE_TEST_COVERAGE') || defined('CLOG_LINKS_NATIVE_TEST_COVERAGE')) {
+if (defined('MAINTENANCE_PURGE_TEST_COVERAGE') || defined('HTML_RENDERER_NATIVE_TEST_COVERAGE') || defined('PER_CS_REVIEW_TEST_COVERAGE') || defined('UTILITY_VIEW_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('HELPER_UNION_TEST_COVERAGE') || defined('STRING_PREDICATE_TEST_COVERAGE') || defined('PHP80_STRING_NATIVE_TEST_COVERAGE') || defined('CLOG_LINKS_NATIVE_TEST_COVERAGE')) {
     require_once $coverageRoot . '/tests/Helpers/NativeChildCoverageEvidence.php';
     $nativeSources = array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php');
     foreach ($coverageFilter->files() as $file) {
@@ -368,8 +372,12 @@ if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE') || defined('PER_CS_REVIEW_TEST
         $source = defined('RRD_TEST_CLI_COVERAGE_COPY') && $file === realpath(RRD_TEST_CLI_COVERAGE_COPY) ? RRD_TEST_CLI_COVERAGE_SOURCE : $file;
         $nativeSources[] = substr($source, strlen($coverageRoot) + 1);
     }
-    $nativeScenario = $argv[1];
-    if (defined('CLOG_LINKS_NATIVE_TEST_COVERAGE')) {
+    $nativeScenario = defined('MAINTENANCE_PURGE_TEST_COVERAGE') ? MAINTENANCE_PURGE_NATIVE_SCENARIO : $argv[1];
+    if (defined('MAINTENANCE_PURGE_TEST_COVERAGE')) {
+        $nativeProducer = 'tests/Unit/Core/Rrd/MaintenancePurgeNativeTest.php';
+        $nativeSources[] = $nativeProducer;
+        $nativeScenario = MAINTENANCE_PURGE_NATIVE_SCENARIO;
+    } elseif (defined('CLOG_LINKS_NATIVE_TEST_COVERAGE')) {
         $nativeSources = array_merge($nativeSources, array('tests/Unit/ClogLinksNativeCoverageTest.php', 'tests/Helpers/PhpSource.php', 'lib/functions.php', 'lib/html.php'));
         $nativeProducer = 'tests/Fixtures/clog-links-native.php';
     } elseif (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE')) {

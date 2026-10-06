@@ -6,9 +6,18 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
-- Preserve each graph item's numeric SHIFT or TICK value, including backward shifts; validate numeric fields only when rendering uses them.
+- Preserve heartbeat propagation for template-only and local data sources; accept unchanged read-only fields and independently validate consolidation edits before writes.
 - Render sortable header labels as text, including stored automation fields and plugin `device_display_text` labels. Arbitrary label markup is now escaped; existing entities, generated sort icons and sorting callbacks are preserved.
 
+- Preserve existing NaN gaps while removing stddev and variance spikes; count only completed replacements against the per-archive limit and report the selected replacement mode. Fixes #238.
+
+- Preserve cached HR-MIB disk allocation units with the `Bytes` suffix; reject fractional, non-finite and out-of-range Integer32 samples as unknown.
+
+- Preserve each graph item's numeric SHIFT or TICK value, including backward shifts; validate numeric fields only when rendering uses them.
+- Preserve trusted RRA directory links and custom configured roots during cleanup; retain final file links and unsafe proxy or archive targets without creating directories outside the archive.
+
+- Map complete exclamation-delimited poller field lists from PHP and Spine while preserving scalar exclamation marks and hexadecimal values, including hexadecimal-looking field names. Fixes #284.
+- Query the shipped `poller` table when checking multi-collector Boost settings, preserve the current system setting if that count fails, and normalize the bounded 120-minute fallback before master scheduling arithmetic. Fixes #270.
 - Enforce persistent CDEF reference integrity for legacy writers and atomic aggregate cache replacement; refuse online collector primary upgrades and confirm the final installation version before reporting success.
 - Roll back complete aggregate regeneration and creation on unconfirmed reads or writes, preserving caller transactions; reject malformed aggregate item selections before saving and report incomplete propagation.
 - Keep permission writes and session epochs consistent, including failed writes and absent deletions.
@@ -23,6 +32,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Share user and group permission-filter rendering while retaining their existing routes, translations, template choices and filter events. Part of #699.
 - Add a reusable local write transaction helper with caller-owned savepoints, persistent InnoDB checks on the selected PDO connection, and native MariaDB/MySQL regressions.
 
+- Add a reusable local write transaction helper with caller-owned savepoints, persistent InnoDB checks on the selected PDO connection, and native MariaDB/MySQL regressions.
 - Replicate complete Data Source Profile definitions before collector references, retaining existing collector rows if delivery fails.
 - Coordinate all Data Source Profile definition writers with deletion and preserve unchanged legacy references.
 
@@ -89,6 +99,14 @@ Targeting `v1.3.0`, the first planned application release. See
 - Bind the data-query output type when rebuilding poller cache entries and skip malformed values, so stored field text cannot alter the SQL query. Fixes #533.
 - Validate graph-item TICK fractions and SHIFT offsets as single numeric tokens before saving or writing RRDtool pipe commands. Malformed legacy rows are skipped. Fixes #535.
 - Require the Realtime Graphs realm and graph visibility before reading a graph cache or starting its realtime poller, including requests made through the guest account. Fixes #537.
+- Treat missing or invalid Host Resources allocation units and negative disk samples as unknown instead of reporting raw units, raising a type error, or guessing an unsigned wrap. Fixes #243.
+- Enforce the spike-removal replacement budget across every row and data source in an RRA, reset it only at the next RRA, and count NaN replacements. Fixes #238.
+- Apply `nan` replacements in the spike-removal window modes and count changed samples, so float and fill no longer report success without changing the selected samples. Fixes #237.
+- Save an editable profile heartbeat even when the browser omits the disabled step field, while refusing changes to structural fields for profiles used by local data sources. Fixes #232.
+
+- Limit profile heartbeat propagation to the matching data template as well as the local data source, so template rows sharing the zero local-data sentinel do not overwrite unrelated templates. Fixes #233.
+
+- Recheck data-source profile references when a bulk deletion is submitted, preserving definitions still used by templates or sources while allowing unused profiles in the same selection to be removed.
 
 - Remove orphaned user-log entries even when no current user accounts remain.
 - Stop token generation when the cryptographic random source fails instead of returning a predictable fallback. Fixes #580.

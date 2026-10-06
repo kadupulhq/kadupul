@@ -130,7 +130,7 @@ if ($child == false) {
         $next_run_time = $boost_next_run_time;
     }
 
-    $seconds_offset = read_config_option('boost_rrd_update_interval') * 60;
+    $seconds_offset = boost_interval_seconds();
 
     $pending_archives = boost_get_arch_table_names();
     $run_now = boost_time_to_run($forcerun, $current_time, $last_run_time, $next_run_time) || cacti_sizeof($pending_archives);
@@ -596,6 +596,20 @@ function boost_wait_children($children, $timeout)
     return $success;
 }
 
+/** Resolve the configured minute interval before any master scheduling arithmetic. */
+function boost_interval_seconds(): int
+{
+    $configured = read_config_option('boost_rrd_update_interval');
+    $minutes = (is_string($configured) || is_int($configured)) && ctype_digit((string) $configured)
+        ? filter_var(ltrim((string) $configured, '0'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => intdiv(PHP_INT_MAX, 60)]])
+        : false;
+    if ($minutes === false) {
+        $minutes = 120;
+        set_config_option('boost_rrd_update_interval', 120);
+    }
+    return $minutes * 60;
+}
+
 function boost_time_to_run($forcerun, $current_time, $last_run_time, $next_run_time)
 {
     $run_now = false;
@@ -608,13 +622,7 @@ function boost_time_to_run($forcerun, $current_time, $last_run_time, $next_run_t
             set_config_option('boost_rrd_update_system_enable', 'on');
         }
 
-        $seconds_offset = read_config_option('boost_rrd_update_interval') * 60;
-
-        /* Initialize seconds offset, if not set to 2 hours */
-        if (empty($seconds_offset)) {
-            $seconds_offset = 120;
-            set_config_option('boost_rrd_update_interval', 120);
-        }
+        $seconds_offset = boost_interval_seconds();
 
         boost_debug("Last Runtime was " . date('Y-m-d H:i:s', $last_run_time) . " ($last_run_time).");
         boost_debug("Next Runtime is " . date('Y-m-d H:i:s', $next_run_time) . " ($next_run_time).");
@@ -652,9 +660,11 @@ function boost_time_to_run($forcerun, $current_time, $last_run_time, $next_run_t
             set_config_option('boost_next_run_time', $next_run_time);
         }
     } else {
-        $pollers = db_fetch_cell('SELECT COUNT(*) FROM pollers WHERE disabled = ""');
+        $pollers = db_fetch_cell('SELECT COUNT(*) FROM poller WHERE disabled = ""');
 
-        if ($pollers > 1) {
+        if ($pollers === false || $pollers === null) {
+            boost_debug('Unable to determine the number of active Data Collectors; preserving the Boost system setting.');
+        } elseif ((int) $pollers > 1) {
             boost_debug('Someone attempted to disable boost through there are multiple Data Collectors Defined!');
 
             set_config_option('boost_rrd_update_system_enable', 'on');

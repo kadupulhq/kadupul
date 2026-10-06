@@ -101,6 +101,7 @@ def main():
         'src/Platform/Infrastructure/Symfony/Controller/LegacyAboutController.php',
         'src/Platform/Infrastructure/Legacy/InstallationProductVersion.php',
         'vdef.php',
+        'data_source_profiles.php', 'lib/data_source_profile_integrity.php',
         'src/GraphDefinition/Infrastructure/Legacy/LegacyVdefEditor.php',
         'src/GraphDefinition/Infrastructure/Symfony/Controller/VdefItemController.php',
         'src/GraphDefinition/Infrastructure/Symfony/Controller/VdefActionController.php',
@@ -301,7 +302,11 @@ def main():
     assignment_checks += ['collector verified cleanup publishes no redundant purge command', 'bulk collector verified cleanup publishes no redundant purge commands']
     assignment_checks += ['selected PDO runner preserves primary and collector identities and caller-owned work']
     assignment_checks += ['collector acknowledgement failure cannot report success after remote cleanup', 'collector failed acknowledgement retains receipt despite verified remote absence', 'bulk collector later acknowledgement failure cannot report success', 'bulk collector failed acknowledgement rolls back all receipts after remote absence']
+    profile_checks = ['in-use profile heartbeat saves when the disabled step field is absent', 'selected template RRD heartbeat follows its profile', 'selected local-source RRD heartbeat follows its profile', 'unrelated template RRD heartbeat is unchanged', 'unrelated local-source RRD heartbeat is unchanged', 'unchanged structural fields permit an in-use heartbeat save', 'single forged structural field refuses the complete in-use save: x_files_factor', 'single forged structural field refuses the complete in-use save: consolidation_function_id[]', 'template-only profile propagates heartbeat without local data sources', 'unused profile consolidation-only save is independent of step submission', 'unused profile factor-only save retains interval and consolidation functions', 'new profile creation persists submitted structural fields', 'unused profile structural edits save normally', "malformed consolidation selection causes no partial writes: '2'", "malformed consolidation selection causes no partial writes: ['99']", "malformed consolidation selection causes no partial writes: ['1e0']", "malformed consolidation selection causes no partial writes: ['1', '2', '3', '4', '1']", 'template-only heartbeat save emits no existing-file tuning warning', 'non-templated local heartbeats update only for the selected profile', 'unchanged heartbeat retains existing metadata and emits no tuning warning', 'profile save rejects missing CSRF before persistence', 'template-only profile accepts every structural field', 'read-only refusal displays its error and records the operator warning: x_files_factor', 'single forged structural field leaves propagated heartbeat unchanged: x_files_factor', 'read-only refusal displays its error and records the operator warning: consolidation_function_id[]', 'single forged structural field leaves propagated heartbeat unchanged: consolidation_function_id[]']
     failures = {
+        'profile-heartbeat-test-hash': 'Integration test source differs',
+        'missing-profile-heartbeat-test-hash': 'Integration test source differs',
+        **{f'missing-profile-heartbeat-check-{index}': 'Incomplete Symfony integration' for index in range(len(profile_checks))},
         'data-source-profile-test-hash': 'Integration test source differs',
         'about-authentication-test-hash': 'Integration test source differs',
         'missing-data-source-profile-test-hash': 'Integration test source differs',
@@ -496,6 +501,12 @@ def main():
                 evidence['source_sha256']['tests/Symfony/palette_sql_failure_probe.php'] = '0' * 64
             elif case == 'palette-test-hash':
                 evidence['source_sha256']['tests/Symfony/palette_color_scenarios.py'] = '0' * 64
+            elif case == 'profile-heartbeat-test-hash':
+                evidence['source_sha256']['tests/Symfony/data_source_profile_heartbeat_scenarios.py'] = '0' * 64
+            elif case == 'missing-profile-heartbeat-test-hash':
+                evidence['source_sha256'].pop('tests/Symfony/data_source_profile_heartbeat_scenarios.py')
+            elif case.startswith('missing-profile-heartbeat-check-'):
+                evidence['checks'].remove(profile_checks[int(case.rsplit('-', 1)[1])])
             elif case == 'missing-data-source-profile-test-hash':
                 evidence['source_sha256'].pop('tests/Symfony/data_source_profile_scenarios.py')
             elif case == 'vdef-probe-hash':

@@ -942,6 +942,7 @@ function process_poller_output_page(&$rrdtool_pipe, $remainder, $after, &$acknow
         foreach ($results as $item) {
             /* trim the default characters, but add single and double quotes */
             $value            = $item['output'];
+            $normalized_value = normalize_poller_multi_value_result($value);
             $unix_time        = $item['unix_time'];
             $rrd_path         = $item['rrd_path'];
             $rrd_name         = $item['rrd_name'];
@@ -976,8 +977,9 @@ function process_poller_output_page(&$rrdtool_pipe, $remainder, $after, &$acknow
                 } else {
                     $rrd_update_array[$rrd_path]['times'][$unix_time][$rrd_name] = 'U';
                 }
-            } elseif (str_contains($value, ':')) {
+            } elseif (str_contains($normalized_value, ':')) {
                 /* multiple value output */
+                $value = $normalized_value;
                 $values = preg_split('/\s+/', $value);
 
                 if ($data_template_id > 0) {
