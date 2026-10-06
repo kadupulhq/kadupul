@@ -78,10 +78,25 @@ function native_query_snmp_get(string $root, string $directory, array $scenario,
     });
     try {
         require_once $root . '/include/global_constants.php';
-        // The values are the exact fallback constants in lib/snmp.php.
-        foreach (array('GUESS' => 1, 'ASCII' => 2, 'HEX' => 3) as $name => $value) {
-            if (!defined('SNMP_STRING_OUTPUT_' . $name)) define('SNMP_STRING_OUTPUT_' . $name, $value);
+        require_once $root . '/tests/Helpers/PhpSource.php';
+        $snmpSource = file_get_contents($root . '/lib/snmp.php');
+        if ($snmpSource === false) throw new RuntimeException('Actual SNMP constant guards unavailable');
+        $names = array('SNMP_STRING_OUTPUT_GUESS', 'SNMP_STRING_OUTPUT_ASCII', 'SNMP_STRING_OUTPUT_HEX');
+        if (!empty($scenario['predefined'])) {
+            foreach (array_combine($names, array(17, 19, 23)) as $name => $value) {
+                if (!defined($name)) define($name, $value);
+            }
         }
+        $existingConstants = array();
+        foreach ($names as $name) {
+            if (defined($name)) $existingConstants[$name] = constant($name);
+            eval(test_php_block_source($snmpSource, "if (!defined('" . $name . "'))"));
+        }
+        foreach ($existingConstants as $name => $value) {
+            if (constant($name) !== $value) throw new RuntimeException('Actual SNMP fallback guard changed a predefined constant');
+        }
+        $constants = array('SNMP_POLLER' => SNMP_POLLER);
+        foreach ($names as $name) $constants[$name] = constant($name);
         require_once $root . '/lib/xml.php';
         require_once $root . '/lib/data_query.php';
         $schema = file_get_contents($root . '/cacti.sql');
@@ -162,7 +177,7 @@ function native_query_snmp_get(string $root, string $directory, array $scenario,
         if ($GLOBALS['queryTransport'] !== $expectedTransport || count($GLOBALS['querySql']) !== 3) throw new RuntimeException('Actual query changed transport tuples, ordering or cache write budget');
         if ($database->query('SELECT ' . implode(',', array_keys($host)) . ' FROM host WHERE id=4')->fetch(PDO::FETCH_ASSOC) !== $host) throw new RuntimeException('Fixed walk unexpectedly mutated host settings');
         $GLOBALS['nativeChildCoverageMarkers'] = array('actual-snmp-query-completed', 'actual-snmp-cache-readback', 'actual-session-close');
-        return array('rows' => $rows, 'transport' => $GLOBALS['queryTransport'], 'sql' => $GLOBALS['querySql'], 'host' => $host);
+        return array('rows' => $rows, 'transport' => $GLOBALS['queryTransport'], 'sql' => $GLOBALS['querySql'], 'host' => $host, 'constants' => $constants, 'preexisting_constants' => $existingConstants);
     } finally {
         restore_error_handler();
     }

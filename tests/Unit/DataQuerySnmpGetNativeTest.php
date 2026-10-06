@@ -40,7 +40,7 @@ function runQuery(array $scenario): array
         $scenario,
         array_merge(array('actual-snmp-query-completed', 'actual-snmp-cache-readback', 'actual-session-close'), empty($scenario['probeReturns']) ? array() : array('native-helper-values-preserved')),
         array('lib/data_query.php', 'lib/xml.php'),
-        array('tests/Fixtures/data-query-snmp-get-native.php', 'lib/data_query.php', 'lib/xml.php', 'include/global_constants.php', 'cacti.sql', 'lib/snmp.php')
+        array('tests/Fixtures/data-query-snmp-get-native.php', 'lib/data_query.php', 'lib/xml.php', 'include/global_constants.php', 'cacti.sql', 'lib/snmp.php', 'tests/Helpers/PhpSource.php')
     );
     $registration['collectorPrelude'] = 'define("SNMP_QUERY_NATIVE_TEST_COVERAGE", true);';
     $command = \child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program,
@@ -77,6 +77,7 @@ dataset('native SNMP field formats', array(
     'uppercase uses guess' => array(array('format' => 'HEX', 'suffix' => false, 'rewrite' => false)),
     'suffix retained on session path' => array(array('suffix' => true, 'rewrite' => false)),
     'suffix retained on formatted path' => array(array('format' => 'hex', 'suffix' => true, 'rewrite' => false)),
+    'existing extension constants are preserved' => array(array('format' => 'hex', 'suffix' => false, 'rewrite' => false, 'predefined' => true)),
     'plain field rewrites its OID' => array(array('format' => 'ascii', 'suffix' => true, 'rewrite' => true)),
 ));
 
@@ -86,6 +87,8 @@ test('whole SNMP query preserves formatted and regexp field transport tuples and
     expect($result['rows'][6])->toBe(array('host_id' => 5, 'snmp_query_id' => 10, 'field_name' => 'adjacent', 'field_value' => 'untouched', 'snmp_index' => '7', 'oid' => 'adjacent-oid', 'present' => 1));
     expect($result['transport'][0])->toBe(array('session', array('192.0.2.7', 'fictional-community', 3, 'fictional-user', 'fictional-auth', 'SHA', 'fictional-privacy', 'AES', 'fixture-context', 'fixture-engine', 1161, 1501, 2, 10, 5)));
     $format = $scenario['format'] ?? null;
+    $constants = $result['constants'];
+    foreach ($result['preexisting_constants'] as $name => $value) expect($constants[$name])->toBe($value);
     foreach (array('value', 'capture') as $fieldNumber => $field) {
         foreach (array(7, 9) as $position => $index) {
             $oid = '.1.3.6.1.' . ($field === 'capture' ? '4' : ($scenario['rewrite'] ? '30' : '3')) . '.' . $index . ($scenario['suffix'] ? '.5' : '');
@@ -93,7 +96,7 @@ test('whole SNMP query preserves formatted and regexp field transport tuples and
             if ($format === null) {
                 expect($call)->toBe(array('session-get', $oid));
             } else {
-                expect($call)->toBe(array('get', array('192.0.2.7', 'fictional-community', $oid, 3, 'fictional-user', 'fictional-auth', 'SHA', 'fictional-privacy', 'AES', 'fixture-context', 1161, 1501, 0, 'fixture-engine', $format === 'hex' ? 3 : ($format === 'ascii' ? 2 : 1))));
+                expect($call)->toBe(array('get', array('192.0.2.7', 'fictional-community', $oid, 3, 'fictional-user', 'fictional-auth', 'SHA', 'fictional-privacy', 'AES', 'fixture-context', 1161, 1501, $constants['SNMP_POLLER'], 'fixture-engine', $format === 'hex' ? $constants['SNMP_STRING_OUTPUT_HEX'] : ($format === 'ascii' ? $constants['SNMP_STRING_OUTPUT_ASCII'] : $constants['SNMP_STRING_OUTPUT_GUESS']))));
             }
             $row = array_values(array_filter($result['rows'], static fn(array $row): bool => $row['host_id'] === 4 && $row['field_name'] === $field && $row['snmp_index'] === (string) $index));
             expect($row)->toBe(array(array('host_id' => 4, 'snmp_query_id' => 10, 'field_name' => $field,
