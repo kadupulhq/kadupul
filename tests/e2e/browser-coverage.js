@@ -19,7 +19,8 @@ const sourceHashes = sources => Object.fromEntries(sources.map(source => [source
 // own required inventory rather than trusting the report's claimed sources.
 function producerSources() {
   return ['tests/Symfony/vdef_browser_probe.cjs', 'tests/Symfony/vdef_scenarios.py', 'tests/Symfony/session_bridge.py', 'package-lock.json', 'tests/e2e/package-lock.json', 'tests/e2e/browser-coverage.js',
-    'tests/e2e/midwinter-listeners.spec.js', 'tests/e2e/selectmenu-scroll.spec.js', 'tests/e2e/theme-smoke.html', 'tests/e2e/playwright.config.js',
+    'tests/e2e/midwinter-listeners.spec.js', 'tests/e2e/selectmenu-scroll.spec.js', 'tests/e2e/html-sink-escaping.spec.js', 'tests/e2e/theme-smoke.html', 'tests/e2e/playwright.config.js',
+    'user_admin.php', 'user_group_admin.php', 'tree.php', 'managers.php', 'utilities.php', 'include/js/jstree.js',
     'lib/html.php', 'include/js/jquery.js', 'include/js/jquery-ui.js', 'include/js/js.storage.js',
     'include/js/jquery.cookie.js', 'include/js/purify.js', 'include/js/jquery.tablesorter.js',
     'include/themes/classic/jquery-ui.css', 'include/fa/css/all.css', 'include/fa/webfonts/fa-solid-900.woff2',
@@ -28,7 +29,8 @@ function producerSources() {
 }
 
 const mergerSources = ['tests/Symfony/vdef_browser_probe.cjs', 'tests/Symfony/vdef_scenarios.py', 'tests/Symfony/session_bridge.py', 'public/js/vdef-item.js', 'package-lock.json', 'tests/e2e/package-lock.json', 'tests/e2e/browser-coverage.js',
-  'tests/e2e/midwinter-listeners.spec.js', 'tests/e2e/selectmenu-scroll.spec.js', 'tests/e2e/theme-smoke.html', 'tests/e2e/playwright.config.js',
+  'tests/e2e/midwinter-listeners.spec.js', 'tests/e2e/selectmenu-scroll.spec.js', 'tests/e2e/html-sink-escaping.spec.js', 'tests/e2e/theme-smoke.html', 'tests/e2e/playwright.config.js',
+  'user_admin.php', 'user_group_admin.php', 'tree.php', 'managers.php', 'utilities.php', 'include/js/jstree.js',
   'lib/html.php', 'include/js/jquery.js', 'include/js/jquery-ui.js', 'include/js/js.storage.js',
   'include/js/jquery.cookie.js', 'include/js/purify.js', 'include/js/jquery.tablesorter.js',
   'include/themes/classic/jquery-ui.css', 'include/fa/css/all.css', 'include/fa/webfonts/fa-solid-900.woff2',
@@ -63,6 +65,15 @@ const scenarios = {
     'a scroll queued before the menu opens does not immediately close it',
     'shared theme controls preserve filter icons, select widget sizing and both logos',
     'shared form controls retain import labels and theme widths',
+  ],
+  'html-sink-escaping.spec.js': [
+    'a color name with markup stays inside the color dropdown input',
+    'an ordinary color name is shown in the color dropdown input',
+    'user_admin.php shows permission reasons with markup as text',
+    'user_group_admin.php shows permission reasons with markup as text',
+    'rebuilding a tree list keeps escaped names as text',
+    'SNMP notification tooltips on manager logs show names and descriptions as text',
+    'SNMP notification log tooltips drop script from the title markup',
   ],
 };
 
