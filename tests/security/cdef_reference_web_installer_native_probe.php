@@ -77,6 +77,31 @@ function webToken(string $body): string
     throw new RuntimeException('The real rendered form did not supply a CSRF token.');
 }
 
+/** Retain only non-secret worker state before the exclusively owned schema is removed. */
+function webLifecycleDiagnostics(PDO $database, string $installerLogPath, int $initialInstallerLogBytes): void
+{
+    try {
+        $keys = ['install_step', 'install_version', 'install_progress', 'install_started', 'install_updated', 'install_complete'];
+        $statement = $database->prepare('SELECT name,value FROM settings WHERE name IN (' . implode(',', array_fill(0, count($keys), '?')) . ') ORDER BY name');
+        $statement->execute($keys);
+        $state = ['settings' => $statement->fetchAll(PDO::FETCH_KEY_PAIR),
+            'processes' => $database->query("SELECT tasktype,taskname,taskid,pid,timeout,started,last_update FROM processes WHERE tasktype='install' AND taskname='master' AND taskid=0")->fetchAll(PDO::FETCH_ASSOC)];
+        // Classify known lifecycle events without publishing raw installer logs,
+        // request fields, configuration, credentials or exception arguments.
+        $log = is_file($installerLogPath) ? file_get_contents($installerLogPath) : '';
+        if ($log === false) {
+            throw new RuntimeException('Cannot read owned installer lifecycle log.');
+        }
+        $log = substr($log, $initialInstallerLogBytes);
+        $state['worker_registration_refused'] = str_contains($log, 'Old process still running and has not timed out!');
+        $state['background_start_rejected'] = str_contains($log, 'Background was already started at');
+        echo 'WEB_LIFECYCLE ' . json_encode($state, JSON_THROW_ON_ERROR) . "\n";
+    } catch (Throwable $diagnosticError) {
+        // Preserve the original completion failure and allow owned cleanup.
+        echo "WEB_LIFECYCLE unavailable\n";
+    }
+}
+
 $failureUpgrade = ($argv[1] ?? '') === 'failure-upgrade';
 $initialVersion = $failureUpgrade ? '1.2.33' : 'new_install';
 $root = dirname(__DIR__, 2);
@@ -106,9 +131,12 @@ chmod($cookies, 0600);
 $created = false;
 $server = null;
 $installerLogPath = $root . '/log/cacti.log';
-$initialInstallerLogBytes = is_file($installerLogPath) ? filesize($installerLogPath) : 0;
-if ($initialInstallerLogBytes === false) throw new RuntimeException('Cannot inspect owned installer log boundary.');
+$initialInstallerLogBytes = 0;
 try {
+    $initialInstallerLogBytes = is_file($installerLogPath) ? filesize($installerLogPath) : 0;
+    if ($initialInstallerLogBytes === false) {
+        throw new RuntimeException('Cannot inspect owned installer log boundary.');
+    }
     echo 'SERVER ' . $database->query('SELECT VERSION()')->fetchColumn() . "\n";
     $database->exec("CREATE DATABASE `$schema`");
     $created = true;
@@ -283,28 +311,8 @@ try {
         'actual web Installer installs the exact native CDEF contract and data readiness'
     );
 } finally {
-    // Retain only non-secret worker lifecycle state before removing the owned
-    // schema and transport files. This leaves every completion assertion intact.
     if ($created) {
-        try {
-            $keys = ['install_step', 'install_version', 'install_progress', 'install_started', 'install_updated', 'install_complete'];
-            $statement = $database->prepare('SELECT name,value FROM settings WHERE name IN (' . implode(',', array_fill(0, count($keys), '?')) . ') ORDER BY name');
-            $statement->execute($keys);
-            $state = ['settings' => $statement->fetchAll(PDO::FETCH_KEY_PAIR),
-                'processes' => $database->query("SELECT tasktype,taskname,taskid,pid,timeout,started,last_update FROM processes WHERE tasktype='install' AND taskname='master' AND taskid=0")->fetchAll(PDO::FETCH_ASSOC)];
-            // Report only known lifecycle categories, never raw log text or
-            // request/configuration values from the candidate's installer log.
-            $log = is_file($installerLogPath) ? file_get_contents($installerLogPath) : '';
-            if ($log === false) throw new RuntimeException('Cannot read owned installer lifecycle log.');
-            $log = substr($log, $initialInstallerLogBytes);
-            $state['worker_registration_refused'] = str_contains($log, 'Old process still running and has not timed out!');
-            $state['background_start_rejected'] = str_contains($log, 'Background was already started at');
-            echo 'WEB_LIFECYCLE ' . json_encode($state, JSON_THROW_ON_ERROR) . "\n";
-        } catch (Throwable $diagnosticError) {
-            // Diagnostics must not replace a failed completion assertion or
-            // prevent cleanup; omit exception data from the public artifact.
-            echo "WEB_LIFECYCLE unavailable\n";
-        }
+        webLifecycleDiagnostics($database, $installerLogPath, $initialInstallerLogBytes);
     }
     if (is_resource($server)) {
         proc_terminate($server);
