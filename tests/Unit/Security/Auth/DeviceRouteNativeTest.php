@@ -50,6 +50,7 @@ final class DeviceRouteNativeTest extends PHPUnit\Framework\TestCase
         foreach (['anonymous' => 401, 'unprivileged' => 403] as $access => $status) {
             foreach (['GET', 'POST'] as $method) yield "$access $method before malformed fields" => [['action' => ['edit'], 'id' => ['13']], $method, $access, $status, null];
         }
+        yield 'legacy bulk selection expires' => [['action' => 'actions', 'drp_action' => 'native_budget_probe', 'selected_items' => serialize(range(1001, 6000))], 'POST', 'manager', 409, null];
         yield 'malformed expired payload' => [['action' => ['save'], 'id' => ['13']], 'POST', 'manager', 409, null];
     }
 
