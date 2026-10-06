@@ -322,7 +322,7 @@ test('pages send the device, tree, rule, data source and utility actions by POST
 
     expect($source('lib/html.php'))->toMatch('/\\$classo \\.= \' cactiPostAction\';\\s+\\$post\\s+= " data-url=\'\\$href\'";/');
     expect($source('lib/html_form.php'))->toMatch('/class=\'[^\']*cactiPostAction\' data-url=\'<\\?php print html_escape\\(\\$config\\[\'url_path\'\\] \\. \\$action_url \\. \'&confirm=true\'\\)/');
-    expect($source('data_sources.php'))->toMatch('/class=\'hyperLink cactiPostAction\' href=\'#\' data-url=\'<\\?php print html_escape\\(\'data_sources\\.php\\?action=ds_\'/');
+    expect($source('data_sources.php'))->toMatch('/class=\'hyperLink cactiPostAction\' href=\'#\' data-url=\'<\\?php print htmlspecialchars\\(html_escape\\(\'data_sources\\.php\\?action=ds_\'[^\\n]+ENT_QUOTES \\| ENT_HTML5, html_escape_charset\\(\\), false\\)/');
     // Migrated field deletion and whitelist confirmations use Symfony forms.
     // DataInputPresentationTest verifies missing/forged tokens before mutation.
 
@@ -350,9 +350,16 @@ test('no page triggers ajax_dnd or query_reload by GET', function () {
 
     expect($offenders)->toBe(array());
 
-    foreach (array('cdef.php', 'automation_snmp.php', 'automation_templates.php', 'color_templates.php', 'tree.php') as $file) {
+    foreach (array('cdef.php', 'automation_templates.php', 'tree.php') as $file) {
         expect(file_get_contents($root . '/' . $file))
             ->toMatch("/loadPageUsingPost(?:Checked)?\\('[a-z_]+\\.php\\?action=ajax_dnd.*?', \\$\\.tableDnD\\.serialize\\(\\) \\+ '&__csrf_magic=' \\+ encodeURIComponent\\(csrfMagicToken\\)\\);/");
+    }
+    // These callers encode the complete URL as a JavaScript value. Keep the
+    // POST/token handoff and all contextual encoding flags in the contract.
+    foreach (array('automation_snmp.php' => 'automation_snmp.php', 'color_templates.php' => 'color_templates_items.php') as $file => $controller) {
+        expect(file_get_contents($root . '/' . $file))
+            ->toContain("loadPageUsingPostChecked(<?php print json_encode('$controller?action=ajax_dnd&id=' . ")
+            ->toMatch("/JSON_HEX_TAG \\| JSON_HEX_AMP \\| JSON_HEX_APOS \\| JSON_HEX_QUOT \\| JSON_THROW_ON_ERROR\\);\\?>, \\$\\.tableDnD\\.serialize\\(\\) \\+ '&__csrf_magic=' \\+ encodeURIComponent\\(csrfMagicToken\\)\\);/");
     }
     expect(file_get_contents($root . '/graphs_new.php'))
         ->toMatch("/loadPageUsingPost\\('graphs_new\\.php\\?action=query_reload', \\{[^;]*__csrf_magic: csrfMagicToken/");
