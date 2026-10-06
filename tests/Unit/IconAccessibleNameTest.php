@@ -179,6 +179,7 @@ final class IconAccessibleNameTest extends TestCase
     {
         $root = dirname(__DIR__, 2);
         $sources = array(
+            'html_escape_charset' => 'lib/html.php',
             'html_escape' => 'lib/html.php',
             'html_start_box' => 'lib/html.php',
             'html_safe_href' => 'lib/html.php',
@@ -189,6 +190,10 @@ final class IconAccessibleNameTest extends TestCase
             'debug_icon_valid_result' => 'data_debug.php',
             'debug_icon' => 'data_debug.php',
         );
+
+        if (in_array('html_escape', $functions, true)) {
+            array_unshift($functions, 'html_escape_charset');
+        }
 
         $script = self::STUBS;
         foreach ($functions as $function) {

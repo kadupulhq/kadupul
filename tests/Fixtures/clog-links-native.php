@@ -58,7 +58,13 @@ require $root . '/tests/Helpers/PhpSource.php';
 foreach (array('array_rekey', 'get_data_source_title') as $function) {
     eval(test_php_function_source(file_get_contents($root . '/lib/functions.php'), $function));
 }
-eval(test_php_function_source(file_get_contents($root . '/lib/html.php'), 'html_escape'));
+$html_source = file_get_contents($root . '/lib/html.php');
+if ($html_source === false) {
+    throw new RuntimeException('Cannot read actual HTML escaping dependencies.');
+}
+foreach (array('html_escape_charset', 'html_escape') as $function) {
+    eval(test_php_function_source($html_source, $function));
+}
 
 foreach (array(
     'host' => 'id INTEGER PRIMARY KEY, description TEXT',
