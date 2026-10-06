@@ -19,7 +19,7 @@ function rrd_cli_fixture_remove($path)
 }
 
 /** Collect real subprocess coverage without changing the copied CLI source. */
-function rrd_cli_coverage_arguments($test, $dir, $root, $scriptName)
+function rrd_cli_coverage_arguments($test, $dir, $root, $scriptName, ?array $registration = null)
 {
     if ($test->getTestResultObject()->getCodeCoverage() === null) {
         return array();
@@ -27,7 +27,17 @@ function rrd_cli_coverage_arguments($test, $dir, $root, $scriptName)
     $bootstrap = '<?php define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__);' .
         'define("RRD_TEST_CLI_COVERAGE_COPY", ' . var_export($dir . '/cli/' . $scriptName, true) . ');' .
         'define("RRD_TEST_CLI_COVERAGE_SOURCE", ' . var_export($root . '/cli/' . $scriptName, true) . ');' .
+        ($registration !== null ? 'define("UPGRADE_BOUNDARY_TEST_COVERAGE",true);' : '') .
         'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
+    if ($registration !== null) {
+        $GLOBALS['rrd_cli_strict_registrations'][$dir] = $registration;
+        $bootstrap .= 'require_once ' . var_export($root . '/tests/Helpers/NativeChildCoverageEvidence.php', true) . ';'
+            . '$GLOBALS["nativeChildCoverageSnapshot"]=NativeChildCoverageEvidence::snapshot(' . var_export($root, true) . ','
+            . var_export($registration['producer'], true) . ',' . var_export($registration['scenario'], true) . ',' . var_export($registration['sources'], true) . ');'
+            . 'register_shutdown_function(function(){ $db=new PDO("sqlite:".__DIR__."/version.sqlite");'
+            . 'if(is_file(__DIR__."/future-step")||!is_file(__DIR__."/current-step")||$db->query("SELECT cacti FROM version")->fetchColumn()!== ' . var_export($registration['stored'], true) . '){throw new RuntimeException("Upgrade boundary state not observed.");}'
+            . '$GLOBALS["nativeChildCoverageMarkers"]=' . var_export($registration['markers'], true) . ';});';
+    }
     file_put_contents($dir . '/coverage.php', $bootstrap);
     return array('-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-d', 'auto_prepend_file=' . $dir . '/coverage.php');
 }
@@ -35,13 +45,26 @@ function rrd_cli_coverage_arguments($test, $dir, $root, $scriptName)
 function rrd_cli_merge_coverage($test, $dir)
 {
     $parent = $test->getTestResultObject()->getCodeCoverage();
+    if ($parent !== null && isset($GLOBALS['rrd_cli_strict_registrations'][$dir]) && !is_file($dir . '/coverage.php')) {
+        throw new RuntimeException('Registered upgrade coverage bootstrap is missing.');
+    }
     if ($parent === null || !file_exists($dir . '/coverage.php')) {
         return;
     }
     $reports = glob($dir . '/*.coverage');
     expect($reports)->toHaveCount(1);
     // Only our child can write in this owned 0700 fixture directory.
-    $child = unserialize(file_get_contents($reports[0]));
+    $registration = $GLOBALS['rrd_cli_strict_registrations'][$dir] ?? null;
+    if ($registration !== null) {
+        require_once dirname(__DIR__, 3) . '/Helpers/NativeChildCoverageEvidence.php';
+        $arguments = [$reports[0], dirname(__DIR__, 4), $registration['producer'], $registration['scenario'], $registration['sources'], $registration['markers'], ['cli/upgrade_database.php', 'lib/installer.php']];
+        $child = NativeChildCoverageEvidence::load(...$arguments);
+        expect(NativeChildCoverageEvidence::verifyRejections(...[...$arguments, 'lib/boost.php']))
+            ->toBe(count($registration['sources']) + count($registration['markers']) + 10);
+        unset($GLOBALS['rrd_cli_strict_registrations'][$dir]);
+    } else {
+        $child = unserialize(file_get_contents($reports[0]));
+    }
     expect($child)->toBeInstanceOf(SebastianBergmann\CodeCoverage\CodeCoverage::class);
     $parent->merge($child);
 }
@@ -573,9 +596,14 @@ test('database upgrade reports rejected versions and completed migrations accura
         array('1.2.28', 1, 'Upgrading from v1.2.28', false, 'noop-first-write-failure'),
         array('1.2.28', 1, 'Upgrading from v1.2.28', false, 'noop-second-write-failure'),
         array('1.2.30', 1, 'upgrade function (', false, 'missing-function'),
+        array('1.2.30', 0, 'Upgrading from v1.2.30', true, 'current-boundary'),
+        array($targetVersion, 0, 'Upgrading from v1.2.30', true, 'forced-start-success'),
+        array($targetVersion, 1, 'Upgrading from v1.2.30', false, 'forced-start-refusal'),
     );
 
     foreach ($cases as [$version, $expectedStatus, $expectedOutput, $expectSchemaWrite, $migrationOutcome]) {
+        $boundary = in_array($migrationOutcome, ['current-boundary', 'forced-start-success', 'forced-start-refusal'], true);
+        $forcedStart = str_starts_with($migrationOutcome, 'forced-start-');
         $dir = sys_get_temp_dir() . '/upgrade-version-' . bin2hex(random_bytes(8));
         foreach (array('', '/cli', '/include', '/lib', '/install', '/install/upgrades', '/store') as $suffix) {
             mkdir($dir . $suffix, 0700);
@@ -589,12 +617,12 @@ test('database upgrade reports rejected versions and completed migrations accura
             foreach (array('lib/data_query.php', 'lib/poller.php', 'lib/utility.php', 'install/functions.php') as $file) {
                 file_put_contents($dir . '/' . $file, '<?php');
             }
-            if (in_array($version, array('1.2.28', '1.2.30'), true) && $migrationOutcome !== 'missing') {
+            if ((in_array($version, array('1.2.28', '1.2.30'), true) || $forcedStart) && $migrationOutcome !== 'missing') {
                 $upgradeFile = str_replace('.', '_', $targetVersion);
                 $upgradeFunction = 'upgrade_to_' . $upgradeFile;
                 $body = $migrationOutcome === 'step-failure'
                     ? '$GLOBALS["database_upgrade_status"][' . var_export($targetVersion, true) . '] = array(array("status" => DB_STATUS_ERROR, "error" => "fixture failure", "sql" => "ALTER TABLE fixture"));'
-                    : '';
+                    : ($boundary ? 'touch(dirname(__DIR__,2)."/current-step");' : '');
                 file_put_contents($dir . '/install/upgrades/' . $upgradeFile . '.php', '<?php function ' . $upgradeFunction . '() {' . $body . '}');
                 if ($migrationOutcome === 'missing-function') {
                     file_put_contents($dir . '/install/upgrades/' . $upgradeFile . '.php', '<?php // Required migration function is deliberately absent.');
@@ -606,6 +634,9 @@ test('database upgrade reports rejected versions and completed migrations accura
                     }
                 }
             }
+            if ($boundary) {
+                file_put_contents($dir . '/install/upgrades/1_2_999.php', '<?php function upgrade_to_1_2_999(){touch(dirname(__DIR__,2)."/future-step");}');
+            }
             $fixture = '<?php $config = ' . var_export(array(
                 'base_path' => $dir,
                 'rra_path' => $dir . '/store',
@@ -615,13 +646,13 @@ test('database upgrade reports rejected versions and completed migrations accura
                 'poller_id' => $migrationOutcome === 'contract-refusal' ? 1 : 2,
                 'cacti_server_os' => 'unix',
             ), true) . ';'
-                . '$cacti_version_codes = ' . var_export(str_starts_with($migrationOutcome, 'noop-') ? array_fill_keys(array('1.2.28', '1.2.29', '1.2.30', '1.2.31', '1.2.32', '1.2.33', $targetVersion), 'fixture') : array('1.2.30' => 'old', $targetVersion => 'new'), true) . ';'
+                . '$cacti_version_codes = ' . var_export(str_starts_with($migrationOutcome, 'noop-') ? array_fill_keys(array('1.2.28', '1.2.29', '1.2.30', '1.2.31', '1.2.32', '1.2.33', $targetVersion), 'fixture') : ($boundary ? array('1.2.30' => 'old', $targetVersion => 'new', '1.2.999' => 'later') : array('1.2.30' => 'old', $targetVersion => 'new')), true) . ';'
                 . '$GLOBALS["fixture_version"] = ' . var_export($version, true) . ';'
                 . 'define("CACTI_VERSION", ' . var_export($targetVersion, true) . ');'
                 . 'define("DB_STATUS_SKIPPED", 2);'
                 . 'define("DB_STATUS_ERROR", 0);'
                 . 'define("DB_STATUS_SUCCESS", 1);'
-                . '$GLOBALS["fail_version_write"] = ' . var_export($migrationOutcome === 'write-failure', true) . ';'
+                . '$GLOBALS["fail_version_write"] = ' . var_export(in_array($migrationOutcome, ['write-failure', 'forced-start-refusal'], true), true) . ';'
                 . '$database_hostname="fixture";$database_port=0;$database_default="owned";'
                 . '$versionWriter=new PDO("sqlite:".dirname(__DIR__)."/version.sqlite",null,null,array(PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION));'
                 . '$versionWriter->exec("CREATE TABLE version (cacti TEXT)");'
@@ -638,12 +669,22 @@ test('database upgrade reports rejected versions and completed migrations accura
                 . 'function cacti_version_compare($left, $right, $operator) { return version_compare($left, $right, $operator); }'
                 . 'function db_fetch_cell_prepared(...$args) { return "InnoDB"; }'
                 . 'function db_execute_prepared(...$args) { if ($GLOBALS["fail_version_write"]) { return false; } touch(dirname(__DIR__) . "/schema-write"); return true; }';
+            if ($boundary) {
+                $fixture .= 'register_shutdown_function(function(){file_put_contents(dirname(__DIR__)."/owner-transaction",$GLOBALS["versionWriter"]->inTransaction()?"open":"closed");});';
+            }
             file_put_contents($dir . '/include/cli_check.php', $fixture);
+            $registration = $boundary ? [
+                'producer' => 'tests/Unit/Core/Cli/RrdMaintenanceCoordinationTest.php',
+                'scenario' => 'cli-upgrade-' . $migrationOutcome . ':' . hash('sha256', serialize([$version, $targetVersion, $forcedStart, $expectedStatus])),
+                'sources' => ['composer.lock', 'tests/composer.lock', 'tests/Unit/Core/Cli/RrdMaintenanceCoordinationTest.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'cli/upgrade_database.php', 'lib/installer.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/cdef_reference.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'],
+                'markers' => ['upgrade-current-step-observed', 'upgrade-later-step-absent'],
+                'stored' => $expectSchemaWrite ? $targetVersion : $version,
+            ] : null;
             $process = proc_open(
                 array_merge(
                     array(PHP_BINARY),
-                    rrd_cli_coverage_arguments($this, $dir, $root, 'upgrade_database.php'),
-                    array($dir . '/cli/upgrade_database.php')
+                    rrd_cli_coverage_arguments($this, $dir, $root, 'upgrade_database.php', $registration),
+                    array_merge(array($dir . '/cli/upgrade_database.php'), $forcedStart ? array('--forcever=1.2.30') : array())
                 ),
                 array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
                 $pipes
@@ -663,6 +704,13 @@ test('database upgrade reports rejected versions and completed migrations accura
             $observer = new PDO('sqlite:' . $dir . '/version.sqlite');
             expect($observer->query('SELECT cacti FROM version')->fetchAll(PDO::FETCH_COLUMN))
                 ->toBe(array($migrationOutcome === 'noop-second-write-failure' ? '1.2.31' : ($expectSchemaWrite ? $targetVersion : $version)));
+            if ($boundary) {
+                expect(file_exists($dir . '/current-step'))->toBeTrue()
+                    ->and(file_exists($dir . '/future-step'))->toBeFalse()
+                    ->and(file_get_contents($dir . '/owner-transaction'))->toBe('closed')
+                    ->and($observer->query('SELECT value FROM version_log ORDER BY rowid')->fetchAll(PDO::FETCH_COLUMN))
+                    ->toBe($migrationOutcome === 'forced-start-refusal' ? array() : array($targetVersion));
+            }
             if (str_starts_with($migrationOutcome, 'noop-')) {
                 $expectedMarkers = $migrationOutcome === 'noop-chain' ? array('1.2.31', '1.2.33', $targetVersion) : ($migrationOutcome === 'noop-second-write-failure' ? array('1.2.31') : array());
                 expect($observer->query('SELECT value FROM version_log ORDER BY rowid')->fetchAll(PDO::FETCH_COLUMN))
@@ -670,7 +718,7 @@ test('database upgrade reports rejected versions and completed migrations accura
             }
             if (in_array($migrationOutcome, array('noop-first-write-failure', 'noop-second-write-failure'), true)) {
                 expect($error)->toContain('could not be confirmed; retry from the last confirmed version');
-            } elseif ($migrationOutcome === 'write-failure') {
+            } elseif (in_array($migrationOutcome, ['write-failure', 'forced-start-refusal'], true)) {
                 expect($error)->toContain('The final database version could not be confirmed');
             } elseif ($migrationOutcome === 'contract-refusal') {
                 expect($error)->toContain('CDEF reference contract installation could not be confirmed');
