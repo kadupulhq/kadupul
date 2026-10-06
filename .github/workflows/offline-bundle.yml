@@ -11,10 +11,60 @@ permissions:
   contents: read
 
 jobs:
+  authentication:
+    name: Shared authentication (${{ matrix.backend }} sessions)
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        backend: [files, database]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.4'
+          extensions: gd, gmp, intl, ldap, mbstring, pcntl, pdo_mysql, posix, sockets, xml
+          coverage: none
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .node-version
+      - uses: jdx/mise-action@9149ea85001c7435d5a66bb127d6a1b6227cb0a5 # v5.0.0
+        with:
+          install_args: python@3.12.12 node@22.22.2
+      - name: Install pinned browser workflow test runtime
+        run: |
+          mise exec node@22.22.2 -- npm ci --ignore-scripts --no-audit --no-fund --prefix tests/e2e
+          mise exec node@22.22.2 -- node tests/e2e/node_modules/@playwright/test/cli.js install --with-deps chromium
+      - name: Verify complete shared authentication backend over HTTP
+        env:
+          SESSION_BACKEND: ${{ matrix.backend }}
+          AUTH_PROJECT: kadupul-offline-auth-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.backend }}
+        run: |
+          case "$SESSION_BACKEND" in
+            files)
+              mise exec python@3.12.12 -- python tests/Symfony/session_bridge.py --project "$AUTH_PROJECT"
+              ;;
+            database)
+              mise exec python@3.12.12 -- python tests/Symfony/session_bridge.py --database-sessions --project "$AUTH_PROJECT"
+              ;;
+            *)
+              echo "Unknown session backend" >&2
+              exit 1
+              ;;
+          esac
+
   bundle:
+    needs: authentication
+    if: ${{ always() }}
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     timeout-minutes: 30
     steps:
+      - name: Require both authentication backends to pass
+        if: ${{ needs.authentication.result != 'success' }}
+        run: exit 1
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -33,14 +83,6 @@ jobs:
         run: mise exec python@3.12.12 -- python tools/build-offline.py
       - name: Build isolated verification runtime
         run: docker build -f tests/behavior/Dockerfile -t kadupul-offline-verifier .
-      - name: Install pinned browser workflow test runtime
-        run: |
-          mise exec node@22.22.2 -- npm ci --ignore-scripts --no-audit --no-fund --prefix tests/e2e
-          mise exec node@22.22.2 -- node tests/e2e/node_modules/@playwright/test/cli.js install --with-deps chromium
-      - name: Verify shared authentication over HTTP
-        run: |
-          mise exec python@3.12.12 -- python tests/Symfony/session_bridge.py
-          mise exec python@3.12.12 -- python tests/Symfony/session_bridge.py --database-sessions
       - name: Verify archive without network access
         run: |
           mkdir -p /tmp/kadupul-offline-check
