@@ -39,7 +39,7 @@ $source = file_get_contents(__DIR__ . '/../../lib/html.php');
 if ($source === false) {
     throw new RuntimeException('Unable to read the production renderer.');
 }
-foreach (['html_escape', 'graph_drilldown_icons', 'html_spikekill_js'] as $function) {
+foreach (['html_escape_charset', 'html_escape', 'graph_drilldown_icons', 'html_spikekill_js'] as $function) {
     eval(test_php_function_source($source, $function));
 }
 ob_start();
