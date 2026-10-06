@@ -114,7 +114,7 @@ function nativeScenarioLines(scenario) {
   const layout = 'include/layout.js';
   const midwinter = 'include/themes/midwinter/main.js';
   const statements = scenario === 'realtime graph activation preserves loading glyph response and original image'
-    ? [[layout, "class='drillDown "], ['include/realtime.js', "$.get(urlPath+'graph_realtime.php?action=countdown"]]
+    ? [[layout, "class='drillDown "], ['include/realtime.js', "realtimeRequest(urlPath+'graph_realtime.php?action=countdown"]]
     : scenario === 'responsive filters preserve control callbacks and visibility across clicks'
     ? [[layout, "filterHeader.find('div.cactiTableButton').append($('<span style=\"display:none;\" class=\"cactiFilterExport\""]]
     : scenario === 'debug table actions and stored collapsible sections retain registry glyphs'

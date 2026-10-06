@@ -41,13 +41,30 @@ $GLOBALS['nativePresentationObserver'] = static function (array $rendered) use (
     };
     $validateWorkers();
     $db = PresentationMutationEvidence::database($root, $directory);
-    PresentationMutationEvidence::createCanonicalTables($db, $root, array_values(array_diff(PresentationGraphCreationEvidence::tables(), PresentationMutationEvidence::tables())));
+    PresentationMutationEvidence::createCanonicalTables($db, $root, array_values(array_diff(array_merge(PresentationGraphCreationEvidence::tables(), array('user_auth_row_cache')), PresentationMutationEvidence::tables())));
+    $db->sqliteCreateFunction('UNIX_TIMESTAMP', static fn(string $value): int => strtotime($value) ?: 0, 1);
+    $GLOBALS['nativeGraphCountSql'] = array();
+    $db->sqliteCreateFunction('FROM_UNIXTIME', static function (int $value): string {
+        // Observe the actual count-query argument at the unchanged cache writer;
+        // retain the canonical timestamp result rather than replacing SQL.
+        foreach (debug_backtrace(0, 16) as $frame) {
+            if (($frame['function'] ?? '') === 'get_total_row_data') {
+                if (!isset($frame['args'][1]) || !is_string($frame['args'][1])) {
+                    throw new RuntimeException('Native graph count-query argument missing');
+                }
+                $GLOBALS['nativeGraphCountSql'][] = $frame['args'][1];
+                break;
+            }
+        }
+        return gmdate('Y-m-d H:i:s', $value);
+    }, 1);
     $insert = static function (string $table, array $row) use ($db): void {
         $columns = array_keys($row);
         $db->prepare('INSERT INTO ' . $table . ' (' . implode(',', $columns) . ') VALUES (' . implode(',', array_fill(0, count($columns), '?')) . ')')->execute(array_values($row));
     };
     $insert('host', array('id' => 100,'description' => 'Router <one>','hostname' => 'router.invalid','host_template_id' => 3));
     $insert('host', array('id' => 101,'description' => 'Adjacent router','hostname' => 'adjacent.invalid','host_template_id' => 3));
+    $insert('host', array('id' => 102,'description' => 'Earlier denied router','hostname' => 'denied.invalid','host_template_id' => 3));
     $insert('host_template', array('id' => 3,'name' => 'Device template <A>'));
     foreach (array(6 => 'Traffic <one>',7 => 'Available <two>',8 => 'Multiple <three>',9 => 'Errors <four>') as $id => $name) {
         $insert('graph_templates', array('id' => $id,'name' => $name,'multiple' => $id === 8 ? 'on' : ''));
@@ -56,7 +73,12 @@ $GLOBALS['nativePresentationObserver'] = static function (array $rendered) use (
         $insert('host_graph', array('host_id' => 100,'graph_template_id' => $id));
     }
     $insert('graph_local', array('id' => 200,'host_id' => 100,'graph_template_id' => 6,'snmp_query_id' => 0));
-    $insert('user_auth', array('id' => 1,'username' => 'admin','password' => 'unused','full_name' => 'Fixture actor','email_address' => '','enabled' => 'on'));
+    $insert('user_auth', array('id' => 1,'username' => 'admin','password' => 'unused','full_name' => 'Fixture actor','email_address' => '','enabled' => 'on','policy_hosts' => 2,'policy_graphs' => 2,'policy_graph_templates' => 1));
+    foreach ($case === 'templates-missing-device' ? array(101) : array(100,101) as $deviceId) {
+        $insert('user_auth_perms', array('user_id' => 1,'item_id' => $deviceId,'type' => 3));
+    }
+    $insert('settings', array('name' => 'auth_method','value' => '1'));
+    $insert('settings', array('name' => 'graph_auth_method','value' => '3'));
     $insert('user_auth_realm', array('user_id' => 1,'realm_id' => 8));
     $insert('settings', array('name' => 'autocomplete_enabled','value' => 'on'));
     $queryCase = str_starts_with($case, 'query-');
@@ -84,6 +106,7 @@ $GLOBALS['nativePresentationObserver'] = static function (array $rendered) use (
     $GLOBALS['database_sessions'][$key] = $db;
     try {
         unset($_SESSION['sess_config_array']);
+        $GLOBALS['current_user'] = $db->query('SELECT * FROM user_auth WHERE id = 1')->fetch(PDO::FETCH_ASSOC);
         $_REQUEST = array('action' => '','header' => 'false','rows' => '10','graph_type' => $queryCase ? ($case === 'query-all' ? '-2' : '10') : '-1','host_id' => $case === 'templates-none' ? '0' : ($case === 'templates-missing-device' ? '999' : '100'),'filter' => $case === 'templates-filter' ? 'Traffic' : ($case === 'templates-no-matches' || $case === 'query-no-matches' ? 'No matching template' : ($case === 'query-filter' ? 'uplink' : '')),'returnto' => 'host.php');
         $GLOBALS['request'] = &$_REQUEST;
         $GLOBALS['_CACTI_REQUEST'] = array();
@@ -163,10 +186,29 @@ $GLOBALS['nativePresentationObserver'] = static function (array $rendered) use (
             throw new RuntimeException('Stored graph labels became markup');
         }
         $validateWorkers();
+        $cacheWrite = 'REPLACE INTO user_auth_row_cache (user_id, class, hash, total_rows, time) VALUES (?, ?, ?, ?, FROM_UNIXTIME(?))';
         foreach ($db->prepared as $query) {
-            if (preg_match('/^SELECT\b/i', $query) !== 1) {
+            if (preg_match('/^SELECT\b/i', $query) !== 1 && $query !== $cacheWrite) {
                 throw new RuntimeException('Read-only graph form attempted a database mutation');
             }
+        }
+        $countCache = $db->query('SELECT user_id, class, hash, total_rows FROM user_auth_row_cache')->fetchAll(PDO::FETCH_ASSOC);
+        if (count($countCache) !== 1 || (int) $countCache[0]['user_id'] !== 1 || $countCache[0]['class'] !== 'device'
+            || (int) $countCache[0]['total_rows'] !== ($case === 'templates-missing-device' ? 1 : 2) || preg_match('/^[a-f0-9]{32}$/D', $countCache[0]['hash']) !== 1) {
+            throw new RuntimeException('Current graph-creation policy/count cache does not match authorized devices: ' . json_encode($countCache, JSON_THROW_ON_ERROR));
+        }
+        if (count($GLOBALS['nativeGraphCountSql']) !== 1 || !hash_equals(md5($GLOBALS['nativeGraphCountSql'][0]), $countCache[0]['hash'])) {
+            throw new RuntimeException('Graph count cache hash differs from the actual policy query bytes');
+        }
+        $writesBefore = count(array_filter($db->prepared, static fn(string $sql): bool => $sql === $cacheWrite));
+        if (graphs_new_default_host_id() !== 101 || count(array_filter($db->prepared, static fn(string $sql): bool => $sql === $cacheWrite)) !== $writesBefore) {
+            throw new RuntimeException('Repeated allowed-device lookup lost current cached count/default');
+        }
+        if (!is_device_allowed(101) || is_device_allowed(102) || ($case === 'templates-missing-device' && is_device_allowed(100))) {
+            throw new RuntimeException('Actual graph-creation actor grants/denials are not enforced');
+        }
+        if ($case === 'templates-missing-device' && (int) get_request_var('host_id') !== 101) {
+            throw new RuntimeException('Missing device did not normalize to the authorized adjacent default');
         }
         $after = PresentationGraphCreationEvidence::snapshot($db);
         if ($after !== $before) {
@@ -175,7 +217,7 @@ $GLOBALS['nativePresentationObserver'] = static function (array $rendered) use (
         if (($GLOBALS['diagnostics'] ?? array()) !== array()) {
             throw new RuntimeException('Actual presentation caller emitted unexpected diagnostics: ' . implode('; ', $GLOBALS['diagnostics']));
         }
-        $bytes = json_encode(array('case' => $case,'before' => $before,'after' => $after,'html' => $html), JSON_THROW_ON_ERROR);
+        $bytes = json_encode(array('case' => $case,'before' => $before,'after' => $after,'html' => $html,'count_cache' => $countCache), JSON_THROW_ON_ERROR);
         if (file_put_contents($directory . '/outcome.json', $bytes) !== strlen($bytes)) {
             throw new RuntimeException('Cannot retain graph render outcome');
         }
@@ -189,7 +231,7 @@ if (getenv('PRESENTATION_GRAPH_CREATION_COVERAGE') === '1') {
     $testLoader = require $root . '/tests/vendor/autoload.php';
     require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
     $filter = new SebastianBergmann\CodeCoverage\Filter();
-    foreach (array('graphs_new.php', 'lib/database.php', 'lib/html.php', 'lib/data_query.php', 'lib/xml.php', 'lib/path_helpers.php') as $source) {
+    foreach (array('graphs_new.php', 'lib/database.php', 'lib/auth.php', 'lib/html.php', 'lib/data_query.php', 'lib/xml.php', 'lib/path_helpers.php') as $source) {
         $filter->includeFile($root . '/' . $source);
     }
     $coverage = new SebastianBergmann\CodeCoverage\CodeCoverage((new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($filter), $filter);
