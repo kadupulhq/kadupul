@@ -32,12 +32,16 @@ final class PresentationMutationStatement extends PDOStatement
         if ($this->selectedRows === null) {
             return parent::fetchAll($mode, ...$args);
         }
-        if (!in_array($mode, array(PDO::FETCH_ASSOC, PDO::FETCH_DEFAULT), true) || $args !== array()) {
+        if (!in_array($mode, array(PDO::FETCH_ASSOC, PDO::FETCH_DEFAULT, PDO::FETCH_NUM, PDO::FETCH_BOTH), true) || $args !== array()) {
             throw new RuntimeException('Unsupported mutation SELECT result mode');
         }
         $rows = $this->selectedRows;
         $this->selectedRows = array();
-        return $rows;
+        return match ($mode) {
+            PDO::FETCH_NUM => array_map(array_values(...), $rows),
+            PDO::FETCH_BOTH => array_map(static fn(array $row): array => $row + array_values($row), $rows),
+            default => $rows,
+        };
     }
 
     public function fetchColumn(int $column = 0): mixed
@@ -91,15 +95,21 @@ final class PresentationMutationEvidence
      */
     public static function database(string $root, string $directory): PresentationMutationDatabase
     {
+        $database = new PresentationMutationDatabase('sqlite:' . $directory . '/mutations.sqlite');
+        $database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $database->setAttribute(PDO::ATTR_STATEMENT_CLASS, array(PresentationMutationStatement::class));
+        self::createCanonicalTables($database, $root, self::tables());
+        return $database;
+    }
+
+    public static function createCanonicalTables(PDO $database, string $root, array $tables): void
+    {
         $schema = file_get_contents($root . '/cacti.sql');
         if ($schema === false) {
             throw new RuntimeException('Canonical presentation mutation schema unavailable');
         }
-        $database = new PresentationMutationDatabase('sqlite:' . $directory . '/mutations.sqlite');
-        $database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $database->setAttribute(PDO::ATTR_STATEMENT_CLASS, array(PresentationMutationStatement::class));
-        foreach (self::tables() as $table) {
-            if (preg_match('/CREATE TABLE `?' . preg_quote($table, '/') . '`? \((.*?)\) ENGINE=/s', $schema, $match) !== 1) {
+        foreach ($tables as $table) {
+            if (preg_match('/CREATE TABLE `?' . preg_quote($table, '/') . '`? \((.*?)\)\s+ENGINE=/s', $schema, $match) !== 1) {
                 throw new RuntimeException('Canonical mutation table missing: ' . $table);
             }
             $columns = array();
@@ -118,7 +128,6 @@ final class PresentationMutationEvidence
             }
             $database->exec('CREATE TABLE ' . $table . ' (' . implode(', ', $columns) . ')');
         }
-        return $database;
     }
 
     public static function snapshot(PDO $database): array
