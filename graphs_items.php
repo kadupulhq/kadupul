@@ -1,6 +1,7 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -108,38 +109,10 @@ function form_save()
                 set_request_var('alpha', get_nfilter_request_var('invisible_alpha'));
             }
 
-            $save['alpha']          = form_input_validate((isset($item['alpha']) ? $item['alpha'] : get_nfilter_request_var('alpha')), 'alpha', '', true, 3);
+            $save = array_merge($save, graph_item_editor_rrd_fields(isset($item['alpha']) ? $item['alpha'] : get_nfilter_request_var('alpha')));
             $save['graph_type_id']  = form_input_validate((isset($item['graph_type_id']) ? $item['graph_type_id'] : get_nfilter_request_var('graph_type_id')), 'graph_type_id', '^[0-9]+$', true, 3);
 
-            if (isset_request_var('line_width') || isset($item['line_width'])) {
-                $save['line_width'] = form_input_validate((isset($item['line_width']) ? $item['line_width'] : get_nfilter_request_var('line_width')), 'line_width', '(^[0-9]+[\.,0-9]+$|^[0-9]+$)', true, 3);
-            } else { # make sure to transfer old LINEx style into line_width on save
-                switch ($save['graph_type_id']) {
-                    case GRAPH_ITEM_TYPE_LINE1:
-                        $save['line_width'] = 1;
-                        break;
-                    case GRAPH_ITEM_TYPE_LINE2:
-                        $save['line_width'] = 2;
-                        break;
-                    case GRAPH_ITEM_TYPE_LINE3:
-                        $save['line_width'] = 3;
-                        break;
-                    default:
-                        $save['line_width'] = 0;
-                }
-            }
-
-            $save['dashes']         = form_input_validate((isset_request_var('dashes') ? get_nfilter_request_var('dashes') : ''), 'dashes', '', true, 3);
-            $save['dash_offset']    = form_input_validate((isset_request_var('dash_offset') ? get_nfilter_request_var('dash_offset') : ''), 'dash_offset', '^[0-9]+$', true, 3);
-            $save['cdef_id']        = form_input_validate(get_nfilter_request_var('cdef_id'), 'cdef_id', '^[0-9]+$', true, 3);
-            $save['vdef_id']        = form_input_validate(get_nfilter_request_var('vdef_id'), 'vdef_id', '^[0-9]+$', true, 3);
-            $save['shift']          = form_input_validate((isset_request_var('shift') ? get_nfilter_request_var('shift') : ''), 'shift', '^((on)|)$', true, 3);
-            $save['consolidation_function_id'] = form_input_validate((isset($item['consolidation_function_id']) ? $item['consolidation_function_id'] : get_nfilter_request_var('consolidation_function_id')), 'consolidation_function_id', '^[0-9]+$', true, 3);
-            $save['textalign']      = form_input_validate((isset_request_var('textalign') ? get_nfilter_request_var('textalign') : ''), 'textalign', '^[a-z]+$', true, 3);
-            $save['text_format']    = form_input_validate((isset($item['text_format']) ? $item['text_format'] : get_nfilter_request_var('text_format')), 'text_format', '', true, 3);
-            $save['value']          = form_input_validate(get_nfilter_request_var('value'), 'value', '', true, 3);
-            $save['hard_return']    = form_input_validate(((isset($item['hard_return']) ? $item['hard_return'] : (isset_request_var('hard_return') ? get_nfilter_request_var('hard_return') : ''))), 'hard_return', '', true, 3);
-            $save['gprint_id']      = form_input_validate(get_nfilter_request_var('gprint_id'), 'gprint_id', '^[0-9]+$', true, 3);
+            $save = array_merge($save, graph_item_editor_save_fields($item, $save['graph_type_id']));
             $save['sequence']       = $sequence;
 
             if (!is_error_message()) {

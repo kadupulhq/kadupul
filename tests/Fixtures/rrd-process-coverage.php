@@ -5,7 +5,7 @@
 
 // Loaded only when the parent PHPUnit run is collecting real coverage.
 $coverageRoot = dirname(__DIR__, 2);
-if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE') || defined('SYMFONY_SESSION_TEST_COVERAGE') || defined('DATA_INPUT_LIST_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('MEMBERSHIP_EPOCH_TEST_COVERAGE') || (defined('GROUP_COPY_TEST_COVERAGE') && !defined('GROUP_COPY_UNIT_TEST_COVERAGE')) || defined('USER_COPY_TEST_COVERAGE')) {
+if (defined('POLLER_OUTPUT_TYPE_TEST_COVERAGE') || defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE') || defined('SYMFONY_SESSION_TEST_COVERAGE') || defined('DATA_INPUT_LIST_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('MEMBERSHIP_EPOCH_TEST_COVERAGE') || (defined('GROUP_COPY_TEST_COVERAGE') && !defined('GROUP_COPY_UNIT_TEST_COVERAGE')) || defined('USER_COPY_TEST_COVERAGE')) {
     require_once $coverageRoot . '/include/vendor/autoload.php';
     // Symfony's module suite uses the application's PHPUnit 11 / code-coverage
     // 10 stack. Child reports are serialized into that parent process, so they
@@ -29,6 +29,13 @@ if (!is_string($coveragePackageVersion)) {
     throw new RuntimeException('Unable to determine the active code-coverage version');
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('POLLER_OUTPUT_TYPE_TEST_COVERAGE')) {
+    foreach (['lib/utility.php', 'lib/database.php', 'lib/api_poller.php', 'lib/data_query.php', 'lib/xml.php',
+        'src/Inventory/Infrastructure/Legacy/PollerCacheBufferWrite.php', 'src/Inventory/Infrastructure/Legacy/QueuedCollectorPurge.php',
+        'src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php', 'src/Platform/Infrastructure/Legacy/LegacyReferenceWriteTransaction.php'] as $coverageFile) {
+        $coverageFilter->includeFile($coverageRoot . '/' . $coverageFile);
+    }
+}
 if (defined('USER_COPY_TEST_COVERAGE')) {
     foreach (array('lib/auth.php', 'lib/database.php', 'lib/html_validate.php') as $coverageFile) {
         $coverageFilter->includeFile($coverageRoot . '/' . $coverageFile);
@@ -150,6 +157,12 @@ if (defined('REQUEST_CONTEXT_TEST_COVERAGE')) {
 if (defined('FORM_RENDERER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
 }
+if (defined('SNMP_SECURITY_NATIVE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/snmp.php');
+}
+if (defined('SNMP_BINARY_READ_NATIVE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php');
+}
 if (defined('COLOR_DROPDOWN_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
 }
@@ -161,6 +174,7 @@ if (defined('PLUGIN_COMPAT_TEST_COVERAGE')) {
 }
 if (defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/snmp.php');
 }
 if (defined('FORCE_HTTPS_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
@@ -232,6 +246,9 @@ if (defined('DATA_SOURCE_LIMIT_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/data_templates.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
+if (defined('REALTIME_AUTH_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/graph_realtime.php');
+}
 if (defined('BASIC_AUTH_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/include/auth.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
@@ -285,6 +302,9 @@ if (defined('THEME_SELECTION_TEST_COVERAGE')) {
 }
 if (defined('MAILER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
+}
+if (defined('RESOURCE_CACHE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/poller.php');
 }
 if (defined('SYMFONY_SESSION_TEST_COVERAGE')) {
     require_once $coverageRoot . '/tests/Helpers/NativeChildCoverageEvidence.php';

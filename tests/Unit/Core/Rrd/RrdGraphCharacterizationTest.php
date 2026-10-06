@@ -241,6 +241,12 @@ dataset('rrd graph scenarios', function () {
         )),
         'quotes in a substituted title' => array('graph-substituted-quotes', rrd_characterization_graph_scenario($window, array(), $quoting, $area, array('db' => $quoting_db))),
         'CR and LF in a substituted title and vertical label' => array('graph-substituted-newlines', rrd_characterization_graph_scenario($window, array(), $quoting, $area, array('db' => $newline_db))),
+        'CR and LF in stored graph item fields' => array('graph-item-newlines', rrd_characterization_graph_scenario($window + array('print_source' => true), array(), array(), array(
+            rrd_characterization_item(1, 'LINE1', rrd_characterization_ds('traffic_out') + array('hex' => '002A97', 'alpha' => "80\nnext", 'dashes' => "5\nnext", 'dash_offset' => "2\nnext")),
+            rrd_characterization_item(2, 'STACK', rrd_characterization_ds('errors') + array('hex' => '00FF00', 'shift' => 'on', 'value' => "60\nnext")),
+            rrd_characterization_item(3, 'TIC', rrd_characterization_ds('errors') + array('hex' => 'FF00FF', 'value' => "0.5\nnext")),
+            rrd_characterization_item(4, 'LINE2', rrd_characterization_ds('traffic_in') + array('hex' => 'FF0000', 'dash_offset' => '0')),
+        ))),
         'different quoted values in the title and vertical label' => array('graph-substituted-pair', rrd_characterization_graph_scenario($window, array(), $pair, $area, array('db' => $pair_db))),
         'export to file' => array('graph-export', rrd_characterization_graph_scenario($window + array('export' => true, 'export_filename' => 'rra/graph_7.png', 'graphv' => true), array(), array('image_format_id' => '3'), $area)),
         'missing rrd file' => array('graph-missing-rrd', rrd_characterization_graph_scenario($window + array('print_source' => true), array(), array(), $area, array('files' => array()))),
@@ -331,22 +337,41 @@ test('graph options match their golden for each scale and axis setting', functio
     rrd_characterization_golden('graph-options-rrdtool-1.3', explode(" \\\n", $old['results'][0]['returned']));
 });
 
-test('a generated graph command renders in RRDtool', function () {
+test('a generated graph command renders in RRDtool', function ($kind) {
     $binary = getenv('RRDTOOL_TEST_BINARY');
     if (!$binary || !is_executable($binary)) {
         $this->markTestSkipped('RRDTOOL_TEST_BINARY is required');
     }
-    $output = rrd_characterization_run($this, rrd_characterization_quoting_scenario());
+    if ($kind === 'quoted text') {
+        $scenario = rrd_characterization_quoting_scenario();
+    } else {
+        $scenario = rrd_characterization_graph_scenario(
+            array('graph_start' => 1700000000, 'graph_end' => 1700003600, 'output_filename' => '/dev/null'),
+            array('enable_rrdtool_gradient_support' => $kind === 'gradient' ? 'on' : ''),
+            array('title_cache' => 'Graph item styles', 'vertical_label' => 'bits/s'),
+            array(
+                rrd_characterization_item(1, 'AREA', rrd_characterization_ds('traffic_in') + array('hex' => '00CF00', 'alpha' => '80', 'shift' => 'on', 'value' => '60')),
+                rrd_characterization_item(2, 'LINE2', rrd_characterization_ds('traffic_out') + array('hex' => '002A97', 'alpha' => 'CC', 'dashes' => '2.5,1.5', 'dash_offset' => '1.5', 'shift' => 'on', 'value' => '-120')),
+                rrd_characterization_item(3, 'HRULE', array('hex' => 'FF9900', 'value' => '95', 'dashes' => '5,3', 'dash_offset' => '2')),
+                rrd_characterization_item(4, 'VRULE', array('hex' => '000000', 'value' => '1700001800', 'dashes' => '2.5,1.5', 'dash_offset' => '1.5')),
+            )
+        );
+    }
+    $output = rrd_characterization_run($this, $scenario);
     $graph = array_values(array_filter($output['results'][0]['sent'], function ($sent) {
         return strncmp($sent['stdin'], 'graph ', 6) === 0;
     }));
     expect($graph)->toHaveCount(1);
+    if ($kind !== 'quoted text') {
+        expect($graph[0]['stdin'])->toContain(":dashes='2.5,1.5'", ":dash-offset='1.5'", ":dashes='5,3'", "SHIFT:a:'60'", "SHIFT:b:'-120'");
+    }
 
     $directory = sys_get_temp_dir() . '/rrd-graph-roundtrip-' . bin2hex(random_bytes(8));
     mkdir($directory . '/rra', 0700, true);
     try {
         // Paths in the command are relative to the directory RRDtool runs in.
-        $create = "create 'rra/router'\"'\"'s traffic_11.rrd' --start 1699990000 --step 300 DS:traffic_in:GAUGE:600:U:U DS:traffic_out:GAUGE:600:U:U"
+        $create = ($kind === 'quoted text' ? "create 'rra/router'\"'\"'s traffic_11.rrd'" : 'create rra/router_traffic_11.rrd')
+            . ' --start 1699990000 --step 300 DS:traffic_in:GAUGE:600:U:U DS:traffic_out:GAUGE:600:U:U'
             . ' RRA:AVERAGE:0.5:1:100 RRA:MIN:0.5:1:100 RRA:MAX:0.5:1:100 RRA:LAST:0.5:1:100';
         // Fontconfig warns on stderr when it has no writable cache, as on CI
         // runners, so give it one inside the scratch directory.
@@ -372,7 +397,7 @@ test('a generated graph command renders in RRDtool', function () {
     // One OK for create and one for graph, which first prints the image size.
     expect(preg_match_all('/^OK u:/m', $stdout))->toBe(2);
     expect($stdout)->toMatch('/^\d+x\d+$/m');
-});
+})->with(array('quoted text', 'graph item styles', 'gradient'));
 
 test('VDEF-backed drawing lines render but do not become XPORT columns', function () {
     $binary = getenv('RRDTOOL_TEST_BINARY');
@@ -593,3 +618,33 @@ test('a DEF path the RRDtool proxy cannot carry refuses the graph before it is s
     // The file check is refused first, so nothing reaches the proxy at all.
     'a blank' => array(array(11 => '<path_rra>/router traffic_11.rrd'), 'graph-proxy-def-blank'),
 ));
+
+
+test('numeric graph item commands use their own positive and negative offsets', function ($type) {
+    $items = array(
+        rrd_characterization_item(1, $type, rrd_characterization_ds('traffic_in') + array('hex' => '00CF00', 'shift' => 'on', 'value' => '60')),
+        rrd_characterization_item(2, $type, rrd_characterization_ds('traffic_out') + array('hex' => '002A97', 'shift' => 'on', 'value' => '-120')),
+        rrd_characterization_item(3, $type, rrd_characterization_ds('errors') + array('hex' => 'FF0000', 'shift' => 'on', 'value' => "1\ninvalid")),
+        rrd_characterization_item(4, 'COMMENT', array('text_format' => 'Last item', 'value' => '999')),
+    );
+    $output = rrd_characterization_run($this, rrd_characterization_graph_scenario(array('graph_start' => 1700000000, 'graph_end' => 1700003600), array(), array(), $items));
+    $command = implode('', array_column($output['results'][0]['sent'], 'stdin'));
+    preg_match_all("/SHIFT:[a-z]+:'([^']+)'/", $command, $offsets);
+    expect($offsets[1])->toBe(array('60', '-120'));
+    expect($command)->not->toContain("SHIFT:c:'1")
+        ->not->toContain('invalid');
+})->with(array('AREA', 'STACK', 'LINE1', 'LINE2', 'LINE3', 'LINESTACK'));
+
+test('numeric graph item ticks keep distinct fractions and discard malformed values', function () {
+    $items = array(
+        rrd_characterization_item(1, 'TIC', rrd_characterization_ds('traffic_in') + array('hex' => '00CF00', 'value' => '0.25')),
+        rrd_characterization_item(2, 'TIC', rrd_characterization_ds('traffic_out') + array('hex' => '002A97', 'value' => '0.5')),
+        rrd_characterization_item(3, 'TIC', rrd_characterization_ds('errors') + array('hex' => 'FF0000', 'value' => "1\ninvalid")),
+        rrd_characterization_item(4, 'COMMENT', array('text_format' => 'Last item', 'value' => '999')),
+    );
+    $output = rrd_characterization_run($this, rrd_characterization_graph_scenario(array('graph_start' => 1700000000, 'graph_end' => 1700003600), array(), array(), $items));
+    $command = implode('', array_column($output['results'][0]['sent'], 'stdin'));
+    preg_match_all("/TICK:[a-z]+#[0-9A-F]+'[0-9A-F]{2}':'([^']+)'/", $command, $fractions);
+    expect($fractions[1])->toBe(array('0.25', '0.5'));
+    expect($command)->not->toContain('invalid');
+});

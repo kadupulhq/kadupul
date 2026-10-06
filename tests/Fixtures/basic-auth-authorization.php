@@ -8,10 +8,14 @@ $root = $argv[1];
 $scenario = $argv[2];
 $mode = $argv[3];
 require $root . '/lib/auth.php';
-define('CACTI_VERSION', 'test');
-define('OPER_MODE_NATIVE', 0);
-define('OPER_MODE_RESKIN', 1);
-define('POLLER_VERBOSITY_MEDIUM', 3);
+define('CACTI_VERSION', str_starts_with($mode, 'realtime') ? '1.2.31' : 'test');
+if (str_starts_with($mode, 'realtime')) {
+    require $root . '/include/global_constants.php';
+} else {
+    define('OPER_MODE_NATIVE', 0);
+    define('OPER_MODE_RESKIN', 1);
+    define('POLLER_VERBOSITY_MEDIUM', 3);
+}
 $config = array('cacti_db_version' => 'test', 'url_path' => '/', 'base_path' => $root);
 $user_auth_realm_filenames = array('user_admin.php' => 7);
 $auth_text = true;
@@ -20,8 +24,12 @@ $db = new PDO('sqlite::memory:');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $db->exec("CREATE TABLE user_auth (id INTEGER, username TEXT, realm INTEGER, enabled TEXT, locked TEXT, password TEXT DEFAULT '', password_history TEXT DEFAULT '', reset_perms INTEGER)");
 $db->exec("INSERT INTO user_auth (id, username, realm, enabled, locked) VALUES (42, 'fixture', 2, 'on', '')");
-$db->sqliteCreateFunction('NOW', function () { return '2026-09-20'; });
-$db->sqliteCreateFunction('RAND', function () { return 0.5; });
+$db->sqliteCreateFunction('NOW', function () {
+    return '2026-09-20';
+});
+$db->sqliteCreateFunction('RAND', function () {
+    return 0.5;
+});
 $db->sqliteCreateFunction('FLOOR', 'floor');
 $db->exec('CREATE TABLE user_auth_cache (user_id INTEGER, hostname TEXT, last_update TEXT, token TEXT)');
 $db->exec('CREATE TABLE user_auth_row_cache (user_id INTEGER)');
@@ -61,45 +69,115 @@ if ($scenario === 'allowed') {
         $db->exec("UPDATE user_auth_group SET enabled = ''");
     }
 }
-function read_config_option($key) {
-    return array('auth_method' => '2', 'auth_cache_enabled' => 'on', 'admin_user' => 1)[$key] ?? '';
+function read_config_option($key)
+{
+    if ($key === 'path_php_binary') return PHP_BINARY;
+    if ($key === 'realtime_cache_path') return getcwd() . '/cache';
+    if ($key === 'guest_user' && str_starts_with($GLOBALS['mode'], 'realtime')) return strpos($GLOBALS['scenario'], 'guest') !== false ? 'fixture' : 'configured-guest';
+    return array('auth_method' => '2', 'auth_cache_enabled' => 'on', 'admin_user' => 1, 'graph_auth_method' => 1)[$key] ?? '';
 }
-function get_current_page() { return $GLOBALS['mode'] === 'logout' ? 'logout.php' : 'user_admin.php'; }
-function get_guest_account() { return strpos($GLOBALS['scenario'], 'guest') !== false ? 42 : 0; }
-function get_template_account($id) { return 0; }
-function get_client_addr() { return '127.0.0.1'; }
-function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
-function kill_session_var($key) { unset($_SESSION[$key]); }
+function get_current_page()
+{
+    if (str_starts_with($GLOBALS['mode'], 'realtime')) return 'graph_realtime.php';
+    return $GLOBALS['mode'] === 'logout' ? 'logout.php' : 'user_admin.php';
+}
+if (!str_starts_with($mode, 'realtime')) {
+    function get_guest_account()
+    {
+        return strpos($GLOBALS['scenario'], 'guest') !== false ? 42 : 0;
+    }
+}
+function get_template_account($id)
+{
+    return 0;
+}
+function get_client_addr()
+{
+    return '127.0.0.1';
+}
+function cacti_sizeof($value)
+{
+    return is_array($value) ? count($value) : 0;
+}
+function kill_session_var($key)
+{
+    unset($_SESSION[$key]);
+}
 function cacti_log(...$args) {}
-function cacti_cookie_logout() { $GLOBALS['events'][] = 'CLEAR_COOKIES'; }
-function cacti_session_destroy() { $_SESSION = array(); $GLOBALS['events'][] = 'DESTROY_SESSION'; }
-function cacti_cookie_session_logout() { $GLOBALS['events'][] = 'CLEAR_REMEMBER'; }
-function cacti_cookie_session_set(...$args) { $GLOBALS['events'][] = 'SET_REMEMBER'; }
-function input_validate_input_number($value) { if (!is_numeric($value)) throw new RuntimeException('Invalid test ID'); }
-function __($value) { return $value; }
-function get_nfilter_request_var($name, $default = '') { return $_REQUEST[$name] ?? $default; }
-function get_filter_request_var($name) { return get_nfilter_request_var($name); }
-function get_request_var($name) { return get_nfilter_request_var($name); }
-function isset_request_var($name) { return isset($_REQUEST[$name]); }
+function cacti_cookie_logout()
+{
+    $GLOBALS['events'][] = 'CLEAR_COOKIES';
+}
+function cacti_session_destroy()
+{
+    $_SESSION = array();
+    $GLOBALS['events'][] = 'DESTROY_SESSION';
+}
+function cacti_cookie_session_logout()
+{
+    $GLOBALS['events'][] = 'CLEAR_REMEMBER';
+}
+function cacti_cookie_session_set(...$args)
+{
+    $GLOBALS['events'][] = 'SET_REMEMBER';
+}
+function input_validate_input_number($value)
+{
+    if (!is_numeric($value)) throw new RuntimeException('Invalid test ID');
+}
+function __($value)
+{
+    return $value;
+}
+function get_nfilter_request_var($name, $default = '')
+{
+    return $_REQUEST[$name] ?? $default;
+}
+function get_filter_request_var($name)
+{
+    $value = get_nfilter_request_var($name);
+    if (str_starts_with($GLOBALS['mode'], 'realtime') && $name === 'local_graph_id') return filter_var($value, FILTER_VALIDATE_INT);
+    return $value;
+}
+function get_request_var($name)
+{
+    return get_nfilter_request_var($name);
+}
+function isset_request_var($name)
+{
+    return isset($_REQUEST[$name]);
+}
 function set_default_action() {}
 // This persistence fixture mocks request helpers. The real method/token guard
 // is exercised separately by AdminMutationCsrfTest against the real controller.
-function cacti_require_post_actions(array $actions) {
+function cacti_require_post_actions(array $actions)
+{
     if (in_array($_REQUEST['action'] ?? '', $actions, true)
         && (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST' || ($_POST['__csrf_magic'] ?? '') !== 'auth-fixture-token')) {
         throw new RuntimeException('Authentication fixture requires an intentional POST');
     }
 }
-function form_input_validate($value, ...$args) { return $value; }
-function is_error_message() { return str_ends_with($GLOBALS['scenario'], 'validation_error'); }
-function raise_message($id) { $GLOBALS['events'][] = 'MESSAGE:' . $id; }
-function sql_save($save, $table) {
+function form_input_validate($value, ...$args)
+{
+    return $value;
+}
+function is_error_message()
+{
+    return str_ends_with($GLOBALS['scenario'], 'validation_error');
+}
+function raise_message($id)
+{
+    $GLOBALS['events'][] = 'MESSAGE:' . $id;
+}
+function sql_save($save, $table)
+{
     if (str_ends_with($GLOBALS['scenario'], 'save_failed')) return false;
     $query = $GLOBALS['db']->prepare('UPDATE user_auth SET enabled = ? WHERE id = ?');
     $query->execute(array($save['enabled'], $save['id']));
     return $save['id'];
 }
-function api_plugin_hook_function($hook, ...$args) {
+function api_plugin_hook_function($hook, ...$args)
+{
     if ($hook === 'user_admin_setup_sql_save') {
         $save = $args[0];
         if ($GLOBALS['scenario'] === 'plugin_disabled') $save['enabled'] = '';
@@ -112,26 +190,108 @@ function api_plugin_hook_function($hook, ...$args) {
     }
     return OPER_MODE_NATIVE;
 }
-function db_fetch_row_prepared($sql, $params = array()) {
+function db_fetch_row_prepared($sql, $params = array())
+{
     $query = $GLOBALS['db']->prepare($sql);
     $query->execute($params);
     return $query->fetch(PDO::FETCH_ASSOC);
 }
-function db_fetch_cell_prepared($sql, $params = array()) {
+function db_fetch_cell_prepared($sql, $params = array())
+{
     if (strpos($sql, 'AS authorized') !== false) $GLOBALS['events'][] = 'REALM_CHECK';
     if (strpos($sql, 'FROM user_auth_cache') !== false) $GLOBALS['events'][] = 'COOKIE_CHECK';
     $query = $GLOBALS['db']->prepare($sql);
     $query->execute($params);
     return $query->fetchColumn();
 }
-function db_table_exists($name) { return true; }
-function db_execute_prepared($sql, $params = array()) {
+function db_table_exists($name)
+{
+    return true;
+}
+function db_execute_prepared($sql, $params = array())
+{
     if (strpos($sql, 'INSERT IGNORE INTO user_log') !== false) {
         $GLOBALS['events'][] = 'LOGIN_LOG';
         return true;
     }
     $query = $GLOBALS['db']->prepare($sql);
     return $query->execute($params);
+}
+if (str_starts_with($mode, 'realtime')) {
+    // Exercise the real middleware and graph policy queries on this connection.
+    require $root . '/tests/Helpers/PhpSource.php';
+    foreach (['cacti_version_compare', 'version_to_decimal', 'get_guest_account'] as $helper) {
+        eval(test_php_function_source(file_get_contents($root . '/lib/functions.php'), $helper));
+    }
+    $config['cacti_db_version'] = '1.2.31';
+    $user_auth_realm_filenames['graph_realtime.php'] = 25;
+    $guest_account = true;
+    foreach (['policy_graphs', 'policy_hosts', 'policy_graph_templates', 'policy_trees'] as $column) {
+        $db->exec('ALTER TABLE user_auth ADD COLUMN ' . $column . ' INTEGER DEFAULT 1');
+        $db->exec('ALTER TABLE user_auth_group ADD COLUMN ' . $column . ' INTEGER DEFAULT 1');
+    }
+    $db->exec('ALTER TABLE user_auth_group ADD COLUMN name TEXT');
+    $db->exec("INSERT INTO user_auth(id,username,realm,enabled,locked) VALUES(43,'configured-guest',0,'','')");
+    $db->exec('CREATE TABLE user_auth_perms (user_id INTEGER, type INTEGER, item_id INTEGER)');
+    $db->exec('CREATE TABLE user_auth_group_perms (group_id INTEGER, type INTEGER, item_id INTEGER)');
+    $db->exec('CREATE TABLE graph_templates_graph (local_graph_id INTEGER, title_cache TEXT, width INTEGER, height INTEGER, image_format_id INTEGER)');
+    $db->exec('CREATE TABLE graph_local (id INTEGER, graph_template_id INTEGER, host_id INTEGER, snmp_index TEXT, snmp_query_id INTEGER)');
+    $db->exec('CREATE TABLE graph_templates (id INTEGER, name TEXT)');
+    $db->exec('CREATE TABLE host (id INTEGER, description TEXT, disabled TEXT, deleted TEXT)');
+    $db->exec("INSERT INTO graph_templates_graph VALUES(7,'Fixture',425,125,1)");
+    $db->exec("INSERT INTO graph_local VALUES(7,0,0,'',0)");
+    $db->sqliteCreateFunction('IF', static fn($condition, $yes, $no) => $condition ? $yes : $no);
+    if (str_ends_with($scenario, '_allowed') || str_contains($scenario, '_graph_')) $db->exec('INSERT INTO user_auth_realm VALUES(42,25)');
+    if (str_contains($scenario, '_graph_')) {
+        $db->exec('UPDATE user_auth SET policy_graphs=2,policy_hosts=2,policy_graph_templates=2 WHERE id=42');
+        if (str_ends_with($scenario, '_allowed')) $db->exec('INSERT INTO user_auth_perms VALUES(42,1,7)');
+    }
+    function db_fetch_assoc_prepared($sql, $params = [])
+    {
+        $query = $GLOBALS['db']->prepare($sql);
+        $query->execute($params);
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+    function db_fetch_assoc($sql)
+    {
+        return db_fetch_assoc_prepared($sql);
+    }
+    function db_fetch_cell($sql)
+    {
+        return db_fetch_cell_prepared($sql);
+    }
+    function read_user_setting($key, $default = '', ...$args)
+    {
+        return $default;
+    }
+    if ($mode === 'realtime_init') {
+        function isempty_request_var($name)
+        {
+            return !isset($_REQUEST[$name]) || $_REQUEST[$name] === '';
+        }
+        function load_current_session_value($name, $session, $default)
+        {
+            $_REQUEST[$name] = $_REQUEST[$name] ?? $_SESSION[$session] ?? $default;
+            $_SESSION[$session] = $_REQUEST[$name];
+        }
+        function cacti_exec($binary, $arguments, &$output, $timeout)
+        {
+            if ($binary !== PHP_BINARY || $arguments !== ['-q', $GLOBALS['root'] . '/poller_realtime.php', '--graph=7', '--interval=10', '--poller_id=bootstrap'] || $timeout !== null) {
+                throw new RuntimeException('Unexpected authorized realtime worker handoff');
+            }
+            $GLOBALS['events'][] = 'POLLER';
+            return 0;
+        }
+        function rrdtool_function_graph(...$arguments)
+        {
+            $GLOBALS['events'][] = 'RENDER';
+            exit;
+        }
+    }
+    $_REQUEST = ['action' => match ($mode) {
+        'realtime_default' => '', 'realtime_init' => 'init', default => 'view'
+    }, 'local_graph_id' => '7'];
+    ob_start();
 }
 $_SERVER['PHP_AUTH_USER'] = 'fixture';
 if (strpos($scenario, 'guest') !== false) unset($_SERVER['PHP_AUTH_USER']);
@@ -142,9 +302,19 @@ if (str_starts_with($scenario, 'existing_')) {
     auth_session_bind_credentials(42);
 }
 register_shutdown_function(function () {
-    echo json_encode(array('events' => $GLOBALS['events'], 'user' => $_SESSION['sess_user_id'] ?? null, 'status' => http_response_code() ?: 200));
+    $result = array('events' => $GLOBALS['events'], 'user' => $_SESSION['sess_user_id'] ?? null, 'status' => http_response_code() ?: 200);
+    if (str_starts_with($GLOBALS['mode'], 'realtime')) {
+        $result['body'] = '';
+        while (ob_get_level()) $result['body'] = ob_get_clean() . $result['body'];
+        $GLOBALS['nativeChildCoverageMarkers'] = ['realtime-bootstrap-completed'];
+    }
+    echo json_encode($result);
 });
-if ($mode === 'transition') {
+if (str_starts_with($mode, 'realtime')) {
+    require $root . '/include/auth.php';
+    $_SESSION['sess_realtime_hash'] = 'bootstrap';
+    require $root . '/graph_realtime.php';
+} elseif ($mode === 'transition') {
     $events[] = cacti_auth_transition(42, 'test') ? 'ACCEPT' : 'REJECT';
 } elseif ($mode === 'identity') {
     unset($_SERVER['PHP_AUTH_USER']);

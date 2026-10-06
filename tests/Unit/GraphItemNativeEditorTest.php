@@ -17,8 +17,8 @@ test('production graph item editors preserve fixed widths and source association
     $coverage = $this->getTestResultObject()->getCodeCoverage();
     $bootstrap = '<?php define("GRAPH_ITEM_EDITOR_TEST_COVERAGE", true); ';
     if ($coverage !== null) {
-        foreach (array('RRD_TEST_COVERAGE_DIRECTORY' => $dir, 'RRD_TEST_CLI_COVERAGE_COPY' => $dir . '/' . $script, 'RRD_TEST_CLI_COVERAGE_SOURCE' => $root . '/' . $script) as $name => $value) {
-            $bootstrap .= 'define(' . var_export($name, true) . ',' . var_export($value, true) . ');';
+        foreach (array('RRD_TEST_COVERAGE_DIRECTORY' => $dir, 'RRD_TEST_CLI_COVERAGE_COPY' => $dir . '/' . $script, 'RRD_TEST_CLI_COVERAGE_SOURCE' => $root . '/' . $script) as $name => $coverageValue) {
+            $bootstrap .= 'define(' . var_export($name, true) . ',' . var_export($coverageValue, true) . ');';
         }
         $bootstrap .= 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
     }
@@ -34,7 +34,10 @@ test('production graph item editors preserve fixed widths and source association
         expect($error)->toBe('');
         list($body, $json) = explode("\nRESULT:", $output);
         $calls = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-        if ($mode === 'save' || str_starts_with($mode, 'save-')) {
+        if (str_starts_with($mode, 'invalid-')) {
+            expect(array_filter($calls, static fn($call) => $call[0] === 'save'))->toBeEmpty();
+            expect(end($calls))->toBe(array('errors', array(substr($mode, 8))));
+        } elseif ($mode === 'save' || str_starts_with($mode, 'save-')) {
             $saves = array_values(array_filter($calls, static function ($call) {
                 return $call[0] === 'save';
             }));
@@ -81,6 +84,106 @@ test('production graph item editors preserve fixed widths and source association
         }
     }
 })->with(array(
+    array('graphs_items.php', 'invalid-line_width'), array('graph_templates_items.php', 'invalid-line_width'),
+    array('graphs_items.php', 'invalid-alpha'), array('graphs_items.php', 'invalid-dashes'), array('graphs_items.php', 'invalid-dash_offset'),
+    array('graph_templates_items.php', 'invalid-alpha'), array('graph_templates_items.php', 'invalid-dashes'), array('graph_templates_items.php', 'invalid-dash_offset'),
     array('graph_templates_items.php', 'item_moveup-single'), array('graph_templates_items.php', 'item_movedown-single'),
     array('graphs_items.php', 'save-5'), array('graphs_items.php', 'save-6'), array('graphs_items.php', 'save-20'), array('graphs_items.php', 'save-10'), array('graphs_items.php', 'save-15'),
     array('graph_templates_items.php', 'save-5'), array('graph_templates_items.php', 'save-6'), array('graph_templates_items.php', 'save-20'), array('graph_templates_items.php', 'save-10'), array('graph_templates_items.php', 'save-15'),array('graphs_items.php','save'),array('graphs_items.php','item_edit'),array('graph_templates_items.php','save'),array('graph_templates_items.php','item_edit'),array('graph_templates_items.php','ajax_data_sources'),array('graph_templates_items.php','item_moveup'),array('graph_templates_items.php','item_movedown')));
+
+
+test('graph item numeric form validation follows the fields used by rendering', function ($script, $value, $shift, $type, $invalid, $style = array(), $errorField = 'value') {
+    $root = dirname(__DIR__, 2);
+    $directory = sys_get_temp_dir() . '/graph-item-value-' . bin2hex(random_bytes(8));
+    mkdir($directory, 0700);
+    mkdir($directory . '/include', 0700);
+    mkdir($directory . '/lib', 0700);
+    foreach (array('poller', 'utility', 'api_data_source', 'template') as $name) {
+        file_put_contents($directory . '/lib/' . $name . '.php', '<?php');
+    }
+    $coverage = $this->getTestResultObject()->getCodeCoverage();
+    $bootstrap = '<?php define("GRAPH_ITEM_EDITOR_TEST_COVERAGE", true); ';
+    if ($coverage !== null) {
+        foreach (array('RRD_TEST_COVERAGE_DIRECTORY' => $directory, 'RRD_TEST_CLI_COVERAGE_COPY' => $directory . '/' . $script, 'RRD_TEST_CLI_COVERAGE_SOURCE' => $root . '/' . $script) as $name => $coverageValue) {
+            $bootstrap .= 'define(' . var_export($name, true) . ',' . var_export($coverageValue, true) . ');';
+        }
+        $bootstrap .= 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    $bootstrap .= 'require ' . var_export($root . '/tests/Fixtures/graph-item-native-bootstrap.php', true) . ';';
+    file_put_contents($directory . '/include/auth.php', $bootstrap);
+    file_put_contents($directory . '/lib/graph_item_editor.php', '<?php require_once ' . var_export($root . '/lib/graph_item_editor.php', true) . ';');
+    copy($root . '/' . $script, $directory . '/' . $script);
+    try {
+        $environment = array_replace(getenv(), array('GRAPH_ITEM_TEST_ROOT' => $root, 'GRAPH_ITEM_TEST_MODE' => 'save-' . $type,
+            'GRAPH_ITEM_TEST_VALIDATION' => '1', 'GRAPH_ITEM_TEST_PAYLOAD' => json_encode(array('value' => $value, 'shift' => $shift) + $style, JSON_THROW_ON_ERROR)));
+        $process = proc_open(array(PHP_BINARY, '-d', 'error_reporting=24575', '-d', 'pcov.directory=/', $directory . '/' . $script), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $directory, $environment);
+        expect($process)->toBeResource();
+        $stdout = stream_get_contents($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        \PHPUnit\Framework\Assert::assertSame(0, proc_close($process), $stderr . $stdout);
+        expect($stderr)->toBe('');
+        $calls = json_decode(substr($stdout, strrpos($stdout, 'RESULT:') + 7), true, 512, JSON_THROW_ON_ERROR);
+        if ($coverage !== null) {
+            $reports = glob($directory . '/*.coverage');
+            expect($reports)->toHaveCount(1);
+            $coverage->merge(unserialize(file_get_contents($reports[0])));
+        }
+        $validation = array_values(array_filter($calls, static fn($call) => $call[0] === 'validation'));
+        expect($validation)->toHaveCount(1);
+        \PHPUnit\Framework\Assert::assertSame($invalid, isset($validation[0][1][$errorField]), json_encode($calls, JSON_THROW_ON_ERROR));
+        $saves = array_values(array_filter($calls, static fn($call) => $call[0] === 'save'));
+        if ($invalid) {
+            expect($saves)->toBe(array());
+        } else {
+            expect($saves)->toHaveCount(1)->and($saves[0][1]['value'])->toBe($value);
+            foreach ($style as $field => $stored) {
+                expect($saves[0][1][$field])->toBe($stored);
+            }
+        }
+    } finally {
+        foreach (array('/include', '/lib', '') as $suffix) {
+            foreach (glob($directory . $suffix . '/*') as $file) {
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
+            rmdir($directory . $suffix);
+        }
+    }
+})->with(function () {
+    foreach (array('graphs_items.php', 'graph_templates_items.php') as $script) {
+        foreach (array(
+            array('alpha' => 'CC', 'dashes' => '5,3', 'dash_offset' => '2'),
+            array('alpha' => '80', 'dashes' => '2.5,1.5', 'dash_offset' => '1.5'),
+            array('alpha' => '', 'dashes' => '', 'dash_offset' => ''),
+        ) as $style) {
+            yield array($script, '1', '', 4, false, $style);
+        }
+        foreach (array('alpha' => array("80\nx", 'GG', 'FFF', "80\n"),
+            'dashes' => array("5\n3", '5;3', '5,,3', '5,', '-1,2'),
+            'dash_offset' => array("2\n", '-1', '1e3')) as $field => $values) {
+            foreach ($values as $styleValue) {
+                yield array($script, '1', '', 4, true, array($field => $styleValue), $field);
+            }
+        }
+        foreach (array('3600', '-60', '.5', '') as $value) {
+            yield array($script, $value, 'on', 4, false);
+        }
+        foreach (array("1\n", '1:2', '1 2', 'NaN') as $value) {
+            yield array($script, $value, 'on', 4, true);
+            yield array($script, $value, 'on', 7, true);
+            yield array($script, $value, '', 30, true);
+        }
+        yield array($script, '|query_ifSpeed|', '', 4, false);
+        yield array($script, '|query_ifSpeed|', '', 7, false);
+        yield array($script, '|query_ifSpeed|', 'on', 7, true);
+        yield array($script, '0.5', '', 30, false);
+        foreach (array(1, 2, 3) as $type) {
+            foreach (array('|query_ifSpeed|', '12:30') as $value) {
+                yield array($script, $value, '', $type, false);
+            }
+        }
+    }
+});

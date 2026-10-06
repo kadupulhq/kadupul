@@ -92,6 +92,8 @@ jobs:
             }
             php tests/integration/windows_storage_preflight.php
             if ($LASTEXITCODE -ne 0) { throw 'Windows storage preflight regression failed' }
+            php tests/integration/windows_resource_cache_paths.php
+            if ($LASTEXITCODE -ne 0) { throw 'Windows resource cache path regression failed' }
           } finally {
             $item = Get-Item $fixture
             $item.Attributes = $item.Attributes -band (-bnot [System.IO.FileAttributes]::ReadOnly)

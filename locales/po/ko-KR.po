@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 16:31-0700\n"
+"POT-Creation-Date: 2026-10-05 22:39-0700\n"
 "PO-Revision-Date: 2024-04-20 19:06-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -621,8 +621,8 @@ msgstr "템플릿"
 #: automation_devices.php:514 automation_devices.php:529
 #: automation_devices.php:544 automation_graph_rules.php:783
 #: automation_graph_rules.php:805 automation_tree_rules.php:831
-#: data_debug.php:1046 data_sources.php:1454 graph_templates_items.php:474
-#: graphs.php:1950 graphs_items.php:288 host.php:1592 host.php:1610
+#: data_debug.php:1046 data_sources.php:1454 graph_templates_items.php:446
+#: graphs.php:1950 graphs_items.php:261 host.php:1592 host.php:1610
 #: host.php:1627 host.php:1691 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3803 lib/auth.php:3852
@@ -640,9 +640,9 @@ msgstr "일부"
 #: automation_graph_rules.php:938 automation_graph_rules.php:939
 #: automation_networks.php:460 automation_tree_rules.php:959
 #: data_debug.php:1047 data_sources.php:999 data_sources.php:1455
-#: data_sources.php:1768 data_templates.php:1317 graph_templates_items.php:51
-#: graphs.php:1510 graphs.php:1519 graphs.php:1951 graphs_items.php:289
-#: graphs_items.php:409 host.php:255 host.php:1172 host.php:1183 host.php:1593
+#: data_sources.php:1768 data_templates.php:1317 graph_templates_items.php:52
+#: graphs.php:1510 graphs.php:1519 graphs.php:1951 graphs_items.php:262
+#: graphs_items.php:382 host.php:255 host.php:1172 host.php:1183 host.php:1593
 #: host.php:1628 include/global_arrays.php:523 include/global_arrays.php:581
 #: include/global_arrays.php:673 include/global_arrays.php:885
 #: include/global_arrays.php:1740 include/global_form.php:574
@@ -2975,7 +2975,7 @@ msgid "Data Source repair received an invalid Data Source ID."
 msgstr "데이터 소스 복구에 잘못된 데이터 소스 ID가 수신되었습니다."
 
 #: data_debug.php:452 data_debug.php:891 data_queries.php:716
-#: data_sources.php:1062 data_templates.php:718 graphs_items.php:405
+#: data_sources.php:1062 data_templates.php:718 graphs_items.php:378
 #: include/global_arrays.php:1005 include/global_form.php:960
 #: lib/api_aggregate.php:2338 lib/html.php:1283 rrdcheck.php:142
 msgid "Data Source"
@@ -3183,7 +3183,7 @@ msgstr "재방송 분석"
 msgid "Check"
 msgstr "체크"
 
-#: data_debug.php:840 include/global_form.php:1018 lib/rrd.php:4089
+#: data_debug.php:840 include/global_form.php:1018 lib/rrd.php:4114
 #: utilities.php:793 utilities.php:810 utilities.php:3144
 msgid "Value"
 msgstr "값"
@@ -3740,7 +3740,7 @@ msgstr "단계"
 
 #: data_source_profiles.php:822 graphs_new.php:449 include/global_form.php:284
 #: lib/html.php:605 lib/html_filter.php:55 lib/installer.php:2827
-#: lib/rrd.php:4131 utilities.php:861 utilities.php:1817
+#: lib/rrd.php:4156 utilities.php:861 utilities.php:1817
 msgid "Rows"
 msgstr "행"
 
@@ -4455,39 +4455,39 @@ msgstr "그래프 데이터"
 msgid "RRDtool Graph Syntax"
 msgstr "RRDtool 그래프 구문"
 
-#: graph_image.php:171 graph_json.php:208 graph_realtime.php:246
+#: graph_image.php:171 graph_json.php:208 graph_realtime.php:264
 #: lib/rrd.php:2518
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller는 아직 운영되지 않았습니다."
 
-#: graph_realtime.php:352
+#: graph_realtime.php:377
 msgid "Real-time has been disabled by your administrator."
 msgstr "관리자가 실시간을 비활성화했습니다."
 
-#: graph_realtime.php:359
+#: graph_realtime.php:384
 msgid "The Image Cache Directory does not exist.  Please first create it and set permissions and then attempt to open another Real-time graph."
 msgstr "이미지 캐시 디렉토리가 존재하지 않습니다. 먼저 그것을 만들고 권한을 설정 한 다음 다른 실시간 그래프를 열려고 시도하십시오."
 
-#: graph_realtime.php:366
+#: graph_realtime.php:391
 msgid "The Image Cache Directory is not writable.  Please set permissions and then attempt to open another Real-time graph."
 msgstr "이미지 캐시 디렉토리에 쓸 수 없습니다. 권한을 설정하고 다른 실시간 그래프를 열어보십시오."
 
-#: graph_realtime.php:387
+#: graph_realtime.php:412
 #, fuzzy
 msgid "Kadupul Real-time Graphing"
 msgstr "Kadupul 실시간 그래프"
 
-#: graph_realtime.php:434 lib/html_graph.php:229 lib/html_reports.php:107
+#: graph_realtime.php:459 lib/html_graph.php:229 lib/html_reports.php:107
 #: lib/html_tree.php:1051
 msgid "Thumbnails"
 msgstr "썸네일"
 
-#: graph_realtime.php:438
+#: graph_realtime.php:463
 #, php-format
 msgid "%d seconds left."
 msgstr "% d 초 남았습니다."
 
-#: graph_realtime.php:454
+#: graph_realtime.php:479
 msgid " seconds left."
 msgstr "초 남았습니다."
 
@@ -4668,16 +4668,16 @@ msgstr "최대:"
 msgid "Min:"
 msgstr "최소"
 
-#: graph_templates_items.php:430
+#: graph_templates_items.php:402
 #, php-format
 msgid "Graph Template Items [edit graph: %s]"
 msgstr "그래프 템플릿 항목 [그래프 편집 :  %s]"
 
-#: graph_templates_items.php:469
+#: graph_templates_items.php:441
 msgid "Data Template Filter"
 msgstr "데이터 템플릿 항목"
 
-#: graph_templates_items.php:475
+#: graph_templates_items.php:447
 msgid "This filter will limit the Data Sources visible in the Data Source dropdown."
 msgstr "이 필터는 데이터 소스 드롭다운에 표시되는 데이터 소스를 제한합니다."
 
@@ -5074,26 +5074,26 @@ msgstr "이 그래프의 내부 데이터베이스 ID입니다. 자동화 또는
 msgid "Empty Graph"
 msgstr "그래프 복사"
 
-#: graphs_items.php:267
+#: graphs_items.php:240
 msgid "Data Sources [No Device]"
 msgstr "데이터 소스 [기기 없음]"
 
-#: graphs_items.php:269
+#: graphs_items.php:242
 #, php-format
 msgid "Data Sources [%s]"
 msgstr "데이터 소스 [ %s]"
 
-#: graphs_items.php:284 include/global_arrays.php:1355
+#: graphs_items.php:257 include/global_arrays.php:1355
 #: include/global_form.php:1640
 msgid "Data Template"
 msgstr "데이터 템플릿"
 
-#: graphs_items.php:363
+#: graphs_items.php:336
 #, php-format
 msgid "Graph Items [graph: %s]"
 msgstr "그래프 항목 [그래프 :  %s]"
 
-#: graphs_items.php:406
+#: graphs_items.php:379
 msgid "Choose the Data Source to associate with this Graph Item."
 msgstr "이 그래프 항목과 연결할 데이터 소스를 선택하십시오."
 
@@ -5554,7 +5554,7 @@ msgstr "복구 중"
 
 #: host.php:1698 lib/api_automation.php:33 lib/auth.php:2986
 #: lib/clog_webapi.php:856 lib/html_utility.php:1339 lib/import.php:342
-#: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4107 lib/rrd.php:4119
+#: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4132 lib/rrd.php:4144
 #: lib/spikekill.php:284 package_import.php:522 package_import.php:600
 #: utilities.php:206 utilities.php:207 utilities.php:2691
 msgid "Unknown"
@@ -6577,7 +6577,7 @@ msgstr "자연 주문"
 msgid "Numeric Ordering"
 msgstr "숫자 순서 지정"
 
-#: include/global_arrays.php:952 lib/rrd.php:4055
+#: include/global_arrays.php:952 lib/rrd.php:4080
 msgid "Header"
 msgstr "헤더"
 
@@ -8162,7 +8162,7 @@ msgstr "데이터가 데이터 소스에서 수집되는 빈도"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "RRDtool에서 알 수없는 데이터를 기록하기 전에 얼마나 오래 데이터가 누락 될 수 있습니다. 데이터 소스가 불안정하고 그래프에 간격을 표시하지 않고 이전 데이터를 전달하려는 경우이 값을 늘리십시오. 이 값에 X-Files Factor를 곱하여 실제 시간을 판별하십시오."
 
-#: include/global_form.php:226 lib/rrd.php:4134
+#: include/global_form.php:226 lib/rrd.php:4159
 msgid "X-Files Factor"
 msgstr "X 파일 요소"
 
@@ -8724,7 +8724,7 @@ msgstr "불투명 / 알파 채널"
 msgid "The opacity/alpha channel of the color."
 msgstr "색상의 불투명도 / 알파 채널입니다."
 
-#: include/global_form.php:989 lib/rrd.php:4130
+#: include/global_form.php:989 lib/rrd.php:4155
 msgid "Consolidation Function"
 msgstr "통합 기능"
 
@@ -12431,7 +12431,7 @@ msgstr "이 값 무시"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1056 lib/html_reports.php:1721
-#: lib/html_reports.php:2061 lib/html_reports.php:2072 lib/rrd.php:4084
+#: lib/html_reports.php:2061 lib/html_reports.php:2072 lib/rrd.php:4109
 #: utilities.php:351 utilities.php:1468 utilities.php:3144
 msgid "Type"
 msgstr "유형"
@@ -12567,7 +12567,7 @@ msgstr "오류: range1-range2 형식의 IP 범위는 더 이상 지원되지 않
 #: lib/api_device.php:1367 lib/api_device.php:1554 lib/api_device.php:1558
 #: lib/api_device.php:1594 lib/api_device.php:1598 lib/api_device.php:1643
 #: lib/api_device.php:1647 lib/api_device.php:1708 lib/api_device.php:1712
-#: lib/utility.php:738
+#: lib/utility.php:744
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
 msgstr "원격 폴러 %s 이 (가) 다운되었습니다. 다시 시작되면 FullSync를 수행해야 합니다"
@@ -13427,7 +13427,7 @@ msgid "User Community"
 msgstr "사용자 커뮤니티"
 
 #: lib/functions.php:4076 lib/functions.php:4101 lib/html.php:2658
-#: lib/utility.php:1440
+#: lib/utility.php:1446
 msgid "Documentation"
 msgstr "문서"
 
@@ -13572,11 +13572,11 @@ msgstr "%s %s"
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "경고: 키 Kadupul 포함 파일 %s 이 (가) 누락되었습니다. 이 파일을 찾아 교체하십시오"
 
-#: lib/graph_item_editor.php:34
+#: lib/graph_item_editor.php:36
 msgid "Line Width"
 msgstr ""
 
-#: lib/graph_item_editor.php:39
+#: lib/graph_item_editor.php:41
 msgid "LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a positive width in pixels; integers or decimal values are supported."
 msgstr ""
 
@@ -16151,7 +16151,7 @@ msgstr "요구 사항 : Kadupul&gt; =  %s"
 msgid "Not Stated"
 msgstr "명시되지 않은"
 
-#: lib/poller.php:1950 lib/poller.php:2195
+#: lib/poller.php:1998 lib/poller.php:2243
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 
@@ -16235,181 +16235,181 @@ msgstr ""
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "오류 : RRD 파일  %s을 (를) 쓸 수 없습니다."
 
-#: lib/rrd.php:3844
+#: lib/rrd.php:3869
 #, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "필요한 RRD 파일 단계 크기는 '%s' 이지만 관찰된 단계는 '%s' 입니다"
 
-#: lib/rrd.php:3908
+#: lib/rrd.php:3933
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "데이터 원본 &#39; %s&#39;의 형식이 &#39; %s&#39;이어야합니다."
 
-#: lib/rrd.php:3914
+#: lib/rrd.php:3939
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "데이터 원본 &#39; %s&#39;의 하트 비트가 &#39; %s&#39;이어야합니다."
 
-#: lib/rrd.php:3926
+#: lib/rrd.php:3951
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "데이터 원본 &#39; %s&#39;의 RRD 최소값은 &#39; %s&#39;이어야합니다."
 
-#: lib/rrd.php:3935
+#: lib/rrd.php:3960
 #, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "Kadupul 정의에서 DS &#39; %s&#39;이 누락되었습니다."
 
-#: lib/rrd.php:3949 lib/rrd.php:3950
+#: lib/rrd.php:3974 lib/rrd.php:3975
 #, fuzzy, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Kadupul RRA &#39; %s&#39;의 CF / 스텝 수 ( %s,  %s)가 &#39; %s&#39;"
 
-#: lib/rrd.php:3963 lib/rrd.php:3964
+#: lib/rrd.php:3988 lib/rrd.php:3989
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "파일 RRA &#39; %s&#39;은 (는) &#39; %s&#39;(으)로 동일한 CF / 단계 ( %s,  %s)"
 
-#: lib/rrd.php:3996
+#: lib/rrd.php:4021
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr "'%s' 의 pdp_per_row가 유효하지 않습니다. RRA '%s' 은 (는) '%s' 이어야 합니다. Kadupul가 RRD 파일을 다시 만들 수 있도록 삭제하고 허용하는 것이 좋습니다."
 
-#: lib/rrd.php:4000
+#: lib/rrd.php:4025
 #, fuzzy, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "Kadupul에 대한 XFF RRA id &#39; %s&#39;은 (는) &#39; %s&#39;이어야합니다."
 
-#: lib/rrd.php:4004
+#: lib/rrd.php:4029
 #, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Kadupul RRA ID '%s' 의 행 수가 잘못되었습니다. 행 수는 '%s' 이지만 '%s' 이어야 합니다"
 
-#: lib/rrd.php:4021
+#: lib/rrd.php:4046
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "RRA &#39; %s&#39;은 (는) RRDfile에 없습니다."
 
-#: lib/rrd.php:4029
+#: lib/rrd.php:4054
 #, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "Kadupul 정의에서 RRA &#39; %s&#39;이 누락되었습니다."
 
-#: lib/rrd.php:4051
+#: lib/rrd.php:4076
 msgid "RRD File Information"
 msgstr "RRD 파일 정보"
 
-#: lib/rrd.php:4083
+#: lib/rrd.php:4108
 msgid "Data Source Items"
 msgstr "데이터 소스 항목"
 
-#: lib/rrd.php:4085
+#: lib/rrd.php:4110
 msgid "Minimal Heartbeat"
 msgstr "최소 하트 비트"
 
-#: lib/rrd.php:4086
+#: lib/rrd.php:4111
 msgid "Min"
 msgstr "최소"
 
-#: lib/rrd.php:4087
+#: lib/rrd.php:4112
 msgid "Max"
 msgstr "최대"
 
-#: lib/rrd.php:4088
+#: lib/rrd.php:4113
 msgid "Last DS"
 msgstr "마지막 DS"
 
-#: lib/rrd.php:4090
+#: lib/rrd.php:4115
 msgid "Unknown Sec"
 msgstr "알 수없는 초"
 
-#: lib/rrd.php:4129
+#: lib/rrd.php:4154
 msgid "Round Robin Archive"
 msgstr "라운드 로빈 아카이브"
 
-#: lib/rrd.php:4132
+#: lib/rrd.php:4157
 msgid "Cur Row"
 msgstr "커 로우"
 
-#: lib/rrd.php:4133
+#: lib/rrd.php:4158
 msgid "PDP per Row"
 msgstr "행당 PDP"
 
-#: lib/rrd.php:4135
+#: lib/rrd.php:4160
 msgid "CDP Prep Value (0)"
 msgstr "CDP 준비 값 (0)"
 
-#: lib/rrd.php:4136
+#: lib/rrd.php:4161
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP 알 수없는 데이터 요소 (0)"
 
-#: lib/rrd.php:4217
+#: lib/rrd.php:4242
 msgid "Errors Found"
 msgstr " %s을 찾을 수 없습니다."
 
-#: lib/rrd.php:4229
+#: lib/rrd.php:4254
 msgid "Optional Tuning Recommendations"
 msgstr "데이터 소스 필드"
 
-#: lib/rrd.php:4254 lib/rrd.php:4257
+#: lib/rrd.php:4279 lib/rrd.php:4282
 #, php-format
 msgid "rename %s to %s"
 msgstr "%s에서  %s (으)로 이름 바꾸기"
 
-#: lib/rrd.php:4349
+#: lib/rrd.php:4374
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "XML 파일을 쓰는 동안 오류가 발생했습니다 :  %s"
 
-#: lib/rrd.php:4355
+#: lib/rrd.php:4380
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4361
+#: lib/rrd.php:4386
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "오류 : RRD 파일  %s을 (를) 쓸 수 없습니다."
 
-#: lib/rrd.php:4382
+#: lib/rrd.php:4407
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "rrdtool 덤프의 XML을 구문 분석하는 동안 오류가 발생했습니다."
 
-#: lib/rrd.php:4418 lib/rrd.php:4437
+#: lib/rrd.php:4443 lib/rrd.php:4462
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "RRDtool 덤프의 XML을 구문 분석하는 동안 오류가 발생했습니다."
 
-#: lib/rrd.php:4655
+#: lib/rrd.php:4680
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRA (CF =  %s, ROWS = % d, PDP_PER_ROW = % d, XFF = % 1.2f)가 RRD 파일에서 제거되었습니다."
 
-#: lib/rrd.php:4693
+#: lib/rrd.php:4718
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF =  %s, ROWS = % d, PDP_PER_ROW = % d, XFF = % 1.2f) RRD 파일에 추가"
 
-#: lib/rrd.php:4724 lib/rrd.php:4740
+#: lib/rrd.php:4749 lib/rrd.php:4765
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "웹 사이트에  %s에 대한 쓰기 권한이 없으며 RRD를 만들거나 업데이트 할 수 없음"
 
-#: lib/rrd.php:4736
+#: lib/rrd.php:4761
 msgid "(Custom)"
 msgstr "사용자 정의"
 
-#: lib/rrd.php:4742
+#: lib/rrd.php:4767
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "데이터 파일을 열지 못했습니다. 폴러가 아직 실행되지 않았을 수 있습니다."
 
-#: lib/rrd.php:4745
+#: lib/rrd.php:4770
 msgid "RRA Folder"
 msgstr "RRA 폴더"
 
-#: lib/rrd.php:4745
+#: lib/rrd.php:4770
 msgid "Root"
 msgstr "워드프레스 루트 디렉토리를 확인할 수 없습니다"
 
-#: lib/rrd.php:4859
+#: lib/rrd.php:4884
 msgid "Unknown RRDtool Error"
 msgstr "알 수없는 RRDtool 오류"
 
@@ -16434,8 +16434,7 @@ msgstr ""
 msgid "RRD storage configuration requires attention"
 msgstr ""
 
-#: lib/snmp.php:194 lib/snmp.php:294 lib/snmp.php:389 lib/snmp.php:734
-#: lib/snmp.php:749
+#: lib/snmp.php:371 lib/snmp.php:856 lib/snmp.php:879
 #, fuzzy, php-format
 msgid "SNMP Command is: %s"
 msgstr "SNMP 옵션 [편집 :  %s]"
@@ -16754,191 +16753,191 @@ msgstr "잘못된 데이터로 인해 %s 에 대해 그래프가 생성되지 �
 msgid "NOTE: Graph not added for Data Query %s and index %s due to Data Source verification failure"
 msgstr "참고: 데이터 원본 확인 실패로 인해 데이터 쿼리 %s 및 인덱스 %s 에 그래프가 추가되지 않음"
 
-#: lib/utility.php:1148
+#: lib/utility.php:1154
 msgid "MySQL 5.6+ and MariaDB 10.0+ are great releases, and are very good versions to choose. Make sure you run the very latest release though which fixes a long standing low level networking issue that was causing spine many issues with reliability."
 msgstr "MySQL 5.6+와 MariaDB 10.0+는 훌륭한 릴리스이며 선택할 수있는 아주 좋은 버전입니다. 최신 릴리스를 실행했는지 확인하십시오. 안정성이있는 많은 문제를 야기하는 오랜 저급 네트워킹 문제가 수정되었습니다."
 
-#: lib/utility.php:1160
+#: lib/utility.php:1166
 #, php-format
 msgid "It is STRONGLY recommended that you enable InnoDB in any %s version greater than 5.5.3."
 msgstr "5.5.3보다 큰 %s 버전에서 InnoDB를 활성화하는 것이 좋습니다."
 
-#: lib/utility.php:1173 lib/utility.php:1210
+#: lib/utility.php:1179 lib/utility.php:1216
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4_unicode_ci collation type as some characters take more than a single byte."
 msgstr "영어 이외의 언어로 Kadupul를 사용하는 경우 일부 문자는 1 바이트 이상을 사용하므로 utf8mb4_unicode_ci 데이터 정렬 유형을 사용하는 것이 중요합니다."
 
-#: lib/utility.php:1179 lib/utility.php:1185 lib/utility.php:1216
-#: lib/utility.php:1222
+#: lib/utility.php:1185 lib/utility.php:1191 lib/utility.php:1222
+#: lib/utility.php:1228
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4 character set as some characters take more than a single byte."
 msgstr "영어 이외의 언어로 Kadupul를 사용하는 경우 일부 문자는 1 바이트 이상을 사용하므로 utf8mb4 문자 세트를 사용하는 것이 중요합니다."
 
-#: lib/utility.php:1198
+#: lib/utility.php:1204
 #, php-format
 msgid "It is recommended that you enable InnoDB in any %s version greater than 5.1."
 msgstr "5.1보다 큰 %s 버전에서 InnoDB를 활성화하는 것이 좋습니다."
 
-#: lib/utility.php:1231
+#: lib/utility.php:1237
 #, php-format
 msgid "Depending on the number of logins and use of spine data collector, %s will need many connections.  The calculation for spine is: total_connections = total_processes * (total_threads + script_servers + 1), then you must leave headroom for user connections, which will change depending on the number of concurrent login accounts."
 msgstr "로그인 수 및 척추 데이터 수집기 사용에 따라  %s에 많은 연결이 필요합니다. 척추에 대한 계산은 total_connections = total_processes * (total_threads + script_servers + 1)이므로 사용자 연결을위한 헤드 룸을 남겨 두어야합니다. 이는 동시 로그인 계정의 수에 따라 변경됩니다."
 
-#: lib/utility.php:1236
+#: lib/utility.php:1242
 msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
 msgstr "테이블 캐쉬를 크게 유지하면 innodb_file_per_table을 사용할 때 파일 열기 / 닫기 작업이 줄어 듭니다."
 
-#: lib/utility.php:1241
+#: lib/utility.php:1247
 msgid "With Remote polling capabilities, large amounts of data will be synced from the main server to the remote pollers.  Therefore, keep this value at or above 16M."
 msgstr "원격 폴링 기능을 사용하면 많은 양의 데이터가 주 서버에서 원격 폴러로 동기화됩니다. 따라서이 값을 16M 이상으로 유지하십시오."
 
-#: lib/utility.php:1247
+#: lib/utility.php:1253
 #, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
 msgstr "Kadupul Performance Booster를 사용하고 메모리 스토리지 엔진을 선택하는 경우 시스템의 메모리 테이블 공간이 부족해지기 전에 Performance Booster 버퍼를 플러시해야합니다. 이것은 두 가지 방법으로 수행됩니다. 먼저 출력 열의 크기를 적절한 크기로 줄입니다. 이 열은 poller_output 및 poller_output_boost 테이블에 있습니다. 두 번째로 할 수있는 것은 메모리 테이블에 더 많은 메모리를 할당하는 것입니다. 우리는 임의로 시스템 메모리의 권장 값 10 %%를 선택했지만, SSD 디스크 드라이브를 사용하거나 시스템이 더 작은 경우이 권장 사항을 무시하거나 다른 스토리지 엔진을 선택할 수 있습니다. 콘솔 -&gt; 시스템 유틸리티 -&gt; 부스트 상태보기에서 성능 향상 표의 예상 소비량을 볼 수 있습니다."
 
-#: lib/utility.php:1253
+#: lib/utility.php:1259
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
 msgstr "임시 테이블 크기가 더 큰 서브 쿼리를 실행할 때 임시 테이블을 메모리에 보관하십시오."
 
-#: lib/utility.php:1259 lib/utility.php:1265
+#: lib/utility.php:1265 lib/utility.php:1271
 msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr ""
 
-#: lib/utility.php:1271
+#: lib/utility.php:1277
 #, php-format
 msgid "When using InnoDB storage it is important to keep your table spaces separate.  This makes managing the tables simpler for long time users of %s.  If you are running with this currently off, you can migrate to the per file storage by enabling the feature, and then running an alter statement on all InnoDB tables."
 msgstr "InnoDB 스토리지를 사용할 때 테이블 공간을 분리하여 보관하는 것이 중요합니다. 이렇게하면 오랫동안  %s 사용자에게 테이블을 더 간단하게 관리 할 수 있습니다. 현재이 기능을 사용하지 않고 실행중인 경우이 기능을 활성화 한 다음 모든 InnoDB 테이블에서 alter 문을 실행하여 파일 저장소 단위로 마이그레이션 할 수 있습니다."
 
-#: lib/utility.php:1277
+#: lib/utility.php:1283
 msgid "When using innodb_file_per_table, it is important to set the innodb_file_format to Barracuda.  This setting will allow longer indexes important for certain Kadupul tables."
 msgstr "innodb_file_per_table을 사용할 때, innodb_file_format을 바라쿠다로 설정하는 것이 중요합니다. 이 설정을 사용하면 특정 Kadupul 테이블에서 더 긴 인덱스를 사용할 수 있습니다."
 
-#: lib/utility.php:1283
+#: lib/utility.php:1289
 msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
 msgstr "테이블에 인덱스가 매우 큰 경우 Barracuda innodb_file_format 및 innodb_large_prefix를 1로 사용하여 작업해야합니다.이를 수행하지 않으면 테이블을 제대로 작성할 수없는 플러그인이 발생할 수 있습니다."
 
-#: lib/utility.php:1289
+#: lib/utility.php:1295
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
 msgstr "InnoDB는 가능한 많은 테이블과 인덱스를 시스템 메모리에 보유합니다. 그러므로, innodb_buffer_pool을 메모리에서 많은 테이블과 인덱스를 저장할만큼 충분히 크게 만들어야한다. / var / lib / mysql / Kadupul 디렉토리의 크기를 확인하면이 값을 결정하는 데 도움이됩니다. 시스템 총 메모리의 25 %%를 권장하지만 사용자의 요구 사항은 시스템 크기에 따라 다릅니다."
 
-#: lib/utility.php:1295
+#: lib/utility.php:1301
 #, fuzzy
 msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "갑작스러운 시스템 충돌을 수용하기 위해 내부 저널링이있는 ZFS 또는 FusionI / O에서 Kadupul 인스턴스를 실행하지 않는 한이 설정은 ON으로 유지되어야합니다. 그러나 전원이 매우 양호하고 시스템이 거의 다운되지 않고 백업이있는 경우이 설정을 끄면 데이터베이스 성능이 거의 50 % 향상 될 수 있습니다."
 
-#: lib/utility.php:1300
+#: lib/utility.php:1306
 msgid "This is where metadata is stored. If you had a lot of tables, it would be useful to increase this."
 msgstr "여기서 메타 데이터가 저장됩니다. 테이블이 많으면이 값을 늘리는 것이 좋습니다."
 
-#: lib/utility.php:1305
+#: lib/utility.php:1311
 msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "사기성 쿼리는 데이터베이스가 다른 데이터베이스로 오프라인 상태가되어서는 안됩니다. 그들이 시스템을 죽이기 전에 이러한 쿼리를 종료하십시오."
 
-#: lib/utility.php:1310
+#: lib/utility.php:1316
 msgid "Maximum I/O performance happens when you use the O_DIRECT method to flush pages."
 msgstr "최대 I / O 성능은 O_DIRECT 메서드를 사용하여 페이지를 플러시 할 때 발생합니다."
 
-#: lib/utility.php:1320
+#: lib/utility.php:1326
 #, php-format
 msgid "Setting this value to 2 means that you will flush all transactions every second rather than at commit.  This allows %s to perform writing less often."
 msgstr "이 값을 2로 설정하면 커밋보다 매초마다 모든 트랜잭션을 플러시합니다. 이렇게하면  %s에서 글을 자주 적게 수행 할 수 있습니다."
 
-#: lib/utility.php:1325
+#: lib/utility.php:1331
 msgid "With modern SSD type storage, having multiple io threads is advantageous for applications with high io characteristics."
 msgstr "현대의 SSD 타입 스토리지에서, 다수의 IO 스레드를 갖는 것은 높은 IO 특성을 갖는 어플리케이션에 유리합니다."
 
-#: lib/utility.php:1333 lib/utility.php:1375
+#: lib/utility.php:1339 lib/utility.php:1381
 #, php-format
 msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "%s  %s부터는  %s에서 트랜잭션을 디스크로 플러시하는 빈도를 제어 할 수 있습니다. 기본값은 1 초이지만 높은 I / O 시스템에서 1보다 큰 값으로 설정하면 디스크 I / O가보다 순차적으로 이루어질 수 있습니다"
 
-#: lib/utility.php:1338
+#: lib/utility.php:1344
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "최신 SSD 유형 저장 장치를 사용하면 다중 읽기 스레드를 갖는 것이 io 특성이 높은 응용 프로그램에 유리합니다."
 
-#: lib/utility.php:1343
+#: lib/utility.php:1349
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "최신 SSD 유형의 저장 장치를 사용하면 쓰기 스레드가 여러 개인 경우 높은 IO 특성을 가진 응용 프로그램에 유리합니다."
 
-#: lib/utility.php:1349
+#: lib/utility.php:1355
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
 msgstr "%s는 성능을 향상시키기 위해 innodb_buffer_pool을 메모리 영역으로 나눕니다. 최대 값은 64입니다. innodb_buffer_pool이 1GB보다 작 으면 풀 크기를 128MB로 나눈 값을 사용해야합니다. 이 방정식을 최대 64까지 계속 사용하십시오."
 
-#: lib/utility.php:1349
+#: lib/utility.php:1355
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s는 성능을 향상시키기 위해 innodb_buffer_pool을 메모리 영역으로 나눕니다. 최대 값은 64입니다. innodb_buffer_pool이 1GB보다 작 으면 풀 크기를 128MB로 나눈 값을 사용해야합니다. 이 방정식을 최대 64까지 계속 사용하십시오."
 
-#: lib/utility.php:1355 lib/utility.php:1391
+#: lib/utility.php:1361 lib/utility.php:1397
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
 msgstr "SSD 디스크가있는 경우이 제안을 사용하십시오. 실제 하드 드라이브가있는 경우 어레이의 활성 드라이브 수를 200 * 사용하십시오. NVMe 또는 PCIe 플래시를 사용하는 경우 100,000만큼 큰 숫자를 사용할 수 있습니다."
 
-#: lib/utility.php:1361 lib/utility.php:1397
+#: lib/utility.php:1367 lib/utility.php:1403
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 2000 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 200000 can be used."
 msgstr "SSD 디스크가있는 경우이 제안을 사용하십시오. 물리적 하드 드라이브가있는 경우 2000 * 어레이의 활성 드라이브 수를 사용하십시오. NVMe 또는 PCIe 플래시를 사용하는 경우 200000보다 훨씬 큰 숫자를 사용할 수 있습니다."
 
-#: lib/utility.php:1367 lib/utility.php:1403
+#: lib/utility.php:1373 lib/utility.php:1409
 msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this setting."
 msgstr "SSD 디스크가있는 경우이 제안을 사용하십시오. 그렇지 않은 경우이 설정을 지정하지 마십시오."
 
-#: lib/utility.php:1380
+#: lib/utility.php:1386
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics."
 msgstr "최신 SSD 유형 저장 장치를 사용하면 다중 읽기 스레드를 갖는 것이 io 특성이 높은 응용 프로그램에 유리합니다."
 
-#: lib/utility.php:1385
+#: lib/utility.php:1391
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics."
 msgstr "최신 SSD 유형의 저장 장치를 사용하면 쓰기 스레드가 여러 개인 경우 높은 IO 특성을 가진 응용 프로그램에 유리합니다."
 
-#: lib/utility.php:1416
+#: lib/utility.php:1422
 msgid "When using MariaDB 10.2.4 and above, this setting should be off if atomic writes are enabled.  Therefore, please enable atomic writes instead of the double write buffer as it will increase performance."
 msgstr "MariaDB 10.2.4 이상을 사용할 때 원자 쓰기가 활성화된 경우 이 설정을 꺼야 합니다. 따라서 성능이 향상되므로 이중 쓰기 버퍼 대신 원자 쓰기를 활성화하십시오."
 
-#: lib/utility.php:1423
+#: lib/utility.php:1429
 msgid "When using MariaDB 10.2.4 and above, you can use atomic writes over the doublewrite buffer to increase performance."
 msgstr "MariaDB 10.2.4 이상을 사용하는 경우 이중 쓰기 버퍼에 원자적 쓰기를 사용하여 성능을 높일 수 있습니다."
 
-#: lib/utility.php:1440
+#: lib/utility.php:1446
 #, php-format
 msgid "%s Tuning"
 msgstr "%s 튜닝"
 
-#: lib/utility.php:1440
+#: lib/utility.php:1446
 msgid "Note: Many changes below require a database restart"
 msgstr "참고 : 아래의 많은 변경 사항은 데이터베이스를 다시 시작해야합니다."
 
-#: lib/utility.php:1448
+#: lib/utility.php:1454
 msgid "Variable"
 msgstr "변수"
 
-#: lib/utility.php:1449
+#: lib/utility.php:1455
 msgid "Current Value"
 msgstr "현재 가치"
 
-#: lib/utility.php:1451
+#: lib/utility.php:1457
 msgid "Recommended Value"
 msgstr "권장 값"
 
-#: lib/utility.php:1452
+#: lib/utility.php:1458
 msgid "Comments"
 msgstr "댓글"
 
-#: lib/utility.php:2046
+#: lib/utility.php:2052
 #, php-format
 msgid "PHP %s is the minimum version"
 msgstr "PHP  %s이 (는) 최소 버전입니다."
 
-#: lib/utility.php:2048
+#: lib/utility.php:2054
 #, php-format
 msgid "A minimum of %s memory limit"
 msgstr "최소  %s MB 메모리 제한"
 
-#: lib/utility.php:2050
+#: lib/utility.php:2056
 #, php-format
 msgid "A minimum of %s m execution time"
 msgstr "최소  %sm 실행 시간"
 
-#: lib/utility.php:2052
+#: lib/utility.php:2058
 msgid "A valid timezone that matches MySQL and the system"
 msgstr "MySQL 및 시스템과 일치하는 유효한 시간대"
 
@@ -16946,7 +16945,7 @@ msgstr "MySQL 및 시스템과 일치하는 유효한 시간대"
 msgid "A useful name for this VDEF."
 msgstr "이 VDEF의 유용한 이름입니다."
 
-#: link.php:61
+#: link.php:64
 #, php-format
 msgid "External Link ID '%s' with Title '%s' attempted to inject an invalid URL and was blocked!"
 msgstr ""

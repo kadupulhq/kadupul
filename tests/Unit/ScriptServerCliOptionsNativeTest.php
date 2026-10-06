@@ -81,6 +81,98 @@ BOOT);
         }
     }
 
+    public function testActualProtocolUsesConfiguredRootsAndRejectsUnsupportedFilesBeforeIncluding(): void
+    {
+        $root = dirname(__DIR__, 2);
+        $directory = sys_get_temp_dir() . '/script-server-roots-' . bin2hex(random_bytes(8));
+        foreach (['install/include', 'install/scripts/directory', 'install/plugins/test/scripts', 'install/lib', 'configured'] as $path) {
+            mkdir($directory . '/' . $path, 0700, true);
+        }
+        $copy = $directory . '/install/script_server.php';
+        copy($root . '/script_server.php', $copy);
+        file_put_contents($directory . '/install/include/cli_check.php', <<<'BOOT'
+<?php
+$config = ['cacti_server_os' => 'unix', 'base_path' => dirname(__DIR__), 'scripts_path' => dirname(__DIR__, 2) . '/configured-link'];
+define('POLLER_VERBOSITY_DEBUG', 5);
+define('POLLER_VERBOSITY_HIGH', 3);
+define('COPYRIGHT_YEARS', '2004-2026');
+function cacti_log($message, ...$arguments) { file_put_contents(__DIR__ . '/protocol.log', $message . "\n", FILE_APPEND); }
+function read_config_option($name) { return 300; }
+function get_cacti_version() { return 'fixture-version'; }
+function db_close() {}
+BOOT);
+        file_put_contents($directory . '/install/scripts/main.php', '<?php function ss_main() { return "main"; }');
+        file_put_contents($directory . '/configured/custom.php', '<?php function ss_custom() { return "custom"; }');
+        file_put_contents($directory . '/install/plugins/test/scripts/plugin.php', '<?php function ss_plugin() { return "plugin"; }');
+        file_put_contents($directory . '/install/lib/outside.php', '<?php file_put_contents(__DIR__ . "/included", "unexpected"); function ss_outside() { return "outside"; }');
+        file_put_contents($directory . '/install/scripts/nonphp.sh', '<?php file_put_contents(__DIR__ . "/included", "unexpected"); function ss_nonphp() { return "nonphp"; }');
+        symlink($directory . '/configured', $directory . '/configured-link');
+        symlink($directory . '/install/lib/outside.php', $directory . '/install/scripts/escape.php');
+        $requests = [
+            '/scripts/main.php ss_main',
+            '/scripts/main.php ss_main',
+            '/plugins/test/scripts/plugin.php ss_plugin',
+            '/lib/outside.php ss_outside',
+            '/scripts ss_main',
+            '/scripts/directory ss_main',
+            '/scripts/nonphp.sh ss_nonphp',
+            '/scripts/escape.php ss_outside',
+            '/scripts/missing.php ss_main',
+            '/scripts/main.php ss_plugin',
+            '/scripts/main.php strlen text',
+        ];
+        $requests = array_map(static fn($request) => $directory . '/install' . $request, $requests);
+        array_splice($requests, 2, 0, [$directory . '/configured-link/custom.php ss_custom']);
+        $coverage = $this->getTestResultObject()->getCodeCoverage();
+        $command = [PHP_BINARY, '-d', 'error_reporting=24575', '-d', 'pcov.directory=/'];
+        if ($coverage !== null) {
+            $prelude = $directory . '/coverage.php';
+            file_put_contents($prelude, '<?php define("RRD_TEST_COVERAGE_DIRECTORY", ' . var_export($directory, true)
+                . '); define("RRD_TEST_CLI_COVERAGE_COPY", ' . var_export($copy, true)
+                . '); define("RRD_TEST_CLI_COVERAGE_SOURCE", ' . var_export($root . '/script_server.php', true)
+                . '); require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';');
+            $command = [...$command, '-d', 'auto_prepend_file=' . $prelude];
+        }
+        try {
+            $process = proc_open([...$command, $copy], [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, $directory . '/install', getenv());
+            self::assertIsResource($process);
+            fwrite($pipes[0], implode("\n", [...$requests, 'quit']) . "\n");
+            fclose($pipes[0]);
+            $output = stream_get_contents($pipes[1]);
+            $error = stream_get_contents($pipes[2]);
+            fclose($pipes[1]);
+            fclose($pipes[2]);
+            self::assertSame(0, proc_close($process), $output . $error);
+            self::assertSame('', $error);
+            self::assertSame("PHP Script Server has Started - Parent is cmd\nmain\nmain\ncustom\nplugin\n" . str_repeat("U\n", 8), $output);
+            self::assertFileDoesNotExist($directory . '/install/scripts/included');
+            self::assertFileDoesNotExist($directory . '/install/lib/included');
+            $log = file_get_contents($directory . '/install/include/protocol.log');
+            self::assertSame(3, substr_count($log, 'resolves outside scripts directory. Rejected.'));
+            self::assertStringContainsString('PHP Script File to be included, does not exist', $log);
+            self::assertStringContainsString('requires a PHP script file. Rejected.', $log);
+            self::assertStringContainsString('was not defined by script file', $log);
+            self::assertStringContainsString('Refusing to dispatch PHP internal function', $log);
+            if ($coverage !== null) {
+                $reports = glob($directory . '/*.coverage');
+                self::assertCount(1, $reports);
+                $coverage->merge(unserialize(file_get_contents($reports[0])));
+            }
+        } finally {
+            $remove = static function ($path) use (&$remove): void {
+                if (is_link($path) || is_file($path)) {
+                    unlink($path);
+                } elseif (is_dir($path)) {
+                    foreach (array_diff(scandir($path), ['.', '..']) as $entry) {
+                        $remove($path . '/' . $entry);
+                    }
+                    rmdir($path);
+                }
+            };
+            $remove($directory);
+        }
+    }
+
     public static function arguments(): array
     {
         return [
