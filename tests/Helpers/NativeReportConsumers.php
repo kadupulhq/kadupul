@@ -13,6 +13,16 @@ final class NativeReportConnection
     public function __construct(private NativeDeviceConnection $connection) {}
     public function prepare(string $sql): NativeDeviceStatement|LegacyFormGoldenStatement|PDOStatement
     {
+        if ($this->connection->database->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'sqlite') {
+            // The shared read-only port recognizes SELECT by its leading token;
+            // MySQL also admits the actual parenthesized branch SELECT unchanged.
+            $normalized = trim(preg_replace('/\s+/', ' ', $sql));
+            if (str_starts_with($normalized, '(SELECT gti.id, CONCAT(')) {
+                $this->connection->queries[] = $normalized;
+                return $this->connection->database->prepare($sql);
+            }
+            return $this->connection->prepare($sql);
+        }
         if ($this->connection->database->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite' && str_contains($sql, 'UNION (SELECT')) {
             if (!str_starts_with($sql, 'SELECT -1 AS id,') || !str_ends_with($sql, 'ORDER BY name)')) {
                 throw new RuntimeException('Unrecognized report UNION dialect port');
