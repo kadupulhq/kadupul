@@ -196,36 +196,12 @@ function cacti_snmp_get(
             $snmp_value = format_snmp_string($snmp_value, false, $value_output_format);
         }
     } else {
-        $snmp_value = '';
-        $hostname = cacti_format_ipv6_colon($hostname);
-
-        $command = cacti_snmp_read_command(
-            'path_snmpget',
-            'fntevU' . ($value_output_format == SNMP_STRING_OUTPUT_HEX ? 'x' : ''),
+        return cacti_snmp_read_binary_value(
+            'get',
             array($hostname, $port, $oid, $version, $community, $timeout_ms, $retries),
-            array($auth_proto, $auth_user, $auth_pass, $priv_proto, $priv_pass, $context, $engineid)
+            array($auth_proto, $auth_user, $auth_pass, $priv_proto, $priv_pass, $context, $engineid),
+            $value_output_format
         );
-        if ($command === null) {
-            return;
-        }
-
-        if (isset($_SESSION)) {
-            debug_log_insert('data_query', __esc('SNMP Command is: %s', cacti_snmp_command_log_string($command)));
-        }
-
-        $snmp_value = cacti_snmp_exec_argv($command);
-
-        /* fix for multi-line snmp output */
-        if (is_array($snmp_value)) {
-            $snmp_value = implode(' ', $snmp_value);
-        }
-
-        if (strpos($snmp_value, 'Timeout') !== false) {
-            cacti_log("WARNING: SNMP Error:'Timeout', Device:'$hostname', OID:'$oid'", false, 'SNMP', POLLER_VERBOSITY_HIGH);
-            $snmp_value = 'U';
-        } else {
-            $snmp_value = format_snmp_string($snmp_value, false, $value_output_format);
-        }
     }
 
     return $snmp_value;
@@ -289,34 +265,12 @@ function cacti_snmp_get_raw(
             $snmp_value = 'U';
         }
     } else {
-        $snmp_value = '';
-        $hostname = cacti_format_ipv6_colon($hostname);
-
-        $command = cacti_snmp_read_command(
-            'path_snmpget',
-            'fntev' . ($value_output_format == SNMP_STRING_OUTPUT_HEX ? 'x' : ''),
+        return cacti_snmp_read_binary_value(
+            'get_raw',
             array($hostname, $port, $oid, $version, $community, $timeout_ms, $retries),
-            array($auth_proto, $auth_user, $auth_pass, $priv_proto, $priv_pass, $context, $engineid)
+            array($auth_proto, $auth_user, $auth_pass, $priv_proto, $priv_pass, $context, $engineid),
+            $value_output_format
         );
-        if ($command === null) {
-            return;
-        }
-
-        if (isset($_SESSION)) {
-            debug_log_insert('data_query', __esc('SNMP Command is: %s', cacti_snmp_command_log_string($command)));
-        }
-
-        $snmp_value = cacti_snmp_exec_argv($command);
-
-        /* fix for multi-line snmp output */
-        if (is_array($snmp_value)) {
-            $snmp_value = implode(' ', $snmp_value);
-        }
-
-        if (strpos($snmp_value, 'Timeout') !== false) {
-            cacti_log("WARNING: SNMP Error:'Timeout', Device:'$hostname', OID:'$oid'", false, 'SNMP', POLLER_VERBOSITY_HIGH);
-            $snmp_value = 'U';
-        }
     }
 
     return $snmp_value;
@@ -344,6 +298,24 @@ function cacti_snmp_getnext(
         \Kadupul\Inventory\Infrastructure\Legacy\DeviceDiagnosticScope::remember(['snmp_community' => $community, 'snmp_username' => $auth_user, 'snmp_password' => $auth_pass, 'snmp_priv_passphrase' => $priv_pass]);
     }
 
+
+    return cacti_snmp_getnext_request(
+        array($hostname, $port, $oid, $version, $community, $timeout_ms, $retries),
+        array($auth_proto, $auth_user, $auth_pass, $priv_proto, $priv_pass, $context, $engineid),
+        $value_output_format
+    );
+}
+
+/**
+ * Keep the legacy getnext argument list at the compatibility boundary.
+ *
+ * @param array{0: mixed, 1: mixed, 2: mixed, 3: mixed, 4: mixed, 5: mixed, 6: mixed} $request Host, port, OID, version, community, timeout milliseconds and retries.
+ * @param array{0: mixed, 1: mixed, 2: mixed, 3: mixed, 4: mixed, 5: mixed, 6: mixed} $security Authentication protocol/user/passphrase, privacy protocol/passphrase, context and engine ID.
+ */
+function cacti_snmp_getnext_request(array $request, array $security, mixed $value_output_format): mixed
+{
+    list($hostname, $port, $oid, $version, $community, $timeout_ms, $retries) = $request;
+    list($auth_proto, $auth_user, $auth_pass, $priv_proto, $priv_pass, $context, $engineid) = $security;
 
     global $config, $snmp_error;
 
@@ -378,39 +350,52 @@ function cacti_snmp_getnext(
             $snmp_value = format_snmp_string($snmp_value, false, $value_output_format);
         }
     } else {
-        $snmp_value = '';
-        $hostname = cacti_format_ipv6_colon($hostname);
-
-        $command = cacti_snmp_read_command(
-            'path_snmpgetnext',
-            'fntevU' . ($value_output_format == SNMP_STRING_OUTPUT_HEX ? 'x' : ''),
+        return cacti_snmp_read_binary_value(
+            'getnext',
             array($hostname, $port, $oid, $version, $community, $timeout_ms, $retries),
-            array($auth_proto, $auth_user, $auth_pass, $priv_proto, $priv_pass, $context, $engineid)
+            array($auth_proto, $auth_user, $auth_pass, $priv_proto, $priv_pass, $context, $engineid),
+            $value_output_format
         );
-        if ($command === null) {
-            return;
-        }
-
-        if (isset($_SESSION)) {
-            debug_log_insert('data_query', __esc('SNMP Command is: %s', cacti_snmp_command_log_string($command)));
-        }
-
-        $snmp_value = cacti_snmp_exec_argv($command);
-
-        /* fix for multi-line snmp output */
-        if (is_array($snmp_value)) {
-            $snmp_value = implode(' ', $snmp_value);
-        }
-
-        if (strpos($snmp_value, 'Timeout') !== false) {
-            cacti_log("WARNING: SNMP Error:'Timeout', Device:'$hostname', OID:'$oid'", false, 'SNMP', POLLER_VERBOSITY_HIGH);
-        }
-
-        /* strip out non-snmp data */
-        $snmp_value = format_snmp_string($snmp_value, false, $value_output_format);
     }
 
     return $snmp_value;
+}
+
+/**
+ * Execute binary reads while preserving the get, raw and getnext output policies.
+ *
+ * @param array{0: mixed, 1: mixed, 2: mixed, 3: mixed, 4: mixed, 5: mixed, 6: mixed} $request Host, port, OID, version, community, timeout milliseconds and retries.
+ * @param array{0: mixed, 1: mixed, 2: mixed, 3: mixed, 4: mixed, 5: mixed, 6: mixed} $security Authentication protocol/user/passphrase, privacy protocol/passphrase, context and engine ID.
+ * @param mixed $value_output_format Legacy SNMP output mode.
+ */
+function cacti_snmp_read_binary_value(string $operation, array $request, array $security, mixed $value_output_format): ?string
+{
+    $raw = $operation === 'get_raw';
+    $next = $operation === 'getnext';
+    $request[0] = cacti_format_ipv6_colon($request[0]);
+    $command = cacti_snmp_read_command(
+        $next ? 'path_snmpgetnext' : 'path_snmpget',
+        ($raw ? 'fntev' : 'fntevU') . ($value_output_format == SNMP_STRING_OUTPUT_HEX ? 'x' : ''),
+        $request,
+        $security
+    );
+    if ($command === null) {
+        return null;
+    }
+
+    if (isset($_SESSION)) {
+        debug_log_insert('data_query', __esc('SNMP Command is: %s', cacti_snmp_command_log_string($command)));
+    }
+
+    $snmp_value = implode(' ', cacti_snmp_exec_argv($command));
+    if (strpos($snmp_value, 'Timeout') !== false) {
+        cacti_log("WARNING: SNMP Error:'Timeout', Device:'{$request[0]}', OID:'{$request[2]}'", false, 'SNMP', POLLER_VERBOSITY_HIGH);
+        if (!$next) {
+            return 'U';
+        }
+    }
+
+    return $raw ? $snmp_value : format_snmp_string($snmp_value, false, $value_output_format);
 }
 
 /**
@@ -587,8 +572,8 @@ function cacti_snmp_session_walk(
     $session,
     $oid,
     $dummy = false,
-    $max_repetitions = NULL,
-    $non_repeaters = NULL,
+    $max_repetitions = null,
+    $non_repeaters = null,
     $value_output_format = SNMP_STRING_OUTPUT_GUESS
 ) {
 
