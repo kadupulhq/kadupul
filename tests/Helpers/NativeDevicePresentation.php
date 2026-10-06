@@ -9,38 +9,58 @@ declare(strict_types=1);
 final class NativeDeviceStatement
 {
     private array $rows = [];
+    private ?int $selectedCount = null;
     public function __construct(private PDOStatement $statement, private bool $buffered = true, private ?Closure $onExecute = null) {}
     public function execute(?array $parameters = null): bool
     {
         $result = $this->statement->execute($parameters);
-        if ($result && $this->onExecute !== null)($this->onExecute)($parameters ?? []);
-        $this->rows = $this->buffered ? $this->statement->fetchAll(PDO::FETCH_ASSOC) : [];
+        if ($result && $this->onExecute !== null) {
+            ($this->onExecute)($parameters ?? []);
+        }
+        $this->selectedCount = null;
+        $this->rows = [];
+        if ($result && $this->buffered && preg_match('/^\s*SELECT\b/i', $this->statement->queryString)) {
+            $this->rows = $this->statement->fetchAll(PDO::FETCH_ASSOC);
+            $this->selectedCount = count($this->rows);
+        }
         return $result;
     }
     public function rowCount(): int
     {
-        return $this->buffered ? count($this->rows) : $this->statement->rowCount();
+        return $this->selectedCount ?? $this->statement->rowCount();
     }
     public function fetchAll(int $mode = PDO::FETCH_ASSOC): array
     {
-        if (!$this->buffered) return $this->statement->fetchAll($mode);
+        if ($this->selectedCount === null) return $this->statement->fetchAll($mode);
         $rows = $this->rows;
         $this->rows = [];
-        return $mode === PDO::FETCH_BOTH ? array_map(static fn(array $row): array => $row + array_values($row), $rows) : $rows;
+        return array_map(fn(array $row): array => $this->formatRow($row, $mode), $rows);
     }
     public function fetch(int $mode = PDO::FETCH_ASSOC): array|false
     {
-        return $this->buffered ? (array_shift($this->rows) ?? false) : $this->statement->fetch($mode);
+        if ($this->selectedCount === null) return $this->statement->fetch($mode);
+        $row = array_shift($this->rows);
+        return $row === null ? false : $this->formatRow($row, $mode);
     }
     public function fetchColumn(int $column = 0): mixed
     {
-        if (!$this->buffered) return $this->statement->fetchColumn($column);
+        if ($this->selectedCount === null) return $this->statement->fetchColumn($column);
         $row = array_shift($this->rows);
         return $row === null ? false : array_values($row)[$column];
     }
     public function closeCursor(): bool
     {
-        return true;
+        $this->rows = [];
+        return $this->statement->closeCursor();
+    }
+    private function formatRow(array $row, int $mode): array
+    {
+        return match ($mode) {
+            PDO::FETCH_ASSOC => $row,
+            PDO::FETCH_BOTH => $row + array_values($row),
+            PDO::FETCH_NUM => array_values($row),
+            default => throw new RuntimeException('Unsupported buffered device SELECT mode'),
+        };
     }
     public function errorCode(): string
     {
@@ -57,17 +77,18 @@ final class NativeDeviceConnection
 {
     public array $queries = [];
     public array $cacheHashes = [];
-    public function __construct(public PDO $database) {}
+    public function __construct(public PDO $database, private array $additionalTables = [], private array $additionalWrites = []) {}
     public function prepare(string $sql): NativeDeviceStatement|LegacyFormGoldenStatement|PDOStatement
     {
         $normalized = trim(preg_replace('/\s+/', ' ', $sql));
         $cacheWrite = $normalized === 'REPLACE INTO user_auth_row_cache (user_id, class, hash, total_rows, time) VALUES (?, ?, ?, ?, FROM_UNIXTIME(?))';
-        if (!$cacheWrite && !preg_match('/^(?:SELECT|SHOW)\b/i', $normalized)) {
+        $allowedWrite = $cacheWrite || in_array($normalized, $this->additionalWrites, true);
+        if (!$allowedWrite && !preg_match('/^(?:SELECT|SHOW)\b/i', $normalized)) {
             throw new RuntimeException('Read-only device presentation attempted a database mutation');
         }
-        foreach (NativeDevicePresentation::tables() as $table) {
-            if (preg_match('/\b(?:FROM|JOIN|INTO)\s+`?' . preg_quote($table, '/') . '`?\b/i', $normalized)) {
-                if (!$cacheWrite && !str_starts_with(strtoupper($normalized), 'SELECT ')) {
+        foreach (array_merge(NativeDevicePresentation::tables(), $this->additionalTables) as $table) {
+            if (preg_match('/\b(?:FROM|JOIN|INTO|UPDATE)\s+`?' . preg_quote($table, '/') . '`?\b/i', $normalized)) {
+                if (!$allowedWrite && !str_starts_with(strtoupper($normalized), 'SELECT ')) {
                     throw new RuntimeException('Device presentation attempted a database mutation');
                 }
                 $this->queries[] = $normalized;
