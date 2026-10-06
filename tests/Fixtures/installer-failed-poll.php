@@ -56,7 +56,7 @@ eval('namespace InstallerFailedPollFixture; final class Installer {
  $errors, $templates, $eula, $cronInterval, $locales, $stepData, $theme;
  function setRuntime($runtime) {}
  function getStepDefault() { return 1; }
- function setStep($step) { global $state; $this->stepCurrent=$step; $state["install_step"]=$step; }
+ function setStep($step, bool $persist = true) { global $state; $this->stepCurrent=$step; if ($persist) $state["install_step"]=$step; }
  function getLanguage() { return "en-US"; }
  function setLanguage($language) {}
  function getTheme() { return "modern"; }
