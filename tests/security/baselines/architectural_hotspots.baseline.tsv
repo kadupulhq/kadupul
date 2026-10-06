@@ -26,9 +26,9 @@ cmd_exec	./lib/functions.php:7469	            $shell = shell_exec(cacti_escapesh
 cmd_exec	./lib/functions.php:7471	            $shell = shell_exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' -v 2>&1');
 cmd_exec	./lib/functions.php:7728	            exec('id -nu', $o, $r);
 cmd_exec	./lib/functions.php:7738	            exec(sprintf('grep :%s: /etc/passwd | cut -d: -f1', (int) $uid), $o, $r);
-cmd_exec	./lib/functions.php:8057	 * shell_exec() callers that already assemble the command string.
-cmd_exec	./lib/functions.php:8099	    $process = proc_open($argv, $descriptors, $pipes);
-cmd_exec	./lib/functions.php:8168	 * shell_exec() and expect a string return value.
+cmd_exec	./lib/functions.php:8080	 * shell_exec() callers that already assemble the command string.
+cmd_exec	./lib/functions.php:8122	    $process = proc_open($argv, $descriptors, $pipes);
+cmd_exec	./lib/functions.php:8191	 * shell_exec() and expect a string return value.
 cmd_exec	./lib/installer.php:3660	            $results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:3696	                    shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:851	            $process = @proc_open(
@@ -267,7 +267,7 @@ dynamic_include	./color_templates.php:167	    include_once($config['base_path'] 
 dynamic_include	./color_templates.php:377	    include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./color_templates.php:428	    include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./color_templates.php:507	    include_once($config['base_path'] . '/lib/api_aggregate.php');
-dynamic_include	./graph_realtime.php:482	    <?php include($config['base_path'] . '/include/global_session.php'); ?>
+dynamic_include	./graph_realtime.php:495	    <?php include($config['base_path'] . '/include/global_session.php'); ?>
 dynamic_include	./include/auth.php:135	                require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/auth.php:202	            require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/csrf.php:404	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
@@ -373,7 +373,7 @@ dynamic_include	./lib/functions.php:6116	    require_once($config['include_path'
 dynamic_include	./lib/functions.php:6117	    require_once($config['include_path'] . '/vendor/phpmailer/src/SMTP.php');
 dynamic_include	./lib/functions.php:655	    include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./lib/graph_variables.php:47		include_once($config['library_path'] . '/rrd.php');
-dynamic_include	./lib/html.php:1303	    include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/html.php:1358	    include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/html_tree.php:462		include_once($config['base_path'] . '/lib/data_query.php');
 dynamic_include	./lib/html_tree.php:76		include_once($config['library_path'] . '/data_query.php');
 dynamic_include	./lib/html_tree.php:806		include($config['include_path'] . '/global_arrays.php');
@@ -428,7 +428,7 @@ dynamic_include	./lib/snmp.php:33	    include_once($config['include_path'] . '/v
 dynamic_include	./lib/snmp.php:35	    include_once($config['include_path'] . '/vendor/phpsnmp/classSNMP.php');
 dynamic_include	./lib/snmpagent.php:316			include_once($config['base_path'] . '/plugins/maint/functions.php');
 dynamic_include	./lib/snmpagent.php:873				include_once($config['library_path'] . '/poller.php');
-dynamic_include	./lib/template.php:1636	    include_once($config['library_path'] . '/data_query.php');
+dynamic_include	./lib/template.php:1637	    include_once($config['library_path'] . '/data_query.php');
 dynamic_include	./lib/timespan_settings.php:14	include_once($config['base_path'] . '/lib/time.php');
 dynamic_include	./lib/utility.php:118	    include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./lib/utility.php:176	    include_once($config['library_path'] . '/data_query.php');
@@ -527,7 +527,7 @@ dynamic_include	./rrdcleaner.php:9	include_once($config['library_path'] . '/func
 dynamic_include	./script_server.php:348	            include_once($include_file);
 dynamic_include	./scripts/ss_netsnmp_lmsensors.php:26		include($config['base_path'] . '/lib/snmp.php');
 dynamic_include	./snmpagent_persist.php:164	            include($path_mibcache);
-dynamic_include	./spikekill.php:17	include_once($config['base_path'] . '/lib/spikekill.php');
+dynamic_include	./spikekill.php:18	include_once($config['base_path'] . '/lib/spikekill.php');
 dynamic_include	./src/Graphing/Infrastructure/Rrd/GraphOptionsGenerator.php:27	        include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./src/Platform/Infrastructure/Legacy/InstallationConfiguration.php:125	        require $path;
 dynamic_include	./tools/verify-offline.php:17	$kernel = require $root . '/config/bootstrap.php';
@@ -537,7 +537,7 @@ sort_order_input	./automation_snmp.php:535				ORDER BY sequence', array(get_requ
 sort_order_input	./data_queries.php:912						ORDER BY field_name, sequence', array(get_request_var('id'), $data_template['id']));
 sort_order_input	./graph_templates.php:506			ORDER BY name', array(get_request_var('id')));
 sort_order_input	./graph_templates_inputs.php:187			ORDER BY gti.sequence", array(get_request_var('id'), get_request_var('graph_template_id')));
-sort_order_input	./graphs.php:1279				ORDER BY gti.sequence", array(get_request_var('id')));
+sort_order_input	./graphs.php:1340				ORDER BY gti.sequence", array(get_request_var('id')));
 sort_order_input	./host_templates.php:474				ORDER BY graph_templates.name', array(get_request_var('id')));
 sort_order_input	./host_templates.php:512									ORDER BY gt.name', array(get_request_var('id'))), 'name', 'id', '', '', '');?>
 sort_order_input	./host_templates.php:531				ORDER BY snmp_query.name', array(get_request_var('id')));

@@ -260,3 +260,39 @@ test('RRD row ownership is checked independently of the owned data row', functio
         expect($result['saved'])->toBe(array());
     }
 })->with(array('untemplated rejects foreign item' => array(false), 'templated ignores unused current item' => array(true)));
+
+
+// These recording-port controller cases are behavioral-only. The full native
+// HTTP/policy fixtures provide separately bound physical authorization proof.
+test('component input authorization reaches its own owner guard before any replacement', function ($fields, $environment, $writes, $lookups) {
+    $request = array('save_component_data_source' => null, 'save_component_data' => '1', 'value_7' => 'admitted value') + $fields;
+    $result = limit_save($this, 'data_sources.php', $request, array('LIMIT_COVERAGE' => '0', 'LIMIT_COMPONENT_FIELD' => '1') + $environment);
+    expect($result['saved'])->toBe(array())
+        ->and(count($result['component_writes']))->toBe($writes)
+        ->and(count($result['component_lookups']))->toBe($lookups);
+    if ($writes) {
+        expect($result['component_writes'][0][0])->toContain('REPLACE INTO data_input_data')
+            ->and($result['component_writes'][0][1])->toBe(array(7, 3, 'admitted value'));
+    }
+})->with(array(
+    'foreign row independently denied' => array(array(), array('LIMIT_DATA_OWNER' => '6'), 0, 1),
+    'nonempty row without local source' => array(array('local_data_id' => '0'), array('LIMIT_DATA_OWNER' => '5'), 0, 1),
+    'matching row on denied device' => array(array(), array('LIMIT_SOURCE_HOST' => '12', 'LIMIT_DEVICE_DENIED' => '1'), 0, 1),
+    'missing data row' => array(array(), array('LIMIT_COMPONENT_MISSING' => '1'), 0, 1),
+    'matching admitted row writes its input' => array(array(), array('LIMIT_DATA_OWNER' => '5'), 1, 1),
+    'empty new data row remains admitted noop' => array(array('local_data_id' => '0', 'data_template_data_id' => '0'), array(), 0, 0),
+));
+
+test('existing source saves distinguish allowed denied and missing positive destination devices', function ($environment, $admitted) {
+    $result = limit_save($this, 'data_sources.php', array('host_id' => '12', '_host_id' => '12'), array('LIMIT_COVERAGE' => '0') + $environment);
+    if ($admitted) {
+        expect($result['saved'])->toHaveKeys(array('data_local', 'data_template_data', 'data_template_rrd'))
+            ->and($result['saved']['data_local']['host_id'])->toBe(12);
+    } else {
+        expect($result['saved'])->toBe(array())->and($result['component_writes'])->toBe(array());
+    }
+})->with(array(
+    'allowed positive destination' => array(array(), true),
+    'denied positive destination' => array(array('LIMIT_DEVICE_DENIED' => '1'), false),
+    'missing positive destination' => array(array('LIMIT_DEVICE_MISSING' => '1'), false),
+));

@@ -376,7 +376,7 @@ def verify_graph_creation(harness, session, aggregate, color, check):
                     destination = response.geturl()
                     body = response.read().decode('utf-8', errors='strict')
                 after_log = harness.command('cat', '/var/www/html/log/cacti.log')['stdout']
-                check(status == 200 and destination == session.base + '/graphs.php'
+                check(status == 200 and destination == session.base + '/graphs.php?header=false'
                       and 'Graph not found.  Either it has been deleted or your database needs repair.' not in body
                       and after_log.startswith(log)
                       and after_log[len(log):].count('User attempted to access an unauthorized graph') == 1

@@ -168,6 +168,7 @@ test('repeated checks for the signed-in user still use the cache', function () {
         'sess_user_id'      => 7,
         'sess_tree_perms'   => array(7 => array(5 => true)),
         'sess_simple_perms' => array(7 => true),
+        'sess_perms_reset_key' => array(7 => '107'),
     );
 
     $trace = permission_cache_trace(array(array('is_tree_allowed', array(5, 7)), array('get_simple_graph_perms', array(7))), $session);
@@ -296,8 +297,8 @@ test('a reset of one owner leaves another owner cached answers in place', functi
         ->and($trace['queries'][4])->toBe(array('policy_trees'));
 });
 
-test('the signed-in user checks read no reset key', function () {
-    /* is_realm_allowed() already clears these caches when the signed-in user is reset */
+test('the signed-in user checks read the reset key before cached answers', function () {
+    /* Guest-enabled image routes may skip the realm gate before these helpers. */
     $trace = permission_cache_trace(array(
         array('is_tree_allowed', array(5)),
         array('get_simple_graph_perms', array(7)),
@@ -307,7 +308,7 @@ test('the signed-in user checks read no reset key', function () {
     ), array('sess_user_id' => 7));
 
     expect($trace['returns'])->toBe(array(false, false, false, false, false))
-        ->and($trace['reset_checks'])->toBe(array(0, 0, 0, 0, 0))
+        ->and($trace['reset_checks'])->toBe(array(1, 1, 1, 1, 1))
         ->and($trace['queries'][3])->toBe(array())
         ->and($trace['queries'][4])->toBe(array());
 });
@@ -321,5 +322,5 @@ test('an administrator session rechecks another user after that user is reset', 
     ), array('sess_user_id' => 1));
 
     expect($trace['returns'])->toBe(array(false, null, true, true))
-        ->and($trace['reset_checks'])->toBe(array(1, 0, 1, 0));
+        ->and($trace['reset_checks'])->toBe(array(1, 0, 1, 1));
 });

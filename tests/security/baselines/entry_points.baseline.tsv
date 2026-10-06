@@ -93,7 +93,7 @@ gprint_presets.php	realm:5	include/auth.php
 graph.php	guest-or-realm:7	include/auth.php; guest_account
 graph_image.php	guest-or-realm:7	include/auth.php; guest_account, auth_text
 graph_json.php	guest-or-realm:7	include/auth.php; guest_account, auth_json
-graph_realtime.php	realm:25	guest identity from include/auth.php; own realm 25 check for every caller; reviewed at f3398a90c344
+graph_realtime.php	realm:25	guest identity from include/auth.php; own realm 25 check for every caller; reviewed at 5d47cd271d29
 graph_templates.php	realm:10	include/auth.php
 graph_templates_inputs.php	realm:10	include/auth.php
 graph_templates_items.php	realm:10	include/auth.php

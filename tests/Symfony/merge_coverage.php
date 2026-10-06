@@ -19,6 +19,27 @@ function require_symfony_integration_checks(array $manifest, array $checks): voi
     }
 }
 
+/**
+ * Require the intentional failure exit and unchanged state, rather than the
+ * frozen original's successful exit when its audit baseline cannot be loaded.
+ *
+ * @return list<string>
+ */
+function required_audit_baseline_failure_checks(): array
+{
+    return [
+        'audit report with the audit schema missing: frozen original records its historical success exit on baseline failure',
+        'audit report with the audit schema missing: native command fails without claiming a clean audit',
+        'audit report with the audit schema missing: refused native audit preserves all schema and baseline state',
+        'audit report with an unparsable audit schema: frozen original records its historical success exit on baseline failure',
+        'audit report with an unparsable audit schema: native command fails without claiming a clean audit',
+        'audit report with an unparsable audit schema: refused native audit preserves all schema and baseline state',
+        'audit report when table_columns cannot be created: frozen original records its historical success exit on baseline failure',
+        'audit report when table_columns cannot be created: native command fails without claiming a clean audit',
+        'audit report when table_columns cannot be created: refused native audit preserves all schema and baseline state',
+    ];
+}
+
 $root = dirname(__DIR__, 2);
 require $root . '/include/vendor/autoload.php';
 if ($argc !== 6) {
@@ -553,9 +574,6 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'audit repair with a failing alter: the recorded path column matches every baseline attribute before index drift',
         'audit repair with a failing alter: shim logs the same cacti.log lines, date included',
         'audit repair with a failing alter: shim logs the refused statement without the backtrace',
-        'audit report with the audit schema missing: shim stdout matches the original',
-        'audit report with an unparsable audit schema: shim names the line that does not parse instead of the client error',
-        'audit report when table_columns cannot be created: shim stops without a trailing newline',
         'audit upgrade from the previous version: shim stdout matches the original',
         'audit upgrade: shim upgrades the database to the code version',
         'audit upgrade without a mode: shim stdout matches the original',
@@ -578,6 +596,9 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'audit --repair through bin/console without --force plans the repair and changes nothing',
         'audit refuses a remote collector before any statement, --help included',
         'audit scenarios leave the schema, settings, grants and docs/ as they found them'];
+    if ($handler !== 'none') {
+        $checks = array_merge($checks, required_audit_baseline_failure_checks());
+    }
     // The original installed scenario, its completed behavior checks and each page's
     // actual source hash are required before these legacy caller observations enter Clover.
     $legacyCallerPaths = $handler === 'none' ? [] : ['graphs.php', 'cdef.php',

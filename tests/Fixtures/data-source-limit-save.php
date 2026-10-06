@@ -29,6 +29,8 @@ $config = array(
 $saved = array();
 $plugins_integrated = array();
 $edit_hooks = array();
+$component_writes = array();
+$component_lookups = array();
 // The messages form_save() raises; raise_message() only needs them to exist.
 $messages = array(1 => array('message' => 'Saved', 'type' => 'info'), 2 => array('message' => 'Failed', 'type' => 'error'),
     3 => array('message' => 'Validation', 'type' => 'error'), 43 => array('message' => 'Limits', 'type' => 'error'));
@@ -62,6 +64,10 @@ function db_fetch_cell(...$args)
 
 function db_fetch_row_prepared($sql, ...$args)
 {
+    if (str_starts_with($sql, 'SELECT local_data_id FROM data_template_data')) {
+        $GLOBALS['component_lookups'][] = $args[0];
+        return getenv('LIMIT_COMPONENT_MISSING') === '1' ? array() : array('local_data_id' => getenv('LIMIT_DATA_OWNER') ?: ($_REQUEST['local_data_id'] ?? 0));
+    }
     if (str_starts_with($sql, 'SELECT host_id, data_template_id')) {
         return getenv('LIMIT_EDIT_MISSING') === '1' ? array() : array('host_id' => getenv('LIMIT_SOURCE_HOST') ?: '0', 'data_template_id' => '0');
     }
@@ -75,6 +81,9 @@ function db_fetch_row(...$args)
 
 function db_fetch_assoc_prepared($sql, ...$args)
 {
+    if (getenv('LIMIT_COMPONENT_FIELD') === '1' && str_contains($sql, 'LEFT JOIN data_input_fields') && ($args[0][0] ?? 0) > 0) {
+        return array(array('data_input_id' => 1, 'host_id' => 0, 'id' => 7, 'input_output' => 'in', 'data_name' => 'fixture', 'regexp_match' => '', 'allow_nulls' => 'on', 'type_code' => ''));
+    }
     if (getenv('LIMIT_EDIT_HOOK') === '1' && str_contains($sql, 'FROM plugin_hooks') && ($args[0][0] ?? '') === 'data_source_edit_top') {
         return array(array('name' => 'internal', 'file' => '', 'function' => 'limit_edit_hook'));
     }
@@ -95,6 +104,7 @@ function db_fetch_assoc(...$args)
 
 function db_execute_prepared(...$args)
 {
+    $GLOBALS['component_writes'][] = $args;
     return true;
 }
 
@@ -148,7 +158,7 @@ register_shutdown_function(function () {
     while (ob_get_level()) {
         ob_end_clean();
     }
-    echo json_encode(array('saved' => $GLOBALS['saved'], 'hooks' => $GLOBALS['edit_hooks'], 'saved_all' => $GLOBALS['saved_all'] ?? array(), 'errors' => array_keys($_SESSION['sess_error_fields'] ?? array())));
+    echo json_encode(array('component_writes' => $GLOBALS['component_writes'], 'component_lookups' => $GLOBALS['component_lookups'], 'saved' => $GLOBALS['saved'], 'hooks' => $GLOBALS['edit_hooks'], 'saved_all' => $GLOBALS['saved_all'] ?? array(), 'errors' => array_keys($_SESSION['sess_error_fields'] ?? array())));
 });
 ob_start();
 require $root . '/' . $page;

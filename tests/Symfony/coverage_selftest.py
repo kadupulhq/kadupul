@@ -400,6 +400,17 @@ def main():
     graph_checks = ['graph association adds through Symfony', 'graph association invokes plugin hook once with exact payload', 'graph association automation creates a graph', 'graph association removes through Symfony', 'graph association failure rolls back primary writes', 'graph association verifies remote template', 'graph association removal retains existing graphs']
     query_checks = ['query association adds through Symfony', 'query association removes through Symfony', 'query association failure rolls back primary writes', 'query reindex method changes through Symfony', 'query reindex method is verified on collector', 'query removal retains existing graphs', 'query removal clears associations cache and reindex state']
     profile_checks = ['in-use profile heartbeat saves when the disabled step field is absent', 'selected template RRD heartbeat follows its profile', 'selected local-source RRD heartbeat follows its profile', 'unrelated template RRD heartbeat is unchanged', 'unrelated local-source RRD heartbeat is unchanged', 'unchanged structural fields permit an in-use heartbeat save', 'single forged structural field refuses the complete in-use save: x_files_factor', 'single forged structural field refuses the complete in-use save: consolidation_function_id[]', 'template-only profile propagates heartbeat without local data sources', 'unused profile consolidation-only save is independent of step submission', 'unused profile factor-only save retains interval and consolidation functions', 'new profile creation persists submitted structural fields', 'unused profile structural edits save normally', "malformed consolidation selection causes no partial writes: '2'", "malformed consolidation selection causes no partial writes: ['99']", "malformed consolidation selection causes no partial writes: ['1e0']", "malformed consolidation selection causes no partial writes: ['1', '2', '3', '4', '1']", 'template-only heartbeat save emits no existing-file tuning warning', 'non-templated local heartbeats update only for the selected profile', 'unchanged heartbeat retains existing metadata and emits no tuning warning', 'profile save rejects missing CSRF before persistence', 'template-only profile accepts every structural field', 'read-only refusal displays its error and records the operator warning: x_files_factor', 'single forged structural field leaves propagated heartbeat unchanged: x_files_factor', 'read-only refusal displays its error and records the operator warning: consolidation_function_id[]', 'single forged structural field leaves propagated heartbeat unchanged: consolidation_function_id[]']
+    audit_baseline_failure_checks = [
+        'audit report with the audit schema missing: frozen original records its historical success exit on baseline failure',
+        'audit report with the audit schema missing: native command fails without claiming a clean audit',
+        'audit report with the audit schema missing: refused native audit preserves all schema and baseline state',
+        'audit report with an unparsable audit schema: frozen original records its historical success exit on baseline failure',
+        'audit report with an unparsable audit schema: native command fails without claiming a clean audit',
+        'audit report with an unparsable audit schema: refused native audit preserves all schema and baseline state',
+        'audit report when table_columns cannot be created: frozen original records its historical success exit on baseline failure',
+        'audit report when table_columns cannot be created: native command fails without claiming a clean audit',
+        'audit report when table_columns cannot be created: refused native audit preserves all schema and baseline state',
+    ]
     failures = {
         'profile-heartbeat-test-hash': 'Integration test source differs',
         'missing-profile-heartbeat-test-hash': 'Integration test source differs',
@@ -518,6 +529,8 @@ def main():
         'missing-audit-noop-upgrade-check': 'Incomplete Symfony integration checks',
         'missing-audit-required-upgrade-check': 'Incomplete Symfony integration checks',
     }
+    for index in range(len(audit_baseline_failure_checks)):
+        failures['missing-audit-baseline-failure-check-' + str(index)] = 'Incomplete Symfony integration checks'
     for index in range(len(TREE_CHECKS)):
         failures['missing-tree-check-' + str(index)] = 'Incomplete Symfony integration checks'
     failures['missing-legacy-page-test-hash'] = 'Integration test source differs'
@@ -737,6 +750,8 @@ def main():
                 evidence['source_sha256']['tests/Fixtures/native-cli/audit_database.php'] = '0' * 64
             elif case.startswith('missing-tree-check-'):
                 evidence['checks'].remove(TREE_CHECKS[int(case.rsplit('-', 1)[1])])
+            elif case.startswith('missing-audit-baseline-failure-check-'):
+                evidence['checks'].remove(audit_baseline_failure_checks[int(case.rsplit('-', 1)[1])])
             elif case == 'missing-audit-check':
                 evidence['checks'].remove('audit refuses an operator without the Installation/Upgrades realm')
             elif case == 'missing-audit-noop-upgrade-check':

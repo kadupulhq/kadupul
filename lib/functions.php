@@ -7777,6 +7777,18 @@ function get_debug_prefix()
     return sprintf('<[ %s | %7d ]> -- ', $dateTime, getmypid());
 }
 
+/** Report proxy migration/rejection once per request, without request values. */
+function log_client_addr_proxy_diagnostic(): void
+{
+    static $reported = false;
+
+    if ($reported) {
+        return;
+    }
+    $reported = true;
+    cacti_log('DEBUG: Proxy client address ignored or rejected; configure proxy_trusted_addresses with exact proxy IPs and proxy_headers with one allowlisted header containing one client IP. Legacy boolean proxy_headers is unsupported.', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
+}
+
 function get_client_addr()
 {
     global $config, $allowed_proxy_headers;
@@ -7792,6 +7804,9 @@ function get_client_addr()
     // the TCP peer; proxy use now requires one allowlisted header and an
     // explicitly trusted REMOTE_ADDR.
     if (!is_array($trustedProxies)) {
+        if (!empty($headers)) {
+            log_client_addr_proxy_diagnostic();
+        }
         return $peer;
     }
     $peerBinary = inet_pton($peer);
@@ -7807,27 +7822,35 @@ function get_client_addr()
         }
     }
     if (!$trusted) {
+        if (!empty($headers)) {
+            log_client_addr_proxy_diagnostic();
+        }
         return $peer;
     }
 
     if (!is_array($headers) || count($headers) !== 1) {
+        log_client_addr_proxy_diagnostic();
         return false;
     }
     if (!is_array($allowed_proxy_headers)) {
+        log_client_addr_proxy_diagnostic();
         return false;
     }
     foreach ($allowed_proxy_headers as $allowed_header) {
         if (!is_string($allowed_header)) {
+            log_client_addr_proxy_diagnostic();
             return false;
         }
     }
     $header = reset($headers);
     if (!is_string($header) || !in_array($header, $allowed_proxy_headers, true) || $header === 'REMOTE_ADDR' || !isset($_SERVER[$header])) {
+        log_client_addr_proxy_diagnostic();
         return false;
     }
 
     $client = $_SERVER[$header];
     if (!is_string($client) || str_contains($client, ',') || !filter_var(trim($client), FILTER_VALIDATE_IP)) {
+        log_client_addr_proxy_diagnostic();
         return false;
     }
 

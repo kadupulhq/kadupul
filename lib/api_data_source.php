@@ -12,15 +12,17 @@ require_once __DIR__ . '/rrd_maintenance.php';
    remote pollers to update their caches
    @arg $poller_id - the id of the poller impacted by hash update
    @arg $variable  - the hash variable prefix for the replication setting. */
-function api_data_source_cache_crc_update($poller_id, $variable = 'poller_replicate_data_source_cache_crc')
+function api_data_source_cache_crc_update($poller_id, $variable = 'poller_replicate_data_source_cache_crc', $web_scope = null)
 {
     $hash = hash('ripemd160', date('Y-m-d H:i:s') . rand() . $poller_id);
 
-    db_execute_prepared(
+    $write = static fn() => db_execute_prepared(
         "REPLACE INTO settings
 		SET value = ?, name='$variable" . '_' . "$poller_id'",
         array($hash)
     );
+    if ($web_scope === null) $write();
+    else $web_scope->checked($write);
 }
 
 /* api_data_source_deletable - tells you if a data source can be removed
@@ -203,8 +205,11 @@ function api_data_source_is_allowed($local_data_id)
     return (int) $data_source['host_id'] === 0 || ((int) $data_source['host_id'] > 0 && is_device_allowed((int) $data_source['host_id']));
 }
 
-function api_data_source_remove_multi($local_data_ids, $propagate_remote = true, $verify_reviewed_scope = null)
+function api_data_source_remove_multi($local_data_ids, $propagate_remote = true, $verify_reviewed_scope = null, $web_scope = null)
 {
+    $execute = $web_scope === null ? static fn(...$arguments) => db_execute(...$arguments) : [$web_scope, 'execute'];
+    $fetch = $web_scope === null ? static fn(...$arguments) => db_fetch_assoc(...$arguments) : [$web_scope, 'fetch'];
+    $remote = $web_scope === null ? static fn(...$arguments) => poller_push_to_remote_db_connect(...$arguments) : [$web_scope, 'remote'];
     // Shortcut out if no data
     if (!cacti_sizeof($local_data_ids)) {
         return;
@@ -224,14 +229,14 @@ function api_data_source_remove_multi($local_data_ids, $propagate_remote = true,
 
     $local_data_ids_chunks = array_chunk($local_data_ids, 1000);
     foreach ($local_data_ids_chunks as $ids_to_delete) {
-        $poller_ids = $propagate_remote ? get_remote_poller_ids_from_data_sources($ids_to_delete) : array();
+        $poller_ids = $propagate_remote ? ($web_scope === null ? get_remote_poller_ids_from_data_sources($ids_to_delete) : $web_scope->pollers($ids_to_delete)) : array();
 
         if (is_array($ids_to_delete)) {
             cacti_log("Found as an array");
             $ids_to_delete = implode(', ', array_map('intval', $ids_to_delete));
         }
 
-        $data_template_data_ids = db_fetch_assoc('SELECT id
+        $data_template_data_ids = $fetch('SELECT id
 			FROM data_template_data
 			WHERE local_data_id IN (' . $ids_to_delete . ')');
 
@@ -242,13 +247,13 @@ function api_data_source_remove_multi($local_data_ids, $propagate_remote = true,
                 $dtd_ids_to_delete[] = $data_template_data_id['id'];
 
                 if (cacti_sizeof($dtd_ids_to_delete) >= 1000) {
-                    db_execute('DELETE FROM data_input_data
+                    $execute('DELETE FROM data_input_data
 						WHERE data_template_data_id IN (' . implode(',', $dtd_ids_to_delete) . ')');
 
                     if (cacti_sizeof($poller_ids)) {
                         foreach ($poller_ids as $poller_id) {
-                            if (($rcnn_id = poller_push_to_remote_db_connect($poller_id, true)) !== false) {
-                                db_execute('DELETE FROM data_input_data
+                            if (($rcnn_id = $remote($poller_id, true)) !== false) {
+                                $execute('DELETE FROM data_input_data
 									WHERE data_template_data_id IN (' . implode(',', $dtd_ids_to_delete) . ')', true, $rcnn_id);
                             }
                         }
@@ -259,13 +264,13 @@ function api_data_source_remove_multi($local_data_ids, $propagate_remote = true,
             }
 
             if (cacti_sizeof($dtd_ids_to_delete)) {
-                db_execute('DELETE FROM data_input_data
+                $execute('DELETE FROM data_input_data
 					WHERE data_template_data_id IN (' . implode(',', $dtd_ids_to_delete) . ')');
 
                 if (cacti_sizeof($poller_ids)) {
                     foreach ($poller_ids as $poller_id) {
-                        if (($rcnn_id = poller_push_to_remote_db_connect($poller_id, true)) !== false) {
-                            db_execute('DELETE FROM data_input_data
+                        if (($rcnn_id = $remote($poller_id, true)) !== false) {
+                            $execute('DELETE FROM data_input_data
 								WHERE data_template_data_id IN (' . implode(',', $dtd_ids_to_delete) . ')', true, $rcnn_id);
                         }
                     }
@@ -276,7 +281,7 @@ function api_data_source_remove_multi($local_data_ids, $propagate_remote = true,
 
         /* prepare auto-clean if enabled */
         if ($autoclean == 'on') {
-            db_execute("INSERT INTO data_source_purge_action (local_data_id, name, action)
+            $execute("INSERT INTO data_source_purge_action (local_data_id, name, action)
 				SELECT local_data_id, REPLACE(data_source_path, '<path_rra>/', ''), '" . $acmethod . "'
 				FROM data_template_data
 				WHERE local_data_id IN (" . $ids_to_delete . ')
@@ -284,75 +289,80 @@ function api_data_source_remove_multi($local_data_ids, $propagate_remote = true,
         }
 
         /* core data */
-        db_execute('DELETE FROM data_template_data
+        $execute('DELETE FROM data_template_data
 			WHERE local_data_id IN (' . $ids_to_delete . ')');
 
-        db_execute('DELETE FROM data_template_rrd
+        $execute('DELETE FROM data_template_rrd
 			WHERE local_data_id IN (' . $ids_to_delete . ')');
 
-        db_execute('DELETE FROM poller_item
+        $execute('DELETE FROM poller_item
 			WHERE local_data_id IN (' . $ids_to_delete . ')');
 
-        db_execute('DELETE FROM data_local
+        $execute('DELETE FROM data_local
 			WHERE id IN (' . $ids_to_delete . ')');
 
-        db_execute('DELETE FROM data_debug
+        $execute('DELETE FROM data_debug
 			WHERE datasource IN (' . $ids_to_delete . ')');
 
         /* dsstats */
-        db_execute('DELETE FROM data_source_stats_daily
+        $execute('DELETE FROM data_source_stats_daily
 			WHERE local_data_id IN(' . $ids_to_delete . ')');
 
-        db_execute('DELETE FROM data_source_stats_hourly
+        $execute('DELETE FROM data_source_stats_hourly
 			WHERE local_data_id IN(' . $ids_to_delete . ')');
 
-        db_execute('DELETE FROM data_source_stats_hourly_cache
+        if ($web_scope !== null) {
+            $web_scope->queueVolatileDelete('data_source_stats_hourly_cache', $ids_to_delete);
+            $web_scope->queueVolatileDelete('data_source_stats_hourly_last', $ids_to_delete);
+        } else {
+            $execute('DELETE FROM data_source_stats_hourly_cache
 			WHERE local_data_id IN(' . $ids_to_delete . ')');
 
-        db_execute('DELETE FROM data_source_stats_hourly_last
+            $execute('DELETE FROM data_source_stats_hourly_last
+			WHERE local_data_id IN(' . $ids_to_delete . ')');
+        }
+
+        $execute('DELETE FROM data_source_stats_monthly
 			WHERE local_data_id IN(' . $ids_to_delete . ')');
 
-        db_execute('DELETE FROM data_source_stats_monthly
+        $execute('DELETE FROM data_source_stats_weekly
 			WHERE local_data_id IN(' . $ids_to_delete . ')');
 
-        db_execute('DELETE FROM data_source_stats_weekly
-			WHERE local_data_id IN(' . $ids_to_delete . ')');
-
-        db_execute('DELETE FROM data_source_stats_yearly
+        $execute('DELETE FROM data_source_stats_yearly
 			WHERE local_data_id IN(' . $ids_to_delete . ')');
 
         /* boost */
-        db_execute('DELETE FROM poller_output
+        $execute('DELETE FROM poller_output
 			WHERE local_data_id IN (' . $ids_to_delete . ')');
 
-        db_execute('DELETE FROM poller_output_boost
+        $execute('DELETE FROM poller_output_boost
 			WHERE local_data_id IN (' . $ids_to_delete . ')');
 
         if (cacti_sizeof($poller_ids)) {
             foreach ($poller_ids as $poller_id) {
-                if (($rcnn_id = poller_push_to_remote_db_connect($poller_id, true)) !== false) {
+                if (($rcnn_id = $remote($poller_id, true)) !== false) {
                     /* core data */
-                    db_execute('DELETE FROM data_template_data
+                    $execute('DELETE FROM data_template_data
 						WHERE local_data_id IN (' . $ids_to_delete . ')', true, $rcnn_id);
 
-                    db_execute('DELETE FROM data_template_rrd
+                    $execute('DELETE FROM data_template_rrd
 						WHERE local_data_id IN (' . $ids_to_delete . ')', true, $rcnn_id);
 
-                    db_execute('DELETE FROM poller_item
+                    $execute('DELETE FROM poller_item
 						WHERE local_data_id IN (' . $ids_to_delete . ')', true, $rcnn_id);
 
-                    db_execute('DELETE FROM data_local
+                    $execute('DELETE FROM data_local
 						WHERE id IN (' . $ids_to_delete . ')', true, $rcnn_id);
 
                     /* boost */
-                    db_execute('DELETE FROM poller_output
+                    $execute('DELETE FROM poller_output
 						WHERE local_data_id IN (' . $ids_to_delete . ')', true, $rcnn_id);
 
-                    db_execute('DELETE FROM poller_output_boost
+                    $execute('DELETE FROM poller_output_boost
 						WHERE local_data_id IN (' . $ids_to_delete . ')', true, $rcnn_id);
                 }
 
-                api_data_source_cache_crc_update($poller_id);
+                api_data_source_cache_crc_update($poller_id, 'poller_replicate_data_source_cache_crc', $web_scope);
             }
         }
     }

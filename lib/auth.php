@@ -1991,7 +1991,7 @@ function get_allowed_tree_header_graphs($tree_id, $leaf_id = 0, $sql_where = '',
  *
  * @return (array) Array of allowed graphs
  */
-function get_allowed_graphs($sql_where = '', $sql_order = 'gtg.title_cache', $sql_limit = '', &$total_rows = 0, $user_id = 0, $graph_id = 0, $apply_view_filters = true)
+function get_allowed_graphs($sql_where = '', $sql_order = 'gtg.title_cache', $sql_limit = '', &$total_rows = 0, $user_id = 0, $graph_id = 0, $apply_view_filters = true, $return_ids_sql = false)
 {
     $graph_id = auth_resource_id($graph_id);
     if ($graph_id === null) {
@@ -2050,6 +2050,15 @@ function get_allowed_graphs($sql_where = '', $sql_order = 'gtg.title_cache', $sq
         $sql_where = get_policy_where($graph_auth_method, $policies, $sql_where);
     }
 
+    if ($return_ids_sql) {
+        return "SELECT gl.id
+            FROM graph_templates_graph AS gtg
+            INNER JOIN graph_local AS gl ON gl.id=gtg.local_graph_id
+            LEFT JOIN graph_templates AS gt ON gt.id=gl.graph_template_id
+            LEFT JOIN host AS h ON h.id=gl.host_id
+            $sql_where";
+    }
+
     $graphs = db_fetch_assoc("SELECT gtg.local_graph_id, h.description, gt.name AS template_name,
 		gtg.title_cache, gtg.width, gtg.height, gl.snmp_index, gl.snmp_query_id, gl.host_id, h.disabled,
 		IF(gl.graph_template_id=0, 0, IF(gl.snmp_query_id=0, 2, 1)) AS graph_source
@@ -2081,6 +2090,15 @@ function get_allowed_graphs($sql_where = '', $sql_order = 'gtg.title_cache', $sq
     }
 
     return $graphs;
+}
+
+/** Return management graph policy without reading titles or populating row caches. */
+function get_allowed_management_graph_ids_sql($user_id = 0): string
+{
+    $total_rows = -1;
+    $sql = get_allowed_graphs('', '', '', $total_rows, $user_id, 0, false, true);
+
+    return is_string($sql) ? $sql : 'SELECT NULL AS id WHERE 1=0';
 }
 
 /**
@@ -3457,6 +3475,78 @@ function get_allowed_management_device_ids_sql($user_id = 0): string
     $sql = get_allowed_devices('', '', '', $total_rows, $user_id, 0, false, true);
 
     return is_string($sql) ? $sql : 'SELECT NULL AS id WHERE 1=0';
+}
+
+/**
+ * Authorize a web management selection without hydrating the device inventory.
+ * Debug data sources require a positive permitted device; general data-source
+ * management retains the non-device host_id=0 contract.
+ * Each invocation reads current owners and policies. This is a read boundary,
+ * not serialization against later legacy or concurrent writes.
+ *
+ * @param list<mixed> $selection Original selection, including repeated IDs
+ * @return list<mixed> Allowed values in their original representation and order
+ */
+function get_allowed_management_selection(string $resource, array $selection): array
+{
+    if (!in_array($resource, array('graph', 'data', 'debug', 'device'), true) || count($selection) > 10000) {
+        throw new RuntimeException('Invalid management selection.');
+    }
+    $ids = array();
+    foreach ($selection as $value) {
+        $id = auth_resource_id($value);
+        if ($id !== null && $id > 0) $ids[$id] = $id;
+    }
+    if (!$ids) return array();
+
+    $authenticated = read_config_option('auth_method') != 0;
+    $actor = auth_resource_id($_SESSION['sess_user_id'] ?? null);
+    if ($authenticated && ($actor === null || $actor === 0)) {
+        throw new RuntimeException('Management actor is unavailable.');
+    }
+    $account = static function () use ($authenticated, $actor): ?string {
+        if (!$authenticated) return null;
+        $row = db_fetch_row_prepared('SELECT reset_perms, enabled, locked FROM user_auth WHERE id = ?', array($actor));
+        if (($row['enabled'] ?? '') !== 'on' || ($row['locked'] ?? 'on') === 'on'
+            || !isset($row['reset_perms']) || !preg_match('/^[0-9]+$/D', (string) $row['reset_perms'])) {
+            throw new RuntimeException('Management actor could not be confirmed.');
+        }
+        return (string) $row['reset_perms'];
+    };
+
+    global $database_last_error;
+    $previous_error = $database_last_error ?? null;
+    $database_last_error = null;
+    try {
+        for ($attempt = 0; $attempt < 2; $attempt++) {
+            $generation = $account();
+            $devices = get_allowed_management_device_ids_sql();
+            $graphs = $resource === 'graph' ? get_allowed_management_graph_ids_sql() : '';
+            $table = $resource === 'graph' ? 'graph_local' : (in_array($resource, array('data', 'debug'), true) ? 'data_local' : 'host');
+            $allowed = array();
+            foreach (array_chunk(array_values($ids), 1000) as $chunk) {
+                $rows = db_fetch_assoc("SELECT id FROM $table WHERE id IN (" . implode(',', $chunk) . ")
+                    AND " . ($resource === 'device' ? "id IN ($devices)" : ($resource === 'debug' ? "(host_id > 0 AND host_id IN ($devices))" : "(host_id = 0 OR (host_id > 0 AND host_id IN ($devices)))"))
+                    . ($resource === 'graph' ? " AND id IN ($graphs)" : ''));
+                if (!is_array($rows) || !empty($database_last_error)) {
+                    throw new RuntimeException('Management ownership could not be confirmed.');
+                }
+                foreach ($rows as $row) $allowed[(int) $row['id']] = true;
+            }
+            $current_generation = $account();
+            if (!empty($database_last_error)) {
+                throw new RuntimeException('Management policy could not be confirmed.');
+            }
+            if ($generation !== $current_generation) continue;
+            return array_values(array_filter($selection, static function ($value) use ($allowed): bool {
+                $id = auth_resource_id($value);
+                return $id !== null && isset($allowed[$id]);
+            }));
+        }
+        throw new RuntimeException('Management policy changed repeatedly.');
+    } finally {
+        $database_last_error = $previous_error;
+    }
 }
 
 /**
@@ -5278,9 +5368,9 @@ function auth_unknown_user_password_verify($password)
  *
  * The reset runs in another request or process, such as user_admin.php while
  * poller_reports.php is checking report owners, so the cached answers are tied
- * to the user's reset_perms value rather than cleared by the reset itself. The
- * signed-in user is left to is_realm_allowed(), which clears these caches for
- * that user on reset.
+ * to the user's reset_perms value rather than cleared by the reset itself.
+ * Guest-enabled image routes return from authentication before checking a
+ * realm, so the signed-in user's graph answers must be checked here too.
  *
  * @param  (int) $user_id The user whose cached answers are about to be used
  *
@@ -5288,8 +5378,12 @@ function auth_unknown_user_password_verify($password)
  */
 function auth_perm_cache_check_reset($user_id)
 {
-    if (empty($user_id) || (isset($_SESSION['sess_user_id']) && $user_id == $_SESSION['sess_user_id'])) {
+    if (empty($user_id)) {
         return;
+    }
+
+    if (isset($_SESSION['sess_perms_reset_key']) && !is_array($_SESSION['sess_perms_reset_key'])) {
+        unset($_SESSION['sess_perms_reset_key']);
     }
 
     $key = db_fetch_cell_prepared(
@@ -5298,6 +5392,10 @@ function auth_perm_cache_check_reset($user_id)
 		WHERE id = ?',
         array($user_id)
     );
+
+    if ($user_id > 0 && $key === false) {
+        throw new RuntimeException('Permission generation could not be confirmed.');
+    }
 
     if (isset($_SESSION['sess_perms_reset_key'][$user_id]) && $_SESSION['sess_perms_reset_key'][$user_id] == $key) {
         return;
