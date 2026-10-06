@@ -92,24 +92,7 @@ function legacy_audit_upgrade_database()
 
     $pistart = microtime(true);
 
-    // Upgrade plugins now
-    $plugins = glob($config['base_path'] . '/plugins/*', GLOB_ONLYDIR);
-
-    // Do syslog and thold first if found
-    $preorder[] = $config['base_path'] . '/plugins/thold';
-    $preorder[] = $config['base_path'] . '/plugins/syslog';
-
-    foreach ($plugins as $p) {
-        if (strpos($p, 'thold') !== false) {
-            // Skip, upgrading this first
-        } elseif (strpos($p, 'syslog') !== false) {
-            // Skip, upgrading this second
-        } else {
-            $preorder[] = $p;
-        }
-    }
-
-    $plugins = $preorder;
+    $plugins = \Kadupul\Platform\Infrastructure\Legacy\LegacyUpgradePluginLifecycle::orderedDirectories($preorder, $p);
 
     if (cacti_sizeof($plugins)) {
         if (!defined('IN_PLUGIN_INSTALL')) {
@@ -184,10 +167,10 @@ function legacy_audit_upgrade_database()
                                 print '---------------------------------------------------------------------------------------------' . PHP_EOL;
                             } else {
                                 cacti_log("WARNING: Kadupul Plugin $pname Upgrade Encountered Errors.", true, 'UPGRADE');
-                                return $return_var;
                                 print '---------------------------------------------------------------------------------------------' . PHP_EOL;
                                 print implode(PHP_EOL, $output) . PHP_EOL;
                                 print '---------------------------------------------------------------------------------------------' . PHP_EOL;
+                                return $return_var;
                             }
                         }
                     } else {
@@ -202,34 +185,7 @@ function legacy_audit_upgrade_database()
         }
     }
 
-    // Unregister plugins that no longer exist
-    // We keep legacy tables due to potential
-    // issues.
-
-    print '---------------------------------------------------------------------------------------------' . PHP_EOL;
-    cacti_log('NOTE: Pruning invalid and deprecated plugins while preserving tables', true, 'UPGRADE');
-
-    $plugins = db_fetch_assoc('SELECT directory FROM plugin_config');
-    if (cacti_sizeof($plugins)) {
-        foreach ($plugins as $p) {
-            $pname = $p['directory'];
-
-            if (!file_exists($config['base_path'] . '/plugins/' . $pname . '/INFO')) {
-                if (file_exists($config['base_path'] . '/plugins/' . $pname . '/setup.php')) {
-                    cacti_log("NOTE: Uninstalling Plugin $pname which is not supported.  Preserving tables.", true, 'UPGRADE');
-
-                    api_plugin_uninstall($pname, false);
-                } else {
-                    cacti_log("NOTE: Uninstalling Plugin $pname which is not supported and setup.php not found.  Preserving tables.", true, 'UPGRADE');
-                    db_execute_prepared('DELETE FROM plugin_config WHERE directory = ?', array($pname));
-                    db_execute_prepared('DELETE FROM plugin_db_changes WHERE plugin = ?', array($pname));
-                    db_execute_prepared('DELETE FROM plugin_hooks WHERE name = ?', array($pname));
-                    db_execute_prepared('DELETE FROM plugin_realms WHERE plugin = ?', array($pname));
-                }
-            }
-        }
-    }
-    print '---------------------------------------------------------------------------------------------' . PHP_EOL;
+    \Kadupul\Platform\Infrastructure\Legacy\LegacyUpgradePluginLifecycle::prune();
 
     $end = microtime(true);
 

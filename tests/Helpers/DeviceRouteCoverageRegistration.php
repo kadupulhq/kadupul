@@ -8,6 +8,9 @@ declare(strict_types=1);
 final class DeviceRouteCoverageRegistration
 {
     public const SOURCES = [
+        'tests/Helpers/NativeDevicePresentation.php',
+        'tests/Fixtures/device-presentation-native.php',
+        'tests/Unit/DevicePresentationNativeTest.php',
         'lib/rrd.php',
         'src/Graphing/Infrastructure/Rrd/ProxyCipher.php',
         'lib/dsdebug.php',
@@ -263,6 +266,16 @@ final class DeviceRouteCoverageRegistration
     ];
     public const SUITES = ['LegacyDevicesTest', 'DeviceActionCsrfTest', 'DeviceAssociationPresentationTest', 'DeviceMaintenancePresentationTest', 'DeviceBulkAssignmentPresentationTest', 'DeviceStatePresentationTest', 'DeviceFormPageTest', 'DeviceEditTest', 'DeviceCreateTest', 'DeviceAssociationTest', 'DeviceMaintenanceExecutionTest', 'DeviceMaintenanceTest', 'DeviceMaintenanceProcessTest', 'DeviceRemovalPresentationTest', 'DeviceAutomationPresentationTest', 'DevicePlacementPresentationTest'];
     public const MEASURED = [
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceCatalog.php',
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceLocations.php',
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceEditor.php',
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceAssociations.php',
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceVisibility.php',
+        'src/Inventory/Infrastructure/Persistence/DoctrineDeviceCreationCatalog.php',
+        'src/Inventory/Infrastructure/Persistence/DoctrineDeviceSites.php',
+        'src/Inventory/Infrastructure/Persistence/DoctrineSiteAssignmentCatalog.php',
+        'src/Inventory/Infrastructure/Persistence/DoctrineDeviceVisibility.php',
+        'src/Inventory/Infrastructure/Persistence/DeviceVisibilityRules.php',
         'src/Kernel.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceAssociationController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceAutomationController.php',

@@ -2491,7 +2491,7 @@ function html_spikekill_menu_item($text, $icon = '', $class = '', $id = '', $dat
     }
 
     if (!empty($data_graph)) {
-        $output .= "data-graph='" . html_escape($data_graph) . "' ";
+        $output .= "data-graph='" . htmlspecialchars((string) html_escape($data_graph), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false) . "' ";
     }
 
     $output .= 'class=\'' . (empty($class) ? '' : ' ' . html_escape($class)) . '\'>';

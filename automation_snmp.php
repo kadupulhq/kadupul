@@ -619,7 +619,7 @@ function automation_snmp_edit()
 		<?php if (read_config_option('drag_and_drop') == 'on') { ?>
         $('#snmp_item').tableDnD({
             onDrop: function(table, row) {
-                loadPageUsingPostChecked('automation_snmp.php?action=ajax_dnd&id=<?php isset_request_var('id') ? print get_request_var('id') : print 0;?>', $.tableDnD.serialize() + '&__csrf_magic=' + encodeURIComponent(csrfMagicToken));
+                loadPageUsingPostChecked(<?php print json_encode('automation_snmp.php?action=ajax_dnd&id=' . (isset_request_var('id') ? get_request_var('id') : 0), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR);?>, $.tableDnD.serialize() + '&__csrf_magic=' + encodeURIComponent(csrfMagicToken));
             }
         });
 		<?php } ?>

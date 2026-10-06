@@ -33,6 +33,9 @@ if (defined('PERMISSION_CLI_NATIVE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/api_automation_tools.php');
 }
 
+if (defined('SNMP_QUERY_NATIVE_TEST_COVERAGE')) {
+    foreach (array('lib/data_query.php', 'lib/xml.php') as $file) $coverageFilter->includeFile($coverageRoot . '/' . $file);
+}
 if (defined('UPGRADE_BOUNDARY_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/installer.php');
 }
@@ -79,6 +82,10 @@ if (defined('MEMBERSHIP_EPOCH_TEST_COVERAGE')) {
 }
 if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE') || defined('CLASSIC_TEXT_TABS_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
+}
+if (defined('FONT_SETTINGS_NATIVE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/settings.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/graph_fonts.php');
 }
 if (defined('GRAPH_TEMPLATE_RENDER_NATIVE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html_graph.php');
@@ -364,6 +371,9 @@ if (defined('PROFILE_SECURITY_TEST_COVERAGE')) {
 if (defined('GRAPH_ITEM_EDITOR_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/graph_item_editor.php');
 }
+if (defined('AUDIT_PLUGIN_LIFECYCLE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyUpgradePluginLifecycle.php');
+}
 if (defined('RRD_TEST_CLI_COVERAGE_COPY')) {
     $coverageFilter->includeFile(RRD_TEST_CLI_COVERAGE_COPY);
 }
@@ -484,6 +494,13 @@ if (defined('MAINTENANCE_PURGE_TEST_COVERAGE') || defined('HTML_RENDERER_NATIVE_
         $nativeProducer = 'tests/Fixtures/helper-union-native.php';
     }
     $nativeCoverageEvidence = NativeChildCoverageEvidence::snapshot($coverageRoot, $nativeProducer, $nativeScenario, $nativeSources);
+}
+if (defined('AUDIT_PLUGIN_LIFECYCLE_TEST_COVERAGE')) {
+    // This producer executes the byte-identical CLI copy and the real shared
+    // lifecycle through Composer. The parent suite retains its complete filter.
+    $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+    $coverageFilter->includeFile(RRD_TEST_CLI_COVERAGE_COPY);
+    $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyUpgradePluginLifecycle.php');
 }
 $childCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
     (new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($coverageFilter),

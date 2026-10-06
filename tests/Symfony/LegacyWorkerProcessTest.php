@@ -270,6 +270,18 @@ print "plugin says hi\n";
         ]) . "\n", file_get_contents($this->root . '/calls.log'));
     }
 
+    public function testSharedOrderingPreservesThePluginIncludeContext(): void
+    {
+        $this->install('["thold" => ["status" => 1, "version" => "1"]]', 0);
+        $this->plugin('thold', '2', 'if (!isset($preorder, $p) || $plugins !== $preorder || $p !== $config["base_path"] . "/plugins/thold") { throw new RuntimeException("Legacy plugin include ordering context changed"); } function plugin_thold_upgrade() { print "ordering context retained\n"; }');
+
+        $run = $this->upgrade()->run();
+
+        self::assertTrue($run->completed);
+        self::assertStringContainsString('ordering context retained', $run->stdout);
+        self::assertSame("core warning\n", $run->stderr);
+    }
+
     public function testTheRealWorkerPrintsAFailedCoreUpgradeAsExecReturnedItAndFails(): void
     {
         $this->install('[]', 3);
@@ -300,7 +312,7 @@ print "plugin says hi\n";
     {
         $this->install('["thold" => ["status" => 1, "version" => "1"]]', $coreExit);
         $this->plugin('thold', '2', $setup);
-        (new Filesystem())->dumpFile($this->root . '/plugins/thold/database_upgrade.php', '<?php file_put_contents(dirname(__DIR__, 2) . "/plugin-script-reached", "yes"); exit(' . $pluginExit . ');');
+        (new Filesystem())->dumpFile($this->root . '/plugins/thold/database_upgrade.php', '<?php file_put_contents(dirname(__DIR__, 2) . "/plugin-script-reached", "yes"); print "plugin failure detail  \n\nplugin last\n"; fwrite(STDERR, "plugin warning\n"); exit(' . $pluginExit . ');');
 
         $run = $this->upgrade()->run();
 
@@ -311,6 +323,13 @@ print "plugin says hi\n";
             self::assertFileDoesNotExist($this->root . '/plugin-script-reached');
         } elseif ($pluginExit === 0) {
             self::assertFileDoesNotExist($this->root . '/plugin-script-reached');
+        } else {
+            $dashes = str_repeat('-', 93);
+            self::assertStringContainsString("UPGRADE WARNING: Kadupul Plugin thold Upgrade Encountered Errors.\n"
+                . $dashes . "\nplugin failure detail\n\nplugin last\n" . $dashes . "\n", $run->stdout);
+            self::assertSame("core warning\nplugin warning\n", $run->stderr);
+            self::assertStringNotContainsString('NOTE: Pruning invalid and deprecated plugins', $run->stdout);
+            self::assertFileDoesNotExist($this->root . '/calls.log');
         }
     }
 

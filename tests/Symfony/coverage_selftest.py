@@ -315,6 +315,7 @@ def main():
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsLegacyArguments.php',
         'cli/audit_database.php',
         'bin/legacy-audit-upgrade.php',
+        'src/Platform/Infrastructure/Legacy/LegacyUpgradePluginLifecycle.php',
         'src/Platform/Domain/Schema/AuditMode.php',
         'src/Platform/Domain/Schema/BaselineColumn.php',
         'src/Platform/Domain/Schema/BaselineIndex.php',
