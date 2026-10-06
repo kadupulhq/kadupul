@@ -25,6 +25,71 @@ function graph_font_setting_field(string $friendly_name, string $description, st
     );
 }
 
+/**
+ * Keep System/profile font pairs adjacent and retain their field/property order.
+ *
+ * @return array<string, array<string, mixed>>
+ */
+function graph_font_setting_pairs(bool $user_settings = false): array
+{
+    $defaults = $user_settings
+        ? array('title' => '12', 'legend' => '10', 'axis' => '8', 'unit' => '8')
+        : array('title' => '10', 'legend' => '8', 'axis' => '7', 'unit' => '7');
+    $fields = array(
+        'title' => array(
+            __('Title Font Size'),
+            __('The size of the font used for Graph Titles'),
+            __('Title Font Setting'),
+            $user_settings
+                ? __('The Pango font description to use for Graph Titles, such as DejaVu Sans Bold')
+                : __('The font to use for Graph Titles.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files.')
+        ),
+        'legend' => array(
+            __('Legend Font Size'),
+            __('The size of the font used for Graph Legend items'),
+            __('Legend Font Setting'),
+            $user_settings
+                ? __('The Pango font description to use for Graph Legend items, such as DejaVu Sans Mono')
+                : __('The font to use for Graph Legends.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files.')
+        ),
+        'axis' => array(
+            __('Axis Font Size'),
+            __('The size of the font used for Graph Axis'),
+            __('Axis Font Setting'),
+            $user_settings
+                ? __('The Pango font description to use for Graph Axis items, such as DejaVu Sans')
+                : __('The font to use for Graph Axis items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files.')
+        ),
+        'unit' => array(
+            __('Unit Font Size'),
+            __('The size of the font used for Graph Units'),
+            __('Unit Font Setting'),
+            $user_settings
+                ? __('The Pango font description to use for Graph Unit items, such as DejaVu Sans')
+                : __('The font to use for Graph Unit items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files.')
+        )
+    );
+    $settings = array();
+    foreach ($fields as $role => $field) {
+        $size = array(
+            'friendly_name' => $field[0],
+            'description' => $field[1],
+            'method' => 'textbox',
+            'default' => $defaults[$role],
+            'max_length' => '10'
+        );
+        if (!$user_settings) {
+            $size['size'] = '5';
+        }
+        $size['filter'] = FILTER_CALLBACK;
+        $size['options'] = array('options' => 'graph_font_size_filter');
+        $settings[$role . '_size'] = $size;
+        $settings[$role . '_font'] = graph_font_setting_field($field[2], $field[3]);
+    }
+
+    return $settings;
+}
+
 $dir = dir($config['base_path'] . '/include/themes/');
 while (false !== ($entry = $dir->read())) {
     if ($entry != '.' && $entry != '..') {
@@ -1085,62 +1150,7 @@ $settings = array(
             __('When not using Theme based font control, the Pango font description to use for all Graphs, such as DejaVu Sans. Optionally, you may leave blank and control font settings on a per object basis.'),
             '255'
         ),
-        'title_size' => array(
-            'friendly_name' => __('Title Font Size'),
-            'description' => __('The size of the font used for Graph Titles'),
-            'method' => 'textbox',
-            'default' => '10',
-            'max_length' => '10',
-            'size' => '5',
-            'filter' => FILTER_CALLBACK,
-            'options' => array('options' => 'graph_font_size_filter')
-        ),
-        'title_font' => graph_font_setting_field(
-            __('Title Font Setting'),
-            __('The font to use for Graph Titles.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files.')
-        ),
-        'legend_size' => array(
-            'friendly_name' => __('Legend Font Size'),
-            'description' => __('The size of the font used for Graph Legend items'),
-            'method' => 'textbox',
-            'default' => '8',
-            'max_length' => '10',
-            'size' => '5',
-            'filter' => FILTER_CALLBACK,
-            'options' => array('options' => 'graph_font_size_filter')
-        ),
-        'legend_font' => graph_font_setting_field(
-            __('Legend Font Setting'),
-            __('The font to use for Graph Legends.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files.')
-        ),
-        'axis_size' => array(
-            'friendly_name' => __('Axis Font Size'),
-            'description' => __('The size of the font used for Graph Axis'),
-            'method' => 'textbox',
-            'default' => '7',
-            'max_length' => '10',
-            'size' => '5',
-            'filter' => FILTER_CALLBACK,
-            'options' => array('options' => 'graph_font_size_filter')
-        ),
-        'axis_font' => graph_font_setting_field(
-            __('Axis Font Setting'),
-            __('The font to use for Graph Axis items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files.')
-        ),
-        'unit_size' => array(
-            'friendly_name' => __('Unit Font Size'),
-            'description' => __('The size of the font used for Graph Units'),
-            'method' => 'textbox',
-            'default' => '7',
-            'max_length' => '10',
-            'size' => '5',
-            'filter' => FILTER_CALLBACK,
-            'options' => array('options' => 'graph_font_size_filter')
-        ),
-        'unit_font' => graph_font_setting_field(
-            __('Unit Font Setting'),
-            __('The font to use for Graph Unit items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files.')
-        ),
+        ...graph_font_setting_pairs(),
         'business_hours_header' => array(
             'friendly_name' => __('Business Hours Settings'),
             'collapsible' => 'true',
@@ -2831,58 +2841,7 @@ $settings_user = array(
             'on_change' => 'graphSettings()',
             'default' => ''
         ),
-        'title_size' => array(
-            'friendly_name' => __('Title Font Size'),
-            'description' => __('The size of the font used for Graph Titles'),
-            'method' => 'textbox',
-            'default' => '12',
-            'max_length' => '10',
-            'filter' => FILTER_CALLBACK,
-            'options' => array('options' => 'graph_font_size_filter')
-        ),
-        'title_font' => graph_font_setting_field(
-            __('Title Font Setting'),
-            __('The Pango font description to use for Graph Titles, such as DejaVu Sans Bold')
-        ),
-        'legend_size' => array(
-            'friendly_name' => __('Legend Font Size'),
-            'description' => __('The size of the font used for Graph Legend items'),
-            'method' => 'textbox',
-            'default' => '10',
-            'max_length' => '10',
-            'filter' => FILTER_CALLBACK,
-            'options' => array('options' => 'graph_font_size_filter')
-        ),
-        'legend_font' => graph_font_setting_field(
-            __('Legend Font Setting'),
-            __('The Pango font description to use for Graph Legend items, such as DejaVu Sans Mono')
-        ),
-        'axis_size' => array(
-            'friendly_name' => __('Axis Font Size'),
-            'description' => __('The size of the font used for Graph Axis'),
-            'method' => 'textbox',
-            'default' => '8',
-            'max_length' => '10',
-            'filter' => FILTER_CALLBACK,
-            'options' => array('options' => 'graph_font_size_filter')
-        ),
-        'axis_font' => graph_font_setting_field(
-            __('Axis Font Setting'),
-            __('The Pango font description to use for Graph Axis items, such as DejaVu Sans')
-        ),
-        'unit_size' => array(
-            'friendly_name' => __('Unit Font Size'),
-            'description' => __('The size of the font used for Graph Units'),
-            'method' => 'textbox',
-            'default' => '8',
-            'max_length' => '10',
-            'filter' => FILTER_CALLBACK,
-            'options' => array('options' => 'graph_font_size_filter')
-        ),
-        'unit_font' => graph_font_setting_field(
-            __('Unit Font Setting'),
-            __('The Pango font description to use for Graph Unit items, such as DejaVu Sans')
-        )
+        ...graph_font_setting_pairs(true)
     )
 );
 
