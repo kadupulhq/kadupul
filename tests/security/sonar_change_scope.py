@@ -7,16 +7,18 @@
 import argparse
 from dataclasses import dataclass
 import json
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 import re
 import shutil
 import subprocess
 
 
-ROOT_DOCUMENTS = frozenset(("README.md", "CHANGELOG.md", "CONTRIBUTING.md"))
-# These Markdown documents carry verification provenance/generated evidence.
-VERIFICATION_DOCUMENTS = frozenset((
-    "docs/cdef-reference-integrity.md", "docs/testing/behavioral-surface.md",
+# Keep an explicit list: new/unknown Markdown may carry executable verification
+# provenance, so it requires full analysis until its consumers are reviewed.
+ORDINARY_DOCUMENTS = frozenset((
+    "README.md", "CHANGELOG.md", "CONTRIBUTING.md", "docs/README.md",
+    "docs/testing/sonarcloud.md", "docs/digitalocean-runners.md", "docs/fork-import.md",
+    "docs/upgrading-rrd-storage.md", "docs/symfony-external-links.md", "docs/security-headers.md",
 ))
 SHA = re.compile(r"[0-9a-f]{40}\Z")
 
@@ -43,17 +45,7 @@ def ordinary_document(path: bytes) -> bool:
         name = path.decode("utf-8")
     except UnicodeError:
         return False
-    if any(ord(character) < 32 or ord(character) == 127 for character in name) or "\\" in name:
-        return False
-    if name in ROOT_DOCUMENTS:
-        return True
-    path_name = PurePosixPath(name)
-    parts = path_name.parts
-    return (len(parts) >= 2 and parts[0] == "docs" and name.endswith(".md")
-            and path_name.as_posix() == name
-            and name not in VERIFICATION_DOCUMENTS
-            and all(part not in (".", "..") and not part.startswith(".") for part in parts)
-            and not any(part in ("fixtures", "evidence") for part in parts[1:-1]))
+    return name in ORDINARY_DOCUMENTS
 
 
 def classify_diff(raw: bytes) -> Scope:

@@ -64,10 +64,18 @@ class SonarChangeScopeTest(unittest.TestCase):
         result = self.classify(first)
         self.assertFalse(result.full_analysis)
         self.assertEqual(result.changed_files, 4)
-        self.git("mv", "docs/testing/sonarcloud.md", "docs/testing/sonar-scheduling.md")
+        self.git("mv", "docs/testing/sonarcloud.md", "docs/fork-import.md")
         (self.repo / "CHANGELOG.md").unlink()
         second = self.commit()
         self.assertFalse(self.classify(second, first).full_analysis)
+
+    def test_every_explicit_prose_document_is_admitted_with_real_git_blobs(self):
+        for name in sorted(scope.ORDINARY_DOCUMENTS):
+            with self.subTest(path=name):
+                base = self.git("rev-parse", "HEAD")
+                self.write(name, "Updated ordinary prose\n")
+                head = self.commit()
+                self.assertFalse(self.classify(head, base).full_analysis)
 
     def test_main_documentation_push_is_inapplicable_but_unknown_ref_is_full(self):
         self.write("docs/README.md")
@@ -83,6 +91,9 @@ class SonarChangeScopeTest(unittest.TestCase):
                  "mise.toml", "sonar-project.properties", ".dockerignore", "config/services.yaml",
                  "docs/audit_schema.sql", "docs/html/help.html", "docs/fixture.json",
                  "docs/cdef-reference-integrity.md", "docs/testing/behavioral-surface.md",
+                 "docs/reviews/migration-review-carry.md", "docs/reviews/twig-page-batch-feedback.md",
+                 "docs/testing/review-dispositions.md", "docs/testing/coverage-matrix.md",
+                 "docs/testing/php84-modernization-audit.md", "docs/new-unreviewed.md",
                  "docs/fixtures/input.md", "docs/evidence/receipt.md", "AGENTS.md", "unknown.md"]
         for path in paths:
             with self.subTest(path=path):
@@ -119,12 +130,12 @@ class SonarChangeScopeTest(unittest.TestCase):
     def test_code_to_docs_and_docs_to_code_renames_are_full(self):
         self.write("lib/input.php")
         base = self.commit()
-        self.write("docs/input.md")
+        self.write("docs/README.md")
         (self.repo / "lib/input.php").unlink()
         head = self.commit()
         self.assertTrue(self.classify(head, base).full_analysis)
         self.write("lib/output.php")
-        (self.repo / "docs/input.md").unlink()
+        (self.repo / "docs/README.md").unlink()
         next_head = self.commit()
         self.assertTrue(self.classify(next_head, head).full_analysis)
 
@@ -170,7 +181,7 @@ class SonarChangeScopeTest(unittest.TestCase):
             self.assertTrue(scope.classify_diff(raw).full_analysis)
 
     def test_binary_invalid_utf8_and_oversized_markdown_are_full(self):
-        path = self.repo / "docs/input.md"
+        path = self.repo / "docs/README.md"
         path.parent.mkdir()
         for content in [b"binary\0input", b"\xff", b"x" * (4 * 1024 * 1024 + 1)]:
             with self.subTest(content_length=len(content)):

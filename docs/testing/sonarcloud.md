@@ -25,8 +25,11 @@ merge tree against the event's base commit, or the before/after trees for a main
 push. A documentation commit after a code commit does not hide the earlier code
 change in that pull request.
 
-Only ordinary, non-executable Markdown under `docs/` and the root `README.md`,
-`CHANGELOG.md`, and `CONTRIBUTING.md` can skip the full coverage/analysis job.
+Only ordinary, non-executable Markdown in the explicit `ORDINARY_DOCUMENTS`
+allowlist can skip the full coverage/analysis job: the root `README.md`,
+`CHANGELOG.md`, and `CONTRIBUTING.md`, plus reviewed prose guides named in
+`tests/security/sonar_change_scope.py`. New or unrecognized Markdown requires
+full analysis until its consumers and provenance have been reviewed.
 Verification provenance, generated evidence, fixtures, schema, rendered HTML,
 source, tests, dependencies, configuration and CI inputs remain applicable.
 Renames involving those inputs, symlink/executable changes, empty diffs,
