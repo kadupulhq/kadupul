@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 22:55-0700\n"
+"POT-Creation-Date: 2026-10-06 05:07-0700\n"
 "PO-Revision-Date: 2024-04-20 18:53-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -53,7 +53,7 @@ msgstr "תוכנית זו מופצת בתקווה שזה יהיה שימושי, 
 #: data_templates.php:18 data_templates.php:790 gprint_presets.php:12
 #: graph_templates.php:22 graph_templates.php:517 graphs.php:31 host.php:26
 #: host_templates.php:19 host_templates.php:484 host_templates.php:541
-#: include/global_arrays.php:1652 include/global_settings.php:232
+#: include/global_arrays.php:1652 include/global_settings.php:251
 #: lib/api_automation.php:1323 lib/api_automation.php:1386
 #: lib/api_automation.php:1457 lib/html.php:1497 lib/html_form.php:1397
 #: lib/html_reports.php:1937 managers.php:13 pollers.php:18 tree.php:1678
@@ -573,8 +573,8 @@ msgstr "גודל"
 #: data_queries.php:1533 data_source_profiles.php:1398
 #: data_source_profiles.php:1399 data_sources.php:1794 data_sources.php:1795
 #: data_templates.php:1315 gprint_presets.php:430 graph_templates.php:921
-#: host_templates.php:996 include/global_settings.php:876
-#: include/global_settings.php:1927 lib/api_automation.php:1438 tree.php:2387
+#: host_templates.php:996 include/global_settings.php:895
+#: include/global_settings.php:1922 lib/api_automation.php:1438 tree.php:2387
 #: tree.php:2388 user_admin.php:2268 user_domains.php:758
 #: user_group_admin.php:2065
 msgid "No"
@@ -587,7 +587,7 @@ msgstr "לא"
 #: data_source_profiles.php:1398 data_source_profiles.php:1399
 #: data_sources.php:1794 data_sources.php:1795 data_templates.php:1315
 #: gprint_presets.php:430 graph_templates.php:921 host_templates.php:996
-#: include/global_settings.php:875 include/global_settings.php:1926
+#: include/global_settings.php:894 include/global_settings.php:1921
 #: lib/api_automation.php:1438 lib/installer.php:2124 lib/installer.php:2152
 #: lib/installer.php:3953 tree.php:2387 tree.php:2388 user_admin.php:2266
 #: user_domains.php:754 user_domains.php:758 user_group_admin.php:2063
@@ -609,7 +609,7 @@ msgstr "גרפים מצטברים"
 
 #: aggregate_graphs.php:1562 data_debug.php:1042 data_sources.php:1450
 #: graph_view.php:699 graphs.php:1946 host.php:1687
-#: include/global_arrays.php:2892 include/global_settings.php:610
+#: include/global_arrays.php:2892 include/global_settings.php:629
 #: lib/api_automation.php:446 lib/html_graph.php:139 lib/html_tree.php:973
 #: rrdcleaner.php:381
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:59
@@ -652,9 +652,9 @@ msgstr "הכל"
 #: include/global_form.php:1000 include/global_form.php:1008
 #: include/global_form.php:1186 include/global_form.php:1205
 #: include/global_form.php:1214 include/global_form.php:2128
-#: include/global_form.php:2170 include/global_settings.php:614
-#: include/global_settings.php:622 include/global_settings.php:630
-#: include/global_settings.php:1338 include/global_settings.php:2001
+#: include/global_form.php:2170 include/global_settings.php:633
+#: include/global_settings.php:641 include/global_settings.php:649
+#: include/global_settings.php:1333 include/global_settings.php:1996
 #: lib/api_automation.php:48 lib/api_automation.php:431
 #: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3806
 #: lib/auth.php:3855 lib/auth.php:3901 lib/html.php:220 lib/html.php:2303
@@ -836,7 +836,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "הזן את הסיסמה הנוכחית ואת החדש <br> סיסמת Kadupul."
 
 #: auth_changepassword.php:397 auth_login.php:329 auth_login.php:332
-#: include/global_settings.php:1835 lib/functions.php:6174
+#: include/global_settings.php:1830 lib/functions.php:6174
 msgid "Username"
 msgstr "שם משתמש"
 
@@ -925,7 +925,7 @@ msgstr "הזן את שם המשתמש והסיסמה שלך למטה"
 msgid "Password"
 msgstr "סיסמה"
 
-#: auth_login.php:350 include/global_settings.php:2324 lib/auth.php:1014
+#: auth_login.php:350 include/global_settings.php:2319 lib/auth.php:1014
 #: lib/auth.php:1036 lib/auth.php:1046 lib/auth.php:1051 user_admin.php:2123
 msgid "Local"
 msgstr "מקומי"
@@ -948,8 +948,8 @@ msgstr "השאר אותי מחובר"
 msgid "Login"
 msgstr "התחבר"
 
-#: auth_profile.php:61 include/global_settings.php:22
-#: include/global_settings.php:1202 include/global_settings.php:1519
+#: auth_profile.php:61 include/global_settings.php:41
+#: include/global_settings.php:1197 include/global_settings.php:1514
 #: lib/html.php:2759 managers.php:24 user_admin.php:1740
 #: user_group_admin.php:1742
 msgid "General"
@@ -960,7 +960,7 @@ msgid "User Account Details"
 msgstr "פרטי חשבון משתמש"
 
 #: auth_profile.php:313 include/global_arrays.php:857
-#: include/global_settings.php:2737 lib/html.php:2183 lib/html.php:2205
+#: include/global_settings.php:2732 lib/html.php:2183 lib/html.php:2205
 #: lib/html.php:2740
 msgid "Tree View"
 msgstr "תצוגת עצים"
@@ -984,7 +984,7 @@ msgid "The login name for this user."
 msgstr "שם ההתחברות של משתמש זה."
 
 #: auth_profile.php:342 include/global_form.php:1503
-#: include/global_settings.php:1871 user_admin.php:2246 user_domains.php:482
+#: include/global_settings.php:1866 user_admin.php:2246 user_domains.php:482
 #: user_group_admin.php:721 utilities.php:1153
 msgid "Full Name"
 msgstr "שם מלא"
@@ -1142,7 +1142,7 @@ msgid "SNMP Name"
 msgstr "שם SNMP"
 
 #: automation_devices.php:274 host.php:1711 include/global_form.php:1184
-#: include/global_settings.php:2319 lib/html.php:2399
+#: include/global_settings.php:2314 lib/html.php:2399
 msgid "Location"
 msgstr "מיקום"
 
@@ -1256,7 +1256,7 @@ msgstr "שכפל"
 
 #: automation_graph_rules.php:14 automation_networks.php:18
 #: automation_tree_rules.php:14 data_sources.php:24 host.php:27
-#: include/global_arrays.php:1650 include/global_settings.php:1787
+#: include/global_arrays.php:1650 include/global_settings.php:1782
 #: managers.php:14 managers.php:20 plugins.php:24 pollers.php:20
 #: user_admin.php:19 user_domains.php:17 user_domains.php:397
 #: user_group_admin.php:21
@@ -1370,7 +1370,7 @@ msgstr "שאילתת נתונים"
 #: automation_tree_rules.php:855 automation_tree_rules.php:975
 #: automation_tree_rules.php:993 data_debug.php:1107 data_sources.php:1513
 #: host.php:1762 include/global_arrays.php:917 include/global_form.php:1527
-#: include/global_settings.php:345 include/global_settings.php:361
+#: include/global_settings.php:364 include/global_settings.php:380
 #: lib/api_automation.php:27 lib/html_reports.php:2036
 #: lib/html_reports.php:2141 lib/html_reports.php:2152
 #: lib/html_reports.php:2188 managers.php:241 managers.php:612
@@ -1386,11 +1386,11 @@ msgstr "מאופשר"
 #: automation_tree_rules.php:993 data_debug.php:1108 data_sources.php:1514
 #: data_templates.php:1319 host.php:1763 include/global_arrays.php:916
 #: include/global_arrays.php:1573 include/global_arrays.php:1865
-#: include/global_settings.php:344 include/global_settings.php:360
-#: include/global_settings.php:1370 include/global_settings.php:1630
-#: include/global_settings.php:1644 include/global_settings.php:1657
-#: include/global_settings.php:1682 include/global_settings.php:1696
-#: include/global_settings.php:1786 include/global_settings.php:2550
+#: include/global_settings.php:363 include/global_settings.php:379
+#: include/global_settings.php:1365 include/global_settings.php:1625
+#: include/global_settings.php:1639 include/global_settings.php:1652
+#: include/global_settings.php:1677 include/global_settings.php:1691
+#: include/global_settings.php:1781 include/global_settings.php:2545
 #: lib/api_automation.php:28 lib/html.php:2836 lib/html_reports.php:2037
 #: lib/html_reports.php:2188 lib/html_utility.php:1317 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:935 user_domains.php:397
@@ -1492,7 +1492,7 @@ msgid "Manual"
 msgstr "ידני"
 
 #: automation_networks.php:409 automation_networks.php:1064
-#: include/global_arrays.php:1879 include/global_settings.php:1371
+#: include/global_arrays.php:1879 include/global_settings.php:1366
 msgid "Daily"
 msgstr "יומי"
 
@@ -1525,7 +1525,7 @@ msgid "Network Discovery Range [new]"
 msgstr "טווח גילוי רשת [חדש]"
 
 #: automation_networks.php:434 include/global_form.php:1880
-#: include/global_form.php:1983 include/global_settings.php:35
+#: include/global_form.php:1983 include/global_settings.php:54
 #: lib/html_reports.php:13
 msgid "General Settings"
 msgstr "הגדרות כלליות"
@@ -1664,11 +1664,11 @@ msgstr "‫%d דקה"
 #: include/global_arrays.php:1593 include/global_arrays.php:1617
 #: include/global_arrays.php:1618 include/global_arrays.php:1619
 #: include/global_arrays.php:1620 include/global_arrays.php:1621
-#: include/global_arrays.php:1634 include/global_settings.php:1698
-#: include/global_settings.php:1699 include/global_settings.php:1700
-#: include/global_settings.php:1701 include/global_settings.php:1702
-#: include/global_settings.php:2663 include/global_settings.php:2942
-#: include/global_settings.php:2943 include/global_settings.php:2944
+#: include/global_arrays.php:1634 include/global_settings.php:1693
+#: include/global_settings.php:1694 include/global_settings.php:1695
+#: include/global_settings.php:1696 include/global_settings.php:1697
+#: include/global_settings.php:2658 include/global_settings.php:2917
+#: include/global_settings.php:2918 include/global_settings.php:2919
 #: pollers.php:902 pollers.php:903
 #, php-format
 msgid "%d Minutes"
@@ -1696,10 +1696,10 @@ msgstr "‫%d שעה"
 #: include/global_arrays.php:1546 include/global_arrays.php:1547
 #: include/global_arrays.php:1548 include/global_arrays.php:1549
 #: include/global_arrays.php:1550 include/global_arrays.php:1556
-#: include/global_arrays.php:1557 include/global_settings.php:1704
-#: include/global_settings.php:1705 include/global_settings.php:1706
-#: include/global_settings.php:1707 include/global_settings.php:2946
-#: include/global_settings.php:2947
+#: include/global_arrays.php:1557 include/global_settings.php:1699
+#: include/global_settings.php:1700 include/global_settings.php:1701
+#: include/global_settings.php:1702 include/global_settings.php:2921
+#: include/global_settings.php:2922
 #, php-format
 msgid "%d Hours"
 msgstr "%d לפני מספר ימים"
@@ -1953,7 +1953,7 @@ msgid "The type of ping packet to send."
 msgstr "סוג של חבילת ping לשלוח."
 
 #: automation_networks.php:727 include/global_form.php:1265
-#: include/global_settings.php:799
+#: include/global_settings.php:818
 msgid "Ping Port"
 msgstr "נמל פינג"
 
@@ -1962,7 +1962,7 @@ msgid "TCP or UDP port to attempt connection."
 msgstr "יציאת TCP או UDP כדי לנסות להתחבר."
 
 #: automation_networks.php:735 include/global_form.php:1273
-#: include/global_settings.php:807
+#: include/global_settings.php:826
 msgid "Ping Timeout Value"
 msgstr "ערך פינג פסק זמן"
 
@@ -1971,7 +1971,7 @@ msgid "The timeout value to use for host ICMP and UDP pinging.  This host SNMP t
 msgstr "ערך timeout לשימוש עבור המארח ICMP ו UDP pinging. ערך מארח זה של SNMP מארח חל על רכיבי SNMP."
 
 #: automation_networks.php:744 include/global_form.php:1282
-#: include/global_settings.php:815
+#: include/global_settings.php:834
 msgid "Ping Retry Count"
 msgstr "Ping נסה שוב לספור"
 
@@ -2082,7 +2082,7 @@ msgid "Idle"
 msgstr "ממתין"
 
 #: automation_networks.php:1150 include/global_arrays.php:891
-#: include/global_arrays.php:1210 include/global_settings.php:2576
+#: include/global_arrays.php:1210 include/global_settings.php:2571
 #: lib/html_reports.php:2183 user_admin.php:2114
 msgid "Never"
 msgstr "לעולם לא"
@@ -2112,10 +2112,10 @@ msgstr "רענן"
 #: include/global_arrays.php:1627 include/global_arrays.php:1628
 #: include/global_arrays.php:1629 include/global_arrays.php:1630
 #: include/global_arrays.php:1631 include/global_arrays.php:1632
-#: include/global_settings.php:1271 include/global_settings.php:1272
-#: include/global_settings.php:1273 include/global_settings.php:1274
-#: include/global_settings.php:2659 include/global_settings.php:2660
-#: include/global_settings.php:2661 pollers.php:896 pollers.php:897
+#: include/global_settings.php:1266 include/global_settings.php:1267
+#: include/global_settings.php:1268 include/global_settings.php:1269
+#: include/global_settings.php:2654 include/global_settings.php:2655
+#: include/global_settings.php:2656 pollers.php:896 pollers.php:897
 #: pollers.php:898 pollers.php:899 pollers.php:900
 #, php-format
 msgid "%d Seconds"
@@ -2215,12 +2215,12 @@ msgstr "אוטומציה של אפשרויות SNMP"
 msgid "Item"
 msgstr "פריט"
 
-#: automation_snmp.php:541 include/auth.php:341 include/global_settings.php:679
+#: automation_snmp.php:541 include/auth.php:341 include/global_settings.php:698
 #: package_import.php:504 permission_denied.php:43 plugins.php:641
 msgid "Version"
 msgstr "גרסה"
 
-#: automation_snmp.php:542 include/global_settings.php:686
+#: automation_snmp.php:542 include/global_settings.php:705
 msgid "Community"
 msgstr "קהילה"
 
@@ -2228,11 +2228,11 @@ msgstr "קהילה"
 msgid "Port"
 msgstr "פורט"
 
-#: automation_snmp.php:544 include/global_settings.php:764
+#: automation_snmp.php:544 include/global_settings.php:783
 msgid "Timeout"
 msgstr "פסק זמן"
 
-#: automation_snmp.php:545 include/global_settings.php:772
+#: automation_snmp.php:545 include/global_settings.php:791
 msgid "Retries"
 msgstr "נסה שוב"
 
@@ -3801,7 +3801,7 @@ msgstr "פרופיל מקור נתונים RRA (לקריאה בלבד)"
 msgid "Data Retention"
 msgstr "שמירת נתונים"
 
-#: data_source_profiles.php:898 include/global_settings.php:1006
+#: data_source_profiles.php:898 include/global_settings.php:1025
 #: lib/html_reports.php:1212
 msgid "Graph Timespan"
 msgstr "גרף Timespan"
@@ -3843,7 +3843,7 @@ msgstr "הזן מספר חוקי של שורות כדי לקבל את גודל �
 #: include/global_arrays.php:790 include/global_arrays.php:791
 #: include/global_arrays.php:792 include/global_arrays.php:793
 #: include/global_arrays.php:794 include/global_arrays.php:795
-#: include/global_arrays.php:1471 include/global_settings.php:1636
+#: include/global_arrays.php:1471 include/global_settings.php:1631
 #, php-format
 msgid "%d Years"
 msgstr "% d שנים"
@@ -3877,8 +3877,8 @@ msgstr "% d שבוע"
 
 #: data_source_profiles.php:1106 include/global_arrays.php:779
 #: include/global_arrays.php:780 include/global_arrays.php:1464
-#: include/global_settings.php:2950 include/global_settings.php:2951
-#: include/global_settings.php:2952 rrdcleaner.php:535 rrdcleaner.php:536
+#: include/global_settings.php:2925 include/global_settings.php:2926
+#: include/global_settings.php:2927 rrdcleaner.php:535 rrdcleaner.php:536
 #, php-format
 msgid "%d Weeks"
 msgstr "% d שבועות"
@@ -3893,11 +3893,11 @@ msgstr "% d יום"
 #: data_source_profiles.php:1115 include/global_arrays.php:766
 #: include/global_arrays.php:776 include/global_arrays.php:777
 #: include/global_arrays.php:1460 include/global_arrays.php:1461
-#: include/global_arrays.php:1462 include/global_settings.php:1631
-#: include/global_settings.php:1632 include/global_settings.php:1633
-#: include/global_settings.php:1634 include/global_settings.php:1645
-#: include/global_settings.php:1646 include/global_settings.php:1647
-#: include/global_settings.php:1648
+#: include/global_arrays.php:1462 include/global_settings.php:1626
+#: include/global_settings.php:1627 include/global_settings.php:1628
+#: include/global_settings.php:1629 include/global_settings.php:1640
+#: include/global_settings.php:1641 include/global_settings.php:1642
+#: include/global_settings.php:1643
 #, php-format
 msgid "%d Days"
 msgstr "%d ימים"
@@ -3906,8 +3906,8 @@ msgstr "%d ימים"
 #: include/global_arrays.php:1524 include/global_arrays.php:1545
 #: include/global_arrays.php:1555 include/global_arrays.php:1585
 #: include/global_arrays.php:1594 include/global_arrays.php:1622
-#: include/global_settings.php:1406 include/global_settings.php:1703
-#: include/global_settings.php:2945
+#: include/global_settings.php:1401 include/global_settings.php:1698
+#: include/global_settings.php:2920
 msgid "1 Hour"
 msgstr "שעה אחת"
 
@@ -3940,7 +3940,7 @@ msgid "Read Only"
 msgstr "Éxito: Limesurvey חדש נוצר"
 
 #: data_source_profiles.php:1333 data_sources.php:1719
-#: include/global_settings.php:1234
+#: include/global_settings.php:1229
 msgid "Poller Interval"
 msgstr "מרווח פולר"
 
@@ -4218,7 +4218,7 @@ msgstr "חיצוני"
 #: data_sources.php:1277 include/global_arrays.php:710
 #: include/global_arrays.php:1207 include/global_arrays.php:1579
 #: include/global_arrays.php:1615 include/global_arrays.php:1633
-#: include/global_settings.php:1697 include/global_settings.php:2662
+#: include/global_settings.php:1692 include/global_settings.php:2657
 msgid "1 Minute"
 msgstr "1 דקה"
 
@@ -4881,7 +4881,7 @@ msgid "Select the Report to add the selected Graphs to."
 msgstr "בחר את הדוח כדי להוסיף את הגרפים שנבחרו."
 
 #: graph_view.php:995 include/global_arrays.php:2036
-#: include/global_settings.php:2733
+#: include/global_settings.php:2728
 msgid "Preview Mode"
 msgstr "מצב תצוגה מקדימה"
 
@@ -5229,7 +5229,7 @@ msgstr "הגדרות סינון נשמרו"
 msgid "Graph Types"
 msgstr "סוגי גרפים"
 
-#: graphs_new.php:426 include/global_settings.php:418
+#: graphs_new.php:426 include/global_settings.php:437
 msgid "Graph Template Based"
 msgstr "תבנית גרף מבוססת"
 
@@ -5641,7 +5641,7 @@ msgstr "מחק תבניות מכשיר"
 msgid "Undefined"
 msgstr "לא מוגדר"
 
-#: host.php:1646 include/global_settings.php:618 lib/html.php:2365
+#: host.php:1646 include/global_settings.php:637 lib/html.php:2365
 #: lib/html_reports.php:1151
 msgid "Site"
 msgstr "אתר"
@@ -6560,8 +6560,8 @@ msgstr "כל שעה"
 #: include/global_arrays.php:813 include/global_arrays.php:814
 #: include/global_arrays.php:1867 include/global_arrays.php:1868
 #: include/global_arrays.php:1869 include/global_arrays.php:1870
-#: include/global_arrays.php:1871 include/global_settings.php:2551
-#: include/global_settings.php:2552
+#: include/global_arrays.php:1871 include/global_settings.php:2546
+#: include/global_settings.php:2547
 #, php-format
 msgid "Every %d Hours"
 msgstr "כל% d שעות"
@@ -6577,7 +6577,7 @@ msgid "%0.1f Minutes"
 msgstr "%0.1f דקות"
 
 #: include/global_arrays.php:786 include/global_arrays.php:1470
-#: include/global_settings.php:1635 rrdcleaner.php:541
+#: include/global_settings.php:1630 rrdcleaner.php:541
 #, php-format
 msgid "%d Year"
 msgstr "% d שנה"
@@ -6802,7 +6802,7 @@ msgid "Aggregate"
 msgstr "מצטבר"
 
 #: include/global_arrays.php:1009 include/global_arrays.php:1067
-#: include/global_arrays.php:1222 include/global_settings.php:530
+#: include/global_arrays.php:1222 include/global_settings.php:549
 msgid "Automation"
 msgstr "אוטומציה"
 
@@ -7317,8 +7317,8 @@ msgstr "4 שעות"
 msgid "6 Hours"
 msgstr "6 שעות"
 
-#: include/global_arrays.php:1595 include/global_settings.php:1489
-#: include/global_settings.php:1490 include/global_settings.php:1491
+#: include/global_arrays.php:1595 include/global_settings.php:1484
+#: include/global_settings.php:1485 include/global_settings.php:1486
 #, php-format
 msgid "%s Hours"
 msgstr "%s שעות"
@@ -7333,18 +7333,18 @@ msgstr "% d GBytes"
 msgid "Unlimited"
 msgstr "ללא הגבלה"
 
-#: include/global_arrays.php:1616 include/global_settings.php:1388
-#: include/global_settings.php:1389 include/global_settings.php:1390
-#: include/global_settings.php:1391 include/global_settings.php:1401
-#: include/global_settings.php:1402 include/global_settings.php:1403
-#: include/global_settings.php:1404 include/global_settings.php:1405
-#: include/global_settings.php:1415 include/global_settings.php:1416
-#: include/global_settings.php:1429 include/global_settings.php:1430
-#: include/global_settings.php:1431 include/global_settings.php:1432
-#: include/global_settings.php:1470 include/global_settings.php:1471
-#: include/global_settings.php:1472 include/global_settings.php:1473
-#: include/global_settings.php:1484 include/global_settings.php:1485
-#: include/global_settings.php:1486 include/global_settings.php:1487
+#: include/global_arrays.php:1616 include/global_settings.php:1383
+#: include/global_settings.php:1384 include/global_settings.php:1385
+#: include/global_settings.php:1386 include/global_settings.php:1396
+#: include/global_settings.php:1397 include/global_settings.php:1398
+#: include/global_settings.php:1399 include/global_settings.php:1400
+#: include/global_settings.php:1410 include/global_settings.php:1411
+#: include/global_settings.php:1424 include/global_settings.php:1425
+#: include/global_settings.php:1426 include/global_settings.php:1427
+#: include/global_settings.php:1465 include/global_settings.php:1466
+#: include/global_settings.php:1467 include/global_settings.php:1468
+#: include/global_settings.php:1479 include/global_settings.php:1480
+#: include/global_settings.php:1481 include/global_settings.php:1482
 #, php-format
 msgid "%s Minutes"
 msgstr "%s דקות"
@@ -7946,7 +7946,7 @@ msgstr "שדות קלט נתונים"
 msgid "(Remove Item)"
 msgstr "(הסר פריט)"
 
-#: include/global_arrays.php:2428 include/global_settings.php:217
+#: include/global_arrays.php:2428 include/global_settings.php:236
 #: rrdcleaner.php:323
 msgid "RRD Cleaner"
 msgstr "RRD מנקה"
@@ -8151,7 +8151,7 @@ msgstr "משפט סיסמאות של SNMP (v3)"
 msgid "Choose the SNMPv3 Privacy Passphrase."
 msgstr "בחר את משפט הסיסמה של פרטיות SNMPv3."
 
-#: include/global_form.php:94 include/global_settings.php:739
+#: include/global_form.php:94 include/global_settings.php:758
 msgid "SNMP Context (v3)"
 msgstr "הקשר SNMP (v3)"
 
@@ -8159,7 +8159,7 @@ msgstr "הקשר SNMP (v3)"
 msgid "Enter the SNMP Context to use for this device."
 msgstr "הזן את ההקשר SNMP לשימוש בהתקן זה."
 
-#: include/global_form.php:103 include/global_settings.php:748
+#: include/global_form.php:103 include/global_settings.php:767
 msgid "SNMP Engine ID (v3)"
 msgstr "מזהה מנוע SNMP (v3)"
 
@@ -8313,7 +8313,7 @@ msgstr "מספר הדגימות הנדרשות לפני מילוי שורה במ
 msgid "How many generations data is kept in the RRA."
 msgstr "כמה דורות הנתונים נשמרים ב- RRA."
 
-#: include/global_form.php:293 include/global_settings.php:2683
+#: include/global_form.php:293 include/global_settings.php:2678
 msgid "Default Timespan"
 msgstr "ברירת מחדל"
 
@@ -9011,7 +9011,7 @@ msgstr "סמן תיבה זו כדי להשבית את כל הבדיקות עבו
 msgid "Availability/Reachability Options"
 msgstr "אפשרויות זמינות / זמינות"
 
-#: include/global_form.php:1246 include/global_settings.php:785
+#: include/global_form.php:1246 include/global_settings.php:804
 msgid "Downed Device Detection"
 msgstr "זיהוי מכשיר למטה"
 
@@ -9221,7 +9221,7 @@ msgstr "החלף תבניות ערך מוצעות לשאילתת נתונים"
 msgid "Replace Data Source and Graph Template Suggested Value Records for Data Queries.  Graphs and Data Sources will take on new names after either a Data Query Reindex or by using the forced Replace Suggested Values process."
 msgstr "החלף מקור נתונים ורשומות ערך מוצעות לתבנית גרף עבור שאילתות נתונים.  גרפים ומקורות נתונים יקבלו שמות חדשים לאחר אינדקס מחדש של שאילתת נתונים או על ידי שימוש בתהליך החלפה מאולצת של ערכים מוצעים."
 
-#: include/global_form.php:1707 include/global_settings.php:580
+#: include/global_form.php:1707 include/global_settings.php:599
 #: package_import.php:890
 msgid "Graph Template Image Format"
 msgstr "תבנית תבנית תבנית גרף"
@@ -9230,7 +9230,7 @@ msgstr "תבנית תבנית תבנית גרף"
 msgid "The Image Format to be used when importing or updating Graph Templates."
 msgstr "ברירת המחדל של תבנית תמונה שתשמש עבור כל תבניות הגרפים החדשות."
 
-#: include/global_form.php:1714 include/global_settings.php:587
+#: include/global_form.php:1714 include/global_settings.php:606
 #: package_import.php:898
 msgid "Graph Template Height"
 msgstr "גובה תבנית גרף"
@@ -9239,7 +9239,7 @@ msgstr "גובה תבנית גרף"
 msgid "The Height to be used when importing or updating Graph Templates."
 msgstr "ברירת המחדל של רוחב התרשים לשימוש בכל תבניות הגרפים החדשות."
 
-#: include/global_form.php:1722 include/global_settings.php:595
+#: include/global_form.php:1722 include/global_settings.php:614
 #: package_import.php:907
 msgid "Graph Template Width"
 msgstr "רוחב תבנית גרף"
@@ -9523,1145 +9523,1141 @@ msgstr "ז"
 msgid " K"
 msgstr "כ"
 
-#: include/global_settings.php:23
+#: include/global_settings.php:21
+msgid "Enter a Pango font description"
+msgstr ""
+
+#: include/global_settings.php:42
 msgid "Paths"
 msgstr "@ title: column"
 
-#: include/global_settings.php:24
+#: include/global_settings.php:43
 msgid "Device Defaults"
 msgstr "הגדרות ברירת מחדל של ההתקן"
 
-#: include/global_settings.php:25 include/global_settings.php:626
+#: include/global_settings.php:44 include/global_settings.php:645
 msgid "Poller"
 msgstr "פולר"
 
-#: include/global_settings.php:26
+#: include/global_settings.php:45
 msgid "Data"
 msgstr "נתונים"
 
-#: include/global_settings.php:27
+#: include/global_settings.php:46
 msgid "Visual"
 msgstr "חזותי"
 
-#: include/global_settings.php:28 lib/functions.php:6173 lib/functions.php:6178
+#: include/global_settings.php:47 lib/functions.php:6173 lib/functions.php:6178
 msgid "Authentication"
 msgstr "שיטת האימות לא חוקי"
 
-#: include/global_settings.php:29
+#: include/global_settings.php:48
 msgid "Performance"
 msgstr "عملکرد"
 
-#: include/global_settings.php:30
+#: include/global_settings.php:49
 msgid "Spikes"
 msgstr "קוצים"
 
-#: include/global_settings.php:31
+#: include/global_settings.php:50
 msgid "Mail/Reporting/DNS"
 msgstr "דואר / דיווח / DNS"
 
-#: include/global_settings.php:36
+#: include/global_settings.php:55
 msgid "Time Spanning/Shifting"
 msgstr "זמן פורש / שינוי"
 
-#: include/global_settings.php:37
+#: include/global_settings.php:56
 msgid "Graph Thumbnail Settings"
 msgstr "הגדרות תרשים ממוזערות"
 
-#: include/global_settings.php:38 include/global_settings.php:887
+#: include/global_settings.php:57 include/global_settings.php:906
 msgid "Tree Settings"
 msgstr "הגדרות מערכת ניהול עצים"
 
-#: include/global_settings.php:39
+#: include/global_settings.php:58
 msgid "Graph Fonts"
 msgstr "גופני תרשים"
 
-#: include/global_settings.php:68
+#: include/global_settings.php:87
 msgid "PHP Mail() Function"
 msgstr "PHP PHP () פונקציה"
 
-#: include/global_settings.php:69 lib/functions.php:6154
+#: include/global_settings.php:88 lib/functions.php:6154
 msgid "Sendmail"
 msgstr "& Sendmail@ option"
 
-#: include/global_settings.php:70 lib/functions.php:6160
+#: include/global_settings.php:89 lib/functions.php:6160
 msgid "SMTP"
 msgstr "SMTP"
 
-#: include/global_settings.php:96
+#: include/global_settings.php:115
 msgid "Required Tool Paths"
 msgstr "נתיבי כלי דרושים"
 
-#: include/global_settings.php:101
+#: include/global_settings.php:120
 msgid "snmpwalk Binary Path"
 msgstr "נתיב בינארי snmpwalk"
 
-#: include/global_settings.php:102
+#: include/global_settings.php:121
 msgid "The path to your snmpwalk binary."
 msgstr "הדרך אל הבינארי snmpwalk שלך."
 
-#: include/global_settings.php:108
+#: include/global_settings.php:127
 msgid "snmpget Binary Path"
 msgstr "נתיב בינארי snmpget"
 
-#: include/global_settings.php:109
+#: include/global_settings.php:128
 msgid "The path to your snmpget binary."
 msgstr "הנתיב שלך בינארי snmpget."
 
-#: include/global_settings.php:115
+#: include/global_settings.php:134
 msgid "snmpbulkwalk Binary Path"
 msgstr "נתיב בינארי"
 
-#: include/global_settings.php:116
+#: include/global_settings.php:135
 msgid "The path to your snmpbulkwalk binary."
 msgstr "השביל אל הבינארית של snmpbulkwalk."
 
-#: include/global_settings.php:122
+#: include/global_settings.php:141
 msgid "snmpgetnext Binary Path"
 msgstr "נתיב בינארי"
 
-#: include/global_settings.php:123
+#: include/global_settings.php:142
 msgid "The path to your snmpgetnext binary."
 msgstr "הנתיב אל הקובץ הבינארי snmpgetnext שלך."
 
-#: include/global_settings.php:129
+#: include/global_settings.php:148
 msgid "snmptrap Binary Path"
 msgstr "נתיב בינארי snmptrap"
 
-#: include/global_settings.php:130
+#: include/global_settings.php:149
 msgid "The path to your snmptrap binary."
 msgstr "הנתיב שלך בינרי snmptrap."
 
-#: include/global_settings.php:136
+#: include/global_settings.php:155
 msgid "RRDtool Binary Path"
 msgstr "נתיב בינארי RRDtool"
 
-#: include/global_settings.php:137
+#: include/global_settings.php:156
 msgid "The path to the rrdtool binary."
 msgstr "השביל אל הבינארי rrdtool."
 
-#: include/global_settings.php:143
+#: include/global_settings.php:162
 msgid "PHP Binary Path"
 msgstr "נתיב בינארי של PHP"
 
-#: include/global_settings.php:144
+#: include/global_settings.php:163
 msgid "The path to your PHP binary file (may require a php recompile to get this file)."
 msgstr "הנתיב לקובץ הבינארי של PHP (עשוי לדרוש recompile PHP כדי לקבל את הקובץ הזה)."
 
-#: include/global_settings.php:150
+#: include/global_settings.php:169
 msgid "Logging"
 msgstr "רישום"
 
-#: include/global_settings.php:155
+#: include/global_settings.php:174
 msgid "Kadupul Log Path"
 msgstr "נתיב כניסה"
 
-#: include/global_settings.php:156
+#: include/global_settings.php:175
 msgid "The path to your Kadupul log file (if blank, defaults to &lt;path_cacti&gt;/log/cacti.log)"
 msgstr "הנתיב לקובץ יומן ה- Kadupul שלך (אם ריק, ברירות מחדל &lt;path_cacti&gt; /log/cacti.log)"
 
-#: include/global_settings.php:165
+#: include/global_settings.php:184
 msgid "Poller Standard Error Log Path"
 msgstr "נתיב תקלה של רשם נתיב רישום"
 
-#: include/global_settings.php:166
+#: include/global_settings.php:185
 msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file"
 msgstr "אם אתה נתקל בבעיות עם Kadupul&#39;s Data Collectors, הגדר נתיב קובץ זה והשגיאה הסטנדרטית של Data Collectors תנותב לקובץ זה"
 
-#: include/global_settings.php:175
+#: include/global_settings.php:194
 #, fuzzy
 msgid "Rotate the Kadupul Log"
 msgstr "סובב את יומן Kadupul"
 
-#: include/global_settings.php:176
+#: include/global_settings.php:195
 msgid "This option will rotate the Kadupul Log periodically."
 msgstr "אפשרות זו תסובב את יומן Kadupul מעת לעת."
 
-#: include/global_settings.php:181
+#: include/global_settings.php:200
 msgid "Rotation Frequency"
 msgstr "תדר סיבוב"
 
-#: include/global_settings.php:182
+#: include/global_settings.php:201
 msgid "At what frequency would you like to rotate your logs?"
 msgstr "באיזו תדירות תרצה לסובב את היומנים שלך?"
 
-#: include/global_settings.php:188
+#: include/global_settings.php:207
 msgid "Log Retention"
 msgstr "שימור יומן"
 
-#: include/global_settings.php:189
+#: include/global_settings.php:208
 msgid "How many log files do you wish to retain?  Use 0 to never remove any logs. (0-365)"
 msgstr "כמה קובצי יומן ברצונך לשמור? השתמש ב 0 כדי לא להסיר אף פעם יומנים. (0-365)"
 
-#: include/global_settings.php:196
+#: include/global_settings.php:215
 msgid "Alternate Poller Path"
 msgstr "נתיב פולרים חלופי"
 
-#: include/global_settings.php:201
+#: include/global_settings.php:220
 msgid "Spine Binary File Location"
 msgstr "השדרה מיקום קובץ בינארי"
 
-#: include/global_settings.php:202
+#: include/global_settings.php:221
 msgid "The path to Spine binary."
 msgstr "השביל לשדרה בינארית."
 
-#: include/global_settings.php:209
+#: include/global_settings.php:228
 msgid "Spine Config File Path"
 msgstr "השדרה תצורת קובץ השדרה"
 
-#: include/global_settings.php:210
+#: include/global_settings.php:229
 msgid "The path to Spine configuration file.  By default, in the cwd of Spine, or /etc if not specified."
 msgstr "השביל לקובץ תצורה של עמוד השדרה. כברירת מחדל, ב cwd של עמוד השדרה, או / וכו &#39;אם לא צוין."
 
-#: include/global_settings.php:222
+#: include/global_settings.php:241
 msgid "RRDfile Auto Clean"
 msgstr "ניקוי אוטומטי של RRDfile"
 
-#: include/global_settings.php:223
+#: include/global_settings.php:242
 #, fuzzy
 msgid "Automatically archive or delete RRDfiles when their corresponding Data Sources are removed from Kadupul"
 msgstr "העבר אוטומטית לארכיון או מחק RRDfiles כאשר מקורות הנתונים המתאימים שלהם מוסרים Kadupul"
 
-#: include/global_settings.php:228
+#: include/global_settings.php:247
 msgid "RRDfile Auto Clean Method"
 msgstr "RRDfile אוטומטי ניקוי שיטה"
 
-#: include/global_settings.php:229
+#: include/global_settings.php:248
 msgid "The method used to Clean RRDfiles from Kadupul after their Data Sources are deleted."
 msgstr "השיטה המשמשת לניקוי RRDfiles מ Kadupul לאחר מקורות הנתונים שלהם נמחקים."
 
-#: include/global_settings.php:233
+#: include/global_settings.php:252
 msgid "Archive"
 msgstr "ארכיון"
 
-#: include/global_settings.php:238
+#: include/global_settings.php:257
 msgid "Archive directory"
 msgstr "ספריית ארכיון"
 
-#: include/global_settings.php:239
+#: include/global_settings.php:258
 msgid "This is the directory where RRDfiles are <strong>moved</strong> for archiving"
 msgstr "זוהי הספרייה שבה RRDfiles <strong>מועברים</strong> לארכיון"
 
-#: include/global_settings.php:247
+#: include/global_settings.php:266
 msgid "Log Settings"
 msgstr "הגדרות רישום"
 
-#: include/global_settings.php:252
+#: include/global_settings.php:271
 msgid "Log Destination"
 msgstr "יעד התחבר"
 
-#: include/global_settings.php:253
+#: include/global_settings.php:272
 msgid "How will Kadupul handle event logging."
 msgstr "איך Kadupul להתמודד עם רישום האירועים."
 
-#: include/global_settings.php:259
+#: include/global_settings.php:278
 msgid "Generic Log Level"
 msgstr "רמה כללית"
 
-#: include/global_settings.php:260
+#: include/global_settings.php:279
 msgid "What level of detail do you want sent to the log file.  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
 msgstr "באיזו רמה של פירוט ברצונך לשלוח את קובץ היומן. אזהרה: יציאה מכל מצב אחר מאשר NONE או LOW יכולה למצות את שטח הדיסק במהירות."
 
-#: include/global_settings.php:266
+#: include/global_settings.php:285
 msgid "Log Input Validation Issues"
 msgstr "בעיות אימות כניסה"
 
-#: include/global_settings.php:267
+#: include/global_settings.php:286
 msgid "Record when request fields are accessed without going through proper input validation"
 msgstr "הקלט כאשר ניתן לגשת לשדות הבקשה מבלי לעבור אימות קלט תקין"
 
-#: include/global_settings.php:272
+#: include/global_settings.php:291
 msgid "Data Source Tracing"
 msgstr "מקורות נתונים"
 
-#: include/global_settings.php:273
+#: include/global_settings.php:292
 msgid "A developer only option to trace the creation of Data Sources mainly around checks for uniqueness"
 msgstr "מפתח רק אפשרות לעקוב אחר יצירת מקורות נתונים בעיקר סביב בדיקות ייחודיות"
 
-#: include/global_settings.php:278
+#: include/global_settings.php:297
 msgid "Selective File Debug"
 msgstr "סלקטיבי קובץ Debug"
 
-#: include/global_settings.php:279
+#: include/global_settings.php:298
 msgid "Select which files you wish to place in Debug mode regardless of the Generic Log Level setting.  Any files selected will be treated as they are in Debug mode."
 msgstr "בחר אילו קבצים ברצונך להציב במצב Debug ללא קשר להגדרת Generic Log Level. כל הקבצים שנבחרו יטופלו כפי שהם במצב Debug."
 
-#: include/global_settings.php:285
+#: include/global_settings.php:304
 msgid "Selective Plugin Debug"
 msgstr "סלקטיבי Plugin Debug"
 
-#: include/global_settings.php:286
+#: include/global_settings.php:305
 msgid "Select which Plugins you wish to place in Debug mode regardless of the Generic Log Level setting.  Any files used by this plugin will be treated as they are in Debug mode."
 msgstr "בחר אילו תוספים ברצונך להציב במצב Debug ללא קשר להגדרת Generic Log Level. כל הקבצים המשמשים את הפלאגין יטופלו כפי שהם במצב Debug."
 
-#: include/global_settings.php:292
+#: include/global_settings.php:311
 msgid "Selective Device Debug"
 msgstr "סלקטיבי Device Debug"
 
-#: include/global_settings.php:293
+#: include/global_settings.php:312
 msgid "A comma delimited list of Device ID's that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
 msgstr "רשימה של מזהי התקן שמורכבת בפסיקים שברצונך להיות במצב Debug במהלך איסוף הנתונים. רמה זו Debug הוא רק במקום במהלך תהליך הסקרים Kadupul."
 
-#: include/global_settings.php:300
+#: include/global_settings.php:319
 msgid "Syslog/Eventlog Item Selection"
 msgstr "Syslog / Eventlog פריט בחירה"
 
-#: include/global_settings.php:301
+#: include/global_settings.php:320
 msgid "When using Syslog/Eventlog for logging, the Kadupul log messages that will be forwarded to the Syslog/Eventlog."
 msgstr "בעת שימוש ב- Syslog / Eventlog לרישום, הודעות יומן Kadupul שיועברו ל- Syslog / Eventlog."
 
-#: include/global_settings.php:306
+#: include/global_settings.php:325
 msgid "Statistics"
 msgstr "סטטיסטיקות"
 
-#: include/global_settings.php:310 lib/clog_webapi.php:551 utilities.php:1474
+#: include/global_settings.php:329 lib/clog_webapi.php:551 utilities.php:1474
 msgid "Warnings"
 msgstr "אזהרות"
 
-#: include/global_settings.php:314 lib/clog_webapi.php:553 utilities.php:1475
+#: include/global_settings.php:333 lib/clog_webapi.php:553 utilities.php:1475
 msgid "Errors"
 msgstr "שגיאות"
 
-#: include/global_settings.php:320
+#: include/global_settings.php:339
 msgid "Internationalization (i18n)"
 msgstr "בינלאומיות (i18n)"
 
-#: include/global_settings.php:325
+#: include/global_settings.php:344
 msgid "Language Support"
 msgstr "תמיכת שפה"
 
-#: include/global_settings.php:326
+#: include/global_settings.php:345
 msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."
 msgstr "בחר &#39;מופעלת&#39; כדי לאפשר את לוקליזציה של Kadupul. מצב קפדני דורש שהשפה המבוקשת תתמוך גם בכל יישומי הפלאגין המותקנים במערכת שלך. אם זה לא את העובדה שהכל יוצג באנגלית."
 
-#: include/global_settings.php:332
+#: include/global_settings.php:351
 msgid "Language"
 msgstr "שפה"
 
-#: include/global_settings.php:333
+#: include/global_settings.php:352
 msgid "Default language for this system."
 msgstr "שפת ברירת המחדל עבור מערכת זו."
 
-#: include/global_settings.php:339
+#: include/global_settings.php:358
 msgid "Auto Language Detection"
 msgstr "זיהוי שפה אוטומטית"
 
-#: include/global_settings.php:340
+#: include/global_settings.php:359
 msgid "Allow to automatically determine the 'default' language of the user and provide it at login time if that language is supported by Kadupul. If disabled, the default language will be in force until the user elects another language."
 msgstr "אפשר לקבוע באופן אוטומטי את שפת ברירת המחדל של המשתמש ולספק אותה בזמן ההתחברות, אם השפה נתמכת על ידי Kadupul. אם האפשרות מושבתת, שפת ברירת המחדל תהיה בתוקף עד שהמשתמש יבחר בשפה אחרת."
 
-#: include/global_settings.php:349
+#: include/global_settings.php:368
 msgid "Preferred Language Processor"
 msgstr "מעבד שפה מועדף"
 
-#: include/global_settings.php:350
+#: include/global_settings.php:369
 msgid "Kadupul includes support for multiple alternate Language Translation Processors.  If none is selected Kadupul will attempt to use the first one found."
 msgstr "Kadupul כולל תמיכה במספר מעבדי תרגום שפות חלופיות. זה יהיה ברירת המחדל להשתמש בתמיכה המובנית ב-PHP, אך לא כל גרסאות לינוקס כוללות תמיכת שפה מובנית. אם לא נבחר, Kadupul יבחר את הראשון שנמצא."
 
-#: include/global_settings.php:356
+#: include/global_settings.php:375
 msgid "Client TimeZone Support"
 msgstr "תמיכה ב - TimeZone"
 
-#: include/global_settings.php:357
+#: include/global_settings.php:376
 #, fuzzy
 msgid "How should Kadupul support Client Dates based upon the Client browsers timezone."
 msgstr "כיצד Kadupul צריכים לתמוך בתאריכי לקוח בהתבסס על אזור הזמן של דפדפני הלקוח."
 
-#: include/global_settings.php:366 include/global_settings.php:2640
+#: include/global_settings.php:385 include/global_settings.php:2635
 msgid "Date Display Format"
 msgstr "פורמט תצוגה תאריך"
 
-#: include/global_settings.php:367
+#: include/global_settings.php:386
 msgid "The System default date format to use in Kadupul."
 msgstr "פורמט תאריך ברירת המחדל של המערכת לשימוש ב- Kadupul."
 
-#: include/global_settings.php:373 include/global_settings.php:2647
+#: include/global_settings.php:392 include/global_settings.php:2642
 msgid "Date Separator"
 msgstr "מפריד תאריך"
 
-#: include/global_settings.php:374
+#: include/global_settings.php:393
 msgid "The System default date separator to be used in Kadupul."
 msgstr "מפריד התאריך של ברירת המחדל של המערכת לשימוש ב- Kadupul."
 
-#: include/global_settings.php:380
+#: include/global_settings.php:399
 msgid "Other Settings"
 msgstr "הגדרות אחרות"
 
-#: include/global_settings.php:385
+#: include/global_settings.php:404
 msgid "Show only site specific locations"
 msgstr "הגדר כאן אפשרויות ספציפיות לתרשים."
 
-#: include/global_settings.php:386
+#: include/global_settings.php:405
 msgid "Show only locations that are available at a devices selected site."
 msgstr "הצג רק מיקומים שזמינים באתר שנבחר במכשירים."
 
-#: include/global_settings.php:391
+#: include/global_settings.php:410
 msgid "Has Graphs/Data Sources Checked"
 msgstr "יש גרפים / מקורות נתונים נבדק"
 
-#: include/global_settings.php:392
+#: include/global_settings.php:411
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "האם יש לבדוק את הגרפים ואת מקורות הנתונים על פי ברירת המחדל."
 
-#: include/global_settings.php:397 utilities.php:287 utilities.php:292
+#: include/global_settings.php:416 utilities.php:287 utilities.php:292
 msgid "RRDtool Version"
 msgstr "RRDtool גירסה"
 
-#: include/global_settings.php:398
+#: include/global_settings.php:417
 msgid "The version of RRDtool that you have installed."
 msgstr "הגירסה של RRDtool שהתקנת."
 
-#: include/global_settings.php:404
+#: include/global_settings.php:423
 msgid "Enable Gradient Support"
 msgstr "הפעל דוח"
 
-#: include/global_settings.php:405
+#: include/global_settings.php:424
 msgid "Enabled Gradient Support for AREA and STACK charts."
 msgstr "תמיכה הדרגתית מופעלת עבור תרשימי אזור וערימה."
 
-#: include/global_settings.php:410
+#: include/global_settings.php:429
 msgid "Graph Permission Method"
 msgstr "שיטת הרשאה גרף"
 
-#: include/global_settings.php:411
+#: include/global_settings.php:430
 msgid "Graph access is granted directly by a graph permission in every mode. Permissive also grants access when the user has permission for the graph's device or template. Restrictive requires permission for both the device and template when there is no direct graph permission. Device Based requires device permission, and Graph Template Based requires template permission. User and group policies are evaluated separately and their allowed results are combined. These modes trade query performance against fine-grained permissions on large installations."
 msgstr ""
 
-#: include/global_settings.php:415
+#: include/global_settings.php:434
 msgid "Permissive"
 msgstr "מתירני"
 
-#: include/global_settings.php:416
+#: include/global_settings.php:435
 msgid "Restrictive"
 msgstr "מגבילה"
 
-#: include/global_settings.php:417
+#: include/global_settings.php:436
 msgid "Device Based"
 msgstr "שם ההתקן:% 1"
 
-#: include/global_settings.php:423
+#: include/global_settings.php:442
 msgid "Graph/Data Source Creation Method"
 msgstr "שיטת יצירת גרף / מקור נתונים"
 
-#: include/global_settings.php:424
+#: include/global_settings.php:443
 msgid "If set to Simple, Graphs and Data Sources can only be created from New Graphs.  If Advanced, legacy Graph and Data Source creation is supported."
 msgstr "אם מוגדר פשוט, גרפים ומקורות נתונים ניתן ליצור רק מ גרפים חדשים. אם יש תמיכה ביצירת גרסאות מתקדמות, גרסאות ומקור נתונים."
 
-#: include/global_settings.php:427
+#: include/global_settings.php:446
 msgid "Simple"
 msgstr "פשוט"
 
-#: include/global_settings.php:428 lib/html.php:2825
+#: include/global_settings.php:447 lib/html.php:2825
 msgid "Advanced"
 msgstr "מתקדם"
 
-#: include/global_settings.php:432
+#: include/global_settings.php:451
 msgid "Show Form/Setting Help Inline"
 msgstr "הצג טופס / הגדרת עזרה בשורה"
 
-#: include/global_settings.php:433
+#: include/global_settings.php:452
 msgid "When checked, Form and Setting Help will be show inline.  Otherwise it will be presented when hovering over the help button."
 msgstr "כאשר מסומנת, טופס ועזרה הגדרה יוצגו בשורה. אחרת היא תוצג כאשר תרחף מעל לחצן העזרה."
 
-#: include/global_settings.php:438
+#: include/global_settings.php:457
 msgid "Local Page Help Only"
 msgstr "קבל עזרה"
 
-#: include/global_settings.php:439
+#: include/global_settings.php:458
 msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of you Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
 msgstr "כברירת מחדל, העזרה בדף Kadupul נמצאת בכתובת kadupul.org.  עם זאת, אם למערכת שלכם אין גישה לאינטרנט, תוכלו להוריד את התיעוד באופן מקומי בפורמט HTML ולארח אותו במיקום 'docs' של שרת ה - Kadupul שלכם.  אם בחרת רק למנף את המיקום המקומי לתיעוד העזרה בדף, יש לסמן את תיבת הסימון הזו."
 
-#: include/global_settings.php:444
+#: include/global_settings.php:463
 msgid "Deletion Verification"
 msgstr "אימות מחיקה"
 
-#: include/global_settings.php:445
+#: include/global_settings.php:464
 msgid "Prompt user before item deletion."
 msgstr "הצג את המשתמש לפני מחיקת הפריט."
 
-#: include/global_settings.php:450
+#: include/global_settings.php:469
 msgid "Data Source Preservation Preset"
 msgstr "שיטת יצירת גרף / מקור נתונים"
 
-#: include/global_settings.php:451
+#: include/global_settings.php:470
 #, fuzzy
 msgid "When enabled, Kadupul will set Radio Button to Delete related Data Sources of a Graph when removing Graphs.  Note: Kadupul will not allow the removal of Data Sources if they are used in other Graphs."
 msgstr "כאשר מופעל, Kadupul יגדירו את כפתור הרדיו למחיקת מקורות נתונים קשורים לתרשים בעת הסרת גרפים. הערה: Kadupul לא יאפשרו הסרת מקורות נתונים אם משתמשים בהם בתרשימים אחרים."
 
-#: include/global_settings.php:456
+#: include/global_settings.php:475
 msgid "Graphs Auto Unlock"
 msgstr "כלל התאמה של גרף"
 
-#: include/global_settings.php:457
+#: include/global_settings.php:476
 #, fuzzy
 msgid "When enabled, Kadupul will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
 msgstr "כאשר מופעל, Kadupul לא נועלים גרפים. זה מאפשר שינוי ידני מהיר יותר של מקורות נתונים הקשורים לתרשים."
 
-#: include/global_settings.php:462
+#: include/global_settings.php:481
 msgid "Hide Kadupul Dashboard"
 msgstr "הסתר את לוח המחוונים של Kadupul"
 
-#: include/global_settings.php:463
+#: include/global_settings.php:482
 msgid "For use with Kadupul's External Link Support.  Using this setting, you can hide the Kadupul Dashboard, so you can display just your own page."
 msgstr "לשימוש עם תמיכה קישורים חיצוניים של Kadupul. באמצעות הגדרה זו, אתה יכול להסתיר את לוח המחוונים Kadupul, כך שתוכל להציג רק את הדף שלך."
 
-#: include/global_settings.php:468
+#: include/global_settings.php:487
 msgid "Enable Drag-N-Drop"
 msgstr "הפעל Drag-N-Drop"
 
-#: include/global_settings.php:469
+#: include/global_settings.php:488
 msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired user, this option may be disabled."
 msgstr "חלק ממשקי Kadupul תומכים ב- Drag-N-Drop. אם אפשרות זו מסומנת, תפעיל אפשרות זו. הערה: עבור משתמש לקויי ראייה, אפשרות זו עשויה להיות מושבתת."
 
-#: include/global_settings.php:474
+#: include/global_settings.php:493
 msgid "Site Security"
 msgstr "אבטחה של SMTP"
 
-#: include/global_settings.php:479
+#: include/global_settings.php:498
 msgid "Force Connections over HTTPS"
 msgstr "כפה חיבורים באמצעות HTTPS"
 
-#: include/global_settings.php:480
+#: include/global_settings.php:499
 msgid "When checked, any attempts to access Kadupul will be redirected to HTTPS to ensure high security."
 msgstr "כאשר מסומן, כל הניסיונות לגשת Kadupul ינותבו HTTPS כדי להבטיח אבטחה גבוהה."
 
-#: include/global_settings.php:485
+#: include/global_settings.php:504
 #, fuzzy
 msgid "Allow Unsafe Remote Data Collector HTTPS"
 msgstr "נתונים מרוחקים מצב אספן:"
 
-#: include/global_settings.php:486
+#: include/global_settings.php:505
 msgid "Allow the use of Self Signed Certificates and allow the hostname of the Certificate to differ from that of the Remote Data Collector."
 msgstr ""
 
-#: include/global_settings.php:491
+#: include/global_settings.php:510
 #, fuzzy
 msgid "Allow Unsafe Metacharacters in Data Input Methods"
 msgstr "השם של שיטת קלט נתונים זו."
 
-#: include/global_settings.php:492
+#: include/global_settings.php:511
 msgid "Historically, Kadupul administrators created simple Data Input Methods that include commands like \"ps -ef | grep something | wc -l\" to represent a numeric value for use in Kadupul Graphs.  In earlier versions of Kadupul, this was permitted.  However, this is an unsafe practice as it is a gateway for third party users to publish insecure Data Templates.  In modern Kadupul, these types of practices should be avoided.  However, we provide this option if you have older Data Input Methods that contain these unsafe Meta Characters and have not converted them to local scripts in the 'scripts' directory.  When this option is unchecked, Kadupul restricts shell-style metacharacters such as quotation marks, curly brackets, vertical bars, backslashes, and backticks.  Kadupul continues to allow greater-than and less-than signs for things like <path_cacti> and for input parameters, but if this option is unchecked, that is the limit of their permitted use."
 msgstr ""
 
-#: include/global_settings.php:498
+#: include/global_settings.php:517
 #, fuzzy
 msgid "Content-Security Script Policy"
 msgstr "מקורות חלופיים של אבטחת תוכן"
 
-#: include/global_settings.php:499
+#: include/global_settings.php:518
 msgid "Controls the script-src CSP policy. The Nonce Mode - Reporting Only choice reports inline scripts that lack a nonce without blocking them. The implementation also supports an enforcing nonce mode through direct configuration, but this mode is not offered here because many built-in pages and plugins still use inline scripts without nonces. Enabling enforcement before those scripts are migrated can break pages and plugins. Use CactiSecureHeaders::getNonceAttribute() when adding inline scripts."
 msgstr ""
 
-#: include/global_settings.php:502
+#: include/global_settings.php:521
 msgid "Allow Non-Nonced Inline JavaScript"
 msgstr ""
 
-#: include/global_settings.php:503
+#: include/global_settings.php:522
 msgid "Allow both unsafe-eval and Non-Nonced Inline JavaScript"
 msgstr ""
 
-#: include/global_settings.php:504
+#: include/global_settings.php:523
 msgid "Nonce Mode - Reporting Only"
 msgstr ""
 
-#: include/global_settings.php:508 include/global_settings.php:523
+#: include/global_settings.php:527 include/global_settings.php:542
 #, fuzzy
 msgid "CSP Violation Report URI"
 msgstr "דו&quot;ח קקט"
 
-#: include/global_settings.php:509
+#: include/global_settings.php:528
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use <url_path>/csp_report.php. Must contain only safe URL characters."
 msgstr ""
 
-#: include/global_settings.php:515
+#: include/global_settings.php:534
 msgid "Content-Security Alternate Sources"
 msgstr "מקורות חלופיים של אבטחת תוכן"
 
-#: include/global_settings.php:516
+#: include/global_settings.php:535
 msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
 msgstr "שמות דומיין מחוסלים בחלל שאפשר יהיה לגשת אליהם מחוץ לשרת האינטרנט עצמו. זה חשוב עבור משתמשים שבוחרים להשתמש ב- CDN או באתר אירוח. מקורות יכולים לכלול תווים כלליים למשל: *.mydomain.com, או פרוטוקול, למשל: https: //*.example.com. מקורות חלופיים אלה כוללים סוגי תמונה, CSS ו- JavaScript בלבד."
 
-#: include/global_settings.php:524
+#: include/global_settings.php:543
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use /cacti/csp_report.php at the installation root. Must contain only safe URL characters."
 msgstr ""
 
-#: include/global_settings.php:536
+#: include/global_settings.php:555
 msgid "Enable Automatic Graph Creation"
 msgstr "אפשר יצירת גרפים אוטומטית"
 
-#: include/global_settings.php:537
+#: include/global_settings.php:556
 msgid "When disabled, Kadupul Automation will not actively create any Graph.  This is useful when adjusting Device settings so as to avoid creating new Graphs each time you save an object.  Invoking Automation Rules manually will still be possible."
 msgstr "כאשר מושבת, Kadupul אוטומציה לא תיצור באופן פעיל כל גרף. אפשרות זו שימושית בעת התאמת הגדרות התקן, כדי למנוע יצירת גרפים חדשים בכל פעם שתשמור אובייקט. עדיין ניתן יהיה להשתמש בכללי אוטומציה ידנית."
 
-#: include/global_settings.php:542
+#: include/global_settings.php:561
 msgid "Enable Automatic Tree Item Creation"
 msgstr "אפשר יצירה אוטומטית של פריטי עץ"
 
-#: include/global_settings.php:543
+#: include/global_settings.php:562
 msgid "When disabled, Kadupul Automation will not actively create any Tree Item.  This is useful when adjusting Device or Graph settings so as to avoid creating new Tree Entries each time you save an object.  Invoking Rules manually will still be possible."
 msgstr "כאשר מושבת, Kadupul אוטומציה לא פעיל ליצור כל פריט עץ. אפשרות זו שימושית בעת התאמת הגדרות ההתקן או התרשים, כדי למנוע יצירת ערכי עץ חדשים בכל פעם שתשמור אובייקט. כללים ידניים ימשיכו להיות זמינים."
 
-#: include/global_settings.php:547
+#: include/global_settings.php:566
 msgid "Automation Notification To Email"
 msgstr "הודעת אוטומציה לדוא&quot;ל"
 
-#: include/global_settings.php:548
+#: include/global_settings.php:567
 msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admins Email account."
 msgstr "כתובת הדואר האלקטרוני לשליחה של הודעות אימייל לאוטומציה אם לא צוין ברמת &#39;אוטומציה&#39;. אם שדה זה או הערך &#39;רשת אוטומציה&#39; יישארו ריקים, Kadupul ישתמש בחשבון מנהלי הדואר הראשי של Kadupul."
 
-#: include/global_settings.php:554
+#: include/global_settings.php:573
 msgid "Automation Notification From Name"
 msgstr "הודעת אוטומציה מתוך השם"
 
-#: include/global_settings.php:555
+#: include/global_settings.php:574
 msgid "The Email Name to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name."
 msgstr "שם האימייל שישמש להודעות דוא&quot;ל של התראות אוטומטיות אם לא צוין ברמת רשת האוטומטי. אם שדה זה או הערך Network Automation נותרים ריקים, Kadupul ישתמש בברירת המחדל של המערכת משם."
 
-#: include/global_settings.php:562
+#: include/global_settings.php:581
 msgid "Automation Notification From Email"
 msgstr "הודעת אוטומציה מאת דואר אלקטרוני"
 
-#: include/global_settings.php:563
+#: include/global_settings.php:582
 msgid "The Email Address to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address."
 msgstr "כתובת הדואר האלקטרוני לשימוש בהודעות דוא&quot;ל של התראות אוטומטיות אם לא צוין ברמת רשת האוטומטי. אם שדה זה או הערך &#39;רשת אוטומציה&#39; נותרים ריקים, Kadupul ישתמש בברירת המחדל של המערכת מכתובת דואר אלקטרוני."
 
-#: include/global_settings.php:569
+#: include/global_settings.php:588
 msgid "Graph Template Defaults"
 msgstr "תבנית גרף מבוססת"
 
-#: include/global_settings.php:575
+#: include/global_settings.php:594
 msgid "Graph Template Test Data Source"
 msgstr "תרשים, מקור נתונים"
 
-#: include/global_settings.php:576
+#: include/global_settings.php:595
 msgid "Check this checkbox if you wish to test the Data Sources prior to their creation for new and newly imported Graph Templates.  With Test Data Sources enabled, if the Data Source does not return valid data, the Graph will not be created.  This setting is important if you wish to have a more generic Device Template that can include more Graph Templates that can be selectively applied depending on the characteristics of the Device itself.  Note: If you have a long running script as a Data Source, the time to create Graphs will be increased."
 msgstr "סמן תיבת סימון זו אם ברצונך לבדוק את מקורות הנתונים לפני יצירתם לתבניות גרף חדשות ומיובאות. כאשר מקורות נתוני בדיקה מופעלים, אם מקור הנתונים אינו מחזיר נתונים תקפים, הגרף לא ייווצר. הגדרה זו חשובה אם ברצונך לקבל תבנית מכשיר כללית יותר שתוכל לכלול יותר תבניות גרף הניתנות ליישום סלקטיבי בהתאם למאפייני ההתקן עצמו. הערה: אם יש לך סקריפט ממושך כמקור נתונים, הזמן ליצירת גרפים יוגדל."
 
-#: include/global_settings.php:581
+#: include/global_settings.php:600
 msgid "The default Image Format to be used for all new Graph Templates."
 msgstr "ברירת המחדל של תבנית תמונה שתשמש עבור כל תבניות הגרפים החדשות."
 
-#: include/global_settings.php:588
+#: include/global_settings.php:607
 msgid "The default Graph Height to be used for all new Graph Templates."
 msgstr "ברירת המחדל של רוחב התרשים לשימוש בכל תבניות הגרפים החדשות."
 
-#: include/global_settings.php:596
+#: include/global_settings.php:615
 msgid "The default Graph Width to be used for all new Graph Templates."
 msgstr "ברירת המחדל של רוחב התרשים לשימוש בכל תבניות הגרפים החדשות."
 
-#: include/global_settings.php:605
+#: include/global_settings.php:624
 msgid "General Defaults"
 msgstr "ברירות מחדל כלליות"
 
-#: include/global_settings.php:611
+#: include/global_settings.php:630
 msgid "The default Device Template used on all new Devices."
 msgstr "ברירת המחדל של תבנית המכשיר משמשת בכל המכשירים החדשים."
 
-#: include/global_settings.php:619
+#: include/global_settings.php:638
 msgid "The default Site for all new Devices."
 msgstr "אתר ברירת המחדל עבור כל המכשירים החדשים."
 
-#: include/global_settings.php:627
+#: include/global_settings.php:646
 msgid "The default Poller for all new Devices."
 msgstr "ברירת המחדל עבור כל המכשירים החדשים."
 
-#: include/global_settings.php:634
+#: include/global_settings.php:653
 msgid "Device Threads"
 msgstr "אשכולות המכשיר"
 
-#: include/global_settings.php:635
+#: include/global_settings.php:654
 msgid "The default number of Device Threads.  This is only applicable when using the Spine Data Collector."
 msgstr "מספר ברירת המחדל של שרשורי המכשיר. אפשרות זו חלה רק בעת השימוש במאגר הנתונים של עמוד השדרה."
 
-#: include/global_settings.php:639
+#: include/global_settings.php:658
 #, fuzzy, php-format
 msgid "%s Thread"
 msgstr "חוט"
 
-#: include/global_settings.php:640 include/global_settings.php:641
-#: include/global_settings.php:642 include/global_settings.php:643
-#: include/global_settings.php:644 include/global_settings.php:645
-#: include/global_settings.php:646 include/global_settings.php:647
-#: include/global_settings.php:648
+#: include/global_settings.php:659 include/global_settings.php:660
+#: include/global_settings.php:661 include/global_settings.php:662
+#: include/global_settings.php:663 include/global_settings.php:664
+#: include/global_settings.php:665 include/global_settings.php:666
+#: include/global_settings.php:667
 #, fuzzy, php-format
 msgid "%s Threads"
 msgstr "אשכולות"
 
-#: include/global_settings.php:652
+#: include/global_settings.php:671
 msgid "Re-index Method for Data Queries"
 msgstr "שיטת אינדקס מחדש לשאילתות נתונים"
 
-#: include/global_settings.php:653
+#: include/global_settings.php:672
 msgid "The default Re-index Method to use for all Data Queries."
 msgstr "ברירת המחדל של שיטת המדד לשימוש בכל שאילתות הנתונים."
 
-#: include/global_settings.php:659
+#: include/global_settings.php:678
 msgid "Default Interface Speed"
 msgstr "סוג גרף ברירת מחדל"
 
-#: include/global_settings.php:660
+#: include/global_settings.php:679
 msgid "If Kadupul can not determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
 msgstr "אם Kadupul לא יכול לקבוע את מהירות הממשק בשל אם ifSpeed או אם heSpeed לא מוגדר או להיות אפס, מה הערך המרבי אתה רוצה על RRDfiles וכתוצאה מכך."
 
-#: include/global_settings.php:664
+#: include/global_settings.php:683
 msgid "100 Mbps Ethernet"
 msgstr "100 Mbps Ethernet"
 
-#: include/global_settings.php:665
+#: include/global_settings.php:684
 msgid "1 Gbps Ethernet"
 msgstr "1 Gbps Ethernet"
 
-#: include/global_settings.php:666
+#: include/global_settings.php:685
 msgid "10 Gbps Ethernet"
 msgstr "10 Gbps Ethernet"
 
-#: include/global_settings.php:667
+#: include/global_settings.php:686
 msgid "25 Gbps Ethernet"
 msgstr "25 Gbps Ethernet"
 
-#: include/global_settings.php:668
+#: include/global_settings.php:687
 msgid "40 Gbps Ethernet"
 msgstr "40 Gbps Ethernet"
 
-#: include/global_settings.php:669
+#: include/global_settings.php:688
 msgid "56 Gbps Ethernet"
 msgstr "56 Gbps Ethernet"
 
-#: include/global_settings.php:670
+#: include/global_settings.php:689
 msgid "100 Gbps Ethernet"
 msgstr "100 Gbps Ethernet"
 
-#: include/global_settings.php:674
+#: include/global_settings.php:693
 msgid "SNMP Defaults"
 msgstr "ברירות מחדל של SNMP"
 
-#: include/global_settings.php:680
+#: include/global_settings.php:699
 msgid "Default SNMP version for all new Devices."
 msgstr "גרסת ברירת המחדל של SNMP עבור כל ההתקנים החדשים."
 
-#: include/global_settings.php:687
+#: include/global_settings.php:706
 msgid "Default SNMP read community for all new Devices."
 msgstr "ברירת המחדל של קהילת SNMP נקראת עבור כל המכשירים החדשים."
 
-#: include/global_settings.php:693
+#: include/global_settings.php:712
 msgid "Security Level"
 msgstr "רמת אבטחה"
 
-#: include/global_settings.php:694
+#: include/global_settings.php:713
 msgid "Default SNMP v3 Security Level for all new Devices."
 msgstr "ברירת המחדל של רמת האבטחה של SNMP v3 עבור כל ההתקנים החדשים."
 
-#: include/global_settings.php:701
+#: include/global_settings.php:720
 msgid "Auth Protocol (v3)"
 msgstr "פרוטוקול Auth (v3)"
 
-#: include/global_settings.php:702
+#: include/global_settings.php:721
 msgid "Default SNMPv3 Authorization Protocol for all new Devices."
 msgstr "ברירת מחדל של SNMPv3 פרוטוקול הרשאות עבור כל המכשירים החדשים."
 
-#: include/global_settings.php:707
+#: include/global_settings.php:726
 msgid "Auth User (v3)"
 msgstr "משתמש Auth (v3)"
 
-#: include/global_settings.php:708
+#: include/global_settings.php:727
 msgid "Default SNMP v3 Authorization User for all new Devices."
 msgstr "ברירת מחדל SNMP v3 הרשאות משתמש עבור כל ההתקנים החדשים."
 
-#: include/global_settings.php:715
+#: include/global_settings.php:734
 msgid "Auth Passphrase (v3)"
 msgstr "ביטוי סיסמה Auth (v3)"
 
-#: include/global_settings.php:716
+#: include/global_settings.php:735
 msgid "Default SNMP v3 Authorization Passphrase for all new Devices."
 msgstr "ברירת מחדל של SNMP v3 הרשאת סיסמה עבור כל ההתקנים החדשים."
 
-#: include/global_settings.php:724
+#: include/global_settings.php:743
 msgid "Privacy Protocol (v3)"
 msgstr "פרוטוקול פרטיות (v3)"
 
-#: include/global_settings.php:725
+#: include/global_settings.php:744
 msgid "Default SNMPv3 Privacy Protocol for all new Devices."
 msgstr "ברירת מחדל של פרוטוקול פרטיות SNMPv3 עבור כל ההתקנים החדשים."
 
-#: include/global_settings.php:731
+#: include/global_settings.php:750
 msgid "Privacy Passphrase (v3)"
 msgstr "משפט סיסמה לפרטיות (v3)."
 
-#: include/global_settings.php:732
+#: include/global_settings.php:751
 msgid "Default SNMPv3 Privacy Passphrase for all new Devices."
 msgstr "ברירת מחדל של סיסמת ברירת המחדל של SNMPv3 עבור כל ההתקנים החדשים."
 
-#: include/global_settings.php:740
+#: include/global_settings.php:759
 msgid "Enter the SNMP v3 Context for all new Devices."
 msgstr "הזן את ההקשר של SNMP v3 עבור כל ההתקנים החדשים."
 
-#: include/global_settings.php:749
+#: include/global_settings.php:768
 msgid "Default SNMP v3 Engine Id for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
 msgstr "ברירת מחדל SNMP v3 מזהה מנוע עבור כל ההתקנים החדשים. השאר שדה זה ריק כדי להשתמש במזהה SNMP Engine המוגדר לכל מקלט ההודעות של SNMPv3."
 
-#: include/global_settings.php:756
+#: include/global_settings.php:775
 msgid "Port Number"
 msgstr "מספר נמל"
 
-#: include/global_settings.php:757
+#: include/global_settings.php:776
 msgid "Default UDP Port for all new Devices.  Typically 161."
 msgstr "ברירת מחדל של יציאת UDP עבור כל ההתקנים החדשים. בדרך כלל 161."
 
-#: include/global_settings.php:765
+#: include/global_settings.php:784
 msgid "Default SNMP timeout in milli-seconds for all new Devices."
 msgstr "ברירת מחדל של זמן הקצאת SNMP במילי-שניות עבור כל המכשירים החדשים."
 
-#: include/global_settings.php:773
+#: include/global_settings.php:792
 msgid "Default SNMP retries for all new Devices."
 msgstr "ברירת המחדל של SNMP מנסה שוב עבור כל המכשירים החדשים."
 
-#: include/global_settings.php:780
+#: include/global_settings.php:799
 msgid "Availability/Reachability"
 msgstr "זמינות / יכולת חזרה"
 
-#: include/global_settings.php:786
+#: include/global_settings.php:805
 msgid "Default Availability/Reachability for all new Devices.  The method Kadupul will use to determine if a Device is available for polling.  <br><i>NOTE: It is recommended that, at a minimum, SNMP always be selected.</i>"
 msgstr "ברירת מחדל זמינות / יכולת חזרה לכל המכשירים החדשים. השיטה Kadupul תשתמש כדי לקבוע אם התקן זמין עבור הסקרים. <br> <i>הערה: מומלץ לבחור, לכל הפחות, SNMP תמיד.</i>"
 
-#: include/global_settings.php:792
+#: include/global_settings.php:811
 msgid "Ping Type"
 msgstr "סוג פינג"
 
-#: include/global_settings.php:793
+#: include/global_settings.php:812
 msgid "Default Ping type for all new Devices.</i>"
 msgstr "ברירת מחדל Ping סוג עבור כל המכשירים החדשים."
 
-#: include/global_settings.php:800
+#: include/global_settings.php:819
 msgid "Default Ping Port for all new Devices.  With TCP, Kadupul will attempt to Syn the port.  With UDP, Kadupul requires either a successful connection, or a 'port not reachable' error to determine if the Device is up or not."
 msgstr "ברירת מחדל Ping Port עבור כל ההתקנים החדשים. עם TCP, Kadupul ינסה לסנכרן את היציאה. עם UDP, Kadupul דורש חיבור מוצלח, או &quot;יציאה לא נגיש&quot; שגיאה כדי לקבוע אם המכשיר הוא מעלה או לא."
 
-#: include/global_settings.php:808
+#: include/global_settings.php:827
 msgid "Default Ping Timeout value in milli-seconds for all new Devices.  The timeout values to use for Device SNMP, ICMP, UDP and TCP pinging.  ICMP Pings will be rounded up to the nearest second.  TCP and UDP connection timeouts on Windows are controlled by the operating system, and are therefore not recommended on Windows."
 msgstr "ערך ברירת המחדל של Ping Timeout במילי-שניות עבור כל המכשירים החדשים. ערכי הזמן הקצוב לשימוש עבור התקן SNMP, ICMP, UDP ו- TCP pinging. ICMP Pings יהיה מעוגל עד השנייה הקרובה. חיבורי זמן של חיבורי TCP ו- UDP ב- Windows נשלטים על-ידי מערכת ההפעלה, ולכן אינם מומלצים ב- Windows."
 
-#: include/global_settings.php:816
+#: include/global_settings.php:835
 msgid "The number of times Kadupul will attempt to ping a Device before marking it as down."
 msgstr "מספר הפעמים Kadupul ינסה ping מכשיר לפני סימון אותו למטה."
 
-#: include/global_settings.php:823
+#: include/global_settings.php:842
 msgid "Up/Down Settings"
 msgstr "למעלה / למטה הגדרות"
 
-#: include/global_settings.php:828
+#: include/global_settings.php:847
 msgid "Failure Count"
 msgstr "ספירת כשל"
 
-#: include/global_settings.php:829
+#: include/global_settings.php:848
 msgid "The number of polling intervals a Device must be down before logging an error and reporting Device as down."
 msgstr "מספר פרקי הסקרים המכשיר חייב להיות למטה לפני רישום שגיאה ודיווח על המכשיר כעל מטה."
 
-#: include/global_settings.php:836
+#: include/global_settings.php:855
 msgid "Recovery Count"
 msgstr "ספירת השחזור"
 
-#: include/global_settings.php:837
+#: include/global_settings.php:856
 msgid "The number of polling intervals a Device must remain up before returning Device to an up status and issuing a notice."
 msgstr "מספר המרווחים של ההצבעה במכשיר חייב להישאר מעודכן לפני החזרת ההתקן למצב מעלה והודעה."
 
-#: include/global_settings.php:846
+#: include/global_settings.php:865
 msgid "Theme Settings"
 msgstr "הגדרות עיצוב"
 
-#: include/global_settings.php:851 include/global_settings.php:1061
-#: include/global_settings.php:2585 lib/html.php:2773
+#: include/global_settings.php:870 include/global_settings.php:1080
+#: include/global_settings.php:2580 lib/html.php:2773
 msgid "Theme"
 msgstr "תבנית"
 
-#: include/global_settings.php:852 include/global_settings.php:2586
+#: include/global_settings.php:871 include/global_settings.php:2581
 msgid "Please select one of the available Themes to skin your Kadupul with."
 msgstr "בחר אחד מהנושאים הזמינים לעור שלך עם Kadupul."
 
-#: include/global_settings.php:858
+#: include/global_settings.php:877
 msgid "Table Settings"
 msgstr "הגדרות הטבלה"
 
-#: include/global_settings.php:863
+#: include/global_settings.php:882
 msgid "Rows Per Page"
 msgstr "שורות לעמוד"
 
-#: include/global_settings.php:864
+#: include/global_settings.php:883
 msgid "The default number of rows to display on for a table."
 msgstr "מספר ברירת המחדל של שורות להצגה עבור טבלה."
 
-#: include/global_settings.php:870
+#: include/global_settings.php:889
 msgid "Autocomplete Enabled"
 msgstr "השלמה אוטומטית מופעלת"
 
-#: include/global_settings.php:871
+#: include/global_settings.php:890
 msgid "In very large systems, select lists can slow the user interface significantly.  If this option is enabled, Kadupul will use autocomplete callbacks to populate the select list systematically.  Note: autocomplete is forcibly disabled on the Classic theme."
 msgstr "במערכות גדולות מאוד, רשימות נבחרות יכולות להאט באופן משמעותי את ממשק המשתמש. אם אפשרות זו מופעלת, Kadupul תשתמש בקריאות השלמה אוטומטית כדי לאכלס את הרשימה שנבחרה באופן שיטתי. הערה: ההשלמה האוטומטית מושבתת בכפייה על העיצוב הקלאסי."
 
-#: include/global_settings.php:880
+#: include/global_settings.php:899
 msgid "Autocomplete Rows"
 msgstr "השלמה אוטומטית של שורות"
 
-#: include/global_settings.php:881 include/global_settings.php:901
+#: include/global_settings.php:900 include/global_settings.php:920
 msgid ".  This is limited by the php setting 'max_input_vars', currently:"
 msgstr ".  זה מוגבל על ידי הגדרת PHP 'MAX_INPUT_VARS ', כרגע:"
 
-#: include/global_settings.php:881
+#: include/global_settings.php:900
 msgid "The default number of rows to return from an autocomplete based select pattern match."
 msgstr "מספר השורות המוגדר כברירת מחדל כדי לחזור מתבנית התבנית שנבחרה על ידי ההשלמה האוטומטית."
 
-#: include/global_settings.php:892 include/global_settings.php:2815
+#: include/global_settings.php:911 include/global_settings.php:2810
 msgid "Minimum Tree Width"
 msgstr "אורך מינימלי"
 
-#: include/global_settings.php:893 include/global_settings.php:2816
+#: include/global_settings.php:912 include/global_settings.php:2811
 msgid "The Minimum width of the Tree to contract to."
 msgstr "הרוחב המינימלי של העץ אליו יתכווץ."
 
-#: include/global_settings.php:900 include/global_settings.php:2823
+#: include/global_settings.php:919 include/global_settings.php:2818
 msgid "Maximum Tree Width"
 msgstr "אורך כותרת מרבי"
 
-#: include/global_settings.php:901 include/global_settings.php:2824
+#: include/global_settings.php:920 include/global_settings.php:2819
 msgid "The Maximum width of the Tree to expand to, after which time, Tree branches will scroll on the page."
 msgstr "הרוחב המרבי של העץ להתרחבות ואחריו זמן ענפי העץ יגלול על הדף."
 
-#: include/global_settings.php:908
+#: include/global_settings.php:927
 msgid "Filter Settings"
 msgstr "הגדרות סינון"
 
-#: include/global_settings.php:913
+#: include/global_settings.php:932
 msgid "Strip Domains from Device Dropdowns"
 msgstr "הפשט דומיינים מהתפריטים הנפתחים של מכשירים"
 
-#: include/global_settings.php:914
+#: include/global_settings.php:933
 msgid "When viewing Device name filter dropdowns, checking this option will strip to domain from the hostname."
 msgstr "בעת צפייה בתפריטים הנפתחים של מסנן שם המכשיר, בדיקת אפשרות זו תגרום לדומיין משם המארח."
 
-#: include/global_settings.php:919
+#: include/global_settings.php:938
 msgid "Graph/Data Source/Data Query Settings"
 msgstr "תרשים / מקור נתונים / הגדרות שאילתת נתונים"
 
-#: include/global_settings.php:924
+#: include/global_settings.php:943
 msgid "Maximum Title Length"
 msgstr "אורך כותרת מרבי"
 
-#: include/global_settings.php:925
+#: include/global_settings.php:944
 msgid "The maximum allowable Graph or Data Source titles."
 msgstr "הגרף המרבי המותר או מקור הנתונים."
 
-#: include/global_settings.php:932
+#: include/global_settings.php:951
 msgid "Data Source Field Length"
 msgstr "אורך שדה מקור נתונים"
 
-#: include/global_settings.php:933
+#: include/global_settings.php:952
 msgid "The maximum Data Query field length."
 msgstr "אורך השדה המרבי של שאילתת נתונים."
 
-#: include/global_settings.php:940
+#: include/global_settings.php:959
 msgid "Graph Creation"
 msgstr "יצירת גרפים"
 
-#: include/global_settings.php:945
+#: include/global_settings.php:964
 msgid "Default Graph Type"
 msgstr "סוג גרף ברירת מחדל"
 
-#: include/global_settings.php:946
+#: include/global_settings.php:965
 #, fuzzy
 msgid "When creating graphs, what Graph Type would you like preselected?"
 msgstr "בעת יצירת גרפים, איזה סוג גרף תרצה לבחור מראש?"
 
-#: include/global_settings.php:950
+#: include/global_settings.php:969
 msgid "All Types"
 msgstr "כל הסוגים"
 
-#: include/global_settings.php:951
+#: include/global_settings.php:970
 msgid "By Template/Data Query"
 msgstr "מאת שאילתה / שאילתת נתונים"
 
-#: include/global_settings.php:955
+#: include/global_settings.php:974
 msgid "Log Management"
 msgstr "ניהול יומן"
 
-#: include/global_settings.php:960
+#: include/global_settings.php:979
 msgid "Default Log Tail Lines"
 msgstr "ברירת מחדל כניסה זנב קווים"
 
-#: include/global_settings.php:961
+#: include/global_settings.php:980
 #, fuzzy
 msgid "Default number of lines of the Kadupul log file to tail."
 msgstr "מספר ברירת המחדל של השורות של קובץ יומן Kadupul לזנב."
 
-#: include/global_settings.php:967
+#: include/global_settings.php:986
 msgid "Maximum number of rows per page"
 msgstr "מספר השורות המרבי לכל דף"
 
-#: include/global_settings.php:968
+#: include/global_settings.php:987
 msgid "User defined number of lines for the CLOG to tail when selecting 'All lines'."
 msgstr "המשתמש הגדיר מספר שורות עבור CLOG כדי הזנב בעת בחירת &quot;כל השורות&quot;."
 
-#: include/global_settings.php:975
+#: include/global_settings.php:994
 msgid "Log Tail Refresh"
 msgstr "התחבר זנב רענון"
 
-#: include/global_settings.php:976
+#: include/global_settings.php:995
 msgid "How often do you want the Kadupul log display to update."
 msgstr "באיזו תדירות ברצונך להציג את תצוגת היומן של Kadupul."
 
-#: include/global_settings.php:982
+#: include/global_settings.php:1001
 msgid "Log Viewer Settings"
 msgstr "הגדרות תצוגת יומן"
 
-#: include/global_settings.php:987
+#: include/global_settings.php:1006
 msgid "Exclusion Regex"
 msgstr "אי הכללה של Regex"
 
-#: include/global_settings.php:988
+#: include/global_settings.php:1007
 msgid "Any strings that match this regex will be excluded from the user display.  <strong>For example, if you want to exclude all log lines that include the words 'Admin' or 'Login' you would type '(Admin || Login)'</strong>"
 msgstr "כל מחרוזות התואמות את הביטוי הרגולרי הזה לא ייכללו בתצוגת המשתמש. <strong>לדוגמה, אם ברצונך לא לכלול את כל שורות היומן הכוללות את המילים &#39;מנהל&#39; או &#39;התחברות&#39;, עליך להקליד &#39;(Admin || Login)&#39;</strong>"
 
-#: include/global_settings.php:995
+#: include/global_settings.php:1014
 msgid "Real-time Graphs"
 msgstr "גרפים בזמן אמת"
 
-#: include/global_settings.php:1000
+#: include/global_settings.php:1019
 msgid "Enable Real-time Graphing"
 msgstr "אפשר גרפים בזמן אמת"
 
-#: include/global_settings.php:1001
+#: include/global_settings.php:1020
 msgid "When an option is checked, users will be able to put Kadupul into Real-time mode."
 msgstr "כאשר אפשרות מסומנת, משתמשים יוכלו לשים Kadupul לתוך מצב בזמן אמת."
 
-#: include/global_settings.php:1007
+#: include/global_settings.php:1026
 msgid "This timespan you wish to see on the default graph."
 msgstr "לוח זמנים זה ברצונך לראות בתרשים ברירת המחדל."
 
-#: include/global_settings.php:1013
+#: include/global_settings.php:1032
 msgid "Minimum Refresh Interval"
 msgstr "מרווח רענון"
 
-#: include/global_settings.php:1014
+#: include/global_settings.php:1033
 msgid "This is the minimal supported time between Graph updates.  This value is also used to set certain RRDfile attributes.  If you have a Device that caches data and does not provide realtime updates, you may have to increase the default Minimum Refresh Interval to prevent creating Graphs with gaps."
 msgstr "זהו הזמן הנתמך המינימלי בין עדכוני הגרף. ערך זה משמש גם להגדרת תכונות RRDfile מסוימות. אם יש לך מכשיר המאחסן נתונים ואינו מספק עדכונים בזמן אמת, ייתכן שיהיה עליך להגדיל את ברירת המחדל של מרווח רענון מינימלי כדי למנוע יצירת גרפים עם פערים."
 
-#: include/global_settings.php:1020
+#: include/global_settings.php:1039
 msgid "Cache Directory"
 msgstr "מדריך המטמון"
 
-#: include/global_settings.php:1021
+#: include/global_settings.php:1040
 msgid "This is the location, on the web server where the RRDfiles and PNG files will be cached.  This cache will be managed by the poller.  Make sure you have the correct read and write permissions on this folder"
 msgstr "זהו המיקום, בשרת האינטרנט שבו קובצי ה- RRDfiles ו- PNG יישמרו במטמון. מטמון זה ינוהל על ידי הסוקר. ודא שיש לך את הרשאות הקריאה והכתיבה הנכונות בתיקיה זו"
 
-#: include/global_settings.php:1028
+#: include/global_settings.php:1047
 msgid "RRDtool Graph Options"
 msgstr "אפשרויות תרשים"
 
-#: include/global_settings.php:1033
+#: include/global_settings.php:1052
 msgid "Custom Watermark"
 msgstr "צבעים"
 
-#: include/global_settings.php:1034
+#: include/global_settings.php:1053
 msgid "Text placed at the bottom center of every Graph."
 msgstr "טקסט ממוקם במרכז התחתון של כל גרף."
 
-#: include/global_settings.php:1041
+#: include/global_settings.php:1060
 msgid "Custom Date Format"
 msgstr "צבעים"
 
-#: include/global_settings.php:1042
+#: include/global_settings.php:1061
 msgid "To be used when formatting |date_time| on a graph"
 msgstr "לשימוש בעת עיצוב | תאריך_שעה | על גרף"
 
-#: include/global_settings.php:1049
+#: include/global_settings.php:1068
 msgid "Disable RRDtool Watermark"
 msgstr "RRDtool גרף סימן מים"
 
-#: include/global_settings.php:1050
+#: include/global_settings.php:1069
 msgid "Provided your RRDtool version supports it, you may disable RRDtool advertisement on your Graphs by checking this option."
 msgstr "בתנאי שגרסת ה- RRDtool שלך תומכת בה, תוכל להשבית את הפרסומת של RRDtool בגרפים שלך על ידי סימון אפשרות זו."
 
-#: include/global_settings.php:1055
+#: include/global_settings.php:1074
 msgid "Font Selection Method"
 msgstr "שיטת בחירת גופן"
 
-#: include/global_settings.php:1056
+#: include/global_settings.php:1075
 msgid "How do you wish fonts to be handled by default?"
 msgstr "כיצד ברצונך לטפל בגופנים כברירת מחדל?"
 
-#: include/global_settings.php:1060 lib/api_device.php:1897
+#: include/global_settings.php:1079 lib/api_device.php:1897
 msgid "System"
 msgstr "מערכת"
 
-#: include/global_settings.php:1065
+#: include/global_settings.php:1084
 msgid "Default Font"
 msgstr "גופן ברירת מחדל"
 
-#: include/global_settings.php:1066
+#: include/global_settings.php:1085
 msgid "When not using Theme based font control, the Pango font description to use for all Graphs, such as DejaVu Sans. Optionally, you may leave blank and control font settings on a per object basis."
 msgstr ""
 
-#: include/global_settings.php:1068 include/global_settings.php:1087
-#: include/global_settings.php:1106 include/global_settings.php:1125
-#: include/global_settings.php:1144 include/global_settings.php:2852
-#: include/global_settings.php:2870 include/global_settings.php:2888
-#: include/global_settings.php:2906
-msgid "Enter a Pango font description"
-msgstr ""
-
-#: include/global_settings.php:1074 include/global_settings.php:2840
+#: include/global_settings.php:1089 include/global_settings.php:2835
 msgid "Title Font Size"
 msgstr "גופן כותרת"
 
-#: include/global_settings.php:1075 include/global_settings.php:2841
+#: include/global_settings.php:1090 include/global_settings.php:2836
 msgid "The size of the font used for Graph Titles"
 msgstr "גודל הגופן המשמש לכותרות גרף"
 
-#: include/global_settings.php:1084 include/global_settings.php:2849
+#: include/global_settings.php:1099 include/global_settings.php:2844
 msgid "Title Font Setting"
 msgstr "הגדרת גופן כותרת"
 
-#: include/global_settings.php:1085
+#: include/global_settings.php:1100
 msgid "The font to use for Graph Titles.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
 msgstr ""
 
-#: include/global_settings.php:1093 include/global_settings.php:2858
+#: include/global_settings.php:1103 include/global_settings.php:2848
 msgid "Legend Font Size"
 msgstr "גודל גופן מקרא"
 
-#: include/global_settings.php:1094 include/global_settings.php:2859
+#: include/global_settings.php:1104 include/global_settings.php:2849
 msgid "The size of the font used for Graph Legend items"
 msgstr "גודלו של הגופן המשמש לפריטי Legend"
 
-#: include/global_settings.php:1103 include/global_settings.php:2867
+#: include/global_settings.php:1113 include/global_settings.php:2857
 msgid "Legend Font Setting"
 msgstr "הגדרת גופן מקרא"
 
-#: include/global_settings.php:1104
+#: include/global_settings.php:1114
 msgid "The font to use for Graph Legends.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
 msgstr ""
 
-#: include/global_settings.php:1112 include/global_settings.php:2876
+#: include/global_settings.php:1117 include/global_settings.php:2861
 msgid "Axis Font Size"
 msgstr "גודל גופן ציר"
 
-#: include/global_settings.php:1113 include/global_settings.php:2877
+#: include/global_settings.php:1118 include/global_settings.php:2862
 msgid "The size of the font used for Graph Axis"
 msgstr "גודל הגופן המשמש לציר גרף"
 
-#: include/global_settings.php:1122 include/global_settings.php:2885
+#: include/global_settings.php:1127 include/global_settings.php:2870
 msgid "Axis Font Setting"
 msgstr "הגדרת גופן ציר"
 
-#: include/global_settings.php:1123
+#: include/global_settings.php:1128
 msgid "The font to use for Graph Axis items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
 msgstr ""
 
-#: include/global_settings.php:1131 include/global_settings.php:2894
+#: include/global_settings.php:1131 include/global_settings.php:2874
 msgid "Unit Font Size"
 msgstr "גודל גופן יחידה"
 
-#: include/global_settings.php:1132 include/global_settings.php:2895
+#: include/global_settings.php:1132 include/global_settings.php:2875
 msgid "The size of the font used for Graph Units"
 msgstr "גודל הגופן המשמש ליחידות גרפים"
 
-#: include/global_settings.php:1141 include/global_settings.php:2903
+#: include/global_settings.php:1141 include/global_settings.php:2883
 msgid "Unit Font Setting"
 msgstr "הגדרת גופן יחידה"
 
@@ -10669,151 +10665,159 @@ msgstr "הגדרת גופן יחידה"
 msgid "The font to use for Graph Unit items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
 msgstr ""
 
-#: include/global_settings.php:1150
+#: include/global_settings.php:1145
 msgid "Business Hours Settings"
 msgstr "הגדרות משתמש"
 
-#: include/global_settings.php:1155
+#: include/global_settings.php:1150
 msgid "Start of Business Day"
 msgstr "יום תחילת העסק"
 
-#: include/global_settings.php:1156
+#: include/global_settings.php:1151
 msgid "The time your business hours start. Format: hh:mm"
 msgstr "השעה שבה שעות הפעילות של העסק שלך מתחילות. פורמט: hh:mm"
 
-#: include/global_settings.php:1163
+#: include/global_settings.php:1158
 msgid "End of Business Day"
 msgstr "סוף יום העסקים"
 
-#: include/global_settings.php:1164
+#: include/global_settings.php:1159
 msgid "The time your business hours end. Format: hh:mm"
 msgstr "השעה שבה שעות הפעילות שלך מסתיימות. פורמט: hh:mm"
 
-#: include/global_settings.php:1171
+#: include/global_settings.php:1166
 msgid "Hide Weekends"
 msgstr "% d שבועות"
 
-#: include/global_settings.php:1172
+#: include/global_settings.php:1167
 msgid "Only show business hours during weekdays."
 msgstr "להציג את שעות הפעילות של העסק רק בימי חול."
 
-#: include/global_settings.php:1177
+#: include/global_settings.php:1172
 #, fuzzy
 msgid "Show business hours"
 msgstr "שעות פעילות"
 
-#: include/global_settings.php:1178
+#: include/global_settings.php:1173
 msgid "Display business hours on rrd graphs."
 msgstr "הצג שעות עסקים על גרפי rrd."
 
-#: include/global_settings.php:1183
+#: include/global_settings.php:1178
 msgid "Color to use for business hours"
 msgstr "צבע לשימוש בשעות הפעילות"
 
-#: include/global_settings.php:1184
+#: include/global_settings.php:1179
 msgid "The color to be shown for business hours"
 msgstr "הצבע שיוצג לשעות הפעילות"
 
-#: include/global_settings.php:1191
+#: include/global_settings.php:1186
 msgid "Maximum number of days to show business hours"
 msgstr "מספר השורות המרבי לכל דף"
 
-#: include/global_settings.php:1192
+#: include/global_settings.php:1187
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "לאחר מספר ימים זה, שעות הפעילות לא יתווספו לגרף. <br/>מומלץ: 62 ימים"
 
-#: include/global_settings.php:1207
+#: include/global_settings.php:1202
 msgid "Data Collection Enabled"
 msgstr "איסוף הנתונים מופעל"
 
-#: include/global_settings.php:1208
+#: include/global_settings.php:1203
 msgid "If you wish to stop the polling process completely, uncheck this box."
 msgstr "אם ברצונך להפסיק לחלוטין את תהליך הסקרים, בטל את הסימון בתיבה זו."
 
-#: include/global_settings.php:1214
+#: include/global_settings.php:1209
 msgid "SNMP Agent Support Enabled"
 msgstr "תמיכה ב - SNMP Agent מופעלת"
 
-#: include/global_settings.php:1215
+#: include/global_settings.php:1210
 msgid "If this option is checked, Kadupul will populate SNMP Agent tables with Kadupul device and system information.  It does not enable the SNMP Agent itself."
 msgstr "אם אפשרות זו מסומנת, Kadupul יאכלס טבלאות SNMP Agent עם התקן Kadupul ומידע על המערכת. הוא אינו מאפשר את ה- SNMP Agent עצמו."
 
-#: include/global_settings.php:1220
+#: include/global_settings.php:1215
 msgid "Poller Type"
 msgstr "סוג פולר"
 
-#: include/global_settings.php:1221
+#: include/global_settings.php:1216
 msgid "The poller type to use.  This setting will take affect at next polling interval."
 msgstr "סוג הסולם לשימוש. הגדרה זו תיכנס לתוקף בהצבעה הבאה."
 
-#: include/global_settings.php:1227
+#: include/global_settings.php:1222
 msgid "Poller Sync Interval"
 msgstr "סולם המרווח סנכרון"
 
-#: include/global_settings.php:1228
+#: include/global_settings.php:1223
 msgid "The default polling sync interval to use when creating a poller.  This setting will affect how often remote pollers are checked and updated."
 msgstr "ברירת המחדל של סנכרון הסריקה מרווח לשימוש בעת יצירת אבקה. הגדרה זו תשפיע על התדירות שבה בודקים מרוחקים ומעודכנים."
 
-#: include/global_settings.php:1235
+#: include/global_settings.php:1230
 msgid "The polling interval in use.  This setting will affect how often RRDfiles are checked and updated.  <strong><u>NOTE: If you change this value, you must re-populate the poller cache.  Failure to do so, may result in lost data.</u></strong>"
 msgstr "מרווח הסקרים בשימוש. הגדרה זו תשפיע על התדירות שבה RRDfiles נבדקים ומעודכנים. <strong><u>הערה: אם תשנה ערך זה, עליך לאכלס מחדש את הקובץ השמור של המארח. אם לא תעשה זאת, עלול לגרום לאיבוד נתונים.</u></strong>"
 
-#: include/global_settings.php:1241
+#: include/global_settings.php:1236
 msgid "Cron/Daemon Interval"
 msgstr "מרווח Cron"
 
-#: include/global_settings.php:1242
+#: include/global_settings.php:1237
 #, fuzzy
 msgid "The frequency that the Kadupul data collector will be started.  You can use either crontab, a scheduled task (for windows), or the cactid systemd service to control launching the Kadupul data collector.  For instructions on using the cactid daemon, review the README.md file in the service directory."
 msgstr "התדירות בה יופעל אספן הנתונים של Kadupul. תוכל להשתמש ב- crontab, במשימה מתוזמנת (עבור חלונות) או בשירות systemd cactid כדי לשלוט בהשקת אספן הנתונים של Kadupul. לקבלת הוראות לשימוש בדמון Kadupul, עיין בקובץ README.md בספריית השירות."
 
-#: include/global_settings.php:1248
+#: include/global_settings.php:1243
 msgid "Balance Process Load"
 msgstr "עומס תהליך יתרה"
 
-#: include/global_settings.php:1249
+#: include/global_settings.php:1244
 msgid "If you choose this option, Kadupul will attempt to balance the load of each poller process by equally distributing poller items per process."
 msgstr "אם תבחר באפשרות זו, Kadupul תנסה לאזן את העומס של כל תהליך אבנר על ידי הפצה שווה פריטים פריטים לכל תהליך."
 
-#: include/global_settings.php:1254
+#: include/global_settings.php:1249
 msgid "Debug Output Width"
 msgstr "רוחב באגים של ניפוי באגים"
 
-#: include/global_settings.php:1255
+#: include/global_settings.php:1250
 msgid "If you choose this option, Kadupul will check for output that exceeds Kadupul's ability to store it and issue a warning when it finds it."
 msgstr "אם תבחר באפשרות זו, Kadupul תבדוק פלט שחורג מיכולתו של Kadupul לאחסן אותו ולהוציא אזהרה כאשר הוא מוצא אותו."
 
-#: include/global_settings.php:1260
+#: include/global_settings.php:1255
 msgid "Disable increasing OID Check"
 msgstr "השבת את בדיקת OID הגוברת"
 
-#: include/global_settings.php:1261
+#: include/global_settings.php:1256
 msgid "Controls disabling check for increasing OID while walking OID tree."
 msgstr "שולטת לבדוק השבתה עבור הגדלת OID בעת הליכה עץ OID."
 
-#: include/global_settings.php:1266
+#: include/global_settings.php:1261
 msgid "Remote Agent Timeout"
 msgstr "זמן קצוב לסוכן"
 
-#: include/global_settings.php:1267
+#: include/global_settings.php:1262
 msgid "The amount of time, in seconds, that the Central Kadupul web server will wait for a response from the Remote Data Collector to obtain various Device information before abandoning the request.  On Devices that are associated with Data Collectors other than the Central Kadupul Data Collector, the Remote Agent must be used to gather Device information."
 msgstr "משך הזמן, בשניות, ששרת האינטרנט המרכזי של Kadupul יחכה לתגובה ממאגר הנתונים המרוחק כדי לקבל מידע מכשיר אחר לפני שתנטוש את הבקשה. במכשירים המשויכים ל- Data Collectors, פרט למאגר הנתונים המרכזי של Kadupul, יש להשתמש ב&#39;נציג המרוחק &#39;כדי לאסוף מידע על ההתקן."
 
-#: include/global_settings.php:1278
+#: include/global_settings.php:1273
 msgid "SNMP Bulkwalk Fetch Size"
 msgstr "גודל אחזור SNMP Bulkwalk"
 
-#: include/global_settings.php:1279
+#: include/global_settings.php:1274
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
 msgstr "כמה OID צריך להיות מוחזר לכל בקשה snmpbulkwalk? עבור מכשירים עם עצי SNMP גדולים, הגדלת גודל זה תגדיל את ביצועי המדד מחדש באמצעות רשת WAN."
 
-#: include/global_settings.php:1298
+#: include/global_settings.php:1293
 msgid "SNMP Get OID Limit"
 msgstr "SNMP קבל"
 
-#: include/global_settings.php:1299
+#: include/global_settings.php:1294
 msgid "The default maximum number of SNMP Get OIDs to issue per snmpget request.  For Devices, this setting is controlled at the Device level.  You should only use this setting when using Kadupul's SNMP API natively in your scripts or plugins."
 msgstr "מספר ברירת המחדל המרבי של SNMP קבל OID להנפיק לכל בקשת snmpget. עבור מכשירים, הגדרה זו נשלטת ברמת המכשיר. עליך להשתמש בהגדרה זו רק כאשר אתה משתמש ב- SNMP API של Kadupul באופן מקורי בסקריפטים או בתוספים שלך."
+
+#: include/global_settings.php:1301
+msgid "Rejected Sample Retention"
+msgstr ""
+
+#: include/global_settings.php:1302
+msgid "Hours that samples refused by RRDtool, for example after a data source schema change, stay queued for retry before they are moved to the poller_output_rejected table.  Repair the RRDfile, then run cli/replay_rejected_samples.php to process them."
+msgstr ""
 
 #: include/global_settings.php:1304
 msgid "Refresh Poller Table Per Cycle"
@@ -10823,1445 +10827,1437 @@ msgstr "רענן טבלת פולר לכל מחזור"
 msgid "This setting is for a single poller systems only to rebuild the poller output table on each polling cycle to prevent the memory table from swapping on very large systems with large databases that could use swap."
 msgstr "הגדרה זו מיועדת למערכות סוקר בודדות רק כדי לבנות מחדש את טבלת הפלט של הסוקר בכל מחזור סקרים כדי למנוע מטבלת הזיכרון להחליף מערכות גדולות מאוד עם מסדי נתונים גדולים שיכולים להשתמש ב - SWAP."
 
-#: include/global_settings.php:1306
-msgid "Rejected Sample Retention"
-msgstr ""
-
-#: include/global_settings.php:1307
-msgid "Hours that samples refused by RRDtool, for example after a data source schema change, stay queued for retry before they are moved to the poller_output_rejected table.  Repair the RRDfile, then run cli/replay_rejected_samples.php to process them."
-msgstr ""
-
-#: include/global_settings.php:1314
+#: include/global_settings.php:1309
 msgid "Rejected Sample Limit"
 msgstr ""
 
-#: include/global_settings.php:1315
+#: include/global_settings.php:1310
 msgid "The most refused samples one data source may keep queued.  The oldest samples beyond this limit are moved to the poller_output_rejected table immediately."
 msgstr ""
 
-#: include/global_settings.php:1322
+#: include/global_settings.php:1317
 msgid "Disable Resource Cache Replication"
 msgstr "לבנות מחדש מטמון משאבים"
 
-#: include/global_settings.php:1323
+#: include/global_settings.php:1318
 #, fuzzy
 msgid "By default, the main Kadupul Data Collector will cache the entire web site and plugins into a Resource Cache.  Then, periodically the Remote Data Collectors will update themselves with any updates from the main Kadupul Data Collector.  This Resource Cache essentially allows Remote Data Collectors to self upgrade.  If you do not wish to use this option, you can disable it using this setting."
 msgstr "כברירת מחדל, Kadupul הנתונים הראשי של Kadupul ישמור את כל אתר האינטרנט במטמון ותוספים למטמון משאבים. לאחר מכן, מעת לעת אספני הנתונים המרוחקים יתעדכנו בעצמם בעדכוני כל העדכונים של אספן הנתונים הראשי של Kadupul. מטמון משאבים זה מאפשר למעשה לאספני נתונים מרוחקים לשדרג עצמי. אם אינך מעוניין להשתמש באפשרות זו, תוכל להשבית אותה באמצעות הגדרה זו."
 
-#: include/global_settings.php:1328
+#: include/global_settings.php:1323
 msgid "Additional Data Collector Settings"
 msgstr "נתונים מרוחקים מצב אספן:"
 
-#: include/global_settings.php:1333
+#: include/global_settings.php:1328
 msgid "Invalid Data Logging"
 msgstr "רישום נתונים לא חוקי"
 
-#: include/global_settings.php:1334
+#: include/global_settings.php:1329
 msgid "How would you like the Data Collector output errors logged?  Options include: 'Detailed' which details every error, 'Summary' which provides the number of output errors per Device, and 'None', which does not provide error counts."
 msgstr "איך היית רוצה שגיאות פלט השדרה נרשמה? האפשרויות הן: &quot;מפורט&quot; אשר דומה רישום cmd.php; &#39;סיכום&#39; המספק את מספר שגיאות הפלט למכשיר; ו &#39;ללא&#39;, אשר אינו מספק ספירת שגיאות."
 
-#: include/global_settings.php:1339 utilities.php:140
+#: include/global_settings.php:1334 utilities.php:140
 msgid "Summary"
 msgstr "סיכום"
 
-#: include/global_settings.php:1340
+#: include/global_settings.php:1335
 msgid "Detailed"
 msgstr "פרטים"
 
-#: include/global_settings.php:1344
+#: include/global_settings.php:1339
 msgid "Number of PHP Script Servers"
 msgstr "מספר שרתי PHP Script"
 
-#: include/global_settings.php:1345
+#: include/global_settings.php:1340
 msgid "The number of concurrent script server processes to run per spine process.  Settings between 1 and 15 are accepted.  This parameter will help if you are running several threads and script server scripts and is only valid for the spine Data Collector."
 msgstr "מספר התהליכים של שרת סקריפט בו-זמניים להפעלת תהליך השדרה. ההגדרות בין 1 ל -10 מתקבלות. פרמטר זה יעזור אם אתה מפעיל מספר נושאים וסקריפטים של סקריפט."
 
-#: include/global_settings.php:1352
+#: include/global_settings.php:1347
 msgid "Script and Script Server Timeout Value"
 msgstr "סקריפט וסקריפט"
 
-#: include/global_settings.php:1353
+#: include/global_settings.php:1348
 msgid "The maximum time that spine will wait on a script to complete.  This timeout value is in seconds and is only valid for the spine Data Collector."
 msgstr "הזמן המקסימלי שבו Kadupul יחכה על סקריפט כדי להשלים. ערך הזמן הקצוב הוא בשניות"
 
-#: include/global_settings.php:1360
+#: include/global_settings.php:1355
 msgid "Periodic All Device Re-Index"
 msgstr "אינדקס מחדש תקופתי של כל המכשירים"
 
-#: include/global_settings.php:1365
+#: include/global_settings.php:1360
 msgid "Re-Index All Device Schedule"
 msgstr "שיטת אינדקס מחדש"
 
-#: include/global_settings.php:1366
+#: include/global_settings.php:1361
 msgid "At what frequency do you wish to Re-Index all Devices.  This Re-Index will occur at midnight at the frequency that you select."
 msgstr "באיזה תדר ברצונך לבצע אינדקס מחדש של כל המכשירים. אינדקס חוזר זה יתרחש בחצות בתדירות שתבחר."
 
-#: include/global_settings.php:1372
+#: include/global_settings.php:1367
 msgid "Weekly on Sunday"
 msgstr "שבועי ביום ראשון"
 
-#: include/global_settings.php:1373
+#: include/global_settings.php:1368
 msgid "Monthly on Sunady"
 msgstr "חודשי ביום"
 
-#: include/global_settings.php:1377
+#: include/global_settings.php:1372
 msgid "Background Timeout and Concurrent Process Settings"
 msgstr "הגדרת גופן מקרא"
 
-#: include/global_settings.php:1382
+#: include/global_settings.php:1377
 msgid "Report Generation Timeout"
 msgstr "זמן קצוב לסוכן"
 
-#: include/global_settings.php:1383
+#: include/global_settings.php:1378
 msgid "The maximum amount of time Kadupul's Reports Generation script can run without generating a timeout error and being killed."
 msgstr "משך הזמן המרבי של סקריפט יצירת הדוחות של Kadupul יכול לפעול מבלי ליצור שגיאת פסק זמן ולהיהרג."
 
-#: include/global_settings.php:1387 include/global_settings.php:1400
-#: include/global_settings.php:1428 include/global_settings.php:1469
-#: include/global_settings.php:1483
+#: include/global_settings.php:1382 include/global_settings.php:1395
+#: include/global_settings.php:1423 include/global_settings.php:1464
+#: include/global_settings.php:1478
 #, php-format
 msgid "%s Minute"
 msgstr "%s דקות"
 
-#: include/global_settings.php:1395
+#: include/global_settings.php:1390
 msgid "Data Source Statistics Timeout"
 msgstr "נתונים סטטיסטיים"
 
-#: include/global_settings.php:1396
+#: include/global_settings.php:1391
 #, fuzzy
 msgid "The maximum amount of time Kadupul's Data Source Statistics script can run without generating a timeout error and being killed."
 msgstr "משך הזמן המרבי של סקריפט הנתונים של מקור הנתונים של Kadupul יכול לרוץ מבלי ליצור שגיאת פסק זמן ולהיהרג."
 
-#: include/global_settings.php:1410
+#: include/global_settings.php:1405
 msgid "RRDChecker Timeout"
 msgstr "פסק זמן של DNS"
 
-#: include/global_settings.php:1411
+#: include/global_settings.php:1406
 msgid "The maximum amount of time Kadupul's RRDfile check script can run without generating a timeout error and being killed."
 msgstr "משך הזמן המרבי שסקריפט Spikekill של Kadupul יכול לרוץ מבלי ליצור שגיאת פסק זמן ולהיהרג."
 
-#: include/global_settings.php:1417 include/global_settings.php:1418
-#: include/global_settings.php:1419 include/global_settings.php:1474
-#: include/global_settings.php:1488
+#: include/global_settings.php:1412 include/global_settings.php:1413
+#: include/global_settings.php:1414 include/global_settings.php:1469
+#: include/global_settings.php:1483
 #, php-format
 msgid "%s Hour"
 msgstr "%s שעות"
 
-#: include/global_settings.php:1423
+#: include/global_settings.php:1418
 msgid "Poller Commands Timeout"
 msgstr "פסק זמן לפקודות רקע"
 
-#: include/global_settings.php:1424
+#: include/global_settings.php:1419
 #, fuzzy
 msgid "The maximum amount of time Kadupul's Background Commands script can run without generating a timeout error and being killed.  This script will perform tasks such as re-indexing Devices and pruning devices from Remote Data Collectors."
 msgstr "משך הזמן המרבי של סקריפט פקודות הרקע של Kadupul יכול לרוץ מבלי ליצור שגיאת פסק זמן ולהיהרג."
 
-#: include/global_settings.php:1436
+#: include/global_settings.php:1431
 msgid "Poller Command Concurrent Processes"
 msgstr "תהליכים מקבילים"
 
-#: include/global_settings.php:1437
+#: include/global_settings.php:1432
 msgid "The number of concurrent Poller Command processes.  The will be at most one concurrent command per host within the Poller Command pool."
 msgstr "מספר התהליכים המקבילים לפקודת הסוקר.  הפקודה תהיה בו - זמנית אחת לכל היותר לכל מארח במאגר הפיקוד של Poller."
 
-#: include/global_settings.php:1441 include/global_settings.php:2106
-#: include/global_settings.php:2216 include/global_settings.php:2284
+#: include/global_settings.php:1436 include/global_settings.php:2101
+#: include/global_settings.php:2211 include/global_settings.php:2279
 msgid "1 Process"
 msgstr "תהליך"
 
-#: include/global_settings.php:1442 include/global_settings.php:1443
-#: include/global_settings.php:1444 include/global_settings.php:1445
-#: include/global_settings.php:1446 include/global_settings.php:1447
-#: include/global_settings.php:1448 include/global_settings.php:1449
-#: include/global_settings.php:1450 include/global_settings.php:1451
-#: include/global_settings.php:1452 include/global_settings.php:1453
-#: include/global_settings.php:1454 include/global_settings.php:1455
-#: include/global_settings.php:1456 include/global_settings.php:1457
-#: include/global_settings.php:1458 include/global_settings.php:1459
-#: include/global_settings.php:1460 include/global_settings.php:2107
-#: include/global_settings.php:2108 include/global_settings.php:2109
-#: include/global_settings.php:2110 include/global_settings.php:2111
-#: include/global_settings.php:2112 include/global_settings.php:2113
-#: include/global_settings.php:2114 include/global_settings.php:2115
-#: include/global_settings.php:2116 include/global_settings.php:2117
-#: include/global_settings.php:2118 include/global_settings.php:2119
-#: include/global_settings.php:2120 include/global_settings.php:2121
-#: include/global_settings.php:2122 include/global_settings.php:2123
-#: include/global_settings.php:2124 include/global_settings.php:2125
-#: include/global_settings.php:2217 include/global_settings.php:2218
-#: include/global_settings.php:2219 include/global_settings.php:2220
-#: include/global_settings.php:2221 include/global_settings.php:2222
-#: include/global_settings.php:2223 include/global_settings.php:2224
-#: include/global_settings.php:2225 include/global_settings.php:2226
-#: include/global_settings.php:2227 include/global_settings.php:2228
-#: include/global_settings.php:2229 include/global_settings.php:2230
-#: include/global_settings.php:2231 include/global_settings.php:2232
-#: include/global_settings.php:2233 include/global_settings.php:2234
-#: include/global_settings.php:2235 include/global_settings.php:2285
-#: include/global_settings.php:2286 include/global_settings.php:2287
-#: include/global_settings.php:2288 include/global_settings.php:2289
-#: include/global_settings.php:2290 include/global_settings.php:2291
-#: include/global_settings.php:2292 include/global_settings.php:2293
-#: include/global_settings.php:2294 include/global_settings.php:2295
-#: include/global_settings.php:2296 include/global_settings.php:2297
-#: include/global_settings.php:2298 include/global_settings.php:2299
-#: include/global_settings.php:2300 include/global_settings.php:2301
-#: include/global_settings.php:2302 include/global_settings.php:2303
+#: include/global_settings.php:1437 include/global_settings.php:1438
+#: include/global_settings.php:1439 include/global_settings.php:1440
+#: include/global_settings.php:1441 include/global_settings.php:1442
+#: include/global_settings.php:1443 include/global_settings.php:1444
+#: include/global_settings.php:1445 include/global_settings.php:1446
+#: include/global_settings.php:1447 include/global_settings.php:1448
+#: include/global_settings.php:1449 include/global_settings.php:1450
+#: include/global_settings.php:1451 include/global_settings.php:1452
+#: include/global_settings.php:1453 include/global_settings.php:1454
+#: include/global_settings.php:1455 include/global_settings.php:2102
+#: include/global_settings.php:2103 include/global_settings.php:2104
+#: include/global_settings.php:2105 include/global_settings.php:2106
+#: include/global_settings.php:2107 include/global_settings.php:2108
+#: include/global_settings.php:2109 include/global_settings.php:2110
+#: include/global_settings.php:2111 include/global_settings.php:2112
+#: include/global_settings.php:2113 include/global_settings.php:2114
+#: include/global_settings.php:2115 include/global_settings.php:2116
+#: include/global_settings.php:2117 include/global_settings.php:2118
+#: include/global_settings.php:2119 include/global_settings.php:2120
+#: include/global_settings.php:2212 include/global_settings.php:2213
+#: include/global_settings.php:2214 include/global_settings.php:2215
+#: include/global_settings.php:2216 include/global_settings.php:2217
+#: include/global_settings.php:2218 include/global_settings.php:2219
+#: include/global_settings.php:2220 include/global_settings.php:2221
+#: include/global_settings.php:2222 include/global_settings.php:2223
+#: include/global_settings.php:2224 include/global_settings.php:2225
+#: include/global_settings.php:2226 include/global_settings.php:2227
+#: include/global_settings.php:2228 include/global_settings.php:2229
+#: include/global_settings.php:2230 include/global_settings.php:2280
+#: include/global_settings.php:2281 include/global_settings.php:2282
+#: include/global_settings.php:2283 include/global_settings.php:2284
+#: include/global_settings.php:2285 include/global_settings.php:2286
+#: include/global_settings.php:2287 include/global_settings.php:2288
+#: include/global_settings.php:2289 include/global_settings.php:2290
+#: include/global_settings.php:2291 include/global_settings.php:2292
+#: include/global_settings.php:2293 include/global_settings.php:2294
+#: include/global_settings.php:2295 include/global_settings.php:2296
+#: include/global_settings.php:2297 include/global_settings.php:2298
 #, php-format
 msgid "%d Processes"
 msgstr "% d תהליכים"
 
-#: include/global_settings.php:1464
+#: include/global_settings.php:1459
 msgid "Maintenance Background Generation Timeout"
 msgstr "פסק זמן ליצירת רקע לתחזוקה"
 
-#: include/global_settings.php:1465
+#: include/global_settings.php:1460
 msgid "The maximum amount of time a Kadupul's Maintenance script can run without generating a timeout error and being killed."
 msgstr "משך הזמן המרבי שסקריפט תחזוקה של Kadupul יכול לרוץ מבלי ליצור שגיאת פסק זמן ולהיהרג."
 
-#: include/global_settings.php:1478
+#: include/global_settings.php:1473
 msgid "Spikekill Background Generation Timeout"
 msgstr "פסק זמן להפקת רקע Spikekill"
 
-#: include/global_settings.php:1479
+#: include/global_settings.php:1474
 msgid "The maximum amount of time a Kadupul's Spikekill script can run without generating a timeout error and being killed."
 msgstr "משך הזמן המרבי שסקריפט Spikekill של Kadupul יכול לרוץ מבלי ליצור שגיאת פסק זמן ולהיהרג."
 
-#: include/global_settings.php:1495
+#: include/global_settings.php:1490
 msgid "Data Collector Defaults"
 msgstr "אספני נתונים"
 
-#: include/global_settings.php:1496
+#: include/global_settings.php:1491
 msgid "These settings are maintained at the Data Collector level.  The values here are only defaults used when first creating a Data Collector."
 msgstr "הגדרות אלה נשמרות ברמת אספן הנתונים. הערכים כאן הם ברירות מחדל המשמשות רק בעת יצירת אספן נתונים."
 
-#: include/global_settings.php:1501
+#: include/global_settings.php:1496
 msgid "Data Collector Processes"
 msgstr "ברירת המחדל של נתוני אספן תהליכים"
 
-#: include/global_settings.php:1502
+#: include/global_settings.php:1497
 msgid "The default number of concurrent processes to execute per Data Collector.  NOTE: Starting from Kadupul 1.2, this setting is maintained in the Data Collector.  Moving forward, this value is only a preset for the Data Collector.  Using a higher number when using cmd.php will improve performance.  Performance improvements in Spine are best resolved with the threads parameter.  When using Spine, we recommend a lower number and leveraging threads instead.  When using cmd.php, use no more than 2x the number of CPU cores."
 msgstr "מספר ברירת המחדל של תהליכים בו-זמניים לביצוע על-ידי Data Collector. הערה: החל מ - Kadupul 1.2, הגדרה זו נשמרת ב - Data Collector. בהעברה קדימה, ערך זה הוא רק מראש עבור Data Collector. שימוש במספר גבוה יותר בעת שימוש ב- cmd.php ישפר את הביצועים. שיפורים בביצועים בעמוד השדרה נפתרים בצורה הטובה ביותר עם הפרמטר thread. בעת שימוש בעמוד השדרה, אנו ממליצים על מספר נמוך יותר ומינוף מינוף במקום זאת. בעת שימוש ב- cmd.php, אין להשתמש יותר מ -2x במספר ליבות המעבד."
 
-#: include/global_settings.php:1509
+#: include/global_settings.php:1504
 msgid "Threads per Process"
 msgstr "ברירת מחדל של חוטים לכל תהליך"
 
-#: include/global_settings.php:1510
+#: include/global_settings.php:1505
 msgid "The Default Threads allowed per process.  NOTE: Starting in Kadupul 1.2+, this setting is maintained in the Data Collector, and this is simply the Preset.  Using a higher number when using Spine will improve performance.  However, ensure that you have enough MySQL/MariaDB connections to support the following equation: connections = data collectors * processes * (threads + script servers).  You must also ensure that you have enough spare connections for user login connections as well."
 msgstr "פתילי ברירת המחדל המותרים לכל תהליך. הערה: החל מ- Kadupul 1.2+, הגדרה זו נשמרת ב- Data Collector, וזו פשוט ההגדרה מראש. שימוש במספר גבוה יותר בעת השימוש בעמוד השדרה ישפר את הביצועים. עם זאת, ודא שיש לך מספיק MySQL / קשרים MariaDB לתמוך את המשוואה הבאה: חיבורים = אספנים נתונים * תהליכים * (שרשורים + סקריפט). כמו כן, עליך לוודא שיש לך מספיק חיבורים חילוף עבור חיבורי התחברות משתמש גם כן."
 
-#: include/global_settings.php:1524
+#: include/global_settings.php:1519
 msgid "Authentication Method"
 msgstr "שיטת אימות"
 
-#: include/global_settings.php:1525
+#: include/global_settings.php:1520
 msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
 msgstr "<blockquote style=\";text-align:right;direction:rtl\"> <i>אימות מובנה</i> - Kadupul מטפל באימות משתמש, המאפשר לך ליצור משתמשים ולתת להם זכויות בתחומים שונים בתוך Kadupul. <br><br> <i>אימות בסיסי אינטרנט</i> - האימות מטופל על ידי שרת האינטרנט. ניתן להוסיף או ליצור משתמשים באופן אוטומטי בהתחברות הראשונה אם משתמש התבנית מוגדר, אחרת ייעשה שימוש בהרשאות האורחים שהוגדרו. <br><br> <i>אימות LDAP</i> - מאפשר אימות מול שרת LDAP. משתמשים ייווצרו אוטומטית בהתחברות הראשונה אם משתמש התבנית מוגדר, אחרת ייעשה שימוש בהרשאות האורחים שהוגדרו. אם מודול LDAP של PHP אינו מופעל, אימות LDAP לא יופיע כאפשרות לבחירה. <br><br> <i>אימות מרובה LDAP / AD Domain</i> - מאפשר למנהלי מערכת לתמוך במספר קבוצות נפרדות מספריות LDAP / AD שונות כדי לגשת למשאבים של Kadupul. בדיוק כמו אימות LDAP, מודול PHP LDAP נדרש להשתמש בשיטה זו. </blockquote>"
 
-#: include/global_settings.php:1531
+#: include/global_settings.php:1526
 msgid "Support Authentication Cookies"
 msgstr "תמיכה בעוגיות אימות"
 
-#: include/global_settings.php:1532
+#: include/global_settings.php:1527
 msgid "If a user authenticates and selects 'Keep me signed in', an authentication cookie will be created on the user's computer allowing that user to stay logged in.  The authentication cookie expires after 90 days of non-use."
 msgstr "אם משתמש מאמת ובוחר באפשרות &#39;שמור אותי מחובר&#39;, קובץ Cookie של אימות ייווצר במחשב המשתמש ומאפשר למשתמש להישאר מחובר. קובץ ה- cookie של האימות פג לאחר 90 יום של אי-שימוש."
 
-#: include/global_settings.php:1537
+#: include/global_settings.php:1532
 msgid "Special Users"
 msgstr "משתמשים מיוחדים"
 
-#: include/global_settings.php:1542
+#: include/global_settings.php:1537
 msgid "Primary Admin"
 msgstr "מנהל ראשי"
 
-#: include/global_settings.php:1543
+#: include/global_settings.php:1538
 msgid "The name of the primary administrative account that will automatically receive Emails when the Kadupul system experiences issues.  To receive these Emails, ensure that your mail settings are correct, and the administrative account has an Email address that is set."
 msgstr "השם של חשבון הניהול הראשי שיקבל הודעות אימייל באופן אוטומטי כאשר מערכת Kadupul תחווה בעיות. כדי לקבל הודעות דוא&quot;ל אלה, ודא שהגדרות הדואר שלך נכונות, ולחשבון הניהול יש כתובת דוא&quot;ל שהוגדרה."
 
-#: include/global_settings.php:1545 include/global_settings.php:1553
-#: include/global_settings.php:1561 user_domains.php:329
+#: include/global_settings.php:1540 include/global_settings.php:1548
+#: include/global_settings.php:1556 user_domains.php:329
 msgid "No User"
 msgstr "אין משתמש"
 
-#: include/global_settings.php:1550
+#: include/global_settings.php:1545
 msgid "Guest User"
 msgstr "משתמש אורח"
 
-#: include/global_settings.php:1551
+#: include/global_settings.php:1546
 msgid "The name of the guest user for viewing graphs; is 'No User' by default."
 msgstr "השם של המשתמש האורח לצפייה בתרשימים; הוא &#39;ללא משתמש&#39; כברירת מחדל."
 
-#: include/global_settings.php:1558 user_domains.php:325
+#: include/global_settings.php:1553 user_domains.php:325
 msgid "User Template"
 msgstr "תבנית משתמש"
 
-#: include/global_settings.php:1559
+#: include/global_settings.php:1554
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "שם המשתמש ש- Kadupul ישמש כתבנית עבור משתמשי Web Basic ו- LDAP חדשים; הוא &#39;אורח&#39; כברירת מחדל. חשבון משתמש זה יושבת מפני כניסה עם בחירתו."
 
-#: include/global_settings.php:1566
+#: include/global_settings.php:1561
 msgid "Basic Authentication Settings"
 msgstr "אימות בסיסי באינטרנט"
 
-#: include/global_settings.php:1571
+#: include/global_settings.php:1566
 msgid "Basic Auth Login Failure Message"
 msgstr "קובץ מייפל אותנטי בסיסי"
 
-#: include/global_settings.php:1572
+#: include/global_settings.php:1567
 msgid "When using basic authentication, if there are issues mapping the username to a valid Kadupul account, the message included here will be displayed to users.  It can include both text and HTML."
 msgstr "בעת שימוש באימות בסיסי, אם יש בעיות במיפוי שם המשתמש לחשבון Kadupul חוקי, ההודעה הכלולה כאן תוצג למשתמשים. זה יכול לכלול גם טקסט וגם HTML."
 
-#: include/global_settings.php:1579
+#: include/global_settings.php:1574
 msgid "Basic Auth Mapfile"
 msgstr "קובץ מייפל אותנטי בסיסי"
 
-#: include/global_settings.php:1580
+#: include/global_settings.php:1575
 msgid "When using basic authentication, if the basic account needs to be translated to a different login account, you can specify a CSV file here to map the basic account to the desired login account."
 msgstr "בעת שימוש באימות בסיסי, אם יש לתרגם את חשבון הבסיס לחשבון התחברות אחר, תוכלו לציין כאן קובץ CSV כדי למפות את חשבון הבסיס לחשבון ההתחברות הרצוי."
 
-#: include/global_settings.php:1588
+#: include/global_settings.php:1583
 msgid "Local Account Complexity Requirements"
 msgstr "דרישות מורכבות של חשבון מקומי"
 
-#: include/global_settings.php:1593
+#: include/global_settings.php:1588
 msgid "Minimum Length"
 msgstr "אורך מינימלי"
 
-#: include/global_settings.php:1594
+#: include/global_settings.php:1589
 msgid "This is minimal length of allowed passwords."
 msgstr "זהו אורך מינימלי של סיסמאות מותר."
 
-#: include/global_settings.php:1601
+#: include/global_settings.php:1596
 msgid "Require Mix Case"
 msgstr "דרוש מקרה מיקס"
 
-#: include/global_settings.php:1602
+#: include/global_settings.php:1597
 msgid "This will require new passwords to contains both lower and upper-case characters."
 msgstr "זה ידרוש סיסמאות חדשות כדי להכיל הן התחתון תווים תווים העליון."
 
-#: include/global_settings.php:1607
+#: include/global_settings.php:1602
 msgid "Require Number"
 msgstr "דרוש מספר"
 
-#: include/global_settings.php:1608
+#: include/global_settings.php:1603
 msgid "This will require new passwords to contain at least 1 numerical character."
 msgstr "זה ידרוש סיסמאות חדשות כדי להכיל לפחות 1 מספרים מספריים."
 
-#: include/global_settings.php:1613
+#: include/global_settings.php:1608
 msgid "Require Special Character"
 msgstr "דרוש תו מיוחד"
 
-#: include/global_settings.php:1614
+#: include/global_settings.php:1609
 msgid "This will require new passwords to contain at least 1 special character."
 msgstr "זה ידרוש סיסמאות חדשות כדי להכיל לפחות 1 תו מיוחד."
 
-#: include/global_settings.php:1619
+#: include/global_settings.php:1614
 msgid "Force Complexity Upon Old Passwords"
 msgstr "כוח המורכבות על סיסמאות ישנות"
 
-#: include/global_settings.php:1620
+#: include/global_settings.php:1615
 msgid "This will require all old passwords to also meet the new complexity requirements upon login.  If not met, it will force a password change."
 msgstr "זה יחייב את כל הסיסמאות הישנות כדי לענות גם על דרישות המורכבות החדשה עם הכניסה. אם לא נפגשו, זה יאלץ לשנות את הסיסמה."
 
-#: include/global_settings.php:1625
+#: include/global_settings.php:1620
 msgid "Expire Inactive Accounts"
 msgstr "פקיעת חשבונות לא פעילים"
 
-#: include/global_settings.php:1626
+#: include/global_settings.php:1621
 msgid "This is maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy."
 msgstr "זהו מספר הימים המרבי לפני שחשבונות לא פעילים מושבתים. חשבון מנהל המערכת אינו נכלל במדיניות זו."
 
-#: include/global_settings.php:1639
+#: include/global_settings.php:1634
 msgid "Expire Password"
 msgstr "פג את הסיסמה"
 
-#: include/global_settings.php:1640
+#: include/global_settings.php:1635
 msgid "This is maximum number of days before a password is set to expire."
 msgstr "זהו מספר הימים המרבי עד לסיום תוקפו של סיסמה."
 
-#: include/global_settings.php:1652
+#: include/global_settings.php:1647
 msgid "Password History"
 msgstr "היסטוריית סיסמאות"
 
-#: include/global_settings.php:1653
+#: include/global_settings.php:1648
 #, fuzzy
 msgid "Remember this number of old passwords and disallow reusing them."
 msgstr "זכור מספר זה של סיסמאות ישנות וחסר שימוש חוזר בהן."
 
-#: include/global_settings.php:1658
+#: include/global_settings.php:1653
 msgid "1 Change"
 msgstr "1 שנה"
 
-#: include/global_settings.php:1659 include/global_settings.php:1660
-#: include/global_settings.php:1661 include/global_settings.php:1662
-#: include/global_settings.php:1663 include/global_settings.php:1664
-#: include/global_settings.php:1665 include/global_settings.php:1666
-#: include/global_settings.php:1667 include/global_settings.php:1668
-#: include/global_settings.php:1669
+#: include/global_settings.php:1654 include/global_settings.php:1655
+#: include/global_settings.php:1656 include/global_settings.php:1657
+#: include/global_settings.php:1658 include/global_settings.php:1659
+#: include/global_settings.php:1660 include/global_settings.php:1661
+#: include/global_settings.php:1662 include/global_settings.php:1663
+#: include/global_settings.php:1664
 #, php-format
 msgid "%d Changes"
 msgstr "% d שינויים"
 
-#: include/global_settings.php:1672
+#: include/global_settings.php:1667
 msgid "Account Locking"
 msgstr "נעילת חשבון"
 
-#: include/global_settings.php:1677
+#: include/global_settings.php:1672
 msgid "Lock Accounts"
 msgstr "נעל חשבונות"
 
-#: include/global_settings.php:1678
+#: include/global_settings.php:1673
 msgid "Lock an account after this many failed attempts in 1 hour."
 msgstr "נעל חשבון אחרי זה ניסיונות כושלים רבים 1 שעה."
 
-#: include/global_settings.php:1683
+#: include/global_settings.php:1678
 msgid "1 Attempt"
 msgstr "1 ניסיון"
 
-#: include/global_settings.php:1684 include/global_settings.php:1685
-#: include/global_settings.php:1686 include/global_settings.php:1687
-#: include/global_settings.php:1688
+#: include/global_settings.php:1679 include/global_settings.php:1680
+#: include/global_settings.php:1681 include/global_settings.php:1682
+#: include/global_settings.php:1683
 #, php-format
 msgid "%d Attempts"
 msgstr "% d ניסיונות"
 
-#: include/global_settings.php:1691
+#: include/global_settings.php:1686
 msgid "Auto Unlock"
 msgstr "ביטול נעילה אוטומטית"
 
-#: include/global_settings.php:1692
+#: include/global_settings.php:1687
 msgid "An account will automatically be unlocked after this many minutes.  Even if the correct password is entered, the account will not unlock until this time limit has been met.  Max of 1440 minutes (1 Day)"
 msgstr "חשבון יבוטל באופן אוטומטי לאחר מספר דקות. גם אם הוזן הסיסמא הנכונה, החשבון לא יבטל את הנעילה עד להגבלת מגבלת הזמן הזו. מקסימום של 1440 דקות (יום אחד)"
 
-#: include/global_settings.php:1708 include/global_settings.php:2948
+#: include/global_settings.php:1703 include/global_settings.php:2923
 msgid "1 Day"
 msgstr "יום אחד"
 
-#: include/global_settings.php:1711
+#: include/global_settings.php:1706
 msgid "LDAP General Settings"
 msgstr "הגדרות כלליות של LDAP"
 
-#: include/global_settings.php:1715 user_domains.php:352
+#: include/global_settings.php:1710 user_domains.php:352
 msgid "Server(s)"
 msgstr "Serveurs"
 
-#: include/global_settings.php:1716 user_domains.php:353
+#: include/global_settings.php:1711 user_domains.php:353
 #, fuzzy
 msgid "A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
 msgstr "רשימה מופרדת של שמות מארחי DNS או כתובת IP של שרתי LDAP חוקיים. Kadupul ינסו להשתמש בשרתי LDAP משמאל לימין כדי לאמת משתמש."
 
-#: include/global_settings.php:1722 user_domains.php:361
+#: include/global_settings.php:1717 user_domains.php:361
 msgid "Port Standard"
 msgstr "יציאה רגילה"
 
-#: include/global_settings.php:1723
+#: include/global_settings.php:1718
 msgid "TCP port for Non-SSL communications including LDAP + TLS.  Default is 389."
 msgstr "יציאת TCP / UDP לתקשורת שאינה SSL."
 
-#: include/global_settings.php:1730 user_domains.php:370
+#: include/global_settings.php:1725 user_domains.php:370
 msgid "Port SSL"
 msgstr "פורט SSL"
 
-#: include/global_settings.php:1731
+#: include/global_settings.php:1726
 msgid "TCP port for LDAPS for SSL communications.  Default is 636."
 msgstr "יציאת TCP / UDP לתקשורת שאינה SSL."
 
-#: include/global_settings.php:1738 user_domains.php:379
+#: include/global_settings.php:1733 user_domains.php:379
 msgid "Protocol Version"
 msgstr "גרסת פרוטוקול"
 
-#: include/global_settings.php:1739
+#: include/global_settings.php:1734
 msgid "Protocol Version to connect to the server with."
 msgstr "גרסת פרוטוקול כי השרת תומך."
 
-#: include/global_settings.php:1745
+#: include/global_settings.php:1740
 msgid "Connect Timeout"
 msgstr "זמן הקצאת חיבור"
 
-#: include/global_settings.php:1746
+#: include/global_settings.php:1741
 msgid "The Network Connect Timeout in seconds."
 msgstr "הזן את פסק הזמן של ה- SMTP תוך שניות."
 
-#: include/global_settings.php:1753
+#: include/global_settings.php:1748
 msgid "Bind Timeout"
 msgstr "פסק זמן"
 
-#: include/global_settings.php:1754
+#: include/global_settings.php:1749
 msgid "The Bind Timeout in seconds."
 msgstr "הזן את פסק הזמן של ה- SMTP תוך שניות."
 
-#: include/global_settings.php:1761
+#: include/global_settings.php:1756
 msgid "LDAP Debug Mode"
 msgstr "מצב ניפוי באגים LDAP"
 
-#: include/global_settings.php:1762
+#: include/global_settings.php:1757
 #, fuzzy
 msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log during Binding and Searching activities."
 msgstr "אם מסומן Kadupul ירשמו מידע LDAP נוסף ליומן Kadupul במהלך פעילויות כריכה וחיפוש."
 
-#: include/global_settings.php:1767 user_domains.php:386
+#: include/global_settings.php:1762 user_domains.php:386
 msgid "Encryption"
 msgstr "הצפנה"
 
-#: include/global_settings.php:1768
+#: include/global_settings.php:1763
 msgid "Encryption that the server supports. NOTE: When using LDAP + TLS you must use version 3."
 msgstr "הצפנה שהשרת תומך בה. TLS נתמך רק באמצעות פרוטוקול גירסה 3."
 
-#: include/global_settings.php:1774
+#: include/global_settings.php:1769
 msgid "TLS Certificate Requirements"
 msgstr "דרישות תעודת TLS"
 
-#: include/global_settings.php:1775
+#: include/global_settings.php:1770
 msgid "Should LDAP verify TLS Certificates when received by the Client.  Demand and Hard refuse a server whose certificate does not verify.  Never and Allow skip that check, so anyone on the network path can pose as the directory and read the passwords sent to it."
 msgstr ""
 
-#: include/global_settings.php:1781 user_domains.php:393
+#: include/global_settings.php:1776 user_domains.php:393
 msgid "Referrals"
 msgstr "הפניות"
 
-#: include/global_settings.php:1782 user_domains.php:394
+#: include/global_settings.php:1777 user_domains.php:394
 msgid "Enable or Disable LDAP referrals.  If disabled, it may increase the speed of searches."
 msgstr "הפעלה או השבתה של הפניות LDAP. אם היא מושבתת, היא עשויה להגדיל את מהירות החיפושים."
 
-#: include/global_settings.php:1791 user_domains.php:400
+#: include/global_settings.php:1786 user_domains.php:400
 msgid "Mode"
 msgstr "מצב"
 
-#: include/global_settings.php:1792
+#: include/global_settings.php:1787
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
 msgstr "מצב אשר Kadupul ינסה לאמת מול שרת LDAP. <blockquote style=\";text-align:right;direction:rtl\"> <i>אין חיפוש</i> - לא מתבצע <i>חיפוש</i> שם ייחודי (DN), רק לנסות לאגד עם שם (שם מובחן) DN. <br><br> <i>חיפוש אנונימי</i> - ניסיונות לחפש שם משתמש נגד ספריית LDAP דרך מחייב אנונימי כדי לאתר את השם הייחודי של המשתמש (DN). <br><br> <i>חיפוש ספציפי</i> - ניסיונות לחפש שם משתמש נגד ספריית LDAP באמצעות שם ייחודי (DN) ו סיסמא ספציפית עבור מחייב לאתר את שם ייחודי של המשתמש (DN)."
 
-#: include/global_settings.php:1798 user_domains.php:407
+#: include/global_settings.php:1793 user_domains.php:407
 msgid "Distinguished Name (DN)"
 msgstr "שם ייחודי (DN)"
 
-#: include/global_settings.php:1799 user_domains.php:408
+#: include/global_settings.php:1794 user_domains.php:408
 msgid "The \"Distinguished Name\" syntax, applicable for both OpenLDAP and Windows AD configurations, offers flexibility in defining user identity. For OpenLDAP, the format follows this structure: <i>\"uid=&lt;username&gt;,ou=people,dc=domain,dc=local\"</i>. Windows AD provides an alternative syntax: <i>\"&lt;username&gt;@win2kdomain.local\"</i>, commonly known as \"userPrincipalName (UPN)\". In this context, \"&lt;username&gt;\" represents the specific username provided during the login prompt. This is particularly pertinent when operating in \"No Searching\" mode, or \"Require Group Membership\" enabled."
 msgstr ""
 
-#: include/global_settings.php:1805 user_domains.php:415
+#: include/global_settings.php:1800 user_domains.php:415
 msgid "Require Group Membership"
 msgstr "דרוש חברות בקבוצה"
 
-#: include/global_settings.php:1806 user_domains.php:416
+#: include/global_settings.php:1801 user_domains.php:416
 msgid "Require user to be member of group to authenticate. Group settings must be set for this to work, enabling without proper group settings will cause authentication failure."
 msgstr "דרוש מהמשתמש להיות חבר בקבוצה כדי לאמת. יש להגדיר את הגדרות הקבוצה כך שתפעל, ללא הגדרות קבוצה נאותות יגרום לכשל באימות."
 
-#: include/global_settings.php:1811 user_domains.php:421
+#: include/global_settings.php:1806 user_domains.php:421
 msgid "LDAP Group Settings"
 msgstr "הגדרות קבוצת LDAP"
 
-#: include/global_settings.php:1815 user_domains.php:425
+#: include/global_settings.php:1810 user_domains.php:425
 msgid "Group Distinguished Name (DN)"
 msgstr "שם קבוצה ייחודי (DN)"
 
-#: include/global_settings.php:1816 user_domains.php:426
+#: include/global_settings.php:1811 user_domains.php:426
 msgid "Distinguished Name of the group that user must have membership."
 msgstr "שם ייחודי של הקבוצה כי המשתמש חייב להיות חברות."
 
-#: include/global_settings.php:1822 user_domains.php:432
+#: include/global_settings.php:1817 user_domains.php:432
 msgid "Group Member Attribute"
 msgstr "מאפיין חבר בקבוצה"
 
-#: include/global_settings.php:1823 user_domains.php:433
+#: include/global_settings.php:1818 user_domains.php:433
 msgid "This refers to the specific attribute within the LDAP directory that holds the usernames of group members. It is crucial to ensure that the attribute value aligns with the configuration specified in the \"Distinguished Name\" or that the actual attribute value is searchable using the settings outlined in the \"Distinguished Name\"."
 msgstr "הכוונה לתכונה הספציפית בספריית LDAP המחזיקה בשמות המשתמש של חברי הקבוצה. חשוב לוודא שערך התכונה מתיישר עם התצורה המצוינת ב \"שם הנכבד\" או שערך התכונה בפועל ניתן לחיפוש באמצעות ההגדרות המפורטות ב \"שם הנכבד \"."
 
-#: include/global_settings.php:1829 user_domains.php:439
+#: include/global_settings.php:1824 user_domains.php:439
 msgid "Group Member Type"
 msgstr "סוג חבר בקבוצה"
 
-#: include/global_settings.php:1830 user_domains.php:440
+#: include/global_settings.php:1825 user_domains.php:440
 msgid "Defines if users use full Distinguished Name or just Username in the defined Group Member Attribute."
 msgstr "מגדיר אם משתמשים משתמשים בשם מלא או שם משתמש רק בתכונת חבר הקבוצה המוגדרת."
 
-#: include/global_settings.php:1834
+#: include/global_settings.php:1829
 msgid "Distinguished Name"
 msgstr "שם מכובד"
 
-#: include/global_settings.php:1839 user_domains.php:446
+#: include/global_settings.php:1834 user_domains.php:446
 msgid "LDAP Specific Search Settings"
 msgstr "הגדרות חיפוש ספציפיות של LDAP"
 
-#: include/global_settings.php:1843 user_domains.php:450
+#: include/global_settings.php:1838 user_domains.php:450
 msgid "Search Base"
 msgstr "בסיס חיפוש"
 
-#: include/global_settings.php:1844
+#: include/global_settings.php:1839
 msgid "Search base for searching the LDAP directory, such as <i>'dc=win2kdomain,dc=local'</i> or <i>'ou=people,dc=domain,dc=local'</i>."
 msgstr "חפש בסיס לחיפוש בספריית LDAP, כגון <i>&#39;dc = win2kdomain, dc = local&#39;</i> או <i>&#39;ou = people, dc = domain, dc = local&#39;</i> ."
 
-#: include/global_settings.php:1849 user_domains.php:457
+#: include/global_settings.php:1844 user_domains.php:457
 msgid "Search Filter"
 msgstr "מסנן חיפוש"
 
-#: include/global_settings.php:1850
+#: include/global_settings.php:1845
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> or for OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  '&lt;username&gt' is replaced with the username that was supplied at the login prompt. "
 msgstr "מסנן חיפוש שבו ניתן להשתמש כדי לאתר את המשתמש בספריית LDAP, כגון עבור Windows: <i>&#39;((&amp; objectclass = user) (objectcategory = user) (userPrincipalName = &lt;שם משתמש&gt; *))&#39;</i> או עבור OpenLDAP: <i>&#39;((&amp; objectClass חשבון =) (uid = &lt;username&gt;)) &#39;</i> . &#39;&lt;שם משתמש&#39; &#39;מוחלף בשם המשתמש שסופק בהודעת ההתחברות."
 
-#: include/global_settings.php:1855 user_domains.php:464
+#: include/global_settings.php:1850 user_domains.php:464
 msgid "Search Distinguished Name (DN)"
 msgstr "חפש שם ייחודי (DN)"
 
-#: include/global_settings.php:1856 user_domains.php:465
+#: include/global_settings.php:1851 user_domains.php:465
 msgid "Distinguished Name for Specific Searching binding to the LDAP directory."
 msgstr "שם ייחודי לחיפוש ספציפי המחייב לספריית LDAP."
 
-#: include/global_settings.php:1861 user_domains.php:471
+#: include/global_settings.php:1856 user_domains.php:471
 msgid "Search Password"
 msgstr "חיפוש סיסמה"
 
-#: include/global_settings.php:1862 user_domains.php:472
+#: include/global_settings.php:1857 user_domains.php:472
 msgid "Password for Specific Searching binding to the LDAP directory."
 msgstr "סיסמה לחיפוש ספציפי המחייב לספריית LDAP."
 
-#: include/global_settings.php:1867 user_domains.php:478
+#: include/global_settings.php:1862 user_domains.php:478
 msgid "LDAP CN Settings"
 msgstr "הגדרות LDAP CN"
 
-#: include/global_settings.php:1872 user_domains.php:483
+#: include/global_settings.php:1867 user_domains.php:483
 msgid "Field that will replace the Full Name when creating a new user, taken from LDAP. (on windows: displayname) "
 msgstr "שדה שיחליף את השם המלא בעת יצירת משתמש חדש, שנלקח מ- LDAP. (ב- windows: displayname)"
 
-#: include/global_settings.php:1877 package_import.php:498
+#: include/global_settings.php:1872 package_import.php:498
 msgid "Email"
 msgstr "אימייל"
 
-#: include/global_settings.php:1878
+#: include/global_settings.php:1873
 msgid "Field that will replace the Email taken from LDAP. (on windows: mail)"
 msgstr "שדה שיחליף את האימייל שנלקח מ- LDAP. (בחלונות: דואר)"
 
-#: include/global_settings.php:1885
+#: include/global_settings.php:1880
 msgid "URL Linking"
 msgstr "קישור כתובת אתר"
 
-#: include/global_settings.php:1890
+#: include/global_settings.php:1885
 msgid "Server Base URL"
 msgstr "כתובת אתר של שרת בסיס"
 
-#: include/global_settings.php:1891
+#: include/global_settings.php:1886
 msgid "This is a the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
 msgstr "זהו מיקום השרת שישמש לקישורים לאתר Kadupul."
 
-#: include/global_settings.php:1898
+#: include/global_settings.php:1893
 msgid "Emailing Options"
 msgstr "אפשרויות אימייל"
 
-#: include/global_settings.php:1902
+#: include/global_settings.php:1897
 msgid "Notify Primary Admin of Issues"
 msgstr "הודע למנהל הראשי של בעיות"
 
-#: include/global_settings.php:1903
+#: include/global_settings.php:1898
 msgid "In cases where the Kadupul server is experiencing problems, should the Primary Administrator be notified by Email?  The Primary Administrator's Kadupul user account is specified under the Authentication tab on Kadupul's settings page. It defaults to the 'admin' account."
 msgstr "במקרים שבהם השרת של Kadupul נתקל בבעיות, האם מנהל המערכת הראשי יקבל הודעה בדוא&quot;ל? חשבון המשתמש של מנהל המערכת הראשי של מנהל המערכת צוין תחת הכרטיסייה אימות בדף ההגדרות של Kadupul. זה ברירת המחדל לחשבון &#39;מנהל&#39;."
 
-#: include/global_settings.php:1908
+#: include/global_settings.php:1903
 msgid "Test Email"
 msgstr "בדיקת דוא&quot;ל"
 
-#: include/global_settings.php:1909
+#: include/global_settings.php:1904
 msgid "This is a Email account used for sending a test message to ensure everything is working properly."
 msgstr "זהו חשבון דואר אלקטרוני המשמש לשליחת הודעת בדיקה כדי לוודא שהכל פועל כהלכה."
 
-#: include/global_settings.php:1914
+#: include/global_settings.php:1909
 msgid "Mail Services"
 msgstr "שירותי דואר"
 
-#: include/global_settings.php:1915
+#: include/global_settings.php:1910
 msgid "Which mail service to use in order to send mail"
 msgstr "באיזה שירות דואר יש להשתמש כדי לשלוח דואר"
 
-#: include/global_settings.php:1921
+#: include/global_settings.php:1916
 msgid "Ping Mail Server"
 msgstr "Ping שרת דואר"
 
-#: include/global_settings.php:1922
+#: include/global_settings.php:1917
 msgid "Ping the Mail Server before sending test Email?"
 msgstr "Ping את שרת הדואר לפני שליחת הודעת דוא&quot;ל?"
 
-#: include/global_settings.php:1931 lib/html_reports.php:168
+#: include/global_settings.php:1926 lib/html_reports.php:168
 msgid "From Email Address"
 msgstr "נשלח מדוא\"ל"
 
-#: include/global_settings.php:1932
+#: include/global_settings.php:1927
 msgid "This is the Email address that the Email will appear from."
 msgstr "זוהי כתובת האימייל שאליה יופיע האימייל."
 
-#: include/global_settings.php:1937 lib/html_reports.php:160
+#: include/global_settings.php:1932 lib/html_reports.php:160
 msgid "From Name"
 msgstr "שם השולח"
 
-#: include/global_settings.php:1938
+#: include/global_settings.php:1933
 msgid "This is the actual name that the Email will appear from."
 msgstr "זהו השם האמיתי שממנו יופיע האימייל."
 
-#: include/global_settings.php:1943
+#: include/global_settings.php:1938
 msgid "Word Wrap"
 msgstr "עטיפת מילה"
 
-#: include/global_settings.php:1944
+#: include/global_settings.php:1939
 msgid "This is how many characters will be allowed before a line in the Email is automatically word wrapped. (0 = Disabled)"
 msgstr "זה כמה תווים יהיה מותר לפני שורה בדוא&quot;ל הוא באופן אוטומטי מילה עטוף. (0 מושבת)"
 
-#: include/global_settings.php:1951
+#: include/global_settings.php:1946
 msgid "Sendmail Options"
 msgstr "אפשרויות Sendmail"
 
-#: include/global_settings.php:1956 lib/functions.php:6154
+#: include/global_settings.php:1951 lib/functions.php:6154
 msgid "Sendmail Path"
 msgstr "נתיב Sendmail"
 
-#: include/global_settings.php:1957
+#: include/global_settings.php:1952
 msgid "This is the path to sendmail on your server. (Only used if Sendmail is selected as the Mail Service)"
 msgstr "זהו הנתיב לשליחה על השרת שלך. (משמש רק אם Sendmail נבחר לשירות הדואר)"
 
-#: include/global_settings.php:1965
+#: include/global_settings.php:1960
 msgid "SMTP Options"
 msgstr "אפשרויות SMTP"
 
-#: include/global_settings.php:1970
+#: include/global_settings.php:1965
 msgid "SMTP Hostname"
 msgstr "שם מארח של SMTP"
 
-#: include/global_settings.php:1971
+#: include/global_settings.php:1966
 msgid "This is the hostname/IP of the SMTP Server you will send the Email to. For failover, separate your hosts using a semi-colon."
 msgstr "זהו שם המארח / IP של שרת ה- SMTP שתשלח אליו את האימייל. עבור כשל, הפרד את המארחים שלך באמצעות מחצית-מעי."
 
-#: include/global_settings.php:1977
+#: include/global_settings.php:1972
 msgid "SMTP Port"
 msgstr "יציאת SMTP"
 
-#: include/global_settings.php:1978
+#: include/global_settings.php:1973
 msgid "The port on the SMTP Server to use."
 msgstr "היציאה בשרת ה- SMTP לשימוש."
 
-#: include/global_settings.php:1985
+#: include/global_settings.php:1980
 msgid "SMTP Username"
 msgstr "שם משתמש ב-SMTP"
 
-#: include/global_settings.php:1986
+#: include/global_settings.php:1981
 msgid "The username to authenticate with when sending via SMTP. (Leave blank if you do not require authentication.)"
 msgstr "שם המשתמש לאימות עם השליחה באמצעות SMTP. (השאר ריק אם אינך דורש אימות)."
 
-#: include/global_settings.php:1991
+#: include/global_settings.php:1986
 msgid "SMTP Password"
 msgstr "סיסמת SMTP"
 
-#: include/global_settings.php:1992
+#: include/global_settings.php:1987
 msgid "The password to authenticate with when sending via SMTP. (Leave blank if you do not require authentication.)"
 msgstr "הסיסמה כדי לאמת עם בעת שליחת באמצעות SMTP. (השאר ריק אם אינך דורש אימות)."
 
-#: include/global_settings.php:1997
+#: include/global_settings.php:1992
 msgid "SMTP Security"
 msgstr "אבטחה של SMTP"
 
-#: include/global_settings.php:1998
+#: include/global_settings.php:1993
 msgid "The encryption method to use for the Email."
 msgstr "שיטת ההצפנה לשימוש בדוא&quot;ל."
 
-#: include/global_settings.php:2002
+#: include/global_settings.php:1997
 msgid "SSL"
 msgstr "‫SSL"
 
-#: include/global_settings.php:2003
+#: include/global_settings.php:1998
 msgid "TLS"
 msgstr "TLS"
 
-#: include/global_settings.php:2008
+#: include/global_settings.php:2003
 msgid "SMTP Timeout"
 msgstr "זמן קצוב"
 
-#: include/global_settings.php:2009
+#: include/global_settings.php:2004
 msgid "Please enter the SMTP timeout in seconds."
 msgstr "הזן את פסק הזמן של ה- SMTP תוך שניות."
 
-#: include/global_settings.php:2016
+#: include/global_settings.php:2011
 msgid "Reporting Presets"
 msgstr "דיווחים קבועים מראש"
 
-#: include/global_settings.php:2021
+#: include/global_settings.php:2016
 msgid "Default Graph Image Format"
 msgstr "פורמט תמונה של גרף ברירת מחדל"
 
-#: include/global_settings.php:2022
+#: include/global_settings.php:2017
 msgid "When creating a new report, what image type should be used for the inline graphs."
 msgstr "בעת יצירת דוח חדש, איזה סוג תמונה יש להשתמש עבור תרשימים מוטבעים."
 
-#: include/global_settings.php:2028
+#: include/global_settings.php:2023
 msgid "Maximum E-Mail Size"
 msgstr "גודל דואר אלקטרוני מרבי"
 
-#: include/global_settings.php:2029
+#: include/global_settings.php:2024
 msgid "The maximum size of the E-Mail message including all attachments."
 msgstr "הגודל המרבי של הודעת הדואר האלקטרוני כולל את כל ההקשרים."
 
-#: include/global_settings.php:2035
+#: include/global_settings.php:2030
 #, fuzzy
 msgid "Poller Logging Level for Kadupul Reporting"
 msgstr "רמת רישום של פולרים לדיווח על Kadupul"
 
-#: include/global_settings.php:2036
+#: include/global_settings.php:2031
 msgid "What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
 msgstr "באיזו רמה של פירוט ברצונך לשלוח את קובץ היומן. אזהרה: יציאה מכל מצב אחר מאשר NONE או LOW יכולה למצות את שטח הדיסק במהירות."
 
-#: include/global_settings.php:2042
+#: include/global_settings.php:2037
 msgid "Enable Lotus Notes (R) tweak"
 msgstr "אפשר לצבוט Lotus Notes (R)"
 
-#: include/global_settings.php:2043
+#: include/global_settings.php:2038
 msgid "Enable code tweak for specific handling of Lotus Notes Mail Clients."
 msgstr "אפשר צופן קוד עבור טיפול ספציפי של לקוחות דואר Lotus Notes."
 
-#: include/global_settings.php:2048
+#: include/global_settings.php:2043
 msgid "DNS Options"
 msgstr "אפשרויות DNS"
 
-#: include/global_settings.php:2053
+#: include/global_settings.php:2048
 msgid "Primary DNS IP Address"
 msgstr "כתובת IP ראשית של DNS"
 
-#: include/global_settings.php:2054
+#: include/global_settings.php:2049
 msgid "Enter the primary DNS IP Address to utilize for reverse lookups."
 msgstr "הזן את כתובת ה- IP הראשית של DNS כדי להשתמש בה עבור בדיקה לאחור."
 
-#: include/global_settings.php:2060
+#: include/global_settings.php:2055
 msgid "Secondary DNS IP Address"
 msgstr "כתובת IP משנית של DNS"
 
-#: include/global_settings.php:2061
+#: include/global_settings.php:2056
 msgid "Enter the secondary DNS IP Address to utilize for reverse lookups."
 msgstr "הזן את כתובת ה- IP של ה- DNS המשנית כדי להשתמש בה לחיפוש הפוך."
 
-#: include/global_settings.php:2067
+#: include/global_settings.php:2062
 msgid "DNS Timeout"
 msgstr "פסק זמן של DNS"
 
-#: include/global_settings.php:2068
+#: include/global_settings.php:2063
 msgid "Please enter the DNS timeout in milliseconds.  Kadupul uses a PHP based DNS resolver."
 msgstr "הזן את זמן הקצאת ה- DNS באלפיות שנייה. Kadupul משתמשת ב- DNS מבוסס DNS."
 
-#: include/global_settings.php:2077
+#: include/global_settings.php:2072
 msgid "On-demand RRD Update Settings"
 msgstr "הגדרות עדכון RRD לפי דרישה"
 
-#: include/global_settings.php:2082
+#: include/global_settings.php:2077
 msgid "Enable On-demand RRD Updating"
 msgstr "אפשר על פי דרישה RRD מעדכן"
 
-#: include/global_settings.php:2083
+#: include/global_settings.php:2078
 msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take affect until after the next polling cycle.  When you have Remote Data Collectors, this settings is required to be on."
 msgstr "האם Boost לאפשר על פי דרישה RRD מעדכן ב Kadupul? אם תשבית, שינוי זה לא ייכנס לתוקף עד לאחר מחזור הסקרים הבא. כאשר יש לך נתונים מרחוק אספנים, הגדרות אלה נדרש להיות על."
 
-#: include/global_settings.php:2088
+#: include/global_settings.php:2083
 msgid "System Level RRD Updater"
 msgstr "מערכת רמת RRD Updater"
 
-#: include/global_settings.php:2089
+#: include/global_settings.php:2084
 msgid "Before RRD On-demand Update Can be Cleared, a poller run must always pass"
 msgstr "לפני RRD על פי דרישה עדכון יכול להיות מסומנת, לרוץ ריצה חייב תמיד לעבור"
 
-#: include/global_settings.php:2094
+#: include/global_settings.php:2089
 msgid "How Often Should Boost Update All RRDs"
 msgstr "כיצד לעתים קרובות צריך לקדם עדכון כל RRDs"
 
-#: include/global_settings.php:2095
+#: include/global_settings.php:2090
 msgid "When you enable boost, your RRD files are only updated when they are requested by a user, or when this time period elapses."
 msgstr "כאשר אתה מפעיל דחיפה, קובצי ה- RRD שלך מתעדכנים רק כאשר הם מתבקשים על-ידי משתמש, או כאשר פרק זמן זה חלף."
 
-#: include/global_settings.php:2101
+#: include/global_settings.php:2096
 msgid "Number of Boost Processes"
 msgstr "מספר תהליכים Boost"
 
-#: include/global_settings.php:2102
+#: include/global_settings.php:2097
 msgid "The number of concurrent boost processes to use to use to process all of the RRDs in the boost table."
 msgstr "מספר תהליכים דחיפה בו זמנית להשתמש כדי להשתמש כדי לעבד את כל RRDs בטבלה דחיפה."
 
-#: include/global_settings.php:2129
+#: include/global_settings.php:2124
 msgid "Maximum Records"
 msgstr "רשומות מרבי"
 
-#: include/global_settings.php:2130
+#: include/global_settings.php:2125
 msgid "If the boost output table exceeds this size, in records, an update will take place."
 msgstr "אם הטבלה להגביר את הפלט עולה על גודל זה, ברשומות, עדכון יתקיים."
 
-#: include/global_settings.php:2137
+#: include/global_settings.php:2132
 msgid "Maximum Data Source Items Per Pass"
 msgstr "פריטי מקור נתונים מקסימליים למעבר"
 
-#: include/global_settings.php:2138
+#: include/global_settings.php:2133
 msgid "To optimize performance, the boost RRD updater needs to know how many Data Source Items should be retrieved in one pass.  Please be careful not to set too high as graphing performance during major updates can be compromised.  If you encounter graphing or polling slowness during updates, lower this number.  The default value is 50000."
 msgstr "כדי לייעל את הביצועים, המעלה RRD Updater צריך לדעת כמה פריטים מקור נתונים צריך להיות מאוחזר במעבר אחד. אנא היזהר לא להגדיר גבוה מדי כמו ביצועי גרפים במהלך עדכונים מרכזיים יכול להיות בסכנה. אם אתה נתקל גרף או איטיות הקצב במהלך עדכונים, להקטין את המספר הזה. ערך ברירת המחדל הוא 50000."
 
-#: include/global_settings.php:2144
+#: include/global_settings.php:2139
 msgid "Maximum Argument Length"
 msgstr "אורך ארגומנט מרבי"
 
-#: include/global_settings.php:2145
+#: include/global_settings.php:2140
 msgid "When boost sends update commands to RRDtool, it must not exceed the operating systems Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
 msgstr "כאשר דחיפה שולח פקודות עדכון RRDtool, זה לא יעלה על מערכות ההפעלה אורך ארגומנט מקסימלי. זה משתנה לפי מערכת ההפעלה ואת רמת הקרנל. לדוגמה: Windows 2000 &lt;= 2048, FreeBSD &lt;= 65535, Linux 2.6.22-- &lt;= 131072, Linux 2.6.23 ++ ללא הגבלה"
 
-#: include/global_settings.php:2152
+#: include/global_settings.php:2147
 msgid "Memory Limit for Boost and Poller"
 msgstr "מגבלת זיכרון עבור Boost ו Poller"
 
-#: include/global_settings.php:2153
+#: include/global_settings.php:2148
 msgid "The maximum amount of memory for the Kadupul Poller and Boosts Poller"
 msgstr "את כמות הזיכרון המקסימלית של Kadupul Poller ו Boosts Poller"
 
-#: include/global_settings.php:2159
+#: include/global_settings.php:2154
 msgid "Maximum RRD Update Script Run Time"
 msgstr "זמן ריצה מקסימלי של זמן ריצה של סקריפט RRD"
 
-#: include/global_settings.php:2160
+#: include/global_settings.php:2155
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log,"
 msgstr "אם אבזר להגביר excceds זה זמן ריצה, אזהרה תוצב ביומן קקטוסים,"
 
-#: include/global_settings.php:2166
+#: include/global_settings.php:2161
 msgid "Enable direct population of poller_output_boost table"
 msgstr "הפעל אוכלוסייה ישירה של tableer_ruput_boost"
 
-#: include/global_settings.php:2167
+#: include/global_settings.php:2162
 msgid "Enables direct insert of records into poller output boost with results in a 25% time reduction in each poll cycle."
 msgstr "מאפשר הוספה ישירה של הרשומות להגברת תפוקת הפולרים עם תוצאות בהפחתת זמן של 25% בכל מחזור סקר."
 
-#: include/global_settings.php:2172
+#: include/global_settings.php:2167
 msgid "Boost Debug Log"
 msgstr "שפר את ניקוי באגים"
 
-#: include/global_settings.php:2173
+#: include/global_settings.php:2168
 msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost\tpoller process."
 msgstr "אם השדה הזה אינו ריק, Boost יתחבר RRDupdate פלט מתהליך הגברת ההצבעה."
 
-#: include/global_settings.php:2180 utilities.php:2943
+#: include/global_settings.php:2175 utilities.php:2943
 msgid "Image Caching"
 msgstr "מטמון תמונות"
 
-#: include/global_settings.php:2185
+#: include/global_settings.php:2180
 msgid "Enable Image Caching"
 msgstr "אפשר מטמון תמונות"
 
-#: include/global_settings.php:2186
+#: include/global_settings.php:2181
 msgid "Should image caching be enabled?"
 msgstr "האם יש לאפשר אחסון במטמון של תמונות?"
 
-#: include/global_settings.php:2191
+#: include/global_settings.php:2186
 msgid "Location for Image Files"
 msgstr "מיקום עבור קובצי תמונות"
 
-#: include/global_settings.php:2192
+#: include/global_settings.php:2187
 msgid "Specify the location where Boost should place your image files.  These files will be automatically purged by the poller when they expire."
 msgstr "ציין את המיקום שבו Boost צריך למקם את קובצי התמונות שלך. קבצים אלה יטוהרו באופן אוטומטי על ידי הסוקר כאשר יפוג."
 
-#: include/global_settings.php:2200
+#: include/global_settings.php:2195
 msgid "Data Sources Statistics"
 msgstr "נתונים סטטיסטיים"
 
-#: include/global_settings.php:2205
+#: include/global_settings.php:2200
 msgid "Enable Data Source Statistics Collection"
 msgstr "הפעל נתונים סטטיסטיים אוסף נתונים"
 
-#: include/global_settings.php:2206
+#: include/global_settings.php:2201
 msgid "Should Data Source Statistics be collected for this Kadupul system?"
 msgstr "האם יש לאסוף נתונים מקור נתונים עבור מערכת זו Kadupul?"
 
-#: include/global_settings.php:2211
+#: include/global_settings.php:2206
 msgid "Number of DSStats Processes"
 msgstr "מספר תהליכים Boost"
 
-#: include/global_settings.php:2212
+#: include/global_settings.php:2207
 msgid "The number of concurrent DSStats processes to use to use to process all of the Data Sources."
 msgstr "מספר תהליכים דחיפה בו זמנית להשתמש כדי להשתמש כדי לעבד את כל RRDs בטבלה דחיפה."
 
-#: include/global_settings.php:2239
+#: include/global_settings.php:2234
 msgid "Daily Update Frequency"
 msgstr "תדירות העדכון היומי"
 
-#: include/global_settings.php:2240
+#: include/global_settings.php:2235
 msgid "How frequent should Daily Stats be updated?"
 msgstr "כמה תכופים יש לעדכן נתונים סטטיסטיים יומיים?"
 
-#: include/global_settings.php:2246
+#: include/global_settings.php:2241
 msgid "Hourly Average Window"
 msgstr "חלון ממוצע לשעה"
 
-#: include/global_settings.php:2247
+#: include/global_settings.php:2242
 msgid "The number of consecutive hours that represent the hourly average.  Keep in mind that a setting too high can result in very large memory tables"
 msgstr "מספר שעות רצופות המייצגות את הממוצע לשעה. זכור כי הגדרה גבוהה מדי עלולה לגרום לטבלאות זיכרון גדולות מאוד"
 
-#: include/global_settings.php:2253
+#: include/global_settings.php:2248
 msgid "Maintenance Time"
 msgstr "זמן תחזוקה"
 
-#: include/global_settings.php:2254
+#: include/global_settings.php:2249
 msgid "What time of day should Weekly, Monthly, and Yearly Data be updated?  Format is HH:MM [am/pm]"
 msgstr "באיזה שעה ביום יש לעדכן נתונים שבועיים, חודשיים ושנתיים? פורמט הוא HH: MM [am / pm]"
 
-#: include/global_settings.php:2261
+#: include/global_settings.php:2256
 msgid "Memory Limit for Data Source Statistics Data Collector"
 msgstr "מגבלת זיכרון עבור נתונים מקור נתונים נתונים אספן"
 
-#: include/global_settings.php:2262
+#: include/global_settings.php:2257
 #, fuzzy
 msgid "The maximum amount of memory for the Kadupul Poller and Data Source Statistics Poller"
 msgstr "הכמות המקסימלית של זיכרון עבור פולטי Kadupul נתונים מקור נתונים סטטיסטיים Poller"
 
-#: include/global_settings.php:2268
+#: include/global_settings.php:2263
 msgid "RRDfile Check"
 msgstr "RRDfile מנקה"
 
-#: include/global_settings.php:2273
+#: include/global_settings.php:2268
 msgid "Enable RRDfile Check"
 msgstr "הפעל כלל"
 
-#: include/global_settings.php:2274
+#: include/global_settings.php:2269
 msgid "Should RRDfile check be enabled for this Kadupul system?"
 msgstr "האם יש לאסוף נתונים מקור נתונים עבור מערכת זו Kadupul?"
 
-#: include/global_settings.php:2279
+#: include/global_settings.php:2274
 msgid "Number of RRDfile Check Processes"
 msgstr "מספר תהליכים Boost"
 
-#: include/global_settings.php:2280
+#: include/global_settings.php:2275
 msgid "The number of concurrent RRDfile check processes to use to use to process all of rrd files."
 msgstr "מספר תהליכים דחיפה בו זמנית להשתמש כדי להשתמש כדי לעבד את כל RRDs בטבלה דחיפה."
 
-#: include/global_settings.php:2307
+#: include/global_settings.php:2302
 msgid "Check Frequency"
 msgstr "תדירות"
 
-#: include/global_settings.php:2308
+#: include/global_settings.php:2303
 msgid "How frequent should RRD be checked ?"
 msgstr "כמה תכופים יש לעדכן נתונים סטטיסטיים יומיים?"
 
-#: include/global_settings.php:2314
+#: include/global_settings.php:2309
 msgid "Data Storage Settings"
 msgstr "הגדרות אחסון נתונים"
 
-#: include/global_settings.php:2320
+#: include/global_settings.php:2315
 msgid "Choose if RRDs will be stored locally or being handled by an external RRDtool proxy server."
 msgstr "בחר אם RRDs יאוחסנו באופן מקומי או שיטופלו על ידי שרת proxy חיצוני של RRDtool."
 
-#: include/global_settings.php:2325 include/global_settings.php:2359
+#: include/global_settings.php:2320 include/global_settings.php:2354
 msgid "RRDtool Proxy Server"
 msgstr "RRDtool שרת פרוקסי"
 
-#: include/global_settings.php:2329
+#: include/global_settings.php:2324
 msgid "Structure RRDfile Paths"
 msgstr "נתיבי RRD מובנים"
 
-#: include/global_settings.php:2334
+#: include/global_settings.php:2329
 msgid "Enable Structured Paths"
 msgstr "נתיבי RRD מובנים"
 
-#: include/global_settings.php:2335
+#: include/global_settings.php:2330
 msgid "Use a separate subfolder for each hosts RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
 msgstr ""
 
-#: include/global_settings.php:2339
+#: include/global_settings.php:2334
 msgid "Directory Pattern"
 msgstr "נמצאו מדריך"
 
-#: include/global_settings.php:2340
+#: include/global_settings.php:2335
 msgid "Which Directory Pattern do you wish to use for Structured RRD Paths.  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
 msgstr "באיזו תבנית ספרייה ברצונך להשתמש עבור נתיבי RRD מובנים.  'מזהה המכשיר' הוא ברירת המחדל. יש להשתמש בהגדרה 'מזהה התקן/מזהה שאילתת נתונים' כאשר יש לך מכשירים עם אלפי גרפים.  לאחר שינוי תבנית הספריה, עליך להפעיל שוב את סקריפט ה - CLI של הנתיב המובנה כדי לשנות את נתיבי קובץ ה - RRD לתבנית החדשה."
 
-#: include/global_settings.php:2344
+#: include/global_settings.php:2339
 msgid "Device ID"
 msgstr "התקן"
 
-#: include/global_settings.php:2345
+#: include/global_settings.php:2340
 msgid "Device ID/Data Query ID"
 msgstr "מחק שאילתת נתונים"
 
-#: include/global_settings.php:2346
+#: include/global_settings.php:2341
 msgid "Device Hash/Device ID"
 msgstr "שם ההתקן:% 1"
 
-#: include/global_settings.php:2347
+#: include/global_settings.php:2342
 msgid "Device Hash/Device ID/Data Query ID"
 msgstr "מזהה Hash/Device/מזהה שאילתת נתונים"
 
-#: include/global_settings.php:2351
+#: include/global_settings.php:2346
 msgid "Max Device Hash Directories"
 msgstr "ספריות Hash מקסימליות של מכשירים"
 
-#: include/global_settings.php:2352
+#: include/global_settings.php:2347
 msgid "The maximum number of Device Directories to be created based upon hashed Device ID's."
 msgstr "המספר המרבי של תיקיות מכשירים שייווצרו בהתבסס על מזהה התקן מקוטע."
 
-#: include/global_settings.php:2364 include/global_settings.php:2396
+#: include/global_settings.php:2359 include/global_settings.php:2391
 msgid "Proxy Server"
 msgstr "שרת פרוקסי"
 
-#: include/global_settings.php:2365
+#: include/global_settings.php:2360
 msgid "The DNS hostname or IP address of the RRDtool proxy server."
 msgstr "שם המארח DNS או כתובת ה- IP של שרת ה- Proxy של RRDtool."
 
-#: include/global_settings.php:2370 include/global_settings.php:2402
+#: include/global_settings.php:2365 include/global_settings.php:2397
 msgid "Proxy Port Number"
 msgstr "מספר יציאת פרוקסי"
 
-#: include/global_settings.php:2371
+#: include/global_settings.php:2366
 msgid "TCP port for encrypted communication."
 msgstr "יציאת TCP עבור תקשורת מוצפנת."
 
-#: include/global_settings.php:2378 include/global_settings.php:2410
+#: include/global_settings.php:2373 include/global_settings.php:2405
 #: utilities.php:277
 msgid "RSA Fingerprint"
 msgstr "טביעת אצבע של RSA"
 
-#: include/global_settings.php:2379
+#: include/global_settings.php:2374
 msgid "The fingerprint of the current public RSA key the proxy is using. This is required to establish a trusted connection."
 msgstr "טביעת האצבע של מפתח RSA הציבורי הנוכחי שבו משתמש ה- Proxy. זה נדרש כדי ליצור חיבור מהימן."
 
-#: include/global_settings.php:2386
+#: include/global_settings.php:2381
 msgid "RRDtool Proxy Server - Backup"
 msgstr "RRDtool שרת פרוקסי - גיבוי"
 
-#: include/global_settings.php:2391
+#: include/global_settings.php:2386
 msgid "Load Balancing"
 msgstr "איזון עומסים"
 
-#: include/global_settings.php:2392
+#: include/global_settings.php:2387
 msgid "If both main and backup proxy are receivable this option allows to spread all requests against RRDtool."
 msgstr "אם הן proxy הראשי גיבוי הם receivable אפשרות זו מאפשרת להפיץ את כל הבקשות נגד RRDtool."
 
-#: include/global_settings.php:2397
+#: include/global_settings.php:2392
 msgid "The DNS hostname or IP address of the RRDtool backup proxy server if proxy is running in MSR mode."
 msgstr "שם המארח DNS או כתובת ה- IP של שרת ה- Proxy של גיבוי ה- RRDtool אם proxy פועל במצב MSR."
 
-#: include/global_settings.php:2403
+#: include/global_settings.php:2398
 msgid "TCP port for encrypted communication with the backup proxy."
 msgstr "יציאת TCP עבור תקשורת מוצפנת עם פרוקסי הגיבוי."
 
-#: include/global_settings.php:2411
+#: include/global_settings.php:2406
 msgid "The fingerprint of the current public RSA key the backup proxy is using. This required to establish a trusted connection."
 msgstr "טביעת האצבע של מפתח RSA הציבורי הנוכחי המשמש את פרוקסי הגיבוי. זה נדרש כדי ליצור חיבור מהימן."
 
-#: include/global_settings.php:2420
+#: include/global_settings.php:2415
 msgid "Spike Kill Settings"
 msgstr "הגדרות ספייק להרוג"
 
-#: include/global_settings.php:2425
+#: include/global_settings.php:2420
 msgid "Removal Method"
 msgstr "שיטת הסרה"
 
-#: include/global_settings.php:2426
+#: include/global_settings.php:2421
 msgid "There are two removal methods.  The first, Standard Deviation, will remove any sample that is X number of standard deviations away from the average of samples.  The second method, Variance, will remove any sample that is X% more than the Variance average.  The Variance method takes into account a certain number of 'outliers'.  Those are exceptional samples, like the spike, that need to be excluded from the Variance Average calculation."
 msgstr "ישנן שתי שיטות הסרה. הראשון, סטיית תקן, תסיר כל מדגם כי הוא מספר X של סטיות תקן במרחק הממוצע של דגימות. השיטה השנייה, Variance, תסיר כל מדגם שהוא X% יותר מממוצע הווריאנס. שיטת הווריאנס לוקחת בחשבון מספר מסוים של &quot;חריגים&quot;. אלה דוגמאות חריגות, כמו ספייק, כי צריך להיות מחוץ לחישוב ממוצע varariance."
 
-#: include/global_settings.php:2430
+#: include/global_settings.php:2425
 msgid "Standard Deviation"
 msgstr "סטיית תקן"
 
-#: include/global_settings.php:2431
+#: include/global_settings.php:2426
 msgid "Variance Based w/Outliers Removed"
 msgstr "שונות מבוסס w / outliers הוסרו"
 
-#: include/global_settings.php:2435 lib/html.php:2515
+#: include/global_settings.php:2430 lib/html.php:2515
 msgid "Replacement Method"
 msgstr "שיטת החלפה"
 
-#: include/global_settings.php:2436
+#: include/global_settings.php:2431
 msgid "There are three replacement methods.  The first method replaces the spike with the average of the data source in question.  The second method replaces the spike with a 'NaN'.  The last replaces the spike with the last known good value found."
 msgstr "ישנן שלוש שיטות חלופיות. השיטה הראשונה מחליפה את ספייק עם הממוצע של מקור הנתונים המדובר. השיטה השנייה מחליפה את ספייק עם &quot;NaN&quot;. האחרון מחליף את ספייק עם הערך הטוב האחרון הידוע נמצא."
 
-#: include/global_settings.php:2440 lib/html.php:2511
+#: include/global_settings.php:2435 lib/html.php:2511
 msgid "Average"
 msgstr "ממוצע"
 
-#: include/global_settings.php:2441 lib/html.php:2512
+#: include/global_settings.php:2436 lib/html.php:2512
 msgid "NaN's"
 msgstr "של נאן"
 
-#: include/global_settings.php:2442 lib/html.php:2513
+#: include/global_settings.php:2437 lib/html.php:2513
 msgid "Last Known Good"
 msgstr "אחרון ידוע"
 
-#: include/global_settings.php:2446
+#: include/global_settings.php:2441
 msgid "Number of Standard Deviations"
 msgstr "מספר סטיות תקן"
 
-#: include/global_settings.php:2447
+#: include/global_settings.php:2442
 msgid "Any value that is this many standard deviations above the average will be excluded.  A good number will be dependent on the type of data to be operated on.  We recommend a number no lower than 5 Standard Deviations."
 msgstr "כל ערך שהוא זה סטיות תקן רבות מעל הממוצע לא ייכללו. מספר טוב יהיה תלוי בסוג הנתונים להיות מופעל על. אנו ממליצים על מספר לא קטן מ -5 סטיות תקן."
 
-#: include/global_settings.php:2451 include/global_settings.php:2452
-#: include/global_settings.php:2453 include/global_settings.php:2454
-#: include/global_settings.php:2455 include/global_settings.php:2456
-#: include/global_settings.php:2457 include/global_settings.php:2458
-#: include/global_settings.php:2459 include/global_settings.php:2460
-#: include/global_settings.php:2461 include/global_settings.php:2462
-#: include/global_settings.php:2463
+#: include/global_settings.php:2446 include/global_settings.php:2447
+#: include/global_settings.php:2448 include/global_settings.php:2449
+#: include/global_settings.php:2450 include/global_settings.php:2451
+#: include/global_settings.php:2452 include/global_settings.php:2453
+#: include/global_settings.php:2454 include/global_settings.php:2455
+#: include/global_settings.php:2456 include/global_settings.php:2457
+#: include/global_settings.php:2458
 #, php-format
 msgid "%d Standard Deviations"
 msgstr "% d סטיות תקן"
 
-#: include/global_settings.php:2467
+#: include/global_settings.php:2462
 msgid "Variance Percentage"
 msgstr "אחוז באחוזים"
 
-#: include/global_settings.php:2468
+#: include/global_settings.php:2463
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
 msgstr "ערך זה מייצג את האחוז מעל הממוצע המדגם המתואם לאחר הוצאת חריגים מהמדגם. לדוגמה, אחוז באחוזים של 100 %% בממוצע מותאם של 50 יסיר כל מדגם מעל לכמות 100 מהתרשים."
 
-#: include/global_settings.php:2491
+#: include/global_settings.php:2486
 msgid "Variance Number of Outliers"
 msgstr "שונות מספר חריגים"
 
-#: include/global_settings.php:2492
+#: include/global_settings.php:2487
 msgid "This value represents the number of high and low average samples will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed."
 msgstr "ערך זה מייצג את מספר הדגימות הממוצעות הגבוהות והנמוכות יוסר מהדגימה שנקבעה לפני חישוב הממוצע. אם תבחר ערך יוצא דופן של 5, אז הן ממוצעים העליון והתחתון 5 מוסרים."
 
-#: include/global_settings.php:2496 include/global_settings.php:2497
-#: include/global_settings.php:2498 include/global_settings.php:2499
-#: include/global_settings.php:2500 include/global_settings.php:2501
-#: include/global_settings.php:2502 include/global_settings.php:2503
-#: include/global_settings.php:2504 include/global_settings.php:2505
-#: include/global_settings.php:2506 include/global_settings.php:2507
-#: include/global_settings.php:2508
+#: include/global_settings.php:2491 include/global_settings.php:2492
+#: include/global_settings.php:2493 include/global_settings.php:2494
+#: include/global_settings.php:2495 include/global_settings.php:2496
+#: include/global_settings.php:2497 include/global_settings.php:2498
+#: include/global_settings.php:2499 include/global_settings.php:2500
+#: include/global_settings.php:2501 include/global_settings.php:2502
+#: include/global_settings.php:2503
 #, php-format
 msgid "%d High/Low Samples"
 msgstr "% d גבוה / נמוך דוגמאות"
 
-#: include/global_settings.php:2512
+#: include/global_settings.php:2507
 msgid "Max Kills Per RRA"
 msgstr "מקסימום הורג RRA"
 
-#: include/global_settings.php:2513
+#: include/global_settings.php:2508
 msgid "This value represents the maximum number of spikes to remove from a Graph RRA."
 msgstr "ערך זה מייצג את המספר המרבי של קוצים להסרה מ- Graph RRA."
 
-#: include/global_settings.php:2517 include/global_settings.php:2518
-#: include/global_settings.php:2519 include/global_settings.php:2520
-#: include/global_settings.php:2521 include/global_settings.php:2522
-#: include/global_settings.php:2523 include/global_settings.php:2524
-#: include/global_settings.php:2525 include/global_settings.php:2526
-#: include/global_settings.php:2527 include/global_settings.php:2528
+#: include/global_settings.php:2512 include/global_settings.php:2513
+#: include/global_settings.php:2514 include/global_settings.php:2515
+#: include/global_settings.php:2516 include/global_settings.php:2517
+#: include/global_settings.php:2518 include/global_settings.php:2519
+#: include/global_settings.php:2520 include/global_settings.php:2521
+#: include/global_settings.php:2522 include/global_settings.php:2523
 #, php-format
 msgid "%d Spikes"
 msgstr "% d קוצים"
 
-#: include/global_settings.php:2532
+#: include/global_settings.php:2527
 msgid "RRDfile Backup Directory"
 msgstr "RRDfile גיבוי Directory"
 
-#: include/global_settings.php:2533
+#: include/global_settings.php:2528
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
 msgstr "אם ספריה זו אינה ריקה, RRFfiles המקוריים שלך יגובו למיקום זה."
 
-#: include/global_settings.php:2540
+#: include/global_settings.php:2535
 msgid "Batch Spike Kill Settings"
 msgstr "אצווה ספייק להרוג הגדרות"
 
-#: include/global_settings.php:2545
+#: include/global_settings.php:2540
 msgid "Removal Schedule"
 msgstr "לוח זמנים להסרה"
 
-#: include/global_settings.php:2546
+#: include/global_settings.php:2541
 msgid "Do you wish to periodically remove spikes from your graphs?  If so, select the frequency below."
 msgstr "האם ברצונך להסיר מעת לעת את הקוצים מהגרפים שלך? אם כן, בחר את התדירות שבהמשך."
 
-#: include/global_settings.php:2553
+#: include/global_settings.php:2548
 msgid "Once a Day"
 msgstr "פעם ביום"
 
-#: include/global_settings.php:2554
+#: include/global_settings.php:2549
 msgid "Every Other Day"
 msgstr "בכל יום אחר"
 
-#: include/global_settings.php:2558
+#: include/global_settings.php:2553
 msgid "Base Time"
 msgstr "זמן הבסיס"
 
-#: include/global_settings.php:2559
+#: include/global_settings.php:2554
 msgid "The Base Time for Spike removal to occur.  For example, if you use '12:00am' and you choose once per day, the batch removal would begin at approximately midnight every day."
 msgstr "זמן הבסיס עבור הסרת ספייק להתרחש. לדוגמה, אם אתה משתמש ב &#39;12: 00:00&#39; ואתה בוחר פעם ביום, הסרת האצווה תתחיל בחצות בערך כל יום."
 
-#: include/global_settings.php:2566
+#: include/global_settings.php:2561
 msgid "Graph Templates to Spike Kill"
 msgstr "גרף תבניות ספייק להרוג"
 
-#: include/global_settings.php:2568
+#: include/global_settings.php:2563
 msgid "When performing batch spike removal, only the templates selected below will be acted on."
 msgstr "בעת ביצוע הסרת ספייק אצווה, רק את התבניות שנבחרו להלן יפעלו."
 
-#: include/global_settings.php:2572
+#: include/global_settings.php:2567
 msgid "Backup Retention"
 msgstr "שמירת נתונים"
 
-#: include/global_settings.php:2573
+#: include/global_settings.php:2568
 msgid "When SpikeKill kills spikes in graphs, it makes a backup of the RRDfile.  How long should these backup files be retained?"
 msgstr "כאשר SpikeKill הורג קוצים בתרשימים, הוא מבצע גיבוי של ה- RRDfile. כמה זמן צריך לשמור על קבצי הגיבוי האלה?"
 
-#: include/global_settings.php:2592
+#: include/global_settings.php:2587
 msgid "Default View Mode"
 msgstr "מצב תצוגת ברירת מחדל"
 
-#: include/global_settings.php:2593
+#: include/global_settings.php:2588
 msgid "Which Graph mode you want displayed by default when you first visit the Graphs page?"
 msgstr "באיזה מצב גרף ברצונך להציג כברירת מחדל בעת ביקור ראשון בדף &#39;גרפים&#39;?"
 
-#: include/global_settings.php:2599
+#: include/global_settings.php:2594
 msgid "TimeZone Support"
 msgstr "תמיכה ב - TimeZone"
 
-#: include/global_settings.php:2600
+#: include/global_settings.php:2595
 #, fuzzy
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
 msgstr "איך תרצו Kadupul יציגו תאריכים? הגדרה זו תשנה גם את האופן שבו תאריכי גרפי Kadupul מיוצגים."
 
-#: include/global_settings.php:2603
+#: include/global_settings.php:2598
 msgid "Kadupul Server Timezone"
 msgstr "שרת Kadupul - %s - תחזוקה"
 
-#: include/global_settings.php:2604
+#: include/global_settings.php:2599
 msgid "My Browsers Timezone"
 msgstr "אזור הזמן של הדפדפנים שלי"
 
-#: include/global_settings.php:2609
+#: include/global_settings.php:2604
 msgid "User Language"
 msgstr "שפת משתמש"
 
-#: include/global_settings.php:2610
+#: include/global_settings.php:2605
 msgid "Defines the preferred GUI language."
 msgstr "מגדיר את שפת GUI המועדפת."
 
-#: include/global_settings.php:2616
+#: include/global_settings.php:2611
 msgid "Show Graph Title"
 msgstr "הצג כותרת גרף"
 
-#: include/global_settings.php:2617
+#: include/global_settings.php:2612
 msgid "Display the graph title on the page so that it may be searched using the browser."
 msgstr "הצג את כותרת הגרף בדף, כך שניתן יהיה לחפש אותה באמצעות הדפדפן."
 
-#: include/global_settings.php:2622
+#: include/global_settings.php:2617
 msgid "Hide Disabled"
 msgstr "הסתר מושבת"
 
-#: include/global_settings.php:2623
+#: include/global_settings.php:2618
 msgid "Hides Disabled Devices and Graphs when viewing outside of Console tab."
 msgstr "מסתיר מכשירים מושבתים וגרפים בעת הצגה מחוץ לכרטיסייה &#39;מסוף&#39;."
 
-#: include/global_settings.php:2628
+#: include/global_settings.php:2623
 msgid "Show Device Aggregates"
 msgstr "אגרגטים"
 
-#: include/global_settings.php:2629
+#: include/global_settings.php:2624
 msgid "If a Device Data Source is included in an Aggregate Graph, show that Graph along with other Device Graphs"
 msgstr "אם מקור נתוני התקנים כלול בתרשים מצטבר, הראה את התרשים יחד עם גרפי התקנים אחרים"
 
-#: include/global_settings.php:2634
+#: include/global_settings.php:2629
 msgid "Enable Horizontal Scrolling"
 msgstr "אפשר גלילה אופקית"
 
-#: include/global_settings.php:2635
+#: include/global_settings.php:2630
 msgid "Enable Horizontal Scrolling of Tables, Disabling Responsive Column Visibility."
 msgstr "אפשר גלילה אופקית של טבלאות, השבתת נראות עמודת תגובה."
 
-#: include/global_settings.php:2641
+#: include/global_settings.php:2636
 msgid "The date format to use in Kadupul."
 msgstr "תבנית התאריך לשימוש ב- Kadupul."
 
-#: include/global_settings.php:2648
+#: include/global_settings.php:2643
 msgid "The date separator to be used in Kadupul."
 msgstr "מפריד התאריך שישמש ב- Kadupul."
 
-#: include/global_settings.php:2654
+#: include/global_settings.php:2649
 msgid "Page Refresh"
 msgstr "דף רענון"
 
-#: include/global_settings.php:2655
+#: include/global_settings.php:2650
 msgid "The number of seconds between automatic page refreshes."
 msgstr "מספר השניות בין רענון אוטומטי של דף."
 
-#: include/global_settings.php:2667
+#: include/global_settings.php:2662
 msgid "Preview Graphs Per Page"
 msgstr "תצוגה מקדימה של גרפים לעמוד"
 
-#: include/global_settings.php:2668 include/global_settings.php:2797
+#: include/global_settings.php:2663 include/global_settings.php:2792
 msgid "The number of graphs to display on one page in preview mode."
 msgstr "מספר הגרפים להצגה בעמוד אחד במצב תצוגה מקדימה."
 
-#: include/global_settings.php:2676
+#: include/global_settings.php:2671
 msgid "Default Time Range"
 msgstr "טווח זמן ברירת מחדל"
 
-#: include/global_settings.php:2677
+#: include/global_settings.php:2672
 msgid "The default RRA to use in rare occasions."
 msgstr "ברירת המחדל של RRA לשימוש במקרים נדירים."
 
-#: include/global_settings.php:2684
+#: include/global_settings.php:2679
 msgid "The default Timespan displayed when viewing Graphs and other time specific data."
 msgstr "ברירת המחדל של Timespan מוצגת בעת הצגת גרפים ונתונים ספציפיים אחרים בזמן."
 
-#: include/global_settings.php:2690
+#: include/global_settings.php:2685
 msgid "Default Timeshift"
 msgstr "ברירת מחדל"
 
-#: include/global_settings.php:2691
+#: include/global_settings.php:2686
 msgid "The default Timeshift displayed when viewing Graphs and other time specific data."
 msgstr "ברירת המחדל של Timeshift מוצגת בעת הצגת גרפים ונתונים ספציפיים אחרים בזמן."
 
-#: include/global_settings.php:2697
+#: include/global_settings.php:2692
 msgid "Allow Graph to extend to Future"
 msgstr "אפשר לגרף להאריך את העתיד"
 
-#: include/global_settings.php:2698
+#: include/global_settings.php:2693
 msgid "When displaying Graphs, allow Graph Dates to extend 'to future'"
 msgstr "בעת הצגת גרפים, אפשר לתאריכי גרפים להאריך את האפשרות &#39;לעתיד&#39;"
 
-#: include/global_settings.php:2703
+#: include/global_settings.php:2698
 msgid "First Day of the Week"
 msgstr "יום ראשון בשבוע"
 
-#: include/global_settings.php:2704
+#: include/global_settings.php:2699
 msgid "The first Day of the Week for weekly Graph Displays"
 msgstr "היום הראשון בשבוע להצגת גרפים שבועיים"
 
-#: include/global_settings.php:2710
+#: include/global_settings.php:2705
 msgid "Start of Daily Shift"
 msgstr "התחלה של Shift יומי"
 
-#: include/global_settings.php:2711
+#: include/global_settings.php:2706
 msgid "Start Time of the Daily Shift."
 msgstr "שעת ההתחלה היומית."
 
-#: include/global_settings.php:2718
+#: include/global_settings.php:2713
 msgid "End of Daily Shift"
 msgstr "סוף משמרת יומית"
 
-#: include/global_settings.php:2719
+#: include/global_settings.php:2714
 msgid "End Time of the Daily Shift."
 msgstr "סוף הזמן של המשמרת היומית."
 
-#: include/global_settings.php:2728
+#: include/global_settings.php:2723
 msgid "Thumbnail Sections"
 msgstr "סעיפים ממוזערים"
 
-#: include/global_settings.php:2729
+#: include/global_settings.php:2724
 msgid "Which portions of Kadupul display Thumbnails by default."
 msgstr "אילו חלקים של Kadupul להציג תמונות ממוזערות כברירת מחדל."
 
-#: include/global_settings.php:2743
+#: include/global_settings.php:2738
 msgid "Preview Thumbnail Columns"
 msgstr "תצוגה מקדימה של עמודות ממוזערות"
 
-#: include/global_settings.php:2744
+#: include/global_settings.php:2739
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
 msgstr "מספר העמודות לשימוש בעת הצגת גרפים ממוזערים במצב תצוגה מקדימה."
 
-#: include/global_settings.php:2748 include/global_settings.php:2762
+#: include/global_settings.php:2743 include/global_settings.php:2757
 msgid "1 Column"
 msgstr "עמודה 1"
 
-#: include/global_settings.php:2749 include/global_settings.php:2750
-#: include/global_settings.php:2751 include/global_settings.php:2752
-#: include/global_settings.php:2753 include/global_settings.php:2763
-#: include/global_settings.php:2764 include/global_settings.php:2765
-#: include/global_settings.php:2766 include/global_settings.php:2767
+#: include/global_settings.php:2744 include/global_settings.php:2745
+#: include/global_settings.php:2746 include/global_settings.php:2747
+#: include/global_settings.php:2748 include/global_settings.php:2758
+#: include/global_settings.php:2759 include/global_settings.php:2760
+#: include/global_settings.php:2761 include/global_settings.php:2762
 #: lib/html_graph.php:219 lib/html_graph.php:220 lib/html_graph.php:221
 #: lib/html_graph.php:222 lib/html_graph.php:223 lib/html_tree.php:1041
 #: lib/html_tree.php:1042 lib/html_tree.php:1043 lib/html_tree.php:1044
@@ -12270,112 +12266,112 @@ msgstr "עמודה 1"
 msgid "%d Columns"
 msgstr "% d עמודות"
 
-#: include/global_settings.php:2757
+#: include/global_settings.php:2752
 msgid "Tree View Thumbnail Columns"
 msgstr "הצג עץ ממוזערות עמודות"
 
-#: include/global_settings.php:2758
+#: include/global_settings.php:2753
 msgid "The number of columns to use when displaying Thumbnail graphs in Tree mode."
 msgstr "מספר העמודות לשימוש בעת הצגת גרפים ממוזערים במצב עץ."
 
-#: include/global_settings.php:2771
+#: include/global_settings.php:2766
 msgid "Thumbnail Height"
 msgstr "גובה תמונה ממוזערת"
 
-#: include/global_settings.php:2772
+#: include/global_settings.php:2767
 msgid "The height of Thumbnail graphs in pixels."
 msgstr "גובה התרשימים הממוזערים בפיקסלים."
 
-#: include/global_settings.php:2779
+#: include/global_settings.php:2774
 msgid "Thumbnail Width"
 msgstr "רוחב תמונה ממוזערת"
 
-#: include/global_settings.php:2780
+#: include/global_settings.php:2775
 msgid "The width of Thumbnail graphs in pixels."
 msgstr "רוחב הגרפים הממוזערים בפיקסלים."
 
-#: include/global_settings.php:2789
+#: include/global_settings.php:2784
 msgid "Default Tree"
 msgstr "עץ ברירת מחדל"
 
-#: include/global_settings.php:2790
+#: include/global_settings.php:2785
 msgid "The default graph tree to use when displaying graphs in tree mode."
 msgstr "עץ הגרף המשמש כברירת מחדל לשימוש בעת הצגת גרפים במצב עץ."
 
-#: include/global_settings.php:2796
+#: include/global_settings.php:2791
 msgid "Graphs Per Page"
 msgstr "גרפים לעמוד"
 
-#: include/global_settings.php:2803
+#: include/global_settings.php:2798
 msgid "Expand Devices"
 msgstr "הרחב את התקנים"
 
-#: include/global_settings.php:2804
+#: include/global_settings.php:2799
 msgid "Choose whether to expand the Graph Templates and Data Queries used by a Device on Tree."
 msgstr "בחר אם להרחיב את תבניות התרשים ושאילתות הנתונים שבהן משתמש מכשיר על עץ."
 
-#: include/global_settings.php:2809
+#: include/global_settings.php:2804
 msgid "Tree History"
 msgstr "היסטוריית סיסמאות"
 
-#: include/global_settings.php:2810
+#: include/global_settings.php:2805
 #, fuzzy
 msgid "If enabled, Kadupul will remember your Tree History between logins and when you return to the Graphs page."
 msgstr "אם זה מופעל, Kadupul יזכרו את היסטוריית העצים שלך בין כניסות וכשתחזור לדף הגרפים."
 
-#: include/global_settings.php:2833
+#: include/global_settings.php:2828
 msgid "Use Custom Fonts"
 msgstr "השתמש בגופנים מותאמים אישית"
 
-#: include/global_settings.php:2834
+#: include/global_settings.php:2829
 msgid "Choose whether to use your own custom fonts and font sizes or utilize the system defaults."
 msgstr "בחר אם להשתמש בגופנים ובגופני גופנים מותאמים אישית או השתמש בברירות המחדל של המערכת."
 
-#: include/global_settings.php:2850
+#: include/global_settings.php:2845
 msgid "The Pango font description to use for Graph Titles, such as DejaVu Sans Bold"
 msgstr ""
 
-#: include/global_settings.php:2868
+#: include/global_settings.php:2858
 msgid "The Pango font description to use for Graph Legend items, such as DejaVu Sans Mono"
 msgstr ""
 
-#: include/global_settings.php:2886
+#: include/global_settings.php:2871
 msgid "The Pango font description to use for Graph Axis items, such as DejaVu Sans"
 msgstr ""
 
-#: include/global_settings.php:2904
+#: include/global_settings.php:2884
 msgid "The Pango font description to use for Graph Unit items, such as DejaVu Sans"
 msgstr ""
 
-#: include/global_settings.php:2921
+#: include/global_settings.php:2896
 msgid "Realtime View Mode"
 msgstr "מצב צפייה בזמן אמת"
 
-#: include/global_settings.php:2922
+#: include/global_settings.php:2897
 msgid "How do you wish to view Realtime Graphs?"
 msgstr "כיצד ברצונך להציג גרפים בזמן אמת?"
 
-#: include/global_settings.php:2925
+#: include/global_settings.php:2900
 msgid "Inline"
 msgstr "בשורה"
 
-#: include/global_settings.php:2926
+#: include/global_settings.php:2901
 msgid "New Window"
 msgstr "בחלון חדש"
 
-#: include/global_settings.php:2941
+#: include/global_settings.php:2916
 msgid "System Setting"
 msgstr "הגדרות משתמש"
 
-#: include/global_settings.php:2949
+#: include/global_settings.php:2924
 msgid "1 Week"
 msgstr "שבוע"
 
-#: include/global_settings.php:2962
+#: include/global_settings.php:2937
 msgid "Auto Log Out Time"
 msgstr "יציאה אוטומטית"
 
-#: include/global_settings.php:2963
+#: include/global_settings.php:2938
 msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no affect when Authentication Cookies are enabled."
 msgstr "למשתמשים עם גישה למסוף בלבד, כמה זמן משתמש זה יכול להישאר מחובר לפני שהוא מתנתק אוטומטית. שים לב שאם לא היית פעיל יותר משעה, ייתכן שיהיה עליך לרענן את הדפדפן שלך. שים לב גם שהגדרה זו לא משפיעה על הפעלת קובצי Cookie לאימות."
 
