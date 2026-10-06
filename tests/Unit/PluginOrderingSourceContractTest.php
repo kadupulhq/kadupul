@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
@@ -26,6 +28,8 @@
  *   whatever row already holds that id and producing ERROR 1062.
  */
 
+require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
+
 $libPluginsPath = __DIR__ . '/../../lib/plugins.php';
 $pluginsPath    = __DIR__ . '/../../plugins.php';
 
@@ -43,7 +47,7 @@ function plugin_ordering_source(string $path): string
 // ---------------------------------------------------------------------------
 
 test('api_plugin_moveup has $prior_id !== null guard around the three-step swap', function () use ($libPluginsPath) {
-    $source = plugin_ordering_source($libPluginsPath);
+    $source = test_php_function_source(plugin_ordering_source($libPluginsPath), 'api_plugin_moveup');
 
     $fn_pos    = strpos($source, 'function api_plugin_moveup(');
     $guard_pos = strpos($source, 'if ($prior_id !== null)', $fn_pos);
@@ -53,7 +57,7 @@ test('api_plugin_moveup has $prior_id !== null guard around the three-step swap'
 });
 
 test('api_plugin_moveup swap executes only after the prior_id guard, not before', function () use ($libPluginsPath) {
-    $source = plugin_ordering_source($libPluginsPath);
+    $source = test_php_function_source(plugin_ordering_source($libPluginsPath), 'api_plugin_moveup');
 
     $fn_pos    = strpos($source, 'function api_plugin_moveup(');
     $guard_pos = strpos($source, 'if ($prior_id !== null)', $fn_pos);
@@ -66,7 +70,7 @@ test('api_plugin_moveup swap executes only after the prior_id guard, not before'
 });
 
 test('api_plugin_moveup temp_id computation is inside the prior_id guard', function () use ($libPluginsPath) {
-    $source = plugin_ordering_source($libPluginsPath);
+    $source = test_php_function_source(plugin_ordering_source($libPluginsPath), 'api_plugin_moveup');
 
     $fn_pos      = strpos($source, 'function api_plugin_moveup(');
     $guard_pos   = strpos($source, 'if ($prior_id !== null)', $fn_pos);
@@ -79,7 +83,7 @@ test('api_plugin_moveup temp_id computation is inside the prior_id guard', funct
 });
 
 test('api_plugin_moveup does not assign $prior_id to any id column before the null guard', function () use ($libPluginsPath) {
-    $source = plugin_ordering_source($libPluginsPath);
+    $source = test_php_function_source(plugin_ordering_source($libPluginsPath), 'api_plugin_moveup');
 
     $fn_pos    = strpos($source, 'function api_plugin_moveup(');
     $guard_pos = strpos($source, 'if ($prior_id !== null)', $fn_pos);
@@ -96,7 +100,7 @@ test('api_plugin_moveup does not assign $prior_id to any id column before the nu
 // ---------------------------------------------------------------------------
 
 test('api_plugin_movedown has outer $id !== false guard', function () use ($libPluginsPath) {
-    $source = plugin_ordering_source($libPluginsPath);
+    $source = test_php_function_source(plugin_ordering_source($libPluginsPath), 'api_plugin_movedown');
 
     $fn_pos   = strpos($source, 'function api_plugin_movedown(');
     $id_guard = strpos($source, 'if ($id !== false)', $fn_pos);
@@ -106,7 +110,7 @@ test('api_plugin_movedown has outer $id !== false guard', function () use ($libP
 });
 
 test('api_plugin_movedown has $next_id !== null guard around the three-step swap', function () use ($libPluginsPath) {
-    $source = plugin_ordering_source($libPluginsPath);
+    $source = test_php_function_source(plugin_ordering_source($libPluginsPath), 'api_plugin_movedown');
 
     $fn_pos    = strpos($source, 'function api_plugin_movedown(');
     $guard_pos = strpos($source, 'if ($next_id !== null)', $fn_pos);
@@ -116,7 +120,7 @@ test('api_plugin_movedown has $next_id !== null guard around the three-step swap
 });
 
 test('api_plugin_movedown swap executes only after the next_id guard, not before', function () use ($libPluginsPath) {
-    $source = plugin_ordering_source($libPluginsPath);
+    $source = test_php_function_source(plugin_ordering_source($libPluginsPath), 'api_plugin_movedown');
 
     $fn_pos    = strpos($source, 'function api_plugin_movedown(');
     $guard_pos = strpos($source, 'if ($next_id !== null)', $fn_pos);
@@ -128,7 +132,7 @@ test('api_plugin_movedown swap executes only after the next_id guard, not before
 });
 
 test('api_plugin_movedown does not assign $next_id to any id column before the null guard', function () use ($libPluginsPath) {
-    $source = plugin_ordering_source($libPluginsPath);
+    $source = test_php_function_source(plugin_ordering_source($libPluginsPath), 'api_plugin_movedown');
 
     $fn_pos    = strpos($source, 'function api_plugin_movedown(');
     $guard_pos = strpos($source, 'if ($next_id !== null)', $fn_pos);
@@ -141,58 +145,127 @@ test('api_plugin_movedown does not assign $next_id to any id column before the n
 // plugins_load_temp_table sql_mode save/restore
 // ---------------------------------------------------------------------------
 
-test('plugins_load_temp_table saves @@SESSION.sql_mode before adding NO_AUTO_VALUE_ON_ZERO', function () use ($pluginsPath) {
-    $source = plugin_ordering_source($pluginsPath);
+// These ports record the actual extracted production function's DB call order.
+// They do not model MySQL temporary-table storage or plugin discovery.
+eval(<<<'PORTS'
+namespace PluginOrderingCopyContract;
+function plugins_temp_table_exists($table) { return false; }
+function db_column_exists($table, $column) {
+    if ($column !== 'requires') throw new \RuntimeException('Unexpected column lookup');
+    return true;
+}
+function db_fetch_cell($sql) {
+    if ($sql !== 'SELECT @@SESSION.sql_mode') throw new \RuntimeException('Unexpected cell query');
+    $GLOBALS['plugin_ordering_copy']['calls'][] = ['read', $sql, []];
+    return $GLOBALS['plugin_ordering_copy']['mode'];
+}
+function db_execute_prepared($sql, $params) {
+    if ($sql !== 'SET SESSION sql_mode = ?' || count($params) !== 1) throw new \RuntimeException('Unexpected prepared write');
+    $GLOBALS['plugin_ordering_copy']['calls'][] = ['set', $sql, $params];
+    $GLOBALS['plugin_ordering_copy']['mode'] = $params[0];
+    return true;
+}
+function db_execute($sql) {
+    if (!preg_match('/^(?:CREATE TEMPORARY TABLE IF NOT EXISTS plugin_temp_table_[0-9]+ LIKE plugin_config|TRUNCATE plugin_temp_table_[0-9]+|INSERT INTO plugin_temp_table_[0-9]+ SELECT \* FROM plugin_config)$/D', $sql)) throw new \RuntimeException('Unexpected unprepared write');
+    $GLOBALS['plugin_ordering_copy']['calls'][] = ['execute', $sql, []];
+    if (str_starts_with($sql, 'INSERT INTO')) $GLOBALS['plugin_ordering_copy']['insert_mode'] = $GLOBALS['plugin_ordering_copy']['mode'];
+    return true;
+}
+function db_fetch_assoc($sql) {
+    if ($sql !== 'SELECT id, directory, status FROM plugin_config') throw new \RuntimeException('Unexpected list query');
+    return [];
+}
+PORTS);
+eval('namespace PluginOrderingCopyContract; ' . test_php_function_source(plugin_ordering_source($pluginsPath), 'plugins_load_temp_table'));
 
-    $fn_pos   = strpos($source, 'function plugins_load_temp_table()');
-    $save_pos = strpos($source, '$orig_sql_mode = db_fetch_cell(\'SELECT @@SESSION.sql_mode\')', $fn_pos);
-    // Anchor on the PHP-side mode append, not the SET SESSION statement, so
-    // the order check is not confused by the restore call that also contains
-    // 'SET SESSION sql_mode'.
-    $set_pos  = strpos($source, "\$modes[] = 'NO_AUTO_VALUE_ON_ZERO'", $fn_pos);
+/** @return array{calls: list<array>, mode: string, insert_mode: string} */
+function plugin_ordering_copy_calls(string $mode): array
+{
+    $directory = sys_get_temp_dir() . '/plugin-ordering-copy-' . bin2hex(random_bytes(8));
+    if (!mkdir($directory, 0700)) {
+        throw new RuntimeException('Unable to create owned plugin directory');
+    }
+    $names = ['config', 'plugins', 'plugins_integrated', 'local_db_cnn_id', 'plugin_ordering_copy'];
+    $prior = [];
+    foreach ($names as $name) {
+        $prior[$name] = [array_key_exists($name, $GLOBALS), $GLOBALS[$name] ?? null];
+    }
+    $hadSession = array_key_exists('_SESSION', $GLOBALS);
+    $session = $_SESSION ?? null;
+    try {
+        if (!mkdir($directory . '/plugins', 0700)) {
+            throw new RuntimeException('Unable to create owned plugin subdirectory');
+        }
+        $GLOBALS['config'] = ['base_path' => $directory, 'poller_id' => 1];
+        $GLOBALS['plugins_integrated'] = [];
+        $GLOBALS['plugin_ordering_copy'] = ['calls' => [], 'mode' => $mode];
+        $_SESSION = [];
+        PluginOrderingCopyContract\plugins_load_temp_table();
+        return $GLOBALS['plugin_ordering_copy'];
+    } finally {
+        foreach ($prior as $name => [$exists, $value]) {
+            if ($exists) {
+                $GLOBALS[$name] = $value;
+            } else {
+                unset($GLOBALS[$name]);
+            }
+        }
+        if ($hadSession) {
+            $_SESSION = $session;
+        } else {
+            unset($_SESSION);
+        }
+        if (is_dir($directory . '/plugins') && !rmdir($directory . '/plugins')) {
+            throw new RuntimeException('Unable to remove owned plugin subdirectory');
+        }
+        if (!rmdir($directory)) {
+            throw new RuntimeException('Unable to remove owned plugin directory');
+        }
+    }
+}
 
-    expect($fn_pos)->not->toBeFalse();
-    expect($save_pos)->not->toBeFalse('$orig_sql_mode save not found in plugins_load_temp_table');
-    expect($set_pos)->not->toBeFalse('NO_AUTO_VALUE_ON_ZERO mode append not found in plugins_load_temp_table');
-    // Save must come before the mode append.
-    expect($save_pos)->toBeLessThan($set_pos);
+function plugin_ordering_mode_samples(): array
+{
+    return ['', 'STRICT_ALL_TABLES,ANSI_QUOTES', ' ANSI_QUOTES, NO_AUTO_VALUE_ON_ZERO '];
+}
+
+test('plugins_load_temp_table saves @@SESSION.sql_mode before adding NO_AUTO_VALUE_ON_ZERO', function () {
+    foreach (plugin_ordering_mode_samples() as $mode) {
+        $calls = plugin_ordering_copy_calls($mode)['calls'];
+        expect($calls[2])->toBe(['read', 'SELECT @@SESSION.sql_mode', []]);
+        expect($calls[3][0])->toBe('set');
+        expect($calls[3][2][0])->toContain('NO_AUTO_VALUE_ON_ZERO');
+    }
 });
 
-test('plugins_load_temp_table inserts into temp table while NO_AUTO_VALUE_ON_ZERO is active', function () use ($pluginsPath) {
-    $source = plugin_ordering_source($pluginsPath);
-
-    $fn_pos      = strpos($source, 'function plugins_load_temp_table()');
-    $nav_pos     = strpos($source, 'NO_AUTO_VALUE_ON_ZERO', $fn_pos);
-    $insert_pos  = strpos($source, 'INSERT INTO $table SELECT * FROM plugin_config', $fn_pos);
-
-    expect($nav_pos)->not->toBeFalse();
-    expect($insert_pos)->not->toBeFalse('bulk INSERT not found in plugins_load_temp_table');
-    // INSERT must come after the mode is set.
-    expect($insert_pos)->toBeGreaterThan($nav_pos);
+test('plugins_load_temp_table inserts into temp table while NO_AUTO_VALUE_ON_ZERO is active', function () {
+    foreach (plugin_ordering_mode_samples() as $mode) {
+        $result = plugin_ordering_copy_calls($mode);
+        expect($result['calls'][4][1])->toMatch('/^INSERT INTO plugin_temp_table_[0-9]+ SELECT \* FROM plugin_config$/D');
+        expect(explode(',', $result['insert_mode']))->toContain('NO_AUTO_VALUE_ON_ZERO');
+        expect(array_count_values(explode(',', $result['insert_mode']))['NO_AUTO_VALUE_ON_ZERO'])->toBe(1);
+    }
 });
 
-test('plugins_load_temp_table restores original sql_mode after the bulk INSERT', function () use ($pluginsPath) {
-    $source = plugin_ordering_source($pluginsPath);
-
-    $fn_pos       = strpos($source, 'function plugins_load_temp_table()');
-    $insert_pos   = strpos($source, 'INSERT INTO $table SELECT * FROM plugin_config', $fn_pos);
-    $restore_pos  = strpos($source, 'SET SESSION sql_mode = ?', $fn_pos);
-
-    expect($insert_pos)->not->toBeFalse();
-    expect($restore_pos)->not->toBeFalse('sql_mode restore not found in plugins_load_temp_table');
-    // Restore must come after the INSERT.
-    expect($restore_pos)->toBeGreaterThan($insert_pos);
+test('plugins_load_temp_table restores original sql_mode after the bulk INSERT', function () {
+    foreach (plugin_ordering_mode_samples() as $mode) {
+        $calls = plugin_ordering_copy_calls($mode)['calls'];
+        expect($calls)->toHaveCount(6);
+        // Two identical SQL strings have distinct bindings and distinct order.
+        expect($calls[3][1])->toBe('SET SESSION sql_mode = ?');
+        expect($calls[4][0])->toBe('execute');
+        expect($calls[5])->toBe(['set', 'SET SESSION sql_mode = ?', [$mode]]);
+    }
 });
 
-test('plugins_load_temp_table restore uses db_execute_prepared with $orig_sql_mode', function () use ($pluginsPath) {
-    $source = plugin_ordering_source($pluginsPath);
-
-    $fn_pos = strpos($source, 'function plugins_load_temp_table()');
-
-    // The restore call must bind $orig_sql_mode, not a hardcoded string, so
-    // the session mode is returned to exactly what it was before the copy.
-    $restore_slice_start = strpos($source, 'SET SESSION sql_mode = ?', $fn_pos);
-    $restore_slice       = substr($source, $restore_slice_start, 120);
-
-    expect($restore_slice)->toContain('$orig_sql_mode');
+test('plugins_load_temp_table restore uses db_execute_prepared with $orig_sql_mode', function () {
+    foreach (plugin_ordering_mode_samples() as $mode) {
+        $result = plugin_ordering_copy_calls($mode);
+        expect($result['mode'])->toBe($mode);
+        expect($result['calls'][5][2])->toBe([$mode]);
+        // Retain whitespace and empty modes exactly; the enabling call normalizes them.
+        if ($mode !== 'ANSI_QUOTES,NO_AUTO_VALUE_ON_ZERO') {
+            expect($result['calls'][3][2])->not->toBe($result['calls'][5][2]);
+        }
+    }
 });
