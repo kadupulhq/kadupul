@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Run an explicit Sonar scope check on every eligible update; skip expensive coverage only for verified ordinary documentation changes and retain full analysis for relevant or uncertain inputs.
+
 - Install the pinned Python test dependency in an isolated environment before Snyk scans all repository projects.
 
 - Reduce repeated native test coverage parsing while preserving complete uncovered-source reports and strict subprocess evidence checks.
