@@ -50,7 +50,7 @@ var previousColumns   = null;
 // html_common_header() sets kadupulIcons from config/icons.json, already
 // resolved for the current theme, so PHP and JavaScript draw the same glyphs.
 function iconClass(name) {
-	if (typeof kadupulIcons === 'object' && kadupulIcons !== null && Object.prototype.hasOwnProperty.call(kadupulIcons, name)) {
+	if (typeof kadupulIcons === 'object' && kadupulIcons !== null && (typeof Object.hasOwn === 'function' ? Object.hasOwn(kadupulIcons, name) : Object.prototype.hasOwnProperty.call(kadupulIcons, name))) {
 		return kadupulIcons[name];
 	}
 
