@@ -249,6 +249,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Share ordered System and profile graph-font metadata while preserving their defaults, translated labels, validation and field order.
+
 - Add Symfony bulk SNMP settings with explicit credential replacement, per-device credential validation and secret-safe failure responses.
 
 - Add Symfony bulk site, template and collector assignments with whole-selection validation, primary rollback and verified collector replication.

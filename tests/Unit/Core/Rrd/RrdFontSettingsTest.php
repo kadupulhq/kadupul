@@ -126,14 +126,52 @@ test('loaded CSP settings advertise supported reporting and explain direct enfor
 // The per-user labels reuse the System labels so existing translations still apply.
 test('font setting labels keep their translations', function () {
     $root = dirname(__DIR__, 4);
-    preg_match_all("/(?:'friendly_name' => |graph_font_setting_field\(\s*)__\('([^']*Font[^']*)'\)/", file_get_contents($root . '/include/global_settings.php'), $labels);
+    $result = rrd_characterization_run($this, array('options' => rrd_characterization_options(), 'calls' => array(
+        array('fn' => 'rrd_characterization_setting_definitions', 'args' => array()),
+    )))['results'][0];
+    expect($result['diagnostics'])->toBe(array());
+    $labels = array();
+    foreach ($result['returned'] as $sections) {
+        foreach ($sections as $fields) {
+            foreach ($fields as $field) {
+                if (str_contains($field['friendly_name'] ?? '', 'Font')) {
+                    $labels[] = $field['friendly_name'];
+                }
+            }
+        }
+    }
     $po = file_get_contents($root . '/locales/po/de-DE.po');
-
-    expect($labels[1])->toHaveCount(19);
-    foreach (array_unique($labels[1]) as $label) {
+    expect($po)->not->toBeFalse();
+    expect($labels)->toHaveCount(19);
+    foreach (array_unique($labels) as $label) {
         expect($po)->toContain('msgid "' . $label . '"');
     }
 });
+
+// Frozen from the complete real be32 settings include before the shared builder.
+test('loaded graph font metadata preserves original field order values and types', function (string $context) {
+    $root = dirname(__DIR__, 4);
+    $json = file_get_contents($root . '/tests/Golden/graph-font-settings.json');
+    if ($json === false) {
+        throw new RuntimeException('Unable to read original font metadata');
+    }
+    $expected = json_decode($json, true, flags: JSON_THROW_ON_ERROR);
+    $result = rrd_characterization_run($this, array('options' => rrd_characterization_options(), 'calls' => array(
+        array('fn' => 'rrd_characterization_setting_definitions', 'args' => array()),
+    )))['results'][0];
+    expect($result['diagnostics'])->toBe(array());
+    if ($context === 'system') {
+        $fields = $result['returned']['system']['visual'];
+        $actual = array_intersect_key($fields, $expected['system']);
+        $keys = array_keys($fields);
+        $start = array_search('path_rrdtool_default_font', $keys, true);
+        expect($start)->not->toBeFalse();
+        expect(array_slice($keys, $start, 10))->toBe(array_merge(array_keys($expected['system']), array('business_hours_header')));
+    } else {
+        $actual = $result['returned']['user']['fonts'];
+    }
+    expect($actual)->toBe($expected[$context]);
+})->with(array('System metadata' => 'system', 'profile metadata' => 'user'));
 
 test('group graph settings store the default for a font size they refuse', function ($submitted, $stored) {
     $root = dirname(__DIR__, 4);

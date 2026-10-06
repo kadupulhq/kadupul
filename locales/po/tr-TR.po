@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-06 05:07-0700\n"
+"POT-Creation-Date: 2026-10-06 13:13-0700\n"
 "PO-Revision-Date: 2024-04-20 19:24-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -53,7 +53,7 @@ msgstr "Bu program yararlı olması ümidiyle, ancak HİÇBİR GARANTİ OLMAKSIZ
 #: data_templates.php:18 data_templates.php:790 gprint_presets.php:12
 #: graph_templates.php:22 graph_templates.php:517 graphs.php:31 host.php:26
 #: host_templates.php:19 host_templates.php:484 host_templates.php:541
-#: include/global_arrays.php:1652 include/global_settings.php:251
+#: include/global_arrays.php:1652 include/global_settings.php:316
 #: lib/api_automation.php:1323 lib/api_automation.php:1386
 #: lib/api_automation.php:1457 lib/html.php:1497 lib/html_form.php:1397
 #: lib/html_reports.php:1937 managers.php:13 pollers.php:18 tree.php:1678
@@ -573,8 +573,8 @@ msgstr "Boyut"
 #: data_queries.php:1533 data_source_profiles.php:1398
 #: data_source_profiles.php:1399 data_sources.php:1794 data_sources.php:1795
 #: data_templates.php:1315 gprint_presets.php:430 graph_templates.php:921
-#: host_templates.php:996 include/global_settings.php:895
-#: include/global_settings.php:1922 lib/api_automation.php:1438 tree.php:2387
+#: host_templates.php:996 include/global_settings.php:960
+#: include/global_settings.php:1932 lib/api_automation.php:1438 tree.php:2387
 #: tree.php:2388 user_admin.php:2268 user_domains.php:758
 #: user_group_admin.php:2065
 msgid "No"
@@ -587,7 +587,7 @@ msgstr "Hayır"
 #: data_source_profiles.php:1398 data_source_profiles.php:1399
 #: data_sources.php:1794 data_sources.php:1795 data_templates.php:1315
 #: gprint_presets.php:430 graph_templates.php:921 host_templates.php:996
-#: include/global_settings.php:894 include/global_settings.php:1921
+#: include/global_settings.php:959 include/global_settings.php:1931
 #: lib/api_automation.php:1438 lib/installer.php:2124 lib/installer.php:2152
 #: lib/installer.php:3953 tree.php:2387 tree.php:2388 user_admin.php:2266
 #: user_domains.php:754 user_domains.php:758 user_group_admin.php:2063
@@ -609,7 +609,7 @@ msgstr "Toplam Grafikler"
 
 #: aggregate_graphs.php:1562 data_debug.php:1042 data_sources.php:1450
 #: graph_view.php:699 graphs.php:1946 host.php:1687
-#: include/global_arrays.php:2892 include/global_settings.php:629
+#: include/global_arrays.php:2892 include/global_settings.php:694
 #: lib/api_automation.php:446 lib/html_graph.php:139 lib/html_tree.php:973
 #: rrdcleaner.php:381
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:59
@@ -652,9 +652,9 @@ msgstr "Herhangi"
 #: include/global_form.php:1000 include/global_form.php:1008
 #: include/global_form.php:1186 include/global_form.php:1205
 #: include/global_form.php:1214 include/global_form.php:2128
-#: include/global_form.php:2170 include/global_settings.php:633
-#: include/global_settings.php:641 include/global_settings.php:649
-#: include/global_settings.php:1333 include/global_settings.php:1996
+#: include/global_form.php:2170 include/global_settings.php:698
+#: include/global_settings.php:706 include/global_settings.php:714
+#: include/global_settings.php:1343 include/global_settings.php:2006
 #: lib/api_automation.php:48 lib/api_automation.php:431
 #: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3806
 #: lib/auth.php:3855 lib/auth.php:3901 lib/html.php:220 lib/html.php:2303
@@ -835,7 +835,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "Lütfen mevcut şifrenizi ve yeni şifrenizi girin <br> Kadupul şifre."
 
 #: auth_changepassword.php:397 auth_login.php:329 auth_login.php:332
-#: include/global_settings.php:1830 lib/functions.php:6174
+#: include/global_settings.php:1840 lib/functions.php:6174
 msgid "Username"
 msgstr "Kullanıcı Adı"
 
@@ -924,7 +924,7 @@ msgstr "Kullanıcı adınızı ve şifrenizi aşağıya girin"
 msgid "Password"
 msgstr "Şifre"
 
-#: auth_login.php:350 include/global_settings.php:2319 lib/auth.php:1014
+#: auth_login.php:350 include/global_settings.php:2329 lib/auth.php:1014
 #: lib/auth.php:1036 lib/auth.php:1046 lib/auth.php:1051 user_admin.php:2123
 msgid "Local"
 msgstr "Yerel"
@@ -947,8 +947,8 @@ msgstr "Oturum açık kalsın"
 msgid "Login"
 msgstr "Giriş"
 
-#: auth_profile.php:61 include/global_settings.php:41
-#: include/global_settings.php:1197 include/global_settings.php:1514
+#: auth_profile.php:61 include/global_settings.php:106
+#: include/global_settings.php:1207 include/global_settings.php:1524
 #: lib/html.php:2759 managers.php:24 user_admin.php:1740
 #: user_group_admin.php:1742
 msgid "General"
@@ -959,7 +959,7 @@ msgid "User Account Details"
 msgstr "Kullanıcı Hesap Detayları"
 
 #: auth_profile.php:313 include/global_arrays.php:857
-#: include/global_settings.php:2732 lib/html.php:2183 lib/html.php:2205
+#: include/global_settings.php:2742 lib/html.php:2183 lib/html.php:2205
 #: lib/html.php:2740
 msgid "Tree View"
 msgstr "Ağaç görünümü"
@@ -983,7 +983,7 @@ msgid "The login name for this user."
 msgstr "Bu kullanıcı için giriş adı."
 
 #: auth_profile.php:342 include/global_form.php:1503
-#: include/global_settings.php:1866 user_admin.php:2246 user_domains.php:482
+#: include/global_settings.php:1876 user_admin.php:2246 user_domains.php:482
 #: user_group_admin.php:721 utilities.php:1153
 msgid "Full Name"
 msgstr "Ad Soyad"
@@ -1141,7 +1141,7 @@ msgid "SNMP Name"
 msgstr "SNMP Adı"
 
 #: automation_devices.php:274 host.php:1711 include/global_form.php:1184
-#: include/global_settings.php:2314 lib/html.php:2399
+#: include/global_settings.php:2324 lib/html.php:2399
 msgid "Location"
 msgstr "Konum"
 
@@ -1255,7 +1255,7 @@ msgstr "Kopyala"
 
 #: automation_graph_rules.php:14 automation_networks.php:18
 #: automation_tree_rules.php:14 data_sources.php:24 host.php:27
-#: include/global_arrays.php:1650 include/global_settings.php:1782
+#: include/global_arrays.php:1650 include/global_settings.php:1792
 #: managers.php:14 managers.php:20 plugins.php:24 pollers.php:20
 #: user_admin.php:19 user_domains.php:17 user_domains.php:397
 #: user_group_admin.php:21
@@ -1369,7 +1369,7 @@ msgstr "Veri sorgusu"
 #: automation_tree_rules.php:855 automation_tree_rules.php:975
 #: automation_tree_rules.php:993 data_debug.php:1107 data_sources.php:1513
 #: host.php:1762 include/global_arrays.php:917 include/global_form.php:1527
-#: include/global_settings.php:364 include/global_settings.php:380
+#: include/global_settings.php:429 include/global_settings.php:445
 #: lib/api_automation.php:27 lib/html_reports.php:2036
 #: lib/html_reports.php:2141 lib/html_reports.php:2152
 #: lib/html_reports.php:2188 managers.php:241 managers.php:612
@@ -1385,11 +1385,11 @@ msgstr "Etkin"
 #: automation_tree_rules.php:993 data_debug.php:1108 data_sources.php:1514
 #: data_templates.php:1319 host.php:1763 include/global_arrays.php:916
 #: include/global_arrays.php:1573 include/global_arrays.php:1865
-#: include/global_settings.php:363 include/global_settings.php:379
-#: include/global_settings.php:1365 include/global_settings.php:1625
-#: include/global_settings.php:1639 include/global_settings.php:1652
-#: include/global_settings.php:1677 include/global_settings.php:1691
-#: include/global_settings.php:1781 include/global_settings.php:2545
+#: include/global_settings.php:428 include/global_settings.php:444
+#: include/global_settings.php:1375 include/global_settings.php:1635
+#: include/global_settings.php:1649 include/global_settings.php:1662
+#: include/global_settings.php:1687 include/global_settings.php:1701
+#: include/global_settings.php:1791 include/global_settings.php:2555
 #: lib/api_automation.php:28 lib/html.php:2836 lib/html_reports.php:2037
 #: lib/html_reports.php:2188 lib/html_utility.php:1317 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:935 user_domains.php:397
@@ -1491,7 +1491,7 @@ msgid "Manual"
 msgstr "Manuel"
 
 #: automation_networks.php:409 automation_networks.php:1064
-#: include/global_arrays.php:1879 include/global_settings.php:1366
+#: include/global_arrays.php:1879 include/global_settings.php:1376
 msgid "Daily"
 msgstr "Günlük"
 
@@ -1524,7 +1524,7 @@ msgid "Network Discovery Range [new]"
 msgstr "Ağ Bulma Aralığı [yeni]"
 
 #: automation_networks.php:434 include/global_form.php:1880
-#: include/global_form.php:1983 include/global_settings.php:54
+#: include/global_form.php:1983 include/global_settings.php:119
 #: lib/html_reports.php:13
 msgid "General Settings"
 msgstr "Genel Ayarlar"
@@ -1663,11 +1663,11 @@ msgstr "% d dakika"
 #: include/global_arrays.php:1593 include/global_arrays.php:1617
 #: include/global_arrays.php:1618 include/global_arrays.php:1619
 #: include/global_arrays.php:1620 include/global_arrays.php:1621
-#: include/global_arrays.php:1634 include/global_settings.php:1693
-#: include/global_settings.php:1694 include/global_settings.php:1695
-#: include/global_settings.php:1696 include/global_settings.php:1697
-#: include/global_settings.php:2658 include/global_settings.php:2917
-#: include/global_settings.php:2918 include/global_settings.php:2919
+#: include/global_arrays.php:1634 include/global_settings.php:1703
+#: include/global_settings.php:1704 include/global_settings.php:1705
+#: include/global_settings.php:1706 include/global_settings.php:1707
+#: include/global_settings.php:2668 include/global_settings.php:2876
+#: include/global_settings.php:2877 include/global_settings.php:2878
 #: pollers.php:902 pollers.php:903
 #, php-format
 msgid "%d Minutes"
@@ -1695,10 +1695,10 @@ msgstr "%d Saat"
 #: include/global_arrays.php:1546 include/global_arrays.php:1547
 #: include/global_arrays.php:1548 include/global_arrays.php:1549
 #: include/global_arrays.php:1550 include/global_arrays.php:1556
-#: include/global_arrays.php:1557 include/global_settings.php:1699
-#: include/global_settings.php:1700 include/global_settings.php:1701
-#: include/global_settings.php:1702 include/global_settings.php:2921
-#: include/global_settings.php:2922
+#: include/global_arrays.php:1557 include/global_settings.php:1709
+#: include/global_settings.php:1710 include/global_settings.php:1711
+#: include/global_settings.php:1712 include/global_settings.php:2880
+#: include/global_settings.php:2881
 #, php-format
 msgid "%d Hours"
 msgstr "%d Saat"
@@ -1953,7 +1953,7 @@ msgid "The type of ping packet to send."
 msgstr "Gönderilecek ping paketinin türü."
 
 #: automation_networks.php:727 include/global_form.php:1265
-#: include/global_settings.php:818
+#: include/global_settings.php:883
 msgid "Ping Port"
 msgstr "Ping Limanı"
 
@@ -1962,7 +1962,7 @@ msgid "TCP or UDP port to attempt connection."
 msgstr "Bağlantıyı denemek için TCP veya UDP bağlantı noktası."
 
 #: automation_networks.php:735 include/global_form.php:1273
-#: include/global_settings.php:826
+#: include/global_settings.php:891
 msgid "Ping Timeout Value"
 msgstr "Ping Zaman Aşımı Değeri"
 
@@ -1971,7 +1971,7 @@ msgid "The timeout value to use for host ICMP and UDP pinging.  This host SNMP t
 msgstr "Ana bilgisayar ICMP ve UDP ping işlemi için kullanılacak zamanaşımı değeri. Bu ana bilgisayar SNMP zaman aşımı değeri, SNMP ping&#39;leri için geçerlidir."
 
 #: automation_networks.php:744 include/global_form.php:1282
-#: include/global_settings.php:834
+#: include/global_settings.php:899
 msgid "Ping Retry Count"
 msgstr "Ping Yeniden Deneme Sayısı"
 
@@ -2082,7 +2082,7 @@ msgid "Idle"
 msgstr "Boşta"
 
 #: automation_networks.php:1150 include/global_arrays.php:891
-#: include/global_arrays.php:1210 include/global_settings.php:2571
+#: include/global_arrays.php:1210 include/global_settings.php:2581
 #: lib/html_reports.php:2183 user_admin.php:2114
 msgid "Never"
 msgstr "Asla"
@@ -2112,10 +2112,10 @@ msgstr "Yenile"
 #: include/global_arrays.php:1627 include/global_arrays.php:1628
 #: include/global_arrays.php:1629 include/global_arrays.php:1630
 #: include/global_arrays.php:1631 include/global_arrays.php:1632
-#: include/global_settings.php:1266 include/global_settings.php:1267
-#: include/global_settings.php:1268 include/global_settings.php:1269
-#: include/global_settings.php:2654 include/global_settings.php:2655
-#: include/global_settings.php:2656 pollers.php:896 pollers.php:897
+#: include/global_settings.php:1276 include/global_settings.php:1277
+#: include/global_settings.php:1278 include/global_settings.php:1279
+#: include/global_settings.php:2664 include/global_settings.php:2665
+#: include/global_settings.php:2666 pollers.php:896 pollers.php:897
 #: pollers.php:898 pollers.php:899 pollers.php:900
 #, php-format
 msgid "%d Seconds"
@@ -2215,12 +2215,12 @@ msgstr "Otomasyon SNMP Seçenekleri"
 msgid "Item"
 msgstr "Öğe"
 
-#: automation_snmp.php:541 include/auth.php:341 include/global_settings.php:698
+#: automation_snmp.php:541 include/auth.php:341 include/global_settings.php:763
 #: package_import.php:504 permission_denied.php:43 plugins.php:641
 msgid "Version"
 msgstr "Versiyon"
 
-#: automation_snmp.php:542 include/global_settings.php:705
+#: automation_snmp.php:542 include/global_settings.php:770
 msgid "Community"
 msgstr "Topluluk"
 
@@ -2228,11 +2228,11 @@ msgstr "Topluluk"
 msgid "Port"
 msgstr "Port"
 
-#: automation_snmp.php:544 include/global_settings.php:783
+#: automation_snmp.php:544 include/global_settings.php:848
 msgid "Timeout"
 msgstr "Zaman Aşımı"
 
-#: automation_snmp.php:545 include/global_settings.php:791
+#: automation_snmp.php:545 include/global_settings.php:856
 msgid "Retries"
 msgstr "Deneme hakkı"
 
@@ -3759,7 +3759,7 @@ msgstr "Veri Kaynağı Profil RRA&#39;ları (Salt Okunur)"
 msgid "Data Retention"
 msgstr "Verilerin Saklanması"
 
-#: data_source_profiles.php:898 include/global_settings.php:1025
+#: data_source_profiles.php:898 include/global_settings.php:1090
 #: lib/html_reports.php:1212
 msgid "Graph Timespan"
 msgstr "Graph Timespan"
@@ -3801,7 +3801,7 @@ msgstr "RRA boyutunu elde etmek için geçerli sayıda Satır girin."
 #: include/global_arrays.php:790 include/global_arrays.php:791
 #: include/global_arrays.php:792 include/global_arrays.php:793
 #: include/global_arrays.php:794 include/global_arrays.php:795
-#: include/global_arrays.php:1471 include/global_settings.php:1631
+#: include/global_arrays.php:1471 include/global_settings.php:1641
 #, php-format
 msgid "%d Years"
 msgstr "%d Yıl"
@@ -3835,8 +3835,8 @@ msgstr "% d Hafta"
 
 #: data_source_profiles.php:1106 include/global_arrays.php:779
 #: include/global_arrays.php:780 include/global_arrays.php:1464
-#: include/global_settings.php:2925 include/global_settings.php:2926
-#: include/global_settings.php:2927 rrdcleaner.php:535 rrdcleaner.php:536
+#: include/global_settings.php:2884 include/global_settings.php:2885
+#: include/global_settings.php:2886 rrdcleaner.php:535 rrdcleaner.php:536
 #, php-format
 msgid "%d Weeks"
 msgstr "%d Hafta"
@@ -3851,11 +3851,11 @@ msgstr "%d Gün"
 #: data_source_profiles.php:1115 include/global_arrays.php:766
 #: include/global_arrays.php:776 include/global_arrays.php:777
 #: include/global_arrays.php:1460 include/global_arrays.php:1461
-#: include/global_arrays.php:1462 include/global_settings.php:1626
-#: include/global_settings.php:1627 include/global_settings.php:1628
-#: include/global_settings.php:1629 include/global_settings.php:1640
-#: include/global_settings.php:1641 include/global_settings.php:1642
-#: include/global_settings.php:1643
+#: include/global_arrays.php:1462 include/global_settings.php:1636
+#: include/global_settings.php:1637 include/global_settings.php:1638
+#: include/global_settings.php:1639 include/global_settings.php:1650
+#: include/global_settings.php:1651 include/global_settings.php:1652
+#: include/global_settings.php:1653
 #, php-format
 msgid "%d Days"
 msgstr "%d Gün"
@@ -3864,8 +3864,8 @@ msgstr "%d Gün"
 #: include/global_arrays.php:1524 include/global_arrays.php:1545
 #: include/global_arrays.php:1555 include/global_arrays.php:1585
 #: include/global_arrays.php:1594 include/global_arrays.php:1622
-#: include/global_settings.php:1401 include/global_settings.php:1698
-#: include/global_settings.php:2920
+#: include/global_settings.php:1411 include/global_settings.php:1708
+#: include/global_settings.php:2879
 msgid "1 Hour"
 msgstr "1 Saat"
 
@@ -3898,7 +3898,7 @@ msgid "Read Only"
 msgstr "Sadece oku"
 
 #: data_source_profiles.php:1333 data_sources.php:1719
-#: include/global_settings.php:1229
+#: include/global_settings.php:1239
 msgid "Poller Interval"
 msgstr "Poller Aralığı"
 
@@ -4150,7 +4150,7 @@ msgstr "Dış"
 #: data_sources.php:1277 include/global_arrays.php:710
 #: include/global_arrays.php:1207 include/global_arrays.php:1579
 #: include/global_arrays.php:1615 include/global_arrays.php:1633
-#: include/global_settings.php:1692 include/global_settings.php:2657
+#: include/global_settings.php:1702 include/global_settings.php:2667
 msgid "1 Minute"
 msgstr "1 dakika boyu"
 
@@ -4813,7 +4813,7 @@ msgid "Select the Report to add the selected Graphs to."
 msgstr "Seçili Grafikleri eklemek için Raporu seçin."
 
 #: graph_view.php:995 include/global_arrays.php:2036
-#: include/global_settings.php:2728
+#: include/global_settings.php:2738
 msgid "Preview Mode"
 msgstr "Önizleme modu"
 
@@ -5161,7 +5161,7 @@ msgstr "Kayıtlı Filtre Ayarları"
 msgid "Graph Types"
 msgstr "Grafik Türleri"
 
-#: graphs_new.php:426 include/global_settings.php:437
+#: graphs_new.php:426 include/global_settings.php:502
 msgid "Graph Template Based"
 msgstr "Grafik Şablonu Tabanlı"
 
@@ -5573,7 +5573,7 @@ msgstr "Aygıt Şablonlarını Sil"
 msgid "Undefined"
 msgstr "Tanımlanmamış"
 
-#: host.php:1646 include/global_settings.php:637 lib/html.php:2365
+#: host.php:1646 include/global_settings.php:702 lib/html.php:2365
 #: lib/html_reports.php:1151
 msgid "Site"
 msgstr "Site"
@@ -6500,8 +6500,8 @@ msgstr "Her Saat"
 #: include/global_arrays.php:813 include/global_arrays.php:814
 #: include/global_arrays.php:1867 include/global_arrays.php:1868
 #: include/global_arrays.php:1869 include/global_arrays.php:1870
-#: include/global_arrays.php:1871 include/global_settings.php:2546
-#: include/global_settings.php:2547
+#: include/global_arrays.php:1871 include/global_settings.php:2556
+#: include/global_settings.php:2557
 #, php-format
 msgid "Every %d Hours"
 msgstr "Her% d saatte bir"
@@ -6517,7 +6517,7 @@ msgid "%0.1f Minutes"
 msgstr "0 dakika"
 
 #: include/global_arrays.php:786 include/global_arrays.php:1470
-#: include/global_settings.php:1630 rrdcleaner.php:541
+#: include/global_settings.php:1640 rrdcleaner.php:541
 #, php-format
 msgid "%d Year"
 msgstr "%d Yıl"
@@ -6742,7 +6742,7 @@ msgid "Aggregate"
 msgstr "Toplam"
 
 #: include/global_arrays.php:1009 include/global_arrays.php:1067
-#: include/global_arrays.php:1222 include/global_settings.php:549
+#: include/global_arrays.php:1222 include/global_settings.php:614
 msgid "Automation"
 msgstr "Otomasyon"
 
@@ -7257,8 +7257,8 @@ msgstr "4 Saat"
 msgid "6 Hours"
 msgstr "6 Saat"
 
-#: include/global_arrays.php:1595 include/global_settings.php:1484
-#: include/global_settings.php:1485 include/global_settings.php:1486
+#: include/global_arrays.php:1595 include/global_settings.php:1494
+#: include/global_settings.php:1495 include/global_settings.php:1496
 #, php-format
 msgid "%s Hours"
 msgstr "%s saat"
@@ -7273,18 +7273,18 @@ msgstr "% d GBytes"
 msgid "Unlimited"
 msgstr "Sınırsız"
 
-#: include/global_arrays.php:1616 include/global_settings.php:1383
-#: include/global_settings.php:1384 include/global_settings.php:1385
-#: include/global_settings.php:1386 include/global_settings.php:1396
-#: include/global_settings.php:1397 include/global_settings.php:1398
-#: include/global_settings.php:1399 include/global_settings.php:1400
-#: include/global_settings.php:1410 include/global_settings.php:1411
-#: include/global_settings.php:1424 include/global_settings.php:1425
-#: include/global_settings.php:1426 include/global_settings.php:1427
-#: include/global_settings.php:1465 include/global_settings.php:1466
-#: include/global_settings.php:1467 include/global_settings.php:1468
-#: include/global_settings.php:1479 include/global_settings.php:1480
-#: include/global_settings.php:1481 include/global_settings.php:1482
+#: include/global_arrays.php:1616 include/global_settings.php:1393
+#: include/global_settings.php:1394 include/global_settings.php:1395
+#: include/global_settings.php:1396 include/global_settings.php:1406
+#: include/global_settings.php:1407 include/global_settings.php:1408
+#: include/global_settings.php:1409 include/global_settings.php:1410
+#: include/global_settings.php:1420 include/global_settings.php:1421
+#: include/global_settings.php:1434 include/global_settings.php:1435
+#: include/global_settings.php:1436 include/global_settings.php:1437
+#: include/global_settings.php:1475 include/global_settings.php:1476
+#: include/global_settings.php:1477 include/global_settings.php:1478
+#: include/global_settings.php:1489 include/global_settings.php:1490
+#: include/global_settings.php:1491 include/global_settings.php:1492
 #, php-format
 msgid "%s Minutes"
 msgstr "%s Dakika"
@@ -7886,7 +7886,7 @@ msgstr "Veri Giriş Alanları"
 msgid "(Remove Item)"
 msgstr "(Öğeyi kaldırmak)"
 
-#: include/global_arrays.php:2428 include/global_settings.php:236
+#: include/global_arrays.php:2428 include/global_settings.php:301
 #: rrdcleaner.php:323
 msgid "RRD Cleaner"
 msgstr "RRD Temizleyici"
@@ -8091,7 +8091,7 @@ msgstr "SNMP Gizlilik Şifresi (v3)"
 msgid "Choose the SNMPv3 Privacy Passphrase."
 msgstr "SNMPv3 Gizlilik Şifresini seçin."
 
-#: include/global_form.php:94 include/global_settings.php:758
+#: include/global_form.php:94 include/global_settings.php:823
 msgid "SNMP Context (v3)"
 msgstr "SNMP İçeriği (v3)"
 
@@ -8099,7 +8099,7 @@ msgstr "SNMP İçeriği (v3)"
 msgid "Enter the SNMP Context to use for this device."
 msgstr "Bu cihaz için kullanılacak SNMP İçeriğini girin."
 
-#: include/global_form.php:103 include/global_settings.php:767
+#: include/global_form.php:103 include/global_settings.php:832
 msgid "SNMP Engine ID (v3)"
 msgstr "SNMP Motor Kimliği (v3)"
 
@@ -8254,7 +8254,7 @@ msgstr "RRA şartnamesinde bir satırı doldurmadan önce gereken örnek sayıs�
 msgid "How many generations data is kept in the RRA."
 msgstr "RRA&#39;da kaç nesil veri tutulur."
 
-#: include/global_form.php:293 include/global_settings.php:2678
+#: include/global_form.php:293 include/global_settings.php:2688
 msgid "Default Timespan"
 msgstr "Varsayılan Zaman Aralığı"
 
@@ -8952,7 +8952,7 @@ msgstr "Bu ana bilgisayarın tüm denetimlerini devre dışı bırakmak için bu
 msgid "Availability/Reachability Options"
 msgstr "Kullanılabilirlik / Erişilebilirlik Seçenekleri"
 
-#: include/global_form.php:1246 include/global_settings.php:804
+#: include/global_form.php:1246 include/global_settings.php:869
 msgid "Downed Device Detection"
 msgstr "Düşmüş Cihaz Algılama"
 
@@ -9162,7 +9162,7 @@ msgstr "Veri Sorgusu Önerilen Değer Kalıplarını Değiştir"
 msgid "Replace Data Source and Graph Template Suggested Value Records for Data Queries.  Graphs and Data Sources will take on new names after either a Data Query Reindex or by using the forced Replace Suggested Values process."
 msgstr "Veri Sorguları için Veri Kaynağı ve Grafik Şablonu Önerilen Değer Kayıtlarını değiştirin.  Grafikler ve Veri Kaynakları, bir Veri Sorgusu Yeniden Dizininden sonra veya zorunlu Önerilen Değerleri Değiştirme işlemini kullanarak yeni adlar alacaktır."
 
-#: include/global_form.php:1707 include/global_settings.php:599
+#: include/global_form.php:1707 include/global_settings.php:664
 #: package_import.php:890
 msgid "Graph Template Image Format"
 msgstr "Grafik Şablonu Resim Biçimi"
@@ -9171,7 +9171,7 @@ msgstr "Grafik Şablonu Resim Biçimi"
 msgid "The Image Format to be used when importing or updating Graph Templates."
 msgstr "Tüm yeni Grafik Şablonları için kullanılacak varsayılan Görüntü Formatı."
 
-#: include/global_form.php:1714 include/global_settings.php:606
+#: include/global_form.php:1714 include/global_settings.php:671
 #: package_import.php:898
 msgid "Graph Template Height"
 msgstr "Grafik Şablon Yüksekliği"
@@ -9180,7 +9180,7 @@ msgstr "Grafik Şablon Yüksekliği"
 msgid "The Height to be used when importing or updating Graph Templates."
 msgstr "Tüm yeni Grafik Şablonları için kullanılacak varsayılan Grafik Genişliği."
 
-#: include/global_form.php:1722 include/global_settings.php:614
+#: include/global_form.php:1722 include/global_settings.php:679
 #: package_import.php:907
 msgid "Graph Template Width"
 msgstr "Grafik Şablon Genişliği"
@@ -9468,2736 +9468,2753 @@ msgstr "K"
 msgid "Enter a Pango font description"
 msgstr ""
 
+#: include/global_settings.php:40
+msgid "Title Font Size"
+msgstr "Başlık Yazı Boyutu"
+
+#: include/global_settings.php:41
+msgid "The size of the font used for Graph Titles"
+msgstr "Grafik Başlıkları için kullanılan fontun boyutu"
+
 #: include/global_settings.php:42
+msgid "Title Font Setting"
+msgstr "Başlık Yazı Tipi Ayarı"
+
+#: include/global_settings.php:44
+msgid "The Pango font description to use for Graph Titles, such as DejaVu Sans Bold"
+msgstr ""
+
+#: include/global_settings.php:45
+msgid "The font to use for Graph Titles.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
+msgstr ""
+
+#: include/global_settings.php:48
+msgid "Legend Font Size"
+msgstr "Legend Yazı Tipi Boyutu"
+
+#: include/global_settings.php:49
+msgid "The size of the font used for Graph Legend items"
+msgstr "Graph Legend öğeleri için kullanılan fontun boyutu"
+
+#: include/global_settings.php:50
+msgid "Legend Font Setting"
+msgstr "Legend Yazı Tipi Ayarı"
+
+#: include/global_settings.php:52
+msgid "The Pango font description to use for Graph Legend items, such as DejaVu Sans Mono"
+msgstr ""
+
+#: include/global_settings.php:53
+msgid "The font to use for Graph Legends.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
+msgstr ""
+
+#: include/global_settings.php:56
+msgid "Axis Font Size"
+msgstr "Eksen Yazı Tipi Boyutu"
+
+#: include/global_settings.php:57
+msgid "The size of the font used for Graph Axis"
+msgstr "Graph Axis için kullanılan fontun boyutu"
+
+#: include/global_settings.php:58
+msgid "Axis Font Setting"
+msgstr "Eksen Yazı Tipi Ayarı"
+
+#: include/global_settings.php:60
+msgid "The Pango font description to use for Graph Axis items, such as DejaVu Sans"
+msgstr ""
+
+#: include/global_settings.php:61
+msgid "The font to use for Graph Axis items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
+msgstr ""
+
+#: include/global_settings.php:64
+msgid "Unit Font Size"
+msgstr "Birim Yazı Tipi Boyutu"
+
+#: include/global_settings.php:65
+msgid "The size of the font used for Graph Units"
+msgstr "Grafik Birimleri için kullanılan fontun boyutu"
+
+#: include/global_settings.php:66
+msgid "Unit Font Setting"
+msgstr "Birim Yazı Tipi Ayarı"
+
+#: include/global_settings.php:68
+msgid "The Pango font description to use for Graph Unit items, such as DejaVu Sans"
+msgstr ""
+
+#: include/global_settings.php:69
+msgid "The font to use for Graph Unit items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
+msgstr ""
+
+#: include/global_settings.php:107
 msgid "Paths"
 msgstr "Yollar"
 
-#: include/global_settings.php:43
+#: include/global_settings.php:108
 msgid "Device Defaults"
 msgstr "Aygıt Varsayılanları"
 
-#: include/global_settings.php:44 include/global_settings.php:645
+#: include/global_settings.php:109 include/global_settings.php:710
 msgid "Poller"
 msgstr "İskele babası"
 
-#: include/global_settings.php:45
+#: include/global_settings.php:110
 msgid "Data"
 msgstr "Veri"
 
-#: include/global_settings.php:46
+#: include/global_settings.php:111
 msgid "Visual"
 msgstr "Görsel"
 
-#: include/global_settings.php:47 lib/functions.php:6173 lib/functions.php:6178
+#: include/global_settings.php:112 lib/functions.php:6173
+#: lib/functions.php:6178
 msgid "Authentication"
 msgstr "Doğrulama"
 
-#: include/global_settings.php:48
+#: include/global_settings.php:113
 msgid "Performance"
 msgstr "Performans"
 
-#: include/global_settings.php:49
+#: include/global_settings.php:114
 msgid "Spikes"
 msgstr "Başak"
 
-#: include/global_settings.php:50
+#: include/global_settings.php:115
 msgid "Mail/Reporting/DNS"
 msgstr "Posta / Raporlama / DNS"
 
-#: include/global_settings.php:55
+#: include/global_settings.php:120
 msgid "Time Spanning/Shifting"
 msgstr "Zaman Yayılma / Vites Değiştirme"
 
-#: include/global_settings.php:56
+#: include/global_settings.php:121
 msgid "Graph Thumbnail Settings"
 msgstr "Grafik Küçük Resim Ayarları"
 
-#: include/global_settings.php:57 include/global_settings.php:906
+#: include/global_settings.php:122 include/global_settings.php:971
 msgid "Tree Settings"
 msgstr "Ağaç ayarları"
 
-#: include/global_settings.php:58
+#: include/global_settings.php:123
 msgid "Graph Fonts"
 msgstr "Grafik Yazı Tipleri"
 
-#: include/global_settings.php:87
+#: include/global_settings.php:152
 msgid "PHP Mail() Function"
 msgstr "PHP Mail () İşlevi"
 
-#: include/global_settings.php:88 lib/functions.php:6154
+#: include/global_settings.php:153 lib/functions.php:6154
 msgid "Sendmail"
 msgstr "Sendmail"
 
-#: include/global_settings.php:89 lib/functions.php:6160
+#: include/global_settings.php:154 lib/functions.php:6160
 msgid "SMTP"
 msgstr "SMTP"
 
-#: include/global_settings.php:115
+#: include/global_settings.php:180
 msgid "Required Tool Paths"
 msgstr "Gerekli Takım Yolları"
 
-#: include/global_settings.php:120
+#: include/global_settings.php:185
 msgid "snmpwalk Binary Path"
 msgstr "snmpwalk İkili Yol"
 
-#: include/global_settings.php:121
+#: include/global_settings.php:186
 msgid "The path to your snmpwalk binary."
 msgstr "Snmpwalk çiftinin yolu."
 
-#: include/global_settings.php:127
+#: include/global_settings.php:192
 msgid "snmpget Binary Path"
 msgstr "snmpget İkili Yol"
 
-#: include/global_settings.php:128
+#: include/global_settings.php:193
 msgid "The path to your snmpget binary."
 msgstr "Snmpget ikilisinizin yolu."
 
-#: include/global_settings.php:134
+#: include/global_settings.php:199
 msgid "snmpbulkwalk Binary Path"
 msgstr "snmpbulkwalk İkili Yol"
 
-#: include/global_settings.php:135
+#: include/global_settings.php:200
 msgid "The path to your snmpbulkwalk binary."
 msgstr "Snmpbulkwalk ikili dosyanızın yolu."
 
-#: include/global_settings.php:141
+#: include/global_settings.php:206
 msgid "snmpgetnext Binary Path"
 msgstr "snmpgetnext İkili Yol"
 
-#: include/global_settings.php:142
+#: include/global_settings.php:207
 msgid "The path to your snmpgetnext binary."
 msgstr "Snmpgetnext ikili dosyanızın yolu."
 
-#: include/global_settings.php:148
+#: include/global_settings.php:213
 msgid "snmptrap Binary Path"
 msgstr "snmptrap İkili Yol"
 
-#: include/global_settings.php:149
+#: include/global_settings.php:214
 msgid "The path to your snmptrap binary."
 msgstr "Snmptrap ikili sisteminize giden yol."
 
-#: include/global_settings.php:155
+#: include/global_settings.php:220
 msgid "RRDtool Binary Path"
 msgstr "RRDtool İkili Yol"
 
-#: include/global_settings.php:156
+#: include/global_settings.php:221
 msgid "The path to the rrdtool binary."
 msgstr "Rrdtool ikiliye giden yol."
 
-#: include/global_settings.php:162
+#: include/global_settings.php:227
 msgid "PHP Binary Path"
 msgstr "PHP İkili Yol"
 
-#: include/global_settings.php:163
+#: include/global_settings.php:228
 msgid "The path to your PHP binary file (may require a php recompile to get this file)."
 msgstr "PHP ikili dosyanızın yolu (bu dosyayı almak için bir php yeniden derlemesi gerekebilir)."
 
-#: include/global_settings.php:169
+#: include/global_settings.php:234
 msgid "Logging"
 msgstr "Günlükleme"
 
-#: include/global_settings.php:174
+#: include/global_settings.php:239
 #, fuzzy
 msgid "Kadupul Log Path"
 msgstr "Kadupul Günlük Yolu"
 
-#: include/global_settings.php:175
+#: include/global_settings.php:240
 msgid "The path to your Kadupul log file (if blank, defaults to &lt;path_cacti&gt;/log/cacti.log)"
 msgstr "Kadupul günlük dosyanızın yolu (boşsa, varsayılan olarak &lt;path_cacti&gt; /log/cacti.log)"
 
-#: include/global_settings.php:184
+#: include/global_settings.php:249
 msgid "Poller Standard Error Log Path"
 msgstr "Poller Standart Hata Günlüğü Yolu"
 
-#: include/global_settings.php:185
+#: include/global_settings.php:250
 msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file"
 msgstr "Kadupul&#39;nin Veri Toplayıcıları ile ilgili sorunlarınız varsa, bu dosya yolunu ayarlayın ve Veri Toplayıcıları standart hatası bu dosyaya yönlendirilecek"
 
-#: include/global_settings.php:194
+#: include/global_settings.php:259
 #, fuzzy
 msgid "Rotate the Kadupul Log"
 msgstr "Kadupul Günlüğünü Döndür"
 
-#: include/global_settings.php:195
+#: include/global_settings.php:260
 msgid "This option will rotate the Kadupul Log periodically."
 msgstr "Bu seçenek Kadupul Günlüğünü periyodik olarak döndürür."
 
-#: include/global_settings.php:200
+#: include/global_settings.php:265
 msgid "Rotation Frequency"
 msgstr "Dönme frekansı"
 
-#: include/global_settings.php:201
+#: include/global_settings.php:266
 msgid "At what frequency would you like to rotate your logs?"
 msgstr "Kayıtlarınızı hangi sıklıkta döndürmek istersiniz?"
 
-#: include/global_settings.php:207
+#: include/global_settings.php:272
 msgid "Log Retention"
 msgstr "Log Saklama"
 
-#: include/global_settings.php:208
+#: include/global_settings.php:273
 msgid "How many log files do you wish to retain?  Use 0 to never remove any logs. (0-365)"
 msgstr "Kaç tane günlük dosyasını saklamak istiyorsunuz? Günlükleri hiçbir zaman kaldırmak için 0 kullanın. (0-365)"
 
-#: include/global_settings.php:215
+#: include/global_settings.php:280
 msgid "Alternate Poller Path"
 msgstr "Alternatif Poller Yolu"
 
-#: include/global_settings.php:220
+#: include/global_settings.php:285
 msgid "Spine Binary File Location"
 msgstr "Omurga İkili Dosya Konumu"
 
-#: include/global_settings.php:221
+#: include/global_settings.php:286
 msgid "The path to Spine binary."
 msgstr "Omurga ikili yolu."
 
-#: include/global_settings.php:228
+#: include/global_settings.php:293
 msgid "Spine Config File Path"
 msgstr "Omurga Yapılandırma Dosyası Yolu"
 
-#: include/global_settings.php:229
+#: include/global_settings.php:294
 msgid "The path to Spine configuration file.  By default, in the cwd of Spine, or /etc if not specified."
 msgstr "Spine yapılandırma dosyasının yolu. Varsayılan olarak, Spine&#39;da veya belirtilmemişse / etc içinde."
 
-#: include/global_settings.php:241
+#: include/global_settings.php:306
 msgid "RRDfile Auto Clean"
 msgstr "RRDfile Otomatik Temizleme"
 
-#: include/global_settings.php:242
+#: include/global_settings.php:307
 msgid "Automatically archive or delete RRDfiles when their corresponding Data Sources are removed from Kadupul"
 msgstr "Karşılık gelen Veri Kaynakları Kadupul&#39;den kaldırıldığında RRD dosyalarını otomatik olarak arşivle veya sil"
 
-#: include/global_settings.php:247
+#: include/global_settings.php:312
 msgid "RRDfile Auto Clean Method"
 msgstr "RRDfile Otomatik Temizleme Yöntemi"
 
-#: include/global_settings.php:248
+#: include/global_settings.php:313
 msgid "The method used to Clean RRDfiles from Kadupul after their Data Sources are deleted."
 msgstr "Veri Kaynakları silindikten sonra RRD dosyalarını Kadupul&#39;den temizlemek için kullanılan yöntem."
 
-#: include/global_settings.php:252
+#: include/global_settings.php:317
 msgid "Archive"
 msgstr "Arşiv"
 
-#: include/global_settings.php:257
+#: include/global_settings.php:322
 msgid "Archive directory"
 msgstr "Arşiv dizini"
 
-#: include/global_settings.php:258
+#: include/global_settings.php:323
 msgid "This is the directory where RRDfiles are <strong>moved</strong> for archiving"
 msgstr "Bu, RRD dosyalarının arşivlenmek üzere <strong>taşındığı</strong> dizindir."
 
-#: include/global_settings.php:266
+#: include/global_settings.php:331
 msgid "Log Settings"
 msgstr "Günlük Ayarları"
 
-#: include/global_settings.php:271
+#: include/global_settings.php:336
 msgid "Log Destination"
 msgstr "Hedef Hedefi"
 
-#: include/global_settings.php:272
+#: include/global_settings.php:337
 msgid "How will Kadupul handle event logging."
 msgstr "Kadupul olay günlüğünü nasıl idare edecek?"
 
-#: include/global_settings.php:278
+#: include/global_settings.php:343
 msgid "Generic Log Level"
 msgstr "Genel Günlük Seviyesi"
 
-#: include/global_settings.php:279
+#: include/global_settings.php:344
 msgid "What level of detail do you want sent to the log file.  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
 msgstr "Günlük dosyasına hangi düzeyde ayrıntı gönderilmesini istiyorsunuz? UYARI: NONE veya LOW dışındaki herhangi bir durumda bırakmak, disk alanınızı hızla tüketebilir."
 
-#: include/global_settings.php:285
+#: include/global_settings.php:350
 msgid "Log Input Validation Issues"
 msgstr "Günlük Giriş Doğrulama Sorunları"
 
-#: include/global_settings.php:286
+#: include/global_settings.php:351
 msgid "Record when request fields are accessed without going through proper input validation"
 msgstr "İstek alanlarına uygun giriş doğrulaması yapılmadan erişildiğinde kaydetme"
 
-#: include/global_settings.php:291
+#: include/global_settings.php:356
 msgid "Data Source Tracing"
 msgstr "Veri Kaynakları Kullanımı"
 
-#: include/global_settings.php:292
+#: include/global_settings.php:357
 msgid "A developer only option to trace the creation of Data Sources mainly around checks for uniqueness"
 msgstr "Bir geliştirici yalnızca, özellikle benzersiz olma durumundaki kontroller etrafında Veri Kaynaklarının oluşturulmasını izlemek için bir seçenek"
 
-#: include/global_settings.php:297
+#: include/global_settings.php:362
 msgid "Selective File Debug"
 msgstr "Seçici dosya hata ayıklama"
 
-#: include/global_settings.php:298
+#: include/global_settings.php:363
 msgid "Select which files you wish to place in Debug mode regardless of the Generic Log Level setting.  Any files selected will be treated as they are in Debug mode."
 msgstr "Genel Günlük Seviyesi ayarından bağımsız olarak, hangi dosyaları Debug modunda bırakmak istediğinizi seçin. Seçilen tüm dosyalar Hata Ayıklama modunda olduğu gibi değerlendirilir."
 
-#: include/global_settings.php:304
+#: include/global_settings.php:369
 msgid "Selective Plugin Debug"
 msgstr "Seçici Eklenti Hata Ayıklama"
 
-#: include/global_settings.php:305
+#: include/global_settings.php:370
 msgid "Select which Plugins you wish to place in Debug mode regardless of the Generic Log Level setting.  Any files used by this plugin will be treated as they are in Debug mode."
 msgstr "Genel Günlük Seviyesi ayarından bağımsız olarak, hangi Eklentileri Hata Ayıklama moduna geçirmek istediğinizi seçin. Bu eklenti tarafından kullanılan tüm dosyalar Hata Ayıklama modunda olduğu gibi değerlendirilir."
 
-#: include/global_settings.php:311
+#: include/global_settings.php:376
 msgid "Selective Device Debug"
 msgstr "Seçici Aygıt Hata Ayıklama"
 
-#: include/global_settings.php:312
+#: include/global_settings.php:377
 msgid "A comma delimited list of Device ID's that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
 msgstr "Veri toplama sırasında Hata Ayıklama modunda olmasını istediğiniz virgülle ayrılmış bir Aygıt Kimliği listesi. Bu hata ayıklama düzeyi, yalnızca Kadupul yoklama işlemi sırasında kullanılabilir."
 
-#: include/global_settings.php:319
+#: include/global_settings.php:384
 msgid "Syslog/Eventlog Item Selection"
 msgstr "Syslog / Eventlog Öğe Seçimi"
 
-#: include/global_settings.php:320
+#: include/global_settings.php:385
 msgid "When using Syslog/Eventlog for logging, the Kadupul log messages that will be forwarded to the Syslog/Eventlog."
 msgstr "Günlüğe kaydetme için Syslog / Eventlog kullanılırken, Kadupul günlüğü Syslog / Eventlog öğesine iletilir."
 
-#: include/global_settings.php:325
+#: include/global_settings.php:390
 msgid "Statistics"
 msgstr "İstatistikler"
 
-#: include/global_settings.php:329 lib/clog_webapi.php:551 utilities.php:1474
+#: include/global_settings.php:394 lib/clog_webapi.php:551 utilities.php:1474
 msgid "Warnings"
 msgstr "Uyarı"
 
-#: include/global_settings.php:333 lib/clog_webapi.php:553 utilities.php:1475
+#: include/global_settings.php:398 lib/clog_webapi.php:553 utilities.php:1475
 msgid "Errors"
 msgstr "Hatalar"
 
-#: include/global_settings.php:339
+#: include/global_settings.php:404
 msgid "Internationalization (i18n)"
 msgstr "Uluslararasılaştırma (i18n)"
 
-#: include/global_settings.php:344
+#: include/global_settings.php:409
 msgid "Language Support"
 msgstr "Dil Desteği"
 
-#: include/global_settings.php:345
+#: include/global_settings.php:410
 #, fuzzy
 msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."
 msgstr "Kadupul yerelleştirilmesine izin vermek için &#39;etkin&#39; seçeneğini seçin. Sıkı mod, istenen dilin sisteminizde kurulu olan tüm eklentiler tarafından da desteklenmesini gerektirir. Gerçek bu değilse, her şey İngilizce olarak gösterilecektir."
 
-#: include/global_settings.php:351
+#: include/global_settings.php:416
 msgid "Language"
 msgstr "Dil"
 
-#: include/global_settings.php:352
+#: include/global_settings.php:417
 msgid "Default language for this system."
 msgstr "Bu sistem için varsayılan dil."
 
-#: include/global_settings.php:358
+#: include/global_settings.php:423
 msgid "Auto Language Detection"
 msgstr "Otomatik Dil Tespiti"
 
-#: include/global_settings.php:359
+#: include/global_settings.php:424
 msgid "Allow to automatically determine the 'default' language of the user and provide it at login time if that language is supported by Kadupul. If disabled, the default language will be in force until the user elects another language."
 msgstr "Kullanıcının &#39;varsayılan&#39; dilini otomatik olarak belirlemeye izin ver ve bu dil Kadupul tarafından destekleniyorsa giriş zamanında verilmesine izin ver. Devre dışı bırakılırsa, varsayılan dil, kullanıcı başka bir dil seçinceye kadar yürürlükte kalacaktır."
 
-#: include/global_settings.php:368
+#: include/global_settings.php:433
 msgid "Preferred Language Processor"
 msgstr "Tercih Edilen Dil İşlemcisi"
 
-#: include/global_settings.php:369
+#: include/global_settings.php:434
 #, fuzzy
 msgid "Kadupul includes support for multiple alternate Language Translation Processors.  If none is selected Kadupul will attempt to use the first one found."
 msgstr "Kadupul, birden çok alternatif Dil Çeviri İşlemcisi için destek içerir. Varsayılan olarak yerleşik PHP desteği kullanılacaktır, ancak tüm Linux türevleri yerleşik Dil Desteğini içermez. Seçilmezse, Kadupul ilk bulunanı seçecektir."
 
-#: include/global_settings.php:375
+#: include/global_settings.php:440
 msgid "Client TimeZone Support"
 msgstr "MySQL - TimeZone Desteği"
 
-#: include/global_settings.php:376
+#: include/global_settings.php:441
 msgid "How should Kadupul support Client Dates based upon the Client browsers timezone."
 msgstr "Kadupul, İstemci tarayıcılarının saat dilimine bağlı olarak İstemci Tarihlerini nasıl desteklemelidir?"
 
-#: include/global_settings.php:385 include/global_settings.php:2635
+#: include/global_settings.php:450 include/global_settings.php:2645
 msgid "Date Display Format"
 msgstr "Tarih görüntüleme biçimi"
 
-#: include/global_settings.php:386
+#: include/global_settings.php:451
 msgid "The System default date format to use in Kadupul."
 msgstr "Kadupul&#39;de kullanılacak Sistem varsayılan tarih formatı."
 
-#: include/global_settings.php:392 include/global_settings.php:2642
+#: include/global_settings.php:457 include/global_settings.php:2652
 msgid "Date Separator"
 msgstr "Tarih Ayırıcı"
 
-#: include/global_settings.php:393
+#: include/global_settings.php:458
 msgid "The System default date separator to be used in Kadupul."
 msgstr "Kadupul&#39;de kullanılacak Sistem varsayılan tarih ayırıcısı."
 
-#: include/global_settings.php:399
+#: include/global_settings.php:464
 msgid "Other Settings"
 msgstr "Diğer Ayarlar"
 
-#: include/global_settings.php:404
+#: include/global_settings.php:469
 msgid "Show only site specific locations"
 msgstr "Grafiğe özel seçenekleri burada ayarlayın."
 
-#: include/global_settings.php:405
+#: include/global_settings.php:470
 msgid "Show only locations that are available at a devices selected site."
 msgstr "Yalnızca seçilen bir cihaz tesisinde kullanılabilen konumları göster."
 
-#: include/global_settings.php:410
+#: include/global_settings.php:475
 msgid "Has Graphs/Data Sources Checked"
 msgstr "Kontrol Edilen Grafikler / Veri Kaynakları Var"
 
-#: include/global_settings.php:411
+#: include/global_settings.php:476
 msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "Grafikleri ve Veri Kaynakları Varsa Varsayılan Olarak Kontrol Edilmeli."
 
-#: include/global_settings.php:416 utilities.php:287 utilities.php:292
+#: include/global_settings.php:481 utilities.php:287 utilities.php:292
 msgid "RRDtool Version"
 msgstr "RRDtool Sürümü"
 
-#: include/global_settings.php:417
+#: include/global_settings.php:482
 msgid "The version of RRDtool that you have installed."
 msgstr "Yüklemiş olduğunuz RRDtool sürümü."
 
-#: include/global_settings.php:423
+#: include/global_settings.php:488
 msgid "Enable Gradient Support"
 msgstr "Raporu Etkinleştir"
 
-#: include/global_settings.php:424
+#: include/global_settings.php:489
 msgid "Enabled Gradient Support for AREA and STACK charts."
 msgstr "ALAN ve YIĞIN grafikleri için Gradyan Desteği etkinleştirildi."
 
-#: include/global_settings.php:429
+#: include/global_settings.php:494
 msgid "Graph Permission Method"
 msgstr "Grafik İzin Yöntemi"
 
-#: include/global_settings.php:430
+#: include/global_settings.php:495
 msgid "Graph access is granted directly by a graph permission in every mode. Permissive also grants access when the user has permission for the graph's device or template. Restrictive requires permission for both the device and template when there is no direct graph permission. Device Based requires device permission, and Graph Template Based requires template permission. User and group policies are evaluated separately and their allowed results are combined. These modes trade query performance against fine-grained permissions on large installations."
 msgstr ""
 
-#: include/global_settings.php:434
+#: include/global_settings.php:499
 msgid "Permissive"
 msgstr "İzin"
 
-#: include/global_settings.php:435
+#: include/global_settings.php:500
 msgid "Restrictive"
 msgstr "kısıtlayıcı"
 
-#: include/global_settings.php:436
+#: include/global_settings.php:501
 msgid "Device Based"
 msgstr "Aygıt Adı"
 
-#: include/global_settings.php:442
+#: include/global_settings.php:507
 msgid "Graph/Data Source Creation Method"
 msgstr "Grafik / Veri Kaynağı Oluşturma Yöntemi"
 
-#: include/global_settings.php:443
+#: include/global_settings.php:508
 msgid "If set to Simple, Graphs and Data Sources can only be created from New Graphs.  If Advanced, legacy Graph and Data Source creation is supported."
 msgstr "Basit olarak ayarlandıysa, Grafikler ve Veri Kaynakları yalnızca Yeni Grafiklerden oluşturulabilir. Gelişmiş ise, eski Grafik ve Veri Kaynağı oluşturma desteklenir."
 
-#: include/global_settings.php:446
+#: include/global_settings.php:511
 msgid "Simple"
 msgstr "Basit"
 
-#: include/global_settings.php:447 lib/html.php:2825
+#: include/global_settings.php:512 lib/html.php:2825
 msgid "Advanced"
 msgstr "Gelişmiş"
 
-#: include/global_settings.php:451
+#: include/global_settings.php:516
 msgid "Show Form/Setting Help Inline"
 msgstr "Formu / Ayar Yardım Satırını Göster"
 
-#: include/global_settings.php:452
+#: include/global_settings.php:517
 msgid "When checked, Form and Setting Help will be show inline.  Otherwise it will be presented when hovering over the help button."
 msgstr "İşaretlendiğinde, Form ve Ayar Yardımı satır içi gösterilecektir. Aksi halde, yardım düğmesinin üzerine getirildiğinde sunulacaktır."
 
-#: include/global_settings.php:457
+#: include/global_settings.php:522
 msgid "Local Page Help Only"
 msgstr "Yardım İste"
 
-#: include/global_settings.php:458
+#: include/global_settings.php:523
 msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of you Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
 msgstr "Varsayılan olarak Kadupul sayfa yardımı kadupul.org adresinde bulunur.  Ancak, sisteminizin İnternet erişimi yoksa, belgeleri yerel olarak HTML biçiminde indirebilir ve Kadupul sunucunuzun 'dokümanlar' konumunda barındırabilirsiniz. Sayfa yardımı belgeleri için yalnızca yerel konumdan yararlanmayı seçerseniz, bu onay kutusunu işaretleyin."
 
-#: include/global_settings.php:463
+#: include/global_settings.php:528
 msgid "Deletion Verification"
 msgstr "Silme Doğrulaması"
 
-#: include/global_settings.php:464
+#: include/global_settings.php:529
 msgid "Prompt user before item deletion."
 msgstr "Öğe silmeden önce kullanıcıyı isteyin."
 
-#: include/global_settings.php:469
+#: include/global_settings.php:534
 msgid "Data Source Preservation Preset"
 msgstr "Grafik / Veri Kaynağı Oluşturma Yöntemi"
 
-#: include/global_settings.php:470
+#: include/global_settings.php:535
 #, fuzzy
 msgid "When enabled, Kadupul will set Radio Button to Delete related Data Sources of a Graph when removing Graphs.  Note: Kadupul will not allow the removal of Data Sources if they are used in other Graphs."
 msgstr "Etkinleştirildiğinde, Kadupul, Grafikleri kaldırırken Radyo Düğmesini Grafiğin İlgili Veri Kaynaklarını Sil olarak ayarlayacaktır. Not: Kadupul, diğer Grafiklerde kullanılıyorsa Veri Kaynaklarının kaldırılmasına izin vermez."
 
-#: include/global_settings.php:475
+#: include/global_settings.php:540
 msgid "Graphs Auto Unlock"
 msgstr "Grafik Eşleştirme Kuralı"
 
-#: include/global_settings.php:476
+#: include/global_settings.php:541
 #, fuzzy
 msgid "When enabled, Kadupul will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
 msgstr "Etkinleştirildiğinde, Kadupul Grafikleri kilitlemez. Bu, bir Grafikle ilgili Veri Kaynaklarının daha hızlı manuel olarak değiştirilmesine izin verir."
 
-#: include/global_settings.php:481
+#: include/global_settings.php:546
 msgid "Hide Kadupul Dashboard"
 msgstr "Kadupul Panosunu Gizle"
 
-#: include/global_settings.php:482
+#: include/global_settings.php:547
 msgid "For use with Kadupul's External Link Support.  Using this setting, you can hide the Kadupul Dashboard, so you can display just your own page."
 msgstr "Kadupul&#39;nin Harici Bağlantı Desteği ile kullanmak için. Bu ayarı kullanarak Kadupul Dashboard&#39;u gizleyebilirsiniz, böylece sadece kendi sayfanızı görüntüleyebilirsiniz."
 
-#: include/global_settings.php:487
+#: include/global_settings.php:552
 msgid "Enable Drag-N-Drop"
 msgstr "Drag-N-Drop&#39;u Etkinleştir"
 
-#: include/global_settings.php:488
+#: include/global_settings.php:553
 msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired user, this option may be disabled."
 msgstr "Kadupul&#39;nin arabirimlerinin bazıları Drag-N-Drop özelliğini destekliyor. İşaretliyse bu seçenek etkinleştirilecektir. Not: Görme engelli kullanıcılar için bu seçenek devre dışı bırakılabilir."
 
-#: include/global_settings.php:493
+#: include/global_settings.php:558
 msgid "Site Security"
 msgstr "SMTP Güvenlik"
 
-#: include/global_settings.php:498
+#: include/global_settings.php:563
 msgid "Force Connections over HTTPS"
 msgstr "HTTPS Üzerindeki Bağlantıları Zorla"
 
-#: include/global_settings.php:499
+#: include/global_settings.php:564
 msgid "When checked, any attempts to access Kadupul will be redirected to HTTPS to ensure high security."
 msgstr "İşaretlendiğinde, yüksek güvenlik sağlamak için Kadupul&#39;ye erişme girişimleri HTTPS&#39;ye yönlendirilir."
 
-#: include/global_settings.php:504
+#: include/global_settings.php:569
 #, fuzzy
 msgid "Allow Unsafe Remote Data Collector HTTPS"
 msgstr "Uzaktan Veri Toplayıcı Durumu:"
 
-#: include/global_settings.php:505
+#: include/global_settings.php:570
 msgid "Allow the use of Self Signed Certificates and allow the hostname of the Certificate to differ from that of the Remote Data Collector."
 msgstr ""
 
-#: include/global_settings.php:510
+#: include/global_settings.php:575
 #, fuzzy
 msgid "Allow Unsafe Metacharacters in Data Input Methods"
 msgstr "Bu Veri Giriş Yöntemi&#39;nin adı."
 
-#: include/global_settings.php:511
+#: include/global_settings.php:576
 msgid "Historically, Kadupul administrators created simple Data Input Methods that include commands like \"ps -ef | grep something | wc -l\" to represent a numeric value for use in Kadupul Graphs.  In earlier versions of Kadupul, this was permitted.  However, this is an unsafe practice as it is a gateway for third party users to publish insecure Data Templates.  In modern Kadupul, these types of practices should be avoided.  However, we provide this option if you have older Data Input Methods that contain these unsafe Meta Characters and have not converted them to local scripts in the 'scripts' directory.  When this option is unchecked, Kadupul restricts shell-style metacharacters such as quotation marks, curly brackets, vertical bars, backslashes, and backticks.  Kadupul continues to allow greater-than and less-than signs for things like <path_cacti> and for input parameters, but if this option is unchecked, that is the limit of their permitted use."
 msgstr ""
 
-#: include/global_settings.php:517
+#: include/global_settings.php:582
 #, fuzzy
 msgid "Content-Security Script Policy"
 msgstr "İçerik-Güvenlik Alternatif Kaynakları"
 
-#: include/global_settings.php:518
+#: include/global_settings.php:583
 msgid "Controls the script-src CSP policy. The Nonce Mode - Reporting Only choice reports inline scripts that lack a nonce without blocking them. The implementation also supports an enforcing nonce mode through direct configuration, but this mode is not offered here because many built-in pages and plugins still use inline scripts without nonces. Enabling enforcement before those scripts are migrated can break pages and plugins. Use CactiSecureHeaders::getNonceAttribute() when adding inline scripts."
 msgstr ""
 
-#: include/global_settings.php:521
+#: include/global_settings.php:586
 msgid "Allow Non-Nonced Inline JavaScript"
 msgstr ""
 
-#: include/global_settings.php:522
+#: include/global_settings.php:587
 msgid "Allow both unsafe-eval and Non-Nonced Inline JavaScript"
 msgstr ""
 
-#: include/global_settings.php:523
+#: include/global_settings.php:588
 msgid "Nonce Mode - Reporting Only"
 msgstr ""
 
-#: include/global_settings.php:527 include/global_settings.php:542
+#: include/global_settings.php:592 include/global_settings.php:607
 #, fuzzy
 msgid "CSP Violation Report URI"
 msgstr "Kaktüsler Raporu"
 
-#: include/global_settings.php:528
+#: include/global_settings.php:593
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use <url_path>/csp_report.php. Must contain only safe URL characters."
 msgstr ""
 
-#: include/global_settings.php:534
+#: include/global_settings.php:599
 msgid "Content-Security Alternate Sources"
 msgstr "İçerik-Güvenlik Alternatif Kaynakları"
 
-#: include/global_settings.php:535
+#: include/global_settings.php:600
 msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
 msgstr "Web Sunucusunun kendisinin dışından erişilmesine izin verilecek alanla sınırlandırılmış alan adları. Bu, bir CDN veya barındırma sitesi kullanmayı seçen kullanıcılar için önemlidir. Kaynaklar joker karakterler içerebilir, örneğin: *.alanadim.com veya bir protokol, örneğin: https://*.example.com. Bu Alternatif Kaynaklar yalnızca Görüntü, CSS ve JavaScript türlerini içerir."
 
-#: include/global_settings.php:543
+#: include/global_settings.php:608
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use /cacti/csp_report.php at the installation root. Must contain only safe URL characters."
 msgstr ""
 
-#: include/global_settings.php:555
+#: include/global_settings.php:620
 msgid "Enable Automatic Graph Creation"
 msgstr "Otomatik Grafik Oluşturmayı Etkinleştir"
 
-#: include/global_settings.php:556
+#: include/global_settings.php:621
 msgid "When disabled, Kadupul Automation will not actively create any Graph.  This is useful when adjusting Device settings so as to avoid creating new Graphs each time you save an object.  Invoking Automation Rules manually will still be possible."
 msgstr "Devre dışı bırakıldığında, Kadupul Automation aktif olarak herhangi bir Grafik oluşturmaz. Bu, bir nesneyi her kaydettiğinizde yeni Grafikler oluşturmamak için Aygıt ayarlarını yaparken kullanışlıdır. Otomasyon Kurallarını manuel olarak çağırmak yine de mümkün olacaktır."
 
-#: include/global_settings.php:561
+#: include/global_settings.php:626
 msgid "Enable Automatic Tree Item Creation"
 msgstr "Otomatik Ağaç Öğesi Oluşturmayı Etkinleştir"
 
-#: include/global_settings.php:562
+#: include/global_settings.php:627
 msgid "When disabled, Kadupul Automation will not actively create any Tree Item.  This is useful when adjusting Device or Graph settings so as to avoid creating new Tree Entries each time you save an object.  Invoking Rules manually will still be possible."
 msgstr "Devre dışı bırakıldığında, Kadupul Automation aktif olarak herhangi bir Ağaç Öğesi oluşturmaz. Bu, bir nesneyi her kaydettiğinizde yeni Ağaç Girişleri oluşturmamak için Aygıt veya Grafik ayarlarını yaparken kullanışlıdır. Kuralları manuel olarak çağırmak yine de mümkün olacaktır."
 
-#: include/global_settings.php:566
+#: include/global_settings.php:631
 msgid "Automation Notification To Email"
 msgstr "E-postaya Otomasyon Bildirimi"
 
-#: include/global_settings.php:567
+#: include/global_settings.php:632
 msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admins Email account."
 msgstr "Otomasyon Ağı düzeyinde belirtilmemişse Otomasyon Bildirimi E-postaları gönderilecek E-posta Adresi. Bu alan veya Otomasyon Ağı değeri boş bırakılırsa, Kadupul Birincil Kadupul Yönetici E-posta hesabını kullanır."
 
-#: include/global_settings.php:573
+#: include/global_settings.php:638
 msgid "Automation Notification From Name"
 msgstr "Adından Otomasyon Bildirimi"
 
-#: include/global_settings.php:574
+#: include/global_settings.php:639
 msgid "The Email Name to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name."
 msgstr "Otomasyon Bildirimi için kullanılacak E-posta Adı, Otomasyon Ağı düzeyinde belirtilmemişse, e-postaları gönderir. Bu alan veya Otomasyon Ağı değeri boş bırakılırsa, Kadupul sistemin varsayılan Adını kullanır."
 
-#: include/global_settings.php:581
+#: include/global_settings.php:646
 msgid "Automation Notification From Email"
 msgstr "E-postadan Otomasyon Bildirimi"
 
-#: include/global_settings.php:582
+#: include/global_settings.php:647
 msgid "The Email Address to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address."
 msgstr "Otomasyon Bildirimi için kullanılacak E-posta Adresi, Otomasyon Ağı düzeyinde belirtilmemişse, e-posta adresleri. Bu alan veya Otomasyon Ağı değeri boş bırakılırsa, Kadupul sistem varsayılanını E-posta Adresinden kullanacaktır."
 
-#: include/global_settings.php:588
+#: include/global_settings.php:653
 msgid "Graph Template Defaults"
 msgstr "Grafik Şablonu Tabanlı"
 
-#: include/global_settings.php:594
+#: include/global_settings.php:659
 msgid "Graph Template Test Data Source"
 msgstr "Grafik, Veri Kaynağı"
 
-#: include/global_settings.php:595
+#: include/global_settings.php:660
 msgid "Check this checkbox if you wish to test the Data Sources prior to their creation for new and newly imported Graph Templates.  With Test Data Sources enabled, if the Data Source does not return valid data, the Graph will not be created.  This setting is important if you wish to have a more generic Device Template that can include more Graph Templates that can be selectively applied depending on the characteristics of the Device itself.  Note: If you have a long running script as a Data Source, the time to create Graphs will be increased."
 msgstr "Yeni ve yeni içe aktarılan Grafik Şablonları için Veri Kaynaklarını oluşturmadan önce test etmek istiyorsanız bu onay kutusunu işaretleyin. Test Veri Kaynakları etkinleştirildiğinde, Veri Kaynağı geçerli veriler döndürmezse Grafik oluşturulmaz. Cihazın özelliklerine bağlı olarak seçilerek uygulanabilen daha fazla Grafik Şablonu içerebilen daha genel bir Cihaz Şablonuna sahip olmak istiyorsanız bu ayar önemlidir. Not: Veri Kaynağı olarak uzun süredir çalışan bir komut dosyanız varsa, Grafik oluşturma süresi artacaktır."
 
-#: include/global_settings.php:600
+#: include/global_settings.php:665
 msgid "The default Image Format to be used for all new Graph Templates."
 msgstr "Tüm yeni Grafik Şablonları için kullanılacak varsayılan Görüntü Formatı."
 
-#: include/global_settings.php:607
+#: include/global_settings.php:672
 msgid "The default Graph Height to be used for all new Graph Templates."
 msgstr "Tüm yeni Grafik Şablonları için kullanılacak varsayılan Grafik Genişliği."
 
-#: include/global_settings.php:615
+#: include/global_settings.php:680
 msgid "The default Graph Width to be used for all new Graph Templates."
 msgstr "Tüm yeni Grafik Şablonları için kullanılacak varsayılan Grafik Genişliği."
 
-#: include/global_settings.php:624
+#: include/global_settings.php:689
 msgid "General Defaults"
 msgstr "Genel Varsayılanlar"
 
-#: include/global_settings.php:630
+#: include/global_settings.php:695
 msgid "The default Device Template used on all new Devices."
 msgstr "Tüm yeni cihazlarda kullanılan varsayılan Cihaz Şablonu."
 
-#: include/global_settings.php:638
+#: include/global_settings.php:703
 msgid "The default Site for all new Devices."
 msgstr "Tüm yeni cihazlar için varsayılan site."
 
-#: include/global_settings.php:646
+#: include/global_settings.php:711
 msgid "The default Poller for all new Devices."
 msgstr "Tüm yeni Aygıtlar için varsayılan Yoklayıcı."
 
-#: include/global_settings.php:653
+#: include/global_settings.php:718
 msgid "Device Threads"
 msgstr "Cihaz Konuları"
 
-#: include/global_settings.php:654
+#: include/global_settings.php:719
 msgid "The default number of Device Threads.  This is only applicable when using the Spine Data Collector."
 msgstr "Varsayılan Aygıt İpliği sayısı. Bu sadece Omurga Veri Toplayıcı kullanılırken geçerlidir."
 
-#: include/global_settings.php:658
+#: include/global_settings.php:723
 #, fuzzy, php-format
 msgid "%s Thread"
 msgstr "İPLİK"
 
-#: include/global_settings.php:659 include/global_settings.php:660
-#: include/global_settings.php:661 include/global_settings.php:662
-#: include/global_settings.php:663 include/global_settings.php:664
-#: include/global_settings.php:665 include/global_settings.php:666
-#: include/global_settings.php:667
+#: include/global_settings.php:724 include/global_settings.php:725
+#: include/global_settings.php:726 include/global_settings.php:727
+#: include/global_settings.php:728 include/global_settings.php:729
+#: include/global_settings.php:730 include/global_settings.php:731
+#: include/global_settings.php:732
 #, fuzzy, php-format
 msgid "%s Threads"
 msgstr "Konular"
 
-#: include/global_settings.php:671
+#: include/global_settings.php:736
 msgid "Re-index Method for Data Queries"
 msgstr "Veri Sorguları İçin Yeniden Endeksleme Yöntemi"
 
-#: include/global_settings.php:672
+#: include/global_settings.php:737
 msgid "The default Re-index Method to use for all Data Queries."
 msgstr "Tüm Veri Sorguları için kullanılacak varsayılan Re-index Yöntemi."
 
-#: include/global_settings.php:678
+#: include/global_settings.php:743
 msgid "Default Interface Speed"
 msgstr "Varsayılan Grafik Türü"
 
-#: include/global_settings.php:679
+#: include/global_settings.php:744
 msgid "If Kadupul can not determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
 msgstr "Eğer Kadupul, ifSpeed veya ifHighSpeed'in ayarlanmaması veya sıfır olması nedeniyle arayüz hızını belirleyemiyorsa, elde edilen RRD dosyalarında maksimum değerin ne olmasını istersiniz?"
 
-#: include/global_settings.php:683
+#: include/global_settings.php:748
 msgid "100 Mbps Ethernet"
 msgstr "100 Mbps Ethernet"
 
-#: include/global_settings.php:684
+#: include/global_settings.php:749
 msgid "1 Gbps Ethernet"
 msgstr "1 Gb / sn Ethernet"
 
-#: include/global_settings.php:685
+#: include/global_settings.php:750
 msgid "10 Gbps Ethernet"
 msgstr "10 Gb / sn Ethernet"
 
-#: include/global_settings.php:686
+#: include/global_settings.php:751
 msgid "25 Gbps Ethernet"
 msgstr "25 Gb / sn Ethernet"
 
-#: include/global_settings.php:687
+#: include/global_settings.php:752
 msgid "40 Gbps Ethernet"
 msgstr "40 Gbps Ethernet"
 
-#: include/global_settings.php:688
+#: include/global_settings.php:753
 msgid "56 Gbps Ethernet"
 msgstr "56 Gb / sn Ethernet"
 
-#: include/global_settings.php:689
+#: include/global_settings.php:754
 msgid "100 Gbps Ethernet"
 msgstr "100 Gb / sn Ethernet"
 
-#: include/global_settings.php:693
+#: include/global_settings.php:758
 msgid "SNMP Defaults"
 msgstr "SNMP Varsayılanları"
 
-#: include/global_settings.php:699
+#: include/global_settings.php:764
 msgid "Default SNMP version for all new Devices."
 msgstr "Tüm yeni cihazlar için varsayılan SNMP sürümü."
 
-#: include/global_settings.php:706
+#: include/global_settings.php:771
 msgid "Default SNMP read community for all new Devices."
 msgstr "Varsayılan SNMP, tüm yeni Cihazlar için topluluk okur."
 
-#: include/global_settings.php:712
+#: include/global_settings.php:777
 msgid "Security Level"
 msgstr "Güvenlik Düzeyi"
 
-#: include/global_settings.php:713
+#: include/global_settings.php:778
 msgid "Default SNMP v3 Security Level for all new Devices."
 msgstr "Tüm yeni cihazlar için varsayılan SNMP v3 Güvenlik Seviyesi."
 
-#: include/global_settings.php:720
+#: include/global_settings.php:785
 msgid "Auth Protocol (v3)"
 msgstr "Yetkilendirme Protokolü (v3)"
 
-#: include/global_settings.php:721
+#: include/global_settings.php:786
 msgid "Default SNMPv3 Authorization Protocol for all new Devices."
 msgstr "Tüm yeni cihazlar için varsayılan SNMPv3 Yetkilendirme Protokolü."
 
-#: include/global_settings.php:726
+#: include/global_settings.php:791
 msgid "Auth User (v3)"
 msgstr "Yetkili Kullanıcı (v3)"
 
-#: include/global_settings.php:727
+#: include/global_settings.php:792
 msgid "Default SNMP v3 Authorization User for all new Devices."
 msgstr "Tüm yeni cihazlar için varsayılan SNMP v3 yetkilendirme kullanıcısı."
 
-#: include/global_settings.php:734
+#: include/global_settings.php:799
 msgid "Auth Passphrase (v3)"
 msgstr "Yetki Parolası (v3)"
 
-#: include/global_settings.php:735
+#: include/global_settings.php:800
 msgid "Default SNMP v3 Authorization Passphrase for all new Devices."
 msgstr "Tüm yeni cihazlar için varsayılan SNMP v3 yetkilendirme şifresi."
 
-#: include/global_settings.php:743
+#: include/global_settings.php:808
 msgid "Privacy Protocol (v3)"
 msgstr "Gizlilik Protokolü (v3)"
 
-#: include/global_settings.php:744
+#: include/global_settings.php:809
 msgid "Default SNMPv3 Privacy Protocol for all new Devices."
 msgstr "Tüm yeni cihazlar için varsayılan SNMPv3 Gizlilik Protokolü."
 
-#: include/global_settings.php:750
+#: include/global_settings.php:815
 msgid "Privacy Passphrase (v3)"
 msgstr "Gizlilik Şifresi (v3)"
 
-#: include/global_settings.php:751
+#: include/global_settings.php:816
 msgid "Default SNMPv3 Privacy Passphrase for all new Devices."
 msgstr "Tüm yeni cihazlar için varsayılan SNMPv3 Gizlilik Şifresi."
 
-#: include/global_settings.php:759
+#: include/global_settings.php:824
 msgid "Enter the SNMP v3 Context for all new Devices."
 msgstr "Tüm yeni Cihazlar için SNMP v3 İçeriğini girin."
 
-#: include/global_settings.php:768
+#: include/global_settings.php:833
 msgid "Default SNMP v3 Engine Id for all new Devices. Leave this field empty to use the SNMP Engine ID being defined per SNMPv3 Notification receiver."
 msgstr "Tüm yeni Aygıtlar için varsayılan SNMP v3 Motor Kimliği. SNMPv3 Bildirim alıcısı başına tanımlanmış SNMP Motor Kimliğini kullanmak için bu alanı boş bırakın."
 
-#: include/global_settings.php:775
+#: include/global_settings.php:840
 msgid "Port Number"
 msgstr "Port Numarası"
 
-#: include/global_settings.php:776
+#: include/global_settings.php:841
 msgid "Default UDP Port for all new Devices.  Typically 161."
 msgstr "Tüm yeni cihazlar için varsayılan UDP bağlantı noktası. Tipik olarak 161."
 
-#: include/global_settings.php:784
+#: include/global_settings.php:849
 msgid "Default SNMP timeout in milli-seconds for all new Devices."
 msgstr "Tüm yeni Aygıtlar için varsayılan SNMP zaman aşımını saniye cinsinden."
 
-#: include/global_settings.php:792
+#: include/global_settings.php:857
 msgid "Default SNMP retries for all new Devices."
 msgstr "Varsayılan SNMP, tüm yeni Aygıtlar için yeniden dener."
 
-#: include/global_settings.php:799
+#: include/global_settings.php:864
 msgid "Availability/Reachability"
 msgstr "Kullanılabilirlik / erişilebilirlik"
 
-#: include/global_settings.php:805
+#: include/global_settings.php:870
 msgid "Default Availability/Reachability for all new Devices.  The method Kadupul will use to determine if a Device is available for polling.  <br><i>NOTE: It is recommended that, at a minimum, SNMP always be selected.</i>"
 msgstr "Tüm yeni cihazlar için varsayılan uygunluk / erişilebilirlik. Kadupul yöntemi, bir aygıtın yoklama için uygun olup olmadığını belirlemek için kullanacaktır. <br> <i>NOT: En azından SNMP&#39;nin daima seçilmesi önerilir.</i>"
 
-#: include/global_settings.php:811
+#: include/global_settings.php:876
 msgid "Ping Type"
 msgstr "Ping Türü"
 
-#: include/global_settings.php:812
+#: include/global_settings.php:877
 msgid "Default Ping type for all new Devices.</i>"
 msgstr "Tüm yeni Cihazlar için varsayılan Ping türü.</i>"
 
-#: include/global_settings.php:819
+#: include/global_settings.php:884
 msgid "Default Ping Port for all new Devices.  With TCP, Kadupul will attempt to Syn the port.  With UDP, Kadupul requires either a successful connection, or a 'port not reachable' error to determine if the Device is up or not."
 msgstr "Tüm yeni cihazlar için varsayılan ping portu. TCP ile Kadupul portu senkronize etmeye çalışacaktır. UDP ile Kadupul, cihazın başarılı olup olmadığını veya bağlantı kurulup kurulmadığını belirlemek için &#39;bağlantıya ulaşılamıyor&#39; hatası gerektiriyor."
 
-#: include/global_settings.php:827
+#: include/global_settings.php:892
 msgid "Default Ping Timeout value in milli-seconds for all new Devices.  The timeout values to use for Device SNMP, ICMP, UDP and TCP pinging.  ICMP Pings will be rounded up to the nearest second.  TCP and UDP connection timeouts on Windows are controlled by the operating system, and are therefore not recommended on Windows."
 msgstr "Tüm yeni Aygıtlar için varsayılan Ping Zaman Aşımı değeri mili-saniye olarak. Aygıt SNMP, ICMP, UDP ve TCP ping için kullanılacak zaman aşımı değerleri. ICMP Pings, en yakın saniyeye yuvarlanır. Windows&#39;taki TCP ve UDP bağlantı zaman aşımları işletim sistemi tarafından kontrol edilir ve bu nedenle Windows&#39;ta önerilmez."
 
-#: include/global_settings.php:835
+#: include/global_settings.php:900
 msgid "The number of times Kadupul will attempt to ping a Device before marking it as down."
 msgstr "Kadupul&#39;nin, bir Cihazı aşağı olarak işaretlemeden önce bir cihazı pinglemeye çalışacağı sayı."
 
-#: include/global_settings.php:842
+#: include/global_settings.php:907
 msgid "Up/Down Settings"
 msgstr "Yukarı / Aşağı Ayarları"
 
-#: include/global_settings.php:847
+#: include/global_settings.php:912
 msgid "Failure Count"
 msgstr "Başarısızlık sayısı"
 
-#: include/global_settings.php:848
+#: include/global_settings.php:913
 msgid "The number of polling intervals a Device must be down before logging an error and reporting Device as down."
 msgstr "Bir hata günlüğe kaydetmeden ve bir Aygıtı aşağı olarak bildirmeden önce bir Aygıtın yoklama aralığı sayısı azaltılmalıdır."
 
-#: include/global_settings.php:855
+#: include/global_settings.php:920
 msgid "Recovery Count"
 msgstr "Kurtarma Sayısı"
 
-#: include/global_settings.php:856
+#: include/global_settings.php:921
 msgid "The number of polling intervals a Device must remain up before returning Device to an up status and issuing a notice."
 msgstr "Aygıtı çalışır duruma getirmeden ve bir bildirimde bulunmadan önce bir Aygıtın yoklama aralığı sayısı devam etmelidir."
 
-#: include/global_settings.php:865
+#: include/global_settings.php:930
 msgid "Theme Settings"
 msgstr "Tema Ayarları"
 
-#: include/global_settings.php:870 include/global_settings.php:1080
-#: include/global_settings.php:2580 lib/html.php:2773
+#: include/global_settings.php:935 include/global_settings.php:1145
+#: include/global_settings.php:2590 lib/html.php:2773
 msgid "Theme"
 msgstr "Tema"
 
-#: include/global_settings.php:871 include/global_settings.php:2581
+#: include/global_settings.php:936 include/global_settings.php:2591
 msgid "Please select one of the available Themes to skin your Kadupul with."
 msgstr "Lütfen Kadupul&#39;nizi ciltlemek için mevcut Temalardan birini seçin."
 
-#: include/global_settings.php:877
+#: include/global_settings.php:942
 msgid "Table Settings"
 msgstr "Tablo ayarları"
 
-#: include/global_settings.php:882
+#: include/global_settings.php:947
 msgid "Rows Per Page"
 msgstr "Sayfa Başına Satır"
 
-#: include/global_settings.php:883
+#: include/global_settings.php:948
 msgid "The default number of rows to display on for a table."
 msgstr "Tablo için görüntülenecek varsayılan satır sayısı."
 
-#: include/global_settings.php:889
+#: include/global_settings.php:954
 msgid "Autocomplete Enabled"
 msgstr "Otomatik Tamamlama Etkin"
 
-#: include/global_settings.php:890
+#: include/global_settings.php:955
 msgid "In very large systems, select lists can slow the user interface significantly.  If this option is enabled, Kadupul will use autocomplete callbacks to populate the select list systematically.  Note: autocomplete is forcibly disabled on the Classic theme."
 msgstr "Çok büyük sistemlerde, seçilen listeler kullanıcı arabirimini önemli ölçüde yavaşlatabilir. Bu seçenek etkinleştirilirse, Kadupul, seçim listesini sistematik olarak doldurmak için otomatik tamamlama geri aramalarını kullanır. Not: Klasik tema için otomatik tamamlama zorla devre dışı bırakılır."
 
-#: include/global_settings.php:899
+#: include/global_settings.php:964
 msgid "Autocomplete Rows"
 msgstr "Otomatik Tamamlama Satırları"
 
-#: include/global_settings.php:900 include/global_settings.php:920
+#: include/global_settings.php:965 include/global_settings.php:985
 msgid ".  This is limited by the php setting 'max_input_vars', currently:"
 msgstr ".  Bu, şu anda 'max_input_vars' php ayarı ile sınırlıdır:"
 
-#: include/global_settings.php:900
+#: include/global_settings.php:965
 msgid "The default number of rows to return from an autocomplete based select pattern match."
 msgstr "Otomatik tamamlama tabanlı seçme desen eşleşmesinden döndürülecek varsayılan satır sayısı."
 
-#: include/global_settings.php:911 include/global_settings.php:2810
+#: include/global_settings.php:976 include/global_settings.php:2820
 msgid "Minimum Tree Width"
 msgstr "Minimum uzunluk"
 
-#: include/global_settings.php:912 include/global_settings.php:2811
+#: include/global_settings.php:977 include/global_settings.php:2821
 msgid "The Minimum width of the Tree to contract to."
 msgstr "Taahhüt edilecek Ağacın Minimum genişliği."
 
-#: include/global_settings.php:919 include/global_settings.php:2818
+#: include/global_settings.php:984 include/global_settings.php:2828
 msgid "Maximum Tree Width"
 msgstr "Maksimum Başlık Uzunluğu"
 
-#: include/global_settings.php:920 include/global_settings.php:2819
+#: include/global_settings.php:985 include/global_settings.php:2829
 msgid "The Maximum width of the Tree to expand to, after which time, Tree branches will scroll on the page."
 msgstr "Genişletilecek Ağacın maksimum genişliği, bundan sonra Ağaç dalları sayfada kayar."
 
-#: include/global_settings.php:927
+#: include/global_settings.php:992
 msgid "Filter Settings"
 msgstr "Filtre Ayarları"
 
-#: include/global_settings.php:932
+#: include/global_settings.php:997
 msgid "Strip Domains from Device Dropdowns"
 msgstr "Cihaz Açılır Listelerinden Alanları Şeritle"
 
-#: include/global_settings.php:933
+#: include/global_settings.php:998
 msgid "When viewing Device name filter dropdowns, checking this option will strip to domain from the hostname."
 msgstr "Cihaz adı filtresi açılır listelerini görüntülerken, bu seçeneğin işaretlenmesi ana bilgisayar adından alan adına geçer."
 
-#: include/global_settings.php:938
+#: include/global_settings.php:1003
 msgid "Graph/Data Source/Data Query Settings"
 msgstr "Grafik / Veri Kaynağı / Veri Sorgu Ayarları"
 
-#: include/global_settings.php:943
+#: include/global_settings.php:1008
 msgid "Maximum Title Length"
 msgstr "Maksimum Başlık Uzunluğu"
 
-#: include/global_settings.php:944
+#: include/global_settings.php:1009
 msgid "The maximum allowable Graph or Data Source titles."
 msgstr "İzin verilen maksimum Grafik veya Veri Kaynağı başlıkları."
 
-#: include/global_settings.php:951
+#: include/global_settings.php:1016
 msgid "Data Source Field Length"
 msgstr "Veri Kaynağı Alan Uzunluğu"
 
-#: include/global_settings.php:952
+#: include/global_settings.php:1017
 msgid "The maximum Data Query field length."
 msgstr "Maksimum Veri Sorgu alanı uzunluğu."
 
-#: include/global_settings.php:959
+#: include/global_settings.php:1024
 msgid "Graph Creation"
 msgstr "Grafik Oluşturma"
 
-#: include/global_settings.php:964
+#: include/global_settings.php:1029
 msgid "Default Graph Type"
 msgstr "Varsayılan Grafik Türü"
 
-#: include/global_settings.php:965
+#: include/global_settings.php:1030
 #, fuzzy
 msgid "When creating graphs, what Graph Type would you like preselected?"
 msgstr "Grafikler oluştururken, hangi Grafik Türünü önceden seçilmesini istersiniz?"
 
-#: include/global_settings.php:969
+#: include/global_settings.php:1034
 msgid "All Types"
 msgstr "Tüm Türler"
 
-#: include/global_settings.php:970
+#: include/global_settings.php:1035
 msgid "By Template/Data Query"
 msgstr "Şablon / Veri Sorgusuna Göre"
 
-#: include/global_settings.php:974
+#: include/global_settings.php:1039
 msgid "Log Management"
 msgstr "Günlük Yönetimi"
 
-#: include/global_settings.php:979
+#: include/global_settings.php:1044
 msgid "Default Log Tail Lines"
 msgstr "Varsayılan Günlük Kuyruk Çizgileri"
 
-#: include/global_settings.php:980
+#: include/global_settings.php:1045
 msgid "Default number of lines of the Kadupul log file to tail."
 msgstr "Kuyruğa alınacak Kadupul günlük dosyasının varsayılan satır sayısı."
 
-#: include/global_settings.php:986
+#: include/global_settings.php:1051
 msgid "Maximum number of rows per page"
 msgstr "Sayfa başına maksimum satır sayısı"
 
-#: include/global_settings.php:987
+#: include/global_settings.php:1052
 msgid "User defined number of lines for the CLOG to tail when selecting 'All lines'."
 msgstr "CLOG için &#39;Tüm satırlar&#39; seçildiğinde kullanıcı tarafından tanımlanacak satır sayısı."
 
-#: include/global_settings.php:994
+#: include/global_settings.php:1059
 msgid "Log Tail Refresh"
 msgstr "Günlük Kuyruk Yenile"
 
-#: include/global_settings.php:995
+#: include/global_settings.php:1060
 msgid "How often do you want the Kadupul log display to update."
 msgstr "Kadupul günlüğü ekranının ne sıklıkla güncellenmesini istiyorsunuz?"
 
-#: include/global_settings.php:1001
+#: include/global_settings.php:1066
 msgid "Log Viewer Settings"
 msgstr "Günlük Görüntüleyici Ayarları"
 
-#: include/global_settings.php:1006
+#: include/global_settings.php:1071
 msgid "Exclusion Regex"
 msgstr "Dışlama Regex"
 
-#: include/global_settings.php:1007
+#: include/global_settings.php:1072
 msgid "Any strings that match this regex will be excluded from the user display.  <strong>For example, if you want to exclude all log lines that include the words 'Admin' or 'Login' you would type '(Admin || Login)'</strong>"
 msgstr "Bu regex ile eşleşen dizeler kullanıcı ekranından çıkarılır. <strong>Örneğin, &#39;Yönetici&#39; veya &#39;Giriş&#39; kelimelerini içeren tüm günlük satırlarını hariç tutmak istiyorsanız &#39;yazarsınız (Yönetici || Giriş)&#39;</strong>"
 
-#: include/global_settings.php:1014
+#: include/global_settings.php:1079
 msgid "Real-time Graphs"
 msgstr "Gerçek Zamanlı Grafikler"
 
-#: include/global_settings.php:1019
+#: include/global_settings.php:1084
 msgid "Enable Real-time Graphing"
 msgstr "Gerçek Zamanlı Grafiği Etkinleştir"
 
-#: include/global_settings.php:1020
+#: include/global_settings.php:1085
 msgid "When an option is checked, users will be able to put Kadupul into Real-time mode."
 msgstr "Bir seçenek işaretlendiğinde, kullanıcılar Kadupul&#39;yi Gerçek Zamanlı moda sokabilir."
 
-#: include/global_settings.php:1026
+#: include/global_settings.php:1091
 msgid "This timespan you wish to see on the default graph."
 msgstr "Bu zaman aralığı, varsayılan grafikte görmek istersiniz."
 
-#: include/global_settings.php:1032
+#: include/global_settings.php:1097
 msgid "Minimum Refresh Interval"
 msgstr "Yenileme aralığı"
 
-#: include/global_settings.php:1033
+#: include/global_settings.php:1098
 msgid "This is the minimal supported time between Graph updates.  This value is also used to set certain RRDfile attributes.  If you have a Device that caches data and does not provide realtime updates, you may have to increase the default Minimum Refresh Interval to prevent creating Graphs with gaps."
 msgstr "Bu, Grafik güncellemeleri arasında desteklenen minimum süredir. Bu değer ayrıca belirli RRDfile özniteliklerini ayarlamak için kullanılır. Verileri önbelleğe alan ve gerçek zamanlı güncellemeler sağlamayan bir Cihazınız varsa, boşluklu Grafikler oluşturmayı önlemek için varsayılan Minimum Yenileme Aralığını artırmanız gerekebilir."
 
-#: include/global_settings.php:1039
+#: include/global_settings.php:1104
 msgid "Cache Directory"
 msgstr "Önbellek Dizini"
 
-#: include/global_settings.php:1040
+#: include/global_settings.php:1105
 msgid "This is the location, on the web server where the RRDfiles and PNG files will be cached.  This cache will be managed by the poller.  Make sure you have the correct read and write permissions on this folder"
 msgstr "Bu, web sunucusundaki RRDfiles ve PNG dosyalarının önbelleğe alınacağı konumdur. Bu önbellek yoklama tarafından yönetilecektir. Bu klasörde doğru okuma ve yazma izinlerine sahip olduğunuzdan emin olun."
 
-#: include/global_settings.php:1047
+#: include/global_settings.php:1112
 msgid "RRDtool Graph Options"
 msgstr "Grafik Seçenekleri"
 
-#: include/global_settings.php:1052
+#: include/global_settings.php:1117
 msgid "Custom Watermark"
 msgstr "Özel Veriler"
 
-#: include/global_settings.php:1053
+#: include/global_settings.php:1118
 msgid "Text placed at the bottom center of every Graph."
 msgstr "Her Grafiğin alt ortasına yerleştirilmiş metin."
 
-#: include/global_settings.php:1060
+#: include/global_settings.php:1125
 msgid "Custom Date Format"
 msgstr "Özel Tarih Formatı"
 
-#: include/global_settings.php:1061
+#: include/global_settings.php:1126
 msgid "To be used when formatting |date_time| on a graph"
 msgstr "|tarih_saat| biçimlendirilirken kullanılacak bir grafikte"
 
-#: include/global_settings.php:1068
+#: include/global_settings.php:1133
 msgid "Disable RRDtool Watermark"
 msgstr "RRDtool Grafik Filigranı"
 
-#: include/global_settings.php:1069
+#: include/global_settings.php:1134
 msgid "Provided your RRDtool version supports it, you may disable RRDtool advertisement on your Graphs by checking this option."
 msgstr "RRDtool sürümünüz destekliyorsa, bu seçeneği işaretleyerek Grafiklerinizde RRDtool reklamını devre dışı bırakabilirsiniz."
 
-#: include/global_settings.php:1074
+#: include/global_settings.php:1139
 msgid "Font Selection Method"
 msgstr "Yazı Tipi Seçme Yöntemi"
 
-#: include/global_settings.php:1075
+#: include/global_settings.php:1140
 msgid "How do you wish fonts to be handled by default?"
 msgstr "Yazı tiplerinin varsayılan olarak nasıl ele alınmasını istersiniz?"
 
-#: include/global_settings.php:1079 lib/api_device.php:1897
+#: include/global_settings.php:1144 lib/api_device.php:1897
 msgid "System"
 msgstr "Sistem"
 
-#: include/global_settings.php:1084
+#: include/global_settings.php:1149
 msgid "Default Font"
 msgstr "Varsayılan Yazı Tipi"
 
-#: include/global_settings.php:1085
+#: include/global_settings.php:1150
 msgid "When not using Theme based font control, the Pango font description to use for all Graphs, such as DejaVu Sans. Optionally, you may leave blank and control font settings on a per object basis."
 msgstr ""
 
-#: include/global_settings.php:1089 include/global_settings.php:2835
-msgid "Title Font Size"
-msgstr "Başlık Yazı Boyutu"
-
-#: include/global_settings.php:1090 include/global_settings.php:2836
-msgid "The size of the font used for Graph Titles"
-msgstr "Grafik Başlıkları için kullanılan fontun boyutu"
-
-#: include/global_settings.php:1099 include/global_settings.php:2844
-msgid "Title Font Setting"
-msgstr "Başlık Yazı Tipi Ayarı"
-
-#: include/global_settings.php:1100
-msgid "The font to use for Graph Titles.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
-msgstr ""
-
-#: include/global_settings.php:1103 include/global_settings.php:2848
-msgid "Legend Font Size"
-msgstr "Legend Yazı Tipi Boyutu"
-
-#: include/global_settings.php:1104 include/global_settings.php:2849
-msgid "The size of the font used for Graph Legend items"
-msgstr "Graph Legend öğeleri için kullanılan fontun boyutu"
-
-#: include/global_settings.php:1113 include/global_settings.php:2857
-msgid "Legend Font Setting"
-msgstr "Legend Yazı Tipi Ayarı"
-
-#: include/global_settings.php:1114
-msgid "The font to use for Graph Legends.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
-msgstr ""
-
-#: include/global_settings.php:1117 include/global_settings.php:2861
-msgid "Axis Font Size"
-msgstr "Eksen Yazı Tipi Boyutu"
-
-#: include/global_settings.php:1118 include/global_settings.php:2862
-msgid "The size of the font used for Graph Axis"
-msgstr "Graph Axis için kullanılan fontun boyutu"
-
-#: include/global_settings.php:1127 include/global_settings.php:2870
-msgid "Axis Font Setting"
-msgstr "Eksen Yazı Tipi Ayarı"
-
-#: include/global_settings.php:1128
-msgid "The font to use for Graph Axis items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
-msgstr ""
-
-#: include/global_settings.php:1131 include/global_settings.php:2874
-msgid "Unit Font Size"
-msgstr "Birim Yazı Tipi Boyutu"
-
-#: include/global_settings.php:1132 include/global_settings.php:2875
-msgid "The size of the font used for Graph Units"
-msgstr "Grafik Birimleri için kullanılan fontun boyutu"
-
-#: include/global_settings.php:1141 include/global_settings.php:2883
-msgid "Unit Font Setting"
-msgstr "Birim Yazı Tipi Ayarı"
-
-#: include/global_settings.php:1142
-msgid "The font to use for Graph Unit items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
-msgstr ""
-
-#: include/global_settings.php:1145
+#: include/global_settings.php:1155
 msgid "Business Hours Settings"
 msgstr "Kullanıcı Ayarları"
 
-#: include/global_settings.php:1150
+#: include/global_settings.php:1160
 #, fuzzy
 msgid "Start of Business Day"
 msgstr "işletmenin Başlangıcı"
 
-#: include/global_settings.php:1151
+#: include/global_settings.php:1161
 msgid "The time your business hours start. Format: hh:mm"
 msgstr "Çalışma saatlerinizin başladığı saat. Format:ss:dd"
 
-#: include/global_settings.php:1158
+#: include/global_settings.php:1168
 #, fuzzy
 msgid "End of Business Day"
 msgstr "(mesai bitimine kadar)"
 
-#: include/global_settings.php:1159
+#: include/global_settings.php:1169
 msgid "The time your business hours end. Format: hh:mm"
 msgstr "Çalışma saatlerinizin sona erdiği saat. Format:ss:dd"
 
-#: include/global_settings.php:1166
+#: include/global_settings.php:1176
 msgid "Hide Weekends"
 msgstr "%d Hafta"
 
-#: include/global_settings.php:1167
+#: include/global_settings.php:1177
 msgid "Only show business hours during weekdays."
 msgstr "Çalışma saatlerini yalnızca hafta içi günlerde gösterin."
 
-#: include/global_settings.php:1172
+#: include/global_settings.php:1182
 #, fuzzy
 msgid "Show business hours"
 msgstr "Çalışma Saatleri"
 
-#: include/global_settings.php:1173
+#: include/global_settings.php:1183
 msgid "Display business hours on rrd graphs."
 msgstr "Çalışma saatlerini rrd grafiklerinde görüntüleyin."
 
-#: include/global_settings.php:1178
+#: include/global_settings.php:1188
 msgid "Color to use for business hours"
 msgstr "Çalışma saatleri için kullanılacak renkler"
 
-#: include/global_settings.php:1179
+#: include/global_settings.php:1189
 msgid "The color to be shown for business hours"
 msgstr "Çalışma saatleri için gösterilecek renk"
 
-#: include/global_settings.php:1186
+#: include/global_settings.php:1196
 msgid "Maximum number of days to show business hours"
 msgstr "Sayfa başına maksimum satır sayısı"
 
-#: include/global_settings.php:1187
+#: include/global_settings.php:1197
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "Bu gün sayısından sonra çalışma saatleri grafiğe eklenmeyecektir. <br/>Önerilen: 62 gün"
 
-#: include/global_settings.php:1202
+#: include/global_settings.php:1212
 msgid "Data Collection Enabled"
 msgstr "Veri Toplama Etkin"
 
-#: include/global_settings.php:1203
+#: include/global_settings.php:1213
 msgid "If you wish to stop the polling process completely, uncheck this box."
 msgstr "Oylama işlemini tamamen durdurmak istiyorsanız, bu kutunun işaretini kaldırın."
 
-#: include/global_settings.php:1209
+#: include/global_settings.php:1219
 msgid "SNMP Agent Support Enabled"
 msgstr "SNMP Agent Desteği Etkin"
 
-#: include/global_settings.php:1210
+#: include/global_settings.php:1220
 msgid "If this option is checked, Kadupul will populate SNMP Agent tables with Kadupul device and system information.  It does not enable the SNMP Agent itself."
 msgstr "Bu seçenek işaretliyse, Kadupul, SNMP Agent tablolarını Kadupul cihazı ve sistem bilgileriyle birlikte doldurur. SNMP Aracısının kendisini etkinleştirmez."
 
-#: include/global_settings.php:1215
+#: include/global_settings.php:1225
 msgid "Poller Type"
 msgstr "Poller Tipi"
 
-#: include/global_settings.php:1216
+#: include/global_settings.php:1226
 msgid "The poller type to use.  This setting will take affect at next polling interval."
 msgstr "Kullanılacak poller tipi. Bu ayar bir sonraki yoklama aralığında etkili olacaktır."
 
-#: include/global_settings.php:1222
+#: include/global_settings.php:1232
 msgid "Poller Sync Interval"
 msgstr "Poller Sync Aralığı"
 
-#: include/global_settings.php:1223
+#: include/global_settings.php:1233
 msgid "The default polling sync interval to use when creating a poller.  This setting will affect how often remote pollers are checked and updated."
 msgstr "Bir yoklayıcı oluştururken kullanılacak varsayılan yoklama senkronizasyon aralığı. Bu ayar, uzak oylayıcıların ne sıklıkla kontrol edildiğini ve güncellendiğini etkiler."
 
-#: include/global_settings.php:1230
+#: include/global_settings.php:1240
 msgid "The polling interval in use.  This setting will affect how often RRDfiles are checked and updated.  <strong><u>NOTE: If you change this value, you must re-populate the poller cache.  Failure to do so, may result in lost data.</u></strong>"
 msgstr "Kullanılan yoklama aralığı. Bu ayar RRD dosyalarının ne sıklıkla kontrol edildiğini ve güncellendiğini etkiler. <strong><u>NOT: Bu değeri değiştirirseniz, yoklama önbelleğini yeniden doldurmalısınız. Bunu yapmamak, veri kaybına neden olabilir.</u></strong>"
 
-#: include/global_settings.php:1236
+#: include/global_settings.php:1246
 msgid "Cron/Daemon Interval"
 msgstr "Tekrar (Cron) aralığı"
 
-#: include/global_settings.php:1237
+#: include/global_settings.php:1247
 #, fuzzy
 msgid "The frequency that the Kadupul data collector will be started.  You can use either crontab, a scheduled task (for windows), or the cactid systemd service to control launching the Kadupul data collector.  For instructions on using the cactid daemon, review the README.md file in the service directory."
 msgstr "Kadupul veri toplayıcının başlatılacağı frekans. Kadupul veri toplayıcının başlatılmasını kontrol etmek için crontab, zamanlanmış bir görev (Windows için) veya cactid systemd hizmetini kullanabilirsiniz. Kadupul arka plan programının kullanımına ilişkin talimatlar için hizmet dizinindeki README.md dosyasını inceleyin."
 
-#: include/global_settings.php:1243
+#: include/global_settings.php:1253
 msgid "Balance Process Load"
 msgstr "İşlem Yükü Dengesi"
 
-#: include/global_settings.php:1244
+#: include/global_settings.php:1254
 msgid "If you choose this option, Kadupul will attempt to balance the load of each poller process by equally distributing poller items per process."
 msgstr "Bu seçeneği tercih ederseniz, Kadupul her yoklama işleminin yükünü işlem başına yoklama öğelerini eşit olarak dağıtarak dengelemeye çalışır."
 
-#: include/global_settings.php:1249
+#: include/global_settings.php:1259
 msgid "Debug Output Width"
 msgstr "Hata Ayıklama Çıkışı Genişliği"
 
-#: include/global_settings.php:1250
+#: include/global_settings.php:1260
 msgid "If you choose this option, Kadupul will check for output that exceeds Kadupul's ability to store it and issue a warning when it finds it."
 msgstr "Bu seçeneği tercih ederseniz, Kadupul, Kadupul&#39;nin saklama kapasitesini aşan çıktıyı kontrol eder ve bulduğu zaman bir uyarı verir."
 
-#: include/global_settings.php:1255
+#: include/global_settings.php:1265
 msgid "Disable increasing OID Check"
 msgstr "Artan OID Kontrolünü devre dışı bırak"
 
-#: include/global_settings.php:1256
+#: include/global_settings.php:1266
 msgid "Controls disabling check for increasing OID while walking OID tree."
 msgstr "OID ağacını yürürken OID artışını devre dışı bırakma kontrolünü kontrol eder."
 
-#: include/global_settings.php:1261
+#: include/global_settings.php:1271
 msgid "Remote Agent Timeout"
 msgstr "Uzak Ajan Zaman Aşımı"
 
-#: include/global_settings.php:1262
+#: include/global_settings.php:1272
 #, fuzzy
 msgid "The amount of time, in seconds, that the Central Kadupul web server will wait for a response from the Remote Data Collector to obtain various Device information before abandoning the request.  On Devices that are associated with Data Collectors other than the Central Kadupul Data Collector, the Remote Agent must be used to gather Device information."
 msgstr "Central Kadupul web sunucusunun, isteği terk etmeden önce, Uzak Veri Toplayıcı&#39;dan çeşitli Cihaz bilgileri alması için bir yanıt bekleyeceği saniye cinsinden süre. Merkezi Kadupul Veri Toplayıcısı dışındaki Veri Toplayıcılarla ilişkilendirilen Aygıtlarda, Aygıt bilgilerini toplamak için Uzak Aracı kullanılmalıdır."
 
-#: include/global_settings.php:1273
+#: include/global_settings.php:1283
 msgid "SNMP Bulkwalk Fetch Size"
 msgstr "SNMP Bulkwalk Getirme Boyutu"
 
-#: include/global_settings.php:1274
+#: include/global_settings.php:1284
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
 msgstr "Snmpbulkwalk isteği başına kaç OID iade edilmelidir? Büyük SNMP ağaçlarına sahip Aygıtlar için bu boyutun artırılması, bir WAN üzerinden yeniden endeksleme performansını arttıracaktır."
 
-#: include/global_settings.php:1293
+#: include/global_settings.php:1303
 msgid "SNMP Get OID Limit"
 msgstr "SNMP Al"
-
-#: include/global_settings.php:1294
-msgid "The default maximum number of SNMP Get OIDs to issue per snmpget request.  For Devices, this setting is controlled at the Device level.  You should only use this setting when using Kadupul's SNMP API natively in your scripts or plugins."
-msgstr "snmpget isteği başına verilecek varsayılan maksimum SNMP Get OID sayısı. Cihazlar için bu ayar Cihaz düzeyinde kontrol edilir. Bu ayarı yalnızca Kadupul'nin SNMP API'sini komut dosyalarınızda veya eklentilerinizde yerel olarak kullanırken kullanmalısınız."
-
-#: include/global_settings.php:1301
-msgid "Rejected Sample Retention"
-msgstr ""
-
-#: include/global_settings.php:1302
-msgid "Hours that samples refused by RRDtool, for example after a data source schema change, stay queued for retry before they are moved to the poller_output_rejected table.  Repair the RRDfile, then run cli/replay_rejected_samples.php to process them."
-msgstr ""
 
 #: include/global_settings.php:1304
 msgid "Refresh Poller Table Per Cycle"
 msgstr "Poller Tablosunu Döngü Başına Yenile"
 
+#: include/global_settings.php:1304
+msgid "The default maximum number of SNMP Get OIDs to issue per snmpget request.  For Devices, this setting is controlled at the Device level.  You should only use this setting when using Kadupul's SNMP API natively in your scripts or plugins."
+msgstr "snmpget isteği başına verilecek varsayılan maksimum SNMP Get OID sayısı. Cihazlar için bu ayar Cihaz düzeyinde kontrol edilir. Bu ayarı yalnızca Kadupul'nin SNMP API'sini komut dosyalarınızda veya eklentilerinizde yerel olarak kullanırken kullanmalısınız."
+
 #: include/global_settings.php:1305
 msgid "This setting is for a single poller systems only to rebuild the poller output table on each polling cycle to prevent the memory table from swapping on very large systems with large databases that could use swap."
 msgstr "Bu ayar, bellek tablosunun takas kullanabilecek büyük veritabanlarına sahip çok büyük sistemlerde takas edilmesini önlemek için yalnızca her yoklama döngüsünde yoklama çıktı tablosunu yeniden oluşturmak için tek bir yoklama sistemi içindir."
 
-#: include/global_settings.php:1309
+#: include/global_settings.php:1311
+msgid "Rejected Sample Retention"
+msgstr ""
+
+#: include/global_settings.php:1312
+msgid "Hours that samples refused by RRDtool, for example after a data source schema change, stay queued for retry before they are moved to the poller_output_rejected table.  Repair the RRDfile, then run cli/replay_rejected_samples.php to process them."
+msgstr ""
+
+#: include/global_settings.php:1319
 msgid "Rejected Sample Limit"
 msgstr ""
 
-#: include/global_settings.php:1310
+#: include/global_settings.php:1320
 msgid "The most refused samples one data source may keep queued.  The oldest samples beyond this limit are moved to the poller_output_rejected table immediately."
 msgstr ""
 
-#: include/global_settings.php:1317
+#: include/global_settings.php:1327
 msgid "Disable Resource Cache Replication"
 msgstr "Kaynak Önbelleğini Yeniden Oluştur"
 
-#: include/global_settings.php:1318
+#: include/global_settings.php:1328
 #, fuzzy
 msgid "By default, the main Kadupul Data Collector will cache the entire web site and plugins into a Resource Cache.  Then, periodically the Remote Data Collectors will update themselves with any updates from the main Kadupul Data Collector.  This Resource Cache essentially allows Remote Data Collectors to self upgrade.  If you do not wish to use this option, you can disable it using this setting."
 msgstr "Varsayılan olarak, ana Kadupul Veri Toplayıcı tüm web sitesini ve eklentileri bir Kaynak Önbelleği'nde önbelleğe alır. Ardından, Uzak Veri Toplayıcıları periyodik olarak kendilerini ana Kadupul Veri Toplayıcısından gelen güncellemelerle güncelleyecektir. Bu Kaynak Önbellek, esasen Uzak Veri Toplayıcıların kendi kendini yükseltmelerine izin verir. Bu seçeneği kullanmak istemiyorsanız, bu ayarı kullanarak devre dışı bırakabilirsiniz."
 
-#: include/global_settings.php:1323
+#: include/global_settings.php:1333
 msgid "Additional Data Collector Settings"
 msgstr "Uzaktan Veri Toplayıcı Durumu:"
 
-#: include/global_settings.php:1328
+#: include/global_settings.php:1338
 msgid "Invalid Data Logging"
 msgstr "Geçersiz Veri Günlüğü"
 
-#: include/global_settings.php:1329
+#: include/global_settings.php:1339
 msgid "How would you like the Data Collector output errors logged?  Options include: 'Detailed' which details every error, 'Summary' which provides the number of output errors per Device, and 'None', which does not provide error counts."
 msgstr "Spine çıkış hatalarının kaydedilmesini nasıl istersiniz? Seçenekler şunlardır: cmd.php günlüğüne benzer &#39;Ayrıntılı&#39;; Aygıt başına çıktı hatalarının sayısını sağlayan &#39;Özet&#39;; ve hata sayımı sağlamayan &#39;Yok&#39;."
 
-#: include/global_settings.php:1334 utilities.php:140
+#: include/global_settings.php:1344 utilities.php:140
 msgid "Summary"
 msgstr "Özet"
 
-#: include/global_settings.php:1335
+#: include/global_settings.php:1345
 msgid "Detailed"
 msgstr "Detaylı"
 
-#: include/global_settings.php:1339
+#: include/global_settings.php:1349
 msgid "Number of PHP Script Servers"
 msgstr "PHP Komut Dosyası Sunucusu Sayısı"
 
-#: include/global_settings.php:1340
+#: include/global_settings.php:1350
 msgid "The number of concurrent script server processes to run per spine process.  Settings between 1 and 15 are accepted.  This parameter will help if you are running several threads and script server scripts and is only valid for the spine Data Collector."
 msgstr "Eşzamanlı komut dosyası sunucusu sayısı, Spine işlemi başına çalıştırılacak işlemlerin sayısı. 1 ile 10 arasındaki ayarlar kabul edilir. Birden fazla iş parçacığı ve komut dosyası sunucusu komut dosyaları çalıştırıyorsanız, bu parametre yardımcı olacaktır."
 
-#: include/global_settings.php:1347
+#: include/global_settings.php:1357
 msgid "Script and Script Server Timeout Value"
 msgstr "Komut Dosyası ve Komut Dosyası Sunucusu Zaman Aşımı Değeri"
 
-#: include/global_settings.php:1348
+#: include/global_settings.php:1358
 msgid "The maximum time that spine will wait on a script to complete.  This timeout value is in seconds and is only valid for the spine Data Collector."
 msgstr "Kadupul&#39;nin bir betiğin tamamlanması için bekleyeceği maksimum süre. Bu zaman aşımı değeri saniye cinsindendir."
 
-#: include/global_settings.php:1355
+#: include/global_settings.php:1365
 msgid "Periodic All Device Re-Index"
 msgstr "Periyodik Tüm Cihaz Yeniden İndeksleme"
 
-#: include/global_settings.php:1360
+#: include/global_settings.php:1370
 msgid "Re-Index All Device Schedule"
 msgstr "Yeniden Dizin Yöntemi"
 
-#: include/global_settings.php:1361
+#: include/global_settings.php:1371
 msgid "At what frequency do you wish to Re-Index all Devices.  This Re-Index will occur at midnight at the frequency that you select."
 msgstr "Tüm Cihazları hangi sıklıkta Yeniden İndekslemek istiyorsunuz?  Bu Yeniden Endeksleme, seçtiğiniz sıklıkta gece yarısı gerçekleşecektir."
 
-#: include/global_settings.php:1367
+#: include/global_settings.php:1377
 msgid "Weekly on Sunday"
 msgstr "Haftalık Pazar"
 
-#: include/global_settings.php:1368
+#: include/global_settings.php:1378
 msgid "Monthly on Sunady"
 msgstr "Her Gün Aylık"
 
-#: include/global_settings.php:1372
+#: include/global_settings.php:1382
 msgid "Background Timeout and Concurrent Process Settings"
 msgstr "Legend Yazı Tipi Ayarı"
 
-#: include/global_settings.php:1377
+#: include/global_settings.php:1387
 msgid "Report Generation Timeout"
 msgstr "Uzak Ajan Zaman Aşımı"
 
-#: include/global_settings.php:1378
+#: include/global_settings.php:1388
 msgid "The maximum amount of time Kadupul's Reports Generation script can run without generating a timeout error and being killed."
 msgstr "Kadupul'nin Rapor Oluşturma komut dosyasının bir zaman aşımı hatası oluşturmadan ve öldürülmeden çalışabileceği maksimum süre."
 
-#: include/global_settings.php:1382 include/global_settings.php:1395
-#: include/global_settings.php:1423 include/global_settings.php:1464
-#: include/global_settings.php:1478
+#: include/global_settings.php:1392 include/global_settings.php:1405
+#: include/global_settings.php:1433 include/global_settings.php:1474
+#: include/global_settings.php:1488
 #, php-format
 msgid "%s Minute"
 msgstr "%s Dakika"
 
-#: include/global_settings.php:1390
+#: include/global_settings.php:1400
 msgid "Data Source Statistics Timeout"
 msgstr "Veri Kaynakları İstatistikleri"
 
-#: include/global_settings.php:1391
+#: include/global_settings.php:1401
 msgid "The maximum amount of time Kadupul's Data Source Statistics script can run without generating a timeout error and being killed."
 msgstr "Kadupul'nin Veri Kaynağı İstatistikleri komut dosyasının zaman aşımı hatası oluşturmadan ve öldürülmeden çalışabileceği maksimum süre."
 
-#: include/global_settings.php:1405
+#: include/global_settings.php:1415
 msgid "RRDChecker Timeout"
 msgstr "DNS Zaman Aşımı"
 
-#: include/global_settings.php:1406
+#: include/global_settings.php:1416
 msgid "The maximum amount of time Kadupul's RRDfile check script can run without generating a timeout error and being killed."
 msgstr "Bir Kadupul'nin Spikekill betiğinin zaman aşımı hatası oluşturmadan ve öldürülmeden çalışabileceği maksimum süre."
 
-#: include/global_settings.php:1412 include/global_settings.php:1413
-#: include/global_settings.php:1414 include/global_settings.php:1469
-#: include/global_settings.php:1483
+#: include/global_settings.php:1422 include/global_settings.php:1423
+#: include/global_settings.php:1424 include/global_settings.php:1479
+#: include/global_settings.php:1493
 #, php-format
 msgid "%s Hour"
 msgstr "%s Saat"
 
-#: include/global_settings.php:1418
+#: include/global_settings.php:1428
 msgid "Poller Commands Timeout"
 msgstr "Arka Plan Komutları Zaman Aşımı"
 
-#: include/global_settings.php:1419
+#: include/global_settings.php:1429
 msgid "The maximum amount of time Kadupul's Background Commands script can run without generating a timeout error and being killed.  This script will perform tasks such as re-indexing Devices and pruning devices from Remote Data Collectors."
 msgstr "Kadupul'nin Arka Plan Komutları komut dosyasının zaman aşımı hatası oluşturmadan ve öldürülmeden çalışabileceği maksimum süre."
 
-#: include/global_settings.php:1431
+#: include/global_settings.php:1441
 msgid "Poller Command Concurrent Processes"
 msgstr "Eşzamanlı İşlemler"
 
-#: include/global_settings.php:1432
+#: include/global_settings.php:1442
 msgid "The number of concurrent Poller Command processes.  The will be at most one concurrent command per host within the Poller Command pool."
 msgstr "Eşzamanlı Yoklayıcı Komutu işlemlerinin sayısı., Yoklayıcı Komutu havuzunda ana bilgisayar başına en fazla bir eşzamanlı komut olacaktır."
 
-#: include/global_settings.php:1436 include/global_settings.php:2101
-#: include/global_settings.php:2211 include/global_settings.php:2279
+#: include/global_settings.php:1446 include/global_settings.php:2111
+#: include/global_settings.php:2221 include/global_settings.php:2289
 msgid "1 Process"
 msgstr "1 İşlem"
 
-#: include/global_settings.php:1437 include/global_settings.php:1438
-#: include/global_settings.php:1439 include/global_settings.php:1440
-#: include/global_settings.php:1441 include/global_settings.php:1442
-#: include/global_settings.php:1443 include/global_settings.php:1444
-#: include/global_settings.php:1445 include/global_settings.php:1446
 #: include/global_settings.php:1447 include/global_settings.php:1448
 #: include/global_settings.php:1449 include/global_settings.php:1450
 #: include/global_settings.php:1451 include/global_settings.php:1452
 #: include/global_settings.php:1453 include/global_settings.php:1454
-#: include/global_settings.php:1455 include/global_settings.php:2102
-#: include/global_settings.php:2103 include/global_settings.php:2104
-#: include/global_settings.php:2105 include/global_settings.php:2106
-#: include/global_settings.php:2107 include/global_settings.php:2108
-#: include/global_settings.php:2109 include/global_settings.php:2110
-#: include/global_settings.php:2111 include/global_settings.php:2112
+#: include/global_settings.php:1455 include/global_settings.php:1456
+#: include/global_settings.php:1457 include/global_settings.php:1458
+#: include/global_settings.php:1459 include/global_settings.php:1460
+#: include/global_settings.php:1461 include/global_settings.php:1462
+#: include/global_settings.php:1463 include/global_settings.php:1464
+#: include/global_settings.php:1465 include/global_settings.php:2112
 #: include/global_settings.php:2113 include/global_settings.php:2114
 #: include/global_settings.php:2115 include/global_settings.php:2116
 #: include/global_settings.php:2117 include/global_settings.php:2118
 #: include/global_settings.php:2119 include/global_settings.php:2120
-#: include/global_settings.php:2212 include/global_settings.php:2213
-#: include/global_settings.php:2214 include/global_settings.php:2215
-#: include/global_settings.php:2216 include/global_settings.php:2217
-#: include/global_settings.php:2218 include/global_settings.php:2219
-#: include/global_settings.php:2220 include/global_settings.php:2221
+#: include/global_settings.php:2121 include/global_settings.php:2122
+#: include/global_settings.php:2123 include/global_settings.php:2124
+#: include/global_settings.php:2125 include/global_settings.php:2126
+#: include/global_settings.php:2127 include/global_settings.php:2128
+#: include/global_settings.php:2129 include/global_settings.php:2130
 #: include/global_settings.php:2222 include/global_settings.php:2223
 #: include/global_settings.php:2224 include/global_settings.php:2225
 #: include/global_settings.php:2226 include/global_settings.php:2227
 #: include/global_settings.php:2228 include/global_settings.php:2229
-#: include/global_settings.php:2230 include/global_settings.php:2280
-#: include/global_settings.php:2281 include/global_settings.php:2282
-#: include/global_settings.php:2283 include/global_settings.php:2284
-#: include/global_settings.php:2285 include/global_settings.php:2286
-#: include/global_settings.php:2287 include/global_settings.php:2288
-#: include/global_settings.php:2289 include/global_settings.php:2290
+#: include/global_settings.php:2230 include/global_settings.php:2231
+#: include/global_settings.php:2232 include/global_settings.php:2233
+#: include/global_settings.php:2234 include/global_settings.php:2235
+#: include/global_settings.php:2236 include/global_settings.php:2237
+#: include/global_settings.php:2238 include/global_settings.php:2239
+#: include/global_settings.php:2240 include/global_settings.php:2290
 #: include/global_settings.php:2291 include/global_settings.php:2292
 #: include/global_settings.php:2293 include/global_settings.php:2294
 #: include/global_settings.php:2295 include/global_settings.php:2296
 #: include/global_settings.php:2297 include/global_settings.php:2298
+#: include/global_settings.php:2299 include/global_settings.php:2300
+#: include/global_settings.php:2301 include/global_settings.php:2302
+#: include/global_settings.php:2303 include/global_settings.php:2304
+#: include/global_settings.php:2305 include/global_settings.php:2306
+#: include/global_settings.php:2307 include/global_settings.php:2308
 #, php-format
 msgid "%d Processes"
 msgstr "% d İşlemler"
 
-#: include/global_settings.php:1459
+#: include/global_settings.php:1469
 msgid "Maintenance Background Generation Timeout"
 msgstr "Bakım Arka Planı Oluşturma Zaman Aşımı"
 
-#: include/global_settings.php:1460
+#: include/global_settings.php:1470
 msgid "The maximum amount of time a Kadupul's Maintenance script can run without generating a timeout error and being killed."
 msgstr "Bir Kadupul'nin Bakım betiğinin zaman aşımı hatası oluşturmadan ve öldürülmeden çalışabileceği maksimum süre."
 
-#: include/global_settings.php:1473
+#: include/global_settings.php:1483
 msgid "Spikekill Background Generation Timeout"
 msgstr "Spikekill Arkaplan Üretimi Zaman Aşımı"
 
-#: include/global_settings.php:1474
+#: include/global_settings.php:1484
 msgid "The maximum amount of time a Kadupul's Spikekill script can run without generating a timeout error and being killed."
 msgstr "Bir Kadupul'nin Spikekill betiğinin zaman aşımı hatası oluşturmadan ve öldürülmeden çalışabileceği maksimum süre."
 
-#: include/global_settings.php:1490
+#: include/global_settings.php:1500
 msgid "Data Collector Defaults"
 msgstr "Veri Toplayıcıları"
 
-#: include/global_settings.php:1491
+#: include/global_settings.php:1501
 msgid "These settings are maintained at the Data Collector level.  The values here are only defaults used when first creating a Data Collector."
 msgstr "Bu ayarlar, Veri Toplayıcı düzeyinde korunur. Buradaki değerler, yalnızca Veri Toplayıcı ilk oluşturulurken kullanılan varsayılan değerlerdir."
 
-#: include/global_settings.php:1496
+#: include/global_settings.php:1506
 msgid "Data Collector Processes"
 msgstr "Varsayılan Veri Toplayıcı İşlemleri"
 
-#: include/global_settings.php:1497
+#: include/global_settings.php:1507
 msgid "The default number of concurrent processes to execute per Data Collector.  NOTE: Starting from Kadupul 1.2, this setting is maintained in the Data Collector.  Moving forward, this value is only a preset for the Data Collector.  Using a higher number when using cmd.php will improve performance.  Performance improvements in Spine are best resolved with the threads parameter.  When using Spine, we recommend a lower number and leveraging threads instead.  When using cmd.php, use no more than 2x the number of CPU cores."
 msgstr "Veri Toplayıcıya göre yürütülecek varsayılan eşzamanlı işlem sayısı. NOT: Kadupul 1.2&#39;den başlayarak, bu ayar Veri Toplayıcı&#39;da tutulur. İlerlerken, bu değer yalnızca Veri Toplayıcı için bir ön ayardır. Cmd.php kullanırken daha yüksek bir sayı kullanmak performansı artıracaktır. Spine&#39;deki performans iyileştirmeleri, dizi parametresiyle en iyi şekilde çözümlenir. Spine kullanırken, daha düşük bir sayı ve bunun yerine diş kaldıraçları öneririz. Cmd.php kullanırken, en fazla 2 kat CPU çekirdeği kullanın."
 
-#: include/global_settings.php:1504
+#: include/global_settings.php:1514
 msgid "Threads per Process"
 msgstr "İşlem Başına Varsayılan Konular"
 
-#: include/global_settings.php:1505
+#: include/global_settings.php:1515
 msgid "The Default Threads allowed per process.  NOTE: Starting in Kadupul 1.2+, this setting is maintained in the Data Collector, and this is simply the Preset.  Using a higher number when using Spine will improve performance.  However, ensure that you have enough MySQL/MariaDB connections to support the following equation: connections = data collectors * processes * (threads + script servers).  You must also ensure that you have enough spare connections for user login connections as well."
 msgstr "Her işlem için varsayılan konulara izin verilir. NOT: Kadupul 1.2+ ile başlayarak, bu ayar Veri Toplayıcı&#39;da tutulur ve bu sadece Ön Ayar&#39;tır. Spine kullanırken daha yüksek bir sayı kullanmak performansı artıracaktır. Bununla birlikte, aşağıdaki denklemi desteklemek için yeterli MySQL / MariaDB bağlantınız olduğundan emin olun: links = data collectors * process * (thread + script server). Ayrıca kullanıcı girişi bağlantıları için de yeterli yedek bağlantınızın olduğundan emin olmalısınız."
 
-#: include/global_settings.php:1519
+#: include/global_settings.php:1529
 msgid "Authentication Method"
 msgstr "Kimlik Doğrulama Yöntemi"
 
-#: include/global_settings.php:1520
+#: include/global_settings.php:1530
 msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
 msgstr "<blockquote> <i>Yerleşik Kimlik Doğrulama</i> - Kadupul, kullanıcı oluşturmanıza ve onlara Kadupul içindeki farklı alanlarda haklar vermenize olanak sağlayan kullanıcı kimlik doğrulamasını yönetir. <br><br> <i>Web Temel Doğrulama</i> - Doğrulama, web sunucusu tarafından gerçekleştirilir. Şablon Kullanıcısı tanımlanırsa kullanıcılar ilk giriş sırasında otomatik olarak eklenebilir veya oluşturulabilir, aksi takdirde tanımlanmış misafir izinleri kullanılır. <br><br> <i>LDAP Kimlik Doğrulama</i> - Bir LDAP sunucusuna karşı kimlik doğrulamasına izin verir. Şablon Kullanıcısı tanımlanırsa, kullanıcılar ilk giriş sırasında otomatik olarak oluşturulacak, aksi takdirde tanımlanmış misafir izinleri kullanılacaktır. PHP’lerin LDAP modülü etkin değilse, LDAP Kimlik Doğrulama seçilebilir bir seçenek olarak görünmeyecektir. <br><br> <i>Çoklu LDAP / AD Etki Alanı Kimlik Doğrulaması</i> - Yöneticilerin Kadupul kaynaklarına erişmek için farklı LDAP / AD dizinlerinden birden fazla ayrı grubu desteklemesini sağlar. LDAP Kimlik Doğrulaması gibi, PHP LDAP modülü de bu yöntemi kullanmak için gereklidir. </blockquote>"
 
-#: include/global_settings.php:1526
+#: include/global_settings.php:1536
 msgid "Support Authentication Cookies"
 msgstr "Kimlik Doğrulama Çerezlerini Destekleyin"
 
-#: include/global_settings.php:1527
+#: include/global_settings.php:1537
 msgid "If a user authenticates and selects 'Keep me signed in', an authentication cookie will be created on the user's computer allowing that user to stay logged in.  The authentication cookie expires after 90 days of non-use."
 msgstr "Bir kullanıcı &quot;Beni oturumumu açık tut&quot; seçeneğini onaylarsa ve seçerse, kullanıcının bilgisayarında oturumun kalmasına izin veren bir kimlik doğrulama çerezi oluşturulur. Kimlik doğrulama çerezi, kullanımdan 90 gün sonra sona erer."
 
-#: include/global_settings.php:1532
+#: include/global_settings.php:1542
 msgid "Special Users"
 msgstr "Özel Kullanıcılar"
 
-#: include/global_settings.php:1537
+#: include/global_settings.php:1547
 msgid "Primary Admin"
 msgstr "Birincil Yönetici"
 
-#: include/global_settings.php:1538
+#: include/global_settings.php:1548
 msgid "The name of the primary administrative account that will automatically receive Emails when the Kadupul system experiences issues.  To receive these Emails, ensure that your mail settings are correct, and the administrative account has an Email address that is set."
 msgstr "Kadupul sisteminde sorun yaşandığında otomatik olarak E-posta alacak olan birincil yönetim hesabının adı. Bu E-postaları almak için posta ayarlarınızın doğru olduğundan ve yönetim hesabının ayarlanmış bir E-posta adresine sahip olduğundan emin olun."
 
-#: include/global_settings.php:1540 include/global_settings.php:1548
-#: include/global_settings.php:1556 user_domains.php:329
+#: include/global_settings.php:1550 include/global_settings.php:1558
+#: include/global_settings.php:1566 user_domains.php:329
 msgid "No User"
 msgstr "Üye yok"
 
-#: include/global_settings.php:1545
+#: include/global_settings.php:1555
 msgid "Guest User"
 msgstr "Misafir kullanıcı"
 
-#: include/global_settings.php:1546
+#: include/global_settings.php:1556
 msgid "The name of the guest user for viewing graphs; is 'No User' by default."
 msgstr "Grafikleri görüntülemek için konuk kullanıcının adı; varsayılan olarak &#39;Kullanıcı Yok&#39; şeklindedir."
 
-#: include/global_settings.php:1553 user_domains.php:325
+#: include/global_settings.php:1563 user_domains.php:325
 msgid "User Template"
 msgstr "Kullanıcı kalıbı"
 
-#: include/global_settings.php:1554
+#: include/global_settings.php:1564
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "Kadupul&#39;nin yeni Web Basic ve LDAP kullanıcıları için şablon olarak kullanacağı kullanıcının adı; varsayılan olarak &#39;konuk&#39; şeklindedir. Bu kullanıcı hesabı seçildikten sonra giriş yapamaz."
 
-#: include/global_settings.php:1561
+#: include/global_settings.php:1571
 msgid "Basic Authentication Settings"
 msgstr "Web Temel Kimlik Doğrulama"
 
-#: include/global_settings.php:1566
+#: include/global_settings.php:1576
 msgid "Basic Auth Login Failure Message"
 msgstr "Temel Kimlik Doğrulama Harita Dosyası"
 
-#: include/global_settings.php:1567
+#: include/global_settings.php:1577
 msgid "When using basic authentication, if there are issues mapping the username to a valid Kadupul account, the message included here will be displayed to users.  It can include both text and HTML."
 msgstr "Temel kimlik doğrulamayı kullanırken, kullanıcı adını geçerli bir Kadupul hesabıyla eşleştirme sorunları varsa, burada yer alan mesaj kullanıcılara gösterilecektir. Hem metin hem de HTML içerebilir."
 
-#: include/global_settings.php:1574
+#: include/global_settings.php:1584
 msgid "Basic Auth Mapfile"
 msgstr "Temel Kimlik Doğrulama Harita Dosyası"
 
-#: include/global_settings.php:1575
+#: include/global_settings.php:1585
 msgid "When using basic authentication, if the basic account needs to be translated to a different login account, you can specify a CSV file here to map the basic account to the desired login account."
 msgstr "Temel kimlik doğrulamayı kullanırken, temel hesabın farklı bir giriş hesabına çevrilmesi gerekiyorsa, temel hesabı istediğiniz giriş hesabıyla eşleştirmek için burada bir CSV dosyası belirtebilirsiniz."
 
-#: include/global_settings.php:1583
+#: include/global_settings.php:1593
 msgid "Local Account Complexity Requirements"
 msgstr "Yerel Hesap Karmaşıklığı Gereksinimleri"
 
-#: include/global_settings.php:1588
+#: include/global_settings.php:1598
 msgid "Minimum Length"
 msgstr "En Az Uzunluk"
 
-#: include/global_settings.php:1589
+#: include/global_settings.php:1599
 msgid "This is minimal length of allowed passwords."
 msgstr "Bu, izin verilen şifrelerin minimum uzunluğu."
 
-#: include/global_settings.php:1596
+#: include/global_settings.php:1606
 msgid "Require Mix Case"
 msgstr "Mix Case gerektir"
 
-#: include/global_settings.php:1597
+#: include/global_settings.php:1607
 msgid "This will require new passwords to contains both lower and upper-case characters."
 msgstr "Bunun için hem küçük hem de büyük harf içeren yeni şifreler gerekir."
 
-#: include/global_settings.php:1602
+#: include/global_settings.php:1612
 msgid "Require Number"
 msgstr "Numara gerektir"
 
-#: include/global_settings.php:1603
+#: include/global_settings.php:1613
 msgid "This will require new passwords to contain at least 1 numerical character."
 msgstr "Bu, en az 1 sayısal karakter içermesi için yeni şifreler gerektirir."
 
-#: include/global_settings.php:1608
+#: include/global_settings.php:1618
 msgid "Require Special Character"
 msgstr "Özel Karakter İste"
 
-#: include/global_settings.php:1609
+#: include/global_settings.php:1619
 msgid "This will require new passwords to contain at least 1 special character."
 msgstr "Bu, en az 1 özel karakter içermesi için yeni şifreler gerektirecektir."
 
-#: include/global_settings.php:1614
+#: include/global_settings.php:1624
 msgid "Force Complexity Upon Old Passwords"
 msgstr "Eski Şifreler Üzerindeki Karmaşıklığı Zorla"
 
-#: include/global_settings.php:1615
+#: include/global_settings.php:1625
 msgid "This will require all old passwords to also meet the new complexity requirements upon login.  If not met, it will force a password change."
 msgstr "Bu, tüm eski şifrelerin oturum açtıktan sonra yeni karmaşıklık gereksinimlerini karşılamasını gerektirir. Eğer karşılanmazsa, şifre değişikliğini zorlar."
 
-#: include/global_settings.php:1620
+#: include/global_settings.php:1630
 msgid "Expire Inactive Accounts"
 msgstr "Etkin Olmayan Hesapların Sona Ermesi"
 
-#: include/global_settings.php:1621
+#: include/global_settings.php:1631
 msgid "This is maximum number of days before inactive accounts are disabled.  The Admin account is excluded from this policy."
 msgstr "Bu, etkin olmayan hesapların devre dışı bırakılmasından önceki maksimum gün sayısıdır. Yönetici hesabı bu politikadan hariç tutuldu."
 
-#: include/global_settings.php:1634
+#: include/global_settings.php:1644
 msgid "Expire Password"
 msgstr "Şifre Sona Erme"
 
-#: include/global_settings.php:1635
+#: include/global_settings.php:1645
 msgid "This is maximum number of days before a password is set to expire."
 msgstr "Bu, bir şifrenin kullanım süresinin dolmasından önce maksimum gün sayısıdır."
 
-#: include/global_settings.php:1647
+#: include/global_settings.php:1657
 msgid "Password History"
 msgstr "Şifre Geçmişi"
 
-#: include/global_settings.php:1648
+#: include/global_settings.php:1658
 #, fuzzy
 msgid "Remember this number of old passwords and disallow reusing them."
 msgstr "Bu eski şifreleri hatırlayın ve tekrar kullanmanıza izin vermeyin."
 
-#: include/global_settings.php:1653
+#: include/global_settings.php:1663
 msgid "1 Change"
 msgstr "1 Değişim"
 
-#: include/global_settings.php:1654 include/global_settings.php:1655
-#: include/global_settings.php:1656 include/global_settings.php:1657
-#: include/global_settings.php:1658 include/global_settings.php:1659
-#: include/global_settings.php:1660 include/global_settings.php:1661
-#: include/global_settings.php:1662 include/global_settings.php:1663
-#: include/global_settings.php:1664
+#: include/global_settings.php:1664 include/global_settings.php:1665
+#: include/global_settings.php:1666 include/global_settings.php:1667
+#: include/global_settings.php:1668 include/global_settings.php:1669
+#: include/global_settings.php:1670 include/global_settings.php:1671
+#: include/global_settings.php:1672 include/global_settings.php:1673
+#: include/global_settings.php:1674
 #, php-format
 msgid "%d Changes"
 msgstr "% d Değişiklikler"
 
-#: include/global_settings.php:1667
+#: include/global_settings.php:1677
 msgid "Account Locking"
 msgstr "Hesap Kilitleme"
 
-#: include/global_settings.php:1672
+#: include/global_settings.php:1682
 msgid "Lock Accounts"
 msgstr "Hesapları Kilitle"
 
-#: include/global_settings.php:1673
+#: include/global_settings.php:1683
 msgid "Lock an account after this many failed attempts in 1 hour."
 msgstr "Bir bu kadar başarısız denemeden sonra bir saat içinde bir hesabı kilitleyin."
 
-#: include/global_settings.php:1678
+#: include/global_settings.php:1688
 msgid "1 Attempt"
 msgstr "1 Girişimi"
 
-#: include/global_settings.php:1679 include/global_settings.php:1680
-#: include/global_settings.php:1681 include/global_settings.php:1682
-#: include/global_settings.php:1683
+#: include/global_settings.php:1689 include/global_settings.php:1690
+#: include/global_settings.php:1691 include/global_settings.php:1692
+#: include/global_settings.php:1693
 #, php-format
 msgid "%d Attempts"
 msgstr "% d Denemeler"
 
-#: include/global_settings.php:1686
+#: include/global_settings.php:1696
 msgid "Auto Unlock"
 msgstr "Otomatik kilidini"
 
-#: include/global_settings.php:1687
+#: include/global_settings.php:1697
 msgid "An account will automatically be unlocked after this many minutes.  Even if the correct password is entered, the account will not unlock until this time limit has been met.  Max of 1440 minutes (1 Day)"
 msgstr "Bir kaç dakika sonra bir hesap otomatik olarak açılır. Doğru şifre girilse bile, bu süre geçinceye kadar hesap kilidini açmaz. Maksimum 1440 dakika (1 Gün)"
 
-#: include/global_settings.php:1703 include/global_settings.php:2923
+#: include/global_settings.php:1713 include/global_settings.php:2882
 msgid "1 Day"
 msgstr "1 Gün"
 
-#: include/global_settings.php:1706
+#: include/global_settings.php:1716
 msgid "LDAP General Settings"
 msgstr "LDAP Genel Ayarları"
 
-#: include/global_settings.php:1710 user_domains.php:352
+#: include/global_settings.php:1720 user_domains.php:352
 msgid "Server(s)"
 msgstr "Sunucular"
 
-#: include/global_settings.php:1711 user_domains.php:353
+#: include/global_settings.php:1721 user_domains.php:353
 msgid "A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
 msgstr "Geçerli LDAP sunucuları için DNS ana bilgisayar adlarının veya IP adreslerinin boşlukla ayrılmış listesi. Kadupul, bir kullanıcının kimliğini doğrulamak için LDAP sunucularını soldan sağa doğru kullanmayı dener."
 
-#: include/global_settings.php:1717 user_domains.php:361
+#: include/global_settings.php:1727 user_domains.php:361
 msgid "Port Standard"
 msgstr "Liman Standardı"
 
-#: include/global_settings.php:1718
+#: include/global_settings.php:1728
 msgid "TCP port for Non-SSL communications including LDAP + TLS.  Default is 389."
 msgstr "SSL olmayan iletişim için TCP / UDP bağlantı noktası."
 
-#: include/global_settings.php:1725 user_domains.php:370
+#: include/global_settings.php:1735 user_domains.php:370
 msgid "Port SSL"
 msgstr "Port SSL"
 
-#: include/global_settings.php:1726
+#: include/global_settings.php:1736
 msgid "TCP port for LDAPS for SSL communications.  Default is 636."
 msgstr "SSL olmayan iletişim için TCP / UDP bağlantı noktası."
 
-#: include/global_settings.php:1733 user_domains.php:379
+#: include/global_settings.php:1743 user_domains.php:379
 msgid "Protocol Version"
 msgstr "Protokol Sürümü"
 
-#: include/global_settings.php:1734
+#: include/global_settings.php:1744
 msgid "Protocol Version to connect to the server with."
 msgstr "Sunucunun desteklediği Protokol Sürümü."
 
-#: include/global_settings.php:1740
+#: include/global_settings.php:1750
 msgid "Connect Timeout"
 msgstr "Bağlantı zamanaşımı"
 
-#: include/global_settings.php:1741
+#: include/global_settings.php:1751
 msgid "The Network Connect Timeout in seconds."
 msgstr "Lütfen SMTP zaman aşımını saniye cinsinden girin."
 
-#: include/global_settings.php:1748
+#: include/global_settings.php:1758
 msgid "Bind Timeout"
 msgstr "Zaman Aşımı"
 
-#: include/global_settings.php:1749
+#: include/global_settings.php:1759
 msgid "The Bind Timeout in seconds."
 msgstr "Lütfen SMTP zaman aşımını saniye cinsinden girin."
 
-#: include/global_settings.php:1756
+#: include/global_settings.php:1766
 msgid "LDAP Debug Mode"
 msgstr "LDAP Hata Ayıklama Modu"
 
-#: include/global_settings.php:1757
+#: include/global_settings.php:1767
 #, fuzzy
 msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log during Binding and Searching activities."
 msgstr "Kontrol Edilirse Kadupul, Bağlama ve Arama faaliyetleri sırasında Kadupul günlüğüne fazladan LDAP bilgisi kaydeder."
 
-#: include/global_settings.php:1762 user_domains.php:386
+#: include/global_settings.php:1772 user_domains.php:386
 msgid "Encryption"
 msgstr "Şifreleme"
 
-#: include/global_settings.php:1763
+#: include/global_settings.php:1773
 msgid "Encryption that the server supports. NOTE: When using LDAP + TLS you must use version 3."
 msgstr "Sunucunun desteklediği şifreleme. TLS sadece Protokol Versiyon 3 tarafından desteklenmektedir."
 
-#: include/global_settings.php:1769
+#: include/global_settings.php:1779
 msgid "TLS Certificate Requirements"
 msgstr "TLS Sertifika Gereksinimleri"
 
-#: include/global_settings.php:1770
+#: include/global_settings.php:1780
 msgid "Should LDAP verify TLS Certificates when received by the Client.  Demand and Hard refuse a server whose certificate does not verify.  Never and Allow skip that check, so anyone on the network path can pose as the directory and read the passwords sent to it."
 msgstr ""
 
-#: include/global_settings.php:1776 user_domains.php:393
+#: include/global_settings.php:1786 user_domains.php:393
 msgid "Referrals"
 msgstr "Referanslar"
 
-#: include/global_settings.php:1777 user_domains.php:394
+#: include/global_settings.php:1787 user_domains.php:394
 msgid "Enable or Disable LDAP referrals.  If disabled, it may increase the speed of searches."
 msgstr "LDAP yönlendirmelerini etkinleştirme veya devre dışı bırakma. Devre dışı bırakılırsa, aramaların hızını artırabilir."
 
-#: include/global_settings.php:1786 user_domains.php:400
+#: include/global_settings.php:1796 user_domains.php:400
 msgid "Mode"
 msgstr "Mod"
 
-#: include/global_settings.php:1787
+#: include/global_settings.php:1797
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
 msgstr "Kaktüslerin LDAP sunucusuna karşı kimlik doğrulaması yapmaya çalıştığı mod. <blockquote> <i>Arama</i> Yok - Ayırt Edici Ad Yok (DN) araması gerçekleşir, verilen Ayırt Edici Ad (DN) biçimiyle bağlanmaya çalışın. <br><br> <i>Anonim Arama</i> - Kullanıcının Ayırt Edici Adını (DN) bulmak için adsız bağlama yoluyla LDAP dizininde kullanıcı adı aramaya çalışır. <br><br> <i>Özel Arama</i> - Kullanıcının Ayırt Edici Adını (DN) bulmak için bağlama için Belirli Ayırt Edici Ad (DN) ve Belirli Şifre ile LDAP dizininde kullanıcı adı aramaya çalışır."
 
-#: include/global_settings.php:1793 user_domains.php:407
+#: include/global_settings.php:1803 user_domains.php:407
 msgid "Distinguished Name (DN)"
 msgstr "Ayırt Edici Ad (DN)"
 
-#: include/global_settings.php:1794 user_domains.php:408
+#: include/global_settings.php:1804 user_domains.php:408
 msgid "The \"Distinguished Name\" syntax, applicable for both OpenLDAP and Windows AD configurations, offers flexibility in defining user identity. For OpenLDAP, the format follows this structure: <i>\"uid=&lt;username&gt;,ou=people,dc=domain,dc=local\"</i>. Windows AD provides an alternative syntax: <i>\"&lt;username&gt;@win2kdomain.local\"</i>, commonly known as \"userPrincipalName (UPN)\". In this context, \"&lt;username&gt;\" represents the specific username provided during the login prompt. This is particularly pertinent when operating in \"No Searching\" mode, or \"Require Group Membership\" enabled."
 msgstr ""
 
-#: include/global_settings.php:1800 user_domains.php:415
+#: include/global_settings.php:1810 user_domains.php:415
 msgid "Require Group Membership"
 msgstr "Grup Üyeliği İste"
 
-#: include/global_settings.php:1801 user_domains.php:416
+#: include/global_settings.php:1811 user_domains.php:416
 msgid "Require user to be member of group to authenticate. Group settings must be set for this to work, enabling without proper group settings will cause authentication failure."
 msgstr "Kullanıcının, kimliğini doğrulamak için gruba üye olmasını isteyin. Bunun çalışması için grup ayarlarının yapılması gerekir, uygun grup ayarlarının yapılmaması yetkilendirme başarısızlığına neden olur."
 
-#: include/global_settings.php:1806 user_domains.php:421
+#: include/global_settings.php:1816 user_domains.php:421
 msgid "LDAP Group Settings"
 msgstr "LDAP Grubu Ayarları"
 
-#: include/global_settings.php:1810 user_domains.php:425
+#: include/global_settings.php:1820 user_domains.php:425
 msgid "Group Distinguished Name (DN)"
 msgstr "Grup Ayırt Edici Adı (DN)"
 
-#: include/global_settings.php:1811 user_domains.php:426
+#: include/global_settings.php:1821 user_domains.php:426
 msgid "Distinguished Name of the group that user must have membership."
 msgstr "Üyenin sahip olması gereken grubun ayırt edici adı."
 
-#: include/global_settings.php:1817 user_domains.php:432
+#: include/global_settings.php:1827 user_domains.php:432
 msgid "Group Member Attribute"
 msgstr "Grup Üyesi Özelliği"
 
-#: include/global_settings.php:1818 user_domains.php:433
+#: include/global_settings.php:1828 user_domains.php:433
 msgid "This refers to the specific attribute within the LDAP directory that holds the usernames of group members. It is crucial to ensure that the attribute value aligns with the configuration specified in the \"Distinguished Name\" or that the actual attribute value is searchable using the settings outlined in the \"Distinguished Name\"."
 msgstr "Bu, LDAP dizininde grup üyelerinin kullanıcı adlarını tutan belirli bir özniteliği ifade eder. Öznitelik değerinin \"Distinguished Name\" de belirtilen konfigürasyonla uyumlu olduğundan veya gerçek öznitelik değerinin \"Distinguished Name\" de belirtilen ayarlar kullanılarak aranabilir olduğundan emin olmak çok önemlidir."
 
-#: include/global_settings.php:1824 user_domains.php:439
+#: include/global_settings.php:1834 user_domains.php:439
 msgid "Group Member Type"
 msgstr "Grup Üyesi Türü"
 
-#: include/global_settings.php:1825 user_domains.php:440
+#: include/global_settings.php:1835 user_domains.php:440
 msgid "Defines if users use full Distinguished Name or just Username in the defined Group Member Attribute."
 msgstr "Kullanıcıların tanımlanmış Grup Üyesi Özniteliğinde tam Ayırt Edici Ad veya yalnızca Kullanıcı Adı kullanıp kullanmadıklarını tanımlar."
 
-#: include/global_settings.php:1829
+#: include/global_settings.php:1839
 msgid "Distinguished Name"
 msgstr "Ayırt Edici İsim"
 
-#: include/global_settings.php:1834 user_domains.php:446
+#: include/global_settings.php:1844 user_domains.php:446
 msgid "LDAP Specific Search Settings"
 msgstr "LDAP Özel Arama Ayarları"
 
-#: include/global_settings.php:1838 user_domains.php:450
+#: include/global_settings.php:1848 user_domains.php:450
 msgid "Search Base"
 msgstr "Arama Tabanı"
 
-#: include/global_settings.php:1839
+#: include/global_settings.php:1849
 msgid "Search base for searching the LDAP directory, such as <i>'dc=win2kdomain,dc=local'</i> or <i>'ou=people,dc=domain,dc=local'</i>."
 msgstr "<i>&#39;Dc = win2kdomain, dc = local&#39;</i> veya <i>&#39;ou = people, dc = domain, dc = local&#39;</i> gibi LDAP dizinini aramak için arama tabanı."
 
-#: include/global_settings.php:1844 user_domains.php:457
+#: include/global_settings.php:1854 user_domains.php:457
 msgid "Search Filter"
 msgstr "Arama Filtresi"
 
-#: include/global_settings.php:1845
+#: include/global_settings.php:1855
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> or for OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  '&lt;username&gt' is replaced with the username that was supplied at the login prompt. "
 msgstr "Kullanıcının pencereleri LDAP dizininde bulmak için kullanacağı arama filtresi, örneğin: <i>&#39;(&amp; (objectclass = user) (objectcategory = user) (userPrincipalName = &lt;username&gt; *))&#39;</i> veya OpenLDAP: <i>&#39;(&amp; (objectClass) = hesap) (uid = &lt;kullanıcı adı&gt;)) &#39;</i> . &#39;&lt;username&gt;&#39; giriş isteminde verilen kullanıcı adı ile değiştirildi."
 
-#: include/global_settings.php:1850 user_domains.php:464
+#: include/global_settings.php:1860 user_domains.php:464
 msgid "Search Distinguished Name (DN)"
 msgstr "Ayırt Edici Adı Ara (DN)"
 
-#: include/global_settings.php:1851 user_domains.php:465
+#: include/global_settings.php:1861 user_domains.php:465
 msgid "Distinguished Name for Specific Searching binding to the LDAP directory."
 msgstr "LDAP dizinine bağlanan Özel Arama için Ayırt Edici Ad."
 
-#: include/global_settings.php:1856 user_domains.php:471
+#: include/global_settings.php:1866 user_domains.php:471
 msgid "Search Password"
 msgstr "Şifre Ara"
 
-#: include/global_settings.php:1857 user_domains.php:472
+#: include/global_settings.php:1867 user_domains.php:472
 msgid "Password for Specific Searching binding to the LDAP directory."
 msgstr "LDAP dizinine Özel Arama için şifre."
 
-#: include/global_settings.php:1862 user_domains.php:478
+#: include/global_settings.php:1872 user_domains.php:478
 msgid "LDAP CN Settings"
 msgstr "LDAP CN Ayarları"
 
-#: include/global_settings.php:1867 user_domains.php:483
+#: include/global_settings.php:1877 user_domains.php:483
 msgid "Field that will replace the Full Name when creating a new user, taken from LDAP. (on windows: displayname) "
 msgstr "LDAP&#39;den alınan, yeni bir kullanıcı oluştururken Tam Adı değiştirecek alan. (pencerelerde: görünen ad)"
 
-#: include/global_settings.php:1872 package_import.php:498
+#: include/global_settings.php:1882 package_import.php:498
 msgid "Email"
 msgstr "E-posta"
 
-#: include/global_settings.php:1873
+#: include/global_settings.php:1883
 msgid "Field that will replace the Email taken from LDAP. (on windows: mail)"
 msgstr "LDAP&#39;den alınan E-postanın yerini alacak alan. (pencerelerde: posta)"
 
-#: include/global_settings.php:1880
+#: include/global_settings.php:1890
 msgid "URL Linking"
 msgstr "URL Bağlantısı"
 
-#: include/global_settings.php:1885
+#: include/global_settings.php:1895
 msgid "Server Base URL"
 msgstr "Sunucu Tabanı URL&#39;si"
 
-#: include/global_settings.php:1886
+#: include/global_settings.php:1896
 msgid "This is a the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
 msgstr "Bu, Kadupul sitesine bağlantılar için kullanılacak bir sunucu konumudur."
 
-#: include/global_settings.php:1893
+#: include/global_settings.php:1903
 msgid "Emailing Options"
 msgstr "E-posta Seçenekleri"
 
-#: include/global_settings.php:1897
+#: include/global_settings.php:1907
 msgid "Notify Primary Admin of Issues"
 msgstr "Birincil Sorunları Yönetici Olarak Bildir"
 
-#: include/global_settings.php:1898
+#: include/global_settings.php:1908
 msgid "In cases where the Kadupul server is experiencing problems, should the Primary Administrator be notified by Email?  The Primary Administrator's Kadupul user account is specified under the Authentication tab on Kadupul's settings page. It defaults to the 'admin' account."
 msgstr "Kadupul sunucusunun sorun yaşadığı durumlarda, Birincil Yöneticiye E-posta ile bildirilmeli mi? Birincil Yöneticinin Kadupul kullanıcı hesabı, Kadupul&#39;nin ayarlar sayfasındaki Kimlik Doğrulama sekmesi altında belirtilmiştir. Varsayılan olarak &#39;admin&#39; hesabına."
 
-#: include/global_settings.php:1903
+#: include/global_settings.php:1913
 msgid "Test Email"
 msgstr "Test E-postası"
 
-#: include/global_settings.php:1904
+#: include/global_settings.php:1914
 msgid "This is a Email account used for sending a test message to ensure everything is working properly."
 msgstr "Bu, her şeyin düzgün çalıştığından emin olmak için bir test mesajı göndermek için kullanılan bir E-posta hesabıdır."
 
-#: include/global_settings.php:1909
+#: include/global_settings.php:1919
 msgid "Mail Services"
 msgstr "Mail Servisleri"
 
-#: include/global_settings.php:1910
+#: include/global_settings.php:1920
 msgid "Which mail service to use in order to send mail"
 msgstr "Posta göndermek için hangi posta servisini kullanmak"
 
-#: include/global_settings.php:1916
+#: include/global_settings.php:1926
 msgid "Ping Mail Server"
 msgstr "Ping Posta Sunucusu"
 
-#: include/global_settings.php:1917
+#: include/global_settings.php:1927
 msgid "Ping the Mail Server before sending test Email?"
 msgstr "Test E-postasını göndermeden önce Posta Sunucusuna ping atmak ister misiniz?"
 
-#: include/global_settings.php:1926 lib/html_reports.php:168
+#: include/global_settings.php:1936 lib/html_reports.php:168
 msgid "From Email Address"
 msgstr "E-posta Adresinden"
 
-#: include/global_settings.php:1927
+#: include/global_settings.php:1937
 msgid "This is the Email address that the Email will appear from."
 msgstr "Bu, E-postanın görüneceği E-posta adresidir."
 
-#: include/global_settings.php:1932 lib/html_reports.php:160
+#: include/global_settings.php:1942 lib/html_reports.php:160
 msgid "From Name"
 msgstr "İsimden"
 
-#: include/global_settings.php:1933
+#: include/global_settings.php:1943
 msgid "This is the actual name that the Email will appear from."
 msgstr "Bu, E-postanın görüneceği asıl addır."
 
-#: include/global_settings.php:1938
+#: include/global_settings.php:1948
 msgid "Word Wrap"
 msgstr "Sozcuk kaydir"
 
-#: include/global_settings.php:1939
+#: include/global_settings.php:1949
 msgid "This is how many characters will be allowed before a line in the Email is automatically word wrapped. (0 = Disabled)"
 msgstr "E-postadaki bir satır otomatik olarak sözcük sarılmadan önce kaç karaktere izin verileceğidir. (0 = Devre dışı)"
 
-#: include/global_settings.php:1946
+#: include/global_settings.php:1956
 msgid "Sendmail Options"
 msgstr "Sendmail Seçenekleri"
 
-#: include/global_settings.php:1951 lib/functions.php:6154
+#: include/global_settings.php:1961 lib/functions.php:6154
 msgid "Sendmail Path"
 msgstr "Sendmail Yolu"
 
-#: include/global_settings.php:1952
+#: include/global_settings.php:1962
 msgid "This is the path to sendmail on your server. (Only used if Sendmail is selected as the Mail Service)"
 msgstr "Bu, sunucunuzda sendmail&#39;in yoludur. (Yalnızca Posta Hizmeti olarak Sendmail seçilmişse kullanılır)"
 
-#: include/global_settings.php:1960
+#: include/global_settings.php:1970
 msgid "SMTP Options"
 msgstr "SMTP Ayarları"
 
-#: include/global_settings.php:1965
+#: include/global_settings.php:1975
 msgid "SMTP Hostname"
 msgstr "SMTP Hostname"
 
-#: include/global_settings.php:1966
+#: include/global_settings.php:1976
 msgid "This is the hostname/IP of the SMTP Server you will send the Email to. For failover, separate your hosts using a semi-colon."
 msgstr "Bu, E-postayı göndereceğiniz SMTP Sunucusunun ana bilgisayar adı / IP adresidir. Yük devretme için, ana bilgisayarlarınızı noktalı virgül kullanarak ayırın."
 
-#: include/global_settings.php:1972
+#: include/global_settings.php:1982
 msgid "SMTP Port"
 msgstr "SMTP Port"
 
-#: include/global_settings.php:1973
+#: include/global_settings.php:1983
 msgid "The port on the SMTP Server to use."
 msgstr "Kullanılacak SMTP Sunucusundaki bağlantı noktası."
 
-#: include/global_settings.php:1980
+#: include/global_settings.php:1990
 msgid "SMTP Username"
 msgstr "SMTP Kullanıcı Adı"
 
-#: include/global_settings.php:1981
+#: include/global_settings.php:1991
 msgid "The username to authenticate with when sending via SMTP. (Leave blank if you do not require authentication.)"
 msgstr "SMTP ile gönderirken kimlik doğrulaması yapacak kullanıcı adı. (Kimlik doğrulaması istemiyorsanız boş bırakın.)"
 
-#: include/global_settings.php:1986
+#: include/global_settings.php:1996
 msgid "SMTP Password"
 msgstr "SMTP Şifre"
 
-#: include/global_settings.php:1987
+#: include/global_settings.php:1997
 msgid "The password to authenticate with when sending via SMTP. (Leave blank if you do not require authentication.)"
 msgstr "SMTP ile gönderirken kimlik doğrulaması yapılacak şifre. (Kimlik doğrulaması istemiyorsanız boş bırakın.)"
 
-#: include/global_settings.php:1992
+#: include/global_settings.php:2002
 msgid "SMTP Security"
 msgstr "SMTP Güvenlik"
 
-#: include/global_settings.php:1993
+#: include/global_settings.php:2003
 msgid "The encryption method to use for the Email."
 msgstr "E-posta için kullanılacak şifreleme yöntemi."
 
-#: include/global_settings.php:1997
+#: include/global_settings.php:2007
 msgid "SSL"
 msgstr "SSL"
 
-#: include/global_settings.php:1998
+#: include/global_settings.php:2008
 msgid "TLS"
 msgstr "TLS"
 
-#: include/global_settings.php:2003
+#: include/global_settings.php:2013
 msgid "SMTP Timeout"
 msgstr "SMTP Zaman Aşımı"
 
-#: include/global_settings.php:2004
+#: include/global_settings.php:2014
 msgid "Please enter the SMTP timeout in seconds."
 msgstr "Lütfen SMTP zaman aşımını saniye cinsinden girin."
 
-#: include/global_settings.php:2011
+#: include/global_settings.php:2021
 msgid "Reporting Presets"
 msgstr "Rapor Hazır Ayarları"
 
-#: include/global_settings.php:2016
+#: include/global_settings.php:2026
 msgid "Default Graph Image Format"
 msgstr "Varsayılan Grafik Resim Biçimi"
 
-#: include/global_settings.php:2017
+#: include/global_settings.php:2027
 msgid "When creating a new report, what image type should be used for the inline graphs."
 msgstr "Yeni bir rapor oluştururken, satır içi grafikler için hangi resim türünün kullanılması gerektiği"
 
-#: include/global_settings.php:2023
+#: include/global_settings.php:2033
 msgid "Maximum E-Mail Size"
 msgstr "Maksimum E-Posta Boyutu"
 
-#: include/global_settings.php:2024
+#: include/global_settings.php:2034
 msgid "The maximum size of the E-Mail message including all attachments."
 msgstr "Tüm ekleri içeren e-posta mesajının maksimum boyutu."
 
-#: include/global_settings.php:2030
+#: include/global_settings.php:2040
 #, fuzzy
 msgid "Poller Logging Level for Kadupul Reporting"
 msgstr "Kadupul Raporlaması için Poller Günlük Seviyesi"
 
-#: include/global_settings.php:2031
+#: include/global_settings.php:2041
 msgid "What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
 msgstr "Günlük dosyasına hangi düzeyde ayrıntı gönderilmesini istiyorsunuz? UYARI: NONE veya LOW dışındaki herhangi bir durumda bırakmak, disk alanınızı hızla tüketebilir."
 
-#: include/global_settings.php:2037
+#: include/global_settings.php:2047
 msgid "Enable Lotus Notes (R) tweak"
 msgstr "Lotus Notes (R) ayarını etkinleştirme"
 
-#: include/global_settings.php:2038
+#: include/global_settings.php:2048
 msgid "Enable code tweak for specific handling of Lotus Notes Mail Clients."
 msgstr "Lotus Notes Posta İstemcileri&#39;nin özel kullanımı için kod ayarını etkinleştirin."
 
-#: include/global_settings.php:2043
+#: include/global_settings.php:2053
 msgid "DNS Options"
 msgstr "DNS Seçenekleri"
 
-#: include/global_settings.php:2048
+#: include/global_settings.php:2058
 msgid "Primary DNS IP Address"
 msgstr "Birincil DNS IP Adresi"
 
-#: include/global_settings.php:2049
+#: include/global_settings.php:2059
 msgid "Enter the primary DNS IP Address to utilize for reverse lookups."
 msgstr "Geriye doğru aramalarda kullanılacak birincil DNS IP Adresini girin."
 
-#: include/global_settings.php:2055
+#: include/global_settings.php:2065
 msgid "Secondary DNS IP Address"
 msgstr "İkincil DNS IP Adresi"
 
-#: include/global_settings.php:2056
+#: include/global_settings.php:2066
 msgid "Enter the secondary DNS IP Address to utilize for reverse lookups."
 msgstr "Geriye doğru aramalarda kullanılacak ikincil DNS IP Adresini girin."
 
-#: include/global_settings.php:2062
+#: include/global_settings.php:2072
 msgid "DNS Timeout"
 msgstr "DNS Zaman Aşımı"
 
-#: include/global_settings.php:2063
+#: include/global_settings.php:2073
 msgid "Please enter the DNS timeout in milliseconds.  Kadupul uses a PHP based DNS resolver."
 msgstr "Lütfen DNS zaman aşımını milisaniye cinsinden girin. Kadupul, PHP tabanlı bir DNS çözücü kullanıyor."
 
-#: include/global_settings.php:2072
+#: include/global_settings.php:2082
 msgid "On-demand RRD Update Settings"
 msgstr "İsteğe bağlı RRD Güncelleme Ayarları"
 
-#: include/global_settings.php:2077
+#: include/global_settings.php:2087
 msgid "Enable On-demand RRD Updating"
 msgstr "İsteğe Bağlı RRD Güncellemesini Etkinleştir"
 
-#: include/global_settings.php:2078
+#: include/global_settings.php:2088
 msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take affect until after the next polling cycle.  When you have Remote Data Collectors, this settings is required to be on."
 msgstr "Boost, talep üzerine RRD güncellemesinin Kadupul&#39;de yapılmasına izin vermeli mi? Devre dışı bırakırsanız, bu değişiklik bir sonraki yoklama döngüsüne kadar geçerli olmaz. Uzak Veri Toplayıcılarınız olduğunda, bu ayarların açık olması gerekir."
 
-#: include/global_settings.php:2083
+#: include/global_settings.php:2093
 msgid "System Level RRD Updater"
 msgstr "Sistem Seviyesi RRD Güncelleyici"
 
-#: include/global_settings.php:2084
+#: include/global_settings.php:2094
 msgid "Before RRD On-demand Update Can be Cleared, a poller run must always pass"
 msgstr "RRD Talep Üzerine Güncelleme Silinebilmeden Önce, bir yoklama çalıştırması daima geçmelidir"
 
-#: include/global_settings.php:2089
+#: include/global_settings.php:2099
 msgid "How Often Should Boost Update All RRDs"
 msgstr "Tüm RRD Güncellemelerini Ne Kadar Hızlandırmalıdır?"
 
-#: include/global_settings.php:2090
+#: include/global_settings.php:2100
 msgid "When you enable boost, your RRD files are only updated when they are requested by a user, or when this time period elapses."
 msgstr "Yükseltmeyi etkinleştirdiğinizde, RDR dosyalarınız yalnızca bir kullanıcı tarafından talep edildiğinde veya bu süre geçtiğinde güncellenir."
 
-#: include/global_settings.php:2096
+#: include/global_settings.php:2106
 msgid "Number of Boost Processes"
 msgstr "Takviye İşlem Sayısı"
 
-#: include/global_settings.php:2097
+#: include/global_settings.php:2107
 msgid "The number of concurrent boost processes to use to use to process all of the RRDs in the boost table."
 msgstr "Takviye tablosundaki tüm RRD&#39;leri işlemek için kullanılacak eşzamanlı artırma işlemlerinin sayısı."
 
-#: include/global_settings.php:2124
+#: include/global_settings.php:2134
 msgid "Maximum Records"
 msgstr "Maksimum Kayıtlar"
 
-#: include/global_settings.php:2125
+#: include/global_settings.php:2135
 msgid "If the boost output table exceeds this size, in records, an update will take place."
 msgstr "Takviye çıktı tablosu bu boyutu aşarsa, kayıtlarda bir güncelleme gerçekleşir."
 
-#: include/global_settings.php:2132
+#: include/global_settings.php:2142
 msgid "Maximum Data Source Items Per Pass"
 msgstr "Geçiş Başına Maksimum Veri Kaynağı Öğesi"
 
-#: include/global_settings.php:2133
+#: include/global_settings.php:2143
 msgid "To optimize performance, the boost RRD updater needs to know how many Data Source Items should be retrieved in one pass.  Please be careful not to set too high as graphing performance during major updates can be compromised.  If you encounter graphing or polling slowness during updates, lower this number.  The default value is 50000."
 msgstr "Performansı iyileştirmek için, artırıcı RRD güncelleyicisinin bir seferde kaç Veri Kaynağı Öğesi alınması gerektiğini bilmesi gerekir. Lütfen büyük güncellemeler sırasındaki grafik performansı tehlikeye girebileceğinden çok yüksek ayarlarda bulunmamaya dikkat edin. Güncellemeler sırasında grafik çizme veya yoklama yavaşlığıyla karşılaşırsanız, bu sayıyı azaltın. Varsayılan değer 50000&#39;dür."
 
-#: include/global_settings.php:2139
+#: include/global_settings.php:2149
 msgid "Maximum Argument Length"
 msgstr "Maksimum Bağımsız Değişken Uzunluğu"
 
-#: include/global_settings.php:2140
+#: include/global_settings.php:2150
 msgid "When boost sends update commands to RRDtool, it must not exceed the operating systems Maximum Argument Length.  This varies by operating system and kernel level.  For example: Windows 2000 <= 2048, FreeBSD <= 65535, Linux 2.6.22-- <= 131072, Linux 2.6.23++ unlimited"
 msgstr "Yükseltme, RRDtool&#39;a güncelleme komutları gönderdiğinde, işletim sistemleri Maksimum Bağımsız Değişken Uzunluğunu geçmemelidir. Bu işletim sistemi ve çekirdek seviyesine göre değişir. Örneğin: Windows 2000 &lt;= 2048, FreeBSD &lt;= 65535, Linux 2.6.22 - &lt;= 131072, Linux 2.6.23 ++ sınırsız"
 
-#: include/global_settings.php:2147
+#: include/global_settings.php:2157
 msgid "Memory Limit for Boost and Poller"
 msgstr "Boost ve Poller için Bellek Sınırı"
 
-#: include/global_settings.php:2148
+#: include/global_settings.php:2158
 msgid "The maximum amount of memory for the Kadupul Poller and Boosts Poller"
 msgstr "Kadupul Poller ve Boosts Poller için azami bellek miktarı"
 
-#: include/global_settings.php:2154
+#: include/global_settings.php:2164
 msgid "Maximum RRD Update Script Run Time"
 msgstr "Maksimum RRD Güncelleme Komut Dosyası Çalışma Süresi"
 
-#: include/global_settings.php:2155
+#: include/global_settings.php:2165
 msgid "If the boost poller exceeds this runtime, a warning will be placed in the cacti log,"
 msgstr "Destekleyici yoklayıcı bu çalışma zamanını hariç tutarsa, kaktüsler günlüğüne bir uyarı verilir,"
 
-#: include/global_settings.php:2161
+#: include/global_settings.php:2171
 msgid "Enable direct population of poller_output_boost table"
 msgstr "Poller_output_boost tablosunun doğrudan popülasyonunu etkinleştir"
 
-#: include/global_settings.php:2162
+#: include/global_settings.php:2172
 msgid "Enables direct insert of records into poller output boost with results in a 25% time reduction in each poll cycle."
 msgstr "Her yoklama döngüsünde% 25 zaman azalmasıyla sonuçlanan yoklama çıkış artışına doğrudan kayıt eklenmesini sağlar."
 
-#: include/global_settings.php:2167
+#: include/global_settings.php:2177
 msgid "Boost Debug Log"
 msgstr "Hata ayıklama günlüğünü artır"
 
-#: include/global_settings.php:2168
+#: include/global_settings.php:2178
 msgid "If this field is non-blank, Boost will log RRDUpdate output from the boost\tpoller process."
 msgstr "Bu alan boş değilse, Yükseltme, yükseltme yoklama işleminden RRDupdate çıktısını kaydeder."
 
-#: include/global_settings.php:2175 utilities.php:2943
+#: include/global_settings.php:2185 utilities.php:2943
 msgid "Image Caching"
 msgstr "Görüntü Önbelleğe Alma"
 
-#: include/global_settings.php:2180
+#: include/global_settings.php:2190
 msgid "Enable Image Caching"
 msgstr "Görüntü Önbelleğe Almayı Etkinleştir"
 
-#: include/global_settings.php:2181
+#: include/global_settings.php:2191
 msgid "Should image caching be enabled?"
 msgstr "Görüntü önbelleğe alma etkinleştirilmeli mi?"
 
-#: include/global_settings.php:2186
+#: include/global_settings.php:2196
 msgid "Location for Image Files"
 msgstr "Görüntü Dosyalarının Konumu"
 
-#: include/global_settings.php:2187
+#: include/global_settings.php:2197
 msgid "Specify the location where Boost should place your image files.  These files will be automatically purged by the poller when they expire."
 msgstr "Boost&#39;un görüntü dosyalarınızı yerleştireceği yeri belirtin. Bu dosyalar zaman aşımına uğradığında yoklayıcı tarafından otomatik olarak temizlenir."
 
-#: include/global_settings.php:2195
+#: include/global_settings.php:2205
 msgid "Data Sources Statistics"
 msgstr "Veri Kaynakları İstatistikleri"
 
-#: include/global_settings.php:2200
+#: include/global_settings.php:2210
 msgid "Enable Data Source Statistics Collection"
 msgstr "Veri Kaynağı İstatistikleri Koleksiyonunu Etkinleştir"
 
-#: include/global_settings.php:2201
+#: include/global_settings.php:2211
 msgid "Should Data Source Statistics be collected for this Kadupul system?"
 msgstr "Bu Kadupul sistemi için Veri Kaynağı İstatistikleri toplanmalı mı?"
 
-#: include/global_settings.php:2206
+#: include/global_settings.php:2216
 msgid "Number of DSStats Processes"
 msgstr "Takviye İşlem Sayısı"
 
-#: include/global_settings.php:2207
+#: include/global_settings.php:2217
 msgid "The number of concurrent DSStats processes to use to use to process all of the Data Sources."
 msgstr "Takviye tablosundaki tüm RRD&#39;leri işlemek için kullanılacak eşzamanlı artırma işlemlerinin sayısı."
 
-#: include/global_settings.php:2234
+#: include/global_settings.php:2244
 msgid "Daily Update Frequency"
 msgstr "Günlük Güncelleme Frekansı"
 
-#: include/global_settings.php:2235
+#: include/global_settings.php:2245
 msgid "How frequent should Daily Stats be updated?"
 msgstr "Günlük İstatistikler ne sıklıkla güncellenmelidir?"
 
-#: include/global_settings.php:2241
+#: include/global_settings.php:2251
 msgid "Hourly Average Window"
 msgstr "Saatlik Ortalama Pencere"
 
-#: include/global_settings.php:2242
+#: include/global_settings.php:2252
 msgid "The number of consecutive hours that represent the hourly average.  Keep in mind that a setting too high can result in very large memory tables"
 msgstr "Saatlik ortalamayı temsil eden ardışık saat sayısı. Çok yüksek bir ayarın çok büyük bellek tablolarına neden olabileceğini unutmayın."
 
-#: include/global_settings.php:2248
+#: include/global_settings.php:2258
 msgid "Maintenance Time"
 msgstr "Bakım zamanı"
 
-#: include/global_settings.php:2249
+#: include/global_settings.php:2259
 msgid "What time of day should Weekly, Monthly, and Yearly Data be updated?  Format is HH:MM [am/pm]"
 msgstr "Haftalık, Aylık ve Yıllık Veriler hangi saatlerde güncellenmelidir? Biçim HH: MM [am / pm]"
 
-#: include/global_settings.php:2256
+#: include/global_settings.php:2266
 msgid "Memory Limit for Data Source Statistics Data Collector"
 msgstr "Veri Kaynağı İstatistikleri Veri Toplayıcı için Bellek Sınırı"
 
-#: include/global_settings.php:2257
+#: include/global_settings.php:2267
 msgid "The maximum amount of memory for the Kadupul Poller and Data Source Statistics Poller"
 msgstr "Kadupul Poller ve Data Source Statistics Poller için maksimum hafıza miktarı"
 
-#: include/global_settings.php:2263
+#: include/global_settings.php:2273
 msgid "RRDfile Check"
 msgstr "RRDfile Temizleyici"
 
-#: include/global_settings.php:2268
+#: include/global_settings.php:2278
 msgid "Enable RRDfile Check"
 msgstr "Kuralı Etkinleştir"
 
-#: include/global_settings.php:2269
+#: include/global_settings.php:2279
 msgid "Should RRDfile check be enabled for this Kadupul system?"
 msgstr "Bu Kadupul sistemi için Veri Kaynağı İstatistikleri toplanmalı mı?"
 
-#: include/global_settings.php:2274
+#: include/global_settings.php:2284
 msgid "Number of RRDfile Check Processes"
 msgstr "Takviye İşlem Sayısı"
 
-#: include/global_settings.php:2275
+#: include/global_settings.php:2285
 msgid "The number of concurrent RRDfile check processes to use to use to process all of rrd files."
 msgstr "Takviye tablosundaki tüm RRD&#39;leri işlemek için kullanılacak eşzamanlı artırma işlemlerinin sayısı."
 
-#: include/global_settings.php:2302
+#: include/global_settings.php:2312
 msgid "Check Frequency"
 msgstr "Sıklık"
 
-#: include/global_settings.php:2303
+#: include/global_settings.php:2313
 msgid "How frequent should RRD be checked ?"
 msgstr "Günlük İstatistikler ne sıklıkla güncellenmelidir?"
 
-#: include/global_settings.php:2309
+#: include/global_settings.php:2319
 msgid "Data Storage Settings"
 msgstr "Veri Depolama Ayarları"
 
-#: include/global_settings.php:2315
+#: include/global_settings.php:2325
 msgid "Choose if RRDs will be stored locally or being handled by an external RRDtool proxy server."
 msgstr "RRD&#39;lerin yerel olarak mı depolanacağını veya harici bir RRDtool proxy sunucusu tarafından mı işleneceğini seçin."
 
-#: include/global_settings.php:2320 include/global_settings.php:2354
+#: include/global_settings.php:2330 include/global_settings.php:2364
 msgid "RRDtool Proxy Server"
 msgstr "RRDtool Proxy Sunucusu"
 
-#: include/global_settings.php:2324
+#: include/global_settings.php:2334
 msgid "Structure RRDfile Paths"
 msgstr "Yapılandırılmış RRD Yolları"
 
-#: include/global_settings.php:2329
+#: include/global_settings.php:2339
 msgid "Enable Structured Paths"
 msgstr "Yapılandırılmış RRD Yolları"
 
-#: include/global_settings.php:2330
+#: include/global_settings.php:2340
 msgid "Use a separate subfolder for each hosts RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
 msgstr ""
 
-#: include/global_settings.php:2334
+#: include/global_settings.php:2344
 msgid "Directory Pattern"
 msgstr "Dizin bulundu"
 
-#: include/global_settings.php:2335
+#: include/global_settings.php:2345
 msgid "Which Directory Pattern do you wish to use for Structured RRD Paths.  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
 msgstr "Yapılandırılmış RRD Yolları için hangi Dizin Desenini kullanmak istiyorsunuz?  'Cihaz Kimliği' varsayılandır. Binlerce Grafiğe sahip Cihazlarınız olduğunda 'Cihaz Kimliği/Veri Sorgu Kimliği' ayarı kullanılmalıdır. Dizin Desenini Değiştirdikten sonra, yeni Desene giden RRD dosyası yollarını değiştirmek için Yapılandırılmış Yol CLI komut dosyasını tekrar çalıştırmanız gerekir."
 
-#: include/global_settings.php:2339
+#: include/global_settings.php:2349
 msgid "Device ID"
 msgstr "Cihaz"
 
-#: include/global_settings.php:2340
+#: include/global_settings.php:2350
 msgid "Device ID/Data Query ID"
 msgstr "Veri Sorgusunu Sil"
 
-#: include/global_settings.php:2341
+#: include/global_settings.php:2351
 msgid "Device Hash/Device ID"
 msgstr "Aygıt Adı"
 
-#: include/global_settings.php:2342
+#: include/global_settings.php:2352
 msgid "Device Hash/Device ID/Data Query ID"
 msgstr "Cihaz Karması/Cihaz Kimliği/Veri Sorgusu Kimliği"
 
-#: include/global_settings.php:2346
+#: include/global_settings.php:2356
 msgid "Max Device Hash Directories"
 msgstr "Maksimum Aygıt Karma Dizini"
 
-#: include/global_settings.php:2347
+#: include/global_settings.php:2357
 msgid "The maximum number of Device Directories to be created based upon hashed Device ID's."
 msgstr "Karma Cihaz Kimliklerine dayalı olarak oluşturulacak maksimum Cihaz Dizini sayısı."
 
-#: include/global_settings.php:2359 include/global_settings.php:2391
+#: include/global_settings.php:2369 include/global_settings.php:2401
 msgid "Proxy Server"
 msgstr "Proxy Sunucusu"
 
-#: include/global_settings.php:2360
+#: include/global_settings.php:2370
 msgid "The DNS hostname or IP address of the RRDtool proxy server."
 msgstr "RRDtool proxy sunucusunun DNS ana bilgisayar adı veya IP adresi."
 
-#: include/global_settings.php:2365 include/global_settings.php:2397
+#: include/global_settings.php:2375 include/global_settings.php:2407
 msgid "Proxy Port Number"
 msgstr "Proxy Bağlantı Noktası Numarası"
 
-#: include/global_settings.php:2366
+#: include/global_settings.php:2376
 msgid "TCP port for encrypted communication."
 msgstr "Şifreli iletişim için TCP portu."
 
-#: include/global_settings.php:2373 include/global_settings.php:2405
+#: include/global_settings.php:2383 include/global_settings.php:2415
 #: utilities.php:277
 msgid "RSA Fingerprint"
 msgstr "RSA Parmak İzi"
 
-#: include/global_settings.php:2374
+#: include/global_settings.php:2384
 msgid "The fingerprint of the current public RSA key the proxy is using. This is required to establish a trusted connection."
 msgstr "Proxy&#39;nin kullandığı geçerli RSA anahtarının parmak izi. Güvenilir bir bağlantı kurmak için bu gereklidir."
 
-#: include/global_settings.php:2381
+#: include/global_settings.php:2391
 msgid "RRDtool Proxy Server - Backup"
 msgstr "RRDtool Proxy Sunucusu - Yedekleme"
 
-#: include/global_settings.php:2386
+#: include/global_settings.php:2396
 msgid "Load Balancing"
 msgstr "Yük dengeleme"
 
-#: include/global_settings.php:2387
+#: include/global_settings.php:2397
 msgid "If both main and backup proxy are receivable this option allows to spread all requests against RRDtool."
 msgstr "Hem ana hem de yedek proxy alınabilirse, bu seçenek tüm istekleri RRDtool&#39;a karşı yaymaya izin verir."
 
-#: include/global_settings.php:2392
+#: include/global_settings.php:2402
 msgid "The DNS hostname or IP address of the RRDtool backup proxy server if proxy is running in MSR mode."
 msgstr "Proxy MSR modunda çalışıyorsa, DNS ana bilgisayar adı veya RRDtool yedek proxy sunucusunun IP adresi."
 
-#: include/global_settings.php:2398
+#: include/global_settings.php:2408
 msgid "TCP port for encrypted communication with the backup proxy."
 msgstr "Yedek proxy ile şifreli iletişim için TCP portu."
 
-#: include/global_settings.php:2406
+#: include/global_settings.php:2416
 msgid "The fingerprint of the current public RSA key the backup proxy is using. This required to establish a trusted connection."
 msgstr "Yedek proxy&#39;nin kullandığı geçerli ortak RSA anahtarının parmak izi. Bu güvenilir bir bağlantı kurmak için gerekli."
 
-#: include/global_settings.php:2415
+#: include/global_settings.php:2425
 msgid "Spike Kill Settings"
 msgstr "Spike Kill Ayarları"
 
-#: include/global_settings.php:2420
+#: include/global_settings.php:2430
 msgid "Removal Method"
 msgstr "Kaldırma yöntemi"
 
-#: include/global_settings.php:2421
+#: include/global_settings.php:2431
 msgid "There are two removal methods.  The first, Standard Deviation, will remove any sample that is X number of standard deviations away from the average of samples.  The second method, Variance, will remove any sample that is X% more than the Variance average.  The Variance method takes into account a certain number of 'outliers'.  Those are exceptional samples, like the spike, that need to be excluded from the Variance Average calculation."
 msgstr "İki tane kaldırma yöntemi var. Birincisi, Standart Sapma, X sayısının standart sapma sayısı olan numuneleri, numunelerin ortalamalarından uzaklaştırır. İkinci yöntem olan Variance, Varyans ortalamasından% X daha fazla olan herhangi bir örneği kaldıracaktır. Varyans yöntemi, belirli sayıda &#39;aykırı değeri&#39; dikkate alır. Bunlar, Spike gibi, Variance Average hesaplamasından çıkarılması gereken istisnai örneklerdir."
 
-#: include/global_settings.php:2425
+#: include/global_settings.php:2435
 msgid "Standard Deviation"
 msgstr "Standart Sapma"
 
-#: include/global_settings.php:2426
+#: include/global_settings.php:2436
 msgid "Variance Based w/Outliers Removed"
 msgstr "Varyansa Dayalı Harcamalar Kaldırıldı"
 
-#: include/global_settings.php:2430 lib/html.php:2515
+#: include/global_settings.php:2440 lib/html.php:2515
 msgid "Replacement Method"
 msgstr "Değiştirme yöntemi"
 
-#: include/global_settings.php:2431
+#: include/global_settings.php:2441
 msgid "There are three replacement methods.  The first method replaces the spike with the average of the data source in question.  The second method replaces the spike with a 'NaN'.  The last replaces the spike with the last known good value found."
 msgstr "Üç tane değiştirme yöntemi vardır. İlk yöntem, ani değeri söz konusu veri kaynağının ortalaması ile değiştirir. İkinci yöntem ise sivri uçtaki &#39;NaN&#39; ile değiştirir. Sonuncusu, en son bilinen iyi değer ile başak değiştirir."
 
-#: include/global_settings.php:2435 lib/html.php:2511
+#: include/global_settings.php:2445 lib/html.php:2511
 msgid "Average"
 msgstr "Ortalama"
 
-#: include/global_settings.php:2436 lib/html.php:2512
+#: include/global_settings.php:2446 lib/html.php:2512
 msgid "NaN's"
 msgstr "NaN en"
 
-#: include/global_settings.php:2437 lib/html.php:2513
+#: include/global_settings.php:2447 lib/html.php:2513
 msgid "Last Known Good"
 msgstr "Bilinen en son iyi"
 
-#: include/global_settings.php:2441
+#: include/global_settings.php:2451
 msgid "Number of Standard Deviations"
 msgstr "Standart Sapma Sayısı"
 
-#: include/global_settings.php:2442
+#: include/global_settings.php:2452
 msgid "Any value that is this many standard deviations above the average will be excluded.  A good number will be dependent on the type of data to be operated on.  We recommend a number no lower than 5 Standard Deviations."
 msgstr "Ortalamanın üstünde bu kadar standart sapma olan herhangi bir değer hariç tutulacaktır. İyi bir sayı, çalıştırılacak verinin türüne bağlı olacaktır. 5 Standart Sapmadan az olmayan bir sayı öneririz."
 
-#: include/global_settings.php:2446 include/global_settings.php:2447
-#: include/global_settings.php:2448 include/global_settings.php:2449
-#: include/global_settings.php:2450 include/global_settings.php:2451
-#: include/global_settings.php:2452 include/global_settings.php:2453
-#: include/global_settings.php:2454 include/global_settings.php:2455
 #: include/global_settings.php:2456 include/global_settings.php:2457
-#: include/global_settings.php:2458
+#: include/global_settings.php:2458 include/global_settings.php:2459
+#: include/global_settings.php:2460 include/global_settings.php:2461
+#: include/global_settings.php:2462 include/global_settings.php:2463
+#: include/global_settings.php:2464 include/global_settings.php:2465
+#: include/global_settings.php:2466 include/global_settings.php:2467
+#: include/global_settings.php:2468
 #, php-format
 msgid "%d Standard Deviations"
 msgstr "% d Standart Sapmalar"
 
-#: include/global_settings.php:2462
+#: include/global_settings.php:2472
 msgid "Variance Percentage"
 msgstr "Varyans Yüzdesi"
 
-#: include/global_settings.php:2463
+#: include/global_settings.php:2473
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
 msgstr "Bu değer, aykırı değerler numuneden çıkarıldıktan sonra düzeltilmiş numune ortalamasının üzerindeki yüzdeyi temsil eder.  Örneğin, düzeltilmiş ortalama 50 'de 100%% Varyans Yüzdesi, 100' ün üzerindeki herhangi bir örneği grafikten kaldıracaktır."
 
-#: include/global_settings.php:2486
+#: include/global_settings.php:2496
 msgid "Variance Number of Outliers"
 msgstr "Aykırı Değerlerin Varyansı"
 
-#: include/global_settings.php:2487
+#: include/global_settings.php:2497
 msgid "This value represents the number of high and low average samples will be removed from the sample set prior to calculating the Variance Average.  If you choose an outlier value of 5, then both the top and bottom 5 averages are removed."
 msgstr "Bu değer, yüksek ve düşük ortalama örneklerin sayısını, Varyans Ortalamasını hesaplamadan önce örnek setten çıkarılacaktır. 5 değerinde bir outlier değeri seçerseniz, hem üst hem de alt 5 ortalamalar kaldırılır."
 
-#: include/global_settings.php:2491 include/global_settings.php:2492
-#: include/global_settings.php:2493 include/global_settings.php:2494
-#: include/global_settings.php:2495 include/global_settings.php:2496
-#: include/global_settings.php:2497 include/global_settings.php:2498
-#: include/global_settings.php:2499 include/global_settings.php:2500
 #: include/global_settings.php:2501 include/global_settings.php:2502
-#: include/global_settings.php:2503
+#: include/global_settings.php:2503 include/global_settings.php:2504
+#: include/global_settings.php:2505 include/global_settings.php:2506
+#: include/global_settings.php:2507 include/global_settings.php:2508
+#: include/global_settings.php:2509 include/global_settings.php:2510
+#: include/global_settings.php:2511 include/global_settings.php:2512
+#: include/global_settings.php:2513
 #, php-format
 msgid "%d High/Low Samples"
 msgstr "% d Yüksek / Düşük Örnekler"
 
-#: include/global_settings.php:2507
+#: include/global_settings.php:2517
 msgid "Max Kills Per RRA"
 msgstr "RRA Başına Max Kills"
 
-#: include/global_settings.php:2508
+#: include/global_settings.php:2518
 msgid "This value represents the maximum number of spikes to remove from a Graph RRA."
 msgstr "Bu değer, bir Grafik RRA&#39;sından kaldırılacak maksimum çivilerin sayısını temsil eder."
 
-#: include/global_settings.php:2512 include/global_settings.php:2513
-#: include/global_settings.php:2514 include/global_settings.php:2515
-#: include/global_settings.php:2516 include/global_settings.php:2517
-#: include/global_settings.php:2518 include/global_settings.php:2519
-#: include/global_settings.php:2520 include/global_settings.php:2521
 #: include/global_settings.php:2522 include/global_settings.php:2523
+#: include/global_settings.php:2524 include/global_settings.php:2525
+#: include/global_settings.php:2526 include/global_settings.php:2527
+#: include/global_settings.php:2528 include/global_settings.php:2529
+#: include/global_settings.php:2530 include/global_settings.php:2531
+#: include/global_settings.php:2532 include/global_settings.php:2533
 #, php-format
 msgid "%d Spikes"
 msgstr "% d Spike"
 
-#: include/global_settings.php:2527
+#: include/global_settings.php:2537
 msgid "RRDfile Backup Directory"
 msgstr "RRDfile Yedekleme Dizini"
 
-#: include/global_settings.php:2528
+#: include/global_settings.php:2538
 msgid "If this directory is not empty, then your original RRDfiles will be backed up to this location."
 msgstr "Bu dizin boş değilse, orijinal RRD dosyalarınız bu konuma yedeklenecektir."
 
-#: include/global_settings.php:2535
+#: include/global_settings.php:2545
 msgid "Batch Spike Kill Settings"
 msgstr "Toplu Spike Kill Ayarları"
 
-#: include/global_settings.php:2540
+#: include/global_settings.php:2550
 msgid "Removal Schedule"
 msgstr "Kaldırma Programı"
 
-#: include/global_settings.php:2541
+#: include/global_settings.php:2551
 msgid "Do you wish to periodically remove spikes from your graphs?  If so, select the frequency below."
 msgstr "Çivileri periyodik olarak grafiklerinizden çıkarmak ister misiniz? Eğer öyleyse, aşağıdaki frekansı seçin."
 
-#: include/global_settings.php:2548
+#: include/global_settings.php:2558
 msgid "Once a Day"
 msgstr "Günde bir kez"
 
-#: include/global_settings.php:2549
+#: include/global_settings.php:2559
 msgid "Every Other Day"
 msgstr "Her Başka Gün"
 
-#: include/global_settings.php:2553
+#: include/global_settings.php:2563
 msgid "Base Time"
 msgstr "Baz zamanı"
 
-#: include/global_settings.php:2554
+#: include/global_settings.php:2564
 msgid "The Base Time for Spike removal to occur.  For example, if you use '12:00am' and you choose once per day, the batch removal would begin at approximately midnight every day."
 msgstr "Spike kaldırma için Temel Zaman oluşması. Örneğin, &#39;12: 00 &#39;kullanırsanız ve günde bir kez seçerseniz, parti kaldırma işlemi her gün yaklaşık gece yarısında başlar."
 
-#: include/global_settings.php:2561
+#: include/global_settings.php:2571
 msgid "Graph Templates to Spike Kill"
 msgstr "Öldürmek Spike Grafik Şablonları"
 
-#: include/global_settings.php:2563
+#: include/global_settings.php:2573
 msgid "When performing batch spike removal, only the templates selected below will be acted on."
 msgstr "Toplu başak çıkarmayı gerçekleştirirken, yalnızca aşağıda seçilen şablonlar uygulanacaktır."
 
-#: include/global_settings.php:2567
+#: include/global_settings.php:2577
 msgid "Backup Retention"
 msgstr "Veri saklama"
 
-#: include/global_settings.php:2568
+#: include/global_settings.php:2578
 msgid "When SpikeKill kills spikes in graphs, it makes a backup of the RRDfile.  How long should these backup files be retained?"
 msgstr "SpikeKill grafiklerdeki ani uçları öldürdüğünde RRDdosyasının bir yedeğini oluşturur. Bu yedekleme dosyaları ne kadar süreyle saklanmalıdır?"
 
-#: include/global_settings.php:2587
+#: include/global_settings.php:2597
 msgid "Default View Mode"
 msgstr "Varsayılan Modu Görüntüle"
 
-#: include/global_settings.php:2588
+#: include/global_settings.php:2598
 msgid "Which Graph mode you want displayed by default when you first visit the Graphs page?"
 msgstr "Grafikler sayfasını ilk ziyaret ettiğinizde varsayılan olarak hangi Grafik modunu görüntülemek istiyorsunuz?"
 
-#: include/global_settings.php:2594
+#: include/global_settings.php:2604
 msgid "TimeZone Support"
 msgstr "MySQL - TimeZone Desteği"
 
-#: include/global_settings.php:2595
+#: include/global_settings.php:2605
 #, fuzzy
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
 msgstr "Kadupul tarihleri nasıl sunmasını istersiniz?  Bu ayar aynı zamanda Kadupul Graphs tarihlerinin gösterilme şeklini de değiştirecektir."
 
-#: include/global_settings.php:2598
+#: include/global_settings.php:2608
 msgid "Kadupul Server Timezone"
 msgstr "Kadupul Sunucu v %s - Bakım"
 
-#: include/global_settings.php:2599
+#: include/global_settings.php:2609
 msgid "My Browsers Timezone"
 msgstr "Tarayıcımın Saat Dilimi"
 
-#: include/global_settings.php:2604
+#: include/global_settings.php:2614
 msgid "User Language"
 msgstr "Kullanıcı dili"
 
-#: include/global_settings.php:2605
+#: include/global_settings.php:2615
 msgid "Defines the preferred GUI language."
 msgstr "Tercih edilen GUI dilini tanımlar."
 
-#: include/global_settings.php:2611
+#: include/global_settings.php:2621
 msgid "Show Graph Title"
 msgstr "Grafik Başlığını Göster"
 
-#: include/global_settings.php:2612
+#: include/global_settings.php:2622
 msgid "Display the graph title on the page so that it may be searched using the browser."
 msgstr "Sayfada grafik başlığını görüntüleyin, böylece tarayıcı kullanılarak aranabilir."
 
-#: include/global_settings.php:2617
+#: include/global_settings.php:2627
 msgid "Hide Disabled"
 msgstr "Devre Dışı Bırak Gizle"
 
-#: include/global_settings.php:2618
+#: include/global_settings.php:2628
 msgid "Hides Disabled Devices and Graphs when viewing outside of Console tab."
 msgstr "Konsol sekmesinin dışından bakarken Engelli Aygıtları ve Grafikleri gizler."
 
-#: include/global_settings.php:2623
+#: include/global_settings.php:2633
 msgid "Show Device Aggregates"
 msgstr "Agregalar"
 
-#: include/global_settings.php:2624
+#: include/global_settings.php:2634
 msgid "If a Device Data Source is included in an Aggregate Graph, show that Graph along with other Device Graphs"
 msgstr "Toplam Grafikte bir Aygıt Veri Kaynağı varsa, Grafiği diğer Aygıt Grafikleri ile birlikte gösterin"
 
-#: include/global_settings.php:2629
+#: include/global_settings.php:2639
 msgid "Enable Horizontal Scrolling"
 msgstr "Yatay Kaydırmayı Etkinleştir"
 
-#: include/global_settings.php:2630
+#: include/global_settings.php:2640
 msgid "Enable Horizontal Scrolling of Tables, Disabling Responsive Column Visibility."
 msgstr "Duyarlı Sütun Görünürlüğünü Devre Dışı Bırakarak Tabloların Yatay Kaydırmasını Etkinleştirin."
 
-#: include/global_settings.php:2636
+#: include/global_settings.php:2646
 msgid "The date format to use in Kadupul."
 msgstr "Kadupul&#39;de kullanılacak tarih formatı."
 
-#: include/global_settings.php:2643
+#: include/global_settings.php:2653
 msgid "The date separator to be used in Kadupul."
 msgstr "Kadupul&#39;de kullanılacak tarih ayırıcısı."
 
-#: include/global_settings.php:2649
+#: include/global_settings.php:2659
 msgid "Page Refresh"
 msgstr "Sayfa Yenile"
 
-#: include/global_settings.php:2650
+#: include/global_settings.php:2660
 msgid "The number of seconds between automatic page refreshes."
 msgstr "Otomatik sayfa yenileme arasında geçen saniye sayısı."
 
-#: include/global_settings.php:2662
+#: include/global_settings.php:2672
 msgid "Preview Graphs Per Page"
 msgstr "Sayfa Başına Grafikleri Önizleme"
 
-#: include/global_settings.php:2663 include/global_settings.php:2792
+#: include/global_settings.php:2673 include/global_settings.php:2802
 msgid "The number of graphs to display on one page in preview mode."
 msgstr "Önizleme modunda bir sayfada gösterilecek grafik sayısı."
 
-#: include/global_settings.php:2671
+#: include/global_settings.php:2681
 msgid "Default Time Range"
 msgstr "Varsayılan Zaman Aralığı"
 
-#: include/global_settings.php:2672
+#: include/global_settings.php:2682
 msgid "The default RRA to use in rare occasions."
 msgstr "Nadir durumlarda kullanılacak varsayılan RRA."
 
-#: include/global_settings.php:2679
+#: include/global_settings.php:2689
 msgid "The default Timespan displayed when viewing Graphs and other time specific data."
 msgstr "Varsayılan Zaman Aralığı, Grafikleri ve diğer zamana özgü verileri görüntülerken görüntülenir."
 
-#: include/global_settings.php:2685
+#: include/global_settings.php:2695
 msgid "Default Timeshift"
 msgstr "Varsayılan Zaman Kaydırma"
 
-#: include/global_settings.php:2686
+#: include/global_settings.php:2696
 msgid "The default Timeshift displayed when viewing Graphs and other time specific data."
 msgstr "Grafikler ve diğer zamana özel verileri görüntülerken varsayılan Timeshift görüntülenir."
 
-#: include/global_settings.php:2692
+#: include/global_settings.php:2702
 msgid "Allow Graph to extend to Future"
 msgstr "Grafiğin Geleceğe Uzatmasına İzin Ver"
 
-#: include/global_settings.php:2693
+#: include/global_settings.php:2703
 msgid "When displaying Graphs, allow Graph Dates to extend 'to future'"
 msgstr "Grafikleri görüntülerken, Grafik Tarihlerinin &#39;geleceğe&#39; uzanmasına izin ver"
 
-#: include/global_settings.php:2698
+#: include/global_settings.php:2708
 msgid "First Day of the Week"
 msgstr "Haftanın ilk günü"
 
-#: include/global_settings.php:2699
+#: include/global_settings.php:2709
 msgid "The first Day of the Week for weekly Graph Displays"
 msgstr "Haftanın ilk Haftası Günü Grafik Ekranları"
 
-#: include/global_settings.php:2705
+#: include/global_settings.php:2715
 msgid "Start of Daily Shift"
 msgstr "Günlük Vardiya Başlangıcı"
 
-#: include/global_settings.php:2706
+#: include/global_settings.php:2716
 msgid "Start Time of the Daily Shift."
 msgstr "Günlük Vardiya Başlangıç Saati."
 
-#: include/global_settings.php:2713
+#: include/global_settings.php:2723
 msgid "End of Daily Shift"
 msgstr "Günlük Vardiya Sonu"
 
-#: include/global_settings.php:2714
+#: include/global_settings.php:2724
 msgid "End Time of the Daily Shift."
 msgstr "Günlük Vardiya Sonu."
 
-#: include/global_settings.php:2723
+#: include/global_settings.php:2733
 msgid "Thumbnail Sections"
 msgstr "Küçük Resim Bölümleri"
 
-#: include/global_settings.php:2724
+#: include/global_settings.php:2734
 msgid "Which portions of Kadupul display Thumbnails by default."
 msgstr "Kadupul&#39;nin hangi bölümleri varsayılan olarak Küçük Resimler&#39;i görüntüler."
 
-#: include/global_settings.php:2738
+#: include/global_settings.php:2748
 msgid "Preview Thumbnail Columns"
 msgstr "Küçük Resim Sütunlarını Önizle"
 
-#: include/global_settings.php:2739
+#: include/global_settings.php:2749
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
 msgstr "Önizleme modunda Küçük Resim grafiklerini görüntülerken kullanılacak sütun sayısı."
 
-#: include/global_settings.php:2743 include/global_settings.php:2757
+#: include/global_settings.php:2753 include/global_settings.php:2767
 msgid "1 Column"
 msgstr "1 Sütun"
 
-#: include/global_settings.php:2744 include/global_settings.php:2745
-#: include/global_settings.php:2746 include/global_settings.php:2747
-#: include/global_settings.php:2748 include/global_settings.php:2758
-#: include/global_settings.php:2759 include/global_settings.php:2760
-#: include/global_settings.php:2761 include/global_settings.php:2762
+#: include/global_settings.php:2754 include/global_settings.php:2755
+#: include/global_settings.php:2756 include/global_settings.php:2757
+#: include/global_settings.php:2758 include/global_settings.php:2768
+#: include/global_settings.php:2769 include/global_settings.php:2770
+#: include/global_settings.php:2771 include/global_settings.php:2772
 #: lib/html_graph.php:219 lib/html_graph.php:220 lib/html_graph.php:221
 #: lib/html_graph.php:222 lib/html_graph.php:223 lib/html_tree.php:1041
 #: lib/html_tree.php:1042 lib/html_tree.php:1043 lib/html_tree.php:1044
@@ -12206,112 +12223,96 @@ msgstr "1 Sütun"
 msgid "%d Columns"
 msgstr "yaklaşık %d gün önce"
 
-#: include/global_settings.php:2752
+#: include/global_settings.php:2762
 msgid "Tree View Thumbnail Columns"
 msgstr "Ağaç Görünümü Küçük Sütunları"
 
-#: include/global_settings.php:2753
+#: include/global_settings.php:2763
 msgid "The number of columns to use when displaying Thumbnail graphs in Tree mode."
 msgstr "Ağaç modunda Küçük Resim grafiklerini görüntülerken kullanılacak sütun sayısı."
 
-#: include/global_settings.php:2766
+#: include/global_settings.php:2776
 msgid "Thumbnail Height"
 msgstr "Küçük resim"
 
-#: include/global_settings.php:2767
+#: include/global_settings.php:2777
 msgid "The height of Thumbnail graphs in pixels."
 msgstr "Küçük Resim grafikleri piksel cinsinden yüksekliği."
 
-#: include/global_settings.php:2774
+#: include/global_settings.php:2784
 msgid "Thumbnail Width"
 msgstr "Küçük Resim Genişliği"
 
-#: include/global_settings.php:2775
+#: include/global_settings.php:2785
 msgid "The width of Thumbnail graphs in pixels."
 msgstr "Küçük resim grafiklerinin piksel cinsinden genişliği."
 
-#: include/global_settings.php:2784
+#: include/global_settings.php:2794
 msgid "Default Tree"
 msgstr "Varsayılan Ağaç"
 
-#: include/global_settings.php:2785
+#: include/global_settings.php:2795
 msgid "The default graph tree to use when displaying graphs in tree mode."
 msgstr "Ağaç modundaki grafikleri görüntülerken kullanılacak varsayılan grafik ağacı."
 
-#: include/global_settings.php:2791
+#: include/global_settings.php:2801
 msgid "Graphs Per Page"
 msgstr "Sayfa Başına Grafik"
 
-#: include/global_settings.php:2798
+#: include/global_settings.php:2808
 msgid "Expand Devices"
 msgstr "Aygıtları Genişlet"
 
-#: include/global_settings.php:2799
+#: include/global_settings.php:2809
 msgid "Choose whether to expand the Graph Templates and Data Queries used by a Device on Tree."
 msgstr "Ağaçtaki bir Aygıt tarafından kullanılan Grafik Şablonlarının ve Veri Sorgularının genişletilip genişletilmeyeceğini seçin."
 
-#: include/global_settings.php:2804
+#: include/global_settings.php:2814
 msgid "Tree History"
 msgstr "Şifre Geçmişi"
 
-#: include/global_settings.php:2805
+#: include/global_settings.php:2815
 #, fuzzy
 msgid "If enabled, Kadupul will remember your Tree History between logins and when you return to the Graphs page."
 msgstr "Etkinleştirilirse, Kadupul girişler arasındaki ve Grafikler sayfasına döndüğünüzde Ağaç Geçmişinizi hatırlar."
 
-#: include/global_settings.php:2828
+#: include/global_settings.php:2838
 msgid "Use Custom Fonts"
 msgstr "Özel Yazı Tiplerini Kullan"
 
-#: include/global_settings.php:2829
+#: include/global_settings.php:2839
 msgid "Choose whether to use your own custom fonts and font sizes or utilize the system defaults."
 msgstr "Kendi özel yazı tiplerinizi ve yazı tipi boyutlarınızı mı kullanacağınızı veya sistem varsayılanlarını mı kullanacağınızı seçin."
 
-#: include/global_settings.php:2845
-msgid "The Pango font description to use for Graph Titles, such as DejaVu Sans Bold"
-msgstr ""
-
-#: include/global_settings.php:2858
-msgid "The Pango font description to use for Graph Legend items, such as DejaVu Sans Mono"
-msgstr ""
-
-#: include/global_settings.php:2871
-msgid "The Pango font description to use for Graph Axis items, such as DejaVu Sans"
-msgstr ""
-
-#: include/global_settings.php:2884
-msgid "The Pango font description to use for Graph Unit items, such as DejaVu Sans"
-msgstr ""
-
-#: include/global_settings.php:2896
+#: include/global_settings.php:2855
 msgid "Realtime View Mode"
 msgstr "Gerçek Zamanlı Görüntüleme Modu"
 
-#: include/global_settings.php:2897
+#: include/global_settings.php:2856
 msgid "How do you wish to view Realtime Graphs?"
 msgstr "Realtime Graphs&#39;ı nasıl görmek istersiniz?"
 
-#: include/global_settings.php:2900
+#: include/global_settings.php:2859
 msgid "Inline"
 msgstr "Çizgide"
 
-#: include/global_settings.php:2901
+#: include/global_settings.php:2860
 msgid "New Window"
 msgstr "Yeni Pencere"
 
-#: include/global_settings.php:2916
+#: include/global_settings.php:2875
 msgid "System Setting"
 msgstr "Kullanıcı Ayarları"
 
-#: include/global_settings.php:2924
+#: include/global_settings.php:2883
 msgid "1 Week"
 msgstr "1 Hafta"
 
-#: include/global_settings.php:2937
+#: include/global_settings.php:2896
 msgid "Auto Log Out Time"
 msgstr "Otomatik Çıkış"
 
-#: include/global_settings.php:2938
+#: include/global_settings.php:2897
 msgid "For users with Console access only, how long this user can stay logged in before being automatically logged out.  Note that if you have not been active in more than an hour, you may have to refresh your browser.  Also note that this setting has no affect when Authentication Cookies are enabled."
 msgstr "Yalnızca Konsol erişimine sahip kullanıcılar için, bu kullanıcının otomatik olarak oturumu kapatılmadan önce ne kadar süreyle oturum açabileceği. Bir saatten uzun süredir aktif değilseniz, tarayıcınızı yenilemeniz gerekebileceğini unutmayın. Ayrıca, Kimlik Doğrulama Çerezleri etkinleştirildiğinde bu ayarın hiçbir etkisi olmadığını unutmayın."
 
