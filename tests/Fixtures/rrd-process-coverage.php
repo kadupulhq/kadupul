@@ -194,6 +194,12 @@ if (defined('IMPORT_PREVIEW_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/templates_import.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/import.php');
 }
+if (defined('HTML_AUTOMATION_LABEL_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/api_automation.php');
+}
+if (defined('HTML_RENDERER_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
+}
 if (defined('BULK_CSRF_CONTROLLER')) {
     $coverageFilter->includeFile(BULK_CSRF_CONTROLLER);
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');

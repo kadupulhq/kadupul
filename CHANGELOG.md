@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Render sortable header labels as text, including stored automation fields and plugin `device_display_text` labels. Arbitrary label markup is now escaped; existing entities, generated sort icons and sorting callbacks are preserved.
+
 - Enforce persistent CDEF reference integrity for legacy writers and atomic aggregate cache replacement; refuse online collector primary upgrades and confirm the final installation version before reporting success.
 - Roll back complete aggregate regeneration and creation on unconfirmed reads or writes, preserving caller transactions; reject malformed aggregate item selections before saving and report incomplete propagation.
 - Keep permission writes and session epochs consistent, including failed writes and absent deletions.
@@ -130,6 +132,8 @@ Targeting `v1.3.0`, the first planned application release. See
 - Fix blank and wrong Font Awesome 7 icons: the midwinter filter icon no longer shows a missing-glyph box, the multiselect collapse-all and expand-all buttons show their arrows, and the legacy `fa-circle-thin` class draws an outline circle again.
 
 - Give icon-only controls an accessible name: the Add and page help links, the tab menu buttons, the Console tab in themes that hide its text, and the Data Source troubleshooter's pass and fail icons.
+
+- Escape the values that graph views, start boxes, table headers and the spike removal menu print into HTML attributes and text. The realtime popup link now passes the graph URL to `window.open()` as encoded JavaScript strings, and the graph id is always a number. Forward-ported from lts/1.2.
 
 - Capture the RRDtool dump while transforming RRD files so repair utilities print nothing outside debug mode and print the modified XML only once in debug mode. Fixes #438.
 

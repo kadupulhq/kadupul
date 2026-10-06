@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.3.0.-1\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 10:11-0700\n"
+"POT-Creation-Date: 2026-10-05 16:31-0700\n"
 "PO-Revision-Date: 2023-07-27 15:11+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -55,7 +55,7 @@ msgstr "Ця програма розповсюджується з надією, 
 #: host_templates.php:19 host_templates.php:462 host_templates.php:519
 #: include/global_arrays.php:1651 include/global_settings.php:232
 #: lib/api_automation.php:1323 lib/api_automation.php:1386
-#: lib/api_automation.php:1457 lib/html.php:1437 lib/html_form.php:1397
+#: lib/api_automation.php:1457 lib/html.php:1425 lib/html_form.php:1397
 #: lib/html_reports.php:1861 managers.php:13 pollers.php:18 tree.php:1627
 #: tree.php:1780 tree.php:1840 tree.php:1861 user_admin.php:17
 #: user_domains.php:15 user_group_admin.php:19
@@ -135,7 +135,7 @@ msgstr "Натисніть \"Продовжити\" для видалення н
 #: host.php:479 host.php:493 host.php:507 host.php:516 host.php:545
 #: host.php:557 host_templates.php:212 host_templates.php:226
 #: host_templates.php:237 host_templates.php:289 host_templates.php:358
-#: lib/clog_webapi.php:225 lib/html.php:2717 lib/html_form.php:1396
+#: lib/clog_webapi.php:225 lib/html.php:2705 lib/html_form.php:1396
 #: lib/html_form.php:1413 lib/html_form.php:1424 lib/html_reports.php:614
 #: managers.php:1061 managers.php:1122 plugins.php:712 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:705
@@ -169,7 +169,7 @@ msgstr "Відміна"
 #: host.php:461 host.php:470 host.php:479 host.php:493 host.php:507
 #: host.php:516 host.php:545 host.php:557 host_templates.php:212
 #: host_templates.php:226 host_templates.php:237 host_templates.php:290
-#: host_templates.php:359 lib/clog_webapi.php:226 lib/html.php:2716
+#: host_templates.php:359 lib/clog_webapi.php:226 lib/html.php:2704
 #: lib/html_reports.php:556 managers.php:1061 managers.php:1122 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:705
 #: tree.php:714 tree.php:723 tree.php:732 user_admin.php:252 user_admin.php:292
@@ -326,7 +326,7 @@ msgstr "Подробиці"
 msgid "Items"
 msgstr "Елементи"
 
-#: aggregate_graphs.php:646 aggregate_graphs.php:652 lib/html.php:2160
+#: aggregate_graphs.php:646 aggregate_graphs.php:652 lib/html.php:2148
 #: lib/html_reports.php:1481
 msgid "Preview"
 msgstr "Попередній перегляд"
@@ -420,7 +420,7 @@ msgstr "Відповідні Графіки"
 #: graphs.php:1993 graphs_new.php:443 host.php:1681 host_templates.php:766
 #: lib/api_automation.php:42 lib/api_automation.php:43
 #: lib/api_automation.php:480 lib/api_automation.php:708
-#: lib/clog_webapi.php:608 lib/html.php:257 lib/html_filter.php:46
+#: lib/clog_webapi.php:608 lib/html.php:260 lib/html_filter.php:46
 #: lib/html_graph.php:191 lib/html_reports.php:1946 lib/html_tree.php:119
 #: lib/html_tree.php:967 managers.php:144 managers.php:504 managers.php:761
 #: plugins.php:491 pollers.php:869 rrdcheck.php:210 rrdcleaner.php:523
@@ -438,8 +438,8 @@ msgstr "Пошук"
 #: data_sources.php:1852 graph_view.php:488 graph_view.php:739
 #: graph_view.php:803 graphs.php:2010 graphs.php:2178 host.php:1792
 #: include/global_arrays.php:993 include/global_arrays.php:1228
-#: include/global_arrays.php:2011 lib/api_automation.php:283 lib/html.php:1884
-#: lib/html.php:1953 lib/html_graph.php:197 lib/html_tree.php:1022
+#: include/global_arrays.php:2011 lib/api_automation.php:283 lib/html.php:1872
+#: lib/html.php:1941 lib/html_graph.php:197 lib/html_tree.php:1022
 #: lib/html_tree.php:1378 tree.php:857 tree.php:2296 user_admin.php:801
 #: user_admin.php:1072 user_admin.php:2346 user_group_admin.php:900
 #: user_group_admin.php:1054 user_group_admin.php:2107 utilities.php:315
@@ -482,7 +482,7 @@ msgstr "Частина Агрегованого"
 #: graphs_new.php:432 host.php:1671 host_templates.php:757
 #: lib/api_automation.php:187 lib/api_automation.php:471
 #: lib/api_automation.php:723 lib/api_automation.php:1087
-#: lib/clog_webapi.php:533 lib/html.php:1716 lib/html_filter.php:63
+#: lib/clog_webapi.php:533 lib/html.php:1704 lib/html_filter.php:63
 #: lib/html_graph.php:178 lib/html_reports.php:1977 lib/html_tree.php:1009
 #: managers.php:169 managers.php:529 managers.php:784 plugins.php:530
 #: pollers.php:914 tree.php:2172 user_admin.php:2149 user_admin.php:2346
@@ -626,7 +626,7 @@ msgstr "Шаблон"
 #: host.php:1627 host.php:1691 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3803 lib/auth.php:3852
-#: lib/html.php:2239 lib/html.php:2267 lib/html.php:2306 lib/html.php:2340
+#: lib/html.php:2227 lib/html.php:2255 lib/html.php:2294 lib/html.php:2328
 #: lib/html_reports.php:977 lib/html_reports.php:981 lib/html_reports.php:1096
 #: lib/html_reports.php:1106 lib/html_reports.php:1956 managers.php:490
 #: managers.php:771
@@ -657,8 +657,8 @@ msgstr "Будь-який"
 #: include/global_settings.php:1320 include/global_settings.php:1983
 #: lib/api_automation.php:48 lib/api_automation.php:431
 #: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3806
-#: lib/auth.php:3855 lib/auth.php:3901 lib/html.php:217 lib/html.php:2240
-#: lib/html.php:2265 lib/html.php:2307 lib/html.php:2341 lib/html_form.php:392
+#: lib/auth.php:3855 lib/auth.php:3901 lib/html.php:220 lib/html.php:2228
+#: lib/html.php:2253 lib/html.php:2295 lib/html.php:2329 lib/html_form.php:392
 #: lib/html_reports.php:988 lib/html_reports.php:992 lib/html_reports.php:1022
 #: lib/html_reports.php:1096 lib/html_reports.php:1102
 #: lib/html_reports.php:1106 lib/html_reports.php:1114
@@ -820,7 +820,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr ""
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4096 lib/html.php:2652
+#: include/global_form.php:1552 lib/functions.php:4096 lib/html.php:2640
 msgid "Change Password"
 msgstr "Змінити пароль"
 
@@ -947,7 +947,7 @@ msgstr "Логін користувача"
 
 #: auth_profile.php:61 include/global_settings.php:22
 #: include/global_settings.php:1184 include/global_settings.php:1501
-#: lib/html.php:2665 managers.php:24 user_admin.php:1740
+#: lib/html.php:2653 managers.php:24 user_admin.php:1740
 #: user_group_admin.php:1722
 msgid "General"
 msgstr "Загальне"
@@ -957,18 +957,18 @@ msgid "User Account Details"
 msgstr "Подробиці аккаунту"
 
 #: auth_profile.php:308 include/global_arrays.php:857
-#: include/global_settings.php:2719 lib/html.php:2120 lib/html.php:2142
-#: lib/html.php:2646
+#: include/global_settings.php:2719 lib/html.php:2108 lib/html.php:2130
+#: lib/html.php:2634
 msgid "Tree View"
 msgstr "Перегляд Дерева"
 
-#: auth_profile.php:312 include/global_arrays.php:858 lib/html.php:2127
-#: lib/html.php:2151 lib/html.php:2647
+#: auth_profile.php:312 include/global_arrays.php:858 lib/html.php:2115
+#: lib/html.php:2139 lib/html.php:2635
 msgid "List View"
 msgstr "Перегляд Списку"
 
-#: auth_profile.php:316 include/global_arrays.php:859 lib/html.php:2134
-#: lib/html.php:2648
+#: auth_profile.php:316 include/global_arrays.php:859 lib/html.php:2122
+#: lib/html.php:2636
 msgid "Preview View"
 msgstr "Попередній Перегляд"
 
@@ -1139,7 +1139,7 @@ msgid "SNMP Name"
 msgstr "SNMP Ім'я"
 
 #: automation_devices.php:270 host.php:1644 include/global_form.php:1184
-#: include/global_settings.php:2301 lib/html.php:2336
+#: include/global_settings.php:2301 lib/html.php:2324
 msgid "Location"
 msgstr "Місцезнаходження"
 
@@ -1229,8 +1229,8 @@ msgstr "Очищення Виявлених Пристроїв"
 #: automation_snmp.php:552 automation_snmp.php:553 automation_snmp.php:554
 #: automation_snmp.php:555 automation_snmp.php:556 automation_snmp.php:557
 #: data_debug.php:633 data_source_profiles.php:61 host.php:1879
-#: lib/functions.php:6385 lib/functions.php:6390 lib/html.php:1325
-#: lib/html.php:1397 lib/html_reports.php:1742 lib/html_reports.php:1768
+#: lib/functions.php:6385 lib/functions.php:6390 lib/html.php:1313
+#: lib/html.php:1385 lib/html_reports.php:1742 lib/html_reports.php:1768
 #: lib/html_reports.php:1839 lib/html_reports.php:1840
 #: lib/html_reports.php:1841 lib/spikekill.php:1665 lib/spikekill.php:1666
 #: lib/spikekill.php:1713 lib/spikekill.php:1714 lib/spikekill.php:1715
@@ -1388,7 +1388,7 @@ msgstr "Увімкнено"
 #: include/global_settings.php:1626 include/global_settings.php:1639
 #: include/global_settings.php:1664 include/global_settings.php:1678
 #: include/global_settings.php:1768 include/global_settings.php:2532
-#: lib/api_automation.php:28 lib/html.php:2742 lib/html_reports.php:1958
+#: lib/api_automation.php:28 lib/html.php:2730 lib/html_reports.php:1958
 #: lib/html_reports.php:2109 lib/html_utility.php:1317 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:935 user_domains.php:397
 #: user_group_admin.php:716 utilities.php:2119 utilities.php:2637
@@ -2277,7 +2277,7 @@ msgstr "немає"
 #: automation_snmp.php:562 automation_templates.php:512 cdef.php:591
 #: color_templates.php:96 data_queries.php:793 data_queries.php:900
 #: lib/api_automation.php:1310 lib/api_automation.php:1373
-#: lib/api_automation.php:1444 lib/html.php:1424 lib/html_reports.php:1854
+#: lib/api_automation.php:1444 lib/html.php:1412 lib/html_reports.php:1854
 #: lib/html_reports.php:1856 tree.php:2314 tree.php:2321
 msgid "Move Down"
 msgstr "Перемістити Вниз"
@@ -2285,7 +2285,7 @@ msgstr "Перемістити Вниз"
 #: automation_snmp.php:568 automation_templates.php:518 cdef.php:597
 #: color_templates.php:102 data_queries.php:798 data_queries.php:905
 #: lib/api_automation.php:1316 lib/api_automation.php:1379
-#: lib/api_automation.php:1450 lib/html.php:1430 lib/html_reports.php:1856
+#: lib/api_automation.php:1450 lib/html.php:1418 lib/html_reports.php:1856
 #: lib/html_reports.php:1858 tree.php:2318 tree.php:2322
 msgid "Move Up"
 msgstr "Перемістити Догори"
@@ -2821,14 +2821,14 @@ msgid "Hex"
 msgstr "Hex"
 
 #: color_templates.php:79 lib/api_aggregate.php:2427 lib/api_aggregate.php:2430
-#: lib/api_aggregate.php:2434 lib/html.php:1350 lib/html.php:1352
+#: lib/api_aggregate.php:2434 lib/html.php:1338 lib/html.php:1340
 #: lib/html_reports.php:1845
 #, php-format
 msgid "Item # %d"
 msgstr "Елемент # %d"
 
 #: color_templates.php:118 graph_templates_inputs.php:225
-#: lib/api_aggregate.php:2486 lib/html.php:1447
+#: lib/api_aggregate.php:2486 lib/html.php:1435
 msgid "No Items"
 msgstr "Немає Елементів"
 
@@ -2994,7 +2994,7 @@ msgstr "Ремонт Джерела Даних отримав невірний I
 #: data_debug.php:452 data_debug.php:891 data_queries.php:716
 #: data_sources.php:1062 data_templates.php:718 graphs_items.php:405
 #: include/global_arrays.php:1005 include/global_form.php:960
-#: lib/api_aggregate.php:2338 lib/html.php:1295 rrdcheck.php:142
+#: lib/api_aggregate.php:2338 lib/html.php:1283 rrdcheck.php:142
 msgid "Data Source"
 msgstr "Джерело Даних"
 
@@ -3002,7 +3002,7 @@ msgstr "Джерело Даних"
 msgid "The Data Source to Debug"
 msgstr "Джерело Даних для Відлагодження"
 
-#: data_debug.php:457 lib/html.php:2669 utilities.php:1031 utilities.php:1152
+#: data_debug.php:457 lib/html.php:2657 utilities.php:1031 utilities.php:1152
 msgid "User"
 msgstr "Користувач"
 
@@ -3291,14 +3291,14 @@ msgid "Run checks on currently filtered Data Sources and preserve other results"
 msgstr ""
 
 #: data_debug.php:1082 data_sources.php:1488 data_templates.php:1101
-#: lib/html.php:2678
+#: lib/html.php:2666
 msgid "Profile"
 msgstr "Профіль"
 
 #: data_debug.php:1086 data_debug.php:1105 data_debug.php:1116
 #: data_sources.php:1492 data_sources.php:1512 data_templates.php:1105
 #: graphs.php:2003 graphs_new.php:410 host.php:1648 host_templates.php:692
-#: host_templates.php:707 lib/clog_webapi.php:549 lib/html.php:216
+#: host_templates.php:707 lib/clog_webapi.php:549 lib/html.php:219
 #: lib/html_reports.php:1077 lib/html_reports.php:2200 plugins.php:501
 #: settings.php:531 settings.php:553 settings.php:584 tree.php:854
 #: user_admin.php:2083 user_admin.php:2108 user_admin.php:2122
@@ -3776,7 +3776,7 @@ msgid "Steps"
 msgstr "Кроки"
 
 #: data_source_profiles.php:822 graphs_new.php:449 include/global_form.php:284
-#: lib/html.php:592 lib/html_filter.php:55 lib/installer.php:2827
+#: lib/html.php:605 lib/html_filter.php:55 lib/installer.php:2827
 #: lib/rrd.php:4131 utilities.php:861 utilities.php:1817
 msgid "Rows"
 msgstr "Рядки"
@@ -4124,8 +4124,8 @@ msgstr "Ім'я цього Шаблону Даних. Будь ласка, зв�
 #: data_sources.php:997 graph_view.php:817 graphs.php:1515
 #: include/global_arrays.php:954 include/global_arrays.php:1003
 #: include/global_arrays.php:1687 include/global_arrays.php:1856
-#: lib/api_automation.php:426 lib/functions.php:6021 lib/html.php:2235
-#: lib/html.php:2272 lib/html_reports.php:1109 utilities.php:1913
+#: lib/api_automation.php:426 lib/functions.php:6021 lib/html.php:2223
+#: lib/html.php:2260 lib/html_reports.php:1109 utilities.php:1913
 msgid "Device"
 msgstr "Пристрій"
 
@@ -4482,7 +4482,7 @@ msgstr "Доступні Агреговані Графіки не існують
 msgid "Viewing Graph"
 msgstr "Перегляд Графіка"
 
-#: graph.php:160 lib/html.php:524
+#: graph.php:160 lib/html.php:530
 msgid "Graph Details, Zooming and Debugging Utilities"
 msgstr "Деталі Графіку, Збільшення та Засоби Відлагодження"
 
@@ -4490,15 +4490,15 @@ msgstr "Деталі Графіку, Збільшення та Засоби Ві
 msgid "CSV Export"
 msgstr "Експорт CSV"
 
-#: graph.php:165 graph.php:389 lib/html.php:544
+#: graph.php:165 graph.php:389 lib/html.php:550
 msgid "Edit Graph Template"
 msgstr "Редагувати Шаблон Графіків."
 
-#: graph.php:170 lib/html.php:550 lib/html.php:552
+#: graph.php:170 lib/html.php:556 lib/html.php:565
 msgid "Click to view just this Graph in Real-time"
 msgstr "Клацніть для перегляду цього Графіку в Реальному часі"
 
-#: graph.php:270 lib/html.php:2643
+#: graph.php:270 lib/html.php:2631
 msgid "Utility View"
 msgstr "Утилітарний Перегляд"
 
@@ -4787,13 +4787,13 @@ msgstr "Додати до Звіту"
 msgid "Report"
 msgstr "Звіт"
 
-#: graph_view.php:703 lib/html.php:202 lib/html.php:207 lib/html_graph.php:143
+#: graph_view.php:703 lib/html.php:205 lib/html.php:210 lib/html_graph.php:143
 #: lib/html_tree.php:977
 msgid "All Graphs & Templates"
 msgstr "Всі Графіки та Шаблони"
 
 #: graph_view.php:704 include/global_arrays.php:2889 lib/graphs.php:40
-#: lib/graphs.php:49 lib/html.php:210 lib/html_graph.php:144
+#: lib/graphs.php:49 lib/html.php:213 lib/html_graph.php:144
 #: lib/html_tree.php:978
 msgid "Not Templated"
 msgstr "Без Шаблонів"
@@ -4844,12 +4844,12 @@ msgstr "Режим Попереднього Перегляду"
 msgid "Add Selected Graphs to Report"
 msgstr "Додати Обрані Графіки до Звіту"
 
-#: graph_view.php:1049 lib/html.php:2714
+#: graph_view.php:1049 lib/html.php:2702
 msgid "Ok"
 msgstr "Ок"
 
 #: graph_xport.php:102 graph_xport.php:144 include/global_form.php:1809
-#: include/global_form.php:2077 lib/html.php:2016
+#: include/global_form.php:2077 lib/html.php:2004
 msgid "Title"
 msgstr "Заголовок"
 
@@ -5176,7 +5176,7 @@ msgstr "Нові Графіки для  [ Всіх Пристроїв ]"
 msgid "New Graphs for None Host Type"
 msgstr "Нові графіки для Хостів без Типу"
 
-#: graphs_new.php:367 lib/html.php:2641
+#: graphs_new.php:367 lib/html.php:2629
 msgid "Filter Settings Saved"
 msgstr "Налаштування Фільтрів Збережено"
 
@@ -5210,12 +5210,12 @@ msgstr "(Виберіть тип графіку для створення)"
 msgid "Create"
 msgstr "Створити"
 
-#: graphs_new.php:552 graphs_new.php:850 lib/html.php:1125 user_admin.php:1426
+#: graphs_new.php:552 graphs_new.php:850 lib/html.php:1105 user_admin.php:1426
 #: user_group_admin.php:1406
 msgid "Select All"
 msgstr "Вибрати Все"
 
-#: graphs_new.php:552 graphs_new.php:850 lib/html.php:1021 lib/html.php:1125
+#: graphs_new.php:552 graphs_new.php:850 lib/html.php:994 lib/html.php:1105
 msgid "Select All Rows"
 msgstr "Вибрати Всі Рядки"
 
@@ -5596,7 +5596,7 @@ msgstr "Видалити Пристрій"
 msgid "Undefined"
 msgstr "Не визначено"
 
-#: host.php:1588 include/global_settings.php:618 lib/html.php:2302
+#: host.php:1588 include/global_settings.php:618 lib/html.php:2290
 #: lib/html_reports.php:1090
 msgid "Site"
 msgstr "Вузол"
@@ -6330,7 +6330,7 @@ msgstr ""
 msgid "Justified"
 msgstr ""
 
-#: include/global_arrays.php:585 lib/html.php:2740
+#: include/global_arrays.php:585 lib/html.php:2728
 msgid "Center"
 msgstr ""
 
@@ -6642,7 +6642,7 @@ msgstr "Заголовок"
 
 #: include/global_arrays.php:953 include/global_arrays.php:1004
 #: include/global_arrays.php:1686 include/global_arrays.php:1855
-#: lib/html.php:2729
+#: lib/html.php:2717
 msgid "Graph"
 msgstr "Графік"
 
@@ -6808,7 +6808,7 @@ msgid "Configuration"
 msgstr "Конфігурація"
 
 #: include/global_arrays.php:1030 include/global_arrays.php:1052
-#: lib/html.php:2475 lib/html.php:2744
+#: lib/html.php:2463 lib/html.php:2732
 msgid "Settings"
 msgstr "Налаштування"
 
@@ -7032,7 +7032,7 @@ msgstr ""
 msgid "System Administration"
 msgstr ""
 
-#: include/global_arrays.php:1352 lib/html.php:1299
+#: include/global_arrays.php:1352 lib/html.php:1287
 msgid "CDEF"
 msgstr "CDEF"
 
@@ -7065,7 +7065,7 @@ msgstr ""
 msgid "Graph Template Input"
 msgstr ""
 
-#: include/global_arrays.php:1365 lib/html.php:1300
+#: include/global_arrays.php:1365 lib/html.php:1288
 msgid "VDEF"
 msgstr "VDEF"
 
@@ -7828,7 +7828,7 @@ msgid "List Mode"
 msgstr ""
 
 #: include/global_arrays.php:2061 include/global_arrays.php:2067
-#: lib/functions.php:4318 lib/html.php:1876 lib/html.php:1941 lib/html.php:2662
+#: lib/functions.php:4318 lib/html.php:1864 lib/html.php:1929 lib/html.php:2650
 #: user_admin.php:1471 user_group_admin.php:1453
 msgid "Console"
 msgstr ""
@@ -7962,7 +7962,7 @@ msgstr ""
 msgid "(Action)"
 msgstr ""
 
-#: include/global_arrays.php:2625 lib/html.php:2683
+#: include/global_arrays.php:2625 lib/html.php:2671
 msgid "About Kadupul"
 msgstr "Про Kadupul"
 
@@ -7975,7 +7975,7 @@ msgid "Export Results"
 msgstr ""
 
 #: include/global_arrays.php:2661 include/global_arrays.php:2691
-#: lib/html.php:1892 lib/html.php:1966
+#: lib/html.php:1880 lib/html.php:1954
 msgid "Reporting"
 msgstr ""
 
@@ -8756,7 +8756,7 @@ msgstr ""
 msgid "Place the legend items in the given vertical order."
 msgstr ""
 
-#: include/global_form.php:953 lib/api_aggregate.php:2339 lib/html.php:1296
+#: include/global_form.php:953 lib/api_aggregate.php:2339 lib/html.php:1284
 msgid "Graph Item Type"
 msgstr ""
 
@@ -9895,7 +9895,7 @@ msgstr ""
 msgid "Simple"
 msgstr ""
 
-#: include/global_settings.php:428 lib/html.php:2731
+#: include/global_settings.php:428 lib/html.php:2719
 msgid "Advanced"
 msgstr ""
 
@@ -10307,7 +10307,7 @@ msgid "Theme Settings"
 msgstr ""
 
 #: include/global_settings.php:851 include/global_settings.php:1061
-#: include/global_settings.php:2567 lib/html.php:2679
+#: include/global_settings.php:2567 lib/html.php:2667
 msgid "Theme"
 msgstr ""
 
@@ -11885,7 +11885,7 @@ msgstr ""
 msgid "Variance Based w/Outliers Removed"
 msgstr ""
 
-#: include/global_settings.php:2417 lib/html.php:2449
+#: include/global_settings.php:2417 lib/html.php:2437
 msgid "Replacement Method"
 msgstr ""
 
@@ -11893,15 +11893,15 @@ msgstr ""
 msgid "There are three replacement methods.  The first method replaces the spike with the average of the data source in question.  The second method replaces the spike with a 'NaN'.  The last replaces the spike with the last known good value found."
 msgstr ""
 
-#: include/global_settings.php:2422 lib/html.php:2445
+#: include/global_settings.php:2422 lib/html.php:2433
 msgid "Average"
 msgstr ""
 
-#: include/global_settings.php:2423 lib/html.php:2446
+#: include/global_settings.php:2423 lib/html.php:2434
 msgid "NaN's"
 msgstr ""
 
-#: include/global_settings.php:2424 lib/html.php:2447
+#: include/global_settings.php:2424 lib/html.php:2435
 msgid "Last Known Good"
 msgstr ""
 
@@ -12440,15 +12440,15 @@ msgstr ""
 msgid "The Graphs chosen for the Aggregate Graph do not use Graph Templates.  Aggregate does not support creating Aggregate Graphs from non-templated graphs."
 msgstr ""
 
-#: lib/api_aggregate.php:2337 lib/html.php:1293
+#: lib/api_aggregate.php:2337 lib/html.php:1281
 msgid "Graph Item"
 msgstr ""
 
-#: lib/api_aggregate.php:2340 lib/html.php:1297
+#: lib/api_aggregate.php:2340 lib/html.php:1285
 msgid "CF Type"
 msgstr ""
 
-#: lib/api_aggregate.php:2341 lib/html.php:1302
+#: lib/api_aggregate.php:2341 lib/html.php:1290
 msgid "Item Color"
 msgstr ""
 
@@ -13464,11 +13464,11 @@ msgstr ""
 msgid "guest"
 msgstr ""
 
-#: lib/functions.php:4075 lib/functions.php:4100 lib/html.php:2668
+#: lib/functions.php:4075 lib/functions.php:4100 lib/html.php:2656
 msgid "User Community"
 msgstr ""
 
-#: lib/functions.php:4076 lib/functions.php:4101 lib/html.php:2670
+#: lib/functions.php:4076 lib/functions.php:4101 lib/html.php:2658
 #: lib/utility.php:1440
 msgid "Documentation"
 msgstr ""
@@ -13478,11 +13478,11 @@ msgstr ""
 msgid "Logged in as %s"
 msgstr ""
 
-#: lib/functions.php:4095 lib/html.php:2649
+#: lib/functions.php:4095 lib/html.php:2637
 msgid "Edit Profile"
 msgstr ""
 
-#: lib/functions.php:4105 lib/html.php:2653
+#: lib/functions.php:4105 lib/html.php:2641
 msgid "Logout"
 msgstr ""
 
@@ -13633,443 +13633,443 @@ msgstr ""
 msgid "Remote Server"
 msgstr "Видалити Запит"
 
-#: lib/html.php:110
+#: lib/html.php:113
 msgid "Get Page Help"
 msgstr ""
 
-#: lib/html.php:204 settings.php:575
+#: lib/html.php:207 settings.php:575
 msgid "Templates Selected"
 msgstr ""
 
-#: lib/html.php:258 settings.php:540 settings.php:557 settings.php:616
+#: lib/html.php:261 settings.php:540 settings.php:557 settings.php:616
 msgid "Enter keyword"
 msgstr ""
 
-#: lib/html.php:453 lib/reports.php:1678
+#: lib/html.php:456 lib/reports.php:1678
 msgid "Data Query:"
 msgstr ""
 
-#: lib/html.php:525
+#: lib/html.php:531
 msgid "CSV Export of Graph Data"
 msgstr ""
 
-#: lib/html.php:526 lib/html.php:2640
+#: lib/html.php:532 lib/html.php:2628
 msgid "Time Graph View"
 msgstr ""
 
-#: lib/html.php:537
+#: lib/html.php:543
 msgid "Edit Device"
 msgstr ""
 
-#: lib/html.php:557
+#: lib/html.php:570
 msgid "Kill Spikes in Graphs"
 msgstr ""
 
-#: lib/html.php:608 lib/html.php:640 lib/installer.php:1790
+#: lib/html.php:621 lib/html.php:653 lib/installer.php:1790
 msgid "Previous"
 msgstr ""
 
-#: lib/html.php:611
+#: lib/html.php:624
 #, php-format
 msgid "%d to %d of %s [ %s ]"
 msgstr ""
 
-#: lib/html.php:614 lib/html.php:646 lib/installer.php:1789
+#: lib/html.php:627 lib/html.php:659 lib/installer.php:1789
 msgid "Next"
 msgstr ""
 
-#: lib/html.php:621
+#: lib/html.php:634
 #, php-format
 msgid "All %d %s"
 msgstr ""
 
-#: lib/html.php:643
+#: lib/html.php:656
 #, php-format
 msgid "Current Page: %s"
 msgstr ""
 
-#: lib/html.php:653
+#: lib/html.php:666
 #, php-format
 msgid "No %s Found"
 msgstr ""
 
-#: lib/html.php:1294
+#: lib/html.php:1282
 msgid "#"
 msgstr ""
 
-#: lib/html.php:1298
+#: lib/html.php:1286
 msgid "GPrint"
 msgstr ""
 
-#: lib/html.php:1301
+#: lib/html.php:1289
 msgid "Alpha %"
 msgstr ""
 
-#: lib/html.php:1358
+#: lib/html.php:1346
 msgid "No Source"
 msgstr ""
 
-#: lib/html.php:1706
+#: lib/html.php:1694
 msgid "Choose an action"
 msgstr ""
 
-#: lib/html.php:1716
+#: lib/html.php:1704
 msgid "Execute Action"
 msgstr ""
 
-#: lib/html.php:1897 lib/html.php:1976 managers.php:26 managers.php:219
+#: lib/html.php:1885 lib/html.php:1964 managers.php:26 managers.php:219
 msgid "Logs"
 msgstr ""
 
-#: lib/html.php:2103 user_admin.php:2346 user_admin.php:2352
+#: lib/html.php:2091 user_admin.php:2346 user_admin.php:2352
 msgid "Show All"
 msgstr ""
 
-#: lib/html.php:2455
+#: lib/html.php:2443
 msgid "Standard Deviations"
 msgstr ""
 
-#: lib/html.php:2461
+#: lib/html.php:2449
 msgid "Kills Per RRA"
 msgstr ""
 
-#: lib/html.php:2467
+#: lib/html.php:2455
 msgid "Remove StdDev"
 msgstr ""
 
-#: lib/html.php:2468
+#: lib/html.php:2456
 msgid "Gap Fill Range"
 msgstr ""
 
-#: lib/html.php:2469 lib/spikekill.php:280
+#: lib/html.php:2457 lib/spikekill.php:280
 msgid "Float Range"
 msgstr ""
 
-#: lib/html.php:2471
+#: lib/html.php:2459
 msgid "Dry Run StdDev"
 msgstr ""
 
-#: lib/html.php:2472
+#: lib/html.php:2460
 msgid "Dry Run Gap Fill Range"
 msgstr ""
 
-#: lib/html.php:2473
+#: lib/html.php:2461
 msgid "Dry Run Float Range"
 msgstr ""
 
-#: lib/html.php:2636
+#: lib/html.php:2624
 msgid "Allow or limit the table columns to extend beyond the current windows limits."
 msgstr ""
 
-#: lib/html.php:2637 lib/html_filter.php:48
+#: lib/html.php:2625 lib/html_filter.php:48
 msgid "Enter a search term"
 msgstr ""
 
-#: lib/html.php:2638
+#: lib/html.php:2626
 msgid "Enter a regular expression"
 msgstr ""
 
-#: lib/html.php:2639
+#: lib/html.php:2627
 msgid "No file selected"
 msgstr ""
 
-#: lib/html.php:2642 lib/html.php:2685
+#: lib/html.php:2630 lib/html.php:2673
 msgid "SpikeKill Results"
 msgstr ""
 
-#: lib/html.php:2644
+#: lib/html.php:2632
 msgid "Click to view just this Graph in Realtime"
 msgstr ""
 
-#: lib/html.php:2645
+#: lib/html.php:2633
 msgid "Click again to take this Graph out of Realtime"
 msgstr ""
 
-#: lib/html.php:2654
+#: lib/html.php:2642
 msgid "Standard Mode"
 msgstr ""
 
-#: lib/html.php:2655
+#: lib/html.php:2643
 msgid "Compact Mode"
 msgstr ""
 
-#: lib/html.php:2656
+#: lib/html.php:2644
 msgid "Dark Color Mode"
 msgstr ""
 
-#: lib/html.php:2657
+#: lib/html.php:2645
 msgid "Light Color Mode"
 msgstr ""
 
-#: lib/html.php:2658
+#: lib/html.php:2646
 msgid "Use System Color"
 msgstr ""
 
-#: lib/html.php:2659
+#: lib/html.php:2647
 msgid "Ignore System Color"
 msgstr ""
 
-#: lib/html.php:2660
+#: lib/html.php:2648
 msgid "Help"
 msgstr ""
 
-#: lib/html.php:2661
+#: lib/html.php:2649
 msgid "Kadupul Home"
 msgstr ""
 
-#: lib/html.php:2663
+#: lib/html.php:2651
 msgid "Miscellaneous"
 msgstr ""
 
-#: lib/html.php:2664
+#: lib/html.php:2652
 msgid "Dashboards"
 msgstr ""
 
-#: lib/html.php:2666
+#: lib/html.php:2654
 msgid "Charts"
 msgstr ""
 
-#: lib/html.php:2667
+#: lib/html.php:2655
 msgid "Kadupul Project Page"
 msgstr ""
 
-#: lib/html.php:2671
+#: lib/html.php:2659
 msgid "Spine"
 msgstr ""
 
-#: lib/html.php:2672
+#: lib/html.php:2660
 msgid "RRDProxy"
 msgstr ""
 
-#: lib/html.php:2673
+#: lib/html.php:2661
 msgid "Keyboard"
 msgstr ""
 
-#: lib/html.php:2674
+#: lib/html.php:2662
 msgid "Shortcuts"
 msgstr ""
 
-#: lib/html.php:2675
+#: lib/html.php:2663
 msgid "Contribute to the Kadupul Project"
 msgstr ""
 
-#: lib/html.php:2676
+#: lib/html.php:2664
 msgid "Help in Developing"
 msgstr ""
 
-#: lib/html.php:2677
+#: lib/html.php:2665
 msgid "Donation & Sponsoring"
 msgstr ""
 
-#: lib/html.php:2680
+#: lib/html.php:2668
 msgid "Client"
 msgstr ""
 
-#: lib/html.php:2681
+#: lib/html.php:2669
 msgid "Help in Translating"
 msgstr ""
 
-#: lib/html.php:2682
+#: lib/html.php:2670
 msgid "Report a bug"
 msgstr ""
 
-#: lib/html.php:2684
+#: lib/html.php:2672
 msgid "Kadupul"
 msgstr "Kadupul"
 
-#: lib/html.php:2686
+#: lib/html.php:2674
 msgid "Click to Show/Hide Filter"
 msgstr ""
 
-#: lib/html.php:2687
+#: lib/html.php:2675
 msgid "Clear Current Filter"
 msgstr ""
 
-#: lib/html.php:2688
+#: lib/html.php:2676
 msgid "Clipboard"
 msgstr ""
 
-#: lib/html.php:2689
+#: lib/html.php:2677
 msgid "Clipboard ID"
 msgstr ""
 
-#: lib/html.php:2690
+#: lib/html.php:2678
 msgid "Copy operation is unavailable at this time"
 msgstr ""
 
-#: lib/html.php:2691
+#: lib/html.php:2679
 msgid "Failed to find data to copy!"
 msgstr ""
 
-#: lib/html.php:2692
+#: lib/html.php:2680
 msgid "Clipboard has been updated"
 msgstr ""
 
-#: lib/html.php:2693
+#: lib/html.php:2681
 msgid "Sorry, your clipboard could not be updated at this time"
 msgstr ""
 
-#: lib/html.php:2697
+#: lib/html.php:2685
 msgid "Passphrase length meets 8 character minimum"
 msgstr ""
 
-#: lib/html.php:2698
+#: lib/html.php:2686
 msgid "Passphrase too short"
 msgstr ""
 
-#: lib/html.php:2699
+#: lib/html.php:2687
 msgid "Passphrase matches but too short"
 msgstr ""
 
-#: lib/html.php:2700
+#: lib/html.php:2688
 msgid "Passphrase too short and not matching"
 msgstr ""
 
-#: lib/html.php:2701
+#: lib/html.php:2689
 msgid "Passphrases match"
 msgstr ""
 
-#: lib/html.php:2702
+#: lib/html.php:2690
 msgid "Passphrases do not match"
 msgstr ""
 
-#: lib/html.php:2703
+#: lib/html.php:2691
 msgid "Sorry, we could not process your last action."
 msgstr ""
 
-#: lib/html.php:2704
+#: lib/html.php:2692
 msgid "Error:"
 msgstr ""
 
-#: lib/html.php:2705
+#: lib/html.php:2693
 msgid "Reason:"
 msgstr ""
 
-#: lib/html.php:2706
+#: lib/html.php:2694
 msgid "Action failed"
 msgstr ""
 
-#: lib/html.php:2707 pollers.php:804
+#: lib/html.php:2695 pollers.php:804
 msgid "Connection Successful"
 msgstr ""
 
-#: lib/html.php:2708 pollers.php:806
+#: lib/html.php:2696 pollers.php:806
 msgid "Connection Failed"
 msgstr ""
 
-#: lib/html.php:2709
+#: lib/html.php:2697
 msgid "The response to the last action was unexpected."
 msgstr ""
 
-#: lib/html.php:2710
+#: lib/html.php:2698
 msgid "Some Actions failed"
 msgstr ""
 
-#: lib/html.php:2711
+#: lib/html.php:2699
 msgid "Note, we could not process all your actions.  Details are below."
 msgstr ""
 
-#: lib/html.php:2712
+#: lib/html.php:2700
 msgid "Operation successful"
 msgstr ""
 
-#: lib/html.php:2713
+#: lib/html.php:2701
 msgid "The Operation was successful.  Details are below."
 msgstr ""
 
-#: lib/html.php:2715
+#: lib/html.php:2703
 msgid "Pause"
 msgstr ""
 
-#: lib/html.php:2718
+#: lib/html.php:2706
 msgid "Zoom In"
 msgstr ""
 
-#: lib/html.php:2719
+#: lib/html.php:2707
 msgid "Zoom Out"
 msgstr ""
 
-#: lib/html.php:2720
+#: lib/html.php:2708
 msgid "Zoom Out Factor"
 msgstr ""
 
-#: lib/html.php:2721
+#: lib/html.php:2709
 msgid "Timestamps"
 msgstr ""
 
-#: lib/html.php:2722
+#: lib/html.php:2710
 msgid "2x"
 msgstr ""
 
-#: lib/html.php:2723
+#: lib/html.php:2711
 msgid "4x"
 msgstr ""
 
-#: lib/html.php:2724
+#: lib/html.php:2712
 msgid "8x"
 msgstr ""
 
-#: lib/html.php:2725
+#: lib/html.php:2713
 msgid "16x"
 msgstr ""
 
-#: lib/html.php:2726
+#: lib/html.php:2714
 msgid "32x"
 msgstr ""
 
-#: lib/html.php:2727
+#: lib/html.php:2715
 msgid "Zoom Out Positioning"
 msgstr ""
 
-#: lib/html.php:2728
+#: lib/html.php:2716
 msgid "Zoom Mode"
 msgstr ""
 
-#: lib/html.php:2730
+#: lib/html.php:2718
 msgid "Quick"
 msgstr ""
 
-#: lib/html.php:2732
+#: lib/html.php:2720
 msgid "Open in new tab"
 msgstr ""
 
-#: lib/html.php:2733
+#: lib/html.php:2721
 msgid "Save graph"
 msgstr ""
 
-#: lib/html.php:2734
+#: lib/html.php:2722
 msgid "Copy graph"
 msgstr ""
 
-#: lib/html.php:2735
+#: lib/html.php:2723
 msgid "Copy graph link"
 msgstr ""
 
-#: lib/html.php:2736
+#: lib/html.php:2724
 msgid "Always On"
 msgstr ""
 
-#: lib/html.php:2737
+#: lib/html.php:2725
 msgid "Auto"
 msgstr ""
 
-#: lib/html.php:2738
+#: lib/html.php:2726
 msgid "Always Off"
 msgstr ""
 
-#: lib/html.php:2739
+#: lib/html.php:2727
 msgid "Begin with"
 msgstr ""
 
-#: lib/html.php:2741
+#: lib/html.php:2729
 msgid "End with"
 msgstr ""
 
-#: lib/html.php:2743 lib/html_form.php:1432
+#: lib/html.php:2731 lib/html_form.php:1432
 msgid "Close"
 msgstr ""
 
-#: lib/html.php:2745
+#: lib/html.php:2733
 msgid "3rd Mouse Button"
 msgstr ""
 
