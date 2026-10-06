@@ -55,6 +55,7 @@ const scenarios = {
     'a system scheme change leaves a manual colour mode alone',
     'ESC outside fullscreen and the retired c+F1 shortcut raise no error or alert',
     'SHIFT+k enters fullscreen on the content area and leaves it again',
+    'repeated native page setup keeps one search icon per input',
   ],
   'selectmenu-scroll.spec.js': [
     'select menu remains usable after the browser scrolls its button into view',
@@ -64,6 +65,15 @@ const scenarios = {
     'shared form controls retain import labels and theme widths',
   ],
 };
+
+function filterGlyphProductionLine() {
+  const source = fs.readFileSync(path.join(root, 'include/themes/midwinter/main.js'), 'utf8');
+  const lines = source.split('\n').flatMap((value, index) =>
+    value.includes('<div class="cactiTableFilter">') && value.includes("iconClass('filter')")
+      && value.includes(".prependTo('#filterTableOnTop .cactiTableTitle')") ? [index + 1] : []);
+  if (lines.length !== 1) throw new Error('Missing or ambiguous filter glyph production statement');
+  return lines[0];
+}
 
 function loadEvidence(file, expectedProducer, expectedScenario) {
   const receipt = JSON.parse(fs.readFileSync(`${file}.receipt`, 'utf8'));
@@ -98,7 +108,7 @@ function loadEvidence(file, expectedProducer, expectedScenario) {
     }
   }
   if (expectedScenario === 'the relocated filter keeps its production sliders glyph and controls'
-      && !(map.fileCoverageFor(path.join(root, 'include/themes/midwinter/main.js')).getLineCoverage()[504] > 0)) {
+      && !(map.fileCoverageFor(path.join(root, 'include/themes/midwinter/main.js')).getLineCoverage()[filterGlyphProductionLine()] > 0)) {
     throw new Error('Missing actual filter glyph production line');
   }
   if (expectedProducer.endsWith('vdef_browser_probe.cjs')) {
@@ -255,8 +265,9 @@ function verifyRegistryRejections(directory) {
       const file = path.join(owned, glyphFile);
       const data = JSON.parse(fs.readFileSync(file));
       const production = data[path.join(root, 'include/themes/midwinter/main.js')];
+      const glyphLine = filterGlyphProductionLine();
       for (const [key, location] of Object.entries(production.statementMap)) {
-        if (location.start.line <= 504 && location.end.line >= 504) production.s[key] = 0;
+        if (location.start.line <= glyphLine && location.end.line >= glyphLine) production.s[key] = 0;
       }
       const bytes = JSON.stringify(data);
       fs.writeFileSync(file, bytes);

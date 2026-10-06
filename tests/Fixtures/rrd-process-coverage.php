@@ -202,6 +202,9 @@ if (defined('FORM_RENDERER_TEST_COVERAGE')) {
 if (defined('SNMP_SECURITY_NATIVE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/snmp.php');
 }
+if (defined('SNMP_BINARY_READ_NATIVE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php');
+}
 if (defined('COLOR_DROPDOWN_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
 }
