@@ -97,7 +97,6 @@
             <exclude>./Unit/HtmlFilterXssTest.php</exclude>
             <exclude>./Unit/JsContextHardeningTest.php</exclude>
             <exclude>./Unit/PathAndRedirectHardeningTest.php</exclude>
-            <exclude>./Unit/PluginOrderingSourceContractTest.php</exclude>
             <exclude>./Unit/PrivateAdvisoryEvidenceRegressionTest.php</exclude>
             <exclude>./Unit/RlikeSqliMigrationTest.php</exclude>
             <exclude>./Unit/RrdCfFallbackTest.php</exclude>
