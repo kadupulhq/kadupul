@@ -64,7 +64,7 @@
 
             <!-- Remaining unrepaired tests call read_config_option() or is_urlencoded() without
                  loading lib/functions.php or stubbing them. -->
-            <exclude>./Unit/Issue7121InputStringRegressionTest.php</exclude>
+            <exclude>./Unit/InputStringPlaceholderRegressionTest.php</exclude>
             <exclude>./Unit/RedirectValidationTest.php</exclude>
             <exclude>./Unit/SecurityScriptServerDataInputTest.php</exclude>
             <exclude>./handoff/RedirectDataHandoffTest.php</exclude>

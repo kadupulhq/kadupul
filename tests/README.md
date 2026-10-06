@@ -55,3 +55,5 @@ native PHP behaviors, and `*.test.mjs` for Node contracts. Keep upstream
 issue/advisory identifiers in comments as provenance. A source assertion
 that a function signature exists does not prove that the file parses or that
 the function executes.
+
+The placeholder regression file is `Unit/InputStringPlaceholderRegressionTest.php`; its existing coverage exclusion remains while #805 tracks its fixture dependency. `integration/DataInputImportValidationContractTest.php` checks source ordering and native shared-validator contracts. The registered Symfony HTTP/worker scenarios provide installed data-input save/persistence evidence. Issue references and inherited attribution remain in both files.
