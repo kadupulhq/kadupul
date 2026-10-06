@@ -1,9 +1,9 @@
 class	location	match
 cmd_exec	./cactid.php:85		exec('pgrep -a php | grep cactid.php', $output);
-cmd_exec	./cli/audit_database.php:1044	                $db_shell = trim((string) shell_exec('which mysql'));
-cmd_exec	./cli/audit_database.php:1084	            $process = proc_open(
+cmd_exec	./cli/audit_database.php:1000	                $db_shell = trim((string) shell_exec('which mysql'));
+cmd_exec	./cli/audit_database.php:1040	            $process = proc_open(
 cmd_exec	./cli/audit_database.php:136	    exec(cacti_escapeshellarg(PHP_BINARY) . ' ' . cacti_escapeshellarg($config['base_path'] . '/cli/upgrade_database.php') . ' --debug', $output, $return_var);
-cmd_exec	./cli/audit_database.php:243	                            exec(cacti_escapeshellarg(PHP_BINARY) . ' ' . cacti_escapeshellarg($config['base_path'] . '/plugins/' . $pname . '/database_upgrade.php') . ' --type=large --force-ver=' . cacti_escapeshellarg($old), $output, $return_var);
+cmd_exec	./cli/audit_database.php:226	                            exec(cacti_escapeshellarg(PHP_BINARY) . ' ' . cacti_escapeshellarg($config['base_path'] . '/plugins/' . $pname . '/database_upgrade.php') . ' --type=large --force-ver=' . cacti_escapeshellarg($old), $output, $return_var);
 cmd_exec	./cli/batchgapfix.php:293		$process = proc_open($args, array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
 cmd_exec	./cli/batchgapfix.php:363			exec($command, $output, $return_var);
 cmd_exec	./cli/float_rrdfiles.php:665		return proc_open($args, array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
@@ -92,8 +92,8 @@ cmd_exec	./utilities.php:237	            $snmp_version = shell_exec(cacti_escape
 cmd_exec	./utilities.php:257	            exec(cacti_escapeshellcmd(read_config_option('path_spine')) . ' --version', $out_array);
 dynamic_include	./automation_snmp.php:415	    #include_once($config['base_path'].'/plugins/mactrack/lib/automation_functions.php');
 dynamic_include	./automation_tree_rules.php:541	    include_once($config['base_path'] . '/lib/html_tree.php');
-dynamic_include	./bin/legacy-audit-upgrade.php:146	                        include_once($plugin . '/setup.php');
-dynamic_include	./bin/legacy-audit-upgrade.php:148	                            include_once($plugin . '/includes/database.php');
+dynamic_include	./bin/legacy-audit-upgrade.php:129	                        include_once($plugin . '/setup.php');
+dynamic_include	./bin/legacy-audit-upgrade.php:131	                            include_once($plugin . '/includes/database.php');
 dynamic_include	./cli/add_data_query.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/add_data_query.php:11	require_once($config['base_path'] . '/lib/api_automation.php');
 dynamic_include	./cli/add_data_query.php:12	require_once($config['base_path'] . '/lib/api_data_source.php');
@@ -147,8 +147,8 @@ dynamic_include	./cli/apply_automation_rules.php:18	require_once($config['base_p
 dynamic_include	./cli/apply_automation_rules.php:19	require_once($config['base_path'] . '/lib/reports.php');
 dynamic_include	./cli/apply_automation_rules.php:20	require_once($config['base_path'] . '/lib/template.php');
 dynamic_include	./cli/apply_automation_rules.php:21	require_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./cli/audit_database.php:204	                        include_once($plugin . '/setup.php');
-dynamic_include	./cli/audit_database.php:206	                            include_once($plugin . '/includes/database.php');
+dynamic_include	./cli/audit_database.php:187	                        include_once($plugin . '/setup.php');
+dynamic_include	./cli/audit_database.php:189	                            include_once($plugin . '/includes/database.php');
 dynamic_include	./cli/batchgapfix.php:18	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/change_device.php:11	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/change_device.php:12	require_once($config['base_path'] . '/lib/api_device.php');
@@ -349,13 +349,13 @@ dynamic_include	./lib/boost.php:1739	        include_once($config['library_path'
 dynamic_include	./lib/boost.php:347	        include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/boost.php:505	    include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/boost.php:871	    include_once($config['library_path'] . '/rrd.php');
-dynamic_include	./lib/data_query.php:2158	    include_once($config['library_path'] . '/sort.php');
-dynamic_include	./lib/data_query.php:2602	    include_once($config['library_path'] . '/variables.php');
+dynamic_include	./lib/data_query.php:2141	    include_once($config['library_path'] . '/sort.php');
+dynamic_include	./lib/data_query.php:2585	    include_once($config['library_path'] . '/variables.php');
 dynamic_include	./lib/data_query.php:652	    include_once($config['library_path'] . '/xml.php');
 dynamic_include	./lib/data_query.php:76	    include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/data_query.php:77	    include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./lib/data_query.php:78	    include_once($config['library_path'] . '/utility.php');
-dynamic_include	./lib/data_query.php:870	    include_once($config['library_path'] . '/snmp.php');
+dynamic_include	./lib/data_query.php:909	    include_once($config['library_path'] . '/snmp.php');
 dynamic_include	./lib/database.php:257	        include($config['base_path'] . '/include/config.php');
 dynamic_include	./lib/dsstats.php:1002	        include_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./lib/dsstats.php:1046	        include_once($config['library_path'] . '/poller.php');
