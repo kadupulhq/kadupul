@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.3.0.-1\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 16:47-0700\n"
+"POT-Creation-Date: 2026-10-05 22:39-0700\n"
 "PO-Revision-Date: 2023-07-27 15:11+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -16463,8 +16463,7 @@ msgstr ""
 msgid "RRD storage configuration requires attention"
 msgstr ""
 
-#: lib/snmp.php:205 lib/snmp.php:294 lib/snmp.php:379 lib/snmp.php:871
-#: lib/snmp.php:894
+#: lib/snmp.php:371 lib/snmp.php:856 lib/snmp.php:879
 #, fuzzy, php-format
 msgid "SNMP Command is: %s"
 msgstr "Опції SNMP [редагування: %s]"
