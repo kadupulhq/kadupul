@@ -453,6 +453,14 @@ function get_request_var_request($name, $default = '')
    @returns - the value of the request variable */
 function get_filter_request_var($name, $filter = FILTER_VALIDATE_INT, $options = array())
 {
+    // Integer identifiers must be scalar before the historical empty-value path.
+    // Preserve callers explicitly requesting PHP's array-filter mode.
+    $flags = is_array($options) ? ($options['flags'] ?? 0) : $options;
+    $array_mode = is_int($flags) && ($flags & (FILTER_REQUIRE_ARRAY | FILTER_FORCE_ARRAY)) !== 0;
+    if ($filter === FILTER_VALIDATE_INT && !$array_mode && isset_request_var($name) && !is_scalar(get_nfilter_request_var($name))) {
+        die_html_input_error($name, '');
+    }
+
     if (isset_request_var($name)) {
         if (isempty_request_var($name)) {
             set_request_var($name, get_nfilter_request_var($name));
