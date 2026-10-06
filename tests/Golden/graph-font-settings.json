@@ -1,0 +1,204 @@
+{
+  "system": {
+    "path_rrdtool_default_font": {
+      "friendly_name": "Default Font",
+      "description": "When not using Theme based font control, the Pango font description to use for all Graphs, such as DejaVu Sans. Optionally, you may leave blank and control font settings on a per object basis.",
+      "method": "font",
+      "placeholder": "Enter a Pango font description",
+      "max_length": "255",
+      "filter": 1024,
+      "options": {
+        "options": "graph_font_name_filter"
+      }
+    },
+    "title_size": {
+      "friendly_name": "Title Font Size",
+      "description": "The size of the font used for Graph Titles",
+      "method": "textbox",
+      "default": "10",
+      "max_length": "10",
+      "size": "5",
+      "filter": 1024,
+      "options": {
+        "options": "graph_font_size_filter"
+      }
+    },
+    "title_font": {
+      "friendly_name": "Title Font Setting",
+      "description": "The font to use for Graph Titles.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files.",
+      "method": "font",
+      "placeholder": "Enter a Pango font description",
+      "max_length": "100",
+      "filter": 1024,
+      "options": {
+        "options": "graph_font_name_filter"
+      }
+    },
+    "legend_size": {
+      "friendly_name": "Legend Font Size",
+      "description": "The size of the font used for Graph Legend items",
+      "method": "textbox",
+      "default": "8",
+      "max_length": "10",
+      "size": "5",
+      "filter": 1024,
+      "options": {
+        "options": "graph_font_size_filter"
+      }
+    },
+    "legend_font": {
+      "friendly_name": "Legend Font Setting",
+      "description": "The font to use for Graph Legends.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files.",
+      "method": "font",
+      "placeholder": "Enter a Pango font description",
+      "max_length": "100",
+      "filter": 1024,
+      "options": {
+        "options": "graph_font_name_filter"
+      }
+    },
+    "axis_size": {
+      "friendly_name": "Axis Font Size",
+      "description": "The size of the font used for Graph Axis",
+      "method": "textbox",
+      "default": "7",
+      "max_length": "10",
+      "size": "5",
+      "filter": 1024,
+      "options": {
+        "options": "graph_font_size_filter"
+      }
+    },
+    "axis_font": {
+      "friendly_name": "Axis Font Setting",
+      "description": "The font to use for Graph Axis items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files.",
+      "method": "font",
+      "placeholder": "Enter a Pango font description",
+      "max_length": "100",
+      "filter": 1024,
+      "options": {
+        "options": "graph_font_name_filter"
+      }
+    },
+    "unit_size": {
+      "friendly_name": "Unit Font Size",
+      "description": "The size of the font used for Graph Units",
+      "method": "textbox",
+      "default": "7",
+      "max_length": "10",
+      "size": "5",
+      "filter": 1024,
+      "options": {
+        "options": "graph_font_size_filter"
+      }
+    },
+    "unit_font": {
+      "friendly_name": "Unit Font Setting",
+      "description": "The font to use for Graph Unit items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files.",
+      "method": "font",
+      "placeholder": "Enter a Pango font description",
+      "max_length": "100",
+      "filter": 1024,
+      "options": {
+        "options": "graph_font_name_filter"
+      }
+    }
+  },
+  "user": {
+    "custom_fonts": {
+      "friendly_name": "Use Custom Fonts",
+      "description": "Choose whether to use your own custom fonts and font sizes or utilize the system defaults.",
+      "method": "checkbox",
+      "on_change": "graphSettings()",
+      "default": ""
+    },
+    "title_size": {
+      "friendly_name": "Title Font Size",
+      "description": "The size of the font used for Graph Titles",
+      "method": "textbox",
+      "default": "12",
+      "max_length": "10",
+      "filter": 1024,
+      "options": {
+        "options": "graph_font_size_filter"
+      }
+    },
+    "title_font": {
+      "friendly_name": "Title Font Setting",
+      "description": "The Pango font description to use for Graph Titles, such as DejaVu Sans Bold",
+      "method": "font",
+      "placeholder": "Enter a Pango font description",
+      "max_length": "100",
+      "filter": 1024,
+      "options": {
+        "options": "graph_font_name_filter"
+      }
+    },
+    "legend_size": {
+      "friendly_name": "Legend Font Size",
+      "description": "The size of the font used for Graph Legend items",
+      "method": "textbox",
+      "default": "10",
+      "max_length": "10",
+      "filter": 1024,
+      "options": {
+        "options": "graph_font_size_filter"
+      }
+    },
+    "legend_font": {
+      "friendly_name": "Legend Font Setting",
+      "description": "The Pango font description to use for Graph Legend items, such as DejaVu Sans Mono",
+      "method": "font",
+      "placeholder": "Enter a Pango font description",
+      "max_length": "100",
+      "filter": 1024,
+      "options": {
+        "options": "graph_font_name_filter"
+      }
+    },
+    "axis_size": {
+      "friendly_name": "Axis Font Size",
+      "description": "The size of the font used for Graph Axis",
+      "method": "textbox",
+      "default": "8",
+      "max_length": "10",
+      "filter": 1024,
+      "options": {
+        "options": "graph_font_size_filter"
+      }
+    },
+    "axis_font": {
+      "friendly_name": "Axis Font Setting",
+      "description": "The Pango font description to use for Graph Axis items, such as DejaVu Sans",
+      "method": "font",
+      "placeholder": "Enter a Pango font description",
+      "max_length": "100",
+      "filter": 1024,
+      "options": {
+        "options": "graph_font_name_filter"
+      }
+    },
+    "unit_size": {
+      "friendly_name": "Unit Font Size",
+      "description": "The size of the font used for Graph Units",
+      "method": "textbox",
+      "default": "8",
+      "max_length": "10",
+      "filter": 1024,
+      "options": {
+        "options": "graph_font_size_filter"
+      }
+    },
+    "unit_font": {
+      "friendly_name": "Unit Font Setting",
+      "description": "The Pango font description to use for Graph Unit items, such as DejaVu Sans",
+      "method": "font",
+      "placeholder": "Enter a Pango font description",
+      "max_length": "100",
+      "filter": 1024,
+      "options": {
+        "options": "graph_font_name_filter"
+      }
+    }
+  }
+}
