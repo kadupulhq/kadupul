@@ -213,3 +213,89 @@ test('realtime graph activation preserves loading glyph response and original im
   await expect(page.locator('#timespan')).toBeVisible();
   expect(await page.evaluate(() => realtimeArray[7])).toBe(false);
 });
+
+async function loadDarkGraphMenu(page) {
+  await loadLayout(page);
+  await page.setContent('<div id="dd1" class="graphDrillDown" style="width:100px;height:80px"><div class="iconWrapper"><button id="graph-one">First graph</button></div></div><div id="dd2" class="graphDrillDown" style="width:100px;height:80px"><div class="iconWrapper"><button id="graph-two">Second graph</button></div></div><button id="outside">Outside graphs</button>');
+  await page.addStyleTag({ url: '/include/themes/dark/main.css' });
+  await page.evaluate(() => {
+    window.searchFilter = 'Search'; window.searchRFilter = 'Filter'; window.noFileSelected = 'No file';
+  });
+  await page.addScriptTag({ url: '/include/themes/dark/main.js' });
+  await page.evaluate(() => {
+    // This owned graph-only fixture isolates unrelated navigation/page sizing.
+    // Keep the actual themeReady graph handlers and shared layout state intact.
+    window.keepWindowSize = () => {};
+    window.setMenuVisibility = () => {};
+    window.setNavigationScroll = () => {};
+    themeReady();
+  });
+}
+
+test('dark graph hover retains handoff leave reinitialization and keyboard focus', async ({ page }) => {
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await loadDarkGraphMenu(page);
+  const first = page.locator('#dd1');
+  const second = page.locator('#dd2');
+  for (let pass = 0; pass < 2; pass++) {
+    if (pass) await page.evaluate(() => themeReady());
+    await first.hover();
+    await expect(first).toHaveClass(/iconsShown/);
+    await expect(first.locator('.iconWrapper')).toHaveCSS('opacity', '1');
+    await second.hover();
+    await expect(first).not.toHaveClass(/iconsShown/);
+    await expect(second).toHaveClass(/iconsShown/);
+    expect(await page.evaluate(() => graphMenuElement)).toBe('2');
+    await page.locator('#outside').hover();
+    await expect(second).not.toHaveClass(/iconsShown/);
+    await expect(second.locator('.iconWrapper')).toHaveCSS('opacity', '0');
+  }
+  await page.locator('body').click({ position: { x: 500, y: 500 } });
+  await page.keyboard.press('Tab');
+  await expect(page.locator('#graph-one')).toBeFocused();
+  await expect(first.locator('.iconWrapper')).toHaveCSS('opacity', '1');
+  await expect(first).not.toHaveClass(/iconsShown/);
+  expect(errors).toEqual([]);
+});
+
+test('dark graph timer snapshots its element before a class hook changes shared state', async ({ page }) => {
+  await loadDarkGraphMenu(page);
+  await page.evaluate(() => {
+    window.savedDarkAddClass = $.fn.addClass;
+    $.fn.addClass = function (name) {
+      const result = savedDarkAddClass.apply(this, arguments);
+      if (name === 'iconsShown') window.element = $('#dd2');
+      return result;
+    };
+  });
+  try {
+    await page.locator('#dd1').hover();
+    await expect(page.locator('#dd1')).toHaveClass(/iconsShown/);
+    expect(await page.evaluate(() => graphMenuElement)).toBe('1');
+    await expect(page.locator('#dd2')).not.toHaveClass(/iconsShown/);
+  } finally {
+    await page.evaluate(() => { $.fn.addClass = savedDarkAddClass; delete window.savedDarkAddClass; });
+  }
+});
+
+for (const nativeApi of [true, false]) {
+  test(`native own icon lookup preserves registry semantics with modern API ${nativeApi ? 'available' : 'absent'}`, async ({ page }) => {
+    await loadLayout(page);
+    const result = await page.evaluate(enabled => {
+      const descriptor = Object.getOwnPropertyDescriptor(Object, 'hasOwn');
+      try {
+        if (!enabled) Object.defineProperty(Object, 'hasOwn', { value: undefined, configurable: true });
+        const registry = Object.create(null);
+        registry.add = 'fa fa-plus'; registry.hasOwnProperty = 'registry-value';
+        window.kadupulIcons = registry;
+        const ordinary = [iconClass('add'), iconClass('missing'), iconClass('hasOwnProperty'), iconSelector('add'), iconMarkup('add')];
+        window.kadupulIcons = Object.create({ inherited: 'not-an-own-icon' });
+        return { ordinary, inherited: iconClass('inherited') };
+      } finally {
+        Object.defineProperty(Object, 'hasOwn', descriptor);
+      }
+    }, nativeApi);
+    expect(result).toEqual({ ordinary: ['fa fa-plus', '', 'registry-value', '.fa.fa-plus', '<i class="fa fa-plus" aria-hidden="true"></i>'], inherited: '' });
+  });
+}

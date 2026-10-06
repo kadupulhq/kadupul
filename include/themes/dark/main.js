@@ -106,7 +106,8 @@ function themeReady() {
 		}
 	});
 
-	// Hide the graph icons until you hover
+	// Hide the graph icons until you hover. The stylesheet reveals the icons for
+	// this class and keyboard focus, so they stay in the tab order.
 	$('.graphDrillDown').hover(
 	function() {
 		element = $(this);
@@ -117,24 +118,20 @@ function themeReady() {
 		}
 
 		clearTimeout(graphMenuTimer);
-		graphMenuTimer = setTimeout(function() { showGraphMenu(element); }, 400);
+		graphMenuTimer = setTimeout(function() {
+			const currentElement = element;
+			currentElement.addClass('iconsShown');
+			graphMenuElement = currentElement.attr('id').replace('dd', '');
+		}, 400);
 	},
 	function() {
 		element = $(this);
 		clearTimeout(graphMenuTimer);
-		graphMenuTimer = setTimeout(function() { hideGraphMenu(element); }, 400);
+		graphMenuTimer = setTimeout(function() {
+			const currentElement = element;
+			currentElement.removeClass('iconsShown');
+		}, 400);
 	});
-
-	// The stylesheet reveals the icons for this class and for keyboard focus, so
-	// they are never display:none and stay in the tab order.
-	function showGraphMenu(element) {
-		element.addClass('iconsShown');
-		graphMenuElement = element.attr('id').replace('dd', '');
-	}
-
-	function hideGraphMenu(element) {
-		element.removeClass('iconsShown');
-	}
 
 	setNavigationScroll();
 }

@@ -24,7 +24,7 @@ function producerSources() {
     'lib/html.php', 'include/js/jquery.js', 'include/js/jquery-ui.js', 'include/js/js.storage.js',
     'include/js/pace.js', 'include/js/jquery.zoom.js', 'config/icons.json', 'include/fa/webfonts/fa-brands-400.woff2',
     'include/js/jquery.cookie.js', 'include/js/purify.js', 'include/js/jquery.tablesorter.js',
-    'include/themes/classic/jquery-ui.css', 'include/fa/css/all.css', 'include/fa/webfonts/fa-solid-900.woff2',
+    'include/themes/dark/main.css', 'include/themes/classic/jquery-ui.css', 'include/fa/css/all.css', 'include/fa/webfonts/fa-solid-900.woff2',
     'include/themes/midwinter/vendor/mark/jquery.mark.js', 'include/themes/midwinter/vendor/hotkeys/hotkeys.js',
     'include/themes/midwinter/vendor/ua-parser/ua-parser.js', ...measuredSources];
 }
@@ -35,7 +35,7 @@ const mergerSources = ['tests/Symfony/vdef_browser_probe.cjs', 'tests/Symfony/vd
   'lib/html.php', 'include/js/jquery.js', 'include/js/jquery-ui.js', 'include/js/js.storage.js',
   'include/js/pace.js', 'include/js/jquery.zoom.js', 'config/icons.json', 'include/fa/webfonts/fa-brands-400.woff2',
   'include/js/jquery.cookie.js', 'include/js/purify.js', 'include/js/jquery.tablesorter.js',
-  'include/themes/classic/jquery-ui.css', 'include/fa/css/all.css', 'include/fa/webfonts/fa-solid-900.woff2',
+  'include/themes/dark/main.css', 'include/themes/classic/jquery-ui.css', 'include/fa/css/all.css', 'include/fa/webfonts/fa-solid-900.woff2',
   'include/themes/midwinter/vendor/mark/jquery.mark.js', 'include/themes/midwinter/vendor/hotkeys/hotkeys.js',
   'include/themes/midwinter/vendor/ua-parser/ua-parser.js',
   'include/realtime.js', 'include/layout.js', 'include/themes/classic/main.js', 'include/themes/modern/main.js',
@@ -87,6 +87,10 @@ const scenarios = {
     'debug table actions and stored collapsible sections retain registry glyphs',
     'SNMP passphrase validation draws real status glyphs for each field state',
     'realtime graph activation preserves loading glyph response and original image',
+    'dark graph hover retains handoff leave reinitialization and keyboard focus',
+    'dark graph timer snapshots its element before a class hook changes shared state',
+    'native own icon lookup preserves registry semantics with modern API available',
+    'native own icon lookup preserves registry semantics with modern API absent',
   ],
   'html-sink-escaping.spec.js': [
     'a color name with markup stays inside the color dropdown input',
@@ -113,7 +117,13 @@ function filterGlyphProductionLine() {
 function nativeScenarioLines(scenario) {
   const layout = 'include/layout.js';
   const midwinter = 'include/themes/midwinter/main.js';
-  const statements = scenario === 'realtime graph activation preserves loading glyph response and original image'
+  const statements = scenario === 'dark graph hover retains handoff leave reinitialization and keyboard focus'
+    ? [['include/themes/dark/main.js', "graphMenuElement = currentElement.attr('id').replace('dd', '');"], ['include/themes/dark/main.js', "currentElement.removeClass('iconsShown');"]]
+    : scenario.startsWith('dark graph ')
+      ? [['include/themes/dark/main.js', "graphMenuElement = currentElement.attr('id').replace('dd', '');"]]
+    : scenario.startsWith('native own icon lookup ')
+      ? [[layout, "typeof Object.hasOwn === 'function'"]]
+      : scenario === 'realtime graph activation preserves loading glyph response and original image'
     ? [[layout, "class='drillDown "], ['include/realtime.js', "realtimeRequest(urlPath+'graph_realtime.php?action=countdown"]]
     : scenario === 'responsive filters preserve control callbacks and visibility across clicks'
     ? [[layout, "filterHeader.find('div.cactiTableButton').append($('<span style=\"display:none;\" class=\"cactiFilterExport\""]]
@@ -139,7 +149,9 @@ function loadEvidence(file, expectedProducer, expectedScenario) {
   if (expectedProducer !== registeredProducer || !scenarios[driver]?.includes(expectedScenario)) throw new Error('Unregistered browser scenario');
   const receipt = JSON.parse(fs.readFileSync(`${file}.receipt`, 'utf8'));
   const bytes = fs.readFileSync(file);
-  const requiredHits = expectedProducer.endsWith('midwinter-listeners.spec.js')
+  const requiredHits = expectedScenario.startsWith('dark graph ')
+    ? ['include/layout.js', 'include/themes/dark/main.js']
+    : expectedProducer.endsWith('midwinter-listeners.spec.js')
     ? ['include/themes/midwinter/main.js']
     : expectedProducer.endsWith('vdef_browser_probe.cjs') ? ['public/js/vdef-item.js'] : ['include/layout.js'];
   if (receipt.version !== 1 || receipt.producer !== expectedProducer || receipt.scenario !== expectedScenario

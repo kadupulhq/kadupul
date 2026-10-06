@@ -52,6 +52,25 @@ test('an unknown name draws nothing and selects nothing', () => {
   assert.equal(helpers({ kadupulIcons: null }).iconSelector('add'), ':not(*)');
 });
 
+for (const nativeApi of [true, false]) {
+  test(`own icon lookup retains ordinary registry semantics with Object.hasOwn ${nativeApi ? 'available' : 'absent'}`, () => {
+    const js = helpers();
+    if (!nativeApi) runInContext('Object.hasOwn = undefined', js);
+    runInContext(`
+      kadupulIcons = Object.create(null);
+      kadupulIcons.add = 'fa fa-plus';
+      kadupulIcons.hasOwnProperty = 'registry-value';
+    `, js);
+    assert.equal(js.iconClass('add'), 'fa fa-plus');
+    assert.equal(js.iconClass('missing'), '');
+    assert.equal(js.iconClass('hasOwnProperty'), 'registry-value');
+    runInContext(`kadupulIcons = Object.create({ inherited: 'not-an-own-icon' }); kadupulIcons.add = 'fa fa-plus';`, js);
+    assert.equal(js.iconClass('inherited'), '');
+    assert.equal(js.iconSelector('add'), '.fa.fa-plus');
+    assert.equal(js.iconMarkup('add'), '<i class="fa fa-plus" aria-hidden="true"></i>');
+  });
+}
+
 // Files that still spell out Font Awesome classes. Each moves to html_icon()
 // or iconClass() in its own change, so this list may only shrink.
 const notMigrated = 'legacy page, not yet drawn from config/icons.json';
