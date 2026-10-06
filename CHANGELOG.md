@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Verify access-only session expiry refresh on refused remembered-login restoration without relying on wall-clock timing; retain exact credential and adjacent-session checks.
+
 - Install the pinned Python test dependency in an isolated environment before Snyk scans all repository projects.
 
 - Reduce repeated native test coverage parsing while preserving complete uncovered-source reports and strict subprocess evidence checks.
