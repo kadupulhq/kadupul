@@ -38,6 +38,11 @@ $environment['KADUPUL_REFERENCE_RUNTIME_SCHEMA'] = $schema;
 $environment['KADUPUL_REFERENCE_PRIMARY_SCHEMA'] = $primary;
 $mode = $argv[1] ?? '';
 $version = trim(file_get_contents($root . '/include/cacti_version'));
+// This prior-release scenario completes 1.2.34 before confirming the final
+// installed version. A later marker failure must retain that confirmed step.
+$initialVersion = '1.2.33';
+$lastConfirmedVersion = '1.2.34';
+installerAssert(version_compare($version, $lastConfirmedVersion, '>'), 'the final version follows the admitted intermediate migration');
 
 function cliFixtureSnapshot(PDO $database, string $schema): array
 {
@@ -61,7 +66,7 @@ try {
         $created[] = $name;
         $database->exec("USE `$name`");
         installerSeed($database, $root, $previousSchema);
-        $database->exec("UPDATE version SET cacti='1.2.33'");
+        $database->exec('UPDATE version SET cacti=' . $database->quote($initialVersion));
     }
     $beforeLocal = cliFixtureSnapshot($database, $schema);
     $beforePrimary = cliFixtureSnapshot($database, $primary);
@@ -97,8 +102,10 @@ try {
             $database->exec('CREATE TRIGGER cli_version_refusal BEFORE UPDATE ON version FOR EACH ROW BEGIN IF NEW.cacti = '
                 . $database->quote($version) . " THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='native final marker refused'; END IF; END");
         } elseif ($mode === 'marker-coercion') {
-            $database->exec('CREATE TRIGGER cli_version_refusal BEFORE UPDATE ON version FOR EACH ROW SET NEW.cacti = '
-                . $database->quote('1.2.35'));
+            // Coerce only the final marker; earlier migration confirmations must
+            // execute normally so the real final CLI statement is reached.
+            $database->exec('CREATE TRIGGER cli_version_refusal BEFORE UPDATE ON version FOR EACH ROW BEGIN IF NEW.cacti = '
+                . $database->quote($version) . ' THEN SET NEW.cacti = ' . $database->quote($initialVersion) . '; END IF; END');
         } elseif ($mode !== 'marker-success') {
             throw new RuntimeException('Unknown native CLI confirmation mode.');
         }
@@ -108,7 +115,7 @@ try {
         if ($mode === 'marker-success') {
             installerAssert($exit === 0 && $stored === [$version], 'primary CLI confirms the genuine final version');
         } else {
-            installerAssert($exit !== 0 && $stored === ['1.2.33'], 'failed or coerced CLI final marker refuses success and preserves retry');
+            installerAssert($exit !== 0 && $stored === [$lastConfirmedVersion], 'failed or coerced CLI final marker refuses success and preserves retry');
             $database->exec('DROP TRIGGER cli_version_refusal');
             [$retry] = installerRun($root, $environment, 'cli/upgrade_database.php', []);
             installerAssert(
