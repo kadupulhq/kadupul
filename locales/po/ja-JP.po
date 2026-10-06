@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-05 17:04-0700\n"
+"POT-Creation-Date: 2026-10-05 23:07-0700\n"
 "PO-Revision-Date: 2024-11-22 08:46+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -16144,8 +16144,7 @@ msgstr ""
 msgid "Forward schema repair could not be confirmed. Review the target schema and installer privileges before retrying."
 msgstr ""
 
-#: lib/snmp.php:213 lib/snmp.php:306 lib/snmp.php:395 lib/snmp.php:891
-#: lib/snmp.php:914
+#: lib/snmp.php:387 lib/snmp.php:876 lib/snmp.php:899
 #, fuzzy, php-format
 msgid "SNMP Command is: %s"
 msgstr "SNMPオプション[編集：%s]"
