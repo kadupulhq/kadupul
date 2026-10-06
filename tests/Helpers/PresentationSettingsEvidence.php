@@ -13,7 +13,7 @@ final class PresentationSettingsEvidence
     {
         return array_values(array_unique(array_merge(PresentationMutationEvidence::sources(), array(
             'tests/Helpers/PresentationSettingsEvidence.php', 'tests/Fixtures/presentation-settings-native.php',
-            'tests/Unit/PresentationSettingsNativeCoverageTest.php', 'lib/sort.php',
+            'tests/Unit/PresentationSettingsNativeCoverageTest.php', 'lib/sort.php', 'tests/Fixtures/presentation-fontconfig-list.sh',
         ))));
     }
 

@@ -11,7 +11,7 @@ if (PHP_SAPI !== 'cli') {
 }
 [, $root,$directory,$case] = $argv;
 require_once $root . '/tests/Helpers/PresentationSettingsEvidence.php';
-$cases = array('general-selected','general-empty','general-multi-scalar','path-valid','path-invalid','auth-password-retain','auth-password-change','auth-password-mismatch');
+$cases = array('general-selected','general-empty','general-multi-scalar','path-valid','path-invalid','auth-password-retain','auth-password-change','auth-password-mismatch', 'font-installed', 'font-uninstalled', 'font-empty', 'font-unavailable', 'font-malformed', 'font-theme-hidden');
 if (!in_array($case, $cases, true) || !is_dir($directory)) {
     throw new RuntimeException('Unknown native settings save scenario');
 }
@@ -51,11 +51,36 @@ $GLOBALS['nativePresentationObserver'] = static function (array $rendered) use (
     foreach (array('cactiApplVersion','cactiApplPollerEnabled') as $name) {
         $insert('snmpagent_cache', array('oid' => $name,'name' => $name,'mib' => 'CACTI-MIB','value' => 'old')) ;
     }
+    $fontCase = str_starts_with($case, 'font-');
+    $priorPath = getenv('PATH');
+    if ($fontCase) {
+        $insert('settings', array('name' => 'title_font', 'value' => 'Old Uninstalled'));
+        $insert('settings', array('name' => 'title_size', 'value' => '14'));
+        foreach (array('path_cactilog' => $directory . '/cacti.log', 'log_destination' => '1', 'log_verbosity' => '5') as $name => $value) $insert('settings', array('name' => $name, 'value' => $value));
+        if (!mkdir($directory . '/fontconfig', 0700)) throw new RuntimeException('Cannot create owned fontconfig port');
+        if ($case !== 'font-unavailable') {
+            $fontSource = $root . '/tests/Fixtures/presentation-fontconfig-list.sh';
+            $fontExecutable = $directory . '/fontconfig/fc-list';
+            if (!copy($fontSource, $fontExecutable) || !chmod($fontExecutable, 0700) || hash_file('sha256', $fontSource) !== hash_file('sha256', $fontExecutable)) {
+                throw new RuntimeException('Owned fontconfig producer was not an identical admitted source');
+            }
+        }
+        putenv('PATH=' . $directory . '/fontconfig');
+    }
     $before = PresentationSettingsEvidence::snapshot($db);
-    $tab = str_starts_with($case, 'path-') ? 'path' : (str_starts_with($case, 'auth-') ? 'authentication' : 'general');
+    $tab = $fontCase ? 'visual' : (str_starts_with($case, 'path-') ? 'path' : (str_starts_with($case, 'auth-') ? 'authentication' : 'general'));
     $request = array('action' => 'save','tab' => $tab,'header' => 'false');
     $expected = array('unrelated_setting' => 'Retain exactly','ldap_specific_password' => 'fixture-old-value');
-    if ($tab === 'general') {
+    if ($fontCase) {
+        $font = match ($case) {
+            'font-uninstalled' => 'Missing Native Family', 'font-malformed' => '/not/a/font.ttf',
+            'font-empty' => '', 'font-theme-hidden' => 'Old Uninstalled', default => 'Native Serif Bold',
+        };
+        $request += array('font_method' => $case === 'font-theme-hidden' ? '1' : '0', 'title_font' => $font,
+            'title_size' => $case === 'font-uninstalled' || $case === 'font-malformed' ? '4' : '12.5');
+        $expected['title_font'] = in_array($case, array('font-uninstalled', 'font-malformed'), true) ? 'Old Uninstalled' : $font;
+        $expected['title_size'] = in_array($case, array('font-uninstalled', 'font-malformed'), true) ? '14' : '12.5';
+    } elseif ($tab === 'general') {
         $request += array('log_pstats' => 'on', 'data_source_trace' => 'on','selective_debug' => array('poller.php','cmd.php'),'selective_device_debug' => '100,101','log_verbosity' => '3');
         if ($case === 'general-empty') {
             $request = array('action' => 'save','tab' => $tab,'header' => 'false');
@@ -119,6 +144,20 @@ $GLOBALS['nativePresentationObserver'] = static function (array $rendered) use (
         include $root . '/settings.php';
         $html = ob_get_clean();
         $validateWorkers();
+        if ($fontCase) {
+            if (graph_font_size('72.1', 'fallback') !== 72 || graph_font_size('4', 'fallback') !== 'fallback' || graph_font_size('12.5', 8) !== 12.5) {
+                throw new RuntimeException('Native stored font size cap/fallback/type contract changed');
+            }
+            if (settings_value_passes_filter('title_size', '4', false) !== false || settings_value_passes_filter('title_size', '12.5', true) !== true || settings_value_passes_filter('no_such_font_setting', 'anything') !== true) {
+                throw new RuntimeException('Actual shared font-setting filters lost metadata or unknown-setting behavior');
+            }
+            if ($case !== 'font-unavailable' && hash_file('sha256', $fontSource) !== hash_file('sha256', $fontExecutable)) {
+                throw new RuntimeException('Owned fontconfig evidence changed during production process handoff');
+            }
+            $log = is_file($directory . '/cacti.log') ? file_get_contents($directory . '/cacti.log') : '';
+            $unchecked = str_contains($log === false ? '' : $log, 'was saved without checking that it is installed');
+            if (($case === 'font-unavailable') !== $unchecked) throw new RuntimeException('Fontconfig omission was not reported exactly at the actual unchecked boundary');
+        }
         $after = PresentationSettingsEvidence::snapshot($db);
         $stored = array_column($after['settings'], 'value', 'name');
         foreach ($expected as $name => $value) {
@@ -126,7 +165,7 @@ $GLOBALS['nativePresentationObserver'] = static function (array $rendered) use (
                 throw new RuntimeException('Settings persisted value/omission mismatch: ' . $name);
             }
         }
-        $errorCase = in_array($case, array('path-invalid','auth-password-mismatch'), true);
+        $errorCase = in_array($case, array('path-invalid','auth-password-mismatch', 'font-uninstalled', 'font-malformed'), true);
         if ($errorCase !== !empty($_SESSION['sess_error_fields'])) {
             throw new RuntimeException('Settings save validation outcome mismatch: ' . $case . ' fields=' . json_encode(array_keys($_SESSION['sess_error_fields'] ?? array())));
         }
@@ -167,6 +206,7 @@ $GLOBALS['nativePresentationObserver'] = static function (array $rendered) use (
     } finally {
         $GLOBALS['database_sessions'][$key] = $prior;
         $GLOBALS['local_db_cnn_id'] = $priorLocal;
+        if ($fontCase) putenv($priorPath === false ? 'PATH' : 'PATH=' . $priorPath);
     }
 };
 
@@ -174,7 +214,7 @@ if (getenv('PRESENTATION_SETTINGS_COVERAGE') === '1') {
     $testLoader = require $root . '/tests/vendor/autoload.php';
     require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
     $filter = new SebastianBergmann\CodeCoverage\Filter();
-    foreach (array('settings.php', 'lib/database.php', 'lib/mib_cache.php') as $source) {
+    foreach (array('settings.php', 'lib/database.php', 'lib/mib_cache.php', 'lib/functions.php', 'lib/graph_fonts.php', 'src/Graphing/Domain/Font/GraphFontResolver.php', 'src/Graphing/Infrastructure/Fontconfig/InstalledFontFamilies.php') as $source) {
         $filter->includeFile($root . '/' . $source);
     }
     $coverage = new SebastianBergmann\CodeCoverage\CodeCoverage((new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($filter), $filter);

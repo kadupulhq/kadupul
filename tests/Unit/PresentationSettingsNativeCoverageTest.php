@@ -50,9 +50,13 @@ final class PresentationSettingsNativeCoverageTest extends TestCase
                 $markers = PresentationSettingsEvidence::markers($case);
                 $page = 'settings.php';
                 $hits = array($page, 'lib/database.php');
+                if (str_starts_with($case, 'font-')) {
+                    $hits = array_merge($hits, array('lib/functions.php', 'lib/graph_fonts.php', 'src/Graphing/Domain/Font/GraphFontResolver.php'));
+                    if (in_array($case, array('font-installed', 'font-uninstalled', 'font-unavailable'), true)) $hits[] = 'src/Graphing/Infrastructure/Fontconfig/InstalledFontFamilies.php';
+                }
                 $report = $directory . '/settings.coverage';
                 $child = NativeChildCoverageEvidence::load($report, $root, 'tests/Fixtures/presentation-settings-native.php', $case, $sources, $markers, $hits);
-                if ($case === 'general-selected') {
+                if ($case === 'general-selected' || $case === 'font-installed') {
                     self::assertSame(count($sources) + count($markers) + 10, NativeChildCoverageEvidence::verifyRejections(
                         $report,
                         $root,
@@ -78,7 +82,7 @@ final class PresentationSettingsNativeCoverageTest extends TestCase
     public static function mutations(): array
     {
         $cases = array();
-        foreach (array('general-selected', 'general-empty', 'general-multi-scalar', 'path-valid', 'path-invalid', 'auth-password-retain', 'auth-password-change', 'auth-password-mismatch') as $case) {
+        foreach (array('general-selected', 'general-empty', 'general-multi-scalar', 'path-valid', 'path-invalid', 'auth-password-retain', 'auth-password-change', 'auth-password-mismatch', 'font-installed', 'font-uninstalled', 'font-empty', 'font-unavailable', 'font-malformed', 'font-theme-hidden') as $case) {
             $cases[$case] = array($case);
         }
 
