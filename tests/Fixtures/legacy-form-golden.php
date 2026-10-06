@@ -740,6 +740,15 @@ $config['cacti_version'] = CACTI_VERSION;
 // include/auth.php leaves the signed-in user here.
 $current_user = db_fetch_row_prepared('SELECT * FROM user_auth WHERE id = ?', array($_SESSION['sess_user_id']));
 
+// Native page producers may supply an actual isolated database port after
+// bootstrap. Historical golden recordings keep their original connection.
+if (defined('PRESENTATION_PAGE_NATIVE') && isset($GLOBALS['nativePresentationBootstrap'])) {
+    if (!$GLOBALS['nativePresentationBootstrap'] instanceof Closure) {
+        throw new RuntimeException('Native presentation bootstrap must be a Closure');
+    }
+    ($GLOBALS['nativePresentationBootstrap'])();
+}
+
 if (isset($scenario['form'])) {
     // A few methods call helpers from libraries their pages include.
     foreach ($scenario['require'] ?? array() as $library) {
