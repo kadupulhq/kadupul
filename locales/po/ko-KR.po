@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-06 06:54-0700\n"
+"POT-Creation-Date: 2026-10-06 06:57-0700\n"
 "PO-Revision-Date: 2024-04-20 19:06-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -1068,14 +1068,14 @@ msgstr "기기 삭제"
 #: automation_devices.php:39 automation_devices.php:294
 #: automation_devices.php:406 automation_devices.php:417
 #: automation_devices.php:679 automation_devices.php:680 host.php:1847
-#: lib/api_automation.php:31 lib/html_utility.php:1327 pollers.php:32
+#: lib/api_automation.php:31 lib/html_utility.php:1335 pollers.php:32
 msgid "Down"
 msgstr "아래로"
 
 #: automation_devices.php:40 automation_devices.php:294
 #: automation_devices.php:408 automation_devices.php:419
 #: automation_devices.php:679 automation_devices.php:680 host.php:1846
-#: lib/api_automation.php:30 lib/html_utility.php:1333
+#: lib/api_automation.php:30 lib/html_utility.php:1341
 msgid "Up"
 msgstr "위로"
 
@@ -1400,7 +1400,7 @@ msgstr "활성화"
 #: include/global_settings.php:1677 include/global_settings.php:1691
 #: include/global_settings.php:1781 include/global_settings.php:2545
 #: lib/api_automation.php:28 lib/html.php:2844 lib/html_reports.php:2037
-#: lib/html_reports.php:2188 lib/html_utility.php:1317 managers.php:241
+#: lib/html_reports.php:2188 lib/html_utility.php:1325 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:936 user_domains.php:397
 #: user_group_admin.php:756 utilities.php:2147 utilities.php:2699
 #: utilities.php:3008
@@ -5578,12 +5578,12 @@ msgid "Not Up"
 msgstr "위로"
 
 #: host.php:1848 lib/api_automation.php:32 lib/html.php:65
-#: lib/html_utility.php:1330 pollers.php:34
+#: lib/html_utility.php:1338 pollers.php:34
 msgid "Recovering"
 msgstr "복구 중"
 
 #: host.php:1849 lib/api_automation.php:33 lib/auth.php:3059
-#: lib/clog_webapi.php:856 lib/html_utility.php:1339 lib/import.php:342
+#: lib/clog_webapi.php:856 lib/html_utility.php:1347 lib/import.php:342
 #: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4194 lib/rrd.php:4206
 #: lib/spikekill.php:301 package_import.php:522 package_import.php:600
 #: utilities.php:211 utilities.php:212 utilities.php:2753
@@ -12367,7 +12367,7 @@ msgstr "초기화하는 중"
 msgid "Please wait while the installation system for Kadupul Version %s initializes. You must have JavaScript enabled for this to work."
 msgstr "Kadupul Version  %s의 설치 시스템이 초기화되는 동안 기다려주십시오. 이 기능을 사용하려면 JavaScript를 활성화해야합니다."
 
-#: install/install.php:101 lib/html_utility.php:1336 lib/installer.php:2085
+#: install/install.php:101 lib/html_utility.php:1344 lib/installer.php:2085
 #: lib/installer.php:4093
 msgid "Error"
 msgstr "오류"
@@ -14757,41 +14757,41 @@ msgstr "(비 그래프 템플릿)"
 msgid "Selected"
 msgstr "선택된"
 
-#: lib/html_utility.php:540 lib/html_utility.php:762
+#: lib/html_utility.php:548 lib/html_utility.php:770
 #, php-format
 msgid "The regular expression \"%s\" is not valid. Error is %s"
 msgstr "검색어 &quot; %s&quot;이 (가) 유효하지 않습니다. 오류는  %s입니다."
 
-#: lib/html_utility.php:1242
+#: lib/html_utility.php:1250
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
 msgstr "Kadupul 정규 표현식은 보안상의 이유로 50자로 제한됩니다."
 
-#: lib/html_utility.php:1246
+#: lib/html_utility.php:1254
 #, fuzzy
 msgid "Kadupul regular expressions can not includes the semi-color character."
 msgstr "Kadupul 정규식은 반색 문자를 포함할 수 없습니다."
 
-#: lib/html_utility.php:1266
+#: lib/html_utility.php:1274
 msgid "There was an internal error!"
 msgstr "내부 오류가 발생했습니다."
 
-#: lib/html_utility.php:1267
+#: lib/html_utility.php:1275
 msgid "Backtrack limit was exhausted!"
 msgstr "역 추적 제한이 고갈되었습니다."
 
-#: lib/html_utility.php:1268
+#: lib/html_utility.php:1276
 msgid "Recursion limit was exhausted!"
 msgstr "재귀 한도가 없어졌습니다!"
 
-#: lib/html_utility.php:1269
+#: lib/html_utility.php:1277
 msgid "Bad UTF-8 error!"
 msgstr "잘못된 UTF-8 오류!"
 
-#: lib/html_utility.php:1270
+#: lib/html_utility.php:1278
 msgid "Bad UTF-8 offset error!"
 msgstr "잘못된 UTF-8 오프셋 오류!"
 
-#: lib/html_utility.php:1321
+#: lib/html_utility.php:1329
 msgid "Down (Thold)"
 msgstr "다운로드"
 
