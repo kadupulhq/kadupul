@@ -5,6 +5,7 @@
 
 require_once dirname(__DIR__, 3) . '/Helpers/RrdCharacterization.php';
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+require_once dirname(__DIR__, 3) . '/Helpers/ChildProcessCoverage.php';
 
 /** Script lines that define the font setting filters and the resolver they call. */
 function rrd_font_settings_filters(string $root): string
@@ -125,7 +126,7 @@ test('loaded CSP settings advertise supported reporting and explain direct enfor
 // The per-user labels reuse the System labels so existing translations still apply.
 test('font setting labels keep their translations', function () {
     $root = dirname(__DIR__, 4);
-    preg_match_all("/'friendly_name' => __\('([^']*Font[^']*)'\)/", file_get_contents($root . '/include/global_settings.php'), $labels);
+    preg_match_all("/(?:'friendly_name' => |graph_font_setting_field\(\s*)__\('([^']*Font[^']*)'\)/", file_get_contents($root . '/include/global_settings.php'), $labels);
     $po = file_get_contents($root . '/locales/po/de-DE.po');
 
     expect($labels[1])->toHaveCount(19);
@@ -232,17 +233,42 @@ function rrd_font_settings_fc_list(): string
 }
 
 /** Run $script with only $path to find programs on, and return what it printed as JSON. */
-function rrd_font_settings_php(string $script, string $path, array $argv = array())
+function rrd_font_settings_php(string $script, string $path, array $argv = array(), ?array $registration = null)
 {
     $pipes = array();
-    $process = proc_open(array_merge(array(PHP_BINARY, '-r', $script, '--'), $argv), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, null, array('PATH' => $path));
-    $output = stream_get_contents($pipes[1]);
-    $error = stream_get_contents($pipes[2]);
-    fclose($pipes[1]);
-    fclose($pipes[2]);
-    expect(proc_close($process))->toBe(0, $error . $output)->and($error)->toBe('');
+    $command = array_merge(array(PHP_BINARY, '-r', $script, '--'), $argv);
+    $coverageDirectory = null;
+    if ($registration !== null) {
+        $command = child_coverage_command($command, $coverageDirectory, $registration);
+    }
+    // Keep the original executable-discovery boundary. Only the parent's
+    // explicitly configured runtime extension directory is inherited for PCOV.
+    $environment = array('PATH' => $path);
+    if ($coverageDirectory !== null && getenv('PHP_INI_SCAN_DIR') !== false) {
+        $environment['PHP_INI_SCAN_DIR'] = getenv('PHP_INI_SCAN_DIR');
+    }
+    try {
+        $process = proc_open($command, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, null, $environment);
+        expect(is_resource($process))->toBeTrue();
+        $output = stream_get_contents($pipes[1]);
+        $error = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        expect(proc_close($process))->toBe(0, $error . $output)->and($error)->toBe('');
+        $result = json_decode($output, true, 512, JSON_THROW_ON_ERROR);
+        if ($registration !== null) {
+            child_coverage_collect($coverageDirectory);
+        }
 
-    return json_decode($output, true, 512, JSON_THROW_ON_ERROR);
+        return $result;
+    } finally {
+        if ($coverageDirectory !== null && is_dir($coverageDirectory)) {
+            foreach (glob($coverageDirectory . '/*') as $file) {
+                unlink($file);
+            }
+            rmdir($coverageDirectory);
+        }
+    }
 }
 
 /** Script lines that load the font name filter with a logger that records what it is given. */
@@ -281,14 +307,26 @@ test('font names are checked against the fonts fontconfig lists', function () {
         ->and($unchecked[1][4])->toBe("NOTE: Graph font 'Roboto Mono' was saved without checking that it is installed, because fc-list is not available");
 });
 
-test('every graph font setting checks its font name', function () {
-    $root = dirname(__DIR__, 4);
-    $settings = file_get_contents($root . '/include/global_settings.php');
-    preg_match_all("/'([a-z_]+)' => array\((?:(?!\n        \),).)*'method' => 'font'(?:(?!\n        \),).)*\n        \)/s", $settings, $fields);
-
-    expect($fields[1])->toBe(array('path_rrdtool_default_font', 'title_font', 'legend_font', 'axis_font', 'unit_font', 'title_font', 'legend_font', 'axis_font', 'unit_font'));
-    foreach ($fields[0] as $field) {
-        expect($field)->toContain("'options' => array('options' => 'graph_font_name_filter')");
+test('every loaded graph font setting checks its font name', function () {
+    $result = rrd_characterization_run($this, array('options' => rrd_characterization_options(), 'calls' => array(
+        array('fn' => 'rrd_characterization_setting_definitions', 'args' => array()),
+    )))['results'][0];
+    expect($result['diagnostics'])->toBe(array());
+    $fields = array();
+    foreach (array_merge(array_values($result['returned']['system']), array_values($result['returned']['user'])) as $section) {
+        foreach ($section as $name => $field) {
+            if (($field['method'] ?? '') === 'font') {
+                $fields[] = array($name, $field);
+            }
+        }
+    }
+    expect(array_column($fields, 0))->toBe(array('path_rrdtool_default_font', 'title_font', 'legend_font', 'axis_font', 'unit_font', 'title_font', 'legend_font', 'axis_font', 'unit_font'));
+    foreach ($fields as [$name, $field]) {
+        expect($field['filter'])->toBe(FILTER_CALLBACK)
+            ->and($field['options'])->toBe(array('options' => 'graph_font_name_filter'))
+            ->and($field['max_length'])->toBe($name === 'path_rrdtool_default_font' ? '255' : '100')
+            ->and(array_key_exists('default', $field))->toBeFalse()
+            ->and(array_keys($field))->toBe(array('friendly_name', 'description', 'method', 'placeholder', 'max_length', 'filter', 'options'));
     }
 });
 
@@ -335,7 +373,10 @@ function rrd_font_settings_save(array $requests, array $stored): array
             "title_font" => array("method" => "font", "filter" => FILTER_CALLBACK, "options" => array("options" => "graph_font_name_filter")),
             "title_size" => array("method" => "textbox", "filter" => FILTER_CALLBACK, "options" => array("options" => "graph_font_size_filter")),
         ));
-        register_shutdown_function(function () { echo json_encode(array($GLOBALS["writes"], $GLOBALS["messages"], $_SESSION["sess_error_fields"] ?? array())); });
+        register_shutdown_function(function () {
+            echo json_encode(array($GLOBALS["writes"], $GLOBALS["messages"], $_SESSION["sess_error_fields"] ?? array()), JSON_THROW_ON_ERROR);
+            $GLOBALS["nativeChildCoverageMarkers"] = array("settings-controller-executed", "font-write-outcome-captured");
+        });
         ');
     $script = rrd_font_settings_name_filter($root) . '
         $_REQUEST = json_decode($argv[1], true) + array("action" => "save", "tab" => "visual");
@@ -345,7 +386,21 @@ function rrd_font_settings_save(array $requests, array $stored): array
     $saves = array();
     try {
         foreach ($requests as $request) {
-            $saves[] = rrd_font_settings_php($script, $directory, array(json_encode($request), json_encode($stored)));
+            $registration = child_coverage_registration(
+                __FILE__,
+                'font-settings-native-save',
+                array($request, $stored),
+                array('settings-controller-executed', 'font-write-outcome-captured'),
+                array('settings.php'),
+                array(
+                    'tests/Helpers/PhpSource.php', 'settings.php', 'lib/graph_fonts.php',
+                    'src/Graphing/Domain/Font/GraphFontMethod.php', 'src/Graphing/Domain/Font/GraphFont.php',
+                    'src/Graphing/Domain/Font/GraphFontProfile.php', 'src/Graphing/Domain/Font/GraphFontResolver.php',
+                    'src/Graphing/Infrastructure/Fontconfig/InstalledFontFamilies.php',
+                )
+            );
+            $registration['collectorPrelude'] = 'define("FONT_SETTINGS_NATIVE_TEST_COVERAGE", true);';
+            $saves[] = rrd_font_settings_php($script, $directory, array(json_encode($request), json_encode($stored)), $registration);
         }
     } finally {
         unlink($directory . '/site/include/auth.php');
