@@ -53,7 +53,10 @@ final class NativeChildCoverageEvidence
         if (!$coverage instanceof SebastianBergmann\CodeCoverage\CodeCoverage) {
             throw new RuntimeException('Native coverage report is invalid.');
         }
-        $data = $coverage->getData()->lineCoverage();
+        // The final parent report adds uncovered lines from the merged filter.
+        // Admission inspects physical child data without reparsing that filter
+        // for every imported report or evidence rejection control.
+        $data = $coverage->getData(true)->lineCoverage();
         $allowed = [];
         $canonicalRoot = realpath($root);
         foreach (array_merge([$producer], $sources, $hitSources) as $path) {
@@ -63,7 +66,7 @@ final class NativeChildCoverageEvidence
             }
             $allowed[$canonical] = true;
         }
-        foreach (array_keys($data) as $file) {
+        foreach (array_unique(array_merge(array_keys($data), $coverage->filter()->files())) as $file) {
             if (!isset($allowed[$file])) {
                 throw new RuntimeException('Native coverage measured an unregistered source: ' . $file);
             }
@@ -120,7 +123,7 @@ final class NativeChildCoverageEvidence
             // Required-source rejection must not depend on which library
             // declaration lines the coverage driver marks during bootstrap.
             $withoutRequiredSource = unserialize($originalReport);
-            $withoutRequiredData = $withoutRequiredSource->getData();
+            $withoutRequiredData = $withoutRequiredSource->getData(true);
             $withoutRequiredLines = $withoutRequiredData->lineCoverage();
             unset($withoutRequiredLines[realpath($root . '/' . $unexecutedSource)]);
             $withoutRequiredData->setLineCoverage($withoutRequiredLines);
@@ -134,7 +137,7 @@ final class NativeChildCoverageEvidence
             file_put_contents($report . '.json', $originalEvidence);
             $reject(['index.php'], 'source is missing or stale');
             $injected = unserialize($originalReport);
-            $injectedData = $injected->getData();
+            $injectedData = $injected->getData(true);
             $lines = $injectedData->lineCoverage();
             $lines[realpath($root . '/index.php')] = [1 => ['negative unregistered source probe']];
             $injectedData->setLineCoverage($lines);
