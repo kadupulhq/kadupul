@@ -29,6 +29,9 @@ if (!is_string($coveragePackageVersion)) {
     throw new RuntimeException('Unable to determine the active code-coverage version');
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('SNMP_QUERY_NATIVE_TEST_COVERAGE')) {
+    foreach (array('lib/data_query.php', 'lib/xml.php') as $file) $coverageFilter->includeFile($coverageRoot . '/' . $file);
+}
 if (defined('UPGRADE_BOUNDARY_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/installer.php');
 }
