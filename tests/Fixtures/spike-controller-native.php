@@ -86,6 +86,7 @@ function spike_controller_fixture_run(): never
     require_once $root . '/tests/Helpers/PhpSource.php';
     $htmlSource = file_get_contents($root . '/lib/html.php');
     if (!is_string($htmlSource)) throw new RuntimeException('Cannot read native HTML escaping source.');
+    eval(test_php_function_source($htmlSource, 'html_escape_charset'));
     eval(test_php_function_source($htmlSource, 'html_escape'));
     $GLOBALS['spikeValidationDiagnostics'] = [];
     $GLOBALS['spikeValidationFooter'] = 0;

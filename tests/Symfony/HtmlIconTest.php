@@ -145,7 +145,7 @@ final class HtmlIconTest extends TestCase
             . '$config = array("url_path" => "/kadupul/", "base_path" => ' . var_export($root, true) . ');'
             . 'function get_selected_theme() { return ' . var_export($theme, true) . '; }'
             . $stubs;
-        foreach (array_merge(array('html_escape', 'html_icon_registry', 'html_icon_class', 'html_icon'), $functions) as $function) {
+        foreach (array_merge(array('html_escape_charset', 'html_escape', 'html_icon_registry', 'html_icon_class', 'html_icon'), $functions) as $function) {
             $script .= "\n" . test_php_function_source($source, $function);
         }
 
