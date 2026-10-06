@@ -4,10 +4,16 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+if (array_slice($argv, 1) === ['--version']) {
+    echo 'mysql Ver 8.0.36 MySQL';
+    exit(0);
+}
+
 $database = getenv('AUDIT_TEST_CASE') === 'leading-hyphen' ? '-audit' : 'fixture database; echo ignored';
 if (!in_array('--database=' . $database, $argv, true)
     || getenv('MYSQL_PWD') !== 'fixture password with quotes \" and spaces'
-    || count($argv) !== 5
+    || count($argv) !== 6
+    || !in_array('--ssl-mode=DISABLED', $argv, true)
     || array_filter($argv, static fn($argument) => str_starts_with($argument, '-p') || str_contains($argument, 'fixture password'))) {
     exit(2);
 }

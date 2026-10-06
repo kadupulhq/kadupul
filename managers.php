@@ -713,7 +713,11 @@ function manager_logs($id, $header_label)
 		div.style.backgroundColor = '#EFFCF0';
 		div.style.border = 'solid 1px grey';
 		div.style.padding = '10px';
-		div.innerHTML = '<b>' + title + '</b><div style="padding-left:10px; padding-right:5px;"><pre>' + desc + '</pre></div>';
+		var body = $('<div style="padding-left:10px; padding-right:5px;"><pre></pre></div>');
+
+		// Notification names and descriptions are text, never markup.
+		body.find('pre').text(desc);
+		$(div).empty().append($('<b>').text(title), body);
 		div.style.left = e.clientX + 15 + 'px';
 		div.style.top = e.clientY + 15 + 'px';
 	}
@@ -733,6 +737,12 @@ function manager_logs($id, $header_label)
 	$(function() {
 		$('#severity').on('change', function() {
 			applyFilter();
+		});
+
+		$('a.snmpagentNotification').on('mousemove', function(event) {
+			showTooltip(event, document.getElementById('snmpagentTooltip'), $(this).attr('data-notification'), $(this).attr('data-description'));
+		}).on('mouseout', function() {
+			hideTooltip(document.getElementById('snmpagentTooltip'));
 		});
 
 		$('#form_snmpagent_manager_logs').on('submit', function() {
@@ -853,14 +863,9 @@ function manager_logs($id, $header_label)
             print "<td class='nowrap'>" . date('Y/m/d H:i:s', $item['time']) . '</td>';
 
             if ($item['description']) {
-                $description = '';
-                $lines = preg_split('/\r\n|\r|\n/', $item['description']);
+                $description = implode("\n", array_map('trim', preg_split('/\r\n|\r|\n/', $item['description'])));
 
-                foreach ($lines as $line) {
-                    $description .= html_escape(trim($line)) . '<br>';
-                }
-
-                print '<td><a href="#" onMouseOut="hideTooltip(snmpagentTooltip)" onMouseMove="showTooltip(event, snmpagentTooltip, \'' . html_escape($item['notification']) . '\', \'' . $description . '\')">' . html_escape($item['notification']) . '</a></td>';
+                print '<td><a href="#" class="snmpagentNotification" data-notification="' . html_escape($item['notification']) . '" data-description="' . html_escape($description) . '">' . html_escape($item['notification']) . '</a></td>';
             } else {
                 print '<td>' . html_escape($item['notification']) . '</td>';
             }

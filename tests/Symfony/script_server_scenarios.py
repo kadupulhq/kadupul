@@ -79,6 +79,9 @@ def verify_protocol(harness, device, check):
         (f'{SCRIPTS}missing.php ss_missing', 'U'),
         (f'{hstats} system id', 'U'),
         (f'{hstats} ss_no_such_function 1', 'U'),
+        # Functions from a different file under scripts/ must not be callable
+        # through the selected file merely because both files are trusted roots.
+        (f'{hstats} ss_thold_time', 'U'),
         # errors.php is the harness prepend, loaded from outside base_path.
         (f'{hstats} behavior_install_error_handler', 'U'),
         (f"{hstats} ss_hstats 'unterminated", f"ERROR: Parse error attempting to parse string ''unterminated'\nU"),
@@ -97,13 +100,13 @@ def verify_protocol(harness, device, check):
     check(result['stdout'] == expected, 'script server answers valid calls and refuses invalid ones with U')
     check('uid=' not in result['stdout'], 'script server never dispatches PHP internals')
     log = cacti_log(harness)[before:]
-    for message in ("Script file '/etc/passwd' resolves outside base path. Rejected.",
+    for message in ("Script file '/etc/passwd' resolves outside scripts directory. Rejected.",
                     f"Script file '{SCRIPTS}missing.php' could not be resolved. Rejected.",
                     "Refusing to dispatch PHP internal function 'system' from script server.",
                     "Function does not exist  INC: 'ss_hstats.php' FUNC: 'ss_no_such_function'",
-                    "Function 'behavior_install_error_handler' defined outside base path"):
+                    "Function 'behavior_install_error_handler' was not defined by script file"):
         check(message in log, 'script server logs refusal: ' + message)
-    check(log.count('resolves outside base path. Rejected.') == 2, 'script server refuses includes outside the base path')
+    check(log.count('resolves outside scripts directory. Rejected.') == 2, 'script server refuses includes outside the scripts directory')
 
 
 def verify_shutdown(harness, check):

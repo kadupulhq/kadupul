@@ -1,11 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 use SebastianBergmann\CodeCoverage\CodeCoverage;
+use SebastianBergmann\CodeCoverage\Data\ProcessedCodeCoverageData;
+use SebastianBergmann\CodeCoverage\Driver\Selector;
+use SebastianBergmann\CodeCoverage\Filter;
 use SebastianBergmann\CodeCoverage\Report\Clover;
 
 $root = dirname(__DIR__, 3);
@@ -74,13 +79,21 @@ foreach (array_keys($mapped) as $path) {
 // PHPUnit 12 retains copied CLI files in the coverage filter even after the
 // child fixture remaps measured data to the checked-in source path. Native
 // tests remove their scratch directories before this merger runs, so restore
-// only missing copies whose suffix maps uniquely to a covered source file.
-$temporaryRoot = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-$sourceFiles = array_keys($coverage->getData()->lineCoverage());
+// only copies referenced by this artifact, using an exact hash-bound manifest
+// for renamed entrypoints or an unambiguous source suffix for older artifacts.
+$temporaryRoot = rtrim(realpath(sys_get_temp_dir()) ?: sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+$sourceFiles = array_keys($coverage->getData(true)->lineCoverage());
+$filteredSources = array_fill_keys($coverage->filter()->files(), true);
 $temporaryCoverageSources = array();
 $sourceMapManifests = array();
 foreach (glob($temporaryRoot . 'kadupul-coverage-source-map-*.json') ?: array() as $manifest) {
-    $sourceMap = json_decode(file_get_contents($manifest), true, 512, JSON_THROW_ON_ERROR);
+    $sourceMap = json_decode(file_get_contents($manifest), true);
+    // A different coverage job may retain manifests in the same temp root.
+    // Consume only copies actually referenced by this unit coverage artifact.
+    if (!is_array($sourceMap) || !is_string($sourceMap['copy'] ?? null)
+        || !isset($filteredSources[$sourceMap['copy']])) {
+        continue;
+    }
     if (!is_array($sourceMap)
         || !is_string($sourceMap['copy'] ?? null)
         || !is_string($sourceMap['source'] ?? null)
@@ -89,18 +102,30 @@ foreach (glob($temporaryRoot . 'kadupul-coverage-source-map-*.json') ?: array() 
         || !str_starts_with($sourceMap['source'], $root . DIRECTORY_SEPARATOR)
         || realpath($sourceMap['source']) !== $sourceMap['source']
         || !is_file($sourceMap['source'])) {
-        continue;
+        throw new RuntimeException('Invalid associated coverage source mapping');
     }
 
-    $relativeSource = substr($sourceMap['source'], strlen($root) + 1);
     $relativeCopy = substr($sourceMap['copy'], strlen($temporaryRoot));
     $sourceHash = hash_file('sha256', $sourceMap['source']);
     $copySegments = explode(DIRECTORY_SEPARATOR, $relativeCopy);
-    if (!str_ends_with($sourceMap['copy'], DIRECTORY_SEPARATOR . $relativeSource)
-        || in_array('..', $copySegments, true)
+    if (in_array('..', $copySegments, true)
+        || in_array('.', $copySegments, true)
+        || in_array('', $copySegments, true)
         || !is_string($sourceHash)
         || !hash_equals($sourceMap['sha256'], $sourceHash)) {
-        continue;
+        throw new RuntimeException('Invalid associated coverage source mapping');
+    }
+
+    $component = rtrim($temporaryRoot, DIRECTORY_SEPARATOR);
+    foreach ($copySegments as $segment) {
+        $component .= DIRECTORY_SEPARATOR . $segment;
+        if (is_link($component)) {
+            throw new RuntimeException('Linked associated coverage source mapping');
+        }
+    }
+    if (file_exists($sourceMap['copy']) && (!is_file($sourceMap['copy'])
+        || hash_file('sha256', $sourceMap['copy']) !== $sourceHash)) {
+        throw new RuntimeException('Retained associated coverage source differs');
     }
 
     $temporaryCoverageSources[$sourceMap['copy']] = $sourceMap['source'];
@@ -143,6 +168,9 @@ foreach ($coverage->filter()->files() as $path) {
     }
 
     if (count($matches) !== 1) {
+        if (!is_file($path)) {
+            throw new RuntimeException('Unmapped temporary coverage source');
+        }
         continue;
     }
 
@@ -158,6 +186,34 @@ foreach ($coverage->filter()->files() as $path) {
 
     $temporaryCoverageSources[$path] = $matches[0];
 }
+
+// Retain measured test identities while replacing copied paths in both data
+// and the allowlist. A temporary entry must never inflate Clover metrics or
+// reappear as uncovered after its fixture has removed it.
+$canonicalData = clone $coverage->getData(true);
+$lineCoverage = $canonicalData->lineCoverage();
+$functionCoverage = $canonicalData->functionCoverage();
+foreach ($temporaryCoverageSources as $path => $source) {
+    $copiedData = new ProcessedCodeCoverageData();
+    $copiedData->setLineCoverage(isset($lineCoverage[$path]) ? [$source => $lineCoverage[$path]] : []);
+    $copiedData->setFunctionCoverage(isset($functionCoverage[$path]) ? [$source => $functionCoverage[$path]] : []);
+    $canonicalData->merge($copiedData);
+}
+$lineCoverage = $canonicalData->lineCoverage();
+$functionCoverage = $canonicalData->functionCoverage();
+foreach ($temporaryCoverageSources as $path => $source) {
+    unset($lineCoverage[$path], $functionCoverage[$path]);
+}
+$canonicalData->setLineCoverage($lineCoverage);
+$canonicalData->setFunctionCoverage($functionCoverage);
+$canonicalFilter = new Filter();
+foreach ($coverage->filter()->files() as $path) {
+    $canonicalFilter->includeFile($temporaryCoverageSources[$path] ?? $path);
+}
+$canonicalCoverage = new CodeCoverage((new Selector())->forLineCoverage($canonicalFilter), $canonicalFilter);
+$canonicalCoverage->setData($canonicalData);
+$canonicalCoverage->setTests($coverage->getTests());
+$coverage = $canonicalCoverage;
 
 $rawCoverageClass = class_exists(\SebastianBergmann\CodeCoverage\Data\RawCodeCoverageData::class)
     ? \SebastianBergmann\CodeCoverage\Data\RawCodeCoverageData::class
@@ -184,7 +240,7 @@ foreach ($temporaryCoverageSources as $path => $source) {
     }
 
     $directory = dirname($path);
-    while ($directory !== rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR)
+    while ($directory !== rtrim($temporaryRoot, DIRECTORY_SEPARATOR)
         && str_starts_with($directory, $temporaryRoot)
         && @rmdir($directory)) {
         $directory = dirname($directory);

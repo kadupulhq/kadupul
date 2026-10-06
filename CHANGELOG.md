@@ -8,6 +8,67 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Add explicit native test-suite commands and a guide to their separate dependencies; name source-contract tests after their behavior and restore isolated input-string validation tests against the production validator.
 
+- Verify authenticated graph-tree confirmation and native automation placement handoffs, including rejected foreign/non-header parents and admitted destinations; require their measured behavior checks.
+- Restore database-client TLS option selection before atomic audit imports, reject unknown or failing client versions before audit writes, and preserve literal argument and owned SQL cleanup contracts.
+
+- Keep CLI site tree nodes consistent with web placement by storing their site identity without a copied title; verify parent, duplicate, and malformed-input refusals through the actual CLI/API and require their measured behavior checks.
+
+- Make the missing input-field index and aggregate creation timestamp repairs reachable from deployed 1.2.31–1.2.34 through the main 1.2.35 upgrade step; confirm native schema changes and preserve a retryable version on failure.
+
+- Stream audit upgrade progress before the worker exits, withhold protocol markers, preserve failure receipts, and keep JSON responses and final diagnostics free of duplicate output.
+
+- Reject malformed schema-audit reports with controlled CI diagnostics; cover clean, failed, dirty, empty, and missing-baseline contracts.
+
+- Return failure from the legacy audit CLI when repair or export fails; report missing tables separately from attempted ALTER statements and preserve SQL comment prefixes in diagnostic plans.
+- Preserve recognized scriptless upgrade releases, reject missing required migrations, and confirm each intermediate database version before advancing or reporting success.
+- Report integer signedness drift for manual range review, preserve local text collations during unrelated schema repairs, and refuse index algorithms unsupported by the effective storage engine.
+- Authorize non-deletion graph and data-source bulk selections with current owner/policy SQL in chunks of 1,000, retaining the established 10,000-object safety ceiling and supported 5,000-row UI batches.
+- Batch device management reuses the same bounded current-policy selection checks before protected names or action hooks. Malformed decimal, exponent and floating-point IDs are refused for graph/device selections and filtered from data-source selections; valid zero-padded or whitespace-normalized integer representations retain their order and duplicates.
+- Management graph/data list and count queries reuse policy ID subqueries instead of hydrating the complete device inventory. Graph lists apply the same graph/template policy as actions, and data-template filter choices derive only from admitted sources.
+- Main device management intentionally requires both the Devices realm and object policy access. Creating a device does not grant a new device permission; default-deny operators need an explicit applicable policy grant before managing the new device. LTS behavior is unchanged.
+
+- Display graph access refusals once after an AJAX-compatible redirect; preserve graph and device authorization before editor lookup or session locking.
+
+- Allow unrestricted administrators and device operators to purge unfinished unassigned and orphan troubleshooting checks; preserve device-scoped purge for restricted operators.
+
+- Authorize complete graph and data-source deletion scopes before reading dependent names or writing; retain safe confirmation choices and reject oversized dependency batches. Report collector or volatile-cache partial outcomes separately from local transaction cleanup.
+- Register graph-item choice sources in strict cookie and domain-authentication coverage evidence.
+
+- Bound legacy Boost writer lock acquisition to 60 attempts; report contention and retain queued samples instead of waiting indefinitely.
+- Correct Settings help for graph permission combinations, auto scale limits, and CSP nonce reporting and enforcement. Fixes #222, #230, and #265.
+
+- Preserve heartbeat propagation for template-only and local data sources; accept unchanged read-only fields and independently validate consolidation edits before writes.
+- Render sortable header labels as text, including stored automation fields and plugin `device_display_text` labels. Arbitrary label markup is now escaped; existing entities, generated sort icons and sorting callbacks are preserved.
+
+- Preserve existing NaN gaps while removing stddev and variance spikes; count only completed replacements against the per-archive limit and report the selected replacement mode. Fixes #238.
+
+- Preserve cached HR-MIB disk allocation units with the `Bytes` suffix; reject fractional, non-finite and out-of-range Integer32 samples as unknown.
+
+- Preserve each graph item's numeric SHIFT or TICK value, including backward shifts; validate numeric fields only when rendering uses them.
+- Preserve trusted RRA directory links and custom configured roots during cleanup; retain final file links and unsafe proxy or archive targets without creating directories outside the archive.
+
+- Map complete exclamation-delimited poller field lists from PHP and Spine while preserving scalar exclamation marks and hexadecimal values, including hexadecimal-looking field names. Fixes #284.
+- Query the shipped `poller` table when checking multi-collector Boost settings, preserve the current system setting if that count fails, and normalize the bounded 120-minute fallback before master scheduling arithmetic. Fixes #270.
+- Trust forwarded client IPs only when the TCP peer is an explicitly configured
+  proxy and exactly one allowlisted header contains one IP address. The unsafe
+  `proxy_headers = true` mode no longer authorizes forwarded addresses.
+- Limit data source troubleshooting, repair, purge, and bulk operations to allowed devices.
+- Enforce device and graph access checks in Graph Management and Data Sources, including bulk confirmation lists and device reassignment.
+- Scope both AJAX graph-input data-source choice queries to the actor's device policy before returning names; retain authorized current choices and device-less sources without loading the full device inventory.
+- Skip unauthorized graph trees before name lookup on bulk-action confirmation pages.
+- Restrict new graph creation and data query reloads to allowed devices.
+- Require graph access before spike handling reads or rewrites an RRD.
+- Restrict data source edits and RRD item changes to devices the user may access, and reject custom RRD paths that escape the configured RRA directory.
+- Restrict graph edit, create, and device-move operations to graphs and devices the user may access.
+- Require device access before viewing, saving, reindexing, pinging, reloading queries, or changing templates for a device; also enforce access in the web-facing device save API.
+- Limit Data Query Cache and Poller Cache views to devices the current user may access, including their default Any filters.
+- Report schema audit drift for defaults, collations, indexes, and missing tables without treating a stale fork baseline as automatically repairable. Fixes #454.
+- Add Docker MariaDB integration coverage for the maintenance CLI commands on `main`, and validate CLI selectors, permissions, audit reporting and selected-host poller-cache behavior.
+- Reject non-positive and fractional poller-cache thread counts, include the audit baseline and runtime dependencies in Docker integration coverage, and fail before starting the test stack when its configured test pattern matches no files.
+- Resolve JavaScript and CSS include paths through Symfony Filesystem while retaining the legacy helper's search order, relative-path rules, and missing-file notifications. Closes #489.
+- Read legacy current-page and browser URL values through Symfony HttpFoundation while retaining the existing helper signatures, server-variable precedence, and URI sanitization. Refactors #484.
+- Preserve text-column collation when repairing from an older schema baseline, and match missing-table checks to the baseline's case-insensitive table identity.
+- Confirm an interactive database upgrade before preparing and confirming its resulting repair plan; stop repair on failed or unconfirmed upgrades and honor the cron setting for quiet upgrade deprecation warnings.
 - Enforce persistent CDEF reference integrity for legacy writers and atomic aggregate cache replacement; refuse online collector primary upgrades and confirm the final installation version before reporting success.
 - Roll back complete aggregate regeneration and creation on unconfirmed reads or writes, preserving caller transactions; reject malformed aggregate item selections before saving and report incomplete propagation.
 - Keep permission writes and session epochs consistent, including failed writes and absent deletions.
@@ -16,12 +77,15 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Preserve explicit PNG realtime graph output and search filters across RRD cleaner pages; identify the CSRF refresh utility correctly in its CLI metadata.
 - Migrate Data Input Methods and fields to Symfony/PHP 8.4 and Twig, with current authorization, revision checks, transaction rollback and explicit collector/whitelist retry outcomes.
+- Add Symfony Inventory tree/report placement using owning Graphing and Reporting contracts, authorization, revisions and transactional confirmation.
 - Retain old collector polling copies until primary assignment commits, repair missing associations on unchanged template assignments, and preserve remote enabled-state drift during bulk site/template changes.
 
 - Migrate VDEF listing, editing, item ordering, duplication and deletion to Symfony/Twig with realm checks, CSRF protection, stale-form detection and dependency-aware deletion; retain safe legacy URL redirects.
 - Share user and group permission-filter rendering while retaining their existing routes, translations, template choices and filter events. Part of #699.
+- Handle recovery CLI help and version flags before requiring remote database connections; retain recovery samples when a normal run cannot connect.
 - Add a reusable local write transaction helper with caller-owned savepoints, persistent InnoDB checks on the selected PDO connection, and native MariaDB/MySQL regressions.
 
+- Add a reusable local write transaction helper with caller-owned savepoints, persistent InnoDB checks on the selected PDO connection, and native MariaDB/MySQL regressions.
 - Replicate complete Data Source Profile definitions before collector references, retaining existing collector rows if delivery fails.
 - Coordinate all Data Source Profile definition writers with deletion and preserve unchanged legacy references.
 
@@ -41,6 +105,13 @@ follows [Semantic Versioning](VERSIONING.md).
 - Port the remaining CSRF Magic library checks from 1.2: refuse more than eight submitted tokens, token times that are not digits or exceed the 300-second future clock-skew allowance, and generate fallback secrets with `random_bytes()`. The optional CSRF debug log and the default failure page no longer record tokens, the secret, form values or query strings. Secret rotation generates before modifying the working file, then exclusively writes and verifies a replacement in its directory, preserves existing UID/GID with verified ownership before applying mode 0640 and renaming atomically; generation or publication failure preserves the working key. Symlink file destinations are refused.
 - Keep inaccessible SNMP cache entries as navigation-only links and return `NONE` for direct reads without PHP 8.4 warnings.
 
+- Draw core icons from one registry, `config/icons.json`, which maps names such as `add` and `collapse-all` to Font Awesome 7 classes. `html_icon()` refuses an icon with no accessible label unless it is marked decorative, `layout.js` reads the same map, and themes redraw icons through registry overrides instead of rewriting classes in the page. Console menu glyphs are now registry names; a plugin's Font Awesome classes in `$menu_glyphs` still render as given. Plugin icons are no longer restyled by a theme: paw, paper-plane and sunrise leave `fa-arrow-down` and `fa-arrow-up` alone, and midwinter leaves plugin menu glyphs alone.
+- Check graph permission on a remote data collector before it asks the main poller for a graph image.
+- Keep cached graph and tree permission answers separate for each user, so an emailed report only includes graphs and trees its owner may view.
+- Check that real-time graphs are enabled, that the user has the Real-time realm and that the user may view the graph before a real-time request polls any device or returns a cached image.
+- Save real-time graph preferences only from a token-checked POST; polling by GET no longer changes them.
+- Show the graph page's Real-time button only when real-time graphs are enabled and the user has the Real-time realm.
+- Show a report device item according to the owner's device permission rather than the permission of an unrelated tree.
 - Render About through Symfony and Twig with escaped version/beta text and complete English/French license information; preserve authenticated access without a console realm, including online collectors authenticated against their reachable primary.
 
 - Render the color palette through Symfony and Twig, with protected named colors, revision-checked transactions and strict quoted CSV imports/exports.
@@ -55,10 +126,12 @@ follows [Semantic Versioning](VERSIONING.md).
 - Bound PCRE work when tree automation applies saved replacement patterns. Fixes #591.
 - Return a clean 404 for HTTP requests to the PHP Script Server under PHP-FPM. Fixes #377.
 - Honor the script server's documented `--environ`, `-v`/`-V`, and `-h`/`-H` options. Fixes #375 and #376.
+
 - Require PHP CS Fixer 3.95.27 consistently in the staged-content hook and CI. Fixes #486.
 - Own persistent local RRDtool pipe processes in the Graphing `LocalRrdtool` adapter while retaining the legacy procedural entry points. Fixes #500.
 - Move RRDtool graph option generation into the Graphing module while keeping its procedural wrapper and output unchanged. Part of #502.
 - Resolve ordered graph-item consolidation references in a Graphing collaborator while preserving GPRINT association behavior. Part of #502.
+- Resolve graph fonts in one Graphing `GraphFontResolver` from the theme, the System settings and the viewer's own fonts. Graph `--font` arguments, the Default Font for local, proxy, Data Source statistics and RRD check RRDtool processes, the error image text size and the Boost render key all use it, and a golden test pins the `--font` arguments to the previous code for valid settings.
 - Reuse one RRDtool proxy session for the commands in a graph render, including consolidation-function lookups. Part of #502.
 - Preserve negative integer `--units-exponent` values accepted by graph forms. Fixes #228.
 - Complete Inventory site editing, sorting, duplication and deletion through Symfony; retire the procedural Sites page while retaining safe legacy URL compatibility.
@@ -69,6 +142,9 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Tests
 
+- Generate the audit baseline from a fresh install in CI and fail when its schema rows differ from the checked-in baseline. Fixes #453.
+- Audit both fresh installs and release-upgraded databases against the checked-in schema in CI. Fixes #452.
+- Validate locally authored and conflict-resolved merge content without rejecting whitespace inherited unchanged from the incoming branch.
 - Add native SQL-backed regression coverage for HTML filters, graph drilldown context, ordered report rendering, and realm/view/role/simple-permission helper contracts. Part of #699.
 
 - Exercise user-log cleanup against real MySQL and MariaDB, preserving each current account's latest login and token while removing failed and orphaned entries; collect coverage from the actual controller.
@@ -77,18 +153,59 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Characterize `is_resource_writable()` for existing files, new files, directories, and permission-denied paths before changing the legacy filesystem check.
 
+### Deprecated
+
+- Deprecate `cli/audit_database.php --upgrade` and direct operators to run `php cli/upgrade_database.php` separately. Retain the flag for compatibility and print a warning to stderr. Part of #457.
+
 ### Fixed
+- Return a nonzero status for refused upgrade start versions, missing required migration scripts, migration errors, or failed version-marker writes. Fixes #240.
+- Check linked data-source and poller device owners before graph device reassignment and before graph form writes; denied, missing, or malformed child owners leave the graph and its children unchanged. Template-only references remain non-device records.
+- Validate installed font families after recognized Pango suffixes, reject names when fontconfig reports no installed fonts, and preserve complete multiword default descriptions through RRDProxy session setup.
+- Make the graph spike-removal menu reachable with Enter and Space, restore focus on Escape, and discard obsolete menu replies after script reloads.
+- Keep Paper Plane content links readable on hover; measure contrast using opacity groups and image-layer order, and reject new or worsened measured failures.
 - Invalidate the affected user or group members' permission caches after removing a typed permission exception.
 - Rebuild dependent poller caches once when updating a Data Input whitelist, with the worker retaining propagation failure reporting.
 
+- Validate replicated resource-cache paths against the installation tree, protect `include/config.php`, and run PHP syntax checks without a shell.
+- Restrict Script Server dispatch to PHP files under `scripts/` and only call functions declared by the selected file.
+- Validate dashes, dash offsets and alpha values on graph-item and graph-template-item edit pages, preserving fractional dash patterns and offsets. Filter and quote those fields and the SHIFT and TICK values when rendering graphs, including values stored through graph-input overrides and template imports.
+- Run binary SNMP get, getnext and walk commands through Symfony Process argument arrays, keeping hostnames and SNMP credentials intact as single arguments on Windows. Fixes #531.
+- Bind the data-query output type when rebuilding poller cache entries and skip malformed values, so stored field text cannot alter the SQL query. Fixes #533.
+- Validate graph-item TICK fractions and SHIFT offsets as single numeric tokens before saving or writing RRDtool pipe commands. Malformed legacy rows are skipped. Fixes #535.
+- Require the Realtime Graphs realm and graph visibility before reading a graph cache or starting its realtime poller, including requests made through the guest account. Fixes #537.
+- Treat missing or invalid Host Resources allocation units and negative disk samples as unknown instead of reporting raw units, raising a type error, or guessing an unsigned wrap. Fixes #243.
+- Enforce the spike-removal replacement budget across every row and data source in an RRA, reset it only at the next RRA, and count NaN replacements. Fixes #238.
+- Apply `nan` replacements in the spike-removal window modes and count changed samples, so float and fill no longer report success without changing the selected samples. Fixes #237.
+- Save an editable profile heartbeat even when the browser omits the disabled step field, while refusing changes to structural fields for profiles used by local data sources. Fixes #232.
+- Make the documented `add_tree.php --node-type=site --site-id=ID` workflow create a site tree item, persist its `site_id`, and render its current site devices. Reject unknown site IDs before inserting a row. Fixes #235.
+
+- Reject tree CLI nodes with a missing tree, a missing or foreign parent, or a non-header parent; report failed node creation with a nonzero exit status. Fixes #236.
+- Limit profile heartbeat propagation to the matching data template as well as the local data source, so template rows sharing the zero local-data sentinel do not overwrite unrelated templates. Fixes #233.
+- Recheck data-source profile references when a bulk deletion is submitted, preserving definitions still used by templates or sources while allowing unused profiles in the same selection to be removed.
+- Make the effective graph-policy display honor explicit template grants under Restrictive mode when the template policy defaults to Deny. Fixes #263.
+- Verify worker-session MariaDB snapshot settings before association/maintenance transactions so heartbeat updates do not invalidate the final collector locking read on MariaDB 11.8.
+- Allow collector heartbeat updates during Inventory association and maintenance network work; revalidate collector configuration and availability immediately before commit.
+- Budget Inventory worker processes for every remote data-query request, preserving the existing local-work margin and the configured remote timeout cap.
+- Reject malformed association commands before mutation, propagate query refresh failures in strict workers, and publish authoritative primary changes before collector commits.
+- Restore the `data_input_data.data_input_field_id` index and normalize the `aggregate_graphs.created` timestamp during the 1.2.31 upgrade so upgraded databases match the fresh-install schema.
+- Stop schema report, alters, and repair when the canonical baseline cannot be loaded, returning a failing CLI status and JSON `failed` status without results. Preserve explicit create/load mode messages and legacy exit conventions; missing or unparsable create inputs leave existing audit tables untouched. Fixes #242.
 - Remove orphaned user-log entries even when no current user accounts remain.
 - Stop token generation when the cryptographic random source fails instead of returning a predictable fallback. Fixes #580.
 - Refresh generated Midwinter stylesheet import versions during the browser build so uncompiled installations invalidate changed child CSS.
 - Return a failing CLI status and JSON `failed` status when any database table analysis fails, and use the correct `ANALYZE NO_WRITE_TO_BINLOG TABLE` syntax on main. Fixes #241.
 
+- Show color names, data input field names, group names in permission reasons, and graph, device and site names in the tree editor as text; these places parsed the decoded names as markup. Copying a user group now rejects a prefix that the group name rule refuses, and SNMP notification tooltips no longer use inline handlers, so they also work under a nonce CSP.
 - Build offline archives with the npm JavaScript CLI bundled with the selected Node runtime, avoiding shell-wrapper parse failures in CI. Related to #703.
 - Preserve both existing audit baseline tables until a staged import is validated and atomically installed; report failed imports and repairs with a nonzero CLI status. Fixes #242.
 - Invoke standard plugin upgrade callbacks during database audits and quote upgrade script paths and arguments.
+- Ask for a Pango font description in the graph font settings instead of a TrueType font file. RRDtool 1.3 and later pass the value to Pango, which ignores a file path and draws its fallback font.
+- Draw Midwinter graph legends in DejaVu Sans Mono. Its `Roboto Mono` setting fell back to the proportional DejaVu Sans on hosts without Roboto, including the container image, and misaligned legend columns.
+- Draw the graph error image with the bundled DejaVu font when no system DejaVu Sans is installed, and wrap its text by measured width and whole characters. The GD fallback used the point size as a built-in font id, so lines overlapped and ran past the frame, and translated messages were cut inside UTF-8 characters.
+- Search the bundled `include/fonts` directory on Windows as well. Classic theme external-link tabs lost their labels there because Windows ships no DejaVu font.
+- Refuse a graph font name that is not a Pango font description, or that names no font `fc-list` reports as installed, when System, User or User Group settings are saved. Without `fc-list` a well-formed name is saved and the unchecked save is logged. In Theme font mode the hidden font fields keep their stored values unchecked, so a stale font does not block the rest of the Visual tab. A stored font file path or a name with double quotes, colons or control characters now draws the Default Font instead of reaching RRDtool, and is no longer sent to an RRDtool proxy.
+- Key Boost cached graphs by the fonts a render resolves to. The key left out the Default Font, so a changed Default Font served graphs drawn with the old one.
+- Refuse graph font sizes of 4 points or less, or above 72 points, when System, User or User Group settings are saved. The profile page no longer stores a cleared or invalid size as the user types, and User Group settings store the default instead.
+- Replace graph font sizes that are empty, non-numeric, infinite or 4 points and below with the default, and cap larger ones at 72 points. A thumbnail with an empty title size threw a `TypeError`, and a size such as `1e400` made RRDtool reject every graph.
 - Bind graph-template and local graph item ordering filters as parameters and preserve the non-classic theme fallback when available. Related to #476.
 - Bring the lts/1.2 authentication hardening to main. Leaving the retired no-authentication method now switches to local authentication without starting a session or clearing the administrator password; the administrator signs in and must choose a new password. The guest account can no longer open Edit Profile. Failed LDAP and domain logins show one generic message and keep the directory error in the log. A local login for an unknown username costs the same password hashing as one for a known username. A remember-me login with a pending forced password change goes to the change page, every logout path deletes the server-side remember-me token, and a malformed remember-me cookie is ignored.
 
@@ -121,6 +238,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Install only the Font Awesome stylesheet, its WOFF2 fonts and licence into a cleared `include/fa` with directory guards, instead of the whole 25 MB npm package. Font URLs now carry the package version, so a browser that cached Font Awesome 5 fonts under the same names fetches the new ones.
 - Disable network access while parsing imported package XML. Fixes #578.
+- Key Boost's cached graph images by the fonts, font sizes, colour mode, date format, time zone, language and requested theme each viewer renders with, and by the requested output format. A graph drawn with one user's custom fonts, date format or browser time zone was served to other users of the same theme until the cache expired, and the reverse ignored a user's own settings. Graphs rendered by the remote agent and by reports are now also written under the name their own theme and size options produce, rather than the global request's. The `graphv` output of `graph_json.php` and PNGs forced over an SVG template no longer share a file name with the plain image. The name also carries the graph's start and end times, so users whose first weekday or day shift hours differ no longer share an image for the This Week, Previous Week or Day Shift presets.
 - Keep SNMP agent cache values on one `pass_persist` protocol line by removing embedded carriage returns and line feeds before storage and output.
 - Normalize Graph View graph-list values before storing them in the session, escape them in HTML, and encode them for JavaScript. Removing the last selected graph now clears the stored selection, while paging preserves it. Fixes #574.
 - Escape and type-check the posted local graph ID before rendering Aggregate Graphs bulk-action confirmation markup. Fixes #586.
@@ -128,10 +246,14 @@ Targeting `v1.3.0`, the first planned application release. See
 - Recheck data-source profile references when a bulk deletion is submitted, preserving definitions still used by templates or sources while allowing unused profiles in the same selection to be removed.
 - Escape device and network values before adding them to automation discovery HTML emails. Fixes #589.
 
+- Show a keyboard focus ring in every theme. Links and buttons clicked with the mouse show no ring; text fields now show it on click as well, as browsers apply :focus-visible there. In modern, paper-plane and midwinter the ring carries a contrasting halo, so one ring reads on both the light and dark panels. Keep switch checkboxes and radios reachable by Tab, let keyboard users reach the dark theme's graph utility icons, and improve contrast for text, icons, focus rings and the edges of fields, menus and switches at rest, hovered, focused and in selected rows. Midwinter now takes its status, icon and control colours from per-mode variables. `tests/e2e/tests/theme-contrast.spec.ts` measures real pages in every theme; focused declaration tests cover the changed dark, paper-plane and sunrise palettes. These checks do not establish AA conformance for every page. The themes also style `h1.loginHeading` like the login legend, ready for the login markup change.
+
 - Create the identity audit file with restrictive permissions without changing the process-wide umask, which could otherwise affect unrelated threaded requests. Fixes #382.
 - Fix blank and wrong Font Awesome 7 icons: the midwinter filter icon no longer shows a missing-glyph box, the multiselect collapse-all and expand-all buttons show their arrows, and the legacy `fa-circle-thin` class draws an outline circle again.
 
 - Give icon-only controls an accessible name: the Add and page help links, the tab menu buttons, the Console tab in themes that hide its text, and the Data Source troubleshooter's pass and fail icons.
+
+- Escape the values that graph views, start boxes, table headers and the spike removal menu print into HTML attributes and text. The realtime popup link now passes the graph URL to `window.open()` as encoded JavaScript strings, and the graph id is always a number. Forward-ported from lts/1.2.
 
 - Capture the RRDtool dump while transforming RRD files so repair utilities print nothing outside debug mode and print the modified XML only once in debug mode. Fixes #438.
 
@@ -196,8 +318,24 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Commit through PDO rather than the MariaDB-only `@@in_transaction` variable, so device edits, creates, template assignments, collector moves and bulk state changes commit on MySQL instead of rolling back and reporting an uncertain outcome.
 
+- Accept an LDAP Domains login only for a realm that is an enabled domain, and always bind against that domain's directory first. Any other realm, a domain without directory settings, and a directory user with no account and no domain template are refused instead of falling through to the default template or guest account. Domain login errors no longer show directory error text on the login page; the log keeps it.
+- Index RRD input-field references on fresh installations and through a registered schema upgrade from main 1.2.31 or LTS 1.2.32, keeping reference locks scoped to the selected fields.
+- Allow user settings and credential metadata to store the full user account ID range on fresh and upgraded databases.
+- Require a POST with a CSRF token to move, delete or add items on the CDEF, VDEF, color template, graph, graph template, data source, data template, data query, data source profile, device template, automation, tree and external link pages. Their move and delete links now post from the page and load the result in place; a GET for these actions gets 405.
+
+- Require a POST with a CSRF token to add or remove device graph templates and data queries, to create, rename, copy, move or delete tree branches, set their sort order, or sort the tree list, to delete automation rules and data input fields, to enable or disable a data source, to remove a color, and to rebuild the poller, resource and SNMP agent caches, purge data source statistics, or clear or purge the Kadupul and user logs. The pages that offer these actions now post them with the token.
+- Require a POST with a CSRF token to lock or unlock a tree for editing, reorder trees by drag and drop, change, reload or verbosely re-run a device data query, turn device debugging on or off, and repopulate a device's poller cache. The tree, device and new graph pages now post these actions with the token.
+- Require a POST with a CSRF token to reorder items by drag and drop on the CDEF, VDEF, automation SNMP, automation template and color template pages, and to re-run a data query from the new graphs page. These pages now post the reorder and the reload with the token.
+
 ### Changed
 
+- Route Inventory device menus and legacy `host.php` links through Symfony. Legacy POSTs expire without replay; GET action links open confirmation forms. Existing automation rules are applied through an Inventory use case and Automation adapter. Preserve collector, template and exact-location list filters.
+- Device pages no longer execute legacy plugin UI hooks or custom device-page actions. Plugins must expose their own pages or adopt Symfony extensions; existing save/template/association/bulk action callbacks remain in isolated adapters. Legacy device CSV links now export the selected public-data page instead of unbounded host records.
+
+- Add Symfony device maintenance for reindexing, query diagnostics, polling cache refresh, debug controls and connectivity checks with secret-safe plain-text results.
+- Migrate device data-query associations and reindex settings to Symfony, retaining graph data and verifying primary/remote cache cleanup.
+- Add Symfony device graph-template association editing with legacy automation hooks, stale-association protection, remote verification and existing-graph retention.
+- Run cli/audit_database.php through kadupul:database:audit, with --json and --dry-run. The flags are unchanged apart from --dry-run, --json, --force and a bare, empty or spaced --as, which the shim now refuses; it takes the operator only as --as=NAME. Under bin/console, --repair only plans unless --force is given or the operator confirms the plan at the prompt. The command requires an operator with the Console Access and Installation/Upgrades realms. It reads docs/audit_schema.sql itself instead of piping it into the mysql client with the database password on the command line, and it builds each repair statement from typed parts, so no text from the file or the server reaches the database unquoted. The upgrade and each plugin upgrade run with no shell, so a plugin's recorded version reaches its script as one argument. The schema dump targets the configured database server, so MYSQL_HOST and similar variables cannot point it elsewhere. A failed upgrade now stops the run before any repair.
 - Add Symfony bulk SNMP settings with explicit credential replacement, per-device credential validation and secret-safe failure responses.
 
 - Add Symfony bulk site, template and collector assignments with whole-selection validation, primary rollback and verified collector replication.
@@ -211,7 +349,6 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Serve legacy stylesheets and scripts from `public/assets/` with digested file names once `php bin/console asset-map:compile` has run, using Symfony AssetMapper 7.4. Theme `url()` and `@import` references are rewritten to the digested copies, so Midwinter no longer keeps hand-maintained import hashes and `update_hash.php` is gone. Without a compiled manifest, and for `custom.css`, plugins and the flag-icons stylesheet, pages keep the `?md5` URLs. Docker images and offline bundles ship the compiled files; source installations must rerun the compile after each upgrade.
 - Reuse common row-count option rendering in automation previews while preserving each row filter.
-
 - Migrate bulk device statistics reset to a Symfony confirmation page and Inventory use case, with authorized selection checks and primary/remote failure handling.
 
 - Run legacy `exec_into_array()` commands through Symfony Process while preserving its public signature, stdout line array, exit-status handling, and unlimited wait behavior. Retain the native `exec()` path if Process cannot start because `proc_open()` is unavailable. Tracks #482.

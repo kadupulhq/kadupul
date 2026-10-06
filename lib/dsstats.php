@@ -6,6 +6,8 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+require_once __DIR__ . '/graph_fonts.php';
+
 /**
  * get_rrdfile_names - this routine returns all of the RRDfiles know to Kadupul
  *   so as to be processed when performing the Daily, Weekly, Monthly and Yearly
@@ -1087,8 +1089,9 @@ function dsstats_rrdtool_init()
     }
 
     /* set the rrdtool default font */
-    if (read_config_option('path_rrdtool_default_font')) {
-        putenv('RRD_DEFAULT_FONT=' . read_config_option('path_rrdtool_default_font'));
+    $font = graph_font_resolver()->family(read_config_option('path_rrdtool_default_font'));
+    if ($font != '') {
+        putenv('RRD_DEFAULT_FONT=' . $font);
     }
 
     $command = read_config_option('path_rrdtool') . ' - ';

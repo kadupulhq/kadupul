@@ -64,6 +64,39 @@ function reports_add_devices($report_id, $device_ids, $timespan, $align)
 {
     if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) $report_id, 'reports')) {
         raise_message('reports_not_owner');
+        return false;
+    }
+    global $database_sessions, $database_hostname, $database_port, $database_default;
+    $connection = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
+    if (!$connection instanceof PDO) {
+        return false;
+    }
+    $owns_transaction = !$connection->inTransaction();
+    if ($owns_transaction && !db_begin_transaction($connection)) {
+        return false;
+    }
+    try {
+        if (!db_fetch_cell_prepared('SELECT id FROM reports WHERE id = ? FOR UPDATE', array($report_id))) {
+            return false;
+        }
+        $result = reports_add_devices_locked($report_id, $device_ids, $timespan, $align);
+        // Legacy batches can report skipped duplicates after adding other items.
+        if ($owns_transaction && !db_commit_transaction($connection)) {
+            return false;
+        }
+        return $result;
+    } finally {
+        if ($owns_transaction && $connection->inTransaction()) {
+            db_rollback_transaction($connection);
+        }
+    }
+}
+
+// Share the report row lock with Symfony before the existence check and insert.
+function reports_add_devices_locked($report_id, $device_ids, $timespan, $align)
+{
+    if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) $report_id, 'reports')) {
+        raise_message('reports_not_owner');
 
         return false;
     } else {
@@ -83,7 +116,7 @@ function reports_add_devices($report_id, $device_ids, $timespan, $align)
 				WHERE host_id = ?
 				AND item_type = 5
 				AND report_id = ?
-				AND timespan = ?',
+				AND timespan = ? FOR UPDATE',
                 array($device_id, $report_id, $timespan)
             );
 
@@ -123,8 +156,8 @@ function reports_add_devices($report_id, $device_ids, $timespan, $align)
 
                     db_execute_prepared(
                         'INSERT INTO reports_items
-						(report_id, item_type, host_template_id, site_id, host_id, graph_template_id, local_graph_id, timespan, align, sequence)
-						VALUES (?, 5, ?, ?, ?, ?, ?, ?, ?, ?)',
+						(report_id, item_type, host_template_id, site_id, host_id, graph_template_id, local_graph_id, timespan, align, sequence, item_text)
+						VALUES (?, 5, ?, ?, ?, ?, ?, ?, ?, ?, \'\')',
                         array(
                             $report_id,
                             $host_template_id,
@@ -926,7 +959,7 @@ function reports_generate_html($reports_id, $output = REPORTS_OUTPUT_STDOUT, &$t
                 /* start a new section */
                 $column = 0;
             } elseif ($item['item_type'] == REPORTS_ITEM_HOST) {
-                if (is_tree_allowed($item['host_id'], $report['user_id'])) {
+                if (is_device_allowed($item['host_id'], $report['user_id'])) {
                     $outstr .= reports_expand_device($report, $item, $item['host_id'], $output, $format_ok, $theme);
                 }
             } elseif ($item['item_type'] == REPORTS_ITEM_TREE) {

@@ -9,6 +9,17 @@ const root = path.resolve(__dirname, '../..');
 // The page header defines these labels from lib/html.php.
 const labels = [...fs.readFileSync(path.join(root, 'lib/html.php'), 'utf8').matchAll(/var (\w+)='<\?php print __esc/g)]
   .map(match => match[1]).concat(['cactiVersion', 'zoom_i18n_settings']);
+// layout.js loads before the theme and supplies the icon helpers, and the page
+// header prints the registry map they read.
+const layout = fs.readFileSync(path.join(root, 'include/layout.js'), 'utf8');
+const iconHelpers = ['iconClass', 'iconSelector', 'iconMarkup', 'basename', 'setNavigationScroll'].map(name => {
+  const start = layout.indexOf(`function ${name}(`);
+  const end = layout.indexOf('\n}\n', start);
+  if (start < 0 || end <= start) throw new Error(`Missing native layout function: ${name}`);
+  return layout.slice(start, end + 2);
+}).join('\n');
+const registry = JSON.parse(fs.readFileSync(path.join(root, 'config/icons.json'), 'utf8'));
+const icons = { ...registry.icons, ...registry.themes.midwinter };
 const markup = `
   <div id="menu"><input type="text" name="keyword">
     <ul role="menu"><li><a role="menuitem" href="#">Devices</a></li><li><a role="menuitem" href="#">Graphs</a></li></ul>
@@ -23,7 +34,9 @@ async function loadTheme(page, { autoColorMode = 'on', stubPageSetup = true, rea
   for (const file of ['include/js/jquery.js', 'include/js/js.storage.js', 'include/js/jquery.cookie.js', 'include/js/purify.js']) {
     await page.addScriptTag({ path: path.join(root, file) });
   }
-  await page.evaluate(({ auto, names }) => {
+  await page.addScriptTag({ content: iconHelpers });
+  await page.evaluate(({ auto, names, icons }) => {
+    window.kadupulIcons = icons;
     for (const name of names) {
       window[name] = name;
     }
@@ -40,7 +53,7 @@ async function loadTheme(page, { autoColorMode = 'on', stubPageSetup = true, rea
       if (type === 'change') window.colourListeners++;
       return add.call(this, type, ...rest);
     };
-  }, { auto: autoColorMode, names: labels });
+  }, { auto: autoColorMode, names: labels, icons });
   await page.addScriptTag({ url: '/include/themes/midwinter/main.js' });
   if (realDefaultElements) {
     for (const file of ['include/js/jquery-ui.js', 'include/js/jquery.tablesorter.js']) {
@@ -53,6 +66,7 @@ async function loadTheme(page, { autoColorMode = 'on', stubPageSetup = true, rea
     await page.evaluate(() => { $.fn.ready = window.savedReady; });
   }
   await page.evaluate(({ stub, realDefaultElements }) => {
+    window.productionDefaultElements = window.setupDefaultElements;
     const steps = ['setupTree', 'setMenuVisibility', 'updateNavigation', 'checkConsoleMenu'];
     if (!realDefaultElements) steps.push('setupDefaultElements');
     for (const name of stub ? [...steps, 'setupTheme'] : steps) {
@@ -215,4 +229,21 @@ test('SHIFT+k enters fullscreen on the content area and leaves it again', async 
 
   await page.keyboard.press('Shift+K');
   await page.waitForFunction(() => document.fullscreenElement === null);
+});
+
+
+test('repeated native page setup keeps one search icon per input', async ({ page }) => {
+  await loadTheme(page);
+  await page.addScriptTag({ path: path.join(root, 'include/js/jquery-ui.js') });
+  await page.evaluate(() => {
+    window.cactiConsoleAllowed = true;
+    // No colour dropdown exists in this fixture; that external widget is outside the icon contract.
+    $.fn.dropcolor = function() { return this; };
+    $('body').append('<table><tr><td><input id="filter"></td><td><input id="filterd"></td><td><input id="rfilter"></td></tr></table>');
+    for (let count = 0; count < 3; count++) productionDefaultElements();
+  });
+  for (const id of ['filter', 'filterd', 'rfilter']) {
+    await expect(page.locator(`#${id} + i.filter`)).toHaveCount(1);
+    await expect(page.locator(`#${id}`).locator('..').locator('i.filter')).toHaveCount(1);
+  }
 });

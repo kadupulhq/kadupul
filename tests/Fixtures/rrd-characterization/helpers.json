@@ -472,7 +472,7 @@
             "watermark_font": "Sans \"Bold\"",
             "watermark_size": "4.5"
         },
-        "returned": "--font WATERMARK:4.5:'Sans \"Bold\"' \\\n",
+        "returned": "--font WATERMARK:4.5: \\\n",
         "args_after": [
             "watermark",
             "",

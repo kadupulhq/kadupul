@@ -9,7 +9,7 @@ require_once dirname(__DIR__, 4) . '/lib/rrd_maintenance.php';
 require_once dirname(__DIR__, 4) . '/lib/rrd.php';
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 $source = file_get_contents(dirname(__DIR__, 4) . '/poller_maintenance.php');
-foreach (array('rrdfile_purge', 'remove_files', 'rrdclean_create_path') as $name) {
+foreach (array('rrdfile_purge', 'remove_files', 'rrdclean_create_path', 'rrdcleaner_is_safe_relative_path', 'rrdcleaner_resolve_contained_path', 'rrdcleaner_archive_path_is_safe') as $name) {
     eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($source, $name));
 }
 function read_config_option($key, $force = false)
@@ -65,6 +65,32 @@ function rename($source, $target)
 {
     return !empty($GLOBALS['purge_fixture_failure']) && basename($source) === 'sample.rrd' ? false : \rename($source, $target);
 }
+
+test('cleanup resolver rejects paths outside the real RRA directory', function () {
+    $root = sys_get_temp_dir() . '/purge-contained-' . bin2hex(random_bytes(8));
+    mkdir($root, 0700);
+    $inside = $root . '/inside.rrd';
+    $outside = $root . '-outside.rrd';
+    file_put_contents($inside, 'inside');
+    file_put_contents($outside, 'outside');
+
+    try {
+        expect(rrdcleaner_resolve_contained_path($inside, $root))->toBe(realpath($inside))
+            ->and(rrdcleaner_resolve_contained_path($outside, $root))->toBeFalse()
+            ->and(rrdcleaner_resolve_contained_path($root . '/missing.rrd', $root))->toBeFalse();
+
+        if (symlink($outside, $root . '/link.rrd')) {
+            expect(rrdcleaner_resolve_contained_path($root . '/link.rrd', $root))->toBeFalse();
+        }
+    } finally {
+        if (is_link($root . '/link.rrd')) {
+            unlink($root . '/link.rrd');
+        }
+        unlink($inside);
+        unlink($outside);
+        rmdir($root);
+    }
+});
 
 test('purge and archive defer once under a writer lease then complete on retry', function ($action, $filesystemFailure) {
     $saved = $GLOBALS['config'] ?? null;
@@ -125,7 +151,9 @@ test('a file that cannot be removed does not stop later pages of the queue', fun
     // The failing request sorts first and fills the first page with 999 others.
     $GLOBALS['purge_fixture_queue'] = array(array('id' => 1, 'name' => 'sample.rrd', 'local_data_id' => 0, 'action' => $action));
     for ($i = 0; $i < 1000; $i++) {
-        $GLOBALS['purge_fixture_queue'][] = array('id' => $i + 2, 'name' => sprintf('z%04d.rrd', $i), 'local_data_id' => 0, 'action' => $action);
+        $name = sprintf('z%04d.rrd', $i);
+        file_put_contents($directory . '/' . $name, 'queued file');
+        $GLOBALS['purge_fixture_queue'][] = array('id' => $i + 2, 'name' => $name, 'local_data_id' => 0, 'action' => $action);
     }
     $GLOBALS['purge_fixture_reads'] = 0;
     $GLOBALS['purge_fixture_max_reads'] = 2;
@@ -138,6 +166,38 @@ test('a file that cannot be removed does not stop later pages of the queue', fun
     } finally {
         unset($GLOBALS['purge_fixture_failure']);
         $GLOBALS['config'] = $saved;
+        $paths = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($paths as $path) {
+            $path->isDir() ? rmdir($path->getPathname()) : unlink($path->getPathname());
+        }
+        rmdir($directory);
+        unset($GLOBALS['purge_fixture_queue'], $GLOBALS['purge_fixture_reads'], $GLOBALS['purge_fixture_max_reads']);
+    }
+})->with(array('1', '3'));
+
+test('queued files that are already gone leave the queue while unsafe names stay', function ($action) {
+    $saved = $GLOBALS['config'] ?? null;
+    $directory = sys_get_temp_dir() . '/purge-missing-' . bin2hex(random_bytes(8));
+    mkdir($directory, 0700);
+    file_put_contents($directory . '-outside.rrd', 'outside');
+    $GLOBALS['config'] = array('cacti_server_os' => 'unix', 'rra_path' => $directory, 'base_path' => $directory);
+    $GLOBALS['purged'] = $GLOBALS['archived'] = 0;
+    $GLOBALS['poller_start'] = microtime(true);
+    $GLOBALS['purge_fixture_queue'] = array(
+        array('id' => 1, 'name' => 'never_polled.rrd', 'local_data_id' => 0, 'action' => $action),
+        array('id' => 2, 'name' => '../' . basename($directory) . '-outside.rrd', 'local_data_id' => 0, 'action' => $action),
+    );
+    $GLOBALS['purge_fixture_reads'] = 0;
+    $GLOBALS['purge_fixture_max_reads'] = 1;
+    try {
+        $retained = 0;
+        remove_files($GLOBALS['purge_fixture_queue'], $retained);
+        expect(array_column($GLOBALS['purge_fixture_queue'], 'id'))->toBe(array(2))
+            ->and($retained)->toBe(1)
+            ->and(file_get_contents($directory . '-outside.rrd'))->toBe('outside');
+    } finally {
+        $GLOBALS['config'] = $saved;
+        unlink($directory . '-outside.rrd');
         $paths = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
         foreach ($paths as $path) {
             $path->isDir() ? rmdir($path->getPathname()) : unlink($path->getPathname());

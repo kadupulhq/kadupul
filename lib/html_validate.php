@@ -1,54 +1,60 @@
 <?php
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-function input_validate_input_equals($value, $c_value) {
-	if ($value != $c_value) {
-		die_html_input_error();
-	}
+function input_validate_input_equals($value, $c_value)
+{
+    if ($value != $c_value) {
+        die_html_input_error();
+    }
 }
 
-function input_validate_input_number($value) {
-	if ((!is_numeric($value)) && ($value != '')) {
-		die_html_input_error();
-	}
+function input_validate_input_number($value)
+{
+    if ((!is_numeric($value)) && ($value != '')) {
+        die_html_input_error();
+    }
 }
 
-function input_validate_input_regex($value, $regex) {
-	if ($value != null && $value != '' && (!preg_match('/' . $regex . '/', $value))) {
-		die_html_input_error();
-	}
+function input_validate_input_regex($value, $regex)
+{
+    if ($value != null && $value != '' && (!preg_match('/' . $regex . '/', $value))) {
+        die_html_input_error();
+    }
 }
 
-function html_log_input_error($variable) {
-	cacti_debug_backtrace("Input Validation Not Performed for '$variable'");
+function html_log_input_error($variable)
+{
+    cacti_debug_backtrace("Input Validation Not Performed for '$variable'");
 }
 
-function die_html_input_error($variable = '', $value = '', $message = '') {
-	global $config;
+function die_html_input_error($variable = '', $value = '', $message = ''): never
+{
+    global $config;
 
-	if ($message == '') {
-		$message = __esc('Validation error for variable %s with a value of %s.  See backtrace below for more details.', $variable, html_escape($value));
-	}
+    if ($message == '') {
+        $message = __esc('Validation error for variable %s with a value of %s.  See backtrace below for more details.', $variable, html_escape($value));
+    }
 
-	if (isset_request_var('json')) {
-		cacti_debug_backtrace('Validation Error' . ($variable != '' ? ', Variable:' . html_escape($variable):'') . ($value != '' ? ', Value:' . html_escape($value):'') . ', Source: ' . get_client_addr() . ', Request: ' . json_encode($_REQUEST), false);
-		print json_encode(
-			array(
-				'status' => '500',
-				'statusText' => __('Validation Error'),
-				'responseText' => $message
-			)
-		);
-	} else {
-		cacti_debug_backtrace('Validation Error' . ($variable != '' ? ', Variable:' . html_escape($variable):'') . ($value != '' ? ', Value:' . html_escape($value):'') . ', Source: ' . get_client_addr() . ', Request: ' . json_encode($_REQUEST), true);
+    if (isset_request_var('json')) {
+        cacti_debug_backtrace('Validation Error' . ($variable != '' ? ', Variable:' . html_escape($variable) : '') . ($value != '' ? ', Value:' . html_escape($value) : '') . ', Source: ' . get_client_addr() . ', Request: ' . json_encode($_REQUEST), false);
+        print json_encode(
+            array(
+                'status' => '500',
+                'statusText' => __('Validation Error'),
+                'responseText' => $message
+            )
+        );
+    } else {
+        cacti_debug_backtrace('Validation Error' . ($variable != '' ? ', Variable:' . html_escape($variable) : '') . ($value != '' ? ', Value:' . html_escape($value) : '') . ', Source: ' . get_client_addr() . ', Request: ' . json_encode($_REQUEST), true);
 
-		print "<table style='width:100%;text-align:center;'><tr><td>$message</td></tr></table>";
-		bottom_footer();
-	}
+        print "<table style='width:100%;text-align:center;'><tr><td>$message</td></tr></table>";
+        bottom_footer();
+    }
 
-	exit;
+    exit;
 }
-

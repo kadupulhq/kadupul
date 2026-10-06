@@ -71,3 +71,21 @@ test('clog title caching accepts repeated scalar and list identifiers without wa
     expect($status)->toBe(0)->and($error)->toBe('');
     expect(json_decode($output, true, 512, JSON_THROW_ON_ERROR))->toBe(array(array(7 => 'Title 7', 8 => 'Title 8'), array(7 => 'Title 7'), array(7, 8)));
 });
+
+
+test('RRD cleaner scan persists escaped metadata and preserves batch boundaries', function ($mode, $count, $fileSize, $expectedBatches) {
+    $mtime = $mode === 'scan-proxy' && $fileSize === 'unknown' ? 'invalid' : 1700000000;
+    $rows = [["a'b\\.rrd", $fileSize, $mtime]];
+    for ($index = 1; $index < $count; $index++) $rows[] = [sprintf('sample%04d.rrd', $index), $fileSize, 1700000000];
+    [$status, $output, $error] = per_cs_review_run($this, $mode, json_encode($rows, JSON_THROW_ON_ERROR));
+    expect($status)->toBe(0)->and($error)->toBe('');
+    $result = json_decode($output, true, flags: JSON_THROW_ON_ERROR);
+    expect($result['rows'])->toHaveCount($count)->and($result['batches'])->toBe($expectedBatches);
+    expect($result['rows'][0]['name'])->toBe("a'b\\.rrd")
+        ->and($result['rows'][0]['size'])->toBe((int) $fileSize)
+        ->and($result['rows'][0]['in_cacti'])->toBe(0)
+        ->and($result['rows'][0]['last_mod'])->toBe($mtime === 'invalid' ? '1970-01-01 00:00:00' : '2023-11-14 22:13:20');
+})->with([
+    ['scan-local', 1, 17, [1]], ['scan-local', 401, 17, [400, 1]],
+    ['scan-proxy', 2, 'unknown', [2]], ['scan-proxy', 2, 399, [1, 1]],
+]);

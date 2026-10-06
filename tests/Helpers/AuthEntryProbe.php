@@ -5,7 +5,7 @@
 
 /*
  * Runs the shipped include/auth.php and lib/auth.php in a child PHP process
- * against an in-memory user_auth table; see Fixtures/auth-entry-probe-child.php. The
+ * against an in-memory user_auth table; see ../Fixtures/auth-entry-probe-child.php. The
  * child's stubs live in their own file because PHP declares a file's
  * functions when it compiles the file, and other tests in the same run
  * declare the same names.

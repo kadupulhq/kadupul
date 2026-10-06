@@ -1,15 +1,17 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
 include('./include/auth.php');
 
-cacti_require_post_actions(array('actions'));
+cacti_require_post_actions(array('actions', 'rrd_add', 'rrd_remove', 'ds_enable', 'ds_disable'));
 include_once('./lib/api_data_source.php');
 include_once('./lib/api_device.php');
 include_once('./lib/api_graph.php');
+require_once __DIR__ . '/lib/graph_data_removal.php';
 include_once('./lib/data_query.php');
 include_once('./lib/html_form_template.php');
 include_once('./lib/poller.php');
@@ -50,6 +52,10 @@ switch (get_request_var('action')) {
 
         break;
     case 'data_edit':
+        if (!isempty_request_var('id') && !data_source_device_is_allowed(get_filter_request_var('id'))) {
+            data_source_access_denied();
+        }
+
         top_header();
 
         data_edit();
@@ -105,6 +111,27 @@ switch (get_request_var('action')) {
 
 function form_save()
 {
+    if (isset_request_var('save_component_data_source_new') || isset_request_var('save_component_data_source')) {
+        $local_data_id = get_filter_request_var('local_data_id');
+        $host_id       = get_filter_request_var('host_id');
+
+        if (!empty($local_data_id) && !data_source_device_is_allowed($local_data_id)) {
+            data_source_access_denied();
+        }
+
+        if (!data_source_device_id_is_allowed($host_id)) {
+            data_source_access_denied();
+        }
+
+        if (isset_request_var('save_component_data_source') && !data_source_save_rows_are_owned()) {
+            data_source_access_denied();
+        }
+    }
+
+    if (isset_request_var('save_component_data') && !data_source_data_form_is_allowed()) {
+        data_source_access_denied();
+    }
+
     if ((isset_request_var('save_component_data_source_new')) && (!isempty_request_var('data_template_id'))) {
         $save['id']               = get_filter_request_var('local_data_id');
         $save['host_id']          = get_filter_request_var('host_id');
@@ -218,6 +245,10 @@ function form_save()
         $save2['data_input_id']               = form_input_validate(get_request_var('data_input_id'), 'data_input_id', '^[0-9]+$', true, 3);
         $save2['name']                        = form_input_validate(get_nfilter_request_var('name'), 'name', '', false, 3);
         $save2['data_source_path']            = form_input_validate(get_nfilter_request_var('data_source_path'), 'data_source_path', '', true, 3);
+        if (!is_error_message() && !data_source_path_is_allowed($save2['data_source_path'])) {
+            $_SESSION['sess_error_fields']['data_source_path'] = 'data_source_path';
+            raise_message(2);
+        }
         $save2['active']                      = form_input_validate((isset_request_var('active') ? get_nfilter_request_var('active') : ''), 'active', '', true, 3);
         $save2['data_source_profile_id']      = form_input_validate(get_request_var('data_source_profile_id'), 'data_source_profile_id', '^[0-9]+$', false, 3);
         $save2['rrd_step']                    = form_input_validate(get_request_var('rrd_step'), 'rrd_step', '^[0-9]+$', false, 3);
@@ -375,11 +406,69 @@ function form_actions()
     get_filter_request_var('drp_action', FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/^([a-zA-Z0-9_]+)$/')));
     /* ==================================================== */
 
+    $removal_scope = null;
+    $removal_preview = null;
+    $removal_item_preview = null;
+    if (get_nfilter_request_var('drp_action') == '1') {
+        try {
+            $selection = array();
+            if (isset_request_var('selected_items')) {
+                $selection = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
+                $mode = isset_request_var('delete_type') ? get_nfilter_request_var('delete_type') : 1;
+            } else {
+                foreach ($_POST as $key => $value) {
+                    if (preg_match('/^chk_([0-9]+)$/D', $key, $match)) $selection[] = $match[1];
+                }
+                $mode = 1;
+            }
+            if (!is_array($selection)) throw new RuntimeException('Invalid removal selection.');
+            $removal_scope = GraphDataRemovalScope::review('data', $selection, $mode);
+            if (!isset_request_var('selected_items')) {
+                try {
+                    $removal_item_preview = GraphDataRemovalScope::review('data', $selection, 2);
+                } catch (GraphDataRemovalAccessDenied|GraphDataRemovalBatchTooLarge) {
+                    // Items and whole graphs have different aggregate dependency scopes.
+                }
+                try {
+                    $removal_preview = GraphDataRemovalScope::review('data', $selection, 3);
+                } catch (GraphDataRemovalAccessDenied|GraphDataRemovalBatchTooLarge) {
+                    // Source-only deletion does not authorize dependent graph names or writes.
+                }
+            }
+        } catch (Throwable $error) {
+            graph_data_removal_failed('data', $error);
+        }
+    }
     /* if we are to save this form, instead of display it */
     if (isset_request_var('selected_items')) {
         $selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
+        if ($removal_scope !== null) {
+            $selected_items = $removal_scope->selectedIds();
+            set_request_var('selected_items', serialize($selected_items));
+        }
+        if (is_array($selected_items) && $removal_scope === null) {
+            try {
+                $selected_items = get_allowed_management_selection('data', $selected_items);
+            } catch (Throwable $error) {
+                data_source_access_denied();
+            }
+            /* plugin action hooks read the request, so they must see the filtered list too */
+            set_request_var('selected_items', serialize($selected_items));
+            if (cacti_sizeof($selected_items) === 0) {
+                $selected_items = false;
+            }
+        }
 
         if ($selected_items != false) {
+            if ($removal_scope === null) {
+                try {
+                    $verified = get_allowed_management_selection('data', $selected_items);
+                } catch (Throwable $error) {
+                    data_source_access_denied();
+                }
+                if (count($verified) !== count($selected_items)) data_source_access_denied();
+            }
+
             if (get_nfilter_request_var('drp_action') == '1') { /* delete */
                 if (!isset_request_var('delete_type')) {
                     set_request_var('delete_type', 1);
@@ -387,59 +476,25 @@ function form_actions()
                     get_filter_request_var('delete_type');
                 }
 
-                switch (get_request_var('delete_type')) {
-                    case '2': /* delete all graph items tied to this data source */
-                        $data_template_rrds = array_rekey(db_fetch_assoc('SELECT id
-							FROM data_template_rrd
-							WHERE ' . array_to_sql_or($selected_items, 'local_data_id')), 'id', 'id');
-
-                        $poller_ids = db_fetch_assoc('SELECT DISTINCT poller_id
-							FROM host AS h
-							INNER JOIN data_local AS dl
-							ON dl.host_id=h.id
-							WHERE poller_id > 1
-							AND id IN (' . implode(', ', $selected_items) . ')');
-
-                        api_plugin_hook_function('graph_items_remove', $data_template_rrds);
-
-                        /* loop through each data source item */
-                        if (cacti_sizeof($data_template_rrds) > 0) {
-                            db_execute('DELETE FROM graph_templates_item
-								WHERE task_item_id IN (' . implode(',', $data_template_rrds) . ')
-								AND local_graph_id > 0');
-
-                            if (cacti_sizeof($poller_ids)) {
-                                foreach ($poller_ids as $poller_id) {
-                                    if (($rcnn_id = poller_push_to_remote_db_connect($poller_id, true)) !== false) {
-                                        db_execute('DELETE FROM graph_templates_item
-											WHERE task_item_id IN (' . implode(',', $data_template_rrds) . ')
-											AND local_graph_id > 0', true, $rcnn_id);
-                                    }
-                                }
-                            }
+                try {
+                    $removal_scope->run(static function () use ($removal_scope, $selected_items): void {
+                        if (get_request_var('delete_type') == '2') {
+                            $removal_scope->deleteGraphItems();
+                        } elseif (get_request_var('delete_type') == '3') {
+                            $graphs = $removal_scope->graphsFromSources();
+                            api_graph_remove_multi($graphs, false, array($removal_scope, 'verify'), $removal_scope);
                         }
-
-                        break;
-                    case '3': /* delete all graphs tied to this data source */
-                        $graphs = array_rekey(db_fetch_assoc('SELECT
-							graph_templates_graph.local_graph_id
-							FROM (data_template_rrd,graph_templates_item,graph_templates_graph)
-							WHERE graph_templates_item.task_item_id=data_template_rrd.id
-							AND graph_templates_item.local_graph_id=graph_templates_graph.local_graph_id
-							AND ' . array_to_sql_or($selected_items, 'data_template_rrd.local_data_id') . '
-							AND graph_templates_graph.local_graph_id > 0
-							GROUP BY graph_templates_graph.local_graph_id'), 'local_graph_id', 'local_graph_id');
-
-                        if (cacti_sizeof($graphs) > 0) {
-                            api_graph_remove_multi($graphs);
-                        }
-
-                        break;
+                        api_data_source_remove_multi($selected_items, true, array($removal_scope, 'verify'), $removal_scope);
+                    });
+                } catch (Throwable $error) {
+                    graph_data_removal_failed('data', $error);
                 }
-
-                api_data_source_remove_multi($selected_items);
             } elseif (get_nfilter_request_var('drp_action') == '3') { // change host
                 get_filter_request_var('host_id');
+
+                if (!data_source_device_id_is_allowed(get_request_var('host_id'))) {
+                    data_source_access_denied();
+                }
 
                 api_data_source_change_host($selected_items, get_request_var('host_id'));
             } elseif (get_nfilter_request_var('drp_action') == '6') { // data source enable
@@ -473,12 +528,29 @@ function form_actions()
     $ds_list = '';
     $i = 0;
 
+    $allowed = array();
+    if ($removal_scope === null) {
+        $selection = array();
+        foreach ($_POST as $key => $value) {
+            if (preg_match('/^chk_([0-9]+)$/', $key, $match)) $selection[] = $match[1];
+        }
+        try {
+            $allowed = array_fill_keys(array_map('intval', get_allowed_management_selection('data', $selection)), true);
+        } catch (Throwable $error) {
+            data_source_access_denied();
+        }
+    }
+
     /* loop through each of the graphs selected on the previous page and get more info about them */
     foreach ($_POST as $var => $val) {
         if (preg_match('/^chk_([0-9]+)$/', $var, $matches)) {
             /* ================= input validation ================= */
             input_validate_input_number($matches[1]);
             /* ==================================================== */
+
+            if ($removal_scope === null && !isset($allowed[(int) $matches[1]])) {
+                continue;
+            }
 
             $ds_list .= '<li>' . html_escape(get_data_source_title($matches[1])) . '</li>';
             $ds_array[$i] = $matches[1];
@@ -498,7 +570,7 @@ function form_actions()
             $graphs = array();
 
             /* find out which (if any) graphs are using this data source, so we can tell the user */
-            if (isset($ds_array)) {
+            if (isset($ds_array) && $removal_item_preview !== null) {
                 $graphs = db_fetch_assoc('SELECT
 					graph_templates_graph.local_graph_id,
 					graph_templates_graph.title_cache
@@ -526,12 +598,15 @@ function form_actions()
                 print '</ul></div>';
                 print '<br>';
 
-                form_radio_button('delete_type', '3', '1', __n('Leave the <strong>Graph</strong> untouched.', 'Leave all <strong>Graphs</strong> untouched.', cacti_sizeof($graphs)), '1');
+                $default_delete_type = $removal_preview !== null ? '3' : '1';
+                form_radio_button('delete_type', $default_delete_type, '1', __n('Leave the <strong>Graph</strong> untouched.', 'Leave all <strong>Graphs</strong> untouched.', cacti_sizeof($graphs)), '1');
                 print '<br>';
-                form_radio_button('delete_type', '3', '2', __n('Delete all <strong>Graph Items</strong> that reference this Data Source.', 'Delete all <strong>Graph Items</strong> that reference these Data Sources.', cacti_sizeof($ds_array)), '1');
+                form_radio_button('delete_type', $default_delete_type, '2', __n('Delete all <strong>Graph Items</strong> that reference this Data Source.', 'Delete all <strong>Graph Items</strong> that reference these Data Sources.', cacti_sizeof($ds_array)), '1');
                 print '<br>';
-                form_radio_button('delete_type', '3', '3', __n('Delete all <strong>Graphs</strong> that reference this Data Source.', 'Delete all <strong>Graphs</strong> that reference these Data Sources.', cacti_sizeof($ds_array)), '1');
-                print '<br>';
+                if ($removal_preview !== null) {
+                    form_radio_button('delete_type', '3', '3', __n('Delete all <strong>Graphs</strong> that reference this Data Source.', 'Delete all <strong>Graphs</strong> that reference these Data Sources.', cacti_sizeof($ds_array)), '1');
+                    print '<br>';
+                }
                 print '</td></tr>';
             }
 
@@ -545,7 +620,10 @@ function form_actions()
 					<p>" . __n('Choose a new Device for this Data Source and click \'Continue\'.', 'Choose a new Device for these Data Sources and click \'Continue\'', cacti_sizeof($ds_array)) . "</p>
 					<div class='itemlist'><ul>$ds_list</ul></div>
 					<p>" . __('New Device:') . "<br>";
-            form_dropdown('host_id', db_fetch_assoc("SELECT id, CONCAT_WS('',description,' (',hostname,')') AS name FROM host ORDER BY description, hostname"), 'name', 'id', '', '', '0');
+            $allowed_devices_sql = get_allowed_management_device_ids_sql();
+            $devices = db_fetch_assoc("SELECT id, CONCAT_WS('',description,' (',hostname,')') AS name
+                FROM host WHERE id IN ($allowed_devices_sql) ORDER BY description, hostname");
+            form_dropdown('host_id', $devices, 'name', 'id', '', __('None'), '0');
             print "</p>
 				</td>
 			</tr>";
@@ -743,6 +821,10 @@ function ds_rrd_remove()
     get_filter_request_var('id');
     /* ==================================================== */
 
+    if (!data_source_rrd_item_is_allowed(get_request_var('id'))) {
+        data_source_access_denied();
+    }
+
     db_execute_prepared(
         'DELETE FROM data_template_rrd
 		WHERE id = ?',
@@ -765,6 +847,10 @@ function ds_rrd_add()
     get_filter_request_var('id');
     /* ==================================================== */
 
+    if (!data_source_device_is_allowed(get_request_var('id'))) {
+        data_source_access_denied();
+    }
+
     db_execute_prepared(
         "INSERT INTO data_template_rrd
 		(local_data_id, rrd_maximum, rrd_minimum, rrd_heartbeat, data_source_type_id, data_source_name)
@@ -783,6 +869,10 @@ function ds_disable()
     get_filter_request_var('id');
     /* ==================================================== */
 
+    if (!data_source_device_is_allowed(get_request_var('id'))) {
+        data_source_access_denied();
+    }
+
     api_data_source_disable(get_request_var('id'));
     header('Location: data_sources.php?header=false&action=ds_edit&id=' . get_request_var('id'));
 }
@@ -792,6 +882,10 @@ function ds_enable()
     /* ================= input validation ================= */
     get_filter_request_var('id');
     /* ==================================================== */
+
+    if (!data_source_device_is_allowed(get_request_var('id'))) {
+        data_source_access_denied();
+    }
 
     api_data_source_enable(get_request_var('id'));
     header('Location: data_sources.php?header=false&action=ds_edit&id=' . get_request_var('id'));
@@ -806,8 +900,6 @@ function ds_edit()
     get_filter_request_var('host_id');
     /* ==================================================== */
 
-    api_plugin_hook('data_source_edit_top');
-
     $use_data_template = true;
     $data_template     = array();
 
@@ -818,6 +910,12 @@ function ds_edit()
 			WHERE id = ?',
             array(get_request_var('id'))
         );
+
+        if (empty($data_local) || !data_source_device_id_is_allowed($data_local['host_id'])) {
+            data_source_access_denied();
+        }
+
+        api_plugin_hook('data_source_edit_top');
 
         $data = db_fetch_row_prepared(
             'SELECT *
@@ -853,6 +951,12 @@ function ds_edit()
             $use_data_template = false;
         }
     } else {
+        if (!data_source_device_id_is_allowed(get_request_var('host_id'))) {
+            data_source_access_denied();
+        }
+
+        api_plugin_hook('data_source_edit_top');
+
         $header_label = __('Data Template Selection [new]');
 
         $use_data_template = false;
@@ -916,7 +1020,7 @@ function ds_edit()
             ?><span class='linkMarker'>*</span><a class='hyperLink' href='<?php print html_escape('data_templates.php?action=template_edit&id=' . (isset($data_template['id']) ? $data_template['id'] : '0'));?>'><?php print __('Edit Data Template.');?></a><br><?php
         }
         if (isset_request_var('id') && get_request_var('id') > 0) {
-            ?><span class='linkMarker'>*</span><a class='hyperLink' href='<?php print html_escape('data_sources.php?action=ds_' . ($data['active'] == 'on' ? 'dis' : 'en') . 'able&id=' . get_request_var('id')) ?>'><?php print($data['active'] == 'on' ? __('Disable Data Source.') : __('Enable Data Source.'));?></a><br>
+            ?><span class='linkMarker'>*</span><a class='hyperLink cactiPostAction' href='#' data-url='<?php print html_escape('data_sources.php?action=ds_' . ($data['active'] == 'on' ? 'dis' : 'en') . 'able&id=' . get_request_var('id')) ?>'><?php print($data['active'] == 'on' ? __('Disable Data Source.') : __('Enable Data Source.'));?></a><br>
 					<?php
         }
         ?>
@@ -1142,7 +1246,7 @@ function ds_edit()
                 foreach ($template_data_rrds as $template_data_rrd) {
                     $i++;
                     print "	<td " . (($template_data_rrd['id'] == get_request_var('view_rrd')) ? "class='even'" : "class='odd'") . " style='width:" . ((strlen($template_data_rrd['data_source_name']) * 9) + 50) . ";text-align:center;' class='tab'>
-						<span class='textHeader'><a href='" . html_escape('data_sources.php?action=ds_edit&id=' . get_request_var('id') . '&view_rrd=' . $template_data_rrd['id']) . "'>$i: " . html_escape($template_data_rrd['data_source_name']) . '</a>' . (($use_data_template == false) ? " <a class='pic deleteMarker fa fa-times' href='" . html_escape('data_sources.php?action=rrd_remove&id=' . $template_data_rrd['id'] . '&local_data_id=' . get_request_var('id')) . "' title='" . __esc('Delete') . "'></a>" : '') . "</span>
+						<span class='textHeader'><a href='" . html_escape('data_sources.php?action=ds_edit&id=' . get_request_var('id') . '&view_rrd=' . $template_data_rrd['id']) . "'>$i: " . html_escape($template_data_rrd['data_source_name']) . '</a>' . (($use_data_template == false) ? " <a class='pic deleteMarker fa fa-times cactiPostAction' href='#' data-url='" . html_escape('data_sources.php?action=rrd_remove&id=' . $template_data_rrd['id'] . '&local_data_id=' . get_request_var('id')) . "' title='" . __esc('Delete') . "'></a>" : '') . "</span>
 						</td>";
                     print "<td style='width:1px;'></td>";
                 }
@@ -1160,7 +1264,7 @@ function ds_edit()
 				" . __esc('Data Source Item %s', $header_label) . "
 			</div>
 			<div class='tableSubHeaderColumn right'>
-				" . ((!isempty_request_var('id') && (empty($data_template['id']))) ? "<a class='linkOverDark' href='" . html_escape('data_sources.php?action=rrd_add&id=' . get_request_var('id')) . "'>" . __('New') . "</a>&nbsp;" : '') . "
+				" . ((!isempty_request_var('id') && (empty($data_template['id']))) ? "<a class='linkOverDark cactiPostAction' href='#' data-url='" . html_escape('data_sources.php?action=rrd_add&id=' . get_request_var('id')) . "'>" . __('New') . "</a>&nbsp;" : '') . "
 			</div>
 		</div>";
 
@@ -1267,6 +1371,180 @@ function ds_edit()
     bottom_footer();
 }
 
+/**
+ * Check whether a data source belongs to a device visible to the current user.
+ *
+ * @param int $local_data_id Data source identifier.
+ *
+ * @return bool
+ */
+function data_source_device_is_allowed($local_data_id)
+{
+    $host_id = db_fetch_cell_prepared('SELECT host_id FROM data_local WHERE id = ?', array($local_data_id));
+
+    return $host_id !== false && $host_id !== null && ((int) $host_id === 0 || ((int) $host_id > 0 && is_device_allowed($host_id)));
+}
+
+/**
+ * Check an explicitly selected device, including verifying that it exists.
+ *
+ * @param int $host_id Device identifier.
+ *
+ * @return bool
+ */
+function data_source_device_id_is_allowed($host_id)
+{
+    // Only None (0) is a persisted device-less destination. Any (-1) is a list filter.
+    if ((int) $host_id === 0) {
+        return true;
+    }
+    if ((int) $host_id < 0) {
+        return false;
+    }
+
+    $found_host_id = db_fetch_cell_prepared('SELECT id FROM host WHERE id = ?', array($host_id));
+
+    return !empty($host_id) && $found_host_id !== false && $found_host_id !== null && is_device_allowed($host_id);
+}
+
+/**
+ * Check access to the data source referenced by a data-template form row.
+ *
+ * @return bool
+ */
+function data_source_data_form_is_allowed()
+{
+    $local_data_id = get_filter_request_var('local_data_id');
+    $data_id       = get_filter_request_var('data_template_data_id');
+
+    // A new data source posts no data row yet, and form_save() writes nothing for it.
+    if (empty($data_id)) {
+        return true;
+    }
+
+    $row           = db_fetch_row_prepared('SELECT local_data_id FROM data_template_data WHERE id = ?', array($data_id));
+
+    return !empty($local_data_id) && !empty($row) && (int) $row['local_data_id'] === (int) $local_data_id && data_source_device_is_allowed($local_data_id);
+}
+
+/**
+ * Check that the data and item rows a data source save names belong to that
+ * data source, so a save cannot rewrite another data source's rows.
+ *
+ * @return bool
+ */
+function data_source_save_rows_are_owned()
+{
+    $local_data_id = (int) get_filter_request_var('local_data_id');
+    $data_id       = get_filter_request_var('data_template_data_id');
+
+    if (!empty($data_id)) {
+        $owner = db_fetch_cell_prepared('SELECT local_data_id FROM data_template_data WHERE id = ?', array($data_id));
+
+        if ($local_data_id === 0 || $owner === false || $owner === null || (int) $owner !== $local_data_id) {
+            return false;
+        }
+    }
+
+    if (isset_request_var('save_component_data_source') && isempty_request_var('_data_template_id') && !isempty_request_var('current_rrd')) {
+        $owner = db_fetch_cell_prepared('SELECT local_data_id FROM data_template_rrd WHERE id = ?', array(get_filter_request_var('current_rrd')));
+
+        if ($local_data_id === 0 || $owner === false || $owner === null || (int) $owner !== $local_data_id) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
+ * Check access to the data source that owns an RRD item.
+ *
+ * @param int $rrd_id Data-source RRD item identifier.
+ *
+ * @return bool
+ */
+function data_source_rrd_item_is_allowed($rrd_id)
+{
+    $local_data_id = db_fetch_cell_prepared('SELECT local_data_id FROM data_template_rrd WHERE id = ?', array($rrd_id));
+
+    return $local_data_id !== false && $local_data_id !== null && data_source_device_is_allowed($local_data_id);
+}
+
+/**
+ * Check that an RRD path resolves inside the configured RRA directory.
+ *
+ * @param string $path Stored path, optionally using the <path_rra> prefix.
+ *
+ * @return bool
+ */
+function data_source_path_is_allowed($path)
+{
+    global $config;
+
+    if ($path === '') {
+        return true;
+    }
+
+    $base = realpath($config['rra_path']);
+    if ($base === false || str_contains($path, "\0") || str_contains($path, '\\')) {
+        return false;
+    }
+
+    if (str_starts_with($path, '<path_rra>/')) {
+        $relative = substr($path, strlen('<path_rra>/'));
+        if (str_contains($relative, '<path_rra>')) {
+            return false;
+        }
+        $candidate = $base . '/' . $relative;
+    } elseif (str_contains($path, '<path_rra>')) {
+        return false;
+    } elseif (!str_contains($path, '/')) {
+        $candidate = $base . '/' . $path;
+    } elseif (str_starts_with($path, $base . '/')) {
+        $candidate = $path;
+    } elseif (str_starts_with($path, rtrim($config['rra_path'], '/') . '/')) {
+        $candidate = $base . '/' . substr($path, strlen(rtrim($config['rra_path'], '/')) + 1);
+    } else {
+        return false;
+    }
+
+    $relative = substr($candidate, strlen($base) + 1);
+    if ($relative === '' || preg_match('#(^|/)\.\.?(/|$)#', $relative)) {
+        return false;
+    }
+
+    $resolved = realpath($candidate);
+    if ($resolved !== false) {
+        return cacti_path_is_within($resolved, $base);
+    }
+
+    if (is_link($candidate)) {
+        return false;
+    }
+
+    $parent = dirname($candidate);
+    while (!file_exists($parent) && !is_link($parent) && $parent !== dirname($parent)) {
+        $parent = dirname($parent);
+    }
+
+    $resolved_parent = realpath($parent);
+
+    return $resolved_parent !== false && cacti_path_is_within($resolved_parent, $base);
+}
+
+/**
+ * Stop a data-source operation when its device is outside the user's scope.
+ *
+ * @return never
+ */
+function data_source_access_denied()
+{
+    cacti_log('User attempted to access an unauthorized data source', false, 'AUTH');
+    header('Location: data_sources.php');
+    exit;
+}
+
 function get_poller_interval($seconds, $data_source_profile_id)
 {
     if ($seconds == 0 || $data_source_profile_id == 0) {
@@ -1349,6 +1627,11 @@ function validate_data_source_vars()
 function ds()
 {
     global $ds_actions, $item_rows, $sampling_intervals;
+    if (get_request_var('host_id') > 0 && !is_device_allowed(get_filter_request_var('host_id'))) {
+        set_request_var('host_id', '-2');
+    }
+
+    $allowed_devices_sql = get_allowed_management_device_ids_sql();
 
     if (get_request_var('rows') == -1) {
         $rows = read_config_option('num_rows_table');
@@ -1455,12 +1738,14 @@ function ds()
 							<option value='0'<?php if (get_request_var('template_id') == '0') {?> selected<?php }?>><?php print __('None');?></option>
 							<?php
 
-                            $templates = db_fetch_assoc('SELECT DISTINCT data_template.id, data_template.name
+                            $templates = db_fetch_assoc("SELECT DISTINCT data_template.id, data_template.name
 								FROM data_template
 								INNER JOIN data_template_data
 								ON data_template.id = data_template_data.data_template_id
+								INNER JOIN data_local AS dl ON dl.id = data_template_data.local_data_id
 								WHERE data_template_data.local_data_id > 0
-								ORDER BY data_template.name');
+                                AND (dl.host_id=0 OR dl.host_id IS NULL OR dl.host_id IN ($allowed_devices_sql))
+								ORDER BY data_template.name");
 
     if (cacti_sizeof($templates)) {
         foreach ($templates as $template) {
@@ -1568,15 +1853,21 @@ function ds()
         $sql_where1 = '';
     }
     $sql_where2 = '';
-
     if (get_request_var('host_id') == '-1') {
-        /* Show all items */
+        $sql_where1 .= ($sql_where1 != '' ? ' AND ' : 'WHERE ') . "(dl.host_id IN ($allowed_devices_sql) OR dl.host_id=0 OR dl.host_id IS NULL)";
+        $sql_where2 .= " AND (gl.host_id IN ($allowed_devices_sql) OR gl.host_id=0 OR gl.host_id IS NULL)";
     } elseif (isempty_request_var('host_id')) {
         $sql_where1 .= ($sql_where1 != '' ? ' AND' : 'WHERE') . ' (dl.host_id=0 OR dl.host_id IS NULL)';
         $sql_where2 .= ' AND (gl.host_id=0 OR gl.host_id IS NULL)';
-    } elseif (!isempty_request_var('host_id')) {
-        $sql_where1 .= ($sql_where1 != '' ? ' AND' : 'WHERE') . ' dl.host_id=' . get_request_var('host_id');
-        $sql_where2 .= ' AND gl.host_id=' . get_request_var('host_id');
+    } else {
+        $host_id = get_filter_request_var('host_id');
+        if ($host_id <= 0 || !is_device_allowed($host_id)) {
+            $sql_where1 .= ($sql_where1 != '' ? ' AND' : 'WHERE') . ' 1=0';
+            $sql_where2 .= ' AND 1=0';
+        } else {
+            $sql_where1 .= ($sql_where1 != '' ? ' AND' : 'WHERE') . ' dl.host_id=' . (int) $host_id;
+            $sql_where2 .= ' AND gl.host_id=' . (int) $host_id;
+        }
     }
 
     if (get_request_var('site_id') == '-1') {

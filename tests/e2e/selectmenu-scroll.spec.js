@@ -1,7 +1,12 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 const { test, expect } = require('@playwright/test');
+const fs = require('fs');
+const path = require('path');
 require('./browser-coverage').collectThemeCoverage(test);
+
+// html_common_header() prints this map before layout.js loads.
+const icons = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../../config/icons.json'), 'utf8')).icons;
 
 async function loadLayout(page) {
   await page.goto('/tests/e2e/theme-smoke.html');
@@ -9,6 +14,7 @@ async function loadLayout(page) {
   await page.addScriptTag({ url: '/include/js/jquery.tablesorter.js' });
   // Skip the application-ready bootstrap; this fixture supplies its own page.
   await page.evaluate(() => { window.savedReady = $.fn.ready; $.fn.ready = function () { return this; }; });
+  await page.evaluate(map => { window.kadupulIcons = map; }, icons);
   await page.addScriptTag({ url: '/include/layout.js' });
   await page.evaluate(() => { $.fn.ready = window.savedReady; });
   await page.setContent('<div class="cactiConsoleContentArea" style="height:250px;overflow:auto"><div style="height:1800px"></div><select id="storage_location"><option value="0">Local</option><option value="1">RRDtool Proxy Server</option></select><div style="height:200px"></div></div>');
@@ -50,7 +56,7 @@ test('shared theme controls preserve filter icons, select widget sizing and both
   await page.addStyleTag({ url: '/include/fa/css/all.css' });
   await page.evaluate(() => {
     window.searchFilter = 'Search'; window.searchRFilter = 'Filter';
-    for (let i = 0; i < 2; i++) { setupThemeSearchIcons(); setupThemeSelectmenus(); setupThemeLogos('fa-paw'); }
+    for (let i = 0; i < 2; i++) { setupThemeSearchIcons(); setupThemeSelectmenus(); setupThemeLogos('paw'); }
   });
   await expect(page.locator('input + i.fa-search')).toHaveCount(3);
   await expect(page.locator('#rfilter')).toHaveAttribute('placeholder', 'Filter');
@@ -60,7 +66,7 @@ test('shared theme controls preserve filter icons, select widget sizing and both
   });
   expect(widgets).toEqual({ maxHeight: '250px', multiple: false });
   await expect(page.locator('.cactiLoginLogo i.fa-paw, .cactiLogoutLogo i.fa-paw')).toHaveCount(2);
-  await page.evaluate(() => setupThemeLogos('fa-sun'));
+  await page.evaluate(() => setupThemeLogos('sun'));
   await expect(page.locator('.cactiLoginLogo i.fa-sun, .cactiLogoutLogo i.fa-sun')).toHaveCount(2);
   for (const logo of await page.locator('.cactiLoginLogo i, .cactiLogoutLogo i').all()) {
     expect(await logo.evaluate(node => getComputedStyle(node, '::before').content)).not.toMatch(/^(none|normal|"")$/);

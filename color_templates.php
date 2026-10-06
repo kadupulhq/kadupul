@@ -1,6 +1,7 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -93,13 +94,13 @@ function draw_color_template_items_list($item_list, $filename, $url_data, $disab
 
                 if (read_config_option('drag_and_drop') == '') {
                     if ($i < $total_items && $total_items > 1) {
-                        echo '<a class="pic fa fa-caret-down moveArrow" href="' . html_escape('color_templates_items.php?action=item_movedown&color_template_item_id=' . $item['color_template_item_id'] . '&color_template_id=' . $item['color_template_id']) . '" title="' . __esc('Move Down') . '"></a>';
+                        echo '<a class="pic fa fa-caret-down moveArrow cactiPostAction" href="#" data-url="' . html_escape('color_templates_items.php?action=item_movedown&color_template_item_id=' . $item['color_template_item_id'] . '&color_template_id=' . $item['color_template_id']) . '" title="' . __esc('Move Down') . '"></a>';
                     } else {
                         echo '<span class="moveArrowNone"></span>';
                     }
 
                     if ($i > 1 && $i <= $total_items) {
-                        echo '<a class="pic fa fa-caret-up moveArrow" href="' . html_escape('color_templates_items.php?action=item_moveup&color_template_item_id=' . $item['color_template_item_id'] . '&color_template_id=' . $item['color_template_id']) . '" title="' . __esc('Move Up') . '"></a>';
+                        echo '<a class="pic fa fa-caret-up moveArrow cactiPostAction" href="#" data-url="' . html_escape('color_templates_items.php?action=item_moveup&color_template_item_id=' . $item['color_template_item_id'] . '&color_template_id=' . $item['color_template_id']) . '" title="' . __esc('Move Up') . '"></a>';
                     } else {
                         echo '<span class="moveArrowNone"></span>';
                     }
@@ -330,7 +331,7 @@ function aggregate_color_item()
 		<?php if (read_config_option('drag_and_drop') == 'on') { ?>
 		$('#color_item').tableDnD({
 			onDrop: function(table, row) {
-				loadPageNoHeader('color_templates_items.php?action=ajax_dnd&id=<?php isset_request_var('color_template_id') ? print get_request_var('color_template_id') : print 0;?>&'+$.tableDnD.serialize());
+				loadPageUsingPostChecked('color_templates_items.php?action=ajax_dnd&id=<?php isset_request_var('color_template_id') ? print get_request_var('color_template_id') : print 0;?>', $.tableDnD.serialize() + '&__csrf_magic=' + encodeURIComponent(csrfMagicToken));
 			}
 		});
 		<?php } ?>

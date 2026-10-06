@@ -76,7 +76,7 @@ if (get_request_var('action') === 'zoom') {
 			ON dsp.id=dspr.data_source_profile_id
 			WHERE dspr.id = ?', array($selected_rra_id));
         },
-        static function () use ($graph_no_data_message) {
+        static function () use ($graph_no_data_message): never {
             raise_message('graph_no_data', $graph_no_data_message, MESSAGE_LEVEL_ERROR);
             cacti_header('graph_view.php');
             exit;
@@ -166,7 +166,7 @@ switch (get_request_var('action')) {
                                         print '<br/>';
                                     }
 
-							    if (read_config_option('realtime_enabled') == 'on' || is_realm_allowed(25)) {
+							    if (read_config_option('realtime_enabled') == 'on' && is_realm_allowed(25)) {
 							        print "<a class='iconLink' href='#' onclick=\"window.open('" . $config['url_path'] . 'graph_realtime.php?top=0&left=0&local_graph_id=' . get_request_var('local_graph_id') . "', 'popup_" . get_request_var('local_graph_id') . "', 'directories=no,toolbar=no,menubar=no,resizable=yes,location=no,scrollbars=no,status=no,titlebar=no,width=650,height=300');return false\"><img src='" . $config['url_path'] . "images/chart_curve_go.png' alt='' title='" . __esc('Click to view just this Graph in Real-time') . "'></a><br/>\n";
 							    }
 

@@ -968,13 +968,50 @@ function get_column_sequence_number($table, $index, $column)
 
 function create_tables($load = true)
 {
-    global $config, $database_default, $database_username, $database_password, $database_port, $database_hostname;
+    global $config, $database_default, $database_username, $database_password, $database_port, $database_hostname, $database_ssl;
     global $altersopt;
 
     if ($load) {
         $schema_file = $config['base_path'] . '/docs/audit_schema.sql';
         if (!is_file($schema_file) || !is_readable($schema_file)) {
             print 'FATAL: Failed to find or read Audit Schema' . PHP_EOL;
+            return false;
+        }
+        $db_shell = getenv('CACTI_MYSQL_CLIENT');
+
+        // Allow installations and isolated checks to select a specific client.
+        if ($db_shell === false || $db_shell === '') {
+            // Handle systems where MariaDB does not provide the mysql command.
+            if (file_exists('/usr/bin/mariadb')) {
+                $db_shell = '/usr/bin/mariadb';
+            } elseif (file_exists('/usr/bin/mysql')) {
+                $db_shell = '/usr/bin/mysql';
+            } elseif (file_exists('/usr/local/bin/mariadb')) {
+                $db_shell = '/usr/local/bin/mariadb';
+            } elseif (file_exists('/usr/local/bin/mysql')) {
+                $db_shell = '/usr/local/bin/mysql';
+            } else {
+                $db_shell = trim((string) shell_exec('which mysql'));
+
+                if ($db_shell == '') {
+                    print 'FATAL: mysql or mariadb command not found' . PHP_EOL;
+                    return false;
+                }
+            }
+        }
+
+        // Confirm the client/TLS handoff before creating or replacing audit tables.
+        try {
+            $version_process = new \Symfony\Component\Process\Process(array($db_shell, '--version'), null, null, null, 5.0);
+            $version_process->run();
+            $client_version = $version_process->getOutput() . $version_process->getErrorOutput();
+            $tls_option = $version_process->isSuccessful()
+                ? db_client_ssl_option($database_ssl, $client_version) : false;
+        } catch (\Symfony\Component\Process\Exception\ExceptionInterface) {
+            $tls_option = false;
+        }
+        if ($tls_option === false) {
+            print 'FATAL: Unable to determine a safe TLS option for database client' . PHP_EOL;
             return false;
         }
     }
@@ -1027,29 +1064,6 @@ function create_tables($load = true)
         $output = array();
         $error  = 0;
 
-        $db_shell = getenv('CACTI_MYSQL_CLIENT');
-
-        // Allow installations and isolated checks to select a specific client.
-        if ($db_shell === false || $db_shell === '') {
-            // Handle systems where MariaDB does not provide the mysql command.
-            if (file_exists('/usr/bin/mariadb')) {
-                $db_shell = '/usr/bin/mariadb';
-            } elseif (file_exists('/usr/bin/mysql')) {
-                $db_shell = '/usr/bin/mysql';
-            } elseif (file_exists('/usr/local/bin/mariadb')) {
-                $db_shell = '/usr/local/bin/mariadb';
-            } elseif (file_exists('/usr/local/bin/mysql')) {
-                $db_shell = '/usr/local/bin/mysql';
-            } else {
-                $db_shell = trim((string) shell_exec('which mysql'));
-
-                if ($db_shell == '') {
-                    print 'FATAL: mysql or mariadb command not found' . PHP_EOL;
-                    return false;
-                }
-            }
-        }
-
         $suffix = bin2hex(random_bytes(8));
         $completion = 'audit_complete_' . $suffix;
         $staging = array('table_columns' => 'audit_columns_' . $suffix, 'table_indexes' => 'audit_indexes_' . $suffix);
@@ -1081,6 +1095,9 @@ function create_tables($load = true)
                 '--host=' . $database_hostname,
                 '--port=' . $database_port,
                 '--database=' . $database_default);
+            if ($tls_option !== '') {
+                $command[] = trim($tls_option);
+            }
             $process = proc_open(
                 $command,
                 array(0 => array('file', $import_file, 'r'), 1 => array('pipe', 'w'), 2 => array('redirect', 1)),

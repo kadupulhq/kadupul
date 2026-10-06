@@ -10,6 +10,19 @@ $guest_account = true;
 include('./include/auth.php');
 include_once('./lib/rrd.php');
 
+/* Polling and explicit display controls update transient session state even on
+ * GET. Admit their legacy same-origin requests before initializing the realtime
+ * hash, looking up graphs, changing preferences or invoking the collector.
+ * Cached-image reads and untouched page navigation retain their GET behavior.
+ */
+$realtime_action = get_nfilter_request_var('action');
+if (in_array($realtime_action, array('init', 'timespan', 'interval', 'countdown'), true)
+    || (!in_array($realtime_action, array('init', 'timespan', 'interval', 'countdown', 'view'), true)
+        && (isset_request_var('ds_step') || isset_request_var('graph_start')
+            || isset_request_var('size') || isset_request_var('graph_nolegend')))) {
+    csrf_refuse_cross_site_get();
+}
+
 $config['force_storage_location_local'] = true;
 
 /* ================= input validation ================= */
@@ -26,6 +39,25 @@ get_filter_request_var('top');
 get_filter_request_var('left');
 /* ==================================================== */
 
+$user_id = (int) ($_SESSION['sess_user_id'] ?? 0);
+
+if ($user_id < 1 || !is_realm_allowed(25)) {
+    http_response_code(403);
+    if (get_request_var('action') === '') {
+        print __('Permission Denied');
+    }
+    exit;
+}
+
+/*
+ * csrf-magic checks the token only on POST. Polling stays available by GET, but
+ * only a POST may change the saved real-time preferences.
+ */
+function graph_realtime_is_post()
+{
+    return isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST';
+}
+
 if (!isset($_SESSION['sess_realtime_hash'])) {
     $_SESSION['sess_realtime_hash'] = generate_hash();
 }
@@ -38,11 +70,64 @@ if (!is_string($hash) || !preg_match('/\A[a-zA-Z0-9_-]{1,64}\z/', $hash)) {
 
 set_default_action();
 
+/*
+ * poller_realtime.php polls every device behind the graph and view returns the
+ * image that poll cached, so refuse both before any work when real-time is off,
+ * the user lacks the Real-time realm or the render would deny the graph.
+ * include/auth.php returns before its realm check on a guest page. A graph id
+ * that is not positive still gets the 400 below.
+ */
+if (in_array(get_request_var('action'), array('init', 'timespan', 'interval', 'countdown', 'view'), true)) {
+    $local_graph_id = get_filter_request_var('local_graph_id');
+
+    if (read_config_option('realtime_enabled') == '') {
+        $denied = __('Real-time has been disabled by your administrator.');
+    } elseif (!is_realm_allowed(25)) {
+        http_response_code(403);
+        exit;
+    }
+}
+
 switch (get_request_var('action')) {
     case 'init':
     case 'timespan':
     case 'interval':
     case 'countdown':
+        $local_graph_id = get_filter_request_var('local_graph_id');
+        if (!is_int($local_graph_id) || $local_graph_id < 1) {
+            http_response_code(400);
+            exit;
+        }
+
+        if (isset($denied)) {
+            $graph_contents = rrdtool_create_error_image($denied);
+
+            if ($graph_contents === false) {
+                $graph_contents = file_get_contents(__DIR__ . '/images/kadupul-error.png');
+            }
+
+            /* realtime.js resets its controls from every reply, so a refusal carries the same keys */
+            print json_encode(array(
+                'local_graph_id' => $local_graph_id,
+                'top'            => get_request_var('top'),
+                'left'           => get_request_var('left'),
+                'ds_step'        => html_escape($_SESSION['sess_realtime_ds_step'] ?? read_user_setting('realtime_interval', 10)),
+                'graph_start'    => html_escape($_SESSION['sess_realtime_graph_start'] ?? -read_user_setting('realtime_gwindow', 60)),
+                'size'           => html_escape($_SESSION['sess_realtime_size'] ?? read_user_setting('realtime_size', 100)),
+                'thumbnails'     => html_escape($_SESSION['sess_realtime_nolegend'] ?? 'false'),
+                'data'           => base64_encode($graph_contents),
+                'image_format'   => 'png'
+            ));
+
+            exit;
+        }
+
+        $user_id = (int) ($_SESSION['sess_user_id'] ?? 0);
+        if ($user_id < 1 || !is_graph_allowed($local_graph_id, $user_id)) {
+            http_response_code(403);
+            exit;
+        }
+
         ob_start();
 
         $guest_account = true;
@@ -201,9 +286,8 @@ switch (get_request_var('action')) {
         $graph_data_array['image_format'] = $gtype;
 
         /* call poller */
-        $local_graph_id = get_filter_request_var('local_graph_id');
         $interval = filter_var($graph_data_array['ds_step'], FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)));
-        if (!is_int($local_graph_id) || $local_graph_id < 1 || $interval === false) {
+        if ($interval === false) {
             http_response_code(400);
             exit;
         }
@@ -269,10 +353,12 @@ switch (get_request_var('action')) {
         }
 
         /* save user preferences */
-        set_user_setting('realtime_interval', get_request_var('ds_step'));
-        set_user_setting('realtime_gwindow', abs(get_request_var('graph_start')));
-        set_user_setting('realtime_size', get_request_var('size'));
-        set_user_setting('realtime_nolegend', get_request_var('graph_nolegend'));
+        if (graph_realtime_is_post()) {
+            set_user_setting('realtime_interval', get_request_var('ds_step'));
+            set_user_setting('realtime_gwindow', abs(get_request_var('graph_start')));
+            set_user_setting('realtime_size', get_request_var('size'));
+            set_user_setting('realtime_nolegend', get_request_var('graph_nolegend'));
+        }
 
         $_SESSION['sess_realtime_ds_step']     = get_request_var('ds_step');
         $_SESSION['sess_realtime_graph_start'] = get_request_var('graph_start');
@@ -297,11 +383,23 @@ switch (get_request_var('action')) {
         exit;
         break;
     case 'view':
+        if (isset($denied)) {
+            http_response_code(403);
+            exit;
+        }
+
         $local_graph_id = get_filter_request_var('local_graph_id');
         if (!is_int($local_graph_id) || $local_graph_id < 1) {
             http_response_code(400);
             exit;
         }
+
+        $user_id = (int) ($_SESSION['sess_user_id'] ?? 0);
+        if ($user_id < 1 || !is_graph_allowed($local_graph_id, $user_id)) {
+            http_response_code(403);
+            exit;
+        }
+
         $graph_rrd = read_config_option('realtime_cache_path') . '/user_' . $hash . '_lgi_' . $local_graph_id . '.png';
 
         if (file_exists($graph_rrd)) {
@@ -341,15 +439,24 @@ if (!isset($_SESSION['sess_realtime_graph_start'])) {
 }
 
 /* save user preferences */
-set_user_setting('realtime_interval', get_request_var('ds_step'));
-set_user_setting('realtime_gwindow', abs(get_request_var('graph_start')));
-set_user_setting('realtime_size', get_request_var('size'));
-set_user_setting('realtime_nolegend', get_request_var('graph_nolegend'));
+if (graph_realtime_is_post()) {
+    set_user_setting('realtime_interval', get_request_var('ds_step'));
+    set_user_setting('realtime_gwindow', abs(get_request_var('graph_start')));
+    set_user_setting('realtime_size', get_request_var('size'));
+    set_user_setting('realtime_nolegend', get_request_var('graph_nolegend'));
+}
 
 if (read_config_option('realtime_enabled') == '') {
     print "<html>\n";
     print "<body>\n";
     print "	<p><strong>" . __('Real-time has been disabled by your administrator.') . "</strong></p>\n";
+    print "</body>\n";
+    print "</html>\n";
+    exit;
+} elseif (!is_realm_allowed(25)) {
+    print "<html>\n";
+    print "<body>\n";
+    print "	<p><strong>" . __('Permission Denied') . "</strong></p>\n";
     print "</body>\n";
     print "</html>\n";
     exit;

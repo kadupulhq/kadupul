@@ -215,7 +215,7 @@ function get_files()
             $files = explode("\r\n", $scan);
             foreach ($files as $file) {
                 list($pathname, $size, $mtime) = explode(',', $file);
-                $sql[] = "('" . str_replace($rra_path, '', $pathname) . "', " . $size . ", '" . date('Y-m-d H:i:s', $mtime) . "',0)";
+                $sql[] = "(" . db_qstr(str_replace($rra_path, '', $pathname)) . ", " . (int) $size . ", " . db_qstr(date('Y-m-d H:i:s', (int) $mtime)) . ",0)";
                 $size++;
 
                 if ($size == 400) {
@@ -237,7 +237,7 @@ function get_files()
 
         foreach ($iterator as $file) {
             if (substr($file->getPathname(), -3) == 'rrd' && !($archive && strstr($file->getPathname(), $arcbase . '/') !== false)) {
-                $sql[] = "('" . str_replace($rra_path, '', $file->getPathname()) . "', " . $file->getSize() . ", '" . date('Y-m-d H:i:s', $file->getMTime()) . "',0)";
+                $sql[] = "(" . db_qstr(str_replace($rra_path, '', $file->getPathname())) . ", " . (int) $file->getSize() . ", " . db_qstr(date('Y-m-d H:i:s', $file->getMTime())) . ",0)";
                 $size++;
 
                 if ($size == 400) {

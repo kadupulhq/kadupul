@@ -145,16 +145,16 @@ final class AutomationModuleNativeTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('schedules')]
     public function testNativeSchedulerHonoursManualAndFutureTimes(array $scenario, bool $expected): void
     {
-        $startedAt = time();
         $state = $this->runNative($scenario + array('mode' => 'schedule'));
-        $finishedAt = time();
         self::assertSame($expected, $state['result']);
         if ($expected && $scenario['type'] === 2) {
-            // The scheduler stores minute precision; compare against the invocation window,
-            // rather than a later parent clock which can cross a minute boundary.
-            $next = (new DateTimeImmutable($state['contracts']['next_start'], new DateTimeZone('UTC')))->getTimestamp();
-            self::assertGreaterThanOrEqual(intdiv($startedAt, 60) * 60, $next);
-            self::assertLessThanOrEqual($finishedAt + 86400, $next);
+            // Production persists UTC timestamps to minute precision. Anchor the
+            // window to execution, before subprocess coverage/report cleanup.
+            $next = new DateTimeImmutable($state['contracts']['next_start'], new DateTimeZone('UTC'));
+            $earliest = intdiv($state['contracts']['observed_before'], 60) * 60;
+            $latest = intdiv($state['contracts']['observed_after'] + 86400, 60) * 60;
+            self::assertGreaterThanOrEqual($earliest, $next->getTimestamp());
+            self::assertLessThanOrEqual($latest, $next->getTimestamp());
         }
         self::assertSame(8, (int) $state['contracts']['id']);
     }
@@ -255,7 +255,8 @@ final class AutomationModuleNativeTest extends TestCase
                 self::assertStringContainsString('Graph Added', $state['log']);
             } else {
                 self::assertArrayNotHasKey('pushed', $state['contracts']);
-                self::assertStringContainsString('Graph not added', $state['log']);
+                self::assertFalse($state['result']);
+                self::assertStringNotContainsString('Graph Added', $state['log']);
             }
         }
     }

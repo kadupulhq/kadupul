@@ -163,8 +163,29 @@ select {
 	font-size: 12px;
 }
 
-*:focus {
+:focus:not(:focus-visible) {
 	outline: none;
+}
+
+/*
+ * Component rules strip outlines; !important keeps the keyboard ring from
+ * losing to them on specificity. The white halo lets one dark ring serve the
+ * light content and the dark green title rows, menus and buttons alike.
+ */
+:focus-visible {
+	outline: 2px solid #0d47a1 !important;
+	outline-offset: 1px;
+	box-shadow: 0 0 0 5px #ffffff !important;
+}
+
+/* The #d3d3d3 control border measures 1.2:1 to 1.5:1 on the light rows. */
+:is(input, textarea).ui-state-default, .ui-widget-content :is(input, textarea).ui-state-default,
+.ui-selectmenu-button.ui-button, button.ui-multiselect, .cactiLoginTable input {
+	border-color: #838383;
+}
+
+.checkboxSlider, .radioSlider {
+	box-shadow: inset 0 0 0 1px #838383;
 }
 
 label {
@@ -248,13 +269,13 @@ label {
 
 .goodpassword {
 	padding: 4px;
-	color: green;
+	color: #007200;
 	font-size: 1.5em !important;
 	vertical-align: bottom;
 }
 
 .associated {
-	color: green;
+	color: #007200;
 	font-weight: normal;
 }
 
@@ -273,7 +294,7 @@ label {
 }
 
 .idle {
-	color: green;
+	color: #007200;
 	font-weight: normal;
 }
 
@@ -302,7 +323,7 @@ label {
 }
 
 .success {
-	color: green;
+	color: #007200;
 }
 
 .failed {
@@ -310,11 +331,11 @@ label {
 }
 
 .accessGranted {
-	color: green;
+	color: #007200;
 }
 
 .accessGrantedItem {
-	color: green;
+	color: #007200;
 }
 
 .accessRestricted {
@@ -371,11 +392,11 @@ label {
 }
 
 .deviceUp {
-	color: rgba(40, 180, 40, 1.0) !important;
+	color: #197119 !important;
 }
 
 .deviceDown {
-	color: #ff0000 !important;
+	color: #c60000 !important;
 }
 
 .deviceUnknown {
@@ -383,11 +404,11 @@ label {
 }
 
 .deviceDisabled {
-	color: #a1a1a1 !important;
+	color: #616161 !important;
 }
 
 .deviceRecovering {
-	color: #ff8f1e !important;
+	color: #994d00 !important;
 }
 
 .deviceError {
@@ -395,23 +416,23 @@ label {
 }
 
 .deviceDownMuted {
-	color: #ffe333 !important;
+	color: #716100 !important;
 }
 
 .deviceThreshold {
-	color: #ffa833 !important;
+	color: #905300 !important;
 }
 
 .deviceUnmonitored {
-	color: rgba(250, 253, 158, 0.8) !important;
+	color: #636502 !important;
 }
 
 .deviceWarning {
-	color: #ea9827 !important;
+	color: #8a560d !important;
 }
 
 .deviceAlert {
-	color: #ea5f27 !important;
+	color: #ab3d10 !important;
 }
 
 .deviceUpBg {
@@ -491,7 +512,7 @@ label {
 }
 
 .beingGraphed {
-	color: green;
+	color: #007200;
 }
 
 .notBeingGraphed {
@@ -557,7 +578,7 @@ label {
 	cursor: pointer;
 	padding: 1px;
 	vertical-align: middle;
-	color: lime;
+	color: #009200;
 	font-size: 14px;
 	margin-right: 10px;
 }
@@ -566,13 +587,13 @@ label {
 	cursor: pointer;
 	padding: 1px;
 	vertical-align: middle;
-	color: rgba(255, 204, 0, 0.8);
+	color: #997a00;
 	font-size: 14px;
 	margin-right: 10px;
 }
 
 .deletequery {
-	color: red !important;
+	color: #f40000 !important;
 	cursor: pointer;
 	padding: 1px;
 	vertical-align: middle;
@@ -624,7 +645,7 @@ label {
 }
 
 .linkMarker {
-	color: #c16921;
+	color: #945019;
 }
 
 .filteredValue {
@@ -966,11 +987,17 @@ ul#breadcrumbs {
 }
 
 .loginErrors, .logoutErrors {
-	color: red;
+	color: #cc0000;
 	min-height: 15px;
 }
 
-legend {
+.loginHeading {
+	margin: 0;
+	padding: 0 2px;
+	font-weight: inherit;
+}
+
+legend, .loginHeading {
 	font-size: 22px;
 }
 
@@ -1128,8 +1155,16 @@ legend {
 	display: inline-block;
 }
 
+button.iconLink.spikekill {
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	cursor: pointer;
+}
+
 .noLinkEditMain {
-	color: rgba(44,130,29,1);
+	color: #267019;
 	text-decoration: none;
 	font-size: 12px;
 	font-weight: normal;
@@ -1142,7 +1177,7 @@ legend {
 }
 
 .linkEditMain, .linkEditMain:visited, .linkEditMain:active {
-	color: rgba(44,130,29,1);
+	color: #267019;
 	text-decoration: none;
 	font-size: 12px;
 	font-weight: normal;
@@ -1493,11 +1528,11 @@ legend {
 	width: 100%;
 	text-align: left;
 	line-height: 20px;
-	background: rgba(138,179,105,1);
-	background: -moz-linear-gradient(top, rgba(138,179,105,1) 0%, rgba(63,117,15,1) 100%);
-	background: -webkit-linear-gradient(top, rgba(138,179,105,1) 0%, rgba(63,117,15,1) 100%);
-	background: -o-linear-gradient(top, rgba(138,179,105,1) 0%, rgba(63,117,15,1) 100%);
-	background: -ms-linear-gradient(top, rgba(138,179,105,1) 0%, rgba(63,117,15,1) 100%);
+	background: rgba(91,126,64,1);
+	background: -moz-linear-gradient(top, rgba(91,126,64,1) 0%, rgba(63,117,15,1) 100%);
+	background: -webkit-linear-gradient(top, rgba(91,126,64,1) 0%, rgba(63,117,15,1) 100%);
+	background: -o-linear-gradient(top, rgba(91,126,64,1) 0%, rgba(63,117,15,1) 100%);
+	background: -ms-linear-gradient(top, rgba(91,126,64,1) 0%, rgba(63,117,15,1) 100%);
 }
 
 .formHeaderText {
@@ -1609,7 +1644,7 @@ legend {
 	background: -webkit-linear-gradient(top, rgba(98,125,77,1) 0%, rgba(31,59,8,1) 100%);
 	background: -o-linear-gradient(top, rgba(98,125,77,1) 0%, rgba(31,59,8,1) 100%);
 	background: -ms-linear-gradient(top, rgba(98,125,77,1) 0%, rgba(31,59,8,1) 100%);
-	background: linear-gradient(to bottom, rgba(138,179,105,1) 0%, rgba(63,117,15,1) 100%);
+	background: linear-gradient(to bottom, rgba(91,126,64,1) 0%, rgba(63,117,15,1) 100%);
 }
 
 .cactiNavBarBottom {
@@ -1618,11 +1653,11 @@ legend {
 
 .tableHeader {
 	display: table-row;
-	background: rgba(138,179,105,1);
-	background: -moz-linear-gradient(top, rgba(138,179,105,1) 0%, rgba(63,117,15,1) 100%);
-	background: -webkit-linear-gradient(top, rgba(138,179,105,1) 0%, rgba(63,117,15,1) 100%);
-	background: -o-linear-gradient(top, rgba(138,179,105,1) 0%, rgba(63,117,15,1) 100%);
-	background: -ms-linear-gradient(top, rgba(138,179,105,1) 0%, rgba(63,117,15,1) 100%);
+	background: rgba(91,126,64,1);
+	background: -moz-linear-gradient(top, rgba(91,126,64,1) 0%, rgba(63,117,15,1) 100%);
+	background: -webkit-linear-gradient(top, rgba(91,126,64,1) 0%, rgba(63,117,15,1) 100%);
+	background: -o-linear-gradient(top, rgba(91,126,64,1) 0%, rgba(63,117,15,1) 100%);
+	background: -ms-linear-gradient(top, rgba(91,126,64,1) 0%, rgba(63,117,15,1) 100%);
 	height: 24px;
 }
 
@@ -1631,13 +1666,13 @@ legend {
 }
 
 .tableHeader th.primarySort, th.tablesorter-headerDesc, th.tablesorter-headerAsc {
-	background: rgba(138,155,107,1);
-	background: linear-gradient(to bottom, rgba(138,155,107,1) 0%, rgba(51,79,28,1) 100%);
+	background: rgba(107,121,82,1);
+	background: linear-gradient(to bottom, rgba(107,121,82,1) 0%, rgba(51,79,28,1) 100%);
 }
 
 .tableHeader th.secondarySort {
-	background: rgba(158,175,127,1);
-	background: linear-gradient(to bottom, rgba(158,175,127,1) 0%, rgba(71,99,48,1) 100%);
+	background: rgba(106,122,77,1);
+	background: linear-gradient(to bottom, rgba(106,122,77,1) 0%, rgba(71,99,48,1) 100%);
 }
 
 .tableHeader th, .tableHeader td {
@@ -1682,11 +1717,11 @@ legend {
 .tableSubHeaderCheckbox {
 	max-width: 20px;
 	width: 20px;
-	background: -moz-linear-gradient(top, rgba(138,179,105,1) 0%, rgba(63,117,15,1) 100%);
-	background: -webkit-linear-gradient(top, rgba(138,179,105,1) 0%, rgba(63,117,15,1) 100%);
-	background: -o-linear-gradient(top, rgba(138,179,105,1) 0%, rgba(63,117,15,1) 100%);
-	background: -ms-linear-gradient(top, rgba(138,179,105,1) 0%, rgba(63,117,15,1) 100%);
-	background: linear-gradient(to bottom, rgba(138,179,105,1) 0%, rgba(63,117,15,1) 100%);
+	background: -moz-linear-gradient(top, rgba(91,126,64,1) 0%, rgba(63,117,15,1) 100%);
+	background: -webkit-linear-gradient(top, rgba(91,126,64,1) 0%, rgba(63,117,15,1) 100%);
+	background: -o-linear-gradient(top, rgba(91,126,64,1) 0%, rgba(63,117,15,1) 100%);
+	background: -ms-linear-gradient(top, rgba(91,126,64,1) 0%, rgba(63,117,15,1) 100%);
+	background: linear-gradient(to bottom, rgba(91,126,64,1) 0%, rgba(63,117,15,1) 100%);
 }
 
 .tableRow {
@@ -2160,12 +2195,12 @@ tr th:last-child .checkbox {
 
 #nav li a.active {
 	color: snow;
-	background: -moz-linear-gradient(top, rgba(138,179,105,1) 0%, rgba(63,117,15,1) 100%);
-	background: -webkit-linear-gradient(top, rgba(138,179,105,1) 0%, rgba(63,117,15,1) 100%);
-	background: -o-linear-gradient(top, rgba(138,179,105,1) 0%, rgba(63,117,15,1) 100%);
-	background: -ms-linear-gradient(top, rgba(138,179,105,1) 0%, rgba(63,117,15,1) 100%);
-	background: linear-gradient(to bottom, rgba(138,179,105,1) 0%, rgba(63,117,15,1) 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8ab369', endColorstr='#3f750f', GradientType=0 );
+	background: -moz-linear-gradient(top, rgba(91,126,64,1) 0%, rgba(63,117,15,1) 100%);
+	background: -webkit-linear-gradient(top, rgba(91,126,64,1) 0%, rgba(63,117,15,1) 100%);
+	background: -o-linear-gradient(top, rgba(91,126,64,1) 0%, rgba(63,117,15,1) 100%);
+	background: -ms-linear-gradient(top, rgba(91,126,64,1) 0%, rgba(63,117,15,1) 100%);
+	background: linear-gradient(to bottom, rgba(91,126,64,1) 0%, rgba(63,117,15,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5b7e40', endColorstr='#3f750f', GradientType=0 );
 }
 
 th {
@@ -2201,6 +2236,85 @@ tr.selectable:hover:not(.selected) a {
 
 tr.selected a {
 	color: black;
+}
+
+/* The status colours are for light rows; selected rows are mid green. */
+tr.selected .deviceUp {
+	color: #104810 !important;
+}
+
+tr.selected .deviceDown {
+	color: #840000 !important;
+}
+
+tr.selected .deviceRecovering {
+	color: #633100 !important;
+}
+
+tr.selected .deviceDisabled {
+	color: #3e3e3e !important;
+}
+
+tr.selected .deviceUnknown {
+	color: #0000d7 !important;
+}
+
+tr.selected .deviceError {
+	color: #6d0e75 !important;
+}
+
+tr.selected .deviceDownMuted {
+	color: #483e00 !important;
+}
+
+tr.selected .deviceThreshold {
+	color: #5d3500 !important;
+}
+
+tr.selected .deviceUnmonitored {
+	color: #404101 !important;
+}
+
+tr.selected .deviceWarning {
+	color: #593709 !important;
+}
+
+tr.selected .deviceAlert {
+	color: #6f270b !important;
+}
+
+tr.selected .beingGraphed, tr.selected .success {
+	color: #004a00;
+}
+
+tr.selected .reloadquery {
+	color: #006700;
+}
+
+tr.selected .verbosequery {
+	color: #6c5600;
+}
+
+tr.selected .deletequery {
+	color: #b50000 !important;
+}
+
+/* The selected tree node's gloss dips to #b5c6d0 behind the text. */
+.jstree-clicked.deviceUp {
+	color: #155f15 !important;
+}
+
+.jstree-clicked.deviceDown {
+	color: #a80000 !important;
+}
+
+.jstree-clicked.deviceRecovering {
+	color: #814000 !important;
+}
+
+/* The active spike kill item is dark green; its status-coloured icons are not meant for that. */
+.spikekillMenu .ui-state-active i {
+	color: snow !important;
 }
 
 #nav li a.pic:hover, #nav li ul li a.selected {
@@ -2528,7 +2642,12 @@ tr#realtime td:first-child {
 }
 
 .checkboxSwitch input {
-	display: none;
+	/* Hidden without display:none, which would take the control out of the tab order. */
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: 0;
+	opacity: 0;
 }
 
 .checkboxSlider {
@@ -2567,8 +2686,10 @@ input:disabled + .checkboxSlider {
 	cursor: not-allowed;
 }
 
-input:focus + .checkboxSlider {
-	box-shadow: 0 0 1px #2196F3;
+input:focus-visible + .checkboxSlider {
+	outline: 2px solid #0d47a1;
+	outline-offset: 2px;
+	box-shadow: inset 0 0 0 1px #838383, 0 0 0 6px #ffffff;
 }
 
 input:checked + .checkboxSlider:before {
@@ -2607,7 +2728,12 @@ input:checked + .checkboxSlider:before {
 }
 
 .radioSwitch input {
-	display: none;
+	/* Hidden without display:none, which would take the control out of the tab order. */
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: 0;
+	opacity: 0;
 }
 
 .radioSlider {
@@ -2653,8 +2779,10 @@ input:disabled + .radioSlider {
 	cursor: not-allowed;
 }
 
-input:focus + .radioSlider {
-	box-shadow: 0 0 1px #2196F3;
+input:focus-visible + .radioSlider {
+	outline: 2px solid #0d47a1;
+	outline-offset: 2px;
+	box-shadow: inset 0 0 0 1px #838383, 0 0 0 6px #ffffff;
 }
 
 input:checked + .radioSlider:before {

@@ -68,6 +68,12 @@ const SELF_GATED = [
         'CSP violation report sink; browsers post reports without credentials',
         'anchor',
     ],
+    'graph_realtime.php' => [
+        'realm:25',
+        '$user_id < 1 || !is_realm_allowed(25)',
+        'guest identity from include/auth.php; own realm 25 check for every caller',
+        'refusal',
+    ],
     'link.php' => [
         'realm:10000+id',
         "is_realm_allowed(\$page['id'] + 10000)",
@@ -205,7 +211,7 @@ const ABOUT_ACCESS_ADAPTER = 'Kadupul\IdentityAccess\Infrastructure\Legacy\Legac
 // Complete reviewed native-identity and persistence handoff, plus its scoped
 // service binding. A changed helper or binding must be reviewed again.
 const ABOUT_AUTHENTICATION_SOURCES = [
-    'lib/auth.php' => '5f72c877cdc3f3c475570bae9abcf624ab64f8787a4786c4cf50fc969f254053',
+    'lib/auth.php' => '68bd5a67d77d764f819e2bbc2825212f8d01c1acf3a844f08cc478fb8da3ac7d',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php' => 'b405b4eabee2e7caf495e64710711eb152a2b6b4cffb60821f1fdd7fe17096c8',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php' => '61f8ea837055c09bd58d8146ea3c18a7ae37b34abfcbfb00427253c087cbdacf',
     'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php' => '4efc747fdc6521ee882efe65f4f98b90bf1649039348f3762548c1e45cdbe0a0',
@@ -214,7 +220,7 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'c07761a00231ff569cbff177dc4b401f631cc34239e90e83d62f8a0cec0b69ce',
     'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => '4743883f8c2b1dc9b07c91a66bccdfa39f92531b6acafc0474bed5f92824513c',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => 'a5a72aeb49fa0167126f7bbaac00b17f8820a8ecaf7024521f5f81c059de7c70',
+    'config/services.yaml' => '2defe6625c46804a9e10651263ae0579aaee6bd5fee1847de5b6c1ff5c2a9cd2',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter

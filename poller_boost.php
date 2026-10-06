@@ -130,7 +130,7 @@ if ($child == false) {
         $next_run_time = $boost_next_run_time;
     }
 
-    $seconds_offset = read_config_option('boost_rrd_update_interval') * 60;
+    $seconds_offset = boost_interval_seconds();
 
     $pending_archives = boost_get_arch_table_names();
     $run_now = boost_time_to_run($forcerun, $current_time, $last_run_time, $next_run_time) || cacti_sizeof($pending_archives);
@@ -596,6 +596,20 @@ function boost_wait_children($children, $timeout)
     return $success;
 }
 
+/** Resolve the configured minute interval before any master scheduling arithmetic. */
+function boost_interval_seconds(): int
+{
+    $configured = read_config_option('boost_rrd_update_interval');
+    $minutes = (is_string($configured) || is_int($configured)) && ctype_digit((string) $configured)
+        ? filter_var(ltrim((string) $configured, '0'), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => intdiv(PHP_INT_MAX, 60)]])
+        : false;
+    if ($minutes === false) {
+        $minutes = 120;
+        set_config_option('boost_rrd_update_interval', 120);
+    }
+    return $minutes * 60;
+}
+
 function boost_time_to_run($forcerun, $current_time, $last_run_time, $next_run_time)
 {
     $run_now = false;
@@ -608,13 +622,7 @@ function boost_time_to_run($forcerun, $current_time, $last_run_time, $next_run_t
             set_config_option('boost_rrd_update_system_enable', 'on');
         }
 
-        $seconds_offset = read_config_option('boost_rrd_update_interval') * 60;
-
-        /* Initialize seconds offset, if not set to 2 hours */
-        if (empty($seconds_offset)) {
-            $seconds_offset = 120;
-            set_config_option('boost_rrd_update_interval', 120);
-        }
+        $seconds_offset = boost_interval_seconds();
 
         boost_debug("Last Runtime was " . date('Y-m-d H:i:s', $last_run_time) . " ($last_run_time).");
         boost_debug("Next Runtime is " . date('Y-m-d H:i:s', $next_run_time) . " ($next_run_time).");
@@ -652,9 +660,11 @@ function boost_time_to_run($forcerun, $current_time, $last_run_time, $next_run_t
             set_config_option('boost_next_run_time', $next_run_time);
         }
     } else {
-        $pollers = db_fetch_cell('SELECT COUNT(*) FROM pollers WHERE disabled = ""');
+        $pollers = db_fetch_cell('SELECT COUNT(*) FROM poller WHERE disabled = ""');
 
-        if ($pollers > 1) {
+        if ($pollers === false || $pollers === null) {
+            boost_debug('Unable to determine the number of active Data Collectors; preserving the Boost system setting.');
+        } elseif ((int) $pollers > 1) {
             boost_debug('Someone attempted to disable boost through there are multiple Data Collectors Defined!');
 
             set_config_option('boost_rrd_update_system_enable', 'on');
@@ -951,8 +961,10 @@ function boost_process_local_data_ids($last_id, $child, $rrdtool_pipe)
             if (!$locked) {
                 /* acquire lock in order to prevent race conditions, only a problem pre-rrdtool 1.5 */
                 if (cacti_version_compare($rrdtool_version, '1.5', '<')) {
-                    while (!db_fetch_cell("SELECT GET_LOCK('boost.single_ds." . $item['local_data_id'] . "', 1)")) {
-                        usleep(50000);
+                    if (!boost_acquire_legacy_lock($item['local_data_id'])) {
+                        cacti_log('ERROR: Boost writer lock attempts exhausted for data source ' . (int) $item['local_data_id'] . '; queued samples retained', false, 'BOOST');
+                        restore_error_handler();
+                        return false;
                     }
                 }
 
@@ -998,8 +1010,10 @@ function boost_process_local_data_ids($last_id, $child, $rrdtool_pipe)
 
                 /* acquire lock in order to prevent race conditions, only a problem pre-rrdtool 1.5 */
                 if (cacti_version_compare($rrdtool_version, '1.5', '<')) {
-                    while (!db_fetch_cell("SELECT GET_LOCK('boost.single_ds." . $item['local_data_id'] . "', 1)")) {
-                        usleep(50000);
+                    if (!boost_acquire_legacy_lock($item['local_data_id'])) {
+                        cacti_log('ERROR: Boost writer lock attempts exhausted for data source ' . (int) $item['local_data_id'] . '; queued samples retained', false, 'BOOST');
+                        restore_error_handler();
+                        return false;
                     }
                 }
 
@@ -1610,17 +1624,39 @@ function boost_purge_cached_png_files($forcerun)
                 /* goto the cache directory */
                 chdir($cache_directory);
 
+                /* removing a name needs the directory, not the file, to be writable. The web
+                 * server writes images 0644, so a poller running as another user could not
+                 * write them but may still remove them, unless the sticky bit limits removal
+                 * to their owner */
+                $directory_writable = is_writable('.');
+                $sticky             = (fileperms('.') & 01000) != 0;
+                $uid                = function_exists('posix_geteuid') ? posix_geteuid() : false;
+
                 /* check and fry as applicable */
                 foreach ($directory_contents as $file) {
-                    if (is_writable($file)) {
-                        $modify_time = filemtime($file);
-                        if ($modify_time < $remove_time) {
-                            /* only remove jpeg's and png's */
-                            if ((substr_count(strtolower($file), '.png')) ||
-                                (substr_count(strtolower($file), '.jpg'))) {
-                                unlink($file);
-                            }
-                        }
+                    if (!is_file($file)) {
+                        continue;
+                    }
+
+                    /* only remove jpeg's and png's, and temporary images a writer left behind */
+                    if (!preg_match('/\.(?:png|jpg)$/iD', $file) && strpos($file, BOOST_PNG_TEMP_PREFIX) !== 0) {
+                        continue;
+                    }
+
+                    if (filemtime($file) >= $remove_time) {
+                        continue;
+                    }
+
+                    if (!$directory_writable) {
+                        continue;
+                    }
+
+                    if ($sticky && $uid !== false && $uid !== 0 && fileowner($file) !== $uid && fileowner('.') !== $uid) {
+                        continue;
+                    }
+
+                    if (!@unlink($file)) {
+                        cacti_log("WARNING: Boost could not remove the cached image '$file'", false, 'BOOST');
                     }
                 }
             }

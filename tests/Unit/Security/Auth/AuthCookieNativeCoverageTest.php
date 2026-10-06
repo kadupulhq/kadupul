@@ -176,7 +176,7 @@ final class AuthCookieNativeCoverageTest extends TestCase
     {
         return array(
             'existing configured realm' => array(array(), 43, false, array('bind'), 0),
-            'matching name in foreign realm is not accepted' => array(array('foreign_realm' => true), null, false, array('bind'), 0),
+            'matching name in foreign realm is not accepted' => array(array('foreign_realm' => true), null, true, array('bind'), 0),
             'missing template cannot create a principal' => array(array('foreign_realm' => true, 'missing_template' => true), null, true, array('bind'), 0),
             'rejected bind increments only its realm' => array(array('bind_failure' => true), null, true, array('bind'), 1),
             'search failure never attempts bind' => array(array('search_failure' => true), null, true, array(), 0),
@@ -206,9 +206,9 @@ final class AuthCookieNativeCoverageTest extends TestCase
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
                 require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
-                $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/auth-cookie-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('lib/auth.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('native-auth-operation-returned', 'credential-and-audit-readback'), array('lib/auth.php'));
+                $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/auth-cookie-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('lib/auth.php', 'lib/graph_item_choices.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('native-auth-operation-returned', 'credential-and-audit-readback'), array('lib/auth.php'));
                 if (!self::$coverageEvidenceChecked) {
-                    self::assertSame(25, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/auth-cookie-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('lib/auth.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('native-auth-operation-returned', 'credential-and-audit-readback'), array('lib/auth.php'), 'lib/rrd.php'));
+                    self::assertSame(26, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/auth-cookie-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('lib/auth.php', 'lib/graph_item_choices.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('native-auth-operation-returned', 'credential-and-audit-readback'), array('lib/auth.php'), 'lib/rrd.php'));
                     self::$coverageEvidenceChecked = true;
                 }
                 $coverage->merge($childCoverage);

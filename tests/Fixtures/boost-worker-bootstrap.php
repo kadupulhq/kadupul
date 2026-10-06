@@ -87,6 +87,10 @@ function db_fetch_cell_prepared($sql, $params = array())
         return 'InnoDB';
     }
     $mode = getenv('BOOST_MODE');
+    if ($mode === 'output-legacy-lock' && str_contains($sql, 'SELECT GET_LOCK')) {
+        $GLOBALS['legacy_lock_attempts'] = ($GLOBALS['legacy_lock_attempts'] ?? 0) + 1;
+        return false;
+    }
     if ($mode === 'output-next-count' && strpos($sql, 'SELECT COUNT(*)') !== false) {
         return false;
     }
@@ -103,11 +107,11 @@ function db_fetch_cell_prepared($sql, $params = array())
 }
 function get_installed_rrdtool_version()
 {
-    return '1.7';
+    return getenv('BOOST_MODE') === 'output-legacy-lock' ? '1.4' : '1.7';
 }
 function get_rrdtool_version(...$args)
 {
-    return '1.7';
+    return getenv('BOOST_MODE') === 'output-legacy-lock' ? '1.4' : '1.7';
 }
 function boost_error_handler(...$args)
 {
@@ -123,6 +127,9 @@ function db_fetch_assoc_prepared(...$args)
 }
 function db_fetch_assoc($sql)
 {
+    if (getenv('BOOST_MODE') === 'output-legacy-lock') {
+        return array(array('local_data_id' => 42, 'rrd_name' => 'value', 'timestamp' => '1700000000', 'output' => '42'));
+    }
     if (getenv('BOOST_MODE') === 'output-next-count') {
         return array();
     }
@@ -156,6 +163,10 @@ function api_plugin_hook($name)
 define('SQL_NO_CACHE', '');
 require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
 eval(test_php_function_source(file_get_contents(dirname(__DIR__, 2) . '/lib/boost.php'), 'boost_delete_samples'));
+eval(test_php_function_source(file_get_contents(dirname(__DIR__, 2) . '/lib/boost.php'), 'boost_acquire_legacy_lock'));
+foreach (array('version_to_decimal', 'cacti_version_compare') as $name) {
+    eval(test_php_function_source(file_get_contents(dirname(__DIR__, 2) . '/lib/functions.php'), $name));
+}
 function boost_memory_limit() {}
 function boost_get_total_rows()
 {
@@ -186,6 +197,9 @@ function db_execute($sql)
 }
 function db_execute_prepared(...$args)
 {
+    if (getenv('BOOST_MODE') === 'output-legacy-lock' && str_contains((string) ($args[0] ?? ''), 'DELETE')) {
+        $GLOBALS['legacy_deletes'] = ($GLOBALS['legacy_deletes'] ?? 0) + 1;
+    }
     return true;
 }
 if ($mode === 'shutdown') {
@@ -207,7 +221,11 @@ register_shutdown_function(function () use ($fixture, $mode) {
         $GLOBALS['archive_table'] = 'pending';
         $GLOBALS['max_run_duration'] = 60;
         $result = boost_output_rrd_data(1);
-        file_put_contents($fixture . '/result.json', json_encode(array($result, !empty($GLOBALS['closed_writer']))));
+        if ($mode === 'output-legacy-lock') {
+            file_put_contents($fixture . '/result.json', json_encode(array($result, !empty($GLOBALS['closed_writer']), $GLOBALS['legacy_lock_attempts'] ?? 0, $GLOBALS['legacy_deletes'] ?? 0)));
+        } else {
+            file_put_contents($fixture . '/result.json', json_encode(array($result, !empty($GLOBALS['closed_writer']))));
+        }
         return;
     }
 

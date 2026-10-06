@@ -273,23 +273,43 @@ while (1) {
              * being undefined. include_once() is idempotent, so re-running it
              * on cached entries is a no-op. */
             $real_include = realpath($include_file);
-            $base_real    = realpath($config['base_path']);
+            // Roots are deployment configuration and remain fixed during this
+            // server process. Imported plugin scripts use plugins/<name>/scripts.
+            if (!isset($script_roots)) {
+                $roots = [$config['base_path'] . DIRECTORY_SEPARATOR . 'scripts'];
+                if (isset($config['scripts_path']) && is_string($config['scripts_path'])) {
+                    $roots[] = $config['scripts_path'];
+                }
+                foreach (glob($config['base_path'] . '/plugins/*/scripts', GLOB_ONLYDIR) ?: [] as $root) {
+                    $roots[] = $root;
+                }
+                $script_roots = [];
+                foreach ($roots as $root) {
+                    $resolved_root = realpath($root);
+                    if ($resolved_root !== false && is_dir($resolved_root)) {
+                        $script_roots[] = rtrim(str_replace('\\', '/', $resolved_root), '/');
+                    }
+                }
+            }
 
             if ($real_include !== false) {
                 $real_include = str_replace('\\', '/', $real_include);
-            }
-            if ($base_real !== false) {
-                $base_real = str_replace('\\', '/', $base_real);
             }
 
             /* On Windows, realpath() may return mixed-case drive letters; use
              * case-insensitive comparison to avoid false rejections. */
             $path_cmp = (DIRECTORY_SEPARATOR === '\\') ? 'stripos' : 'strpos';
-            $path_ok  = ($real_include !== false && $base_real !== false && $path_cmp($real_include, $base_real . '/') === 0);
+            $path_ok = false;
+            foreach ($script_roots as $script_root) {
+                if ($real_include !== false && $path_cmp($real_include, $script_root . '/') === 0) {
+                    $path_ok = true;
+                    break;
+                }
+            }
 
             if (!$path_ok) {
                 if ($real_include !== false) {
-                    cacti_log("WARNING: Script file '$include_file' resolves outside base path. Rejected.", false, 'PHPSVR');
+                    cacti_log("WARNING: Script file '$include_file' resolves outside scripts directory. Rejected.", false, 'PHPSVR');
                 } else {
                     cacti_log("WARNING: Script file '$include_file' could not be resolved. Rejected.", false, 'PHPSVR');
                 }
@@ -300,8 +320,15 @@ while (1) {
 
             $include_file = $real_include;
 
-            if (!file_exists($include_file)) {
+            if (!is_file($include_file)) {
                 cacti_log('WARNING: PHP Script File to be included, does not exist', false, 'PHPSVR');
+                fputs(STDOUT, "U\n");
+                fflush(STDOUT);
+                continue;
+            }
+
+            if (strcasecmp(pathinfo($include_file, PATHINFO_EXTENSION), 'php') !== 0) {
+                cacti_log('WARNING: Script Server requires a PHP script file. Rejected.', false, 'PHPSVR');
                 fputs(STDOUT, "U\n");
                 fflush(STDOUT);
                 continue;
@@ -331,9 +358,7 @@ while (1) {
             }
 
             /* Refuse to call PHP internals (system, passthru, exec, ...) and
-             * any function whose source file lives outside base_path. The
-             * script-server contract is to dispatch into user scripts in the
-             * Kadupul tree; anything else is a containment failure. */
+             * functions that were not declared by this script file. */
             try {
                 $ref = new ReflectionFunction($function);
             } catch (ReflectionException $e) {
@@ -365,8 +390,13 @@ while (1) {
                 $fn_real = str_replace('\\', '/', $fn_real);
             }
 
-            if ($fn_real === false || $path_cmp($fn_real, $base_real . '/') !== 0) {
-                cacti_log("WARNING: Function '$function' defined outside base path ('$fn_file'). Rejected.", false, 'PHPSVR');
+            $include_cmp = str_replace('\\', '/', $include_file);
+            $path_matches = ($fn_real !== false) && ((DIRECTORY_SEPARATOR === '\\')
+                ? strcasecmp($fn_real, $include_cmp) === 0
+                : $fn_real === $include_cmp);
+
+            if (!$path_matches) {
+                cacti_log("WARNING: Function '$function' was not defined by script file '$include_file'. Rejected.", false, 'PHPSVR');
                 fputs(STDOUT, "U\n");
                 fflush(STDOUT);
                 continue;

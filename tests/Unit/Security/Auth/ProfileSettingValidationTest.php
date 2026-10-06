@@ -34,7 +34,7 @@ function profile_setting_definitions(): array
     );
 }
 
-function profile_setting_run(string $function, array $request, bool $graph_settings = true, string $page = 'auth_profile.php'): array
+function profile_setting_run(string $function, array $request, bool $graph_settings = true, string $page = 'auth_profile.php', array $pluginFields = array()): array
 {
     $functions = file_get_contents(dirname(__DIR__, 4) . '/lib/functions.php');
     $stubs = test_php_function_source($functions, 'user_setting_value_allowed') . "\n"
@@ -47,7 +47,7 @@ function profile_setting_run(string $function, array $request, bool $graph_setti
         'functions' => array($function),
         'request' => $request,
         'session' => array('sess_user_id' => 5),
-        'globals' => array('settings_user' => profile_setting_definitions()),
+        'globals' => array('settings_user' => profile_setting_definitions() + array('plugin' => $pluginFields)),
         'stubs' => $stubs,
         'answers' => array(array('assoc', '/FROM graph_tree/', array(array('id' => '4', 'name' => 'Main')))),
         'call' => $function === 'form_save' ? 'form_save()' : 'api_auth_update_user_setting(get_nfilter_request_var("name"), get_nfilter_request_var("value"))',
@@ -144,3 +144,44 @@ test('nested thumbnail checkboxes can be enabled and disabled', function (bool $
     expect($stored['thumbnail_section_tree_2'])->toBe($enabled ? 'on' : '')
         ->and($result['session']['sess_error_fields'] ?? array())->not->toHaveKey('thumbnail_section_tree_2');
 })->with(array(true,false));
+
+
+test('profile autosave validates supported plugin fields before persistence', function (array $field, string $accepted, string $rejected) {
+    foreach (array(array($accepted, true, true), array($rejected, true, false), array($accepted, false, false)) as [$value, $authorized, $stored]) {
+        $result = profile_setting_run('api_auth_update_user_setting', array('name' => 'plugin_setting', 'value' => $value), $authorized, 'auth_profile.php', array('plugin_setting' => $field));
+        $writes = admin_action_probe_writes($result, '/^REPLACE INTO settings_user/');
+        expect($writes)->toHaveCount($stored ? 1 : 0);
+        if ($stored) {
+            expect($writes[0]['params'])->toBe(array('plugin_setting', $value, 5));
+        }
+    }
+})->with(array(
+    'callback choice' => array(array('method' => 'drop_callback', 'sql' => 'SELECT id,name FROM graph_tree'), '4', '99'),
+    'radio choice' => array(array('method' => 'radio', 'items' => array(array('radio_value' => 'safe', 'radio_caption' => 'Safe'))), 'safe', 'absent'),
+    'password length' => array(array('method' => 'textbox_password', 'max_length' => 8), "sample'", 'oversized'),
+));
+
+test('profile file fields accept only offered directory entries', function () {
+    $directory = sys_get_temp_dir() . '/kadupul-profile-files-' . bin2hex(random_bytes(8));
+    expect(mkdir($directory, 0700))->toBeTrue();
+    try {
+        expect(file_put_contents($directory . '/offered', 'fixture'))->toBe(7)
+            ->and(file_put_contents($directory . '/excluded', 'fixture'))->toBe(7);
+        $field = array('method' => 'drop_files', 'directory' => $directory, 'exclusions' => array('excluded'));
+        foreach (array('offered', 'excluded', 'missing', '.', '..', '../offered') as $value) {
+            $result = profile_setting_run('api_auth_update_user_setting', array('name' => 'plugin_file', 'value' => $value), true, 'auth_profile.php', array('plugin_file' => $field));
+            $writes = admin_action_probe_writes($result, '/^REPLACE INTO settings_user/');
+            expect($writes)->toHaveCount($value === 'offered' ? 1 : 0);
+            if ($value === 'offered') {
+                expect($writes[0]['params'])->toBe(array('plugin_file', 'offered', 5));
+            }
+        }
+    } finally {
+        foreach (array('offered', 'excluded') as $file) {
+            if (is_file($directory . '/' . $file)) {
+                unlink($directory . '/' . $file);
+            }
+        }
+        rmdir($directory);
+    }
+});

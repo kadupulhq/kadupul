@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 require_once dirname(__DIR__, 2) . '/Helpers/PestCodeCoverageCompatibility.php';
+require_once dirname(__DIR__, 2) . '/Helpers/PhpSource.php';
 
 use PHPUnit\Framework\TestCase;
 
@@ -129,6 +130,9 @@ final class AuditNativeContractTest extends TestCase
             $copy = $directory . '/cli/audit_database.php';
             copy($root . '/cli/audit_database.php', $copy);
             copy($root . '/tests/Fixtures/audit-native-bootstrap.php', $directory . '/include/cli_check.php');
+            $source = file_get_contents($root . '/lib/database.php');
+            self::assertIsString($source);
+            file_put_contents($directory . '/include/cli_check.php', "\nrequire_once " . var_export($root . '/include/vendor/autoload.php', true) . ';' . test_php_function_source($source, 'db_client_ssl_option'), FILE_APPEND);
             $client = $directory . '/client.php';
             file_put_contents($client, str_replace('#!/usr/bin/env php', '#!' . PHP_BINARY, file_get_contents($root . '/tests/Fixtures/audit-native-client.php')));
             chmod($client, 0700);
@@ -142,7 +146,7 @@ final class AuditNativeContractTest extends TestCase
             }
             $command[] = $copy;
             $command[] = $option;
-            if (str_starts_with($case, 'upgrade-')) {
+            if (str_starts_with($case, 'upgrade-') && $case !== 'upgrade-standalone') {
                 $command[] = '--report';
             }
             $environment = array_merge(getenv(), array('AUDIT_TEST_SQLITE' => $path, 'AUDIT_TEST_CASE' => $case, 'AUDIT_TEST_VERSION' => trim(file_get_contents($root . '/include/cacti_version')), 'CACTI_MYSQL_CLIENT' => $client));
@@ -246,6 +250,6 @@ final class AuditNativeContractTest extends TestCase
     public static function cases(): array
     {
         $reports = array_map(static fn($case) => array($case, '--report', 0), array('report-type', 'report-missing-column', 'report-unexpected-column', 'report-no-baseline', 'report-missing-index', 'report-unique-index', 'report-primary-index', 'report-index-reordered', 'report-unexpected-index', 'report-clean', 'report-index-clean'));
-        return array_merge($reports, array(array('valid', '--create', 0), array('leading-hyphen', '--create', 0), array('cleanup-backup', '--create', 1), array('cleanup-marker', '--create', 1), array('cleanup-exception', '--create', 1), array('truncated-import', '--create', 1), array('partial-success', '--create', 1), array('load-truncate-columns', '--load', 1), array('load-truncate-indexes', '--load', 1), array('load-column-failure', '--load', 1), array('load-index-failure', '--load', 1), array('partial-import', '--repair', 1), array('import-failure', '--repair', 1), array('empty-import', '--create', 1), array('swap-failure', '--create', 1), array('missing', '--create', 1), array('create-table_columns-failure', '--create', 1), array('create-table_indexes-failure', '--create', 1), array('repair-failure', '--repair', 1), array('repair-success', '--repair', 0), array('plan', '--alters', 0), array('dump-failure', '--load', 1), array('dump-success', '--load', 0), array('missing-docs', '--load', 1), array('upgrade-success', '--upgrade', 0), array('upgrade-failure', '--upgrade', 1), array('upgrade-plugin-failure', '--upgrade', 1), array('upgrade-standard-callback-failure', '--upgrade', 1), array('upgrade-alternate-callback-failure', '--upgrade', 1), array('upgrade-setup-callback-failure', '--upgrade', 1), array('version', '--version', 0), array('help', '--help', 0)));
+        return array_merge($reports, array(array('valid', '--create', 0), array('leading-hyphen', '--create', 0), array('cleanup-backup', '--create', 1), array('cleanup-marker', '--create', 1), array('cleanup-exception', '--create', 1), array('truncated-import', '--create', 1), array('partial-success', '--create', 1), array('load-truncate-columns', '--load', 1), array('load-truncate-indexes', '--load', 1), array('load-column-failure', '--load', 1), array('load-index-failure', '--load', 1), array('partial-import', '--repair', 1), array('import-failure', '--repair', 1), array('empty-import', '--create', 1), array('swap-failure', '--create', 1), array('missing', '--create', 1), array('create-table_columns-failure', '--create', 1), array('create-table_indexes-failure', '--create', 1), array('repair-failure', '--repair', 1), array('repair-success', '--repair', 0), array('plan', '--alters', 0), array('dump-failure', '--load', 1), array('dump-success', '--load', 0), array('missing-docs', '--load', 1), array('upgrade-success', '--upgrade', 0), array('upgrade-standalone', '--upgrade', 0), array('upgrade-failure', '--upgrade', 1), array('upgrade-plugin-failure', '--upgrade', 1), array('upgrade-standard-callback-failure', '--upgrade', 1), array('upgrade-alternate-callback-failure', '--upgrade', 1), array('upgrade-setup-callback-failure', '--upgrade', 1), array('version', '--version', 0), array('help', '--help', 0)));
     }
 }

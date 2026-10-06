@@ -6,6 +6,8 @@ dependencies with `mise exec -- composer install --working-dir=tests`.
 The application uses PHPUnit 10; the Pest 4 sandbox uses PHPUnit 12. Keep
 their vendor trees separate. Do not run a generic `phpunit` command: the
 default configurations have different bootstrap and database requirements.
+Use `memory_limit=2G` in the local PHP coverage configuration for the whole-tree
+report; completing selected tests alone does not establish that the report was written.
 
 `make test` retains its existing behavioral characterization meaning. There
 is no aggregate command that establishes that all CI checks passed.
@@ -15,9 +17,9 @@ is no aggregate command that establishes that all CI checks passed.
 | `make test-characterization` | Ordered container scenarios and committed goldens; see the [characterization guide](../docs/testing/README.md). Requires Docker Compose. |
 | `make test-symfony` | Application PHPUnit 10, `phpunit-symfony.xml`, `tests/Symfony`. Also available through `composer test`. |
 | `make test-legacy` | Pest 4, `tests/phpunit-spikekill.xml`: its explicit legacy regression suites, beyond spike removal. CI exercises privileged and unprivileged variants. |
-| `make test-database` | Pest 4, `tests/phpunit-database.xml`: six database contract files. Prepare a disposable database and set the `BOOST_DB_*` connection variables as in the CI database matrix; these tests perform writes. |
+| `make test-database` | Pest 4, `tests/phpunit-database.xml`: the explicit database contract files. Prepare a disposable database and set the `BOOST_DB_*` connection variables as in the CI database matrix; these tests perform writes. |
 | `make test-unit-coverage` | Pest 4, `tests/phpunit-coverage.xml`: the configured Unit, HandOff, handoff and mutation contribution, with existing exclusions preserved. Requires PCOV or Xdebug; writes its configured Clover report. |
-| `make test-javascript` | Node's native test runner, all `tests/Unit/*.test.mjs`. Install root dependencies with `mise exec -- npm ci` first. Some contracts also execute PHP; run with the locked PHP runtime and required extensions. This includes more contracts than the root `npm test` selection. |
+| `make test-javascript` | Node's native test runner, all `tests/Unit/*.test.mjs`. Install root dependencies with `mise exec -- npm ci` and build shipped assets with `mise exec -- npm run build` first. Some contracts also execute PHP; run with the locked PHP runtime and required extensions. This includes more contracts than the root `npm test` selection. |
 | `make test-themes` | The existing `test:themes` script in `tests/e2e/package.json`, explicitly using `playwright.config.js` and its local PHP server. Install locked browser dependencies with `mise exec -- npm ci --prefix tests/e2e` and the required Playwright browser/system dependencies. |
 | `make test-runner-contracts` | Python subprocess tests for suite dispatch, argument preservation, unavailable dependencies, empty JavaScript discovery and runner failure propagation. |
 

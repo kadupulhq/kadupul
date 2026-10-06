@@ -42,7 +42,7 @@ final class CdefNativeCoverageRegistration
             'tests/Fixtures/aggregate-percentile-original.php','tests/security/cdef_reference_installer_native_probe.php','tests/Helpers/PhpSource.php',
             'aggregate_graphs.php','aggregate_templates.php','color_templates.php','lib/html_utility.php','lib/html_validate.php','lib/html.php','lib/html_form.php','lib/headers_secure.php',
             'src/Platform/Contract/CdefReferenceReadiness.php','lib/database.php','lib/graph_template_input.php','lib/plugins.php','lib/auth.php',
-            'include/global_constants.php','include/global_arrays.php','include/global_form.php',
+            'include/global_constants.php','include/global_arrays.php','include/global_form.php','include/global_settings.php',
             'include/global_languages.php','lib/boost.php']);
     }
 

@@ -289,7 +289,23 @@ save_log_files() {
 set_cacti_admin_password() {
   echo "NOTE: Setting Kadupul admin password and unsetting forced password change"
 
-  $dbshell $MYSQL_AUTH_USR -e "UPDATE user_auth SET password=MD5('$WAPASS') WHERE id = 1 ;" "$DBNAME"
+  # Seed the disposable test account with the same current hash algorithm as
+  # application password changes. Keep the password off the PHP command line;
+  # a hexadecimal SQL literal also handles quotes without SQL interpolation.
+  local password_hex
+  password_hex=$(printf '%s' "$WAPASS" | php -r '
+    $password = stream_get_contents(STDIN);
+    $hash = password_hash($password, PASSWORD_DEFAULT);
+    if (!is_string($hash) || !password_verify($password, $hash)) {
+      exit(1);
+    }
+    echo bin2hex($hash);
+  ') || { echo "FATAL: Unable to hash the test account password" >&2; exit 1; }
+  if [[ ! "$password_hex" =~ ^[0-9a-f]+$ ]]; then
+    echo "FATAL: Invalid test account password hash" >&2
+    exit 1
+  fi
+  $dbshell $MYSQL_AUTH_USR -e "UPDATE user_auth SET password=CONVERT(0x${password_hex} USING ascii) WHERE id = 1 ;" "$DBNAME" || exit 1
   $dbshell $MYSQL_AUTH_USR -e "UPDATE user_auth SET password_change='', must_change_password='' WHERE id = 1 ;" "$DBNAME"
   $dbshell $MYSQL_AUTH_USR -e "REPLACE INTO settings (name, value) VALUES ('secpass_forceold', '') ;" "$DBNAME"
 }

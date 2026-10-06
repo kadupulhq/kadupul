@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -58,12 +60,23 @@ function read_config_option(...$arguments)
 {
     return '';
 }
+// Logging/progress ports stay in this disposable process; SQL cache results are real.
 function log_install_always(...$arguments) {}
+function log_install_debug(...$arguments) {}
+function log_install_high(...$arguments) {}
+function log_install_medium(...$arguments) {}
+function set_config_option($name, $value): void
+{
+    if ($name !== 'install_updated') {
+        throw new RuntimeException('Unexpected installer progress setting: ' . $name);
+    }
+    $GLOBALS['fixture_install_updated'] = $value;
+}
 function api_plugin_hook(...$arguments) {}
 function set_install_config_option($name, $value)
 {
     if ($name === 'install_cache_db') {
-        $GLOBALS['cache_file'] = $value;
+        $GLOBALS['cache_files'][] = $value;
     }
 }
 function get_cacti_cli_version()
@@ -112,8 +125,16 @@ $database_sessions = ["$host:$port:$database" => $installer_connection];
 $config = ['base_path' => $root, 'poller_id' => 1, 'connection' => 'local', 'is_web' => false, 'url_path' => '/', 'cacti_server_os' => 'unix'];
 require $root . '/include/global_constants.php';
 require $root . '/include/global_arrays.php';
+require $root . '/tests/Helpers/PhpSource.php';
+foreach (['db_install_add_cache' => 'install/functions.php', 'clean_up_lines' => 'lib/functions.php'] as $function => $path) {
+    $functionSource = file_get_contents($root . '/' . $path);
+    if ($functionSource === false) {
+        throw new RuntimeException('Installer dependency source unavailable: ' . $path);
+    }
+    eval(test_php_function_source($functionSource, $function));
+}
 require $root . '/lib/installer.php';
-$tables = ['data_template_rrd', 'data_input_fields', 'settings_user', 'version', 'poller_output', 'data_source_profiles', 'data_template_data', 'data_source_profiles_rra', 'data_source_profiles_cf'];
+$tables = ['data_input_data', 'aggregate_graphs', 'data_template_rrd', 'data_input_fields', 'settings_user', 'version', 'poller_output', 'data_source_profiles', 'data_template_data', 'data_source_profiles_rra', 'data_source_profiles_cf'];
 foreach ($tables as $table) {
     $check = $owner->prepare('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=?');
     $check->execute([$table]);
@@ -184,6 +205,9 @@ try {
                 $owner->exec('DELETE FROM settings_user WHERE user_id > 65535');
                 $owner->exec("ALTER TABLE settings_user MODIFY user_id smallint(8) unsigned NOT NULL default '0'");
             }
+            $owner->exec('ALTER TABLE data_input_data DROP INDEX data_input_field_id');
+            $owner->exec('ALTER TABLE data_input_data ADD INDEX data_input_field_id (data_template_data_id)');
+            $owner->exec('ALTER TABLE aggregate_graphs MODIFY created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP');
             $owner->exec("UPDATE version SET cacti = '$installedVersion'");
             // Execute the real installer's version gate using the real registry,
             // starting at an already installed 1.2.31, rather than calling the
@@ -193,7 +217,21 @@ try {
             $reflection->getProperty('old_cacti_version')->setValue($installer, $installedVersion);
             ob_start();
             try {
+                $refusedRepair = $reflection->getMethod('upgradeDatabase')->invoke($installer);
+                $forwardErrors = array_filter($database_upgrade_status['1.2.35'] ?? [], static fn(array $entry): bool => $entry['status'] === DB_STATUS_ERROR);
+                $retryVersion = get_cacti_cli_version();
+                if (!is_string($refusedRepair) || $forwardErrors === [] || !version_compare($retryVersion, CACTI_VERSION, '<')
+                    || $writer->query('SELECT cacti FROM version')->fetchColumn() !== $retryVersion) {
+                    throw new RuntimeException('Forward repair refusal did not reach Installer or preserve its retry marker.');
+                }
+                // Correct only the owned incompatible definition, then retry the real current registry.
+                $owner->exec('ALTER TABLE data_input_data DROP INDEX data_input_field_id');
+                $reflection->getProperty('old_cacti_version')->setValue($installer, $retryVersion);
                 $result = $reflection->getMethod('upgradeDatabase')->invoke($installer);
+                $forwardSuccesses = array_filter($database_upgrade_status['1.2.35'] ?? [], static fn(array $entry): bool => $entry['status'] === DB_STATUS_SUCCESS);
+                if (count($forwardSuccesses) !== 2 || !isset($fixture_install_updated)) {
+                    throw new RuntimeException('Forward repair did not cache both actual schema writes on retry.');
+                }
             } finally {
                 ob_end_clean();
             }
@@ -235,6 +273,15 @@ try {
                 throw new RuntimeException('Successful final confirmation did not publish the current release.');
             }
             echo 'PASS: ' . $mode . " migration retains an intermediate marker; failed final write and successful retry are observed on an independent connection.\n";
+        }
+        $forwardIndex = $owner->query("SHOW INDEX FROM data_input_data WHERE Key_name='data_input_field_id'")->fetchAll(PDO::FETCH_ASSOC);
+        $forwardCreated = $owner->query("SHOW FULL COLUMNS FROM aggregate_graphs WHERE Field='created'")->fetch(PDO::FETCH_ASSOC);
+        if (count($forwardIndex) !== 1 || $forwardIndex[0]['Column_name'] !== 'data_input_field_id'
+            || (int) $forwardIndex[0]['Non_unique'] !== 1 || $forwardIndex[0]['Sub_part'] !== null
+            || strtoupper($forwardIndex[0]['Index_type']) !== 'BTREE'
+            || stripos($forwardCreated['Extra'], 'on update') !== false
+            || $forwardCreated['Null'] !== 'NO' || !str_starts_with(strtolower($forwardCreated['Default']), 'current_timestamp')) {
+            throw new RuntimeException('Forward schema repair contracts differ from the canonical native schema.');
         }
         foreach ([65536, 16777215] as $userId) {
             $statement = $owner->prepare('REPLACE INTO settings_user (user_id, name, value) VALUES (?, ?, ?)');
@@ -297,7 +344,9 @@ try {
     foreach (array_reverse($created) as $table) {
         $owner->exec("DROP TABLE `$table`");
     }
-    if (isset($cache_file) && is_file($cache_file)) {
-        unlink($cache_file);
+    foreach ($cache_files ?? [] as $cache_file) {
+        if (is_file($cache_file)) {
+            unlink($cache_file);
+        }
     }
 }

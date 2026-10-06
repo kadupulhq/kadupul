@@ -31,7 +31,10 @@ $user          = array();                             // An array that will incl
 $user_enabled  = true;                                // A variable to let plugins know that the user is enabled
 $guest_user    = false;                               // Indicates the Guest account is being used
 $realm         = 0;                                   // The compensated realm used for template and user validation
-$frv_realm     = get_nfilter_request_var('realm', 0); // The dropdown value for realm
+$frv_realm     = auth_resource_id(get_nfilter_request_var('realm', 0)); // The dropdown value for realm
+if ($frv_realm === null) {
+    die_html_input_error('realm');
+}
 $error         = false;                               // Global variable, will be true if any errors occur
 $error_msg     = '';                                  // The errors message in case there was a login error
 
@@ -39,7 +42,7 @@ $error_msg     = '';                                  // The errors message in c
 global $error, $error_msg;
 
 if (get_nfilter_request_var('action') == 'login' || $auth_method == 2) {
-    if ($auth_method > 2 && $frv_realm <= 1) {
+    if (($auth_method == 4 && $frv_realm === 0) || ($auth_method == 3 && in_array($frv_realm, array(0, 1), true))) {
         // User picked 'local' from dropdown;
         $auth_method = 1;
     } else {
@@ -107,6 +110,13 @@ if (get_nfilter_request_var('action') == 'login' || $auth_method == 2) {
             exit;
 
             break;
+    }
+
+    // A domain login creates its account from the domain's own template, so an
+    // empty result without an error must not reach the global template or guest.
+    if ($auth_method == 4 && !$error && !cacti_sizeof($user)) {
+        $error     = true;
+        $error_msg = __('Access Denied!  Login Failed.');
     }
 
     /* Create user from template if available */
@@ -357,7 +367,8 @@ $selectedTheme = get_selected_theme();
                     )
                 );
             } else {
-                $realms = get_auth_realms(true);
+                // Nothing comes back when no domain is enabled.
+                $realms = get_auth_realms(true) ?? array();
             }
 
             // try and remember previously selected realm

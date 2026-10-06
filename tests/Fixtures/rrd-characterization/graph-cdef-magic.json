@@ -66,12 +66,12 @@
                 "CDEF:cdefd='TIME,<now-300>,GT,a,a,UN,0,a,IF,IF,TIME,<now-300>,GT,a,a,UN,0,a,IF,IF,TIME,<now-300>,GT,b,b,UN,0,b,IF,IF,TIME,<now-300>,GT,c,c,UN,0,c,IF,IF,TIME,<now-300>,GT,d,d,UN,0,d,IF,IF,+,+,+,+,TIME,<now-300>,GT,a,a,UN,0,a,IF,IF,TIME,<now-300>,GT,b,b,UN,0,b,IF,IF,TIME,<now-300>,GT,c,c,UN,0,c,IF,IF,TIME,<now-300>,GT,d,d,UN,0,d,IF,IF,+,+,+,TIME,<now-300>,GT,a,a,UN,0,a,IF,IF,TIME,<now-300>,GT,a,a,UN,0,a,IF,IF,TIME,<now-300>,GT,c,c,UN,0,c,IF,IF,+,+,TIME,<now-300>,GT,a,a,UN,0,a,IF,IF,TIME,<now-300>,GT,c,c,UN,0,c,IF,IF,+,TIME,<now-300>,GT,1,a,UN,0,1,IF,IF,TIME,<now-300>,GT,1,a,UN,0,1,IF,IF,TIME,<now-300>,GT,1,b,UN,0,1,IF,IF,TIME,<now-300>,GT,1,c,UN,0,1,IF,IF,TIME,<now-300>,GT,1,d,UN,0,1,IF,IF,+,+,+,+,TIME,<now-300>,GT,1,a,UN,0,1,IF,IF,TIME,<now-300>,GT,1,b,UN,0,1,IF,IF,TIME,<now-300>,GT,1,c,UN,0,1,IF,IF,TIME,<now-300>,GT,1,d,UN,0,1,IF,IF,+,+,+,TIME,<now-300>,GT,1,a,UN,0,1,IF,IF,TIME,<now-300>,GT,1,a,UN,0,1,IF,IF,TIME,<now-300>,GT,1,c,UN,0,1,IF,IF,+,+,TIME,<now-300>,GT,1,a,UN,0,1,IF,IF,TIME,<now-300>,GT,1,c,UN,0,1,IF,IF,+,60,c,+,+,+,+,+,+,+,+,+'",
                 "CDEF:cdefe='TIME,<now-300>,GT,d,d,UN,0,d,IF,IF,TIME,<now-300>,GT,1,d,UN,0,1,IF,IF,/,60,*'",
                 "CDEF:cdeff='TIME,<now-300>,GT,a,a,UN,0,a,IF,IF,TIME,<now-300>,GT,a,a,UN,0,a,IF,IF,TIME,<now-300>,GT,b,b,UN,0,b,IF,IF,TIME,<now-300>,GT,c,c,UN,0,c,IF,IF,TIME,<now-300>,GT,d,d,UN,0,d,IF,IF,+,+,+,+,TIME,<now-300>,GT,a,a,UN,0,a,IF,IF,TIME,<now-300>,GT,b,b,UN,0,b,IF,IF,TIME,<now-300>,GT,c,c,UN,0,c,IF,IF,TIME,<now-300>,GT,d,d,UN,0,d,IF,IF,+,+,+,,,TIME,<now-300>,GT,1,a,UN,0,1,IF,IF,TIME,<now-300>,GT,1,a,UN,0,1,IF,IF,TIME,<now-300>,GT,1,b,UN,0,1,IF,IF,TIME,<now-300>,GT,1,c,UN,0,1,IF,IF,TIME,<now-300>,GT,1,d,UN,0,1,IF,IF,+,+,+,+,TIME,<now-300>,GT,1,a,UN,0,1,IF,IF,TIME,<now-300>,GT,1,b,UN,0,1,IF,IF,TIME,<now-300>,GT,1,c,UN,0,1,IF,IF,TIME,<now-300>,GT,1,d,UN,0,1,IF,IF,+,+,+,,,300,a,+,+,+,+,+,+,+,+,+'",
-                "AREA:cdefa#00CF00FF:'In        ' ",
-                "AREA:cdefb#00FF00FF:'In again  ':STACK",
-                "LINE1:cdefc#002A97FF:'Out       '",
-                "LINE2:cdefd#FF0000FF:'Similar in'",
-                "LINE3:cdefe#0000FFFF:'Errors    '",
-                "HRULE:95#FF9900FF:'Rule'\r\nquit\r\n"
+                "AREA:cdefa#00CF00'FF':'In        ' ",
+                "AREA:cdefb#00FF00'FF':'In again  ':STACK",
+                "LINE1:cdefc#002A97'FF':'Out       '",
+                "LINE2:cdefd#FF0000'FF':'Similar in'",
+                "LINE3:cdefe#0000FF'FF':'Errors    '",
+                "HRULE:95#FF9900'FF':'Rule'\r\nquit\r\n"
             ]
         }
     ],

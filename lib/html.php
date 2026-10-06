@@ -81,7 +81,10 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
     } elseif (!isempty_request_var('tab')) {
         $table_prefix .= '_' . clean_up_name(get_nfilter_request_var('tab'));
     }
-    $table_id = $table_prefix . $table_suffix;
+    $table_id     = html_escape($table_prefix . $table_suffix);
+    $width        = html_escape($width);
+    $align        = html_escape($align);
+    $cell_padding = html_escape($cell_padding);
 
     if ($title != '') {
         print "<div id='$table_id' class='cactiTable' style='width:$width;text-align:$align;'>";
@@ -107,12 +110,12 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
         }
 
         if ($help_file !== false && $help_count == 0 && is_realm_allowed(28)) {
-            print "<span class='cactiHelp' title='" . __esc('Get Page Help') . "'><a class='linkOverDark helpPage' data-page='" . html_escape(basename($help_file)) . "' href='#' aria-label='" . __esc('Get Page Help') . "'><i class='far fa-question-circle' aria-hidden='true'></i></a></span>";
+            print "<span class='cactiHelp' title='" . __esc('Get Page Help') . "'><a class='linkOverDark helpPage' data-page='" . html_escape(basename($help_file)) . "' href='#' aria-label='" . __esc('Get Page Help') . "'>" . html_icon('help', '', array('aria-hidden' => 'true')) . "</a></span>";
             $help_count++;
         }
 
         if ($add_text != '' && !is_array($add_text)) {
-            print "<span class='cactiFilterAdd' title='" . html_escape($add_label) . "'><a class='linkOverDark' href='" . html_escape(html_safe_href($add_text)) . "' aria-label='" . html_escape($add_label) . "'><i class='fa fa-plus' aria-hidden='true'></i></a></span>";
+            print "<span class='cactiFilterAdd' title='" . html_escape($add_label) . "'><a class='linkOverDark' href='" . html_escape(html_safe_href($add_text)) . "' aria-label='" . html_escape($add_label) . "'>" . html_icon('add', '', array('aria-hidden' => 'true')) . "</a></span>";
         } else {
             if (is_array($add_text)) {
                 if (cacti_sizeof($add_text)) {
@@ -126,13 +129,21 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
                         if (isset($icon['class']) && $icon['class'] !== '') {
                             $classi = $icon['class'];
                         } else {
-                            $classi = 'fa fa-plus';
+                            $classi = html_icon_class('add');
                         }
 
                         if (isset($icon['href'])) {
                             $href = html_escape(html_safe_href($icon['href']));
                         } else {
                             $href = '#';
+                        }
+
+                        // A state changing button posts its URL from the page with the token.
+                        $post = '';
+                        if (isset($icon['post']) && $icon['post'] === true && $href !== '#') {
+                            $classo .= ' cactiPostAction';
+                            $post   = " data-url='$href'";
+                            $href   = '#';
                         }
 
                         if (isset($icon['title'])) {
@@ -145,7 +156,7 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
                             $title = $add_label;
                         }
 
-                        print "<span class='cactiFilterAdd' title='" . html_escape($title) . "'><a" . (isset($icon['id']) ? " id='" . $icon['id'] . "'" : '') . " class='$classo' href='$href' aria-label='" . html_escape($title) . "'><i class='$classi' aria-hidden='true'></i></a></span>";
+                        print "<span class='cactiFilterAdd' title='" . html_escape($title) . "'><a" . (isset($icon['id']) ? " id='" . html_escape($icon['id']) . "'" : '') . " class='$classo' href='$href' aria-label='" . html_escape($title) . "'$post><i class='" . html_escape($classi) . "' aria-hidden='true'></i></a></span>";
                     }
                 }
             } else {
@@ -327,10 +338,10 @@ function html_graph_area(&$graph_array, $no_graphs_message = '', $extra_url_args
 				<table style='text-align:center;margin:auto;'>
 					<tr>
 						<td>
-							<div class='graphWrapper' style='width:100%;' id='wrapper_<?php print $graph['local_graph_id']?>' graph_width='<?php print $graph['width'];?>' graph_height='<?php print $graph['height'];?>' title_font_size='<?php print((read_user_setting('custom_fonts') == 'on') ? read_user_setting('title_size') : read_config_option('title_size'));?>'></div>
+							<div class='graphWrapper' style='width:100%;' id='wrapper_<?php print html_escape($graph['local_graph_id']);?>' graph_width='<?php print html_escape($graph['width']);?>' graph_height='<?php print html_escape($graph['height']);?>' title_font_size='<?php print html_escape((read_user_setting('custom_fonts') == 'on') ? read_user_setting('title_size') : read_config_option('title_size'));?>'></div>
 							<?php print(read_user_setting('show_graph_title') == 'on' ? "<span class='center'>" . html_escape($graph['title_cache']) . '</span>' : '');?>
 						</td>
-						<?php if (is_realm_allowed(27)) { ?><td id='dd<?php print $graph['local_graph_id'];?>' class='noprint graphDrillDown'>
+						<?php if (is_realm_allowed(27)) { ?><td id='dd<?php print html_escape($graph['local_graph_id']);?>' class='noprint graphDrillDown'>
 							<?php graph_drilldown_icons($graph['local_graph_id'], 'graph_buttons', $tree_id, $branch_id);?>
 						</td><?php } ?>
 					</tr>
@@ -450,7 +461,7 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = '', $extr
                     }
 
                     print "<tr class='tableHeader'>
-							<td class='graphSubHeaderColumn textHeaderDark' colspan='$columns'>" . __('Data Query:') . ' ' . $graph['data_query_name'] . '</td>
+							<td class='graphSubHeaderColumn textHeaderDark' colspan='" . html_escape($columns) . "'>" . __('Data Query:') . ' ' . html_escape($graph['data_query_name']) . '</td>
 						</tr>';
                     $i = 0;
                 }
@@ -467,10 +478,10 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = '', $extr
 				<table style='text-align:center;margin:auto;'>
 					<tr>
 						<td>
-							<div class='graphWrapper' id='wrapper_<?php print $graph['local_graph_id']?>' graph_width='<?php print read_user_setting('default_width');?>' graph_height='<?php print read_user_setting('default_height');?>'></div>
+							<div class='graphWrapper' id='wrapper_<?php print html_escape($graph['local_graph_id']);?>' graph_width='<?php print html_escape(read_user_setting('default_width'));?>' graph_height='<?php print html_escape(read_user_setting('default_height'));?>'></div>
 							<?php print(read_user_setting('show_graph_title') == 'on' ? "<span class='center'>" . html_escape($graph['title_cache']) . '</span>' : '');?>
 						</td>
-						<?php if (is_realm_allowed(27)) { ?><td id='dd<?php print $graph['local_graph_id'];?>' class='noprint graphDrillDown'>
+						<?php if (is_realm_allowed(27)) { ?><td id='dd<?php print html_escape($graph['local_graph_id']);?>' class='noprint graphDrillDown'>
 							<?php print graph_drilldown_icons($graph['local_graph_id'], 'graph_buttons_thumbnails', $tree_id, $branch_id);?>
 						</td><?php } ?>
 					</tr>
@@ -511,6 +522,9 @@ function graph_drilldown_icons($local_graph_id, $type = 'graph_buttons', $tree_i
 
     static $rand = 0;
 
+    $local_graph_id = (int) $local_graph_id;
+    $url_path       = html_escape($config['url_path']);
+
     $aggregate_url = aggregate_build_children_url($local_graph_id);
 
     $graph_template_id = db_fetch_cell_prepared(
@@ -521,12 +535,12 @@ function graph_drilldown_icons($local_graph_id, $type = 'graph_buttons', $tree_i
     );
 
     print "<div class='iconWrapper'>";
-    print "<a class='iconLink utils' href='#' role='link' id='graph_" . $local_graph_id . "_util'><img class='drillDown' src='" . $config['url_path'] . "images/cog.png' alt='' title='" . __esc('Graph Details, Zooming and Debugging Utilities') . "'></a><br>";
-    print "<a class='iconLink csvexport' href='#' role='link' id='graph_" . $local_graph_id . "_csv'><img class='drillDown' src='" . $config['url_path'] . "images/table_go.png' alt='' title='" . __esc('CSV Export of Graph Data') . "'></a><br>";
-    print "<a class='iconLink mrtg' href='#' role='link' id='graph_" . $local_graph_id . "_mrtg'><img class='drillDown' src='" . $config['url_path'] . "images/timeview.png' alt='' title='" . __esc('Time Graph View') . "'></a><br>";
+    print "<a class='iconLink utils' href='#' id='graph_" . $local_graph_id . "_util'><img class='drillDown' src='" . $url_path . "images/cog.png' alt='' title='" . __esc('Graph Details, Zooming and Debugging Utilities') . "'></a><br>";
+    print "<a class='iconLink csvexport' href='#' id='graph_" . $local_graph_id . "_csv'><img class='drillDown' src='" . $url_path . "images/table_go.png' alt='' title='" . __esc('CSV Export of Graph Data') . "'></a><br>";
+    print "<a class='iconLink mrtg' href='#' id='graph_" . $local_graph_id . "_mrtg'><img class='drillDown' src='" . $url_path . "images/timeview.png' alt='' title='" . __esc('Time Graph View') . "'></a><br>";
 
     if (is_realm_allowed(3)) {
-        $host_id = db_fetch_cell_prepared(
+        $host_id = (int) db_fetch_cell_prepared(
             'SELECT host_id
 			FROM graph_local
 			WHERE id = ?',
@@ -534,27 +548,34 @@ function graph_drilldown_icons($local_graph_id, $type = 'graph_buttons', $tree_i
         );
 
         if ($host_id > 0) {
-            print "<a class='iconLink' href='" . html_escape($config['url_path'] . "host.php?action=edit&id=$host_id") . "' data-graph='" . $local_graph_id . "' id='graph_" . $local_graph_id . "_de'><img id='de" . $host_id . '_' . $rand . "' class='drillDown' src='" . $config['url_path'] . "images/server_edit.png' title='" . __esc('Edit Device') . "'></a>";
+            print "<a class='iconLink' href='" . html_escape($config['url_path'] . "host.php?action=edit&id=$host_id") . "' data-graph='" . $local_graph_id . "' id='graph_" . $local_graph_id . "_de'><img id='de" . $host_id . '_' . $rand . "' class='drillDown' src='" . $url_path . "images/server_edit.png' title='" . __esc('Edit Device') . "'></a>";
             print '<br/>';
             $rand++;
         }
     }
 
     if (is_realm_allowed(10) && $graph_template_id > 0) {
-        print "<a class='iconLink' role='link' title='" . __esc('Edit Graph Template') . "' href='" . html_escape($config['url_path'] . 'graph_templates.php?action=template_edit&id=' . $graph_template_id) . "'><img src='" . html_escape($config['url_path'] . 'images/template_edit.png') . "'></img></a>";
+        print "<a class='iconLink' title='" . __esc('Edit Graph Template') . "' href='" . html_escape($config['url_path'] . 'graph_templates.php?action=template_edit&id=' . $graph_template_id) . "'><img src='" . html_escape($config['url_path'] . 'images/template_edit.png') . "'></img></a>";
         print '<br/>';
     }
 
     if (read_config_option('realtime_enabled') == 'on' && is_realm_allowed(25)) {
         if (read_user_setting('realtime_mode') == '' || read_user_setting('realtime_mode') == '1') {
-            print "<a class='iconLink realtime' href='#' role='link' id='graph_" . $local_graph_id . "_realtime'><img class='drillDown' src='" . $config['url_path'] . "images/chart_curve_go.png' alt='' title='" . __esc('Click to view just this Graph in Real-time') . "'></a><br/>";
+            print "<a class='iconLink realtime' href='#' id='graph_" . $local_graph_id . "_realtime'><img class='drillDown' src='" . $url_path . "images/chart_curve_go.png' alt='' title='" . __esc('Click to view just this Graph in Real-time') . "'></a><br/>";
         } else {
-            print "<a class='iconLink' href='#' onclick=\"window.open('" . $config['url_path'] . 'graph_realtime.php?top=0&left=0&local_graph_id=' . $local_graph_id . "', 'popup_" . $local_graph_id . "', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=yes,width=650,height=300');return false\"><img src='" . $config['url_path'] . "images/chart_curve_go.png' alt='' title='" . __esc('Click to view just this Graph in Real-time') . "'></a><br/>";
+            // Encode for JavaScript first, then for the attribute that carries it.
+            $json_flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
+            $popup      = 'window.open('
+                . json_encode($config['url_path'] . 'graph_realtime.php?top=0&left=0&local_graph_id=' . $local_graph_id, $json_flags) . ', '
+                . json_encode('popup_' . $local_graph_id, $json_flags) . ', '
+                . "'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=yes,width=650,height=300');return false";
+
+            print "<a class='iconLink' href='#' onclick='" . html_escape($popup) . "'><img src='" . $url_path . "images/chart_curve_go.png' alt='' title='" . __esc('Click to view just this Graph in Real-time') . "'></a><br/>";
         }
     }
 
     if (is_realm_allowed(1043)) {
-        print "<span class='iconLink spikekill' data-graph='" . $local_graph_id . "' id='graph_" . $local_graph_id . "_sk'><img id='sk" . $local_graph_id . "' class='drillDown' src='" . $config['url_path'] . "images/spikekill.gif' title='" . __esc('Kill Spikes in Graphs') . "'></span>";
+        print "<button type='button' class='iconLink spikekill' aria-haspopup='menu' aria-expanded='false' aria-label='" . __esc('Kill Spikes in Graphs') . "' data-graph='" . $local_graph_id . "' id='graph_" . $local_graph_id . "_sk'><img id='sk" . $local_graph_id . "' class='drillDown' src='" . $url_path . "images/spikekill.gif' alt='' title='" . __esc('Kill Spikes in Graphs') . "'></button>";
         print '<br/>';
     }
 
@@ -605,13 +626,13 @@ function html_nav_bar($base_url, $max_pages, $current_page, $rows_per_page, $tot
 
         $nav = "<div class='navBarNavigation'>
 			<div class='navBarNavigationPrevious'>
-				" . (($current_page > 1) ? "<a data-url='" . html_escape($base_url . $page_var . "=" . $prev_page) . "' data-return='" . html_escape($return_to) . "' href='#'><i class='fa fa-angle-double-left previous'></i>" . __('Previous') . '</a>' : '') . "
+				" . (($current_page > 1) ? "<a data-url='" . html_escape($base_url . $page_var . "=" . $prev_page) . "' data-return='" . html_escape($return_to) . "' href='#'>" . html_icon('page-previous', '', array('class' => 'previous', 'aria-hidden' => 'true')) . __('Previous') . '</a>' : '') . "
 			</div>
 			<div class='navBarNavigationCenter'>
 				" . __('%d to %d of %s [ %s ]', (($rows_per_page * ($current_page - 1)) + 1), (($total_rows < $rows_per_page) || ($total_rows < ($rows_per_page * $current_page)) ? $total_rows : $rows_per_page * $current_page), $total_rows, $url_page_select) . "
 			</div>
 			<div class='navBarNavigationNext'>
-				" . (($current_page * $rows_per_page) < $total_rows ? "<a data-url='" . html_escape($base_url . $page_var . "=" . $next_page) . "' data-return='" . html_escape($return_to) . "' href='#'>" . __('Next') . "<i class='fa fa-angle-double-right next'></i></a>" : '') . "
+				" . (($current_page * $rows_per_page) < $total_rows ? "<a data-url='" . html_escape($base_url . $page_var . "=" . $next_page) . "' data-return='" . html_escape($return_to) . "' href='#'>" . __('Next') . html_icon('page-next', '', array('class' => 'next', 'aria-hidden' => 'true')) . "</a>" : '') . "
 			</div>
 		</div>";
     } elseif ($total_rows > 0) {
@@ -637,13 +658,13 @@ function html_nav_bar($base_url, $max_pages, $current_page, $rows_per_page, $tot
 
             $nav = "<div class='navBarNavigation'>
 				<div class='navBarNavigationPrevious'>
-					" . (($current_page > 1) ? "<a data-url='" . html_escape($base_url . $page_var . "=" . $prev_page) . "' data-return='" . html_escape($return_to) . "' href='#'><i class='fa fa-angle-double-left previous'></i>" . __('Previous') . "</a>" : "") . "
+					" . (($current_page > 1) ? "<a data-url='" . html_escape($base_url . $page_var . "=" . $prev_page) . "' data-return='" . html_escape($return_to) . "' href='#'>" . html_icon('page-previous', '', array('class' => 'previous', 'aria-hidden' => 'true')) . __('Previous') . "</a>" : "") . "
 				</div>
 				<div class='navBarNavigationCenter'>
 					" . __('Current Page: %s', $url_page_select) . "
 				</div>
 				<div class='navBarNavigationNext'>
-					" . ($total_rows >= $rows_per_page ? "<a data-url='" . html_escape($base_url . $page_var . "=" . $next_page) . "' data-return='" . html_escape($return_to) . "' href='#'>" . __('Next') . "<i class='fa fa-angle-double-right next'></i></a>" : "") . "
+					" . ($total_rows >= $rows_per_page ? "<a data-url='" . html_escape($base_url . $page_var . "=" . $next_page) . "' data-return='" . html_escape($return_to) . "' href='#'>" . __('Next') . html_icon('page-next', '', array('class' => 'next', 'aria-hidden' => 'true')) . "</a>" : "") . "
 				</div>
 			</div>";
         }
@@ -658,23 +679,14 @@ function html_nav_bar($base_url, $max_pages, $current_page, $rows_per_page, $tot
     return $nav;
 }
 
-/* html_header_sort - draws a header row suitable for display inside of a box element.  When
-        a user selects a column header, the callback function "filename" will be called to handle
-        the sort the column and display the altered results.
-   @arg $header_items - an array containing a list of column items to display.  The
-        format is similar to the html_header, with the exception that it has three
-        dimensions associated with each element (db_column => display_text, default_sort_order)
-        alternatively (db_column => array('display' = 'blah', 'align' = 'blah', 'sort' = 'blah'))
-   @arg $sort_column - the value of current sort column.
-   @arg $sort_direction - the value the current sort direction.  The actual sort direction
-        will be opposite this direction if the user selects the same named column.
-   @arg $last_item_colspan - the TD 'colspan' to apply to the last cell in the row
-   @arg $url - a base url to redirect sort actions to
-   @arg $return_to - the id of the object to inject output into as a result of the sort action */
-function html_header_sort($header_items, $sort_column, $sort_direction, $last_item_colspan = 1, $url = '', $return_to = '')
+/**
+ * Register the columns and restore ordering for one sortable header.
+ * Each public renderer retains its own page counter and display behavior.
+ *
+ * @return array{0: string, 1: array} next direction and current ordering
+ */
+function html_header_sort_context($header_items, $sort_direction, $page_count)
 {
-    static $page_count = 0;
-
     $reg_page = $page_count . '_' . str_replace('.php', '', basename($_SERVER['SCRIPT_NAME']));
 
     if (isset_request_var('action')) {
@@ -716,6 +728,145 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
         $order_data = array(get_request_var('sort_column') => get_request_var('sort_direction'));
     }
 
+    return array($new_sort_direction, $order_data);
+}
+
+/**
+ * Resolve the shared display and sort metadata before encoding at the output boundary.
+ *
+ * @return array{0: mixed, 1: mixed, 2: string, 3: ?string, 4: mixed, 5: string, 6: string}
+ */
+function html_header_sort_item($db_column, $display_array, $sort_column, $sort_direction, $new_sort_direction, $order_data, $primarySort)
+{
+    $isSort = '';
+    if (isset($display_array['nohide'])) {
+        $nohide = 'nohide';
+    } else {
+        $nohide = '';
+    }
+
+    if (array_key_exists('display', $display_array)) {
+        $display_text = $display_array['display'];
+        if ($sort_column == $db_column) {
+            $icon      = $sort_direction;
+            $direction = $new_sort_direction;
+
+            if ($db_column == $primarySort) {
+                $isSort = 'primarySort';
+            } else {
+                $isSort = 'secondarySort';
+            }
+        } else {
+            if (isset($order_data[$db_column])) {
+                $icon = $order_data[$db_column];
+                if ($order_data[$db_column] == 'DESC') {
+                    $direction = 'ASC';
+                } else {
+                    $direction = 'DESC';
+                }
+
+                if ($db_column == $primarySort) {
+                    $isSort = 'primarySort';
+                } else {
+                    $isSort = 'secondarySort';
+                }
+            } else {
+                $icon = '';
+                if (isset($display_array['sort'])) {
+                    $direction = $display_array['sort'];
+                } else {
+                    $direction = 'ASC';
+                }
+            }
+        }
+
+        if (isset($display_array['align'])) {
+            $align = $display_array['align'];
+        } else {
+            $align = 'left';
+        }
+
+        if (isset($display_array['tip'])) {
+            $tip = $display_array['tip'];
+        } else {
+            $tip = '';
+        }
+    } else {
+        /* by default, you will always sort ascending, with the exception of an already sorted column */
+        if ($sort_column == $db_column) {
+            $icon         = $sort_direction;
+            $direction    = $new_sort_direction;
+            $display_text = $display_array[0];
+
+            if ($db_column == $primarySort) {
+                $isSort = 'primarySort';
+            } else {
+                $isSort = 'secondarySort';
+            }
+        } else {
+            if (isset($order_data[$db_column])) {
+                $icon = $order_data[$db_column];
+                if ($order_data[$db_column] == 'DESC') {
+                    $direction = 'ASC';
+                } else {
+                    $direction = 'DESC';
+                }
+
+                if ($db_column == $primarySort) {
+                    $isSort = 'primarySort';
+                } else {
+                    $isSort = 'secondarySort';
+                }
+            } else {
+                $icon = '';
+                $direction = $display_array[1];
+            }
+
+            $display_text = $display_array[0];
+        }
+
+        $align = 'left';
+        $tip   = '';
+    }
+
+    if (strtolower($icon) == 'asc') {
+        $icon = 'sort-asc';
+    } elseif (strtolower($icon) == 'desc') {
+        $icon = 'sort-desc';
+    } else {
+        $icon = 'sort';
+    }
+
+    $align = html_escape($align);
+
+    return array($display_text, $direction, $icon, $align, $tip, $nohide, $isSort);
+}
+
+/* Display labels in sortable headers are text, including plugin-provided labels.
+ * Explicit builtin encoding at output sinks retains html_escape normalization
+ * and its cached charset while keeping text and attribute contexts visible.
+ */
+
+/* html_header_sort - draws a header row suitable for display inside of a box element.  When
+        a user selects a column header, the callback function "filename" will be called to handle
+        the sort the column and display the altered results.
+   @arg $header_items - an array containing a list of column items to display.  The
+        format is similar to the html_header, with the exception that it has three
+        dimensions associated with each element (db_column => display_text, default_sort_order)
+        alternatively (db_column => array('display' = 'blah', 'align' = 'blah', 'sort' = 'blah'))
+   @arg $sort_column - the value of current sort column.
+   @arg $sort_direction - the value the current sort direction.  The actual sort direction
+        will be opposite this direction if the user selects the same named column.
+   @arg $last_item_colspan - the TD 'colspan' to apply to the last cell in the row
+   @arg $url - a base url to redirect sort actions to
+   @arg $return_to - the id of the object to inject output into as a result of the sort action */
+function html_header_sort($header_items, $sort_column, $sort_direction, $last_item_colspan = 1, $url = '', $return_to = '')
+{
+    static $page_count = 0;
+
+    [$new_sort_direction, $order_data] = html_header_sort_context($header_items, $sort_direction, $page_count);
+
+    $primarySort = null;
     foreach ($order_data as $key => $direction) {
         $primarySort = $key;
         break;
@@ -725,110 +876,44 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 
     $i = 1;
     foreach ($header_items as $db_column => $display_array) {
-        $isSort = '';
-        if (isset($display_array['nohide'])) {
-            $nohide = 'nohide';
-        } else {
-            $nohide = '';
-        }
-
-        if (array_key_exists('display', $display_array)) {
-            $display_text = $display_array['display'];
-            if ($sort_column == $db_column) {
-                $icon      = $sort_direction;
-                $direction = $new_sort_direction;
-
-                if ($db_column == $primarySort) {
-                    $isSort = 'primarySort';
-                } else {
-                    $isSort = 'secondarySort';
-                }
-            } else {
-                if (isset($order_data[$db_column])) {
-                    $icon = $order_data[$db_column];
-                    if ($order_data[$db_column] == 'DESC') {
-                        $direction = 'ASC';
-                    } else {
-                        $direction = 'DESC';
-                    }
-
-                    if ($db_column == $primarySort) {
-                        $isSort = 'primarySort';
-                    } else {
-                        $isSort = 'secondarySort';
-                    }
-                } else {
-                    $icon = '';
-                    if (isset($display_array['sort'])) {
-                        $direction = $display_array['sort'];
-                    } else {
-                        $direction = 'ASC';
-                    }
-                }
-            }
-
-            if (isset($display_array['align'])) {
-                $align = $display_array['align'];
-            } else {
-                $align = 'left';
-            }
-
-            if (isset($display_array['tip'])) {
-                $tip = $display_array['tip'];
-            } else {
-                $tip = '';
-            }
-        } else {
-            /* by default, you will always sort ascending, with the exception of an already sorted column */
-            if ($sort_column == $db_column) {
-                $icon         = $sort_direction;
-                $direction    = $new_sort_direction;
-                $display_text = $display_array[0];
-
-                if ($db_column == $primarySort) {
-                    $isSort = 'primarySort';
-                } else {
-                    $isSort = 'secondarySort';
-                }
-            } else {
-                if (isset($order_data[$db_column])) {
-                    $icon = $order_data[$db_column];
-                    if ($order_data[$db_column] == 'DESC') {
-                        $direction = 'ASC';
-                    } else {
-                        $direction = 'DESC';
-                    }
-
-                    if ($db_column == $primarySort) {
-                        $isSort = 'primarySort';
-                    } else {
-                        $isSort = 'secondarySort';
-                    }
-                } else {
-                    $icon = '';
-                    $direction = $display_array[1];
-                }
-
-                $display_text = $display_array[0];
-            }
-
-            $align = 'left';
-            $tip   = '';
-        }
-
-        if (strtolower($icon) == 'asc') {
-            $icon = 'fa fa-sort-up';
-        } elseif (strtolower($icon) == 'desc') {
-            $icon = 'fa fa-sort-down';
-        } else {
-            $icon = 'fa fa-sort';
-        }
+        [$display_text, $direction, $icon, $align, $tip, $nohide, $isSort] = html_header_sort_item(
+            $db_column,
+            $display_array,
+            $sort_column,
+            $sort_direction,
+            $new_sort_direction,
+            $order_data,
+            $primarySort
+        );
 
         if (($db_column == '') || (substr_count($db_column, 'nosort'))) {
-            print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'" : '') . " class='$nohide $align' " . ((($i + 1) == cacti_count($header_items)) ? "colspan='$last_item_colspan' " : '') . '>' . $display_text . '</th>';
+            print '<th '
+                . ($tip != '' ? "title='"
+                . htmlspecialchars((string) html_escape($tip), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "'" : '')
+                . " class='"
+                . htmlspecialchars("$nohide $align", ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "' "
+                . ((($i + 1) == cacti_count($header_items)) ? "colspan='"
+                . htmlspecialchars((string) html_escape($last_item_colspan), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "' " : '')
+                . '>'
+                . htmlspecialchars((string) html_escape($display_text), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . '</th>';
         } else {
-            print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'" : '') . " class='sortable $align $nohide $isSort'>";
-            print "<div class='sortinfo' sort-return='" . ($return_to == '' ? 'main' : $return_to) . "' sort-page='" . ($url == '' ? html_escape(get_current_page(false)) : $url) . "' sort-column='$db_column' sort-direction='$direction'><div class='textSubHeaderDark'>" . $display_text . "<i class='$icon'></i></div></div></th>";
+            print '<th ' . ($tip != '' ? "title='" . htmlspecialchars((string) html_escape($tip), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false) . "'" : '') . " class='" . htmlspecialchars("sortable $align $nohide $isSort", ENT_QUOTES | ENT_HTML5, html_escape_charset(), false) . "'>";
+            print "<div class='sortinfo' sort-return='"
+                . htmlspecialchars((string) html_escape($return_to == '' ? 'main' : $return_to), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "' sort-page='"
+                . htmlspecialchars((string) html_escape($url == '' ? get_current_page(false) : $url), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "' sort-column='"
+                . htmlspecialchars((string) html_escape($db_column), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "' sort-direction='"
+                . htmlspecialchars((string) html_escape($direction), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "'><div class='textSubHeaderDark'>"
+                . htmlspecialchars((string) html_escape($display_text), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . html_icon($icon, '', array('aria-hidden' => 'true'))
+                . "</div></div></th>";
         }
 
         $i++;
@@ -856,47 +941,9 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 {
     static $page_count = 0;
 
-    $reg_page = $page_count . '_' . str_replace('.php', '', basename($_SERVER['SCRIPT_NAME']));
+    [$new_sort_direction, $order_data] = html_header_sort_context($header_items, $sort_direction, $page_count);
 
-    if (isset_request_var('action')) {
-        $reg_page .= '_' . get_nfilter_request_var('action');
-    }
-
-    if (isset_request_var('tab')) {
-        $reg_page .= '_' . get_nfilter_request_var('tab');
-    }
-
-    $valid_columns = [];
-    foreach (array_keys($header_items) as $key) {
-        if ($key !== '' && strpos((string) $key, 'nosort') === false) {
-            $valid_columns[] = $key;
-        }
-    }
-    $_SESSION['valid_sort_columns'][$reg_page] = $valid_columns;
-
-    /* reverse the sort direction */
-    if ($sort_direction == 'ASC') {
-        $new_sort_direction = 'DESC';
-    } else {
-        $new_sort_direction = 'ASC';
-    }
-
-    $page = $page_count . '_' . str_replace('.php', '', basename($_SERVER['SCRIPT_NAME']));
-
-    if (isset_request_var('action')) {
-        $page .= '_' . get_request_var('action');
-    }
-
-    if (isset_request_var('tab')) {
-        $page .= '_' . get_request_var('tab');
-    }
-
-    if (isset($_SESSION['sort_data'][$page])) {
-        $order_data = $_SESSION['sort_data'][$page];
-    } else {
-        $order_data = array(get_request_var('sort_column') => get_request_var('sort_direction'));
-    }
-
+    $primarySort = null;
     foreach ($order_data as $key => $direction) {
         $primarySort = $key;
         break;
@@ -910,113 +957,45 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
     print "<tr class='tableHeader'>";
 
     foreach ($header_items as $db_column => $display_array) {
-        $isSort = '';
-        if (isset($display_array['nohide'])) {
-            $nohide = 'nohide';
-        } else {
-            $nohide = '';
-        }
-
-        $icon   = '';
-        if (array_key_exists('display', $display_array)) {
-            $display_text = $display_array['display'];
-            if ($sort_column == $db_column) {
-                $icon      = $sort_direction;
-                $direction = $new_sort_direction;
-
-                if ($db_column == $primarySort) {
-                    $isSort = 'primarySort';
-                } else {
-                    $isSort = 'secondarySort';
-                }
-            } else {
-                if (isset($order_data[$db_column])) {
-                    $icon = $order_data[$db_column];
-                    if ($order_data[$db_column] == 'DESC') {
-                        $direction = 'ASC';
-                    } else {
-                        $direction = 'DESC';
-                    }
-
-                    if ($db_column == $primarySort) {
-                        $isSort = 'primarySort';
-                    } else {
-                        $isSort = 'secondarySort';
-                    }
-                } else {
-                    $icon = '';
-                    if (isset($display_array['sort'])) {
-                        $direction = $display_array['sort'];
-                    } else {
-                        $direction = 'ASC';
-                    }
-                }
-            }
-
-            if (isset($display_array['align'])) {
-                $align = $display_array['align'];
-            } else {
-                $align = 'left';
-            }
-
-            if (isset($display_array['tip'])) {
-                $tip = $display_array['tip'];
-            } else {
-                $tip = '';
-            }
-        } else {
-            /* by default, you will always sort ascending, with the exception of an already sorted column */
-            if ($sort_column == $db_column) {
-                $icon         = $sort_direction;
-                $direction    = $new_sort_direction;
-                $display_text = $display_array[0];
-
-                if ($db_column == $primarySort) {
-                    $isSort = 'primarySort';
-                } else {
-                    $isSort = 'secondarySort';
-                }
-            } else {
-                if (isset($order_data[$db_column])) {
-                    $icon = $order_data[$db_column];
-                    if ($order_data[$db_column] == 'DESC') {
-                        $direction = 'ASC';
-                    } else {
-                        $direction = 'DESC';
-                    }
-
-                    if ($db_column == $primarySort) {
-                        $isSort = 'primarySort';
-                    } else {
-                        $isSort = 'secondarySort';
-                    }
-                } else {
-                    $icon = '';
-                    $direction = $display_array[1];
-                }
-
-                $display_text = $display_array[0];
-            }
-
-            $align = 'left';
-            $tip   = '';
-        }
-
-        if (strtolower($icon) == 'asc') {
-            $icon = 'fa fa-sort-up';
-        } elseif (strtolower($icon) == 'desc') {
-            $icon = 'fa fa-sort-down';
-        } else {
-            $icon = 'fa fa-sort';
-        }
+        [$display_text, $direction, $icon, $align, $tip, $nohide, $isSort] = html_header_sort_item(
+            $db_column,
+            $display_array,
+            $sort_column,
+            $sort_direction,
+            $new_sort_direction,
+            $order_data,
+            $primarySort
+        );
 
         if (($db_column == '') || (substr_count($db_column, 'nosort'))) {
-            print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'" : '') . " class='$align $nohide'>" . $display_text . '</th>';
+            print '<th '
+                . ($tip != '' ? "title='"
+                . htmlspecialchars((string) html_escape($tip), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "'" : '')
+                . " class='"
+                . htmlspecialchars("$align $nohide", ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "'>"
+                . htmlspecialchars((string) html_escape($display_text), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . '</th>';
         } else {
-            print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'" : '') . " class='sortable $align $nohide $isSort'>";
-            print "<div class='sortinfo' sort-return='" . ($return_to == '' ? 'main' : $return_to) . "' sort-page='" . html_escape($form_action) . "' sort-column='$db_column' sort-direction='$direction'><div class='textSubHeaderDark'>" . $display_text . "<i class='$icon'></i></div></div></th>";
+            print '<th ' . ($tip != '' ? "title='" . htmlspecialchars((string) html_escape($tip), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false) . "'" : '') . " class='" . htmlspecialchars("sortable $align $nohide $isSort", ENT_QUOTES | ENT_HTML5, html_escape_charset(), false) . "'>";
+            print "<div class='sortinfo' sort-return='"
+                . htmlspecialchars((string) html_escape($return_to == '' ? 'main' : $return_to), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "' sort-page='"
+                . htmlspecialchars((string) html_escape($form_action), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "' sort-column='"
+                . htmlspecialchars((string) html_escape($db_column), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "' sort-direction='"
+                . htmlspecialchars((string) html_escape($direction), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . "'><div class='textSubHeaderDark'>"
+                . htmlspecialchars((string) html_escape($display_text), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false)
+                . html_icon($icon, '', array('aria-hidden' => 'true'))
+                . "</div></div></th>";
         }
     }
+
+    $prefix      = htmlspecialchars((string) html_escape($prefix), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false);
+    $form_action = htmlspecialchars((string) html_escape($form_action), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false);
 
     print "<th class='tableSubHeaderCheckbox'><input id='selectall' class='checkbox' type='checkbox' title='" . __esc('Select All Rows') . "' data-prefix='$prefix'><label class='formCheckboxLabel' title='" . __esc('Select All Rows') . "' for='selectall'></label></th>" . ($include_form ? "<th style='display:none;'><form id='$prefix' name='$prefix' method='post' action='$form_action'></th>" : '');
     print '</tr>';
@@ -1031,6 +1010,8 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 function html_header($header_items, $last_item_colspan = 1)
 {
     print "<tr class='tableHeader " . (!$last_item_colspan > 1 ? 'tableFixed' : '') . "'>";
+
+    $colspan = html_escape($last_item_colspan);
 
     $i = 0;
     foreach ($header_items as $item) {
@@ -1053,9 +1034,9 @@ function html_header($header_items, $last_item_colspan = 1)
                 $tip = '';
             }
 
-            print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "' " : '') . "class='$nohide $align' " . ((($i + 1) == cacti_count($header_items)) ? "colspan='$last_item_colspan' " : '') . '>' . html_escape($item['display']) . '</th>';
+            print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "' " : '') . "class='$nohide " . html_escape($align) . "' " . ((($i + 1) == cacti_count($header_items)) ? "colspan='$colspan' " : '') . '>' . html_escape($item['display']) . '</th>';
         } else {
-            print '<th ' . ((($i + 1) == cacti_count($header_items)) ? "colspan='$last_item_colspan' " : '') . '>' . html_escape($item) . '</th>';
+            print '<th ' . ((($i + 1) == cacti_count($header_items)) ? "colspan='$colspan' " : '') . '>' . html_escape($item) . '</th>';
         }
 
         $i++;
@@ -1073,10 +1054,12 @@ function html_section_header($header_item, $last_item_colspan = 1)
 {
     print "<tr class='tableHeader " . (!$last_item_colspan > 1 ? 'tableFixed' : '') . "'>";
 
+    $colspan = html_escape($last_item_colspan);
+
     if (is_array($header_item) && isset($header_item['display'])) {
-        print "<th " . (isset($header_item['align']) ? "style='text-align:" . $header_item['align'] . ";'" : "") . " colspan='$last_item_colspan'>" . $header_item['display'] . '</th>';
+        print "<th " . (isset($header_item['align']) ? "style='text-align:" . html_escape($header_item['align']) . ";'" : "") . " colspan='$colspan'>" . html_escape($header_item['display']) . '</th>';
     } else {
-        print "<th colspan='$last_item_colspan'>" . $header_item . '</th>';
+        print "<th colspan='$colspan'>" . html_escape($header_item) . '</th>';
     }
 
     print '</tr>';
@@ -1116,11 +1099,14 @@ function html_header_checkbox($header_items, $include_form = true, $form_action 
                 $tip = '';
             }
 
-            print '<th ' . ($tip != '' ? " title='" . html_escape($tip) . "' " : '') . "class='$align $nohide'>" . html_escape($item['display']) . '</th>';
+            print '<th ' . ($tip != '' ? " title='" . html_escape($tip) . "' " : '') . "class='" . html_escape($align) . " $nohide'>" . html_escape($item['display']) . '</th>';
         } else {
             print "<th class='left'>" . html_escape($item) . '</th>';
         }
     }
+
+    $prefix      = html_escape($prefix);
+    $form_action = html_escape($form_action);
 
     print "<th class='tableSubHeaderCheckbox'><input id='selectall' class='checkbox' type='checkbox' title='" . __esc('Select All Rows') . "' data-prefix='$prefix'><label class='formCheckboxLabel' title='" . __esc('Select All') . "' for='selectall'></label></th>" . ($include_form ? "<th style='display:none;'><form id='$prefix' name='$prefix' method='post' action='$form_action'></th>" : '');
     print '</tr>';
@@ -1193,10 +1179,8 @@ function html_escape_request_var($string)
     return html_escape(get_request_var($string));
 }
 
-/* html_escape - sanitizes a string for display
-   @arg $string - string the string to escape
-   @returns $new_string - the escaped string to be returned. */
-function html_escape($string)
+/** Return the cached output charset shared by HTML text and attribute encoding. */
+function html_escape_charset(): string
 {
     static $charset;
 
@@ -1208,12 +1192,22 @@ function html_escape($string)
         $charset = 'UTF-8';
     }
 
+    return $charset;
+}
+
+/* html_escape - sanitizes a string for display
+   @arg $string - string the string to escape
+   @returns $new_string - the escaped string to be returned. */
+function html_escape($string)
+{
+    $charset = html_escape_charset();
+
     // Grave Accent character can lead to xss
     if ($string !== null) {
         $string = str_replace('`', '&#96;', $string);
         return htmlspecialchars($string, ENT_QUOTES | ENT_HTML5, $charset, false);
     } else {
-        return $string;
+        return null;
     }
 }
 
@@ -1238,6 +1232,80 @@ function html_safe_href($url)
     }
 
     return $url;
+}
+
+/* html_icon_registry - the icon names config/icons.json defines, read once per request
+   @returns - the registry */
+function html_icon_registry(): \Kadupul\Platform\Contract\IconRegistry
+{
+    global $config;
+
+    static $registry = null;
+
+    if ($registry === null) {
+        $json = file_get_contents($config['base_path'] . '/config/icons.json');
+
+        $registry = \Kadupul\Platform\Contract\IconRegistry::fromJson($json === false ? '' : $json);
+    }
+
+    return $registry;
+}
+
+/* html_icon_class - the Font Awesome classes that draw an icon in the current theme
+   @arg $name - an icon name from config/icons.json
+   @returns - the space separated class list */
+function html_icon_class(string $name): string
+{
+    return html_icon_registry()->classes($name, get_selected_theme());
+}
+
+/* html_icon - renders an icon from config/icons.json as an <i> element
+   @arg $name - an icon name from config/icons.json
+   @arg $label - what a screen reader announces for the icon.  Pass '' only for
+        a decorative icon, together with 'aria-hidden' => 'true' in $attrs.
+   @arg $attrs - further attributes; 'class' is added to the icon classes
+   @returns - the markup */
+function html_icon(string $name, string $label, array $attrs = array()): string
+{
+    $has_label = trim($label) !== '';
+    $hidden = ($attrs['aria-hidden'] ?? '') === 'true';
+
+    // An unlabelled glyph is announced as an empty string under Font Awesome 7.
+    if (!$has_label && !$hidden) {
+        throw new InvalidArgumentException("Icon $name needs a label, or aria-hidden='true' if it is decorative");
+    }
+
+    if ($has_label && $hidden) {
+        throw new InvalidArgumentException("Icon $name cannot be both labelled and hidden");
+    }
+
+    if (isset($attrs['role']) || isset($attrs['aria-label'])) {
+        throw new InvalidArgumentException("Icon $name takes its role and aria-label from the label argument");
+    }
+
+    $class = html_icon_class($name);
+
+    if (isset($attrs['class']) && $attrs['class'] !== '') {
+        $class .= ' ' . $attrs['class'];
+    }
+
+    unset($attrs['class']);
+
+    $markup = "<i class='" . html_escape($class) . "'";
+
+    if ($has_label) {
+        $markup .= " role='img' aria-label='" . html_escape($label) . "'";
+    }
+
+    foreach ($attrs as $attr => $value) {
+        if (!is_string($attr) || !preg_match('/^[a-z][a-z0-9-]*$/', $attr) || str_starts_with(strtolower($attr), 'on')) {
+            throw new InvalidArgumentException("Icon $name has an invalid attribute name");
+        }
+
+        $markup .= ' ' . $attr . "='" . html_escape((string) $value) . "'";
+    }
+
+    return $markup . '></i>';
 }
 
 /* html_split_string - takes a string and breaks it into a number of <br> separated segments
@@ -1421,20 +1489,20 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
                 $line = '';
 
                 if ($i != cacti_sizeof($item_list) - 1) {
-                    $line .= "<span><a class='moveArrow fa fa-caret-down' title='" . __esc('Move Down') . "' href='" . html_escape("$filename?action=item_movedown&id=" . $item['id'] . "&$url_data") . "'></a></span>";
+                    $line .= "<span><a class='moveArrow " . html_icon_class('move-down') . " cactiPostAction' title='" . __esc('Move Down') . "' href='#' data-url='" . html_escape("$filename?action=item_movedown&id=" . $item['id'] . "&$url_data") . "'></a></span>";
                 } else {
                     $line .= "<span class='moveArrowNone'></span>";
                 }
 
                 if ($i > 0) {
-                    $line .= "<span><a class='moveArrow fa fa-caret-up' title='" . __esc('Move Up') . "' href='" . html_escape("$filename?action=item_moveup&id=" . $item['id'] . "&$url_data") . "'></a></span>";
+                    $line .= "<span><a class='moveArrow " . html_icon_class('move-up') . " cactiPostAction' title='" . __esc('Move Up') . "' href='#' data-url='" . html_escape("$filename?action=item_moveup&id=" . $item['id'] . "&$url_data") . "'></a></span>";
                 } else {
                     $line .= "<span class='moveArrowNone'></span>";
                 }
 
                 form_selectable_cell($line, $rid, '', 'right nowrap');
 
-                $line = "<a class='deleteMarker fa fa-times' title='" . __esc('Delete') . "' href='" . html_escape("$filename?action=item_remove&id=" . $item['id'] . "&nostate=true&$url_data") . "'></a>";
+                $line = "<a class='deleteMarker " . html_icon_class('remove') . " cactiPostAction' title='" . __esc('Delete') . "' href='#' data-url='" . html_escape("$filename?action=item_remove&id=" . $item['id'] . "&nostate=true&$url_data") . "'></a>";
 
                 form_selectable_cell($line, $rid, '1%', 'right');
             }
@@ -1592,11 +1660,14 @@ function draw_menu($user_menu = '')
             }
             $headers[$id] = true;
 
-            if (isset($menu_glyphs[$header_name])) {
-                $glyph = '<i class="menu_glyph ' . $menu_glyphs[$header_name] . '"></i>';
-            } else {
-                $glyph = '<i class="menu_glyph fa fa-folder"></i>';
+            $glyph = $menu_glyphs[$header_name] ?? 'menu-folder';
+
+            // Plugins add Font Awesome classes here rather than registry names.
+            if (html_icon_registry()->has($glyph)) {
+                $glyph = html_icon_class($glyph);
             }
+
+            $glyph = '<i class="menu_glyph ' . html_escape($glyph) . '"></i>';
 
             print "<li class='menuitem' role='menuitem' aria-haspopup='menu' id='$id'><a class='menu_parent active' href='#'>$glyph<span>$header_name</span></a>";
             print "<ul role='menu' id='{$id}_div' style='display:block;'>";
@@ -2097,10 +2168,10 @@ function html_show_tabs_left()
                 $i++;
             }
 
-            print "<li><a id='$id' role='tab' class='lefttab" . (isset($tab['selected']) ? " selected' aria-selected='true'" : "' aria-selected='false'") . " href='" . html_escape($tab['url']) . "' aria-label='" . html_escape($tab['title']) . "'><span class='fa glyph_$id' aria-hidden='true'></span><span class='text_$id'>" . html_escape($tab['title']) . "</span></a><a id='menu-$id' class='maintabs-submenu' href='#' aria-label='" . html_escape($tab['title']) . "' aria-haspopup='menu'><i class='fa fa-angle-down' aria-hidden='true'></i></a></li>";
+            print "<li><a id='$id' role='tab' class='lefttab" . (isset($tab['selected']) ? " selected' aria-selected='true'" : "' aria-selected='false'") . " href='" . html_escape($tab['url']) . "' aria-label='" . html_escape($tab['title']) . "'><span class='fa glyph_$id' aria-hidden='true'></span><span class='text_$id'>" . html_escape($tab['title']) . "</span></a><a id='menu-$id' class='maintabs-submenu' href='#' aria-label='" . html_escape($tab['title']) . "' aria-haspopup='menu'>" . html_icon('submenu', '', array('aria-hidden' => 'true')) . "</a></li>";
         }
 
-        print "<li class='ellipsis maintabs-submenu-ellipsis'><a id='menu-ellipsis' role='tab' aria-selected='false' class='submenu-ellipsis' href='#' aria-label='" . __esc('Show All') . "' aria-haspopup='menu'><i class='fa fa-angle-down' aria-hidden='true'></i></a></li>";
+        print "<li class='ellipsis maintabs-submenu-ellipsis'><a id='menu-ellipsis' role='tab' aria-selected='false' class='submenu-ellipsis' href='#' aria-label='" . __esc('Show All') . "' aria-haspopup='menu'>" . html_icon('submenu', '', array('aria-hidden' => 'true')) . "</a></li>";
 
         print '</ul></nav></div>';
     }
@@ -2416,20 +2487,20 @@ function html_spikekill_menu_item($text, $icon = '', $class = '', $id = '', $dat
     $output = '<li ';
 
     if (!empty($id)) {
-        $output .= "id='$id' ";
+        $output .= "id='" . html_escape($id) . "' ";
     }
 
     if (!empty($data_graph)) {
-        $output .= "data-graph='$data_graph' ";
+        $output .= "data-graph='" . html_escape($data_graph) . "' ";
     }
 
-    $output .= 'class=\'' . (empty($class) ? '' : " $class") . '\'>';
+    $output .= 'class=\'' . (empty($class) ? '' : ' ' . html_escape($class)) . '\'>';
     $output .= '<span class=\'spikeKillMenuItem\'>';
     if (!empty($icon)) {
-        $output .= "<i class='$icon'></i>";
+        $output .= "<i class='" . html_escape($icon) . "'></i>";
     }
 
-    $output .= "$text</span>";
+    $output .= html_escape($text) . '</span>';
 
     if (!empty($subitem)) {
         $output .= "<ul>$subitem</ul>";
@@ -2442,21 +2513,24 @@ function html_spikekill_menu_item($text, $icon = '', $class = '', $id = '', $dat
 function html_spikekill_menu($local_graph_id)
 {
     global $settings;
-    $ravgnan1 = html_spikekill_menu_item(__('Average'), html_spikekill_setting('spikekill_avgnan') == 'avg' ? 'fa fa-check' : 'fa', 'skmethod', 'method_avg');
-    $ravgnan2 = html_spikekill_menu_item(__('NaN\'s'), html_spikekill_setting('spikekill_avgnan') == 'nan' ? 'fa fa-check' : 'fa', 'skmethod', 'method_nan');
-    $ravgnan3 = html_spikekill_menu_item(__('Last Known Good'), html_spikekill_setting('spikekill_avgnan') == 'last' ? 'fa fa-check' : 'fa', 'skmethod', 'method_last');
+
+    $check = html_icon_class('check');
+
+    $ravgnan1 = html_spikekill_menu_item(__('Average'), html_spikekill_setting('spikekill_avgnan') == 'avg' ? $check : 'fa', 'skmethod', 'method_avg');
+    $ravgnan2 = html_spikekill_menu_item(__('NaN\'s'), html_spikekill_setting('spikekill_avgnan') == 'nan' ? $check : 'fa', 'skmethod', 'method_nan');
+    $ravgnan3 = html_spikekill_menu_item(__('Last Known Good'), html_spikekill_setting('spikekill_avgnan') == 'last' ? $check : 'fa', 'skmethod', 'method_last');
 
     $ravgnan = html_spikekill_menu_item(__('Replacement Method'), '', '', '', '', $ravgnan1 . $ravgnan2 . $ravgnan3);
 
     $rstddev = '';
     foreach ($settings['spikes']['spikekill_deviations']['array'] as $key => $value) {
-        $rstddev .= html_spikekill_menu_item($value, html_spikekill_setting('spikekill_deviations') == $key ? 'fa fa-check' : 'fa', 'skstddev', 'stddev_' . $key);
+        $rstddev .= html_spikekill_menu_item($value, html_spikekill_setting('spikekill_deviations') == $key ? $check : 'fa', 'skstddev', 'stddev_' . $key);
     }
     $rstddev  = html_spikekill_menu_item(__('Standard Deviations'), '', '', '', '', $rstddev);
 
     $rkills  = '';
     foreach ($settings['spikes']['spikekill_number']['array'] as $key => $value) {
-        $rkills .= html_spikekill_menu_item($value, html_spikekill_setting('spikekill_number') == $key ? 'fa fa-check' : 'fa', 'skills', 'kills_' . $key);
+        $rkills .= html_spikekill_menu_item($value, html_spikekill_setting('spikekill_number') == $key ? $check : 'fa', 'skills', 'kills_' . $key);
     }
     $rkills  = html_spikekill_menu_item(__('Kills Per RRA'), '', '', '', '', $rkills);
 
@@ -2464,15 +2538,15 @@ function html_spikekill_menu($local_graph_id)
 	<div class='spikekillParent' style='display:none;z-index:20;position:absolute;text-align:left;white-space:nowrap;padding-right:2px;'>
 	<ul class='spikekillMenu' style='font-size:1em;'>
 	<?php
-    print html_spikekill_menu_item(__('Remove StdDev'), 'deviceUp fa fa-life-ring', 'rstddev', '', $local_graph_id);
-    print html_spikekill_menu_item(__('Gap Fill Range'), 'deviceUnknown fa fa-life-ring', 'rfill', '', $local_graph_id);
-    print html_spikekill_menu_item(__('Float Range'), 'deviceDown fa fa-life-ring', 'rfloat', '', $local_graph_id);
+    print html_spikekill_menu_item(__('Remove StdDev'), 'deviceUp ' . html_icon_class('spike-remove'), 'rstddev', '', $local_graph_id);
+    print html_spikekill_menu_item(__('Gap Fill Range'), 'deviceUnknown ' . html_icon_class('spike-remove'), 'rfill', '', $local_graph_id);
+    print html_spikekill_menu_item(__('Float Range'), 'deviceDown ' . html_icon_class('spike-remove'), 'rfloat', '', $local_graph_id);
 
-    print html_spikekill_menu_item(__('Dry Run StdDev'), 'deviceUp fa fa-check', 'dstddev', '', $local_graph_id);
-    print html_spikekill_menu_item(__('Dry Run Gap Fill Range'), 'deviceUnknown fa fa-check', 'dfill', '', $local_graph_id);
-    print html_spikekill_menu_item(__('Dry Run Float Range'), 'deviceDown fa fa-check', 'dfloat', '', $local_graph_id);
+    print html_spikekill_menu_item(__('Dry Run StdDev'), 'deviceUp ' . html_icon_class('spike-dry-run'), 'dstddev', '', $local_graph_id);
+    print html_spikekill_menu_item(__('Dry Run Gap Fill Range'), 'deviceUnknown ' . html_icon_class('spike-dry-run'), 'dfill', '', $local_graph_id);
+    print html_spikekill_menu_item(__('Dry Run Float Range'), 'deviceDown ' . html_icon_class('spike-dry-run'), 'dfloat', '', $local_graph_id);
 
-    print html_spikekill_menu_item(__('Settings'), 'fa fa-cog', '', '', '', $ravgnan . $rstddev . $rkills);
+    print html_spikekill_menu_item(__('Settings'), html_icon_class('settings'), '', '', '', $ravgnan . $rstddev . $rkills);
 }
 
 function html_spikekill_js()
@@ -2480,25 +2554,48 @@ function html_spikekill_js()
     ?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 	spikeKillOpen = false;
+    var spikeKillGeneration = (typeof spikeKillGeneration === 'undefined' ? 0 : spikeKillGeneration) + 1;
 	$(function() {
-		$(document).on('click', function() {
+        var generation = spikeKillGeneration;
+        var previousTrigger = $('button.spikekill[aria-expanded="true"]');
+        var restoreFocus = $('.spikekillMenu').is(':focus') || $('.spikekillMenu').has(document.activeElement).length > 0;
+        $('.spikekillMenu').menu('destroy').parent().remove();
+        $('button.spikekill').attr('aria-expanded', 'false');
+        if (restoreFocus) previousTrigger.trigger('focus');
+		$(document).off('click.spikeKill').on('click.spikeKill', function() {
 			if (spikeKillOpen) {
-				$(this).find('.spikekillMenu').menu('destroy').parent().remove();
+				$('.spikekillMenu').menu('destroy').parent().remove();
+				$('button.spikekill').attr('aria-expanded', 'false');
 				spikeKillOpen = false;
 			}
 		});
 
-		$('span.spikekill').children().contextmenu(function() {
+		$('button.spikekill').off('contextmenu.spikeKill').on('contextmenu.spikeKill', function() {
 			return false;
 		});
 
-		$('span.spikekill').on('click', function() {
+		$(document).off('keydown.spikeKill').on('keydown.spikeKill', function(event) {
+			if (event.key === 'Escape' && spikeKillOpen) {
+				var trigger = $('button.spikekill[aria-expanded="true"]');
+				$('.spikekillMenu').menu('destroy').parent().remove();
+				spikeKillOpen = false;
+				trigger.attr('aria-expanded', 'false').trigger('focus');
+			}
+		});
+
+		$('button.spikekill').off('click.spikeKill').on('click.spikeKill', function(event) {
+			event.stopPropagation();
+			var trigger = $(this);
 			if (spikeKillOpen == false) {
-				local_graph_id = $(this).attr('data-graph');
+				var local_graph_id = trigger.attr('data-graph');
+                trigger.prop('disabled', true);
 
 				$.get('?action=spikemenu&local_graph_id='+local_graph_id)
 					.done(function(data) {
-						$('#sk'+local_graph_id).after(data);
+                        if (generation !== spikeKillGeneration) return;
+                        $('.spikekillMenu').menu('destroy').parent().remove();
+                        $('button.spikekill').attr('aria-expanded', 'false');
+						trigger.after(data);
 
 						menuAnchor = $('#sk'+local_graph_id).offset().left;
 						pageWidth  = $(document).width();
@@ -2519,14 +2616,18 @@ function html_spikekill_js()
 						spikeKillActions();
 
 						spikeKillOpen = true;
+						trigger.attr('aria-expanded', 'true');
+						$('.spikekillMenu').trigger('focus');
 					})
 					.fail(function(data) {
-						getPresentHTTPError(data);
-					});
+						if (generation === spikeKillGeneration) getPresentHTTPError(data);
+					})
+                    .always(function() { trigger.prop('disabled', false); });
 
 			} else {
 				spikeKillOpen = false;
-				$(this).find('.spikekillMenu').menu('destroy').parent().remove();
+				$('.spikekillMenu').menu('destroy').parent().remove();
+				$('button.spikekill').attr('aria-expanded', 'false');
 			}
 		});
 	});
@@ -2563,8 +2664,8 @@ function html_spikekill_js()
 		});
 
 		$('.skmethod').on('click', function() {
-			$('.skmethod').find('i').removeClass('fa fa-check');
-			$(this).find('i:first').addClass('fa fa-check');
+			$('.skmethod').find('i').removeClass(iconClass('check'));
+			$(this).find('i:first').addClass(iconClass('check'));
 			$(this).find('.spikekillMenu').menu('destroy').parent().remove();
 
 			strURL = '?action=spikesave&setting=ravgnan&id='+$(this).attr('id').replace('method_','');
@@ -2575,8 +2676,8 @@ function html_spikekill_js()
 		});
 
 		$('.skills').on('click', function() {
-			$('.skills').find('i').removeClass('fa fa-check');
-			$(this).find('i:first').addClass('fa fa-check');
+			$('.skills').find('i').removeClass(iconClass('check'));
+			$(this).find('i:first').addClass(iconClass('check'));
 			$(this).find('.spikekillMenu').menu('destroy').parent().remove();
 
 			strURL = '?action=spikesave&setting=rkills&id='+$(this).attr('id').replace('kills_','');
@@ -2587,8 +2688,8 @@ function html_spikekill_js()
 		});
 
 		$('.skstddev').on('click', function() {
-			$('.skstddev').find('i').removeClass('fa fa-check');
-			$(this).find('i:first').addClass('fa fa-check');
+			$('.skstddev').find('i').removeClass(iconClass('check'));
+			$(this).find('i:first').addClass(iconClass('check'));
 			$(this).find('.spikekillMenu').menu('destroy').parent().remove();
 
 			strURL = '?action=spikesave&setting=rstddev&id='+$(this).attr('id').replace('stddev_','');
@@ -2631,6 +2732,7 @@ function html_common_header($title, $selectedTheme = '')
 	<meta http-equiv='Content-Type' content='text/html;charset=utf-8'>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 		var theme='<?php print $selectedTheme;?>';
+		var kadupulIcons=<?php print json_encode(html_icon_registry()->forTheme($selectedTheme), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR);?>;
 		var hScroll=<?php print read_user_setting('enable_hscroll', '') == 'on' ? 'true' : 'false';?>;
 		var userSettings=<?php print is_view_allowed('graph_settings') ? 'true' : 'false';?>;
 		var tableConstraints='<?php print __esc('Allow or limit the table columns to extend beyond the current windows limits.');?>';

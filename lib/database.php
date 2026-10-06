@@ -326,7 +326,7 @@ function db_check_reconnect($db_conn = false, $log = true)
     }
 }
 
-function db_warning_handler($errno, $errstr, $errfile, $errline, $errcontext = [])
+function db_warning_handler($errno, $errstr, $errfile, $errline, $errcontext = []): never
 {
     throw new Exception($errstr, $errno);
 }
@@ -2314,6 +2314,34 @@ function db_switch_main_to_local()
         $database_sessions["$database_hostname:$database_port:$database_default"] = $local_db_cnn_id;
 
         return true;
+    }
+
+    return false;
+}
+
+/**
+ * Select the client option that disables TLS when the configured DB connection does.
+ *
+ * MySQL and MariaDB clients use different option names. Failing to select the
+ * right one can make a schema audit fail against servers without TLS support.
+ *
+ * @param bool   $database_ssl  Whether database TLS is enabled in Cacti config.
+ * @param string $client_version Output from the database client's --version.
+ *
+ * @return string|false Safe client option, or false when the client is unknown.
+ */
+function db_client_ssl_option($database_ssl, $client_version)
+{
+    if (!empty($database_ssl)) {
+        return '';
+    }
+
+    if (preg_match('/MariaDB/i', $client_version)) {
+        return ' --skip-ssl';
+    }
+
+    if (preg_match('/MySQL|Percona/i', $client_version)) {
+        return ' --ssl-mode=DISABLED';
     }
 
     return false;

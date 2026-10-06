@@ -15,33 +15,18 @@ use Kadupul\Platform\Application\Command\MaintenanceRealm;
 use Kadupul\Platform\Application\Command\MaintenanceTarget;
 use Kadupul\Platform\Application\Port\DatabaseMaintenance;
 use Kadupul\Platform\Application\Port\DatabaseTarget;
+use Kadupul\Tests\Fixtures\MaintenanceOperator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class MaintenanceTargetTest extends TestCase
 {
-    private function maintenance(bool $collector): DatabaseMaintenance
-    {
-        $maintenance = $this->createStub(DatabaseMaintenance::class);
-        $maintenance->method('isRemoteCollector')->willReturn($collector);
-
-        return $maintenance;
-    }
-
-    private function operator(?Actor $actor, bool $utilities, bool $upgrade): ConsoleOperator
-    {
-        $operator = $this->createStub(ConsoleOperator::class);
-        $operator->method('actor')->willReturn($actor);
-        $operator->method('canAdministerInstallation')->willReturn($utilities);
-        $operator->method('canUpgradeInstallation')->willReturn($upgrade);
-
-        return $operator;
-    }
+    use MaintenanceOperator;
 
     #[DataProvider('grants')]
     public function testEachRealmChecksOnlyItsOwnGrant(MaintenanceRealm $realm, bool $utilities, bool $upgrade, bool $allowed): void
     {
-        $target = new MaintenanceTarget($this->operator(new Actor(4, 'ops'), $utilities, $upgrade), $this->maintenance(false));
+        $target = $this->maintenanceTarget(false, $upgrade, $utilities, new Actor(4, 'ops'));
         if (!$allowed) {
             $this->expectException(InstallationAccessDenied::class);
         }
@@ -64,13 +49,15 @@ final class MaintenanceTargetTest extends TestCase
         $operator->expects(self::once())->method('select')->with('ops', OperatorDatabase::Main);
         $operator->method('actor')->willReturn(new Actor(4, 'ops'));
         $operator->method('canUpgradeInstallation')->willReturn(true);
-        $scope = (new MaintenanceTarget($operator, $this->maintenance(true)))->select(false, 'ops', MaintenanceRealm::Upgrade);
+        $maintenance = $this->createStub(DatabaseMaintenance::class);
+        $maintenance->method('isRemoteCollector')->willReturn(true);
+        $scope = (new MaintenanceTarget($operator, $maintenance))->select(false, 'ops', MaintenanceRealm::Upgrade);
         self::assertSame(DatabaseTarget::Main, $scope->target);
     }
 
     public function testARefusalCarriesTheActorAndTarget(): void
     {
-        $target = new MaintenanceTarget($this->operator(new Actor(4, 'ops'), true, false), $this->maintenance(true));
+        $target = $this->maintenanceTarget(true, false, true, new Actor(4, 'ops'));
         try {
             $target->select(false, 'ops', MaintenanceRealm::Upgrade);
             self::fail('Expected a refusal');
@@ -81,7 +68,7 @@ final class MaintenanceTargetTest extends TestCase
 
     public function testAnUnknownOperatorIsRefusedWithoutAnActor(): void
     {
-        $target = new MaintenanceTarget($this->operator(null, true, true), $this->maintenance(false));
+        $target = $this->maintenanceTarget(actor: null);
         try {
             $target->select(true, 'nobody', MaintenanceRealm::Upgrade);
             self::fail('Expected a refusal');

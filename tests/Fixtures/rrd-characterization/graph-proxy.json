@@ -53,8 +53,8 @@
             "--font WATERMARK:6:'Arial'",
             "DEF:a=./router_traffic_11.rrd:'traffic_in':AVERAGE",
             "DEF:b=./errors/router_errors_12.rrd:'errors':AVERAGE",
-            "AREA:a#00CF00FF:'Inbound &quot;peak&quot;\\: a  b' ",
-            "LINE1:b#FF0000FF:'Errors              '",
+            "AREA:a#00CF00'FF':'Inbound &quot;peak&quot;\\: a  b' ",
+            "LINE1:b#FF0000'FF':'Errors              '",
             "GPRINT:a:LAST:'Now\\:%8.2lf %s'"
         ],
         [

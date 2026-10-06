@@ -37,6 +37,8 @@ if ($mysql) {
 $database->exec($tablePrefix . 'graph_templates_item (id INTEGER PRIMARY KEY, sequence INTEGER, graph_template_id INTEGER, local_graph_id INTEGER, local_graph_template_item_id INTEGER DEFAULT 0, graph_type_id INTEGER, text_format VARCHAR(255) DEFAULT "", hard_return VARCHAR(2) DEFAULT "", task_item_id INTEGER DEFAULT 0, hash VARCHAR(64) DEFAULT "")');
 $database->exec($tablePrefix . 'graph_template_input (id INTEGER PRIMARY KEY, graph_template_id INTEGER, name TEXT, column_name TEXT)');
 $database->exec($tablePrefix . 'graph_template_input_defs (graph_template_input_id INTEGER, graph_template_item_id INTEGER)');
+$database->exec($tablePrefix . 'graph_local (id INTEGER PRIMARY KEY, host_id INTEGER, graph_template_id INTEGER)');
+$database->exec('INSERT INTO graph_local (id,host_id,graph_template_id) VALUES (3,11,2),(4,12,2)');
 $database->exec('INSERT INTO graph_templates_item (id,sequence,graph_template_id,local_graph_id,graph_type_id) VALUES (1,1,2,0,9),(2,2,2,0,9),(3,1,2,3,9),(4,2,2,3,9),(5,1,2,4,9),(6,50,2,4,9),(7,1,8,0,9),(8,2,8,0,9)');
 $queries = array();
 $saved = array();
@@ -88,10 +90,29 @@ require $root . '/include/global_constants.php';
 $messages = array(1 => array('message' => 'Saved', 'level' => MESSAGE_LEVEL_INFO), 2 => array('message' => 'Failed', 'level' => MESSAGE_LEVEL_ERROR));
 require $root . '/lib/functions.php';
 require $root . '/lib/html_utility.php';
+require_once $root . '/tests/Helpers/PhpSource.php';
+eval(test_php_function_source(file_get_contents($root . '/lib/auth.php'), 'auth_resource_id'));
+// Policy decisions are isolated boundaries; graph ownership and all ordering SQL are real.
+function is_graph_allowed($graph_id): bool
+{
+    return $graph_id === 3;
+}
+function is_device_allowed($host_id): bool
+{
+    return $host_id === 11;
+}
 session_save_path($directory);
 session_start();
 $_SESSION['sess_user_id'] = 7;
 $_SESSION['sess_messages'] = array();
+function csrf_startup()
+{
+    csrf_conf('rewrite', false);
+    csrf_conf('defer', true);
+    csrf_conf('auto-session', false);
+    csrf_conf('secret', 'isolated-graph-ordering-test-secret');
+}
+require $root . '/include/vendor/csrf/csrf-magic.php';
 $before = $database->query('SELECT id,sequence FROM graph_templates_item ORDER BY id')->fetchAll(PDO::FETCH_KEY_PAIR);
 register_shutdown_function(function () use ($database, &$before) {
     $after = $database->query('SELECT id,sequence FROM graph_templates_item ORDER BY id')->fetchAll(PDO::FETCH_KEY_PAIR);
@@ -131,5 +152,7 @@ if (str_contains($scenario, 'boundary')) {
 }
 $_REQUEST = array('action' => str_contains($scenario, 'save') ? 'save' : ($up ? 'item_moveup' : 'item_movedown'), 'id' => $id, 'graph_template_id' => 2, 'local_graph_id' => 3, 'graph_template_item_id' => 0, 'local_graph_template_item_id' => 0, 'save_component_item' => 1, 'sequence' => 0, 'graph_type_id' => 9, 'task_item_id' => 0, 'color_id' => 0, 'alpha' => 'FF', 'cdef_id' => 0, 'vdef_id' => 0, 'consolidation_function_id' => 4, 'gprint_id' => 0, 'text_format' => '', 'value' => '');
 $_POST = $_REQUEST;
+$_SERVER['REQUEST_METHOD'] = 'POST';
+$_POST['__csrf_magic'] = csrf_get_tokens();
 chdir($directory);
 require $directory . '/' . $controller;

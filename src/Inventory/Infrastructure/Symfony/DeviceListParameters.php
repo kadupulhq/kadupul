@@ -14,7 +14,7 @@ final class DeviceListParameters
 {
     public static function parse(array $query): DeviceListCriteria
     {
-        foreach (['q', 'state', 'status', 'sort', 'direction', 'page', 'size', 'site'] as $key) {
+        foreach (['q', 'state', 'status', 'sort', 'direction', 'page', 'size', 'site', 'template', 'collector', 'location', 'location_mode'] as $key) {
             if (isset($query[$key]) && !is_string($query[$key])) {
                 throw new \InvalidArgumentException('Invalid device list filters.');
             }
@@ -28,7 +28,18 @@ final class DeviceListParameters
         if ($site !== '' && (!ctype_digit($site) || strlen($site) > 10)) {
             throw new \InvalidArgumentException('Invalid device site.');
         }
-        return new DeviceListCriteria($query['q'] ?? '', $query['state'] ?? 'all', (int) $page, (int) $size, $query['status'] ?? 'all', new DeviceOrder($query['sort'] ?? 'name', $query['direction'] ?? 'asc'), $site === '' ? null : (int) $site);
+        $ids = [];
+        foreach (['template', 'collector'] as $key) {
+            $value = $query[$key] ?? '';
+            if ($value !== '' && (!ctype_digit($value) || strlen($value) > 8)) {
+                throw new \InvalidArgumentException('Invalid device list filters.');
+            }
+            $ids[$key] = $value === '' ? null : (int) $value;
+        }
+        if (!in_array($query['location_mode'] ?? 'all', ['all', 'exact'], true)) {
+            throw new \InvalidArgumentException('Invalid device list filters.');
+        }
+        return new DeviceListCriteria($query['q'] ?? '', $query['state'] ?? 'all', (int) $page, (int) $size, $query['status'] ?? 'all', new DeviceOrder($query['sort'] ?? 'name', $query['direction'] ?? 'asc'), $site === '' ? null : (int) $site, $ids['template'], $ids['collector'], ($query['location_mode'] ?? 'all') === 'exact' ? ($query['location'] ?? '') : null);
     }
 
     public static function context(array $query): array
@@ -44,6 +55,9 @@ final class DeviceListParameters
     {
         return ['q' => $criteria->search, 'state' => $criteria->state, 'status' => $criteria->status,
             'sort' => $criteria->order->field, 'direction' => $criteria->order->direction,
-            'page' => $criteria->page, 'size' => $criteria->pageSize, 'site' => $criteria->siteId ?? ''];
+            'page' => $criteria->page, 'size' => $criteria->pageSize, 'site' => $criteria->siteId ?? '']
+            + ($criteria->templateId === null ? [] : ['template' => $criteria->templateId])
+            + ($criteria->collectorId === null ? [] : ['collector' => $criteria->collectorId])
+            + ($criteria->location === null ? [] : ['location_mode' => 'exact', 'location' => $criteria->location]);
     }
 }

@@ -6,6 +6,7 @@
  */
 
 require_once __DIR__ . '/path_helpers.php';
+require_once __DIR__ . '/graph_fonts.php';
 
 /**
  * title_trim - takes a string of text, truncates it to $max_length and appends
@@ -122,6 +123,123 @@ function read_graph_config_option($config_name, $force = false)
 }
 
 /**
+ * graph_font_size_filter - FILTER_CALLBACK for the font size settings
+ *
+ * RRDtool refuses INF and Cairo fails on very large sizes. Sizes of 4 and below
+ * were always replaced by a default, so they are refused as well.
+ *
+ * @param $size - the submitted size
+ *
+ * @return - $size when RRDtool can draw it, otherwise false
+ */
+function graph_font_size_filter($size)
+{
+    graph_font_resolver();
+
+    return \Kadupul\Graphing\Domain\Font\GraphFontResolver::acceptsSize($size) ? $size : false;
+}
+
+/**
+ * graph_font_size - the point size to hand RRDtool for a stored font size
+ *
+ * Values saved before graph_font_size_filter() existed can be anything, so
+ * sizes it refuses fall back to $default, except that large ones are capped.
+ *
+ * @param $size    - the stored size
+ * @param $default - the size to use when $size is not usable
+ *
+ * @return - a size RRDtool can draw
+ */
+function graph_font_size($size, $default)
+{
+    graph_font_resolver();
+
+    // GraphFontResolver::size() returns floats only. Plugins may compare this
+    // result strictly, so the fallback keeps the type the caller passed and
+    // the cap stays the integer 72, as before the resolver.
+    if (\Kadupul\Graphing\Domain\Font\GraphFontResolver::acceptsSize($size)) {
+        return (float) $size;
+    }
+
+    if (is_numeric($size) && is_finite((float) $size) && (float) $size > \Kadupul\Graphing\Domain\Font\GraphFontResolver::MAX_SIZE) {
+        return 72;
+    }
+
+    return $default;
+}
+
+/**
+ * graph_font_name_filter - FILTER_CALLBACK for the graph font settings
+ *
+ * Refuses a value that is not a Pango font description, or that names no
+ * family fontconfig reports as installed. Without fc-list, as on Windows, a
+ * well-formed name is accepted unchecked and the fact is logged.
+ *
+ * @param $name - the submitted font description
+ *
+ * @return - $name when RRDtool can use it, otherwise false
+ */
+function graph_font_name_filter($name)
+{
+    static $installed = null;
+
+    graph_font_resolver();
+
+    if (!is_string($name) || !\Kadupul\Graphing\Domain\Font\GraphFontResolver::acceptsFamily($name)) {
+        return false;
+    }
+
+    // An empty setting leaves the choice to RRDtool.
+    if (trim($name) === '') {
+        return $name;
+    }
+
+    $installed ??= new \Kadupul\Graphing\Infrastructure\Fontconfig\InstalledFontFamilies((new \Symfony\Component\Process\ExecutableFinder())->find('fc-list'));
+
+    $found = $installed->contains($name);
+
+    if ($found === null) {
+        cacti_log('NOTE: Graph font \'' . $name . '\' was saved without checking that it is installed, because fc-list is not available', false, 'SYSTEM', POLLER_VERBOSITY_MEDIUM);
+
+        return $name;
+    }
+
+    return $found ? $name : false;
+}
+
+/**
+ * settings_value_passes_filter - checks a value against the filter a setting declares
+ *
+ * @param $name         - the setting name
+ * @param $value        - the submitted value
+ * @param $user_setting - true to look in $settings_user, false for $settings
+ *
+ * @return - false only when the setting has a filter and the value fails it
+ */
+function settings_value_passes_filter($name, $value, $user_setting = false)
+{
+    global $settings, $settings_user;
+
+    $tabs = $user_setting ? $settings_user : $settings;
+
+    foreach ($tabs as $tab_fields) {
+        if (!isset($tab_fields[$name]['filter'])) {
+            continue;
+        }
+
+        $field_array = $tab_fields[$name];
+
+        if (isset($field_array['options'])) {
+            return filter_var($value, $field_array['filter'], $field_array['options']) !== false;
+        }
+
+        return filter_var($value, $field_array['filter']) !== false;
+    }
+
+    return true;
+}
+
+/**
  * save_user_setting - sets/updates aLL user settings
  *
  * @param $config_name - the name of the configuration setting as specified $settings array
@@ -140,6 +258,13 @@ function save_user_settings($user = -1)
 
     foreach ($settings_user as $tab_short_name => $tab_fields) {
         foreach ($tab_fields as $field_name => $field_array) {
+            if (isset_request_var($field_name) && isset($field_array['default']) && is_numeric($field_array['default'])
+                && (!is_numeric(get_nfilter_request_var($field_name)) || !settings_value_passes_filter($field_name, get_nfilter_request_var($field_name), true))) {
+                $_SESSION['sess_error_fields'][$field_name] = $field_name;
+                $_SESSION['sess_field_values'][$field_name] = get_nfilter_request_var($field_name);
+                continue;
+            }
+
             if (isset($field_array['method'])) {
                 if ($field_array['method'] == 'checkbox') {
                     set_user_setting($field_name, (isset_request_var($field_name) ? 'on' : ''), $user);
@@ -172,7 +297,7 @@ function save_user_settings($user = -1)
                         }
                     }
                 } elseif (isset_request_var($field_name)) {
-                    if (user_setting_value_allowed($field_array, get_nfilter_request_var($field_name))) {
+                    if (user_setting_value_allowed($field_array, get_nfilter_request_var($field_name)) && settings_value_passes_filter($field_name, get_nfilter_request_var($field_name), true)) {
                         set_user_setting($field_name, get_nfilter_request_var($field_name), $user);
                     } else {
                         $_SESSION['sess_error_fields'][$field_name] = $field_name;
@@ -214,6 +339,11 @@ function user_setting_value_allowed($field_array, $value)
         case 'drop_array':
         case 'drop_language':
             return isset($field_array['array']) && is_array($field_array['array']) && array_key_exists($value, $field_array['array']);
+        case 'drop_callback':
+            if (!empty($field_array['none_value']) && $value === '0') {
+                return true;
+            }
+            // Fall through to the same SQL choices rendered by form_callback().
         case 'drop_sql':
             foreach (db_fetch_assoc($field_array['sql']) as $row) {
                 if ((string) $row['id'] === $value) {
@@ -222,6 +352,25 @@ function user_setting_value_allowed($field_array, $value)
             }
 
             return false;
+        case 'radio':
+            foreach ($field_array['items'] ?? array() as $item) {
+                if (isset($item['radio_value']) && $value === (string) $item['radio_value']) {
+                    return true;
+                }
+            }
+            return false;
+        case 'drop_files':
+            $directory = $field_array['directory'] ?? '';
+            if (!is_string($directory) || !is_dir($directory) || !is_readable($directory)) {
+                return false;
+            }
+            $files = scandir($directory);
+            return $files !== false && $value !== '.' && $value !== '..'
+                && in_array($value, $files, true)
+                && !in_array($value, $field_array['exclusions'] ?? array(), true)
+                && is_readable($directory . '/' . $value);
+        case 'textbox_password':
+            return !isset($field_array['max_length']) || strlen($value) <= $field_array['max_length'];
         case 'textbox':
         case 'font':
             if (isset($field_array['max_length']) && strlen($value) > $field_array['max_length']) {
@@ -1199,9 +1348,9 @@ function raise_message($message_id, $message = '', $message_level = MESSAGE_LEVE
  * @param  (string) Header section for the message
  * @param  (string) The actual error message to display
  *
- * @return (void)
+ * @return never
  */
-function raise_message_javascript($title, $header, $message)
+function raise_message_javascript($title, $header, $message): never
 {
     ?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
@@ -2134,6 +2283,26 @@ function is_hex_string(&$result)
     return true;
 }
 
+/** Normalize complete multi-field lists without rewriting scalar exclamation marks. */
+function normalize_poller_multi_value_result($result)
+{
+    if (strpos($result, '!') === false) {
+        return $result;
+    }
+    $fields = preg_split('/\s+/', trim($result));
+    if ($fields === false || cacti_sizeof($fields) < 2) {
+        return $result;
+    }
+    foreach ($fields as $field) {
+        if (!preg_match('/^[^\s:!]+[:!][^\s:!]+$/D', $field)) {
+            return $result;
+        }
+    }
+    return implode(' ', array_map(static function ($field) {
+        return str_replace('!', ':', $field);
+    }, $fields));
+}
+
 /**
  * prepare_validate_result - determines if the result value is valid or not.  If not valid returns a "U"
  *
@@ -2158,23 +2327,28 @@ function prepare_validate_result(&$result)
     } elseif (is_hexadecimal($result)) {
         dsv_log('prepare_validate_result', 'data is hex', POLLER_VERBOSITY_MEDIUM);
 
-        return hexdec($result);
+        return hexdec(str_replace(array(':', ' ', '-'), '', $result));
     } elseif (substr_count($result, ':') || substr_count($result, '!')) {
         /* looking for name value pairs */
-        if (substr_count($result, ' ') == 0) {
+        $field_result = normalize_poller_multi_value_result($result);
+        // Keep ambiguous bang fields distinguishable from a scalar hex dump at the queue consumer.
+        if (!is_hexadecimal($field_result)) {
+            $result = $field_result;
+        }
+        if (substr_count($field_result, ' ') == 0) {
             dsv_log('prepare_validate_result', 'data has no spaces', POLLER_VERBOSITY_MEDIUM);
 
             return true;
         } else {
             $delim_cnt = 0;
 
-            if (substr_count($result, ':')) {
-                $delim_cnt = substr_count($result, ':');
-            } elseif (strstr($result, '!')) {
-                $delim_cnt = substr_count($result, '!');
+            if (substr_count($field_result, ':')) {
+                $delim_cnt = substr_count($field_result, ':');
+            } elseif (strstr($field_result, '!')) {
+                $delim_cnt = substr_count($field_result, '!');
             }
 
-            $space_cnt = substr_count(trim($result), ' ');
+            $space_cnt = substr_count(trim($field_result), ' ');
 
             dsv_log('prepare_validate_result', "data has $space_cnt spaces and $delim_cnt fields which is " . (($space_cnt + 1 == $delim_cnt) ? '' : 'NOT') . ' okay', POLLER_VERBOSITY_MEDIUM);
 
@@ -7339,11 +7513,18 @@ function get_include_relpath($path)
     global $config;
     $basePath = rtrim($config['base_path'], '/') . '/';
 
-    $npath = '';
-    if (file_exists($path)) {
+    if (is_string($path) && class_exists(\Kadupul\Platform\Infrastructure\Legacy\LegacyIncludePathResolver::class)) {
+        $npath = (new \Kadupul\Platform\Infrastructure\Legacy\LegacyIncludePathResolver(new \Symfony\Component\Filesystem\Filesystem()))->existingRelativePath($path, $config['base_path']);
+    } elseif (file_exists($path)) {
         $npath = str_replace($basePath, '', $path);
     } elseif (file_exists($basePath . $path)) {
         $npath = $path;
+    } else {
+        $npath = false;
+    }
+
+    if ($npath !== false) {
+        return $npath;
     } elseif (debounce_run_notification('missing:' . $path)) {
         $npath = str_replace($basePath, '', $path);
 
@@ -7352,7 +7533,7 @@ function get_include_relpath($path)
         admin_email(__('Kadupul System Warning'), __('WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file', $config['base_path'] . '/' . $npath));
     }
 
-    return $npath;
+    return $npath === false ? '' : $npath;
 }
 
 /**
@@ -7596,45 +7777,84 @@ function get_debug_prefix()
     return sprintf('<[ %s | %7d ]> -- ', $dateTime, getmypid());
 }
 
+/** Report proxy migration/rejection once per request, without request values. */
+function log_client_addr_proxy_diagnostic(): void
+{
+    static $reported = false;
+
+    if ($reported) {
+        return;
+    }
+    $reported = true;
+    cacti_log('DEBUG: Proxy client address ignored or rejected; configure proxy_trusted_addresses with exact proxy IPs and proxy_headers with one allowlisted header containing one client IP. Legacy boolean proxy_headers is unsupported.', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
+}
+
 function get_client_addr()
 {
     global $config, $allowed_proxy_headers;
 
-    $proxy_headers = (isset($config['proxy_headers']) ? $config['proxy_headers'] : []);
-
-    if ($proxy_headers === true) {
-        $proxy_headers = $allowed_proxy_headers;
-    } elseif (is_array($proxy_headers) && is_array($allowed_proxy_headers)) {
-        $proxy_headers = array_intersect($proxy_headers, $allowed_proxy_headers);
+    $peer = $_SERVER['REMOTE_ADDR'] ?? '';
+    if (!is_string($peer) || !filter_var($peer, FILTER_VALIDATE_IP)) {
+        return false;
     }
 
-    if (!is_array($proxy_headers)) {
-        $proxy_headers = [];
+    $headers = $config['proxy_headers'] ?? [];
+    $trustedProxies = $config['proxy_trusted_addresses'] ?? [];
+    // `true` previously trusted every header from every peer. Fail closed to
+    // the TCP peer; proxy use now requires one allowlisted header and an
+    // explicitly trusted REMOTE_ADDR.
+    if (!is_array($trustedProxies)) {
+        if (!empty($headers)) {
+            log_client_addr_proxy_diagnostic();
+        }
+        return $peer;
     }
-
-    if (!in_array('REMOTE_ADDR', $proxy_headers)) {
-        $proxy_headers[] = 'REMOTE_ADDR';
-    }
-
-    $client_addr = false;
-    foreach ($proxy_headers as $header) {
-        if (!empty($_SERVER[$header])) {
-            $header_ips = explode(',', $_SERVER[$header]);
-            foreach ($header_ips as $header_ip) {
-                if (!empty($header_ip)) {
-                    if (!filter_var($header_ip, FILTER_VALIDATE_IP)) {
-                        cacti_log('ERROR: Invalid remote client IP Address found in header (' . $header . ').', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
-                    } else {
-                        $client_addr = $header_ip;
-                        cacti_log('DEBUG: Using remote client IP Address found in header (' . $header . '): ' . $client_addr . ' (' . $_SERVER[$header] . ')', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
-                        break 2;
-                    }
-                }
-            }
+    $peerBinary = inet_pton($peer);
+    $trusted = false;
+    foreach ($trustedProxies as $trustedProxy) {
+        if (!is_string($trustedProxy) || !filter_var($trustedProxy, FILTER_VALIDATE_IP)) {
+            continue;
+        }
+        $trustedBinary = inet_pton($trustedProxy);
+        if ($peerBinary !== false && $trustedBinary !== false && hash_equals($peerBinary, $trustedBinary)) {
+            $trusted = true;
+            break;
         }
     }
+    if (!$trusted) {
+        if (!empty($headers)) {
+            log_client_addr_proxy_diagnostic();
+        }
+        return $peer;
+    }
 
-    return $client_addr;
+    if (!is_array($headers) || count($headers) !== 1) {
+        log_client_addr_proxy_diagnostic();
+        return false;
+    }
+    if (!is_array($allowed_proxy_headers)) {
+        log_client_addr_proxy_diagnostic();
+        return false;
+    }
+    foreach ($allowed_proxy_headers as $allowed_header) {
+        if (!is_string($allowed_header)) {
+            log_client_addr_proxy_diagnostic();
+            return false;
+        }
+    }
+    $header = reset($headers);
+    if (!is_string($header) || !in_array($header, $allowed_proxy_headers, true) || $header === 'REMOTE_ADDR' || !isset($_SERVER[$header])) {
+        log_client_addr_proxy_diagnostic();
+        return false;
+    }
+
+    $client = $_SERVER[$header];
+    if (!is_string($client) || str_contains($client, ',') || !filter_var(trim($client), FILTER_VALIDATE_IP)) {
+        log_client_addr_proxy_diagnostic();
+        return false;
+    }
+
+    return trim($client);
 }
 
 /**
@@ -8583,9 +8803,9 @@ function cacti_normalize_windows_path($path)
  *
  * @param string $default The default to redirect to unless
  *
- * @return void
+ * @return never
  */
-function cacti_header($default = 'index.php')
+function cacti_header($default = 'index.php'): never
 {
     $save_url = validate_redirect_url($_SERVER['HTTP_REFERER'] ?? $default, $default);
 
@@ -8604,9 +8824,9 @@ function cacti_header($default = 'index.php')
  * @param  string $default  Fallback URL when input is empty or invalid
  * @param  int    $status   HTTP status code for the redirect
  *
- * @return void  (exits after sending the header)
+ * @return never  (exits after sending the header)
  */
-function cacti_redirect($url = '', $default = 'index.php', $status = 302)
+function cacti_redirect($url = '', $default = 'index.php', $status = 302): never
 {
     $safe_url = validate_redirect_url(
         !empty($url) ? $url : (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $default),

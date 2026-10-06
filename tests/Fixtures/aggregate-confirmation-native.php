@@ -8,10 +8,16 @@ if (PHP_SAPI !== 'cli') {
     exit;
 }
 $root = dirname(__DIR__, 2);
+// Match the application's actual Composer bootstrap for semantic icons.
+require_once $root . '/include/vendor/autoload.php';
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
 $directory = $argv[2];
 mkdir($directory . '/include');
 mkdir($directory . '/lib');
+mkdir($directory . '/config');
+if (!copy($root . '/config/icons.json', $directory . '/config/icons.json')) {
+    throw new RuntimeException('Could not install the production icon map in the fixture.');
+}
 // Authentication and unrelated mutation APIs are outside this confirmation
 // fixture. Production request validation, SQL, rendering and escaping run.
 foreach (array('include/auth.php', 'include/global_session.php', 'lib/api_graph.php', 'lib/api_tree.php', 'lib/api_data_source.php', 'lib/api_aggregate.php', 'lib/data_query.php', 'lib/html_form_template.php', 'lib/poller.php', 'lib/reports.php', 'lib/rrd.php', 'lib/template.php', 'lib/utility.php') as $file) {

@@ -408,7 +408,7 @@ $settings = array(
         ),
         'graph_auth_method' => array(
             'friendly_name' => __('Graph Permission Method'),
-            'description' => __('There are four methods for determining a User\'s Graph Permissions.  The first is \'Permissive\'.  Under the \'Permissive\' setting, a User only needs access to either the Graph, Device or Graph Template to gain access to the Graphs that apply to them.  Under \'Restrictive\', the User must have access to the Graph, the Device, and the Graph Template to gain access to the Graph.  These first two methods have scalability problems for very large installs.  So, two additional options are available.  They are \'Device Based\', which means if you have access to the Device, you get access to it\'s Graphs.  And lastly \'Graph Template Based\', which means if you have access to the \'Graph Template\' you get access to all Device Graphs of that Template.'),
+            'description' => __('Graph access is granted directly by a graph permission in every mode. Permissive also grants access when the user has permission for the graph\'s device or template. Restrictive requires permission for both the device and template when there is no direct graph permission. Device Based requires device permission, and Graph Template Based requires template permission. User and group policies are evaluated separately and their allowed results are combined. These modes trade query performance against fine-grained permissions on large installations.'),
             'method' => 'drop_array',
             'default' => '1',
             'array' => array(
@@ -496,7 +496,7 @@ $settings = array(
         'content_security_policy_script' => array(
             'method' => 'drop_array',
             'friendly_name' => __('Content-Security Script Policy'),
-            'description' => __('Controls the script-src CSP policy.  In Nonce Modes, Kadupul Plugins that use inline JavaScript must include the nonce attribute from Kadupul\'s builtin function \'CactiSecureHeaders::getNonceAttribute()\'. Otherwise, those scripts will be blocked by the browser.  Currently, Kadupul only allows reporting on Kadupul Plugins that do not properly use Nonce Mode.  In the future, we will allow Administrators to block such plugins from using their inline JavaScript if they are not using Nonces.'),
+            'description' => __('Controls the script-src CSP policy. The Nonce Mode - Reporting Only choice reports inline scripts that lack a nonce without blocking them. The implementation also supports an enforcing nonce mode through direct configuration, but this mode is not offered here because many built-in pages and plugins still use inline scripts without nonces. Enabling enforcement before those scripts are migrated can break pages and plugins. Use CactiSecureHeaders::getNonceAttribute() when adding inline scripts.'),
             'default' => '',
             'array' => array(
                 '0'            => __('Allow Non-Nonced Inline JavaScript'),
@@ -1063,10 +1063,12 @@ $settings = array(
         ),
         'path_rrdtool_default_font' => array(
             'friendly_name' => __('Default Font'),
-            'description' =>  __('When not using Theme based font control, the Pangon font-config font name to use for all Graphs. Optionally, you may leave blank and control font settings on a per object basis.'),
+            'description' =>  __('When not using Theme based font control, the Pango font description to use for all Graphs, such as DejaVu Sans. Optionally, you may leave blank and control font settings on a per object basis.'),
             'method' => 'font',
-            'placeholder' =>  __('Enter Valid Font Config Value'),
-            'max_length' => '255'
+            'placeholder' =>  __('Enter a Pango font description'),
+            'max_length' => '255',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_name_filter')
         ),
         'title_size' => array(
             'friendly_name' => __('Title Font Size'),
@@ -1074,14 +1076,18 @@ $settings = array(
             'method' => 'textbox',
             'default' => '10',
             'max_length' => '10',
-            'size' => '5'
+            'size' => '5',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_size_filter')
         ),
         'title_font' => array(
             'friendly_name' => __('Title Font Setting'),
-            'description' => __('The font to use for Graph Titles.  Enter either a valid True Type Font file or valid Pango font-config value.'),
+            'description' => __('The font to use for Graph Titles.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files.'),
             'method' => 'font',
-            'placeholder' => __('Enter Valid Font Config Value'),
-            'max_length' => '100'
+            'placeholder' => __('Enter a Pango font description'),
+            'max_length' => '100',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_name_filter')
         ),
         'legend_size' => array(
             'friendly_name' => __('Legend Font Size'),
@@ -1089,14 +1095,18 @@ $settings = array(
             'method' => 'textbox',
             'default' => '8',
             'max_length' => '10',
-            'size' => '5'
+            'size' => '5',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_size_filter')
         ),
         'legend_font' => array(
             'friendly_name' => __('Legend Font Setting'),
-            'description' => __('The font to use for Graph Legends.  Enter either a valid True Type Font file or valid Pango font-config value.'),
+            'description' => __('The font to use for Graph Legends.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files.'),
             'method' => 'font',
-            'placeholder' => __('Enter Valid Font Config Value'),
-            'max_length' => '100'
+            'placeholder' => __('Enter a Pango font description'),
+            'max_length' => '100',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_name_filter')
         ),
         'axis_size' => array(
             'friendly_name' => __('Axis Font Size'),
@@ -1104,14 +1114,18 @@ $settings = array(
             'method' => 'textbox',
             'default' => '7',
             'max_length' => '10',
-            'size' => '5'
+            'size' => '5',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_size_filter')
         ),
         'axis_font' => array(
             'friendly_name' => __('Axis Font Setting'),
-            'description' => __('The font to use for Graph Axis items.  Enter either a valid True Type Font file or valid Pango font-config value.'),
+            'description' => __('The font to use for Graph Axis items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files.'),
             'method' => 'font',
-            'placeholder' => __('Enter Valid Font Config Value'),
-            'max_length' => '100'
+            'placeholder' => __('Enter a Pango font description'),
+            'max_length' => '100',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_name_filter')
         ),
         'unit_size' => array(
             'friendly_name' => __('Unit Font Size'),
@@ -1119,14 +1133,18 @@ $settings = array(
             'method' => 'textbox',
             'default' => '7',
             'max_length' => '10',
-            'size' => '5'
+            'size' => '5',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_size_filter')
         ),
         'unit_font' => array(
             'friendly_name' => __('Unit Font Setting'),
-            'description' => __('The font to use for Graph Unit items.  Enter either a valid True Type Font file or valid Pango font-config value.'),
+            'description' => __('The font to use for Graph Unit items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files.'),
             'method' => 'font',
-            'placeholder' => __('Enter Valid Font Config Value'),
-            'max_length' => '100'
+            'placeholder' => __('Enter a Pango font description'),
+            'max_length' => '100',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_name_filter')
         ),
         'business_hours_header' => array(
             'friendly_name' => __('Business Hours Settings'),
@@ -2823,52 +2841,72 @@ $settings_user = array(
             'description' => __('The size of the font used for Graph Titles'),
             'method' => 'textbox',
             'default' => '12',
-            'max_length' => '10'
+            'max_length' => '10',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_size_filter')
         ),
         'title_font' => array(
-            'friendly_name' => __('Title Font File'),
-            'description' => __('The font file to use for Graph Titles'),
+            'friendly_name' => __('Title Font Setting'),
+            'description' => __('The Pango font description to use for Graph Titles, such as DejaVu Sans Bold'),
             'method' => 'font',
-            'max_length' => '100'
+            'placeholder' => __('Enter a Pango font description'),
+            'max_length' => '100',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_name_filter')
         ),
         'legend_size' => array(
             'friendly_name' => __('Legend Font Size'),
             'description' => __('The size of the font used for Graph Legend items'),
             'method' => 'textbox',
             'default' => '10',
-            'max_length' => '10'
+            'max_length' => '10',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_size_filter')
         ),
         'legend_font' => array(
-            'friendly_name' => __('Legend Font File'),
-            'description' => __('The font file to be used for Graph Legend items'),
+            'friendly_name' => __('Legend Font Setting'),
+            'description' => __('The Pango font description to use for Graph Legend items, such as DejaVu Sans Mono'),
             'method' => 'font',
-            'max_length' => '100'
+            'placeholder' => __('Enter a Pango font description'),
+            'max_length' => '100',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_name_filter')
         ),
         'axis_size' => array(
             'friendly_name' => __('Axis Font Size'),
             'description' => __('The size of the font used for Graph Axis'),
             'method' => 'textbox',
             'default' => '8',
-            'max_length' => '10'
+            'max_length' => '10',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_size_filter')
         ),
         'axis_font' => array(
-            'friendly_name' => __('Axis Font File'),
-            'description' => __('The font file to be used for Graph Axis items'),
+            'friendly_name' => __('Axis Font Setting'),
+            'description' => __('The Pango font description to use for Graph Axis items, such as DejaVu Sans'),
             'method' => 'font',
-            'max_length' => '100'
+            'placeholder' => __('Enter a Pango font description'),
+            'max_length' => '100',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_name_filter')
         ),
         'unit_size' => array(
             'friendly_name' => __('Unit Font Size'),
             'description' => __('The size of the font used for Graph Units'),
             'method' => 'textbox',
             'default' => '8',
-            'max_length' => '10'
+            'max_length' => '10',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_size_filter')
         ),
         'unit_font' => array(
-            'friendly_name' => __('Unit Font File'),
-            'description' => __('The font file to be used for Graph Unit items'),
+            'friendly_name' => __('Unit Font Setting'),
+            'description' => __('The Pango font description to use for Graph Unit items, such as DejaVu Sans'),
             'method' => 'font',
-            'max_length' => '100'
+            'placeholder' => __('Enter a Pango font description'),
+            'max_length' => '100',
+            'filter' => FILTER_CALLBACK,
+            'options' => array('options' => 'graph_font_name_filter')
         )
     )
 );

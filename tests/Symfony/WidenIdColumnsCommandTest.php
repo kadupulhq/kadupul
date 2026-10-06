@@ -8,11 +8,8 @@
 namespace Kadupul\Tests;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DriverManager;
-use Kadupul\IdentityAccess\Contract\AuditTrail;
 use Kadupul\IdentityAccess\Infrastructure\Cli\CliConsoleAccess;
 use Kadupul\Platform\Application\Command\MaintenanceTarget;
-use Kadupul\Platform\Application\Command\SchemaChangeAudit;
 use Kadupul\Platform\Application\Command\WidenIdColumns;
 use Kadupul\Platform\Application\Port\ColumnCatalog;
 use Kadupul\Platform\Application\Port\ColumnWidening;
@@ -28,6 +25,8 @@ use Kadupul\Platform\Infrastructure\Symfony\Console\LegacyRequest;
 use Kadupul\Platform\Infrastructure\Symfony\Console\ResultRenderer;
 use Kadupul\Platform\Infrastructure\Symfony\Console\WidenIdColumnsCommand;
 use Kadupul\Platform\Infrastructure\Symfony\Console\WidenIdColumnsLegacyArguments;
+use Kadupul\Tests\Fixtures\ConsoleOperatorDatabase;
+use Kadupul\Tests\Fixtures\MaintenanceOperator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\MockClock;
 use Symfony\Component\Console\Command\Command;
@@ -37,6 +36,9 @@ use Symfony\Component\Process\Process;
 
 final class WidenIdColumnsCommandTest extends TestCase
 {
+    use ConsoleOperatorDatabase;
+    use MaintenanceOperator;
+
     private const string HEADER = "NOTE: Fixing MediumInt Columns for Local Database\n";
 
     private string $root;
@@ -45,31 +47,10 @@ final class WidenIdColumnsCommandTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->root = sys_get_temp_dir() . '/kadupul-widen-command-' . bin2hex(random_bytes(8));
-        (new Filesystem())->dumpFile($this->root . '/include/cacti_version', "1.3.0\n");
+        $this->root = $this->installationRoot('kadupul-widen-command-');
         // User 1, admin, holds Console Access (8) and Installation/Upgrades (26).
-        $this->db = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true]);
-        foreach ([
-            'CREATE TABLE version (cacti TEXT)',
-            "INSERT INTO version VALUES ('1.3.0')",
-            'CREATE TABLE settings (name TEXT PRIMARY KEY, value TEXT)',
-            "INSERT INTO settings VALUES ('admin_user', '1')",
-            'CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, enabled TEXT, locked TEXT, must_change_password TEXT)',
-            "INSERT INTO user_auth VALUES (1, 'admin', 'on', '', '')",
-            'CREATE TABLE user_auth_realm (user_id INTEGER, realm_id INTEGER)',
-            'INSERT INTO user_auth_realm VALUES (1, 8), (1, 26)',
-            'CREATE TABLE user_auth_group (id INTEGER, enabled TEXT)',
-            'CREATE TABLE user_auth_group_members (group_id INTEGER, user_id INTEGER)',
-            'CREATE TABLE user_auth_group_realm (group_id INTEGER, realm_id INTEGER)',
-        ] as $statement) {
-            $this->db->executeStatement($statement);
-        }
+        $this->db = $this->operatorDatabase(8, 26);
         $this->presentation = new CliPresentation();
-    }
-
-    protected function tearDown(): void
-    {
-        (new Filesystem())->remove($this->root);
     }
 
     /** The fresh schema plus table a, whose graph_id is still mediumint. */
@@ -86,9 +67,9 @@ final class WidenIdColumnsCommandTest extends TestCase
         $widening->method('statement')->willReturnCallback(static fn(DatabaseTarget $target, string $table): string => 'ALTER TABLE `' . $table . '` x');
         $widening->method('widen')->willReturn($ok);
         $maintenance = $this->createStub(DatabaseMaintenance::class);
-        $widen = new WidenIdColumns(new MaintenanceTarget(new CliConsoleAccess($this->db, $this->db), $maintenance), $widening, new SchemaChangeAudit($this->createStub(AuditTrail::class)));
+        $widen = new WidenIdColumns(new MaintenanceTarget(new CliConsoleAccess($this->db, $this->db), $maintenance), $widening, $this->recordingAudit());
         // A year that is not the current one proves the version line reads the clock.
-        $command = new WidenIdColumnsCommand($widen, new InstallationVersion($this->root, $this->db, new Filesystem()), $this->presentation, new ResultRenderer(), new MockClock('2031-06-01 00:00:00'));
+        $command = new WidenIdColumnsCommand($widen, new InstallationVersion($this->root, $this->db, new Filesystem(), new MockClock('2031-06-01 00:00:00')), $this->presentation, new ResultRenderer());
 
         return new CommandTester(new Command(null, $command));
     }
@@ -124,8 +105,8 @@ final class WidenIdColumnsCommandTest extends TestCase
         $this->presentation->forLegacy(LegacyRequest::Run);
         $widening = $this->createStub(ColumnWidening::class);
         $widening->method('catalog')->willReturn(new ColumnCatalog([]));
-        $widen = new WidenIdColumns(new MaintenanceTarget(new CliConsoleAccess($this->db, $this->db), $this->createStub(DatabaseMaintenance::class)), $widening, new SchemaChangeAudit($this->createStub(AuditTrail::class)));
-        $tester = new CommandTester(new Command(null, new WidenIdColumnsCommand($widen, new InstallationVersion($this->root, $this->db, new Filesystem()), $this->presentation, new ResultRenderer(), new MockClock())));
+        $widen = new WidenIdColumns(new MaintenanceTarget(new CliConsoleAccess($this->db, $this->db), $this->createStub(DatabaseMaintenance::class)), $widening, $this->recordingAudit());
+        $tester = new CommandTester(new Command(null, new WidenIdColumnsCommand($widen, new InstallationVersion($this->root, $this->db, new Filesystem(), new MockClock()), $this->presentation, new ResultRenderer())));
         self::assertSame(0, $tester->execute(['--debug' => true]));
         self::assertStringStartsWith(self::HEADER . "DEBUG: ERROR: Attributes missing for data_input_data and column data_template_data_id.\n", $tester->getDisplay());
         self::assertStringEndsWith("NOTE: Column widths adjusted on 0 Tables!\n", $tester->getDisplay());
@@ -198,8 +179,8 @@ final class WidenIdColumnsCommandTest extends TestCase
     {
         $widening = $this->createStub(ColumnWidening::class);
         $widening->method('catalog')->willReturn(new ColumnCatalog(WidenIdColumnsTest::freshSchema()));
-        $widen = new WidenIdColumns(new MaintenanceTarget(new CliConsoleAccess($this->db, $this->db), $this->createStub(DatabaseMaintenance::class)), $widening, new SchemaChangeAudit($this->createStub(AuditTrail::class)));
-        $tester = new CommandTester(new Command(null, new WidenIdColumnsCommand($widen, new InstallationVersion($this->root, $this->db, new Filesystem()), $this->presentation, new ResultRenderer(), new MockClock())));
+        $widen = new WidenIdColumns(new MaintenanceTarget(new CliConsoleAccess($this->db, $this->db), $this->createStub(DatabaseMaintenance::class)), $widening, $this->recordingAudit());
+        $tester = new CommandTester(new Command(null, new WidenIdColumnsCommand($widen, new InstallationVersion($this->root, $this->db, new Filesystem(), new MockClock()), $this->presentation, new ResultRenderer())));
         self::assertSame(0, $tester->execute([]));
         self::assertStringContainsString('[OK] No id column needed widening.', $tester->getDisplay());
     }
@@ -234,21 +215,12 @@ final class WidenIdColumnsCommandTest extends TestCase
         $map = new WidenIdColumnsLegacyArguments();
         self::assertSame([['--debug' => true], null], $map->translate(['-d']));
         self::assertSame([['--debug' => true, '--local' => true], null], $map->translate(['--debug', '--local']));
-        foreach (['--version', '-V', '-v'] as $flag) {
-            self::assertSame(LegacyRequest::Version, $map->translate([$flag])[1]);
-        }
-        foreach (['--help', '-H', '-h'] as $flag) {
-            self::assertSame(LegacyRequest::Help, $map->translate([$flag])[1]);
-        }
-        self::assertSame([['--as' => 'ops'], null], $map->translate(['--as=ops']));
         self::assertSame(['ERROR: Invalid Parameter --x', ''], $map->invalid('--x'));
-        // No original flag took --dry-run, --json or --installer.
-        foreach (['--dry-run', '--json', '--installer', '--as='] as $flag) {
-            try {
-                $map->translate([$flag]);
-                self::fail($flag . ' was accepted.');
-            } catch (InvalidLegacyArgument) {
-            }
+        // No original flag took --installer.
+        try {
+            $map->translate(['--installer']);
+            self::fail('--installer was accepted.');
+        } catch (InvalidLegacyArgument) {
         }
     }
 

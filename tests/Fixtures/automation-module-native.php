@@ -18,6 +18,13 @@ if (isset($scenario['search_base64'])) {
 }
 mkdir($directory . '/include');
 mkdir($directory . '/lib');
+// Rendering uses the production semantic icon registry and its real map.
+// Keep filesystem effects inside this fixture's temporary application root.
+require_once $root . '/include/vendor/autoload.php';
+mkdir($directory . '/config');
+if (!copy($root . '/config/icons.json', $directory . '/config/icons.json')) {
+    throw new RuntimeException('Could not install the production icon map in the fixture.');
+}
 mkdir($directory . '/include/themes/classic', 0700, true);
 file_put_contents($directory . '/include/themes/classic/main.css', '');
 foreach (array('include/auth.php', 'include/global_session.php', 'include/top_header.php', 'include/bottom_footer.php', 'lib/poller.php', 'lib/utility.php') as $stub) {
@@ -33,6 +40,10 @@ if (isset($argv[3])) {
 require $root . '/include/vendor/ezyang/htmlpurifier/library/HTMLPurifier.auto.php';
 $db = new PDO('sqlite::memory:');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$database_hostname = 'native';
+$database_port = 0;
+$database_default = 'automation';
+$database_sessions = array('native:0:automation' => $db);
 $db->sqliteCreateFunction('UNIX_TIMESTAMP', static fn($value) => strtotime($value));
 $db->sqliteCreateFunction('FROM_UNIXTIME', static fn($value) => date('Y-m-d H:i:s', $value));
 $definitions = array(
@@ -51,7 +62,7 @@ $definitions = array(
     'data_input_data' => 'data_template_data_id INTEGER, data_input_field_id INTEGER, t_value TEXT, value TEXT',
     'data_input_fields' => 'id INTEGER PRIMARY KEY, data_input_id INTEGER, input_output TEXT, type_code TEXT, allow_nulls TEXT',
     'automation_tree_rule_items' => 'id INTEGER PRIMARY KEY, rule_id INTEGER, field TEXT, search_pattern TEXT, replace_pattern TEXT, sequence INTEGER',
-    'data_local' => 'id INTEGER PRIMARY KEY, host_id INTEGER',
+    'data_local' => 'id INTEGER PRIMARY KEY, host_id INTEGER, snmp_query_id INTEGER, snmp_index TEXT',
     'snmp_query' => 'id INTEGER PRIMARY KEY, name TEXT, xml_path TEXT',
     'snmp_query_graph' => 'id INTEGER PRIMARY KEY, snmp_query_id INTEGER, graph_template_id INTEGER',
     'host_snmp_cache' => 'host_id INTEGER, snmp_query_id INTEGER, snmp_index TEXT, field_name TEXT, field_value TEXT',
@@ -92,7 +103,7 @@ function automation_native_statement($sql, $params = array())
     if (preg_match('/^SHOW COLUMNS FROM (\w+)$/', $sql, $columns)) {
         $sql = "SELECT name AS Field, type AS Type FROM pragma_table_info('" . $columns[1] . "')";
     }
-    $statement = $GLOBALS['db']->prepare($sql);
+    $statement = $GLOBALS['db']->prepare(preg_replace('/ FOR UPDATE$/', '', $sql));
     $statement->execute($params);
     return $statement;
 }
@@ -142,6 +153,18 @@ function db_execute($sql)
 {
     automation_native_statement($sql);
     return true;
+}
+function db_begin_transaction($connection = null)
+{
+    return ($connection ?? $GLOBALS['db'])->beginTransaction();
+}
+function db_commit_transaction($connection = null)
+{
+    return ($connection ?? $GLOBALS['db'])->commit();
+}
+function db_rollback_transaction($connection = null)
+{
+    return ($connection ?? $GLOBALS['db'])->rollBack();
 }
 function db_close() {}
 function db_table_exists($table)
@@ -194,6 +217,12 @@ require $root . '/lib/functions.php';
 require $root . '/lib/html_utility.php';
 require $root . '/lib/html.php';
 require $root . '/lib/html_validate.php';
+require_once $root . '/tests/Helpers/PhpSource.php';
+$template_source = file_get_contents($root . '/lib/template.php');
+if ($template_source === false) {
+    throw new RuntimeException('Unable to read graph template whitelist');
+}
+eval(test_php_function_source($template_source, 'graph_template_whitelist_check'));
 require $root . '/lib/html_form.php';
 require $root . '/lib/headers_secure.php';
 require $root . '/lib/variables.php';
@@ -267,6 +296,10 @@ function create_complete_graph_from_template($template, $host, $query, &$suggest
     if ($GLOBALS['scenario']['case'] === 'empty') {
         return array();
     }
+    automation_native_statement('INSERT INTO graph_local (id,host_id,graph_template_id,snmp_query_id,snmp_query_graph_id,snmp_index) VALUES (101,?,?,?,?,?)', array($host, $template, $query['snmp_query_id'], $query['snmp_query_graph_id'], $query['snmp_index']));
+    automation_native_statement('INSERT INTO data_local (id,host_id,snmp_query_id,snmp_index) VALUES (201,?,?,?)', array($host, $query['snmp_query_id'], $query['snmp_index']));
+    automation_native_statement('INSERT INTO data_template_rrd (id,local_data_id) VALUES (9001,201)');
+    automation_native_statement('INSERT INTO graph_templates_item (id,graph_template_id,task_item_id,local_graph_id) VALUES (9001,?,9001,101)', array($template));
     return array('local_graph_id' => 101,'local_data_id' => array(201));
 }
 function push_out_host($host, $data)
@@ -398,8 +431,12 @@ if ($scenario['mode'] === 'matches') {
     $start = date('Y-m-d H:i:s', time() + ($scenario['future'] ? 86400 * 40 : -86400 * 2));
     $stmt = $db->prepare('INSERT INTO automation_networks VALUES (8,?,1,?, ?,?,?,?,?,?)');
     $stmt->execute(array($scenario['type'], $start, $scenario['next'] ? $start : '0000-00-00 00:00:00', '1,2,3,4,5,6,7', '1,2,3,4,5,6,7,8,9,10,11,12', '1,15,32', '1,2,3,4', '1,2,3,4,5,6,7'));
+    $before = time();
     $GLOBALS['result'] = api_automation_is_time_to_start(8);
+    $after = time();
     $GLOBALS['contracts'] = $db->query('SELECT * FROM automation_networks WHERE id=8')->fetch(PDO::FETCH_ASSOC);
+    $GLOBALS['contracts']['observed_before'] = $before;
+    $GLOBALS['contracts']['observed_after'] = $after;
 } elseif ($scenario['mode'] === 'preview') {
     $db->exec('INSERT INTO automation_tree_rules VALUES (8,' . TREE_ITEM_TYPE_HOST . ',"Selected")');
     $db->exec("INSERT INTO automation_match_rule_items VALUES (1,8," . AUTOMATION_RULE_TYPE_TREE_MATCH . ",1,0,'h.id'," . AUTOMATION_OP_MATCHES . ",'7')");

@@ -8,7 +8,7 @@ function runGraphInputProbe($program, array $arguments = array(), $coverage = nu
     $root = dirname(__DIR__, 3);
     $directory = sys_get_temp_dir() . '/graph-input-' . bin2hex(random_bytes(8));
     mkdir($directory . '/include', 0700, true);
-    file_put_contents($directory . '/include/auth.php', '<?php');
+    file_put_contents($directory . '/include/auth.php', '<?php require_once ' . var_export($root . '/tests/Helpers/PhpSource.php', true) . ';eval(test_php_function_source(file_get_contents(' . var_export($root . '/lib/auth.php', true) . '), ' . var_export('auth_resource_id', true) . '));');
     symlink($root . '/lib', $directory . '/lib');
     if ($coverage !== null) {
         $program = 'define("GRAPH_INPUT_TEST_COVERAGE",true);'
@@ -58,6 +58,9 @@ $config = array('url_path' => '/');
 session_id('graph-input-test-session');
 $_SESSION = array('sess_user_id' => 42);
 function read_config_option($key) { return '0'; }
+function is_graph_allowed($id) { return (int) $id === 1; }
+function is_device_allowed($id) { return (int) $id === 1; }
+function cacti_log(...$args) {}
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function is_error_message() { return false; }
 function get_hash_graph_template(...$args) { return 'hash'; }
@@ -195,13 +198,16 @@ test('graph save rejects stored identifiers before persistence and binds approve
 require $argv[1] . '/include/global_constants.php';
 require $argv[1] . '/lib/html_utility.php';
 function read_config_option($key) { return '0'; }
+function is_graph_allowed($id) { return (int) $id === 1; }
+function is_device_allowed($id) { return (int) $id === 1; }
+function cacti_log(...$args) {}
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function __($text, ...$args) { return $text; }
 function api_plugin_hook_function($name, $value) { return $value; }
 function form_input_validate($value, ...$args) { return $value; }
 function is_error_message() { return false; }
 function sql_save(...$args) { throw new Exception('Persistence before input validation'); }
-function db_fetch_cell_prepared(...$args) { return 2; }
+function db_fetch_cell_prepared($sql, ...$args) { return strpos($sql, 'SELECT host_id FROM graph_local') !== false ? 1 : 2; }
 function db_fetch_assoc_prepared($sql, $params) {
     return strpos($sql, 'SELECT id, column_name') !== false ? array(array('id' => 7, 'column_name' => $GLOBALS['argv'][2])) : array(array('id' => 88));
 }
@@ -225,4 +231,52 @@ PHP;
     array('text_format, unapproved()', false, 'save_component_graph'),
     array('local_graph_id', false, 'save_component_graph'),
     array('text_format, unapproved()', false, 'save_component_graph_new'),
+));
+
+test('graph edits outside the user\'s graph or device scope are refused before any write', function ($request) {
+    $program = <<<'PHP'
+require $argv[1] . '/include/global_constants.php';
+require $argv[1] . '/lib/html_utility.php';
+function read_config_option($key) { return '0'; }
+function is_graph_allowed($id) { return (int) $id === 1; }
+function is_device_allowed($id) { return (int) $id === 1; }
+function cacti_log(...$args) { $GLOBALS['denied'] = true; }
+function raise_message(...$args) { $GLOBALS['denied'] = true; }
+function snmpagent_graphs_action_bottom($args) { if ($args[1] !== array()) { throw new RuntimeException('Denied selections reached SNMP handoff'); } }
+register_shutdown_function(function () { echo empty($GLOBALS['denied']) ? 'ALLOWED' : 'DENIED'; });
+function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
+function cacti_count($value) { return cacti_sizeof($value); }
+function __($text, ...$args) { return $text; }
+function api_plugin_hook_function($name, $value) { return $value; }
+function form_input_validate($value, ...$args) { return $value; }
+function is_error_message() { return false; }
+function sanitize_unserialize_selected_items($items) { return unserialize($items); }
+function input_validate_input_number($value) {}
+function sql_save(...$args) { throw new Exception('Persisted'); }
+function db_execute_prepared(...$args) { throw new Exception('Persisted'); }
+// Graph 1 is on device 1 and owns graph row 10; any other graph row belongs to graph 2.
+function db_fetch_cell_prepared($sql, $params = array()) {
+    if (strpos($sql, 'SELECT host_id FROM graph_local') !== false) return 1;
+    if (strpos($sql, 'FROM graph_templates_graph') !== false) return (int) $params[0] === 10 ? 1 : 2;
+    return 0;
+}
+function db_fetch_assoc_prepared(...$args) { return array(); }
+$_REQUEST = json_decode($argv[2], true) + array('local_graph_id' => '1', 'host_id_prev' => '1', 'host_id' => '1', 'graph_template_graph_id' => '10', 'local_graph_template_graph_id' => '0', 'graph_template_id' => '0', 'graph_template_id_prev' => '0');
+// The bulk action path requires a POST that passed its CSRF check.
+function csrf_check($fatal) { return true; }
+$_POST = $_REQUEST + array('__csrf_magic' => 'token');
+$_SERVER['REQUEST_METHOD'] = 'POST';
+require $argv[1] . '/graphs.php';
+PHP;
+    expect(runGraphInputProbe($program, array(json_encode($request))))->toBe('DENIED');
+})->with(array(
+    'foreign graph' => array(array('action' => 'save', 'save_component_graph' => '1', 'local_graph_id' => '3')),
+    'negative bulk destination' => array(array('action' => 'actions', 'drp_action' => '5', 'host_id' => '-1', 'selected_items' => serialize(array(1)))),
+    'negative target device' => array(array('action' => 'save', 'save_component_graph' => '1', 'host_id' => '-1')),
+    'foreign target device' => array(array('action' => 'save', 'save_component_graph' => '1', 'host_id' => '5')),
+    'foreign graph row' => array(array('action' => 'save', 'save_component_graph' => '1', 'graph_template_graph_id' => '11')),
+    'bulk action on a foreign graph' => array(array('action' => 'actions', 'drp_action' => '1', 'selected_items' => serialize(array(1, 3)))),
+    'bulk confirmation for a foreign graph' => array(array('action' => 'actions', 'drp_action' => '1', 'chk_3' => 'on')),
+    'graph editor for a foreign graph' => array(array('action' => 'graph_edit', 'id' => '3')),
+    'item list for a foreign graph' => array(array('action' => 'item', 'id' => '3')),
 ));

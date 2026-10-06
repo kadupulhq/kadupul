@@ -942,6 +942,7 @@ function process_poller_output_page(&$rrdtool_pipe, $remainder, $after, &$acknow
         foreach ($results as $item) {
             /* trim the default characters, but add single and double quotes */
             $value            = $item['output'];
+            $normalized_value = normalize_poller_multi_value_result($value);
             $unix_time        = $item['unix_time'];
             $rrd_path         = $item['rrd_path'];
             $rrd_name         = $item['rrd_name'];
@@ -976,8 +977,9 @@ function process_poller_output_page(&$rrdtool_pipe, $remainder, $after, &$acknow
                 } else {
                     $rrd_update_array[$rrd_path]['times'][$unix_time][$rrd_name] = 'U';
                 }
-            } elseif (str_contains($value, ':')) {
+            } elseif (str_contains($normalized_value, ':')) {
                 /* multiple value output */
+                $value = $normalized_value;
                 $values = preg_split('/\s+/', $value);
 
                 if ($data_template_id > 0) {
@@ -1579,7 +1581,21 @@ function update_db_from_path($path, $type, $recursive = true)
 
         $pobject->close();
     } else {
-        if (!should_ignore_from_replication($path)) {
+        // Cache-in reads deployment-owned files. Preserve the requested path
+        // for symlinked plugins; remotes still validate their write destination.
+        $base_path = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', $config['base_path']), '/');
+        $requested_path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
+        $prefix = $base_path . '/';
+        $within_base = DIRECTORY_SEPARATOR === '\\'
+            ? strncasecmp($requested_path, $prefix, strlen($prefix)) === 0
+            : str_starts_with($requested_path, $prefix);
+        if (!$within_base || !is_file($path)) {
+            cacti_log("NOTE: Skipping resource cache file outside the configured install path or unavailable: '$path'", false, 'REPLICATE');
+            return;
+        }
+
+        $relative_path = substr($requested_path, strlen($prefix));
+        if (!should_ignore_from_replication($relative_path)) {
             $pathinfo = pathinfo($path);
             if (isset($pathinfo['extension'])) {
                 $extension = strtolower($pathinfo['extension']);
@@ -1589,7 +1605,7 @@ function update_db_from_path($path, $type, $recursive = true)
 
             /* exclude spurious extensions */
             if (array_search($extension, $excluded_extensions, true) === false) {
-                $spath = ltrim(trim(str_replace($config['base_path'], '', $path), '/ \\'), '/ \\');
+                $spath = str_replace(DIRECTORY_SEPARATOR, '/', $relative_path);
 
                 $attributes = fileperms($path);
                 $attributes = empty($attributes) ? 33188 : $attributes;
@@ -1632,6 +1648,8 @@ function resource_cache_out($type, $path)
 
     $settings_path = "md5dirsum_$type";
     $php_path      = read_config_option('path_php_binary');
+    $install_path  = realpath($config['base_path']);
+    $config_path   = $install_path === false ? false : realpath($install_path . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'config.php');
     $last_md5      = read_config_option($settings_path);
     $curr_md5      = md5sum_path($path['path'], $path['recursive']);
 
@@ -1651,7 +1669,12 @@ function resource_cache_out($type, $path)
                     continue;
                 }
 
-                $mypath = $config['base_path'] . DIRECTORY_SEPARATOR . $e['path'];
+                $mypath = poller_resource_cache_destination($e['path'], $install_path, $config_path);
+                if ($mypath === false) {
+                    cacti_log("ERROR: Refusing unsafe resource cache path '" . $e['path'] . "'", false, 'REPLICATE');
+
+                    continue;
+                }
 
                 if (file_exists($mypath)) {
                     $md5sum = md5_file($mypath);
@@ -1660,12 +1683,18 @@ function resource_cache_out($type, $path)
                 }
 
                 if (!is_dir(dirname($mypath))) {
-                    $relative_dir = str_replace($config['base_path'], '', dirname($mypath));
-                    mkdir('./' . $relative_dir, 0755, true);
+                    mkdir(dirname($mypath), 0755, true);
+                }
+
+                $mypath = poller_resource_cache_destination($e['path'], $install_path, $config_path);
+                if ($mypath === false) {
+                    cacti_log("ERROR: Resource cache destination changed during replication for '" . $e['path'] . "'", false, 'REPLICATE');
+
+                    continue;
                 }
 
                 if (is_dir(dirname($mypath))) {
-                    if ($md5sum != $e['md5sum'] && $e['path'] != 'include/config.php') {
+                    if ($md5sum != $e['md5sum']) {
                         // If for some reason, the attributes are empty, assume 0644
                         $attributes = empty($e['attributes']) ? 33188 : $e['attributes'];
 
@@ -1698,7 +1727,28 @@ function resource_cache_out($type, $path)
 
                             if ((is_writeable($tmpdir) && !file_exists($tmpfile)) || (file_exists($tmpfile) && is_writable($tmpfile))) {
                                 if (file_put_contents($tmpfile, $contents) !== false) {
-                                    $output = system($php_path . ' -l ' . $tmpfile, $exit);
+                                    $output = '';
+                                    $descriptors = array(
+                                        0 => array('pipe', 'r'),
+                                        1 => array('pipe', 'w'),
+                                        2 => array('pipe', 'w')
+                                    );
+                                    $process = false;
+                                    if (is_string($php_path) && $php_path !== '' && function_exists('proc_open')) {
+                                        $process = proc_open(array($php_path, '-l', $tmpfile), $descriptors, $pipes);
+                                    }
+
+                                    if (is_resource($process)) {
+                                        fclose($pipes[0]);
+                                        $output = stream_get_contents($pipes[1]);
+                                        $error_output = stream_get_contents($pipes[2]);
+                                        fclose($pipes[1]);
+                                        fclose($pipes[2]);
+                                        $exit = proc_close($process);
+                                        // Preserve PHP lint stdout for replication callers.
+                                        echo $output;
+                                        $output .= $error_output;
+                                    }
 
                                     if ($exit == 0) {
                                         cacti_log("INFO: Updating '$mypath' from Cache!", false, 'REPLICATE');
@@ -2817,8 +2867,71 @@ function remote_poller_up($poller_id)
 
 function should_ignore_from_replication($path)
 {
-    $entry = basename($path);
-    return ($entry == '.' || $entry == '..' || $entry == '.git' || $entry == '');
+    if (!is_string($path) || $path === '' || strpos($path, "\0") !== false || strpos($path, '\\') !== false ||
+        str_starts_with($path, '/') || preg_match('/^[a-zA-Z]:/', $path)) {
+        return true;
+    }
+
+    if (DIRECTORY_SEPARATOR === '\\' && str_contains($path, ':')) {
+        return true;
+    }
+
+    foreach (explode('/', $path) as $entry) {
+        if ($entry === '' || $entry === '.' || $entry === '..' || $entry === '.git') {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Resolve a cached resource path inside the install tree and exclude config.php.
+ *
+ * @param string|false $path        Relative path from the resource cache.
+ * @param string|false $installPath Canonical installation directory.
+ * @param string|false $configPath  Canonical protected configuration path.
+ *
+ * @return string|false
+ */
+function poller_resource_cache_destination($path, $installPath, $configPath)
+{
+    if ($installPath === false || should_ignore_from_replication($path)) {
+        return false;
+    }
+
+    $candidate = $installPath . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $path);
+    $fallbackConfigPath = $installPath . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'config.php';
+    if (is_link($candidate)) {
+        return false;
+    }
+
+    // Compare without case: on a case-insensitive filesystem include/CONFIG.php
+    // is config.php, and realpath() keeps the case it was given.
+    if (strcasecmp($candidate, $fallbackConfigPath) === 0) {
+        return false;
+    }
+
+    $resolved = realpath($candidate);
+    if ($resolved !== false) {
+        if (!cacti_path_is_within($resolved, $installPath) || ($configPath !== false && strcasecmp($resolved, $configPath) === 0)) {
+            return false;
+        }
+
+        return $resolved;
+    }
+
+    $parent = dirname($candidate);
+    while (!file_exists($parent) && !is_link($parent) && $parent !== dirname($parent)) {
+        $parent = dirname($parent);
+    }
+
+    $resolvedParent = realpath($parent);
+    if ($resolvedParent === false || !cacti_path_is_within($resolvedParent, $installPath)) {
+        return false;
+    }
+
+    return $candidate;
 }
 
 function get_remote_poller_ids_from_graphs(&$graphs)
