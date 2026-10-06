@@ -167,10 +167,10 @@ function legacy_audit_upgrade_database()
                                 print '---------------------------------------------------------------------------------------------' . PHP_EOL;
                             } else {
                                 cacti_log("WARNING: Kadupul Plugin $pname Upgrade Encountered Errors.", true, 'UPGRADE');
-                                return $return_var;
                                 print '---------------------------------------------------------------------------------------------' . PHP_EOL;
                                 print implode(PHP_EOL, $output) . PHP_EOL;
                                 print '---------------------------------------------------------------------------------------------' . PHP_EOL;
+                                return $return_var;
                             }
                         }
                     } else {
