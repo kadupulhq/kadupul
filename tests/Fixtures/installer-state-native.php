@@ -39,6 +39,7 @@ define('DB_STATUS_SUCCESS', 3);
 define('DB_STATUS_SKIPPED', 4);
 $directory = $argv[1];
 $scenario = $argv[2];
+$reset = in_array($scenario, ['new-version', 'retry-reset'], true);
 $dsn = getenv('INSTALLER_STATE_TEST_DSN');
 if ($dsn !== false && $dsn !== '') {
     if (getenv('INSTALLER_STATE_OWNED_BACKEND') !== '1' || !str_starts_with($dsn, 'mysql:')) {
@@ -64,7 +65,7 @@ if ($dsn !== false && $dsn !== '') {
     if ($sql === false) {
         throw new RuntimeException('Canonical schema is unavailable.');
     }
-    foreach (['settings', 'version'] as $table) {
+    foreach (['settings', 'version', 'host_template', 'poller_output'] as $table) {
         if (preg_match('/CREATE TABLE ' . $table . ' \([^;]+;/s', $sql, $matches) !== 1) {
             throw new RuntimeException('Canonical installer table is unavailable.');
         }
@@ -75,9 +76,12 @@ if ($dsn !== false && $dsn !== '') {
     $writer = new PDO('sqlite:' . $directory . '/state.sqlite', options: [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
     // Canonical settings/version columns and keys from cacti.sql; no existing database.
     $reader->exec("CREATE TABLE settings(name VARCHAR(255) NOT NULL DEFAULT '' PRIMARY KEY,value VARCHAR(4096) NOT NULL DEFAULT '');
-        CREATE TABLE version(cacti CHAR(20) DEFAULT '' PRIMARY KEY);");
+        CREATE TABLE version(cacti CHAR(20) DEFAULT '' PRIMARY KEY);
+        CREATE TABLE host_template(id INTEGER PRIMARY KEY,hash VARCHAR(32) NOT NULL DEFAULT '',name VARCHAR(100) NOT NULL DEFAULT '',class VARCHAR(40) NOT NULL DEFAULT '');
+        CREATE TABLE poller_output(local_data_id INTEGER NOT NULL,rrd_name VARCHAR(19) NOT NULL,time TIMESTAMP NOT NULL,output TEXT NOT NULL,PRIMARY KEY(local_data_id,rrd_name,time));");
 }
-$reader->prepare('INSERT INTO version(cacti) VALUES(?)')->execute([in_array($scenario, ['default', 'completed'], true) ? CACTI_VERSION : '1.2.34']);
+$reader->prepare('INSERT INTO host_template(id,hash,name) VALUES(?,?,?)')->execute([1, '07d3fe6a52915f99e642d22e27d967a4', 'Native Linux']);
+$reader->prepare('INSERT INTO version(cacti) VALUES(?)')->execute([$reset ? '1.2.33' : (in_array($scenario, ['default', 'completed'], true) ? CACTI_VERSION : '1.2.34')]);
 foreach (['install_step' => '97', 'install_prev' => '96', 'install_next' => '98', 'install_theme' => 'modern', 'selected_theme' => 'modern', 'adjacent_setting' => 'unchanged'] as $name => $value) {
     $reader->prepare('INSERT INTO settings(name,value) VALUES(?,?)')->execute([$name, $value]);
 }
@@ -92,7 +96,13 @@ if ($scenario === 'default') {
 } elseif ($scenario === 'numeric-string') {
     $reader->exec("UPDATE settings SET value='097' WHERE name='install_step'");
 }
-$config = ['is_web' => false, 'base_path' => $root];
+if ($reset) {
+    $reader->prepare("UPDATE settings SET value=? WHERE name='install_step'")->execute([$scenario === 'new-version' ? '98' : '99']);
+    foreach (['install_version' => '1.2.33', 'install_error' => 'prior failure', 'install_complete' => 'old attempt', 'install_snmp_option_test' => 'stale', 'path_rrdtool' => '/usr/bin/true', 'default_template' => '1'] as $name => $value) {
+        $reader->prepare('INSERT INTO settings(name,value) VALUES(?,?)')->execute([$name, $value]);
+    }
+}
+$config = ['is_web' => false, 'base_path' => $root, 'cacti_server_os' => 'unix'];
 $settings = [];
 $database_hostname = 'native';
 $database_port = '0';
@@ -101,6 +111,52 @@ $database_sessions = ['native:0:owned' => $reader];
 $local_db_cnn_id = $reader;
 $interleave = null;
 $writes = [];
+$deletes = [];
+function db_execute(string $sql): bool
+{
+    $GLOBALS['deletes'][] = $sql;
+    return $GLOBALS['reader']->exec($sql) !== false;
+}
+function db_fetch_assoc(string $sql): array
+{
+    return $GLOBALS['reader']->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+}
+function db_fetch_cell_prepared(string $sql, array $parameters): mixed
+{
+    if ($GLOBALS['reader']->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite'
+        && $sql === 'SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?') {
+        // SQLite has no InnoDB capability; preserve the genuine queue refusal.
+        return db_table_exists($parameters[0]) ? 'SQLite' : false;
+    }
+    $query = $GLOBALS['reader']->prepare($sql);
+    $query->execute($parameters);
+    return $query->fetchColumn();
+}
+function db_table_exists(string $name): bool
+{
+    if ($GLOBALS['reader']->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql') {
+        return db_fetch_cell_prepared('SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=DATABASE() AND table_name=?', [$name]) > 0;
+    }
+    return db_fetch_cell_prepared("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?", [$name]) > 0;
+}
+// External wizard inventories are empty in this isolated state fixture.
+// The full installed web probes separately exercise real binaries/packages.
+function install_file_paths(): array
+{
+    return [];
+}
+function install_setup_get_tables(): array
+{
+    return [];
+}
+function install_setup_get_templates(): array
+{
+    return [];
+}
+function utility_php_extensions(): array
+{
+    return array_fill_keys(get_loaded_extensions(), ['installed' => true]);
+}
 function db_fetch_cell(string $sql): mixed
 {
     return $GLOBALS['reader']->query($sql)->fetchColumn();
@@ -129,6 +185,7 @@ function __(string $text, mixed ...$arguments): string
 }
 function log_install_high(mixed ...$arguments): void {}
 function log_install_medium(mixed ...$arguments): void {}
+function log_install_always(mixed ...$arguments): void {}
 function log_install_debug(mixed ...$arguments): void
 {
     if ($GLOBALS['interleave'] !== null && str_ends_with($GLOBALS['scenario'], '-write') && ($arguments[0] ?? '') === 'step' && str_starts_with($arguments[1] ?? '', 'setStep(): ')) {
@@ -142,6 +199,7 @@ function get_installed_locales(): array
     return [];
 }
 require $root . '/lib/functions.php';
+require $root . '/lib/api_automation.php';
 $installSource = file_get_contents($root . '/install/functions.php');
 if ($installSource === false) {
     throw new RuntimeException('Installer setting source is unavailable.');
@@ -187,12 +245,13 @@ if (str_starts_with($scenario, 'normalize-')) {
     $hydrate($input);
     $poll = $worker;
 } else {
-    $poll = new Installer(['Runtime' => 'Json', 'Step' => Installer::STEP_INSTALL]);
+    $poll = new Installer($reset ? ['Runtime' => 'Json'] : ['Runtime' => 'Json', 'Step' => Installer::STEP_INSTALL]);
 }
 $observed = $reader->query('SELECT name,value FROM settings ORDER BY name')->fetchAll(PDO::FETCH_KEY_PAIR);
-$pollAgain = str_starts_with($scenario, 'normalize-') ? $poll : new Installer(['Runtime' => 'Json', 'Step' => Installer::STEP_INSTALL]);
+$pollAgain = str_starts_with($scenario, 'normalize-') ? $poll : new Installer($reset ? ['Runtime' => 'Json'] : ['Runtime' => 'Json', 'Step' => Installer::STEP_INSTALL]);
 $afterAgain = $reader->query('SELECT name,value FROM settings ORDER BY name')->fetchAll(PDO::FETCH_KEY_PAIR);
 $readback = read_config_option('install_step', true);
+$version = $reader->query('SELECT cacti FROM version')->fetchColumn();
 $navigation = [
     'Prev' => (new ReflectionProperty(Installer::class, 'buttonPrevious'))->getValue($pollAgain),
     'Next' => (new ReflectionProperty(Installer::class, 'buttonNext'))->getValue($pollAgain),
@@ -206,4 +265,4 @@ if ($coverage !== null) {
     if (file_put_contents($report, $bytes) !== strlen($bytes)) throw new RuntimeException('Incomplete installer coverage report.');
     NativeChildCoverageEvidence::write($report, $root, $evidence, InstallerStateEvidence::MARKERS);
 }
-fwrite(STDOUT, json_encode(['before' => $before, 'navigation' => $navigation, 'readback' => $readback, 'next_local_step' => $pollAgain->getStep(), 'next_persisted' => $afterAgain, 'local_step' => $poll->getStep(), 'persisted' => $observed, 'writes' => $writes], JSON_THROW_ON_ERROR));
+fwrite(STDOUT, json_encode(['before' => $before, 'version' => $version, 'deletes' => $deletes, 'navigation' => $navigation, 'readback' => $readback, 'next_local_step' => $pollAgain->getStep(), 'next_persisted' => $afterAgain, 'local_step' => $poll->getStep(), 'persisted' => $observed, 'writes' => $writes], JSON_THROW_ON_ERROR));

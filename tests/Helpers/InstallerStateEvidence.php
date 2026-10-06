@@ -20,7 +20,7 @@ final class InstallerStateEvidence
             'tests/Helpers/PhpSource.php',
             'tests/composer.lock', 'composer.lock', 'tests/phpunit-coverage.xml',
             'include/cacti_version', 'cacti.sql', 'lib/installer.php',
-            'lib/functions.php', 'lib/path_helpers.php',
+            'lib/functions.php', 'lib/path_helpers.php', 'lib/api_automation.php', 'lib/rrd_maintenance.php',
             'lib/poller.php', 'install/functions.php', 'install/install.js',
             'install/step_json.php', 'install/background.php',
         ];

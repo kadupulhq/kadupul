@@ -39,6 +39,18 @@ it('preserves installer hydration and normalization contracts', function (string
         expect($state['persisted']['selected_theme'])->toBe('modern');
         expect($state['navigation']['Prev']['Step'])->toBe($expected >= 98 || $expected === 1 ? 0 : 96);
         expect($state['navigation']['Next']['Step'])->toBe($expected >= 98 ? 0 : ($expected === 1 ? 2 : 98));
+        if (in_array($scenario, ['new-version', 'retry-reset'], true)) {
+            expect($state['deletes'][0])->toBe("DELETE FROM settings WHERE name LIKE 'install_%'");
+            expect(count(array_filter($state['deletes'], static fn(string $sql): bool => $sql === "DELETE FROM settings WHERE name LIKE 'install_%'")))->toBe(1);
+            foreach (['install_error', 'install_complete', 'install_version', 'install_snmp_option_test'] as $name) {
+                expect($state['persisted'])->not->toHaveKey($name);
+            }
+            expect($state['persisted']['default_template'])->toBe('1');
+            expect($state['persisted']['install_mode'])->toBe('3');
+            expect($state['version'])->toBe('1.2.33');
+            expect($state['persisted']['path_rrdtool'])->toBe($state['before']['path_rrdtool']);
+            expect(array_values(array_filter($state['writes'], static fn(array $write): bool => $write[0] === 'install_step')))->toBe([['install_step', 1]]);
+        }
         if ($scenario === 'numeric-string') {
             expect($state['persisted']['install_step'])->toBe('097');
             expect($state['next_local_step'])->toBe('097');
@@ -101,4 +113,6 @@ it('preserves installer hydration and normalization contracts', function (string
     'zero setter input retains welcome normalization' => ['normalize-zero', 1],
     'negative setter input retains welcome normalization' => ['normalize-negative', 1],
     'outside setter input retains welcome normalization' => ['normalize-outside', 1],
+    'completed prior version starts a new wizard' => ['new-version', 1],
+    'normal failed-version reload starts a retry wizard' => ['retry-reset', 1],
 ]);
