@@ -50,7 +50,10 @@ class SonarChangeScopeTest(unittest.TestCase):
         return self.git("rev-parse", "HEAD")
 
     def event(self, head, base=None):
-        return {"pull_request": {"base": {"sha": base or self.base}, "head": {"sha": head}}}
+        return {"repository": {"full_name": "owned/repository", "default_branch": "main"},
+                "pull_request": {"base": {"sha": base or self.base},
+                                 "head": {"sha": head, "ref": "sonar/owned",
+                                          "repo": {"full_name": "owned/repository"}}}}
 
     def classify(self, head, base=None):
         return scope.classify(self.repo, "pull_request", self.event(head, base), head)
@@ -201,8 +204,8 @@ class SonarChangeScopeTest(unittest.TestCase):
 
     def test_actual_workflow_command_emits_current_scope_without_private_paths(self):
         content = (ROOT / ".github/workflows/sonarcloud.yml").read_text()
-        shell = textwrap.dedent(content.split("        id: scope\n        run: |\n", 1)[1]
-                                .split("\n  analyze:", 1)[0])
+        shell = textwrap.dedent(content.split("      - name: Classify the complete tested change\n", 1)[1]
+                                .split("        run: |\n", 1)[1].split("\n  analyze:", 1)[0])
         tools = self.directory / "bin"
         tools.mkdir()
         runner = tools / "mise"
@@ -213,12 +216,17 @@ class SonarChangeScopeTest(unittest.TestCase):
         for name, full in [("docs/README.md", False), ("lib/required.php", True)]:
             self.write(name)
             head = self.commit()
-            event_path.write_text(json.dumps(self.event(head)))
+            event = self.event(head)
+            if not full:
+                event["pull_request"]["head"]["ref"] = "docs/owned"
+            event_path.write_text(json.dumps(event))
             output.write_text("")
             env = {**os.environ, "PATH": str(tools) + os.pathsep + os.environ["PATH"],
                    "GITHUB_WORKSPACE": str(self.repo), "GITHUB_EVENT_PATH": str(event_path),
                    "GITHUB_EVENT_NAME": "pull_request", "GITHUB_SHA": head,
-                   "GITHUB_OUTPUT": str(output)}
+                   "GITHUB_OUTPUT": str(output), "ENABLE_SONAR": "true", "SONAR_ALL_PRS": "",
+                   "RUN_SONAR": "", "REPOSITORY": "owned/repository", "ACTOR": "owned-maintainer",
+                   "GITHUB_REF": "refs/pull/1/merge"}
             result = subprocess.run(["/bin/bash", "-e", "-c", shell], cwd=ROOT,
                                     env=env, capture_output=True, text=True, check=False)
             self.assertEqual(result.returncode, 0)
@@ -227,8 +235,84 @@ class SonarChangeScopeTest(unittest.TestCase):
         event_path.write_text("not-json")
         result = subprocess.run(["/bin/bash", "-e", "-c", shell], cwd=ROOT,
                                 env=env, capture_output=True, text=True, check=False)
-        self.assertEqual(result.returncode, 0)
-        self.assertIn("reason=unreadable-event", output.read_text())
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("::error::", result.stdout)
+
+    def policy(self, event_name="pull_request", branch="sonar/owned", enable="true",
+               all_prs="", run_sonar="", source="owned/repository", actor="maintainer",
+               default="main", ref="refs/heads/main"):
+        event = {"repository": {"full_name": "owned/repository", "default_branch": default},
+                 "ref": ref, "pull_request": {"head": {"ref": branch, "repo": {"full_name": source}}}}
+        return scope.event_policy(event_name, event, enable, all_prs, run_sonar,
+                                  "owned/repository", actor, ref)
+
+    def test_source_branch_matrix_and_future_all_prs_switch(self):
+        for branch in ["feature/change", "fix/change", "refactor/change", "chore/change",
+                       "docs/change", "experiment/change", "data/change", "model/change",
+                       "chore/consolidate-main-identity"]:
+            with self.subTest(branch=branch):
+                self.assertFalse(self.policy(branch=branch).full_analysis)
+                self.assertTrue(self.policy(branch=branch, all_prs="true").full_analysis)
+        for branch in ["sonar/change", "release/v1", "sonar/nested/change", "SONAR/change", "Release/v1"]:
+            self.assertTrue(self.policy(branch=branch).full_analysis)
+        for branch in ["sonar", "release", "sonar-other", "feature/sonar/change"]:
+            self.assertFalse(self.policy(branch=branch).full_analysis)
+
+    def test_default_branch_and_manual_dispatch(self):
+        self.assertTrue(self.policy(event_name="push").full_analysis)
+        self.assertTrue(self.policy(event_name="push", default="primary", ref="refs/heads/primary").full_analysis)
+        self.assertFalse(self.policy(event_name="push", ref="refs/heads/feature/change").full_analysis)
+        self.assertTrue(self.policy(event_name="workflow_dispatch", run_sonar="true", ref="refs/heads/fix/change").full_analysis)
+        self.assertFalse(self.policy(event_name="workflow_dispatch", run_sonar="false").full_analysis)
+        self.assertFalse(self.policy(event_name="workflow_dispatch").full_analysis)
+
+    def test_disabled_and_fork_events_never_admit_analysis(self):
+        for enable in ["", "false"]:
+            for name in ["pull_request", "push", "workflow_dispatch"]:
+                self.assertFalse(self.policy(event_name=name, enable=enable, run_sonar="true", all_prs="true").full_analysis)
+        for all_prs in ["", "true"]:
+            for branch in ["sonar/change", "release/v1", "feature/change"]:
+                self.assertFalse(self.policy(branch=branch, source="outside/fork", all_prs=all_prs).full_analysis)
+        self.assertFalse(self.policy(actor="dependabot[bot]", all_prs="true").full_analysis)
+        self.assertFalse(self.policy(event_name="pull_request_target").full_analysis)
+
+    def test_bad_configuration_or_event_cannot_masquerade_as_clean_skip(self):
+        for flag in ["enabled", "1", "true\nfalse"]:
+            with self.assertRaises(ValueError):
+                self.policy(enable=flag)
+        for event in [{}, [], {"repository": {}},
+                      {"repository": {"full_name": "owned/repository"}, "pull_request": []}]:
+            with self.assertRaises(ValueError):
+                scope.event_policy("pull_request", event, "true", "", "", "owned/repository", "maintainer", "refs/pull/1/merge")
+        with self.assertRaises(ValueError):
+            scope.event_policy("push", {"repository": {"full_name": "owned/repository", "default_branch": "main"},
+                                       "ref": "refs/heads/other"}, "true", "", "", "owned/repository", "maintainer", "refs/heads/main")
+
+    def test_requested_credential_step_fails_without_exposing_values(self):
+        content = (ROOT / ".github/workflows/sonarcloud.yml").read_text()
+        shell = textwrap.dedent(content.split("      - name: Verify requested analysis credentials\n", 1)[1]
+                                .split("        run: |\n", 1)[1].split("      - name: Checkout", 1)[0])
+        for token, expected in [("", 1), ("owned-not-a-real-token", 0)]:
+            result = subprocess.run(["/bin/bash", "-e", "-c", shell],
+                                    env={**os.environ, "SONAR_TOKEN": token}, capture_output=True, text=True)
+            self.assertEqual(result.returncode, expected)
+            if token:
+                self.assertNotIn(token, result.stdout + result.stderr)
+            else:
+                self.assertIn("SONAR_TOKEN is not configured", result.stdout)
+
+
+    def test_future_required_gate_rejects_failed_cancelled_and_skipped_analysis(self):
+        content = (ROOT / ".github/workflows/sonarcloud.yml").read_text()
+        shell = textwrap.dedent(content.split("      - name: Require completed analysis\n", 1)[1]
+                                .split("        run: |\n", 1)[1])
+        for scope_result in ["success", "failure", "cancelled", "skipped"]:
+            for analysis_result in ["success", "failure", "cancelled", "skipped"]:
+                result = subprocess.run(["/bin/bash", "-e", "-c", shell],
+                                        env={**os.environ, "SCOPE_RESULT": scope_result,
+                                             "ANALYSIS_RESULT": analysis_result}, capture_output=True, text=True)
+                self.assertEqual(result.returncode, 0 if scope_result == analysis_result == "success" else 1)
+
 
 
 if __name__ == "__main__":
