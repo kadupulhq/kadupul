@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Make SonarCloud selective during modernization with an explicit enable switch, trusted analysis/release branches and manual runs; retain complete coverage and visible failures, and add bounded CI jobs, safe concurrency, dependency download caches and a future required quality-gate check.
+
 - Verify access-only session expiry refresh on refused remembered-login restoration without relying on wall-clock timing; retain exact credential and adjacent-session checks.
 
 - Verify that the pinned Snyk dependency scan completes all five repository projects through its documented legacy testing path, while retaining the existing vulnerability policy.
