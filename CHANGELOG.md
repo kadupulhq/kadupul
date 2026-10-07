@@ -20,9 +20,13 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Bound legacy Boost writer lock acquisition to 60 attempts; report contention and retain queued samples instead of waiting indefinitely.
 - Correct Settings help for graph permission combinations, auto scale limits, and CSP nonce reporting and enforcement. Fixes #222, #230, and #265.
+- Preserve completed or failed installer worker state when a concurrent status poll hydrates an unchanged step; retain explicit transitions, navigation, and retry defaults.
+
 - Verify access-only session expiry refresh on refused remembered-login restoration without relying on wall-clock timing; retain exact credential and adjacent-session checks.
 
 - Verify that the pinned Snyk dependency scan completes all five repository projects through its documented legacy testing path, while retaining the existing vulnerability policy.
+
+- Run an explicit Sonar scope check on every eligible update; skip expensive coverage only for verified ordinary documentation changes and retain full analysis for relevant or uncertain inputs.
 
 - Install the pinned Python test dependency in an isolated environment before Snyk scans all repository projects.
 
