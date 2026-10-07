@@ -25,11 +25,6 @@ services:
     Kadupul\Platform\Infrastructure\Symfony\Console\CliPresentation:
         public: true
 
-    Kadupul\Platform\Infrastructure\Asset\CompiledAssetManifest:
-        arguments:
-            $manifestFile: '%kernel.project_dir%/public/assets/manifest.json'
-            $webPrefix: 'public'
-
     Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration: ~
 
     Kadupul\Platform\Contract\LegacyConfiguration:
