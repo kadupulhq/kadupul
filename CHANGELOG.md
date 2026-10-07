@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Reuse the device form failure presenter for association, collector, maintenance, and automation actions while preserving operation-specific statuses, translated messages, and authorization responses.
+
 - Verify authenticated graph-tree confirmation and native automation placement handoffs, including rejected foreign/non-header parents and admitted destinations; require their measured behavior checks.
 
 - Keep CLI site tree nodes consistent with web placement by storing their site identity without a copied title; verify parent, duplicate, and malformed-input refusals through the actual CLI/API and require their measured behavior checks.
