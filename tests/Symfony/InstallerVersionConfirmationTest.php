@@ -129,4 +129,39 @@ final class InstallerVersionConfirmationTest extends TestCase
         self::assertSame(['1.2.32', '1.2.33'], $this->versions());
         self::assertFalse($this->database->inTransaction());
     }
+
+    public function testIntermediateMarkerIsConfirmedWithoutPublishingTheFinalRelease(): void
+    {
+        $this->database->exec("INSERT INTO version VALUES('1.2.30')");
+        self::assertTrue(Installer::recordUpgradeVersion('1.2.31'));
+        self::assertSame(['1.2.31'], $this->versions());
+        self::assertFalse($this->database->inTransaction());
+        self::assertTrue($this->confirm());
+        self::assertSame([CACTI_VERSION], $this->versions());
+    }
+
+    public function testRejectedIntermediateMarkerPreservesTheConfirmedRetryVersion(): void
+    {
+        $this->database->exec("INSERT INTO version VALUES('1.2.30')");
+        $this->database->exec("CREATE TRIGGER refuse_intermediate BEFORE UPDATE ON version WHEN NEW.cacti='1.2.31' BEGIN SELECT RAISE(ABORT,'intermediate version refused'); END");
+        self::assertFalse(Installer::recordUpgradeVersion('1.2.31'));
+        self::assertSame(['1.2.30'], $this->versions());
+        self::assertFalse($this->database->inTransaction());
+        $this->database->exec('DROP TRIGGER refuse_intermediate');
+        self::assertTrue(Installer::recordUpgradeVersion('1.2.31'));
+        self::assertSame(['1.2.31'], $this->versions());
+    }
+
+    public function testIntermediateCommitRefusalRollsBackAndRemainsRetryable(): void
+    {
+        $this->database->exec('PRAGMA foreign_keys = ON');
+        $this->database->exec("INSERT INTO version VALUES('1.2.30'); CREATE TABLE admitted (value TEXT PRIMARY KEY); INSERT INTO admitted VALUES('1.2.30'); CREATE TABLE commit_guard (value TEXT REFERENCES admitted(value) DEFERRABLE INITIALLY DEFERRED); CREATE TRIGGER guard_commit AFTER UPDATE ON version BEGIN INSERT INTO commit_guard VALUES(NEW.cacti); END");
+        self::assertFalse(Installer::recordUpgradeVersion('1.2.31'));
+        self::assertSame(['1.2.30'], $this->versions());
+        self::assertSame([], $this->database->query('SELECT value FROM commit_guard')->fetchAll(PDO::FETCH_COLUMN));
+        self::assertFalse($this->database->inTransaction());
+        $this->database->exec("INSERT INTO admitted VALUES('1.2.31')");
+        self::assertTrue(Installer::recordUpgradeVersion('1.2.31'));
+        self::assertSame(['1.2.31'], $this->versions());
+    }
 }

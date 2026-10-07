@@ -47,6 +47,10 @@ test('legacy upgrade completion verifies the final queue engine', function ($eng
 define('CACTI_VERSION',trim(file_get_contents($root.'/include/cacti_version')));
 $config=array('base_path'=>$root, 'poller_id'=>$collector==='local'?1:2, 'connection'=>$collector);$remote_db_cnn_id='primary-connection';
 require $root.'/include/global_constants.php';
+$database_hostname='installer-fixture';$database_port=0;$database_default='owned';
+$versionDatabase=new PDO('sqlite::memory:',options:array(PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION));
+$versionDatabase->exec("CREATE TABLE version (cacti TEXT); INSERT INTO version VALUES('1.1.5')");
+$database_sessions=array('installer-fixture:0:owned'=>$versionDatabase);
 function __($message,...$args){return $args?vsprintf($message,$args):$message;}
 function read_config_option(...$args){return '';}
 function log_install_always(...$args){}
@@ -82,14 +86,14 @@ ob_start();
 try {
     $result=$method->invoke($installer);
     require_once $root.'/install/upgrades/1_2_31.php';
-    upgrade_to_1_2_31();
+    upgrade_poller_output_rejected();
 }
 finally {
     ob_end_clean();
     $cacheCreated=isset($GLOBALS['cache_file']) && is_file($GLOBALS['cache_file']);
     $cacheRemoved=$cacheCreated && unlink($GLOBALS['cache_file']);
 }
-echo json_encode(array($result,$statements,$cacheRemoved));
+echo json_encode(array($result,$statements,$cacheRemoved,$versionDatabase->query('SELECT cacti FROM version')->fetchAll(PDO::FETCH_COLUMN)));
 INSTALLER;
     try {
         file_put_contents($dir . '/probe.php', $script);
@@ -102,6 +106,7 @@ INSTALLER;
         $result = json_decode($out, true);
         $this->assertSame(JSON_ERROR_NONE, json_last_error(), $out);
         expect($result[2])->toBeTrue('The installer cache file must be created and removed by the native probe.');
+        expect($result[3])->toBe(array('1.1.6'), 'The completed migration must confirm only its intermediate version.');
         if ($engine === 'InnoDB' || $collector === 'recovery') {
             expect($result[0])->toBeFalse();
         } else {

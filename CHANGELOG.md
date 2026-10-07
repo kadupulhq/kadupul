@@ -6,6 +6,21 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Reuse the device form failure presenter for association, collector, maintenance, and automation actions while preserving operation-specific statuses, translated messages, and authorization responses.
+
+- Verify authenticated graph-tree confirmation and native automation placement handoffs, including rejected foreign/non-header parents and admitted destinations; require their measured behavior checks.
+
+- Keep CLI site tree nodes consistent with web placement by storing their site identity without a copied title; verify parent, duplicate, and malformed-input refusals through the actual CLI/API and require their measured behavior checks.
+
+- Make the missing input-field index and aggregate creation timestamp repairs reachable from deployed 1.2.31–1.2.34 through the main 1.2.35 upgrade step; confirm native schema changes and preserve a retryable version on failure.
+
+- Stream audit upgrade progress before the worker exits, withhold protocol markers, preserve failure receipts, and keep JSON responses and final diagnostics free of duplicate output.
+
+- Reject malformed schema-audit reports with controlled CI diagnostics; cover clean, failed, dirty, empty, and missing-baseline contracts.
+
+- Return failure from the legacy audit CLI when repair or export fails; report missing tables separately from attempted ALTER statements and preserve SQL comment prefixes in diagnostic plans.
+- Preserve recognized scriptless upgrade releases, reject missing required migrations, and confirm each intermediate database version before advancing or reporting success.
+- Report integer signedness drift for manual range review, preserve local text collations during unrelated schema repairs, and refuse index algorithms unsupported by the effective storage engine.
 - Authorize non-deletion graph and data-source bulk selections with current owner/policy SQL in chunks of 1,000, retaining the established 10,000-object safety ceiling and supported 5,000-row UI batches.
 - Batch device management reuses the same bounded current-policy selection checks before protected names or action hooks. Malformed decimal, exponent and floating-point IDs are refused for graph/device selections and filtered from data-source selections; valid zero-padded or whitespace-normalized integer representations retain their order and duplicates.
 - Management graph/data list and count queries reuse policy ID subqueries instead of hydrating the complete device inventory. Graph lists apply the same graph/template policy as actions, and data-template filter choices derive only from admitted sources.
@@ -59,6 +74,9 @@ follows [Semantic Versioning](VERSIONING.md).
 - Restrict graph edit, create, and device-move operations to graphs and devices the user may access.
 - Require device access before viewing, saving, reindexing, pinging, reloading queries, or changing templates for a device; also enforce access in the web-facing device save API.
 - Limit Data Query Cache and Poller Cache views to devices the current user may access, including their default Any filters.
+- Report schema audit drift for defaults, collations, indexes, and missing tables without treating a stale fork baseline as automatically repairable. Fixes #454.
+- Preserve text-column collation when repairing from an older schema baseline, and match missing-table checks to the baseline's case-insensitive table identity.
+- Confirm an interactive database upgrade before preparing and confirming its resulting repair plan; stop repair on failed or unconfirmed upgrades and honor the cron setting for quiet upgrade deprecation warnings.
 - Enforce persistent CDEF reference integrity for legacy writers and atomic aggregate cache replacement; refuse online collector primary upgrades and confirm the final installation version before reporting success.
 - Roll back complete aggregate regeneration and creation on unconfirmed reads or writes, preserving caller transactions; reject malformed aggregate item selections before saving and report incomplete propagation.
 - Keep permission writes and session epochs consistent, including failed writes and absent deletions.
@@ -67,6 +85,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Preserve explicit PNG realtime graph output and search filters across RRD cleaner pages; identify the CSRF refresh utility correctly in its CLI metadata.
 - Migrate Data Input Methods and fields to Symfony/PHP 8.4 and Twig, with current authorization, revision checks, transaction rollback and explicit collector/whitelist retry outcomes.
+- Add Symfony Inventory tree/report placement using owning Graphing and Reporting contracts, authorization, revisions and transactional confirmation.
 - Retain old collector polling copies until primary assignment commits, repair missing associations on unchanged template assignments, and preserve remote enabled-state drift during bulk site/template changes.
 
 - Migrate VDEF listing, editing, item ordering, duplication and deletion to Symfony/Twig with realm checks, CSRF protection, stale-form detection and dependency-aware deletion; retain safe legacy URL redirects.
@@ -114,6 +133,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Bound PCRE work when tree automation applies saved replacement patterns. Fixes #591.
 - Return a clean 404 for HTTP requests to the PHP Script Server under PHP-FPM. Fixes #377.
 - Honor the script server's documented `--environ`, `-v`/`-V`, and `-h`/`-H` options. Fixes #375 and #376.
+
 - Require PHP CS Fixer 3.95.27 consistently in the staged-content hook and CI. Fixes #486.
 - Own persistent local RRDtool pipe processes in the Graphing `LocalRrdtool` adapter while retaining the legacy procedural entry points. Fixes #500.
 - Move RRDtool graph option generation into the Graphing module while keeping its procedural wrapper and output unchanged. Part of #502.
@@ -129,6 +149,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Tests
 
+- Generate the audit baseline from a fresh install in CI and fail when its schema rows differ from the checked-in baseline. Fixes #453.
+- Audit both fresh installs and release-upgraded databases against the checked-in schema in CI. Fixes #452.
 - Add native SQL-backed regression coverage for HTML filters, graph drilldown context, ordered report rendering, and realm/view/role/simple-permission helper contracts. Part of #699.
 
 - Exercise user-log cleanup against real MySQL and MariaDB, preserving each current account's latest login and token while removing failed and orphaned entries; collect coverage from the actual controller.
@@ -137,7 +159,12 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Characterize `is_resource_writable()` for existing files, new files, directories, and permission-denied paths before changing the legacy filesystem check.
 
+### Deprecated
+
+- Deprecate `cli/audit_database.php --upgrade` and direct operators to run `php cli/upgrade_database.php` separately. Retain the flag for compatibility and print a warning to stderr. Part of #457.
+
 ### Fixed
+- Return a nonzero status for refused upgrade start versions, missing required migration scripts, migration errors, or failed version-marker writes. Fixes #240.
 - Check linked data-source and poller device owners before graph device reassignment and before graph form writes; denied, missing, or malformed child owners leave the graph and its children unchanged. Template-only references remain non-device records.
 - Validate installed font families after recognized Pango suffixes, reject names when fontconfig reports no installed fonts, and preserve complete multiword default descriptions through RRDProxy session setup.
 - Make the graph spike-removal menu reachable with Enter and Space, restore focus on Escape, and discard obsolete menu replies after script reloads.
@@ -156,11 +183,18 @@ Targeting `v1.3.0`, the first planned application release. See
 - Enforce the spike-removal replacement budget across every row and data source in an RRA, reset it only at the next RRA, and count NaN replacements. Fixes #238.
 - Apply `nan` replacements in the spike-removal window modes and count changed samples, so float and fill no longer report success without changing the selected samples. Fixes #237.
 - Save an editable profile heartbeat even when the browser omits the disabled step field, while refusing changes to structural fields for profiles used by local data sources. Fixes #232.
+- Make the documented `add_tree.php --node-type=site --site-id=ID` workflow create a site tree item, persist its `site_id`, and render its current site devices. Reject unknown site IDs before inserting a row. Fixes #235.
 
+- Reject tree CLI nodes with a missing tree, a missing or foreign parent, or a non-header parent; report failed node creation with a nonzero exit status. Fixes #236.
 - Limit profile heartbeat propagation to the matching data template as well as the local data source, so template rows sharing the zero local-data sentinel do not overwrite unrelated templates. Fixes #233.
 - Recheck data-source profile references when a bulk deletion is submitted, preserving definitions still used by templates or sources while allowing unused profiles in the same selection to be removed.
 - Make the effective graph-policy display honor explicit template grants under Restrictive mode when the template policy defaults to Deny. Fixes #263.
-
+- Verify worker-session MariaDB snapshot settings before association/maintenance transactions so heartbeat updates do not invalidate the final collector locking read on MariaDB 11.8.
+- Allow collector heartbeat updates during Inventory association and maintenance network work; revalidate collector configuration and availability immediately before commit.
+- Budget Inventory worker processes for every remote data-query request, preserving the existing local-work margin and the configured remote timeout cap.
+- Reject malformed association commands before mutation, propagate query refresh failures in strict workers, and publish authoritative primary changes before collector commits.
+- Restore the `data_input_data.data_input_field_id` index and normalize the `aggregate_graphs.created` timestamp during the 1.2.31 upgrade so upgraded databases match the fresh-install schema.
+- Stop schema report, alters, and repair when the canonical baseline cannot be loaded, returning a failing CLI status and JSON `failed` status without results. Preserve explicit create/load mode messages and legacy exit conventions; missing or unparsable create inputs leave existing audit tables untouched. Fixes #242.
 - Remove orphaned user-log entries even when no current user accounts remain.
 - Stop token generation when the cryptographic random source fails instead of returning a predictable fallback. Fixes #580.
 - Refresh generated Midwinter stylesheet import versions during the browser build so uncompiled installations invalidate changed child CSS.
@@ -303,6 +337,13 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Share ordered System and profile graph-font metadata while preserving their defaults, translated labels, validation and field order.
 
+- Route Inventory device menus and legacy `host.php` links through Symfony. Legacy POSTs expire without replay; GET action links open confirmation forms. Existing automation rules are applied through an Inventory use case and Automation adapter. Preserve collector, template and exact-location list filters.
+- Device pages no longer execute legacy plugin UI hooks or custom device-page actions. Plugins must expose their own pages or adopt Symfony extensions; existing save/template/association/bulk action callbacks remain in isolated adapters. Legacy device CSV links now export the selected public-data page instead of unbounded host records.
+
+- Add Symfony device maintenance for reindexing, query diagnostics, polling cache refresh, debug controls and connectivity checks with secret-safe plain-text results.
+- Migrate device data-query associations and reindex settings to Symfony, retaining graph data and verifying primary/remote cache cleanup.
+- Add Symfony device graph-template association editing with legacy automation hooks, stale-association protection, remote verification and existing-graph retention.
+- Run cli/audit_database.php through kadupul:database:audit, with --json and --dry-run. The flags are unchanged apart from --dry-run, --json, --force and a bare, empty or spaced --as, which the shim now refuses; it takes the operator only as --as=NAME. Under bin/console, --repair only plans unless --force is given or the operator confirms the plan at the prompt. The command requires an operator with the Console Access and Installation/Upgrades realms. It reads docs/audit_schema.sql itself instead of piping it into the mysql client with the database password on the command line, and it builds each repair statement from typed parts, so no text from the file or the server reaches the database unquoted. The upgrade and each plugin upgrade run with no shell, so a plugin's recorded version reaches its script as one argument. The schema dump targets the configured database server, so MYSQL_HOST and similar variables cannot point it elsewhere. A failed upgrade now stops the run before any repair.
 - Add Symfony bulk SNMP settings with explicit credential replacement, per-device credential validation and secret-safe failure responses.
 
 - Add Symfony bulk site, template and collector assignments with whole-selection validation, primary rollback and verified collector replication.
@@ -316,7 +357,6 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Serve legacy stylesheets and scripts from `public/assets/` with digested file names once `php bin/console asset-map:compile` has run, using Symfony AssetMapper 7.4. Theme `url()` and `@import` references are rewritten to the digested copies, so Midwinter no longer keeps hand-maintained import hashes and `update_hash.php` is gone. Without a compiled manifest, and for `custom.css`, plugins and the flag-icons stylesheet, pages keep the `?md5` URLs. Docker images and offline bundles ship the compiled files; source installations must rerun the compile after each upgrade.
 - Reuse common row-count option rendering in automation previews while preserving each row filter.
-
 - Migrate bulk device statistics reset to a Symfony confirmation page and Inventory use case, with authorized selection checks and primary/remote failure handling.
 
 - Run legacy `exec_into_array()` commands through Symfony Process while preserving its public signature, stdout line array, exit-status handling, and unlimited wait behavior. Retain the native `exec()` path if Process cannot start because `proc_open()` is unavailable. Tracks #482.

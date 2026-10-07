@@ -255,7 +255,8 @@ final class AutomationModuleNativeTest extends TestCase
                 self::assertStringContainsString('Graph Added', $state['log']);
             } else {
                 self::assertArrayNotHasKey('pushed', $state['contracts']);
-                self::assertStringContainsString('Graph not added', $state['log']);
+                self::assertFalse($state['result']);
+                self::assertStringNotContainsString('Graph Added', $state['log']);
             }
         }
     }

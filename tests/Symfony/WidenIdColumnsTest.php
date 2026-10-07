@@ -7,28 +7,23 @@
 
 namespace Kadupul\Tests;
 
-use Kadupul\IdentityAccess\Contract\Actor;
 use Kadupul\IdentityAccess\Contract\AuditEvent;
-use Kadupul\IdentityAccess\Contract\AuditTrail;
-use Kadupul\IdentityAccess\Contract\ConsoleOperator;
 use Kadupul\Platform\Application\Command\InstallationAccessDenied;
-use Kadupul\Platform\Application\Command\MaintenanceTarget;
-use Kadupul\Platform\Application\Command\SchemaChangeAudit;
 use Kadupul\Platform\Application\Command\WidenIdColumns;
 use Kadupul\Platform\Application\Port\ColumnCatalog;
 use Kadupul\Platform\Application\Port\ColumnWidening;
-use Kadupul\Platform\Application\Port\DatabaseMaintenance;
 use Kadupul\Platform\Application\Port\DatabaseTarget;
 use Kadupul\Platform\Application\ReadModel\WideningEvent;
 use Kadupul\Platform\Domain\Schema\ColumnDefinition;
 use Kadupul\Platform\Domain\Schema\IdColumns;
+use Kadupul\Tests\Fixtures\MaintenanceOperator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class WidenIdColumnsTest extends TestCase
 {
-    /** @var list<AuditEvent> */
-    private array $events = [];
+    use MaintenanceOperator;
+
     /** @var list<string> statements widen() received */
     private array $sent = [];
 
@@ -81,17 +76,7 @@ final class WidenIdColumnsTest extends TestCase
 
     private function widen(ColumnWidening $widening, bool $collector = false, bool $upgrade = true): WidenIdColumns
     {
-        $operator = $this->createStub(ConsoleOperator::class);
-        $operator->method('actor')->willReturn(new Actor(1, 'admin'));
-        $operator->method('canUpgradeInstallation')->willReturn($upgrade);
-        $maintenance = $this->createStub(DatabaseMaintenance::class);
-        $maintenance->method('isRemoteCollector')->willReturn($collector);
-        $trail = $this->createStub(AuditTrail::class);
-        $trail->method('record')->willReturnCallback(function (AuditEvent $event): void {
-            $this->events[] = $event;
-        });
-
-        return new WidenIdColumns(new MaintenanceTarget($operator, $maintenance), $widening, new SchemaChangeAudit($trail));
+        return new WidenIdColumns($this->maintenanceTarget($collector, $upgrade), $widening, $this->recordingAudit());
     }
 
     /**

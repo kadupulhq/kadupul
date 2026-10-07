@@ -17,7 +17,7 @@ final class DeviceAssignmentProcessTest extends TestCase
 {
     public static function outcomes(): iterable
     {
-        foreach (['collector', 'template'] as $kind) {
+        foreach (['collector', 'template', 'associations'] as $kind) {
             foreach ([
                 ['ok', 0, null],
                 ['ok', 1, \RuntimeException::class],
@@ -38,7 +38,9 @@ final class DeviceAssignmentProcessTest extends TestCase
         $directory = sys_get_temp_dir() . '/assignment-protocol-' . bin2hex(random_bytes(8));
         mkdir($directory . '/bin', 0700, true);
         $file = $directory . '/bin/legacy-device-' . $kind . '.php';
-        $command = ['actor' => 2, 'id' => 7, $kind . '_id' => 3, 'revision' => 'fixture'];
+        $command = ['actor' => 2, 'id' => 7, 'revision' => 'fixture'] + ($kind === 'associations'
+            ? ['kind' => 'query', 'operation' => 'add', 'target' => 3, 'reindex' => 2]
+            : [$kind . '_id' => 3]);
         $response = 'KADUPUL_' . strtoupper($kind) . '_RESULT=' . json_encode(['status' => $status]);
         $stub = '<?php $input = json_decode(stream_get_contents(STDIN), true);'
             . ' if ($input !== ' . var_export($command, true) . ') { exit(9); }'
@@ -50,6 +52,9 @@ final class DeviceAssignmentProcessTest extends TestCase
             $database->prepare('INSERT INTO settings VALUES (?, ?)')->execute(['path_php_binary', PHP_BINARY]);
             if ($error !== null) {
                 $this->expectException($error);
+            }
+            if ($status === 'invalid') {
+                $this->expectExceptionMessage('Select a valid device ' . ($kind === 'associations' ? 'association' : $kind) . '.');
             }
             DeviceAssignmentProcess::run($database, $directory, $kind, $command);
             self::assertNull($error);

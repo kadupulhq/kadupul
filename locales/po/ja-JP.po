@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-06 17:13-0700\n"
+"POT-Creation-Date: 2026-10-06 17:25-0700\n"
 "PO-Revision-Date: 2024-11-22 08:46+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -48,9 +48,9 @@ msgstr "このプログラムは有用であることを期待して配布され
 #: data_queries.php:972 data_queries.php:1252 data_source_profiles.php:16
 #: data_source_profiles.php:934 data_sources.php:23 data_sources.php:1249
 #: data_templates.php:19 data_templates.php:791 gprint_presets.php:12
-#: graph_templates.php:22 graph_templates.php:517 graphs.php:32 host.php:29
+#: graph_templates.php:22 graph_templates.php:517 graphs.php:32
 #: host_templates.php:20 host_templates.php:485 host_templates.php:542
-#: include/global_arrays.php:1652 include/global_settings.php:316
+#: include/global_arrays.php:1655 include/global_settings.php:316
 #: lib/api_automation.php:1323 lib/api_automation.php:1386
 #: lib/api_automation.php:1457 lib/html.php:1505 lib/html_form.php:1397
 #: lib/html_reports.php:1937 managers.php:13 pollers.php:18 tree.php:1688
@@ -83,7 +83,7 @@ msgstr "集計と関連付ける"
 msgid "Disassociate with Aggregate"
 msgstr "集約との関連付け解除"
 
-#: aggregate_graphs.php:70 graphs.php:151 host.php:250
+#: aggregate_graphs.php:70 graphs.php:151
 #, php-format
 msgid "Place on a Tree (%s)"
 msgstr "木に置く（%s）"
@@ -128,9 +128,7 @@ msgstr "次の集計グラフを削除するには、[続行]をクリックし�
 #: graph_view.php:1043 graphs.php:886 graphs.php:902 graphs.php:913
 #: graphs.php:924 graphs.php:939 graphs.php:956 graphs.php:965 graphs.php:1167
 #: graphs.php:1210 graphs.php:1232 graphs.php:1263 graphs.php:1275
-#: graphs.php:1859 host.php:487 host.php:496 host.php:543 host.php:552
-#: host.php:561 host.php:577 host.php:591 host.php:600 host.php:631
-#: host.php:643 host_templates.php:222 host_templates.php:236
+#: graphs.php:1859 host_templates.php:222 host_templates.php:236
 #: host_templates.php:247 host_templates.php:302 host_templates.php:375
 #: lib/clog_webapi.php:225 lib/html.php:2819 lib/html_form.php:1396
 #: lib/html_form.php:1413 lib/html_form.php:1424 lib/html_reports.php:632
@@ -162,9 +160,7 @@ msgstr "取り消し"
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
 #: graphs.php:886 graphs.php:902 graphs.php:913 graphs.php:924 graphs.php:939
 #: graphs.php:956 graphs.php:965 graphs.php:1167 graphs.php:1210
-#: graphs.php:1232 graphs.php:1263 graphs.php:1275 host.php:487 host.php:496
-#: host.php:543 host.php:552 host.php:561 host.php:577 host.php:591
-#: host.php:600 host.php:631 host.php:643 host_templates.php:222
+#: graphs.php:1232 graphs.php:1263 graphs.php:1275 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
 #: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2818
 #: lib/html_reports.php:574 managers.php:1066 managers.php:1127 pollers.php:549
@@ -193,7 +189,7 @@ msgstr "以下の集計グラフをテンプレートベースの集計に移行
 #: aggregate_graphs.php:406 aggregate_graphs.php:456 aggregate_graphs.php:504
 #: auth_changepassword.php:415 auth_profile.php:464 automation_networks.php:387
 #: automation_snmp.php:245 graphs.php:1169 graphs.php:1219 graphs.php:1222
-#: graphs.php:1266 graphs.php:1859 host.php:634 include/auth.php:309
+#: graphs.php:1266 graphs.php:1859 include/auth.php:309
 #: lib/api_aggregate.php:2209 lib/api_aggregate.php:2224 lib/html_form.php:1422
 #: lib/html_reports.php:632 managers.php:1130 permission_denied.php:14
 #: permission_denied.php:16
@@ -241,21 +237,21 @@ msgstr "集約名："
 msgid "New Aggregate"
 msgstr "新しい集計"
 
-#: aggregate_graphs.php:485 graphs.php:1247 host.php:615
+#: aggregate_graphs.php:485 graphs.php:1247
 msgid "Click 'Continue' to add the selected Graphs to the Report below."
 msgstr "[続行]をクリックして、選択したグラフを下のレポートに追加します。"
 
-#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1251 host.php:619
+#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1251
 #: lib/html_reports.php:18 lib/html_reports.php:2133
 msgid "Report Name"
 msgstr "レポート名"
 
-#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1255 host.php:623
+#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1255
 #: lib/html_reports.php:1789
 msgid "Timespan"
 msgstr "スパン"
 
-#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1259 host.php:627
+#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1259
 msgid "Align"
 msgstr "整列"
 
@@ -295,7 +291,7 @@ msgstr "グラフの関連付け解除"
 msgid "Click 'Continue' to place the following Aggregate Graph(s) under the Tree Branch."
 msgstr "[続行]をクリックして、次の集計グラフをツリーブランチの下に配置します。"
 
-#: aggregate_graphs.php:538 host.php:583
+#: aggregate_graphs.php:538
 msgid "Destination Branch:"
 msgstr "行き先の枝："
 
@@ -414,7 +410,7 @@ msgstr "マッチンググラフ"
 #: color_templates.php:560 data_debug.php:1214 data_queries.php:1371
 #: data_source_profiles.php:1186 data_sources.php:1814 data_templates.php:1101
 #: gprint_presets.php:255 graph_templates.php:727 graph_view.php:667
-#: graphs.php:2114 graphs_new.php:526 host.php:1832 host_templates.php:795
+#: graphs.php:2114 graphs_new.php:526 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
 #: lib/api_automation.php:480 lib/api_automation.php:708
 #: lib/clog_webapi.php:608 lib/html.php:268 lib/html_filter.php:46
@@ -433,9 +429,9 @@ msgstr "検索"
 #: aggregate_graphs.php:1288 aggregate_graphs.php:1324
 #: aggregate_graphs.php:1587 color_templates.php:680 data_sources.php:2004
 #: data_sources.php:2143 graph_view.php:488 graph_view.php:739
-#: graph_view.php:803 graphs.php:2131 graphs.php:2323 host.php:1946
-#: include/global_arrays.php:993 include/global_arrays.php:1229
-#: include/global_arrays.php:2012 lib/api_automation.php:283 lib/html.php:1955
+#: graph_view.php:803 graphs.php:2131 graphs.php:2323
+#: include/global_arrays.php:994 include/global_arrays.php:1230
+#: include/global_arrays.php:2015 lib/api_automation.php:283 lib/html.php:1955
 #: lib/html.php:2024 lib/html_graph.php:197 lib/html_tree.php:1022
 #: lib/html_tree.php:1378 tree.php:917 tree.php:2366 user_admin.php:801
 #: user_admin.php:1073 user_admin.php:2347 user_group_admin.php:940
@@ -451,7 +447,7 @@ msgstr "グラフ"
 #: data_debug.php:1224 data_queries.php:1381 data_source_profiles.php:1196
 #: data_source_profiles.php:1318 data_sources.php:1824 data_templates.php:1130
 #: gprint_presets.php:265 graph_templates.php:737 graph_view.php:743
-#: graphs.php:2135 graphs_new.php:536 host.php:1857 host_templates.php:805
+#: graphs.php:2135 graphs_new.php:536 host_templates.php:805
 #: include/global_form.php:242 lib/api_automation.php:182
 #: lib/api_automation.php:490 lib/api_automation.php:718
 #: lib/api_automation.php:1082 lib/html_reports.php:2045 managers.php:154
@@ -476,15 +472,14 @@ msgstr "集計の一部"
 #: data_debug.php:1139 data_queries.php:1396 data_source_profiles.php:1217
 #: data_sources.php:1764 data_templates.php:1151 gprint_presets.php:283
 #: graph_templates.php:758 graph_view.php:675 graphs.php:2105
-#: graphs_new.php:515 host.php:1822 host_templates.php:786
-#: lib/api_automation.php:187 lib/api_automation.php:471
-#: lib/api_automation.php:723 lib/api_automation.php:1087
-#: lib/clog_webapi.php:533 lib/html.php:1787 lib/html_filter.php:63
-#: lib/html_graph.php:178 lib/html_reports.php:2056 lib/html_tree.php:1009
-#: managers.php:169 managers.php:529 managers.php:794 plugins.php:530
-#: pollers.php:914 tree.php:2242 user_admin.php:2150 user_admin.php:2347
-#: user_admin.php:2353 user_admin.php:2359 user_admin.php:2365
-#: user_admin.php:2371 user_admin.php:2377
+#: graphs_new.php:515 host_templates.php:786 lib/api_automation.php:187
+#: lib/api_automation.php:471 lib/api_automation.php:723
+#: lib/api_automation.php:1087 lib/clog_webapi.php:533 lib/html.php:1787
+#: lib/html_filter.php:63 lib/html_graph.php:178 lib/html_reports.php:2056
+#: lib/html_tree.php:1009 managers.php:169 managers.php:529 managers.php:794
+#: plugins.php:530 pollers.php:914 tree.php:2242 user_admin.php:2150
+#: user_admin.php:2347 user_admin.php:2353 user_admin.php:2359
+#: user_admin.php:2365 user_admin.php:2371 user_admin.php:2377
 msgid "Go"
 msgstr "Go"
 
@@ -493,9 +488,9 @@ msgstr "Go"
 #: automation_templates.php:418 cdef.php:758 data_debug.php:1139
 #: data_queries.php:1396 data_source_profiles.php:1217 data_sources.php:1764
 #: data_templates.php:1151 gprint_presets.php:283 graph_templates.php:758
-#: graph_view.php:675 graphs.php:2105 graphs_new.php:515 host.php:1822
-#: host_templates.php:786 lib/html_graph.php:178 managers.php:169
-#: managers.php:529 managers.php:794 plugins.php:530 pollers.php:914
+#: graph_view.php:675 graphs.php:2105 graphs_new.php:515 host_templates.php:786
+#: lib/html_graph.php:178 managers.php:169 managers.php:529 managers.php:794
+#: plugins.php:530 pollers.php:914
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
 #: tree.php:2242 user_admin.php:2150 user_domains.php:665
 #: user_group_admin.php:2018 utilities.php:1084 utilities.php:1470
@@ -511,16 +506,15 @@ msgstr "フィルタの設定/更新"
 #: data_debug.php:1140 data_queries.php:1397 data_source_profiles.php:1218
 #: data_sources.php:1765 data_templates.php:1152 gprint_presets.php:284
 #: graph_templates.php:759 graph_view.php:676 graphs.php:2106
-#: graphs_new.php:516 host.php:1823 host_templates.php:787
-#: lib/api_automation.php:188 lib/api_automation.php:472
-#: lib/api_automation.php:724 lib/api_automation.php:1088
-#: lib/clog_webapi.php:534 lib/html_filter.php:68 lib/html_graph.php:179
-#: lib/html_graph.php:305 lib/html_reports.php:2057 lib/html_tree.php:1010
-#: lib/html_tree.php:1121 managers.php:170 managers.php:530 managers.php:795
-#: plugins.php:531 pollers.php:915 tree.php:2243 user_admin.php:2151
-#: user_admin.php:2347 user_admin.php:2353 user_admin.php:2359
-#: user_admin.php:2365 user_admin.php:2371 user_admin.php:2377
-#: user_domains.php:666
+#: graphs_new.php:516 host_templates.php:787 lib/api_automation.php:188
+#: lib/api_automation.php:472 lib/api_automation.php:724
+#: lib/api_automation.php:1088 lib/clog_webapi.php:534 lib/html_filter.php:68
+#: lib/html_graph.php:179 lib/html_graph.php:305 lib/html_reports.php:2057
+#: lib/html_tree.php:1010 lib/html_tree.php:1121 managers.php:170
+#: managers.php:530 managers.php:795 plugins.php:531 pollers.php:915
+#: tree.php:2243 user_admin.php:2151 user_admin.php:2347 user_admin.php:2353
+#: user_admin.php:2359 user_admin.php:2365 user_admin.php:2371
+#: user_admin.php:2377 user_domains.php:666
 msgid "Clear"
 msgstr "クリア"
 
@@ -528,10 +522,9 @@ msgstr "クリア"
 #: automation_templates.php:419 cdef.php:759 data_debug.php:1140
 #: data_queries.php:1397 data_source_profiles.php:1218 data_sources.php:1765
 #: data_templates.php:1152 gprint_presets.php:284 graph_templates.php:759
-#: graph_view.php:676 graphs.php:2106 graphs_new.php:516 host.php:1823
-#: host_templates.php:787 lib/html_graph.php:179 lib/html_tree.php:1010
-#: managers.php:170 managers.php:530 managers.php:795 plugins.php:531
-#: pollers.php:915
+#: graph_view.php:676 graphs.php:2106 graphs_new.php:516 host_templates.php:787
+#: lib/html_graph.php:179 lib/html_tree.php:1010 managers.php:170
+#: managers.php:530 managers.php:795 plugins.php:531 pollers.php:915
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:96
 #: tree.php:2243 user_admin.php:2151 user_domains.php:666
 #: user_group_admin.php:2019 utilities.php:1085 utilities.php:1471
@@ -548,11 +541,11 @@ msgstr "グラフの題名"
 #: automation_graph_rules.php:964 automation_tree_rules.php:971
 #: data_debug.php:517 data_queries.php:1482 data_sources.php:1998
 #: data_templates.php:1260 graph_templates.php:864 graphs.php:2339
-#: host.php:1940 host_templates.php:949 lib/api_automation.php:282
-#: pollers.php:995 tree.php:2306 user_admin.php:809 user_admin.php:924
-#: user_admin.php:1073 user_admin.php:1212 user_admin.php:1351
-#: user_group_admin.php:741 user_group_admin.php:948 user_group_admin.php:1095
-#: user_group_admin.php:1231 user_group_admin.php:1363
+#: host_templates.php:949 lib/api_automation.php:282 pollers.php:995
+#: tree.php:2306 user_admin.php:809 user_admin.php:924 user_admin.php:1073
+#: user_admin.php:1212 user_admin.php:1351 user_group_admin.php:741
+#: user_group_admin.php:948 user_group_admin.php:1095 user_group_admin.php:1231
+#: user_group_admin.php:1363
 msgid "ID"
 msgstr "ID"
 
@@ -586,7 +579,7 @@ msgstr "いいえ"
 #: gprint_presets.php:430 graph_templates.php:921 host_templates.php:997
 #: include/global_settings.php:959 include/global_settings.php:1931
 #: lib/api_automation.php:1438 lib/installer.php:2134 lib/installer.php:2162
-#: lib/installer.php:3963 tree.php:2399 tree.php:2400 user_admin.php:2267
+#: lib/installer.php:3994 tree.php:2399 tree.php:2400 user_admin.php:2267
 #: user_domains.php:754 user_domains.php:758 user_group_admin.php:2084
 msgid "Yes"
 msgstr "はい"
@@ -600,15 +593,14 @@ msgid " [ Custom Graphs List Applied - Clear to Reset ]"
 msgstr " [カスタムグラフリストの適用 - リストからのフィルタ]"
 
 #: aggregate_graphs.php:1547 aggregate_graphs.php:1653
-#: include/global_arrays.php:2764
+#: include/global_arrays.php:2767
 msgid "Aggregate Graphs"
 msgstr "集計グラフ"
 
 #: aggregate_graphs.php:1562 data_debug.php:1110 data_sources.php:1733
-#: graph_view.php:699 graphs.php:2067 host.php:1768
-#: include/global_arrays.php:2892 include/global_settings.php:694
-#: lib/api_automation.php:446 lib/html_graph.php:139 lib/html_tree.php:973
-#: rrdcleaner.php:381
+#: graph_view.php:699 graphs.php:2067 include/global_arrays.php:2895
+#: include/global_settings.php:694 lib/api_automation.php:446
+#: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:381
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:59
 #: utilities.php:2094
 msgid "Template"
@@ -619,8 +611,7 @@ msgstr "テンプレート"
 #: automation_devices.php:564 automation_graph_rules.php:819
 #: automation_graph_rules.php:841 automation_tree_rules.php:855
 #: data_debug.php:1114 data_sources.php:1737 graph_templates_items.php:447
-#: graphs.php:2071 graphs_items.php:270 host.php:1731 host.php:1752
-#: host.php:1772 host.php:1842 lib/api_automation.php:26
+#: graphs.php:2071 graphs_items.php:270 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3954 lib/auth.php:4003
 #: lib/html.php:2310 lib/html.php:2338 lib/html.php:2377 lib/html.php:2411
@@ -639,11 +630,10 @@ msgstr "任意"
 #: data_debug.php:1115 data_sources.php:626 data_sources.php:1103
 #: data_sources.php:1738 data_sources.php:2059 data_templates.php:1323
 #: graph_templates_items.php:53 graphs.php:950 graphs.php:1596 graphs.php:1605
-#: graphs.php:2072 graphs_items.php:271 graphs_items.php:391 host.php:294
-#: host.php:1287 host.php:1298 host.php:1732 host.php:1773
-#: include/global_arrays.php:523 include/global_arrays.php:581
-#: include/global_arrays.php:673 include/global_arrays.php:885
-#: include/global_arrays.php:1741 include/global_form.php:574
+#: graphs.php:2072 graphs_items.php:271 graphs_items.php:391
+#: include/global_arrays.php:524 include/global_arrays.php:582
+#: include/global_arrays.php:674 include/global_arrays.php:886
+#: include/global_arrays.php:1744 include/global_form.php:574
 #: include/global_form.php:883 include/global_form.php:891
 #: include/global_form.php:899 include/global_form.php:938
 #: include/global_form.php:945 include/global_form.php:971
@@ -720,13 +710,13 @@ msgid "Aggregate Template [new]"
 msgstr "集約テンプレート[new]"
 
 #: aggregate_templates.php:598 aggregate_templates.php:697
-#: include/global_arrays.php:2746
+#: include/global_arrays.php:2749
 msgid "Aggregate Templates"
 msgstr "集約テンプレート"
 
 #: aggregate_templates.php:612 automation_templates.php:399
 #: automation_templates.php:489 color_templates.php:685
-#: include/global_arrays.php:1002 include/global_arrays.php:1066
+#: include/global_arrays.php:1003 include/global_arrays.php:1067
 #: lib/installer.php:2748 user_admin.php:2365 user_group_admin.php:2160
 msgid "Templates"
 msgstr "テンプレート"
@@ -757,7 +747,7 @@ msgid "Graphs Using"
 msgstr "グラフ"
 
 #: aggregate_templates.php:709 graphs.php:2126 host_templates.php:730
-#: include/global_arrays.php:958 include/global_arrays.php:1361
+#: include/global_arrays.php:959 include/global_arrays.php:1364
 #: include/global_form.php:1399 include/global_form.php:1635
 #: lib/html_reports.php:1181 tree.php:1944
 msgid "Graph Template"
@@ -936,7 +926,7 @@ msgstr "パスワード"
 msgid "Local"
 msgstr "ローカル"
 
-#: auth_login.php:364 include/global_arrays.php:873 lib/auth.php:1047
+#: auth_login.php:364 include/global_arrays.php:874 lib/auth.php:1047
 #: lib/auth.php:1052
 msgid "LDAP"
 msgstr "LDAP"
@@ -965,18 +955,18 @@ msgstr "一般"
 msgid "User Account Details"
 msgstr "ユーザーアカウントの詳細"
 
-#: auth_profile.php:313 include/global_arrays.php:857
+#: auth_profile.php:313 include/global_arrays.php:858
 #: include/global_settings.php:2742 lib/html.php:2191 lib/html.php:2213
 #: lib/html.php:2748
 msgid "Tree View"
 msgstr "Tree View"
 
-#: auth_profile.php:317 include/global_arrays.php:858 lib/html.php:2198
+#: auth_profile.php:317 include/global_arrays.php:859 lib/html.php:2198
 #: lib/html.php:2222 lib/html.php:2749
 msgid "List View"
 msgstr "リスト表示"
 
-#: auth_profile.php:321 include/global_arrays.php:859 lib/html.php:2205
+#: auth_profile.php:321 include/global_arrays.php:860 lib/html.php:2205
 #: lib/html.php:2750
 msgid "Preview View"
 msgstr "ユーザーはプレビュー表示の権限を持っている"
@@ -1065,14 +1055,14 @@ msgstr "デバイスを削除"
 
 #: automation_devices.php:39 automation_devices.php:294
 #: automation_devices.php:406 automation_devices.php:417
-#: automation_devices.php:679 automation_devices.php:680 host.php:1847
+#: automation_devices.php:679 automation_devices.php:680
 #: lib/api_automation.php:31 lib/html_utility.php:1335 pollers.php:32
 msgid "Down"
 msgstr "下"
 
 #: automation_devices.php:40 automation_devices.php:294
 #: automation_devices.php:408 automation_devices.php:419
-#: automation_devices.php:679 automation_devices.php:680 host.php:1846
+#: automation_devices.php:679 automation_devices.php:680
 #: lib/api_automation.php:30 lib/html_utility.php:1341
 msgid "Up"
 msgstr "上"
@@ -1120,18 +1110,17 @@ msgstr "デバイスを追加"
 msgid "Click 'Continue' to Delete the following Discovered device(s)."
 msgstr "[続行]をクリックして、次の検出されたデバイスを追加します。"
 
-#: automation_devices.php:220 host.php:577
+#: automation_devices.php:220
 msgid "Delete Device(s)"
 msgstr "デバイスを削除"
 
-#: automation_devices.php:262 automation_devices.php:578 host.php:1717
-#: host.php:1853 host.php:2006 include/global_arrays.php:990
-#: include/global_arrays.php:1046 include/global_arrays.php:2326
-#: lib/api_automation.php:178 lib/api_automation.php:271
-#: lib/api_automation.php:486 lib/api_automation.php:563
-#: lib/api_automation.php:1189 pollers.php:1031 tree.php:916 tree.php:2360
-#: user_admin.php:1065 user_admin.php:2359 user_group_admin.php:1087
-#: user_group_admin.php:2154 utilities.php:315
+#: automation_devices.php:262 automation_devices.php:578
+#: include/global_arrays.php:991 include/global_arrays.php:1047
+#: include/global_arrays.php:2329 lib/api_automation.php:178
+#: lib/api_automation.php:271 lib/api_automation.php:486
+#: lib/api_automation.php:563 lib/api_automation.php:1189 pollers.php:1031
+#: tree.php:916 tree.php:2360 user_admin.php:1065 user_admin.php:2359
+#: user_group_admin.php:1087 user_group_admin.php:2154 utilities.php:315
 msgid "Devices"
 msgstr "デバイス"
 
@@ -1147,7 +1136,7 @@ msgstr "IP"
 msgid "SNMP Name"
 msgstr "SNMP フィールド名(ドロップダウン)"
 
-#: automation_devices.php:274 host.php:1792 include/global_form.php:1184
+#: automation_devices.php:274 include/global_form.php:1184
 #: include/global_settings.php:2324 lib/html.php:2407
 msgid "Location"
 msgstr "場所"
@@ -1169,20 +1158,19 @@ msgstr "説明"
 msgid "OS"
 msgstr "OS"
 
-#: automation_devices.php:278 host.php:1970 include/global_arrays.php:524
+#: automation_devices.php:278 include/global_arrays.php:525
 msgid "Uptime"
 msgstr "あなたのアップタイムロボットAPIキー："
 
 #: automation_devices.php:279 automation_devices.php:560
-#: include/global_arrays.php:1018 utilities.php:2156
+#: include/global_arrays.php:1019 utilities.php:2156
 msgid "SNMP"
 msgstr "SNMP"
 
 #: automation_devices.php:280 automation_devices.php:524
 #: automation_graph_rules.php:837 automation_networks.php:1075
 #: automation_tree_rules.php:851 data_debug.php:523 data_debug.php:1169
-#: data_sources.php:1793 data_templates.php:1289 host.php:886 host.php:1015
-#: host.php:1838 host.php:1958 lib/api_automation.php:52
+#: data_sources.php:1793 data_templates.php:1289 lib/api_automation.php:52
 #: lib/api_automation.php:53 lib/api_automation.php:280
 #: lib/api_automation.php:573 lib/api_automation.php:1199
 #: lib/html_reports.php:2031 lib/installer.php:2054 managers.php:216
@@ -1201,7 +1189,7 @@ msgstr "最終チェック"
 msgid "Not Detected"
 msgstr "見つかりませんでした"
 
-#: automation_devices.php:318 host.php:2064
+#: automation_devices.php:318
 msgid "No Devices Found"
 msgstr "デバイスが見つかりません"
 
@@ -1217,7 +1205,7 @@ msgstr "ネットワーク"
 msgid "Reset fields to defaults"
 msgstr "フィールドをデフォルトにリセット"
 
-#: automation_devices.php:515 host.php:1824 lib/html_form.php:1436
+#: automation_devices.php:515 lib/html_form.php:1436
 msgid "Export"
 msgstr "エクスポート"
 
@@ -1237,9 +1225,9 @@ msgstr "検出されたデバイスの削除"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:698 data_source_profiles.php:61 host.php:2033
-#: lib/functions.php:6559 lib/functions.php:6564 lib/html.php:1393
-#: lib/html.php:1465 lib/html_reports.php:1810 lib/html_reports.php:1838
+#: data_debug.php:698 data_source_profiles.php:61 lib/functions.php:6559
+#: lib/functions.php:6564 lib/html.php:1393 lib/html.php:1465
+#: lib/html_reports.php:1810 lib/html_reports.php:1838
 #: lib/html_reports.php:1915 lib/html_reports.php:1916
 #: lib/html_reports.php:1917 lib/spikekill.php:1734 lib/spikekill.php:1735
 #: lib/spikekill.php:1800 lib/spikekill.php:1801 lib/spikekill.php:1802
@@ -1256,13 +1244,13 @@ msgstr "該当なし"
 #: automation_tree_rules.php:14 cdef.php:15 color_templates.php:14
 #: data_queries.php:17 data_source_profiles.php:17 data_templates.php:20
 #: graph_templates.php:23 graphs.php:52 host_templates.php:21
-#: include/global_arrays.php:1649
+#: include/global_arrays.php:1652
 msgid "Duplicate"
 msgstr "複製"
 
 #: automation_graph_rules.php:15 automation_networks.php:18
-#: automation_tree_rules.php:15 data_sources.php:26 host.php:30
-#: include/global_arrays.php:1650 include/global_settings.php:1792
+#: automation_tree_rules.php:15 data_sources.php:26
+#: include/global_arrays.php:1653 include/global_settings.php:1792
 #: managers.php:14 managers.php:20 plugins.php:24 pollers.php:20
 #: user_admin.php:19 user_domains.php:17 user_domains.php:397
 #: user_group_admin.php:21
@@ -1270,8 +1258,8 @@ msgid "Enable"
 msgstr "有効"
 
 #: automation_graph_rules.php:16 automation_networks.php:17
-#: automation_tree_rules.php:16 data_sources.php:27 host.php:31
-#: include/global_arrays.php:1651 managers.php:15 managers.php:19
+#: automation_tree_rules.php:16 data_sources.php:27
+#: include/global_arrays.php:1654 managers.php:15 managers.php:19
 #: plugins.php:25 pollers.php:19 user_admin.php:20 user_domains.php:16
 #: user_group_admin.php:22
 msgid "Disable"
@@ -1359,14 +1347,14 @@ msgid "Graph Creation Criteria"
 msgstr "グラフ作成基準"
 
 #: automation_graph_rules.php:800 automation_graph_rules.php:847
-#: automation_graph_rules.php:954 include/global_arrays.php:1013
-#: include/global_arrays.php:2782
+#: automation_graph_rules.php:954 include/global_arrays.php:1014
+#: include/global_arrays.php:2785
 msgid "Graph Rules"
 msgstr "グラフ規則"
 
 #: automation_graph_rules.php:815 automation_graph_rules.php:965
-#: graphs.php:2127 include/global_arrays.php:1364
-#: include/global_arrays.php:2891 include/global_form.php:1645
+#: graphs.php:2127 include/global_arrays.php:1367
+#: include/global_arrays.php:2894 include/global_form.php:1645
 #: include/global_form.php:2207
 msgid "Data Query"
 msgstr "データ問合せ"
@@ -1375,7 +1363,7 @@ msgstr "データ問合せ"
 #: automation_graph_rules.php:983 automation_networks.php:535
 #: automation_tree_rules.php:856 automation_tree_rules.php:976
 #: automation_tree_rules.php:994 data_debug.php:1175 data_sources.php:1798
-#: host.php:1843 include/global_arrays.php:917 include/global_form.php:1527
+#: include/global_arrays.php:918 include/global_form.php:1527
 #: include/global_settings.php:429 include/global_settings.php:445
 #: lib/api_automation.php:27 lib/html_reports.php:2036
 #: lib/html_reports.php:2141 lib/html_reports.php:2152
@@ -1390,8 +1378,8 @@ msgstr "有効"
 #: automation_graph_rules.php:843 automation_graph_rules.php:983
 #: automation_networks.php:1090 automation_tree_rules.php:857
 #: automation_tree_rules.php:994 data_debug.php:1176 data_sources.php:1799
-#: data_templates.php:1325 host.php:1844 include/global_arrays.php:916
-#: include/global_arrays.php:1573 include/global_arrays.php:1865
+#: data_templates.php:1325 include/global_arrays.php:917
+#: include/global_arrays.php:1576 include/global_arrays.php:1868
 #: include/global_settings.php:428 include/global_settings.php:444
 #: include/global_settings.php:1375 include/global_settings.php:1635
 #: include/global_settings.php:1649 include/global_settings.php:1662
@@ -1489,7 +1477,7 @@ msgstr "デバッグモードで検出を実行"
 msgid "Click 'Continue' to cancel on going Network Discovery(s)."
 msgstr "進行中のネットワーク探索をキャンセルするには、[続行]をクリックします。"
 
-#: automation_networks.php:401 include/global_arrays.php:509
+#: automation_networks.php:401 include/global_arrays.php:510
 msgid "SNMP Get"
 msgstr "SNMP Get"
 
@@ -1498,17 +1486,17 @@ msgid "Manual"
 msgstr "手動"
 
 #: automation_networks.php:409 automation_networks.php:1064
-#: include/global_arrays.php:1879 include/global_settings.php:1376
+#: include/global_arrays.php:1882 include/global_settings.php:1376
 msgid "Daily"
 msgstr "毎日"
 
 #: automation_networks.php:410 automation_networks.php:1065
-#: include/global_arrays.php:1880
+#: include/global_arrays.php:1883
 msgid "Weekly"
 msgstr "毎週"
 
 #: automation_networks.php:411 automation_networks.php:1066
-#: include/global_arrays.php:1881
+#: include/global_arrays.php:1884
 msgid "Monthly"
 msgstr "毎月"
 
@@ -1562,7 +1550,7 @@ msgstr "このネットワークにわかりやすい名前を付けます。"
 msgid "New Network Discovery Range"
 msgstr "新しいネットワーク探索範囲"
 
-#: automation_networks.php:447 automation_networks.php:1072 host.php:1748
+#: automation_networks.php:447 automation_networks.php:1072
 msgid "Data Collector"
 msgstr "データコレクター"
 
@@ -1633,11 +1621,11 @@ msgstr "%d スレッド"
 #: automation_networks.php:505 automation_networks.php:506
 #: automation_networks.php:507 automation_networks.php:508
 #: automation_networks.php:509 automation_networks.php:510
-#: automation_networks.php:511 include/global_arrays.php:820
-#: include/global_arrays.php:821 include/global_arrays.php:822
-#: include/global_arrays.php:823 include/global_arrays.php:824
-#: include/global_arrays.php:825 include/global_arrays.php:826
-#: include/global_arrays.php:827 include/global_arrays.php:828
+#: automation_networks.php:511 include/global_arrays.php:821
+#: include/global_arrays.php:822 include/global_arrays.php:823
+#: include/global_arrays.php:824 include/global_arrays.php:825
+#: include/global_arrays.php:826 include/global_arrays.php:827
+#: include/global_arrays.php:828 include/global_arrays.php:829
 #, php-format
 msgid "%d Threads"
 msgstr "%d スレッド"
@@ -1658,19 +1646,19 @@ msgstr "%d分"
 #: automation_networks.php:522 automation_networks.php:523
 #: automation_networks.php:524 automation_networks.php:525
 #: automation_networks.php:1212 automation_networks.php:1213
-#: data_sources.php:1557 include/global_arrays.php:711
-#: include/global_arrays.php:712 include/global_arrays.php:713
-#: include/global_arrays.php:714 include/global_arrays.php:751
-#: include/global_arrays.php:752 include/global_arrays.php:754
-#: include/global_arrays.php:755 include/global_arrays.php:756
-#: include/global_arrays.php:757 include/global_arrays.php:758
-#: include/global_arrays.php:759 include/global_arrays.php:1208
-#: include/global_arrays.php:1209 include/global_arrays.php:1580
-#: include/global_arrays.php:1584 include/global_arrays.php:1592
-#: include/global_arrays.php:1593 include/global_arrays.php:1617
-#: include/global_arrays.php:1618 include/global_arrays.php:1619
-#: include/global_arrays.php:1620 include/global_arrays.php:1621
-#: include/global_arrays.php:1634 include/global_settings.php:1703
+#: data_sources.php:1557 include/global_arrays.php:712
+#: include/global_arrays.php:713 include/global_arrays.php:714
+#: include/global_arrays.php:715 include/global_arrays.php:752
+#: include/global_arrays.php:753 include/global_arrays.php:755
+#: include/global_arrays.php:756 include/global_arrays.php:757
+#: include/global_arrays.php:758 include/global_arrays.php:759
+#: include/global_arrays.php:760 include/global_arrays.php:1209
+#: include/global_arrays.php:1210 include/global_arrays.php:1583
+#: include/global_arrays.php:1587 include/global_arrays.php:1595
+#: include/global_arrays.php:1596 include/global_arrays.php:1620
+#: include/global_arrays.php:1621 include/global_arrays.php:1622
+#: include/global_arrays.php:1623 include/global_arrays.php:1624
+#: include/global_arrays.php:1637 include/global_settings.php:1703
 #: include/global_settings.php:1704 include/global_settings.php:1705
 #: include/global_settings.php:1706 include/global_settings.php:1707
 #: include/global_settings.php:2668 include/global_settings.php:2876
@@ -1680,29 +1668,29 @@ msgstr "%d分"
 msgid "%d Minutes"
 msgstr "%d 分"
 
-#: automation_networks.php:526 include/global_arrays.php:760
-#: include/global_arrays.php:770 include/global_arrays.php:1454
+#: automation_networks.php:526 include/global_arrays.php:761
+#: include/global_arrays.php:771 include/global_arrays.php:1457
 #, php-format
 msgid "%d Hour"
 msgstr "%d 時間"
 
 #: automation_networks.php:527 automation_networks.php:528
 #: automation_networks.php:529 data_source_profiles.php:1123
-#: include/global_arrays.php:716 include/global_arrays.php:717
-#: include/global_arrays.php:718 include/global_arrays.php:719
-#: include/global_arrays.php:720 include/global_arrays.php:761
-#: include/global_arrays.php:762 include/global_arrays.php:763
-#: include/global_arrays.php:764 include/global_arrays.php:771
-#: include/global_arrays.php:772 include/global_arrays.php:773
-#: include/global_arrays.php:774 include/global_arrays.php:1455
-#: include/global_arrays.php:1456 include/global_arrays.php:1457
-#: include/global_arrays.php:1458 include/global_arrays.php:1525
-#: include/global_arrays.php:1526 include/global_arrays.php:1527
-#: include/global_arrays.php:1528 include/global_arrays.php:1529
-#: include/global_arrays.php:1546 include/global_arrays.php:1547
-#: include/global_arrays.php:1548 include/global_arrays.php:1549
-#: include/global_arrays.php:1550 include/global_arrays.php:1556
-#: include/global_arrays.php:1557 include/global_settings.php:1709
+#: include/global_arrays.php:717 include/global_arrays.php:718
+#: include/global_arrays.php:719 include/global_arrays.php:720
+#: include/global_arrays.php:721 include/global_arrays.php:762
+#: include/global_arrays.php:763 include/global_arrays.php:764
+#: include/global_arrays.php:765 include/global_arrays.php:772
+#: include/global_arrays.php:773 include/global_arrays.php:774
+#: include/global_arrays.php:775 include/global_arrays.php:1458
+#: include/global_arrays.php:1459 include/global_arrays.php:1460
+#: include/global_arrays.php:1461 include/global_arrays.php:1528
+#: include/global_arrays.php:1529 include/global_arrays.php:1530
+#: include/global_arrays.php:1531 include/global_arrays.php:1532
+#: include/global_arrays.php:1549 include/global_arrays.php:1550
+#: include/global_arrays.php:1551 include/global_arrays.php:1552
+#: include/global_arrays.php:1553 include/global_arrays.php:1559
+#: include/global_arrays.php:1560 include/global_settings.php:1709
 #: include/global_settings.php:1710 include/global_settings.php:1711
 #: include/global_settings.php:1712 include/global_settings.php:2880
 #: include/global_settings.php:2881
@@ -1812,37 +1800,37 @@ msgid "What Day(s) of the week will this Network Range be discovered."
 msgstr "このネットワーク範囲は、何曜日に検出されますか。"
 
 #: automation_networks.php:636 automation_networks.php:694
-#: include/global_arrays.php:1937
+#: include/global_arrays.php:1940
 msgid "Sunday"
 msgstr "日曜日"
 
 #: automation_networks.php:637 automation_networks.php:695
-#: include/global_arrays.php:1938
+#: include/global_arrays.php:1941
 msgid "Monday"
 msgstr "月曜日"
 
 #: automation_networks.php:638 automation_networks.php:696
-#: include/global_arrays.php:1939
+#: include/global_arrays.php:1942
 msgid "Tuesday"
 msgstr "火曜日"
 
 #: automation_networks.php:639 automation_networks.php:697
-#: include/global_arrays.php:1940
+#: include/global_arrays.php:1943
 msgid "Wednesday"
 msgstr "水曜日"
 
 #: automation_networks.php:640 automation_networks.php:698
-#: include/global_arrays.php:1941
+#: include/global_arrays.php:1944
 msgid "Thursday"
 msgstr "木曜日"
 
 #: automation_networks.php:641 automation_networks.php:699
-#: include/global_arrays.php:1942
+#: include/global_arrays.php:1945
 msgid "Friday"
 msgstr "金曜日"
 
 #: automation_networks.php:642 automation_networks.php:700
-#: include/global_arrays.php:1943
+#: include/global_arrays.php:1946
 msgid "Saturday"
 msgstr "土曜日"
 
@@ -1854,51 +1842,51 @@ msgstr "年の月"
 msgid "What Months(s) of the Year will this Network Range be discovered."
 msgstr "このネットワーク範囲が検出されるのは、その年の何月ですか。"
 
-#: automation_networks.php:652 include/global_arrays.php:1891
+#: automation_networks.php:652 include/global_arrays.php:1894
 msgid "January"
 msgstr "1月"
 
-#: automation_networks.php:653 include/global_arrays.php:1892
+#: automation_networks.php:653 include/global_arrays.php:1895
 msgid "February"
 msgstr "2月"
 
-#: automation_networks.php:654 include/global_arrays.php:1893
+#: automation_networks.php:654 include/global_arrays.php:1896
 msgid "March"
 msgstr "3月"
 
-#: automation_networks.php:655 include/global_arrays.php:1894
+#: automation_networks.php:655 include/global_arrays.php:1897
 msgid "April"
 msgstr "4月"
 
-#: automation_networks.php:656 include/global_arrays.php:1895
+#: automation_networks.php:656 include/global_arrays.php:1898
 msgid "May"
 msgstr "5月"
 
-#: automation_networks.php:657 include/global_arrays.php:1896
+#: automation_networks.php:657 include/global_arrays.php:1899
 msgid "June"
 msgstr "6月"
 
-#: automation_networks.php:658 include/global_arrays.php:1897
+#: automation_networks.php:658 include/global_arrays.php:1900
 msgid "July"
 msgstr "7月"
 
-#: automation_networks.php:659 include/global_arrays.php:1898
+#: automation_networks.php:659 include/global_arrays.php:1901
 msgid "August"
 msgstr "8月"
 
-#: automation_networks.php:660 include/global_arrays.php:1899
+#: automation_networks.php:660 include/global_arrays.php:1902
 msgid "September"
 msgstr "9月"
 
-#: automation_networks.php:661 include/global_arrays.php:1900
+#: automation_networks.php:661 include/global_arrays.php:1903
 msgid "October"
 msgstr "10月"
 
-#: automation_networks.php:662 include/global_arrays.php:1901
+#: automation_networks.php:662 include/global_arrays.php:1904
 msgid "November"
 msgstr "11月"
 
-#: automation_networks.php:663 include/global_arrays.php:1902
+#: automation_networks.php:663 include/global_arrays.php:1905
 msgid "December"
 msgstr "12月"
 
@@ -2031,7 +2019,7 @@ msgid "Network Filters"
 msgstr "ネットワークフィルタ"
 
 #: automation_networks.php:1054 automation_networks.php:1186
-#: include/global_arrays.php:1010
+#: include/global_arrays.php:1011
 msgid "Networks"
 msgstr "ネットワーク"
 
@@ -2088,8 +2076,8 @@ msgstr "実行中"
 msgid "Idle"
 msgstr "待機"
 
-#: automation_networks.php:1150 include/global_arrays.php:891
-#: include/global_arrays.php:1210 include/global_settings.php:2581
+#: automation_networks.php:1150 include/global_arrays.php:892
+#: include/global_arrays.php:1211 include/global_settings.php:2581
 #: lib/html_reports.php:2183 user_admin.php:2115
 msgid "Never"
 msgstr "決して"
@@ -2106,19 +2094,19 @@ msgstr "更新"
 
 #: automation_networks.php:1207 automation_networks.php:1208
 #: automation_networks.php:1209 automation_networks.php:1210
-#: data_sources.php:1553 include/global_arrays.php:709
-#: include/global_arrays.php:745 include/global_arrays.php:746
-#: include/global_arrays.php:747 include/global_arrays.php:748
-#: include/global_arrays.php:749 include/global_arrays.php:750
-#: include/global_arrays.php:1203 include/global_arrays.php:1204
-#: include/global_arrays.php:1205 include/global_arrays.php:1206
-#: include/global_arrays.php:1574 include/global_arrays.php:1575
-#: include/global_arrays.php:1576 include/global_arrays.php:1577
-#: include/global_arrays.php:1578 include/global_arrays.php:1613
-#: include/global_arrays.php:1614 include/global_arrays.php:1626
-#: include/global_arrays.php:1627 include/global_arrays.php:1628
-#: include/global_arrays.php:1629 include/global_arrays.php:1630
-#: include/global_arrays.php:1631 include/global_arrays.php:1632
+#: data_sources.php:1553 include/global_arrays.php:710
+#: include/global_arrays.php:746 include/global_arrays.php:747
+#: include/global_arrays.php:748 include/global_arrays.php:749
+#: include/global_arrays.php:750 include/global_arrays.php:751
+#: include/global_arrays.php:1204 include/global_arrays.php:1205
+#: include/global_arrays.php:1206 include/global_arrays.php:1207
+#: include/global_arrays.php:1577 include/global_arrays.php:1578
+#: include/global_arrays.php:1579 include/global_arrays.php:1580
+#: include/global_arrays.php:1581 include/global_arrays.php:1616
+#: include/global_arrays.php:1617 include/global_arrays.php:1629
+#: include/global_arrays.php:1630 include/global_arrays.php:1631
+#: include/global_arrays.php:1632 include/global_arrays.php:1633
+#: include/global_arrays.php:1634 include/global_arrays.php:1635
 #: include/global_settings.php:1276 include/global_settings.php:1277
 #: include/global_settings.php:1278 include/global_settings.php:1279
 #: include/global_settings.php:2664 include/global_settings.php:2665
@@ -2353,7 +2341,7 @@ msgstr "[続行]をクリックして、Folling自動化テンプレートを削
 msgid "Delete Automation Template(s)"
 msgstr "自動化テンプレートを削除"
 
-#: automation_templates.php:271 include/global_arrays.php:1365
+#: automation_templates.php:271 include/global_arrays.php:1368
 #: include/global_form.php:1211 include/global_form.php:1630
 #: lib/html_reports.php:1160
 msgid "Device Template"
@@ -2481,7 +2469,7 @@ msgstr "ツリー作成基準"
 msgid "Change Leaf Type"
 msgstr "葉の種類を変更"
 
-#: automation_tree_rules.php:740 lib/installer.php:4187 utilities.php:2752
+#: automation_tree_rules.php:740 lib/installer.php:4218 utilities.php:2752
 #: utilities.php:2753 utilities.php:2756 utilities.php:2757
 msgid "WARNING:"
 msgstr "警告:"
@@ -2499,8 +2487,8 @@ msgid "Are you sure you wish to continue?"
 msgstr "本当に続行してもよろしいですか ?"
 
 #: automation_tree_rules.php:836 automation_tree_rules.php:861
-#: automation_tree_rules.php:961 include/global_arrays.php:1014
-#: include/global_arrays.php:2806
+#: automation_tree_rules.php:961 include/global_arrays.php:1015
+#: include/global_arrays.php:2809
 msgid "Tree Rules"
 msgstr "ツリールール"
 
@@ -2631,7 +2619,7 @@ msgstr "CDEF [編集:%s]"
 msgid "CDEF [new]"
 msgstr "CDEF [新規]"
 
-#: cdef.php:558 include/global_arrays.php:2152
+#: cdef.php:558 include/global_arrays.php:2155
 msgid "CDEF Items"
 msgstr "CDEF 項目"
 
@@ -2648,8 +2636,8 @@ msgstr "アイテム#%d"
 msgid "Delete CDEF Item"
 msgstr "CDEFアイテムを削除"
 
-#: cdef.php:718 cdef.php:733 cdef.php:858 include/global_arrays.php:1019
-#: include/global_arrays.php:2134
+#: cdef.php:718 cdef.php:733 cdef.php:858 include/global_arrays.php:1020
+#: include/global_arrays.php:2137
 msgid "CDEFs"
 msgstr "CDEF"
 
@@ -2815,7 +2803,7 @@ msgstr "集合体"
 msgid "Color Item"
 msgstr "カラーアイテム"
 
-#: color_templates.php:60 include/global_arrays.php:1007
+#: color_templates.php:60 include/global_arrays.php:1008
 #: include/global_form.php:975 include/global_form.php:2089
 msgid "Color"
 msgstr "色"
@@ -2908,7 +2896,7 @@ msgid "Color Template '%s' had no Aggregate Templates or Graphs using this Color
 msgstr "カラーテンプレート'%s'には、このカラーテンプレートを使用する集計テンプレートまたはグラフがありませんでした。"
 
 #: color_templates.php:552 color_templates.php:566 color_templates.php:661
-#: include/global_arrays.php:2722
+#: include/global_arrays.php:2725
 msgid "Color Templates"
 msgstr "カラーテンプレート"
 
@@ -2989,7 +2977,7 @@ msgstr ""
 
 #: data_debug.php:501 data_debug.php:959 data_queries.php:769
 #: data_sources.php:1166 data_templates.php:719 graphs_items.php:387
-#: include/global_arrays.php:1005 include/global_form.php:960
+#: include/global_arrays.php:1006 include/global_form.php:960
 #: lib/api_aggregate.php:2338 lib/html.php:1363 rrdcheck.php:142
 msgid "Data Source"
 msgstr "データソース"
@@ -3081,8 +3069,8 @@ msgid "Summary of issues found for the Data Source."
 msgstr "データソースについて見つかった要約の問題。"
 
 #: data_debug.php:646 data_debug.php:1220 data_sources.php:1820
-#: data_sources.php:1982 host.php:1952 include/global_arrays.php:994
-#: include/global_arrays.php:1040 include/global_arrays.php:2308
+#: data_sources.php:1982 include/global_arrays.php:995
+#: include/global_arrays.php:1041 include/global_arrays.php:2311
 #: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:325
 msgid "Data Sources"
@@ -3293,7 +3281,7 @@ msgstr "プロフィール"
 
 #: data_debug.php:1154 data_debug.php:1173 data_debug.php:1184
 #: data_sources.php:1777 data_sources.php:1797 data_templates.php:1111
-#: graphs.php:2124 graphs_new.php:488 host.php:1796 host_templates.php:716
+#: graphs.php:2124 graphs_new.php:488 host_templates.php:716
 #: host_templates.php:734 lib/clog_webapi.php:549 lib/html.php:227
 #: lib/html_reports.php:1138 lib/html_reports.php:2284 plugins.php:501
 #: settings.php:590 settings.php:612 settings.php:643 tree.php:914
@@ -3542,9 +3530,8 @@ msgstr "フィールド名"
 msgid "Suggested Value"
 msgstr "推奨値"
 
-#: data_queries.php:893 data_queries.php:1003 host.php:973 host.php:1117
-#: host_templates.php:515 host_templates.php:569 lib/html.php:51
-#: lib/html_filter.php:38
+#: data_queries.php:893 data_queries.php:1003 host_templates.php:515
+#: host_templates.php:569 lib/html.php:51 lib/html_filter.php:38
 msgid "Add"
 msgstr "追加"
 
@@ -3582,13 +3569,12 @@ msgstr "正常に配置されたXMLファイル"
 msgid "Could not locate XML file."
 msgstr "XMLファイルが見つかりませんでした。"
 
-#: data_queries.php:1206 host.php:881 host_templates.php:466
-#: include/global_arrays.php:2416
+#: data_queries.php:1206 host_templates.php:466 include/global_arrays.php:2419
 msgid "Associated Graph Templates"
 msgstr "関連グラフテンプレート"
 
 #: data_queries.php:1210 graph_templates.php:858 graphs_new.php:640
-#: host.php:885 lib/api_automation.php:576
+#: lib/api_automation.php:576
 msgid "Graph Template Name"
 msgstr "グラフテンプレート名"
 
@@ -3613,12 +3599,12 @@ msgid "Delete Associated Graph"
 msgstr "関連付けられたグラフを削除"
 
 #: data_queries.php:1362 data_queries.php:1377 data_queries.php:1512
-#: include/global_arrays.php:999 include/global_arrays.php:1226
-#: include/global_arrays.php:2398 lib/api_automation.php:1078
+#: include/global_arrays.php:1000 include/global_arrays.php:1227
+#: include/global_arrays.php:2401 lib/api_automation.php:1078
 msgid "Data Queries"
 msgstr "データ問合せ"
 
-#: data_queries.php:1476 host.php:1013 utilities.php:1934
+#: data_queries.php:1476 utilities.php:1934
 msgid "Data Query Name"
 msgstr "データ照会名"
 
@@ -3642,7 +3628,7 @@ msgstr "このデータクエリを使用しているグラフの数。"
 msgid "The number of Graphs Templates using this Data Query."
 msgstr "このデータクエリを使用しているグラフテンプレートの数。"
 
-#: data_queries.php:1505 include/global_arrays.php:1357
+#: data_queries.php:1505 include/global_arrays.php:1360
 #: include/global_form.php:570 include/global_form.php:1380
 msgid "Data Input Method"
 msgstr "データの入力方法"
@@ -3787,12 +3773,12 @@ msgstr "データソースごとに%s KB"
 msgid "Enter a valid number of Rows to obtain the RRA size."
 msgstr "有効な行数を入力して、RRAサイズを取得します。"
 
-#: data_source_profiles.php:1088 include/global_arrays.php:787
-#: include/global_arrays.php:788 include/global_arrays.php:789
-#: include/global_arrays.php:790 include/global_arrays.php:791
-#: include/global_arrays.php:792 include/global_arrays.php:793
-#: include/global_arrays.php:794 include/global_arrays.php:795
-#: include/global_arrays.php:1471 include/global_settings.php:1641
+#: data_source_profiles.php:1088 include/global_arrays.php:788
+#: include/global_arrays.php:789 include/global_arrays.php:790
+#: include/global_arrays.php:791 include/global_arrays.php:792
+#: include/global_arrays.php:793 include/global_arrays.php:794
+#: include/global_arrays.php:795 include/global_arrays.php:796
+#: include/global_arrays.php:1474 include/global_settings.php:1641
 #, php-format
 msgid "%d Years"
 msgstr "%d 年"
@@ -3801,48 +3787,48 @@ msgstr "%d 年"
 msgid "1 Year"
 msgstr "1年"
 
-#: data_source_profiles.php:1097 include/global_arrays.php:781
-#: include/global_arrays.php:1465 rrdcleaner.php:537
+#: data_source_profiles.php:1097 include/global_arrays.php:782
+#: include/global_arrays.php:1468 rrdcleaner.php:537
 #, php-format
 msgid "%d Month"
 msgstr "%d ヶ月間の"
 
-#: data_source_profiles.php:1097 include/global_arrays.php:782
-#: include/global_arrays.php:783 include/global_arrays.php:784
-#: include/global_arrays.php:785 include/global_arrays.php:1466
-#: include/global_arrays.php:1467 include/global_arrays.php:1468
-#: include/global_arrays.php:1469 rrdcleaner.php:538 rrdcleaner.php:539
+#: data_source_profiles.php:1097 include/global_arrays.php:783
+#: include/global_arrays.php:784 include/global_arrays.php:785
+#: include/global_arrays.php:786 include/global_arrays.php:1469
+#: include/global_arrays.php:1470 include/global_arrays.php:1471
+#: include/global_arrays.php:1472 rrdcleaner.php:538 rrdcleaner.php:539
 #: rrdcleaner.php:540
 #, php-format
 msgid "%d Months"
 msgstr "%d ヶ月間の"
 
-#: data_source_profiles.php:1106 include/global_arrays.php:722
-#: include/global_arrays.php:778 include/global_arrays.php:1463
+#: data_source_profiles.php:1106 include/global_arrays.php:723
+#: include/global_arrays.php:779 include/global_arrays.php:1466
 #: rrdcleaner.php:533 rrdcleaner.php:534
 #, php-format
 msgid "%d Week"
 msgstr "%d 週間の"
 
-#: data_source_profiles.php:1106 include/global_arrays.php:779
-#: include/global_arrays.php:780 include/global_arrays.php:1464
+#: data_source_profiles.php:1106 include/global_arrays.php:780
+#: include/global_arrays.php:781 include/global_arrays.php:1467
 #: include/global_settings.php:2884 include/global_settings.php:2885
 #: include/global_settings.php:2886 rrdcleaner.php:535 rrdcleaner.php:536
 #, php-format
 msgid "%d Weeks"
 msgstr "%d 週間の"
 
-#: data_source_profiles.php:1115 include/global_arrays.php:721
-#: include/global_arrays.php:765 include/global_arrays.php:775
-#: include/global_arrays.php:1459
+#: data_source_profiles.php:1115 include/global_arrays.php:722
+#: include/global_arrays.php:766 include/global_arrays.php:776
+#: include/global_arrays.php:1462
 #, php-format
 msgid "%d Day"
 msgstr "%d 日間"
 
-#: data_source_profiles.php:1115 include/global_arrays.php:766
-#: include/global_arrays.php:776 include/global_arrays.php:777
-#: include/global_arrays.php:1460 include/global_arrays.php:1461
-#: include/global_arrays.php:1462 include/global_settings.php:1636
+#: data_source_profiles.php:1115 include/global_arrays.php:767
+#: include/global_arrays.php:777 include/global_arrays.php:778
+#: include/global_arrays.php:1463 include/global_arrays.php:1464
+#: include/global_arrays.php:1465 include/global_settings.php:1636
 #: include/global_settings.php:1637 include/global_settings.php:1638
 #: include/global_settings.php:1639 include/global_settings.php:1650
 #: include/global_settings.php:1651 include/global_settings.php:1652
@@ -3851,16 +3837,16 @@ msgstr "%d 日間"
 msgid "%d Days"
 msgstr "%d 日"
 
-#: data_source_profiles.php:1123 include/global_arrays.php:715
-#: include/global_arrays.php:1524 include/global_arrays.php:1545
-#: include/global_arrays.php:1555 include/global_arrays.php:1585
-#: include/global_arrays.php:1594 include/global_arrays.php:1622
+#: data_source_profiles.php:1123 include/global_arrays.php:716
+#: include/global_arrays.php:1527 include/global_arrays.php:1548
+#: include/global_arrays.php:1558 include/global_arrays.php:1588
+#: include/global_arrays.php:1597 include/global_arrays.php:1625
 #: include/global_settings.php:1411 include/global_settings.php:1708
 #: include/global_settings.php:2879
 msgid "1 Hour"
 msgstr "1時間"
 
-#: data_source_profiles.php:1177 include/global_arrays.php:1233
+#: data_source_profiles.php:1177 include/global_arrays.php:1234
 msgid "Data Source Profiles"
 msgstr "データソースプロファイル"
 
@@ -4076,8 +4062,8 @@ msgid "The name given to this data template.  Please note that you may only chan
 msgstr "このデータテンプレートに付けられた名前。グラフテンプレートは100％互換のグラフテンプレートにしか変更できないため、同一のデータソースが含まれることになります。"
 
 #: data_sources.php:1101 graph_view.php:817 graphs.php:1601
-#: include/global_arrays.php:954 include/global_arrays.php:1003
-#: include/global_arrays.php:1688 include/global_arrays.php:1857
+#: include/global_arrays.php:955 include/global_arrays.php:1004
+#: include/global_arrays.php:1691 include/global_arrays.php:1860
 #: lib/api_automation.php:426 lib/functions.php:6195 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
@@ -4125,9 +4111,9 @@ msgstr "RRDツールチューン情報"
 msgid "External"
 msgstr "外部ソース"
 
-#: data_sources.php:1555 include/global_arrays.php:710
-#: include/global_arrays.php:1207 include/global_arrays.php:1579
-#: include/global_arrays.php:1615 include/global_arrays.php:1633
+#: data_sources.php:1555 include/global_arrays.php:711
+#: include/global_arrays.php:1208 include/global_arrays.php:1582
+#: include/global_arrays.php:1618 include/global_arrays.php:1636
 #: include/global_settings.php:1702 include/global_settings.php:2667
 msgid "1 Minute"
 msgstr "1分"
@@ -4201,7 +4187,7 @@ msgstr "データソースが見つかりません"
 msgid "No Graphs"
 msgstr "グラフ"
 
-#: data_sources.php:2149 include/global_arrays.php:995
+#: data_sources.php:2149 include/global_arrays.php:996
 msgid "Aggregates"
 msgstr "総計"
 
@@ -4309,7 +4295,7 @@ msgid "After you uncheck this checkbox and then Save the Data Template, any exis
 msgstr "このチェックボックスをオフにしてからデータテンプレートを保存すると、このデータテンプレートに基づく既存のデータソースはカスタムデータを失います。これにより、データ収集とグラフが破損する可能性があります"
 
 #: data_templates.php:1092 data_templates.php:1126 data_templates.php:1296
-#: include/global_arrays.php:1237 include/global_arrays.php:2290
+#: include/global_arrays.php:1238 include/global_arrays.php:2293
 msgid "Data Templates"
 msgstr "データテンプレート"
 
@@ -4379,11 +4365,11 @@ msgstr "GPRINTプリセット[編集：%s]"
 msgid "GPRINT Presets [new]"
 msgstr "GPRINTプリセット[new]"
 
-#: gprint_presets.php:246 include/global_arrays.php:2116
+#: gprint_presets.php:246 include/global_arrays.php:2119
 msgid "GPRINT Presets"
 msgstr "GPRINT プリセット"
 
-#: gprint_presets.php:261 gprint_presets.php:408 include/global_arrays.php:1022
+#: gprint_presets.php:261 gprint_presets.php:408 include/global_arrays.php:1023
 msgid "GPRINTs"
 msgstr "GPRINT"
 
@@ -4588,7 +4574,7 @@ msgstr "グラフを次のグラフテンプレートと同期させるには、
 msgid "Graph Template Items [edit: %s]"
 msgstr "グラフテンプレートアイテム[編集：%s]"
 
-#: graph_templates.php:497 include/global_arrays.php:2260
+#: graph_templates.php:497 include/global_arrays.php:2263
 msgid "Graph Item Inputs"
 msgstr "グラフ項目の入力"
 
@@ -4619,8 +4605,8 @@ msgid "Check this checkbox if you wish to allow the user to override the value o
 msgstr "グラフ作成中にユーザーが右側の値を上書きできるようにする場合は、このチェックボックスをオンにします。"
 
 #: graph_templates.php:718 graph_templates.php:733 graph_templates.php:900
-#: graphs_new.php:637 include/global_arrays.php:1236
-#: include/global_arrays.php:2236 lib/html_tree.php:541 user_admin.php:1204
+#: graphs_new.php:637 include/global_arrays.php:1237
+#: include/global_arrays.php:2239 lib/html_tree.php:541 user_admin.php:1204
 #: user_group_admin.php:1223
 msgid "Graph Templates"
 msgstr "グラフテンプレート"
@@ -4735,7 +4721,7 @@ msgstr "[カスタムグラフリストの適用 - リストからのフィル�
 msgid "View"
 msgstr "表示"
 
-#: graph_view.php:677 graph_view.php:929 include/global_arrays.php:1215
+#: graph_view.php:677 graph_view.php:929 include/global_arrays.php:1216
 msgid "View Graphs"
 msgstr "グラフを表示する"
 
@@ -4752,7 +4738,7 @@ msgstr "レポート"
 msgid "All Graphs & Templates"
 msgstr "すべてのグラフとテンプレート"
 
-#: graph_view.php:704 include/global_arrays.php:2890 lib/graphs.php:40
+#: graph_view.php:704 include/global_arrays.php:2893 lib/graphs.php:40
 #: lib/graphs.php:49 lib/html.php:221 lib/html_graph.php:144
 #: lib/html_tree.php:978
 msgid "Not Templated"
@@ -4795,7 +4781,7 @@ msgstr "プレビューモードでないときのこのグラフのサイズ。
 msgid "Select the Report to add the selected Graphs to."
 msgstr "選択したグラフを追加するレポートを選択します。"
 
-#: graph_view.php:995 include/global_arrays.php:2036
+#: graph_view.php:995 include/global_arrays.php:2039
 #: include/global_settings.php:2738
 msgid "Preview Mode"
 msgstr "プレビューモード"
@@ -4858,7 +4844,7 @@ msgstr "サマリー詳細"
 msgid "Download"
 msgstr "ダウンロード"
 
-#: graphs.php:37 graphs.php:902 include/global_arrays.php:2086
+#: graphs.php:37 graphs.php:902 include/global_arrays.php:2089
 msgid "Change Graph Template"
 msgstr "新規グラフテンプレートを変更する"
 
@@ -4870,7 +4856,7 @@ msgstr "集約グラフを作成する"
 msgid "Create Aggregate from Template"
 msgstr "テンプレートから集計を作成"
 
-#: graphs.php:47 graphs.php:1232 host.php:34
+#: graphs.php:47 graphs.php:1232
 msgid "Apply Automation Rules"
 msgstr "自動化ルールを適用する"
 
@@ -4951,7 +4937,7 @@ msgstr "行き先の枝"
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
 msgstr "これらのグラフに新しいデバイスを選択して、[続行]をクリックします。"
 
-#: graphs.php:945 include/global_arrays.php:987
+#: graphs.php:945 include/global_arrays.php:988
 msgid "New Device"
 msgstr "新しい装置"
 
@@ -5109,7 +5095,7 @@ msgstr "データソース[デバイスなし]"
 msgid "Data Sources [%s]"
 msgstr "データソース [%s]"
 
-#: graphs_items.php:266 include/global_arrays.php:1356
+#: graphs_items.php:266 include/global_arrays.php:1359
 #: include/global_form.php:1640
 msgid "Data Template"
 msgstr "このデータテンプレートに名前を与えてください。"
@@ -5164,7 +5150,7 @@ msgstr "フィルタを保存"
 msgid "Edit this Device"
 msgstr "このデバイスを編集"
 
-#: graphs_new.php:554 host.php:841
+#: graphs_new.php:554
 msgid "Create New Device"
 msgstr "新しいデバイスを作成する"
 
@@ -5172,8 +5158,8 @@ msgstr "新しいデバイスを作成する"
 msgid "(Select a graph type to create)"
 msgstr "（作成するグラフの種類を選択してください）"
 
-#: graphs_new.php:631 include/global_arrays.php:985
-#: include/global_arrays.php:1063 lib/html_form.php:1417 lib/html_form.php:1430
+#: graphs_new.php:631 include/global_arrays.php:986
+#: include/global_arrays.php:1064 lib/html_form.php:1417 lib/html_form.php:1430
 #: tree.php:1662
 msgid "Create"
 msgstr "作成"
@@ -5253,423 +5239,6 @@ msgstr "警告：ユーザー：%sのKadupulページ：%sが致命的なエラ�
 msgid "The document page '%s' could not be reached locally."
 msgstr ""
 
-#: host.php:32
-msgid "Change Device Settings"
-msgstr "デバイス設定を変更する"
-
-#: host.php:33 pollers.php:21
-msgid "Clear Statistics"
-msgstr "統計を消去"
-
-#: host.php:35
-msgid "Sync to Device Template"
-msgstr "デバイステンプレートに同期"
-
-#: host.php:36
-msgid "Place Device on Report"
-msgstr "ツリーにデバイスを配置"
-
-#: host.php:109
-msgid "Data Query Re-indexed."
-msgstr "データクエリインデックス"
-
-#: host.php:117
-msgid "Device Data Query Re-indexed.  Verbose output displayed."
-msgstr "デバイスデータクエリのインデックスが再作成されました。詳細な出力が表示されます。"
-
-#: host.php:143
-msgid "Device Debugging Enabled for Device."
-msgstr "デバイスのデバイスデバッグが有効になっています。"
-
-#: host.php:152
-msgid "Device Debugging Disabled for Device."
-msgstr "デバイスは無効です"
-
-#: host.php:161
-msgid "Poller Cache for Device Refreshed."
-msgstr "デバイスのポーラーキャッシュが更新されました。"
-
-#: host.php:163
-msgid "ERROR: Invalid Device ID."
-msgstr "エラー：デバイス["
-
-#: host.php:222
-msgid "Device Reindex Failed."
-msgstr ""
-
-#: host.php:238
-#, php-format
-msgid "Device Reindex Completed in %0.2f seconds.  There were %d items updated."
-msgstr "デバイスの再インデックスは%0.2f秒で完了しました。%d個のアイテムが更新されました。"
-
-#: host.php:404
-#, php-format
-msgid "Unable to add some Devices to Report '%s'"
-msgstr "レポート'%s'にいくつかのデバイスを追加できません"
-
-#: host.php:482
-msgid "Click 'Continue' to enable the following Device(s)."
-msgstr "次のデバイスを有効にするには、[続行]をクリックします。"
-
-#: host.php:487
-msgid "Enable Device(s)"
-msgstr "デバイスを有効にする"
-
-#: host.php:491
-msgid "Click 'Continue' to disable the following Device(s)."
-msgstr "次のデバイスを無効にするには、[続行]をクリックします。"
-
-#: host.php:496
-msgid "Disable Device(s)"
-msgstr "デバイスを無効にする"
-
-#: host.php:500
-msgid "Click 'Continue' to change the Device options below for multiple Device(s).  Please check the box next to the fields you want to update, and then fill in the new value."
-msgstr "[続行]をクリックして、複数のデバイスの下にある[デバイス]オプションを変更します。更新するフィールドの横にあるチェックボックスをオンにしてから、新しい値を入力します。"
-
-#: host.php:520
-msgid "Update this Field"
-msgstr "このフィールドを更新する"
-
-#: host.php:543
-msgid "Change Device(s) SNMP Options"
-msgstr "デバイスのSNMPオプションの変更"
-
-#: host.php:547
-msgid "Click 'Continue' to clear the counters for the following Device(s)."
-msgstr "[続行]をクリックして、次のデバイスのカウンターをクリアします。"
-
-#: host.php:552
-msgid "Clear Statistics on Device(s)"
-msgstr "デバイスの統計情報を消去する"
-
-#: host.php:556
-msgid "Click 'Continue' to Synchronize the following Device(s) to their Device Template."
-msgstr "[続行]をクリックして、次のデバイスをそれらのデバイステンプレートに同期させます。"
-
-#: host.php:561
-msgid "Synchronize Device(s)"
-msgstr "デバイスを同期する"
-
-#: host.php:565
-msgid "Click 'Continue' to delete the following Device(s)."
-msgstr "次のデバイスを削除するには、[続行]をクリックしてください。"
-
-#: host.php:568
-msgid "Leave all Graph(s) and Data Source(s) untouched.  Data Source(s) will be disabled however."
-msgstr "すべてのグラフとデータソースはそのまま残します。ただし、データソースは無効になります。"
-
-#: host.php:570
-msgid "Delete all associated Graph(s) and Data Source(s)."
-msgstr "関連付けられているすべてのグラフとデータソースを削除します。"
-
-#: host.php:581
-msgid "Click 'Continue' to place the following Device(s) under the branch selected below."
-msgstr "[続行]をクリックして、次のデバイスを下で選択したブランチの下に配置します。"
-
-#: host.php:591
-msgid "Place Device(s) on Tree"
-msgstr "ツリーにデバイスを配置"
-
-#: host.php:595
-msgid "Click 'Continue' to apply Automation Rules to the following Devices(s)."
-msgstr "次のデバイスに自動化ルールを適用するには、[続行]をクリックします。"
-
-#: host.php:600
-msgid "Run Automation on Device(s)"
-msgstr "デバイスでオートメーションを実行する"
-
-#: host.php:631
-msgid "Add Devices to Report"
-msgstr "レポートに追加"
-
-#: host.php:633
-msgid "You currently have no Reports defined."
-msgstr "現在レポートが定義されていません。"
-
-#: host.php:805
-msgid "Device [new]"
-msgstr "端末[新規]"
-
-#: host.php:819
-#, php-format
-msgid "Device [edit: %s]"
-msgstr "デバイス[編集：%s]"
-
-#: host.php:821
-msgid "Disable Device Debug"
-msgstr "デバイスデバッグを無効にする"
-
-#: host.php:823
-msgid "Enable Device Debug"
-msgstr "デバイスデバッグを有効にする"
-
-#: host.php:826
-msgid "Repopulate Poller Cache"
-msgstr "ポーラーキャッシュを再構築する"
-
-#: host.php:827 include/global_arrays.php:2458 include/global_arrays.php:2470
-#: utilities.php:2395
-msgid "View Poller Cache"
-msgstr "ポーラーキャッシュの表示"
-
-#: host.php:842
-msgid "Create Graphs for this Device"
-msgstr "このデバイスのグラフを作成する"
-
-#: host.php:843
-msgid "Re-Index Device"
-msgstr "再索引方法"
-
-#: host.php:846
-msgid "Data Source List"
-msgstr "データソースリスト"
-
-#: host.php:847
-msgid "Graph List"
-msgstr "グラフリスト"
-
-#: host.php:853
-msgid "Contacting Device"
-msgstr "連絡デバイス"
-
-#: host.php:948 tree.php:1782 tree.php:1856 tree.php:1964
-msgid "Edit"
-msgstr "編集"
-
-#: host.php:948
-msgid "Is Being Graphed"
-msgstr "グラッシングされている"
-
-#: host.php:948
-msgid "Not Being Graphed"
-msgstr "グラフにされていない"
-
-#: host.php:951
-msgid "Delete Graph Template Association"
-msgstr "グラフテンプレートの関連付けを削除する"
-
-#: host.php:958 host_templates.php:493
-msgid "No associated graph templates."
-msgstr "関連グラフテンプレート"
-
-#: host.php:967 host_templates.php:502
-msgid "Add Graph Template"
-msgstr "グラフテンプレートを追加"
-
-#: host.php:973
-msgid "Add Graph Template to Device"
-msgstr "グラフテンプレートをデバイスに追加"
-
-#: host.php:989
-msgid "Data Query Debug Information"
-msgstr "データクエリのデバッグ情報"
-
-#: host.php:993 lib/functions.php:4947 tree.php:1804 tree.php:1878
-#: tree.php:1986 user_admin.php:18 user_group_admin.php:20
-msgid "Copy"
-msgstr "コピー"
-
-#: host.php:994
-msgid "Hide"
-msgstr "非表示"
-
-#: host.php:1009 host_templates.php:525
-msgid "Associated Data Queries"
-msgstr "連想データ照会"
-
-#: host.php:1014 host.php:1111
-msgid "Re-Index Method"
-msgstr "再索引方法"
-
-#: host.php:1016 include/global_arrays.php:2092 include/global_arrays.php:2158
-#: include/global_arrays.php:2248 include/global_arrays.php:2284
-#: include/global_arrays.php:2302 include/global_arrays.php:2320
-#: include/global_arrays.php:2338 include/global_arrays.php:2368
-#: include/global_arrays.php:2404 include/global_arrays.php:2434
-#: include/global_arrays.php:2530 include/global_arrays.php:2734
-#: include/global_arrays.php:2758 include/global_arrays.php:2776
-#: include/global_arrays.php:2794 include/global_arrays.php:2818
-#: lib/api_automation.php:1289 lib/api_automation.php:1352
-#: lib/api_automation.php:1422 lib/html_reports.php:1792 plugins.php:605
-msgid "Actions"
-msgstr "操作"
-
-#: host.php:1078
-#, php-format
-msgid " [%d Items, %d Rows]"
-msgstr "[%dアイテム、%d行]"
-
-#: host.php:1078
-msgid "Fail"
-msgstr "失敗"
-
-#: host.php:1078 lib/functions.php:6210 lib/functions.php:6215
-msgid "Success"
-msgstr "成功"
-
-#: host.php:1081
-msgid "Reload Query"
-msgstr "クエリの再読み込み"
-
-#: host.php:1082
-msgid "Verbose Query"
-msgstr "冗長なクエリ"
-
-#: host.php:1083
-msgid "Remove Query"
-msgstr "クエリを削除"
-
-#: host.php:1089
-msgid "No Associated Data Queries."
-msgstr "連想データ照会"
-
-#: host.php:1105 host_templates.php:559
-msgid "Add Data Query"
-msgstr "データクエリを追加"
-
-#: host.php:1117
-msgid "Add Data Query to Device"
-msgstr "デバイスへのデータクエリの追加"
-
-#: host.php:1288 host.php:1301 include/global_arrays.php:679
-msgid "Ping"
-msgstr "Ping"
-
-#: host.php:1299 include/global_arrays.php:674
-msgid "Ping and SNMP Uptime"
-msgstr "pingとSNMPの稼働時間"
-
-#: host.php:1300 include/global_arrays.php:676
-msgid "SNMP Uptime"
-msgstr "SNMP稼働時間"
-
-#: host.php:1302 include/global_arrays.php:675
-msgid "Ping or SNMP Uptime"
-msgstr "pingまたはSNMPの稼働時間"
-
-#: host.php:1303 include/global_arrays.php:677
-msgid "SNMP Desc"
-msgstr "SNMPの説明"
-
-#: host.php:1304
-msgid "SNMP GetNext"
-msgstr "SNMP GetNext"
-
-#: host.php:1368
-msgid "Delete Item from Device"
-msgstr "デバイステンプレートを削除"
-
-#: host.php:1611 host.php:1804
-msgid "Undefined"
-msgstr "未定義"
-
-#: host.php:1727 include/global_settings.php:702 lib/html.php:2373
-#: lib/html_reports.php:1151
-msgid "Site"
-msgstr "サイト"
-
-#: host.php:1824
-msgid "Export Devices"
-msgstr "エクスポートデバイス"
-
-#: host.php:1845 lib/api_automation.php:29
-msgid "Not Up"
-msgstr "上"
-
-#: host.php:1848 lib/api_automation.php:32 lib/html.php:65
-#: lib/html_utility.php:1338 pollers.php:34
-msgid "Recovering"
-msgstr "復元中"
-
-#: host.php:1849 lib/api_automation.php:33 lib/auth.php:3059
-#: lib/clog_webapi.php:856 lib/html_utility.php:1347 lib/import.php:342
-#: lib/plugins.php:1499 lib/plugins.php:1500 lib/rrd.php:4194 lib/rrd.php:4206
-#: lib/spikekill.php:301 package_import.php:522 package_import.php:600
-#: utilities.php:211 utilities.php:212 utilities.php:2753
-msgid "Unknown"
-msgstr "不明"
-
-#: host.php:1928 lib/api_automation.php:570 tree.php:987 utilities.php:2283
-msgid "Device Description"
-msgstr "デバイスの説明"
-
-#: host.php:1931
-msgid "The name by which this Device will be referred to."
-msgstr "この装置が参照される名前。"
-
-#: host.php:1934 include/global_form.php:1176 include/global_form.php:1747
-#: lib/api_automation.php:279 lib/api_automation.php:571
-#: lib/api_automation.php:890 lib/api_automation.php:1197 managers.php:217
-#: pollers.php:115 pollers.php:1001 user_admin.php:1073
-#: user_group_admin.php:1095
-msgid "Hostname"
-msgstr "ホスト名"
-
-#: host.php:1937
-msgid "Either an IP address, or hostname.  If a hostname, it must be resolvable by either DNS, or from your hosts file."
-msgstr "IPアドレス、またはホスト名。ホスト名の場合は、DNSまたはホストファイルから解決できる必要があります。"
-
-#: host.php:1943
-msgid "The internal database ID for this Device.  Useful when performing automation or debugging."
-msgstr "このデバイスの内部データベースID。自動化またはデバッグを実行するときに役立ちます。"
-
-#: host.php:1949
-msgid "The total number of Graphs generated from this Device."
-msgstr "このデバイスから生成されたグラフの総数。"
-
-#: host.php:1955
-msgid "The total number of Data Sources generated from this Device."
-msgstr "このデバイスから生成されたデータソースの総数。"
-
-#: host.php:1961
-msgid "The monitoring status of the Device based upon ping results.  If this Device is a special type Device, by using the hostname \"localhost\", or due to the setting to not perform an Availability Check, it will always remain Up.  When using cmd.php data collector, a Device with no Graphs, is not pinged by the data collector and will remain in an \"Unknown\" state."
-msgstr "pingの結果に基づくデバイスの監視ステータス。このデバイスが特殊なタイプのデバイスである場合、ホスト名 &quot;localhost&quot;を使用するか、可用性チェックを実行しない設定のために、常にUpのままになります。 cmd.phpデータコレクタを使用する場合、グラフのないデバイスはデータコレクタによって固定されず、「不明」状態のままになります。"
-
-#: host.php:1964
-msgid "In State"
-msgstr "都道府県"
-
-#: host.php:1967
-msgid "The amount of time that this Device has been in its current state."
-msgstr "このデバイスが現在の状態になっている時間。"
-
-#: host.php:1973
-msgid "The current amount of time that the host has been up."
-msgstr "ホストが起動している現在の時間。"
-
-#: host.php:1976
-msgid "Poll Time"
-msgstr "投票時間"
-
-#: host.php:1979
-msgid "The amount of time it takes to collect data from this Device."
-msgstr "このデバイスからデータを収集するのにかかる時間。"
-
-#: host.php:1982
-msgid "Current (ms)"
-msgstr "現在 (ミリ秒)"
-
-#: host.php:1985
-msgid "The current ping time in milliseconds to reach the Device."
-msgstr "デバイスに到達するための現在のping時間（ミリ秒）。"
-
-#: host.php:1988
-msgid "Average (ms)"
-msgstr "平均 (ミリ秒)"
-
-#: host.php:1991
-msgid "The average ping time in milliseconds to reach the Device since the counters were cleared for this Device."
-msgstr "このデバイスのカウンタがクリアされてからデバイスに到達するまでの平均ping時間（ミリ秒）。"
-
-#: host.php:1994
-msgid "Availability"
-msgstr "有効性"
-
-#: host.php:1997
-msgid "The availability percentage based upon ping results since the counters were cleared for this Device."
-msgstr "このデバイスのカウンタがクリアされてからのpingに基づくアベイラビリティパーセンテージ"
-
 #: host_templates.php:22
 msgid "Sync Devices"
 msgstr "同期装置"
@@ -5733,13 +5302,29 @@ msgstr "デバイステンプレート[new]"
 msgid "Default Submit Button"
 msgstr "デフォルトの送信ボタン"
 
+#: host_templates.php:493
+msgid "No associated graph templates."
+msgstr "関連グラフテンプレート"
+
+#: host_templates.php:502
+msgid "Add Graph Template"
+msgstr "グラフテンプレートを追加"
+
 #: host_templates.php:515
 msgid "Add Graph Template to Device Template"
 msgstr "デバイステンプレートにグラフテンプレートを追加する"
 
+#: host_templates.php:525
+msgid "Associated Data Queries"
+msgstr "連想データ照会"
+
 #: host_templates.php:550
 msgid "No associated data queries."
 msgstr "連想データ照会"
+
+#: host_templates.php:559
+msgid "Add Data Query"
+msgstr "データクエリを追加"
 
 #: host_templates.php:569
 msgid "Add Data Query to Device Template"
@@ -5750,7 +5335,7 @@ msgid "Delete Item from Device Template"
 msgstr "デバイステンプレートを削除"
 
 #: host_templates.php:703 host_templates.php:801 host_templates.php:968
-#: include/global_arrays.php:1238 include/global_arrays.php:2272
+#: include/global_arrays.php:1239 include/global_arrays.php:2275
 msgid "Device Templates"
 msgstr "デバイステンプレート"
 
@@ -5795,7 +5380,7 @@ msgstr "使用しているデバイス"
 msgid "The number of Devices using this Device Template."
 msgstr "このデバイステンプレートを使用しているデバイスの数。"
 
-#: host_templates.php:993 include/global_arrays.php:1101
+#: host_templates.php:993 include/global_arrays.php:1102
 msgid "Unassigned"
 msgstr "アサインされていません"
 
@@ -5851,1412 +5436,1432 @@ msgstr "このData CollectorがメインのKadupulサイトと完全に同期し
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "メインデータコレクターがオフラインまたはリカバリステータスになりました"
 
-#: include/global_arrays.php:138
+#: include/global_arrays.php:139
 msgid "Save Successful."
 msgstr "保存に成功しました。"
 
-#: include/global_arrays.php:141
+#: include/global_arrays.php:142
 msgid "Save Failed."
 msgstr "保存に失敗しました。"
 
-#: include/global_arrays.php:144
+#: include/global_arrays.php:145
 msgid "Save Failed due to field input errors (Check red fields)."
 msgstr "フィールド入力エラーが原因で保存に失敗しました（赤いフィールドを確認してください）。"
 
-#: include/global_arrays.php:147
+#: include/global_arrays.php:148
 msgid "Passwords do not match, please retype."
 msgstr "パスワードが一致しません。もう一度入力してください。"
 
-#: include/global_arrays.php:150
+#: include/global_arrays.php:151
 msgid "You must select at least one field."
 msgstr "少なくとも1つのフィールドを選択しなければなりません。"
 
-#: include/global_arrays.php:153
+#: include/global_arrays.php:154
 msgid "You must have built in user authentication turned on to use this feature."
 msgstr "この機能を使用するには、組み込みのユーザー認証がオンになっている必要があります。"
 
-#: include/global_arrays.php:156
+#: include/global_arrays.php:157
 msgid "XML parse error."
 msgstr "XML の解析エラーです。"
 
-#: include/global_arrays.php:159
+#: include/global_arrays.php:160
 msgid "The directory highlighted does not exist.  Please enter a valid directory."
 msgstr "強調表示されているディレクトリは存在しません。有効なディレクトリを入力してください。"
 
-#: include/global_arrays.php:162
+#: include/global_arrays.php:163
 msgid "The Kadupul log file must have the extension '.log'"
 msgstr "Kadupulログファイルの拡張子は.logです。"
 
-#: include/global_arrays.php:165
+#: include/global_arrays.php:166
 msgid "Data Input for method does not appear to be whitelisted."
 msgstr "メソッドのデータ入力がホワイトリストに登録されていないようです。"
 
-#: include/global_arrays.php:168
+#: include/global_arrays.php:169
 msgid "Data Source does not exist."
 msgstr "データソースが存在しません。"
 
-#: include/global_arrays.php:171
+#: include/global_arrays.php:172
 msgid "Username already in use."
 msgstr "ユーザー名は既に使用されています。"
 
-#: include/global_arrays.php:174
+#: include/global_arrays.php:175
 msgid "The SNMP v3 Privacy Passphrases do not match"
 msgstr "SNMP v3プライバシーパスフレーズが一致しません"
 
-#: include/global_arrays.php:177
+#: include/global_arrays.php:178
 msgid "The SNMP v3 Authentication Passphrases do not match"
 msgstr "SNMP v3認証パスフレーズが一致しません"
 
-#: include/global_arrays.php:180
+#: include/global_arrays.php:181
 msgid "XML: Kadupul version does not exist."
 msgstr "XML: Kadupul バージョンが存在しません。"
 
-#: include/global_arrays.php:183
+#: include/global_arrays.php:184
 msgid "XML: Hash version does not exist."
 msgstr "XML: ハッシュバージョンが存在しません。"
 
-#: include/global_arrays.php:186
+#: include/global_arrays.php:187
 msgid "XML: Generated with a newer version of Kadupul."
 msgstr "XML: Kadupul のより新しいバージョンで生成されました。"
 
-#: include/global_arrays.php:189
+#: include/global_arrays.php:190
 msgid "XML: Cannot locate type code."
 msgstr "XML：タイプコードが見つかりません。"
 
-#: include/global_arrays.php:192
+#: include/global_arrays.php:193
 msgid "Username already exists."
 msgstr "ユーザー名は既に存在します。"
 
-#: include/global_arrays.php:195
+#: include/global_arrays.php:196
 msgid "Username change not permitted for designated template or guest user."
 msgstr "指定されたテンプレートまたはゲストユーザに対してユーザ名の変更は許可されていません。"
 
-#: include/global_arrays.php:198
+#: include/global_arrays.php:199
 msgid "User delete not permitted for designated template or guest user."
 msgstr "指定されたテンプレートまたはゲストユーザに対してユーザ削除は許可されていません。"
 
-#: include/global_arrays.php:201
+#: include/global_arrays.php:202
 msgid "User delete not permitted for designated graph export user."
 msgstr "指定されたグラフエクスポートユーザに対してユーザ削除は許可されていません。"
 
-#: include/global_arrays.php:204
+#: include/global_arrays.php:205
 msgid "Data Template includes deleted Data Source Profile.  Please resave the Data Template with an existing Data Source Profile."
 msgstr "データテンプレートに削除されたデータソースプロファイルが含まれています。既存のデータソースプロファイルを使用してデータテンプレートを保存し直してください。"
 
-#: include/global_arrays.php:207
+#: include/global_arrays.php:208
 msgid "Graph Template includes deleted GPrint Prefix.  Please run database repair script to identify and/or correct."
 msgstr "グラフテンプレートに削除されたGPrint Prefixが含まれています。データベース修復スクリプトを実行して、識別または修正してください。"
 
-#: include/global_arrays.php:210
+#: include/global_arrays.php:211
 msgid "Graph Template includes deleted CDEFs.  Please run database repair script to identify and/or correct."
 msgstr "グラフテンプレートに削除されたCDEFが含まれています。データベース修復スクリプトを実行して、識別または修正してください。"
 
-#: include/global_arrays.php:213
+#: include/global_arrays.php:214
 msgid "Graph Template includes deleted Data Input Method.  Please run database repair script to identify."
 msgstr "グラフテンプレートに削除されたデータ入力方式が含まれています。識別するためにデータベース修復スクリプトを実行してください。"
 
-#: include/global_arrays.php:216
+#: include/global_arrays.php:217
 msgid "Data Template not found during Export.  Please run database repair script to identify."
 msgstr "エクスポート中にデータテンプレートが見つかりません。識別するためにデータベース修復スクリプトを実行してください。"
 
-#: include/global_arrays.php:219
+#: include/global_arrays.php:220
 msgid "Device Template not found during Export.  Please run database repair script to identify."
 msgstr "エクスポート中にデバイステンプレートが見つかりません。識別するためにデータベース修復スクリプトを実行してください。"
 
-#: include/global_arrays.php:222
+#: include/global_arrays.php:223
 msgid "Data Query not found during Export.  Please run database repair script to identify."
 msgstr "エクスポート中にデータクエリが見つかりませんでした。識別するためにデータベース修復スクリプトを実行してください。"
 
-#: include/global_arrays.php:225
+#: include/global_arrays.php:226
 msgid "Graph Template not found during Export.  Please run database repair script to identify."
 msgstr "エクスポート中にグラフテンプレートが見つかりません。識別するためにデータベース修復スクリプトを実行してください。"
 
-#: include/global_arrays.php:228
+#: include/global_arrays.php:229
 msgid "Graph not found.  Either it has been deleted or your database needs repair."
 msgstr "グラフが見つかりません。削除されたか、データベースを修復する必要があります。"
 
-#: include/global_arrays.php:231
+#: include/global_arrays.php:232
 msgid "SNMPv3 Auth Passphrases must be 8 characters or greater."
 msgstr "SNMPv3認証パスフレーズは8文字以上でなければなりません。"
 
-#: include/global_arrays.php:234
+#: include/global_arrays.php:235
 msgid "Some Graphs not updated. Unable to change device for Data Query based Graphs."
 msgstr "一部のグラフは更新されません。データクエリベースのグラフのデバイスを変更できません。"
 
-#: include/global_arrays.php:237
+#: include/global_arrays.php:238
 msgid "Unable to change device for Data Query based Graphs."
 msgstr "データクエリベースのグラフのデバイスを変更できません。"
 
-#: include/global_arrays.php:240
+#: include/global_arrays.php:241
 msgid "Some settings not saved. Check messages below.  Check red fields for errors."
 msgstr "一部の設定が保存されていません。以下のメッセージを確認してください。赤い欄にエラーがないか確認してください。"
 
-#: include/global_arrays.php:243
+#: include/global_arrays.php:244
 msgid "The file highlighted does not exist.  Please enter a valid file name."
 msgstr "強調表示されたファイルは存在しません。有効なファイル名を入力してください。"
 
-#: include/global_arrays.php:246
+#: include/global_arrays.php:247
 msgid "All User Settings have been returned to their default values."
 msgstr "すべてのユーザー設定はデフォルト値に戻りました。"
 
-#: include/global_arrays.php:249
+#: include/global_arrays.php:250
 msgid "Suggested Field Name was not entered.  Please enter a field name and try again."
 msgstr "推奨フィールド名が入力されていません。フィールド名を入力してもう一度やり直してください。"
 
-#: include/global_arrays.php:252
+#: include/global_arrays.php:253
 msgid "Suggested Value was not entered.  Please enter a suggested value and try again."
 msgstr "推奨値が入力されていません。推奨値を入力してやり直してください。"
 
-#: include/global_arrays.php:255
+#: include/global_arrays.php:256
 msgid "You must select at least one object from the list."
 msgstr "リストから少なくとも1つのオブジェクトを選択する必要があります。"
 
-#: include/global_arrays.php:258
+#: include/global_arrays.php:259
 msgid "Device Template updated.  Remember to Sync Devices to push all changes to Devices that use this Device Template."
 msgstr "デバイステンプレートが更新されました。このデバイステンプレートを使用するデバイスにすべての変更を適用するには、テンプレートの同期を忘れないでください。"
 
-#: include/global_arrays.php:261
+#: include/global_arrays.php:262
 msgid "Save Successful. Settings replicated to Remote Data Collectors."
 msgstr "成功しました。設定はリモートデータコレクタに複製されます。"
 
-#: include/global_arrays.php:264
+#: include/global_arrays.php:265
 msgid "Save Failed.  Minimum Values must be less than Maximum Value."
 msgstr "保存に失敗しました。最小値は最大値より小さくなければなりません。"
 
-#: include/global_arrays.php:267
+#: include/global_arrays.php:268
 msgid "Unable to change password.  User account not found."
 msgstr "パスワードを変更できません。ユーザーアカウントが見つかりません。"
 
-#: include/global_arrays.php:270
+#: include/global_arrays.php:271
 msgid "Data Input Saved.  You must update the Data Templates referencing this Data Input Method before creating Graphs or Data Sources."
 msgstr "データ入力が保存されました。グラフまたはデータソースを作成する前に、このデータ入力方法を参照するデータテンプレートを更新する必要があります。"
 
-#: include/global_arrays.php:273
+#: include/global_arrays.php:274
 msgid "Data Input Saved.  You must update the Data Templates referencing this Data Input Method before the Data Collectors will start using any new or modified Data Input - Input Fields."
 msgstr "データ入力が保存されました。データコレクタが新規または変更されたデータ入力入力フィールドを使用する前に、このデータ入力方法を参照するデータテンプレートを更新する必要があります。"
 
-#: include/global_arrays.php:276
+#: include/global_arrays.php:277
 msgid "Data Input Field Saved.  You must update the Data Templates referencing this Data Input Method before creating Graphs or Data Sources."
 msgstr "データ入力フィールドが保存されました。グラフまたはデータソースを作成する前に、このデータ入力方法を参照するデータテンプレートを更新する必要があります。"
 
-#: include/global_arrays.php:279
+#: include/global_arrays.php:280
 msgid "Data Input Field Saved.  You must update the Data Templates referencing this Data Input Method before the Data Collectors will start using any new or modified Data Input - Input Fields."
 msgstr "データ入力フィールドが保存されました。データコレクタが新規または変更されたデータ入力入力フィールドを使用する前に、このデータ入力方法を参照するデータテンプレートを更新する必要があります。"
 
-#: include/global_arrays.php:282
+#: include/global_arrays.php:283
 msgid "Log file specified is not a Kadupul log or archive file."
 msgstr "指定されたログファイルはKadupulのログまたはアーカイブファイルではありません。"
 
-#: include/global_arrays.php:285
+#: include/global_arrays.php:286
 msgid "Log file specified was Kadupul archive file and was removed."
 msgstr "指定されたログファイルはKadupulアーカイブファイルであり、削除されました。"
 
-#: include/global_arrays.php:288
+#: include/global_arrays.php:289
 #, fuzzy
 msgid "Kadupul log purged successfully"
 msgstr "Kadupulログは正常に削除されました"
 
-#: include/global_arrays.php:291
+#: include/global_arrays.php:292
 msgid "If you force a password change, you must also allow the user to change their password."
 msgstr "パスワードを強制的に変更する場合は、ユーザーにもパスワードの変更を許可する必要があります。"
 
-#: include/global_arrays.php:294
+#: include/global_arrays.php:295
 msgid "You are not allowed to change your password."
 msgstr "パスワードを変更することは許可されていません。"
 
-#: include/global_arrays.php:297
+#: include/global_arrays.php:298
 msgid "Unable to determine size of password field, please check permissions of db user"
 msgstr "パスワードフィールドのサイズを決定できません。dbユーザーの権限を確認してください"
 
-#: include/global_arrays.php:300
+#: include/global_arrays.php:301
 #, fuzzy
 msgid "Unable to increase size of password field, please check permission of db user"
 msgstr "パスワードフィールドのサイズを増やすことができません、dbユーザの許可を確認してください"
 
-#: include/global_arrays.php:303
+#: include/global_arrays.php:304
 msgid "LDAP/AD based password change not supported."
 msgstr "LDAP / ADベースのパスワード変更はサポートされていません。"
 
-#: include/global_arrays.php:306
+#: include/global_arrays.php:307
 msgid "Password successfully changed."
 msgstr "パスワードが変更されました。"
 
-#: include/global_arrays.php:309
+#: include/global_arrays.php:310
 msgid "Unable to clear log, no write permissions"
 msgstr "ログを消去できない、書き込み権限がない"
 
-#: include/global_arrays.php:312
+#: include/global_arrays.php:313
 msgid "Unable to clear log, file does not exist"
 msgstr "ログを消去できません、ファイルが存在しません"
 
-#: include/global_arrays.php:315
+#: include/global_arrays.php:316
 msgid "CSRF Timeout, refreshing page."
 msgstr "CSRFタイムアウト、ページを更新しています。"
 
-#: include/global_arrays.php:318
+#: include/global_arrays.php:319
 msgid "CSRF Timeout occurred due to inactivity, page refreshed."
 msgstr "CSRFタイムアウトは非アクティブのために発生しました。"
 
-#: include/global_arrays.php:321
+#: include/global_arrays.php:322
 msgid "Invalid timestamp. Select timestamp in the future."
 msgstr "タイムスタンプが無効です。将来のタイムスタンプを選択してください。"
 
-#: include/global_arrays.php:324
+#: include/global_arrays.php:325
 msgid "Data Collector(s) synchronized for offline operation"
 msgstr "オフライン操作用に同期されたデータコレクタ"
 
-#: include/global_arrays.php:327
+#: include/global_arrays.php:328
 msgid "Data Collector(s) not found when attempting synchronization"
 msgstr "同期を試みるときにデータコレクタが見つかりません"
 
-#: include/global_arrays.php:330
+#: include/global_arrays.php:331
 msgid "Unable to establish MySQL connection with Remote Data Collector."
 msgstr "Remote Data CollectorとMySQL接続を確立できません。"
 
-#: include/global_arrays.php:333
+#: include/global_arrays.php:334
 msgid "Data Collector synchronization must be initiated from the main Kadupul server."
 msgstr "Data Collectorの同期は、メインのKadupulサーバから開始する必要があります。"
 
-#: include/global_arrays.php:336
+#: include/global_arrays.php:337
 msgid "Synchronization does not include the Central Kadupul Database server."
 msgstr "同期にはCentral Kadupulデータベースサーバーは含まれません。"
 
-#: include/global_arrays.php:339
+#: include/global_arrays.php:340
 msgid "When saving a Remote Data Collector, the Database Hostname must be unique from all others."
 msgstr "リモートデータコレクタを保存する場合、データベースホスト名は他のすべてのデータベースホスト名とは異なる必要があります。"
 
-#: include/global_arrays.php:342
+#: include/global_arrays.php:343
 msgid "Your Remote Database Hostname must be something other than 'localhost' for each Remote Data Collector."
 msgstr "リモートデータベースのホスト名は、各リモートデータコレクタの「localhost」以外にする必要があります。"
 
-#: include/global_arrays.php:345
+#: include/global_arrays.php:346
 msgid "Path variables on this page were only saved locally."
 msgstr "このページのパス変数はローカルでのみ保存されました。"
 
-#: include/global_arrays.php:348
+#: include/global_arrays.php:349
 msgid "Report Saved"
 msgstr "レポートを保存しました"
 
-#: include/global_arrays.php:351
+#: include/global_arrays.php:352
 msgid "Report Save Failed"
 msgstr "レポート保存失敗"
 
-#: include/global_arrays.php:354
+#: include/global_arrays.php:355
 msgid "Report Item Saved"
 msgstr "レポートアイテムを保存しました"
 
-#: include/global_arrays.php:357
+#: include/global_arrays.php:358
 msgid "Report Item Save Failed"
 msgstr "レポートアイテムの保存に失敗しました"
 
-#: include/global_arrays.php:360
+#: include/global_arrays.php:361
 msgid "Graph was not found attempting to Add to Report"
 msgstr "レポートに追加しようとしているグラフが見つかりませんでした"
 
-#: include/global_arrays.php:363
+#: include/global_arrays.php:364
 msgid "Unable to Add Graphs.  Current user is not owner"
 msgstr "グラフを追加できません。現在のユーザーは所有者ではありません"
 
-#: include/global_arrays.php:366
+#: include/global_arrays.php:367
 msgid "Unable to Add all Graphs.  See error message for details."
 msgstr "すべてのグラフを追加できません。詳細についてはエラーメッセージを参照してください。"
 
-#: include/global_arrays.php:369
+#: include/global_arrays.php:370
 msgid "You must select at least one Graph to add to a Report."
 msgstr "レポートに追加するグラフを少なくとも1つ選択する必要があります。"
 
-#: include/global_arrays.php:372
+#: include/global_arrays.php:373
 msgid "All Graphs have been added to the Report.  Duplicate Graphs with the same Timespan were skipped."
 msgstr "すべてのグラフがレポートに追加されました。同じタイムスパンを持つ重複したグラフはスキップされました。"
 
-#: include/global_arrays.php:375
+#: include/global_arrays.php:376
 msgid "Poller Resource Cache cleared.  Main Data Collector will rebuild at the next poller start, and Remote Data Collectors will sync afterwards."
 msgstr "ポーラーリソースキャッシュがクリアされました。 Main Data Collectorは次回のポーラー起動時に再構築され、Remote Data Collectorはその後同期します。"
 
-#: include/global_arrays.php:378
+#: include/global_arrays.php:379
 msgid "Permission Denied.  You do not have permission to the requested action."
 msgstr "アクセス拒否。要求されたアクションに対する許可がありません。"
 
-#: include/global_arrays.php:381
+#: include/global_arrays.php:382
 msgid "Page is not defined.  Therefore, it can not be displayed."
 msgstr "ページが定義されていません。そのため、表示できません。"
 
-#: include/global_arrays.php:384
+#: include/global_arrays.php:385
 msgid "Unexpected error occurred"
 msgstr "予期しないエラーが発生しました"
 
-#: include/global_arrays.php:499 include/global_arrays.php:922
+#: include/global_arrays.php:500 include/global_arrays.php:923
 msgid "Function"
 msgstr "機能"
 
-#: include/global_arrays.php:500 include/global_arrays.php:924
+#: include/global_arrays.php:501 include/global_arrays.php:925
 msgid "Special Data Source"
 msgstr "特別なデータソース"
 
-#: include/global_arrays.php:501 include/global_arrays.php:926
+#: include/global_arrays.php:502 include/global_arrays.php:927
 msgid "Custom String"
 msgstr "カスタム文字列"
 
-#: include/global_arrays.php:505 include/global_arrays.php:963
+#: include/global_arrays.php:506 include/global_arrays.php:964
 msgid "Current Graph Item Data Source"
 msgstr "現在のグラフ項目のデータソース"
 
-#: include/global_arrays.php:510
+#: include/global_arrays.php:511
 msgid "SNMP Query"
 msgstr "SNMPクエリ"
 
-#: include/global_arrays.php:511 include/global_arrays.php:518
+#: include/global_arrays.php:512 include/global_arrays.php:519
 msgid "Script/Command"
 msgstr "スクリプト/コマンド"
 
-#: include/global_arrays.php:512
+#: include/global_arrays.php:513
 msgid "Script Query"
 msgstr "スクリプトクエリ"
 
-#: include/global_arrays.php:513 include/global_arrays.php:519
+#: include/global_arrays.php:514 include/global_arrays.php:520
 #: utilities.php:2158
 msgid "Script Server"
 msgstr "スクリプトサーバー"
 
-#: include/global_arrays.php:514
+#: include/global_arrays.php:515
 msgid "Script Server Query"
 msgstr "スクリプトサーバー"
 
-#: include/global_arrays.php:525
+#: include/global_arrays.php:526
 msgid "Index Count"
 msgstr "インデックス数"
 
-#: include/global_arrays.php:526
+#: include/global_arrays.php:527
 msgid "Verify All"
 msgstr "すべて確認"
 
-#: include/global_arrays.php:530
+#: include/global_arrays.php:531
 msgid "All Re-Indexing will be manual or managed through scripts or Device Automation."
 msgstr "すべての再索引付けは手動で行われるか、スクリプトまたはDevice Automationによって管理されます。"
 
-#: include/global_arrays.php:531
+#: include/global_arrays.php:532
 msgid "When the Devices SNMP uptime goes backward, a Re-Index will be performed."
 msgstr "デバイスのSNMPアップタイムが遅れると、再インデックスが実行されます。"
 
-#: include/global_arrays.php:532
+#: include/global_arrays.php:533
 msgid "When the Data Query index count changes, a Re-Index will be performed."
 msgstr "データクエリのインデックス数が変わると、再インデックスが実行されます。"
 
-#: include/global_arrays.php:533
+#: include/global_arrays.php:534
 msgid "Every polling cycle, a Re-Index will be performed.  Very expensive."
 msgstr "ポーリングサイクルごとに、再インデックスが実行されます。とても高い"
 
-#: include/global_arrays.php:537
+#: include/global_arrays.php:538
 msgid "SNMP Field Name (Dropdown)"
 msgstr "SNMP フィールド名(ドロップダウン)"
 
-#: include/global_arrays.php:538
+#: include/global_arrays.php:539
 msgid "SNMP Field Value (From User)"
 msgstr "SNMP フィールド値 (From User)"
 
-#: include/global_arrays.php:539
+#: include/global_arrays.php:540
 msgid "SNMP Output Type (Dropdown)"
 msgstr "SNMP 出力の種類 (ドロップダウン)"
 
-#: include/global_arrays.php:563 include/global_arrays.php:569
+#: include/global_arrays.php:564 include/global_arrays.php:570
 msgid "Normal"
 msgstr "ノーマル"
 
-#: include/global_arrays.php:564
+#: include/global_arrays.php:565
 msgid "Light"
 msgstr "ライト"
 
-#: include/global_arrays.php:565 include/global_arrays.php:570
+#: include/global_arrays.php:566 include/global_arrays.php:571
 msgid "Mono"
 msgstr "モノクロ"
 
-#: include/global_arrays.php:574
+#: include/global_arrays.php:575
 msgid "North"
 msgstr "北"
 
-#: include/global_arrays.php:575
+#: include/global_arrays.php:576
 msgid "South"
 msgstr "南"
 
-#: include/global_arrays.php:576
+#: include/global_arrays.php:577
 msgid "West"
 msgstr "西"
 
-#: include/global_arrays.php:577
+#: include/global_arrays.php:578
 msgid "East"
 msgstr "东"
 
-#: include/global_arrays.php:582
+#: include/global_arrays.php:583
 msgid "Left"
 msgstr "左"
 
-#: include/global_arrays.php:583
+#: include/global_arrays.php:584
 msgid "Right"
 msgstr "右"
 
-#: include/global_arrays.php:584
+#: include/global_arrays.php:585
 msgid "Justified"
 msgstr "均等割付"
 
-#: include/global_arrays.php:585 lib/html.php:2842
+#: include/global_arrays.php:586 lib/html.php:2842
 msgid "Center"
 msgstr "中央"
 
-#: include/global_arrays.php:589
+#: include/global_arrays.php:590
 msgid "Top -> Down"
 msgstr "上 - &gt;下"
 
-#: include/global_arrays.php:590
+#: include/global_arrays.php:591
 msgid "Bottom -> Up"
 msgstr "下 - &gt;上へ"
 
-#: include/global_arrays.php:594 tree.php:1766
+#: include/global_arrays.php:595 tree.php:1766
 msgid "Numeric"
 msgstr "数値"
 
-#: include/global_arrays.php:595
+#: include/global_arrays.php:596
 msgid "Timestamp"
 msgstr "タイムスタンプ"
 
-#: include/global_arrays.php:596
+#: include/global_arrays.php:597
 msgid "Duration"
 msgstr "期間"
 
-#: include/global_arrays.php:634
+#: include/global_arrays.php:635
 msgid "Not In Use"
 msgstr "ユーザー名は既に使用されています。"
 
-#: include/global_arrays.php:635 include/global_arrays.php:636
-#: include/global_arrays.php:637 include/global_arrays.php:880
-#: include/global_arrays.php:881
+#: include/global_arrays.php:636 include/global_arrays.php:637
+#: include/global_arrays.php:638 include/global_arrays.php:881
+#: include/global_arrays.php:882
 #, fuzzy, php-format
 msgid "Version %d"
 msgstr "バージョン: %d"
 
-#: include/global_arrays.php:641 include/global_arrays.php:651
+#: include/global_arrays.php:642 include/global_arrays.php:652
 msgid "[None]"
 msgstr "なし"
 
-#: include/global_arrays.php:642
+#: include/global_arrays.php:643
 msgid "MD5"
 msgstr "MD5"
 
-#: include/global_arrays.php:643
+#: include/global_arrays.php:644
 msgid "SHA"
 msgstr "SHA"
 
-#: include/global_arrays.php:644
+#: include/global_arrays.php:645
 msgid "SHA-224"
 msgstr "SHA-224"
 
-#: include/global_arrays.php:645
+#: include/global_arrays.php:646
 msgid "SHA-256"
 msgstr "SHA-256"
 
-#: include/global_arrays.php:646
+#: include/global_arrays.php:647
 #, fuzzy
 msgid "SHA-384"
 msgstr "SHA-392"
 
-#: include/global_arrays.php:647
+#: include/global_arrays.php:648
 msgid "SHA-512"
 msgstr "SHA-512"
 
-#: include/global_arrays.php:652
+#: include/global_arrays.php:653
 msgid "DES"
 msgstr "不均衡症候群"
 
-#: include/global_arrays.php:653
+#: include/global_arrays.php:654
 msgid "AES"
 msgstr "不均衡症候群"
 
-#: include/global_arrays.php:654
+#: include/global_arrays.php:655
 msgid "AES-128"
 msgstr "AES-128"
 
-#: include/global_arrays.php:655
+#: include/global_arrays.php:656
 msgid "AES-192"
 msgstr "AES-192"
 
-#: include/global_arrays.php:656
+#: include/global_arrays.php:657
 msgid "AES-192-C"
 msgstr "AES-192"
 
-#: include/global_arrays.php:657
+#: include/global_arrays.php:658
 msgid "AES-256"
 msgstr "AES-256"
 
-#: include/global_arrays.php:658
+#: include/global_arrays.php:659
 msgid "AES-256-C"
 msgstr "AES-256"
 
-#: include/global_arrays.php:667
+#: include/global_arrays.php:668
 msgid "Logfile Only"
 msgstr "ログファイルのみ"
 
-#: include/global_arrays.php:668
+#: include/global_arrays.php:669
 msgid "Logfile and Syslog/Eventlog"
 msgstr "ログファイルとSyslog / Eventlog"
 
-#: include/global_arrays.php:669
+#: include/global_arrays.php:670
 msgid "Syslog/Eventlog Only"
 msgstr "Syslog / Eventlogのみ"
 
+#: include/global_arrays.php:675
+msgid "Ping and SNMP Uptime"
+msgstr "pingとSNMPの稼働時間"
+
+#: include/global_arrays.php:676
+msgid "Ping or SNMP Uptime"
+msgstr "pingまたはSNMPの稼働時間"
+
+#: include/global_arrays.php:677
+msgid "SNMP Uptime"
+msgstr "SNMP稼働時間"
+
 #: include/global_arrays.php:678
+msgid "SNMP Desc"
+msgstr "SNMPの説明"
+
+#: include/global_arrays.php:679
 msgid "SNMP getNext"
 msgstr "SNMP getNext"
 
-#: include/global_arrays.php:683
+#: include/global_arrays.php:680
+msgid "Ping"
+msgstr "Ping"
+
+#: include/global_arrays.php:684
 msgid "ICMP Ping"
 msgstr "ICMP Ping"
 
-#: include/global_arrays.php:684
+#: include/global_arrays.php:685
 msgid "TCP Ping"
 msgstr "TCP ping"
 
-#: include/global_arrays.php:685
+#: include/global_arrays.php:686
 #, fuzzy
 msgid "TCP Ping Closed"
 msgstr "TCP ping"
 
-#: include/global_arrays.php:686
+#: include/global_arrays.php:687
 msgid "UDP Ping"
 msgstr "UDP Ping"
 
-#: include/global_arrays.php:690
+#: include/global_arrays.php:691
 msgid "NONE - Syslog Only if Selected"
 msgstr "NONE  - 選択した場合のみSyslog"
 
-#: include/global_arrays.php:691
+#: include/global_arrays.php:692
 msgid "LOW - Statistics and Errors"
 msgstr "LOW  - 統計とエラー"
 
-#: include/global_arrays.php:692
+#: include/global_arrays.php:693
 msgid "MEDIUM - Statistics, Errors and Results"
 msgstr "MEDIUM  - 統計、エラー、結果"
 
-#: include/global_arrays.php:693
+#: include/global_arrays.php:694
 msgid "HIGH - Statistics, Errors, Results and Major I/O Events"
 msgstr "HIGH  - 統計、エラー、結果、および主要なI / Oイベント"
 
-#: include/global_arrays.php:694
+#: include/global_arrays.php:695
 msgid "DEBUG - Statistics, Errors, Results, I/O and Program Flow"
 msgstr "DEBUG  - 統計、エラー、結果、I / O、プログラムフロー"
 
-#: include/global_arrays.php:695
+#: include/global_arrays.php:696
 msgid "DEVEL - Developer DEBUG Level"
 msgstr "DEVEL  - 開発者向けDEBUGレベル"
 
-#: include/global_arrays.php:708
+#: include/global_arrays.php:709
 msgid "Selected Poller Interval"
 msgstr "選択したポーラー間隔"
 
-#: include/global_arrays.php:726 include/global_arrays.php:727
-#: include/global_arrays.php:728 include/global_arrays.php:729
-#: include/global_arrays.php:799 include/global_arrays.php:800
-#: include/global_arrays.php:801 include/global_arrays.php:802
+#: include/global_arrays.php:727 include/global_arrays.php:728
+#: include/global_arrays.php:729 include/global_arrays.php:730
+#: include/global_arrays.php:800 include/global_arrays.php:801
+#: include/global_arrays.php:802 include/global_arrays.php:803
 #, php-format
 msgid "Every %d Seconds"
 msgstr "%d秒ごと"
 
-#: include/global_arrays.php:730 include/global_arrays.php:803
-#: include/global_arrays.php:848
+#: include/global_arrays.php:731 include/global_arrays.php:804
+#: include/global_arrays.php:849
 msgid "Every Minute"
 msgstr "毎分"
 
-#: include/global_arrays.php:731 include/global_arrays.php:732
-#: include/global_arrays.php:733 include/global_arrays.php:734
-#: include/global_arrays.php:735 include/global_arrays.php:804
-#: include/global_arrays.php:809 include/global_arrays.php:849
+#: include/global_arrays.php:732 include/global_arrays.php:733
+#: include/global_arrays.php:734 include/global_arrays.php:735
+#: include/global_arrays.php:736 include/global_arrays.php:805
+#: include/global_arrays.php:810 include/global_arrays.php:850
 #, php-format
 msgid "Every %d Minutes"
 msgstr "%d 分ごと"
 
-#: include/global_arrays.php:736 include/global_arrays.php:810
+#: include/global_arrays.php:737 include/global_arrays.php:811
 msgid "Every Hour"
 msgstr "1時間ごと"
 
-#: include/global_arrays.php:737 include/global_arrays.php:738
-#: include/global_arrays.php:739 include/global_arrays.php:740
-#: include/global_arrays.php:811 include/global_arrays.php:812
-#: include/global_arrays.php:813 include/global_arrays.php:814
-#: include/global_arrays.php:1867 include/global_arrays.php:1868
-#: include/global_arrays.php:1869 include/global_arrays.php:1870
-#: include/global_arrays.php:1871 include/global_settings.php:2556
+#: include/global_arrays.php:738 include/global_arrays.php:739
+#: include/global_arrays.php:740 include/global_arrays.php:741
+#: include/global_arrays.php:812 include/global_arrays.php:813
+#: include/global_arrays.php:814 include/global_arrays.php:815
+#: include/global_arrays.php:1870 include/global_arrays.php:1871
+#: include/global_arrays.php:1872 include/global_arrays.php:1873
+#: include/global_arrays.php:1874 include/global_settings.php:2556
 #: include/global_settings.php:2557
 #, php-format
 msgid "Every %d Hours"
 msgstr "%d時間ごと"
 
-#: include/global_arrays.php:741
+#: include/global_arrays.php:742
 #, php-format
 msgid "Every %d Day"
 msgstr "%d日ごと"
 
-#: include/global_arrays.php:753
+#: include/global_arrays.php:754
 #, php-format
 msgid "%0.1f Minutes"
 msgstr "%0.1f 分"
 
-#: include/global_arrays.php:786 include/global_arrays.php:1470
+#: include/global_arrays.php:787 include/global_arrays.php:1473
 #: include/global_settings.php:1640 rrdcleaner.php:541
 #, php-format
 msgid "%d Year"
 msgstr "%d 年間の"
 
-#: include/global_arrays.php:808
+#: include/global_arrays.php:809
 msgid "Disabled/Manual"
 msgstr "無効/手動"
 
-#: include/global_arrays.php:815
+#: include/global_arrays.php:816
 msgid "Every day"
 msgstr "毎日"
 
-#: include/global_arrays.php:819
+#: include/global_arrays.php:820
 msgid "1 Thread"
 msgstr "％dスレッド"
 
-#: include/global_arrays.php:863
+#: include/global_arrays.php:864
 msgid "Builtin Authentication"
 msgstr "組み込み認証"
 
-#: include/global_arrays.php:864
+#: include/global_arrays.php:865
 msgid "Web Basic Authentication"
 msgstr "ウェブ Basic 認証"
 
-#: include/global_arrays.php:868
+#: include/global_arrays.php:869
 msgid "LDAP Authentication"
 msgstr "LDAP認証"
 
-#: include/global_arrays.php:869
+#: include/global_arrays.php:870
 msgid "Multiple LDAP/AD Domains"
 msgstr "複数のLDAP / ADドメイン"
 
-#: include/global_arrays.php:874
+#: include/global_arrays.php:875
 msgid "Active Directory"
 msgstr "アクティブディレクトリー"
 
-#: include/global_arrays.php:886
+#: include/global_arrays.php:887
 msgid "LDAPS"
 msgstr "LDAP"
 
-#: include/global_arrays.php:887
+#: include/global_arrays.php:888
 msgid "LDAP + TLS"
 msgstr "LDAP + TLS"
 
-#: include/global_arrays.php:892
+#: include/global_arrays.php:893
 msgid "Hard"
 msgstr "ハード"
 
-#: include/global_arrays.php:893
+#: include/global_arrays.php:894
 msgid "Demand"
 msgstr "デマンド"
 
-#: include/global_arrays.php:894 user_admin.php:653 user_group_admin.php:795
+#: include/global_arrays.php:895 user_admin.php:653 user_group_admin.php:795
 msgid "Allow"
 msgstr "許可"
 
-#: include/global_arrays.php:895
+#: include/global_arrays.php:896
 msgid "Try"
 msgstr "トライ"
 
-#: include/global_arrays.php:899
+#: include/global_arrays.php:900
 msgid "No Searching"
 msgstr "検索しない"
 
-#: include/global_arrays.php:900
+#: include/global_arrays.php:901
 msgid "Anonymous Searching"
 msgstr "匿名検索"
 
-#: include/global_arrays.php:901
+#: include/global_arrays.php:902
 msgid "Specific Searching"
 msgstr "特定の検索"
 
-#: include/global_arrays.php:918
+#: include/global_arrays.php:919
 msgid "Enabled (strict mode)"
 msgstr "有効（厳密モード）"
 
-#: include/global_arrays.php:923 include/global_form.php:2132
+#: include/global_arrays.php:924 include/global_form.php:2132
 #: include/global_form.php:2174 lib/api_automation.php:1287
 #: lib/api_automation.php:1350
 msgid "Operator"
 msgstr "操作"
 
-#: include/global_arrays.php:925
+#: include/global_arrays.php:926
 msgid "Another CDEF"
 msgstr "別の CDEF"
 
-#: include/global_arrays.php:944
+#: include/global_arrays.php:945
 msgid "Inherit Parent Sorting"
 msgstr "親の並べ替えを継承"
 
-#: include/global_arrays.php:945
+#: include/global_arrays.php:946
 msgid "Manual Ordering (No Sorting)"
 msgstr "手動整列 (ソートしません)"
 
-#: include/global_arrays.php:946
+#: include/global_arrays.php:947
 msgid "Alphabetic Ordering"
 msgstr "英字順"
 
-#: include/global_arrays.php:947
+#: include/global_arrays.php:948
 msgid "Natural Ordering"
 msgstr "ナチュラルオーダー"
 
-#: include/global_arrays.php:948
+#: include/global_arrays.php:949
 msgid "Numeric Ordering"
 msgstr "数字順"
 
-#: include/global_arrays.php:952 lib/rrd.php:4142
+#: include/global_arrays.php:953 lib/rrd.php:4142
 msgid "Header"
 msgstr "ヘッダー"
 
-#: include/global_arrays.php:953 include/global_arrays.php:1004
-#: include/global_arrays.php:1687 include/global_arrays.php:1856
+#: include/global_arrays.php:954 include/global_arrays.php:1005
+#: include/global_arrays.php:1690 include/global_arrays.php:1859
 #: lib/html.php:2831
 msgid "Graph"
 msgstr "グラフ"
 
-#: include/global_arrays.php:959 tree.php:1953
+#: include/global_arrays.php:960 tree.php:1953
 msgid "Data Query Index"
 msgstr "データクエリインデックス"
 
-#: include/global_arrays.php:964
+#: include/global_arrays.php:965
 msgid "Current Graph Item Polling Interval"
 msgstr "現在のグラフ項目のポーリング間隔"
 
-#: include/global_arrays.php:965
+#: include/global_arrays.php:966
 msgid "All Data Sources (Do not Include Duplicates)"
 msgstr "すべてのデータソース（重複を含まない）"
 
-#: include/global_arrays.php:966
+#: include/global_arrays.php:967
 msgid "All Data Sources (Include Duplicates)"
 msgstr "すべてのデータソース(複製を含む)"
 
-#: include/global_arrays.php:967
+#: include/global_arrays.php:968
 msgid "All Similar Data Sources (Do not Include Duplicates)"
 msgstr "すべての類似データソース（重複を含まない）"
 
-#: include/global_arrays.php:968
+#: include/global_arrays.php:969
 msgid "All Similar Data Sources (Do not Include Duplicates) Polling Interval"
 msgstr "すべての類似データソース（重複を含まない）ポーリング間隔"
 
-#: include/global_arrays.php:969
+#: include/global_arrays.php:970
 msgid "All Similar Data Sources (Include Duplicates)"
 msgstr "すべての類似データソース（重複を含む）"
 
-#: include/global_arrays.php:970
+#: include/global_arrays.php:971
 msgid "Current Data Source Item: Minimum Value"
 msgstr "現在のデータソース項目: 最小値"
 
-#: include/global_arrays.php:971
+#: include/global_arrays.php:972
 msgid "Current Data Source Item: Maximum Value"
 msgstr "現在のデータソース項目：最大値"
 
-#: include/global_arrays.php:972
+#: include/global_arrays.php:973
 msgid "Graph: Lower Limit"
 msgstr "グラフ: 下限"
 
-#: include/global_arrays.php:973
+#: include/global_arrays.php:974
 msgid "Graph: Upper Limit"
 msgstr "グラフ: 上限"
 
-#: include/global_arrays.php:974
+#: include/global_arrays.php:975
 msgid "Count of All Data Sources (Do not Include Duplicates)"
 msgstr "全データソースの数（重複を含まない）"
 
-#: include/global_arrays.php:975
+#: include/global_arrays.php:976
 msgid "Count of All Data Sources (Include Duplicates)"
 msgstr "全データソースの数（重複を含む）"
 
-#: include/global_arrays.php:976
+#: include/global_arrays.php:977
 msgid "Count of All Similar Data Sources (Do not Include Duplicates)"
 msgstr "すべての類似データソースの数（重複を含まない）"
 
-#: include/global_arrays.php:977
+#: include/global_arrays.php:978
 msgid "Count of All Similar Data Sources (Include Duplicates)"
 msgstr "すべての類似データソースの数（重複を含む）"
 
-#: include/global_arrays.php:982 include/global_arrays.php:1062
+#: include/global_arrays.php:983 include/global_arrays.php:1063
 msgid "Main Console"
 msgstr "コンソール"
 
-#: include/global_arrays.php:983
+#: include/global_arrays.php:984
 msgid "Console Page"
 msgstr "コンソールページの上部"
 
-#: include/global_arrays.php:986 lib/html_form_template.php:627
+#: include/global_arrays.php:987 lib/html_form_template.php:627
 #: lib/html_form_template.php:639
 msgid "New Graphs"
 msgstr "新規グラフ"
 
-#: include/global_arrays.php:989 include/global_arrays.php:1045
-#: include/global_arrays.php:1064
+#: include/global_arrays.php:990 include/global_arrays.php:1046
+#: include/global_arrays.php:1065
 msgid "Management"
 msgstr "マネジメント"
 
-#: include/global_arrays.php:991 tree.php:915 tree.php:2348
+#: include/global_arrays.php:992 tree.php:915 tree.php:2348
 msgid "Sites"
 msgstr "サイト"
 
-#: include/global_arrays.php:992 include/global_arrays.php:1230 tree.php:2208
+#: include/global_arrays.php:993 include/global_arrays.php:1231 tree.php:2208
 #: tree.php:2223 tree.php:2290 user_admin.php:1343 user_admin.php:2371
 #: user_admin.php:2377 user_group_admin.php:1355 user_group_admin.php:2166
 msgid "Trees"
 msgstr "木"
 
-#: include/global_arrays.php:997 include/global_arrays.php:1048
-#: include/global_arrays.php:1065
+#: include/global_arrays.php:998 include/global_arrays.php:1049
+#: include/global_arrays.php:1066
 msgid "Data Collection"
 msgstr "サーベイ"
 
-#: include/global_arrays.php:998 include/global_arrays.php:1049
-#: include/global_arrays.php:2200 pollers.php:860
+#: include/global_arrays.php:999 include/global_arrays.php:1050
+#: include/global_arrays.php:2203 pollers.php:860
 msgid "Data Collectors"
 msgstr "データコレクタ"
 
-#: include/global_arrays.php:1000 include/global_arrays.php:1225
-#: include/global_arrays.php:2362
+#: include/global_arrays.php:1001 include/global_arrays.php:1226
+#: include/global_arrays.php:2365
 msgid "Data Input Methods"
 msgstr "データの入力方法"
 
-#: include/global_arrays.php:1006 include/global_arrays.php:2893
+#: include/global_arrays.php:1007 include/global_arrays.php:2896
 msgid "Aggregate"
 msgstr "総計"
 
-#: include/global_arrays.php:1009 include/global_arrays.php:1067
-#: include/global_arrays.php:1222 include/global_settings.php:614
+#: include/global_arrays.php:1010 include/global_arrays.php:1068
+#: include/global_arrays.php:1223 include/global_settings.php:614
 msgid "Automation"
 msgstr "自動化"
 
-#: include/global_arrays.php:1011
+#: include/global_arrays.php:1012
 msgid "Discovered Devices"
 msgstr "発見された機器"
 
-#: include/global_arrays.php:1012
+#: include/global_arrays.php:1013
 msgid "Device Rules"
 msgstr "デバイスルール"
 
-#: include/global_arrays.php:1016 include/global_arrays.php:1068
-#: include/global_arrays.php:1234 lib/html_filter.php:160
+#: include/global_arrays.php:1017 include/global_arrays.php:1069
+#: include/global_arrays.php:1235 lib/html_filter.php:160
 #: lib/html_graph.php:243 lib/html_tree.php:1065
 msgid "Presets"
 msgstr "プリセット"
 
-#: include/global_arrays.php:1017
+#: include/global_arrays.php:1018
 msgid "Data Profiles"
 msgstr "データプロファイル"
 
-#: include/global_arrays.php:1020 include/global_arrays.php:2524
+#: include/global_arrays.php:1021 include/global_arrays.php:2527
 msgid "VDEFs"
 msgstr "VDEF"
 
-#: include/global_arrays.php:1021 include/global_arrays.php:2224
+#: include/global_arrays.php:1022 include/global_arrays.php:2227
 msgid "Colors"
 msgstr "色"
 
-#: include/global_arrays.php:1024 include/global_arrays.php:1069
+#: include/global_arrays.php:1025 include/global_arrays.php:1070
 msgid "Import/Export"
 msgstr "インポート/エクスポート"
 
-#: include/global_arrays.php:1025 include/global_arrays.php:1241
-#: include/global_arrays.php:2650
+#: include/global_arrays.php:1026 include/global_arrays.php:1242
+#: include/global_arrays.php:2653
 msgid "Import Templates"
 msgstr "テンプレートインポート"
 
-#: include/global_arrays.php:1026 include/global_arrays.php:2656
+#: include/global_arrays.php:1027 include/global_arrays.php:2659
 msgid "Import Packages"
 msgstr "テンプレートインポート"
 
-#: include/global_arrays.php:1027 include/global_arrays.php:1240
-#: include/global_arrays.php:2638 templates_export.php:142
+#: include/global_arrays.php:1028 include/global_arrays.php:1241
+#: include/global_arrays.php:2641 templates_export.php:142
 msgid "Export Templates"
 msgstr "テンプレートエクスポート"
 
-#: include/global_arrays.php:1029 include/global_arrays.php:1051
-#: include/global_arrays.php:1070 lib/plugins.php:1443
+#: include/global_arrays.php:1030 include/global_arrays.php:1052
+#: include/global_arrays.php:1071 lib/plugins.php:1443
 msgid "Configuration"
 msgstr "構成"
 
-#: include/global_arrays.php:1030 include/global_arrays.php:1052
+#: include/global_arrays.php:1031 include/global_arrays.php:1053
 #: lib/html.php:2549 lib/html.php:2846
 msgid "Settings"
 msgstr "設定"
 
-#: include/global_arrays.php:1031 include/global_arrays.php:2578
+#: include/global_arrays.php:1032 include/global_arrays.php:2581
 #: user_admin.php:2131 user_admin.php:2236 user_group_admin.php:733
 #: user_group_admin.php:2172
 msgid "Users"
 msgstr "ユーザー"
 
-#: include/global_arrays.php:1032 include/global_arrays.php:2608
+#: include/global_arrays.php:1033 include/global_arrays.php:2611
 msgid "User Groups"
 msgstr "ユーザーグループ"
 
-#: include/global_arrays.php:1033 include/global_arrays.php:2596
+#: include/global_arrays.php:1034 include/global_arrays.php:2599
 #: user_domains.php:634 user_domains.php:728
 msgid "User Domains"
 msgstr "ユーザードメイン"
 
-#: include/global_arrays.php:1035 include/global_arrays.php:1054
-#: include/global_arrays.php:1071 include/global_arrays.php:2452
+#: include/global_arrays.php:1036 include/global_arrays.php:1055
+#: include/global_arrays.php:1072 include/global_arrays.php:2455
 msgid "Utilities"
 msgstr "ユーティリティ"
 
-#: include/global_arrays.php:1036 include/global_arrays.php:1055
+#: include/global_arrays.php:1037 include/global_arrays.php:1056
 msgid "System Utilities"
 msgstr "システムユーティリティ"
 
-#: include/global_arrays.php:1037 include/global_arrays.php:1072
-#: include/global_arrays.php:1115 include/global_arrays.php:1218
-#: include/global_arrays.php:2212 user_admin.php:1497 user_group_admin.php:1519
+#: include/global_arrays.php:1038 include/global_arrays.php:1073
+#: include/global_arrays.php:1116 include/global_arrays.php:1219
+#: include/global_arrays.php:2215 user_admin.php:1497 user_group_admin.php:1519
 msgid "External Links"
 msgstr "外部リンク"
 
-#: include/global_arrays.php:1039 include/global_arrays.php:1074
+#: include/global_arrays.php:1040 include/global_arrays.php:1075
 msgid "Troubleshooting"
 msgstr "トラブルシューティング"
 
-#: include/global_arrays.php:1073
+#: include/global_arrays.php:1074
 msgid "Support"
 msgstr "サポート"
 
-#: include/global_arrays.php:1078
+#: include/global_arrays.php:1079
 msgid "Access Points, Controllers"
 msgstr "アクセスポイント、コントローラー"
 
-#: include/global_arrays.php:1079
+#: include/global_arrays.php:1080
 msgid "Application Related"
 msgstr "自動化ルールを適用する"
 
-#: include/global_arrays.php:1080
+#: include/global_arrays.php:1081
 #, fuzzy
 msgid "Kadupul Related"
 msgstr "Kadupulレポート"
 
-#: include/global_arrays.php:1081
+#: include/global_arrays.php:1082
 msgid "Database Related"
 msgstr "データベース"
 
-#: include/global_arrays.php:1082
+#: include/global_arrays.php:1083
 msgid "Facilities Related"
 msgstr "施設関連"
 
-#: include/global_arrays.php:1083
+#: include/global_arrays.php:1084
 msgid "Generic Device"
 msgstr "一般ログレベル"
 
-#: include/global_arrays.php:1084
+#: include/global_arrays.php:1085
 msgid "HPC/Grid Computing"
 msgstr "グリッドオプション"
 
-#: include/global_arrays.php:1085
+#: include/global_arrays.php:1086
 msgid "Hypervisor Related"
 msgstr "ハイパーバイザー関連"
 
-#: include/global_arrays.php:1086
+#: include/global_arrays.php:1087
 msgid "ILO, IPMI, iDrac, etc."
 msgstr "ILO、IPMI、iDracなど"
 
-#: include/global_arrays.php:1087
+#: include/global_arrays.php:1088
 #, fuzzy
 msgid "Licensing Related"
 msgstr "ライセンス関連のFAQ"
 
-#: include/global_arrays.php:1088
+#: include/global_arrays.php:1089
 msgid "Linux Related"
 msgstr "Linux関連"
 
-#: include/global_arrays.php:1089
+#: include/global_arrays.php:1090
 msgid "Load Balancer"
 msgstr "ロードバランシング"
 
-#: include/global_arrays.php:1090
+#: include/global_arrays.php:1091
 msgid "Network Switch"
 msgstr "ネットワークフィルタ"
 
-#: include/global_arrays.php:1091
+#: include/global_arrays.php:1092
 msgid "Network Router"
 msgstr "ネットワークフィルタ"
 
-#: include/global_arrays.php:1092
+#: include/global_arrays.php:1093
 msgid "NAS/SAN Related"
 msgstr "NAS/SAN関連"
 
-#: include/global_arrays.php:1093
+#: include/global_arrays.php:1094
 msgid "Network Firewalls"
 msgstr "ネットワークフィルタ"
 
-#: include/global_arrays.php:1094
+#: include/global_arrays.php:1095
 msgid "Power Related PDUs/STS, etc."
 msgstr "電源関連のPDU/STSなど"
 
-#: include/global_arrays.php:1095
+#: include/global_arrays.php:1096
 msgid "Printer Related"
 msgstr "データベース"
 
-#: include/global_arrays.php:1096
+#: include/global_arrays.php:1097
 msgid "Storage Related"
 msgstr "ストレージ関連"
 
-#: include/global_arrays.php:1097
+#: include/global_arrays.php:1098
 msgid "Telco Related"
 msgstr "テンプレートを選択"
 
-#: include/global_arrays.php:1098
+#: include/global_arrays.php:1099
 msgid "Web Server Related"
 msgstr "ウェブサーバー関連"
 
-#: include/global_arrays.php:1099
+#: include/global_arrays.php:1100
 msgid "Windows Related"
 msgstr "Windows関連"
 
-#: include/global_arrays.php:1100
+#: include/global_arrays.php:1101
 msgid "UPS Related"
 msgstr "UPS関連"
 
-#: include/global_arrays.php:1124
+#: include/global_arrays.php:1125
 msgid "All Lines"
 msgstr "すべての行"
 
-#: include/global_arrays.php:1125 include/global_arrays.php:1126
-#: include/global_arrays.php:1127 include/global_arrays.php:1128
-#: include/global_arrays.php:1129 include/global_arrays.php:1130
-#: include/global_arrays.php:1131 include/global_arrays.php:1132
-#: include/global_arrays.php:1133 include/global_arrays.php:1134
-#: include/global_arrays.php:1135 include/global_arrays.php:1136
+#: include/global_arrays.php:1126 include/global_arrays.php:1127
+#: include/global_arrays.php:1128 include/global_arrays.php:1129
+#: include/global_arrays.php:1130 include/global_arrays.php:1131
+#: include/global_arrays.php:1132 include/global_arrays.php:1133
+#: include/global_arrays.php:1134 include/global_arrays.php:1135
+#: include/global_arrays.php:1136 include/global_arrays.php:1137
 #, php-format
 msgid "%d Lines"
 msgstr "%dライン"
 
-#: include/global_arrays.php:1214
+#: include/global_arrays.php:1215
 msgid "Console Access"
 msgstr "コンソールアクセス"
 
-#: include/global_arrays.php:1216
+#: include/global_arrays.php:1217
 msgid "Realtime Graphs"
 msgstr "リアルタイムグラフ"
 
-#: include/global_arrays.php:1217
+#: include/global_arrays.php:1218
 msgid "Update Profile"
 msgstr "プロフィールを更新"
 
-#: include/global_arrays.php:1220
+#: include/global_arrays.php:1221
 msgid "Users/Groups"
 msgstr "ユーザーグループ"
 
-#: include/global_arrays.php:1221
+#: include/global_arrays.php:1222
 msgid "Settings/Utilities"
 msgstr "設定/ユーティリティ"
 
-#: include/global_arrays.php:1223
+#: include/global_arrays.php:1224
 msgid "Installation/Upgrades"
 msgstr "インストール/アップグレード"
 
-#: include/global_arrays.php:1228
+#: include/global_arrays.php:1229
 msgid "Sites/Devices/Data"
 msgstr "サイト/デバイス/データ"
 
-#: include/global_arrays.php:1231
+#: include/global_arrays.php:1232
 msgid "Spike Handling"
 msgstr "スパイクキル設定"
 
-#: include/global_arrays.php:1243 utilities.php:2384
+#: include/global_arrays.php:1244 utilities.php:2384
 msgid "Log Administration"
 msgstr "ログ管理"
 
-#: include/global_arrays.php:1244
+#: include/global_arrays.php:1245
 msgid "Log Viewing"
 msgstr "ログ閲覧"
 
-#: include/global_arrays.php:1246
+#: include/global_arrays.php:1247
 msgid "Reports Administration"
 msgstr "ログ管理"
 
-#: include/global_arrays.php:1247
+#: include/global_arrays.php:1248
 msgid "Reports Creation"
 msgstr "レポート作成"
 
-#: include/global_arrays.php:1248
+#: include/global_arrays.php:1249
 msgid "Show Graph Action Icons"
 msgstr "グラフのタイトルを表示"
 
-#: include/global_arrays.php:1249
+#: include/global_arrays.php:1250
 msgid "Show User Help Links"
 msgstr "ユーザーヘルプリンクを表示する"
 
-#: include/global_arrays.php:1250
+#: include/global_arrays.php:1251
 msgid "Plugin Administration"
 msgstr "ログ管理"
 
-#: include/global_arrays.php:1254
+#: include/global_arrays.php:1255
 msgid "Normal User"
 msgstr "一般ユーザー"
 
-#: include/global_arrays.php:1255
+#: include/global_arrays.php:1256
 msgid "Template Editor"
 msgstr "テンプレートエディタ"
 
-#: include/global_arrays.php:1256
+#: include/global_arrays.php:1257
 msgid "General Administration"
 msgstr "一般管理"
 
-#: include/global_arrays.php:1257
+#: include/global_arrays.php:1258
 msgid "System Administration"
 msgstr "2. システム管理"
 
-#: include/global_arrays.php:1353 lib/html.php:1367
+#: include/global_arrays.php:1356 lib/html.php:1367
 msgid "CDEF"
 msgstr "CDEF"
 
-#: include/global_arrays.php:1354
+#: include/global_arrays.php:1357
 msgid "CDEF Item"
 msgstr "CDEFアイテム"
 
-#: include/global_arrays.php:1355
+#: include/global_arrays.php:1358
 msgid "GPRINT Preset"
 msgstr "GPRINTプリセット"
 
-#: include/global_arrays.php:1358
+#: include/global_arrays.php:1361
 msgid "Data Input Field"
 msgstr "データ入力欄"
 
-#: include/global_arrays.php:1359 include/global_form.php:579
+#: include/global_arrays.php:1362 include/global_form.php:579
 #: include/global_form.php:1679 package_import.php:862
 msgid "Data Source Profile"
 msgstr "データソースプロファイル"
 
-#: include/global_arrays.php:1360
+#: include/global_arrays.php:1363
 msgid "Data Template Item"
 msgstr "データテンプレート項目"
 
-#: include/global_arrays.php:1362
+#: include/global_arrays.php:1365
 msgid "Graph Template Item"
 msgstr "グラフテンプレート項目"
 
-#: include/global_arrays.php:1363
+#: include/global_arrays.php:1366
 msgid "Graph Template Input"
 msgstr "グラフテンプレート入力"
 
-#: include/global_arrays.php:1366 lib/html.php:1368
+#: include/global_arrays.php:1369 lib/html.php:1368
 msgid "VDEF"
 msgstr "VDEF"
 
-#: include/global_arrays.php:1367
+#: include/global_arrays.php:1370
 msgid "VDEF Item"
 msgstr "VDEF項目"
 
-#: include/global_arrays.php:1421
+#: include/global_arrays.php:1424
 msgid "Last Half Hour"
 msgstr "後半30分"
 
-#: include/global_arrays.php:1422
+#: include/global_arrays.php:1425
 msgid "Last Hour"
 msgstr "最終時間"
 
-#: include/global_arrays.php:1423 include/global_arrays.php:1424
-#: include/global_arrays.php:1425 include/global_arrays.php:1426
+#: include/global_arrays.php:1426 include/global_arrays.php:1427
+#: include/global_arrays.php:1428 include/global_arrays.php:1429
 #, php-format
 msgid "Last %d Hours"
 msgstr "過去%d時間"
 
-#: include/global_arrays.php:1427
+#: include/global_arrays.php:1430
 msgid "Last Day"
 msgstr "過去 1日"
 
-#: include/global_arrays.php:1428 include/global_arrays.php:1429
-#: include/global_arrays.php:1430
+#: include/global_arrays.php:1431 include/global_arrays.php:1432
+#: include/global_arrays.php:1433
 #, php-format
 msgid "Last %d Days"
 msgstr "過去%d日間"
 
-#: include/global_arrays.php:1431
+#: include/global_arrays.php:1434
 msgid "Last Week"
 msgstr "先週"
 
-#: include/global_arrays.php:1432
+#: include/global_arrays.php:1435
 #, php-format
 msgid "Last %d Weeks"
 msgstr "過去%d週間"
 
-#: include/global_arrays.php:1433
+#: include/global_arrays.php:1436
 msgid "Last Month"
 msgstr "先月"
 
-#: include/global_arrays.php:1434 include/global_arrays.php:1435
-#: include/global_arrays.php:1436 include/global_arrays.php:1437
+#: include/global_arrays.php:1437 include/global_arrays.php:1438
+#: include/global_arrays.php:1439 include/global_arrays.php:1440
 #, php-format
 msgid "Last %d Months"
 msgstr "過去%dヶ月"
 
-#: include/global_arrays.php:1438
+#: include/global_arrays.php:1441
 msgid "Last Year"
 msgstr "去年"
 
-#: include/global_arrays.php:1439
+#: include/global_arrays.php:1442
 #, php-format
 msgid "Last %d Years"
 msgstr "過去%d年間"
 
-#: include/global_arrays.php:1440
+#: include/global_arrays.php:1443
 msgid "Day Shift"
 msgstr "日勤"
 
-#: include/global_arrays.php:1441
+#: include/global_arrays.php:1444
 msgid "This Day"
 msgstr "日"
 
-#: include/global_arrays.php:1442
+#: include/global_arrays.php:1445
 msgid "This Week"
 msgstr "今週"
 
-#: include/global_arrays.php:1443
+#: include/global_arrays.php:1446
 msgid "This Month"
 msgstr "今月"
 
-#: include/global_arrays.php:1444
+#: include/global_arrays.php:1447
 msgid "This Year"
 msgstr "今年"
 
-#: include/global_arrays.php:1445
+#: include/global_arrays.php:1448
 msgid "Previous Day"
 msgstr "前の日"
 
-#: include/global_arrays.php:1446
+#: include/global_arrays.php:1449
 msgid "Previous Week"
 msgstr "前の週"
 
-#: include/global_arrays.php:1447
+#: include/global_arrays.php:1450
 msgid "Previous Month"
 msgstr "前の月"
 
-#: include/global_arrays.php:1448
+#: include/global_arrays.php:1451
 msgid "Previous Year"
 msgstr "前年"
 
-#: include/global_arrays.php:1453
+#: include/global_arrays.php:1456
 #, php-format
 msgid "%d Min"
 msgstr "%d 分"
 
-#: include/global_arrays.php:1508
+#: include/global_arrays.php:1511
 msgid "Month Number, Day, Year"
 msgstr "月番号、日、年"
 
-#: include/global_arrays.php:1509
+#: include/global_arrays.php:1512
 msgid "Month Name, Day, Year"
 msgstr "月名、日、年"
 
-#: include/global_arrays.php:1510
+#: include/global_arrays.php:1513
 msgid "Day, Month Number, Year"
 msgstr "日、月番号、年"
 
-#: include/global_arrays.php:1511
+#: include/global_arrays.php:1514
 msgid "Day, Month Name, Year"
 msgstr "日、月名、年"
 
-#: include/global_arrays.php:1512
+#: include/global_arrays.php:1515
 msgid "Year, Month Number, Day"
 msgstr "年、月番号、日"
 
-#: include/global_arrays.php:1513
+#: include/global_arrays.php:1516
 msgid "Year, Month Name, Day"
 msgstr "年、月名、日"
 
-#: include/global_arrays.php:1523 include/global_arrays.php:1554
+#: include/global_arrays.php:1526 include/global_arrays.php:1557
 msgid "After Boost"
 msgstr "ブースト後"
 
-#: include/global_arrays.php:1533 include/global_arrays.php:1534
-#: include/global_arrays.php:1535 include/global_arrays.php:1536
-#: include/global_arrays.php:1537 include/global_arrays.php:1599
-#: include/global_arrays.php:1600
+#: include/global_arrays.php:1536 include/global_arrays.php:1537
+#: include/global_arrays.php:1538 include/global_arrays.php:1539
+#: include/global_arrays.php:1540 include/global_arrays.php:1602
+#: include/global_arrays.php:1603
 #, php-format
 msgid "%d MBytes"
 msgstr "%d Mバイト"
 
-#: include/global_arrays.php:1538
+#: include/global_arrays.php:1541
 msgid "1 GByte"
 msgstr "1Gバイト"
 
-#: include/global_arrays.php:1539 include/global_arrays.php:1602
+#: include/global_arrays.php:1542 include/global_arrays.php:1605
 #: lib/boost.php:124
 #, php-format
 msgid "%s GBytes"
 msgstr "%s Gバイト"
 
-#: include/global_arrays.php:1540 include/global_arrays.php:1541
-#: include/global_arrays.php:1603 include/global_arrays.php:1604
-#: include/global_arrays.php:1605 include/global_arrays.php:1606
-#: include/global_arrays.php:1607 include/global_arrays.php:1608
+#: include/global_arrays.php:1543 include/global_arrays.php:1544
+#: include/global_arrays.php:1606 include/global_arrays.php:1607
+#: include/global_arrays.php:1608 include/global_arrays.php:1609
+#: include/global_arrays.php:1610 include/global_arrays.php:1611
 #, php-format
 msgid "%d GBytes"
 msgstr "%d Gバイト"
 
-#: include/global_arrays.php:1561
+#: include/global_arrays.php:1564
 msgid "2,000 Data Source Items"
 msgstr "2,000のデータソース項目"
 
-#: include/global_arrays.php:1562
+#: include/global_arrays.php:1565
 msgid "5,000 Data Source Items"
 msgstr "5,000のデータソース項目"
 
-#: include/global_arrays.php:1563
+#: include/global_arrays.php:1566
 msgid "10,000 Data Source Items"
 msgstr "10,000個のデータソース項目"
 
-#: include/global_arrays.php:1564
+#: include/global_arrays.php:1567
 msgid "15,000 Data Source Items"
 msgstr "15,000のデータソース項目"
 
-#: include/global_arrays.php:1565
+#: include/global_arrays.php:1568
 msgid "25,000 Data Source Items"
 msgstr "25,000データソース項目"
 
-#: include/global_arrays.php:1566
+#: include/global_arrays.php:1569
 msgid "50,000 Data Source Items (Default)"
 msgstr "50,000データソース項目（デフォルト）"
 
-#: include/global_arrays.php:1567
+#: include/global_arrays.php:1570
 msgid "100,000 Data Source Items"
 msgstr "10万件のデータソース項目"
 
-#: include/global_arrays.php:1568
+#: include/global_arrays.php:1571
 msgid "200,000 Data Source Items"
 msgstr "20万件のデータソース項目"
 
-#: include/global_arrays.php:1569
+#: include/global_arrays.php:1572
 msgid "400,000 Data Source Items"
 msgstr "400,000件のデータソース項目"
 
-#: include/global_arrays.php:1586
+#: include/global_arrays.php:1589
 msgid "2 Hours"
 msgstr "2時間"
 
-#: include/global_arrays.php:1587
+#: include/global_arrays.php:1590
 msgid "4 Hours"
 msgstr "4 時間"
 
-#: include/global_arrays.php:1588
+#: include/global_arrays.php:1591
 msgid "6 Hours"
 msgstr "6時間"
 
-#: include/global_arrays.php:1595 include/global_settings.php:1494
+#: include/global_arrays.php:1598 include/global_settings.php:1494
 #: include/global_settings.php:1495 include/global_settings.php:1496
 #, php-format
 msgid "%s Hours"
 msgstr "%s 時"
 
-#: include/global_arrays.php:1601
+#: include/global_arrays.php:1604
 #, php-format
 msgid "%d GByte"
 msgstr "%d GByte"
 
-#: include/global_arrays.php:1609 utilities.php:2850 utilities.php:2851
+#: include/global_arrays.php:1612 utilities.php:2850 utilities.php:2851
 #: utilities.php:2900
 msgid "Unlimited"
 msgstr "無制限"
 
-#: include/global_arrays.php:1616 include/global_settings.php:1393
+#: include/global_arrays.php:1619 include/global_settings.php:1393
 #: include/global_settings.php:1394 include/global_settings.php:1395
 #: include/global_settings.php:1396 include/global_settings.php:1406
 #: include/global_settings.php:1407 include/global_settings.php:1408
@@ -7272,740 +6877,758 @@ msgstr "無制限"
 msgid "%s Minutes"
 msgstr "%s分"
 
-#: include/global_arrays.php:1638
+#: include/global_arrays.php:1641
 msgid "1 Megabyte"
 msgstr "1メガバイト"
 
-#: include/global_arrays.php:1639 include/global_arrays.php:1640
-#: include/global_arrays.php:1641 include/global_arrays.php:1642
-#: include/global_arrays.php:1643 include/global_arrays.php:1644
+#: include/global_arrays.php:1642 include/global_arrays.php:1643
+#: include/global_arrays.php:1644 include/global_arrays.php:1645
+#: include/global_arrays.php:1646 include/global_arrays.php:1647
 #, php-format
 msgid "%d Megabytes"
 msgstr "%d メガバイト"
 
-#: include/global_arrays.php:1648
+#: include/global_arrays.php:1651
 msgid "Send Now"
 msgstr "今すぐ送信します。"
 
-#: include/global_arrays.php:1656
+#: include/global_arrays.php:1659
 msgid "Take Ownership"
 msgstr "所有権を得る"
 
-#: include/global_arrays.php:1660
+#: include/global_arrays.php:1663
 msgid "Inline PNG Image"
 msgstr "インラインPNG画像"
 
-#: include/global_arrays.php:1665
+#: include/global_arrays.php:1668
 msgid "Inline JPEG Image"
 msgstr "インラインJPEG画像"
 
-#: include/global_arrays.php:1666
+#: include/global_arrays.php:1669
 msgid "Inline GIF Image"
 msgstr "インラインGIF画像"
 
-#: include/global_arrays.php:1669
+#: include/global_arrays.php:1672
 msgid "Attached PNG Image"
 msgstr "添付PNG画像"
 
-#: include/global_arrays.php:1672
+#: include/global_arrays.php:1675
 msgid "Attached JPEG Image"
 msgstr "添付JPEG画像"
 
-#: include/global_arrays.php:1673
+#: include/global_arrays.php:1676
 msgid "Attached GIF Image"
 msgstr "添付GIF画像"
 
-#: include/global_arrays.php:1677
+#: include/global_arrays.php:1680
 msgid "Inline PNG Image, LN Style"
 msgstr "インラインPNG画像、LNスタイル"
 
-#: include/global_arrays.php:1679
+#: include/global_arrays.php:1682
 msgid "Inline JPEG Image, LN Style"
 msgstr "インラインJPEG画像、LNスタイル"
 
-#: include/global_arrays.php:1680
+#: include/global_arrays.php:1683
 msgid "Inline GIF Image, LN Style"
 msgstr "インラインGIF画像、LNスタイル"
 
-#: include/global_arrays.php:1685
+#: include/global_arrays.php:1688
 msgid "Text"
 msgstr "テキスト"
 
-#: include/global_arrays.php:1686 include/global_form.php:2252
+#: include/global_arrays.php:1689 include/global_form.php:2252
 msgid "Tree"
 msgstr "ツリー"
 
-#: include/global_arrays.php:1689
+#: include/global_arrays.php:1692
 msgid "Horizontal Rule"
 msgstr "横型ルール"
 
-#: include/global_arrays.php:1693
+#: include/global_arrays.php:1696
 msgid "left"
 msgstr "左"
 
-#: include/global_arrays.php:1694
+#: include/global_arrays.php:1697
 msgid "center"
 msgstr "センター"
 
-#: include/global_arrays.php:1695
+#: include/global_arrays.php:1698
 msgid "right"
 msgstr "右"
 
-#: include/global_arrays.php:1699
+#: include/global_arrays.php:1702
 msgid "Minute(s)"
 msgstr "分"
 
-#: include/global_arrays.php:1700
+#: include/global_arrays.php:1703
 msgid "Hour(s)"
 msgstr "時間"
 
-#: include/global_arrays.php:1701
+#: include/global_arrays.php:1704
 msgid "Day(s)"
 msgstr "日"
 
-#: include/global_arrays.php:1702
+#: include/global_arrays.php:1705
 msgid "Week(s)"
 msgstr "週"
 
-#: include/global_arrays.php:1703
+#: include/global_arrays.php:1706
 msgid "Month(s), Day of Month"
 msgstr "月、日"
 
-#: include/global_arrays.php:1704
+#: include/global_arrays.php:1707
 msgid "Month(s), Day of Week"
 msgstr "月、曜日"
 
-#: include/global_arrays.php:1705
+#: include/global_arrays.php:1708
 msgid "Year(s)"
 msgstr "年"
 
-#: include/global_arrays.php:1709
+#: include/global_arrays.php:1712
 msgid "Keep Graph Types"
 msgstr "グラフの種類を保持"
 
-#: include/global_arrays.php:1710
+#: include/global_arrays.php:1713
 msgid "Keep Type and STACK"
 msgstr "タイプと積み重ね"
 
-#: include/global_arrays.php:1711
+#: include/global_arrays.php:1714
 msgid "Convert to AREA/STACK Graph"
 msgstr "AREA / STACKグラフに変換"
 
-#: include/global_arrays.php:1712
+#: include/global_arrays.php:1715
 msgid "Convert to LINE1 Graph"
 msgstr "LINE1グラフに変換"
 
-#: include/global_arrays.php:1713
+#: include/global_arrays.php:1716
 msgid "Convert to LINE2 Graph"
 msgstr "LINE 2グラフに変換"
 
-#: include/global_arrays.php:1714
+#: include/global_arrays.php:1717
 msgid "Convert to LINE3 Graph"
 msgstr "LINE 3グラフに変換"
 
-#: include/global_arrays.php:1715
+#: include/global_arrays.php:1718
 msgid "Convert to LINE1/STACK Graph"
 msgstr "LINE1グラフに変換"
 
-#: include/global_arrays.php:1716
+#: include/global_arrays.php:1719
 msgid "Convert to LINE2/STACK Graph"
 msgstr "LINE 2グラフに変換"
 
-#: include/global_arrays.php:1717
+#: include/global_arrays.php:1720
 msgid "Convert to LINE3/STACK Graph"
 msgstr "LINE 3グラフに変換"
 
-#: include/global_arrays.php:1721
+#: include/global_arrays.php:1724
 msgid "No Totals"
 msgstr "合計なし"
 
-#: include/global_arrays.php:1722
+#: include/global_arrays.php:1725
 msgid "Print All Legend Items"
 msgstr "すべての凡例アイテムを印刷する"
 
-#: include/global_arrays.php:1723
+#: include/global_arrays.php:1726
 msgid "Print Totaling Legend Items Only"
 msgstr "合計凡例アイテムのみを印刷"
 
-#: include/global_arrays.php:1727
+#: include/global_arrays.php:1730
 msgid "Total Similar Data Sources"
 msgstr "合計類似データソース"
 
-#: include/global_arrays.php:1728
+#: include/global_arrays.php:1731
 msgid "Total All Data Sources"
 msgstr "全データソースの合計"
 
-#: include/global_arrays.php:1732
+#: include/global_arrays.php:1735
 msgid "No Reordering"
 msgstr "並べ替えなし"
 
-#: include/global_arrays.php:1733
+#: include/global_arrays.php:1736
 msgid "Data Source, Graph"
 msgstr "データソース、グラフ"
 
-#: include/global_arrays.php:1734
+#: include/global_arrays.php:1737
 msgid "Graph, Data Source"
 msgstr "現在のグラフ項目のデータソース"
 
-#: include/global_arrays.php:1735
+#: include/global_arrays.php:1738
 msgid "Base Graph Order"
 msgstr "グラフあり"
 
-#: include/global_arrays.php:1742
+#: include/global_arrays.php:1745
 msgid "contains"
 msgstr "含む"
 
-#: include/global_arrays.php:1743
+#: include/global_arrays.php:1746
 msgid "does not contain"
 msgstr "含まない"
 
-#: include/global_arrays.php:1744
+#: include/global_arrays.php:1747
 msgid "begins with"
 msgstr "始まる"
 
-#: include/global_arrays.php:1745
+#: include/global_arrays.php:1748
 msgid "does not begin with"
 msgstr "が右の値と前方不一致"
 
-#: include/global_arrays.php:1746
+#: include/global_arrays.php:1749
 msgid "ends with"
 msgstr "終わる"
 
-#: include/global_arrays.php:1747
+#: include/global_arrays.php:1750
 msgid "does not end with"
 msgstr "終わらない"
 
-#: include/global_arrays.php:1748
+#: include/global_arrays.php:1751
 msgid "matches"
 msgstr "一致"
 
-#: include/global_arrays.php:1749
+#: include/global_arrays.php:1752
 msgid "is not equal to"
 msgstr "等しくない"
 
-#: include/global_arrays.php:1750
+#: include/global_arrays.php:1753
 msgid "is less than"
 msgstr "より小さい"
 
-#: include/global_arrays.php:1751
+#: include/global_arrays.php:1754
 msgid "is less than or equal"
 msgstr "が右の値より小さいか等しい"
 
-#: include/global_arrays.php:1752
+#: include/global_arrays.php:1755
 msgid "is greater than"
 msgstr "より大きい"
 
-#: include/global_arrays.php:1753
+#: include/global_arrays.php:1756
 msgid "is greater than or equal"
 msgstr "が右の値より大きいか等しい"
 
-#: include/global_arrays.php:1754
+#: include/global_arrays.php:1757
 msgid "is unknown"
 msgstr "不明"
 
-#: include/global_arrays.php:1755
+#: include/global_arrays.php:1758
 msgid "is not unknown"
 msgstr "不明"
 
-#: include/global_arrays.php:1756
+#: include/global_arrays.php:1759
 msgid "is empty"
 msgstr "空"
 
-#: include/global_arrays.php:1757
+#: include/global_arrays.php:1760
 msgid "is not empty"
 msgstr "空ではない"
 
-#: include/global_arrays.php:1758
+#: include/global_arrays.php:1761
 msgid "matches regular expression"
 msgstr "が正規表現で一致"
 
-#: include/global_arrays.php:1759
+#: include/global_arrays.php:1762
 msgid "does not match regular expression"
 msgstr "正規表現と一致しません"
 
-#: include/global_arrays.php:1861
+#: include/global_arrays.php:1864
 msgid "Fixed String"
 msgstr "固定文字列"
 
-#: include/global_arrays.php:1866
+#: include/global_arrays.php:1869
 msgid "Every 1 Hour"
 msgstr "1時間ごと"
 
-#: include/global_arrays.php:1872
+#: include/global_arrays.php:1875
 msgid "Every Day"
 msgstr "毎日"
 
-#: include/global_arrays.php:1873
+#: include/global_arrays.php:1876
 msgid "Every Week"
 msgstr "毎週"
 
-#: include/global_arrays.php:1874 include/global_arrays.php:1875
+#: include/global_arrays.php:1877 include/global_arrays.php:1878
 #, php-format
 msgid "Every %d Weeks"
 msgstr "%d週間ごと"
 
-#: include/global_arrays.php:1906
+#: include/global_arrays.php:1909
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jan"
 msgstr "1月"
 
-#: include/global_arrays.php:1907
+#: include/global_arrays.php:1910
 msgctxt "A short textual representation of a month, three letters"
 msgid "Feb"
 msgstr "2月"
 
-#: include/global_arrays.php:1908
+#: include/global_arrays.php:1911
 msgctxt "A short textual representation of a month, three letters"
 msgid "Mar"
 msgstr "3月"
 
-#: include/global_arrays.php:1909
+#: include/global_arrays.php:1912
 msgctxt "A short textual representation of a month, three letters"
 msgid "Apr"
 msgstr "4月"
 
-#: include/global_arrays.php:1910
+#: include/global_arrays.php:1913
 msgctxt "A short textual representation of a month, three letters"
 msgid "May"
 msgstr "5月"
 
-#: include/global_arrays.php:1911
+#: include/global_arrays.php:1914
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jun"
 msgstr "6月"
 
-#: include/global_arrays.php:1912
+#: include/global_arrays.php:1915
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jul"
 msgstr "7月"
 
-#: include/global_arrays.php:1913
+#: include/global_arrays.php:1916
 msgctxt "A short textual representation of a month, three letters"
 msgid "Aug"
 msgstr "8月"
 
-#: include/global_arrays.php:1914
+#: include/global_arrays.php:1917
 msgctxt "A short textual representation of a month, three letters"
 msgid "Sep"
 msgstr "9月"
 
-#: include/global_arrays.php:1915
+#: include/global_arrays.php:1918
 msgctxt "A short textual representation of a month, three letters"
 msgid "Oct"
 msgstr "10月"
 
-#: include/global_arrays.php:1916
+#: include/global_arrays.php:1919
 msgctxt "A short textual representation of a month, three letters"
 msgid "Nov"
 msgstr "11月"
 
-#: include/global_arrays.php:1917
+#: include/global_arrays.php:1920
 msgctxt "A short textual representation of a month, three letters"
 msgid "Dec"
 msgstr "12月"
 
-#: include/global_arrays.php:1921
+#: include/global_arrays.php:1924
 msgid "Use the First Handler Found"
 msgstr "PHPGetTextハンドラーを使用する"
 
-#: include/global_arrays.php:1925
+#: include/global_arrays.php:1928
 msgid "Use the PHP GetText Handler"
 msgstr "PHPGetTextハンドラーを使用する"
 
-#: include/global_arrays.php:1929
+#: include/global_arrays.php:1932
 msgid "Use the Oscarotero GetText Handler"
 msgstr "OscaroteroGetTextハンドラーを使用する"
 
-#: include/global_arrays.php:1933
+#: include/global_arrays.php:1936
 msgid "Use the MonoTranslator GetText Handler"
 msgstr "MonoTranslatorGetTextハンドラーを使用する"
 
-#: include/global_arrays.php:1947
+#: include/global_arrays.php:1950
 msgctxt "A textual representation of a day, three letters"
 msgid "Sun"
 msgstr "日"
 
-#: include/global_arrays.php:1948
+#: include/global_arrays.php:1951
 msgctxt "A textual representation of a day, three letters"
 msgid "Mon"
 msgstr "月"
 
-#: include/global_arrays.php:1949
+#: include/global_arrays.php:1952
 msgctxt "A textual representation of a day, three letters"
 msgid "Tue"
 msgstr "火"
 
-#: include/global_arrays.php:1950
+#: include/global_arrays.php:1953
 msgctxt "A textual representation of a day, three letters"
 msgid "Wed"
 msgstr "水"
 
-#: include/global_arrays.php:1951
+#: include/global_arrays.php:1954
 msgctxt "A textual representation of a day, three letters"
 msgid "Thu"
 msgstr "木"
 
-#: include/global_arrays.php:1952
+#: include/global_arrays.php:1955
 msgctxt "A textual representation of a day, three letters"
 msgid "Fri"
 msgstr "金"
 
-#: include/global_arrays.php:1953
+#: include/global_arrays.php:1956
 msgctxt "A textual representation of a day, three letters"
 msgid "Sat"
 msgstr "土"
 
-#: include/global_arrays.php:1957
+#: include/global_arrays.php:1960
 msgid "Arabic"
 msgstr "アラビア語"
 
-#: include/global_arrays.php:1958
+#: include/global_arrays.php:1961
 msgid "Bulgarian"
 msgstr "ブルガリア語"
 
-#: include/global_arrays.php:1959
+#: include/global_arrays.php:1962
 msgid "Chinese (China)"
 msgstr "中国語（中国）"
 
-#: include/global_arrays.php:1960
+#: include/global_arrays.php:1963
 msgid "Chinese (Taiwan)"
 msgstr "中国語 (台湾)"
 
-#: include/global_arrays.php:1961
+#: include/global_arrays.php:1964
 msgid "Dutch"
 msgstr "オランダ語"
 
-#: include/global_arrays.php:1962
+#: include/global_arrays.php:1965
 msgid "English"
 msgstr "英語"
 
-#: include/global_arrays.php:1963
+#: include/global_arrays.php:1966
 msgid "French"
 msgstr "フランス語"
 
-#: include/global_arrays.php:1964
+#: include/global_arrays.php:1967
 msgid "German"
 msgstr "ドイツ語"
 
-#: include/global_arrays.php:1965
+#: include/global_arrays.php:1968
 msgid "Greek"
 msgstr "ギリシャ語"
 
-#: include/global_arrays.php:1966
+#: include/global_arrays.php:1969
 msgid "Hebrew"
 msgstr "ヘブライ語"
 
-#: include/global_arrays.php:1967
+#: include/global_arrays.php:1970
 msgid "Hindi"
 msgstr "ヒンディー語"
 
-#: include/global_arrays.php:1968
+#: include/global_arrays.php:1971
 msgid "Italian"
 msgstr "イタリア語"
 
-#: include/global_arrays.php:1969
+#: include/global_arrays.php:1972
 msgid "Japanese"
 msgstr "日本語"
 
-#: include/global_arrays.php:1970
+#: include/global_arrays.php:1973
 msgid "Korean"
 msgstr "韓国語"
 
-#: include/global_arrays.php:1971
+#: include/global_arrays.php:1974
 msgid "Polish"
 msgstr "ポーランド語"
 
-#: include/global_arrays.php:1972
+#: include/global_arrays.php:1975
 msgid "Portuguese"
 msgstr "ポルトガル語"
 
-#: include/global_arrays.php:1973
+#: include/global_arrays.php:1976
 msgid "Portuguese (Brazil)"
 msgstr "ポルトガル語 (ブラジル)"
 
-#: include/global_arrays.php:1974
+#: include/global_arrays.php:1977
 msgid "Russian"
 msgstr "ロシア語"
 
-#: include/global_arrays.php:1975
+#: include/global_arrays.php:1978
 msgid "Spanish"
 msgstr "スペイン語"
 
-#: include/global_arrays.php:1976
+#: include/global_arrays.php:1979
 msgid "Swedish"
 msgstr "スウェーデン語"
 
-#: include/global_arrays.php:1977
+#: include/global_arrays.php:1980
 msgid "Turkish"
 msgstr "トルコ語"
 
-#: include/global_arrays.php:1978
+#: include/global_arrays.php:1981
 msgid "Vietnamese"
 msgstr "ベトナム語"
 
-#: include/global_arrays.php:1982
+#: include/global_arrays.php:1985
 msgid "Classic"
 msgstr "クラシック"
 
-#: include/global_arrays.php:1983
+#: include/global_arrays.php:1986
 msgid "Modern"
 msgstr "モダン"
 
-#: include/global_arrays.php:1984
+#: include/global_arrays.php:1987
 msgid "Dark"
 msgstr "ダーク"
 
-#: include/global_arrays.php:1985
+#: include/global_arrays.php:1988
 msgid "Paper-plane"
 msgstr "紙飛行機"
 
-#: include/global_arrays.php:1986
+#: include/global_arrays.php:1989
 msgid "Paw"
 msgstr "動物の足"
 
-#: include/global_arrays.php:1987
+#: include/global_arrays.php:1990
 msgid "Sunrise"
 msgstr "サンライズ"
 
-#: include/global_arrays.php:1991
+#: include/global_arrays.php:1994
 msgid "[Fail]"
 msgstr "失敗"
 
-#: include/global_arrays.php:1992
+#: include/global_arrays.php:1995
 msgid "[Warning]"
 msgstr "警告:"
 
-#: include/global_arrays.php:1993
+#: include/global_arrays.php:1996
 msgid "[Restart]"
 msgstr "メンバーに限定"
 
-#: include/global_arrays.php:1994
+#: include/global_arrays.php:1997
 msgid "[Success]"
 msgstr "成功！"
 
-#: include/global_arrays.php:1995
+#: include/global_arrays.php:1998
 msgid "[Skipped]"
 msgstr "[スキップ]"
 
-#: include/global_arrays.php:2000 include/global_arrays.php:2006
+#: include/global_arrays.php:2003 include/global_arrays.php:2009
 msgid "User Profile (Edit)"
 msgstr "ユーザープロフィール（編集）"
 
-#: include/global_arrays.php:2018 include/global_arrays.php:2024
+#: include/global_arrays.php:2021 include/global_arrays.php:2027
 msgid "Tree Mode"
 msgstr "ツリーモード"
 
-#: include/global_arrays.php:2030
+#: include/global_arrays.php:2033
 msgid "List Mode"
 msgstr "一覧モード"
 
-#: include/global_arrays.php:2062 include/global_arrays.php:2068
+#: include/global_arrays.php:2065 include/global_arrays.php:2071
 #: lib/functions.php:4492 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "コンソール"
 
-#: include/global_arrays.php:2074
+#: include/global_arrays.php:2077
 msgid "Graph Management"
 msgstr "グラフ管理"
 
-#: include/global_arrays.php:2080 include/global_arrays.php:2122
-#: include/global_arrays.php:2140 include/global_arrays.php:2194
-#: include/global_arrays.php:2206 include/global_arrays.php:2218
-#: include/global_arrays.php:2230 include/global_arrays.php:2242
-#: include/global_arrays.php:2278 include/global_arrays.php:2296
-#: include/global_arrays.php:2314 include/global_arrays.php:2332
-#: include/global_arrays.php:2350 include/global_arrays.php:2374
-#: include/global_arrays.php:2410 include/global_arrays.php:2536
-#: include/global_arrays.php:2560 include/global_arrays.php:2584
-#: include/global_arrays.php:2602 include/global_arrays.php:2614
-#: include/global_arrays.php:2728 include/global_arrays.php:2752
-#: include/global_arrays.php:2770 include/global_arrays.php:2788
-#: include/global_arrays.php:2812
+#: include/global_arrays.php:2083 include/global_arrays.php:2125
+#: include/global_arrays.php:2143 include/global_arrays.php:2197
+#: include/global_arrays.php:2209 include/global_arrays.php:2221
+#: include/global_arrays.php:2233 include/global_arrays.php:2245
+#: include/global_arrays.php:2281 include/global_arrays.php:2299
+#: include/global_arrays.php:2317 include/global_arrays.php:2335
+#: include/global_arrays.php:2353 include/global_arrays.php:2377
+#: include/global_arrays.php:2413 include/global_arrays.php:2539
+#: include/global_arrays.php:2563 include/global_arrays.php:2587
+#: include/global_arrays.php:2605 include/global_arrays.php:2617
+#: include/global_arrays.php:2731 include/global_arrays.php:2755
+#: include/global_arrays.php:2773 include/global_arrays.php:2791
+#: include/global_arrays.php:2815
 msgid "(Edit)"
 msgstr "(編集)"
 
-#: include/global_arrays.php:2098 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2095 include/global_arrays.php:2161
+#: include/global_arrays.php:2251 include/global_arrays.php:2287
+#: include/global_arrays.php:2305 include/global_arrays.php:2323
+#: include/global_arrays.php:2341 include/global_arrays.php:2371
+#: include/global_arrays.php:2407 include/global_arrays.php:2437
+#: include/global_arrays.php:2533 include/global_arrays.php:2737
+#: include/global_arrays.php:2761 include/global_arrays.php:2779
+#: include/global_arrays.php:2797 include/global_arrays.php:2821
+#: lib/api_automation.php:1289 lib/api_automation.php:1352
+#: lib/api_automation.php:1422 lib/html_reports.php:1792 plugins.php:605
+msgid "Actions"
+msgstr "操作"
+
+#: include/global_arrays.php:2101 lib/api_aggregate.php:2333
 msgid "Graph Items"
 msgstr "グラフ項目"
 
-#: include/global_arrays.php:2104
+#: include/global_arrays.php:2107
 msgid "Create New Graphs"
 msgstr "新規グラフを作成"
 
-#: include/global_arrays.php:2110
+#: include/global_arrays.php:2113
 msgid "Create Graphs from Data Query"
 msgstr "データクエリからグラフを作成する"
 
-#: include/global_arrays.php:2128 include/global_arrays.php:2146
-#: include/global_arrays.php:2266 include/global_arrays.php:2356
-#: include/global_arrays.php:2380 include/global_arrays.php:2542
+#: include/global_arrays.php:2131 include/global_arrays.php:2149
+#: include/global_arrays.php:2269 include/global_arrays.php:2359
+#: include/global_arrays.php:2383 include/global_arrays.php:2545
 msgid "(Remove)"
 msgstr "(削除)"
 
-#: include/global_arrays.php:2164 include/global_arrays.php:2170
-#: include/global_arrays.php:2176 include/global_arrays.php:2182
-#: include/global_arrays.php:2476
+#: include/global_arrays.php:2167 include/global_arrays.php:2173
+#: include/global_arrays.php:2179 include/global_arrays.php:2185
+#: include/global_arrays.php:2479
 msgid "View Log"
 msgstr "ビュー・ログ"
 
-#: include/global_arrays.php:2188
+#: include/global_arrays.php:2191
 msgid "Graph Trees"
 msgstr "グラフツリー"
 
-#: include/global_arrays.php:2254 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2257 lib/api_aggregate.php:2333
 msgid "Graph Template Items"
 msgstr "グラフテンプレートの項目"
 
-#: include/global_arrays.php:2344
+#: include/global_arrays.php:2347
 msgid "Round Robin Archives"
 msgstr "ラウンドロビンアーカイブ"
 
-#: include/global_arrays.php:2386
+#: include/global_arrays.php:2389
 msgid "Data Input Fields"
 msgstr "データの入力項目"
 
-#: include/global_arrays.php:2392 include/global_arrays.php:2422
+#: include/global_arrays.php:2395 include/global_arrays.php:2425
 msgid "(Remove Item)"
 msgstr "（アイテムを削除）"
 
-#: include/global_arrays.php:2428 include/global_settings.php:301
+#: include/global_arrays.php:2431 include/global_settings.php:301
 #: rrdcleaner.php:323
 msgid "RRD Cleaner"
 msgstr "RRDクリーナー"
 
-#: include/global_arrays.php:2440
+#: include/global_arrays.php:2443
 msgid "List unused Files"
 msgstr "未使用ファイルの一覧表示"
 
-#: include/global_arrays.php:2446
+#: include/global_arrays.php:2449
 msgid "RRD Check"
 msgstr "実行チェック"
 
-#: include/global_arrays.php:2464 utilities.php:2399
+#: include/global_arrays.php:2461 include/global_arrays.php:2473
+#: utilities.php:2395
+msgid "View Poller Cache"
+msgstr "ポーラーキャッシュの表示"
+
+#: include/global_arrays.php:2467 utilities.php:2399
 msgid "View Data Query Cache"
 msgstr "データクエリキャッシュの表示"
 
-#: include/global_arrays.php:2482
+#: include/global_arrays.php:2485
 msgid "Clear Log"
 msgstr "ログを消去する"
 
-#: include/global_arrays.php:2488 utilities.php:2388
+#: include/global_arrays.php:2491 utilities.php:2388
 msgid "View User Log"
 msgstr "ユーザーログを表示する"
 
-#: include/global_arrays.php:2494
+#: include/global_arrays.php:2497
 msgid "Clear User Log"
 msgstr "ユーザーログを消去する"
 
-#: include/global_arrays.php:2500 utilities.php:2379 utilities.php:2380
+#: include/global_arrays.php:2503 utilities.php:2379 utilities.php:2380
 msgid "Technical Support"
 msgstr "テクニカルサポート"
 
-#: include/global_arrays.php:2506 utilities.php:2570
+#: include/global_arrays.php:2509 utilities.php:2570
 msgid "Boost Status"
 msgstr "ブーストステータス"
 
-#: include/global_arrays.php:2512 utilities.php:2454
+#: include/global_arrays.php:2515 utilities.php:2454
 msgid "View SNMP Agent Cache"
 msgstr "SNMPエージェントキャッシュの表示"
 
-#: include/global_arrays.php:2518 utilities.php:2465
+#: include/global_arrays.php:2521 utilities.php:2465
 msgid "View SNMP Agent Notification Log"
 msgstr "SNMPエージェント通知ログを表示する"
 
-#: include/global_arrays.php:2548
+#: include/global_arrays.php:2551
 msgid "VDEF Items"
 msgstr "VDEFアイテム"
 
-#: include/global_arrays.php:2554
+#: include/global_arrays.php:2557
 msgid "View SNMP Notification Receivers"
 msgstr "SNMP通知受信者を表示する"
 
-#: include/global_arrays.php:2566
+#: include/global_arrays.php:2569
 msgid "Kadupul Settings"
 msgstr "Kadupul 設定"
 
-#: include/global_arrays.php:2572
+#: include/global_arrays.php:2575
 msgid "External Link"
 msgstr "外部リンク"
 
-#: include/global_arrays.php:2590 include/global_arrays.php:2620
+#: include/global_arrays.php:2593 include/global_arrays.php:2623
 msgid "(Action)"
 msgstr "アクション"
 
-#: include/global_arrays.php:2626 lib/html.php:2785
+#: include/global_arrays.php:2629 lib/html.php:2785
 msgid "About Kadupul"
 msgstr "Kadupul について"
 
-#: include/global_arrays.php:2632
+#: include/global_arrays.php:2635
 #, fuzzy
 msgid "Kadupul Help"
 msgstr "Kadupulホーム"
 
-#: include/global_arrays.php:2644
+#: include/global_arrays.php:2647
 msgid "Export Results"
 msgstr "エクスポート結果"
 
-#: include/global_arrays.php:2662 include/global_arrays.php:2692
+#: include/global_arrays.php:2665 include/global_arrays.php:2695
 #: lib/html.php:1963 lib/html.php:2037
 msgid "Reporting"
 msgstr "PHPレポート"
 
-#: include/global_arrays.php:2668 include/global_arrays.php:2698
+#: include/global_arrays.php:2671 include/global_arrays.php:2701
 msgid "Report Add"
 msgstr "レポート追加"
 
-#: include/global_arrays.php:2674 include/global_arrays.php:2704
+#: include/global_arrays.php:2677 include/global_arrays.php:2707
 msgid "Report Delete"
 msgstr "レポート削除"
 
-#: include/global_arrays.php:2680 include/global_arrays.php:2710
+#: include/global_arrays.php:2683 include/global_arrays.php:2713
 msgid "Report Edit"
 msgstr "レポート編集"
 
-#: include/global_arrays.php:2686 include/global_arrays.php:2716
+#: include/global_arrays.php:2689 include/global_arrays.php:2719
 msgid "Report Edit Item"
 msgstr "レポート編集項目"
 
-#: include/global_arrays.php:2740
+#: include/global_arrays.php:2743
 msgid "Color Template Items"
 msgstr "カラーテンプレートアイテム"
 
-#: include/global_arrays.php:2800
+#: include/global_arrays.php:2803
 msgid "Graph Rule Items"
 msgstr "グラフルール項目"
 
-#: include/global_arrays.php:2824
+#: include/global_arrays.php:2827
 msgid "Tree Rule Items"
 msgstr "ツリールール項目"
 
-#: include/global_arrays.php:2855 include/global_arrays.php:2871
-#: lib/api_device.php:1948
+#: include/global_arrays.php:2858 include/global_arrays.php:2874
+#: lib/api_device.php:1952
 msgid "days"
 msgstr "日"
 
-#: include/global_arrays.php:2856
+#: include/global_arrays.php:2859
 msgid "hrs"
 msgstr "時間"
 
-#: include/global_arrays.php:2857
+#: include/global_arrays.php:2860
 msgid "mins"
 msgstr "分"
 
-#: include/global_arrays.php:2858
+#: include/global_arrays.php:2861
 msgid "secs"
 msgstr "秒"
 
-#: include/global_arrays.php:2872 lib/api_device.php:1948
+#: include/global_arrays.php:2875 lib/api_device.php:1952
 msgid "hours"
 msgstr "時間"
 
-#: include/global_arrays.php:2873 lib/api_device.php:1948
+#: include/global_arrays.php:2876 lib/api_device.php:1952
 msgid "minutes"
 msgstr "分"
 
-#: include/global_arrays.php:2874
+#: include/global_arrays.php:2877
 msgid "seconds"
 msgstr "秒"
 
@@ -8888,6 +8511,14 @@ msgstr "一般的なデバイスオプション"
 #: include/global_form.php:1170
 msgid "Give this host a meaningful description."
 msgstr "このホストにわかりやすい説明を付けます。"
+
+#: include/global_form.php:1176 include/global_form.php:1747
+#: lib/api_automation.php:279 lib/api_automation.php:571
+#: lib/api_automation.php:890 lib/api_automation.php:1197 managers.php:217
+#: pollers.php:115 pollers.php:1001 user_admin.php:1073
+#: user_group_admin.php:1095
+msgid "Hostname"
+msgstr "ホスト名"
 
 #: include/global_form.php:1177 include/global_form.php:1748
 msgid "Fully qualified hostname or IP address for this device."
@@ -10162,6 +9793,10 @@ msgstr "一般的なデフォルト"
 msgid "The default Device Template used on all new Devices."
 msgstr "すべての新しいデバイスで使用されるデフォルトのデバイステンプレート。"
 
+#: include/global_settings.php:702 lib/html.php:2373 lib/html_reports.php:1151
+msgid "Site"
+msgstr "サイト"
+
 #: include/global_settings.php:703
 msgid "The default Site for all new Devices."
 msgstr "すべての新しいデバイスのデフォルトサイト。"
@@ -10591,7 +10226,7 @@ msgstr "フォント選択方法"
 msgid "How do you wish fonts to be handled by default?"
 msgstr "フォントをデフォルトでどのように処理しますか。"
 
-#: include/global_settings.php:1144 lib/api_device.php:1903
+#: include/global_settings.php:1144 lib/api_device.php:1907
 msgid "System"
 msgstr "システム"
 
@@ -12373,7 +12008,7 @@ msgid "Please wait while the installation system for Kadupul Version %s initiali
 msgstr "Kadupulバージョン%sのインストールシステムが初期化されている間お待ちください。これを機能させるには、JavaScriptを有効にする必要があります。"
 
 #: install/install.php:101 lib/html_utility.php:1344 lib/installer.php:2095
-#: lib/installer.php:4103
+#: lib/installer.php:4134
 msgid "Error"
 msgstr "エラー"
 
@@ -12441,6 +12076,23 @@ msgstr "集計アイテムは編集できません"
 msgid "Override this Value"
 msgstr "この値を上書き"
 
+#: lib/api_automation.php:29
+msgid "Not Up"
+msgstr "上"
+
+#: lib/api_automation.php:32 lib/html.php:65 lib/html_utility.php:1338
+#: pollers.php:34
+msgid "Recovering"
+msgstr "復元中"
+
+#: lib/api_automation.php:33 lib/auth.php:3059 lib/clog_webapi.php:856
+#: lib/html_utility.php:1347 lib/import.php:342 lib/plugins.php:1499
+#: lib/plugins.php:1500 lib/rrd.php:4194 lib/rrd.php:4206 lib/spikekill.php:301
+#: package_import.php:522 package_import.php:600 utilities.php:211
+#: utilities.php:212 utilities.php:2753
+msgid "Unknown"
+msgstr "不明"
+
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
 #: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4171
@@ -12460,6 +12112,10 @@ msgstr "一致するデバイスがありません"
 #: lib/api_automation.php:878
 msgid "Matching Objects"
 msgstr "一致するオブジェクト"
+
+#: lib/api_automation.php:570 tree.php:987 utilities.php:2283
+msgid "Device Description"
+msgstr "デバイスの説明"
 
 #: lib/api_automation.php:714
 msgid "Objects"
@@ -12560,11 +12216,11 @@ msgstr "ルールアイテム[%sのルールアイテムを編集: %s]"
 msgid "Rule Item [new rule item for %s: %s]"
 msgstr "ルールアイテム[%sの新しいルールアイテム: %s]"
 
-#: lib/api_automation.php:3288
+#: lib/api_automation.php:3344
 msgid "Added by Kadupul Automation"
 msgstr "Kadupul Automationが追加しました"
 
-#: lib/api_automation.php:3582
+#: lib/api_automation.php:3638
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "エラー：range1-range2の形式のIP範囲はサポートされなくなりました。"
 
@@ -12572,13 +12228,13 @@ msgstr "エラー：range1-range2の形式のIP範囲はサポートされなく
 #: lib/api_device.php:389 lib/api_device.php:451 lib/api_device.php:456
 #: lib/api_device.php:501 lib/api_device.php:505 lib/api_device.php:581
 #: lib/api_device.php:585 lib/api_device.php:640 lib/api_device.php:644
-#: lib/api_device.php:710 lib/api_device.php:713 lib/api_device.php:786
-#: lib/api_device.php:789 lib/api_device.php:838 lib/api_device.php:841
-#: lib/api_device.php:882 lib/api_device.php:885 lib/api_device.php:1308
-#: lib/api_device.php:1321 lib/api_device.php:1325 lib/api_device.php:1370
-#: lib/api_device.php:1373 lib/api_device.php:1560 lib/api_device.php:1564
-#: lib/api_device.php:1600 lib/api_device.php:1604 lib/api_device.php:1649
-#: lib/api_device.php:1653 lib/api_device.php:1714 lib/api_device.php:1718
+#: lib/api_device.php:710 lib/api_device.php:713 lib/api_device.php:788
+#: lib/api_device.php:791 lib/api_device.php:840 lib/api_device.php:843
+#: lib/api_device.php:886 lib/api_device.php:889 lib/api_device.php:1312
+#: lib/api_device.php:1325 lib/api_device.php:1329 lib/api_device.php:1374
+#: lib/api_device.php:1377 lib/api_device.php:1564 lib/api_device.php:1568
+#: lib/api_device.php:1604 lib/api_device.php:1608 lib/api_device.php:1653
+#: lib/api_device.php:1657 lib/api_device.php:1718 lib/api_device.php:1722
 #: lib/utility.php:744
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
@@ -12588,76 +12244,76 @@ msgstr "リモートポーラー%sがダウンしています。再度アップ�
 msgid "Device replication failed. A FullSync is required; see the log for details."
 msgstr ""
 
-#: lib/api_device.php:1824
+#: lib/api_device.php:1828
 msgid "ERROR: Device ID is Blank"
 msgstr "エラー：デバイスIDが空白です"
 
-#: lib/api_device.php:1837 lib/api_device.php:1839
+#: lib/api_device.php:1841 lib/api_device.php:1843
 msgid "ERROR: Device["
 msgstr "エラー：デバイス["
 
-#: lib/api_device.php:1855
+#: lib/api_device.php:1859
 msgid "ERROR: Failed to connect to remote collector."
 msgstr "エラー：リモートコレクタへの接続に失敗しました。"
 
-#: lib/api_device.php:1862
+#: lib/api_device.php:1866
 msgid "Device is Disabled"
 msgstr "デバイスは無効です"
 
-#: lib/api_device.php:1863
+#: lib/api_device.php:1867
 msgid "Device Availability Check Bypassed"
 msgstr "デバイスの利用可能性チェックのバイパス"
 
-#: lib/api_device.php:1870
+#: lib/api_device.php:1874
 msgid "SNMP Information"
 msgstr "SNMP情報"
 
-#: lib/api_device.php:1874
+#: lib/api_device.php:1878
 msgid "SNMP not in use"
 msgstr "SNMPが使用されていません"
 
-#: lib/api_device.php:1895 lib/api_device.php:1903 lib/api_device.php:1922
+#: lib/api_device.php:1899 lib/api_device.php:1907 lib/api_device.php:1926
 msgid "SNMP error"
 msgstr "SNMPエラー"
 
-#: lib/api_device.php:1895
+#: lib/api_device.php:1899
 msgid "Session"
 msgstr "セッション"
 
-#: lib/api_device.php:1922
+#: lib/api_device.php:1926
 msgid "Host"
 msgstr "ホスト"
 
-#: lib/api_device.php:1940
+#: lib/api_device.php:1944
 msgid "System:"
 msgstr "システム："
 
-#: lib/api_device.php:1947
+#: lib/api_device.php:1951
 msgid "Uptime:"
 msgstr "あなたのアップタイムロボットAPIキー："
 
-#: lib/api_device.php:1949
+#: lib/api_device.php:1953
 msgid "Hostname:"
 msgstr "ホスト："
 
-#: lib/api_device.php:1950
+#: lib/api_device.php:1954
 msgid "Location:"
 msgstr "位置:"
 
-#: lib/api_device.php:1951
+#: lib/api_device.php:1955
 msgid "Contact:"
 msgstr "連絡先:"
 
-#: lib/api_device.php:1982 lib/functions.php:6213 lib/functions.php:6215
+#: lib/api_device.php:1986 lib/functions.php:6213 lib/functions.php:6215
 #: lib/functions.php:6219
 msgid "Ping Results"
 msgstr "pingの結果"
 
-#: lib/api_device.php:1987
+#: lib/api_device.php:1991
 msgid "No Ping or SNMP Availability Check in Use"
 msgstr "PingまたはSNMP可用性チェックインが使用されていない"
 
-#: lib/api_tree.php:186
+#: lib/api_tree.php:204
 msgid "New Branch"
 msgstr "新しい支店"
 
@@ -12717,7 +12373,7 @@ msgid "Branch:"
 msgstr "支店:"
 
 #: lib/auth.php:3300 lib/auth.php:3334 lib/html_tree.php:949
-#: lib/reports.php:1081
+#: lib/reports.php:1114
 msgid "Device:"
 msgstr "機器:"
 
@@ -12920,430 +12576,430 @@ msgstr "パスワードが一致しません。もう一度入力してくださ
 msgid "System Device"
 msgstr "同期装置"
 
-#: lib/data_query.php:54 lib/data_query.php:423
+#: lib/data_query.php:64 lib/data_query.php:466
 msgid "Automation Execution for Data Query complete"
 msgstr "データ照会の自動実行完了"
 
-#: lib/data_query.php:57 lib/data_query.php:426
+#: lib/data_query.php:67 lib/data_query.php:469
 msgid "Plugin Hooks complete"
 msgstr "プラグインフック完了"
 
-#: lib/data_query.php:75
+#: lib/data_query.php:85
 #, php-format
 msgid "Running Data Query [%s]."
 msgstr "データクエリ[%s]を実行しています。"
 
-#: lib/data_query.php:85
+#: lib/data_query.php:97
 #, php-format
 msgid "Found Type = '%s' [%s]."
 msgstr "タイプ= '%s' [%s]が見つかりました。"
 
-#: lib/data_query.php:107
+#: lib/data_query.php:119
 #, php-format
 msgid "Unknown Type = '%s'."
 msgstr "不明なタイプ = '%s'."
 
-#: lib/data_query.php:142
+#: lib/data_query.php:154
 msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
 msgstr "警告：ソートフィールドの関連付けが変更されました。再マッピングの問題が発生する可能性があります。"
 
-#: lib/data_query.php:154
+#: lib/data_query.php:166
 msgid "Update Data Query Sort Cache complete"
 msgstr "データクエリソートキャッシュの更新が完了しました"
 
-#: lib/data_query.php:179
+#: lib/data_query.php:193
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "検証するローカルデータIDが%s個見つかりました"
 
-#: lib/data_query.php:273
+#: lib/data_query.php:299
 #, php-format
 msgid "Index Change Detected! CurrentIndex: %s, PreviousIndex: %s"
 msgstr "インデックスの変更が検出されました！ CurrentIndex ：%s、PreviousIndex ：%s"
 
-#: lib/data_query.php:293
+#: lib/data_query.php:323
 #, php-format
 msgid "Transient Index Removal Detected! PreviousIndex: %s.  No action taken."
 msgstr "一時的なインデックス削除が検出されました！ PreviousIndex ：%s。アクションは実行されませんでした。"
 
-#: lib/data_query.php:296
+#: lib/data_query.php:326
 #, php-format
 msgid "Index Removal Detected! PreviousIndex: %s"
 msgstr "インデックスの削除が検出されました！ PreviousIndex ：%s"
 
-#: lib/data_query.php:330
+#: lib/data_query.php:366
 #, php-format
 msgid "Verification of %s Local Data ID's Complete"
 msgstr "%sローカルデータIDの検証が完了しました"
 
-#: lib/data_query.php:333
+#: lib/data_query.php:369
 #, php-format
 msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
 msgstr "見つかりました。%sと%sの孤立したローカルデータIDを再マップするように変更しました。"
 
-#: lib/data_query.php:336
+#: lib/data_query.php:372
 msgid "Done remapping Graphs to their new Indexes"
 msgstr "グラフを新しいインデックスに再マッピングする"
 
-#: lib/data_query.php:342 lib/data_query.php:349
+#: lib/data_query.php:378 lib/data_query.php:385
 msgid "Done updating Data Source Title Cache"
 msgstr "データソースプロファイルの重複"
 
-#: lib/data_query.php:345 lib/data_query.php:352
+#: lib/data_query.php:381 lib/data_query.php:388
 msgid "Done updating Graph Title Cache"
 msgstr "グラフタイトルキャッシュの更新が完了しました"
 
-#: lib/data_query.php:356
+#: lib/data_query.php:392
 msgid "Index Association with Local Data complete"
 msgstr "ローカルデータとのインデックスの関連付けが完了しました"
 
-#: lib/data_query.php:362
+#: lib/data_query.php:398
 #, php-format
 msgid "Update Re-Index Cache complete. There were %s index changes, and %s orphaned indexes."
 msgstr "再インデックスキャッシュの更新が完了しました。%s件のインデックス変更があり、%s件の孤立したインデックスがありました。"
 
-#: lib/data_query.php:366
+#: lib/data_query.php:402
 msgid "Update Poller Cache for Query complete"
 msgstr "クエリ完了のためのポーラーキャッシュの更新"
 
-#: lib/data_query.php:368
+#: lib/data_query.php:404
 msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
 msgstr "インデックスの変更は検出されず、インデックスの再作成とポーラーキャッシュの再作成はスキップされます。"
 
-#: lib/data_query.php:415
+#: lib/data_query.php:458
 msgid "Automation Executing for Data Query complete"
 msgstr "データ照会の自動実行が完了しました"
 
-#: lib/data_query.php:418
+#: lib/data_query.php:461
 msgid "Plugin hooks complete"
 msgstr "プラグインフック完了"
 
-#: lib/data_query.php:474
+#: lib/data_query.php:520
 msgid "Checking for Sort Field change.  No changes detected."
 msgstr "ソートフィールドの変更を確認しています。変更は検出されませんでした。"
 
-#: lib/data_query.php:479
+#: lib/data_query.php:525
 #, php-format
 msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "新しい並べ替えフィールドが検出されました: '%s'古い並べ替えフィールド'%s'"
 
-#: lib/data_query.php:496
+#: lib/data_query.php:546
 msgid "ERROR: New Sort Field not suitable.  Sort Field will not change."
 msgstr "エラー：新しいソートフィールドは適切ではありません。ソートフィールドは変更されません。"
 
-#: lib/data_query.php:508
+#: lib/data_query.php:560
 msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "新しいソートフィールドが検証されました。ソートフィールドを更新します。"
 
-#: lib/data_query.php:606
+#: lib/data_query.php:673
 #, php-format
 msgid "Could not find data query XML file at '%s'"
 msgstr "'%s'にデータクエリXMLファイルが見つかりませんでした"
 
-#: lib/data_query.php:610
+#: lib/data_query.php:677
 #, php-format
 msgid "Found data query XML file at '%s'"
 msgstr "'%s'にデータクエリXMLファイルが見つかりました"
 
-#: lib/data_query.php:633 lib/data_query.php:821 lib/data_query.php:2394
+#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2625
 msgid "Error parsing XML file into an array."
 msgstr "XMLファイルを配列に解析中にエラーが発生しました。"
 
-#: lib/data_query.php:637 lib/data_query.php:825
+#: lib/data_query.php:705 lib/data_query.php:938
 msgid "XML file parsed ok."
 msgstr "XMLファイルは正常に解析されました。"
 
-#: lib/data_query.php:645 lib/data_query.php:828
+#: lib/data_query.php:713 lib/data_query.php:941
 #, php-format
 msgid "Invalid field &lt;index_order&gt;%s&lt;/index_order&gt;"
 msgstr "無効なフィールド< index_order > %s </ index_order >"
 
-#: lib/data_query.php:646 lib/data_query.php:829
+#: lib/data_query.php:714 lib/data_query.php:942
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
 msgstr "&lt;direction&gt; input &lt;/direction&gt;または&lt;direction&gt;入出力&lt;/direction&gt;フィールドのみを含める必要があります"
 
-#: lib/data_query.php:663
+#: lib/data_query.php:731
 msgid "Data Query returned no indexes."
 msgstr "エラー：データクエリはインデックスを返しませんでした。"
 
-#: lib/data_query.php:664
+#: lib/data_query.php:732
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
 msgstr "XMLファイルに&lt;arg_num_indexes&gt;がありません、 &#39;Index Count Changed&#39;はサポートされていません"
 
-#: lib/data_query.php:667
+#: lib/data_query.php:735
 #, php-format
 msgid "Executing script for num of indexes '%s'"
 msgstr "インデックス'%s'の数のスクリプトを実行しています"
 
-#: lib/data_query.php:670
+#: lib/data_query.php:738
 #, php-format
 msgid "Found number of indexes: %s"
 msgstr "インデックスの数が見つかりました: %s"
 
-#: lib/data_query.php:674
+#: lib/data_query.php:742
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
 msgstr "XMLファイルに&lt;arg_num_indexes&gt;がありません、 &#39;Index Count Changed&#39;はサポートされていません"
 
-#: lib/data_query.php:676
+#: lib/data_query.php:744
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
 msgstr "XMLファイルに&lt;arg_num_indexes&gt;がありません、 &#39;Index Count Changed&#39;はarg_indexエントリーをカウントすることによってエミュレート"
 
-#: lib/data_query.php:687
+#: lib/data_query.php:755
 msgid "ERROR: Data Query returned no indexes."
 msgstr "エラー：データクエリはインデックスを返しませんでした。"
 
-#: lib/data_query.php:691
+#: lib/data_query.php:759
 #, php-format
 msgid "Executing script for list of indexes '%s', Index Count: %s"
 msgstr "インデックス'%s'のリストのスクリプトを実行しています、インデックス数: %s"
 
-#: lib/data_query.php:693
+#: lib/data_query.php:761
 msgid "Click to show Data Query output for 'index'"
 msgstr "クリックして &#39;index&#39;のデータクエリ出力を表示する"
 
-#: lib/data_query.php:696
+#: lib/data_query.php:764
 #, php-format
 msgid "Found index: %s"
 msgstr "インデックスが見つかりました: %s"
 
-#: lib/data_query.php:711 lib/data_query.php:1213
+#: lib/data_query.php:779 lib/data_query.php:1349
 #, php-format
 msgid "Click to show Data Query output for field '%s'"
 msgstr "フィールド'%s'のデータクエリ出力を表示するにはクリックしてください"
 
-#: lib/data_query.php:717
+#: lib/data_query.php:785
 #, php-format
 msgid "Sort field returned no data for field name %s, skipping"
 msgstr "ソートフィールドはフィールド名%sのデータを返しませんでした。スキップします"
 
-#: lib/data_query.php:719
+#: lib/data_query.php:787
 #, php-format
 msgid "Executing script query '%s'"
 msgstr "スクリプトクエリ'%s'を実行しています"
 
-#: lib/data_query.php:730 lib/data_query.php:737
+#: lib/data_query.php:798 lib/data_query.php:805
 #, php-format
 msgid "Found item [%s='%s'] index: %s"
 msgstr "アイテム[%s='%s']インデックスが見つかりました: %s"
 
-#: lib/data_query.php:775 lib/data_query.php:790
+#: lib/data_query.php:845 lib/data_query.php:861
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
 msgstr "合計：%f、デルタ：%f、%s"
 
-#: lib/data_query.php:815
+#: lib/data_query.php:928
 #, php-format
 msgid "Invalid host_id: %s"
 msgstr "無効なhost_id ：%s"
 
-#: lib/data_query.php:839
+#: lib/data_query.php:952
 msgid "Auto Bulk Walk Size Selected."
 msgstr "自動バルクウォークサイズが選択されました。"
 
-#: lib/data_query.php:849 lib/data_query.php:894
+#: lib/data_query.php:974 lib/data_query.php:1033
 msgid "Failed to load SNMP session."
 msgstr "SNMPセッションを読み込めませんでした。"
 
-#: lib/data_query.php:859
+#: lib/data_query.php:984
 #, php-format
 msgid "Tested Bulk Walk Size %d with a response of %2.4f."
 msgstr "バルクウォークサイズ%dをテストしました。応答は%2.4fです。"
 
-#: lib/data_query.php:870
+#: lib/data_query.php:995
 #, php-format
 msgid "Bulk Walk Size selected was %d."
 msgstr "選択したバルクウォークサイズは%dでした。"
 
-#: lib/data_query.php:873
+#: lib/data_query.php:998
 msgid "Saving Bulk Walk Size to Device."
 msgstr "バルクウォークサイズをデバイスに保存します。"
 
-#: lib/data_query.php:885
+#: lib/data_query.php:1012
 #, php-format
 msgid "Bulk Walk Size is fixed at %d."
 msgstr "バルクウォークサイズは%dに固定されています。"
 
-#: lib/data_query.php:907
+#: lib/data_query.php:1046
 #, php-format
 msgid "Executing SNMP get for num of indexes @ '%s' Index Count: %s"
 msgstr "インデックス数@'%s'のSNMP GETを実行していますインデックス数：%s"
 
-#: lib/data_query.php:909
+#: lib/data_query.php:1048
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
 msgstr "XMLファイルに&lt;oid_num_indexes&gt;がありません、 &#39;Index Count Changed&#39;はoid_indexエントリをカウントすることによってエミュレートされました"
 
-#: lib/data_query.php:912
+#: lib/data_query.php:1051
 #, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
 msgstr "'%s'インデックスカウントでインデックスリストのSNMPウォークを実行中: %s"
 
-#: lib/data_query.php:916
+#: lib/data_query.php:1055
 msgid "No SNMP data returned"
 msgstr "SNMPデータが返されない"
 
-#: lib/data_query.php:921
+#: lib/data_query.php:1060
 #, php-format
 msgid "Index found at OID: '%s' value: '%s'"
 msgstr "OIDでインデックスが見つかりました：'%s'値：'%s'"
 
-#: lib/data_query.php:952
+#: lib/data_query.php:1091
 #, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
 msgstr "'%s'インデックス数でフィルタリングされたインデックスのリスト: %s"
 
-#: lib/data_query.php:956
+#: lib/data_query.php:1095
 #, php-format
 msgid "Filtered Index by value found at OID: '%s' value: '%s'"
 msgstr "OIDで見つかった値によるフィルタリングされたインデックス: '%s'値: '%s'"
 
-#: lib/data_query.php:972
+#: lib/data_query.php:1111
 #, php-format
 msgid "Filtering list of indexes @ '%s' Index Count: %s"
 msgstr "'%s'インデックス数でインデックスのリストをフィルタリングしています：%s"
 
-#: lib/data_query.php:976
+#: lib/data_query.php:1115
 #, php-format
 msgid "Filtered Index found at OID: '%s' value: '%s'"
 msgstr "OIDでフィルタリングされたインデックスが見つかりました：'%s'値：'%s'"
 
-#: lib/data_query.php:996
+#: lib/data_query.php:1135
 #, php-format
 msgid "Fixing wrong 'method' field for '%s' since 'rewrite_index' or 'oid_suffix' is defined"
 msgstr "'rewrite_index'または'oid_suffix'が定義されているため、'%s'の間違った'method'フィールドを修正"
 
-#: lib/data_query.php:1003
+#: lib/data_query.php:1142
 #, php-format
 msgid "Inserting index data for field '%s' [value='%s']"
 msgstr "フィールド'%s'のインデックスデータを挿入しています[value ='%s']"
 
-#: lib/data_query.php:1008
+#: lib/data_query.php:1147
 #, php-format
 msgid "Located input field '%s' [get]"
 msgstr "入力フィールド'%s'が見つかりました[GET]"
 
-#: lib/data_query.php:1017
+#: lib/data_query.php:1156
 #, php-format
 msgid "Found OID rewrite rule: 's/%s/%s/'"
 msgstr "OIDリライトルールが見つかりました: 's /%s/%s/'"
 
-#: lib/data_query.php:1028
+#: lib/data_query.php:1167
 #, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
 msgstr "oID ：'%s'でoid_rewrite新しいOID ：'%s'"
 
-#: lib/data_query.php:1049
+#: lib/data_query.php:1172
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='%s']"
 msgstr "データ@'%s'[ value ='%s']のSNMP GETを実行しています"
 
-#: lib/data_query.php:1060
+#: lib/data_query.php:1183
 #, php-format
 msgid "Field '%s' %s"
 msgstr "フィールド'%s' %s"
 
-#: lib/data_query.php:1121
+#: lib/data_query.php:1244
 #, php-format
 msgid "Executing SNMP get for %s oids (%s)"
 msgstr "%s oids (%s)に対してSNMP GETを実行しています"
 
-#: lib/data_query.php:1147 lib/data_query.php:1239 lib/data_query.php:1247
+#: lib/data_query.php:1282 lib/data_query.php:1389 lib/data_query.php:1397
 #, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
 msgstr "ソートフィールドはOID [%s]のデータを返しませんでした。スキップします。"
 
-#: lib/data_query.php:1151
+#: lib/data_query.php:1288
 #, php-format
 msgid "Found result for data @ '%s' [value='%s']"
 msgstr "データ@'%s'[ value ='%s']の結果が見つかりました"
 
-#: lib/data_query.php:1159
+#: lib/data_query.php:1301
 #, php-format
 msgid "Setting result for data @ '%s' [key='%s', value='%s']"
 msgstr "データ@'%s'[ key ='%s', value ='%s']の結果を設定しています"
 
-#: lib/data_query.php:1163
+#: lib/data_query.php:1311
 #, php-format
 msgid "Skipped result for data @ '%s' [key='%s', value='%s']"
 msgstr "データ@'%s'[ key ='%s', value ='%s']の結果をスキップしました"
 
-#: lib/data_query.php:1177
+#: lib/data_query.php:1329
 #, php-format
 msgid "Got SNMP get result for data @ '%s' [value='%s'] (index: %s)"
 msgstr "データ@'%s'[ value ='%s']のSNMP取得結果を取得しました(インデックス: %s)"
 
-#: lib/data_query.php:1207
+#: lib/data_query.php:1343
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
 msgstr "データ@'%s'[ value ='$ value ']のSNMP GETを実行しています"
 
-#: lib/data_query.php:1215
+#: lib/data_query.php:1351
 #, php-format
 msgid "Located input field '%s' [walk]"
 msgstr "入力フィールド'%s'が見つかりました[ウォーク]"
 
-#: lib/data_query.php:1252
+#: lib/data_query.php:1402
 #, php-format
 msgid "Executing SNMP walk for data @ '%s'"
 msgstr "データ@'%s'のSNMPウォークを実行しています"
 
-#: lib/data_query.php:1271 lib/data_query.php:1329 lib/data_query.php:1378
-#: lib/data_query.php:1429
+#: lib/data_query.php:1421 lib/data_query.php:1479 lib/data_query.php:1528
+#: lib/data_query.php:1579
 #, php-format
 msgid "No index[%s] in value_index_parse, skipping."
 msgstr "Value_index_parseにインデックス[%s]がありません。スキップします。"
 
-#: lib/data_query.php:1312
+#: lib/data_query.php:1462
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from %s]"
 msgstr "アイテム[%s='%s']インデックスが見つかりました: %s [%sから]"
 
-#: lib/data_query.php:1354
+#: lib/data_query.php:1504
 #, php-format
 msgid "Found OCTET STRING '%s' decoded value: '%s'"
 msgstr "オクテット文字列'%s'のデコード値が見つかりました: '%s'"
 
-#: lib/data_query.php:1360 lib/data_query.php:1409
+#: lib/data_query.php:1510 lib/data_query.php:1559
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
 msgstr "アイテム[%s ='%s']インデックスが見つかりました: %s [正規表現oid解析から]"
 
-#: lib/data_query.php:1437
+#: lib/data_query.php:1587
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
 msgstr "アイテム[%s ='%s']インデックスが見つかりました: %s [正規表現oid値解析から]"
 
-#: lib/data_query.php:1659
+#: lib/data_query.php:1822
 #, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
 msgstr "偽のrewrite_value項目が見つかりました、インデックス= '%s'"
 
-#: lib/data_query.php:1672
+#: lib/data_query.php:1835
 msgid "Could not parse translation map (rewrite_value)"
 msgstr "翻訳マップを解析できませんでした（ REWRITE_VALUE ）"
 
-#: lib/data_query.php:1696
+#: lib/data_query.php:1859
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
 msgstr "rewrite_value: '%s' => '%s'"
 
-#: lib/data_query.php:1801
+#: lib/data_query.php:1973
 msgid "Update graph data query cache complete"
 msgstr "データクエリソートキャッシュの更新が完了しました"
 
-#: lib/data_query.php:1818
+#: lib/data_query.php:1992
 msgid "Re-Indexing Data Query complete"
 msgstr "データの再索引付けが完了しました"
 
-#: lib/data_query.php:1949
+#: lib/data_query.php:2144
 msgid "Unknown Index"
 msgstr "未知のインデックス"
 
-#: lib/data_query.php:2507
+#: lib/data_query.php:2749
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "データソース'%s'のXML出力列を選択し、その右側のチェックボックスを切り替える必要があります"
 
-#: lib/data_query.php:2513
+#: lib/data_query.php:2755
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "グラフテンプレートはデータテンプレートを使用していません。グラフテンプレートを修正してください"
 
@@ -13467,6 +13123,11 @@ msgstr "非クエリベース"
 msgid "Link %s"
 msgstr "リンク%s"
 
+#: lib/functions.php:4947 tree.php:1804 tree.php:1878 tree.php:1986
+#: user_admin.php:18 user_group_admin.php:20
+msgid "Copy"
+msgstr "コピー"
+
 #: lib/functions.php:5749
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "メーラーのエラー：いいえ設定したアドレス<b>に</b> !! <br> [ <i>テストメール]</i>リンクを使用している場合は、[ <b>警告メール]</b>設定を設定してください。"
@@ -13525,6 +13186,10 @@ msgstr "セキュリティ"
 #: lib/functions.php:6210
 msgid "Ping Results:"
 msgstr "pingの結果："
+
+#: lib/functions.php:6210 lib/functions.php:6215
+msgid "Success"
+msgstr "成功"
 
 #: lib/functions.php:6219
 msgid "Bypassed"
@@ -13633,7 +13298,7 @@ msgstr "選択したテンプレート"
 msgid "Enter keyword"
 msgstr "キーワードを入力してください"
 
-#: lib/html.php:464 lib/reports.php:1678
+#: lib/html.php:464 lib/reports.php:1711
 msgid "Data Query:"
 msgstr "データ問合せ"
 
@@ -14723,7 +14388,7 @@ msgstr "グラフのテンプレート"
 msgid "Template Based"
 msgstr "テンプレートベース"
 
-#: lib/html_tree.php:927 lib/reports.php:1326
+#: lib/html_tree.php:927 lib/reports.php:1359
 msgid "Tree:"
 msgstr "木："
 
@@ -15114,7 +14779,7 @@ msgid "Location checks"
 msgstr "位置確認"
 
 #: lib/installer.php:2038 lib/installer.php:2189 lib/installer.php:2193
-#: lib/installer.php:2349 lib/installer.php:2354 lib/installer.php:4207
+#: lib/installer.php:2349 lib/installer.php:2354 lib/installer.php:4238
 msgid "ERROR:"
 msgstr "エラー:"
 
@@ -15754,224 +15419,234 @@ msgstr ""
 msgid "Finished %s Process for v%s"
 msgstr "V %sの%sプロセスを完了しました"
 
-#: lib/installer.php:3420
+#: lib/installer.php:3444
 #, php-format
 msgid "Found %s templates to install"
 msgstr "インストールする%sテンプレートが見つかりました"
 
-#: lib/installer.php:3430
+#: lib/installer.php:3454
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "パッケージ#%s '%s'をインポートしようとしています。"
 
-#: lib/installer.php:3439
+#: lib/installer.php:3463
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "プロファイル'%s'のパッケージ#%s'%s'のインポートに成功しました"
 
-#: lib/installer.php:3445
+#: lib/installer.php:3469
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "プロファイル'%s'のパッケージ#%s'%s'のインポートに失敗しました"
 
-#: lib/installer.php:3462
+#: lib/installer.php:3486
 #, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "デバイステンプレート'%s'のマッピング自動化テンプレート"
 
-#: lib/installer.php:3483
+#: lib/installer.php:3507
 msgid "No templates were selected for import"
 msgstr "インポートするテンプレートが選択されていません"
 
-#: lib/installer.php:3493
+#: lib/installer.php:3517
 msgid "Updating remote configuration file"
 msgstr "設定待ち"
 
-#: lib/installer.php:3528
+#: lib/installer.php:3552
 #, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "デフォルトのデータソースプロファイルを%s (%s)に設定しています"
 
-#: lib/installer.php:3556
+#: lib/installer.php:3580
 #, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "選択したプロファイル（%s）が見つかりませんでした。変更は行われませんでした"
 
-#: lib/installer.php:3565
+#: lib/installer.php:3589
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "自動化ネットワーク（%s）の更新、モード\"%s\" => \"%s\"、サブネット\"%s\" => %s\""
 
-#: lib/installer.php:3575
+#: lib/installer.php:3599
 msgid "Failed to find automation network, no changes were made"
 msgstr "自動化ネットワークが見つかりませんでした。変更は行われませんでした"
 
-#: lib/installer.php:3579
+#: lib/installer.php:3603
 msgid "Adding extra snmp settings for automation"
 msgstr "自動化のための追加のSNMP設定の追加"
 
-#: lib/installer.php:3585
+#: lib/installer.php:3609
 #, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "オートメーションオプションセット%sの選択"
 
-#: lib/installer.php:3598
+#: lib/installer.php:3622
 #, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "自動化オプションセット%sの更新"
 
-#: lib/installer.php:3601
+#: lib/installer.php:3625
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "自動化オプションセット%sが正常に更新されました"
 
-#: lib/installer.php:3603
+#: lib/installer.php:3627
 #, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "自動化オプションセット%sのシーケンス変更"
 
-#: lib/installer.php:3611
+#: lib/installer.php:3635
 #, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "自動化オプションセット%sの更新に失敗しました"
 
-#: lib/installer.php:3614
+#: lib/installer.php:3638
 msgid "Failed to find any automation option set"
 msgstr "コピーするデータが見つかりませんでした。"
 
-#: lib/installer.php:3644
+#: lib/installer.php:3668
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "最初のKadupulデバイスのデバイステンプレートは%sです"
 
-#: lib/installer.php:3674
+#: lib/installer.php:3698
 msgid "Creating Graphs for Default Device"
 msgstr "このデバイスのグラフを作成する"
 
-#: lib/installer.php:3681
+#: lib/installer.php:3705
 msgid "Adding Device to Default Tree"
 msgstr "デバイスデフォルト"
 
-#: lib/installer.php:3689
+#: lib/installer.php:3713
 msgid "No templated graphs for Default Device were found"
 msgstr "デフォルトデバイスのテンプレートグラフが見つかりませんでした"
 
-#: lib/installer.php:3693
+#: lib/installer.php:3717
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "警告：オペレーティングシステムのデバイステンプレートが見つかりません。 Kadupulサーバーを監視するには、デバイステンプレートまたはKadupulパッケージをインポートする必要があります。"
 
-#: lib/installer.php:3700
+#: lib/installer.php:3724
 msgid "Running first-time data query for local host"
 msgstr "ローカルホストの初回データクエリの実行"
 
-#: lib/installer.php:3708
+#: lib/installer.php:3732
 msgid "Repopulating poller cache"
 msgstr "ポーラーキャッシュを再構築する"
 
-#: lib/installer.php:3713
+#: lib/installer.php:3737
 msgid "Repopulating SNMP Agent cache"
 msgstr "SNMPエージェントのキャッシュを再構築する"
 
-#: lib/installer.php:3718
+#: lib/installer.php:3742
 msgid "Generating RSA Key Pair"
 msgstr "RSAキーペアの生成"
 
-#: lib/installer.php:3729
+#: lib/installer.php:3753
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "変換するテーブルが%s個見つかりました"
 
-#: lib/installer.php:3736
+#: lib/installer.php:3760
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "テーブル#%s「%s」を変換しています"
 
-#: lib/installer.php:3744
+#: lib/installer.php:3768
 #, php-format
 msgid "Converting Table #%s '%s' failed in-process: %s"
 msgstr ""
 
-#: lib/installer.php:3752
+#: lib/installer.php:3776
 msgid "No tables where found or selected for conversion"
 msgstr "変換用に検出または選択されたテーブルはありません"
 
-#: lib/installer.php:3764
+#: lib/installer.php:3788
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "%sから%sに切り替えました"
 
-#: lib/installer.php:3768
+#: lib/installer.php:3792
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "注：データベースキャッシュに一時ファイルを使用する：%s"
 
-#: lib/installer.php:3790
+#: lib/installer.php:3814
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "V %s（ DB %s）からv %sにアップグレード中"
 
-#: lib/installer.php:3798
+#: lib/installer.php:3822
 #, php-format
-msgid "WARNING: Failed to find upgrade function for v%s"
-msgstr "警告： v %sのアップグレード機能が見つかりませんでした"
+msgid "ERROR: Failed to find upgrade function for v%s"
+msgstr ""
 
-#: lib/installer.php:3861
+#: lib/installer.php:3831
+#, php-format
+msgid "ERROR: Database version %s could not be confirmed; retry from the last confirmed version."
+msgstr ""
+
+#: lib/installer.php:3840
+#, php-format
+msgid "ERROR: Required upgrade file for v%s was not found."
+msgstr ""
+
+#: lib/installer.php:3892
 msgid "Install aborted due to no EULA acceptance"
 msgstr "EULAが受け入れられないため、インストールが中止されました"
 
-#: lib/installer.php:3885
+#: lib/installer.php:3916
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "バックグラウンドはすでに%sで開始されています。%sでのこの試みはスキップされました"
 
-#: lib/installer.php:3909
+#: lib/installer.php:3940
 #, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "インストール中に例外が発生しました: #%s - %s"
 
-#: lib/installer.php:3928
+#: lib/installer.php:3959
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "インストールは%sに開始され、%sに完了しました"
 
-#: lib/installer.php:3965
+#: lib/installer.php:3996
 msgid "Both"
 msgstr "両方"
 
-#: lib/installer.php:3965
+#: lib/installer.php:3996
 #, php-format
 msgid "No - %s"
 msgstr "No - %s"
 
-#: lib/installer.php:3970
+#: lib/installer.php:4001
 #, php-format
 msgid "%s - N/A"
 msgstr "%s - N/A"
 
-#: lib/installer.php:3970 lib/installer.php:3972
+#: lib/installer.php:4001 lib/installer.php:4003
 msgid "Web"
 msgstr "Web"
 
-#: lib/installer.php:3972 lib/installer.php:3975
+#: lib/installer.php:4003 lib/installer.php:4006
 #, php-format
 msgid "%s - No"
 msgstr "%s - No"
 
-#: lib/installer.php:3975
+#: lib/installer.php:4006
 msgid "Cli"
 msgstr "CLI"
 
-#: lib/installer.php:3981
+#: lib/installer.php:4012
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "PHPオプションの設定%s = %s"
 
-#: lib/installer.php:3987
+#: lib/installer.php:4018
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "PHPオプション%sの設定に失敗しました。%sです（%sにする必要があります）"
 
-#: lib/installer.php:4024
+#: lib/installer.php:4055
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "同期を試みるときにデータコレクタが見つかりません"
 
@@ -16183,69 +15858,69 @@ msgstr "言及なし"
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 
-#: lib/reports.php:141
+#: lib/reports.php:174
 #, php-format
 msgid "Device '%s' successfully added to Report."
 msgstr "デバイス'%s'はレポートに正常に追加されました。"
 
-#: lib/reports.php:144
+#: lib/reports.php:177
 msgid "Device not found! Unable to add to Report"
 msgstr "レポートに追加しようとしているグラフが見つかりませんでした"
 
-#: lib/reports.php:148
+#: lib/reports.php:181
 #, php-format
 msgid "Device '%s' not added to Report as it already exists on report."
 msgstr "デバイス「%s」はレポートにすでに存在するため、レポートに追加されません。"
 
-#: lib/reports.php:603
+#: lib/reports.php:636
 #, php-format
 msgid "Problems sending Report '%s' Problem with e-mail Subsystem Error is '%s'"
 msgstr "レポート'%s'の送信の問題電子メールサブシステムエラーの問題は'%s'です"
 
-#: lib/reports.php:610
+#: lib/reports.php:643
 #, php-format
 msgid "Report '%s' Sent Successfully"
 msgstr "レポート '%s' が正常に送信されました。"
 
-#: lib/reports.php:1108 lib/reports.php:1464
+#: lib/reports.php:1141 lib/reports.php:1497
 msgid "(No Graph Template)"
 msgstr "グラフのテンプレート"
 
-#: lib/reports.php:1532
+#: lib/reports.php:1565
 msgid "(Non Query Based)"
 msgstr "（非クエリベース）"
 
-#: lib/reports.php:1943
+#: lib/reports.php:1976
 msgid "Add to Report"
 msgstr "レポートに追加"
 
-#: lib/reports.php:1961
+#: lib/reports.php:1994
 msgid "Choose the Report to associate these graphs with.  The defaults for alignment will be used for each graph in the list below."
 msgstr "これらのグラフを関連付けるレポートを選択してください。以下のリストの各グラフには、配置のデフォルトが使用されます。"
 
-#: lib/reports.php:1963
+#: lib/reports.php:1996
 msgid "Report:"
 msgstr "レポート:"
 
-#: lib/reports.php:1973
+#: lib/reports.php:2006
 msgid "Graph Timespan:"
 msgstr "グラフタイムスパン："
 
-#: lib/reports.php:1976
+#: lib/reports.php:2009
 msgid "Graph Alignment:"
 msgstr "グラフの配置"
 
-#: lib/reports.php:2075
+#: lib/reports.php:2108
 #, php-format
 msgid "Created Report Graph Item '<i>%s</i>'"
 msgstr "レポートグラフアイテム<i>'%s'</i>を作成しました"
 
-#: lib/reports.php:2077
+#: lib/reports.php:2110
 #, php-format
 msgid "Failed Adding Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "レポートグラフアイテム<i>'%s'</i>の追加に失敗しました"
 
-#: lib/reports.php:2080
+#: lib/reports.php:2113
 #, php-format
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "スキップされたレポートグラフアイテム<i>'%s'</i>は既に存在します"
@@ -16462,7 +16137,11 @@ msgstr ""
 msgid "RRD storage configuration requires attention"
 msgstr ""
 
-#: lib/snmp.php:371 lib/snmp.php:856 lib/snmp.php:879
+#: lib/schema_repair_integrity.php:25
+msgid "Forward schema repair could not be confirmed. Review the target schema and installer privileges before retrying."
+msgstr ""
+
+#: lib/snmp.php:387 lib/snmp.php:876 lib/snmp.php:899
 #, fuzzy, php-format
 msgid "SNMP Command is: %s"
 msgstr "SNMPオプション[編集：%s]"
@@ -17664,6 +17343,10 @@ msgstr "Kadupul Automation ReportにはHTMLベースのEメールクライアン
 msgid "WARNING: Detected Poller Boost Overrun, Possible Boost Poller Crash"
 msgstr "警告：検出されたポーラーブーストオーバーラン、ブーストポーラークラッシュの可能性"
 
+#: pollers.php:21
+msgid "Clear Statistics"
+msgstr "統計を消去"
+
 #: pollers.php:25
 msgid "Full Sync"
 msgstr "フル同期"
@@ -18716,6 +18399,10 @@ msgstr "アルファベット順"
 #: tree.php:1752
 msgid "Natural"
 msgstr "ナチュラル"
+
+#: tree.php:1782 tree.php:1856 tree.php:1964
+msgid "Edit"
+msgstr "編集"
 
 #: tree.php:1789 tree.php:1863 tree.php:1971
 msgid "Cut"

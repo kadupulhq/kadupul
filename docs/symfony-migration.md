@@ -1120,8 +1120,9 @@ Known differences from `cli/convert_tables.php`:
   original compared against `off`, which no server reports.
 - On a remote collector the command reads the main database's own tables. The
   original looked them up under the local database's name.
-- A failed statement is logged with the two `DBCALL` lines and no backtrace;
-  the statement text in them differs in quoting and spacing.
+- A failed statement logs the server's message, and at debug verbosity the
+  line with its error number and statement, whose text differs in quoting and
+  spacing; there is no backtrace.
 - Output is printed after every table is done.
 - On a primary installation the main connection is a second connection with
   the same credentials, as for `kadupul:database:analyze`.
@@ -1176,9 +1177,190 @@ Known differences from `cli/fix_mediumint.php`:
 - JSON `adjusted` counts every table a statement was sent or planned for,
   failed ones included, as the legacy `Column widths adjusted` line does.
 - On a remote collector the command reads the main database's own table list.
-- A failed statement is logged with the two `DBCALL` lines and no backtrace.
+- A failed statement logs the server's message, and at debug verbosity the
+  line with its error number and statement; there is no backtrace.
 - An invalid flag prints the error and help without the version line.
 
+`php bin/console kadupul:database:audit` compares the schema with
+`docs/audit_schema.sql` (`--report`), prints the statements that would make
+them match (`--alters`), runs them (`--repair`), reloads the audit tables
+(`--create`), or rewrites the file from this database for developers
+(`--load`). `--repair` changes the schema only with `--force`; without it
+the run plans, and on a terminal it then asks before it runs the plan.
+`--upgrade` is deprecated: run `php cli/upgrade_database.php` separately
+before auditing. The flag remains accepted for compatibility and prints a
+deprecation warning to stderr; while the database is behind, it still runs the
+core and plugin upgrades. It needs the Console
+Access and Installation/Upgrades realms, the realm of the install wizard,
+which is the only place the web UI changes the core schema
+(`include/global_arrays.php:1284-1285`). `--dry-run` reads the file and the
+schema and changes nothing, not even the two audit tables. `--json` prints
+`status`, `database`, `dry_run`, `mode`, `upgrade`, `baseline`, `tables`,
+`alters`, `imported` and `exported`.
+
+Known differences from `cli/audit_database.php`:
+
+- It needs an operator with the Console Access and Installation/Upgrades
+  realms, with the same Settings/Utilities fallback as convert-tables. The
+  original ran for anyone who could run it.
+- `docs/audit_schema.sql` is parsed and its rows inserted with bound values.
+  The original piped the file into the `mysql` client with the password on
+  its command line. `FATAL: mysql or mariadb command not found` no longer
+  occurs, and a file with an `INSERT` into any other table, a row with
+  several value lists, or a value that is not a string, number or `NULL` is
+  refused whole: `FATAL: Failed Load the Audit Schema` is followed by
+  `ERROR: docs/audit_schema.sql line <n> does not parse` instead of the
+  client's output, and the client's error, which the original let through
+  to stderr, is not printed. The two audit tables get the definitions in
+  the file, from constants that a test keeps equal to it.
+- Only base tables are audited and imported; the original also walked views.
+  Table names are quoted in `SHOW FULL COLUMNS` and `SHOW INDEXES` so column
+  collations are part of the audit baseline.
+- Column defaults compare with strict `NULL`/empty-string/value distinctions;
+  `EXTRA`, column collation, index collation, prefix length and index type are
+  checked. `utf8mb4_general_ci` is treated as UTF, not Latin. The baseline file
+  now stores each column's collation and accepts the old eight-field format
+  when reading older installations. Column names use case-insensitive exact
+  matching; underscores in names are not SQL `LIKE` wildcards.
+- A table in the baseline but missing from the live schema is reported as an
+  error. Repair does not recreate it. Compatible local character-column
+  collations remain reported for manual review and are preserved when repairing
+  other attributes; collation-only drift never schedules a conversion. Integer
+  signedness changes require manual range review and block automatic ALTER,
+  rather than being classified as local widening. Index drift involving prefix
+  lengths, descending columns or an algorithm unsupported by the storage engine
+  blocks automatic ALTER. HASH rebuilds require MEMORY; InnoDB/MyISAM cannot
+  silently substitute BTREE and repeatedly rebuild a primary key. Supported
+  index repairs confirm the actual stored columns, uniqueness and algorithm
+  before reporting success; DDL remains committed if confirmation later fails.
+  Main's 1.2.35 upgrade also makes the input-field index and aggregate-created
+  timestamp repairs reachable for databases already at 1.2.31 through 1.2.34.
+  Both 1.2.31 and 1.2.35 share the checked repair: an already correct schema
+  performs no DDL, each change is read back on the established connection, and
+  failed confirmation keeps the last confirmed version available for retry.
+  Unsupported index definitions or timestamp precision/nullability/defaults
+  require manual review before either change. Removing ON UPDATE from a
+  timestamp with an operator column comment also requires manual review;
+  this step does not silently rewrite those attributes. Earlier DDL may remain
+  committed after a later failure. Fresh-install SQL and the audit baseline
+  already contain the intended definitions and remain unchanged.
+- A repair statement is built from typed parts: names quoted, defaults as
+  quoted literals, `FIRST` in capitals, one line. `--alters` and a failed
+  repair print the original's statement text. A clause with no typed form
+  (an `EXTRA` other than `auto_increment` or `on update CURRENT_TIMESTAMP`, a
+  type outside the list MariaDB prints, an index with no `USING`, a table
+  character set outside the list, a baseline name outside the pattern) makes
+  its table `Failed` without a statement being sent; the server refused each
+  of these when the original sent it, so only the log differs: no `DBCALL`
+  lines.
+- A default is written as a literal with its backslashes doubled, as the
+  widen command writes it. Under `NO_BACKSLASH_ESCAPES` the server keeps
+  both, so a default of `x\` is stored as `x\\`.
+- A `plugin_db_changes` table without the `table`, `column` and `method`
+  columns makes the audit fail. The original's lookups failed quietly and
+  matched nothing, so every plugin table and column counted as unknown.
+- Each table is read again just before its `ALTER TABLE`; a table that
+  changed since the audit read it, or a statement that modifies or drops a
+  column or index the server does not list by that exact name, fails
+  without a statement being sent.
+- A `MODIFY COLUMN` names the column as the server lists it. The original
+  used the audit schema's spelling, which it matched without letter case, so
+  a column whose case differs is now named in its live case. MariaDB 11.8
+  renames a column to the letter case a `MODIFY COLUMN` spells it in, so the
+  original's repair also renamed such a column to the audit schema's case;
+  the command keeps the live name and changes only the definition.
+- A column the server holds in a wider type than `docs/audit_schema.sql`
+  lists is never modified. `kadupul:database:widen-id-columns` leaves such
+  columns, for example `rrdcheck.local_data_id` once `local_data_id` needed
+  widening elsewhere. The original sent a `MODIFY COLUMN` back to the listed
+  type, which narrowed the column and, under a lenient SQL mode, truncated
+  larger values without an error. A smaller integer type, a shorter `char` or
+  `varchar`, or a `decimal` with fewer digits on either side of the point
+  counts as narrower. `--report` prints `WARNING Col: '<column>', widened
+  locally.  Audit schema: '<type>', Is: '<type>'.  Not narrowed.` instead of
+  the column's `ERROR` lines and counts it as a warning. `--repair` and
+  `--alters` print the same line after the table's `Scanning Table` line,
+  with `-- ` before it under `--alters`. Under `--json` each table lists
+  these columns in `widened`.
+- `--load` records column collations with `SHOW FULL COLUMNS`; resetting an
+  older audit table adds the nullable `table_collation` metadata column before
+  importing. `--load` still rewrites the checked-in baseline file.
+- `docs/audit_schema.sql` is the schema contract for the exact Kadupul release
+  and fork being audited. A fork that changes its schema must refresh and
+  review this file against a pristine database built from that fork's source
+  before relying on `--repair`. Run `--report` first. Do not refresh the
+  baseline from a production database with unreviewed drift: `--load` would
+  bless that drift as expected. `--repair` never drops columns or tables, but
+  it can add baseline columns, change supported column definitions, rebuild
+  indexes, and normalize table engine/row format.
+- A failed import under `--load` makes the run fail. The original printed
+  `Importing Table: ... - Done` for every table either way and exited 0.
+- `--dry-run --load` lists the two audit tables even when they do not exist
+  yet, since an applied run creates them before it lists the schema.
+- `--load` reads every table before it imports any, so the rows it records
+  for the indexes of `table_columns` and `table_indexes` themselves carry
+  the cardinality of the empty tables. The original read each table as it
+  reached it, after importing the tables before it, so those two tables'
+  cardinality counted rows it had just inserted. Cardinality is the
+  server's estimate, and the audit never compares it.
+- Using the deprecated `--upgrade` flag prints a warning to stderr that directs
+  operators to `php cli/upgrade_database.php`. It remains accepted for
+  compatibility and runs `cli/upgrade_database.php` and each plugin's
+  `database_upgrade.php` through Symfony Process with an argument array and
+  the PHP binary the command runs under, not `php` from `PATH` through a
+  shell; a plugin's recorded version reaches its script as one argument. The
+  upgrade's stderr is printed after it finishes, and all output appears when
+  the run ends.
+- An upgrade whose `cli/upgrade_database.php` exits non-zero fails the run.
+  The plugin upgrades still run and their output is the original's, but no
+  mode runs after them. The shim then prints `FATAL: Kadupul Upgrade Failed.
+  The audit was not run.` and exits 1. Under `--json` the status is
+  `failed`, with `upgrade: failed`. The original printed the errors and went
+  on, so `--upgrade --repair` sent its `ALTER TABLE` statements to a half
+  upgraded schema.
+- An upgrade that stops before its end, on an exception or a crash, fails
+  the run the same way, and the exception's text is not printed. The
+  original died there with the PHP error, so no mode ran either.
+- `--load` writes `docs/audit_schema.sql` only when the dump program
+  succeeds. The original truncated the file first.
+- A failed export prints the original's `Finished Creating Audit Schema
+  with ERROR` and exits 1 in legacy presentation as well as other modes;
+  the frozen original exited 0. Under `--json` it reads `partial`, with
+  `exported: false`, and exits 1. A dump program that exits non-zero logs
+  the original's `DBCALL ERROR: mysqldump failed with exit code <n> for
+  database '<db>'`. The dump is stopped after 300 seconds, where the
+  original waited for it, and logs `DBCALL ERROR: mysqldump timed out after
+  300 seconds for database '<db>'`. A dump that cannot be written to
+  `docs/` logs `DBCALL ERROR: could not write the audit schema dump for
+  database '<db>'`. Neither of the last two lines names the command.
+- `--load` dumps from the configured database server: the dump program
+  gets the host and port from `include/config.php`, and the TLS CA,
+  certificate and key when the connection uses TLS. Its environment holds
+  only `PATH`, `HOME` and the password, so `MYSQL_HOST`, `MYSQL_TCP_PORT` or
+  `MYSQL_UNIX_PORT` cannot point it elsewhere. The original named neither
+  host nor port, so the client used its own default.
+- A failed statement, such as an `ALTER TABLE` the server refuses or the
+  `CREATE TABLE` of an audit table, logs the server's message as the
+  original did, but no `CMDPHP SQL Backtrace` line follows it, as with the
+  other write commands.
+- Any database fault prints the generic `ERROR: Database audit failed`.
+- `--dry-run` exists only under `bin/console`; there it runs no statement,
+  including the audit tables' reload, which every original mode ran.
+- Under `bin/console`, `--repair` without `--force` runs as `--dry-run` does
+  and changes nothing. On a terminal the command then shows the plan and
+  asks `Run these statements now?`, which defaults to no; a yes runs the
+  audit again and repairs. Under `--json`, or with no terminal, it only plans,
+  so `dry_run` is `true`. The shim repairs at once, as the original did.
+- The shim refuses `--dry-run`, `--json`, `--force`, a bare or empty `--as`,
+  and `--as NAME` with a space, before it loads anything: it prints `ERROR:
+  Invalid Parameter <flag>`, a blank line and the help, and exits 1. The
+  original ignored all of them and ran, so `--repair --dry-run` ran a real
+  repair. `--as` takes its value only as `--as=NAME`, as in the other
+  shims.
+- `--as=NAME` with no mode checks the operator before it prints the help,
+  so an unknown or unauthorized name is refused with `ERROR: Unknown or
+  unauthorized operator` and exit 1. The original ignored `--as` and printed
+  the help.
 
 ### Device statistics reset
 
@@ -1275,6 +1457,53 @@ This is not a distributed transaction. Failure pages retain empty password contr
 Deploy the form, domain command and worker together after draining in-flight bulk
 requests; older bulk forms without explicit selections fail validation. No schema or
 dependency changes are required. Code rollback cannot undo committed credentials.
+
+
+### Device graph-template associations
+
+`/inventory/devices/{id}/associations/graph` uses Symfony Form/Twig and the
+`ChangeDeviceAssociation` use case through `DeviceAssociationStore`. Revisions cover
+the current associations and assignment identity. Only eligible non-query graph
+templates can be added. The worker rechecks visibility and locks the device and
+association rows, preserves automation/plugin hooks on addition, verifies primary
+and remote state and retains existing graphs on removal. Primary rollback cannot
+undo remote or automation side effects; failures require inspection before retry.
+
+
+### Data-query associations and reindex settings
+
+`/inventory/devices/{id}/associations/query` extends the association use case with
+query addition, removal and reindex-method changes. Revisions include methods and
+SNMP availability; uptime reindex is unavailable when SNMP is disabled. The worker
+uses the existing data-query APIs and verifies the stored association/method on
+both collectors. Removal confirms query cache and reindex-state cleanup while
+retaining graphs. Discovery follows device availability; saving an association is
+not evidence that a live discovery completed. Explicit diagnostic actions are a
+separate workflow.
+
+
+### Device maintenance
+
+`/inventory/devices/{id}/maintenance` uses `MaintainDevice` and a `DeviceMaintenance`
+port for reindex-all, query reload/diagnostics, polling cache refresh, debug controls
+and connectivity. Symfony owns forms, authorization, CSRF and escaped output. The
+isolated worker rechecks device/query revisions and collector availability. It
+redacts stored credentials from bounded plain-text diagnostics and does not report
+false query results or disabled devices as completed reindex operations. Debug
+settings are updated with locking and verified on affected collectors. Primary
+rollback cannot undo remote effects or external probes.
+
+### Device tree and report placement
+
+Inventory now coordinates bounded device selections through `PlaceDevices`. Destination catalogs and writes belong to Graphing and Reporting contracts. Their legacy adapters enforce ownership and realm permissions, reject another user's tree edit lock and invalid branches, preserve existing placements, and verify additions. The isolated worker rechecks device authorization and revisions under site-before-device locks, invokes legacy action hooks, and commits the primary transaction only after confirmation. Plugin side effects may survive a rollback; failures must be inspected before retrying.
+
+### Legacy device entry and menus
+
+`host.php` now boots the Symfony kernel using the same base-path preserving bridge as Sites. The framework rechecks authentication and realm access. List/edit/create/export links translate to typed routes; old GET association and maintenance links only open fresh forms. Every old POST returns 409 without interpreting serialized selections or executing a mutation. Unsupported legacy actions return 405. Location suggestions now query only authorized devices, with explicit bounded search rather than the global `cur_device_id` session filter.
+
+The list retains collector/template/exact-location filters and the core not-up status filter. Legacy sort columns other than name/hostname are rejected rather than silently ignored. CSV compatibility intentionally uses the bounded public-data export; it never exports SNMP credentials or unrestricted host rows.
+
+Applying already configured device automation rules is available through a Symfony confirmation and `ApplyDeviceRules`, with rule execution owned by the Automation adapter. Rule authoring/administration remains a later module migration. Existing mutating hooks remain in the isolated workers. Legacy UI injection hooks (`device_top`, `host_edit_*`, `device_edit_*`, `device_filters`, `device_sql_where`, `device_display_text`, `device_table_*`, `device_change_javascript`) and custom `device_action_array`, `device_action_prepare` and `device_action_execute` hooks no longer run on core device pages. Plugin-owned pages are outside this queue; plugin authors must provide their own routes or a typed Symfony extension before relying on the new core UI. This is a main-only compatibility change and must be reviewed before release.
 ### Palette CSV spreadsheet safety
 
 Palette downloads mark every operator-controlled name and hex cell as literal

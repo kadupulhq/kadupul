@@ -580,51 +580,50 @@ final class AuthPolicyNativeCoverageTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('managementDeviceCases')]
-    public function testDeviceManagementUsesBoundedCurrentPolicyBeforeNamesAndHandoff(array $scenario, string $stage, ?array $selection): void
+    public function testSharedDeviceSelectionPolicyUsesCurrentRowsAndBoundedQueries(array $scenario, string $stage, ?array $selection): void
     {
         $state = $this->runPolicy(array_merge(['operation' => 'management-bulk', 'resource' => 'device',
             'config' => ['graph_auth_method' => 3]], $scenario))['result'];
         self::assertSame($stage, $state['stage']);
         self::assertSame($selection, $state['selection']);
         self::assertSame('preserved previous diagnostic', $state['error_restored']);
-        if ($stage === 'denied') {
-            self::assertSame([], $state['events']);
-            self::assertSame([], $state['title_ids']);
-            if (($scenario['size'] ?? 0) === 10001) self::assertSame(0, $state['queries']);
-        } elseif (($scenario['size'] ?? 0) === 5000) {
-            self::assertSame(array_fill(0, 5, 1000), $state['eligibility_rows']);
-            $confirmation = ($scenario['phase'] ?? '') === 'confirmation';
-            self::assertLessThanOrEqual($confirmation ? 5011 : 11, $state['queries']);
-            self::assertSame($confirmation ? range(1001, 6000) : [], $state['title_ids']);
-            self::assertSame($confirmation ? [] : ['device_action_execute', 'snmp', 'device_action_bottom'], array_column($state['events'], 0));
-            foreach ($state['events'] as $event) self::assertSame(range(1001, 6000), $event[1]);
+        // The helper is a read boundary; migrated HTTP actions are tested through
+        // DeviceRouteNativeTest and have their own 100-device selection contract.
+        self::assertSame([], $state['events']);
+        self::assertSame([], $state['title_ids']);
+        if (($scenario['size'] ?? 0) === 10001) self::assertSame(0, $state['queries']);
+        if (in_array($scenario['size'] ?? 0, [5000, 10000], true)) {
+            $chunks = intdiv($scenario['size'], 1000);
+            self::assertSame(array_fill(0, $chunks, 1000), $state['eligibility_rows']);
+            self::assertLessThanOrEqual(6 + $chunks, $state['queries']);
         }
+
     }
 
     public static function managementDeviceCases(): array
     {
         return [
-            'maximum execution' => [['size' => 5000], 'execution', range(1001, 6000)],
-            'maximum confirmation' => [['size' => 5000, 'phase' => 'confirmation'], 'confirmation', range(1001, 6000)],
+            'five thousand direct selection' => [['size' => 5000], 'policy', range(1001, 6000)],
+            'maximum ten thousand direct selection' => [['size' => 10000], 'policy', range(1001, 11000)],
             'oversized execution' => [['size' => 10001], 'denied', null],
             'oversized confirmation' => [['size' => 10001, 'phase' => 'confirmation'], 'denied', null],
             'disabled actor' => [['actor_disabled' => true], 'denied', null],
             'locked actor' => [['actor_locked' => true], 'denied', null],
             'read failure' => [['read_failure' => true], 'denied', null],
             'late chunk failure' => [['size' => 1001, 'read_failure' => 2], 'denied', null],
-            'generation once' => [['generation_change' => 'once'], 'denied', null],
+            'generation once' => [['generation_change' => 'once'], 'policy', []],
             'generation repeat' => [['generation_change' => 'repeat'], 'denied', null],
-            'zero identifier' => [['selection' => [0, 1001]], 'denied', null],
-            'decimal identifier' => [['selection' => ['1001.0', 1002]], 'denied', null],
-            'exponent identifier' => [['selection' => ['1.001e3', 1002]], 'denied', null],
-            'fractional float identifier' => [['selection' => [1001.5, 1002]], 'denied', null],
-            'integral float identifier' => [['integral_float' => true], 'denied', null],
-            'negative identifier' => [['selection' => [-1, 1001]], 'denied', null],
-            'missing device' => [['selection' => [9999, 1001]], 'denied', null],
-            'restricted device' => [['restricted' => true], 'denied', null],
-            'duplicate representation' => [['selection' => ['01001', 1002, '1001 ', 1001]], 'execution', ['01001', 1002, '1001 ', 1001]],
-            'no authentication' => [['auth_method' => 0, 'anonymous' => true], 'execution', [1001, 1002, 1003, 1004]],
-            'hidden disabled devices remain manageable' => [['hide_disabled' => 'on'], 'execution', [1001, 1002, 1003, 1004]],
+            'zero identifier' => [['selection' => [0, 1001]], 'policy', [1001]],
+            'decimal identifier' => [['selection' => ['1001.0', 1002]], 'policy', [1002]],
+            'exponent identifier' => [['selection' => ['1.001e3', 1002]], 'policy', [1002]],
+            'fractional float identifier' => [['selection' => [1001.5, 1002]], 'policy', [1002]],
+            'integral float identifier' => [['integral_float' => true], 'policy', [1002, 1003, 1004]],
+            'negative identifier' => [['selection' => [-1, 1001]], 'policy', [1001]],
+            'missing device' => [['selection' => [9999, 1001]], 'policy', [1001]],
+            'restricted device' => [['restricted' => true], 'policy', []],
+            'duplicate representation' => [['selection' => ['01001', 1002, '1001 ', 1001]], 'policy', ['01001', 1002, '1001 ', 1001]],
+            'no authentication' => [['auth_method' => 0, 'anonymous' => true], 'policy', [1001, 1002, 1003, 1004]],
+            'hidden disabled devices remain manageable' => [['hide_disabled' => 'on'], 'policy', [1001, 1002, 1003, 1004]],
         ];
     }
 

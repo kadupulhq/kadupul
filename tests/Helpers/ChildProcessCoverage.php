@@ -111,7 +111,7 @@ if (!function_exists('child_coverage_command')) {
             'include/global_session.php', 'lib/auth.php', 'lib/functions.php', 'lib/clog_webapi.php',
             'logout.php', 'data_debug.php', 'managers.php', 'utilities.php', 'rrdcleaner.php',
             'cli/refresh_csrf.php', 'lib/csrf_rotation.php', 'lib/html_utility.php',
-            'auth_changepassword.php', 'lib/ldap.php', 'install/functions.php', 'install/upgrades/1_2_31.php', 'include/vendor/csrf/csrf-magic.php',
+            'auth_changepassword.php', 'lib/ldap.php', 'install/functions.php', 'install/upgrades/1_2_31.php', 'install/upgrades/1_2_35.php', 'lib/schema_repair_integrity.php', 'include/vendor/csrf/csrf-magic.php',
             'include/vendor/csrf/csrf-conf.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php',
             'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php',
             'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'

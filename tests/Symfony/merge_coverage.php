@@ -9,6 +9,37 @@ use SebastianBergmann\CodeCoverage\CodeCoverage;
 use SebastianBergmann\CodeCoverage\Data\RawCodeCoverageData;
 use SebastianBergmann\CodeCoverage\Report\Clover;
 
+/** @param array<string, mixed> $manifest @param list<string> $checks */
+function require_symfony_integration_checks(array $manifest, array $checks): void
+{
+    foreach ($checks as $check) {
+        if (!in_array($check, $manifest['checks'] ?? [], true)) {
+            throw new RuntimeException('Incomplete Symfony integration checks');
+        }
+    }
+}
+
+/**
+ * Require the intentional failure exit and unchanged state, rather than the
+ * frozen original's successful exit when its audit baseline cannot be loaded.
+ *
+ * @return list<string>
+ */
+function required_audit_baseline_failure_checks(): array
+{
+    return [
+        'audit report with the audit schema missing: frozen original records its historical success exit on baseline failure',
+        'audit report with the audit schema missing: native command fails without claiming a clean audit',
+        'audit report with the audit schema missing: refused native audit preserves all schema and baseline state',
+        'audit report with an unparsable audit schema: frozen original records its historical success exit on baseline failure',
+        'audit report with an unparsable audit schema: native command fails without claiming a clean audit',
+        'audit report with an unparsable audit schema: refused native audit preserves all schema and baseline state',
+        'audit report when table_columns cannot be created: frozen original records its historical success exit on baseline failure',
+        'audit report when table_columns cannot be created: native command fails without claiming a clean audit',
+        'audit report when table_columns cannot be created: refused native audit preserves all schema and baseline state',
+    ];
+}
+
 $root = dirname(__DIR__, 2);
 require $root . '/include/vendor/autoload.php';
 if ($argc !== 6) {
@@ -42,21 +73,24 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     if (($manifest['suite'] ?? '') !== $suite || ($manifest['session_handler'] ?? '') !== $handler) {
         throw new RuntimeException('Wrong integration suite or session handler');
     }
-    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'data_input_scenarios.py', 'data_input_review_http.py', 'data_source_profile_scenarios.py', 'data_source_profile_heartbeat_scenarios.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'cli_schema_scenarios.py', 'coverage_support.py', 'link_scenarios.py', 'about_scenarios.py', 'about_authentication_scenarios.py', 'palette_color_review_http.py', 'palette_color_scenarios.py', 'palette_sql_failure_probe.php', 'vdef_scenarios.py', 'vdef_transaction_probe.php', 'vdef_browser_probe.cjs', 'device_bulk_assignment_scenarios.py', 'device_bulk_snmp_scenarios.py'];
+    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'data_input_scenarios.py', 'data_input_review_http.py', 'data_source_profile_scenarios.py', 'data_source_profile_heartbeat_scenarios.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'tree_automation_probe.php', 'cli_schema_scenarios.py', 'coverage_support.py', 'link_scenarios.py', 'about_scenarios.py', 'about_authentication_scenarios.py', 'palette_color_review_http.py', 'palette_color_scenarios.py', 'palette_sql_failure_probe.php', 'vdef_scenarios.py', 'vdef_transaction_probe.php', 'vdef_browser_probe.cjs', 'device_bulk_assignment_scenarios.py', 'device_bulk_snmp_scenarios.py', 'device_association_scenarios.py', 'device_legacy_scenarios.py', 'device_maintenance_scenarios.py', 'device_placement_scenarios.py', 'placement_lock_probe.php', 'cli_audit_scenarios.py'];
     $sourcePaths = array_map(static fn(string $script): string => 'tests/Symfony/' . $script, $scripts);
     if ($handler !== 'none') {
         // Bind the bodyless contract without inventing coverage for its declaration.
         $sourcePaths[] = 'src/Platform/Contract/ReferenceWriteTransactionRunner.php';
         $sourcePaths[] = 'src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php';
+        $sourcePaths[] = 'src/Platform/Infrastructure/Legacy/LegacyUpgradePluginLifecycle.php';
         $sourcePaths[] = 'tests/Symfony/cdef_legacy_page_scenarios.py';
         $sourcePaths[] = 'tests/e2e/browser-coverage.js';
         $sourcePaths[] = 'public/js/vdef-item.js';
         $sourcePaths[] = 'tests/Fixtures/plugins/compatibility_test/setup.php';
-        // cli_parity_scenarios.py and cli_schema_scenarios.py compare the shims
-        // against these frozen originals.
+        // cli_parity_scenarios.py, cli_schema_scenarios.py and
+        // cli_audit_scenarios.py compare the shims against these frozen originals.
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/analyze_database.php';
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/convert_tables.php';
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/fix_mediumint.php';
+        $sourcePaths[] = 'tests/Fixtures/legacy-cli/audit_database.php';
+        $sourcePaths[] = 'tests/Fixtures/native-cli/audit_database.php';
     }
     foreach ($sourcePaths as $path) {
         if (($manifest['source_sha256'][$path] ?? '') !== hash_file('sha256', $root . '/' . $path)) {
@@ -64,6 +98,23 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         }
     }
     $checks = $handler === 'none' ? ['disconnected archive verified', 'dependency repair verified', 'invalid manifest and symlink rejected'] : [
+        'tree CLI creates a node under an existing header in its tree',
+        'tree CLI permits root placement',
+        'tree CLI rejects a nonexistent parent without inserting a node',
+        'tree CLI rejects a parent from another tree without inserting a node',
+        'tree CLI rejects a graph item as a parent without inserting a node',
+        'tree CLI rejects host site and empty header parents without writes',
+        'tree CLI rejects missing tree and malformed parent grammar without writes',
+        'tree CLI stores the complete site identity without a copied title',
+        'tree CLI site placement preserves a valid header and rejects duplicates',
+        'site tree nodes render renamed site identity and current devices',
+        'tree CLI rejects invalid site identity with a diagnostic and no writes',
+        'tree API rejects all non-header parents and preserves rejected updates',
+        'authenticated graph tree placement renders its selected graph and destination',
+        'authenticated graph tree placement rejects a foreign parent without writes',
+        'authenticated graph tree placement admits one graph under a valid header',
+        'automation tree placement rejects a host parent without writes',
+        'automation tree placement admits one host under a valid header',
         'selected PDO runner preserves primary and collector identities and caller-owned work',
         'system page size fixture restores original absence and value',
         'profile deletion confirmation page renders',
@@ -96,6 +147,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'template-only heartbeat save emits no existing-file tuning warning',
         'collector retry builds real poller item from the saved command',
         'offline collector yields explicit partial handoff without undoing local definition',
+        'offline handoff fixture restores poller identities',
         'whitelist update publishes the exact saved command and verifies it',
         'worker independently rechecks feature grants before executing the handoff',
         'French session authenticates through legacy login',
@@ -254,6 +306,47 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'bulk SNMP replaces credentials through Symfony',
         'bulk SNMP verifies remote credentials',
         'bulk SNMP secrets stay out of database diagnostics',
+        'legacy device POST is never replayed',
+        'legacy device GET links do not mutate state',
+        'legacy device entry rechecks revoked management realm',
+        'legacy location suggestions use authorized Inventory query',
+        'Inventory preserves template collector and exact location filters',
+        'existing device automation rules run through Symfony',
+        'device automation preserves action 6 once with full selection',
+        'device automation SQL failure cannot report success',
+        'tree placement verifies final state after callbacks',
+        'report placement verifies final state after callbacks',
+        'tree placement saves through Symfony',
+        'report placement saves through Symfony',
+        'tree legacy placement shares destination locks and rejects duplicates',
+        'report legacy placement shares destination locks and rejects duplicates',
+        'tree placement rolls back entire selection',
+        'report placement rolls back entire selection',
+        'tree placement preserves selected parent',
+        'report placement preserves display settings',
+        'tree placement does not duplicate existing devices',
+        'report placement does not duplicate existing devices',
+        'maintenance enables debug through Symfony',
+        'maintenance confirms remote debug setting',
+        'maintenance SQL rejection cannot report success',
+        'maintenance failure rolls back primary debug settings',
+        'maintenance refreshes polling cache through Symfony',
+        'maintenance connectivity probes the real SNMP fixture',
+        'collector ping returns sanitized diagnostics', 'collector runquery returns sanitized diagnostics', 'maintenance executes reload-query against the SNMP fixture', 'maintenance executes reindex against the SNMP fixture',
+        'maintenance executes query-diagnostics against the SNMP fixture',
+        'maintenance rejects stale device settings',
+        'graph association adds through Symfony', 'graph association invokes plugin hook once with exact payload', 'graph association automation creates a graph',
+        'graph association removes through Symfony',
+        'graph association failure rolls back primary writes',
+        'graph association verifies remote template',
+        'graph association removal retains existing graphs',
+        'query association adds through Symfony',
+        'query association removes through Symfony',
+        'query association failure rolls back primary writes',
+        'query reindex method changes through Symfony',
+        'query reindex method is verified on collector',
+        'query removal retains existing graphs',
+        'query removal clears associations cache and reindex state',
         'bulk SNMP fixture has nonempty primary polling rows',
         'bulk SNMP fixture has nonempty remote polling rows',
         'bulk SNMP rejects nontransactional primary cache participants before writes',
@@ -300,6 +393,8 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'rejected bulk template does not invoke action 4',
         'bulk site displays its assignment completion notice',
         'bulk template displays its assignment completion notice',
+        'bulk site supports explicit unassignment',
+        'bulk template supports explicit unassignment',
         'bulk existing template repairs missing association',
         'bulk existing template restores primary and collector association',
         'bulk template assignment retains existing graphs and data',
@@ -330,6 +425,12 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'bulk collector cleanup failure cannot report success',
         'bulk collector cleanup failure retains committed destination ownership',
         'bulk collector cleanup failure leaves recoverable old copies',
+        'collector cleanup failure retains committed primary ownership',
+        'collector cleanup failure retains committed primary polling ownership',
+        'collector cleanup failure leaves old collector residue',
+        'collector cleanup recovery restores the old collector before retrying',
+        'collector cleanup recovery removes old collector residue',
+
         'bulk collector recovers old residue by returning to remote',
         'collector acknowledgement failure cannot report success after remote cleanup',
         'collector failed acknowledgement retains receipt despite verified remote absence',
@@ -461,11 +562,48 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'widen fallback still needs a direct Settings/Utilities grant',
         'widen falls back to Settings/Utilities while nobody holds Installation/Upgrades',
         'widen --dry-run through bin/console plans each table and changes nothing',
-        'widen scenarios leave the schema as they found it'];
+        'widen scenarios leave the schema as they found it',
+        'retained audit compatibility report executes successfully',
+        'audit --load persists the actual SHOW FULL COLUMNS collation',
+        'audit --load records the collation extension with its actual catalog attributes',
+        'audit upgrade traverses the registered no-op 1.2.32 without a schema script',
+        'audit upgrade still refuses a missing required migration without publishing its final version',
+        'audit report on a drifted table: shim stdout matches the original',
+        'audit repair on a drifted table: shim schema matches the original',
+        'audit repair on a drifted table: shim logs the same cacti.log lines, date included',
+        'audit repair: shim drops the stray index and restores the drifted table through the kernel container',
+        'audit repair with a failing alter: the recorded path column matches every baseline attribute before index drift',
+        'audit repair with a failing alter: shim logs the same cacti.log lines, date included',
+        'audit repair with a failing alter: shim logs the refused statement without the backtrace',
+        'audit upgrade from the previous version: shim stdout matches the original',
+        'audit upgrade: shim upgrades the database to the code version',
+        'audit upgrade without a mode: shim stdout matches the original',
+        'audit load: shim schema matches the original',
+        'audit load with a failing export: shim leaves the previous audit schema file where the original truncated it',
+        'audit load without a docs directory: shim stdout matches the original',
+        'audit refuses an unknown operator before any statement',
+        'audit refuses an empty --as rather than falling back to admin_user',
+        'audit refuses a run with no operator',
+        'audit refuses an operator without the Installation/Upgrades realm',
+        'audit refuses --dry-run through the shim before any statement',
+        'audit refuses --json through the shim before any statement',
+        'audit refuses --force through the shim before any statement',
+        'audit refuses --as through the shim before any statement',
+        'audit refuses --as admin through the shim before any statement',
+        'audit refuses an unauthorized --as with no mode instead of printing the help',
+        'audit fallback still needs a direct Settings/Utilities grant',
+        'audit falls back to Settings/Utilities while nobody holds Installation/Upgrades',
+        'audit --dry-run through bin/console plans the repair and changes nothing, not even the audit tables',
+        'audit --repair through bin/console without --force plans the repair and changes nothing',
+        'audit refuses a remote collector before any statement, --help included',
+        'audit scenarios leave the schema, settings, grants and docs/ as they found them'];
+    if ($handler !== 'none') {
+        $checks = array_merge($checks, required_audit_baseline_failure_checks());
+    }
     // The original installed scenario, its completed behavior checks and each page's
     // actual source hash are required before these legacy caller observations enter Clover.
     $legacyCallerPaths = $handler === 'none' ? [] : ['graphs.php', 'cdef.php',
-        'aggregate_templates.php', 'color_templates.php', 'aggregate_graphs.php', 'lib/utility.php'];
+        'aggregate_templates.php', 'color_templates.php', 'aggregate_graphs.php', 'lib/utility.php', 'lib/api_automation.php'];
     if ($handler !== 'none') {
         $checks = array_merge($checks, [
             'installed CDEF duplication preserves persisted parent and children',
@@ -500,11 +638,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             'installed legacy CDEF aggregate and color page scenarios completed cleanup',
         ]);
     }
-    foreach ($checks as $check) {
-        if (!in_array($check, $manifest['checks'] ?? [], true)) {
-            throw new RuntimeException('Incomplete Symfony integration checks');
-        }
-    }
+    require_symfony_integration_checks($manifest, $checks);
     $reports = glob($argv[$argument] . '/raw/coverage-*.json');
     if (!$reports) {
         throw new RuntimeException('Missing integration coverage reports');
@@ -525,7 +659,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             // generated configuration/cache, dependencies or installed plugins.
             // The script server and cli/ shims are listed
             // because only a subprocess or an HTTP request can reach their entry guards.
-            if (!str_starts_with($relative, 'src/') && !in_array($relative, $legacyCallerPaths, true) && !in_array($relative, ['bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'lib/api_device.php', 'data_input.php', 'script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php', 'links.php', 'about.php', 'color.php', 'vdef.php', 'data_source_profiles.php', 'lib/data_source_profile_integrity.php'], true)) {
+            if (!str_starts_with($relative, 'src/') && !in_array($relative, $legacyCallerPaths, true) && !in_array($relative, ['bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'lib/api_device.php', 'data_input.php', 'script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php', 'links.php', 'about.php', 'color.php', 'vdef.php', 'data_source_profiles.php', 'lib/data_source_profile_integrity.php', 'bin/legacy-device-associations.php', 'bin/legacy-device-maintenance.php', 'bin/legacy-device-placement.php', 'host.php', 'include/themes/midwinter/update_hash.php', 'cli/audit_database.php', 'bin/legacy-audit-upgrade.php', 'cli/add_tree.php', 'lib/api_tree.php'], true)) {
                 continue;
             }
             $local = $root . '/' . $relative;
@@ -641,6 +775,48 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceBulkAssignmentController.php',
         'src/Inventory/Application/Command/ChangeDevicesSnmp.php',
         'src/Inventory/Infrastructure/Legacy/DeviceSnmpWriter.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyDeviceTreePlacement.php',
+        'src/Reporting/Infrastructure/Legacy/LegacyDeviceReportPlacement.php',
+        'host.php',
+        'src/Automation/Infrastructure/Legacy/LegacyDeviceRules.php',
+        'src/Inventory/Application/Command/ApplyDeviceRules.php',
+        'src/Inventory/Application/Query/SuggestDeviceLocations.php',
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceLocations.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/DeviceAutomationController.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/LegacyDevicesController.php',
+        'bin/legacy-device-placement.php',
+        'src/IdentityAccess/Infrastructure/Legacy/LegacyResourceAccess.php',
+        'src/Inventory/Domain/DevicePlacement.php',
+        'src/Inventory/Application/Command/PlaceDevices.php',
+        'src/Inventory/Application/Query/ListDevicePlacementDestinations.php',
+        'src/Inventory/Infrastructure/Legacy/LegacyDevicePlacements.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/DevicePlacementController.php',
+        'src/Inventory/Infrastructure/Symfony/Form/DevicePlacementType.php',
+        'bin/legacy-device-maintenance.php',
+        'src/Inventory/Domain/DeviceMaintenanceRequest.php',
+        'src/Inventory/Domain/DeviceMaintenanceState.php',
+        'src/Inventory/Application/Command/MaintainDevice.php',
+        'src/Inventory/Application/Query/PrepareDeviceMaintenance.php',
+        'src/Inventory/Application/ReadModel/DeviceMaintenanceResult.php',
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceMaintenance.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceMaintenanceRecords.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceMaintenanceExecutor.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceDiagnosticText.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceDiagnosticScope.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/DeviceMaintenanceController.php',
+        'src/Inventory/Infrastructure/Symfony/Form/DeviceMaintenanceType.php',
+        'bin/legacy-device-associations.php',
+        'src/Inventory/Domain/DeviceAssociations.php',
+        'src/Inventory/Domain/DeviceAssociationChange.php',
+        'src/Inventory/Application/Command/ChangeDeviceAssociation.php',
+        'src/Inventory/Application/Query/PrepareDeviceAssociations.php',
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceAssociations.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceAssociationRecords.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceAssociationWriter.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceCollectorGuard.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceWorkerTimeout.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/DeviceAssociationController.php',
+        'src/Inventory/Infrastructure/Symfony/Form/DeviceAssociationType.php',
         'src/Inventory/Domain/DeviceOptionsChange.php',
         'src/Inventory/Application/Command/ChangeDeviceOptions.php',
         'src/Inventory/Infrastructure/Legacy/DeviceOptionsWriter.php',
@@ -716,6 +892,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Platform/Domain/Schema/TableStatus.php',
         'src/Platform/Infrastructure/Legacy/InstallerTableConversion.php',
         'src/Platform/Infrastructure/Legacy/InstallerTableResult.php',
+        'src/Platform/Infrastructure/Persistence/CactiSchemaFile.php',
         'src/Platform/Infrastructure/Persistence/DbalTableConversion.php',
         'src/Platform/Infrastructure/Persistence/MaintenanceConnections.php',
         'src/Platform/Infrastructure/Symfony/Console/ConvertTablesCommand.php',
@@ -734,7 +911,54 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Platform/Infrastructure/Persistence/DbalColumnWidening.php',
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsCommand.php',
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsInput.php',
-        'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsLegacyArguments.php'];
+        'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsLegacyArguments.php',
+        'cli/audit_database.php',
+        'bin/legacy-audit-upgrade.php',
+        'src/Platform/Infrastructure/Legacy/LegacyUpgradePluginLifecycle.php',
+        'src/Platform/Domain/Schema/AuditMode.php',
+        'src/Platform/Domain/Schema/BaselineColumn.php',
+        'src/Platform/Domain/Schema/BaselineIndex.php',
+        'src/Platform/Domain/Schema/AuditBaseline.php',
+        'src/Platform/Domain/Schema/InvalidAuditSchema.php',
+        'src/Platform/Domain/Schema/AuditSchemaDump.php',
+        'src/Platform/Domain/Schema/BaselineName.php',
+        'src/Platform/Domain/Schema/LiveTable.php',
+        'src/Platform/Domain/Schema/PluginSchemaChanges.php',
+        'src/Platform/Domain/Schema/ColumnBase.php',
+        'src/Platform/Domain/Schema/ColumnType.php',
+        'src/Platform/Domain/Schema/ColumnExtra.php',
+        'src/Platform/Domain/Schema/ColumnSpec.php',
+        'src/Platform/Domain/Schema/IndexAlgorithm.php',
+        'src/Platform/Domain/Schema/DefaultCharset.php',
+        'src/Platform/Domain/Schema/AlterClause.php',
+        'src/Platform/Domain/Schema/ModifyColumn.php',
+        'src/Platform/Domain/Schema/AddColumn.php',
+        'src/Platform/Domain/Schema/DropIndex.php',
+        'src/Platform/Domain/Schema/RebuildIndex.php',
+        'src/Platform/Domain/Schema/UnbuildableClause.php',
+        'src/Platform/Domain/Schema/ColumnDrift.php',
+        'src/Platform/Domain/Schema/IndexDrift.php',
+        'src/Platform/Domain/Schema/AuditTableStatus.php',
+        'src/Platform/Domain/Schema/TableAudit.php',
+        'src/Platform/Domain/Schema/TableAlter.php',
+        'src/Platform/Application/Port/AuditCatalog.php',
+        'src/Platform/Application/Port/SchemaAudit.php',
+        'src/Platform/Application/Port/AuditBaselineStore.php',
+        'src/Platform/Application/Port/InstallationUpgrade.php',
+        'src/Platform/Application/ReadModel/UpgradeOutput.php',
+        'src/Platform/Application/ReadModel/AuditOutcome.php',
+        'src/Platform/Application/ReadModel/BaselineOutcome.php',
+        'src/Platform/Application/ReadModel/AlterResult.php',
+        'src/Platform/Application/ReadModel/AuditReport.php',
+        'src/Platform/Application/Command/AuditRun.php',
+        'src/Platform/Application/Command/AuditDatabase.php',
+        'src/Platform/Infrastructure/Persistence/DbalSchemaAudit.php',
+        'src/Platform/Infrastructure/Persistence/DbalAuditBaselineStore.php',
+        'src/Platform/Infrastructure/Symfony/Console/AuditDatabaseInput.php',
+        'src/Platform/Infrastructure/Symfony/Console/AuditDatabaseLegacyArguments.php',
+        'src/Platform/Infrastructure/Symfony/Console/AuditDatabaseCommand.php',
+        'src/Platform/Infrastructure/Legacy/LegacyInstallationUpgrade.php',
+        'src/Platform/Infrastructure/Legacy/LegacyWorkerProcess.php'];
     if ($handler === 'database') {
         $requiredPaths[] = 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php';
     }

@@ -315,6 +315,10 @@ function substitute_host_data($string, $l_escape_string, $r_escape_string, $host
             return $string;
         }
 
+        if (class_exists(\Kadupul\Inventory\Infrastructure\Legacy\DeviceDiagnosticScope::class, false)) {
+            \Kadupul\Inventory\Infrastructure\Legacy\DeviceDiagnosticScope::remember($host);
+        }
+
         [$search, $replace] = \Kadupul\Platform\Infrastructure\Legacy\HostDataSubstitution::replacements($l_escape_string, $r_escape_string, $host);
         $string = str_replace($search, $replace, $string);
 

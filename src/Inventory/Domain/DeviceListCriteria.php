@@ -11,12 +11,15 @@ final readonly class DeviceListCriteria
 {
     public string $search;
 
-    public function __construct(string $search = '', public string $state = 'all', public int $page = 1, public int $pageSize = 25, public string $status = 'all', public DeviceOrder $order = new DeviceOrder(), public ?int $siteId = null)
+    public function __construct(string $search = '', public string $state = 'all', public int $page = 1, public int $pageSize = 25, public string $status = 'all', public DeviceOrder $order = new DeviceOrder(), public ?int $siteId = null, public ?int $templateId = null, public ?int $collectorId = null, public ?string $location = null)
     {
         $this->search = trim($search);
         if (strlen($this->search) > 200 || !in_array($state, ['all', 'enabled', 'disabled'], true)
-            || !in_array($status, ['all', 'unknown', 'down', 'recovering', 'up', 'error', 'disabled'], true)
+            || !in_array($status, ['all', 'unknown', 'down', 'recovering', 'up', 'error', 'disabled', 'not-up'], true)
             || ($siteId !== null && ($siteId < 0 || $siteId > 4294967295))
+            || ($templateId !== null && ($templateId < 0 || $templateId > 16777215))
+            || ($collectorId !== null && ($collectorId < 1 || $collectorId > 16777215))
+            || ($location !== null && (mb_strlen($location, 'UTF-8') > 255 || !mb_check_encoding($location, 'UTF-8') || str_contains($location, "\0")))
             || $page < 1 || $page > 100000 || !in_array($pageSize, [25, 50, 100], true)) {
             throw new \InvalidArgumentException('Invalid device list filters.');
         }

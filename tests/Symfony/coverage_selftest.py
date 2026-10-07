@@ -75,6 +75,7 @@ def prepare_wrapper_line_failure_reports(directory, scratch, anchor):
 
 def main():
     from cdef_legacy_page_scenarios import REQUIRED_CHECKS
+    from cli_parity_scenarios import TREE_CHECKS
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--php', default='php')
@@ -174,6 +175,48 @@ def main():
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceBulkAssignmentController.php',
         'src/Inventory/Application/Command/ChangeDevicesSnmp.php',
         'src/Inventory/Infrastructure/Legacy/DeviceSnmpWriter.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyDeviceTreePlacement.php',
+        'src/Reporting/Infrastructure/Legacy/LegacyDeviceReportPlacement.php',
+        'host.php',
+        'src/Automation/Infrastructure/Legacy/LegacyDeviceRules.php',
+        'src/Inventory/Application/Command/ApplyDeviceRules.php',
+        'src/Inventory/Application/Query/SuggestDeviceLocations.php',
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceLocations.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/DeviceAutomationController.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/LegacyDevicesController.php',
+        'bin/legacy-device-placement.php',
+        'src/IdentityAccess/Infrastructure/Legacy/LegacyResourceAccess.php',
+        'src/Inventory/Domain/DevicePlacement.php',
+        'src/Inventory/Application/Command/PlaceDevices.php',
+        'src/Inventory/Application/Query/ListDevicePlacementDestinations.php',
+        'src/Inventory/Infrastructure/Legacy/LegacyDevicePlacements.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/DevicePlacementController.php',
+        'src/Inventory/Infrastructure/Symfony/Form/DevicePlacementType.php',
+        'bin/legacy-device-maintenance.php',
+        'src/Inventory/Domain/DeviceMaintenanceRequest.php',
+        'src/Inventory/Domain/DeviceMaintenanceState.php',
+        'src/Inventory/Application/Command/MaintainDevice.php',
+        'src/Inventory/Application/Query/PrepareDeviceMaintenance.php',
+        'src/Inventory/Application/ReadModel/DeviceMaintenanceResult.php',
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceMaintenance.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceMaintenanceRecords.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceMaintenanceExecutor.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceDiagnosticText.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceDiagnosticScope.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/DeviceMaintenanceController.php',
+        'src/Inventory/Infrastructure/Symfony/Form/DeviceMaintenanceType.php',
+        'bin/legacy-device-associations.php',
+        'src/Inventory/Domain/DeviceAssociations.php',
+        'src/Inventory/Domain/DeviceAssociationChange.php',
+        'src/Inventory/Application/Command/ChangeDeviceAssociation.php',
+        'src/Inventory/Application/Query/PrepareDeviceAssociations.php',
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceAssociations.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceAssociationRecords.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceAssociationWriter.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceCollectorGuard.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceWorkerTimeout.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/DeviceAssociationController.php',
+        'src/Inventory/Infrastructure/Symfony/Form/DeviceAssociationType.php',
         'src/Inventory/Domain/DeviceOptionsChange.php',
         'src/Inventory/Application/Command/ChangeDeviceOptions.php',
         'src/Inventory/Infrastructure/Legacy/DeviceOptionsWriter.php',
@@ -249,6 +292,7 @@ def main():
         'src/Platform/Domain/Schema/TableStatus.php',
         'src/Platform/Infrastructure/Legacy/InstallerTableConversion.php',
         'src/Platform/Infrastructure/Legacy/InstallerTableResult.php',
+        'src/Platform/Infrastructure/Persistence/CactiSchemaFile.php',
         'src/Platform/Infrastructure/Persistence/DbalTableConversion.php',
         'src/Platform/Infrastructure/Persistence/MaintenanceConnections.php',
         'src/Platform/Infrastructure/Symfony/Console/ConvertTablesCommand.php',
@@ -267,8 +311,55 @@ def main():
         'src/Platform/Infrastructure/Persistence/DbalColumnWidening.php',
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsCommand.php',
         'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsInput.php',
-        'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsLegacyArguments.php')]
-    legacy_pages = ('graphs.php', 'cdef.php', 'aggregate_templates.php', 'color_templates.php', 'aggregate_graphs.php', 'lib/utility.php')
+        'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsLegacyArguments.php',
+        'cli/audit_database.php',
+        'bin/legacy-audit-upgrade.php',
+        'src/Platform/Infrastructure/Legacy/LegacyUpgradePluginLifecycle.php',
+        'src/Platform/Domain/Schema/AuditMode.php',
+        'src/Platform/Domain/Schema/BaselineColumn.php',
+        'src/Platform/Domain/Schema/BaselineIndex.php',
+        'src/Platform/Domain/Schema/AuditBaseline.php',
+        'src/Platform/Domain/Schema/InvalidAuditSchema.php',
+        'src/Platform/Domain/Schema/AuditSchemaDump.php',
+        'src/Platform/Domain/Schema/BaselineName.php',
+        'src/Platform/Domain/Schema/LiveTable.php',
+        'src/Platform/Domain/Schema/PluginSchemaChanges.php',
+        'src/Platform/Domain/Schema/ColumnBase.php',
+        'src/Platform/Domain/Schema/ColumnType.php',
+        'src/Platform/Domain/Schema/ColumnExtra.php',
+        'src/Platform/Domain/Schema/ColumnSpec.php',
+        'src/Platform/Domain/Schema/IndexAlgorithm.php',
+        'src/Platform/Domain/Schema/DefaultCharset.php',
+        'src/Platform/Domain/Schema/AlterClause.php',
+        'src/Platform/Domain/Schema/ModifyColumn.php',
+        'src/Platform/Domain/Schema/AddColumn.php',
+        'src/Platform/Domain/Schema/DropIndex.php',
+        'src/Platform/Domain/Schema/RebuildIndex.php',
+        'src/Platform/Domain/Schema/UnbuildableClause.php',
+        'src/Platform/Domain/Schema/ColumnDrift.php',
+        'src/Platform/Domain/Schema/IndexDrift.php',
+        'src/Platform/Domain/Schema/AuditTableStatus.php',
+        'src/Platform/Domain/Schema/TableAudit.php',
+        'src/Platform/Domain/Schema/TableAlter.php',
+        'src/Platform/Application/Port/AuditCatalog.php',
+        'src/Platform/Application/Port/SchemaAudit.php',
+        'src/Platform/Application/Port/AuditBaselineStore.php',
+        'src/Platform/Application/Port/InstallationUpgrade.php',
+        'src/Platform/Application/ReadModel/UpgradeOutput.php',
+        'src/Platform/Application/ReadModel/AuditOutcome.php',
+        'src/Platform/Application/ReadModel/BaselineOutcome.php',
+        'src/Platform/Application/ReadModel/AlterResult.php',
+        'src/Platform/Application/ReadModel/AuditReport.php',
+        'src/Platform/Application/Command/AuditRun.php',
+        'src/Platform/Application/Command/AuditDatabase.php',
+        'src/Platform/Infrastructure/Persistence/DbalSchemaAudit.php',
+        'src/Platform/Infrastructure/Persistence/DbalAuditBaselineStore.php',
+        'src/Platform/Infrastructure/Symfony/Console/AuditDatabaseInput.php',
+        'src/Platform/Infrastructure/Symfony/Console/AuditDatabaseLegacyArguments.php',
+        'src/Platform/Infrastructure/Symfony/Console/AuditDatabaseCommand.php',
+        'src/Platform/Infrastructure/Legacy/LegacyInstallationUpgrade.php',
+        'src/Platform/Infrastructure/Legacy/LegacyWorkerProcess.php')]
+    legacy_pages = ('graphs.php', 'cdef.php', 'aggregate_templates.php', 'color_templates.php', 'aggregate_graphs.php', 'lib/utility.php', 'lib/api_automation.php')
     wrapper_line = buffered_wrapper_line()
     required += [prefix + path for path in legacy_pages]
     for path in (args.files / 'raw').glob('coverage-*.json'):
@@ -280,7 +371,8 @@ def main():
                     (source != prefix + 'lib/utility.php' or lines.get(str(wrapper_line)) == 1)):
                 measured['files'][source] = report['files'][source]
     if set(measured['files']) != set(required):
-        raise RuntimeError('Self-test requires real HTTP and worker measurements')
+        missing = sorted(set(required) - set(measured['files']))
+        raise RuntimeError('Self-test requires real HTTP and worker measurements: ' + ', '.join(missing))
     data_input_checks = ['system page size fixture restores original absence and value', 'profile deletion confirmation page renders', 'unused profile is normally removable', 'collector retry builds real poller item from the saved command', 'offline collector yields explicit partial handoff without undoing local definition', 'whitelist update publishes the exact saved command and verifies it', 'worker independently rechecks feature grants before executing the handoff', 'French session authenticates through legacy login', 'French editor translates presentation without changing raw command definition', 'English field deletion confirmation uses a readable action label', 'French field deletion confirmation honors the authenticated preference']
     about_authentication_checks = ['About unprotected Basic headers cannot establish a web-server principal', 'About Basic identity is verified by Apache before PHP', 'About first Basic request restores native identity through the legacy forwarder', 'About Basic restoration resumes About without granting console realm 8', 'About restored Basic session refuses a revoked account', 'About first remembered request restores the native cookie identity', 'About remembered restoration resumes About without granting console realm 8', 'About remembered restoration consumes and rotates the exact native token', 'About consumed remembered token cannot be replayed', 'About replacement remembered token establishes a fresh native session', 'About restored remembered session refuses a disabled account']
     about_authentication_checks += ['About Basic transition publishes a native credential cookie', 'About remembered transition publishes protected session and replacement cookies']
@@ -295,14 +387,30 @@ def main():
     snmp_checks += ['bulk SNMP stored passphrase denial uses the actual actor French preference']
     snmp_checks += ['bulk SNMP rejects nontransactional primary cache participants before writes', 'bulk SNMP rejects nontransactional collector cache participants before writes']
     assignment_checks += ['device list exposes all bulk assignment routes', 'default mutation selection retains existing missing-site and disabled-poller behavior', 'bulk site invokes action 4 once for the complete selection', 'bulk template invokes action 4 once for the complete selection', 'rejected bulk site does not invoke action 4', 'rejected bulk template does not invoke action 4', 'bulk site displays its assignment completion notice', 'bulk template displays its assignment completion notice', 'bulk existing template repairs missing association', 'bulk existing template restores primary and collector association', 'bulk template assignment retains existing graphs and data', 'bulk template unassignment invokes the zero-template hook for each device', 'bulk template preserves site membership cache marker', 'bulk collector worker rejects disabled destination after GET', 'disabled bulk collector destination writes no ownership or copy', 'bulk collector return failure reports uncertain outcome', 'bulk collector return failure rolls back primary ownership and statistics', 'bulk collector rollback retains every previous polling copy', 'bulk collector transfers a full remote selection to another remote', 'bulk remote transfer confirms primary and destination ownership', 'bulk remote transfer preserves nonempty polling ownership', 'bulk remote transfer removes old copies after commit', 'bulk collector can return to its previous remote', 'bulk remote return cleans the second collector', 'bulk collector mid-batch failure reports uncertain outcome', 'bulk collector mid-batch failure rolls back primary host and cache ownership', 'bulk collector mid-batch failure rolls back poller statistics', 'rejected bulk collector does not invoke action 4', 'bulk collector failure retains documented first-device remote residue', 'bulk site worker rejects deleted destination after GET without writes', 'malformed bulk assignment command cannot write', 'bulk assignment worker rejects extra command keys before writes']
-    assignment_checks += ['bulk site preserves preflight remote disabled state', 'bulk template preserves preflight remote disabled state']
+    assignment_checks += ['bulk site preserves preflight remote disabled state', 'bulk template preserves preflight remote disabled state', 'bulk site supports explicit unassignment', 'bulk template supports explicit unassignment']
     assignment_checks += ['bulk collector cleanup rejects changed ownership before purging', 'bulk collector cleanup failure cannot report success', 'bulk collector cleanup failure retains committed destination ownership', 'bulk collector cleanup failure leaves recoverable old copies', 'bulk collector recovers old residue by returning to remote']
-    collector_cleanup_checks = ['collector cleanup failure retains committed primary ownership and polling rows', 'collector cleanup failure leaves a recoverable old host copy', 'collector cleanup failure emits no success audit', 'collector reassignment recovers old host and polling residue through confirmed moves']
+    collector_cleanup_checks = ['collector cleanup failure retains committed primary ownership', 'collector cleanup failure retains committed primary polling ownership', 'collector cleanup failure leaves old collector residue', 'collector cleanup recovery restores the old collector before retrying', 'collector cleanup recovery removes old collector residue', 'collector cleanup failure retains committed primary ownership and polling rows', 'collector cleanup failure leaves a recoverable old host copy', 'collector cleanup failure emits no success audit', 'collector reassignment recovers old host and polling residue through confirmed moves']
     assignment_checks += ['collector cleanup failure persists old-owner retry receipt', 'collector same-target retry reports repeated cleanup failure', 'collector failed retry retains old copy and receipt', 'collector disabled pending owner refuses cleanup retry', 'collector unavailable cleanup retains retry receipt', 'collector successful same-target retry removes old dependent copies', 'collector successful cleanup acknowledges retry receipt', 'bulk collector cleanup failure persists complete retry inventory', 'bulk collector same-target retry reports repeated cleanup failure', 'bulk collector failed retry retains complete cleanup inventory', 'bulk collector same-target retry completes pending cleanup', 'bulk collector successful retry removes old polling copies', 'bulk collector successful cleanup acknowledges complete retry inventory']
     assignment_checks += ['collector verified cleanup publishes no redundant purge command', 'bulk collector verified cleanup publishes no redundant purge commands']
     assignment_checks += ['selected PDO runner preserves primary and collector identities and caller-owned work']
     assignment_checks += ['collector acknowledgement failure cannot report success after remote cleanup', 'collector failed acknowledgement retains receipt despite verified remote absence', 'bulk collector later acknowledgement failure cannot report success', 'bulk collector failed acknowledgement rolls back all receipts after remote absence']
+    cutover_checks = ['legacy device POST is never replayed', 'legacy device GET links do not mutate state', 'legacy device entry rechecks revoked management realm', 'legacy location suggestions use authorized Inventory query', 'Inventory preserves template collector and exact location filters', 'existing device automation rules run through Symfony', 'device automation preserves action 6 once with full selection', 'device automation SQL failure cannot report success']
+    placement_checks = ['tree legacy placement shares destination locks and rejects duplicates', 'report legacy placement shares destination locks and rejects duplicates', 'tree placement verifies final state after callbacks', 'report placement verifies final state after callbacks', 'tree placement saves through Symfony', 'report placement saves through Symfony', 'tree placement rolls back entire selection', 'report placement rolls back entire selection', 'tree placement preserves selected parent', 'report placement preserves display settings', 'tree placement does not duplicate existing devices', 'report placement does not duplicate existing devices']
+    maintenance_checks = ['maintenance enables debug through Symfony', 'maintenance confirms remote debug setting', 'maintenance SQL rejection cannot report success', 'maintenance failure rolls back primary debug settings', 'maintenance refreshes polling cache through Symfony', 'maintenance connectivity probes the real SNMP fixture', 'collector ping returns sanitized diagnostics', 'collector runquery returns sanitized diagnostics', 'maintenance executes reload-query against the SNMP fixture', 'maintenance executes reindex against the SNMP fixture', 'maintenance executes query-diagnostics against the SNMP fixture', 'maintenance rejects stale device settings']
+    graph_checks = ['graph association adds through Symfony', 'graph association invokes plugin hook once with exact payload', 'graph association automation creates a graph', 'graph association removes through Symfony', 'graph association failure rolls back primary writes', 'graph association verifies remote template', 'graph association removal retains existing graphs']
+    query_checks = ['query association adds through Symfony', 'query association removes through Symfony', 'query association failure rolls back primary writes', 'query reindex method changes through Symfony', 'query reindex method is verified on collector', 'query removal retains existing graphs', 'query removal clears associations cache and reindex state']
     profile_checks = ['in-use profile heartbeat saves when the disabled step field is absent', 'selected template RRD heartbeat follows its profile', 'selected local-source RRD heartbeat follows its profile', 'unrelated template RRD heartbeat is unchanged', 'unrelated local-source RRD heartbeat is unchanged', 'unchanged structural fields permit an in-use heartbeat save', 'single forged structural field refuses the complete in-use save: x_files_factor', 'single forged structural field refuses the complete in-use save: consolidation_function_id[]', 'template-only profile propagates heartbeat without local data sources', 'unused profile consolidation-only save is independent of step submission', 'unused profile factor-only save retains interval and consolidation functions', 'new profile creation persists submitted structural fields', 'unused profile structural edits save normally', "malformed consolidation selection causes no partial writes: '2'", "malformed consolidation selection causes no partial writes: ['99']", "malformed consolidation selection causes no partial writes: ['1e0']", "malformed consolidation selection causes no partial writes: ['1', '2', '3', '4', '1']", 'template-only heartbeat save emits no existing-file tuning warning', 'non-templated local heartbeats update only for the selected profile', 'unchanged heartbeat retains existing metadata and emits no tuning warning', 'profile save rejects missing CSRF before persistence', 'template-only profile accepts every structural field', 'read-only refusal displays its error and records the operator warning: x_files_factor', 'single forged structural field leaves propagated heartbeat unchanged: x_files_factor', 'read-only refusal displays its error and records the operator warning: consolidation_function_id[]', 'single forged structural field leaves propagated heartbeat unchanged: consolidation_function_id[]']
+    audit_baseline_failure_checks = [
+        'audit report with the audit schema missing: frozen original records its historical success exit on baseline failure',
+        'audit report with the audit schema missing: native command fails without claiming a clean audit',
+        'audit report with the audit schema missing: refused native audit preserves all schema and baseline state',
+        'audit report with an unparsable audit schema: frozen original records its historical success exit on baseline failure',
+        'audit report with an unparsable audit schema: native command fails without claiming a clean audit',
+        'audit report with an unparsable audit schema: refused native audit preserves all schema and baseline state',
+        'audit report when table_columns cannot be created: frozen original records its historical success exit on baseline failure',
+        'audit report when table_columns cannot be created: native command fails without claiming a clean audit',
+        'audit report when table_columns cannot be created: refused native audit preserves all schema and baseline state',
+    ]
     failures = {
         'profile-heartbeat-test-hash': 'Integration test source differs',
         'missing-profile-heartbeat-test-hash': 'Integration test source differs',
@@ -394,6 +502,12 @@ def main():
         'unmeasured-DoctrineDeviceCreationCatalog.php': 'Missing measured execution: src/Inventory/Infrastructure/Persistence/DoctrineDeviceCreationCatalog.php',
         'unmeasured-LegacyDeviceCreator.php': 'Missing measured execution: src/Inventory/Infrastructure/Legacy/LegacyDeviceCreator.php',
         'path-traversal': 'Invalid integration source path',
+        'device_association_scenarios.py-test-hash': 'Integration test source differs',
+        'device_legacy_scenarios.py-test-hash': 'Integration test source differs',
+        'device_maintenance_scenarios.py-test-hash': 'Integration test source differs',
+        'device_placement_scenarios.py-test-hash': 'Integration test source differs',
+        'placement_lock_probe.php-test-hash': 'Integration test source differs',
+        'collector-cleanup-test-hash': 'Integration test source differs',
         'script-server-test-hash': 'Integration test source differs',
         'missing-script-server-check': 'Incomplete Symfony integration checks',
         'cli-parity-test-hash': 'Integration test source differs',
@@ -405,7 +519,20 @@ def main():
         'missing-installer-conversion-check': 'Incomplete Symfony integration checks',
         'cli-widen-original-test-hash': 'Integration test source differs',
         'missing-widen-check': 'Incomplete Symfony integration checks',
+        'cli-audit-test-hash': 'Integration test source differs',
+        'cli-audit-original-test-hash': 'Integration test source differs',
+        'cli-audit-native-test-hash': 'Integration test source differs',
+        'missing-audit-check': 'Incomplete Symfony integration checks',
+        'missing-retained-audit-check': 'Incomplete Symfony integration checks',
+        'missing-audit-index-only-check': 'Incomplete Symfony integration checks',
+        'missing-audit-extension-check': 'Incomplete Symfony integration checks',
+        'missing-audit-noop-upgrade-check': 'Incomplete Symfony integration checks',
+        'missing-audit-required-upgrade-check': 'Incomplete Symfony integration checks',
     }
+    for index in range(len(audit_baseline_failure_checks)):
+        failures['missing-audit-baseline-failure-check-' + str(index)] = 'Incomplete Symfony integration checks'
+    for index in range(len(TREE_CHECKS)):
+        failures['missing-tree-check-' + str(index)] = 'Incomplete Symfony integration checks'
     failures['missing-legacy-page-test-hash'] = 'Integration test source differs'
     failures['missing-selected-runner-check'] = 'Incomplete Symfony integration'
     for source in ['src/Platform/Contract/ReferenceWriteTransactionRunner.php',
@@ -426,6 +553,18 @@ def main():
         failures['missing-collector-cleanup-check-' + str(index)] = 'Incomplete Symfony integration'
     for index in range(len(snmp_checks)):
         failures['missing-snmp-check-' + str(index)] = 'Incomplete Symfony integration'
+    for index in range(len(collector_cleanup_checks)):
+        failures['missing-collector-cleanup-check-' + str(index)] = 'Incomplete Symfony integration'
+    for index in range(len(cutover_checks)):
+        failures['missing-cutover-check-' + str(index)] = 'Incomplete Symfony integration'
+    for index in range(len(placement_checks)):
+        failures['missing-placement-check-' + str(index)] = 'Incomplete Symfony integration'
+    for index in range(len(maintenance_checks)):
+        failures['missing-maintenance-check-' + str(index)] = 'Incomplete Symfony integration'
+    for index in range(len(graph_checks)):
+        failures['missing-graph-check-' + str(index)] = 'Incomplete Symfony integration'
+    for index in range(len(query_checks)):
+        failures['missing-query-check-' + str(index)] = 'Incomplete Symfony integration'
     for index in range(len(option_checks)):
         failures['missing-option-check-' + str(index)] = 'Incomplete Symfony integration'
     for index in range(len(state_probe_checks)):
@@ -569,6 +708,18 @@ def main():
                 evidence['source_sha256']['tests/Symfony/device_creation_review_scenarios.py'] = '0' * 64
             elif case == 'creation-plugin-test-hash':
                 evidence['source_sha256']['tests/Fixtures/plugins/compatibility_test/setup.php'] = '0' * 64
+            elif case == 'device_association_scenarios.py-test-hash':
+                evidence['source_sha256']['tests/Symfony/device_association_scenarios.py'] = '0' * 64
+            elif case == 'device_legacy_scenarios.py-test-hash':
+                evidence['source_sha256']['tests/Symfony/device_legacy_scenarios.py'] = '0' * 64
+            elif case == 'device_maintenance_scenarios.py-test-hash':
+                evidence['source_sha256']['tests/Symfony/device_maintenance_scenarios.py'] = '0' * 64
+            elif case == 'device_placement_scenarios.py-test-hash':
+                evidence['source_sha256']['tests/Symfony/device_placement_scenarios.py'] = '0' * 64
+            elif case == 'placement_lock_probe.php-test-hash':
+                evidence['source_sha256']['tests/Symfony/placement_lock_probe.php'] = '0' * 64
+            elif case == 'collector-cleanup-test-hash':
+                evidence['source_sha256']['tests/Symfony/device_collector_scenarios.py'] = '0' * 64
             elif case == 'script-server-test-hash':
                 evidence['source_sha256']['tests/Symfony/script_server_scenarios.py'] = '0' * 64
             elif case == 'missing-script-server-check':
@@ -591,6 +742,28 @@ def main():
                 evidence['source_sha256']['tests/Fixtures/legacy-cli/fix_mediumint.php'] = '0' * 64
             elif case == 'missing-widen-check':
                 evidence['checks'].remove('widen refuses an operator without the Installation/Upgrades realm')
+            elif case == 'cli-audit-test-hash':
+                evidence['source_sha256']['tests/Symfony/cli_audit_scenarios.py'] = '0' * 64
+            elif case == 'cli-audit-original-test-hash':
+                evidence['source_sha256']['tests/Fixtures/legacy-cli/audit_database.php'] = '0' * 64
+            elif case == 'cli-audit-native-test-hash':
+                evidence['source_sha256']['tests/Fixtures/native-cli/audit_database.php'] = '0' * 64
+            elif case.startswith('missing-tree-check-'):
+                evidence['checks'].remove(TREE_CHECKS[int(case.rsplit('-', 1)[1])])
+            elif case.startswith('missing-audit-baseline-failure-check-'):
+                evidence['checks'].remove(audit_baseline_failure_checks[int(case.rsplit('-', 1)[1])])
+            elif case == 'missing-audit-check':
+                evidence['checks'].remove('audit refuses an operator without the Installation/Upgrades realm')
+            elif case == 'missing-audit-noop-upgrade-check':
+                evidence['checks'].remove('audit upgrade traverses the registered no-op 1.2.32 without a schema script')
+            elif case == 'missing-audit-required-upgrade-check':
+                evidence['checks'].remove('audit upgrade still refuses a missing required migration without publishing its final version')
+            elif case == 'missing-audit-extension-check':
+                evidence['checks'].remove('audit --load records the collation extension with its actual catalog attributes')
+            elif case == 'missing-audit-index-only-check':
+                evidence['checks'].remove('audit repair with a failing alter: the recorded path column matches every baseline attribute before index drift')
+            elif case == 'missing-retained-audit-check':
+                evidence['checks'].remove('retained audit compatibility report executes successfully')
             elif case == 'missing-device-creation-check':
                 evidence['checks'].remove('legacy template graph associations are preserved')
             elif case.startswith('missing-statistics-check-'):
@@ -607,6 +780,24 @@ def main():
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case.startswith('missing-snmp-check-'):
                 missing = snmp_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-collector-cleanup-check-'):
+                omitted = collector_cleanup_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != omitted]
+            elif case.startswith('missing-cutover-check-'):
+                missing = cutover_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-placement-check-'):
+                missing = placement_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-maintenance-check-'):
+                missing = maintenance_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-graph-check-'):
+                missing = graph_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-query-check-'):
+                missing = query_checks[int(case.rsplit('-', 1)[1])]
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case.startswith('missing-option-check-'):
                 missing = option_checks[int(case.rsplit('-', 1)[1])]

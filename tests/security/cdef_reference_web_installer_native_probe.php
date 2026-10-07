@@ -77,9 +77,46 @@ function webToken(string $body): string
     throw new RuntimeException('The real rendered form did not supply a CSRF token.');
 }
 
+/** Retain only non-secret worker state before the exclusively owned schema is removed. */
+function webLifecycleDiagnostics(PDO $database, string $installerLogPath, int $initialInstallerLogBytes): void
+{
+    try {
+        $keys = ['install_step', 'install_version', 'install_progress', 'install_started', 'install_updated', 'install_complete'];
+        $statement = $database->prepare('SELECT name,value FROM settings WHERE name IN (' . implode(',', array_fill(0, count($keys), '?')) . ') ORDER BY name');
+        $statement->execute($keys);
+        $state = ['settings' => $statement->fetchAll(PDO::FETCH_KEY_PAIR),
+            'processes' => $database->query("SELECT tasktype,taskname,taskid,pid,timeout,started,last_update FROM processes WHERE tasktype='install' AND taskname='master' AND taskid=0")->fetchAll(PDO::FETCH_ASSOC)];
+        // Classify known lifecycle events without publishing raw installer logs,
+        // request fields, configuration, credentials or exception arguments.
+        $log = is_file($installerLogPath) ? file_get_contents($installerLogPath) : '';
+        if ($log === false) {
+            throw new RuntimeException('Cannot read owned installer lifecycle log.');
+        }
+        $log = substr($log, $initialInstallerLogBytes);
+        $state['worker_registration_refused'] = str_contains($log, 'Old process still running and has not timed out!');
+        $state['background_start_rejected'] = str_contains($log, 'Background was already started at');
+        echo 'WEB_LIFECYCLE ' . json_encode($state, JSON_THROW_ON_ERROR) . "\n";
+    } catch (Throwable $diagnosticError) {
+        // Preserve the original completion failure and allow owned cleanup.
+        echo "WEB_LIFECYCLE unavailable\n";
+    }
+}
+
 $failureUpgrade = ($argv[1] ?? '') === 'failure-upgrade';
 $initialVersion = $failureUpgrade ? '1.2.33' : 'new_install';
 $root = dirname(__DIR__, 2);
+$currentVersionSource = file_get_contents($root . '/include/cacti_version');
+if ($currentVersionSource === false) {
+    throw new RuntimeException('The current installer version file could not be read.');
+}
+$currentVersion = trim($currentVersionSource);
+if (strlen($currentVersion) > 32 || preg_match('/\A[0-9]+(?:\.[0-9]+){2}(?:[-a-zA-Z0-9]+)?\z/', $currentVersion) !== 1) {
+    throw new RuntimeException('The current installer version has an unsupported format.');
+}
+$lastConfirmedVersion = '1.2.34';
+if ($failureUpgrade) {
+    installerAssert(version_compare($currentVersion, $lastConfirmedVersion, '>'), 'the final web version follows the admitted intermediate migration');
+}
 if (!is_file($root . '/.cdef-reference-task-owned-candidate')
     || hash_file('sha256', $root . '/include/config.php') !== hash_file('sha256', $root . '/tests/Fixtures/cdef-reference-runtime-config.php')) {
     throw new RuntimeException('An exact marked task-owned installer candidate is required.');
@@ -94,9 +131,12 @@ chmod($cookies, 0600);
 $created = false;
 $server = null;
 $installerLogPath = $root . '/log/cacti.log';
-$initialInstallerLogBytes = is_file($installerLogPath) ? filesize($installerLogPath) : 0;
-if ($initialInstallerLogBytes === false) throw new RuntimeException('Cannot inspect owned installer log boundary.');
+$initialInstallerLogBytes = 0;
 try {
+    $initialInstallerLogBytes = is_file($installerLogPath) ? filesize($installerLogPath) : 0;
+    if ($initialInstallerLogBytes === false) {
+        throw new RuntimeException('Cannot inspect owned installer log boundary.');
+    }
     echo 'SERVER ' . $database->query('SELECT VERSION()')->fetchColumn() . "\n";
     $database->exec("CREATE DATABASE `$schema`");
     $created = true;
@@ -206,9 +246,19 @@ try {
                 === 'The primary CDEF reference contract could not be installed. Review the schema and installer privileges before retrying.',
                 'actual web background upgrade reports native contract failure'
             );
+            // The actual 1.2.34 migration is confirmed before the final CDEF
+            // contract refuses 1.2.35; preserve that last successful marker.
+            $failedVersion = $database->query('SELECT cacti FROM version')->fetchColumn();
+            $observedVersion = is_string($failedVersion) && strlen($failedVersion) <= 32
+                && preg_match('/\A[0-9]+(?:\.[0-9]+){2}\z/', $failedVersion) === 1 ? $failedVersion : 'unexpected';
+            $versionDiagnostic = 'WEB_VERSION ' . json_encode(['initial' => $initialVersion,
+                'confirmed' => $observedVersion, 'target' => $currentVersion], JSON_THROW_ON_ERROR) . "\n";
+            if (fwrite(STDOUT, $versionDiagnostic) !== strlen($versionDiagnostic)) {
+                throw new RuntimeException('Cannot preserve the sanitized web version diagnostic.');
+            }
             installerAssert(
-                $database->query('SELECT cacti FROM version')->fetchColumn() === '1.2.33',
-                'failed actual 1.2.33 web upgrade retains retryable previous version'
+                $failedVersion === $lastConfirmedVersion,
+                'failed actual web upgrade retains the last confirmed intermediate version'
             );
             $database->exec("DELETE FROM cdef_items WHERE cdef_id=15000001");
             $repaired = true;
@@ -248,7 +298,7 @@ try {
     installerAssert(!$failureUpgrade || $repaired, 'upgrade failure fixture reaches real failure and repaired retry');
     installerAssert(isset($data) && (int) $data['Step'] === 98, 'actual web background Installer reaches completion');
     installerAssert(
-        $database->query('SELECT cacti FROM version')->fetchColumn() === trim(file_get_contents($root . '/include/cacti_version')),
+        $database->query('SELECT cacti FROM version')->fetchColumn() === $currentVersion,
         'actual web Installer records the current version'
     );
     installerAssert(
@@ -261,28 +311,8 @@ try {
         'actual web Installer installs the exact native CDEF contract and data readiness'
     );
 } finally {
-    // Retain only non-secret worker lifecycle state before removing the owned
-    // schema and transport files. This leaves every completion assertion intact.
     if ($created) {
-        try {
-            $keys = ['install_step', 'install_version', 'install_progress', 'install_started', 'install_updated', 'install_complete'];
-            $statement = $database->prepare('SELECT name,value FROM settings WHERE name IN (' . implode(',', array_fill(0, count($keys), '?')) . ') ORDER BY name');
-            $statement->execute($keys);
-            $state = ['settings' => $statement->fetchAll(PDO::FETCH_KEY_PAIR),
-                'processes' => $database->query("SELECT tasktype,taskname,taskid,pid,timeout,started,last_update FROM processes WHERE tasktype='install' AND taskname='master' AND taskid=0")->fetchAll(PDO::FETCH_ASSOC)];
-            // Report only known lifecycle categories, never raw log text or
-            // request/configuration values from the candidate's installer log.
-            $log = is_file($installerLogPath) ? file_get_contents($installerLogPath) : '';
-            if ($log === false) throw new RuntimeException('Cannot read owned installer lifecycle log.');
-            $log = substr($log, $initialInstallerLogBytes);
-            $state['worker_registration_refused'] = str_contains($log, 'Old process still running and has not timed out!');
-            $state['background_start_rejected'] = str_contains($log, 'Background was already started at');
-            echo 'WEB_LIFECYCLE ' . json_encode($state, JSON_THROW_ON_ERROR) . "\n";
-        } catch (Throwable $diagnosticError) {
-            // Diagnostics must not replace a failed completion assertion or
-            // prevent cleanup; omit exception data from the public artifact.
-            echo "WEB_LIFECYCLE unavailable\n";
-        }
+        webLifecycleDiagnostics($database, $installerLogPath, $initialInstallerLogBytes);
     }
     if (is_resource($server)) {
         proc_terminate($server);

@@ -9,17 +9,24 @@ namespace Kadupul\Platform\Infrastructure\Legacy;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
+use Psr\Clock\ClockInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /** get_cacti_cli_version() without the legacy bootstrap. */
 final readonly class InstallationVersion
 {
-    public function __construct(private string $projectDir, private Connection $localConnection, private Filesystem $filesystem) {}
+    public function __construct(private string $projectDir, private Connection $localConnection, private Filesystem $filesystem, private ClockInterface $clock) {}
+
+    /** include/cacti_version, trimmed, as include/global.php:24-32 defined CACTI_VERSION. */
+    public function file(): string
+    {
+        return trim($this->filesystem->readFile($this->projectDir . '/include/cacti_version'));
+    }
 
     /** "<include/cacti_version> (DB: <version.cacti>)" */
     public function text(): string
     {
-        $file = trim($this->filesystem->readFile($this->projectDir . '/include/cacti_version'));
+        $file = $this->file();
         // get_cacti_version() reads the default (local) connection through
         // db_fetch_cell(), which yields an empty cell rather than failing.
         try {
@@ -33,10 +40,10 @@ final readonly class InstallationVersion
 
     /**
      * The first line of every cli/ script's --version and --help output. The
-     * caller passes its clock's time so the copyright year stays testable.
+     * year comes from the clock, not date(), so tests can fix it.
      */
-    public function line(string $utility, \DateTimeImmutable $now): string
+    public function line(string $utility): string
     {
-        return $utility . ', Version ' . $this->text() . ', Copyright (C) 2004-' . $now->format('Y') . ' The Cacti Group';
+        return $utility . ', Version ' . $this->text() . ', Copyright (C) 2004-' . $this->clock->now()->format('Y') . ' The Cacti Group';
     }
 }
