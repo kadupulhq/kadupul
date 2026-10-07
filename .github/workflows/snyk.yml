@@ -17,6 +17,7 @@ concurrency:
 
 jobs:
   token:
+    timeout-minutes: 5
     name: Check Snyk configuration
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     outputs:
@@ -45,6 +46,7 @@ jobs:
           fi
 
   dependencies:
+    timeout-minutes: 30
     name: Composer and npm dependencies
     needs: token
     if: ${{ needs.token.outputs.configured == 'true' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
