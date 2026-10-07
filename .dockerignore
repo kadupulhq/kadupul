@@ -13,7 +13,8 @@
 CHANGELOG.md
 
 tests/
-docs/
+docs/*
+!docs/audit_schema.sql
 .php-cs-fixer.php
 phpstan.neon
 phpstan.neon.dist

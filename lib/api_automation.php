@@ -3947,19 +3947,16 @@ function automation_get_dns_from_ip($ip, $dns, $timeout = 1000)
 
     /* needs a byte to indicate the length of each segment of the request */
     for ($x = 3; $x >= 0; $x--) {
-        switch (strlen($octets[$x])) {
-            case 1: // 1 byte long segment
-                $data .= "\1";
-                break;
-            case 2: // 2 byte long segment
-                $data .= "\2";
-                break;
-            case 3: // 3 byte long segment
-                $data .= "\3";
-                break;
-            default: // segment is too big, invalid IP
-                return 'ERROR';
+        $length = match (strlen($octets[$x])) {
+            1 => "\1",
+            2 => "\2",
+            3 => "\3",
+            default => null,
+        };
+        if ($length === null) {
+            return 'ERROR';
         }
+        $data .= $length;
 
         /* and the segment itself */
         $data .= $octets[$x];

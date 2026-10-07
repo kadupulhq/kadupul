@@ -332,6 +332,13 @@ jobs:
       - name: Install isolated CSV test runner
         run: composer install --working-dir=tests --prefer-dist --no-progress --no-interaction
 
+      - name: Verify PHP 8.1 idiom contracts
+        working-directory: tests
+        run: |
+          php -d error_reporting=8191 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/Php81IdiomsTest.php --colors=never
+          php -d error_reporting=8191 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/GhsaPmgmRegressionTest.php --colors=never
+          php -d error_reporting=8191 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/CoreSecurityHardeningTest.php --filter="ping constructor" --colors=never
+
       - name: Verify PHP 8.0 string and regex behavior
         working-directory: tests
         run: php -d "error_reporting=E_ALL & ~E_DEPRECATED" vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/Php80StringRegexTest.php --colors=never
@@ -480,6 +487,9 @@ jobs:
 
       - name: Check the hook installer
         run: bash tests/tools/test_githooks_install.sh
+
+      - name: Check merge validation preserves incoming content
+        run: bash tests/tools/test_githooks_merge.sh
 
   javascript:
     timeout-minutes: 30

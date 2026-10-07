@@ -29,7 +29,13 @@
             <exclude>./handoff/PluginCspHandOffTest.php</exclude>
             <exclude>./handoff/SecurityHardening1_2xHandOffTest.php</exclude>
 
-            <!-- Describe-style tests remain excluded from this legacy coverage run. -->
+            <!-- Existing defects tracked in #805; Pest 4 supports describe().
+                 Authorize: a stale source/comment assertion (20 other cases pass).
+                 BuildRemoteUrl: requires missing lib/cacti_http.php.
+                 Escape, SortColumn, Theme: loading lib/functions.php redeclares
+                 cacti_path_is_within() extracted by the shared bootstrap.
+                 Replace obsolete fixtures with production behavior tests before
+                 admitting these files; do not weaken security assertions. -->
             <exclude>./Unit/CactiAuthorizeTest.php</exclude>
             <exclude>./Unit/CactiBuildRemoteUrlTest.php</exclude>
             <exclude>./Unit/CactiHtmlContextEscapeTest.php</exclude>

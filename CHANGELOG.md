@@ -9,6 +9,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Reuse the device form failure presenter for association, collector, maintenance, and automation actions while preserving operation-specific statuses, translated messages, and authorization responses.
 
 - Verify authenticated graph-tree confirmation and native automation placement handoffs, including rejected foreign/non-header parents and admitted destinations; require their measured behavior checks.
+- Restore database-client TLS option selection before atomic audit imports, reject unknown or failing client versions before audit writes, and preserve literal argument and owned SQL cleanup contracts.
 
 - Keep CLI site tree nodes consistent with web placement by storing their site identity without a copied title; verify parent, duplicate, and malformed-input refusals through the actual CLI/API and require their measured behavior checks.
 
@@ -75,6 +76,10 @@ follows [Semantic Versioning](VERSIONING.md).
 - Require device access before viewing, saving, reindexing, pinging, reloading queries, or changing templates for a device; also enforce access in the web-facing device save API.
 - Limit Data Query Cache and Poller Cache views to devices the current user may access, including their default Any filters.
 - Report schema audit drift for defaults, collations, indexes, and missing tables without treating a stale fork baseline as automatically repairable. Fixes #454.
+- Add Docker MariaDB integration coverage for the maintenance CLI commands on `main`, and validate CLI selectors, permissions, audit reporting and selected-host poller-cache behavior.
+- Reject non-positive and fractional poller-cache thread counts, include the audit baseline and runtime dependencies in Docker integration coverage, and fail before starting the test stack when its configured test pattern matches no files.
+- Resolve JavaScript and CSS include paths through Symfony Filesystem while retaining the legacy helper's search order, relative-path rules, and missing-file notifications. Closes #489.
+- Read legacy current-page and browser URL values through Symfony HttpFoundation while retaining the existing helper signatures, server-variable precedence, and URI sanitization. Refactors #484.
 - Preserve text-column collation when repairing from an older schema baseline, and match missing-table checks to the baseline's case-insensitive table identity.
 - Confirm an interactive database upgrade before preparing and confirming its resulting repair plan; stop repair on failed or unconfirmed upgrades and honor the cron setting for quiet upgrade deprecation warnings.
 - Enforce persistent CDEF reference integrity for legacy writers and atomic aggregate cache replacement; refuse online collector primary upgrades and confirm the final installation version before reporting success.
@@ -90,6 +95,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Migrate VDEF listing, editing, item ordering, duplication and deletion to Symfony/Twig with realm checks, CSRF protection, stale-form detection and dependency-aware deletion; retain safe legacy URL redirects.
 - Share user and group permission-filter rendering while retaining their existing routes, translations, template choices and filter events. Part of #699.
+- Handle recovery CLI help and version flags before requiring remote database connections; retain recovery samples when a normal run cannot connect.
 - Add a reusable local write transaction helper with caller-owned savepoints, persistent InnoDB checks on the selected PDO connection, and native MariaDB/MySQL regressions.
 
 - Add a reusable local write transaction helper with caller-owned savepoints, persistent InnoDB checks on the selected PDO connection, and native MariaDB/MySQL regressions.
@@ -151,6 +157,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Generate the audit baseline from a fresh install in CI and fail when its schema rows differ from the checked-in baseline. Fixes #453.
 - Audit both fresh installs and release-upgraded databases against the checked-in schema in CI. Fixes #452.
+- Validate locally authored and conflict-resolved merge content without rejecting whitespace inherited unchanged from the incoming branch.
 - Add native SQL-backed regression coverage for HTML filters, graph drilldown context, ordered report rendering, and realm/view/role/simple-permission helper contracts. Part of #699.
 
 - Exercise user-log cleanup against real MySQL and MariaDB, preserving each current account's latest login and token while removing failed and orphaned entries; collect coverage from the actual controller.

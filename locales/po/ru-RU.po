@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Russian Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-06 17:25-0700\n"
+"POT-Creation-Date: 2026-10-06 17:32-0700\n"
 "PO-Revision-Date: 2024-12-06 19:24+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -1053,14 +1053,14 @@ msgstr "Удалить устройство"
 #: automation_devices.php:39 automation_devices.php:294
 #: automation_devices.php:406 automation_devices.php:417
 #: automation_devices.php:679 automation_devices.php:680
-#: lib/api_automation.php:31 lib/html_utility.php:1335 pollers.php:32
+#: lib/api_automation.php:31 lib/html_utility.php:1350 pollers.php:32
 msgid "Down"
 msgstr "Выкл"
 
 #: automation_devices.php:40 automation_devices.php:294
 #: automation_devices.php:408 automation_devices.php:419
 #: automation_devices.php:679 automation_devices.php:680
-#: lib/api_automation.php:30 lib/html_utility.php:1341
+#: lib/api_automation.php:30 lib/html_utility.php:1356
 msgid "Up"
 msgstr "Вкл"
 
@@ -1383,7 +1383,7 @@ msgstr "Включенные"
 #: include/global_settings.php:1687 include/global_settings.php:1701
 #: include/global_settings.php:1791 include/global_settings.php:2555
 #: lib/api_automation.php:28 lib/html.php:2844 lib/html_reports.php:2037
-#: lib/html_reports.php:2188 lib/html_utility.php:1325 managers.php:241
+#: lib/html_reports.php:2188 lib/html_utility.php:1340 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:936 user_domains.php:397
 #: user_group_admin.php:756 utilities.php:2147 utilities.php:2699
 #: utilities.php:3008
@@ -2512,7 +2512,7 @@ msgid "No Tree Rules Found"
 msgstr "Правила для деревьев не найдены"
 
 #: cactid.php:27 help.php:54 lib/functions.php:6706 lib/functions.php:6776
-#: lib/functions.php:6872 lib/functions.php:7526 poller.php:417 poller.php:584
+#: lib/functions.php:6872 lib/functions.php:7533 poller.php:417 poller.php:584
 #: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
 #: poller_automation.php:37 poller_boost.php:387
 msgid "Kadupul System Warning"
@@ -4526,7 +4526,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Какти Поллер еще не сбежал."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8229 permission_denied.php:29 permission_denied.php:36
+#: lib/functions.php:8236 permission_denied.php:29 permission_denied.php:36
 msgid "Permission Denied"
 msgstr "Доступ запрещён"
 
@@ -5469,11 +5469,11 @@ msgstr "Вы должны войти в систему, чтобы получи�
 msgid "Login Again"
 msgstr "Войти снова"
 
-#: include/auth.php:317 lib/functions.php:8230 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8237 permission_denied.php:38
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Если вы считаете, что это ошибка. Пожалуйста, свяжитесь с администратором Kadupul."
 
-#: include/auth.php:317 lib/functions.php:8230 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8237 permission_denied.php:38
 #, fuzzy
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Вам не разрешается доступ к этому разделу Kadupul."
@@ -12095,7 +12095,7 @@ msgstr "Инициализация"
 msgid "Please wait while the installation system for Kadupul Version %s initializes. You must have JavaScript enabled for this to work."
 msgstr "Пожалуйста, подождите, пока инициализируется система установки Kadupul Version %s. Для того чтобы JavaScript работал, он должен быть включен."
 
-#: install/install.php:101 lib/html_utility.php:1344 lib/installer.php:2095
+#: install/install.php:101 lib/html_utility.php:1359 lib/installer.php:2095
 #: lib/installer.php:4134
 msgid "Error"
 msgstr "Ошибка"
@@ -12168,13 +12168,13 @@ msgstr "Переопределить это значение"
 msgid "Not Up"
 msgstr "Упал"
 
-#: lib/api_automation.php:32 lib/html.php:65 lib/html_utility.php:1338
+#: lib/api_automation.php:32 lib/html.php:65 lib/html_utility.php:1353
 #: pollers.php:34
 msgid "Recovering"
 msgstr "Восстановление"
 
 #: lib/api_automation.php:33 lib/auth.php:3059 lib/clog_webapi.php:856
-#: lib/html_utility.php:1347 lib/import.php:342 lib/plugins.php:1499
+#: lib/html_utility.php:1362 lib/import.php:342 lib/plugins.php:1499
 #: lib/plugins.php:1500 lib/rrd.php:4194 lib/rrd.php:4206 lib/spikekill.php:301
 #: package_import.php:522 package_import.php:600 utilities.php:211
 #: utilities.php:212 utilities.php:2753
@@ -13330,7 +13330,7 @@ msgstr "Версия %s %s"
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7526
+#: lib/functions.php:7533
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "ПРЕДУПРЕЖДЕНИЕ: Отсутствует файл включения ключевых Kadupul %s.  Найдите и замените этот файл"
@@ -14530,27 +14530,28 @@ msgstr "Регулярные выражения Kadupul ограничены 50 
 msgid "Kadupul regular expressions can not includes the semi-color character."
 msgstr "Регулярные выражения Kadupul не могут включать полуцветной символ."
 
-#: lib/html_utility.php:1274
+#: lib/html_utility.php:1273 lib/html_utility.php:1277
+#: lib/html_utility.php:1299
 msgid "There was an internal error!"
 msgstr "Произошла внутренняя ошибка!"
 
-#: lib/html_utility.php:1275
+#: lib/html_utility.php:1300
 msgid "Backtrack limit was exhausted!"
 msgstr "Граница обратного хода была исчерпана!"
 
-#: lib/html_utility.php:1276
+#: lib/html_utility.php:1301
 msgid "Recursion limit was exhausted!"
 msgstr "Предел рецидива был исчерпан!"
 
-#: lib/html_utility.php:1277
+#: lib/html_utility.php:1302
 msgid "Bad UTF-8 error!"
 msgstr "Плохая ошибка UTF-8!"
 
-#: lib/html_utility.php:1278
+#: lib/html_utility.php:1303
 msgid "Bad UTF-8 offset error!"
 msgstr "Плохая ошибка смещения UTF-8!"
 
-#: lib/html_utility.php:1329
+#: lib/html_utility.php:1344
 msgid "Down (Thold)"
 msgstr "Скачать"
 
@@ -15839,66 +15840,66 @@ msgstr "Введен неверный пароль. Авторизация не 
 msgid "Unexpected error %s (Ldap Error: %s) on Server (%s)"
 msgstr "Неожиданная ошибка %s (ошибка Ldap: %s) на сервере (%s)"
 
-#: lib/ping.php:116
+#: lib/ping.php:130
 msgid "ICMP Ping timed out"
 msgstr "ICMP Ping истек по времени"
 
-#: lib/ping.php:201 lib/ping.php:219
+#: lib/ping.php:215 lib/ping.php:233
 #, php-format
 msgid "ICMP Ping Success (%s ms)"
 msgstr "Успешный эхо-запрос ICMP (%s мс)"
 
-#: lib/ping.php:206 lib/ping.php:224
+#: lib/ping.php:220 lib/ping.php:238
 msgid "ICMP ping Timed out"
 msgstr "ICMP ping Время истекло"
 
-#: lib/ping.php:231 lib/ping.php:458 lib/ping.php:598
+#: lib/ping.php:245 lib/ping.php:486 lib/ping.php:627
 msgid "Destination address not specified"
 msgstr "Адрес назначения не указан"
 
-#: lib/ping.php:336 lib/ping.php:473
+#: lib/ping.php:364 lib/ping.php:502
 msgid "default"
 msgstr "по умолчанию"
 
-#: lib/ping.php:364 lib/ping.php:373 lib/ping.php:501 lib/ping.php:510
+#: lib/ping.php:392 lib/ping.php:401 lib/ping.php:530 lib/ping.php:539
 msgid "Please upgrade to PHP 5.5.4+ for IPv6 support!"
 msgstr "Пожалуйста, обновите PHP до версии 5.5.4+ для поддержки IPv6!"
 
-#: lib/ping.php:396
+#: lib/ping.php:424
 #, php-format
 msgid "UDP ping error: %s"
 msgstr "Ошибка пинга UDP: %s"
 
-#: lib/ping.php:436
+#: lib/ping.php:464
 #, php-format
 msgid "UDP Ping Success (%s ms)"
 msgstr "UDP Ping Успех (%s мс)"
 
-#: lib/ping.php:536
+#: lib/ping.php:565
 #, fuzzy, php-format
 msgid "TCP Ping Success Connection Refused (%s ms)"
 msgstr "Успех TCP Ping (%s мс)"
 
-#: lib/ping.php:539
+#: lib/ping.php:568
 #, fuzzy, php-format
 msgid "TCP Ping Failed: socket_connect(), reason: %s"
 msgstr "TCP ping: socket_connect(), причина: %s"
 
-#: lib/ping.php:562
+#: lib/ping.php:591
 #, fuzzy, php-format
 msgid "TCP Ping Failed: socket_select() failed, reason: %s"
 msgstr "TCP ping: socket_select() не удалось, причина: %s"
 
-#: lib/ping.php:577
+#: lib/ping.php:606
 #, php-format
 msgid "TCP Ping Success (%s ms)"
 msgstr "Успех TCP Ping (%s мс)"
 
-#: lib/ping.php:587
+#: lib/ping.php:616
 msgid "TCP ping timed out"
 msgstr "TCP ping истек по времени"
 
-#: lib/ping.php:614
+#: lib/ping.php:644
 msgid "Ping not performed due to setting."
 msgstr "Пинг не выполняется из-за настройки."
 

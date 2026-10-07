@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-06 17:25-0700\n"
+"POT-Creation-Date: 2026-10-06 17:32-0700\n"
 "PO-Revision-Date: 2024-05-25 11:07-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -1060,14 +1060,14 @@ msgstr "حذف الجهاز (الأجهزة)"
 #: automation_devices.php:39 automation_devices.php:294
 #: automation_devices.php:406 automation_devices.php:417
 #: automation_devices.php:679 automation_devices.php:680
-#: lib/api_automation.php:31 lib/html_utility.php:1335 pollers.php:32
+#: lib/api_automation.php:31 lib/html_utility.php:1350 pollers.php:32
 msgid "Down"
 msgstr "المرض"
 
 #: automation_devices.php:40 automation_devices.php:294
 #: automation_devices.php:408 automation_devices.php:419
 #: automation_devices.php:679 automation_devices.php:680
-#: lib/api_automation.php:30 lib/html_utility.php:1341
+#: lib/api_automation.php:30 lib/html_utility.php:1356
 msgid "Up"
 msgstr "أعلى"
 
@@ -1390,7 +1390,7 @@ msgstr "مفعل"
 #: include/global_settings.php:1687 include/global_settings.php:1701
 #: include/global_settings.php:1791 include/global_settings.php:2555
 #: lib/api_automation.php:28 lib/html.php:2844 lib/html_reports.php:2037
-#: lib/html_reports.php:2188 lib/html_utility.php:1325 managers.php:241
+#: lib/html_reports.php:2188 lib/html_utility.php:1340 managers.php:241
 #: managers.php:612 pollers.php:33 user_admin.php:936 user_domains.php:397
 #: user_group_admin.php:756 utilities.php:2147 utilities.php:2699
 #: utilities.php:3008
@@ -2520,7 +2520,7 @@ msgid "No Tree Rules Found"
 msgstr "لم يتم العثور على قواعد شجرة"
 
 #: cactid.php:27 help.php:54 lib/functions.php:6706 lib/functions.php:6776
-#: lib/functions.php:6872 lib/functions.php:7526 poller.php:417 poller.php:584
+#: lib/functions.php:6872 lib/functions.php:7533 poller.php:417 poller.php:584
 #: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
 #: poller_automation.php:37 poller_boost.php:387
 #, fuzzy
@@ -4653,7 +4653,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "لم يعمل Kadupul Poller بعد."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8229 permission_denied.php:29 permission_denied.php:36
+#: lib/functions.php:8236 permission_denied.php:29 permission_denied.php:36
 msgid "Permission Denied"
 msgstr "تم رفض الإذن"
 
@@ -5594,11 +5594,11 @@ msgstr "FATAL: يجب تسجيل الدخول للوصول إلى هذه الم�
 msgid "Login Again"
 msgstr "تسجيل الدخول مرة أخرى"
 
-#: include/auth.php:317 lib/functions.php:8230 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8237 permission_denied.php:38
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "إذا كنت تشعر أن هذا خطأ. يرجى الاتصال بمدير Kadupul."
 
-#: include/auth.php:317 lib/functions.php:8230 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8237 permission_denied.php:38
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "لا يسمح لك بالوصول إلى هذا القسم من Kadupul."
 
@@ -12206,7 +12206,7 @@ msgstr "جار التهيئة"
 msgid "Please wait while the installation system for Kadupul Version %s initializes. You must have JavaScript enabled for this to work."
 msgstr "يرجى الانتظار حتى تتم تهيئة نظام التثبيت لإصدار Kadupul %s. يجب تمكين جافا سكريبت حتى يعمل هذا."
 
-#: install/install.php:101 lib/html_utility.php:1344 lib/installer.php:2095
+#: install/install.php:101 lib/html_utility.php:1359 lib/installer.php:2095
 #: lib/installer.php:4134
 msgid "Error"
 msgstr "خطأ"
@@ -12279,13 +12279,13 @@ msgstr "تجاوز هذه القيمة"
 msgid "Not Up"
 msgstr "لا يصل"
 
-#: lib/api_automation.php:32 lib/html.php:65 lib/html_utility.php:1338
+#: lib/api_automation.php:32 lib/html.php:65 lib/html_utility.php:1353
 #: pollers.php:34
 msgid "Recovering"
 msgstr "يستردّ"
 
 #: lib/api_automation.php:33 lib/auth.php:3059 lib/clog_webapi.php:856
-#: lib/html_utility.php:1347 lib/import.php:342 lib/plugins.php:1499
+#: lib/html_utility.php:1362 lib/import.php:342 lib/plugins.php:1499
 #: lib/plugins.php:1500 lib/rrd.php:4194 lib/rrd.php:4206 lib/spikekill.php:301
 #: package_import.php:522 package_import.php:600 utilities.php:211
 #: utilities.php:212 utilities.php:2753
@@ -13444,7 +13444,7 @@ msgstr "الإصدار %s %s"
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7526
+#: lib/functions.php:7533
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "تحذير: مفتاح Kadupul تضمين ملف %s مفقود.  الرجاء تحديد موقع هذا الملف واستبداله"
@@ -14646,27 +14646,28 @@ msgstr "تقتصر تعبيرات Kadupul العادية على 50 حرفا فق
 msgid "Kadupul regular expressions can not includes the semi-color character."
 msgstr "لا يمكن أن تتضمن تعبيرات Kadupul العادية الحرف شبه اللوني."
 
-#: lib/html_utility.php:1274
+#: lib/html_utility.php:1273 lib/html_utility.php:1277
+#: lib/html_utility.php:1299
 msgid "There was an internal error!"
 msgstr "كان هناك خطأ داخلي!"
 
-#: lib/html_utility.php:1275
+#: lib/html_utility.php:1300
 msgid "Backtrack limit was exhausted!"
 msgstr "تم استنفاد حد التراجع!"
 
-#: lib/html_utility.php:1276
+#: lib/html_utility.php:1301
 msgid "Recursion limit was exhausted!"
 msgstr "تم استنفاد الحد من العودية!"
 
-#: lib/html_utility.php:1277
+#: lib/html_utility.php:1302
 msgid "Bad UTF-8 error!"
 msgstr "خطأ UTF-8 سيء!"
 
-#: lib/html_utility.php:1278
+#: lib/html_utility.php:1303
 msgid "Bad UTF-8 offset error!"
 msgstr "سوء UTF-8 خطأ إزاحة!"
 
-#: lib/html_utility.php:1329
+#: lib/html_utility.php:1344
 msgid "Down (Thold)"
 msgstr "أسفل (قال)"
 
@@ -15950,66 +15951,66 @@ msgstr "تم توفير كلمة مرور غير صالحة.  فشل تسجيل 
 msgid "Unexpected error %s (Ldap Error: %s) on Server (%s)"
 msgstr "خطأ غير متوقع %s (خطأ LDAP: %s) على الخادم (%s)"
 
-#: lib/ping.php:116
+#: lib/ping.php:130
 msgid "ICMP Ping timed out"
 msgstr "انتهت المهلة المحددة لـ ICMP"
 
-#: lib/ping.php:201 lib/ping.php:219
+#: lib/ping.php:215 lib/ping.php:233
 #, php-format
 msgid "ICMP Ping Success (%s ms)"
 msgstr "ICMP بينغ النجاح (%s مللي ثانية)"
 
-#: lib/ping.php:206 lib/ping.php:224
+#: lib/ping.php:220 lib/ping.php:238
 msgid "ICMP ping Timed out"
 msgstr "ICMP بينغ خرجت"
 
-#: lib/ping.php:231 lib/ping.php:458 lib/ping.php:598
+#: lib/ping.php:245 lib/ping.php:486 lib/ping.php:627
 msgid "Destination address not specified"
 msgstr "عنوان الوجهة غير محدد"
 
-#: lib/ping.php:336 lib/ping.php:473
+#: lib/ping.php:364 lib/ping.php:502
 msgid "default"
 msgstr "افتراضي"
 
-#: lib/ping.php:364 lib/ping.php:373 lib/ping.php:501 lib/ping.php:510
+#: lib/ping.php:392 lib/ping.php:401 lib/ping.php:530 lib/ping.php:539
 msgid "Please upgrade to PHP 5.5.4+ for IPv6 support!"
 msgstr "يرجى الترقية إلى PHP 5.5.4+ لدعم IPv6!"
 
-#: lib/ping.php:396
+#: lib/ping.php:424
 #, php-format
 msgid "UDP ping error: %s"
 msgstr "خطأ ping UDP: %s"
 
-#: lib/ping.php:436
+#: lib/ping.php:464
 #, php-format
 msgid "UDP Ping Success (%s ms)"
 msgstr "نجاح اختبار الاتصال UDP (%s مللي ثانية)"
 
-#: lib/ping.php:536
+#: lib/ping.php:565
 #, fuzzy, php-format
 msgid "TCP Ping Success Connection Refused (%s ms)"
 msgstr "نجاح اختبار الاتصال في برنامج التعاون الفني (%s مللي ثانية)"
 
-#: lib/ping.php:539
+#: lib/ping.php:568
 #, fuzzy, php-format
 msgid "TCP Ping Failed: socket_connect(), reason: %s"
 msgstr "اختبار الاتصال TCP: socket_connect () ، السبب: %s"
 
-#: lib/ping.php:562
+#: lib/ping.php:591
 #, fuzzy, php-format
 msgid "TCP Ping Failed: socket_select() failed, reason: %s"
 msgstr "اختبار اتصال TCP: socket_select() فشل ، السبب: %s"
 
-#: lib/ping.php:577
+#: lib/ping.php:606
 #, php-format
 msgid "TCP Ping Success (%s ms)"
 msgstr "نجاح اختبار الاتصال في برنامج التعاون الفني (%s مللي ثانية)"
 
-#: lib/ping.php:587
+#: lib/ping.php:616
 msgid "TCP ping timed out"
 msgstr "انتهت مهلة TCP ping"
 
-#: lib/ping.php:614
+#: lib/ping.php:644
 msgid "Ping not performed due to setting."
 msgstr "لم يتم تنفيذ Ping بسبب الإعداد."
 

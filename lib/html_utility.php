@@ -1235,7 +1235,7 @@ function cacti_build_https_redirect_url(string $server_name, string $request_uri
  *
  * @return bool|string Returns true if the regular expression is valid, otherwise returns an error message string.
  */
-function validate_is_regex($regex)
+function validate_is_regex($regex): bool|string
 {
     if ($regex == '') {
         return true;
@@ -1254,21 +1254,46 @@ function validate_is_regex($regex)
         return __('Kadupul regular expressions can not includes the semi-color character.');
     }
 
-    restore_error_handler();
-
-    $track_errors = ini_get('track_errors');
-    ini_set('track_errors', 1);
-
-    if (@preg_match("'" . $regex . "'", NULL) !== false) {
-        ini_set('track_errors', $track_errors);
+    $warning = null;
+    $previous_handler = null;
+    $previous_handler = set_error_handler(static function ($severity, $message, $file, $line) use (&$warning, &$previous_handler) {
+        if ($file === __FILE__ && str_starts_with($message, 'preg_match():')) {
+            $warning = trim(substr($message, strlen('preg_match():')));
+            return true;
+        }
+        return is_callable($previous_handler) ? $previous_handler($severity, $message, $file, $line) : false;
+    });
+    $backtrack_limit = false;
+    $recursion_limit = false;
+    try {
+        // Supported PCRE versions let later pattern directives replace earlier
+        // ones. Caller limits cannot be raised by a supplied pattern.
+        $backtrack_limit = ini_set('pcre.backtrack_limit', (string) min(10000, (int) ini_get('pcre.backtrack_limit')));
+        if ($backtrack_limit === false) {
+            return __('There was an internal error!');
+        }
+        $recursion_limit = ini_set('pcre.recursion_limit', (string) min(100, (int) ini_get('pcre.recursion_limit')));
+        if ($recursion_limit === false) {
+            return __('There was an internal error!');
+        }
+        $result = @preg_match("'(*NO_JIT)(*LIMIT_MATCH=10000)(*LIMIT_DEPTH=100)(*LIMIT_HEAP=1024)" . $regex . "'", '');
+        $error = preg_last_error();
+        $error_message = preg_last_error_msg();
+    } finally {
+        if ($backtrack_limit !== false) {
+            ini_set('pcre.backtrack_limit', $backtrack_limit);
+        }
+        if ($recursion_limit !== false) {
+            ini_set('pcre.recursion_limit', $recursion_limit);
+        }
+        restore_error_handler();
+    }
+    if ($result !== false) {
         return true;
     }
-
-    $last_error = error_get_last();
-
-    $php_error = trim(str_replace('preg_match():', '', $last_error['message']));
-
-    ini_set('track_errors', $track_errors);
+    if ($warning !== null) {
+        return $warning;
+    }
 
     $errors = array(
         PREG_INTERNAL_ERROR         => __('There was an internal error!'),
@@ -1278,17 +1303,7 @@ function validate_is_regex($regex)
         PREG_BAD_UTF8_OFFSET_ERROR  => __('Bad UTF-8 offset error!'),
     );
 
-    $error = preg_last_error();
-
-    if (!defined('IN_CACTI_INSTALL')) {
-        set_error_handler('CactiErrorHandler');
-    }
-
-    if (empty($error)) {
-        return $php_error;
-    } else {
-        return $errors[$error];
-    }
+    return $errors[$error] ?? $error_message;
 }
 
 /* load_current_session_value - finds the correct value of a variable that is being
