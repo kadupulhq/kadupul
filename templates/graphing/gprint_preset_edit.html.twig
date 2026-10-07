@@ -1,0 +1,21 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% block title %}{{ (preset ? 'Edit GPRINT Preset' : 'Add GPRINT Preset')|trans({}, 'gprint') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+    <p><a href="{{ path('gprint_preset_list', filters) }}">{{ 'Back to GPRINT Presets'|trans({}, 'gprint') }}</a></p>
+    <h1>{{ (preset ? 'Edit GPRINT Preset' : 'Add GPRINT Preset')|trans({}, 'gprint') }}</h1>
+    {% if saved %}<output>{{ 'GPRINT Preset saved.'|trans({}, 'gprint') }}</output>{% endif %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.gprint_text) }}
+        {{ form_widget(form.revision) }}
+        <button type="submit">{{ 'Save GPRINT Preset'|trans({}, 'gprint') }}</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

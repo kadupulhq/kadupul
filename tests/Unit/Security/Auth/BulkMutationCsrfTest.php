@@ -71,8 +71,9 @@ PHP;
     }
 }
 
-// sites.php, host.php, links.php, color.php and vdef.php use Symfony; their
-// framework and HTTP tests cover POST/CSRF rejection and GET navigation.
+// sites.php, host.php, links.php, color.php, gprint_presets.php and vdef.php
+// use Symfony; their framework and HTTP tests cover POST/CSRF rejection and
+// GET navigation.
 test('bulk controllers reject unprotected confirmation requests before dispatch', function ($controller, $method, $token, $action, $status) {
     expect(runBulkMutationRequest($this, $controller, $method, $token, $action))->toBe('STATUS:' . $status);
 })->with(array(
@@ -80,7 +81,7 @@ test('bulk controllers reject unprotected confirmation requests before dispatch'
     'automation_graph_rules.php', 'automation_networks.php', 'automation_snmp.php',
     'automation_templates.php', 'automation_tree_rules.php', 'cdef.php',
     'color_templates.php', 'data_debug.php', 'data_queries.php',
-    'data_source_profiles.php', 'data_sources.php', 'data_templates.php', 'gprint_presets.php',
+    'data_source_profiles.php', 'data_sources.php', 'data_templates.php',
     'graphs.php', 'host_templates.php', 'managers.php',
     'pollers.php', 'tree.php', 'user_domains.php',
 ))->with(array(

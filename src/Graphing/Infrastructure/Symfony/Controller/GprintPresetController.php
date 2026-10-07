@@ -1,0 +1,71 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+namespace Kadupul\Graphing\Infrastructure\Symfony\Controller;
+
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
+use Kadupul\Platform\Contract\LegacyConfiguration;
+use Kadupul\Graphing\Application\Port\GprintPresetStore;
+use Kadupul\Graphing\Application\Port\GprintPresetPreferences;
+use Kadupul\Graphing\Application\Port\GprintPresetAccess;
+use Kadupul\Graphing\Application\Query\GprintPresetAccessDenied;
+use Kadupul\Graphing\Domain\GprintPresetFilters;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
+
+final class GprintPresetController
+{
+    #[Route('/graphing/gprint-presets', name: 'gprint_preset_list', methods: ['GET', 'HEAD'])]
+    public function __invoke(Request $request, ConsoleAccess $console, GprintPresetAccess $access, GprintPresetStore $store, GprintPresetPreferences $preferences, LegacyConfiguration $configuration, Environment $twig, TranslatorInterface $translator): Response
+    {
+        $headers = ['Cache-Control' => 'private, no-store'];
+        $actor = $console->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'gprint'), 401, ['Cache-Control' => 'private, no-store']);
+        }
+        try {
+            $access->authorize();
+            $query = $request->query->all();
+            $saved = $query['saved'] ?? null;
+            $deleted = $query['deleted'] ?? null;
+            $reset = $query['reset'] ?? null;
+            unset($query['saved'], $query['deleted']);
+            unset($query['reset']);
+            if (($saved !== null && $saved !== '1') || ($deleted !== null && $deleted !== '1') || ($reset !== null && $reset !== '1')) {
+                throw new \InvalidArgumentException('Invalid GPRINT preset filters.');
+            }
+            if ($query === [] && $reset !== '1') {
+                $query = $preferences->load() ?? [];
+            }
+            $filters = GprintPresetFilters::fromQuery($query, $store->defaultRows(), $store->defaultHasGraphs());
+            if (($configuration->values()['collector_id'] ?? null) === 1
+                && ($request->query->has('reset') || array_intersect(array_keys($request->query->all()), GprintPresetFilters::KEYS) !== [])) {
+                $preferences->save($filters->query());
+            }
+            $page = $store->list($filters);
+        } catch (GprintPresetAccessDenied $error) {
+            return new Response($translator->trans('Access denied.', [], 'gprint'), $error->unauthenticated ? 401 : 403, $headers);
+        } catch (\InvalidArgumentException) {
+            return new Response($translator->trans('Invalid GPRINT preset filters.', [], 'gprint'), 400, $headers);
+        } catch (\Throwable) {
+            return new Response($translator->trans('Unable to load GPRINT presets. Reload before retrying.', [], 'gprint'), 502, $headers);
+        }
+        $parameters = $filters->query();
+        return new Response($request->isMethod('HEAD') ? '' : $twig->render('graphing/gprint_presets.html.twig', [
+            'page' => $page,
+            'filters' => $parameters,
+            'defaultRows' => $store->defaultRows(),
+            'saved' => $saved === '1',
+            'deleted' => $deleted === '1',
+        ]), 200, $headers);
+    }
+}

@@ -1582,6 +1582,24 @@ The old `vdef.php` URL redirects safe GET navigation to the Symfony routes and
 rejects posted actions; legacy procedural VDEF functions remain available to
 graph rendering.
 
+### GPRINT preset administration
+
+The GPRINT preset list, editor and delete confirmation use Symfony routes under
+`/graphing/gprint-presets`, Forms and Twig. `gprint_presets.php` forwards to the
+legacy route, which redirects safe GET navigation and refuses posted forms.
+A request without filters keeps the user's saved list filters, and `clear=1`
+resets them. Access and writes need console access and realm 5, rechecked inside
+the write transaction, as for Colors. Names and format text keep the legacy
+50-character limit and are stored as entered. Edits and deletes carry a revision
+and refuse stale forms. A selection holds at most 100 presets.
+
+The legacy page only disabled the checkbox of a preset in use; the server now
+refuses to delete a preset that any graph or graph template item references.
+That check locks the referencing rows, but there is no native foreign key or
+trigger for `graph_templates_item.gprint_id`, so an item inserted by another
+writer after the check commits can still reference a deleted preset. The CDEF
+reference contract does not cover GPRINT.
+
 ### Template synchronization discovery boundary
 
 Bulk template synchronization first validates and commits the primary template

@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Render GPRINT presets through Symfony and Twig in the console layout. Edits and deletes are revision-checked, and deleting a preset still used by a graph or graph template is now refused on the server. A legacy menu visit keeps the saved list filters.
+
 - Render converted Twig pages in the console layout with the active theme and a realm-filtered console menu, and share list macros across the palette and VDEF pages.
 
 - Remove the obsolete Snyk dependency-path ignore without adding replacement exceptions, and clarify that Dependabot-triggered pushes also skip secret-dependent Sonar analysis.
