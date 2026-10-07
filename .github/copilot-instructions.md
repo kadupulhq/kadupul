@@ -63,7 +63,7 @@ findings, request re-review, and verify latest-head CI before an authorized merg
   - `tests/tools/check_php_style.sh` checks changed PHP files that were already formatted at the merge base, new files, and whitespace-only conversions; CI runs the same script. Do not flag an unconverted tab-indented file that a small change edits.
   - `lts/1.2` keeps upstream Cacti formatting (tabs, same-line function braces) so upstream fixes cherry-pick cleanly. Do not reformat files there.
   - Start each file with SPDX tags, not the old GPL box. Files inherited from Cacti keep `SPDX-FileCopyrightText: <years> The Cacti Group` with its existing years and `SPDX-License-Identifier: GPL-2.0-or-later`; add `SPDX-FileCopyrightText: 2026 The Kadupul project and contributors` when you make a substantive change. Files Kadupul creates carry only the Kadupul line and `GPL-3.0-or-later`.
-  - Use snake_case functions and procedural structure consistent with the codebase; avoid introducing namespaces unless integrating vendor code.
+  - Use snake_case functions and procedural structure consistent with the codebase; retain legacy structure in legacy files; use the existing namespaces and services in Symfony code.
   - Maintain the PHP >=8.4 requirement in `composer.json`; the CI validates PHP 8.4 on main.
   - Don’t change public function signatures in `lib/api_*.php` or widely used helpers without auditing usages.
   - For dependencies, prefer Composer-managed libs under `include/vendor` and keep versions pinned by `composer.lock`.
@@ -72,3 +72,12 @@ findings, request re-review, and verify latest-head CI before an authorized merg
 - Bootstrap/config: `include/global.php`, `include/config.php.dist`.
 - Core libs: `lib/database.php`, `lib/functions.php`, `lib/poller.php`, `lib/template.php`, `lib/plugins.php`.
 - Exemplars: `data_input.php` (full CRUD page), `host_templates.php` (AJAX + CSRF + validation), `cactid.php` (daemon loop), `cli/install_cacti.php` (installer flow).
+
+## Main migration review
+
+Read [AGENTS.md](../AGENTS.md) and the repository coding guide for current-main
+architecture and commands. Use the versions pinned by `mise.toml`. Review both
+Symfony services and legacy adapters; protect session/resource authorization,
+RRD/database integrity and remote-poller scope. Golden updates need substantive
+review, not automatic acceptance. Live installer/poller examples above require
+explicit disposable fixtures or deployment authorization. Preserve LTS separately.

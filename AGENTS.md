@@ -36,3 +36,28 @@ including feedback from people, Copilot, Sonar, and other automated checks.
   and quality gates pass on the latest head. Do not bypass protections or
   self-approve. Report pending reviews, failed checks, and remaining findings
   honestly.
+
+## Current main architecture and verification
+
+Main combines Symfony 7.4 services in `src/`, routes/configuration in `config/`,
+and browser entry points in `public/` with legacy PHP web, poller and CLI
+contracts. Preserve adapter/compatibility boundaries during migration; a modern
+service's presence does not authorize deleting its legacy counterpart.
+`mise.toml` pins PHP, Node and Python. Never merge Cacti upstream wholesale into
+main; inspect/cherry-pick only relevant compatible changes. LTS is a separate
+maintenance boundary and is unchanged unless the task names it.
+
+Run `mise exec -- composer install` for locked PHP dependencies,
+`mise exec -- composer test` for the root Symfony test suite, and
+`mise exec -- npm ci`, `mise exec -- npm test`, `mise exec -- npm run build`
+for managed frontend assets. Install/test operations can rebuild generated
+assets; do not stage dependency trees or incidental output. Read `Makefile`
+before behavioral tests: `mise exec -- make test-harness-selftest` tests the
+harness; `make test-characterization` needs disposable Docker/database fixtures.
+Review golden changes explicitly rather than regenerating them to hide drift.
+
+Preserve session/resource authorization, remote-poller scope, database/RRD
+integrity, backups and TLS. Never run installers, migrations, pollers or restores
+against production during routine checks. Local source scans and generated
+framework/configuration assets do not prove runtime acceptance. Keep existing
+review-thread, DCO, formatting-migration and required-check rules intact.
