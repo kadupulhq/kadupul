@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -21,11 +23,11 @@ final class DeviceMaintenancePresentationTest extends TestCase
 {
     public static function saveOutcomes(): array
     {
-        return [[null, 200], [true, 401], [false, 403], [null, 200, true]];
+        return [[null, 200], [true, 401], [false, 403], [null, 200, true], [null, 200, false, true]];
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('saveOutcomes')]
-    public function testFrenchPresentationEscapesNamesAndPreservesAssignmentValues(?bool $unauthenticated, int $expectedStatus, bool $missingAfterSave = false): void
+    public function testFrenchPresentationEscapesNamesAndPreservesAssignmentValues(?bool $unauthenticated, int $expectedStatus, bool $missingAfterSave = false, bool $invalidAfterSave = false): void
     {
         $kernel = new Kernel('test', true);
         try {
@@ -46,7 +48,10 @@ final class DeviceMaintenancePresentationTest extends TestCase
             $device = new DeviceMaintenanceState(new \Kadupul\Inventory\Domain\DeviceState(7, '<router>', 'router.invalid', true, 0, 1, 0), [2 => '<Query>', 3 => '<Query>'], [], false);
             $port = $this->createMock(DeviceMaintenance::class);
             $saved = false;
-            $port->method('findVisible')->willReturnCallback(static function () use (&$saved, $missingAfterSave, $device) {
+            $port->method('findVisible')->willReturnCallback(static function () use (&$saved, $missingAfterSave, $invalidAfterSave, $device) {
+                if ($saved && $invalidAfterSave) {
+                    throw new \InvalidArgumentException('Refresh validation failed.');
+                }
                 return $saved && $missingAfterSave ? null : $device;
             });
             $save = $port->expects(self::once())->method('execute')->with(42, 7, self::callback(fn($request) => $request->operation === 'connectivity'), $device->revision());
@@ -83,6 +88,9 @@ final class DeviceMaintenancePresentationTest extends TestCase
             $request->headers->set('Origin', 'http://localhost');
             $response = $kernel->handle($request);
             self::assertSame($expectedStatus, $response->getStatusCode());
+            if ($invalidAfterSave) {
+                self::assertStringContainsString('Refresh validation failed.', $response->getContent());
+            }
             if ($expectedStatus === 200) {
                 self::assertStringContainsString('&lt;unsafe&gt;', $response->getContent());
                 self::assertStringNotContainsString('<unsafe>', $response->getContent());

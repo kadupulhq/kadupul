@@ -7,6 +7,7 @@ follows [Semantic Versioning](VERSIONING.md).
 ## [Unreleased]
 
 - Add explicit native test-suite commands and a guide to their separate dependencies; name source-contract tests after their behavior and restore isolated input-string validation tests against the production validator.
+- Reuse the device form failure presenter for association, collector, maintenance, and automation actions while preserving operation-specific statuses, translated messages, and authorization responses.
 
 - Verify authenticated graph-tree confirmation and native automation placement handoffs, including rejected foreign/non-header parents and admitted destinations; require their measured behavior checks.
 - Restore database-client TLS option selection before atomic audit imports, reject unknown or failing client versions before audit writes, and preserve literal argument and owned SQL cleanup contracts.

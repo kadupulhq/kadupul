@@ -58,8 +58,8 @@ final class DeviceRouteNativeTest extends PHPUnit\Framework\TestCase
     {
         $state = DeviceRouteNativeHarness::run(['kind' => 'destinations'], $this->getTestResultObject()->getCodeCoverage());
         self::assertSame(0, $state['exit']);
-        self::assertSame(124, $state['tests']);
-        self::assertSame(1198, $state['assertions']);
+        self::assertSame(137, $state['tests']);
+        self::assertSame(1388, $state['assertions']);
         self::assertDoesNotMatchRegularExpression('/PHP (?:Warning|Fatal|Notice)/', $state['stderr']);
     }
 }

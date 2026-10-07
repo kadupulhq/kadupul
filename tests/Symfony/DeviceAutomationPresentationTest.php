@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -19,7 +21,21 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class DeviceAutomationPresentationTest extends TestCase
 {
-    public function testFrenchPresentationEscapesNamesAndPreservesAssignmentValues(): void
+    public static function writeOutcomes(): array
+    {
+        return [
+            'success' => [null, 303, null],
+            'unauthenticated write' => [new \Kadupul\Inventory\Application\Query\InventoryAccessDenied(true), 401, null],
+            'unauthorized write' => [new \Kadupul\Inventory\Application\Query\InventoryAccessDenied(false), 403, null],
+            'missing selection' => [new \Kadupul\Inventory\Application\Command\DevicesNotFound(), 404, null],
+            'stale selection' => [new \Kadupul\Inventory\Domain\DeviceEditConflict('Stale revision'), 409, 'Stale revision'],
+            'invalid operation' => [new \InvalidArgumentException('Invalid operation'), 422, 'Invalid operation'],
+            'uncertain worker' => [new \RuntimeException('private worker diagnostic'), 502, 'Le résultat de l’opération est incertain.'],
+        ];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('writeOutcomes')]
+    public function testFrenchPresentationEscapesNamesAndPreservesAssignmentValues(\RuntimeException|\InvalidArgumentException|null $failure, int $expectedStatus, ?string $expectedMessage): void
     {
         $kernel = new Kernel('test', true);
         try {
@@ -40,7 +56,10 @@ final class DeviceAutomationPresentationTest extends TestCase
             $device = new DeviceState(7, '<router>', 'router.invalid', true, 0, 1, 0);
             $port = $this->createMockForIntersectionOfInterfaces([\Kadupul\Inventory\Application\Port\DeviceAutomation::class, DeviceStates::class, \Kadupul\Inventory\Application\Port\DeviceSnmpSettings::class, \Kadupul\Inventory\Application\Port\DeviceStatistics::class, \Kadupul\Inventory\Application\Port\DeviceTemplateSynchronization::class, \Kadupul\Inventory\Application\Port\DeviceOptions::class]);
             $port->method('findVisible')->willReturn([$device]);
-            $port->expects(self::once())->method('applyRules')->with(42, self::callback(fn($selection) => $selection->revisions === [7 => $device->revision()]));
+            $save = $port->expects(self::once())->method('applyRules')->with(42, self::callback(fn($selection) => $selection->revisions === [7 => $device->revision()]));
+            if ($failure !== null) {
+                $save->willThrowException($failure);
+            }
             $container->set(\Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceStates::class, $port);
             $path = '/inventory/devices/automation?ids[]=7';
             $response = $kernel->handle(Request::create($path, 'GET', [], ['Cacti' => 'fixture']));
@@ -58,7 +77,13 @@ final class DeviceAutomationPresentationTest extends TestCase
             }
             $request = Request::create($path, 'POST', ['device_state' => $fields], ['Cacti' => 'fixture']);
             $request->headers->set('Origin', 'http://localhost');
-            self::assertSame(303, $kernel->handle($request)->getStatusCode());
+            $response = $kernel->handle($request);
+            self::assertSame($expectedStatus, $response->getStatusCode());
+            self::assertStringContainsString('no-store', $response->headers->get('Cache-Control'));
+            self::assertStringNotContainsString('private worker diagnostic', $response->getContent());
+            if ($expectedMessage !== null) {
+                self::assertStringContainsString($expectedMessage, $response->getContent());
+            }
         } finally {
             $kernel->shutdown();
         }

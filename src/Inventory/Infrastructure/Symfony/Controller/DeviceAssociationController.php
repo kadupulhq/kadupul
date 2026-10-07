@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -10,11 +12,10 @@ namespace Kadupul\Inventory\Infrastructure\Symfony\Controller;
 use Kadupul\Inventory\Application\Command\ChangeDeviceAssociation;
 use Kadupul\Inventory\Application\Query\PrepareDeviceAssociations;
 use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
-use Kadupul\Inventory\Domain\DeviceEditConflict;
+use Kadupul\Inventory\Infrastructure\Symfony\DeviceFormFailure;
 use Kadupul\Inventory\Infrastructure\Symfony\DeviceListParameters;
 use Kadupul\Inventory\Infrastructure\Symfony\Form\DeviceAssociationType;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -27,7 +28,7 @@ use Kadupul\Inventory\Infrastructure\Symfony\DeviceAssignmentForm;
 final class DeviceAssociationController
 {
     #[Route('/inventory/devices/{id}/associations/{kind}', name: 'inventory_device_associations', requirements: ['id' => '[1-9][0-9]{0,7}', 'kind' => 'graph|query'], methods: ['GET', 'HEAD', 'POST'])]
-    public function __invoke(int $id, string $kind, Request $request, PrepareDeviceAssociations $prepare, ChangeDeviceAssociation $assign, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, DeviceAssignmentForm $validation): Response
+    public function __invoke(int $id, string $kind, Request $request, PrepareDeviceAssociations $prepare, ChangeDeviceAssociation $assign, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, DeviceAssignmentForm $validation, DeviceFormFailure $failures): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         try {
@@ -59,16 +60,11 @@ final class DeviceAssociationController
                     }
                     $assign($id, new \Kadupul\Inventory\Domain\DeviceAssociationChange($kind, (string) $data['operation'], $data['target'], $data['reindex'] ?? 0), (string) $data['revision']);
                     return new RedirectResponse($urls->generate('inventory_device_associations', $editParameters + ['saved' => 1]), 303, $headers);
-                } catch (InventoryAccessDenied $error) {
-                    return new Response($translator->trans('Access denied.', [], 'inventory'), $error->unauthenticated ? 401 : 403, $headers);
-                } catch (DeviceEditConflict $error) {
-                    $status = 409;
-                    $form->addError(new FormError($translator->trans($error->getMessage(), [], 'inventory')));
-                } catch (\InvalidArgumentException $error) {
-                    $form->addError(new FormError($translator->trans($error->getMessage(), [], 'inventory')));
-                } catch (\RuntimeException $error) {
-                    $status = 502;
-                    $form->addError(new FormError($translator->trans('Save outcome is uncertain. Reload the device before retrying.', [], 'inventory')));
+                } catch (\RuntimeException|\InvalidArgumentException $error) {
+                    $status = $failures->apply($form, $error, $status);
+                    if ($status instanceof Response) {
+                        return $status;
+                    }
                 }
             }
         }
