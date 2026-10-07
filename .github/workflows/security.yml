@@ -96,6 +96,7 @@ jobs:
           retention-days: 14
 
   dependencies:
+    timeout-minutes: 15
     name: Dependency review
     # Needs the dependency graph, which is another Code Security feature on a
     # private repository. Turns itself on with the repository.

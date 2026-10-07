@@ -153,6 +153,49 @@ def classify(checkout: Path, event_name: str, event: dict, expected: str) -> Sco
         return Scope(True, "unavailable-history")
 
 
+def event_policy(event_name: str, event: dict, enable: str, all_prs: str,
+                 run_sonar: str, repository: str, actor: str, ref: str) -> Scope:
+    """Select analysis without secrets; GitHub also enforces trust at job level."""
+    flags = [enable.lower(), all_prs.lower(), run_sonar.lower()]
+    if any(value not in ("", "true", "false") for value in flags):
+        raise ValueError("Sonar switches must be true, false, or absent")
+    if flags[0] != "true":
+        return Scope(False, "disabled")
+    if not isinstance(event, dict) or not repository:
+        raise ValueError("Sonar event metadata is unavailable")
+    metadata = event.get("repository")
+    if not isinstance(metadata, dict) or metadata.get("full_name") != repository:
+        raise ValueError("Sonar repository identity is unavailable")
+    if actor == "dependabot[bot]":
+        return Scope(False, "untrusted-actor")
+    if event_name == "workflow_dispatch":
+        return Scope(flags[2] == "true", "manual-request" if flags[2] == "true" else "manual-declined")
+    if event_name == "push":
+        default = metadata.get("default_branch")
+        if not isinstance(default, str) or not default:
+            raise ValueError("Default branch identity is unavailable")
+        if event.get("ref") != ref:
+            raise ValueError("Push reference does not match the event")
+        return Scope(ref == "refs/heads/" + default,
+                     "default-branch" if ref == "refs/heads/" + default else "development-branch")
+    if event_name == "pull_request":
+        pr = event.get("pull_request")
+        if not isinstance(pr, dict) or not isinstance(pr.get("head"), dict):
+            raise ValueError("Pull request identity is unavailable")
+        head = pr["head"]
+        if not isinstance(head.get("repo"), dict) or head["repo"].get("full_name") != repository:
+            return Scope(False, "fork-or-unavailable-source")
+        branch = head.get("ref")
+        if not isinstance(branch, str) or not branch:
+            raise ValueError("Pull request source branch is unavailable")
+        if flags[1] == "true":
+            return Scope(True, "all-trusted-pull-requests")
+        # Match GitHub startsWith(), which compares strings without case.
+        selected = branch.lower().startswith(("sonar/", "release/"))
+        return Scope(selected, "analysis-branch" if selected else "development-branch")
+    return Scope(False, "unsupported-event")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--checkout", type=Path, required=True)
@@ -160,13 +203,30 @@ def main() -> int:
     parser.add_argument("--event-name", required=True)
     parser.add_argument("--expected-checkout", required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--enable-sonar", default=None)
+    parser.add_argument("--all-prs", default="")
+    parser.add_argument("--run-sonar", default="")
+    parser.add_argument("--repository", default="")
+    parser.add_argument("--actor", default="")
+    parser.add_argument("--ref", default="")
     args = parser.parse_args()
     try:
         if args.event_path.stat().st_size > 2 * 1024 * 1024:
             raise ValueError("Oversized event")
         event = json.loads(args.event_path.read_text(encoding="utf-8"))
-        scope = classify(args.checkout, args.event_name, event, args.expected_checkout)
-    except (OSError, UnicodeError, ValueError, RecursionError):
+        if args.enable_sonar is None:
+            # Preserve the explicit content-classification CLI for diagnostics.
+            scope = classify(args.checkout, args.event_name, event, args.expected_checkout)
+        else:
+            scope = event_policy(args.event_name, event, args.enable_sonar, args.all_prs,
+                                 args.run_sonar, args.repository, args.actor, args.ref)
+            if scope.full_analysis:
+                if git(args.checkout, "rev-parse", "HEAD").decode("ascii").strip() != args.expected_checkout:
+                    raise ValueError("Requested Sonar checkout does not match the event")
+    except (OSError, UnicodeError, ValueError, RecursionError, subprocess.SubprocessError):
+        if args.enable_sonar is not None:
+            print("::error::Sonar scheduling configuration or event verification failed.")
+            return 1
         scope = Scope(True, "unreadable-event")
     with args.output.open("a", encoding="utf-8") as output:
         output.write(f"full_analysis={'true' if scope.full_analysis else 'false'}\n")
@@ -174,8 +234,8 @@ def main() -> int:
     if scope.full_analysis:
         print(f"Full Sonar coverage and analysis required: {scope.reason}")
     else:
-        print(f"Sonar not applicable: {scope.changed_files} ordinary documentation changes; "
-              "no new analysis or quality-gate result is claimed")
+        print(f"Sonar intentionally skipped: {scope.reason}; "
+              "no analysis or passing quality-gate result is claimed")
     return 0
 
 
