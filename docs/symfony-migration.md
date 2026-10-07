@@ -376,11 +376,17 @@ Converted pages extend `templates/base.html.twig` and fill its `title` and
 The layout links `{{ asset(theme_stylesheet(), 'legacy') }}`. The
 `theme_stylesheet()` Twig function returns the signed-in user's theme
 `main.css`, falling back to the system theme and then `modern`. The `legacy`
-asset package in `framework.yaml` uses `CompiledAssetVersionStrategy`, which
+asset package, `LegacyAssetPackage`, uses `CompiledAssetVersionStrategy`, which
 returns the compiled `public/assets/` copy when the manifest lists it and the
 source path with an `?md5` query otherwise, as legacy pages do. Do not use
 `asset()` without a package for these files: AssetMapper's default package
 emits a digested `/assets/` URL even before a compile, and nothing serves it.
+
+URLs below the installation root, from the `legacy` package and from the
+`installation_path()` Twig function, start at the configured `url_path`, as
+legacy pages do. The request base path is not used because it depends on the
+front controller: `/public/index.php` would put every link under `/public/`.
+An invalid `url_path`, or one that cannot be read, falls back to `/`.
 
 `console_menu()` returns the console menu for accounts with console access.
 `LegacyConsoleMenu` mirrors both `$menu` branches in

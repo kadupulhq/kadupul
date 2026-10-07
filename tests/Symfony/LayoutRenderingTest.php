@@ -18,10 +18,11 @@ use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Contract\LegacyConfiguration;
 use Kadupul\Platform\Infrastructure\Asset\CompiledAssetManifest;
 use Kadupul\Platform\Infrastructure\Asset\CompiledAssetVersionStrategy;
+use Kadupul\Platform\Infrastructure\Asset\LegacyAssetPackage;
+use Kadupul\Platform\Infrastructure\Symfony\InstallationContext;
 use Kadupul\Platform\Infrastructure\Symfony\ThemeStylesheet;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Asset\Context\RequestStackContext;
-use Symfony\Component\Asset\PathPackage;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -29,9 +30,14 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 final class LayoutRenderingTest extends TestCase
 {
-    public function testConsolePageCarriesThemeMenuAndLegacyHooks(): void
+    /**
+     * The request base path is /kadupul under app.php but /kadupul/public under
+     * public/index.php; installation URLs must not follow it.
+     */
+    #[DataProvider('frontControllers')]
+    public function testConsolePageCarriesThemeMenuAndLegacyHooks(string $frontController): void
     {
-        $request = self::request('/inventory/devices/new');
+        $request = self::request('/inventory/devices/new', $frontController);
         $session = new Session(new MockArraySessionStorage());
         $session->getFlashBag()->add('notice', '<b>Saved</b>');
         $request->setSession($session);
@@ -70,6 +76,46 @@ final class LayoutRenderingTest extends TestCase
         self::assertSame(1, $xpath->query('//*[@id="navigation_right"]/main')->length);
     }
 
+    public static function frontControllers(): iterable
+    {
+        yield 'repository root' => ['app.php'];
+        yield 'public directory' => ['public/index.php'];
+    }
+
+    public static function urlPaths(): iterable
+    {
+        yield 'root' => ['/', '/host.php'];
+        yield 'sub-path' => ['/kadupul/', '/kadupul/host.php'];
+        yield 'no trailing slash' => ['/kadupul', '/kadupul/host.php'];
+        yield 'missing' => [null, '/host.php'];
+        yield 'relative' => ['kadupul/', '/host.php'];
+        yield 'protocol relative' => ['//evil.example/', '/host.php'];
+        yield 'absolute URL' => ['https://evil.example/', '/host.php'];
+        yield 'backslash' => ['/\\evil.example/', '/host.php'];
+        yield 'query' => ['/kadupul/?x=', '/host.php'];
+        yield 'control character' => ["/kadupul\n/", '/host.php'];
+        yield 'not a string' => [['/'], '/host.php'];
+    }
+
+    #[DataProvider('urlPaths')]
+    public function testInstallationPathsUseOnlyAValidConfiguredUrlPath(mixed $urlPath, string $expected): void
+    {
+        $values = $urlPath === null ? ['collector_id' => 1] : ['collector_id' => 1, 'url_path' => $urlPath];
+        foreach (self::frontControllers() as [$frontController]) {
+            self::assertSame($expected, self::context($values, $frontController)->path('host.php'));
+        }
+    }
+
+    public function testUnreadableConfigurationUsesTheRoot(): void
+    {
+        $configuration = self::createStub(LegacyConfiguration::class);
+        $configuration->method('values')->willThrowException(new \RuntimeException('Installation configuration is required.'));
+        $requests = new RequestStack();
+        $requests->push(self::request('/links', 'public/index.php'));
+
+        self::assertSame('/about.php', (new InstallationContext($configuration, $requests))->path('about.php'));
+    }
+
     public function testThemeFollowsUserThenSystemSettingAndInstalledDirectories(): void
     {
         $root = self::installation();
@@ -90,15 +136,14 @@ final class LayoutRenderingTest extends TestCase
      * asset-map:compile has run, and nothing serves that URL. The legacy
      * package keeps the documented compiled-or-?md5 contract.
      */
-    public function testLegacyAssetPackageUsesCompiledManifestThenUncompiledFallback(): void
+    #[DataProvider('frontControllers')]
+    public function testLegacyAssetPackageUsesCompiledManifestThenUncompiledFallback(string $frontController): void
     {
         $root = self::installation();
-        $requests = new RequestStack();
-        $requests->push(self::request('/graph-definitions/vdefs'));
-        $package = static fn(): PathPackage => new PathPackage('/', new CompiledAssetVersionStrategy(
+        $package = static fn(): LegacyAssetPackage => new LegacyAssetPackage(new CompiledAssetVersionStrategy(
             new CompiledAssetManifest($root . '/public/assets/manifest.json', 'public'),
             $root,
-        ), new RequestStackContext($requests));
+        ), self::context(['url_path' => '/kadupul/'], $frontController));
         try {
             self::assertSame('/kadupul/include/themes/dark/main.css?' . md5('body{}dark'), $package()->getUrl('include/themes/dark/main.css'));
             self::assertSame('/kadupul/include/themes/absent/main.css', $package()->getUrl('include/themes/absent/main.css'));
@@ -119,6 +164,7 @@ final class LayoutRenderingTest extends TestCase
         try {
             $kernel->boot();
             $container = $kernel->getContainer()->get('test.service_container');
+            $container->set(LegacyConfiguration::class, self::configuration(['collector_id' => 1, 'url_path' => '/kadupul/']));
             $container->get('request_stack')->push(self::request('/graph-definitions/vdefs'));
             if (is_file($kernel->getProjectDir() . '/public/assets/manifest.json')) {
                 self::markTestSkipped('This checkout has compiled assets.');
@@ -145,9 +191,7 @@ final class LayoutRenderingTest extends TestCase
             $container->set(ConsoleAccess::class, $session);
             $container->set(AuthenticatedAccess::class, $session);
             $container->set(DatabaseConnection::class, self::database($theme, 'modern'));
-            $configuration = self::createStub(LegacyConfiguration::class);
-            $configuration->method('values')->willReturn(['collector_id' => 1]);
-            $container->set(LegacyConfiguration::class, $configuration);
+            $container->set(LegacyConfiguration::class, self::configuration(['collector_id' => 1, 'url_path' => '/kadupul/']));
             $container->get('request_stack')->push($request);
             $html = $container->get('twig')->render('graph_definition/vdefs.html.twig', [
                 'rows' => [], 'total' => 0, 'page' => 1, 'pages' => 1, 'criteria' => new \Kadupul\GraphDefinition\Domain\VdefListCriteria(),
@@ -161,12 +205,34 @@ final class LayoutRenderingTest extends TestCase
         return new \DOMXPath($document);
     }
 
-    private static function request(string $route): Request
+    private static function request(string $route, string $frontController = 'app.php'): Request
     {
-        return Request::create('http://localhost/kadupul/app.php' . $route, 'GET', [], [], [], [
-            'SCRIPT_NAME' => '/kadupul/app.php',
-            'SCRIPT_FILENAME' => dirname(__DIR__, 2) . '/app.php',
+        return Request::create('http://localhost/kadupul/' . $frontController . $route, 'GET', [], [], [], [
+            'SCRIPT_NAME' => '/kadupul/' . $frontController,
+            'SCRIPT_FILENAME' => dirname(__DIR__, 2) . '/' . $frontController,
         ]);
+    }
+
+    /** @param array<string, mixed> $values */
+    private static function configuration(array $values): LegacyConfiguration
+    {
+        return new class ($values) implements LegacyConfiguration {
+            public function __construct(private array $values) {}
+
+            public function values(): array
+            {
+                return $this->values;
+            }
+        };
+    }
+
+    /** @param array<string, mixed> $values */
+    private static function context(array $values, string $frontController): InstallationContext
+    {
+        $requests = new RequestStack();
+        $requests->push(self::request('/links', $frontController));
+
+        return new InstallationContext(self::configuration($values), $requests);
     }
 
     /** The console actor and its realm grants come from one adapter, as in production. */

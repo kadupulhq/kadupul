@@ -11,7 +11,6 @@
         {% block javascripts %}{% endblock %}
     </head>
     <body>{% block page %}
-        {% set base = app.request ? app.request.basePath : '' %}
         {% set menu = console_menu() %}
         <div id="cactiPageHead" class="cactiPageHead" role="banner"><div id="tabs"></div></div>
         <div id="cactiContent" class="cactiContent">
@@ -23,15 +22,15 @@
                         <ul>
                         {% for item in section.items %}
                             {% set current = app.request and ('app.php' ~ app.request.pathInfo) == item.path %}
-                            {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- LegacyConsoleMenu::isAppPath() admits only relative script paths; Twig escapes the attribute. #}
-                            <li><a class="pic{{ current ? ' selected' }}" href="{{ base }}/{{ item.path }}"{% if current %} aria-current="page"{% endif %}>{{ item.label }}</a></li>
+                            {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- LegacyConsoleMenu::isAppPath() admits only relative script paths below the validated url_path; Twig escapes the attribute. #}
+                            <li><a class="pic{{ current ? ' selected' }}" href="{{ installation_path(item.path) }}"{% if current %} aria-current="page"{% endif %}>{{ item.label }}</a></li>
                         {% endfor %}
                         </ul>
                     </li>
                 {% endfor %}
                 </ul>
-                {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed script path below the request base path. #}
-                <a class="cactiLogo pic" href="{{ base }}/about.php" aria-label="{{ 'About Kadupul'|trans({}, 'menu') }}"></a>
+                {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed script path below the validated url_path. #}
+                <a class="cactiLogo pic" href="{{ installation_path('about.php') }}" aria-label="{{ 'About Kadupul'|trans({}, 'menu') }}"></a>
             </nav>
             {% endif %}
             <div id="navigation_right" class="cactiConsoleContentArea">
