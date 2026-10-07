@@ -7,6 +7,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: release-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
 jobs:
   offline-bundle:
     uses: ./.github/workflows/offline-bundle.yml # zizmor: ignore[self-repository] -- Pinned actionlint does not yet support $/ workflow calls.
@@ -27,6 +31,7 @@ jobs:
       php-version: '8.4'
 
   attach-offline-bundle:
+    timeout-minutes: 15
     needs: [release, offline-bundle]
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     permissions:
