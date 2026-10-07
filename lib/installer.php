@@ -132,6 +132,7 @@ class Installer implements JsonSerializable
         $this->setRuntime(isset($install_params['Runtime']) ? $install_params['Runtime'] : 'unknown');
 
         $step = read_config_option('install_step', true);
+        $storedStep = $step;
         log_install_high('step', 'Initial: ' . clean_up_lines(var_export($step, true)));
 
         if (empty($step)) {
@@ -181,7 +182,9 @@ class Installer implements JsonSerializable
         }
 
         log_install_high('step', 'After: ' . clean_up_lines(var_export($step, true)));
-        $this->setStep($step);
+        // Hydration must not overwrite a worker transition committed after this read.
+        // Defaults and derived transitions still publish through the existing setter.
+        $this->setStep($step, $step !== $storedStep);
 
         $this->iconClass = array(
             DB_STATUS_ERROR   => 'fa fa-thumbs-down',
@@ -1595,8 +1598,9 @@ class Installer implements JsonSerializable
 
     /* setStep() - sets the current step
      * @param_step - must be a valid value as defined by STEP_ constants */
-    private function setStep($param_step = -1)
+    private function setStep($param_step = -1, bool $persist = true)
     {
+        $requestedStep = $param_step;
         $step = Installer::STEP_WELCOME;
         if (empty($param_step)) {
             $param_step = 1;
@@ -1621,6 +1625,8 @@ class Installer implements JsonSerializable
         }
 
         $this->stepCurrent  = ($step == Installer::STEP_NONE ? Installer::STEP_WELCOME : $step);
+        // An invalid stored step still needs the original normalization write.
+        $persist = $persist || $this->stepCurrent != $requestedStep;
         $this->stepPrevious = Installer::STEP_NONE;
         $this->stepNext     = Installer::STEP_NONE;
         if ($step <= Installer::STEP_COMPLETE) {
@@ -1630,10 +1636,14 @@ class Installer implements JsonSerializable
             }
         }
 
-        set_install_config_option('install_step', $this->stepCurrent);
+        if ($persist) {
+            set_install_config_option('install_step', $this->stepCurrent);
+        }
         $this->updateButtons();
-        set_install_config_option('install_prev', $this->stepPrevious);
-        set_install_config_option('install_next', $this->stepNext);
+        if ($persist) {
+            set_install_config_option('install_prev', $this->stepPrevious);
+            set_install_config_option('install_next', $this->stepNext);
+        }
     }
 
     /* Some utility functions */
