@@ -46,3 +46,6 @@ public/assets/
 
 # Generated Symfony IDE reference.
 /config/reference.php
+
+# Local assistant state
+.omc
