@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Verify that the pinned Snyk dependency scan completes all five repository projects through its documented legacy testing path, while retaining the existing vulnerability policy.
+
 - Run an explicit Sonar scope check on every eligible update; skip expensive coverage only for verified ordinary documentation changes and retain full analysis for relevant or uncertain inputs.
 
 - Install the pinned Python test dependency in an isolated environment before Snyk scans all repository projects.
