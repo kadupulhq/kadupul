@@ -4,6 +4,45 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block title %}Kadupul{% endblock %}</title>
+        {% block stylesheets %}
+            {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- asset() resolves a fixed path below an installed theme directory. #}
+            <link href="{{ asset(theme_stylesheet(), 'legacy') }}" type="text/css" rel="stylesheet">
+        {% endblock %}
+        {% block javascripts %}{% endblock %}
     </head>
-    <body>{% block body %}{% endblock %}</body>
+    <body>{% block page %}
+        {% set base = app.request ? app.request.basePath : '' %}
+        {% set menu = console_menu() %}
+        <div id="cactiPageHead" class="cactiPageHead" role="banner"><div id="tabs"></div></div>
+        <div id="cactiContent" class="cactiContent">
+            {% if menu is not empty %}
+            <nav id="navigation" class="cactiConsoleNavigationArea" aria-label="{{ 'Console'|trans({}, 'menu') }}">
+                <ul class="menu">
+                {% for section in menu %}
+                    <li class="menuitem"><span class="menu_parent">{{ section.label }}</span>
+                        <ul>
+                        {% for item in section.items %}
+                            {% set current = app.request and ('app.php' ~ app.request.pathInfo) == item.path %}
+                            {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- LegacyConsoleMenu::isAppPath() admits only relative script paths; Twig escapes the attribute. #}
+                            <li><a class="pic{{ current ? ' selected' }}" href="{{ base }}/{{ item.path }}"{% if current %} aria-current="page"{% endif %}>{{ item.label }}</a></li>
+                        {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+                </ul>
+                {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed script path below the request base path. #}
+                <a class="cactiLogo pic" href="{{ base }}/about.php" aria-label="{{ 'About Kadupul'|trans({}, 'menu') }}"></a>
+            </nav>
+            {% endif %}
+            <div id="navigation_right" class="cactiConsoleContentArea">
+                {% set flashes = app.flashes %}
+                {% if flashes is not empty %}
+                <div class="flashMessages" role="status">
+                    {% for type, messages in flashes %}{% for message in messages %}<p class="flash-{{ type }}">{{ message }}</p>{% endfor %}{% endfor %}
+                </div>
+                {% endif %}
+                {% block body %}{% endblock %}
+            </div>
+        </div>
+    {% endblock %}</body>
 </html>

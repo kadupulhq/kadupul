@@ -10,6 +10,13 @@ framework:
     # Do not start a second Symfony session with a different cookie or payload.
     session: false
     form: true
+    # Theme and other include/ files keep the URLs legacy pages emit: the
+    # compiled public/assets/ copy when listed in the manifest, otherwise
+    # the source path with an ?md5 query (see CompiledAssetVersionStrategy).
+    assets:
+        packages:
+            legacy:
+                version_strategy: Kadupul\Platform\Infrastructure\Asset\CompiledAssetVersionStrategy
     csrf_protection:
         stateless_token_ids: ['data_input_method', 'data_input_field', 'data_input_action', 'inventory_device_edit', 'inventory_device_template', 'inventory_device_collector', 'inventory_device_state', 'inventory_device_remove', 'inventory_site_edit', 'inventory_site_create', 'inventory_device_create', 'inventory_site_action', 'navigation_link', 'navigation_link_action', 'palette_color_edit', 'palette_color_create', 'palette_color_delete', 'palette_color_import', 'graph_vdef_edit', 'graph_vdef_action', 'inventory_device_bulk_assignment', 'inventory_device_associations', 'inventory_device_maintenance', 'inventory_device_placement']
 
