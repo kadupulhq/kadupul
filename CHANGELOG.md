@@ -34,6 +34,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Authorize complete graph and data-source deletion scopes before reading dependent names or writing; retain safe confirmation choices and reject oversized dependency batches. Report collector or volatile-cache partial outcomes separately from local transaction cleanup.
 - Register graph-item choice sources in strict cookie and domain-authentication coverage evidence.
+- Inline dark graph hover helpers while preserving timer element snapshots and keyboard access. Prefer the native own-property API for icon lookups while retaining the older-browser fallback.
 
 - Bound legacy Boost writer lock acquisition to 60 attempts; report contention and retain queued samples instead of waiting indefinitely.
 - Correct Settings help for graph permission combinations, auto scale limits, and CSP nonce reporting and enforcement. Fixes #222, #230, and #265.
