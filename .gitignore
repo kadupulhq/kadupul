@@ -128,8 +128,6 @@ __pycache__/
 # stay out of commits, but nothing declared them and a global excludes rule had
 # been masking part of it. Assistant session directories are enforced by this
 # repository's own commit guard rather than named here.
-.omc/
-.worktrees/
 notepad.md
 
 # Symfony runtime state.
@@ -150,5 +148,6 @@ notepad.md
 # Generated Symfony IDE reference.
 /config/reference.php
 
-# Local assistant state; not project source
-/.omc/
+# Local assistant sessions and isolated worktrees
+.omc/
+.worktrees/
