@@ -238,7 +238,7 @@ jobs:
 
       - name: Dependency maintenance tests with coverage
         run: |
-          node --experimental-test-coverage --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=tests/vendor-sync.lcov tests/Unit/vendor-sync.test.mjs tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs tests/Unit/theme-scripts.test.mjs tests/Unit/selectmenu-scroll.test.mjs tests/Unit/permission-filter.test.mjs tests/Unit/browser-build.test.mjs tests/Unit/icon-classes.test.mjs tests/Unit/csrf-magic-origin.test.mjs
+          node --experimental-test-coverage --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=tests/vendor-sync.lcov tests/Unit/vendor-sync.test.mjs tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs tests/Unit/theme-scripts.test.mjs tests/Unit/selectmenu-scroll.test.mjs tests/Unit/permission-filter.test.mjs tests/Unit/browser-build.test.mjs tests/Unit/icon-classes.test.mjs tests/Unit/icon-registry.test.mjs tests/Unit/csrf-magic-origin.test.mjs
           test -s tests/vendor-sync.lcov
 
       - name: Native browser layout and theme coverage

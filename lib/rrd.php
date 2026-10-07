@@ -6,6 +6,8 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+require_once __DIR__ . '/graph_fonts.php';
+
 define('RRD_NL', " \\\n");
 define('MAX_FETCH_CACHE_SIZE', 5);
 
@@ -163,8 +165,9 @@ function __rrd_init($output_to_term = true, $acknowledged = false)
     global $config;
 
     /* set the rrdtool default font */
-    if (read_config_option('path_rrdtool_default_font')) {
-        putenv('RRD_DEFAULT_FONT=' . read_config_option('path_rrdtool_default_font'));
+    $font = rrdtool_default_font();
+    if (!empty($font)) {
+        putenv('RRD_DEFAULT_FONT=' . $font);
     }
 
     rrdtool_set_language();
@@ -378,21 +381,19 @@ function __rrd_proxy_init($logopt = 'WEBLOG')
     $rrdproxy = array($rrdp_socket, $rrdp_public_key);
 
     /* set the rrdtool default font */
-    $font = (string) read_config_option('path_rrdtool_default_font');
+    $font = rrdtool_default_font();
     if ($font !== '') {
-        // rrdproxy splits the value on blanks and keeps any quotes as part of it.
-        if (rrdtool_proxy_token_is_safe($font)) {
-            $set = rrdtool_execute('setenv RRD_DEFAULT_FONT ' . $font, false, RRDTOOL_OUTPUT_BOOLEAN, $rrdproxy, $logopt);
-            if ($set === null) {
-                cacti_log('CACTI2RRDP ERROR: The RRDtool Proxy Server did not answer during session setup.', false, $logopt, POLLER_VERBOSITY_LOW);
-                socket_close($rrdp_socket);
-                return false;
-            }
-            if ($set === false) {
-                cacti_log('CACTI2RRDP WARNING: The RRDtool Proxy Server refused the default font path.', false, $logopt, POLLER_VERBOSITY_LOW);
-            }
-        } else {
-            cacti_log('CACTI2RRDP WARNING: The RRDtool default font path contains a blank, a quote or a backslash and was not sent to the RRDtool Proxy Server.', false, $logopt, POLLER_VERBOSITY_LOW);
+        // RRDProxy setenv joins the rest of the line as the value. The font
+        // resolver validates this bounded Pango description before transport;
+        // the bare-token restriction for proxy file paths does not apply here.
+        $set = rrdtool_execute('setenv RRD_DEFAULT_FONT ' . $font, false, RRDTOOL_OUTPUT_BOOLEAN, $rrdproxy, $logopt);
+        if ($set === null) {
+            cacti_log('CACTI2RRDP ERROR: The RRDtool Proxy Server did not answer during session setup.', false, $logopt, POLLER_VERBOSITY_LOW);
+            socket_close($rrdp_socket);
+            return false;
+        }
+        if ($set === false) {
+            cacti_log('CACTI2RRDP WARNING: The RRDtool Proxy Server refused the default font description.', false, $logopt, POLLER_VERBOSITY_LOW);
         }
     }
 
@@ -2262,10 +2263,15 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
     }
 
     /* check the purge the boost poller output cache, and check for a live image file if caching is enabled */
-    $graph_data = boost_graph_cache_check($local_graph_id, $rra_id, $rrdtool_pipe, $graph_data_array, false);
+    $boost_cache_file = null;
+    $graph_data       = boost_graph_cache_check($local_graph_id, $rra_id, $rrdtool_pipe, $graph_data_array, false, $boost_cache_file);
     if ($graph_data !== false) {
         return $graph_data;
     }
+
+    /* the cache write uses the path the check above named; without one it keys the
+     * request as checked, before the window defaults below */
+    $boost_cache_request = $graph_data_array;
 
     if (empty($graph_data_array['graph_start'])) {
         $graph_data_array['graph_start'] = -86400;
@@ -3231,7 +3237,7 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
 
                 $output = rrdtool_execute("$graph $graph_opts$graph_defs$txt_graph_items", false, $output_flag, $rrdtool_pipe);
 
-                boost_graph_set_file($output, $local_graph_id, $rra_id);
+                boost_graph_set_file($output, $local_graph_id, $rra_id, $boost_cache_request, $boost_cache_file);
 
                 return $output;
             }
@@ -3452,21 +3458,16 @@ function rrdtool_function_theme_font_options(&$graph_data_array)
         }
     }
 
-    /* title fonts */
-    $graph_opts .= rrdtool_function_set_font('title', ((!empty($graph_data_array['graph_nolegend'])) ? $graph_data_array['graph_nolegend'] : ''), $themefonts);
-
-    /* axis fonts */
-    $graph_opts .= rrdtool_function_set_font('axis', '', $themefonts);
-
-    /* legend fonts */
-    $graph_opts .= rrdtool_function_set_font('legend', '', $themefonts);
-
-    /* unit fonts */
-    $graph_opts .= rrdtool_function_set_font('unit', '', $themefonts);
-
-    /* watermark fonts */
+    $elements = array('title', 'axis', 'legend', 'unit');
     if (isset($rrdversion) && cacti_version_compare($rrdversion, '1.3', '>')) {
-        $graph_opts .= rrdtool_function_set_font('watermark', '', $themefonts);
+        $elements[] = 'watermark';
+    }
+
+    $profile   = rrdtool_graph_font_profile(is_array($themefonts) ? $themefonts : array(), $elements);
+    $no_legend = !empty($graph_data_array['graph_nolegend']) ? $graph_data_array['graph_nolegend'] : '';
+
+    foreach ($elements as $element) {
+        $graph_opts .= rrdtool_graph_font_argument($profile, $element, $element == 'title' ? $no_legend : '');
     }
 
     return $graph_opts;
@@ -3479,41 +3480,102 @@ function rrdtool_set_font($type, $no_legend = '', $themefonts = array())
 
 function rrdtool_function_set_font($type, $no_legend, $themefonts)
 {
+    $profile = rrdtool_graph_font_profile(is_array($themefonts) ? $themefonts : array(), array((string) $type));
+
+    return rrdtool_graph_font_argument($profile, (string) $type, $no_legend);
+}
+
+/**
+ * rrdtool_theme_fonts - the $rrdfonts a theme's rrdtheme.php defines
+ *
+ * @param $theme - an installed theme name
+ *
+ * @return - the theme fonts, or an empty array when the theme sets none
+ */
+function rrdtool_theme_fonts($theme)
+{
     global $config;
 
-    if (read_config_option('font_method') == 0) {
+    $rrdtheme = $config['base_path'] . '/include/themes/' . $theme . '/rrdtheme.php';
+    if (!file_exists($rrdtheme) || !is_readable($rrdtheme)) {
+        return array();
+    }
+
+    $rrdfonts = array();
+    include($rrdtheme);
+
+    return is_array($rrdfonts) ? $rrdfonts : array();
+}
+
+/**
+ * rrdtool_graph_font_profile - the fonts a graph render uses
+ *
+ * Reads only the settings the resolver needs for $elements, so asking for one
+ * element does not look up the viewer's settings for the others.
+ *
+ * @param $themefonts - the theme's $rrdfonts
+ * @param $elements   - the graph elements to resolve
+ *
+ * @return - a \Kadupul\Graphing\Domain\Font\GraphFontProfile
+ */
+function rrdtool_graph_font_profile(array $themefonts, array $elements = array('title', 'axis', 'legend', 'unit', 'watermark')): \Kadupul\Graphing\Domain\Font\GraphFontProfile
+{
+    $resolver = graph_font_resolver();
+
+    $method = read_config_option('font_method') == 0 ? \Kadupul\Graphing\Domain\Font\GraphFontMethod::System : \Kadupul\Graphing\Domain\Font\GraphFontMethod::Theme;
+    $site   = array();
+    $viewer = null;
+
+    if ($method === \Kadupul\Graphing\Domain\Font\GraphFontMethod::System && $elements !== array()) {
         if (read_user_setting('custom_fonts') == 'on') {
-            $font = read_user_setting($type . '_font');
-            $size = read_user_setting($type . '_size');
+            $viewer = array();
+            foreach ($elements as $element) {
+                $viewer[$element] = array('font' => read_user_setting($element . '_font'), 'size' => read_user_setting($element . '_size'));
+            }
         } else {
-            $font = read_config_option($type . '_font');
-            $size = read_config_option($type . '_size');
+            foreach ($elements as $element) {
+                $site[$element] = array('font' => read_config_option($element . '_font'), 'size' => read_config_option($element . '_size'));
+            }
         }
-    } elseif (isset($themefonts[$type]['font']) && isset($themefonts[$type]['size'])) {
-        $font = $themefonts[$type]['font'];
-        $size = $themefonts[$type]['size'];
-    } else {
-        return;
     }
 
-    if ($font != '') {
-        /* verifying all possible pango font params is too complex to be tested here
-         * so we only escape the font
-         */
-        $font = rrdtool_pipe_quote($font);
+    return $resolver->resolve(array_values($elements), $method, $themefonts, $site, $viewer, read_config_option('path_rrdtool_default_font'));
+}
+
+/**
+ * rrdtool_default_font - the Default Font setting as RRDtool is given it
+ *
+ * @return - a Pango font description, or '' to leave RRDtool its own default
+ */
+function rrdtool_default_font()
+{
+    return graph_font_resolver()->family(read_config_option('path_rrdtool_default_font'));
+}
+
+/**
+ * rrdtool_graph_font_argument - the --font argument for one element of a profile
+ *
+ * @param $profile   - the render's font profile
+ * @param $type      - the graph element
+ * @param $no_legend - non-empty for a thumbnail, which draws a smaller title
+ *
+ * @return - the argument, or null when the element has no font
+ */
+function rrdtool_graph_font_argument(\Kadupul\Graphing\Domain\Font\GraphFontProfile $profile, $type, $no_legend = '')
+{
+    $font = $profile->element($type);
+    if ($font === null) {
+        return null;
     }
 
-    if ($type == 'title') {
-        if (!empty($no_legend)) {
-            $size = $size * .70;
-        } elseif (($size <= 4) || !is_numeric($size)) {
-            $size = 12;
-        }
-    } elseif (($size <= 4) || !is_numeric($size)) {
-        $size = 8;
+    $size = $font->size;
+    if ($type == 'title' && !empty($no_legend)) {
+        $size = $size * .70;
     }
 
-    return '--font ' . strtoupper($type) . ':' . floatval($size) . ':' . $font . RRD_NL;
+    $family = $font->family !== '' ? rrdtool_pipe_quote($font->family) : '';
+
+    return '--font ' . strtoupper($type) . ':' . floatval($size) . ':' . $family . RRD_NL;
 }
 
 function rrd_substitute_host_query_data($txt_graph_item, $graph, $graph_item)
@@ -4781,9 +4843,176 @@ function rrdtool_parse_error($string)
     return $string;
 }
 
-function rrdtool_create_error_image($string, $width = '', $height = '')
+/**
+ * rrdtool_error_image_font - the TrueType font for the graph error image
+ *
+ * include/fonts ships only the Bold DejaVu faces, so it is the last resort
+ * after any system DejaVu Sans.
+ *
+ * @return - a readable font file, or '' when none is available
+ */
+function rrdtool_error_image_font()
 {
     global $config, $dejavu_paths;
+
+    $candidates = array();
+
+    if ($config['cacti_server_os'] != 'unix') {
+        $candidates[] = 'C:/Windows/Fonts/Arial.ttf';
+    }
+
+    foreach (array('DejaVuSans.ttf', 'DejaVuSans-Bold.ttf') as $face) {
+        foreach ($dejavu_paths as $dejavupath) {
+            $candidates[] = rtrim($dejavupath, '/') . '/' . $face;
+        }
+    }
+
+    foreach ($candidates as $candidate) {
+        if (is_file($candidate) && is_readable($candidate)) {
+            return $candidate;
+        }
+    }
+
+    return '';
+}
+
+/**
+ * rrdtool_error_image_layout - wrap error text into the 450x200 error image
+ *
+ * Text is measured in pixels and broken between characters, never inside a
+ * UTF-8 sequence. Without FreeType the GD built-in fonts draw only ASCII, so
+ * other characters become '?' one for one.
+ *
+ * @param $text      - the error text, lines separated by "\n"
+ * @param $font_file - a TrueType font, or '' for the GD built-in font
+ * @param $font_size - the size in points
+ *
+ * @return - array('font', 'size', 'line_height', 'lines' => array(array('text', 'x', 'y', 'width')))
+ */
+function rrdtool_error_image_layout($text, $font_file, $font_size)
+{
+    $left   = 125;
+    $right  = 440;
+    $top    = 4;
+    $bottom = 195;
+
+    // The error image has room for a handful of lines, so theme sizes are kept small.
+    $font_size = min(graph_font_size($font_size, 8), 12);
+    $ttf       = $font_file != '' && function_exists('imagettfbbox') && function_exists('imagettftext');
+
+    $text = (string) $text;
+
+    if (!mb_check_encoding($text, 'UTF-8')) {
+        $text = mb_convert_encoding($text, 'UTF-8', 'UTF-8');
+    }
+
+    $text = trim(str_replace(array("\r\n", "\r"), "\n", $text));
+
+    if ($text == '') {
+        $text = __('Unknown RRDtool Error');
+    }
+
+    if ($ttf) {
+        $box         = imagettfbbox($font_size, 0, $font_file, 'ÁHgjy');
+        $line_height = -$box[7];
+        $descent     = $box[1];
+        $font        = $font_file;
+        $measure     = function ($string) use ($font_size, $font_file) {
+            if ($string == '') {
+                return 0;
+            }
+
+            $box = imagettfbbox($font_size, 0, $font_file, $string);
+
+            return max($box[2], $box[4]) - min($box[0], $box[6]);
+        };
+    } else {
+        $font        = $font_size >= 10 ? 3 : 2;
+        $line_height = imagefontheight($font);
+        $descent     = 0;
+        $char_width  = imagefontwidth($font);
+        $text        = preg_replace('/[^\x20-\x7E\n]/u', '?', $text);
+        $measure     = function ($string) use ($char_width) {
+            return mb_strlen($string) * $char_width;
+        };
+    }
+
+    $step      = $line_height + $descent + 3;
+    $max_width = $right - $left;
+    $max_lines = max(1, intdiv($bottom - $top - $line_height - $descent, $step) + 1);
+
+    $lines = array();
+
+    foreach (explode("\n", $text) as $paragraph) {
+        $line = '';
+
+        foreach (preg_split('/ +/u', trim($paragraph)) as $word) {
+            $candidate = $line == '' ? $word : $line . ' ' . $word;
+
+            if ($measure($candidate) <= $max_width) {
+                $line = $candidate;
+
+                continue;
+            }
+
+            if ($line != '') {
+                $lines[] = $line;
+            }
+
+            $line = '';
+
+            foreach (mb_str_split($word) as $character) {
+                if ($line != '' && $measure($line . $character) > $max_width) {
+                    $lines[] = $line;
+                    $line    = '';
+                }
+
+                $line .= $character;
+            }
+        }
+
+        $lines[] = $line;
+    }
+
+    if (count($lines) > $max_lines) {
+        $lines = array_slice($lines, 0, $max_lines);
+        $last  = rtrim($lines[$max_lines - 1]);
+
+        while ($last != '' && $measure($last . '...') > $max_width) {
+            $last = mb_substr($last, 0, -1);
+        }
+
+        $lines[$max_lines - 1] = $last . '...';
+    }
+
+    $block = count($lines) * $step - $step + $line_height + $descent;
+    $ypos  = max($top, intdiv(200 - $block, 2));
+
+    $layout = array(
+        'font'        => $font,
+        'size'        => $font_size,
+        'line_height' => $line_height,
+        'lines'       => array(),
+    );
+
+    foreach ($lines as $line) {
+        $layout['lines'][] = array(
+            'text'  => $line,
+            'x'     => $left,
+            // imagettftext() places the baseline at y, imagestring() the top edge.
+            'y'     => $ttf ? $ypos + $line_height : $ypos,
+            'width' => $measure($line),
+        );
+
+        $ypos += $step;
+    }
+
+    return $layout;
+}
+
+function rrdtool_create_error_image($string, $width = '', $height = '')
+{
+    global $config;
 
     $string = rrdtool_parse_error($string);
 
@@ -4792,30 +5021,16 @@ function rrdtool_create_error_image($string, $width = '', $height = '')
 
     $image_data  = false;
     $font_color  = '000000';
-    $font_size   = 8;
     $back_color  = 'F3F3F3';
     $shadea      = 'CBCBCB';
     $shadeb      = '999999';
 
-    if ($config['cacti_server_os'] == 'unix') {
-        foreach ($dejavu_paths as $dejavupath) {
-            if (file_exists($dejavupath . '/DejaVuSans.ttf')) {
-                $font_file = $dejavupath . '/DejaVuSans.ttf';
-                break;
-            }
-        }
-    } else {
-        $font_file = 'C:/Windows/Fonts/Arial.ttf';
-    }
+    $font_file = rrdtool_error_image_font();
 
     $themefile  = $config['base_path'] . '/include/themes/' . get_selected_theme() . '/rrdtheme.php';
 
     if (file_exists($themefile) && is_readable($themefile)) {
         include($themefile);
-
-        if (isset($rrdfonts['legend']['size'])) {
-            $font_size   = $rrdfonts['legend']['size'];
-        }
 
         if (isset($rrdcolors['font'])) {
             $font_color  = $rrdcolors['font'];
@@ -4833,6 +5048,10 @@ function rrdtool_create_error_image($string, $width = '', $height = '')
             $shadeb = $rrdcolors['shadeb'];
         }
     }
+
+    /* the error text is drawn at the size the graph legend would have been */
+    $legend    = rrdtool_graph_font_profile(isset($rrdfonts) && is_array($rrdfonts) ? $rrdfonts : array(), array('legend'))->element('legend');
+    $font_size = $legend !== null ? $legend->size : 8;
 
     $image = imagecreatetruecolor(450, 200);
     imagesavealpha($image, true);
@@ -4869,49 +5088,19 @@ function rrdtool_create_error_image($string, $width = '', $height = '')
     list($red, $green, $blue) = sscanf($font_color, '%02x%02x%02x');
     $text_color = imagecolorallocate($image, $red, $green, $blue);
 
-    /* see the size of the string */
-    $string    = trim($string);
-    $maxstring = ceil((450 - (125 + 10)) / ($font_size / 0.9));
-    $stringlen = strlen($string) * $font_size;
-    $padding   = 5;
+    $layout = rrdtool_error_image_layout($string, $font_file, $font_size);
 
-    if ($stringlen > $maxstring) {
-        $cstring = wordwrap($string, $maxstring, "\n", true);
-        $strings = explode("\n", $cstring);
-        $strings = array_reverse($strings);
-        $lines   = cacti_sizeof($strings);
-    } elseif (strlen(trim($string)) == 0) {
-        $strings = array(__('Unknown RRDtool Error'));
-        $lines   = 1;
-    } else {
-        $strings = array($string);
-        $lines   = 1;
-    }
-
-    /* setup the text position, image is 450x200, we start at 125 pixels from the left */
-    $xpos  = 125;
-    $texth = ($lines * $font_size + (($lines - 1) * $padding));
-    $ypos  = round((200 / 2) + ($texth / 2), 0);
-
-    /* blank lines still take their place, as $texth counts them */
-    /* set the font of the image */
-    if (isset($font_file) && file_exists($font_file) && is_readable($font_file) && function_exists('imagettftext')) {
-        foreach ($strings as $string) {
-            if (trim($string) != '') {
-                if (@imagettftext($image, $font_size, 0, $xpos, $ypos, $text_color, $font_file, $string) === false) {
-                    cacti_log('TTF text overlay failed');
-                }
-            }
-            $ypos -= ($font_size + $padding);
+    foreach ($layout['lines'] as $line) {
+        if ($line['text'] == '') {
+            continue;
         }
-    } else {
-        foreach ($strings as $string) {
-            if (trim($string) != '') {
-                if (@imagestring($image, $font_size, $xpos, $ypos, $string, $text_color) === false) {
-                    cacti_log('Text overlay failed');
-                }
+
+        if (is_string($layout['font'])) {
+            if (@imagettftext($image, $layout['size'], 0, $line['x'], $line['y'], $text_color, $layout['font'], $line['text']) === false) {
+                cacti_log('TTF text overlay failed');
             }
-            $ypos -= ($font_size + $padding);
+        } elseif (@imagestring($image, $layout['font'], $line['x'], $line['y'], $line['text'], $text_color) === false) {
+            cacti_log('Text overlay failed');
         }
     }
 

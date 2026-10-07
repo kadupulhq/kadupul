@@ -142,6 +142,20 @@ tr.selected {
 	background-color: khaki;
 }
 
+/*
+ * Borderless white fields vanish into white and light grey rows, and the
+ * #d3d3d3 menu border measures 1.2:1 to 1.5:1 there.
+ */
+:is(input, textarea).ui-state-default, .ui-widget-content :is(input, textarea).ui-state-default,
+.ui-selectmenu-button.ui-button, button.ui-multiselect {
+	border: 1px solid #838383;
+}
+
+/* A focused menu shows its active item, whose #aaaaaa edge measures 2.1:1. */
+.ui-menu .ui-menu-item-wrapper.ui-state-active {
+	border-color: #838383;
+}
+
 label {
 	white-space: nowrap;
 }
@@ -212,55 +226,55 @@ label {
 
 .badpassword_message {
 	padding: 2px;
-	color: red;
+	color: #cc0000;
 	font-size: 1.0em !important;
 	vertical-align: bottom;
 }
 
 .badpassword {
 	padding: 4px;
-	color: red;
+	color: #cc0000;
 	font-size: 1.5em !important;
 	vertical-align: bottom;
 }
 
 .goodpassword {
 	padding: 4px;
-	color: green;
+	color: #007700;
 	font-size: 1.5em !important;
 	vertical-align: bottom;
 }
 
 .associated {
-	color: green;
+	color: #007700;
 	font-weight: bold;
 }
 
 .notAssociated {
-	color: red;
+	color: #cc0000;
 	font-weight: bold;
 }
 
 .disabled_row span, .disabled_row td, .disabled_row a {
-	color: grey;
+	color: #656565;
 }
 
 .disabled {
-	color: grey;
+	color: #656565;
 	font-weight: bold;
 }
 
 .idle {
-	color: green;
+	color: #007700;
 	font-weight: bold;
 }
 
 .running {
-	color: orange;
+	color: #8c5b00;
 }
 
 .errored {
-	color: red;
+	color: #cc0000;
 	font-weight: bold;
 }
 
@@ -281,20 +295,20 @@ label {
 }
 
 .success {
-	color: green;
+	color: #007700;
 }
 
 .failed {
-	color: red;
+	color: #cc0000;
 }
 
 .accessGranted {
-	color: green;
+	color: #007700;
 	font-weight: bold;
 }
 
 .accessGrantedItem {
-	color: green;
+	color: #007700;
 }
 
 .accessRestricted {
@@ -379,7 +393,7 @@ label {
 
 .cactiTooltipHint {
 	cursor: pointer;
-	color: #6D88AD;
+	color: #6783aa;
 }
 
 .monoSpace {
@@ -408,11 +422,11 @@ label {
 }
 
 .deviceUp {
-	color: rgba(40, 180, 40, 1.0) !important;
+	color: #1a751a !important;
 }
 
 .deviceDown {
-	color: #FF0000 !important;
+	color: #ce0000 !important;
 }
 
 .deviceUnknown {
@@ -420,11 +434,11 @@ label {
 }
 
 .deviceDisabled {
-	color: #A1A1A1 !important;
+	color: #656565 !important;
 }
 
 .deviceRecovering {
-	color: #FF8F1E !important;
+	color: #a05000 !important;
 }
 
 .deviceError {
@@ -444,7 +458,7 @@ label {
 }
 
 .deviceWarning {
-	color: #AA7807 !important;
+	color: #865e06 !important;
 }
 
 .deviceAlert {
@@ -529,7 +543,7 @@ label {
 }
 
 .beingGraphed {
-	color: green;
+	color: #007700;
 }
 
 .notBeingGraphed {
@@ -590,7 +604,7 @@ label {
 	cursor: pointer;
 	padding: 1px;
 	vertical-align: middle;
-	color: lime;
+	color: #009700;
 	font-weight: bold;
 	font-size: 14px;
 	margin-right: 10px;
@@ -600,7 +614,7 @@ label {
 	cursor: pointer;
 	padding: 1px;
 	vertical-align: middle;
-	color: rgba(255, 204, 0, 0.8);
+	color: #9e7e00;
 	font-size: 14px;
 	margin-right: 10px;
 }
@@ -656,7 +670,7 @@ label {
 }
 
 .linkMarker {
-	color: #C16921;
+	color: #99531a;
 }
 
 .filteredValue {
@@ -813,6 +827,24 @@ ul#breadcrumbs {
 	display: block;
 }
 
+/* jstree drops the outline on its anchors. */
+.jstree-anchor:focus-visible {
+	outline: auto;
+}
+
+/* The selected node's gloss dips to #b5c6d0 behind the text. */
+.jstree-clicked.deviceUp {
+	color: #155e15 !important;
+}
+
+.jstree-clicked.deviceDown {
+	color: #a70000 !important;
+}
+
+.jstree-clicked.deviceRecovering {
+	color: #804000 !important;
+}
+
 .cactiConsoleNavigationArea {
 	display: table-cell;
 	background: snow url('./../../../images/shadow_gray.gif') repeat-x center top;
@@ -890,15 +922,21 @@ ul#breadcrumbs {
 }
 
 .cactiLoginTable input {
-	border: 1px solid #BBBBBB !important;
+	border: 1px solid #838383 !important;
 }
 
 .loginErrors, .logoutErrors {
-	color: red;
+	color: #cc0000;
 	min-height: 0px;
 }
 
-legend {
+.loginHeading {
+	margin: 0;
+	padding: 0 2px;
+	font-weight: inherit;
+}
+
+legend, .loginHeading {
 	font-size: 22px;
 	font-weight: bold;
 	text-align: right;
@@ -1022,6 +1060,14 @@ legend {
 	width: 20px;
 	line-height: 20px;
 	display: inline-block;
+}
+
+button.iconLink.spikekill {
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	cursor: pointer;
 }
 
 .noLinkEditMain {
@@ -1358,7 +1404,7 @@ legend {
 	text-align: left;
 	border-right: 1px groove #EFEFEF;
 	font-size: 11px;
-	background-color: #6D88AD !important;
+	background-color: #59779F !important;
 }
 
 .formHeaderText {
@@ -1457,7 +1503,7 @@ legend {
 
 .tableHeader {
 	display: table-row;
-	background-color: #6D88AD !important;
+	background-color: #59779F !important;
 	line-height: 18px;
 }
 
@@ -1474,7 +1520,7 @@ legend {
 	border-right: 1px groove #EFEFEF;
 	font-size: 11px;
 	line-height: 18px;
-	background-color: #6D88AD !important;
+	background-color: #59779F !important;
 	padding: 2px;
 }
 
@@ -1645,7 +1691,7 @@ legend {
 
 .textMenuHeader {
 	color: #FFFFFF;
-	background-color: #9C9C9C;
+	background-color: #747474;
 	font-size: 10px;
 	font-weight: bold;
 }
@@ -1869,7 +1915,7 @@ tr th:last-child .checkbox {
 
 #nav li a.active {
 	color: snow !important;
-	background-color: #9c9c9c;
+	background-color: #747474;
 	border-bottom: 1px solid #666;
 	font-weight: bold;
 }

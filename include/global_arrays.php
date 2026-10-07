@@ -1057,20 +1057,21 @@ if ($config['poller_id'] == 1 || $config['connection'] == 'online') {
     );
 }
 
+// Icon names from config/icons.json. A plugin may add a Font Awesome class list instead.
 $menu_glyphs = array(
-    __('Main Console') => 'fa fa-map',
-    __('Create') => 'fa fa-chart-area',
-    __('Management') => 'fa fa-home',
-    __('Data Collection') => 'fa fa-database',
-    __('Templates') => 'fa fa-clone',
-    __('Automation') => 'fab fa-superpowers',
-    __('Presets') => 'fa fa-archive',
-    __('Import/Export') => 'fa fa-exchange-alt',
-    __('Configuration')  => 'fa fa-sliders-h',
-    __('Utilities') => 'fa fa-cogs',
-    __('External Links') => 'fa fa-external-link-alt',
-    __('Support') => 'fa fa-question-circle',
-    __('Troubleshooting') => 'fa fa-bug'
+    __('Main Console') => 'menu-main-console',
+    __('Create') => 'menu-create',
+    __('Management') => 'menu-management',
+    __('Data Collection') => 'menu-data-collection',
+    __('Templates') => 'menu-templates',
+    __('Automation') => 'menu-automation',
+    __('Presets') => 'menu-presets',
+    __('Import/Export') => 'menu-import-export',
+    __('Configuration')  => 'menu-configuration',
+    __('Utilities') => 'menu-utilities',
+    __('External Links') => 'menu-external-links',
+    __('Support') => 'menu-support',
+    __('Troubleshooting') => 'menu-troubleshooting'
 );
 
 $device_classes = array(
@@ -2902,7 +2903,8 @@ if ($config['cacti_server_os'] == 'unix') {
     );
 } else {
     $dejavu_paths = array(
-        'C:/Windows/Fonts/' //Windows
+        'C:/Windows/Fonts/', //Windows
+        __DIR__ . '/fonts'  //Built-in
     );
 }
 

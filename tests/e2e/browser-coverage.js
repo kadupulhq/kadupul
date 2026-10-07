@@ -8,7 +8,7 @@ const { createCoverageMap } = require('istanbul-lib-coverage');
 
 const root = path.resolve(__dirname, '../..');
 
-const measuredSources = ['public/js/vdef-item.js', 'include/layout.js', 'include/themes/classic/main.js', 'include/themes/modern/main.js',
+const measuredSources = ['public/js/vdef-item.js', 'include/realtime.js', 'include/layout.js', 'include/themes/classic/main.js', 'include/themes/modern/main.js',
   'include/themes/midwinter/main.js', 'include/themes/paw/main.js', 'include/themes/sunrise/main.js',
   'include/themes/paper-plane/main.js', 'include/themes/dark/main.js'];
 
@@ -20,7 +20,7 @@ const sourceHashes = sources => Object.fromEntries(sources.map(source => [source
 function producerSources() {
   return ['tests/Symfony/vdef_browser_probe.cjs', 'tests/Symfony/vdef_scenarios.py', 'tests/Symfony/session_bridge.py', 'package-lock.json', 'tests/e2e/package-lock.json', 'tests/e2e/browser-coverage.js',
     'tests/e2e/midwinter-listeners.spec.js', 'tests/e2e/selectmenu-scroll.spec.js', 'tests/e2e/theme-smoke.html', 'tests/e2e/playwright.config.js',
-    'lib/html.php', 'include/js/jquery.js', 'include/js/jquery-ui.js', 'include/js/js.storage.js',
+    'include/js/pace.js', 'include/js/jquery.zoom.js', 'lib/html.php', 'config/icons.json', 'include/fa/webfonts/fa-brands-400.woff2', 'include/js/jquery.js', 'include/js/jquery-ui.js', 'include/js/js.storage.js',
     'include/js/jquery.cookie.js', 'include/js/purify.js', 'include/js/jquery.tablesorter.js',
     'include/themes/classic/jquery-ui.css', 'include/fa/css/all.css', 'include/fa/webfonts/fa-solid-900.woff2',
     'include/themes/midwinter/vendor/mark/jquery.mark.js', 'include/themes/midwinter/vendor/hotkeys/hotkeys.js',
@@ -29,16 +29,16 @@ function producerSources() {
 
 const mergerSources = ['tests/Symfony/vdef_browser_probe.cjs', 'tests/Symfony/vdef_scenarios.py', 'tests/Symfony/session_bridge.py', 'public/js/vdef-item.js', 'package-lock.json', 'tests/e2e/package-lock.json', 'tests/e2e/browser-coverage.js',
   'tests/e2e/midwinter-listeners.spec.js', 'tests/e2e/selectmenu-scroll.spec.js', 'tests/e2e/theme-smoke.html', 'tests/e2e/playwright.config.js',
-  'lib/html.php', 'include/js/jquery.js', 'include/js/jquery-ui.js', 'include/js/js.storage.js',
+  'include/js/pace.js', 'include/js/jquery.zoom.js', 'lib/html.php', 'config/icons.json', 'include/fa/webfonts/fa-brands-400.woff2', 'include/js/jquery.js', 'include/js/jquery-ui.js', 'include/js/js.storage.js',
   'include/js/jquery.cookie.js', 'include/js/purify.js', 'include/js/jquery.tablesorter.js',
   'include/themes/classic/jquery-ui.css', 'include/fa/css/all.css', 'include/fa/webfonts/fa-solid-900.woff2',
   'include/themes/midwinter/vendor/mark/jquery.mark.js', 'include/themes/midwinter/vendor/hotkeys/hotkeys.js',
   'include/themes/midwinter/vendor/ua-parser/ua-parser.js',
-  'include/layout.js', 'include/themes/classic/main.js', 'include/themes/modern/main.js',
+  'include/realtime.js', 'include/layout.js', 'include/themes/classic/main.js', 'include/themes/modern/main.js',
   'include/themes/midwinter/main.js', 'include/themes/paw/main.js', 'include/themes/sunrise/main.js',
   'include/themes/paper-plane/main.js', 'include/themes/dark/main.js'];
 
-const mergerMeasuredSources = ['public/js/vdef-item.js', 'include/layout.js', 'include/themes/classic/main.js', 'include/themes/modern/main.js',
+const mergerMeasuredSources = ['public/js/vdef-item.js', 'include/realtime.js', 'include/layout.js', 'include/themes/classic/main.js', 'include/themes/modern/main.js',
   'include/themes/midwinter/main.js', 'include/themes/paw/main.js', 'include/themes/sunrise/main.js',
   'include/themes/paper-plane/main.js', 'include/themes/dark/main.js'];
 
@@ -55,6 +55,23 @@ const scenarios = {
     'a system scheme change leaves a manual colour mode alone',
     'ESC outside fullscreen and the retired c+F1 shortcut raise no error or alert',
     'SHIFT+k enters fullscreen on the content area and leaves it again',
+    'repeated native page setup keeps one search icon per input',
+    'native compact navigation preserves menu glyphs and one dialog binding',
+    'chrome windows: native client dialog displays parsed environment and glyphs',
+    'internet explorer: native client dialog displays parsed environment and glyphs',
+    'edge windows: native client dialog displays parsed environment and glyphs',
+    'firefox ubuntu: native client dialog displays parsed environment and glyphs',
+    'opera linux: native client dialog displays parsed environment and glyphs',
+    'safari mac: native client dialog displays parsed environment and glyphs',
+    'chrome os: native client dialog displays parsed environment and glyphs',
+    'raspberry pi: native client dialog displays parsed environment and glyphs',
+    'blackberry mobile: native client dialog displays parsed environment and glyphs',
+    'android mobile: native client dialog displays parsed environment and glyphs',
+    'ipad tablet: native client dialog displays parsed environment and glyphs',
+    'playstation console: native client dialog displays parsed environment and glyphs',
+    'smart television: native client dialog displays parsed environment and glyphs',
+    'tesla embedded: native client dialog displays parsed environment and glyphs',
+    'unknown client: native client dialog displays parsed environment and glyphs',
   ],
   'selectmenu-scroll.spec.js': [
     'select menu remains usable after the browser scrolls its button into view',
@@ -62,10 +79,51 @@ const scenarios = {
     'a scroll queued before the menu opens does not immediately close it',
     'shared theme controls preserve filter icons, select widget sizing and both logos',
     'shared form controls retain import labels and theme widths',
+    'responsive filters preserve control callbacks and visibility across clicks',
+    'debug table actions and stored collapsible sections retain registry glyphs',
+    'SNMP passphrase validation draws real status glyphs for each field state',
+    'realtime graph activation preserves loading glyph response and original image',
   ],
 };
 
+function filterGlyphProductionLine() {
+  const source = fs.readFileSync(path.join(root, 'include/themes/midwinter/main.js'), 'utf8');
+  const lines = source.split('\n').flatMap((value, index) =>
+    value.includes('<div class="cactiTableFilter">') && value.includes("iconClass('filter')")
+      && value.includes(".prependTo('#filterTableOnTop .cactiTableTitle')") ? [index + 1] : []);
+  if (lines.length !== 1) throw new Error('Missing or ambiguous filter glyph production statement');
+  return lines[0];
+}
+
+// Bind a native scenario to its actual production statement, not just a
+// loaded script or an arbitrary positive hit elsewhere in that file.
+function nativeScenarioLines(scenario) {
+  const layout = 'include/layout.js';
+  const midwinter = 'include/themes/midwinter/main.js';
+  const statements = scenario === 'realtime graph activation preserves loading glyph response and original image'
+    ? [[layout, "class='drillDown "], ['include/realtime.js', "$.get(urlPath+'graph_realtime.php?action=countdown"]]
+    : scenario === 'responsive filters preserve control callbacks and visibility across clicks'
+    ? [[layout, "filterHeader.find('div.cactiTableButton').append($('<span style=\"display:none;\" class=\"cactiFilterExport\""]]
+    : scenario === 'debug table actions and stored collapsible sections retain registry glyphs'
+      ? [[layout, "anchors.filter('.cactiTableCopy').addClass(iconClass('copy'))"], [layout, "if ($(this).find('i').is(iconSelector('hide-section')))" ]]
+      : scenario === 'SNMP passphrase validation draws real status glyphs for each field state'
+        ? [[layout, "$(pass).after('<span id=\"'+spanconf+'\"><i class=\"goodpassword '"]]
+        : scenario === 'native compact navigation preserves menu glyphs and one dialog binding'
+          ? [[midwinter, "$(DOMPurify.sanitize(compact_user_menu_content)).appendTo('#compact_user_menu')"]]
+          : scenario.endsWith(': native client dialog displays parsed environment and glyphs')
+            ? [[midwinter, 'let uaObj = new UAParser()'], [midwinter, "$('#dialog_container').dialog({"]] : [];
+  return statements.map(([source, text]) => {
+    const lines = fs.readFileSync(path.join(root, source), 'utf8').split('\n')
+      .flatMap((value, index) => value.includes(text) ? [index + 1] : []);
+    if (lines.length !== 1) throw new Error(`Missing or ambiguous native browser statement: ${source}`);
+    return [source, lines[0]];
+  });
+}
+
 function loadEvidence(file, expectedProducer, expectedScenario) {
+  const driver = path.basename(expectedProducer);
+  const registeredProducer = driver === 'vdef_browser_probe.cjs' ? `tests/Symfony/${driver}` : `tests/e2e/${driver}`;
+  if (expectedProducer !== registeredProducer || !scenarios[driver]?.includes(expectedScenario)) throw new Error('Unregistered browser scenario');
   const receipt = JSON.parse(fs.readFileSync(`${file}.receipt`, 'utf8'));
   const bytes = fs.readFileSync(file);
   const requiredHits = expectedProducer.endsWith('midwinter-listeners.spec.js')
@@ -98,8 +156,13 @@ function loadEvidence(file, expectedProducer, expectedScenario) {
     }
   }
   if (expectedScenario === 'the relocated filter keeps its production sliders glyph and controls'
-      && !(map.fileCoverageFor(path.join(root, 'include/themes/midwinter/main.js')).getLineCoverage()[504] > 0)) {
+      && !(map.fileCoverageFor(path.join(root, 'include/themes/midwinter/main.js')).getLineCoverage()[filterGlyphProductionLine()] > 0)) {
     throw new Error('Missing actual filter glyph production line');
+  }
+  for (const [source, line] of nativeScenarioLines(expectedScenario)) {
+    if (!(map.fileCoverageFor(path.join(root, source)).getLineCoverage()[line] > 0)) {
+      throw new Error(`Missing actual native browser statement: ${source}:${line}`);
+    }
   }
   if (expectedProducer.endsWith('vdef_browser_probe.cjs')) {
     const coverage = map.fileCoverageFor(path.join(root, 'public/js/vdef-item.js'));
@@ -164,6 +227,14 @@ function verifyRejections(file, producer, scenario) {
         for (const key of Object.keys(entry.b)) entry.b[key] = entry.b[key].map(() => 0);
       }
     }));
+    for (const [source, line] of nativeScenarioLines(scenario)) {
+      refuse(() => reportEdit(data => {
+        const production = data[path.join(root, source)];
+        for (const [key, location] of Object.entries(production.statementMap)) {
+          if (location.start.line <= line && location.end.line >= line) production.s[key] = 0;
+        }
+      }));
+    }
   } finally {
     fs.writeFileSync(file, originalReport);
     fs.writeFileSync(`${file}.receipt`, originalReceipt);
@@ -183,7 +254,7 @@ function collectThemeCoverage(test) {
     for (const entry of await page.coverage.stopJSCoverage()) {
       if (!/^https?:\/\//.test(entry.url)) continue;
       const pathname = new URL(entry.url).pathname;
-      if (pathname !== '/include/layout.js' && !/^\/include\/themes\/[a-z0-9_-]+\/main\.js$/.test(pathname)) continue;
+      if (pathname !== '/include/layout.js' && pathname !== '/include/realtime.js' && !/^\/include\/themes\/[a-z0-9_-]+\/main\.js$/.test(pathname)) continue;
       const sourceFile = path.join(root, pathname);
       if (entry.source !== fs.readFileSync(sourceFile, 'utf8')) {
         throw new Error(`Browser coverage source differs from checkout: ${pathname}`);
@@ -249,14 +320,33 @@ function verifyRegistryRejections(directory) {
         fs.writeFileSync(file, JSON.stringify(receipt));
       });
     }
+    for (const scenario of Object.values(scenarios).flat().filter(title => nativeScenarioLines(title).length)) {
+      for (const [source, line] of nativeScenarioLines(scenario)) {
+        refuse(() => {
+          const name = reports.find(file => JSON.parse(fs.readFileSync(path.join(owned, `${file}.receipt`))).scenario === scenario);
+          const file = path.join(owned, name);
+          const data = JSON.parse(fs.readFileSync(file));
+          const production = data[path.join(root, source)];
+          for (const [key, location] of Object.entries(production.statementMap)) {
+            if (location.start.line <= line && location.end.line >= line) production.s[key] = 0;
+          }
+          const bytes = JSON.stringify(data);
+          fs.writeFileSync(file, bytes);
+          const receipt = JSON.parse(fs.readFileSync(`${file}.receipt`));
+          receipt.digest = hash(bytes);
+          fs.writeFileSync(`${file}.receipt`, JSON.stringify(receipt));
+        });
+      }
+    }
     refuse(() => {
       const glyphFile = reports.find(file => JSON.parse(fs.readFileSync(path.join(owned, `${file}.receipt`))).scenario
         === 'the relocated filter keeps its production sliders glyph and controls');
       const file = path.join(owned, glyphFile);
       const data = JSON.parse(fs.readFileSync(file));
       const production = data[path.join(root, 'include/themes/midwinter/main.js')];
+      const glyphLine = filterGlyphProductionLine();
       for (const [key, location] of Object.entries(production.statementMap)) {
-        if (location.start.line <= 504 && location.end.line >= 504) production.s[key] = 0;
+        if (location.start.line <= glyphLine && location.end.line >= glyphLine) production.s[key] = 0;
       }
       const bytes = JSON.stringify(data);
       fs.writeFileSync(file, bytes);
@@ -322,5 +412,6 @@ function publishVdefCoverage(map, snapshot, scenario) {
     completed: 'browser-test-passed-and-production-measured' }));
 }
 
-module.exports = { collectThemeCoverage, publishVdefCoverage, browserSourceSnapshot: () => sourceHashes(producerSources()) };
+module.exports = { collectThemeCoverage, publishVdefCoverage, browserSourceSnapshot: () => sourceHashes(producerSources()),
+  verifyBrowserReport: loadEvidence, verifyBrowserRejections: verifyRejections };
 if (require.main === module) merge(process.argv[2], process.argv[3]);

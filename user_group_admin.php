@@ -313,8 +313,7 @@ function user_group_copy($id, $prefix = 'New Group')
     }
 }
 
-
-function update_policies()
+function update_policies(): never
 {
     if (!user_group_exists(get_filter_request_var('id'))) {
         user_group_refuse(get_filter_request_var('id'));
@@ -587,6 +586,7 @@ function form_save()
         if (!user_group_exists(get_filter_request_var('id'))) {
             user_group_refuse(get_filter_request_var('id'));
         }
+        $refused = false;
 
         foreach ($settings_user as $tab_short_name => $tab_fields) {
             foreach ($tab_fields as $field_name => $field_array) {
@@ -595,7 +595,21 @@ function form_save()
                         user_group_execute_child(get_filter_request_var('id'), 'REPLACE INTO settings_user_group (group_id, name, value) VALUES (?, ?, ?)', array(get_filter_request_var('id'), $sub_field_name, get_nfilter_request_var($sub_field_name, '')));
                     }
                 } else {
-                    user_group_execute_child(get_filter_request_var('id'), 'REPLACE INTO settings_user_group (group_id, name, value) VALUES (?, ?, ?)', array(get_request_var('id'), $field_name, get_nfilter_request_var($field_name)));
+                    $value = get_nfilter_request_var($field_name);
+
+                    // Same rule as save_user_settings(): a numeric setting that fails its filter
+                    // keeps its default, and any other that fails keeps its stored value.
+                    if (isset($field_array['default']) && is_numeric($field_array['default']) && !settings_value_passes_filter($field_name, $value, true)) {
+                        $value = $field_array['default'];
+                    } elseif (!settings_value_passes_filter($field_name, $value, true)) {
+                        $_SESSION['sess_error_fields'][$field_name] = $field_name;
+                        $_SESSION['sess_field_values'][$field_name] = $value;
+                        $refused = true;
+
+                        continue;
+                    }
+
+                    user_group_execute_child(get_filter_request_var('id'), 'REPLACE INTO settings_user_group (group_id, name, value) VALUES (?, ?, ?)', array(get_request_var('id'), $field_name, $value));
                 }
             }
         }
@@ -604,7 +618,13 @@ function form_save()
 
         reset_group_perms(get_request_var('id'));
 
-        raise_message(1);
+        // Same messages as settings.php when a value its filter refuses is left unsaved.
+        if ($refused) {
+            raise_message(35);
+            raise_message(3);
+        } else {
+            raise_message(1);
+        }
 
         header('Location: user_group_admin.php?action=edit&header=false&tab=settings&id=' . get_nfilter_request_var('id'));
         exit;

@@ -199,6 +199,7 @@ PHP;
         $program .= "\n" . ($scenario['stubs'] ?? '') . "\n";
 
         $sources = array('lib/auth.php' => array_merge(array('auth_membership_begin', 'auth_membership_finish', 'auth_membership_lock_users', 'auth_membership_lock_groups', 'user_group_change_memberships', 'user_group_replace_memberships', 'user_group_update_membership', 'user_group_execute_child'), $scenario['auth_functions'] ?? array()));
+        $sources['lib/functions.php'] = array('settings_value_passes_filter');
         $sources[$scenario['page']] = array_merge($sources[$scenario['page']] ?? array(), $scenario['functions'] ?? array());
 
         foreach ($sources as $file => $functions) {

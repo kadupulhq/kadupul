@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Bound legacy Boost writer lock acquisition to 60 attempts; report contention and retain queued samples instead of waiting indefinitely.
+- Correct Settings help for graph permission combinations, auto scale limits, and CSP nonce reporting and enforcement. Fixes #222, #230, and #265.
 - Make SonarCloud selective during modernization with an explicit enable switch, trusted analysis/release branches and manual runs; retain complete coverage and visible failures, and add bounded CI jobs, safe concurrency, dependency download caches and a future required quality-gate check.
 
 - Preserve completed or failed installer worker state when a concurrent status poll hydrates an unchanged step; retain explicit transitions, navigation, and retry defaults.
@@ -66,6 +68,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Port the remaining CSRF Magic library checks from 1.2: refuse more than eight submitted tokens, token times that are not digits or exceed the 300-second future clock-skew allowance, and generate fallback secrets with `random_bytes()`. The optional CSRF debug log and the default failure page no longer record tokens, the secret, form values or query strings. Secret rotation generates before modifying the working file, then exclusively writes and verifies a replacement in its directory, preserves existing UID/GID with verified ownership before applying mode 0640 and renaming atomically; generation or publication failure preserves the working key. Symlink file destinations are refused.
 - Keep inaccessible SNMP cache entries as navigation-only links and return `NONE` for direct reads without PHP 8.4 warnings.
 
+- Draw core icons from one registry, `config/icons.json`, which maps names such as `add` and `collapse-all` to Font Awesome 7 classes. `html_icon()` refuses an icon with no accessible label unless it is marked decorative, `layout.js` reads the same map, and themes redraw icons through registry overrides instead of rewriting classes in the page. Console menu glyphs are now registry names; a plugin's Font Awesome classes in `$menu_glyphs` still render as given. Plugin icons are no longer restyled by a theme: paw, paper-plane and sunrise leave `fa-arrow-down` and `fa-arrow-up` alone, and midwinter leaves plugin menu glyphs alone.
 - Render About through Symfony and Twig with escaped version/beta text and complete English/French license information; preserve authenticated access without a console realm, including online collectors authenticated against their reachable primary.
 
 - Render the color palette through Symfony and Twig, with protected named colors, revision-checked transactions and strict quoted CSV imports/exports.
@@ -84,6 +87,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Own persistent local RRDtool pipe processes in the Graphing `LocalRrdtool` adapter while retaining the legacy procedural entry points. Fixes #500.
 - Move RRDtool graph option generation into the Graphing module while keeping its procedural wrapper and output unchanged. Part of #502.
 - Resolve ordered graph-item consolidation references in a Graphing collaborator while preserving GPRINT association behavior. Part of #502.
+- Resolve graph fonts in one Graphing `GraphFontResolver` from the theme, the System settings and the viewer's own fonts. Graph `--font` arguments, the Default Font for local, proxy, Data Source statistics and RRD check RRDtool processes, the error image text size and the Boost render key all use it, and a golden test pins the `--font` arguments to the previous code for valid settings.
 - Reuse one RRDtool proxy session for the commands in a graph render, including consolidation-function lookups. Part of #502.
 - Preserve negative integer `--units-exponent` values accepted by graph forms. Fixes #228.
 - Complete Inventory site editing, sorting, duplication and deletion through Symfony; retire the procedural Sites page while retaining safe legacy URL compatibility.
@@ -103,6 +107,9 @@ Targeting `v1.3.0`, the first planned application release. See
 - Characterize `is_resource_writable()` for existing files, new files, directories, and permission-denied paths before changing the legacy filesystem check.
 
 ### Fixed
+- Validate installed font families after recognized Pango suffixes, reject names when fontconfig reports no installed fonts, and preserve complete multiword default descriptions through RRDProxy session setup.
+- Make the graph spike-removal menu reachable with Enter and Space, restore focus on Escape, and discard obsolete menu replies after script reloads.
+- Keep Paper Plane content links readable on hover; measure contrast using opacity groups and image-layer order, and reject new or worsened measured failures.
 - Invalidate the affected user or group members' permission caches after removing a typed permission exception.
 - Rebuild dependent poller caches once when updating a Data Input whitelist, with the worker retaining propagation failure reporting.
 
@@ -130,6 +137,14 @@ Targeting `v1.3.0`, the first planned application release. See
 - Build offline archives with the npm JavaScript CLI bundled with the selected Node runtime, avoiding shell-wrapper parse failures in CI. Related to #703.
 - Preserve both existing audit baseline tables until a staged import is validated and atomically installed; report failed imports and repairs with a nonzero CLI status. Fixes #242.
 - Invoke standard plugin upgrade callbacks during database audits and quote upgrade script paths and arguments.
+- Ask for a Pango font description in the graph font settings instead of a TrueType font file. RRDtool 1.3 and later pass the value to Pango, which ignores a file path and draws its fallback font.
+- Draw Midwinter graph legends in DejaVu Sans Mono. Its `Roboto Mono` setting fell back to the proportional DejaVu Sans on hosts without Roboto, including the container image, and misaligned legend columns.
+- Draw the graph error image with the bundled DejaVu font when no system DejaVu Sans is installed, and wrap its text by measured width and whole characters. The GD fallback used the point size as a built-in font id, so lines overlapped and ran past the frame, and translated messages were cut inside UTF-8 characters.
+- Search the bundled `include/fonts` directory on Windows as well. Classic theme external-link tabs lost their labels there because Windows ships no DejaVu font.
+- Refuse a graph font name that is not a Pango font description, or that names no font `fc-list` reports as installed, when System, User or User Group settings are saved. Without `fc-list` a well-formed name is saved and the unchecked save is logged. In Theme font mode the hidden font fields keep their stored values unchecked, so a stale font does not block the rest of the Visual tab. A stored font file path or a name with double quotes, colons or control characters now draws the Default Font instead of reaching RRDtool, and is no longer sent to an RRDtool proxy.
+- Key Boost cached graphs by the fonts a render resolves to. The key left out the Default Font, so a changed Default Font served graphs drawn with the old one.
+- Refuse graph font sizes of 4 points or less, or above 72 points, when System, User or User Group settings are saved. The profile page no longer stores a cleared or invalid size as the user types, and User Group settings store the default instead.
+- Replace graph font sizes that are empty, non-numeric, infinite or 4 points and below with the default, and cap larger ones at 72 points. A thumbnail with an empty title size threw a `TypeError`, and a size such as `1e400` made RRDtool reject every graph.
 - Bind graph-template and local graph item ordering filters as parameters and preserve the non-classic theme fallback when available. Related to #476.
 - Bring the lts/1.2 authentication hardening to main. Leaving the retired no-authentication method now switches to local authentication without starting a session or clearing the administrator password; the administrator signs in and must choose a new password. The guest account can no longer open Edit Profile. Failed LDAP and domain logins show one generic message and keep the directory error in the log. A local login for an unknown username costs the same password hashing as one for a known username. A remember-me login with a pending forced password change goes to the change page, every logout path deletes the server-side remember-me token, and a malformed remember-me cookie is ignored.
 
@@ -162,12 +177,15 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Install only the Font Awesome stylesheet, its WOFF2 fonts and licence into a cleared `include/fa` with directory guards, instead of the whole 25 MB npm package. Font URLs now carry the package version, so a browser that cached Font Awesome 5 fonts under the same names fetches the new ones.
 - Disable network access while parsing imported package XML. Fixes #578.
+- Key Boost's cached graph images by the fonts, font sizes, colour mode, date format, time zone, language and requested theme each viewer renders with, and by the requested output format. A graph drawn with one user's custom fonts, date format or browser time zone was served to other users of the same theme until the cache expired, and the reverse ignored a user's own settings. Graphs rendered by the remote agent and by reports are now also written under the name their own theme and size options produce, rather than the global request's. The `graphv` output of `graph_json.php` and PNGs forced over an SVG template no longer share a file name with the plain image. The name also carries the graph's start and end times, so users whose first weekday or day shift hours differ no longer share an image for the This Week, Previous Week or Day Shift presets.
 - Keep SNMP agent cache values on one `pass_persist` protocol line by removing embedded carriage returns and line feeds before storage and output.
 - Normalize Graph View graph-list values before storing them in the session, escape them in HTML, and encode them for JavaScript. Removing the last selected graph now clears the stored selection, while paging preserves it. Fixes #574.
 - Escape and type-check the posted local graph ID before rendering Aggregate Graphs bulk-action confirmation markup. Fixes #586.
 - Escape color-dropdown values and enclosing form row IDs in their HTML contexts; render color option identifiers as integers. Fixes #576.
 - Recheck data-source profile references when a bulk deletion is submitted, preserving definitions still used by templates or sources while allowing unused profiles in the same selection to be removed.
 - Escape device and network values before adding them to automation discovery HTML emails. Fixes #589.
+
+- Show a keyboard focus ring in every theme. Links and buttons clicked with the mouse show no ring; text fields now show it on click as well, as browsers apply :focus-visible there. In modern, paper-plane and midwinter the ring carries a contrasting halo, so one ring reads on both the light and dark panels. Keep switch checkboxes and radios reachable by Tab, let keyboard users reach the dark theme's graph utility icons, and improve contrast for text, icons, focus rings and the edges of fields, menus and switches at rest, hovered, focused and in selected rows. Midwinter now takes its status, icon and control colours from per-mode variables. `tests/e2e/tests/theme-contrast.spec.ts` measures real pages in every theme; focused declaration tests cover the changed dark, paper-plane and sunrise palettes. These checks do not establish AA conformance for every page. The themes also style `h1.loginHeading` like the login legend, ready for the login markup change.
 
 - Create the identity audit file with restrictive permissions without changing the process-wide umask, which could otherwise affect unrelated threaded requests. Fixes #382.
 - Fix blank and wrong Font Awesome 7 icons: the midwinter filter icon no longer shows a missing-glyph box, the multiselect collapse-all and expand-all buttons show their arrows, and the legacy `fa-circle-thin` class draws an outline circle again.
@@ -240,6 +258,8 @@ Targeting `v1.3.0`, the first planned application release. See
 - Commit through PDO rather than the MariaDB-only `@@in_transaction` variable, so device edits, creates, template assignments, collector moves and bulk state changes commit on MySQL instead of rolling back and reporting an uncertain outcome.
 
 ### Changed
+
+- Share ordered System and profile graph-font metadata while preserving their defaults, translated labels, validation and field order.
 
 - Add Symfony bulk SNMP settings with explicit credential replacement, per-device credential validation and secret-safe failure responses.
 

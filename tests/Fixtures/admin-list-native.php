@@ -8,10 +8,12 @@ if (PHP_SAPI !== 'cli') {
     exit(1);
 }
 $root = dirname(__DIR__, 2);
+// Match the application's actual Composer bootstrap for semantic icons.
+require_once $root . '/include/vendor/autoload.php';
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
 if (isset($argv[3])) {
     require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
-    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/admin-list-native.php', $argv[1], array('user_admin.php', 'user_group_admin.php', 'lib/html.php', 'lib/html_form.php', 'lib/html_utility.php', 'lib/functions.php', 'lib/variables.php', 'src/Platform/Infrastructure/Legacy/HostDataSubstitution.php', 'include/global_constants.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
+    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/admin-list-native.php', $argv[1], array('config/icons.json', 'src/Platform/Contract/IconRegistry.php', 'user_admin.php', 'user_group_admin.php', 'lib/html.php', 'lib/html_form.php', 'lib/html_utility.php', 'lib/functions.php', 'lib/variables.php', 'src/Platform/Infrastructure/Legacy/HostDataSubstitution.php', 'include/global_constants.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
 }
 $directory = $argv[2];
 mkdir($directory . '/include', 0700, true);
@@ -22,8 +24,9 @@ $page = $group ? 'user_group_admin.php' : 'user_admin.php';
 $_SERVER['PHP_SELF'] = $page;
 $_SERVER['SCRIPT_NAME'] = $page;
 $_SERVER['SCRIPT_FILENAME'] = $root . '/' . $page;
-$_SESSION = array('sess_user_id' => 99);
-$config = array('poller_id' => 1, 'connection' => 'online', 'url_path' => '/', 'is_web' => false, 'config_options_array' => array('num_rows_table' => 2));
+$_SESSION = array('sess_user_id' => 99, 'selected_theme' => 'classic');
+$themes = array('classic' => 'Classic');
+$config = array('base_path' => $root, 'poller_id' => 1, 'connection' => 'online', 'url_path' => '/', 'is_web' => false, 'config_options_array' => array('num_rows_table' => 2));
 $item_rows = array(1 => 'One', 2 => 'Two & more');
 $auth_realms = array(0 => 'Local');
 $request = array_merge(array('action' => 'fixture', 'rows' => 2, 'page' => 1, 'filter' => '', 'group' => -1, 'realm' => -1, 'login' => 0, 'sort_column' => $group ? 'name' : 'username', 'sort_direction' => 'ASC'), $scenario['request'] ?? array());

@@ -58,6 +58,10 @@ if (defined('MEMBERSHIP_EPOCH_TEST_COVERAGE')) {
 if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE') || defined('CLASSIC_TEXT_TABS_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
 }
+if (defined('FONT_SETTINGS_NATIVE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/settings.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/graph_fonts.php');
+}
 if (defined('GRAPH_TEMPLATE_RENDER_NATIVE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html_graph.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
@@ -331,6 +335,7 @@ if (defined('PERMISSION_REQUEST_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionRequests.php');
 }
 if (defined('ADMIN_LIST_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/src/Platform/Contract/IconRegistry.php');
     $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
     $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
@@ -372,6 +377,10 @@ if (defined('MAINTENANCE_PURGE_TEST_COVERAGE') || defined('HTML_RENDERER_NATIVE_
         $source = defined('RRD_TEST_CLI_COVERAGE_COPY') && $file === realpath(RRD_TEST_CLI_COVERAGE_COPY) ? RRD_TEST_CLI_COVERAGE_SOURCE : $file;
         $nativeSources[] = substr($source, strlen($coverageRoot) + 1);
     }
+    if (defined('HTML_RENDERER_NATIVE_TEST_COVERAGE') || defined('UTILITY_VIEW_TEST_COVERAGE')) {
+        $nativeSources = array_merge($nativeSources, array('config/icons.json', 'src/Platform/Contract/IconRegistry.php'));
+        $coverageFilter->includeFile($coverageRoot . '/src/Platform/Contract/IconRegistry.php');
+    }
     $nativeScenario = defined('MAINTENANCE_PURGE_TEST_COVERAGE') ? MAINTENANCE_PURGE_NATIVE_SCENARIO : $argv[1];
     if (defined('MAINTENANCE_PURGE_TEST_COVERAGE')) {
         $nativeProducer = 'tests/Unit/Core/Rrd/MaintenancePurgeNativeTest.php';
@@ -398,7 +407,7 @@ if (defined('MAINTENANCE_PURGE_TEST_COVERAGE') || defined('HTML_RENDERER_NATIVE_
             $nativeSources = array_merge($nativeSources, array('tests/Unit/ManagerNativeCoverageTest.php', 'include/global_session.php'));
         }
     } elseif (defined('UTILITY_LOG_TEST_COVERAGE')) {
-        $nativeSources[] = 'tests/Symfony/UtilityLogPersistenceTest.php';
+        $nativeSources = array_merge($nativeSources, array('tests/Symfony/UtilityLogPersistenceTest.php', 'lib/html_utility.php', 'tests/Helpers/PhpSource.php'));
         $nativeProducer = 'tests/Fixtures/utility-log-native.php';
     } elseif (defined('STRING_PREDICATE_TEST_COVERAGE')) {
         $nativeSources = array_merge($nativeSources, array('tests/Unit/Core/Helpers/StringPredicateNativeTest.php', 'include/global_constants.php', 'lib/html.php'));

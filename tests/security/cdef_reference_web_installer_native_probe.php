@@ -93,6 +93,9 @@ touch($cookies);
 chmod($cookies, 0600);
 $created = false;
 $server = null;
+$installerLogPath = $root . '/log/cacti.log';
+$initialInstallerLogBytes = is_file($installerLogPath) ? filesize($installerLogPath) : 0;
+if ($initialInstallerLogBytes === false) throw new RuntimeException('Cannot inspect owned installer log boundary.');
 try {
     echo 'SERVER ' . $database->query('SELECT VERSION()')->fetchColumn() . "\n";
     $database->exec("CREATE DATABASE `$schema`");
@@ -163,12 +166,29 @@ try {
     $token = webToken($body);
     $step = 1;
     $repaired = false;
+    $nextTemplates = null;
     $deadline = microtime(true) + 300;
     while (microtime(true) < $deadline) {
+        $stepFields = ['Step' => $step, 'Eula' => 1, 'AutomationMode' => 0];
+        if ($nextTemplates !== null) {
+            $stepFields['Templates'] = $nextTemplates;
+            $nextTemplates = null;
+        }
         [$status, $body] = webRequest($base . 'step_json.php', $cookies, ['__csrf_magic' => $token,
-            'data' => ['Step' => $step, 'Eula' => 1, 'AutomationMode' => 0]]);
+            'data' => $stepFields]);
         $data = json_decode($body, true);
         if ($status !== 200 || !is_array($data) || !isset($data['Step'], $data['Next'])) {
+            // Identifier-only response diagnostics preserve failure evidence
+            // without publishing the response, exception arguments or secrets.
+            $responseState = ['bytes' => strlen($body), 'json_error' => json_last_error_msg()];
+            if (preg_match('/Call to undefined function ([a-zA-Z_\\\\][a-zA-Z0-9_\\\\]*)\(/', $body, $missing)) {
+                $responseState['missing_function'] = $missing[1];
+            }
+            if (preg_match('/(?:Uncaught|Fatal error:).*?(?:Error|Exception).*? in ([^\r\n<>]+?\.php).*?(?:line |:)([0-9]+)/s', $body, $failure)) {
+                $responseState['source_file'] = basename($failure[1]);
+                $responseState['source_line'] = (int) $failure[2];
+            }
+            echo 'WEB_RESPONSE_DIAGNOSTIC ' . json_encode($responseState, JSON_THROW_ON_ERROR) . "\n";
             throw new RuntimeException('The actual web step did not return its JSON contract: HTTP ' . $status . '.');
         }
         echo 'WEB step=' . (int) $data['Step'] . ' next=' . (int) $data['Next']['Step'] . ' enabled=' . (int) $data['Next']['Enabled'] . "\n";
@@ -210,6 +230,19 @@ try {
         if (in_array((int) $data['Step'], [6, 10], true)) {
             installerAssert(str_contains($data['Html'], 'id="confirm"'), 'actual web installer renders explicit acknowledgement at step ' . (int) $data['Step']);
         }
+        if ((int) $data['Step'] === 8) {
+            // Exercise the actual template-selection handoff while keeping this
+            // CDEF contract probe independent of importing every vendor package.
+            $availableTemplates = $data['StepData']['Templates'] ?? null;
+            $selectedTemplate = 'chk_template_Local_Linux_Machine_xml_gz';
+            installerAssert(
+                is_array($availableTemplates) && array_key_exists($selectedTemplate, $availableTemplates)
+                && str_contains($data['Html'], $selectedTemplate),
+                'actual web installer renders the selected Local Linux template'
+            );
+            $nextTemplates = array_fill_keys(array_keys($availableTemplates), false);
+            $nextTemplates[$selectedTemplate] = true;
+        }
         $step = (int) $data['Next']['Step'];
     }
     installerAssert(!$failureUpgrade || $repaired, 'upgrade failure fixture reaches real failure and repaired retry');
@@ -218,12 +251,39 @@ try {
         $database->query('SELECT cacti FROM version')->fetchColumn() === trim(file_get_contents($root . '/include/cacti_version')),
         'actual web Installer records the current version'
     );
+    installerAssert(
+        (int) $database->query("SELECT COUNT(*) FROM host_template WHERE name = 'Local Linux Machine'")->fetchColumn() === 1,
+        'actual web Installer imports the selected device template'
+    );
     require $root . '/lib/cdef_reference.php';
     installerAssert(
         (new \Kadupul\Platform\Infrastructure\Legacy\CdefReferenceContract($database, 1))->ready(),
         'actual web Installer installs the exact native CDEF contract and data readiness'
     );
 } finally {
+    // Retain only non-secret worker lifecycle state before removing the owned
+    // schema and transport files. This leaves every completion assertion intact.
+    if ($created) {
+        try {
+            $keys = ['install_step', 'install_version', 'install_progress', 'install_started', 'install_updated', 'install_complete'];
+            $statement = $database->prepare('SELECT name,value FROM settings WHERE name IN (' . implode(',', array_fill(0, count($keys), '?')) . ') ORDER BY name');
+            $statement->execute($keys);
+            $state = ['settings' => $statement->fetchAll(PDO::FETCH_KEY_PAIR),
+                'processes' => $database->query("SELECT tasktype,taskname,taskid,pid,timeout,started,last_update FROM processes WHERE tasktype='install' AND taskname='master' AND taskid=0")->fetchAll(PDO::FETCH_ASSOC)];
+            // Report only known lifecycle categories, never raw log text or
+            // request/configuration values from the candidate's installer log.
+            $log = is_file($installerLogPath) ? file_get_contents($installerLogPath) : '';
+            if ($log === false) throw new RuntimeException('Cannot read owned installer lifecycle log.');
+            $log = substr($log, $initialInstallerLogBytes);
+            $state['worker_registration_refused'] = str_contains($log, 'Old process still running and has not timed out!');
+            $state['background_start_rejected'] = str_contains($log, 'Background was already started at');
+            echo 'WEB_LIFECYCLE ' . json_encode($state, JSON_THROW_ON_ERROR) . "\n";
+        } catch (Throwable $diagnosticError) {
+            // Diagnostics must not replace a failed completion assertion or
+            // prevent cleanup; omit exception data from the public artifact.
+            echo "WEB_LIFECYCLE unavailable\n";
+        }
+    }
     if (is_resource($server)) {
         proc_terminate($server);
         proc_close($server);

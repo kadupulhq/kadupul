@@ -18,6 +18,13 @@ if (isset($scenario['search_base64'])) {
 }
 mkdir($directory . '/include');
 mkdir($directory . '/lib');
+// Rendering uses the production semantic icon registry and its real map.
+// Keep filesystem effects inside this fixture's temporary application root.
+require_once $root . '/include/vendor/autoload.php';
+mkdir($directory . '/config');
+if (!copy($root . '/config/icons.json', $directory . '/config/icons.json')) {
+    throw new RuntimeException('Could not install the production icon map in the fixture.');
+}
 mkdir($directory . '/include/themes/classic', 0700, true);
 file_put_contents($directory . '/include/themes/classic/main.css', '');
 foreach (array('include/auth.php', 'include/global_session.php', 'include/top_header.php', 'include/bottom_footer.php', 'lib/poller.php', 'lib/utility.php') as $stub) {

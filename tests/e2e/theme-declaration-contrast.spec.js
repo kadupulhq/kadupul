@@ -9,6 +9,7 @@ const path = require('node:path');
 // their colors and backgrounds come entirely from the production stylesheet.
 const levels = ['Emergency', 'Critical', 'Alert', 'Warning', 'Error', 'Notice', 'Info', 'Debug'];
 const fixture = `
+  <div class="cactiContent"><span class="deviceDown" id="offline">Offline device</span><a href="#" id="contentlink">Ordinary content link</a><table><tr class="tableRowGraph"><td><a href="#" id="lightlink">Light panel link</a></td></tr><tr class="odd"><td><a href="#" id="oddlink">Dark row link</a></td></tr></table></div>
   <div class="deviceUnknownBg" id="unknown">Unknown device</div>
   <div class="deviceErrorBg" id="error">Device error</div>
   <div class="deviceAlertBg" id="alert">Device alert</div>
@@ -31,14 +32,14 @@ for (const theme of ['dark', 'paper-plane', 'sunrise']) {
   test(`${theme} scanned declaration pairs remain readable in the browser`, async ({ page }, info) => {
     await page.setContent(`<!doctype html><html><body>${fixture}</body></html>`);
     await page.addStyleTag({ content: fs.readFileSync(path.resolve(__dirname, '../../include/themes', theme, 'main.css'), 'utf8') });
-    await page.addStyleTag({ content: '.popupBox, .submenuoptions, .menuoptions, #nav { display: block !important; position: static !important; }' });
+    await page.addStyleTag({ content: 'body { overflow: auto !important; } .popupBox, .submenuoptions, .menuoptions, #nav { display: block !important; position: static !important; }' });
     // Check the installer fallback separately from its decorative image.
     await page.locator('#install').evaluate(element => { element.style.backgroundImage = 'none'; });
     const cases = ['unknown', 'error', 'alert', 'popup', 'header', ...levels.map(name => `log${name}`)].map(id => ({ id }));
-    if (theme === 'dark') cases.push({ id: 'navlink' }, { id: 'page', hover: true });
-    if (theme === 'paper-plane') cases.push({ id: 'widget' }, { id: 'expanded' }, ...['login', 'submenu', 'menu', 'save', 'action'].map(id => ({ id, hover: true })));
+    if (theme === 'dark') cases.push({ id: 'navlink' }, { id: 'page', hover: true }, { id: 'offline' });
+    if (theme === 'paper-plane') cases.push({ id: 'widget' }, { id: 'expanded' }, { id: 'contentlink', hover: true }, { id: 'lightlink', hover: true }, { id: 'oddlink', hover: true }, ...['login', 'submenu', 'menu', 'save', 'action'].map(id => ({ id, hover: true })));
     if (theme === 'sunrise') cases.push({ id: 'checklabel', pseudo: '::before' }, { id: 'install' }, ...['submenu', 'menu'].map(id => ({ id, hover: true })));
-    expect(cases).toHaveLength(theme === 'dark' ? 15 : theme === 'paper-plane' ? 20 : 17);
+    expect(cases).toHaveLength(theme === 'dark' ? 16 : theme === 'paper-plane' ? 23 : 17);
     const readings = [];
     for (const probe of cases) {
       if (probe.hover) await page.locator(`#${probe.id}`).hover();
@@ -65,10 +66,14 @@ for (const theme of ['dark', 'paper-plane', 'sunrise']) {
         return { id, foreground: style.color, background: style.backgroundColor, ratio: (Math.max(f, b) + 0.05) / (Math.min(f, b) + 0.05) };
       }, probe);
       readings.push(reading);
+      if (theme === 'dark' && probe.id === 'offline') expect(reading.foreground).toBe('rgb(255, 155, 155)');
+      if (theme === 'paper-plane' && probe.id === 'lightlink') expect(reading.foreground).toBe('rgb(51, 51, 51)');
       expect.soft(reading.ratio, `${theme} ${probe.id}: ${JSON.stringify(reading)}`).toBeGreaterThanOrEqual(4.5);
       if (probe.hover) await page.mouse.move(0, 0);
     }
-    await info.attach('computed-contrast', { body: JSON.stringify(readings, null, 2), contentType: 'application/json' });
+    const report = info.outputPath('computed-contrast.json');
+    fs.writeFileSync(report, JSON.stringify(readings, null, 2));
+    await info.attach('computed-contrast', { path: report, contentType: 'application/json' });
     await page.screenshot({ path: info.outputPath(`${theme}-contrast.png`), fullPage: true });
   });
 }

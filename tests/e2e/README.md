@@ -91,6 +91,38 @@ to be reached. `KEEP_UP=1 ./rrd-proxy/run.sh` preserves the stack for
 inspection; use the Compose files with project name
 `kadupul-rrd-proxy-e2e` to inspect logs.
 
+## Theme contrast on real pages
+
+`tests/theme-contrast.spec.ts` logs in, switches the system theme, and measures
+every shipped theme (midwinter in both colour modes) on the console, list,
+edit, settings, graph and login pages, plus open menus, dialogs and message
+boxes. For each page it measures at rest, with rows selected, and while each
+kind of link, row, button and control is hovered and keyboard-focused. It
+checks text at 4.5:1 (3:1 when large), icon glyphs, focus indicators and the
+edges of inputs and switches at 3:1. Colours come from computed style;
+backgrounds come from every element painted under the measured point, with
+alpha composited and each gradient stop tried. A focused control that stays
+outside the viewport fails, since Tab would leave its ring off-screen. Disabled
+controls and text over an image are reported but not failed.
+
+```bash
+cd tests/e2e
+HOST_PORT=8090 docker compose up -d --build
+docker compose exec -T php bash tests/e2e/theme-contrast/seed.sh
+E2E_BASE_URL=http://localhost:8090 npx playwright test tests/theme-contrast.spec.ts
+
+# Measure another revision's theme files on the same stack, then list what
+# the working tree breaks that the other revision did not.
+mkdir -p /tmp/main-themes && git -C ../.. archive origin/main include/themes | tar -x -C /tmp/main-themes
+E2E_BASE_URL=http://localhost:8090 THEME_CONTRAST_LABEL=main \
+    THEME_CONTRAST_ROOT=/tmp/main-themes npx playwright test tests/theme-contrast.spec.ts
+node theme-contrast/compare.js main current
+```
+
+The spec switches the stack's system theme, so run it on its own. Each theme
+writes `theme-contrast-results/theme-contrast-<label>-<theme>.json`;
+`THEME_CONTRAST_THEMES=dark,paw` limits a run.
+
 ## What the stack does at boot
 
 1. MariaDB seeds `/docker-entrypoint-initdb.d/01-schema.sql` (the repo's

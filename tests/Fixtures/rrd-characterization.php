@@ -40,7 +40,8 @@ putenv('TZ=UTC');
 putenv('LANG=en_US.UTF-8');
 putenv('RRDCACHED_ADDRESS');
 $config = array(
-    'cacti_server_os' => 'unix',
+    // include/global_arrays.php picks OS-specific paths when it is loaded.
+    'cacti_server_os' => $scenario['server_os'] ?? 'unix',
     'is_web' => false,
     'poller_id' => 1,
     'base_path' => $root,
@@ -113,11 +114,19 @@ function db_fetch_assoc_prepared($sql, $params = array(), $log = true, $db_conn 
 
 function db_execute($sql, $log = true, $db_conn = false)
 {
-    throw new RuntimeException('Unexpected write: ' . $sql);
+    return db_execute_prepared($sql);
 }
 
 function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = false, $execute_name = 'Exec', $default_value = true, $return_func = 'no_return_function', $return_params = array())
 {
+    // Boost counts cache reads and writes in the SNMP agent cache; a scenario may allow such writes.
+    $normalized = trim(preg_replace('/\s+/', ' ', $sql));
+    foreach ($GLOBALS['scenario']['writes'] ?? array() as $allowed) {
+        if (strpos($normalized, $allowed) !== false) {
+            return true;
+        }
+    }
+
     throw new RuntimeException('Unexpected write: ' . $sql);
 }
 
@@ -192,6 +201,18 @@ require $root . '/lib/html_utility.php';
 require $root . '/lib/mib_cache.php';
 require $root . '/lib/variables.php';
 require $root . '/lib/rrd.php';
+// A parity scenario also loads a frozen copy of the code it replaced.
+foreach ($scenario['require'] ?? array() as $file) {
+    require $root . '/' . $file;
+}
+
+/** Return settings as the real include produced them, for UI contract tests. */
+function rrd_characterization_setting_definitions(): array
+{
+    global $settings, $settings_user;
+
+    return array('system' => $settings, 'user' => $settings_user);
+}
 
 $plugins_integrated = array();
 $_COOKIE = $scenario['cookies'] ?? array();
@@ -239,6 +260,10 @@ foreach ($scenario['calls'] as $call) {
         $returned = array('thrown' => get_class($thrown), 'message' => $thrown->getMessage());
     }
     $printed = ob_get_clean();
+    // The results travel as JSON, which would mangle binary output such as a PNG.
+    if (!empty($call['base64']) && is_string($returned)) {
+        $returned = base64_encode($returned);
+    }
     if (isset($call['rrdp_argument'])) {
         rrd_close($args[$call['rrdp_argument']]);
         $args[$call['rrdp_argument']] = '<rrdp>';

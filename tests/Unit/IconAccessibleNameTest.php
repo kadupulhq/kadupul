@@ -184,6 +184,9 @@ final class IconAccessibleNameTest extends TestCase
             'html_start_box' => 'lib/html.php',
             'html_safe_href' => 'lib/html.php',
             'html_show_tabs_left' => 'lib/html.php',
+            'html_icon_registry' => 'lib/html.php',
+            'html_icon_class' => 'lib/html.php',
+            'html_icon' => 'lib/html.php',
             'is_hexadecimal' => 'lib/functions.php',
             'strip_alpha' => 'lib/functions.php',
             'prepare_validate_result' => 'lib/functions.php',
@@ -191,11 +194,14 @@ final class IconAccessibleNameTest extends TestCase
             'debug_icon' => 'data_debug.php',
         );
 
+        // html_icon() reads config/icons.json through the Composer autoloader.
+        $script = 'require ' . var_export($root . '/include/vendor/autoload.php', true) . ';'
+            . self::STUBS
+            . "\n\$config['base_path'] = " . var_export($root, true) . ';';
         if (in_array('html_escape', $functions, true)) {
             array_unshift($functions, 'html_escape_charset');
+            array_push($functions, 'html_icon_registry', 'html_icon_class', 'html_icon');
         }
-
-        $script = self::STUBS;
         foreach ($functions as $function) {
             $source = file_get_contents($root . '/' . $sources[$function]);
             self::assertIsString($source);

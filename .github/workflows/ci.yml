@@ -341,6 +341,14 @@ jobs:
         # throws on every diagnostic, including CSV default-argument deprecations.
         run: php -d error_reporting=8191 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/CsvExplicitEscapeParityTest.php --colors=never
 
+      - name: Verify never and legacy regression contracts
+        working-directory: tests
+        run: |
+          php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/Core/NeverReturnTypeTest.php --colors=never
+          php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/Security/Auth/ReportAdminGroupRealmTest.php --colors=never
+          php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/HardeningAuth2026RegressionTest.php --colors=never
+          php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/TreeSortFalseGuardTest.php --colors=never
+
       - name: Verify string predicates and directory boundaries
         working-directory: tests
         run: |
@@ -510,7 +518,7 @@ jobs:
         if: steps.detect.outputs.found == 'true'
         run: |
           npm run --if-present test
-          node --test tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs tests/Unit/midwinter-cookie.test.mjs tests/Unit/midwinter-css-imports.test.mjs tests/Unit/theme-scripts.test.mjs tests/Unit/selectmenu-scroll.test.mjs tests/Unit/icon-classes.test.mjs tests/Unit/permission-filter.test.mjs
+          node --test tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs tests/Unit/midwinter-cookie.test.mjs tests/Unit/midwinter-css-imports.test.mjs tests/Unit/theme-scripts.test.mjs tests/Unit/selectmenu-scroll.test.mjs tests/Unit/icon-classes.test.mjs tests/Unit/icon-registry.test.mjs tests/Unit/permission-filter.test.mjs
 
   changelog:
     timeout-minutes: 5

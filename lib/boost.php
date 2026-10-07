@@ -6,6 +6,26 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+/* boost_graph_set_file() writes images under this prefix before renaming them;
+ * boost_purge_cached_png_files() removes old ones a dead writer left behind */
+define('BOOST_PNG_TEMP_PREFIX', 'boost_png_tmp_');
+
+/** Acquire an old-RRDtool writer lock with a bounded number of attempts. */
+function boost_acquire_legacy_lock($local_data_id, $max_attempts = 60)
+{
+    $local_data_id = (int) $local_data_id;
+    $max_attempts = max(1, (int) $max_attempts);
+    $lock_attempts = 0;
+
+    while (!db_fetch_cell_prepared('SELECT GET_LOCK(?, 1)', array('boost.single_ds.' . $local_data_id))) {
+        if (++$lock_attempts >= $max_attempts) {
+            return false;
+        }
+        usleep(50000);
+    }
+    return true;
+}
+
 /** Failed workers may leave samples even when other children succeeded. */
 function boost_archive_is_empty($table)
 {
@@ -382,7 +402,98 @@ function boost_return_cached_image(&$graph_data_array)
     }
 }
 
-function boost_graph_cache_check($local_graph_id, $rra_id, $rrdtool_pipe, &$graph_data_array, $return = true)
+/**
+ * Every per-viewer or per-request input that changes rrdtool_function_graph()
+ * output must be here, or an image rendered for one user is served to another.
+ */
+function boost_graph_cache_render_key($graph_data_array)
+{
+    if (isset($graph_data_array['graph_theme'])) {
+        $theme = cacti_validate_theme($graph_data_array['graph_theme']);
+    } else {
+        $theme = get_selected_theme();
+    }
+
+    $color_mode = '';
+    if (isset($_COOKIE['CactiColorMode']) && in_array($_COOKIE['CactiColorMode'], array('dark', 'light', 'dark-dimmed'), true)) {
+        $color_mode = $_COOKIE['CactiColorMode'];
+    }
+
+    $parts = array('theme' => $theme, 'color_mode' => $color_mode);
+
+    /* the fonts rrdtool_function_theme_font_options() draws with, resolved from
+     * the theme, the site and the viewer; settings that resolve alike share a key */
+    $parts['fonts'] = rrdtool_graph_font_profile(rrdtool_theme_fonts($theme))->fingerprint();
+
+    /* the From/To legend comment, as rrdtool_function_format_graph_date() resolves it */
+    $parts['date_format'] = (string) read_user_setting('default_date_format', read_config_option('default_date_format'));
+    $parts['datechar']    = (string) read_user_setting('default_datechar', read_config_option('default_datechar'));
+
+    /* cacti_time_zone_set() moves both zones to the viewer's browser offset; PHP
+     * dates the legend while RRDtool dates the axis. rrdtool_set_language() sets
+     * LANG from CACTI_LOCALE before each render, so the viewer's language is
+     * keyed through the locale globals below; LANG here is the web server's */
+    $parts['php_tz'] = date_default_timezone_get();
+    $parts['tz']     = (string) getenv('TZ');
+    $parts['lang']   = (string) getenv('LANG');
+
+    /* number_format_i18n() formats |sum:| legends from these whatever LANG holds */
+    $parts['locale']  = (string) ($GLOBALS['cacti_locale'] ?? '');
+    $parts['country'] = (string) ($GLOBALS['cacti_country'] ?? '');
+
+    /* the window a preset resolves to follows the viewer's first weekday and day
+     * shift; graph pages anchor it on the last poller run, so it holds for one interval.
+     * A window the caller leaves out is keyed as absent, as the check sees it */
+    $parts['graph_start'] = (string) ($graph_data_array['graph_start'] ?? '');
+    $parts['graph_end']   = (string) ($graph_data_array['graph_end'] ?? '');
+
+    /* The filename casts dimensions and uses isset() for thumbnail names,
+     * while the renderer validates dimensions and tests the legend value.
+     * Keep the original values and omission state to avoid those collisions. */
+    foreach (array('graph_width', 'graph_height', 'graph_nolegend') as $field) {
+        $parts[$field] = array(array_key_exists($field, $graph_data_array), $graph_data_array[$field] ?? null);
+    }
+
+    /* graph_json.php asks for graphv output, and image_format=png overrides an SVG template */
+    $parts['graphv']       = isset($graph_data_array['graphv']) ? 'on' : '';
+    $parts['image_format'] = (string) ($graph_data_array['image_format'] ?? '');
+
+    /* serialize() is binary safe, so no part has to be valid UTF-8 */
+    return hash('sha256', serialize($parts));
+}
+
+function boost_graph_cache_filename($cache_directory, $local_graph_id, $rra_id, $timespan, $graph_data_array)
+{
+    if ($rra_id > 0) {
+        $cache_file = $cache_directory . '/' . get_selected_theme() . '_lgi_' . $local_graph_id . '_rrai_' . $rra_id;
+    } else {
+        $cache_file = $cache_directory . '/' . get_selected_theme() . '_lgi_' . $local_graph_id . '_rrai_' . $rra_id . '_tsi_' . $timespan;
+    }
+
+    if (isset($graph_data_array['graph_height'])) {
+        $cache_file .= '_height_' . (int) $graph_data_array['graph_height'];
+    }
+
+    if (isset($graph_data_array['graph_width'])) {
+        $cache_file .= '_width_' . (int) $graph_data_array['graph_width'];
+    }
+
+    $cache_file .= '_rk_' . boost_graph_cache_render_key($graph_data_array);
+
+    if (isset($graph_data_array['graph_nolegend'])) {
+        $cache_file .= '_thumb.png';
+    } else {
+        $cache_file .= '.png';
+    }
+
+    return $cache_file;
+}
+
+/**
+ * $cache_file receives the path the image for this request is cached under;
+ * pass it to boost_graph_set_file() so the write cannot pick another name.
+ */
+function boost_graph_cache_check($local_graph_id, $rra_id, $rrdtool_pipe, &$graph_data_array, $return = true, &$cache_file = null)
 {
     global $config;
 
@@ -433,6 +544,19 @@ function boost_graph_cache_check($local_graph_id, $rra_id, $rrdtool_pipe, &$grap
         return false;
     }
 
+    if (isset($_SESSION['sess_current_timespan'])) {
+        $timespan = $_SESSION['sess_current_timespan'];
+    } else {
+        $timespan = 0;
+    }
+
+    /* name the image before the on-demand updates below, which move PHP to the
+     * server zone until the render moves it back to the viewer's */
+    $cache_directory = read_config_option('boost_png_cache_directory');
+    if ($cache_directory != '') {
+        $cache_file = boost_graph_cache_filename($cache_directory, $local_graph_id, $rra_id, $timespan, $graph_data_array);
+    }
+
     /* get the information to populate into the rrd files */
     if (boost_check_correct_enabled()) {
         /* before we make a graph, we need to check for rrd updates and perform them. */
@@ -465,43 +589,13 @@ function boost_graph_cache_check($local_graph_id, $rra_id, $rrdtool_pipe, &$grap
         }
     }
 
-    if (isset($_SESSION['sess_current_timespan'])) {
-        $timespan = $_SESSION['sess_current_timespan'];
-    } else {
-        $timespan = 0;
-    }
-
     /* check the graph cache and use it if it is valid, otherwise turn over to
      * cacti's graphing functions.
      */
     if (boost_return_cached_image($graph_data_array)) {
-        /* if timespan is greater than 1, it is a predefined, if it does not
-         * exist, it is the old fashioned MRTG type graph
-         */
-        $cache_directory = read_config_option('boost_png_cache_directory');
-
         if ($cache_directory != '') {
             if (is_dir($cache_directory)) {
                 if (is_writable($cache_directory)) {
-                    if ($rra_id > 0) {
-                        $cache_file = $cache_directory . '/' . get_selected_theme() . '_lgi_' . $local_graph_id . '_rrai_' . $rra_id;
-                    } else {
-                        $cache_file = $cache_directory . '/' . get_selected_theme() . '_lgi_' . $local_graph_id . '_rrai_' . $rra_id . '_tsi_' . $timespan;
-                    }
-
-                    if (isset($graph_data_array['graph_height'])) {
-                        $cache_file .= '_height_' . $graph_data_array['graph_height'];
-                    }
-                    if (isset($graph_data_array['graph_width'])) {
-                        $cache_file .= '_width_' . $graph_data_array['graph_width'];
-                    }
-
-                    if (isset($graph_data_array['graph_nolegend'])) {
-                        $cache_file .= '_thumb.png';
-                    } else {
-                        $cache_file .= '.png';
-                    }
-
                     if (file_exists($cache_file)) {
                         $mod_time = filemtime($cache_file);
                         $poller_interval = read_config_option('poller_interval');
@@ -511,10 +605,18 @@ function boost_graph_cache_check($local_graph_id, $rra_id, $rrdtool_pipe, &$grap
                         }
 
                         if (($mod_time + $poller_interval) > time()) {
+                            $output = false;
                             if ($fileptr = fopen($cache_file, 'rb')) {
-                                $output = fread($fileptr, filesize($cache_file));
+                                /* the size of the file opened, not of whatever the name points to now;
+                                 * fread() refuses a length of 0 */
+                                $stat = fstat($fileptr);
+                                if ($stat !== false && $stat['size'] > 0) {
+                                    $output = fread($fileptr, $stat['size']);
+                                }
                                 fclose($fileptr);
+                            }
 
+                            if ($output !== false && $output !== '') {
                                 /* restore original error handler */
                                 restore_error_handler();
 
@@ -525,7 +627,7 @@ function boost_graph_cache_check($local_graph_id, $rra_id, $rrdtool_pipe, &$grap
 
                                 return $output;
                             } else {
-                                cacti_log("Attempting to open cache file '$cache_file' failed", false, 'BOOST', POLLER_VERBOSITY_DEBUG);
+                                cacti_log("Attempting to read cache file '$cache_file' failed", false, 'BOOST', POLLER_VERBOSITY_DEBUG);
                             }
                         } else {
                             cacti_log("Boost Cache PNG Expired.  Image '$cache_file' will be recreated", false, 'BOOST', POLLER_VERBOSITY_DEBUG);
@@ -574,9 +676,19 @@ function boost_prep_graph_array($graph_data_array)
     return $graph_data_array;
 }
 
-function boost_graph_set_file(&$output, $local_graph_id, $rra_id)
+/**
+ * $cache_file should be the path boost_graph_cache_check() returned for this
+ * render. Without it the name is built again from $graph_data_array, which must
+ * then be the array the check was given, before the render filled in any
+ * defaults. The global fallback keeps older three-argument callers working.
+ */
+function boost_graph_set_file(&$output, $local_graph_id, $rra_id, $graph_data_array = null, $cache_file = null)
 {
-    global $config, $boost_sock, $graph_data_array;
+    global $config, $boost_sock;
+
+    if ($graph_data_array === null) {
+        $graph_data_array = $GLOBALS['graph_data_array'] ?? array();
+    }
 
     /* SECURITY: Cast identifiers to integers to prevent path traversal */
     $local_graph_id = (int) $local_graph_id;
@@ -609,43 +721,34 @@ function boost_graph_set_file(&$output, $local_graph_id, $rra_id)
 
         if ($cache_directory != '') {
             if (is_dir($cache_directory)) {
-                if ($rra_id > 0) {
-                    $cache_file = $cache_directory . '/' . get_selected_theme() . '_lgi_' . $local_graph_id . '_rrai_' . $rra_id;
-                } else {
-                    $cache_file = $cache_directory . '/' . get_selected_theme() . '_lgi_' . $local_graph_id . '_rrai_' . $rra_id . '_tsi_' . $timespan;
-                }
-
-                if (isset($graph_data_array['graph_height'])) {
-                    $cache_file .= '_height_' . $graph_data_array['graph_height'];
-                }
-
-                if (isset($graph_data_array['graph_width'])) {
-                    $cache_file .= '_width_' . $graph_data_array['graph_width'];
-                }
-
-                if (isset($graph_data_array['graph_nolegend'])) {
-                    $cache_file .= '_thumb.png';
-                } else {
-                    $cache_file .= '.png';
+                /* SECURITY: only a PNG name inside the cache directory is written */
+                if (!is_string($cache_file) || dirname($cache_file) !== dirname($cache_directory . '/x') || substr($cache_file, -4) !== '.png') {
+                    $cache_file = boost_graph_cache_filename($cache_directory, $local_graph_id, $rra_id, $timespan, $graph_data_array);
                 }
 
                 if (is_writable($cache_directory)) {
                     /* if the cache file was created in a prior step, save it */
                     if (strlen($output) > 10) {
-                        /* SECURITY: Use umask to set permissions at creation time,
-                           preventing symlink TOCTOU privilege escalation */
-                        $old_umask = umask(0111);
+                        /* SECURITY: the cache directory may be writable by other users and
+                         * need not be sticky, so a name can be swapped for a link at any time.
+                         * Mode 'x' creates the file exclusively and refuses an existing name or
+                         * link, the image is written through that descriptor rather than by
+                         * name, and rename() and unlink() act on the name without following
+                         * it. Readers see the old image or the whole new one */
+                        $temp_file = $cache_directory . '/' . BOOST_PNG_TEMP_PREFIX . bin2hex(random_bytes(8));
+                        $handle    = @fopen($temp_file, 'xb');
 
-                        if ($fileptr = fopen($cache_file, 'w')) {
-                            fwrite($fileptr, $output, strlen($output));
-                            fclose($fileptr);
+                        if ($handle !== false) {
+                            $written = fwrite($handle, $output);
 
-                            /* count the number of images that had to be cached */
-                            $mc->object('boostStatsTotalsImagesCacheWrites')->count();
-                            $mc->object('boostStatsLastUpdate')->set(time());
+                            if (fclose($handle) && $written === strlen($output) && rename($temp_file, $cache_file)) {
+                                /* count the number of images that had to be cached */
+                                $mc->object('boostStatsTotalsImagesCacheWrites')->count();
+                                $mc->object('boostStatsLastUpdate')->set(time());
+                            } else {
+                                @unlink($temp_file);
+                            }
                         }
-
-                        umask($old_umask);
                     }
                 } else {
                     cacti_log('ERROR: Boost Cache Directory is not writable!  Can not cache images', false, 'BOOST');

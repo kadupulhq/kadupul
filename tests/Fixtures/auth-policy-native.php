@@ -48,6 +48,14 @@ foreach ($scenario['groups'] ?? [] as $index => $group) {
     $db->prepare('INSERT INTO user_auth_group_members VALUES (?, ?)')->execute([$group['user'] ?? 42, $id]);
     $db->prepare('INSERT INTO user_auth_group_realm VALUES (?, 21)')->execute([$id]);
     $db->prepare('UPDATE user_auth_group SET policy_trees=? WHERE id=?')->execute([$group['tree_policy'] ?? 1, $id]);
+    if ($scenario['operation'] === 'graphs') {
+        $policy = $group['graph_policy'] ?? 2;
+        $db->prepare('UPDATE user_auth_group SET policy_graphs=?,policy_hosts=?,policy_graph_templates=? WHERE id=?')->execute([$policy, $policy, $policy, $id]);
+        foreach ($group['graph_exceptions'] ?? [] as $type) {
+            $item = [1 => 100, 3 => 101, 4 => 102][$type];
+            $db->prepare('INSERT INTO user_auth_group_perms VALUES (?, ?, ?)')->execute([$id, $type, $item]);
+        }
+    }
     foreach ($group['exceptions'] ?? [] as $type) {
         $db->prepare('INSERT INTO user_auth_group_perms VALUES (?, ?, 100)')->execute([$id, $type]);
     }
@@ -105,6 +113,10 @@ function read_config_option($name)
 {
     return $name === 'auth_method' ? ($GLOBALS['scenario']['auth_method'] ?? 1) : ($GLOBALS['scenario']['config'][$name] ?? '');
 }
+function read_user_setting($name, ...$args)
+{
+    return '';
+}
 function cacti_version_compare($left, $right, $operator)
 {
     return version_compare($left, $right, $operator);
@@ -130,6 +142,34 @@ require $root . '/lib/auth.php';
 $result = null;
 $cached = null;
 switch ($scenario['operation']) {
+    case 'graphs':
+        // Persist the graph/host/template relationships used by the production
+        // query. Distinct IDs catch a permission joined to the wrong resource.
+        $db->exec("ALTER TABLE host ADD deleted TEXT DEFAULT ''; ALTER TABLE host ADD disabled TEXT DEFAULT '';
+CREATE TABLE graph_local(id INTEGER PRIMARY KEY,host_id INTEGER,graph_template_id INTEGER,snmp_index TEXT,snmp_query_id INTEGER);
+CREATE TABLE graph_templates(id INTEGER PRIMARY KEY,name TEXT);
+CREATE TABLE graph_templates_graph(local_graph_id INTEGER,title_cache TEXT,width INTEGER,height INTEGER);
+INSERT INTO host(id,description) VALUES(101,'Fixture host');
+INSERT INTO graph_templates VALUES(102,'Fixture template');
+INSERT INTO graph_local VALUES(100,101,102,'interface',1);
+INSERT INTO graph_templates_graph VALUES(100,'Fixture graph',500,120);");
+        $db->sqliteCreateFunction('IF', static fn($condition, $yes, $no) => $condition ? $yes : $no);
+        foreach ($scenario['graph_exceptions'] ?? [] as $type) {
+            $item = [1 => 100, 3 => 101, 4 => 102][$type];
+            $db->prepare('INSERT INTO user_auth_perms VALUES (42, ?, ?)')->execute([$type, $item]);
+        }
+        $where = get_policy_where($scenario['config']['graph_auth_method'], get_policies(42), '');
+        $query = 'SELECT gl.id FROM graph_local AS gl LEFT JOIN host AS h ON h.id=gl.host_id ' . $where;
+        $total = 0;
+        $rows = get_allowed_graphs('', '', '', $total, 42, 100);
+        $result = [
+            'policy_rows' => array_column(db_fetch_assoc($query), 'id'),
+            'allowed_rows' => array_column($rows, 'local_graph_id'),
+            'total' => $total,
+            'allowed' => is_graph_allowed(100, 42),
+            'missing' => is_graph_allowed(999, 42),
+        ];
+        break;
     case 'branch':
         if (!empty($scenario['graph'])) {
             $db->exec('UPDATE graph_tree_items SET local_graph_id=100 WHERE id=12');
