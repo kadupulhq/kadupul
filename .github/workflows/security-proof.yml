@@ -29,6 +29,7 @@ concurrency:
 
 jobs:
   sink-inventory-guard:
+    timeout-minutes: 20
     name: sink and architectural hotspot guard
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     steps:
@@ -53,6 +54,7 @@ jobs:
         run: tests/security/verify_architectural_hotspots.sh
 
   entry-point-inventory:
+    timeout-minutes: 30
     name: entry-point gate inventory
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     steps:
@@ -95,6 +97,7 @@ jobs:
         run: mise exec python@3.12.12 -- python tests/security/test_entry_point_apache_denies.py
 
   branding-migration-guard:
+    timeout-minutes: 20
     name: branding migration (utf8mb4 and latin1)
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     services:
@@ -125,6 +128,7 @@ jobs:
         run: php tests/security/verify_branding_migration.php
 
   advisory-proof-matrix:
+    timeout-minutes: 20
     name: private advisory proof matrix
     if: github.event_name == 'workflow_dispatch'
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}

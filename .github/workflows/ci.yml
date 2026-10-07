@@ -14,6 +14,7 @@ concurrency:
 
 jobs:
   gettext-catalogs:
+    timeout-minutes: 15
     name: Gettext source and compiled catalogs
     runs-on: ubuntu-latest
     steps:
@@ -24,6 +25,8 @@ jobs:
         with:
           install_args: python@3.12.12
           add_shims_to_path: false
+      - name: Verify selective Sonar scheduling
+        run: mise exec python@3.12.12 -- python -m unittest discover -s tests/security -p test_sonar_change_scope.py -v
       - name: Install GNU gettext tools
         run: sudo apt-get update && sudo apt-get install -y gettext
       - name: Verify every shipped source and compiled catalog
@@ -32,6 +35,7 @@ jobs:
         run: mise exec python@3.12.12 -- python tests/security/test_gettext_catalogs.py
 
   runtime-floor:
+    timeout-minutes: 15
     name: PHP runtime boundary (${{ matrix.php }})
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     strategy:
@@ -63,6 +67,7 @@ jobs:
           mise exec python@3.12.12 -- python tests/tools/runtime_floor.py --php-version "$TEST_PHP_VERSION"
 
   windows-storage-preflight:
+    timeout-minutes: 20
     name: Windows storage access
     runs-on: windows-2022
     steps:
@@ -101,6 +106,7 @@ jobs:
           }
 
   database-contracts:
+    timeout-minutes: 45
     name: Database contracts (${{ matrix.database }})
     runs-on: ubuntu-22.04
     strategy:
@@ -253,6 +259,7 @@ jobs:
           if-no-files-found: error
 
   php:
+    timeout-minutes: 60
     name: PHP ${{ matrix.php }}
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     strategy:
@@ -445,6 +452,7 @@ jobs:
           if-no-files-found: warn
 
   style:
+    timeout-minutes: 20
     name: Code style
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     steps:
@@ -474,6 +482,7 @@ jobs:
         run: bash tests/tools/test_githooks_install.sh
 
   javascript:
+    timeout-minutes: 30
     name: JavaScript
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     steps:
@@ -527,6 +536,7 @@ jobs:
           node --test tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs tests/Unit/midwinter-cookie.test.mjs tests/Unit/midwinter-css-imports.test.mjs tests/Unit/theme-scripts.test.mjs tests/Unit/selectmenu-scroll.test.mjs tests/Unit/icon-classes.test.mjs tests/Unit/icon-registry.test.mjs tests/Unit/permission-filter.test.mjs tests/Unit/realtime-preferences.test.mjs tests/Unit/post-action-links.test.mjs tests/Unit/html-sink-escaping.test.mjs
 
   changelog:
+    timeout-minutes: 5
     name: Changelog
     # The release workflow refuses to publish a tag the changelog does not
     # describe. Finding that out at tag time is the worst moment, so catch it
