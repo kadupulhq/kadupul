@@ -4,7 +4,13 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main, 'chore/consolidate-main-*']
+  workflow_dispatch:
+    inputs:
+      run_sonar:
+        description: Run complete coverage and Sonar analysis on this branch
+        type: boolean
+        default: true
+        required: true
 
 permissions:
   contents: read
@@ -15,6 +21,7 @@ concurrency:
 
 jobs:
   scope:
+    timeout-minutes: 10
     name: Sonar analysis scope
     runs-on: ubuntu-latest
     outputs:
@@ -33,18 +40,33 @@ jobs:
         run: mise exec python@3.12.12 -- python -m unittest discover -s tests/security -p test_sonar_change_scope.py -v
       - name: Classify the complete tested change
         id: scope
+        env:
+          ENABLE_SONAR: ${{ vars.ENABLE_SONAR }}
+          SONAR_ALL_PRS: ${{ vars.SONAR_ALL_PRS }}
+          RUN_SONAR: ${{ inputs.run_sonar }}
+          REPOSITORY: ${{ github.repository }}
+          ACTOR: ${{ github.actor }}
         run: |
           mise exec python@3.12.12 -- python tests/security/sonar_change_scope.py \
             --checkout "$GITHUB_WORKSPACE" --event-path "$GITHUB_EVENT_PATH" \
             --event-name "$GITHUB_EVENT_NAME" --expected-checkout "$GITHUB_SHA" \
-            --output "$GITHUB_OUTPUT"
+            --output "$GITHUB_OUTPUT" --enable-sonar "$ENABLE_SONAR" \
+            --all-prs "$SONAR_ALL_PRS" --run-sonar "$RUN_SONAR" \
+            --repository "$REPOSITORY" --actor "$ACTOR" --ref "$GITHUB_REF"
 
   analyze:
+    timeout-minutes: 180
     name: SonarQube Cloud analysis
     needs: scope
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
-    # Fork and Dependabot pull requests get no secrets, so the scan cannot authenticate there.
-    if: ${{ needs.scope.outputs.full_analysis == 'true' && (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]') }}
+    # Keep a native trust boundary even if PR-authored classification code changes.
+    if: >-
+      vars.ENABLE_SONAR == 'true' && needs.scope.outputs.full_analysis == 'true' &&
+      github.actor != 'dependabot[bot]' &&
+      ((github.event_name == 'push' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)) ||
+       (github.event_name == 'workflow_dispatch' && inputs.run_sonar) ||
+       (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository &&
+        (vars.SONAR_ALL_PRS == 'true' || startsWith(github.head_ref, 'sonar/') || startsWith(github.head_ref, 'release/'))))
     permissions:
       contents: read
       pull-requests: read
@@ -62,6 +84,14 @@ jobs:
           --health-cmd="healthcheck.sh --connect --innodb_initialized"
           --health-interval=5s --health-timeout=5s --health-retries=20
     steps:
+      - name: Verify requested analysis credentials
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          if [ -z "$SONAR_TOKEN" ]; then
+            echo '::error::Sonar was requested but SONAR_TOKEN is not configured.'
+            exit 1
+          fi
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -83,6 +113,16 @@ jobs:
         run: |
           sudo apt-get update -o Acquire::Retries=3
           sudo apt-get install -y --no-install-recommends rrdtool
+
+      - name: Locate Composer download cache
+        id: composer-cache
+        run: echo "directory=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache locked dependency downloads
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: ${{ steps.composer-cache.outputs.directory }}
+          key: sonar-composer-${{ runner.os }}-php84-${{ hashFiles('composer.lock', 'tests/composer.lock') }}
 
       - name: Install application dependencies
         run: composer install --no-interaction --no-progress
@@ -107,6 +147,10 @@ jobs:
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '22.22.2'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            tests/e2e/package-lock.json
 
       - name: Build browser assets for compatibility tests
         run: npm ci --ignore-scripts && npm run build
@@ -208,5 +252,25 @@ jobs:
 
       - name: Scan
         uses: SonarSource/sonarqube-scan-action@d209202bc7d53ff1cc128f7f907dac145c9d6ae9 # v8.3.0
+        with:
+          args: -Dsonar.qualitygate.wait=true -Dsonar.qualitygate.timeout=600
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  quality-gate:
+    name: Sonar Quality Gate
+    needs: [scope, analyze]
+    # Opt-in future enforcement: skipped analysis cannot masquerade as a gate pass.
+    if: ${{ always() && vars.SONAR_ALL_PRS == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require completed analysis
+        env:
+          SCOPE_RESULT: ${{ needs.scope.result }}
+          ANALYSIS_RESULT: ${{ needs.analyze.result }}
+        run: |
+          if [ "$SCOPE_RESULT" != 'success' ] || [ "$ANALYSIS_RESULT" != 'success' ]; then
+            echo '::error::Required Sonar analysis did not pass. Check ENABLE_SONAR, credentials, trust eligibility, and the analysis log.'
+            exit 1
+          fi
