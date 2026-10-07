@@ -13,7 +13,7 @@
 }
 .jstree-anchor {
   display: inline-block;
-  color: #7e818f;
+  color: var(--text-color-normal);
   white-space: nowrap;
 /* padding: 0 4px 0 1px; */
   margin: 0;
@@ -33,7 +33,7 @@
 }
 
 .jstree-anchor:hover {
-    color: #f2f2f3 !important;
+    color: var(--text-color-highlight) !important;
 }
 
 .jstree-icon {
@@ -371,7 +371,7 @@
   background: transparent;
   box-shadow: none;
   border-radius: 0;
-  color: #f2f2f3 !important;
+  color: var(--text-color-highlight) !important;
 }
 .jstree-default .jstree-wholerow {
   -moz-box-sizing: border-box;
@@ -394,7 +394,7 @@
 .jstree-default .jstree-anchor {
   line-height: 20px;
   height: 20px;
-  color: #7e818f;
+  color: var(--text-color-normal);
 }
 .jstree-default .jstree-icon {
   width: 22px;

@@ -1,14 +1,4 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
 version: v1.25.1
-# ignores vulnerabilities until expiry date; change duration by modifying expiry date
-ignore:
-  SNYK-PHP-SQUIZLABSPHPCODESNIFFER-18565129:
-    - doctrine/dbal@4.4.4 > squizlabs/php_codesniffer@4.0.1:
-        reason: >-
-          Snyk models Doctrine DBAL’s embedded require-dev metadata as an
-          installed transitive dependency. Composer does not install
-          dependencies’ require-dev packages; composer.lock has no root package
-          entry for PHP_CodeSniffer. Recheck when DBAL metadata changes.
-        expires: 2026-10-29T00:00:00.000Z
-        created: 2026-09-29T04:00:51.279Z
+ignore: {}
 patch: {}

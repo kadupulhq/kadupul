@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
+
 html {
     --hue: 233;
     --accent-hue: 240;
@@ -5,13 +11,51 @@ html {
     --special-hue: 233;
     --special2-hue: 218;
     --progress-hue: 208;
-    --text-color-normal: hsl(var(--hue), 7%, 50%);
+    --text-color-normal: hsl(var(--hue), 7%, 58%);
     --text-color-medium: hsl(var(--hue), 7%, 60%);
     --text-color-light: hsl(var(--hue), 7%, 75%);
-    --text-color-lighter: hsl(var(--hue), 7%, 85%);
+    --text-color-lighter-on-dark: hsl(var(--hue), 7%, 85%);
+    --text-color-lighter: var(--text-color-lighter-on-dark);
     --text-color-richer: hsl(var(--hue), 50%, 72%);
-    --text-color-highlight: hsl(var(--accent-hue), 4%, 95%);
-    --text-color-highlight-a: hsl(var(--accent2-hue), 64%, 60%);
+    --text-color-highlight-on-dark: hsl(var(--accent-hue), 4%, 95%);
+    --text-color-highlight: var(--text-color-highlight-on-dark);
+    --text-color-widget: #CECECE;
+    --text-color-control: #969BA3;
+    --text-color-highlight-a-on-dark: hsl(var(--accent2-hue), 64%, 60%);
+    --text-color-highlight-a: var(--text-color-highlight-a-on-dark);
+    --focus-ring: hsl(var(--accent2-hue), 64%, 60%);
+    /* A halo behind the ring keeps it visible on fills lighter than the page. */
+    --focus-halo: hsl(var(--hue), 23%, 6%);
+    --control-border: hsl(var(--hue), 19%, 52%);
+    /* Status colours for dark fills; light mode keeps these on its dark panels. */
+    --status-up-on-dark: #00ac00;
+    --status-down-on-dark: #ff5b5b;
+    --status-unknown-on-dark: #8686ff;
+    --status-disabled-on-dark: #a1a1a1;
+    --status-recovering-on-dark: yellow;
+    --status-error-on-dark: #ffaa00;
+    --status-down-muted-on-dark: #ffe333;
+    --status-threshold-on-dark: #ffa833;
+    --status-unmonitored-on-dark: rgba(250, 253, 158, 0.8);
+    --status-warning-on-dark: #c28908;
+    --status-alert-on-dark: #ff5f0e;
+    --status-graphed-on-dark: #00ac00;
+    --status-not-graphed-on-dark: #949494;
+    --status-verbose-on-dark: orange;
+    --status-up: var(--status-up-on-dark);
+    --status-down: var(--status-down-on-dark);
+    --status-unknown: var(--status-unknown-on-dark);
+    --status-disabled: var(--status-disabled-on-dark);
+    --status-recovering: var(--status-recovering-on-dark);
+    --status-error: var(--status-error-on-dark);
+    --status-down-muted: var(--status-down-muted-on-dark);
+    --status-threshold: var(--status-threshold-on-dark);
+    --status-unmonitored: var(--status-unmonitored-on-dark);
+    --status-warning: var(--status-warning-on-dark);
+    --status-alert: var(--status-alert-on-dark);
+    --status-graphed: var(--status-graphed-on-dark);
+    --status-not-graphed: var(--status-not-graphed-on-dark);
+    --status-verbose: var(--status-verbose-on-dark);
     --text-color-navigation: hsl(var(--hue), 7%, 60%);
     --text-color-navigation-highlight: hsl(var(--hue), 7%, 85%);
     --background: hsl(var(--hue), 19%, 17%);
@@ -42,8 +86,29 @@ html[data-theme-color='light'] {
     --text-color-medium: hsl(var(--hue), 7%, 50%);
     --text-color-light: hsl(var(--hue), 7%, 25%);
     --text-color-lighter: hsl(var(--hue), 7%, 5%);
-    --text-color-navigation: hsl(var(--hue), 7%, 75%);
+    --text-color-highlight-a: hsl(var(--accent2-hue), 64%, 38%);
+    --text-color-navigation: hsl(var(--hue), 7%, 93%);
     --text-color-navigation-highlight: hsl(var(--hue), 7%, 100%);
+    --focus-ring: hsl(var(--accent2-hue), 64%, 38%);
+    --focus-halo: hsl(var(--hue), 100%, 100%);
+    --text-color-highlight: hsl(var(--hue), 7%, 35%);
+    --text-color-widget: #717171;
+    --text-color-control: #6d727c;
+    --control-border: hsl(var(--hue), 0%, 54%);
+    --status-up: #008000;
+    --status-down: #dd0000;
+    --status-unknown: #0000ff;
+    --status-disabled: #6d6d6d;
+    --status-recovering: #717100;
+    --status-error: #956300;
+    --status-down-muted: #7e6d00;
+    --status-threshold: #a15c00;
+    --status-unmonitored: #6f7202;
+    --status-warning: #906606;
+    --status-alert: #660000;
+    --status-graphed: #008000;
+    --status-not-graphed: #484848;
+    --status-verbose: #c07c00;
     --background: hsl(var(--hue), 27.3%, 97.1%);
     --background-content: hsl(var(--hue), 100%, 100%);
     --background-filter: hsl(var(--hue), 17%, 18%);

@@ -3,12 +3,15 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once getenv('AUDIT_TEST_AUTOLOAD');
+
 $config = array('base_path' => dirname(__DIR__), 'poller_id' => 1);
 $database_default = getenv('AUDIT_TEST_CASE') === 'leading-hyphen' ? '-audit' : 'fixture database; echo ignored';
 $database_username = 'fixture';
 $database_password = 'fixture password with quotes \" and spaces';
 $database_hostname = 'localhost';
 $database_port = '3306';
+$database_ssl = false;
 define('CACTI_VERSION', getenv('AUDIT_TEST_VERSION'));
 define('COPYRIGHT_YEARS', '2004-2026');
 $db = new PDO('sqlite:' . getenv('AUDIT_TEST_SQLITE'));

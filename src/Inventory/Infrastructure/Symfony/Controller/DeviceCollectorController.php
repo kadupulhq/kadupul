@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -10,11 +12,10 @@ namespace Kadupul\Inventory\Infrastructure\Symfony\Controller;
 use Kadupul\Inventory\Application\Command\AssignDeviceCollector;
 use Kadupul\Inventory\Application\Query\PrepareDeviceCollectorAssignment;
 use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
-use Kadupul\Inventory\Domain\DeviceEditConflict;
+use Kadupul\Inventory\Infrastructure\Symfony\DeviceFormFailure;
 use Kadupul\Inventory\Infrastructure\Symfony\DeviceListParameters;
 use Kadupul\Inventory\Infrastructure\Symfony\Form\DeviceCollectorType;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -27,7 +28,7 @@ use Kadupul\Inventory\Infrastructure\Symfony\DeviceAssignmentForm;
 final class DeviceCollectorController
 {
     #[Route('/inventory/devices/{id}/collector', name: 'inventory_device_collector', requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
-    public function __invoke(int $id, Request $request, PrepareDeviceCollectorAssignment $prepare, AssignDeviceCollector $assign, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, DeviceAssignmentForm $validation): Response
+    public function __invoke(int $id, Request $request, PrepareDeviceCollectorAssignment $prepare, AssignDeviceCollector $assign, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, DeviceAssignmentForm $validation, DeviceFormFailure $failures): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         try {
@@ -56,16 +57,11 @@ final class DeviceCollectorController
                 try {
                     $assign($id, $data['collector_id'], (string) $data['revision']);
                     return new RedirectResponse($urls->generate('inventory_device_collector', $editParameters + ['saved' => 1]), 303, $headers);
-                } catch (InventoryAccessDenied $error) {
-                    return new Response($translator->trans('Access denied.', [], 'inventory'), $error->unauthenticated ? 401 : 403, $headers);
-                } catch (DeviceEditConflict $error) {
-                    $status = 409;
-                    $form->addError(new FormError($translator->trans($error->getMessage(), [], 'inventory')));
-                } catch (\InvalidArgumentException $error) {
-                    $form->addError(new FormError($translator->trans($error->getMessage(), [], 'inventory')));
-                } catch (\RuntimeException $error) {
-                    $status = 502;
-                    $form->addError(new FormError($translator->trans('Save outcome is uncertain. Reload the device before retrying.', [], 'inventory')));
+                } catch (\RuntimeException|\InvalidArgumentException $error) {
+                    $status = $failures->apply($form, $error, $status);
+                    if ($status instanceof Response) {
+                        return $status;
+                    }
                 }
             }
         }

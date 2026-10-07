@@ -46,33 +46,56 @@ var isHover = false;
 var hoverTimer = false;
 var previousMainWidth = null;
 var previousColumns   = null;
+
+// html_common_header() sets kadupulIcons from config/icons.json, already
+// resolved for the current theme, so PHP and JavaScript draw the same glyphs.
+function iconClass(name) {
+	if (typeof kadupulIcons === 'object' && kadupulIcons !== null && (typeof Object.hasOwn === 'function' ? Object.hasOwn(kadupulIcons, name) : Object.prototype.hasOwnProperty.call(kadupulIcons, name))) {
+		return kadupulIcons[name];
+	}
+
+	return '';
+}
+
+function iconSelector(name) {
+	const classes = iconClass(name).split(' ').filter(Boolean);
+
+	// An unknown name must not turn 'i' + iconSelector(name) into every <i>.
+	return classes.length ? '.' + classes.join('.') : ':not(*)';
+}
+
+// Decorative only; the control around the icon carries the accessible name.
+function iconMarkup(name) {
+	return '<i class="' + iconClass(name) + '" aria-hidden="true"></i>';
+}
+
 var faIcons = {
 	open: {
-		icon: '<i class="fas fa-caret-down" aria-hidden="true"></i>'
+		icon: iconMarkup('dropdown-open')
 	},
 	close: {
-		icon: '<i class="fas fa-times-circle" aria-hidden="true"></i>'
+		icon: iconMarkup('dropdown-close')
 	},
 	checkAll: {
-		icon: '<i class="fas fa-check" aria-hidden="true"></i>'
+		icon: iconMarkup('check-all')
 	},
 	uncheckAll: {
-		icon: '<i class="fas fa-ban" aria-hidden="true"></i>'
+		icon: iconMarkup('uncheck-all')
 	},
 	flipAll: {
-		icon: '<i class="fas fa-undo" aria-hidden="true"></i>'
+		icon: iconMarkup('flip-all')
 	},
 	collapseAll: {
-		icon: '<i class="fas fa-angles-down" aria-hidden="true"></i>'
+		icon: iconMarkup('collapse-all')
 	},
 	expandAll: {
-		icon: '<i class="fas fa-angles-right" aria-hidden="true"></i>'
+		icon: iconMarkup('expand-all')
 	},
 	collapse: {
-		icon: '<i class="fas fa-chevron-down" aria-hidden="true"></i>'
+		icon: iconMarkup('collapse')
 	},
 	expand: {
-		icon: '<i class="fas fa-chevron-right" aria-hidden="true"></i>'
+		icon: iconMarkup('expand')
 	}
 };
 
@@ -761,6 +784,25 @@ function handleTableNav() {
 		var url = $(this).data('url');
 		cactiReturnTo(url);
 	});
+
+	/* applySkin() reruns this after every refresh, so the namespaced off()
+	 * keeps one handler per link and a click posts once. */
+	$('.cactiPostAction').off('click.cactiPostAction').on('click.cactiPostAction', function(event) {
+		/* Like ajaxAnchors(), keep the click from also selecting the table row
+		 * or folding the filter header that holds the button. */
+		event.preventDefault();
+		event.stopPropagation();
+		/* Without data-url the href is '#' or a GET to the action; posting
+		 * either would send the token to the wrong place. */
+		var url = $(this).data('url');
+		if (url) {
+			if ($(this).data('navigation') === 'fullpage') {
+				navigateUsingPost(url);
+			} else {
+				loadPage(url, false, true);
+			}
+		}
+	});
 }
 
 /** setupSelectmenuScrollClose - Close open select menus when their scroll
@@ -798,8 +840,8 @@ function setupSelectmenuScrollClose() {
 function setupThemeSearchIcons() {
 	for (const [id, label] of [['filter', searchFilter], ['filterd', searchFilter], ['rfilter', searchRFilter]]) {
 		const input = $('input[id="' + id + '"]');
-		if (input.length && input.next('i.fa-search').length < 1) {
-			input.after("<i class='fa fa-search filter'/>").attr('autocomplete', 'off').attr('placeholder', label).parent('td').css('white-space', 'nowrap');
+		if (input.length && input.next('i' + iconSelector('search')).length < 1) {
+			input.after("<i class='" + iconClass('search') + " filter'/>").attr('autocomplete', 'off').attr('placeholder', label).parent('td').css('white-space', 'nowrap');
 		}
 	}
 }
@@ -862,8 +904,8 @@ function setupThemeFormControls(width) {
 
 }
 
-function setupThemeLogos(icon) {
-	const markup = "<i class='fa " + icon + "'/>";
+function setupThemeLogos(name) {
+	const markup = "<i class='" + iconClass(name) + "'/>";
 	$('.cactiLoginLogo').html(markup);
 	$('.cactiLogoutLogo').html(markup);
 }
@@ -1258,10 +1300,10 @@ function makeFiltersResponsive() {
 					if (filterHeader.find('.cactiSwitchConstraints').length == 0) {
 						if (hScroll) {
 							$('#main, .cactiConsoleContentArea').css({ 'overflow-x': 'visible' });
-							filterHeader.find('div.cactiTableButton').append('<span class="cactiSwitchConstraintWrapper"><a title="'+tableConstraints+'" class="linkOverDark cactiSwitchConstraints" href="#"><i id="overflow" class="fa fa-compress"></i></a></span>');
+							filterHeader.find('div.cactiTableButton').append('<span class="cactiSwitchConstraintWrapper"><a title="'+tableConstraints+'" class="linkOverDark cactiSwitchConstraints" href="#"><i id="overflow" class="'+iconClass('columns-compress')+'"></i></a></span>');
 						} else {
 							$('#main, .cactiConsoleContentArea').css({ 'overflow-x': 'hidden' });
-							filterHeader.find('div.cactiTableButton').append('<span class="cactiSwitchConstraintWrapper"><a title="'+tableConstraints+'" class="linkOverDark cactiSwitchConstraints" href="#"><i id="overflow" class="fa fa-expand"></i></a></span>');
+							filterHeader.find('div.cactiTableButton').append('<span class="cactiSwitchConstraintWrapper"><a title="'+tableConstraints+'" class="linkOverDark cactiSwitchConstraints" href="#"><i id="overflow" class="'+iconClass('columns-expand')+'"></i></a></span>');
 						}
 
 						$('.cactiSwitchConstraints').off('click').on('click', function(event) {
@@ -1277,12 +1319,12 @@ function makeFiltersResponsive() {
 								}, function() {
 								if (hScroll) {
 									$('#main, .cactiConsoleContentArea').css({ 'overflow-x': 'visible' });
-									$('#overflow').removeClass('fa-expand').addClass('fa-compress');
+									$('#overflow').removeClass(iconClass('columns-expand')).addClass(iconClass('columns-compress'));
 
 									resetTables();
 								} else {
 									$('#main, .cactiConsoleContentArea').css({ 'overflow-x': 'hidden' });
-									$('#overflow').removeClass('fa-compress').addClass('fa-expand');
+									$('#overflow').removeClass(iconClass('columns-compress')).addClass(iconClass('columns-expand'));
 
 									tuneTables();
 								}
@@ -1300,7 +1342,7 @@ function makeFiltersResponsive() {
 
 				if (filterContents.find('#export').length) {
 					title = $('#export').attr('value');
-					filterHeader.find('div.cactiTableButton').append($('<span style="display:none;" class="cactiFilterExport"><i class="fa fa-arrow-down"></i></span>').attr('title', title));
+					filterHeader.find('div.cactiTableButton').append($('<span style="display:none;" class="cactiFilterExport"><i class="'+iconClass('export')+'"></i></span>').attr('title', title));
 
 					$('.cactiFilterExport').off('click').on('click', function(event) {
 						event.stopPropagation();
@@ -1310,7 +1352,7 @@ function makeFiltersResponsive() {
 
 				if (filterContents.find('#import').length) {
 					title = $('#import').attr('value');
-					filterHeader.find('div.cactiTableButton').append($('<span style="display:none;" class="cactiFilterImport"><i class="fa fa-arrow-up"></i></span>').attr('title', title));
+					filterHeader.find('div.cactiTableButton').append($('<span style="display:none;" class="cactiFilterImport"><i class="'+iconClass('import')+'"></i></span>').attr('title', title));
 
 					$('.cactiFilterImport').off('click').on('click', function(event) {
 						event.stopPropagation();
@@ -1320,7 +1362,7 @@ function makeFiltersResponsive() {
 
 				if (filterContents.find('#clear').length) {
 					if (filterHeader.find('.cactiFilterClear').length == 0) {
-						filterHeader.find('div.cactiTableButton').append('<span title="'+clearFilterTitle+'" style="display:none;" class="cactiFilterClear"><i class="fa fa-trash-alt"></i></span>');
+						filterHeader.find('div.cactiTableButton').append('<span title="'+clearFilterTitle+'" style="display:none;" class="cactiFilterClear"><i class="'+iconClass('filter-clear')+'"></i></span>');
 					}
 
 					$('.cactiFilterClear').off('click').on('click', function(event) {
@@ -1345,11 +1387,11 @@ function makeFiltersResponsive() {
 
 				if (state == 'hidden') {
 					if (filterHeader.find('.cactiFilterState').length == 0) {
-						filterHeader.find('div.cactiTableButton').append('<span class="cactiFilterState"><i class="fa fa-angle-double-down"></i></span>');
+						filterHeader.find('div.cactiTableButton').append('<span class="cactiFilterState"><i class="'+iconClass('show-section')+'"></i></span>');
 					}
 				} else {
 					if (filterHeader.find('.cactiFilterState').length == 0) {
-						filterHeader.find('div.cactiTableButton').append('<span class="cactiFilterState"><i class="fa fa-angle-double-up"></i></span>');
+						filterHeader.find('div.cactiTableButton').append('<span class="cactiFilterState"><i class="'+iconClass('hide-section')+'"></i></span>');
 					}
 				}
 
@@ -1367,8 +1409,8 @@ function makeFiltersResponsive() {
 				anchors.each(function(){
 					$(this).attr('title', $(this).text());
 				});
-				anchors.not('.cactiTableCopy').addClass('fa fa-trash-alt');
-				anchors.filter('.cactiTableCopy').addClass('fa fa-copy');
+				anchors.not('.cactiTableCopy').addClass(iconClass('delete'));
+				anchors.filter('.cactiTableCopy').addClass(iconClass('copy'));
 				anchors.tooltip().text('');
 			}
 		});
@@ -1398,12 +1440,12 @@ function toggleFilterAndIcon(id, child, initial) {
 	} else if ($('#'+child).is(':visible')) {
 		$('#'+child).hide();
 		$('#'+id).find('.cactiFilterClear, .cactiFilterImport, .cactiFilterExport').show();
-		$('.cactiFilterState').find('i').removeClass('fa-angle-double-up').addClass('fa-angle-double-down');
+		$('.cactiFilterState').find('i').removeClass(iconClass('hide-section')).addClass(iconClass('show-section'));
 		storage.set('filterVisibility', 'hidden');
 	} else {
 		$('#'+child).show();
 		$('#'+id).find('.cactiFilterClear, .cactiFilterImport, .cactiFilterExport').hide();
-		$('.cactiFilterState').find('i').removeClass('fa-angle-double-down').addClass('fa-angle-double-up');
+		$('.cactiFilterState').find('i').removeClass(iconClass('show-section')).addClass(iconClass('hide-section'));
 		storage.set('filterVisibility', 'visible');
 	}
 
@@ -2324,6 +2366,30 @@ function loadTopTab(href, id, force) {
 	}
 }
 
+/** cactiPreparePostRequestFromUrl - Turn a same-origin action URL into a POST
+ *  that carries its query as form fields plus the CSRF token. A URL on another
+ *  origin throws, so the token never leaves this server. The request URL keeps
+ *  the checked origin, because a path such as //host/x alone names another
+ *  host. */
+function cactiPreparePostRequestFromUrl(href) {
+	var target = new URL(href, window.location.href);
+	if (target.origin !== window.location.origin) {
+		throw new Error('Refusing to send a CSRF token to a different origin');
+	}
+
+	var fields = [{name: '__csrf_magic', value: csrfMagicToken}];
+	target.searchParams.forEach(function(value, name) {
+		if (name !== '__csrf_magic') {
+			fields.push({name: name, value: value});
+		}
+	});
+
+	return {
+		url: target.origin + target.pathname,
+		data: $.param(fields)
+	};
+}
+
 function loadPageUsingPost(href, postData, returnLocation) {
 	$.post(href, postData, function(data) {
 		if (returnLocation !== undefined) {
@@ -2334,6 +2400,41 @@ function loadPageUsingPost(href, postData, returnLocation) {
 
 		applySkin();
 	});
+}
+
+/* Posts as loadPageUsingPost() does, but first asks before discarding unsaved
+ * form edits, as loadPageNoHeader() did for these actions when they were GETs.
+ * Continue sends the same POST. */
+function loadPageUsingPostChecked(href, postData) {
+	var send = function() {
+		loadPageUsingPost(href, postData);
+	};
+
+	if (checkFormStatus(href, 'postdata', send)) {
+		send();
+	}
+}
+
+/* Let the browser follow a cross-page POST redirect and retain its safe GET URL. */
+function navigateUsingPost(href) {
+	var request = cactiPreparePostRequestFromUrl(href);
+	var send = function() {
+		var form = document.createElement('form');
+		form.method = 'post';
+		form.action = request.url;
+		new URLSearchParams(request.data).forEach(function(value, name) {
+			var input = document.createElement('input');
+			input.type = 'hidden';
+			input.name = name;
+			input.value = value;
+			form.appendChild(input);
+		});
+		document.body.appendChild(form);
+		HTMLFormElement.prototype.submit.call(form);
+	};
+	if (checkFormStatus(href, 'postdata', send)) {
+		send();
+	}
 }
 
 /** Symfony Sites pages own their full document rather than legacy AJAX fragments. */
@@ -2351,7 +2452,7 @@ function navigateToSymfonySites(href) {
 	return true;
 }
 
-function loadPage(href, force) {
+function loadPage(href, force, post) {
 	statePushed = false;
 	cont = false;
 
@@ -2360,7 +2461,7 @@ function loadPage(href, force) {
 	}
 
 	if (!force) {
-		cont = checkFormStatus(href, 'loadpage');
+		cont = checkFormStatus(href, post ? 'post' : 'loadpage');
 	} else {
 		cont = true;
 	}
@@ -2373,8 +2474,14 @@ function loadPage(href, force) {
 
 		clearAllTimeouts();
 
+		/* A post action keeps its query string in href so the unsaved form
+		 * dialog can replay it, but history and redirects must never repeat
+		 * the action by GET. */
+		var returnHref = (post ? undefined : href);
+		var request    = (post ? cactiPreparePostRequestFromUrl(href) : null);
+
 		$.ajaxQ.abortAll();
-		$.get(href)
+		(post ? $.post(request.url, request.data) : $.get(href))
 			.done(function(html) {
 				var htmlObject  = $(html);
 				var matches     = html.match(/<title>(.*?)<\/title>/);
@@ -2385,7 +2492,7 @@ function loadPage(href, force) {
 					var html        = htmlObject.find('#main').html();
 					var jstree		= htmlObject.find('.cactiTreeNavigationArea').html();
 
-					checkForRedirects(html, href);
+					checkForRedirects(html, returnHref);
 					if(typeof jstree !== 'undefined' && $('.cactiTreeNavigationArea').length !== 0) {
 						$('.cactiTreeNavigationArea').html(jstree);
 					}
@@ -2400,16 +2507,20 @@ function loadPage(href, force) {
 					myTitle = htmlTitle;
 					myHref  = cleanHeader(href);
 
-					pushState(myTitle, href);
+					if (!post) {
+						pushState(myTitle, href);
+					}
 				} else {
-					checkForRedirects(html, href);
+					checkForRedirects(html, returnHref);
 
 					$('#main').empty().hide();
 					$('#main').html(html);
 
 					thref = stripHeaderSuppression(href);
 
-					pushState(myTitle, href);
+					if (!post) {
+						pushState(myTitle, href);
+					}
 				}
 
 				var hrefParts = href.split('?');
@@ -2453,7 +2564,7 @@ function loadPage(href, force) {
 				return false;
 			})
 			.fail(function(html) {
-				getPresentHTTPErrorOrRedirect(html, href);
+				getPresentHTTPErrorOrRedirect(html, (post ? document.location.href : href));
 			}
 		);
 	}
@@ -2808,7 +2919,7 @@ function setupCollapsible() {
 		if (state == 'hide') {
 			$(this).addClass('collapsed');
 			$(this).nextUntil('div.spacer').hide();
-			$(this).find('i').removeClass('fa-angle-double-up').addClass('fa-angle-double-down');
+			$(this).find('i').removeClass(iconClass('hide-section')).addClass(iconClass('show-section'));
 			storage.set(id, 'hide');
 		}
 	});
@@ -2816,10 +2927,10 @@ function setupCollapsible() {
 	$('.collapsible').off('click').on('click', function(data) {
 		var id = $(this).attr('id')+'_cs';
 
-		if ($(this).find('i').hasClass('fa-angle-double-up')) {
+		if ($(this).find('i').is(iconSelector('hide-section'))) {
 			$(this).addClass('collapsed');
 			$(this).nextUntil('div.spacer').slideUp('slow');
-			$(this).find('i').removeClass('fa-angle-double-up').addClass('fa-angle-double-down');
+			$(this).find('i').removeClass(iconClass('hide-section')).addClass(iconClass('show-section'));
 			storage.set(id, 'hide');
 		} else {
 			$(this).removeClass('collapsed');
@@ -2827,7 +2938,7 @@ function setupCollapsible() {
 			$(this).nextUntil('div.spacer').each(function(data) {
 				$(this).find('input, select').change();
 			});
-			$(this).find('i').removeClass('fa-angle-double-down').addClass('fa-angle-double-up');
+			$(this).find('i').removeClass(iconClass('show-section')).addClass(iconClass('hide-section'));
 			storage.set(id, 'show');
 		}
 	});
@@ -4215,7 +4326,7 @@ function initializeGraphs(disable_cache) {
 				setFilters();
 			} else {
 				keepRealtime[graph_id]  = $('#wrapper_'+graph_id).html();
-				$(this).html("<i style='text-align:center;padding:0px;' title='"+realtimeClickOff+"' class='drillDown fa fa-circle-notch fa-spin'/>");
+				$(this).html("<i style='text-align:center;padding:0px;' title='"+realtimeClickOff+"' class='drillDown "+iconClass('loading')+"'/>");
 				$(this).find('i').tooltip();
 				realtimeArray[graph_id] = true;
 				setFilters();
@@ -4379,7 +4490,9 @@ $.widget('custom.dropcolor', {
 		if (hex != null) {
 			this.wrapper.find('#bgc').css('background-color', '#'+hex[1]);
 		}
-		this.input = $('<input class="ui-autocomplete-input ui-state-default ui-selectmenu-text" style="background:transparent;border:0px;padding:0px;padding-left:24px;margin-left:-24px" value="'+value+'">')
+		// The option text is decoded, so it goes in as a property, never as markup.
+		this.input = $('<input class="ui-autocomplete-input ui-state-default ui-selectmenu-text" style="background:transparent;border:0px;padding:0px;padding-left:24px;margin-left:-24px">')
+		.val(value)
 		.appendTo(this.wrapper)
 		.on('click', function() {
 			$(this).autocomplete('search', '');
@@ -4904,11 +5017,11 @@ function checkSNMPPassphrase(type) {
 		$('#'+span+'conf').remove();
 	} else if ($(pass).val().length < minChars) {
 		$('#'+span).remove();
-		$(pass).after('<span id="'+span+'"><i class="badpassword fa fa-times"></i><span style="padding-left:4px;">'+passwordTooShort+'<span></span>');
+		$(pass).after('<span id="'+span+'"><i class="badpassword '+iconClass('invalid')+'"></i><span style="padding-left:4px;">'+passwordTooShort+'<span></span>');
 		checkSNMPPassphraseConfirm(type);
 	} else {
 		$('#'+span).remove();
-		$(pass).after('<span id="'+span+'"><i class="goodpassword fa fa-check"></i><span style="padding-left:4px;">'+passwordPass+'</span></span>');
+		$(pass).after('<span id="'+span+'"><i class="goodpassword '+iconClass('valid')+'"></i><span style="padding-left:4px;">'+passwordPass+'</span></span>');
 		checkSNMPPassphraseConfirm(type);
 	}
 }
@@ -4933,19 +5046,19 @@ function checkSNMPPassphraseConfirm(type) {
 
 		if (passphrase.indexOf($(conf).val()) == 0) {
 			$('#'+spanconf).remove();
-			$(conf).after('<span id="'+spanconf+'"><i class="badpassword fa fa-times"></i><span style="padding-left:4px;">'+passwordMatchTooShort+'<span></span>');
+			$(conf).after('<span id="'+spanconf+'"><i class="badpassword '+iconClass('invalid')+'"></i><span style="padding-left:4px;">'+passwordMatchTooShort+'<span></span>');
 		} else {
 			$('#'+spanconf).remove();
-			$(conf).after('<span id="'+spanconf+'"><i class="badpassword fa fa-times"></i><span style="padding-left:4px;">'+passwordNotMatchTooShort+'<span></span>');
+			$(conf).after('<span id="'+spanconf+'"><i class="badpassword '+iconClass('invalid')+'"></i><span style="padding-left:4px;">'+passwordNotMatchTooShort+'<span></span>');
 		}
 	} else {
 		if ($(pass).val() != $(conf).val()) {
 			$('#'+spanconf).remove();
-			$(conf).after('<span id="'+spanconf+'"><i class="badpassword fa fa-times"></i><span style="padding-left:4px;">'+passwordNotMatch+'</span></span>');
+			$(conf).after('<span id="'+spanconf+'"><i class="badpassword '+iconClass('invalid')+'"></i><span style="padding-left:4px;">'+passwordNotMatch+'</span></span>');
 		} else {
 			$('#'+span).remove();
 			$('#'+spanconf).remove();
-			$(pass).after('<span id="'+spanconf+'"><i class="goodpassword fa fa-check"></i><span style="padding-left:4px;">'+passwordMatch+'</span></span>');
+			$(pass).after('<span id="'+spanconf+'"><i class="goodpassword '+iconClass('valid')+'"></i><span style="padding-left:4px;">'+passwordMatch+'</span></span>');
 		}
 	}
 }

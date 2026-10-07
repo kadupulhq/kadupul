@@ -217,7 +217,8 @@ PHP 8.4:
   for appends, `readFile()` for reads. Failures surface as `IOException`
   rather than a silenced `@` call; best-effort writes catch it explicitly.
 - External commands go through Symfony Process with an argument array, never a
-  shell string, and an explicit timeout. Caller input never reaches a shell.
+  shell string, and an explicit timeout, unless a command's own section says
+  otherwise. Caller input never reaches a shell.
 
 ## Write commands
 
@@ -241,11 +242,13 @@ are the first.
   A failed statement is reported, logged and audited, and the run goes on to
   the next table, as the originals did. Nothing is retried and nothing claims
   to roll back. A command that changes rows runs its use case inside one
-  `Connection::transactional()` call and never issues DDL inside it.
+  `Connection::transactional()` call, unless a command's own section says
+  otherwise, and never issues DDL inside it.
 - **Target database.** On a remote collector the command writes to the main
-  database unless `--local` is given, which is what the originals did. A
-  missing main configuration fails with `Main database is not configured.`
-  and never falls back to the local database. The schema is read from the
+  database unless `--local` is given, which is what the originals did. This
+  holds unless a command's own section says otherwise. A missing main
+  configuration fails with `Main database is not configured.` and never
+  falls back to the local database. The schema is read from the
   target connection's own `DATABASE()`, not from the local database's name.
 - **Authorization.** The command needs the realm the web UI requires for the
   same action, cited in the command's entry in `docs/symfony-migration.md`,
@@ -259,10 +262,13 @@ are the first.
   column types come from enums or constants. Values such as column defaults
   are quoted with the platform's `quoteStringLiteral()`.
 - **Operator log.** A command writes the lines its original wrote to
-  `cacti.log` through `LegacyOperatorLog`, with the same environ and text. A
-  failed statement also writes the two `DBCALL` lines `db_execute()` wrote,
-  without its backtrace. Log writes are best effort and never change the
-  result.
+  `cacti.log` through `LegacyOperatorLog`, with the same environ, text and
+  level. A line `cacti_log()` wrote with a level is written only when
+  `log_verbosity` allows it, by the rule in `lib/functions.php:1343-1358`;
+  selective debug is not honoured. A failed statement writes the server's own
+  message the way `db_execute()` did, and, at debug verbosity only, the line
+  with its error number and statement (`lib/database.php:638-639`), without
+  the backtrace. Log writes are best effort and never change the result.
 - **Audit.** Each statement sent records one `AuditEvent` through
   `IdentityAccess\Contract\AuditTrail`: the actor, the command, the target
   database, the dry-run flag, the table and whether it succeeded. A table
@@ -279,7 +285,8 @@ are the first.
   the audit schema rejects is a bug and fails the command. Run write commands as the web server's user, so that
   `log/kadupul-audit.jsonl` and `log/cacti.log` stay writable by web requests.
 - **Exit codes and results.** In legacy mode the exit code is the original's,
-  including 0 after its own validation errors and after failed statements.
+  including 0 after its own validation errors and after failed statements,
+  except for the intentional audit failure outcomes documented below.
   Under `bin/console` it is 0 when every statement succeeded, 1 when any
   failed, the run stopped or the operator was refused, and 2 for invalid
   input. JSON `status` is `ok`,
@@ -290,6 +297,51 @@ are the first.
   (`information_schema.TABLES`, `information_schema.COLUMNS`,
   `SHOW CREATE TABLE`) or rows, as well as stdout, stderr and the exit code.
   The security checks are listed in `tests/Symfony/merge_coverage.php`.
+
+### Audit
+
+`kadupul:database:audit` follows the rules above, with these exceptions and
+additions, which the original requires:
+
+- **Target database.** `audit_database.php` refused a remote collector
+  outright, before reading its arguments, and the audit does the same.
+- **Confirmation.** `--repair` is the one write mode that plans by default.
+  It changes the schema only with `--force`, or after the operator has seen
+  the plan on a terminal and answered yes to a question that defaults to no.
+  With `--upgrade`, an interactive repair first asks permission to upgrade,
+  verifies the resulting database version, and then shows the new repair
+  plan for a separate confirmation. Declining either question applies no
+  repair; an unsuccessful or unconfirmed upgrade stops before repair.
+  The retained compatibility CLI keeps immediate repair.
+- **Upgrade deprecation.** Set `KADUPUL_CLI_QUIET_DEPRECATION=1` to suppress
+  the compatibility warning in existing cron jobs. This setting does not
+  suppress upgrade failures or change confirmation behavior.
+- **Transactions.** The audit's only row writes are the baseline inserts
+  into private staging tables. They run in one transaction before both
+  tables are published by an atomic rename. Failed inserts or publication
+  leave the existing baseline intact and stop comparison and repair.
+- **Names that do not exist yet.** A column or index an `ALTER` adds takes
+  its name from the audit baseline parsed out of `docs/audit_schema.sql`, a
+  shipped file, and the name must match `^[A-Za-z0-9_$-]{1,64}$`. The table
+  name still comes from the target's catalog. Column types, `EXTRA` values,
+  `USING` algorithms and table character sets come from closed lists; a
+  clause that has no typed form is reported and its table's statement is not
+  sent. The text of `docs/audit_schema.sql` is parsed as data and never sent.
+- **Workers.** `lib/` code that needs the legacy bootstrap runs in a `bin/`
+  worker that an adapter starts through Symfony Process, with an argument
+  array, JSON on stdin and a result marker on stdout, as the device workers
+  do. A worker checks nothing itself; only its adapter names it, which
+  `tests/Symfony/ArchitectureTest.php` enforces. The upgrade worker has no
+  timeout: stopping it half way leaves the database between two versions,
+  and the original ran it to the end.
+- **Audit events for other steps.** An upgrade, the audit tables' reset or
+  a dump records one event with the type `database-maintenance` and the id
+  `<database>:<step>`, where `<step>` is a fixed name (`upgrade`,
+  `audit-schema-reset`, `audit-schema-export`). Every `ALTER TABLE`,
+  including the audit tables' reload, records a `database-table` event. The
+  audit tables' initialization is one step; their reload is recorded only
+  when attempted. Missing or unparsable files cause no table mutations. The action
+  is `database.audit`.
 
 ## Pilot: device commands
 
@@ -342,3 +394,35 @@ them.
 - Reformatting a legacy script to PER-CS counts every line as new code for
   SonarCloud. Shims replace scripts entirely, so the new code is the shim and
   the command, both of which the parity tests cover.
+
+
+### Audit baseline safety during migration
+
+The compatibility `cli/audit_database.php` remains the hardened legacy
+entry point. The independently available `kadupul:database:audit` command
+must preserve the same import and upgrade failure protections before the
+compatibility implementation can be retired.
+
+A missing, incomplete, unparsable, or failed canonical baseline stops the
+new command before comparison or repair. This refusal exits nonzero and never
+prints a clean audit, including through the legacy presentation adapter.
+Existing baseline rows are preserved;
+both replacement tables are populated privately and published together with
+an atomic rename. Failed live-schema imports do not export a new dump.
+Plugin upgrade callbacks returning false stop the worker before audit work.
+Database schema changes still require backups: atomic baseline replacement
+does not make application schema repairs reversible.
+
+The installed parity harness invokes the native audit through a test-only
+`LegacyCli` bridge while the production compatibility CLI remains supported.
+Canonical imports retain the dump table comments; live-schema `--load` keeps
+the comments created by the compatibility CLI.
+
+The native audit intentionally returns exit 1 after a failed repair (including
+an unbuildable, untyped index clause) or a failed export. The frozen original
+returned exit 0 for these failures. The installed parity comparator requires
+the exact `(0, 1)` exit pair only for its `failing`, `untyped index` and
+`dump denied` states; output, errors, schema, files and logs still compare.
+A missing `docs/` directory skips export (`exported: null`), with no failed
+operation counted, and retains exit 0 in legacy presentation. Other parity
+cases continue to require equal exit codes unless separately documented.

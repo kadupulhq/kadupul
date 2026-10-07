@@ -31,6 +31,8 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y gettext
       - name: Verify every shipped source and compiled catalog
         run: mise exec python@3.12.12 -- python tests/security/verify_gettext_catalogs.py
+      - name: Verify test runner dispatch and missing-suite failures
+        run: mise exec python@3.12.12 -- python tests/tools/test_suite_runner.py
       - name: Verify catalog rejection and historical compatibility boundaries
         run: mise exec python@3.12.12 -- python tests/security/test_gettext_catalogs.py
 
@@ -163,9 +165,9 @@ jobs:
         php Symfony/data_input_lock_probe.php
         php Support/verify_row_cache.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --cache-directory="$RUNNER_TEMP/reference-transaction-phpunit" Symfony/LegacyReferenceWriteTransactionNativeTest.php
-        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --cache-directory="$RUNNER_TEMP/collector-cleanup-phpunit" Symfony/DeviceCollectorJournalNativeTest.php
-        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/queued-purge-phpunit" Symfony/QueuedCollectorPurgeTest.php
-        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/poller-buffer-phpunit" Symfony/PollerCacheBufferWriteTest.php
+        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --cache-directory="$RUNNER_TEMP/collector-cleanup-phpunit.cache" Symfony/DeviceCollectorJournalNativeTest.php
+        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/queued-purge-phpunit.cache" Symfony/QueuedCollectorPurgeTest.php
+        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/poller-buffer-phpunit.cache" Symfony/PollerCacheBufferWriteTest.php
         # Use the disposable matrix server's existing administrator identity;
         # the probe creates/drops only its own random schema in a finally block.
         KADUPUL_REFERENCE_TEST_DSN="$KADUPUL_TEST_MYSQL_DSN" \
@@ -229,17 +231,24 @@ jobs:
           KADUPUL_REFERENCE_TEST_DSN: mysql:host=127.0.0.1;port=${{ job.services.database.ports['3306'] }};dbname=kadupul_cdef_reference_test;charset=utf8mb4
           KADUPUL_REFERENCE_TEST_USER: root
           KADUPUL_REFERENCE_TEST_PASSWORD: cactiroot
+          # This matrix service belongs exclusively to this job; the late-DDL
+          # fixture may create/drop only its own database account here.
+          KADUPUL_REFERENCE_OWNED_BACKEND: '1'
         run: |
           mkdir -p "$RUNNER_TEMP/cdef-api-coverage"
           mise exec python@3.12.12 -- python tests/security/test_cdef_reference_runner.py
           mise exec python@3.12.12 -- python tests/security/test_cdef_reference_gettext.py
           mise exec php@8.4.25 -- php -d pcov.directory="$GITHUB_WORKSPACE" \
             -d pcov.exclude='~/(include/vendor|tests)/~' include/vendor/bin/phpunit \
-            -c phpunit-symfony.xml --filter 'CdefReferenceNativeTest|InstallerVersionConfirmationTest|InstallerFailedPollTest|LegacyAggregateSaveRefusalTest|AggregateItemTransactionTest|CdefNativeProbeCoverageTest|CdefCliNativeCoverageTest|AggregateGraphStatementTest|AggregateGraphItemsBoundaryTest|AggregateCacheCursorTest|HostDataSubstitutionTest' \
+            -c phpunit-symfony.xml --filter 'CdefReferenceNativeTest|InstallerVersionConfirmationTest|InstallerFailedPollTest|LegacyAggregateSaveRefusalTest|AggregateItemTransactionTest|CdefNativeProbeCoverageTest|CdefCliNativeCoverageTest|AggregateGraphStatementTest|AggregateGraphItemsBoundaryTest|AggregateCacheCursorTest|HostDataSubstitutionTest|ForwardSchemaRepairTest' \
             --coverage-php "$RUNNER_TEMP/cdef-api-coverage/native.php" \
             --coverage-clover "$RUNNER_TEMP/cdef-api-coverage/native.xml"
           mise exec php@8.4.25 python@3.12.12 -- python tests/security/run_cdef_reference_contracts.py \
             --output "$RUNNER_TEMP/cdef-reference-proof"
+          mise exec php@8.4.25 python@3.12.12 -- python tests/security/run_schema_repair_contracts.py \
+            --output "$RUNNER_TEMP/schema-repair-proof"
+          mise exec php@8.4.25 python@3.12.12 -- python tests/security/run_graph_data_removal_contracts.py \
+            --output "$RUNNER_TEMP/graph-data-removal-proof"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
@@ -247,6 +256,8 @@ jobs:
           path: |
             ${{ runner.temp }}/cdef-api-coverage
             ${{ runner.temp }}/cdef-reference-proof
+            ${{ runner.temp }}/schema-repair-proof
+            ${{ runner.temp }}/graph-data-removal-proof
           if-no-files-found: error
 
   php:
@@ -323,6 +334,13 @@ jobs:
       - name: Install isolated CSV test runner
         run: composer install --working-dir=tests --prefer-dist --no-progress --no-interaction
 
+      - name: Verify PHP 8.1 idiom contracts
+        working-directory: tests
+        run: |
+          php -d error_reporting=8191 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/Php81IdiomsTest.php --colors=never
+          php -d error_reporting=8191 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/GhsaPmgmRegressionTest.php --colors=never
+          php -d error_reporting=8191 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/CoreSecurityHardeningTest.php --filter="ping constructor" --colors=never
+
       - name: Verify PHP 8.0 string and regex behavior
         working-directory: tests
         run: php -d "error_reporting=E_ALL & ~E_DEPRECATED" vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/Php80StringRegexTest.php --colors=never
@@ -340,6 +358,14 @@ jobs:
         # The isolated production subprocess explicitly enables E_ALL and
         # throws on every diagnostic, including CSV default-argument deprecations.
         run: php -d error_reporting=8191 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/CsvExplicitEscapeParityTest.php --colors=never
+
+      - name: Verify never and legacy regression contracts
+        working-directory: tests
+        run: |
+          php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/Core/NeverReturnTypeTest.php --colors=never
+          php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/Security/Auth/ReportAdminGroupRealmTest.php --colors=never
+          php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/HardeningAuth2026RegressionTest.php --colors=never
+          php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/TreeSortFalseGuardTest.php --colors=never
 
       - name: Verify string predicates and directory boundaries
         working-directory: tests
@@ -392,6 +418,12 @@ jobs:
           echo "KADUPUL_OFFLINE_FIXTURE_PHP_VERSION=$fixture_php_version" >> "$GITHUB_ENV"
       - name: Verify observation normalization and failure reporting
         run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Support/Behavior/selftest.py
+      - name: Verify audit baseline export and failure contracts
+        run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python -m unittest discover -s tests/Support/Behavior -p test_audit_schema_scenarios.py
+      - name: Verify audit snapshot structural comparisons
+        run: mise exec python@3.12.12 -- python tests/tools/test_cli_audit_snapshot.py
+      - name: Verify audit quiet and default deprecation probes
+        run: mise exec python@3.12.12 -- python tests/tools/test_cli_audit_deprecation.py
       - name: Verify offline build runtime selection
         run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" node@22.22.2 python@3.12.12 -- python tests/tools/test_offline_build_runtime.py
       - name: Verify offline guest fixture mutations
@@ -458,6 +490,9 @@ jobs:
       - name: Check the hook installer
         run: bash tests/tools/test_githooks_install.sh
 
+      - name: Check merge validation preserves incoming content
+        run: bash tests/tools/test_githooks_merge.sh
+
   javascript:
     timeout-minutes: 30
     name: JavaScript
@@ -510,7 +545,7 @@ jobs:
         if: steps.detect.outputs.found == 'true'
         run: |
           npm run --if-present test
-          node --test tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs tests/Unit/midwinter-cookie.test.mjs tests/Unit/midwinter-css-imports.test.mjs tests/Unit/theme-scripts.test.mjs tests/Unit/selectmenu-scroll.test.mjs tests/Unit/icon-classes.test.mjs tests/Unit/permission-filter.test.mjs
+          node --test tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs tests/Unit/midwinter-cookie.test.mjs tests/Unit/midwinter-css-imports.test.mjs tests/Unit/theme-scripts.test.mjs tests/Unit/selectmenu-scroll.test.mjs tests/Unit/icon-classes.test.mjs tests/Unit/icon-registry.test.mjs tests/Unit/permission-filter.test.mjs tests/Unit/realtime-preferences.test.mjs tests/Unit/post-action-links.test.mjs tests/Unit/html-sink-escaping.test.mjs
 
   changelog:
     timeout-minutes: 5

@@ -6,6 +6,13 @@
  */
 
 $databaseSource = file_get_contents(dirname(__DIR__, 2) . '/lib/database.php');
+require_once dirname(__DIR__, 2) . '/lib/database.php';
+
+test('legacy library transaction guards do not query MariaDB-only state', function () {
+    foreach (glob(dirname(__DIR__, 2) . '/lib/*.php') as $file) {
+        expect(file_get_contents($file))->not->toContain('SELECT @@in_transaction');
+    }
+});
 
 test('the commit path does not depend on the MariaDB in_transaction variable', function () use ($databaseSource) {
     $start = strpos($databaseSource, 'function db_commit_transaction(');
@@ -30,11 +37,7 @@ test('PDO reports transaction state identically regardless of engine', function 
         ->and($pdo->inTransaction())->toBeFalse();
 });
 
-test('the real function commits an open transaction and refuses a closed one', function () use ($databaseSource) {
-    // The function is evaluated on its own: bootstrap-unit.php skips include/global.php.
-    require_once dirname(__DIR__, 2) . '/tests/Helpers/PhpSource.php';
-    eval(test_php_function_source($databaseSource, 'db_commit_transaction')); // nosemgrep: php.lang.security.eval-use.eval-use
-
+test('the real function commits an open transaction and refuses a closed one', function () {
     $pdo = new PDO('sqlite::memory:', null, null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
     $pdo->exec('CREATE TABLE probe (id INTEGER)');
 

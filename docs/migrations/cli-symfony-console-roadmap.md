@@ -14,7 +14,7 @@ direct web access to the command directory.
 | --- | --- | --- |
 | Foundation | `analyze_database.php` | Merged in #414 |
 | Schema tools | `convert_tables.php`, `fix_mediumint.php` | Merged in #434 |
-| Audit | `audit_database.php` | #451 |
+| Audit | `audit_database.php` | #451: new command implemented; hardened compatibility CLI retained pending migration acceptance |
 | Repair | `repair_database.php` | In progress, after #451 |
 | Users and permissions | `copy_user.php`, `add_perms.php` | Planned |
 | Graphs and trees | `add_graphs.php`, `add_graph_template.php`, `add_tree.php`, `remove_graphs.php`, `remove_broken_graphs.php`, `repair_graphs.php`, `poller_graphs_reapply_names.php` | Planned |

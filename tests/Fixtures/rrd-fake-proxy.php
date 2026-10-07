@@ -88,6 +88,49 @@ $client = socket_accept($server);
 socket_set_option($client, SOL_SOCKET, SO_RCVTIMEO, array('sec' => 20, 'usec' => 0));
 $input = '';
 
+// Optional installed upstream counterpart: execute its entire session dispatch
+// and crypto, supplying only the parent-process accounting/IPC adapters. No
+// command parser or font environment handling is reproduced in this fixture.
+if (!empty($setup['native_client'])) {
+    require $setup['rrdproxy'] . '/include/global.php';
+    require $setup['rrdproxy'] . '/lib/client.php';
+    $rrdcached_pid = false;
+    $rrdp_status = array();
+    $rrdp_config += array(
+        'path_rra' => $directory,
+        'remote_cnn_timeout' => 20,
+        'remote_clients' => array('127.0.0.1' => $setup['client_fingerprint']),
+        'logging_severity_buffered' => 0,
+        'logging_severity_snmp' => 0,
+        'logging_severity_console' => 0,
+    );
+    $rrdp_config['encryption']['public_key'] = $setup['proxy_public_key'];
+    if (!socket_create_pair(AF_UNIX, SOCK_STREAM, 0, $ipc)) {
+        throw new RuntimeException('Unable to create the upstream IPC socket pair.');
+    }
+    $ipc_socket_parent = $ipc[0];
+    function rrdp_system__get_resource_id($socket)
+    {
+        return spl_object_id($socket);
+    }
+    function rrdp_system__count($name, $amount = 1) {}
+    function rrdp_system__calc_bytes($data)
+    {
+        return strlen($data);
+    }
+    function rrdp_system__socket_write($socket, $data)
+    {
+        return rrdp_socket_write_all($socket, $data);
+    }
+    interact($client);
+    file_put_contents($directory . '/commands.json', json_encode(array('RRD_DEFAULT_FONT' => getenv('RRD_DEFAULT_FONT')), JSON_THROW_ON_ERROR));
+    socket_close($ipc[0]);
+    socket_close($ipc[1]);
+    socket_close($client);
+    socket_close($server);
+    exit(0);
+}
+
 $client_key = fake_proxy_read($client, $input);
 $authenticated = false;
 if ($client_key !== null && strlen($client_key) <= 16384 && strpos($client_key, '-----BEGIN PUBLIC KEY-----') !== false) {

@@ -29,7 +29,7 @@ function themeReady() {
 	/* Start clean up */
 
 	//login page
-	setupThemeLogos('fa-paw');
+	setupThemeLogos('paw');
 
 	/* clean up the navigation menu */
 	$('.cactiConsoleNavigationArea').find('#menu').appendTo($('.cactiConsoleNavigationArea').find('#navigation'));
@@ -58,8 +58,8 @@ function themeReady() {
 		$('.menuHr').remove();
 		$('<div class="maintabs usertabs">'
 			+'<nav><ul>'
-				+'<li><a id="menu-user-help" class="usertabs-submenu" href="#"><i class="fa fa-question"></i></a></li>'
-				+'<li class="action-icon-user"><a class="pic" href="#"><i class="fa fa-user"></i></a></li>'
+				+'<li><a id="menu-user-help" class="usertabs-submenu" href="#"><i class="'+iconClass('user-help')+'"></i></a></li>'
+				+'<li class="action-icon-user"><a class="pic" href="#"><i class="'+iconClass('user')+'"></i></a></li>'
 			+'</ul></nav>'
 		+'</div>').insertAfter('.maintabs');
 
@@ -98,10 +98,10 @@ function themeReady() {
 	});
 
 	/* Highlight sortable table columns */
-	$('.tableHeader th').has('i.fa-sort').removeClass('tableHeaderColumnHover tableHeaderColumnSelected');
-	$('.tableHeader th').has('i.fa-sort-up').addClass('tableHeaderColumnSelected');
-	$('.tableHeader th').has('i.fa-sort-down').addClass('tableHeaderColumnSelected');
-	$('.tableHeader th').has('i.fa-sort').hover(
+	$('.tableHeader th').has('i' + iconSelector('sort')).removeClass('tableHeaderColumnHover tableHeaderColumnSelected');
+	$('.tableHeader th').has('i' + iconSelector('sort-asc')).addClass('tableHeaderColumnSelected');
+	$('.tableHeader th').has('i' + iconSelector('sort-desc')).addClass('tableHeaderColumnSelected');
+	$('.tableHeader th').has('i' + iconSelector('sort')).hover(
 		function() {
 			$(this).addClass('tableHeaderColumnHover');
 		}, function() {
@@ -179,10 +179,6 @@ function themeReady() {
 			});
 		}
 	});
-
-	/* Replace icons */
-	$('.fa-arrow-down').addClass('fa-chevron-down').removeClass('fa-arrow-down');
-	$('.fa-arrow-up').addClass('fa-chevron-up').removeClass('fa-arrow-up');
 
 	setNavigationScroll();
 }

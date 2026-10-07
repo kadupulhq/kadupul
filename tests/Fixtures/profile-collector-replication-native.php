@@ -71,7 +71,10 @@ PHP);
 $root = dirname(__DIR__, 2);
 $directory = $argv[2];
 $scenario = json_decode($argv[1], true, flags: JSON_THROW_ON_ERROR);
-define('CACTI_VERSION', trim(file_get_contents($root . '/include/cacti_version')));
+// This profile-only schema exercises the historical 1.2.33 -> 1.2.34
+// Installer boundary. Current-release forward repairs require the owned full
+// schema in run_schema_repair_contracts.py; never run them on prefixed tables.
+define('CACTI_VERSION', !empty($scenario['upgrade_entry']) ? '1.2.34' : trim(file_get_contents($root . '/include/cacti_version')));
 require_once $root . '/include/global_constants.php';
 require $root . '/lib/poller.php';
 require $root . '/lib/api_device.php';
@@ -521,6 +524,7 @@ try {
         $source->exec('UPDATE `' . $maps['source']['data_source_profiles'] . '` SET step=301 WHERE id=1');
     }
     $upgrade_error = null;
+    $retry_initial = null;
     $migration_version = null;
     $version_confirmation = null;
     if (!empty($scenario['upgrade_entry'])) {
@@ -528,6 +532,10 @@ try {
         $config = ['base_path' => $root, 'poller_id' => 2, 'connection' => 'recovery', 'is_web' => false, 'url_path' => '/', 'cacti_server_os' => 'unix'];
         require_once $root . '/include/global_constants.php';
         require $root . '/include/global_arrays.php';
+        if (!isset($cacti_version_codes[CACTI_VERSION])) {
+            throw new RuntimeException('Profile migration target is not registered.');
+        }
+        $cacti_version_codes = array_filter($cacti_version_codes, static fn($version) => version_compare($version, CACTI_VERSION, '<='), ARRAY_FILTER_USE_KEY);
         require $root . '/lib/installer.php';
         $class = new ReflectionClass(Installer::class);
         $upgrade = $class->newInstanceWithoutConstructor();
@@ -546,6 +554,29 @@ try {
             $upgrade_active = false;
         }
         $migration_version = get_cacti_cli_version();
+        if (!empty($scenario['upgrade_retry'])) {
+            $retry_initial = ['error' => $upgrade_error, 'result' => $result, 'version' => $migration_version];
+            if ($upgrade_error === null || ($scenario['failure'] ?? '') !== 'index-wrong-column') {
+                throw new RuntimeException('Expected incompatible profile index refusal before retry.');
+            }
+            $installer->exec('ALTER TABLE `' . $maps['remote']['data_template_data'] . '` DROP INDEX data_source_profile_id');
+            $upgrade_error = null;
+            $upgrade_active = true;
+            ob_start();
+            try {
+                $result = $class->getMethod('upgradeDatabase')->invoke($upgrade);
+            } catch (RuntimeException $error) {
+                $upgrade_error = $error->getMessage();
+                $result = false;
+            } finally {
+                ob_end_clean();
+                if (isset($upgrade_cache_file)) {
+                    unlink($upgrade_cache_file);
+                }
+                $upgrade_active = false;
+            }
+            $migration_version = get_cacti_cli_version();
+        }
         if ($upgrade_error === null && $result === false) {
             $version_confirmation = Installer::recordInstalledVersion();
         }
@@ -567,7 +598,7 @@ try {
         $source->rollBack();
     }
     $callerAfter = $source->query('SELECT step FROM `' . $maps['source']['data_source_profiles'] . '` WHERE id=1')->fetchColumn();
-    file_put_contents($directory . '/result.json', json_encode(['migration_version' => $migration_version, 'version_confirmation' => $version_confirmation, 'upgrade_error' => $upgrade_error, 'remote_version' => $remote->query('SELECT cacti FROM `' . $maps['remote']['version'] . '`')->fetchColumn(), 'caller_before' => $callerBefore, 'caller_after' => $callerAfter, 'source_active' => $sourceActive, 'snapshot_blocked' => $snapshot_blocked ?? false, 'remote_step' => $remote->query('SELECT step FROM `' . $maps['remote']['data_source_profiles'] . '` WHERE id=77')->fetchColumn(), 'sync' => $source->query('SELECT requires_sync FROM `' . $maps['source']['poller'] . '` ORDER BY id')->fetchAll(PDO::FETCH_COLUMN), 'rras' => $rras, 'result' => $result ?? null, 'hooks' => $hooks, 'messages' => $messages, 'rows' => $rows, 'parent' => $parent, 'log' => $log, 'calls' => $calls], JSON_THROW_ON_ERROR));
+    file_put_contents($directory . '/result.json', json_encode(['retry_initial' => $retry_initial, 'upgrade_target' => !empty($scenario['upgrade_entry']) ? CACTI_VERSION : null, 'migration_version' => $migration_version, 'version_confirmation' => $version_confirmation, 'upgrade_error' => $upgrade_error, 'remote_version' => $remote->query('SELECT cacti FROM `' . $maps['remote']['version'] . '`')->fetchColumn(), 'caller_before' => $callerBefore, 'caller_after' => $callerAfter, 'source_active' => $sourceActive, 'snapshot_blocked' => $snapshot_blocked ?? false, 'remote_step' => $remote->query('SELECT step FROM `' . $maps['remote']['data_source_profiles'] . '` WHERE id=77')->fetchColumn(), 'sync' => $source->query('SELECT requires_sync FROM `' . $maps['source']['poller'] . '` ORDER BY id')->fetchAll(PDO::FETCH_COLUMN), 'rras' => $rras, 'result' => $result ?? null, 'hooks' => $hooks, 'messages' => $messages, 'rows' => $rows, 'parent' => $parent, 'log' => $log, 'calls' => $calls], JSON_THROW_ON_ERROR));
 } finally {
     if ($upgradeSchema !== null) {
         $installer->exec("DROP DATABASE `$upgradeSchema`");

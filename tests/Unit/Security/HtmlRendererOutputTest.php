@@ -16,7 +16,7 @@ require_once dirname(__DIR__, 2) . '/Helpers/NativeChildCoverageEvidence.php';
 function rendererCoverageSources(bool $automation = false): array
 {
     $sources = array(
-        'lib/html.php', 'tests/Fixtures/rrd-process-coverage.php',
+        'lib/html.php', 'config/icons.json', 'src/Platform/Contract/IconRegistry.php', 'tests/Fixtures/rrd-process-coverage.php',
         'tests/Helpers/NativeChildCoverageEvidence.php', 'composer.lock', 'tests/composer.lock',
         'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php',
         'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php',
@@ -84,8 +84,8 @@ function render(string $call, array $arguments, ?object $coverage): string
     mkdir($directory, 0700);
     $program = <<<'PHP'
         $a = json_decode($argv[2], true, 512, JSON_THROW_ON_ERROR);
-        $GLOBALS['config'] = array('url_path' => $a['url_path'] ?? '/', 'poller_id' => 1);
-        $GLOBALS['settings'] = array('spikes' => array(
+        $GLOBALS['config'] = array('url_path' => $a['url_path'] ?? '/', 'poller_id' => 1, 'base_path' => $argv[1]);
+        $GLOBALS['settings'] = $a['settings'] ?? array('spikes' => array(
             'spikekill_deviations' => array('array' => array()),
             'spikekill_number' => array('array' => array()),
         ));
@@ -98,6 +98,7 @@ function render(string $call, array $arguments, ?object $coverage): string
         function is_realm_allowed($realm) { return true; }
         function get_current_graph_start() { return -86400; }
         function get_current_graph_end() { return 0; }
+        function get_selected_theme() { return 'modern'; }
         function get_current_page($basename = true) { return $GLOBALS['a']['page'] ?? 'graphs.php'; }
         function api_plugin_hook_function($name, $value = null) { return $value; }
         function aggregate_build_children_url($id) { return ''; }
@@ -110,15 +111,20 @@ function render(string $call, array $arguments, ?object $coverage): string
         function clean_up_name($name) { return $name; }
         class CactiSecureHeaders { public static function getNonceAttribute() { return 'nonce="fixture"'; } }
         $_SERVER['SCRIPT_NAME'] = '/graphs.php';
+        require $argv[1] . '/include/vendor/autoload.php';
         $_SESSION = $a['session'] ?? array();
         require $argv[1] . '/lib/html.php';
         PHP;
     $program .= "\n" . $call;
     $scenario = json_encode(array($call, $arguments), JSON_THROW_ON_ERROR);
     $automation = $arguments['automation'] ?? false;
+    $spikeMenu = $arguments['spike_menu'] ?? false;
     $sources = rendererCoverageSources($automation);
     $markers = array('renderer-call-completed', 'renderer-html-produced');
     $hits = array('lib/html.php');
+    if ($spikeMenu) {
+        $markers[] = 'spike-menu-six-actions-rendered';
+    }
     if ($automation) {
         $markers[] = 'automation-stored-label-rendered';
         $hits[] = 'lib/api_automation.php';
@@ -133,6 +139,7 @@ function render(string $call, array $arguments, ?object $coverage): string
             . ($automation ? 'define("HTML_AUTOMATION_LABEL_TEST_COVERAGE",true);' : '')
             . 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';'
             . 'ob_start();' . $program
+            . ($spikeMenu ? '$GLOBALS["nativeChildCoverageMarkers"][] = "spike-menu-six-actions-rendered";' : '')
             . '$GLOBALS["nativeChildCoverageMarkers"][] = "renderer-call-completed";'
             . 'if (strlen(ob_get_contents()) > 0) { $GLOBALS["nativeChildCoverageMarkers"][] = "renderer-html-produced"; }'
             . 'ob_end_flush();';
@@ -167,7 +174,7 @@ function render(string $call, array $arguments, ?object $coverage): string
             $report = $reports[0];
             $child = \NativeChildCoverageEvidence::load($report, $root, 'tests/Unit/Security/HtmlRendererOutputTest.php', $scenario, $sources, $markers, $hits);
             static $evidenceChecked = array();
-            $evidenceKind = $automation ? 'automation' : 'renderer';
+            $evidenceKind = $automation ? 'automation' : ($spikeMenu ? 'spike-menu' : 'renderer');
             if (!isset($evidenceChecked[$evidenceKind])) {
                 expect(\NativeChildCoverageEvidence::verifyRejections($report, $root, 'tests/Unit/Security/HtmlRendererOutputTest.php', $scenario, $sources, $markers, $hits, 'tests/Helpers/NativeChildCoverageEvidence.php'))->toBe(count($sources) + count($markers) + 10);
                 verifyRendererEvidenceFailures($report, $root, $scenario, $sources, $markers, $hits);
@@ -224,7 +231,12 @@ test('graph drill-down icons keep identifiers numeric and the realtime popup ins
 
     expectNoInjection($xpath, 1);
     expect($xpath->query('//a[@class="iconLink utils"]')->item(0)->getAttribute('id'))->toBe('graph_7_util');
-    expect($xpath->query('//span[@class="iconLink spikekill"]')->item(0)->getAttribute('data-graph'))->toBe('7');
+    $spikeControl = $xpath->query('//button[@class="iconLink spikekill"]')->item(0);
+    expect($spikeControl->getAttribute('data-graph'))->toBe('7');
+    expect($spikeControl->getAttribute('type'))->toBe('button');
+    expect($spikeControl->getAttribute('aria-label'))->toBe('Kill Spikes in Graphs');
+    expect($spikeControl->getAttribute('aria-haspopup'))->toBe('menu');
+    expect($spikeControl->getAttribute('aria-expanded'))->toBe('false');
     expect($xpath->query('//img[@id="de5_0"]')->length)->toBe(1);
     foreach ($xpath->query('//img[@class="drillDown"]') as $image) {
         expect($image->getAttribute('src'))->toStartWith(decoded('/k' . $payload . '/images/'));
@@ -466,7 +478,7 @@ test('both sortable headers restore cached order and retain independent page cou
     }
 });
 
-test('sortable header metadata preserves primary secondary and default column choices', function (array $ordering, string $selected, string $direction, string $nameDirection, string $secondDirection) {
+test('sortable header metadata and registry icons preserve primary secondary and default column choices', function (array $ordering, string $selected, string $direction, string $nameDirection, string $secondDirection, string $nameIcon, string $secondIcon) {
     $call = <<<'CHILD'
         $headers = array('name' => array('display' => 'Name', 'align' => 'center', 'tip' => 'Name hint', 'nohide' => true),
             'second' => array('Second', 'DESC'));
@@ -485,13 +497,15 @@ test('sortable header metadata preserves primary secondary and default column ch
         expect($xpath->evaluate('string(//tr[' . $row . ']/th[1]/@title)'))->toBe('Name hint')
             ->and($xpath->evaluate('string(//tr[' . $row . ']/th[1]/@class)'))->toContain('nohide')
             ->and($xpath->evaluate('string(//tr[' . $row . ']/th[1]/div/@sort-direction)'))->toBe($nameDirection)
-            ->and($xpath->evaluate('string(//tr[' . $row . ']/th[2]/div/@sort-direction)'))->toBe($secondDirection);
+            ->and($xpath->evaluate('string(//tr[' . $row . ']/th[2]/div/@sort-direction)'))->toBe($secondDirection)
+            ->and($xpath->evaluate('string(//tr[' . $row . ']/th[1]//i/@class)'))->toBe($nameIcon)
+            ->and($xpath->evaluate('string(//tr[' . $row . ']/th[2]//i/@class)'))->toBe($secondIcon);
     }
 })->with(array(
-    'named primary selected' => array(array('name' => 'ASC', 'second' => 'DESC'), 'name', 'ASC', 'DESC', 'ASC'),
-    'cached named primary and legacy secondary' => array(array('name' => 'ASC', 'second' => 'DESC'), '', 'DESC', 'DESC', 'ASC'),
-    'legacy secondary selected' => array(array('name' => 'ASC', 'second' => 'DESC'), 'second', 'DESC', 'DESC', 'ASC'),
-    'legacy primary selected and named default' => array(array(), 'second', 'ASC', 'ASC', 'DESC'),
+    'named primary selected' => array(array('name' => 'ASC', 'second' => 'DESC'), 'name', 'ASC', 'DESC', 'ASC', 'fa fa-sort-up', 'fa fa-sort-down'),
+    'cached named primary and legacy secondary' => array(array('name' => 'ASC', 'second' => 'DESC'), '', 'DESC', 'DESC', 'ASC', 'fa fa-sort-up', 'fa fa-sort-down'),
+    'legacy secondary selected' => array(array('name' => 'ASC', 'second' => 'DESC'), 'second', 'DESC', 'DESC', 'ASC', 'fa fa-sort-up', 'fa fa-sort-down'),
+    'legacy primary selected and named default' => array(array(), 'second', 'ASC', 'ASC', 'DESC', 'fa fa-sort', 'fa fa-sort-up'),
 ));
 
 
@@ -591,7 +605,7 @@ test('explicit header encoding preserves cached charset entities and scalar labe
         ->and(substr_count($html, "sort-return='" . $expected . "'"))->toBe(2)
         ->and(substr_count($html, ">" . $expected . "<"))->toBe(4)
         ->and($html)->toContain(
-            "class='fa fa-sort-up'",
+            "class='fa fa-sort-up' aria-hidden='true'",
             "data-prefix='" . $expected . "'",
             "action='" . $expected . "'"
         );
@@ -599,4 +613,49 @@ test('explicit header encoding preserves cached charset entities and scalar labe
     'UTF-8 cached across configuration change' => array('UTF-8', 'ISO-8859-1', 'c3a9'),
     'Latin-1 cached across configuration change' => array('ISO-8859-1', 'UTF-8', 'e9'),
     'empty charset uses UTF-8 fallback' => array('', 'ISO-8859-1', 'c3a9'),
+));
+
+
+test('full spike menu preserves six action graph attributes and nested settings', function (mixed $graph, string $expected, bool $present, bool $encoded = false) {
+    $html = render(
+        'html_spikekill_menu($a["graph_encoded"] ? base64_decode($a["graph"], true) : $a["graph"]);',
+        array('graph' => $graph, 'graph_encoded' => $encoded, 'spike_menu' => true,
+            'settings' => array('spikes' => array(
+                'spikekill_deviations' => array('array' => array(2 => 'Two &amp; deviations')),
+                'spikekill_number' => array('array' => array(3 => "Three ' kills")),
+            )),
+            'user' => array('spikekill_avgnan' => 'last', 'spikekill_deviations' => 2, 'spikekill_number' => 3)),
+        $this->getTestResultObject()->getCodeCoverage()
+    );
+    $xpath = document($html);
+    $actions = array('rstddev' => 'Remove StdDev', 'rfill' => 'Gap Fill Range', 'rfloat' => 'Float Range',
+        'dstddev' => 'Dry Run StdDev', 'dfill' => 'Dry Run Gap Fill Range', 'dfloat' => 'Dry Run Float Range');
+    foreach ($actions as $class => $label) {
+        $items = $xpath->query('//ul[@class="spikekillMenu"]/li[@class=" ' . $class . '"]');
+        expect($items->length)->toBe(1);
+        $item = $items->item(0);
+        expect($item->hasAttribute('data-graph'))->toBe($present)
+            ->and($item->getAttribute('data-graph'))->toBe($expected)
+            ->and($xpath->query('./span', $item)->item(0)->textContent)->toBe($label)
+            ->and($item->attributes->length)->toBe($present ? 2 : 1);
+    }
+    expect($xpath->query('//ul[@class="spikekillMenu"]')->length)->toBe(1)
+        ->and($xpath->query('//li[@id="method_last"]/span/i')->item(0)->getAttribute('class'))->toBe('fa fa-check')
+        ->and($xpath->query('//li[@id="stddev_2"]/span')->item(0)->textContent)->toBe('Two & deviations')
+        ->and($xpath->query('//li[@id="stddev_2"]/span/i')->item(0)->getAttribute('class'))->toBe('fa fa-check')
+        ->and($xpath->query('//li[@id="kills_3"]/span')->item(0)->textContent)->toBe("Three ' kills")
+        ->and($xpath->query('//li[@id="kills_3"]/span/i')->item(0)->getAttribute('class'))->toBe('fa fa-check');
+})->with(array(
+    'positive graph identity' => array(12, '12', true),
+    'scalar identity compatibility' => array(1.5, '1.5', true),
+    'ordinary quoted label' => array("owner's \"graph\" <view>", "owner's \"graph\" <view>", true),
+    'pre-escaped entities' => array('owner&amp;graph&#39;', "owner&graph'", true),
+    'grave accent' => array('owner`graph', 'owner`graph', true),
+    'true scalar identity' => array(true, '1', true),
+    'empty remains omitted' => array('', '', false),
+    'string zero remains omitted' => array('0', '', false),
+    'malformed UTF8 preserves empty attribute' => array('wyg=', '', true, true),
+    'zero remains omitted' => array(0, '', false),
+    'null remains omitted' => array(null, '', false),
+    'false remains omitted' => array(false, '', false),
 ));

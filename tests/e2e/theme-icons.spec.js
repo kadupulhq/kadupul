@@ -5,14 +5,14 @@ const { test, expect } = require('@playwright/test');
 const fs = require('fs');
 const path = require('path');
 
-// Every <i> the theme scripts inject must draw a glyph with the Font Awesome
-// build lib/html.php serves, which ships without the v4 shims.
-const themes = ['classic', 'modern', 'dark', 'paper-plane', 'paw', 'sunrise'];
+// Every icon config/icons.json resolves for a theme must draw a glyph with the
+// Font Awesome build lib/html.php serves, which ships without the v4 shims.
+const registry = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../../config/icons.json'), 'utf8'));
+const themes = ['classic', 'modern', 'dark', 'midwinter', 'paper-plane', 'paw', 'sunrise'];
 const injected = Object.fromEntries(themes.map(theme => {
-  const source = fs.readFileSync(path.resolve(__dirname, `../../include/themes/${theme}/main.js`), 'utf8');
-  const classes = [...source.matchAll(/<i class=["']([^"']+)["']/g)].map(match => match[1]);
-  return [theme, [...new Set(classes)]];
-}).filter(([, classes]) => classes.length));
+  const resolved = { ...registry.icons, ...(registry.themes[theme] || {}) };
+  return [theme, [...new Set(Object.values(resolved))]];
+}));
 
 async function glyphs(page, classes) {
   await page.goto('/tests/e2e/theme-smoke.html');
@@ -31,7 +31,7 @@ async function glyphs(page, classes) {
 }
 
 for (const [theme, classes] of Object.entries(injected)) {
-  test(`${theme} injects icons that render a glyph`, async ({ page }) => {
+  test(`${theme} draws every registry icon with a glyph`, async ({ page }) => {
     for (const icon of await glyphs(page, classes)) {
       expect(icon.content, `${icon.name} has glyph content`).not.toMatch(/^(none|normal|"")$/);
       expect(icon.width, `${icon.name} takes up space`).toBeGreaterThan(0);

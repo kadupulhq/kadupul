@@ -251,7 +251,7 @@ function cacti_csrf_external_path_is_safe($path)
     return true;
 }
 
-function csrf_error_callback()
+function csrf_error_callback(): never
 {
     //Resolve session fixation for PHP 5.4
     session_regenerate_id();

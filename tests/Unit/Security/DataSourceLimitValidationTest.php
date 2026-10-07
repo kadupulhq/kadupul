@@ -37,7 +37,7 @@ function limit_accepted(array $tokens, string $value): bool
  * Post one save to the real $page in a child process, with $fields over a
  * valid request, and return what it saved and which fields failed.
  */
-function limit_save($test, string $page, array $fields): array
+function limit_save($test, string $page, array $fields, array $environment_overrides = array()): array
 {
     $root = dirname(__DIR__, 3);
     $requests = array(
@@ -45,7 +45,7 @@ function limit_save($test, string $page, array $fields): array
             'save_component_data_source' => '1', 'local_data_id' => '5', 'data_template_id' => '0', '_data_template_id' => '0',
             'host_id' => '0', '_host_id' => '0', 'current_rrd' => '7', 'data_template_data_id' => '3',
             'local_data_template_data_id' => '0', 'data_input_id' => '1', '_data_input_id' => '1', 'name' => 'Traffic',
-            'data_source_path' => 'rra/traffic_5.rrd', 'data_source_profile_id' => '1', 'rrd_step' => '300',
+            'data_source_path' => '<path_rra>/traffic_5.rrd', 'data_source_profile_id' => '1', 'rrd_step' => '300',
             'rrd_heartbeat' => '600', 'data_source_type_id' => '1', 'data_source_name' => 'value',
         ),
         'data_templates.php' => array(
@@ -62,6 +62,7 @@ function limit_save($test, string $page, array $fields): array
     $coverage = $test->getTestResultObject()->getCodeCoverage();
     $environment = getenv();
     $environment['LIMIT_COVERAGE'] = $coverage === null ? '0' : '1';
+    $environment = $environment_overrides + $environment;
     try {
         $process = proc_open(
             array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~',
@@ -159,4 +160,139 @@ test('a data source page stores nothing for a limit that fails validation', func
     array('data_templates.php', 'rrd_minimum', '5 x'),
     array('data_templates.php', 'rrd_minimum', '0;x'),
     array('data_templates.php', 'rrd_maximum', '|query_ifHighSpeed|'),
+));
+
+test('a data source save for a device outside the user\'s scope stores nothing', function () {
+    $result = limit_save($this, 'data_sources.php', array(), array('LIMIT_DEVICE_DENIED' => '1', 'LIMIT_SOURCE_HOST' => '12'));
+
+    expect($result['saved'])->toBe(array());
+});
+
+test('a data source save naming another data source\'s rows stores nothing', function ($field) {
+    $result = limit_save($this, 'data_sources.php', array($field => '9'), array('LIMIT_ROW_OWNER' => '6'));
+
+    expect($result['saved'])->toBe(array());
+})->with(array('data_template_data_id', 'current_rrd'));
+
+test('a new data source without a device or template still saves', function () {
+    $result = limit_save($this, 'data_sources.php', array(
+        'local_data_id' => '0', 'data_template_data_id' => '0', 'current_rrd' => '0', 'save_component_data' => '1',
+    ));
+
+    expect($result['errors'])->toBe(array())
+        ->and($result['saved'])->toHaveKeys(array('data_local', 'data_template_data', 'data_template_rrd'));
+});
+
+
+test('RRD save paths preserve a configured symlink root and reject repeated placeholders', function ($case, $accepted) {
+    $directory = sys_get_temp_dir() . '/rrd-root-' . bin2hex(random_bytes(8));
+    mkdir($directory, 0700);
+    mkdir($directory . '/actual', 0700);
+    symlink($directory . '/actual', $directory . '/configured');
+    try {
+        symlink($directory, $directory . '/actual/escape');
+        $path = match ($case) {
+            'configured' => $directory . '/configured/new.rrd',
+            'canonical' => realpath($directory . '/actual') . '/new.rrd',
+            'token' => '<path_rra>/new.rrd',
+            'nested' => '<path_rra>/missing/sub/new.rrd',
+            'bare' => 'new.rrd',
+            'outside' => $directory . '/new.rrd',
+            'nul' => '<path_rra>/new' . chr(0) . '.rrd',
+            'backslash' => '<path_rra>/new' . chr(92) . '.rrd',
+            'embedded' => 'prefix<path_rra>/new.rrd',
+            'baretoken' => '<path_rra>',
+            'repeat' => '<path_rra>/<path_rra>/new.rrd',
+            'traversal' => '<path_rra>/../new.rrd',
+            'escape' => '<path_rra>/escape/new.rrd',
+        };
+        $result = limit_save($this, 'data_sources.php', array('data_source_path' => $path), array('LIMIT_RRA_PATH' => $directory . '/configured'));
+        if ($accepted) {
+            expect($result['errors'])->toBe(array())
+                ->and($result['saved']['data_template_data']['data_source_path'] ?? null)->toBe($path);
+        } else {
+            expect($result['saved'])->toBe(array())
+                ->and($result['errors'])->toBe(array('data_source_path'));
+        }
+    } finally {
+        unlink($directory . '/actual/escape');
+        unlink($directory . '/configured');
+        rmdir($directory . '/actual');
+        rmdir($directory);
+    }
+})->with(array('configured root' => array('configured', true), 'canonical root' => array('canonical', true), 'placeholder' => array('token', true), 'repeated placeholder' => array('repeat', false), 'parent traversal' => array('traversal', false), 'escaping symlink' => array('escape', false), 'nested missing directory' => array('nested', true), 'bare filename' => array('bare', true), 'outside absolute' => array('outside', false), 'NUL byte' => array('nul', false), 'backslash' => array('backslash', false), 'embedded token' => array('embedded', false), 'bare token' => array('baretoken', false)));
+
+
+test('the edit plugin runs only after existing or new source authorization', function ($id, $host, $denied, $admitted) {
+    $result = limit_save($this, 'data_sources.php', array('action' => 'ds_edit', 'id' => $id, 'host_id' => $host), array('LIMIT_EDIT_HOOK' => '1', 'LIMIT_SOURCE_HOST' => $host, 'LIMIT_DEVICE_DENIED' => $denied ? '1' : '0'));
+    expect($result['hooks'])->toBe($admitted ? array(array('data_source_edit_top')) : array())
+        ->and($result['saved'])->toBe(array());
+})->with(array(
+    'existing admitted' => array('5', '12', false, true),
+    'existing denied' => array('5', '13', true, false),
+    'existing non-device without visible devices' => array('5', '0', true, true),
+    'new admitted' => array('0', '12', false, true),
+    'new denied' => array('0', '13', true, false),
+    'new non-device without visible devices' => array('0', '0', true, true),
+    'new negative target' => array('0', '-1', false, false),
+));
+
+
+test('an existing non-device source can save without any visible device', function () {
+    $result = limit_save($this, 'data_sources.php', array(), array('LIMIT_DEVICE_DENIED' => '1'));
+    expect($result['saved'])->toHaveKeys(array('data_local', 'data_template_data', 'data_template_rrd'));
+});
+
+test('a negative destination device stops the save independently of source authorization', function () {
+    $result = limit_save($this, 'data_sources.php', array('host_id' => '-1'), array('LIMIT_SOURCE_HOST' => '0'));
+    expect($result['saved'])->toBe(array());
+});
+
+test('RRD row ownership is checked independently of the owned data row', function ($templated) {
+    $fields = array('current_rrd' => '9');
+    if ($templated) {
+        $fields['_data_template_id'] = $fields['data_template_id'] = '2';
+    }
+    $result = limit_save($this, 'data_sources.php', $fields, array('LIMIT_RRD_OWNER' => '6', 'LIMIT_DATA_OWNER' => '5'));
+    if ($templated) {
+        expect($result['saved'])->toHaveKeys(array('data_local', 'data_template_data'));
+    } else {
+        expect($result['saved'])->toBe(array());
+    }
+})->with(array('untemplated rejects foreign item' => array(false), 'templated ignores unused current item' => array(true)));
+
+
+// These recording-port controller cases are behavioral-only. The full native
+// HTTP/policy fixtures provide separately bound physical authorization proof.
+test('component input authorization reaches its own owner guard before any replacement', function ($fields, $environment, $writes, $lookups) {
+    $request = array('save_component_data_source' => null, 'save_component_data' => '1', 'value_7' => 'admitted value') + $fields;
+    $result = limit_save($this, 'data_sources.php', $request, array('LIMIT_COVERAGE' => '0', 'LIMIT_COMPONENT_FIELD' => '1') + $environment);
+    expect($result['saved'])->toBe(array())
+        ->and(count($result['component_writes']))->toBe($writes)
+        ->and(count($result['component_lookups']))->toBe($lookups);
+    if ($writes) {
+        expect($result['component_writes'][0][0])->toContain('REPLACE INTO data_input_data')
+            ->and($result['component_writes'][0][1])->toBe(array(7, 3, 'admitted value'));
+    }
+})->with(array(
+    'foreign row independently denied' => array(array(), array('LIMIT_DATA_OWNER' => '6'), 0, 1),
+    'nonempty row without local source' => array(array('local_data_id' => '0'), array('LIMIT_DATA_OWNER' => '5'), 0, 1),
+    'matching row on denied device' => array(array(), array('LIMIT_SOURCE_HOST' => '12', 'LIMIT_DEVICE_DENIED' => '1'), 0, 1),
+    'missing data row' => array(array(), array('LIMIT_COMPONENT_MISSING' => '1'), 0, 1),
+    'matching admitted row writes its input' => array(array(), array('LIMIT_DATA_OWNER' => '5'), 1, 1),
+    'empty new data row remains admitted noop' => array(array('local_data_id' => '0', 'data_template_data_id' => '0'), array(), 0, 0),
+));
+
+test('existing source saves distinguish allowed denied and missing positive destination devices', function ($environment, $admitted) {
+    $result = limit_save($this, 'data_sources.php', array('host_id' => '12', '_host_id' => '12'), array('LIMIT_COVERAGE' => '0') + $environment);
+    if ($admitted) {
+        expect($result['saved'])->toHaveKeys(array('data_local', 'data_template_data', 'data_template_rrd'))
+            ->and($result['saved']['data_local']['host_id'])->toBe(12);
+    } else {
+        expect($result['saved'])->toBe(array())->and($result['component_writes'])->toBe(array());
+    }
+})->with(array(
+    'allowed positive destination' => array(array(), true),
+    'denied positive destination' => array(array('LIMIT_DEVICE_DENIED' => '1'), false),
+    'missing positive destination' => array(array('LIMIT_DEVICE_MISSING' => '1'), false),
 ));

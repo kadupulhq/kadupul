@@ -93,7 +93,14 @@ final class HtmlRendererNativeCoverageTest extends TestCase
         self::assertSame('/native/host.php?action=edit&id=1', $xpath->query('//a[@id="graph_11_de"]')->item(0)->getAttribute('href'));
         self::assertSame('/native/graph_templates.php?action=template_edit&id=21', $xpath->query('//a[@title="Edit Graph Template"]')->item(0)->getAttribute('href'));
         self::assertCount(1, $xpath->query('//a[@id="graph_11_realtime"]'));
-        self::assertCount(1, $xpath->query('//span[@id="graph_11_sk"]'));
+        $spikeButtons = $xpath->query('//button[@id="graph_11_sk"]');
+        self::assertCount(1, $spikeButtons);
+        $spikeButton = $spikeButtons->item(0);
+        self::assertSame('button', $spikeButton->getAttribute('type'));
+        self::assertSame('Kill Spikes in Graphs', $spikeButton->getAttribute('aria-label'));
+        self::assertSame('menu', $spikeButton->getAttribute('aria-haspopup'));
+        self::assertSame('false', $spikeButton->getAttribute('aria-expanded'));
+        self::assertSame('11', $spikeButton->getAttribute('data-graph'));
         self::assertSame(array(array('native_graph_buttons', array('hook' => 'native_graph_buttons', 'local_graph_id' => 11, 'rra' => 0, 'view_type' => 'tree', 'tree_id' => 7, 'branch_id' => 8))), $state['hooks']);
         self::assertSame(array(11), $state['queries'][0][1]);
         self::assertSame(array(11), $state['queries'][1][1]);
@@ -233,11 +240,11 @@ final class HtmlRendererNativeCoverageTest extends TestCase
             if ($coverage !== null) {
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
-                $sources = array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php', 'tests/Unit/HtmlRendererNativeCoverageTest.php', 'include/global_constants.php', 'lib/functions.php', 'lib/html_utility.php', 'lib/headers_secure.php', 'lib/html.php');
+                $sources = array('config/icons.json', 'src/Platform/Contract/IconRegistry.php', 'composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php', 'tests/Unit/HtmlRendererNativeCoverageTest.php', 'include/global_constants.php', 'lib/functions.php', 'lib/html_utility.php', 'lib/headers_secure.php', 'lib/html.php');
                 $markers = array('html-rendered:' . $case['kind']);
                 $child = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/html-renderer-native.php', json_encode($case, JSON_THROW_ON_ERROR), $sources, $markers, array('lib/html.php'));
                 if ($case === array('kind' => 'host', 'selected' => 1)) {
-                    self::assertSame(30, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/html-renderer-native.php', json_encode($case, JSON_THROW_ON_ERROR), $sources, $markers, array('lib/html.php'), 'lib/boost.php'));
+                    self::assertSame(32, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/html-renderer-native.php', json_encode($case, JSON_THROW_ON_ERROR), $sources, $markers, array('lib/html.php'), 'lib/boost.php'));
                 }
                 $coverage->merge($child);
             }

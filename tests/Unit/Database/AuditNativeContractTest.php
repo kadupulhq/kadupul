@@ -4,6 +4,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 require_once dirname(__DIR__, 2) . '/Helpers/PestCodeCoverageCompatibility.php';
+require_once dirname(__DIR__, 2) . '/Helpers/PhpSource.php';
+require_once dirname(__DIR__, 2) . '/Helpers/NativeChildCoverageEvidence.php';
 
 use PHPUnit\Framework\TestCase;
 
@@ -106,6 +108,7 @@ final class AuditNativeContractTest extends TestCase
                     if ($plugin !== 'nosetup') {
                         $setup = '<?php';
                         if ($plugin === 'standard') {
+                            $setup .= ' if (!isset($preorder, $p) || $plugins !== $preorder || $p !== $config["base_path"] . "/plugins/standard") { throw new RuntimeException("Legacy plugin include ordering context changed"); }';
                             $setup .= ' function plugin_standard_upgrade() { $GLOBALS["db"]->exec("INSERT INTO upgrade_events VALUES (\'standard\')"); }';
                         } elseif ($plugin === 'alternate') {
                             $setup .= ' function alternate_setup_table_new($upgrade) { $GLOBALS["db"]->exec("INSERT INTO upgrade_events VALUES (\'setup\')"); } function alternate_upgrade_database($upgrade) { $GLOBALS["db"]->exec("INSERT INTO upgrade_events VALUES (\'alternate\')"); }';
@@ -129,23 +132,37 @@ final class AuditNativeContractTest extends TestCase
             $copy = $directory . '/cli/audit_database.php';
             copy($root . '/cli/audit_database.php', $copy);
             copy($root . '/tests/Fixtures/audit-native-bootstrap.php', $directory . '/include/cli_check.php');
+            $source = file_get_contents($root . '/lib/database.php');
+            self::assertIsString($source);
+            file_put_contents($directory . '/include/cli_check.php', "\nrequire_once " . var_export($root . '/include/vendor/autoload.php', true) . ';' . test_php_function_source($source, 'db_client_ssl_option'), FILE_APPEND);
             $client = $directory . '/client.php';
             file_put_contents($client, str_replace('#!/usr/bin/env php', '#!' . PHP_BINARY, file_get_contents($root . '/tests/Fixtures/audit-native-client.php')));
             chmod($client, 0700);
             $coverage = $this->getTestResultObject()->getCodeCoverage();
+            $auditScenario = json_encode(array($case, $option, $expected), JSON_THROW_ON_ERROR);
+            $auditSources = array('cli/audit_database.php', 'cli/refresh_csrf.php', 'src/Platform/Infrastructure/Legacy/LegacyUpgradePluginLifecycle.php',
+                'tests/Fixtures/audit-native-bootstrap.php', 'tests/Fixtures/audit-native-client.php',
+                'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Helpers/PhpSource.php',
+                'composer.lock', 'tests/composer.lock');
+            $auditSnapshot = $coverage === null ? null : NativeChildCoverageEvidence::snapshot(
+                $root,
+                'tests/Unit/Database/AuditNativeContractTest.php',
+                $auditScenario,
+                $auditSources
+            );
             $command = array(PHP_BINARY, '-d', 'opcache.jit=0', '-d', 'opcache.jit_buffer_size=0', '-d', 'error_reporting=24575', '-d', 'pcov.directory=/');
             if ($coverage !== null) {
-                $bootstrap = '<?php define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__); define("RRD_TEST_CLI_COVERAGE_COPY", ' . var_export($copy, true) . '); define("RRD_TEST_CLI_COVERAGE_SOURCE", ' . var_export($root . '/cli/audit_database.php', true) . '); require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
+                $bootstrap = '<?php define("AUDIT_PLUGIN_LIFECYCLE_TEST_COVERAGE", true); define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__); define("RRD_TEST_CLI_COVERAGE_COPY", ' . var_export($copy, true) . '); define("RRD_TEST_CLI_COVERAGE_SOURCE", ' . var_export($root . '/cli/audit_database.php', true) . '); require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
                 file_put_contents($directory . '/coverage.php', $bootstrap);
                 $command[] = '-d';
                 $command[] = 'auto_prepend_file=' . $directory . '/coverage.php';
             }
             $command[] = $copy;
             $command[] = $option;
-            if (str_starts_with($case, 'upgrade-')) {
+            if (str_starts_with($case, 'upgrade-') && $case !== 'upgrade-standalone') {
                 $command[] = '--report';
             }
-            $environment = array_merge(getenv(), array('AUDIT_TEST_SQLITE' => $path, 'AUDIT_TEST_CASE' => $case, 'AUDIT_TEST_VERSION' => trim(file_get_contents($root . '/include/cacti_version')), 'CACTI_MYSQL_CLIENT' => $client));
+            $environment = array_merge(getenv(), array('AUDIT_TEST_AUTOLOAD' => $root . '/include/vendor/autoload.php', 'AUDIT_TEST_SQLITE' => $path, 'AUDIT_TEST_CASE' => $case, 'AUDIT_TEST_VERSION' => trim(file_get_contents($root . '/include/cacti_version')), 'CACTI_MYSQL_CLIENT' => $client));
             $process = proc_open($command, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $directory . '/cli', $environment);
             $output = stream_get_contents($pipes[1]);
             $error = stream_get_contents($pipes[2]);
@@ -230,8 +247,42 @@ final class AuditNativeContractTest extends TestCase
                 self::assertSame(array(), $temporary);
             }
             if ($coverage !== null) {
-                foreach (glob($directory . '/*.coverage') as $report) {
-                    $coverage->merge(unserialize(file_get_contents($report)));
+                $reports = glob($directory . '/*.coverage');
+                self::assertCount(1, $reports, 'Actual audit CLI coverage discovery must not be empty.');
+                $markers = array('audit-cli-outcome-verified:' . $case, 'audit-persisted-state-verified:' . $case);
+                $hits = array('cli/audit_database.php');
+                if (str_starts_with($case, 'upgrade-') && $case !== 'upgrade-failure') {
+                    $hits[] = 'src/Platform/Infrastructure/Legacy/LegacyUpgradePluginLifecycle.php';
+                }
+                foreach ($reports as $report) {
+                    // Bind admission only after the real exit, output and stored
+                    // outcome assertions above have completed for this scenario.
+                    NativeChildCoverageEvidence::write($report, $root, $auditSnapshot, $markers);
+                    $child = NativeChildCoverageEvidence::load(
+                        $report,
+                        $root,
+                        'tests/Unit/Database/AuditNativeContractTest.php',
+                        $auditScenario,
+                        $auditSources,
+                        $markers,
+                        $hits
+                    );
+                    if ($case === 'upgrade-plugin-failure') {
+                        self::assertSame(
+                            count($auditSources) + count($markers) + 10,
+                            NativeChildCoverageEvidence::verifyRejections(
+                                $report,
+                                $root,
+                                'tests/Unit/Database/AuditNativeContractTest.php',
+                                $auditScenario,
+                                $auditSources,
+                                $markers,
+                                $hits,
+                                'cli/refresh_csrf.php'
+                            )
+                        );
+                    }
+                    $coverage->merge($child);
                 }
             }
         } finally {
@@ -246,6 +297,6 @@ final class AuditNativeContractTest extends TestCase
     public static function cases(): array
     {
         $reports = array_map(static fn($case) => array($case, '--report', 0), array('report-type', 'report-missing-column', 'report-unexpected-column', 'report-no-baseline', 'report-missing-index', 'report-unique-index', 'report-primary-index', 'report-index-reordered', 'report-unexpected-index', 'report-clean', 'report-index-clean'));
-        return array_merge($reports, array(array('valid', '--create', 0), array('leading-hyphen', '--create', 0), array('cleanup-backup', '--create', 1), array('cleanup-marker', '--create', 1), array('cleanup-exception', '--create', 1), array('truncated-import', '--create', 1), array('partial-success', '--create', 1), array('load-truncate-columns', '--load', 1), array('load-truncate-indexes', '--load', 1), array('load-column-failure', '--load', 1), array('load-index-failure', '--load', 1), array('partial-import', '--repair', 1), array('import-failure', '--repair', 1), array('empty-import', '--create', 1), array('swap-failure', '--create', 1), array('missing', '--create', 1), array('create-table_columns-failure', '--create', 1), array('create-table_indexes-failure', '--create', 1), array('repair-failure', '--repair', 1), array('repair-success', '--repair', 0), array('plan', '--alters', 0), array('dump-failure', '--load', 1), array('dump-success', '--load', 0), array('missing-docs', '--load', 1), array('upgrade-success', '--upgrade', 0), array('upgrade-failure', '--upgrade', 1), array('upgrade-plugin-failure', '--upgrade', 1), array('upgrade-standard-callback-failure', '--upgrade', 1), array('upgrade-alternate-callback-failure', '--upgrade', 1), array('upgrade-setup-callback-failure', '--upgrade', 1), array('version', '--version', 0), array('help', '--help', 0)));
+        return array_merge($reports, array(array('valid', '--create', 0), array('leading-hyphen', '--create', 0), array('cleanup-backup', '--create', 1), array('cleanup-marker', '--create', 1), array('cleanup-exception', '--create', 1), array('truncated-import', '--create', 1), array('partial-success', '--create', 1), array('load-truncate-columns', '--load', 1), array('load-truncate-indexes', '--load', 1), array('load-column-failure', '--load', 1), array('load-index-failure', '--load', 1), array('partial-import', '--repair', 1), array('import-failure', '--repair', 1), array('empty-import', '--create', 1), array('swap-failure', '--create', 1), array('missing', '--create', 1), array('create-table_columns-failure', '--create', 1), array('create-table_indexes-failure', '--create', 1), array('repair-failure', '--repair', 1), array('repair-success', '--repair', 0), array('plan', '--alters', 0), array('dump-failure', '--load', 1), array('dump-success', '--load', 0), array('missing-docs', '--load', 1), array('upgrade-success', '--upgrade', 0), array('upgrade-standalone', '--upgrade', 0), array('upgrade-failure', '--upgrade', 1), array('upgrade-plugin-failure', '--upgrade', 1), array('upgrade-standard-callback-failure', '--upgrade', 1), array('upgrade-alternate-callback-failure', '--upgrade', 1), array('upgrade-setup-callback-failure', '--upgrade', 1), array('version', '--version', 0), array('help', '--help', 0)));
     }
 }

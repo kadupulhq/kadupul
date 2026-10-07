@@ -2,16 +2,20 @@
 
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
 require_once __DIR__ . '/graph_template_input.php';
 
-function api_delete_graphs(&$local_graph_ids, $delete_type, $reviewed_data_ids = null, $verify_reviewed_scope = null)
+function api_delete_graphs(&$local_graph_ids, $delete_type, $reviewed_data_ids = null, $verify_reviewed_scope = null, $web_scope = null)
 {
+    $fetch = $web_scope === null ? static fn(...$arguments) => db_fetch_assoc(...$arguments) : [$web_scope, 'fetch'];
     if ($reviewed_data_ids !== null && !is_callable($verify_reviewed_scope)) {
         throw new RuntimeException('Reviewed graph removal requires a dependency verifier');
     }
+
+    if ($web_scope !== null) $web_scope->verify();
 
     /* check for a bad local_graph_id = 0, and remove graphs */
     api_graph_remove_bad_graphs($local_graph_ids);
@@ -20,12 +24,13 @@ function api_delete_graphs(&$local_graph_ids, $delete_type, $reviewed_data_ids =
         return;
     }
 
-    api_graph_remove_aggregate_items($local_graph_ids, $reviewed_data_ids !== null);
+    if ($web_scope === null) api_graph_remove_aggregate_items($local_graph_ids, $reviewed_data_ids !== null);
+    else $web_scope->removeAggregateItems($local_graph_ids);
 
     switch ($delete_type) {
         case '2': // delete all data sources referenced by this graph
             $all_data_sources = array_rekey(
-                db_fetch_assoc('SELECT DISTINCT dtd.local_data_id
+                $fetch('SELECT DISTINCT dtd.local_data_id
 				FROM data_template_data AS dtd
 				INNER JOIN data_template_rrd AS dtr
 				ON dtd.local_data_id=dtr.local_data_id
@@ -46,7 +51,7 @@ function api_delete_graphs(&$local_graph_ids, $delete_type, $reviewed_data_ids =
 
             if (cacti_sizeof($all_data_sources)) {
                 $data_sources = array_rekey(
-                    db_fetch_assoc('SELECT dtd.local_data_id,
+                    $fetch('SELECT dtd.local_data_id,
 					COUNT(DISTINCT gti.local_graph_id) AS graphs
 					FROM data_template_data AS dtd
 					INNER JOIN data_template_rrd AS dtr
@@ -57,20 +62,20 @@ function api_delete_graphs(&$local_graph_ids, $delete_type, $reviewed_data_ids =
 					AND gti.local_graph_id NOT IN(SELECT local_graph_id FROM aggregate_graphs)
 					GROUP BY dtd.local_data_id
 					HAVING graphs = 1
-					AND ' . array_to_sql_or($all_data_sources, 'local_data_id')),
+                    AND ' . array_to_sql_or($all_data_sources, 'dtd.local_data_id')),
                     'local_data_id',
                     'local_data_id'
                 );
 
                 if (cacti_sizeof($data_sources)) {
-                    api_data_source_remove_multi($data_sources, $reviewed_data_ids === null, $verify_reviewed_scope);
+                    api_data_source_remove_multi($data_sources, $reviewed_data_ids === null || $web_scope !== null, $verify_reviewed_scope, $web_scope);
                 }
 
-                api_graph_remove_multi($local_graph_ids, $reviewed_data_ids !== null, $verify_reviewed_scope);
+                api_graph_remove_multi($local_graph_ids, $reviewed_data_ids !== null && $web_scope === null, $verify_reviewed_scope, $web_scope);
 
                 /* Remove orphaned data sources */
                 $data_sources = array_rekey(
-                    db_fetch_assoc('SELECT DISTINCT dtd.local_data_id
+                    $fetch('SELECT DISTINCT dtd.local_data_id
 					FROM data_template_data AS dtd
 					INNER JOIN data_template_rrd AS dtr
 					ON dtd.local_data_id=dtr.local_data_id
@@ -78,22 +83,22 @@ function api_delete_graphs(&$local_graph_ids, $delete_type, $reviewed_data_ids =
 					ON dtr.id=gti.task_item_id
 					WHERE ' . array_to_sql_or($all_data_sources, 'dtd.local_data_id') . '
 					AND gti.local_graph_id IS NULL
-					AND gti.local_graph_id NOT IN(SELECT local_graph_id FROM aggregate_graphs)
-					AND dtd.local_data_id > 0'),
+                    ' . ($web_scope === null ? 'AND gti.local_graph_id NOT IN(SELECT local_graph_id FROM aggregate_graphs)' : '') . '
+                    AND dtd.local_data_id > 0'),
                     'local_data_id',
                     'local_data_id'
                 );
 
                 if (cacti_sizeof($data_sources)) {
-                    api_data_source_remove_multi($data_sources, $reviewed_data_ids === null, $verify_reviewed_scope);
+                    api_data_source_remove_multi($data_sources, $reviewed_data_ids === null || $web_scope !== null, $verify_reviewed_scope, $web_scope);
                 }
             } else {
-                api_graph_remove_multi($local_graph_ids, $reviewed_data_ids !== null, $verify_reviewed_scope);
+                api_graph_remove_multi($local_graph_ids, $reviewed_data_ids !== null && $web_scope === null, $verify_reviewed_scope, $web_scope);
             }
 
             break;
         case '1':
-            api_graph_remove_multi($local_graph_ids, $reviewed_data_ids !== null, $verify_reviewed_scope);
+            api_graph_remove_multi($local_graph_ids, $reviewed_data_ids !== null && $web_scope === null, $verify_reviewed_scope, $web_scope);
 
             break;
     }
@@ -102,7 +107,8 @@ function api_delete_graphs(&$local_graph_ids, $delete_type, $reviewed_data_ids =
      * Save the last time a graph was created/updated
      * for Caching.
      */
-    set_config_option('time_last_change_graph', time());
+    if ($web_scope === null) set_config_option('time_last_change_graph', time());
+    else $web_scope->checked(static fn() => set_config_option('time_last_change_graph', time()));
 }
 
 function api_graph_remove($local_graph_id)
@@ -204,8 +210,9 @@ function api_graph_remove_aggregate_items($local_graph_ids, $reject_aggregates =
 
 }
 
-function api_graph_remove_multi($local_graph_ids, $reject_aggregates = false, $verify_reviewed_scope = null)
+function api_graph_remove_multi($local_graph_ids, $reject_aggregates = false, $verify_reviewed_scope = null, $web_scope = null)
 {
+    $execute = $web_scope === null ? static fn(...$arguments) => db_execute(...$arguments) : [$web_scope, 'execute'];
     /* check for a bad local_graph_id = 0, and remove graphs */
     api_graph_remove_bad_graphs($local_graph_ids);
 
@@ -234,13 +241,14 @@ function api_graph_remove_multi($local_graph_ids, $reject_aggregates = false, $v
             $i++;
 
             if (($i % 1000) == 0) {
-                api_graph_remove_aggregate_items($ids_to_delete, $reject_aggregates);
+                if ($web_scope === null) api_graph_remove_aggregate_items($ids_to_delete, $reject_aggregates);
+                else $web_scope->removeAggregateItems(array_map('intval', explode(',', $ids_to_delete)));
 
-                db_execute("DELETE FROM graph_templates_graph WHERE local_graph_id IN ($ids_to_delete)");
-                db_execute("DELETE FROM graph_templates_item WHERE local_graph_id IN ($ids_to_delete)");
-                db_execute("DELETE FROM graph_tree_items WHERE local_graph_id IN ($ids_to_delete)");
-                db_execute("DELETE FROM reports_items WHERE local_graph_id IN ($ids_to_delete)");
-                db_execute("DELETE FROM graph_local WHERE id IN ($ids_to_delete)");
+                $execute("DELETE FROM graph_templates_graph WHERE local_graph_id IN ($ids_to_delete)");
+                $execute("DELETE FROM graph_templates_item WHERE local_graph_id IN ($ids_to_delete)");
+                $execute("DELETE FROM graph_tree_items WHERE local_graph_id IN ($ids_to_delete)");
+                $execute("DELETE FROM reports_items WHERE local_graph_id IN ($ids_to_delete)");
+                $execute("DELETE FROM graph_local WHERE id IN ($ids_to_delete)");
 
                 $i = 0;
                 $ids_to_delete = '';
@@ -248,20 +256,22 @@ function api_graph_remove_multi($local_graph_ids, $reject_aggregates = false, $v
         }
 
         if ($i > 0) {
-            api_graph_remove_aggregate_items($ids_to_delete, $reject_aggregates);
+            if ($web_scope === null) api_graph_remove_aggregate_items($ids_to_delete, $reject_aggregates);
+            else $web_scope->removeAggregateItems(array_map('intval', explode(',', $ids_to_delete)));
 
-            db_execute("DELETE FROM graph_templates_graph WHERE local_graph_id IN ($ids_to_delete)");
-            db_execute("DELETE FROM graph_templates_item WHERE local_graph_id IN ($ids_to_delete)");
-            db_execute("DELETE FROM graph_tree_items WHERE local_graph_id IN ($ids_to_delete)");
-            db_execute("DELETE FROM reports_items WHERE local_graph_id IN ($ids_to_delete)");
-            db_execute("DELETE FROM graph_local WHERE id IN ($ids_to_delete)");
+            $execute("DELETE FROM graph_templates_graph WHERE local_graph_id IN ($ids_to_delete)");
+            $execute("DELETE FROM graph_templates_item WHERE local_graph_id IN ($ids_to_delete)");
+            $execute("DELETE FROM graph_tree_items WHERE local_graph_id IN ($ids_to_delete)");
+            $execute("DELETE FROM reports_items WHERE local_graph_id IN ($ids_to_delete)");
+            $execute("DELETE FROM graph_local WHERE id IN ($ids_to_delete)");
         }
 
         /**
          * Save the last time a graph was created/updated
          * for Caching.
          */
-        set_config_option('time_last_change_graph', time());
+        if ($web_scope === null) set_config_option('time_last_change_graph', time());
+        else $web_scope->checked(static fn() => set_config_option('time_last_change_graph', time()));
     }
 }
 
@@ -676,55 +686,138 @@ function api_duplicate_graph($_local_graph_id, $_graph_template_id, $graph_title
     }
 }
 
-function api_graph_change_device($local_graph_id, $host_id)
+/** @return list<array{local_data_id: int|string, host_id: int|string|null}>|false */
+function api_graph_device_change_scope(mixed $local_graph_id, mixed $host_id): array|false
 {
-    $dqgraph = db_fetch_cell_prepared(
-        'SELECT snmp_query_id
+    $host_id = auth_resource_id($host_id);
+    if ($host_id === null || !is_graph_allowed($local_graph_id) || ($host_id > 0 && !is_device_allowed($host_id))) {
+        return false;
+    }
+
+    $graph = db_fetch_row_prepared(
+        'SELECT host_id, snmp_query_id
 		FROM graph_local
 		WHERE id = ?',
         array($local_graph_id)
     );
 
-    if (empty($dqgraph)) {
-        db_execute_prepared(
-            'UPDATE graph_local
-			SET host_id = ?
-			WHERE id = ?',
-            array($host_id, $local_graph_id)
-        );
+    if (!is_array($graph) || !array_key_exists('host_id', $graph) || !array_key_exists('snmp_query_id', $graph)) {
+        return false;
+    }
+    $source_host_id = auth_resource_id($graph['host_id']);
+    if ($source_host_id === null || ($source_host_id > 0 && !is_device_allowed($source_host_id))) {
+        return false;
+    }
 
-        update_graph_title_cache($local_graph_id);
-
-        /* update the data sources as well */
-        $data_ids = db_fetch_assoc_prepared(
-            'SELECT DISTINCT dtr.local_data_id
-			FROM graph_templates_item AS gti
-			INNER JOIN data_template_rrd AS dtr
-			ON gti.task_item_id=dtr.id
-			WHERE gti.local_graph_id = ?',
-            array($local_graph_id)
-        );
-
-        if (cacti_sizeof($data_ids)) {
+    if (empty($graph['snmp_query_id'])) {
+        // A graph may reference a source owned by another device. Review the
+        // whole handoff before changing the graph, its title, or any child.
+        $previous_error = $GLOBALS['database_last_error'] ?? null;
+        $GLOBALS['database_last_error'] = '';
+        try {
+            $data_ids = db_fetch_assoc_prepared(
+                'SELECT DISTINCT dtr.local_data_id, dl.host_id
+                FROM graph_templates_item AS gti
+                INNER JOIN data_template_rrd AS dtr ON gti.task_item_id=dtr.id
+                LEFT JOIN data_local AS dl ON dl.id=dtr.local_data_id
+                WHERE gti.local_graph_id = ? LIMIT 10001',
+                array($local_graph_id)
+            );
+            if (!is_array($data_ids) || count($data_ids) > 10000 || !empty($GLOBALS['database_last_error'])) {
+                return false;
+            }
+            $persisted_ids = array();
             foreach ($data_ids as $data_id) {
-                db_execute_prepared(
-                    'UPDATE data_local
-					SET host_id = ?
-					WHERE id = ?',
-                    array($host_id, $data_id['local_data_id'])
-                );
-
-                db_execute_prepared(
-                    'UPDATE poller_item
-					SET host_id = ?
-					WHERE local_data_id = ?',
-                    array($host_id, $data_id['local_data_id'])
-                );
+                $id = auth_resource_id($data_id['local_data_id'] ?? null);
+                if ($id === null) {
+                    return false;
+                }
+                // local_data_id=0 denotes a template, not a persisted source.
+                if ($id === 0) {
+                    continue;
+                }
+                $owner = auth_resource_id($data_id['host_id'] ?? null);
+                if ($owner === null) {
+                    return false;
+                }
+                $persisted_ids[$id] = $id;
+            }
+            $persisted_ids = array_values($persisted_ids);
+            if (get_allowed_management_selection('data', $persisted_ids) !== $persisted_ids) {
+                return false;
+            }
+            $allowed_devices_sql = get_allowed_management_device_ids_sql();
+            $poller_owners = db_fetch_assoc_prepared(
+                "SELECT DISTINCT pi.host_id, CASE WHEN pi.host_id = 0 OR pi.host_id IN ($allowed_devices_sql) THEN 1 ELSE 0 END AS allowed
+                FROM poller_item AS pi
+                INNER JOIN data_template_rrd AS dtr ON pi.local_data_id=dtr.local_data_id
+                INNER JOIN graph_templates_item AS gti ON gti.task_item_id=dtr.id
+                WHERE gti.local_graph_id = ? AND dtr.local_data_id > 0 LIMIT 10001",
+                array($local_graph_id)
+            );
+            if (!is_array($poller_owners) || count($poller_owners) > 10000 || !empty($GLOBALS['database_last_error'])) {
+                return false;
+            }
+            foreach ($poller_owners as $poller_owner) {
+                $owner = auth_resource_id($poller_owner['host_id'] ?? null);
+                if ($owner === null || (int) ($poller_owner['allowed'] ?? 0) !== 1) {
+                    return false;
+                }
+            }
+        } catch (Throwable $error) {
+            return false;
+        } finally {
+            if ($previous_error === null) {
+                unset($GLOBALS['database_last_error']);
+            } else {
+                $GLOBALS['database_last_error'] = $previous_error;
             }
         }
 
-        return true;
+        return $data_ids;
     }
 
     return false;
+}
+
+function api_graph_change_device($local_graph_id, $host_id)
+{
+    $host_id = auth_resource_id($host_id);
+    $data_ids = api_graph_device_change_scope($local_graph_id, $host_id);
+    if ($data_ids === false) {
+        return false;
+    }
+
+    db_execute_prepared(
+        'UPDATE graph_local
+			SET host_id = ?
+			WHERE id = ?',
+        array($host_id, $local_graph_id)
+    );
+
+    update_graph_title_cache($local_graph_id);
+
+    /* update the previously reviewed persisted data sources as well */
+    if (cacti_sizeof($data_ids)) {
+        foreach ($data_ids as $data_id) {
+            if ((int) $data_id['local_data_id'] === 0) {
+                continue;
+            }
+            db_execute_prepared(
+                'UPDATE data_local
+					SET host_id = ?
+					WHERE id = ?',
+                array($host_id, $data_id['local_data_id'])
+            );
+
+            db_execute_prepared(
+                'UPDATE poller_item
+					SET host_id = ?
+					WHERE local_data_id = ?',
+                array($host_id, $data_id['local_data_id'])
+            );
+        }
+    }
+
+    return true;
 }

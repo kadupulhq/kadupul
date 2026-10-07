@@ -27,6 +27,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--database-sessions', action='store_true')
     parser.add_argument('--coverage-output', type=Path)
+    parser.add_argument('--tree-cli-only', action='store_true')
     parser.add_argument('--project', default='kadupul-symfony-auth')
     args = parser.parse_args()
     database_sessions = args.database_sessions
@@ -44,6 +45,10 @@ def main():
         configure_coverage(harness, args.coverage_output)
     try:
         harness.setup()
+        if args.tree_cli_only:
+            from cli_parity_scenarios import verify_tree_cli
+            verify_tree_cli(harness, check)
+            return
         if database_sessions:
             harness.command('php', '-r', 'file_put_contents("include/config.php", "\\n\\$cacti_db_session = true;\\n", FILE_APPEND);', check=True)
         anonymous = Session(harness.base)
@@ -56,10 +61,13 @@ def main():
               'standalone health remains available')
         from script_server_scenarios import verify_script_server
         verify_script_server(harness, check)
-        from cli_parity_scenarios import verify_cli_parity
+        from cli_parity_scenarios import verify_cli_parity, verify_tree_cli
         verify_cli_parity(harness, check)
+        verify_tree_cli(harness, check)
         from cli_schema_scenarios import verify_schema_parity
         verify_schema_parity(harness, check)
+        from cli_audit_scenarios import verify_audit_parity
+        verify_audit_parity(harness, check)
 
         # A syntactically valid, attacker-selected ID must never be adopted.
         forged = '0123456789abcdef' * 2

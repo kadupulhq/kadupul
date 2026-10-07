@@ -28,6 +28,7 @@ function db_fetch_cell_prepared(...$args) { return '1'; }
 function get_guest_account() { return $GLOBALS['guestId']; }
 function is_realm_allowed($realm) { return $realm === 25 && $GLOBALS['realmAllowed']; }
 function is_graph_allowed($id, $user) { return $id === 7 && $user === $GLOBALS['userId'] && $GLOBALS['graphAllowed']; }
+function __($message) { return $message; }
 function cacti_log(...$args) {}
 function cacti_exec($binary, $args, &$output, $timeout) {
     if ($binary !== '/php path/php' || $timeout !== null || $args !== array(
@@ -40,7 +41,9 @@ function cacti_exec($binary, $args, &$output, $timeout) {
     return $GLOBALS['status'];
 }
 function rrdtool_function_graph(...$args) { $GLOBALS['rendered'] = true; $GLOBALS['format'] = $GLOBALS['graph_data_array']['image_format']; exit; }
-$config = array('base_path' => '/application path');
+$config = array('base_path' => '/application path', 'include_path' => $argv[1] . '/include', 'is_web' => false);
+$_SERVER['REQUEST_METHOD'] = 'GET';
+require $argv[1] . '/include/csrf.php';
 $step = json_decode($argv[3], true);
 $status = (int) $argv[5];
 $realmAllowed = json_decode($argv[8], true);

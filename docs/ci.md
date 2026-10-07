@@ -103,8 +103,11 @@ Sonar is disabled. No path filter suppresses the Sonar PR workflow.
 | `feature/*`, `fix/*`, `refactor/*`, `chore/*`, `docs/*`, `experiment/*`, consolidation stacks | Intentional skip |
 | Manual dispatch, `run_sonar=true` | Full analysis of the selected repository branch |
 | Manual dispatch, `run_sonar=false` | Intentional skip |
-| Fork PR or Dependabot PR | Secret-dependent analysis skipped; ordinary CI continues |
+| Fork PR or Dependabot actor (any event) | Secret-dependent analysis skipped; ordinary CI continues |
 | Any context with `ENABLE_SONAR` absent/false | Analysis skipped |
+
+The Dependabot actor restriction also applies to default-branch pushes and manual
+dispatch; the full-analysis entries above require an eligible actor.
 
 Push triggers retain the discovered default branch `main`; update that trigger
 if the default branch is renamed. Prefix selection follows GitHub's case-insensitive [`startsWith` semantics](https://docs.github.com/en/actions/reference/workflows-and-actions/expressions#startswith).

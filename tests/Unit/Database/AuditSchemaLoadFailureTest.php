@@ -11,6 +11,8 @@ require_once dirname(__DIR__, 2) . '/Helpers/PestCodeCoverageCompatibility.php';
 
 use PHPUnit\Framework\TestCase;
 
+require_once dirname(__DIR__, 2) . '/Helpers/PhpSource.php';
+
 final class AuditSchemaLoadFailureTest extends TestCase
 {
     use \PestCodeCoverageCompatibility;
@@ -72,6 +74,9 @@ SH);
                     . 'function db_table_exists($table) { return true; }'
                     . 'function db_fetch_assoc($sql) { return array(); }'
                     . 'function cacti_escapeshellarg($value) { return escapeshellarg($value); }';
+                $source = file_get_contents($root . '/lib/database.php');
+                self::assertIsString($source);
+                $bootstrap .= 'require_once ' . var_export($root . '/include/vendor/autoload.php', true) . ';' . test_php_function_source($source, 'db_client_ssl_option');
                 file_put_contents($directory . '/include/cli_check.php', $bootstrap);
 
                 $environment = array_merge(getenv(), [

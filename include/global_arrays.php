@@ -131,6 +131,7 @@ $cacti_version_codes = array(
     '1.2.32'  => '0103',
     '1.2.33'  => '0103',
     '1.2.34'  => '0103',
+    '1.2.35'  => '0103',
 );
 
 $messages = array(
@@ -984,7 +985,7 @@ if ($config['poller_id'] == 1 || $config['connection'] == 'online') {
         ),
         __('Create') => array(
             'graphs_new.php' => __('New Graphs'),
-            'host.php?action=edit&create=true' => __('New Device')
+            'app.php/inventory/devices/new' => __('New Device')
         ),
         __('Management') => array(
             'host.php'             => __('Devices'),
@@ -1043,7 +1044,7 @@ if ($config['poller_id'] == 1 || $config['connection'] == 'online') {
 } else {
     $menu = array(
         __('Management') => array(
-            'host.php' => __('Devices')
+            'app.php/inventory/devices' => __('Devices')
         ),
         __('Data Collection') => array(
             'pollers.php' => __('Data Collectors')
@@ -1057,20 +1058,21 @@ if ($config['poller_id'] == 1 || $config['connection'] == 'online') {
     );
 }
 
+// Icon names from config/icons.json. A plugin may add a Font Awesome class list instead.
 $menu_glyphs = array(
-    __('Main Console') => 'fa fa-map',
-    __('Create') => 'fa fa-chart-area',
-    __('Management') => 'fa fa-home',
-    __('Data Collection') => 'fa fa-database',
-    __('Templates') => 'fa fa-clone',
-    __('Automation') => 'fab fa-superpowers',
-    __('Presets') => 'fa fa-archive',
-    __('Import/Export') => 'fa fa-exchange-alt',
-    __('Configuration')  => 'fa fa-sliders-h',
-    __('Utilities') => 'fa fa-cogs',
-    __('External Links') => 'fa fa-external-link-alt',
-    __('Support') => 'fa fa-question-circle',
-    __('Troubleshooting') => 'fa fa-bug'
+    __('Main Console') => 'menu-main-console',
+    __('Create') => 'menu-create',
+    __('Management') => 'menu-management',
+    __('Data Collection') => 'menu-data-collection',
+    __('Templates') => 'menu-templates',
+    __('Automation') => 'menu-automation',
+    __('Presets') => 'menu-presets',
+    __('Import/Export') => 'menu-import-export',
+    __('Configuration')  => 'menu-configuration',
+    __('Utilities') => 'menu-utilities',
+    __('External Links') => 'menu-external-links',
+    __('Support') => 'menu-support',
+    __('Troubleshooting') => 'menu-troubleshooting'
 );
 
 $device_classes = array(
@@ -1283,6 +1285,8 @@ $user_auth_realm_filenames = array(
     'sites.php' => 3,
     'pollers.php' => 3,
     'host.php' => 3,
+    'app.php/inventory/devices' => 3,
+    'app.php/inventory/devices/new' => 3,
     'host_templates.php' => 12,
     'index.php' => 8,
     'install.php' => 26,
@@ -2902,7 +2906,8 @@ if ($config['cacti_server_os'] == 'unix') {
     );
 } else {
     $dejavu_paths = array(
-        'C:/Windows/Fonts/' //Windows
+        'C:/Windows/Fonts/', //Windows
+        __DIR__ . '/fonts'  //Built-in
     );
 }
 

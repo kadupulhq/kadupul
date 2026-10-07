@@ -106,39 +106,32 @@ function themeReady() {
 		}
 	});
 
-	// Hide the graph icons until you hover
+	// Hide the graph icons until you hover. The stylesheet reveals the icons for
+	// this class and keyboard focus, so they stay in the tab order.
 	$('.graphDrillDown').hover(
 	function() {
 		element = $(this);
 
 		// hide the previously shown element
 		if (element.attr('id').replace('dd', '') != graphMenuElement && graphMenuElement > 0) {
-			$('#dd'+graphMenuElement).find('.iconWrapper:first').hide(300);
+			$('#dd'+graphMenuElement).removeClass('iconsShown');
 		}
 
 		clearTimeout(graphMenuTimer);
-		graphMenuTimer = setTimeout(function() { showGraphMenu(element); }, 400);
+		graphMenuTimer = setTimeout(function() {
+			const currentElement = element;
+			currentElement.addClass('iconsShown');
+			graphMenuElement = currentElement.attr('id').replace('dd', '');
+		}, 400);
 	},
 	function() {
 		element = $(this);
 		clearTimeout(graphMenuTimer);
-		graphMenuTimer = setTimeout(function() { hideGraphMenu(element); }, 400);
+		graphMenuTimer = setTimeout(function() {
+			const currentElement = element;
+			currentElement.removeClass('iconsShown');
+		}, 400);
 	});
-
-	function showGraphMenu(element) {
-		element.find('.spikekillMenu').menu('disable');
-		element.find('.iconWrapper').show(300, function() {
-			graphMenuElement = element.attr('id').replace('dd', '');;
-			$(this).find('.spikekillMenu').menu('enable');
-		});
-	}
-
-	function hideGraphMenu(element) {
-		element.find('.spikekillMenu').menu('disable');
-		element.find('.iconWrapper').hide(300, function() {
-			$(this).find('.spikekillMenu').menu('enable');
-		});
-	}
 
 	setNavigationScroll();
 }

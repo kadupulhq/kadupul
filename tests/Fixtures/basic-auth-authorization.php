@@ -74,7 +74,7 @@ function read_config_option($key)
     if ($key === 'path_php_binary') return PHP_BINARY;
     if ($key === 'realtime_cache_path') return getcwd() . '/cache';
     if ($key === 'guest_user' && str_starts_with($GLOBALS['mode'], 'realtime')) return strpos($GLOBALS['scenario'], 'guest') !== false ? 'fixture' : 'configured-guest';
-    return array('auth_method' => '2', 'auth_cache_enabled' => 'on', 'admin_user' => 1, 'graph_auth_method' => 1)[$key] ?? '';
+    return array('auth_method' => '2', 'auth_cache_enabled' => 'on', 'admin_user' => 1, 'graph_auth_method' => 1, 'realtime_enabled' => 'on')[$key] ?? '';
 }
 function get_current_page()
 {
@@ -311,6 +311,10 @@ register_shutdown_function(function () {
     echo json_encode($result);
 });
 if (str_starts_with($mode, 'realtime')) {
+    $config['include_path'] = $root . '/include';
+    $config['is_web'] = false;
+    $_SERVER['REQUEST_METHOD'] = 'GET';
+    require $root . '/include/csrf.php';
     require $root . '/include/auth.php';
     $_SESSION['sess_realtime_hash'] = 'bootstrap';
     require $root . '/graph_realtime.php';

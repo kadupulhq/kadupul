@@ -3,10 +3,19 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Concrete route samples must preserve parent-child bindings and fail closed."""
 import unittest
-from entry_point_authorization import sample, route_fixtures, has_feature_realm
+from unittest.mock import patch
+from entry_point_authorization import BASELINE, Client, entries, sample, route_fixtures, has_feature_realm
 
 
 class RouteSamples(unittest.TestCase):
+    def test_inventory_header_precedes_every_real_route(self):
+        lines = BASELINE.read_text().splitlines()
+        self.assertEqual('entry\tgate\tdetail', lines[0])
+        rows = entries()
+        self.assertEqual(len(lines) - 1, len(rows))
+        self.assertEqual(lines[1].split('\t')[0], rows[0][0])
+        self.assertNotIn(('entry', 'gate', 'detail'), rows)
+
     def test_feature_pages_are_probed_without_console_only_shortcut(self):
         for entry in ('app.php/data-inputs/actions/delete', 'app.php/links',
                       'app.php/graph-definitions/vdefs/{id}/items',
@@ -64,6 +73,31 @@ class RouteSamples(unittest.TestCase):
         route_fixtures(Rig(), [('app.php/inventory/devices/{id}', 'symfony:device', '')], ids)
         self.assertEqual('app.php/inventory/devices/7', sample('app.php/inventory/devices/{id}', '', ids))
         self.assertEqual('app.php/inventory/sites/9', sample('app.php/inventory/sites/{id}', '', ids))
+
+
+class LiveLoginSetup(unittest.TestCase):
+    def test_local_login_posts_the_actual_local_form_without_a_realm_selector(self):
+        client = Client('http://fixture.invalid')
+        response = {'status': 302, 'body': '', 'location': 'index.php'}
+        with patch.object(client, 'request', side_effect=[{'status': 200}, response]) as request:
+            self.assertIs(response, client.login('fixture-user', 'fixture-password'))
+        self.assertEqual(('index.php',), request.call_args_list[0].args)
+        self.assertEqual(('index.php', {'action': 'login', 'login_username': 'fixture-user',
+                         'login_password': 'fixture-password'}), request.call_args_list[1].args)
+
+    def test_failed_login_status_never_starts_the_authorization_sweep(self):
+        for status in (400, 401, 403, 500):
+            with self.subTest(status=status):
+                client = Client('http://fixture.invalid')
+                with patch.object(client, 'request', side_effect=[{'status': 200}, {'status': status, 'body': 'Refused'}]):
+                    with self.assertRaisesRegex(RuntimeError, 'Login failed for fixture-user'):
+                        client.login('fixture-user', 'fixture-password')
+
+    def test_existing_http_200_login_form_refusal_remains_an_error(self):
+        client = Client('http://fixture.invalid')
+        with patch.object(client, 'request', side_effect=[{'status': 200}, {'status': 200, 'body': 'login_username'}]):
+            with self.assertRaisesRegex(RuntimeError, 'Login failed for fixture-user'):
+                client.login('fixture-user', 'fixture-password')
 
 
 if __name__ == '__main__':

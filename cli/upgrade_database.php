@@ -194,19 +194,21 @@ if ($old_cacti_version == CACTI_VERSION) {
     exit;
 } elseif ($old_cacti_version < 0.7) {
     print 'You are attempting to install cacti ' . CACTI_VERSION . ' onto a 0.6.x database.' . PHP_EOL . "To continue, you must create a new database, import 'cacti.sql' into it," . PHP_EOL . "and\tupdate 'include/config.php' to point to the new database." . PHP_EOL;
-    exit;
+    exit(1);
 } elseif (empty($old_cacti_version)) {
     print "You have created a new database, but have not yet imported the 'cacti.sql' file." . PHP_EOL;
-    exit;
+    exit(1);
 } elseif ($old_version_index == '') {
     print "Invalid Kadupul version $old_cacti_version, cannot upgrade to " . CACTI_VERSION . PHP_EOL;
-    exit;
+    exit(1);
 }
 
 print 'Upgrading from v' . $old_cacti_version . PHP_EOL;
 
 $prev_cacti_version = $old_cacti_version;
 $orig_cacti_version = get_cacti_version();
+$upgrade_failed = false;
+require_once __DIR__ . '/../lib/installer.php';
 
 // loop through versions from old version to the current, performing updates for each version in the chain
 foreach ($cacti_version_codes as $cacti_upgrade_version => $hash_code) {
@@ -234,16 +236,17 @@ foreach ($cacti_version_codes as $cacti_upgrade_version => $hash_code) {
         }
 
         if ($status == DB_STATUS_ERROR) {
+            $upgrade_failed = true;
             break;
         }
 
-        if (CACTI_VERSION != $cacti_upgrade_version && cacti_version_compare($orig_cacti_version, $cacti_upgrade_version, '<')) {
-            db_execute_prepared("UPDATE version SET cacti = ?", array($cacti_upgrade_version));
-
-            $orig_cacti_version = $cacti_upgrade_version;
-        }
-
         $prev_cacti_version = $cacti_upgrade_version;
+    } elseif (Installer::isDatabaseUpgradeNoop($cacti_upgrade_version)) {
+        continue;
+    } else {
+        print 'Error: upgrade file (' . $upgrade_file . ') not found' . PHP_EOL;
+        $upgrade_failed = true;
+        break;
     }
 
     if (CACTI_VERSION == $cacti_upgrade_version && (int) ($config['poller_id'] ?? 0) <= 1) {
@@ -263,7 +266,12 @@ foreach ($cacti_version_codes as $cacti_upgrade_version => $hash_code) {
             exit(1);
         }
     } else {
-        db_execute_prepared("UPDATE version SET cacti = ?", array($cacti_upgrade_version));
+        if (!Installer::recordUpgradeVersion($cacti_upgrade_version)) {
+            fwrite(STDERR, "Database version $cacti_upgrade_version could not be confirmed; retry from the last confirmed version.\n");
+            $upgrade_failed = true;
+            break;
+        }
+        $orig_cacti_version = $cacti_upgrade_version;
     }
 
     if (CACTI_VERSION == $cacti_upgrade_version) {
@@ -272,6 +280,7 @@ foreach ($cacti_version_codes as $cacti_upgrade_version => $hash_code) {
 }
 
 print PHP_EOL;
+exit($upgrade_failed ? 1 : 0);
 
 function db_install_errors($cacti_version)
 {

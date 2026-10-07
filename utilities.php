@@ -8,6 +8,11 @@
 use Kadupul\Platform\Infrastructure\Legacy\UtilityRows;
 
 include('./include/auth.php');
+
+cacti_require_post_actions(array(
+    'clear_poller_cache', 'rebuild_resource_cache', 'clear_logfile', 'purge_logfile',
+    'clear_user_log', 'purge_data_source_statistics', 'rebuild_snmpagent_cache'
+));
 include_once('./lib/api_data_source.php');
 include_once('./lib/boost.php');
 include_once('./lib/rrd.php');
@@ -980,8 +985,11 @@ function utilities_view_user_log()
 	}
 
 	function purgeLog() {
-		strURL = urlPath+'utilities.php?action=clear_user_log&header=false';
-		loadPageNoHeader(strURL);
+		loadPageUsingPost(urlPath+'utilities.php', {
+			action: 'clear_user_log',
+			header: 'false',
+			__csrf_magic: csrfMagicToken
+		});
 	}
 
 	$(function() {
@@ -1357,8 +1365,12 @@ function utilities_view_logfile()
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 
 	function purgeLog() {
-		strURL = urlPath+'utilities.php?action=purge_logfile&header=false&filename='+$('#filename').val();
-		loadPageNoHeader(strURL);
+		loadPageUsingPost(urlPath+'utilities.php', {
+			action: 'purge_logfile',
+			header: 'false',
+			filename: $('#filename').val(),
+			__csrf_magic: csrfMagicToken
+		});
 	}
 
 	$(function() {
@@ -1695,6 +1707,14 @@ function utilities_view_snmp_cache()
 
     validate_store_request_vars($filters, 'sess_usnmp');
     /* ================= input validation ================= */
+    if (get_request_var('host_id') > 0 && !is_device_allowed(get_request_var('host_id'))) {
+        set_request_var('host_id', -1);
+        $_SESSION['sess_usnmp_host_id'] = -1;
+        set_request_var('page', 1);
+        $_SESSION['sess_usnmp_page'] = 1;
+    }
+    $allowed_host_sql = utilities_allowed_host_sql('h.id');
+
 
     if (get_request_var('rows') == '-1') {
         $rows = read_config_option('num_rows_table');
@@ -1765,13 +1785,14 @@ function utilities_view_snmp_cache()
 							<option value='-1'<?php if (get_request_var('host_id') == '-1') {?> selected<?php }?>><?php print __('Any');?></option>
 							<?php
                             if (get_request_var('host_id') == -1) {
-                                $snmp_queries = db_fetch_assoc('SELECT DISTINCT sq.id, sq.name
+                                $snmp_queries = db_fetch_assoc("SELECT DISTINCT sq.id, sq.name
 									FROM host_snmp_cache AS hsc
 									INNER JOIN snmp_query AS sq
 									ON hsc.snmp_query_id = sq.id
 									INNER JOIN host AS h
 									ON hsc.host_id = h.id
-									ORDER by sq.name');
+									WHERE $allowed_host_sql
+									ORDER by sq.name");
                             } else {
                                 $snmp_queries = db_fetch_assoc_prepared(
                                     "SELECT DISTINCT sq.id, sq.name
@@ -1847,7 +1868,7 @@ function utilities_view_snmp_cache()
 
     html_end_box();
 
-    $sql_where = '';
+    $sql_where = ' AND ' . $allowed_host_sql;
 
     /* filter by host */
     if (get_request_var('host_id') == '-1') {
@@ -2002,6 +2023,14 @@ function utilities_view_poller_cache()
 
     validate_store_request_vars($filters, 'sess_poller');
     /* ================= input validation ================= */
+    if (get_request_var('host_id') > 0 && !is_device_allowed(get_request_var('host_id'))) {
+        set_request_var('host_id', -1);
+        $_SESSION['sess_poller_host_id'] = -1;
+        set_request_var('page', 1);
+        $_SESSION['sess_poller_page'] = 1;
+    }
+    $allowed_host_sql = utilities_allowed_host_sql('h.id');
+
 
     if (get_request_var('rows') == '-1') {
         $rows = read_config_option('num_rows_table');
@@ -2069,11 +2098,10 @@ function utilities_view_poller_cache()
 							<option value='-1'<?php if (get_request_var('template_id') == '-1') {?> selected<?php }?>><?php print __('Any');?></option>
 							<option value='0'<?php if (get_request_var('template_id') == '0') {?> selected<?php }?>><?php print __('None');?></option>
 							<?php
-                            if (get_request_var('host_id') > 0) {
-                                $sql_where = 'WHERE dl.host_id = ' . get_request_var('host_id');
-                            } else {
-                                $sql_where = '';
-                            }
+                            $sql_where = 'WHERE (dl.host_id = 0 OR ' . utilities_allowed_host_sql('dl.host_id') . ')';
+    if (get_request_var('host_id') >= 0) {
+        $sql_where .= ' AND dl.host_id = ' . get_request_var('host_id');
+    }
 
     $templates = db_fetch_assoc("SELECT DISTINCT dt.id, dt.name
 								FROM data_template AS dt
@@ -2153,7 +2181,8 @@ function utilities_view_poller_cache()
 
     /* form the 'where' clause for our main sql query */
     $params = array();
-    $sql_where = '';
+    // Poller items without a device belong to no device scope and stay visible.
+    $sql_where = 'WHERE (pi.host_id = 0 OR ' . $allowed_host_sql . ')';
 
     if (get_request_var('poller_action') != '-1') {
         $sql_where .= ($sql_where != '' ? ' AND ' : ' WHERE') . " pi.action = ?";
@@ -2318,6 +2347,31 @@ function utilities_view_poller_cache()
     }
 }
 
+/**
+ * Build a cache query predicate limited to the current user's devices.
+ *
+ * @param string $column Qualified host ID column.
+ *
+ * @return string
+ */
+function utilities_allowed_host_sql($column)
+{
+    return $column . ' IN (' . get_allowed_management_device_ids_sql() . ')';
+}
+
+/**
+ * Deny cache requests for devices outside the current user's scope.
+ *
+ * @return never
+ */
+function utilities_device_access_denied()
+{
+    cacti_log('User attempted to view an unauthorized device cache', false, 'AUTH');
+    header('Location: permission_denied.php');
+    exit;
+}
+
+
 function utilities()
 {
     global $config, $utilities;
@@ -2348,6 +2402,7 @@ function utilities()
         ),
         __('Rebuild Poller Cache') => array(
             'link'  => 'utilities.php?action=clear_poller_cache',
+            'post'  => true,
             'mode'  => 'online',
             'description' => __('The Poller Cache will be re-generated if you select this option. Use this option only in the event of a database crash if you are experiencing issues after the crash and have already run the database repair tools.  Alternatively, if you are having problems with a specific Device, simply re-save that Device to rebuild its Poller Cache.  There is also a command line interface equivalent to this command that is recommended for large systems.'),
             'note'        => array(
@@ -2357,6 +2412,7 @@ function utilities()
         ),
         __('Rebuild Resource Cache') => array(
             'link'  => 'utilities.php?action=rebuild_resource_cache',
+            'post'  => true,
             'mode'  => 'online',
             'description' => __('When operating multiple Data Collectors in Kadupul, Kadupul will attempt to maintain state for key files on all Data Collectors.  This includes all core, non-install related website and plugin files.  When you force a Resource Cache rebuild, Kadupul will clear the local Resource Cache, and then rebuild it at the next scheduled poller start.  This will trigger all Remote Data Collectors to recheck their website and plugin files for consistency.')
         ),
@@ -2372,6 +2428,7 @@ function utilities()
     $utilities[__('Data Source Statistics Utilities')] = array(
         __('Purge Data Source Statistics') => array(
             'link'  => 'utilities.php?action=purge_data_source_statistics',
+            'post'  => true,
             'mode'  => 'online',
             'description' => __('This menu pick will purge all existing Data Source Statistics from the Database.  If Data Source Statistics is enabled, the Data Sources Statistics will start collection again on the next Data Collector pass.')
         ),
@@ -2401,6 +2458,7 @@ function utilities()
             ),
             __('Rebuild SNMP Agent Cache') => array(
                 'link'  => 'utilities.php?action=rebuild_snmpagent_cache',
+                'post'  => true,
                 'mode'  => 'online',
                 'description' => __('The SNMP cache will be cleared and re-generated if you select this option. Note that it takes another poller run to restore the SNMP cache completely.')
             ),
@@ -2432,7 +2490,11 @@ function utilities()
 
                 form_alternate_row();
                 print "<td class='nowrap' style='vertical-align:top;'>";
-                print "<a class='hyperLink' href='" . html_escape($details['link']) . "'>" . $title . '</a>';
+                if (isset($details['post']) && $details['post'] === true) {
+                    print "<a class='hyperLink cactiPostAction' href='#' data-url='" . html_escape($details['link']) . "'>" . $title . '</a>';
+                } else {
+                    print "<a class='hyperLink' href='" . html_escape($details['link']) . "'>" . $title . '</a>';
+                }
                 print '</td>';
                 print '<td>';
                 print html_escape($details['description']);
@@ -3471,7 +3533,7 @@ function snmpagent_utilities_run_eventlog()
 	$('.tooltip').tooltip({
 		track: true,
 		position: { collision: 'flipfit' },
-		content: function() { return $(this).attr('title'); }
+		content: function() { return DOMPurify.sanitize($(this).attr('title')); }
 	});
 	</script>
 	<?php

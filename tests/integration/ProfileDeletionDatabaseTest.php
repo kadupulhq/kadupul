@@ -19,9 +19,10 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('migrationIndexCases')]
-    public function testActualInstallerRecordsVersionOnlyForAUsableReferenceIndex(string $failure, bool $ready): void
+    public function testHistoricalProfileInstallerRecordsVersionOnlyForAUsableReferenceIndex(string $failure, bool $ready): void
     {
         $state = $this->runNative(['collector' => 'bulk', 'upgrade_entry' => true, 'failure' => $failure]);
+        self::assertSame('1.2.34', $state['upgrade_target'], 'This profile-only schema tests the historical profile migration, not current forward repairs');
         self::assertSame('1.2.33', $state['migration_version'], 'Migration alone must not publish the final release');
         self::assertSame($ready ? '1.2.34' : '1.2.33', $state['remote_version']);
         if ($ready) {
@@ -33,6 +34,21 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
             self::assertStringContainsString('reference index is missing or incompatible', $state['upgrade_error']);
             self::assertSame([], array_filter($state['calls'], static fn($call) => str_starts_with($call[1], 'UPDATE version')));
         }
+    }
+
+    public function testHistoricalProfileInstallerRetriesAfterAnIncompatibleIndexIsCorrected(): void
+    {
+        $state = $this->runNative(['collector' => 'bulk', 'upgrade_entry' => true, 'upgrade_retry' => true, 'failure' => 'index-wrong-column']);
+        self::assertSame('1.2.34', $state['upgrade_target']);
+        self::assertSame('1.2.33', $state['retry_initial']['version']);
+        self::assertFalse($state['retry_initial']['result']);
+        self::assertStringContainsString('reference index is missing or incompatible', $state['retry_initial']['error']);
+        self::assertNull($state['upgrade_error']);
+        self::assertFalse($state['result']);
+        self::assertSame('1.2.33', $state['migration_version'], 'The successful migration still defers the final release marker');
+        self::assertTrue($state['version_confirmation']);
+        self::assertSame('1.2.34', $state['remote_version']);
+        self::assertCount(1, array_filter($state['calls'], static fn($call) => str_starts_with($call[1], 'ALTER TABLE data_template_data ADD INDEX data_source_profile_id')));
     }
 
     public static function migrationIndexCases(): array

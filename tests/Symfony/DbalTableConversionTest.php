@@ -14,6 +14,7 @@ use Kadupul\Platform\Domain\Schema\TableChange;
 use Kadupul\Platform\Domain\Schema\TableCharset;
 use Kadupul\Platform\Domain\Schema\TableStatus;
 use Kadupul\Platform\Infrastructure\Legacy\LegacyOperatorLog;
+use Kadupul\Platform\Infrastructure\Persistence\CactiSchemaFile;
 use Kadupul\Platform\Infrastructure\Persistence\DbalTableConversion;
 use Kadupul\Platform\Infrastructure\Persistence\MaintenanceConnections;
 use Kadupul\Tests\Fixtures\RealMariaDb;
@@ -55,7 +56,7 @@ final class DbalTableConversionTest extends TestCase
 
     private function adapter(Connection $db): DbalTableConversion
     {
-        return new DbalTableConversion($this->root, new Filesystem(), $this->connections($db));
+        return new DbalTableConversion(new CactiSchemaFile($this->root, new Filesystem()), $this->connections($db));
     }
 
     private function log(): string

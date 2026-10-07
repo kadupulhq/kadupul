@@ -8,6 +8,13 @@ if (PHP_SAPI !== 'cli') {
     exit(1);
 }
 $root = dirname(__DIR__, 2);
+require_once __DIR__ . '/../Helpers/PhpSource.php';
+$htmlUtilitySource = file_get_contents($root . '/lib/html_utility.php');
+if ($htmlUtilitySource === false) {
+    throw new RuntimeException('Cannot read production request guards');
+}
+eval(test_php_function_source($htmlUtilitySource, 'cacti_require_post_actions'));
+eval(test_php_function_source($htmlUtilitySource, 'cacti_require_post_request'));
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
 $directory = $argv[2];
 $db = new PDO(getenv('KADUPUL_TEST_MYSQL_DSN'), getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root', getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: '', [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_EMULATE_PREPARES => false]);

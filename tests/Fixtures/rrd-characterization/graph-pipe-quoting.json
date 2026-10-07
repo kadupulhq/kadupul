@@ -45,7 +45,7 @@
                 "--color ARROW#2C4D43",
                 "--color FRAME#2C4D43",
                 "--border 1",
-                "--font TITLE:10:'fonts/My Font'\"'\"'s.ttf'",
+                "--font TITLE:10:",
                 "--font AXIS:8:'DejaVu Sans'",
                 "--font LEGEND:8:",
                 "--font UNIT:7:",

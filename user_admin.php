@@ -65,7 +65,7 @@ if (isset_request_var('update_policy')) {
     Actions Function
    -------------------------- */
 
-function update_policies()
+function update_policies(): never
 {
     $policies = array('policy_graphs', 'policy_trees', 'policy_hosts', 'policy_graph_templates');
 
@@ -851,7 +851,8 @@ function graph_perms_edit($tab, $header_label)
 			$(document).tooltip({
 				items: '[data-tooltip]',
 				content: function() {
-					return $(this).attr('data-tooltip');
+					// The reason is plain text; the attribute read has already decoded it.
+					return $('<div>').text($(this).attr('data-tooltip')).html();
 				}
 			});
 		});

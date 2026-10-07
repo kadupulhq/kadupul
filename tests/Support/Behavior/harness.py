@@ -296,7 +296,7 @@ class Session:
         if not self.token:
             raise RuntimeError('Login form lacks CSRF token')
         return self.request('/index.php', {'action': 'login', 'login_username': 'admin',
-                            'login_password': password, 'realm': 'local', '__csrf_magic': self.token})
+                            'login_password': password, '__csrf_magic': self.token})
 
 
 class Harness:
@@ -1052,6 +1052,11 @@ def main():
     status = 2
     try:
         harness.setup()
+        if args.target == 'ci-smoke':
+            from audit_schema_scenarios import assert_baseline_reproducible
+            assert_baseline_reproducible(harness)
+            from audit_schema_scenarios import assert_clean_schema_audit
+            assert_clean_schema_audit(harness, 'Fresh install')
         harness.scenarios()
         harness.poller_scenarios()
         harness.fault_scenarios()

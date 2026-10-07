@@ -215,14 +215,20 @@ def verify_data_inputs(harness, session, check):
     status,body,_=post(session,propagate,payload)
     cached=harness.sql(f'SELECT arg1 FROM poller_item WHERE local_data_id={local}').strip()
     check(status==200 and 'incomplete' not in body and '/usr/bin/printf' in cached and '1' in cached,'collector retry builds real poller item from the saved command')
+    pollers_before = harness.sql('SELECT id,hostname FROM poller ORDER BY id')
     harness.sql("INSERT INTO poller(name,hostname,status) VALUES ('Data input offline','127.0.0.1',0)")
     remote=int(harness.sql("SELECT id FROM poller WHERE name='Data input offline'").strip())
-    harness.sql(f'UPDATE host SET poller_id={remote} WHERE id={host}')
-    fields,_=page(session,propagate)
-    payload={'data_input_action[revision]':fields['data_input_action[revision]'],'data_input_action[_token]':fields['data_input_action[_token]']}
-    status,body,_=post(session,propagate,payload)
-    check(status==200 and 'propagation is incomplete' in body and harness.sql(f'SELECT input_string FROM data_input WHERE id={target}').strip()=='/usr/bin/printf 1','offline collector yields explicit partial handoff without undoing local definition')
-    harness.sql(f'UPDATE host SET poller_id=1 WHERE id={host}')
+    try:
+        harness.sql(f'UPDATE host SET poller_id={remote} WHERE id={host}')
+        fields,_=page(session,propagate)
+        payload={'data_input_action[revision]':fields['data_input_action[revision]'],'data_input_action[_token]':fields['data_input_action[_token]']}
+        status,body,_=post(session,propagate,payload)
+        check(status==200 and 'propagation is incomplete' in body and harness.sql(f'SELECT input_string FROM data_input WHERE id={target}').strip()=='/usr/bin/printf 1','offline collector yields explicit partial handoff without undoing local definition')
+    finally:
+        # Only this fixture's collector and queued commands are owned here.
+        # Leaving its loopback identity would make later collector auth ambiguous.
+        harness.sql(f'UPDATE host SET poller_id=1 WHERE id={host}; DELETE FROM poller_command WHERE poller_id={remote}; DELETE FROM poller WHERE id={remote}')
+    check(harness.sql('SELECT id,hostname FROM poller ORDER BY id') == pollers_before, 'offline handoff fixture restores poller identities')
     # Legacy whitelist update runs a real CLI process and verifies its file bytes.
     config="\n$input_whitelist = '/tmp/data-input-review-whitelist.json';\n"
     harness.compose('exec','-T','-u','root','web','php','-r',"file_put_contents('include/config.php', " + json.dumps(config).replace('$','\\$') + ", FILE_APPEND);")

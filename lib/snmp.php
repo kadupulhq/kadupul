@@ -71,6 +71,10 @@ function cacti_snmp_session(
     $max_oids = 10,
     $bulk_walk_size = 10
 ) {
+    if (class_exists(\Kadupul\Inventory\Infrastructure\Legacy\DeviceDiagnosticScope::class, false)) {
+        \Kadupul\Inventory\Infrastructure\Legacy\DeviceDiagnosticScope::remember(['snmp_community' => $community, 'snmp_username' => $auth_user, 'snmp_password' => $auth_pass, 'snmp_priv_passphrase' => $priv_pass]);
+    }
+
 
     switch ($version) {
         case '1':
@@ -145,6 +149,10 @@ function cacti_snmp_get(
     $engineid = '',
     $value_output_format = SNMP_STRING_OUTPUT_GUESS
 ) {
+    if (class_exists(\Kadupul\Inventory\Infrastructure\Legacy\DeviceDiagnosticScope::class, false)) {
+        \Kadupul\Inventory\Infrastructure\Legacy\DeviceDiagnosticScope::remember(['snmp_community' => $community, 'snmp_username' => $auth_user, 'snmp_password' => $auth_pass, 'snmp_priv_passphrase' => $priv_pass]);
+    }
+
 
     global $config, $snmp_error;
 
@@ -217,6 +225,10 @@ function cacti_snmp_get_raw(
     $engineid = '',
     $value_output_format = SNMP_STRING_OUTPUT_GUESS
 ) {
+    if (class_exists(\Kadupul\Inventory\Infrastructure\Legacy\DeviceDiagnosticScope::class, false)) {
+        \Kadupul\Inventory\Infrastructure\Legacy\DeviceDiagnosticScope::remember(['snmp_community' => $community, 'snmp_username' => $auth_user, 'snmp_password' => $auth_pass, 'snmp_priv_passphrase' => $priv_pass]);
+    }
+
 
     global $config, $snmp_error;
 
@@ -282,6 +294,10 @@ function cacti_snmp_getnext(
     $engineid = '',
     $value_output_format = SNMP_STRING_OUTPUT_GUESS
 ) {
+    if (class_exists(\Kadupul\Inventory\Infrastructure\Legacy\DeviceDiagnosticScope::class, false)) {
+        \Kadupul\Inventory\Infrastructure\Legacy\DeviceDiagnosticScope::remember(['snmp_community' => $community, 'snmp_username' => $auth_user, 'snmp_password' => $auth_pass, 'snmp_priv_passphrase' => $priv_pass]);
+    }
+
 
     return cacti_snmp_getnext_request(
         array($hostname, $port, $oid, $version, $community, $timeout_ms, $retries),
@@ -745,6 +761,10 @@ function cacti_snmp_walk(
     $engineid = '',
     $value_output_format = SNMP_STRING_OUTPUT_GUESS
 ) {
+    if (class_exists(\Kadupul\Inventory\Infrastructure\Legacy\DeviceDiagnosticScope::class, false)) {
+        \Kadupul\Inventory\Infrastructure\Legacy\DeviceDiagnosticScope::remember(['snmp_community' => $community, 'snmp_username' => $auth_user, 'snmp_password' => $auth_pass, 'snmp_priv_passphrase' => $priv_pass]);
+    }
+
 
     global $config, $banned_snmp_strings, $snmp_error;
 

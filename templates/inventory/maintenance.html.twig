@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'Device maintenance'|trans({}, 'inventory') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    <h1>{{ 'Device maintenance'|trans({}, 'inventory') }} — {{ device.device.description }}</h1>
+    <p>{{ (device.debugEnabled ? 'Device debug enabled.' : 'Device debug disabled.')|trans({}, 'inventory') }}</p>
+    <p>{{ 'Diagnostic output describes this check; it does not guarantee future device availability.'|trans({}, 'inventory') }}</p>
+    {% if result %}
+    <section aria-label="{{ 'Operation result'|trans({}, 'inventory') }}">
+        <h2>{{ (result.completed ? result.message : 'The operation did not complete.')|trans({}, 'inventory') }}</h2>
+        {% if result.output != '' %}<pre>{{ result.output }}</pre>{% endif %}
+    </section>
+    {% endif %}
+    {{ form_start(form) }}{{ form_errors(form) }}{{ form_widget(form) }}
+        <button type="submit">{{ 'Run maintenance action'|trans({}, 'inventory') }}</button>
+    {{ form_end(form) }}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route and validated context. #}
+    <p><a href="{{ path('inventory_devices', filters) }}">{{ 'Back to devices'|trans({}, 'inventory') }}</a></p>
+</main>
+{% endblock %}

@@ -1,0 +1,42 @@
+#!/bin/sh
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+set -eu
+
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
+cd "$ROOT"
+suite=${1:-help}
+if [ "$#" -gt 0 ]; then shift; fi
+fail() { printf '%s\n' "$*" >&2; exit 2; }
+require_file() { [ -f "$1" ] || fail "Missing $1; install the locked dependencies described in tests/README.md."; }
+
+case "$suite" in
+    help|--help|-h)
+        printf '%s\n' 'Usage: tests/bin/run <suite> [runner arguments]' \
+            'Suites: symfony, legacy, database, unit-coverage, javascript, themes' \
+            'See tests/README.md for prerequisites and separate CI coverage jobs.'
+        exit 0 ;;
+    symfony)
+        require_file include/vendor/bin/phpunit
+        exec mise exec -- php include/vendor/bin/phpunit --configuration phpunit-symfony.xml --fail-on-empty-test-suite "$@" ;;
+    legacy|database|unit-coverage)
+        require_file tests/vendor/bin/pest
+        case "$suite" in
+            legacy) config=phpunit-spikekill.xml ;;
+            database) config=phpunit-database.xml ;;
+            unit-coverage) config=phpunit-coverage.xml ;;
+        esac
+        require_file "tests/$config"
+        cd tests
+        exec mise exec -- php vendor/bin/pest --test-directory=. --configuration "$config" --fail-on-empty-test-suite "$@" ;;
+    javascript)
+        # Globbing discovers the native Unit contracts, including future additions.
+        # An unmatched pattern must fail rather than report an empty successful run.
+        require_file tests/Unit/*.test.mjs
+        exec mise exec -- node --test "$@" tests/Unit/*.test.mjs ;;
+    themes)
+        require_file tests/e2e/node_modules/@playwright/test/cli.js
+        cd tests/e2e
+        exec mise exec -- npm run test:themes -- --config=playwright.config.js "$@" ;;
+    *) fail "Unknown suite: $suite. Run tests/bin/run help." ;;
+esac

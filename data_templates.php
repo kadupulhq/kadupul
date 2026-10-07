@@ -1,12 +1,13 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
 include('./include/auth.php');
 
-cacti_require_post_actions(array('actions'));
+cacti_require_post_actions(array('actions', 'rrd_add', 'rrd_remove'));
 include_once('./lib/api_data_source.php');
 include_once('./lib/api_tree.php');
 include_once('./lib/html_tree.php');
@@ -787,7 +788,7 @@ function template_edit()
             print "<div class='tabs' style='float:left;'><nav><ul role='tablist'>\n";
 
             foreach ($template_data_rrds as $template_data_rrd) {
-                print "<li class='subTab'><a " . (($template_data_rrd['id'] == get_request_var('view_rrd')) ? "class='pic selected'" : "class='pic'") . " href='" . html_escape('data_templates.php?action=template_edit&id=' . get_request_var('id') . '&view_rrd=' . $template_data_rrd['id']) . "'>" . ($i + 1) . ": " . html_escape($template_data_rrd['data_source_name']) . "</a>" . ($template_data['data_sources'] == 0 ? "<a class='pic deleteMarker fa fa-times' title='" . __esc('Delete') . "' href='" . html_escape('data_templates.php?action=rrd_remove&id=' . $template_data_rrd['id'] . '&data_template_id=' . get_request_var('id')) . "'></a>" : "<a class='deleteMarkerDisabled fa fa-times' href='#' title='" . __esc('Data Templates in use can not be modified') . "'></a>") . "</li>\n";
+                print "<li class='subTab'><a " . (($template_data_rrd['id'] == get_request_var('view_rrd')) ? "class='pic selected'" : "class='pic'") . " href='" . htmlspecialchars(html_escape('data_templates.php?action=template_edit&id=' . get_request_var('id') . '&view_rrd=' . $template_data_rrd['id']), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false) . "'>" . ($i + 1) . ": " . html_escape($template_data_rrd['data_source_name']) . "</a>" . ($template_data['data_sources'] == 0 ? "<a class='pic deleteMarker fa fa-times cactiPostAction' title='" . __esc('Delete') . "' href='#' data-url='" . htmlspecialchars(html_escape('data_templates.php?action=rrd_remove&id=' . $template_data_rrd['id'] . '&data_template_id=' . get_request_var('id')), ENT_QUOTES | ENT_HTML5, html_escape_charset(), false) . "'></a>" : "<a class='deleteMarkerDisabled fa fa-times' href='#' title='" . __esc('Data Templates in use can not be modified') . "'></a>") . "</li>\n";
 
                 $i++;
             }
@@ -813,7 +814,7 @@ function template_edit()
     }
 
     if (!$isSNMPGet && !$readOnly) {
-        html_start_box(__('Data Source Item [%s]', (isset($template_rrd) ? html_escape($template_rrd['data_source_name']) : '')), '100%', true, '0', 'center', (!isempty_request_var('id') ? 'data_templates.php?action=rrd_add&id=' . get_request_var('id') : ''), __('New'));
+        html_start_box(__('Data Source Item [%s]', (isset($template_rrd) ? html_escape($template_rrd['data_source_name']) : '')), '100%', true, '0', 'center', (!isempty_request_var('id') ? array(array('id' => 'rrd_add', 'href' => '#', 'callback' => true)) : ''), __('New'));
     } else {
         html_start_box(__('Data Source Item [%s]', (isset($template_rrd) ? html_escape($template_rrd['data_source_name']) : '')), '100%', true, '0', 'center', '', '');
     }
@@ -935,7 +936,7 @@ function template_edit()
                 } elseif (isset($fields_host_edit[$field['data_name']])) {
                     $help = $fields_host_edit[$field['data_name']]['description'];
                 } else {
-                    $help = $field['name'];
+                    $help = html_escape($field['name']);
                 }
 
                 print "<div class='formRow $class'>";
@@ -980,6 +981,11 @@ function template_edit()
 	var readOnly = <?php print $readOnly ? 'true' : 'false';?>;
 
 	$(function() {
+		$('#rrd_add').on('click', function(event) {
+			event.preventDefault();
+			loadPage('data_templates.php?action=rrd_add&id=<?php print (int) get_request_var('id');?>', false, true);
+		});
+
 		if (readOnly) {
 			// Data Source
 			$('#data_input_id').prop('disabled', true).addClass('ui-state-disabled');

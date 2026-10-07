@@ -4,6 +4,8 @@ about.php	symfony:forward	forwards to app.php/about/legacy
 aggregate_graphs.php	realm:5	include/auth.php
 aggregate_templates.php	realm:5	include/auth.php
 app.php	symfony:front-controller	Symfony kernel; routes listed as app.php/... rows
+app.php/about	symfony:platform_about	methods=GET|HEAD; AuthenticatedAccess signed-in account; no realm required
+app.php/about/legacy	symfony:platform_about_legacy	methods=GET|HEAD|POST; AuthenticatedAccess signed-in account; no realm required
 app.php/data-inputs	symfony:data_inputs	methods=GET|HEAD; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 55539f0a80ef and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
 app.php/data-inputs/actions/{operation}	symfony:data_input_bulk	methods=GET|HEAD|POST requirements=operation=delete|duplicate; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 1f46fb124365 and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
 app.php/data-inputs/legacy	symfony:data_input_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action af73f4343625 and controller e011435a3fdf and workflow b0abc0295d4c: feature realm 2
@@ -11,8 +13,6 @@ app.php/data-inputs/new	symfony:data_input_create	methods=GET|HEAD|POST; Console
 app.php/data-inputs/{id}/edit	symfony:data_input_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action f5da79ca881e and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
 app.php/data-inputs/{id}/fields/{field}	symfony:data_input_field	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7},field=[0-9]{1,8}; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 74a56be92e80 and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
 app.php/data-inputs/{id}/{operation}	symfony:data_input_action	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7},operation=delete|duplicate|field_delete|propagate|whitelist; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 0326117ba140 and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
-app.php/about	symfony:platform_about	methods=GET|HEAD; AuthenticatedAccess signed-in account; no realm required
-app.php/about/legacy	symfony:platform_about_legacy	methods=GET|HEAD|POST; AuthenticatedAccess signed-in account; no realm required
 app.php/graph-definitions/vdefs	symfony:graph_vdefs	methods=GET|HEAD; ConsoleAccess realm 8 + realm 14
 app.php/graph-definitions/vdefs/actions/{operation}	symfony:graph_vdef_action	methods=GET|HEAD|POST requirements=operation=delete|duplicate; ConsoleAccess realm 8 + realm 14
 app.php/graph-definitions/vdefs/legacy	symfony:graph_vdef_legacy	methods=GET|HEAD; ConsoleAccess realm 8 + realm 14
@@ -33,11 +33,16 @@ app.php/inventory/devices	symfony:inventory_devices	methods=GET|HEAD; ConsoleAcc
 app.php/inventory/devices.csv	symfony:inventory_devices_csv	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices.json	symfony:inventory_devices_json	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices/assign/{kind}	symfony:inventory_device_bulk_assignment	methods=GET|HEAD|POST requirements=kind=site|template|collector; ConsoleAccess realm 8 + realm 3
+app.php/inventory/devices/automation	symfony:inventory_device_automation	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
+app.php/inventory/devices/legacy	symfony:inventory_devices_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices/new	symfony:inventory_device_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
+app.php/inventory/devices/place/{kind}	symfony:inventory_device_placement	methods=GET|HEAD|POST requirements=kind=tree|report; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices/remove	symfony:inventory_device_remove	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices/{id}	symfony:inventory_device_details	methods=GET|HEAD requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 3
+app.php/inventory/devices/{id}/associations/{kind}	symfony:inventory_device_associations	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7},kind=graph|query; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices/{id}/collector	symfony:inventory_device_collector	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices/{id}/edit	symfony:inventory_device_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 3
+app.php/inventory/devices/{id}/maintenance	symfony:inventory_device_maintenance	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices/{id}/template	symfony:inventory_device_template	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices/{operation}	symfony:inventory_device_state	methods=GET|HEAD|POST requirements=operation=enable|disable|clear-statistics|sync-template|options|snmp; ConsoleAccess realm 8 + realm 3
 app.php/inventory/sites	symfony:inventory_sites	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
@@ -53,7 +58,7 @@ app.php/links/new	symfony:navigation_link_create	methods=GET|HEAD|POST; ConsoleA
 app.php/links/{id}/edit	symfony:navigation_link_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8
 app.php/session	symfony:session	methods=GET|HEAD; ConsoleAccess realm 8; reviewed at c1e137157c2e: answers 401 with no identity when the actor is null
 auth_changepassword.php	authenticated	own session check; action=checkpass answers anonymously with the password policy verdict; reviewed at ff7ac6fa6c55
-auth_login.php	anonymous-allowed	login handler; include/auth.php includes it after bootstrap, so a direct request stops at the first undefined function; reviewed at 7daec21be402
+auth_login.php	anonymous-allowed	login handler; include/auth.php includes it after bootstrap, so a direct request stops at the first undefined function; reviewed at 858e41478258
 auth_profile.php	realm:20	include/auth.php; guest_account withdrawn from anonymous and guest callers
 automation_devices.php	realm:23	include/auth.php
 automation_graph_rules.php	realm:23	include/auth.php
@@ -88,7 +93,7 @@ gprint_presets.php	realm:5	include/auth.php
 graph.php	guest-or-realm:7	include/auth.php; guest_account
 graph_image.php	guest-or-realm:7	include/auth.php; guest_account, auth_text
 graph_json.php	guest-or-realm:7	include/auth.php; guest_account, auth_json
-graph_realtime.php	realm:25	guest identity from include/auth.php; own realm 25 check for every caller; reviewed at b5481a7c85f5
+graph_realtime.php	realm:25	guest identity from include/auth.php; own realm 25 check for every caller; reviewed at 5d47cd271d29
 graph_templates.php	realm:10	include/auth.php
 graph_templates_inputs.php	realm:10	include/auth.php
 graph_templates_items.php	realm:10	include/auth.php
@@ -98,7 +103,7 @@ graphs.php	realm:5	include/auth.php
 graphs_items.php	realm:5	include/auth.php
 graphs_new.php	realm:5	include/auth.php
 help.php	guest-or-authenticated	include/auth.php realm -1; guest_account
-host.php	realm:3	include/auth.php
+host.php	symfony:forward	forwards to app.php/inventory/devices/legacy
 host_templates.php	realm:12	include/auth.php
 images/index.php	anonymous-allowed	redirect-only
 include/admin_notifications.php	anonymous-allowed	inert: declarations and literal assignments only
@@ -109,12 +114,12 @@ include/config.php	web-server-denied	nginx; apache .htaccess
 include/content/index.php	anonymous-allowed	redirect-only
 include/csrf.php	anonymous-allowed	fragment without bootstrap, reviewed at bc25ffb52c48; included by include/global.php
 include/global.php	web-server-denied	nginx; apache .htaccess
-include/global_arrays.php	anonymous-allowed	fragment without bootstrap, reviewed at 68f2974f3548; included by include/global.php, lib/api_aggregate.php, lib/boost.php
+include/global_arrays.php	anonymous-allowed	fragment without bootstrap, reviewed at 36b3d991ff66; included by include/global.php, lib/api_aggregate.php, lib/boost.php
 include/global_constants.php	anonymous-allowed	fragment without bootstrap, reviewed at 44950e59dd15; included by include/global.php
-include/global_form.php	anonymous-allowed	fragment without bootstrap, reviewed at aadb66a8a7cc; included by include/global.php
+include/global_form.php	anonymous-allowed	fragment without bootstrap, reviewed at ecb0178c09d6; included by include/global.php
 include/global_languages.php	anonymous-allowed	fragment without bootstrap, reviewed at 614a6beac129; included by include/global.php
 include/global_session.php	anonymous-allowed	fragment without bootstrap, reviewed at 89b8966e06b4; included by auth_changepassword.php, auth_login.php, graph_realtime.php
-include/global_settings.php	anonymous-allowed	fragment without bootstrap, reviewed at 183e1a4a3b86; included by include/global.php
+include/global_settings.php	anonymous-allowed	fragment without bootstrap, reviewed at 8fa0a2433725; included by include/global.php
 include/index.php	anonymous-allowed	redirect-only
 include/js/LC_MESSAGES/index.php	anonymous-allowed	redirect-only
 include/js/index.php	anonymous-allowed	redirect-only
@@ -219,6 +224,7 @@ install/upgrades/1_2_3.php	anonymous-allowed	inert: declarations and literal ass
 install/upgrades/1_2_31.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_33.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_34.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_35.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_5.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_7.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_8.php	anonymous-allowed	inert: declarations and literal assignments only
@@ -250,7 +256,7 @@ poller_rrdcheck.php	cli-only	guard: include/cli_check.php
 poller_spikekill.php	cli-only	guard: include/cli_check.php
 pollers.php	realm:3	include/auth.php
 public/index.php	symfony:front-controller	Symfony kernel; routes listed as app.php/... rows
-remote_agent.php	anonymous-allowed	no user session; remote_client_authorized() admits registered poller addresses only; reviewed at a623320051ce
+remote_agent.php	anonymous-allowed	no user session; remote_client_authorized() admits registered poller addresses only; reviewed at b3b57a013f51
 reports_admin.php	realm:21	include/auth.php
 reports_user.php	realm:22	include/auth.php
 resource/index.php	anonymous-allowed	redirect-only
