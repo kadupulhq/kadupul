@@ -28,9 +28,9 @@ cmd_exec	./lib/functions.php:7731	            exec(sprintf('grep :%s: /etc/passw
 cmd_exec	./lib/functions.php:8073	 * shell_exec() callers that already assemble the command string.
 cmd_exec	./lib/functions.php:8115	    $process = proc_open($argv, $descriptors, $pipes);
 cmd_exec	./lib/functions.php:8184	 * shell_exec() and expect a string return value.
-cmd_exec	./lib/installer.php:3660	            $results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
-cmd_exec	./lib/installer.php:3696	                    shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
-cmd_exec	./lib/installer.php:851	            $process = @proc_open(
+cmd_exec	./lib/installer.php:3670	            $results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
+cmd_exec	./lib/installer.php:3706	                    shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
+cmd_exec	./lib/installer.php:854	            $process = @proc_open(
 cmd_exec	./lib/ping.php:149					$result = shell_exec('ping ' . cacti_escapeshellarg($this->host['hostname']));
 cmd_exec	./lib/ping.php:151					$result = shell_exec('ping -m ' . ceil($this->timeout/1000) . ' -n ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
 cmd_exec	./lib/ping.php:153					$result = shell_exec('ping -t ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
@@ -379,7 +379,7 @@ dynamic_include	./lib/html_tree.php:807		include_once($config['library_path'] . 
 dynamic_include	./lib/html_tree.php:808		include_once($config['library_path'] . '/html_utility.php');
 dynamic_include	./lib/import.php:16	    include_once($config['library_path'] . '/xml.php');
 dynamic_include	./lib/import.php:2153	    include_once($config['library_path'] . '/vdef.php');
-dynamic_include	./lib/installer.php:3806	                include_once($upgrade_file);
+dynamic_include	./lib/installer.php:3816	                include_once($upgrade_file);
 dynamic_include	./lib/mib_cache.php:43	        include_once($config['include_path'] . '/vendor/phpsnmp/mib_parser.php');
 dynamic_include	./lib/plugins.php:1016	    include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./lib/plugins.php:145	                        include_once($plugin_include);
@@ -572,7 +572,7 @@ fs_write	./lib/import.php:645	                        $file = fopen($filename, '
 fs_write	./lib/input_whitelist.php:111	        $stream = @fopen($temporary, 'x+b');
 fs_write	./lib/input_whitelist.php:41	            $lock = @fopen($lockPath, 'x+b');
 fs_write	./lib/input_whitelist.php:49	            $lock = @fopen($lockPath, 'r+b');
-fs_write	./lib/installer.php:3063	            $file = fopen($cacheFile, "r");
+fs_write	./lib/installer.php:3073	            $file = fopen($cacheFile, "r");
 fs_write	./lib/poller.php:1729	                                if (file_put_contents($tmpfile, $contents) !== false) {
 fs_write	./lib/poller.php:1757	                                            file_put_contents($mypath, $contents);
 fs_write	./lib/poller.php:1786	                            file_put_contents($mypath, $contents);
