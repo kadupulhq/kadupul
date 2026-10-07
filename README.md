@@ -1,5 +1,8 @@
 # Kadupul
 
+[![Quality gate](https://sonarcloud.io/api/project_badges/measure?project=kadupulhq_kadupul&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=kadupulhq_kadupul)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/kadupulhq/kadupul/badge)](https://scorecard.dev/viewer/?uri=github.com/kadupulhq/kadupul)
+
 Network monitoring and graphing. Kadupul polls devices over SNMP and scripts,
 stores measurements in RRD files, and renders graphs with RRDtool.
 It is an independent fork of [Cacti](https://github.com/Cacti/cacti), without affiliation or endorsement from that project.
