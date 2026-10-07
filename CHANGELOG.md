@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Verify access-only session expiry refresh on refused remembered-login restoration without relying on wall-clock timing; retain exact credential and adjacent-session checks.
+
 - Verify that the pinned Snyk dependency scan completes all five repository projects through its documented legacy testing path, while retaining the existing vulnerability policy.
 
 - Run an explicit Sonar scope check on every eligible update; skip expensive coverage only for verified ordinary documentation changes and retain full analysis for relevant or uncertain inputs.

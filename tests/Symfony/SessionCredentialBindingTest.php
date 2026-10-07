@@ -95,7 +95,33 @@ final class SessionCredentialBindingTest extends TestCase
                 self::assertTrue($state['next_console']);
             }
             if (str_contains($scenario, '-policy-') && !$accepted) {
-                self::assertSame($state['policy_before'], $state['policy_after']);
+                $before = $state['policy_before'];
+                $after = $state['policy_after'];
+                if ($storage === 'database') {
+                    self::assertCount(2, $before['sessions']);
+                    self::assertSame(array_column($before['sessions'], 'id'), array_column($after['sessions'], 'id'));
+                    self::assertIsInt($state['request_started']);
+                    self::assertIsInt($state['request_finished']);
+                    self::assertGreaterThanOrEqual($state['request_started'], $state['request_finished']);
+                    $ownRows = 0;
+                    foreach ($before['sessions'] as $index => $row) {
+                        if ($row['id'] !== $before['session_id']) {
+                            self::assertSame($row, $after['sessions'][$index]);
+                            continue;
+                        }
+                        $ownRows++;
+                        $touched = $after['sessions'][$index]['access'];
+                        self::assertIsInt($touched);
+                        self::assertGreaterThan($row['access'], $touched);
+                        self::assertGreaterThanOrEqual($state['request_started'], $touched);
+                        self::assertLessThanOrEqual($state['request_finished'], $touched);
+                        // The read-only handler may refresh this row's expiry, but
+                        // its identity, payload and metadata must remain identical.
+                        $after['sessions'][$index]['access'] = $row['access'];
+                    }
+                    self::assertSame(1, $ownRows);
+                }
+                self::assertSame($before, $after);
             }
             if (str_ends_with($scenario, '-rollback')) {
                 self::assertTrue($state['refused_while_active']);
