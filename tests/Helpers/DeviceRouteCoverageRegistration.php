@@ -49,6 +49,8 @@ final class DeviceRouteCoverageRegistration
         'tests/Symfony/DeviceBulkAssignmentPresentationTest.php',
         'tests/Symfony/DeviceStatePresentationTest.php',
         'tests/Symfony/DeviceFormPageTest.php',
+        'tests/Symfony/DeviceFormFailureTest.php',
+        'tests/Symfony/DeviceCollectorPresentationTest.php',
         'tests/Symfony/DeviceEditTest.php',
         'tests/Symfony/DeviceCreateTest.php',
         'tests/Symfony/DeviceAssociationTest.php',
@@ -264,8 +266,9 @@ final class DeviceRouteCoverageRegistration
         'templates/inventory/sites.html.twig',
         'templates/inventory/template.html.twig',
     ];
-    public const SUITES = ['LegacyDevicesTest', 'DeviceActionCsrfTest', 'DeviceAssociationPresentationTest', 'DeviceMaintenancePresentationTest', 'DeviceBulkAssignmentPresentationTest', 'DeviceStatePresentationTest', 'DeviceFormPageTest', 'DeviceEditTest', 'DeviceCreateTest', 'DeviceAssociationTest', 'DeviceMaintenanceExecutionTest', 'DeviceMaintenanceTest', 'DeviceMaintenanceProcessTest', 'DeviceRemovalPresentationTest', 'DeviceAutomationPresentationTest', 'DevicePlacementPresentationTest'];
+    public const SUITES = ['LegacyDevicesTest', 'DeviceActionCsrfTest', 'DeviceAssociationPresentationTest', 'DeviceMaintenancePresentationTest', 'DeviceBulkAssignmentPresentationTest', 'DeviceStatePresentationTest', 'DeviceFormPageTest', 'DeviceFormFailureTest', 'DeviceCollectorPresentationTest', 'DeviceEditTest', 'DeviceCreateTest', 'DeviceAssociationTest', 'DeviceMaintenanceExecutionTest', 'DeviceMaintenanceTest', 'DeviceMaintenanceProcessTest', 'DeviceRemovalPresentationTest', 'DeviceAutomationPresentationTest', 'DevicePlacementPresentationTest'];
     public const MEASURED = [
+        'src/Inventory/Infrastructure/Symfony/DeviceFormFailure.php',
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceCatalog.php',
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceLocations.php',
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceEditor.php',

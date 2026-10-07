@@ -35,6 +35,11 @@ final class DeviceRouteNativeHarness
                 if (count($reports) !== 1) throw new RuntimeException('Route coverage missing');
                 $prefix = 'src/Inventory/Infrastructure/Symfony/Controller/';
                 $hits = $scenario['kind'] === 'presentation' ? ['host.php', $prefix . 'LegacyDevicesController.php'] : ($scenario['kind'] === 'wrapper' ? ['host.php', $prefix . 'LegacyDevicesController.php'] : [$prefix . 'DeviceMaintenanceController.php', $prefix . 'DeviceAssociationController.php', $prefix . 'DeviceCreateController.php', $prefix . 'DeviceStateController.php', $prefix . 'DeviceBulkAssignmentController.php']);
+                if ($scenario['kind'] === 'destinations') {
+                    $hits[] = 'src/Inventory/Infrastructure/Symfony/DeviceFormFailure.php';
+                    $hits[] = $prefix . 'DeviceAutomationController.php';
+                    $hits[] = $prefix . 'DeviceCollectorController.php';
+                }
                 if ($scenario['kind'] === 'presentation') {
                     $action = $scenario['fields']['action'] ?? '';
                     $adapter = 'src/Inventory/Infrastructure/';

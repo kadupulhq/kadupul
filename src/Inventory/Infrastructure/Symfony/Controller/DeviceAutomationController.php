@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -12,7 +14,7 @@ use Kadupul\Inventory\Application\Command\DevicesNotFound;
 use Kadupul\Inventory\Application\Query\PrepareDeviceStateChange;
 use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
 use Kadupul\Inventory\Domain\DeviceSelection;
-use Kadupul\Inventory\Domain\DeviceEditConflict;
+use Kadupul\Inventory\Infrastructure\Symfony\DeviceFormFailure;
 use Kadupul\Inventory\Infrastructure\Symfony\DeviceListParameters;
 use Kadupul\Inventory\Infrastructure\Symfony\Form\DeviceStateType;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -28,7 +30,7 @@ use Twig\Environment;
 final class DeviceAutomationController
 {
     #[Route('/inventory/devices/automation', name: 'inventory_device_automation', methods: ['GET', 'HEAD', 'POST'])]
-    public function __invoke(Request $request, PrepareDeviceStateChange $prepare, \Kadupul\Inventory\Application\Command\ApplyDeviceRules $applyRules, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function __invoke(Request $request, PrepareDeviceStateChange $prepare, \Kadupul\Inventory\Application\Command\ApplyDeviceRules $applyRules, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, DeviceFormFailure $failures): Response
     {
         $operation = 'automation';
         $headers = ['Cache-Control' => 'private, no-store'];
@@ -74,20 +76,15 @@ final class DeviceAutomationController
                     }
                     $applyRules($selection);
                     return new RedirectResponse($urls->generate('inventory_devices', $filters + ['completed' => $operation]), 303, $headers);
-                } catch (InventoryAccessDenied $error) {
-                    return new Response($translator->trans('Access denied.', [], 'inventory'), $error->unauthenticated ? 401 : 403, $headers);
                 } catch (DevicesNotFound) {
                     return new Response($translator->trans('Selected devices were not found.', [], 'inventory'), 404, $headers);
-                } catch (DeviceEditConflict $error) {
-                    $status = 409;
-                    $form->addError(new FormError($translator->trans($error->getMessage(), [], 'inventory')));
-                } catch (\InvalidArgumentException $error) {
-                    $form->addError(new FormError($translator->trans($error->getMessage(), [], 'inventory')));
                 } catch (\JsonException) {
                     $form->addError(new FormError($translator->trans('Invalid device selection.', [], 'inventory')));
-                } catch (\RuntimeException) {
-                    $status = 502;
-                    $form->addError(new FormError($translator->trans('Device operation outcome is uncertain. Check every selected device before retrying.', [], 'inventory')));
+                } catch (\RuntimeException|\InvalidArgumentException $error) {
+                    $status = $failures->apply($form, $error, $status, 'Device operation outcome is uncertain. Check every selected device before retrying.');
+                    if ($status instanceof Response) {
+                        return $status;
+                    }
                 }
             }
         }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -41,4 +43,26 @@ final class DeviceFormFailureTest extends TestCase
             self::assertStringContainsString('no-store', $response->headers->get('Cache-Control'));
         }
     }
+
+    public function testOperationSpecificStatusAndUncertainMessageArePreserved(): void
+    {
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator->expects(self::exactly(4))->method('trans')->willReturnCallback(function (string $message, array $parameters, string $domain): string {
+            self::assertSame([], $parameters);
+            self::assertSame('inventory', $domain);
+            return $message;
+        });
+        $failures = new DeviceFormFailure($translator);
+        foreach ([
+            [new \InvalidArgumentException('Refresh validation failed.'), 200, 200, 'Refresh validation failed.'],
+            [new \InvalidArgumentException('Validation after earlier failure.'), 502, 502, 'Validation after earlier failure.'],
+            [new DeviceEditConflict('Stale revision'), 200, 409, 'Stale revision'],
+            [new \RuntimeException('private worker diagnostic'), 200, 502, 'Device operation outcome is uncertain. Check every selected device before retrying.'],
+        ] as [$error, $currentStatus, $expectedStatus, $expectedMessage]) {
+            $form = $this->createMock(FormInterface::class);
+            $form->expects(self::once())->method('addError')->with(self::callback(fn($error) => $error->getMessage() === $expectedMessage))->willReturnSelf();
+            self::assertSame($expectedStatus, $failures->apply($form, $error, $currentStatus, 'Device operation outcome is uncertain. Check every selected device before retrying.'));
+        }
+    }
+
 }
