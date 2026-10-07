@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Remove the obsolete Snyk dependency-path ignore without adding replacement exceptions, and clarify that Dependabot-triggered pushes also skip secret-dependent Sonar analysis.
+
 - Add explicit native test-suite commands and a guide to their separate dependencies; name source-contract tests after their behavior and restore isolated input-string validation tests against the production validator.
 - Reuse the device form failure presenter for association, collector, maintenance, and automation actions while preserving operation-specific statuses, translated messages, and authorization responses.
 
