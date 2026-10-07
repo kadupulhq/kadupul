@@ -68,10 +68,9 @@
             <exclude>./HandOff/AutomationSortHandoffTest.php</exclude>
             <exclude>./mutation/RlikeHelperMutationTest.php</exclude>
 
-            <!-- Calls read_config_option() or is_urlencoded() without
+            <!-- Remaining unrepaired tests call read_config_option() or is_urlencoded() without
                  loading lib/functions.php or stubbing them. -->
-            <exclude>./Unit/Issue7121InputStringRegressionTest.php</exclude>
-            <exclude>./Unit/Issue7121SmokeTest.php</exclude>
+            <exclude>./Unit/InputStringPlaceholderRegressionTest.php</exclude>
             <exclude>./Unit/RedirectValidationTest.php</exclude>
             <exclude>./handoff/RedirectDataHandoffTest.php</exclude>
             <exclude>./HandOff/RedirectDataHandoffTest.php</exclude>
@@ -98,7 +97,6 @@
             <exclude>./Unit/HtmlFilterXssTest.php</exclude>
             <exclude>./Unit/JsContextHardeningTest.php</exclude>
             <exclude>./Unit/PathAndRedirectHardeningTest.php</exclude>
-            <exclude>./Unit/PluginMoveorderBugTest.php</exclude>
             <exclude>./Unit/PrivateAdvisoryEvidenceRegressionTest.php</exclude>
             <exclude>./Unit/RlikeSqliMigrationTest.php</exclude>
             <exclude>./Unit/RrdCfFallbackTest.php</exclude>
