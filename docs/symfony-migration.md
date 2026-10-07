@@ -369,6 +369,51 @@ where `AllowOverride` permits them:
 Do not add `immutable` to `include/themes/` or `include/js/`; their URLs keep
 the same name across upgrades and rely on the `?md5` query.
 
+## Console layout and list templates
+
+Converted pages extend `templates/base.html.twig` and fill its `title` and
+`body` blocks; `stylesheets` and `javascripts` are available for page assets.
+The layout links `{{ asset(theme_stylesheet(), 'legacy') }}`. The
+`theme_stylesheet()` Twig function returns the signed-in user's theme
+`main.css`, falling back to the system theme and then `modern`. The `legacy`
+asset package in `framework.yaml` uses `CompiledAssetVersionStrategy`, which
+returns the compiled `public/assets/` copy when the manifest lists it and the
+source path with an `?md5` query otherwise, as legacy pages do. Do not use
+`asset()` without a package for these files: AssetMapper's default package
+emits a digested `/assets/` URL even before a compile, and nothing serves it.
+
+`console_menu()` returns the console menu for accounts with console access.
+`LegacyConsoleMenu` mirrors both `$menu` branches in
+`include/global_arrays.php`, with each page's realm from
+`$user_auth_realm_filenames`, and adds enabled console-style external links.
+`ConsoleMenuTest` fails when the copies drift. The full menu applies on the
+primary and on an online remote collector; when the installation configuration
+refuses an offline or recovering collector, the four-entry offline menu
+applies, although such a collector usually cannot identify the user and shows
+no menu. Items are filtered through the session adapter's `RealmGrants`, and
+only relative script paths are rendered. The menu is display only; every route
+still authorizes its own request. Flash messages render from `app.flashes`.
+
+Markup reuses the legacy IDs and classes (`cactiPageHead`, `cactiContent`,
+`navigation`, `cactiConsoleNavigationArea`, `menuitem`, `menu_parent`,
+`cactiTable`, `tableHeader`, `sortable`, `filterTable`, `navBarNavigation`) so
+installed themes and `custom.css` apply without changes. It avoids `#main`,
+`#nav` and `.breadCrumbBar`, which themes hide until `main.js` reveals them.
+The layout does not render the console and graph tabs or the breadcrumb bar.
+Twig pages do not load `main.js` or `layout.js`, so collapsible menu sections,
+AJAX sorting and paging, select-all checkboxes and row highlighting are absent.
+Plugin menu entries added through the `config_arrays` hook do not appear,
+because Symfony requests do not run the legacy bootstrap that calls it.
+
+To render a page without the layout, override `page` with `{{ block('body') }}`.
+
+`templates/_list.html.twig` holds macros for list pages: `rows_per_page`,
+`sort_header`, `selection_cell` and `pagination`. Each takes the caller's
+translation domain, and every visible string is a message key in that domain.
+Embed `templates/_list_filter.html.twig` for the GET filter form. The palette
+and VDEF lists use them; `ListTemplateRenderingTest` compares their output with
+fixtures captured before the change, ignoring class attributes.
+
 ## Transitional dependencies
 
 `tools/dependencies/legacy-files.json` pins the exact source revision, archive SHA-256 and individual SHA-256

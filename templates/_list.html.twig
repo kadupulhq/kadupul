@@ -1,0 +1,34 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+
+List pieces shared by converted pages. Classes match the legacy html_*()
+helpers so installed themes and custom.css apply. Every visible string is a
+message key translated in the caller's domain.
+#}
+
+{% macro rows_per_page(id, label, options, selected, domain, default_rows = null) %}
+<label for="{{ id }}">{{ label|trans({}, domain) }}</label>
+<select id="{{ id }}" name="rows">
+    {% for value, text in options %}
+        <option value="{{ value }}"{% if selected == value %} selected{% endif %}>{{ (value == '-1' ? 'Default (%count%)' : text)|trans({'%count%': default_rows}, domain) }}</option>
+    {% endfor %}
+</select>
+{% endmacro %}
+
+{% macro sort_header(route, filters, column, label, domain) %}
+{% set active = filters.sort_column == column %}
+{# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+<th scope="col" class="sortable{{ active ? ' primarySort' }}"><a href="{{ path(route, filters|merge({sort_column: column, sort_direction: active and filters.sort_direction == 'ASC' ? 'DESC' : 'ASC'})) }}">{{ label|trans({}, domain) }}</a></th>
+{% endmacro %}
+
+{% macro selection_cell(value, name, domain, id = null, disabled = false) %}
+<td class="checkbox">{% if id %}<label for="{{ id }}">{{ 'Select'|trans({}, domain) }}</label> {% endif %}<input{% if id %} id="{{ id }}"{% endif %} type="checkbox" name="ids[]" value="{{ value }}"{% if disabled %} disabled{% endif %} aria-label="{{ 'Select %name%'|trans({'%name%': name}, domain) }}"></td>
+{% endmacro %}
+
+{% macro pagination(route, parameters, page, has_previous, has_next, label, status, status_parameters, domain) %}
+<nav aria-label="{{ label|trans({}, domain) }}" class="navBarNavigation">
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+    {% if has_previous %}<a rel="prev" class="navBarNavigationPrevious" href="{{ path(route, parameters|merge({page: page - 1})) }}">{{ 'Previous'|trans({}, domain) }}</a>{% endif %}<span class="navBarNavigationCenter">{{ status|trans(status_parameters, domain) }}</span>{% if has_next %}<a rel="next" class="navBarNavigationNext" href="{{ path(route, parameters|merge({page: page + 1})) }}">{{ 'Next'|trans({}, domain) }}</a>{% endif %}
+</nav>
+{% endmacro %}

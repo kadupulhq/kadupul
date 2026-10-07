@@ -1,0 +1,10 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+
+GET filter form for a list; embed it and fill the filters block. The
+filterTable class is the legacy filter hook themes style.
+#}
+<form method="get" action="{{ action }}"{% if role|default %} role="{{ role }}"{% endif %} class="filterTable">
+    {% block filters %}{% endblock %}
+</form>
