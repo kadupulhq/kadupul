@@ -1,10 +1,13 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
 include('./include/auth.php');
+
+cacti_require_post_actions(array('query_reload'));
 include_once('./lib/api_data_source.php');
 include_once('./lib/api_graph.php');
 include_once('./lib/api_tree.php');
@@ -67,6 +70,32 @@ function save_default_query_option()
     print __('Default Settings Saved') . "\n";
 }
 
+/**
+ * Find the first device the current user is allowed to access.
+ *
+ * @return int Allowed device ID, or zero when none are available
+ */
+function graphs_new_default_host_id()
+{
+    $total_rows = 0;
+    $devices = get_allowed_management_devices('', 'description, hostname', '1', $total_rows);
+
+    return cacti_sizeof($devices) ? (int) $devices[0]['id'] : 0;
+}
+
+/**
+ * Check whether the current user may use a device for graph creation.
+ *
+ * @param int $host_id Device ID, or zero for a non-device template graph
+ * @param bool $requires_device Whether this action requires a real device
+ * @return bool
+ */
+function graphs_new_host_is_allowed($host_id, bool $requires_device = false)
+{
+    $host_id = auth_resource_id($host_id);
+    return $host_id !== null && ($host_id === 0 ? !$requires_device : is_device_allowed($host_id));
+}
+
 function save_user_filter()
 {
     $rows = get_filter_request_var('rows');
@@ -102,6 +131,13 @@ function store_get_selected_dq_index($snmp_query_id)
 function form_save()
 {
     if (isset_request_var('save_component_graph')) {
+        $host_id = get_filter_request_var('host_id');
+        if (!graphs_new_host_is_allowed($host_id)) {
+            raise_message('new_graph_access_denied', __('The requested device is not available.'), MESSAGE_LEVEL_ERROR);
+            header('Location: graphs_new.php?host_id=' . graphs_new_default_host_id() . '&header=false');
+            exit;
+        }
+
         $form_data = array();
 
         /* summarize the 'create graph from host template/snmp index' stuff into an array */
@@ -155,9 +191,16 @@ function form_save()
     }
 
     if (isset_request_var('save_component_new_graphs')) {
-        host_new_graphs_save(get_filter_request_var('host_id'));
+        $host_id = get_filter_request_var('host_id');
+        if (!graphs_new_host_is_allowed($host_id)) {
+            raise_message('new_graph_access_denied', __('The requested device is not available.'), MESSAGE_LEVEL_ERROR);
+            header('Location: graphs_new.php?host_id=' . graphs_new_default_host_id() . '&header=false');
+            exit;
+        }
 
-        header('Location: graphs_new.php?host_id=' . get_filter_request_var('host_id') . '&header=false');
+        host_new_graphs_save($host_id);
+
+        header('Location: graphs_new.php?host_id=' . $host_id . '&header=false');
     }
 }
 
@@ -172,7 +215,13 @@ function host_reload_query()
     get_filter_request_var('host_id');
     /* ==================================================== */
 
-    run_data_query(get_request_var('host_id'), get_request_var('id'));
+    $host_id = get_request_var('host_id');
+    if (!graphs_new_host_is_allowed($host_id, true)) {
+        raise_message('new_graph_access_denied', __('The requested device is not available.'), MESSAGE_LEVEL_ERROR);
+        return false;
+    }
+
+    run_data_query($host_id, get_request_var('id'));
 }
 
 /* -------------------
@@ -181,6 +230,11 @@ function host_reload_query()
 
 function host_new_graphs_save($host_id)
 {
+    if (!graphs_new_host_is_allowed($host_id)) {
+        cacti_log('WARNING: Graph creation rejected for a device the current user cannot access.', false, 'AUTH');
+        return false;
+    }
+
     $selected_graphs_array = cacti_unserialize(stripslashes(get_nfilter_request_var('selected_graphs_array')));
 
     $values = array();
@@ -307,7 +361,7 @@ function graphs()
         'host_id' => array(
             'filter' => FILTER_VALIDATE_INT,
             'pageset' => true,
-            'default' => db_fetch_cell('SELECT id FROM host ORDER BY description, hostname LIMIT 1')
+            'default' => graphs_new_default_host_id()
         ),
         'graph_type' => array(
             'filter' => FILTER_VALIDATE_INT,
@@ -317,6 +371,10 @@ function graphs()
 
     validate_store_request_vars($filters, 'sess_grn');
     /* ================= input validation ================= */
+    if (get_request_var('host_id') > 0 && !graphs_new_host_is_allowed(get_request_var('host_id'))) {
+        raise_message('new_graph_access_denied', __('The requested device is not available.'), MESSAGE_LEVEL_ERROR);
+        set_request_var('host_id', graphs_new_default_host_id());
+    }
 
     if (get_request_var('rows') == '-1') {
         $rows = read_user_setting('num_rows_table', read_config_option('num_rows_table'), true);
@@ -389,7 +447,12 @@ function graphs()
 	$(function() {
 		$('[id^="reload"]').on('click', function(data) {
 			$(this).addClass('fa-spin');
-			loadPageNoHeader('graphs_new.php?action=query_reload&header=false&id='+$(this).attr('data-id')+'&host_id='+$('#host_id').val());
+			loadPageUsingPost('graphs_new.php?action=query_reload', {
+				header: 'false',
+				id: $(this).attr('data-id'),
+				host_id: $('#host_id').val(),
+				__csrf_magic: csrfMagicToken
+			});
 		});
 
 		$('#graph_type, #rows').on('change', function() {
@@ -885,7 +948,7 @@ function graphs()
                         }
 
                         if (!cacti_sizeof($snmp_query_indexes)) {
-                            print "<tr class='odd'><td>" . __('This Data Query returned 0 rows, perhaps there was a problem executing this Data Query.') . "<a href='" . html_escape('host.php?action=query_verbose&id=' . $snmp_query['id'] . '&host_id=' . $host['id']) . "'>" . __('You can run this Data Query in debug mode') . "</a> " . __('From there you can get more information.') . '</td></tr>';
+                            print "<tr class='odd'><td>" . __('This Data Query returned 0 rows, perhaps there was a problem executing this Data Query.') . "<a class='cactiPostAction' href='#' data-navigation='fullpage' data-url='" . html_escape('host.php?action=query_verbose&header=true&id=' . $snmp_query['id'] . '&host_id=' . $host['id']) . "'>" . __('You can run this Data Query in debug mode') . "</a> " . __('From there you can get more information.') . '</td></tr>';
                         } else {
                             print "<tr class='tableHeader'>
 									$html_dq_header

@@ -12,6 +12,16 @@ require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
 require_once dirname(__DIR__) . '/Helpers/NativeChildCoverageEvidence.php';
 
 $authSource = file_get_contents(dirname(__DIR__, 2) . '/lib/auth.php');
+$authFunctionBody = static function ($functionName) use ($authSource) {
+    $start = strpos($authSource, 'function ' . $functionName . '(');
+    if ($start === false) {
+        return '';
+    }
+
+    $end = strpos($authSource, "\nfunction ", $start + 1);
+
+    return $end === false ? substr($authSource, $start) : substr($authSource, $start, $end - $start);
+};
 
 // --- GHSA-9ffc-rr2g-c8hh: Remote-User header gate ---
 
@@ -67,22 +77,25 @@ test('GHSA-9ffc-rr2g-c8hh: header reads only appear after the auth_method gate',
 
 // --- GHSA-3jj2-v5ch-wmq5: LDAP realm boundary ---
 
-test('GHSA-3jj2-v5ch-wmq5: domains_login_process uses >= 3 realm boundary', function () use ($authSource) {
-    // realm=3 is a valid domain realm; > 3 would allow it to bypass the LDAP bind.
-    // The guard and comment sit ~605-640 chars into the function body.
-    $start = strpos($authSource, 'function domains_login_process(');
-    expect($start)->not->toBeFalse();
-
-    $body = substr($authSource, $start, 800);
-    expect($body)->toContain('$realm >= 3');
+test('GHSA-3jj2-v5ch-wmq5: domains_login_process binds only for domain realms', function () use ($authSource) {
+    // Domain realms are 1000 + domain_id. A lower bound of 3 let realms that
+    // are not domains skip the bind; DomainsLoginRealmTest runs those cases.
+    $body = test_php_function_source($authSource, 'domains_login_process');
+    expect($body)->toContain('$realm >= 1000')
+        ->and($body)->not->toContain('$realm >= 3');
 });
 
-test('GHSA-3jj2-v5ch-wmq5: realm boundary comment cites the advisory', function () use ($authSource) {
-    $start = strpos($authSource, 'function domains_login_process(');
-    expect($start)->not->toBeFalse();
+test('GHSA-3jj2-v5ch-wmq5: domains_login_process checks the realm before lockout or bind', function () use ($authSource) {
+    $body = test_php_function_source($authSource, 'domains_login_process');
+    $allowlist = strpos($body, 'get_auth_realms(true)');
+    $lockout = strpos($body, 'auth_checkclear_lockout(');
+    $search = strpos($body, 'domains_ldap_search_dn(');
 
-    $body = substr($authSource, $start, 800);
-    expect($body)->toContain('GHSA-3jj2-v5ch-wmq5');
+    expect($allowlist)->not->toBeFalse()
+        ->and($lockout)->not->toBeFalse()
+        ->and($search)->not->toBeFalse()
+        ->and($allowlist)->toBeLessThan($lockout)
+        ->and($allowlist)->toBeLessThan($search);
 });
 
 // --- GHSA-2px8-gvmq-85f3: LDAP lockout call-site ---
@@ -149,7 +162,7 @@ test('domain bind failures enforce the configured lockout using numeric error co
             $reports = glob($directory . '/*.coverage');
             expect($reports)->toHaveCount(1);
             $root = dirname(__DIR__, 2);
-            $sources = array('tests/Unit/HardeningAuth2026RegressionTest.php', 'composer.lock', 'tests/composer.lock', 'tests/Fixtures/domain-lockout-native.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/auth.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
+            $sources = array('tests/Unit/HardeningAuth2026RegressionTest.php', 'composer.lock', 'tests/composer.lock', 'tests/Fixtures/domain-lockout-native.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/auth.php', 'lib/graph_item_choices.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
             $scenario = json_encode(array('code' => (string) $code, 'text' => $text), JSON_THROW_ON_ERROR);
             $arguments = array($reports[0], $root, 'tests/Fixtures/domain-lockout-native.php', $scenario, $sources, array('domain-lockout-persisted-state-readback'), array('lib/auth.php'));
             $measured = NativeChildCoverageEvidence::load(...$arguments);

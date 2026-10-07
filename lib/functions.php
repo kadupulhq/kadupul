@@ -258,9 +258,11 @@ function save_user_settings($user = -1)
 
     foreach ($settings_user as $tab_short_name => $tab_fields) {
         foreach ($tab_fields as $field_name => $field_array) {
-            /* Preserve the font-size fallback; malformed values for other settings are refused below. */
-            if (isset($field_array['filter'], $field_array['options']['options']) && $field_array['options']['options'] === 'graph_font_size_filter' && isset($field_array['default']) && is_numeric($field_array['default']) && (!is_numeric(get_nfilter_request_var($field_name)) || !settings_value_passes_filter($field_name, get_nfilter_request_var($field_name), true))) {
-                set_request_var($field_name, $field_array['default']);
+            if (isset_request_var($field_name) && isset($field_array['default']) && is_numeric($field_array['default'])
+                && (!is_numeric(get_nfilter_request_var($field_name)) || !settings_value_passes_filter($field_name, get_nfilter_request_var($field_name), true))) {
+                $_SESSION['sess_error_fields'][$field_name] = $field_name;
+                $_SESSION['sess_field_values'][$field_name] = get_nfilter_request_var($field_name);
+                continue;
             }
 
             if (isset($field_array['method'])) {
@@ -337,6 +339,11 @@ function user_setting_value_allowed($field_array, $value)
         case 'drop_array':
         case 'drop_language':
             return isset($field_array['array']) && is_array($field_array['array']) && array_key_exists($value, $field_array['array']);
+        case 'drop_callback':
+            if (!empty($field_array['none_value']) && $value === '0') {
+                return true;
+            }
+            // Fall through to the same SQL choices rendered by form_callback().
         case 'drop_sql':
             foreach (db_fetch_assoc($field_array['sql']) as $row) {
                 if ((string) $row['id'] === $value) {
@@ -345,6 +352,25 @@ function user_setting_value_allowed($field_array, $value)
             }
 
             return false;
+        case 'radio':
+            foreach ($field_array['items'] ?? array() as $item) {
+                if (isset($item['radio_value']) && $value === (string) $item['radio_value']) {
+                    return true;
+                }
+            }
+            return false;
+        case 'drop_files':
+            $directory = $field_array['directory'] ?? '';
+            if (!is_string($directory) || !is_dir($directory) || !is_readable($directory)) {
+                return false;
+            }
+            $files = scandir($directory);
+            return $files !== false && $value !== '.' && $value !== '..'
+                && in_array($value, $files, true)
+                && !in_array($value, $field_array['exclusions'] ?? array(), true)
+                && is_readable($directory . '/' . $value);
+        case 'textbox_password':
+            return !isset($field_array['max_length']) || strlen($value) <= $field_array['max_length'];
         case 'textbox':
         case 'font':
             if (isset($field_array['max_length']) && strlen($value) > $field_array['max_length']) {
@@ -7744,45 +7770,84 @@ function get_debug_prefix()
     return sprintf('<[ %s | %7d ]> -- ', $dateTime, getmypid());
 }
 
+/** Report proxy migration/rejection once per request, without request values. */
+function log_client_addr_proxy_diagnostic(): void
+{
+    static $reported = false;
+
+    if ($reported) {
+        return;
+    }
+    $reported = true;
+    cacti_log('DEBUG: Proxy client address ignored or rejected; configure proxy_trusted_addresses with exact proxy IPs and proxy_headers with one allowlisted header containing one client IP. Legacy boolean proxy_headers is unsupported.', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
+}
+
 function get_client_addr()
 {
     global $config, $allowed_proxy_headers;
 
-    $proxy_headers = (isset($config['proxy_headers']) ? $config['proxy_headers'] : []);
-
-    if ($proxy_headers === true) {
-        $proxy_headers = $allowed_proxy_headers;
-    } elseif (is_array($proxy_headers) && is_array($allowed_proxy_headers)) {
-        $proxy_headers = array_intersect($proxy_headers, $allowed_proxy_headers);
+    $peer = $_SERVER['REMOTE_ADDR'] ?? '';
+    if (!is_string($peer) || !filter_var($peer, FILTER_VALIDATE_IP)) {
+        return false;
     }
 
-    if (!is_array($proxy_headers)) {
-        $proxy_headers = [];
+    $headers = $config['proxy_headers'] ?? [];
+    $trustedProxies = $config['proxy_trusted_addresses'] ?? [];
+    // `true` previously trusted every header from every peer. Fail closed to
+    // the TCP peer; proxy use now requires one allowlisted header and an
+    // explicitly trusted REMOTE_ADDR.
+    if (!is_array($trustedProxies)) {
+        if (!empty($headers)) {
+            log_client_addr_proxy_diagnostic();
+        }
+        return $peer;
     }
-
-    if (!in_array('REMOTE_ADDR', $proxy_headers)) {
-        $proxy_headers[] = 'REMOTE_ADDR';
-    }
-
-    $client_addr = false;
-    foreach ($proxy_headers as $header) {
-        if (!empty($_SERVER[$header])) {
-            $header_ips = explode(',', $_SERVER[$header]);
-            foreach ($header_ips as $header_ip) {
-                if (!empty($header_ip)) {
-                    if (!filter_var($header_ip, FILTER_VALIDATE_IP)) {
-                        cacti_log('ERROR: Invalid remote client IP Address found in header (' . $header . ').', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
-                    } else {
-                        $client_addr = $header_ip;
-                        cacti_log('DEBUG: Using remote client IP Address found in header (' . $header . '): ' . $client_addr . ' (' . $_SERVER[$header] . ')', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
-                        break 2;
-                    }
-                }
-            }
+    $peerBinary = inet_pton($peer);
+    $trusted = false;
+    foreach ($trustedProxies as $trustedProxy) {
+        if (!is_string($trustedProxy) || !filter_var($trustedProxy, FILTER_VALIDATE_IP)) {
+            continue;
+        }
+        $trustedBinary = inet_pton($trustedProxy);
+        if ($peerBinary !== false && $trustedBinary !== false && hash_equals($peerBinary, $trustedBinary)) {
+            $trusted = true;
+            break;
         }
     }
+    if (!$trusted) {
+        if (!empty($headers)) {
+            log_client_addr_proxy_diagnostic();
+        }
+        return $peer;
+    }
 
-    return $client_addr;
+    if (!is_array($headers) || count($headers) !== 1) {
+        log_client_addr_proxy_diagnostic();
+        return false;
+    }
+    if (!is_array($allowed_proxy_headers)) {
+        log_client_addr_proxy_diagnostic();
+        return false;
+    }
+    foreach ($allowed_proxy_headers as $allowed_header) {
+        if (!is_string($allowed_header)) {
+            log_client_addr_proxy_diagnostic();
+            return false;
+        }
+    }
+    $header = reset($headers);
+    if (!is_string($header) || !in_array($header, $allowed_proxy_headers, true) || $header === 'REMOTE_ADDR' || !isset($_SERVER[$header])) {
+        log_client_addr_proxy_diagnostic();
+        return false;
+    }
+
+    $client = $_SERVER[$header];
+    if (!is_string($client) || str_contains($client, ',') || !filter_var(trim($client), FILTER_VALIDATE_IP)) {
+        log_client_addr_proxy_diagnostic();
+        return false;
+    }
+
+    return trim($client);
 }
 
 /**

@@ -163,9 +163,9 @@ jobs:
         php Symfony/data_input_lock_probe.php
         php Support/verify_row_cache.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --cache-directory="$RUNNER_TEMP/reference-transaction-phpunit" Symfony/LegacyReferenceWriteTransactionNativeTest.php
-        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --cache-directory="$RUNNER_TEMP/collector-cleanup-phpunit" Symfony/DeviceCollectorJournalNativeTest.php
-        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/queued-purge-phpunit" Symfony/QueuedCollectorPurgeTest.php
-        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/poller-buffer-phpunit" Symfony/PollerCacheBufferWriteTest.php
+        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --cache-directory="$RUNNER_TEMP/collector-cleanup-phpunit.cache" Symfony/DeviceCollectorJournalNativeTest.php
+        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/queued-purge-phpunit.cache" Symfony/QueuedCollectorPurgeTest.php
+        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/poller-buffer-phpunit.cache" Symfony/PollerCacheBufferWriteTest.php
         # Use the disposable matrix server's existing administrator identity;
         # the probe creates/drops only its own random schema in a finally block.
         KADUPUL_REFERENCE_TEST_DSN="$KADUPUL_TEST_MYSQL_DSN" \
@@ -240,6 +240,8 @@ jobs:
             --coverage-clover "$RUNNER_TEMP/cdef-api-coverage/native.xml"
           mise exec php@8.4.25 python@3.12.12 -- python tests/security/run_cdef_reference_contracts.py \
             --output "$RUNNER_TEMP/cdef-reference-proof"
+          mise exec php@8.4.25 python@3.12.12 -- python tests/security/run_graph_data_removal_contracts.py \
+            --output "$RUNNER_TEMP/graph-data-removal-proof"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
@@ -247,6 +249,7 @@ jobs:
           path: |
             ${{ runner.temp }}/cdef-api-coverage
             ${{ runner.temp }}/cdef-reference-proof
+            ${{ runner.temp }}/graph-data-removal-proof
           if-no-files-found: error
 
   php:
@@ -518,7 +521,7 @@ jobs:
         if: steps.detect.outputs.found == 'true'
         run: |
           npm run --if-present test
-          node --test tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs tests/Unit/midwinter-cookie.test.mjs tests/Unit/midwinter-css-imports.test.mjs tests/Unit/theme-scripts.test.mjs tests/Unit/selectmenu-scroll.test.mjs tests/Unit/icon-classes.test.mjs tests/Unit/icon-registry.test.mjs tests/Unit/permission-filter.test.mjs
+          node --test tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs tests/Unit/midwinter-cookie.test.mjs tests/Unit/midwinter-css-imports.test.mjs tests/Unit/theme-scripts.test.mjs tests/Unit/selectmenu-scroll.test.mjs tests/Unit/icon-classes.test.mjs tests/Unit/icon-registry.test.mjs tests/Unit/permission-filter.test.mjs tests/Unit/realtime-preferences.test.mjs tests/Unit/post-action-links.test.mjs tests/Unit/html-sink-escaping.test.mjs
 
   changelog:
     timeout-minutes: 5

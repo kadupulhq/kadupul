@@ -6,6 +6,7 @@
  */
 
 include_once('./include/auth.php');
+cacti_require_post_actions(array('item_remove', 'item_moveup', 'item_movedown', 'ajax_dnd'));
 
 /* set default action */
 set_default_action();

@@ -6,6 +6,18 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Authorize non-deletion graph and data-source bulk selections with current owner/policy SQL in chunks of 1,000, retaining the established 10,000-object safety ceiling and supported 5,000-row UI batches.
+- Batch device management reuses the same bounded current-policy selection checks before protected names or action hooks. Malformed decimal, exponent and floating-point IDs are refused for graph/device selections and filtered from data-source selections; valid zero-padded or whitespace-normalized integer representations retain their order and duplicates.
+- Management graph/data list and count queries reuse policy ID subqueries instead of hydrating the complete device inventory. Graph lists apply the same graph/template policy as actions, and data-template filter choices derive only from admitted sources.
+- Main device management intentionally requires both the Devices realm and object policy access. Creating a device does not grant a new device permission; default-deny operators need an explicit applicable policy grant before managing the new device. LTS behavior is unchanged.
+
+- Display graph access refusals once after an AJAX-compatible redirect; preserve graph and device authorization before editor lookup or session locking.
+
+- Allow unrestricted administrators and device operators to purge unfinished unassigned and orphan troubleshooting checks; preserve device-scoped purge for restricted operators.
+
+- Authorize complete graph and data-source deletion scopes before reading dependent names or writing; retain safe confirmation choices and reject oversized dependency batches. Report collector or volatile-cache partial outcomes separately from local transaction cleanup.
+- Register graph-item choice sources in strict cookie and domain-authentication coverage evidence.
+
 - Bound legacy Boost writer lock acquisition to 60 attempts; report contention and retain queued samples instead of waiting indefinitely.
 - Correct Settings help for graph permission combinations, auto scale limits, and CSP nonce reporting and enforcement. Fixes #222, #230, and #265.
 - Make SonarCloud selective during modernization with an explicit enable switch, trusted analysis/release branches and manual runs; retain complete coverage and visible failures, and add bounded CI jobs, safe concurrency, dependency download caches and a future required quality-gate check.
@@ -34,6 +46,19 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Map complete exclamation-delimited poller field lists from PHP and Spine while preserving scalar exclamation marks and hexadecimal values, including hexadecimal-looking field names. Fixes #284.
 - Query the shipped `poller` table when checking multi-collector Boost settings, preserve the current system setting if that count fails, and normalize the bounded 120-minute fallback before master scheduling arithmetic. Fixes #270.
+- Trust forwarded client IPs only when the TCP peer is an explicitly configured
+  proxy and exactly one allowlisted header contains one IP address. The unsafe
+  `proxy_headers = true` mode no longer authorizes forwarded addresses.
+- Limit data source troubleshooting, repair, purge, and bulk operations to allowed devices.
+- Enforce device and graph access checks in Graph Management and Data Sources, including bulk confirmation lists and device reassignment.
+- Scope both AJAX graph-input data-source choice queries to the actor's device policy before returning names; retain authorized current choices and device-less sources without loading the full device inventory.
+- Skip unauthorized graph trees before name lookup on bulk-action confirmation pages.
+- Restrict new graph creation and data query reloads to allowed devices.
+- Require graph access before spike handling reads or rewrites an RRD.
+- Restrict data source edits and RRD item changes to devices the user may access, and reject custom RRD paths that escape the configured RRA directory.
+- Restrict graph edit, create, and device-move operations to graphs and devices the user may access.
+- Require device access before viewing, saving, reindexing, pinging, reloading queries, or changing templates for a device; also enforce access in the web-facing device save API.
+- Limit Data Query Cache and Poller Cache views to devices the current user may access, including their default Any filters.
 - Enforce persistent CDEF reference integrity for legacy writers and atomic aggregate cache replacement; refuse online collector primary upgrades and confirm the final installation version before reporting success.
 - Roll back complete aggregate regeneration and creation on unconfirmed reads or writes, preserving caller transactions; reject malformed aggregate item selections before saving and report incomplete propagation.
 - Keep permission writes and session epochs consistent, including failed writes and absent deletions.
@@ -69,6 +94,12 @@ follows [Semantic Versioning](VERSIONING.md).
 - Keep inaccessible SNMP cache entries as navigation-only links and return `NONE` for direct reads without PHP 8.4 warnings.
 
 - Draw core icons from one registry, `config/icons.json`, which maps names such as `add` and `collapse-all` to Font Awesome 7 classes. `html_icon()` refuses an icon with no accessible label unless it is marked decorative, `layout.js` reads the same map, and themes redraw icons through registry overrides instead of rewriting classes in the page. Console menu glyphs are now registry names; a plugin's Font Awesome classes in `$menu_glyphs` still render as given. Plugin icons are no longer restyled by a theme: paw, paper-plane and sunrise leave `fa-arrow-down` and `fa-arrow-up` alone, and midwinter leaves plugin menu glyphs alone.
+- Check graph permission on a remote data collector before it asks the main poller for a graph image.
+- Keep cached graph and tree permission answers separate for each user, so an emailed report only includes graphs and trees its owner may view.
+- Check that real-time graphs are enabled, that the user has the Real-time realm and that the user may view the graph before a real-time request polls any device or returns a cached image.
+- Save real-time graph preferences only from a token-checked POST; polling by GET no longer changes them.
+- Show the graph page's Real-time button only when real-time graphs are enabled and the user has the Real-time realm.
+- Show a report device item according to the owner's device permission rather than the permission of an unrelated tree.
 - Render About through Symfony and Twig with escaped version/beta text and complete English/French license information; preserve authenticated access without a console realm, including online collectors authenticated against their reachable primary.
 
 - Render the color palette through Symfony and Twig, with protected named colors, revision-checked transactions and strict quoted CSV imports/exports.
@@ -107,6 +138,7 @@ Targeting `v1.3.0`, the first planned application release. See
 - Characterize `is_resource_writable()` for existing files, new files, directories, and permission-denied paths before changing the legacy filesystem check.
 
 ### Fixed
+- Check linked data-source and poller device owners before graph device reassignment and before graph form writes; denied, missing, or malformed child owners leave the graph and its children unchanged. Template-only references remain non-device records.
 - Validate installed font families after recognized Pango suffixes, reject names when fontconfig reports no installed fonts, and preserve complete multiword default descriptions through RRDProxy session setup.
 - Make the graph spike-removal menu reachable with Enter and Space, restore focus on Escape, and discard obsolete menu replies after script reloads.
 - Keep Paper Plane content links readable on hover; measure contrast using opacity groups and image-layer order, and reject new or worsened measured failures.
@@ -126,14 +158,15 @@ Targeting `v1.3.0`, the first planned application release. See
 - Save an editable profile heartbeat even when the browser omits the disabled step field, while refusing changes to structural fields for profiles used by local data sources. Fixes #232.
 
 - Limit profile heartbeat propagation to the matching data template as well as the local data source, so template rows sharing the zero local-data sentinel do not overwrite unrelated templates. Fixes #233.
-
 - Recheck data-source profile references when a bulk deletion is submitted, preserving definitions still used by templates or sources while allowing unused profiles in the same selection to be removed.
+- Make the effective graph-policy display honor explicit template grants under Restrictive mode when the template policy defaults to Deny. Fixes #263.
 
 - Remove orphaned user-log entries even when no current user accounts remain.
 - Stop token generation when the cryptographic random source fails instead of returning a predictable fallback. Fixes #580.
 - Refresh generated Midwinter stylesheet import versions during the browser build so uncompiled installations invalidate changed child CSS.
 - Return a failing CLI status and JSON `failed` status when any database table analysis fails, and use the correct `ANALYZE NO_WRITE_TO_BINLOG TABLE` syntax on main. Fixes #241.
 
+- Show color names, data input field names, group names in permission reasons, and graph, device and site names in the tree editor as text; these places parsed the decoded names as markup. Copying a user group now rejects a prefix that the group name rule refuses, and SNMP notification tooltips no longer use inline handlers, so they also work under a nonce CSP.
 - Build offline archives with the npm JavaScript CLI bundled with the selected Node runtime, avoiding shell-wrapper parse failures in CI. Related to #703.
 - Preserve both existing audit baseline tables until a staged import is validated and atomically installed; report failed imports and repairs with a nonzero CLI status. Fixes #242.
 - Invoke standard plugin upgrade callbacks during database audits and quote upgrade script paths and arguments.
@@ -256,6 +289,15 @@ Targeting `v1.3.0`, the first planned application release. See
 - Check every changed PHP file in the style check; a large file list could make it skip some.
 
 - Commit through PDO rather than the MariaDB-only `@@in_transaction` variable, so device edits, creates, template assignments, collector moves and bulk state changes commit on MySQL instead of rolling back and reporting an uncertain outcome.
+
+- Accept an LDAP Domains login only for a realm that is an enabled domain, and always bind against that domain's directory first. Any other realm, a domain without directory settings, and a directory user with no account and no domain template are refused instead of falling through to the default template or guest account. Domain login errors no longer show directory error text on the login page; the log keeps it.
+- Index RRD input-field references on fresh installations and through a registered schema upgrade from main 1.2.31 or LTS 1.2.32, keeping reference locks scoped to the selected fields.
+- Allow user settings and credential metadata to store the full user account ID range on fresh and upgraded databases.
+- Require a POST with a CSRF token to move, delete or add items on the CDEF, VDEF, color template, graph, graph template, data source, data template, data query, data source profile, device template, automation, tree and external link pages. Their move and delete links now post from the page and load the result in place; a GET for these actions gets 405.
+
+- Require a POST with a CSRF token to add or remove device graph templates and data queries, to create, rename, copy, move or delete tree branches, set their sort order, or sort the tree list, to delete automation rules and data input fields, to enable or disable a data source, to remove a color, and to rebuild the poller, resource and SNMP agent caches, purge data source statistics, or clear or purge the Kadupul and user logs. The pages that offer these actions now post them with the token.
+- Require a POST with a CSRF token to lock or unlock a tree for editing, reorder trees by drag and drop, change, reload or verbosely re-run a device data query, turn device debugging on or off, and repopulate a device's poller cache. The tree, device and new graph pages now post these actions with the token.
+- Require a POST with a CSRF token to reorder items by drag and drop on the CDEF, VDEF, automation SNMP, automation template and color template pages, and to re-run a data query from the new graphs page. These pages now post the reorder and the reload with the token.
 
 ### Changed
 

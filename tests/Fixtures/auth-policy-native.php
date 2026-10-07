@@ -9,12 +9,57 @@ if (PHP_SAPI !== 'cli') {
 }
 $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
+if ($scenario['operation'] === 'graph-policy-display') {
+    require __DIR__ . '/graph-policy-display-native.php';
+    require_once $root . '/tests/Helpers/GraphPolicyDisplayCoverageRegistration.php';
+}
+if ($scenario['operation'] === 'spike-controller') {
+    require __DIR__ . '/spike-controller-native.php';
+    require_once $root . '/tests/Helpers/SpikeControllerCoverageRegistration.php';
+}
+if ($scenario['operation'] === 'graph-device-change') require __DIR__ . '/graph-device-change-native.php';
+if ($scenario['operation'] === 'management-list') require __DIR__ . '/management-list-native.php';
+if ($scenario['operation'] === 'management-bulk') require __DIR__ . '/management-bulk-native.php';
+if ($scenario['operation'] === 'graph-data-removal') require __DIR__ . '/graph-data-removal-native.php';
 if (isset($argv[3])) {
     require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
-    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], array('lib/auth.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
+    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], array('lib/auth.php', 'lib/graph_item_choices.php', 'tests/Helpers/PhpSource.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
+    if ($scenario['operation'] === 'graph-policy-display') {
+        $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], GraphPolicyDisplayCoverageRegistration::SOURCES);
+    }
+    if ($scenario['operation'] === 'graph-device-change') {
+        require_once $root . '/tests/Helpers/GraphDeviceChangeCoverageRegistration.php';
+        $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], GraphDeviceChangeCoverageRegistration::SOURCES);
+        define('GRAPH_DEVICE_CHANGE_TEST_COVERAGE', true);
+    }
+    if ($scenario['operation'] === 'management-list') {
+        require_once $root . '/tests/Helpers/ManagementListCoverageRegistration.php';
+        $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], ManagementListCoverageRegistration::SOURCES);
+        define('MANAGEMENT_LIST_TEST_COVERAGE', true);
+    }
+    if ($scenario['operation'] === 'management-bulk') {
+        require_once $root . '/tests/Helpers/ManagementBulkCoverageRegistration.php';
+        $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], ManagementBulkCoverageRegistration::SOURCES);
+    }
+    if (in_array($scenario['operation'], ['graph-cache-revocation', 'graph-image-cache'], true)) {
+        require_once $root . '/tests/Helpers/GraphCacheCoverageRegistration.php';
+        $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], GraphCacheCoverageRegistration::SOURCES);
+        define('GRAPH_CACHE_TEST_COVERAGE', true);
+    }
+    if ($scenario['operation'] === 'spike-controller') {
+        $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], SpikeControllerCoverageRegistration::SOURCES);
+        define('SPIKE_CSRF_TEST_COVERAGE', true);
+        define('SPIKE_CONTROLLER_VALIDATION_TEST_COVERAGE', true);
+    }
+    if ($scenario['operation'] === 'graph-data-removal') {
+        require_once $root . '/tests/Helpers/GraphDataRemovalCoverageRegistration.php';
+        $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-policy-native.php', $argv[1], GraphDataRemovalCoverageRegistration::SOURCES);
+        define('GRAPH_DATA_REMOVAL_TEST_COVERAGE', true);
+    }
 }
+if (in_array($scenario['operation'], ['graph-cache-revocation', 'graph-image-cache'], true)) require __DIR__ . '/graph-cache-native.php';
 $config = ['cacti_db_version' => '1.2.33'];
-$db = new PDO('sqlite::memory:');
+$db = $scenario['operation'] === 'graph-data-removal' ? new GraphDataRemovalFixtureDatabase() : new PDO('sqlite::memory:');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $db->exec('CREATE TABLE user_auth (id INTEGER, reset_perms INTEGER, enabled TEXT DEFAULT \'on\', locked TEXT DEFAULT \'\', show_tree TEXT, show_list TEXT, show_preview TEXT, graph_settings TEXT, policy_hosts INTEGER, policy_graphs INTEGER, policy_graph_templates INTEGER, policy_trees INTEGER DEFAULT 1)');
 $db->prepare('INSERT INTO user_auth(id,reset_perms,show_tree,show_list,show_preview,graph_settings,policy_hosts,policy_graphs,policy_graph_templates) VALUES (42, 0, ?, ?, ?, ?, ?, ?, ?)')->execute(array_merge(array_fill(0, 4, $scenario['view_default'] ?? ''), array_fill(0, 3, $scenario['policy'] ?? 1)));
@@ -28,7 +73,11 @@ $db->exec('CREATE TABLE user_auth_group_perms (group_id INTEGER, type INTEGER, i
 $db->exec('CREATE TABLE plugin_realms (id INTEGER, file TEXT, display TEXT)');
 $db->exec("CREATE TABLE graph_tree(id INTEGER PRIMARY KEY, enabled TEXT, name TEXT);
 CREATE TABLE graph_tree_items(id INTEGER PRIMARY KEY, graph_tree_id INTEGER, parent INTEGER, title TEXT DEFAULT '', local_graph_id INTEGER DEFAULT 0, host_id INTEGER DEFAULT 0, site_id INTEGER DEFAULT 0, host_grouping_type INTEGER DEFAULT 0, position INTEGER DEFAULT 0);
-CREATE TABLE host(id INTEGER PRIMARY KEY, site_id INTEGER, description TEXT);
+CREATE TABLE host(id INTEGER PRIMARY KEY, site_id INTEGER, description TEXT, host_template_id INTEGER DEFAULT 0, disabled TEXT DEFAULT '', deleted TEXT DEFAULT '');
+CREATE TABLE graph_local(id INTEGER PRIMARY KEY, host_id INTEGER, graph_template_id INTEGER, snmp_index TEXT DEFAULT '', snmp_query_id INTEGER DEFAULT 0);
+CREATE TABLE graph_templates_graph(local_graph_id INTEGER PRIMARY KEY, title_cache TEXT, width INTEGER, height INTEGER);
+CREATE TABLE graph_templates(id INTEGER PRIMARY KEY, name TEXT);
+CREATE TABLE host_template(id INTEGER PRIMARY KEY);
 CREATE TABLE sites(id INTEGER PRIMARY KEY, name TEXT);
 CREATE TABLE user_auth_row_cache(user_id INTEGER, class TEXT, hash TEXT, total_rows INTEGER, time TEXT, PRIMARY KEY(user_id,class,hash));
 CREATE TABLE reports(id INTEGER PRIMARY KEY,user_id INTEGER);
@@ -36,6 +85,7 @@ CREATE TABLE reports_items(id INTEGER PRIMARY KEY,report_id INTEGER);
 INSERT INTO graph_tree VALUES(100,'on','Visible'),(101,'','Disabled'),(102,'on','Other');
 INSERT INTO graph_tree_items(id,graph_tree_id,parent,title,position) VALUES(11,100,0,'Parent',2),(12,100,11,'Child',1),(13,102,0,'Other tree',1);
 INSERT INTO reports VALUES(1,42),(2,43); INSERT INTO reports_items VALUES(10,1),(20,2),(30,999);");
+$db->sqliteCreateFunction('IF', static fn($condition, $yes, $no) => $condition ? $yes : $no);
 $db->sqliteCreateFunction('UNIX_TIMESTAMP', static fn($value) => strtotime($value));
 $db->sqliteCreateFunction('FROM_UNIXTIME', static fn($value) => gmdate('Y-m-d H:i:s', $value));
 $db->exec("INSERT INTO plugin_realms VALUES (5, 'first.php,middle.php,last.php', 'Extension realm')");
@@ -66,13 +116,47 @@ foreach ($scenario['exceptions'] ?? [] as $type) {
 $db->prepare('UPDATE user_auth SET policy_trees=? WHERE id=42')->execute([$scenario['tree_policy'] ?? 1]);
 $_SESSION = $scenario['anonymous'] ?? false ? [] : ['sess_user_id' => 42];
 $queries = 0;
+$querySql = [];
+$queryRowCounts = [];
 $logs = [];
 function db_fetch_assoc_prepared($sql, $params = [])
 {
+    if (($GLOBALS['scenario']['operation'] ?? '') === 'spike-controller' && str_contains($sql, 'SELECT DISTINCT data_template_rrd.local_data_id')) {
+        $GLOBALS['spikeLookupParameters'][] = $params;
+    }
+    if (($GLOBALS['scenario']['operation'] ?? '') === 'graph-device-change' && !empty($GLOBALS['scenario']['read_failure']) && str_contains($sql, $GLOBALS['scenario']['read_failure'] === 'data' ? 'SELECT DISTINCT dtr.local_data_id' : 'SELECT DISTINCT pi.host_id')) {
+        throw new RuntimeException('Fixture child metadata read failure.');
+    }
     $GLOBALS['queries']++;
+    $GLOBALS['querySql'][] = $sql;
+    if (($GLOBALS['scenario']['operation'] ?? '') === 'graph-data-removal'
+        && !empty($GLOBALS['scenario']['read_failure']) && str_contains($sql, $GLOBALS['scenario']['read_failure'])) {
+        $GLOBALS['database_last_error'] = 'fixture read failure';
+        return array();
+    }
+    // MySQL gives SELECT aliases precedence in GROUP BY; SQLite otherwise
+    // resolves this normalizer's id against its joined input columns.
+    if (($GLOBALS['scenario']['operation'] ?? '') === 'management-list' && str_contains($sql, 'GROUP BY id, name')) {
+        $sql = str_replace('GROUP BY id, name', 'GROUP BY 1, 2', $sql);
+    }
+    if (($GLOBALS['scenario']['operation'] ?? '') === 'management-list') $sql = str_replace(' RLIKE ', ' REGEXP ', $sql);
     $q = $GLOBALS['db']->prepare($sql);
     $q->execute($params);
-    return $q->fetchAll(PDO::FETCH_ASSOC);
+    $rows = $q->fetchAll(PDO::FETCH_ASSOC);
+    $bulk = ($GLOBALS['scenario']['operation'] ?? '') === 'management-bulk';
+    $eligibility = str_starts_with($sql, 'SELECT id FROM graph_local ') || str_starts_with($sql, 'SELECT id FROM data_local ') || str_starts_with($sql, 'SELECT id FROM host ');
+    $GLOBALS['queryRowCounts'][] = ['choices' => str_contains($sql, 'data_template_rrd'), 'rows' => count($rows), 'bulk_eligibility' => $bulk && $eligibility];
+    if ($bulk && str_starts_with($sql, 'SELECT description FROM host WHERE id')) $GLOBALS['bulkFixture']['title_ids'][] = (int) $params[0];
+    if ($bulk && $eligibility) {
+        management_bulk_fixture_after_query($sql);
+        $failure = $GLOBALS['scenario']['read_failure'] ?? 0;
+        $eligibilityCount = count(array_filter($GLOBALS['queryRowCounts'], static fn(array $row): bool => $row['bulk_eligibility']));
+        if ($failure && ($failure === true || $eligibilityCount === $failure)) {
+            $GLOBALS['database_last_error'] = 'fixture late eligibility failure';
+            return [];
+        }
+    }
+    return $rows;
 }
 function db_fetch_row_prepared($sql, $params = [])
 {
@@ -81,6 +165,7 @@ function db_fetch_row_prepared($sql, $params = [])
 }
 function db_fetch_cell_prepared($sql, $params = [])
 {
+    if (!empty($GLOBALS['graphCacheReadFailure']) && str_contains($sql, 'SELECT reset_perms')) return false;
     $rows = db_fetch_assoc_prepared($sql, $params);
     return $rows ? reset($rows[0]) : false;
 }
@@ -94,6 +179,10 @@ function db_fetch_cell($sql)
 }
 function db_execute_prepared($sql, $params = [])
 {
+    if (($GLOBALS['scenario']['operation'] ?? '') === 'graph-device-change') $GLOBALS['graphDeviceWrites'][] = [$sql, $params];
+    if (($GLOBALS['scenario']['operation'] ?? '') === 'graph-data-removal') {
+        return graph_data_removal_fixture_execute($sql, $params, func_get_args()[3] ?? false);
+    }
     $query = $GLOBALS['db']->prepare($sql);
     return $query->execute($params);
 }
@@ -103,7 +192,7 @@ function kill_session_var($name)
 }
 function get_guest_account()
 {
-    return 0;
+    return ($GLOBALS['scenario']['actor'] ?? '') === 'guest' ? 42 : 0;
 }
 function db_table_exists($name)
 {
@@ -115,7 +204,7 @@ function read_config_option($name)
 }
 function read_user_setting($name, ...$args)
 {
-    return '';
+    return $name === 'hide_disabled' ? ($GLOBALS['scenario']['hide_disabled'] ?? '') : '';
 }
 function cacti_version_compare($left, $right, $operator)
 {
@@ -123,6 +212,11 @@ function cacti_version_compare($left, $right, $operator)
 }
 function array_rekey($rows, $key, $value)
 {
+    if (is_array($value)) {
+        $result = array();
+        foreach ($rows as $row) $result[$row[$key]] = array_intersect_key($row, array_flip($value));
+        return $result;
+    }
     return array_column($rows, $value, $key);
 }
 function cacti_sizeof($rows)
@@ -142,14 +236,144 @@ require $root . '/lib/auth.php';
 $result = null;
 $cached = null;
 switch ($scenario['operation']) {
+    case 'graph-policy-display':
+        $result = graph_policy_display_fixture_run();
+        break;
+    case 'spike-controller':
+        spike_controller_fixture_run();
+        break;
+    case 'management-list':
+        management_list_fixture_run();
+        break;
+    case 'management-bulk':
+        management_bulk_fixture_run();
+        break;
+    case 'graph-cache-revocation':
+    case 'graph-image-cache':
+        $result = graph_cache_fixture_run($scenario);
+        break;
+    case 'graph-data-removal':
+        graph_data_removal_fixture_run();
+        break;
+    case 'graph-item-choices':
+        require_once $root . '/tests/Helpers/PhpSource.php';
+        $apiSource = file_get_contents($root . '/lib/api_data_source.php');
+        if ($apiSource === false) throw new RuntimeException('Cannot read data-source authorization contract');
+        eval(test_php_function_source($apiSource, 'api_data_source_is_allowed'));
+        $db->exec("CREATE TABLE data_local(id INTEGER PRIMARY KEY, host_id INTEGER);
+CREATE TABLE data_template_data(local_data_id INTEGER PRIMARY KEY,name_cache TEXT);
+CREATE TABLE data_template_rrd(id INTEGER PRIMARY KEY,local_data_id INTEGER,data_source_name TEXT);
+INSERT INTO host(id,description,disabled) VALUES(100,'Allowed','on'),(101,'Foreign',''),(102,'Unattached','');
+INSERT INTO graph_local(id,host_id,graph_template_id) VALUES(100,100,100),(101,101,101);
+INSERT INTO graph_templates VALUES(100,'Allowed'),(101,'Foreign');
+INSERT INTO data_local VALUES(10,100),(11,101),(12,0),(13,102);
+INSERT INTO data_template_data VALUES(10,'Allowed source'),(11,'Foreign source'),(12,'Free source'),(13,'Unattached source');
+INSERT INTO data_template_rrd VALUES(20,10,'rate'),(21,11,'rate'),(22,12,'rate'),(23,13,'rate');");
+        if (empty($scenario['no_realm'])) {
+            $db->exec('INSERT INTO user_auth_realm VALUES(42,5)');
+        }
+        $db->exec('UPDATE user_auth SET policy_hosts=2,policy_graphs=2,policy_graph_templates=2 WHERE id=42');
+        foreach ([3,4] as $type) {
+            $db->prepare('INSERT INTO user_auth_perms VALUES(42,?,102)')->execute([$type]);
+        }
+        if (!empty($scenario['group_grant'])) {
+            $db->exec("INSERT INTO user_auth_group(id,enabled,policy_hosts,policy_graphs,policy_graph_templates) VALUES(9,'on',2,2,2);
+INSERT INTO user_auth_group_members VALUES(42,9);
+INSERT INTO user_auth_group_perms VALUES(9,3,100),(9,4,100);");
+        } else {
+            $db->exec('INSERT INTO user_auth_perms VALUES(42,3,100),(42,4,100)');
+        }
+        for ($i = 0; $i < ($scenario['device_count'] ?? 0); $i++) {
+            $db->prepare('INSERT INTO host(id,description) VALUES(?,?)')->execute([1000 + $i, 'Inventory ' . $i]);
+        }
+        for ($i = 0; $i < ($scenario['choice_count'] ?? 0); $i++) {
+            $id = 1000 + $i;
+            $db->prepare('INSERT INTO data_local VALUES(?,100)')->execute([$id]);
+            $db->prepare('INSERT INTO data_template_data VALUES(?,?)')->execute([$id, sprintf('Many %05d', $i)]);
+            $db->prepare('INSERT INTO data_template_rrd VALUES(?, ?,?)')->execute([$id,$id,'rate']);
+        }
+        if (!empty($scenario['allow_inventory'])) {
+            $db->exec('UPDATE user_auth SET policy_hosts=1 WHERE id=42; DELETE FROM user_auth_perms WHERE user_id=42 AND type=3; INSERT INTO user_auth_perms VALUES(42,3,101)');
+        }
+        $db->sqliteCreateFunction('CONCAT_WS', static fn($separator, ...$parts) => implode($separator, array_filter($parts, static fn($part) => $part !== null)));
+        function get_nfilter_request_var($name)
+        {
+            return $GLOBALS['scenario']['choices_request'][$name] ?? '';
+        }
+        function db_qstr($value)
+        {
+            return $GLOBALS['db']->quote($value);
+        }
+        function __esc($value)
+        {
+            return htmlspecialchars($value, ENT_QUOTES);
+        }
+        require $root . '/lib/graph_item_choices.php';
+        $before = $queries;
+        $querySql = [];
+        $queryRowCounts = [];
+        $choices = graph_item_choices();
+        $choiceQueries = $queries - $before;
+        $choiceSql = $querySql;
+        $policyRowCounts = array_column(array_filter($queryRowCounts, static fn($query) => !$query['choices']), 'rows');
+        $admitted = [];
+        foreach ([10,11,12,13] as $id) {
+            $admitted[$id] = api_data_source_is_allowed($id);
+        }
+        $result = ['choices' => $choices, 'status' => http_response_code() ?: 200, 'queries' => $choiceQueries,
+            'protected_reads' => count(array_filter($choiceSql, static fn($sql) => str_contains($sql, 'data_template_rrd'))),
+            'max_policy_rows' => $policyRowCounts === [] ? 0 : max($policyRowCounts),
+            'device_inventory_reads' => count(array_filter($choiceSql, static fn($sql) => str_contains($sql, 'SELECT h1.*'))),
+            'count_reads' => count(array_filter($choiceSql, static fn($sql) => str_contains($sql, 'COUNT(DISTINCT id)') && !str_contains($sql, ' h.id = '))),
+            'admitted' => $admitted];
+        unset($before);
+        break;
+    case 'resource-ids':
+    case 'device-filter-policy':
+        $db->exec("INSERT INTO host(id,description,disabled,deleted) VALUES(100,'Target','on',''),(101,'Denied','on',''),(102,'Deleted','','on')");
+        $db->exec("INSERT INTO graph_local(id,host_id,graph_template_id) VALUES(100,100,0),(101,101,0),(102,102,0); INSERT INTO graph_templates_graph VALUES(100,'Target',100,100),(101,'Foreign',100,100),(102,'Deleted',100,100)");
+        if ($scenario['operation'] === 'resource-ids') {
+            $before = $queries;
+            $refused = [];
+            $invalid_lists = [];
+            foreach ([0, -1, '', [], 1.5, '1e2', '100a', (string) PHP_INT_MAX . '0', null, false] as $id) {
+                try {
+                    $refused[] = [is_device_allowed($id, 42), is_graph_allowed($id, 42)];
+                    if ($id !== 0) {
+                        $device_rows = $graph_rows = -2;
+                        $invalid_lists[] = [get_allowed_devices('', '', '', $device_rows, 42, $id), $device_rows, get_allowed_graphs('', '', '', $graph_rows, 42, $id), $graph_rows];
+                    }
+                } catch (Throwable $error) {
+                    $refused[] = get_class($error);
+                }
+            }
+            $invalid_queries = $queries - $before;
+            $admitted = [];
+            foreach ([100, '100', '0100', '100 '] as $id) {
+                $admitted[] = [is_device_allowed($id, 42), is_graph_allowed($id, 42)];
+            }
+            $result = ['refused' => $refused, 'invalid_lists' => $invalid_lists, 'invalid_queries' => $invalid_queries, 'admitted' => $admitted];
+            break;
+        }
+        $total = -1;
+        $visible = get_allowed_devices('', 'description', '', $total, 42);
+        $visible_graphs = get_allowed_graphs('', '', '', $total, 42);
+        $management = get_allowed_management_devices('', 'h1.id', '', $total, 42);
+        $result = ['view' => array_column($visible, 'id'), 'graph_view' => array_column($visible_graphs, 'local_graph_id'), 'management' => array_column($management, 'id'), 'target' => is_device_allowed(100, 42), 'foreign' => is_device_allowed(101, 42), 'deleted' => is_device_allowed(102, 42), 'missing' => is_device_allowed(999, 42), 'graphs' => [is_graph_allowed(100, 42), is_graph_allowed(101, 42), is_graph_allowed(102, 42), is_graph_allowed(999, 42)]];
+        break;
+    case 'cache-owner-isolation':
+        $db->exec('UPDATE user_auth SET policy_graphs=1,policy_graph_templates=1,policy_trees=1 WHERE id=42');
+        $db->exec('UPDATE user_auth SET policy_graphs=2,policy_graph_templates=2,policy_trees=2 WHERE id=43');
+        $answers = static fn(int $user): array => array(is_tree_allowed(100, $user), get_simple_graph_perms($user), get_simple_graph_template_perms($user));
+        $result = array($answers(42), $answers(43), $answers(42));
+        $db->exec('UPDATE user_auth SET policy_graphs=1,policy_graph_templates=1,policy_trees=1,reset_perms=1 WHERE id=43');
+        $result[] = $answers(43);
+        $result[] = $answers(42);
+        break;
     case 'graphs':
         // Persist the graph/host/template relationships used by the production
         // query. Distinct IDs catch a permission joined to the wrong resource.
-        $db->exec("ALTER TABLE host ADD deleted TEXT DEFAULT ''; ALTER TABLE host ADD disabled TEXT DEFAULT '';
-CREATE TABLE graph_local(id INTEGER PRIMARY KEY,host_id INTEGER,graph_template_id INTEGER,snmp_index TEXT,snmp_query_id INTEGER);
-CREATE TABLE graph_templates(id INTEGER PRIMARY KEY,name TEXT);
-CREATE TABLE graph_templates_graph(local_graph_id INTEGER,title_cache TEXT,width INTEGER,height INTEGER);
-INSERT INTO host(id,description) VALUES(101,'Fixture host');
+        $db->exec("INSERT INTO host(id,description) VALUES(101,'Fixture host');
 INSERT INTO graph_templates VALUES(102,'Fixture template');
 INSERT INTO graph_local VALUES(100,101,102,'interface',1);
 INSERT INTO graph_templates_graph VALUES(100,'Fixture graph',500,120);");
@@ -242,6 +466,9 @@ INSERT INTO graph_templates_graph VALUES(100,'Fixture graph',500,120);");
         $db->exec('DELETE FROM user_auth_group_perms');
         $cached = is_tree_allowed(100);
         break;
+    case 'graph-device-change':
+        $result = native_graph_device_change();
+        break;
     case 'policies':
         $result = get_policies(42);
         break;
@@ -271,4 +498,13 @@ INSERT INTO graph_templates_graph VALUES(100,'Fixture graph',500,120);");
         throw new InvalidArgumentException('Unknown policy operation.');
 }
 $nativeChildCoverageMarkers = array('native-policy-operation-returned', 'policy-session-observed');
+if ($scenario['operation'] === 'graph-policy-display') $nativeChildCoverageMarkers[] = 'persisted-policy-display-compared';
+if ($scenario['operation'] === 'graph-device-change') $nativeChildCoverageMarkers[] = 'graph-device-child-scope-observed';
+if (in_array($scenario['operation'], ['graph-cache-revocation', 'graph-image-cache'], true)) {
+    $nativeChildCoverageMarkers = array_merge($nativeChildCoverageMarkers, ['graph-cache-revocation-observed', 'graph-cache-query-budget-observed']);
+    if ($scenario['operation'] === 'graph-image-cache') $nativeChildCoverageMarkers[] = 'graph-cache-image-dispatch-observed';
+}
+if ($scenario['operation'] === 'graph-item-choices') {
+    $nativeChildCoverageMarkers = array_merge($nativeChildCoverageMarkers, ['graph-choice-policy-returned', 'graph-choice-query-budget-observed']);
+}
 print json_encode(['result' => $result, 'cached' => $cached, 'session' => $_SESSION, 'extra_queries' => isset($before) ? $queries - $before : null, 'logs' => $logs], JSON_THROW_ON_ERROR);

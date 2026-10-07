@@ -21,7 +21,7 @@ ini_set('memory_limit', '-1');
 set_default_action();
 
 if (isset_request_var('purge')) {
-    // Purge truncates every check and carries no action name for the global
+    // Purge carries no action name for the global
     // guard to match; the Purge button still sends it as a same-origin GET.
     csrf_refuse_cross_site_get();
 }
@@ -36,10 +36,17 @@ switch (get_request_var('action')) {
     case 'run_debug':
         $id = get_filter_request_var('id');
 
-        if ($id > 0) {
-            $selected_items = array($id);
+        if ($id > 0 && dsdebug_is_data_source_allowed($id)) {
+            $selected_items = dsdebug_authorize_data_source_selection(array($id));
+            if ($selected_items === null || $selected_items === array()) {
+                debug_redirect_access_denied();
+                break;
+            }
             debug_delete($selected_items);
-            debug_rerun($selected_items);
+            if (debug_rerun($selected_items) === false) {
+                debug_redirect_access_denied();
+                break;
+            }
             raise_message('rerun', __('Data Source debug started.'), MESSAGE_LEVEL_INFO);
             header('Location: data_debug.php?action=view&id=' . get_filter_request_var('id'));
         } else {
@@ -50,17 +57,23 @@ switch (get_request_var('action')) {
     case 'run_repair':
         $id = get_filter_request_var('id');
 
-        if ($id > 0) {
+        if ($id > 0 && dsdebug_is_data_source_allowed($id)) {
+            $selected_items = dsdebug_authorize_data_source_selection(array($id));
+            if ($selected_items === null || $selected_items === array()) {
+                debug_redirect_access_denied();
+                break;
+            }
             if (dsdebug_run_repair($id)) {
                 raise_message('repair', __('All RRDfile repairs succeeded.'), MESSAGE_LEVEL_INFO);
             } else {
                 raise_message('repair', __('One or more RRDfile repairs failed.  See Kadupul log for errors.'), MESSAGE_LEVEL_ERROR);
             }
 
-            $selected_items = array($id);
-
             debug_delete($selected_items);
-            debug_rerun($selected_items);
+            if (debug_rerun($selected_items) === false) {
+                debug_redirect_access_denied();
+                break;
+            }
 
             raise_message('rerun', __('Automatic Data Source debug being rerun after repair.'), MESSAGE_LEVEL_INFO);
 
@@ -73,12 +86,25 @@ switch (get_request_var('action')) {
     case 'view':
         $id = get_filter_request_var('id');
 
+        if ($id <= 0 || !dsdebug_is_data_source_allowed($id)) {
+            raise_message('debug_access_denied', __('The requested Data Source is not available.'), MESSAGE_LEVEL_ERROR);
+            header('Location: data_debug.php?header=false');
+            break;
+        }
+
         $debug_status = debug_process_status($id);
 
         if ($debug_status == 'notset') {
-            $selected_items = array($id);
+            $selected_items = dsdebug_authorize_data_source_selection(array($id));
+            if ($selected_items === null || $selected_items === array()) {
+                debug_redirect_access_denied();
+                break;
+            }
             debug_delete($selected_items);
-            debug_rerun($selected_items);
+            if (debug_rerun($selected_items) === false) {
+                debug_redirect_access_denied();
+                break;
+            }
             $debug_status = 'waiting';
         }
 
@@ -130,6 +156,13 @@ switch (get_request_var('action')) {
         debug_wizard();
         bottom_footer();
         break;
+}
+
+/** Preserve the visible denial outcome when a fresh mutation-boundary check fails. */
+function debug_redirect_access_denied()
+{
+    raise_message('debug_access_denied', __('The requested Data Source is not available.'), MESSAGE_LEVEL_ERROR);
+    header('Location: data_debug.php?header=false');
 }
 
 function debug_runall_filtered()
@@ -227,14 +260,23 @@ function form_actions()
             }
         }
 
+        $selected_items = dsdebug_authorize_data_source_selection($selected_items);
+        if ($selected_items === null) {
+            header('Location: data_debug.php?header=false');
+            exit;
+        }
+
         /* if we are to save this form, instead of display it */
         if (isset_request_var('save_list')) {
             if (get_request_var('drp_action') == '2') { /* delete */
                 debug_delete($selected_items);
                 header('Location: data_debug.php?header=false&debug=-1');
             } elseif (get_request_var('drp_action') == '1') { /* Rerun */
-                debug_rerun($selected_items);
-                header('Location: data_debug.php?header=false&debug=1');
+                if (debug_rerun($selected_items) === false) {
+                    header('Location: data_debug.php?header=false');
+                } else {
+                    header('Location: data_debug.php?header=false&debug=1');
+                }
             }
 
             exit;
@@ -242,6 +284,7 @@ function form_actions()
     }
 }
 
+/** @return false|null False when current admission cannot be confirmed; historical success remains null. */
 function debug_rerun($selected_items)
 {
     $info = array(
@@ -262,6 +305,9 @@ function debug_rerun($selected_items)
     $info = serialize($info);
 
     if (!empty($selected_items)) {
+        // Recheck the batch at the mutation boundary, including direct callers.
+        $selected_items = dsdebug_authorize_data_source_selection($selected_items);
+        if ($selected_items === null || $selected_items === array()) return false;
         foreach ($selected_items as $id) {
             $exists = db_fetch_cell_prepared(
                 'SELECT id
@@ -391,12 +437,15 @@ function debug_get_filter(&$sql_where, &$dd_join)
         $sql_where = '';
     }
 
+    $allowed_devices_sql = get_allowed_management_device_ids_sql();
     if (get_request_var('host_id') == '-1') {
-        /* Show all items */
+        $sql_where .= ($sql_where != '' ? ' AND' : 'WHERE') . ' dl.host_id IN (' . $allowed_devices_sql . ')';
     } elseif (isempty_request_var('host_id')) {
-        $sql_where .= ($sql_where != '' ? ' AND' : 'WHERE') . ' (dl.host_id=0 OR dl.host_id IS NULL)';
-    } elseif (!isempty_request_var('host_id')) {
-        $sql_where .= ($sql_where != '' ? ' AND' : 'WHERE') . ' dl.host_id=' . get_request_var('host_id');
+        // Preserve the historical no-device display only when some device is
+        // permitted; an account without permitted devices still sees no rows.
+        $sql_where .= ($sql_where != '' ? ' AND' : 'WHERE') . ' (dl.host_id=0 OR dl.host_id IS NULL) AND EXISTS (' . $allowed_devices_sql . ')';
+    } else {
+        $sql_where .= ($sql_where != '' ? ' AND' : 'WHERE') . ' dl.host_id=' . (int) get_request_var('host_id') . ' AND dl.host_id IN (' . $allowed_devices_sql . ')';
     }
 
     if (get_request_var('site_id') == '-1') {
@@ -521,7 +570,23 @@ function debug_wizard()
     );
 
     if (isset_request_var('purge')) {
-        db_execute('TRUNCATE TABLE data_debug');
+        $user_id = auth_resource_id($_SESSION['sess_user_id'] ?? null);
+        $full_device_access = read_config_option('auth_method') == 0
+            || ($user_id !== null && $user_id > 0
+                && (cacti_authorize_is_admin($user_id) || get_simple_device_perms($user_id)));
+
+        if ($full_device_access) {
+            // Unassigned and orphan checks have no device to join. Only an
+            // unrestricted operator may remove these unfinished checks.
+            db_execute('DELETE FROM data_debug');
+        } else {
+            $allowed_devices_sql = get_allowed_management_device_ids_sql();
+            db_execute('DELETE dd
+				FROM data_debug AS dd
+				INNER JOIN data_local AS dl
+				ON dd.datasource = dl.id
+				WHERE dl.host_id IN (' . $allowed_devices_sql . ')');
+        }
     }
 
     /* fill in the current date for printing in the log */
@@ -673,6 +738,9 @@ function debug_view()
     $refresh = 60;
 
     $id = get_filter_request_var('id');
+    if (!dsdebug_is_data_source_allowed($id)) {
+        return;
+    }
 
     $check = db_fetch_row_prepared(
         'SELECT *

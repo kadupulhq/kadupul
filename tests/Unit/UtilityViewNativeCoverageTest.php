@@ -349,6 +349,104 @@ final class UtilityViewNativeCoverageTest extends TestCase
         );
     }
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('scopedCacheCases')]
+    public function testCacheSelectorsAndRowsUseTheSameAdmittedDeviceScope(string $view, array $allowed, array $request, array $session): void
+    {
+        $state = $this->render(array('view' => $view, 'request' => $request, 'session' => $session,
+            'allowed_devices' => $allowed, 'non_device' => true));
+        $document = new DOMDocument();
+        self::assertTrue($document->loadHTML($state['html'], LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_NONET));
+        $xpath = new DOMXPath($document);
+        $selector = $view === 'snmp' ? 'snmp_query_id' : 'template_id';
+        self::assertCount(0, $xpath->query('//select[@id="' . $selector . '"]/option[@value="20"]'));
+        self::assertStringNotContainsString($view === 'snmp' ? 'OID-foreign' : 'Gamma DS', $state['html']);
+        $prefix = $view === 'snmp' ? 'sess_usnmp' : 'sess_poller';
+        $effectiveHost = ($request['host_id'] ?? -1) === 0 ? 0 : -1;
+        self::assertSame((string) $effectiveHost, (string) $state['request']['host_id']);
+        self::assertSame((string) $effectiveHost, (string) $state['session'][$prefix . '_host_id']);
+        self::assertSame($state['before'], $state['after']);
+        if ($allowed !== array() && $effectiveHost !== 0) {
+            self::assertCount(1, $xpath->query('//select[@id="' . $selector . '"]/option[@value="10"]'));
+            self::assertStringContainsString($view === 'snmp' ? 'OID-alpha' : 'Alpha DS', $state['html']);
+        } else {
+            self::assertCount(0, $xpath->query('//select[@id="' . $selector . '"]/option[@value="10"]'));
+        }
+        if ($view === 'poller') {
+            self::assertCount(1, $xpath->query('//select[@id="template_id"]/option[@value="30"]'));
+            self::assertSame(array($allowed === array() || $effectiveHost === 0 ? 1 : 3), $state['total_rows']);
+            if ($allowed === array() || $effectiveHost === 0) {
+                self::assertStringContainsString('Non-device DS', $state['html']);
+            }
+        } else {
+            self::assertSame(array($allowed === array() ? 0 : 2), $state['snmp_counts']);
+        }
+    }
+
+    public static function scopedCacheCases(): iterable
+    {
+        foreach (array('snmp', 'poller') as $view) {
+            $prefix = $view === 'snmp' ? 'sess_usnmp' : 'sess_poller';
+            yield $view . ' Any' => array($view, array(1), array(), array());
+            yield $view . ' stale saved filter' => array($view, array(1), array(), array($prefix . '_host_id' => 2));
+            yield $view . ' denied explicit filter' => array($view, array(1), array('host_id' => 2), array());
+            yield $view . ' no allowed devices' => array($view, array(), array(), array());
+            if ($view === 'poller') {
+                yield $view . ' None' => array($view, array(1), array('host_id' => 0), array());
+                yield $view . ' None without devices' => array($view, array(), array('host_id' => 0), array());
+            }
+        }
+    }
+
+    public function testCachePredicateKeepsTwentyThousandPermittedHostsWithoutHydration(): void
+    {
+        $state = $this->render(['view' => 'snmp','request' => ['rows' => 10], 'utility_policy' => ['admin' => true,'policy_hosts' => 1,'host_count' => 20000], 'utility_policy_probe' => true]);
+        self::assertSame([], $state['policy_host_hydration']);
+        self::assertLessThan(2048, strlen($state['utility_policy_probe']['predicate']));
+        self::assertSame(array_merge([1,2], range(1000, 20999)), $state['utility_policy_probe']['first_ids']);
+        self::assertSame([3], $state['utility_policy_counts']);
+        foreach ($state['before'] as $table => $rows) self::assertSame($rows, $state['after'][$table]);
+    }
+
+    public function testCachePredicateReadsCurrentPersistedDevicePolicyIncludingDisabledDevice(): void
+    {
+        $state = $this->render(['view' => 'snmp','request' => ['rows' => 10], 'utility_policy' => ['exceptions' => [1]], 'utility_policy_probe' => true,'utility_policy_change' => true]);
+        self::assertSame([1], $state['utility_policy_probe']['first_ids']);
+        self::assertSame([2], $state['utility_policy_probe']['second_ids']);
+        self::assertSame([], $state['policy_host_hydration']);
+        self::assertSame([2], $state['utility_policy_counts']);
+        self::assertSame($state['before']['host_snmp_cache'], $state['after']['host_snmp_cache']);
+        self::assertSame($state['before']['poller_item'], $state['after']['poller_item']);
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('persistedCachePolicyCases')]
+    public function testActualCacheCountAndRowsUsePersistedManagementPolicy(string $view, array $policy, int $host, array $names, int $count): void
+    {
+        $state = $this->render(['view' => $view,'request' => ['host_id' => $host,'rows' => 10], 'utility_policy' => $policy]);
+        $document = new DOMDocument();
+        self::assertTrue($document->loadHTML($state['html'], LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_NONET));
+        $xpath = new DOMXPath($document);
+        $selector = $view === 'snmp' ? '//tr[contains(@class,"tableRow")]/td[1]' : '//tr[@class="odd" or @class="even"]/td[1][a]';
+        $actual = [];
+        foreach ($xpath->query($selector) as $cell) $actual[] = trim($cell->textContent);
+        self::assertSame($names, $actual);
+        self::assertSame([$count], $state['utility_policy_counts']);
+        self::assertSame([], $state['policy_host_hydration']);
+        foreach ($state['before'] as $table => $rows) self::assertSame($rows, $state['after'][$table]);
+    }
+
+    public static function persistedCachePolicyCases(): iterable
+    {
+        yield 'restricted SNMP rows and count' => ['snmp',['exceptions' => [1]],-1,['Alpha & <script>','Alpha & <script>'],2];
+        yield 'disabled permitted SNMP device remains admitted' => ['snmp',['exceptions' => [2]],-1,['Beta'],1];
+        yield 'SNMP no permitted devices' => ['snmp',[],-1,[],0];
+        yield 'administrator sees every SNMP device' => ['snmp',['admin' => true,'policy_hosts' => 1],-1,['Alpha & <script>','Alpha & <script>','Beta'],3];
+        yield 'realm administrator still follows configured deny policy' => ['snmp',['admin' => true],-1,[],0];
+        yield 'unrestricted policy sees every SNMP device' => ['snmp',['policy_hosts' => 1],-1,['Alpha & <script>','Alpha & <script>','Beta'],3];
+        yield 'poller scoped Any retains non-device producer' => ['poller',['exceptions' => [1]],-1,['Alpha DS & <script>','Beta DS','Non-device DS'],3];
+        yield 'poller no devices still admits non-device producer' => ['poller',[],-1,['Non-device DS'],1];
+        yield 'poller explicit non-device selection' => ['poller',['exceptions' => [1]],0,['Non-device DS'],1];
+    }
+
     private function render(array $scenario): array
     {
         $root = dirname(__DIR__, 2);
@@ -371,18 +469,21 @@ final class UtilityViewNativeCoverageTest extends TestCase
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
                 $sources = array('config/icons.json', 'src/Platform/Contract/IconRegistry.php', 'composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php', 'tests/Unit/UtilityViewNativeCoverageTest.php', 'utilities.php', 'lib/html.php', 'lib/html_utility.php', 'lib/functions.php', 'lib/clog_webapi.php', 'src/Platform/Infrastructure/Legacy/UtilityRows.php', 'include/global_constants.php', 'lib/html_form.php', 'lib/variables.php', 'src/Platform/Infrastructure/Legacy/HostDataSubstitution.php', 'lib/utility.php');
+                if (isset($scenario['utility_policy'])) $sources = array_merge($sources, array('tests/Fixtures/debug-purge-policy.php', 'tests/Fixtures/data-debug-records.php', 'lib/auth.php', 'include/csrf.php', 'tests/Helpers/PhpSource.php', 'lib/html_validate.php', 'cacti.sql'));
                 $markers = array('utility-view-observed:' . $scenario['view']);
                 $hitSources = array('utilities.php');
                 // The shared helper has four view callers; SNMP/log/Boost retain their original renderers.
                 if (in_array($scenario['view'], array('user', 'poller', 'agent', 'event', 'options'), true)) {
                     $hitSources[] = 'src/Platform/Infrastructure/Legacy/UtilityRows.php';
                 }
+                if (isset($scenario['utility_policy'])) $hitSources[] = 'lib/auth.php';
                 $encoded = json_encode($scenario, JSON_THROW_ON_ERROR);
                 $child = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/utility-view-native.php', $encoded, $sources, $markers, $hitSources);
-                static $omissionsVerified = false;
-                if (!$omissionsVerified) {
-                    self::assertSame(38, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/utility-view-native.php', $encoded, $sources, $markers, $hitSources, $scenario['view'] === 'boost' ? 'lib/rrd_maintenance.php' : 'lib/boost.php'));
-                    $omissionsVerified = true;
+                static $omissionsVerified = [];
+                $mode = isset($scenario['utility_policy']) ? 'actual-policy' : 'permission-port';
+                if (!isset($omissionsVerified[$mode])) {
+                    self::assertSame(isset($scenario['utility_policy']) ? 45 : 38, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/utility-view-native.php', $encoded, $sources, $markers, $hitSources, $scenario['view'] === 'boost' ? 'lib/rrd_maintenance.php' : 'lib/boost.php'));
+                    $omissionsVerified[$mode] = true;
                 }
                 $coverage->merge($child);
             }

@@ -11,7 +11,8 @@ require_once dirname(__DIR__, 3) . '/Helpers/ChildProcessCoverage.php';
 function rrd_font_settings_filters(string $root): string
 {
     return 'require_once ' . var_export($root . '/lib/graph_fonts.php', true) . ';'
-        . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'graph_font_size_filter'), true) . ');';
+        . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'graph_font_size_filter'), true) . ');'
+        . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'user_setting_value_allowed'), true) . ');';
 }
 
 test('every graph font size setting refuses sizes RRDtool cannot draw', function () {
@@ -51,12 +52,9 @@ test('the profile page leaves a font size it refuses unsaved', function () {
     $root = dirname(__DIR__, 4);
     $script = 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'settings_value_passes_filter'), true) . ');'
         . rrd_font_settings_filters($root)
-        . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'user_setting_value_allowed'), true) . ');'
         . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/auth_profile.php'), 'api_auth_update_user_setting'), true) . ');'
         . <<<'PHP'
         $writes = array();
-        function user_group_exists($id) { return $id === "3"; }
-        function user_group_execute_child($id, $sql, $params) { return db_execute_prepared($sql, $params); }
         function db_execute_prepared($sql, $params) { $GLOBALS['writes'][] = $params; }
         function kill_session_var($name) {}
         function is_view_allowed($name) { return true; }
@@ -184,10 +182,10 @@ test('group graph settings store the default for a font size they refuse', funct
         function get_request_var($name) { return $_REQUEST[$name]; }
         function get_filter_request_var($name) { return $_REQUEST[$name]; }
         function get_nfilter_request_var($name, $default = '') { return $_REQUEST[$name] ?? $default; }
-        function user_group_exists($id) { return $id === "3"; }
-        function user_group_execute_child($id, $sql, $params) { return db_execute_prepared($sql, $params); }
         function db_execute_prepared($sql, $params) { $GLOBALS['writes'][] = $params; }
         function kill_session_var($name) {}
+        function user_group_exists($id) { return $id === '3'; }
+        function user_group_execute_child($id, $sql, $params) { return db_execute_prepared($sql, $params); }
         function reset_group_perms($id) {}
         function raise_message($id) {}
         $settings = array();
@@ -219,11 +217,10 @@ test('group graph settings store the default for a font size they refuse', funct
 ));
 
 // user_admin.php and the profile Save All path both store graph settings through save_user_settings().
-test('saving all user settings stores the default for a font size they refuse', function ($submitted, $stored) {
+test('saving all user settings preserves a stored font size when its replacement is refused', function ($submitted, $stored) {
     $root = dirname(__DIR__, 4);
     $script = 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'settings_value_passes_filter'), true) . ');'
         . rrd_font_settings_filters($root)
-        . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'user_setting_value_allowed'), true) . ');'
         . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'save_user_settings'), true) . ');'
         . <<<'PHP'
         $writes = array();
@@ -238,7 +235,7 @@ test('saving all user settings stores the default for a font size they refuse', 
         ));
         $_REQUEST = array('title_size' => $argv[1], 'title_font' => 'DejaVu Sans');
         save_user_settings(5);
-        echo json_encode($writes);
+        echo json_encode(array('writes' => $writes, 'errors' => array_keys($_SESSION['sess_error_fields'] ?? array())));
         PHP;
 
     $pipes = array();
@@ -249,14 +246,17 @@ test('saving all user settings stores the default for a font size they refuse', 
     fclose($pipes[2]);
 
     expect(proc_close($process))->toBe(0, $error)
-        ->and(json_decode($output, true))->toBe(array(array('title_size', $stored, 5), array('title_font', 'DejaVu Sans', 5)));
+        ->and(json_decode($output, true))->toBe(array(
+            'writes' => $stored === null ? array(array('title_font', 'DejaVu Sans', 5)) : array(array('title_size', $stored, 5), array('title_font', 'DejaVu Sans', 5)),
+            'errors' => $stored === null ? array('title_size') : array(),
+        ));
 })->with(array(
-    'empty' => array('', '12'),
-    'at the lower bound' => array('4', '12'),
+    'empty' => array('', null),
+    'at the lower bound' => array('4', null),
     'just above the lower bound' => array('4.5', '4.5'),
     'at the upper bound' => array('72', '72'),
-    'above the upper bound' => array('72.5', '12'),
-    'infinite' => array('1e400', '12'),
+    'above the upper bound' => array('72.5', null),
+    'infinite' => array('1e400', null),
 ));
 
 /** A directory holding a stand-in fc-list that lists DejaVu Sans and DejaVu Sans Mono. */
@@ -392,8 +392,6 @@ function rrd_font_settings_save(array $requests, array $stored): array
         function get_nfilter_request_var($name) { return $_REQUEST[$name] ?? ""; }
         function isset_request_var($name) { return isset($_REQUEST[$name]); }
         function db_qstr($value) { return "\'" . $value . "\'"; }
-        function user_group_exists($id) { return $id === "3"; }
-        function user_group_execute_child($id, $sql, $params) { return db_execute_prepared($sql, $params); }
         function db_execute_prepared($sql, $params) { $GLOBALS["writes"][$params[0]] = $params[1]; }
         function db_execute($sql) {}
         function db_fetch_assoc($sql) { return array(); }
@@ -502,17 +500,16 @@ test('user and group graph settings keep a font that is not installed unsaved', 
         . $settings_user . $request . '
         $writes = array();
         $messages = array();
-        function user_group_exists($id) { return $id === "3"; }
-        function user_group_execute_child($id, $sql, $params) { return db_execute_prepared($sql, $params); }
         function db_execute_prepared($sql, $params) { $GLOBALS["writes"][] = $params; }
         function kill_session_var($name) {}
+        function user_group_exists($id) { return $id === "3"; }
+        function user_group_execute_child($id, $sql, $params) { return db_execute_prepared($sql, $params); }
         function reset_group_perms($id) {}
         function raise_message($id) { $GLOBALS["messages"][] = $id; }
         register_shutdown_function(function () { echo json_encode(array($GLOBALS["writes"], $GLOBALS["messages"], $_SESSION["sess_error_fields"] ?? array())); });
         form_save();';
     $user = rrd_font_settings_name_filter($root)
         . 'eval(' . var_export(test_php_function_source($functions, 'settings_value_passes_filter'), true) . ');'
-        . 'eval(' . var_export(test_php_function_source($functions, 'user_setting_value_allowed'), true) . ');'
         . 'eval(' . var_export(test_php_function_source($functions, 'save_user_settings'), true) . ');'
         . $settings_user . $request . '
         $writes = array();

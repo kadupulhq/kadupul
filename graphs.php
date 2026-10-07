@@ -12,6 +12,7 @@ include_once('./lib/api_aggregate.php');
 include_once('./lib/api_automation.php');
 include_once('./lib/api_data_source.php');
 include_once('./lib/api_graph.php');
+require_once __DIR__ . '/lib/graph_data_removal.php';
 include_once('./lib/api_tree.php');
 include_once('./lib/data_query.php');
 include_once('./lib/graphs.php');
@@ -65,6 +66,10 @@ switch (get_request_var('action')) {
 
         break;
     case 'item':
+        if (!isempty_request_var('id') && !graph_edit_graph_is_allowed(get_filter_request_var('id'))) {
+            graph_edit_access_denied();
+        }
+
         top_header();
         item();
         bottom_footer();
@@ -94,9 +99,17 @@ switch (get_request_var('action')) {
         break;
     case 'lock':
     case 'unlock':
+        if (!isempty_request_var('id') && !graph_edit_graph_is_allowed(get_filter_request_var('id'))) {
+            graph_edit_access_denied();
+        }
+
         $_SESSION['sess_graph_lock_id'] = get_filter_request_var('id');
         $_SESSION['sess_graph_locked']  = (get_request_var('action') == 'lock' ? true : false);
     case 'graph_edit':
+        if (!isempty_request_var('id') && !graph_edit_graph_is_allowed(get_filter_request_var('id'))) {
+            graph_edit_access_denied();
+        }
+
         top_header();
         graph_edit();
         bottom_footer();
@@ -117,58 +130,9 @@ switch (get_request_var('action')) {
 
 function get_ajax_graph_items()
 {
-    $rrd_id  = get_filter_request_var('rrd_id');
-    $host_id = get_filter_request_var('host_id');
+    require_once __DIR__ . '/lib/graph_item_choices.php';
 
-    if ($host_id > 0) {
-        $sql_where = ' AND data_local.host_id=' . $host_id;
-    } else {
-        $sql_where = '';
-    }
-
-    if (get_request_var('term') != '') {
-        $sql_where .= ' HAVING name LIKE "%' . trim(db_qstr(get_request_var('term')), "'") . '%"';
-    }
-
-    $items  = db_fetch_assoc_prepared(
-        "SELECT *
-		FROM (SELECT data_template_rrd.id AS id,
-			CONCAT_WS('',
-			CASE
-			WHEN host.description IS NULL THEN '" . __esc('No Device - ') . "'
-			WHEN host.description IS NOT NULL THEN ''
-			END,
-			data_template_data.name_cache,' (',data_template_rrd.data_source_name,')') AS name
-			FROM (data_template_data,data_template_rrd,data_local)
-			LEFT JOIN host ON (data_local.host_id=host.id)
-			WHERE data_template_rrd.local_data_id=data_local.id
-			AND data_template_data.local_data_id=data_local.id
-			AND data_template_rrd.id = ?
-		) AS a
-		UNION
-		SELECT *
-		FROM (SELECT data_template_rrd.id AS id,
-			CONCAT_WS('',
-			CASE
-			WHEN host.description IS NULL THEN '" . __esc('No Device - ') . "'
-			WHEN host.description IS NOT NULL THEN ''
-			END,
-			data_template_data.name_cache,' (',data_template_rrd.data_source_name,')') AS name
-			FROM (data_template_data,data_template_rrd,data_local)
-			LEFT JOIN host ON (data_local.host_id=host.id)
-			WHERE data_template_rrd.local_data_id=data_local.id
-			AND data_template_data.local_data_id=data_local.id
-			$sql_where
-			ORDER BY name
-		) AS b
-		LIMIT " . read_config_option('autocomplete_rows'),
-        array($rrd_id)
-    );
-
-    foreach ($items as $key => $item) {
-        $items[$key]['label'] = $item['name'];
-    }
-
+    $items = graph_item_choices();
     header('Content-Type: application/json');
     print json_encode($items);
 }
@@ -226,6 +190,36 @@ function form_save(): never
         set_request_var('host_id', get_request_var('host_id_prev'));
     } else {
         get_filter_request_var('host_id');
+    }
+
+    $local_graph_id = get_request_var('local_graph_id');
+    $host_id        = auth_resource_id(get_request_var('host_id'));
+    if (!empty($local_graph_id) && !graph_edit_graph_is_allowed($local_graph_id)) {
+        graph_edit_access_denied();
+    }
+
+    // The graph row posted with a save must belong to the graph being saved.
+    if (isset_request_var('save_component_graph') && !isempty_request_var('graph_template_graph_id')) {
+        $owner = db_fetch_cell_prepared('SELECT local_graph_id FROM graph_templates_graph WHERE id = ?', array(get_request_var('graph_template_graph_id')));
+        if (empty($local_graph_id) || $owner === false || $owner === null || (int) $owner !== (int) $local_graph_id) {
+            graph_edit_access_denied();
+        }
+    }
+
+    if ($host_id === null || ($host_id > 0 && !is_device_allowed($host_id))) {
+        graph_edit_access_denied();
+    }
+
+    $device_change_required = false;
+    if (isset_request_var('save_component_graph') && !empty($local_graph_id)) {
+        $stored_host_id = auth_resource_id(db_fetch_cell_prepared('SELECT host_id FROM graph_local WHERE id = ?', array($local_graph_id)));
+        if ($stored_host_id === null) {
+            graph_edit_access_denied();
+        }
+        $device_change_required = $stored_host_id !== $host_id;
+        if ($device_change_required && api_graph_device_change_scope($local_graph_id, $host_id) === false) {
+            graph_edit_access_denied();
+        }
     }
 
     $gt_id_unparsed      = get_nfilter_request_var('graph_template_id');
@@ -351,7 +345,7 @@ function form_save(): never
             update_graph_title_cache($local_graph_id);
 
             /* if the host id changes, then update the graph items association too */
-            if (get_request_var('host_id') != get_request_var('host_id_prev')) {
+            if ($device_change_required) {
                 if (!api_graph_change_device($local_graph_id, get_request_var('host_id'))) {
                     raise_message(34);
                 }
@@ -582,17 +576,77 @@ function form_actions()
     get_filter_request_var('drp_action', FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/^([a-zA-Z0-9_]+)$/')));
     /* ==================================================== */
 
+    $removal_scope = null;
+    $removal_preview = null;
+    if (get_nfilter_request_var('drp_action') == '1') {
+        try {
+            $selection = array();
+            if (isset_request_var('selected_items')) {
+                $selection = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
+                $mode = isset_request_var('delete_type') ? get_nfilter_request_var('delete_type') : 1;
+            } else {
+                foreach ($_POST as $key => $value) {
+                    if (preg_match('/^chk_([0-9]+)$/D', $key, $match)) $selection[] = $match[1];
+                }
+                $mode = 1;
+            }
+            if (!is_array($selection)) throw new RuntimeException('Invalid removal selection.');
+            $removal_scope = GraphDataRemovalScope::review('graph', $selection, $mode);
+            if (!isset_request_var('selected_items')) {
+                try {
+                    $removal_preview = GraphDataRemovalScope::review('graph', $selection, 2);
+                } catch (GraphDataRemovalAccessDenied|GraphDataRemovalBatchTooLarge) {
+                    // The graph-only action remains reachable; dependent names stay private.
+                }
+            }
+        } catch (Throwable $error) {
+            graph_data_removal_failed('graph', $error);
+        }
+    }
     /* if we are to save this form, instead of display it */
     if (isset_request_var('selected_items')) {
         $selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
+        if ($removal_scope !== null) {
+            $selected_items = $removal_scope->selectedIds();
+            set_request_var('selected_items', serialize($selected_items));
+        }
+        if (is_array($selected_items) && $removal_scope === null) {
+            try {
+                $allowed = get_allowed_management_selection('graph', $selected_items);
+            } catch (Throwable $error) {
+                graph_edit_access_denied();
+            }
+            if (count($allowed) !== count($selected_items)) graph_edit_access_denied();
+            $selected_items = $allowed;
+            /* plugin action hooks read the request, so they must see the filtered list too */
+            set_request_var('selected_items', serialize($selected_items));
+            if (cacti_sizeof($selected_items) === 0) {
+                $selected_items = false;
+            }
+        }
 
         if ($selected_items != false) {
+            if ($removal_scope === null) {
+                try {
+                    $verified = get_allowed_management_selection('graph', $selected_items);
+                } catch (Throwable $error) {
+                    graph_edit_access_denied();
+                }
+                if (count($verified) !== count($selected_items)) graph_edit_access_denied();
+            }
+
             if (get_request_var('drp_action') == '1') { // delete
                 if (!isset_request_var('delete_type')) {
                     set_request_var('delete_type', 1);
                 }
 
-                api_delete_graphs($selected_items, get_filter_request_var('delete_type'));
+                try {
+                    $removal_scope->run(static function () use ($removal_scope, &$selected_items): void {
+                        api_delete_graphs($selected_items, get_filter_request_var('delete_type'), $removal_scope->dataIds(), array($removal_scope, 'verify'), $removal_scope);
+                    });
+                } catch (Throwable $error) {
+                    graph_data_removal_failed('graph', $error);
+                }
             } elseif (get_request_var('drp_action') == '2') { // change graph template
                 $gt_id_unparsed      = get_nfilter_request_var('graph_template_id');
                 $gt_id_prev_unparsed = get_nfilter_request_var('graph_template_id_prev');
@@ -618,6 +672,11 @@ function form_actions()
             } elseif (get_request_var('drp_action') == '5') { // change host
                 get_filter_request_var('host_id');
                 $failures = false;
+                $host_id = auth_resource_id(get_request_var('host_id'));
+                if ($host_id === null || ($host_id > 0 && !is_device_allowed($host_id))) {
+                    $selected_items = array();
+                    raise_message('device_access_denied', __('The selected Device is not available.'), MESSAGE_LEVEL_ERROR);
+                }
                 for ($i = 0;($i < cacti_count($selected_items));$i++) {
                     if (!api_graph_change_device($selected_items[$i], get_request_var('host_id'))) {
                         $failures = true;
@@ -686,6 +745,19 @@ function form_actions()
     $graph_list = '';
     $graph      = array();
 
+    if ($removal_scope === null) {
+        $selection = array();
+        foreach ($_POST as $key => $value) {
+            if (preg_match('/^chk_([0-9]+)$/', $key, $match)) $selection[] = $match[1];
+        }
+        try {
+            $allowed = get_allowed_management_selection('graph', $selection);
+        } catch (Throwable $error) {
+            graph_edit_access_denied();
+        }
+        if (count($allowed) !== count($selection)) graph_edit_access_denied();
+    }
+
     /* loop through each of the graphs selected on the previous page and get more info about them */
     foreach ($_POST as $var => $val) {
         if (preg_match('/^chk_([0-9]+)$/', $var, $matches)) {
@@ -722,7 +794,7 @@ function form_actions()
     if (isset($graph_array) && cacti_sizeof($graph_array)) {
         if (get_request_var('drp_action') == '1') { // delete
             /* find out which (if any) data sources are being used by this graph, so we can tell the user */
-            if (isset($graph_array) && cacti_sizeof($graph_array)) {
+            if (isset($graph_array) && cacti_sizeof($graph_array) && $removal_preview !== null) {
                 $data_sources = array_rekey(
                     db_fetch_assoc('SELECT DISTINCT dtd.local_data_id, dtd.name_cache
 						FROM data_template_data AS dtd
@@ -872,7 +944,10 @@ function form_actions()
 					<div class='itemlist'><ul>$graph_list</ul></div>
 					<p>" . __('New Device') . "<br>";
 
-            form_dropdown('host_id', db_fetch_assoc("SELECT id,CONCAT_WS('',description,' (',hostname,')') as name FROM host ORDER BY description,hostname"), 'name', 'id', '', '', '0');
+            $allowed_devices_sql = get_allowed_management_device_ids_sql();
+            $devices = db_fetch_assoc("SELECT id, CONCAT_WS('',description,' (',hostname,')') AS name
+                FROM host WHERE id IN ($allowed_devices_sql) ORDER BY description, hostname");
+            form_dropdown('host_id', $devices, 'name', 'id', '', __('None'), '0');
 
             print "</p>
 				</td>
@@ -1292,7 +1367,7 @@ function item()
     ?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 	$(function() {
-		$('.deleteMarker, .moveArrow').on('click', function(event) {
+		$('.deleteMarker, .moveArrow').not('.cactiPostAction').on('click', function(event) {
 			event.preventDefault();
 			loadPageNoHeader($(this).attr('href'));
 		});
@@ -1330,6 +1405,10 @@ function graph_edit()
     /* ================= input validation ================= */
     get_filter_request_var('id');
     /* ==================================================== */
+
+    if (!isempty_request_var('id') && !is_graph_allowed(get_request_var('id'))) {
+        graph_edit_access_denied();
+    }
 
     $use_graph_template = true;
 
@@ -1385,10 +1464,13 @@ function graph_edit()
 
         $host_id = db_fetch_cell_prepared(
             'SELECT host_id
-			FROM graph_local
-			WHERE id = ?',
+            FROM graph_local
+            WHERE id = ?',
             array(get_request_var('id'))
         );
+        if ($host_id > 0 && !is_device_allowed($host_id)) {
+            graph_edit_access_denied();
+        }
 
         /* case of a deleted graph */
         if (!cacti_sizeof($graph)) {
@@ -1403,6 +1485,10 @@ function graph_edit()
             $use_graph_template = 'false';
         }
     } else {
+        if (isset_request_var('host_id') && get_filter_request_var('host_id') > 0 && !is_device_allowed(get_request_var('host_id'))) {
+            graph_edit_access_denied();
+        }
+
         $header_label = __('Graph [new]');
         $use_graph_template = false;
 
@@ -1771,7 +1857,8 @@ function graph_edit()
 
 	if (locked) {
 		$('input').not('input[value="<?php print __('Cancel');?>"]').not('input[value="<?php print __('Return');?>"]').prop('disabled', true);
-		$('.moveArrow, .deleteMarker, .linkOverDark, .linkEditMain').attr('href', '#').removeClass('moveArrow').removeClass('deleteMarker');
+		/* Item links post from data-url through the cactiPostAction handler, so clearing href alone leaves them live. */
+		$('.moveArrow, .deleteMarker, .linkOverDark, .linkEditMain').attr('href', '#').removeAttr('data-url').off('click.cactiPostAction').removeClass('moveArrow deleteMarker cactiPostAction');
 		if ($('#submit').button('instance')) {
 			$('#submit').button('disable');
 		} else {
@@ -1787,6 +1874,37 @@ function graph_edit()
     } else {
         api_plugin_hook_function('graph_edit_after');
     }
+}
+
+/**
+ * Check that the user may see a graph and, when it has one, its device.
+ *
+ * @param int $local_graph_id Graph identifier.
+ *
+ * @return bool
+ */
+function graph_edit_graph_is_allowed($local_graph_id)
+{
+    if (!is_graph_allowed($local_graph_id)) {
+        return false;
+    }
+
+    $host_id = db_fetch_cell_prepared('SELECT host_id FROM graph_local WHERE id = ?', array($local_graph_id));
+
+    return !($host_id > 0 && !is_device_allowed($host_id));
+}
+
+/**
+ * Deny access to a graph that is outside the current user's device scope.
+ *
+ * @return never
+ */
+function graph_edit_access_denied()
+{
+    cacti_log('User attempted to access an unauthorized graph', false, 'AUTH');
+    raise_message('graph_access_denied', __('Graph access denied'), MESSAGE_LEVEL_ERROR);
+    header('Location: graphs.php?header=false');
+    exit;
 }
 
 function validate_graph_request_vars()
@@ -1863,6 +1981,9 @@ function validate_graph_request_vars()
 function graph_management()
 {
     global $graph_actions, $graph_sources, $item_rows, $config;
+    if (get_request_var('host_id') > 0 && !is_device_allowed(get_filter_request_var('host_id'))) {
+        set_request_var('host_id', '-2');
+    }
 
     if (get_request_var('rows') == -1) {
         $rows = read_config_option('num_rows_table');
@@ -2036,21 +2157,45 @@ function graph_management()
     /* form the 'where' clause for our main sql query */
     $sql_where  = '';
     $sql_where2 = '';
-    if (get_request_var('rfilter') != '') {
-        $sql_where = " WHERE (gtg.title_cache " . db_qstr_rlike(get_request_var('rfilter')) .
-            " OR gt.name " . db_qstr_rlike(get_request_var('rfilter')) .
-            " OR gl.id = " . (int) get_request_var('rfilter') . ")";
-        $sql_where2 = " AND (gl.id = " . (int) get_request_var('rfilter') . ")";
+    $allowed_devices_sql = get_allowed_management_device_ids_sql();
+    $allowed_graphs_sql = get_allowed_management_graph_ids_sql();
+    if (get_request_var('local_graph_ids') != '') {
+        $requested_graph_ids = explode(',', get_request_var('local_graph_ids'));
+        $allowed_requested_graph_ids = array();
+        foreach ($requested_graph_ids as $requested_graph_id) {
+            $requested_graph_id = auth_resource_id($requested_graph_id);
+            if ($requested_graph_id !== null && $requested_graph_id > 0) {
+                $allowed_requested_graph_ids[] = $requested_graph_id;
+            }
+        }
+        set_request_var('local_graph_ids', cacti_sizeof($allowed_requested_graph_ids) > 0 ? implode(',', $allowed_requested_graph_ids) : '0');
     }
 
+    if (get_request_var('rfilter') != '') {
+        $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . "(gtg.title_cache " . db_qstr_rlike(get_request_var('rfilter')) .
+            " OR gt.name " . db_qstr_rlike(get_request_var('rfilter')) .
+            " OR gl.id = " . (int) get_request_var('rfilter') . ")";
+        $sql_where2 .= " AND (gl.id = " . (int) get_request_var('rfilter') . ")";
+    }
+
+    // The list and its count use the same policy as the mutation boundary.
+    $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . "gl.id IN ($allowed_graphs_sql)";
+    $sql_where2 .= " AND gl.id IN ($allowed_graphs_sql)";
     if (get_request_var('host_id') == '-1') {
-        /* Show all items */
+        $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . "(gl.host_id IN ($allowed_devices_sql) OR gl.host_id=0)";
+        $sql_where2 .= " AND (gl.host_id IN ($allowed_devices_sql) OR gl.host_id=0)";
     } elseif (isempty_request_var('host_id')) {
-        $sql_where  .= ($sql_where != '' ? ' AND ' : 'WHERE ') . ' gl.host_id=0';
+        $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . ' gl.host_id=0';
         $sql_where2 .= ' AND gl.host_id=0';
-    } elseif (!isempty_request_var('host_id')) {
-        $sql_where  .= ($sql_where != '' ? ' AND ' : 'WHERE ') . ' gl.host_id=' . get_request_var('host_id');
-        $sql_where2 .= ' AND gl.host_id=' . get_request_var('host_id');
+    } else {
+        $host_id = get_filter_request_var('host_id');
+        if ($host_id <= 0 || !is_device_allowed($host_id)) {
+            $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . '1=0';
+            $sql_where2 .= ' AND 1=0';
+        } else {
+            $sql_where .= ($sql_where != '' ? ' AND ' : 'WHERE ') . 'gl.host_id=' . (int) $host_id;
+            $sql_where2 .= ' AND gl.host_id=' . (int) $host_id;
+        }
     }
 
     if (get_request_var('site_id') == '-1') {

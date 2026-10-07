@@ -7,7 +7,10 @@
 
 include('./include/auth.php');
 
-cacti_require_post_actions(array('actions', 'reindex'));
+cacti_require_post_actions(array(
+    'actions', 'reindex', 'gt_add', 'gt_remove', 'query_add', 'query_remove', 'query_change',
+    'query_reload', 'query_verbose', 'enable_debug', 'disable_debug', 'repopulate'
+));
 include_once('./lib/api_automation.php');
 include_once('./lib/api_data_source.php');
 include_once('./lib/api_device.php');
@@ -116,6 +119,10 @@ switch (get_request_var('action')) {
         header('Location: host.php?header=' . (isset_request_var('header') && get_nfilter_request_var('header') == 'true' ? 'true' : 'false') . '&action=edit&id=' . get_request_var('host_id') . '&display_dq_details=true');
         break;
     case 'edit':
+        if (!isempty_request_var('id')) {
+            host_require_device_access(get_filter_request_var('id'));
+        }
+
         top_header();
 
         host_edit();
@@ -125,18 +132,23 @@ switch (get_request_var('action')) {
         break;
     case 'ping_host':
         $host_id = get_filter_request_var('id');
+        host_require_device_access($host_id);
         api_device_ping_device($host_id);
 
         break;
     case 'enable_debug':
-        enable_device_debug(get_filter_request_var('host_id'));
+        $host_id = get_filter_request_var('host_id');
+        host_require_device_access($host_id);
+        enable_device_debug($host_id);
         raise_message('enable_debug', __('Device Debugging Enabled for Device.'), MESSAGE_LEVEL_INFO);
 
         header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
 
         break;
     case 'disable_debug':
-        disable_device_debug(get_filter_request_var('host_id'));
+        $host_id = get_filter_request_var('host_id');
+        host_require_device_access($host_id);
+        disable_device_debug($host_id);
         raise_message('disable_debug', __('Device Debugging Disabled for Device.'), MESSAGE_LEVEL_INFO);
 
         header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
@@ -144,6 +156,7 @@ switch (get_request_var('action')) {
         break;
     case 'repopulate':
         if (get_filter_request_var('host_id') > 0) {
+            host_require_device_access(get_request_var('host_id'));
             push_out_host(get_request_var('host_id'));
             raise_message('repopulate_message', __('Poller Cache for Device Refreshed.'), MESSAGE_LEVEL_INFO);
         } else {
@@ -171,6 +184,22 @@ switch (get_request_var('action')) {
     Global Form Functions
    -------------------------- */
 
+/**
+ * Stop a device operation unless the current user may access the device.
+ *
+ * @param int $host_id Device identifier.
+ *
+ * @return void
+ */
+function host_require_device_access($host_id)
+{
+    if ($host_id <= 0 || !is_device_allowed($host_id)) {
+        cacti_log('User attempted to access an unauthorized device', false, 'AUTH');
+        header('Location: permission_denied.php');
+        exit;
+    }
+}
+
 function host_reindex()
 {
     global $config;
@@ -181,6 +210,7 @@ function host_reindex()
     if (!is_int($host_id) || $host_id <= 0) {
         die_html_input_error('host_id', $host_id);
     }
+    host_require_device_access($host_id);
 
     $output = array();
     $status = cacti_exec(read_config_option('path_php_binary'), array(
@@ -283,6 +313,10 @@ function form_save()
             get_filter_request_var('id');
             get_filter_request_var('host_template_id');
 
+            if (get_request_var('id') > 0) {
+                host_require_device_access(get_request_var('id'));
+            }
+
             $host_id = api_device_save(
                 get_nfilter_request_var('id'),
                 get_nfilter_request_var('host_template_id'),
@@ -341,6 +375,13 @@ function form_actions()
         $selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
 
         if ($selected_items != false) {
+            try {
+                $allowed = get_allowed_management_selection('device', $selected_items);
+            } catch (Throwable $error) {
+                host_require_device_access(0);
+            }
+            if (count($allowed) !== count($selected_items)) host_require_device_access(0);
+
             if (get_request_var('drp_action') == '2') { // Enable Selected Devices
                 api_device_enable_devices($selected_items);
             } elseif (get_request_var('drp_action') == '3') { // Disable Selected Devices
@@ -401,6 +442,17 @@ function form_actions()
     /* setup some variables */
     $host_list = '';
     $host_array = array();
+
+    $selection = array();
+    foreach ($_POST as $key => $value) {
+        if (preg_match('/^chk_([0-9]+)$/', $key, $match)) $selection[] = $match[1];
+    }
+    try {
+        $allowed = get_allowed_management_selection('device', $selection);
+    } catch (Throwable $error) {
+        host_require_device_access(0);
+    }
+    if (count($allowed) !== count($selection)) host_require_device_access(0);
 
     /* loop through each of the host templates selected on the previous page and get more info about them */
     foreach ($_POST as $var => $val) {
@@ -663,6 +715,7 @@ function host_add_query()
     get_filter_request_var('snmp_query_id');
     get_filter_request_var('reindex_method');
     /* ==================================================== */
+    host_require_device_access(get_request_var('host_id'));
 
     api_device_dq_add(get_request_var('host_id'), get_request_var('snmp_query_id'), get_request_var('reindex_method'));
 }
@@ -673,6 +726,7 @@ function host_reload_query()
     get_filter_request_var('id');
     get_filter_request_var('host_id');
     /* ==================================================== */
+    host_require_device_access(get_request_var('host_id'));
 
     run_data_query(get_request_var('host_id'), get_request_var('id'));
 }
@@ -683,6 +737,7 @@ function host_remove_query()
     get_filter_request_var('id');
     get_filter_request_var('host_id');
     /* ==================================================== */
+    host_require_device_access(get_request_var('host_id'));
 
     api_device_dq_remove(get_request_var('host_id'), get_request_var('id'));
 }
@@ -694,6 +749,7 @@ function host_change_query()
     get_filter_request_var('host_id');
     get_filter_request_var('reindex_method');
     /* ==================================================== */
+    host_require_device_access(get_request_var('host_id'));
 
     api_device_dq_change(get_request_var('host_id'), get_request_var('data_query_id'), get_request_var('reindex_method'));
 }
@@ -704,6 +760,7 @@ function host_add_gt()
     get_filter_request_var('host_id');
     get_filter_request_var('graph_template_id');
     /* ==================================================== */
+    host_require_device_access(get_request_var('host_id'));
 
     db_execute_prepared(
         'REPLACE INTO host_graph
@@ -723,6 +780,7 @@ function host_remove_gt()
     get_filter_request_var('id');
     get_filter_request_var('host_id');
     /* ==================================================== */
+    host_require_device_access(get_request_var('host_id'));
 
     api_device_gt_remove(get_request_var('host_id'), get_request_var('id'));
 }
@@ -738,6 +796,9 @@ function host_edit()
     /* ================= input validation ================= */
     get_filter_request_var('id');
     /* ==================================================== */
+    if (!isempty_request_var('id')) {
+        host_require_device_access(get_request_var('id'));
+    }
 
     api_plugin_hook('host_edit_top');
 
@@ -757,12 +818,12 @@ function host_edit()
         if (cacti_sizeof($host)) {
             $header_label = __esc('Device [edit: %s]', $host['description']);
             if (is_device_debug_enabled($host['id'])) {
-                $debug_link = "<span class='linkMarker'>*</span><a class='hyperLink' href='" . html_escape('host.php?action=disable_debug&host_id=' . $host['id']) . "'>" . __('Disable Device Debug') . "</a><br>";
+                $debug_link = "<span class='linkMarker'>*</span><a class='hyperLink cactiPostAction' href='#' data-url='" . html_escape('host.php?action=disable_debug&host_id=' . $host['id']) . "'>" . __('Disable Device Debug') . "</a><br>";
             } else {
-                $debug_link = "<span class='linkMarker'>*</span><a class='hyperLink' href='" . html_escape('host.php?action=enable_debug&host_id=' . $host['id']) . "'>" . __('Enable Device Debug') . "</a><br>";
+                $debug_link = "<span class='linkMarker'>*</span><a class='hyperLink cactiPostAction' href='#' data-url='" . html_escape('host.php?action=enable_debug&host_id=' . $host['id']) . "'>" . __('Enable Device Debug') . "</a><br>";
             }
 
-            $repop_link = "<span class='linkMarker'>*</span><a class='hyperLink' href='" . html_escape('host.php?action=repopulate&host_id=' . $host['id']) . "'>" . __('Repopulate Poller Cache') . "</a><br>";
+            $repop_link = "<span class='linkMarker'>*</span><a class='hyperLink cactiPostAction' href='#' data-url='" . html_escape('host.php?action=repopulate&host_id=' . $host['id']) . "'>" . __('Repopulate Poller Cache') . "</a><br>";
             $repop_link .= "<span class='linkMarker'>*</span><a class='hyperLink' href='" . html_escape('utilities.php?poller_action=-1&action=view_poller_cache&host_id=' . $host['id'] . '&template_id=-1&filter=&rows=-1') . "'>" . __('View Poller Cache') . "</a><br>";
         }
     } else {
@@ -1286,15 +1347,6 @@ function device_javascript()
 		setPing();
 	}
 
-	function hostPageLoad(strURL) {
-		var scrollTop = $(window).scrollTop();
-		$.get(strURL, function(data) {
-			$('#main').html(data);
-			applySkin();
-			$(window).scrollTop(scrollTop);
-		});
-	}
-
 	$(function() {
 		// Need to set this for global snmpv3 functions to remain sane between edits
 		snmp_security_initialized = false;
@@ -1352,24 +1404,52 @@ function device_javascript()
 
 		$('[id^="reload"]').on('click', function(data) {
 			$(this).addClass('fa-spin');
-			strURL = 'host.php?action=query_reload&id='+$(this).attr('data-id')+'&host_id='+$('#id').val()+'&nostate=true';
-			hostPageLoad(strURL);
+			var scrollTop = $(window).scrollTop();
+			$.post('host.php?action=query_reload', {
+				id: $(this).attr('data-id'),
+				host_id: $('#id').val(),
+				nostate: 'true',
+				__csrf_magic: csrfMagicToken }).done(function(data) {
+				$('#main').html(data);
+				applySkin();
+				$(window).scrollTop(scrollTop);
+			});
 		});
 
 		$('[id^="verbose"]').on('click', function(data) {
 			$(this).addClass('fa-spin');
-			var strURL = 'host.php?action=query_verbose&id='+$(this).attr('data-id')+'&host_id='+$('#id').val()+'&nostate=true';
-			loadPageNoHeader(strURL, true);
+			loadPageUsingPostChecked('host.php?action=query_verbose', {
+				id: $(this).attr('data-id'),
+				host_id: $('#id').val(),
+				nostate: 'true',
+				__csrf_magic: csrfMagicToken
+			});
 		});
 
 		$('[id^="remove"]').on('click', function(data) {
-			var strURL = 'host.php?action=query_remove&id='+$(this).attr('data-id')+'&host_id='+$('#id').val()+'&nostate=true';
-			hostPageLoad(strURL);
+			var scrollTop = $(window).scrollTop();
+			$.post('host.php?action=query_remove', {
+				id: $(this).attr('data-id'),
+				host_id: $('#id').val(),
+				nostate: 'true',
+				__csrf_magic: csrfMagicToken }).done(function(data) {
+				$('#main').html(data);
+				applySkin();
+				$(window).scrollTop(scrollTop);
+			});
 		});
 
 		$('[id^="gtremove"]').on('click', function(data) {
-			strURL = 'host.php?action=gt_remove&id='+$(this).attr('data-id')+'&host_id='+$('#id').val()+'&nostate=true';
-			hostPageLoad(strURL);
+			var scrollTop = $(window).scrollTop();
+			$.post('host.php?action=gt_remove', {
+				id: $(this).attr('data-id'),
+				host_id: $('#id').val(),
+				nostate: 'true',
+				__csrf_magic: csrfMagicToken }).done(function(data) {
+				$('#main').html(data);
+				applySkin();
+				$(window).scrollTop(scrollTop);
+			});
 		});
 
 		$('#add_dq').on('click', function() {
@@ -1434,14 +1514,15 @@ function device_javascript()
 			});
 
 		$('input[id^="reindex_"]').on('change', function() {
-			strURL  = urlPath+'host.php?action=query_change&header=false';
-			strURL += '&host_id='+$(this).attr('data-device-id');
-			strURL += '&data_query_id='+$(this).attr('data-query-id');
-			strURL += '&reindex_method='+$(this).attr('data-reindex-method');
-
 			height = $('.hostInfoHeader').height();
 
-			loadPageNoHeader(strURL, true);
+			loadPageUsingPostChecked(urlPath+'host.php?action=query_change', {
+				header: 'false',
+				host_id: $(this).attr('data-device-id'),
+				data_query_id: $(this).attr('data-query-id'),
+				reindex_method: $(this).attr('data-reindex-method'),
+				__csrf_magic: csrfMagicToken
+			});
 
 			$('.hostInfoHeader').css('height', height);
 		});

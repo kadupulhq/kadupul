@@ -19,8 +19,10 @@ const sourceHashes = sources => Object.fromEntries(sources.map(source => [source
 // own required inventory rather than trusting the report's claimed sources.
 function producerSources() {
   return ['tests/Symfony/vdef_browser_probe.cjs', 'tests/Symfony/vdef_scenarios.py', 'tests/Symfony/session_bridge.py', 'package-lock.json', 'tests/e2e/package-lock.json', 'tests/e2e/browser-coverage.js',
-    'tests/e2e/midwinter-listeners.spec.js', 'tests/e2e/selectmenu-scroll.spec.js', 'tests/e2e/theme-smoke.html', 'tests/e2e/playwright.config.js',
-    'include/js/pace.js', 'include/js/jquery.zoom.js', 'lib/html.php', 'config/icons.json', 'include/fa/webfonts/fa-brands-400.woff2', 'include/js/jquery.js', 'include/js/jquery-ui.js', 'include/js/js.storage.js',
+    'tests/e2e/midwinter-listeners.spec.js', 'tests/e2e/selectmenu-scroll.spec.js', 'tests/e2e/html-sink-escaping.spec.js', 'tests/e2e/theme-smoke.html', 'tests/e2e/playwright.config.js',
+    'user_admin.php', 'user_group_admin.php', 'tree.php', 'managers.php', 'utilities.php', 'include/js/jstree.js',
+    'lib/html.php', 'include/js/jquery.js', 'include/js/jquery-ui.js', 'include/js/js.storage.js',
+    'include/js/pace.js', 'include/js/jquery.zoom.js', 'config/icons.json', 'include/fa/webfonts/fa-brands-400.woff2',
     'include/js/jquery.cookie.js', 'include/js/purify.js', 'include/js/jquery.tablesorter.js',
     'include/themes/classic/jquery-ui.css', 'include/fa/css/all.css', 'include/fa/webfonts/fa-solid-900.woff2',
     'include/themes/midwinter/vendor/mark/jquery.mark.js', 'include/themes/midwinter/vendor/hotkeys/hotkeys.js',
@@ -28,8 +30,10 @@ function producerSources() {
 }
 
 const mergerSources = ['tests/Symfony/vdef_browser_probe.cjs', 'tests/Symfony/vdef_scenarios.py', 'tests/Symfony/session_bridge.py', 'public/js/vdef-item.js', 'package-lock.json', 'tests/e2e/package-lock.json', 'tests/e2e/browser-coverage.js',
-  'tests/e2e/midwinter-listeners.spec.js', 'tests/e2e/selectmenu-scroll.spec.js', 'tests/e2e/theme-smoke.html', 'tests/e2e/playwright.config.js',
-  'include/js/pace.js', 'include/js/jquery.zoom.js', 'lib/html.php', 'config/icons.json', 'include/fa/webfonts/fa-brands-400.woff2', 'include/js/jquery.js', 'include/js/jquery-ui.js', 'include/js/js.storage.js',
+  'tests/e2e/midwinter-listeners.spec.js', 'tests/e2e/selectmenu-scroll.spec.js', 'tests/e2e/html-sink-escaping.spec.js', 'tests/e2e/theme-smoke.html', 'tests/e2e/playwright.config.js',
+  'user_admin.php', 'user_group_admin.php', 'tree.php', 'managers.php', 'utilities.php', 'include/js/jstree.js',
+  'lib/html.php', 'include/js/jquery.js', 'include/js/jquery-ui.js', 'include/js/js.storage.js',
+  'include/js/pace.js', 'include/js/jquery.zoom.js', 'config/icons.json', 'include/fa/webfonts/fa-brands-400.woff2',
   'include/js/jquery.cookie.js', 'include/js/purify.js', 'include/js/jquery.tablesorter.js',
   'include/themes/classic/jquery-ui.css', 'include/fa/css/all.css', 'include/fa/webfonts/fa-solid-900.woff2',
   'include/themes/midwinter/vendor/mark/jquery.mark.js', 'include/themes/midwinter/vendor/hotkeys/hotkeys.js',
@@ -84,6 +88,15 @@ const scenarios = {
     'SNMP passphrase validation draws real status glyphs for each field state',
     'realtime graph activation preserves loading glyph response and original image',
   ],
+  'html-sink-escaping.spec.js': [
+    'a color name with markup stays inside the color dropdown input',
+    'an ordinary color name is shown in the color dropdown input',
+    'user_admin.php shows permission reasons with markup as text',
+    'user_group_admin.php shows permission reasons with markup as text',
+    'rebuilding a tree list keeps escaped names as text',
+    'SNMP notification tooltips on manager logs show names and descriptions as text',
+    'SNMP notification log tooltips drop script from the title markup',
+  ],
 };
 
 function filterGlyphProductionLine() {
@@ -101,7 +114,7 @@ function nativeScenarioLines(scenario) {
   const layout = 'include/layout.js';
   const midwinter = 'include/themes/midwinter/main.js';
   const statements = scenario === 'realtime graph activation preserves loading glyph response and original image'
-    ? [[layout, "class='drillDown "], ['include/realtime.js', "$.get(urlPath+'graph_realtime.php?action=countdown"]]
+    ? [[layout, "class='drillDown "], ['include/realtime.js', "realtimeRequest(urlPath+'graph_realtime.php?action=countdown"]]
     : scenario === 'responsive filters preserve control callbacks and visibility across clicks'
     ? [[layout, "filterHeader.find('div.cactiTableButton').append($('<span style=\"display:none;\" class=\"cactiFilterExport\""]]
     : scenario === 'debug table actions and stored collapsible sections retain registry glyphs'
@@ -308,6 +321,17 @@ function verifyRegistryRejections(directory) {
       fs.unlinkSync(path.join(owned, first));
       fs.unlinkSync(path.join(owned, `${first}.receipt`));
     });
+    for (const scenario of scenarios['html-sink-escaping.spec.js']) {
+      refuse(() => {
+        const missing = reports.find(file => {
+          const receipt = JSON.parse(fs.readFileSync(path.join(owned, `${file}.receipt`)));
+          return receipt.producer === 'tests/e2e/html-sink-escaping.spec.js' && receipt.scenario === scenario;
+        });
+        if (!missing) throw new Error('Missing HTML sink scenario control input');
+        fs.unlinkSync(path.join(owned, missing));
+        fs.unlinkSync(path.join(owned, `${missing}.receipt`));
+      });
+    }
     refuse(() => {
       fs.copyFileSync(path.join(owned, first), path.join(owned, 'duplicate.json'));
       fs.copyFileSync(path.join(owned, `${first}.receipt`), path.join(owned, 'duplicate.json.receipt'));

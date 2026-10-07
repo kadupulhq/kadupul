@@ -13,7 +13,7 @@ $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
 if (isset($argv[3])) {
     require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
-    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-cookie-native.php', $argv[1], array('lib/auth.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
+    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-cookie-native.php', $argv[1], array('lib/auth.php', 'lib/graph_item_choices.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
 }
 $config = array();
 $db = new PDO('sqlite::memory:', options: array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
@@ -46,8 +46,9 @@ if (in_array($scenario['operation'] ?? '', array('domain', 'domain-cn'), true)) 
     if ($scenario['foreign_realm'] ?? false) {
         $db->exec('UPDATE user_auth SET realm=1004 WHERE id=43');
     }
-    $db->exec('CREATE TABLE user_domains(domain_id INTEGER,domain_name TEXT,user_id INTEGER)');
-    $db->prepare('INSERT INTO user_domains VALUES(3,?,?)')->execute(array('fixture.example', ($scenario['missing_template'] ?? false) ? 55 : 0));
+    $db->exec('CREATE TABLE user_domains(domain_id INTEGER,domain_name TEXT,user_id INTEGER,enabled TEXT DEFAULT "on",defdomain INTEGER DEFAULT 0)');
+    $db->prepare('INSERT INTO user_domains(domain_id,domain_name,user_id) VALUES(3,?,?)')->execute(array('fixture.example', ($scenario['missing_template'] ?? false) ? 55 : 0));
+    $scenario['config']['auth_method'] = 4;
     $db->exec('CREATE TABLE user_domains_ldap(domain_id INTEGER,server TEXT,group_require TEXT)');
     $db->exec("INSERT INTO user_domains_ldap VALUES(3,'fixture.example','')");
 }
@@ -77,6 +78,10 @@ function get_nfilter_request_var($name)
 {
     return $name === 'realm' ? 1003 : ($GLOBALS['scenario']['password'] ?? 'test-password');
 }
+function get_filter_request_var($name)
+{
+    return filter_var(get_nfilter_request_var($name), FILTER_VALIDATE_INT);
+}
 $events = array();
 $issued = null;
 $identity_queries = array();
@@ -94,6 +99,14 @@ function db_fetch_cell_prepared($sql, $params = array())
     }
     $row = db_fetch_row_prepared($sql, $params);
     return $row ? reset($row) : false;
+}
+function db_fetch_assoc($sql)
+{
+    return $GLOBALS['db']->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+}
+function db_fetch_cell($sql)
+{
+    return db_fetch_cell_prepared($sql);
 }
 function db_execute_prepared($sql, $params = array())
 {

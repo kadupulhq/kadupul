@@ -7,7 +7,7 @@
 
 include('./include/auth.php');
 
-cacti_require_post_actions(array('actions'));
+cacti_require_post_actions(array('actions', 'item_moveup', 'item_movedown', 'item_remove', 'ajax_dnd'));
 include_once('./lib/snmp.php');
 
 $automation_snmp_actions = array(
@@ -577,13 +577,13 @@ function automation_snmp_edit()
 
                 if (read_config_option('drag_and_drop') == '') {
                     if ($i < $total_items && $total_items > 1) {
-                        $form_data .= '<a class="pic fa fa-caret-down moveArrow" href="' . html_escape('automation_snmp.php?action=item_movedown&item_id=' . $item['id'] . '&id=' . $item['snmp_id']) . '" title="' . __esc('Move Down') . '"></a>';
+                        $form_data .= '<a class="pic fa fa-caret-down moveArrow cactiPostAction" href="#" data-url="' . html_escape('automation_snmp.php?action=item_movedown&item_id=' . $item['id'] . '&id=' . $item['snmp_id']) . '" title="' . __esc('Move Down') . '"></a>';
                     } else {
                         $form_data .= '<span class="moveArrowNone"></span>';
                     }
 
                     if ($i > 1 && $i <= $total_items) {
-                        $form_data .= '<a class="pic fa fa-caret-up moveArrow" href="' . html_escape('automation_snmp.php?action=item_moveup&item_id=' . $item['id'] . '&id=' . $item['snmp_id']) . '" title="' . __esc('Move Up') . '"></a>';
+                        $form_data .= '<a class="pic fa fa-caret-up moveArrow cactiPostAction" href="#" data-url="' . html_escape('automation_snmp.php?action=item_moveup&item_id=' . $item['id'] . '&id=' . $item['snmp_id']) . '" title="' . __esc('Move Up') . '"></a>';
                     } else {
                         $form_data .= '<span class="moveArrowNone"></span>';
                     }
@@ -619,7 +619,7 @@ function automation_snmp_edit()
 		<?php if (read_config_option('drag_and_drop') == 'on') { ?>
         $('#snmp_item').tableDnD({
             onDrop: function(table, row) {
-                loadPageNoHeader('automation_snmp.php?action=ajax_dnd&id=<?php isset_request_var('id') ? print get_request_var('id') : print 0;?>&'+$.tableDnD.serialize());
+                loadPageUsingPostChecked(<?php print json_encode('automation_snmp.php?action=ajax_dnd&id=' . (isset_request_var('id') ? get_request_var('id') : 0), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR);?>, $.tableDnD.serialize() + '&__csrf_magic=' + encodeURIComponent(csrfMagicToken));
             }
         });
 		<?php } ?>

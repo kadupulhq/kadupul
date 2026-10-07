@@ -260,9 +260,21 @@ function user_group_remove($id)
     throw $retry_error ?? new RuntimeException('Group membership changed repeatedly during removal');
 }
 
-function user_group_copy($id, $prefix = 'New Group')
+function user_group_copy($id, $prefix = 'New Group', ?string &$validation_error = null)
 {
     static $count = 1;
+    $name = $prefix . ' ' . $count;
+    $validation_error = null;
+    if (strlen($name) > 20) {
+        $validation_error = __('The copied Group Name must not exceed 20 characters, including the numeric suffix.');
+        return false;
+    }
+
+    // The copy skips form_save(), so its name gets the same character rule here.
+    if (!preg_match('/^[A-Za-z0-9._\\\\@ -]+$/', $name)) {
+        return false;
+    }
+
     $unit = null;
     try {
         $unit = auth_membership_begin(array('user_auth_group', 'user_auth_group_perms', 'user_auth_group_realm'));
@@ -278,7 +290,7 @@ function user_group_copy($id, $prefix = 'New Group')
         }
         $perms = auth_membership_rows($db, 'SELECT item_id, type FROM user_auth_group_perms WHERE group_id = ? ORDER BY item_id, type' . $lock, array($id));
         $realms = auth_membership_rows($db, 'SELECT realm_id FROM user_auth_group_realm WHERE group_id = ? ORDER BY realm_id' . $lock, array($id));
-        $values = array_merge(array($prefix . ' ' . $count), array_values($source[0]));
+        $values = array_merge(array($name), array_values($source[0]));
         $columns = array_merge(array('name'), $fields);
         auth_membership_execute($db, 'INSERT INTO user_auth_group (' . implode(', ', $columns) . ') VALUES (' . implode(',', array_fill(0, count($values), '?')) . ')', $values);
         $group_id = $db->lastInsertId();
@@ -380,13 +392,21 @@ function form_actions()
                 }
             } elseif (get_nfilter_request_var('drp_action') == '2') { /* copy */
                 $copy_failed = false;
+                $copy_error = null;
                 for ($i = 0;($i < cacti_count($selected_items));$i++) {
-                    if (!user_group_copy($selected_items[$i], get_nfilter_request_var('group_prefix'))) {
+                    if (!user_group_copy($selected_items[$i], get_nfilter_request_var('group_prefix'), $validation_error)) {
                         $copy_failed = true;
+                        $copy_error = $validation_error ?? $copy_error;
                     }
                 }
                 if ($copy_failed) {
-                    raise_message(2);
+                    if ($copy_error !== null) {
+                        raise_message('group_prefix', $copy_error, MESSAGE_LEVEL_ERROR);
+                    } elseif (!preg_match('/^[A-Za-z0-9._\\\\@ -]+$/', get_nfilter_request_var('group_prefix') . ' 1')) {
+                        raise_message('group_prefix', __('The Group Prefix may only contain letters, numbers, spaces and the characters . _ \\ @ -'), MESSAGE_LEVEL_ERROR);
+                    } else {
+                        raise_message(2);
+                    }
                 }
             } elseif (get_nfilter_request_var('drp_action') == '3') { /* enable */
                 for ($i = 0;($i < cacti_count($selected_items));$i++) {
@@ -970,7 +990,8 @@ function user_group_graph_perms_edit($tab, $header_label)
 			$(document).tooltip({
 				items: '[data-tooltip]',
 				content: function() {
-					return $(this).attr('data-tooltip');
+					// The reason is plain text; the attribute read has already decoded it.
+					return $('<div>').text($(this).attr('data-tooltip')).html();
 				}
 			});
 		});

@@ -213,11 +213,13 @@ if (str_starts_with($operation, 'expand-')) {
         $db->exec('ALTER TABLE user_auth_group ADD ' . $field . ' INTEGER DEFAULT 2');
     }
     $db->exec("ALTER TABLE user_auth_group ADD name TEXT DEFAULT ''");
-    $db->exec('CREATE TABLE user_auth(id INTEGER PRIMARY KEY, policy_graphs INTEGER, policy_hosts INTEGER, policy_graph_templates INTEGER, policy_trees INTEGER)');
+    // Canonical user_auth.reset_perms is unsigned NOT NULL DEFAULT 0;
+    // the real permission-cache guard reads it before graph expansion.
+    $db->exec('CREATE TABLE user_auth(id INTEGER PRIMARY KEY, policy_graphs INTEGER, policy_hosts INTEGER, policy_graph_templates INTEGER, policy_trees INTEGER, reset_perms INTEGER NOT NULL DEFAULT 0 CHECK(reset_perms >= 0))');
     $db->exec('CREATE TABLE user_auth_perms(user_id INTEGER,item_id INTEGER,type INTEGER)');
     $db->exec('CREATE TABLE user_auth_group_perms(group_id INTEGER,item_id INTEGER,type INTEGER)');
     $db->exec('CREATE TABLE host_template(id INTEGER PRIMARY KEY,name TEXT)');
-    $db->exec('INSERT INTO user_auth VALUES(42,2,2,2,2)');
+    $db->exec('INSERT INTO user_auth(id,policy_graphs,policy_hosts,policy_graph_templates,policy_trees) VALUES(42,2,2,2,2)');
     $db->exec('INSERT INTO user_auth_perms VALUES(42,200,1),(42,201,1),(42,210,1)');
     $db->exec("ALTER TABLE host ADD deleted TEXT DEFAULT ''");
     $db->exec("ALTER TABLE host ADD disabled TEXT DEFAULT ''");

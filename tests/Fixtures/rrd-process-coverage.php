@@ -29,6 +29,14 @@ if (!is_string($coveragePackageVersion)) {
     throw new RuntimeException('Unable to determine the active code-coverage version');
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('DATA_SOURCE_CONTROLLER_TEST_COVERAGE')) {
+    foreach (array('lib/auth.php', 'lib/html_utility.php', 'data_sources.php', 'graphs.php') as $file) $coverageFilter->includeFile($coverageRoot . '/' . $file);
+}
+
+if (defined('DEVICE_GRAPH_CALLER_TEST_COVERAGE')) {
+    foreach (array('lib/auth.php', 'lib/html_utility.php', 'graphs_new.php', 'host.php', 'graphs.php', 'lib/api_graph.php', 'lib/api_device.php', 'src/Inventory/Infrastructure/Legacy/LegacyDeviceSiteWriter.php') as $file) $coverageFilter->includeFile($coverageRoot . '/' . $file);
+}
+
 if (defined('POLLER_RESULT_HELPERS_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/path_helpers.php');
@@ -88,8 +96,32 @@ if (defined('INPUT_STRING_VALIDATOR_TEST_COVERAGE')) {
 if (defined('CLOG_LINKS_NATIVE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/clog_webapi.php');
 }
+if (defined('TREE_CONFIRMATION_TEST_COVERAGE')) {
+    foreach (array('tree.php', 'lib/auth.php', 'lib/html_utility.php') as $coverageFile) {
+        $coverageFilter->includeFile($coverageRoot . '/' . $coverageFile);
+    }
+}
 if (defined('AUTH_POLICY_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/graph_item_choices.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
+}
+if (defined('GRAPH_DEVICE_CHANGE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/api_graph.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
+}
+if (defined('MANAGEMENT_LIST_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/graphs.php');
+    $coverageFilter->includeFile($coverageRoot . '/data_sources.php');
+}
+if (defined('GRAPH_CACHE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/graph_image.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+}
+if (defined('GRAPH_DATA_REMOVAL_TEST_COVERAGE')) {
+    foreach (array('lib/graph_data_removal.php', 'lib/api_graph.php', 'lib/api_data_source.php',
+        'src/Platform/Infrastructure/Legacy/LegacyReferenceWriteTransaction.php') as $coverageFile) {
+        $coverageFilter->includeFile($coverageRoot . '/' . $coverageFile);
+    }
 }
 if (defined('HTML_REPORT_RENDER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html.php');
@@ -106,8 +138,14 @@ if (defined('UTILITY_VIEW_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/clog_webapi.php');
     $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/UtilityRows.php');
 }
+if (defined('UTILITY_CACHE_POLICY_NATIVE_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_validate.php');
+}
 if (defined('DATA_DEBUG_NATIVE_TEST_COVERAGE')) {
+    if (defined('DEBUG_POLICY_TEST_COVERAGE')) $coverageFilter->includeFile($coverageRoot . '/lib/html_validate.php');
     $coverageFilter->includeFile($coverageRoot . '/data_debug.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
     $coverageFilter->includeFile($coverageRoot . '/rrdcleaner.php');
 }
 if (defined('MANAGER_VIEW_NATIVE_TEST_COVERAGE')) {
@@ -208,6 +246,7 @@ if (defined('AGGREGATE_QUERY_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/api_aggregate.php');
 }
 if (defined('SPIKE_CSRF_TEST_COVERAGE')) {
+    if (defined('SPIKE_CONTROLLER_VALIDATION_TEST_COVERAGE')) $coverageFilter->includeFile($coverageRoot . '/lib/html_validate.php');
     $coverageFilter->includeFile($coverageRoot . '/spikekill.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
 }
@@ -254,6 +293,10 @@ if (defined('DATA_SOURCE_LIMIT_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/data_templates.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
+if (defined('DOMAINS_LOGIN_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
+    $coverageFilter->includeFile($coverageRoot . '/auth_login.php');
+}
 if (defined('REALTIME_AUTH_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/graph_realtime.php');
 }
@@ -261,6 +304,9 @@ if (defined('BASIC_AUTH_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/include/auth.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
     $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
+}
+if (defined('CLIENT_ADDR_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
 if (defined('PAGE_FLAG_TEST_COVERAGE_SOURCE')) {
     $coverageFilter->includeFile(PAGE_FLAG_TEST_COVERAGE_SOURCE);
@@ -401,7 +447,10 @@ if (defined('MAINTENANCE_PURGE_TEST_COVERAGE') || defined('HTML_RENDERER_NATIVE_
         $nativeSources = array_merge($nativeSources, array('tests/Unit/UtilityViewNativeCoverageTest.php', 'include/global_constants.php', 'lib/html_form.php', 'lib/variables.php', 'src/Platform/Infrastructure/Legacy/HostDataSubstitution.php', 'lib/utility.php'));
         $nativeProducer = 'tests/Fixtures/utility-view-native.php';
         if (defined('DATA_DEBUG_NATIVE_TEST_COVERAGE')) {
-            $nativeSources = array_merge($nativeSources, array('tests/Unit/DataDebugNativeCoverageTest.php', 'tests/Fixtures/data-debug-records.php', 'include/global_session.php'));
+            $nativeSources = array_merge($nativeSources, array('tests/Unit/DataDebugNativeCoverageTest.php', 'tests/Fixtures/data-debug-records.php', 'include/global_session.php', 'tests/Fixtures/debug-purge-policy.php', 'lib/auth.php', 'include/csrf.php', 'tests/Helpers/PhpSource.php', 'lib/html_validate.php', 'cacti.sql', 'tests/Fixtures/debug-denial-native-router.php'));
+        }
+        if (defined('UTILITY_CACHE_POLICY_NATIVE_TEST_COVERAGE')) {
+            $nativeSources = array_merge($nativeSources, array('tests/Fixtures/debug-purge-policy.php', 'tests/Fixtures/data-debug-records.php', 'lib/auth.php', 'include/csrf.php', 'tests/Helpers/PhpSource.php', 'lib/html_validate.php', 'cacti.sql'));
         }
         if (defined('MANAGER_VIEW_NATIVE_TEST_COVERAGE')) {
             $nativeSources = array_merge($nativeSources, array('tests/Unit/ManagerNativeCoverageTest.php', 'include/global_session.php'));

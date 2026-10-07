@@ -926,7 +926,7 @@ function reports_generate_html($reports_id, $output = REPORTS_OUTPUT_STDOUT, &$t
                 /* start a new section */
                 $column = 0;
             } elseif ($item['item_type'] == REPORTS_ITEM_HOST) {
-                if (is_tree_allowed($item['host_id'], $report['user_id'])) {
+                if (is_device_allowed($item['host_id'], $report['user_id'])) {
                     $outstr .= reports_expand_device($report, $item, $item['host_id'], $output, $format_ok, $theme);
                 }
             } elseif ($item['item_type'] == REPORTS_ITEM_TREE) {

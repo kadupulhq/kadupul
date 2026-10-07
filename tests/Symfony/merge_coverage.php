@@ -488,7 +488,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             'installed graph late generation refusal rolls back all nine participants',
             'installed graph editor renders persisted graph device and data source identities without mutation',
             'installed graph autocomplete returns exact persisted owned data source identity without mutation',
-            'installed deleted graph editor reports missing resource without mutation',
+            'installed deleted graph editor refuses stale identity without mutation',
             'installed color synchronization reports genuine empty usage',
             'installed color synchronization regenerates actual template and standalone cohorts',
             'installed color second cohort refusal preserves failed graph and reports earlier committed cohort',

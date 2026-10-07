@@ -114,7 +114,7 @@ test('realtime realm guard uses the real guest bootstrap and persisted permissio
     file_put_contents($dir . '/lib/rrd.php', '<?php');
     file_put_contents($dir . '/cache/user_bootstrap_lgi_7.png', 'REALTIME_AUTHORIZED_IMAGE');
     $coverage = $this->getTestResultObject()->getCodeCoverage();
-    $sources = ['include/auth.php', 'lib/auth.php', 'graph_realtime.php', 'user_admin.php', 'lib/functions.php',
+    $sources = ['include/csrf.php', 'include/vendor/csrf/csrf-conf.php', 'include/vendor/csrf/csrf-magic.php', 'include/auth.php', 'lib/auth.php', 'graph_realtime.php', 'user_admin.php', 'lib/functions.php',
         'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php',
         'include/global_constants.php', 'tests/Helpers/PhpSource.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Fixtures/rrd-process-coverage.php'];
     $prelude = '';
@@ -149,7 +149,7 @@ test('realtime realm guard uses the real guest bootstrap and persisted permissio
         $result = json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
         expect($result['user'])->toBe(42);
         expect($result['status'])->toBe($allowed ? 200 : 403);
-        expect($result['body'])->toBe($allowed && $mode === 'realtime_view' ? base64_encode('REALTIME_AUTHORIZED_IMAGE') : '');
+        expect($result['body'])->toBe($allowed && $mode === 'realtime_view' ? base64_encode('REALTIME_AUTHORIZED_IMAGE') : (!$allowed && $mode === 'realtime_default' ? 'Permission Denied' : ''));
         expect($result['events'])->toBe($allowed && $mode === 'realtime_init' ? ['POLLER', 'RENDER'] : []);
         if ($coverage !== null) {
             $reports = glob($dir . '/*.coverage');

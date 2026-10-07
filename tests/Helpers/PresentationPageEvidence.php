@@ -44,7 +44,7 @@ final class PresentationPageEvidence
             'lib/export.php',
             'lib/graph_item_editor.php',
             'lib/graph_template_input.php',
-            'lib/graphs.php',
+            'lib/graphs.php', 'lib/graph_data_removal.php',
             'lib/html_form_template.php',
             'lib/html_graph.php',
             'lib/html_tree.php',

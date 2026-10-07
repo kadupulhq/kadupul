@@ -25,7 +25,7 @@ $_SESSION = array('sess_user_id' => 1, 'sess_user_config_array' => array('custom
 $_REQUEST = $_GET = $_POST = array_merge(array('action' => 'zoom', 'local_graph_id' => 4, 'rra_id' => 'all'), $scenario['request'] ?? array());
 $_CACTI_REQUEST = array();
 $_SERVER['SCRIPT_NAME'] = '/graph.php';
-$config = array('base_path' => $directory, 'url_path' => '/cacti/', 'poller_id' => 1, 'is_web' => false, 'config_options_array' => array('log_validation' => '', 'title_size' => 10));
+$config = array('base_path' => $directory, 'url_path' => '/cacti/', 'poller_id' => 1, 'is_web' => false, 'config_options_array' => array('log_validation' => '', 'title_size' => 10, 'realtime_enabled' => $scenario['realtime_enabled'] ?? ''));
 $no_session_write = array('graph.php');
 $db = new PDO('sqlite::memory:', null, null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 $db->exec("CREATE TABLE graph_templates_graph(local_graph_id INTEGER,width INTEGER,height INTEGER,title_cache TEXT,graph_template_id INTEGER,title TEXT,t_title TEXT);
@@ -67,7 +67,7 @@ function is_graph_allowed($id)
 }
 function is_realm_allowed($realm)
 {
-    return false;
+    return in_array($realm, $GLOBALS['scenario']['realms'] ?? array(), true);
 }
 function aggregate_build_children_url(...$arguments)
 {
