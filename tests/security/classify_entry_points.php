@@ -2102,15 +2102,51 @@ function authenticated_access_adapter(string $root): string
     return ABOUT_ACCESS_ADAPTER;
 }
 
-/** Prove a direct feature check or the first check of a final delegated use case. */
-function palette_feature_call(string $root, array $target, int $depth = 0): bool
+// Route prefix => realm-5 feature contract, its only adapter and the reviewed
+// bytes of the adapter and its SQL helper. A changed file needs a fresh review.
+const REVIEWED_FEATURE_ACCESS = [
+    '/graphing/colors' => [
+        'label' => 'palette',
+        'contract' => 'Kadupul\\Graphing\\Application\\Port\\PaletteColorAccess',
+        'adapter' => 'Kadupul\\Graphing\\Infrastructure\\Legacy\\LegacyPaletteColorAccess',
+        'sources' => [
+            'src/Graphing/Infrastructure/Legacy/LegacyPaletteColorAccess.php' => '20cdc2c2051fe11429a9adcdbbf75fcb6e5e20161ad8fe73758ef73424526801',
+            'src/Graphing/Infrastructure/Legacy/PaletteSql.php' => '87a4a7c445777c474ef28235fe5c84b718c531c57a8e73d14c550456e72c2693',
+        ],
+    ],
+    '/graphing/gprint-presets' => [
+        'label' => 'GPRINT',
+        'contract' => 'Kadupul\\Graphing\\Application\\Port\\GprintPresetAccess',
+        'adapter' => 'Kadupul\\Graphing\\Infrastructure\\Legacy\\LegacyGprintPresetAccess',
+        'sources' => [
+            'src/Graphing/Infrastructure/Legacy/LegacyGprintPresetAccess.php' => 'f2ca42fd6ad55dad1553b298aa2ac04018c4e9e0a0ab3f57c9100c752ad3206f',
+            'src/Graphing/Infrastructure/Legacy/GprintPresetSql.php' => 'df4f5a7ee047782c1a1e85893599f69bd3463d9f10c23046b8c8f61c8438f31f',
+        ],
+    ],
+];
+
+/** @return array{label: string, contract: string, adapter: string, sources: array<string, string>}|null */
+function reviewed_feature_access(string $path): ?array
 {
-    if ($target === ['Kadupul\\Graphing\\Application\\Port\\PaletteColorAccess', 'authorize']) {
+    foreach (REVIEWED_FEATURE_ACCESS as $prefix => $feature) {
+        if ($path === $prefix || str_starts_with($path, $prefix . '/')) {
+            return $feature;
+        }
+    }
+    return null;
+}
+
+/** Prove a direct feature check or the first check of a final delegated use case. */
+function feature_access_call(string $root, array $target, array $feature, int $depth = 0): bool
+{
+    if ($target === [$feature['contract'], 'authorize']) {
         // Exact reviewed current-account and realm-5 authorization contract.
-        $adapter = $root . '/src/Graphing/Infrastructure/Legacy/LegacyPaletteColorAccess.php';
-        $sql = $root . '/src/Graphing/Infrastructure/Legacy/PaletteSql.php';
-        return is_file($adapter) && hash_file('sha256', $adapter) === '20cdc2c2051fe11429a9adcdbbf75fcb6e5e20161ad8fe73758ef73424526801'
-            && is_file($sql) && hash_file('sha256', $sql) === '87a4a7c445777c474ef28235fe5c84b718c531c57a8e73d14c550456e72c2693';
+        foreach ($feature['sources'] as $relative => $hash) {
+            if (!is_file($root . '/' . $relative) || hash_file('sha256', $root . '/' . $relative) !== $hash) {
+                return false;
+            }
+        }
+        return true;
     }
     if ($depth >= CALL_DEPTH) {
         return false;
@@ -2121,13 +2157,13 @@ function palette_feature_call(string $root, array $target, int $depth = 0): bool
         return false;
     }
     $found = first_service_call($root, $callee->stmts ?? [], receiver_types($root, $target[0], $callee), null);
-    return $found !== null && palette_feature_call($root, $found[0], $depth + 1);
+    return $found !== null && feature_access_call($root, $found[0], $feature, $depth + 1);
 }
 
-function palette_feature_guard(string $root, string $class, Stmt\ClassMethod $method, array $files): bool
+function feature_access_guard(string $root, string $class, Stmt\ClassMethod $method, array $files, array $feature): bool
 {
-    $contract = 'Kadupul\\Graphing\\Application\\Port\\PaletteColorAccess';
-    $adapter = 'Kadupul\\Graphing\\Infrastructure\\Legacy\\LegacyPaletteColorAccess';
+    $contract = $feature['contract'];
+    $adapter = $feature['adapter'];
     foreach ($files as $path) {
         foreach (walk(parse_file($root, $path, true) ?? []) as $node) {
             if ($node instanceof Stmt\Class_ && $node->namespacedName?->toString() !== $adapter) {
@@ -2163,7 +2199,7 @@ function palette_feature_guard(string $root, string $class, Stmt\ClassMethod $me
                     }
                 }
             }
-            return $found !== null && palette_feature_call($root, $found[0]);
+            return $found !== null && feature_access_call($root, $found[0], $feature);
         }
     }
     return false;
@@ -2394,9 +2430,10 @@ function symfony_routes(string $root, array $files): array
                                 // this realm for create/edit; pin their actual bodies.
                                 $reviewed .= '; reviewed DataInputAccess at ' . digest($adapter->stmts) . ' and action ' . digest($method->stmts) . ' and controller ' . digest($class->stmts) . ' and workflow ' . digest($workflow->stmts) . ': feature realm 2';
                             }
-                            if ($route['path'] === '/graphing/colors' || str_starts_with($route['path'], '/graphing/colors/')) {
-                                if (!palette_feature_guard($root, $name, $method, $sources)) {
-                                    $rows[] = ['app.php' . $route['path'], 'unknown', $detail . '; no reviewed first-effect palette realm-5 check'];
+                            $feature = reviewed_feature_access($route['path']);
+                            if ($feature !== null) {
+                                if (!feature_access_guard($root, $name, $method, $sources, $feature)) {
+                                    $rows[] = ['app.php' . $route['path'], 'unknown', $detail . '; no reviewed first-effect ' . $feature['label'] . ' realm-5 check'];
                                     continue;
                                 }
                                 $grant .= ' + realm 5';

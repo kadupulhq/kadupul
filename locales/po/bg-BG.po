@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-06 17:32-0700\n"
+"POT-Creation-Date: 2026-10-07 15:18-0700\n"
 "PO-Revision-Date: 2024-04-20 18:23-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -47,15 +47,14 @@ msgstr "Тази програма се разпространява с наде�
 #: color_templates.php:109 data_queries.php:16 data_queries.php:863
 #: data_queries.php:972 data_queries.php:1252 data_source_profiles.php:16
 #: data_source_profiles.php:934 data_sources.php:23 data_sources.php:1249
-#: data_templates.php:19 data_templates.php:791 gprint_presets.php:12
-#: graph_templates.php:22 graph_templates.php:517 graphs.php:32
-#: host_templates.php:20 host_templates.php:485 host_templates.php:542
-#: include/global_arrays.php:1655 include/global_settings.php:316
-#: lib/api_automation.php:1323 lib/api_automation.php:1386
-#: lib/api_automation.php:1457 lib/html.php:1505 lib/html_form.php:1397
-#: lib/html_reports.php:1937 managers.php:13 pollers.php:18 tree.php:1688
-#: tree.php:1841 tree.php:1901 tree.php:1922 user_admin.php:17
-#: user_domains.php:15 user_group_admin.php:19
+#: data_templates.php:19 data_templates.php:791 graph_templates.php:22
+#: graph_templates.php:517 graphs.php:32 host_templates.php:20
+#: host_templates.php:485 host_templates.php:542 include/global_arrays.php:1655
+#: include/global_settings.php:316 lib/api_automation.php:1323
+#: lib/api_automation.php:1386 lib/api_automation.php:1457 lib/html.php:1505
+#: lib/html_form.php:1397 lib/html_reports.php:1937 managers.php:13
+#: pollers.php:18 tree.php:1688 tree.php:1841 tree.php:1901 tree.php:1922
+#: user_admin.php:17 user_domains.php:15 user_group_admin.php:19
 msgid "Delete"
 msgstr "Изтрий"
 
@@ -123,18 +122,18 @@ msgstr "Кликнете върху „Напред“, за да изтриет
 #: data_sources.php:616 data_sources.php:631 data_sources.php:640
 #: data_sources.php:649 data_sources.php:658 data_sources.php:664
 #: data_templates.php:486 data_templates.php:498 data_templates.php:514
-#: gprint_presets.php:137 graph_templates.php:373 graph_templates.php:385
-#: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
-#: graph_view.php:1043 graphs.php:886 graphs.php:902 graphs.php:913
-#: graphs.php:924 graphs.php:939 graphs.php:956 graphs.php:965 graphs.php:1167
-#: graphs.php:1210 graphs.php:1232 graphs.php:1263 graphs.php:1275
-#: graphs.php:1859 host_templates.php:222 host_templates.php:236
-#: host_templates.php:247 host_templates.php:302 host_templates.php:375
-#: lib/clog_webapi.php:225 lib/html.php:2819 lib/html_form.php:1396
-#: lib/html_form.php:1413 lib/html_form.php:1424 lib/html_reports.php:632
-#: managers.php:1066 managers.php:1127 plugins.php:712 pollers.php:549
-#: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:762
-#: tree.php:771 tree.php:780 tree.php:789 user_admin.php:252 user_admin.php:292
+#: graph_templates.php:373 graph_templates.php:385 graph_templates.php:407
+#: graph_templates.php:416 graph_templates.php:425 graph_view.php:1043
+#: graphs.php:886 graphs.php:902 graphs.php:913 graphs.php:924 graphs.php:939
+#: graphs.php:956 graphs.php:965 graphs.php:1167 graphs.php:1210
+#: graphs.php:1232 graphs.php:1263 graphs.php:1275 graphs.php:1859
+#: host_templates.php:222 host_templates.php:236 host_templates.php:247
+#: host_templates.php:302 host_templates.php:375 lib/clog_webapi.php:225
+#: lib/html.php:2819 lib/html_form.php:1396 lib/html_form.php:1413
+#: lib/html_form.php:1424 lib/html_reports.php:632 managers.php:1066
+#: managers.php:1127 plugins.php:712 pollers.php:549 pollers.php:558
+#: pollers.php:567 pollers.php:576 pollers.php:585 tree.php:762 tree.php:771
+#: tree.php:780 tree.php:789 user_admin.php:252 user_admin.php:292
 #: user_admin.php:303 user_admin.php:314 user_admin.php:337
 #: user_domains.php:220 user_domains.php:229 user_domains.php:238
 #: user_domains.php:247 user_group_admin.php:460 user_group_admin.php:479
@@ -156,11 +155,11 @@ msgstr "Отказ"
 #: data_sources.php:616 data_sources.php:631 data_sources.php:640
 #: data_sources.php:649 data_sources.php:658 data_sources.php:664
 #: data_templates.php:486 data_templates.php:498 data_templates.php:514
-#: gprint_presets.php:137 graph_templates.php:373 graph_templates.php:385
-#: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
-#: graphs.php:886 graphs.php:902 graphs.php:913 graphs.php:924 graphs.php:939
-#: graphs.php:956 graphs.php:965 graphs.php:1167 graphs.php:1210
-#: graphs.php:1232 graphs.php:1263 graphs.php:1275 host_templates.php:222
+#: graph_templates.php:373 graph_templates.php:385 graph_templates.php:407
+#: graph_templates.php:416 graph_templates.php:425 graphs.php:886
+#: graphs.php:902 graphs.php:913 graphs.php:924 graphs.php:939 graphs.php:956
+#: graphs.php:965 graphs.php:1167 graphs.php:1210 graphs.php:1232
+#: graphs.php:1263 graphs.php:1275 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
 #: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2818
 #: lib/html_reports.php:574 managers.php:1066 managers.php:1127 pollers.php:549
@@ -409,15 +408,15 @@ msgstr "Съответстващи графики"
 #: automation_templates.php:393 automation_tree_rules.php:845 cdef.php:727
 #: color_templates.php:560 data_debug.php:1214 data_queries.php:1371
 #: data_source_profiles.php:1186 data_sources.php:1814 data_templates.php:1101
-#: gprint_presets.php:255 graph_templates.php:727 graph_view.php:667
-#: graphs.php:2114 graphs_new.php:526 host_templates.php:795
-#: lib/api_automation.php:42 lib/api_automation.php:43
-#: lib/api_automation.php:480 lib/api_automation.php:708
-#: lib/clog_webapi.php:608 lib/html.php:268 lib/html_filter.php:46
-#: lib/html_graph.php:191 lib/html_reports.php:2025 lib/html_tree.php:119
-#: lib/html_tree.php:967 managers.php:144 managers.php:504 managers.php:771
-#: plugins.php:491 pollers.php:869 rrdcheck.php:210 rrdcleaner.php:523
-#: settings.php:598 settings.php:615 settings.php:674
+#: graph_templates.php:727 graph_view.php:667 graphs.php:2114
+#: graphs_new.php:526 host_templates.php:795 lib/api_automation.php:42
+#: lib/api_automation.php:43 lib/api_automation.php:480
+#: lib/api_automation.php:708 lib/clog_webapi.php:608 lib/html.php:268
+#: lib/html_filter.php:46 lib/html_graph.php:191 lib/html_reports.php:2025
+#: lib/html_tree.php:119 lib/html_tree.php:967 managers.php:144
+#: managers.php:504 managers.php:771 plugins.php:491 pollers.php:869
+#: rrdcheck.php:210 rrdcleaner.php:523 settings.php:598 settings.php:615
+#: settings.php:674
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:56
 #: tree.php:938 tree.php:973 tree.php:1008 tree.php:2217 user_admin.php:2074
 #: user_domains.php:643 user_group_admin.php:1993 utilities.php:1094
@@ -446,13 +445,12 @@ msgstr "Графики"
 #: automation_tree_rules.php:865 cdef.php:737 color_templates.php:576
 #: data_debug.php:1224 data_queries.php:1381 data_source_profiles.php:1196
 #: data_source_profiles.php:1318 data_sources.php:1824 data_templates.php:1130
-#: gprint_presets.php:265 graph_templates.php:737 graph_view.php:743
-#: graphs.php:2135 graphs_new.php:536 host_templates.php:805
-#: include/global_form.php:242 lib/api_automation.php:182
-#: lib/api_automation.php:490 lib/api_automation.php:718
-#: lib/api_automation.php:1082 lib/html_reports.php:2045 managers.php:154
-#: managers.php:514 plugins.php:515 pollers.php:879 rrdcheck.php:233
-#: rrdcleaner.php:549
+#: graph_templates.php:737 graph_view.php:743 graphs.php:2135
+#: graphs_new.php:536 host_templates.php:805 include/global_form.php:242
+#: lib/api_automation.php:182 lib/api_automation.php:490
+#: lib/api_automation.php:718 lib/api_automation.php:1082
+#: lib/html_reports.php:2045 managers.php:154 managers.php:514 plugins.php:515
+#: pollers.php:879 rrdcheck.php:233 rrdcleaner.php:549
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:81
 #: tree.php:2227 user_admin.php:2135 user_domains.php:18 user_domains.php:653
 #: user_domains.php:739 user_group_admin.php:2003 utilities.php:1076
@@ -470,16 +468,16 @@ msgstr "Част от агрегата"
 #: automation_snmp.php:728 automation_templates.php:418
 #: automation_tree_rules.php:877 cdef.php:758 color_templates.php:598
 #: data_debug.php:1139 data_queries.php:1396 data_source_profiles.php:1217
-#: data_sources.php:1764 data_templates.php:1151 gprint_presets.php:283
-#: graph_templates.php:758 graph_view.php:675 graphs.php:2105
-#: graphs_new.php:515 host_templates.php:786 lib/api_automation.php:187
-#: lib/api_automation.php:471 lib/api_automation.php:723
-#: lib/api_automation.php:1087 lib/clog_webapi.php:533 lib/html.php:1787
-#: lib/html_filter.php:63 lib/html_graph.php:178 lib/html_reports.php:2056
-#: lib/html_tree.php:1009 managers.php:169 managers.php:529 managers.php:794
-#: plugins.php:530 pollers.php:914 tree.php:2242 user_admin.php:2150
-#: user_admin.php:2347 user_admin.php:2353 user_admin.php:2359
-#: user_admin.php:2365 user_admin.php:2371 user_admin.php:2377
+#: data_sources.php:1764 data_templates.php:1151 graph_templates.php:758
+#: graph_view.php:675 graphs.php:2105 graphs_new.php:515 host_templates.php:786
+#: lib/api_automation.php:187 lib/api_automation.php:471
+#: lib/api_automation.php:723 lib/api_automation.php:1087
+#: lib/clog_webapi.php:533 lib/html.php:1787 lib/html_filter.php:63
+#: lib/html_graph.php:178 lib/html_reports.php:2056 lib/html_tree.php:1009
+#: managers.php:169 managers.php:529 managers.php:794 plugins.php:530
+#: pollers.php:914 tree.php:2242 user_admin.php:2150 user_admin.php:2347
+#: user_admin.php:2353 user_admin.php:2359 user_admin.php:2365
+#: user_admin.php:2371 user_admin.php:2377
 msgid "Go"
 msgstr "Търси"
 
@@ -487,8 +485,8 @@ msgstr "Търси"
 #: automation_devices.php:509 automation_snmp.php:728
 #: automation_templates.php:418 cdef.php:758 data_debug.php:1139
 #: data_queries.php:1396 data_source_profiles.php:1217 data_sources.php:1764
-#: data_templates.php:1151 gprint_presets.php:283 graph_templates.php:758
-#: graph_view.php:675 graphs.php:2105 graphs_new.php:515 host_templates.php:786
+#: data_templates.php:1151 graph_templates.php:758 graph_view.php:675
+#: graphs.php:2105 graphs_new.php:515 host_templates.php:786
 #: lib/html_graph.php:178 managers.php:169 managers.php:529 managers.php:794
 #: plugins.php:530 pollers.php:914
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
@@ -504,25 +502,25 @@ msgstr "Задаване / опресняване на филтрите"
 #: automation_snmp.php:729 automation_templates.php:419
 #: automation_tree_rules.php:878 cdef.php:759 color_templates.php:599
 #: data_debug.php:1140 data_queries.php:1397 data_source_profiles.php:1218
-#: data_sources.php:1765 data_templates.php:1152 gprint_presets.php:284
-#: graph_templates.php:759 graph_view.php:676 graphs.php:2106
-#: graphs_new.php:516 host_templates.php:787 lib/api_automation.php:188
-#: lib/api_automation.php:472 lib/api_automation.php:724
-#: lib/api_automation.php:1088 lib/clog_webapi.php:534 lib/html_filter.php:68
-#: lib/html_graph.php:179 lib/html_graph.php:305 lib/html_reports.php:2057
-#: lib/html_tree.php:1010 lib/html_tree.php:1121 managers.php:170
-#: managers.php:530 managers.php:795 plugins.php:531 pollers.php:915
-#: tree.php:2243 user_admin.php:2151 user_admin.php:2347 user_admin.php:2353
-#: user_admin.php:2359 user_admin.php:2365 user_admin.php:2371
-#: user_admin.php:2377 user_domains.php:666
+#: data_sources.php:1765 data_templates.php:1152 graph_templates.php:759
+#: graph_view.php:676 graphs.php:2106 graphs_new.php:516 host_templates.php:787
+#: lib/api_automation.php:188 lib/api_automation.php:472
+#: lib/api_automation.php:724 lib/api_automation.php:1088
+#: lib/clog_webapi.php:534 lib/html_filter.php:68 lib/html_graph.php:179
+#: lib/html_graph.php:305 lib/html_reports.php:2057 lib/html_tree.php:1010
+#: lib/html_tree.php:1121 managers.php:170 managers.php:530 managers.php:795
+#: plugins.php:531 pollers.php:915 tree.php:2243 user_admin.php:2151
+#: user_admin.php:2347 user_admin.php:2353 user_admin.php:2359
+#: user_admin.php:2365 user_admin.php:2371 user_admin.php:2377
+#: user_domains.php:666
 msgid "Clear"
 msgstr "Изчисти"
 
 #: aggregate_graphs.php:1304 aggregate_graphs.php:1597 automation_snmp.php:729
 #: automation_templates.php:419 cdef.php:759 data_debug.php:1140
 #: data_queries.php:1397 data_source_profiles.php:1218 data_sources.php:1765
-#: data_templates.php:1152 gprint_presets.php:284 graph_templates.php:759
-#: graph_view.php:676 graphs.php:2106 graphs_new.php:516 host_templates.php:787
+#: data_templates.php:1152 graph_templates.php:759 graph_view.php:676
+#: graphs.php:2106 graphs_new.php:516 host_templates.php:787
 #: lib/html_graph.php:179 lib/html_tree.php:1010 managers.php:170
 #: managers.php:530 managers.php:795 plugins.php:531 pollers.php:915
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:96
@@ -562,11 +560,10 @@ msgstr "Размер"
 #: automation_tree_rules.php:723 cdef.php:885 color_templates.php:704
 #: data_queries.php:1534 data_source_profiles.php:1398
 #: data_source_profiles.php:1399 data_sources.php:2085 data_sources.php:2086
-#: data_templates.php:1321 gprint_presets.php:430 graph_templates.php:921
-#: host_templates.php:997 include/global_settings.php:960
-#: include/global_settings.php:1932 lib/api_automation.php:1438 tree.php:2399
-#: tree.php:2400 user_admin.php:2269 user_domains.php:758
-#: user_group_admin.php:2086
+#: data_templates.php:1321 graph_templates.php:921 host_templates.php:997
+#: include/global_settings.php:960 include/global_settings.php:1932
+#: lib/api_automation.php:1438 tree.php:2399 tree.php:2400 user_admin.php:2269
+#: user_domains.php:758 user_group_admin.php:2086
 msgid "No"
 msgstr "Не"
 
@@ -576,7 +573,7 @@ msgstr "Не"
 #: data_queries.php:1534 data_source_profiles.php:1397
 #: data_source_profiles.php:1398 data_source_profiles.php:1399
 #: data_sources.php:2085 data_sources.php:2086 data_templates.php:1321
-#: gprint_presets.php:430 graph_templates.php:921 host_templates.php:997
+#: graph_templates.php:921 host_templates.php:997
 #: include/global_settings.php:959 include/global_settings.php:1931
 #: lib/api_automation.php:1438 lib/installer.php:2134 lib/installer.php:2162
 #: lib/installer.php:3994 tree.php:2399 tree.php:2400 user_admin.php:2267
@@ -722,7 +719,7 @@ msgid "Templates"
 msgstr "Шаблони"
 
 #: aggregate_templates.php:638 cdef.php:753 color_templates.php:593
-#: gprint_presets.php:278 graph_templates.php:753
+#: graph_templates.php:753
 msgid "Has Graphs"
 msgstr "Има графики"
 
@@ -736,13 +733,12 @@ msgstr "Агрегираните шаблони, които се използв�
 
 #: aggregate_templates.php:707 cdef.php:868 color_templates.php:675
 #: data_queries.php:1488 data_source_profiles.php:1323 data_sources.php:2016
-#: data_templates.php:1266 gprint_presets.php:390 graph_templates.php:870
-#: host_templates.php:955
+#: data_templates.php:1266 graph_templates.php:870 host_templates.php:955
 msgid "Deletable"
 msgstr "Deletable"
 
 #: aggregate_templates.php:708 cdef.php:869 data_queries.php:1211
-#: data_queries.php:1493 gprint_presets.php:395 graph_templates.php:875
+#: data_queries.php:1493 graph_templates.php:875
 msgid "Graphs Using"
 msgstr "Използване на графики"
 
@@ -2655,7 +2651,6 @@ msgid "The number of Graphs using this CDEF."
 msgstr "Броят графики, използващи този CDEF."
 
 #: cdef.php:870 data_queries.php:1499 data_source_profiles.php:1351
-#: gprint_presets.php:401
 msgid "Templates Using"
 msgstr "Използване на шаблони"
 
@@ -4370,68 +4365,6 @@ msgstr "Източници на данни, базирани на неактив
 #: data_templates.php:1330
 msgid "No Data Templates Found"
 msgstr "Няма намерени шаблони за данни"
-
-#: gprint_presets.php:132
-msgid "Click 'Continue' to delete the following GPRINT Preset(s)."
-msgstr "Кликнете върху „Напред“, за да изтриете предварително зададените настройки на GPRINT."
-
-#: gprint_presets.php:137
-msgid "Delete GPRINT Preset(s)"
-msgstr "Изтриване на предварителните настройки на GPRINT"
-
-#: gprint_presets.php:172
-#, fuzzy
-msgid "GPRINT Preset not found."
-msgstr "Предварително зададени GPRINT"
-
-#: gprint_presets.php:179
-#, php-format
-msgid "GPRINT Presets [edit: %s]"
-msgstr "Предварителни настройки на GPRINT [редактиране: %s]"
-
-#: gprint_presets.php:181
-msgid "GPRINT Presets [new]"
-msgstr "Предварителни настройки на GPRINT [ново]"
-
-#: gprint_presets.php:246 include/global_arrays.php:2119
-msgid "GPRINT Presets"
-msgstr "Предварителни настройки на GPRINT"
-
-#: gprint_presets.php:261 gprint_presets.php:408 include/global_arrays.php:1023
-msgid "GPRINTs"
-msgstr "GPRINTs"
-
-#: gprint_presets.php:378
-msgid "GPRINT Preset Name"
-msgstr "Предварително зададено име на GPRINT"
-
-#: gprint_presets.php:381
-msgid "The name of this GPRINT Preset."
-msgstr "Името на тази предварителна настройка GPRINT."
-
-#: gprint_presets.php:384
-msgid "Format"
-msgstr "Формат"
-
-#: gprint_presets.php:387
-msgid "The GPRINT format string."
-msgstr "Поредицата за формат на GPRINT."
-
-#: gprint_presets.php:392
-msgid "GPRINTs that are in use cannot be Deleted.  In use is defined as being referenced by either a Graph or a Graph Template."
-msgstr "Използваните GPRINT не могат да бъдат изтрити. В употреба се дефинира като рефериран от графичен или графичен шаблон."
-
-#: gprint_presets.php:398
-msgid "The number of Graphs using this GPRINT."
-msgstr "Броят графики, използващи този GPRINT."
-
-#: gprint_presets.php:404
-msgid "The number of Graphs Templates using this GPRINT."
-msgstr "Броят на шаблоните за графики, използващи този GPRINT."
-
-#: gprint_presets.php:437
-msgid "No GPRINT Presets"
-msgstr "Няма предварителни настройки на GPRINT"
 
 #: graph.php:52
 msgid "GRAPH DOES NOT EXIST"
@@ -6383,6 +6316,10 @@ msgstr "VDEFs"
 msgid "Colors"
 msgstr "Цветове"
 
+#: include/global_arrays.php:1023
+msgid "GPRINTs"
+msgstr "GPRINTs"
+
 #: include/global_arrays.php:1025 include/global_arrays.php:1070
 msgid "Import/Export"
 msgstr "Импорт/Експорт"
@@ -7476,6 +7413,10 @@ msgstr "Създаване на нови графики"
 #: include/global_arrays.php:2113
 msgid "Create Graphs from Data Query"
 msgstr "Създаване на графики от автоматизирано събиране на данни"
+
+#: include/global_arrays.php:2119
+msgid "GPRINT Presets"
+msgstr "Предварителни настройки на GPRINT"
 
 #: include/global_arrays.php:2131 include/global_arrays.php:2149
 #: include/global_arrays.php:2269 include/global_arrays.php:2359
