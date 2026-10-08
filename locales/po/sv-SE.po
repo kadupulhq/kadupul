@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-07 15:18-0700\n"
+"POT-Creation-Date: 2026-10-07 18:08-0700\n"
 "PO-Revision-Date: 2026-03-16 13:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -415,8 +415,7 @@ msgstr "Matchande grafer"
 #: lib/html_filter.php:46 lib/html_graph.php:191 lib/html_reports.php:2025
 #: lib/html_tree.php:119 lib/html_tree.php:967 managers.php:144
 #: managers.php:504 managers.php:771 plugins.php:491 pollers.php:869
-#: rrdcheck.php:210 rrdcleaner.php:523 settings.php:598 settings.php:615
-#: settings.php:674
+#: rrdcleaner.php:523 settings.php:598 settings.php:615 settings.php:674
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:56
 #: tree.php:938 tree.php:973 tree.php:1008 tree.php:2217 user_admin.php:2074
 #: user_domains.php:643 user_group_admin.php:1993 utilities.php:1094
@@ -450,7 +449,7 @@ msgstr "Diagram"
 #: lib/api_automation.php:182 lib/api_automation.php:490
 #: lib/api_automation.php:718 lib/api_automation.php:1082
 #: lib/html_reports.php:2045 managers.php:154 managers.php:514 plugins.php:515
-#: pollers.php:879 rrdcheck.php:233 rrdcleaner.php:549
+#: pollers.php:879 rrdcleaner.php:549
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:81
 #: tree.php:2227 user_admin.php:2135 user_domains.php:18 user_domains.php:653
 #: user_domains.php:739 user_group_admin.php:2003 utilities.php:1076
@@ -2976,7 +2975,7 @@ msgstr ""
 #: data_debug.php:501 data_debug.php:959 data_queries.php:769
 #: data_sources.php:1166 data_templates.php:719 graphs_items.php:387
 #: include/global_arrays.php:1006 include/global_form.php:960
-#: lib/api_aggregate.php:2338 lib/html.php:1363 rrdcheck.php:142
+#: lib/api_aggregate.php:2338 lib/html.php:1363
 msgid "Data Source"
 msgstr "Datakälla"
 
@@ -4789,8 +4788,7 @@ msgstr "Nionde percentilen"
 msgid "Summation"
 msgstr "Sammanfattning"
 
-#: graph_xport.php:126 graph_xport.php:220 rrdcheck.php:155 utilities.php:265
-#: utilities.php:1163
+#: graph_xport.php:126 graph_xport.php:220 utilities.php:265 utilities.php:1163
 msgid "Date"
 msgstr "Datum"
 
@@ -17611,85 +17609,6 @@ msgstr "Förra gången var denna datainsamlare helt synkroniserad med den huvuds
 msgid "No Data Collectors Found"
 msgstr "Inga datainsamlare hittades"
 
-#: rrdcheck.php:17
-msgid "RRD check"
-msgstr "RRD-kontroll"
-
-#: rrdcheck.php:18
-msgid "RRD check is disabled, please enable in Configuration -> Settings -> Data"
-msgstr "RRD-kontrollen är inaktiverad, aktivera den i Konfiguration -> Inställningar -> Data"
-
-#: rrdcheck.php:87 utilities.php:2444
-msgid "RRDfile Checker"
-msgstr "RRDfile-kontroll"
-
-#: rrdcheck.php:128
-msgid "RRDcheck Problems"
-msgstr "RRDcheck Problem"
-
-#: rrdcheck.php:138
-msgid "Host Description"
-msgstr "Värd Beskrivning"
-
-#: rrdcheck.php:146
-msgid "Local Data ID"
-msgstr "ID för lokala data"
-
-#: rrdcheck.php:151
-msgid "Message"
-msgstr "Meddelande"
-
-#: rrdcheck.php:168 rrdcheck.php:172 rrdcleaner.php:394 rrdcleaner.php:395
-msgid "Deleted"
-msgstr "Raderad"
-
-#: rrdcheck.php:184
-msgid "No RRDcheck Problems Found"
-msgstr "Inga RRDcheck-problem hittades"
-
-#: rrdcheck.php:216
-msgid "Age"
-msgstr "Ålder"
-
-#: rrdcheck.php:220 rrdcheck.php:221 rrdcheck.php:222
-#, php-format
-msgid "%d hours"
-msgstr "%d timmar"
-
-#: rrdcheck.php:223
-#, php-format
-msgid "%d day"
-msgstr "%d dygn"
-
-#: rrdcheck.php:224 rrdcheck.php:225
-#, php-format
-msgid "%d days"
-msgstr "%d dagar"
-
-#: rrdcheck.php:229
-msgid "Messages"
-msgstr "Meddelanden"
-
-#: rrdcheck.php:245 rrdcleaner.php:564 user_domains.php:665
-#: user_group_admin.php:2018 user_group_admin.php:2148
-#: user_group_admin.php:2154 user_group_admin.php:2160
-#: user_group_admin.php:2166 user_group_admin.php:2172
-msgctxt "filter: use"
-msgid "Go"
-msgstr "Start"
-
-#: rrdcheck.php:246 rrdcleaner.php:565 user_group_admin.php:2019
-#: user_group_admin.php:2148 user_group_admin.php:2154
-#: user_group_admin.php:2160 user_group_admin.php:2166
-msgctxt "filter: reset"
-msgid "Clear"
-msgstr "Töm"
-
-#: rrdcheck.php:247
-msgctxt "filter: purge"
-msgid "Purge"
-msgstr "Rensa"
-
 #: rrdcleaner.php:14 tree.php:20
 msgctxt "dropdown action"
 msgid "Delete"
@@ -17732,6 +17651,10 @@ msgstr "Senast ändrad"
 msgid "Size [KB]"
 msgstr "Storlek [KB]"
 
+#: rrdcleaner.php:394 rrdcleaner.php:395
+msgid "Deleted"
+msgstr "Raderad"
+
 #: rrdcleaner.php:403
 msgid "No unused RRD Files"
 msgstr "Inga oanvända RRD-filer"
@@ -17751,6 +17674,21 @@ msgstr "Tid sedan uppdatering"
 #: rrdcleaner.php:545
 msgid "RRDfiles"
 msgstr "RRDfiles"
+
+#: rrdcleaner.php:564 user_domains.php:665 user_group_admin.php:2018
+#: user_group_admin.php:2148 user_group_admin.php:2154
+#: user_group_admin.php:2160 user_group_admin.php:2166
+#: user_group_admin.php:2172
+msgctxt "filter: use"
+msgid "Go"
+msgstr "Start"
+
+#: rrdcleaner.php:565 user_group_admin.php:2019 user_group_admin.php:2148
+#: user_group_admin.php:2154 user_group_admin.php:2160
+#: user_group_admin.php:2166
+msgctxt "filter: reset"
+msgid "Clear"
+msgstr "Töm"
 
 #: rrdcleaner.php:566
 msgid "Rescan"
@@ -19707,6 +19645,10 @@ msgstr "RRDfile Cleaner"
 #: utilities.php:2442
 msgid "When you delete Data Sources from Kadupul, the corresponding RRDfiles are not removed automatically.  Use this utility to facilitate the removal of these old files."
 msgstr "När du tar bort datakällor från Kadupul tas inte motsvarande RRD-filer automatiskt bort. Använd det här verktyget för att underlätta avlägsnandet av dessa gamla filer."
+
+#: utilities.php:2444
+msgid "RRDfile Checker"
+msgstr "RRDfile-kontroll"
 
 #: utilities.php:2447
 msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need enable rrdcheck in Configuration->Settings->Data"

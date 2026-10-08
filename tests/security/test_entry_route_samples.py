@@ -25,11 +25,13 @@ class RouteSamples(unittest.TestCase):
                       'app.php/graphing/gprint-presets/new',
                       'app.php/graphing/color-templates/new',
                       'app.php/graphing/color-template-items/legacy',
-                      'data_input.php', 'links.php', 'host_templates.php'):
+                      'app.php/utilities/rrd-check/purge',
+                      'data_input.php', 'links.php', 'host_templates.php', 'rrdcheck.php'):
             with self.subTest(entry=entry):
                 self.assertTrue(has_feature_realm(entry))
         for entry in ('app.php/about', 'about.php', 'app.php/graphing/colors-other',
-                      'app.php/inventory/devices/{id}', 'app.php/links-extra'):
+                      'app.php/inventory/devices/{id}', 'app.php/links-extra',
+                      'app.php/utilities/rrd-checker'):
             with self.subTest(entry=entry):
                 self.assertFalse(has_feature_realm(entry))
 

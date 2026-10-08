@@ -448,6 +448,8 @@ jobs:
         run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Symfony/link_review_http.py
       - name: Verify GPRINT presets through HTTP and MariaDB
         run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Symfony/gprint_preset_http.py
+      - name: Verify RRD check through HTTP and MariaDB
+        run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Symfony/rrdcheck_http.py
       - name: Verify the actual CLI upgrades an installed LTS database version
         run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Symfony/schema_upgrade_cli_http.py
       - name: Refuse forbidden access at every entry point

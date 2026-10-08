@@ -164,11 +164,12 @@ def has_feature_realm(entry):
     """These migrated pages require a feature grant in addition to Console."""
     legacy = {'gprint_presets.php', 'vdef.php', 'cdef.php', 'color_templates.php',
               'color_templates_items.php', 'aggregate_templates.php', 'host_templates.php',
-              'color.php', 'links.php', 'data_input.php'}
+              'color.php', 'links.php', 'data_input.php', 'rrdcheck.php'}
     prefixes = ('graphing/gprint-presets', 'graph-definitions/vdefs',
                 'graph-definitions/cdefs', 'graphing/color-templates',
                 'graphing/color-template-items', 'aggregate-templates',
-                'inventory/device-templates', 'graphing/colors', 'links', 'data-inputs')
+                'inventory/device-templates', 'graphing/colors', 'links', 'data-inputs',
+                'utilities/rrd-check')
     return entry in legacy or any(entry == 'app.php/' + prefix or
                                  entry.startswith('app.php/' + prefix + '/')
                                  for prefix in prefixes)
