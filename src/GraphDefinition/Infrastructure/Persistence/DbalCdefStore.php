@@ -32,6 +32,9 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 #[AsAlias(CdefStore::class)]
 final readonly class DbalCdefStore implements CdefStore
 {
+    // Far longer than any usable RPN expression; keeps the editor page bounded.
+    private const int PREVIEW_LIMIT = 16384;
+    private const string PREVIEW_TRUNCATED = ' [preview truncated]';
     private const string STALE = 'The CDEF changed since you opened this form. Reload before saving.';
     // Legacy counts distinct graph/template uses, not graph items.
     private const string USAGE = 'SELECT c.id, c.name,
@@ -88,6 +91,7 @@ final readonly class DbalCdefStore implements CdefStore
         }
         $rows = $this->items($id, '');
         $version = $this->rrdtoolVersion();
+        $expanded = [];
         $items = [];
         foreach ($rows as $row) {
             $type = (int) $row['type'];
@@ -99,7 +103,7 @@ final readonly class DbalCdefStore implements CdefStore
             };
             $items[] = new CdefItem((int) $row['id'], (int) $row['sequence'], $type, $value, $label);
         }
-        return new Cdef($id, (string) $parent['name'], CdefRevision::of($parent, $rows), $items, $this->preview($id, [], $version));
+        return new Cdef($id, (string) $parent['name'], CdefRevision::of($parent, $rows), $items, $this->preview($id, $expanded, [], $version));
     }
 
     public function findMany(array $ids): array
@@ -310,21 +314,34 @@ final readonly class DbalCdefStore implements CdefStore
         ), $rows);
     }
 
-    /** @param array<int, true> $visited */
-    private function preview(int $id, array $visited, string $version): string
+    /**
+     * Expand nested CDEFs once each. A chain of definitions that each include
+     * the next one twice would otherwise double at every level.
+     *
+     * @param array<int, string> $expanded finished expansions by CDEF ID
+     * @param array<int, true> $active CDEFs on the current path
+     */
+    private function preview(int $id, array &$expanded, array $active, string $version): string
     {
-        if (isset($visited[$id])) {
+        if (isset($expanded[$id])) {
+            return $expanded[$id];
+        }
+        if (isset($active[$id])) {
             return '[recursive CDEF]';
         }
-        $visited[$id] = true;
-        $parts = [];
-        foreach ($this->database->fetchAllAssociative('SELECT type, value FROM cdef_items WHERE cdef_id = ? ORDER BY sequence, id', [$id]) as $item) {
+        $active[$id] = true;
+        $text = '';
+        foreach ($this->database->fetchAllAssociative('SELECT type, value FROM cdef_items WHERE cdef_id = ? ORDER BY sequence, id', [$id]) as $index => $item) {
             $type = (int) $item['type'];
-            $parts[] = $type === CdefFunctions::CDEF
-                ? $this->preview((int) $item['value'], $visited, $version)
-                : CdefFunctions::rpn($type, (string) $item['value'], $version);
+            $text .= ($index === 0 ? '' : ',') . ($type === CdefFunctions::CDEF
+                ? $this->preview((int) $item['value'], $expanded, $active, $version)
+                : CdefFunctions::rpn($type, (string) $item['value'], $version));
+            if (strlen($text) > self::PREVIEW_LIMIT) {
+                $text = substr($text, 0, self::PREVIEW_LIMIT) . self::PREVIEW_TRUNCATED;
+                break;
+            }
         }
-        return implode(',', $parts);
+        return $expanded[$id] = $text;
     }
 
     /**
@@ -366,7 +383,9 @@ final readonly class DbalCdefStore implements CdefStore
     private function reaches(int $from, int $target): bool
     {
         $edges = [];
-        foreach ($this->database->fetchAllAssociative('SELECT cdef_id, value FROM cdef_items WHERE type = 5') as $row) {
+        // A locking read sees committed edges, not the transaction's snapshot.
+        $lock = $this->database->getDatabasePlatform() instanceof AbstractMySQLPlatform ? ' LOCK IN SHARE MODE' : '';
+        foreach ($this->database->fetchAllAssociative('SELECT cdef_id, value FROM cdef_items WHERE type = 5' . $lock) as $row) {
             $edges[(int) $row['cdef_id']][] = (int) $row['value'];
         }
         $pending = [$from];

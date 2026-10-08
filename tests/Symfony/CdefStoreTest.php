@@ -15,6 +15,7 @@ use Kadupul\GraphDefinition\Application\Port\CdefAccess;
 use Kadupul\GraphDefinition\Application\Query\CdefAccessDenied;
 use Kadupul\GraphDefinition\Domain\CdefFilters;
 use Kadupul\GraphDefinition\Domain\CdefFunctions;
+use Kadupul\GraphDefinition\Infrastructure\Persistence\DbalCdefPreferences;
 use Kadupul\GraphDefinition\Infrastructure\Persistence\DbalCdefStore;
 use Kadupul\IdentityAccess\Contract\AuditEvent;
 use Kadupul\IdentityAccess\Contract\AuditTrail;
@@ -270,6 +271,62 @@ final class CdefStoreTest extends TestCase
         self::assertSame(['Alpha_1'], array_map(static fn($cdef): string => $cdef->name, $paged->cdefs));
         self::assertTrue($paged->hasPrevious() && $paged->hasNext());
         self::assertNull($this->store->find((int) $this->database->fetchOne("SELECT id FROM cdef WHERE name = 'System'")));
+    }
+
+    public function testPreviewExpandsEachDefinitionOnceAndStaysBounded(): void
+    {
+        $leaf = $this->store->save(7, null, 'Level 0', null);
+        $this->database->insert('cdef_items', ['cdef_id' => $leaf, 'sequence' => 1, 'type' => 6, 'value' => '1']);
+        $previous = $leaf;
+        for ($level = 1; $level <= 30; $level++) {
+            $current = $this->store->save(7, null, 'Level ' . $level, null);
+            // Each level includes the one below twice: 2^30 leaves if expanded per path.
+            $this->database->insert('cdef_items', ['cdef_id' => $current, 'sequence' => 1, 'type' => 5, 'value' => (string) $previous]);
+            $this->database->insert('cdef_items', ['cdef_id' => $current, 'sequence' => 2, 'type' => 5, 'value' => (string) $previous]);
+            $previous = $current;
+        }
+        $started = hrtime(true);
+        $memory = memory_get_usage();
+        $first = $this->store->find($previous)->preview;
+        self::assertLessThan(2_000_000_000, hrtime(true) - $started);
+        self::assertLessThan(8 * 1024 * 1024, memory_get_peak_usage() - $memory + strlen($first));
+        self::assertStringEndsWith(' [preview truncated]', $first);
+        self::assertSame(16384 + strlen(' [preview truncated]'), strlen($first));
+        self::assertStringStartsWith('1,1,1,1', $first);
+        self::assertSame($first, $this->store->find($previous)->preview);
+        self::assertSame(str_repeat('1,', 31) . '1', $this->store->find($leaf + 5)->preview);
+    }
+
+    public function testCycleCheckReadsCommittedReferencesWithASharedLockOnMysql(): void
+    {
+        $database = $this->createMock(Connection::class);
+        $database->method('getDatabasePlatform')->willReturn(new \Doctrine\DBAL\Platforms\MariaDBPlatform());
+        $issued = [];
+        $database->method('fetchAllAssociative')->willReturnCallback(function (string $sql) use (&$issued): array {
+            $issued[] = $sql;
+            return [['cdef_id' => 2, 'value' => '1']];
+        });
+        $store = new DbalCdefStore($database, $this->createMock(CdefAccess::class), $this->createMock(AuditTrail::class), $this->createMock(LegacyConfiguration::class), $this->createMock(CdefReferenceReadiness::class));
+        $reaches = new \ReflectionMethod($store, 'reaches');
+        self::assertTrue($reaches->invoke($store, 2, 1));
+        self::assertSame(['SELECT cdef_id, value FROM cdef_items WHERE type = 5 LOCK IN SHARE MODE'], $issued);
+    }
+
+    public function testStoredFiltersOutOfRangeAreIgnoredInsteadOfBreakingTheList(): void
+    {
+        $this->database->executeStatement('CREATE TABLE settings_user (user_id INT, name TEXT, value TEXT, PRIMARY KEY (user_id, name))');
+        $access = $this->createMock(CdefAccess::class);
+        $access->method('authorize')->willReturn(new \Kadupul\IdentityAccess\Contract\Actor(7, 'operator'));
+        $preferences = new DbalCdefPreferences($access, $this->database, $this->createMock(LegacyConfiguration::class));
+        foreach ([
+            ['rows' => '0'], ['rows' => '9000'], ['page' => '0'], ['sort_column' => 'c.id'], ['has_graphs' => 'yes'], ['filter' => str_repeat('x', 201)],
+        ] as $stored) {
+            $this->database->executeStatement('REPLACE INTO settings_user (user_id, name, value) VALUES (7, ?, ?)', ['cdef_filters', json_encode($stored)]);
+            self::assertNull($preferences->load(), json_encode($stored));
+        }
+        $valid = ['filter' => 'bits', 'rows' => '50', 'sort_column' => 'graphs', 'sort_direction' => 'DESC'];
+        $this->database->executeStatement('REPLACE INTO settings_user (user_id, name, value) VALUES (7, ?, ?)', ['cdef_filters', json_encode($valid)]);
+        self::assertSame($valid, $preferences->load());
     }
 
     private function item(int $cdefId, int $type, string $value): void

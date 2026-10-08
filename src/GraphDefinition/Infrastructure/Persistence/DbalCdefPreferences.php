@@ -41,7 +41,16 @@ final readonly class DbalCdefPreferences implements CdefPreferences
         } catch (\JsonException) {
             return null;
         }
-        return is_array($filters) && self::valid($filters) ? $filters : null;
+        if (!is_array($filters) || !self::valid($filters)) {
+            return null;
+        }
+        try {
+            // A stored value that is no longer in range must not lock the list.
+            CdefFilters::fromQuery($filters, 1);
+        } catch (\InvalidArgumentException) {
+            return null;
+        }
+        return $filters;
     }
 
     public function save(array $filters): void
