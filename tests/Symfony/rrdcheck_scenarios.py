@@ -1,6 +1,6 @@
 """RRD check list and purge through real Symfony forms and transactional MariaDB."""
 from html.parser import HTMLParser
-from urllib.parse import urlencode, urlsplit
+from urllib.parse import parse_qs, urlencode, urlsplit
 from urllib.request import Request
 from urllib.error import HTTPError
 import json
@@ -73,7 +73,8 @@ def verify_rrdcheck(harness, session, user_id, check):
         page_links = [link for link in parser.links if link.startswith('/')]
         check(page_links and all(urlsplit(link).path.startswith(base) for link in page_links),
               'RRD check page links stay on the Symfony routes: ' + repr(page_links))
-        check(any('sort_column=message' in link and 'filter=old+probe' in link for link in page_links), 'RRD check sort links keep the active filters')
+        queries = [parse_qs(urlsplit(link).query) for link in page_links]
+        check(any(q.get('sort_column') == ['message'] and q.get('filter') == ['old probe'] for q in queries), 'RRD check sort links keep the active filters')
         saved = json.loads(harness.sql(f"SELECT value FROM settings_user WHERE user_id={user_id} AND name='rrdcheck_filters'").strip())
         check(saved['filter'] == 'old probe' and saved['age'] == '86400', 'RRD check remembers explicit filters')
         status, body, _ = fetch(base)
