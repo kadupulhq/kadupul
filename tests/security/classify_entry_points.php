@@ -2135,6 +2135,15 @@ const REVIEWED_FEATURE_ACCESS = [
             'src/Platform/Infrastructure/Persistence/DbalRrdCheckAccess.php' => '6f0222557edd0c1b2f307aae6c309b7129e88c0bb0909a15999d27cdd3ebba89',
         ],
     ],
+    '/graph-definitions/cdefs' => [
+        'label' => 'CDEF',
+        'realm' => 14,
+        'contract' => 'Kadupul\\GraphDefinition\\Application\\Port\\CdefAccess',
+        'adapter' => 'Kadupul\\GraphDefinition\\Infrastructure\\Persistence\\DbalCdefAccess',
+        'sources' => [
+            'src/GraphDefinition/Infrastructure/Persistence/DbalCdefAccess.php' => 'e11ea939a76da0dcb0db1041d95907f5524d5bfb79d2bbf3ea415406ce934612',
+        ],
+    ],
 ];
 
 /** @return array{label: string, realm: int, contract: string, adapter: string, sources: array<string, string>}|null */

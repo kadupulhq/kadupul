@@ -151,6 +151,8 @@ def main():
         verify_vdefs(harness, session, user_id, check)
         from rrdcheck_scenarios import verify_rrdcheck
         verify_rrdcheck(harness, session, user_id, check)
+        from cdef_scenarios import verify_cdefs
+        verify_cdefs(harness, session, user_id, check)
         response = session.opener.open(harness.base + '/app.php/session')
         check('no-store' in response.headers.get('Cache-Control', ''), 'identity response is never cached')
         response.close()

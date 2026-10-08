@@ -1,0 +1,26 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% set heading = operation == 'delete' ? 'Delete CDEFs' : 'Duplicate CDEFs' %}
+{% block title %}{{ heading|trans({}, 'cdef') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    <h1>{{ heading|trans({}, 'cdef') }}</h1>
+    <p>{{ (operation == 'delete' ? 'Click Continue to delete the following CDEFs.' : 'Click Continue to duplicate the following CDEFs. You can optionally change the title format for the new CDEFs.')|trans({}, 'cdef') }}</p>
+    <ul>
+        {% for cdef in cdefs %}<li>{{ cdef.name }}</li>{% endfor %}
+    </ul>
+    {% if used %}<p role="alert">{{ 'CDEFs in use by a graph, template, aggregate or another CDEF cannot be deleted.'|trans({}, 'cdef') }}</p>{% endif %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {% if form.title_format is defined %}{{ form_row(form.title_format) }}{% endif %}
+        {{ form_widget(form.selection) }}
+        {{ form_widget(form.revisions) }}
+        {% if not used %}<button type="submit">{{ 'Continue'|trans({}, 'cdef') }}</button>{% endif %}
+        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route. #}
+        <a href="{{ path('graph_cdefs') }}">{{ 'Cancel'|trans({}, 'cdef') }}</a>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

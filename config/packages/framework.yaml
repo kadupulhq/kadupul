@@ -11,7 +11,7 @@ framework:
     session: false
     form: true
     csrf_protection:
-        stateless_token_ids: ['data_input_method', 'data_input_field', 'data_input_action', 'inventory_device_edit', 'inventory_device_template', 'inventory_device_collector', 'inventory_device_state', 'inventory_device_remove', 'inventory_site_edit', 'inventory_site_create', 'inventory_device_create', 'inventory_site_action', 'navigation_link', 'navigation_link_action', 'palette_color_edit', 'palette_color_create', 'palette_color_delete', 'palette_color_import', 'gprint_preset_edit', 'gprint_preset_create', 'gprint_preset_delete', 'graph_vdef_edit', 'graph_vdef_action', 'inventory_device_bulk_assignment', 'inventory_device_associations', 'inventory_device_maintenance', 'inventory_device_placement', 'platform_rrd_check_purge']
+        stateless_token_ids: ['data_input_method', 'data_input_field', 'data_input_action', 'inventory_device_edit', 'inventory_device_template', 'inventory_device_collector', 'inventory_device_state', 'inventory_device_remove', 'inventory_site_edit', 'inventory_site_create', 'inventory_device_create', 'inventory_site_action', 'navigation_link', 'navigation_link_action', 'palette_color_edit', 'palette_color_create', 'palette_color_delete', 'palette_color_import', 'gprint_preset_edit', 'gprint_preset_create', 'gprint_preset_delete', 'graph_vdef_edit', 'graph_vdef_action', 'inventory_device_bulk_assignment', 'inventory_device_associations', 'inventory_device_maintenance', 'inventory_device_placement', 'platform_rrd_check_purge', 'graph_cdef_create', 'graph_cdef_edit', 'graph_cdef_item', 'graph_cdef_action']
 
 when@test:
     framework:

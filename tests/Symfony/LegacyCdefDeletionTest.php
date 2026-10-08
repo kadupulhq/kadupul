@@ -104,6 +104,30 @@ final class LegacyCdefDeletionTest extends TestCase
         self::assertFalse($database->inTransaction());
     }
 
+    public function testAdmissionRunsInsideTheTransactionWithTheCanonicalSelectionAndCanRefuse(): void
+    {
+        $database = $this->database();
+        $seen = [];
+        (new LegacyCdefDeletion($database, 1))->delete(['2', 1], function (array $ids) use ($database, &$seen): void {
+            $seen = [$ids, $database->inTransaction()];
+        });
+        self::assertSame([[1, 2], true], $seen);
+        self::assertSame([3], array_column($this->snapshot($database)['cdef'], 'id'));
+
+        $database = $this->database();
+        $before = $this->snapshot($database);
+        try {
+            (new LegacyCdefDeletion($database, 1))->delete([1, 2], static function (): void {
+                throw new \InvalidArgumentException('refused by caller');
+            });
+            self::fail('A refused admission still deleted.');
+        } catch (\InvalidArgumentException $error) {
+            self::assertSame('refused by caller', $error->getMessage());
+        }
+        self::assertSame($before, $this->snapshot($database));
+        self::assertFalse($database->inTransaction());
+    }
+
     public function testIncomingOwnerTargetAndEveryCacheFamilyPreservesAllRows(): void
     {
         foreach (['cdef_items', 'graph_templates_item', 'aggregate_graph_templates_item', 'aggregate_graphs_graph_item'] as $table) {

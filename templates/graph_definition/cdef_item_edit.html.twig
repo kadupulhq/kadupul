@@ -1,0 +1,33 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'CDEF Items [edit: %name%]'|trans({'%name%': cdef.name}, 'cdef') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+    <p><a href="{{ path('graph_cdef_edit', {id: cdef.id}) }}">{{ 'Back to CDEF'|trans({}, 'cdef') }}</a></p>
+    <h1>{{ 'CDEF Items [edit: %name%]'|trans({'%name%': cdef.name}, 'cdef') }}</h1>
+    <section aria-labelledby="cdef-preview">
+        <h2 id="cdef-preview">{{ 'CDEF Preview'|trans({}, 'cdef') }}</h2>
+        <pre>cdef={{ cdef.preview }}</pre>
+    </section>
+    {# Changing the type reloads the page with that type's value choices. #}
+    <form method="get" action="{{ path('graph_cdef_item_edit', {cdefId: cdef.id, itemId: item ? item.id : 0}) }}" class="filterTable">
+        <label for="cdef-item-type">{{ 'CDEF Item Type'|trans({}, 'cdef') }}</label>
+        <select id="cdef-item-type" name="type">
+            {% for value, label in types %}
+                <option value="{{ value }}"{% if value == type %} selected{% endif %}>{{ label|trans({}, 'cdef') }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">{{ 'Choose type'|trans({}, 'cdef') }}</button>
+    </form>
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.value) }}
+        {{ form_widget(form.revision) }}
+        <button type="submit">{{ 'Save'|trans({}, 'cdef') }}</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

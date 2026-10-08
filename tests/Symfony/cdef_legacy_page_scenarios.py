@@ -7,12 +7,6 @@ from urllib.error import HTTPError
 from urllib.parse import urlencode
 
 REQUIRED_CHECKS = (
-    'installed CDEF duplication preserves persisted parent and children',
-    'installed CDEF referenced deletion refuses and preserves actual records',
-    'installed CDEF unused deletion removes actual parent and children',
-    'installed CDEF child copy refusal reports exact partial parent and preserves original definition',
-    'installed legacy write requires actual CSRF before mutation: /cdef.php',
-    'installed legacy write refuses the revoked actor realm before mutation: /cdef.php',
     'installed legacy write requires actual CSRF before mutation: /graphs.php',
     'installed legacy write refuses the revoked actor realm before mutation: /graphs.php',
     'installed aggregate template save persists rendered graph item cache',
@@ -36,7 +30,7 @@ REQUIRED_CHECKS = (
     'installed aggregate graph malformed request refuses before all nine participant writes',
     'installed aggregate graph cache refusal preserves cache and reports saved title',
     'installed aggregate graph regeneration refusal preserves generated items and reports saved settings',
-    'installed legacy CDEF aggregate and color page scenarios completed cleanup',
+    'installed legacy aggregate and color page scenarios completed cleanup',
 )
 
 
@@ -502,76 +496,17 @@ def verify_color_cohorts(harness, session, aggregate, color, created, check):
 
 def verify_cdef_legacy_pages(harness, session, check):
     """Use only this disposable installed stack; leave no surviving owned records."""
-    cdef = 15000901
-    dependent = 15000902
     color = 15000901
     aggregate = 15000901
-    copies = []
-    check(harness.sql(f'SELECT COUNT(*) FROM cdef WHERE id IN ({cdef},{dependent})').strip() == '0'
-          and harness.sql(f'SELECT COUNT(*) FROM aggregate_graph_templates WHERE id={aggregate}').strip() == '0'
+    check(harness.sql(f'SELECT COUNT(*) FROM aggregate_graph_templates WHERE id={aggregate}').strip() == '0'
           and harness.sql(f'SELECT COUNT(*) FROM color_templates WHERE color_template_id IN ({color},{color+1})').strip() == '0',
           'installed legacy page fixture identities are exclusively unused')
     try:
-        for page in ('/cdef.php', '/aggregate_templates.php', '/color_templates.php',
+        for page in ('/aggregate_templates.php', '/color_templates.php',
                      '/graphs.php', '/aggregate_graphs.php'):
             status, body, _ = request(session, page)
             check(status == 200 and 'login_username' not in body,
                   'installed legacy page authenticates real cookie: ' + page)
-        harness.sql(f"INSERT INTO cdef(id,hash,name) VALUES ({cdef},REPEAT('a',32),'Owned HTTP CDEF'),"
-                    f"({dependent},REPEAT('b',32),'Owned HTTP reference');"
-                    f"INSERT INTO cdef_items(hash,cdef_id,sequence,type,value) VALUES "
-                    f"(REPEAT('c',32),{cdef},1,6,'2'),(REPEAT('d',32),{dependent},1,5,'{cdef}');")
-        status, body, _ = request(session, f'/cdef.php?action=edit&id={cdef}')
-        check(status == 200 and 'Owned HTTP CDEF' in body and 'Item #1' in body,
-              'installed CDEF editor renders actual persisted child')
-        status, _, form = request(session, '/cdef.php', {
-            'action': 'actions', 'drp_action': '2', 'chk_' + str(cdef): 'on',
-            '__csrf_magic': session.token,
-        })
-        check(status == 200 and 'selected_items' in form,
-              'installed CDEF access control uses an actual duplication confirmation')
-        verify_write_access(harness, session, '/cdef.php', form, 14,
-                            lambda: graph_snapshot(harness), check)
-        status, _, _ = bulk(session, '/cdef.php', 2, cdef, check,
-                            {'title_format': '<cdef_title> HTTP copy'})
-        rows = harness.rows("SELECT JSON_OBJECT('id',id,'name',name) FROM cdef "
-                            "WHERE name='Owned HTTP CDEF HTTP copy'")
-        copies = [int(row['id']) for row in rows]
-        check(status == 200 and len(copies) == 1 and int(harness.sql(
-            f'SELECT COUNT(*) FROM cdef_items WHERE cdef_id={copies[0]}').strip()) == 1,
-            'installed CDEF duplication preserves persisted parent and children')
-        before = harness.sql(f'SELECT id,cdef_id,sequence,type,value FROM cdef_items '
-                             f'WHERE cdef_id IN ({cdef},{dependent}) ORDER BY id')
-        status, body, _ = bulk(session, '/cdef.php', 1, cdef, check)
-        check(status == 200 and 'CDEF deletion could not be confirmed' in body
-              and harness.sql(f'SELECT id,cdef_id,sequence,type,value FROM cdef_items '
-                              f'WHERE cdef_id IN ({cdef},{dependent}) ORDER BY id') == before
-              and int(harness.sql(f'SELECT COUNT(*) FROM cdef WHERE id={cdef}').strip()) == 1,
-              'installed CDEF referenced deletion refuses and preserves actual records')
-        status, _, _ = bulk(session, '/cdef.php', 1, copies[0], check)
-        check(status == 200 and int(harness.sql(
-            f'SELECT COUNT(*) FROM cdef WHERE id={copies[0]}').strip()) == 0
-            and int(harness.sql(f'SELECT COUNT(*) FROM cdef_items WHERE cdef_id={copies[0]}').strip()) == 0,
-            'installed CDEF unused deletion removes actual parent and children')
-        original_before = [harness.sql(f'SELECT * FROM cdef WHERE id={cdef}'),
-                           harness.sql(f'SELECT * FROM cdef_items WHERE cdef_id={cdef} ORDER BY id')]
-        form = confirmation(session, '/cdef.php', 2, cdef, check,
-                            {'title_format': '<cdef_title> failed HTTP copy'})
-        harness.sql("CREATE TRIGGER owned_http_cdef_copy_refusal BEFORE INSERT ON cdef_items "
-                    "FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Owned HTTP CDEF child refusal'")
-        try:
-            status, body, _ = request(session, '/cdef.php', form)
-            partial = harness.rows("SELECT JSON_OBJECT('id',id,'name',name) FROM cdef "
-                                   "WHERE name='Owned HTTP CDEF failed HTTP copy'")
-            copies.extend(int(row['id']) for row in partial)
-            check(status == 200 and 'CDEF duplication could not be confirmed. A partial copy may remain' in body
-                  and len(partial) == 1 and harness.sql(
-                      f"SELECT COUNT(*) FROM cdef_items WHERE cdef_id={partial[0]['id']}").strip() == '0'
-                  and [harness.sql(f'SELECT * FROM cdef WHERE id={cdef}'),
-                       harness.sql(f'SELECT * FROM cdef_items WHERE cdef_id={cdef} ORDER BY id')] == original_before,
-                  'installed CDEF child copy refusal reports exact partial parent and preserves original definition')
-        finally:
-            harness.sql('DROP TRIGGER owned_http_cdef_copy_refusal')
         graph_template = 4
         check(int(harness.sql('SELECT COUNT(*) FROM graph_templates_item WHERE local_graph_id=0 '
                               'AND graph_template_id=4').strip()) > 1,
@@ -638,14 +573,7 @@ def verify_cdef_legacy_pages(harness, session, check):
                     f'DELETE FROM aggregate_graph_templates_graph WHERE aggregate_template_id={aggregate};'
                     f'DELETE FROM aggregate_graph_templates WHERE id={aggregate};'
                     f'DELETE FROM color_template_items WHERE color_template_id IN ({color},{color+1});'
-                    f'DELETE FROM color_templates WHERE color_template_id IN ({color},{color+1});'
-                    f'DELETE FROM cdef_items WHERE cdef_id IN ({cdef},{dependent});'
-                    f'DELETE FROM cdef WHERE id IN ({dependent},{cdef});')
-        for identifier in copies:
-            harness.sql(f'DELETE FROM cdef_items WHERE cdef_id={identifier};'
-                        f'DELETE FROM cdef WHERE id={identifier};')
-    check(harness.sql(f'SELECT COUNT(*) FROM cdef WHERE id IN ({cdef},{dependent},'
-                      + ','.join(str(identifier) for identifier in copies) + ')').strip() == '0'
-          and harness.sql(f'SELECT COUNT(*) FROM aggregate_graph_templates WHERE id={aggregate}').strip() == '0'
+                    f'DELETE FROM color_templates WHERE color_template_id IN ({color},{color+1});')
+    check(harness.sql(f'SELECT COUNT(*) FROM aggregate_graph_templates WHERE id={aggregate}').strip() == '0'
           and harness.sql(f'SELECT COUNT(*) FROM color_templates WHERE color_template_id IN ({color},{color+1})').strip() == '0',
-          'installed legacy CDEF aggregate and color page scenarios completed cleanup')
+          'installed legacy aggregate and color page scenarios completed cleanup')
