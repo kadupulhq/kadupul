@@ -16,8 +16,14 @@ final class LegacyCdefDeletion
 {
     public function __construct(private readonly \PDO $database, private readonly mixed $collectorId, private readonly ?CdefReferenceReadiness $readiness = null) {}
 
-    /** @param list<int|string> $selection */
-    public function delete(array $selection): void
+    /**
+     * The optional admission check runs first inside the owned transaction, so
+     * a caller can recheck its own authorization under the same locks.
+     *
+     * @param list<int|string> $selection
+     * @param (\Closure(list<int>): void)|null $admit
+     */
+    public function delete(array $selection, ?\Closure $admit = null): void
     {
         if ($this->collectorId !== 1) {
             throw new \RuntimeException('CDEF deletion requires the explicitly configured primary collector.');
@@ -57,6 +63,9 @@ final class LegacyCdefDeletion
             $owned = $this->database->beginTransaction();
             if (!$owned || $this->database->errorCode() !== '00000') {
                 throw new \RuntimeException('The CDEF deletion transaction could not be started.');
+            }
+            if ($admit !== null) {
+                $admit($ids);
             }
             $statement = $this->query("SELECT id, `system` FROM cdef WHERE id IN ($placeholders) ORDER BY id$lock", $ids);
             $parents = $statement->fetchAll(\PDO::FETCH_ASSOC);

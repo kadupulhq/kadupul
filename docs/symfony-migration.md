@@ -1612,6 +1612,32 @@ authorization locks before removing rows. The old `rrdcheck.php` URL forwards
 GET navigation, sends `action=purge` to the confirmation form and answers 409
 to posted forms. The poller still writes the table through `lib/rrdcheck.php`.
 
+### CDEF administration
+
+The CDEF list, editor, item editor and the duplicate and delete confirmations
+use Symfony routes, Forms and Twig under `/graph-definitions/cdefs`. Every route
+requires console access and the Presets realm (14); writes recheck the
+account and both realms with locking reads inside their transaction. Each form
+carries a revision of the definition and its items, and a stale form is
+refused. `cdef.php` forwards GET navigation, maps the old edit, item and item
+removal links, and answers 409 to posted forms after authorizing them. A list
+visit without filters keeps the user's saved filters, and `clear=1` resets them.
+
+The item type is chosen with a separate GET selector that reloads the value
+choices; it is not part of the saved form, because function, operator and CDEF
+values share numbers. An item that references another CDEF locks every CDEF
+row before checking for a cycle, so two writers cannot close one between them.
+Items move one place at a time; drag-and-drop ordering is not available.
+Duplication copies all selected definitions in one transaction instead of
+leaving a partial copy on failure.
+
+Deletion uses `LegacyCdefDeletion` and the native reference readiness check
+from the CDEF reference contract (`docs/cdef-reference-integrity.md`). The store
+passes an admission callback that runs first inside the contract's transaction:
+it rechecks the actor, the revisions and every graph, template, aggregate and
+nested reference under lock. The contract's own checks and triggers remain the
+final guard. Writes, including deletion, need the primary collector.
+
 ### Template synchronization discovery boundary
 
 Bulk template synchronization first validates and commits the primary template

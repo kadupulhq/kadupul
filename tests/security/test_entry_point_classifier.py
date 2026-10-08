@@ -1366,6 +1366,9 @@ final class AuthenticatedOnly {
         'RRD check': ('/utilities/rrd-check', 15, 'Platform', 'RrdCheckAccess',
                       ['src/Platform/Infrastructure/Persistence/DbalRrdCheckAccess.php'],
                       [('UTILITIES_REALM = 15', 'UTILITIES_REALM = 16')]),
+        'CDEF': ('/graph-definitions/cdefs', 14, 'GraphDefinition', 'CdefAccess',
+                 ['src/GraphDefinition/Infrastructure/Persistence/DbalCdefAccess.php'],
+                 [('CDEF_REALM = 14', 'CDEF_REALM = 15')]),
     }
     for feature, (route, realm, module, contract, files, tampering) in feature_specs.items():
         for label, (body, admitted) in feature_cases.items():

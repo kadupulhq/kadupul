@@ -1,0 +1,54 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% block title %}{{ (cdef ? 'Edit CDEF' : 'Add CDEF')|trans({}, 'cdef') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route. #}
+    <p><a href="{{ path('graph_cdefs') }}">{{ 'Back to CDEFs'|trans({}, 'cdef') }}</a></p>
+    <h1>{{ cdef ? 'CDEF [edit: %name%]'|trans({'%name%': cdef.name}, 'cdef') : 'CDEF [new]'|trans({}, 'cdef') }}</h1>
+    {% if saved %}<output>{{ 'CDEF saved.'|trans({}, 'cdef') }}</output>{% endif %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.name) }}
+        {{ form_widget(form.revision) }}
+        <button type="submit">{{ 'Save'|trans({}, 'cdef') }}</button>
+    {{ form_end(form) }}
+    {% if cdef %}
+        <section aria-labelledby="cdef-preview">
+            <h2 id="cdef-preview">{{ 'CDEF Preview'|trans({}, 'cdef') }}</h2>
+            <pre>cdef={{ cdef.preview }}</pre>
+        </section>
+        <section aria-labelledby="cdef-items">
+            <h2 id="cdef-items">{{ 'CDEF Items'|trans({}, 'cdef') }}</h2>
+            {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+            <p><a href="{{ path('graph_cdef_item_edit', {cdefId: cdef.id, itemId: 0}) }}">{{ 'Add CDEF Item'|trans({}, 'cdef') }}</a></p>
+            <table class="cactiTable">
+                <thead><tr class="tableHeader"><th scope="col">{{ 'Item'|trans({}, 'cdef') }}</th><th scope="col">{{ 'Item Value'|trans({}, 'cdef') }}</th><th scope="col">{{ 'Actions'|trans({}, 'cdef') }}</th></tr></thead>
+                <tbody>
+                {% for item in cdef.items %}
+                    <tr>
+                        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+                        <td><a href="{{ path('graph_cdef_item_edit', {cdefId: cdef.id, itemId: item.id}) }}">{{ 'Item #%number%'|trans({'%number%': loop.index}, 'cdef') }}</a></td>
+                        <td><em>{{ (types[item.type] ?? 'Unknown')|trans({}, 'cdef') }}</em>: {{ item.type == 4 ? item.label|trans({}, 'cdef') : item.label }}</td>
+                        <td>
+                            {{ form_start(changes[item.id], {action: path('graph_cdef_item_move', {cdefId: cdef.id, itemId: item.id, direction: 'down'})}) }}
+                            {{ form_widget(changes[item.id]) }}
+                            {% if not loop.last %}<button type="submit">{{ 'Move Down'|trans({}, 'cdef') }}</button>{% endif %}
+                            {% if not loop.first %}<button type="submit" formaction="{{ path('graph_cdef_item_move', {cdefId: cdef.id, itemId: item.id, direction: 'up'}) }}">{{ 'Move Up'|trans({}, 'cdef') }}</button>{% endif %}
+                            {{ form_end(changes[item.id]) }}
+                            {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+                            <a href="{{ path('graph_cdef_item_delete', {cdefId: cdef.id, itemId: item.id}) }}">{{ 'Delete'|trans({}, 'cdef') }}</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="3"><em>{{ 'No CDEF Items'|trans({}, 'cdef') }}</em></td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    {% endif %}
+</main>
+{% endblock %}
