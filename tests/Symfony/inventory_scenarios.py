@@ -168,9 +168,16 @@ def verify_inventory(harness, session, user_id, check):
             self.edits = []
             self.details = []
             self.selected = []
+            # The console menu links to device pages too; only the list's own
+            # links must carry its view.
+            self.in_menu = False
 
         def handle_starttag(self, tag, attributes):
             attrs = dict(attributes)
+            if tag == 'nav' and attrs.get('id') == 'navigation':
+                self.in_menu = True
+            if self.in_menu:
+                return
             if tag == 'a' and ('rel' in attrs or '.csv?' in attrs.get('href', '')):
                 self.links.append(attrs['href'])
             if tag == 'a' and '/edit?' in attrs.get('href', ''):
@@ -179,6 +186,10 @@ def verify_inventory(harness, session, user_id, check):
                 self.details.append(attrs['href'])
             if tag == 'option' and 'selected' in attrs:
                 self.selected.append(attrs.get('value'))
+
+        def handle_endtag(self, tag):
+            if tag == 'nav':
+                self.in_menu = False
 
     for page in (1, 2):
         with session.opener.open(harness.base + base + '?' + urlencode(

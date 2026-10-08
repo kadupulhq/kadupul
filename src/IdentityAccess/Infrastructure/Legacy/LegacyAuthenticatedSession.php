@@ -11,9 +11,10 @@ use Kadupul\IdentityAccess\Application\Port\AuthenticatedSession;
 use Kadupul\IdentityAccess\Contract\Actor;
 use Kadupul\IdentityAccess\Contract\AuthenticatedAccess;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
+use Kadupul\IdentityAccess\Contract\RealmGrants;
 use Kadupul\Platform\Contract\DatabaseConnection;
 
-final readonly class LegacyAuthenticatedSession implements AuthenticatedSession, ConsoleAccess, AuthenticatedAccess
+final readonly class LegacyAuthenticatedSession implements AuthenticatedSession, ConsoleAccess, AuthenticatedAccess, RealmGrants
 {
     public function __construct(private SharedSession $session, private DatabaseConnection $database) {}
 
@@ -57,6 +58,15 @@ final readonly class LegacyAuthenticatedSession implements AuthenticatedSession,
     public function canManageDevices(Actor $actor): bool
     {
         return $actor->id > 0 && $this->hasRealm($actor->id, 3);
+    }
+
+    public function grantedRealms(Actor $actor, array $realmIds): array
+    {
+        if ($actor->id <= 0) {
+            return [];
+        }
+
+        return array_values(array_filter(array_unique($realmIds), fn(int $realm): bool => $this->hasRealm($actor->id, $realm)));
     }
 
     private function hasRealm(int $id, int $realm): bool

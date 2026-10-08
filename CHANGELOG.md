@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Render converted Twig pages in the console layout with the active theme and a realm-filtered console menu, and share list macros across the palette and VDEF pages.
+
 - Remove the obsolete Snyk dependency-path ignore without adding replacement exceptions, and clarify that Dependabot-triggered pushes also skip secret-dependent Sonar analysis.
 
 - Add explicit native test-suite commands and a guide to their separate dependencies; name source-contract tests after their behavior and restore isolated input-string validation tests against the production validator.

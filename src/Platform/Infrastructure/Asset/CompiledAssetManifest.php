@@ -7,6 +7,8 @@
 
 namespace Kadupul\Platform\Infrastructure\Asset;
 
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+
 /**
  * Reads the manifest.json that asset-map:compile writes, without booting the kernel.
  *
@@ -23,7 +25,12 @@ final class CompiledAssetManifest
      * @param string $manifestFile Absolute path of public/assets/manifest.json.
      * @param string $webPrefix    Path of the public directory below the web root, such as "public".
      */
-    public function __construct(private readonly string $manifestFile, private readonly string $webPrefix) {}
+    public function __construct(
+        #[Autowire('%kernel.project_dir%/public/assets/manifest.json')]
+        private readonly string $manifestFile,
+        #[Autowire('public')]
+        private readonly string $webPrefix,
+    ) {}
 
     /**
      * The web-root-relative path of the compiled copy of $logicalPath, such as

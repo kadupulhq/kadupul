@@ -201,6 +201,22 @@ final class ArchitectureTest extends TestCase
      *
      * @param array<string, list<string>> $allowed
      */
+    /**
+     * RealmGrants only decides which menu entries to show. Keeping its users
+     * to the menu stops it from becoming a route or write guard; those keep
+     * their own realm checks.
+     */
+    public function testRealmGrantsStaysADisplayLookup(): void
+    {
+        $this->assertOnlyTheseFilesName([
+            'RealmGrants' => [
+                'src/IdentityAccess/Contract/RealmGrants.php',
+                'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php',
+                'src/Navigation/Infrastructure/Legacy/LegacyConsoleMenu.php',
+            ],
+        ]);
+    }
+
     private function assertOnlyTheseFilesName(array $allowed): void
     {
         $root = dirname(__DIR__, 2);
