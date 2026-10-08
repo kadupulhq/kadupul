@@ -83,8 +83,7 @@ final class PresentationMutationNativeCoverageTest extends TestCase
     public static function mutations(): array
     {
         $cases = array();
-        foreach (array('query-remove', 'query-remove-missing', 'query-item-remove', 'query-item-remove-missing',
-            'color-up', 'color-down', 'color-up-first', 'color-down-last', 'color-missing', 'color-zero', 'color-gapped-down') as $case) {
+        foreach (array('query-remove', 'query-remove-missing', 'query-item-remove', 'query-item-remove-missing') as $case) {
             $cases[$case] = array($case);
         }
         if ($cases === array()) {
@@ -98,8 +97,7 @@ final class PresentationMutationNativeCoverageTest extends TestCase
         $root = dirname(__DIR__, 2);
         $source = file_get_contents($root . '/tests/Fixtures/presentation-mutations-native.php');
         self::assertNotFalse($source);
-        foreach (array('query-remove' => 'data_query_remove($id);', 'query-item-remove' => 'data_query_item_remove();',
-            'color-up' => '$up ? aggregate_color_item_moveup() : aggregate_color_item_movedown();') as $case => $call) {
+        foreach (array('query-remove' => 'data_query_remove($id);', 'query-item-remove' => 'data_query_item_remove();') as $case => $call) {
             $directory = sys_get_temp_dir() . '/presentation-mutation-control-' . bin2hex(random_bytes(8));
             self::assertTrue(mkdir($directory, 0700));
             try {

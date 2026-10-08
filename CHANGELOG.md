@@ -97,6 +97,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Render the console home with Symfony and Twig, preserving native login, plugin HTML/session hooks, translations and remote collector status. Add an authenticated help overview while retaining the contextual-help JSON endpoint.
 
+- Render color templates and their color items through Symfony and Twig. Edits, item order and bulk actions are revision-checked, templates used by an aggregate graph or aggregate template stay selectable for duplicate and sync, and the server now refuses to delete them. Sync runs each template in one transaction, so a failure no longer leaves part of a template's aggregates updated.
+
 ## [1.3.0-alpha.1]
 
 - First Kadupul preview for isolated evaluation. This is pre-alpha software, with no production support or supported migration path. It combines the existing monitoring, polling and graphing application with an incremental Symfony 7.4 migration; PHP 8.4 or later is required.

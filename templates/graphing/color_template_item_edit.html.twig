@@ -1,0 +1,19 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% block title %}{{ (item ? 'Edit Color Item' : 'Add Color Item')|trans({}, 'color_template') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+    <p><a href="{{ path('color_template_edit', {id: template.id}) }}">{{ 'Back to Color Template'|trans({}, 'color_template') }}</a></p>
+    <h1>{{ (item ? 'Color Template Items [edit: %name%]' : 'Color Template Items [new: %name%]')|trans({'%name%': template.name}, 'color_template') }}</h1>
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.color_id) }}
+        {{ form_widget(form.revision) }}
+        <button type="submit">{{ 'Save'|trans({}, 'color_template') }}</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

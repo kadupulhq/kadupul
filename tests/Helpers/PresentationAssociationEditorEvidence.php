@@ -27,7 +27,7 @@ final class PresentationAssociationEditorEvidence
     public static function cases(): array
     {
         return array('query-edit-xml', 'query-edit-missing-xml', 'query-new',
-            'query-association-edit', 'query-association-new', 'color-confirm', 'color-edit', 'color-new');
+            'query-association-edit', 'query-association-new');
     }
 
     public static function tables(): array

@@ -1,0 +1,70 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% import '_list.html.twig' as list %}
+{% block title %}{{ 'Color Templates'|trans({}, 'color_template') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    <h1>{{ 'Color Templates'|trans({}, 'color_template') }}</h1>
+    {% if deleted %}<output>{{ 'Color Templates deleted.'|trans({}, 'color_template') }}</output>{% endif %}
+    {% if duplicated %}<output>{{ 'Color Templates duplicated.'|trans({}, 'color_template') }}</output>{% endif %}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+    <p><a href="{{ path('color_template_create', filters) }}">{{ 'Add Color Template'|trans({}, 'color_template') }}</a></p>
+    {% embed '_list_filter.html.twig' with {action: path('color_template_list')} %}
+    {% block filters %}
+        {% import '_list.html.twig' as list %}
+        <label for="color-template-filter">{{ 'Search'|trans({}, 'color_template') }}</label>
+        <input id="color-template-filter" name="filter" type="search" maxlength="200" value="{{ filters.filter }}">
+        {{ list.rows_per_page('color-template-rows', 'Color Templates per page', {'-1': 'Default', '10': '10', '15': '15', '16': '16', '17': '17', '18': '18', '19': '19', '20': '20', '21': '21', '22': '22', '23': '23', '24': '24', '25': '25', '26': '26', '27': '27', '30': '30', '40': '40', '44': '44', '45': '45', '50': '50', '100': '100', '250': '250', '500': '500', '750': '750', '1000': '1000', '2000': '2000', '3000': '3000', '4000': '4000', '5000': '5000'}, filters.rows, 'color_template', defaultRows) }}
+        <input type="hidden" name="sort_column" value="{{ filters.sort_column }}">
+        <input type="hidden" name="sort_direction" value="{{ filters.sort_direction }}">
+        <input type="hidden" name="has_graphs" value="false">
+        <label><input type="checkbox" name="has_graphs" value="true"{% if filters.has_graphs == 'true' %} checked{% endif %}> {{ 'Has Graphs'|trans({}, 'color_template') }}</label>
+        <button type="submit">{{ 'Go'|trans({}, 'color_template') }}</button>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+        <a href="{{ path('color_template_list', {reset: 1}) }}">{{ 'Clear'|trans({}, 'color_template') }}</a>
+    {% endblock %}
+    {% endembed %}
+    {% set selectionLimit = constant('Kadupul\\Graphing\\Application\\Port\\ColorTemplateStore::MAX_SELECTION') %}
+    <p id="color-template-selection-help">{{ 'Select up to %count% templates from the first %count% rows. Use %count% rows per page or search to select other templates.'|trans({'%count%': selectionLimit}, 'color_template') }}</p>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route. #}
+    <form method="get" action="{{ path('color_template_action') }}" aria-describedby="color-template-selection-help">
+        {% for key, value in filters %}<input type="hidden" name="{{ key }}" value="{{ value }}">{% endfor %}
+        <table class="cactiTable">
+            <caption>{{ 'Color Templates'|trans({}, 'color_template') }}</caption>
+            <thead><tr class="tableHeader">
+                <th scope="col">{{ 'Select'|trans({}, 'color_template') }}</th>
+                {{ list.sort_header('color_template_list', filters, 'name', 'Template Title', 'color_template') }}
+                <th scope="col" title="{{ 'Color Templates used by an aggregate graph or aggregate template cannot be deleted.'|trans({}, 'color_template') }}">{{ 'Deletable'|trans({}, 'color_template') }}</th>
+                {{ list.sort_header('color_template_list', filters, 'graphs', 'Graphs', 'color_template') }}
+                {{ list.sort_header('color_template_list', filters, 'templates', 'Templates', 'color_template') }}
+            </tr></thead>
+            <tbody>
+            {% for template in page.templates %}
+                <tr>
+                    {# Referenced templates stay selectable: duplicate and sync apply to them. #}
+                    {{ list.selection_cell(template.id, template.name, 'color_template', 'color-template-select-' ~ template.id, loop.index > selectionLimit) }}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+                    <td><a href="{{ path('color_template_edit', filters|merge({id: template.id})) }}">{{ template.name }}</a></td>
+                    <td>{{ (template.deletable ? 'Yes' : 'No')|trans({}, 'color_template') }}</td>
+                    <td>{{ template.graphs }}</td>
+                    <td>{{ template.templates }}</td>
+                </tr>
+            {% else %}
+                <tr><td colspan="5"><em>{{ 'No Color Templates Found'|trans({}, 'color_template') }}</em></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <label for="color-template-action">{{ 'Action'|trans({}, 'color_template') }}</label>
+        <select id="color-template-action" name="action">
+            <option value="delete">{{ 'Delete'|trans({}, 'color_template') }}</option>
+            <option value="duplicate">{{ 'Duplicate'|trans({}, 'color_template') }}</option>
+            <option value="sync">{{ 'Sync Aggregates'|trans({}, 'color_template') }}</option>
+        </select>
+        <button type="submit">{{ 'Go'|trans({}, 'color_template') }}</button>
+    </form>
+    {{ list.pagination('color_template_list', filters, filters.page, page.hasPrevious, page.hasNext, 'Color Template pages', 'Page %page%', {'%page%': filters.page}, 'color_template') }}
+</main>
+{% endblock %}

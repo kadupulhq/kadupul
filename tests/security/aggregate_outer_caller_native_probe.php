@@ -28,7 +28,6 @@ eval(test_php_function_source(file_get_contents($root . '/tests/security/cdef_re
 // Execute actual first-party save helpers without page dispatch. These controls
 // cover the save/cache operation, not HTTP authentication/CSRF or predispatch
 // authorized orphan housekeeping; installed route proof remains separate.
-eval(test_php_function_source(file_get_contents($root . '/color_templates.php'), 'sync_color_templates'));
 eval(test_php_function_source(file_get_contents($root . '/aggregate_graphs.php'), 'form_save'));
 eval(test_php_function_source(file_get_contents($root . '/aggregate_templates.php'), 'aggregate_form_save'));
 $no_http_headers = true;
@@ -183,19 +182,8 @@ foreach ($operations as $name => $operation) {
             if ($name === 'associate' && !$callerOwned) {
                 $database->exec("INSERT INTO color_templates(color_template_id,name) VALUES(15000101,'Unused fixture'),(15000102,'Referenced fixture')");
                 $database->exec("INSERT INTO color_template_items(color_template_id,color_id,sequence) VALUES(15000102,1,1)");
-                $_SESSION['sess_messages'] = [];
-                callerAssert(sync_color_templates(15000101) === true && $_SESSION['sess_messages']['color_template_sync']['level'] === MESSAGE_LEVEL_INFO, 'real successful empty color discovery reports no usages');
-                $database->exec('RENAME TABLE aggregate_graph_templates_item TO task_saved_aggregate_graph_templates_item');
-                $_SESSION['sess_messages'] = [];
-                try {
-                    callerAssert(sync_color_templates(15000101) === false && !isset($_SESSION['sess_messages']['color_template_sync']) && $_SESSION['sess_messages']['color_template_sync_failed']['level'] === MESSAGE_LEVEL_ERROR, 'real failed color discovery refuses without no-usage or success message');
-                } finally {
-                    $database->exec('RENAME TABLE task_saved_aggregate_graph_templates_item TO aggregate_graph_templates_item');
-                }
                 $targetItem = (int) $database->query('SELECT id FROM graph_templates_item WHERE local_graph_id=15000001 ORDER BY id LIMIT 1')->fetchColumn();
                 $database->exec("INSERT INTO aggregate_graphs_graph_item(aggregate_graph_id,graph_templates_item_id,sequence,color_template,item_skip,item_total) VALUES(15000101,$targetItem,1,15000102,'','')");
-                $_SESSION['sess_messages'] = [];
-                callerAssert(sync_color_templates(15000102) === true && str_contains($_SESSION['sess_messages']['color_template_sync']['message'], '1 Non-Templated Aggregates'), 'real non-template color cohort executes correct graph collection');
             }
             if (str_starts_with($name, 'web_')) {
                 $webId = 0;
