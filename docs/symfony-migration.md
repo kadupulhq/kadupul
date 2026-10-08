@@ -1600,6 +1600,18 @@ trigger for `graph_templates_item.gprint_id`, so an item inserted by another
 writer after the check commits can still reference a deleted preset. The CDEF
 reference contract does not cover GPRINT.
 
+### RRD check
+
+The RRD check list, its search, age and row filters, and the purge action use
+Symfony routes and Twig under `/utilities/rrd-check`. Every route requires
+console access and the Utilities realm (15). Purging is a confirmation form
+posted with a CSRF token; it rechecks the account and both realms with locking
+reads and deletes the rows in one transaction. It uses `DELETE`, not the
+legacy `TRUNCATE`, because `TRUNCATE` commits implicitly and would release the
+authorization locks before removing rows. The old `rrdcheck.php` URL forwards
+GET navigation, sends `action=purge` to the confirmation form and answers 409
+to posted forms. The poller still writes the table through `lib/rrdcheck.php`.
+
 ### Template synchronization discovery boundary
 
 Bulk template synchronization first validates and commits the primary template

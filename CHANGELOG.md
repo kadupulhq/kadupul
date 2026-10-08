@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Serve the RRD check list through Symfony and Twig; purging now needs a POST with a CSRF token and rechecks the Utilities realm in the same transaction, and old `rrdcheck.php` links and posts no longer change data.
+
 - Render GPRINT presets through Symfony and Twig in the console layout. Edits and deletes are revision-checked, and deleting a preset still used by a graph or graph template is now refused on the server. A legacy menu visit keeps the saved list filters.
 
 - Render converted Twig pages in the console layout with the active theme and a realm-filtered console menu, and share list macros across the palette and VDEF pages.

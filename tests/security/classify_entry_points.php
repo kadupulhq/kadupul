@@ -2102,11 +2102,13 @@ function authenticated_access_adapter(string $root): string
     return ABOUT_ACCESS_ADAPTER;
 }
 
-// Route prefix => realm-5 feature contract, its only adapter and the reviewed
-// bytes of the adapter and its SQL helper. A changed file needs a fresh review.
+// Route prefix => feature realm, its access contract, the contract's only
+// adapter and the reviewed bytes of the files that decide it. A changed file
+// needs a fresh review.
 const REVIEWED_FEATURE_ACCESS = [
     '/graphing/colors' => [
         'label' => 'palette',
+        'realm' => 5,
         'contract' => 'Kadupul\\Graphing\\Application\\Port\\PaletteColorAccess',
         'adapter' => 'Kadupul\\Graphing\\Infrastructure\\Legacy\\LegacyPaletteColorAccess',
         'sources' => [
@@ -2116,6 +2118,7 @@ const REVIEWED_FEATURE_ACCESS = [
     ],
     '/graphing/gprint-presets' => [
         'label' => 'GPRINT',
+        'realm' => 5,
         'contract' => 'Kadupul\\Graphing\\Application\\Port\\GprintPresetAccess',
         'adapter' => 'Kadupul\\Graphing\\Infrastructure\\Legacy\\LegacyGprintPresetAccess',
         'sources' => [
@@ -2123,9 +2126,18 @@ const REVIEWED_FEATURE_ACCESS = [
             'src/Graphing/Infrastructure/Legacy/GprintPresetSql.php' => 'df4f5a7ee047782c1a1e85893599f69bd3463d9f10c23046b8c8f61c8438f31f',
         ],
     ],
+    '/utilities/rrd-check' => [
+        'label' => 'RRD check',
+        'realm' => 15,
+        'contract' => 'Kadupul\\Platform\\Application\\Port\\RrdCheckAccess',
+        'adapter' => 'Kadupul\\Platform\\Infrastructure\\Persistence\\DbalRrdCheckAccess',
+        'sources' => [
+            'src/Platform/Infrastructure/Persistence/DbalRrdCheckAccess.php' => '6f0222557edd0c1b2f307aae6c309b7129e88c0bb0909a15999d27cdd3ebba89',
+        ],
+    ],
 ];
 
-/** @return array{label: string, contract: string, adapter: string, sources: array<string, string>}|null */
+/** @return array{label: string, realm: int, contract: string, adapter: string, sources: array<string, string>}|null */
 function reviewed_feature_access(string $path): ?array
 {
     foreach (REVIEWED_FEATURE_ACCESS as $prefix => $feature) {
@@ -2140,7 +2152,7 @@ function reviewed_feature_access(string $path): ?array
 function feature_access_call(string $root, array $target, array $feature, int $depth = 0): bool
 {
     if ($target === [$feature['contract'], 'authorize']) {
-        // Exact reviewed current-account and realm-5 authorization contract.
+        // Exact reviewed current-account and feature-realm authorization contract.
         foreach ($feature['sources'] as $relative => $hash) {
             if (!is_file($root . '/' . $relative) || hash_file('sha256', $root . '/' . $relative) !== $hash) {
                 return false;
@@ -2433,10 +2445,10 @@ function symfony_routes(string $root, array $files): array
                             $feature = reviewed_feature_access($route['path']);
                             if ($feature !== null) {
                                 if (!feature_access_guard($root, $name, $method, $sources, $feature)) {
-                                    $rows[] = ['app.php' . $route['path'], 'unknown', $detail . '; no reviewed first-effect ' . $feature['label'] . ' realm-5 check'];
+                                    $rows[] = ['app.php' . $route['path'], 'unknown', $detail . '; no reviewed first-effect ' . $feature['label'] . ' realm-' . $feature['realm'] . ' check'];
                                     continue;
                                 }
-                                $grant .= ' + realm 5';
+                                $grant .= ' + realm ' . $feature['realm'];
                             }
                             $rows[] = ['app.php' . $route['path'], 'symfony:' . $route['name'], $detail . '; ConsoleAccess ' . $grant . $reviewed];
                         } elseif (array_key_exists($route['name'], ANONYMOUS_ROUTES)) {

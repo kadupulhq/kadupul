@@ -1,0 +1,18 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'Purge RRD check problems'|trans({}, 'rrd_check') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    <h1>{{ 'Purge RRD check problems'|trans({}, 'rrd_check') }}</h1>
+    <p>{{ 'Click Continue to delete all %count% recorded RRD check problems.'|trans({'%count%': count}, 'rrd_check') }}</p>
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        <button type="submit">{{ 'Continue'|trans({}, 'rrd_check') }}</button>
+        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route; no supplied URI. #}
+        <a href="{{ path('platform_rrd_checks') }}">{{ 'Cancel'|trans({}, 'rrd_check') }}</a>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

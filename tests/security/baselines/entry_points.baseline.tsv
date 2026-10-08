@@ -62,6 +62,9 @@ app.php/links/legacy	symfony:navigation_links_legacy	methods=GET|HEAD|POST; Cons
 app.php/links/new	symfony:navigation_link_create	methods=GET|HEAD|POST; ConsoleAccess realm 8
 app.php/links/{id}/edit	symfony:navigation_link_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8
 app.php/session	symfony:session	methods=GET|HEAD; ConsoleAccess realm 8; reviewed at c1e137157c2e: answers 401 with no identity when the actor is null
+app.php/utilities/rrd-check	symfony:platform_rrd_checks	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
+app.php/utilities/rrd-check/legacy	symfony:platform_rrd_check_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 15
+app.php/utilities/rrd-check/purge	symfony:platform_rrd_check_purge	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 15
 auth_changepassword.php	authenticated	own session check; action=checkpass answers anonymously with the password policy verdict; reviewed at ff7ac6fa6c55
 auth_login.php	anonymous-allowed	login handler; include/auth.php includes it after bootstrap, so a direct request stops at the first undefined function; reviewed at 858e41478258
 auth_profile.php	realm:20	include/auth.php; guest_account withdrawn from anonymous and guest callers
@@ -269,7 +272,7 @@ resource/script_queries/index.php	anonymous-allowed	redirect-only
 resource/script_server/index.php	anonymous-allowed	redirect-only
 resource/snmp_queries/index.php	anonymous-allowed	redirect-only
 rra/	web-server-denied	nginx; apache .htaccess
-rrdcheck.php	realm:15	include/auth.php
+rrdcheck.php	symfony:forward	forwards to app.php/utilities/rrd-check/legacy
 rrdcleaner.php	realm:15	include/auth.php
 script_server.php	cli-only	guard: php_sapi_name() check
 scripts/	web-server-denied	nginx; apache .htaccess

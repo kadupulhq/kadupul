@@ -1,0 +1,59 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% import '_list.html.twig' as list %}
+{% block title %}{{ 'RRDfile Checker'|trans({}, 'rrd_check') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    <h1>{{ 'RRDfile Checker'|trans({}, 'rrd_check') }}</h1>
+    {% if not enabled %}<p role="status">{{ 'RRD check is disabled. Enable it in Configuration > Settings > Data.'|trans({}, 'rrd_check') }}</p>{% endif %}
+    {% if purged %}<output>{{ 'RRD check problems purged.'|trans({}, 'rrd_check') }}</output>{% endif %}
+    {% embed '_list_filter.html.twig' with {action: path('platform_rrd_checks')} %}
+    {% block filters %}
+        {% import '_list.html.twig' as list %}
+        <label for="rrd-check-filter">{{ 'Search'|trans({}, 'rrd_check') }}</label>
+        <input id="rrd-check-filter" name="filter" type="search" maxlength="200" value="{{ filters.filter }}">
+        <label for="rrd-check-age">{{ 'Age'|trans({}, 'rrd_check') }}</label>
+        <select id="rrd-check-age" name="age">
+            {% for value, label in {'0': '< 2 hours', '14400': '> 4 hours', '43200': '> 12 hours', '86400': '> 1 day', '259200': '> 3 days', '604800': '> 7 days'} %}
+                <option value="{{ value }}"{% if filters.age == value %} selected{% endif %}>{{ label|trans({}, 'rrd_check') }}</option>
+            {% endfor %}
+        </select>
+        {{ list.rows_per_page('rrd-check-rows', 'Messages', {'-1': 'Default', '10': '10', '15': '15', '16': '16', '17': '17', '18': '18', '19': '19', '20': '20', '21': '21', '22': '22', '23': '23', '24': '24', '25': '25', '26': '26', '27': '27', '30': '30', '40': '40', '44': '44', '45': '45', '50': '50', '100': '100', '250': '250', '500': '500', '750': '750', '1000': '1000', '2000': '2000', '3000': '3000', '4000': '4000', '5000': '5000'}, filters.rows, 'rrd_check', defaultRows) }}
+        <input type="hidden" name="sort_column" value="{{ filters.sort_column }}">
+        <input type="hidden" name="sort_direction" value="{{ filters.sort_direction }}">
+        <button type="submit">{{ 'Go'|trans({}, 'rrd_check') }}</button>
+        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+        <a href="{{ path('platform_rrd_checks', {clear: 1}) }}">{{ 'Clear'|trans({}, 'rrd_check') }}</a>
+        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route; the link opens a confirmation form and never purges. #}
+        <a href="{{ path('platform_rrd_check_purge') }}">{{ 'Purge'|trans({}, 'rrd_check') }}</a>
+    {% endblock %}
+    {% endembed %}
+    <table class="cactiTable">
+        <caption>{{ 'RRD check problems'|trans({}, 'rrd_check') }}</caption>
+        <thead><tr class="tableHeader">
+            {{ list.sort_header('platform_rrd_checks', filters, 'description', 'Device Description', 'rrd_check') }}
+            {{ list.sort_header('platform_rrd_checks', filters, 'name_cache', 'Data Source', 'rrd_check') }}
+            {{ list.sort_header('platform_rrd_checks', filters, 'local_data_id', 'Local Data ID', 'rrd_check') }}
+            {{ list.sort_header('platform_rrd_checks', filters, 'message', 'Message', 'rrd_check') }}
+            {{ list.sort_header('platform_rrd_checks', filters, 'test_date', 'Date', 'rrd_check') }}
+        </tr></thead>
+        <tbody>
+        {% for problem in page.problems %}
+            <tr>
+                <td>{{ problem.device ?? 'Deleted'|trans({}, 'rrd_check') }}</td>
+                <td>{{ problem.dataSource ?? 'Deleted'|trans({}, 'rrd_check') }}</td>
+                <td class="center">{{ problem.localDataId }}</td>
+                <td>{{ problem.message }}</td>
+                <td class="right">{{ problem.testedAt }}</td>
+            </tr>
+        {% else %}
+            <tr><td colspan="5"><em>{{ 'No RRDcheck Problems Found'|trans({}, 'rrd_check') }}</em></td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ list.pagination('platform_rrd_checks', filters, filters.page, page.hasPrevious, page.hasNext, 'RRD check pages', 'Page %page% of %total% problems', {'%page%': filters.page, '%total%': page.total}, 'rrd_check') }}
+</main>
+{% endblock %}
