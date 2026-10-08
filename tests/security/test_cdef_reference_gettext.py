@@ -8,8 +8,6 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 MESSAGES = (
-    'CDEF deletion could not be confirmed. Reload the selection before retrying.',
-    'CDEF duplication could not be confirmed. A partial copy may remain; reload before retrying.',
     'The primary CDEF reference contract could not be installed. Review the schema and installer privileges before retrying.',
     'The installed database version could not be confirmed. Review the installer errors before retrying.',
     'Aggregate items could not be saved. Other graph settings may already have been saved; review them before retrying.',

@@ -161,9 +161,6 @@ function itemActionCases()
         array('automation_tree_rules.php', 'item_moveup', array()),
         array('automation_tree_rules.php', 'item_movedown', array()),
         array('automation_tree_rules.php', 'item_remove', array()),
-        array('cdef.php', 'item_moveup', array()),
-        array('cdef.php', 'item_movedown', array()),
-        array('cdef.php', 'item_remove', array()),
         array('color_templates_items.php', 'item_moveup', array()),
         array('color_templates_items.php', 'item_movedown', array()),
         array('color_templates_items.php', 'item_remove', array()),
@@ -203,7 +200,6 @@ function itemActionCases()
         array('tree.php', 'lock', array()),
         array('tree.php', 'unlock', array()),
         array('tree.php', 'ajax_dnd', array('tree_ids' => array('line1', 'line2'))),
-        array('cdef.php', 'ajax_dnd', array('cdef_item' => array('line1', 'line2'))),
         array('automation_snmp.php', 'ajax_dnd', array('snmp_item' => array('line1', 'line2'))),
         array('automation_templates.php', 'ajax_dnd', array('template_ids' => array('line1', 'line2'))),
         array('color_templates_items.php', 'ajax_dnd', array('color_item' => array('line1', 'line2'))),
@@ -240,7 +236,7 @@ test('item editors and lists still open by GET', function ($controller, $action)
 })->with(array(
     array('automation_snmp.php', 'item_edit'), array('automation_templates.php', 'edit'),
     array('automation_graph_rules.php', 'item_edit'), array('automation_tree_rules.php', 'item_edit'),
-    array('cdef.php', 'item_edit'), array('color_templates_items.php', 'item_edit'),
+    array('color_templates_items.php', 'item_edit'),
     array('data_queries.php', 'item_edit'), array('data_source_profiles.php', 'item_edit'),
     array('data_sources.php', 'data_edit'), array('data_templates.php', 'template_edit'),
     array('graphs_items.php', 'item_edit'), array('graph_templates_items.php', 'item_edit'),
@@ -333,7 +329,7 @@ test('no page triggers ajax_dnd or query_reload by GET', function () {
 
     expect($offenders)->toBe(array());
 
-    foreach (array('cdef.php', 'automation_templates.php', 'tree.php') as $file) {
+    foreach (array('automation_templates.php', 'tree.php') as $file) {
         expect(file_get_contents($root . '/' . $file))
             ->toMatch("/loadPageUsingPost(?:Checked)?\\('[a-z_]+\\.php\\?action=ajax_dnd.*?', \\$\\.tableDnD\\.serialize\\(\\) \\+ '&__csrf_magic=' \\+ encodeURIComponent\\(csrfMagicToken\\)\\);/");
     }

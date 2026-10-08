@@ -73,7 +73,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     if (($manifest['suite'] ?? '') !== $suite || ($manifest['session_handler'] ?? '') !== $handler) {
         throw new RuntimeException('Wrong integration suite or session handler');
     }
-    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'data_input_scenarios.py', 'data_input_review_http.py', 'data_source_profile_scenarios.py', 'data_source_profile_heartbeat_scenarios.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'tree_automation_probe.php', 'cli_schema_scenarios.py', 'coverage_support.py', 'link_scenarios.py', 'about_scenarios.py', 'about_authentication_scenarios.py', 'palette_color_review_http.py', 'palette_color_scenarios.py', 'gprint_preset_scenarios.py', 'palette_sql_failure_probe.php', 'vdef_scenarios.py', 'vdef_transaction_probe.php', 'vdef_browser_probe.cjs', 'device_bulk_assignment_scenarios.py', 'device_bulk_snmp_scenarios.py', 'device_association_scenarios.py', 'device_legacy_scenarios.py', 'device_maintenance_scenarios.py', 'device_placement_scenarios.py', 'placement_lock_probe.php', 'cli_audit_scenarios.py'];
+    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'data_input_scenarios.py', 'data_input_review_http.py', 'data_source_profile_scenarios.py', 'data_source_profile_heartbeat_scenarios.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'tree_automation_probe.php', 'cli_schema_scenarios.py', 'coverage_support.py', 'link_scenarios.py', 'about_scenarios.py', 'about_authentication_scenarios.py', 'palette_color_review_http.py', 'palette_color_scenarios.py', 'gprint_preset_scenarios.py', 'cdef_scenarios.py', 'palette_sql_failure_probe.php', 'vdef_scenarios.py', 'vdef_transaction_probe.php', 'vdef_browser_probe.cjs', 'device_bulk_assignment_scenarios.py', 'device_bulk_snmp_scenarios.py', 'device_association_scenarios.py', 'device_legacy_scenarios.py', 'device_maintenance_scenarios.py', 'device_placement_scenarios.py', 'placement_lock_probe.php', 'cli_audit_scenarios.py'];
     $sourcePaths = array_map(static fn(string $script): string => 'tests/Symfony/' . $script, $scripts);
     if ($handler !== 'none') {
         // Bind the bodyless contract without inventing coverage for its declaration.
@@ -606,12 +606,6 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'aggregate_templates.php', 'color_templates.php', 'aggregate_graphs.php', 'lib/utility.php', 'lib/api_automation.php'];
     if ($handler !== 'none') {
         $checks = array_merge($checks, [
-            'installed CDEF duplication preserves persisted parent and children',
-            'installed CDEF referenced deletion refuses and preserves actual records',
-            'installed CDEF unused deletion removes actual parent and children',
-            'installed CDEF child copy refusal reports exact partial parent and preserves original definition',
-            'installed legacy write requires actual CSRF before mutation: /cdef.php',
-            'installed legacy write refuses the revoked actor realm before mutation: /cdef.php',
             'installed legacy write requires actual CSRF before mutation: /graphs.php',
             'installed legacy write refuses the revoked actor realm before mutation: /graphs.php',
             'installed aggregate template save persists rendered graph item cache',
@@ -635,7 +629,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             'installed aggregate graph malformed request refuses before all nine participant writes',
             'installed aggregate graph cache refusal preserves cache and reports saved title',
             'installed aggregate graph regeneration refusal preserves generated items and reports saved settings',
-            'installed legacy CDEF aggregate and color page scenarios completed cleanup',
+            'installed legacy aggregate and color page scenarios completed cleanup',
         ]);
     }
     require_symfony_integration_checks($manifest, $checks);
