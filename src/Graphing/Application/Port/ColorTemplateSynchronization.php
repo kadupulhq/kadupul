@@ -11,6 +11,12 @@ namespace Kadupul\Graphing\Application\Port;
 
 interface ColorTemplateSynchronization
 {
+    /** Each template runs in its own worker of up to 120 seconds. */
+    public const int MAX_SELECTION = 10;
+
+    /** No further worker starts after this many seconds of one request. */
+    public const int DEADLINE_SECONDS = 180;
+
     /**
      * Push one template's colors out to the aggregate templates and
      * non-templated aggregate graphs that use it, all or nothing.

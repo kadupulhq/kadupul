@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+"A Color Template used by an aggregate graph or aggregate template must keep at least one color.": "Un modèle de couleurs utilisé par un graphique agrégé ou un modèle d'agrégat doit conserver au moins une couleur."
 "Access denied.": "Accès refusé."
 "Action": "Action"
 "Action outcome is uncertain. Check the Color Template list before retrying.": "Le résultat de l'action est incertain. Vérifiez la liste des modèles de couleurs avant de réessayer."
@@ -51,6 +52,7 @@
 "Delete outcome is uncertain. Reload before retrying.": "Le résultat de la suppression est incertain. Rechargez avant de réessayer."
 "Duplicate": "Dupliquer"
 "Duplicate Color Templates": "Dupliquer des modèles de couleurs"
+"Each Color Template is synchronized in turn. Synchronization stops at the first failure, and templates not started within %seconds% seconds are left for another run.": "Chaque modèle de couleurs est synchronisé à son tour. La synchronisation s'arrête au premier échec, et les modèles non commencés dans les %seconds% secondes sont laissés pour une autre exécution."
 "Go": "Valider"
 "Graphs": "Graphiques"
 "Has Graphs": "A des graphiques"
@@ -81,10 +83,13 @@
 "Select a valid color.": "Sélectionnez une couleur valide."
 "Select up to %count% templates from the first %count% rows. Use %count% rows per page or search to select other templates.": "Sélectionnez jusqu'à %count% modèles parmi les %count% premières lignes. Utilisez %count% lignes par page ou la recherche pour sélectionner d'autres modèles."
 "Sync Aggregates": "Synchroniser les agrégats"
+"Sync Aggregates takes up to %count% templates at a time.": "La synchronisation des agrégats accepte au plus %count% modèles à la fois."
 "Synchronize Color Templates": "Synchroniser des modèles de couleurs"
+"Synchronize up to %count% Color Templates at a time.": "Synchronisez au plus %count% modèles de couleurs à la fois."
 "Template Title": "Titre du modèle"
 "Templates": "Modèles"
 "The selected Color Templates changed. Reload before continuing.": "Les modèles de couleurs sélectionnés ont changé. Rechargez avant de continuer."
+"The time limit was reached before these Color Templates were synchronized. Select them again to synchronize them:": "Le délai a expiré avant la synchronisation de ces modèles de couleurs. Sélectionnez-les de nouveau pour les synchroniser :"
 "This legacy Color Template form has expired. Open Color Templates and submit a new form.": "Ce formulaire hérité de modèles de couleurs a expiré. Ouvrez les modèles de couleurs et soumettez un nouveau formulaire."
 "Title Format": "Format du titre"
 "Unable to authorize Color Template access.": "Impossible d'autoriser l'accès aux modèles de couleurs."

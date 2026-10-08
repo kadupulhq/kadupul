@@ -75,6 +75,17 @@ final readonly class LegacyColorTemplateSynchronization implements ColorTemplate
         }
     }
 
+    /**
+     * The worker's last line. It runs after the commit, so it must not fail:
+     * a stored name that is not valid UTF-8 is reported with U+FFFD.
+     *
+     * @param ?array{template: string, aggregate_templates: int, aggregate_graphs: int} $summary
+     */
+    public static function result(string $status, ?array $summary): string
+    {
+        return self::MARKER . '=' . json_encode(['status' => $status, 'summary' => $summary], JSON_INVALID_UTF8_SUBSTITUTE | JSON_UNESCAPED_UNICODE | JSON_PARTIAL_OUTPUT_ON_ERROR);
+    }
+
     private function binary(): string
     {
         // A web SAPI's PHP_BINARY names the server, so use the configured CLI

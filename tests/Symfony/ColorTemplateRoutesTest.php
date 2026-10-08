@@ -24,6 +24,7 @@ use Kadupul\Kernel;
 use Kadupul\Platform\Contract\LegacyConfiguration;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Clock\MockClock;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -122,6 +123,43 @@ final class ColorTemplateRoutesTest extends TestCase
         self::assertSame(502, $response->getStatusCode());
         self::assertStringContainsString('had 1 Aggregate Templates pushed out', $body);
         self::assertStringContainsString('Some aggregates may already have been updated', $body);
+    }
+
+    public function testSyncCapsItsSelectionAndStopsStartingWorkersAtTheDeadline(): void
+    {
+        $this->synchronization->expects(self::never())->method('synchronize');
+        $ids = implode('&', array_map(static fn(int $id): string => 'ids[]=' . $id, range(1, ColorTemplateSynchronization::MAX_SELECTION + 1)));
+        $response = $this->get('/graphing/color-templates/actions?action=sync&' . $ids);
+        self::assertSame(400, $response->getStatusCode());
+        self::assertStringContainsString('Synchronize up to 10 Color Templates at a time.', (string) $response->getContent());
+    }
+
+    public function testSyncReportsTemplatesLeftUnstartedAfterTheDeadline(): void
+    {
+        $clock = new MockClock();
+        $this->kernel->getContainer()->get('test.service_container')->set('clock', $clock);
+        $started = [];
+        $this->synchronization->method('synchronize')->willReturnCallback(static function (int $actor, int $id) use ($clock, &$started): array {
+            $started[] = $id;
+            $clock->sleep(ColorTemplateSynchronization::DEADLINE_SECONDS);
+            return ['template' => 'T' . $id, 'aggregate_templates' => 0, 'aggregate_graphs' => 1];
+        });
+        $response = $this->post('/graphing/color-templates/actions?action=sync&ids[]=1&ids[]=2&ids[]=3', '[1,2,3]', [1 => 'revision-1', 2 => 'revision-2', 3 => 'revision-3']);
+        $body = (string) $response->getContent();
+        self::assertSame(200, $response->getStatusCode(), $body);
+        self::assertSame([1], $started);
+        self::assertStringContainsString('The time limit was reached', $body);
+        self::assertMatchesRegularExpression('#<li>Graphs</li>\s*<li>Templates</li>#', $body);
+    }
+
+    public function testRemovingTheLastColorOfAReferencedTemplateIsRefused(): void
+    {
+        $item = new ColorTemplateItem(10, 2, 1, 1, 'FF0000');
+        $this->store->method('items')->willReturn([$item]);
+        $this->store->method('removeItem')->willThrowException(new \InvalidArgumentException('A Color Template used by an aggregate graph or aggregate template must keep at least one color.'));
+        $response = $this->kernel->handle(Request::create('/graphing/color-templates/2/items/10/delete', 'POST', ['color_template_item_delete' => ['revision' => $item->revision, '_token' => 'csrf-token']], server: ['HTTP_ORIGIN' => 'http://localhost', 'HTTP_ACCEPT_LANGUAGE' => 'fr']));
+        self::assertSame(409, $response->getStatusCode());
+        self::assertStringContainsString('must keep at least one color', (string) $response->getContent());
     }
 
     public function testItemOrderButtonsSwapNeighboursUnderTheFormRevision(): void

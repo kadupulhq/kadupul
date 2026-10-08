@@ -25,6 +25,7 @@ use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 final readonly class LegacyColorTemplateStore implements ColorTemplateStore
 {
     public const string CHANGED = 'The selected Color Templates changed. Reload before continuing.';
+    public const string LAST_COLOR = 'A Color Template used by an aggregate graph or aggregate template must keep at least one color.';
 
     public function __construct(private DatabaseConnection $database, private ColorTemplateAccess $access, private AuditTrail $audit, private LegacyConfiguration $configuration) {}
 
@@ -151,6 +152,12 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
         $this->write($actorId, 'item.delete', (string) $templateId, function (\PDO $db) use ($templateId, $itemId, $revision): void {
             $this->lockTemplate($db, $templateId);
             $this->lockItem($db, $templateId, $itemId, $revision);
+            // push_out_aggregates() takes each item index modulo the color count,
+            // so an empty template that aggregates still use breaks their push-out.
+            $remaining = (int) ColorTemplateSql::column(ColorTemplateSql::execute($db, 'SELECT COUNT(*) FROM color_template_items WHERE color_template_id = ?', [$templateId]));
+            if ($remaining === 1 && $this->referenced($db, [$templateId])) {
+                throw new \InvalidArgumentException(self::LAST_COLOR);
+            }
             $query = ColorTemplateSql::execute($db, 'DELETE FROM color_template_items WHERE color_template_item_id = ? AND color_template_id = ?', [$itemId, $templateId]);
             if ($query->rowCount() !== 1) {
                 throw new \RuntimeException('Color item removal was not confirmed.');
@@ -188,11 +195,8 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
             $this->assertRevisions($db, $ids, $revisions);
             $placeholders = $this->placeholders($ids);
             // The legacy page only disabled checkboxes; refuse referenced templates here.
-            foreach (['aggregate_graph_templates_item', 'aggregate_graphs_graph_item'] as $table) {
-                $query = ColorTemplateSql::execute($db, 'SELECT color_template FROM ' . $table . ' WHERE color_template IN (' . $placeholders . ')' . $this->lock(), $ids);
-                if (ColorTemplateSql::column($query) !== false) {
-                    throw new \InvalidArgumentException('Color Templates used by an aggregate graph or aggregate template cannot be deleted.');
-                }
+            if ($this->referenced($db, $ids)) {
+                throw new \InvalidArgumentException('Color Templates used by an aggregate graph or aggregate template cannot be deleted.');
             }
             ColorTemplateSql::execute($db, 'DELETE FROM color_template_items WHERE color_template_id IN (' . $placeholders . ')', $ids);
             if (ColorTemplateSql::execute($db, 'DELETE FROM color_templates WHERE color_template_id IN (' . $placeholders . ')', $ids)->rowCount() !== count($ids)) {
@@ -255,6 +259,18 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
             $revisions[(int) $id] = hash('sha256', json_encode([(int) $id, (string) $name, $items[(int) $id] ?? []], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE));
         }
         return $revisions;
+    }
+
+    /** Lock the reference rows so a concurrent aggregate save waits for this write. */
+    private function referenced(\PDO $db, array $ids): bool
+    {
+        foreach (['aggregate_graph_templates_item', 'aggregate_graphs_graph_item'] as $table) {
+            $query = ColorTemplateSql::execute($db, 'SELECT color_template FROM ' . $table . ' WHERE color_template IN (' . $this->placeholders($ids) . ')' . $this->lock(), $ids);
+            if (ColorTemplateSql::column($query) !== false) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private function lockTemplate(\PDO $db, int $templateId): void

@@ -91,5 +91,5 @@ try {
 
 // Legacy code may print; only the marker line reaches the caller.
 ob_end_clean();
-print LegacyColorTemplateSynchronization::MARKER . '=' . json_encode(['status' => $status, 'summary' => $summary], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE) . PHP_EOL;
+print LegacyColorTemplateSynchronization::result($status, $summary) . PHP_EOL;
 exit($status === 'ok' ? 0 : 1);

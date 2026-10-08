@@ -28,7 +28,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
     {% endblock %}
     {% endembed %}
     {% set selectionLimit = constant('Kadupul\\Graphing\\Application\\Port\\ColorTemplateStore::MAX_SELECTION') %}
-    <p id="color-template-selection-help">{{ 'Select up to %count% templates from the first %count% rows. Use %count% rows per page or search to select other templates.'|trans({'%count%': selectionLimit}, 'color_template') }}</p>
+    <p id="color-template-selection-help">{{ 'Select up to %count% templates from the first %count% rows. Use %count% rows per page or search to select other templates.'|trans({'%count%': selectionLimit}, 'color_template') }} {{ 'Sync Aggregates takes up to %count% templates at a time.'|trans({'%count%': constant('Kadupul\\Graphing\\Application\\Port\\ColorTemplateSynchronization::MAX_SELECTION')}, 'color_template') }}</p>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route. #}
     <form method="get" action="{{ path('color_template_action') }}" aria-describedby="color-template-selection-help">
         {% for key, value in filters %}<input type="hidden" name="{{ key }}" value="{{ value }}">{% endfor %}

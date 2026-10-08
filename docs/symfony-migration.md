@@ -1680,7 +1680,10 @@ and realm 5, rechecked inside each write transaction. Names keep the
 255-character limit, counted in characters, and are stored as entered.
 
 Name edits, item edits and removals, item order and every bulk action carry a
-revision and refuse stale forms. A selection holds at most 100 templates. The
+revision and refuse stale forms. A selection holds at most 100 templates, or
+10 for sync. A template that an aggregate graph or aggregate template uses
+keeps at least one color: `push_out_aggregates()` divides by the color count,
+so removing its last item is refused. The
 legacy list disabled the checkbox of a template used by an aggregate template,
 which also hid duplicate and sync; every row is now selectable, and the server
 refuses to delete a template that an aggregate graph or aggregate template
@@ -1694,7 +1697,9 @@ aggregate templates and the non-propagating or untemplated aggregate graphs
 the legacy action pushed out. Each worker rechecks the account and realms,
 locks the template and its items, refuses a template changed since the
 confirmation, and commits all of its aggregates or none. As before, the action
-stops at the first failed template; earlier templates stay committed.
+stops at the first failed template; earlier templates stay committed. A worker
+may run for 120 seconds, so no new worker starts once a request has spent 180
+seconds; the page lists the templates left unsynchronized.
 
 ### RRD check
 

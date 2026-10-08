@@ -124,6 +124,31 @@ final class ColorTemplateTest extends TestCase
         $this->store->removeItem(1, $id, $current->id, $current->revision);
     }
 
+    public function testAReferencedTemplateKeepsItsLastColor(): void
+    {
+        foreach (['aggregate_graphs_graph_item', 'aggregate_graph_templates_item'] as $table) {
+            $id = $this->store->save(1, null, 'Used by ' . $table, null);
+            $this->store->saveItem(1, $id, null, 1, null);
+            $this->store->saveItem(1, $id, null, 2, null);
+            $this->db->exec("INSERT INTO $table VALUES (7, 1, $id)");
+            $first = $this->store->items($id)[0];
+            $this->store->removeItem(1, $id, $first->id, $first->revision);
+            $last = $this->store->items($id)[0];
+            try {
+                $this->store->removeItem(1, $id, $last->id, $last->revision);
+                self::fail('The last color of a referenced template was removed.');
+            } catch (\InvalidArgumentException $error) {
+                self::assertSame(LegacyColorTemplateStore::LAST_COLOR, $error->getMessage());
+            }
+            self::assertCount(1, $this->store->items($id));
+        }
+        $free = $this->store->save(1, null, 'Unused', null);
+        $this->store->saveItem(1, $free, null, 1, null);
+        $item = $this->store->items($free)[0];
+        $this->store->removeItem(1, $free, $item->id, $item->revision);
+        self::assertSame([], $this->store->items($free));
+    }
+
     public function testDeletionRefusesAggregateGraphAndTemplateReferences(): void
     {
         $free = $this->store->save(1, null, 'Free', null);

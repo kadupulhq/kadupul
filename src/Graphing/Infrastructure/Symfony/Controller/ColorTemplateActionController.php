@@ -17,6 +17,7 @@ use Kadupul\Graphing\Domain\ColorTemplate;
 use Kadupul\Graphing\Domain\ColorTemplateFilters;
 use Kadupul\Graphing\Infrastructure\Symfony\Form\ColorTemplateActionType;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
+use Psr\Clock\ClockInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -32,7 +33,7 @@ final class ColorTemplateActionController
     private const array ACTIONS = ['delete', 'duplicate', 'sync'];
 
     #[Route('/graphing/color-templates/actions', name: 'color_template_action', methods: ['GET', 'HEAD', 'POST'])]
-    public function __invoke(Request $request, ConsoleAccess $console, ColorTemplateAccess $access, ColorTemplateStore $store, ColorTemplateSynchronization $synchronization, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function __invoke(Request $request, ConsoleAccess $console, ColorTemplateAccess $access, ColorTemplateStore $store, ColorTemplateSynchronization $synchronization, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, ClockInterface $clock): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         $actor = $console->consoleActor();
@@ -47,6 +48,9 @@ final class ColorTemplateActionController
                 return new Response($translator->trans('Select a valid Color Template action.', [], 'color_template'), 400, $headers);
             }
             $ids = $this->ids($query['ids'] ?? null);
+            if ($action === 'sync' && count($ids) > ColorTemplateSynchronization::MAX_SELECTION) {
+                return new Response($translator->trans('Synchronize up to %count% Color Templates at a time.', ['%count%' => ColorTemplateSynchronization::MAX_SELECTION], 'color_template'), 400, $headers);
+            }
             unset($query['action'], $query['ids']);
             $filters = $query === [] ? [] : ColorTemplateFilters::fromQuery($query, $store->defaultRows(), $store->defaultHasGraphs())->query();
             $templates = $store->findMany($ids);
@@ -73,6 +77,7 @@ final class ColorTemplateActionController
         $form->handleRequest($request);
         $status = $request->isMethod('POST') ? 422 : 200;
         $synchronized = [];
+        $notRun = [];
         $failed = false;
         if ($form->isSubmitted()) {
             if ($form->getExtraData() !== []) {
@@ -100,8 +105,14 @@ final class ColorTemplateActionController
                         return new RedirectResponse($urls->generate('color_template_list', ['duplicated' => 1] + $filters), 303, $headers);
                     }
                     // Each template commits on its own and the run stops at the
-                    // first failure, as the legacy action did.
-                    foreach ($ids as $id) {
+                    // first failure, as the legacy action did. Past the deadline
+                    // no further worker starts; the rest are reported as not run.
+                    $deadline = $clock->now()->getTimestamp() + ColorTemplateSynchronization::DEADLINE_SECONDS;
+                    foreach ($ids as $position => $id) {
+                        if ($clock->now()->getTimestamp() >= $deadline) {
+                            $notRun = array_slice($ids, $position);
+                            break;
+                        }
                         $failed = true;
                         if (!is_string($submitted[$id] ?? null)) {
                             throw new \InvalidArgumentException('Invalid color template selection.');
@@ -130,6 +141,7 @@ final class ColorTemplateActionController
             'form' => $form->createView(),
             'filters' => $filters,
             'synchronized' => $synchronized,
+            'not_run' => array_values(array_filter($templates, static fn(ColorTemplate $template): bool => in_array($template->id, $notRun, true))),
             'completed' => $action === 'sync' && $status === 200 && $request->isMethod('POST'),
             'failed' => $failed,
         ]), $status, $headers);

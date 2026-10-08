@@ -47,6 +47,15 @@ final class ColorTemplateSynchronizationTest extends TestCase
         self::assertSame([[AuditEvent::ALLOWED, AuditEvent::SUCCEEDED, '7']], array_map(static fn(AuditEvent $event): array => [$event->decision, $event->outcome, $event->targetId], $this->events));
     }
 
+    public function testACommittedResultIsReportedEvenForAnInvalidUtf8Name(): void
+    {
+        $line = LegacyColorTemplateSynchronization::result('ok', ['template' => "Reds \xff", 'aggregate_templates' => 1, 'aggregate_graphs' => 2]);
+        self::assertStringStartsWith('KADUPUL_COLOR_SYNC_RESULT={', $line);
+        $this->worker('print ' . var_export($line . "\n", true) . ';');
+        self::assertSame(['template' => "Reds \u{FFFD}", 'aggregate_templates' => 1, 'aggregate_graphs' => 2], $this->adapter()->synchronize(42, 7, 'revision'));
+        self::assertSame([AuditEvent::SUCCEEDED], array_map(static fn(AuditEvent $event): string => $event->outcome, $this->events));
+    }
+
     public function testDeniedAndChangedResultsKeepTheirMeaning(): void
     {
         $this->worker('print "KADUPUL_COLOR_SYNC_RESULT=" . json_encode(["status" => "denied", "summary" => null]) . "\n"; exit(1);');

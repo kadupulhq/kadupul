@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+"A Color Template used by an aggregate graph or aggregate template must keep at least one color.": "A Color Template used by an aggregate graph or aggregate template must keep at least one color."
 "Access denied.": "Access denied."
 "Action": "Action"
 "Action outcome is uncertain. Check the Color Template list before retrying.": "Action outcome is uncertain. Check the Color Template list before retrying."
@@ -51,6 +52,7 @@
 "Delete outcome is uncertain. Reload before retrying.": "Delete outcome is uncertain. Reload before retrying."
 "Duplicate": "Duplicate"
 "Duplicate Color Templates": "Duplicate Color Templates"
+"Each Color Template is synchronized in turn. Synchronization stops at the first failure, and templates not started within %seconds% seconds are left for another run.": "Each Color Template is synchronized in turn. Synchronization stops at the first failure, and templates not started within %seconds% seconds are left for another run."
 "Go": "Go"
 "Graphs": "Graphs"
 "Has Graphs": "Has Graphs"
@@ -81,10 +83,13 @@
 "Select a valid color.": "Select a valid color."
 "Select up to %count% templates from the first %count% rows. Use %count% rows per page or search to select other templates.": "Select up to %count% templates from the first %count% rows. Use %count% rows per page or search to select other templates."
 "Sync Aggregates": "Sync Aggregates"
+"Sync Aggregates takes up to %count% templates at a time.": "Sync Aggregates takes up to %count% templates at a time."
 "Synchronize Color Templates": "Synchronize Color Templates"
+"Synchronize up to %count% Color Templates at a time.": "Synchronize up to %count% Color Templates at a time."
 "Template Title": "Template Title"
 "Templates": "Templates"
 "The selected Color Templates changed. Reload before continuing.": "The selected Color Templates changed. Reload before continuing."
+"The time limit was reached before these Color Templates were synchronized. Select them again to synchronize them:": "The time limit was reached before these Color Templates were synchronized. Select them again to synchronize them:"
 "This legacy Color Template form has expired. Open Color Templates and submit a new form.": "This legacy Color Template form has expired. Open Color Templates and submit a new form."
 "Title Format": "Title Format"
 "Unable to authorize Color Template access.": "Unable to authorize Color Template access."

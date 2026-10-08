@@ -207,6 +207,17 @@ def verify_color_templates(harness, session, user_id, check):
         check(fetch(delete_path, delete_form)[0] == 422
               and harness.sql(f'SELECT COUNT(*) FROM color_templates WHERE color_template_id={template_id}').strip() == '1',
               'the server refuses to delete a referenced color template')
+        remaining = [int(value) for value in harness.sql(f'SELECT color_template_item_id FROM color_template_items WHERE color_template_id={template_id} ORDER BY sequence').splitlines()]
+        for item in remaining[:-1]:
+            item_delete = f'/app.php/graphing/color-templates/{template_id}/items/{item}/delete'
+            fields, _ = form(item_delete, 'color_template_item_delete[_token]')
+            fetch(item_delete, fields)
+        item_delete = f'/app.php/graphing/color-templates/{template_id}/items/{remaining[-1]}/delete'
+        fields, _ = form(item_delete, 'color_template_item_delete[_token]')
+        status, body, _, _ = fetch(item_delete, fields)
+        check(status == 409 and 'must keep at least one color' in body
+              and harness.sql(f'SELECT COUNT(*) FROM color_template_items WHERE color_template_id={template_id}').strip() == '1',
+              'the last color of a referenced color template cannot be removed')
 
         duplicate_path, duplicate_form, _ = action('duplicate', [template_id])
         harness.sql(f"UPDATE color_templates SET name='{marker} renamed' WHERE color_template_id={template_id}")
