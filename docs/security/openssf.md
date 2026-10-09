@@ -34,11 +34,13 @@ The published assessment for commit
 `2416a594bb7b800cc92c390b57d1aec51e6cb0dd` scored **6.3/10** on 2026-10-08,
 before the control changes above. The existing Scorecard workflow runs on main
 pushes, weekly, and on request; its SARIF assessment is also retained as an
-Actions artifact. Check the report's source SHA and date before comparing scores.
+Actions artifact. A fresh run after the settings change published **6.8/10**
+at `2026-10-09T00:05:17Z` for the same source commit. Branch protection increased
+from 3/10 to 8/10. Check the report's source SHA and date before comparing scores.
 
 | Requirement | Status | Remaining acceptance evidence |
 | --- | --- | --- |
-| New protection settings | verified | GitHub API readback on 2026-10-08; subsequent Scorecard report still pending |
+| New protection settings | verified | GitHub API readback on 2026-10-08 and subsequent published Scorecard assessment |
 | Code review history | planned | Accumulate independently approved changes; new settings cannot retroactively approve old commits |
 | Continuous fuzzing | planned | Introduce a reproducible fuzz target, corpus, crash triage and continuous runner; ordinary unit tests are not fuzzing |
 | OpenSSF Best Practices badge | planned | Complete the project's assessment with evidence and obtain the badge; no badge is claimed |
