@@ -4,7 +4,7 @@ updates:
   # to security updates. Keep security remediation separate from routine bumps.
   # The seven-day cooldown applies only to version updates, never security fixes.
   - package-ecosystem: pip
-    directory: /tests/Symfony
+    directories: [/tests/Symfony, /tests/tools]
     labels: [dependencies, branch:main, testing, no-changelog]
     commit-message: {prefix: chore, include: scope}
     schedule: {interval: weekly, day: monday}

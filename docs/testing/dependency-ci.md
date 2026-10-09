@@ -44,5 +44,31 @@ command. Workflow lint also validates the Dependabot configuration, including
 its schema and cooldown settings. GitHub's update jobs remain authoritative for
 dependency resolution; inspect their logs and proposed diffs before merging.
 
+## Coverage and analysis
+
+Sonar coverage runs in two independent jobs: legacy unit/poller coverage, and
+Symfony/HTTP/offline/browser coverage. Both keep their complete test suites,
+coverage self-tests and production-source checks. The final scanner waits for
+both jobs to succeed; neither producer uploads a partial run.
+
+The serial run on [PR #829](https://github.com/kadupulhq/kadupul/actions/runs/37916951018)
+completed all tests but reached its 180-minute timeout just as scanning began.
+Legacy unit coverage alone took 128 minutes on that runner. Parallel producers
+remove the application coverage phase from that critical path. This is a workflow
+change; it does not relax test assertions or claim a measured speedup before the
+replacement run completes.
+
+Artifacts contain only the five final XML/LCOV reports and receipts binding
+their checksums to the exact checkout commit and tree. The consumer checks the
+complete report sets before remapping source paths between runner workspaces.
+It rejects stale revisions, changed reports, empty coverage and foreign paths.
+Artifacts expire after 14 days and are downloaded by immutable IDs. Attempt-specific
+names support a full rerun; GitHub's **Re-run failed jobs** can reuse successful
+producer artifacts when only verification or scanning failed.
+
+The legacy producer has a 180-minute budget, the application producer 90 minutes,
+and the scanner 15 minutes. Stale PR runs still cancel. A missing or failed
+producer prevents analysis and cannot supply a passing quality gate.
+
 References: [GitHub Dependabot options](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference)
 and [security-update configuration](https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/configure-security-updates).

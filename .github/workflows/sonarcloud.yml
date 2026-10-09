@@ -36,6 +36,14 @@ jobs:
         uses: jdx/mise-action@7a4e45a543138629540c9a1616d08632b893e492 # v5.0.1
         with:
           install_args: python@3.12.12
+      - name: Install coverage artifact verifier
+        run: |
+          mise exec python@3.12.12 -- python -m venv "$RUNNER_TEMP/sonar-artifact-tools"
+          "$RUNNER_TEMP/sonar-artifact-tools/bin/python" -m pip install --require-hashes -r tests/tools/requirements.txt
+
+      - name: Verify coverage artifact failure handling
+        run: |
+          "$RUNNER_TEMP/sonar-artifact-tools/bin/python" -m unittest discover -s tests/tools -p 'test_sonar_coverage_artifacts.py' -v
       - name: Verify scope classification
         run: mise exec python@3.12.12 -- python -m unittest discover -s tests/security -p test_sonar_change_scope.py -v
       - name: Classify the complete tested change
@@ -54,10 +62,15 @@ jobs:
             --all-prs "$SONAR_ALL_PRS" --run-sonar "$RUN_SONAR" \
             --repository "$REPOSITORY" --actor "$ACTOR" --ref "$GITHUB_REF"
 
-  analyze:
+  # Independent coverage producers run in parallel; the scanner requires both.
+  # Keeping final XML/LCOV artifacts lets a failed scan be retried without
+  # repeating the two-hour legacy suite. No partial producer uploads reports.
+  legacy-coverage:
     timeout-minutes: 180
-    name: SonarQube Cloud analysis
+    name: Legacy unit and poller coverage
     needs: scope
+    outputs:
+      artifact-id: ${{ steps.coverage-artifact.outputs.artifact-id }}
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     # Keep a native trust boundary even if PR-authored classification code changes.
     if: >-
@@ -96,6 +109,167 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # Blame and new-code detection need the full history.
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: '8.4'
+          extensions: snmp, pcntl, sockets, gd, gmp, intl, ldap, mbstring, pdo_mysql, posix, xml
+          # PCOV and JIT both hook execution; child HTTP tests inherit this INI.
+          ini-values: opcache.jit=off, opcache.jit_buffer_size=0
+          coverage: pcov
+          tools: composer
+
+      - name: Install RRDtool for native writer coverage
+        run: |
+          sudo apt-get update -o Acquire::Retries=3
+          sudo apt-get install -y --no-install-recommends rrdtool
+
+      - name: Locate Composer download cache
+        id: composer-cache
+        run: echo "directory=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+      - name: Cache Composer downloads
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ steps.composer-cache.outputs.directory }}
+          key: composer-downloads-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('composer.lock', 'tests/composer.lock') }}
+          restore-keys: |
+            composer-downloads-${{ runner.os }}-${{ runner.arch }}-
+
+      - name: Install application dependencies
+        run: composer install --no-interaction --no-progress
+
+      # composer install only warns when the lock is stale; validate exits
+      # non-zero, so the run uses exactly the committed versions.
+      - name: Install test dependencies
+        working-directory: tests
+        run: |
+          set -euo pipefail
+          composer validate --no-check-publish --check-lock
+          composer install --no-progress --no-interaction
+
+      # No continue-on-error. A failing test stops the job before the scan, so
+      # Sonar never receives coverage from a partial run. The checks after the
+      # run catch one that exits 0 before PHPUnit writes the report, and a
+      # report that recorded nothing.
+      #
+      # PCOV guesses its root from the working directory and would instrument
+      # only tests/, so point it at the checkout.
+      - name: Set up Node for application assets
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22.22.2'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            tests/e2e/package-lock.json
+
+      - name: Build browser assets for compatibility tests
+        run: npm ci --ignore-scripts && npm run build
+
+      - name: Compile installed browser assets for CLI coverage
+        run: php bin/console asset-map:compile --env=prod --no-debug
+
+      - name: Unit tests with coverage
+        working-directory: tests
+        env:
+          RRDTOOL_TEST_BINARY: /usr/bin/rrdtool
+          KADUPUL_TEST_MYSQL_DSN: mysql:host=127.0.0.1;port=${{ job.services.database.ports['3306'] }};dbname=kadupul_test;charset=utf8mb4
+          KADUPUL_TEST_MYSQL_PASSWORD: kadupul-ci-only
+        run: |
+          set -euo pipefail
+          test -x "$RRDTOOL_TEST_BINARY"
+          php -d error_reporting=24575 -d pcov.directory="$GITHUB_WORKSPACE" \
+            -d pcov.exclude='~/(include/vendor|tests)/~' \
+            vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --configuration phpunit-coverage.xml --coverage-php coverage.php
+          test -s coverage.xml
+          # PHP variables must remain literal until PHP parses the expression.
+          # shellcheck disable=SC2016
+          php -r '$m = simplexml_load_file("coverage.xml")->project->metrics; echo "Covered statements: {$m["coveredstatements"]} of {$m["statements"]}", PHP_EOL; exit((int) $m["coveredstatements"] > 0 ? 0 : 1);'
+
+      - name: Set up integration runner
+        uses: jdx/mise-action@7a4e45a543138629540c9a1616d08632b893e492 # v5.0.1
+        with:
+          install_args: python@3.12.12 node@22.22.2
+
+      - name: Install coverage artifact verifier
+        run: |
+          mise exec python@3.12.12 -- python -m venv "$RUNNER_TEMP/sonar-artifact-tools"
+          "$RUNNER_TEMP/sonar-artifact-tools/bin/python" -m pip install --require-hashes -r tests/tools/requirements.txt
+
+      - name: Poller integration coverage
+        env:
+          PHP_VERSION: '8.4'
+        run: |
+          set -euo pipefail
+          mise exec python@3.12.12 -- python tests/Support/Behavior/poller_coverage.py --output "$RUNNER_TEMP/poller-coverage"
+          mise exec python@3.12.12 -- python tests/Support/Behavior/coverage_selftest.py --unit tests/coverage.php --integration "$RUNNER_TEMP/poller-coverage"
+          php tests/Support/Behavior/merge_poller_coverage.php tests/coverage.php "$RUNNER_TEMP/poller-coverage" tests/coverage.xml
+
+      - name: Seal complete coverage reports
+        env:
+          COVERAGE_PART: legacy
+        run: |
+          "$RUNNER_TEMP/sonar-artifact-tools/bin/python" tests/tools/sonar_coverage_artifacts.py seal \
+            --part "$COVERAGE_PART" --bundle "$RUNNER_TEMP/sonar-coverage-$COVERAGE_PART" \
+            --expected-source "$GITHUB_SHA"
+      - name: Preserve complete coverage reports
+        id: coverage-artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: sonar-coverage-legacy-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/sonar-coverage-legacy/
+          if-no-files-found: error
+          retention-days: 14
+
+  application-coverage:
+    timeout-minutes: 90
+    name: Application and browser coverage
+    needs: scope
+    outputs:
+      artifact-id: ${{ steps.coverage-artifact.outputs.artifact-id }}
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    # Keep a native trust boundary even if PR-authored classification code changes.
+    if: >-
+      vars.ENABLE_SONAR == 'true' && needs.scope.outputs.full_analysis == 'true' &&
+      github.actor != 'dependabot[bot]' &&
+      ((github.event_name == 'push' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)) ||
+       (github.event_name == 'workflow_dispatch' && inputs.run_sonar) ||
+       (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository &&
+        (vars.SONAR_ALL_PRS == 'true' || startsWith(github.head_ref, 'sonar/') || startsWith(github.head_ref, 'release/'))))
+    permissions:
+      contents: read
+      pull-requests: read
+    # The real-MariaDB PHPUnit tests skip without a server; the password
+    # exists only inside this runner.
+    services:
+      database:
+        image: mariadb:11.8
+        env:
+          MARIADB_ROOT_PASSWORD: kadupul-ci-only
+          MARIADB_DATABASE: kadupul_test
+        ports:
+          - 3306/tcp
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+    steps:
+      - name: Verify requested analysis credentials
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          if [ -z "$SONAR_TOKEN" ]; then
+            echo '::error::Sonar was requested but SONAR_TOKEN is not configured.'
+            exit 1
+          fi
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Blame and new-code detection need the full history.
+          ref: ${{ github.sha }}
           fetch-depth: 0
           persist-credentials: false
 
@@ -169,36 +343,15 @@ jobs:
             include/vendor/bin/phpunit --configuration phpunit-symfony.xml --coverage-php var/symfony-coverage.php
           test -s var/symfony-coverage.php
 
-      - name: Unit tests with coverage
-        working-directory: tests
-        env:
-          RRDTOOL_TEST_BINARY: /usr/bin/rrdtool
-          KADUPUL_TEST_MYSQL_DSN: mysql:host=127.0.0.1;port=${{ job.services.database.ports['3306'] }};dbname=kadupul_test;charset=utf8mb4
-          KADUPUL_TEST_MYSQL_PASSWORD: kadupul-ci-only
-        run: |
-          set -euo pipefail
-          test -x "$RRDTOOL_TEST_BINARY"
-          php -d error_reporting=24575 -d pcov.directory="$GITHUB_WORKSPACE" \
-            -d pcov.exclude='~/(include/vendor|tests)/~' \
-            vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --configuration phpunit-coverage.xml --coverage-php coverage.php
-          test -s coverage.xml
-          # PHP variables must remain literal until PHP parses the expression.
-          # shellcheck disable=SC2016
-          php -r '$m = simplexml_load_file("coverage.xml")->project->metrics; echo "Covered statements: {$m["coveredstatements"]} of {$m["statements"]}", PHP_EOL; exit((int) $m["coveredstatements"] > 0 ? 0 : 1);'
-
       - name: Set up integration runner
         uses: jdx/mise-action@7a4e45a543138629540c9a1616d08632b893e492 # v5.0.1
         with:
           install_args: python@3.12.12 node@22.22.2
 
-      - name: Poller integration coverage
-        env:
-          PHP_VERSION: '8.4'
+      - name: Install coverage artifact verifier
         run: |
-          set -euo pipefail
-          mise exec python@3.12.12 -- python tests/Support/Behavior/poller_coverage.py --output "$RUNNER_TEMP/poller-coverage"
-          mise exec python@3.12.12 -- python tests/Support/Behavior/coverage_selftest.py --unit tests/coverage.php --integration "$RUNNER_TEMP/poller-coverage"
-          php tests/Support/Behavior/merge_poller_coverage.php tests/coverage.php "$RUNNER_TEMP/poller-coverage" tests/coverage.xml
+          mise exec python@3.12.12 -- python -m venv "$RUNNER_TEMP/sonar-artifact-tools"
+          "$RUNNER_TEMP/sonar-artifact-tools/bin/python" -m pip install --require-hashes -r tests/tools/requirements.txt
 
       - name: About authenticated-only HTTP integration
         run: mise exec python@3.12.12 -- python tests/Symfony/about_review_http.py
@@ -250,6 +403,85 @@ jobs:
           node tests/e2e/node_modules/@playwright/test/cli.js test --config=tests/e2e/playwright.config.js layout-interactions.spec.js midwinter-listeners.spec.js html-sink-escaping.spec.js
           node tests/e2e/browser-coverage.js "$KADUPUL_BROWSER_COVERAGE" var/browser-coverage.lcov
           test -s var/browser-coverage.lcov
+
+      - name: Seal complete coverage reports
+        env:
+          COVERAGE_PART: application
+        run: |
+          "$RUNNER_TEMP/sonar-artifact-tools/bin/python" tests/tools/sonar_coverage_artifacts.py seal \
+            --part "$COVERAGE_PART" --bundle "$RUNNER_TEMP/sonar-coverage-$COVERAGE_PART" \
+            --expected-source "$GITHUB_SHA"
+      - name: Preserve complete coverage reports
+        id: coverage-artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: sonar-coverage-application-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/sonar-coverage-application/
+          if-no-files-found: error
+          retention-days: 14
+
+  analyze:
+    timeout-minutes: 15
+    name: SonarQube Cloud analysis
+    needs: [scope, legacy-coverage, application-coverage]
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    # Keep a native trust boundary even if PR-authored classification code changes.
+    if: >-
+      vars.ENABLE_SONAR == 'true' && needs.scope.outputs.full_analysis == 'true' &&
+      github.actor != 'dependabot[bot]' &&
+      ((github.event_name == 'push' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)) ||
+       (github.event_name == 'workflow_dispatch' && inputs.run_sonar) ||
+       (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository &&
+        (vars.SONAR_ALL_PRS == 'true' || startsWith(github.head_ref, 'sonar/') || startsWith(github.head_ref, 'release/'))))
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Blame and new-code detection need the full history.
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up integration runner
+        uses: jdx/mise-action@7a4e45a543138629540c9a1616d08632b893e492 # v5.0.1
+        with:
+          install_args: python@3.12.12 node@22.22.2
+
+      - name: Install coverage artifact verifier
+        run: |
+          mise exec python@3.12.12 -- python -m venv "$RUNNER_TEMP/sonar-artifact-tools"
+          "$RUNNER_TEMP/sonar-artifact-tools/bin/python" -m pip install --require-hashes -r tests/tools/requirements.txt
+
+      - name: Require both immutable producer artifacts
+        env:
+          LEGACY_ARTIFACT_ID: ${{ needs.legacy-coverage.outputs.artifact-id }}
+          APPLICATION_ARTIFACT_ID: ${{ needs.application-coverage.outputs.artifact-id }}
+        run: |
+          for artifact_id in "$LEGACY_ARTIFACT_ID" "$APPLICATION_ARTIFACT_ID"; do
+            case "$artifact_id" in
+              ''|*[!0-9]*) echo '::error::A complete coverage producer artifact is missing.'; exit 1 ;;
+            esac
+          done
+      - name: Download legacy coverage from this run
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          artifact-ids: ${{ needs.legacy-coverage.outputs.artifact-id }}
+          merge-multiple: true
+          path: .sonar-coverage/legacy
+      - name: Download application coverage from this run
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          artifact-ids: ${{ needs.application-coverage.outputs.artifact-id }}
+          merge-multiple: true
+          path: .sonar-coverage/application
+      - name: Verify complete reports and remap source paths
+        run: |
+          "$RUNNER_TEMP/sonar-artifact-tools/bin/python" tests/tools/sonar_coverage_artifacts.py consume \
+            --bundle .sonar-coverage --expected-source "$GITHUB_SHA"
+          rm -rf .sonar-coverage
 
       - name: Scan
         uses: SonarSource/sonarqube-scan-action@d209202bc7d53ff1cc128f7f907dac145c9d6ae9 # v8.3.0
