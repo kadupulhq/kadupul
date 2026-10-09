@@ -33,7 +33,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Set up scope runner
-        uses: jdx/mise-action@9149ea85001c7435d5a66bb127d6a1b6227cb0a5 # v5.0.0
+        uses: jdx/mise-action@7a4e45a543138629540c9a1616d08632b893e492 # v5.0.1
         with:
           install_args: python@3.12.12
       - name: Verify scope classification
@@ -187,7 +187,7 @@ jobs:
           php -r '$m = simplexml_load_file("coverage.xml")->project->metrics; echo "Covered statements: {$m["coveredstatements"]} of {$m["statements"]}", PHP_EOL; exit((int) $m["coveredstatements"] > 0 ? 0 : 1);'
 
       - name: Set up integration runner
-        uses: jdx/mise-action@9149ea85001c7435d5a66bb127d6a1b6227cb0a5 # v5.0.0
+        uses: jdx/mise-action@7a4e45a543138629540c9a1616d08632b893e492 # v5.0.1
         with:
           install_args: python@3.12.12 node@22.22.2
 

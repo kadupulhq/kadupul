@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Require configured data input validation before collection; invalid or missing approvals stop affected methods. Unconfigured installations retain their existing behavior; refresh configured approvals with the input whitelist CLI before resuming collection.
+
 - Add Pest serial profiling and isolated parallel feedback with complete JUnit discovery checks and hardened XML evidence parsing.
 - Diagnose unavailable PHP POSIX/process functions and Linux `/proc` before native worker-boundary self-tests start workers.
 

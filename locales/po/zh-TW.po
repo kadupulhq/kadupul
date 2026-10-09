@@ -15141,7 +15141,7 @@ msgid "User Community"
 msgstr "用戶社區"
 
 #: lib/functions.php:4250 lib/functions.php:4275 lib/html.php:2772
-#: lib/utility.php:1446
+#: lib/utility.php:1447
 #, fuzzy
 msgid "Documentation"
 msgstr "文件"
@@ -18992,215 +18992,215 @@ msgstr "圖形創建"
 msgid "NOTE: Graph not added for Data Query %s and index %s due to Data Source verification failure"
 msgstr ""
 
-#: lib/utility.php:1154
+#: lib/utility.php:1155
 #, fuzzy
 msgid "MySQL 5.6+ and MariaDB 10.0+ are great releases, and are very good versions to choose. Make sure you run the very latest release though which fixes a long standing low level networking issue that was causing spine many issues with reliability."
 msgstr "MySQL 5.6+和MariaDB 10.0+是很棒的版本，是非常好的版本。確保你運行最新的版本，雖然它解決了一個長期存在的低級別網絡問題，這個問題導致脊柱出現許多可靠性問題。"
 
-#: lib/utility.php:1166
+#: lib/utility.php:1167
 #, fuzzy, php-format
 msgid "It is STRONGLY recommended that you enable InnoDB in any %s version greater than 5.5.3."
 msgstr "建議您在大於5.1的任何%s版本中啟用InnoDB。"
 
-#: lib/utility.php:1179 lib/utility.php:1216
+#: lib/utility.php:1180 lib/utility.php:1217
 #, fuzzy
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4_unicode_ci collation type as some characters take more than a single byte."
 msgstr "將Kadupul與英語以外的語言一起使用時，使用utf8mb4_unicode_ci校對類型非常重要，因為某些字符需要多個字節。"
 
-#: lib/utility.php:1185 lib/utility.php:1191 lib/utility.php:1222
-#: lib/utility.php:1228
+#: lib/utility.php:1186 lib/utility.php:1192 lib/utility.php:1223
+#: lib/utility.php:1229
 #, fuzzy
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4 character set as some characters take more than a single byte."
 msgstr "將Kadupul與英語以外的語言一起使用時，使用utf8mb4字符集非常重要，因為某些字符需要多個字節。"
 
-#: lib/utility.php:1204
+#: lib/utility.php:1205
 #, fuzzy, php-format
 msgid "It is recommended that you enable InnoDB in any %s version greater than 5.1."
 msgstr "建議您在大於5.1的任何%s版本中啟用InnoDB。"
 
-#: lib/utility.php:1237
+#: lib/utility.php:1238
 #, fuzzy, php-format
 msgid "Depending on the number of logins and use of spine data collector, %s will need many connections.  The calculation for spine is: total_connections = total_processes * (total_threads + script_servers + 1), then you must leave headroom for user connections, which will change depending on the number of concurrent login accounts."
 msgstr "根據登錄次數和使用脊椎數據收集器，%s將需要許多連接。 spine的計算是：total_connections = total_processes *（total_threads + script_servers + 1），然後您必須為用戶連接留出空間，這將根據並發登錄帳戶的數量而變化。"
 
-#: lib/utility.php:1242
+#: lib/utility.php:1243
 #, fuzzy
 msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
 msgstr "使用innodb_file_per_table時，保持表緩存更大意味著更少的文件打開/關閉操作。"
 
-#: lib/utility.php:1247
+#: lib/utility.php:1248
 #, fuzzy
 msgid "With Remote polling capabilities, large amounts of data will be synced from the main server to the remote pollers.  Therefore, keep this value at or above 16M."
 msgstr "使用遠程輪詢功能，大量數據將從主服務器同步到遠程輪詢器。因此，請將此值保持在16M或以上。"
 
-#: lib/utility.php:1253
+#: lib/utility.php:1254
 #, fuzzy, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
 msgstr "如果使用Kadupul Performance Booster並選擇內存存儲引擎，則必須小心在系統內存表空間耗盡之前刷新Performance Booster緩衝區。這有兩種方法，首先將輸出列的大小減小到恰當的大小。此列位於表poller_output和poller_output_boost中。您可以做的第二件事是為內存表分配更多內存。我們已經任意選擇了10 %%系統內存的推薦值，但如果您使用的是SSD磁盤驅動器，或者係統較小，則可以忽略此建議或選擇其他存儲引擎。您可能會在Console  - &gt; System Utilities  - &gt; View Boost Status下看到Performance Booster表的預期消耗。"
 
-#: lib/utility.php:1259
+#: lib/utility.php:1260
 #, fuzzy
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
 msgstr "執行子查詢時，臨時表大小較大時，請將這些臨時表保留在內存中。"
 
-#: lib/utility.php:1265 lib/utility.php:1271
+#: lib/utility.php:1266 lib/utility.php:1272
 msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr ""
 
-#: lib/utility.php:1277
+#: lib/utility.php:1278
 #, fuzzy, php-format
 msgid "When using InnoDB storage it is important to keep your table spaces separate.  This makes managing the tables simpler for long time users of %s.  If you are running with this currently off, you can migrate to the per file storage by enabling the feature, and then running an alter statement on all InnoDB tables."
 msgstr "使用InnoDB存儲時，將表空間分開是很重要的。這使得對於%s的長時間用戶來說，管理表更簡單。如果您當前正在運行此服務，則可以通過啟用該功能，然後在所有InnoDB表上運行alter語句來遷移到每個文件存儲。"
 
-#: lib/utility.php:1283
+#: lib/utility.php:1284
 #, fuzzy
 msgid "When using innodb_file_per_table, it is important to set the innodb_file_format to Barracuda.  This setting will allow longer indexes important for certain Kadupul tables."
 msgstr "使用innodb_file_per_table時，將innodb_file_format設置為Barracuda非常重要。此設置將允許更長的索引對某些Kadupul表很重要。"
 
-#: lib/utility.php:1289
+#: lib/utility.php:1290
 #, fuzzy
 msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
 msgstr "如果表的索引很大，則必須使用梭子魚的innodb_file_format和innodb_large_prefix等於1的操作。否則可能導致插件無法正確創建表。"
 
-#: lib/utility.php:1295
+#: lib/utility.php:1296
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
 msgstr "InnoDB將盡可能多地保存系統內存中的表和索引。因此，你應該使innodb_buffer_pool足夠大，以便在內存中保存盡可能多的表和索引。檢查/ var / lib / mysql / Kadupul目錄的大小將有助於確定此值。我們建議您的系統總內存佔25 %%，但您的要求會因係統大小而異。"
 
-#: lib/utility.php:1301
+#: lib/utility.php:1302
 #, fuzzy
 msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "除非您的Kadupul實例在ZFS或FusionI / O上運行，並且兩者都具有內部日記功能以適應突然的系統崩潰，否則此設置應保持為ON。但是，如果您的電源非常好，並且系統很少宕機並且有備份，那麼將此設置設置為OFF可以使數據庫性能提高近50％。"
 
-#: lib/utility.php:1306
+#: lib/utility.php:1307
 #, fuzzy
 msgid "This is where metadata is stored. If you had a lot of tables, it would be useful to increase this."
 msgstr "這是存儲元數據的地方。如果你有很多表，那麼增加它會很有用。"
 
-#: lib/utility.php:1311
+#: lib/utility.php:1312
 #, fuzzy
 msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "Rogue查詢不應該讓數據庫脫機到其他人。在殺死您的系統之前殺死這些查詢。"
 
-#: lib/utility.php:1316
+#: lib/utility.php:1317
 #, fuzzy
 msgid "Maximum I/O performance happens when you use the O_DIRECT method to flush pages."
 msgstr "使用O_DIRECT方法刷新頁面時，會發生最大I / O性能。"
 
-#: lib/utility.php:1326
+#: lib/utility.php:1327
 #, fuzzy, php-format
 msgid "Setting this value to 2 means that you will flush all transactions every second rather than at commit.  This allows %s to perform writing less often."
 msgstr "將此值設置為2意味著您將每秒刷新所有事務而不是提交。這允許%s更少地執行寫入。"
 
-#: lib/utility.php:1331
+#: lib/utility.php:1332
 #, fuzzy
 msgid "With modern SSD type storage, having multiple io threads is advantageous for applications with high io characteristics."
 msgstr "使用現代SSD類型存儲，具有多個io線程對於具有高io特性的應用是有利的。"
 
-#: lib/utility.php:1339 lib/utility.php:1381
+#: lib/utility.php:1340 lib/utility.php:1382
 #, fuzzy, php-format
 msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "從%s%s開始，您可以控制%s將事務刷新到磁盤的頻率。默認值為1秒，但在高I / O系統中設置為大於1的值可以允許磁盤I / O更順序"
 
-#: lib/utility.php:1344
+#: lib/utility.php:1345
 #, fuzzy
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "使用現代SSD類型存儲，具有多個讀取io線程對於具有高io特性的應用是有利的。"
 
-#: lib/utility.php:1349
+#: lib/utility.php:1350
 #, fuzzy
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "使用現代SSD類型存儲，具有多個寫入io線程對於具有高io特性的應用是有利的。"
 
-#: lib/utility.php:1355
+#: lib/utility.php:1356
 #, fuzzy, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
 msgstr "%s會將innodb_buffer_pool劃分為內存區域以提高性能。最大值為64.當你的innodb_buffer_pool小於1GB時，你應該使用池大小除以128MB。繼續使用此公式，最大值為64。"
 
-#: lib/utility.php:1355
+#: lib/utility.php:1356
 #, fuzzy, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s會將innodb_buffer_pool劃分為內存區域以提高性能。最大值為64.當你的innodb_buffer_pool小於1GB時，你應該使用池大小除以128MB。繼續使用此公式，最大值為64。"
 
-#: lib/utility.php:1361 lib/utility.php:1397
+#: lib/utility.php:1362 lib/utility.php:1398
 #, fuzzy
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
 msgstr "如果您有SSD磁盤，請使用此建議。如果您有物理硬盤驅動器，請使用200 *陣列中的活動驅動器數量。如果使用NVMe或PCIe閃存，可以使用高達100000的更大數字。"
 
-#: lib/utility.php:1367 lib/utility.php:1403
+#: lib/utility.php:1368 lib/utility.php:1404
 #, fuzzy
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 2000 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 200000 can be used."
 msgstr "如果您有SSD磁盤，請使用此建議。如果您有物理硬盤驅動器，請使用2000 *陣列中的活動驅動器數量。如果使用NVMe或PCIe Flash，則可以使用高達200000的更大數字。"
 
-#: lib/utility.php:1373 lib/utility.php:1409
+#: lib/utility.php:1374 lib/utility.php:1410
 #, fuzzy
 msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this setting."
 msgstr "如果您有SSD磁盤，請使用此建議。否則，請勿設置此設置。"
 
-#: lib/utility.php:1386
+#: lib/utility.php:1387
 #, fuzzy
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics."
 msgstr "使用現代SSD類型存儲，具有多個讀取io線程對於具有高io特性的應用是有利的。"
 
-#: lib/utility.php:1391
+#: lib/utility.php:1392
 #, fuzzy
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics."
 msgstr "使用現代SSD類型存儲，具有多個寫入io線程對於具有高io特性的應用是有利的。"
 
-#: lib/utility.php:1422
+#: lib/utility.php:1423
 msgid "When using MariaDB 10.2.4 and above, this setting should be off if atomic writes are enabled.  Therefore, please enable atomic writes instead of the double write buffer as it will increase performance."
 msgstr "使用 MariaDB 10.2.4 及更高版本時，如果啟用了原子寫入，則應關閉此設置。因此，請啟用原子寫入而不是雙寫入緩衝區，因為它會提高性能。"
 
-#: lib/utility.php:1429
+#: lib/utility.php:1430
 msgid "When using MariaDB 10.2.4 and above, you can use atomic writes over the doublewrite buffer to increase performance."
 msgstr "使用 MariaDB 10.2.4 及更高版本時，您可以在雙寫緩衝區上使用原子寫入來提高性能。"
 
-#: lib/utility.php:1446
+#: lib/utility.php:1447
 #, fuzzy, php-format
 msgid "%s Tuning"
 msgstr "%s調整"
 
-#: lib/utility.php:1446
+#: lib/utility.php:1447
 #, fuzzy
 msgid "Note: Many changes below require a database restart"
 msgstr "注意：以下許多更改都需要重新啟動數據庫"
 
-#: lib/utility.php:1454
+#: lib/utility.php:1455
 #, fuzzy
 msgid "Variable"
 msgstr "变数"
 
-#: lib/utility.php:1455
+#: lib/utility.php:1456
 #, fuzzy
 msgid "Current Value"
 msgstr "當前的數值"
 
-#: lib/utility.php:1457
+#: lib/utility.php:1458
 #, fuzzy
 msgid "Recommended Value"
 msgstr "推薦值"
 
-#: lib/utility.php:1458
+#: lib/utility.php:1459
 #, fuzzy
 msgid "Comments"
 msgstr "評論"
 
-#: lib/utility.php:2052
+#: lib/utility.php:2053
 #, fuzzy, php-format
 msgid "PHP %s is the minimum version"
 msgstr "PHP%s是最小版本"
 
-#: lib/utility.php:2054
+#: lib/utility.php:2055
 #, fuzzy, php-format
 msgid "A minimum of %s memory limit"
 msgstr "至少%s MB內存限制"
 
-#: lib/utility.php:2056
+#: lib/utility.php:2057
 #, fuzzy, php-format
 msgid "A minimum of %s m execution time"
 msgstr "至少%sm執行時間"
 
-#: lib/utility.php:2058
+#: lib/utility.php:2059
 #, fuzzy
 msgid "A valid timezone that matches MySQL and the system"
 msgstr "與MySQL和系統匹配的有效時區"

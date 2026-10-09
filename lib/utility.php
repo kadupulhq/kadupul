@@ -1033,7 +1033,7 @@ function data_input_whitelist_check($data_input_id)
     global $config;
 
     static $data_input_whitelist = null;
-    static $validated_input_ids  = null;
+    static $validated_input_ids  = array();
     static $notified = array();
 
     // no whitelist file defined, everything whitelisted
@@ -1042,29 +1042,30 @@ function data_input_whitelist_check($data_input_id)
     }
 
     // whitelist is configured but does not exist, means nothing whitelisted
-    if (!file_exists($config['input_whitelist'])) {
+    if (!is_string($config['input_whitelist']) || !is_file($config['input_whitelist']) || !is_readable($config['input_whitelist'])) {
         return false;
     }
 
     // load whitelist, but only once within process execution
-    if ($data_input_whitelist == null) {
+    if ($data_input_whitelist === null) {
         $data_input_ids = array_rekey(
             db_fetch_assoc('SELECT * FROM data_input'),
             'hash',
             array('id', 'name', 'input_string')
         );
 
-        $data_input_whitelist = json_decode(file_get_contents($config['input_whitelist']), true);
-        if ($data_input_whitelist === null) {
-            cacti_log('ERROR: Failed to parse input whitelist file: ' . $config['input_whitelist']);
-            return true;
+        $bytes = @file_get_contents($config['input_whitelist']);
+        $data_input_whitelist = $bytes === false ? null : json_decode($bytes, true);
+        if (!is_array($data_input_whitelist)) {
+            cacti_log('ERROR: Failed to read or parse input whitelist file: ' . $config['input_whitelist']);
+            return false;
         }
 
         if (cacti_sizeof($data_input_ids)) {
             foreach ($data_input_ids as $hash => $id) {
                 if ($id['input_string'] != '') {
                     if (isset($data_input_whitelist[$hash])) {
-                        if ($data_input_whitelist[$hash] == $id['input_string']) {
+                        if ($data_input_whitelist[$hash] === $id['input_string']) {
                             $validated_input_ids[$id['id']] = true;
                         } else {
                             cacti_log('ERROR: Whitelist entry failed validation for Data Input: ' . $id['name'] . ' DI[' . $id['id'] . '].  Data Collection will not run.  Run CLI command input_whitelist.php --audit and --update to remediate.');
@@ -1072,7 +1073,7 @@ function data_input_whitelist_check($data_input_id)
                         }
                     } else {
                         cacti_log('WARNING: Whitelist entry missing for Data Input: ' . $id['name'] . ' DI[' . $id['id'] . '].  Run CLI command input_whitelist.php --update to remediate.');
-                        $validated_input_ids[$id['id']] = true;
+                        $validated_input_ids[$id['id']] = false;
                     }
                 } else {
                     $validated_input_ids[$id['id']] = true;
@@ -1092,7 +1093,7 @@ function data_input_whitelist_check($data_input_id)
             return false;
         }
     } else {
-        return true;
+        return false;
     }
 }
 
