@@ -89,6 +89,32 @@ function cacti_snmp_select_uptime($system_uptime, $engine_time, $now = null) {
 	return $system_uptime === false || $engine_uptime >= $system_uptime ? $engine_uptime : $system_uptime;
 }
 
+/**
+ * Select the counter used for uptime-backwards reindex assertions.
+ *
+ * Spine prefers snmpEngineTime, even when it is smaller than sysUpTime or
+ * resembles wall-clock time. The cache baseline and PHP assertion must use
+ * that same counter. A zero engine time is valid immediately after a reset.
+ * Device display continues to use cacti_snmp_select_uptime().
+ *
+ * @return int|false Counter in hundredths of a second, or false when unavailable.
+ */
+function cacti_snmp_select_reindex_uptime($system_uptime, $engine_time) {
+	if ((is_int($engine_time) || is_string($engine_time)) &&
+		preg_match('/^[0-9]+$/D', (string) $engine_time) === 1 &&
+		$engine_time <= 2147483647) {
+		return (int) $engine_time * 100;
+	}
+
+	if ((is_int($system_uptime) || is_string($system_uptime)) &&
+		preg_match('/^[0-9]+$/D', (string) $system_uptime) === 1 &&
+		$system_uptime <= 4294967295) {
+		return (int) $system_uptime;
+	}
+
+	return false;
+}
+
 function cacti_snmp_session($hostname, $community, $version, $auth_user = '', $auth_pass = '',
 	$auth_proto = '', $priv_pass = '', $priv_proto = '', $context = '', $engineid = '',
 	$port = 161, $timeout_ms = 500, $retries = 0, $max_oids = 10, $bulk_walk_size = 10) {

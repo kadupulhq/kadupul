@@ -38,10 +38,9 @@ test('normal engine time still covers a wrapped sysUpTime value', function () {
 		->and(cacti_snmp_select_uptime('U', 'U', $now))->toBeFalse();
 });
 
-test('every system uptime call path uses the shared selection rule', function () use ($root) {
+test('system uptime display call paths retain the shared selection rule', function () use ($root) {
 	$call_counts = array(
-		'cmd.php'                => 2,
-		'lib/poller.php'         => 1,
+		'cmd.php'                => 1,
 		'lib/api_device.php'     => 1,
 		'lib/api_automation.php' => 1
 	);
@@ -49,6 +48,32 @@ test('every system uptime call path uses the shared selection rule', function ()
 	foreach ($call_counts as $path => $count) {
 		expect(substr_count(file_get_contents($root . '/' . $path), 'cacti_snmp_select_uptime('))->toBeGreaterThanOrEqual($count);
 	}
+});
+
+test('reindex counters prefer the engine counter while display retains its heuristic', function () {
+	$now = 1784363931;
+
+	expect(cacti_snmp_select_reindex_uptime(4000000, 600))->toBe(60000)
+		->and(cacti_snmp_select_reindex_uptime(3015, $now))->toBe($now * 100)
+		->and(cacti_snmp_select_uptime(3015, $now, $now))->toBe(3015)
+		->and(cacti_snmp_select_reindex_uptime(4000000, '0'))->toBe(0)
+		->and(cacti_snmp_select_reindex_uptime('0', 'U'))->toBe(0)
+		->and(cacti_snmp_select_reindex_uptime(250000, 50000000))->toBe(5000000000)
+		->and(cacti_snmp_select_reindex_uptime('4294967295', '2147483647'))->toBe(214748364700);
+});
+
+test('reindex counters fall back on unavailable or malformed engine responses', function () {
+	foreach (array('U', '', false, null, -1, '-1', '1.5', '1e3', array(), true, 1.5, '2147483648') as $engine) {
+		expect(cacti_snmp_select_reindex_uptime('4200', $engine))->toBe(4200);
+	}
+	foreach (array('U', '', false, null, -1, '1.5', '1e3', array(), true, '4294967296') as $system) {
+		expect(cacti_snmp_select_reindex_uptime($system, 'U'))->toBeFalse();
+	}
+});
+
+test('both reindex cache and PHP assertion use the counter selection contract', function () use ($root) {
+	expect(file_get_contents($root . '/cmd.php'))->toContain('$output        = cacti_snmp_select_reindex_uptime(')
+		->and(file_get_contents($root . '/lib/poller.php'))->toContain('$assert_value  = cacti_snmp_select_reindex_uptime(');
 });
 
 test('device display reuses the uptime reads and shows an unknown placeholder', function () use ($root) {
