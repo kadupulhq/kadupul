@@ -48,7 +48,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
         with:
           php-version: '${{ matrix.php }}'
           coverage: none
@@ -76,7 +76,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
         with:
           php-version: '8.4'
           coverage: none
@@ -133,7 +133,7 @@ jobs:
         persist-credentials: false
 
     - name: Install PHP 8.4
-      uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+      uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
       with:
         php-version: '8.4'
         extensions: dom, gd, gmp, intl, ldap, mbstring, mysqlnd, pdo_mysql, sockets, sqlite3, xml
@@ -199,7 +199,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
         with:
           php-version: '8.4.25'
           extensions: curl, dom, gd, gmp, intl, ldap, mbstring, pcntl, pdo_mysql, posix, sockets, sqlite3, xml
@@ -273,7 +273,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
         with:
           php-version: ${{ matrix.php }}
           extensions: gd, gmp, ldap, mbstring, mysqli, pdo_mysql, snmp, sockets, xml, zip
@@ -476,7 +476,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
         with:
           php-version: '8.4'
           coverage: none
