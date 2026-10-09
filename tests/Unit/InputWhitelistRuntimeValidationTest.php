@@ -6,7 +6,7 @@
 test('configured runtime whitelist requires a validated method', function ($case, $expected) {
     $root = dirname(__DIR__, 2);
     $process = proc_open(array(PHP_BINARY, '-d', 'error_reporting=E_ALL',
-        $root . '/tests/Fixtures/input-whitelist-runtime.php', $root, $case),
+        $root . '/tests/fixtures/input-whitelist-runtime.php', $root, $case),
         array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
     expect(is_resource($process))->toBeTrue();
     $stdout = stream_get_contents($pipes[1]);
