@@ -1,11 +1,10 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import fc from 'fast-check';
-import assert from 'node:assert/strict';
-import { createHash, randomInt } from 'node:crypto';
-import { test } from 'node:test';
-import { syncAssets } from '../../tools/dependencies/sync.mjs';
+const fc = require('fast-check');
+const assert = require('node:assert/strict');
+const { createHash, randomInt } = require('node:crypto');
+const { test } = require('node:test');
 
 const hash = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const runs = Number(process.env.FUZZ_RUNS ?? 1000);
@@ -40,6 +39,7 @@ function fixture(body, extra = {}) {
 }
 
 test('verified arbitrary bytes survive the documented UTF-8/LF conversion', async (t) => {
+  const { syncAssets } = await import('../../tools/dependencies/sync.mjs');
   t.mock.method(console, 'log', () => {});
   await fc.assert(fc.asyncProperty(bytes, async (data) => {
     const body = Buffer.from(data);
@@ -51,6 +51,7 @@ test('verified arbitrary bytes survive the documented UTF-8/LF conversion', asyn
 });
 
 test('a corrupted download at any batch position prevents every write', async (t) => {
+  const { syncAssets } = await import('../../tools/dependencies/sync.mjs');
   t.mock.method(console, 'log', () => {});
   await fc.assert(fc.asyncProperty(bytes, fc.integer({ min: 0, max: 5 }), async (data, badIndex) => {
     const { asset, io, writes } = fixture(Buffer.from(data));
@@ -63,6 +64,7 @@ test('a corrupted download at any batch position prevents every write', async (t
 });
 
 test('generated patch text is literal and preserves the containing asset', async (t) => {
+  const { syncAssets } = await import('../../tools/dependencies/sync.mjs');
   t.mock.method(console, 'log', () => {});
   await fc.assert(fc.asyncProperty(fc.string({ maxLength: 1024 }), async (after) => {
     const { asset, io, writes } = fixture(Buffer.from('prefix\r\nANCHOR\r\nsuffix'), {

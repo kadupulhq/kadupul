@@ -63,8 +63,15 @@ $unionFunctions = [
     'api_clone_get_unique_filename' => ['lib/api_device.php', ['false', 'string']],
     'exec_with_timeout' => ['lib/poller.php', ['false', 'null', 'string']],
 ];
+$unionSources = [];
 foreach ($unionFunctions as $name => [$file, $types]) {
-    eval('namespace KadupulUnionTests; ' . test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/' . $file), $name));
+    // These definitions are immutable within this file's setup. Mutable I/O
+    // and global state still get fresh fixtures in beforeEach/afterEach.
+    $unionSources[$file] ??= file_get_contents(dirname(__DIR__, 4) . '/' . $file);
+    if (!is_string($unionSources[$file])) {
+        throw new RuntimeException('Unable to read the actual helper source: ' . $file);
+    }
+    eval('namespace KadupulUnionTests; ' . test_php_function_source($unionSources[$file], $name));
 }
 
 beforeEach(function () {

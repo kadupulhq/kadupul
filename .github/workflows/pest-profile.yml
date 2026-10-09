@@ -1,0 +1,74 @@
+name: Pest profiling
+
+on:
+  workflow_dispatch:
+    inputs:
+      coverage:
+        description: Profile with complete serial PHP coverage (slower)
+        type: boolean
+        default: false
+      filter:
+        description: Optional Pest test-name filter; leave empty for the full suite
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  profile:
+    name: Profile full Pest suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: '8.4.25'
+          extensions: curl, dom, gd, gmp, intl, ldap, mbstring, pdo_mysql, snmp, sockets, sqlite3, xml
+          coverage: ${{ inputs.coverage && 'pcov' || 'none' }}
+          ini-values: opcache.jit=off, opcache.jit_buffer_size=0
+          tools: composer
+      - name: Preserve selected PHP for mise
+        run: |
+          mkdir -p "$RUNNER_TEMP/profile-php/bin"
+          ln -s "$(readlink -f "$(command -v php)")" "$RUNNER_TEMP/profile-php/bin/php"
+      - uses: jdx/mise-action@9149ea85001c7435d5a66bb127d6a1b6227cb0a5 # v5.0.0
+        with:
+          install_args: python@3.12.12 node@22.22.2
+          add_shims_to_path: false
+      - name: Install locked dependencies and application assets
+        run: |
+          mise exec python@3.12.12 -- python -m pip install --require-hashes -r tests/tools/requirements.txt
+          sudo apt-get update -o Acquire::Retries=3
+          sudo apt-get install -y --no-install-recommends rrdtool snmp
+          mise plugins install --force php https://github.com/mise-plugins/asdf-php.git#e361a2c912a431393b7deb3ecf44b877900d889c
+          mise link php@8.4.25 "$RUNNER_TEMP/profile-php"
+          mise exec php@8.4.25 -- composer install --no-progress --no-interaction --prefer-dist
+          mise exec php@8.4.25 -- composer install --working-dir=tests --no-progress --no-interaction --prefer-dist
+          mise exec node@22.22.2 -- npm ci --ignore-scripts
+          mise exec node@22.22.2 -- npm run build
+          mise exec php@8.4.25 -- php bin/console asset-map:compile
+      - name: Verify discovery and failure contracts
+        run: mise exec python@3.12.12 -- python tests/tools/test_run_pest.py
+      - name: Profile actual tests and retain complete result status
+        env:
+          PEST_FILTER: ${{ inputs.filter }}
+          PEST_COVERAGE: ${{ inputs.coverage }}
+        run: |
+          set -euo pipefail
+          arguments=(profile --junit "$RUNNER_TEMP/pest-profile.xml")
+          if [ -n "$PEST_FILTER" ]; then arguments+=(--filter="$PEST_FILTER"); fi
+          if [ "$PEST_COVERAGE" = true ]; then arguments+=(--with-coverage); fi
+          mise exec python@3.12.12 -- python tests/tools/run_pest.py "${arguments[@]}" 2>&1 | tee "$RUNNER_TEMP/pest-profile.log"
+      - name: Upload profile and test results
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pest-profile
+          path: |
+            ${{ runner.temp }}/pest-profile.log
+            ${{ runner.temp }}/pest-profile.xml
+          if-no-files-found: error

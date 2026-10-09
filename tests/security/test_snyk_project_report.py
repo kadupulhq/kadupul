@@ -59,18 +59,25 @@ class SnykProjectReportTest(unittest.TestCase):
         for record in report:
             del record["targetFile"]
             record["displayTargetFile"] = "./" + record["displayTargetFile"]
-        self.assertEqual(len(guard.verify_report(report, self.checkout)), 5)
+        self.assertEqual(len(guard.verify_report(report, self.checkout)), 6)
 
     def test_checkout_bound_absolute_and_relative_manifest_identities_agree(self):
         report = complete_report()
         for record in report:
             record["targetFile"] = str(self.checkout / record["targetFile"])
-        self.assertEqual(len(guard.verify_report(report, self.checkout)), 5)
+        self.assertEqual(len(guard.verify_report(report, self.checkout)), 6)
+
+    def test_pest_parser_dependency_requires_its_own_completed_project_scan(self):
+        report = complete_report()
+        self.assertEqual(guard.EXPECTED_PROJECTS["tests/tools/requirements.txt"], "pip")
+        missing = [project for project in report if project["targetFile"] != "tests/tools/requirements.txt"]
+        with self.assertRaises(guard.ReportError):
+            guard.verify_report(missing, self.checkout)
 
     def test_incomplete_duplicate_unexpected_and_nonarray_reports_fail(self):
         report = complete_report()
         bad = [None, {}, [], report[0], report[:-1], report + [report[0]],
-               [report[0]] * 5, [*report[:-1], {"ok": False, "error": "DO_NOT_PRINT"}]]
+               [report[0]] * 6, [*report[:-1], {"ok": False, "error": "DO_NOT_PRINT"}]]
         for candidate in bad:
             with self.subTest(candidate_type=type(candidate).__name__):
                 with self.assertRaises(guard.ReportError):

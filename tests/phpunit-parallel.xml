@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+  Reviewed feedback lane: memory-only databases, read-only source fixtures,
+  and native children whose files/directories have unique task-owned names.
+  No shared database, fixed listener port, source rewrite, or Docker project.
+  Keep the full phpunit-coverage.xml suite authoritative for coverage.
+-->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="bootstrap-unit.php" colors="true">
+    <testsuites>
+        <testsuite name="Parallel unit contracts">
+            <file>./Unit/Security/GraphItemNumericValueTest.php</file>
+            <file>./Unit/DatabaseTransactionPortabilityTest.php</file>
+            <file>./Unit/SnmpV3SecurityNegotiationNativeTest.php</file>
+            <file>./Unit/Security/HtmlRendererOutputTest.php</file>
+            <file>./Unit/ThemeSelectionAllowlistTest.php</file>
+            <file>./Unit/Core/Helpers/HelperUnionReturnTypeTest.php</file>
+            <file>./Unit/PrepareValidateResultMultiDelimiterTest.php</file>
+            <file>./Unit/IconAccessibleNameTest.php</file>
+        </testsuite>
+    </testsuites>
+</phpunit>
