@@ -56,6 +56,17 @@ See [filesystem requirements](docs/testing/spikekill-safety.md).
 
 ## Running from source
 
+Install the PHP dependencies from `composer.lock` before invoking the web
+application, poller, or CLI from a source checkout:
+
+```sh
+composer install --no-dev --prefer-dist --no-interaction
+```
+
+Repeat this step after updating the checkout. The historical tracked vendor tree
+does not replace the locked installation. The release packaging workflow installs
+these dependencies into its archive.
+
 Schema changes are committed to `cacti.sql`, used for new installations, and to
 the installer upgrade path, used for existing ones. A source checkout does not
 change its version number between releases, so the upgrade may not run on its
