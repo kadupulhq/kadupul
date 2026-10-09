@@ -50,8 +50,8 @@ function rrd_proxy_channel_run(string $root, array $calls = array(), array $touc
 		}
 	}
 
-	$proxyKey  = phpseclib3\Crypt\RSA::createKey(2048);
-	$clientKey = phpseclib3\Crypt\RSA::createKey(2048);
+	$proxyKey  = phpseclib4\Crypt\RSA::createKey(2048);
+	$clientKey = phpseclib4\Crypt\RSA::createKey(2048);
 
 	$keys = array(
 		'proxy_private'  => $proxyKey->toString('PKCS8'),
@@ -85,8 +85,8 @@ require $keys['root'] . '/include/vendor/autoload.php';
 
 /* Cacti/rrdproxy lib/functions.php: fresh AES key per message, RSA-OAEP/SHA-1 wrap, zero IV, no MAC */
 function proxy_encrypt($output, $rsa_key) {
-	$rsa = phpseclib3\Crypt\PublicKeyLoader::loadPublicKey($rsa_key)->withPadding(phpseclib3\Crypt\RSA::ENCRYPTION_OAEP)->withHash('sha1')->withMGFHash('sha1');
-	$aes = new phpseclib3\Crypt\Rijndael('cbc');
+	$rsa = phpseclib4\Crypt\PublicKeyLoader::loadPublicKey($rsa_key)->withPadding(phpseclib4\Crypt\RSA::ENCRYPTION_OAEP)->withHash('sha1')->withMGFHash('sha1');
+	$aes = new phpseclib4\Crypt\Rijndael('cbc');
 	$key = random_bytes(32);
 	$aes->setKey($key);
 	$aes->setIV(str_repeat("\0", 16));
@@ -106,8 +106,8 @@ function proxy_decrypt($input, $private) {
 			return false;
 		}
 
-		$rsa = phpseclib3\Crypt\PublicKeyLoader::loadPrivateKey($private)->withPadding(phpseclib3\Crypt\RSA::ENCRYPTION_OAEP)->withHash('sha1')->withMGFHash('sha1');
-		$aes = new phpseclib3\Crypt\Rijndael('cbc');
+		$rsa = phpseclib4\Crypt\PublicKeyLoader::loadPrivateKey($private)->withPadding(phpseclib4\Crypt\RSA::ENCRYPTION_OAEP)->withHash('sha1')->withMGFHash('sha1');
+		$aes = new phpseclib4\Crypt\Rijndael('cbc');
 		$aes->setKey(substr($rsa->decrypt($wrapped), 0, 32));
 		$aes->setIV(str_repeat("\0", 16));
 

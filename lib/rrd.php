@@ -292,7 +292,7 @@ function __rrd_proxy_init($logopt = 'WEBLOG') {
 	}
 
 	try {
-		$rsa = \phpseclib3\Crypt\PublicKeyLoader::loadPublicKey($rrdp_public_key);
+		$rsa = \phpseclib4\Crypt\PublicKeyLoader::loadPublicKey($rrdp_public_key);
 		$fingerprint = $rsa->getFingerprint();
 	} catch (Throwable $e) {
 		cacti_log('CACTI2RRDP ERROR: Invalid RSA public key returned by proxy.', false, $logopt, POLLER_VERBOSITY_LOW);
@@ -402,11 +402,11 @@ function encrypt($output, $rsa_key) {
 			 * random IV or an HMAC would break them. The fresh AES key per
 			 * message stops the fixed IV from exposing repeated plaintext;
 			 * integrity protection needs a proxy protocol change. */
-			$rsa = \phpseclib3\Crypt\PublicKeyLoader::loadPublicKey($rsa_key)
-				->withPadding(\phpseclib3\Crypt\RSA::ENCRYPTION_OAEP)
+			$rsa = \phpseclib4\Crypt\PublicKeyLoader::loadPublicKey($rsa_key)
+				->withPadding(\phpseclib4\Crypt\RSA::ENCRYPTION_OAEP)
 				->withHash('sha1')
 				->withMGFHash('sha1');
-			$aes = new \phpseclib3\Crypt\Rijndael('cbc');
+			$aes = new \phpseclib4\Crypt\Rijndael('cbc');
 			$aes_key = random_bytes(32);
 
 			$aes->setKey($aes_key);
@@ -444,8 +444,8 @@ function decrypt($input) {
 		}
 
 		try {
-			$rsa = \phpseclib3\Crypt\PublicKeyLoader::loadPrivateKey(read_config_option('rsa_private_key'))
-				->withPadding(\phpseclib3\Crypt\RSA::ENCRYPTION_OAEP)
+			$rsa = \phpseclib4\Crypt\PublicKeyLoader::loadPrivateKey(read_config_option('rsa_private_key'))
+				->withPadding(\phpseclib4\Crypt\RSA::ENCRYPTION_OAEP)
 				->withHash('sha1')
 				->withMGFHash('sha1');
 			$aes_key = $rsa->decrypt($encrypted_key);
@@ -453,7 +453,7 @@ function decrypt($input) {
 				return false;
 			}
 
-			$aes = new \phpseclib3\Crypt\Rijndael('cbc');
+			$aes = new \phpseclib4\Crypt\Rijndael('cbc');
 			/* phpseclib 2 silently truncated oversized Rijndael keys to 32 bytes.
 			 * Retain compatibility with packets produced by existing proxies. */
 			$aes->setKey(substr($aes_key, 0, 32));
