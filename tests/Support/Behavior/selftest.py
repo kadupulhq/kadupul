@@ -906,6 +906,14 @@ def native_worker_boundary():
         raise RuntimeError('Linux worker-boundary validation requires PHP')
     import subprocess
     import tempfile
+    probe = subprocess.run(
+        ['php', '-d', 'auto_prepend_file=', '-r',
+         'exit(function_exists("posix_setsid") && function_exists("posix_getpgrp") && '
+         'function_exists("posix_kill") && function_exists("proc_open") && '
+         'is_readable("/proc/self/stat") ? 0 : 70);'],
+        capture_output=True, text=True, timeout=10)
+    if probe.returncode != 0:
+        raise RuntimeError('Linux worker-boundary validation requires PHP POSIX/process functions and readable /proc')
     with tempfile.TemporaryDirectory(prefix='behavior-worker-') as directory:
         marker = Path(directory) / 'complete'
         worker = Path(directory) / 'late-worker.php'
