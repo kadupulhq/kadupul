@@ -72,7 +72,7 @@ jobs:
           "$RUNNER_TEMP/snyk-python/bin/python" -m pip install --require-hashes -r tests/tools/requirements.txt
           echo "$RUNNER_TEMP/snyk-python/bin" >> "$GITHUB_PATH"
       - name: Set up Snyk CLI
-        uses: snyk/actions/setup@b075801f26076be9bb50521154cafab73f44da0c
+        uses: snyk/actions/setup@11b673cfb4b0dc0d860a1323caa199d54950dcce
         with:
           snyk-version: v1.1307.4
       - name: Verify complete-project report guard
