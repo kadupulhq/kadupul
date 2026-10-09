@@ -12,6 +12,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: fuzz-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   vendor-assets:
     name: Fuzz vendor asset integrity
@@ -24,6 +28,11 @@ jobs:
       - uses: jdx/mise-action@9149ea85001c7435d5a66bb127d6a1b6227cb0a5 # v5.0.0
         with:
           install_args: node@22.22.2
+      - name: Cache npm downloads
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5.0.3
+        with:
+          path: ~/.npm
+          key: npm-downloads-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('package-lock.json') }}
       - name: Install locked dependencies
         run: mise exec node@22.22.2 -- npm ci --ignore-scripts --no-audit --no-fund
       - name: Generate and shrink inputs against the shipped asset synchronizer
