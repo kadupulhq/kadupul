@@ -204,8 +204,15 @@ class SonarChangeScopeTest(unittest.TestCase):
 
     def test_actual_workflow_command_emits_current_scope_without_private_paths(self):
         content = (ROOT / ".github/workflows/sonarcloud.yml").read_text()
-        shell = textwrap.dedent(content.split("      - name: Classify the complete tested change\n", 1)[1]
-                                .split("        run: |\n", 1)[1].split("\n  analyze:", 1)[0])
+        body = content.split("      - name: Classify the complete tested change\n", 1)[1].split("        run: |\n", 1)[1]
+        # A run scalar ends at its indentation boundary, regardless of the
+        # next job's name or the number of independent coverage producers.
+        lines = []
+        for line in body.splitlines():
+            if line.strip() and not line.startswith("          "):
+                break
+            lines.append(line)
+        shell = textwrap.dedent("\n".join(lines))
         tools = self.directory / "bin"
         tools.mkdir()
         runner = tools / "mise"
