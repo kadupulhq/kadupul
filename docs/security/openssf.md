@@ -63,7 +63,10 @@ are targeted checks, not an updated published aggregate score. Every selectable
 PHP 8.1–8.4 harness base and the three fixed PHP test images use verified
 multi-platform registry digests. Harness manifests obtain the PHP base identity
 from the running container's inherited label; a floating tag cannot supply it.
-The provenance change can require a reviewed baseline recapture. No goldens
+The upgrade rehearsal verifies the archived baseline recipe, pins its owned
+execution copy to the selected runtime, and records both archived and executed
+recipe hashes. The historical archive remains unchanged. The provenance change
+can require a reviewed baseline recapture. No goldens
 were automatically updated.
 
 Packaging remains unavailable: the detector does not recognize the pinned
