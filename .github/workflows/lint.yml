@@ -3,9 +3,9 @@ name: Lint
 on:
   push:
     branches: [main]
-    paths: ['.github/workflows/**', '.github/actions/**']
+    paths: ['.github/workflows/**', '.github/actions/**', '.github/dependabot.yml']
   pull_request:
-    paths: ['.github/workflows/**', '.github/actions/**']
+    paths: ['.github/workflows/**', '.github/actions/**', '.github/dependabot.yml']
   workflow_dispatch:
 
 permissions:
@@ -41,4 +41,4 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           pipx install zizmor==1.30.1
-          zizmor --persona=regular --min-severity=low .github/workflows/
+          zizmor --persona=regular --min-severity=low --strict-collection .github/workflows/ .github/dependabot.yml

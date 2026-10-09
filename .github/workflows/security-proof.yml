@@ -81,7 +81,7 @@ jobs:
       - name: Record the PHP interpreter
         run: echo "PHP=$(command -v php)" >> "$GITHUB_ENV"
 
-      - uses: jdx/mise-action@9149ea85001c7435d5a66bb127d6a1b6227cb0a5 # v5.0.0
+      - uses: jdx/mise-action@7a4e45a543138629540c9a1616d08632b893e492 # v5.0.1
         with:
           install_args: python@3.12.12
 
@@ -165,6 +165,7 @@ jobs:
       - name: Upload proof artifacts
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
+          retention-days: 14
           name: private-advisory-proof-${{ github.run_id }}
           path: security/proof-run/${{ github.run_id }}
           if-no-files-found: error

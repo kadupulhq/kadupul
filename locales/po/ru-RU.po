@@ -12999,7 +12999,7 @@ msgid "User Community"
 msgstr "Сообщество пользователей"
 
 #: lib/functions.php:4250 lib/functions.php:4275 lib/html.php:2772
-#: lib/utility.php:1446
+#: lib/utility.php:1447
 msgid "Documentation"
 msgstr "Документация"
 
@@ -16378,192 +16378,192 @@ msgstr "График не создан для %s из-за неверных да
 msgid "NOTE: Graph not added for Data Query %s and index %s due to Data Source verification failure"
 msgstr "ПРИМЕЧАНИЕ. График не добавлен для запроса данных %s и индекса %s из-за ошибки проверки источника данных"
 
-#: lib/utility.php:1154
+#: lib/utility.php:1155
 msgid "MySQL 5.6+ and MariaDB 10.0+ are great releases, and are very good versions to choose. Make sure you run the very latest release though which fixes a long standing low level networking issue that was causing spine many issues with reliability."
 msgstr "MySQL 5.6+ и MariaDB 10.0+ - это отличные релизы, и они очень хороши для выбора. Убедитесь, что вы запустили самую последнюю версию, хотя она исправляет давнюю сетевую проблему низкого уровня, которая вызывала множество проблем с надежностью."
 
-#: lib/utility.php:1166
+#: lib/utility.php:1167
 #, php-format
 msgid "It is STRONGLY recommended that you enable InnoDB in any %s version greater than 5.5.3."
 msgstr "Рекомендуется включить InnoDB в любой версии %s, превышающей 5.1."
 
-#: lib/utility.php:1179 lib/utility.php:1216
+#: lib/utility.php:1180 lib/utility.php:1217
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4_unicode_ci collation type as some characters take more than a single byte."
 msgstr "При использовании Kadupul с языками, отличными от английского, важно использовать тип сопоставления utf8mb4_unicode_ci, поскольку некоторые символы занимают больше одного байта."
 
-#: lib/utility.php:1185 lib/utility.php:1191 lib/utility.php:1222
-#: lib/utility.php:1228
+#: lib/utility.php:1186 lib/utility.php:1192 lib/utility.php:1223
+#: lib/utility.php:1229
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4 character set as some characters take more than a single byte."
 msgstr "При использовании Kadupul с языками, отличными от английского, важно использовать набор символов utf8mb4, так как некоторые символы занимают больше одного байта."
 
-#: lib/utility.php:1204
+#: lib/utility.php:1205
 #, php-format
 msgid "It is recommended that you enable InnoDB in any %s version greater than 5.1."
 msgstr "Рекомендуется включить InnoDB в любой версии %s, превышающей 5.1."
 
-#: lib/utility.php:1237
+#: lib/utility.php:1238
 #, php-format
 msgid "Depending on the number of logins and use of spine data collector, %s will need many connections.  The calculation for spine is: total_connections = total_processes * (total_threads + script_servers + 1), then you must leave headroom for user connections, which will change depending on the number of concurrent login accounts."
 msgstr "В зависимости от количества входов и использования спинного накопителя данных, %s понадобится много соединений.  Расчет для хребта: total_connections = total_processes * (total_threads + script_servers + 1), после чего необходимо оставить свободное место для пользовательских подключений, которое будет изменяться в зависимости от количества одновременных учетных записей."
 
-#: lib/utility.php:1242
+#: lib/utility.php:1243
 msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
 msgstr "Увеличение кэша таблицы означает меньшее количество операций открытия/закрытия файлов при использовании innodb_file_per_table."
 
-#: lib/utility.php:1247
+#: lib/utility.php:1248
 msgid "With Remote polling capabilities, large amounts of data will be synced from the main server to the remote pollers.  Therefore, keep this value at or above 16M."
 msgstr "Благодаря возможностям удаленного опроса, большие объемы данных будут синхронизироваться с главного сервера на удаленные опросы.  Поэтому держите это значение на уровне 16M или выше."
 
-#: lib/utility.php:1253
+#: lib/utility.php:1254
 #, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
 msgstr ""
 
-#: lib/utility.php:1259
+#: lib/utility.php:1260
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
 msgstr "При выполнении подзапросов, имеющих больший размер временной таблицы, сохраняйте эти временные таблицы в памяти."
 
-#: lib/utility.php:1265 lib/utility.php:1271
+#: lib/utility.php:1266 lib/utility.php:1272
 msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr ""
 
-#: lib/utility.php:1277
+#: lib/utility.php:1278
 #, php-format
 msgid "When using InnoDB storage it is important to keep your table spaces separate.  This makes managing the tables simpler for long time users of %s.  If you are running with this currently off, you can migrate to the per file storage by enabling the feature, and then running an alter statement on all InnoDB tables."
 msgstr "При использовании системы хранения InnoDB важно, чтобы ваши столовые пространства были разделены.  Это упрощает управление таблицами в %s в течение длительного времени.  Если у вас в данный момент эта функция выключена, вы можете перейти на файловое хранилище, включив данную функцию, а затем запустив оператор change на всех таблицах InnoDB."
 
-#: lib/utility.php:1283
+#: lib/utility.php:1284
 #, fuzzy
 msgid "When using innodb_file_per_table, it is important to set the innodb_file_format to Barracuda.  This setting will allow longer indexes important for certain Kadupul tables."
 msgstr "При использовании innodb_file_per_table важно установить формат innodb_file_format на Barracuda.  Эта настройка позволит использовать более длинные индексы, важные для определенных таблиц Kadupul."
 
-#: lib/utility.php:1289
+#: lib/utility.php:1290
 msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
 msgstr "Если ваши таблицы имеют очень большие индексы, вы должны работать с Barracuda innodb_file_format и innodb_large_prefix, равным 1. Невыполнение этого может привести к плагинам, которые не могут должным образом создавать таблицы."
 
-#: lib/utility.php:1295
+#: lib/utility.php:1296
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
 msgstr ""
 
-#: lib/utility.php:1301
+#: lib/utility.php:1302
 #, fuzzy
 msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "Эти параметры должны оставаться включенными, если только ваши экземпляры Kadupul не работают на ZFS или FusionI / O, которые оба имеют внутреннее ведение журнала для предотвращения внезапных сбоев системы. Однако, если у вас очень хорошая мощность, и ваши системы редко выходят из строя и у вас есть резервные копии, отключение этого параметра может привести к увеличению производительности базы данных почти на 50%."
 
-#: lib/utility.php:1306
+#: lib/utility.php:1307
 msgid "This is where metadata is stored. If you had a lot of tables, it would be useful to increase this."
 msgstr "Здесь хранятся метаданные. Если бы у вас было много таблиц, было бы полезно увеличить их количество."
 
-#: lib/utility.php:1311
+#: lib/utility.php:1312
 msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "Некорректные запросы не должны приводить к тому, что база данных перейдет в автономный режим для других пользователей.  Убейте эти запросы, прежде чем они уничтожат ваш организм."
 
-#: lib/utility.php:1316
+#: lib/utility.php:1317
 msgid "Maximum I/O performance happens when you use the O_DIRECT method to flush pages."
 msgstr "Максимальная производительность ввода/вывода достигается при использовании метода O_DIRECT для промывки страниц."
 
-#: lib/utility.php:1326
+#: lib/utility.php:1327
 #, php-format
 msgid "Setting this value to 2 means that you will flush all transactions every second rather than at commit.  This allows %s to perform writing less often."
 msgstr "Установка этого значения в 2 означает, что вы будете каждую секунду смывать все транзакции, а не при фиксации.  Это позволяет %s выполнять запись реже."
 
-#: lib/utility.php:1331
+#: lib/utility.php:1332
 msgid "With modern SSD type storage, having multiple io threads is advantageous for applications with high io characteristics."
 msgstr "Современные SSD-накопители с несколькими потоками io выгодно использовать в приложениях с высокими характеристиками io."
 
-#: lib/utility.php:1339 lib/utility.php:1381
+#: lib/utility.php:1340 lib/utility.php:1382
 #, php-format
 msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "Как и в %s %s, вы можете контролировать, как часто %s проливает транзакции на диск.  По умолчанию - 1 секунда, но в системах с высоким уровнем ввода/вывода установка значения больше 1 может позволить дисковому входу/выходу быть более последовательным."
 
-#: lib/utility.php:1344
+#: lib/utility.php:1345
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "Благодаря современным SSD-накопителям, возможность многократного чтения потоков io выгодна для приложений с высокими характеристиками io."
 
-#: lib/utility.php:1349
+#: lib/utility.php:1350
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "Благодаря современным SSD-накопителям, возможность многократной записи потоков io выгодна для приложений с высокими характеристиками io."
 
-#: lib/utility.php:1355
+#: lib/utility.php:1356
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
 msgstr "%s разделит innodb_buffer_pool на области памяти для повышения производительности.  Максимальное значение - 64.  Если ваш innodb_buffer_pool меньше 1 ГБ, вы должны использовать размер пула, разделенный на 128MB.  Продолжайте использовать это уравнение до максимального значения 64."
 
-#: lib/utility.php:1355
+#: lib/utility.php:1356
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s разделит innodb_buffer_pool на области памяти для повышения производительности.  Максимальное значение - 64.  Если ваш innodb_buffer_pool меньше 1 ГБ, вы должны использовать размер пула, разделенный на 128MB.  Продолжайте использовать это уравнение до максимального значения 64."
 
-#: lib/utility.php:1361 lib/utility.php:1397
+#: lib/utility.php:1362 lib/utility.php:1398
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
 msgstr "Если у вас есть SSD-диски, воспользуйтесь этим предложением.  Если у вас есть физические жесткие диски, используйте 200 * количество активных дисков в массиве.  При использовании NVMe или PCIe Flash можно использовать гораздо больше цифр, вплоть до 100000."
 
-#: lib/utility.php:1367 lib/utility.php:1403
+#: lib/utility.php:1368 lib/utility.php:1404
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 2000 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 200000 can be used."
 msgstr "Если у вас есть SSD-диски, воспользуйтесь этим предложением.  Если у вас есть физические жесткие диски, используйте 2000 * количество активных дисков в массиве.  При использовании NVMe или PCIe Flash можно использовать гораздо больше цифр, вплоть до 200000."
 
-#: lib/utility.php:1373 lib/utility.php:1409
+#: lib/utility.php:1374 lib/utility.php:1410
 msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this setting."
 msgstr "Если у вас есть SSD-диски, воспользуйтесь этим предложением. В противном случае, не устанавливайте эту настройку."
 
-#: lib/utility.php:1386
+#: lib/utility.php:1387
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics."
 msgstr "Благодаря современным SSD-накопителям, возможность многократного чтения потоков io выгодна для приложений с высокими характеристиками io."
 
-#: lib/utility.php:1391
+#: lib/utility.php:1392
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics."
 msgstr "Благодаря современным SSD-накопителям, возможность многократной записи потоков io выгодна для приложений с высокими характеристиками io."
 
-#: lib/utility.php:1422
+#: lib/utility.php:1423
 msgid "When using MariaDB 10.2.4 and above, this setting should be off if atomic writes are enabled.  Therefore, please enable atomic writes instead of the double write buffer as it will increase performance."
 msgstr "При использовании MariaDB 10.2.4 и выше этот параметр должен быть отключен, если включена атомарная запись. Поэтому, пожалуйста, включите атомарную запись вместо двойного буфера записи, так как это повысит производительность."
 
-#: lib/utility.php:1429
+#: lib/utility.php:1430
 msgid "When using MariaDB 10.2.4 and above, you can use atomic writes over the doublewrite buffer to increase performance."
 msgstr "При использовании MariaDB 10.2.4 и выше вы можете использовать атомарную запись в буфер двойной записи для повышения производительности."
 
-#: lib/utility.php:1446
+#: lib/utility.php:1447
 #, php-format
 msgid "%s Tuning"
 msgstr "%s Настройка"
 
-#: lib/utility.php:1446
+#: lib/utility.php:1447
 msgid "Note: Many changes below require a database restart"
 msgstr "Примечание: Многие изменения ниже требуют перезапуска базы данных."
 
-#: lib/utility.php:1454
+#: lib/utility.php:1455
 msgid "Variable"
 msgstr "Переменная"
 
-#: lib/utility.php:1455
+#: lib/utility.php:1456
 msgid "Current Value"
 msgstr "Текущее значение"
 
-#: lib/utility.php:1457
+#: lib/utility.php:1458
 msgid "Recommended Value"
 msgstr "Рекомендуемое значение"
 
-#: lib/utility.php:1458
+#: lib/utility.php:1459
 msgid "Comments"
 msgstr "Комментарии"
 
-#: lib/utility.php:2052
+#: lib/utility.php:2053
 #, php-format
 msgid "PHP %s is the minimum version"
 msgstr "PHP %s - это минимальная версия."
 
-#: lib/utility.php:2054
+#: lib/utility.php:2055
 #, php-format
 msgid "A minimum of %s memory limit"
 msgstr "Минимальное ограничение объема оперативной памяти в %s МБ"
 
-#: lib/utility.php:2056
+#: lib/utility.php:2057
 #, php-format
 msgid "A minimum of %s m execution time"
 msgstr "Минимальное время выполнения %s m"
 
-#: lib/utility.php:2058
+#: lib/utility.php:2059
 msgid "A valid timezone that matches MySQL and the system"
 msgstr "Действительный часовой пояс, который соответствует MySQL и системе."
 

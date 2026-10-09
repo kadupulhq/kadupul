@@ -17,15 +17,13 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: jdx/mise-action@9149ea85001c7435d5a66bb127d6a1b6227cb0a5 # v5.0.0
+      - uses: jdx/mise-action@7a4e45a543138629540c9a1616d08632b893e492 # v5.0.1
         with:
           install_args: python@3.12.12
       - name: Validate failure evidence and cleanup isolation
         run: mise exec python@3.12.12 -- python tests/Support/Behavior/release_selftest.py
       - name: Fetch pinned baseline source
         run: git fetch --no-tags https://github.com/Cacti/cacti.git 6482af547c204199e829b7a0df0b7a13db3e0a58
-      - name: Load PHP base image for runtime provenance
-        run: docker pull php:8.4-apache
       - name: Rehearse upgrade and restore the matching snapshot
         env:
           PHP_VERSION: '8.4'
@@ -34,6 +32,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
+          retention-days: 14
           name: release-rehearsal
           path: tests/behavior/results/release-readiness/
           if-no-files-found: error

@@ -62,16 +62,17 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '22'
-      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
+      - uses: jdx/mise-action@7a4e45a543138629540c9a1616d08632b893e492 # v5.0.1
         with:
           install_args: python@3.12.12
       - name: Install Python dependencies for project discovery
         run: |
           mise exec python@3.12.12 -- python -m venv "$RUNNER_TEMP/snyk-python"
           "$RUNNER_TEMP/snyk-python/bin/python" -m pip install -r tests/Symfony/requirements.txt
+          "$RUNNER_TEMP/snyk-python/bin/python" -m pip install --require-hashes -r tests/tools/requirements.txt
           echo "$RUNNER_TEMP/snyk-python/bin" >> "$GITHUB_PATH"
       - name: Set up Snyk CLI
-        uses: snyk/actions/setup@b075801f26076be9bb50521154cafab73f44da0c
+        uses: snyk/actions/setup@11b673cfb4b0dc0d860a1323caa199d54950dcce
         with:
           snyk-version: v1.1307.4
       - name: Verify complete-project report guard
@@ -104,6 +105,7 @@ jobs:
         if: ${{ always() && steps.dependency_scan.outputs.receipt-path != '' }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
+          retention-days: 14
           name: snyk-project-completion
           path: ${{ steps.dependency_scan.outputs.receipt-path }}
           if-no-files-found: error
