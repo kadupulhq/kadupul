@@ -69,6 +69,7 @@ jobs:
         run: |
           mise exec python@3.12.12 -- python -m venv "$RUNNER_TEMP/snyk-python"
           "$RUNNER_TEMP/snyk-python/bin/python" -m pip install -r tests/Symfony/requirements.txt
+          "$RUNNER_TEMP/snyk-python/bin/python" -m pip install --require-hashes -r tests/tools/requirements.txt
           echo "$RUNNER_TEMP/snyk-python/bin" >> "$GITHUB_PATH"
       - name: Set up Snyk CLI
         uses: snyk/actions/setup@b075801f26076be9bb50521154cafab73f44da0c
