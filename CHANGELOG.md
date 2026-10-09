@@ -22,6 +22,8 @@ follows [Semantic Versioning](VERSIONING.md).
 - Remove the obsolete Snyk dependency-path ignore without adding replacement exceptions, and clarify that Dependabot-triggered pushes also skip secret-dependent Sonar analysis.
 
 - Add explicit native test-suite commands and a guide to their separate dependencies; name source-contract tests after their behavior and restore isolated input-string validation tests against the production validator.
+
+- Upgrade the managed jQuery distribution to 4.0.0 and replace removed JSON parsing and trimming APIs in realtime and Midwinter pages.
 - Reuse the device form failure presenter for association, collector, maintenance, and automation actions while preserving operation-specific statuses, translated messages, and authorization responses.
 
 - Verify authenticated graph-tree confirmation and native automation placement handoffs, including rejected foreign/non-header parents and admitted destinations; require their measured behavior checks.
