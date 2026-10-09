@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Upgrade phpseclib to 4.0.1 with matching RSA and RRDproxy namespaces, retaining existing encrypted proxy framing and legacy key compatibility
 -issue: Use Spine's engine-first counter, including zero after a reset, for PHP uptime-backwards reindex baselines and assertions while retaining the device-display uptime heuristic
 -issue: Make the effective graph-policy display honor explicit template grants under Restrictive mode when the template policy defaults to Deny
 -issue: Preserve formatted Host Resources Bytes allocation units, missing-cache fallback, and supported signed Integer32 overflow counters while rejecting non-finite samples and invalid units

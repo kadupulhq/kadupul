@@ -118,24 +118,24 @@ jobs:
           }
 
           if ($lockedVersion === null) {
-              fwrite(STDERR, "phpseclib is missing from composer.lock\n");
+              file_put_contents('php://stderr', "phpseclib is missing from composer.lock\n");
               exit(1);
           }
 
           require $packageDir . '/include/vendor/autoload.php';
 
           if (!\Composer\InstalledVersions::isInstalled('phpseclib/phpseclib')) {
-              fwrite(STDERR, "phpseclib is not installed through Composer\n");
+              file_put_contents('php://stderr', "phpseclib is not installed through Composer\n");
               exit(1);
           }
 
           if (\Composer\InstalledVersions::getPrettyVersion('phpseclib/phpseclib') !== $lockedVersion) {
-              fwrite(STDERR, "phpseclib does not match composer.lock\n");
+              file_put_contents('php://stderr', "phpseclib does not match composer.lock\n");
               exit(1);
           }
 
-          if (!class_exists(\phpseclib3\Crypt\RSA::class)) {
-              fwrite(STDERR, "phpseclib is not autoloadable\n");
+          if (!class_exists(\phpseclib4\Crypt\RSA::class)) {
+              file_put_contents('php://stderr', "phpseclib is not autoloadable\n");
               exit(1);
           }
           PHP
@@ -166,13 +166,13 @@ jobs:
           <?php
           require getenv('PACKAGE_DIR') . '/include/vendor/autoload.php';
 
-          if (!class_exists(phpseclib3\Crypt\RSA::class)) {
-              fwrite(STDERR, "The extracted release cannot autoload phpseclib\n");
+          if (!class_exists(phpseclib4\Crypt\RSA::class)) {
+              file_put_contents('php://stderr', "The extracted release cannot autoload phpseclib\n");
               exit(1);
           }
 
           if (!class_exists(HTMLPurifier::class)) {
-              fwrite(STDERR, "The extracted release cannot autoload HTML Purifier\n");
+              file_put_contents('php://stderr', "The extracted release cannot autoload HTML Purifier\n");
               exit(1);
           }
           PHP
