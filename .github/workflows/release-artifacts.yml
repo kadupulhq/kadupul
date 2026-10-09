@@ -9,6 +9,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: release-artifact-acceptance-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   container:
     name: Release container boot and offline assets

@@ -145,3 +145,7 @@ Before changing required checks, verify that they run on every applicable PR.
 Rename requirements with their producer workflows to avoid blocking merges on
 a check that can never run. Restore prior settings only through an authorized,
 reviewed GitHub administration change; do not bypass protections to merge a PR.
+
+PHP behavior-image provenance is checked against the actual pinned FROM stages.
+A digest update must refresh the corresponding provenance label; the release
+self-test rejects a FROM-only or LABEL-only update before running a rehearsal.
