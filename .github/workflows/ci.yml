@@ -139,6 +139,17 @@ jobs:
         extensions: dom, gd, gmp, intl, ldap, mbstring, mysqlnd, pdo_mysql, sockets, sqlite3, xml
         coverage: none
 
+    - name: Locate Composer download cache
+      id: composer-cache
+      run: echo "directory=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+    - name: Cache Composer downloads
+      uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5.1.0
+      with:
+        path: ${{ steps.composer-cache.outputs.directory }}
+        key: composer-downloads-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('composer.lock', 'tests/composer.lock') }}
+        restore-keys: |
+          composer-downloads-${{ runner.os }}-${{ runner.arch }}-
+
     - name: Install application dependencies
       run: composer install --no-dev --no-interaction --no-progress --prefer-dist
 
@@ -213,6 +224,21 @@ jobs:
         with:
           install_args: python@3.12.12 node@22.22.2
           add_shims_to_path: false
+      - name: Locate Composer download cache
+        id: composer-cache
+        run: echo "directory=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+      - name: Cache Composer downloads
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5.1.0
+        with:
+          path: ${{ steps.composer-cache.outputs.directory }}
+          key: composer-downloads-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('composer.lock', 'tests/composer.lock') }}
+          restore-keys: |
+            composer-downloads-${{ runner.os }}-${{ runner.arch }}-
+      - name: Cache npm downloads
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5.1.0
+        with:
+          path: ~/.npm
+          key: npm-downloads-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('package-lock.json') }}
       - name: Build actual dependencies and installer assets
         run: |
           mise plugins install --force php https://github.com/mise-plugins/asdf-php.git#e361a2c912a431393b7deb3ecf44b877900d889c
@@ -252,6 +278,7 @@ jobs:
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
+          retention-days: 14
           name: cdef-reference-${{ strategy.job-index }}
           path: |
             ${{ runner.temp }}/cdef-api-coverage
@@ -299,6 +326,17 @@ jobs:
         if: hashFiles('composer.json') != ''
         run: composer validate --strict
 
+      - name: Locate Composer download cache
+        id: composer-cache
+        run: echo "directory=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+      - name: Cache Composer downloads
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5.1.0
+        with:
+          path: ${{ steps.composer-cache.outputs.directory }}
+          key: composer-downloads-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('composer.lock', 'tests/composer.lock') }}
+          restore-keys: |
+            composer-downloads-${{ runner.os }}-${{ runner.arch }}-
+
       - name: Install dependencies
         if: hashFiles('composer.lock') != ''
         run: composer install --prefer-dist --no-progress --no-interaction
@@ -318,6 +356,7 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '22.22.2'
+          cache: npm
 
       - name: Build installed browser assets for compatibility tests
         run: npm ci --ignore-scripts && npm run build
@@ -438,8 +477,6 @@ jobs:
         run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Support/flag_icons_helpers_test.py
       # This exercises runtime invariants without claiming parity with upstream.
       # Observations are ephemeral CI artifacts; committed goldens stay untouched.
-      - name: Load PHP base image for runtime provenance
-        run: docker pull php:8.4-apache
       - name: Exercise fresh install, authentication and collection
         env:
           PHP_VERSION: '8.4'
@@ -462,6 +499,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
+          retention-days: 14
           name: application-smoke-observations
           path: tests/behavior/results/ci-smoke/
           if-no-files-found: warn
