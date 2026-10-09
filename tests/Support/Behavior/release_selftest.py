@@ -249,7 +249,8 @@ def runtime_provenance_consistency():
         old = references['8.4']
         updated = old.split('@')[0] + '@sha256:' + 'a' * 64
         for changed in (source.replace('FROM ' + old, 'FROM ' + updated, 1),
-                        source.replace('php-base="' + old, 'php-base="' + updated, 1)):
+                        source.replace('php-base="' + old, 'php-base="' + updated, 1),
+                        source + '\nFROM ' + updated + ' AS php-8.4\n'):
             recipe.write_text(changed)
             with patch.object(release, 'ROOT', root):
                 try:
