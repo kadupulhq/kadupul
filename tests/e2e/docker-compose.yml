@@ -6,7 +6,7 @@
 
 services:
   mariadb:
-    image: mariadb:10.11
+    image: public.ecr.aws/docker/library/mariadb:10.11@sha256:7db29378d4fdab73f8123bbc2b48905c90d1a4b00cf848b028f1e81e623257f2
     container_name: cacti-e2e-mariadb
     environment:
       MARIADB_ROOT_PASSWORD: cactiroot
@@ -61,7 +61,7 @@ services:
       - cacti-e2e
 
   nginx:
-    image: nginx:alpine
+    image: public.ecr.aws/docker/library/nginx:alpine@sha256:df221db836e1754089190208cee7eeda94f233197056426eda74a43ab1abeac2
     container_name: cacti-e2e-nginx
     depends_on:
       - php

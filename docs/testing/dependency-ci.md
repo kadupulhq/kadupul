@@ -57,10 +57,23 @@ without restarting running services. Self-hosted and local daemons are unchanged
 GitHub starts job services before steps can configure that cache. Database
 services therefore use the Docker Official Images published at
 `public.ecr.aws/docker/library`, with the same matrix version families and
-unchanged health checks. All six MariaDB/MySQL matrix tags were confirmed
-available before switching. The separate Buildx builder has its own registry
-cache configuration. No registry credentials are required for these public
-pulls; scanners, assertions and required check names remain unchanged.
+unchanged health checks. The service manifests are pinned by digest, including
+the Compose database and Nginx fixtures. All six MariaDB/MySQL matrix manifests
+and Nginx were verified by immutable lookup and Linux/amd64 availability before
+switching. Runtime database provenance reads the actual running container's
+image, avoiding a second lookup of a floating tag.
+
+Actionlint 1.7.12 and Semgrep 1.176.0 run as native, pinned tools instead of pulling
+uncached tool images. The Semgrep version matches the previous pinned image;
+installation asserts the executable's version before preserving the same scan
+options. Its isolated environment uses mise's Python 3.12.12 and the hash-locked
+`tests/tools/requirements-semgrep.txt`, covered by the existing Dependabot pip
+entry. Regenerate that lock from `requirements-semgrep.in` under Python 3.12.12
+using pip-tools 7.5.1 with `--generate-hashes --allow-unsafe --strip-extras`.
+The CSP stack uses
+the native Docker builder instead of pulling a separate BuildKit container.
+No registry credentials are required for these public pulls; scanners,
+assertions and required check names remain unchanged.
 
 ## Coverage and analysis
 

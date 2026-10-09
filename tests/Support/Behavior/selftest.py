@@ -229,12 +229,30 @@ def pinned_base_image_contract():
         def inspect(args, **kwargs):
             if args[1] == 'inspect':
                 assert args[-1] == 'a' * 64
+                if args[3] == '{{.Image}}':
+                    return {'stdout': 'sha256:' + '3' * 64}
                 assert args[3] == '{{index .Config.Labels "org.kadupul.behavior.php-base"}}'
                 return {'stdout': reference}
-            assert args[-1] == 'mariadb:10.11'
+            assert args[-1] == 'sha256:' + '3' * 64
             return {'stdout': 'mariadb@sha256:' + '2' * 64}
         with patch.object(harness, 'run', side_effect=inspect):
             assert recorder.base_image_digest()['ref'] == reference
+    for missing in ('container', 'image', 'digest'):
+        recorder.compose = lambda *args: {'stdout': '' if args[-1] == 'db' and missing == 'container' else 'a' * 64}
+        def incomplete_database(args, **kwargs):
+            if args[1] == 'inspect':
+                if args[3] == '{{.Image}}':
+                    return {'stdout': '' if missing == 'image' else 'sha256:' + '3' * 64}
+                return {'stdout': 'php:8.4-apache@sha256:' + '1' * 64}
+            return {'stdout': '' if missing == 'digest' else 'mariadb@sha256:' + '2' * 64}
+        with patch.object(harness, 'run', side_effect=incomplete_database):
+            try:
+                recorder.base_image_digest()
+            except RuntimeError as error:
+                assert 'database' in str(error)
+            else:
+                raise AssertionError('Incomplete running database provenance accepted')
+    recorder.compose = lambda *args: {'stdout': 'a' * 64}
     for reference in ('', '<no value>', 'php:8.2-apache', 'php:8.2-apache@sha256:short'):
         with patch.object(harness, 'run', return_value={'stdout': reference}):
             try:

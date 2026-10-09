@@ -1,6 +1,6 @@
 services:
   db:
-    image: mariadb:10.11
+    image: public.ecr.aws/docker/library/mariadb:10.11@sha256:7db29378d4fdab73f8123bbc2b48905c90d1a4b00cf848b028f1e81e623257f2
     environment:
       MARIADB_ROOT_PASSWORD: behavior-root
       MARIADB_DATABASE: cacti

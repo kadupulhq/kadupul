@@ -64,7 +64,7 @@ def main():
                 '--entrypoint', 'php-fpm', '--volume', f'{stage}:/var/www/html/cacti:ro', args.php_image, '-F')
             run('docker', 'run', '-d', '--name', nginx, '--network', name, '-p', '127.0.0.1::80',
                 '--volume', f'{stage}:/var/www/html/cacti:ro',
-                '--volume', f'{ROOT}/tests/e2e/nginx.conf:/etc/nginx/conf.d/default.conf:ro', 'nginx:alpine')
+                '--volume', f'{ROOT}/tests/e2e/nginx.conf:/etc/nginx/conf.d/default.conf:ro', 'public.ecr.aws/docker/library/nginx:alpine@sha256:df221db836e1754089190208cee7eeda94f233197056426eda74a43ab1abeac2')
             port = run('docker', 'port', nginx, '80/tcp').rsplit(':', 1)[1]
 
             def request(path):

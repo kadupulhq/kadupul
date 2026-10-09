@@ -24,18 +24,14 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Configure hosted Docker image cache
-        if: runner.environment == 'github-hosted' && runner.os == 'Linux'
-        run: bash tests/tools/configure_docker_mirror.sh
+      - uses: jdx/mise-action@7a4e45a543138629540c9a1616d08632b893e492 # v5.0.1
+        with:
+          install_args: actionlint@1.7.12
 
       # Catches the expression typo, the bad `needs` reference, and the shell
       # mistake that would otherwise only show up on a tag.
       - name: actionlint
-        run: |
-          docker run --rm \
-            --volume "${PWD}:/repo" --workdir /repo \
-            rhysd/actionlint@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667 \
-            -color
+        run: mise exec actionlint@1.7.12 -- actionlint -color
 
       # Catches the security mistakes actionlint does not: unpinned actions,
       # over-broad permissions, and script injection through untrusted context.

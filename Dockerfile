@@ -25,7 +25,7 @@ FROM node:26.10.0-bookworm-slim@sha256:662933cf47f013bc8e4beb31a6116448427a82057
 WORKDIR /app
 COPY package.json package-lock.json ./
 COPY tools/dependencies ./tools/dependencies
-COPY include/js/jquery.tablesorter.pager.js ./include/js/jquery.tablesorter.pager.js
+COPY include/js/jquery.tablesorter.pager.source.js ./include/js/jquery.tablesorter.pager.source.js
 COPY include/themes/midwinter ./include/themes/midwinter
 RUN npm ci --ignore-scripts --no-audit --no-fund && node tools/dependencies/build.mjs
 

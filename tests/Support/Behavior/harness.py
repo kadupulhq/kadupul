@@ -728,7 +728,15 @@ class Harness:
         base_ref = (image['stdout'] or '').strip()
         if not re.fullmatch(r'php:8\.[1-4]-apache@sha256:[0-9a-f]{64}', base_ref):
             raise RuntimeError('Missing or invalid pinned PHP base provenance')
-        db = run(['docker', 'image', 'inspect', '--format', '{{index .RepoDigests 0}}', 'mariadb:10.11'], check=True)
+        db_container = self.compose('ps', '-q', 'db')['stdout'].strip()
+        if not re.fullmatch(r'[0-9a-f]{64}', db_container):
+            raise RuntimeError('Missing or invalid database container identity')
+        db_image = run(['docker', 'inspect', '--format', '{{.Image}}', db_container], check=True)['stdout'].strip()
+        if not re.fullmatch(r'sha256:[0-9a-f]{64}', db_image):
+            raise RuntimeError('Missing or invalid database image identity')
+        db = run(['docker', 'image', 'inspect', '--format', '{{index .RepoDigests 0}}', db_image], check=True)
+        if not re.fullmatch(r'[^\s@]+@sha256:[0-9a-f]{64}', (db['stdout'] or '').strip()):
+            raise RuntimeError('Missing or invalid database image provenance')
         packages = self.command('sh', '-c', "dpkg-query -W -f='${Package}=${Version}\\n' rrdtool snmp snmpd", check=True)
         return {'ref': base_ref,
                 'db_ref': (db['stdout'] or '').strip(),
