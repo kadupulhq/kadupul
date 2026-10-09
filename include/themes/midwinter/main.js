@@ -260,7 +260,7 @@ function setupTheme() {
 			redesignConsoleMenu(menu);
 
 			// -- duplicate the console tab items and add them to the console navigation area for compact mode
-			if ($.trim($('compact_tab_menu').html()) === '') {
+			if (String($('compact_tab_menu').html() ?? '').trim() === '') {
 				$('<div class="compact_nav_icon" data-helper="dashboards">'+
 						'<i class="'+iconClass('nav-dashboards')+'"></i>'+
 						'<span>'+cactiDashboards+'</span>'+
@@ -268,7 +268,7 @@ function setupTheme() {
 			}
 
 			if (cactiConsoleAllowed) {
-				if ($.trim($('compact_tab_menu').html()) === '') {
+				if (String($('compact_tab_menu').html() ?? '').trim() === '') {
 					$('<div class="compact_nav_icon" data-helper="settings">'+
 							'<i class="'+iconClass('nav-settings')+'"></i>'+
 							'<span>'+zoom_i18n_settings+'</span>'+

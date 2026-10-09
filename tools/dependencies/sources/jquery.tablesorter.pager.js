@@ -437,7 +437,7 @@
 						p.totalRows = 0;
 					} else {
 						// process ajax object
-						if (!Array.isArray(result)) {
+						if (!$.isArray(result)) {
 							p.ajaxData = result;
 							c.totalRows = p.totalRows = result.total;
 							c.filteredRows = p.filteredRows = typeof result.filteredRows !== 'undefined' ? result.filteredRows : result.total;
@@ -468,7 +468,7 @@
 								tds += '<tr>';
 								for ( j = 0; j < d[i].length; j++ ) {
 									// build tbody cells; watch for data containing HTML markup - see #434
-									tds += /^\s*<td/.test(d[i][j]) ? ((value) => String(value ?? "").trim())(d[i][j]) : '<td>' + d[i][j] + '</td>';
+									tds += /^\s*<td/.test(d[i][j]) ? $.trim(d[i][j]) : '<td>' + d[i][j] + '</td>';
 								}
 								tds += '</tr>';
 							}
@@ -974,7 +974,7 @@
 				// .unbind( namespace ) adding in jQuery 1.4.3 ( I think )
 				.unbind( pagerEvents.split(' ').join(namespace + ' ').replace(/\s+/g, ' ') )
 				.bind('filterInit filterStart '.split(' ').join(namespace + ' '), function(e, filters) {
-					p.currentFilters = Array.isArray(filters) ? filters : c.$table.data('lastSearch');
+					p.currentFilters = $.isArray(filters) ? filters : c.$table.data('lastSearch');
 					var filtersEqual;
 					if (p.ajax && e.type === 'filterInit') {
 						// ensure pager ajax is called after filter widget has initialized
