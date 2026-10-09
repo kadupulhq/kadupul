@@ -195,9 +195,10 @@ def base_image_failure_contract():
     # Exercise the real probes: nonzero exits with plausible stdout must fail.
     for failed_probe in range(5):
         recorder = object.__new__(harness.Harness)
+        recorder.compose = lambda *args: {'stdout': 'a' * 64}
         recorder.command = lambda *args, **kw: harness.run(list(args), **kw)
         responses = [subprocess.CompletedProcess([], 0, output, '') for output in
-                     ('NAME=Debian', 'PHP 8.2', valid['base_image']['ref'], valid['base_image']['db_ref'], 'rrdtool=1.7')]
+                     ('NAME=Debian', 'PHP 8.2', 'php:8.2-apache@sha256:' + '1' * 64, valid['base_image']['db_ref'], 'rrdtool=1.7')]
         responses[failed_probe].returncode = 1
         with patch.object(harness.subprocess, 'run', side_effect=responses):
             try:
@@ -216,6 +217,33 @@ def base_image_failure_contract():
         else:
             raise AssertionError('Missing runtime identification accepted')
     print('invalid base image metadata fails capture without writing goldens')
+
+
+def pinned_base_image_contract():
+    recorder = object.__new__(harness.Harness)
+    recorder.compose = lambda *args: {'stdout': 'a' * 64}
+    recorder.command = lambda *args, **kwargs: {
+        'stdout': 'NAME=Debian' if args[0] == 'cat' else 'PHP 8.2' if args[0] == 'php' else 'rrdtool=1.7'}
+    for version in ('8.1', '8.2', '8.3', '8.4'):
+        reference = 'php:' + version + '-apache@sha256:' + '1' * 64
+        def inspect(args, **kwargs):
+            if args[1] == 'inspect':
+                assert args[-1] == 'a' * 64
+                assert args[3] == '{{index .Config.Labels "org.kadupul.behavior.php-base"}}'
+                return {'stdout': reference}
+            assert args[-1] == 'mariadb:10.11'
+            return {'stdout': 'mariadb@sha256:' + '2' * 64}
+        with patch.object(harness, 'run', side_effect=inspect):
+            assert recorder.base_image_digest()['ref'] == reference
+    for reference in ('', '<no value>', 'php:8.2-apache', 'php:8.2-apache@sha256:short'):
+        with patch.object(harness, 'run', return_value={'stdout': reference}):
+            try:
+                recorder.base_image_digest()
+            except RuntimeError as error:
+                assert 'pinned PHP base provenance' in str(error)
+            else:
+                raise AssertionError('Missing or mutable PHP base provenance accepted')
+    print('PHP base provenance uses the pinned label on the running container')
 
 
 def bootstrap_repeat_provenance():
@@ -1197,6 +1225,7 @@ def main():
     provenance_contract()
     application_input_boundary_contract()
     base_image_failure_contract()
+    pinned_base_image_contract()
     application_image_contract()
     diagnostic_contracts()
     retained_controller_inputs()

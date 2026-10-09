@@ -1,7 +1,7 @@
 # PHP-FPM runtime for the E2E stack. CI installs locked Composer/npm
 # dependencies into the mounted checkout before starting this image.
 
-FROM php:8.4-fpm-alpine
+FROM php:8.4-fpm-alpine@sha256:78cd8de9970a9cd6ff4d98860a94eb5bf37dd2d5776b4785562dbfad01c29d5a
 
 LABEL org.opencontainers.image.title="cacti-e2e-php" \
       org.opencontainers.image.source="https://github.com/kadupulhq/kadupul" \
