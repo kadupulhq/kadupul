@@ -177,6 +177,28 @@ def legacy_build_inputs(baseline):
     return digests
 
 
+def pin_legacy_runtime(baseline):
+    """Pin the owned historical recipe without changing its archived evidence."""
+    import re
+    version = os.environ.get('PHP_VERSION', '8.4')
+    stages = re.findall(r'^FROM (php:(8\.[1-4])-apache@sha256:[0-9a-f]{64}) AS php-\2$',
+                        (ROOT / 'tests/behavior/Dockerfile').read_text(), re.MULTILINE)
+    references = [reference for reference, selected in stages if selected == version]
+    require(len(references) == 1, 'Missing or ambiguous pinned rehearsal runtime')
+    recipe = baseline / '.behavior-legacy.Dockerfile'
+    require(recipe.is_file() and not recipe.is_symlink(), 'Missing owned historical recipe')
+    original = recipe.read_bytes()
+    source = original.decode()
+    anchor = 'FROM php:${PHP_VERSION}-apache'
+    require(source.splitlines().count(anchor) == 1, 'Unexpected historical runtime stage')
+    reference = references[0]
+    source = source.replace(anchor, 'FROM ' + reference + '\nLABEL org.kadupul.behavior.php-base="' + reference + '"', 1)
+    recipe.write_text(source)
+    return {'base_ref': reference,
+            'archived_recipe_sha256': hashlib.sha256(original).hexdigest(),
+            'executed_recipe_sha256': hashlib.sha256(recipe.read_bytes()).hexdigest()}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--baseline', default='6482af547c204199e829b7a0df0b7a13db3e0a58')
@@ -197,6 +219,7 @@ def main():
             baseline = temp / 'baseline'
             evidence['baseline_dockerignore'] = prepare_baseline(baseline_revision, baseline)
             evidence['baseline_build_inputs'] = legacy_build_inputs(baseline)
+            evidence['baseline_runtime_pin'] = pin_legacy_runtime(baseline)
             harness.ROOT = baseline
             h = harness.Harness(SimpleNamespace(target='release-readiness', only=None, update_golden=False, project=project))
             # Use a dedicated project and keep the baseline image for rollback.

@@ -1,0 +1,42 @@
+name: Supply-chain property fuzzing
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  schedule:
+    - cron: '41 5 * * 2'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  vendor-assets:
+    name: Fuzz vendor asset integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: jdx/mise-action@9149ea85001c7435d5a66bb127d6a1b6227cb0a5 # v5.0.0
+        with:
+          install_args: node@22.22.2
+      - name: Install locked dependencies
+        run: mise exec node@22.22.2 -- npm ci --ignore-scripts --no-audit --no-fund
+      - name: Generate and shrink inputs against the shipped asset synchronizer
+        env:
+          FUZZ_RUNS: '2000'
+        run: |
+          set -euo pipefail
+          mise exec node@22.22.2 -- npm run test:fuzz 2>&1 | tee fuzz-results.log
+      - name: Retain results and counterexample replay details
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: vendor-asset-fuzz-results
+          path: fuzz-results.log
+          retention-days: 14
+          if-no-files-found: error
