@@ -218,6 +218,9 @@ jobs:
 
     - name: Check PHP version
       run: php -v
+
+    - name: Install locked application dependencies
+      run: composer install --no-dev --no-interaction --no-progress --prefer-dist
       
     # Intropage's LTS integration requires thold_functions.php and get_allowed_thresholds().
     # Thold develop has removed that API; use its compatible published 1.8.2 release.
