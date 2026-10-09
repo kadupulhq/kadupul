@@ -20,9 +20,13 @@ On 2026-10-08, GitHub's native API confirmed these settings:
 
 The required main checks are `PHP 8.4`, `JavaScript`,
 `Gettext source and compiled catalogs`, `Semgrep`,
-`Composer and npm dependencies`, and `Code style`. These checks run for all
+`Dependency review`, and `Code style`. These checks run for all
 pull requests, without changed-path filters. LTS retains its separate test
 contracts; main-only check names are not required on LTS.
+
+Snyk additionally scans the installed Composer, npm and Python projects on
+trusted PRs with its configured secret. It can skip fork PRs, so that
+secret-dependent job is not used as a required check for every main PR.
 
 One independent reviewer must approve future changes. Automation and a PR
 author cannot supply that approval. Administrative controls were applied
