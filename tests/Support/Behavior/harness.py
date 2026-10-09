@@ -710,21 +710,27 @@ class Harness:
     def base_image_digest(self):
         """The base image this run was built on.
 
-        The Dockerfile takes a version argument and resolves a mutable tag, which
-        the matrix needs. Pinning a digest there would fix one version and break
-        the rest, so record what was actually used instead: a base refresh then
-        shows up as a diff in the manifest rather than silently moving a golden.
+        Each selectable PHP stage is digest-pinned. Read the inherited base label
+        from the running container, rather than inspecting a mutable PHP tag that
+        may have moved since the build.
         """
         operating_system = self.command('cat', '/etc/os-release', check=True)['stdout'].strip()
         php_version = self.command('php', '-v', check=True)['stdout'].strip()
         if not operating_system or not php_version.startswith('PHP '):
             raise RuntimeError('Missing or invalid runtime provenance')
         runtime = '\n'.join(operating_system.splitlines()[:2] + php_version.splitlines()[:1])
-        image = run(['docker', 'image', 'inspect', '--format', '{{index .RepoDigests 0}}',
-                     f'php:{os.environ.get("PHP_VERSION", "8.4")}-apache'], check=True)
+        container = self.compose('ps', '-q', 'web')['stdout'].strip()
+        if not re.fullmatch(r'[0-9a-f]{64}', container):
+            raise RuntimeError('Missing or invalid web container identity')
+        image = run(['docker', 'inspect', '--format',
+                     '{{index .Config.Labels "org.kadupul.behavior.php-base"}}',
+                     container], check=True)
+        base_ref = (image['stdout'] or '').strip()
+        if not re.fullmatch(r'php:8\.[1-4]-apache@sha256:[0-9a-f]{64}', base_ref):
+            raise RuntimeError('Missing or invalid pinned PHP base provenance')
         db = run(['docker', 'image', 'inspect', '--format', '{{index .RepoDigests 0}}', 'mariadb:10.11'], check=True)
         packages = self.command('sh', '-c', "dpkg-query -W -f='${Package}=${Version}\\n' rrdtool snmp snmpd", check=True)
-        return {'ref': (image['stdout'] or '').strip(),
+        return {'ref': base_ref,
                 'db_ref': (db['stdout'] or '').strip(),
                 # The base digest does not pin apt, so a rebuild can change these.
                 'packages': (packages['stdout'] or '').strip(),

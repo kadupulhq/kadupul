@@ -205,6 +205,21 @@ def legacy_build_input_integrity():
         hashes = release.legacy_build_inputs(baseline)
         assert hashlib.sha256((baseline / '.behavior-legacy.Dockerfile').read_bytes()).hexdigest() == hashes['tests/behavior/Dockerfile']
         assert hashlib.sha256((baseline / '.behavior-legacy.Dockerfile.dockerignore').read_bytes()).hexdigest() == hashes['.dockerignore']
+        with patch.dict(os.environ, {'PHP_VERSION': '8.4'}):
+            pin = release.pin_legacy_runtime(baseline)
+        assert pin['archived_recipe_sha256'] == hashes['tests/behavior/Dockerfile']
+        assert pin['executed_recipe_sha256'] != pin['archived_recipe_sha256']
+        assert pin['base_ref'].startswith('php:8.4-apache@sha256:')
+        assert ('LABEL org.kadupul.behavior.php-base="' + pin['base_ref'] + '"') in (baseline / '.behavior-legacy.Dockerfile').read_text()
+        executed = (baseline / '.behavior-legacy.Dockerfile').read_bytes()
+        with patch.dict(os.environ, {'PHP_VERSION': 'unsupported'}):
+            try:
+                release.pin_legacy_runtime(baseline)
+            except RuntimeError as error:
+                assert 'pinned rehearsal runtime' in str(error)
+            else:
+                raise AssertionError('An unsupported historical runtime was accepted')
+        assert (baseline / '.behavior-legacy.Dockerfile').read_bytes() == executed
         forged_root = Path(directory) / 'forged'
         forged_evidence = forged_root / 'tests/behavior/evidence/historical-baseline'
         shutil.copytree(evidence, forged_evidence)
