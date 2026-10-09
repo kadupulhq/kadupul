@@ -6,8 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
-- Upgrade the managed jQuery distribution to 4.0.0 and replace removed JSON parsing and trimming APIs in realtime and Midwinter pages.
-
+- Add Pest serial profiling and isolated parallel feedback with complete JUnit discovery checks and hardened XML evidence parsing.
 - Diagnose unavailable PHP POSIX/process functions and Linux `/proc` before native worker-boundary self-tests start workers.
 
 - Serve the CDEF list, editor, items, duplication and deletion through Symfony and Twig. Every change is revision-checked and rechecks the CDEF realm in its transaction, a CDEF can no longer include itself through another CDEF, and deletion goes through the CDEF reference contract. Old `cdef.php` links navigate; posts to it no longer change data.
@@ -21,6 +20,8 @@ follows [Semantic Versioning](VERSIONING.md).
 - Remove the obsolete Snyk dependency-path ignore without adding replacement exceptions, and clarify that Dependabot-triggered pushes also skip secret-dependent Sonar analysis.
 
 - Add explicit native test-suite commands and a guide to their separate dependencies; name source-contract tests after their behavior and restore isolated input-string validation tests against the production validator.
+
+- Upgrade the managed jQuery distribution to 4.0.0 and replace removed JSON parsing and trimming APIs in realtime and Midwinter pages.
 - Reuse the device form failure presenter for association, collector, maintenance, and automation actions while preserving operation-specific statuses, translated messages, and authorization responses.
 
 - Verify authenticated graph-tree confirmation and native automation placement handoffs, including rejected foreign/non-header parents and admitted destinations; require their measured behavior checks.
