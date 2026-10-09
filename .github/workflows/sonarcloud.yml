@@ -87,7 +87,7 @@ jobs:
     # exists only inside this runner.
     services:
       database:
-        image: mariadb:11.8
+        image: public.ecr.aws/docker/library/mariadb:11.8@sha256:6422478cb8e159f080fb1d8ccf65101e26fe51385787fde7d16c3b165a331f15
         env:
           MARIADB_ROOT_PASSWORD: kadupul-ci-only
           MARIADB_DATABASE: kadupul_test
@@ -112,6 +112,9 @@ jobs:
           ref: ${{ github.sha }}
           fetch-depth: 0
           persist-credentials: false
+      - name: Configure hosted Docker image cache
+        if: runner.environment == 'github-hosted' && runner.os == 'Linux'
+        run: bash tests/tools/configure_docker_mirror.sh
 
       - name: Set up PHP
         uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
@@ -247,7 +250,7 @@ jobs:
     # exists only inside this runner.
     services:
       database:
-        image: mariadb:11.8
+        image: public.ecr.aws/docker/library/mariadb:11.8@sha256:6422478cb8e159f080fb1d8ccf65101e26fe51385787fde7d16c3b165a331f15
         env:
           MARIADB_ROOT_PASSWORD: kadupul-ci-only
           MARIADB_DATABASE: kadupul_test
@@ -272,6 +275,9 @@ jobs:
           ref: ${{ github.sha }}
           fetch-depth: 0
           persist-credentials: false
+      - name: Configure hosted Docker image cache
+        if: runner.environment == 'github-hosted' && runner.os == 'Linux'
+        run: bash tests/tools/configure_docker_mirror.sh
 
       - name: Set up PHP
         uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2

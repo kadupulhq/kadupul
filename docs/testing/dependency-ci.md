@@ -44,6 +44,24 @@ command. Workflow lint also validates the Dependabot configuration, including
 its schema and cooldown settings. GitHub's update jobs remain authoritative for
 dependency resolution; inspect their logs and proposed diffs before merging.
 
+## Public image pulls
+
+Hosted CI hit Docker Hub HTTP 429 limits during image builds, service startup
+and scanner pulls, including retries. Linux jobs that use Docker configure
+Google's [public Docker Hub cache](https://docs.cloud.google.com/artifact-registry/docs/pull-cached-dockerhub-images)
+before building or pulling. Original image references and digest verification
+remain intact; cache misses use Docker Hub. The configuration is validated and
+the daemon [reloads registry mirrors with SIGHUP](https://docs.docker.com/reference/cli/dockerd/#configuration-reload-behavior)
+without restarting running services. Self-hosted and local daemons are unchanged.
+
+GitHub starts job services before steps can configure that cache. Database
+services therefore use the Docker Official Images published at
+`public.ecr.aws/docker/library`, with the same matrix version families and
+unchanged health checks. All six MariaDB/MySQL matrix tags were confirmed
+available before switching. The separate Buildx builder has its own registry
+cache configuration. No registry credentials are required for these public
+pulls; scanners, assertions and required check names remain unchanged.
+
 ## Coverage and analysis
 
 Sonar coverage runs in two independent jobs: legacy unit/poller coverage, and

@@ -22,6 +22,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - name: Configure hosted Docker image cache
+        if: runner.environment == 'github-hosted' && runner.os == 'Linux'
+        run: bash tests/tools/configure_docker_mirror.sh
       - name: Build the actual release image
         run: docker build --build-arg VERSION=acceptance -t kadupul-release-acceptance .
       - name: Verify dependencies and authorization without network access

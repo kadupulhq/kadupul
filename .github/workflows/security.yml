@@ -29,6 +29,9 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+      - name: Configure hosted Docker image cache
+        if: runner.environment == 'github-hosted' && runner.os == 'Linux'
+        run: bash tests/tools/configure_docker_mirror.sh
 
       # The tree is inherited from Cacti and does not start clean: a sample of
       # 400 of our own files returns 41 findings. A zero-findings gate on that
