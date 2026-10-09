@@ -177,13 +177,27 @@ def legacy_build_inputs(baseline):
     return digests
 
 
+def pinned_runtime_references():
+    """Require the provenance label to describe the actual pinned PHP stage."""
+    import re
+    source = (ROOT / 'tests/behavior/Dockerfile').read_text()
+    stages = re.findall(
+        r'^FROM (php:(8\.[1-4])-apache@sha256:[0-9a-f]{64}) AS php-\2\n'
+        r'LABEL org\.kadupul\.behavior\.php-base="([^"\n]+)"$',
+        source, re.MULTILINE)
+    require(len(re.findall(r'^FROM php:', source, re.MULTILINE)) == 4 and
+            len(stages) == 4 and {version for _, version, _ in stages} ==
+            {'8.1', '8.2', '8.3', '8.4'}, 'Missing or ambiguous pinned runtime provenance')
+    require(all(reference == label for reference, _, label in stages),
+            'PHP runtime provenance label differs from its FROM reference')
+    return {version: reference for reference, version, _ in stages}
+
+
 def pin_legacy_runtime(baseline):
     """Pin the owned historical recipe without changing its archived evidence."""
-    import re
     version = os.environ.get('PHP_VERSION', '8.4')
-    stages = re.findall(r'^FROM (php:(8\.[1-4])-apache@sha256:[0-9a-f]{64}) AS php-\2$',
-                        (ROOT / 'tests/behavior/Dockerfile').read_text(), re.MULTILINE)
-    references = [reference for reference, selected in stages if selected == version]
+    references = [reference for selected, reference in pinned_runtime_references().items()
+                  if selected == version]
     require(len(references) == 1, 'Missing or ambiguous pinned rehearsal runtime')
     recipe = baseline / '.behavior-legacy.Dockerfile'
     require(recipe.is_file() and not recipe.is_symlink(), 'Missing owned historical recipe')

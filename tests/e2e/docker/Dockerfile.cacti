@@ -63,7 +63,7 @@ RUN mkdir -p /var/cacti-state \
 # The bind-mount approach used previously meant the host's
 # include/config.php (whatever the developer had) clobbered our
 # container-friendly config, killing every protected request.
-COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer@sha256:af98f42dfff7c68ba8d53c2164fd9fde1087b7d449514baa38c418b1f6bc4bac /usr/bin/composer /usr/local/bin/composer
 COPY --chown=www-data:www-data . /var/www/html
 RUN composer install --working-dir=/var/www/html --no-dev --prefer-dist --no-interaction --no-progress \
  && rm -f /var/www/html/include/config.php \

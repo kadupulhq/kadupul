@@ -44,5 +44,71 @@ command. Workflow lint also validates the Dependabot configuration, including
 its schema and cooldown settings. GitHub's update jobs remain authoritative for
 dependency resolution; inspect their logs and proposed diffs before merging.
 
+## Public image pulls
+
+Hosted CI hit Docker Hub HTTP 429 limits during image builds, service startup
+and scanner pulls, including retries. Linux jobs that use Docker configure
+Google's [public Docker Hub cache](https://docs.cloud.google.com/artifact-registry/docs/pull-cached-dockerhub-images)
+before building or pulling. Original image references and digest verification
+remain intact; cache misses use Docker Hub. The configuration is validated and
+the daemon [reloads registry mirrors with SIGHUP](https://docs.docker.com/reference/cli/dockerd/#configuration-reload-behavior)
+without restarting running services. Self-hosted and local daemons are unchanged.
+
+GitHub starts job services before steps can configure that cache. Database
+services therefore use the Docker Official Images published at
+`public.ecr.aws/docker/library`, with the same matrix version families and
+unchanged health checks. The service manifests are pinned by digest, including
+the Compose database and Nginx fixtures. All six MariaDB/MySQL matrix manifests
+and Nginx were verified by immutable lookup and Linux/amd64 availability before
+switching. Runtime database provenance reads the actual running container's
+image, avoiding a second lookup of a floating tag.
+
+Actionlint 1.7.12 and Semgrep 1.176.0 run as native, pinned tools instead of pulling
+uncached tool images. The Semgrep version matches the previous pinned image;
+installation asserts the executable's version before preserving the same scan
+options. Its isolated environment uses mise's Python 3.12.12 and the hash-locked
+`tests/tools/requirements-semgrep.txt`, covered by the existing Dependabot pip
+entry. Regenerate that lock from `requirements-semgrep.in` under Python 3.12.12
+using pip-tools 7.5.1 with `--generate-hashes --allow-unsafe --strip-extras`.
+The CSP stack uses
+the native Docker builder instead of pulling a separate BuildKit container.
+No registry credentials are required for these public pulls; scanners,
+assertions and required check names remain unchanged.
+
+## Coverage and analysis
+
+Sonar coverage runs in two independent jobs: legacy unit/poller coverage, and
+Symfony/HTTP/offline/browser coverage. Both keep their complete test suites,
+coverage self-tests and production-source checks. The final scanner waits for
+both jobs to succeed; neither producer uploads a partial run.
+
+The serial run on [PR #829](https://github.com/kadupulhq/kadupul/actions/runs/37916951018)
+completed all tests but reached its 180-minute timeout just as scanning began.
+Legacy unit coverage alone took 128 minutes on that runner. Parallel producers
+remove the application coverage phase from that critical path. This is a workflow
+change; it does not relax test assertions or claim a measured speedup before the
+replacement run completes.
+
+Artifacts contain only the five final XML/LCOV reports and receipts binding
+their checksums to the exact checkout commit and tree. The consumer checks the
+complete report sets before remapping source paths between runner workspaces.
+It rejects stale revisions, changed reports, empty coverage and foreign paths.
+Artifacts expire after 14 days and are downloaded by immutable IDs. Attempt-specific
+names support a full rerun; GitHub's **Re-run failed jobs** can reuse successful
+producer artifacts when only verification or scanning failed.
+
+The legacy producer has a 180-minute budget, the application producer 90 minutes,
+and the scanner 15 minutes. Stale PR runs still cancel. A missing or failed
+producer prevents analysis and cannot supply a passing quality gate.
+
+Runtime whitelist cases import actual child-process PCOV coverage through the
+existing source/scenario/checksum/completion receipt checks. Their behavioral
+assertions also run without coverage; missing or stale child evidence fails a
+coverage run. The upstream pager input remains byte-identical, with its MIT
+license, at `include/js/jquery.tablesorter.pager.source.js`. The builder verifies
+its manifest checksum before applying the reviewed compatibility patches. This
+keeps upstream vendor input in the existing vendor tree and project-owned build
+and compatibility code in the measured source set.
+
 References: [GitHub Dependabot options](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference)
 and [security-update configuration](https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/configure-security-updates).

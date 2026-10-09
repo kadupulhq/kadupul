@@ -285,6 +285,8 @@ final class CdefStoreTest extends TestCase
             $this->database->insert('cdef_items', ['cdef_id' => $current, 'sequence' => 2, 'type' => 5, 'value' => (string) $previous]);
             $previous = $current;
         }
+        // Measure this preview, not the high-water mark of preceding suite tests.
+        memory_reset_peak_usage();
         $started = hrtime(true);
         $memory = memory_get_usage();
         $first = $this->store->find($previous)->preview;

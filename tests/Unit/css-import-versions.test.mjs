@@ -22,7 +22,7 @@ test('the actual browser build versions changed imported CSS for the uncompiled 
     await cp(join(root, 'tools/dependencies'), join(directory, 'tools/dependencies'), { recursive: true });
     await cp(join(root, 'include/themes/midwinter'), join(directory, 'include/themes/midwinter'), { recursive: true });
     await mkdir(join(directory, 'include/js'), { recursive: true });
-    await cp(join(root, 'include/js/jquery.tablesorter.pager.js'), join(directory, 'include/js/jquery.tablesorter.pager.js'));
+    await cp(join(root, 'include/js/jquery.tablesorter.pager.source.js'), join(directory, 'include/js/jquery.tablesorter.pager.source.js'));
     await symlink(join(root, 'node_modules'), join(directory, 'node_modules'), 'dir');
     const stylesheet = join(directory, 'include/themes/midwinter/main.css');
     const child = join(directory, 'include/themes/midwinter/css/pre/fonts.css');

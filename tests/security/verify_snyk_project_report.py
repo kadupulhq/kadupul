@@ -17,6 +17,7 @@ EXPECTED_PROJECTS = {
     "package-lock.json": "npm",
     "tests/composer.lock": "composer",
     "tests/Symfony/requirements.txt": "pip",
+    "tests/tools/requirements.txt": "pip",
     "tests/e2e/package-lock.json": "npm",
 }
 
@@ -53,7 +54,7 @@ def canonical_manifest(value, checkout):
 
 def verify_report(report, checkout):
     if not isinstance(report, list) or len(report) != len(EXPECTED_PROJECTS):
-        raise ReportError("Report must contain exactly five project results")
+        raise ReportError(f"Report must contain exactly {len(EXPECTED_PROJECTS)} project results")
     counts = {}
     for project in report:
         if not isinstance(project, dict) or "error" in project:
@@ -156,7 +157,7 @@ def main():
     if not receipt["complete"]:
         print(receipt["error"])
         return 1
-    print("Snyk completed all five expected project scans")
+    print(f"Snyk completed all {len(EXPECTED_PROJECTS)} expected project scans")
     return 0
 
 

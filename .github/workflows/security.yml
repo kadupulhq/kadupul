@@ -29,6 +29,19 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+      - uses: jdx/mise-action@7a4e45a543138629540c9a1616d08632b893e492 # v5.0.1
+        with:
+          install_args: python@3.12.12
+      - name: Install the pinned native scanner
+        run: |
+          scanner_environment="$RUNNER_TEMP/semgrep"
+          expected_version=$(sed -nE 's/^semgrep==([^[:space:]]+).*$/\1/p' tests/tools/requirements-semgrep.txt)
+          test -n "$expected_version"
+          mise exec python@3.12.12 -- python -m venv "$scanner_environment"
+          "$scanner_environment/bin/python" -m pip install --disable-pip-version-check --require-hashes -r tests/tools/requirements-semgrep.txt
+          echo "$scanner_environment/bin" >> "$GITHUB_PATH"
+          installed_version=$(PATH="$scanner_environment/bin:$PATH" "$scanner_environment/bin/semgrep" --version)
+          test "$installed_version" = "$expected_version"
 
       # The tree is inherited from Cacti and does not start clean: a sample of
       # 400 of our own files returns 41 findings. A zero-findings gate on that
@@ -37,7 +50,6 @@ jobs:
       # scheduled full scan reports everything without blocking.
       - name: Scan
         env:
-          IMAGE: semgrep/semgrep@sha256:12672acdb0949e19f9f6a4c2b288edd0b404f268f0ca7738a2c06f372f50362e
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
@@ -56,13 +68,7 @@ jobs:
             gate=(--baseline-commit "${BASE_SHA}" --error)
           fi
 
-          docker run --rm \
-            --user "$(id -u):$(id -g)" \
-            --env HOME=/tmp \
-            --volume "${PWD}:/src" \
-            --workdir /src \
-            "$IMAGE" \
-            semgrep scan "${configs[@]}" "${gate[@]}" \
+          semgrep scan "${configs[@]}" "${gate[@]}" \
               --metrics off \
               --timeout 0 --timeout-threshold 0 --max-target-bytes 0 \
               --sarif --output semgrep.sarif

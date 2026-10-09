@@ -7,7 +7,7 @@ RUN apt-get update \
  && docker-php-ext-install -j"$(nproc)" gmp ldap pcntl sockets \
  && rm -rf /var/lib/apt/lists/*
 
-COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer@sha256:af98f42dfff7c68ba8d53c2164fd9fde1087b7d449514baa38c418b1f6bc4bac /usr/bin/composer /usr/local/bin/composer
 
 RUN git clone https://github.com/Cacti/rrdproxy.git /opt/rrdproxy \
  && git -C /opt/rrdproxy checkout "${RRDPROXY_REF}" \

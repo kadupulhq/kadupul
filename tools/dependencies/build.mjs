@@ -29,7 +29,7 @@ await syncAssets(manifest, '--write', {
     if (!asset || !paths[asset.file]) throw new Error('Unmapped npm asset');
     // npm's tablesorter distribution omits the unminified pager; retain its small pinned source.
     const source = asset.file === 'jquery.tablesorter.pager.js'
-      ? 'include/js/jquery.tablesorter.pager.js'
+      ? 'include/js/jquery.tablesorter.pager.source.js'
       : `node_modules/${paths[asset.file]}`;
     const bytes = await readFile(new URL(source, root));
     return { ok: true, arrayBuffer: async () => bytes };

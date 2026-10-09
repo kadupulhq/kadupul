@@ -1,0 +1,45 @@
+name: Release artifact acceptance
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-artifact-acceptance-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  container:
+    name: Release container boot and offline assets
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Configure hosted Docker image cache
+        if: runner.environment == 'github-hosted' && runner.os == 'Linux'
+        run: bash tests/tools/configure_docker_mirror.sh
+      - name: Build the actual release image
+        run: docker build --build-arg VERSION=acceptance -t kadupul-release-acceptance .
+      - name: Verify dependencies and authorization without network access
+        run: |
+          docker run --rm --network none --entrypoint php \
+            kadupul-release-acceptance /var/www/html/tools/verify-offline.php
+      - name: Verify unprivileged FPM startup and health
+        run: |
+          set -euo pipefail
+          container=$(docker run --detach --network none kadupul-release-acceptance)
+          trap 'docker logs "$container"; docker rm --force "$container"' EXIT
+          attempt=0
+          until docker exec "$container" /usr/local/bin/entrypoint healthcheck; do
+            attempt=$((attempt + 1))
+            [ "$attempt" -lt 30 ] || exit 1
+            sleep 1
+          done
+          docker exec -i "$container" php < tests/Fixtures/release-fpm-health.php

@@ -239,7 +239,34 @@ def legacy_build_input_integrity():
     print('Historical release build inputs retain verified hashes and reject tampering')
 
 
+def runtime_provenance_consistency():
+    source = (release.ROOT / 'tests/behavior/Dockerfile').read_text()
+    references = release.pinned_runtime_references()
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        recipe = root / 'tests/behavior/Dockerfile'
+        recipe.parent.mkdir(parents=True)
+        old = references['8.4']
+        updated = old.split('@')[0] + '@sha256:' + 'a' * 64
+        for changed in (source.replace('FROM ' + old, 'FROM ' + updated, 1),
+                        source.replace('php-base="' + old, 'php-base="' + updated, 1),
+                        source + '\nFROM ' + updated + ' AS php-8.4\n'):
+            recipe.write_text(changed)
+            with patch.object(release, 'ROOT', root):
+                try:
+                    release.pinned_runtime_references()
+                except RuntimeError as error:
+                    assert 'provenance' in str(error)
+                else:
+                    raise AssertionError('Mismatched PHP image provenance was accepted')
+        recipe.write_text(source.replace(old, updated))
+        with patch.object(release, 'ROOT', root):
+            assert release.pinned_runtime_references()['8.4'] == updated
+    print('PHP runtime provenance rejects FROM-only and LABEL-only updates and accepts matched updates')
+
+
 def main():
+    runtime_provenance_consistency()
     legacy_build_input_integrity()
     baseline_ignore_contract()
     baseline_checkout_metadata()
