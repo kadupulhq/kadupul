@@ -17,7 +17,7 @@ def run(*args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--php-image', default='php:8.4-fpm')
+    parser.add_argument('--php-image', default='public.ecr.aws/docker/library/php:8.4-fpm-bookworm@sha256:6bfef8e416977aa41f48e3e42a40c1e08050d24e4a938c6edb421400bff24601')
     args = parser.parse_args()
     name = 'kadupul-private-' + uuid.uuid4().hex[:12]
     php, nginx = name + '-php', name + '-nginx'
