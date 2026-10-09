@@ -6,8 +6,19 @@ declare(strict_types=1);
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 // Execute the actual runtime predicate with owned filesystem and DB adapters.
-require $argv[1] . '/lib/utility.php';
+$root = $argv[1];
 $case = $argv[2];
+if (getenv('KADUPUL_RUNTIME_WHITELIST_COVERAGE')) {
+    define('RRD_TEST_COVERAGE_DIRECTORY', getenv('KADUPUL_RUNTIME_WHITELIST_COVERAGE'));
+    define('INPUT_WHITELIST_RUNTIME_TEST_COVERAGE', true);
+    require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
+    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/input-whitelist-runtime.php', $case, array(
+        'composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php',
+        'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Unit/InputWhitelistRuntimeValidationTest.php', 'lib/utility.php'
+    ));
+    require $root . '/tests/Fixtures/rrd-process-coverage.php';
+}
+require $root . '/lib/utility.php';
 $directory = sys_get_temp_dir() . '/whitelist-runtime-' . bin2hex(random_bytes(8));
 mkdir($directory, 0700);
 $path = $directory . '/allow.json';
@@ -69,3 +80,4 @@ try {
     }
     rmdir($directory);
 }
+$nativeChildCoverageMarkers = array('runtime-predicate-outcomes-readback');

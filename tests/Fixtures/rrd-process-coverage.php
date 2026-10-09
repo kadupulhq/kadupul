@@ -502,6 +502,12 @@ if (defined('AUDIT_PLUGIN_LIFECYCLE_TEST_COVERAGE')) {
     $coverageFilter->includeFile(RRD_TEST_CLI_COVERAGE_COPY);
     $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyUpgradePluginLifecycle.php');
 }
+if (defined('INPUT_WHITELIST_RUNTIME_TEST_COVERAGE')) {
+    // The runtime producer measures the actual predicate, with no copied or
+    // evaluated source and no unrelated RRD execution claim.
+    $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+    $coverageFilter->includeFile($coverageRoot . '/lib/utility.php');
+}
 $childCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
     (new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($coverageFilter),
     $coverageFilter

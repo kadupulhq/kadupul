@@ -70,5 +70,14 @@ The legacy producer has a 180-minute budget, the application producer 90 minutes
 and the scanner 15 minutes. Stale PR runs still cancel. A missing or failed
 producer prevents analysis and cannot supply a passing quality gate.
 
+Runtime whitelist cases import actual child-process PCOV coverage through the
+existing source/scenario/checksum/completion receipt checks. Their behavioral
+assertions also run without coverage; missing or stale child evidence fails a
+coverage run. The upstream pager input remains byte-identical, with its MIT
+license, at `include/js/jquery.tablesorter.pager.source.js`. The builder verifies
+its manifest checksum before applying the reviewed compatibility patches. This
+keeps upstream vendor input in the existing vendor tree and project-owned build
+and compatibility code in the measured source set.
+
 References: [GitHub Dependabot options](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference)
 and [security-update configuration](https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/configure-security-updates).

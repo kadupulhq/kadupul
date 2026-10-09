@@ -132,7 +132,10 @@ final class NativeChildCoverageEvidence
             $changed = $evidence;
             $changed['report'] = hash_file('sha256', $report);
             file_put_contents($report . '.json', json_encode($changed, JSON_THROW_ON_ERROR));
-            $reject([$unexecutedSource], 'was not executed');
+            // A producer with one measured file becomes completely empty;
+            // admission rejects it before reaching the per-source check.
+            $remainingHits = array_filter($withoutRequiredLines, static fn($lines) => array_filter($lines, static fn($hits) => is_array($hits) && $hits !== []));
+            $reject([$unexecutedSource], $remainingHits ? 'was not executed' : 'discovered no measured source');
             file_put_contents($report, $originalReport);
             file_put_contents($report . '.json', $originalEvidence);
             $reject(['index.php'], 'source is missing or stale');
