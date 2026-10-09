@@ -7,6 +7,7 @@ follows [Semantic Versioning](VERSIONING.md).
 ## [Unreleased]
 
 - Add Pest serial profiling and isolated parallel feedback with complete JUnit discovery checks and hardened XML evidence parsing.
+- Diagnose unavailable PHP POSIX/process functions and Linux `/proc` before native worker-boundary self-tests start workers.
 
 - Serve the CDEF list, editor, items, duplication and deletion through Symfony and Twig. Every change is revision-checked and rechecks the CDEF realm in its transaction, a CDEF can no longer include itself through another CDEF, and deletion goes through the CDEF reference contract. Old `cdef.php` links navigate; posts to it no longer change data.
 

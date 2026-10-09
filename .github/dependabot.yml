@@ -1,57 +1,130 @@
 version: 2
 updates:
+  # Omit target-branch on default-branch entries so these options also apply
+  # to security updates. Keep security remediation separate from routine bumps.
+  # The seven-day cooldown applies only to version updates, never security fixes.
   - package-ecosystem: pip
     directory: /tests/Symfony
-    target-branch: main
-    labels: [dependencies, no-changelog]
-    schedule:
-      interval: weekly
+    labels: [dependencies, branch:main, testing, no-changelog]
+    commit-message: {prefix: chore, include: scope}
+    schedule: {interval: weekly, day: monday}
     open-pull-requests-limit: 5
+    cooldown: {default-days: 7}
+    groups:
+      python-minor-patch:
+        patterns: ["*"]
+        update-types: [minor, patch]
+      python-security:
+        applies-to: security-updates
+        patterns: ["*"]
 
   - package-ecosystem: composer
-    directories:
-      - /
-      - /tests
-    target-branch: main
-    labels: [dependencies, no-changelog]
-    schedule:
-      interval: weekly
+    directories: [/, /tests]
+    labels: [dependencies, branch:main, php, no-changelog]
+    commit-message: {prefix: chore, include: scope}
+    schedule: {interval: weekly, day: monday}
     open-pull-requests-limit: 5
+    cooldown: {default-days: 7}
     groups:
-      php-dependencies:
+      php-minor-patch:
+        patterns: ["*"]
+        update-types: [minor, patch]
+      php-security:
+        applies-to: security-updates
+        patterns: ["*"]
+
+  - package-ecosystem: npm
+    directories: [/, /tests/e2e]
+    labels: [dependencies, branch:main, javascript, no-changelog]
+    commit-message: {prefix: chore, include: scope}
+    schedule: {interval: weekly, day: monday}
+    open-pull-requests-limit: 5
+    cooldown: {default-days: 7}
+    groups:
+      javascript-minor-patch:
+        patterns: ["*"]
+        update-types: [minor, patch]
+      javascript-security:
+        applies-to: security-updates
+        patterns: ["*"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    labels: [dependencies, branch:main, github_actions, no-changelog]
+    commit-message: {prefix: ci, include: scope}
+    schedule: {interval: weekly, day: monday}
+    open-pull-requests-limit: 5
+    cooldown: {default-days: 7}
+    groups:
+      actions-minor-patch:
+        patterns: ["*"]
+        update-types: [minor, patch]
+      actions-security:
+        applies-to: security-updates
+        patterns: ["*"]
+
+  - package-ecosystem: docker
+    directories: [/, /tests/behavior, /tests/e2e, /tests/e2e/docker, /tests/e2e/rrd-proxy]
+    labels: [dependencies, branch:main, testing, no-changelog]
+    commit-message: {prefix: chore, include: scope}
+    schedule: {interval: weekly, day: monday}
+    open-pull-requests-limit: 5
+    cooldown: {default-days: 7}
+    # Runtime families and named harness stages are deliberate compatibility
+    # contracts. Refresh their digests; review family changes explicitly.
+    ignore:
+      - dependency-name: "*"
+        update-types: [version-update:semver-major, version-update:semver-minor]
+
+  # Security updates are a GitHub default-branch feature. These explicit LTS
+  # entries provide version updates for its own manifests and workflows.
+  - package-ecosystem: composer
+    directories: [/, /tests]
+    target-branch: lts/1.2
+    labels: [dependencies, branch:lts, php, no-changelog]
+    commit-message: {prefix: chore, include: scope}
+    schedule: {interval: weekly, day: monday}
+    open-pull-requests-limit: 5
+    cooldown: {default-days: 7}
+    groups:
+      lts-php-minor-patch:
         patterns: ["*"]
         update-types: [minor, patch]
 
   - package-ecosystem: npm
-    directories:
-      - /
-      - /tests/e2e
-    target-branch: main
-    labels: [dependencies, no-changelog]
-    schedule:
-      interval: weekly
+    directory: /tests/e2e
+    target-branch: lts/1.2
+    labels: [dependencies, branch:lts, javascript, testing, no-changelog]
+    commit-message: {prefix: chore, include: scope}
+    schedule: {interval: weekly, day: monday}
     open-pull-requests-limit: 5
+    cooldown: {default-days: 7}
     groups:
-      javascript-dependencies:
+      lts-javascript-minor-patch:
         patterns: ["*"]
         update-types: [minor, patch]
 
   - package-ecosystem: github-actions
     directory: /
-    target-branch: main
-    labels: [dependencies, no-changelog]
-    schedule:
-      interval: weekly
+    target-branch: lts/1.2
+    labels: [dependencies, branch:lts, github_actions, no-changelog]
+    commit-message: {prefix: ci, include: scope}
+    schedule: {interval: weekly, day: monday}
+    open-pull-requests-limit: 5
+    cooldown: {default-days: 7}
     groups:
-      actions:
+      lts-actions-minor-patch:
         patterns: ["*"]
+        update-types: [minor, patch]
 
   - package-ecosystem: docker
-    directories:
-      - /
-      - /tests/behavior
-    target-branch: main
-    labels: [dependencies, no-changelog]
-    schedule:
-      interval: weekly
+    directories: [/tests/e2e, /tests/e2e/docker]
+    target-branch: lts/1.2
+    labels: [dependencies, branch:lts, testing, no-changelog]
+    commit-message: {prefix: chore, include: scope}
+    schedule: {interval: weekly, day: monday}
     open-pull-requests-limit: 5
+    cooldown: {default-days: 7}
+    ignore:
+      - dependency-name: "*"
+        update-types: [version-update:semver-major, version-update:semver-minor]
