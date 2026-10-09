@@ -36,14 +36,30 @@ jobs:
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     permissions:
       contents: write
+      id-token: write
+      attestations: write
     steps:
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: kadupul-offline-bundle
           path: dist
+      - name: Verify the archive checksum before attesting
+        working-directory: dist
+        run: sha256sum --check kadupul-offline.tar.gz.sha256
+      - name: Attest the installable offline archive
+        id: offline-attestation
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: dist/kadupul-offline.tar.gz
+      - name: Preserve the signed verification bundle with the release asset
+        env:
+          ATTESTATION_BUNDLE: ${{ steps.offline-attestation.outputs.bundle-path }}
+        run: |
+          test -s "$ATTESTATION_BUNDLE"
+          cp "$ATTESTATION_BUNDLE" dist/kadupul-offline.tar.gz.sigstore.json
       - name: Attach installable archive to release
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           RELEASE_TAG: ${{ github.ref_name }}
-        run: gh release upload "$RELEASE_TAG" dist/kadupul-offline.tar.gz dist/kadupul-offline.tar.gz.sha256
+        run: gh release upload "$RELEASE_TAG" dist/kadupul-offline.tar.gz dist/kadupul-offline.tar.gz.sha256 dist/kadupul-offline.tar.gz.sigstore.json

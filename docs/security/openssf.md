@@ -46,14 +46,68 @@ from 3/10 to 8/10. Check the report's source SHA and date before comparing score
 | --- | --- | --- |
 | New protection settings | verified | GitHub API readback on 2026-10-08 and subsequent published Scorecard assessment |
 | Code review history | planned | Accumulate independently approved changes; new settings cannot retroactively approve old commits |
-| Continuous fuzzing | planned | Introduce a reproducible fuzz target, corpus, crash triage and continuous runner; ordinary unit tests are not fuzzing |
-| OpenSSF Best Practices badge | planned | Complete the project's assessment with evidence and obtain the badge; no badge is claimed |
-| Signed release artifacts | planned | Verify provenance/signatures with the first supported release |
+| Continuous fuzzing | implemented | `fuzz.yml` runs fast-check against the shipped vendor asset synchronizer on PRs, main pushes and weekly; 2,000 generated cases per property, shrinking and replay details retained |
+| OpenSSF Best Practices badge | pending enrollment | Complete the [evidence checklist](openssf-best-practices.md) in a maintainer's authenticated badge account; no badge is claimed |
+| Signed release artifacts | implemented; release evidence pending | The offline archive is checksummed, attested and uploaded with its Sigstore bundle; verify the first published release before claiming signed release history |
 | Maintenance history | not assessed | Scorecard reports that this project is younger than 90 days; inherited contributors alone do not establish ongoing maintenance |
 
-Some checks returned unavailable (`-1`), including workflow/token analysis and
-packaging. Unavailable results are not passing findings. Investigate later
-reports rather than treating the aggregate score as complete coverage.
+The published assessment used archive file mode. `.gitattributes` deliberately
+excludes `.github` and `tests` from source archives, so workflow/token analysis
+was unavailable and dependency analysis omitted test images. The Scorecard
+workflow now uses `file_mode: git`, preserving release archive exclusions while
+assessing the complete tracked tree.
+
+Full-tree validation with Scorecard 5.5.0 confirms 10/10 for Dangerous-Workflow,
+Token-Permissions, Pinned-Dependencies and Fuzzing on the updated source. These
+are targeted checks, not an updated published aggregate score. Every selectable
+PHP 8.1–8.4 harness base and the three fixed PHP test images use verified
+multi-platform registry digests. Harness manifests obtain the PHP base identity
+from the running container's inherited label; a floating tag cannot supply it.
+The provenance change can require a reviewed baseline recapture. No goldens
+were automatically updated.
+
+Packaging remains unavailable: the detector does not recognize the pinned
+reusable release workflow, which already publishes an archive and GHCR image.
+Signed-Releases remains unavailable until a release exists. Maintained is zero
+because the repository is younger than 90 days; Code-Review needs independent
+review history. Branch-Protection is 8/10: two approvals and mandatory code-owner
+review need additional eligible maintainers; only the author account was listed
+as a collaborator during this audit. Existing protections remain enforced.
+
+Unavailable results are not passing findings. Reassess after these changes merge
+and verify the report's source SHA before comparing aggregate scores.
+
+## Fuzzing and release verification
+
+Install the locked development dependencies and run the property fuzzer:
+
+```sh
+mise exec node@22.22.2 -- npm ci --ignore-scripts
+FUZZ_RUNS=2000 mise exec node@22.22.2 -- npm run test:fuzz
+```
+
+It exercises checksum rejection at every batch position, arbitrary binary
+inputs, LF conversion and literal patch replacement through the real
+`syncAssets` function. Downloads and writes use owned memory fixtures. This is
+property fuzzing of the supply chain boundary; it does not fuzz the entire PHP
+application. Each run records its seed. Failures include a shrunk counterexample
+and replay path; rerun the named failing test with `FUZZ_SEED` and `FUZZ_PATH`,
+then add a permanent regression before fixing the defect.
+
+Download the release archive, checksum and `.sigstore.json` bundle together.
+Verify the signed provenance against this repository and workflow, not merely
+the unsigned checksum:
+
+```sh
+sha256sum --check kadupul-offline.tar.gz.sha256
+gh attestation verify kadupul-offline.tar.gz --repo kadupulhq/kadupul \
+  --bundle kadupul-offline.tar.gz.sigstore.json \
+  --signer-workflow kadupulhq/kadupul/.github/workflows/release.yml
+```
+
+The workflow attests only after checksum validation succeeds and uploads only
+after attestation succeeds. Actual keyless signing requires GitHub's release
+job identity; no release was fabricated to improve a Scorecard result.
 
 ## Rechecking and recovery
 

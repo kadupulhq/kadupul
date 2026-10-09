@@ -1,10 +1,20 @@
 # Cacti runtime image for the e2e harness. The repo is baked into the image.
 
-# The tag is mutable: a base refresh can change diagnostics or defaults with no
-# source diff. The manifest records the resolved digest of this image and of the
-# database image, so a refresh shows up there. A digest pin here would fix one
-# PHP version and break the version matrix.
+# Keep the PHP_VERSION matrix while pinning each selectable runtime.
+# Add a pinned stage before introducing another runtime.
 ARG PHP_VERSION=8.4
+FROM php:8.1-apache@sha256:72f0c0134922985022d55a39b0390d35dc7a10e961aa6c44fa35b4c3102f4268 AS php-8.1
+LABEL org.kadupul.behavior.php-base="php:8.1-apache@sha256:72f0c0134922985022d55a39b0390d35dc7a10e961aa6c44fa35b4c3102f4268"
+
+FROM php:8.2-apache@sha256:2029ac2c39fab54d7d8abe6c9108068b8593de1e8cede79ce00d15f7aa895e37 AS php-8.2
+LABEL org.kadupul.behavior.php-base="php:8.2-apache@sha256:2029ac2c39fab54d7d8abe6c9108068b8593de1e8cede79ce00d15f7aa895e37"
+
+FROM php:8.3-apache@sha256:7a33fa6c555763fa384c727ab7377c4807f628daec0660eda705957a905f707f AS php-8.3
+LABEL org.kadupul.behavior.php-base="php:8.3-apache@sha256:7a33fa6c555763fa384c727ab7377c4807f628daec0660eda705957a905f707f"
+
+FROM php:8.4-apache@sha256:901b0dbcd2419cc9cd307ea05e57403449ce722ccd5b32335da6e8d39f2b1ee0 AS php-8.4
+LABEL org.kadupul.behavior.php-base="php:8.4-apache@sha256:901b0dbcd2419cc9cd307ea05e57403449ce722ccd5b32335da6e8d39f2b1ee0"
+
 FROM node:26.10.0-bookworm-slim@sha256:662933cf47f013bc8e4beb31a6116448427a82057ba7c42c97e4c5ba766504c2 AS assets
 WORKDIR /app
 COPY package.json package-lock.json ./
@@ -13,7 +23,7 @@ COPY include/js/jquery.tablesorter.pager.js ./include/js/jquery.tablesorter.page
 COPY include/themes/midwinter ./include/themes/midwinter
 RUN npm ci --ignore-scripts --no-audit --no-fund && node tools/dependencies/build.mjs
 
-FROM php:${PHP_VERSION}-apache
+FROM php-${PHP_VERSION} AS runtime
 
 ENV DEBIAN_FRONTEND=noninteractive
 
