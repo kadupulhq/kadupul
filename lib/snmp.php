@@ -99,7 +99,8 @@ function cacti_snmp_select_uptime($system_uptime, $engine_time, $now = null) {
  *
  * @return int|false Counter in hundredths of a second, or false when unavailable.
  */
-function cacti_snmp_select_reindex_uptime($system_uptime, $engine_time) {
+function cacti_snmp_select_reindex_uptime($system_uptime, $engine_time)
+{
 	if ((is_int($engine_time) || is_string($engine_time)) &&
 		preg_match('/^[0-9]+$/D', (string) $engine_time) === 1 &&
 		$engine_time <= 2147483647) {
