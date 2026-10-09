@@ -57,11 +57,44 @@ jobs:
         with:
           php-version: '8.1'
           tools: composer
+      - uses: jdx/mise-action@7a4e45a543138629540c9a1616d08632b893e492 # v5.0.1
+        with:
+          install_args: python@3.12.12
+          add_shims_to_path: false
       - name: Set up Snyk CLI
         uses: snyk/actions/setup@11b673cfb4b0dc0d860a1323caa199d54950dcce
         with:
           snyk-version: v1.1307.4
+      - name: Verify complete-project report guard
+        run: mise exec python@3.12.12 -- python -m unittest discover -s tests/security -p test_snyk_project_report.py -v
       - name: Test Composer and npm dependencies
-        run: snyk test --all-projects --dev --severity-threshold=high
+        id: dependency_scan
+        run: |
+          scan_dir=$(mktemp -d "$RUNNER_TEMP/snyk-completion.XXXXXX")
+          echo "receipt-path=$scan_dir/completion.json" >> "$GITHUB_OUTPUT"
+          # Use the pinned legacy test path and keep provider reports out of logs.
+          trap 'rm -f -- "$scan_dir/report.json" "$scan_dir/scan.log"' EXIT
+          set +e
+          snyk test --all-projects --dev --severity-threshold=high --print-deps \
+            --json-file-output="$scan_dir/report.json" > "$scan_dir/scan.log" 2>&1
+          scan_status=$?
+          mise exec python@3.12.12 -- python tests/security/verify_snyk_project_report.py \
+            "$scan_dir/report.json" --checkout "$GITHUB_WORKSPACE" \
+            --cli-exit "$scan_status" --scan-log "$scan_dir/scan.log" \
+            --receipt "$scan_dir/completion.json"
+          report_status=$?
+          set -e
+          if [ "$scan_status" -ne 0 ]; then
+            exit "$scan_status"
+          fi
+          exit "$report_status"
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      - name: Preserve sanitized project completion receipt
+        if: ${{ always() && steps.dependency_scan.outputs.receipt-path != '' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          retention-days: 14
+          name: snyk-project-completion
+          path: ${{ steps.dependency_scan.outputs.receipt-path }}
+          if-no-files-found: error
