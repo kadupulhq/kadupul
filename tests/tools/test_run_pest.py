@@ -9,7 +9,9 @@ import subprocess
 import sys
 import tempfile
 import unittest
-import xml.etree.ElementTree as ET
+import defusedxml.ElementTree as ET
+from defusedxml.common import DefusedXmlException
+from run_pest import report_testcases
 
 ROOT = Path(__file__).resolve().parents[2]
 PHP_VERSION = "8.4.25"
@@ -27,7 +29,16 @@ class PestRunnerTest(unittest.TestCase):
     def cases(self, report):
         return sorted((case.attrib["classname"], case.attrib["name"],
                        case.find("skipped") is not None)
-                      for case in ET.parse(report).findall(".//testcase"))
+                      for case in report_testcases(report))
+
+    def test_junit_parser_accepts_normal_evidence_and_refuses_a_doctype(self):
+        with tempfile.TemporaryDirectory(prefix="kadupul-pest-xml-") as owned:
+            report = Path(owned) / "evidence.xml"
+            report.write_text('<testsuites><testsuite><testcase name="observed"/></testsuite></testsuites>')
+            self.assertEqual(len(report_testcases(report)), 1)
+            report.write_text('<!DOCTYPE testsuites><testsuites/>')
+            with self.assertRaises(DefusedXmlException):
+                report_testcases(report)
 
     def test_serial_and_parallel_execute_identical_complete_inventory(self):
         with tempfile.TemporaryDirectory(prefix="kadupul-pest-runner-") as owned:
@@ -38,7 +49,7 @@ class PestRunnerTest(unittest.TestCase):
                 self.assertEqual(run.returncode, 0, run.stdout)
                 outputs.append(self.cases(report))
             self.assertEqual(outputs[0], outputs[1])
-            inventory = ET.parse(ROOT / "tests/phpunit-parallel.xml").findall("./testsuites/testsuite/file")
+            inventory = ET.parse(ROOT / "tests/phpunit-parallel.xml", forbid_dtd=True).findall("./testsuites/testsuite/file")
             for entry in inventory:
                 stem = Path(entry.text).stem
                 self.assertTrue(any(stem in classname for classname, _, _ in outputs[0]), stem)

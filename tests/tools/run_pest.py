@@ -9,9 +9,15 @@ import os
 from pathlib import Path
 import subprocess
 import sys
-import xml.etree.ElementTree as ET
+import defusedxml.ElementTree as ET
+from defusedxml.common import DefusedXmlException
 
 ROOT = Path(__file__).resolve().parents[2]
+
+
+def report_testcases(path: Path):
+    """Read JUnit evidence without accepting DTDs, entities or external resources."""
+    return ET.parse(path, forbid_dtd=True).findall(".//testcase")
 
 
 def processes(value: str) -> int:
@@ -68,7 +74,7 @@ def main() -> int:
     if configuration == "phpunit-parallel.xml":
         # Pest's serial loader does not discover DSL tests from PHPUnit <file>
         # entries alone. Explicit selectors keep serial/parallel cases equal.
-        files = ET.parse(ROOT / "tests" / configuration).findall("./testsuites/testsuite/file")
+        files = ET.parse(ROOT / "tests" / configuration, forbid_dtd=True).findall("./testsuites/testsuite/file")
         if not files:
             parser.error("The parallel test inventory must not be empty.")
         for entry in files:
@@ -86,9 +92,9 @@ def main() -> int:
     status = subprocess.run(command, cwd=ROOT / "tests", env=environment, check=False).returncode
     if status == 0 and args.junit is not None:
         try:
-            if not ET.parse(args.junit).findall(".//testcase"):
+            if not report_testcases(args.junit):
                 raise ValueError("No test cases in the JUnit report.")
-        except (OSError, ET.ParseError, ValueError):
+        except (OSError, ET.ParseError, DefusedXmlException, ValueError):
             print("Pest exited successfully without a complete nonempty JUnit report.", file=sys.stderr)
             return 1
     return status if status >= 0 else 128 - status

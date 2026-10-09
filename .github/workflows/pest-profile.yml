@@ -41,6 +41,7 @@ jobs:
           add_shims_to_path: false
       - name: Install locked dependencies and application assets
         run: |
+          mise exec python@3.12.12 -- python -m pip install --require-hashes -r tests/tools/requirements.txt
           sudo apt-get update -o Acquire::Retries=3
           sudo apt-get install -y --no-install-recommends rrdtool snmp
           mise plugins install --force php https://github.com/mise-plugins/asdf-php.git#e361a2c912a431393b7deb3ecf44b877900d889c

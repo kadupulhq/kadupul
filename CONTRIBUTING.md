@@ -43,6 +43,8 @@ AI-review tools are intentionally not required by these hooks.
 ## Pest profiling and isolated parallel feedback
 
 Install the locked application and test dependencies before running these tools.
+Install the Python XML parser with
+`mise exec -- python -m pip install --require-hashes -r tests/tools/requirements.txt`.
 `mise exec -- python tests/tools/run_pest.py profile --junit /tmp/pest-profile.xml`
 runs the full serial suite and prints the slowest cases. `parallel` runs the
 reviewed inventory in `tests/phpunit-parallel.xml` with two workers by default.
