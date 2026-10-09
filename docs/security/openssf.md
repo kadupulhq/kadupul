@@ -42,12 +42,24 @@ Actions artifact. A fresh run after the settings change published **6.8/10**
 at `2026-10-09T00:05:17Z` for the same source commit. Branch protection increased
 from 3/10 to 8/10. Check the report's source SHA and date before comparing scores.
 
+After PR #825 merged, the published assessment reached **8.0/10** at
+`2026-10-09T06:44:07Z` for source
+`a9afa6b3adb06c3651fc5199f98c98aa2516df0c`. Workflow safety, token permissions,
+dependency pinning and fuzzing scored 10/10. Best Practices enrollment scored
+2/10, reflecting an assessment in progress rather than a passing badge.
+
+For this maintenance and release work, the maintainer temporarily waived the
+independent-approval requirement. Ready merges use a narrow native ruleset
+exception, with required CI, thread resolution and protected history retained;
+the approval settings are restored immediately after each merge. This exception
+does not create independent review evidence or improve Code-Review history.
+
 | Requirement | Status | Remaining acceptance evidence |
 | --- | --- | --- |
 | New protection settings | verified | GitHub API readback on 2026-10-08 and subsequent published Scorecard assessment |
 | Code review history | planned | Accumulate independently approved changes; new settings cannot retroactively approve old commits |
 | Continuous fuzzing | implemented | `fuzz.yml` runs fast-check against the shipped vendor asset synchronizer on PRs, main pushes and weekly; 2,000 generated cases per property, shrinking and replay details retained |
-| OpenSSF Best Practices badge | pending enrollment | Complete the [evidence checklist](openssf-best-practices.md) in a maintainer's authenticated badge account; no badge is claimed |
+| OpenSSF Best Practices badge | enrolled; passing assessment 70% on 2026-10-09 | [Project 15322](https://www.bestpractices.dev/en/projects/15322); complete the remaining [evidence checklist](openssf-best-practices.md), without claiming an earned badge |
 | Signed release artifacts | implemented; release evidence pending | The offline archive is checksummed, attested and uploaded with its Sigstore bundle; verify the first published release before claiming signed release history |
 | Maintenance history | not assessed | Scorecard reports that this project is younger than 90 days; inherited contributors alone do not establish ongoing maintenance |
 
@@ -59,7 +71,7 @@ assessing the complete tracked tree.
 
 Full-tree validation with Scorecard 5.5.0 confirms 10/10 for Dangerous-Workflow,
 Token-Permissions, Pinned-Dependencies and Fuzzing on the updated source. These
-are targeted checks, not an updated published aggregate score. Every selectable
+agree with the published aggregate assessment above. Every selectable
 PHP 8.1–8.4 harness base and the three fixed PHP test images use verified
 multi-platform registry digests. Harness manifests obtain the PHP base identity
 from the running container's inherited label; a floating tag cannot supply it.

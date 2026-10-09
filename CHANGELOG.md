@@ -11,6 +11,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - First Kadupul preview for isolated evaluation. This is pre-alpha software, with no production support or supported migration path. It combines the existing monitoring, polling and graphing application with an incremental Symfony 7.4 migration; PHP 8.4 or later is required.
 - Ship a dependency-complete offline archive with signed provenance and a container image with signed provenance. Release publication waits for artifact verification; consumers must verify the signatures against the Kadupul repository and release workflows.
 - Assess the full Git tree with OpenSSF Scorecard, pin test runtime images, and continuously fuzz the vendor asset integrity boundary. These controls do not constitute a security certification or a Best Practices badge.
+- Measure the CDEF preview memory budget from its own execution rather than earlier tests' process-wide peak; retain the existing 8 MiB limit.
 
 - Serve the CDEF list, editor, items, duplication and deletion through Symfony and Twig. Every change is revision-checked and rechecks the CDEF realm in its transaction, a CDEF can no longer include itself through another CDEF, and deletion goes through the CDEF reference contract. Old `cdef.php` links navigate; posts to it no longer change data.
 
