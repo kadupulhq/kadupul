@@ -30,7 +30,7 @@ COPY include/themes/midwinter ./include/themes/midwinter
 RUN npm ci --ignore-scripts --no-audit --no-fund && node tools/dependencies/build.mjs
 
 # --- runtime ----------------------------------------------------------------
-FROM php@sha256:19642e172d3a542225225e202ddc2c11f67bdcbddf147b676c49338609b9290f AS runtime
+FROM php:8.4-fpm-bookworm@sha256:6bfef8e416977aa41f48e3e42a40c1e08050d24e4a938c6edb421400bff24601 AS runtime
 
 ARG VERSION=dev
 ARG TARGETARCH
@@ -48,7 +48,7 @@ LABEL org.opencontainers.image.title="Kadupul" \
 RUN set -eux; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
-        rrdtool snmp libsnmp40 \
+        rrdtool snmp libsnmp40 procps \
         libfreetype6 libjpeg62-turbo libpng16-16 libgmp10 libldap-2.5-0 \
         libicu72 libxml2 libzip4 default-mysql-client; \
     savedAptMark="$(apt-mark showmanual)"; \
@@ -60,7 +60,7 @@ RUN set -eux; \
     docker-php-ext-install -j"$(nproc)" \
         gd gmp intl ldap mbstring pdo pdo_mysql mysqli \
         snmp pcntl posix sockets xml zip opcache; \
-    pecl install apcu && docker-php-ext-enable apcu; \
+    pecl install apcu-5.1.28 && docker-php-ext-enable apcu; \
     apt-mark auto '.*' > /dev/null; \
     apt-mark manual $savedAptMark > /dev/null; \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \

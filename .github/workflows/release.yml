@@ -26,8 +26,10 @@ jobs:
       id-token: write     # OIDC token for cosign and the attestations API
       attestations: write # file provenance against the repository
     with:
-      tarball: true
+      # The verified, dependency-complete offline builder supplies the archive.
+      tarball: false
       image: true
+      draft: true
       php-version: '8.4'
 
   attach-offline-bundle:
@@ -63,3 +65,48 @@ jobs:
           GH_REPO: ${{ github.repository }}
           RELEASE_TAG: ${{ github.ref_name }}
         run: gh release upload "$RELEASE_TAG" dist/kadupul-offline.tar.gz dist/kadupul-offline.tar.gz.sha256 dist/kadupul-offline.tar.gz.sigstore.json
+
+  publish:
+    name: Verify artifacts before publishing
+    needs: [release, attach-offline-bundle]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      packages: read
+    steps:
+      - name: Verify signed archive and container provenance
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          printf '%s' "$GH_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+          mkdir verification
+          gh release download "$RELEASE_TAG" --dir verification \
+            --pattern kadupul-offline.tar.gz \
+            --pattern kadupul-offline.tar.gz.sha256 \
+            --pattern kadupul-offline.tar.gz.sigstore.json
+          cd verification
+          sha256sum --check kadupul-offline.tar.gz.sha256
+          gh attestation verify kadupul-offline.tar.gz --repo "$GH_REPO" \
+            --bundle kadupul-offline.tar.gz.sigstore.json \
+            --source-digest "$GITHUB_SHA" --signer-digest "$GITHUB_SHA" \
+            --signer-workflow kadupulhq/kadupul/.github/workflows/release.yml
+          gh attestation verify "oci://ghcr.io/${GH_REPO,,}:${RELEASE_TAG#v}" \
+            --repo "$GH_REPO" \
+            --source-digest "$GITHUB_SHA" \
+            --signer-digest 917f4d4369474e947d29252a7597868927f3a38a \
+            --signer-workflow kadupulhq/.github/.github/workflows/release.yml
+      - name: Publish the verified draft
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          case "$RELEASE_TAG" in
+            *-*) gh release edit "$RELEASE_TAG" --draft=false --prerelease --latest=false ;;
+            *) gh release edit "$RELEASE_TAG" --draft=false ;;
+          esac
