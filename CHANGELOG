@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Use Spine's engine-first counter, including zero after a reset, for PHP uptime-backwards reindex baselines and assertions while retaining the device-display uptime heuristic
 -issue: Make the effective graph-policy display honor explicit template grants under Restrictive mode when the template policy defaults to Deny
 -issue: Preserve formatted Host Resources Bytes allocation units, missing-cache fallback, and supported signed Integer32 overflow counters while rejecting non-finite samples and invalid units
 -issue: Recovery resends replace the main collector's staged value before local acknowledgement, and exact output comparisons preserve case, accent and trailing-space changes across supported collations

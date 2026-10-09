@@ -482,7 +482,7 @@ function update_reindex_cache($host_id, $data_query_id) {
 					if ($oid_uptime == '.1.3.6.1.2.1.1.3.0') {
 						$engine_time   = cacti_snmp_session_get($session, '.1.3.6.1.6.3.10.2.1.3.0');
 						$system_uptime = cacti_snmp_session_get($session, $oid_uptime);
-						$assert_value  = cacti_snmp_select_uptime($system_uptime, $engine_time);
+						$assert_value  = cacti_snmp_select_reindex_uptime($system_uptime, $engine_time);
 
 						if ($assert_value === false) {
 							$assert_value = '';

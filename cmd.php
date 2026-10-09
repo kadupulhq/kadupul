@@ -840,7 +840,7 @@ function ping_and_reindex_check(&$item, $mibs) {
 							if (trim($index_item['arg1']) == '.1.3.6.1.2.1.1.3.0') {
 								$engine_time   = cacti_snmp_session_get($session, '.1.3.6.1.6.3.10.2.1.3.0');
 								$system_uptime = cacti_snmp_session_get($session, $index_item['arg1']);
-								$output        = cacti_snmp_select_uptime($system_uptime, $engine_time);
+								$output        = cacti_snmp_select_reindex_uptime($system_uptime, $engine_time);
 
 								if ($output === false) {
 									$output = 'U';
