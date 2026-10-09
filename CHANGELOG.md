@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Diagnose unavailable PHP POSIX/process functions and Linux `/proc` before native worker-boundary self-tests start workers.
+
 - Serve the CDEF list, editor, items, duplication and deletion through Symfony and Twig. Every change is revision-checked and rechecks the CDEF realm in its transaction, a CDEF can no longer include itself through another CDEF, and deletion goes through the CDEF reference contract. Old `cdef.php` links navigate; posts to it no longer change data.
 
 - Serve the RRD check list through Symfony and Twig; purging now needs a POST with a CSRF token and rechecks the Utilities realm in the same transaction, and old `rrdcheck.php` links and posts no longer change data.
