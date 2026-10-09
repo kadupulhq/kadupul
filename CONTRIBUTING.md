@@ -40,7 +40,22 @@ Install php-cs-fixer 3.95.27 on `PATH`, or set `PHP_CS_FIXER` to that pinned
 executable. GitHub CI remains authoritative and must pass before merge. Local
 AI-review tools are intentionally not required by these hooks.
 
+## Pest profiling and isolated parallel feedback
+
+Install the locked application and test dependencies before running these tools.
+`mise exec -- python tests/tools/run_pest.py profile --junit /tmp/pest-profile.xml`
+runs the full serial suite and prints the slowest cases. `parallel` runs the
+reviewed inventory in `tests/phpunit-parallel.xml` with two workers by default.
+Use a fresh JUnit path: the runner refuses to overwrite earlier evidence.
+
+Run `mise exec -- python tests/tools/test_run_pest.py` after changing the runner
+or inventory. It checks serial/parallel discovery parity, empty selections,
+failure outcomes and report preservation. The parallel feedback lane does not
+replace full serial coverage, database, browser or deployment checks.
+The manually dispatched `Pest profiling` workflow retains its report and log.
+
 ## Commits
+
 
 Use Conventional Commits and sign off every commit with `git commit -s` under the
 [Developer Certificate of Origin](https://developercertificate.org/).
