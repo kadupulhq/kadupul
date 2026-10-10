@@ -63,8 +63,8 @@ and Nginx were verified by immutable lookup and Linux/amd64 availability before
 switching. Runtime database provenance reads the actual running container's
 image, avoiding a second lookup of a floating tag.
 
-Actionlint 1.7.12 and Semgrep 1.176.0 run as native, pinned tools instead of pulling
-uncached tool images. The Semgrep version matches the previous pinned image;
+Actionlint 1.7.12 and Semgrep 1.179.0 run as native, pinned tools instead of pulling
+uncached tool images. The scanner lock includes patched PyJWT 2.15.1;
 installation asserts the executable's version before preserving the same scan
 options. Its isolated environment uses mise's Python 3.12.12 and the hash-locked
 `tests/tools/requirements-semgrep.txt`, covered by the existing Dependabot pip

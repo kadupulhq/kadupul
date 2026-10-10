@@ -1,4 +1,4 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Native CI scanner; matches the former digest-pinned image's release.
-semgrep==1.176.0
+# Native CI scanner; keep its transitive dependencies hash-locked and patched.
+semgrep==1.179.0
