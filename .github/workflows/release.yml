@@ -59,12 +59,14 @@ jobs:
         run: |
           test -s "$ATTESTATION_BUNDLE"
           cp "$ATTESTATION_BUNDLE" dist/kadupul-offline.tar.gz.sigstore.json
+          jq -e '.dsseEnvelope | (.payloadType == "application/vnd.in-toto+json") and (.payload | type == "string") and (.signatures | length > 0)' "$ATTESTATION_BUNDLE" >/dev/null
+          jq -c '.dsseEnvelope' "$ATTESTATION_BUNDLE" > dist/kadupul-offline.tar.gz.intoto.jsonl
       - name: Attach installable archive to release
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           RELEASE_TAG: ${{ github.ref_name }}
-        run: gh release upload "$RELEASE_TAG" dist/kadupul-offline.tar.gz dist/kadupul-offline.tar.gz.sha256 dist/kadupul-offline.tar.gz.sigstore.json
+        run: gh release upload "$RELEASE_TAG" dist/kadupul-offline.tar.gz dist/kadupul-offline.tar.gz.sha256 dist/kadupul-offline.tar.gz.sigstore.json dist/kadupul-offline.tar.gz.intoto.jsonl
 
   publish:
     name: Verify artifacts before publishing
@@ -87,9 +89,12 @@ jobs:
           gh release download "$RELEASE_TAG" --dir verification \
             --pattern kadupul-offline.tar.gz \
             --pattern kadupul-offline.tar.gz.sha256 \
-            --pattern kadupul-offline.tar.gz.sigstore.json
+            --pattern kadupul-offline.tar.gz.sigstore.json \
+            --pattern kadupul-offline.tar.gz.intoto.jsonl
           cd verification
           sha256sum --check kadupul-offline.tar.gz.sha256
+          jq -c '.dsseEnvelope' kadupul-offline.tar.gz.sigstore.json > expected-provenance.jsonl
+          cmp expected-provenance.jsonl kadupul-offline.tar.gz.intoto.jsonl
           gh attestation verify kadupul-offline.tar.gz --repo "$GH_REPO" \
             --bundle kadupul-offline.tar.gz.sigstore.json \
             --source-digest "$GITHUB_SHA" --signer-digest "$GITHUB_SHA" \

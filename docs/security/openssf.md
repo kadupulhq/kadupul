@@ -110,6 +110,11 @@ and replay path; rerun the named failing test with `FUZZ_SEED` and `FUZZ_PATH`,
 then add a permanent regression before fixing the defect.
 
 Download the release archive, checksum and `.sigstore.json` bundle together.
+The `.intoto.jsonl` asset contains the same signed DSSE envelope in the standard
+in-toto JSON Lines format. The Sigstore bundle also carries its certificate and
+transparency evidence; use that bundle for the verification command below.
+Publication checks that both provenance representations match before verifying
+the bundle against the exact source and signer revisions.
 Verify the signed provenance against this repository and workflow, not merely
 the unsigned checksum:
 
