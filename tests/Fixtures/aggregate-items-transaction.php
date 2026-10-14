@@ -8,7 +8,17 @@ declare(strict_types=1);
 require dirname(__DIR__, 2) . '/lib/api_aggregate.php';
 require dirname(__DIR__, 2) . '/include/global_constants.php';
 function cacti_log(...$arguments) {}
-$db = new PDO('sqlite::memory:', options: [PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT]);
+$db = new class ('sqlite::memory:', options: [PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT]) extends PDO {
+    public int $maxParameters = 0;
+    public int $preparedQueries = 0;
+
+    public function prepare(string $query, array $options = []): PDOStatement|false
+    {
+        $this->maxParameters = max($this->maxParameters, substr_count($query, '?'));
+        $this->preparedQueries++;
+        return parent::prepare($query, $options);
+    }
+};
 $database_hostname = 'aggregate-fixture';
 $database_port = 0;
 $database_default = 'aggregate-fixture';
@@ -46,6 +56,23 @@ if ($caller) {
 if ($case === 'mixed-owners') {
     $items[1]['aggregate_graph_id'] = 2;
 }
+if (str_starts_with($case, 'invalid-')) {
+    $invalid = ['sql' => '1 OR 1=1', 'array' => [1], 'boolean' => true, 'null' => null,
+        'zero' => 0, 'negative' => '-1', 'overflow' => '999999999999999999999999999999'];
+    if ($case === 'invalid-structured') {
+        $items[0]['item_skip'] = ['on'];
+    } else {
+        $items[0]['aggregate_graph_id'] = $invalid[substr($case, 8)];
+    }
+}
+if ($case === 'large') {
+    $items = [];
+    for ($id = 1000; $id < 8000; $id++) {
+        $items[] = ['aggregate_graph_id' => 1, 'graph_templates_item_id' => $id];
+    }
+}
+$db->maxParameters = 0;
+$db->preparedQueries = 0;
 $handler = static fn() => false;
 set_error_handler($handler);
 $saved = aggregate_graph_items_save($items, $table);
@@ -53,7 +80,9 @@ $actualHandler = set_error_handler(static fn() => false);
 restore_error_handler();
 restore_error_handler();
 $rows = $case === 'prepare' ? null : $db->query("SELECT * FROM $table ORDER BY graph_templates_item_id")->fetchAll(PDO::FETCH_ASSOC);
-$result = ['reached' => $reached, 'saved' => $saved, 'before' => $before, 'rows' => $rows,
+$result = ['reached' => $reached, 'saved' => $saved, 'before' => $before, 'rows' => $case === 'large' ? null : $rows,
+    'row_count' => $rows === null ? null : count($rows),
+    'max_parameters' => $db->maxParameters, 'prepared_queries' => $db->preparedQueries,
     'transaction' => $db->inTransaction(), 'handler_preserved' => $actualHandler === $handler,
     'caller_work' => $caller ? $db->query('SELECT value FROM caller_work')->fetchColumn() : null];
 if ($caller) {
