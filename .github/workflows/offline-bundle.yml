@@ -35,14 +35,14 @@ jobs:
           php-version: '8.4'
           extensions: gd, gmp, intl, ldap, mbstring, pcntl, pdo_mysql, posix, sockets, xml
           coverage: none
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .node-version
           cache: npm
           cache-dependency-path: |
             package-lock.json
             tests/e2e/package-lock.json
-      - uses: jdx/mise-action@7a4e45a543138629540c9a1616d08632b893e492 # v5.0.1
+      - uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca # v5.1.1
         with:
           install_args: python@3.12.12 node@22.22.2
       - name: Install pinned browser workflow test runtime
@@ -87,14 +87,14 @@ jobs:
           php-version: '8.4'
           extensions: gd, gmp, intl, ldap, mbstring, pcntl, pdo_mysql, posix, sockets, xml
           coverage: none
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .node-version
           cache: npm
           cache-dependency-path: |
             package-lock.json
             tests/e2e/package-lock.json
-      - uses: jdx/mise-action@7a4e45a543138629540c9a1616d08632b893e492 # v5.0.1
+      - uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca # v5.1.1
         with:
           install_args: python@3.12.12 node@22.22.2
       - name: Locate Composer download cache
@@ -122,7 +122,7 @@ jobs:
             --volume "$GITHUB_WORKSPACE/tools/verify-offline.php:/verify-offline.php:ro" \
             --workdir /app kadupul-offline-verifier \
             -d auto_prepend_file= /verify-offline.php
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           retention-days: 14
           name: kadupul-offline-bundle
