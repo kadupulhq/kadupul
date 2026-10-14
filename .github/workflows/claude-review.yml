@@ -21,8 +21,14 @@ permissions:
 
 jobs:
   review:
-    uses: kadupulhq/.github/.github/workflows/review.yml@a16058111feea051186bc9b0b82c2e75f48b66a5
+    uses: kadupulhq/.github/.github/workflows/review.yml@6bdac4a1e98219a97ddb2092afb675f119e7eaac
     with:
       pr_number: ${{ inputs.pr_number || '' }}
+      review_guidance: |
+        Repository rules:
+        - A pull request based on lts/1.2 must keep Cacti 1.2.31
+          behaviour and must not add Symfony or any other framework
+          dependency. lts/1.2 keeps upstream Cacti formatting.
+        - PHP changed on main follows PER-CS 2.0.
     secrets:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
