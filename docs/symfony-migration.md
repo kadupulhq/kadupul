@@ -31,6 +31,26 @@ execution before loading dependencies or configuration.
 
 ## Shared identity compatibility
 
+Logout Everywhere rotates the existing credential generation and removes stored
+sessions and remembered-login tokens in one transaction. Existing file sessions
+are rejected by the same generation check on their next request. A failure returns
+HTTP 503 and preserves the transaction's previous state. The current browser is
+logged out only after a confirmed commit.
+
+Legacy remembered login rotation binds the token to its admitted generation with
+a message authentication code (MAC). The generation stays on the server. Both
+adapters reject tokens bound to an older generation, even if an in-flight request
+stores a replacement after revocation. The legacy transition keeps the generation
+that admitted the original token. Existing unversioned cookies remain compatible
+and are converted when restored. Passwords and unrelated preferences are unchanged.
+
+Deploy these authentication changes to all application instances together. Older
+versions do not validate the marker in rotated remembered tokens, so mixed-version
+revocation is not verified. Do not treat reverting application code as restoring
+revoked credentials or preserving this protection; require fresh authentication
+and revoke remembered credentials through the supported administrative process
+before rolling back to an older authentication implementation.
+
 `GET /session` (also HEAD) returns the authenticated user's ID and username.
 In an existing deployment use `/app.php/session`; the server must support PHP
 PATH_INFO. The equivalent route through `public/index.php` now accepts the same

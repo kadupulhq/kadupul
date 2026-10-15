@@ -29,6 +29,7 @@ require $root . '/include/vendor/csrf/csrf-magic.php';
 require $root . '/lib/html_utility.php';
 function read_config_option($key) { return '0'; }
 function db_execute_prepared(...$args) { echo 'MUTATION'; exit; }
+function auth_logout_everywhere(...$args) { echo 'MUTATION'; exit; }
 function db_fetch_row_prepared(...$args) { return array('id' => 42, 'realm' => 0, 'password_change' => 'on', 'enabled' => 'on', 'locked' => '', 'password' => '', 'username' => 'test', 'locked' => ''); }
 function get_cacti_version() { return 'test'; }
 function cacti_sizeof($value) { return count($value); }

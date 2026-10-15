@@ -193,6 +193,11 @@ if (in_array($scenario, ['reset-write', 'rehash-write'], true)) {
 if (str_starts_with($credentialScenario, 'reset')) {
     $db->exec("UPDATE user_auth SET password='replacement-password-hash' WHERE id=9");
 }
+if ($credentialScenario === 'logout') {
+    if (!auth_logout_everywhere(9, auth_session_credential_key('old-password-hash'), $db)) {
+        throw new RuntimeException('Actual logout-everywhere revocation failed.');
+    }
+}
 if (str_starts_with($credentialScenario, 'rehash')) {
     if (!auth_rehash_password_preserving_sessions(9, 'old-password-hash', 'upgraded-password-hash', $db)) {
         throw new RuntimeException('Actual transparent hash upgrade failed.');
@@ -243,8 +248,15 @@ try {
                     $_SERVER['REMOTE_USER'] = $_SERVER['PHP_AUTH_USER'] = 'operator';
                 } else {
                     $db->exec("INSERT INTO settings VALUES('auth_cache_enabled','on')");
-                    $db->prepare("INSERT INTO user_auth_cache(user_id,hostname,last_update,token) VALUES(9,'127.0.0.1',CURRENT_TIMESTAMP,?)")->execute([hash('sha512', 'fixture-remembered-token')]);
-                    $_COOKIE['cacti_remembers'] = '9,0,fixture-remembered-token';
+                    $restoreToken = str_contains($credentialScenario, '-generation-')
+                        ? 'v1.' . str_repeat('a', 64) . '.' . hash_hmac('sha256', str_repeat('a', 64), auth_session_credential_key('old-password-hash'))
+                        : 'fixture-remembered-token';
+                    if ($credentialScenario === 'restore-remember-generation-revoked') {
+                        $db->prepare("REPLACE INTO settings_user VALUES(9,'auth_credential_generation',?)")
+                            ->execute([auth_session_credential_key('old-password-hash') . ':' . str_repeat('b', 64)]);
+                    }
+                    $db->prepare("INSERT INTO user_auth_cache(user_id,hostname,last_update,token) VALUES(9,'127.0.0.1',CURRENT_TIMESTAMP,?)")->execute([hash('sha512', $restoreToken)]);
+                    $_COOKIE['cacti_remembers'] = '9,0,' . $restoreToken;
                 }
                 if ($policyCase) {
                     $db->exec("UPDATE user_auth SET must_change_password='on',password_change='on' WHERE id=9");
@@ -346,6 +358,10 @@ if (($rollback || str_ends_with($scenario, '-write')) && method_exists($session,
     $responseDispatched = true;
 }
 $revoked = $databaseSessions ? $db->query('SELECT COUNT(*) FROM sessions')->fetchColumn() === 0 : !is_file($directory . '/sess_' . $id);
+if ($credentialScenario === 'restore-remember-generation-revoked'
+    && $db->query('SELECT token FROM user_auth_cache WHERE user_id=9')->fetchColumn() !== hash('sha512', $restoreToken)) {
+    throw new RuntimeException('A revoked generation consumed or rotated the remembered credential.');
+}
 $transition = null;
 if ($remembered) {
     $cleared = !isset($_COOKIE['cacti_remembers']) && !$requests->getCurrentRequest()->cookies->has('cacti_remembers');

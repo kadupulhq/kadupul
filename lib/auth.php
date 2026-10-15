@@ -139,15 +139,21 @@ function clear_auth_cookie($db = false, $expire = null, $remembered = null)
  *
  * @return (bool) True if token set worked, otherwise false
  */
-function set_auth_cookie($user)
+function set_auth_cookie($user, $generation = null)
 {
     global $config;
 
+    if ($generation !== null && (!is_string($generation) || preg_match('/\A[a-f0-9]{64}\z/D', $generation) !== 1)) {
+        return false;
+    }
     if (db_table_exists('user_auth_cache')) {
         clear_auth_cookie();
 
         try {
             $nssecret = bin2hex(random_bytes(32));
+            if ($generation !== null) {
+                $nssecret = 'v1.' . $nssecret . '.' . hash_hmac('sha256', $nssecret, $generation);
+            }
         } catch (Exception $e) {
             cacti_log('FATAL: CSPRNG failed. Cannot generate secure authentication token.', false, 'AUTH');
 
@@ -176,13 +182,24 @@ function set_auth_cookie($user)
     return false;
 }
 
+/** A rotated remembered credential may not adopt a later session generation. */
+function auth_cookie_generation_valid(string $token, string $generation): bool
+{
+    if (!str_starts_with($token, 'v1.')) {
+        return true; // Existing unversioned cookies remain valid until revoked.
+    }
+    return preg_match('/\Av1\.([a-f0-9]{64})\.([a-f0-9]{64})\z/D', $token, $parts) === 1
+        && hash_equals(hash_hmac('sha256', $parts[1], $generation), $parts[2]);
+}
+
 /**
- * check_auth_cookie - clears a users security token
+ * check_auth_cookie - restore a persisted remembered credential.
  *
- * @return (int) The user of the session cookie, otherwise false
+ * @return (int|false) The user of the session cookie, otherwise false
  */
 function check_auth_cookie()
 {
+    unset($_SESSION['sess_cookie_credential']);
     if (isset($_COOKIE['cacti_remembers']) &&
         is_string($_COOKIE['cacti_remembers']) &&
         read_config_option('auth_cache_enabled') == 'on' &&
@@ -210,7 +227,7 @@ function check_auth_cookie()
         if ($user_id > 0 && $user_id != get_guest_account()) {
             if ($realm_id == -1) {
                 $user_info = db_fetch_row_prepared(
-                    'SELECT id, realm, username
+                    'SELECT id, realm, username, password
 					FROM user_auth
 					WHERE id = ?
 					AND enabled = \'on\'
@@ -220,7 +237,7 @@ function check_auth_cookie()
                 );
             } else {
                 $user_info = db_fetch_row_prepared(
-                    'SELECT id, realm, username
+                    'SELECT id, realm, username, password
 					FROM user_auth
 					WHERE id = ?
 					AND enabled = \'on\'
@@ -231,6 +248,10 @@ function check_auth_cookie()
             }
 
             if (cacti_sizeof($user_info)) {
+                $generation = auth_session_credential_generation($user_info['id'], $user_info['password']);
+                if (!auth_cookie_generation_valid($token, $generation)) {
+                    return false;
+                }
                 $secret = hash('sha512', $token, false);
 
                 $found  = db_fetch_cell_prepared(
@@ -250,6 +271,11 @@ function check_auth_cookie()
                         return false;
                     }
 
+                    if (!set_auth_cookie($user_info, $generation)) {
+                        return false;
+                    }
+                    $_SESSION['sess_cookie_credential'] = array('user_id' => (int) $user_info['id'], 'generation' => $generation);
+
                     cacti_log("LOGIN: User '" . $user_info['username'] . "' with ID '" . $user_info['id'] . "' Authenticated via Authentication Cookie", false, 'AUTH');
 
                     db_execute_prepared(
@@ -259,8 +285,6 @@ function check_auth_cookie()
 						(?, ?, 2, ?, NOW())',
                         array($user_info['username'], $user_info['id'], get_client_addr())
                     );
-
-                    set_auth_cookie($user_info);
 
                     return $user_info['id'];
                 }
@@ -5955,9 +5979,11 @@ function check_reset_no_authentication($auth_method)
  */
 function cacti_auth_transition($user_id, $reason = 'login')
 {
+    $restored = $_SESSION['sess_cookie_credential'] ?? null;
+    unset($_SESSION['sess_cookie_credential']);
     /* Recheck account eligibility at every authentication boundary. */
     $account = db_fetch_row_prepared(
-        'SELECT enabled, locked
+        'SELECT enabled, locked, password
 		FROM user_auth
 		WHERE id = ?',
         array($user_id)
@@ -5966,6 +5992,12 @@ function cacti_auth_transition($user_id, $reason = 'login')
     if (!$account || ($account['enabled'] !== 'on' && (int) $user_id !== (int) get_guest_account()) || $account['locked'] === 'on') {
         cacti_log('SECURITY: auth transition blocked for unavailable, disabled or locked user: ' . $user_id . ' reason: ' . $reason, false, 'AUTH');
 
+        return false;
+    }
+
+    if ($reason === 'cookie_restore' && (!is_array($restored) || ($restored['user_id'] ?? null) !== (int) $user_id
+        || !is_string($restored['generation'] ?? null)
+        || !hash_equals(auth_session_credential_generation($user_id, $account['password']), $restored['generation']))) {
         return false;
     }
 
@@ -5979,7 +6011,13 @@ function cacti_auth_transition($user_id, $reason = 'login')
     kill_session_var('sess_user_config_array');
     kill_session_var('sess_config_array');
 
-    auth_session_bind_credentials($user_id);
+    if ($reason === 'cookie_restore') {
+        // Keep the snapshot that admitted the token even if revocation commits
+        // after the check above. Never bind that credential to a newer generation.
+        $_SESSION['sess_user_credential'] = $restored['generation'];
+    } else {
+        auth_session_bind_credentials($user_id);
+    }
 
     cacti_log('NOTE: auth transition completed for user ' . $user_id . ' reason=' . $reason, false, 'AUTH', POLLER_VERBOSITY_MEDIUM);
 
@@ -6000,6 +6038,82 @@ function cacti_auth_transition($user_id, $reason = 'login')
 function auth_session_credential_key($password)
 {
     return hash('sha256', (string) $password);
+}
+
+/** Revoke all sessions and remembered logins without changing the password. */
+function auth_logout_everywhere($user_id, $credential, $db = false)
+{
+    global $database_sessions, $database_hostname, $database_port, $database_default;
+    if (!is_string($credential) || preg_match('/\A[a-f0-9]{64}\z/D', $credential) !== 1 || (int) $user_id <= 0) {
+        return false;
+    }
+    if (!$db instanceof PDO) {
+        $db = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
+    }
+    if (!$db instanceof PDO || $db->inTransaction()) {
+        return false;
+    }
+    try {
+        if (!$db->beginTransaction()) {
+            return false;
+        }
+        $mysql = $db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql';
+        if (!$mysql && $db->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'sqlite') {
+            throw new RuntimeException('Unsupported session revocation database.');
+        }
+        if ($mysql) {
+            foreach (array('user_auth', 'settings_user', 'user_auth_cache', 'sessions') as $table) {
+                $query = $db->query('SELECT * FROM `' . $table . '` LIMIT 0');
+                if ($query === false || $query->errorCode() !== '00000') {
+                    throw new RuntimeException('Session revocation table could not be inspected.');
+                }
+                $query->closeCursor();
+                $query = $db->query('SHOW CREATE TABLE `' . $table . '`');
+                $row = $query === false ? false : $query->fetch(PDO::FETCH_NUM);
+                if (!is_array($row) || $query->errorCode() !== '00000' || !isset($row[1])
+                    || stripos($row[1], 'CREATE TEMPORARY TABLE') !== false || !preg_match('/\bENGINE=InnoDB\b/i', $row[1])) {
+                    throw new RuntimeException('Session revocation requires persistent InnoDB tables.');
+                }
+            }
+        }
+        $query = $db->prepare('SELECT password FROM user_auth WHERE id = ?' . ($mysql ? ' FOR UPDATE' : ''));
+        if ($query === false || !$query->execute(array($user_id)) || $query->errorCode() !== '00000') {
+            throw new RuntimeException('Session revocation account read failed.');
+        }
+        $password = $query->fetchColumn();
+        if (!is_string($password) || $query->errorCode() !== '00000'
+            || !hash_equals(auth_session_credential_generation($user_id, $password, $db), $credential)) {
+            throw new RuntimeException('Session revocation credential is no longer current.');
+        }
+        $mapping = auth_session_credential_key($password) . ':' . bin2hex(random_bytes(32));
+        $query = $db->prepare("REPLACE INTO settings_user (user_id, name, value) VALUES (?, 'auth_credential_generation', ?)");
+        if ($query === false || !$query->execute(array($user_id, $mapping)) || $query->errorCode() !== '00000') {
+            throw new RuntimeException('Session revocation generation write failed.');
+        }
+        // Confirm the stored value before reporting a successful revocation.
+        if (auth_session_credential_generation($user_id, $password, $db) !== substr($mapping, 65)) {
+            throw new RuntimeException('Session revocation generation was not preserved.');
+        }
+        foreach (array('user_auth_cache', 'sessions') as $table) {
+            $query = $db->prepare('DELETE FROM ' . $table . ' WHERE user_id = ?');
+            if ($query === false || !$query->execute(array($user_id)) || $query->errorCode() !== '00000') {
+                throw new RuntimeException('Session revocation deletion failed.');
+            }
+        }
+        if (!$db->commit()) {
+            throw new RuntimeException('Session revocation commit failed.');
+        }
+        return true;
+    } catch (Throwable $error) {
+        if ($db->inTransaction()) {
+            try {
+                $db->rollBack();
+            } catch (Throwable $cleanup_error) {
+                // Preserve failure even if the connection also refuses cleanup.
+            }
+        }
+        return false;
+    }
 }
 
 /**

@@ -211,9 +211,9 @@ const ABOUT_ACCESS_ADAPTER = 'Kadupul\IdentityAccess\Infrastructure\Legacy\Legac
 // Complete reviewed native-identity and persistence handoff, plus its scoped
 // service binding. A changed helper or binding must be reviewed again.
 const ABOUT_AUTHENTICATION_SOURCES = [
-    'lib/auth.php' => '68bd5a67d77d764f819e2bbc2825212f8d01c1acf3a844f08cc478fb8da3ac7d',
+    'lib/auth.php' => '64cfc4b6567205384afa25800ab82cac3d5f25b187cd1c48b921c80d87f3044f',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php' => 'b405b4eabee2e7caf495e64710711eb152a2b6b4cffb60821f1fdd7fe17096c8',
-    'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php' => '61f8ea837055c09bd58d8146ea3c18a7ae37b34abfcbfb00427253c087cbdacf',
+    'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php' => '46340d80064d69997bd1afcb1eea4cbb6b7ba4900efa7ee9e822593e3dcd7641',
     'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php' => '4efc747fdc6521ee882efe65f4f98b90bf1649039348f3762548c1e45cdbe0a0',
     'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php' => '0d9d146c13a1229cbb85593760bbb7ad62faeab4db3dd71b1d14dedbb3901199',
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationFileSessionHandler.php' => '941e8b6a6673a9a6956a1c6bf15397428f66a515c6b12fe812a31b1419b33a2a',

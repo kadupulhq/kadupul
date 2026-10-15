@@ -225,6 +225,10 @@ final readonly class LegacyBrowserAuthentication
         if (!$this->eligible($database, $user) || ((int) $user['realm'] === 0 && $user['must_change_password'] === 'on' && $user['password_change'] === 'on')) {
             return null;
         }
+        require_once dirname(__DIR__, 4) . '/lib/auth.php';
+        if (str_starts_with($token, 'v1.') && !\auth_cookie_generation_valid($token, \auth_session_credential_generation((int) $user['id'], $user['password'], $database))) {
+            return null;
+        }
         $hash = hash('sha512', $token);
         $cached = BrowserAuthenticationSql::row(BrowserAuthenticationSql::execute($database, 'SELECT id FROM user_auth_cache WHERE user_id = ? AND token = ? AND hostname = ?' . ($database->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : ''), [(int) $user['id'], $hash, $ip]));
         return $cached === false ? null : ['user' => $user, 'cache' => (int) $cached['id'], 'hash' => $hash];
