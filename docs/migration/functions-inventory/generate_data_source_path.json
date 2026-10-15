@@ -1,0 +1,57 @@
+{
+    "schema": 1,
+    "name": "generate_data_source_path",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 3487,
+        "end_line": 3566,
+        "line_count": 80,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "local_data_id",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 3, "core_outside_functions_php": 1, "tests": 0, "plugins": 0},
+        "body": {
+            "uses_global": ["config"],
+            "static_variables": ["extended_paths", "pattern"],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {
+                "db_execute_prepared": 1,
+                "db_fetch_cell_prepared": 1,
+                "db_fetch_row_prepared": 1
+            },
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {
+            "functions": ["cacti_sizeof", "clean_up_file_name", "read_config_option"],
+            "recursive": false
+        },
+        "called_by": ["get_data_source_path"]
+    },
+    "human": {
+        "target_module": "DataInput/Domain",
+        "wave": 4,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Plan lists DataInput and Graphing domain services; split chosen by name."
+    }
+}

@@ -1,0 +1,66 @@
+{
+    "schema": 1,
+    "name": "draw_navigation_text",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 4293,
+        "end_line": 4517,
+        "line_count": 225,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "type",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "'url'"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 14, "core_outside_functions_php": 12, "tests": 1, "plugins": 0},
+        "body": {
+            "uses_global": ["config", "navigation"],
+            "static_variables": [],
+            "superglobals": ["$_SERVER"],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {"db_fetch_cell_prepared": 6, "db_fetch_row_prepared": 2},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": [
+                {
+                    "call": "api_plugin_hook_function",
+                    "name": "draw_navigation_text",
+                    "resolved": true,
+                    "expression": null,
+                    "line": 4297
+                }
+            ]
+        },
+        "calls": {
+            "functions": [
+                "cacti_sizeof",
+                "get_current_page",
+                "get_selected_theme",
+                "resolve_navigation_variables"
+            ],
+            "recursive": false
+        },
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Navigation",
+        "wave": 5,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Twig layout replaces page chrome as pages migrate."
+    }
+}

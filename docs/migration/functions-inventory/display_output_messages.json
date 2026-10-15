@@ -1,0 +1,46 @@
+{
+    "schema": 1,
+    "name": "display_output_messages",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 1377,
+        "end_line": 1410,
+        "line_count": 34,
+        "signature": {"parameters": [], "return_type": null, "returns_reference": false},
+        "docblock": true,
+        "fan_out": {"core": 3, "core_outside_functions_php": 1, "tests": 3, "plugins": 0},
+        "body": {
+            "uses_global": ["messages"],
+            "static_variables": [],
+            "superglobals": ["$_SESSION"],
+            "session": {"references": 5, "keys": ["sess_messages"]},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {
+            "functions": [
+                "cacti_log",
+                "clear_messages",
+                "debug_log_clear",
+                "debug_log_return",
+                "get_format_message_instance",
+                "get_message_max_type"
+            ],
+            "recursive": false
+        },
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Application/Port/FlashMessages",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

@@ -1,0 +1,483 @@
+{
+ "groups": [
+  {
+   "module": "Platform/Domain/Text",
+   "wave": 1,
+   "names": [
+    "title_trim",
+    "strip_alpha",
+    "strip_domain",
+    "stri_replace",
+    "padleft",
+    "is_hexadecimal",
+    "is_hex_string",
+    "is_base64_encoded",
+    "is_urlencoded"
+   ],
+   "prefixes": [
+    "clean_up_"
+   ]
+  },
+  {
+   "module": "Platform/Domain/Collection",
+   "wave": 1,
+   "names": [
+    "array_rekey",
+    "build_where_from_array",
+    "calculate_percentiles",
+    "cacti_sizeof",
+    "cacti_count"
+   ]
+  },
+  {
+   "module": "Platform/Domain/Network",
+   "wave": 1,
+   "names": [
+    "cacti_pton",
+    "cacti_ntop",
+    "cacti_ntoc",
+    "cacti_ptoa",
+    "is_ipaddress",
+    "is_mac_address",
+    "cacti_format_ipv6_colon",
+    "cacti_oid_numeric_format"
+   ]
+  },
+  {
+   "module": "Platform/Application/Port/ProductVersion",
+   "wave": 1,
+   "names": [
+    "get_cacti_version",
+    "get_cacti_version_text",
+    "get_cacti_cli_version",
+    "cacti_version_compare",
+    "version_to_decimal",
+    "get_hash_version",
+    "get_rrdtool_version"
+   ]
+  },
+  {
+   "module": "DataInput/Domain",
+   "wave": 1,
+   "note": "Plan assigns template hashes to DataInput; confirm for cdef, vdef, gprint and graph template hashes.",
+   "names": [
+    "generate_hash"
+   ],
+   "prefixes": [
+    "get_hash_"
+   ]
+  },
+  {
+   "module": "Platform/Domain/Time",
+   "wave": 1,
+   "note": "Plan lists waves 1-2 for time.",
+   "names": [
+    "date_time_format",
+    "get_daysfromtime",
+    "get_uptime",
+    "cacti_time_zone_set",
+    "cacti_browser_zone_enabled",
+    "cacti_browser_zone_set",
+    "get_nearest_timespan"
+   ]
+  },
+  {
+   "module": "Platform/Application/Port/ConfigurationSettings",
+   "wave": 2,
+   "names": [
+    "read_config_option",
+    "set_config_option",
+    "read_default_config_option",
+    "config_value_exists",
+    "prime_common_config_settings",
+    "is_remote_path_setting",
+    "settings_value_passes_filter"
+   ]
+  },
+  {
+   "module": "Platform/Application/Port/UserSettings",
+   "wave": 2,
+   "note": "Plan lists only ConfigurationSettings and UserSettings ports; graph config options follow user settings.",
+   "names": [
+    "read_user_setting",
+    "set_user_setting",
+    "read_default_user_setting",
+    "user_setting_exists",
+    "clear_user_setting",
+    "read_graph_config_option",
+    "read_default_graph_config_option",
+    "set_graph_config_option",
+    "graph_config_value_exists"
+   ]
+  },
+  {
+   "module": "Platform/Infrastructure/Legacy",
+   "wave": 2,
+   "note": "Logging: PSR-3 adapter that keeps the cacti.log line format.",
+   "names": [
+    "cacti_log",
+    "cacti_log_file",
+    "get_selective_log_level",
+    "tail_file",
+    "determine_display_log_entry",
+    "dsv_log",
+    "cacti_debug_backtrace"
+   ],
+   "prefixes": [
+    "debug_log_"
+   ]
+  },
+  {
+   "module": "Platform/Infrastructure/Legacy",
+   "wave": 2,
+   "note": "Legacy handlers stay for the legacy entry; the Symfony path uses a kernel exception listener.",
+   "names": [
+    "CactiErrorHandler",
+    "IgnoreErrorHandler",
+    "CactiShutdownHandler"
+   ]
+  },
+  {
+   "module": "Platform/Application/Port/FlashMessages",
+   "wave": 3,
+   "names": [
+    "raise_message",
+    "display_output_messages",
+    "is_error_message",
+    "clear_messages",
+    "kill_session_var",
+    "force_session_data"
+   ]
+  },
+  {
+   "module": "Alerting/Application/Port/MailSender",
+   "wave": 3,
+   "names": [
+    "send_mail",
+    "mailer",
+    "email_test",
+    "ping_mail_server",
+    "add_email_details",
+    "parse_email_details",
+    "create_emailtext",
+    "admin_email"
+   ]
+  },
+  {
+   "module": "Platform/Domain/Security",
+   "wave": 3,
+   "note": "Hard-stop domain: delegate and verify at the thorough tier.",
+   "names": [
+    "validate_path_within",
+    "cacti_path_is_within",
+    "cacti_csv_safe",
+    "cacti_input_string_is_safe",
+    "cacti_html_context_escape"
+   ],
+   "prefixes": [
+    "sanitize_",
+    "cacti_redact_"
+   ]
+  },
+  {
+   "module": "Platform/Application/Port/ProcessRunner",
+   "wave": 3,
+   "note": "Hard-stop domain: delegate and verify at the thorough tier.",
+   "names": [
+    "cacti_exec",
+    "cacti_exec_string",
+    "cacti_escapeshellarg",
+    "cacti_escapeshellcmd"
+   ]
+  },
+  {
+   "module": "Platform/Presentation/Http",
+   "wave": 3,
+   "names": [
+    "cacti_header",
+    "cacti_redirect",
+    "get_client_addr",
+    "get_current_page",
+    "is_page_ajax",
+    "raise_ajax_permission_denied",
+    "get_url_type",
+    "cacti_http"
+   ]
+  },
+  {
+   "module": "Platform/Application/Port/Filesystem",
+   "wave": 3,
+   "names": [
+    "is_resource_writable",
+    "recursive_chown",
+    "cacti_temp_file",
+    "get_running_user",
+    "cacti_plugin_path"
+   ]
+  },
+  {
+   "module": "IdentityAccess",
+   "wave": 4,
+   "note": "Hard-stop domain (auth, session, cookies): delegate and verify at the thorough tier.",
+   "names": [
+    "get_guest_account",
+    "get_template_account",
+    "get_username",
+    "clog_authorized"
+   ],
+   "prefixes": [
+    "cacti_session_",
+    "cacti_cookie_"
+   ]
+  },
+  {
+   "module": "DataInput/Domain",
+   "wave": 4,
+   "note": "Plan lists DataInput and Graphing domain services; split chosen by name.",
+   "names": [
+    "get_data_source_item_name",
+    "get_data_source_path",
+    "get_data_source_title",
+    "generate_data_source_path",
+    "get_associated_rras"
+   ]
+  },
+  {
+   "module": "Graphing/Domain",
+   "wave": 4,
+   "note": "Plan lists DataInput and Graphing domain services; split chosen by name.",
+   "names": [
+    "get_rrd_cfs",
+    "generate_graph_best_cf",
+    "get_graph_title",
+    "get_graph_title_cache"
+   ]
+  },
+  {
+   "module": "DataInput/Application",
+   "wave": 4,
+   "names": [
+    "test_data_source",
+    "test_data_sources",
+    "get_full_script_path",
+    "get_full_test_script_path",
+    "prepare_validate_result",
+    "normalize_poller_multi_value_result",
+    "repair_system_data_input_methods"
+   ]
+  },
+  {
+   "module": "GraphDefinition/Infrastructure",
+   "wave": 4,
+   "note": "Explicit transactions; re-examine concurrency instead of copying.",
+   "names": [
+    "move_graph_group",
+    "get_graph_group",
+    "get_graph_parent",
+    "get_item",
+    "get_sequence",
+    "move_item_up",
+    "move_item_down",
+    "generate_data_input_field_sequences"
+   ]
+  },
+  {
+   "module": "Inventory/Application",
+   "wave": 4,
+   "names": [
+    "update_host_status",
+    "enable_device_debug",
+    "disable_device_debug",
+    "is_device_debug_enabled",
+    "call_remote_data_collector"
+   ],
+   "prefixes": [
+    "debounce_"
+   ]
+  },
+  {
+   "module": "Navigation",
+   "wave": 5,
+   "note": "Twig layout replaces page chrome as pages migrate.",
+   "names": [
+    "top_header",
+    "bottom_footer",
+    "get_selected_theme",
+    "get_compiled_asset_path"
+   ],
+   "prefixes": [
+    "draw_",
+    "get_md5_include_"
+   ]
+  },
+  {
+   "module": "legacy-retained",
+   "wave": 5,
+   "note": "Leave until the owning pages move to Symfony Form and Validator.",
+   "names": [
+    "form_input_validate",
+    "check_changed"
+   ]
+  },
+  {
+   "module": "Platform/Domain/Security",
+   "wave": 3,
+   "names": [
+    "cacti_is_sensitive_key",
+    "cacti_validate_sort_column",
+    "cacti_unserialize",
+    "validate_relative_path_within",
+    "cacti_normalize_windows_path",
+    "is_valid_pathname"
+   ]
+  },
+  {
+   "module": "Platform/Presentation/Http",
+   "wave": 3,
+   "names": [
+    "filter_value",
+    "get_browser_query_string",
+    "escape_page_action",
+    "get_web_browser",
+    "get_default_contextoption"
+   ]
+  },
+  {
+   "module": "Platform/Application/Port/NameResolver",
+   "wave": 3,
+   "names": [
+    "cacti_gethostbyname",
+    "cacti_gethostinfo",
+    "get_dns_from_ip"
+   ]
+  },
+  {
+   "module": "Platform/Domain/Time",
+   "wave": 2,
+   "names": [
+    "cacti_system_zone_set",
+    "get_timeinstate"
+   ]
+  },
+  {
+   "module": "Platform/Infrastructure/Legacy",
+   "wave": 2,
+   "names": [
+    "get_debug_prefix",
+    "log_client_addr_proxy_diagnostic"
+   ]
+  },
+  {
+   "module": "Platform/Infrastructure/Persistence",
+   "wave": 2,
+   "names": [
+    "get_cacti_base_tables"
+   ]
+  },
+  {
+   "module": "Platform/Application/Port/UserSettings",
+   "wave": 2,
+   "names": [
+    "save_user_settings",
+    "user_setting_value_allowed"
+   ]
+  },
+  {
+   "module": "Platform/Application/Port/ProductVersion",
+   "wave": 1,
+   "names": [
+    "get_installed_rrdtool_version"
+   ]
+  },
+  {
+   "module": "Platform/Application/Port/FlashMessages",
+   "wave": 3,
+   "names": [
+    "get_format_message_instance",
+    "get_message_level",
+    "get_message_max_type",
+    "raise_message_javascript",
+    "display_custom_error_message"
+   ]
+  },
+  {
+   "module": "Alerting/Application/Port/MailSender",
+   "wave": 3,
+   "names": [
+    "record_mailer_error",
+    "split_emaildetail"
+   ]
+  },
+  {
+   "module": "Platform/Application/Port/Filesystem",
+   "wave": 3,
+   "names": [
+    "get_include_relpath",
+    "get_execution_user"
+   ]
+  },
+  {
+   "module": "Platform/Application/Port/ProcessRunner",
+   "wave": 3,
+   "names": [
+    "is_function_enabled",
+    "exec_into_array"
+   ]
+  },
+  {
+   "module": "Navigation",
+   "wave": 5,
+   "names": [
+    "appendHeaderSuppression",
+    "general_header",
+    "top_graph_header",
+    "set_page_refresh",
+    "resolve_navigation_variables",
+    "cacti_validate_theme",
+    "get_validated_theme",
+    "get_validated_language",
+    "get_md5_hash"
+   ]
+  },
+  {
+   "module": "IdentityAccess",
+   "wave": 4,
+   "names": [
+    "clog_admin"
+   ]
+  },
+  {
+   "module": "DataInput/Application",
+   "wave": 4,
+   "names": [
+    "get_nonsystem_data_input",
+    "data_source_limit_pattern"
+   ]
+  },
+  {
+   "module": "Graphing/Domain",
+   "wave": 4,
+   "names": [
+    "generate_graph_def_name",
+    "get_color",
+    "graph_font_name_filter",
+    "graph_font_size",
+    "graph_font_size_filter"
+   ]
+  },
+  {
+   "module": "Inventory/Application",
+   "wave": 4,
+   "names": [
+    "get_device_name"
+   ]
+  },
+  {
+   "module": "Collection/Application",
+   "wave": 4,
+   "names": [
+    "poller_maintenance"
+   ]
+  }
+ ]
+}

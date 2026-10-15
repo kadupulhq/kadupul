@@ -1,0 +1,36 @@
+{
+    "schema": 1,
+    "name": "get_guest_account",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 3384,
+        "end_line": 3398,
+        "line_count": 15,
+        "signature": {"parameters": [], "return_type": null, "returns_reference": false},
+        "docblock": true,
+        "fan_out": {"core": 17, "core_outside_functions_php": 15, "tests": 20, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {"db_fetch_cell_prepared": 1},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["read_config_option"], "recursive": false},
+        "called_by": ["draw_login_status"]
+    },
+    "human": {
+        "target_module": "IdentityAccess",
+        "wave": 4,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Hard-stop domain (auth, session, cookies): delegate and verify at the thorough tier."
+    }
+}

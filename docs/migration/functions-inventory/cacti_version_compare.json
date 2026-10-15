@@ -1,0 +1,68 @@
+{
+    "schema": 1,
+    "name": "cacti_version_compare",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 7315,
+        "end_line": 7355,
+        "line_count": 41,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "version1",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "version2",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "operator",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "'>'"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 33, "core_outside_functions_php": 31, "tests": 32, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["cacti_sizeof", "version_to_decimal"], "recursive": false},
+        "called_by": ["get_installed_rrdtool_version"]
+    },
+    "human": {
+        "target_module": "Platform/Application/Port/ProductVersion",
+        "wave": 1,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

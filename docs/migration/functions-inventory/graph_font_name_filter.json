@@ -1,0 +1,50 @@
+{
+    "schema": 1,
+    "name": "graph_font_name_filter",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 182,
+        "end_line": 208,
+        "line_count": 27,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "name",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 3, "core_outside_functions_php": 2, "tests": 8, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": ["installed"],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["cacti_log"], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Graphing/Domain",
+        "wave": 4,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

@@ -1,0 +1,50 @@
+{
+    "schema": 1,
+    "name": "get_uptime",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 6562,
+        "end_line": 6565,
+        "line_count": 4,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "host",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": false,
+        "fan_out": {"core": 2, "core_outside_functions_php": 2, "tests": 1, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["get_daysfromtime"], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Domain/Time",
+        "wave": 1,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Plan lists waves 1-2 for time."
+    }
+}

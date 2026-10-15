@@ -1,0 +1,50 @@
+{
+    "schema": 1,
+    "name": "debug_log_return",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 5016,
+        "end_line": 5045,
+        "line_count": 30,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "type",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 3, "core_outside_functions_php": 1, "tests": 2, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": ["$_SESSION"],
+            "session": {"references": 5, "keys": ["debug_log"]},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": ["display_output_messages"]
+    },
+    "human": {
+        "target_module": "Platform/Infrastructure/Legacy",
+        "wave": 2,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Logging: PSR-3 adapter that keeps the cacti.log line format."
+    }
+}

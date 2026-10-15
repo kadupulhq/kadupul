@@ -1,0 +1,90 @@
+{
+    "schema": 1,
+    "name": "move_graph_group",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 3744,
+        "end_line": 3851,
+        "line_count": 108,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "graph_template_item_id",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "graph_group_array",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "target_id",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "direction",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 4, "core_outside_functions_php": 3, "tests": 2, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {
+                "db_execute_prepared": 5,
+                "db_fetch_assoc_prepared": 1,
+                "db_fetch_row_prepared": 1
+            },
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {
+            "functions": [
+                "build_where_from_array",
+                "cacti_sizeof",
+                "get_graph_group",
+                "move_item_down",
+                "move_item_up"
+            ],
+            "recursive": false
+        },
+        "called_by": []
+    },
+    "human": {
+        "target_module": "GraphDefinition/Infrastructure",
+        "wave": 4,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Explicit transactions; re-examine concurrency instead of copying."
+    }
+}

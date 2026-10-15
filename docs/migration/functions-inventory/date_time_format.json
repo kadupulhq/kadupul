@@ -1,0 +1,36 @@
+{
+    "schema": 1,
+    "name": "date_time_format",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 7246,
+        "end_line": 7274,
+        "line_count": 29,
+        "signature": {"parameters": [], "return_type": null, "returns_reference": false},
+        "docblock": true,
+        "fan_out": {"core": 3, "core_outside_functions_php": 2, "tests": 6, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["read_config_option"], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Domain/Time",
+        "wave": 1,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Plan lists waves 1-2 for time."
+    }
+}

@@ -1,0 +1,59 @@
+{
+    "schema": 1,
+    "name": "cacti_gethostbyname",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 7406,
+        "end_line": 7435,
+        "line_count": 30,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "hostname",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "type",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "''"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 10, "core_outside_functions_php": 9, "tests": 8, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["cacti_gethostinfo", "cacti_sizeof"], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Application/Port/NameResolver",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

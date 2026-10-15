@@ -1,0 +1,79 @@
+{
+    "schema": 1,
+    "name": "draw_login_status",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 4236,
+        "end_line": 4284,
+        "line_count": 49,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "using_guest_account",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "false"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 4, "core_outside_functions_php": 3, "tests": 0, "plugins": 0},
+        "body": {
+            "uses_global": ["config"],
+            "static_variables": [],
+            "superglobals": ["$_SESSION"],
+            "session": {"references": 4, "keys": ["sess_user_id"]},
+            "db_calls": {"db_fetch_row_prepared": 1},
+            "headers": [],
+            "exits": [],
+            "output": ["print"],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": [
+                {
+                    "call": "api_plugin_hook",
+                    "name": "nav_login_before",
+                    "resolved": true,
+                    "expression": null,
+                    "line": 4244
+                },
+                {
+                    "call": "api_plugin_hook",
+                    "name": "nav_login_after",
+                    "resolved": true,
+                    "expression": null,
+                    "line": 4253
+                },
+                {
+                    "call": "api_plugin_hook",
+                    "name": "nav_login_before",
+                    "resolved": true,
+                    "expression": null,
+                    "line": 4262
+                },
+                {
+                    "call": "api_plugin_hook",
+                    "name": "nav_login_after",
+                    "resolved": true,
+                    "expression": null,
+                    "line": 4282
+                }
+            ]
+        },
+        "calls": {"functions": ["get_guest_account", "read_config_option"], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Navigation",
+        "wave": 5,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Twig layout replaces page chrome as pages migrate."
+    }
+}

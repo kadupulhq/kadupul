@@ -1,0 +1,59 @@
+{
+    "schema": 1,
+    "name": "cacti_plugin_path",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 9232,
+        "end_line": 9255,
+        "line_count": 24,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "plugin",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "relative",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "''"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 6, "core_outside_functions_php": 5, "tests": 11, "plugins": 0},
+        "body": {
+            "uses_global": ["config"],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": ["realpath"],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["validate_relative_path_within"], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Application/Port/Filesystem",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

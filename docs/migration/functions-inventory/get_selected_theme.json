@@ -1,0 +1,40 @@
+{
+    "schema": 1,
+    "name": "get_selected_theme",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 1024,
+        "end_line": 1110,
+        "line_count": 87,
+        "signature": {"parameters": [], "return_type": null, "returns_reference": false},
+        "docblock": true,
+        "fan_out": {"core": 28, "core_outside_functions_php": 25, "tests": 22, "plugins": 0},
+        "body": {
+            "uses_global": ["config", "themes"],
+            "static_variables": [],
+            "superglobals": ["$_SESSION"],
+            "session": {"references": 7, "keys": ["selected_theme", "sess_user_id"]},
+            "db_calls": {
+                "db_execute_prepared": 1,
+                "db_fetch_cell_prepared": 1,
+                "db_table_exists": 1
+            },
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": ["file_exists"],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["read_config_option"], "recursive": false},
+        "called_by": ["draw_navigation_text"]
+    },
+    "human": {
+        "target_module": "Navigation",
+        "wave": 5,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Twig layout replaces page chrome as pages migrate."
+    }
+}

@@ -1,0 +1,36 @@
+{
+    "schema": 1,
+    "name": "get_url_type",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 6901,
+        "end_line": 6908,
+        "line_count": 8,
+        "signature": {"parameters": [], "return_type": null, "returns_reference": false},
+        "docblock": true,
+        "fan_out": {"core": 5, "core_outside_functions_php": 2, "tests": 3, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["read_config_option"], "recursive": false},
+        "called_by": ["call_remote_data_collector", "get_default_contextoption"]
+    },
+    "human": {
+        "target_module": "Platform/Presentation/Http",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

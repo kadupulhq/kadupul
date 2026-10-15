@@ -1,0 +1,39 @@
+{
+    "schema": 1,
+    "name": "poller_maintenance",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 6357,
+        "end_line": 6371,
+        "line_count": 15,
+        "signature": {"parameters": [], "return_type": null, "returns_reference": false},
+        "docblock": false,
+        "fan_out": {"core": 5, "core_outside_functions_php": 4, "tests": 28, "plugins": 0},
+        "body": {
+            "uses_global": ["config"],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {
+            "functions": ["cacti_escapeshellarg", "cacti_escapeshellcmd", "read_config_option"],
+            "recursive": false
+        },
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Collection/Application",
+        "wave": 4,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

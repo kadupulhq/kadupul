@@ -1,0 +1,50 @@
+{
+    "schema": 1,
+    "name": "cacti_validate_theme",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 8957,
+        "end_line": 9006,
+        "line_count": 50,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "requested",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 7, "core_outside_functions_php": 6, "tests": 12, "plugins": 0},
+        "body": {
+            "uses_global": ["config"],
+            "static_variables": ["valid_themes"],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": ["is_dir", "is_file", "scandir"],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["read_config_option"], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Navigation",
+        "wave": 5,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

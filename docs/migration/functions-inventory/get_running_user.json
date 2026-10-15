@@ -1,0 +1,43 @@
+{
+    "schema": 1,
+    "name": "get_running_user",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 7684,
+        "end_line": 7770,
+        "line_count": 87,
+        "signature": {"parameters": [], "return_type": null, "returns_reference": false},
+        "docblock": false,
+        "fan_out": {"core": 4, "core_outside_functions_php": 4, "tests": 0, "plugins": 0},
+        "body": {
+            "uses_global": ["config"],
+            "static_variables": ["tmp_user"],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [
+                "file_exists",
+                "file_put_contents",
+                "fileowner",
+                "sys_get_temp_dir",
+                "tempnam",
+                "unlink"
+            ],
+            "process_functions": ["exec", "posix_geteuid", "posix_getpwuid"],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["is_resource_writable"], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Application/Port/Filesystem",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

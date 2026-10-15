@@ -1,0 +1,54 @@
+{
+    "schema": 1,
+    "name": "cacti_count",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 8212,
+        "end_line": 8215,
+        "line_count": 4,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "array",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": false,
+        "fan_out": {"core": 112, "core_outside_functions_php": 109, "tests": 29, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": [
+            "generate_data_input_field_sequences",
+            "get_dns_from_ip",
+            "sanitize_search_string"
+        ]
+    },
+    "human": {
+        "target_module": "Platform/Domain/Collection",
+        "wave": 1,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

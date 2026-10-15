@@ -1,0 +1,68 @@
+{
+    "schema": 1,
+    "name": "cacti_validate_sort_column",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 9113,
+        "end_line": 9120,
+        "line_count": 8,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "column",
+                    "type": "string",
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "allowed",
+                    "type": "array",
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "default",
+                    "type": "string",
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "''"
+                }
+            ],
+            "return_type": "string",
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 5, "core_outside_functions_php": 3, "tests": 33, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Domain/Security",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

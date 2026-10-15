@@ -1,0 +1,50 @@
+{
+    "schema": 1,
+    "name": "get_message_level",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 1210,
+        "end_line": 1228,
+        "line_count": 19,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "current_message",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": false,
+        "fan_out": {"core": 4, "core_outside_functions_php": 0, "tests": 2, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": ["get_format_message_instance", "get_message_max_type", "raise_message"]
+    },
+    "human": {
+        "target_module": "Platform/Application/Port/FlashMessages",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

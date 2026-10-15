@@ -1,0 +1,53 @@
+{
+    "schema": 1,
+    "name": "cacti_session_start",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 8249,
+        "end_line": 8284,
+        "line_count": 36,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "regenerate",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "false"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 13, "core_outside_functions_php": 9, "tests": 11, "plugins": 0},
+        "body": {
+            "uses_global": ["config"],
+            "static_variables": [],
+            "superglobals": ["$_SESSION"],
+            "session": {"references": 1, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": ["die"],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {
+            "functions": ["cacti_debug_backtrace", "cacti_log", "cacti_session_regenerate"],
+            "recursive": false
+        },
+        "called_by": ["clear_messages", "force_session_data", "raise_message"]
+    },
+    "human": {
+        "target_module": "IdentityAccess",
+        "wave": 4,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Hard-stop domain (auth, session, cookies): delegate and verify at the thorough tier."
+    }
+}

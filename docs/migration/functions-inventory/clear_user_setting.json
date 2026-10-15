@@ -1,0 +1,59 @@
+{
+    "schema": 1,
+    "name": "clear_user_setting",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 479,
+        "end_line": 501,
+        "line_count": 23,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "config_name",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "user",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "-1"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 1, "core_outside_functions_php": 0, "tests": 4, "plugins": 0},
+        "body": {
+            "uses_global": ["settings_user"],
+            "static_variables": [],
+            "superglobals": ["$_SESSION"],
+            "session": {"references": 2, "keys": ["sess_user_config_array", "sess_user_id"]},
+            "db_calls": {"db_execute_prepared": 1, "db_table_exists": 1},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Application/Port/UserSettings",
+        "wave": 2,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Plan lists only ConfigurationSettings and UserSettings ports; graph config options follow user settings."
+    }
+}

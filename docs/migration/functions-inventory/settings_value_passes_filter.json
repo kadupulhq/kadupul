@@ -1,0 +1,68 @@
+{
+    "schema": 1,
+    "name": "settings_value_passes_filter",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 219,
+        "end_line": 240,
+        "line_count": 22,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "name",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "value",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "user_setting",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "false"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 6, "core_outside_functions_php": 3, "tests": 14, "plugins": 0},
+        "body": {
+            "uses_global": ["settings", "settings_user"],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": ["save_user_settings"]
+    },
+    "human": {
+        "target_module": "Platform/Application/Port/ConfigurationSettings",
+        "wave": 2,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}
