@@ -1,0 +1,95 @@
+{
+  "cases": [
+    {
+      "args": [1],
+      "id": "present",
+      "result": {
+        "returned": {"type": "string", "value": "Local Linux Machine"},
+        "sql": ["SELECT description FROM host WHERE id = ? -- [1]"]
+      }
+    },
+    {
+      "args": [999999],
+      "id": "absent",
+      "note": "no row: false, not null or empty string",
+      "result": {
+        "returned": {"type": "bool", "value": false},
+        "sql": ["SELECT description FROM host WHERE id = ? -- [999999]"]
+      }
+    },
+    {
+      "args": [1],
+      "id": "description_multibyte",
+      "prelude": ["UPDATE host SET description = 'Ünïcode 設備 ✓' WHERE id = 1"],
+      "result": {
+        "returned": {"type": "string", "value": "Ünïcode 設備 ✓"},
+        "sql": ["SELECT description FROM host WHERE id = ? -- [1]"]
+      }
+    },
+    {
+      "args": [1],
+      "id": "description_long",
+      "note": "a 4000 byte description is returned as a digest",
+      "prelude": [
+        "UPDATE host SET description = ? WHERE id = ? -- [{\"$\":\"repeat\",\"count\":2000,\"unit\":\"ab\"},1]"
+      ],
+      "result": {
+        "returned": {
+          "type": "string",
+          "value": "ababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababab"
+        },
+        "sql": ["SELECT description FROM host WHERE id = ? -- [1]"]
+      }
+    },
+    {
+      "args": [],
+      "id": "no_arguments",
+      "result": {
+        "exception": {
+          "class": "ArgumentCountError",
+          "code": 0,
+          "message": "Too few arguments to function get_device_name(), 0 passed in <caller> and exactly 1 expected"
+        },
+        "sql": []
+      }
+    },
+    {
+      "args": ["1abc"],
+      "id": "id_trailing_text",
+      "result": {
+        "returned": {"type": "string", "value": "Local Linux Machine"},
+        "sql": ["SELECT description FROM host WHERE id = ? -- [\"1abc\"]"]
+      }
+    },
+    {
+      "args": [null],
+      "id": "id_null",
+      "result": {
+        "returned": {"type": "bool", "value": false},
+        "sql": ["SELECT description FROM host WHERE id = ? -- [null]"]
+      }
+    },
+    {
+      "args": ["abc"],
+      "id": "id_text",
+      "result": {
+        "returned": {"type": "bool", "value": false},
+        "sql": ["SELECT description FROM host WHERE id = ? -- [\"abc\"]"]
+      }
+    },
+    {
+      "args": [[1]],
+      "id": "id_array",
+      "result": {
+        "returned": {"type": "bool", "value": false},
+        "sql": [
+          "SELECT description FROM host WHERE id = ? -- [[1]] !! Exception: Array to string conversion"
+        ]
+      }
+    }
+  ],
+  "function": "get_device_name",
+  "signature": [
+    {"by_ref": false, "name": "host_id", "optional": false, "type": null, "variadic": false}
+  ]
+}

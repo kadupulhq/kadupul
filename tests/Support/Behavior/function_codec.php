@@ -85,7 +85,7 @@ function behavior_decode($value)
     throw new InvalidArgumentException('Unknown tag ' . $tag);
 }
 
-function behavior_encode($value)
+function behavior_encode($value, $limit = BEHAVIOR_LONG_STRING)
 {
     if (is_float($value)) {
         if (is_nan($value)) {
@@ -104,7 +104,7 @@ function behavior_encode($value)
     if (is_string($value)) {
         // A long result is compared by digest; the golden stays reviewable and
         // any change to a single byte still changes the record.
-        if (strlen($value) > BEHAVIOR_LONG_STRING) {
+        if (strlen($value) > $limit) {
             return ['$' => 'long', 'bytes' => strlen($value), 'sha256' => hash('sha256', $value), 'head_hex' => bin2hex(substr($value, 0, 32))];
         }
         // Control bytes would read as noise in a golden, and packed addresses
@@ -114,11 +114,11 @@ function behavior_encode($value)
 
     if (is_array($value)) {
         if (array_is_list($value)) {
-            return array_map('behavior_encode', $value);
+            return array_map(fn($item) => behavior_encode($item, $limit), $value);
         }
         $pairs = [];
         foreach ($value as $k => $v) {
-            $pairs[] = [$k, behavior_encode($v)];
+            $pairs[] = [$k, behavior_encode($v, $limit)];
         }
 
         return ['$' => 'array', 'pairs' => $pairs];
@@ -127,7 +127,7 @@ function behavior_encode($value)
     if (is_object($value)) {
         $props = [];
         foreach (get_object_vars($value) as $k => $v) {
-            $props[] = [$k, behavior_encode($v)];
+            $props[] = [$k, behavior_encode($v, $limit)];
         }
 
         return ['$' => 'object', 'class' => get_class($value), 'props' => $props];

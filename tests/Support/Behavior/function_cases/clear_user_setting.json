@@ -1,0 +1,11 @@
+{
+  "function": "clear_user_setting",
+  "cases": [
+    {"record_sql": true, "record_state": ["session"], "record_tables": true, "id": "delete_existing_row", "args": ["fncdb_pref", 1], "prelude": [{"sql": "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'v')"}]},
+    {"record_sql": true, "record_state": ["session"], "record_tables": true, "id": "uses_session_user", "args": ["fncdb_pref"], "note": "user -1 and a session user: that user", "ambient": {"session": {"sess_user_id": 1}}, "prelude": [{"sql": "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'v')"}, {"sql": "INSERT INTO settings_user VALUES (2, 'fncdb_pref', 'w')"}]},
+    {"record_sql": true, "record_state": ["session"], "record_tables": true, "id": "no_user_and_no_session", "args": ["fncdb_pref"], "note": "user -1 with no session: undefined key, user null, nothing matches", "prelude": [{"sql": "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'v')"}]},
+    {"record_sql": true, "record_state": ["session"], "record_tables": true, "id": "credential_generation_is_refused", "args": ["auth_credential_generation", 1], "note": "no query and the row is kept", "prelude": [{"sql": "INSERT INTO settings_user VALUES (1, 'auth_credential_generation', '5')"}]},
+    {"record_sql": true, "record_state": ["session"], "record_tables": true, "id": "user_text", "args": ["fncdb_pref", "abc"], "note": "\"abc\" is read as 0 by the comparison with an unsigned column", "prelude": [{"sql": "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'v')"}]},
+    {"record_sql": true, "record_state": ["session"], "record_tables": true, "id": "user_array", "args": ["fncdb_pref", [1]]}
+  ]
+}

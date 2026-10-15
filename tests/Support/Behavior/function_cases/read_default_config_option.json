@@ -1,0 +1,13 @@
+{
+  "function": "read_default_config_option",
+  "cases": [
+    {"id": "top_level_int", "args": ["poller_interval"]},
+    {"id": "top_level_string_zero", "args": ["guest_user"], "note": "the default \"0\" is a string"},
+    {"id": "no_default_key", "args": ["path_rrdtool"], "note": "the field exists but has no default: null"},
+    {"id": "nested_item", "args": ["log_pstats"], "note": "defaults of fields inside items"},
+    {"id": "unknown", "args": ["fncdb_unknown"]},
+    {"id": "empty_name", "args": [""]},
+    {"id": "database_value_is_ignored", "args": ["poller_interval"], "note": "a settings row does not affect the default", "ambient": {"settings": {"poller_interval": "999"}}, "record_sql": true},
+    {"id": "no_arguments", "args": []}
+  ]
+}

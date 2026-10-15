@@ -1,0 +1,92 @@
+{
+  "cases": [
+    {
+      "args": [1, "vdef"],
+      "id": "vdef_present",
+      "note": "stored hash of vdef.1",
+      "result": {
+        "returned": {"type": "string", "value": "e06ed529238448773038601afb3cf278"},
+        "sql": ["SELECT hash FROM vdef WHERE id = ? -- [1]"]
+      }
+    },
+    {
+      "args": [999999, "vdef"],
+      "id": "vdef_absent",
+      "note": "no row: a new random hash",
+      "result": {
+        "returned": {"type": "string", "value": "<generated 32 hex>"},
+        "sql": ["SELECT hash FROM vdef WHERE id = ? -- [999999]"]
+      }
+    },
+    {
+      "args": [1, "vdef_item"],
+      "id": "vdef_item_present",
+      "note": "stored hash of vdef_items.1",
+      "result": {
+        "returned": {"type": "string", "value": "88d33bf9271ac2bdf490cf1784a342c1"},
+        "sql": ["SELECT hash FROM vdef_items WHERE id = ? -- [1]"]
+      }
+    },
+    {
+      "args": [1, "nope"],
+      "id": "unknown_sub_type",
+      "note": "default branch: no query, random hash",
+      "result": {"returned": {"type": "string", "value": "<generated 32 hex>"}, "sql": []}
+    },
+    {
+      "args": [1, true],
+      "id": "sub_type_true",
+      "note": "switch uses ==, so true matches the first case",
+      "result": {"returned": {"type": "string", "value": "e06ed529238448773038601afb3cf278"}}
+    },
+    {
+      "args": [1, "vdef"],
+      "id": "upper_case_hash",
+      "note": "upper case hex is accepted and returned as stored",
+      "prelude": ["UPDATE vdef SET hash = 'E06ED529238448773038601AFB3CF278' WHERE id = 1"],
+      "result": {"returned": {"type": "string", "value": "E06ED529238448773038601AFB3CF278"}}
+    },
+    {
+      "args": [1, "vdef"],
+      "id": "non_hex_32_chars",
+      "note": "32 characters but not hex (ctype_xdigit and length 32)",
+      "prelude": ["UPDATE vdef SET hash = 'gggggggggggggggggggggggggggggggg' WHERE id = 1"],
+      "result": {"returned": {"type": "string", "value": "<generated 32 hex>"}}
+    },
+    {
+      "args": ["1abc", "vdef"],
+      "id": "id_trailing_text",
+      "result": {
+        "returned": {"type": "string", "value": "e06ed529238448773038601afb3cf278"},
+        "sql": ["SELECT hash FROM vdef WHERE id = ? -- [\"1abc\"]"]
+      }
+    },
+    {
+      "args": ["abc", "vdef"],
+      "id": "id_text",
+      "result": {"returned": {"type": "string", "value": "<generated 32 hex>"}}
+    },
+    {
+      "args": [null, "vdef"],
+      "id": "id_null",
+      "result": {"returned": {"type": "string", "value": "<generated 32 hex>"}}
+    },
+    {
+      "args": [[1], "vdef"],
+      "id": "id_array",
+      "result": {"returned": {"type": "string", "value": "<generated 32 hex>"}}
+    }
+  ],
+  "function": "get_hash_vdef",
+  "signature": [
+    {"by_ref": false, "name": "vdef_id", "optional": false, "type": null, "variadic": false},
+    {
+      "by_ref": false,
+      "default": "vdef",
+      "name": "sub_type",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    }
+  ]
+}

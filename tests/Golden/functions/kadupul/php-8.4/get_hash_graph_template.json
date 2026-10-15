@@ -1,0 +1,112 @@
+{
+  "cases": [
+    {
+      "args": [1, "graph_template"],
+      "id": "graph_template_present",
+      "note": "stored hash of graph_templates.1",
+      "result": {
+        "returned": {"type": "string", "value": "8d8296c812ac02217d13b16f4a616e2a"},
+        "sql": ["SELECT hash FROM graph_templates WHERE id = ? -- [1]"]
+      }
+    },
+    {
+      "args": [999999, "graph_template"],
+      "id": "graph_template_absent",
+      "note": "no row: a new random hash",
+      "result": {
+        "returned": {"type": "string", "value": "<generated 32 hex>"},
+        "sql": ["SELECT hash FROM graph_templates WHERE id = ? -- [999999]"]
+      }
+    },
+    {
+      "args": [1, "graph_template_item"],
+      "id": "graph_template_item_present",
+      "note": "stored hash of graph_templates_item.1",
+      "result": {
+        "returned": {"type": "string", "value": "33d0e45c25f435de32f2512ebb7f24b9"},
+        "sql": ["SELECT hash FROM graph_templates_item WHERE id = ? -- [1]"]
+      }
+    },
+    {
+      "args": [3532, "graph_template_item"],
+      "id": "graph_template_item_stored_empty_hash",
+      "note": "graph_templates_item.3532 has hash \"\": a new random hash",
+      "result": {"returned": {"type": "string", "value": "<generated 32 hex>"}}
+    },
+    {
+      "args": [1, "graph_template_input"],
+      "id": "graph_template_input_present",
+      "note": "stored hash of graph_template_input.1",
+      "result": {
+        "returned": {"type": "string", "value": "a4788eefaea272586ed57ca7f0d25007"},
+        "sql": ["SELECT hash FROM graph_template_input WHERE id = ? -- [1]"]
+      }
+    },
+    {
+      "args": [1, "nope"],
+      "id": "unknown_sub_type",
+      "note": "default branch: no query, random hash",
+      "result": {"returned": {"type": "string", "value": "<generated 32 hex>"}, "sql": []}
+    },
+    {
+      "args": [1, true],
+      "id": "sub_type_true",
+      "note": "switch uses ==, so true matches the first case",
+      "result": {"returned": {"type": "string", "value": "8d8296c812ac02217d13b16f4a616e2a"}}
+    },
+    {
+      "args": [1, "graph_template"],
+      "id": "upper_case_hash",
+      "note": "upper case hex is accepted and returned as stored",
+      "prelude": [
+        "UPDATE graph_templates SET hash = '8D8296C812AC02217D13B16F4A616E2A' WHERE id = 1"
+      ],
+      "result": {"returned": {"type": "string", "value": "8D8296C812AC02217D13B16F4A616E2A"}}
+    },
+    {
+      "args": [1, "graph_template"],
+      "id": "non_hex_32_chars",
+      "note": "32 characters but not hex (unanchored /[a-fA-F0-9]{32}/)",
+      "prelude": [
+        "UPDATE graph_templates SET hash = 'gggggggggggggggggggggggggggggggg' WHERE id = 1"
+      ],
+      "result": {"returned": {"type": "string", "value": "<generated 32 hex>"}}
+    },
+    {
+      "args": ["1abc", "graph_template"],
+      "id": "id_trailing_text",
+      "result": {
+        "returned": {"type": "string", "value": "8d8296c812ac02217d13b16f4a616e2a"},
+        "sql": ["SELECT hash FROM graph_templates WHERE id = ? -- [\"1abc\"]"]
+      }
+    },
+    {
+      "args": [null, "graph_template"],
+      "id": "id_null",
+      "result": {"returned": {"type": "string", "value": "<generated 32 hex>"}}
+    },
+    {
+      "args": [[1], "graph_template"],
+      "id": "id_array",
+      "result": {"returned": {"type": "string", "value": "<generated 32 hex>"}}
+    }
+  ],
+  "function": "get_hash_graph_template",
+  "signature": [
+    {
+      "by_ref": false,
+      "name": "graph_template_id",
+      "optional": false,
+      "type": null,
+      "variadic": false
+    },
+    {
+      "by_ref": false,
+      "default": "graph_template",
+      "name": "sub_type",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    }
+  ]
+}

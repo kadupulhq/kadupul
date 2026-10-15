@@ -1,0 +1,110 @@
+{
+  "cases": [
+    {
+      "args": ["graph_template"],
+      "id": "type_graph_template",
+      "result": {"returned": {"type": "string", "value": "000103"}}
+    },
+    {
+      "args": ["data_template"],
+      "id": "type_data_template",
+      "result": {"returned": {"type": "string", "value": "010103"}}
+    },
+    {
+      "args": ["cdef"],
+      "id": "type_cdef",
+      "result": {"returned": {"type": "string", "value": "050103"}}
+    },
+    {
+      "args": ["data_query"],
+      "id": "type_data_query",
+      "result": {"returned": {"type": "string", "value": "040103"}}
+    },
+    {
+      "args": ["data_source_profile"],
+      "id": "type_data_source_profile",
+      "result": {"returned": {"type": "string", "value": "200103"}}
+    },
+    {
+      "args": ["nope"],
+      "id": "unknown_type",
+      "note": "undefined key: a warning, and the version code alone",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Undefined array key \"nope\"",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "string", "value": "0103"}
+      }
+    },
+    {
+      "args": ["CDEF"],
+      "id": "type_case_differs",
+      "note": "array keys are case sensitive",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Undefined array key \"CDEF\"",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "string", "value": "0103"}
+      }
+    },
+    {
+      "args": [""],
+      "id": "type_empty",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Undefined array key \"\"",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "string", "value": "0103"}
+      }
+    },
+    {
+      "args": [null],
+      "id": "type_null",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Undefined array key \"\"",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "string", "value": "0103"}
+      }
+    },
+    {
+      "args": [],
+      "id": "no_arguments",
+      "result": {
+        "exception": {
+          "class": "ArgumentCountError",
+          "code": 0,
+          "message": "Too few arguments to function get_hash_version(), 0 passed in <caller> and exactly 1 expected"
+        }
+      }
+    }
+  ],
+  "function": "get_hash_version",
+  "signature": [
+    {"by_ref": false, "name": "type", "optional": false, "type": null, "variadic": false}
+  ]
+}

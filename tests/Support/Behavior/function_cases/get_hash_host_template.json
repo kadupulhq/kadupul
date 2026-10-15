@@ -1,0 +1,12 @@
+{
+  "function": "get_hash_host_template",
+  "cases": [
+    {"id": "only_present", "args": [1], "note": "stored hash of host_template.1", "record_sql": true},
+    {"id": "only_absent", "args": [999999], "note": "no row: a new random hash", "record_sql": true, "mask_generated": true},
+    {"id": "upper_case_hash", "args": [1], "note": "upper case hex is accepted and returned as stored", "prelude": [{"sql": "UPDATE host_template SET hash = '9168BF1142B5B05817B8A5BB598B5D21' WHERE id = 1"}], "mask_generated": true},
+    {"id": "non_hex_32_chars", "args": [1], "note": "32 characters but not hex (ctype_xdigit and length 32)", "prelude": [{"sql": "UPDATE host_template SET hash = 'gggggggggggggggggggggggggggggggg' WHERE id = 1"}], "mask_generated": true},
+    {"id": "id_trailing_text", "args": ["1abc"], "mask_generated": true, "record_sql": true},
+    {"id": "id_null", "args": [null], "mask_generated": true},
+    {"id": "id_array", "args": [[1]], "mask_generated": true}
+  ]
+}

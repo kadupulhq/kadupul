@@ -1,0 +1,90 @@
+{
+  "cases": [
+    {
+      "args": ["fncdb_pref", 1],
+      "id": "delete_existing_row",
+      "prelude": ["INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'v')"],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": ["DELETE FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",1]"],
+        "table_diff": ["- settings_user {\"name\":\"fncdb_pref\",\"user_id\":1,\"value\":\"v\"}"]
+      }
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["fncdb_pref"],
+      "id": "uses_session_user",
+      "note": "user -1 and a session user: that user",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'v')",
+        "INSERT INTO settings_user VALUES (2, 'fncdb_pref', 'w')"
+      ],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": ["DELETE FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",1]"],
+        "table_diff": ["- settings_user {\"name\":\"fncdb_pref\",\"user_id\":1,\"value\":\"v\"}"]
+      }
+    },
+    {
+      "args": ["fncdb_pref"],
+      "id": "no_user_and_no_session",
+      "note": "user -1 with no session: undefined key, user null, nothing matches",
+      "prelude": ["INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'v')"],
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Undefined array key \"sess_user_id\"",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "null", "value": null},
+        "sql": ["DELETE FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",null]"]
+      }
+    },
+    {
+      "args": ["auth_credential_generation", 1],
+      "id": "credential_generation_is_refused",
+      "note": "no query and the row is kept",
+      "prelude": ["INSERT INTO settings_user VALUES (1, 'auth_credential_generation', '5')"],
+      "result": {"returned": {"type": "null", "value": null}, "sql": []}
+    },
+    {
+      "args": ["fncdb_pref", "abc"],
+      "id": "user_text",
+      "note": "\"abc\" is read as 0 by the comparison with an unsigned column",
+      "prelude": ["INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'v')"],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "DELETE FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",\"abc\"]"
+        ],
+        "table_diff": ["- settings_user {\"name\":\"fncdb_pref\",\"user_id\":0,\"value\":\"v\"}"]
+      }
+    },
+    {
+      "args": ["fncdb_pref", [1]],
+      "id": "user_array",
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "DELETE FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",[1]] !! Exception: Array to string conversion"
+        ]
+      }
+    }
+  ],
+  "function": "clear_user_setting",
+  "signature": [
+    {"by_ref": false, "name": "config_name", "optional": false, "type": null, "variadic": false},
+    {
+      "by_ref": false,
+      "default": -1,
+      "name": "user",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    }
+  ]
+}

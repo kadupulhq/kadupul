@@ -1,0 +1,16 @@
+{
+  "function": "get_graph_title_cache",
+  "cases": [
+    {"record_sql": true, "id": "present", "args": [1]},
+    {"record_sql": true, "id": "absent", "args": [999999], "note": "no row: false"},
+    {"record_sql": true, "id": "graph_without_cache_row", "args": [5], "note": "a graph_local row with no graph_templates_graph row", "prelude": [{"sql": "INSERT INTO graph_local (id, host_id) VALUES (5, 1)"}]},
+    {"record_sql": true, "id": "cache_empty", "args": [1], "prelude": [{"sql": "UPDATE graph_templates_graph SET title_cache = '' WHERE local_graph_id = 1"}]},
+    {"record_sql": true, "id": "two_rows_for_one_graph", "args": [1], "note": "first row in storage order wins", "prelude": [{"sql": "INSERT INTO graph_templates_graph (local_graph_id, title_cache) VALUES (1, 'duplicate')"}]},
+    {"record_sql": true, "id": "template_rows_share_id_zero", "args": [0], "note": "graph_templates_graph rows of templates all carry local_graph_id 0; the first is returned"},
+    {"record_sql": true, "id": "no_arguments", "args": []},
+    {"record_sql": true, "id": "id_trailing_text", "args": ["1abc"]},
+    {"record_sql": true, "id": "id_null", "args": [null]},
+    {"record_sql": true, "id": "id_text", "args": ["abc"]},
+    {"record_sql": true, "id": "id_array", "args": [[1]]}
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "cases": [
+    {
+      "args": ["poller_interval"],
+      "id": "top_level_int",
+      "result": {"returned": {"type": "int", "value": 300}}
+    },
+    {
+      "args": ["guest_user"],
+      "id": "top_level_string_zero",
+      "note": "the default \"0\" is a string",
+      "result": {"returned": {"type": "string", "value": "0"}}
+    },
+    {
+      "args": ["path_rrdtool"],
+      "id": "no_default_key",
+      "note": "the field exists but has no default: null",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "args": ["log_pstats"],
+      "id": "nested_item",
+      "note": "defaults of fields inside items",
+      "result": {"returned": {"type": "string", "value": ""}}
+    },
+    {
+      "args": ["fncdb_unknown"],
+      "id": "unknown",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {"args": [""], "id": "empty_name", "result": {"returned": {"type": "null", "value": null}}},
+    {
+      "ambient": {"settings": {"poller_interval": "999"}},
+      "args": ["poller_interval"],
+      "id": "database_value_is_ignored",
+      "note": "a settings row does not affect the default",
+      "result": {"returned": {"type": "int", "value": 300}, "sql": []}
+    },
+    {
+      "args": [],
+      "id": "no_arguments",
+      "result": {
+        "exception": {
+          "class": "ArgumentCountError",
+          "code": 0,
+          "message": "Too few arguments to function read_default_config_option(), 0 passed in <caller> and exactly 1 expected"
+        }
+      }
+    }
+  ],
+  "function": "read_default_config_option",
+  "signature": [
+    {"by_ref": false, "name": "config_name", "optional": false, "type": null, "variadic": false}
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "function": "get_hash_graph_template",
+  "cases": [
+    {"id": "graph_template_present", "args": [1, "graph_template"], "note": "stored hash of graph_templates.1", "record_sql": true},
+    {"id": "graph_template_absent", "args": [999999, "graph_template"], "note": "no row: a new random hash", "record_sql": true, "mask_generated": true},
+    {"id": "graph_template_item_present", "args": [1, "graph_template_item"], "note": "stored hash of graph_templates_item.1", "record_sql": true},
+    {"id": "graph_template_item_stored_empty_hash", "args": [3532, "graph_template_item"], "note": "graph_templates_item.3532 has hash \"\": a new random hash", "mask_generated": true},
+    {"id": "graph_template_input_present", "args": [1, "graph_template_input"], "note": "stored hash of graph_template_input.1", "record_sql": true},
+    {"id": "unknown_sub_type", "args": [1, "nope"], "note": "default branch: no query, random hash", "record_sql": true, "mask_generated": true},
+    {"id": "sub_type_true", "args": [1, true], "note": "switch uses ==, so true matches the first case", "mask_generated": true},
+    {"id": "upper_case_hash", "args": [1, "graph_template"], "note": "upper case hex is accepted and returned as stored", "prelude": [{"sql": "UPDATE graph_templates SET hash = '8D8296C812AC02217D13B16F4A616E2A' WHERE id = 1"}], "mask_generated": true},
+    {"id": "non_hex_32_chars", "args": [1, "graph_template"], "note": "32 characters but not hex (unanchored /[a-fA-F0-9]{32}/)", "prelude": [{"sql": "UPDATE graph_templates SET hash = 'gggggggggggggggggggggggggggggggg' WHERE id = 1"}], "mask_generated": true},
+    {"id": "id_trailing_text", "args": ["1abc", "graph_template"], "mask_generated": true, "record_sql": true},
+    {"id": "id_null", "args": [null, "graph_template"], "mask_generated": true},
+    {"id": "id_array", "args": [[1], "graph_template"], "mask_generated": true}
+  ]
+}

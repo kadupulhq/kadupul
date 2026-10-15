@@ -1,0 +1,14 @@
+{
+  "function": "get_device_name",
+  "cases": [
+    {"record_sql": true, "id": "present", "args": [1]},
+    {"record_sql": true, "id": "absent", "args": [999999], "note": "no row: false, not null or empty string"},
+    {"record_sql": true, "id": "description_multibyte", "args": [1], "prelude": [{"sql": "UPDATE host SET description = 'Ünïcode 設備 ✓' WHERE id = 1"}]},
+    {"record_sql": true, "id": "description_long", "args": [1], "note": "a 4000 byte description is returned as a digest", "prelude": [{"sql": "UPDATE host SET description = ? WHERE id = ?", "params": [{"$": "repeat", "unit": "ab", "count": 2000}, 1]}]},
+    {"record_sql": true, "id": "no_arguments", "args": []},
+    {"record_sql": true, "id": "id_trailing_text", "args": ["1abc"]},
+    {"record_sql": true, "id": "id_null", "args": [null]},
+    {"record_sql": true, "id": "id_text", "args": ["abc"]},
+    {"record_sql": true, "id": "id_array", "args": [[1]]}
+  ]
+}

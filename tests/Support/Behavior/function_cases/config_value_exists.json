@@ -1,0 +1,15 @@
+{
+  "function": "config_value_exists",
+  "cases": [
+    {"id": "present", "args": ["poller_interval"], "isolated": true, "record_sql": true},
+    {"id": "absent", "args": ["fncdb_missing"], "isolated": true, "record_sql": true},
+    {"id": "present_empty_value", "args": ["fncdb_empty"], "note": "a row whose value is \"\" exists", "isolated": true, "record_sql": true, "ambient": {"settings": {"fncdb_empty": ""}}},
+    {"id": "name_case_differs", "args": ["POLLER_INTERVAL"], "note": "the collation ignores case: the row is found", "isolated": true, "record_sql": true},
+    {"id": "name_accent_folds", "args": ["poller_intervàl"], "note": "unicode_ci folds accents", "isolated": true, "record_sql": true},
+    {"id": "name_null", "args": [null], "note": "null key is stored under \"\"", "isolated": true, "record_sql": true},
+    {"id": "name_array", "args": [["poller_interval"]], "note": "illegal offset", "isolated": true, "record_sql": true},
+    {"id": "cached_true_survives_delete", "args": ["fncdb_row"], "isolated": true, "record_sql": true, "ambient": {"settings": {"fncdb_row": "x"}}, "between": [{"sql": "DELETE FROM settings WHERE name = 'fncdb_row'"}]},
+    {"id": "cached_false_survives_insert", "args": ["fncdb_row"], "isolated": true, "record_sql": true, "between": [{"sql": "INSERT INTO settings (name, value) VALUES ('fncdb_row', 'x')"}]},
+    {"id": "no_arguments", "args": [], "isolated": true}
+  ]
+}

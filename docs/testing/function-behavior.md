@@ -55,14 +55,18 @@ For each case:
 | `result.log` | New lines in `log/cacti.log`, with the timestamp replaced. |
 | `warm` | `{same: true}`, or `{same: false, result: ...}` when an identical second call in the same process answers differently. This is how a `static` or global cache shows up. |
 | `prelude`, `between` | Records of the setup steps that ran before the call and between the two calls. |
+| `sql` | Only when the case sets `record_sql`. One string per statement the first call executed: the text, then `-- ` and the bound values, then `xN` for a repeat and `!! ` and the error for a failed statement. |
+| `table_diff` | Only when the case sets `record_tables`. `- table {row}` for each row of `settings` or `settings_user` the first call removed or changed, `+ table {row}` for each it added or changed. |
+| `state` | Only when the case sets `record_state`. `set area.key = value` and `unset area.key` for what the first call changed in `$_SESSION`, `$config` or the `$settings_user` definitions, one level into arrays. |
 
 Each function also records its `signature`: parameter names, types, defaults,
 and which are by reference.
 
 Two things keep goldens short without losing content:
 
-- A golden leaves out a field that holds its default: `note` of `""`, `warm` of `{"same": true}`, and `result.diagnostics` of `[]`, `result.log` of `[]` and `result.output` of `""`. The harness puts them back when it reads a golden, so a record that lacks one of these still fails the comparison.
-- A list or object of more than 64 elements, in `args`, `ambient`, `returned` or `by_ref`, is written as `{"$": "list", "count": N, "types": [...], "head": [first 4], "sha256": "..."}` (`"$": "object"` for a map, with the first 4 keys in sorted order). The hash covers the whole value in canonical form, so changing one element, or `1` into `1.0`, changes the golden. Lists inside a smaller container are summarized on their own. The case file still holds the full input.
+- A golden leaves out a field that holds its default: `note` of `""`, `warm` of `{"same": true}`, and `result.diagnostics` of `[]`, `result.log` of `[]` and `result.output` of `""`. The harness puts them back when it reads a golden, so a record that lacks one of these still fails the comparison. The `warm.result` of a case whose first result carries `sql`, `table_diff` or `state` is stripped the same way; older goldens keep theirs in full and still compare.
+- A string in `sql`, `table_diff` or `state` of more than 120 bytes is written as the `long` digest form, as a long return value is.
+- A list or object of more than 64 elements, in `args`, `ambient`, `returned` or `by_ref`, is written as `{"$": "list", "count": N, "types": [...], "head": [first 4], "sha256": "..."}` (`"$": "object"` for a map, with the first 4 keys in sorted order). The hash covers the whole value in canonical form, so changing one element, or `1` into `1.0`, changes the golden. Lists inside a smaller container are summarized on their own. The case list of a function is never summarized, however many cases it has. The case file still holds the full input.
 
 Every case runs inside a database savepoint that is rolled back, and `$config`
 and `$_SESSION` are restored, so cases do not feed one another.
@@ -93,10 +97,17 @@ One JSON file per function, named after it:
 | `ambient.settings` | `{name: string or null}` written to the `settings` table before the call. `null` deletes the row. The cached copy is dropped so the call reads the table. |
 | `ambient.config` | `{key: value}` set in `$config` for the case. |
 | `ambient.session` | `{key: value}` set in `$_SESSION` for the case. |
-| `prelude` | Steps run before the call: `{"fn": name, "args": [...]}` calls a function defined by the application, `{"setting": {name: value}}` writes a setting. Internal PHP functions such as `shell_exec` are refused. |
+| `prelude` | Steps run before the call: `{"fn": name, "args": [...]}` calls a function defined by the application, `{"setting": {name: value}}` writes a setting, `{"sql": "INSERT ...", "params": [...]}` runs one statement to seed a row (a failed statement stops the run), `{"request": {name: value}}` sets request variables through `set_request_var()`. A `sql` step is recorded as one string, so write literal values where they fit and the step stays on one line. Internal PHP functions such as `shell_exec` are refused. |
 | `between` | Steps run between the first call and the repeat. A setting written here does not drop the cache, which is the point. |
 | `isolated` | `true` or `false`. Run this case in its own PHP process. Use it for anything that depends on a cold cache. |
 | `timeout` | A positive whole number of seconds after which the call is abandoned and recorded as `BehaviorTimeout`. |
+| `record_sql` | `true` records the prepared statements the first call ran as `result.sql`. They are noted by a statement class set on the application's PDO connection, so `lib/database.php` is untouched. A connection opened persistently cannot take one; use a non-persistent instance. |
+| `record_tables` | `true` records the row changes the first call made to `settings` and `settings_user`. |
+| `record_state` | `true` watches the session and `$config`; a list of `session`, `config` and `settings_user` chooses the areas. |
+| `mask_generated` | `true` for a function that returns a freshly generated 32 digit hex hash when it finds none. If the two calls return different hashes, both are written as `<generated 32 hex>`. A stored hash is the same both times and is kept. |
+
+Effects are recorded for the first call only. The repeat is compared on what it
+returns, prints and logs, which is what shows a cache.
 
 Unknown keys are rejected, so a typo or a `skip` flag cannot turn a case into a
 silent pass. The loader also checks that `ambient` and each of its sections are

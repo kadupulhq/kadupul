@@ -1,0 +1,17 @@
+{
+  "function": "get_hash_data_query",
+  "cases": [
+    {"id": "data_query_present", "args": [1, "data_query"], "note": "stored hash of snmp_query.1", "record_sql": true},
+    {"id": "data_query_absent", "args": [999999, "data_query"], "note": "no row: a new random hash", "record_sql": true, "mask_generated": true},
+    {"id": "data_query_graph_present", "args": [1, "data_query_graph"], "note": "stored hash of snmp_query_graph.1", "record_sql": true},
+    {"id": "data_query_sv_data_source_present", "args": [1, "data_query_sv_data_source"], "note": "stored hash of snmp_query_graph_rrd_sv.1", "record_sql": true},
+    {"id": "data_query_sv_graph_present", "args": [1, "data_query_sv_graph"], "note": "stored hash of snmp_query_graph_sv.1", "record_sql": true},
+    {"id": "unknown_sub_type", "args": [1, "nope"], "note": "default branch: no query, random hash", "record_sql": true, "mask_generated": true},
+    {"id": "sub_type_true", "args": [1, true], "note": "switch uses ==, so true matches the first case", "mask_generated": true},
+    {"id": "upper_case_hash", "args": [1, "data_query"], "note": "upper case hex is accepted and returned as stored", "prelude": [{"sql": "UPDATE snmp_query SET hash = '4E95A900B97CDA34691D6C0228353C0F' WHERE id = 1"}], "mask_generated": true},
+    {"id": "non_hex_32_chars", "args": [1, "data_query"], "note": "32 characters but not hex (ctype_xdigit and length 32)", "prelude": [{"sql": "UPDATE snmp_query SET hash = 'gggggggggggggggggggggggggggggggg' WHERE id = 1"}], "mask_generated": true},
+    {"id": "id_trailing_text", "args": ["1abc", "data_query"], "mask_generated": true, "record_sql": true},
+    {"id": "id_null", "args": [null, "data_query"], "mask_generated": true},
+    {"id": "id_array", "args": [[1], "data_query"], "mask_generated": true}
+  ]
+}
