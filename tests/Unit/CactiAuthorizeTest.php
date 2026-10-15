@@ -1,156 +1,104 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-/*
- * Behavior tests for cacti_authorize_resource().
- *
- * Root-cause mitigation for IDOR (GHSA-8p2f and future reports). The
- * helper must:
- *   - return false for zero/negative user or resource ids
- *   - return true when the user owns the row OR is an admin
- *   - return false for unknown resource types (fail closed)
- *   - cache admin status per-request to avoid DB hammering
- *
- * Tests use source-scan invariants plus an isolated reimplementation of
- * the authorization decision (no DB) to cover edge cases.
- */
+namespace CactiAuthorizeBehavior;
 
-/**
- * Pure-function mirror of cacti_authorize_resource() for testing the
- * decision logic without a database. Accepts the inputs the real helper
- * would derive from the DB (owner_id, is_admin).
- */
-function decide_authorize($user_id, $resource_id, $resource_type, $owner_of_resource, $user_is_admin) {
-	$user_id     = (int) $user_id;
-	$resource_id = (int) $resource_id;
-
-	if ($user_id <= 0 || $resource_id <= 0) {
-		return false;
-	}
-
-	if ($user_is_admin) {
-		return true;
-	}
-
-	switch ($resource_type) {
-		case 'reports':
-		case 'graph_tree':
-			return $owner_of_resource !== null && (int) $owner_of_resource === $user_id;
-
-		case 'settings_user':
-			return $resource_id === $user_id;
-
-		default:
-			return false; // fail closed
-	}
+require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
+$source = file_get_contents(dirname(__DIR__, 2) . '/lib/auth.php');
+if (!is_string($source)) {
+    throw new \RuntimeException('Unable to read authorization helpers.');
+}
+foreach (['cacti_authorize_resource', 'cacti_authorize_is_admin', 'cacti_authorize_has_realm'] as $name) {
+    eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($source, $name)); // nosemgrep: php.lang.security.eval-use.eval-use
 }
 
-describe('cacti_authorize_resource source contract', function () {
-	$src = file_get_contents(__DIR__ . '/../../lib/auth.php');
+final class AuthorizationFixture
+{
+    public static ?\PDO $database = null;
+    public static int $queries = 0;
+}
 
-	it('casts user_id and resource_id to int before any decision', function () use ($src) {
-		expect($src)->toContain('$user_id     = (int) $user_id');
-		expect($src)->toContain('$resource_id = (int) $resource_id');
-	});
+function db_fetch_cell_prepared(string $sql, array $parameters = []): mixed
+{
+    AuthorizationFixture::$queries++;
+    $statement = AuthorizationFixture::$database->prepare($sql);
+    $statement->execute($parameters);
 
-	it('rejects non-positive ids before any further work', function () use ($src) {
-		expect($src)->toMatch('/if\s*\(\$user_id\s*<=\s*0\s*\|\|\s*\$resource_id\s*<=\s*0\)\s*\{[^}]*return\s+false/s');
-	});
+    return $statement->fetchColumn();
+}
 
-	it('falls through to false for unknown resource types', function () use ($src) {
-		expect($src)->toContain('default:')
-			->and($src)->toMatch('/default:\s*\/\/[^\n]*fail closed\s*\n\s*return\s+false/');
-	});
+function db_table_exists(string $table): bool
+{
+    $statement = AuthorizationFixture::$database->prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?");
+    $statement->execute([$table]);
 
-	it('uses prepared queries for ownership lookups', function () use ($src) {
-		expect($src)->toContain('db_fetch_cell_prepared');
-		expect($src)->not->toMatch('/db_fetch_cell\s*\([^)]*\$user_id/');  // no raw concat
-	});
+    return $statement->fetchColumn() !== false;
+}
 
-	it('caches admin status per-request', function () use ($src) {
-		expect($src)->toContain('static $admin_cache');
-	});
+beforeAll(function () {
+    AuthorizationFixture::$database = new \PDO('sqlite::memory:', options: [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    AuthorizationFixture::$database->exec("CREATE TABLE reports(id INTEGER PRIMARY KEY,user_id INTEGER);
+        INSERT INTO reports VALUES(42,5),(43,0);
+        CREATE TABLE reports_items(id INTEGER PRIMARY KEY,report_id INTEGER);
+        INSERT INTO reports_items VALUES(80,42),(81,999);
+        CREATE TABLE graph_tree(id INTEGER PRIMARY KEY,user_id INTEGER);
+        INSERT INTO graph_tree VALUES(42,5),(43,0);
+        CREATE TABLE user_auth_realm(user_id INTEGER,realm_id INTEGER);
+        INSERT INTO user_auth_realm VALUES(99,1),(12,21);
+        CREATE TABLE user_auth_group(id INTEGER PRIMARY KEY,enabled TEXT);
+        INSERT INTO user_auth_group VALUES(1,'on'),(2,'');
+        CREATE TABLE user_auth_group_members(user_id INTEGER,group_id INTEGER);
+        INSERT INTO user_auth_group_members VALUES(13,1),(14,2);
+        CREATE TABLE user_auth_group_realm(group_id INTEGER,realm_id INTEGER);
+        INSERT INTO user_auth_group_realm VALUES(1,21),(2,21);");
 });
 
-describe('authorization decision logic', function () {
-	it('rejects zero user id', function () {
-		expect(decide_authorize(0, 10, 'reports', 5, false))->toBeFalse();
-	});
-
-	it('rejects negative user id', function () {
-		expect(decide_authorize(-1, 10, 'reports', 5, false))->toBeFalse();
-	});
-
-	it('rejects zero resource id', function () {
-		expect(decide_authorize(5, 0, 'reports', 5, false))->toBeFalse();
-	});
-
-	it('accepts owner of reports', function () {
-		expect(decide_authorize(5, 10, 'reports', 5, false))->toBeTrue();
-	});
-
-	it('rejects non-owner of reports', function () {
-		expect(decide_authorize(7, 10, 'reports', 5, false))->toBeFalse();
-	});
-
-	it('accepts owner of graph_tree', function () {
-		expect(decide_authorize(5, 10, 'graph_tree', 5, false))->toBeTrue();
-	});
-
-	it('rejects non-owner of graph_tree', function () {
-		expect(decide_authorize(99, 10, 'graph_tree', 5, false))->toBeFalse();
-	});
-
-	it('allows admin to bypass ownership', function () {
-		// User 99 is admin; owner is 5; admin wins.
-		expect(decide_authorize(99, 10, 'reports', 5, true))->toBeTrue();
-	});
-
-	it('allows user to modify own settings_user row', function () {
-		expect(decide_authorize(5, 5, 'settings_user', null, false))->toBeTrue();
-	});
-
-	it('rejects user modifying another user settings_user row', function () {
-		expect(decide_authorize(5, 7, 'settings_user', null, false))->toBeFalse();
-	});
-
-	it('fails closed for unknown resource types', function () {
-		expect(decide_authorize(5, 10, 'totally_unknown', 5, false))->toBeFalse();
-	});
-
-	it('rejects null owner (missing resource row) for non-admin', function () {
-		expect(decide_authorize(5, 10, 'reports', null, false))->toBeFalse();
-	});
-
-	it('rejects when owner is 0 (orphaned row) for non-admin', function () {
-		// Cast: (int) null === 0; owner === 0 but user >= 1, so unequal.
-		expect(decide_authorize(5, 10, 'reports', 0, false))->toBeFalse();
-	});
+afterAll(function () {
+    AuthorizationFixture::$database = null;
 });
 
-describe('IDOR attack scenarios', function () {
-	// Scenario: attacker is user 7, target is user 5's report id 42.
-	// Without this helper, report_edit.php accepts id=42 and updates.
-	// With this helper, the update is rejected.
+test('authorization uses production ownership and direct or enabled-group report realms', function (int $user, int $resource, string $type, bool $allowed) {
+    expect(cacti_authorize_resource($user, $resource, $type))->toBe($allowed);
+})->with([
+    'report owner' => [5, 42, 'reports', true],
+    'foreign report' => [7, 42, 'reports', false],
+    'missing report' => [5, 999, 'reports', false],
+    'orphan report' => [5, 43, 'reports', false],
+    'report administrator' => [12, 42, 'reports', true],
+    'enabled group report administrator' => [13, 42, 'reports', true],
+    'disabled group report administrator' => [14, 42, 'reports', false],
+    'report item owner' => [5, 80, 'report_item', true],
+    'foreign report item' => [7, 80, 'report_item', false],
+    'missing parent' => [5, 81, 'report_item', false],
+    'report item administrator' => [12, 80, 'report_item', true],
+    'enabled group item administrator' => [13, 80, 'report_item', true],
+    'disabled group item administrator' => [14, 80, 'report_item', false],
+    'tree owner' => [5, 42, 'graph_tree', true],
+    'foreign tree' => [7, 42, 'graph_tree', false],
+    'orphan tree' => [5, 43, 'graph_tree', false],
+    'report realm does not grant tree ownership' => [12, 42, 'graph_tree', false],
+    'own settings' => [5, 5, 'settings_user', true],
+    'foreign settings' => [5, 7, 'settings_user', false],
+    'unknown resource type' => [5, 42, 'unknown', false],
+    'system administrator' => [99, 42, 'reports', true],
+    'system administrator tree' => [99, 42, 'graph_tree', true],
+]);
 
-	it('blocks cross-user report modification', function () {
-		$attacker = 7;
-		$victim_report_id = 42;
-		$victim_user_id = 5;
+test('invalid identities are refused before any protected query', function (int $user, int $resource) {
+    $before = AuthorizationFixture::$queries;
+    expect(cacti_authorize_resource($user, $resource, 'reports'))->toBeFalse()
+        ->and(AuthorizationFixture::$queries)->toBe($before);
+})->with([[0, 42], [-1, 42], [5, 0], [5, -1], [99, 0]]);
 
-		expect(decide_authorize($attacker, $victim_report_id, 'reports', $victim_user_id, false))
-			->toBeFalse();
-	});
-
-	it('blocks cross-user graph_tree modification', function () {
-		expect(decide_authorize(7, 42, 'graph_tree', 5, false))->toBeFalse();
-	});
-
-	it('blocks enumeration attack via non-existent resource id', function () {
-		// Non-existent rows return null owner; must be false (don't leak existence).
-		expect(decide_authorize(7, 999999, 'reports', null, false))->toBeFalse();
-	});
+test('production administrator lookups are cached within the request', function () {
+    cacti_authorize_is_admin(99);
+    $before = AuthorizationFixture::$queries;
+    expect(cacti_authorize_is_admin(99))->toBeTrue()->and(AuthorizationFixture::$queries)->toBe($before);
 });
