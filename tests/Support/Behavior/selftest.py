@@ -1459,6 +1459,7 @@ def function_case_file_contract():
         rejects('record_sql_string', with_case(record_sql='yes'))
         rejects('record_tables_int', with_case(record_tables=1))
         rejects('mask_generated_string', with_case(mask_generated='yes'))
+        rejects('unordered_string', with_case(unordered='yes'))
         rejects('record_state_string', with_case(record_state='session'))
         rejects('record_state_empty_list', with_case(record_state=[]))
         rejects('record_state_unknown_area', with_case(record_state=['session', 'globals']))
@@ -1482,7 +1483,7 @@ def function_case_file_contract():
         (folder / 'a.json').write_text(json.dumps(with_case(
             prelude=[{'fn': 'f', 'args': [1]}, {'setting': {'k': None, 'j': 'v'}}], between=[{'fn': 'f'}],
             ambient={'settings': {'k': None}, 'config': {}, 'session': {}}, isolated=True, timeout=2,
-            record_sql=True, record_tables=True, record_state=['session', 'settings_user'], mask_generated=True)['a']))
+            record_sql=True, record_tables=True, record_state=['session', 'settings_user'], mask_generated=True, unordered=True)['a']))
         (folder / 'a.json').write_text(json.dumps({'function': 'a', 'cases': [dict(json.loads((folder / 'a.json').read_text())['cases'][0],
             prelude=[{'sql': 'INSERT INTO t VALUES (?)', 'params': [1]}, {'request': {'a': 1, 'b': [1]}}], record_state=True)]}))
         assert list(harness.load_function_cases(folder)) == ['a']

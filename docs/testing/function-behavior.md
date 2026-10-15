@@ -105,6 +105,7 @@ One JSON file per function, named after it:
 | `record_sql` | `true` records the prepared statements the first call ran as `result.sql`. They are noted by a statement class set on the application's PDO connection, so `lib/database.php` is untouched. A connection opened persistently cannot take one; use a non-persistent instance. |
 | `record_tables` | `true` records the row changes the first call made to `settings` and `settings_user`. |
 | `record_state` | `true` watches the session and `$config`; a list of `session`, `config` and `settings_user` chooses the areas. |
+| `unordered` | `true` sorts a returned list by its encoded form before it is recorded, for a result whose order the function's SQL leaves to the engine. Use it only for a tie on the `ORDER BY` key; an ordering the function promises belongs in the golden. |
 | `mask_generated` | `true` for a function that returns a freshly generated 32 digit hex hash when it finds none. If the two calls return different hashes, both are written as `<generated 32 hex>`. A stored hash is the same both times and is kept. |
 
 Effects are recorded for the first call only. The repeat is compared on what it

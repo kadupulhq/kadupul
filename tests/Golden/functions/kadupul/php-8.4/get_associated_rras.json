@@ -307,7 +307,7 @@
     {
       "args": [0],
       "id": "id_zero_template_rows",
-      "note": "items of no graph: the LEFT JOIN yields one row of NULLs",
+      "note": "items of no graph: the LEFT JOIN yields rows of NULLs that tie on the sort key, so their order is the engine's",
       "result": {
         "returned": {
           "type": "array",
