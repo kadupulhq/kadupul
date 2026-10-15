@@ -86,6 +86,7 @@ cmd_exec	./snmpagent_persist.php:66	    pclose(popen('start "CactiSNMPCache" /I 
 cmd_exec	./snmpagent_persist.php:68	    exec('ps -ef | grep -v grep | grep -v "sh -c" | grep snmpagent_mibcache.php', $output);
 cmd_exec	./snmpagent_persist.php:70	        exec($php . ' ' . $extra_args . ' > /dev/null &');
 cmd_exec	./src/Graphing/Infrastructure/Rrd/LocalRrdtool.php:27	        $process = proc_open(array(read_config_option('path_rrdtool'), '-'), $descriptors, $streams);
+cmd_exec	./src/Platform/Infrastructure/Legacy/Dbal/SharedPdoConnection.php:65	    public function exec(string $sql): int|string
 cmd_exec	./src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php:35	            exec($commandLine, $lines, $status);
 cmd_exec	./utilities.php:219	                exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')), $out_array);
 cmd_exec	./utilities.php:237	            $snmp_version = shell_exec(cacti_escapeshellcmd(read_config_option('path_snmpget')) . ' -V 2>&1');

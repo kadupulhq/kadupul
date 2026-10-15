@@ -13,6 +13,7 @@
       <file>./integration/DeviceQueryConnectionDatabaseTest.php</file>
       <file>./integration/DeviceCollectorWorkerDatabaseTest.php</file>
       <file>./integration/PlacementTransactionDatabaseTest.php</file>
+      <file>integration/LegacyDbalConnectionDatabaseTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

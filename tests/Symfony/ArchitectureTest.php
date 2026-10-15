@@ -196,6 +196,25 @@ final class ArchitectureTest extends TestCase
     }
 
     /**
+     * DBAL on the legacy session carries the legacy writer's privileges.
+     * Symfony-native code keeps its ConnectionTarget connections, so only the
+     * bridge itself may name it until a legacy wrapper is reviewed in here.
+     */
+    public function testOnlyTheLegacyBridgeRunsDbalOnTheLegacySession(): void
+    {
+        $this->assertOnlyTheseFilesName([
+            'SharedPdoDriver' => [
+                'src/Platform/Infrastructure/Legacy/Dbal/LegacyDatabaseConnection.php',
+                'src/Platform/Infrastructure/Legacy/Dbal/SharedPdoDriver.php',
+            ],
+            'LegacyDatabaseConnection' => [
+                'src/Platform/Infrastructure/Legacy/Dbal/LegacyDatabaseCall.php',
+                'src/Platform/Infrastructure/Legacy/Dbal/LegacyDatabaseConnection.php',
+            ],
+        ]);
+    }
+
+    /**
      * Fails unless each class's short name appears, as a whole word, in
      * exactly the listed files outside tests and dependencies.
      *
