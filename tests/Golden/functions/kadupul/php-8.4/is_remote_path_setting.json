@@ -1,0 +1,102 @@
+{
+  "cases": [
+    {
+      "ambient": {"config": {"poller_id": 1}},
+      "args": ["path_rrdtool"],
+      "id": "poller_1_path_prefix",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "ambient": {"config": {"poller_id": 2}},
+      "args": ["path_rrdtool"],
+      "id": "poller_2_path_prefix",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "ambient": {"config": {"poller_id": 2}},
+      "args": ["rrd_path"],
+      "id": "poller_2_path_suffix",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "ambient": {"config": {"poller_id": 2}},
+      "args": ["pathrrd"],
+      "id": "poller_2_no_underscore",
+      "note": "path without the underscore does not match",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "ambient": {"config": {"poller_id": 2}},
+      "args": [null],
+      "id": "poller_2_null_name",
+      "note": "str_contains(null) is deprecated",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 2,
+            "file": "lib/functions.php",
+            "message": "str_contains(): Passing null to parameter #1 ($haystack) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "ambient": {"config": {"poller_id": 2}},
+      "args": [["path_x"]],
+      "id": "poller_2_array_name",
+      "note": "TypeError",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "str_contains(): Argument #1 ($haystack) must be of type string, array given"
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"poller_id": 1}},
+      "args": ["path_x"],
+      "id": "poller_id_boundary_one",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "ambient": {"config": {"poller_id": "10"}},
+      "args": ["path_x"],
+      "id": "poller_id_string_ten",
+      "note": "numeric strings compare as numbers",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "ambient": {"config": {"poller_id": "abc"}},
+      "args": ["path_x"],
+      "id": "poller_id_text",
+      "note": "\"abc\" > 1 compares as strings in PHP 8",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "ambient": {"config": []},
+      "args": ["path_x"],
+      "id": "poller_id_missing",
+      "note": "the key is absent from $config",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [],
+      "id": "no_arguments",
+      "result": {
+        "exception": {
+          "class": "ArgumentCountError",
+          "code": 0,
+          "message": "Too few arguments to function is_remote_path_setting(), 0 passed in <caller> and exactly 1 expected"
+        }
+      }
+    }
+  ],
+  "function": "is_remote_path_setting",
+  "signature": [
+    {"by_ref": false, "name": "config_name", "optional": false, "type": null, "variadic": false}
+  ]
+}

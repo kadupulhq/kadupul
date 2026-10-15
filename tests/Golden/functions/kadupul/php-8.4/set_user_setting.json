@@ -1,0 +1,264 @@
+{
+  "cases": [
+    {
+      "args": ["fncdb_pref", "v", 1],
+      "id": "insert_for_user",
+      "note": "row added; the session cache is dropped; $settings_user gains an entry",
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "INSERT INTO settings_user (user_id, name, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [1,\"fncdb_pref\",\"v\"]"
+        ],
+        "state": ["set settings_user.fncdb_pref = {\"$\":\"array\",\"pairs\":[[\"value\",\"v\"]]}"],
+        "table_diff": ["+ settings_user {\"name\":\"fncdb_pref\",\"user_id\":1,\"value\":\"v\"}"]
+      }
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["fncdb_pref", "v"],
+      "id": "insert_uses_session_user",
+      "note": "user -1 and a session user: that user",
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "INSERT INTO settings_user (user_id, name, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [1,\"fncdb_pref\",\"v\"]"
+        ],
+        "state": ["set settings_user.fncdb_pref = {\"$\":\"array\",\"pairs\":[[\"value\",\"v\"]]}"],
+        "table_diff": ["+ settings_user {\"name\":\"fncdb_pref\",\"user_id\":1,\"value\":\"v\"}"]
+      }
+    },
+    {
+      "ambient": {
+        "session": {
+          "sess_user_config_array": {"$": "array", "pairs": [["fncdb_pref", "cached"]]},
+          "sess_user_id": 1
+        }
+      },
+      "args": ["fncdb_pref", "v", 1],
+      "id": "clears_session_cache",
+      "note": "sess_user_config_array is unset",
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "INSERT INTO settings_user (user_id, name, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [1,\"fncdb_pref\",\"v\"]"
+        ],
+        "state": [
+          "unset session.sess_user_config_array",
+          "set settings_user.fncdb_pref = {\"$\":\"array\",\"pairs\":[[\"value\",\"v\"]]}"
+        ],
+        "table_diff": ["+ settings_user {\"name\":\"fncdb_pref\",\"user_id\":1,\"value\":\"v\"}"]
+      }
+    },
+    {
+      "args": ["auth_credential_generation", "9", 1],
+      "id": "credential_generation_is_refused",
+      "note": "handled elsewhere: no query",
+      "result": {"returned": {"type": "null", "value": null}, "sql": []}
+    },
+    {
+      "args": ["fncdb_pref", "v"],
+      "id": "no_user_cli",
+      "note": "user -1 and no session: the note is below the default log verbosity, so nothing is logged and nothing is written",
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"selective_debug\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ],
+        "state": [
+          "set config.config_options_array.selective_debug = \"\"",
+          "set config.config_options_array.log_verbosity = 2"
+        ]
+      }
+    },
+    {
+      "ambient": {"session": {"sess_user_id": -1}},
+      "args": ["fncdb_pref", "v"],
+      "id": "no_user_session_minus_one",
+      "note": "a session user of -1 keeps user -1: the web branch of the note",
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"selective_debug\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ],
+        "state": [
+          "set config.config_options_array.selective_debug = \"\"",
+          "set config.config_options_array.log_verbosity = 2"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", "v", true],
+      "id": "user_true",
+      "note": "true == -1 is true in PHP, so this takes the no-user branch",
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"selective_debug\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ],
+        "state": [
+          "set config.config_options_array.selective_debug = \"\"",
+          "set config.config_options_array.log_verbosity = 2"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", "v", null],
+      "id": "user_null",
+      "note": "null == -1 is false: the insert is refused and the failure is not reported",
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "INSERT INTO settings_user (user_id, name, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [null,\"fncdb_pref\",\"v\"] !! 23000 1048 Column 'user_id' cannot be null"
+        ],
+        "state": ["set settings_user.fncdb_pref = {\"$\":\"array\",\"pairs\":[[\"value\",\"v\"]]}"]
+      }
+    },
+    {
+      "args": ["fncdb_pref", "v", "abc"],
+      "id": "user_text",
+      "note": "\"abc\" is not -1; the column coerces it and the row is written for user 0",
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "INSERT INTO settings_user (user_id, name, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [\"abc\",\"fncdb_pref\",\"v\"]"
+        ],
+        "state": ["set settings_user.fncdb_pref = {\"$\":\"array\",\"pairs\":[[\"value\",\"v\"]]}"],
+        "table_diff": ["+ settings_user {\"name\":\"fncdb_pref\",\"user_id\":0,\"value\":\"v\"}"]
+      }
+    },
+    {
+      "args": ["fncdb_pref", null, 1],
+      "id": "value_null",
+      "note": "NOT NULL: refused, and the failure is not reported to the caller; the definition array still gets the null",
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "INSERT INTO settings_user (user_id, name, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [1,\"fncdb_pref\",null] !! 23000 1048 Column 'value' cannot be null"
+        ],
+        "state": ["set settings_user.fncdb_pref = {\"$\":\"array\",\"pairs\":[[\"value\",null]]}"]
+      }
+    },
+    {
+      "args": ["fncdb_pref", ["a"], 1],
+      "id": "value_array",
+      "note": "array to string conversion inside PDO",
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "INSERT INTO settings_user (user_id, name, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [1,\"fncdb_pref\",[\"a\"]] !! Exception: Array to string conversion"
+        ],
+        "state": [
+          "set settings_user.fncdb_pref = {\"$\":\"array\",\"pairs\":[[\"value\",[\"a\"]]]}"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", {"$": "bytes", "hex": "c328ff"}, 1],
+      "id": "value_invalid_utf8",
+      "note": "invalid UTF-8 is stored as substitute characters, not refused",
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "INSERT INTO settings_user (user_id, name, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [1,\"fncdb_pref\",{\"$\":\"bytes\",\"hex\":\"c328ff\"}]"
+        ],
+        "state": [
+          "set settings_user.fncdb_pref = {\"$\":\"array\",\"pairs\":[[\"value\",{\"$\":\"bytes\",\"hex\":\"c328ff\"}]]}"
+        ],
+        "table_diff": ["+ settings_user {\"name\":\"fncdb_pref\",\"user_id\":1,\"value\":\"?(?\"}"]
+      }
+    },
+    {
+      "args": ["fncdb_pref", {"$": "repeat", "count": 4097, "unit": "v"}, 1],
+      "id": "value_4097_bytes",
+      "note": "one byte over the column: the stored value is cut to 4096 and the call still succeeds, while the definition array keeps all 4097",
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "INSERT INTO settings_user (user_id, name, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [1,\"fncdb_pref\",{\"$\":\"long\",\"bytes\":4097,\"head_hex\":\"7676767676767676767676767676767676767676767676767676767676767676\",\"sha256\":\"5b917f3c0c9b092dc2139b169b6369e37b8f75b56ed928281fad1c3cf510bf4f\"}]"
+        ],
+        "state": [
+          "set settings_user.fncdb_pref = {\"$\":\"array\",\"pairs\":[[\"value\",{\"$\":\"long\",\"bytes\":4097,\"head_hex\":\"7676767676767676767676767676767676767676767676767676767676767676\",\"sha256\":\"5b917f3c0c9b092dc2139b169b6369e37b8f75b56ed928281fad1c3cf510bf4f\"}]]}"
+        ],
+        "table_diff": [
+          "+ settings_user {\"name\":\"fncdb_pref\",\"user_id\":1,\"value\":{\"$\":\"long\",\"bytes\":4096,\"head_hex\":\"7676767676767676767676767676767676767676767676767676767676767676\",\"sha256\":\"0c6340d0ceddb2aa6757efab90aea89460950e169c900908d058d53560b4df28\"}}"
+        ]
+      }
+    },
+    {
+      "args": ["FNCDB_PREF", "new", 1],
+      "id": "name_case_variant_updates_row",
+      "note": "same row by collation",
+      "prelude": ["INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'old')"],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "INSERT INTO settings_user (user_id, name, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [1,\"FNCDB_PREF\",\"new\"]"
+        ],
+        "state": [
+          "set settings_user.FNCDB_PREF = {\"$\":\"array\",\"pairs\":[[\"value\",\"new\"]]}"
+        ],
+        "table_diff": [
+          "- settings_user {\"name\":\"fncdb_pref\",\"user_id\":1,\"value\":\"old\"}",
+          "+ settings_user {\"name\":\"fncdb_pref\",\"user_id\":1,\"value\":\"new\"}"
+        ]
+      }
+    },
+    {
+      "args": [{"$": "repeat", "count": 256, "unit": "n"}, "v", 1],
+      "id": "name_256_bytes",
+      "note": "logged as too long",
+      "result": {
+        "log": [
+          "<TIMESTAMP> - SYSTEM ERROR: User setting name 'nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn' is too long, will be truncated"
+        ],
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"selective_debug\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]",
+          "INSERT INTO settings_user (user_id, name, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [1,{\"$\":\"long\",\"bytes\":256,\"head_hex\":\"6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e\",\"sha256\":\"342aaaf5a0fcb18cba413f00ff46ffc9bcaa496b545e0998a81056cc7bec6aea\"},\"v\"]"
+        ],
+        "state": [
+          "set config.config_options_array.selective_debug = \"\"",
+          "set config.config_options_array.client_timezone_support = \"0\"",
+          "set config.config_options_array.log_destination = 1",
+          "set config.config_options_array.log_verbosity = 2",
+          "set settings_user.nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn = {\"$\":\"array\",\"pairs\":[[\"value\",\"v\"]]}"
+        ],
+        "table_diff": [
+          "+ settings_user {\"name\":{\"$\":\"long\",\"bytes\":255,\"head_hex\":\"6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e\",\"sha256\":\"3bb555e4ed3e8c6e1818a52c8917ddaa25e9333eeb43a22a9890047c3ded92cc\"},\"user_id\":1,\"value\":\"v\"}"
+        ]
+      }
+    },
+    {
+      "args": ["general", "v", 1],
+      "id": "name_collides_with_settings_tab",
+      "note": "$settings_user[\"general\"][\"value\"] is written into the tab definition",
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "INSERT INTO settings_user (user_id, name, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [1,\"general\",\"v\"]"
+        ],
+        "state": ["set settings_user.general.value = \"v\""],
+        "table_diff": ["+ settings_user {\"name\":\"general\",\"user_id\":1,\"value\":\"v\"}"]
+      }
+    }
+  ],
+  "function": "set_user_setting",
+  "signature": [
+    {"by_ref": false, "name": "config_name", "optional": false, "type": null, "variadic": false},
+    {"by_ref": false, "name": "value", "optional": false, "type": null, "variadic": false},
+    {
+      "by_ref": false,
+      "default": -1,
+      "name": "user",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    }
+  ]
+}

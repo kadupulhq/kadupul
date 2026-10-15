@@ -1,0 +1,19 @@
+{
+  "function": "set_config_option",
+  "cases": [
+    {"record_sql": true, "record_state": true, "record_tables": true, "id": "insert_new", "args": ["fncdb_new", "alpha"], "note": "new row; the process cache is primed"},
+    {"record_sql": true, "record_state": true, "record_tables": true, "id": "update_existing", "args": ["poller_interval", "60"], "note": "ON DUPLICATE KEY UPDATE; the old value is replaced"},
+    {"record_sql": true, "record_state": true, "record_tables": true, "id": "invalid_utf8_value", "args": ["fncdb_new", {"$": "bytes", "hex": "c328ff"}], "note": "stored with substitute characters; the cache keeps the original bytes"},
+    {"record_sql": true, "record_state": true, "record_tables": true, "id": "long_value_too_long", "args": ["fncdb_new", {"$": "repeat", "unit": "v", "count": 4097}], "note": "one byte over: the stored value is cut to 4096 and the call still returns true"},
+    {"record_sql": true, "record_state": true, "record_tables": true, "id": "null_value", "args": ["fncdb_new", null], "note": "value is NOT NULL: refused, false"},
+    {"record_sql": true, "record_state": true, "record_tables": true, "id": "name_case_variant_updates_existing_row", "args": ["POLLER_INTERVAL", "61"], "note": "the collation treats the names as equal, so the existing row is updated and keeps its own case"},
+    {"record_sql": true, "record_state": true, "record_tables": true, "id": "name_256_bytes", "args": [{"$": "repeat", "unit": "n", "count": 300}, "v"], "note": "logged as too long; the stored name is cut to 255 bytes and the call still returns true"},
+    {"record_sql": true, "record_state": true, "record_tables": true, "id": "web_session_cache", "args": ["fncdb_new", "alpha"], "note": "is_web: the value goes to $_SESSION", "ambient": {"config": {"is_web": true}}},
+    {"record_sql": true, "record_state": true, "record_tables": true, "id": "cli_cache_replaces_non_array", "args": ["fncdb_new", "alpha"], "ambient": {"config": {"config_options_array": "oops"}}},
+    {"record_sql": true, "record_state": true, "record_tables": true, "id": "debug_flag_appends_to_a_file", "args": ["fncdb_new", "alpha"], "note": "DEBUG_SET_CONFIG_OPTION writes a line to the temp directory; the return value is unchanged", "ambient": {"config": {"DEBUG_SET_CONFIG_OPTION": true}}},
+    {"record_sql": true, "record_state": true, "record_tables": true, "id": "remote_without_collectors", "args": ["fncdb_new", "alpha", true], "note": "remote=true with only the main poller: no collector writes", "isolated": true},
+    {"record_sql": true, "record_state": true, "record_tables": true, "id": "remote_path_setting_on_collector_skips_push", "args": ["path_fncdb", "x", true], "note": "is_remote_path_setting is true: collectors are not contacted", "isolated": true, "ambient": {"config": {"poller_id": 2}}, "prelude": [{"sql": "INSERT INTO poller (id, dbhost, last_status) VALUES (2, 'localhost', NOW())"}]},
+    {"record_sql": true, "record_state": true, "record_tables": true, "id": "remote_collector_heartbeat_stale", "args": ["fncdb_new", "alpha", true], "note": "a collector with an old heartbeat is skipped: local write done, result false, warning queued", "isolated": true, "prelude": [{"sql": "INSERT INTO poller (id, dbhost, last_status) VALUES (2, 'localhost', '2000-01-01 00:00:00')"}]},
+    {"record_sql": true, "record_state": true, "record_tables": true, "id": "remote_collector_unreachable", "args": ["fncdb_new", "alpha", true], "note": "fresh heartbeat but the connect helper refuses a loopback host: error queued, result false", "isolated": true, "prelude": [{"sql": "INSERT INTO poller (id, dbhost, last_status) VALUES (2, 'localhost', NOW())"}]}
+  ]
+}

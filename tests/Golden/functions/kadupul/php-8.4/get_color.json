@@ -1,0 +1,80 @@
+{
+  "cases": [
+    {
+      "args": [1],
+      "id": "present_black",
+      "result": {
+        "returned": {"type": "string", "value": "000000"},
+        "sql": ["SELECT hex FROM colors WHERE id = ? -- [1]"]
+      }
+    },
+    {
+      "args": [999999],
+      "id": "absent",
+      "note": "no row: false",
+      "result": {
+        "returned": {"type": "bool", "value": false},
+        "sql": ["SELECT hex FROM colors WHERE id = ? -- [999999]"]
+      }
+    },
+    {
+      "args": [1],
+      "id": "hex_empty",
+      "prelude": ["UPDATE colors SET hex = '' WHERE id = 1"],
+      "result": {
+        "returned": {"type": "string", "value": ""},
+        "sql": ["SELECT hex FROM colors WHERE id = ? -- [1]"]
+      }
+    },
+    {
+      "args": [],
+      "id": "no_arguments",
+      "result": {
+        "exception": {
+          "class": "ArgumentCountError",
+          "code": 0,
+          "message": "Too few arguments to function get_color(), 0 passed in <caller> and exactly 1 expected"
+        },
+        "sql": []
+      }
+    },
+    {
+      "args": ["1abc"],
+      "id": "id_trailing_text",
+      "result": {
+        "returned": {"type": "string", "value": "000000"},
+        "sql": ["SELECT hex FROM colors WHERE id = ? -- [\"1abc\"]"]
+      }
+    },
+    {
+      "args": [null],
+      "id": "id_null",
+      "result": {
+        "returned": {"type": "bool", "value": false},
+        "sql": ["SELECT hex FROM colors WHERE id = ? -- [null]"]
+      }
+    },
+    {
+      "args": ["abc"],
+      "id": "id_text",
+      "result": {
+        "returned": {"type": "bool", "value": false},
+        "sql": ["SELECT hex FROM colors WHERE id = ? -- [\"abc\"]"]
+      }
+    },
+    {
+      "args": [[1]],
+      "id": "id_array",
+      "result": {
+        "returned": {"type": "bool", "value": false},
+        "sql": [
+          "SELECT hex FROM colors WHERE id = ? -- [[1]] !! Exception: Array to string conversion"
+        ]
+      }
+    }
+  ],
+  "function": "get_color",
+  "signature": [
+    {"by_ref": false, "name": "color_id", "optional": false, "type": null, "variadic": false}
+  ]
+}

@@ -1,0 +1,372 @@
+{
+  "cases": [
+    {
+      "args": [{"$": "array", "pairs": [["method", "checkbox"]]}, ["on"]],
+      "id": "non_scalar_array",
+      "note": "arrays are refused before anything else",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [{"$": "array", "pairs": [["method", "checkbox"]]}, 0],
+      "id": "scalar_int_cast",
+      "note": "ints are cast to strings: \"0\" is neither on nor empty",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [{"$": "array", "pairs": [["method", "checkbox"]]}, false],
+      "id": "scalar_false_is_empty_string",
+      "note": "false casts to \"\" and passes as an unchecked box",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [{"$": "array", "pairs": [["method", "nonsense"], ["default", "x"]]}, "x"],
+      "id": "equals_default_short_circuit",
+      "note": "the default always passes, whatever the method",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [{"$": "array", "pairs": [["method", "nonsense"], ["default", null]]}, ""],
+      "id": "default_null_is_not_a_default",
+      "note": "isset() is false for null",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [{"$": "array", "pairs": []}, "x"],
+      "id": "method_missing",
+      "note": "no method: refused",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [{"$": "array", "pairs": [["method", "nonsense"]]}, "x"],
+      "id": "method_unknown",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [{"$": "array", "pairs": [["method", "checkbox"]]}, "on"],
+      "id": "checkbox_on",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [{"$": "array", "pairs": [["method", "checkbox"]]}, ""],
+      "id": "checkbox_empty",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [
+        {
+          "$": "array",
+          "pairs": [
+            ["method", "drop_array"],
+            [
+              "array",
+              {"$": "array", "pairs": [["a", "Alpha"], ["1", "One"], ["0", "Zero"], ["", "Blank"]]}
+            ]
+          ]
+        },
+        "a"
+      ],
+      "id": "drop_array_key_present",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [
+        {
+          "$": "array",
+          "pairs": [
+            ["method", "drop_array"],
+            [
+              "array",
+              {"$": "array", "pairs": [["a", "Alpha"], ["1", "One"], ["0", "Zero"], ["", "Blank"]]}
+            ]
+          ]
+        },
+        "b"
+      ],
+      "id": "drop_array_key_absent",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [
+        {
+          "$": "array",
+          "pairs": [
+            ["method", "drop_array"],
+            [
+              "array",
+              {"$": "array", "pairs": [["a", "Alpha"], ["1", "One"], ["0", "Zero"], ["", "Blank"]]}
+            ]
+          ]
+        },
+        "1"
+      ],
+      "id": "drop_array_int_key_as_text",
+      "note": "numeric keys are ints; array_key_exists(\"1\") finds them",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [
+        {
+          "$": "array",
+          "pairs": [
+            ["method", "drop_sql"],
+            ["sql", "SELECT id, name FROM data_source_profiles_rra ORDER BY steps"]
+          ]
+        },
+        "1"
+      ],
+      "id": "drop_sql_id_found",
+      "result": {
+        "returned": {"type": "bool", "value": true},
+        "sql": ["SELECT id, name FROM data_source_profiles_rra ORDER BY steps"]
+      }
+    },
+    {
+      "args": [
+        {
+          "$": "array",
+          "pairs": [
+            ["method", "drop_sql"],
+            ["sql", "SELECT id, name FROM data_source_profiles_rra ORDER BY steps"]
+          ]
+        },
+        "999"
+      ],
+      "id": "drop_sql_id_missing",
+      "result": {
+        "returned": {"type": "bool", "value": false},
+        "sql": ["SELECT id, name FROM data_source_profiles_rra ORDER BY steps"]
+      }
+    },
+    {
+      "args": [{"$": "array", "pairs": [["method", "drop_sql"]]}, "1"],
+      "id": "drop_sql_missing_sql",
+      "note": "undefined key sql",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Undefined array key \"sql\"",
+            "severity": "E_WARNING",
+            "suppressed": false
+          },
+          {
+            "count": 1,
+            "file": "lib/database.php",
+            "message": "trim(): Passing null to parameter #1 ($string) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "exception": {
+          "class": "ValueError",
+          "code": 0,
+          "message": "PDO::prepare(): Argument #1 ($query) must not be empty"
+        },
+        "sql": []
+      }
+    },
+    {
+      "args": [
+        {"$": "array", "pairs": [["method", "drop_sql"], ["sql", "SELECT nothing FROM nowhere"]]},
+        "1"
+      ],
+      "id": "drop_sql_bad_sql",
+      "note": "the database error is swallowed and the loop sees no rows",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "foreach() argument must be of type array|object, false given",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "bool", "value": false},
+        "sql": ["SELECT nothing FROM nowhere !! 42S02 1146 Table 'cacti.nowhere' doesn't exist"]
+      }
+    },
+    {
+      "args": [
+        {
+          "$": "array",
+          "pairs": [
+            ["method", "drop_callback"],
+            ["none_value", "None"],
+            ["sql", "SELECT id FROM data_source_profiles_rra"]
+          ]
+        },
+        "0"
+      ],
+      "id": "drop_callback_none_value",
+      "note": "none_value set and \"0\": accepted without a query",
+      "result": {"returned": {"type": "bool", "value": true}, "sql": []}
+    },
+    {
+      "args": [
+        {
+          "$": "array",
+          "pairs": [
+            ["method", "radio"],
+            [
+              "items",
+              {
+                "$": "array",
+                "pairs": [
+                  ["0", {"$": "array", "pairs": [["radio_value", "a"]]}],
+                  ["1", {"$": "array", "pairs": [["radio_value", 2]]}]
+                ]
+              }
+            ]
+          ]
+        },
+        "a"
+      ],
+      "id": "radio_found",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [
+        {
+          "$": "array",
+          "pairs": [
+            ["method", "radio"],
+            [
+              "items",
+              {"$": "array", "pairs": [["0", {"$": "array", "pairs": [["radio_value", "a"]]}]]}
+            ]
+          ]
+        },
+        "b"
+      ],
+      "id": "radio_missing",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [
+        {"$": "array", "pairs": [["method", "drop_files"], ["directory", "include/themes"]]},
+        "classic"
+      ],
+      "id": "drop_files_file_present",
+      "note": "relative to the application directory",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [
+        {"$": "array", "pairs": [["method", "drop_files"], ["directory", "include/themes"]]},
+        "nonexistent"
+      ],
+      "id": "drop_files_not_a_file",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [
+        {
+          "$": "array",
+          "pairs": [
+            ["method", "drop_files"],
+            ["directory", "include/themes"],
+            ["exclusions", ["classic"]]
+          ]
+        },
+        "classic"
+      ],
+      "id": "drop_files_excluded",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [
+        {
+          "$": "array",
+          "pairs": [
+            ["method", "drop_files"],
+            ["directory", "include/themes"],
+            ["exclusions", ["dark"]]
+          ]
+        },
+        "classic"
+      ],
+      "id": "drop_files_exclusions_not_matching",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [{"$": "array", "pairs": [["method", "drop_files"]]}, "classic"],
+      "id": "drop_files_no_directory",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [
+        {"$": "array", "pairs": [["method", "textbox_password"], ["max_length", 5]]},
+        "abcde"
+      ],
+      "id": "textbox_password_within_max",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [
+        {"$": "array", "pairs": [["method", "textbox_password"], ["max_length", 5]]},
+        "abcdef"
+      ],
+      "id": "textbox_password_over_max",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [{"$": "array", "pairs": [["method", "textbox"]]}, "Plain text 123"],
+      "id": "textbox_plain",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [{"$": "array", "pairs": [["method", "textbox"]]}, "Ünï 設備 ✓"],
+      "id": "textbox_multibyte",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [{"$": "array", "pairs": [["method", "textbox"]]}, "a<b"],
+      "id": "textbox_lt",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [{"$": "array", "pairs": [["method", "textbox"]]}, {"$": "bytes", "hex": "610062"}],
+      "id": "textbox_nul",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [{"$": "array", "pairs": [["method", "textbox"], ["max_length", 3]]}, "abcd"],
+      "id": "textbox_max_length_boundary_over",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [{"$": "array", "pairs": [["method", "textbox"], ["default", "100"]]}, "250"],
+      "id": "textbox_numeric_default_accepts_number",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [{"$": "array", "pairs": [["method", "textbox"], ["default", "100"]]}, "abc"],
+      "id": "textbox_numeric_default_rejects_text",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [{"$": "array", "pairs": [["method", "textbox"], ["default", "100"]]}, "1e3"],
+      "id": "textbox_numeric_default_accepts_exponent",
+      "note": "is_numeric accepts exponent notation",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [{"$": "array", "pairs": [["method", "textbox"], ["default", "100"]]}, "5 "],
+      "id": "textbox_numeric_default_rejects_trailing_space",
+      "note": "PHP 8 allows trailing whitespace in numeric strings",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [{"$": "array", "pairs": [["method", "font"], ["default", "Arial"]]}, "DejaVu Sans"],
+      "id": "font_plain",
+      "result": {"returned": {"type": "bool", "value": true}}
+    }
+  ],
+  "function": "user_setting_value_allowed",
+  "signature": [
+    {"by_ref": false, "name": "field_array", "optional": false, "type": null, "variadic": false},
+    {"by_ref": false, "name": "value", "optional": false, "type": null, "variadic": false}
+  ]
+}

@@ -1032,7 +1032,7 @@ def compare(args):
 
 FUNCTION_CASES = Path(__file__).resolve().with_name('function_cases')
 FUNCTION_GOLDENS = CONTROLLER_ROOT / 'tests/Golden/functions'
-FUNCTION_CASE_KEYS = frozenset(['id', 'args', 'ambient', 'prelude', 'between', 'isolated', 'timeout', 'note'])
+FUNCTION_CASE_KEYS = frozenset(['id', 'args', 'ambient', 'prelude', 'between', 'isolated', 'timeout', 'note', 'record_sql', 'record_tables', 'record_state', 'mask_generated'])
 FUNCTION_AMBIENT_KEYS = frozenset(['settings', 'config', 'session'])
 # Fields that echo what the author wrote. normalize() rewrites paths and clock
 # shapes, which would silently edit an input such as a path under /var/www/html.
@@ -1062,6 +1062,13 @@ def validate_function_steps(where, steps):
             for key, value in values.items():
                 if value is not None and not isinstance(value, str):
                     raise RuntimeError(f'{where}: setting {key} must be a string or null')
+        elif 'request' in step:
+            if set(step) != {'request'} or not isinstance(step['request'], dict) or not step['request']:
+                raise RuntimeError(f'{where}: a request step is exactly {{"request": {{name: value}}}}')
+        elif 'sql' in step:
+            extra = set(step) - {'sql', 'params'}
+            if extra or not isinstance(step['sql'], str) or not step['sql'].strip() or not isinstance(step.get('params', []), list):
+                raise RuntimeError(f'{where}: an sql step is {{"sql": text, "params": [...]}}')
         elif isinstance(step.get('fn'), str) and step['fn']:
             extra = set(step) - {'fn', 'args'}
             if extra:
@@ -1069,7 +1076,7 @@ def validate_function_steps(where, steps):
             if not isinstance(step.get('args', []), list):
                 raise RuntimeError(f'{where}: step args must be a list')
         else:
-            raise RuntimeError(f'{where}: a step needs "setting" or a string "fn"')
+            raise RuntimeError(f'{where}: a step needs "setting", "sql", "request" or a string "fn"')
 
 
 def load_function_cases(directory, only=None):
@@ -1125,8 +1132,12 @@ def load_function_cases(directory, only=None):
             for key in ('prelude', 'between'):
                 if key in case:
                     validate_function_steps(f'{where}: {key}', case[key])
-            if 'isolated' in case and not isinstance(case['isolated'], bool):
-                raise RuntimeError(f'{where}: isolated must be true or false')
+            state = case.get('record_state', False)
+            if not (isinstance(state, bool) or (isinstance(state, list) and state and set(state) <= {'session', 'config', 'settings_user'})):
+                raise RuntimeError(f'{where}: record_state must be true, false or a list of session, config, settings_user')
+            for flag in ('isolated', 'record_sql', 'record_tables', 'mask_generated'):
+                if flag in case and not isinstance(case[flag], bool):
+                    raise RuntimeError(f'{where}: {flag} must be true or false')
             timeout = case.get('timeout')
             if 'timeout' in case and (isinstance(timeout, bool) or not isinstance(timeout, int) or timeout <= 0):
                 raise RuntimeError(f'{where}: timeout must be a positive whole number of seconds')
@@ -1190,10 +1201,12 @@ def normalize_function_record(record):
     The exemption is by position, not by name: a by-reference parameter called
     `id` or `args` sits deeper in the case and must still be normalized.
     """
-    out = {k: normalize_function_tree(v) for k, v in record.items() if k != 'cases'}
-    out['cases'] = [{k: v if k in FUNCTION_INPUT_KEYS else normalize_function_tree(v) for k, v in case.items()}
+    out = summarize_large({k: normalize_function_tree(v) for k, v in record.items() if k != 'cases'})
+    # The case list is the record itself, however many cases a function has;
+    # only what is inside a case is summarized.
+    out['cases'] = [summarize_large({k: v if k in FUNCTION_INPUT_KEYS else normalize_function_tree(v) for k, v in case.items()})
                     for case in record['cases']]
-    return summarize_large(out)
+    return out
 
 
 FUNCTION_SUMMARY_THRESHOLD = 64
@@ -1262,6 +1275,7 @@ def write_function_json(path, value):
 
 FUNCTION_CASE_DEFAULTS = {'note': '', 'warm': {'same': True}}
 FUNCTION_RESULT_DEFAULTS = {'diagnostics': [], 'log': [], 'output': ''}
+FUNCTION_EFFECT_KEYS = frozenset(['sql', 'sql_truncated', 'table_diff', 'state'])
 
 
 def strip_function_defaults(record):
@@ -1278,7 +1292,14 @@ def strip_function_defaults(record):
     for case in record['cases']:
         case = keep(case, FUNCTION_CASE_DEFAULTS)
         if isinstance(case.get('result'), dict):
+            recorded_effects = FUNCTION_EFFECT_KEYS & set(case['result'])
             case['result'] = keep(case['result'], FUNCTION_RESULT_DEFAULTS)
+            # A warm result is spelled out in full in older goldens, which stay as
+            # they are. One that follows a result with recorded effects is
+            # stripped like any other result, because those cases repeat it often.
+            warm = case.get('warm')
+            if recorded_effects and isinstance(warm, dict) and isinstance(warm.get('result'), dict):
+                case['warm'] = dict(warm, result=keep(warm['result'], FUNCTION_RESULT_DEFAULTS))
         cases.append(case)
     return dict(record, cases=cases)
 
@@ -1289,6 +1310,9 @@ def restore_function_defaults(record):
         case = dict(json.loads(canonical(FUNCTION_CASE_DEFAULTS)), **case)
         if isinstance(case.get('result'), dict):
             case['result'] = dict(json.loads(canonical(FUNCTION_RESULT_DEFAULTS)), **case['result'])
+        warm = case.get('warm')
+        if isinstance(warm, dict) and isinstance(warm.get('result'), dict):
+            case['warm'] = dict(warm, result=dict(json.loads(canonical(FUNCTION_RESULT_DEFAULTS)), **warm['result']))
         cases.append(case)
     return dict(record, cases=cases)
 

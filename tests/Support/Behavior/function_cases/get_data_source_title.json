@@ -1,0 +1,18 @@
+{
+  "function": "get_data_source_title",
+  "cases": [
+    {"id": "device_variable_expanded", "args": [1], "note": "name has a pipe and host_id > 0: variables are substituted"},
+    {"record_sql": true, "id": "absent", "args": [999999], "note": "no data_local row: \"Missing Datasource N\""},
+    {"record_sql": true, "id": "plain_name", "args": [1], "prelude": [{"sql": "UPDATE data_template_data SET name = 'Plain name' WHERE local_data_id = 1"}]},
+    {"record_sql": true, "id": "device_id_zero", "args": [1], "note": "host_id 0: the stored name is returned raw", "prelude": [{"sql": "UPDATE data_local SET host_id = 0 WHERE id = 1"}]},
+    {"id": "data_input_variable", "args": [1], "note": "a |input_x| value is read from data_input_data", "prelude": [{"sql": "UPDATE data_template_data SET name = '|host_description| - |input_fncdb| -' WHERE local_data_id = 1"}, {"sql": "INSERT INTO data_input_fields (id, hash, data_input_id, name, data_name, input_output) VALUES (9001, 'ffffffffffffffffffffffffffffffff', 1, 'fncdb', 'fncdb', 'in')"}, {"sql": "INSERT INTO data_input_data (data_input_field_id, data_template_data_id, t_value, value) VALUES (9001, 402, '', 'eth9')"}]},
+    {"id": "data_query_variables", "args": [1], "prelude": [{"sql": "UPDATE data_local SET snmp_query_id = 1, snmp_index = 'eth0' WHERE id = 1"}, {"sql": "UPDATE data_template_data SET name = '|host_description| - |query_ifDescr|' WHERE local_data_id = 1"}, {"sql": "INSERT INTO host_snmp_cache (host_id, snmp_query_id, field_name, field_value, snmp_index, oid) VALUES (1, 1, 'ifDescr', 'eth0 uplink', 'eth0', '')"}]},
+    {"record_sql": true, "id": "template_row_missing", "args": [1], "note": "no data_template_data row: name is null and the template id is reported", "prelude": [{"sql": "DELETE FROM data_template_data WHERE local_data_id = 1"}]},
+    {"record_sql": true, "id": "name_empty", "args": [1], "prelude": [{"sql": "UPDATE data_template_data SET name = '' WHERE local_data_id = 1"}]},
+    {"record_sql": true, "id": "no_arguments", "args": []},
+    {"id": "id_trailing_text", "args": ["1abc"]},
+    {"record_sql": true, "id": "id_null", "args": [null]},
+    {"record_sql": true, "id": "id_text", "args": ["abc"]},
+    {"record_sql": true, "id": "id_array", "args": [[1]]}
+  ]
+}

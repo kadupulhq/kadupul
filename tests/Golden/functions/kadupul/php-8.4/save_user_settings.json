@@ -1,0 +1,322 @@
+{
+  "cases": [
+    {
+      "args": [1],
+      "id": "nothing_submitted_clears_every_checkbox",
+      "note": "an absent checkbox is written as \"\": ten rows are added",
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "table_diff": [
+          "+ settings_user {\"name\":\"custom_fonts\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"expand_hosts\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"tree_history\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"hide_disabled\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"enable_hscroll\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"show_aggregates\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"show_graph_title\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"thumbnail_section_tree_2\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"thumbnail_section_preview\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"allow_graph_dates_in_future\",\"user_id\":1,\"value\":\"\"}"
+        ]
+      }
+    },
+    {
+      "args": [1],
+      "id": "nothing_submitted_when_already_clear",
+      "note": "every row already holds \"\": nothing changes",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (1, 'show_graph_title', ''), (1, 'hide_disabled', ''), (1, 'show_aggregates', ''), (1, 'enable_hscroll', ''), (1, 'allow_graph_dates_in_future', ''), (1, 'expand_hosts', ''), (1, 'tree_history', ''), (1, 'custom_fonts', ''), (1, 'thumbnail_section_preview', ''), (1, 'thumbnail_section_tree_2', '')"
+      ],
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "args": [1],
+      "id": "checkbox_submitted",
+      "note": "the submitted value is ignored; any present checkbox becomes \"on\"",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (1, 'show_graph_title', ''), (1, 'hide_disabled', ''), (1, 'show_aggregates', ''), (1, 'enable_hscroll', ''), (1, 'allow_graph_dates_in_future', ''), (1, 'expand_hosts', ''), (1, 'tree_history', ''), (1, 'custom_fonts', ''), (1, 'thumbnail_section_preview', ''), (1, 'thumbnail_section_tree_2', '')",
+        {"request": {"enable_hscroll": "", "show_graph_title": "yes"}}
+      ],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "table_diff": [
+          "- settings_user {\"name\":\"enable_hscroll\",\"user_id\":1,\"value\":\"\"}",
+          "- settings_user {\"name\":\"show_graph_title\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"enable_hscroll\",\"user_id\":1,\"value\":\"on\"}",
+          "+ settings_user {\"name\":\"show_graph_title\",\"user_id\":1,\"value\":\"on\"}"
+        ]
+      }
+    },
+    {
+      "args": [1],
+      "id": "drop_array_valid",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (1, 'show_graph_title', ''), (1, 'hide_disabled', ''), (1, 'show_aggregates', ''), (1, 'enable_hscroll', ''), (1, 'allow_graph_dates_in_future', ''), (1, 'expand_hosts', ''), (1, 'tree_history', ''), (1, 'custom_fonts', ''), (1, 'thumbnail_section_preview', ''), (1, 'thumbnail_section_tree_2', '')",
+        {"request": {"selected_theme": "dark"}}
+      ],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "table_diff": [
+          "+ settings_user {\"name\":\"selected_theme\",\"user_id\":1,\"value\":\"dark\"}"
+        ]
+      }
+    },
+    {
+      "args": [1],
+      "id": "drop_array_unlisted",
+      "note": "refused: the field is flagged and the typed value kept for redisplay",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (1, 'show_graph_title', ''), (1, 'hide_disabled', ''), (1, 'show_aggregates', ''), (1, 'enable_hscroll', ''), (1, 'allow_graph_dates_in_future', ''), (1, 'expand_hosts', ''), (1, 'tree_history', ''), (1, 'custom_fonts', ''), (1, 'thumbnail_section_preview', ''), (1, 'thumbnail_section_tree_2', '')",
+        {"request": {"selected_theme": "evil"}}
+      ],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "state": [
+          "set session.sess_error_fields = {\"$\":\"array\",\"pairs\":[[\"selected_theme\",\"selected_theme\"]]}",
+          "set session.sess_field_values = {\"$\":\"array\",\"pairs\":[[\"selected_theme\",\"evil\"]]}"
+        ]
+      }
+    },
+    {
+      "args": [1],
+      "id": "numeric_dropdown_valid",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (1, 'show_graph_title', ''), (1, 'hide_disabled', ''), (1, 'show_aggregates', ''), (1, 'enable_hscroll', ''), (1, 'allow_graph_dates_in_future', ''), (1, 'expand_hosts', ''), (1, 'tree_history', ''), (1, 'custom_fonts', ''), (1, 'thumbnail_section_preview', ''), (1, 'thumbnail_section_tree_2', '')",
+        {"request": {"page_refresh": "60"}}
+      ],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "table_diff": ["+ settings_user {\"name\":\"page_refresh\",\"user_id\":1,\"value\":\"60\"}"]
+      }
+    },
+    {
+      "args": [1],
+      "id": "numeric_dropdown_not_numeric",
+      "note": "default \"300\" is numeric, so the value must be numeric first",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (1, 'show_graph_title', ''), (1, 'hide_disabled', ''), (1, 'show_aggregates', ''), (1, 'enable_hscroll', ''), (1, 'allow_graph_dates_in_future', ''), (1, 'expand_hosts', ''), (1, 'tree_history', ''), (1, 'custom_fonts', ''), (1, 'thumbnail_section_preview', ''), (1, 'thumbnail_section_tree_2', '')",
+        {"request": {"page_refresh": "abc"}}
+      ],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "state": [
+          "set session.sess_error_fields = {\"$\":\"array\",\"pairs\":[[\"page_refresh\",\"page_refresh\"]]}",
+          "set session.sess_field_values = {\"$\":\"array\",\"pairs\":[[\"page_refresh\",\"abc\"]]}"
+        ]
+      }
+    },
+    {
+      "args": [1],
+      "id": "numeric_textbox_valid",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (1, 'show_graph_title', ''), (1, 'hide_disabled', ''), (1, 'show_aggregates', ''), (1, 'enable_hscroll', ''), (1, 'allow_graph_dates_in_future', ''), (1, 'expand_hosts', ''), (1, 'tree_history', ''), (1, 'custom_fonts', ''), (1, 'thumbnail_section_preview', ''), (1, 'thumbnail_section_tree_2', '')",
+        {"request": {"default_height": "250"}}
+      ],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "table_diff": [
+          "+ settings_user {\"name\":\"default_height\",\"user_id\":1,\"value\":\"250\"}"
+        ]
+      }
+    },
+    {
+      "args": [1],
+      "id": "text_textbox_valid",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (1, 'show_graph_title', ''), (1, 'hide_disabled', ''), (1, 'show_aggregates', ''), (1, 'enable_hscroll', ''), (1, 'allow_graph_dates_in_future', ''), (1, 'expand_hosts', ''), (1, 'tree_history', ''), (1, 'custom_fonts', ''), (1, 'thumbnail_section_preview', ''), (1, 'thumbnail_section_tree_2', '')",
+        {"request": {"day_shift_start": "08:30"}}
+      ],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "table_diff": [
+          "+ settings_user {\"name\":\"day_shift_start\",\"user_id\":1,\"value\":\"08:30\"}"
+        ]
+      }
+    },
+    {
+      "args": [1],
+      "id": "font_size_rejected_by_filter",
+      "note": "numeric text the size filter refuses",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (1, 'show_graph_title', ''), (1, 'hide_disabled', ''), (1, 'show_aggregates', ''), (1, 'enable_hscroll', ''), (1, 'allow_graph_dates_in_future', ''), (1, 'expand_hosts', ''), (1, 'tree_history', ''), (1, 'custom_fonts', ''), (1, 'thumbnail_section_preview', ''), (1, 'thumbnail_section_tree_2', '')",
+        {"request": {"title_size": "0"}}
+      ],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "state": [
+          "set session.sess_error_fields = {\"$\":\"array\",\"pairs\":[[\"title_size\",\"title_size\"]]}",
+          "set session.sess_field_values = {\"$\":\"array\",\"pairs\":[[\"title_size\",\"0\"]]}"
+        ]
+      }
+    },
+    {
+      "args": [1],
+      "id": "font_name_valid",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (1, 'show_graph_title', ''), (1, 'hide_disabled', ''), (1, 'show_aggregates', ''), (1, 'enable_hscroll', ''), (1, 'allow_graph_dates_in_future', ''), (1, 'expand_hosts', ''), (1, 'tree_history', ''), (1, 'custom_fonts', ''), (1, 'thumbnail_section_preview', ''), (1, 'thumbnail_section_tree_2', '')",
+        {"request": {"title_font": "DejaVu Sans Bold"}}
+      ],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "table_diff": [
+          "+ settings_user {\"name\":\"title_font\",\"user_id\":1,\"value\":\"DejaVu Sans Bold\"}"
+        ]
+      }
+    },
+    {
+      "args": [1],
+      "id": "font_name_markup",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (1, 'show_graph_title', ''), (1, 'hide_disabled', ''), (1, 'show_aggregates', ''), (1, 'enable_hscroll', ''), (1, 'allow_graph_dates_in_future', ''), (1, 'expand_hosts', ''), (1, 'tree_history', ''), (1, 'custom_fonts', ''), (1, 'thumbnail_section_preview', ''), (1, 'thumbnail_section_tree_2', '')",
+        {"request": {"title_font": "<b>"}}
+      ],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "state": [
+          "set session.sess_error_fields = {\"$\":\"array\",\"pairs\":[[\"title_font\",\"title_font\"]]}",
+          "set session.sess_field_values = {\"$\":\"array\",\"pairs\":[[\"title_font\",\"<b>\"]]}"
+        ]
+      }
+    },
+    {
+      "args": [1],
+      "id": "several_fields_mixed",
+      "note": "valid and invalid in one submission: valid ones are kept",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (1, 'show_graph_title', ''), (1, 'hide_disabled', ''), (1, 'show_aggregates', ''), (1, 'enable_hscroll', ''), (1, 'allow_graph_dates_in_future', ''), (1, 'expand_hosts', ''), (1, 'tree_history', ''), (1, 'custom_fonts', ''), (1, 'thumbnail_section_preview', ''), (1, 'thumbnail_section_tree_2', '')",
+        {
+          "request": {
+            "day_shift_start": "<x>",
+            "default_height": "250",
+            "page_refresh": "abc",
+            "selected_theme": "dark",
+            "show_graph_title": "on"
+          }
+        }
+      ],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "state": [
+          "set session.sess_error_fields = {\"$\":\"array\",\"pairs\":[[\"page_refresh\",\"page_refresh\"],[\"day_shift_start\",\"day_shift_start\"]]}",
+          "set session.sess_field_values = {\"$\":\"array\",\"pairs\":[[\"page_refresh\",\"abc\"],[\"day_shift_start\",\"<x>\"]]}"
+        ],
+        "table_diff": [
+          "- settings_user {\"name\":\"show_graph_title\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"default_height\",\"user_id\":1,\"value\":\"250\"}",
+          "+ settings_user {\"name\":\"selected_theme\",\"user_id\":1,\"value\":\"dark\"}",
+          "+ settings_user {\"name\":\"show_graph_title\",\"user_id\":1,\"value\":\"on\"}"
+        ]
+      }
+    },
+    {
+      "ambient": {"session": {"sess_error_fields": {"$": "array", "pairs": [["older", "older"]]}}},
+      "args": [1],
+      "id": "previous_errors_are_kept",
+      "note": "the error list accumulates across fields and survives",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (1, 'show_graph_title', ''), (1, 'hide_disabled', ''), (1, 'show_aggregates', ''), (1, 'enable_hscroll', ''), (1, 'allow_graph_dates_in_future', ''), (1, 'expand_hosts', ''), (1, 'tree_history', ''), (1, 'custom_fonts', ''), (1, 'thumbnail_section_preview', ''), (1, 'thumbnail_section_tree_2', '')",
+        {"request": {"selected_theme": "evil"}}
+      ],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "state": [
+          "set session.sess_error_fields.selected_theme = \"selected_theme\"",
+          "set session.sess_field_values = {\"$\":\"array\",\"pairs\":[[\"selected_theme\",\"evil\"]]}"
+        ]
+      }
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": [],
+      "id": "user_from_session",
+      "note": "user -1 uses the session user",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (1, 'show_graph_title', ''), (1, 'hide_disabled', ''), (1, 'show_aggregates', ''), (1, 'enable_hscroll', ''), (1, 'allow_graph_dates_in_future', ''), (1, 'expand_hosts', ''), (1, 'tree_history', ''), (1, 'custom_fonts', ''), (1, 'thumbnail_section_preview', ''), (1, 'thumbnail_section_tree_2', '')",
+        {"request": {"selected_theme": "dark"}}
+      ],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "table_diff": [
+          "+ settings_user {\"name\":\"selected_theme\",\"user_id\":1,\"value\":\"dark\"}"
+        ]
+      }
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": [2],
+      "id": "user_explicit_over_session",
+      "note": "an explicit user wins over the session",
+      "prelude": [{"request": {"selected_theme": "dark"}}],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "table_diff": [
+          "+ settings_user {\"name\":\"custom_fonts\",\"user_id\":2,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"expand_hosts\",\"user_id\":2,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"tree_history\",\"user_id\":2,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"hide_disabled\",\"user_id\":2,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"enable_hscroll\",\"user_id\":2,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"selected_theme\",\"user_id\":2,\"value\":\"dark\"}",
+          "+ settings_user {\"name\":\"show_aggregates\",\"user_id\":2,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"show_graph_title\",\"user_id\":2,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"thumbnail_section_tree_2\",\"user_id\":2,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"thumbnail_section_preview\",\"user_id\":2,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"allow_graph_dates_in_future\",\"user_id\":2,\"value\":\"\"}"
+        ]
+      }
+    },
+    {
+      "args": [-1],
+      "id": "user_minus_one_without_session",
+      "note": "no session user: undefined key, user null, the inserts are refused without a report",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (1, 'show_graph_title', ''), (1, 'hide_disabled', ''), (1, 'show_aggregates', ''), (1, 'enable_hscroll', ''), (1, 'allow_graph_dates_in_future', ''), (1, 'expand_hosts', ''), (1, 'tree_history', ''), (1, 'custom_fonts', ''), (1, 'thumbnail_section_preview', ''), (1, 'thumbnail_section_tree_2', '')",
+        {"request": {"selected_theme": "dark"}}
+      ],
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Undefined array key \"sess_user_id\"",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "args": ["abc"],
+      "id": "user_text",
+      "note": "not empty, not -1: the column coerces it and rows are written for user 0",
+      "prelude": [{"request": {"selected_theme": "dark"}}],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "table_diff": [
+          "+ settings_user {\"name\":\"custom_fonts\",\"user_id\":0,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"expand_hosts\",\"user_id\":0,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"tree_history\",\"user_id\":0,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"hide_disabled\",\"user_id\":0,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"enable_hscroll\",\"user_id\":0,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"selected_theme\",\"user_id\":0,\"value\":\"dark\"}",
+          "+ settings_user {\"name\":\"show_aggregates\",\"user_id\":0,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"show_graph_title\",\"user_id\":0,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"thumbnail_section_tree_2\",\"user_id\":0,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"thumbnail_section_preview\",\"user_id\":0,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"allow_graph_dates_in_future\",\"user_id\":0,\"value\":\"\"}"
+        ]
+      }
+    }
+  ],
+  "function": "save_user_settings",
+  "signature": [
+    {
+      "by_ref": false,
+      "default": -1,
+      "name": "user",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    }
+  ]
+}

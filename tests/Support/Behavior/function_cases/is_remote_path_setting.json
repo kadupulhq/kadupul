@@ -1,0 +1,16 @@
+{
+  "function": "is_remote_path_setting",
+  "cases": [
+    {"id": "poller_1_path_prefix", "args": ["path_rrdtool"], "ambient": {"config": {"poller_id": 1}}},
+    {"id": "poller_2_path_prefix", "args": ["path_rrdtool"], "ambient": {"config": {"poller_id": 2}}},
+    {"id": "poller_2_path_suffix", "args": ["rrd_path"], "ambient": {"config": {"poller_id": 2}}},
+    {"id": "poller_2_no_underscore", "args": ["pathrrd"], "note": "path without the underscore does not match", "ambient": {"config": {"poller_id": 2}}},
+    {"id": "poller_2_null_name", "args": [null], "note": "str_contains(null) is deprecated", "ambient": {"config": {"poller_id": 2}}},
+    {"id": "poller_2_array_name", "args": [["path_x"]], "note": "TypeError", "ambient": {"config": {"poller_id": 2}}},
+    {"id": "poller_id_boundary_one", "args": ["path_x"], "ambient": {"config": {"poller_id": 1}}},
+    {"id": "poller_id_string_ten", "args": ["path_x"], "note": "numeric strings compare as numbers", "ambient": {"config": {"poller_id": "10"}}},
+    {"id": "poller_id_text", "args": ["path_x"], "note": "\"abc\" > 1 compares as strings in PHP 8", "ambient": {"config": {"poller_id": "abc"}}},
+    {"id": "poller_id_missing", "args": ["path_x"], "note": "the key is absent from $config", "ambient": {"config": {}}},
+    {"id": "no_arguments", "args": []}
+  ]
+}

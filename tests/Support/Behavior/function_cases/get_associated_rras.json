@@ -1,0 +1,17 @@
+{
+  "function": "get_associated_rras",
+  "cases": [
+    {"record_sql": true, "id": "graph_one_profile", "args": [1, "AND dspr.steps > 6"], "note": "rows of profile 1 ordered by steps"},
+    {"record_sql": true, "id": "graph_two_profiles", "args": [4, "AND dspr.steps > 200"], "note": "the second data source uses profile 2: rows of both profiles", "prelude": [{"sql": "UPDATE data_template_data SET data_source_profile_id = 2 WHERE local_data_id = 5"}]},
+    {"record_sql": true, "id": "graph_profile_without_rras", "args": [1], "note": "profile with no rra rows: one row with NULL rra columns", "prelude": [{"sql": "INSERT INTO data_source_profiles (id, hash, name, step) VALUES (50, 'ffffffffffffffffffffffffffffffff', 'empty', 300)"}, {"sql": "UPDATE data_template_data SET data_source_profile_id = 50 WHERE local_data_id = 1"}]},
+    {"record_sql": true, "id": "absent", "args": [999999], "note": "no graph items: empty list"},
+    {"record_sql": true, "id": "where_fragment_filters", "args": [1, "AND dspr.steps > 1 AND dspr.steps < 100"], "note": "sql_where is appended to the statement as text"},
+    {"record_sql": true, "id": "where_fragment_with_leading_or", "args": [1, "OR dspr.steps = 720"], "note": "an OR fragment escapes the graph filter: a row of another profile appears"},
+    {"record_sql": true, "id": "where_fragment_syntax_error", "args": [1, "AND AND"], "note": "a malformed fragment: the database error is swallowed and false is returned"},
+    {"record_sql": true, "id": "where_fragment_array", "args": [1, ["AND 1 = 1"]], "note": "array to string: the fragment becomes the word Array and the statement fails"},
+    {"record_sql": true, "id": "no_arguments", "args": []},
+    {"record_sql": true, "id": "id_trailing_text", "args": ["1abc", "AND dspr.steps > 200"]},
+    {"record_sql": true, "id": "id_text", "args": ["abc", "AND dspr.steps > 200"]},
+    {"record_sql": true, "id": "id_zero_template_rows", "args": [0], "note": "items of no graph: the LEFT JOIN yields one row of NULLs"}
+  ]
+}

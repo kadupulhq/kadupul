@@ -1,0 +1,157 @@
+{
+  "cases": [
+    {
+      "args": [1],
+      "id": "device_variable_expanded",
+      "note": "name has a pipe and host_id > 0: variables are substituted",
+      "result": {"returned": {"type": "string", "value": "Local Linux Machine - Processes"}}
+    },
+    {
+      "args": [999999],
+      "id": "absent",
+      "note": "no data_local row: \"Missing Datasource N\"",
+      "result": {
+        "returned": {"type": "string", "value": "Missing Datasource 999999"},
+        "sql": [
+          "SELECT dl.host_id, dl.snmp_query_id, dl.snmp_index, dl.data_template_id, dtd.name, dtd.id as template_id FROM data_local AS dl LEFT JOIN data_template_data AS dtd ON dtd.local_data_id = dl.id WHERE dl.id = ? -- [999999]"
+        ]
+      }
+    },
+    {
+      "args": [1],
+      "id": "plain_name",
+      "prelude": ["UPDATE data_template_data SET name = 'Plain name' WHERE local_data_id = 1"],
+      "result": {
+        "returned": {"type": "string", "value": "Plain name"},
+        "sql": [
+          "SELECT dl.host_id, dl.snmp_query_id, dl.snmp_index, dl.data_template_id, dtd.name, dtd.id as template_id FROM data_local AS dl LEFT JOIN data_template_data AS dtd ON dtd.local_data_id = dl.id WHERE dl.id = ? -- [1]"
+        ]
+      }
+    },
+    {
+      "args": [1],
+      "id": "device_id_zero",
+      "note": "host_id 0: the stored name is returned raw",
+      "prelude": ["UPDATE data_local SET host_id = 0 WHERE id = 1"],
+      "result": {
+        "returned": {"type": "string", "value": "|host_description| - Processes"},
+        "sql": [
+          "SELECT dl.host_id, dl.snmp_query_id, dl.snmp_index, dl.data_template_id, dtd.name, dtd.id as template_id FROM data_local AS dl LEFT JOIN data_template_data AS dtd ON dtd.local_data_id = dl.id WHERE dl.id = ? -- [1]"
+        ]
+      }
+    },
+    {
+      "args": [1],
+      "id": "data_input_variable",
+      "note": "a |input_x| value is read from data_input_data",
+      "prelude": [
+        "UPDATE data_template_data SET name = '|host_description| - |input_fncdb| -' WHERE local_data_id = 1",
+        "INSERT INTO data_input_fields (id, hash, data_input_id, name, data_name, input_output) VALUES (9001, 'ffffffffffffffffffffffffffffffff', 1, 'fncdb', 'fncdb', 'in')",
+        "INSERT INTO data_input_data (data_input_field_id, data_template_data_id, t_value, value) VALUES (9001, 402, '', 'eth9')"
+      ],
+      "result": {"returned": {"type": "string", "value": "Local Linux Machine - eth9 -"}}
+    },
+    {
+      "args": [1],
+      "id": "data_query_variables",
+      "prelude": [
+        "UPDATE data_local SET snmp_query_id = 1, snmp_index = 'eth0' WHERE id = 1",
+        "UPDATE data_template_data SET name = '|host_description| - |query_ifDescr|' WHERE local_data_id = 1",
+        "INSERT INTO host_snmp_cache (host_id, snmp_query_id, field_name, field_value, snmp_index, oid) VALUES (1, 1, 'ifDescr', 'eth0 uplink', 'eth0', '')"
+      ],
+      "result": {"returned": {"type": "string", "value": "Local Linux Machine - eth0 uplink"}}
+    },
+    {
+      "args": [1],
+      "id": "template_row_missing",
+      "note": "no data_template_data row: name is null and the template id is reported",
+      "prelude": ["DELETE FROM data_template_data WHERE local_data_id = 1"],
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "strstr(): Passing null to parameter #1 ($haystack) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "string", "value": " (Bad template \"309\")"},
+        "sql": [
+          "SELECT dl.host_id, dl.snmp_query_id, dl.snmp_index, dl.data_template_id, dtd.name, dtd.id as template_id FROM data_local AS dl LEFT JOIN data_template_data AS dtd ON dtd.local_data_id = dl.id WHERE dl.id = ? -- [1]"
+        ]
+      }
+    },
+    {
+      "args": [1],
+      "id": "name_empty",
+      "prelude": ["UPDATE data_template_data SET name = '' WHERE local_data_id = 1"],
+      "result": {
+        "returned": {"type": "string", "value": ""},
+        "sql": [
+          "SELECT dl.host_id, dl.snmp_query_id, dl.snmp_index, dl.data_template_id, dtd.name, dtd.id as template_id FROM data_local AS dl LEFT JOIN data_template_data AS dtd ON dtd.local_data_id = dl.id WHERE dl.id = ? -- [1]"
+        ]
+      }
+    },
+    {
+      "args": [],
+      "id": "no_arguments",
+      "result": {
+        "exception": {
+          "class": "ArgumentCountError",
+          "code": 0,
+          "message": "Too few arguments to function get_data_source_title(), 0 passed in <caller> and exactly 1 expected"
+        },
+        "sql": []
+      }
+    },
+    {
+      "args": ["1abc"],
+      "id": "id_trailing_text",
+      "result": {"returned": {"type": "string", "value": "Local Linux Machine - Processes"}}
+    },
+    {
+      "args": [null],
+      "id": "id_null",
+      "result": {
+        "returned": {"type": "string", "value": "Missing Datasource "},
+        "sql": [
+          "SELECT dl.host_id, dl.snmp_query_id, dl.snmp_index, dl.data_template_id, dtd.name, dtd.id as template_id FROM data_local AS dl LEFT JOIN data_template_data AS dtd ON dtd.local_data_id = dl.id WHERE dl.id = ? -- [null]"
+        ]
+      }
+    },
+    {
+      "args": ["abc"],
+      "id": "id_text",
+      "result": {
+        "returned": {"type": "string", "value": "Missing Datasource abc"},
+        "sql": [
+          "SELECT dl.host_id, dl.snmp_query_id, dl.snmp_index, dl.data_template_id, dtd.name, dtd.id as template_id FROM data_local AS dl LEFT JOIN data_template_data AS dtd ON dtd.local_data_id = dl.id WHERE dl.id = ? -- [\"abc\"]"
+        ]
+      }
+    },
+    {
+      "args": [[1]],
+      "id": "id_array",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Array to string conversion",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "string", "value": "Missing Datasource Array"},
+        "sql": [
+          "SELECT dl.host_id, dl.snmp_query_id, dl.snmp_index, dl.data_template_id, dtd.name, dtd.id as template_id FROM data_local AS dl LEFT JOIN data_template_data AS dtd ON dtd.local_data_id = dl.id WHERE dl.id = ? -- [[1]] !! Exception: Array to string conversion"
+        ]
+      }
+    }
+  ],
+  "function": "get_data_source_title",
+  "signature": [
+    {"by_ref": false, "name": "local_data_id", "optional": false, "type": null, "variadic": false}
+  ]
+}

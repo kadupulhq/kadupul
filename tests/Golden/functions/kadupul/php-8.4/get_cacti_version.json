@@ -1,0 +1,76 @@
+{
+  "cases": [
+    {
+      "args": [],
+      "id": "installed_version",
+      "note": "the value in the version table",
+      "result": {
+        "returned": {"type": "string", "value": "1.2.35"},
+        "sql": ["SELECT cacti FROM version LIMIT 1"]
+      }
+    },
+    {
+      "args": [],
+      "id": "whitespace_trimmed",
+      "prelude": ["DELETE FROM version", "INSERT INTO version (cacti) VALUES ('  9.8.7  ')"],
+      "result": {
+        "returned": {"type": "string", "value": "9.8.7"},
+        "sql": ["SELECT cacti FROM version LIMIT 1"]
+      }
+    },
+    {
+      "args": [],
+      "id": "empty_version_not_cached",
+      "note": "an empty string leaves the static empty, so every call queries again",
+      "prelude": ["DELETE FROM version", "INSERT INTO version (cacti) VALUES ('')"],
+      "result": {
+        "returned": {"type": "string", "value": ""},
+        "sql": ["SELECT cacti FROM version LIMIT 1"]
+      }
+    },
+    {
+      "args": [],
+      "id": "zero_string_is_cached",
+      "note": "\"0\" is not == \"\" in PHP 8, so it is cached",
+      "prelude": ["DELETE FROM version", "INSERT INTO version (cacti) VALUES ('0')"],
+      "result": {
+        "returned": {"type": "string", "value": "0"},
+        "sql": ["SELECT cacti FROM version LIMIT 1"]
+      }
+    },
+    {
+      "args": [],
+      "id": "no_version_row",
+      "note": "trim(false) gives an empty string",
+      "prelude": ["DELETE FROM version"],
+      "result": {
+        "returned": {"type": "string", "value": ""},
+        "sql": ["SELECT cacti FROM version LIMIT 1"]
+      }
+    },
+    {
+      "args": [],
+      "between": ["UPDATE version SET cacti = '5.5.5'"],
+      "id": "cached_value_survives_update",
+      "note": "the second call ignores the table change",
+      "result": {
+        "returned": {"type": "string", "value": "1.2.35"},
+        "sql": ["SELECT cacti FROM version LIMIT 1"]
+      }
+    },
+    {
+      "args": [],
+      "between": ["UPDATE version SET cacti = '7.7.7'"],
+      "id": "empty_value_requeried",
+      "note": "an empty version is looked up again after the table gains a value",
+      "prelude": ["DELETE FROM version", "INSERT INTO version (cacti) VALUES ('')"],
+      "result": {
+        "returned": {"type": "string", "value": ""},
+        "sql": ["SELECT cacti FROM version LIMIT 1"]
+      },
+      "warm": {"result": {"returned": {"type": "string", "value": "7.7.7"}}, "same": false}
+    }
+  ],
+  "function": "get_cacti_version",
+  "signature": []
+}

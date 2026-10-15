@@ -1,0 +1,62 @@
+{
+  "cases": [
+    {
+      "args": [2],
+      "id": "only_present",
+      "note": "stored hash of graph_templates_gprint.2",
+      "result": {
+        "returned": {"type": "string", "value": "e9c43831e54eca8069317a2ce8c6f751"},
+        "sql": ["SELECT hash FROM graph_templates_gprint WHERE id = ? -- [2]"]
+      }
+    },
+    {
+      "args": [999999],
+      "id": "only_absent",
+      "note": "no row: a new random hash",
+      "result": {
+        "returned": {"type": "string", "value": "<generated 32 hex>"},
+        "sql": ["SELECT hash FROM graph_templates_gprint WHERE id = ? -- [999999]"]
+      }
+    },
+    {
+      "args": [2],
+      "id": "upper_case_hash",
+      "note": "upper case hex is accepted and returned as stored",
+      "prelude": [
+        "UPDATE graph_templates_gprint SET hash = 'E9C43831E54ECA8069317A2CE8C6F751' WHERE id = 2"
+      ],
+      "result": {"returned": {"type": "string", "value": "E9C43831E54ECA8069317A2CE8C6F751"}}
+    },
+    {
+      "args": [2],
+      "id": "non_hex_32_chars",
+      "note": "32 characters but not hex (ctype_xdigit and length 32)",
+      "prelude": [
+        "UPDATE graph_templates_gprint SET hash = 'gggggggggggggggggggggggggggggggg' WHERE id = 2"
+      ],
+      "result": {"returned": {"type": "string", "value": "<generated 32 hex>"}}
+    },
+    {
+      "args": ["2abc"],
+      "id": "id_trailing_text",
+      "result": {
+        "returned": {"type": "string", "value": "e9c43831e54eca8069317a2ce8c6f751"},
+        "sql": ["SELECT hash FROM graph_templates_gprint WHERE id = ? -- [\"2abc\"]"]
+      }
+    },
+    {
+      "args": [null],
+      "id": "id_null",
+      "result": {"returned": {"type": "string", "value": "<generated 32 hex>"}}
+    },
+    {
+      "args": [[2]],
+      "id": "id_array",
+      "result": {"returned": {"type": "string", "value": "<generated 32 hex>"}}
+    }
+  ],
+  "function": "get_hash_gprint",
+  "signature": [
+    {"by_ref": false, "name": "gprint_id", "optional": false, "type": null, "variadic": false}
+  ]
+}

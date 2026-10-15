@@ -29,7 +29,11 @@ const BEHAVIOR_SEVERITIES = [
 ];
 
 const BEHAVIOR_EVENT_LIMIT = 100;
-const BEHAVIOR_CASE_KEYS = ['id', 'args', 'ambient', 'prelude', 'between', 'isolated', 'timeout', 'note'];
+const BEHAVIOR_SQL_LIMIT = 100;
+const BEHAVIOR_STATE_AREAS = ['session', 'config', 'settings_user'];
+const BEHAVIOR_WATCHED_TABLES = ['settings', 'settings_user'];
+const BEHAVIOR_GENERATED_HASH = '<generated 32 hex>';
+const BEHAVIOR_CASE_KEYS = ['id', 'args', 'ambient', 'prelude', 'between', 'isolated', 'timeout', 'note', 'record_sql', 'record_tables', 'record_state', 'mask_generated'];
 const BEHAVIOR_AMBIENT_KEYS = ['settings', 'config', 'session'];
 
 function behavior_relative($path)
@@ -117,11 +121,181 @@ function behavior_setting_write($name, $value, $forget = true)
 class BehaviorTimeout extends RuntimeException {}
 
 /**
+ * Statement class installed on the application's PDO connections. It notes each
+ * prepared statement that is executed while $GLOBALS['behavior_sql'] is an array,
+ * which is the SQL the function under test caused without touching lib/database.php.
+ */
+class BehaviorStatement extends PDOStatement
+{
+    protected function __construct() {}
+
+    #[\ReturnTypeWillChange]
+    public function execute(?array $params = null)
+    {
+        $entry = ['sql' => preg_replace('/\s+/', ' ', trim($this->queryString)), 'params' => behavior_cell(array_values($params ?? []))];
+        try {
+            $ok = parent::execute($params);
+        } catch (Throwable $e) {
+            behavior_sql_note($entry + ['error' => get_class($e) . ': ' . behavior_scrub($e->getMessage())]);
+
+            throw $e;
+        }
+        behavior_sql_note($ok ? $entry : $entry + ['error' => implode(' ', array_map('strval', $this->errorInfo()))]);
+
+        return $ok;
+    }
+}
+
+/**
+ * One statement as one line: the text, then the bound values after a comment
+ * marker, then a repeat count and any error. A golden stays one line per statement.
+ */
+function behavior_sql_line(array $entry)
+{
+    $line = $entry['sql'];
+    if ($entry['params'] !== []) {
+        $line .= ' -- ' . behavior_json($entry['params']);
+    }
+    if (($entry['count'] ?? 1) > 1) {
+        $line .= ' x' . $entry['count'];
+    }
+    if (isset($entry['error'])) {
+        $line .= ' !! ' . $entry['error'];
+    }
+
+    return $line;
+}
+
+function behavior_sql_note(array $entry)
+{
+    if (!is_array($GLOBALS['behavior_sql'] ?? null)) {
+        return;
+    }
+    $last = count($GLOBALS['behavior_sql']) - 1;
+    if ($last >= 0 && array_diff_key($GLOBALS['behavior_sql'][$last], ['count' => 1]) === $entry) {
+        $GLOBALS['behavior_sql'][$last]['count'] = ($GLOBALS['behavior_sql'][$last]['count'] ?? 1) + 1;
+    } else {
+        $GLOBALS['behavior_sql'][] = $entry;
+    }
+}
+
+/**
+ * A stand-in application has no PDO connection, so there is nothing to hook and
+ * the case records an empty statement list.
+ */
+function behavior_sql_install()
+{
+    foreach ($GLOBALS['database_sessions'] ?? [] as $connection) {
+        if ($connection instanceof PDO) {
+            $connection->setAttribute(PDO::ATTR_STATEMENT_CLASS, ['BehaviorStatement']);
+        }
+    }
+}
+
+/**
+ * The request state a function can change without returning it: the session,
+ * $config and the user settings definitions that set_user_setting() writes into.
+ * Each entry is serialized so a nested change is noticed.
+ */
+function behavior_state_snapshot(array $areas)
+{
+    $out = [];
+    $sources = ['session' => $_SESSION ?? [], 'config' => $GLOBALS['config'] ?? [], 'settings_user' => $GLOBALS['settings_user'] ?? []];
+    foreach (array_intersect_key($sources, array_flip($areas)) as $area => $values) {
+        $out[$area] = $values;
+    }
+
+    return $out;
+}
+
+function behavior_state_diff(array $before, array $after)
+{
+    $lines = [];
+    foreach ($after as $area => $values) {
+        foreach ($values as $key => $value) {
+            $old = $before[$area][$key] ?? null;
+            if (array_key_exists($key, $before[$area]) && serialize($old) === serialize($value)) {
+                continue;
+            }
+            // One level down for arrays, so a cache that gains one entry is
+            // reported as that entry and not as the whole cache again.
+            if (is_array($old) && is_array($value)) {
+                foreach ($value as $sub => $item) {
+                    if (!array_key_exists($sub, $old) || serialize($old[$sub]) !== serialize($item)) {
+                        $lines[] = 'set ' . $area . '.' . $key . '.' . $sub . ' = ' . behavior_json(behavior_cell($item));
+                    }
+                }
+                foreach (array_keys(array_diff_key($old, $value)) as $sub) {
+                    $lines[] = 'unset ' . $area . '.' . $key . '.' . $sub;
+                }
+            } else {
+                $lines[] = 'set ' . $area . '.' . $key . ' = ' . behavior_json(behavior_cell($value));
+            }
+        }
+        foreach (array_keys(array_diff_key($before[$area], $values)) as $key) {
+            $lines[] = 'unset ' . $area . '.' . $key;
+        }
+    }
+
+    return $lines;
+}
+
+/**
+ * State and table values longer than a short line are spelled by digest, as long
+ * return values are, so one oversized value does not fill the golden.
+ */
+const BEHAVIOR_EFFECT_STRING = 120;
+const BEHAVIOR_EFFECT_KEYS = ['sql', 'sql_truncated', 'table_diff', 'state'];
+
+function behavior_cell($value)
+{
+    return behavior_encode($value, BEHAVIOR_EFFECT_STRING);
+}
+
+function behavior_table_rows($table)
+{
+    $saved = $GLOBALS['behavior_sql'] ?? null;
+    $GLOBALS['behavior_sql'] = null;
+    $rows = [];
+    foreach (db_fetch_assoc('SELECT * FROM `' . $table . '`') ?: [] as $row) {
+        $rows[serialize($row)] = $row;
+    }
+    $GLOBALS['behavior_sql'] = $saved;
+    ksort($rows, SORT_STRING);
+
+    return $rows;
+}
+
+function behavior_table_snapshot()
+{
+    $out = [];
+    foreach (BEHAVIOR_WATCHED_TABLES as $table) {
+        $out[$table] = behavior_table_rows($table);
+    }
+
+    return $out;
+}
+
+function behavior_table_diff(array $before, array $after)
+{
+    $lines = [];
+    foreach ($before as $table => $rows) {
+        foreach (['-' => array_diff_key($rows, $after[$table]), '+' => array_diff_key($after[$table], $rows)] as $sign => $changed) {
+            foreach ($changed as $row) {
+                $lines[] = $sign . ' ' . $table . ' ' . behavior_json(array_map('behavior_cell', $row));
+            }
+        }
+    }
+
+    return $lines;
+}
+
+/**
  * $timeout is a whole number of seconds, or null. A function that never
  * returns would otherwise take the whole capture down with it; the alarm turns
  * that into a recorded outcome. It needs pcntl, and the harness image has it.
  */
-function behavior_call($name, array $encoded, $timeout = null)
+function behavior_call($name, array $encoded, $timeout = null, array $options = [])
 {
     $ref = new ReflectionFunction($name);
     $params = $ref->getParameters();
@@ -157,6 +331,15 @@ function behavior_call($name, array $encoded, $timeout = null)
         return true;
     });
     $log_offset = behavior_log_size();
+    $record_sql = !empty($options['record_sql']);
+    // true watches the session and $config; a list names the areas to watch.
+    $watch = $options['record_state'] ?? false;
+    $state_areas = $watch === true ? ['session', 'config'] : ($watch === false ? [] : $watch);
+    $before_state = $state_areas ? behavior_state_snapshot($state_areas) : null;
+    $before_tables = !empty($options['record_tables']) ? behavior_table_snapshot() : null;
+    if ($record_sql) {
+        $GLOBALS['behavior_sql'] = [];
+    }
     if ($timeout) {
         pcntl_async_signals(true);
         pcntl_signal(SIGALRM, function () use ($timeout) {
@@ -177,6 +360,10 @@ function behavior_call($name, array $encoded, $timeout = null)
         }
         $output = ob_get_clean();
         restore_error_handler();
+        if ($record_sql) {
+            $statements = $GLOBALS['behavior_sql'];
+            $GLOBALS['behavior_sql'] = null;
+        }
     }
 
     $by_ref = [];
@@ -201,8 +388,42 @@ function behavior_call($name, array $encoded, $timeout = null)
     }
     $record['log'] = behavior_log_since($log_offset);
     $record['output'] = behavior_encode(behavior_scrub($output));
+    if ($before_state !== null) {
+        $state = behavior_state_diff($before_state, behavior_state_snapshot($state_areas));
+        if ($state) {
+            $record['state'] = $state;
+        }
+    }
+    if ($record_sql) {
+        $record['sql'] = array_map('behavior_sql_line', array_slice($statements, 0, BEHAVIOR_SQL_LIMIT));
+        if (count($statements) > BEHAVIOR_SQL_LIMIT) {
+            $record['sql_truncated'] = count($statements);
+        }
+    }
+    if ($before_tables !== null) {
+        $tables = behavior_table_diff($before_tables, behavior_table_snapshot());
+        if ($tables) {
+            $record['table_diff'] = $tables;
+        }
+    }
 
     return $record;
+}
+
+/**
+ * A function that returns a freshly generated hash answers differently each
+ * time. When both calls return a 32 digit hex string and the strings differ, the
+ * value is random, not stored, and both are replaced by a fixed marker. A stored
+ * hash is the same on both calls and is kept, so a case cannot hide a wrong row.
+ */
+function behavior_mask_generated(array &$first, array &$second)
+{
+    $a = $first['returned']['value'] ?? null;
+    $b = $second['returned']['value'] ?? null;
+    if (is_string($a) && is_string($b) && $a !== $b && preg_match('/^[0-9a-f]{32}$/', $a) && preg_match('/^[0-9a-f]{32}$/', $b)) {
+        $first['returned']['value'] = BEHAVIOR_GENERATED_HASH;
+        $second['returned']['value'] = BEHAVIOR_GENERATED_HASH;
+    }
 }
 
 function behavior_step($step, $forget = true)
@@ -215,10 +436,34 @@ function behavior_step($step, $forget = true)
         return ['setting' => $step['setting']];
     }
 
+    // Request variables for functions that read them. set_request_var() is the
+    // application's own setter, so the superglobals and the request cache agree.
+    if (isset($step['request'])) {
+        if (!is_array($step['request']) || !$step['request']) {
+            throw new RuntimeException('Request step needs a non-empty object');
+        }
+        foreach ($step['request'] as $name => $value) {
+            set_request_var((string) $name, behavior_decode($value));
+        }
+
+        return ['request' => $step['request']];
+    }
+
+    // Fixture rows for functions that read other tables. The step is part of the
+    // case, rolled back with it, and fails loudly so a typo cannot leave a case
+    // reading rows that were never written.
+    if (isset($step['sql'])) {
+        if (!is_string($step['sql']) || $step['sql'] === '' || db_execute_prepared($step['sql'], behavior_decode($step['params'] ?? [])) === false) {
+            throw new RuntimeException('SQL step failed: ' . (is_string($step['sql']) ? $step['sql'] : '?'));
+        }
+
+        return behavior_sql_line(['sql' => $step['sql'], 'params' => $step['params'] ?? []]);
+    }
+
     // A case file is data, not code: an internal function such as shell_exec
     // must not be reachable through it.
     if (!isset($step['fn']) || !is_string($step['fn']) || !function_exists($step['fn']) || !(new ReflectionFunction($step['fn']))->isUserDefined()) {
-        throw new RuntimeException('Step needs "setting" or a user-defined "fn"');
+        throw new RuntimeException('Step needs "setting", "sql", "request" or a user-defined "fn"');
     }
 
     return ['fn' => $step['fn']] + behavior_call($step['fn'], $step['args'] ?? []);
@@ -263,7 +508,8 @@ function behavior_case($name, array $case)
             $record['prelude'] = array_map('behavior_step', $case['prelude']);
         }
 
-        $record['result'] = behavior_call($name, $case['args'], $case['timeout'] ?? null);
+        $options = ['record_sql' => !empty($case['record_sql']), 'record_tables' => !empty($case['record_tables']), 'record_state' => $case['record_state'] ?? false];
+        $record['result'] = behavior_call($name, $case['args'], $case['timeout'] ?? null, $options);
         if (!empty($case['between'])) {
             $record['between'] = array_map(fn($step) => behavior_step($step, false), $case['between']);
         }
@@ -271,8 +517,12 @@ function behavior_case($name, array $case)
         // Same arguments, same process, no reset in between: this is what
         // exposes a static or global cache. Arguments are decoded afresh so a
         // by-reference output from the first call cannot leak into the second.
+        // Effects are recorded for the first call only; the repeat is compared on its answer.
         $warm = behavior_call($name, $case['args'], $case['timeout'] ?? null);
-        $record['warm'] = behavior_json($warm) === behavior_json($record['result']) ? ['same' => true] : ['same' => false, 'result' => $warm];
+        if (!empty($case['mask_generated'])) {
+            behavior_mask_generated($record['result'], $warm);
+        }
+        $record['warm'] = behavior_json($warm) === behavior_json(array_diff_key($record['result'], array_flip(BEHAVIOR_EFFECT_KEYS))) ? ['same' => true] : ['same' => false, 'result' => $warm];
     } finally {
         $rolled_back = db_execute('ROLLBACK TO SAVEPOINT fnwt_case');
         $config = $saved;
@@ -317,6 +567,11 @@ function behavior_function_run($name, $case_file, $select)
     }
 
     $records = [];
+    // Only a case that asks for SQL pays for it, and an instance that opened its
+    // connection persistently, which cannot take a statement class, is left alone.
+    if (array_filter($spec['cases'], fn($case) => !empty($case['record_sql']))) {
+        behavior_sql_install();
+    }
     if (!db_begin_transaction()) {
         throw new RuntimeException('Cannot begin the capture transaction');
     }

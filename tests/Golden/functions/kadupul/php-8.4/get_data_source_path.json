@@ -1,0 +1,214 @@
+{
+  "cases": [
+    {
+      "args": [1, true],
+      "id": "stored_path_expanded",
+      "note": "stored <path_rra> path with expand: <path_rra> becomes the rra directory",
+      "result": {
+        "returned": {"type": "string", "value": "<APP>/rra/local_linux_machine_proc_1.rrd"},
+        "sql": [
+          "SELECT name, data_source_path FROM data_template_data AS dtd WHERE local_data_id = ? -- [1]"
+        ]
+      }
+    },
+    {
+      "args": [1, false],
+      "id": "stored_path_not_expanded",
+      "result": {
+        "returned": {"type": "string", "value": "<path_rra>/local_linux_machine_proc_1.rrd"},
+        "sql": [
+          "SELECT name, data_source_path FROM data_template_data AS dtd WHERE local_data_id = ? -- [1]"
+        ]
+      }
+    },
+    {
+      "args": [1, false],
+      "id": "stored_relative_name",
+      "note": "no slash: <path_rra>/ is prepended",
+      "prelude": [
+        "UPDATE data_template_data SET data_source_path = 'plain.rrd' WHERE local_data_id = 1"
+      ],
+      "result": {
+        "returned": {"type": "string", "value": "<path_rra>/plain.rrd"},
+        "sql": [
+          "SELECT name, data_source_path FROM data_template_data AS dtd WHERE local_data_id = ? -- [1]"
+        ]
+      }
+    },
+    {
+      "args": [1, true],
+      "id": "stored_absolute_path",
+      "note": "a slash and no <path_rra>: returned unchanged",
+      "prelude": [
+        "UPDATE data_template_data SET data_source_path = '/srv/other/x.rrd' WHERE local_data_id = 1"
+      ],
+      "result": {"returned": {"type": "string", "value": "/srv/other/x.rrd"}}
+    },
+    {
+      "args": [1, false],
+      "id": "empty_path_generates_and_stores",
+      "note": "device description and first item name build the path; the UPDATE is issued",
+      "prelude": ["UPDATE data_template_data SET data_source_path = '' WHERE local_data_id = 1"],
+      "result": {
+        "returned": {"type": "string", "value": "<path_rra>/local_linux_machine_proc_1.rrd"},
+        "sql": [
+          "SELECT name, data_source_path FROM data_template_data AS dtd WHERE local_data_id = ? -- [1]",
+          "SELECT value FROM settings WHERE name = ? -- [\"extended_paths\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"extended_paths_type\"]",
+          "SELECT dl.host_id, h.description, dl.snmp_query_id FROM host AS h INNER JOIN data_local AS dl ON dl.host_id = h.id AND dl.id = ? -- [1]",
+          "SELECT data_source_name FROM data_template_rrd WHERE local_data_id = ? ORDER BY id LIMIT 1 -- [1]",
+          "UPDATE data_template_data SET data_source_path = ? WHERE local_data_id = ? -- [\"<path_rra>/local_linux_machine_proc_1.rrd\",1]"
+        ]
+      }
+    },
+    {
+      "ambient": {"settings": {"extended_paths": "on", "extended_paths_type": "device"}},
+      "args": [1, false],
+      "id": "generated_extended_device",
+      "prelude": ["UPDATE data_template_data SET data_source_path = '' WHERE local_data_id = 1"],
+      "result": {
+        "returned": {"type": "string", "value": "<path_rra>/1/1.rrd"},
+        "sql": [
+          "SELECT name, data_source_path FROM data_template_data AS dtd WHERE local_data_id = ? -- [1]",
+          "SELECT value FROM settings WHERE name = ? -- [\"extended_paths\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"extended_paths_type\"]",
+          "SELECT dl.host_id, h.description, dl.snmp_query_id FROM host AS h INNER JOIN data_local AS dl ON dl.host_id = h.id AND dl.id = ? -- [1]",
+          "SELECT value FROM settings WHERE name = ? -- [\"extended_paths_hashes\"]",
+          "UPDATE data_template_data SET data_source_path = ? WHERE local_data_id = ? -- [\"<path_rra>/1/1.rrd\",1]"
+        ]
+      }
+    },
+    {
+      "ambient": {
+        "settings": {
+          "extended_paths": "on",
+          "extended_paths_hashes": "7",
+          "extended_paths_type": "hash_device"
+        }
+      },
+      "args": [1, false],
+      "id": "generated_extended_hash_device",
+      "prelude": ["UPDATE data_template_data SET data_source_path = '' WHERE local_data_id = 1"],
+      "result": {"returned": {"type": "string", "value": "<path_rra>/1/1/1.rrd"}}
+    },
+    {
+      "ambient": {"settings": {"extended_paths": "on", "extended_paths_type": "bogus"}},
+      "args": [1, false],
+      "id": "generated_extended_unknown_pattern",
+      "note": "no branch matches: new_path is undefined",
+      "prelude": ["UPDATE data_template_data SET data_source_path = '' WHERE local_data_id = 1"],
+      "result": {
+        "diagnostics": [
+          {
+            "count": 2,
+            "file": "lib/functions.php",
+            "message": "Undefined variable $new_path",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "args": [1, false],
+      "id": "generated_without_data_item_name",
+      "note": "no data_source_name on the first item: \"ds\" is used",
+      "prelude": [
+        "UPDATE data_template_data SET data_source_path = '' WHERE local_data_id = 1",
+        "UPDATE data_template_rrd SET data_source_name = '' WHERE local_data_id = 1"
+      ],
+      "result": {"returned": {"type": "string", "value": "<path_rra>/local_linux_machine_ds_1.rrd"}}
+    },
+    {
+      "args": [999999, true],
+      "id": "absent",
+      "note": "no data_template_data row: the function returns null",
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT name, data_source_path FROM data_template_data AS dtd WHERE local_data_id = ? -- [999999]"
+        ]
+      }
+    },
+    {
+      "args": [0, true],
+      "id": "id_zero",
+      "result": {"returned": {"type": "string", "value": ""}, "sql": []}
+    },
+    {
+      "args": ["abc", true],
+      "id": "id_text",
+      "result": {
+        "returned": {"type": "string", "value": "<APP>/rra/undefinedhost_voltagevaluedt_abc.rrd"},
+        "sql": [
+          "SELECT name, data_source_path FROM data_template_data AS dtd WHERE local_data_id = ? -- [\"abc\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"extended_paths\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"extended_paths_type\"]",
+          "SELECT dl.host_id, h.description, dl.snmp_query_id FROM host AS h INNER JOIN data_local AS dl ON dl.host_id = h.id AND dl.id = ? -- [\"abc\"]",
+          "SELECT data_source_name FROM data_template_rrd WHERE local_data_id = ? ORDER BY id LIMIT 1 -- [\"abc\"]",
+          "UPDATE data_template_data SET data_source_path = ? WHERE local_data_id = ? -- [\"<path_rra>/undefinedhost_voltagevaluedt_abc.rrd\",\"abc\"]"
+        ]
+      }
+    },
+    {
+      "args": [[1], true],
+      "id": "id_array",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "Cannot access offset of type array in isset or empty"
+        }
+      }
+    },
+    {
+      "args": [1, "false"],
+      "id": "expand_string_false",
+      "note": "loose == true: a non-empty string expands",
+      "result": {
+        "returned": {"type": "string", "value": "<APP>/rra/local_linux_machine_proc_1.rrd"},
+        "sql": [
+          "SELECT name, data_source_path FROM data_template_data AS dtd WHERE local_data_id = ? -- [1]"
+        ]
+      }
+    },
+    {
+      "args": [1, true],
+      "between": [
+        "UPDATE data_template_data SET data_source_path = '/changed/x.rrd' WHERE local_data_id = 1"
+      ],
+      "id": "path_is_cached",
+      "note": "second call answers from the static even though the row changed",
+      "result": {
+        "returned": {"type": "string", "value": "<APP>/rra/local_linux_machine_proc_1.rrd"},
+        "sql": [
+          "SELECT name, data_source_path FROM data_template_data AS dtd WHERE local_data_id = ? -- [1]"
+        ]
+      }
+    },
+    {
+      "args": [1, true],
+      "id": "cache_ignores_expand_flag",
+      "note": "the cache key is the id only: the first expand flag sticks",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "get_data_source_path",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "<path_rra>/local_linux_machine_proc_1.rrd"}
+        }
+      ],
+      "result": {
+        "returned": {"type": "string", "value": "<path_rra>/local_linux_machine_proc_1.rrd"},
+        "sql": []
+      }
+    }
+  ],
+  "function": "get_data_source_path",
+  "signature": [
+    {"by_ref": false, "name": "local_data_id", "optional": false, "type": null, "variadic": false},
+    {"by_ref": false, "name": "expand_paths", "optional": false, "type": null, "variadic": false}
+  ]
+}

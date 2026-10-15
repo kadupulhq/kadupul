@@ -1,0 +1,104 @@
+{
+  "cases": [
+    {
+      "args": ["poller_interval"],
+      "id": "present",
+      "result": {
+        "returned": {"type": "bool", "value": true},
+        "sql": ["SELECT COUNT(*) FROM settings WHERE name = ? -- [\"poller_interval\"]"]
+      }
+    },
+    {
+      "args": ["fncdb_missing"],
+      "id": "absent",
+      "result": {
+        "returned": {"type": "bool", "value": false},
+        "sql": ["SELECT COUNT(*) FROM settings WHERE name = ? -- [\"fncdb_missing\"]"]
+      }
+    },
+    {
+      "ambient": {"settings": {"fncdb_empty": ""}},
+      "args": ["fncdb_empty"],
+      "id": "present_empty_value",
+      "note": "a row whose value is \"\" exists",
+      "result": {
+        "returned": {"type": "bool", "value": true},
+        "sql": ["SELECT COUNT(*) FROM settings WHERE name = ? -- [\"fncdb_empty\"]"]
+      }
+    },
+    {
+      "args": ["POLLER_INTERVAL"],
+      "id": "name_case_differs",
+      "note": "the collation ignores case: the row is found",
+      "result": {
+        "returned": {"type": "bool", "value": true},
+        "sql": ["SELECT COUNT(*) FROM settings WHERE name = ? -- [\"POLLER_INTERVAL\"]"]
+      }
+    },
+    {
+      "args": ["poller_intervàl"],
+      "id": "name_accent_folds",
+      "note": "unicode_ci folds accents",
+      "result": {
+        "returned": {"type": "bool", "value": true},
+        "sql": ["SELECT COUNT(*) FROM settings WHERE name = ? -- [\"poller_intervàl\"]"]
+      }
+    },
+    {
+      "args": [null],
+      "id": "name_null",
+      "note": "null key is stored under \"\"",
+      "result": {
+        "returned": {"type": "bool", "value": false},
+        "sql": ["SELECT COUNT(*) FROM settings WHERE name = ? -- [null]"]
+      }
+    },
+    {
+      "args": [["poller_interval"]],
+      "id": "name_array",
+      "note": "illegal offset",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "Cannot access offset of type array in isset or empty"
+        },
+        "sql": []
+      }
+    },
+    {
+      "ambient": {"settings": {"fncdb_row": "x"}},
+      "args": ["fncdb_row"],
+      "between": ["DELETE FROM settings WHERE name = 'fncdb_row'"],
+      "id": "cached_true_survives_delete",
+      "result": {
+        "returned": {"type": "bool", "value": true},
+        "sql": ["SELECT COUNT(*) FROM settings WHERE name = ? -- [\"fncdb_row\"]"]
+      }
+    },
+    {
+      "args": ["fncdb_row"],
+      "between": ["INSERT INTO settings (name, value) VALUES ('fncdb_row', 'x')"],
+      "id": "cached_false_survives_insert",
+      "result": {
+        "returned": {"type": "bool", "value": false},
+        "sql": ["SELECT COUNT(*) FROM settings WHERE name = ? -- [\"fncdb_row\"]"]
+      }
+    },
+    {
+      "args": [],
+      "id": "no_arguments",
+      "result": {
+        "exception": {
+          "class": "ArgumentCountError",
+          "code": 0,
+          "message": "Too few arguments to function config_value_exists(), 0 passed in <caller> and exactly 1 expected"
+        }
+      }
+    }
+  ],
+  "function": "config_value_exists",
+  "signature": [
+    {"by_ref": false, "name": "config_name", "optional": false, "type": null, "variadic": false}
+  ]
+}

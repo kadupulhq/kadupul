@@ -1,0 +1,217 @@
+{
+  "cases": [
+    {
+      "args": [736],
+      "id": "stored_name",
+      "note": "data_source_name is set: returned as stored",
+      "result": {
+        "returned": {"type": "string", "value": "proc"},
+        "sql": [
+          "SELECT SQL_NO_CACHE dtr.data_source_name, dtd.name FROM data_template_rrd AS dtr INNER JOIN data_template_data AS dtd ON dtr.local_data_id = dtd.local_data_id WHERE dtr.id = ? -- [736]"
+        ]
+      }
+    },
+    {
+      "args": [736],
+      "id": "generated_name_empty_string",
+      "note": "no stored name: lower-cased title cut to fit 19 characters, id appended",
+      "prelude": ["UPDATE data_template_rrd SET data_source_name = '' WHERE id = 736"],
+      "result": {
+        "returned": {"type": "string", "value": "host_description736"},
+        "sql": [
+          "SELECT SQL_NO_CACHE dtr.data_source_name, dtd.name FROM data_template_rrd AS dtr INNER JOIN data_template_data AS dtd ON dtr.local_data_id = dtd.local_data_id WHERE dtr.id = ? -- [736]"
+        ]
+      }
+    },
+    {
+      "args": [999999],
+      "id": "absent",
+      "note": "no row: the missing columns raise warnings and the name is built from nothing",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Undefined array key \"name\"",
+            "severity": "E_WARNING",
+            "suppressed": false
+          },
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "strtolower(): Passing null to parameter #1 ($string) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "string", "value": "999999"},
+        "sql": [
+          "SELECT SQL_NO_CACHE dtr.data_source_name, dtd.name FROM data_template_rrd AS dtr INNER JOIN data_template_data AS dtd ON dtr.local_data_id = dtd.local_data_id WHERE dtr.id = ? -- [999999]"
+        ]
+      }
+    },
+    {
+      "args": [0],
+      "id": "id_zero",
+      "result": {"returned": {"type": "string", "value": ""}, "sql": []}
+    },
+    {
+      "args": [-5],
+      "id": "id_negative",
+      "note": "negative id: no row",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Undefined array key \"name\"",
+            "severity": "E_WARNING",
+            "suppressed": false
+          },
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "strtolower(): Passing null to parameter #1 ($string) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "string", "value": "-5"},
+        "sql": [
+          "SELECT SQL_NO_CACHE dtr.data_source_name, dtd.name FROM data_template_rrd AS dtr INNER JOIN data_template_data AS dtd ON dtr.local_data_id = dtd.local_data_id WHERE dtr.id = ? -- [-5]"
+        ]
+      }
+    },
+    {
+      "args": [[736]],
+      "id": "id_array",
+      "note": "non-empty array: reaches the query",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Trying to access array offset on false",
+            "severity": "E_WARNING",
+            "suppressed": false
+          },
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "strtolower(): Passing null to parameter #1 ($string) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "strlen(): Argument #1 ($string) must be of type string, array given"
+        },
+        "sql": [
+          "SELECT SQL_NO_CACHE dtr.data_source_name, dtd.name FROM data_template_rrd AS dtr INNER JOIN data_template_data AS dtd ON dtr.local_data_id = dtd.local_data_id WHERE dtr.id = ? -- [[736]] !! Exception: Array to string conversion"
+        ]
+      }
+    },
+    {
+      "args": ["abc"],
+      "id": "id_text",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Undefined array key \"name\"",
+            "severity": "E_WARNING",
+            "suppressed": false
+          },
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "strtolower(): Passing null to parameter #1 ($string) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "string", "value": "abc"},
+        "sql": [
+          "SELECT SQL_NO_CACHE dtr.data_source_name, dtd.name FROM data_template_rrd AS dtr INNER JOIN data_template_data AS dtd ON dtr.local_data_id = dtd.local_data_id WHERE dtr.id = ? -- [\"abc\"]"
+        ]
+      }
+    },
+    {
+      "args": [100000],
+      "id": "long_id_shortens_name",
+      "note": "a 6 digit id leaves 13 characters of name",
+      "prelude": [
+        "INSERT INTO data_local (id, host_id) VALUES (100000, 1)",
+        "INSERT INTO data_template_data (local_data_id, name) VALUES (100000, 'Memory Buffers Longer Than Nineteen')",
+        "INSERT INTO data_template_rrd (id, local_data_id, data_source_name) VALUES (100000, 100000, '')"
+      ],
+      "result": {
+        "returned": {"type": "string", "value": "memory_buffer100000"},
+        "sql": [
+          "SELECT SQL_NO_CACHE dtr.data_source_name, dtd.name FROM data_template_rrd AS dtr INNER JOIN data_template_data AS dtd ON dtr.local_data_id = dtd.local_data_id WHERE dtr.id = ? -- [100000]"
+        ]
+      }
+    },
+    {
+      "args": ["0000000000000000736"],
+      "id": "padded_id_fills_budget",
+      "note": "a 19 character id string (still row 736): substr length 0, so only the id remains",
+      "prelude": ["UPDATE data_template_rrd SET data_source_name = '' WHERE id = 736"],
+      "result": {
+        "returned": {"type": "string", "value": "0000000000000000736"},
+        "sql": [
+          "SELECT SQL_NO_CACHE dtr.data_source_name, dtd.name FROM data_template_rrd AS dtr INNER JOIN data_template_data AS dtd ON dtr.local_data_id = dtd.local_data_id WHERE dtr.id = ? -- [\"0000000000000000736\"]"
+        ]
+      }
+    },
+    {
+      "args": ["00000000000000000736"],
+      "id": "padded_id_exceeds_budget",
+      "note": "a 20 character id string: the substr length is -1 and the name loses its last character instead",
+      "prelude": ["UPDATE data_template_rrd SET data_source_name = '' WHERE id = 736"],
+      "result": {
+        "returned": {"type": "string", "value": "host_description_processe00000000000000000736"},
+        "sql": [
+          "SELECT SQL_NO_CACHE dtr.data_source_name, dtd.name FROM data_template_rrd AS dtr INNER JOIN data_template_data AS dtd ON dtr.local_data_id = dtd.local_data_id WHERE dtr.id = ? -- [\"00000000000000000736\"]"
+        ]
+      }
+    },
+    {
+      "args": [2],
+      "id": "template_item_joins_many_rows",
+      "note": "dtr 2 belongs to a template (local_data_id 0); the join matches every template dtd row and the first is used",
+      "prelude": ["UPDATE data_template_rrd SET data_source_name = '' WHERE id = 2"],
+      "result": {
+        "returned": {"type": "string", "value": "host_description_v2"},
+        "sql": [
+          "SELECT SQL_NO_CACHE dtr.data_source_name, dtd.name FROM data_template_rrd AS dtr INNER JOIN data_template_data AS dtd ON dtr.local_data_id = dtd.local_data_id WHERE dtr.id = ? -- [2]"
+        ]
+      }
+    },
+    {
+      "args": [],
+      "id": "no_arguments",
+      "result": {
+        "exception": {
+          "class": "ArgumentCountError",
+          "code": 0,
+          "message": "Too few arguments to function get_data_source_item_name(), 0 passed in <caller> and exactly 1 expected"
+        },
+        "sql": []
+      }
+    }
+  ],
+  "function": "get_data_source_item_name",
+  "signature": [
+    {
+      "by_ref": false,
+      "name": "data_template_rrd_id",
+      "optional": false,
+      "type": null,
+      "variadic": false
+    }
+  ]
+}
