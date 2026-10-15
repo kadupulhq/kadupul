@@ -1,0 +1,17 @@
+{
+  "function": "get_graph_title",
+  "cases": [
+    {"id": "device_variable_expanded", "args": [1], "note": "|host_description| becomes the device name"},
+    {"record_sql": true, "id": "absent", "args": [999999], "note": "no row: empty string"},
+    {"record_sql": true, "id": "plain_title", "args": [1], "note": "no pipe: returned as stored", "prelude": [{"sql": "UPDATE graph_templates_graph SET title = 'Plain title' WHERE local_graph_id = 1"}]},
+    {"record_sql": true, "id": "title_override_flag_set", "args": [1], "note": "t_title set: the stored text is not expanded", "prelude": [{"sql": "UPDATE graph_templates_graph SET t_title = 'on' WHERE local_graph_id = 1"}]},
+    {"record_sql": true, "id": "device_id_zero", "args": [1], "note": "host_id 0: titles are returned unexpanded", "prelude": [{"sql": "UPDATE graph_local SET host_id = 0 WHERE id = 1"}]},
+    {"id": "data_query_variables", "args": [1], "note": "query_ variables come from host_snmp_cache; an empty field value is skipped", "prelude": [{"sql": "UPDATE graph_local SET snmp_query_id = 1, snmp_index = 'eth0' WHERE id = 1"}, {"sql": "UPDATE graph_templates_graph SET title = '|host_description| - |query_ifDescr| - |query_ifAlias|' WHERE local_graph_id = 1"}, {"sql": "INSERT INTO host_snmp_cache (host_id, snmp_query_id, field_name, field_value, snmp_index, oid) VALUES (1, 1, 'ifDescr', 'eth0 uplink', 'eth0', ''), (1, 1, 'ifAlias', '', 'eth0', '')"}]},
+    {"id": "unknown_variable_nulled", "args": [1], "prelude": [{"sql": "UPDATE graph_templates_graph SET title = 'x |nothing_here| y' WHERE local_graph_id = 1"}]},
+    {"record_sql": true, "id": "no_arguments", "args": []},
+    {"id": "id_trailing_text", "args": ["1abc"]},
+    {"record_sql": true, "id": "id_null", "args": [null]},
+    {"record_sql": true, "id": "id_text", "args": ["abc"]},
+    {"record_sql": true, "id": "id_array", "args": [[1]]}
+  ]
+}

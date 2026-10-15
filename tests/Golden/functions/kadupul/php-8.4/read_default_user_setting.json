@@ -1,0 +1,71 @@
+{
+  "cases": [
+    {
+      "args": ["selected_theme"],
+      "id": "drop_array_default",
+      "result": {"returned": {"type": "string", "value": "modern"}}
+    },
+    {
+      "args": ["default_timespan"],
+      "id": "numeric_default",
+      "note": "default is an int here and a string elsewhere",
+      "result": {"returned": {"type": "int", "value": 7}}
+    },
+    {
+      "args": ["hide_disabled"],
+      "id": "checkbox_on",
+      "result": {"returned": {"type": "string", "value": "on"}}
+    },
+    {
+      "args": ["title_font"],
+      "id": "default_null_font",
+      "note": "default null: isset() is false, so the search continues and ends",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "args": ["thumbnail_sections"],
+      "id": "default_null_group",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "args": ["thumbnail_section_preview"],
+      "id": "nested_item_on",
+      "result": {"returned": {"type": "string", "value": "on"}}
+    },
+    {
+      "args": [["selected_theme"]],
+      "id": "array_name",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "Cannot access offset of type array in isset or empty"
+        }
+      }
+    },
+    {
+      "args": ["selected_theme"],
+      "id": "database_value_is_ignored",
+      "note": "a stored user value does not change the default",
+      "prelude": [
+        "INSERT INTO settings_user (user_id, name, value) VALUES (1, 'selected_theme', 'dark')"
+      ],
+      "result": {"returned": {"type": "string", "value": "modern"}, "sql": []}
+    },
+    {
+      "args": [],
+      "id": "no_arguments",
+      "result": {
+        "exception": {
+          "class": "ArgumentCountError",
+          "code": 0,
+          "message": "Too few arguments to function read_default_user_setting(), 0 passed in <caller> and exactly 1 expected"
+        }
+      }
+    }
+  ],
+  "function": "read_default_user_setting",
+  "signature": [
+    {"by_ref": false, "name": "config_name", "optional": false, "type": null, "variadic": false}
+  ]
+}

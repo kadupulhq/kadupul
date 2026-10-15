@@ -1,0 +1,15 @@
+{
+  "function": "get_hash_version",
+  "cases": [
+    {"id": "type_graph_template", "args": ["graph_template"]},
+    {"id": "type_data_template", "args": ["data_template"]},
+    {"id": "type_cdef", "args": ["cdef"]},
+    {"id": "type_data_query", "args": ["data_query"]},
+    {"id": "type_data_source_profile", "args": ["data_source_profile"]},
+    {"id": "unknown_type", "args": ["nope"], "note": "undefined key: a warning, and the version code alone"},
+    {"id": "type_case_differs", "args": ["CDEF"], "note": "array keys are case sensitive"},
+    {"id": "type_empty", "args": [""]},
+    {"id": "type_null", "args": [null]},
+    {"id": "no_arguments", "args": []}
+  ]
+}

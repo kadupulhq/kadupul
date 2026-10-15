@@ -1,0 +1,108 @@
+{
+  "cases": [
+    {
+      "args": [1, "data_template"],
+      "id": "data_template_present",
+      "note": "stored hash of data_template.1",
+      "result": {
+        "returned": {"type": "string", "value": "147da4dfdb3e45673d6824a24c699eae"},
+        "sql": ["SELECT hash FROM data_template WHERE id = ? -- [1]"]
+      }
+    },
+    {
+      "args": [999999, "data_template"],
+      "id": "data_template_absent",
+      "note": "no row: a new random hash",
+      "result": {
+        "returned": {"type": "string", "value": "<generated 32 hex>"},
+        "sql": ["SELECT hash FROM data_template WHERE id = ? -- [999999]"]
+      }
+    },
+    {
+      "args": [1, "data_template_item"],
+      "id": "data_template_item_present",
+      "note": "stored hash of data_template_rrd.1",
+      "result": {
+        "returned": {"type": "string", "value": "39fc8a8bea03276bf423fd63aa443db6"},
+        "sql": ["SELECT hash FROM data_template_rrd WHERE id = ? -- [1]"]
+      }
+    },
+    {
+      "args": [736, "data_template_item"],
+      "id": "data_template_item_stored_empty_hash",
+      "note": "data_template_rrd.736 has hash \"\": a new random hash",
+      "result": {"returned": {"type": "string", "value": "<generated 32 hex>"}}
+    },
+    {
+      "args": [1, "nope"],
+      "id": "unknown_sub_type",
+      "note": "default branch: no query, random hash",
+      "result": {"returned": {"type": "string", "value": "<generated 32 hex>"}, "sql": []}
+    },
+    {
+      "args": [1, true],
+      "id": "sub_type_true",
+      "note": "switch uses ==, so true matches the first case",
+      "result": {"returned": {"type": "string", "value": "147da4dfdb3e45673d6824a24c699eae"}}
+    },
+    {
+      "args": [1, "data_template"],
+      "id": "upper_case_hash",
+      "note": "upper case hex is accepted and returned as stored",
+      "prelude": [
+        "UPDATE data_template SET hash = '147DA4DFDB3E45673D6824A24C699EAE' WHERE id = 1"
+      ],
+      "result": {"returned": {"type": "string", "value": "147DA4DFDB3E45673D6824A24C699EAE"}}
+    },
+    {
+      "args": [1, "data_template"],
+      "id": "non_hex_32_chars",
+      "note": "32 characters but not hex (unanchored /[a-fA-F0-9]{32}/)",
+      "prelude": [
+        "UPDATE data_template SET hash = 'gggggggggggggggggggggggggggggggg' WHERE id = 1"
+      ],
+      "result": {"returned": {"type": "string", "value": "<generated 32 hex>"}}
+    },
+    {
+      "args": ["1abc", "data_template"],
+      "id": "id_trailing_text",
+      "result": {
+        "returned": {"type": "string", "value": "147da4dfdb3e45673d6824a24c699eae"},
+        "sql": ["SELECT hash FROM data_template WHERE id = ? -- [\"1abc\"]"]
+      }
+    },
+    {
+      "args": ["abc", "data_template"],
+      "id": "id_text",
+      "result": {"returned": {"type": "string", "value": "<generated 32 hex>"}}
+    },
+    {
+      "args": [null, "data_template"],
+      "id": "id_null",
+      "result": {"returned": {"type": "string", "value": "<generated 32 hex>"}}
+    },
+    {
+      "args": [[1], "data_template"],
+      "id": "id_array",
+      "result": {"returned": {"type": "string", "value": "<generated 32 hex>"}}
+    }
+  ],
+  "function": "get_hash_data_template",
+  "signature": [
+    {
+      "by_ref": false,
+      "name": "data_template_id",
+      "optional": false,
+      "type": null,
+      "variadic": false
+    },
+    {
+      "by_ref": false,
+      "default": "data_template",
+      "name": "sub_type",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    }
+  ]
+}

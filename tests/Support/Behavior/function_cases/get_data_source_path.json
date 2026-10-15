@@ -1,0 +1,21 @@
+{
+  "function": "get_data_source_path",
+  "cases": [
+    {"record_sql": true, "id": "stored_path_expanded", "args": [1, true], "note": "stored <path_rra> path with expand: <path_rra> becomes the rra directory", "isolated": true},
+    {"record_sql": true, "id": "stored_path_not_expanded", "args": [1, false], "isolated": true},
+    {"record_sql": true, "id": "stored_relative_name", "args": [1, false], "note": "no slash: <path_rra>/ is prepended", "isolated": true, "prelude": [{"sql": "UPDATE data_template_data SET data_source_path = 'plain.rrd' WHERE local_data_id = 1"}]},
+    {"id": "stored_absolute_path", "args": [1, true], "note": "a slash and no <path_rra>: returned unchanged", "isolated": true, "prelude": [{"sql": "UPDATE data_template_data SET data_source_path = '/srv/other/x.rrd' WHERE local_data_id = 1"}]},
+    {"record_sql": true, "id": "empty_path_generates_and_stores", "args": [1, false], "note": "device description and first item name build the path; the UPDATE is issued", "isolated": true, "prelude": [{"sql": "UPDATE data_template_data SET data_source_path = '' WHERE local_data_id = 1"}]},
+    {"record_sql": true, "id": "generated_extended_device", "args": [1, false], "isolated": true, "ambient": {"settings": {"extended_paths": "on", "extended_paths_type": "device"}}, "prelude": [{"sql": "UPDATE data_template_data SET data_source_path = '' WHERE local_data_id = 1"}]},
+    {"id": "generated_extended_hash_device", "args": [1, false], "isolated": true, "ambient": {"settings": {"extended_paths": "on", "extended_paths_type": "hash_device", "extended_paths_hashes": "7"}}, "prelude": [{"sql": "UPDATE data_template_data SET data_source_path = '' WHERE local_data_id = 1"}]},
+    {"id": "generated_extended_unknown_pattern", "args": [1, false], "note": "no branch matches: new_path is undefined", "isolated": true, "ambient": {"settings": {"extended_paths": "on", "extended_paths_type": "bogus"}}, "prelude": [{"sql": "UPDATE data_template_data SET data_source_path = '' WHERE local_data_id = 1"}]},
+    {"id": "generated_without_data_item_name", "args": [1, false], "note": "no data_source_name on the first item: \"ds\" is used", "isolated": true, "prelude": [{"sql": "UPDATE data_template_data SET data_source_path = '' WHERE local_data_id = 1"}, {"sql": "UPDATE data_template_rrd SET data_source_name = '' WHERE local_data_id = 1"}]},
+    {"record_sql": true, "id": "absent", "args": [999999, true], "note": "no data_template_data row: the function returns null", "isolated": true},
+    {"record_sql": true, "id": "id_zero", "args": [0, true], "isolated": true},
+    {"record_sql": true, "id": "id_text", "args": ["abc", true], "isolated": true},
+    {"id": "id_array", "args": [[1], true], "isolated": true},
+    {"record_sql": true, "id": "expand_string_false", "args": [1, "false"], "note": "loose == true: a non-empty string expands", "isolated": true},
+    {"record_sql": true, "id": "path_is_cached", "args": [1, true], "note": "second call answers from the static even though the row changed", "isolated": true, "between": [{"sql": "UPDATE data_template_data SET data_source_path = '/changed/x.rrd' WHERE local_data_id = 1"}]},
+    {"record_sql": true, "id": "cache_ignores_expand_flag", "args": [1, true], "note": "the cache key is the id only: the first expand flag sticks", "isolated": true, "prelude": [{"fn": "get_data_source_path", "args": [1, false]}]}
+  ]
+}

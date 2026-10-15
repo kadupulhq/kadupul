@@ -1,0 +1,357 @@
+{
+  "cases": [
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["fncdb_pref"],
+      "id": "session_user_stored_value",
+      "note": "logged-in user: the row of that user",
+      "prelude": ["INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'stored')"],
+      "result": {
+        "returned": {"type": "string", "value": "stored"},
+        "sql": [
+          "SELECT value FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",1]"
+        ],
+        "state": [
+          "set session.sess_user_config_array = {\"$\":\"array\",\"pairs\":[[\"fncdb_pref\",\"stored\"]]}"
+        ]
+      }
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["fncdb_pref", "given"],
+      "id": "session_user_no_row_uses_argument_default",
+      "result": {
+        "returned": {"type": "string", "value": "given"},
+        "sql": [
+          "SELECT value FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",1]"
+        ],
+        "state": [
+          "set session.sess_user_config_array = {\"$\":\"array\",\"pairs\":[[\"fncdb_pref\",\"given\"]]}"
+        ]
+      }
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["selected_theme"],
+      "id": "session_user_no_row_library_default",
+      "note": "falls back to $settings_user",
+      "result": {
+        "returned": {"type": "string", "value": "modern"},
+        "sql": [
+          "SELECT value FROM settings_user WHERE name = ? AND user_id = ? -- [\"selected_theme\",1]"
+        ],
+        "state": [
+          "set session.sess_user_config_array = {\"$\":\"array\",\"pairs\":[[\"selected_theme\",\"modern\"]]}"
+        ]
+      }
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["fncdb_unknown"],
+      "id": "session_user_unknown_no_default",
+      "note": "null: no row, no argument, no library default",
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_unknown\",1]"
+        ],
+        "state": [
+          "set session.sess_user_config_array = {\"$\":\"array\",\"pairs\":[[\"fncdb_unknown\",null]]}"
+        ]
+      }
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["fncdb_pref", "given"],
+      "id": "stored_value_empty_string",
+      "note": "a stored \"\" wins over the default",
+      "prelude": ["INSERT INTO settings_user VALUES (1, 'fncdb_pref', '')"],
+      "result": {
+        "returned": {"type": "string", "value": ""},
+        "sql": [
+          "SELECT value FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",1]"
+        ],
+        "state": [
+          "set session.sess_user_config_array = {\"$\":\"array\",\"pairs\":[[\"fncdb_pref\",\"\"]]}"
+        ]
+      }
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["fncdb_pref"],
+      "id": "stored_value_long",
+      "note": "the column holds 4096 bytes",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (?, ?, ?) -- [1,\"fncdb_pref\",{\"$\":\"repeat\",\"count\":4096,\"unit\":\"v\"}]"
+      ],
+      "result": {
+        "returned": {
+          "type": "string",
+          "value": "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
+        },
+        "sql": [
+          "SELECT value FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",1]"
+        ],
+        "state": [
+          "set session.sess_user_config_array = {\"$\":\"array\",\"pairs\":[[\"fncdb_pref\",{\"$\":\"long\",\"bytes\":4096,\"head_hex\":\"7676767676767676767676767676767676767676767676767676767676767676\",\"sha256\":\"0c6340d0ceddb2aa6757efab90aea89460950e169c900908d058d53560b4df28\"}]]}"
+        ]
+      }
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["FNCDB_PREF"],
+      "id": "name_case_differs_matches_row",
+      "note": "collation folds case, so another spelling reads the row",
+      "prelude": ["INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'stored')"],
+      "result": {
+        "returned": {"type": "string", "value": "stored"},
+        "sql": [
+          "SELECT value FROM settings_user WHERE name = ? AND user_id = ? -- [\"FNCDB_PREF\",1]"
+        ],
+        "state": [
+          "set session.sess_user_config_array = {\"$\":\"array\",\"pairs\":[[\"FNCDB_PREF\",\"stored\"]]}"
+        ]
+      }
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": [["x"]],
+      "id": "name_array",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "Cannot access offset of type array in isset or empty"
+        },
+        "sql": [
+          "SELECT value FROM settings_user WHERE name = ? AND user_id = ? -- [[\"x\"],1] !! Exception: Array to string conversion"
+        ]
+      }
+    },
+    {
+      "ambient": {
+        "session": {
+          "sess_user_config_array": {"$": "array", "pairs": [["fncdb_pref", "cached"]]},
+          "sess_user_id": 1
+        }
+      },
+      "args": ["fncdb_pref"],
+      "id": "cache_serves_value",
+      "note": "a value in sess_user_config_array is returned without a query",
+      "prelude": ["INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'stored')"],
+      "result": {"returned": {"type": "string", "value": "cached"}, "sql": []}
+    },
+    {
+      "ambient": {
+        "session": {
+          "sess_user_config_array": {"$": "array", "pairs": [["fncdb_pref", "cached"]]},
+          "sess_user_id": 1
+        }
+      },
+      "args": ["fncdb_pref", false, true],
+      "id": "cache_bypassed_by_force",
+      "prelude": ["INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'stored')"],
+      "result": {
+        "returned": {"type": "string", "value": "stored"},
+        "sql": [
+          "SELECT value FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",1]"
+        ],
+        "state": ["set session.sess_user_config_array.fncdb_pref = \"stored\""]
+      }
+    },
+    {
+      "ambient": {"session": {"sess_user_config_array": "oops", "sess_user_id": 1}},
+      "args": ["fncdb_pref"],
+      "id": "cache_not_an_array",
+      "note": "a string cache is not replaced: assigning the entry fails with a TypeError",
+      "prelude": ["INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'stored')"],
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "Cannot access offset of type string on string"
+        },
+        "sql": [
+          "SELECT value FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",1]"
+        ]
+      }
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["fncdb_pref", false, true],
+      "between": ["UPDATE settings_user SET value = 'after' WHERE name = 'fncdb_pref'"],
+      "id": "force_sees_table_change",
+      "prelude": ["INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'before')"],
+      "result": {
+        "returned": {"type": "string", "value": "before"},
+        "sql": [
+          "SELECT value FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",1]"
+        ],
+        "state": [
+          "set session.sess_user_config_array = {\"$\":\"array\",\"pairs\":[[\"fncdb_pref\",\"before\"]]}"
+        ]
+      },
+      "warm": {"result": {"returned": {"type": "string", "value": "after"}}, "same": false}
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["fncdb_pref", false, false, 2],
+      "id": "explicit_user_row",
+      "note": "user > 0: that user, whatever the session says",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'mine')",
+        "INSERT INTO settings_user VALUES (2, 'fncdb_pref', 'theirs')"
+      ],
+      "result": {
+        "returned": {"type": "string", "value": "theirs"},
+        "sql": [
+          "SELECT value FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",2]"
+        ]
+      }
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["fncdb_pref", "given", false, 2],
+      "id": "explicit_user_no_row_argument_default",
+      "result": {
+        "returned": {"type": "string", "value": "given"},
+        "sql": [
+          "SELECT value FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",2]"
+        ]
+      }
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["selected_theme", false, false, 2],
+      "id": "explicit_user_no_row_library_default",
+      "result": {
+        "returned": {"type": "string", "value": "modern"},
+        "sql": [
+          "SELECT value FROM settings_user WHERE name = ? AND user_id = ? -- [\"selected_theme\",2]"
+        ]
+      }
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["fncdb_pref", false, false, -1],
+      "id": "negative_user_session_user_not_used",
+      "note": "not 0 and not > 0: with auth on, the anonymous branch reads user 0",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'anon')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'mine')"
+      ],
+      "result": {
+        "returned": {"type": "string", "value": "anon"},
+        "sql": [
+          "SELECT value FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",0]"
+        ],
+        "state": [
+          "set session.sess_user_config_array = {\"$\":\"array\",\"pairs\":[[\"fncdb_pref\",\"anon\"]]}"
+        ]
+      }
+    },
+    {
+      "ambient": {"settings": {"auth_method": "0", "guest_user": "guest"}},
+      "args": ["fncdb_pref"],
+      "id": "guest_user_row",
+      "note": "auth_method 0: the guest account is the effective user",
+      "prelude": ["INSERT INTO settings_user VALUES (3, 'fncdb_pref', 'guest-value')"],
+      "result": {
+        "returned": {"type": "string", "value": "guest-value"},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"auth_method\"]",
+          "SELECT user_auth.id FROM settings INNER JOIN user_auth ON user_auth.username = settings.value WHERE settings.name = 'guest_user'",
+          "SELECT value FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",3]"
+        ],
+        "state": ["set config.config_options_array.auth_method = \"0\""]
+      }
+    },
+    {
+      "ambient": {"settings": {"auth_method": "0", "guest_user": "nobody"}},
+      "args": ["fncdb_pref"],
+      "id": "guest_user_names_missing_account",
+      "note": "guest_user matches no user_auth row: effective user 0",
+      "prelude": ["INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'anon')"],
+      "result": {
+        "returned": {"type": "string", "value": "anon"},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"auth_method\"]",
+          "SELECT user_auth.id FROM settings INNER JOIN user_auth ON user_auth.username = settings.value WHERE settings.name = 'guest_user'",
+          "SELECT value FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",0]"
+        ],
+        "state": ["set config.config_options_array.auth_method = \"0\""]
+      }
+    },
+    {
+      "ambient": {"settings": {"auth_method": "0", "guest_user": "guest"}},
+      "args": ["fncdb_pref"],
+      "between": ["UPDATE settings_user SET value = 'after' WHERE user_id = 3"],
+      "id": "guest_user_is_not_cached",
+      "prelude": ["INSERT INTO settings_user VALUES (3, 'fncdb_pref', 'before')"],
+      "result": {
+        "returned": {"type": "string", "value": "before"},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"auth_method\"]",
+          "SELECT user_auth.id FROM settings INNER JOIN user_auth ON user_auth.username = settings.value WHERE settings.name = 'guest_user'",
+          "SELECT value FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",3]"
+        ],
+        "state": ["set config.config_options_array.auth_method = \"0\""]
+      },
+      "warm": {"result": {"returned": {"type": "string", "value": "after"}}, "same": false}
+    },
+    {
+      "args": ["selected_theme"],
+      "id": "anonymous_user_zero_no_row",
+      "note": "no session user and auth on: user 0, no row, the library default",
+      "result": {
+        "returned": {"type": "string", "value": "modern"},
+        "sql": [
+          "SELECT value FROM settings_user WHERE name = ? AND user_id = ? -- [\"selected_theme\",0]"
+        ],
+        "state": [
+          "set session.sess_user_config_array = {\"$\":\"array\",\"pairs\":[[\"selected_theme\",\"modern\"]]}"
+        ]
+      }
+    },
+    {
+      "args": [],
+      "id": "no_arguments",
+      "result": {
+        "exception": {
+          "class": "ArgumentCountError",
+          "code": 0,
+          "message": "Too few arguments to function read_user_setting(), 0 passed in <caller> and at least 1 expected"
+        },
+        "sql": []
+      }
+    }
+  ],
+  "function": "read_user_setting",
+  "signature": [
+    {"by_ref": false, "name": "config_name", "optional": false, "type": null, "variadic": false},
+    {
+      "by_ref": false,
+      "default": false,
+      "name": "default",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    },
+    {
+      "by_ref": false,
+      "default": false,
+      "name": "force",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    },
+    {
+      "by_ref": false,
+      "default": 0,
+      "name": "user",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    }
+  ]
+}

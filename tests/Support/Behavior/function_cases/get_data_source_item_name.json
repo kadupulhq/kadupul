@@ -1,0 +1,17 @@
+{
+  "function": "get_data_source_item_name",
+  "cases": [
+    {"record_sql": true, "id": "stored_name", "args": [736], "note": "data_source_name is set: returned as stored"},
+    {"record_sql": true, "id": "generated_name_empty_string", "args": [736], "note": "no stored name: lower-cased title cut to fit 19 characters, id appended", "prelude": [{"sql": "UPDATE data_template_rrd SET data_source_name = '' WHERE id = 736"}]},
+    {"record_sql": true, "id": "absent", "args": [999999], "note": "no row: the missing columns raise warnings and the name is built from nothing"},
+    {"record_sql": true, "id": "id_zero", "args": [0]},
+    {"record_sql": true, "id": "id_negative", "args": [-5], "note": "negative id: no row"},
+    {"record_sql": true, "id": "id_array", "args": [[736]], "note": "non-empty array: reaches the query"},
+    {"record_sql": true, "id": "id_text", "args": ["abc"]},
+    {"record_sql": true, "id": "long_id_shortens_name", "args": [100000], "note": "a 6 digit id leaves 13 characters of name", "prelude": [{"sql": "INSERT INTO data_local (id, host_id) VALUES (100000, 1)"}, {"sql": "INSERT INTO data_template_data (local_data_id, name) VALUES (100000, 'Memory Buffers Longer Than Nineteen')"}, {"sql": "INSERT INTO data_template_rrd (id, local_data_id, data_source_name) VALUES (100000, 100000, '')"}]},
+    {"record_sql": true, "id": "padded_id_fills_budget", "args": ["0000000000000000736"], "note": "a 19 character id string (still row 736): substr length 0, so only the id remains", "prelude": [{"sql": "UPDATE data_template_rrd SET data_source_name = '' WHERE id = 736"}]},
+    {"record_sql": true, "id": "padded_id_exceeds_budget", "args": ["00000000000000000736"], "note": "a 20 character id string: the substr length is -1 and the name loses its last character instead", "prelude": [{"sql": "UPDATE data_template_rrd SET data_source_name = '' WHERE id = 736"}]},
+    {"record_sql": true, "id": "template_item_joins_many_rows", "args": [2], "note": "dtr 2 belongs to a template (local_data_id 0); the join matches every template dtd row and the first is used", "prelude": [{"sql": "UPDATE data_template_rrd SET data_source_name = '' WHERE id = 2"}]},
+    {"record_sql": true, "id": "no_arguments", "args": []}
+  ]
+}

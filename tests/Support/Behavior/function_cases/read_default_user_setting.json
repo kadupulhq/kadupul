@@ -1,0 +1,14 @@
+{
+  "function": "read_default_user_setting",
+  "cases": [
+    {"id": "drop_array_default", "args": ["selected_theme"]},
+    {"id": "numeric_default", "args": ["default_timespan"], "note": "default is an int here and a string elsewhere"},
+    {"id": "checkbox_on", "args": ["hide_disabled"]},
+    {"id": "default_null_font", "args": ["title_font"], "note": "default null: isset() is false, so the search continues and ends"},
+    {"id": "default_null_group", "args": ["thumbnail_sections"]},
+    {"id": "nested_item_on", "args": ["thumbnail_section_preview"]},
+    {"id": "array_name", "args": [["selected_theme"]]},
+    {"id": "database_value_is_ignored", "args": ["selected_theme"], "note": "a stored user value does not change the default", "record_sql": true, "prelude": [{"sql": "INSERT INTO settings_user (user_id, name, value) VALUES (1, 'selected_theme', 'dark')"}]},
+    {"id": "no_arguments", "args": []}
+  ]
+}

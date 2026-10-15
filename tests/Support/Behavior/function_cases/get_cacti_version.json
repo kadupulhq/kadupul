@@ -1,0 +1,12 @@
+{
+  "function": "get_cacti_version",
+  "cases": [
+    {"record_sql": true, "id": "installed_version", "args": [], "note": "the value in the version table", "isolated": true},
+    {"record_sql": true, "id": "whitespace_trimmed", "args": [], "isolated": true, "prelude": [{"sql": "DELETE FROM version"}, {"sql": "INSERT INTO version (cacti) VALUES ('  9.8.7  ')"}]},
+    {"record_sql": true, "id": "empty_version_not_cached", "args": [], "note": "an empty string leaves the static empty, so every call queries again", "isolated": true, "prelude": [{"sql": "DELETE FROM version"}, {"sql": "INSERT INTO version (cacti) VALUES ('')"}]},
+    {"record_sql": true, "id": "zero_string_is_cached", "args": [], "note": "\"0\" is not == \"\" in PHP 8, so it is cached", "isolated": true, "prelude": [{"sql": "DELETE FROM version"}, {"sql": "INSERT INTO version (cacti) VALUES ('0')"}]},
+    {"record_sql": true, "id": "no_version_row", "args": [], "note": "trim(false) gives an empty string", "isolated": true, "prelude": [{"sql": "DELETE FROM version"}]},
+    {"record_sql": true, "id": "cached_value_survives_update", "args": [], "note": "the second call ignores the table change", "isolated": true, "between": [{"sql": "UPDATE version SET cacti = '5.5.5'"}]},
+    {"record_sql": true, "id": "empty_value_requeried", "args": [], "note": "an empty version is looked up again after the table gains a value", "isolated": true, "prelude": [{"sql": "DELETE FROM version"}, {"sql": "INSERT INTO version (cacti) VALUES ('')"}], "between": [{"sql": "UPDATE version SET cacti = '7.7.7'"}]}
+  ]
+}

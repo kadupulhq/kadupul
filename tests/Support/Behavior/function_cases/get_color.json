@@ -1,0 +1,13 @@
+{
+  "function": "get_color",
+  "cases": [
+    {"record_sql": true, "id": "present_black", "args": [1]},
+    {"record_sql": true, "id": "absent", "args": [999999], "note": "no row: false"},
+    {"record_sql": true, "id": "hex_empty", "args": [1], "prelude": [{"sql": "UPDATE colors SET hex = '' WHERE id = 1"}]},
+    {"record_sql": true, "id": "no_arguments", "args": []},
+    {"record_sql": true, "id": "id_trailing_text", "args": ["1abc"]},
+    {"record_sql": true, "id": "id_null", "args": [null]},
+    {"record_sql": true, "id": "id_text", "args": ["abc"]},
+    {"record_sql": true, "id": "id_array", "args": [[1]]}
+  ]
+}

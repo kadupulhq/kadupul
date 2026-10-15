@@ -1,0 +1,246 @@
+{
+  "cases": [
+    {
+      "args": ["fncdb_new", "alpha"],
+      "id": "insert_new",
+      "note": "new row; the process cache is primed",
+      "result": {
+        "returned": {"type": "bool", "value": true},
+        "sql": [
+          "INSERT INTO settings (name, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [\"fncdb_new\",\"alpha\"]"
+        ],
+        "state": ["set config.config_options_array.fncdb_new = \"alpha\""],
+        "table_diff": ["+ settings {\"name\":\"fncdb_new\",\"value\":\"alpha\"}"]
+      }
+    },
+    {
+      "args": ["poller_interval", "60"],
+      "id": "update_existing",
+      "note": "ON DUPLICATE KEY UPDATE; the old value is replaced",
+      "result": {
+        "returned": {"type": "bool", "value": true},
+        "sql": [
+          "INSERT INTO settings (name, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [\"poller_interval\",\"60\"]"
+        ],
+        "state": ["set config.config_options_array.poller_interval = \"60\""],
+        "table_diff": [
+          "- settings {\"name\":\"poller_interval\",\"value\":\"300\"}",
+          "+ settings {\"name\":\"poller_interval\",\"value\":\"60\"}"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_new", {"$": "bytes", "hex": "c328ff"}],
+      "id": "invalid_utf8_value",
+      "note": "stored with substitute characters; the cache keeps the original bytes",
+      "result": {
+        "returned": {"type": "bool", "value": true},
+        "sql": [
+          "INSERT INTO settings (name, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [\"fncdb_new\",{\"$\":\"bytes\",\"hex\":\"c328ff\"}]"
+        ],
+        "state": [
+          "set config.config_options_array.fncdb_new = {\"$\":\"bytes\",\"hex\":\"c328ff\"}"
+        ],
+        "table_diff": ["+ settings {\"name\":\"fncdb_new\",\"value\":\"?(?\"}"]
+      }
+    },
+    {
+      "args": ["fncdb_new", {"$": "repeat", "count": 4097, "unit": "v"}],
+      "id": "long_value_too_long",
+      "note": "one byte over: the stored value is cut to 4096 and the call still returns true",
+      "result": {
+        "returned": {"type": "bool", "value": true},
+        "sql": [
+          "INSERT INTO settings (name, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [\"fncdb_new\",{\"$\":\"long\",\"bytes\":4097,\"head_hex\":\"7676767676767676767676767676767676767676767676767676767676767676\",\"sha256\":\"5b917f3c0c9b092dc2139b169b6369e37b8f75b56ed928281fad1c3cf510bf4f\"}]"
+        ],
+        "state": [
+          "set config.config_options_array.fncdb_new = {\"$\":\"long\",\"bytes\":4097,\"head_hex\":\"7676767676767676767676767676767676767676767676767676767676767676\",\"sha256\":\"5b917f3c0c9b092dc2139b169b6369e37b8f75b56ed928281fad1c3cf510bf4f\"}"
+        ],
+        "table_diff": [
+          "+ settings {\"name\":\"fncdb_new\",\"value\":{\"$\":\"long\",\"bytes\":4096,\"head_hex\":\"7676767676767676767676767676767676767676767676767676767676767676\",\"sha256\":\"0c6340d0ceddb2aa6757efab90aea89460950e169c900908d058d53560b4df28\"}}"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_new", null],
+      "id": "null_value",
+      "note": "value is NOT NULL: refused, false",
+      "result": {
+        "returned": {"type": "bool", "value": false},
+        "sql": [
+          "INSERT INTO settings (name, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [\"fncdb_new\",null] !! 23000 1048 Column 'value' cannot be null"
+        ]
+      }
+    },
+    {
+      "args": ["POLLER_INTERVAL", "61"],
+      "id": "name_case_variant_updates_existing_row",
+      "note": "the collation treats the names as equal, so the existing row is updated and keeps its own case",
+      "result": {
+        "returned": {"type": "bool", "value": true},
+        "sql": [
+          "INSERT INTO settings (name, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [\"POLLER_INTERVAL\",\"61\"]"
+        ],
+        "state": ["set config.config_options_array.POLLER_INTERVAL = \"61\""],
+        "table_diff": [
+          "- settings {\"name\":\"poller_interval\",\"value\":\"300\"}",
+          "+ settings {\"name\":\"poller_interval\",\"value\":\"61\"}"
+        ]
+      }
+    },
+    {
+      "args": [{"$": "repeat", "count": 300, "unit": "n"}, "v"],
+      "id": "name_256_bytes",
+      "note": "logged as too long; the stored name is cut to 255 bytes and the call still returns true",
+      "result": {
+        "log": [
+          "<TIMESTAMP> - SYSTEM ERROR: Config option name 'nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn' is too long, will be truncated"
+        ],
+        "returned": {"type": "bool", "value": true},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"selective_debug\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]",
+          "INSERT INTO settings (name, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [{\"$\":\"long\",\"bytes\":300,\"head_hex\":\"6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e\",\"sha256\":\"230b077491957fb486227d8d66cc84eb751bc5475cc5c41e99d9b1caf847732f\"},\"v\"]"
+        ],
+        "state": [
+          "set config.config_options_array.selective_debug = \"\"",
+          "set config.config_options_array.client_timezone_support = \"0\"",
+          "set config.config_options_array.log_destination = 1",
+          "set config.config_options_array.log_verbosity = 2",
+          "set config.config_options_array.nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn = \"v\""
+        ],
+        "table_diff": [
+          "+ settings {\"name\":{\"$\":\"long\",\"bytes\":255,\"head_hex\":\"6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e6e\",\"sha256\":\"3bb555e4ed3e8c6e1818a52c8917ddaa25e9333eeb43a22a9890047c3ded92cc\"},\"value\":\"v\"}"
+        ]
+      }
+    },
+    {
+      "ambient": {"config": {"is_web": true}},
+      "args": ["fncdb_new", "alpha"],
+      "id": "web_session_cache",
+      "note": "is_web: the value goes to $_SESSION",
+      "result": {
+        "returned": {"type": "bool", "value": true},
+        "sql": [
+          "INSERT INTO settings (name, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [\"fncdb_new\",\"alpha\"]"
+        ],
+        "state": [
+          "set session.sess_config_array = {\"$\":\"array\",\"pairs\":[[\"fncdb_new\",\"alpha\"]]}"
+        ],
+        "table_diff": ["+ settings {\"name\":\"fncdb_new\",\"value\":\"alpha\"}"]
+      }
+    },
+    {
+      "ambient": {"config": {"config_options_array": "oops"}},
+      "args": ["fncdb_new", "alpha"],
+      "id": "cli_cache_replaces_non_array",
+      "result": {
+        "returned": {"type": "bool", "value": true},
+        "sql": [
+          "INSERT INTO settings (name, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [\"fncdb_new\",\"alpha\"]"
+        ],
+        "state": [
+          "set config.config_options_array = {\"$\":\"array\",\"pairs\":[[\"fncdb_new\",\"alpha\"]]}"
+        ],
+        "table_diff": ["+ settings {\"name\":\"fncdb_new\",\"value\":\"alpha\"}"]
+      }
+    },
+    {
+      "ambient": {"config": {"DEBUG_SET_CONFIG_OPTION": true}},
+      "args": ["fncdb_new", "alpha"],
+      "id": "debug_flag_appends_to_a_file",
+      "note": "DEBUG_SET_CONFIG_OPTION writes a line to the temp directory; the return value is unchanged",
+      "result": {
+        "returned": {"type": "bool", "value": true},
+        "sql": [
+          "INSERT INTO settings (name, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [\"fncdb_new\",\"alpha\"]"
+        ],
+        "state": ["set config.config_options_array.fncdb_new = \"alpha\""],
+        "table_diff": ["+ settings {\"name\":\"fncdb_new\",\"value\":\"alpha\"}"]
+      }
+    },
+    {
+      "args": ["fncdb_new", "alpha", true],
+      "id": "remote_without_collectors",
+      "note": "remote=true with only the main poller: no collector writes",
+      "result": {
+        "returned": {"type": "bool", "value": true},
+        "sql": [
+          "INSERT INTO settings (name, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [\"fncdb_new\",\"alpha\"]",
+          "SELECT id, UNIX_TIMESTAMP() - UNIX_TIMESTAMP(last_status) AS last_polled FROM poller WHERE id > 1 AND disabled=\"\""
+        ],
+        "state": ["set config.config_options_array.fncdb_new = \"alpha\""],
+        "table_diff": ["+ settings {\"name\":\"fncdb_new\",\"value\":\"alpha\"}"]
+      }
+    },
+    {
+      "ambient": {"config": {"poller_id": 2}},
+      "args": ["path_fncdb", "x", true],
+      "id": "remote_path_setting_on_collector_skips_push",
+      "note": "is_remote_path_setting is true: collectors are not contacted",
+      "prelude": ["INSERT INTO poller (id, dbhost, last_status) VALUES (2, 'localhost', NOW())"],
+      "result": {
+        "returned": {"type": "bool", "value": true},
+        "sql": [
+          "INSERT INTO settings (name, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [\"path_fncdb\",\"x\"]"
+        ],
+        "state": ["set config.config_options_array.path_fncdb = \"x\""],
+        "table_diff": ["+ settings {\"name\":\"path_fncdb\",\"value\":\"x\"}"]
+      }
+    },
+    {
+      "args": ["fncdb_new", "alpha", true],
+      "id": "remote_collector_heartbeat_stale",
+      "note": "a collector with an old heartbeat is skipped: local write done, result false, warning queued",
+      "prelude": [
+        "INSERT INTO poller (id, dbhost, last_status) VALUES (2, 'localhost', '2000-01-01 00:00:00')"
+      ],
+      "result": {
+        "returned": {"type": "bool", "value": false},
+        "sql": [
+          "INSERT INTO settings (name, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [\"fncdb_new\",\"alpha\"]",
+          "SELECT id, UNIX_TIMESTAMP() - UNIX_TIMESTAMP(last_status) AS last_polled FROM poller WHERE id > 1 AND disabled=\"\""
+        ],
+        "state": [
+          "set session.sess_messages = {\"$\":\"array\",\"pairs\":[[\"poller_2\",{\"$\":\"array\",\"pairs\":[[\"message\",\"Settings save to Data Collector 2 skipped due to heartbeat.\"],[\"level\",2]]}]]}",
+          "set config.config_options_array.fncdb_new = \"alpha\""
+        ],
+        "table_diff": ["+ settings {\"name\":\"fncdb_new\",\"value\":\"alpha\"}"]
+      }
+    },
+    {
+      "args": ["fncdb_new", "alpha", true],
+      "id": "remote_collector_unreachable",
+      "note": "fresh heartbeat but the connect helper refuses a loopback host: error queued, result false",
+      "prelude": ["INSERT INTO poller (id, dbhost, last_status) VALUES (2, 'localhost', NOW())"],
+      "result": {
+        "returned": {"type": "bool", "value": false},
+        "sql": [
+          "INSERT INTO settings (name, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [\"fncdb_new\",\"alpha\"]",
+          "SELECT id, UNIX_TIMESTAMP() - UNIX_TIMESTAMP(last_status) AS last_polled FROM poller WHERE id > 1 AND disabled=\"\"",
+          "SELECT * FROM poller WHERE id = ? -- [2]"
+        ],
+        "state": [
+          "set session.sess_messages = {\"$\":\"array\",\"pairs\":[[\"poller_2\",{\"$\":\"array\",\"pairs\":[[\"message\",\"Settings save to Data Collector 2 Failed.\"],[\"level\",3]]}]]}",
+          "set config.config_options_array.fncdb_new = \"alpha\""
+        ],
+        "table_diff": ["+ settings {\"name\":\"fncdb_new\",\"value\":\"alpha\"}"]
+      }
+    }
+  ],
+  "function": "set_config_option",
+  "signature": [
+    {"by_ref": false, "name": "config_name", "optional": false, "type": null, "variadic": false},
+    {"by_ref": false, "name": "value", "optional": false, "type": null, "variadic": false},
+    {
+      "by_ref": false,
+      "default": false,
+      "name": "remote",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    }
+  ]
+}

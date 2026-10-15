@@ -1,0 +1,359 @@
+{
+  "cases": [
+    {
+      "args": [1, "AND dspr.steps > 6"],
+      "id": "graph_one_profile",
+      "note": "rows of profile 1 ordered by steps",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": [
+            {
+              "$": "array",
+              "pairs": [
+                ["id", 3],
+                ["step", 300],
+                ["steps", 24],
+                ["rows", 775],
+                ["name", "Monthly (2 Hour Average)"],
+                ["rrd_step", 300],
+                ["timespan", 2618784]
+              ]
+            },
+            {
+              "$": "array",
+              "pairs": [
+                ["id", 4],
+                ["step", 300],
+                ["steps", 288],
+                ["rows", 797],
+                ["name", "Yearly (1 Day Average)"],
+                ["rrd_step", 300],
+                ["timespan", 31536000]
+              ]
+            }
+          ]
+        },
+        "sql": [
+          "SELECT DISTINCT SQL_NO_CACHE dspr.id, dsp.step, dspr.steps, dspr.rows, dspr.name, dtd.rrd_step, dspr.timespan FROM graph_templates_item AS gti LEFT JOIN data_template_rrd AS dtr ON gti.task_item_id=dtr.id LEFT JOIN data_template_data AS dtd ON dtr.local_data_id = dtd.local_data_id LEFT JOIN data_source_profiles AS dsp ON dtd.data_source_profile_id=dsp.id LEFT JOIN data_source_profiles_rra AS dspr ON dsp.id=dspr.data_source_profile_id AND dtd.local_data_id != 0 WHERE gti.local_graph_id = ? AND dspr.steps > 6 ORDER BY dspr.steps -- [1]"
+        ]
+      }
+    },
+    {
+      "args": [4, "AND dspr.steps > 200"],
+      "id": "graph_two_profiles",
+      "note": "the second data source uses profile 2: rows of both profiles",
+      "prelude": [
+        "UPDATE data_template_data SET data_source_profile_id = 2 WHERE local_data_id = 5"
+      ],
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": [
+            {
+              "$": "array",
+              "pairs": [
+                ["id", 4],
+                ["step", 300],
+                ["steps", 288],
+                ["rows", 797],
+                ["name", "Yearly (1 Day Average)"],
+                ["rrd_step", 300],
+                ["timespan", 31536000]
+              ]
+            },
+            {
+              "$": "array",
+              "pairs": [
+                ["id", 8],
+                ["step", 30],
+                ["steps", 480],
+                ["rows", 4380],
+                ["name", "Yearly (4 Hour Average)"],
+                ["rrd_step", 300],
+                ["timespan", 31536000]
+              ]
+            }
+          ]
+        },
+        "sql": [
+          "SELECT DISTINCT SQL_NO_CACHE dspr.id, dsp.step, dspr.steps, dspr.rows, dspr.name, dtd.rrd_step, dspr.timespan FROM graph_templates_item AS gti LEFT JOIN data_template_rrd AS dtr ON gti.task_item_id=dtr.id LEFT JOIN data_template_data AS dtd ON dtr.local_data_id = dtd.local_data_id LEFT JOIN data_source_profiles AS dsp ON dtd.data_source_profile_id=dsp.id LEFT JOIN data_source_profiles_rra AS dspr ON dsp.id=dspr.data_source_profile_id AND dtd.local_data_id != 0 WHERE gti.local_graph_id = ? AND dspr.steps > 200 ORDER BY dspr.steps -- [4]"
+        ]
+      }
+    },
+    {
+      "args": [1],
+      "id": "graph_profile_without_rras",
+      "note": "profile with no rra rows: one row with NULL rra columns",
+      "prelude": [
+        "INSERT INTO data_source_profiles (id, hash, name, step) VALUES (50, 'ffffffffffffffffffffffffffffffff', 'empty', 300)",
+        "UPDATE data_template_data SET data_source_profile_id = 50 WHERE local_data_id = 1"
+      ],
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": [
+            {
+              "$": "array",
+              "pairs": [
+                ["id", null],
+                ["step", 300],
+                ["steps", null],
+                ["rows", null],
+                ["name", null],
+                ["rrd_step", 300],
+                ["timespan", null]
+              ]
+            }
+          ]
+        },
+        "sql": [
+          "SELECT DISTINCT SQL_NO_CACHE dspr.id, dsp.step, dspr.steps, dspr.rows, dspr.name, dtd.rrd_step, dspr.timespan FROM graph_templates_item AS gti LEFT JOIN data_template_rrd AS dtr ON gti.task_item_id=dtr.id LEFT JOIN data_template_data AS dtd ON dtr.local_data_id = dtd.local_data_id LEFT JOIN data_source_profiles AS dsp ON dtd.data_source_profile_id=dsp.id LEFT JOIN data_source_profiles_rra AS dspr ON dsp.id=dspr.data_source_profile_id AND dtd.local_data_id != 0 WHERE gti.local_graph_id = ? ORDER BY dspr.steps -- [1]"
+        ]
+      }
+    },
+    {
+      "args": [999999],
+      "id": "absent",
+      "note": "no graph items: empty list",
+      "result": {
+        "returned": {"type": "array", "value": []},
+        "sql": [
+          "SELECT DISTINCT SQL_NO_CACHE dspr.id, dsp.step, dspr.steps, dspr.rows, dspr.name, dtd.rrd_step, dspr.timespan FROM graph_templates_item AS gti LEFT JOIN data_template_rrd AS dtr ON gti.task_item_id=dtr.id LEFT JOIN data_template_data AS dtd ON dtr.local_data_id = dtd.local_data_id LEFT JOIN data_source_profiles AS dsp ON dtd.data_source_profile_id=dsp.id LEFT JOIN data_source_profiles_rra AS dspr ON dsp.id=dspr.data_source_profile_id AND dtd.local_data_id != 0 WHERE gti.local_graph_id = ? ORDER BY dspr.steps -- [999999]"
+        ]
+      }
+    },
+    {
+      "args": [1, "AND dspr.steps > 1 AND dspr.steps < 100"],
+      "id": "where_fragment_filters",
+      "note": "sql_where is appended to the statement as text",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": [
+            {
+              "$": "array",
+              "pairs": [
+                ["id", 2],
+                ["step", 300],
+                ["steps", 6],
+                ["rows", 700],
+                ["name", "Weekly (30 Minute Average)"],
+                ["rrd_step", 300],
+                ["timespan", 604800]
+              ]
+            },
+            {
+              "$": "array",
+              "pairs": [
+                ["id", 3],
+                ["step", 300],
+                ["steps", 24],
+                ["rows", 775],
+                ["name", "Monthly (2 Hour Average)"],
+                ["rrd_step", 300],
+                ["timespan", 2618784]
+              ]
+            }
+          ]
+        },
+        "sql": [
+          "SELECT DISTINCT SQL_NO_CACHE dspr.id, dsp.step, dspr.steps, dspr.rows, dspr.name, dtd.rrd_step, dspr.timespan FROM graph_templates_item AS gti LEFT JOIN data_template_rrd AS dtr ON gti.task_item_id=dtr.id LEFT JOIN data_template_data AS dtd ON dtr.local_data_id = dtd.local_data_id LEFT JOIN data_source_profiles AS dsp ON dtd.data_source_profile_id=dsp.id LEFT JOIN data_source_profiles_rra AS dspr ON dsp.id=dspr.data_source_profile_id AND dtd.local_data_id != 0 WHERE gti.local_graph_id = ? AND dspr.steps > 1 AND dspr.steps < 100 ORDER BY dspr.steps -- [1]"
+        ]
+      }
+    },
+    {
+      "args": [1, "OR dspr.steps = 720"],
+      "id": "where_fragment_with_leading_or",
+      "note": "an OR fragment escapes the graph filter: a row of another profile appears",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": [
+            {
+              "$": "array",
+              "pairs": [
+                ["id", 1],
+                ["step", 300],
+                ["steps", 1],
+                ["rows", 600],
+                ["name", "Daily (5 Minute Average)"],
+                ["rrd_step", 300],
+                ["timespan", 86400]
+              ]
+            },
+            {
+              "$": "array",
+              "pairs": [
+                ["id", 2],
+                ["step", 300],
+                ["steps", 6],
+                ["rows", 700],
+                ["name", "Weekly (30 Minute Average)"],
+                ["rrd_step", 300],
+                ["timespan", 604800]
+              ]
+            },
+            {
+              "$": "array",
+              "pairs": [
+                ["id", 3],
+                ["step", 300],
+                ["steps", 24],
+                ["rows", 775],
+                ["name", "Monthly (2 Hour Average)"],
+                ["rrd_step", 300],
+                ["timespan", 2618784]
+              ]
+            },
+            {
+              "$": "array",
+              "pairs": [
+                ["id", 4],
+                ["step", 300],
+                ["steps", 288],
+                ["rows", 797],
+                ["name", "Yearly (1 Day Average)"],
+                ["rrd_step", 300],
+                ["timespan", 31536000]
+              ]
+            }
+          ]
+        },
+        "sql": [
+          "SELECT DISTINCT SQL_NO_CACHE dspr.id, dsp.step, dspr.steps, dspr.rows, dspr.name, dtd.rrd_step, dspr.timespan FROM graph_templates_item AS gti LEFT JOIN data_template_rrd AS dtr ON gti.task_item_id=dtr.id LEFT JOIN data_template_data AS dtd ON dtr.local_data_id = dtd.local_data_id LEFT JOIN data_source_profiles AS dsp ON dtd.data_source_profile_id=dsp.id LEFT JOIN data_source_profiles_rra AS dspr ON dsp.id=dspr.data_source_profile_id AND dtd.local_data_id != 0 WHERE gti.local_graph_id = ? OR dspr.steps = 720 ORDER BY dspr.steps -- [1]"
+        ]
+      }
+    },
+    {
+      "args": [1, "AND AND"],
+      "id": "where_fragment_syntax_error",
+      "note": "a malformed fragment: the database error is swallowed and false is returned",
+      "result": {
+        "returned": {"type": "bool", "value": false},
+        "sql": [
+          "SELECT DISTINCT SQL_NO_CACHE dspr.id, dsp.step, dspr.steps, dspr.rows, dspr.name, dtd.rrd_step, dspr.timespan FROM graph_templates_item AS gti LEFT JOIN data_template_rrd AS dtr ON gti.task_item_id=dtr.id LEFT JOIN data_template_data AS dtd ON dtr.local_data_id = dtd.local_data_id LEFT JOIN data_source_profiles AS dsp ON dtd.data_source_profile_id=dsp.id LEFT JOIN data_source_profiles_rra AS dspr ON dsp.id=dspr.data_source_profile_id AND dtd.local_data_id != 0 WHERE gti.local_graph_id = ? AND AND ORDER BY dspr.steps -- [1] !! 42000 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'AND ORDER BY dspr.steps' at line 1"
+        ]
+      }
+    },
+    {
+      "args": [1, ["AND 1 = 1"]],
+      "id": "where_fragment_array",
+      "note": "array to string: the fragment becomes the word Array and the statement fails",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Array to string conversion",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "bool", "value": false},
+        "sql": [
+          "SELECT DISTINCT SQL_NO_CACHE dspr.id, dsp.step, dspr.steps, dspr.rows, dspr.name, dtd.rrd_step, dspr.timespan FROM graph_templates_item AS gti LEFT JOIN data_template_rrd AS dtr ON gti.task_item_id=dtr.id LEFT JOIN data_template_data AS dtd ON dtr.local_data_id = dtd.local_data_id LEFT JOIN data_source_profiles AS dsp ON dtd.data_source_profile_id=dsp.id LEFT JOIN data_source_profiles_rra AS dspr ON dsp.id=dspr.data_source_profile_id AND dtd.local_data_id != 0 WHERE gti.local_graph_id = ? Array ORDER BY dspr.steps -- [1] !! 42000 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'Array ORDER BY dspr.steps' at line 1"
+        ]
+      }
+    },
+    {
+      "args": [],
+      "id": "no_arguments",
+      "result": {
+        "exception": {
+          "class": "ArgumentCountError",
+          "code": 0,
+          "message": "Too few arguments to function get_associated_rras(), 0 passed in <caller> and at least 1 expected"
+        },
+        "sql": []
+      }
+    },
+    {
+      "args": ["1abc", "AND dspr.steps > 200"],
+      "id": "id_trailing_text",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": [
+            {
+              "$": "array",
+              "pairs": [
+                ["id", 4],
+                ["step", 300],
+                ["steps", 288],
+                ["rows", 797],
+                ["name", "Yearly (1 Day Average)"],
+                ["rrd_step", 300],
+                ["timespan", 31536000]
+              ]
+            }
+          ]
+        },
+        "sql": [
+          "SELECT DISTINCT SQL_NO_CACHE dspr.id, dsp.step, dspr.steps, dspr.rows, dspr.name, dtd.rrd_step, dspr.timespan FROM graph_templates_item AS gti LEFT JOIN data_template_rrd AS dtr ON gti.task_item_id=dtr.id LEFT JOIN data_template_data AS dtd ON dtr.local_data_id = dtd.local_data_id LEFT JOIN data_source_profiles AS dsp ON dtd.data_source_profile_id=dsp.id LEFT JOIN data_source_profiles_rra AS dspr ON dsp.id=dspr.data_source_profile_id AND dtd.local_data_id != 0 WHERE gti.local_graph_id = ? AND dspr.steps > 200 ORDER BY dspr.steps -- [\"1abc\"]"
+        ]
+      }
+    },
+    {
+      "args": ["abc", "AND dspr.steps > 200"],
+      "id": "id_text",
+      "result": {
+        "returned": {"type": "array", "value": []},
+        "sql": [
+          "SELECT DISTINCT SQL_NO_CACHE dspr.id, dsp.step, dspr.steps, dspr.rows, dspr.name, dtd.rrd_step, dspr.timespan FROM graph_templates_item AS gti LEFT JOIN data_template_rrd AS dtr ON gti.task_item_id=dtr.id LEFT JOIN data_template_data AS dtd ON dtr.local_data_id = dtd.local_data_id LEFT JOIN data_source_profiles AS dsp ON dtd.data_source_profile_id=dsp.id LEFT JOIN data_source_profiles_rra AS dspr ON dsp.id=dspr.data_source_profile_id AND dtd.local_data_id != 0 WHERE gti.local_graph_id = ? AND dspr.steps > 200 ORDER BY dspr.steps -- [\"abc\"]"
+        ]
+      }
+    },
+    {
+      "args": [0],
+      "id": "id_zero_template_rows",
+      "note": "items of no graph: the LEFT JOIN yields one row of NULLs",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": [
+            {
+              "$": "array",
+              "pairs": [
+                ["id", null],
+                ["step", 300],
+                ["steps", null],
+                ["rows", null],
+                ["name", null],
+                ["rrd_step", 300],
+                ["timespan", null]
+              ]
+            },
+            {
+              "$": "array",
+              "pairs": [
+                ["id", null],
+                ["step", null],
+                ["steps", null],
+                ["rows", null],
+                ["name", null],
+                ["rrd_step", null],
+                ["timespan", null]
+              ]
+            }
+          ]
+        },
+        "sql": [
+          "SELECT DISTINCT SQL_NO_CACHE dspr.id, dsp.step, dspr.steps, dspr.rows, dspr.name, dtd.rrd_step, dspr.timespan FROM graph_templates_item AS gti LEFT JOIN data_template_rrd AS dtr ON gti.task_item_id=dtr.id LEFT JOIN data_template_data AS dtd ON dtr.local_data_id = dtd.local_data_id LEFT JOIN data_source_profiles AS dsp ON dtd.data_source_profile_id=dsp.id LEFT JOIN data_source_profiles_rra AS dspr ON dsp.id=dspr.data_source_profile_id AND dtd.local_data_id != 0 WHERE gti.local_graph_id = ? ORDER BY dspr.steps -- [0]"
+        ]
+      }
+    }
+  ],
+  "function": "get_associated_rras",
+  "signature": [
+    {"by_ref": false, "name": "local_graph_id", "optional": false, "type": null, "variadic": false},
+    {
+      "by_ref": false,
+      "default": "",
+      "name": "sql_where",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    }
+  ]
+}

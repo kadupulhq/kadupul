@@ -1,0 +1,12 @@
+{
+  "function": "user_setting_exists",
+  "cases": [
+    {"record_sql": true, "isolated": true, "id": "present", "args": ["fncdb_pref", 1], "prelude": [{"sql": "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'v')"}]},
+    {"record_sql": true, "isolated": true, "id": "absent", "args": ["fncdb_pref", 1]},
+    {"record_sql": true, "isolated": true, "id": "name_case_differs", "args": ["FNCDB_PREF", 1], "note": "collation folds case", "prelude": [{"sql": "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'v')"}]},
+    {"record_sql": true, "isolated": true, "id": "user_array", "args": ["fncdb_pref", [1]]},
+    {"record_sql": true, "isolated": true, "id": "cached_true_survives_delete", "args": ["fncdb_pref", 1], "note": "static cache: the delete is not seen", "prelude": [{"sql": "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'v')"}], "between": [{"sql": "DELETE FROM settings_user"}]},
+    {"record_sql": true, "isolated": true, "id": "cache_is_per_user_and_name", "args": ["fncdb_pref", 2], "note": "another user is not answered from the cache", "prelude": [{"fn": "user_setting_exists", "args": ["fncdb_pref", 1]}, {"sql": "INSERT INTO settings_user VALUES (2, 'fncdb_pref', 'v')"}]},
+    {"record_sql": true, "isolated": true, "id": "no_arguments", "args": []}
+  ]
+}

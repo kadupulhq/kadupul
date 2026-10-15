@@ -1254,6 +1254,33 @@ function fixture_ambient() {
     global $config;
     return [$config['fixture_flag'] ?? null, $_SESSION['fixture_user'] ?? null];
 }
+function fixture_hash($fixed) {
+    return $fixed ? str_repeat('a', 32) : bin2hex(random_bytes(16));
+}
+function fixture_sql_write($name, $value) {
+    $pdo = $GLOBALS['database_sessions']['fixture'];
+    $insert = 'INSERT INTO settings (name, value) VALUES (?, ?)';
+    $pdo->prepare($insert)->execute([$name, $value]);
+    $pdo->prepare($insert)->execute([$name . '2', $value]);
+    try {
+        $pdo->prepare($insert)->execute([$name, $value]);
+    } catch (PDOException $e) {
+    }
+    $pdo->prepare('SELECT 1')->execute();
+    $pdo->prepare('SELECT 1')->execute();
+    $pdo->prepare('SELECT 1')->execute();
+    return true;
+}
+function fixture_state() {
+    $_SESSION['kept']['inner'] = 'new';
+    $_SESSION['plain'] = 'x';
+    unset($_SESSION['gone']);
+    $GLOBALS['config']['fixture_state'] = 'on';
+    $GLOBALS['settings_user']['tab']['value'] = 'v';
+}
+function fixture_request($name) {
+    return $GLOBALS['fixture_request'][$name] ?? null;
+}
 function fixture_mark($value) {
     $GLOBALS['fixture_marker'] = $value;
 }
@@ -1296,12 +1323,27 @@ def fixture_application(directory):
         "    return true;\n"
         "}\n"
         "function db_execute_prepared($sql, $params = []) {\n"
+        "    if (str_contains($sql, 'FAILSTEP')) {\n"
+        "        return false;\n"
+        "    }\n"
         "    if (str_starts_with($sql, 'DELETE FROM settings')) {\n"
         "        unset($GLOBALS['fixture_settings'][$params[0]]);\n"
-        "    } elseif (str_starts_with($sql, 'INSERT INTO settings')) {\n"
+        "    } elseif (str_starts_with($sql, 'INSERT INTO settings') && $params) {\n"
         "        $GLOBALS['fixture_settings'][$params[0]] = $params[1];\n"
         "    }\n"
         "    return true;\n"
+        "}\n"
+        # A real PDO connection, so the statement class has something to attach to.
+        "$pdo = new PDO('sqlite::memory:');\n"
+        "$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);\n"
+        "$pdo->exec('CREATE TABLE settings (name TEXT PRIMARY KEY, value TEXT)');\n"
+        "$pdo->exec('CREATE TABLE settings_user (user_id INTEGER, name TEXT, value TEXT)');\n"
+        "$GLOBALS['database_sessions'] = ['fixture' => $pdo];\n"
+        "function db_fetch_assoc($sql) {\n"
+        "    return $GLOBALS['database_sessions']['fixture']->query($sql)->fetchAll(PDO::FETCH_ASSOC);\n"
+        "}\n"
+        "function set_request_var($name, $value) {\n"
+        "    $GLOBALS['fixture_request'][$name] = $value;\n"
         "}\n"
         "require __DIR__ . '/../lib/fixture_functions.php';\n")
     (root / 'lib/fixture_functions.php').write_text(FIXTURE_FUNCTIONS)
@@ -1414,6 +1456,19 @@ def function_case_file_contract():
         rejects('timeout_float', with_case(timeout=1.5))
         rejects('isolated_string', with_case(isolated='yes'))
         rejects('isolated_int', with_case(isolated=1))
+        rejects('record_sql_string', with_case(record_sql='yes'))
+        rejects('record_tables_int', with_case(record_tables=1))
+        rejects('mask_generated_string', with_case(mask_generated='yes'))
+        rejects('record_state_string', with_case(record_state='session'))
+        rejects('record_state_empty_list', with_case(record_state=[]))
+        rejects('record_state_unknown_area', with_case(record_state=['session', 'globals']))
+        rejects('sql_step_not_text', with_case(prelude=[{'sql': 5}]))
+        rejects('sql_step_blank', with_case(prelude=[{'sql': '  '}]))
+        rejects('sql_step_params_not_list', with_case(prelude=[{'sql': 'SELECT 1', 'params': 'x'}]))
+        rejects('sql_step_unknown_key', with_case(prelude=[{'sql': 'SELECT 1', 'fn': 'f'}]))
+        rejects('request_step_empty', with_case(prelude=[{'request': {}}]))
+        rejects('request_step_not_object', with_case(prelude=[{'request': 'a'}]))
+        rejects('request_step_extra_key', with_case(prelude=[{'request': {'a': 1}, 'fn': 'f'}]))
         # A non-object ambient is a RuntimeError, not a TypeError from set().
         rejects('ambient_int', with_case(ambient=5))
         rejects('ambient_list', with_case(ambient=['settings']))
@@ -1426,7 +1481,10 @@ def function_case_file_contract():
         folder.mkdir()
         (folder / 'a.json').write_text(json.dumps(with_case(
             prelude=[{'fn': 'f', 'args': [1]}, {'setting': {'k': None, 'j': 'v'}}], between=[{'fn': 'f'}],
-            ambient={'settings': {'k': None}, 'config': {}, 'session': {}}, isolated=True, timeout=2)['a']))
+            ambient={'settings': {'k': None}, 'config': {}, 'session': {}}, isolated=True, timeout=2,
+            record_sql=True, record_tables=True, record_state=['session', 'settings_user'], mask_generated=True)['a']))
+        (folder / 'a.json').write_text(json.dumps({'function': 'a', 'cases': [dict(json.loads((folder / 'a.json').read_text())['cases'][0],
+            prelude=[{'sql': 'INSERT INTO t VALUES (?)', 'params': [1]}, {'request': {'a': 1, 'b': [1]}}], record_state=True)]}))
         assert list(harness.load_function_cases(folder)) == ['a']
         # Every shipped case file must load, and none may be empty.
         shipped = harness.load_function_cases(harness.FUNCTION_CASES)
@@ -1596,6 +1654,91 @@ def function_ambient_contract():
         assert out['result']['by_ref']['id']['value'] == '<APP>/x', out
         assert out['result']['by_ref']['args']['value'] == '<APP>/y', out
     print('ambient settings, config and session, prelude, between and mixed isolation behave; internal-function steps and failed savepoints stop the run')
+
+
+def function_effect_contract():
+    """Statements, table rows, state, generated hashes, sql and request steps."""
+    with tempfile.TemporaryDirectory(prefix='function effects ') as directory:
+        root = fixture_application(directory)
+        cases = Path(directory) / 'cases'
+
+        def capture(name, fail=None):
+            spec = harness.load_function_cases(cases, [name])[name]
+            return harness.capture_function(name, spec, lambda n, extra: harness.parse_function_probe(
+                n, run_fixture_probe(root, cases, n, extra, fail)))
+
+        write_cases(cases, 'fixture_sql_write', [
+            {'id': 'recorded', 'args': ['k', 'v'], 'record_sql': True, 'record_tables': True},
+            {'id': 'not_asked', 'args': ['k', 'v']}])
+        by_id = {c['id']: c for c in capture('fixture_sql_write')['cases']}
+        result = by_id['recorded']['result']
+        insert = 'INSERT INTO settings (name, value) VALUES (?, ?)'
+        assert result['sql'][:2] == [insert + ' -- ["k","v"]', insert + ' -- ["k2","v"]'], result['sql']
+        # The duplicate fails: the line carries the error, and SELECT 1 x3 collapses to one line.
+        assert result['sql'][2].startswith(insert + ' -- ["k","v"] !! PDOException'), result['sql']
+        assert result['sql'][3] == 'SELECT 1 x3', result['sql']
+        assert len(result['sql']) == 4, result['sql']
+        assert result['table_diff'] == ['+ settings {"name":"k","value":"v"}', '+ settings {"name":"k2","value":"v"}'], result['table_diff']
+        # Effects belong to the first call; the repeat fails on the duplicate key and is compared on its answer.
+        assert 'sql' not in by_id['recorded']['warm'].get('result', {}), by_id['recorded']['warm']
+        quiet = by_id['not_asked']['result']
+        assert not {'sql', 'table_diff', 'state'} & set(quiet), 'effects recorded without being asked: ' + str(sorted(quiet))
+
+        write_cases(cases, 'fixture_state', [
+            {'id': 'default_areas', 'args': [], 'record_state': True,
+             'ambient': {'session': {'gone': 1, 'kept': {'$': 'array', 'pairs': [['inner', 'old'], ['other', 2]]}}}},
+            {'id': 'user_settings_area', 'args': [], 'record_state': ['settings_user'], 'isolated': True},
+            {'id': 'not_asked', 'args': []}])
+        by_id = {c['id']: c for c in capture('fixture_state')['cases']}
+        assert by_id['default_areas']['result']['state'] == [
+            'set session.kept.inner = "new"', 'set session.plain = "x"', 'unset session.gone', 'set config.fixture_state = "on"'], by_id['default_areas']['result']['state']
+        assert by_id['user_settings_area']['result']['state'] == ['set settings_user.tab = {"$":"array","pairs":[["value","v"]]}'], by_id['user_settings_area']['result']
+        assert 'state' not in by_id['not_asked']['result']
+
+        # A generated hash differs between the calls and is masked; a stored one repeats and is kept.
+        write_cases(cases, 'fixture_hash', [
+            {'id': 'generated', 'args': [False], 'mask_generated': True},
+            {'id': 'stored', 'args': [True], 'mask_generated': True},
+            {'id': 'unmasked', 'args': [False]}])
+        by_id = {c['id']: c for c in capture('fixture_hash')['cases']}
+        assert by_id['generated']['result']['returned']['value'] == '<generated 32 hex>', by_id['generated']
+        assert by_id['generated']['warm'] == {'same': True}, by_id['generated']['warm']
+        assert by_id['stored']['result']['returned']['value'] == 'a' * 32, by_id['stored']
+        assert by_id['unmasked']['warm']['same'] is False, 'an unmasked random value must show as unstable'
+
+        # sql and request steps run, are recorded, and a failing statement stops the run.
+        write_cases(cases, 'fixture_request', [
+            {'id': 'steps', 'args': ['q'], 'prelude': [{'sql': "INSERT INTO settings VALUES ('a', 'b')"}, {'sql': 'INSERT INTO settings VALUES (?, ?)', 'params': ['c', 'd']},
+                                                       {'request': {'q': {'$': 'array', 'pairs': [['x', 1]]}}}]}])
+        record = capture('fixture_request')['cases'][0]
+        assert record['prelude'] == ["INSERT INTO settings VALUES ('a', 'b')", 'INSERT INTO settings VALUES (?, ?) -- ["c","d"]',
+                                      {'request': {'q': {'$': 'array', 'pairs': [['x', 1]]}}}], record['prelude']
+        assert record['result']['returned']['value'] == {'$': 'array', 'pairs': [['x', 1]]}, record['result']
+        write_cases(cases, 'fixture_request', [{'id': 'bad', 'args': ['q'], 'prelude': [{'sql': 'FAILSTEP'}]}])
+        refused = run_fixture_probe(root, cases, 'fixture_request')
+        assert refused['exit'] != 0 and 'SQL step failed' in refused['stdout'] + refused['stderr'], refused
+        assert 'BEHAVIOR_JSON=' not in refused['stdout'], 'a failed sql step was ignored'
+
+        # Defaults are stripped from a warm result that follows recorded effects, and put back;
+        # a warm result in an older golden keeps its explicit defaults and still compares.
+        full = {'diagnostics': [], 'log': [], 'output': ''}
+        newer = {'function': 'f', 'signature': [], 'cases': [{'id': 'a', 'args': [], 'note': '', 'warm': {'same': False, 'result': dict(full, returned={'type': 'int', 'value': 2})},
+                                                              'result': dict(full, returned={'type': 'int', 'value': 1}, sql=['SELECT 1'])}]}
+        stripped = harness.strip_function_defaults(newer)['cases'][0]
+        assert stripped['warm']['result'] == {'returned': {'type': 'int', 'value': 2}}, stripped
+        assert harness.canonical(harness.restore_function_defaults(harness.strip_function_defaults(newer))) == harness.canonical(newer)
+        older = json.loads(json.dumps(newer))
+        del older['cases'][0]['result']['sql']
+        kept = harness.strip_function_defaults(older)['cases'][0]
+        assert kept['warm']['result'] == newer['cases'][0]['warm']['result'], 'an older warm result was rewritten'
+        assert harness.canonical(harness.restore_function_defaults(harness.strip_function_defaults(older))) == harness.canonical(older)
+
+        # A function with more than 64 cases keeps every case; only values inside a case are summarized.
+        many = {'function': 'f', 'signature': [], 'cases': [{'id': str(i), 'args': [list(range(70))], 'result': {'returned': {'type': 'int', 'value': i}}} for i in range(70)]}
+        out = harness.normalize_function_record(many)
+        assert isinstance(out['cases'], list) and len(out['cases']) == 70, 'the case list was summarized'
+        assert out['cases'][0]['args'][0]['$'] == 'list', out['cases'][0]['args']
+    print('statements, table rows, state, generated hashes, sql and request steps and large case lists behave')
 
 
 def function_record_gaps():
@@ -1824,6 +1967,7 @@ def main():
     function_case_file_contract()
     function_capture_contract()
     function_ambient_contract()
+    function_effect_contract()
     function_record_gaps()
     function_golden_contract()
     compact_json_contract()

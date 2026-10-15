@@ -1,0 +1,100 @@
+{
+  "cases": [
+    {
+      "args": ["fncdb_pref", 1],
+      "id": "present",
+      "prelude": ["INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'v')"],
+      "result": {
+        "returned": {"type": "bool", "value": true},
+        "sql": [
+          "SELECT COUNT(*) FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",1]"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", 1],
+      "id": "absent",
+      "result": {
+        "returned": {"type": "bool", "value": false},
+        "sql": [
+          "SELECT COUNT(*) FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",1]"
+        ]
+      }
+    },
+    {
+      "args": ["FNCDB_PREF", 1],
+      "id": "name_case_differs",
+      "note": "collation folds case",
+      "prelude": ["INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'v')"],
+      "result": {
+        "returned": {"type": "bool", "value": true},
+        "sql": [
+          "SELECT COUNT(*) FROM settings_user WHERE name = ? AND user_id = ? -- [\"FNCDB_PREF\",1]"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", [1]],
+      "id": "user_array",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "Cannot access offset of type array in isset or empty"
+        },
+        "sql": []
+      }
+    },
+    {
+      "args": ["fncdb_pref", 1],
+      "between": ["DELETE FROM settings_user"],
+      "id": "cached_true_survives_delete",
+      "note": "static cache: the delete is not seen",
+      "prelude": ["INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'v')"],
+      "result": {
+        "returned": {"type": "bool", "value": true},
+        "sql": [
+          "SELECT COUNT(*) FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",1]"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", 2],
+      "id": "cache_is_per_user_and_name",
+      "note": "another user is not answered from the cache",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "user_setting_exists",
+          "log": [],
+          "output": "",
+          "returned": {"type": "bool", "value": false}
+        },
+        "INSERT INTO settings_user VALUES (2, 'fncdb_pref', 'v')"
+      ],
+      "result": {
+        "returned": {"type": "bool", "value": true},
+        "sql": [
+          "SELECT COUNT(*) FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",2]"
+        ]
+      }
+    },
+    {
+      "args": [],
+      "id": "no_arguments",
+      "result": {
+        "exception": {
+          "class": "ArgumentCountError",
+          "code": 0,
+          "message": "Too few arguments to function user_setting_exists(), 0 passed in <caller> and exactly 2 expected"
+        },
+        "sql": []
+      }
+    }
+  ],
+  "function": "user_setting_exists",
+  "signature": [
+    {"by_ref": false, "name": "config_name", "optional": false, "type": null, "variadic": false},
+    {"by_ref": false, "name": "user_id", "optional": false, "type": null, "variadic": false}
+  ]
+}
