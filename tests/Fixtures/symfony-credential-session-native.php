@@ -193,6 +193,11 @@ if (in_array($scenario, ['reset-write', 'rehash-write'], true)) {
 if (str_starts_with($credentialScenario, 'reset')) {
     $db->exec("UPDATE user_auth SET password='replacement-password-hash' WHERE id=9");
 }
+if ($credentialScenario === 'logout') {
+    if (!auth_logout_everywhere(9, auth_session_credential_key('old-password-hash'), $db)) {
+        throw new RuntimeException('Actual logout-everywhere revocation failed.');
+    }
+}
 if (str_starts_with($credentialScenario, 'rehash')) {
     if (!auth_rehash_password_preserving_sessions(9, 'old-password-hash', 'upgraded-password-hash', $db)) {
         throw new RuntimeException('Actual transparent hash upgrade failed.');

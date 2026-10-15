@@ -149,6 +149,8 @@ final class SessionCredentialBindingTest extends TestCase
     public static function cases(): iterable
     {
         foreach (['file', 'database'] as $storage) {
+            yield $storage . '-logout' => ['logout', $storage, false];
+            yield $storage . '-about-logout' => ['about-logout', $storage, false];
             foreach (['disabled-rollback' => false, 'current' => true, 'unbound' => false, 'reset' => false, 'reset-write' => false, 'rehash' => true, 'rehash-write' => true, 'successive-rehash' => true, 'unbound-remembered' => false, 'unbound-remembered-name' => false, 'unbound-remembered-rollback' => false, 'unbound-remembered-marker-missing-rollback' => false, 'unbound-remembered-marker-malformed-rollback' => false, 'about-current' => true, 'about-unbound' => false, 'about-reset' => false, 'about-rehash' => true, 'about-restore-basic' => true, 'about-restore-remember' => true, 'about-restore-remember-policy-forced' => false, 'about-restore-remember-policy-must-off' => true, 'about-restore-remember-policy-change-off' => true, 'about-restore-remember-policy-nonlocal' => true, 'about-restore-basic-policy-forced' => true, 'empty' => false, 'malformed' => false, 'deleted-live' => false, 'about-empty' => false, 'about-malformed' => false, 'about-deleted-live' => false] as $scenario => $accepted) {
                 yield $storage . '-' . $scenario => [$scenario, $storage, $accepted];
             }

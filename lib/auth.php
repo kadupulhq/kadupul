@@ -6002,6 +6002,82 @@ function auth_session_credential_key($password)
     return hash('sha256', (string) $password);
 }
 
+/** Revoke all sessions and remembered logins without changing the password. */
+function auth_logout_everywhere($user_id, $credential, $db = false)
+{
+    global $database_sessions, $database_hostname, $database_port, $database_default;
+    if (!is_string($credential) || preg_match('/\A[a-f0-9]{64}\z/D', $credential) !== 1 || (int) $user_id <= 0) {
+        return false;
+    }
+    if (!$db instanceof PDO) {
+        $db = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
+    }
+    if (!$db instanceof PDO || $db->inTransaction()) {
+        return false;
+    }
+    try {
+        if (!$db->beginTransaction()) {
+            return false;
+        }
+        $mysql = $db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql';
+        if (!$mysql && $db->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'sqlite') {
+            throw new RuntimeException('Unsupported session revocation database.');
+        }
+        if ($mysql) {
+            foreach (array('user_auth', 'settings_user', 'user_auth_cache', 'sessions') as $table) {
+                $query = $db->query('SELECT * FROM `' . $table . '` LIMIT 0');
+                if ($query === false || $query->errorCode() !== '00000') {
+                    throw new RuntimeException('Session revocation table could not be inspected.');
+                }
+                $query->closeCursor();
+                $query = $db->query('SHOW CREATE TABLE `' . $table . '`');
+                $row = $query === false ? false : $query->fetch(PDO::FETCH_NUM);
+                if (!is_array($row) || $query->errorCode() !== '00000' || !isset($row[1])
+                    || stripos($row[1], 'CREATE TEMPORARY TABLE') !== false || !preg_match('/\bENGINE=InnoDB\b/i', $row[1])) {
+                    throw new RuntimeException('Session revocation requires persistent InnoDB tables.');
+                }
+            }
+        }
+        $query = $db->prepare('SELECT password FROM user_auth WHERE id = ?' . ($mysql ? ' FOR UPDATE' : ''));
+        if ($query === false || !$query->execute(array($user_id)) || $query->errorCode() !== '00000') {
+            throw new RuntimeException('Session revocation account read failed.');
+        }
+        $password = $query->fetchColumn();
+        if (!is_string($password) || $query->errorCode() !== '00000'
+            || !hash_equals(auth_session_credential_generation($user_id, $password, $db), $credential)) {
+            throw new RuntimeException('Session revocation credential is no longer current.');
+        }
+        $mapping = auth_session_credential_key($password) . ':' . bin2hex(random_bytes(32));
+        $query = $db->prepare("REPLACE INTO settings_user (user_id, name, value) VALUES (?, 'auth_credential_generation', ?)");
+        if ($query === false || !$query->execute(array($user_id, $mapping)) || $query->errorCode() !== '00000') {
+            throw new RuntimeException('Session revocation generation write failed.');
+        }
+        // Confirm the stored value before reporting a successful revocation.
+        if (auth_session_credential_generation($user_id, $password, $db) !== substr($mapping, 65)) {
+            throw new RuntimeException('Session revocation generation was not preserved.');
+        }
+        foreach (array('user_auth_cache', 'sessions') as $table) {
+            $query = $db->prepare('DELETE FROM ' . $table . ' WHERE user_id = ?');
+            if ($query === false || !$query->execute(array($user_id)) || $query->errorCode() !== '00000') {
+                throw new RuntimeException('Session revocation deletion failed.');
+            }
+        }
+        if (!$db->commit()) {
+            throw new RuntimeException('Session revocation commit failed.');
+        }
+        return true;
+    } catch (Throwable $error) {
+        if ($db->inTransaction()) {
+            try {
+                $db->rollBack();
+            } catch (Throwable $cleanup_error) {
+                // Preserve failure even if the connection also refuses cleanup.
+            }
+        }
+        return false;
+    }
+}
+
 /**
  * Read the credential generation only when it belongs to this password representation.
  * A real password replacement naturally invalidates the mapping.

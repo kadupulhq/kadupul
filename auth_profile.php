@@ -103,15 +103,15 @@ switch (get_request_var('action')) {
 
 function api_auth_logout_everywhere()
 {
-    $user = $_SESSION['sess_user_id'];
-
-    if (!empty($user)) {
-        db_execute_prepared(
-            'DELETE FROM user_auth_cache
-			WHERE user_id = ?',
-            array($user)
-        );
+    if (!auth_logout_everywhere($_SESSION['sess_user_id'] ?? 0, $_SESSION['sess_user_credential'] ?? null)) {
+        cacti_log('ERROR: Logout Everywhere could not be committed for user ' . (int) ($_SESSION['sess_user_id'] ?? 0), false, 'AUTH');
+        http_response_code(503);
+        return;
     }
+    cacti_log('NOTE: All sessions revoked for user ' . (int) $_SESSION['sess_user_id'], false, 'AUTH');
+    cacti_cookie_session_logout();
+    unset($_COOKIE['cacti_remembers']);
+    cacti_session_destroy();
 }
 
 function api_auth_clear_user_settings()
