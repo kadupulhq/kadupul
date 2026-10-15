@@ -1,0 +1,36 @@
+{
+    "schema": 1,
+    "name": "is_error_message",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 1199,
+        "end_line": 1208,
+        "line_count": 10,
+        "signature": {"parameters": [], "return_type": null, "returns_reference": false},
+        "docblock": true,
+        "fan_out": {"core": 99, "core_outside_functions_php": 98, "tests": 21, "plugins": 0},
+        "body": {
+            "uses_global": ["config", "messages"],
+            "static_variables": [],
+            "superglobals": ["$_SESSION"],
+            "session": {"references": 2, "keys": ["sess_error_fields"]},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["cacti_sizeof"], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Application/Port/FlashMessages",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

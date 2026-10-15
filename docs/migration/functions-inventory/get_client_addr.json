@@ -1,0 +1,36 @@
+{
+    "schema": 1,
+    "name": "get_client_addr",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 7792,
+        "end_line": 7858,
+        "line_count": 67,
+        "signature": {"parameters": [], "return_type": null, "returns_reference": false},
+        "docblock": false,
+        "fan_out": {"core": 25, "core_outside_functions_php": 25, "tests": 24, "plugins": 0},
+        "body": {
+            "uses_global": ["allowed_proxy_headers", "config"],
+            "static_variables": [],
+            "superglobals": ["$_SERVER"],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["log_client_addr_proxy_diagnostic"], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Presentation/Http",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

@@ -1,0 +1,77 @@
+{
+    "schema": 1,
+    "name": "cacti_sizeof",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 8207,
+        "end_line": 8210,
+        "line_count": 4,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "array",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": false,
+        "fan_out": {"core": 2007, "core_outside_functions_php": 1957, "tests": 260, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": [
+            "cacti_gethostbyname",
+            "cacti_version_compare",
+            "calculate_percentiles",
+            "draw_navigation_text",
+            "generate_data_source_path",
+            "generate_graph_best_cf",
+            "get_cacti_base_tables",
+            "get_data_source_path",
+            "get_data_source_title",
+            "get_full_script_path",
+            "get_full_test_script_path",
+            "get_graph_group",
+            "get_graph_title",
+            "get_rrd_cfs",
+            "is_error_message",
+            "is_hex_string",
+            "mailer",
+            "move_graph_group",
+            "normalize_poller_multi_value_result",
+            "prime_common_config_settings",
+            "read_config_option",
+            "read_user_setting",
+            "repair_system_data_input_methods",
+            "test_data_source",
+            "test_data_sources",
+            "version_to_decimal"
+        ]
+    },
+    "human": {
+        "target_module": "Platform/Domain/Collection",
+        "wave": 1,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

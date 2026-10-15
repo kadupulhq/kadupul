@@ -1,0 +1,50 @@
+{
+    "schema": 1,
+    "name": "cacti_is_sensitive_key",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 8876,
+        "end_line": 8894,
+        "line_count": 19,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "key",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 4, "core_outside_functions_php": 1, "tests": 5, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": ["sensitive_keys"],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": ["cacti_redact_sensitive", "cacti_redact_value"]
+    },
+    "human": {
+        "target_module": "Platform/Domain/Security",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

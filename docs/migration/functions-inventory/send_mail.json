@@ -1,0 +1,104 @@
+{
+    "schema": 1,
+    "name": "send_mail",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 5486,
+        "end_line": 5527,
+        "line_count": 42,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "to",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "from",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "subject",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "body",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "attachments",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "''"
+                },
+                {
+                    "name": "headers",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "''"
+                },
+                {
+                    "name": "html",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "false"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": false,
+        "fan_out": {"core": 2, "core_outside_functions_php": 1, "tests": 1, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {"db_fetch_cell_prepared": 1},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["mailer", "read_config_option"], "recursive": false},
+        "called_by": ["email_test"]
+    },
+    "human": {
+        "target_module": "Alerting/Application/Port/MailSender",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

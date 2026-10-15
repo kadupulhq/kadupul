@@ -1,0 +1,36 @@
+{
+    "schema": 1,
+    "name": "cacti_oid_numeric_format",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 6620,
+        "end_line": 6627,
+        "line_count": 8,
+        "signature": {"parameters": [], "return_type": null, "returns_reference": false},
+        "docblock": false,
+        "fan_out": {"core": 2, "core_outside_functions_php": 2, "tests": 0, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Domain/Network",
+        "wave": 1,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

@@ -1,0 +1,151 @@
+{
+    "schema": 1,
+    "name": "mailer",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 5596,
+        "end_line": 5948,
+        "line_count": 353,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "from",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "to",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "cc",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "bcc",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "replyto",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "subject",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "body",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "body_text",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "''"
+                },
+                {
+                    "name": "attachments",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "''"
+                },
+                {
+                    "name": "headers",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "''"
+                },
+                {
+                    "name": "html",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "true"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 6, "core_outside_functions_php": 2, "tests": 14, "plugins": 0},
+        "body": {
+            "uses_global": ["cacti_locale", "config", "mail_methods"],
+            "static_variables": [],
+            "superglobals": ["$_SERVER"],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": ["file_exists"],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {
+            "functions": [
+                "add_email_details",
+                "cacti_debug_backtrace",
+                "cacti_log",
+                "cacti_sizeof",
+                "parse_email_details",
+                "read_config_option",
+                "record_mailer_error"
+            ],
+            "recursive": false
+        },
+        "called_by": ["send_mail"]
+    },
+    "human": {
+        "target_module": "Alerting/Application/Port/MailSender",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

@@ -1,0 +1,50 @@
+{
+    "schema": 1,
+    "name": "exec_into_array",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 4195,
+        "end_line": 4211,
+        "line_count": 17,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "command_line",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 6, "core_outside_functions_php": 5, "tests": 6, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": ["exec"],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Application/Port/ProcessRunner",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

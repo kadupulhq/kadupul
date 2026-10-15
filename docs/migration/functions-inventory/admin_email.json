@@ -1,0 +1,64 @@
+{
+    "schema": 1,
+    "name": "admin_email",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 5480,
+        "end_line": 5484,
+        "line_count": 5,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "subject",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "message",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": false,
+        "fan_out": {"core": 21, "core_outside_functions_php": 17, "tests": 3, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": [
+            "CactiErrorHandler",
+            "CactiShutdownHandler",
+            "call_remote_data_collector",
+            "get_include_relpath"
+        ]
+    },
+    "human": {
+        "target_module": "Alerting/Application/Port/MailSender",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

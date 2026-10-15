@@ -1,0 +1,68 @@
+{
+    "schema": 1,
+    "name": "escape_page_action",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 9137,
+        "end_line": 9144,
+        "line_count": 8,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "actions",
+                    "type": "array",
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "drp_action",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "default",
+                    "type": "string",
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "''"
+                }
+            ],
+            "return_type": "string",
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 25, "core_outside_functions_php": 24, "tests": 3, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Presentation/Http",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

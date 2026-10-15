@@ -1,0 +1,95 @@
+{
+    "schema": 1,
+    "name": "ping_mail_server",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 6111,
+        "end_line": 6161,
+        "line_count": 51,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "host",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "port",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "user",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "password",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "timeout",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "10"
+                },
+                {
+                    "name": "secure",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "'none'"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": false,
+        "fan_out": {"core": 1, "core_outside_functions_php": 0, "tests": 0, "plugins": 0},
+        "body": {
+            "uses_global": ["config"],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["cacti_log"], "recursive": false},
+        "called_by": ["email_test"]
+    },
+    "human": {
+        "target_module": "Alerting/Application/Port/MailSender",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

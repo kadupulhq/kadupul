@@ -1,0 +1,59 @@
+{
+    "schema": 1,
+    "name": "cacti_temp_file",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 8917,
+        "end_line": 8933,
+        "line_count": 17,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "prefix",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "callback",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 2, "core_outside_functions_php": 0, "tests": 0, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": ["sys_get_temp_dir", "tempnam", "unlink"],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["cacti_log"], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Application/Port/Filesystem",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

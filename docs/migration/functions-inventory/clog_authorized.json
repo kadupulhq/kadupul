@@ -1,0 +1,36 @@
+{
+    "schema": 1,
+    "name": "clog_authorized",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 6386,
+        "end_line": 6411,
+        "line_count": 26,
+        "signature": {"parameters": [], "return_type": null, "returns_reference": false},
+        "docblock": false,
+        "fan_out": {"core": 2, "core_outside_functions_php": 1, "tests": 1, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": ["$_SESSION"],
+            "session": {"references": 8, "keys": ["sess_clog_level", "sess_user_id"]},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": ["clog_admin"]
+    },
+    "human": {
+        "target_module": "IdentityAccess",
+        "wave": 4,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Hard-stop domain (auth, session, cookies): delegate and verify at the thorough tier."
+    }
+}

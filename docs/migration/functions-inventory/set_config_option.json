@@ -1,0 +1,79 @@
+{
+    "schema": 1,
+    "name": "set_config_option",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 651,
+        "end_line": 730,
+        "line_count": 80,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "config_name",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "value",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "remote",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "false"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 128, "core_outside_functions_php": 123, "tests": 32, "plugins": 0},
+        "body": {
+            "uses_global": ["config"],
+            "static_variables": [],
+            "superglobals": ["$_SESSION"],
+            "session": {"references": 4, "keys": ["sess_config_array"]},
+            "db_calls": {"db_execute_prepared": 2, "db_fetch_assoc": 1},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": ["file_put_contents", "sys_get_temp_dir"],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {
+            "functions": [
+                "array_rekey",
+                "cacti_debug_backtrace",
+                "cacti_log",
+                "get_debug_prefix",
+                "is_remote_path_setting",
+                "raise_message",
+                "read_config_option"
+            ],
+            "recursive": false
+        },
+        "called_by": ["debounce_run_notification", "disable_device_debug", "enable_device_debug"]
+    },
+    "human": {
+        "target_module": "Platform/Application/Port/ConfigurationSettings",
+        "wave": 2,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

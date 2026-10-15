@@ -1,0 +1,58 @@
+{
+    "schema": 1,
+    "name": "cacti_time_zone_set",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 8540,
+        "end_line": 8636,
+        "line_count": 97,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "gmt_offset",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 4, "core_outside_functions_php": 3, "tests": 7, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": ["$_SESSION"],
+            "session": {
+                "references": 7,
+                "keys": [
+                    "sess_browser_php_tz",
+                    "sess_browser_system_tz",
+                    "sess_php_tz",
+                    "sess_system_tz"
+                ]
+            },
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["cacti_browser_zone_enabled"], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Domain/Time",
+        "wave": 1,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Plan lists waves 1-2 for time."
+    }
+}

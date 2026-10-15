@@ -1,0 +1,50 @@
+{
+    "schema": 1,
+    "name": "is_ipaddress",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 7217,
+        "end_line": 7239,
+        "line_count": 23,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "ip_address",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "''"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": false,
+        "fan_out": {"core": 16, "core_outside_functions_php": 13, "tests": 13, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": ["call_remote_data_collector", "strip_domain"]
+    },
+    "human": {
+        "target_module": "Platform/Domain/Network",
+        "wave": 1,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

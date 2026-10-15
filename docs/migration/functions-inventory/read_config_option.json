@@ -1,0 +1,111 @@
+{
+    "schema": 1,
+    "name": "read_config_option",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 931,
+        "end_line": 1016,
+        "line_count": 86,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "config_name",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "force",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "false"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 1049, "core_outside_functions_php": 963, "tests": 242, "plugins": 0},
+        "body": {
+            "uses_global": [
+                "config",
+                "database_default",
+                "database_hostname",
+                "database_port",
+                "database_sessions"
+            ],
+            "static_variables": [],
+            "superglobals": ["$_SESSION"],
+            "session": {"references": 6, "keys": ["sess_config_array"]},
+            "db_calls": {"db_fetch_row_prepared": 1},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": ["file_put_contents", "sys_get_temp_dir"],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {
+            "functions": [
+                "cacti_debug_backtrace",
+                "cacti_sizeof",
+                "get_debug_prefix",
+                "read_default_config_option"
+            ],
+            "recursive": false
+        },
+        "called_by": [
+            "cacti_browser_zone_enabled",
+            "cacti_http",
+            "cacti_input_string_is_safe",
+            "cacti_log",
+            "cacti_log_file",
+            "cacti_validate_theme",
+            "clean_up_path",
+            "date_time_format",
+            "debounce_run_notification",
+            "disable_device_debug",
+            "draw_login_status",
+            "dsv_log",
+            "email_test",
+            "enable_device_debug",
+            "form_input_validate",
+            "generate_data_source_path",
+            "get_default_contextoption",
+            "get_full_script_path",
+            "get_full_test_script_path",
+            "get_guest_account",
+            "get_installed_rrdtool_version",
+            "get_rrdtool_version",
+            "get_selected_theme",
+            "get_selective_log_level",
+            "get_template_account",
+            "get_timeinstate",
+            "get_url_type",
+            "is_device_debug_enabled",
+            "mailer",
+            "poller_maintenance",
+            "read_user_setting",
+            "send_mail",
+            "set_config_option",
+            "set_page_refresh",
+            "strip_domain",
+            "test_data_source",
+            "update_host_status"
+        ]
+    },
+    "human": {
+        "target_module": "Platform/Application/Port/ConfigurationSettings",
+        "wave": 2,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

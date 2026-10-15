@@ -1,0 +1,68 @@
+{
+    "schema": 1,
+    "name": "recursive_chown",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 7636,
+        "end_line": 7660,
+        "line_count": 25,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "path",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "uid",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "gid",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": false,
+        "fan_out": {"core": 1, "core_outside_functions_php": 0, "tests": 0, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": ["chgrp", "chown", "opendir", "readdir"],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": true},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Application/Port/Filesystem",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

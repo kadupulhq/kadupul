@@ -1,0 +1,39 @@
+{
+    "schema": 1,
+    "name": "email_test",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 6163,
+        "end_line": 6245,
+        "line_count": 83,
+        "signature": {"parameters": [], "return_type": null, "returns_reference": false},
+        "docblock": false,
+        "fan_out": {"core": 1, "core_outside_functions_php": 1, "tests": 0, "plugins": 0},
+        "body": {
+            "uses_global": ["config"],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": ["print"],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {
+            "functions": ["ping_mail_server", "read_config_option", "send_mail"],
+            "recursive": false
+        },
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Alerting/Application/Port/MailSender",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

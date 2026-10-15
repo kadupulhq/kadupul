@@ -1,0 +1,53 @@
+{
+    "schema": 1,
+    "name": "get_md5_include_css",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 7589,
+        "end_line": 7604,
+        "line_count": 16,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "path",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": false,
+        "fan_out": {"core": 16, "core_outside_functions_php": 16, "tests": 6, "plugins": 0},
+        "body": {
+            "uses_global": ["config"],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {
+            "functions": ["get_compiled_asset_path", "get_include_relpath", "get_md5_hash"],
+            "recursive": false
+        },
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Navigation",
+        "wave": 5,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Twig layout replaces page chrome as pages migrate."
+    }
+}

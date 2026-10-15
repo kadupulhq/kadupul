@@ -1,0 +1,59 @@
+{
+    "schema": 1,
+    "name": "check_changed",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 1184,
+        "end_line": 1191,
+        "line_count": 8,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "request",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "session",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 2, "core_outside_functions_php": 1, "tests": 3, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": ["$_SESSION"],
+            "session": {"references": 2, "keys": ["(dynamic)"]},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "legacy-retained",
+        "wave": 5,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Leave until the owning pages move to Symfony Form and Validator."
+    }
+}

@@ -1,0 +1,50 @@
+{
+    "schema": 1,
+    "name": "get_nearest_timespan",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 4580,
+        "end_line": 4598,
+        "line_count": 19,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "timespan",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 2, "core_outside_functions_php": 1, "tests": 0, "plugins": 0},
+        "body": {
+            "uses_global": ["timespans"],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Domain/Time",
+        "wave": 1,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Plan lists waves 1-2 for time."
+    }
+}

@@ -1,0 +1,89 @@
+{
+    "schema": 1,
+    "name": "test_data_sources",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 2433,
+        "end_line": 2469,
+        "line_count": 37,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "graph_template_id",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "host_id",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "snmp_query_id",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "0"
+                },
+                {
+                    "name": "snmp_index",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "''"
+                },
+                {
+                    "name": "values",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "array()"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 5, "core_outside_functions_php": 4, "tests": 3, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {"db_fetch_assoc_prepared": 1, "db_fetch_cell_prepared": 1},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {
+            "functions": ["array_rekey", "cacti_sizeof", "dsv_log", "test_data_source"],
+            "recursive": false
+        },
+        "called_by": []
+    },
+    "human": {
+        "target_module": "DataInput/Application",
+        "wave": 4,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

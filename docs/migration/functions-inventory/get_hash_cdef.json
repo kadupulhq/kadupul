@@ -1,0 +1,59 @@
+{
+    "schema": 1,
+    "name": "get_hash_cdef",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 4767,
+        "end_line": 4790,
+        "line_count": 24,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "cdef_id",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "sub_type",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "'cdef'"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 14, "core_outside_functions_php": 13, "tests": 0, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {"db_fetch_cell_prepared": 2},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["generate_hash"], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "DataInput/Domain",
+        "wave": 1,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Plan assigns template hashes to DataInput; confirm for cdef, vdef, gprint and graph template hashes."
+    }
+}

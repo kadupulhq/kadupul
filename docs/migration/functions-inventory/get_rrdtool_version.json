@@ -1,0 +1,53 @@
+{
+    "schema": 1,
+    "name": "get_rrdtool_version",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 7451,
+        "end_line": 7460,
+        "line_count": 10,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "force",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "false"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": false,
+        "fan_out": {"core": 24, "core_outside_functions_php": 24, "tests": 18, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": ["version"],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {
+            "functions": ["read_config_option", "read_default_config_option"],
+            "recursive": false
+        },
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Application/Port/ProductVersion",
+        "wave": 1,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

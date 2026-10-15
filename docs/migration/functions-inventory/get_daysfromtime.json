@@ -1,0 +1,86 @@
+{
+    "schema": 1,
+    "name": "get_daysfromtime",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 6567,
+        "end_line": 6605,
+        "line_count": 39,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "time",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "secs",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "false"
+                },
+                {
+                    "name": "pad",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "''"
+                },
+                {
+                    "name": "format",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "DAYS_FORMAT_SHORT"
+                },
+                {
+                    "name": "all",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "false"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": false,
+        "fan_out": {"core": 2, "core_outside_functions_php": 0, "tests": 0, "plugins": 0},
+        "body": {
+            "uses_global": ["days_from_time_settings"],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["padleft"], "recursive": false},
+        "called_by": ["get_timeinstate", "get_uptime"]
+    },
+    "human": {
+        "target_module": "Platform/Domain/Time",
+        "wave": 1,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Plan lists waves 1-2 for time."
+    }
+}

@@ -1,0 +1,110 @@
+{
+    "schema": 1,
+    "name": "cacti_log",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 1582,
+        "end_line": 1714,
+        "line_count": 133,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "string",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "output",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "false"
+                },
+                {
+                    "name": "environ",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "'CMDPHP'"
+                },
+                {
+                    "name": "level",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "''"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 1198, "core_outside_functions_php": 1132, "tests": 237, "plugins": 0},
+        "body": {
+            "uses_global": ["config", "database_log"],
+            "static_variables": ["start"],
+            "superglobals": ["$_SERVER"],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": ["print"],
+            "file_functions": ["fclose", "fopen", "fwrite"],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {
+            "functions": [
+                "cacti_browser_zone_set",
+                "cacti_log_file",
+                "cacti_system_zone_set",
+                "clean_up_lines",
+                "get_selective_log_level",
+                "read_config_option"
+            ],
+            "recursive": false
+        },
+        "called_by": [
+            "CactiErrorHandler",
+            "CactiShutdownHandler",
+            "build_where_from_array",
+            "cacti_debug_backtrace",
+            "cacti_exec",
+            "cacti_session_start",
+            "cacti_temp_file",
+            "call_remote_data_collector",
+            "display_output_messages",
+            "dsv_log",
+            "form_input_validate",
+            "get_current_page",
+            "get_include_relpath",
+            "graph_font_name_filter",
+            "log_client_addr_proxy_diagnostic",
+            "mailer",
+            "ping_mail_server",
+            "record_mailer_error",
+            "repair_system_data_input_methods",
+            "set_config_option",
+            "set_user_setting",
+            "update_host_status"
+        ]
+    },
+    "human": {
+        "target_module": "Platform/Infrastructure/Legacy",
+        "wave": 2,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Logging: PSR-3 adapter that keeps the cacti.log line format."
+    }
+}

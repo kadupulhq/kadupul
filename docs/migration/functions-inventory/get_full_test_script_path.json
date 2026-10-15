@@ -1,0 +1,62 @@
+{
+    "schema": 1,
+    "name": "get_full_test_script_path",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 2960,
+        "end_line": 3016,
+        "line_count": 57,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "data_template_id",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "host_id",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 2, "core_outside_functions_php": 0, "tests": 2, "plugins": 0},
+        "body": {
+            "uses_global": ["config"],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {"db_fetch_assoc_prepared": 1, "db_fetch_row_prepared": 2},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {
+            "functions": ["cacti_escapeshellarg", "cacti_sizeof", "read_config_option"],
+            "recursive": false
+        },
+        "called_by": ["test_data_source"]
+    },
+    "human": {
+        "target_module": "DataInput/Application",
+        "wave": 4,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

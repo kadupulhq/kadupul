@@ -1,0 +1,62 @@
+{
+    "schema": 1,
+    "name": "debounce_run_notification",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 8638,
+        "end_line": 8657,
+        "line_count": 20,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "frequency",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "7200"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": false,
+        "fan_out": {"core": 12, "core_outside_functions_php": 8, "tests": 10, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {
+            "functions": ["cacti_debug_backtrace", "read_config_option", "set_config_option"],
+            "recursive": false
+        },
+        "called_by": ["call_remote_data_collector", "get_include_relpath"]
+    },
+    "human": {
+        "target_module": "Inventory/Application",
+        "wave": 4,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

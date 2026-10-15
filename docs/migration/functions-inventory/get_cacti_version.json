@@ -1,0 +1,36 @@
+{
+    "schema": 1,
+    "name": "get_cacti_version",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 7279,
+        "end_line": 7288,
+        "line_count": 10,
+        "signature": {"parameters": [], "return_type": null, "returns_reference": false},
+        "docblock": true,
+        "fan_out": {"core": 27, "core_outside_functions_php": 25, "tests": 15, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": ["version"],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {"db_fetch_cell": 1},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": ["get_cacti_cli_version"]
+    },
+    "human": {
+        "target_module": "Platform/Application/Port/ProductVersion",
+        "wave": 1,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

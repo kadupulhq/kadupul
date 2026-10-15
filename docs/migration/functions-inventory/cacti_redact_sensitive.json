@@ -1,0 +1,50 @@
+{
+    "schema": 1,
+    "name": "cacti_redact_sensitive",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 8851,
+        "end_line": 8866,
+        "line_count": 16,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "data",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 3, "core_outside_functions_php": 0, "tests": 0, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["cacti_is_sensitive_key"], "recursive": true},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Domain/Security",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Hard-stop domain: delegate and verify at the thorough tier."
+    }
+}

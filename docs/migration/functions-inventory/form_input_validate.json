@@ -1,0 +1,94 @@
+{
+    "schema": 1,
+    "name": "form_input_validate",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 1125,
+        "end_line": 1162,
+        "line_count": 38,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "field_value",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "field_name",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "regexp_match",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "allow_nulls",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "custom_message",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "3"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 389, "core_outside_functions_php": 387, "tests": 24, "plugins": 0},
+        "body": {
+            "uses_global": ["messages"],
+            "static_variables": [],
+            "superglobals": ["$_SESSION"],
+            "session": {"references": 3, "keys": ["sess_error_fields", "sess_field_values"]},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {
+            "functions": [
+                "cacti_debug_backtrace",
+                "cacti_log",
+                "raise_message",
+                "read_config_option"
+            ],
+            "recursive": false
+        },
+        "called_by": []
+    },
+    "human": {
+        "target_module": "legacy-retained",
+        "wave": 5,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Leave until the owning pages move to Symfony Form and Validator."
+    }
+}

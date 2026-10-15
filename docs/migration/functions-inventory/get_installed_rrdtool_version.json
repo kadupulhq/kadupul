@@ -1,0 +1,39 @@
+{
+    "schema": 1,
+    "name": "get_installed_rrdtool_version",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 7462,
+        "end_line": 7485,
+        "line_count": 24,
+        "signature": {"parameters": [], "return_type": null, "returns_reference": false},
+        "docblock": false,
+        "fan_out": {"core": 3, "core_outside_functions_php": 3, "tests": 3, "plugins": 0},
+        "body": {
+            "uses_global": ["config", "rrdtool_versions"],
+            "static_variables": ["version"],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": ["shell_exec"],
+            "plugin_hooks": []
+        },
+        "calls": {
+            "functions": ["cacti_escapeshellcmd", "cacti_version_compare", "read_config_option"],
+            "recursive": false
+        },
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Application/Port/ProductVersion",
+        "wave": 1,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

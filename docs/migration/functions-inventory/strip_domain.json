@@ -1,0 +1,50 @@
+{
+    "schema": 1,
+    "name": "strip_domain",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 2209,
+        "end_line": 2220,
+        "line_count": 12,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "hostname",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 10, "core_outside_functions_php": 8, "tests": 1, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["is_ipaddress", "read_config_option"], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Domain/Text",
+        "wave": 1,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

@@ -1,0 +1,50 @@
+{
+    "schema": 1,
+    "name": "get_current_page",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 4634,
+        "end_line": 4667,
+        "line_count": 34,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "basename",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "true"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 31, "core_outside_functions_php": 25, "tests": 31, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": ["$_SERVER"],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["cacti_log"], "recursive": false},
+        "called_by": ["bottom_footer", "draw_navigation_text", "get_browser_query_string"]
+    },
+    "human": {
+        "target_module": "Platform/Presentation/Http",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}
