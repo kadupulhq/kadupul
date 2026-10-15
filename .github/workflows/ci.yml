@@ -500,6 +500,12 @@ jobs:
         run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" -- php tools/dependencies/install-legacy.php
       - name: Verify flag maintenance filename filters
         run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Support/flag_icons_helpers_test.py
+      - name: Verify captured function behavior against committed goldens
+        env:
+          PHP_VERSION: '8.4'
+        run: |
+          mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Support/Behavior/harness.py functions --target kadupul --project "fnwt-functions-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          test -s tests/behavior/results/kadupul/functions.json
       # This exercises runtime invariants without claiming parity with upstream.
       # Observations are ephemeral CI artifacts; committed goldens stay untouched.
       - name: Exercise fresh install, authentication and collection
@@ -526,7 +532,9 @@ jobs:
         with:
           retention-days: 14
           name: application-smoke-observations
-          path: tests/behavior/results/ci-smoke/
+          path: |
+            tests/behavior/results/ci-smoke/
+            tests/behavior/results/kadupul/
           if-no-files-found: warn
 
   style:

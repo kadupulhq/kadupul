@@ -17,10 +17,11 @@ make test-functions            # capture, then compare with the committed golden
 make test-functions-golden     # re-record every function; review the diff
 ```
 
-Neither target runs in any CI workflow. Nothing fails a pull request when a
-function changes behavior, so the goldens can drift from `lib/functions.php`
-until someone runs `make test-functions`. Run it before moving or editing a
-captured function.
+The existing Install, login and poller smoke CI job verifies the committed
+goldens with the function-capture command and retains its observations as
+artifacts. It never regenerates goldens. Run `make test-functions` locally
+before moving or editing a captured function; update goldens explicitly only
+after reviewing the behavior change.
 
 Both start a throwaway compose project named `fnwt_functions`, install the
 fresh schema the way the main harness does, run every case file in
