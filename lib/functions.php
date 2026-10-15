@@ -240,6 +240,31 @@ function settings_value_passes_filter($name, $value, $user_setting = false)
 }
 
 /**
+ * settings_storage - the database access of the settings functions below
+ *
+ * include/global.php reads settings before it loads Composer's autoloader.
+ * Callers without the autoloader get the two classes required here, and the
+ * storage keeps to the db_* helpers until Doctrine DBAL can be loaded.
+ *
+ * @return - a \Kadupul\Platform\Infrastructure\Legacy\LegacySettingsStorage
+ */
+function settings_storage(): \Kadupul\Platform\Infrastructure\Legacy\LegacySettingsStorage
+{
+    static $storage = null;
+
+    if ($storage === null) {
+        if (!class_exists(\Kadupul\Platform\Infrastructure\Legacy\LegacySettingsStorage::class)) {
+            require_once __DIR__ . '/../src/Platform/Infrastructure/Legacy/LegacyLockRetry.php';
+            require_once __DIR__ . '/../src/Platform/Infrastructure/Legacy/LegacySettingsStorage.php';
+        }
+
+        $storage = new \Kadupul\Platform\Infrastructure\Legacy\LegacySettingsStorage();
+    }
+
+    return $storage;
+}
+
+/**
  * save_user_setting - sets/updates aLL user settings
  *
  * @param $config_name - the name of the configuration setting as specified $settings array
@@ -422,12 +447,7 @@ function set_user_setting($config_name, $value, $user = -1)
             cacti_log("ERROR: User setting name '$config_name' is too long, will be truncated", false, 'SYSTEM');
         }
 
-        db_execute_prepared(
-            'INSERT INTO settings_user
-			(user_id, name, value) VALUES (?, ?, ?)
-			ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)',
-            array($user, $config_name, $value)
-        );
+        settings_storage()->writeUserSetting($user, $config_name, $value);
 
         unset($_SESSION['sess_user_config_array']);
         $settings_user[$config_name]['value'] = $value;
@@ -448,18 +468,12 @@ function user_setting_exists($config_name, $user_id)
     static $user_setting_values = array();
 
     if (!isset($user_setting_values[$user_id]) || !array_key_exists($config_name, $user_setting_values[$user_id])) {
-        $value = 0;
+        $value = false;
         if (db_table_exists('settings_user')) {
-            $value = db_fetch_cell_prepared(
-                'SELECT COUNT(*)
-				FROM settings_user
-				WHERE name = ?
-				AND user_id = ?',
-                array($config_name, $user_id)
-            );
+            $value = settings_storage()->userSettingExists($config_name, $user_id);
         }
 
-        if ($value !== false && $value > 0) {
+        if ($value) {
             $user_setting_values[$user_id][$config_name] = true;
         } else {
             $user_setting_values[$user_id][$config_name] = false;
@@ -489,12 +503,7 @@ function clear_user_setting($config_name, $user = -1)
     }
 
     if (db_table_exists('settings_user')) {
-        db_execute_prepared(
-            'DELETE FROM settings_user
-			WHERE name = ?
-			AND user_id = ?',
-            array($config_name, $user)
-        );
+        settings_storage()->removeUserSetting($config_name, $user);
     }
 
     unset($_SESSION['sess_user_config_array']);
@@ -561,13 +570,7 @@ function read_user_setting($config_name, $default = false, $force = false, $user
 
         $db_setting = false;
         if (db_table_exists('settings_user')) {
-            $db_setting = db_fetch_row_prepared(
-                'SELECT value
-				FROM settings_user
-				WHERE name = ?
-				AND user_id = ?',
-                array($config_name, $effective_uid)
-            );
+            $db_setting = settings_storage()->userSettingRow($config_name, $effective_uid);
         }
 
         if (cacti_sizeof($db_setting)) {
@@ -590,13 +593,7 @@ function read_user_setting($config_name, $default = false, $force = false, $user
     if (!isset($user_config_array[$config_name])) {
         $db_setting = false;
         if (db_table_exists('settings_user')) {
-            $db_setting = db_fetch_row_prepared(
-                'SELECT value
-				FROM settings_user
-				WHERE name = ?
-				AND user_id = ?',
-                array($config_name, $effective_uid)
-            );
+            $db_setting = settings_storage()->userSettingRow($config_name, $effective_uid);
         }
 
         if (cacti_sizeof($db_setting)) {
@@ -658,12 +655,7 @@ function set_config_option($config_name, $value, $remote = false)
         cacti_log("ERROR: Config option name '$config_name' is too long, will be truncated", false, 'SYSTEM');
     }
 
-    $success = db_execute_prepared(
-        'INSERT INTO settings
-		(name, value) VALUES (?, ?)
-		ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)',
-        array($config_name, $value)
-    );
+    $success = settings_storage()->writeSetting($config_name, $value);
 
     if ($success === false) {
         return false;
@@ -742,9 +734,7 @@ function config_value_exists($config_name)
     static $config_values = array();
 
     if (!isset($config_values[$config_name])) {
-        $value = db_fetch_cell_prepared('SELECT COUNT(*) FROM settings WHERE name = ?', array($config_name));
-
-        if ($value > 0) {
+        if (settings_storage()->settingExists($config_name)) {
             $config_values[$config_name] = true;
         } else {
             $config_values[$config_name] = false;
@@ -887,16 +877,7 @@ function prime_common_config_settings()
 
     $common_settings = array_merge($common_settings, $extra_settings);
 
-    $settings = array_rekey(
-        db_fetch_assoc_prepared(
-            'SELECT name, value
-			FROM settings
-			WHERE name IN (' . trim(str_repeat('?, ', cacti_sizeof($common_settings)), ', ') . ')',
-            $common_settings
-        ),
-        'name',
-        'value'
-    );
+    $settings = settings_storage()->settingValues($common_settings);
 
     if (isset($_SESSION['sess_config_array'])) {
         $sess = true;
@@ -980,7 +961,7 @@ function read_config_option($config_name, $force = false)
             isset($database_sessions["$database_hostname:$database_port:$database_default"])) {
 
             // Get the database setting
-            $db_result = db_fetch_row_prepared('SELECT value FROM settings WHERE name = ?', array($config_name), false);
+            $db_result = settings_storage()->settingRow($config_name, false);
 
             if (cacti_sizeof($db_result)) {
                 $value = $db_result['value'];

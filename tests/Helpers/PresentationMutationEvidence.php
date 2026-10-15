@@ -52,6 +52,25 @@ final class PresentationMutationStatement extends PDOStatement
         $row = array_shift($this->selectedRows);
         return $row === null ? false : array_values($row)[$column];
     }
+
+    /** Doctrine DBAL reads one row at a time; the rows were already fetched above. */
+    public function fetch(int $mode = PDO::FETCH_DEFAULT, int $cursorOrientation = PDO::FETCH_ORI_NEXT, int $cursorOffset = 0): mixed
+    {
+        if ($this->selectedRows === null) {
+            return parent::fetch($mode, $cursorOrientation, $cursorOffset);
+        }
+        $row = array_shift($this->selectedRows);
+        if ($row === null) {
+            return false;
+        }
+        return match ($mode) {
+            PDO::FETCH_ASSOC, PDO::FETCH_DEFAULT => $row,
+            PDO::FETCH_NUM => array_values($row),
+            PDO::FETCH_BOTH => $row + array_values($row),
+            PDO::FETCH_COLUMN => array_values($row)[0],
+            default => throw new RuntimeException('Unsupported mutation SELECT fetch mode'),
+        };
+    }
 }
 
 final class PresentationMutationDatabase extends PDO

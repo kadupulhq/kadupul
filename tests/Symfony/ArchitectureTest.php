@@ -213,6 +213,7 @@ final class ArchitectureTest extends TestCase
                 'src/Platform/Infrastructure/Legacy/LegacySettingsStorage.php',
             ],
             'LegacySettingsStorage' => [
+                'lib/functions.php',
                 'src/Platform/Infrastructure/Legacy/LegacySettingsStorage.php',
             ],
         ]);

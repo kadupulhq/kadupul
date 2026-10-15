@@ -19,14 +19,19 @@ if (PHP_SAPI !== 'cli') {
 
 $root = dirname(__DIR__, 2);
 $scenario = $argv[1] ?? 'contract';
-require $root . '/include/vendor/autoload.php';
+// The bootstrap scenario stands where include/global.php first reads a
+// setting: Composer's autoloader is not loaded yet.
+if ($scenario !== 'bootstrap') {
+    require $root . '/include/vendor/autoload.php';
+}
 require $root . '/include/global_constants.php';
 require $root . '/lib/database.php';
 require $root . '/tests/Helpers/PhpSource.php';
 // The repository's own functions, extracted as the other native fixtures do,
-// so the helpers under test call the real implementations.
-foreach (['cacti_sizeof', 'cacti_count', 'clean_up_lines'] as $function) {
-    eval(test_php_function_source(file_get_contents($root . '/lib/functions.php'), $function));
+// so settings_storage() and the helpers under test are the real ones.
+foreach (['cacti_sizeof', 'cacti_count', 'clean_up_lines', 'settings_storage'] as $function) {
+    // __DIR__ in eval'd code is this directory; the function expects lib/.
+    eval(str_replace('__DIR__', var_export($root . '/lib', true), test_php_function_source(file_get_contents($root . '/lib/functions.php'), $function)));
 }
 
 $logged = [];
@@ -99,9 +104,23 @@ try {
 
         return ['returns' => var_export($value, true), 'thrown' => $thrown, 'db_error' => $database_last_error, 'logs' => $logged, 'affected' => db_affected_rows(), 'counted' => $database_total_queries - $queries];
     };
-    $storage = new LegacySettingsStorage();
+    // Built here, not above, so the bootstrap scenario loads it itself.
+    $storage = $scenario === 'bootstrap' ? null : new LegacySettingsStorage();
 
-    if ($scenario === 'strict') {
+    if ($scenario === 'bootstrap') {
+        $seed();
+        $out['bootstrap'] = [
+            'composer_loaded_before' => class_exists('Composer\Autoload\ClassLoader', false),
+            'write' => settings_storage()->writeSetting('boot', 'x'),
+            'read' => settings_storage()->settingRow('boot'),
+            'dbal_loaded' => class_exists('Doctrine\DBAL\Connection', false),
+            'storage_classes' => array_values(array_filter(get_declared_classes(), static fn(string $class): bool => str_starts_with($class, 'Kadupul\\'))),
+            'composer_init' => array_values(array_filter(get_declared_classes(), static fn(string $class): bool => str_starts_with($class, 'ComposerAutoloaderInit'))),
+            // Composer's file autoloads define namespaced or guarded global
+            // functions; none of them may run this early.
+            'vendor_functions' => array_values(array_filter(get_defined_functions()['user'], static fn(string $name): bool => str_contains($name, '\\') || in_array($name, ['dump', 'dd'], true))),
+        ];
+    } elseif ($scenario === 'strict') {
         define('KADUPUL_THROW_DATABASE_ERRORS', true);
         $seed();
         $admin->exec("RENAME TABLE `$database_default`.settings TO `$database_default`.settings_away");

@@ -96,6 +96,25 @@ final class SettingsStorageDatabaseTest extends TestCase
         }
     }
 
+    /**
+     * include/global.php reads settings before it loads Composer's
+     * autoloader. There the helpers still run, and nothing from Composer or
+     * Doctrine is loaded ahead of the CSRF boundary.
+     */
+    public function testBeforeComposerTheHelpersRunAndNothingIsAutoloaded(): void
+    {
+        $boot = $this->runNative('bootstrap')['bootstrap'];
+        self::assertSame([
+            'composer_loaded_before' => false,
+            'write' => true,
+            'read' => ['value' => 'x'],
+            'dbal_loaded' => false,
+            'storage_classes' => ['Kadupul\Platform\Infrastructure\Legacy\LegacyLockRetry', 'Kadupul\Platform\Infrastructure\Legacy\LegacySettingsStorage'],
+            'composer_init' => [],
+            'vendor_functions' => [],
+        ], $boot);
+    }
+
     /** @return array<string, mixed> */
     private function runNative(string $scenario): array
     {

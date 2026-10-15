@@ -32,6 +32,14 @@ final class PresentationPageEvidence
             'lib/graph_fonts.php', 'src/Graphing/Domain/Font/GraphFontMethod.php', 'src/Graphing/Domain/Font/GraphFont.php',
             'src/Graphing/Domain/Font/GraphFontProfile.php', 'src/Graphing/Domain/Font/GraphFontResolver.php',
             'src/Graphing/Infrastructure/Fontconfig/InstalledFontFamilies.php',
+            // lib/functions.php reads and writes settings through these.
+            'src/Platform/Infrastructure/Legacy/LegacySettingsStorage.php', 'src/Platform/Infrastructure/Legacy/LegacyLockRetry.php',
+            'src/Platform/Infrastructure/Legacy/Dbal/LegacyDatabaseCall.php',
+            'src/Platform/Infrastructure/Legacy/Dbal/LegacyDatabaseConnection.php', 'src/Platform/Infrastructure/Legacy/Dbal/SharedPdoConnection.php',
+            'src/Platform/Infrastructure/Legacy/Dbal/SharedPdoDriver.php', 'src/Platform/Infrastructure/Legacy/Dbal/SharedPdoFailure.php',
+            'src/Platform/Infrastructure/Legacy/Dbal/SharedPdoResult.php', 'src/Platform/Infrastructure/Legacy/Dbal/SharedPdoStatement.php',
+            'src/Platform/Infrastructure/Persistence/DbalConfigurationSettings.php', 'src/Platform/Infrastructure/Persistence/DbalUserSettings.php',
+            'src/Platform/Application/Port/ConfigurationSettings.php', 'src/Platform/Application/Port/UserSettings.php',
 
             'include/global_session.php',
             'lib/api_aggregate.php',
