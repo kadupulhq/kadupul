@@ -87,7 +87,7 @@ jobs:
     # exists only inside this runner.
     services:
       database:
-        image: public.ecr.aws/docker/library/mariadb:11.8@sha256:6422478cb8e159f080fb1d8ccf65101e26fe51385787fde7d16c3b165a331f15
+        image: mirror.gcr.io/library/mariadb:11.8@sha256:6422478cb8e159f080fb1d8ccf65101e26fe51385787fde7d16c3b165a331f15
         env:
           MARIADB_ROOT_PASSWORD: kadupul-ci-only
           MARIADB_DATABASE: kadupul_test
@@ -250,7 +250,7 @@ jobs:
     # exists only inside this runner.
     services:
       database:
-        image: public.ecr.aws/docker/library/mariadb:11.8@sha256:6422478cb8e159f080fb1d8ccf65101e26fe51385787fde7d16c3b165a331f15
+        image: mirror.gcr.io/library/mariadb:11.8@sha256:6422478cb8e159f080fb1d8ccf65101e26fe51385787fde7d16c3b165a331f15
         env:
           MARIADB_ROOT_PASSWORD: kadupul-ci-only
           MARIADB_DATABASE: kadupul_test
