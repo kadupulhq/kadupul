@@ -14,6 +14,7 @@
       <file>./integration/DeviceCollectorWorkerDatabaseTest.php</file>
       <file>./integration/PlacementTransactionDatabaseTest.php</file>
       <file>integration/LegacyDbalConnectionDatabaseTest.php</file>
+      <file>integration/SettingsStorageDatabaseTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>
