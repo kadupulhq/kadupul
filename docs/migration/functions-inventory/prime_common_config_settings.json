@@ -3,9 +3,9 @@
     "name": "prime_common_config_settings",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 784,
-        "end_line": 920,
-        "line_count": 137,
+        "start_line": 754,
+        "end_line": 881,
+        "line_count": 128,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": false,
         "fan_out": {"core": 1, "core_outside_functions_php": 1, "tests": 1, "plugins": 0},
@@ -14,7 +14,7 @@
             "static_variables": [],
             "superglobals": ["$_SESSION"],
             "session": {"references": 2, "keys": ["sess_config_array"]},
-            "db_calls": {"db_fetch_assoc_prepared": 1},
+            "db_calls": {},
             "headers": [],
             "exits": [],
             "output": [],
@@ -22,7 +22,7 @@
             "process_functions": [],
             "plugin_hooks": []
         },
-        "calls": {"functions": ["array_rekey", "cacti_sizeof"], "recursive": false},
+        "calls": {"functions": ["cacti_sizeof"], "recursive": false},
         "called_by": []
     },
     "human": {

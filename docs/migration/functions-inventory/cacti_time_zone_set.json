@@ -3,8 +3,8 @@
     "name": "cacti_time_zone_set",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8540,
-        "end_line": 8636,
+        "start_line": 8501,
+        "end_line": 8597,
         "line_count": 97,
         "signature": {
             "parameters": [

@@ -3,8 +3,8 @@
     "name": "data_source_limit_pattern",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1169,
-        "end_line": 1177,
+        "start_line": 1130,
+        "end_line": 1138,
         "line_count": 9,
         "signature": {
             "parameters": [

@@ -3,8 +3,8 @@
     "name": "enable_device_debug",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6791,
-        "end_line": 6802,
+        "start_line": 6752,
+        "end_line": 6763,
         "line_count": 12,
         "signature": {
             "parameters": [

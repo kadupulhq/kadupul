@@ -196,6 +196,57 @@ final class ArchitectureTest extends TestCase
     }
 
     /**
+     * DBAL on the legacy session carries the legacy writer's privileges.
+     * Symfony-native code keeps its ConnectionTarget connections, so only the
+     * bridge itself may name it until a legacy wrapper is reviewed in here.
+     */
+    public function testOnlyTheLegacyBridgeRunsDbalOnTheLegacySession(): void
+    {
+        $this->assertOnlyTheseFilesName([
+            'SharedPdoDriver' => [
+                'src/Platform/Infrastructure/Legacy/Dbal/LegacyDatabaseConnection.php',
+                'src/Platform/Infrastructure/Legacy/Dbal/SharedPdoDriver.php',
+            ],
+            'LegacyDatabaseConnection' => [
+                'src/Platform/Infrastructure/Legacy/Dbal/LegacyDatabaseCall.php',
+                'src/Platform/Infrastructure/Legacy/Dbal/LegacyDatabaseConnection.php',
+                'src/Platform/Infrastructure/Legacy/LegacySettingsStorage.php',
+            ],
+            'LegacySettingsStorage' => [
+                'lib/functions.php',
+                'src/Platform/Infrastructure/Legacy/LegacySettingsStorage.php',
+            ],
+        ]);
+    }
+
+    /**
+     * The settings adapters take a Connection and nothing else, so Symfony
+     * code can later run them on a ConnectionTarget connection. Whatever the
+     * legacy functions need besides the statement stays in
+     * LegacySettingsStorage and lib/functions.php.
+     */
+    public function testTheSettingsAdaptersReachNoLegacyState(): void
+    {
+        $root = dirname(__DIR__, 2) . '/src/Platform/Infrastructure/Persistence/';
+        foreach (['DbalConfigurationSettings.php', 'DbalUserSettings.php'] as $file) {
+            $tokens = token_get_all((string) file_get_contents($root . $file));
+            foreach ($tokens as $token) {
+                if (!is_array($token)) {
+                    continue;
+                }
+                [$kind, $value] = $token;
+                self::assertNotContains($kind, [T_GLOBAL, T_REQUIRE, T_REQUIRE_ONCE, T_INCLUDE, T_INCLUDE_ONCE], $file);
+                if ($kind === T_VARIABLE) {
+                    self::assertNotContains($value, ['$_SESSION', '$_SERVER', '$GLOBALS'], $file);
+                }
+                if (in_array($kind, [T_STRING, T_NAME_QUALIFIED, T_NAME_FULLY_QUALIFIED], true)) {
+                    self::assertDoesNotMatchRegularExpression('/(^|\\\\)(db_|cacti_|read_config_option|LegacyDatabase)/', $value, $file);
+                }
+            }
+        }
+    }
+
+    /**
      * Fails unless each class's short name appears, as a whole word, in
      * exactly the listed files outside tests and dependencies.
      *

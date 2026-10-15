@@ -3,8 +3,8 @@
     "name": "save_user_settings",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 251,
-        "end_line": 310,
+        "start_line": 256,
+        "end_line": 315,
         "line_count": 60,
         "signature": {
             "parameters": [

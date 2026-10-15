@@ -3,9 +3,9 @@
     "name": "config_value_exists",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 740,
-        "end_line": 755,
-        "line_count": 16,
+        "start_line": 712,
+        "end_line": 725,
+        "line_count": 14,
         "signature": {
             "parameters": [
                 {
@@ -28,7 +28,7 @@
             "static_variables": ["config_values"],
             "superglobals": [],
             "session": {"references": 0, "keys": []},
-            "db_calls": {"db_fetch_cell_prepared": 1},
+            "db_calls": {},
             "headers": [],
             "exits": [],
             "output": [],

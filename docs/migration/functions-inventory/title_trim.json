@@ -3,8 +3,8 @@
     "name": "title_trim",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 22,
-        "end_line": 29,
+        "start_line": 27,
+        "end_line": 34,
         "line_count": 8,
         "signature": {
             "parameters": [

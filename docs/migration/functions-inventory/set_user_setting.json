@@ -3,9 +3,9 @@
     "name": "set_user_setting",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 399,
+        "start_line": 404,
         "end_line": 435,
-        "line_count": 37,
+        "line_count": 32,
         "signature": {
             "parameters": [
                 {
@@ -46,7 +46,7 @@
             "static_variables": [],
             "superglobals": ["$_SESSION"],
             "session": {"references": 4, "keys": ["sess_user_config_array", "sess_user_id"]},
-            "db_calls": {"db_execute_prepared": 1, "db_table_exists": 1},
+            "db_calls": {"db_table_exists": 1},
             "headers": [],
             "exits": [],
             "output": [],

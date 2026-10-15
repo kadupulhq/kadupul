@@ -3,8 +3,8 @@
     "name": "get_hash_vdef",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 4818,
-        "end_line": 4837,
+        "start_line": 4779,
+        "end_line": 4798,
         "line_count": 20,
         "signature": {
             "parameters": [

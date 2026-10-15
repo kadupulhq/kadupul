@@ -3,8 +3,8 @@
     "name": "is_remote_path_setting",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 628,
-        "end_line": 637,
+        "start_line": 605,
+        "end_line": 614,
         "line_count": 10,
         "signature": {
             "parameters": [

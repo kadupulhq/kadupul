@@ -3,9 +3,9 @@
     "name": "set_config_option",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 651,
-        "end_line": 730,
-        "line_count": 80,
+        "start_line": 628,
+        "end_line": 702,
+        "line_count": 75,
         "signature": {
             "parameters": [
                 {
@@ -46,7 +46,7 @@
             "static_variables": [],
             "superglobals": ["$_SESSION"],
             "session": {"references": 4, "keys": ["sess_config_array"]},
-            "db_calls": {"db_execute_prepared": 2, "db_fetch_assoc": 1},
+            "db_calls": {"db_execute_prepared": 1, "db_fetch_assoc": 1},
             "headers": [],
             "exits": [],
             "output": [],

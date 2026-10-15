@@ -3,8 +3,8 @@
     "name": "filter_value",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 40,
-        "end_line": 69,
+        "start_line": 45,
+        "end_line": 74,
         "line_count": 30,
         "signature": {
             "parameters": [

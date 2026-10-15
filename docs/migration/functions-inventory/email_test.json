@@ -3,8 +3,8 @@
     "name": "email_test",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6163,
-        "end_line": 6245,
+        "start_line": 6124,
+        "end_line": 6206,
         "line_count": 83,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": false,

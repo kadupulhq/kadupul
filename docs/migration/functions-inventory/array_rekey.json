@@ -3,8 +3,8 @@
     "name": "array_rekey",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1490,
-        "end_line": 1509,
+        "start_line": 1451,
+        "end_line": 1470,
         "line_count": 20,
         "signature": {
             "parameters": [
@@ -40,7 +40,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 202, "core_outside_functions_php": 194, "tests": 36, "plugins": 0},
+        "fan_out": {"core": 202, "core_outside_functions_php": 195, "tests": 36, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],
@@ -55,12 +55,7 @@
             "plugin_hooks": []
         },
         "calls": {"functions": [], "recursive": false},
-        "called_by": [
-            "prime_common_config_settings",
-            "set_config_option",
-            "test_data_source",
-            "test_data_sources"
-        ]
+        "called_by": ["set_config_option", "test_data_source", "test_data_sources"]
     },
     "human": {
         "target_module": "Platform/Domain/Collection",

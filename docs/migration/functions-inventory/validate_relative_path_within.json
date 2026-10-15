@@ -3,8 +3,8 @@
     "name": "validate_relative_path_within",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5221,
-        "end_line": 5276,
+        "start_line": 5182,
+        "end_line": 5237,
         "line_count": 56,
         "signature": {
             "parameters": [

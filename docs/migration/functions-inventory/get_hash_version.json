@@ -3,8 +3,8 @@
     "name": "get_hash_version",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 4918,
-        "end_line": 4923,
+        "start_line": 4879,
+        "end_line": 4884,
         "line_count": 6,
         "signature": {
             "parameters": [

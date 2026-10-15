@@ -127,12 +127,32 @@ class BehaviorTimeout extends RuntimeException {}
  */
 class BehaviorStatement extends PDOStatement
 {
+    /**
+     * Doctrine DBAL binds each value before an execute() without arguments,
+     * where the db_* helpers pass them to execute(). Both are the same
+     * statement, so both are written the same way.
+     */
+    private $bound = [];
+
     protected function __construct() {}
+
+    #[\ReturnTypeWillChange]
+    public function bindValue($param, $value, $type = PDO::PARAM_STR)
+    {
+        $this->bound[$param] = $value;
+
+        return parent::bindValue($param, $value, $type);
+    }
 
     #[\ReturnTypeWillChange]
     public function execute(?array $params = null)
     {
-        $entry = ['sql' => preg_replace('/\s+/', ' ', trim($this->queryString)), 'params' => behavior_cell(array_values($params ?? []))];
+        $recorded = $params;
+        if ($recorded === null && $this->bound !== []) {
+            ksort($this->bound);
+            $recorded = $this->bound;
+        }
+        $entry = ['sql' => preg_replace('/\s+/', ' ', trim($this->queryString)), 'params' => behavior_cell(array_values($recorded ?? []))];
         try {
             $ok = parent::execute($params);
         } catch (Throwable $e) {
