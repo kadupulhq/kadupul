@@ -1,0 +1,30 @@
+{
+  "function": "array_rekey",
+  "cases": [
+    {"id": "scalar_value", "args": [[{"$": "array", "pairs": [["id", 1], ["name", "a"], ["v", 10]]}, {"$": "array", "pairs": [["id", 2], ["name", "b"], ["v", 20]]}], "id", "name"]},
+    {"id": "list_of_values", "args": [[{"$": "array", "pairs": [["id", 1], ["name", "a"], ["v", 10]]}, {"$": "array", "pairs": [["id", 2], ["name", "b"], ["v", 20]]}], "id", ["name", "v"]]},
+    {"id": "empty_value_list", "args": [[{"$": "array", "pairs": [["id", 1], ["name", "a"], ["v", 10]]}, {"$": "array", "pairs": [["id", 2], ["name", "b"], ["v", 20]]}], "id", []], "note": "no value names, so nothing is ever assigned"},
+    {"id": "empty_input", "args": [[], "id", "name"]},
+    {"id": "null_input", "args": [null, "id", "name"]},
+    {"id": "string_input", "args": ["abc", "id", "name"]},
+    {"id": "zero_input", "args": [0, "id", "name"]},
+    {"id": "duplicate_key_last_wins", "args": [[{"$": "array", "pairs": [["id", 1], ["name", "a"]]}, {"$": "array", "pairs": [["id", 1], ["name", "b"]]}], "id", "name"]},
+    {"id": "duplicate_key_list_value_merges", "args": [[{"$": "array", "pairs": [["id", 1], ["name", "a"], ["v", 1]]}, {"$": "array", "pairs": [["id", 1], ["name", "b"]]}], "id", ["name", "v"]], "note": "second row has no v: warning, null overwrites the first row v"},
+    {"id": "missing_key_in_item", "args": [[{"$": "array", "pairs": [["name", "a"]]}], "id", "name"], "note": "null key becomes the empty string"},
+    {"id": "missing_value_in_item", "args": [[{"$": "array", "pairs": [["id", 1]]}], "id", "name"]},
+    {"id": "item_is_null", "args": [[null], "id", "name"]},
+    {"id": "item_is_string", "args": [["abc"], "id", "name"], "note": "string offset with a non-numeric key"},
+    {"id": "item_is_int", "args": [[5], "id", "name"]},
+    {"id": "list_items_numeric_key", "args": [[["x", "y"], ["z", "w"]], 0, 1]},
+    {"id": "key_is_int_zero_on_assoc", "args": [[{"$": "array", "pairs": [["id", 1], ["name", "a"], ["v", 10]]}, {"$": "array", "pairs": [["id", 2], ["name", "b"], ["v", 20]]}], 0, "name"]},
+    {"id": "key_value_is_null", "args": [[{"$": "array", "pairs": [["id", 1], ["name", "a"], ["v", 10]]}, {"$": "array", "pairs": [["id", 2], ["name", "b"], ["v", 20]]}], "id", null], "note": "null offset reads the empty-string key"},
+    {"id": "item_key_float", "args": [[{"$": "array", "pairs": [["id", 1.5], ["name", "a"]]}], "id", "name"], "note": "float array key is truncated with a deprecation"},
+    {"id": "item_key_bool", "args": [[{"$": "array", "pairs": [["id", true], ["name", "a"]]}, {"$": "array", "pairs": [["id", false], ["name", "b"]]}], "id", "name"]},
+    {"id": "item_key_null", "args": [[{"$": "array", "pairs": [["id", null], ["name", "a"]]}], "id", "name"]},
+    {"id": "item_key_array", "args": [[{"$": "array", "pairs": [["id", ["x"]], ["name", "a"]]}], "id", "name"], "note": "illegal offset type"},
+    {"id": "item_key_numeric_string_becomes_int", "args": [[{"$": "array", "pairs": [["id", "7"], ["name", "a"]]}], "id", "name"]},
+    {"id": "key_value_nested_array_item", "args": [[{"$": "array", "pairs": [["id", 1], ["name", ["p", "q"]]]}], "id", "name"]},
+    {"id": "assoc_input_ignores_outer_keys", "args": [{"$": "array", "pairs": [["first", {"$": "array", "pairs": [["id", 1], ["name", "a"]]}], ["second", {"$": "array", "pairs": [["id", 2], ["name", "b"]]}]]}, "id", "name"]},
+    {"id": "missing_arguments", "args": [[{"$": "array", "pairs": [["id", 1], ["name", "a"], ["v", 10]]}, {"$": "array", "pairs": [["id", 2], ["name", "b"], ["v", 20]]}]], "note": "two parameters have no default"}
+  ]
+}

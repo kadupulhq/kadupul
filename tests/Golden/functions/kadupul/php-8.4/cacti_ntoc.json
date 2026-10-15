@@ -1,0 +1,119 @@
+{
+  "cases": [
+    {
+      "args": [{"$": "bytes", "hex": "ffffff00"}],
+      "id": "mask_24",
+      "result": {"returned": {"type": "int", "value": 24}}
+    },
+    {
+      "args": [{"$": "bytes", "hex": "ffffffff"}],
+      "id": "mask_32",
+      "result": {"returned": {"type": "int", "value": 32}}
+    },
+    {
+      "args": [{"$": "bytes", "hex": "00000000"}],
+      "id": "mask_0",
+      "result": {"returned": {"type": "int", "value": 0}}
+    },
+    {
+      "args": [{"$": "bytes", "hex": "ff00ff00"}],
+      "id": "mask_noncontiguous",
+      "result": {"returned": {"type": "int", "value": 16}}
+    },
+    {
+      "args": [{"$": "bytes", "hex": "ffffffffffffffff0000000000000000"}],
+      "id": "mask_ipv6_64",
+      "result": {"returned": {"type": "int", "value": 64}}
+    },
+    {
+      "args": [{"$": "bytes", "hex": "e0"}],
+      "id": "mask_3_bits",
+      "result": {"returned": {"type": "int", "value": 3}}
+    },
+    {
+      "args": [{"$": "bytes", "hex": "fe"}],
+      "id": "mask_7_bits",
+      "result": {"returned": {"type": "int", "value": 7}}
+    },
+    {
+      "args": [{"$": "bytes", "hex": "80"}],
+      "id": "mask_1_bit",
+      "result": {"returned": {"type": "int", "value": 1}}
+    },
+    {
+      "args": [{"$": "bytes", "hex": "00ffffff"}],
+      "id": "mask_reversed",
+      "result": {"returned": {"type": "int", "value": 24}}
+    },
+    {
+      "args": [{"$": "bytes", "hex": "ffffff00"}, true],
+      "id": "ipv6_flag_ignored",
+      "result": {"returned": {"type": "int", "value": 24}}
+    },
+    {
+      "args": [""],
+      "id": "empty_string",
+      "note": "str_split(\"\") is [\"\"] before PHP 8.2 and [] after: one count either way",
+      "result": {"returned": {"type": "int", "value": 0}}
+    },
+    {"args": ["24"], "id": "ascii_text", "result": {"returned": {"type": "int", "value": 0}}},
+    {
+      "args": ["ÿ"],
+      "id": "single_ff_char",
+      "note": "two bytes c3 bf",
+      "result": {"returned": {"type": "int", "value": 3}}
+    },
+    {
+      "args": [null],
+      "id": "null",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "str_split(): Passing null to parameter #1 ($string) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "int", "value": 0}
+      }
+    },
+    {"args": [24], "id": "int", "result": {"returned": {"type": "int", "value": 0}}},
+    {
+      "args": [[{"$": "bytes", "hex": "ff"}]],
+      "id": "array",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "str_split(): Argument #1 ($string) must be of type string, array given"
+        }
+      }
+    },
+    {"args": [true], "id": "true", "result": {"returned": {"type": "int", "value": 0}}},
+    {
+      "args": [],
+      "id": "missing_argument",
+      "result": {
+        "exception": {
+          "class": "ArgumentCountError",
+          "code": 0,
+          "message": "Too few arguments to function cacti_ntoc(), 0 passed in <caller> and at least 1 expected"
+        }
+      }
+    }
+  ],
+  "function": "cacti_ntoc",
+  "signature": [
+    {"by_ref": false, "name": "subnet", "optional": false, "type": null, "variadic": false},
+    {
+      "by_ref": false,
+      "default": false,
+      "name": "ipv6",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    }
+  ]
+}

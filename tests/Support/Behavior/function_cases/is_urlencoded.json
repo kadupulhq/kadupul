@@ -1,0 +1,27 @@
+{
+  "function": "is_urlencoded",
+  "cases": [
+    {"id": "percent_escape", "args": ["%41"]},
+    {"id": "plus_as_space", "args": ["a+b"]},
+    {"id": "plain", "args": ["abc"]},
+    {"id": "empty", "args": [""]},
+    {"id": "lone_percent", "args": ["%"]},
+    {"id": "bad_hex", "args": ["%zz"]},
+    {"id": "truncated_escape", "args": ["%4"]},
+    {"id": "percent_nul", "args": ["%00"]},
+    {"id": "lone_plus", "args": ["+"]},
+    {"id": "plus_numeric_quirk", "args": ["+1"], "note": "urldecode gives \" 1\"; both sides are numeric strings, so != is false"},
+    {"id": "plus_numeric_exponent_quirk", "args": ["+1e1"]},
+    {"id": "plus_zero_quirk", "args": ["+0"]},
+    {"id": "trailing_plus_numeric", "args": ["1+"], "note": "only one side is numeric, so the strings are compared"},
+    {"id": "escaped_digit", "args": ["%31"]},
+    {"id": "multibyte_escape", "args": ["%C3%A9"]},
+    {"id": "multibyte_literal", "args": ["é"]},
+    {"id": "null", "args": [null], "note": "urldecode(null) deprecation; null != \"\" is false"},
+    {"id": "int", "args": [5]},
+    {"id": "true", "args": [true]},
+    {"id": "array", "args": [["%41"]]},
+    {"id": "invalid_utf8", "args": [{"$": "bytes", "hex": "25ff"}]},
+    {"id": "oversized", "args": [{"$": "repeat", "unit": "%41", "count": 50000}]}
+  ]
+}

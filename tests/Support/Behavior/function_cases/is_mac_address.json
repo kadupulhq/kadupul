@@ -1,0 +1,26 @@
+{
+  "function": "is_mac_address",
+  "cases": [
+    {"id": "colon_lower", "args": ["00:1a:2b:3c:4d:5e"], "note": "filter_var returns the matched string, not true"},
+    {"id": "colon_upper", "args": ["00:1A:2B:3C:4D:5E"]},
+    {"id": "dash", "args": ["00-1A-2B-3C-4D-5E"]},
+    {"id": "dotted_groups", "args": ["001A.2B3C.4D5E"]},
+    {"id": "mixed_separators", "args": ["00:1a-2b:3c-4d:5e"]},
+    {"id": "broadcast", "args": ["ff:ff:ff:ff:ff:ff"]},
+    {"id": "single_digit_groups", "args": ["0:1:2:3:4:5"]},
+    {"id": "five_groups", "args": ["00:1a:2b:3c:4d"]},
+    {"id": "seven_groups", "args": ["00:1a:2b:3c:4d:5e:6f"]},
+    {"id": "non_hex", "args": ["zz:1a:2b:3c:4d:5e"]},
+    {"id": "no_separator", "args": ["001a2b3c4d5e"]},
+    {"id": "empty", "args": [""]},
+    {"id": "leading_space", "args": [" 00:1a:2b:3c:4d:5e"]},
+    {"id": "trailing_newline", "args": ["00:1a:2b:3c:4d:5e\n"]},
+    {"id": "multibyte", "args": ["é"]},
+    {"id": "null", "args": [null]},
+    {"id": "int", "args": [123456]},
+    {"id": "true", "args": [true]},
+    {"id": "array", "args": [["00:1a:2b:3c:4d:5e"]]},
+    {"id": "oversized", "args": [{"$": "repeat", "unit": "00:", "count": 50000}]},
+    {"id": "missing_argument", "args": []}
+  ]
+}

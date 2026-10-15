@@ -1,0 +1,106 @@
+{
+  "cases": [
+    {
+      "args": ["%41"],
+      "id": "percent_escape",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["a+b"],
+      "id": "plus_as_space",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {"args": ["abc"], "id": "plain", "result": {"returned": {"type": "bool", "value": false}}},
+    {"args": [""], "id": "empty", "result": {"returned": {"type": "bool", "value": false}}},
+    {"args": ["%"], "id": "lone_percent", "result": {"returned": {"type": "bool", "value": false}}},
+    {"args": ["%zz"], "id": "bad_hex", "result": {"returned": {"type": "bool", "value": false}}},
+    {
+      "args": ["%4"],
+      "id": "truncated_escape",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {"args": ["%00"], "id": "percent_nul", "result": {"returned": {"type": "bool", "value": true}}},
+    {"args": ["+"], "id": "lone_plus", "result": {"returned": {"type": "bool", "value": true}}},
+    {
+      "args": ["+1"],
+      "id": "plus_numeric_quirk",
+      "note": "urldecode gives \" 1\"; both sides are numeric strings, so != is false",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["+1e1"],
+      "id": "plus_numeric_exponent_quirk",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["+0"],
+      "id": "plus_zero_quirk",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["1+"],
+      "id": "trailing_plus_numeric",
+      "note": "only one side is numeric, so the strings are compared",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["%31"],
+      "id": "escaped_digit",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["%C3%A9"],
+      "id": "multibyte_escape",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["é"],
+      "id": "multibyte_literal",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [null],
+      "id": "null",
+      "note": "urldecode(null) deprecation; null != \"\" is false",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "urldecode(): Passing null to parameter #1 ($string) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {"args": [5], "id": "int", "result": {"returned": {"type": "bool", "value": false}}},
+    {"args": [true], "id": "true", "result": {"returned": {"type": "bool", "value": false}}},
+    {
+      "args": [["%41"]],
+      "id": "array",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "urldecode(): Argument #1 ($string) must be of type string, array given"
+        }
+      }
+    },
+    {
+      "args": [{"$": "bytes", "hex": "25ff"}],
+      "id": "invalid_utf8",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [{"$": "repeat", "count": 50000, "unit": "%41"}],
+      "id": "oversized",
+      "result": {"returned": {"type": "bool", "value": true}}
+    }
+  ],
+  "function": "is_urlencoded",
+  "signature": [
+    {"by_ref": false, "name": "string", "optional": false, "type": null, "variadic": false}
+  ]
+}

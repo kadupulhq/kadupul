@@ -1,0 +1,163 @@
+{
+  "cases": [
+    {
+      "args": ["123"],
+      "id": "plain_integer",
+      "result": {"returned": {"type": "string", "value": "123"}}
+    },
+    {
+      "args": ["12.5Mbps"],
+      "id": "with_unit",
+      "result": {"returned": {"type": "string", "value": "12.5"}}
+    },
+    {"args": ["-5"], "id": "negative", "result": {"returned": {"type": "string", "value": "-5"}}},
+    {
+      "args": ["+5"],
+      "id": "explicit_plus",
+      "result": {"returned": {"type": "string", "value": "+5"}}
+    },
+    {
+      "args": ["1,234"],
+      "id": "thousands_separator",
+      "note": "comma survives the filter but is_numeric rejects it",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["5-"],
+      "id": "trailing_sign",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["--1"],
+      "id": "double_sign",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {"args": ["1.2.3"], "id": "two_dots", "result": {"returned": {"type": "bool", "value": false}}},
+    {"args": ["."], "id": "lone_dot", "result": {"returned": {"type": "bool", "value": false}}},
+    {
+      "args": ["12."],
+      "id": "trailing_dot",
+      "note": "is_numeric accepts a trailing dot",
+      "result": {"returned": {"type": "string", "value": "12."}}
+    },
+    {
+      "args": [".5"],
+      "id": "leading_dot",
+      "result": {"returned": {"type": "string", "value": ".5"}}
+    },
+    {
+      "args": ["1e5"],
+      "id": "exponent_letter_removed",
+      "note": "the e is stripped, so 15",
+      "result": {"returned": {"type": "string", "value": "15"}}
+    },
+    {
+      "args": ["abc"],
+      "id": "letters_only",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {"args": [""], "id": "empty", "result": {"returned": {"type": "bool", "value": false}}},
+    {
+      "args": ["0"],
+      "id": "zero",
+      "note": "returns the string \"0\", not an int",
+      "result": {"returned": {"type": "string", "value": "0"}}
+    },
+    {
+      "args": ["abc12def"],
+      "id": "surrounding_text",
+      "result": {"returned": {"type": "string", "value": "12"}}
+    },
+    {
+      "args": [" 12 \n"],
+      "id": "whitespace_inside",
+      "result": {"returned": {"type": "string", "value": "12"}}
+    },
+    {
+      "args": [null],
+      "id": "null_input",
+      "note": "preg_replace(null) deprecation, empty result, false",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "preg_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [42],
+      "id": "int_input",
+      "note": "result is the string \"42\"",
+      "result": {"returned": {"type": "string", "value": "42"}}
+    },
+    {
+      "args": [1.5],
+      "id": "float_input",
+      "result": {"returned": {"type": "string", "value": "1.5"}}
+    },
+    {
+      "args": [-2.5],
+      "id": "negative_float_input",
+      "result": {"returned": {"type": "string", "value": "-2.5"}}
+    },
+    {"args": [true], "id": "true_input", "result": {"returned": {"type": "string", "value": "1"}}},
+    {
+      "args": [["1"]],
+      "id": "array_input",
+      "note": "preg_replace over an array yields an array and trim() rejects it",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "trim(): Argument #1 ($string) must be of type string, array given"
+        }
+      }
+    },
+    {
+      "args": ["١٢٣"],
+      "id": "arabic_indic_digits",
+      "note": "not matched by [0-9]",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [{"$": "bytes", "hex": "31ff32"}],
+      "id": "invalid_utf8",
+      "result": {"returned": {"type": "string", "value": "12"}}
+    },
+    {
+      "args": [{"$": "repeat", "count": 5000, "unit": "9"}],
+      "id": "oversized_number",
+      "result": {
+        "returned": {
+          "type": "string",
+          "value": {
+            "$": "long",
+            "bytes": 5000,
+            "head_hex": "3939393939393939393939393939393939393939393939393939393939393939",
+            "sha256": "cd841188f2034920150512139f5decc6b13e6af52b49522395aebe292bf2c6df"
+          }
+        }
+      }
+    },
+    {
+      "args": [{"$": "repeat", "count": 100000, "unit": "x"}],
+      "id": "oversized_text",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [{"$": "bytes", "hex": "3100"}],
+      "id": "nul_byte",
+      "result": {"returned": {"type": "string", "value": "1"}}
+    }
+  ],
+  "function": "strip_alpha",
+  "signature": [
+    {"by_ref": false, "name": "string", "optional": false, "type": null, "variadic": false}
+  ]
+}

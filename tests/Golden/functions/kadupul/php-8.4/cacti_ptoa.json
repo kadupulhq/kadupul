@@ -1,0 +1,88 @@
+{
+  "cases": [
+    {
+      "args": ["t", {"$": "bytes", "hex": "0a000001"}],
+      "id": "ipv4_packed",
+      "note": "prints hex, returns null",
+      "result": {"output": "0a000001", "returned": {"type": "null", "value": null}}
+    },
+    {
+      "args": ["t", {"$": "bytes", "hex": "20010db8000000000000000000000001"}],
+      "id": "ipv6_packed",
+      "result": {
+        "output": "20010db8000000000000000000000001",
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "args": ["t", "abc"],
+      "id": "ascii",
+      "result": {"output": "616263", "returned": {"type": "null", "value": null}}
+    },
+    {
+      "args": ["t", {"$": "bytes", "hex": "ff80"}],
+      "id": "high_bytes",
+      "result": {"output": "ff80", "returned": {"type": "null", "value": null}}
+    },
+    {
+      "args": ["t", {"$": "bytes", "hex": "00"}],
+      "id": "single_zero_byte",
+      "note": "zero is padded to two digits",
+      "result": {"output": "00", "returned": {"type": "null", "value": null}}
+    },
+    {"args": ["t", ""], "id": "empty", "result": {"returned": {"type": "null", "value": null}}},
+    {
+      "args": ["anything", {"$": "bytes", "hex": "01"}],
+      "id": "title_ignored",
+      "result": {"output": "01", "returned": {"type": "null", "value": null}}
+    },
+    {
+      "args": ["t", null],
+      "id": "null_addr",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "str_split(): Passing null to parameter #1 ($string) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "args": ["t", 12],
+      "id": "int_addr",
+      "result": {"output": "3132", "returned": {"type": "null", "value": null}}
+    },
+    {
+      "args": ["t", ["a"]],
+      "id": "array_addr",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "str_split(): Argument #1 ($string) must be of type string, array given"
+        }
+      }
+    },
+    {
+      "args": ["t"],
+      "id": "missing_second_argument",
+      "result": {
+        "exception": {
+          "class": "ArgumentCountError",
+          "code": 0,
+          "message": "Too few arguments to function cacti_ptoa(), 1 passed in <caller> and exactly 2 expected"
+        }
+      }
+    }
+  ],
+  "function": "cacti_ptoa",
+  "signature": [
+    {"by_ref": false, "name": "title", "optional": false, "type": null, "variadic": false},
+    {"by_ref": false, "name": "addr", "optional": false, "type": null, "variadic": false}
+  ]
+}

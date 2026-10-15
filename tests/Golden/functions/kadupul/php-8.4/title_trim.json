@@ -1,0 +1,215 @@
+{
+  "cases": [
+    {
+      "args": ["abc", 10],
+      "id": "ascii_short",
+      "result": {"returned": {"type": "string", "value": "abc"}}
+    },
+    {
+      "args": ["abcde", 5],
+      "id": "ascii_exact_length",
+      "note": "strlen > max is false at equality, so no ellipsis",
+      "result": {"returned": {"type": "string", "value": "abcde"}}
+    },
+    {
+      "args": ["abcdef", 5],
+      "id": "ascii_over_by_one",
+      "result": {"returned": {"type": "string", "value": "abcde..."}}
+    },
+    {"args": ["", 5], "id": "empty_text", "result": {"returned": {"type": "string", "value": ""}}},
+    {
+      "args": ["abc", 0],
+      "id": "zero_max",
+      "note": "mb_substr(..., 0, 0) is empty, ellipsis only",
+      "result": {"returned": {"type": "string", "value": "..."}}
+    },
+    {
+      "args": ["abc", -1],
+      "id": "negative_max",
+      "note": "negative length makes mb_substr drop trailing characters",
+      "result": {"returned": {"type": "string", "value": "ab..."}}
+    },
+    {
+      "args": [null, 5],
+      "id": "null_text",
+      "note": "strlen(null) deprecation, returns null unchanged",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "strlen(): Passing null to parameter #1 ($string) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "args": [null, -1],
+      "id": "null_text_negative_max",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "strlen(): Passing null to parameter #1 ($string) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          },
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "mb_substr(): Passing null to parameter #1 ($string) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "string", "value": "..."}
+      }
+    },
+    {
+      "args": [["a"], 5],
+      "id": "array_text",
+      "note": "strlen() rejects an array",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "strlen(): Argument #1 ($string) must be of type string, array given"
+        }
+      }
+    },
+    {
+      "args": [12345678, 5],
+      "id": "int_text_truncated",
+      "note": "int is coerced to string; result is a string",
+      "result": {"returned": {"type": "string", "value": "12345..."}}
+    },
+    {
+      "args": [12, 5],
+      "id": "int_text_not_truncated",
+      "note": "int returned as int when short enough",
+      "result": {"returned": {"type": "int", "value": 12}}
+    },
+    {
+      "args": [true, 0],
+      "id": "bool_text",
+      "result": {"returned": {"type": "string", "value": "..."}}
+    },
+    {
+      "args": [1.5, 2],
+      "id": "float_text",
+      "result": {"returned": {"type": "string", "value": "1...."}}
+    },
+    {
+      "args": ["ééééé", 3],
+      "id": "multibyte_cut_by_characters",
+      "note": "strlen counts bytes (10), the cut counts characters",
+      "result": {"returned": {"type": "string", "value": "ééé..."}}
+    },
+    {
+      "args": ["ééé", 5],
+      "id": "multibyte_bytes_exceed_but_chars_do_not",
+      "note": "six bytes over five, three characters: ellipsis added with nothing removed",
+      "result": {"returned": {"type": "string", "value": "ééé..."}}
+    },
+    {
+      "args": ["ééé", 3],
+      "id": "multibyte_chars_equal_max",
+      "note": "six bytes over three: ellipsis appended after the whole string",
+      "result": {"returned": {"type": "string", "value": "ééé..."}}
+    },
+    {
+      "args": ["ééé", 6],
+      "id": "multibyte_exact_bytes",
+      "result": {"returned": {"type": "string", "value": "ééé"}}
+    },
+    {
+      "args": ["日本語テキスト", 4],
+      "id": "cjk",
+      "result": {"returned": {"type": "string", "value": "日本語テ..."}}
+    },
+    {
+      "args": [{"$": "bytes", "hex": "c328c328"}, 2],
+      "id": "invalid_utf8",
+      "note": "mb_substr on invalid UTF-8",
+      "result": {"returned": {"type": "string", "value": "?(..."}}
+    },
+    {
+      "args": ["abcdef", "3"],
+      "id": "max_numeric_string",
+      "result": {"returned": {"type": "string", "value": "abc..."}}
+    },
+    {
+      "args": ["abcdef", 2.5],
+      "id": "max_float_fraction",
+      "note": "implicit float to int conversion deprecation",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Implicit conversion from float 2.5 to int loses precision",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "string", "value": "ab..."}
+      }
+    },
+    {
+      "args": ["abc", null],
+      "id": "max_null",
+      "note": "null max compares as 0 and mb_substr treats a null length as \"to the end\"",
+      "result": {"returned": {"type": "string", "value": "abc..."}}
+    },
+    {
+      "args": ["abc", "x"],
+      "id": "max_non_numeric_string",
+      "note": "int against non-numeric string compares as strings",
+      "result": {"returned": {"type": "string", "value": "abc"}}
+    },
+    {
+      "args": ["abc", ""],
+      "id": "max_empty_string",
+      "note": "PHP 8 compares 3 > \"\" as strings",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "mb_substr(): Argument #3 ($length) must be of type ?int, string given"
+        }
+      }
+    },
+    {
+      "args": ["abc", ["x"]],
+      "id": "max_array",
+      "note": "int > array is always false",
+      "result": {"returned": {"type": "string", "value": "abc"}}
+    },
+    {
+      "args": [{"$": "repeat", "count": 100000, "unit": "a"}, 10],
+      "id": "oversized",
+      "result": {"returned": {"type": "string", "value": "aaaaaaaaaa..."}}
+    },
+    {
+      "args": ["abc"],
+      "id": "missing_argument",
+      "note": "second parameter has no default",
+      "result": {
+        "exception": {
+          "class": "ArgumentCountError",
+          "code": 0,
+          "message": "Too few arguments to function title_trim(), 1 passed in <caller> and exactly 2 expected"
+        }
+      }
+    }
+  ],
+  "function": "title_trim",
+  "signature": [
+    {"by_ref": false, "name": "text", "optional": false, "type": null, "variadic": false},
+    {"by_ref": false, "name": "max_length", "optional": false, "type": null, "variadic": false}
+  ]
+}

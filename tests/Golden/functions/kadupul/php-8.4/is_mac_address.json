@@ -1,0 +1,100 @@
+{
+  "cases": [
+    {
+      "args": ["00:1a:2b:3c:4d:5e"],
+      "id": "colon_lower",
+      "note": "filter_var returns the matched string, not true",
+      "result": {"returned": {"type": "string", "value": "00:1a:2b:3c:4d:5e"}}
+    },
+    {
+      "args": ["00:1A:2B:3C:4D:5E"],
+      "id": "colon_upper",
+      "result": {"returned": {"type": "string", "value": "00:1A:2B:3C:4D:5E"}}
+    },
+    {
+      "args": ["00-1A-2B-3C-4D-5E"],
+      "id": "dash",
+      "result": {"returned": {"type": "string", "value": "00-1A-2B-3C-4D-5E"}}
+    },
+    {
+      "args": ["001A.2B3C.4D5E"],
+      "id": "dotted_groups",
+      "result": {"returned": {"type": "string", "value": "001A.2B3C.4D5E"}}
+    },
+    {
+      "args": ["00:1a-2b:3c-4d:5e"],
+      "id": "mixed_separators",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["ff:ff:ff:ff:ff:ff"],
+      "id": "broadcast",
+      "result": {"returned": {"type": "string", "value": "ff:ff:ff:ff:ff:ff"}}
+    },
+    {
+      "args": ["0:1:2:3:4:5"],
+      "id": "single_digit_groups",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["00:1a:2b:3c:4d"],
+      "id": "five_groups",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["00:1a:2b:3c:4d:5e:6f"],
+      "id": "seven_groups",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["zz:1a:2b:3c:4d:5e"],
+      "id": "non_hex",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["001a2b3c4d5e"],
+      "id": "no_separator",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {"args": [""], "id": "empty", "result": {"returned": {"type": "bool", "value": false}}},
+    {
+      "args": [" 00:1a:2b:3c:4d:5e"],
+      "id": "leading_space",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["00:1a:2b:3c:4d:5e\n"],
+      "id": "trailing_newline",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {"args": ["é"], "id": "multibyte", "result": {"returned": {"type": "bool", "value": false}}},
+    {"args": [null], "id": "null", "result": {"returned": {"type": "bool", "value": false}}},
+    {"args": [123456], "id": "int", "result": {"returned": {"type": "bool", "value": false}}},
+    {"args": [true], "id": "true", "result": {"returned": {"type": "bool", "value": false}}},
+    {
+      "args": [["00:1a:2b:3c:4d:5e"]],
+      "id": "array",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [{"$": "repeat", "count": 50000, "unit": "00:"}],
+      "id": "oversized",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [],
+      "id": "missing_argument",
+      "result": {
+        "exception": {
+          "class": "ArgumentCountError",
+          "code": 0,
+          "message": "Too few arguments to function is_mac_address(), 0 passed in <caller> and exactly 1 expected"
+        }
+      }
+    }
+  ],
+  "function": "is_mac_address",
+  "signature": [
+    {"by_ref": false, "name": "result", "optional": false, "type": null, "variadic": false}
+  ]
+}

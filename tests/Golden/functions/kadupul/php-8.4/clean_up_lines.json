@@ -1,0 +1,110 @@
+{
+  "cases": [
+    {"args": ["a\r\nb"], "id": "crlf", "result": {"returned": {"type": "string", "value": "a b"}}},
+    {
+      "args": ["a \n\n  b"],
+      "id": "lf_with_spaces",
+      "result": {"returned": {"type": "string", "value": "a b"}}
+    },
+    {
+      "args": ["\nabc\n"],
+      "id": "leading_trailing_newlines",
+      "note": "each newline run collapses to one space, ends included",
+      "result": {"returned": {"type": "string", "value": " abc "}}
+    },
+    {
+      "args": ["\n"],
+      "id": "only_newline",
+      "result": {"returned": {"type": "string", "value": " "}}
+    },
+    {"args": ["a\rb"], "id": "lone_cr", "result": {"returned": {"type": "string", "value": "a b"}}},
+    {
+      "args": ["a\tb"],
+      "id": "tab_without_newline",
+      "result": {"returned": {"type": "string", "value": "a\tb"}}
+    },
+    {
+      "args": ["a\t\n\tb"],
+      "id": "tab_around_newline",
+      "result": {"returned": {"type": "string", "value": "a b"}}
+    },
+    {
+      "args": ["abc"],
+      "id": "no_newline",
+      "result": {"returned": {"type": "string", "value": "abc"}}
+    },
+    {"args": [""], "id": "empty", "result": {"returned": {"type": "string", "value": ""}}},
+    {
+      "args": ["0"],
+      "id": "zero_string",
+      "note": "loose != against the empty string is true for \"0\"",
+      "result": {"returned": {"type": "string", "value": "0"}}
+    },
+    {
+      "args": [null],
+      "id": "null",
+      "note": "returned as null without touching preg_replace",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "args": [false],
+      "id": "false",
+      "note": "false == \"\" so returned as false",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [0],
+      "id": "int_zero",
+      "note": "PHP 8: 0 != \"\" is true, so the int becomes the string \"0\"",
+      "result": {"returned": {"type": "string", "value": "0"}}
+    },
+    {"args": [123], "id": "int", "result": {"returned": {"type": "string", "value": "123"}}},
+    {
+      "args": [[]],
+      "id": "empty_array",
+      "note": "array != \"\" is true; preg_replace returns an array",
+      "result": {"returned": {"type": "array", "value": []}}
+    },
+    {
+      "args": [["a\nb", "c"]],
+      "id": "array_of_strings",
+      "note": "array subject returns an array",
+      "result": {"returned": {"type": "array", "value": ["a b", "c"]}}
+    },
+    {
+      "args": [{"$": "bytes", "hex": "610d0a62c285c2a063"}],
+      "id": "nel_and_nbsp_untouched",
+      "note": "CR LF handled; NEL and NBSP bytes are not whitespace without /u",
+      "result": {"returned": {"type": "string", "value": "a b c"}}
+    },
+    {
+      "args": ["a b"],
+      "id": "unicode_line_separator",
+      "result": {"returned": {"type": "string", "value": "a b"}}
+    },
+    {
+      "args": [{"$": "bytes", "hex": "61ff0a62"}],
+      "id": "invalid_utf8",
+      "result": {"returned": {"type": "string", "value": {"$": "bytes", "hex": "61ff2062"}}}
+    },
+    {
+      "args": [{"$": "repeat", "count": 10000, "unit": "a\n"}],
+      "id": "oversized",
+      "result": {
+        "returned": {
+          "type": "string",
+          "value": {
+            "$": "long",
+            "bytes": 20000,
+            "head_hex": "6120612061206120612061206120612061206120612061206120612061206120",
+            "sha256": "bc72be9e92234773733418400da5f5b8c149dfbf82f176bf3d01787b945f42a6"
+          }
+        }
+      }
+    }
+  ],
+  "function": "clean_up_lines",
+  "signature": [
+    {"by_ref": false, "name": "string", "optional": false, "type": null, "variadic": false}
+  ]
+}

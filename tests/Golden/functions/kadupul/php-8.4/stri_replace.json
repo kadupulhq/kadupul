@@ -1,0 +1,221 @@
+{
+  "cases": [
+    {
+      "args": ["o", "0", "Foo Boo"],
+      "id": "basic",
+      "result": {"returned": {"type": "string", "value": "F00 B00"}}
+    },
+    {
+      "args": ["FOO", "x", "a foo b Foo c FOO"],
+      "id": "case_insensitive_find",
+      "result": {"returned": {"type": "string", "value": "a x b x c x"}}
+    },
+    {
+      "args": ["zzz", "x", "abc"],
+      "id": "not_found",
+      "result": {"returned": {"type": "string", "value": "abc"}}
+    },
+    {
+      "args": ["b", "", "abcb"],
+      "id": "replace_with_empty",
+      "result": {"returned": {"type": "string", "value": "ac"}}
+    },
+    {
+      "args": ["a", "b", ""],
+      "id": "empty_subject",
+      "result": {"returned": {"type": "string", "value": ""}}
+    },
+    {
+      "args": ["", "x", "abc"],
+      "id": "empty_find",
+      "note": "explode() refuses an empty separator",
+      "result": {
+        "exception": {
+          "class": "ValueError",
+          "code": 0,
+          "message": "explode(): Argument #1 ($separator) must not be empty"
+        }
+      }
+    },
+    {
+      "args": ["abcdef", "x", "abc"],
+      "id": "find_longer_than_subject",
+      "result": {"returned": {"type": "string", "value": "abc"}}
+    },
+    {
+      "args": ["abc", "x", "ABC"],
+      "id": "whole_subject",
+      "result": {"returned": {"type": "string", "value": "x"}}
+    },
+    {
+      "args": ["aa", "b", "aaa"],
+      "id": "overlapping_matches",
+      "result": {"returned": {"type": "string", "value": "ba"}}
+    },
+    {
+      "args": ["a", "aa", "banana"],
+      "id": "replacement_contains_find",
+      "result": {"returned": {"type": "string", "value": "baanaanaa"}}
+    },
+    {
+      "args": [".", "!", "a.b*c"],
+      "id": "regex_metacharacters_are_literal",
+      "result": {"returned": {"type": "string", "value": "a!b*c"}}
+    },
+    {
+      "args": ["x", "-", "AxB"],
+      "id": "preserves_subject_case_around_match",
+      "result": {"returned": {"type": "string", "value": "A-B"}}
+    },
+    {
+      "args": ["é", "e", "café é"],
+      "id": "multibyte_same_case",
+      "result": {"returned": {"type": "string", "value": "cafe e"}}
+    },
+    {
+      "args": ["É", "e", "café"],
+      "id": "multibyte_case_mismatch",
+      "note": "only ASCII is folded",
+      "result": {"returned": {"type": "string", "value": "café"}}
+    },
+    {
+      "args": [null, "x", "abc"],
+      "id": "find_null",
+      "note": "strtolower(null) deprecation, then explode() rejects the empty separator",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "strtolower(): Passing null to parameter #1 ($string) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "exception": {
+          "class": "ValueError",
+          "code": 0,
+          "message": "explode(): Argument #1 ($separator) must not be empty"
+        }
+      }
+    },
+    {
+      "args": ["a", null, "banana"],
+      "id": "replace_null",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "join(): Passing null to parameter #1 ($separator) of type array|string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "string", "value": "bnn"}
+      }
+    },
+    {
+      "args": ["a", "b", null],
+      "id": "subject_null",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "strtolower(): Passing null to parameter #1 ($string) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          },
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "substr(): Passing null to parameter #1 ($string) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "string", "value": ""}
+      }
+    },
+    {
+      "args": [1, "x", "a1b1"],
+      "id": "find_int",
+      "result": {"returned": {"type": "string", "value": "axbx"}}
+    },
+    {
+      "args": ["a", 0, "banana"],
+      "id": "replace_int",
+      "result": {"returned": {"type": "string", "value": "b0n0n0"}}
+    },
+    {
+      "args": ["1", "x", 1121],
+      "id": "subject_int",
+      "result": {"returned": {"type": "string", "value": "xx2x"}}
+    },
+    {
+      "args": [["a"], "b", "abc"],
+      "id": "find_array",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "strtolower(): Argument #1 ($string) must be of type string, array given"
+        }
+      }
+    },
+    {
+      "args": ["a", "b", ["abc"]],
+      "id": "subject_array",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "strtolower(): Argument #1 ($string) must be of type string, array given"
+        }
+      }
+    },
+    {
+      "args": ["\n", " ", "a\nb\nc"],
+      "id": "newline_find",
+      "result": {"returned": {"type": "string", "value": "a b c"}}
+    },
+    {
+      "args": ["a", "b", {"$": "bytes", "hex": "61ff61"}],
+      "id": "invalid_utf8_subject",
+      "result": {"returned": {"type": "string", "value": {"$": "bytes", "hex": "62ff62"}}}
+    },
+    {
+      "args": ["a", "bb", {"$": "repeat", "count": 50000, "unit": "Aa"}],
+      "id": "oversized",
+      "result": {
+        "returned": {
+          "type": "string",
+          "value": {
+            "$": "long",
+            "bytes": 200000,
+            "head_hex": "6262626262626262626262626262626262626262626262626262626262626262",
+            "sha256": "31731ec46c3318e622490d1102d6a5f2d0b33995b35ede8cdbbb76252ee6d87b"
+          }
+        }
+      }
+    },
+    {
+      "args": ["a", "b"],
+      "id": "missing_arguments",
+      "result": {
+        "exception": {
+          "class": "ArgumentCountError",
+          "code": 0,
+          "message": "Too few arguments to function stri_replace(), 2 passed in <caller> and exactly 3 expected"
+        }
+      }
+    }
+  ],
+  "function": "stri_replace",
+  "signature": [
+    {"by_ref": false, "name": "find", "optional": false, "type": null, "variadic": false},
+    {"by_ref": false, "name": "replace", "optional": false, "type": null, "variadic": false},
+    {"by_ref": false, "name": "string", "optional": false, "type": null, "variadic": false}
+  ]
+}

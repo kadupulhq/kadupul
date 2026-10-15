@@ -1,0 +1,54 @@
+{
+  "cases": [
+    {"args": [[]], "id": "empty_array", "result": {"returned": {"type": "int", "value": 0}}},
+    {"args": [[1, 2, 3]], "id": "list", "result": {"returned": {"type": "int", "value": 3}}},
+    {
+      "args": [{"$": "array", "pairs": [["a", 1], ["b", 2]]}],
+      "id": "assoc",
+      "result": {"returned": {"type": "int", "value": 2}}
+    },
+    {
+      "args": [[[1, 2], [3]]],
+      "id": "nested_not_recursive",
+      "result": {"returned": {"type": "int", "value": 2}}
+    },
+    {"args": [[null]], "id": "array_of_null", "result": {"returned": {"type": "int", "value": 1}}},
+    {"args": [null], "id": "null", "result": {"returned": {"type": "int", "value": 0}}},
+    {"args": [false], "id": "false", "result": {"returned": {"type": "int", "value": 0}}},
+    {"args": [true], "id": "true", "result": {"returned": {"type": "int", "value": 0}}},
+    {"args": [""], "id": "empty_string", "result": {"returned": {"type": "int", "value": 0}}},
+    {"args": ["0"], "id": "zero_string", "result": {"returned": {"type": "int", "value": 0}}},
+    {"args": ["abc"], "id": "string", "result": {"returned": {"type": "int", "value": 0}}},
+    {"args": [0], "id": "zero", "result": {"returned": {"type": "int", "value": 0}}},
+    {"args": [5], "id": "int", "result": {"returned": {"type": "int", "value": 0}}},
+    {"args": [1.5], "id": "float", "result": {"returned": {"type": "int", "value": 0}}},
+    {
+      "args": [
+        {
+          "$": "list",
+          "count": 10000,
+          "head": [0, 1, 2, 3],
+          "sha256": "a74675bfed3834ac1c3140b2d7fb7d93d90a76608cc08515a5019a1cb2075ff4",
+          "types": ["int"]
+        }
+      ],
+      "id": "large_list",
+      "result": {"returned": {"type": "int", "value": 10000}}
+    },
+    {
+      "args": [],
+      "id": "missing_argument",
+      "result": {
+        "exception": {
+          "class": "ArgumentCountError",
+          "code": 0,
+          "message": "Too few arguments to function cacti_sizeof(), 0 passed in <caller> and exactly 1 expected"
+        }
+      }
+    }
+  ],
+  "function": "cacti_sizeof",
+  "signature": [
+    {"by_ref": false, "name": "array", "optional": false, "type": null, "variadic": false}
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "cases": [
+    {
+      "ambient": {"settings": {"strip_domain": "on"}},
+      "args": ["10.0.0.1"],
+      "id": "ipv4_with_option_on",
+      "result": {"returned": {"type": "string", "value": "10.0.0.1"}}
+    },
+    {
+      "ambient": {"settings": {"strip_domain": "on"}},
+      "args": ["::1"],
+      "id": "ipv6_with_option_on",
+      "result": {"returned": {"type": "string", "value": "::1"}}
+    },
+    {
+      "ambient": {"settings": {"strip_domain": "on"}},
+      "args": ["fe80::1%eth0"],
+      "id": "ipv6_scope_with_option_on",
+      "result": {"returned": {"type": "string", "value": "fe80::1%eth0"}}
+    },
+    {
+      "ambient": {"settings": {"strip_domain": ""}},
+      "args": ["host.example.com"],
+      "id": "fqdn_option_off",
+      "result": {"returned": {"type": "string", "value": "host.example.com"}}
+    },
+    {
+      "ambient": {"settings": {"strip_domain": "on"}},
+      "args": ["host.example.com"],
+      "id": "fqdn_option_on",
+      "result": {"returned": {"type": "string", "value": "host"}}
+    },
+    {
+      "ambient": {"settings": {"strip_domain": null}},
+      "args": ["host.example.com"],
+      "id": "option_unset",
+      "note": "row removed: falls back to the default of the setting",
+      "result": {"returned": {"type": "string", "value": "host.example.com"}}
+    },
+    {
+      "ambient": {"settings": {"strip_domain": "ON"}},
+      "args": ["host.example.com"],
+      "id": "option_uppercase_on",
+      "note": "comparison is case sensitive",
+      "result": {"returned": {"type": "string", "value": "host.example.com"}}
+    },
+    {
+      "ambient": {"settings": {"strip_domain": "1"}},
+      "args": ["host.example.com"],
+      "id": "option_numeric_one",
+      "result": {"returned": {"type": "string", "value": "host.example.com"}}
+    },
+    {
+      "ambient": {"settings": {"strip_domain": "on"}},
+      "args": ["host"],
+      "id": "no_dot",
+      "result": {"returned": {"type": "string", "value": "host"}}
+    },
+    {
+      "ambient": {"settings": {"strip_domain": "on"}},
+      "args": [".example.com"],
+      "id": "leading_dot",
+      "result": {"returned": {"type": "string", "value": ""}}
+    },
+    {
+      "ambient": {"settings": {"strip_domain": "on"}},
+      "args": ["host."],
+      "id": "trailing_dot",
+      "result": {"returned": {"type": "string", "value": "host"}}
+    },
+    {
+      "ambient": {"settings": {"strip_domain": "on"}},
+      "args": [""],
+      "id": "empty",
+      "result": {"returned": {"type": "string", "value": ""}}
+    },
+    {
+      "ambient": {"settings": {"strip_domain": "on"}},
+      "args": [null],
+      "id": "null",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "str_contains(): Passing null to parameter #1 ($haystack) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          },
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "explode(): Passing null to parameter #2 ($string) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "string", "value": ""}
+      }
+    },
+    {
+      "ambient": {"settings": {"strip_domain": "on"}},
+      "args": [123],
+      "id": "int",
+      "result": {"returned": {"type": "string", "value": "123"}}
+    },
+    {
+      "ambient": {"settings": {"strip_domain": "on"}},
+      "args": [["a.b"]],
+      "id": "array",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "str_contains(): Argument #1 ($haystack) must be of type string, array given"
+        }
+      }
+    },
+    {
+      "ambient": {"settings": {"strip_domain": "on"}},
+      "args": ["hôst.example.com"],
+      "id": "multibyte",
+      "result": {"returned": {"type": "string", "value": "hôst"}}
+    },
+    {
+      "ambient": {"settings": {"strip_domain": "on"}},
+      "args": ["256.1.1.1"],
+      "id": "looks_like_ipv4_but_invalid",
+      "note": "not an address, so the domain is stripped",
+      "result": {"returned": {"type": "string", "value": "256"}}
+    },
+    {
+      "ambient": {"settings": {"strip_domain": "on"}},
+      "args": ["1.2.3"],
+      "id": "numeric_dotted_label",
+      "result": {"returned": {"type": "string", "value": "1"}}
+    },
+    {
+      "ambient": {"settings": {"strip_domain": "on"}},
+      "args": ["HOST.Example.COM"],
+      "id": "uppercase_host",
+      "result": {"returned": {"type": "string", "value": "HOST"}}
+    },
+    {
+      "ambient": {"settings": {"strip_domain": "on"}},
+      "args": ["a b.c"],
+      "id": "space_inside",
+      "result": {"returned": {"type": "string", "value": "a b"}}
+    }
+  ],
+  "function": "strip_domain",
+  "signature": [
+    {"by_ref": false, "name": "hostname", "optional": false, "type": null, "variadic": false}
+  ]
+}

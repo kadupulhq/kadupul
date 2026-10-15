@@ -1,0 +1,429 @@
+{
+  "cases": [
+    {
+      "args": ["10.0.0.1"],
+      "id": "ipv4",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              ["ip", {"$": "bytes", "hex": "0a000001"}],
+              ["subnet", {"$": "bytes", "hex": "ffffffff"}]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": ["10.0.0.0/24"],
+      "id": "ipv4_slash_24",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              ["ip", {"$": "bytes", "hex": "0a000000"}],
+              ["subnet", {"$": "bytes", "hex": "ffffff00"}]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": ["10.0.0.0/32"],
+      "id": "ipv4_slash_32",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              ["ip", {"$": "bytes", "hex": "0a000000"}],
+              ["subnet", {"$": "bytes", "hex": "ffffffff"}]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": ["10.0.0.0/0"],
+      "id": "ipv4_slash_0",
+      "note": "subnet \"0\" is empty(), so the range check is skipped",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              ["ip", {"$": "bytes", "hex": "0a000000"}],
+              ["subnet", {"$": "bytes", "hex": "00000000"}]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": ["10.0.0.0/33"],
+      "id": "ipv4_slash_33",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["10.0.0.0/25"],
+      "id": "ipv4_slash_25",
+      "note": "mask nibble 8",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              ["ip", {"$": "bytes", "hex": "0a000000"}],
+              ["subnet", {"$": "bytes", "hex": "ffffff80"}]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": ["10.0.0.0/26"],
+      "id": "ipv4_slash_26",
+      "note": "mask nibble c",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              ["ip", {"$": "bytes", "hex": "0a000000"}],
+              ["subnet", {"$": "bytes", "hex": "ffffffc0"}]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": ["10.0.0.0/27"],
+      "id": "ipv4_slash_27",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              ["ip", {"$": "bytes", "hex": "0a000000"}],
+              ["subnet", {"$": "bytes", "hex": "ffffffe0"}]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": ["10.0.0.0/23"],
+      "id": "ipv4_slash_23",
+      "note": "mask nibble e",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              ["ip", {"$": "bytes", "hex": "0a000000"}],
+              ["subnet", {"$": "bytes", "hex": "fffffe00"}]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": ["10.0.0.0/22"],
+      "id": "ipv4_slash_22",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              ["ip", {"$": "bytes", "hex": "0a000000"}],
+              ["subnet", {"$": "bytes", "hex": "fffffc00"}]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": ["10.0.0.0/21"],
+      "id": "ipv4_slash_21",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              ["ip", {"$": "bytes", "hex": "0a000000"}],
+              ["subnet", {"$": "bytes", "hex": "fffff800"}]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": ["10.0.0.0/"],
+      "id": "ipv4_slash_empty",
+      "note": "empty mask text falls back to the full length",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              ["ip", {"$": "bytes", "hex": "0a000000"}],
+              ["subnet", {"$": "bytes", "hex": "ffffffff"}]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": ["10.0.0.0/abc"],
+      "id": "ipv4_slash_text",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["10.0.0.1/-1"],
+      "id": "ipv4_slash_negative",
+      "note": "negative length reaches str_repeat",
+      "result": {
+        "exception": {
+          "class": "ValueError",
+          "code": 0,
+          "message": "str_repeat(): Argument #2 ($times) must be greater than or equal to 0"
+        }
+      }
+    },
+    {
+      "args": ["10.0.0.0/24.5"],
+      "id": "ipv4_slash_fraction",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              ["ip", {"$": "bytes", "hex": "0a000000"}],
+              ["subnet", {"$": "bytes", "hex": "ffffff00"}]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": ["10.0.0.0/ 24"],
+      "id": "ipv4_slash_leading_space",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              ["ip", {"$": "bytes", "hex": "0a000000"}],
+              ["subnet", {"$": "bytes", "hex": "ffffff00"}]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": ["10.0.0.0/24 "],
+      "id": "ipv4_slash_trailing_space",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              ["ip", {"$": "bytes", "hex": "0a000000"}],
+              ["subnet", {"$": "bytes", "hex": "ffffff00"}]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": ["10.0.0.0/1e1"],
+      "id": "ipv4_slash_exponent",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              ["ip", {"$": "bytes", "hex": "0a000000"}],
+              ["subnet", {"$": "bytes", "hex": "ffc00000"}]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": ["10.0.0.0/0x10"],
+      "id": "ipv4_slash_hex",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["10.0.0.0/24/8"],
+      "id": "ipv4_double_slash",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["/24"],
+      "id": "slash_first",
+      "note": "strpos is 0, which is falsy, so the slash is not treated as a mask",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["::1"],
+      "id": "ipv6",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              ["ip", {"$": "bytes", "hex": "00000000000000000000000000000001"}],
+              ["subnet", {"$": "bytes", "hex": "ffffffffffffffffffffffffffffffff"}]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": ["2001:db8::/64"],
+      "id": "ipv6_slash_64",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              ["ip", {"$": "bytes", "hex": "20010db8000000000000000000000000"}],
+              ["subnet", {"$": "bytes", "hex": "ffffffffffffffff0000000000000000"}]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": ["2001:db8::/128"],
+      "id": "ipv6_slash_128",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              ["ip", {"$": "bytes", "hex": "20010db8000000000000000000000000"}],
+              ["subnet", {"$": "bytes", "hex": "ffffffffffffffffffffffffffffffff"}]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": ["2001:db8::/129"],
+      "id": "ipv6_slash_129",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["2001:db8::/0"],
+      "id": "ipv6_slash_0",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              ["ip", {"$": "bytes", "hex": "20010db8000000000000000000000000"}],
+              ["subnet", {"$": "bytes", "hex": "00000000000000000000000000000000"}]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": ["::ffff:1.2.3.4/96"],
+      "id": "ipv6_mapped",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              ["ip", {"$": "bytes", "hex": "00000000000000000000ffff01020304"}],
+              ["subnet", {"$": "bytes", "hex": "ffffffffffffffffffffffff00000000"}]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": ["::1%eth0"],
+      "id": "ipv6_scope",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["garbage"],
+      "id": "garbage",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {"args": [""], "id": "empty", "result": {"returned": {"type": "bool", "value": false}}},
+    {
+      "args": [" 10.0.0.1"],
+      "id": "leading_space",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {"args": ["é/24"], "id": "multibyte", "result": {"returned": {"type": "bool", "value": false}}},
+    {
+      "args": [null],
+      "id": "null",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "strpos(): Passing null to parameter #1 ($haystack) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          },
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "inet_pton(): Passing null to parameter #1 ($ip) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": true
+          }
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {"args": [5], "id": "int", "result": {"returned": {"type": "bool", "value": false}}},
+    {
+      "args": [["10.0.0.1"]],
+      "id": "array",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "strpos(): Argument #1 ($haystack) must be of type string, array given"
+        }
+      }
+    },
+    {"args": [true], "id": "true", "result": {"returned": {"type": "bool", "value": false}}}
+  ],
+  "function": "cacti_pton",
+  "signature": [
+    {"by_ref": false, "name": "ipaddr", "optional": false, "type": null, "variadic": false}
+  ]
+}

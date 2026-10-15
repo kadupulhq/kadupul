@@ -1,0 +1,26 @@
+{
+  "function": "read_config_option",
+  "cases": [
+    {"id": "database_value_cold", "args": ["fnwt_probe_key"], "note": "first read in a fresh process comes from the settings table", "ambient": {"settings": {"fnwt_probe_key": "alpha"}}, "isolated": true},
+    {"id": "database_value_empty_string", "args": ["poller_interval"], "note": "a stored empty string is returned, not the default", "ambient": {"settings": {"poller_interval": ""}}, "isolated": true},
+    {"id": "database_value_zero_string", "args": ["fnwt_probe_key"], "ambient": {"settings": {"fnwt_probe_key": "0"}}, "isolated": true},
+    {"id": "default_fallback_when_row_absent", "args": ["poller_interval"], "note": "no settings row: the default from the settings definition array", "ambient": {"settings": {"poller_interval": null}}, "isolated": true},
+    {"id": "unknown_key_no_default", "args": ["fnwt_no_such_option"], "note": "neither a row nor a default: null, and nothing is cached", "isolated": true},
+    {"id": "cache_serves_stale_value", "args": ["fnwt_probe_key"], "note": "the second call is answered from $config and ignores the later table change", "ambient": {"settings": {"fnwt_probe_key": "before"}}, "between": [{"setting": {"fnwt_probe_key": "after"}}], "isolated": true},
+    {"id": "force_reads_through_cache", "args": ["fnwt_probe_key", true], "note": "force=true goes back to the table every time", "ambient": {"settings": {"fnwt_probe_key": "before"}}, "between": [{"setting": {"fnwt_probe_key": "after"}}], "isolated": true},
+    {"id": "force_truthy_string", "args": ["fnwt_probe_key", "1"], "ambient": {"settings": {"fnwt_probe_key": "before"}}, "between": [{"setting": {"fnwt_probe_key": "after"}}], "isolated": true},
+    {"id": "set_config_option_then_read", "args": ["fnwt_probe_key"], "note": "set_config_option writes the row and primes the cache", "prelude": [{"fn": "set_config_option", "args": ["fnwt_probe_key", "via-set"]}], "isolated": true},
+    {"id": "set_config_option_overrides_cached_default", "args": ["poller_interval"], "prelude": [{"fn": "set_config_option", "args": ["poller_interval", "60"]}], "isolated": true},
+    {"id": "null_name", "args": [null], "isolated": true},
+    {"id": "empty_name", "args": [""], "isolated": true},
+    {"id": "int_name", "args": [0], "isolated": true},
+    {"id": "array_name", "args": [["x"]], "note": "isset() on an array offset", "isolated": true},
+    {"id": "long_name", "args": ["kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"], "isolated": true},
+    {"id": "missing_argument", "args": [], "isolated": true},
+    {"id": "web_reads_table_and_fills_session", "args": ["fnwt_probe_key"], "note": "with is_web set the cache is $_SESSION, not $config. The ambient state sets $config[is_web]; a target that decides from a constant does not see it.", "ambient": {"config": {"is_web": true}, "settings": {"fnwt_probe_key": "alpha"}}, "isolated": true},
+    {"id": "web_session_value_wins_over_table", "args": ["fnwt_probe_key"], "ambient": {"config": {"is_web": true}, "settings": {"fnwt_probe_key": "from-table"}, "session": {"sess_config_array": {"$": "array", "pairs": [["fnwt_probe_key", "from-session"]]}}}, "isolated": true, "note": "same ambient is_web state as web_reads_table_and_fills_session"},
+    {"id": "web_force_bypasses_session", "args": ["fnwt_probe_key", true], "ambient": {"config": {"is_web": true}, "settings": {"fnwt_probe_key": "from-table"}, "session": {"sess_config_array": {"$": "array", "pairs": [["fnwt_probe_key", "from-session"]]}}}, "isolated": true, "note": "same ambient is_web state as web_reads_table_and_fills_session"},
+    {"id": "web_session_cache_is_not_an_array", "args": ["fnwt_probe_key"], "note": "a non-array cache is replaced, not trusted.", "ambient": {"config": {"is_web": true}, "settings": {"fnwt_probe_key": "alpha"}, "session": {"sess_config_array": "oops"}}, "isolated": true},
+    {"id": "web_session_serves_stale_value", "args": ["fnwt_probe_key"], "ambient": {"config": {"is_web": true}, "settings": {"fnwt_probe_key": "before"}}, "between": [{"setting": {"fnwt_probe_key": "after"}}], "isolated": true, "note": "same ambient is_web state as web_reads_table_and_fills_session"}
+  ]
+}

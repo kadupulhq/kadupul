@@ -1,0 +1,106 @@
+{
+  "cases": [
+    {
+      "args": [{"$": "bytes", "hex": "0a000001"}],
+      "id": "ipv4_packed",
+      "result": {"returned": {"type": "string", "value": "10.0.0.1"}}
+    },
+    {
+      "args": [{"$": "bytes", "hex": "00000000000000000000000000000001"}],
+      "id": "ipv6_packed",
+      "result": {"returned": {"type": "string", "value": "::1"}}
+    },
+    {
+      "args": [{"$": "bytes", "hex": "00000000000000000000ffff01020304"}],
+      "id": "ipv6_mapped",
+      "result": {"returned": {"type": "string", "value": "::ffff:1.2.3.4"}}
+    },
+    {
+      "args": [{"$": "bytes", "hex": "0a00000102"}],
+      "id": "five_bytes",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {"args": [""], "id": "empty_string", "result": {"returned": {"type": "bool", "value": false}}},
+    {
+      "args": ["0"],
+      "id": "zero_string",
+      "note": "empty(\"0\") is true",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {"args": [null], "id": "null", "result": {"returned": {"type": "bool", "value": false}}},
+    {"args": [false], "id": "false", "result": {"returned": {"type": "bool", "value": false}}},
+    {"args": [0], "id": "int_zero", "result": {"returned": {"type": "bool", "value": false}}},
+    {"args": [[]], "id": "empty_array", "result": {"returned": {"type": "bool", "value": false}}},
+    {
+      "args": ["1234"],
+      "id": "ascii_four_bytes",
+      "result": {"returned": {"type": "string", "value": "49.50.51.52"}}
+    },
+    {
+      "args": [5],
+      "id": "int_single_digit",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [[{"$": "bytes", "hex": "0a000001"}, {"$": "bytes", "hex": "0a000002"}]],
+      "id": "array_first_element_used",
+      "result": {"returned": {"type": "string", "value": "10.0.0.1"}}
+    },
+    {
+      "args": [
+        {
+          "$": "array",
+          "pairs": [
+            ["b", {"$": "bytes", "hex": "0a000002"}],
+            ["a", {"$": "bytes", "hex": "0a000001"}]
+          ]
+        }
+      ],
+      "id": "assoc_array_first_element",
+      "note": "first in insertion order, not key order",
+      "result": {"returned": {"type": "string", "value": "10.0.0.2"}}
+    },
+    {
+      "args": [["", {"$": "bytes", "hex": "0a000001"}]],
+      "id": "array_first_empty",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [[null]],
+      "id": "array_first_null",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "inet_ntop(): Passing null to parameter #1 ($ip) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": true
+          }
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [[[{"$": "bytes", "hex": "0a000001"}]]],
+      "id": "array_of_arrays",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "inet_ntop(): Argument #1 ($ip) must be of type string, array given"
+        }
+      }
+    },
+    {"args": [true], "id": "true", "result": {"returned": {"type": "bool", "value": false}}},
+    {
+      "args": ["10.0.0.1"],
+      "id": "dotted_text",
+      "result": {"returned": {"type": "bool", "value": false}}
+    }
+  ],
+  "function": "cacti_ntop",
+  "signature": [
+    {"by_ref": false, "name": "addr", "optional": false, "type": null, "variadic": false}
+  ]
+}

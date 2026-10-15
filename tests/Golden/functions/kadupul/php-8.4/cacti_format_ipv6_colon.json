@@ -1,0 +1,75 @@
+{
+  "cases": [
+    {
+      "args": ["::1"],
+      "id": "ipv6_loopback",
+      "result": {"returned": {"type": "string", "value": "[::1]"}}
+    },
+    {
+      "args": ["2001:db8::1"],
+      "id": "ipv6_compressed",
+      "result": {"returned": {"type": "string", "value": "[2001:db8::1]"}}
+    },
+    {
+      "args": ["1:2:3:4:5:6:7:8"],
+      "id": "ipv6_full",
+      "result": {"returned": {"type": "string", "value": "[1:2:3:4:5:6:7:8]"}}
+    },
+    {
+      "args": ["::ffff:1.2.3.4"],
+      "id": "ipv6_mapped_v4",
+      "result": {"returned": {"type": "string", "value": "[::ffff:1.2.3.4]"}}
+    },
+    {
+      "args": ["::"],
+      "id": "ipv6_unspecified",
+      "result": {"returned": {"type": "string", "value": "[::]"}}
+    },
+    {
+      "args": ["10.0.0.1"],
+      "id": "ipv4",
+      "result": {"returned": {"type": "string", "value": "10.0.0.1"}}
+    },
+    {
+      "args": ["[::1]"],
+      "id": "already_bracketed",
+      "note": "brackets fail the IPv6 filter, so the bracket branch cannot be reached",
+      "result": {"returned": {"type": "string", "value": "[::1]"}}
+    },
+    {
+      "args": ["fe80::1%eth0"],
+      "id": "scope_id",
+      "result": {"returned": {"type": "string", "value": "fe80::1%eth0"}}
+    },
+    {
+      "args": ["host"],
+      "id": "hostname",
+      "result": {"returned": {"type": "string", "value": "host"}}
+    },
+    {"args": [""], "id": "empty", "result": {"returned": {"type": "string", "value": ""}}},
+    {
+      "args": [" ::1"],
+      "id": "leading_space",
+      "result": {"returned": {"type": "string", "value": " ::1"}}
+    },
+    {
+      "args": ["1::2::3"],
+      "id": "invalid_ipv6",
+      "result": {"returned": {"type": "string", "value": "1::2::3"}}
+    },
+    {
+      "args": [":::"],
+      "id": "triple_colon",
+      "result": {"returned": {"type": "string", "value": ":::"}}
+    },
+    {"args": [null], "id": "null", "result": {"returned": {"type": "null", "value": null}}},
+    {"args": [5], "id": "int", "result": {"returned": {"type": "int", "value": 5}}},
+    {"args": [["::1"]], "id": "array", "result": {"returned": {"type": "array", "value": ["::1"]}}},
+    {"args": [true], "id": "true", "result": {"returned": {"type": "bool", "value": true}}},
+    {"args": ["é"], "id": "multibyte", "result": {"returned": {"type": "string", "value": "é"}}}
+  ],
+  "function": "cacti_format_ipv6_colon",
+  "signature": [
+    {"by_ref": false, "name": "address", "optional": false, "type": null, "variadic": false}
+  ]
+}
