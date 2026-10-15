@@ -1,0 +1,29 @@
+{
+  "function": "is_base64_encoded",
+  "cases": [
+    {"id": "valid", "args": ["aGVsbG8="]},
+    {"id": "valid_no_padding_needed", "args": ["Zm9v"]},
+    {"id": "valid_double_padding", "args": ["YQ=="]},
+    {"id": "missing_padding", "args": ["aGVsbG8"], "note": "strict decode accepts it, the re-encode comparison rejects it"},
+    {"id": "single_padding_short", "args": ["YQ="]},
+    {"id": "three_padding", "args": ["YQ==="]},
+    {"id": "only_padding", "args": ["===="]},
+    {"id": "non_canonical_trailing_bits", "args": ["QR=="]},
+    {"id": "embedded_newline", "args": ["aGVs\nbG8="]},
+    {"id": "trailing_newline", "args": ["aGVsbG8=\n"], "note": "$ matches before a final newline"},
+    {"id": "url_safe_alphabet", "args": ["a-_b"]},
+    {"id": "invalid_characters", "args": ["!!!"]},
+    {"id": "space", "args": ["aGVs bG8="]},
+    {"id": "empty", "args": [""], "note": "the empty string is accepted"},
+    {"id": "single_character", "args": ["a"]},
+    {"id": "zero_string", "args": ["0"]},
+    {"id": "all_a", "args": ["AAAA"]},
+    {"id": "plus_slash", "args": ["+/+/"]},
+    {"id": "null", "args": [null], "note": "preg_match(null) deprecation; empty subject is accepted"},
+    {"id": "int_digits", "args": [1234], "note": "int is matched as a string"},
+    {"id": "true", "args": [true]},
+    {"id": "array", "args": [["QQ=="]]},
+    {"id": "multibyte", "args": ["é"]},
+    {"id": "oversized_valid", "args": [{"$": "repeat", "unit": "QUJD", "count": 100000}]}
+  ]
+}

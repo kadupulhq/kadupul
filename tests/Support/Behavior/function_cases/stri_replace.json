@@ -1,0 +1,31 @@
+{
+  "function": "stri_replace",
+  "cases": [
+    {"id": "basic", "args": ["o", "0", "Foo Boo"]},
+    {"id": "case_insensitive_find", "args": ["FOO", "x", "a foo b Foo c FOO"]},
+    {"id": "not_found", "args": ["zzz", "x", "abc"]},
+    {"id": "replace_with_empty", "args": ["b", "", "abcb"]},
+    {"id": "empty_subject", "args": ["a", "b", ""]},
+    {"id": "empty_find", "args": ["", "x", "abc"], "note": "explode() refuses an empty separator"},
+    {"id": "find_longer_than_subject", "args": ["abcdef", "x", "abc"]},
+    {"id": "whole_subject", "args": ["abc", "x", "ABC"]},
+    {"id": "overlapping_matches", "args": ["aa", "b", "aaa"]},
+    {"id": "replacement_contains_find", "args": ["a", "aa", "banana"]},
+    {"id": "regex_metacharacters_are_literal", "args": [".", "!", "a.b*c"]},
+    {"id": "preserves_subject_case_around_match", "args": ["x", "-", "AxB"]},
+    {"id": "multibyte_same_case", "args": ["é", "e", "café é"]},
+    {"id": "multibyte_case_mismatch", "args": ["É", "e", "café"], "note": "only ASCII is folded"},
+    {"id": "find_null", "args": [null, "x", "abc"], "note": "strtolower(null) deprecation, then explode() rejects the empty separator"},
+    {"id": "replace_null", "args": ["a", null, "banana"]},
+    {"id": "subject_null", "args": ["a", "b", null]},
+    {"id": "find_int", "args": [1, "x", "a1b1"]},
+    {"id": "replace_int", "args": ["a", 0, "banana"]},
+    {"id": "subject_int", "args": ["1", "x", 1121]},
+    {"id": "find_array", "args": [["a"], "b", "abc"]},
+    {"id": "subject_array", "args": ["a", "b", ["abc"]]},
+    {"id": "newline_find", "args": ["\n", " ", "a\nb\nc"]},
+    {"id": "invalid_utf8_subject", "args": ["a", "b", {"$": "bytes", "hex": "61ff61"}]},
+    {"id": "oversized", "args": ["a", "bb", {"$": "repeat", "unit": "Aa", "count": 50000}]},
+    {"id": "missing_arguments", "args": ["a", "b"]}
+  ]
+}

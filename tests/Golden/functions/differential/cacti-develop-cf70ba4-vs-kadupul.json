@@ -1,0 +1,4073 @@
+{
+  "baseline": "cacti-develop",
+  "baseline_php": "8.4.26",
+  "candidate": "kadupul",
+  "candidate_php": "8.4.26",
+  "functions": {
+    "array_rekey": {
+      "cases": [
+        {"case": "scalar_value", "status": "same"},
+        {"case": "list_of_values", "status": "same"},
+        {"case": "empty_value_list", "status": "same"},
+        {"case": "empty_input", "status": "same"},
+        {"case": "null_input", "status": "same"},
+        {"case": "string_input", "status": "same"},
+        {"case": "zero_input", "status": "same"},
+        {"case": "duplicate_key_last_wins", "status": "same"},
+        {"case": "duplicate_key_list_value_merges", "status": "same"},
+        {"case": "missing_key_in_item", "status": "same"},
+        {"case": "missing_value_in_item", "status": "same"},
+        {"case": "item_is_null", "status": "same"},
+        {"case": "item_is_string", "status": "same"},
+        {"case": "item_is_int", "status": "same"},
+        {"case": "list_items_numeric_key", "status": "same"},
+        {"case": "key_is_int_zero_on_assoc", "status": "same"},
+        {"case": "key_value_is_null", "status": "same"},
+        {"case": "item_key_float", "status": "same"},
+        {"case": "item_key_bool", "status": "same"},
+        {"case": "item_key_null", "status": "same"},
+        {"case": "item_key_array", "status": "same"},
+        {"case": "item_key_numeric_string_becomes_int", "status": "same"},
+        {"case": "key_value_nested_array_item", "status": "same"},
+        {"case": "assoc_input_ignores_outer_keys", "status": "same"},
+        {"case": "missing_arguments", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {"by_ref": false, "name": "array", "optional": false, "type": "mixed", "variadic": false},
+          {"by_ref": false, "name": "key", "optional": false, "type": "string", "variadic": false},
+          {
+            "by_ref": false,
+            "name": "key_value",
+            "optional": false,
+            "type": "mixed",
+            "variadic": false
+          }
+        ],
+        "candidate": [
+          {"by_ref": false, "name": "array", "optional": false, "type": null, "variadic": false},
+          {"by_ref": false, "name": "key", "optional": false, "type": null, "variadic": false},
+          {"by_ref": false, "name": "key_value", "optional": false, "type": null, "variadic": false}
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "build_where_from_array": {
+      "cases": [
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": ""}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "1=1"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "empty_array",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "build_where_from_array(): Argument #1 ($filters) must be of type array, null given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "1=1"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "null_filters",
+          "note": "empty() is true for null",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "build_where_from_array(): Argument #1 ($filters) must be of type array, int given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "1=1"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "zero_filters",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "build_where_from_array(): Argument #1 ($filters) must be of type array, string given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "1=1"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "zero_string_filters",
+          "note": "empty(\"0\") is true",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "build_where_from_array(): Argument #1 ($filters) must be of type array, false given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "1=1"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "false_filters",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "build_where_from_array(): Argument #1 ($filters) must be of type array, string given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "1=1"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "empty_string_filters",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "single", "status": "same"},
+        {"case": "multiple_preserves_order", "status": "same"},
+        {"case": "value_types_kept", "status": "same"},
+        {"case": "params_already_populated", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"params": {"type": "null", "value": null}},
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "build_where_from_array(): Argument #2 ($params) must be of type array, null given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": [5]}},
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "`id` = ?"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "params_null",
+          "note": "by-reference null becomes an array",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"params": {"type": "string", "value": "abc"}},
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "build_where_from_array(): Argument #2 ($params) must be of type array, string given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"params": {"type": "string", "value": "abc"}},
+              "diagnostics": [],
+              "exception": {
+                "class": "Error",
+                "code": 0,
+                "message": "[] operator not supported for strings"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "case": "params_string",
+          "note": "[] on a string is an Error",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [
+                "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: id; DROP TABLE x"
+              ],
+              "output": "",
+              "returned": {"type": "string", "value": ""}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [
+                "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: id; DROP TABLE x"
+              ],
+              "output": "",
+              "returned": {"type": "string", "value": "1=0"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "invalid_field_skipped",
+          "note": "logs a SECURITY line, then returns 1=0",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "mixed_valid_invalid", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [
+                "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: 1a"
+              ],
+              "output": "",
+              "returned": {"type": "string", "value": ""}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [
+                "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: 1a"
+              ],
+              "output": "",
+              "returned": {"type": "string", "value": "1=0"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "field_leading_digit",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [
+                "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: a-b"
+              ],
+              "output": "",
+              "returned": {"type": "string", "value": ""}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [
+                "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: a-b"
+              ],
+              "output": "",
+              "returned": {"type": "string", "value": "1=0"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "field_dash",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [
+                "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: a`b"
+              ],
+              "output": "",
+              "returned": {"type": "string", "value": ""}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [
+                "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: a`b"
+              ],
+              "output": "",
+              "returned": {"type": "string", "value": "1=0"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "field_backtick",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [
+                "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: "
+              ],
+              "output": "",
+              "returned": {"type": "string", "value": ""}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [
+                "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: "
+              ],
+              "output": "",
+              "returned": {"type": "string", "value": "1=0"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "field_empty_name",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "field_underscore_start", "status": "same"},
+        {"case": "field_trailing_newline", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [
+                "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: id "
+              ],
+              "output": "",
+              "returned": {"type": "string", "value": ""}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [
+                "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: id "
+              ],
+              "output": "",
+              "returned": {"type": "string", "value": "1=0"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "field_trailing_two_newlines",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [
+                "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: i d"
+              ],
+              "output": "",
+              "returned": {"type": "string", "value": ""}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [
+                "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: i d"
+              ],
+              "output": "",
+              "returned": {"type": "string", "value": "1=0"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "field_embedded_newline",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [
+                "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: é"
+              ],
+              "output": "",
+              "returned": {"type": "string", "value": ""}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [
+                "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: é"
+              ],
+              "output": "",
+              "returned": {"type": "string", "value": "1=0"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "field_unicode",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [
+                "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: 0",
+                "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: 1"
+              ],
+              "output": "",
+              "returned": {"type": "string", "value": ""}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [
+                "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: 0",
+                "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: 1"
+              ],
+              "output": "",
+              "returned": {"type": "string", "value": "1=0"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "field_int_key",
+          "note": "a list has integer keys 0 and 1, which fail the pattern",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [
+                "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: 123"
+              ],
+              "output": "",
+              "returned": {"type": "string", "value": ""}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "log": [
+                "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: 123"
+              ],
+              "output": "",
+              "returned": {"type": "string", "value": "1=0"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "field_numeric_string_key",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "field_long_valid", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "build_where_from_array(): Argument #1 ($filters) must be of type array, string given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [
+                {
+                  "count": 1,
+                  "file": "lib/functions.php",
+                  "message": "foreach() argument must be of type array|object, string given",
+                  "severity": "E_WARNING",
+                  "suppressed": false
+                }
+              ],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "1=0"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "filters_string",
+          "note": "foreach over a string warns; nothing is added",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "build_where_from_array(): Argument #1 ($filters) must be of type array, int given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [
+                {
+                  "count": 1,
+                  "file": "lib/functions.php",
+                  "message": "foreach() argument must be of type array|object, int given",
+                  "severity": "E_WARNING",
+                  "suppressed": false
+                }
+              ],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "1=0"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "filters_int",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "build_where_from_array(): Argument #1 ($filters) must be of type array, true given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"params": {"type": "array", "value": []}},
+              "diagnostics": [
+                {
+                  "count": 1,
+                  "file": "lib/functions.php",
+                  "message": "foreach() argument must be of type array|object, true given",
+                  "severity": "E_WARNING",
+                  "suppressed": false
+                }
+              ],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "1=0"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "filters_true",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "missing_params", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {
+            "by_ref": false,
+            "name": "filters",
+            "optional": false,
+            "type": "array",
+            "variadic": false
+          },
+          {"by_ref": true, "name": "params", "optional": false, "type": "array", "variadic": false}
+        ],
+        "candidate": [
+          {"by_ref": false, "name": "filters", "optional": false, "type": null, "variadic": false},
+          {"by_ref": true, "name": "params", "optional": false, "type": null, "variadic": false}
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "cacti_count": {
+      "cases": [
+        {"case": "empty_array", "status": "same"},
+        {"case": "list", "status": "same"},
+        {"case": "assoc", "status": "same"},
+        {"case": "nested_not_recursive", "status": "same"},
+        {"case": "array_of_null", "status": "same"},
+        {"case": "null", "status": "same"},
+        {"case": "false", "status": "same"},
+        {"case": "true", "status": "same"},
+        {"case": "empty_string", "status": "same"},
+        {"case": "zero_string", "status": "same"},
+        {"case": "string", "status": "same"},
+        {"case": "zero", "status": "same"},
+        {"case": "int", "status": "same"},
+        {"case": "float", "status": "same"},
+        {"case": "large_list", "status": "same"},
+        {"case": "missing_argument", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {"by_ref": false, "name": "array", "optional": false, "type": "mixed", "variadic": false}
+        ],
+        "candidate": [
+          {"by_ref": false, "name": "array", "optional": false, "type": null, "variadic": false}
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "cacti_format_ipv6_colon": {
+      "cases": [
+        {"case": "ipv6_loopback", "status": "same"},
+        {"case": "ipv6_compressed", "status": "same"},
+        {"case": "ipv6_full", "status": "same"},
+        {"case": "ipv6_mapped_v4", "status": "same"},
+        {"case": "ipv6_unspecified", "status": "same"},
+        {"case": "ipv4", "status": "same"},
+        {"case": "already_bracketed", "status": "same"},
+        {"case": "scope_id", "status": "same"},
+        {"case": "hostname", "status": "same"},
+        {"case": "empty", "status": "same"},
+        {"case": "leading_space", "status": "same"},
+        {"case": "invalid_ipv6", "status": "same"},
+        {"case": "triple_colon", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "cacti_format_ipv6_colon(): Argument #1 ($address) must be of type string, null given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "null", "value": null}
+            },
+            "warm": {"same": true}
+          },
+          "case": "null",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "5"}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "int", "value": 5}
+            },
+            "warm": {"same": true}
+          },
+          "case": "int",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "cacti_format_ipv6_colon(): Argument #1 ($address) must be of type string, array given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "array", "value": ["::1"]}
+            },
+            "warm": {"same": true}
+          },
+          "case": "array",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "1"}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": true}
+            },
+            "warm": {"same": true}
+          },
+          "case": "true",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "multibyte", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {
+            "by_ref": false,
+            "name": "address",
+            "optional": false,
+            "type": "string",
+            "variadic": false
+          }
+        ],
+        "candidate": [
+          {"by_ref": false, "name": "address", "optional": false, "type": null, "variadic": false}
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "cacti_ntoc": {
+      "cases": [
+        {"case": "mask_24", "status": "same"},
+        {"case": "mask_32", "status": "same"},
+        {"case": "mask_0", "status": "same"},
+        {"case": "mask_noncontiguous", "status": "same"},
+        {"case": "mask_ipv6_64", "status": "same"},
+        {"case": "mask_3_bits", "status": "same"},
+        {"case": "mask_7_bits", "status": "same"},
+        {"case": "mask_1_bit", "status": "same"},
+        {"case": "mask_reversed", "status": "same"},
+        {"case": "ipv6_flag_ignored", "status": "same"},
+        {"case": "empty_string", "status": "same"},
+        {"case": "ascii_text", "status": "same"},
+        {"case": "single_ff_char", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "cacti_ntoc(): Argument #1 ($subnet) must be of type string, null given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [
+                {
+                  "count": 1,
+                  "file": "lib/functions.php",
+                  "message": "str_split(): Passing null to parameter #1 ($string) of type string is deprecated",
+                  "severity": "E_DEPRECATED",
+                  "suppressed": false
+                }
+              ],
+              "log": [],
+              "output": "",
+              "returned": {"type": "int", "value": 0}
+            },
+            "warm": {"same": true}
+          },
+          "case": "null",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "int", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "cacti_ntoc(): Argument #1 ($subnet) must be of type string, array given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "str_split(): Argument #1 ($string) must be of type string, array given"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "case": "array",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "true", "status": "same"},
+        {"case": "missing_argument", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {
+            "by_ref": false,
+            "name": "subnet",
+            "optional": false,
+            "type": "string",
+            "variadic": false
+          },
+          {
+            "by_ref": false,
+            "default": false,
+            "name": "ipv6",
+            "optional": true,
+            "type": "bool",
+            "variadic": false
+          }
+        ],
+        "candidate": [
+          {"by_ref": false, "name": "subnet", "optional": false, "type": null, "variadic": false},
+          {
+            "by_ref": false,
+            "default": false,
+            "name": "ipv6",
+            "optional": true,
+            "type": null,
+            "variadic": false
+          }
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "cacti_ntop": {
+      "cases": [
+        {"case": "ipv4_packed", "status": "same"},
+        {"case": "ipv6_packed", "status": "same"},
+        {"case": "ipv6_mapped", "status": "same"},
+        {"case": "five_bytes", "status": "same"},
+        {"case": "empty_string", "status": "same"},
+        {"case": "zero_string", "status": "same"},
+        {"case": "null", "status": "same"},
+        {"case": "false", "status": "same"},
+        {"case": "int_zero", "status": "same"},
+        {"case": "empty_array", "status": "same"},
+        {"case": "ascii_four_bytes", "status": "same"},
+        {"case": "int_single_digit", "status": "same"},
+        {"case": "array_first_element_used", "status": "same"},
+        {"case": "assoc_array_first_element", "status": "same"},
+        {"case": "array_first_empty", "status": "same"},
+        {"case": "array_first_null", "status": "same"},
+        {"case": "array_of_arrays", "status": "same"},
+        {"case": "true", "status": "same"},
+        {"case": "dotted_text", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {"by_ref": false, "name": "addr", "optional": false, "type": "mixed", "variadic": false}
+        ],
+        "candidate": [
+          {"by_ref": false, "name": "addr", "optional": false, "type": null, "variadic": false}
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "cacti_oid_numeric_format": {
+      "cases": [
+        {"case": "call", "status": "same"},
+        {"case": "extra_argument_ignored", "status": "same"}
+      ],
+      "signature": {"status": "same"}
+    },
+    "cacti_ptoa": {
+      "cases": [
+        {"case": "ipv4_packed", "status": "same"},
+        {"case": "ipv6_packed", "status": "same"},
+        {"case": "ascii", "status": "same"},
+        {"case": "high_bytes", "status": "same"},
+        {"case": "single_zero_byte", "status": "same"},
+        {"case": "empty", "status": "same"},
+        {"case": "title_ignored", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "cacti_ptoa(): Argument #2 ($addr) must be of type string, null given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [
+                {
+                  "count": 1,
+                  "file": "lib/functions.php",
+                  "message": "str_split(): Passing null to parameter #1 ($string) of type string is deprecated",
+                  "severity": "E_DEPRECATED",
+                  "suppressed": false
+                }
+              ],
+              "log": [],
+              "output": "",
+              "returned": {"type": "null", "value": null}
+            },
+            "warm": {"same": true}
+          },
+          "case": "null_addr",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "int_addr", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "cacti_ptoa(): Argument #2 ($addr) must be of type string, array given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "str_split(): Argument #1 ($string) must be of type string, array given"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "case": "array_addr",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "missing_second_argument", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {
+            "by_ref": false,
+            "name": "title",
+            "optional": false,
+            "type": "string",
+            "variadic": false
+          },
+          {"by_ref": false, "name": "addr", "optional": false, "type": "string", "variadic": false}
+        ],
+        "candidate": [
+          {"by_ref": false, "name": "title", "optional": false, "type": null, "variadic": false},
+          {"by_ref": false, "name": "addr", "optional": false, "type": null, "variadic": false}
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "cacti_pton": {
+      "cases": [
+        {"case": "ipv4", "status": "same"},
+        {"case": "ipv4_slash_24", "status": "same"},
+        {"case": "ipv4_slash_32", "status": "same"},
+        {"case": "ipv4_slash_0", "status": "same"},
+        {"case": "ipv4_slash_33", "status": "same"},
+        {"case": "ipv4_slash_25", "status": "same"},
+        {"case": "ipv4_slash_26", "status": "same"},
+        {"case": "ipv4_slash_27", "status": "same"},
+        {"case": "ipv4_slash_23", "status": "same"},
+        {"case": "ipv4_slash_22", "status": "same"},
+        {"case": "ipv4_slash_21", "status": "same"},
+        {"case": "ipv4_slash_empty", "status": "same"},
+        {"case": "ipv4_slash_text", "status": "same"},
+        {"case": "ipv4_slash_negative", "status": "same"},
+        {"case": "ipv4_slash_fraction", "status": "same"},
+        {"case": "ipv4_slash_leading_space", "status": "same"},
+        {"case": "ipv4_slash_trailing_space", "status": "same"},
+        {"case": "ipv4_slash_exponent", "status": "same"},
+        {"case": "ipv4_slash_hex", "status": "same"},
+        {"case": "ipv4_double_slash", "status": "same"},
+        {"case": "slash_first", "status": "same"},
+        {"case": "ipv6", "status": "same"},
+        {"case": "ipv6_slash_64", "status": "same"},
+        {"case": "ipv6_slash_128", "status": "same"},
+        {"case": "ipv6_slash_129", "status": "same"},
+        {"case": "ipv6_slash_0", "status": "same"},
+        {"case": "ipv6_mapped", "status": "same"},
+        {"case": "ipv6_scope", "status": "same"},
+        {"case": "garbage", "status": "same"},
+        {"case": "empty", "status": "same"},
+        {"case": "leading_space", "status": "same"},
+        {"case": "multibyte", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "cacti_pton(): Argument #1 ($ipaddr) must be of type string, null given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [
+                {
+                  "count": 1,
+                  "file": "lib/functions.php",
+                  "message": "strpos(): Passing null to parameter #1 ($haystack) of type string is deprecated",
+                  "severity": "E_DEPRECATED",
+                  "suppressed": false
+                },
+                {
+                  "count": 1,
+                  "file": "lib/functions.php",
+                  "message": "inet_pton(): Passing null to parameter #1 ($ip) of type string is deprecated",
+                  "severity": "E_DEPRECATED",
+                  "suppressed": true
+                }
+              ],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": false}
+            },
+            "warm": {"same": true}
+          },
+          "case": "null",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "int", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "cacti_pton(): Argument #1 ($ipaddr) must be of type string, array given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "strpos(): Argument #1 ($haystack) must be of type string, array given"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "case": "array",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "true", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {
+            "by_ref": false,
+            "name": "ipaddr",
+            "optional": false,
+            "type": "string",
+            "variadic": false
+          }
+        ],
+        "candidate": [
+          {"by_ref": false, "name": "ipaddr", "optional": false, "type": null, "variadic": false}
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "cacti_sizeof": {
+      "cases": [
+        {"case": "empty_array", "status": "same"},
+        {"case": "list", "status": "same"},
+        {"case": "assoc", "status": "same"},
+        {"case": "nested_not_recursive", "status": "same"},
+        {"case": "array_of_null", "status": "same"},
+        {"case": "null", "status": "same"},
+        {"case": "false", "status": "same"},
+        {"case": "true", "status": "same"},
+        {"case": "empty_string", "status": "same"},
+        {"case": "zero_string", "status": "same"},
+        {"case": "string", "status": "same"},
+        {"case": "zero", "status": "same"},
+        {"case": "int", "status": "same"},
+        {"case": "float", "status": "same"},
+        {"case": "large_list", "status": "same"},
+        {"case": "missing_argument", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {"by_ref": false, "name": "array", "optional": false, "type": "mixed", "variadic": false}
+        ],
+        "candidate": [
+          {"by_ref": false, "name": "array", "optional": false, "type": null, "variadic": false}
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "calculate_percentiles": {
+      "cases": [
+        {"case": "median_default_arg_p50", "status": "same"},
+        {"case": "default_p95", "status": "same"},
+        {"case": "fraction_p", "status": "same"},
+        {"case": "p_exactly_one", "status": "same"},
+        {"case": "p_hundred", "status": "same"},
+        {"case": "p_just_over_hundred", "status": "same"},
+        {"case": "p_zero", "status": "same"},
+        {"case": "p_negative", "status": "same"},
+        {"case": "p_null", "status": "same"},
+        {"case": "p_numeric_string", "status": "same"},
+        {"case": "p_non_numeric_string", "status": "same"},
+        {"case": "p_true", "status": "same"},
+        {"case": "p_array", "status": "same"},
+        {"case": "p_float_tiny", "status": "same"},
+        {"case": "unsorted_input", "status": "same"},
+        {"case": "single_element", "status": "same"},
+        {"case": "two_elements_midpoint", "status": "same"},
+        {"case": "two_elements_p95", "status": "same"},
+        {"case": "empty_data", "status": "same"},
+        {"case": "empty_data_whisker", "status": "same"},
+        {"case": "all_equal", "status": "same"},
+        {"case": "negative_values", "status": "same"},
+        {"case": "float_values", "status": "same"},
+        {"case": "numeric_strings", "status": "same"},
+        {"case": "non_numeric_strings", "status": "same"},
+        {"case": "mixed_null", "status": "same"},
+        {"case": "with_inf", "status": "same"},
+        {"case": "with_nan", "status": "same"},
+        {"case": "assoc_data_reindexed", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "calculate_percentiles(): Argument #1 ($data) must be of type array, null given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "sort(): Argument #1 ($array) must be of type array, null given"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "case": "data_null",
+          "note": "sort() rejects a non-array",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "calculate_percentiles(): Argument #1 ($data) must be of type array, string given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "sort(): Argument #1 ($array) must be of type array, string given"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "case": "data_string",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "calculate_percentiles(): Argument #1 ($data) must be of type array, false given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "sort(): Argument #1 ($array) must be of type array, false given"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "case": "data_false",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "whisker_five", "status": "same"},
+        {"case": "whisker_ignores_requested_percentile", "status": "same"},
+        {"case": "whisker_invalid_percentile", "status": "same"},
+        {"case": "whisker_string_zero", "status": "same"},
+        {"case": "whisker_string_truthy", "status": "same"},
+        {"case": "whisker_two_elements", "status": "same"},
+        {"case": "large_input", "status": "same"},
+        {"case": "p_hundred_large", "status": "same"},
+        {"case": "missing_argument", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {"by_ref": false, "name": "data", "optional": false, "type": "array", "variadic": false},
+          {
+            "by_ref": false,
+            "default": 95,
+            "name": "percentile",
+            "optional": true,
+            "type": "mixed",
+            "variadic": false
+          },
+          {
+            "by_ref": false,
+            "default": false,
+            "name": "whisker",
+            "optional": true,
+            "type": "bool",
+            "variadic": false
+          }
+        ],
+        "candidate": [
+          {"by_ref": false, "name": "data", "optional": false, "type": null, "variadic": false},
+          {
+            "by_ref": false,
+            "default": 95,
+            "name": "percentile",
+            "optional": true,
+            "type": null,
+            "variadic": false
+          },
+          {
+            "by_ref": false,
+            "default": false,
+            "name": "whisker",
+            "optional": true,
+            "type": null,
+            "variadic": false
+          }
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "clean_up_file_name": {
+      "cases": [
+        {"case": "plain", "status": "same"},
+        {"case": "spaces", "status": "same"},
+        {"case": "dots", "status": "same"},
+        {"case": "dot_and_space_run", "status": "same"},
+        {"case": "leading_trailing_space", "status": "same"},
+        {"case": "hyphen", "status": "same"},
+        {"case": "hyphen_between_spaces", "status": "same"},
+        {"case": "underscore_run", "status": "same"},
+        {"case": "only_underscores", "status": "same"},
+        {"case": "tab", "status": "same"},
+        {"case": "newline", "status": "same"},
+        {"case": "symbols", "status": "same"},
+        {"case": "markup", "status": "same"},
+        {"case": "accented", "status": "same"},
+        {"case": "cjk", "status": "same"},
+        {"case": "digits", "status": "same"},
+        {"case": "zero_string", "status": "same"},
+        {"case": "empty", "status": "same"},
+        {"case": "null", "status": "same"},
+        {"case": "false", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "int", "value": 0}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "0"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "int_zero",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "int", "value": 12}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "12"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "int",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "empty_array", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "array", "value": ["a b", "c.d"]}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "array", "value": ["a_b", "c_d"]}
+            },
+            "warm": {"same": true}
+          },
+          "case": "array_of_strings",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "invalid_utf8", "status": "same"},
+        {"case": "oversized", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {"by_ref": false, "name": "string", "optional": false, "type": "mixed", "variadic": false}
+        ],
+        "candidate": [
+          {"by_ref": false, "name": "string", "optional": false, "type": null, "variadic": false}
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "clean_up_lines": {
+      "cases": [
+        {"case": "crlf", "status": "same"},
+        {"case": "lf_with_spaces", "status": "same"},
+        {"case": "leading_trailing_newlines", "status": "same"},
+        {"case": "only_newline", "status": "same"},
+        {"case": "lone_cr", "status": "same"},
+        {"case": "tab_without_newline", "status": "same"},
+        {"case": "tab_around_newline", "status": "same"},
+        {"case": "no_newline", "status": "same"},
+        {"case": "empty", "status": "same"},
+        {"case": "zero_string", "status": "same"},
+        {"case": "null", "status": "same"},
+        {"case": "false", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "int", "value": 0}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "0"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "int_zero",
+          "note": "PHP 8: 0 != \"\" is true, so the int becomes the string \"0\"",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "int", "value": 123}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "123"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "int",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "empty_array", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "array", "value": ["a\nb", "c"]}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "array", "value": ["a b", "c"]}
+            },
+            "warm": {"same": true}
+          },
+          "case": "array_of_strings",
+          "note": "array subject returns an array",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "nel_and_nbsp_untouched", "status": "same"},
+        {"case": "unicode_line_separator", "status": "same"},
+        {"case": "invalid_utf8", "status": "same"},
+        {"case": "oversized", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {"by_ref": false, "name": "string", "optional": false, "type": "mixed", "variadic": false}
+        ],
+        "candidate": [
+          {"by_ref": false, "name": "string", "optional": false, "type": null, "variadic": false}
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "clean_up_name": {
+      "cases": [
+        {"case": "plain", "status": "same"},
+        {"case": "spaces", "status": "same"},
+        {"case": "dots", "status": "same"},
+        {"case": "dot_and_space_run", "status": "same"},
+        {"case": "leading_trailing_space", "status": "same"},
+        {"case": "hyphen", "status": "same"},
+        {"case": "hyphen_between_spaces", "status": "same"},
+        {"case": "underscore_run", "status": "same"},
+        {"case": "only_underscores", "status": "same"},
+        {"case": "tab", "status": "same"},
+        {"case": "newline", "status": "same"},
+        {"case": "symbols", "status": "same"},
+        {"case": "markup", "status": "same"},
+        {"case": "accented", "status": "same"},
+        {"case": "cjk", "status": "same"},
+        {"case": "digits", "status": "same"},
+        {"case": "zero_string", "status": "same"},
+        {"case": "empty", "status": "same"},
+        {"case": "null", "status": "same"},
+        {"case": "false", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "int", "value": 0}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "0"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "int_zero",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "int", "value": 12}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "12"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "int",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "empty_array", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "array", "value": ["a b", "c.d"]}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "array", "value": ["a_b", "c_d"]}
+            },
+            "warm": {"same": true}
+          },
+          "case": "array_of_strings",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "invalid_utf8", "status": "same"},
+        {"case": "oversized", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {"by_ref": false, "name": "string", "optional": false, "type": "mixed", "variadic": false}
+        ],
+        "candidate": [
+          {"by_ref": false, "name": "string", "optional": false, "type": null, "variadic": false}
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "clean_up_path": {
+      "cases": [
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "C:/a/b"}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "C:\\a\\b"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "win32_forward",
+          "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "unix_forward", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "C:/a/b"}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "C:\\a\\b"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "win32_backslash",
+          "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "unix_backslash", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "a/b/c"}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "a\\b\\c"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "win32_mixed",
+          "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "unix_mixed", "status": "same"},
+        {"case": "win32_none", "status": "same"},
+        {"case": "unix_none", "status": "same"},
+        {"case": "win32_empty", "status": "same"},
+        {"case": "unix_empty", "status": "same"},
+        {"case": "other_os_cygwin_on", "status": "same"},
+        {"case": "other_os_storage_location_set", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "a/b/c"}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "a\\b/c"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "other_os_storage_location_zero",
+          "note": "the string \"0\" is falsy. The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "a/b/c"}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "a\\b/c"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "other_os_neither",
+          "note": "returned untouched. The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "a/b/c"}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "a\\b/c"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "other_os_cygwin_other_value",
+          "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "a/b/c"}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "a\\b/c"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "os_null",
+          "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "null", "value": null}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [
+                {
+                  "count": 1,
+                  "file": "lib/functions.php",
+                  "message": "str_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated",
+                  "severity": "E_DEPRECATED",
+                  "suppressed": false
+                }
+              ],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": ""}
+            },
+            "warm": {"same": true}
+          },
+          "case": "win32_null_path",
+          "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "null", "value": null}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [
+                {
+                  "count": 1,
+                  "file": "lib/functions.php",
+                  "message": "str_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated",
+                  "severity": "E_DEPRECATED",
+                  "suppressed": false
+                }
+              ],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": ""}
+            },
+            "warm": {"same": true}
+          },
+          "case": "unix_null_path",
+          "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "win32_int_path", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "array", "value": ["a/b", "c/d"]}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "array", "value": ["a\\b", "c\\d"]}
+            },
+            "warm": {"same": true}
+          },
+          "case": "win32_array_path",
+          "note": "str_replace maps over an array. The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "é/日本"}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "é\\日本"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "win32_multibyte",
+          "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "unix_invalid_utf8", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {
+                "type": "string",
+                "value": {
+                  "$": "long",
+                  "bytes": 100000,
+                  "head_hex": "612f612f612f612f612f612f612f612f612f612f612f612f612f612f612f612f",
+                  "sha256": "e2cf6ad3463ccfa9165bab1c3bb4ba03ce816290cc615c1c15e8cbd438061aef"
+                }
+              }
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {
+                "type": "string",
+                "value": {
+                  "$": "long",
+                  "bytes": 100000,
+                  "head_hex": "615c615c615c615c615c615c615c615c615c615c615c615c615c615c615c615c",
+                  "sha256": "dc825d6986afb53eedd434af9329c39eaa339f54fdefd3a3d42e742a79237563"
+                }
+              }
+            },
+            "warm": {"same": true}
+          },
+          "case": "win32_oversized",
+          "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "unix_unc_prefix", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {"by_ref": false, "name": "path", "optional": false, "type": "mixed", "variadic": false}
+        ],
+        "candidate": [
+          {"by_ref": false, "name": "path", "optional": false, "type": null, "variadic": false}
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "is_base64_encoded": {
+      "cases": [
+        {"case": "valid", "status": "same"},
+        {"case": "valid_no_padding_needed", "status": "same"},
+        {"case": "valid_double_padding", "status": "same"},
+        {"case": "missing_padding", "status": "same"},
+        {"case": "single_padding_short", "status": "same"},
+        {"case": "three_padding", "status": "same"},
+        {"case": "only_padding", "status": "same"},
+        {"case": "non_canonical_trailing_bits", "status": "same"},
+        {"case": "embedded_newline", "status": "same"},
+        {"case": "trailing_newline", "status": "same"},
+        {"case": "url_safe_alphabet", "status": "same"},
+        {"case": "invalid_characters", "status": "same"},
+        {"case": "space", "status": "same"},
+        {"case": "empty", "status": "same"},
+        {"case": "single_character", "status": "same"},
+        {"case": "zero_string", "status": "same"},
+        {"case": "all_a", "status": "same"},
+        {"case": "plus_slash", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "is_base64_encoded(): Argument #1 ($data) must be of type string, null given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [
+                {
+                  "count": 1,
+                  "file": "lib/functions.php",
+                  "message": "preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated",
+                  "severity": "E_DEPRECATED",
+                  "suppressed": false
+                },
+                {
+                  "count": 1,
+                  "file": "lib/functions.php",
+                  "message": "base64_decode(): Passing null to parameter #1 ($string) of type string is deprecated",
+                  "severity": "E_DEPRECATED",
+                  "suppressed": false
+                }
+              ],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": true}
+            },
+            "warm": {"same": true}
+          },
+          "case": "null",
+          "note": "preg_match(null) deprecation; empty subject is accepted",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "int_digits", "status": "same"},
+        {"case": "true", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "is_base64_encoded(): Argument #1 ($data) must be of type string, array given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "preg_match(): Argument #2 ($subject) must be of type string, array given"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "case": "array",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "multibyte", "status": "same"},
+        {"case": "oversized_valid", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {"by_ref": false, "name": "data", "optional": false, "type": "string", "variadic": false}
+        ],
+        "candidate": [
+          {"by_ref": false, "name": "data", "optional": false, "type": null, "variadic": false}
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "is_hex_string": {
+      "cases": [
+        {"case": "hex_dash_prefix", "status": "same"},
+        {"case": "uppercase_prefix", "status": "same"},
+        {"case": "lowercase_prefix", "status": "same"},
+        {"case": "prefix_then_space", "status": "same"},
+        {"case": "single_pair", "status": "same"},
+        {"case": "empty_after_prefix", "status": "same"},
+        {"case": "short_part", "status": "same"},
+        {"case": "non_hex_part", "status": "same"},
+        {"case": "double_space", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"result": {"type": "string", "value": "00 01"}},
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": true}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"result": {"type": "string", "value": "Hex-STRING: 00 01"}},
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": false}
+            },
+            "warm": {"same": true}
+          },
+          "case": "hex_string_prefix_is_dead_branch",
+          "note": "the hex- test matches first, so the Hex-STRING: branch is unreachable and \"String:\" is treated as a part",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "colon_form", "status": "same"},
+        {"case": "prefix_not_at_start", "status": "same"},
+        {"case": "repeated_prefix_all_removed", "status": "same"},
+        {"case": "trailing_newline", "status": "same"},
+        {"case": "no_prefix", "status": "same"},
+        {"case": "empty", "status": "same"},
+        {"case": "zero_string", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"result": {"type": "null", "value": null}},
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "is_hex_string(): Argument #1 ($result) must be of type string, null given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"result": {"type": "null", "value": null}},
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": false}
+            },
+            "warm": {"same": true}
+          },
+          "case": "null",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"result": {"type": "string", "value": "0"}},
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": false}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"result": {"type": "int", "value": 0}},
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": false}
+            },
+            "warm": {"same": true}
+          },
+          "case": "int_zero",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"result": {"type": "string", "value": "5"}},
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": false}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"result": {"type": "int", "value": 5}},
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": false}
+            },
+            "warm": {"same": true}
+          },
+          "case": "int",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "by_ref": {"result": {"type": "array", "value": ["Hex-00 01"]}},
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "is_hex_string(): Argument #1 ($result) must be of type string, array given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "by_ref": {"result": {"type": "array", "value": ["Hex-00 01"]}},
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "strtolower(): Argument #1 ($string) must be of type string, array given"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "case": "array",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "multibyte", "status": "same"},
+        {"case": "oversized", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {"by_ref": true, "name": "result", "optional": false, "type": "string", "variadic": false}
+        ],
+        "candidate": [
+          {"by_ref": true, "name": "result", "optional": false, "type": null, "variadic": false}
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "is_hexadecimal": {
+      "cases": [
+        {"case": "colon_separated", "status": "same"},
+        {"case": "dash_separated", "status": "same"},
+        {"case": "space_separated", "status": "same"},
+        {"case": "mixed_separators", "status": "same"},
+        {"case": "single_pair", "status": "same"},
+        {"case": "no_separator", "status": "same"},
+        {"case": "short_part", "status": "same"},
+        {"case": "long_part", "status": "same"},
+        {"case": "trailing_separator", "status": "same"},
+        {"case": "double_separator", "status": "same"},
+        {"case": "non_hex", "status": "same"},
+        {"case": "mixed_case", "status": "same"},
+        {"case": "surrounding_whitespace", "status": "same"},
+        {"case": "empty", "status": "same"},
+        {"case": "only_space", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "is_hexadecimal(): Argument #1 ($result) must be of type string, null given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [
+                {
+                  "count": 1,
+                  "file": "lib/functions.php",
+                  "message": "trim(): Passing null to parameter #1 ($string) of type string is deprecated",
+                  "severity": "E_DEPRECATED",
+                  "suppressed": false
+                }
+              ],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": false}
+            },
+            "warm": {"same": true}
+          },
+          "case": "null",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "int_two_digits", "status": "same"},
+        {"case": "int_zero", "status": "same"},
+        {"case": "true", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "is_hexadecimal(): Argument #1 ($result) must be of type string, array given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "trim(): Argument #1 ($string) must be of type string, array given"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "case": "array",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "tab_separator", "status": "same"},
+        {"case": "multibyte", "status": "same"},
+        {"case": "full_mac", "status": "same"},
+        {"case": "oversized_trailing_separator", "status": "same"},
+        {"case": "oversized_valid", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {
+            "by_ref": false,
+            "name": "result",
+            "optional": false,
+            "type": "string",
+            "variadic": false
+          }
+        ],
+        "candidate": [
+          {"by_ref": false, "name": "result", "optional": false, "type": null, "variadic": false}
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "is_ipaddress": {
+      "cases": [
+        {"case": "ipv4", "status": "same"},
+        {"case": "ipv4_max", "status": "same"},
+        {"case": "ipv4_zero", "status": "same"},
+        {"case": "ipv4_octet_over", "status": "same"},
+        {"case": "ipv4_three_octets", "status": "same"},
+        {"case": "ipv4_leading_zero", "status": "same"},
+        {"case": "ipv4_five_octets", "status": "same"},
+        {"case": "ipv4_cidr", "status": "same"},
+        {"case": "ipv4_port", "status": "same"},
+        {"case": "ipv4_leading_space", "status": "same"},
+        {"case": "ipv4_trailing_newline", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": false}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": true}
+            },
+            "warm": {"same": true}
+          },
+          "case": "ipv4_with_scope",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "ipv4_decimal_form", "status": "same"},
+        {"case": "ipv6_loopback", "status": "same"},
+        {"case": "ipv6_unspecified", "status": "same"},
+        {"case": "ipv6_full", "status": "same"},
+        {"case": "ipv6_compressed", "status": "same"},
+        {"case": "ipv6_uppercase", "status": "same"},
+        {"case": "ipv6_invalid_hex", "status": "same"},
+        {"case": "ipv6_two_compressions", "status": "same"},
+        {"case": "ipv6_too_many_groups", "status": "same"},
+        {"case": "ipv6_mapped_v4", "status": "same"},
+        {"case": "ipv6_brackets", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": false}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": true}
+            },
+            "warm": {"same": true}
+          },
+          "case": "ipv6_scope",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": false}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": true}
+            },
+            "warm": {"same": true}
+          },
+          "case": "ipv6_empty_scope",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "ipv6_scope_only", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": false}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": true}
+            },
+            "warm": {"same": true}
+          },
+          "case": "ipv6_double_scope",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": false}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": true}
+            },
+            "warm": {"same": true}
+          },
+          "case": "ipv6_scope_numeric",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "empty", "status": "same"},
+        {"case": "hostname", "status": "same"},
+        {"case": "fqdn", "status": "same"},
+        {"case": "multibyte", "status": "same"},
+        {"case": "nul_byte", "status": "same"},
+        {"case": "invalid_utf8", "status": "same"},
+        {"case": "oversized", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "is_ipaddress(): Argument #1 ($ip_address) must be of type string, null given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [
+                {
+                  "count": 1,
+                  "file": "lib/functions.php",
+                  "message": "str_contains(): Passing null to parameter #1 ($haystack) of type string is deprecated",
+                  "severity": "E_DEPRECATED",
+                  "suppressed": false
+                }
+              ],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": false}
+            },
+            "warm": {"same": true}
+          },
+          "case": "null",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "int", "status": "same"},
+        {"case": "true", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "is_ipaddress(): Argument #1 ($ip_address) must be of type string, array given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "str_contains(): Argument #1 ($haystack) must be of type string, array given"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "case": "array",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "default_argument", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {
+            "by_ref": false,
+            "default": "",
+            "name": "ip_address",
+            "optional": true,
+            "type": "string",
+            "variadic": false
+          }
+        ],
+        "candidate": [
+          {
+            "by_ref": false,
+            "default": "",
+            "name": "ip_address",
+            "optional": true,
+            "type": null,
+            "variadic": false
+          }
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "is_mac_address": {
+      "cases": [
+        {"case": "colon_lower", "status": "same"},
+        {"case": "colon_upper", "status": "same"},
+        {"case": "dash", "status": "same"},
+        {"case": "dotted_groups", "status": "same"},
+        {"case": "mixed_separators", "status": "same"},
+        {"case": "broadcast", "status": "same"},
+        {"case": "single_digit_groups", "status": "same"},
+        {"case": "five_groups", "status": "same"},
+        {"case": "seven_groups", "status": "same"},
+        {"case": "non_hex", "status": "same"},
+        {"case": "no_separator", "status": "same"},
+        {"case": "empty", "status": "same"},
+        {"case": "leading_space", "status": "same"},
+        {"case": "trailing_newline", "status": "same"},
+        {"case": "multibyte", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "is_mac_address(): Argument #1 ($result) must be of type string, null given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": false}
+            },
+            "warm": {"same": true}
+          },
+          "case": "null",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "int", "status": "same"},
+        {"case": "true", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "is_mac_address(): Argument #1 ($result) must be of type string, array given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": false}
+            },
+            "warm": {"same": true}
+          },
+          "case": "array",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "oversized", "status": "same"},
+        {"case": "missing_argument", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {
+            "by_ref": false,
+            "name": "result",
+            "optional": false,
+            "type": "string",
+            "variadic": false
+          }
+        ],
+        "candidate": [
+          {"by_ref": false, "name": "result", "optional": false, "type": null, "variadic": false}
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "is_urlencoded": {
+      "cases": [
+        {"case": "percent_escape", "status": "same"},
+        {"case": "plus_as_space", "status": "same"},
+        {"case": "plain", "status": "same"},
+        {"case": "empty", "status": "same"},
+        {"case": "lone_percent", "status": "same"},
+        {"case": "bad_hex", "status": "same"},
+        {"case": "truncated_escape", "status": "same"},
+        {"case": "percent_nul", "status": "same"},
+        {"case": "lone_plus", "status": "same"},
+        {"case": "plus_numeric_quirk", "status": "same"},
+        {"case": "plus_numeric_exponent_quirk", "status": "same"},
+        {"case": "plus_zero_quirk", "status": "same"},
+        {"case": "trailing_plus_numeric", "status": "same"},
+        {"case": "escaped_digit", "status": "same"},
+        {"case": "multibyte_escape", "status": "same"},
+        {"case": "multibyte_literal", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "is_urlencoded(): Argument #1 ($string) must be of type string, null given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [
+                {
+                  "count": 1,
+                  "file": "lib/functions.php",
+                  "message": "urldecode(): Passing null to parameter #1 ($string) of type string is deprecated",
+                  "severity": "E_DEPRECATED",
+                  "suppressed": false
+                }
+              ],
+              "log": [],
+              "output": "",
+              "returned": {"type": "bool", "value": false}
+            },
+            "warm": {"same": true}
+          },
+          "case": "null",
+          "note": "urldecode(null) deprecation; null != \"\" is false",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "int", "status": "same"},
+        {"case": "true", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "is_urlencoded(): Argument #1 ($string) must be of type string, array given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "urldecode(): Argument #1 ($string) must be of type string, array given"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "case": "array",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "invalid_utf8", "status": "same"},
+        {"case": "oversized", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {
+            "by_ref": false,
+            "name": "string",
+            "optional": false,
+            "type": "string",
+            "variadic": false
+          }
+        ],
+        "candidate": [
+          {"by_ref": false, "name": "string", "optional": false, "type": null, "variadic": false}
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "padleft": {
+      "cases": [
+        {"case": "no_pad_needed", "status": "same"},
+        {"case": "value_longer_than_min", "status": "same"},
+        {"case": "empty_pad_default", "status": "same"},
+        {"case": "no_arguments", "status": "same"},
+        {"case": "only_pad", "status": "same"},
+        {"case": "int_value_long_enough", "status": "same"},
+        {"case": "zero_min", "status": "same"},
+        {"case": "negative_min", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "padleft(): Argument #3 ($min) must be of type int, null given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "5"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "null_min",
+          "note": "strlen < null is false",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "padleft(): Argument #2 ($value) must be of type string, array given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [
+                {
+                  "count": null,
+                  "file": "lib/functions.php",
+                  "message": "Array to string conversion",
+                  "severity": "E_WARNING",
+                  "suppressed": false
+                }
+              ],
+              "exception": {
+                "class": "BehaviorTimeout",
+                "code": 0,
+                "message": "no return within 2s"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "case": "array_value_to_string",
+          "note": "Array to string conversion gives \"Array\", five characters, so padding is needed and the loop does not end",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "padleft(): Argument #2 ($value) must be of type string, array given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [
+                {
+                  "count": 1,
+                  "file": "lib/functions.php",
+                  "message": "Array to string conversion",
+                  "severity": "E_WARNING",
+                  "suppressed": false
+                }
+              ],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "Array"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "value_array_no_pad",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "numeric_pad_equal_loose", "status": "same"},
+        {"case": "numeric_pad_equal_loose_short", "status": "same"},
+        {"case": "numeric_pad_and_value", "status": "same"},
+        {"case": "numeric_pad_decimal_value", "status": "same"},
+        {"case": "pad_needed_letter", "status": "same"},
+        {"case": "space_pad_numeric_value", "status": "same"},
+        {"case": "pad_needed_empty_value", "status": "same"},
+        {"case": "pad_needed_multichar", "status": "same"},
+        {"case": "int_zero_pad", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "padleft(): Argument #1 ($pad) must be of type string, array given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [
+                {
+                  "count": null,
+                  "file": "lib/functions.php",
+                  "message": "Array to string conversion",
+                  "severity": "E_WARNING",
+                  "suppressed": false
+                }
+              ],
+              "exception": {
+                "class": "BehaviorTimeout",
+                "code": 0,
+                "message": "no return within 2s"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "case": "pad_array",
+          "note": "array pad becomes \"Array\", \"Array5\" != \"5\": warns on every pass and never ends",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "multibyte_value_counts_bytes", "status": "same"},
+        {"case": "multibyte_pad", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {
+            "by_ref": false,
+            "default": "",
+            "name": "pad",
+            "optional": true,
+            "type": "string",
+            "variadic": false
+          },
+          {
+            "by_ref": false,
+            "default": "",
+            "name": "value",
+            "optional": true,
+            "type": "string",
+            "variadic": false
+          },
+          {
+            "by_ref": false,
+            "default": 2,
+            "name": "min",
+            "optional": true,
+            "type": "int",
+            "variadic": false
+          }
+        ],
+        "candidate": [
+          {
+            "by_ref": false,
+            "default": "",
+            "name": "pad",
+            "optional": true,
+            "type": null,
+            "variadic": false
+          },
+          {
+            "by_ref": false,
+            "default": "",
+            "name": "value",
+            "optional": true,
+            "type": null,
+            "variadic": false
+          },
+          {
+            "by_ref": false,
+            "default": 2,
+            "name": "min",
+            "optional": true,
+            "type": null,
+            "variadic": false
+          }
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "read_config_option": {
+      "cases": [
+        {"case": "database_value_cold", "status": "same"},
+        {"case": "database_value_empty_string", "status": "same"},
+        {"case": "database_value_zero_string", "status": "same"},
+        {"case": "default_fallback_when_row_absent", "status": "same"},
+        {"case": "unknown_key_no_default", "status": "same"},
+        {"case": "cache_serves_stale_value", "status": "same"},
+        {"case": "force_reads_through_cache", "status": "same"},
+        {"case": "force_truthy_string", "status": "same"},
+        {"case": "set_config_option_then_read", "status": "same"},
+        {"case": "set_config_option_overrides_cached_default", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "read_config_option(): Argument #1 ($config_name) must be of type string, null given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "null", "value": null}
+            },
+            "warm": {"same": true}
+          },
+          "case": "null_name",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "empty_name", "status": "same"},
+        {"case": "int_name", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "read_config_option(): Argument #1 ($config_name) must be of type string, array given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "Cannot access offset of type array in isset or empty"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "case": "array_name",
+          "note": "isset() on an array offset",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "long_name", "status": "same"},
+        {"case": "missing_argument", "status": "same"},
+        {"case": "web_reads_table_and_fills_session", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "from-table"}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "from-session"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "web_session_value_wins_over_table",
+          "note": "The ambient state sets $config[is_web]; a target that decides from a constant does not see it.",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "web_force_bypasses_session", "status": "same"},
+        {"case": "web_session_cache_is_not_an_array", "status": "same"},
+        {"case": "web_session_serves_stale_value", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {
+            "by_ref": false,
+            "name": "config_name",
+            "optional": false,
+            "type": "string",
+            "variadic": false
+          },
+          {
+            "by_ref": false,
+            "default": false,
+            "name": "force",
+            "optional": true,
+            "type": "bool",
+            "variadic": false
+          }
+        ],
+        "candidate": [
+          {
+            "by_ref": false,
+            "name": "config_name",
+            "optional": false,
+            "type": null,
+            "variadic": false
+          },
+          {
+            "by_ref": false,
+            "default": false,
+            "name": "force",
+            "optional": true,
+            "type": null,
+            "variadic": false
+          }
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "stri_replace": {
+      "cases": [
+        {"case": "basic", "status": "same"},
+        {"case": "case_insensitive_find", "status": "same"},
+        {"case": "not_found", "status": "same"},
+        {"case": "replace_with_empty", "status": "same"},
+        {"case": "empty_subject", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "abc"}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "ValueError",
+                "code": 0,
+                "message": "explode(): Argument #1 ($separator) must not be empty"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "case": "empty_find",
+          "note": "explode() refuses an empty separator",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "find_longer_than_subject", "status": "same"},
+        {"case": "whole_subject", "status": "same"},
+        {"case": "overlapping_matches", "status": "same"},
+        {"case": "replacement_contains_find", "status": "same"},
+        {"case": "regex_metacharacters_are_literal", "status": "same"},
+        {"case": "preserves_subject_case_around_match", "status": "same"},
+        {"case": "multibyte_same_case", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "cafe"}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "café"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "multibyte_case_mismatch",
+          "note": "only ASCII is folded",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "stri_replace(): Argument #1 ($find) must be of type string, null given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [
+                {
+                  "count": 1,
+                  "file": "lib/functions.php",
+                  "message": "strtolower(): Passing null to parameter #1 ($string) of type string is deprecated",
+                  "severity": "E_DEPRECATED",
+                  "suppressed": false
+                }
+              ],
+              "exception": {
+                "class": "ValueError",
+                "code": 0,
+                "message": "explode(): Argument #1 ($separator) must not be empty"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "case": "find_null",
+          "note": "strtolower(null) deprecation, then explode() rejects the empty separator",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "stri_replace(): Argument #2 ($replace) must be of type string, null given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [
+                {
+                  "count": 1,
+                  "file": "lib/functions.php",
+                  "message": "join(): Passing null to parameter #1 ($separator) of type array|string is deprecated",
+                  "severity": "E_DEPRECATED",
+                  "suppressed": false
+                }
+              ],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "bnn"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "replace_null",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "stri_replace(): Argument #3 ($string) must be of type string, null given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [
+                {
+                  "count": 1,
+                  "file": "lib/functions.php",
+                  "message": "strtolower(): Passing null to parameter #1 ($string) of type string is deprecated",
+                  "severity": "E_DEPRECATED",
+                  "suppressed": false
+                },
+                {
+                  "count": 1,
+                  "file": "lib/functions.php",
+                  "message": "substr(): Passing null to parameter #1 ($string) of type string is deprecated",
+                  "severity": "E_DEPRECATED",
+                  "suppressed": false
+                }
+              ],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": ""}
+            },
+            "warm": {"same": true}
+          },
+          "case": "subject_null",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "find_int", "status": "same"},
+        {"case": "replace_int", "status": "same"},
+        {"case": "subject_int", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "stri_replace(): Argument #1 ($find) must be of type string, array given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "strtolower(): Argument #1 ($string) must be of type string, array given"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "case": "find_array",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "stri_replace(): Argument #3 ($string) must be of type string, array given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "strtolower(): Argument #1 ($string) must be of type string, array given"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "case": "subject_array",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "newline_find", "status": "same"},
+        {"case": "invalid_utf8_subject", "status": "same"},
+        {"case": "oversized", "status": "same"},
+        {"case": "missing_arguments", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {"by_ref": false, "name": "find", "optional": false, "type": "string", "variadic": false},
+          {
+            "by_ref": false,
+            "name": "replace",
+            "optional": false,
+            "type": "string",
+            "variadic": false
+          },
+          {
+            "by_ref": false,
+            "name": "string",
+            "optional": false,
+            "type": "string",
+            "variadic": false
+          }
+        ],
+        "candidate": [
+          {"by_ref": false, "name": "find", "optional": false, "type": null, "variadic": false},
+          {"by_ref": false, "name": "replace", "optional": false, "type": null, "variadic": false},
+          {"by_ref": false, "name": "string", "optional": false, "type": null, "variadic": false}
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "strip_alpha": {
+      "cases": [
+        {"case": "plain_integer", "status": "same"},
+        {"case": "with_unit", "status": "same"},
+        {"case": "negative", "status": "same"},
+        {"case": "explicit_plus", "status": "same"},
+        {"case": "thousands_separator", "status": "same"},
+        {"case": "trailing_sign", "status": "same"},
+        {"case": "double_sign", "status": "same"},
+        {"case": "two_dots", "status": "same"},
+        {"case": "lone_dot", "status": "same"},
+        {"case": "trailing_dot", "status": "same"},
+        {"case": "leading_dot", "status": "same"},
+        {"case": "exponent_letter_removed", "status": "same"},
+        {"case": "letters_only", "status": "same"},
+        {"case": "empty", "status": "same"},
+        {"case": "zero", "status": "same"},
+        {"case": "surrounding_text", "status": "same"},
+        {"case": "whitespace_inside", "status": "same"},
+        {"case": "null_input", "status": "same"},
+        {"case": "int_input", "status": "same"},
+        {"case": "float_input", "status": "same"},
+        {"case": "negative_float_input", "status": "same"},
+        {"case": "true_input", "status": "same"},
+        {"case": "array_input", "status": "same"},
+        {"case": "arabic_indic_digits", "status": "same"},
+        {"case": "invalid_utf8", "status": "same"},
+        {"case": "oversized_number", "status": "same"},
+        {"case": "oversized_text", "status": "same"},
+        {"case": "nul_byte", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {"by_ref": false, "name": "string", "optional": false, "type": "mixed", "variadic": false}
+        ],
+        "candidate": [
+          {"by_ref": false, "name": "string", "optional": false, "type": null, "variadic": false}
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "strip_domain": {
+      "cases": [
+        {"case": "ipv4_with_option_on", "status": "same"},
+        {"case": "ipv6_with_option_on", "status": "same"},
+        {"case": "ipv6_scope_with_option_on", "status": "same"},
+        {"case": "fqdn_option_off", "status": "same"},
+        {"case": "fqdn_option_on", "status": "same"},
+        {"case": "option_unset", "status": "same"},
+        {"case": "option_uppercase_on", "status": "same"},
+        {"case": "option_numeric_one", "status": "same"},
+        {"case": "no_dot", "status": "same"},
+        {"case": "leading_dot", "status": "same"},
+        {"case": "trailing_dot", "status": "same"},
+        {"case": "empty", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "strip_domain(): Argument #1 ($hostname) must be of type string, null given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [
+                {
+                  "count": 1,
+                  "file": "lib/functions.php",
+                  "message": "str_contains(): Passing null to parameter #1 ($haystack) of type string is deprecated",
+                  "severity": "E_DEPRECATED",
+                  "suppressed": false
+                },
+                {
+                  "count": 1,
+                  "file": "lib/functions.php",
+                  "message": "explode(): Passing null to parameter #2 ($string) of type string is deprecated",
+                  "severity": "E_DEPRECATED",
+                  "suppressed": false
+                }
+              ],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": ""}
+            },
+            "warm": {"same": true}
+          },
+          "case": "null",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "int", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "strip_domain(): Argument #1 ($hostname) must be of type string, array given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "str_contains(): Argument #1 ($haystack) must be of type string, array given"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "case": "array",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "multibyte", "status": "same"},
+        {"case": "looks_like_ipv4_but_invalid", "status": "same"},
+        {"case": "numeric_dotted_label", "status": "same"},
+        {"case": "uppercase_host", "status": "same"},
+        {"case": "space_inside", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {
+            "by_ref": false,
+            "name": "hostname",
+            "optional": false,
+            "type": "string",
+            "variadic": false
+          }
+        ],
+        "candidate": [
+          {"by_ref": false, "name": "hostname", "optional": false, "type": null, "variadic": false}
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    },
+    "title_trim": {
+      "cases": [
+        {"case": "ascii_short", "status": "same"},
+        {"case": "ascii_exact_length", "status": "same"},
+        {"case": "ascii_over_by_one", "status": "same"},
+        {"case": "empty_text", "status": "same"},
+        {"case": "zero_max", "status": "same"},
+        {"case": "negative_max", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "title_trim(): Argument #1 ($text) must be of type string, null given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [
+                {
+                  "count": 1,
+                  "file": "lib/functions.php",
+                  "message": "strlen(): Passing null to parameter #1 ($string) of type string is deprecated",
+                  "severity": "E_DEPRECATED",
+                  "suppressed": false
+                }
+              ],
+              "log": [],
+              "output": "",
+              "returned": {"type": "null", "value": null}
+            },
+            "warm": {"same": true}
+          },
+          "case": "null_text",
+          "note": "strlen(null) deprecation, returns null unchanged",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "title_trim(): Argument #1 ($text) must be of type string, null given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [
+                {
+                  "count": 1,
+                  "file": "lib/functions.php",
+                  "message": "strlen(): Passing null to parameter #1 ($string) of type string is deprecated",
+                  "severity": "E_DEPRECATED",
+                  "suppressed": false
+                },
+                {
+                  "count": 1,
+                  "file": "lib/functions.php",
+                  "message": "mb_substr(): Passing null to parameter #1 ($string) of type string is deprecated",
+                  "severity": "E_DEPRECATED",
+                  "suppressed": false
+                }
+              ],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "..."}
+            },
+            "warm": {"same": true}
+          },
+          "case": "null_text_negative_max",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "title_trim(): Argument #1 ($text) must be of type string, array given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "strlen(): Argument #1 ($string) must be of type string, array given"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "case": "array_text",
+          "note": "strlen() rejects an array",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "int_text_truncated", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "12"}
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "int", "value": 12}
+            },
+            "warm": {"same": true}
+          },
+          "case": "int_text_not_truncated",
+          "note": "int returned as int when short enough",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "bool_text", "status": "same"},
+        {"case": "float_text", "status": "same"},
+        {"case": "multibyte_cut_by_characters", "status": "same"},
+        {"case": "multibyte_bytes_exceed_but_chars_do_not", "status": "same"},
+        {"case": "multibyte_chars_equal_max", "status": "same"},
+        {"case": "multibyte_exact_bytes", "status": "same"},
+        {"case": "cjk", "status": "same"},
+        {"case": "invalid_utf8", "status": "same"},
+        {"case": "max_numeric_string", "status": "same"},
+        {"case": "max_float_fraction", "status": "same"},
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "title_trim(): Argument #2 ($max_length) must be of type int, null given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "abc..."}
+            },
+            "warm": {"same": true}
+          },
+          "case": "max_null",
+          "note": "null max compares as 0 and mb_substr treats a null length as \"to the end\"",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "title_trim(): Argument #2 ($max_length) must be of type int, string given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "abc"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "max_non_numeric_string",
+          "note": "int against non-numeric string compares as strings",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "title_trim(): Argument #2 ($max_length) must be of type int, string given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "mb_substr(): Argument #3 ($length) must be of type ?int, string given"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "case": "max_empty_string",
+          "note": "PHP 8 compares 3 > \"\" as strings",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {
+          "baseline": {
+            "result": {
+              "diagnostics": [],
+              "exception": {
+                "class": "TypeError",
+                "code": 0,
+                "message": "title_trim(): Argument #2 ($max_length) must be of type int, array given, called in <caller>"
+              },
+              "log": [],
+              "output": ""
+            },
+            "warm": {"same": true}
+          },
+          "candidate": {
+            "result": {
+              "diagnostics": [],
+              "log": [],
+              "output": "",
+              "returned": {"type": "string", "value": "abc"}
+            },
+            "warm": {"same": true}
+          },
+          "case": "max_array",
+          "note": "int > array is always false",
+          "review": "unreviewed",
+          "status": "differs"
+        },
+        {"case": "oversized", "status": "same"},
+        {"case": "missing_argument", "status": "same"}
+      ],
+      "signature": {
+        "baseline": [
+          {"by_ref": false, "name": "text", "optional": false, "type": "string", "variadic": false},
+          {
+            "by_ref": false,
+            "name": "max_length",
+            "optional": false,
+            "type": "int",
+            "variadic": false
+          }
+        ],
+        "candidate": [
+          {"by_ref": false, "name": "text", "optional": false, "type": null, "variadic": false},
+          {
+            "by_ref": false,
+            "name": "max_length",
+            "optional": false,
+            "type": null,
+            "variadic": false
+          }
+        ],
+        "review": "unreviewed",
+        "status": "differs"
+      }
+    }
+  },
+  "only_in_baseline": [],
+  "only_in_candidate": [],
+  "totals": {"differs": 99, "functions": 27, "same": 529}
+}

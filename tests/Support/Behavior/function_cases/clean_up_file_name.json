@@ -1,0 +1,31 @@
+{
+  "function": "clean_up_file_name",
+  "cases": [
+    {"id": "plain", "args": ["abc"]},
+    {"id": "spaces", "args": ["my name here"]},
+    {"id": "dots", "args": ["a.b.c"]},
+    {"id": "dot_and_space_run", "args": ["a . b"]},
+    {"id": "leading_trailing_space", "args": [" name "]},
+    {"id": "hyphen", "args": ["a-b"], "note": "hyphen is kept by the file name variant"},
+    {"id": "hyphen_between_spaces", "args": ["a - b"]},
+    {"id": "underscore_run", "args": ["a___b"]},
+    {"id": "only_underscores", "args": ["___"]},
+    {"id": "tab", "args": ["tab\tname"]},
+    {"id": "newline", "args": ["line\nname"]},
+    {"id": "symbols", "args": ["a/b\\c:d*e?f\"g<h>i|j"]},
+    {"id": "markup", "args": ["<script>alert(1)</script>"]},
+    {"id": "accented", "args": ["café"]},
+    {"id": "cjk", "args": ["日本語"]},
+    {"id": "digits", "args": ["0123"]},
+    {"id": "zero_string", "args": ["0"]},
+    {"id": "empty", "args": [""]},
+    {"id": "null", "args": [null]},
+    {"id": "false", "args": [false]},
+    {"id": "int_zero", "args": [0]},
+    {"id": "int", "args": [12]},
+    {"id": "empty_array", "args": [[]]},
+    {"id": "array_of_strings", "args": [["a b", "c.d"]]},
+    {"id": "invalid_utf8", "args": [{"$": "bytes", "hex": "61ff62"}]},
+    {"id": "oversized", "args": [{"$": "repeat", "unit": "a b.", "count": 20000}]}
+  ]
+}

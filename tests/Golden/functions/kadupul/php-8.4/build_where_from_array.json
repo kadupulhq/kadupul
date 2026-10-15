@@ -1,0 +1,340 @@
+{
+  "cases": [
+    {
+      "args": [[], []],
+      "id": "empty_array",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": []}},
+        "returned": {"type": "string", "value": "1=1"}
+      }
+    },
+    {
+      "args": [null, []],
+      "id": "null_filters",
+      "note": "empty() is true for null",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": []}},
+        "returned": {"type": "string", "value": "1=1"}
+      }
+    },
+    {
+      "args": [0, []],
+      "id": "zero_filters",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": []}},
+        "returned": {"type": "string", "value": "1=1"}
+      }
+    },
+    {
+      "args": ["0", []],
+      "id": "zero_string_filters",
+      "note": "empty(\"0\") is true",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": []}},
+        "returned": {"type": "string", "value": "1=1"}
+      }
+    },
+    {
+      "args": [false, []],
+      "id": "false_filters",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": []}},
+        "returned": {"type": "string", "value": "1=1"}
+      }
+    },
+    {
+      "args": ["", []],
+      "id": "empty_string_filters",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": []}},
+        "returned": {"type": "string", "value": "1=1"}
+      }
+    },
+    {
+      "args": [{"$": "array", "pairs": [["id", 5]]}, []],
+      "id": "single",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": [5]}},
+        "returned": {"type": "string", "value": "`id` = ?"}
+      }
+    },
+    {
+      "args": [{"$": "array", "pairs": [["host_id", 1], ["status", 2], ["name", "x"]]}, []],
+      "id": "multiple_preserves_order",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": [1, 2, "x"]}},
+        "returned": {"type": "string", "value": "`host_id` = ? AND `status` = ? AND `name` = ?"}
+      }
+    },
+    {
+      "args": [
+        {
+          "$": "array",
+          "pairs": [["a", null], ["b", ""], ["c", "0"], ["d", 1.5], ["e", true], ["f", ["x"]]]
+        },
+        []
+      ],
+      "id": "value_types_kept",
+      "note": "values go into params untouched",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": [null, "", "0", 1.5, true, ["x"]]}},
+        "returned": {
+          "type": "string",
+          "value": "`a` = ? AND `b` = ? AND `c` = ? AND `d` = ? AND `e` = ? AND `f` = ?"
+        }
+      }
+    },
+    {
+      "args": [{"$": "array", "pairs": [["id", 5]]}, ["keep"]],
+      "id": "params_already_populated",
+      "note": "appends to the caller array",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": ["keep", 5]}},
+        "returned": {"type": "string", "value": "`id` = ?"}
+      }
+    },
+    {
+      "args": [{"$": "array", "pairs": [["id", 5]]}, null],
+      "id": "params_null",
+      "note": "by-reference null becomes an array",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": [5]}},
+        "returned": {"type": "string", "value": "`id` = ?"}
+      }
+    },
+    {
+      "args": [{"$": "array", "pairs": [["id", 5]]}, "abc"],
+      "id": "params_string",
+      "note": "[] on a string is an Error",
+      "result": {
+        "by_ref": {"params": {"type": "string", "value": "abc"}},
+        "exception": {
+          "class": "Error",
+          "code": 0,
+          "message": "[] operator not supported for strings"
+        }
+      }
+    },
+    {
+      "args": [{"$": "array", "pairs": [["id; DROP TABLE x", 1]]}, []],
+      "id": "invalid_field_skipped",
+      "note": "logs a SECURITY line, then returns 1=0",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": []}},
+        "log": [
+          "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: id; DROP TABLE x"
+        ],
+        "returned": {"type": "string", "value": "1=0"}
+      }
+    },
+    {
+      "args": [{"$": "array", "pairs": [["id", 1], ["bad field", 2], ["name", 3]]}, []],
+      "id": "mixed_valid_invalid",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": [1, 3]}},
+        "log": [
+          "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: bad field"
+        ],
+        "returned": {"type": "string", "value": "`id` = ? AND `name` = ?"}
+      }
+    },
+    {
+      "args": [{"$": "array", "pairs": [["1a", 1]]}, []],
+      "id": "field_leading_digit",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": []}},
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: 1a"],
+        "returned": {"type": "string", "value": "1=0"}
+      }
+    },
+    {
+      "args": [{"$": "array", "pairs": [["a-b", 1]]}, []],
+      "id": "field_dash",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": []}},
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: a-b"],
+        "returned": {"type": "string", "value": "1=0"}
+      }
+    },
+    {
+      "args": [{"$": "array", "pairs": [["a`b", 1]]}, []],
+      "id": "field_backtick",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": []}},
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: a`b"],
+        "returned": {"type": "string", "value": "1=0"}
+      }
+    },
+    {
+      "args": [{"$": "array", "pairs": [["", 1]]}, []],
+      "id": "field_empty_name",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": []}},
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: "],
+        "returned": {"type": "string", "value": "1=0"}
+      }
+    },
+    {
+      "args": [{"$": "array", "pairs": [["_x", 1]]}, []],
+      "id": "field_underscore_start",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": [1]}},
+        "returned": {"type": "string", "value": "`_x` = ?"}
+      }
+    },
+    {
+      "args": [{"$": "array", "pairs": [["id\n", 1]]}, []],
+      "id": "field_trailing_newline",
+      "note": "the $ anchor accepts a trailing newline, so the name reaches the SQL fragment",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": [1]}},
+        "returned": {"type": "string", "value": "`id\n` = ?"}
+      }
+    },
+    {
+      "args": [{"$": "array", "pairs": [["id\n\n", 1]]}, []],
+      "id": "field_trailing_two_newlines",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": []}},
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: id "],
+        "returned": {"type": "string", "value": "1=0"}
+      }
+    },
+    {
+      "args": [{"$": "array", "pairs": [["i\nd", 1]]}, []],
+      "id": "field_embedded_newline",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": []}},
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: i d"],
+        "returned": {"type": "string", "value": "1=0"}
+      }
+    },
+    {
+      "args": [{"$": "array", "pairs": [["é", 1]]}, []],
+      "id": "field_unicode",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": []}},
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: é"],
+        "returned": {"type": "string", "value": "1=0"}
+      }
+    },
+    {
+      "args": [["a", "b"], []],
+      "id": "field_int_key",
+      "note": "a list has integer keys 0 and 1, which fail the pattern",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": []}},
+        "log": [
+          "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: 0",
+          "<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: 1"
+        ],
+        "returned": {"type": "string", "value": "1=0"}
+      }
+    },
+    {
+      "args": [{"$": "array", "pairs": [["123", 1]]}, []],
+      "id": "field_numeric_string_key",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": []}},
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: 123"],
+        "returned": {"type": "string", "value": "1=0"}
+      }
+    },
+    {
+      "args": [
+        {
+          "$": "array",
+          "pairs": [
+            [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              1
+            ]
+          ]
+        },
+        []
+      ],
+      "id": "field_long_valid",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": [1]}},
+        "returned": {
+          "type": "string",
+          "value": {
+            "$": "long",
+            "bytes": 5006,
+            "head_hex": "6061616161616161616161616161616161616161616161616161616161616161",
+            "sha256": "75a8292fbd208bb6bcfaa4618f7f0e91b3e5abd569bc56762160b9a8d25719ee"
+          }
+        }
+      }
+    },
+    {
+      "args": ["x", []],
+      "id": "filters_string",
+      "note": "foreach over a string warns; nothing is added",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": []}},
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "foreach() argument must be of type array|object, string given",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "string", "value": "1=0"}
+      }
+    },
+    {
+      "args": [5, []],
+      "id": "filters_int",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": []}},
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "foreach() argument must be of type array|object, int given",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "string", "value": "1=0"}
+      }
+    },
+    {
+      "args": [true, []],
+      "id": "filters_true",
+      "result": {
+        "by_ref": {"params": {"type": "array", "value": []}},
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "foreach() argument must be of type array|object, true given",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "string", "value": "1=0"}
+      }
+    },
+    {
+      "args": [{"$": "array", "pairs": [["id", 1]]}],
+      "id": "missing_params",
+      "note": "by-reference parameter has no default",
+      "result": {
+        "exception": {
+          "class": "ArgumentCountError",
+          "code": 0,
+          "message": "Too few arguments to function build_where_from_array(), 1 passed in <caller> and exactly 2 expected"
+        }
+      }
+    }
+  ],
+  "function": "build_where_from_array",
+  "signature": [
+    {"by_ref": false, "name": "filters", "optional": false, "type": null, "variadic": false},
+    {"by_ref": true, "name": "params", "optional": false, "type": null, "variadic": false}
+  ]
+}

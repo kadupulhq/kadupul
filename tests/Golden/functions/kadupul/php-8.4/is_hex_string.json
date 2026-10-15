@@ -1,0 +1,210 @@
+{
+  "cases": [
+    {
+      "args": ["Hex-00 01 02"],
+      "id": "hex_dash_prefix",
+      "note": "result is rewritten to the stripped value",
+      "result": {
+        "by_ref": {"result": {"type": "string", "value": "00 01 02"}},
+        "returned": {"type": "bool", "value": true}
+      }
+    },
+    {
+      "args": ["HEX-AA BB"],
+      "id": "uppercase_prefix",
+      "result": {
+        "by_ref": {"result": {"type": "string", "value": "AA BB"}},
+        "returned": {"type": "bool", "value": true}
+      }
+    },
+    {
+      "args": ["hex-aa bb"],
+      "id": "lowercase_prefix",
+      "result": {
+        "by_ref": {"result": {"type": "string", "value": "aa bb"}},
+        "returned": {"type": "bool", "value": true}
+      }
+    },
+    {
+      "args": ["Hex- 00 01"],
+      "id": "prefix_then_space",
+      "result": {
+        "by_ref": {"result": {"type": "string", "value": "00 01"}},
+        "returned": {"type": "bool", "value": true}
+      }
+    },
+    {
+      "args": ["Hex-00"],
+      "id": "single_pair",
+      "note": "one part is assumed not to be a hex string",
+      "result": {
+        "by_ref": {"result": {"type": "string", "value": "Hex-00"}},
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": ["hex-"],
+      "id": "empty_after_prefix",
+      "result": {
+        "by_ref": {"result": {"type": "string", "value": "hex-"}},
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": ["Hex-00 1"],
+      "id": "short_part",
+      "result": {
+        "by_ref": {"result": {"type": "string", "value": "Hex-00 1"}},
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": ["Hex-0g 01"],
+      "id": "non_hex_part",
+      "result": {
+        "by_ref": {"result": {"type": "string", "value": "Hex-0g 01"}},
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": ["Hex-00  01"],
+      "id": "double_space",
+      "result": {
+        "by_ref": {"result": {"type": "string", "value": "Hex-00  01"}},
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": ["Hex-STRING: 00 01"],
+      "id": "hex_string_prefix_is_dead_branch",
+      "note": "the hex- test matches first, so the Hex-STRING: branch is unreachable and \"String:\" is treated as a part",
+      "result": {
+        "by_ref": {"result": {"type": "string", "value": "Hex-STRING: 00 01"}},
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": ["Hex:00 01"],
+      "id": "colon_form",
+      "result": {
+        "by_ref": {"result": {"type": "string", "value": "Hex:00 01"}},
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": ["xHex-00 01"],
+      "id": "prefix_not_at_start",
+      "result": {
+        "by_ref": {"result": {"type": "string", "value": "xHex-00 01"}},
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": ["Hex-00 01 Hex-02 03"],
+      "id": "repeated_prefix_all_removed",
+      "result": {
+        "by_ref": {"result": {"type": "string", "value": "00 01 02 03"}},
+        "returned": {"type": "bool", "value": true}
+      }
+    },
+    {
+      "args": ["Hex-00 01\n"],
+      "id": "trailing_newline",
+      "result": {
+        "by_ref": {"result": {"type": "string", "value": "00 01"}},
+        "returned": {"type": "bool", "value": true}
+      }
+    },
+    {
+      "args": ["00 01"],
+      "id": "no_prefix",
+      "result": {
+        "by_ref": {"result": {"type": "string", "value": "00 01"}},
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [""],
+      "id": "empty",
+      "result": {
+        "by_ref": {"result": {"type": "string", "value": ""}},
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": ["0"],
+      "id": "zero_string",
+      "result": {
+        "by_ref": {"result": {"type": "string", "value": "0"}},
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [null],
+      "id": "null",
+      "result": {
+        "by_ref": {"result": {"type": "null", "value": null}},
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [0],
+      "id": "int_zero",
+      "result": {
+        "by_ref": {"result": {"type": "int", "value": 0}},
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [5],
+      "id": "int",
+      "result": {
+        "by_ref": {"result": {"type": "int", "value": 5}},
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [["Hex-00 01"]],
+      "id": "array",
+      "result": {
+        "by_ref": {"result": {"type": "array", "value": ["Hex-00 01"]}},
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "strtolower(): Argument #1 ($string) must be of type string, array given"
+        }
+      }
+    },
+    {
+      "args": ["Hex-éé aa"],
+      "id": "multibyte",
+      "result": {
+        "by_ref": {"result": {"type": "string", "value": "Hex-éé aa"}},
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [{"$": "repeat", "count": 2000, "unit": "Hex-00 "}],
+      "id": "oversized",
+      "note": "prefix repeated; all stripped",
+      "result": {
+        "by_ref": {
+          "result": {
+            "type": "string",
+            "value": {
+              "$": "long",
+              "bytes": 5999,
+              "head_hex": "3030203030203030203030203030203030203030203030203030203030203030",
+              "sha256": "74590fb216f3ebd64c28635244d30facd43190a21a67a3813c4833b8b2b36d65"
+            }
+          }
+        },
+        "returned": {"type": "bool", "value": true}
+      }
+    }
+  ],
+  "function": "is_hex_string",
+  "signature": [
+    {"by_ref": true, "name": "result", "optional": false, "type": null, "variadic": false}
+  ]
+}

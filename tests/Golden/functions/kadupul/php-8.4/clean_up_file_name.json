@@ -1,0 +1,105 @@
+{
+  "cases": [
+    {"args": ["abc"], "id": "plain", "result": {"returned": {"type": "string", "value": "abc"}}},
+    {
+      "args": ["my name here"],
+      "id": "spaces",
+      "result": {"returned": {"type": "string", "value": "my_name_here"}}
+    },
+    {"args": ["a.b.c"], "id": "dots", "result": {"returned": {"type": "string", "value": "a_b_c"}}},
+    {
+      "args": ["a . b"],
+      "id": "dot_and_space_run",
+      "result": {"returned": {"type": "string", "value": "a_b"}}
+    },
+    {
+      "args": [" name "],
+      "id": "leading_trailing_space",
+      "result": {"returned": {"type": "string", "value": "_name_"}}
+    },
+    {
+      "args": ["a-b"],
+      "id": "hyphen",
+      "note": "hyphen is kept by the file name variant",
+      "result": {"returned": {"type": "string", "value": "a-b"}}
+    },
+    {
+      "args": ["a - b"],
+      "id": "hyphen_between_spaces",
+      "result": {"returned": {"type": "string", "value": "a_-_b"}}
+    },
+    {
+      "args": ["a___b"],
+      "id": "underscore_run",
+      "result": {"returned": {"type": "string", "value": "a_b"}}
+    },
+    {
+      "args": ["___"],
+      "id": "only_underscores",
+      "result": {"returned": {"type": "string", "value": "_"}}
+    },
+    {
+      "args": ["tab\tname"],
+      "id": "tab",
+      "result": {"returned": {"type": "string", "value": "tab_name"}}
+    },
+    {
+      "args": ["line\nname"],
+      "id": "newline",
+      "result": {"returned": {"type": "string", "value": "line_name"}}
+    },
+    {
+      "args": ["a/b\\c:d*e?f\"g<h>i|j"],
+      "id": "symbols",
+      "result": {"returned": {"type": "string", "value": "abcdefghij"}}
+    },
+    {
+      "args": ["<script>alert(1)</script>"],
+      "id": "markup",
+      "result": {"returned": {"type": "string", "value": "scriptalert1script"}}
+    },
+    {
+      "args": ["café"],
+      "id": "accented",
+      "result": {"returned": {"type": "string", "value": "caf"}}
+    },
+    {"args": ["日本語"], "id": "cjk", "result": {"returned": {"type": "string", "value": ""}}},
+    {"args": ["0123"], "id": "digits", "result": {"returned": {"type": "string", "value": "0123"}}},
+    {"args": ["0"], "id": "zero_string", "result": {"returned": {"type": "string", "value": "0"}}},
+    {"args": [""], "id": "empty", "result": {"returned": {"type": "string", "value": ""}}},
+    {"args": [null], "id": "null", "result": {"returned": {"type": "null", "value": null}}},
+    {"args": [false], "id": "false", "result": {"returned": {"type": "bool", "value": false}}},
+    {"args": [0], "id": "int_zero", "result": {"returned": {"type": "string", "value": "0"}}},
+    {"args": [12], "id": "int", "result": {"returned": {"type": "string", "value": "12"}}},
+    {"args": [[]], "id": "empty_array", "result": {"returned": {"type": "array", "value": []}}},
+    {
+      "args": [["a b", "c.d"]],
+      "id": "array_of_strings",
+      "result": {"returned": {"type": "array", "value": ["a_b", "c_d"]}}
+    },
+    {
+      "args": [{"$": "bytes", "hex": "61ff62"}],
+      "id": "invalid_utf8",
+      "result": {"returned": {"type": "string", "value": "ab"}}
+    },
+    {
+      "args": [{"$": "repeat", "count": 20000, "unit": "a b."}],
+      "id": "oversized",
+      "result": {
+        "returned": {
+          "type": "string",
+          "value": {
+            "$": "long",
+            "bytes": 80000,
+            "head_hex": "615f625f615f625f615f625f615f625f615f625f615f625f615f625f615f625f",
+            "sha256": "02742456b41a7f4d74f955aadcc387556eee42b053bca423b6949c152eab888e"
+          }
+        }
+      }
+    }
+  ],
+  "function": "clean_up_file_name",
+  "signature": [
+    {"by_ref": false, "name": "string", "optional": false, "type": null, "variadic": false}
+  ]
+}

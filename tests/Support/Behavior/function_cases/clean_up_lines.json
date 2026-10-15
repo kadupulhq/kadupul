@@ -1,0 +1,25 @@
+{
+  "function": "clean_up_lines",
+  "cases": [
+    {"id": "crlf", "args": ["a\r\nb"]},
+    {"id": "lf_with_spaces", "args": ["a \n\n  b"]},
+    {"id": "leading_trailing_newlines", "args": ["\nabc\n"], "note": "each newline run collapses to one space, ends included"},
+    {"id": "only_newline", "args": ["\n"]},
+    {"id": "lone_cr", "args": ["a\rb"]},
+    {"id": "tab_without_newline", "args": ["a\tb"]},
+    {"id": "tab_around_newline", "args": ["a\t\n\tb"]},
+    {"id": "no_newline", "args": ["abc"]},
+    {"id": "empty", "args": [""]},
+    {"id": "zero_string", "args": ["0"], "note": "loose != against the empty string is true for \"0\""},
+    {"id": "null", "args": [null], "note": "returned as null without touching preg_replace"},
+    {"id": "false", "args": [false], "note": "false == \"\" so returned as false"},
+    {"id": "int_zero", "args": [0], "note": "PHP 8: 0 != \"\" is true, so the int becomes the string \"0\""},
+    {"id": "int", "args": [123]},
+    {"id": "empty_array", "args": [[]], "note": "array != \"\" is true; preg_replace returns an array"},
+    {"id": "array_of_strings", "args": [["a\nb", "c"]], "note": "array subject returns an array"},
+    {"id": "nel_and_nbsp_untouched", "args": [{"$": "bytes", "hex": "610d0a62c285c2a063"}], "note": "CR LF handled; NEL and NBSP bytes are not whitespace without /u"},
+    {"id": "unicode_line_separator", "args": ["a b"]},
+    {"id": "invalid_utf8", "args": [{"$": "bytes", "hex": "61ff0a62"}]},
+    {"id": "oversized", "args": [{"$": "repeat", "unit": "a\n", "count": 10000}]}
+  ]
+}

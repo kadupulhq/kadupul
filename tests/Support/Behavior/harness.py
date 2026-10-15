@@ -29,9 +29,9 @@ EXPECTED_SCENARIOS = frozenset(['api/ajax-hosts', 'api/datasource-invalid', 'api
 # dependency must be added here and old captures lacking it must be recaptured.
 REQUIRED_INPUTS = frozenset(
     ['tests/Support/Behavior/' + name for name in (
-        'coverage.php', 'coverage_selftest.py', 'errors.php', 'harness.py', 'inventory.py',
-        'merge_poller_coverage.php', 'poller_coverage.py', 'probe.php', 'release_readiness.py',
-        'release_selftest.py', 'selftest.py', 'wait-php.php')]
+        'coverage.php', 'coverage_selftest.py', 'errors.php', 'function_capture.php', 'function_codec.php',
+        'harness.py', 'inventory.py', 'merge_poller_coverage.php', 'poller_coverage.py', 'probe.php',
+        'release_readiness.py', 'release_selftest.py', 'selftest.py', 'wait-php.php')]
     + ['tests/Fixtures/plugins/compatibility_test/INFO', 'tests/Fixtures/plugins/compatibility_test/setup.php',
        'tests/Fixtures/snmp/snmpd.conf', 'tests/Fixtures/snmp/value.sh',
        'tests/behavior/compose.yml', 'tests/behavior/Dockerfile', '.dockerignore'])
@@ -1030,6 +1030,453 @@ def compare(args):
     return int(any(r['status'] not in ('IDENTICAL', 'INTENTIONAL_CHANGE') for r in report))
 
 
+FUNCTION_CASES = Path(__file__).resolve().with_name('function_cases')
+FUNCTION_GOLDENS = CONTROLLER_ROOT / 'tests/Golden/functions'
+FUNCTION_CASE_KEYS = frozenset(['id', 'args', 'ambient', 'prelude', 'between', 'isolated', 'timeout', 'note'])
+FUNCTION_AMBIENT_KEYS = frozenset(['settings', 'config', 'session'])
+# Fields that echo what the author wrote. normalize() rewrites paths and clock
+# shapes, which would silently edit an input such as a path under /var/www/html.
+FUNCTION_INPUT_KEYS = frozenset(['id', 'args', 'ambient', 'note'])
+
+
+def canonical(value):
+    """Text form that keeps 1 and 1.0 apart, which == on parsed JSON does not."""
+    return json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False)
+
+
+def validate_function_steps(where, steps):
+    """Check prelude/between steps the way the probe will read them.
+
+    A malformed step otherwise fails inside PHP after a container is already up.
+    """
+    if not isinstance(steps, list):
+        raise RuntimeError(f'{where}: must be a list of steps')
+    for step in steps:
+        if not isinstance(step, dict):
+            raise RuntimeError(f'{where}: every step must be an object')
+        if 'setting' in step:
+            extra = set(step) - {'setting'}
+            values = step['setting']
+            if extra or not isinstance(values, dict) or not values:
+                raise RuntimeError(f'{where}: a setting step is exactly {{"setting": {{name: value}}}}')
+            for key, value in values.items():
+                if value is not None and not isinstance(value, str):
+                    raise RuntimeError(f'{where}: setting {key} must be a string or null')
+        elif isinstance(step.get('fn'), str) and step['fn']:
+            extra = set(step) - {'fn', 'args'}
+            if extra:
+                raise RuntimeError(f'{where}: unknown step keys ' + ', '.join(sorted(extra)))
+            if not isinstance(step.get('args', []), list):
+                raise RuntimeError(f'{where}: step args must be a list')
+        else:
+            raise RuntimeError(f'{where}: a step needs "setting" or a string "fn"')
+
+
+def load_function_cases(directory, only=None):
+    """Read and validate case files. An empty file is an error, not a pass.
+
+    A function with no cases records nothing, and a golden of nothing verifies
+    forever. The same goes for a name that selects no file.
+    """
+    files = sorted(Path(directory).glob('*.json'))
+    if not files:
+        raise RuntimeError('No function case files in ' + str(directory))
+    names = {path.stem for path in files}
+    unknown = set(only or ()) - names
+    if unknown:
+        raise RuntimeError('No case file for: ' + ', '.join(sorted(unknown)))
+    cases = {}
+    for path in files:
+        name = path.stem
+        if only and name not in only:
+            continue
+        try:
+            spec = json.loads(path.read_text())
+        except ValueError as error:
+            raise RuntimeError(f'{name}: case file is not valid JSON: {error}') from None
+        if not isinstance(spec, dict) or spec.get('function') != name:
+            raise RuntimeError(f'{name}: "function" must equal the file name')
+        items = spec.get('cases')
+        if not isinstance(items, list) or not items:
+            raise RuntimeError(f'{name}: case file has no cases')
+        seen = set()
+        for case in items:
+            if not isinstance(case, dict) or not isinstance(case.get('id'), str) or not case['id']:
+                raise RuntimeError(f'{name}: every case needs a string id')
+            if case['id'] in seen:
+                raise RuntimeError(f'{name}: duplicate case id {case["id"]}')
+            seen.add(case['id'])
+            if not isinstance(case.get('args'), list):
+                raise RuntimeError(f'{name}/{case["id"]}: args must be a list')
+            where = f'{name}/{case["id"]}'
+            ambient = case.get('ambient', {})
+            if not isinstance(ambient, dict):
+                raise RuntimeError(f'{where}: ambient must be an object')
+            extra = set(case) - FUNCTION_CASE_KEYS
+            extra |= set(ambient) - FUNCTION_AMBIENT_KEYS
+            if extra:
+                raise RuntimeError(f'{where}: unknown keys ' + ', '.join(sorted(extra)))
+            for key in ambient:
+                if not isinstance(ambient[key], dict):
+                    raise RuntimeError(f'{where}: ambient.{key} must be an object')
+            for key, value in ambient.get('settings', {}).items():
+                if value is not None and not isinstance(value, str):
+                    raise RuntimeError(f'{where}: ambient.settings.{key} must be a string or null')
+            for key in ('prelude', 'between'):
+                if key in case:
+                    validate_function_steps(f'{where}: {key}', case[key])
+            if 'isolated' in case and not isinstance(case['isolated'], bool):
+                raise RuntimeError(f'{where}: isolated must be true or false')
+            timeout = case.get('timeout')
+            if 'timeout' in case and (isinstance(timeout, bool) or not isinstance(timeout, int) or timeout <= 0):
+                raise RuntimeError(f'{where}: timeout must be a positive whole number of seconds')
+        cases[name] = spec
+    if not cases:
+        raise RuntimeError('--only selected no function')
+    return cases
+
+
+def parse_function_probe(name, result):
+    """Extract the record from a probe run. Anything else is a failed capture."""
+    if result['exit'] or 'BEHAVIOR_JSON=' not in result['stdout']:
+        raise RuntimeError(f'Function probe {name} failed: exit {result["exit"]}: '
+                           + (result['stderr'] or result['stdout'])[-600:])
+    prefix, payload = result['stdout'].rsplit('BEHAVIOR_JSON=', 1)
+    if prefix.strip():
+        # Output outside the captured call means the recorder, not the function, wrote it.
+        raise RuntimeError(f'Function probe {name} printed outside the capture: ' + prefix.strip()[:300])
+    return json.loads(payload)
+
+
+def capture_function(name, spec, run_probe):
+    """Run every case of one function and return its record.
+
+    run_probe(name, extra_args) returns one parsed probe payload. Cases that
+    share a process go in one call; each isolated case gets its own.
+    """
+    shared = [case['id'] for case in spec['cases'] if not case.get('isolated')]
+    batches = ([(shared, [])] if shared else []) + [
+        ([case['id']], ['--case', case['id']]) for case in spec['cases'] if case.get('isolated')]
+    records = {}
+    signature = None
+    for ids, extra in batches:
+        payload = run_probe(name, extra)
+        if payload.get('function') != name:
+            raise RuntimeError(f'{name}: probe answered for {payload.get("function")}')
+        got = [record['id'] for record in payload.get('cases', [])]
+        if got != ids:
+            raise RuntimeError(f'{name}: expected cases {ids}, recorded {got}')
+        if signature is not None and payload['signature'] != signature:
+            raise RuntimeError(f'{name}: signature changed between processes')
+        signature = payload['signature']
+        records.update({record['id']: record for record in payload['cases']})
+    ordered = [records[case['id']] for case in spec['cases']]
+    if not ordered:
+        raise RuntimeError(f'{name}: no case was recorded')
+    return {'function': name, 'signature': signature, 'cases': ordered}
+
+
+def normalize_function_tree(value):
+    if isinstance(value, dict):
+        return {k: normalize_function_tree(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [normalize_function_tree(v) for v in value]
+    return normalize(value)
+
+
+def normalize_function_record(record):
+    """normalize() everywhere except the fields of a case that echo the author's input.
+
+    The exemption is by position, not by name: a by-reference parameter called
+    `id` or `args` sits deeper in the case and must still be normalized.
+    """
+    out = {k: normalize_function_tree(v) for k, v in record.items() if k != 'cases'}
+    out['cases'] = [{k: v if k in FUNCTION_INPUT_KEYS else normalize_function_tree(v) for k, v in case.items()}
+                    for case in record['cases']]
+    return summarize_large(out)
+
+
+FUNCTION_SUMMARY_THRESHOLD = 64
+FUNCTION_SUMMARY_HEAD = 4
+
+
+def json_type(value):
+    if isinstance(value, bool):
+        return 'bool'
+    if value is None:
+        return 'null'
+    return {int: 'int', float: 'float', str: 'string', list: 'array', dict: 'object'}[type(value)]
+
+
+def summarize_large(value):
+    """Replace a list or object of more than 64 elements with a digest summary.
+
+    A 10,000 element argument would otherwise take 10,000 lines of golden. The
+    sha256 covers the whole original value in canonical form, so changing any
+    element still changes the golden; `head` only keeps the golden readable.
+    Smaller containers are walked, since a large one may sit inside them.
+    """
+    if isinstance(value, (list, dict)):
+        if len(value) > FUNCTION_SUMMARY_THRESHOLD:
+            is_list = isinstance(value, list)
+            elements = value if is_list else list(value.values())
+            head = value[:FUNCTION_SUMMARY_HEAD] if is_list else dict(sorted(value.items())[:FUNCTION_SUMMARY_HEAD])
+            return {'$': 'list' if is_list else 'object', 'count': len(value),
+                    'types': sorted({json_type(element) for element in elements}),
+                    'head': summarize_large(head),
+                    'sha256': hashlib.sha256(canonical(value).encode()).hexdigest()}
+        if isinstance(value, list):
+            return [summarize_large(element) for element in value]
+        return {key: summarize_large(element) for key, element in value.items()}
+    return value
+
+
+def compact_json(value, width=100, depth=0, lead=0, trailing=0):
+    """Serialize with sorted keys, keeping a container on one line when its line fits in `width` columns.
+
+    `lead` is what already precedes the value on its line (indentation and key) and
+    `trailing` the comma that follows it. Larger containers get one element per line,
+    two spaces per level. Fully expanded goldens ran to ~45k lines of short scalars,
+    which made the generated diff unreviewable.
+    """
+    flat = json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(', ', ': '))
+    if not isinstance(value, (dict, list, tuple)) or not value or lead + len(flat) + trailing <= width:
+        return flat
+    pad = '  ' * (depth + 1)
+    is_dict = isinstance(value, dict)
+    items = sorted(value.items()) if is_dict else [(None, item) for item in value]
+    opener, closer = ('{', '}') if is_dict else ('[', ']')
+    lines = []
+    for index, (key, item) in enumerate(items):
+        if is_dict and not isinstance(key, str):
+            raise TypeError('compact_json supports string keys only, got ' + repr(key))
+        prefix = json.dumps(key, ensure_ascii=False) + ': ' if is_dict else ''
+        lines.append(pad + prefix + compact_json(item, width, depth + 1, len(pad) + len(prefix), 0 if index == len(items) - 1 else 1))
+    return opener + '\n' + ',\n'.join(lines) + '\n' + '  ' * depth + closer
+
+
+def write_function_json(path, value):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(compact_json(value) + '\n')
+
+
+FUNCTION_CASE_DEFAULTS = {'note': '', 'warm': {'same': True}}
+FUNCTION_RESULT_DEFAULTS = {'diagnostics': [], 'log': [], 'output': ''}
+
+
+def strip_function_defaults(record):
+    """The golden form of a record: fields that hold their documented default are left out.
+
+    Most cases return a value and nothing else, so spelling out an empty log,
+    empty diagnostics and empty output five lines per case buried the value.
+    `restore_function_defaults` is the reader's half; the pair is lossless for
+    records the probe writes, which always carry every one of these fields.
+    """
+    def keep(mapping, defaults):
+        return {k: v for k, v in mapping.items() if not (k in defaults and canonical(v) == canonical(defaults[k]))}
+    cases = []
+    for case in record['cases']:
+        case = keep(case, FUNCTION_CASE_DEFAULTS)
+        if isinstance(case.get('result'), dict):
+            case['result'] = keep(case['result'], FUNCTION_RESULT_DEFAULTS)
+        cases.append(case)
+    return dict(record, cases=cases)
+
+
+def restore_function_defaults(record):
+    cases = []
+    for case in record['cases']:
+        case = dict(json.loads(canonical(FUNCTION_CASE_DEFAULTS)), **case)
+        if isinstance(case.get('result'), dict):
+            case['result'] = dict(json.loads(canonical(FUNCTION_RESULT_DEFAULTS)), **case['result'])
+        cases.append(case)
+    return dict(record, cases=cases)
+
+
+def function_golden_root(target, runtime):
+    return FUNCTION_GOLDENS / target / ('php-' + runtime)
+
+
+def settle_function_goldens(args, records, runtime):
+    """Compare records with goldens, or write them. Returns the failure list."""
+    root = function_golden_root(args.target, runtime)
+    failures = []
+    if not args.update_golden:
+        # A golden whose case file is gone would otherwise sit unchecked forever.
+        orphans = {path.stem for path in root.glob('*.json')} - {path.stem for path in FUNCTION_CASES.glob('*.json')}
+        failures += [name + ': golden has no case file' for name in sorted(orphans)]
+    for name in sorted(records):
+        path = root / (name + '.json')
+        if args.update_golden:
+            write_function_json(path, strip_function_defaults(records[name]))
+        elif not path.exists():
+            failures.append(name + ': MISSING GOLDEN (explicit capture required)')
+        elif canonical(restore_function_defaults(json.loads(path.read_text()))) != canonical(records[name]):
+            failures.append(name + ': REGRESSION')
+            destination = CONTROLLER_ROOT / 'tests/behavior/results' / args.target
+            destination.mkdir(parents=True, exist_ok=True)
+            (destination / ('functions--' + name + '.diff')).write_text(''.join(difflib.unified_diff(
+                path.read_text().splitlines(True), (compact_json(strip_function_defaults(records[name])) + '\n').splitlines(True),
+                fromfile='golden', tofile='observed')))
+    return failures
+
+
+def run_function_captures(args, run_probe, runtime, php_version, cases):
+    records = {}
+    for name, spec in cases.items():
+        records[name] = normalize_function_record(capture_function(name, spec, run_probe))
+        print('CAPTURE functions/' + name + ' (' + str(len(spec['cases'])) + ' cases)', flush=True)
+    destination = CONTROLLER_ROOT / 'tests/behavior/results' / args.target
+    write_json(destination / 'functions.json', {'format': 1, 'target': args.target, 'php': runtime,
+                                                'php_version': php_version, 'functions': records})
+    return records
+
+
+def report_function_run(args, records, runtime, goldens=True):
+    # The empty-selection check lives in load_function_cases; a run that
+    # recorded no cases must still never read as a pass.
+    count = sum(len(record['cases']) for record in records.values())
+    if not records or not count:
+        print('No function cases were recorded', file=sys.stderr)
+        return 2
+    if not goldens:
+        print(f'{len(records)} functions, {count} cases captured')
+        return 0
+    failures = settle_function_goldens(args, records, runtime)
+    print('\n'.join(failures) if failures else
+          f'{len(records)} functions, {count} cases ' + ('captured' if args.update_golden else 'verified'))
+    return int(bool(failures))
+
+
+def functions_in_container(args):
+    """Capture through the container harness, the path that has a real database."""
+    global ROOT
+    ROOT = args.application_root.resolve()
+    cases = load_function_cases(FUNCTION_CASES, args.only)
+    harness = Harness(args)
+    status = 2
+    try:
+        harness.setup()
+        def probe(name, extra):
+            return parse_function_probe(name, harness.php('/harness/probe.php', 'function', name, *extra))
+
+        runtime = harness.command('php', '-r', 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;', check=True)['stdout'].strip()
+        full = harness.command('php', '-r', 'echo PHP_VERSION;', check=True)['stdout'].strip()
+        records = run_function_captures(args, probe, runtime, full, cases)
+        status = report_function_run(args, records, runtime)
+    except Exception as exc:
+        print(exc, file=sys.stderr)
+    finally:
+        if not args.keep and getattr(harness, 'setup_started', True):
+            try:
+                harness.compose('down', '--volumes', '--remove-orphans', timeout=120)
+            except (OSError, RuntimeError, subprocess.TimeoutExpired) as cleanup_error:
+                print('Container cleanup failed: ' + str(cleanup_error), file=sys.stderr)
+                status = status or 2
+        elif args.keep:
+            print('Kept project: ' + ' '.join(harness.dc))
+    return status
+
+
+def functions_in_reference(args):
+    """Capture through a running upstream instance, using the same probe and cases.
+
+    The harness image builds from a Kadupul checkout (package.json, the asset
+    stage, the overlay hash check), so it cannot be pointed at a Cacti develop
+    tree. This copies the probe into the instance's /tmp and runs it there as
+    the web user. The instance's files and database are left as they were: every
+    case runs in a rolled-back savepoint.
+    """
+    cases = load_function_cases(FUNCTION_CASES, args.only)
+    # A fixed path would let two runs, or a stale directory from a killed run,
+    # share staged files; the log lives inside it so one removal cleans both.
+    staging = None
+    try:
+        staging = run(['docker', 'exec', args.container, 'mktemp', '-d', '/tmp/fnwt_probe.XXXXXX'])['stdout'].strip()
+        docker = ['docker', 'exec', '-u', 'www-data', '-e', 'BEHAVIOR_APP_ROOT=' + args.app_dir,
+                  '-e', 'BEHAVIOR_CASE_DIR=' + staging + '/function_cases', '-e', 'BEHAVIOR_LOG_PATH=' + staging + '/probe.log', args.container]
+        # mktemp creates the directory 0700 as the exec user; the probe runs as www-data.
+        run(['docker', 'exec', args.container, 'chmod', '755', staging])
+        here = Path(__file__).resolve().parent
+        for name in ('probe.php', 'function_capture.php', 'function_codec.php', 'function_cases'):
+            run(['docker', 'cp', str(here / name), args.container + ':' + staging + '/' + name])
+        def probe(name, extra):
+            return parse_function_probe(name, run(docker + ['php', staging + '/probe.php', 'function', name, *extra], check=False))
+
+        runtime = run(docker + ['php', '-r', 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;'])['stdout'].strip()
+        full = run(docker + ['php', '-r', 'echo PHP_VERSION;'])['stdout'].strip()
+        records = run_function_captures(args, probe, runtime, full, cases)
+        return report_function_run(args, records, runtime, goldens=False)
+    except Exception as exc:
+        print(exc, file=sys.stderr)
+        return 2
+    finally:
+        if staging:
+            run(['docker', 'exec', args.container, 'rm', '-rf', staging], check=False)
+
+
+def compare_functions(args):
+    """List every function and case as same or differs between two captures.
+
+    The status is observation only. A difference is written as unreviewed; the
+    reviewer decides whether it is intentional or a defect on either side.
+    """
+    root = Path(getattr(args, 'results_root', None) or CONTROLLER_ROOT / 'tests/behavior/results')
+    sides = {}
+    for role in ('baseline', 'candidate'):
+        path = root / getattr(args, role) / 'functions.json'
+        if not path.is_file():
+            raise RuntimeError('Missing ' + str(path))
+        sides[role] = json.loads(path.read_text())
+    base, cand = sides['baseline']['functions'], sides['candidate']['functions']
+    shared = sorted(set(base) & set(cand))
+    if not shared:
+        raise RuntimeError('The two captures share no function')
+    report = {'baseline': args.baseline, 'candidate': args.candidate,
+              'baseline_php': sides['baseline'].get('php_version'), 'candidate_php': sides['candidate'].get('php_version'),
+              'only_in_baseline': sorted(set(base) - set(cand)), 'only_in_candidate': sorted(set(cand) - set(base)),
+              'functions': {}}
+    totals = {'same': 0, 'differs': 0}
+    only_candidate_cases = {}
+
+    def observed(r):
+        return {'result': r['result'], 'warm': r['warm']}
+
+    for name in shared:
+        entry = {'signature': {'status': 'same'}, 'cases': []}
+        if canonical(base[name]['signature']) != canonical(cand[name]['signature']):
+            entry['signature'] = {'status': 'differs', 'baseline': base[name]['signature'],
+                                  'candidate': cand[name]['signature'], 'review': 'unreviewed'}
+        by_id = {record['id']: record for record in cand[name]['cases']}
+        extra = sorted(set(by_id) - {record['id'] for record in base[name]['cases']})
+        if extra:
+            only_candidate_cases[name] = extra
+        for record in base[name]['cases']:
+            other = by_id.get(record['id'])
+            if other is not None and canonical(observed(record)) == canonical(observed(other)):
+                row = {'case': record['id'], 'status': 'same'}
+            else:
+                row = {'case': record['id'], 'status': 'differs', 'baseline': observed(record),
+                       'candidate': observed(other) if other else None, 'review': 'unreviewed'}
+                if record.get('note'):
+                    row['note'] = record['note']
+            totals[row['status']] += 1
+            entry['cases'].append(row)
+        report['functions'][name] = entry
+    report['totals'] = dict(totals, functions=len(shared))
+    if only_candidate_cases:
+        # Present only when non-empty so a clean report keeps its existing shape.
+        report['only_in_candidate_cases'] = only_candidate_cases
+    output = Path(args.output) if args.output else root / (args.candidate + '-vs-' + args.baseline + '.functions-comparison.json')
+    write_function_json(output, report)
+    print(f'{len(shared)} functions: {totals["same"]} cases same, {totals["differs"]} differ -> {output}')
+    if only_candidate_cases:
+        # A case the baseline never ran cannot be compared, so it must not read as a clean pass.
+        print('Cases only in the candidate: ' + '; '.join(f'{n}: {", ".join(ids)}' for n, ids in only_candidate_cases.items()), file=sys.stderr)
+        return 1
+    return 0
+
+
 def main():
     global ROOT
     parser = argparse.ArgumentParser()
@@ -1038,12 +1485,31 @@ def main():
     test.add_argument('--target', default=os.environ.get('TARGET', 'kadupul'))
     test.add_argument('--application-root', type=Path, default=CONTROLLER_ROOT,
                       help='Application checkout to exercise; harness provenance still identifies this controller checkout.')
+    test.add_argument('--project', default='kadupul-behavior',
+                      help='Compose project name. The default is shared, so concurrent runs are refused; pass another to run beside it.')
     test.add_argument('--update-golden', action='store_true')
     test.add_argument('--bootstrap-goldens', action='store_true',
                       help='Allow missing runtime entries during an explicit full capture; verification still requires complete inventories.')
     test.add_argument('--keep', action='store_true')
     test.add_argument('--only', nargs='*', default=None, metavar='GROUP',
                       help='Verify only these scenario groups (api, auth, devices, graphs, plugins, cli, poller, ui, database, upgrade, snmp, faults, diagnostics). All scenarios still run, because later ones consume earlier fixtures.')
+    fn = sub.add_parser('functions', help='Capture function-level behavior through the container harness.')
+    fn.add_argument('--target', default=os.environ.get('TARGET', 'kadupul'))
+    fn.add_argument('--application-root', type=Path, default=CONTROLLER_ROOT)
+    fn.add_argument('--project', default='fnwt_functions')
+    fn.add_argument('--update-golden', action='store_true')
+    fn.add_argument('--keep', action='store_true')
+    fn.add_argument('--only', nargs='*', default=None, metavar='FUNCTION')
+    ref = sub.add_parser('functions-reference', help='Capture the same cases through a running upstream instance.')
+    ref.add_argument('--target', required=True)
+    ref.add_argument('--container', required=True)
+    ref.add_argument('--app-dir', required=True)
+    ref.add_argument('--only', nargs='*', default=None, metavar='FUNCTION')
+    fcmp = sub.add_parser('functions-compare', help='List each function case as same or differs between two captures.')
+    fcmp.add_argument('--results-root', type=Path)
+    fcmp.add_argument('--baseline', required=True)
+    fcmp.add_argument('--candidate', required=True)
+    fcmp.add_argument('--output')
     diff = sub.add_parser('compare')
     diff.add_argument('--results-root', type=Path, help='Directory containing capture labels; defaults to this checkout tests/behavior/results.')
     diff.add_argument('--baseline', required=True)
@@ -1054,6 +1520,17 @@ def main():
     args = parser.parse_args()
     if args.action == 'compare':
         return compare(args)
+    if args.action == 'functions-compare':
+        return compare_functions(args)
+    for action in ('functions', 'functions-reference'):
+        if args.action == action:
+            if not re.fullmatch(r'[a-zA-Z0-9_.-]+', args.target) or args.target in ('.', '..'):
+                parser.error('Target must be a safe artifact label')
+            if args.only is not None and not args.only:
+                parser.error('--only needs at least one function')
+            if args.only and getattr(args, 'update_golden', False):
+                parser.error('--update-golden records every function; it cannot be scoped with --only')
+            return functions_in_container(args) if action == 'functions' else functions_in_reference(args)
     ROOT = args.application_root.resolve()
     if not re.fullmatch(r'[a-zA-Z0-9_.-]+', args.target) or args.target in ('.', '..'):
         parser.error('Target must be a safe artifact label')

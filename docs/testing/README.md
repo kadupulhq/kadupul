@@ -3,6 +3,9 @@
 For the other native test runners and their separate dependencies, see the
 [main test suite guide](../../tests/README.md).
 
+Per-function return values, side effects and errors are captured separately;
+see [function behavior](function-behavior.md).
+
 This harness records what Cacti 1.2.31 actually does, so a later Kadupul
 rewrite can be checked against it. It is a specification captured by
 observation, not a correctness suite. Where Cacti behaves oddly, the harness
@@ -146,6 +149,8 @@ the candidate.
 | `tests/Support/Behavior/harness.py` | Scenario driver. Standard library only, imports nothing from the application. |
 | `tests/Support/Behavior/probe.php` | In-process adapter for behavior not reachable over HTTP or the CLI. A rewrite supplies its own. |
 | `tests/Support/Behavior/errors.php` | PHP diagnostic capture. Chains to the handler it replaces. |
+| `tests/Support/Behavior/function_capture.php`, `function_codec.php`, `function_cases/` | Function-level capture of `lib/functions.php`. See [function behavior](function-behavior.md). |
+| `tests/Golden/functions/<target>/php-<version>/` | Function-level goldens, kept apart from the scenario goldens. |
 | `tests/Support/Behavior/inventory.py` | Regenerates the lexical surface inventory. |
 | `tests/behavior/compose.yml` | Database, web, SNMP and poller services. |
 | `tests/Fixtures/plugins/compatibility_test/` | Synthetic plugin exercising the public plugin API. |

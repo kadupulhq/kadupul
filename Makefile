@@ -7,6 +7,7 @@
 PHP_VERSION ?= 8.4
 TARGET      ?= kadupul
 BEHAVIOR    := PHP_VERSION=$(PHP_VERSION) ./tests/bin/behavior
+FUNCTIONS   := PHP_VERSION=$(PHP_VERSION) mise exec python@3.12 -- python tests/Support/Behavior/harness.py functions
 
 .DEFAULT_GOAL := help
 
@@ -52,6 +53,14 @@ test-bootstrap-golden: ## Capture added scenarios/runtimes; incomplete inventori
 .PHONY: test-keep
 test-keep: ## Run the behavioral suite and leave containers up for inspection
 	$(BEHAVIOR) --target $(TARGET) --keep
+
+.PHONY: test-functions
+test-functions: ## Verify lib/functions.php function behavior against the committed goldens
+	$(FUNCTIONS) --target $(TARGET)
+
+.PHONY: test-functions-golden
+test-functions-golden: ## Re-record function goldens. Review the diff before committing.
+	$(FUNCTIONS) --target $(TARGET) --update-golden
 
 # Scenario-scoped targets. The harness runs one ordered pass because later
 # scenarios consume fixtures created by earlier ones, so these report the

@@ -1,0 +1,32 @@
+{
+  "function": "title_trim",
+  "cases": [
+    {"id": "ascii_short", "args": ["abc", 10]},
+    {"id": "ascii_exact_length", "args": ["abcde", 5], "note": "strlen > max is false at equality, so no ellipsis"},
+    {"id": "ascii_over_by_one", "args": ["abcdef", 5]},
+    {"id": "empty_text", "args": ["", 5]},
+    {"id": "zero_max", "args": ["abc", 0], "note": "mb_substr(..., 0, 0) is empty, ellipsis only"},
+    {"id": "negative_max", "args": ["abc", -1], "note": "negative length makes mb_substr drop trailing characters"},
+    {"id": "null_text", "args": [null, 5], "note": "strlen(null) deprecation, returns null unchanged"},
+    {"id": "null_text_negative_max", "args": [null, -1]},
+    {"id": "array_text", "args": [["a"], 5], "note": "strlen() rejects an array"},
+    {"id": "int_text_truncated", "args": [12345678, 5], "note": "int is coerced to string; result is a string"},
+    {"id": "int_text_not_truncated", "args": [12, 5], "note": "int returned as int when short enough"},
+    {"id": "bool_text", "args": [true, 0]},
+    {"id": "float_text", "args": [1.5, 2]},
+    {"id": "multibyte_cut_by_characters", "args": ["ééééé", 3], "note": "strlen counts bytes (10), the cut counts characters"},
+    {"id": "multibyte_bytes_exceed_but_chars_do_not", "args": ["ééé", 5], "note": "six bytes over five, three characters: ellipsis added with nothing removed"},
+    {"id": "multibyte_chars_equal_max", "args": ["ééé", 3], "note": "six bytes over three: ellipsis appended after the whole string"},
+    {"id": "multibyte_exact_bytes", "args": ["ééé", 6]},
+    {"id": "cjk", "args": ["日本語テキスト", 4]},
+    {"id": "invalid_utf8", "args": [{"$": "bytes", "hex": "c328c328"}, 2], "note": "mb_substr on invalid UTF-8"},
+    {"id": "max_numeric_string", "args": ["abcdef", "3"]},
+    {"id": "max_float_fraction", "args": ["abcdef", 2.5], "note": "implicit float to int conversion deprecation"},
+    {"id": "max_null", "args": ["abc", null], "note": "null max compares as 0 and mb_substr treats a null length as \"to the end\""},
+    {"id": "max_non_numeric_string", "args": ["abc", "x"], "note": "int against non-numeric string compares as strings"},
+    {"id": "max_empty_string", "args": ["abc", ""], "note": "PHP 8 compares 3 > \"\" as strings"},
+    {"id": "max_array", "args": ["abc", ["x"]], "note": "int > array is always false"},
+    {"id": "oversized", "args": [{"$": "repeat", "unit": "a", "count": 100000}, 10]},
+    {"id": "missing_argument", "args": ["abc"], "note": "second parameter has no default"}
+  ]
+}

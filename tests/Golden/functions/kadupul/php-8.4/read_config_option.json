@@ -1,0 +1,204 @@
+{
+  "cases": [
+    {
+      "ambient": {"settings": {"fnwt_probe_key": "alpha"}},
+      "args": ["fnwt_probe_key"],
+      "id": "database_value_cold",
+      "note": "first read in a fresh process comes from the settings table",
+      "result": {"returned": {"type": "string", "value": "alpha"}}
+    },
+    {
+      "ambient": {"settings": {"poller_interval": ""}},
+      "args": ["poller_interval"],
+      "id": "database_value_empty_string",
+      "note": "a stored empty string is returned, not the default",
+      "result": {"returned": {"type": "string", "value": ""}}
+    },
+    {
+      "ambient": {"settings": {"fnwt_probe_key": "0"}},
+      "args": ["fnwt_probe_key"],
+      "id": "database_value_zero_string",
+      "result": {"returned": {"type": "string", "value": "0"}}
+    },
+    {
+      "ambient": {"settings": {"poller_interval": null}},
+      "args": ["poller_interval"],
+      "id": "default_fallback_when_row_absent",
+      "note": "no settings row: the default from the settings definition array",
+      "result": {"returned": {"type": "int", "value": 300}}
+    },
+    {
+      "args": ["fnwt_no_such_option"],
+      "id": "unknown_key_no_default",
+      "note": "neither a row nor a default: null, and nothing is cached",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"settings": {"fnwt_probe_key": "before"}},
+      "args": ["fnwt_probe_key"],
+      "between": [{"setting": {"fnwt_probe_key": "after"}}],
+      "id": "cache_serves_stale_value",
+      "note": "the second call is answered from $config and ignores the later table change",
+      "result": {"returned": {"type": "string", "value": "before"}}
+    },
+    {
+      "ambient": {"settings": {"fnwt_probe_key": "before"}},
+      "args": ["fnwt_probe_key", true],
+      "between": [{"setting": {"fnwt_probe_key": "after"}}],
+      "id": "force_reads_through_cache",
+      "note": "force=true goes back to the table every time",
+      "result": {"returned": {"type": "string", "value": "before"}},
+      "warm": {
+        "result": {
+          "diagnostics": [],
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "after"}
+        },
+        "same": false
+      }
+    },
+    {
+      "ambient": {"settings": {"fnwt_probe_key": "before"}},
+      "args": ["fnwt_probe_key", "1"],
+      "between": [{"setting": {"fnwt_probe_key": "after"}}],
+      "id": "force_truthy_string",
+      "result": {"returned": {"type": "string", "value": "before"}},
+      "warm": {
+        "result": {
+          "diagnostics": [],
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "after"}
+        },
+        "same": false
+      }
+    },
+    {
+      "args": ["fnwt_probe_key"],
+      "id": "set_config_option_then_read",
+      "note": "set_config_option writes the row and primes the cache",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "set_config_option",
+          "log": [],
+          "output": "",
+          "returned": {"type": "bool", "value": true}
+        }
+      ],
+      "result": {"returned": {"type": "string", "value": "via-set"}}
+    },
+    {
+      "args": ["poller_interval"],
+      "id": "set_config_option_overrides_cached_default",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "set_config_option",
+          "log": [],
+          "output": "",
+          "returned": {"type": "bool", "value": true}
+        }
+      ],
+      "result": {"returned": {"type": "string", "value": "60"}}
+    },
+    {"args": [null], "id": "null_name", "result": {"returned": {"type": "null", "value": null}}},
+    {"args": [""], "id": "empty_name", "result": {"returned": {"type": "null", "value": null}}},
+    {"args": [0], "id": "int_name", "result": {"returned": {"type": "null", "value": null}}},
+    {
+      "args": [["x"]],
+      "id": "array_name",
+      "note": "isset() on an array offset",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "Cannot access offset of type array in isset or empty"
+        }
+      }
+    },
+    {
+      "args": [
+        "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
+      ],
+      "id": "long_name",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "args": [],
+      "id": "missing_argument",
+      "result": {
+        "exception": {
+          "class": "ArgumentCountError",
+          "code": 0,
+          "message": "Too few arguments to function read_config_option(), 0 passed in <caller> and at least 1 expected"
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"is_web": true}, "settings": {"fnwt_probe_key": "alpha"}},
+      "args": ["fnwt_probe_key"],
+      "id": "web_reads_table_and_fills_session",
+      "note": "with is_web set the cache is $_SESSION, not $config. The ambient state sets $config[is_web]; a target that decides from a constant does not see it.",
+      "result": {"returned": {"type": "string", "value": "alpha"}}
+    },
+    {
+      "ambient": {
+        "config": {"is_web": true},
+        "session": {
+          "sess_config_array": {"$": "array", "pairs": [["fnwt_probe_key", "from-session"]]}
+        },
+        "settings": {"fnwt_probe_key": "from-table"}
+      },
+      "args": ["fnwt_probe_key"],
+      "id": "web_session_value_wins_over_table",
+      "note": "same ambient is_web state as web_reads_table_and_fills_session",
+      "result": {"returned": {"type": "string", "value": "from-session"}}
+    },
+    {
+      "ambient": {
+        "config": {"is_web": true},
+        "session": {
+          "sess_config_array": {"$": "array", "pairs": [["fnwt_probe_key", "from-session"]]}
+        },
+        "settings": {"fnwt_probe_key": "from-table"}
+      },
+      "args": ["fnwt_probe_key", true],
+      "id": "web_force_bypasses_session",
+      "note": "same ambient is_web state as web_reads_table_and_fills_session",
+      "result": {"returned": {"type": "string", "value": "from-table"}}
+    },
+    {
+      "ambient": {
+        "config": {"is_web": true},
+        "session": {"sess_config_array": "oops"},
+        "settings": {"fnwt_probe_key": "alpha"}
+      },
+      "args": ["fnwt_probe_key"],
+      "id": "web_session_cache_is_not_an_array",
+      "note": "a non-array cache is replaced, not trusted.",
+      "result": {"returned": {"type": "string", "value": "alpha"}}
+    },
+    {
+      "ambient": {"config": {"is_web": true}, "settings": {"fnwt_probe_key": "before"}},
+      "args": ["fnwt_probe_key"],
+      "between": [{"setting": {"fnwt_probe_key": "after"}}],
+      "id": "web_session_serves_stale_value",
+      "note": "same ambient is_web state as web_reads_table_and_fills_session",
+      "result": {"returned": {"type": "string", "value": "before"}}
+    }
+  ],
+  "function": "read_config_option",
+  "signature": [
+    {"by_ref": false, "name": "config_name", "optional": false, "type": null, "variadic": false},
+    {
+      "by_ref": false,
+      "default": false,
+      "name": "force",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    }
+  ]
+}

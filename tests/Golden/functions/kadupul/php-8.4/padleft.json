@@ -1,0 +1,204 @@
+{
+  "cases": [
+    {
+      "args": ["0", "12", 2],
+      "id": "no_pad_needed",
+      "result": {"returned": {"type": "string", "value": "12"}}
+    },
+    {
+      "args": ["0", "123", 2],
+      "id": "value_longer_than_min",
+      "result": {"returned": {"type": "string", "value": "123"}}
+    },
+    {
+      "args": ["", "5", 2],
+      "id": "empty_pad_default",
+      "note": "an empty pad skips padding entirely",
+      "result": {"returned": {"type": "string", "value": "5"}}
+    },
+    {
+      "args": [],
+      "id": "no_arguments",
+      "note": "all defaults: empty pad",
+      "result": {"returned": {"type": "string", "value": ""}}
+    },
+    {
+      "args": ["0"],
+      "id": "only_pad",
+      "note": "default value is the empty string, which still needs padding",
+      "result": {
+        "exception": {"class": "BehaviorTimeout", "code": 0, "message": "no return within 2s"}
+      }
+    },
+    {
+      "args": ["0", 12345, 2],
+      "id": "int_value_long_enough",
+      "note": "result is a string",
+      "result": {"returned": {"type": "string", "value": "12345"}}
+    },
+    {
+      "args": ["0", "5", 0],
+      "id": "zero_min",
+      "result": {"returned": {"type": "string", "value": "5"}}
+    },
+    {
+      "args": ["0", "5", -3],
+      "id": "negative_min",
+      "result": {"returned": {"type": "string", "value": "5"}}
+    },
+    {
+      "args": ["0", "5", null],
+      "id": "null_min",
+      "note": "strlen < null is false",
+      "result": {"returned": {"type": "string", "value": "5"}}
+    },
+    {
+      "args": ["0", ["x"], 20],
+      "id": "array_value_to_string",
+      "note": "Array to string conversion gives \"Array\", five characters, so padding is needed and the loop does not end",
+      "result": {
+        "diagnostics": [
+          {
+            "count": null,
+            "file": "lib/functions.php",
+            "message": "Array to string conversion",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "exception": {"class": "BehaviorTimeout", "code": 0, "message": "no return within 2s"}
+      }
+    },
+    {
+      "args": ["0", ["x"], 2],
+      "id": "value_array_no_pad",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Array to string conversion",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "string", "value": "Array"}
+      }
+    },
+    {
+      "args": ["0", "0", 2],
+      "id": "numeric_pad_equal_loose",
+      "note": "padded \"00\" == \"0\" numerically, so the loop never starts and the result is \"00\"",
+      "result": {"returned": {"type": "string", "value": "00"}}
+    },
+    {
+      "args": ["0", "0", 5],
+      "id": "numeric_pad_equal_loose_short",
+      "note": "result is two characters although min is five",
+      "result": {"returned": {"type": "string", "value": "00"}}
+    },
+    {
+      "args": ["0", "5", 2],
+      "id": "numeric_pad_and_value",
+      "note": "\"05\" == \"5\" numerically, so the loop is skipped and the padded value is returned",
+      "result": {"returned": {"type": "string", "value": "05"}}
+    },
+    {
+      "args": ["0", "5.5", 5],
+      "id": "numeric_pad_decimal_value",
+      "note": "numeric on both sides again: one pad character, result shorter than min",
+      "result": {"returned": {"type": "string", "value": "05.5"}}
+    },
+    {
+      "args": ["x", "ab", 5],
+      "id": "pad_needed_letter",
+      "note": "the loop never changes result, and \"xab\" != \"ab\" stays true: it does not terminate",
+      "result": {
+        "exception": {"class": "BehaviorTimeout", "code": 0, "message": "no return within 2s"}
+      }
+    },
+    {
+      "args": [" ", "5", 3],
+      "id": "space_pad_numeric_value",
+      "note": "\" 5\" is numeric (leading whitespace) so it equals \"5\" and the loop is skipped",
+      "result": {"returned": {"type": "string", "value": " 5"}}
+    },
+    {
+      "args": ["0", "", 2],
+      "id": "pad_needed_empty_value",
+      "result": {
+        "exception": {"class": "BehaviorTimeout", "code": 0, "message": "no return within 2s"}
+      }
+    },
+    {
+      "args": ["ab", "5", 4],
+      "id": "pad_needed_multichar",
+      "result": {
+        "exception": {"class": "BehaviorTimeout", "code": 0, "message": "no return within 2s"}
+      }
+    },
+    {
+      "args": [0, "5", 2],
+      "id": "int_zero_pad",
+      "note": "int 0 is a non-empty pad; \"05\" == \"5\" so the loop is skipped",
+      "result": {"returned": {"type": "string", "value": "05"}}
+    },
+    {
+      "args": [["x"], "5", 2],
+      "id": "pad_array",
+      "note": "array pad becomes \"Array\", \"Array5\" != \"5\": warns on every pass and never ends",
+      "result": {
+        "diagnostics": [
+          {
+            "count": null,
+            "file": "lib/functions.php",
+            "message": "Array to string conversion",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "exception": {"class": "BehaviorTimeout", "code": 0, "message": "no return within 2s"}
+      }
+    },
+    {
+      "args": ["0", "é", 2],
+      "id": "multibyte_value_counts_bytes",
+      "note": "strlen sees two bytes, no padding",
+      "result": {"returned": {"type": "string", "value": "é"}}
+    },
+    {
+      "args": ["é", "5", 3],
+      "id": "multibyte_pad",
+      "result": {
+        "exception": {"class": "BehaviorTimeout", "code": 0, "message": "no return within 2s"}
+      }
+    }
+  ],
+  "function": "padleft",
+  "signature": [
+    {
+      "by_ref": false,
+      "default": "",
+      "name": "pad",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    },
+    {
+      "by_ref": false,
+      "default": "",
+      "name": "value",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    },
+    {
+      "by_ref": false,
+      "default": 2,
+      "name": "min",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    }
+  ]
+}

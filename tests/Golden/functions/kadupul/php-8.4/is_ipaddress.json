@@ -1,0 +1,213 @@
+{
+  "cases": [
+    {"args": ["10.0.0.1"], "id": "ipv4", "result": {"returned": {"type": "bool", "value": true}}},
+    {
+      "args": ["255.255.255.255"],
+      "id": "ipv4_max",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["0.0.0.0"],
+      "id": "ipv4_zero",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["256.1.1.1"],
+      "id": "ipv4_octet_over",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["1.2.3"],
+      "id": "ipv4_three_octets",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["01.2.3.4"],
+      "id": "ipv4_leading_zero",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["1.2.3.4.5"],
+      "id": "ipv4_five_octets",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["192.168.1.1/24"],
+      "id": "ipv4_cidr",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["1.2.3.4:80"],
+      "id": "ipv4_port",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [" 1.2.3.4"],
+      "id": "ipv4_leading_space",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["1.2.3.4\n"],
+      "id": "ipv4_trailing_newline",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["1.2.3.4%eth0"],
+      "id": "ipv4_with_scope",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["2130706433"],
+      "id": "ipv4_decimal_form",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["::1"],
+      "id": "ipv6_loopback",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["::"],
+      "id": "ipv6_unspecified",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["1:2:3:4:5:6:7:8"],
+      "id": "ipv6_full",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["2001:db8::1"],
+      "id": "ipv6_compressed",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["2001:DB8::A"],
+      "id": "ipv6_uppercase",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["2001:db8::g"],
+      "id": "ipv6_invalid_hex",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["1::2::3"],
+      "id": "ipv6_two_compressions",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["1:2:3:4:5:6:7:8:9"],
+      "id": "ipv6_too_many_groups",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["::ffff:1.2.3.4"],
+      "id": "ipv6_mapped_v4",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["[::1]"],
+      "id": "ipv6_brackets",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["fe80::1%eth0"],
+      "id": "ipv6_scope",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["::1%"],
+      "id": "ipv6_empty_scope",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["%eth0"],
+      "id": "ipv6_scope_only",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["fe80::1%eth0%x"],
+      "id": "ipv6_double_scope",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["fe80::1%2"],
+      "id": "ipv6_scope_numeric",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {"args": [""], "id": "empty", "result": {"returned": {"type": "bool", "value": false}}},
+    {
+      "args": ["localhost"],
+      "id": "hostname",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["host.example.com"],
+      "id": "fqdn",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {"args": ["é"], "id": "multibyte", "result": {"returned": {"type": "bool", "value": false}}},
+    {
+      "args": [{"$": "bytes", "hex": "31002e32"}],
+      "id": "nul_byte",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [{"$": "bytes", "hex": "ff"}],
+      "id": "invalid_utf8",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [{"$": "repeat", "count": 100000, "unit": "a"}],
+      "id": "oversized",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [null],
+      "id": "null",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "str_contains(): Passing null to parameter #1 ($haystack) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {"args": [1], "id": "int", "result": {"returned": {"type": "bool", "value": false}}},
+    {"args": [true], "id": "true", "result": {"returned": {"type": "bool", "value": false}}},
+    {
+      "args": [["1.2.3.4"]],
+      "id": "array",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "str_contains(): Argument #1 ($haystack) must be of type string, array given"
+        }
+      }
+    },
+    {
+      "args": [],
+      "id": "default_argument",
+      "note": "defaults to the empty string",
+      "result": {"returned": {"type": "bool", "value": false}}
+    }
+  ],
+  "function": "is_ipaddress",
+  "signature": [
+    {
+      "by_ref": false,
+      "default": "",
+      "name": "ip_address",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    }
+  ]
+}

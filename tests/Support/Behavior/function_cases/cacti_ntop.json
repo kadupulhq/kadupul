@@ -1,0 +1,24 @@
+{
+  "function": "cacti_ntop",
+  "cases": [
+    {"id": "ipv4_packed", "args": [{"$": "bytes", "hex": "0a000001"}]},
+    {"id": "ipv6_packed", "args": [{"$": "bytes", "hex": "00000000000000000000000000000001"}]},
+    {"id": "ipv6_mapped", "args": [{"$": "bytes", "hex": "00000000000000000000ffff01020304"}]},
+    {"id": "five_bytes", "args": [{"$": "bytes", "hex": "0a00000102"}]},
+    {"id": "empty_string", "args": [""]},
+    {"id": "zero_string", "args": ["0"], "note": "empty(\"0\") is true"},
+    {"id": "null", "args": [null]},
+    {"id": "false", "args": [false]},
+    {"id": "int_zero", "args": [0]},
+    {"id": "empty_array", "args": [[]]},
+    {"id": "ascii_four_bytes", "args": ["1234"]},
+    {"id": "int_single_digit", "args": [5]},
+    {"id": "array_first_element_used", "args": [[{"$": "bytes", "hex": "0a000001"}, {"$": "bytes", "hex": "0a000002"}]]},
+    {"id": "assoc_array_first_element", "args": [{"$": "array", "pairs": [["b", {"$": "bytes", "hex": "0a000002"}], ["a", {"$": "bytes", "hex": "0a000001"}]]}], "note": "first in insertion order, not key order"},
+    {"id": "array_first_empty", "args": [["", {"$": "bytes", "hex": "0a000001"}]]},
+    {"id": "array_first_null", "args": [[null]]},
+    {"id": "array_of_arrays", "args": [[[{"$": "bytes", "hex": "0a000001"}]]]},
+    {"id": "true", "args": [true]},
+    {"id": "dotted_text", "args": ["10.0.0.1"]}
+  ]
+}

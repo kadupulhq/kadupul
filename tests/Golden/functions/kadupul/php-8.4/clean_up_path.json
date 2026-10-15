@@ -1,0 +1,280 @@
+{
+  "cases": [
+    {
+      "ambient": {
+        "config": {"cacti_server_os": "win32"},
+        "settings": {"storage_location": "", "using_cygwin": ""}
+      },
+      "args": ["C:/a/b"],
+      "id": "win32_forward",
+      "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+      "result": {"returned": {"type": "string", "value": "C:\\a\\b"}}
+    },
+    {
+      "ambient": {
+        "config": {"cacti_server_os": "unix"},
+        "settings": {"storage_location": "", "using_cygwin": ""}
+      },
+      "args": ["C:/a/b"],
+      "id": "unix_forward",
+      "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+      "result": {"returned": {"type": "string", "value": "C:/a/b"}}
+    },
+    {
+      "ambient": {
+        "config": {"cacti_server_os": "win32"},
+        "settings": {"storage_location": "", "using_cygwin": ""}
+      },
+      "args": ["C:\\a\\b"],
+      "id": "win32_backslash",
+      "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+      "result": {"returned": {"type": "string", "value": "C:\\a\\b"}}
+    },
+    {
+      "ambient": {
+        "config": {"cacti_server_os": "unix"},
+        "settings": {"storage_location": "", "using_cygwin": ""}
+      },
+      "args": ["C:\\a\\b"],
+      "id": "unix_backslash",
+      "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+      "result": {"returned": {"type": "string", "value": "C:/a/b"}}
+    },
+    {
+      "ambient": {
+        "config": {"cacti_server_os": "win32"},
+        "settings": {"storage_location": "", "using_cygwin": ""}
+      },
+      "args": ["a/b\\c"],
+      "id": "win32_mixed",
+      "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+      "result": {"returned": {"type": "string", "value": "a\\b\\c"}}
+    },
+    {
+      "ambient": {
+        "config": {"cacti_server_os": "unix"},
+        "settings": {"storage_location": "", "using_cygwin": ""}
+      },
+      "args": ["a/b\\c"],
+      "id": "unix_mixed",
+      "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+      "result": {"returned": {"type": "string", "value": "a/b/c"}}
+    },
+    {
+      "ambient": {
+        "config": {"cacti_server_os": "win32"},
+        "settings": {"storage_location": "", "using_cygwin": ""}
+      },
+      "args": ["abc"],
+      "id": "win32_none",
+      "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+      "result": {"returned": {"type": "string", "value": "abc"}}
+    },
+    {
+      "ambient": {
+        "config": {"cacti_server_os": "unix"},
+        "settings": {"storage_location": "", "using_cygwin": ""}
+      },
+      "args": ["abc"],
+      "id": "unix_none",
+      "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+      "result": {"returned": {"type": "string", "value": "abc"}}
+    },
+    {
+      "ambient": {
+        "config": {"cacti_server_os": "win32"},
+        "settings": {"storage_location": "", "using_cygwin": ""}
+      },
+      "args": [""],
+      "id": "win32_empty",
+      "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+      "result": {"returned": {"type": "string", "value": ""}}
+    },
+    {
+      "ambient": {
+        "config": {"cacti_server_os": "unix"},
+        "settings": {"storage_location": "", "using_cygwin": ""}
+      },
+      "args": [""],
+      "id": "unix_empty",
+      "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+      "result": {"returned": {"type": "string", "value": ""}}
+    },
+    {
+      "ambient": {
+        "config": {"cacti_server_os": "plan9"},
+        "settings": {"storage_location": "", "using_cygwin": "on"}
+      },
+      "args": ["a\\b/c"],
+      "id": "other_os_cygwin_on",
+      "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+      "result": {"returned": {"type": "string", "value": "a/b/c"}}
+    },
+    {
+      "ambient": {
+        "config": {"cacti_server_os": "plan9"},
+        "settings": {"storage_location": "1", "using_cygwin": ""}
+      },
+      "args": ["a\\b/c"],
+      "id": "other_os_storage_location_set",
+      "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+      "result": {"returned": {"type": "string", "value": "a/b/c"}}
+    },
+    {
+      "ambient": {
+        "config": {"cacti_server_os": "plan9"},
+        "settings": {"storage_location": "0", "using_cygwin": ""}
+      },
+      "args": ["a\\b/c"],
+      "id": "other_os_storage_location_zero",
+      "note": "the string \"0\" is falsy. The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+      "result": {"returned": {"type": "string", "value": "a\\b/c"}}
+    },
+    {
+      "ambient": {
+        "config": {"cacti_server_os": "plan9"},
+        "settings": {"storage_location": "", "using_cygwin": ""}
+      },
+      "args": ["a\\b/c"],
+      "id": "other_os_neither",
+      "note": "returned untouched. The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+      "result": {"returned": {"type": "string", "value": "a\\b/c"}}
+    },
+    {
+      "ambient": {
+        "config": {"cacti_server_os": "plan9"},
+        "settings": {"storage_location": "", "using_cygwin": "yes"}
+      },
+      "args": ["a\\b/c"],
+      "id": "other_os_cygwin_other_value",
+      "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+      "result": {"returned": {"type": "string", "value": "a\\b/c"}}
+    },
+    {
+      "ambient": {
+        "config": {"cacti_server_os": null},
+        "settings": {"storage_location": "", "using_cygwin": ""}
+      },
+      "args": ["a\\b/c"],
+      "id": "os_null",
+      "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+      "result": {"returned": {"type": "string", "value": "a\\b/c"}}
+    },
+    {
+      "ambient": {
+        "config": {"cacti_server_os": "win32"},
+        "settings": {"storage_location": "", "using_cygwin": ""}
+      },
+      "args": [null],
+      "id": "win32_null_path",
+      "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "str_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "string", "value": ""}
+      }
+    },
+    {
+      "ambient": {
+        "config": {"cacti_server_os": "unix"},
+        "settings": {"storage_location": "", "using_cygwin": ""}
+      },
+      "args": [null],
+      "id": "unix_null_path",
+      "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "str_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "string", "value": ""}
+      }
+    },
+    {
+      "ambient": {
+        "config": {"cacti_server_os": "win32"},
+        "settings": {"storage_location": "", "using_cygwin": ""}
+      },
+      "args": [123],
+      "id": "win32_int_path",
+      "note": "str_replace returns a string for an int subject. The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+      "result": {"returned": {"type": "string", "value": "123"}}
+    },
+    {
+      "ambient": {
+        "config": {"cacti_server_os": "win32"},
+        "settings": {"storage_location": "", "using_cygwin": ""}
+      },
+      "args": [["a/b", "c/d"]],
+      "id": "win32_array_path",
+      "note": "str_replace maps over an array. The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+      "result": {"returned": {"type": "array", "value": ["a\\b", "c\\d"]}}
+    },
+    {
+      "ambient": {
+        "config": {"cacti_server_os": "win32"},
+        "settings": {"storage_location": "", "using_cygwin": ""}
+      },
+      "args": ["é/日本"],
+      "id": "win32_multibyte",
+      "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+      "result": {"returned": {"type": "string", "value": "é\\日本"}}
+    },
+    {
+      "ambient": {
+        "config": {"cacti_server_os": "unix"},
+        "settings": {"storage_location": "", "using_cygwin": ""}
+      },
+      "args": [{"$": "bytes", "hex": "5cff5c"}],
+      "id": "unix_invalid_utf8",
+      "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+      "result": {"returned": {"type": "string", "value": {"$": "bytes", "hex": "2fff2f"}}}
+    },
+    {
+      "ambient": {
+        "config": {"cacti_server_os": "win32"},
+        "settings": {"storage_location": "", "using_cygwin": ""}
+      },
+      "args": [{"$": "repeat", "count": 50000, "unit": "a/"}],
+      "id": "win32_oversized",
+      "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+      "result": {
+        "returned": {
+          "type": "string",
+          "value": {
+            "$": "long",
+            "bytes": 100000,
+            "head_hex": "615c615c615c615c615c615c615c615c615c615c615c615c615c615c615c615c",
+            "sha256": "dc825d6986afb53eedd434af9329c39eaa339f54fdefd3a3d42e742a79237563"
+          }
+        }
+      }
+    },
+    {
+      "ambient": {
+        "config": {"cacti_server_os": "unix"},
+        "settings": {"storage_location": "", "using_cygwin": ""}
+      },
+      "args": ["\\\\server\\share\\x"],
+      "id": "unix_unc_prefix",
+      "note": "The ambient state sets $config[cacti_server_os]; a target that reads the CACTI_SERVER_OS constant instead does not see it.",
+      "result": {"returned": {"type": "string", "value": "//server/share/x"}}
+    }
+  ],
+  "function": "clean_up_path",
+  "signature": [
+    {"by_ref": false, "name": "path", "optional": false, "type": null, "variadic": false}
+  ]
+}
