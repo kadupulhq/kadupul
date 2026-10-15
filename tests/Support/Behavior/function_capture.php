@@ -53,6 +53,10 @@ function behavior_scrub($text)
     // and per edit of the probe.
     $text = preg_replace('/ (passed|called) in .+? on line \d+/', ' $1 in <caller>', $text);
 
+    // Lines in the harness's own files move whenever it is edited, and the first
+    // and the repeated call sit on different lines.
+    $text = preg_replace(['#(/harness/[\w./-]+\.php)(?:\[\d+\]|\(\d+\)(?= : eval))#', '#(in file: /harness/\S+\.php\s+on line: )\d+#'], ['$1[<LINE>]', '$1<LINE>'], $text);
+
     return str_replace($config['base_path'], '<APP>', $text);
 }
 
@@ -77,7 +81,8 @@ function behavior_log_since($offset)
         $new = substr((string) file_get_contents(behavior_log_path()), $offset);
         foreach (explode("\n", rtrim($new, "\n")) as $line) {
             // The stamp is wall clock; the message after it is the behavior.
-            $lines[] = preg_replace('/^[0-9A-Za-z\/.-]+ \d{2}:\d{2}:\d{2} - /', '<TIMESTAMP> - ', behavior_scrub($line));
+            // Encoded so a logged message that is not UTF-8 cannot make the record unserializable.
+            $lines[] = behavior_encode(preg_replace('/^[0-9A-Za-z\/.-]+ \d{2}:\d{2}:\d{2} - /', '<TIMESTAMP> - ', behavior_scrub($line)));
         }
     }
 
@@ -450,6 +455,243 @@ function behavior_mask_generated(array &$first, array &$second)
         $first['returned']['value'] = BEHAVIOR_GENERATED_HASH;
         $second['returned']['value'] = BEHAVIOR_GENERATED_HASH;
     }
+}
+
+/*
+ * Fixtures for the logging functions. A case reaches them through prelude and
+ * between steps, which accept any function defined in user code. They touch
+ * only files named log/fnclog_*, below the application root, so a case file
+ * cannot write elsewhere.
+ */
+function behavior_fixture_path($path)
+{
+    if (!is_string($path) || !preg_match('#^log/fnclog_[A-Za-z0-9_./-]*$#', $path) || str_contains($path, '..')) {
+        throw new InvalidArgumentException('Fixture paths are log/fnclog_* below the application root');
+    }
+
+    return $path;
+}
+
+function behavior_fixture_write($path, $content, $mode = 0644)
+{
+    $path = behavior_fixture_path($path);
+    if (is_file($path)) {
+        chmod($path, 0644);
+    }
+    $bytes = file_put_contents($path, $content);
+    chmod($path, $mode);
+
+    return $bytes;
+}
+
+function behavior_fixture_numbered($path, $count, $prefix = 'Line ')
+{
+    $content = '';
+    for ($i = 1; $i <= $count; $i++) {
+        $content .= $prefix . $i . "\n";
+    }
+
+    return behavior_fixture_write($path, $content);
+}
+
+function behavior_fixture_remove($path)
+{
+    $path = behavior_fixture_path($path);
+    if (is_file($path)) {
+        chmod($path, 0644);
+    }
+
+    return is_file($path) ? unlink($path) : false;
+}
+
+/*
+ * The file split on LF, one element per line, so a message that tried to start
+ * another record shows as one. The timestamp keeps its format and loses its
+ * digits, and a poller PID loses its value; the rest is untouched.
+ */
+function behavior_fixture_read($path)
+{
+    $path = behavior_fixture_path($path);
+    if (!is_file($path)) {
+        return null;
+    }
+    $lines = [];
+    foreach (explode("\n", (string) file_get_contents($path)) as $line) {
+        $line = preg_replace_callback('/^([0-9A-Za-z\/.-]+ \d{2}:\d{2}:\d{2}) - /', static fn($m) => '<TIMESTAMP:' . preg_replace('/\d/', '9', $m[1]) . '> - ', $line);
+        $lines[] = behavior_encode(preg_replace('/^(<TIMESTAMP:[^>]+> - POLLER: Poller\[\d+\] PID\[)\d+\]/', '$1<PID>]', $line));
+    }
+
+    return $lines;
+}
+
+/* Set a $_SERVER entry for the rest of the process; null removes it. Use with isolated cases. */
+function behavior_fixture_server($key, $value)
+{
+    if ($value === null) {
+        unset($_SERVER[$key]);
+    } else {
+        $_SERVER[$key] = $value;
+    }
+
+    return $_SERVER[$key] ?? null;
+}
+
+/* The constants the logging code consults, which a case cannot otherwise define. Use with isolated cases. */
+function behavior_fixture_define($name)
+{
+    if (!in_array($name, ['KADUPUL_REDACT_DATABASE_LOGS', 'IN_CACTI_INSTALL'], true)) {
+        throw new InvalidArgumentException('Constant not offered: ' . $name);
+    }
+
+    return define($name, true);
+}
+
+/* Returns the previous level. The level stays for the rest of the process, so use it with isolated cases. */
+function behavior_fixture_error_reporting($level)
+{
+    return error_reporting($level);
+}
+
+/* A plugin_config row, rolled back with the case. */
+function behavior_fixture_plugin_status($directory, $status)
+{
+    return db_execute_prepared('INSERT INTO plugin_config (directory, name, status, author, webpage, version) VALUES (?, ?, ?, ?, ?, ?)', [$directory, $directory, $status, '', '', '1']);
+}
+
+/* The case runner restores $_SESSION afterwards. Use with isolated cases or restore-sensitive callers. */
+function behavior_fixture_unset_session()
+{
+    unset($_SESSION);
+
+    return isset($_SESSION);
+}
+
+/* Read, and optionally clear, state the logging functions write but do not return. */
+function behavior_fixture_peek($what, $clear = false)
+{
+    global $config, $snmp_error, $database_log;
+
+    switch ($what) {
+        case 'session_debug_log':
+            $value = $_SESSION['debug_log'] ?? null;
+            if ($clear) {
+                unset($_SESSION['debug_log']);
+            }
+
+            return $value;
+        case 'config_debug_log':
+            $value = $config['debug_log'] ?? null;
+            if ($clear) {
+                unset($config['debug_log']);
+            }
+
+            return $value;
+        case 'log_path':
+            return $config['log_path'] ?? null;
+        case 'snmp_error':
+            $value = $snmp_error ?? null;
+            if ($clear) {
+                $snmp_error = null;
+            }
+
+            return $value;
+        case 'database_log':
+            $value = $database_log ?? null;
+            if ($clear) {
+                unset($GLOBALS['database_log']);
+            }
+
+            return $value;
+    }
+
+    throw new InvalidArgumentException('Unknown state ' . $what);
+}
+
+/*
+ * Raise a PHP diagnostic with CactiErrorHandler installed, the way the
+ * application runs. The call itself records the log lines it produced.
+ * E_USER_ERROR is not offered: the handler returns false, and PHP then ends the
+ * process for it.
+ */
+function behavior_fixture_trigger($level, $message, $silence = false)
+{
+    if (!in_array($level, [E_USER_WARNING, E_USER_NOTICE, E_USER_DEPRECATED], true)) {
+        throw new InvalidArgumentException('Only E_USER_WARNING, E_USER_NOTICE and E_USER_DEPRECATED can be raised in process');
+    }
+    set_error_handler('CactiErrorHandler');
+    try {
+        if ($silence) {
+            @trigger_error($message, $level);
+        } else {
+            trigger_error($message, $level);
+        }
+    } finally {
+        restore_error_handler();
+    }
+
+    return error_get_last()['message'] ?? null;
+}
+
+/*
+ * Leave a compile-time warning in error_get_last(), which no user handler can see.
+ * With a path, the warning comes from that file instead, which lets it sit under
+ * a plugins/ directory.
+ */
+function behavior_fixture_compile_warning($path = null)
+{
+    error_clear_last();
+    if ($path === null) {
+        @eval('declare(fnclog=1);');
+    } else {
+        $path = getcwd() . '/' . behavior_fixture_path($path);
+        if (!is_dir(dirname($path))) {
+            mkdir(dirname($path), 0755, true);
+        }
+        file_put_contents($path, "<?php\ndeclare(fnclog=1);\n");
+        @include $path;
+        unlink($path);
+    }
+
+    return error_get_last()['type'] ?? null;
+}
+
+/* A diagnostic no handler claims, so error_get_last() holds it as PHP would leave it. */
+function behavior_fixture_unhandled($level, $message)
+{
+    set_error_handler(static fn() => false);
+    try {
+        trigger_error($message, $level);
+    } finally {
+        restore_error_handler();
+    }
+
+    return error_get_last()['message'] ?? null;
+}
+
+/* A backtrace taken through a method and a callback, which have a class and no file. */
+class BehaviorFixtureTrace
+{
+    public function run(array $args)
+    {
+        return array_map([$this, 'take'], [$args])[0];
+    }
+
+    public function take(array $args)
+    {
+        return cacti_debug_backtrace(...$args);
+    }
+}
+
+function behavior_fixture_backtrace(array $args)
+{
+    return (new BehaviorFixtureTrace())->run($args);
+}
+
+function behavior_fixture_clear_last_error()
+{
+    error_clear_last();
+
+    return error_get_last();
 }
 
 function behavior_step($step, $forget = true)

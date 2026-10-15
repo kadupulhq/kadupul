@@ -1,0 +1,90 @@
+{
+  "cases": [
+    {
+      "ambient": {"config": {"poller_id": 1}},
+      "args": ["t"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {
+            "type": "array",
+            "value": {
+              "$": "array",
+              "pairs": [["t", ["</div></td></tr></table></td></tr></td></table>"]]]
+            }
+          }
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "id": "end_plain",
+      "note": "appends a fixed closing fragment",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"config": {"poller_id": 1}},
+      "args": ["t"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {
+            "type": "array",
+            "value": {
+              "$": "array",
+              "pairs": [
+                [
+                  "t",
+                  [
+                    "<table class='cactiTable debug'><tr class='tableHeader'><td>S</td></tr><tr><td style='padding:0px;'><table style='display:none;'><tr><td><div style='font-family: monospace;'>",
+                    "</div></td></tr></table></td></tr></td></table>"
+                  ]
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "id": "end_after_start",
+      "prelude": [
+        {
+          "diagnostics": [
+            {
+              "count": 1,
+              "file": "lib/functions.php",
+              "message": "Undefined variable $copy_headerid",
+              "severity": "E_WARNING",
+              "suppressed": false
+            }
+          ],
+          "fn": "debug_log_insert_section_start",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "result": {"returned": {"type": "null", "value": null}}
+    }
+  ],
+  "function": "debug_log_insert_section_end",
+  "signature": [
+    {"by_ref": false, "name": "type", "optional": false, "type": null, "variadic": false}
+  ]
+}

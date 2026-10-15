@@ -1,0 +1,13 @@
+{
+  "function": "cacti_redact_value",
+  "cases": [
+    {"id": "sensitive_string", "args": ["password", "hunter2"]},
+    {"id": "sensitive_null", "args": ["password", null], "note": "a null secret is still replaced"},
+    {"id": "sensitive_array", "args": ["community", ["public"]]},
+    {"id": "plain_string", "args": ["name", "x"]},
+    {"id": "plain_null", "args": ["name", null]},
+    {"id": "plain_array_not_walked", "args": ["options", {"$": "array", "pairs": [["password", "hunter2"]]}], "note": "the value is returned as is: a secret nested in it is not redacted"},
+    {"id": "plain_list_with_secret_word", "args": ["args", ["password=hunter2"]], "note": "content is never inspected, only the key"},
+    {"id": "missing_value", "args": ["password", null]}
+  ]
+}

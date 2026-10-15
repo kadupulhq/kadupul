@@ -1,0 +1,933 @@
+{
+  "cases": [
+    {
+      "args": ["log/fnclog_tail_missing.log", 10, -1, "", 1, 0, true],
+      "id": "missing_file_is_created",
+      "note": "the first case writes the files the others read. A missing file is touched and an empty array returned",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_remove",
+          "log": [],
+          "output": "",
+          "returned": {"type": "bool", "value": false}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_write",
+          "log": [],
+          "output": "",
+          "returned": {"type": "int", "value": 433}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_numbered",
+          "log": [],
+          "output": "",
+          "returned": {"type": "int", "value": 56}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_numbered",
+          "log": [],
+          "output": "",
+          "returned": {"type": "int", "value": 63}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_numbered",
+          "log": [],
+          "output": "",
+          "returned": {"type": "int", "value": 48893}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_numbered",
+          "log": [],
+          "output": "",
+          "returned": {"type": "int", "value": 551}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_write",
+          "log": [],
+          "output": "",
+          "returned": {"type": "int", "value": 0}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_write",
+          "log": [],
+          "output": "",
+          "returned": {"type": "int", "value": 5}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_write",
+          "log": [],
+          "output": "",
+          "returned": {"type": "int", "value": 4}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_write",
+          "log": [],
+          "output": "",
+          "returned": {"type": "int", "value": 6}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_write",
+          "log": [],
+          "output": "",
+          "returned": {"type": "int", "value": 6}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_write",
+          "log": [],
+          "output": "",
+          "returned": {"type": "int", "value": 20000}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_write",
+          "log": [],
+          "output": "",
+          "returned": {"type": "int", "value": 10}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_write",
+          "log": [],
+          "output": "",
+          "returned": {"type": "int", "value": 6}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_write",
+          "log": [],
+          "output": "",
+          "returned": {"type": "int", "value": 74}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_write",
+          "log": [],
+          "output": "",
+          "returned": {"type": "int", "value": 2}
+        }
+      ],
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 0}
+        },
+        "returned": {"type": "array", "value": []}
+      },
+      "warm": {
+        "result": {
+          "by_ref": {
+            "page_nr": {"type": "int", "value": 1},
+            "total_rows": {"type": "int", "value": 0}
+          },
+          "diagnostics": [
+            {
+              "count": 1,
+              "file": "lib/functions.php",
+              "message": "Undefined array key \"cacti_session_name\"",
+              "severity": "E_WARNING",
+              "suppressed": false
+            },
+            {
+              "count": 1,
+              "file": "lib/functions.php",
+              "message": "Undefined array key \"cookie_options\"",
+              "severity": "E_WARNING",
+              "suppressed": false
+            }
+          ],
+          "exception": {
+            "class": "TypeError",
+            "code": 0,
+            "message": "session_start(): Argument #1 ($options) must be of type array, null given"
+          },
+          "log": [],
+          "output": ""
+        },
+        "same": false
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_locked.log", 10, -1, "", 1, 0, true],
+      "id": "unreadable_file",
+      "note": "mode 0000: a one-element array carrying the error text",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 0}
+        },
+        "returned": {"type": "array", "value": ["Error log/fnclog_tail_locked.log is not readable"]}
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_empty.log", 10, -1, "", 1, 0, true],
+      "id": "empty_file",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 0}
+        },
+        "returned": {"type": "array", "value": []}
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_one.log", 10, -1, "", 1, 0, true],
+      "id": "single_line",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 1}
+        },
+        "returned": {"type": "array", "value": {"$": "array", "pairs": [[1, "only\n"]]}}
+      }
+    },
+    {
+      "args": ["log/fnclog_tail_n8.log", 3, -1, "", 1, 0, true],
+      "id": "cli_without_session_config",
+      "note": "in a CLI process $config[cacti_session_name] is unset, so force_session_data() raises a TypeError after the file was read: tail_file only works in a web request",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 8}
+        },
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Undefined array key \"cacti_session_name\"",
+            "severity": "E_WARNING",
+            "suppressed": false
+          },
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Undefined array key \"cookie_options\"",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "session_start(): Argument #1 ($options) must be of type array, null given"
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_n8.log", 3, -1, "", 1, 0, true],
+      "id": "n8_page1",
+      "note": "the newest 3 lines; keys start at 1",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 8}
+        },
+        "returned": {
+          "type": "array",
+          "value": {"$": "array", "pairs": [[6, "Line 6\n"], [7, "Line 7\n"], [8, "Line 8\n"]]}
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_n8.log", 3, -1, "", 2, 0, true],
+      "id": "n8_page2",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 2},
+          "total_rows": {"type": "int", "value": 8}
+        },
+        "returned": {
+          "type": "array",
+          "value": {"$": "array", "pairs": [[3, "Line 3\n"], [4, "Line 4\n"], [5, "Line 5\n"]]}
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_n8.log", 3, -1, "", 3, 0, true],
+      "id": "n8_page3_partial",
+      "note": "start is clamped to 0 but end comes from the unclamped start (-1+3), so only the oldest 2 lines are returned",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 3},
+          "total_rows": {"type": "int", "value": 8}
+        },
+        "returned": {
+          "type": "array",
+          "value": {"$": "array", "pairs": [[1, "Line 1\n"], [2, "Line 2\n"]]}
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_n8.log", 3, -1, "", 4, 0, true],
+      "id": "n8_page4_beyond",
+      "note": "(4-1)*3 > 8 resets page_nr to 1",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 8}
+        },
+        "returned": {
+          "type": "array",
+          "value": {"$": "array", "pairs": [[6, "Line 6\n"], [7, "Line 7\n"], [8, "Line 8\n"]]}
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_n9.log", 3, -1, "", 3, 0, true],
+      "id": "n9_page3_exact",
+      "note": "exact multiple: page 3 is the oldest 3",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 3},
+          "total_rows": {"type": "int", "value": 9}
+        },
+        "returned": {
+          "type": "array",
+          "value": {"$": "array", "pairs": [[1, "Line 1\n"], [2, "Line 2\n"], [3, "Line 3\n"]]}
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_n8.log", 0, -1, "", 1, 0, true],
+      "id": "n8_lines_zero",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 8}
+        },
+        "returned": {"type": "array", "value": []}
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_n8.log", 1000, -1, "", 1, 0, true],
+      "id": "n8_lines_more",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 8}
+        },
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              [1, "Line 1\n"],
+              [2, "Line 2\n"],
+              [3, "Line 3\n"],
+              [4, "Line 4\n"],
+              [5, "Line 5\n"],
+              [6, "Line 6\n"],
+              [7, "Line 7\n"],
+              [8, "Line 8\n"]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_n8.log", "abc", -1, "", 1, 0, true],
+      "id": "n8_lines_text",
+      "note": "non-numeric line count",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 8}
+        },
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "Unsupported operand types: string * int"
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_n5000.log", 100, -1, "", 1, 0, true],
+      "id": "n5000_page1_summarised",
+      "note": "100 rows: the returned array is recorded by digest",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 5000}
+        },
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": {
+              "$": "list",
+              "count": 100,
+              "head": [
+                [4901, "Line 4901\n"],
+                [4902, "Line 4902\n"],
+                [4903, "Line 4903\n"],
+                [4904, "Line 4904\n"]
+              ],
+              "sha256": "afa45209f39fb132643e8fce2bc1e0b4fc8db96575bdb0e90d1b8ddc65227b73",
+              "types": ["array"]
+            }
+          }
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_n5000.log", 100, -1, "", 51, 0, true],
+      "id": "n5000_page51_empty",
+      "note": "(51-1)*100 = 5000 is not greater than 5000, so page 51 is kept; start -100 clamps to 0 but end is 0, so nothing is returned",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 51},
+          "total_rows": {"type": "int", "value": 5000}
+        },
+        "returned": {"type": "array", "value": []}
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_n5000.log", 100, -1, "", 52, 0, true],
+      "id": "n5000_page52_reset",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 5000}
+        },
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": {
+              "$": "list",
+              "count": 100,
+              "head": [
+                [4901, "Line 4901\n"],
+                [4902, "Line 4902\n"],
+                [4903, "Line 4903\n"],
+                [4904, "Line 4904\n"]
+              ],
+              "sha256": "afa45209f39fb132643e8fce2bc1e0b4fc8db96575bdb0e90d1b8ddc65227b73",
+              "types": ["array"]
+            }
+          }
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_n70.log", 70, -1, "", 1, 0, true],
+      "id": "n70_all",
+      "note": "70 rows is over the 64-element summary threshold",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 70}
+        },
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": {
+              "$": "list",
+              "count": 70,
+              "head": [[1, "Line 1\n"], [2, "Line 2\n"], [3, "Line 3\n"], [4, "Line 4\n"]],
+              "sha256": "a196e32f1fc845fa6bf6d19a3731306ef7eff8d1ce3da22f20cee7dfb26fb640",
+              "types": ["array"]
+            }
+          }
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_long.log", 10, -1, "", 1, 0, true],
+      "id": "long_line",
+      "note": "a 20000 byte line without newline is returned whole",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 1}
+        },
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              [
+                1,
+                {
+                  "$": "long",
+                  "bytes": 20000,
+                  "head_hex": "7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7a",
+                  "sha256": "09ef7eb5c2cd6571647475fd220c7b88426cf645dd18a063ad27b4c8f1f180a6"
+                }
+              ]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_utf8.log", 10, -1, "", 1, 0, true],
+      "id": "invalid_utf8_line",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 2}
+        },
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [[1, {"$": "bytes", "hex": "626164ff0a"}], [2, "good\n"]]
+          }
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_nul.log", 10, -1, "", 1, 0, true],
+      "id": "nul_line",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 2}
+        },
+        "returned": {
+          "type": "array",
+          "value": {"$": "array", "pairs": [[1, {"$": "bytes", "hex": "6100620a"}], [2, "c\n"]]}
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_forged.log", 10, -1, "", 1, 0, true],
+      "id": "forged_looking_lines",
+      "note": "tail_file returns lines as stored; a viewer cannot tell forged from real",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 2}
+        },
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              [1, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP x\n"],
+              [2, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP ERROR: forged\n"]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log", 10, -1, "", 1, 0, true],
+      "id": "path_is_directory",
+      "note": "file_exists is true for a directory; fgets then fails",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 0}
+        },
+        "diagnostics": [
+          {
+            "count": 2,
+            "file": "lib/functions.php",
+            "message": "fgets(): Read of 8192 bytes failed with errno=21 Is a directory",
+            "severity": "E_NOTICE",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "array", "value": []}
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_mix.log", 100, 3, "", 1, 0, true],
+      "id": "type_3",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 4}
+        },
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              [1, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP WARNING: low disk\n"],
+              [2, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP ERROR: disk full\n"],
+              [3, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP DEBUG: trace\n"],
+              [4, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP SQL query\n"]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_mix.log", 100, 6, "", 1, 0, true],
+      "id": "type_6",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 1}
+        },
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [[1, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP DEBUG: trace\n"]]
+          }
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_mix.log", 100, 9, "", 1, 0, true],
+      "id": "type_9",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 9}
+        },
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              [1, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP WARNING: low disk\n"],
+              [2, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP ERROR: disk full\n"],
+              [3, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP DEBUG: trace\n"],
+              [4, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP SQL query\n"],
+              [5, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP AUTOM8 rule\n"],
+              [6, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP BOOST run\n"],
+              [7, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP HOST EVENT: Device[1] is down!\n"],
+              [8, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP ASSERT FAILED x\n"],
+              [9, "<TIMESTAMP:9999-99-99 99:99:99> - SYSTEM plain\n"]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_mix.log", 100, 11, "", 1, 0, true],
+      "id": "type_11",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 1}
+        },
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              [1, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP HOST EVENT: Device[1] is down!\n"]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_mix.log", 100, -1, "ERROR", 1, 0, true],
+      "id": "filter_upper",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 1}
+        },
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [[1, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP ERROR: disk full\n"]]
+          }
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_mix.log", 100, -1, "error", 1, 0, true],
+      "id": "filter_lower",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 1}
+        },
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [[1, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP ERROR: disk full\n"]]
+          }
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_mix.log", 100, -1, "nothing", 1, 0, true],
+      "id": "filter_no_match",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 0}
+        },
+        "returned": {"type": "array", "value": []}
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_mix.log", 100, -1, "err|warn", 1, 0, true],
+      "id": "filter_regex_alt",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 2}
+        },
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              [1, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP WARNING: low disk\n"],
+              [2, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP ERROR: disk full\n"]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_mix.log", 100, -1, "(", 1, 0, true],
+      "id": "filter_invalid_regex",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 0}
+        },
+        "diagnostics": [
+          {
+            "count": 20,
+            "file": "lib/functions.php",
+            "message": "preg_match(): Compilation failed: missing closing parenthesis at offset 1",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "array", "value": []}
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_mix.log", 100, -1, "a/b", 1, 0, true],
+      "id": "filter_slash",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 0}
+        },
+        "diagnostics": [
+          {
+            "count": 20,
+            "file": "lib/functions.php",
+            "message": "preg_match(): Unknown modifier 'b'",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "array", "value": []}
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_mix.log", 100, -1, "0", 1, 0, true],
+      "id": "filter_zero",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 10}
+        },
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              [1, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP STATS: ok\n"],
+              [2, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP WARNING: low disk\n"],
+              [3, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP ERROR: disk full\n"],
+              [4, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP DEBUG: trace\n"],
+              [5, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP SQL query\n"],
+              [6, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP AUTOM8 rule\n"],
+              [7, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP BOOST run\n"],
+              [8, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP HOST EVENT: Device[1] is down!\n"],
+              [9, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP ASSERT FAILED x\n"],
+              [10, "<TIMESTAMP:9999-99-99 99:99:99> - SYSTEM plain\n"]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_mix.log", 100, -1, "nothing", 1, 0, false],
+      "id": "filter_not_found_inverted",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 10}
+        },
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              [1, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP STATS: ok\n"],
+              [2, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP WARNING: low disk\n"],
+              [3, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP ERROR: disk full\n"],
+              [4, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP DEBUG: trace\n"],
+              [5, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP SQL query\n"],
+              [6, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP AUTOM8 rule\n"],
+              [7, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP BOOST run\n"],
+              [8, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP HOST EVENT: Device[1] is down!\n"],
+              [9, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP ASSERT FAILED x\n"],
+              [10, "<TIMESTAMP:9999-99-99 99:99:99> - SYSTEM plain\n"]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_mix.log", 100, -1, "disk", 1, 0, false],
+      "id": "filter_found_inverted",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 8}
+        },
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              [1, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP STATS: ok\n"],
+              [2, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP DEBUG: trace\n"],
+              [3, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP SQL query\n"],
+              [4, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP AUTOM8 rule\n"],
+              [5, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP BOOST run\n"],
+              [6, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP HOST EVENT: Device[1] is down!\n"],
+              [7, "<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP ASSERT FAILED x\n"],
+              [8, "<TIMESTAMP:9999-99-99 99:99:99> - SYSTEM plain\n"]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_mix.log", 100, -1, "2026", 1, 0, false],
+      "id": "filter_position_zero_inverted",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 0}
+        },
+        "returned": {"type": "array", "value": []}
+      }
+    },
+    {
+      "ambient": {"config": {"cacti_session_name": "S", "cookie_options": []}},
+      "args": ["log/fnclog_tail_n8.log", 3, -1, "", 1, 999, true],
+      "id": "total_rows_by_ref_overwritten",
+      "note": "total_rows is replaced, not added to",
+      "result": {
+        "by_ref": {
+          "page_nr": {"type": "int", "value": 1},
+          "total_rows": {"type": "int", "value": 8}
+        },
+        "returned": {
+          "type": "array",
+          "value": {"$": "array", "pairs": [[6, "Line 6\n"], [7, "Line 7\n"], [8, "Line 8\n"]]}
+        }
+      }
+    }
+  ],
+  "function": "tail_file",
+  "signature": [
+    {"by_ref": false, "name": "file_name", "optional": false, "type": null, "variadic": false},
+    {
+      "by_ref": false,
+      "name": "number_of_lines",
+      "optional": false,
+      "type": null,
+      "variadic": false
+    },
+    {
+      "by_ref": false,
+      "default": -1,
+      "name": "message_type",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    },
+    {
+      "by_ref": false,
+      "default": "",
+      "name": "filter",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    },
+    {
+      "by_ref": true,
+      "default": 1,
+      "name": "page_nr",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    },
+    {
+      "by_ref": true,
+      "default": 0,
+      "name": "total_rows",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    },
+    {
+      "by_ref": false,
+      "default": true,
+      "name": "matches",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    }
+  ]
+}

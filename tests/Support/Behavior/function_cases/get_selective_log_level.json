@@ -1,0 +1,20 @@
+{
+  "function": "get_selective_log_level",
+  "cases": [
+    {"id": "nothing_configured", "args": [], "ambient": {"settings": {}}, "isolated": true, "note": "the probe script is /harness/probe.php: no match, empty string"},
+    {"id": "file_listed", "args": [], "ambient": {"settings": {"selective_debug": "probe.php"}}, "isolated": true},
+    {"id": "file_listed_with_space", "args": [], "ambient": {"settings": {"selective_debug": "a.php, probe.php"}}, "isolated": true, "note": "entries are not trimmed: \" probe.php\" does not match"},
+    {"id": "file_other_only", "args": [], "ambient": {"settings": {"selective_debug": "other.php"}}, "isolated": true},
+    {"id": "script_name_fallback", "args": [], "ambient": {"settings": {"selective_debug": "vianame.php"}}, "isolated": true, "prelude": [{"fn": "behavior_fixture_server", "args": ["PHP_SELF", null]}, {"fn": "behavior_fixture_server", "args": ["SCRIPT_NAME", "/x/vianame.php"]}]},
+    {"id": "script_filename_fallback", "args": [], "ambient": {"settings": {"selective_debug": "viafile.php"}}, "isolated": true, "prelude": [{"fn": "behavior_fixture_server", "args": ["PHP_SELF", null]}, {"fn": "behavior_fixture_server", "args": ["SCRIPT_NAME", null]}, {"fn": "behavior_fixture_server", "args": ["SCRIPT_FILENAME", "/x/viafile.php"]}]},
+    {"id": "no_server_entries_uses_functions_file", "args": [], "ambient": {"settings": {"selective_debug": "functions.php"}}, "isolated": true, "prelude": [{"fn": "behavior_fixture_server", "args": ["PHP_SELF", null]}, {"fn": "behavior_fixture_server", "args": ["SCRIPT_NAME", null]}, {"fn": "behavior_fixture_server", "args": ["SCRIPT_FILENAME", null]}], "note": "falls back to the file that defines the function"},
+    {"id": "plugin_dir_listed", "args": [], "ambient": {"settings": {"selective_plugin_debug": "foo"}}, "isolated": true, "prelude": [{"fn": "behavior_fixture_server", "args": ["PHP_SELF", "/var/www/html/plugins/foo/a.php"]}]},
+    {"id": "plugin_dir_not_listed", "args": [], "ambient": {"settings": {"selective_plugin_debug": "bar"}}, "isolated": true, "prelude": [{"fn": "behavior_fixture_server", "args": ["PHP_SELF", "/var/www/html/plugins/foo/a.php"]}]},
+    {"id": "plugin_prefix_matches", "args": [], "ambient": {"settings": {"selective_plugin_debug": "fo"}}, "isolated": true, "prelude": [{"fn": "behavior_fixture_server", "args": ["PHP_SELF", "/var/www/html/plugins/foo/a.php"]}], "note": "\"/fo\" is contained in \"/foo\": a plugin name is matched as a path prefix, so \"fo\" selects foo and foobar"},
+    {"id": "plugin_setting_empty", "args": [], "ambient": {"settings": {"selective_plugin_debug": ""}}, "isolated": true, "prelude": [{"fn": "behavior_fixture_server", "args": ["PHP_SELF", "/var/www/html/plugins/foo/a.php"]}]},
+    {"id": "plugins_in_other_dir_name", "args": [], "ambient": {"settings": {"selective_plugin_debug": "x"}}, "isolated": true, "prelude": [{"fn": "behavior_fixture_server", "args": ["PHP_SELF", "/var/www/html/myplugins/x/a.php"]}], "note": "any directory containing \"plugins\" counts"},
+    {"id": "plugin_setting_ignored_outside_plugins", "args": [], "ambient": {"settings": {"selective_plugin_debug": "foo"}}, "isolated": true, "prelude": [{"fn": "behavior_fixture_server", "args": ["PHP_SELF", "/var/www/html/foo/a.php"]}]},
+    {"id": "file_and_plugin_both", "args": [], "ambient": {"settings": {"selective_debug": "a.php", "selective_plugin_debug": "zzz"}}, "isolated": true, "prelude": [{"fn": "behavior_fixture_server", "args": ["PHP_SELF", "/var/www/html/plugins/foo/a.php"]}], "note": "the plugin check does not clear a level the file check set"},
+    {"id": "cached_for_the_process", "args": [], "ambient": {"settings": {"selective_debug": "probe.php"}}, "isolated": true, "between": [{"setting": {"selective_debug": ""}}], "note": "static: the second call keeps the first answer"}
+  ]
+}

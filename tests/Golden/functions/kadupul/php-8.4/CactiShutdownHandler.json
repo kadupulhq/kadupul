@@ -1,0 +1,127 @@
+{
+  "cases": [
+    {
+      "args": [],
+      "id": "no_error",
+      "note": "error_get_last() is null: nothing happens",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_clear_last_error",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "args": [],
+      "id": "user_warning_ignored_type",
+      "note": "E_USER_* is not in the shutdown handler list: nothing logged by it (the trigger itself logged one line)",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_trigger",
+          "log": [
+            "<TIMESTAMP> - ERROR PHP USER_WARNING: a user warning in file: <HARNESS>/function_capture.php  on line: <LINE>",
+            "<TIMESTAMP> - CMDPHP PHP ERROR WARNING Backtrace:  (<harness frames: 6>, <HARNESS>/function_capture.php[<LINE>]:trigger_error(), CactiErrorHandler())"
+          ],
+          "output": "",
+          "returned": {"type": "string", "value": "a user warning"}
+        }
+      ],
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "args": [],
+      "id": "ignored_message_user_warning",
+      "note": "claimed by IgnoreErrorHandler: returns true",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_trigger",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "a user warning"}
+        }
+      ],
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "args": [],
+      "id": "compile_warning_logged",
+      "note": "E_COMPILE_WARNING from an eval: logged with the shutdown handler's format and a backtrace",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_compile_warning",
+          "log": [],
+          "output": "",
+          "returned": {"type": "int", "value": 128}
+        }
+      ],
+      "result": {
+        "log": [
+          "<TIMESTAMP> - ERROR PHP COMPILE_WARNING: Unsupported declare 'fnclog' in file: <HARNESS>/function_capture.php[<LINE>] : eval()'d code on line: 1",
+          "<TIMESTAMP> - CMDPHP PHP ERROR Backtrace:  (<harness frames: 3>, <HARNESS>/function_capture.php[<LINE>]:CactiShutdownHandler())"
+        ],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "args": [1, 2],
+      "id": "extra_arguments",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_clear_last_error",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "args": [],
+      "id": "ignored_message_unhandled",
+      "note": "an ignorable message left in error_get_last(): returns true before looking at the type",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_unhandled",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "Timeout"}
+        }
+      ],
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [],
+      "id": "compile_warning_in_plugin_file",
+      "note": "the warning names a file under plugins/p/: the handler logs it, disables the plugin (rolled back) and tries to mail the administrator",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_compile_warning",
+          "log": [],
+          "output": "",
+          "returned": {"type": "int", "value": 128}
+        }
+      ],
+      "result": {
+        "log": [
+          "<TIMESTAMP> - ERROR PHP COMPILE_WARNING in  Plugin 'p': Unsupported declare 'fnclog' in file: <APP>/log/fnclog_sd/plugins/p/f.php on line: 2",
+          "<TIMESTAMP> - CMDPHP PHP ERROR Backtrace:  (<harness frames: 3>, <HARNESS>/function_capture.php[<LINE>]:CactiShutdownHandler())",
+          "<TIMESTAMP> - CMDPHP ERRORS DETECTED - DISABLING PLUGIN 'p'",
+          "<TIMESTAMP> - SYSTEM WARNING: Primary Admin account notifications disabled!  Unable to send administrative Email."
+        ],
+        "returned": {"type": "null", "value": null}
+      }
+    }
+  ],
+  "function": "CactiShutdownHandler",
+  "signature": []
+}

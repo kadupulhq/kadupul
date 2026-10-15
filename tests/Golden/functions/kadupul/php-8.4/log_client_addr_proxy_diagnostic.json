@@ -1,0 +1,68 @@
+{
+  "cases": [
+    {
+      "ambient": {"settings": {"log_verbosity": "5"}},
+      "args": [],
+      "id": "debug_verbosity_logs",
+      "note": "level DEBUG: logged once as \"AUTH DEBUG: ...\", then the static flag keeps the warm call silent",
+      "result": {
+        "log": [
+          "<TIMESTAMP> - AUTH DEBUG: Proxy client address ignored or rejected; configure proxy_trusted_addresses with exact proxy IPs and proxy_headers with one allowlisted header containing one client IP. Legacy boolean proxy_headers is unsupported."
+        ],
+        "returned": {"type": "null", "value": null}
+      },
+      "warm": {
+        "result": {
+          "diagnostics": [],
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        },
+        "same": false
+      }
+    },
+    {
+      "ambient": {"settings": {"log_verbosity": "2"}},
+      "args": [],
+      "id": "low_verbosity_gated",
+      "note": "gated by level, but the once-per-request flag is consumed anyway",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"settings": {"log_verbosity": "6"}},
+      "args": [],
+      "id": "devdbg_verbosity",
+      "note": "DEVDBG logs only DEVDBG-level messages and LOW ones; DEBUG is dropped",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"settings": {"log_verbosity": "1"}},
+      "args": [],
+      "id": "none_verbosity",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"settings": {"log_verbosity": "2", "selective_debug": "probe.php"}},
+      "args": [],
+      "id": "selective_debug_forces",
+      "note": "selective debug for the running script forces DEBUG, so the line is written under LOW",
+      "result": {
+        "log": [
+          "<TIMESTAMP> - AUTH DEBUG: Proxy client address ignored or rejected; configure proxy_trusted_addresses with exact proxy IPs and proxy_headers with one allowlisted header containing one client IP. Legacy boolean proxy_headers is unsupported."
+        ],
+        "returned": {"type": "null", "value": null}
+      },
+      "warm": {
+        "result": {
+          "diagnostics": [],
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        },
+        "same": false
+      }
+    }
+  ],
+  "function": "log_client_addr_proxy_diagnostic",
+  "signature": []
+}

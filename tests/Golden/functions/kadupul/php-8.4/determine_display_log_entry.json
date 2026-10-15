@@ -1,0 +1,494 @@
+{
+  "cases": [
+    {
+      "args": [1, "x STATS: y\n", ""],
+      "id": "type1_line0",
+      "note": "'x STATS: y'",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [1, "WARNING: w\n", ""],
+      "id": "type1_line1",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [2, "x WARNING: w\n", ""],
+      "id": "type2_line0",
+      "note": "'x WARNING: w'",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [2, "x WARN y\n", ""],
+      "id": "type2_line1",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [2, "ERROR: e\n", ""],
+      "id": "type2_line2",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [3, "x WARN y\n", ""],
+      "id": "type3_line0",
+      "note": "'x WARN y'",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [3, "x ERROR y\n", ""],
+      "id": "type3_line1",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [3, "x DEBUG y\n", ""],
+      "id": "type3_line2",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [3, "x SQL y\n", ""],
+      "id": "type3_line3",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [3, "x SQL\n", ""],
+      "id": "type3_line4",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [3, "plain\n", ""],
+      "id": "type3_line5",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [4, "x ERROR y\n", ""],
+      "id": "type4_line0",
+      "note": "'x ERROR y'",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [4, "WARNING: w\n", ""],
+      "id": "type4_line1",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [5, "x ERROR y\n", ""],
+      "id": "type5_line0",
+      "note": "'x ERROR y'",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [5, "x DEBUG y\n", ""],
+      "id": "type5_line1",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [5, "x SQL y\n", ""],
+      "id": "type5_line2",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [5, "x WARN y\n", ""],
+      "id": "type5_line3",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [6, "x DEBUG y\n", ""],
+      "id": "type6_line0",
+      "note": "'x DEBUG y'",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [6, "DEBUG x SQL y\n", ""],
+      "id": "type6_line1",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [6, "plain\n", ""],
+      "id": "type6_line2",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [7, "x SQL y\n", ""],
+      "id": "type7_line0",
+      "note": "'x SQL y'",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [7, "x SQL\n", ""],
+      "id": "type7_line1",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [7, "sql lower\n", ""],
+      "id": "type7_line2",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [8, "x AUTOM8 y\n", ""],
+      "id": "type8_line0",
+      "note": "'x AUTOM8 y'",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [8, "autom8\n", ""],
+      "id": "type8_line1",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [9, "x STATS: y\n", ""],
+      "id": "type9_line0",
+      "note": "'x STATS: y'",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [9, "plain\n", ""],
+      "id": "type9_line1",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [10, "x BOOST y\n", ""],
+      "id": "type10_line0",
+      "note": "'x BOOST y'",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [10, "boost\n", ""],
+      "id": "type10_line1",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [11, "x HOST EVENT y\n", ""],
+      "id": "type11_line0",
+      "note": "'x HOST EVENT y'",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [11, "Device[1] is recovering!\n", ""],
+      "id": "type11_line1",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [11, "Device[1] is down!\n", ""],
+      "id": "type11_line2",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [11, "is down!\n", ""],
+      "id": "type11_line3",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [12, "x ASSERT FAILED y\n", ""],
+      "id": "type12_line0",
+      "note": "'x ASSERT FAILED y'",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [12, "x Recache Event y\n", ""],
+      "id": "type12_line1",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [12, "plain\n", ""],
+      "id": "type12_line2",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [-1, "anything\n", ""],
+      "id": "type_all",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [0, "plain\n", ""],
+      "id": "unknown_type_zero",
+      "note": "thold not enabled: types outside the table fall to the default branch",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [13, "plain\n", ""],
+      "id": "unknown_type_thirteen",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["abc", "plain\n", ""],
+      "id": "unknown_type_text",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [null, "plain\n", ""],
+      "id": "unknown_type_null",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [true, "plain\n", ""],
+      "id": "unknown_type_true",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [false, "plain\n", ""],
+      "id": "unknown_type_false",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["1", "plain\n", ""],
+      "id": "unknown_type_string_one",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [1.0, "plain\n", ""],
+      "id": "unknown_type_float_one",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["1abc", "plain\n", ""],
+      "id": "unknown_type_string_one_abc",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [[], "plain\n", ""],
+      "id": "unknown_type_empty_array",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [99, "THOLD: Threshold breached\n", ""],
+      "id": "thold_enabled_type99_match",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_plugin_status",
+          "log": [],
+          "output": "",
+          "returned": {"type": "bool", "value": true}
+        }
+      ],
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [99, "plain\n", ""],
+      "id": "thold_enabled_type99_nomatch",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_plugin_status",
+          "log": [],
+          "output": "",
+          "returned": {"type": "bool", "value": true}
+        }
+      ],
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [13, "plain\n", ""],
+      "id": "thold_enabled_type13",
+      "note": "default branch with thold enabled and type != 99 leaves $display unset: an undefined-variable warning and null",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_plugin_status",
+          "log": [],
+          "output": "",
+          "returned": {"type": "bool", "value": true}
+        }
+      ],
+      "result": {
+        "diagnostics": [
+          {
+            "count": 2,
+            "file": "lib/functions.php",
+            "message": "Undefined variable $display",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "args": [-1, "ERROR: disk Full\n", "", true],
+      "id": "filter_match_none",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [-1, "ERROR: disk Full\n", "disk", true],
+      "id": "filter_match_hit",
+      "result": {"returned": {"type": "string", "value": "ERROR: disk Full\n"}}
+    },
+    {
+      "args": [-1, "ERROR: disk Full\n", "DISK", true],
+      "id": "filter_match_hit_case",
+      "result": {"returned": {"type": "string", "value": "ERROR: disk Full\n"}}
+    },
+    {
+      "args": [-1, "ERROR: disk Full\n", "zzz", true],
+      "id": "filter_match_miss",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [-1, "ERROR: disk Full\n", "d.sk", true],
+      "id": "filter_match_regex_hit",
+      "result": {"returned": {"type": "string", "value": "ERROR: disk Full\n"}}
+    },
+    {
+      "args": [-1, "ERROR: disk Full\n", "zzz|full", true],
+      "id": "filter_match_regex_alt",
+      "result": {"returned": {"type": "string", "value": "ERROR: disk Full\n"}}
+    },
+    {
+      "args": [-1, "ERROR: disk Full\n", "(", true],
+      "id": "filter_match_invalid_regex",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "preg_match(): Compilation failed: missing closing parenthesis at offset 1",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [-1, "ERROR: disk Full\n", "a/b", true],
+      "id": "filter_match_slash_modifier",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "preg_match(): Unknown modifier 'b'",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [
+        -1,
+        "ERROR: disk Full\n",
+        "dxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        true
+      ],
+      "id": "filter_match_long_filter",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [-1, "ERROR: disk Full\n", "0", true],
+      "id": "filter_match_zero",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [-1, "ERROR: disk Full\n", null, true],
+      "id": "filter_match_null",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [-1, "ERROR: disk Full\n", 5, true],
+      "id": "filter_match_int",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [-1, "ERROR: disk Full\n", ["a"], true],
+      "id": "filter_match_array",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "strlen(): Argument #1 ($string) must be of type string, array given"
+        }
+      }
+    },
+    {
+      "args": [-1, "ERROR: disk Full\n", "disk", false],
+      "id": "filter_inverted_hit_middle",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [-1, "ERROR: disk Full\n", "ERROR", false],
+      "id": "filter_inverted_hit_start",
+      "note": "validate_is_regex() never returns false (true or an error string), so the stripos() fallback of the inverted filter is unreachable",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [-1, "ERROR: disk Full\n", "zzz", false],
+      "id": "filter_inverted_miss",
+      "result": {"returned": {"type": "string", "value": "ERROR: disk Full\n"}}
+    },
+    {
+      "args": [-1, "ERROR: disk Full\n", "d.sk", false],
+      "id": "filter_inverted_regex_hit",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [-1, "ERROR: disk Full\n", "", false],
+      "id": "filter_inverted_empty",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [-1, "ERROR: disk Full\n", "(", false],
+      "id": "filter_inverted_invalid_regex",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "preg_match(): Compilation failed: missing closing parenthesis at offset 1",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "string", "value": "ERROR: disk Full\n"}
+      }
+    },
+    {
+      "args": [-1, "ERROR: a(b\n", "(", true],
+      "id": "filter_match_invalid_regex_literal_hit",
+      "note": "an invalid pattern falls through to the literal stripos() test",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "preg_match(): Compilation failed: missing closing parenthesis at offset 1",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "string", "value": "ERROR: a(b\n"}
+      }
+    },
+    {
+      "args": [4, "WARNING: w\n", "w"],
+      "id": "filter_with_type_mismatch",
+      "note": "the type test fails first: false, the filter is not consulted",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [-1, "ERROR: e\n", "e"],
+      "id": "filter_returns_line_not_true",
+      "note": "a matching filter returns the line itself, no filter returns true",
+      "result": {"returned": {"type": "string", "value": "ERROR: e\n"}}
+    },
+    {
+      "args": [-1, "ERROR: disk Full\n", "zzz", null],
+      "id": "matches_null",
+      "result": {"returned": {"type": "string", "value": "ERROR: disk Full\n"}}
+    }
+  ],
+  "function": "determine_display_log_entry",
+  "signature": [
+    {"by_ref": false, "name": "message_type", "optional": false, "type": null, "variadic": false},
+    {"by_ref": false, "name": "line", "optional": false, "type": null, "variadic": false},
+    {"by_ref": false, "name": "filter", "optional": false, "type": null, "variadic": false},
+    {
+      "by_ref": false,
+      "default": true,
+      "name": "matches",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    }
+  ]
+}

@@ -1,0 +1,223 @@
+{
+  "cases": [
+    {
+      "ambient": {"config": {"poller_id": 1}},
+      "args": ["t", "one"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "array", "value": {"$": "array", "pairs": [["t", ["one"]]]}}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "id": "main_poller_no_session",
+      "note": "poller 1 writes to $_SESSION even when there is no session",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"config": {"poller_id": 2}},
+      "args": ["t", "one"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "array", "value": {"$": "array", "pairs": [["t", ["one"]]]}}
+        }
+      ],
+      "id": "remote_poller_no_session",
+      "note": "a remote poller without a session writes to $config[debug_log], which debug_log_return never reads",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_unset_session",
+          "log": [],
+          "output": "",
+          "returned": {"type": "bool", "value": false}
+        }
+      ],
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"config": {"poller_id": 2}, "session": {"x": 1}},
+      "args": ["t", "one"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "array", "value": {"$": "array", "pairs": [["t", ["one"]]]}}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "id": "remote_poller_with_session",
+      "note": "an existing session wins over the poller id",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"config": {"poller_id": 1}, "session": {"x": 1}},
+      "args": ["t", "one"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "array", "value": {"$": "array", "pairs": [["t", ["one"]]]}}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "id": "main_poller_with_session",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"config": {"poller_id": 1}},
+      "args": ["t", "two"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "array", "value": {"$": "array", "pairs": [["t", ["one", "two"]]]}}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "id": "appends_in_order",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "debug_log_insert",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"config": {"poller_id": 1}},
+      "args": ["b", "two"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {
+            "type": "array",
+            "value": {"$": "array", "pairs": [["a", ["one"]], ["b", ["two"]]]}
+          }
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "id": "other_type_kept_apart",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "debug_log_insert",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"config": {"poller_id": 1}},
+      "args": ["t", "<script>alert(1)</script>"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {
+            "type": "array",
+            "value": {"$": "array", "pairs": [["t", ["<script>alert(1)</script>"]]]}
+          }
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "id": "html_not_escaped",
+      "note": "insert stores text as given; escaping is the caller's job",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"config": {"poller_id": 1}},
+      "args": [null, "x"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "array", "value": {"$": "array", "pairs": [["", ["x"]]]}}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "id": "null_type",
+      "note": "a null key is stored under \"\"",
+      "result": {"returned": {"type": "null", "value": null}}
+    }
+  ],
+  "function": "debug_log_insert",
+  "signature": [
+    {"by_ref": false, "name": "type", "optional": false, "type": null, "variadic": false},
+    {"by_ref": false, "name": "text", "optional": false, "type": null, "variadic": false}
+  ]
+}

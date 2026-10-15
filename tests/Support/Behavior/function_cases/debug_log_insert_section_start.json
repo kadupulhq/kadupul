@@ -1,0 +1,9 @@
+{
+  "function": "debug_log_insert_section_start",
+  "cases": [
+    {"id": "start_plain", "args": ["t", "Section"], "ambient": {"config": {"poller_id": 1}}, "between": [{"fn": "behavior_fixture_peek", "args": ["session_debug_log"]}, {"fn": "behavior_fixture_peek", "args": ["config_debug_log"]}], "note": "allowcopy false: $copy_headerid is undefined and the table has no header id (warning)"},
+    {"id": "start_allowcopy", "args": ["t", "Section", true], "ambient": {"config": {"poller_id": 1}}, "between": [{"fn": "behavior_fixture_peek", "args": ["session_debug_log"]}, {"fn": "behavior_fixture_peek", "args": ["config_debug_log"]}], "note": "ids carry a random 32 hex uid, replaced"},
+    {"id": "start_html_escaped", "args": ["t", "<b>\"x\"&"], "ambient": {"config": {"poller_id": 1}}, "between": [{"fn": "behavior_fixture_peek", "args": ["session_debug_log"]}, {"fn": "behavior_fixture_peek", "args": ["config_debug_log"]}], "note": "the header text is html_escape()d"},
+    {"id": "start_allowcopy_truthy_string", "args": ["t", "S", "no"], "ambient": {"config": {"poller_id": 1}}, "between": [{"fn": "behavior_fixture_peek", "args": ["session_debug_log"]}, {"fn": "behavior_fixture_peek", "args": ["config_debug_log"]}]}
+  ]
+}

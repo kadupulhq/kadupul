@@ -1,0 +1,7 @@
+{
+  "function": "debug_log_insert_section_end",
+  "cases": [
+    {"id": "end_plain", "args": ["t"], "ambient": {"config": {"poller_id": 1}}, "between": [{"fn": "behavior_fixture_peek", "args": ["session_debug_log"]}, {"fn": "behavior_fixture_peek", "args": ["config_debug_log"]}], "note": "appends a fixed closing fragment"},
+    {"id": "end_after_start", "args": ["t"], "ambient": {"config": {"poller_id": 1}}, "prelude": [{"fn": "debug_log_insert_section_start", "args": ["t", "S"]}], "between": [{"fn": "behavior_fixture_peek", "args": ["session_debug_log"]}, {"fn": "behavior_fixture_peek", "args": ["config_debug_log"]}]}
+  ]
+}

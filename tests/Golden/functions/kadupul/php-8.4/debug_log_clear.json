@@ -1,0 +1,170 @@
+{
+  "cases": [
+    {
+      "ambient": {"config": {"poller_id": 1}},
+      "args": [],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "id": "clear_all",
+      "note": "no argument: the whole debug_log is removed",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "debug_log_insert",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        },
+        {
+          "diagnostics": [],
+          "fn": "debug_log_insert",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"config": {"poller_id": 1}},
+      "args": ["a"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "array", "value": {"$": "array", "pairs": [["b", ["y"]]]}}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "id": "clear_one_type",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "debug_log_insert",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        },
+        {
+          "diagnostics": [],
+          "fn": "debug_log_insert",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"config": {"poller_id": 1}},
+      "args": ["0"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "array", "value": {"$": "array", "pairs": [["a", ["y"]]]}}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "id": "clear_zero_string",
+      "note": "\"0\" == \"\" is false: only the type \"0\" is removed",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "debug_log_insert",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        },
+        {
+          "diagnostics": [],
+          "fn": "debug_log_insert",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"config": {"poller_id": 2}},
+      "args": [],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "array", "value": {"$": "array", "pairs": [["a", ["x"]]]}}
+        }
+      ],
+      "id": "clear_remote_poller_log_untouched",
+      "note": "clear only touches $_SESSION, not $config[debug_log]",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_unset_session",
+          "log": [],
+          "output": "",
+          "returned": {"type": "bool", "value": false}
+        },
+        {
+          "diagnostics": [],
+          "fn": "debug_log_insert",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "result": {"returned": {"type": "null", "value": null}}
+    }
+  ],
+  "function": "debug_log_clear",
+  "signature": [
+    {
+      "by_ref": false,
+      "default": "",
+      "name": "type",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    }
+  ]
+}

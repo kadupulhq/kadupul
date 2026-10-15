@@ -1,0 +1,10 @@
+{
+  "function": "log_client_addr_proxy_diagnostic",
+  "cases": [
+    {"id": "debug_verbosity_logs", "args": [], "isolated": true, "ambient": {"settings": {"log_verbosity": "5"}}, "note": "level DEBUG: logged once as \"AUTH DEBUG: ...\", then the static flag keeps the warm call silent"},
+    {"id": "low_verbosity_gated", "args": [], "isolated": true, "ambient": {"settings": {"log_verbosity": "2"}}, "note": "gated by level, but the once-per-request flag is consumed anyway"},
+    {"id": "devdbg_verbosity", "args": [], "isolated": true, "ambient": {"settings": {"log_verbosity": "6"}}, "note": "DEVDBG logs only DEVDBG-level messages and LOW ones; DEBUG is dropped"},
+    {"id": "none_verbosity", "args": [], "isolated": true, "ambient": {"settings": {"log_verbosity": "1"}}},
+    {"id": "selective_debug_forces", "args": [], "isolated": true, "ambient": {"settings": {"log_verbosity": "2", "selective_debug": "probe.php"}}, "note": "selective debug for the running script forces DEBUG, so the line is written under LOW"}
+  ]
+}

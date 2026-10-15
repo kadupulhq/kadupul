@@ -1,0 +1,12 @@
+{
+  "function": "CactiShutdownHandler",
+  "cases": [
+    {"id": "no_error", "args": [], "prelude": [{"fn": "behavior_fixture_clear_last_error", "args": []}], "note": "error_get_last() is null: nothing happens"},
+    {"id": "user_warning_ignored_type", "args": [], "prelude": [{"fn": "behavior_fixture_trigger", "args": [512, "a user warning"]}], "note": "E_USER_* is not in the shutdown handler list: nothing logged by it (the trigger itself logged one line)"},
+    {"id": "ignored_message_user_warning", "args": [], "prelude": [{"fn": "behavior_fixture_trigger", "args": [512, "Timeout"]}], "note": "claimed by IgnoreErrorHandler: returns true"},
+    {"id": "compile_warning_logged", "args": [], "prelude": [{"fn": "behavior_fixture_compile_warning", "args": []}], "note": "E_COMPILE_WARNING from an eval: logged with the shutdown handler's format and a backtrace"},
+    {"id": "extra_arguments", "args": [1, 2], "prelude": [{"fn": "behavior_fixture_clear_last_error", "args": []}]},
+    {"id": "ignored_message_unhandled", "args": [], "prelude": [{"fn": "behavior_fixture_unhandled", "args": [512, "Timeout"]}], "note": "an ignorable message left in error_get_last(): returns true before looking at the type"},
+    {"id": "compile_warning_in_plugin_file", "args": [], "prelude": [{"fn": "behavior_fixture_compile_warning", "args": ["log/fnclog_sd/plugins/p/f.php"]}], "note": "the warning names a file under plugins/p/: the handler logs it, disables the plugin (rolled back) and tries to mail the administrator", "isolated": true}
+  ]
+}

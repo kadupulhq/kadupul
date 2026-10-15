@@ -1890,6 +1890,23 @@ def large_value_summary_contract():
     print('values over 64 elements are summarized by hash, smaller ones and non-default fields are untouched')
 
 
+def logging_shape_contract():
+    shape = harness.normalize_logging_shapes
+    assert shape('09/12/2026 02:39:50 - CMDPHP x') == '<TIMESTAMP:99/99/9999 99:99:99> - CMDPHP x'
+    assert shape('2026-09-12 02:39:50 - CMDPHP x') == '<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP x', 'the format survives'
+    assert shape('note at 2026-09-12 02:39:50 - x') == 'note at 2026-09-12 02:39:50 - x', 'only a record start is a timestamp'
+    assert shape('Total[ 0.0123] msg') == 'Total[<T>] msg'
+    assert shape('x - POLLER: Poller[3] PID[4321] y') == 'x - POLLER: Poller[3] PID[<PID>] y'
+    assert shape('<[ 2026-10-15 09:46:18.806820 |    1424 ]> -- ') == '<[ <DATETIME> | <PID:7> ]> -- '
+    assert shape("id='clipboardData" + 'a' * 32 + "'") == "id='clipboardData<UID>'"
+    assert shape('(/harness/probe.php[135]:behavior_function_run(), /harness/function_capture.php[9]:behavior_call(), '
+                 '/harness/function_capture.php[169]:cacti_debug_backtrace())') == \
+        '(<harness frames: 2>, /harness/function_capture.php[<LINE>]:cacti_debug_backtrace())'
+    assert shape('E Backtrace:  (/var/www/html/lib/a.php[40]:f())') == 'E Backtrace:  (/var/www/html/lib/a.php[<LINE>]:f())'
+    assert shape('msg in file: /harness/function_capture.php  on line: 366') == 'msg in file: /harness/function_capture.php  on line: <LINE>'
+    print('logging shapes keep the timestamp format and drop wall clock, PID, random ids and harness frames')
+
+
 def function_comparison_contract():
     with tempfile.TemporaryDirectory(prefix='function comparison ') as directory:
         root = Path(directory)
@@ -1974,6 +1991,7 @@ def main():
     compact_json_contract()
     large_value_summary_contract()
     function_comparison_contract()
+    logging_shape_contract()
     failed_setup_manifest()
     unavailable_docker_failure()
     print('setup failure records an incomplete manifest without probing containers')

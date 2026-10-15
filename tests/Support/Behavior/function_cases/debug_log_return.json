@@ -1,0 +1,12 @@
+{
+  "function": "debug_log_return",
+  "cases": [
+    {"id": "new_graphs_missing", "args": ["new_graphs"], "ambient": {"config": {"poller_id": 1}}, "between": [{"fn": "behavior_fixture_peek", "args": ["session_debug_log"]}]},
+    {"id": "other_missing", "args": ["t"], "ambient": {"config": {"poller_id": 1}}, "between": [{"fn": "behavior_fixture_peek", "args": ["session_debug_log"]}]},
+    {"id": "new_graphs_keeps_entries", "args": ["new_graphs"], "ambient": {"config": {"poller_id": 1}}, "prelude": [{"fn": "debug_log_insert", "args": ["new_graphs", "a"]}, {"fn": "debug_log_insert", "args": ["new_graphs", "b"]}], "between": [{"fn": "behavior_fixture_peek", "args": ["session_debug_log"]}], "note": "new_graphs is not drained: the second call returns the same table"},
+    {"id": "other_drains_entries", "args": ["t"], "ambient": {"config": {"poller_id": 1}}, "prelude": [{"fn": "debug_log_insert", "args": ["t", "a"]}, {"fn": "debug_log_insert", "args": ["t", "b"]}], "between": [{"fn": "behavior_fixture_peek", "args": ["session_debug_log"]}], "note": "any other type is emptied as it is read; the warm call returns an empty table"},
+    {"id": "other_html_passthrough", "args": ["t"], "ambient": {"config": {"poller_id": 1}}, "prelude": [{"fn": "debug_log_insert", "args": ["t", "<i>x</i>"]}], "between": [{"fn": "behavior_fixture_peek", "args": ["session_debug_log"]}], "note": "entries are concatenated unescaped"},
+    {"id": "remote_poller_entries_unreadable", "args": ["t"], "ambient": {"config": {"poller_id": 2}}, "prelude": [{"fn": "behavior_fixture_unset_session", "args": []}, {"fn": "debug_log_insert", "args": ["t", "a"]}], "between": [{"fn": "behavior_fixture_peek", "args": ["config_debug_log"]}], "note": "an entry stored for a remote poller without a session is never returned"},
+    {"id": "empty_list_for_type", "args": ["t"], "ambient": {"config": {"poller_id": 1}, "session": {"debug_log": {"$": "array", "pairs": [["t", []]]}}}, "between": [{"fn": "behavior_fixture_peek", "args": ["session_debug_log"]}], "note": "an existing but empty list still yields an empty table"}
+  ]
+}

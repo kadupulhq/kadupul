@@ -1,0 +1,27 @@
+{
+  "function": "IgnoreErrorHandler",
+  "cases": [
+    {"id": "snmp_noresponsefrom10001", "args": ["No response from 10.0.0.1"], "prelude": [{"fn": "behavior_fixture_peek", "args": ["snmp_error", true]}], "between": [{"fn": "behavior_fixture_peek", "args": ["snmp_error"]}], "note": "SNMP messages return true and set $snmp_error"},
+    {"id": "snmp_nosuchname", "args": ["noSuchName"]},
+    {"id": "snmp_nosuchobjectavailableonthisage", "args": ["No Such Object available on this agent"]},
+    {"id": "snmp_errorinpacket", "args": ["Error in packet"]},
+    {"id": "snmp_thisnamedoesnotexist", "args": ["This name does not exist"]},
+    {"id": "snmp_endofmib", "args": ["End of MIB"]},
+    {"id": "snmp_timeout", "args": ["Timeout: No Response from host"], "prelude": [{"fn": "behavior_fixture_peek", "args": ["snmp_error", true]}], "between": [{"fn": "behavior_fixture_peek", "args": ["snmp_error"]}]},
+    {"id": "snmp_unknownhost", "args": ["Unknown host"]},
+    {"id": "snmp_connectiontimedout", "args": ["Connection timed out"]},
+    {"id": "snmp_invalidobjectidentifier", "args": ["Invalid object identifier"]},
+    {"id": "snmp_nameorservicenotknown", "args": ["Name or service not known"]},
+    {"id": "snmp_usmgenericerrorinfilex", "args": ["USM generic error in file x"]},
+    {"id": "snmp_case_insensitive", "args": ["TIMEOUT"]},
+    {"id": "snmp_trimmed_value", "args": [" \t\\Timeout\n\\ "], "prelude": [{"fn": "behavior_fixture_peek", "args": ["snmp_error", true]}], "between": [{"fn": "behavior_fixture_peek", "args": ["snmp_error"]}], "note": "trim() removes backslash, LF, tab and space from both ends"},
+    {"id": "general_socket", "args": ["unable to read from socket"], "prelude": [{"fn": "behavior_fixture_peek", "args": ["snmp_error", true]}], "between": [{"fn": "behavior_fixture_peek", "args": ["snmp_error"]}], "note": "general messages return true but leave $snmp_error alone"},
+    {"id": "general_exec_time", "args": ["Maximum execution time of 30 seconds exceeded"]},
+    {"id": "general_transport", "args": ["transport read failed"]},
+    {"id": "not_ignored", "args": ["Undefined variable $x"], "note": "returns false"},
+    {"id": "empty_string", "args": [""]},
+    {"id": "null_message", "args": [null], "note": "stripos(null) is deprecated"},
+    {"id": "array_message", "args": [["Timeout"]], "note": "stripos() rejects an array"},
+    {"id": "invalid_utf8", "args": [{"$": "bytes", "hex": "54696d656f7574ff"}]}
+  ]
+}

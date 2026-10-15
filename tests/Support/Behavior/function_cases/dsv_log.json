@@ -1,0 +1,15 @@
+{
+  "function": "dsv_log",
+  "cases": [
+    {"id": "trace_on_scalar", "args": ["msg", "value"], "ambient": {"settings": {"data_source_trace": "on"}}, "note": "line: DSTRACE <message> = <data>, at the default level LOW"},
+    {"id": "trace_off_empty", "args": ["msg", "value"], "ambient": {"settings": {"data_source_trace": ""}}, "note": "nothing is logged"},
+    {"id": "trace_off_unset", "args": ["msg", "value"], "ambient": {"settings": {"data_source_trace": null}}},
+    {"id": "trace_off_other_text", "args": ["msg", "value"], "ambient": {"settings": {"data_source_trace": "1"}}, "note": "only the exact string \"on\" enables it"},
+    {"id": "trace_on_uppercase", "args": ["msg", "value"], "ambient": {"settings": {"data_source_trace": "ON"}}},
+    {"id": "data_null", "args": ["msg"], "ambient": {"settings": {"data_source_trace": "on"}}, "note": "NULL spelled out"},
+    {"id": "data_null_explicit", "args": ["msg", null], "ambient": {"settings": {"data_source_trace": "on"}}},
+    {"id": "data_array", "args": ["msg", {"$": "array", "pairs": [["a", 1], ["b", [1, 2]]]}], "ambient": {"settings": {"data_source_trace": "on"}}, "note": "json_encode"},
+    {"id": "data_array_lf", "args": ["msg", ["a\nb"]], "ambient": {"settings": {"data_source_trace": "on"}}, "note": "json_encode escapes LF as \\n, so the line stays intact"},
+    {"id": "level_explicit_debug_dropped", "args": ["msg", "v", 5], "ambient": {"settings": {"data_source_trace": "on"}}, "note": "level 5 above verbosity 2: dropped"}
+  ]
+}

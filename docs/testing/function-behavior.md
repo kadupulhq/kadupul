@@ -231,3 +231,41 @@ a host PHP with `pcntl` (`make test-harness-selftest` provides one through
 - normalisation leaves a case's own `id`, `args`, `ambient` and `note` alone but
   still normalises a by-reference parameter that happens to carry one of those
   names.
+
+## Logging functions
+
+`cacti_log`, `cacti_log_file`-adjacent settings, `tail_file`, `dsv_log`, the
+`debug_log_*` family, `cacti_debug_backtrace`, the redaction helpers and the PHP
+error handlers write to files and to process state rather than returning a
+value. Their cases use fixtures defined at the end of `function_capture.php`,
+reached through `prelude` and `between` steps:
+
+- `behavior_fixture_write`, `_numbered`, `_remove` and `_read` manage files named
+  `log/fnclog_*` below the application root and nothing else. Cases point
+  `path_cactilog` at one of them and read it back in a `between` step, so the
+  golden holds the exact bytes of every record, one element per LF.
+- `behavior_fixture_server`, `_define`, `_error_reporting` and `_unset_session`
+  change process state for the cases that need it. They persist for the rest of
+  the process, so those cases are `isolated`.
+- `behavior_fixture_peek` reads and clears the debug log, `$snmp_error` and
+  `$database_log`. `behavior_fixture_trigger` raises a real `E_USER_*`
+  diagnostic with `CactiErrorHandler` installed, with or without `@`.
+
+Wall clock, PID, random ids and the harness's own backtrace frames are replaced
+by `normalize_logging_shapes` in `harness.py`. A timestamp keeps its format
+(`<TIMESTAMP:99/99/9999 99:99:99>`), so a change of date format still shows.
+
+What these cases cannot record:
+
+- `syslog()` writes to `/dev/log`, which a PHP process cannot observe. The cases
+  reach every syslog branch and the file shows the part that is observable. To
+  see the syslog payload, run a datagram listener on `/dev/log` as root in a kept
+  stack and replay the `syslog_*` cases.
+- The timestamp format comes from `CACTI_DATE_TIME_FORMAT`, a constant fixed at
+  bootstrap from the stored date settings. A case cannot change it.
+- `tail_file` calls `force_session_data()`, which needs the web session
+  configuration. The cases set `cacti_session_name` and `cookie_options` in
+  `$config`; `cli_without_session_config` records what a CLI process gets.
+- `CactiShutdownHandler` only acts on a fatal error left in `error_get_last()`.
+  A fatal error ends the process, so only the compile-warning arm can be reached
+  in process.

@@ -1,0 +1,234 @@
+{
+  "cases": [
+    {
+      "args": ["password"],
+      "id": "listed_password",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["pass"],
+      "id": "listed_pass",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["snmp_password"],
+      "id": "listed_snmp_password",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["snmp_priv_passphrase"],
+      "id": "listed_snmp_priv_passphrase",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["snmp_auth_passphrase"],
+      "id": "listed_snmp_auth_passphrase",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["rsa_private_key"],
+      "id": "listed_rsa_private_key",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["secret"],
+      "id": "listed_secret",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["auth_key"],
+      "id": "listed_auth_key",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["priv_key"],
+      "id": "listed_priv_key",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["token"],
+      "id": "listed_token",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["cookie"],
+      "id": "listed_cookie",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["community"],
+      "id": "listed_community",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["snmp_community"],
+      "id": "listed_snmp_community",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["specific_password"],
+      "id": "listed_specific_password",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["ldap_password"],
+      "id": "listed_ldap_password",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["PASSWORD"],
+      "id": "upper_case",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["PassWord"],
+      "id": "mixed_case",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["passwordHash"],
+      "id": "substring_prefix",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["user_token"],
+      "id": "substring_suffix",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["compass"],
+      "id": "over_match_compass",
+      "note": "contains \"pass\": a false positive",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["session_cookie_name"],
+      "id": "over_match_cookie_name",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["password_min_length"],
+      "id": "over_match_password_policy",
+      "note": "a policy setting, not a secret",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["api_key"],
+      "id": "name_api_key",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["apikey"],
+      "id": "name_apikey",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["private_key"],
+      "id": "name_private_key",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {"args": ["pwd"], "id": "name_pwd", "result": {"returned": {"type": "bool", "value": false}}},
+    {
+      "args": ["passwd"],
+      "id": "name_passwd",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["authorization"],
+      "id": "name_authorization",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["bearer"],
+      "id": "name_bearer",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["credential"],
+      "id": "name_credential",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["access_key"],
+      "id": "name_access_key",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["secret_key"],
+      "id": "name_secret_key",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["session_id"],
+      "id": "name_session_id",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["csrf_token"],
+      "id": "name_csrf_token",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["snmp_auth_protocol"],
+      "id": "name_snmp_auth_protocol",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["username"],
+      "id": "name_username",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["community_string"],
+      "id": "name_community_string",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["communities"],
+      "id": "name_communities",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["db_pass"],
+      "id": "name_db_pass",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["privkey"],
+      "id": "name_privkey",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {"args": ["psk"], "id": "name_psk", "result": {"returned": {"type": "bool", "value": false}}},
+    {"args": ["jwt"], "id": "name_jwt", "result": {"returned": {"type": "bool", "value": false}}},
+    {"args": [""], "id": "key_empty", "result": {"returned": {"type": "bool", "value": false}}},
+    {"args": [null], "id": "key_null", "result": {"returned": {"type": "bool", "value": false}}},
+    {"args": [0], "id": "key_int_zero", "result": {"returned": {"type": "bool", "value": false}}},
+    {"args": [123], "id": "key_int", "result": {"returned": {"type": "bool", "value": false}}},
+    {
+      "args": [["password"]],
+      "id": "key_array",
+      "note": "an array key is converted to \"Array\" with a warning",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Array to string conversion",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": ["0"],
+      "id": "key_numeric_string",
+      "result": {"returned": {"type": "bool", "value": false}}
+    }
+  ],
+  "function": "cacti_is_sensitive_key",
+  "signature": [
+    {"by_ref": false, "name": "key", "optional": false, "type": null, "variadic": false}
+  ]
+}
