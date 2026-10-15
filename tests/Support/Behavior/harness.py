@@ -1032,7 +1032,7 @@ def compare(args):
 
 FUNCTION_CASES = Path(__file__).resolve().with_name('function_cases')
 FUNCTION_GOLDENS = CONTROLLER_ROOT / 'tests/Golden/functions'
-FUNCTION_CASE_KEYS = frozenset(['id', 'args', 'ambient', 'prelude', 'between', 'isolated', 'timeout', 'note', 'record_sql', 'record_tables', 'record_state', 'mask_generated'])
+FUNCTION_CASE_KEYS = frozenset(['id', 'args', 'ambient', 'prelude', 'between', 'isolated', 'timeout', 'note', 'record_sql', 'record_tables', 'record_state', 'mask_generated', 'unordered'])
 FUNCTION_AMBIENT_KEYS = frozenset(['settings', 'config', 'session'])
 # Fields that echo what the author wrote. normalize() rewrites paths and clock
 # shapes, which would silently edit an input such as a path under /var/www/html.
@@ -1135,7 +1135,7 @@ def load_function_cases(directory, only=None):
             state = case.get('record_state', False)
             if not (isinstance(state, bool) or (isinstance(state, list) and state and set(state) <= {'session', 'config', 'settings_user'})):
                 raise RuntimeError(f'{where}: record_state must be true, false or a list of session, config, settings_user')
-            for flag in ('isolated', 'record_sql', 'record_tables', 'mask_generated'):
+            for flag in ('isolated', 'record_sql', 'record_tables', 'mask_generated', 'unordered'):
                 if flag in case and not isinstance(case[flag], bool):
                     raise RuntimeError(f'{where}: {flag} must be true or false')
             timeout = case.get('timeout')

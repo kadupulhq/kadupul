@@ -12,6 +12,6 @@
     {"record_sql": true, "id": "no_arguments", "args": []},
     {"record_sql": true, "id": "id_trailing_text", "args": ["1abc", "AND dspr.steps > 200"]},
     {"record_sql": true, "id": "id_text", "args": ["abc", "AND dspr.steps > 200"]},
-    {"record_sql": true, "id": "id_zero_template_rows", "args": [0], "note": "items of no graph: the LEFT JOIN yields one row of NULLs"}
+    {"record_sql": true, "unordered": true, "id": "id_zero_template_rows", "args": [0], "note": "items of no graph: the LEFT JOIN yields rows of NULLs that tie on the sort key, so their order is the engine's"}
   ]
 }

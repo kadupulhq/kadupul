@@ -33,7 +33,7 @@ const BEHAVIOR_SQL_LIMIT = 100;
 const BEHAVIOR_STATE_AREAS = ['session', 'config', 'settings_user'];
 const BEHAVIOR_WATCHED_TABLES = ['settings', 'settings_user'];
 const BEHAVIOR_GENERATED_HASH = '<generated 32 hex>';
-const BEHAVIOR_CASE_KEYS = ['id', 'args', 'ambient', 'prelude', 'between', 'isolated', 'timeout', 'note', 'record_sql', 'record_tables', 'record_state', 'mask_generated'];
+const BEHAVIOR_CASE_KEYS = ['id', 'args', 'ambient', 'prelude', 'between', 'isolated', 'timeout', 'note', 'record_sql', 'record_tables', 'record_state', 'mask_generated', 'unordered'];
 const BEHAVIOR_AMBIENT_KEYS = ['settings', 'config', 'session'];
 
 function behavior_relative($path)
@@ -371,7 +371,13 @@ function behavior_call($name, array $encoded, $timeout = null, array $options = 
     $record = [];
     try {
         $returned = $name(...$call);
-        $record['returned'] = ['type' => get_debug_type($returned), 'value' => behavior_encode($returned)];
+        $value = behavior_encode($returned);
+        // A result whose order the SQL leaves to the engine (ties on the ORDER BY key)
+        // is compared as a set, so the golden does not depend on which tie comes first.
+        if (!empty($options['unordered']) && is_array($value) && array_is_list($value)) {
+            usort($value, fn($a, $b) => strcmp(behavior_json($a), behavior_json($b)));
+        }
+        $record['returned'] = ['type' => get_debug_type($returned), 'value' => $value];
     } catch (Throwable $e) {
         $record['exception'] = ['class' => get_class($e), 'code' => $e->getCode(), 'message' => behavior_scrub($e->getMessage())];
     } finally {
@@ -528,7 +534,7 @@ function behavior_case($name, array $case)
             $record['prelude'] = array_map('behavior_step', $case['prelude']);
         }
 
-        $options = ['record_sql' => !empty($case['record_sql']), 'record_tables' => !empty($case['record_tables']), 'record_state' => $case['record_state'] ?? false];
+        $options = ['unordered' => !empty($case['unordered']), 'record_sql' => !empty($case['record_sql']), 'record_tables' => !empty($case['record_tables']), 'record_state' => $case['record_state'] ?? false];
         $record['result'] = behavior_call($name, $case['args'], $case['timeout'] ?? null, $options);
         if (!empty($case['between'])) {
             $record['between'] = array_map(fn($step) => behavior_step($step, false), $case['between']);
@@ -538,7 +544,7 @@ function behavior_case($name, array $case)
         // exposes a static or global cache. Arguments are decoded afresh so a
         // by-reference output from the first call cannot leak into the second.
         // Effects are recorded for the first call only; the repeat is compared on its answer.
-        $warm = behavior_call($name, $case['args'], $case['timeout'] ?? null);
+        $warm = behavior_call($name, $case['args'], $case['timeout'] ?? null, ['unordered' => !empty($case['unordered'])]);
         if (!empty($case['mask_generated'])) {
             behavior_mask_generated($record['result'], $warm);
         }
