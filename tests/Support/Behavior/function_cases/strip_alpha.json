@@ -1,0 +1,33 @@
+{
+  "function": "strip_alpha",
+  "cases": [
+    {"id": "plain_integer", "args": ["123"]},
+    {"id": "with_unit", "args": ["12.5Mbps"]},
+    {"id": "negative", "args": ["-5"]},
+    {"id": "explicit_plus", "args": ["+5"]},
+    {"id": "thousands_separator", "args": ["1,234"], "note": "comma survives the filter but is_numeric rejects it"},
+    {"id": "trailing_sign", "args": ["5-"]},
+    {"id": "double_sign", "args": ["--1"]},
+    {"id": "two_dots", "args": ["1.2.3"]},
+    {"id": "lone_dot", "args": ["."]},
+    {"id": "trailing_dot", "args": ["12."], "note": "is_numeric accepts a trailing dot"},
+    {"id": "leading_dot", "args": [".5"]},
+    {"id": "exponent_letter_removed", "args": ["1e5"], "note": "the e is stripped, so 15"},
+    {"id": "letters_only", "args": ["abc"]},
+    {"id": "empty", "args": [""]},
+    {"id": "zero", "args": ["0"], "note": "returns the string \"0\", not an int"},
+    {"id": "surrounding_text", "args": ["abc12def"]},
+    {"id": "whitespace_inside", "args": [" 12 \n"]},
+    {"id": "null_input", "args": [null], "note": "preg_replace(null) deprecation, empty result, false"},
+    {"id": "int_input", "args": [42], "note": "result is the string \"42\""},
+    {"id": "float_input", "args": [1.5]},
+    {"id": "negative_float_input", "args": [-2.5]},
+    {"id": "true_input", "args": [true]},
+    {"id": "array_input", "args": [["1"]], "note": "preg_replace over an array yields an array and trim() rejects it"},
+    {"id": "arabic_indic_digits", "args": ["١٢٣"], "note": "not matched by [0-9]"},
+    {"id": "invalid_utf8", "args": [{"$": "bytes", "hex": "31ff32"}]},
+    {"id": "oversized_number", "args": [{"$": "repeat", "unit": "9", "count": 5000}]},
+    {"id": "oversized_text", "args": [{"$": "repeat", "unit": "x", "count": 100000}]},
+    {"id": "nul_byte", "args": [{"$": "bytes", "hex": "3100"}]}
+  ]
+}

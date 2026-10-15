@@ -1,0 +1,133 @@
+{
+  "cases": [
+    {"args": ["aGVsbG8="], "id": "valid", "result": {"returned": {"type": "bool", "value": true}}},
+    {
+      "args": ["Zm9v"],
+      "id": "valid_no_padding_needed",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["YQ=="],
+      "id": "valid_double_padding",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["aGVsbG8"],
+      "id": "missing_padding",
+      "note": "strict decode accepts it, the re-encode comparison rejects it",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["YQ="],
+      "id": "single_padding_short",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["YQ==="],
+      "id": "three_padding",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["===="],
+      "id": "only_padding",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["QR=="],
+      "id": "non_canonical_trailing_bits",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["aGVs\nbG8="],
+      "id": "embedded_newline",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["aGVsbG8=\n"],
+      "id": "trailing_newline",
+      "note": "$ matches before a final newline",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["a-_b"],
+      "id": "url_safe_alphabet",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["!!!"],
+      "id": "invalid_characters",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": ["aGVs bG8="],
+      "id": "space",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [""],
+      "id": "empty",
+      "note": "the empty string is accepted",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["a"],
+      "id": "single_character",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {"args": ["0"], "id": "zero_string", "result": {"returned": {"type": "bool", "value": false}}},
+    {"args": ["AAAA"], "id": "all_a", "result": {"returned": {"type": "bool", "value": true}}},
+    {"args": ["+/+/"], "id": "plus_slash", "result": {"returned": {"type": "bool", "value": true}}},
+    {
+      "args": [null],
+      "id": "null",
+      "note": "preg_match(null) deprecation; empty subject is accepted",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          },
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "base64_decode(): Passing null to parameter #1 ($string) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "bool", "value": true}
+      }
+    },
+    {
+      "args": [1234],
+      "id": "int_digits",
+      "note": "int is matched as a string",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {"args": [true], "id": "true", "result": {"returned": {"type": "bool", "value": false}}},
+    {
+      "args": [["QQ=="]],
+      "id": "array",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "preg_match(): Argument #2 ($subject) must be of type string, array given"
+        }
+      }
+    },
+    {"args": ["é"], "id": "multibyte", "result": {"returned": {"type": "bool", "value": false}}},
+    {
+      "args": [{"$": "repeat", "count": 100000, "unit": "QUJD"}],
+      "id": "oversized_valid",
+      "result": {"returned": {"type": "bool", "value": true}}
+    }
+  ],
+  "function": "is_base64_encoded",
+  "signature": [
+    {"by_ref": false, "name": "data", "optional": false, "type": null, "variadic": false}
+  ]
+}

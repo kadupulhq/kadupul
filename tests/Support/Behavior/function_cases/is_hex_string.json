@@ -1,0 +1,28 @@
+{
+  "function": "is_hex_string",
+  "cases": [
+    {"id": "hex_dash_prefix", "args": ["Hex-00 01 02"], "note": "result is rewritten to the stripped value"},
+    {"id": "uppercase_prefix", "args": ["HEX-AA BB"]},
+    {"id": "lowercase_prefix", "args": ["hex-aa bb"]},
+    {"id": "prefix_then_space", "args": ["Hex- 00 01"]},
+    {"id": "single_pair", "args": ["Hex-00"], "note": "one part is assumed not to be a hex string"},
+    {"id": "empty_after_prefix", "args": ["hex-"]},
+    {"id": "short_part", "args": ["Hex-00 1"]},
+    {"id": "non_hex_part", "args": ["Hex-0g 01"]},
+    {"id": "double_space", "args": ["Hex-00  01"]},
+    {"id": "hex_string_prefix_is_dead_branch", "args": ["Hex-STRING: 00 01"], "note": "the hex- test matches first, so the Hex-STRING: branch is unreachable and \"String:\" is treated as a part"},
+    {"id": "colon_form", "args": ["Hex:00 01"]},
+    {"id": "prefix_not_at_start", "args": ["xHex-00 01"]},
+    {"id": "repeated_prefix_all_removed", "args": ["Hex-00 01 Hex-02 03"]},
+    {"id": "trailing_newline", "args": ["Hex-00 01\n"]},
+    {"id": "no_prefix", "args": ["00 01"]},
+    {"id": "empty", "args": [""]},
+    {"id": "zero_string", "args": ["0"]},
+    {"id": "null", "args": [null]},
+    {"id": "int_zero", "args": [0]},
+    {"id": "int", "args": [5]},
+    {"id": "array", "args": [["Hex-00 01"]]},
+    {"id": "multibyte", "args": ["Hex-éé aa"]},
+    {"id": "oversized", "args": [{"$": "repeat", "unit": "Hex-00 ", "count": 2000}], "note": "prefix repeated; all stripped"}
+  ]
+}

@@ -6,6 +6,7 @@ because the golden and the observation are normalized the same way.
 
 Run with: python tests/Support/Behavior/selftest.py
 """
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
@@ -1215,6 +1216,578 @@ def local_login_form_contract():
     assert result == {'login_form': False, 'admin_layout': True}
 
 
+FIXTURE_FUNCTIONS = """<?php
+function fixture_echo($value, &$seen = null) {
+    $seen = [$value, gettype($value)];
+    return $value;
+}
+function fixture_noisy($value) {
+    echo 'printed';
+    trigger_error('careful', E_USER_WARNING);
+    return @$undefined_variable;
+}
+function fixture_repeat() {
+    for ($i = 0; $i < 3; $i++) {
+        trigger_error('again', E_USER_NOTICE);
+    }
+}
+function fixture_counter() {
+    static $calls = 0;
+    return ++$calls;
+}
+function fixture_throws() {
+    throw new RuntimeException('boom');
+}
+function fixture_spins() {
+    while (true) {
+    }
+}
+function fixture_setting($name) {
+    global $config;
+    // Same shape as read_config_option(): a cached value answers before the table does.
+    if (!isset($config['config_options_array'][$name])) {
+        $config['config_options_array'][$name] = $GLOBALS['fixture_settings'][$name] ?? null;
+    }
+    return $config['config_options_array'][$name];
+}
+function fixture_ambient() {
+    global $config;
+    return [$config['fixture_flag'] ?? null, $_SESSION['fixture_user'] ?? null];
+}
+function fixture_mark($value) {
+    $GLOBALS['fixture_marker'] = $value;
+}
+function fixture_marker() {
+    return $GLOBALS['fixture_marker'] ?? null;
+}
+function fixture_logs() {
+    file_put_contents(dirname(__DIR__) . '/log/cacti.log', "09/12/2026 02:39:50 - SYSTEM note\\n", FILE_APPEND);
+}
+"""
+
+
+def fixture_application(directory):
+    """A stand-in application root: just enough for probe.php to bootstrap.
+
+    It tests the recorder, not any Cacti function, so the functions in it are
+    deliberately small. Real captures never use this.
+    """
+    root = Path(directory) / 'app'
+    for sub in ('include', 'lib', 'log'):
+        (root / sub).mkdir(parents=True)
+    (root / 'include/cli_check.php').write_text(
+        "<?php\n$config = ['base_path' => dirname(__DIR__)];\n"
+        "$GLOBALS['fixture_settings'] = [];\n"
+        "function db_begin_transaction() { return getenv('FIXTURE_FAIL') !== 'begin'; }\n"
+        "function db_rollback_transaction() { return true; }\n"
+        # The settings table and its savepoint are modelled so that ambient
+        # state is observable and a rollback is visible; FIXTURE_FAIL makes
+        # one statement report failure.
+        "function db_execute($sql) {\n"
+        "    $fail = getenv('FIXTURE_FAIL');\n"
+        "    if ($sql === 'SAVEPOINT fnwt_case') {\n"
+        "        $GLOBALS['fixture_saved'] = $GLOBALS['fixture_settings'];\n"
+        "        return $fail !== 'savepoint';\n"
+        "    }\n"
+        "    if ($sql === 'ROLLBACK TO SAVEPOINT fnwt_case') {\n"
+        "        $GLOBALS['fixture_settings'] = $GLOBALS['fixture_saved'];\n"
+        "        return $fail !== 'rollback';\n"
+        "    }\n"
+        "    return true;\n"
+        "}\n"
+        "function db_execute_prepared($sql, $params = []) {\n"
+        "    if (str_starts_with($sql, 'DELETE FROM settings')) {\n"
+        "        unset($GLOBALS['fixture_settings'][$params[0]]);\n"
+        "    } elseif (str_starts_with($sql, 'INSERT INTO settings')) {\n"
+        "        $GLOBALS['fixture_settings'][$params[0]] = $params[1];\n"
+        "    }\n"
+        "    return true;\n"
+        "}\n"
+        "require __DIR__ . '/../lib/fixture_functions.php';\n")
+    (root / 'lib/fixture_functions.php').write_text(FIXTURE_FUNCTIONS)
+    for name in ('snmp.php', 'rrd.php'):
+        (root / 'lib' / name).write_text('<?php\n')
+    return root
+
+
+def run_fixture_probe(root, cases_dir, name, extra=(), fail=None):
+    php = shutil.which('php')
+    if php is None:
+        raise RuntimeError('Function capture self-tests need a host PHP; run through mise exec php@8.4.25')
+    environment = {'PATH': '/usr/bin:/bin', 'BEHAVIOR_APP_ROOT': str(root), 'BEHAVIOR_CASE_DIR': str(cases_dir)}
+    if fail:
+        environment['FIXTURE_FAIL'] = fail
+    process = subprocess.run([php, str(Path(__file__).with_name('probe.php')), 'function', name, *extra],
+                             capture_output=True, text=True, env=environment, timeout=60)
+    return {'exit': process.returncode, 'stdout': process.stdout, 'stderr': process.stderr}
+
+
+def write_cases(directory, name, cases):
+    Path(directory).mkdir(parents=True, exist_ok=True)
+    (Path(directory) / (name + '.json')).write_text(json.dumps({'function': name, 'cases': cases}))
+
+
+def codec_roundtrip(document):
+    php = shutil.which('php')
+    process = subprocess.run([php, str(Path(__file__).with_name('probe.php')), 'codec'], input=json.dumps(document),
+                             capture_output=True, text=True, timeout=60)
+    return process
+
+
+def function_codec_contract():
+    # Everything JSON cannot say by itself, in one document. Decoding and
+    # re-encoding must give the same document back: the record of a value can
+    # then be fed in as an input and mean the same thing.
+    document = [None, '', '0', 0, 1, -1, 0.0, 1.0, 0.5, True, False, [], ['a', None],
+                {'$': 'float', 'v': 'nan'}, {'$': 'float', 'v': 'inf'}, {'$': 'float', 'v': '-inf'}, {'$': 'float', 'v': '-0.0'},
+                {'$': 'bytes', 'hex': 'c328'}, {'$': 'bytes', 'hex': '0a000001'},
+                {'$': 'array', 'pairs': [[1, 'a'], ['1x', None], [0, []]]},
+                'é', 'tab\there', 9223372036854775807]
+    process = codec_roundtrip(document)
+    assert process.returncode == 0, process.stderr
+    assert json.loads(process.stdout) == document, process.stdout
+    # == hides int against float and True against 1; the text does not.
+    assert harness.canonical(json.loads(process.stdout)) == harness.canonical(document)
+    assert '"0"' in process.stdout and '[null,"","0",0,1,-1,0.0,1.0,0.5,true,false' in process.stdout
+    # A control byte written as a plain string comes back in the explicit form.
+    again = codec_roundtrip(['a\u0000b'])
+    assert json.loads(again.stdout) == [{'$': 'bytes', 'hex': '610062'}], again.stdout
+    # Authoring mistakes must stop the run, not be guessed at.
+    for bad in ([{'x': 1}], [{'$': 'nope'}], [{'$': 'bytes', 'hex': 'zz'}], [{'$': 'bytes', 'hex': 'abc'}],
+                [{'$': 'float', 'v': '1.5'}], [{'$': 'array', 'pairs': [[1.5, 'x']]}],
+                [{'$': 'repeat', 'unit': '', 'count': 3}], [{'$': 'repeat', 'unit': 'a', 'count': 10 ** 9}]):
+        failed = codec_roundtrip(bad)
+        assert failed.returncode != 0 and 'BEHAVIOR' not in failed.stdout, bad
+    long_value = codec_roundtrip([{'$': 'repeat', 'unit': 'ab', 'count': 5000}])
+    summary = json.loads(long_value.stdout)[0]
+    assert summary['$'] == 'long' and summary['bytes'] == 10000 and len(summary['sha256']) == 64, summary
+    print('value encoding keeps null, empty, "0", int, float, bytes and key order apart')
+
+
+def function_case_file_contract():
+    with tempfile.TemporaryDirectory(prefix='function cases ') as directory:
+        base = Path(directory)
+
+        def rejects(label, files, only=None):
+            folder = base / label
+            folder.mkdir()
+            for name, text in files.items():
+                (folder / (name + '.json')).write_text(text if isinstance(text, str) else json.dumps(text))
+            try:
+                harness.load_function_cases(folder, only)
+            except RuntimeError:
+                return
+            raise AssertionError(label + ' was accepted')
+
+        good = {'function': 'a', 'cases': [{'id': 'x', 'args': []}]}
+        rejects('no_files', {})
+        rejects('empty_cases', {'a': {'function': 'a', 'cases': []}})
+        rejects('cases_missing', {'a': {'function': 'a'}})
+        rejects('wrong_name', {'a': dict(good, function='b')})
+        rejects('not_json', {'a': '{'})
+        rejects('duplicate_id', {'a': {'function': 'a', 'cases': [{'id': 'x', 'args': []}, {'id': 'x', 'args': []}]}})
+        rejects('no_id', {'a': {'function': 'a', 'cases': [{'args': []}]}})
+        rejects('args_not_list', {'a': {'function': 'a', 'cases': [{'id': 'x', 'args': 'y'}]}})
+        # A skip flag would turn a case into a silent pass.
+        rejects('skip_flag', {'a': {'function': 'a', 'cases': [{'id': 'x', 'args': [], 'skip': True}]}})
+        rejects('unknown_ambient', {'a': {'function': 'a', 'cases': [{'id': 'x', 'args': [], 'ambient': {'env': 1}}]}})
+        rejects('unknown_function_selected', {'a': good}, only=['missing'])
+
+        def with_case(**extra):
+            return {'a': {'function': 'a', 'cases': [dict({'id': 'x', 'args': []}, **extra)]}}
+
+        # Malformed steps would otherwise fail inside PHP after the stack is up.
+        rejects('prelude_not_list', with_case(prelude={'fn': 'f'}))
+        rejects('step_not_object', with_case(prelude=['f']))
+        rejects('step_empty', with_case(between=[{}]))
+        rejects('step_unknown_key', with_case(prelude=[{'fn': 'f', 'arg': []}]))
+        rejects('step_fn_not_string', with_case(prelude=[{'fn': 3}]))
+        rejects('step_args_not_list', with_case(between=[{'fn': 'f', 'args': 'y'}]))
+        rejects('setting_step_extra_key', with_case(prelude=[{'setting': {'k': 'v'}, 'fn': 'f'}]))
+        rejects('setting_step_not_object', with_case(prelude=[{'setting': 'k'}]))
+        rejects('setting_step_int_value', with_case(prelude=[{'setting': {'k': 1}}]))
+        rejects('ambient_setting_int_value', with_case(ambient={'settings': {'k': 1}}))
+        rejects('timeout_string', with_case(timeout='2'))
+        rejects('timeout_zero', with_case(timeout=0))
+        rejects('timeout_negative', with_case(timeout=-1))
+        rejects('timeout_bool', with_case(timeout=True))
+        rejects('timeout_float', with_case(timeout=1.5))
+        rejects('isolated_string', with_case(isolated='yes'))
+        rejects('isolated_int', with_case(isolated=1))
+        # A non-object ambient is a RuntimeError, not a TypeError from set().
+        rejects('ambient_int', with_case(ambient=5))
+        rejects('ambient_list', with_case(ambient=['settings']))
+        rejects('ambient_section_not_object', with_case(ambient={'config': ['x']}))
+        folder = base / 'fine'
+        folder.mkdir()
+        (folder / 'a.json').write_text(json.dumps(good))
+        assert list(harness.load_function_cases(folder)) == ['a']
+        folder = base / 'fine_steps'
+        folder.mkdir()
+        (folder / 'a.json').write_text(json.dumps(with_case(
+            prelude=[{'fn': 'f', 'args': [1]}, {'setting': {'k': None, 'j': 'v'}}], between=[{'fn': 'f'}],
+            ambient={'settings': {'k': None}, 'config': {}, 'session': {}}, isolated=True, timeout=2)['a']))
+        assert list(harness.load_function_cases(folder)) == ['a']
+        # Every shipped case file must load, and none may be empty.
+        shipped = harness.load_function_cases(harness.FUNCTION_CASES)
+        assert shipped and all(spec['cases'] for spec in shipped.values())
+    print('case files with no cases, skip flags, duplicate ids or unknown keys are rejected')
+
+
+def function_capture_contract():
+    with tempfile.TemporaryDirectory(prefix='function capture ') as directory:
+        root = fixture_application(directory)
+        cases = Path(directory) / 'cases'
+        specs = {
+            'fixture_echo': [
+                {'id': 'null', 'args': [None, None]}, {'id': 'empty', 'args': ['']}, {'id': 'zero_string', 'args': ['0']},
+                {'id': 'zero_int', 'args': [0]}, {'id': 'zero_float', 'args': [0.0]}, {'id': 'false', 'args': [False]},
+                {'id': 'invalid_utf8', 'args': [{'$': 'bytes', 'hex': 'c328ff'}]},
+                {'id': 'ordered_array', 'args': [{'$': 'array', 'pairs': [['b', 1], ['a', 2], [5, 3]]}]},
+                {'id': 'negative_zero', 'args': [{'$': 'float', 'v': '-0.0'}]},
+            ],
+            'fixture_noisy': [{'id': 'only', 'args': ['x']}],
+            'fixture_repeat': [{'id': 'only', 'args': []}],
+            'fixture_counter': [{'id': 'first', 'args': []}],
+            'fixture_throws': [{'id': 'only', 'args': []}],
+            'fixture_logs': [{'id': 'only', 'args': []}],
+            'fixture_spins': [{'id': 'only', 'args': [], 'timeout': 1, 'isolated': True}],
+        }
+        for name, cs in specs.items():
+            write_cases(cases, name, cs)
+
+        def capture(name):
+            spec = harness.load_function_cases(cases, [name])[name]
+            return harness.capture_function(name, spec, lambda n, extra: harness.parse_function_probe(
+                n, run_fixture_probe(root, cases, n, extra)))
+
+        echo = {c['id']: c for c in capture('fixture_echo')['cases']}
+        types = {k: (v['result']['returned']['type'], v['result']['returned']['value']) for k, v in echo.items()}
+        assert types['null'] == ('null', None) and types['empty'] == ('string', '') and types['zero_string'] == ('string', '0')
+        assert types['zero_int'] == ('int', 0) and types['zero_float'] == ('float', 0.0) and types['false'] == ('bool', False)
+        assert harness.canonical(echo['zero_float']['result']['returned']) != harness.canonical(echo['zero_int']['result']['returned'])
+        assert types['invalid_utf8'] == ('string', {'$': 'bytes', 'hex': 'c328ff'})
+        assert types['negative_zero'][1] == {'$': 'float', 'v': '-0.0'}
+        assert types['ordered_array'][1]['pairs'] == [['b', 1], ['a', 2], [5, 3]], 'array order is behavior'
+        # The by-reference parameter comes back with the type it ended up with.
+        assert echo['null']['result']['by_ref']['seen']['value'] == [None, 'NULL']
+        assert echo['empty']['warm'] == {'same': True}
+
+        noisy = capture('fixture_noisy')['cases'][0]['result']
+        assert noisy['output'] == 'printed'
+        assert noisy['diagnostics'][0]['message'] == 'careful' and noisy['diagnostics'][0]['severity'] == 'E_USER_WARNING'
+        assert noisy['diagnostics'][0]['count'] == 1 and noisy['diagnostics'][0]['suppressed'] is False
+        assert noisy['returned'] == {'type': 'null', 'value': None}
+        repeated = capture('fixture_repeat')['cases'][0]['result']['diagnostics']
+        assert len(repeated) == 1 and repeated[0]['count'] == 3, repeated
+        # The first call and the repeat in the same process differ for a static cache.
+        counter = capture('fixture_counter')['cases'][0]
+        assert counter['result']['returned']['value'] == 1
+        assert counter['warm']['same'] is False and counter['warm']['result']['returned']['value'] == 2
+        thrown = capture('fixture_throws')['cases'][0]['result']
+        assert thrown['exception'] == {'class': 'RuntimeException', 'code': 0, 'message': 'boom'} and 'returned' not in thrown
+        logged = capture('fixture_logs')['cases'][0]['result']
+        assert logged['log'] == ['<TIMESTAMP> - SYSTEM note'], logged['log']
+        spun = capture('fixture_spins')['cases'][0]['result']
+        assert spun['exception']['class'] == 'BehaviorTimeout', spun
+
+        # Two runs give the same bytes. Anything varying here (pids, clocks,
+        # absolute paths) would show up as a regression in every golden.
+        first = [harness.canonical(harness.normalize_function_record(capture(n))) for n in sorted(specs)]
+        second = [harness.canonical(harness.normalize_function_record(capture(n))) for n in sorted(specs)]
+        assert first == second, 'capture is not deterministic'
+        assert str(root) not in ''.join(first), 'absolute path leaked into a record'
+
+        # A function the application does not define is a failed run, not an empty pass.
+        write_cases(cases, 'fixture_absent', [{'id': 'only', 'args': []}])
+        spec = harness.load_function_cases(cases, ['fixture_absent'])['fixture_absent']
+        try:
+            harness.capture_function('fixture_absent', spec, lambda n, extra: harness.parse_function_probe(
+                n, run_fixture_probe(root, cases, n, extra)))
+        except RuntimeError as error:
+            assert 'Unknown function' in str(error) or 'failed' in str(error)
+        else:
+            raise AssertionError('A missing function produced a record')
+    print('captures keep PHP types, by-reference outputs, diagnostics, output, log lines and warm differences, and repeat byte for byte')
+
+
+def function_ambient_contract():
+    with tempfile.TemporaryDirectory(prefix='function ambient ') as directory:
+        root = fixture_application(directory)
+        cases = Path(directory) / 'cases'
+
+        def capture(name, fail=None):
+            spec = harness.load_function_cases(cases, [name])[name]
+            return harness.capture_function(name, spec, lambda n, extra: harness.parse_function_probe(
+                n, run_fixture_probe(root, cases, n, extra, fail)))
+
+        def returned(record):
+            return record['result']['returned']['value']
+
+        # ambient.settings reaches the table, ambient.config and ambient.session
+        # reach their globals, and the next case sees none of it.
+        write_cases(cases, 'fixture_setting', [
+            {'id': 'set', 'args': ['k'], 'ambient': {'settings': {'k': 'v'}}},
+            {'id': 'rolled_back', 'args': ['k']},
+        ])
+        by_id = {c['id']: c for c in capture('fixture_setting')['cases']}
+        assert returned(by_id['set']) == 'v', by_id['set']
+        assert returned(by_id['rolled_back']) is None, 'a setting survived the savepoint rollback'
+        assert by_id['set']['ambient'] == {'settings': {'k': 'v'}}
+
+        write_cases(cases, 'fixture_ambient', [
+            {'id': 'both', 'args': [], 'ambient': {'config': {'fixture_flag': 'on'},
+                                                   'session': {'fixture_user': {'$': 'array', 'pairs': [['id', 7]]}}}},
+            {'id': 'restored', 'args': []},
+        ])
+        by_id = {c['id']: c for c in capture('fixture_ambient')['cases']}
+        assert returned(by_id['both']) == ['on', {'$': 'array', 'pairs': [['id', 7]]}], by_id['both']
+        assert returned(by_id['restored']) == [None, None], '$config or $_SESSION leaked into the next case'
+
+        # prelude runs a real function and a setting write before the call.
+        write_cases(cases, 'fixture_marker', [
+            {'id': 'prelude', 'args': [], 'prelude': [{'fn': 'fixture_mark', 'args': ['m']}]}])
+        record = capture('fixture_marker')['cases'][0]
+        assert returned(record) == 'm' and record['prelude'][0]['fn'] == 'fixture_mark', record
+        write_cases(cases, 'fixture_setting', [
+            {'id': 'prelude_setting', 'args': ['k'], 'prelude': [{'setting': {'k': 'p'}}]}])
+        record = capture('fixture_setting')['cases'][0]
+        assert returned(record) == 'p' and record['prelude'] == [{'setting': {'k': 'p'}}], record
+
+        # A setting written between the calls must not drop the cached value:
+        # the repeat is expected to read the stale one.
+        write_cases(cases, 'fixture_setting', [
+            {'id': 'stale', 'args': ['k'], 'ambient': {'settings': {'k': 'before'}},
+             'between': [{'setting': {'k': 'after'}}], 'isolated': True}])
+        record = capture('fixture_setting')['cases'][0]
+        assert returned(record) == 'before' and record['between'] == [{'setting': {'k': 'after'}}], record
+        assert record['warm'] == {'same': True}, 'between dropped the cache: ' + str(record['warm'])
+
+        # Shared and isolated cases of one function: each isolated case gets a
+        # fresh process, and records come back in file order.
+        write_cases(cases, 'fixture_counter', [
+            {'id': 'a', 'args': []}, {'id': 'c', 'args': [], 'isolated': True}, {'id': 'b', 'args': []}])
+        records = capture('fixture_counter')['cases']
+        assert [r['id'] for r in records] == ['a', 'c', 'b']
+        assert [returned(r) for r in records] == [1, 1, 3], 'an isolated case shared a process with the others'
+
+        # A case file cannot reach an internal function through a step.
+        for key in ('prelude', 'between'):
+            write_cases(cases, 'fixture_marker', [{'id': 'bad', 'args': [], key: [{'fn': 'shell_exec', 'args': ['echo hi']}]}])
+            refused = run_fixture_probe(root, cases, 'fixture_marker')
+            assert refused['exit'] != 0 and 'user-defined' in refused['stdout'] + refused['stderr'], (key, refused)
+            assert 'BEHAVIOR_JSON=' not in refused['stdout'], key + ' step ran an internal function'
+
+        # A failed SAVEPOINT, rollback or transaction start stops the run.
+        write_cases(cases, 'fixture_marker', [{'id': 'only', 'args': []}])
+        for fail, text in (('savepoint', 'SAVEPOINT fnwt_case failed'), ('rollback', 'ROLLBACK TO SAVEPOINT'),
+                           ('begin', 'capture transaction')):
+            refused = run_fixture_probe(root, cases, 'fixture_marker', fail=fail)
+            assert refused['exit'] != 0 and text in refused['stdout'] + refused['stderr'], (fail, refused)
+            assert 'BEHAVIOR_JSON=' not in refused['stdout'], 'a failed ' + fail + ' was ignored'
+
+        # Normalisation exempts the author's input only at the case level.
+        record = {'function': 'f', 'signature': [], 'cases': [{
+            'id': '/var/www/html/i', 'args': ['/var/www/html/a'], 'note': '/var/www/html/n',
+            'result': {'by_ref': {'id': {'type': 'string', 'value': '/var/www/html/x'},
+                                  'args': {'type': 'string', 'value': '/var/www/html/y'}}}}]}
+        out = harness.normalize_function_record(record)['cases'][0]
+        assert out['id'] == '/var/www/html/i' and out['args'] == ['/var/www/html/a'] and out['note'] == '/var/www/html/n'
+        assert out['result']['by_ref']['id']['value'] == '<APP>/x', out
+        assert out['result']['by_ref']['args']['value'] == '<APP>/y', out
+    print('ambient settings, config and session, prelude, between and mixed isolation behave; internal-function steps and failed savepoints stop the run')
+
+
+def function_record_gaps():
+    spec = {'function': 'f', 'cases': [{'id': 'a', 'args': []}, {'id': 'b', 'args': []}]}
+    signature = []
+
+    def short(name, extra):
+        return {'function': 'f', 'signature': signature, 'cases': [{'id': 'a'}]}
+
+    def empty(name, extra):
+        return {'function': 'f', 'signature': signature, 'cases': []}
+
+    def other(name, extra):
+        return {'function': 'g', 'signature': signature, 'cases': [{'id': 'a'}, {'id': 'b'}]}
+
+    def whole(name, extra):
+        return {'function': 'f', 'signature': signature, 'cases': [{'id': 'a'}, {'id': 'b'}]}
+
+    for probe in (short, empty, other):
+        try:
+            harness.capture_function('f', spec, probe)
+        except RuntimeError:
+            pass
+        else:
+            raise AssertionError('Incomplete probe answer was accepted: ' + probe.__name__)
+    assert [c['id'] for c in harness.capture_function('f', spec, whole)['cases']] == ['a', 'b']
+    # Output outside the capture, a nonzero exit or no marker is a failed probe.
+    for result in ({'exit': 1, 'stdout': 'BEHAVIOR_JSON={}', 'stderr': ''}, {'exit': 0, 'stdout': 'nothing', 'stderr': ''},
+                   {'exit': 0, 'stdout': 'stray\nBEHAVIOR_JSON={}', 'stderr': ''}):
+        try:
+            harness.parse_function_probe('f', result)
+        except RuntimeError:
+            pass
+        else:
+            raise AssertionError('Failed probe was accepted: ' + repr(result))
+    print('a probe that records fewer cases, none, or another function fails the run')
+
+
+def function_golden_contract():
+    with tempfile.TemporaryDirectory(prefix='function goldens ') as directory:
+        controller = Path(directory) / 'controller'
+        cases = controller / 'tests/Support/Behavior/function_cases'
+        write_cases(cases, 'f', [{'id': 'a', 'args': []}])
+        args = types.SimpleNamespace(target='fixture', update_golden=False)
+        record = {'function': 'f', 'signature': [], 'cases': [{'id': 'a', 'note': '', 'warm': {'same': True}, 'result': {
+            'diagnostics': [], 'log': [], 'output': '', 'returned': {'type': 'int', 'value': 1}}}]}
+        with patch.object(harness, 'CONTROLLER_ROOT', controller), patch.object(harness, 'FUNCTION_GOLDENS', controller / 'tests/Golden/functions'), \
+                patch.object(harness, 'FUNCTION_CASES', cases):
+            assert harness.settle_function_goldens(args, {'f': record}, '8.4') == ['f: MISSING GOLDEN (explicit capture required)']
+            args.update_golden = True
+            assert harness.settle_function_goldens(args, {'f': record}, '8.4') == []
+            args.update_golden = False
+            assert harness.settle_function_goldens(args, {'f': record}, '8.4') == []
+            # int 1 and float 1.0 compare equal in Python and are different PHP values.
+            changed = json.loads(json.dumps(record))
+            changed['cases'][0]['result']['returned']['value'] = 1.0
+            assert changed == record
+            assert harness.settle_function_goldens(args, {'f': changed}, '8.4') == ['f: REGRESSION']
+            # A golden whose case file was removed is not silently ignored.
+            (cases / 'f.json').unlink()
+            write_cases(cases, 'other', [{'id': 'a', 'args': []}])
+            assert 'f: golden has no case file' in harness.settle_function_goldens(args, {'other': record}, '8.4')
+    print('goldens fail when missing, when int becomes float, or when the case file is gone')
+
+
+def compact_json_contract():
+    # A container stays on one line while its whole line, indentation, key and comma included, fits in 100 columns.
+    for length, inline in ((95, True), (96, True), (97, False)):
+        text = harness.compact_json(['x' * length])
+        assert (text == '["' + 'x' * length + '"]') == inline, (length, text)
+        assert inline or text == '[\n  "' + 'x' * length + '"\n]', text
+    assert len(harness.compact_json(['x' * 96])) == 100
+    # Inner list sits at 2 spaces + '"key": ' and is followed by a comma, so 86 characters reach column 100.
+    for length, inline in ((85, True), (86, True), (87, False)):
+        lines = harness.compact_json({'key': ['x' * length], 'z': 1}).split('\n')
+        if inline:
+            assert lines[1] == '  "key": ["' + 'x' * length + '"],' and len(lines[1]) <= 100, lines
+        else:
+            assert lines[1] == '  "key": [' and lines[2] == '    "' + 'x' * length + '"', lines
+    assert harness.compact_json([]) == '[]' and harness.compact_json({}) == '{}'
+    assert harness.compact_json({'a': [], 'b': {}}) == '{"a": [], "b": {}}'
+    # Columns are characters, not bytes, and non-ASCII text is written as is.
+    assert harness.compact_json(['\u00e9' * 96]) == '["' + '\u00e9' * 96 + '"]'
+    assert harness.compact_json(['\u00e9' * 97]).count('\n') == 2
+    # Key order is sorted at every level, as json.dumps(sort_keys=True) does.
+    assert harness.compact_json({'b': 1, 'a': {'d': 1, 'c': 2}}) == '{"a": {"c": 2, "d": 1}, "b": 1}'
+    tricky = {
+        'quote': 'say "hi"', 'backslash': 'a\\b', 'slash': 'a/b', 'brace': '{[}]', 'comma': 'a, b: c',
+        'control': 'tab\there\nnewline\x01', 'unicode': '\u00e9 \U0001F600 \u2028', 'empty': '', 'zero': '0',
+        'ints': [0, -1, 2 ** 63 - 1], 'floats': [0.0, 1.0, 0.5, -2.25e-10], 'bools': [True, False, None],
+        'nested': {'a': [], 'b': [[], [[]]], 'c': {'d': {'e': 'long ' * 30}}},
+        'objects': [{'k': 1}, {'k': [1, 2, 3], 'long': 'y' * 90}],
+        'key"with\\odd/keys': 1, 'wide': list(range(60)),
+    }
+    text = harness.compact_json(tricky)
+    assert json.loads(text) == tricky
+    assert harness.canonical(json.loads(text)) == harness.canonical(tricky)
+    assert harness.compact_json(json.loads(text)) == text
+    assert '"floats": [0.0, 1.0, 0.5, -2.25e-10]' in text
+    try:
+        harness.compact_json({'k': {1: 'x' * 120}})
+    except TypeError:
+        pass
+    else:
+        raise AssertionError('non-string keys must be refused')
+    print('compact json keeps the 100 column boundary, key order, empty containers and awkward values')
+
+
+def large_value_summary_contract():
+    digest = lambda value: hashlib.sha256(harness.canonical(value).encode()).hexdigest()
+    # 64 elements are written out; 65 become a summary whose hash covers the whole list.
+    assert harness.summarize_large(list(range(64))) == list(range(64))
+    summary = harness.summarize_large(list(range(65)))
+    assert summary == {'$': 'list', 'count': 65, 'types': ['int'], 'head': [0, 1, 2, 3], 'sha256': digest(list(range(65)))}, summary
+    # One changed element, or int against float, changes the hash.
+    changed = list(range(65))
+    changed[64] = 99
+    assert harness.summarize_large(changed)['sha256'] != summary['sha256']
+    as_float = list(range(65))
+    as_float[64] = 64.0
+    assert harness.summarize_large(as_float)['sha256'] != summary['sha256']
+    assert harness.summarize_large(as_float)['types'] == ['float', 'int']
+    # Objects follow the same threshold, counted by keys.
+    wide = {'k%03d' % i: i for i in range(65)}
+    assert harness.summarize_large({k: v for k, v in list(wide.items())[:64]}) == {k: v for k, v in list(wide.items())[:64]}
+    summary = harness.summarize_large(wide)
+    assert summary['$'] == 'object' and summary['count'] == 65 and summary['sha256'] == digest(wide) and summary['head'] == {'k000': 0, 'k001': 1, 'k002': 2, 'k003': 3}, summary
+    # A large value inside small containers is found; a small one inside a large one is covered by its hash.
+    nested = {'a': [1, [list(range(65)), 'x']], 'b': [[1, 2]] * 65}
+    out = harness.summarize_large(nested)
+    assert out['a'][1][0]['$'] == 'list' and out['a'][1][1] == 'x' and out['b']['count'] == 65 and out['b']['head'] == [[1, 2]] * 4, out
+    assert harness.summarize_large([list(range(65))] * 3)[0]['count'] == 65
+    # The case's own args and its results are both summarized, by-reference outputs included.
+    record = {'function': 'f', 'signature': [], 'cases': [{
+        'id': 'big', 'args': [list(range(65))], 'note': '', 'warm': {'same': True},
+        'result': {'returned': {'type': 'array', 'value': list(range(100))}, 'by_ref': {'0': list(range(70))},
+                   'diagnostics': [], 'log': [], 'output': ''}}]}
+    case = harness.normalize_function_record(record)['cases'][0]
+    assert case['args'][0]['count'] == 65 and case['result']['returned']['value']['count'] == 100 and case['result']['by_ref']['0']['count'] == 70, case
+    # Defaults are left out of a golden and restored on read, and only a value equal to the default is left out.
+    stripped = harness.strip_function_defaults(record)
+    assert stripped['cases'][0]['result'].keys() == {'returned', 'by_ref'} and 'note' not in stripped['cases'][0] and 'warm' not in stripped['cases'][0], stripped
+    assert harness.canonical(harness.restore_function_defaults(stripped)) == harness.canonical(record)
+    odd = {'function': 'f', 'signature': [], 'cases': [{'id': 'x', 'args': [], 'note': 'n', 'warm': {'same': False},
+                                                        'result': {'diagnostics': [['E']], 'log': [''], 'output': '0'}}]}
+    assert harness.strip_function_defaults(odd) == odd
+    assert harness.canonical(harness.restore_function_defaults(harness.strip_function_defaults(odd))) == harness.canonical(odd)
+    print('values over 64 elements are summarized by hash, smaller ones and non-default fields are untouched')
+
+
+def function_comparison_contract():
+    with tempfile.TemporaryDirectory(prefix='function comparison ') as directory:
+        root = Path(directory)
+
+        def side(label, value, extra_function=False, extra_case=False):
+            case = lambda i, v: {'id': i, 'result': {'returned': {'type': type(v).__name__, 'value': v}}, 'warm': {'same': True}}
+            functions = {'f': {'function': 'f', 'signature': [], 'cases': [case('same', 1), case('moved', value)]}}
+            if extra_case:
+                functions['f']['cases'].append(case('new', 1))
+            if extra_function:
+                functions['g'] = {'function': 'g', 'signature': [], 'cases': [case('only', 1)]}
+            (root / label).mkdir()
+            (root / label / 'functions.json').write_text(json.dumps({'php_version': '8.4.0', 'functions': functions}))
+
+        side('base', 1)
+        side('cand', 1.0, extra_function=True)
+        args = types.SimpleNamespace(results_root=root, baseline='base', candidate='cand', output=None)
+        assert harness.compare_functions(args) == 0
+        report = json.loads((root / 'cand-vs-base.functions-comparison.json').read_text())
+        rows = {row['case']: row for row in report['functions']['f']['cases']}
+        assert rows['same'] == {'case': 'same', 'status': 'same'}
+        assert rows['moved']['status'] == 'differs' and rows['moved']['review'] == 'unreviewed', rows['moved']
+        assert rows['moved']['baseline']['result']['returned']['value'] == 1 and rows['moved']['candidate']['result']['returned']['value'] == 1.0
+        assert report['only_in_candidate'] == ['g'] and report['totals'] == {'same': 1, 'differs': 1, 'functions': 1}
+        # A case the baseline never ran is not a clean comparison either.
+        side('cand_extra', 1, extra_case=True)
+        extra_args = types.SimpleNamespace(results_root=root, baseline='base', candidate='cand_extra', output=None)
+        assert harness.compare_functions(extra_args) == 1
+        extra_report = json.loads((root / 'cand_extra-vs-base.functions-comparison.json').read_text())
+        assert extra_report['only_in_candidate_cases'] == {'f': ['new']}, extra_report
+        assert 'only_in_candidate_cases' not in report
+        # Nothing in common is an error, not a clean comparison.
+        (root / 'cand/functions.json').write_text(json.dumps({'functions': {'z': {}}}))
+        try:
+            harness.compare_functions(args)
+        except RuntimeError:
+            pass
+        else:
+            raise AssertionError('A comparison with no shared function passed')
+    print('function comparison marks 1 against 1.0 as differs, leaves it unreviewed, and fails with no overlap')
+
+
 def main():
     failures = []
 
@@ -1247,6 +1820,15 @@ def main():
     application_image_contract()
     diagnostic_contracts()
     retained_controller_inputs()
+    function_codec_contract()
+    function_case_file_contract()
+    function_capture_contract()
+    function_ambient_contract()
+    function_record_gaps()
+    function_golden_contract()
+    compact_json_contract()
+    large_value_summary_contract()
+    function_comparison_contract()
     failed_setup_manifest()
     unavailable_docker_failure()
     print('setup failure records an incomplete manifest without probing containers')

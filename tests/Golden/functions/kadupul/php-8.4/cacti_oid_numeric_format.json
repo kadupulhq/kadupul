@@ -1,0 +1,17 @@
+{
+  "cases": [
+    {
+      "args": [],
+      "id": "call",
+      "note": "sets the SNMP extension output format to numeric when the extension is loaded; the setting has no PHP-level getter, so only the return value, output and diagnostics are recorded",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "args": ["x"],
+      "id": "extra_argument_ignored",
+      "result": {"returned": {"type": "null", "value": null}}
+    }
+  ],
+  "function": "cacti_oid_numeric_format",
+  "signature": []
+}

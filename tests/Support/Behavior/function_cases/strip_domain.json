@@ -1,0 +1,25 @@
+{
+  "function": "strip_domain",
+  "cases": [
+    {"id": "ipv4_with_option_on", "args": ["10.0.0.1"], "ambient": {"settings": {"strip_domain": "on"}}},
+    {"id": "ipv6_with_option_on", "args": ["::1"], "ambient": {"settings": {"strip_domain": "on"}}},
+    {"id": "ipv6_scope_with_option_on", "args": ["fe80::1%eth0"], "ambient": {"settings": {"strip_domain": "on"}}},
+    {"id": "fqdn_option_off", "args": ["host.example.com"], "ambient": {"settings": {"strip_domain": ""}}},
+    {"id": "fqdn_option_on", "args": ["host.example.com"], "ambient": {"settings": {"strip_domain": "on"}}},
+    {"id": "option_unset", "args": ["host.example.com"], "note": "row removed: falls back to the default of the setting", "ambient": {"settings": {"strip_domain": null}}},
+    {"id": "option_uppercase_on", "args": ["host.example.com"], "note": "comparison is case sensitive", "ambient": {"settings": {"strip_domain": "ON"}}},
+    {"id": "option_numeric_one", "args": ["host.example.com"], "ambient": {"settings": {"strip_domain": "1"}}},
+    {"id": "no_dot", "args": ["host"], "ambient": {"settings": {"strip_domain": "on"}}},
+    {"id": "leading_dot", "args": [".example.com"], "ambient": {"settings": {"strip_domain": "on"}}},
+    {"id": "trailing_dot", "args": ["host."], "ambient": {"settings": {"strip_domain": "on"}}},
+    {"id": "empty", "args": [""], "ambient": {"settings": {"strip_domain": "on"}}},
+    {"id": "null", "args": [null], "ambient": {"settings": {"strip_domain": "on"}}},
+    {"id": "int", "args": [123], "ambient": {"settings": {"strip_domain": "on"}}},
+    {"id": "array", "args": [["a.b"]], "ambient": {"settings": {"strip_domain": "on"}}},
+    {"id": "multibyte", "args": ["hôst.example.com"], "ambient": {"settings": {"strip_domain": "on"}}},
+    {"id": "looks_like_ipv4_but_invalid", "args": ["256.1.1.1"], "note": "not an address, so the domain is stripped", "ambient": {"settings": {"strip_domain": "on"}}},
+    {"id": "numeric_dotted_label", "args": ["1.2.3"], "ambient": {"settings": {"strip_domain": "on"}}},
+    {"id": "uppercase_host", "args": ["HOST.Example.COM"], "ambient": {"settings": {"strip_domain": "on"}}},
+    {"id": "space_inside", "args": ["a b.c"], "ambient": {"settings": {"strip_domain": "on"}}}
+  ]
+}

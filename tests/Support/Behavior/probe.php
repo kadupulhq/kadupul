@@ -6,13 +6,30 @@
 
 // Adapter for legacy public PHP APIs. A rewrite supplies an equivalent adapter.
 $mode = $argv[1] ?? '';
+$mode_args = array_slice($argv, 2);
+
+if ($mode === 'codec') {
+    // Needs no application: the value encoding is checked on its own.
+    require __DIR__ . '/function_codec.php';
+    $decoded = behavior_decode(json_decode((string) stream_get_contents(STDIN), true, 512, JSON_THROW_ON_ERROR));
+    echo behavior_json(behavior_encode($decoded)) . "\n";
+    exit(0);
+}
+
 $argv = [$argv[0]];
 $_SERVER['argv'] = $argv;
-chdir('/var/www/html');
-require '/var/www/html/include/cli_check.php';
+// BEHAVIOR_APP_ROOT lets function mode run against a checkout installed
+// elsewhere, such as the upstream reference instance, through this same file.
+$app_root = getenv('BEHAVIOR_APP_ROOT') ?: '/var/www/html';
+chdir($app_root);
+require $app_root . '/include/cli_check.php';
 // global.php installs CactiErrorHandler, displacing the prepend handler.
-// require_once cannot re-arm it, so call the installer directly.
-behavior_install_error_handler();
+// require_once cannot re-arm it, so call the installer directly. Against a
+// checkout named by BEHAVIOR_APP_ROOT there is no prepend file and nothing to
+// re-arm; everywhere else the call stays unconditional.
+if (!getenv('BEHAVIOR_APP_ROOT') || function_exists('behavior_install_error_handler')) {
+    behavior_install_error_handler();
+}
 require_once $config['base_path'] . '/lib/snmp.php';
 require_once $config['base_path'] . '/lib/rrd.php';
 $out = [];
@@ -99,5 +116,24 @@ if ($mode === 'types') {
     $options = ['graph_start' => 1700000000, 'graph_end' => 1700003600, 'print_source' => 1];
     ob_start(); $result = rrdtool_function_graph($id, 0, $options); $source = ob_get_clean();
     $out = ['result' => $result, 'source' => $source];
+} elseif ($mode === 'function') {
+    /**
+     * Run one function from lib/functions.php over its case file.
+     * Usage: function NAME [--case ID]...
+     * With no --case, runs the cases that share a process. Cases marked
+     * "isolated" run only when named, one process each.
+     */
+    require __DIR__ . '/function_codec.php';
+    require __DIR__ . '/function_capture.php';
+    $name = $mode_args[0] ?? '';
+    if (!preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $name)) { throw new RuntimeException('Function name required'); }
+    $select = null;
+    for ($i = 1; $i < count($mode_args); $i++) {
+        if ($mode_args[$i] === '--case' && isset($mode_args[$i + 1])) { $select[] = $mode_args[++$i]; }
+    }
+    $case_file = (getenv('BEHAVIOR_CASE_DIR') ?: __DIR__ . '/function_cases') . '/' . $name . '.json';
+    $out = behavior_function_run($name, $case_file, $select);
+    echo "\nBEHAVIOR_JSON=" . behavior_json($out) . "\n";
+    exit(0);
 } else { throw new RuntimeException('Unknown probe'); }
 echo "\nBEHAVIOR_JSON=" . json_encode($out, JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE) . "\n";

@@ -1,0 +1,23 @@
+{
+  "function": "cacti_ntoc",
+  "cases": [
+    {"id": "mask_24", "args": [{"$": "bytes", "hex": "ffffff00"}]},
+    {"id": "mask_32", "args": [{"$": "bytes", "hex": "ffffffff"}]},
+    {"id": "mask_0", "args": [{"$": "bytes", "hex": "00000000"}]},
+    {"id": "mask_noncontiguous", "args": [{"$": "bytes", "hex": "ff00ff00"}]},
+    {"id": "mask_ipv6_64", "args": [{"$": "bytes", "hex": "ffffffffffffffff0000000000000000"}]},
+    {"id": "mask_3_bits", "args": [{"$": "bytes", "hex": "e0"}]},
+    {"id": "mask_7_bits", "args": [{"$": "bytes", "hex": "fe"}]},
+    {"id": "mask_1_bit", "args": [{"$": "bytes", "hex": "80"}]},
+    {"id": "mask_reversed", "args": [{"$": "bytes", "hex": "00ffffff"}]},
+    {"id": "ipv6_flag_ignored", "args": [{"$": "bytes", "hex": "ffffff00"}, true]},
+    {"id": "empty_string", "args": [""], "note": "str_split(\"\") is [\"\"] before PHP 8.2 and [] after: one count either way"},
+    {"id": "ascii_text", "args": ["24"]},
+    {"id": "single_ff_char", "args": ["ÿ"], "note": "two bytes c3 bf"},
+    {"id": "null", "args": [null]},
+    {"id": "int", "args": [24]},
+    {"id": "array", "args": [[{"$": "bytes", "hex": "ff"}]]},
+    {"id": "true", "args": [true]},
+    {"id": "missing_argument", "args": []}
+  ]
+}

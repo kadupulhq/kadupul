@@ -1,0 +1,345 @@
+{
+  "cases": [
+    {
+      "args": [
+        [
+          {"$": "array", "pairs": [["id", 1], ["name", "a"], ["v", 10]]},
+          {"$": "array", "pairs": [["id", 2], ["name", "b"], ["v", 20]]}
+        ],
+        "id",
+        "name"
+      ],
+      "id": "scalar_value",
+      "result": {
+        "returned": {"type": "array", "value": {"$": "array", "pairs": [[1, "a"], [2, "b"]]}}
+      }
+    },
+    {
+      "args": [
+        [
+          {"$": "array", "pairs": [["id", 1], ["name", "a"], ["v", 10]]},
+          {"$": "array", "pairs": [["id", 2], ["name", "b"], ["v", 20]]}
+        ],
+        "id",
+        ["name", "v"]
+      ],
+      "id": "list_of_values",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              [1, {"$": "array", "pairs": [["name", "a"], ["v", 10]]}],
+              [2, {"$": "array", "pairs": [["name", "b"], ["v", 20]]}]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": [
+        [
+          {"$": "array", "pairs": [["id", 1], ["name", "a"], ["v", 10]]},
+          {"$": "array", "pairs": [["id", 2], ["name", "b"], ["v", 20]]}
+        ],
+        "id",
+        []
+      ],
+      "id": "empty_value_list",
+      "note": "no value names, so nothing is ever assigned",
+      "result": {"returned": {"type": "array", "value": []}}
+    },
+    {
+      "args": [[], "id", "name"],
+      "id": "empty_input",
+      "result": {"returned": {"type": "array", "value": []}}
+    },
+    {
+      "args": [null, "id", "name"],
+      "id": "null_input",
+      "result": {"returned": {"type": "array", "value": []}}
+    },
+    {
+      "args": ["abc", "id", "name"],
+      "id": "string_input",
+      "result": {"returned": {"type": "array", "value": []}}
+    },
+    {
+      "args": [0, "id", "name"],
+      "id": "zero_input",
+      "result": {"returned": {"type": "array", "value": []}}
+    },
+    {
+      "args": [
+        [
+          {"$": "array", "pairs": [["id", 1], ["name", "a"]]},
+          {"$": "array", "pairs": [["id", 1], ["name", "b"]]}
+        ],
+        "id",
+        "name"
+      ],
+      "id": "duplicate_key_last_wins",
+      "result": {"returned": {"type": "array", "value": {"$": "array", "pairs": [[1, "b"]]}}}
+    },
+    {
+      "args": [
+        [
+          {"$": "array", "pairs": [["id", 1], ["name", "a"], ["v", 1]]},
+          {"$": "array", "pairs": [["id", 1], ["name", "b"]]}
+        ],
+        "id",
+        ["name", "v"]
+      ],
+      "id": "duplicate_key_list_value_merges",
+      "note": "second row has no v: warning, null overwrites the first row v",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Undefined array key \"v\"",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [[1, {"$": "array", "pairs": [["name", "b"], ["v", null]]}]]
+          }
+        }
+      }
+    },
+    {
+      "args": [[{"$": "array", "pairs": [["name", "a"]]}], "id", "name"],
+      "id": "missing_key_in_item",
+      "note": "null key becomes the empty string",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Undefined array key \"id\"",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "array", "value": {"$": "array", "pairs": [["", "a"]]}}
+      }
+    },
+    {
+      "args": [[{"$": "array", "pairs": [["id", 1]]}], "id", "name"],
+      "id": "missing_value_in_item",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Undefined array key \"name\"",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "array", "value": {"$": "array", "pairs": [[1, null]]}}
+      }
+    },
+    {
+      "args": [[null], "id", "name"],
+      "id": "item_is_null",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 2,
+            "file": "lib/functions.php",
+            "message": "Trying to access array offset on null",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "array", "value": {"$": "array", "pairs": [["", null]]}}
+      }
+    },
+    {
+      "args": [["abc"], "id", "name"],
+      "id": "item_is_string",
+      "note": "string offset with a non-numeric key",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "Cannot access offset of type string on string"
+        }
+      }
+    },
+    {
+      "args": [[5], "id", "name"],
+      "id": "item_is_int",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 2,
+            "file": "lib/functions.php",
+            "message": "Trying to access array offset on int",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "array", "value": {"$": "array", "pairs": [["", null]]}}
+      }
+    },
+    {
+      "args": [[["x", "y"], ["z", "w"]], 0, 1],
+      "id": "list_items_numeric_key",
+      "result": {
+        "returned": {"type": "array", "value": {"$": "array", "pairs": [["x", "y"], ["z", "w"]]}}
+      }
+    },
+    {
+      "args": [
+        [
+          {"$": "array", "pairs": [["id", 1], ["name", "a"], ["v", 10]]},
+          {"$": "array", "pairs": [["id", 2], ["name", "b"], ["v", 20]]}
+        ],
+        0,
+        "name"
+      ],
+      "id": "key_is_int_zero_on_assoc",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 2,
+            "file": "lib/functions.php",
+            "message": "Undefined array key 0",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "array", "value": {"$": "array", "pairs": [["", "b"]]}}
+      }
+    },
+    {
+      "args": [
+        [
+          {"$": "array", "pairs": [["id", 1], ["name", "a"], ["v", 10]]},
+          {"$": "array", "pairs": [["id", 2], ["name", "b"], ["v", 20]]}
+        ],
+        "id",
+        null
+      ],
+      "id": "key_value_is_null",
+      "note": "null offset reads the empty-string key",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 2,
+            "file": "lib/functions.php",
+            "message": "Undefined array key \"\"",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "array", "value": {"$": "array", "pairs": [[1, null], [2, null]]}}
+      }
+    },
+    {
+      "args": [[{"$": "array", "pairs": [["id", 1.5], ["name", "a"]]}], "id", "name"],
+      "id": "item_key_float",
+      "note": "float array key is truncated with a deprecation",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Implicit conversion from float 1.5 to int loses precision",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "array", "value": {"$": "array", "pairs": [[1, "a"]]}}
+      }
+    },
+    {
+      "args": [
+        [
+          {"$": "array", "pairs": [["id", true], ["name", "a"]]},
+          {"$": "array", "pairs": [["id", false], ["name", "b"]]}
+        ],
+        "id",
+        "name"
+      ],
+      "id": "item_key_bool",
+      "result": {
+        "returned": {"type": "array", "value": {"$": "array", "pairs": [[1, "a"], [0, "b"]]}}
+      }
+    },
+    {
+      "args": [[{"$": "array", "pairs": [["id", null], ["name", "a"]]}], "id", "name"],
+      "id": "item_key_null",
+      "result": {"returned": {"type": "array", "value": {"$": "array", "pairs": [["", "a"]]}}}
+    },
+    {
+      "args": [[{"$": "array", "pairs": [["id", ["x"]], ["name", "a"]]}], "id", "name"],
+      "id": "item_key_array",
+      "note": "illegal offset type",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "Cannot access offset of type array on array"
+        }
+      }
+    },
+    {
+      "args": [[{"$": "array", "pairs": [["id", "7"], ["name", "a"]]}], "id", "name"],
+      "id": "item_key_numeric_string_becomes_int",
+      "result": {"returned": {"type": "array", "value": {"$": "array", "pairs": [[7, "a"]]}}}
+    },
+    {
+      "args": [[{"$": "array", "pairs": [["id", 1], ["name", ["p", "q"]]]}], "id", "name"],
+      "id": "key_value_nested_array_item",
+      "result": {"returned": {"type": "array", "value": {"$": "array", "pairs": [[1, ["p", "q"]]]}}}
+    },
+    {
+      "args": [
+        {
+          "$": "array",
+          "pairs": [
+            ["first", {"$": "array", "pairs": [["id", 1], ["name", "a"]]}],
+            ["second", {"$": "array", "pairs": [["id", 2], ["name", "b"]]}]
+          ]
+        },
+        "id",
+        "name"
+      ],
+      "id": "assoc_input_ignores_outer_keys",
+      "result": {
+        "returned": {"type": "array", "value": {"$": "array", "pairs": [[1, "a"], [2, "b"]]}}
+      }
+    },
+    {
+      "args": [
+        [
+          {"$": "array", "pairs": [["id", 1], ["name", "a"], ["v", 10]]},
+          {"$": "array", "pairs": [["id", 2], ["name", "b"], ["v", 20]]}
+        ]
+      ],
+      "id": "missing_arguments",
+      "note": "two parameters have no default",
+      "result": {
+        "exception": {
+          "class": "ArgumentCountError",
+          "code": 0,
+          "message": "Too few arguments to function array_rekey(), 1 passed in <caller> and exactly 3 expected"
+        }
+      }
+    }
+  ],
+  "function": "array_rekey",
+  "signature": [
+    {"by_ref": false, "name": "array", "optional": false, "type": null, "variadic": false},
+    {"by_ref": false, "name": "key", "optional": false, "type": null, "variadic": false},
+    {"by_ref": false, "name": "key_value", "optional": false, "type": null, "variadic": false}
+  ]
+}
