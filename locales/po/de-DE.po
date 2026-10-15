@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul German Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-14 22:23-0700\n"
+"POT-Creation-Date: 2026-10-14 22:59-0700\n"
 "PO-Revision-Date: 2024-05-25 15:08+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -620,7 +620,7 @@ msgstr "Vorlage"
 #: data_debug.php:1114 data_sources.php:1737 graph_templates_items.php:447
 #: graphs.php:2071 graphs_items.php:270 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
-#: lib/api_automation.php:450 lib/auth.php:3954 lib/auth.php:4003
+#: lib/api_automation.php:450 lib/auth.php:3978 lib/auth.php:4027
 #: lib/html.php:2310 lib/html.php:2338 lib/html.php:2377 lib/html.php:2411
 #: lib/html_reports.php:1030 lib/html_reports.php:1034
 #: lib/html_reports.php:1157 lib/html_reports.php:1167
@@ -651,8 +651,8 @@ msgstr "Beliebig"
 #: include/global_settings.php:706 include/global_settings.php:714
 #: include/global_settings.php:1343 include/global_settings.php:2006
 #: lib/api_automation.php:48 lib/api_automation.php:431
-#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3957
-#: lib/auth.php:4006 lib/auth.php:4052 lib/html.php:228 lib/html.php:2311
+#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3981
+#: lib/auth.php:4030 lib/auth.php:4076 lib/html.php:228 lib/html.php:2311
 #: lib/html.php:2336 lib/html.php:2378 lib/html.php:2412 lib/html_form.php:392
 #: lib/html_reports.php:1041 lib/html_reports.php:1045
 #: lib/html_reports.php:1081 lib/html_reports.php:1157
@@ -877,11 +877,11 @@ msgstr "Zugriff verweigert, bitte kontaktieren Sie Ihren Kadupul Administrator."
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr "Zugriff verweigert, bitte kontaktieren Sie Ihren Kadupul Administrator."
 
-#: auth_login.php:119 lib/auth.php:4368 lib/auth.php:4374 lib/auth.php:4479
-#: lib/auth.php:4530 lib/auth.php:4555 lib/auth.php:4578 lib/auth.php:4618
-#: lib/auth.php:4630 lib/auth.php:4653 lib/auth.php:4776 lib/auth.php:4796
-#: lib/auth.php:5008 lib/auth.php:5050 lib/auth.php:5060 lib/auth.php:5076
-#: lib/auth.php:5090 lib/auth.php:5128
+#: auth_login.php:119 lib/auth.php:4392 lib/auth.php:4398 lib/auth.php:4503
+#: lib/auth.php:4554 lib/auth.php:4579 lib/auth.php:4602 lib/auth.php:4642
+#: lib/auth.php:4654 lib/auth.php:4677 lib/auth.php:4800 lib/auth.php:4820
+#: lib/auth.php:5032 lib/auth.php:5074 lib/auth.php:5084 lib/auth.php:5100
+#: lib/auth.php:5114 lib/auth.php:5152
 msgid "Access Denied!  Login Failed."
 msgstr "Zugriff verweigert, Benutzerkonto deaktiviert."
 
@@ -924,13 +924,13 @@ msgstr "Geben Sie Ihren Benutzernamen und Kennwort ein"
 msgid "Password"
 msgstr "Kennwort"
 
-#: auth_login.php:360 include/global_settings.php:2329 lib/auth.php:1014
-#: lib/auth.php:1036 lib/auth.php:1046 lib/auth.php:1051 user_admin.php:2124
+#: auth_login.php:360 include/global_settings.php:2329 lib/auth.php:1038
+#: lib/auth.php:1060 lib/auth.php:1070 lib/auth.php:1075 user_admin.php:2124
 msgid "Local"
 msgstr "Lokal"
 
-#: auth_login.php:364 include/global_arrays.php:874 lib/auth.php:1047
-#: lib/auth.php:1052
+#: auth_login.php:364 include/global_arrays.php:874 lib/auth.php:1071
+#: lib/auth.php:1076
 msgid "LDAP"
 msgstr "LDAP"
 
@@ -5258,7 +5258,7 @@ msgstr "Du musst eingeloggt sein, um diesen Bereich von Kadupul zu betreten."
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "FATAL: Du musst eingeloggt sein, um Zugang zu diesem Bereich von Kadupul zu erhalten."
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5621
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5645
 #: permission_denied.php:14 permission_denied.php:16
 msgid "Login Again"
 msgstr "Neu Anmelden"
@@ -11982,7 +11982,7 @@ msgstr "Nicht aktiv"
 msgid "Recovering"
 msgstr "Wiederherstellend"
 
-#: lib/api_automation.php:33 lib/auth.php:3059 lib/clog_webapi.php:856
+#: lib/api_automation.php:33 lib/auth.php:3083 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:342 lib/plugins.php:1499
 #: lib/plugins.php:1500 lib/rrd.php:4194 lib/rrd.php:4206 lib/spikekill.php:301
 #: package_import.php:522 package_import.php:600 utilities.php:211
@@ -12214,123 +12214,123 @@ msgstr "Keine Ping- oder SNMP-Verfügbarkeitsprüfung im Einsatz"
 msgid "New Branch"
 msgstr "Neue Niederlassung"
 
-#: lib/auth.php:1053
+#: lib/auth.php:1077
 msgid "Web Basic"
 msgstr "Einfache Webanmeldung"
 
-#: lib/auth.php:2888
+#: lib/auth.php:2912
 msgid "Device:(Hide Disabled)"
 msgstr "Gerät ist deaktiviert"
 
-#: lib/auth.php:2906 lib/auth.php:2908 lib/auth.php:2914 lib/auth.php:2916
+#: lib/auth.php:2930 lib/auth.php:2932 lib/auth.php:2938 lib/auth.php:2940
 #, php-format
 msgid "Graph:(%s%s)"
 msgstr "Diagramm:(%s%s)"
 
-#: lib/auth.php:2929 lib/auth.php:2935 lib/auth.php:3002 lib/auth.php:3004
-#: lib/auth.php:3008 lib/auth.php:3010
+#: lib/auth.php:2953 lib/auth.php:2959 lib/auth.php:3026 lib/auth.php:3028
+#: lib/auth.php:3032 lib/auth.php:3034
 #, php-format
 msgid "Device:(%s%s)"
 msgstr "Gerät:(%s%s)"
 
-#: lib/auth.php:2943 lib/auth.php:2949 lib/auth.php:3018 lib/auth.php:3020
-#: lib/auth.php:3024 lib/auth.php:3026
+#: lib/auth.php:2967 lib/auth.php:2973 lib/auth.php:3042 lib/auth.php:3044
+#: lib/auth.php:3048 lib/auth.php:3050
 #, php-format
 msgid "Template:(%s%s)"
 msgstr "Vorlage:(%s%s)"
 
-#: lib/auth.php:2956
+#: lib/auth.php:2980
 #, php-format
 msgid "Graph+Device+Template:(%s%s)"
 msgstr "Diagramm+Gerät+Vorlage:(%s%s)"
 
-#: lib/auth.php:2993 lib/auth.php:2995
+#: lib/auth.php:3017 lib/auth.php:3019
 #, php-format
 msgid "Device+Template:(%s%s)"
 msgstr "Gerät+Vorlage:(%s%s)"
 
-#: lib/auth.php:3039 lib/auth.php:3046 lib/auth.php:3055
+#: lib/auth.php:3063 lib/auth.php:3070 lib/auth.php:3079
 msgid "Restricted By: "
 msgstr "Eingeschränkt"
 
-#: lib/auth.php:3043
+#: lib/auth.php:3067
 msgid "Granted By: "
 msgstr "Zugriff gewährt"
 
-#: lib/auth.php:3050
+#: lib/auth.php:3074
 msgid "Granted"
 msgstr "Gewährt"
 
-#: lib/auth.php:3052 lib/auth.php:3057
+#: lib/auth.php:3076 lib/auth.php:3081
 msgid "Restricted"
 msgstr "Eingeschränkt"
 
-#: lib/auth.php:3291 lib/auth.php:3326
+#: lib/auth.php:3315 lib/auth.php:3350
 msgid "Branch:"
 msgstr "Filiale:"
 
-#: lib/auth.php:3300 lib/auth.php:3334 lib/html_tree.php:949
+#: lib/auth.php:3324 lib/auth.php:3358 lib/html_tree.php:949
 #: lib/reports.php:1114
 msgid "Device:"
 msgstr "Zielsystem:"
 
-#: lib/auth.php:4272 lib/auth.php:4363
+#: lib/auth.php:4296 lib/auth.php:4387
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Zugriff verweigert, bitte kontaktieren Sie Ihren Kadupul Administrator."
 
-#: lib/auth.php:4322
+#: lib/auth.php:4346
 msgid "Access Denied!  Login Disabled."
 msgstr "Zugriff verweigert, Benutzerkonto deaktiviert."
 
-#: lib/auth.php:4397
+#: lib/auth.php:4421
 msgid "Web Basic Authentication configured, but no username was passed from the web server. Please make sure you have authentication enabled on the web server."
 msgstr "Web-Standardauthentifizierung konfiguriert, aber kein Benutzername wurde vom Web-Server übergeben. Bitte stellen Sie sicher, dass Sie die Authentifizierung auf dem Server aktiviert haben."
 
-#: lib/auth.php:4413
+#: lib/auth.php:4437
 #, php-format
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "%s, die vom Webserver authentifiziert werden, aber sowohl Template- als auch Gastbenutzer sind in Kadupul nicht definiert."
 
-#: lib/auth.php:4590 lib/auth.php:4789
+#: lib/auth.php:4614 lib/auth.php:4813
 msgid "Access Denied!  No password provided by user."
 msgstr "Zugriff verweigert! Kein Passwort vom Benutzer bereitgestellt."
 
-#: lib/auth.php:4762 lib/auth.php:5828
+#: lib/auth.php:4786 lib/auth.php:5852
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "Zugriff verweigert! Vorlagenbenutzer-ID %s existiert nicht.  Bitte wenden Sie sich an Ihren Administrator."
 
-#: lib/auth.php:4770
+#: lib/auth.php:4794
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:5123
+#: lib/auth.php:5147
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "Ihr Kadupul-Administrator hat komplexe Kennwörter für Anmeldungen erzwungen, und Ihr aktuelles Kadupul-Kennwort entspricht nicht den neuen Anforderungen. Daher müssen Sie jetzt Ihr Passwort ändern."
 
-#: lib/auth.php:5163
+#: lib/auth.php:5187
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "Das Passwort muss mindestens %d Zeichen enthalten!"
 
-#: lib/auth.php:5169
+#: lib/auth.php:5193
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "Dein Passwort muss mindestens 1 numerische Zeichen enthalten!"
 
-#: lib/auth.php:5173
+#: lib/auth.php:5197
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "Dein Passwort muss eine Mischung aus Kleinbuchstaben und Großbuchstaben enthalten!"
 
-#: lib/auth.php:5179
+#: lib/auth.php:5203
 msgid "Your password must contain at least 1 special character!"
 msgstr "Dein Passwort muss mindestens 1 Sonderzeichen enthalten!"
 
-#: lib/auth.php:5614
+#: lib/auth.php:5638
 #, fuzzy
 msgid "Kadupul Login Failure"
 msgstr "Kadupul gelöscht"
 
-#: lib/auth.php:5914
+#: lib/auth.php:5938
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "Die Authentifizierung war zuvor nicht eingestellt. Es wurde versucht, die lokale Authentifizierung festzulegen, aber es wurde kein Administratorkonto gefunden."
 

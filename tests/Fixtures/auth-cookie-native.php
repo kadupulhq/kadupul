@@ -22,10 +22,15 @@ $db->exec("CREATE TABLE user_auth(id INTEGER PRIMARY KEY, username TEXT, realm I
 $db->exec("INSERT INTO user_auth(id,username,realm,enabled,locked,password,lastfail,failed_attempts) VALUES(42,'alice',0,'on','','',0,0),(43,'alice',3,'on','','',0,0),(44,'foreign',0,'on','','',0,0)");
 $db->exec('CREATE TABLE user_auth_cache(user_id INTEGER, hostname TEXT, last_update TEXT, token TEXT)');
 $db->exec('CREATE TABLE user_log(username TEXT,user_id INTEGER,result INTEGER,ip TEXT,time TEXT)');
-$old = str_repeat('a', 64);
+$db->exec('CREATE TABLE settings_user(user_id INTEGER,name TEXT,value TEXT,PRIMARY KEY(user_id,name))');
+$old = $scenario['token'] ?? str_repeat('a', 64);
 $hash = hash('sha512', $old);
 foreach (array(42, 43, 44) as $id) {
     $db->prepare('INSERT INTO user_auth_cache VALUES(?,?,CURRENT_TIMESTAMP,?)')->execute(array($id, '127.0.0.1', $hash));
+}
+if ($scenario['refuse_insert'] ?? false) {
+    $db->exec("CREATE TRIGGER refuse_token BEFORE INSERT ON user_auth_cache BEGIN SELECT RAISE(ABORT,'token insertion refused'); END");
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
 }
 $db->prepare('UPDATE user_auth SET enabled=?,locked=? WHERE id=?')->execute(array($scenario['enabled'] ?? 'on', $scenario['locked'] ?? '', $scenario['principal'] ?? 42));
 if ($scenario['wrong_host'] ?? false) {

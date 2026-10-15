@@ -139,15 +139,21 @@ function clear_auth_cookie($db = false, $expire = null, $remembered = null)
  *
  * @return (bool) True if token set worked, otherwise false
  */
-function set_auth_cookie($user)
+function set_auth_cookie($user, $generation = null)
 {
     global $config;
 
+    if ($generation !== null && (!is_string($generation) || preg_match('/\A[a-f0-9]{64}\z/D', $generation) !== 1)) {
+        return false;
+    }
     if (db_table_exists('user_auth_cache')) {
         clear_auth_cookie();
 
         try {
             $nssecret = bin2hex(random_bytes(32));
+            if ($generation !== null) {
+                $nssecret = 'v1.' . $generation . '.' . $nssecret;
+            }
         } catch (Exception $e) {
             cacti_log('FATAL: CSPRNG failed. Cannot generate secure authentication token.', false, 'AUTH');
 
@@ -176,13 +182,24 @@ function set_auth_cookie($user)
     return false;
 }
 
+/** A rotated remembered credential may not adopt a later session generation. */
+function auth_cookie_generation_valid(string $token, string $generation): bool
+{
+    if (!str_starts_with($token, 'v1.')) {
+        return true; // Existing unversioned cookies remain valid until revoked.
+    }
+    return preg_match('/\Av1\.([a-f0-9]{64})\.[a-f0-9]{64}\z/D', $token, $parts) === 1
+        && hash_equals($generation, $parts[1]);
+}
+
 /**
- * check_auth_cookie - clears a users security token
+ * check_auth_cookie - restore a persisted remembered credential.
  *
- * @return (int) The user of the session cookie, otherwise false
+ * @return (int|false) The user of the session cookie, otherwise false
  */
 function check_auth_cookie()
 {
+    unset($_SESSION['sess_cookie_credential']);
     if (isset($_COOKIE['cacti_remembers']) &&
         is_string($_COOKIE['cacti_remembers']) &&
         read_config_option('auth_cache_enabled') == 'on' &&
@@ -210,7 +227,7 @@ function check_auth_cookie()
         if ($user_id > 0 && $user_id != get_guest_account()) {
             if ($realm_id == -1) {
                 $user_info = db_fetch_row_prepared(
-                    'SELECT id, realm, username
+                    'SELECT id, realm, username, password
 					FROM user_auth
 					WHERE id = ?
 					AND enabled = \'on\'
@@ -220,7 +237,7 @@ function check_auth_cookie()
                 );
             } else {
                 $user_info = db_fetch_row_prepared(
-                    'SELECT id, realm, username
+                    'SELECT id, realm, username, password
 					FROM user_auth
 					WHERE id = ?
 					AND enabled = \'on\'
@@ -231,6 +248,10 @@ function check_auth_cookie()
             }
 
             if (cacti_sizeof($user_info)) {
+                $generation = auth_session_credential_generation($user_info['id'], $user_info['password']);
+                if (!auth_cookie_generation_valid($token, $generation)) {
+                    return false;
+                }
                 $secret = hash('sha512', $token, false);
 
                 $found  = db_fetch_cell_prepared(
@@ -250,6 +271,11 @@ function check_auth_cookie()
                         return false;
                     }
 
+                    if (!set_auth_cookie($user_info, $generation)) {
+                        return false;
+                    }
+                    $_SESSION['sess_cookie_credential'] = array('user_id' => (int) $user_info['id'], 'generation' => $generation);
+
                     cacti_log("LOGIN: User '" . $user_info['username'] . "' with ID '" . $user_info['id'] . "' Authenticated via Authentication Cookie", false, 'AUTH');
 
                     db_execute_prepared(
@@ -259,8 +285,6 @@ function check_auth_cookie()
 						(?, ?, 2, ?, NOW())',
                         array($user_info['username'], $user_info['id'], get_client_addr())
                     );
-
-                    set_auth_cookie($user_info);
 
                     return $user_info['id'];
                 }
@@ -5955,9 +5979,11 @@ function check_reset_no_authentication($auth_method)
  */
 function cacti_auth_transition($user_id, $reason = 'login')
 {
+    $restored = $_SESSION['sess_cookie_credential'] ?? null;
+    unset($_SESSION['sess_cookie_credential']);
     /* Recheck account eligibility at every authentication boundary. */
     $account = db_fetch_row_prepared(
-        'SELECT enabled, locked
+        'SELECT enabled, locked, password
 		FROM user_auth
 		WHERE id = ?',
         array($user_id)
@@ -5966,6 +5992,12 @@ function cacti_auth_transition($user_id, $reason = 'login')
     if (!$account || ($account['enabled'] !== 'on' && (int) $user_id !== (int) get_guest_account()) || $account['locked'] === 'on') {
         cacti_log('SECURITY: auth transition blocked for unavailable, disabled or locked user: ' . $user_id . ' reason: ' . $reason, false, 'AUTH');
 
+        return false;
+    }
+
+    if ($reason === 'cookie_restore' && (!is_array($restored) || ($restored['user_id'] ?? null) !== (int) $user_id
+        || !is_string($restored['generation'] ?? null)
+        || !hash_equals(auth_session_credential_generation($user_id, $account['password']), $restored['generation']))) {
         return false;
     }
 
@@ -5979,7 +6011,13 @@ function cacti_auth_transition($user_id, $reason = 'login')
     kill_session_var('sess_user_config_array');
     kill_session_var('sess_config_array');
 
-    auth_session_bind_credentials($user_id);
+    if ($reason === 'cookie_restore') {
+        // Keep the snapshot that admitted the token even if revocation commits
+        // after the check above. Never bind that credential to a newer generation.
+        $_SESSION['sess_user_credential'] = $restored['generation'];
+    } else {
+        auth_session_bind_credentials($user_id);
+    }
 
     cacti_log('NOTE: auth transition completed for user ' . $user_id . ' reason=' . $reason, false, 'AUTH', POLLER_VERBOSITY_MEDIUM);
 

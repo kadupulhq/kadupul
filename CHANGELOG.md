@@ -6,7 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
-- Make Logout Everywhere revoke file and database session credentials and remembered logins; preserve existing sessions and return failure if revocation cannot be committed.
+- Make Logout Everywhere revoke file and database session credentials and remembered logins; preserve existing sessions and return failure if revocation cannot be committed. Bind remembered-login rotation to its admitted credential generation so an in-flight restoration cannot create a usable session or token after revocation.
 
 - Update the native CI scanner to Semgrep 1.179.0 and hash-locked PyJWT 2.15.1, removing vulnerable scanner dependencies while preserving the existing scan policy.
 
