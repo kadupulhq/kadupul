@@ -1654,6 +1654,15 @@ def function_ambient_contract():
         assert out['id'] == '/var/www/html/i' and out['args'] == ['/var/www/html/a'] and out['note'] == '/var/www/html/n'
         assert out['result']['by_ref']['id']['value'] == '<APP>/x', out
         assert out['result']['by_ref']['args']['value'] == '<APP>/y', out
+
+        # A repeat that differs only in a normalized field (an elapsed time) is the same repeat.
+        timed = {'diagnostics': [], 'log': [], 'output': 'Total[0.0012] x\n', 'returned': {'type': 'null', 'value': None}}
+        record = {'function': 'f', 'signature': [], 'cases': [
+            {'id': 'a', 'note': '', 'warm': {'same': False, 'result': dict(timed, output='Total[0.0034] x\n')}, 'result': timed},
+            {'id': 'b', 'note': '', 'warm': {'same': False, 'result': dict(timed, output='Total[0.0034] y\n')}, 'result': timed}]}
+        folded = harness.normalize_function_record(record)['cases']
+        assert folded[0]['warm'] == {'same': True}, folded[0]
+        assert folded[1]['warm']['same'] is False, folded[1]
     print('ambient settings, config and session, prelude, between and mixed isolation behave; internal-function steps and failed savepoints stop the run')
 
 

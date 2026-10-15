@@ -26,16 +26,7 @@
       "args": ["", false, false, 2, 1],
       "id": "return_limit2_skip1",
       "note": "skip drops the innermost frames before the limit applies",
-      "result": {"returned": {"type": "string", "value": "(<harness frames: 2>)"}},
-      "warm": {
-        "result": {
-          "diagnostics": [],
-          "log": [],
-          "output": "",
-          "returned": {"type": "string", "value": "(<harness frames: 2>)"}
-        },
-        "same": false
-      }
+      "result": {"returned": {"type": "string", "value": "(<harness frames: 2>)"}}
     },
     {
       "args": ["E", true, true, 1],

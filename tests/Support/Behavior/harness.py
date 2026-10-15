@@ -1237,9 +1237,19 @@ def normalize_function_record(record):
     out = summarize_large({k: normalize_function_tree(v) for k, v in record.items() if k != 'cases'})
     # The case list is the record itself, however many cases a function has;
     # only what is inside a case is summarized.
-    out['cases'] = [summarize_large({k: v if k in FUNCTION_INPUT_KEYS else normalize_function_tree(v) for k, v in case.items()})
+    out['cases'] = [collapse_warm_repeat(summarize_large({k: v if k in FUNCTION_INPUT_KEYS else normalize_function_tree(v) for k, v in case.items()}))
                     for case in record['cases']]
     return out
+
+
+def collapse_warm_repeat(case):
+    # The recorder compares the two calls before normalization, so a field that
+    # carries an elapsed time (Total[0.0012]) differs between them on every run.
+    # Once the shapes are normalized the repeat may be identical after all.
+    warm = case.get('warm')
+    if isinstance(warm, dict) and warm.get('same') is False and warm.get('result') == case.get('result'):
+        case['warm'] = {'same': True}
+    return case
 
 
 FUNCTION_SUMMARY_THRESHOLD = 64

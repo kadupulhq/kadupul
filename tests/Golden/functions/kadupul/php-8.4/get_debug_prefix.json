@@ -4,30 +4,12 @@
       "args": [],
       "id": "format",
       "note": "<[ date time.microseconds | pid right-aligned in 7 ]> -- ; wall clock and PID are replaced",
-      "result": {"returned": {"type": "string", "value": "<[ <DATETIME> | <PID:7> ]> -- "}},
-      "warm": {
-        "result": {
-          "diagnostics": [],
-          "log": [],
-          "output": "",
-          "returned": {"type": "string", "value": "<[ <DATETIME> | <PID:7> ]> -- "}
-        },
-        "same": false
-      }
+      "result": {"returned": {"type": "string", "value": "<[ <DATETIME> | <PID:7> ]> -- "}}
     },
     {
       "args": ["x", 1],
       "id": "extra_arguments_ignored",
-      "result": {"returned": {"type": "string", "value": "<[ <DATETIME> | <PID:7> ]> -- "}},
-      "warm": {
-        "result": {
-          "diagnostics": [],
-          "log": [],
-          "output": "",
-          "returned": {"type": "string", "value": "<[ <DATETIME> | <PID:7> ]> -- "}
-        },
-        "same": false
-      }
+      "result": {"returned": {"type": "string", "value": "<[ <DATETIME> | <PID:7> ]> -- "}}
     }
   ],
   "function": "get_debug_prefix",
