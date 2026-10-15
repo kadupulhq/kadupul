@@ -1,117 +1,69 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-/*
- * Behavior tests for cacti_validate_theme().
- *
- * Root-cause mitigation for GHSA-rm7p / GHSA-cx5r (LFI via graph_theme).
- * The helper must allowlist-validate the theme name against the actual
- * contents of include/themes/ and return a safe default for anything else.
- *
- * Tests use source-scan + isolated reimplementation to avoid the full
- * Kadupul bootstrap. The isolated logic must match the production helper.
- */
+namespace CactiValidateThemeBehavior;
 
-beforeAll(function () {
-	require_once dirname(__DIR__, 2) . '/include/global_constants.php';
-	require_once dirname(__DIR__, 2) . '/lib/functions.php';
-});
+require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
+$source = file_get_contents(dirname(__DIR__, 2) . '/lib/functions.php');
+if (!is_string($source)) {
+    throw new \RuntimeException('Unable to read theme helper.');
+}
+eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($source, 'cacti_validate_theme')); // nosemgrep: php.lang.security.eval-use.eval-use
 
-/**
- * Inline mirror of the production helper, parameterized with the allowlist.
- * Used to exercise the algorithm without depending on the filesystem.
- */
-function resolve_theme_under(array $allowlist, $requested, $default) {
-	$requested = basename((string) $requested);
-
-	return isset($allowlist[$requested]) ? $requested : $default;
+final class ThemeFixture
+{
+    public static string $default = 'modern';
 }
 
-describe('cacti_validate_theme source contract', function () {
-	$src = file_get_contents(__DIR__ . '/../../lib/functions.php');
+function read_config_option(string $name): string
+{
+    if ($name !== 'selected_theme') {
+        throw new \RuntimeException('Unexpected theme setting.');
+    }
 
-	it('uses static cache so scandir runs once per request', function () use ($src) {
-		expect($src)->toContain('static $valid_themes');
-	});
+    return ThemeFixture::$default;
+}
 
-	it('requires both is_dir and is_file(rrdtheme.php) for allowlist entry', function () use ($src) {
-		expect($src)->toContain('is_dir($full)');
-		expect($src)->toContain("is_file(\$full . '/rrdtheme.php')");
-	});
-
-	it('applies basename() to requested value before allowlist check', function () use ($src) {
-		expect($src)->toContain('basename((string) $requested)');
-	});
-
-	it('falls back to a configured or modern default', function () use ($src) {
-		expect($src)->toContain("read_config_option('selected_theme')");
-		expect($src)->toContain("\$default = 'modern'");
-	});
+beforeEach(function () {
+    $this->previousThemeConfig = [array_key_exists('config', $GLOBALS), $GLOBALS['config'] ?? null];
+    $GLOBALS['config'] = ['base_path' => dirname(__DIR__, 2)];
+    ThemeFixture::$default = 'modern';
 });
 
-describe('theme allowlist algorithm', function () {
-	$allow = array('modern' => true, 'classic' => true, 'midwinter' => true);
-
-	it('accepts a valid theme', function () use ($allow) {
-		expect(resolve_theme_under($allow, 'modern', 'modern'))->toBe('modern');
-		expect(resolve_theme_under($allow, 'midwinter', 'modern'))->toBe('midwinter');
-	});
-
-	it('returns default for an invalid theme', function () use ($allow) {
-		expect(resolve_theme_under($allow, 'evil', 'modern'))->toBe('modern');
-	});
-
-	it('strips path traversal via basename', function () use ($allow) {
-		// basename('../../etc/passwd') => 'passwd'; not in allowlist; returns default
-		expect(resolve_theme_under($allow, '../../etc/passwd', 'modern'))->toBe('modern');
-		expect(resolve_theme_under($allow, '/etc/passwd', 'modern'))->toBe('modern');
-		expect(resolve_theme_under($allow, 'modern/../../etc/passwd', 'modern'))->toBe('modern');
-	});
-
-	it('rejects empty, dot, and double-dot', function () use ($allow) {
-		expect(resolve_theme_under($allow, '', 'modern'))->toBe('modern');
-		expect(resolve_theme_under($allow, '.', 'modern'))->toBe('modern');
-		expect(resolve_theme_under($allow, '..', 'modern'))->toBe('modern');
-	});
-
-	it('rejects theme names satisfying basename but not in allowlist', function () use ($allow) {
-		// The exploit category the plain-basename fix missed:
-		// attacker-placed directory with rrdtheme.php. Our allowlist is
-		// built from the real include/themes/ so this is blocked unless
-		// the attacker can write INTO include/themes/ (already game over).
-		expect(resolve_theme_under($allow, 'attacker_uploaded_theme', 'modern'))->toBe('modern');
-	});
-
-	it('is case-sensitive (filesystem names are case-sensitive on POSIX)', function () use ($allow) {
-		expect(resolve_theme_under($allow, 'MODERN', 'modern'))->toBe('modern');
-		expect(resolve_theme_under($allow, 'Modern', 'modern'))->toBe('modern');
-	});
-
-	it('coerces non-string input safely', function () use ($allow) {
-		expect(resolve_theme_under($allow, null, 'modern'))->toBe('modern');
-		expect(resolve_theme_under($allow, 0, 'modern'))->toBe('modern');
-		expect(resolve_theme_under($allow, false, 'modern'))->toBe('modern');
-	});
+afterEach(function () {
+    if ($this->previousThemeConfig[0]) {
+        $GLOBALS['config'] = $this->previousThemeConfig[1];
+    } else {
+        unset($GLOBALS['config']);
+    }
 });
 
-describe('theme ingress enforcement', function () {
-	$graphImageSource = file_get_contents(__DIR__ . '/../../graph_image.php');
-	$graphJsonSource  = file_get_contents(__DIR__ . '/../../graph_json.php');
-	$remoteSource     = file_get_contents(__DIR__ . '/../../remote_agent.php');
-
-	it('uses cacti_validate_theme in graph_image request handling', function () use ($graphImageSource) {
-		expect($graphImageSource)->toContain("cacti_validate_theme(get_request_var('graph_theme'))");
-	});
-
-	it('uses cacti_validate_theme in graph_json request handling', function () use ($graphJsonSource) {
-		expect($graphJsonSource)->toContain("cacti_validate_theme(get_request_var('graph_theme'))");
-	});
-
-	it('uses cacti_validate_theme in remote_agent graph handler', function () use ($remoteSource) {
-		expect($remoteSource)->toContain("cacti_validate_theme(get_request_var('graph_theme'))");
-	});
+test('production theme validation admits shipped themes with real RRD theme files', function () {
+    $themes = glob(dirname(__DIR__, 2) . '/include/themes/*/rrdtheme.php');
+    expect($themes)->not->toBeEmpty();
+    foreach ($themes as $file) {
+        $name = basename(dirname($file));
+        expect(cacti_validate_theme($name))->toBe($name);
+    }
 });
+
+test('production theme validation refuses unknown names and traversal targets', function (mixed $requested) {
+    expect(cacti_validate_theme($requested))->toBe('modern');
+})->with(['unknown' => 'not-a-shipped-theme', 'relative path' => '../../etc/passwd', 'absolute path' => '/etc/passwd', 'nested traversal' => 'modern/../../etc/passwd', 'empty' => '', 'dot' => '.', 'parent' => '..', 'uppercase' => 'MODERN', 'mixed case' => 'Modern', 'null' => null, 'integer' => 0, 'boolean' => false]);
+
+test('configured fallback must also be a shipped theme', function (string $configured, string $expected) {
+    ThemeFixture::$default = $configured;
+    expect(cacti_validate_theme('not-a-shipped-theme'))->toBe($expected);
+})->with([['classic', 'classic'], ['', 'modern'], ['../../etc/passwd', 'modern'], ['attacker_uploaded_theme', 'modern']]);
+
+test('graph entry points retain production theme validation', function (string $file) {
+    $source = file_get_contents(dirname(__DIR__, 2) . '/' . $file);
+    expect($source)->toBeString()->toContain("cacti_validate_theme(get_request_var('graph_theme'))");
+})->with(['graph_image.php', 'graph_json.php', 'remote_agent.php']);
