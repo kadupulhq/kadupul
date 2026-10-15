@@ -95,11 +95,11 @@ PHP;
 
 test('unknown proxy existence never authorizes destructive RRD creation', function ($operation, $response) {
     $result = rrd_proxy_create_guard_run($this, $operation, $response);
-    expect($result[0])->toBe($operation === 'boost-update' ? 'ERROR: Unable to confirm RRD existence' : -1);
+    expect($result[0])->toBe($operation === 'boost-update' ? 'ERROR: Unable to confirm RRD existence' : ($operation === 'update' ? false : -1));
     expect($result[1])->toBe('1700000060:42');
     expect($result[2])->toStartWith('file_exists ')->not->toContain('create ')->not->toContain('update ');
     expect(substr_count($result[2], '_EOT_'))->toBe(1);
-})->with(array('boost-update', 'boost-create', 'direct-create'))->with(array(null, 'invalid OK u:0.00'));
+})->with(array('boost-update', 'boost-create', 'direct-create', 'update'))->with(array(null, 'invalid OK u:0.00', 'ERROR:Timeout', 'ERROR:RRDTOOL_PIPE_BROKEN', "ERROR: opening './sample.rrd': Permission denied", "ERROR:\nERROR:Timeout", "ERROR:\nOK u:0.00 s:0.00 r:0.00"));
 
 test('an existing proxied RRD is checked with a bare path and never recreated', function ($operation) {
     $result = rrd_proxy_create_guard_run($this, $operation, 'OK u:0.00 s:0.00 r:0.00');
@@ -145,7 +145,7 @@ test('proxied updates carry a bare path, and a path the proxy cannot carry is no
 });
 
 test('a proxied create sends a substituted maximum bare, or not at all when the proxy cannot carry it', function ($function) {
-    $missing = "ERROR: opening './sample.rrd': No such file or directory";
+    $missing = "ERROR:\r\n";
 
     // A number goes as it is.
     $result = rrd_proxy_create_guard_run($this, 'max:' . $function . ':100', $missing);
@@ -162,7 +162,7 @@ test('a proxied create sends a substituted maximum bare, or not at all when the 
 
 test('a proxied create with structured paths checks its directory with a bare path', function ($function) {
     // The fake proxy answers only file_exists, so is_dir reads as unknown and mkdir is not sent.
-    $result = rrd_proxy_create_guard_run($this, 'max:' . $function . ':100+tree', "ERROR: opening './sample.rrd': No such file or directory");
+    $result = rrd_proxy_create_guard_run($this, 'max:' . $function . ':100+tree', 'ERROR:');
 
     expect($result[2])->toStartWith("file_exists ./sample.rrd_EOT_\r\nis_dir ._EOT_\r\ncreate ./sample.rrd ");
 })->with(array('direct', 'boost'));

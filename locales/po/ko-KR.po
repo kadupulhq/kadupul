@@ -3050,7 +3050,7 @@ msgstr "재방송 분석"
 msgid "Check"
 msgstr "체크"
 
-#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4176
+#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4188
 #: utilities.php:798 utilities.php:815 utilities.php:3206
 msgid "Value"
 msgstr "값"
@@ -3617,7 +3617,7 @@ msgstr "단계"
 
 #: data_source_profiles.php:900 graphs_new.php:532 include/global_form.php:284
 #: lib/html.php:613 lib/html_filter.php:55 lib/installer.php:2837
-#: lib/rrd.php:4218 utilities.php:866 utilities.php:1838
+#: lib/rrd.php:4230 utilities.php:866 utilities.php:1838
 msgid "Rows"
 msgstr "행"
 
@@ -4271,7 +4271,7 @@ msgid "RRDtool Graph Syntax"
 msgstr "RRDtool 그래프 구문"
 
 #: graph_image.php:174 graph_json.php:208 graph_realtime.php:330
-#: lib/rrd.php:2524
+#: lib/rrd.php:2536
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller는 아직 운영되지 않았습니다."
 
@@ -6018,7 +6018,7 @@ msgstr "자연 주문"
 msgid "Numeric Ordering"
 msgstr "숫자 순서 지정"
 
-#: include/global_arrays.php:953 lib/rrd.php:4142
+#: include/global_arrays.php:953 lib/rrd.php:4154
 msgid "Header"
 msgstr "헤더"
 
@@ -7637,7 +7637,7 @@ msgstr "데이터가 데이터 소스에서 수집되는 빈도"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "RRDtool에서 알 수없는 데이터를 기록하기 전에 얼마나 오래 데이터가 누락 될 수 있습니다. 데이터 소스가 불안정하고 그래프에 간격을 표시하지 않고 이전 데이터를 전달하려는 경우이 값을 늘리십시오. 이 값에 X-Files Factor를 곱하여 실제 시간을 판별하십시오."
 
-#: include/global_form.php:226 lib/rrd.php:4221
+#: include/global_form.php:226 lib/rrd.php:4233
 msgid "X-Files Factor"
 msgstr "X 파일 요소"
 
@@ -8199,7 +8199,7 @@ msgstr "불투명 / 알파 채널"
 msgid "The opacity/alpha channel of the color."
 msgstr "색상의 불투명도 / 알파 채널입니다."
 
-#: include/global_form.php:989 lib/rrd.php:4217
+#: include/global_form.php:989 lib/rrd.php:4229
 msgid "Consolidation Function"
 msgstr "통합 기능"
 
@@ -11910,7 +11910,7 @@ msgstr "복구 중"
 
 #: lib/api_automation.php:33 lib/auth.php:3083 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:342 lib/plugins.php:1499
-#: lib/plugins.php:1500 lib/rrd.php:4194 lib/rrd.php:4206 lib/spikekill.php:301
+#: lib/plugins.php:1500 lib/rrd.php:4206 lib/rrd.php:4218 lib/spikekill.php:301
 #: package_import.php:522 package_import.php:600 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 msgid "Unknown"
@@ -11918,7 +11918,7 @@ msgstr "알 수 없음"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
-#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4171
+#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4183
 #: utilities.php:356 utilities.php:1480 utilities.php:3206
 msgid "Type"
 msgstr "유형"
@@ -15750,194 +15750,194 @@ msgstr "이미 추가 된 보고서 그래프 항목 &#39; <i> %s</i> &#39;을 (
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "건너 뛴 보고서 그래프 항목 &#39; <i> %s</i> &#39;이 (가) 이미 있음"
 
-#: lib/rrd.php:2147
+#: lib/rrd.php:2159
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2150
+#: lib/rrd.php:2162
 msgid "The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2521
+#: lib/rrd.php:2533
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "오류 : RRD 파일  %s을 (를) 쓸 수 없습니다."
 
-#: lib/rrd.php:3931
+#: lib/rrd.php:3943
 #, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "필요한 RRD 파일 단계 크기는 '%s' 이지만 관찰된 단계는 '%s' 입니다"
 
-#: lib/rrd.php:3995
+#: lib/rrd.php:4007
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "데이터 원본 &#39; %s&#39;의 형식이 &#39; %s&#39;이어야합니다."
 
-#: lib/rrd.php:4001
+#: lib/rrd.php:4013
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "데이터 원본 &#39; %s&#39;의 하트 비트가 &#39; %s&#39;이어야합니다."
 
-#: lib/rrd.php:4013
+#: lib/rrd.php:4025
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "데이터 원본 &#39; %s&#39;의 RRD 최소값은 &#39; %s&#39;이어야합니다."
 
-#: lib/rrd.php:4022
+#: lib/rrd.php:4034
 #, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "Kadupul 정의에서 DS &#39; %s&#39;이 누락되었습니다."
 
-#: lib/rrd.php:4036 lib/rrd.php:4037
+#: lib/rrd.php:4048 lib/rrd.php:4049
 #, fuzzy, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Kadupul RRA &#39; %s&#39;의 CF / 스텝 수 ( %s,  %s)가 &#39; %s&#39;"
 
-#: lib/rrd.php:4050 lib/rrd.php:4051
+#: lib/rrd.php:4062 lib/rrd.php:4063
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "파일 RRA &#39; %s&#39;은 (는) &#39; %s&#39;(으)로 동일한 CF / 단계 ( %s,  %s)"
 
-#: lib/rrd.php:4083
+#: lib/rrd.php:4095
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr "'%s' 의 pdp_per_row가 유효하지 않습니다. RRA '%s' 은 (는) '%s' 이어야 합니다. Kadupul가 RRD 파일을 다시 만들 수 있도록 삭제하고 허용하는 것이 좋습니다."
 
-#: lib/rrd.php:4087
+#: lib/rrd.php:4099
 #, fuzzy, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "Kadupul에 대한 XFF RRA id &#39; %s&#39;은 (는) &#39; %s&#39;이어야합니다."
 
-#: lib/rrd.php:4091
+#: lib/rrd.php:4103
 #, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Kadupul RRA ID '%s' 의 행 수가 잘못되었습니다. 행 수는 '%s' 이지만 '%s' 이어야 합니다"
 
-#: lib/rrd.php:4108
+#: lib/rrd.php:4120
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "RRA &#39; %s&#39;은 (는) RRDfile에 없습니다."
 
-#: lib/rrd.php:4116
+#: lib/rrd.php:4128
 #, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "Kadupul 정의에서 RRA &#39; %s&#39;이 누락되었습니다."
 
-#: lib/rrd.php:4138
+#: lib/rrd.php:4150
 msgid "RRD File Information"
 msgstr "RRD 파일 정보"
 
-#: lib/rrd.php:4170
+#: lib/rrd.php:4182
 msgid "Data Source Items"
 msgstr "데이터 소스 항목"
 
-#: lib/rrd.php:4172
+#: lib/rrd.php:4184
 msgid "Minimal Heartbeat"
 msgstr "최소 하트 비트"
 
-#: lib/rrd.php:4173
+#: lib/rrd.php:4185
 msgid "Min"
 msgstr "최소"
 
-#: lib/rrd.php:4174
+#: lib/rrd.php:4186
 msgid "Max"
 msgstr "최대"
 
-#: lib/rrd.php:4175
+#: lib/rrd.php:4187
 msgid "Last DS"
 msgstr "마지막 DS"
 
-#: lib/rrd.php:4177
+#: lib/rrd.php:4189
 msgid "Unknown Sec"
 msgstr "알 수없는 초"
 
-#: lib/rrd.php:4216
+#: lib/rrd.php:4228
 msgid "Round Robin Archive"
 msgstr "라운드 로빈 아카이브"
 
-#: lib/rrd.php:4219
+#: lib/rrd.php:4231
 msgid "Cur Row"
 msgstr "커 로우"
 
-#: lib/rrd.php:4220
+#: lib/rrd.php:4232
 msgid "PDP per Row"
 msgstr "행당 PDP"
 
-#: lib/rrd.php:4222
+#: lib/rrd.php:4234
 msgid "CDP Prep Value (0)"
 msgstr "CDP 준비 값 (0)"
 
-#: lib/rrd.php:4223
+#: lib/rrd.php:4235
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP 알 수없는 데이터 요소 (0)"
 
-#: lib/rrd.php:4304
+#: lib/rrd.php:4316
 msgid "Errors Found"
 msgstr " %s을 찾을 수 없습니다."
 
-#: lib/rrd.php:4316
+#: lib/rrd.php:4328
 msgid "Optional Tuning Recommendations"
 msgstr "데이터 소스 필드"
 
-#: lib/rrd.php:4341 lib/rrd.php:4344
+#: lib/rrd.php:4353 lib/rrd.php:4356
 #, php-format
 msgid "rename %s to %s"
 msgstr "%s에서  %s (으)로 이름 바꾸기"
 
-#: lib/rrd.php:4436
+#: lib/rrd.php:4448
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "XML 파일을 쓰는 동안 오류가 발생했습니다 :  %s"
 
-#: lib/rrd.php:4442
+#: lib/rrd.php:4454
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4448
+#: lib/rrd.php:4460
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "오류 : RRD 파일  %s을 (를) 쓸 수 없습니다."
 
-#: lib/rrd.php:4469
+#: lib/rrd.php:4481
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "rrdtool 덤프의 XML을 구문 분석하는 동안 오류가 발생했습니다."
 
-#: lib/rrd.php:4505 lib/rrd.php:4524
+#: lib/rrd.php:4517 lib/rrd.php:4536
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "RRDtool 덤프의 XML을 구문 분석하는 동안 오류가 발생했습니다."
 
-#: lib/rrd.php:4742
+#: lib/rrd.php:4754
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRA (CF =  %s, ROWS = % d, PDP_PER_ROW = % d, XFF = % 1.2f)가 RRD 파일에서 제거되었습니다."
 
-#: lib/rrd.php:4780
+#: lib/rrd.php:4792
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF =  %s, ROWS = % d, PDP_PER_ROW = % d, XFF = % 1.2f) RRD 파일에 추가"
 
-#: lib/rrd.php:4811 lib/rrd.php:4827
+#: lib/rrd.php:4823 lib/rrd.php:4839
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "웹 사이트에  %s에 대한 쓰기 권한이 없으며 RRD를 만들거나 업데이트 할 수 없음"
 
-#: lib/rrd.php:4823
+#: lib/rrd.php:4835
 msgid "(Custom)"
 msgstr "사용자 정의"
 
-#: lib/rrd.php:4829
+#: lib/rrd.php:4841
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "데이터 파일을 열지 못했습니다. 폴러가 아직 실행되지 않았을 수 있습니다."
 
-#: lib/rrd.php:4832
+#: lib/rrd.php:4844
 msgid "RRA Folder"
 msgstr "RRA 폴더"
 
-#: lib/rrd.php:4832
+#: lib/rrd.php:4844
 msgid "Root"
 msgstr "워드프레스 루트 디렉토리를 확인할 수 없습니다"
 
-#: lib/rrd.php:4912
+#: lib/rrd.php:4924
 msgid "Unknown RRDtool Error"
 msgstr "알 수없는 RRDtool 오류"
 

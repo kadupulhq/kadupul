@@ -1412,6 +1412,7 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp 
     but make sure not to get rid of the "\n"s that are supposed to be
     in there (text format) */
     $command_line = rrdtool_proxy_relative_paths(str_replace("\\\n", ' ', $command_line));
+    $existence_check = str_starts_with($command_line, 'file_exists ');
 
     /* output information to the log file if appropriate */
     cacti_log('CACTI2RRDP: ' . read_config_option('path_rrdtool') . " $command_line", $log_to_stdout, $logopt, POLLER_VERBOSITY_DEBUG);
@@ -1527,6 +1528,11 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp 
                 $rejection = trim($error[1]);
             }
             if (str_contains($output, 'ERROR:')) {
+                // Only the proxy's bare missing-file reply can authorize creation.
+                // Transport and RRDtool errors leave existence unknown.
+                if ($existence_check) {
+                    return rtrim($output, "\r\n") === 'ERROR:' ? false : null;
+                }
                 return false;
             }
             // Incomplete replies cannot authorize recreating an existing proxy RRD.
@@ -1775,6 +1781,12 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
             }
 
             ksort($rrd_fields['times']);
+
+            if ($file_exists === null) {
+                cacti_log('ERROR: RRD pending samples retained for Data Source ' . $rrd_fields['local_data_id'] . '. Unable to confirm RRD existence.', false, 'POLLER');
+                $failed = true;
+                continue;
+            }
 
             if ($file_exists === false) {
                 $times = array_keys($rrd_fields['times']);
