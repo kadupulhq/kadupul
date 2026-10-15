@@ -69,6 +69,15 @@ final class GprintPresetRoutesTest extends TestCase
         $this->kernel->shutdown();
     }
 
+    public function testLegacyRedirectDoesNotLoadThePresetPage(): void
+    {
+        $this->store->expects(self::never())->method('list');
+        $this->preferences->expects(self::never())->method('load');
+        foreach (['/graphing/gprint-presets/legacy', '/graphing/gprint-presets/legacy?filter=cpu'] as $url) {
+            self::assertSame(302, $this->get($url)->getStatusCode());
+        }
+    }
+
     public function testLegacyMenuVisitKeepsSavedFiltersAndClearResetsThem(): void
     {
         $this->store->expects(self::never())->method('save');
