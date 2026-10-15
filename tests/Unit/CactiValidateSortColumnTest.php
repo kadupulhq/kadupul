@@ -1,10 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
+
+namespace CactiValidateSortColumnBehavior;
+
+require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
+$source = file_get_contents(dirname(__DIR__, 2) . '/lib/functions.php');
+if (!is_string($source)) {
+    throw new \RuntimeException('Unable to read sort-column helper.');
+}
+eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($source, 'cacti_validate_sort_column')); // nosemgrep: php.lang.security.eval-use.eval-use
 
 /*
  * Behavior tests for cacti_validate_sort_column().
@@ -14,10 +25,6 @@
  * return only allowlisted column names; anything else must fall through to
  * the default. Returning attacker-controlled data would reintroduce the bug.
  */
-
-beforeAll(function () {
-    require_once dirname(__DIR__, 2) . '/lib/functions.php';
-});
 
 describe('cacti_validate_sort_column', function () {
     it('returns the column when it is in the allowlist', function () {
@@ -74,6 +81,8 @@ describe('cacti_validate_sort_column', function () {
         // Since all callers pass request-var strings, verify the strict path holds.
         expect(cacti_validate_sort_column('0', $allowed, 'fallback'))->toBe('0');
         expect(cacti_validate_sort_column('1', $allowed, 'fallback'))->toBe('1');
+        expect(cacti_validate_sort_column('0', [0, 1], 'fallback'))->toBe('fallback');
+        expect(cacti_validate_sort_column('1', [0, 1], 'fallback'))->toBe('fallback');
     });
 
     it('is case-sensitive (SQL column names are case-sensitive on some engines)', function () {

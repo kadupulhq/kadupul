@@ -1,9 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
+
+namespace CactiHtmlContextEscapeBehavior;
+
+require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
+$source = file_get_contents(dirname(__DIR__, 2) . '/lib/functions.php');
+if (!is_string($source)) {
+    throw new \RuntimeException('Unable to read escaping helper.');
+}
+eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($source, 'cacti_html_context_escape')); // nosemgrep: php.lang.security.eval-use.eval-use
 
 /*
  * Behavior tests for cacti_html_context_escape().
@@ -13,10 +25,20 @@
  * break out of that specific embedding.
  */
 
-beforeAll(function () {
-    require_once dirname(__DIR__, 2) . '/include/global_constants.php';
-    require_once dirname(__DIR__, 2) . '/lib/functions.php';
-});
+// Load the real context values without defining unrelated application constants
+// in the shared runner. Other security suites define their own fixture constants.
+$constants = \test_php_run('require ' . var_export(dirname(__DIR__, 2) . '/include/global_constants.php', true)
+    . '; echo json_encode(array_intersect_key(get_defined_constants(), array_flip(["CACTI_ESC_ELEMENT", "CACTI_ESC_ATTR", "CACTI_ESC_JS_STRING", "CACTI_ESC_URL", "CACTI_ESC_CSS"])), JSON_THROW_ON_ERROR);');
+if ($constants['status'] !== 0 || $constants['err'] !== '') {
+    throw new \RuntimeException('Unable to load production escaping contexts.');
+}
+$contexts = json_decode($constants['out'], true, 512, JSON_THROW_ON_ERROR);
+if (count($contexts) !== 5) {
+    throw new \RuntimeException('Missing production escaping context.');
+}
+foreach ($contexts as $name => $value) {
+    define(__NAMESPACE__ . '\\' . $name, $value);
+}
 
 describe('CACTI_ESC_ELEMENT — HTML element content', function () {
     it('escapes the five HTML metacharacters', function () {
@@ -83,8 +105,7 @@ describe('CACTI_ESC_JS_STRING — JavaScript string literal', function () {
 
     it('escapes ampersand so HTML entity injection does not decode', function () {
         $out = cacti_html_context_escape('a & b', CACTI_ESC_JS_STRING);
-        expect($out)->not->toContain('&')
-            ->or($out)->toContain('\\u0026');
+        expect($out)->toBe('a \\u0026 b');
     });
 
     it('escapes newlines and carriage returns (break string literals)', function () {
@@ -105,7 +126,7 @@ describe('CACTI_ESC_JS_STRING — JavaScript string literal', function () {
         // Invalid UTF-8 byte sequence — json_encode returns false.
         $out = cacti_html_context_escape("\xB1\x31", CACTI_ESC_JS_STRING);
         // Should not be the raw input.
-        expect($out)->not->toBe("\xB1\x31");
+        expect($out)->toBe('');
     });
 });
 
