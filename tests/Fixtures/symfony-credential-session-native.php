@@ -249,7 +249,7 @@ try {
                 } else {
                     $db->exec("INSERT INTO settings VALUES('auth_cache_enabled','on')");
                     $restoreToken = str_contains($credentialScenario, '-generation-')
-                        ? 'v1.' . auth_session_credential_key('old-password-hash') . '.' . str_repeat('a', 64)
+                        ? 'v1.' . str_repeat('a', 64) . '.' . hash_hmac('sha256', str_repeat('a', 64), auth_session_credential_key('old-password-hash'))
                         : 'fixture-remembered-token';
                     if ($credentialScenario === 'restore-remember-generation-revoked') {
                         $db->prepare("REPLACE INTO settings_user VALUES(9,'auth_credential_generation',?)")

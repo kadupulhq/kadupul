@@ -37,12 +37,12 @@ are rejected by the same generation check on their next request. A failure retur
 HTTP 503 and preserves the transaction's previous state. The current browser is
 logged out only after a confirmed commit.
 
-Legacy remembered-login rotation includes its admitted generation in the opaque
-token. Both authentication adapters reject an older generation even if an
-in-flight request stores its replacement token after revocation. The legacy
-session transition retains that admitted generation instead of adopting a newer
-one. Existing unversioned remembered cookies remain compatible and are converted
-when restored. Passwords and unrelated preferences are unchanged.
+Legacy remembered login rotation binds the token to its admitted generation with
+a message authentication code (MAC). The generation stays on the server. Both
+adapters reject tokens bound to an older generation, even if an in-flight request
+stores a replacement after revocation. The legacy transition keeps the generation
+that admitted the original token. Existing unversioned cookies remain compatible
+and are converted when restored. Passwords and unrelated preferences are unchanged.
 
 Deploy these authentication changes to all application instances together. Older
 versions do not validate the marker in rotated remembered tokens, so mixed-version

@@ -152,7 +152,7 @@ function set_auth_cookie($user, $generation = null)
         try {
             $nssecret = bin2hex(random_bytes(32));
             if ($generation !== null) {
-                $nssecret = 'v1.' . $generation . '.' . $nssecret;
+                $nssecret = 'v1.' . $nssecret . '.' . hash_hmac('sha256', $nssecret, $generation);
             }
         } catch (Exception $e) {
             cacti_log('FATAL: CSPRNG failed. Cannot generate secure authentication token.', false, 'AUTH');
@@ -188,8 +188,8 @@ function auth_cookie_generation_valid(string $token, string $generation): bool
     if (!str_starts_with($token, 'v1.')) {
         return true; // Existing unversioned cookies remain valid until revoked.
     }
-    return preg_match('/\Av1\.([a-f0-9]{64})\.[a-f0-9]{64}\z/D', $token, $parts) === 1
-        && hash_equals($generation, $parts[1]);
+    return preg_match('/\Av1\.([a-f0-9]{64})\.([a-f0-9]{64})\z/D', $token, $parts) === 1
+        && hash_equals(hash_hmac('sha256', $parts[1], $generation), $parts[2]);
 }
 
 /**

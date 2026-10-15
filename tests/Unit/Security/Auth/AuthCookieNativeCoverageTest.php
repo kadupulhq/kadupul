@@ -28,7 +28,8 @@ final class AuthCookieNativeCoverageTest extends TestCase
         self::assertSame($principal, $state['issued']['id']);
         self::assertSame($realm, $state['issued']['realm']);
         self::assertMatchesRegularExpression('/\Av1\.[0-9a-f]{64}\.[0-9a-f]{64}\z/D', $state['issued']['token']);
-        self::assertSame(hash('sha256', ''), explode('.', $state['issued']['token'])[1]);
+        $parts = explode('.', $state['issued']['token']);
+        self::assertSame(hash_hmac('sha256', $parts[1], hash('sha256', '')), $parts[2]);
         self::assertSame(array(array('user_id' => $principal, 'result' => 2)), $state['audit']);
         self::assertCount(3, $state['rows']);
         foreach ($state['rows'] as $row) {
@@ -44,7 +45,7 @@ final class AuthCookieNativeCoverageTest extends TestCase
             'domain username' => array(array('realm' => '3,'), 43, 3),
             'legacy numeric principal' => array(array('identity' => '42'), 42, 0),
             'domain numeric principal' => array(array('identity' => '43', 'realm' => '3,'), 43, 3),
-            'current generation token' => array(array('token' => 'v1.' . hash('sha256', '') . '.' . str_repeat('a', 64)), 42, 0),
+            'current generation token' => array(array('token' => 'v1.' . str_repeat('a', 64) . '.' . hash_hmac('sha256', str_repeat('a', 64), hash('sha256', ''))), 42, 0),
         );
     }
 
@@ -85,7 +86,7 @@ final class AuthCookieNativeCoverageTest extends TestCase
             'cache disabled' => array(array('cache_disabled' => true)),
             'cache table absent' => array(array('missing_table' => true)),
             'cookie absent' => array(array('missing_cookie' => true)),
-            'revoked generation token' => array(array('token' => 'v1.' . str_repeat('b', 64) . '.' . str_repeat('a', 64))),
+            'revoked generation token' => array(array('token' => 'v1.' . str_repeat('a', 64) . '.' . hash_hmac('sha256', str_repeat('a', 64), str_repeat('b', 64)))),
             'malformed generation token' => array(array('token' => 'v1.invalid')),
         );
     }

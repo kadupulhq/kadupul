@@ -211,7 +211,7 @@ const ABOUT_ACCESS_ADAPTER = 'Kadupul\IdentityAccess\Infrastructure\Legacy\Legac
 // Complete reviewed native-identity and persistence handoff, plus its scoped
 // service binding. A changed helper or binding must be reviewed again.
 const ABOUT_AUTHENTICATION_SOURCES = [
-    'lib/auth.php' => 'bc2db7c18a99000fb242ce4d27a1dd6a2004616c77d435baa53b8d9e5f0c30ab',
+    'lib/auth.php' => '64cfc4b6567205384afa25800ab82cac3d5f25b187cd1c48b921c80d87f3044f',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php' => 'b405b4eabee2e7caf495e64710711eb152a2b6b4cffb60821f1fdd7fe17096c8',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php' => '46340d80064d69997bd1afcb1eea4cbb6b7ba4900efa7ee9e822593e3dcd7641',
     'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php' => '4efc747fdc6521ee882efe65f4f98b90bf1649039348f3762548c1e45cdbe0a0',
