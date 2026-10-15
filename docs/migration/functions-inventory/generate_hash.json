@@ -3,8 +3,8 @@
     "name": "generate_hash",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 4930,
-        "end_line": 4933,
+        "start_line": 4891,
+        "end_line": 4894,
         "line_count": 4,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,

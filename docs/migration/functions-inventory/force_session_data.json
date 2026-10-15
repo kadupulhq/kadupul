@@ -3,8 +3,8 @@
     "name": "force_session_data",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1462,
-        "end_line": 1476,
+        "start_line": 1423,
+        "end_line": 1437,
         "line_count": 15,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,

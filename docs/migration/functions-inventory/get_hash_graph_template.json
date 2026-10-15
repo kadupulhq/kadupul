@@ -3,8 +3,8 @@
     "name": "get_hash_graph_template",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 4677,
-        "end_line": 4699,
+        "start_line": 4638,
+        "end_line": 4660,
         "line_count": 23,
         "signature": {
             "parameters": [

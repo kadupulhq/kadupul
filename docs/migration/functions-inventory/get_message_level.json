@@ -3,8 +3,8 @@
     "name": "get_message_level",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1210,
-        "end_line": 1228,
+        "start_line": 1171,
+        "end_line": 1189,
         "line_count": 19,
         "signature": {
             "parameters": [

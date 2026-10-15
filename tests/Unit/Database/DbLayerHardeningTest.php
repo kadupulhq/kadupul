@@ -63,21 +63,24 @@ function db_execute_prepared($sql, $params = [])
  * What LegacySettingsStorage does with no legacy session: the same helper
  * call, here the stubs above.
  */
-function settings_storage(): object
+final class LegacySettingsStorage
 {
-    return new class {
-        public function userSettingExists(mixed $name, mixed $userId): bool
-        {
-            $count = db_fetch_cell_prepared('SELECT COUNT(*) FROM settings_user WHERE name = ? AND user_id = ?', [$name, $userId]);
+    public static function instance(): object
+    {
+        return new class {
+            public function userSettingExists(mixed $name, mixed $userId): bool
+            {
+                $count = db_fetch_cell_prepared('SELECT COUNT(*) FROM settings_user WHERE name = ? AND user_id = ?', [$name, $userId]);
 
-            return $count !== false && $count > 0;
-        }
+                return $count !== false && $count > 0;
+            }
 
-        public function writeSetting(mixed $name, mixed $value): bool
-        {
-            return db_execute_prepared('INSERT INTO settings (name, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)', [$name, $value]);
-        }
-    };
+            public function writeSetting(mixed $name, mixed $value): bool
+            {
+                return db_execute_prepared('INSERT INTO settings (name, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)', [$name, $value]);
+            }
+        };
+    }
 }
 
 function cacti_log(...$args): void {}

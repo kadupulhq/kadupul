@@ -3,9 +3,9 @@
     "name": "read_user_setting",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 539,
-        "end_line": 618,
-        "line_count": 80,
+        "start_line": 528,
+        "end_line": 595,
+        "line_count": 68,
         "signature": {
             "parameters": [
                 {
@@ -55,7 +55,7 @@
             "static_variables": [],
             "superglobals": ["$_SESSION"],
             "session": {"references": 6, "keys": ["sess_user_config_array", "sess_user_id"]},
-            "db_calls": {"db_fetch_cell": 1, "db_fetch_row_prepared": 2, "db_table_exists": 2},
+            "db_calls": {"db_fetch_cell": 1, "db_table_exists": 2},
             "headers": [],
             "exits": [],
             "output": [],

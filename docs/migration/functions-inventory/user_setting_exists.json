@@ -4,8 +4,8 @@
     "static": {
         "file": "lib/functions.php",
         "start_line": 446,
-        "end_line": 470,
-        "line_count": 25,
+        "end_line": 464,
+        "line_count": 19,
         "signature": {
             "parameters": [
                 {
@@ -37,7 +37,7 @@
             "static_variables": ["user_setting_values"],
             "superglobals": [],
             "session": {"references": 0, "keys": []},
-            "db_calls": {"db_fetch_cell_prepared": 1, "db_table_exists": 1},
+            "db_calls": {"db_table_exists": 1},
             "headers": [],
             "exits": [],
             "output": [],

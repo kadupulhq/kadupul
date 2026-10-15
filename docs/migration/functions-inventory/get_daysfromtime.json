@@ -3,8 +3,8 @@
     "name": "get_daysfromtime",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6567,
-        "end_line": 6605,
+        "start_line": 6528,
+        "end_line": 6566,
         "line_count": 39,
         "signature": {
             "parameters": [

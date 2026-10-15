@@ -3,8 +3,8 @@
     "name": "clean_up_lines",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 3198,
-        "end_line": 3205,
+        "start_line": 3159,
+        "end_line": 3166,
         "line_count": 8,
         "signature": {
             "parameters": [
@@ -22,7 +22,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 65, "core_outside_functions_php": 60, "tests": 16, "plugins": 0},
+        "fan_out": {"core": 65, "core_outside_functions_php": 60, "tests": 18, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

@@ -44,6 +44,14 @@ final readonly class LegacySettingsStorage
 {
     public function __construct(private LegacyLockRetry $retry = new LegacyLockRetry()) {}
 
+    /** Shared by legacy wrappers, including calls before Composer is loaded. */
+    public static function instance(): self
+    {
+        static $storage = null;
+
+        return $storage ??= new self();
+    }
+
     /**
      * db_fetch_row_prepared('SELECT value FROM settings WHERE name = ?', ...)
      *

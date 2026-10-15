@@ -3,8 +3,8 @@
     "name": "get_guest_account",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 3384,
-        "end_line": 3398,
+        "start_line": 3345,
+        "end_line": 3359,
         "line_count": 15,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,

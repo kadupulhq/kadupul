@@ -3,8 +3,8 @@
     "name": "get_selective_log_level",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1525,
-        "end_line": 1572,
+        "start_line": 1486,
+        "end_line": 1533,
         "line_count": 48,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": false,

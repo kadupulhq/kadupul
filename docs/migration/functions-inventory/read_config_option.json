@@ -3,8 +3,8 @@
     "name": "read_config_option",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 931,
-        "end_line": 1016,
+        "start_line": 892,
+        "end_line": 977,
         "line_count": 86,
         "signature": {
             "parameters": [
@@ -31,7 +31,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 1049, "core_outside_functions_php": 963, "tests": 242, "plugins": 0},
+        "fan_out": {"core": 1052, "core_outside_functions_php": 966, "tests": 244, "plugins": 0},
         "body": {
             "uses_global": [
                 "config",
@@ -43,7 +43,7 @@
             "static_variables": [],
             "superglobals": ["$_SESSION"],
             "session": {"references": 6, "keys": ["sess_config_array"]},
-            "db_calls": {"db_fetch_row_prepared": 1},
+            "db_calls": {},
             "headers": [],
             "exits": [],
             "output": [],

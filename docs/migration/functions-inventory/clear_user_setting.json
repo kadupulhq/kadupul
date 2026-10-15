@@ -3,9 +3,9 @@
     "name": "clear_user_setting",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 479,
-        "end_line": 501,
-        "line_count": 23,
+        "start_line": 473,
+        "end_line": 490,
+        "line_count": 18,
         "signature": {
             "parameters": [
                 {
@@ -37,7 +37,7 @@
             "static_variables": [],
             "superglobals": ["$_SESSION"],
             "session": {"references": 2, "keys": ["sess_user_config_array", "sess_user_id"]},
-            "db_calls": {"db_execute_prepared": 1, "db_table_exists": 1},
+            "db_calls": {"db_table_exists": 1},
             "headers": [],
             "exits": [],
             "output": [],

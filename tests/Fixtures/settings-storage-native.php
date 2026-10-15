@@ -27,11 +27,11 @@ if ($scenario !== 'bootstrap') {
 require $root . '/include/global_constants.php';
 require $root . '/lib/database.php';
 require $root . '/tests/Helpers/PhpSource.php';
-// The repository's own functions, extracted as the other native fixtures do,
-// so settings_storage() and the helpers under test are the real ones.
-foreach (['cacti_sizeof', 'cacti_count', 'clean_up_lines', 'settings_storage'] as $function) {
-    // __DIR__ in eval'd code is this directory; the function expects lib/.
-    eval(str_replace('__DIR__', var_export($root . '/lib', true), test_php_function_source(file_get_contents($root . '/lib/functions.php'), $function)));
+// Load the bridge in the same order as lib/functions.php before Composer.
+require_once $root . '/src/Platform/Infrastructure/Legacy/LegacyLockRetry.php';
+require_once $root . '/src/Platform/Infrastructure/Legacy/LegacySettingsStorage.php';
+foreach (['cacti_sizeof', 'cacti_count', 'clean_up_lines'] as $function) {
+    eval(test_php_function_source(file_get_contents($root . '/lib/functions.php'), $function));
 }
 
 $logged = [];
@@ -111,8 +111,8 @@ try {
         $seed();
         $out['bootstrap'] = [
             'composer_loaded_before' => class_exists('Composer\Autoload\ClassLoader', false),
-            'write' => settings_storage()->writeSetting('boot', 'x'),
-            'read' => settings_storage()->settingRow('boot'),
+            'write' => LegacySettingsStorage::instance()->writeSetting('boot', 'x'),
+            'read' => LegacySettingsStorage::instance()->settingRow('boot'),
             'dbal_loaded' => class_exists('Doctrine\DBAL\Connection', false),
             'storage_classes' => array_values(array_filter(get_declared_classes(), static fn(string $class): bool => str_starts_with($class, 'Kadupul\\'))),
             'composer_init' => array_values(array_filter(get_declared_classes(), static fn(string $class): bool => str_starts_with($class, 'ComposerAutoloaderInit'))),

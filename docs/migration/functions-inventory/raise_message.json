@@ -3,8 +3,8 @@
     "name": "raise_message",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1295,
-        "end_line": 1340,
+        "start_line": 1256,
+        "end_line": 1301,
         "line_count": 46,
         "signature": {
             "parameters": [

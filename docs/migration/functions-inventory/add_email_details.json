@@ -3,8 +3,8 @@
     "name": "add_email_details",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5958,
-        "end_line": 5982,
+        "start_line": 5919,
+        "end_line": 5943,
         "line_count": 25,
         "signature": {
             "parameters": [
