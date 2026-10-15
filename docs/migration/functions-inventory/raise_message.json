@@ -1,0 +1,71 @@
+{
+    "schema": 1,
+    "name": "raise_message",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 1295,
+        "end_line": 1340,
+        "line_count": 46,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "message_id",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "message",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "''"
+                },
+                {
+                    "name": "message_level",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "MESSAGE_LEVEL_NONE"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 390, "core_outside_functions_php": 383, "tests": 55, "plugins": 0},
+        "body": {
+            "uses_global": ["config", "messages", "no_http_headers"],
+            "static_variables": [],
+            "superglobals": ["$_SESSION"],
+            "session": {"references": 5, "keys": ["(dynamic)", "sess_messages"]},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {
+            "functions": ["cacti_session_close", "cacti_session_start", "get_message_level"],
+            "recursive": false
+        },
+        "called_by": ["display_custom_error_message", "form_input_validate", "set_config_option"]
+    },
+    "human": {
+        "target_module": "Platform/Application/Port/FlashMessages",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

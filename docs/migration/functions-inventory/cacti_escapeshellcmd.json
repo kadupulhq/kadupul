@@ -1,0 +1,50 @@
+{
+    "schema": 1,
+    "name": "cacti_escapeshellcmd",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 5313,
+        "end_line": 5332,
+        "line_count": 20,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "string",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": false,
+        "fan_out": {"core": 36, "core_outside_functions_php": 31, "tests": 17, "plugins": 0},
+        "body": {
+            "uses_global": ["config"],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": ["escapeshellcmd"],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": ["get_installed_rrdtool_version", "poller_maintenance", "test_data_source"]
+    },
+    "human": {
+        "target_module": "Platform/Application/Port/ProcessRunner",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Hard-stop domain: delegate and verify at the thorough tier."
+    }
+}

@@ -1,0 +1,77 @@
+{
+    "schema": 1,
+    "name": "cacti_http",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 9161,
+        "end_line": 9217,
+        "line_count": 57,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "url",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "timeout",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "10"
+                },
+                {
+                    "name": "allowlist",
+                    "type": "array",
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "array()"
+                },
+                {
+                    "name": "status",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": true,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "0"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 3, "core_outside_functions_php": 2, "tests": 12, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": ["file_get_contents"],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["read_config_option"], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Presentation/Http",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

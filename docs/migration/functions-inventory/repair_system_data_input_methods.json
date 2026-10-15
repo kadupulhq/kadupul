@@ -1,0 +1,54 @@
+{
+    "schema": 1,
+    "name": "repair_system_data_input_methods",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 6968,
+        "end_line": 7172,
+        "line_count": 205,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "step",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "'import'"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 3, "core_outside_functions_php": 2, "tests": 0, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {
+                "db_execute_prepared": 7,
+                "db_fetch_assoc_prepared": 3,
+                "db_fetch_cell_prepared": 5
+            },
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["cacti_log", "cacti_sizeof"], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "DataInput/Application",
+        "wave": 4,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

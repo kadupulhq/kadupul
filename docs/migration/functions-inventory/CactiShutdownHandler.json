@@ -1,0 +1,44 @@
+{
+    "schema": 1,
+    "name": "CactiShutdownHandler",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 6738,
+        "end_line": 6781,
+        "line_count": 44,
+        "signature": {"parameters": [], "return_type": null, "returns_reference": false},
+        "docblock": false,
+        "fan_out": {"core": 1, "core_outside_functions_php": 1, "tests": 0, "plugins": 0},
+        "body": {
+            "uses_global": ["phperrors"],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {
+            "functions": [
+                "IgnoreErrorHandler",
+                "admin_email",
+                "cacti_debug_backtrace",
+                "cacti_log"
+            ],
+            "recursive": false
+        },
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Infrastructure/Legacy",
+        "wave": 2,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Legacy handlers stay for the legacy entry; the Symfony path uses a kernel exception listener."
+    }
+}

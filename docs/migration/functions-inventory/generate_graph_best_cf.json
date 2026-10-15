@@ -1,0 +1,77 @@
+{
+    "schema": 1,
+    "name": "generate_graph_best_cf",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 3580,
+        "end_line": 3605,
+        "line_count": 26,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "local_data_id",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "requested_cf",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "ds_step",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "60"
+                },
+                {
+                    "name": "rrdtool_pipe",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "false"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 4, "core_outside_functions_php": 4, "tests": 2, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": ["best_cf"],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["cacti_sizeof", "get_rrd_cfs"], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Graphing/Domain",
+        "wave": 4,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Plan lists DataInput and Graphing domain services; split chosen by name."
+    }
+}

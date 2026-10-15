@@ -1,0 +1,50 @@
+{
+    "schema": 1,
+    "name": "sanitize_cdef",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 5178,
+        "end_line": 5184,
+        "line_count": 7,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "cdef",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 2, "core_outside_functions_php": 2, "tests": 0, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": ["drop_char_match", "drop_char_replace"],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Domain/Security",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Hard-stop domain: delegate and verify at the thorough tier."
+    }
+}

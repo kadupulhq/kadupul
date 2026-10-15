@@ -1,0 +1,58 @@
+{
+    "schema": 1,
+    "name": "prepare_validate_result",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 2313,
+        "end_line": 2368,
+        "line_count": 56,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "result",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": true,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 23, "core_outside_functions_php": 13, "tests": 8, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {
+            "functions": [
+                "dsv_log",
+                "is_hexadecimal",
+                "normalize_poller_multi_value_result",
+                "strip_alpha"
+            ],
+            "recursive": false
+        },
+        "called_by": ["test_data_source"]
+    },
+    "human": {
+        "target_module": "DataInput/Application",
+        "wave": 4,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

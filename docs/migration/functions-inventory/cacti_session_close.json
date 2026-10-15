@@ -1,0 +1,36 @@
+{
+    "schema": 1,
+    "name": "cacti_session_close",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 8314,
+        "end_line": 8317,
+        "line_count": 4,
+        "signature": {"parameters": [], "return_type": null, "returns_reference": false},
+        "docblock": true,
+        "fan_out": {"core": 11, "core_outside_functions_php": 6, "tests": 27, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": ["bottom_footer", "clear_messages", "force_session_data", "raise_message"]
+    },
+    "human": {
+        "target_module": "IdentityAccess",
+        "wave": 4,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Hard-stop domain (auth, session, cookies): delegate and verify at the thorough tier."
+    }
+}

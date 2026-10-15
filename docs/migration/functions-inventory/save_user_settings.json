@@ -1,0 +1,60 @@
+{
+    "schema": 1,
+    "name": "save_user_settings",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 251,
+        "end_line": 310,
+        "line_count": 60,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "user",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "-1"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 3, "core_outside_functions_php": 3, "tests": 7, "plugins": 0},
+        "body": {
+            "uses_global": ["settings_user"],
+            "static_variables": [],
+            "superglobals": ["$_SESSION"],
+            "session": {
+                "references": 9,
+                "keys": ["sess_error_fields", "sess_field_values", "sess_user_id"]
+            },
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {
+            "functions": [
+                "set_user_setting",
+                "settings_value_passes_filter",
+                "user_setting_value_allowed"
+            ],
+            "recursive": false
+        },
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Application/Port/UserSettings",
+        "wave": 2,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

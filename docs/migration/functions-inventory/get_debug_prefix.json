@@ -1,0 +1,36 @@
+{
+    "schema": 1,
+    "name": "get_debug_prefix",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 7772,
+        "end_line": 7778,
+        "line_count": 7,
+        "signature": {"parameters": [], "return_type": null, "returns_reference": false},
+        "docblock": false,
+        "fan_out": {"core": 8, "core_outside_functions_php": 4, "tests": 0, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": ["read_config_option", "set_config_option"]
+    },
+    "human": {
+        "target_module": "Platform/Infrastructure/Legacy",
+        "wave": 2,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

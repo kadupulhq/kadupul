@@ -1,0 +1,98 @@
+{
+    "schema": 1,
+    "name": "cacti_debug_backtrace",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 6413,
+        "end_line": 6465,
+        "line_count": 53,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "entry",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "''"
+                },
+                {
+                    "name": "html",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "false"
+                },
+                {
+                    "name": "record",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "true"
+                },
+                {
+                    "name": "limit",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "0"
+                },
+                {
+                    "name": "skip",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "0"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": false,
+        "fan_out": {"core": 31, "core_outside_functions_php": 14, "tests": 13, "plugins": 0},
+        "body": {
+            "uses_global": ["config"],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": ["print"],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["cacti_log", "clean_up_lines"], "recursive": false},
+        "called_by": [
+            "CactiErrorHandler",
+            "CactiShutdownHandler",
+            "cacti_session_start",
+            "debounce_claim_notification",
+            "debounce_run_notification",
+            "form_input_validate",
+            "mailer",
+            "read_config_option",
+            "record_mailer_error",
+            "set_config_option",
+            "set_user_setting"
+        ]
+    },
+    "human": {
+        "target_module": "Platform/Infrastructure/Legacy",
+        "wave": 2,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Logging: PSR-3 adapter that keeps the cacti.log line format."
+    }
+}

@@ -1,0 +1,80 @@
+{
+    "schema": 1,
+    "name": "read_user_setting",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 539,
+        "end_line": 618,
+        "line_count": 80,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "config_name",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "default",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "false"
+                },
+                {
+                    "name": "force",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "false"
+                },
+                {
+                    "name": "user",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "0"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 137, "core_outside_functions_php": 134, "tests": 27, "plugins": 0},
+        "body": {
+            "uses_global": ["config"],
+            "static_variables": [],
+            "superglobals": ["$_SESSION"],
+            "session": {"references": 6, "keys": ["sess_user_config_array", "sess_user_id"]},
+            "db_calls": {"db_fetch_cell": 1, "db_fetch_row_prepared": 2, "db_table_exists": 2},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {
+            "functions": ["cacti_sizeof", "read_config_option", "read_default_user_setting"],
+            "recursive": false
+        },
+        "called_by": ["cacti_browser_zone_enabled", "read_graph_config_option"]
+    },
+    "human": {
+        "target_module": "Platform/Application/Port/UserSettings",
+        "wave": 2,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Plan lists only ConfigurationSettings and UserSettings ports; graph config options follow user settings."
+    }
+}

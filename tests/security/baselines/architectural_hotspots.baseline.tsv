@@ -87,6 +87,7 @@ cmd_exec	./snmpagent_persist.php:68	    exec('ps -ef | grep -v grep | grep -v "s
 cmd_exec	./snmpagent_persist.php:70	        exec($php . ' ' . $extra_args . ' > /dev/null &');
 cmd_exec	./src/Graphing/Infrastructure/Rrd/LocalRrdtool.php:27	        $process = proc_open(array(read_config_option('path_rrdtool'), '-'), $descriptors, $streams);
 cmd_exec	./src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php:35	            exec($commandLine, $lines, $status);
+cmd_exec	./tools/functions-inventory.php:627	    $process     = proc_open(['git', '-C', $root, 'ls-files', '-z', '--', '*.php'], $descriptors, $pipes);
 cmd_exec	./utilities.php:219	                exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')), $out_array);
 cmd_exec	./utilities.php:237	            $snmp_version = shell_exec(cacti_escapeshellcmd(read_config_option('path_snmpget')) . ' -V 2>&1');
 cmd_exec	./utilities.php:257	            exec(cacti_escapeshellcmd(read_config_option('path_spine')) . ' --version', $out_array);

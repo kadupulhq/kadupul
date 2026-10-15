@@ -1,0 +1,50 @@
+{
+    "schema": 1,
+    "name": "clean_up_file_name",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 3234,
+        "end_line": 3243,
+        "line_count": 10,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "string",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 4, "core_outside_functions_php": 2, "tests": 0, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": ["generate_data_source_path"]
+    },
+    "human": {
+        "target_module": "Platform/Domain/Text",
+        "wave": 1,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

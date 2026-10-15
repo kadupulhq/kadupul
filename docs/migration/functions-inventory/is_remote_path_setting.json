@@ -1,0 +1,50 @@
+{
+    "schema": 1,
+    "name": "is_remote_path_setting",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 628,
+        "end_line": 637,
+        "line_count": 10,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "config_name",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 6, "core_outside_functions_php": 4, "tests": 4, "plugins": 0},
+        "body": {
+            "uses_global": ["config"],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": ["set_config_option"]
+    },
+    "human": {
+        "target_module": "Platform/Application/Port/ConfigurationSettings",
+        "wave": 2,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

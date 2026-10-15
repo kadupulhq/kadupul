@@ -1,0 +1,36 @@
+{
+    "schema": 1,
+    "name": "log_client_addr_proxy_diagnostic",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 7781,
+        "end_line": 7790,
+        "line_count": 10,
+        "signature": {"parameters": [], "return_type": "void", "returns_reference": false},
+        "docblock": true,
+        "fan_out": {"core": 7, "core_outside_functions_php": 0, "tests": 0, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": ["reported"],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["cacti_log"], "recursive": false},
+        "called_by": ["get_client_addr"]
+    },
+    "human": {
+        "target_module": "Platform/Infrastructure/Legacy",
+        "wave": 2,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

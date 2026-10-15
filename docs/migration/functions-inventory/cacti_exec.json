@@ -1,0 +1,77 @@
+{
+    "schema": 1,
+    "name": "cacti_exec",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 8093,
+        "end_line": 8185,
+        "line_count": 93,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "binary",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "args",
+                    "type": "array",
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "array()"
+                },
+                {
+                    "name": "output",
+                    "type": "array",
+                    "nullable": false,
+                    "by_ref": true,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "array()"
+                },
+                {
+                    "name": "timeout",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "30"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 11, "core_outside_functions_php": 3, "tests": 21, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": ["fclose"],
+            "process_functions": ["posix_kill", "proc_close", "proc_open", "proc_terminate"],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["cacti_log", "posix_kill"], "recursive": false},
+        "called_by": ["cacti_exec_string"]
+    },
+    "human": {
+        "target_module": "Platform/Application/Port/ProcessRunner",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Hard-stop domain: delegate and verify at the thorough tier."
+    }
+}

@@ -1,0 +1,36 @@
+{
+    "schema": 1,
+    "name": "cacti_system_zone_set",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 8507,
+        "end_line": 8515,
+        "line_count": 9,
+        "signature": {"parameters": [], "return_type": null, "returns_reference": false},
+        "docblock": true,
+        "fan_out": {"core": 4, "core_outside_functions_php": 2, "tests": 8, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": ["$_SESSION"],
+            "session": {"references": 3, "keys": ["sess_php_tz", "sess_system_tz"]},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["cacti_browser_zone_enabled"], "recursive": false},
+        "called_by": ["cacti_log"]
+    },
+    "human": {
+        "target_module": "Platform/Domain/Time",
+        "wave": 2,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}

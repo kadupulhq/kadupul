@@ -1,0 +1,115 @@
+{
+    "schema": 1,
+    "name": "tail_file",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 1729,
+        "end_line": 1794,
+        "line_count": 66,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "file_name",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "number_of_lines",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "message_type",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "-1"
+                },
+                {
+                    "name": "filter",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "''"
+                },
+                {
+                    "name": "page_nr",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": true,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "1"
+                },
+                {
+                    "name": "total_rows",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": true,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "0"
+                },
+                {
+                    "name": "matches",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "true"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 4, "core_outside_functions_php": 3, "tests": 1, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [
+                "fclose",
+                "fgets",
+                "file_exists",
+                "fopen",
+                "is_readable",
+                "rewind",
+                "touch"
+            ],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {
+            "functions": ["determine_display_log_entry", "force_session_data"],
+            "recursive": false
+        },
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Infrastructure/Legacy",
+        "wave": 2,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Logging: PSR-3 adapter that keeps the cacti.log line format."
+    }
+}

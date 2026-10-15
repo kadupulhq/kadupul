@@ -1,0 +1,68 @@
+{
+    "schema": 1,
+    "name": "dsv_log",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 2414,
+        "end_line": 2419,
+        "line_count": 6,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "message",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "data",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "null"
+                },
+                {
+                    "name": "level",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "POLLER_VERBOSITY_LOW"
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 48, "core_outside_functions_php": 0, "tests": 3, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["cacti_log", "read_config_option"], "recursive": false},
+        "called_by": ["prepare_validate_result", "test_data_source", "test_data_sources"]
+    },
+    "human": {
+        "target_module": "Platform/Infrastructure/Legacy",
+        "wave": 2,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Logging: PSR-3 adapter that keeps the cacti.log line format."
+    }
+}

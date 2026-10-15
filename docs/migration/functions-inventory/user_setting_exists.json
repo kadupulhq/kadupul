@@ -1,0 +1,59 @@
+{
+    "schema": 1,
+    "name": "user_setting_exists",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 446,
+        "end_line": 470,
+        "line_count": 25,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "config_name",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "user_id",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 5, "core_outside_functions_php": 2, "tests": 5, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": ["user_setting_values"],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {"db_fetch_cell_prepared": 1, "db_table_exists": 1},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": ["graph_config_value_exists"]
+    },
+    "human": {
+        "target_module": "Platform/Application/Port/UserSettings",
+        "wave": 2,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Plan lists only ConfigurationSettings and UserSettings ports; graph config options follow user settings."
+    }
+}

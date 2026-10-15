@@ -1,0 +1,47 @@
+{
+    "schema": 1,
+    "name": "generate_hash",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 4930,
+        "end_line": 4933,
+        "line_count": 4,
+        "signature": {"parameters": [], "return_type": null, "returns_reference": false},
+        "docblock": true,
+        "fan_out": {"core": 25, "core_outside_functions_php": 7, "tests": 4, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": [
+            "debug_log_insert_section_start",
+            "get_hash_cdef",
+            "get_hash_data_input",
+            "get_hash_data_query",
+            "get_hash_data_source_profile",
+            "get_hash_data_template",
+            "get_hash_gprint",
+            "get_hash_graph_template",
+            "get_hash_host_template",
+            "get_hash_vdef"
+        ]
+    },
+    "human": {
+        "target_module": "DataInput/Domain",
+        "wave": 1,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Plan assigns template hashes to DataInput; confirm for cdef, vdef, gprint and graph template hashes."
+    }
+}

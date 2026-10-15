@@ -1,0 +1,59 @@
+{
+    "schema": 1,
+    "name": "cacti_path_is_within",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 8746,
+        "end_line": 8766,
+        "line_count": 21,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "candidate",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                },
+                {
+                    "name": "base",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": false,
+                    "default": null
+                }
+            ],
+            "return_type": null,
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 12, "core_outside_functions_php": 8, "tests": 28, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": [],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": [],
+            "exits": [],
+            "output": [],
+            "file_functions": ["realpath"],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": ["cacti_normalize_windows_path"], "recursive": false},
+        "called_by": ["validate_relative_path_within"]
+    },
+    "human": {
+        "target_module": "Platform/Domain/Security",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": "Hard-stop domain: delegate and verify at the thorough tier."
+    }
+}

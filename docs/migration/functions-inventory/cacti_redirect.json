@@ -1,0 +1,68 @@
+{
+    "schema": 1,
+    "name": "cacti_redirect",
+    "static": {
+        "file": "lib/functions.php",
+        "start_line": 8829,
+        "end_line": 8838,
+        "line_count": 10,
+        "signature": {
+            "parameters": [
+                {
+                    "name": "url",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "''"
+                },
+                {
+                    "name": "default",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "'index.php'"
+                },
+                {
+                    "name": "status",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "302"
+                }
+            ],
+            "return_type": "never",
+            "returns_reference": false
+        },
+        "docblock": true,
+        "fan_out": {"core": 1, "core_outside_functions_php": 0, "tests": 9, "plugins": 0},
+        "body": {
+            "uses_global": [],
+            "static_variables": [],
+            "superglobals": ["$_SERVER"],
+            "session": {"references": 0, "keys": []},
+            "db_calls": {},
+            "headers": ["header"],
+            "exits": ["exit"],
+            "output": [],
+            "file_functions": [],
+            "process_functions": [],
+            "plugin_hooks": []
+        },
+        "calls": {"functions": [], "recursive": false},
+        "called_by": []
+    },
+    "human": {
+        "target_module": "Platform/Presentation/Http",
+        "wave": 3,
+        "status": "not assessed",
+        "lts_status": "not assessed",
+        "behavior_record": null,
+        "notes": ""
+    }
+}
