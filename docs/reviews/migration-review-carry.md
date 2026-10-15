@@ -39,6 +39,14 @@ Unthreaded review bodies and conversation findings are retained in full in the a
 
 Complex database concurrency: GPRINT persistent-table protection and reference-writer integrity; resumed-writer failure remains actionable.
 
+### Main workflow verification, 2026-10-14
+
+GPRINT administration is already on main. The snapshot below remains historical feedback, not a statement that the page is still waiting to migrate. The current `GprintPresetSql` checks confirmed reads for authorization and saved filters; the legacy redirect no longer loads a preset list. New regression cases exercise silent PDO prepare, execute and late-read failures for both policy settings and saved filters, and require both ordinary and filtered redirects to avoid list queries.
+
+The installed HTTP workflow passed 52 checks on `9f90f24c58f615f7245b70e9826e9802122bfc23` using disposable MariaDB and PHP/Apache fixtures. It covered create/edit/delete, stale revisions, CSRF, escaped names, remembered filters, selection limits, in-use deletion refusal, compatibility redirects and realm denial. This source includes the RRD proxy fix; the GPRINT production files match main `cd736628e927cd187e0b3dff6fa075066718714f`. The new focused GPRINT and retained socket-write regressions passed 30 tests and 159 assertions under PHP 8.4.25. The associated PR records verification against its published test head.
+
+These checks support the authorization/preference-read, selection-limit, duplicate-list-query and SMTP short-write findings below. They do not establish safety for a legacy reference writer resuming after preset deletion, resolve archived GitHub threads, or verify the deferred native reference contract. That concurrency finding remains open and must stay separate from the read-path regression changes.
+
 Full native summaries, conversation comments, inline source context, and resolved/unresolved thread records: [PR 656 complete native review history](https://github.com/kadupulhq/kadupul/pull/656). Published head is not an ancestor of the local signed checkpoint. Both native and local histories are retained; the local history has not incorporated the published history and must not overwrite it. This ledger does not publish that checkpoint or mark its verification current for a combined PR.
 
 ### Unresolved native threads
