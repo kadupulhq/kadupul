@@ -46,11 +46,14 @@ def publish(image):
         subprocess.run(['skopeo', 'login', '--username', username, '--password-stdin', 'ghcr.io'],
                        input=token, text=True, capture_output=True, env=environment, check=True, timeout=60)
         copied = False
-        for registry in ('mirror.gcr.io', 'public.ecr.aws/docker', 'docker.io'):
-            # containers/image rejects references containing both tag and digest.
-            # Fetch the immutable identity; retain the version tag in the inventory.
-            repository = image['source'].split('@', 1)[0].split(':', 1)[0]
-            source = repository.replace('docker.io/', registry + '/', 1) + '@' + image['digest']
+        # Reuse admitted GHCR content even if an old upstream digest disappears.
+        # Copying every platform still checks the complete existing manifest graph.
+        sources = [('ghcr.io', image['destination'].split(':', 1)[0] + '@' + image['digest'])]
+        # containers/image rejects references containing both tag and digest.
+        repository = image['source'].split('@', 1)[0].split(':', 1)[0]
+        sources.extend((registry, repository.replace('docker.io/', registry + '/', 1) + '@' + image['digest'])
+                       for registry in ('mirror.gcr.io', 'public.ecr.aws/docker', 'docker.io'))
+        for registry, source in sources:
             command = ['skopeo', 'copy', '--all', '--preserve-digests', '--retry-times', '3',
                        'docker://' + source, 'docker://' + image['destination']]
             result = subprocess.run(command, capture_output=True, env=environment, timeout=2400)

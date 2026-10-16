@@ -97,7 +97,7 @@ class ContainerMirrorTest(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     mirror.images()
 
-    def measured_publish(self, observed, repository='library/php', tag='8.4-apache'):
+    def measured_publish(self, observed, repository='library/php', tag='8.4-apache', missing_mirror=False):
         manifest = b'{"schemaVersion":2}'
         digest = 'sha256:' + hashlib.sha256(manifest).hexdigest()
         name = repository.rsplit('/', 1)[-1]
@@ -107,6 +107,8 @@ class ContainerMirrorTest(unittest.TestCase):
 
         def run(command, **arguments):
             calls.append((command, arguments))
+            if command[1] == 'copy' and len(calls) == 2 and missing_mirror:
+                return subprocess.CompletedProcess(command, 1, stdout=b'', stderr=b'fixture: mirror not found')
             return subprocess.CompletedProcess(command, 0, stdout=observed if command[1] == 'inspect' else b'')
 
         with patch.dict(os.environ, {'GHCR_TOKEN': 'test-only-value', 'GHCR_USERNAME': 'fixture'}, clear=True), patch.object(subprocess, 'run', side_effect=run):
@@ -116,7 +118,11 @@ class ContainerMirrorTest(unittest.TestCase):
         self.assertNotIn('test-only-value', json.dumps([command for command, _ in calls]))
         self.assertIn('--all', calls[1][0])
         self.assertIn('--preserve-digests', calls[1][0])
-        self.assertIn('docker://mirror.gcr.io/' + repository + '@' + digest, calls[1][0])
+        self.assertIn('docker://' + mirror.PREFIX + name + '@' + digest, calls[1][0])
+        if missing_mirror:
+            self.assertIn('docker://mirror.gcr.io/' + repository + '@' + digest, calls[2][0])
+        else:
+            self.assertFalse(any('mirror.gcr.io' in argument for command, _ in calls for argument in command))
         self.assertEqual('docker://' + mirror.PREFIX + name + ':' + tag, calls[-1][0][-1])
         self.assertFalse(Path(calls[0][1]['env']['REGISTRY_AUTH_FILE']).parent.exists())
 
@@ -127,6 +133,9 @@ class ContainerMirrorTest(unittest.TestCase):
         for repository in ('moby/buildkit', 'docker/buildkit-syft-scanner'):
             with self.subTest(repository=repository):
                 self.measured_publish(b'{"schemaVersion":2}', repository, 'stable-1')
+
+    def test_missing_mirror_bootstraps_the_same_digest_from_upstream(self):
+        self.measured_publish(b'{"schemaVersion":2}', missing_mirror=True)
 
     def test_remote_digest_mismatch_never_produces_verified_receipt(self):
         with self.assertRaisesRegex(RuntimeError, 'differs from the reviewed digest'):

@@ -56,8 +56,10 @@ public registry during application builds and tests.
 The Container mirrors workflow copies all platforms with Skopeo's
 `--all --preserve-digests`, then hashes the manifest fetched from GHCR and
 requires the original digest. Only this publisher needs `packages: write`.
-It tries Google's public cache, ECR's official-image mirror and Docker Hub for
-the same pinned source identity; those upstreams are used only to populate GHCR.
+It first reuses the admitted GHCR manifest and checks its complete platform graph,
+so an existing mirror remains usable if its old upstream digest disappears. For
+missing content it tries Google's public cache, ECR's official-image mirror and
+Docker Hub for the same pinned identity; upstreams only populate GHCR.
 A missing upstream or different manifest fails publication. Verified receipts
 expire after 14 days; GHCR images have a separate lifecycle.
 
