@@ -75,7 +75,7 @@ final readonly class LegacyVdefEditor implements VdefEditor
 
     public function reorder(int $actorId, int $vdefId, array $orderedItemIds, string $revision): void
     {
-        if ($vdefId < 1 || count($orderedItemIds) > 500 || array_filter($orderedItemIds, static fn(mixed $id): bool => !is_int($id) || $id < 1 || $id > 2147483647) !== []) {
+        if ($vdefId < 1 || count($orderedItemIds) > 500 || array_any($orderedItemIds, static fn(mixed $id): bool => !is_int($id) || $id < 1 || $id > 2147483647)) {
             throw new \InvalidArgumentException('The VDEF item order is invalid.');
         }
         $this->transaction($actorId, function () use ($vdefId, $orderedItemIds, $revision): void {
@@ -100,7 +100,7 @@ final readonly class LegacyVdefEditor implements VdefEditor
     {
         if (!in_array($action, ['delete', 'duplicate'], true) || $ids === [] || count($ids) > 500
             || count(array_unique($ids)) !== count($ids)
-            || array_filter($ids, static fn(mixed $id): bool => !is_int($id) || $id < 1 || $id > 99999999) !== []) {
+            || array_any($ids, static fn(mixed $id): bool => !is_int($id) || $id < 1 || $id > 99999999)) {
             throw new \InvalidArgumentException('Invalid VDEF action.');
         }
         $this->transaction($actorId, function () use ($action, $ids, $titleFormat, $revisions): void {
