@@ -44,36 +44,67 @@ command. Workflow lint also validates the Dependabot configuration, including
 its schema and cooldown settings. GitHub's update jobs remain authoritative for
 dependency resolution; inspect their logs and proposed diffs before merging.
 
-## Public image pulls
+## Authenticated container mirrors
 
-Hosted CI hit Docker Hub HTTP 429 limits during image builds, service startup
-and scanner pulls, including retries. Linux jobs that use Docker configure
-Google's [public Docker Hub cache](https://docs.cloud.google.com/artifact-registry/docs/pull-cached-dockerhub-images)
-before building or pulling. Original image references and digest verification
-remain intact; cache misses use Docker Hub. The configuration is validated and
-the daemon [reloads registry mirrors with SIGHUP](https://docs.docker.com/reference/cli/dockerd/#configuration-reload-behavior)
-without restarting running services. Self-hosted and local daemons are unchanged.
+Docker builds, Compose fixtures and workflow services use the repository's
+`ghcr.io/kadupulhq/kadupul-mirrors` packages. Every reference retains its reviewed
+upstream SHA-256 digest. The 17 admitted image manifests are recorded in
+`tools/containers/mirrors.json`; runtime families and database health checks are
+unchanged. CI no longer changes Docker daemon mirror settings or depends on a
+public registry during application builds and tests.
 
-GitHub starts job services before steps can configure that cache. Database
-services therefore use the Docker Official Images published at
-`public.ecr.aws/docker/library`, with the same matrix version families and
-unchanged health checks. The service manifests are pinned by digest, including
-the Compose database and Nginx fixtures. All six MariaDB/MySQL matrix manifests
-and Nginx were verified by immutable lookup and Linux/amd64 availability before
-switching. Runtime database provenance reads the actual running container's
-image, avoiding a second lookup of a floating tag.
+The Container mirrors workflow copies all platforms with Skopeo's
+`--all --preserve-digests`, then hashes the manifest fetched from GHCR and
+requires the original digest. Only this publisher needs `packages: write`.
+It tries Google's public cache, ECR's official-image mirror and Docker Hub for
+the same pinned source identity; those upstreams are used only to populate GHCR.
+A missing upstream or different manifest fails publication. Verified receipts
+expire after 14 days; GHCR images have a separate lifecycle.
 
-Actionlint 1.7.12 and Semgrep 1.179.0 run as native, pinned tools instead of pulling
-uncached tool images. The scanner lock includes patched PyJWT 2.15.1;
-installation asserts the executable's version before preserving the same scan
-options. Its isolated environment uses mise's Python 3.12.12 and the hash-locked
-`tests/tools/requirements-semgrep.txt`, covered by the existing Dependabot pip
-entry. Regenerate that lock from `requirements-semgrep.in` under Python 3.12.12
-using pip-tools 7.5.1 with `--generate-hashes --allow-unsafe --strip-extras`.
-The CSP stack uses
-the native Docker builder instead of pulling a separate BuildKit container.
-No registry credentials are required for these public pulls; scanners,
-assertions and required check names remain unchanged.
+Consumer jobs grant `packages: read` and pass their short-lived `GITHUB_TOKEN`
+to `tests/tools/login_ghcr.sh` through the environment. The helper sends the
+password through standard input and fails before invoking Docker if credentials
+are missing. Job services use GitHub's native `services.credentials` because
+GitHub pulls them before workflow steps. The release caller grants the reusable
+offline workflow read access; the pinned shared image release workflow already
+logs into GHCR before building. No personal token is stored in repository files
+or workflow secrets.
+
+For local builds, provide `GHCR_USERNAME` and a classic token with
+`read:packages` as `GHCR_TOKEN` through your existing secret manager or shell
+environment, then run `bash tests/tools/login_ghcr.sh` before Docker or Compose.
+Do not paste tokens into commands, documentation or logs. Docker retains the
+credential through its configured credential store; use `docker logout ghcr.io`
+to remove it when finished. The existing GitHub CLI login does not necessarily
+include package access.
+
+Publishing through the workflow token links the packages to this repository.
+The workflow tests every admitted image with a separate read-only job token and
+checks the actual pulled repository digest. Packages keep GitHub's default
+private visibility. Other repositories and contributors need explicit package
+read access; fork-specific access has not been verified. Dependabot uses the
+same repository package-access grant automatically, without a registry token in
+`dependabot.yml`. See GitHub's [automatic registry access documentation](https://docs.github.com/en/code-security/concepts/supply-chain-security/automatic-dependabot-access-to-github-registries)
+and [Container registry authentication](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry).
+
+To refresh an image, review its upstream digest and add or update the admitted
+inventory entry. Run Container mirrors on that trusted branch and require every
+publication and read-only pull to pass before changing consumers. On main, the
+workflow runs automatically when the inventory or publisher changes; it can
+also be dispatched manually. Version-family tags are published only after their
+admitted digest is verified, so Dependabot can propose mirrored digest updates.
+The mirror does not automatically track unreviewed upstream tags. Preserve old
+inventory entries while consumers still need their digests. Roll back reference
+changes by reverting the consumer commit; never delete a package digest still
+referenced by supported revisions. This work changes main only; LTS keeps its
+existing registry configuration.
+
+Actionlint 1.7.12 and Semgrep 1.179.0 run as native, pinned tools. The scanner
+lock includes patched PyJWT 2.15.1 and uses mise's Python 3.12.12 with
+`tests/tools/requirements-semgrep.txt`. Regenerate the lock from
+`requirements-semgrep.in` using pip-tools 7.5.1 with
+`--generate-hashes --allow-unsafe --strip-extras`. The CSP stack uses the native
+Docker builder. Assertions and required check names remain unchanged.
 
 ## Coverage and analysis
 

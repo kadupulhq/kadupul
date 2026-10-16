@@ -10,6 +10,9 @@ concurrency:
   cancel-in-progress: true
 jobs:
   rehearsal:
+    permissions:
+      contents: read
+      packages: read
     name: Upgrade, RRD preservation and rollback
     runs-on: ubuntu-22.04
     timeout-minutes: 35
@@ -17,9 +20,11 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Configure hosted Docker image cache
-        if: runner.environment == 'github-hosted' && runner.os == 'Linux'
-        run: bash tests/tools/configure_docker_mirror.sh
+      - name: Authenticate to GitHub Container Registry
+        env:
+          GHCR_TOKEN: ${{ github.token }}
+          GHCR_USERNAME: ${{ github.actor }}
+        run: bash tests/tools/login_ghcr.sh
       - uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca # v5.1.1
         with:
           install_args: python@3.12.12

@@ -182,10 +182,10 @@ def pinned_runtime_references():
     import re
     source = (ROOT / 'tests/behavior/Dockerfile').read_text()
     stages = re.findall(
-        r'^FROM (php:(8\.[1-4])-apache@sha256:[0-9a-f]{64}) AS php-\2\n'
+        r'^FROM (ghcr\.io/kadupulhq/kadupul-mirrors/php:(8\.[1-4])-apache@sha256:[0-9a-f]{64}) AS php-\2\n'
         r'LABEL org\.kadupul\.behavior\.php-base="([^"\n]+)"$',
         source, re.MULTILINE)
-    require(len(re.findall(r'^FROM php:', source, re.MULTILINE)) == 4 and
+    require(len(re.findall(r'^FROM ghcr\.io/kadupulhq/kadupul-mirrors/php:', source, re.MULTILINE)) == 4 and
             len(stages) == 4 and {version for _, version, _ in stages} ==
             {'8.1', '8.2', '8.3', '8.4'}, 'Missing or ambiguous pinned runtime provenance')
     require(all(reference == label for reference, _, label in stages),

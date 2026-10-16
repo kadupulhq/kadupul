@@ -37,6 +37,9 @@ concurrency:
 
 jobs:
   docker-proxy-journey:
+    permissions:
+      contents: read
+      packages: read
     name: Settings, RRD I/O, and template import/export
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     timeout-minutes: 35
@@ -44,9 +47,11 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Configure hosted Docker image cache
-        if: runner.environment == 'github-hosted' && runner.os == 'Linux'
-        run: bash tests/tools/configure_docker_mirror.sh
+      - name: Authenticate to GitHub Container Registry
+        env:
+          GHCR_TOKEN: ${{ github.token }}
+          GHCR_USERNAME: ${{ github.actor }}
+        run: bash tests/tools/login_ghcr.sh
 
       - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
         with:

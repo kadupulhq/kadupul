@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "images": [
+    {
+      "source": "docker.io/library/composer@sha256:af98f42dfff7c68ba8d53c2164fd9fde1087b7d449514baa38c418b1f6bc4bac",
+      "destination": "ghcr.io/kadupulhq/kadupul-mirrors/composer:sha256-af98f42dfff7c68ba8d53c2164fd9fde1087b7d449514baa38c418b1f6bc4bac",
+      "digest": "sha256:af98f42dfff7c68ba8d53c2164fd9fde1087b7d449514baa38c418b1f6bc4bac"
+    },
+    {
+      "source": "docker.io/library/composer@sha256:d8f6343d3fae98107426bc49163ccad46ef85aabd4a27d80a74401fab4aba332",
+      "destination": "ghcr.io/kadupulhq/kadupul-mirrors/composer:sha256-d8f6343d3fae98107426bc49163ccad46ef85aabd4a27d80a74401fab4aba332",
+      "digest": "sha256:d8f6343d3fae98107426bc49163ccad46ef85aabd4a27d80a74401fab4aba332"
+    },
+    {
+      "source": "docker.io/library/mariadb:10.6@sha256:23616f0bd3aff922f4dea4130f1d0a09f3571d20b7b36c8f49840672dc309e8c",
+      "destination": "ghcr.io/kadupulhq/kadupul-mirrors/mariadb:sha256-23616f0bd3aff922f4dea4130f1d0a09f3571d20b7b36c8f49840672dc309e8c",
+      "digest": "sha256:23616f0bd3aff922f4dea4130f1d0a09f3571d20b7b36c8f49840672dc309e8c"
+    },
+    {
+      "source": "docker.io/library/mariadb:11.8@sha256:6422478cb8e159f080fb1d8ccf65101e26fe51385787fde7d16c3b165a331f15",
+      "destination": "ghcr.io/kadupulhq/kadupul-mirrors/mariadb:sha256-6422478cb8e159f080fb1d8ccf65101e26fe51385787fde7d16c3b165a331f15",
+      "digest": "sha256:6422478cb8e159f080fb1d8ccf65101e26fe51385787fde7d16c3b165a331f15"
+    },
+    {
+      "source": "docker.io/library/mariadb:10.11@sha256:7db29378d4fdab73f8123bbc2b48905c90d1a4b00cf848b028f1e81e623257f2",
+      "destination": "ghcr.io/kadupulhq/kadupul-mirrors/mariadb:sha256-7db29378d4fdab73f8123bbc2b48905c90d1a4b00cf848b028f1e81e623257f2",
+      "digest": "sha256:7db29378d4fdab73f8123bbc2b48905c90d1a4b00cf848b028f1e81e623257f2"
+    },
+    {
+      "source": "docker.io/library/mysql:8.4@sha256:6ea90827b1100f8f2ae306a539f86d2c264a26ed435a2a9f75551dd5c3aeb242",
+      "destination": "ghcr.io/kadupulhq/kadupul-mirrors/mysql:sha256-6ea90827b1100f8f2ae306a539f86d2c264a26ed435a2a9f75551dd5c3aeb242",
+      "digest": "sha256:6ea90827b1100f8f2ae306a539f86d2c264a26ed435a2a9f75551dd5c3aeb242"
+    },
+    {
+      "source": "docker.io/library/mysql:8.0@sha256:7dcddc01f13bab2f15cde676d44d01f61fc9f99fe7785e86196dfc07d358ae2b",
+      "destination": "ghcr.io/kadupulhq/kadupul-mirrors/mysql:sha256-7dcddc01f13bab2f15cde676d44d01f61fc9f99fe7785e86196dfc07d358ae2b",
+      "digest": "sha256:7dcddc01f13bab2f15cde676d44d01f61fc9f99fe7785e86196dfc07d358ae2b"
+    },
+    {
+      "source": "docker.io/library/mysql:9.7@sha256:e2bde46db6563855d7177adb5f0b57b9dc663f5a20927a90f4259d3312068497",
+      "destination": "ghcr.io/kadupulhq/kadupul-mirrors/mysql:sha256-e2bde46db6563855d7177adb5f0b57b9dc663f5a20927a90f4259d3312068497",
+      "digest": "sha256:e2bde46db6563855d7177adb5f0b57b9dc663f5a20927a90f4259d3312068497"
+    },
+    {
+      "source": "docker.io/library/nginx:alpine@sha256:df221db836e1754089190208cee7eeda94f233197056426eda74a43ab1abeac2",
+      "destination": "ghcr.io/kadupulhq/kadupul-mirrors/nginx:sha256-df221db836e1754089190208cee7eeda94f233197056426eda74a43ab1abeac2",
+      "digest": "sha256:df221db836e1754089190208cee7eeda94f233197056426eda74a43ab1abeac2"
+    },
+    {
+      "source": "docker.io/library/node:26.10.0-bookworm-slim@sha256:3ffc19ea878019d9e9ae8971732ad4a03cda44f167107173174b60ed7c65bed3",
+      "destination": "ghcr.io/kadupulhq/kadupul-mirrors/node:sha256-3ffc19ea878019d9e9ae8971732ad4a03cda44f167107173174b60ed7c65bed3",
+      "digest": "sha256:3ffc19ea878019d9e9ae8971732ad4a03cda44f167107173174b60ed7c65bed3"
+    },
+    {
+      "source": "docker.io/library/php:8.2-apache@sha256:2029ac2c39fab54d7d8abe6c9108068b8593de1e8cede79ce00d15f7aa895e37",
+      "destination": "ghcr.io/kadupulhq/kadupul-mirrors/php:sha256-2029ac2c39fab54d7d8abe6c9108068b8593de1e8cede79ce00d15f7aa895e37",
+      "digest": "sha256:2029ac2c39fab54d7d8abe6c9108068b8593de1e8cede79ce00d15f7aa895e37"
+    },
+    {
+      "source": "docker.io/library/php:8.4-fpm-bookworm@sha256:6bfef8e416977aa41f48e3e42a40c1e08050d24e4a938c6edb421400bff24601",
+      "destination": "ghcr.io/kadupulhq/kadupul-mirrors/php:sha256-6bfef8e416977aa41f48e3e42a40c1e08050d24e4a938c6edb421400bff24601",
+      "digest": "sha256:6bfef8e416977aa41f48e3e42a40c1e08050d24e4a938c6edb421400bff24601"
+    },
+    {
+      "source": "docker.io/library/php:8.1-apache@sha256:72f0c0134922985022d55a39b0390d35dc7a10e961aa6c44fa35b4c3102f4268",
+      "destination": "ghcr.io/kadupulhq/kadupul-mirrors/php:sha256-72f0c0134922985022d55a39b0390d35dc7a10e961aa6c44fa35b4c3102f4268",
+      "digest": "sha256:72f0c0134922985022d55a39b0390d35dc7a10e961aa6c44fa35b4c3102f4268"
+    },
+    {
+      "source": "docker.io/library/php:8.4-fpm-alpine@sha256:78cd8de9970a9cd6ff4d98860a94eb5bf37dd2d5776b4785562dbfad01c29d5a",
+      "destination": "ghcr.io/kadupulhq/kadupul-mirrors/php:sha256-78cd8de9970a9cd6ff4d98860a94eb5bf37dd2d5776b4785562dbfad01c29d5a",
+      "digest": "sha256:78cd8de9970a9cd6ff4d98860a94eb5bf37dd2d5776b4785562dbfad01c29d5a"
+    },
+    {
+      "source": "docker.io/library/php:8.3-apache@sha256:7a33fa6c555763fa384c727ab7377c4807f628daec0660eda705957a905f707f",
+      "destination": "ghcr.io/kadupulhq/kadupul-mirrors/php:sha256-7a33fa6c555763fa384c727ab7377c4807f628daec0660eda705957a905f707f",
+      "digest": "sha256:7a33fa6c555763fa384c727ab7377c4807f628daec0660eda705957a905f707f"
+    },
+    {
+      "source": "docker.io/library/php:8.4-cli-bookworm@sha256:836ac6c672d1372a47c8fd61b625015bd07760f493fb2eaab2087636498a2b4b",
+      "destination": "ghcr.io/kadupulhq/kadupul-mirrors/php:sha256-836ac6c672d1372a47c8fd61b625015bd07760f493fb2eaab2087636498a2b4b",
+      "digest": "sha256:836ac6c672d1372a47c8fd61b625015bd07760f493fb2eaab2087636498a2b4b"
+    },
+    {
+      "source": "docker.io/library/php:8.4-apache@sha256:901b0dbcd2419cc9cd307ea05e57403449ce722ccd5b32335da6e8d39f2b1ee0",
+      "destination": "ghcr.io/kadupulhq/kadupul-mirrors/php:sha256-901b0dbcd2419cc9cd307ea05e57403449ce722ccd5b32335da6e8d39f2b1ee0",
+      "digest": "sha256:901b0dbcd2419cc9cd307ea05e57403449ce722ccd5b32335da6e8d39f2b1ee0"
+    }
+  ]
+}

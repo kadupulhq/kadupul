@@ -13,6 +13,9 @@ concurrency:
 
 jobs:
   offline-bundle:
+    permissions:
+      contents: read
+      packages: read
     uses: ./.github/workflows/offline-bundle.yml # zizmor: ignore[self-repository] -- Pinned actionlint does not yet support $/ workflow calls.
 
   # A called workflow can only narrow the caller's token, never widen it, so

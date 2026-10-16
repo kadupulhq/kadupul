@@ -1,4 +1,4 @@
-FROM php:8.4-cli-bookworm@sha256:836ac6c672d1372a47c8fd61b625015bd07760f493fb2eaab2087636498a2b4b
+FROM ghcr.io/kadupulhq/kadupul-mirrors/php:8.4-cli-bookworm@sha256:836ac6c672d1372a47c8fd61b625015bd07760f493fb2eaab2087636498a2b4b
 
 ARG RRDPROXY_REF=54aad579803f2b9cf1e9dd979881247656853230
 
@@ -7,7 +7,7 @@ RUN apt-get update \
  && docker-php-ext-install -j"$(nproc)" gmp ldap pcntl sockets \
  && rm -rf /var/lib/apt/lists/*
 
-COPY --from=composer@sha256:af98f42dfff7c68ba8d53c2164fd9fde1087b7d449514baa38c418b1f6bc4bac /usr/bin/composer /usr/local/bin/composer
+COPY --from=ghcr.io/kadupulhq/kadupul-mirrors/composer@sha256:af98f42dfff7c68ba8d53c2164fd9fde1087b7d449514baa38c418b1f6bc4bac /usr/bin/composer /usr/local/bin/composer
 
 RUN git clone https://github.com/Cacti/rrdproxy.git /opt/rrdproxy \
  && git -C /opt/rrdproxy checkout "${RRDPROXY_REF}" \

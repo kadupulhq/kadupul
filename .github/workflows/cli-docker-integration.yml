@@ -50,6 +50,9 @@ concurrency:
 
 jobs:
   cli-database:
+    permissions:
+      contents: read
+      packages: read
     name: CLI integration against MariaDB
     runs-on: ubuntu-24.04
     timeout-minutes: 35
@@ -58,9 +61,11 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-      - name: Configure hosted Docker image cache
-        if: runner.environment == 'github-hosted' && runner.os == 'Linux'
-        run: bash tests/tools/configure_docker_mirror.sh
+      - name: Authenticate to GitHub Container Registry
+        env:
+          GHCR_TOKEN: ${{ github.token }}
+          GHCR_USERNAME: ${{ github.actor }}
+        run: bash tests/tools/login_ghcr.sh
 
       - name: Run CLI maintenance integration suite
         env:

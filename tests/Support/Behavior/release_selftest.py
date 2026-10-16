@@ -209,7 +209,7 @@ def legacy_build_input_integrity():
             pin = release.pin_legacy_runtime(baseline)
         assert pin['archived_recipe_sha256'] == hashes['tests/behavior/Dockerfile']
         assert pin['executed_recipe_sha256'] != pin['archived_recipe_sha256']
-        assert pin['base_ref'].startswith('php:8.4-apache@sha256:')
+        assert pin['base_ref'].startswith('ghcr.io/kadupulhq/kadupul-mirrors/php:8.4-apache@sha256:')
         assert ('LABEL org.kadupul.behavior.php-base="' + pin['base_ref'] + '"') in (baseline / '.behavior-legacy.Dockerfile').read_text()
         executed = (baseline / '.behavior-legacy.Dockerfile').read_bytes()
         with patch.dict(os.environ, {'PHP_VERSION': 'unsupported'}):

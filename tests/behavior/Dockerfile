@@ -3,19 +3,19 @@
 # Keep the PHP_VERSION matrix while pinning each selectable runtime.
 # Add a pinned stage before introducing another runtime.
 ARG PHP_VERSION=8.4
-FROM php:8.1-apache@sha256:72f0c0134922985022d55a39b0390d35dc7a10e961aa6c44fa35b4c3102f4268 AS php-8.1
-LABEL org.kadupul.behavior.php-base="php:8.1-apache@sha256:72f0c0134922985022d55a39b0390d35dc7a10e961aa6c44fa35b4c3102f4268"
+FROM ghcr.io/kadupulhq/kadupul-mirrors/php:8.1-apache@sha256:72f0c0134922985022d55a39b0390d35dc7a10e961aa6c44fa35b4c3102f4268 AS php-8.1
+LABEL org.kadupul.behavior.php-base="ghcr.io/kadupulhq/kadupul-mirrors/php:8.1-apache@sha256:72f0c0134922985022d55a39b0390d35dc7a10e961aa6c44fa35b4c3102f4268"
 
-FROM php:8.2-apache@sha256:2029ac2c39fab54d7d8abe6c9108068b8593de1e8cede79ce00d15f7aa895e37 AS php-8.2
-LABEL org.kadupul.behavior.php-base="php:8.2-apache@sha256:2029ac2c39fab54d7d8abe6c9108068b8593de1e8cede79ce00d15f7aa895e37"
+FROM ghcr.io/kadupulhq/kadupul-mirrors/php:8.2-apache@sha256:2029ac2c39fab54d7d8abe6c9108068b8593de1e8cede79ce00d15f7aa895e37 AS php-8.2
+LABEL org.kadupul.behavior.php-base="ghcr.io/kadupulhq/kadupul-mirrors/php:8.2-apache@sha256:2029ac2c39fab54d7d8abe6c9108068b8593de1e8cede79ce00d15f7aa895e37"
 
-FROM php:8.3-apache@sha256:7a33fa6c555763fa384c727ab7377c4807f628daec0660eda705957a905f707f AS php-8.3
-LABEL org.kadupul.behavior.php-base="php:8.3-apache@sha256:7a33fa6c555763fa384c727ab7377c4807f628daec0660eda705957a905f707f"
+FROM ghcr.io/kadupulhq/kadupul-mirrors/php:8.3-apache@sha256:7a33fa6c555763fa384c727ab7377c4807f628daec0660eda705957a905f707f AS php-8.3
+LABEL org.kadupul.behavior.php-base="ghcr.io/kadupulhq/kadupul-mirrors/php:8.3-apache@sha256:7a33fa6c555763fa384c727ab7377c4807f628daec0660eda705957a905f707f"
 
-FROM php:8.4-apache@sha256:901b0dbcd2419cc9cd307ea05e57403449ce722ccd5b32335da6e8d39f2b1ee0 AS php-8.4
-LABEL org.kadupul.behavior.php-base="php:8.4-apache@sha256:901b0dbcd2419cc9cd307ea05e57403449ce722ccd5b32335da6e8d39f2b1ee0"
+FROM ghcr.io/kadupulhq/kadupul-mirrors/php:8.4-apache@sha256:901b0dbcd2419cc9cd307ea05e57403449ce722ccd5b32335da6e8d39f2b1ee0 AS php-8.4
+LABEL org.kadupul.behavior.php-base="ghcr.io/kadupulhq/kadupul-mirrors/php:8.4-apache@sha256:901b0dbcd2419cc9cd307ea05e57403449ce722ccd5b32335da6e8d39f2b1ee0"
 
-FROM node:26.10.0-bookworm-slim@sha256:3ffc19ea878019d9e9ae8971732ad4a03cda44f167107173174b60ed7c65bed3 AS assets
+FROM ghcr.io/kadupulhq/kadupul-mirrors/node:26.10.0-bookworm-slim@sha256:3ffc19ea878019d9e9ae8971732ad4a03cda44f167107173174b60ed7c65bed3 AS assets
 WORKDIR /app
 COPY package.json package-lock.json ./
 COPY tools/dependencies ./tools/dependencies
@@ -98,7 +98,7 @@ RUN mkdir -p /var/cacti-state \
 # include/config.php (whatever the developer had) clobbered our
 # container-friendly config, killing every protected request.
 COPY --chown=www-data:www-data . /var/www/html
-COPY --from=composer@sha256:d8f6343d3fae98107426bc49163ccad46ef85aabd4a27d80a74401fab4aba332 /usr/bin/composer /usr/local/bin/composer
+COPY --from=ghcr.io/kadupulhq/kadupul-mirrors/composer@sha256:d8f6343d3fae98107426bc49163ccad46ef85aabd4a27d80a74401fab4aba332 /usr/bin/composer /usr/local/bin/composer
 RUN php -d auto_prepend_file= /usr/local/bin/composer install --working-dir=/var/www/html --no-dev --no-interaction --no-progress --prefer-dist --no-scripts \
  && php -d auto_prepend_file= /var/www/html/tools/dependencies/install-legacy.php
 COPY --from=assets /app/include/js /var/www/html/include/js

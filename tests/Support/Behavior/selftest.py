@@ -199,7 +199,7 @@ def base_image_failure_contract():
         recorder.compose = lambda *args: {'stdout': 'a' * 64}
         recorder.command = lambda *args, **kw: harness.run(list(args), **kw)
         responses = [subprocess.CompletedProcess([], 0, output, '') for output in
-                     ('NAME=Debian', 'PHP 8.2', 'php:8.2-apache@sha256:' + '1' * 64, valid['base_image']['db_ref'], 'rrdtool=1.7')]
+                     ('NAME=Debian', 'PHP 8.2', 'ghcr.io/kadupulhq/kadupul-mirrors/php:8.2-apache@sha256:' + '1' * 64, valid['base_image']['db_ref'], 'rrdtool=1.7')]
         responses[failed_probe].returncode = 1
         with patch.object(harness.subprocess, 'run', side_effect=responses):
             try:
@@ -226,7 +226,7 @@ def pinned_base_image_contract():
     recorder.command = lambda *args, **kwargs: {
         'stdout': 'NAME=Debian' if args[0] == 'cat' else 'PHP 8.2' if args[0] == 'php' else 'rrdtool=1.7'}
     for version in ('8.1', '8.2', '8.3', '8.4'):
-        reference = 'php:' + version + '-apache@sha256:' + '1' * 64
+        reference = 'ghcr.io/kadupulhq/kadupul-mirrors/php:' + version + '-apache@sha256:' + '1' * 64
         def inspect(args, **kwargs):
             if args[1] == 'inspect':
                 assert args[-1] == 'a' * 64
@@ -244,7 +244,7 @@ def pinned_base_image_contract():
             if args[1] == 'inspect':
                 if args[3] == '{{.Image}}':
                     return {'stdout': '' if missing == 'image' else 'sha256:' + '3' * 64}
-                return {'stdout': 'php:8.4-apache@sha256:' + '1' * 64}
+                return {'stdout': 'ghcr.io/kadupulhq/kadupul-mirrors/php:8.4-apache@sha256:' + '1' * 64}
             return {'stdout': '' if missing == 'digest' else 'mariadb@sha256:' + '2' * 64}
         with patch.object(harness, 'run', side_effect=incomplete_database):
             try:
@@ -254,7 +254,7 @@ def pinned_base_image_contract():
             else:
                 raise AssertionError('Incomplete running database provenance accepted')
     recorder.compose = lambda *args: {'stdout': 'a' * 64}
-    for reference in ('', '<no value>', 'php:8.2-apache', 'php:8.2-apache@sha256:short'):
+    for reference in ('', '<no value>', 'ghcr.io/kadupulhq/kadupul-mirrors/php:8.2-apache', 'ghcr.io/kadupulhq/kadupul-mirrors/php:8.2-apache@sha256:short'):
         with patch.object(harness, 'run', return_value={'stdout': reference}):
             try:
                 recorder.base_image_digest()

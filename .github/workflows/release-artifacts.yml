@@ -15,6 +15,9 @@ concurrency:
 
 jobs:
   container:
+    permissions:
+      contents: read
+      packages: read
     name: Release container boot and offline assets
     runs-on: ubuntu-latest
     timeout-minutes: 35
@@ -22,9 +25,11 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Configure hosted Docker image cache
-        if: runner.environment == 'github-hosted' && runner.os == 'Linux'
-        run: bash tests/tools/configure_docker_mirror.sh
+      - name: Authenticate to GitHub Container Registry
+        env:
+          GHCR_TOKEN: ${{ github.token }}
+          GHCR_USERNAME: ${{ github.actor }}
+        run: bash tests/tools/login_ghcr.sh
       - name: Build the actual release image
         run: docker build --build-arg VERSION=acceptance -t kadupul-release-acceptance .
       - name: Verify dependencies and authorization without network access
