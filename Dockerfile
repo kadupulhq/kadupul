@@ -10,7 +10,7 @@
 # the same build.
 
 # --- dependencies -----------------------------------------------------------
-FROM composer@sha256:af98f42dfff7c68ba8d53c2164fd9fde1087b7d449514baa38c418b1f6bc4bac AS vendor
+FROM ghcr.io/kadupulhq/kadupul-mirrors/composer@sha256:af98f42dfff7c68ba8d53c2164fd9fde1087b7d449514baa38c418b1f6bc4bac AS vendor
 
 WORKDIR /app
 COPY composer.json composer.lock ./
@@ -21,7 +21,7 @@ RUN composer install \
       --prefer-dist --optimize-autoloader --classmap-authoritative
 
 # Browser dependencies are built once; Node is not shipped in the runtime.
-FROM node:26.10.0-bookworm-slim@sha256:3ffc19ea878019d9e9ae8971732ad4a03cda44f167107173174b60ed7c65bed3 AS assets
+FROM ghcr.io/kadupulhq/kadupul-mirrors/node:26.10.0-bookworm-slim@sha256:3ffc19ea878019d9e9ae8971732ad4a03cda44f167107173174b60ed7c65bed3 AS assets
 WORKDIR /app
 COPY package.json package-lock.json ./
 COPY tools/dependencies ./tools/dependencies
@@ -30,7 +30,7 @@ COPY include/themes/midwinter ./include/themes/midwinter
 RUN npm ci --ignore-scripts --no-audit --no-fund && node tools/dependencies/build.mjs
 
 # --- runtime ----------------------------------------------------------------
-FROM php:8.4-fpm-bookworm@sha256:6bfef8e416977aa41f48e3e42a40c1e08050d24e4a938c6edb421400bff24601 AS runtime
+FROM ghcr.io/kadupulhq/kadupul-mirrors/php:8.4-fpm-bookworm@sha256:6bfef8e416977aa41f48e3e42a40c1e08050d24e4a938c6edb421400bff24601 AS runtime
 
 ARG VERSION=dev
 ARG TARGETARCH

@@ -7,6 +7,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import tempfile
 import unittest
@@ -19,6 +20,41 @@ spec.loader.exec_module(mirror)
 
 
 class ContainerMirrorTest(unittest.TestCase):
+    def test_live_container_references_have_admitted_ghcr_digests(self):
+        admitted = {(image['destination'].split(':', 1)[0], image['digest']) for image in mirror.images()}
+        files = subprocess.run(['git', 'ls-files', '-z'], cwd=ROOT, capture_output=True, check=True).stdout.decode().split('\0')
+        checked = 0
+        for filename in files:
+            path = Path(filename)
+            dockerfile = path.name.startswith('Dockerfile')
+            yaml = (filename.startswith('.github/workflows/') or 'compose' in path.name) and path.suffix in ('.yml', '.yaml')
+            python = filename == 'tests/security/nginx_private_paths.py'
+            if not (dockerfile or yaml or python) or filename.startswith('tests/behavior/evidence/'):
+                continue
+            source = (ROOT / path).read_text()
+            references = []
+            if dockerfile:
+                for line in source.splitlines():
+                    if line.startswith('FROM '):
+                        reference = line.split()[1]
+                        if reference in ('php-${PHP_VERSION}', 'scratch'):
+                            continue
+                        references.append(reference)
+                    references.extend(re.findall(r'--from=([^\s]+/[^\s]+)', line))
+            elif yaml:
+                references = re.findall(r'^\s*image:\s*([^\s]+)', source, re.MULTILINE)
+                references = [ref for ref in references if ref not in ('${{', 'true', 'false', 'cacti-e2e:latest')]
+            else:
+                references = re.findall(r"ghcr\.io/[^'\s]+", source)
+            for reference in references:
+                with self.subTest(file=filename, image=reference):
+                    self.assertTrue(reference.startswith(mirror.PREFIX), reference)
+                    repository, separator, digest = reference.partition('@')
+                    self.assertEqual('@', separator, reference)
+                    self.assertIn((repository.split(':', 1)[0], digest), admitted)
+                    checked += 1
+        self.assertGreaterEqual(checked, 25, 'Container reference discovery must not be empty')
+
     def test_login_helper_uses_stdin_and_refuses_missing_credentials(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

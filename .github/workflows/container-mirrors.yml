@@ -3,12 +3,17 @@ name: Container mirrors
 on:
   pull_request:
     paths:
+      - Dockerfile
+      - tests/**/Dockerfile*
+      - tests/**/*compose*.yml
+      - tests/security/nginx_private_paths.py
+      - .github/workflows/**
       - tools/containers/**
       - tests/tools/test_container_mirrors.py
       - tests/tools/login_ghcr.sh
       - .github/workflows/container-mirrors.yml
   push:
-    branches: [main, ci/authenticated-ghcr-mirrors]
+    branches: [main]
     paths:
       - tools/containers/mirrors.json
       - tools/containers/mirror.py
@@ -79,6 +84,7 @@ jobs:
   consume:
     name: Read-only mirror pull (${{ strategy.job-index }})
     needs: [inventory, publish]
+    if: always() && needs.inventory.result == 'success' && (needs.publish.result == 'success' || github.event_name == 'pull_request')
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:

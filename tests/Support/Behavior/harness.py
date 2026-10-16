@@ -736,7 +736,7 @@ class Harness:
                      '{{index .Config.Labels "org.kadupul.behavior.php-base"}}',
                      container], check=True)
         base_ref = (image['stdout'] or '').strip()
-        if not re.fullmatch(r'php:8\.[1-4]-apache@sha256:[0-9a-f]{64}', base_ref):
+        if not re.fullmatch(r'ghcr\.io/kadupulhq/kadupul-mirrors/php:8\.[1-4]-apache@sha256:[0-9a-f]{64}', base_ref):
             raise RuntimeError('Missing or invalid pinned PHP base provenance')
         db_container = self.compose('ps', '-q', 'db')['stdout'].strip()
         if not re.fullmatch(r'[0-9a-f]{64}', db_container):

@@ -81,13 +81,17 @@ jobs:
        (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository &&
         (vars.SONAR_ALL_PRS == 'true' || startsWith(github.head_ref, 'sonar/') || startsWith(github.head_ref, 'release/'))))
     permissions:
+      packages: read
       contents: read
       pull-requests: read
     # The real-MariaDB PHPUnit tests skip without a server; the password
     # exists only inside this runner.
     services:
       database:
-        image: mirror.gcr.io/library/mariadb:11.8@sha256:6422478cb8e159f080fb1d8ccf65101e26fe51385787fde7d16c3b165a331f15
+        image: ghcr.io/kadupulhq/kadupul-mirrors/mariadb:11.8@sha256:6422478cb8e159f080fb1d8ccf65101e26fe51385787fde7d16c3b165a331f15
+        credentials:
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
         env:
           MARIADB_ROOT_PASSWORD: kadupul-ci-only
           MARIADB_DATABASE: kadupul_test
@@ -112,9 +116,11 @@ jobs:
           ref: ${{ github.sha }}
           fetch-depth: 0
           persist-credentials: false
-      - name: Configure hosted Docker image cache
-        if: runner.environment == 'github-hosted' && runner.os == 'Linux'
-        run: bash tests/tools/configure_docker_mirror.sh
+      - name: Authenticate to GitHub Container Registry
+        env:
+          GHCR_TOKEN: ${{ github.token }}
+          GHCR_USERNAME: ${{ github.actor }}
+        run: bash tests/tools/login_ghcr.sh
 
       - name: Set up PHP
         uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
@@ -244,13 +250,17 @@ jobs:
        (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository &&
         (vars.SONAR_ALL_PRS == 'true' || startsWith(github.head_ref, 'sonar/') || startsWith(github.head_ref, 'release/'))))
     permissions:
+      packages: read
       contents: read
       pull-requests: read
     # The real-MariaDB PHPUnit tests skip without a server; the password
     # exists only inside this runner.
     services:
       database:
-        image: mirror.gcr.io/library/mariadb:11.8@sha256:6422478cb8e159f080fb1d8ccf65101e26fe51385787fde7d16c3b165a331f15
+        image: ghcr.io/kadupulhq/kadupul-mirrors/mariadb:11.8@sha256:6422478cb8e159f080fb1d8ccf65101e26fe51385787fde7d16c3b165a331f15
+        credentials:
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
         env:
           MARIADB_ROOT_PASSWORD: kadupul-ci-only
           MARIADB_DATABASE: kadupul_test
@@ -275,9 +285,11 @@ jobs:
           ref: ${{ github.sha }}
           fetch-depth: 0
           persist-credentials: false
-      - name: Configure hosted Docker image cache
-        if: runner.environment == 'github-hosted' && runner.os == 'Linux'
-        run: bash tests/tools/configure_docker_mirror.sh
+      - name: Authenticate to GitHub Container Registry
+        env:
+          GHCR_TOKEN: ${{ github.token }}
+          GHCR_USERNAME: ${{ github.actor }}
+        run: bash tests/tools/login_ghcr.sh
 
       - name: Set up PHP
         uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
