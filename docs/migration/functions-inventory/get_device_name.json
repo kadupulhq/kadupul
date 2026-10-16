@@ -42,9 +42,9 @@
     "human": {
         "target_module": "Inventory/Application",
         "wave": 4,
-        "status": "not assessed",
+        "status": "planned",
         "lts_status": "not assessed",
-        "behavior_record": null,
+        "behavior_record": "tests/Golden/functions/kadupul/php-8.4/get_device_name.json",
         "notes": ""
     }
 }

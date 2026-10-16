@@ -10,6 +10,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Preserve existing RRD files and pending samples when a proxy existence check fails or returns an ambiguous response.
 - Restore authorization, HTML-context escaping, sort-column and theme tests to the Pest coverage suite using production helpers; retire tests for the removed remote-URL helper.
 - Fix `padleft()` never returning for a pad that is not numeric, and pad numeric values up to the requested minimum length instead of stopping after one pad character.
+- Reject a field name that ends in a newline in `build_where_from_array()` instead of passing it to the query, where it failed with an unknown column.
 
 - Update the native CI scanner to Semgrep 1.179.0 and hash-locked PyJWT 2.15.1, removing vulnerable scanner dependencies while preserving the existing scan policy.
 

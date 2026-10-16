@@ -51,9 +51,9 @@
     "human": {
         "target_module": "Platform/Domain/Collection",
         "wave": 1,
-        "status": "not assessed",
+        "status": "planned",
         "lts_status": "not assessed",
-        "behavior_record": null,
-        "notes": ""
+        "behavior_record": "tests/Golden/functions/kadupul/php-8.4/build_where_from_array.json",
+        "notes": "A field name with a trailing newline passed the name check. See #861."
     }
 }

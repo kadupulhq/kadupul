@@ -5,6 +5,9 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 # lib/functions.php inventory
 
+This is the per-function record. For the approach, the decisions and where the work stands, see
+[Decomposing lib/functions.php](../functions-decomposition.md).
+
 One JSON record per function declared in `lib/functions.php`, plus `index.json`. The records track
 the decomposition of that file into modules under `src/`: where each function is going, how far it
 has got, and what it does today. Plugins call these functions by name, so every row also records how
@@ -172,37 +175,37 @@ files. Cross-check by function name if the lexical scan reports a hook this one 
 | Alerting/Application/Port/MailSender | 10 | 0 | 0 | 0 | 10 |
 | Collection/Application | 1 | 0 | 0 | 0 | 1 |
 | DataInput/Application | 9 | 0 | 0 | 0 | 9 |
-| DataInput/Domain | 15 | 0 | 0 | 0 | 15 |
+| DataInput/Domain | 2 | 13 | 0 | 0 | 15 |
 | GraphDefinition/Infrastructure | 8 | 0 | 0 | 0 | 8 |
-| Graphing/Domain | 9 | 0 | 0 | 0 | 9 |
+| Graphing/Domain | 6 | 3 | 0 | 0 | 9 |
 | IdentityAccess | 13 | 0 | 0 | 0 | 13 |
-| Inventory/Application | 8 | 0 | 0 | 0 | 8 |
+| Inventory/Application | 7 | 1 | 0 | 0 | 8 |
 | Navigation | 17 | 0 | 0 | 0 | 17 |
-| Platform/Application/Port/ConfigurationSettings | 7 | 0 | 0 | 0 | 7 |
+| Platform/Application/Port/ConfigurationSettings | 1 | 2 | 4 | 0 | 7 |
 | Platform/Application/Port/Filesystem | 7 | 0 | 0 | 0 | 7 |
 | Platform/Application/Port/FlashMessages | 11 | 0 | 0 | 0 | 11 |
 | Platform/Application/Port/NameResolver | 3 | 0 | 0 | 0 | 3 |
 | Platform/Application/Port/ProcessRunner | 6 | 0 | 0 | 0 | 6 |
-| Platform/Application/Port/ProductVersion | 8 | 0 | 0 | 0 | 8 |
-| Platform/Application/Port/UserSettings | 11 | 0 | 0 | 0 | 11 |
-| Platform/Domain/Collection | 5 | 0 | 0 | 0 | 5 |
-| Platform/Domain/Network | 8 | 0 | 0 | 0 | 8 |
-| Platform/Domain/Security | 18 | 0 | 0 | 0 | 18 |
-| Platform/Domain/Text | 13 | 0 | 0 | 0 | 13 |
+| Platform/Application/Port/ProductVersion | 6 | 2 | 0 | 0 | 8 |
+| Platform/Application/Port/UserSettings | 4 | 3 | 4 | 0 | 11 |
+| Platform/Domain/Collection | 0 | 5 | 0 | 0 | 5 |
+| Platform/Domain/Network | 0 | 8 | 0 | 0 | 8 |
+| Platform/Domain/Security | 15 | 3 | 0 | 0 | 18 |
+| Platform/Domain/Text | 0 | 13 | 0 | 0 | 13 |
 | Platform/Domain/Time | 9 | 0 | 0 | 0 | 9 |
-| Platform/Infrastructure/Legacy | 17 | 0 | 0 | 0 | 17 |
+| Platform/Infrastructure/Legacy | 0 | 17 | 0 | 0 | 17 |
 | Platform/Infrastructure/Persistence | 1 | 0 | 0 | 0 | 1 |
 | Platform/Presentation/Http | 13 | 0 | 0 | 0 | 13 |
 | legacy-retained | 2 | 0 | 0 | 0 | 2 |
-| **Total** | 229 | 0 | 0 | 0 | 229 |
+| **Total** | 151 | 70 | 8 | 0 | 229 |
 
 | Wave | not assessed | planned | implemented | verified | Total |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| 1 | 51 | 0 | 0 | 0 | 51 |
-| 2 | 38 | 0 | 0 | 0 | 38 |
-| 3 | 68 | 0 | 0 | 0 | 68 |
-| 4 | 53 | 0 | 0 | 0 | 53 |
+| 1 | 14 | 37 | 0 | 0 | 51 |
+| 2 | 8 | 22 | 8 | 0 | 38 |
+| 3 | 65 | 3 | 0 | 0 | 68 |
+| 4 | 45 | 8 | 0 | 0 | 53 |
 | 5 | 19 | 0 | 0 | 0 | 19 |
-| **Total** | 229 | 0 | 0 | 0 | 229 |
+| **Total** | 151 | 70 | 8 | 0 | 229 |
 
 <!-- inventory-counts:end -->

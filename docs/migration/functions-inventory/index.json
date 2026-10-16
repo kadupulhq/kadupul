@@ -3,7 +3,7 @@
     "source": "lib/functions.php",
     "function_count": 229,
     "counts": {
-        "by_status": {"not assessed": 229, "planned": 0, "implemented": 0, "verified": 0},
+        "by_status": {"not assessed": 151, "planned": 70, "implemented": 8, "verified": 0},
         "by_module": {
             "Alerting/Application/Port/MailSender": 10,
             "Collection/Application": 1,
@@ -44,9 +44,9 @@
             "fan_out_core": 2,
             "target_module": "Platform/Infrastructure/Legacy",
             "wave": 2,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/CactiErrorHandler.json"
         },
         {
             "name": "CactiShutdownHandler",
@@ -55,9 +55,9 @@
             "fan_out_core": 1,
             "target_module": "Platform/Infrastructure/Legacy",
             "wave": 2,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/CactiShutdownHandler.json"
         },
         {
             "name": "IgnoreErrorHandler",
@@ -66,9 +66,9 @@
             "fan_out_core": 2,
             "target_module": "Platform/Infrastructure/Legacy",
             "wave": 2,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/IgnoreErrorHandler.json"
         },
         {
             "name": "add_email_details",
@@ -110,9 +110,9 @@
             "fan_out_core": 202,
             "target_module": "Platform/Domain/Collection",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/array_rekey.json"
         },
         {
             "name": "bottom_footer",
@@ -132,9 +132,9 @@
             "fan_out_core": 5,
             "target_module": "Platform/Domain/Collection",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/build_where_from_array.json"
         },
         {
             "name": "cacti_browser_zone_enabled",
@@ -209,9 +209,9 @@
             "fan_out_core": 112,
             "target_module": "Platform/Domain/Collection",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/cacti_count.json"
         },
         {
             "name": "cacti_csv_safe",
@@ -231,9 +231,9 @@
             "fan_out_core": 33,
             "target_module": "Platform/Infrastructure/Legacy",
             "wave": 2,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/cacti_debug_backtrace.json"
         },
         {
             "name": "cacti_escapeshellarg",
@@ -286,9 +286,9 @@
             "fan_out_core": 2,
             "target_module": "Platform/Domain/Network",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/cacti_format_ipv6_colon.json"
         },
         {
             "name": "cacti_gethostbyname",
@@ -363,9 +363,9 @@
             "fan_out_core": 4,
             "target_module": "Platform/Domain/Security",
             "wave": 3,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/cacti_is_sensitive_key.json"
         },
         {
             "name": "cacti_log",
@@ -374,9 +374,9 @@
             "fan_out_core": 1205,
             "target_module": "Platform/Infrastructure/Legacy",
             "wave": 2,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/cacti_log.json"
         },
         {
             "name": "cacti_log_file",
@@ -385,9 +385,9 @@
             "fan_out_core": 3,
             "target_module": "Platform/Infrastructure/Legacy",
             "wave": 2,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/cacti_log_file.json"
         },
         {
             "name": "cacti_normalize_windows_path",
@@ -407,9 +407,9 @@
             "fan_out_core": 0,
             "target_module": "Platform/Domain/Network",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/cacti_ntoc.json"
         },
         {
             "name": "cacti_ntop",
@@ -418,9 +418,9 @@
             "fan_out_core": 0,
             "target_module": "Platform/Domain/Network",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/cacti_ntop.json"
         },
         {
             "name": "cacti_oid_numeric_format",
@@ -429,9 +429,9 @@
             "fan_out_core": 2,
             "target_module": "Platform/Domain/Network",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/cacti_oid_numeric_format.json"
         },
         {
             "name": "cacti_path_is_within",
@@ -462,9 +462,9 @@
             "fan_out_core": 0,
             "target_module": "Platform/Domain/Network",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/cacti_ptoa.json"
         },
         {
             "name": "cacti_pton",
@@ -473,9 +473,9 @@
             "fan_out_core": 1,
             "target_module": "Platform/Domain/Network",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/cacti_pton.json"
         },
         {
             "name": "cacti_redact_sensitive",
@@ -484,9 +484,9 @@
             "fan_out_core": 3,
             "target_module": "Platform/Domain/Security",
             "wave": 3,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/cacti_redact_sensitive.json"
         },
         {
             "name": "cacti_redact_value",
@@ -495,9 +495,9 @@
             "fan_out_core": 3,
             "target_module": "Platform/Domain/Security",
             "wave": 3,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/cacti_redact_value.json"
         },
         {
             "name": "cacti_redirect",
@@ -561,9 +561,9 @@
             "fan_out_core": 2006,
             "target_module": "Platform/Domain/Collection",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/cacti_sizeof.json"
         },
         {
             "name": "cacti_system_zone_set",
@@ -649,9 +649,9 @@
             "fan_out_core": 1,
             "target_module": "Platform/Domain/Collection",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/calculate_percentiles.json"
         },
         {
             "name": "call_remote_data_collector",
@@ -682,9 +682,9 @@
             "fan_out_core": 4,
             "target_module": "Platform/Domain/Text",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/clean_up_file_name.json"
         },
         {
             "name": "clean_up_lines",
@@ -693,9 +693,9 @@
             "fan_out_core": 65,
             "target_module": "Platform/Domain/Text",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/clean_up_lines.json"
         },
         {
             "name": "clean_up_name",
@@ -704,9 +704,9 @@
             "fan_out_core": 6,
             "target_module": "Platform/Domain/Text",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/clean_up_name.json"
         },
         {
             "name": "clean_up_path",
@@ -715,9 +715,9 @@
             "fan_out_core": 5,
             "target_module": "Platform/Domain/Text",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/clean_up_path.json"
         },
         {
             "name": "clear_messages",
@@ -737,9 +737,9 @@
             "fan_out_core": 1,
             "target_module": "Platform/Application/Port/UserSettings",
             "wave": 2,
-            "status": "not assessed",
+            "status": "implemented",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/clear_user_setting.json"
         },
         {
             "name": "clog_admin",
@@ -770,9 +770,9 @@
             "fan_out_core": 6,
             "target_module": "Platform/Application/Port/ConfigurationSettings",
             "wave": 2,
-            "status": "not assessed",
+            "status": "implemented",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/config_value_exists.json"
         },
         {
             "name": "create_emailtext",
@@ -836,9 +836,9 @@
             "fan_out_core": 4,
             "target_module": "Platform/Infrastructure/Legacy",
             "wave": 2,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/debug_log_clear.json"
         },
         {
             "name": "debug_log_insert",
@@ -847,9 +847,9 @@
             "fan_out_core": 42,
             "target_module": "Platform/Infrastructure/Legacy",
             "wave": 2,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/debug_log_insert.json"
         },
         {
             "name": "debug_log_insert_section_end",
@@ -858,9 +858,9 @@
             "fan_out_core": 4,
             "target_module": "Platform/Infrastructure/Legacy",
             "wave": 2,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/debug_log_insert_section_end.json"
         },
         {
             "name": "debug_log_insert_section_start",
@@ -869,9 +869,9 @@
             "fan_out_core": 4,
             "target_module": "Platform/Infrastructure/Legacy",
             "wave": 2,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/debug_log_insert_section_start.json"
         },
         {
             "name": "debug_log_return",
@@ -880,9 +880,9 @@
             "fan_out_core": 3,
             "target_module": "Platform/Infrastructure/Legacy",
             "wave": 2,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/debug_log_return.json"
         },
         {
             "name": "determine_display_log_entry",
@@ -891,9 +891,9 @@
             "fan_out_core": 3,
             "target_module": "Platform/Infrastructure/Legacy",
             "wave": 2,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/determine_display_log_entry.json"
         },
         {
             "name": "disable_device_debug",
@@ -957,9 +957,9 @@
             "fan_out_core": 48,
             "target_module": "Platform/Infrastructure/Legacy",
             "wave": 2,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/dsv_log.json"
         },
         {
             "name": "email_test",
@@ -1111,9 +1111,9 @@
             "fan_out_core": 3,
             "target_module": "DataInput/Domain",
             "wave": 4,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/get_associated_rras.json"
         },
         {
             "name": "get_browser_query_string",
@@ -1155,9 +1155,9 @@
             "fan_out_core": 27,
             "target_module": "Platform/Application/Port/ProductVersion",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/get_cacti_version.json"
         },
         {
             "name": "get_cacti_version_text",
@@ -1188,9 +1188,9 @@
             "fan_out_core": 1,
             "target_module": "Graphing/Domain",
             "wave": 4,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/get_color.json"
         },
         {
             "name": "get_compiled_asset_path",
@@ -1221,9 +1221,9 @@
             "fan_out_core": 11,
             "target_module": "DataInput/Domain",
             "wave": 4,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/get_data_source_item_name.json"
         },
         {
             "name": "get_data_source_path",
@@ -1232,9 +1232,9 @@
             "fan_out_core": 16,
             "target_module": "DataInput/Domain",
             "wave": 4,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/get_data_source_path.json"
         },
         {
             "name": "get_data_source_title",
@@ -1243,9 +1243,9 @@
             "fan_out_core": 10,
             "target_module": "DataInput/Domain",
             "wave": 4,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/get_data_source_title.json"
         },
         {
             "name": "get_daysfromtime",
@@ -1265,9 +1265,9 @@
             "fan_out_core": 8,
             "target_module": "Platform/Infrastructure/Legacy",
             "wave": 2,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/get_debug_prefix.json"
         },
         {
             "name": "get_default_contextoption",
@@ -1287,9 +1287,9 @@
             "fan_out_core": 1,
             "target_module": "Inventory/Application",
             "wave": 4,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/get_device_name.json"
         },
         {
             "name": "get_dns_from_ip",
@@ -1375,9 +1375,9 @@
             "fan_out_core": 18,
             "target_module": "Graphing/Domain",
             "wave": 4,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/get_graph_title.json"
         },
         {
             "name": "get_graph_title_cache",
@@ -1386,9 +1386,9 @@
             "fan_out_core": 3,
             "target_module": "Graphing/Domain",
             "wave": 4,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/get_graph_title_cache.json"
         },
         {
             "name": "get_guest_account",
@@ -1408,9 +1408,9 @@
             "fan_out_core": 14,
             "target_module": "DataInput/Domain",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/get_hash_cdef.json"
         },
         {
             "name": "get_hash_data_input",
@@ -1419,9 +1419,9 @@
             "fan_out_core": 13,
             "target_module": "DataInput/Domain",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/get_hash_data_input.json"
         },
         {
             "name": "get_hash_data_query",
@@ -1430,9 +1430,9 @@
             "fan_out_core": 19,
             "target_module": "DataInput/Domain",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/get_hash_data_query.json"
         },
         {
             "name": "get_hash_data_source_profile",
@@ -1441,9 +1441,9 @@
             "fan_out_core": 7,
             "target_module": "DataInput/Domain",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/get_hash_data_source_profile.json"
         },
         {
             "name": "get_hash_data_template",
@@ -1452,9 +1452,9 @@
             "fan_out_core": 19,
             "target_module": "DataInput/Domain",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/get_hash_data_template.json"
         },
         {
             "name": "get_hash_gprint",
@@ -1463,9 +1463,9 @@
             "fan_out_core": 5,
             "target_module": "DataInput/Domain",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/get_hash_gprint.json"
         },
         {
             "name": "get_hash_graph_template",
@@ -1474,9 +1474,9 @@
             "fan_out_core": 23,
             "target_module": "DataInput/Domain",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/get_hash_graph_template.json"
         },
         {
             "name": "get_hash_host_template",
@@ -1485,9 +1485,9 @@
             "fan_out_core": 5,
             "target_module": "DataInput/Domain",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/get_hash_host_template.json"
         },
         {
             "name": "get_hash_vdef",
@@ -1496,9 +1496,9 @@
             "fan_out_core": 3,
             "target_module": "DataInput/Domain",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/get_hash_vdef.json"
         },
         {
             "name": "get_hash_version",
@@ -1507,9 +1507,9 @@
             "fan_out_core": 36,
             "target_module": "Platform/Application/Port/ProductVersion",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/get_hash_version.json"
         },
         {
             "name": "get_include_relpath",
@@ -1672,9 +1672,9 @@
             "fan_out_core": 2,
             "target_module": "Platform/Infrastructure/Legacy",
             "wave": 2,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/get_selective_log_level.json"
         },
         {
             "name": "get_sequence",
@@ -1826,9 +1826,9 @@
             "fan_out_core": 2,
             "target_module": "Platform/Domain/Text",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/is_base64_encoded.json"
         },
         {
             "name": "is_device_debug_enabled",
@@ -1870,9 +1870,9 @@
             "fan_out_core": 2,
             "target_module": "Platform/Domain/Text",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/is_hex_string.json"
         },
         {
             "name": "is_hexadecimal",
@@ -1881,9 +1881,9 @@
             "fan_out_core": 18,
             "target_module": "Platform/Domain/Text",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/is_hexadecimal.json"
         },
         {
             "name": "is_ipaddress",
@@ -1892,9 +1892,9 @@
             "fan_out_core": 16,
             "target_module": "Platform/Domain/Network",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/is_ipaddress.json"
         },
         {
             "name": "is_mac_address",
@@ -1903,9 +1903,9 @@
             "fan_out_core": 2,
             "target_module": "Platform/Domain/Network",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/is_mac_address.json"
         },
         {
             "name": "is_page_ajax",
@@ -1925,9 +1925,9 @@
             "fan_out_core": 6,
             "target_module": "Platform/Application/Port/ConfigurationSettings",
             "wave": 2,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/is_remote_path_setting.json"
         },
         {
             "name": "is_resource_writable",
@@ -1947,9 +1947,9 @@
             "fan_out_core": 2,
             "target_module": "Platform/Domain/Text",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/is_urlencoded.json"
         },
         {
             "name": "is_valid_pathname",
@@ -1980,9 +1980,9 @@
             "fan_out_core": 7,
             "target_module": "Platform/Infrastructure/Legacy",
             "wave": 2,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/log_client_addr_proxy_diagnostic.json"
         },
         {
             "name": "mailer",
@@ -2046,9 +2046,9 @@
             "fan_out_core": 1,
             "target_module": "Platform/Domain/Text",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/padleft.json"
         },
         {
             "name": "parse_email_details",
@@ -2101,9 +2101,9 @@
             "fan_out_core": 1,
             "target_module": "Platform/Application/Port/ConfigurationSettings",
             "wave": 2,
-            "status": "not assessed",
+            "status": "implemented",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/prime_common_config_settings.json"
         },
         {
             "name": "raise_ajax_permission_denied",
@@ -2145,9 +2145,9 @@
             "fan_out_core": 1052,
             "target_module": "Platform/Application/Port/ConfigurationSettings",
             "wave": 2,
-            "status": "not assessed",
+            "status": "implemented",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/read_config_option.json"
         },
         {
             "name": "read_default_config_option",
@@ -2156,9 +2156,9 @@
             "fan_out_core": 5,
             "target_module": "Platform/Application/Port/ConfigurationSettings",
             "wave": 2,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/read_default_config_option.json"
         },
         {
             "name": "read_default_graph_config_option",
@@ -2178,9 +2178,9 @@
             "fan_out_core": 5,
             "target_module": "Platform/Application/Port/UserSettings",
             "wave": 2,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/read_default_user_setting.json"
         },
         {
             "name": "read_graph_config_option",
@@ -2200,9 +2200,9 @@
             "fan_out_core": 137,
             "target_module": "Platform/Application/Port/UserSettings",
             "wave": 2,
-            "status": "not assessed",
+            "status": "implemented",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/read_user_setting.json"
         },
         {
             "name": "record_mailer_error",
@@ -2310,9 +2310,9 @@
             "fan_out_core": 3,
             "target_module": "Platform/Application/Port/UserSettings",
             "wave": 2,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/save_user_settings.json"
         },
         {
             "name": "send_mail",
@@ -2332,9 +2332,9 @@
             "fan_out_core": 128,
             "target_module": "Platform/Application/Port/ConfigurationSettings",
             "wave": 2,
-            "status": "not assessed",
+            "status": "implemented",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/set_config_option.json"
         },
         {
             "name": "set_graph_config_option",
@@ -2365,9 +2365,9 @@
             "fan_out_core": 27,
             "target_module": "Platform/Application/Port/UserSettings",
             "wave": 2,
-            "status": "not assessed",
+            "status": "implemented",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/set_user_setting.json"
         },
         {
             "name": "settings_value_passes_filter",
@@ -2398,9 +2398,9 @@
             "fan_out_core": 4,
             "target_module": "Platform/Domain/Text",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/stri_replace.json"
         },
         {
             "name": "strip_alpha",
@@ -2409,9 +2409,9 @@
             "fan_out_core": 9,
             "target_module": "Platform/Domain/Text",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/strip_alpha.json"
         },
         {
             "name": "strip_domain",
@@ -2420,9 +2420,9 @@
             "fan_out_core": 10,
             "target_module": "Platform/Domain/Text",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/strip_domain.json"
         },
         {
             "name": "tail_file",
@@ -2431,9 +2431,9 @@
             "fan_out_core": 4,
             "target_module": "Platform/Infrastructure/Legacy",
             "wave": 2,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/tail_file.json"
         },
         {
             "name": "test_data_source",
@@ -2464,9 +2464,9 @@
             "fan_out_core": 7,
             "target_module": "Platform/Domain/Text",
             "wave": 1,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/title_trim.json"
         },
         {
             "name": "top_graph_header",
@@ -2508,9 +2508,9 @@
             "fan_out_core": 5,
             "target_module": "Platform/Application/Port/UserSettings",
             "wave": 2,
-            "status": "not assessed",
+            "status": "implemented",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/user_setting_exists.json"
         },
         {
             "name": "user_setting_value_allowed",
@@ -2519,9 +2519,9 @@
             "fan_out_core": 5,
             "target_module": "Platform/Application/Port/UserSettings",
             "wave": 2,
-            "status": "not assessed",
+            "status": "planned",
             "lts_status": "not assessed",
-            "behavior_record": null
+            "behavior_record": "tests/Golden/functions/kadupul/php-8.4/user_setting_value_allowed.json"
         },
         {
             "name": "validate_path_within",

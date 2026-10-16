@@ -71,9 +71,9 @@
     "human": {
         "target_module": "Platform/Application/Port/ConfigurationSettings",
         "wave": 2,
-        "status": "not assessed",
+        "status": "implemented",
         "lts_status": "not assessed",
-        "behavior_record": null,
-        "notes": ""
+        "behavior_record": "tests/Golden/functions/kadupul/php-8.4/set_config_option.json",
+        "notes": "Statements run through the ConfigurationSettings and UserSettings ports and their DBAL adapters (#867). Caches, defaults, hooks and the remote-collector write stay in this function. The db_* helpers still run before Composer loads and for argument types outside the port. The goldens pass unchanged through this wrapper."
     }
 }
