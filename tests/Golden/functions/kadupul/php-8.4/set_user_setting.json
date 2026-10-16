@@ -107,26 +107,271 @@
     {
       "args": ["fncdb_pref", "v", null],
       "id": "user_null",
-      "note": "null == -1 is false: the insert is refused and the failure is not reported",
+      "note": "null == -1 is false and null is not an integer id: rejected before the insert: nothing is written and a SECURITY line is logged (#872)",
       "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in set_user_setting: NULL"],
         "returned": {"type": "null", "value": null},
         "sql": [
-          "INSERT INTO settings_user (user_id, name, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [null,\"fncdb_pref\",\"v\"] !! 23000 1048 Column 'user_id' cannot be null"
+          "SELECT value FROM settings WHERE name = ? -- [\"selective_debug\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
         ],
-        "state": ["set settings_user.fncdb_pref = {\"$\":\"array\",\"pairs\":[[\"value\",\"v\"]]}"]
+        "state": [
+          "set config.config_options_array.selective_debug = \"\"",
+          "set config.config_options_array.client_timezone_support = \"0\"",
+          "set config.config_options_array.log_destination = 1",
+          "set config.config_options_array.log_verbosity = 2"
+        ]
       }
     },
     {
       "args": ["fncdb_pref", "v", "abc"],
       "id": "user_text",
-      "note": "\"abc\" is not -1; the column coerces it and the row is written for user 0",
+      "note": "\"abc\" is not -1 and not an integer id: rejected before the insert: nothing is written and a SECURITY line is logged (#872)",
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in set_user_setting: string(3)"],
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"selective_debug\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ],
+        "state": [
+          "set config.config_options_array.selective_debug = \"\"",
+          "set config.config_options_array.client_timezone_support = \"0\"",
+          "set config.config_options_array.log_destination = 1",
+          "set config.config_options_array.log_verbosity = 2"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", "v", "1"],
+      "id": "user_digit_string",
+      "note": "a digit string is a valid id: the row is written for user 1",
       "result": {
         "returned": {"type": "null", "value": null},
         "sql": [
-          "INSERT INTO settings_user (user_id, name, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [\"abc\",\"fncdb_pref\",\"v\"]"
+          "INSERT INTO settings_user (user_id, name, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [\"1\",\"fncdb_pref\",\"v\"]"
+        ],
+        "state": ["set settings_user.fncdb_pref = {\"$\":\"array\",\"pairs\":[[\"value\",\"v\"]]}"],
+        "table_diff": ["+ settings_user {\"name\":\"fncdb_pref\",\"user_id\":1,\"value\":\"v\"}"]
+      }
+    },
+    {
+      "args": ["fncdb_pref", "v", "01"],
+      "id": "user_leading_zero",
+      "note": "leading zeros are digits: the row is written for user 1",
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "INSERT INTO settings_user (user_id, name, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [\"01\",\"fncdb_pref\",\"v\"]"
+        ],
+        "state": ["set settings_user.fncdb_pref = {\"$\":\"array\",\"pairs\":[[\"value\",\"v\"]]}"],
+        "table_diff": ["+ settings_user {\"name\":\"fncdb_pref\",\"user_id\":1,\"value\":\"v\"}"]
+      }
+    },
+    {
+      "args": ["fncdb_pref", "v", 0],
+      "id": "user_zero",
+      "note": "0 is a valid id: the row is written for user 0",
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "INSERT INTO settings_user (user_id, name, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) -- [0,\"fncdb_pref\",\"v\"]"
         ],
         "state": ["set settings_user.fncdb_pref = {\"$\":\"array\",\"pairs\":[[\"value\",\"v\"]]}"],
         "table_diff": ["+ settings_user {\"name\":\"fncdb_pref\",\"user_id\":0,\"value\":\"v\"}"]
+      }
+    },
+    {
+      "args": ["fncdb_pref", "v", ""],
+      "id": "user_empty_string",
+      "note": "rejected before the insert: nothing is written and a SECURITY line is logged (#872)",
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in set_user_setting: string(0)"],
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"selective_debug\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ],
+        "state": [
+          "set config.config_options_array.selective_debug = \"\"",
+          "set config.config_options_array.client_timezone_support = \"0\"",
+          "set config.config_options_array.log_destination = 1",
+          "set config.config_options_array.log_verbosity = 2"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", "v", "1abc"],
+      "id": "user_digit_prefix",
+      "note": "rejected before the insert: nothing is written and a SECURITY line is logged (#872)",
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in set_user_setting: string(4)"],
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"selective_debug\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ],
+        "state": [
+          "set config.config_options_array.selective_debug = \"\"",
+          "set config.config_options_array.client_timezone_support = \"0\"",
+          "set config.config_options_array.log_destination = 1",
+          "set config.config_options_array.log_verbosity = 2"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", "v", "1.5"],
+      "id": "user_decimal_string",
+      "note": "rejected before the insert: nothing is written and a SECURITY line is logged (#872)",
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in set_user_setting: string(3)"],
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"selective_debug\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ],
+        "state": [
+          "set config.config_options_array.selective_debug = \"\"",
+          "set config.config_options_array.client_timezone_support = \"0\"",
+          "set config.config_options_array.log_destination = 1",
+          "set config.config_options_array.log_verbosity = 2"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", "v", " 1"],
+      "id": "user_leading_space",
+      "note": "rejected before the insert: nothing is written and a SECURITY line is logged (#872)",
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in set_user_setting: string(2)"],
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"selective_debug\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ],
+        "state": [
+          "set config.config_options_array.selective_debug = \"\"",
+          "set config.config_options_array.client_timezone_support = \"0\"",
+          "set config.config_options_array.log_destination = 1",
+          "set config.config_options_array.log_verbosity = 2"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", "v", "-5"],
+      "id": "user_negative_string",
+      "note": "rejected before the insert: nothing is written and a SECURITY line is logged (#872)",
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in set_user_setting: string(2)"],
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"selective_debug\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ],
+        "state": [
+          "set config.config_options_array.selective_debug = \"\"",
+          "set config.config_options_array.client_timezone_support = \"0\"",
+          "set config.config_options_array.log_destination = 1",
+          "set config.config_options_array.log_verbosity = 2"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", "v", "9223372036854775808"],
+      "id": "user_overflow_string",
+      "note": "does not fit in a PHP int: rejected before the insert: nothing is written and a SECURITY line is logged (#872)",
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in set_user_setting: string(19)"],
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"selective_debug\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ],
+        "state": [
+          "set config.config_options_array.selective_debug = \"\"",
+          "set config.config_options_array.client_timezone_support = \"0\"",
+          "set config.config_options_array.log_destination = 1",
+          "set config.config_options_array.log_verbosity = 2"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", "v", [1]],
+      "id": "user_array",
+      "note": "rejected before the insert: nothing is written and a SECURITY line is logged (#872)",
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in set_user_setting: array"],
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"selective_debug\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ],
+        "state": [
+          "set config.config_options_array.selective_debug = \"\"",
+          "set config.config_options_array.client_timezone_support = \"0\"",
+          "set config.config_options_array.log_destination = 1",
+          "set config.config_options_array.log_verbosity = 2"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", "v", false],
+      "id": "user_false",
+      "note": "false == -1 is false: rejected before the insert: nothing is written and a SECURITY line is logged (#872)",
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in set_user_setting: boolean"],
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"selective_debug\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ],
+        "state": [
+          "set config.config_options_array.selective_debug = \"\"",
+          "set config.config_options_array.client_timezone_support = \"0\"",
+          "set config.config_options_array.log_destination = 1",
+          "set config.config_options_array.log_verbosity = 2"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", "v", 1.5],
+      "id": "user_float",
+      "note": "rejected before the insert: nothing is written and a SECURITY line is logged (#872)",
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in set_user_setting: double"],
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"selective_debug\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ],
+        "state": [
+          "set config.config_options_array.selective_debug = \"\"",
+          "set config.config_options_array.client_timezone_support = \"0\"",
+          "set config.config_options_array.log_destination = 1",
+          "set config.config_options_array.log_verbosity = 2"
+        ]
       }
     },
     {
