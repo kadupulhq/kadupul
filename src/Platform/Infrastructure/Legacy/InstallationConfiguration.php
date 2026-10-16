@@ -21,7 +21,14 @@ final class InstallationConfiguration implements LegacyConfiguration
     public function values(): array
     {
         if ($this->configuration !== null) {
-            if (($this->configuration['collector_id'] ?? 1) !== 1) {
+            if (isset($this->configuration['connection_status']) && !in_array(
+                $this->requests?->getCurrentRequest()?->attributes->get('_route'),
+                ['platform_console', 'platform_help'],
+                true,
+            )) {
+                throw new \RuntimeException('Console collector routing cannot be reused by another workflow.');
+            }
+            if (($this->configuration['collector_id'] ?? 1) !== 1 && !isset($this->configuration['connection_status'])) {
                 $this->requireOnlinePrimaryRoute();
             }
             return $this->configuration;
@@ -42,6 +49,9 @@ final class InstallationConfiguration implements LegacyConfiguration
         ];
         if ($values['collector_id'] < 1) {
             throw new \RuntimeException('Invalid collector identity.');
+        }
+        if (in_array($this->requests?->getCurrentRequest()?->attributes->get('_route'), ['platform_console', 'platform_help'], true)) {
+            return $this->configuration = ConsoleInstallation::select($values, $this->databaseTargets());
         }
         if ($values['collector_id'] !== 1) {
             $this->requireOnlinePrimaryRoute();
@@ -96,6 +106,18 @@ final class InstallationConfiguration implements LegacyConfiguration
         return ['collector_id' => $collector, 'local' => $local, 'main' => $main];
     }
 
+    /** Public URL metadata only; never opens a database for a login redirect. */
+    public function urlPath(): string
+    {
+        $path = $this->load()['url_path'] ?? '/';
+        if (!is_string($path) || !str_starts_with($path, '/') || str_starts_with($path, '//')
+            || str_contains($path, '\\') || preg_match('/[\x00-\x20?#]/', $path)) {
+            throw new \RuntimeException('Invalid installation URL path.');
+        }
+
+        return rtrim($path, '/');
+    }
+
     /**
      * config.php is read once per instance, so values() and databaseTargets()
      * derive from the same load. A refused load is not kept and is refused
@@ -137,7 +159,7 @@ final class InstallationConfiguration implements LegacyConfiguration
         if (!in_array($route, [
             'inventory_sites', 'inventory_sites_json', 'inventory_sites_legacy', 'inventory_site_edit', 'inventory_site_create', 'inventory_site_action',
             'navigation_links', 'navigation_links_legacy', 'navigation_link_create', 'navigation_link_edit', 'navigation_link_action',
-            'platform_about', 'platform_about_legacy',
+            'platform_help', 'platform_about', 'platform_about_legacy',
             'graph_vdefs', 'graph_vdef_create', 'graph_vdef_edit', 'graph_vdef_item_edit', 'graph_vdef_item_delete', 'graph_vdef_item_reorder', 'graph_vdef_action', 'graph_vdef_legacy',
         ], true)) {
             throw new \RuntimeException('The Symfony application requires the primary MySQL installation outside supported online collector administration routes.');

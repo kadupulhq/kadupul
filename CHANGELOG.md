@@ -14,6 +14,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Update the native CI scanner to Semgrep 1.179.0 and hash-locked PyJWT 2.15.1, removing vulnerable scanner dependencies while preserving the existing scan policy.
 
+- Render the console home with Symfony and Twig, preserving native login, plugin HTML/session hooks, translations and remote collector status. Add an authenticated help overview while retaining the contextual-help JSON endpoint.
+
 ## [1.3.0-alpha.1]
 
 - First Kadupul preview for isolated evaluation. This is pre-alpha software, with no production support or supported migration path. It combines the existing monitoring, polling and graphing application with an incremental Symfony 7.4 migration; PHP 8.4 or later is required.

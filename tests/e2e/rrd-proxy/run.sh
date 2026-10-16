@@ -30,7 +30,7 @@ openssl pkey -in "$STATE_DIR/proxy-private.pem" -pubout -out "$STATE_DIR/proxy-p
 "${DC[@]}" up -d --build
 
 for attempt in $(seq 1 90); do
-    if curl -fsSI "http://localhost:${HOST_PORT}/" 2>/dev/null | grep -iq '^content-security-policy-report-only:'; then
+    if curl -fsSI "http://localhost:${HOST_PORT}/login.php" 2>/dev/null | grep -iq '^content-security-policy-report-only:'; then
         break
     fi
     if [[ "$attempt" == 90 ]]; then

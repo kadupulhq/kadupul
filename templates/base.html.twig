@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ (app.request ? app.request.locale : 'en')|replace({'_': '-'}) }}">
     <head>
+        {% block head %}
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block title %}Kadupul{% endblock %}</title>
@@ -9,6 +10,7 @@
             <link href="{{ asset(theme_stylesheet(), 'legacy') }}" type="text/css" rel="stylesheet">
         {% endblock %}
         {% block javascripts %}{% endblock %}
+        {% endblock %}
     </head>
     <body>{% block page %}
         {% set menu = console_menu() %}

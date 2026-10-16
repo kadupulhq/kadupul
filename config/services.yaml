@@ -19,6 +19,7 @@ services:
             - '../src/Platform/Infrastructure/Legacy/CdefReferenceTriggers.php'
             # Constructed with the exact selected native PDO at the caller boundary.
             - '../src/Platform/Infrastructure/Legacy/LegacyReferenceWriteTransaction.php'
+            - '../src/Platform/Infrastructure/Symfony/ConsoleHomeResponse.php'
 
     # Public so a cli/ shim can reach it through the kernel container before running
     # a command, instead of passing the output mode as a hidden command option.
@@ -90,6 +91,17 @@ services:
             $database: '@kadupul.session_database'
 
     Kadupul\IdentityAccess\Application\Query\CurrentActor: ~
+
+    Kadupul\IdentityAccess\Contract\BrowserSession:
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyBrowserSession
+
+    Kadupul\Platform\Application\Query\ViewHelp: ~
+    Kadupul\Platform\Application\Port\HelpTopics:
+        alias: Kadupul\Platform\Infrastructure\Legacy\LegacyHelpTopics
+
+    Kadupul\Platform\Application\Query\ViewConsoleHome: ~
+    Kadupul\Platform\Application\Port\ConsoleHomeContent:
+        alias: Kadupul\Platform\Infrastructure\Legacy\LegacyConsoleHomeContent
 
     Kadupul\IdentityAccess\Application\Port\AuthenticatedSession:
         alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuthenticatedSession

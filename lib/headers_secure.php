@@ -206,15 +206,8 @@ class CactiSecureHeaders {
 	 * otherwise their scripts will be blocked in nonce modes.
 	 */
 
-	/**
-	 * Emit the full security-header set. Safe to call multiple times;
-	 * headers_sent() short-circuits re-emission after output begins.
-	 */
-	public static function emitHeaders() {
-		if (headers_sent()) {
-			return;
-		}
-
+	/** Current legacy policies, also used by the isolated console adapter. */
+	public static function contentSecurityPolicies() {
 		$mode       = self::getCspMode();
 		$nonce      = self::isNonceMode() ? self::getNonce() : '';
 		$alternates = '';
@@ -248,12 +241,21 @@ class CactiSecureHeaders {
 
 		$csp = self::buildCspPolicy($mode, $nonce, $alternates, $report_uri);
 
-		header('X-Frame-Options: SAMEORIGIN');
+		return [$mode === 'nonce-report' ? 'Content-Security-Policy-Report-Only' : 'Content-Security-Policy' => $csp];
+	}
 
-		if ($mode === 'nonce-report') {
-			header('Content-Security-Policy-Report-Only: ' . $csp);
-		} else {
-			header('Content-Security-Policy: ' . $csp);
+	/**
+	 * Emit the full security-header set. Safe to call multiple times;
+	 * headers_sent() short-circuits re-emission after output begins.
+	 */
+	public static function emitHeaders() {
+		if (headers_sent()) {
+			return;
+		}
+
+		header('X-Frame-Options: SAMEORIGIN');
+		foreach (self::contentSecurityPolicies() as $name => $value) {
+			header($name . ': ' . $value);
 		}
 
 		if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {

@@ -11,7 +11,7 @@
  */
 
 // Don't run from the database if using the command line
-if (php_sapi_name() == 'cli') {
+if (php_sapi_name() == 'cli' && !defined('KADUPUL_BROWSER_COMPATIBILITY')) {
 	return;
 }
 

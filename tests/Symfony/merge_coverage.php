@@ -81,6 +81,12 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         $sourcePaths[] = 'src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php';
         $sourcePaths[] = 'src/Platform/Infrastructure/Legacy/LegacyUpgradePluginLifecycle.php';
         $sourcePaths[] = 'tests/Symfony/cdef_legacy_page_scenarios.py';
+        $sourcePaths[] = 'tests/Symfony/console_home_http.py';
+        $sourcePaths[] = 'tests/Symfony/console_browser_probe.cjs';
+        $sourcePaths[] = 'include/js/console-home.js';
+        foreach (['console_home', 'console_home_body', 'console_home_fragment', 'console_home_shell', 'help'] as $template) {
+            $sourcePaths[] = 'templates/platform/' . $template . '.html.twig';
+        }
         $sourcePaths[] = 'tests/e2e/browser-coverage.js';
         $sourcePaths[] = 'public/js/vdef-item.js';
         $sourcePaths[] = 'tests/Fixtures/plugins/compatibility_test/setup.php';
@@ -98,6 +104,19 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         }
     }
     $checks = $handler === 'none' ? ['disconnected archive verified', 'dependency repair verified', 'invalid manifest and symlink rejected'] : [
+        'console schema mismatch preserves the native installer redirect before worker startup',
+        'console native login preserves the installation subdirectory',
+        'help return link retains the installation subdirectory: /public/index.php/help',
+        'authorized embedded PHP content executes',
+        'native console hooks execute exactly once in order',
+        'native console hooks retain the original query string in REQUEST_URI',
+        'plugin session mutations persist across Symfony requests',
+        'native plugin POST form retains CSRF protection',
+        'native CSRF token is withheld from foreign plugin forms',
+        'console browser executes native forms, iframe resize and help navigation under default CSP',
+        'console browser executes native forms, iframe resize and help navigation under nonce CSP',
+        'revoked console access refuses before extension callbacks',
+        'existing JSON page-help contract remains available',
         'tree CLI creates a node under an existing header in its tree',
         'tree CLI permits root placement',
         'tree CLI rejects a nonexistent parent without inserting a node',
@@ -653,7 +672,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             // generated configuration/cache, dependencies or installed plugins.
             // The script server and cli/ shims are listed
             // because only a subprocess or an HTTP request can reach their entry guards.
-            if (!str_starts_with($relative, 'src/') && !in_array($relative, $legacyCallerPaths, true) && !in_array($relative, ['bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'lib/api_device.php', 'data_input.php', 'script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php', 'links.php', 'about.php', 'color.php', 'vdef.php', 'data_source_profiles.php', 'lib/data_source_profile_integrity.php', 'bin/legacy-device-associations.php', 'bin/legacy-device-maintenance.php', 'bin/legacy-device-placement.php', 'host.php', 'include/themes/midwinter/update_hash.php', 'cli/audit_database.php', 'bin/legacy-audit-upgrade.php', 'cli/add_tree.php', 'lib/api_tree.php'], true)) {
+            if (!str_starts_with($relative, 'src/') && !in_array($relative, $legacyCallerPaths, true) && !in_array($relative, ['bin/legacy-console-home.php', 'index.php', 'login.php', 'lib/headers_secure.php', 'include/session.php', 'bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'lib/api_device.php', 'data_input.php', 'script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php', 'links.php', 'about.php', 'color.php', 'vdef.php', 'data_source_profiles.php', 'lib/data_source_profile_integrity.php', 'bin/legacy-device-associations.php', 'bin/legacy-device-maintenance.php', 'bin/legacy-device-placement.php', 'host.php', 'include/themes/midwinter/update_hash.php', 'cli/audit_database.php', 'bin/legacy-audit-upgrade.php', 'cli/add_tree.php', 'lib/api_tree.php'], true)) {
                 continue;
             }
             $local = $root . '/' . $relative;
@@ -680,6 +699,12 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         }
     }
     $requiredPaths = $handler === 'none' ? ['tools/verify-offline.php', 'tools/dependencies/install-legacy.php'] : [
+        'bin/legacy-console-home.php', 'index.php', 'login.php', 'lib/headers_secure.php',
+        'src/Platform/Infrastructure/Legacy/LegacyBrowserWorker.php',
+        'src/Platform/Infrastructure/Legacy/ConsoleExtensionRuntime.php',
+        'src/Platform/Infrastructure/Legacy/ConsoleInstallation.php',
+        'src/Platform/Infrastructure/Symfony/Controller/ConsoleHomeController.php',
+        'src/Platform/Infrastructure/Symfony/Controller/HelpController.php',
         'links.php',
         'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php',
         'src/Navigation/Infrastructure/Symfony/Controller/LinkEditController.php',
@@ -956,6 +981,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Platform/Infrastructure/Legacy/LegacyWorkerProcess.php'];
     if ($handler === 'database') {
         $requiredPaths[] = 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php';
+        $requiredPaths[] = 'include/session.php';
     }
     $requiredPaths = array_merge($requiredPaths, $legacyCallerPaths);
     foreach ($requiredPaths as $required) {

@@ -32,8 +32,8 @@ $cacti_version = trim($cacti_version);
 define('CACTI_VERSION', $cacti_version);
 #define('CACTI_VERSION_BETA', 1);
 
-/* define if cacti is in CLI mode */
-define('CACTI_CLI', (php_sapi_name() == 'cli'));
+/* The CLI-guarded browser worker uses native web bootstrap behavior. */
+define('CACTI_CLI', php_sapi_name() == 'cli' && !defined('KADUPUL_BROWSER_COMPATIBILITY'));
 if (defined('CACTI_CLI_ONLY') && !CACTI_CLI) {
     die('<br><strong>This script is only meant to run at the command line.</strong>');
 }

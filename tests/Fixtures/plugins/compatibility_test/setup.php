@@ -149,3 +149,33 @@ function compatibility_sync_discovery($value)
     }
     throw new RuntimeException('Deferred synchronization discovery fixture failure');
 }
+
+// Registered only by the console integration scenarios.
+function compatibility_console_head()
+{
+    compatibility_test_record('console_head', []);
+    print '<meta name="console-fixture" content="head">';
+    print '<meta name="console-request-uri" content="' . html_escape($_SERVER['REQUEST_URI']) . '">';
+}
+
+function compatibility_console_before()
+{
+    $_SESSION['console_fixture_visits'] = ($_SESSION['console_fixture_visits'] ?? 0) + 1;
+    compatibility_test_record('console_before', [$_SESSION['console_fixture_visits']]);
+    ob_start(); // Extensions may leave a nested capture open.
+    print '<aside id="console-fixture-before" data-visits="' . (int) $_SESSION['console_fixture_visits'] . '">Before</aside>';
+    print '<form id="console-fixture-form" method="post" action="utilities.php"><button>Local action</button></form>';
+    print '<form id="console-fixture-foreign" method="post" action="https://foreign.invalid/"><button>Foreign action</button></form>';
+}
+
+function compatibility_console_after()
+{
+    compatibility_test_record('console_after', []);
+    print '<aside id="console-fixture-after">After</aside>';
+}
+
+function compatibility_console_bottom()
+{
+    compatibility_test_record('console_bottom', []);
+    print '<footer id="console-fixture-bottom">Bottom</footer>';
+}

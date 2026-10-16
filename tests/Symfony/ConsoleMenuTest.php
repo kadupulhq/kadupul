@@ -85,6 +85,19 @@ final class ConsoleMenuTest extends TestCase
         ], $menu->sections());
     }
 
+    public function testAdmittedOfflineAndRecoveringHomeSessionsKeepTheLimitedMenu(): void
+    {
+        foreach (['offline', 'recovery'] as $state) {
+            $configuration = self::createStub(LegacyConfiguration::class);
+            $configuration->method('values')->willReturn(['collector_id' => 2, 'connection_status' => $state]);
+            $menu = self::menu(new Actor(7, 'operator'), [3, 8, 14, 15], $configuration);
+            $paths = array_merge(...array_map(static fn(array $section): array => array_column($section['items'], 'path'), $menu->sections()));
+            self::assertContains('app.php/inventory/devices', $paths);
+            self::assertNotContains('vdef.php', $paths);
+            self::assertNotContains('index.php', $paths);
+        }
+    }
+
     public function testSectionsFollowTheSignedInUsersRealms(): void
     {
         $menu = self::menu(new Actor(7, 'operator'), [8, 14, 10003, 10005, 10006]);

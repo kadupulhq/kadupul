@@ -145,6 +145,24 @@ class GettextCatalogIntegrityTest(unittest.TestCase):
         self.assertTrue((build / "locales/LC_MESSAGES/fr-FR.mo").is_file())
         self.assertEqual({("", "Delete", "")}, set(entries((build / "locales/po/cacti.pot").read_text())))
 
+    def test_missing_twig_extractor_refuses_before_po_or_mo_rewrites(self):
+        build = self.directory / "missing-extractor-build"
+        for directory in ("include", "src", "templates/platform"):
+            (build / directory).mkdir(parents=True)
+        shutil.copytree(self.catalogs, build / "locales")
+        shutil.copy2(ROOT / "locales/build_gettext.sh", build / "locales/build_gettext.sh")
+        (build / "include/cacti_version").write_text("1.3.0")
+        (build / "fixture.php").write_text("<?php __('Delete');\n")
+        (build / "templates/platform/console_home_body.html.twig").write_text("{% trans %}Console Page{% endtrans %}")
+        po = build / "locales/po/fr-FR.po"
+        mo = build / "locales/LC_MESSAGES/fr-FR.mo"
+        original = (po.read_bytes(), mo.read_bytes())
+        result = subprocess.run(["sh", "locales/build_gettext.sh"], cwd=build, capture_output=True, text=True, timeout=120)
+        self.assertNotEqual(0, result.returncode)
+        self.assertIn("Console Twig extraction failed", result.stderr)
+        self.assertIn("artifacts remain incomplete", result.stderr)
+        self.assertEqual(original, (po.read_bytes(), mo.read_bytes()))
+
 
 if __name__ == "__main__":
     unittest.main()

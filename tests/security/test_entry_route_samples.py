@@ -87,6 +87,23 @@ class LiveLoginSetup(unittest.TestCase):
         self.assertEqual(('index.php', {'action': 'login', 'login_username': 'fixture-user',
                          'login_password': 'fixture-password'}), request.call_args_list[1].args)
 
+    def test_console_redirect_posts_to_the_native_login_page(self):
+        client = Client('http://fixture.invalid/kadupul')
+        response = {'status': 302, 'body': '', 'location': 'index.php'}
+        with patch.object(client, 'request', side_effect=[
+                {'status': 302, 'location': '/kadupul/login.php'}, {'status': 200}, response]) as request:
+            self.assertIs(response, client.login('fixture-user', 'fixture-password'))
+        self.assertEqual(('login.php',), request.call_args_list[1].args)
+        self.assertEqual('login.php', request.call_args_list[2].args[0])
+
+    def test_console_login_refuses_foreign_or_unexpected_redirects(self):
+        for location in ('https://foreign.invalid/login.php', '/outside/login.php', '/kadupul/other.php'):
+            client = Client('http://fixture.invalid/kadupul')
+            with patch.object(client, 'request', return_value={'status': 302, 'location': location}) as request:
+                with self.assertRaises(RuntimeError):
+                    client.login('fixture-user', 'fixture-password')
+            self.assertEqual(1, request.call_count)
+
     def test_failed_login_status_never_starts_the_authorization_sweep(self):
         for status in (400, 401, 403, 500):
             with self.subTest(status=status):

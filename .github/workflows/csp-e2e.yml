@@ -157,7 +157,7 @@ jobs:
           # install wizard or an intermediate bootstrap page that does
           # not run the global.php header block.
           for i in $(seq 1 60); do
-            if curl -fsSI http://localhost:8080/ 2>/dev/null | grep -iq '^content-security-policy-report-only:'; then
+            if curl -fsSI http://localhost:8080/login.php 2>/dev/null | grep -iq '^content-security-policy-report-only:'; then
               echo "Cacti is up with report-only CSP header after ${i} attempt(s)."
               exit 0
             fi

@@ -1203,9 +1203,18 @@ def main():
         authenticated = """<?php
 namespace Kadupul\\Fixture;
 use Kadupul\\IdentityAccess\\Contract\\AuthenticatedAccess;
+use Kadupul\\IdentityAccess\\Contract\\ConsoleAccess;
 use Symfony\\Component\\Routing\\Attribute\\Route;
 use Symfony\\Component\\HttpFoundation\\Response;
 final class AuthenticatedOnly {
+    #[Route('/authenticated-console', name: 'authenticated_console')]
+    public function both(AuthenticatedAccess $access, ConsoleAccess $console): Response {
+        $actor = $access->authenticatedActor();
+        if ($actor === null) { return new Response('', 401); }
+        $consoleActor = $console->consoleActor();
+        if ($consoleActor === null || $consoleActor->id !== $actor->id) { return new Response('', 403); }
+        return new Response();
+    }
     #[Route('/authenticated', name: 'authenticated')]
     public function guarded(AuthenticatedAccess $access): Response {
         $actor = $access->authenticatedActor();
@@ -1235,6 +1244,48 @@ final class AuthenticatedOnly {
         count += 1
         if not rows['app.php/authenticated'][1].endswith('; AuthenticatedAccess signed-in account; no realm required'):
             failures.append('authenticated-only page acquired a realm')
+        count += 1
+        if not rows['app.php/authenticated-console'][1].endswith('; ConsoleAccess realm 8'):
+            failures.append('combined authentication and console guard lost realm 8')
+
+        nullable = """<?php
+namespace Kadupul\\Fixture;
+use Kadupul\\IdentityAccess\\Contract\\AuthenticatedAccess;
+use Symfony\\Component\\Routing\\Attribute\\Route;
+use Symfony\\Component\\HttpFoundation\\Response;
+final class NullableQuery {
+    public function __construct(private AuthenticatedAccess $access) {}
+    public function __invoke(): ?array {
+        $actor = $this->access->authenticatedActor();
+        if ($actor === null) { return null; }
+        return ['allowed'];
+    }
+    #[Route('/nullable-refused', name: 'nullable_refused')]
+    public function refused(NullableQuery $query): Response {
+        $result = $query();
+        if ($result === null) { return new Response('', 401); }
+        return new Response();
+    }
+    #[Route('/nullable-ignored', name: 'nullable_ignored')]
+    public function ignored(NullableQuery $query): Response {
+        $result = $query();
+        return new Response();
+    }
+    #[Route('/nullable-side-effect', name: 'nullable_side_effect')]
+    public function sideEffect(NullableQuery $query): Response {
+        $result = $query();
+        if ($result === null) { file_put_contents('/tmp/side-effect', 'x'); return new Response('', 401); }
+        return new Response();
+    }
+}
+"""
+        (root / 'src/Fixture/NullableQuery.php').write_text(nullable)
+        rows = run(root, [])
+        for path, expected in [('app.php/nullable-refused', 'symfony:nullable_refused'),
+                               ('app.php/nullable-ignored', 'unknown'), ('app.php/nullable-side-effect', 'unknown')]:
+            count += 1
+            if rows.get(path, ('missing',))[0] != expected:
+                failures.append('nullable application query refusal: ' + path + ' ' + str(rows.get(path)))
 
         count += 1
         (root / 'src/Fixture/OtherAccess.php').write_text("<?php namespace Kadupul\\Fixture; final class OtherAccess implements \\Kadupul\\IdentityAccess\\Contract\\AuthenticatedAccess { public function authenticatedActor(): ?Actor { return new Actor(); } }")

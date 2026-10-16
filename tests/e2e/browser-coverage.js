@@ -8,7 +8,7 @@ const { createCoverageMap } = require('istanbul-lib-coverage');
 
 const root = path.resolve(__dirname, '../..');
 
-const measuredSources = ['public/js/vdef-item.js', 'include/realtime.js', 'include/layout.js', 'include/themes/classic/main.js', 'include/themes/modern/main.js',
+const measuredSources = ['include/js/console-home.js', 'public/js/vdef-item.js', 'include/realtime.js', 'include/layout.js', 'include/themes/classic/main.js', 'include/themes/modern/main.js',
   'include/themes/midwinter/main.js', 'include/themes/paw/main.js', 'include/themes/sunrise/main.js',
   'include/themes/paper-plane/main.js', 'include/themes/dark/main.js'];
 
@@ -18,7 +18,7 @@ const sourceHashes = sources => Object.fromEntries(sources.map(source => [source
 // Producer inventory is captured before navigation. The merger below keeps its
 // own required inventory rather than trusting the report's claimed sources.
 function producerSources() {
-  return ['tests/Symfony/vdef_browser_probe.cjs', 'tests/Symfony/vdef_scenarios.py', 'tests/Symfony/session_bridge.py', 'package-lock.json', 'tests/e2e/package-lock.json', 'tests/e2e/browser-coverage.js',
+  return ['tests/Symfony/console_browser_probe.cjs', 'tests/Symfony/console_home_http.py', 'tests/Symfony/vdef_browser_probe.cjs', 'tests/Symfony/vdef_scenarios.py', 'tests/Symfony/session_bridge.py', 'package-lock.json', 'tests/e2e/package-lock.json', 'tests/e2e/browser-coverage.js',
     'tests/e2e/midwinter-listeners.spec.js', 'tests/e2e/layout-interactions.spec.js', 'tests/e2e/html-sink-escaping.spec.js', 'tests/e2e/theme-smoke.html', 'tests/e2e/playwright.config.js',
     'user_admin.php', 'user_group_admin.php', 'tree.php', 'managers.php', 'utilities.php', 'include/js/jstree.js',
     'lib/html.php', 'include/js/jquery.js', 'include/js/jquery-ui.js', 'include/js/js.storage.js',
@@ -29,7 +29,7 @@ function producerSources() {
     'include/themes/midwinter/vendor/ua-parser/ua-parser.js', ...measuredSources];
 }
 
-const mergerSources = ['tests/Symfony/vdef_browser_probe.cjs', 'tests/Symfony/vdef_scenarios.py', 'tests/Symfony/session_bridge.py', 'public/js/vdef-item.js', 'package-lock.json', 'tests/e2e/package-lock.json', 'tests/e2e/browser-coverage.js',
+const mergerSources = ['tests/Symfony/console_browser_probe.cjs', 'tests/Symfony/console_home_http.py', 'include/js/console-home.js', 'tests/Symfony/vdef_browser_probe.cjs', 'tests/Symfony/vdef_scenarios.py', 'tests/Symfony/session_bridge.py', 'public/js/vdef-item.js', 'package-lock.json', 'tests/e2e/package-lock.json', 'tests/e2e/browser-coverage.js',
   'tests/e2e/midwinter-listeners.spec.js', 'tests/e2e/layout-interactions.spec.js', 'tests/e2e/html-sink-escaping.spec.js', 'tests/e2e/theme-smoke.html', 'tests/e2e/playwright.config.js',
   'user_admin.php', 'user_group_admin.php', 'tree.php', 'managers.php', 'utilities.php', 'include/js/jstree.js',
   'lib/html.php', 'include/js/jquery.js', 'include/js/jquery-ui.js', 'include/js/js.storage.js',
@@ -42,11 +42,12 @@ const mergerSources = ['tests/Symfony/vdef_browser_probe.cjs', 'tests/Symfony/vd
   'include/themes/midwinter/main.js', 'include/themes/paw/main.js', 'include/themes/sunrise/main.js',
   'include/themes/paper-plane/main.js', 'include/themes/dark/main.js'];
 
-const mergerMeasuredSources = ['public/js/vdef-item.js', 'include/realtime.js', 'include/layout.js', 'include/themes/classic/main.js', 'include/themes/modern/main.js',
+const mergerMeasuredSources = ['include/js/console-home.js', 'public/js/vdef-item.js', 'include/realtime.js', 'include/layout.js', 'include/themes/classic/main.js', 'include/themes/modern/main.js',
   'include/themes/midwinter/main.js', 'include/themes/paw/main.js', 'include/themes/sunrise/main.js',
   'include/themes/paper-plane/main.js', 'include/themes/dark/main.js'];
 
 const scenarios = {
+  'console_browser_probe.cjs': ['files', 'database'].flatMap(handler => ['default', 'nonce'].map(mode => `${handler}:${mode}`)),
   'vdef_browser_probe.cjs': ['files', 'database'].flatMap(handler =>
     ['/app.php', '/public/index.php', '/cacti/app.php', '/cacti/public/index.php'].map(front => `${handler}:${front}`)),
   'midwinter-listeners.spec.js': [
@@ -145,7 +146,7 @@ function nativeScenarioLines(scenario) {
 
 function loadEvidence(file, expectedProducer, expectedScenario) {
   const driver = path.basename(expectedProducer);
-  const registeredProducer = driver === 'vdef_browser_probe.cjs' ? `tests/Symfony/${driver}` : `tests/e2e/${driver}`;
+  const registeredProducer = ['vdef_browser_probe.cjs', 'console_browser_probe.cjs'].includes(driver) ? `tests/Symfony/${driver}` : `tests/e2e/${driver}`;
   if (expectedProducer !== registeredProducer || !scenarios[driver]?.includes(expectedScenario)) throw new Error('Unregistered browser scenario');
   const receipt = JSON.parse(fs.readFileSync(`${file}.receipt`, 'utf8'));
   const bytes = fs.readFileSync(file);
@@ -153,6 +154,7 @@ function loadEvidence(file, expectedProducer, expectedScenario) {
     ? ['include/layout.js', 'include/themes/dark/main.js']
     : expectedProducer.endsWith('midwinter-listeners.spec.js')
     ? ['include/themes/midwinter/main.js']
+    : expectedProducer.endsWith('console_browser_probe.cjs') ? ['include/js/console-home.js']
     : expectedProducer.endsWith('vdef_browser_probe.cjs') ? ['public/js/vdef-item.js'] : ['include/layout.js'];
   if (receipt.version !== 1 || receipt.producer !== expectedProducer || receipt.scenario !== expectedScenario
       || receipt.root !== fs.realpathSync(root) || receipt.digest !== hash(bytes)
@@ -406,7 +408,7 @@ function merge(directory, output, runControls = true) {
     const report = path.join(directory, file);
     const receipt = JSON.parse(fs.readFileSync(`${report}.receipt`, 'utf8'));
     const driver = path.basename(receipt.producer || '');
-    const expectedProducer = driver === 'vdef_browser_probe.cjs' ? `tests/Symfony/${driver}` : `tests/e2e/${driver}`;
+    const expectedProducer = ['vdef_browser_probe.cjs', 'console_browser_probe.cjs'].includes(driver) ? `tests/Symfony/${driver}` : `tests/e2e/${driver}`;
     if (receipt.producer !== expectedProducer || !scenarios[driver]?.includes(receipt.scenario)) throw new Error('Unregistered browser scenario');
     const identity = `${driver}:${receipt.scenario}`;
     if (observed.has(identity)) throw new Error('Duplicate browser scenario');
@@ -434,20 +436,23 @@ function merge(directory, output, runControls = true) {
   console.log(`Browser coverage: ${covered} covered lines across ${map.files().length} theme scripts; ${observed.size} completed scenarios; ${rejectionControls} genuine rejection controls`);
 }
 
-function publishVdefCoverage(map, snapshot, scenario) {
+function publishFrameworkCoverage(map, snapshot, scenario, driver) {
   const directory = process.env.KADUPUL_BROWSER_COVERAGE;
   if (!directory) return;
-  if (!scenarios['vdef_browser_probe.cjs'].includes(scenario)) throw new Error('Unregistered VDEF browser scenario');
-  if (JSON.stringify(sourceHashes(producerSources())) !== JSON.stringify(snapshot)) throw new Error('VDEF browser sources changed during execution');
+  if (!scenarios[driver].includes(scenario)) throw new Error('Unregistered framework browser scenario');
+  if (JSON.stringify(sourceHashes(producerSources())) !== JSON.stringify(snapshot)) throw new Error('Framework browser sources changed during execution');
   fs.mkdirSync(directory, { recursive: true });
   const file = path.join(directory, `${crypto.randomUUID()}.json`);
   const bytes = JSON.stringify(map.toJSON());
   fs.writeFileSync(file, bytes);
   fs.writeFileSync(`${file}.receipt`, JSON.stringify({ version: 1, root: fs.realpathSync(root),
-    producer: 'tests/Symfony/vdef_browser_probe.cjs', scenario, sources: snapshot, digest: hash(bytes),
+    producer: `tests/Symfony/${driver}`, scenario, sources: snapshot, digest: hash(bytes),
     completed: 'browser-test-passed-and-production-measured' }));
 }
 
-module.exports = { collectThemeCoverage, publishVdefCoverage, browserSourceSnapshot: () => sourceHashes(producerSources()),
+const publishVdefCoverage = (map, snapshot, scenario) => publishFrameworkCoverage(map, snapshot, scenario, 'vdef_browser_probe.cjs');
+const publishConsoleCoverage = (map, snapshot, scenario) => publishFrameworkCoverage(map, snapshot, scenario, 'console_browser_probe.cjs');
+
+module.exports = { collectThemeCoverage, publishVdefCoverage, publishConsoleCoverage, browserSourceSnapshot: () => sourceHashes(producerSources()),
   verifyBrowserReport: loadEvidence, verifyBrowserRejections: verifyRejections };
 if (require.main === module) merge(process.argv[2], process.argv[3]);

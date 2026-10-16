@@ -51,6 +51,10 @@ def main():
             return
         if database_sessions:
             harness.command('php', '-r', 'file_put_contents("include/config.php", "\\n\\$cacti_db_session = true;\\n", FILE_APPEND);', check=True)
+        from console_home_http import verify_console_home, verify_console_collectors, verify_console_prefix
+        verify_console_home(harness, check)
+        verify_console_collectors(harness, check)
+        verify_console_prefix(harness, check)
         anonymous = Session(harness.base)
         response = anonymous.request('/app.php/session')
         check(response['status'] == 401, 'Symfony entry requires an authenticated session')

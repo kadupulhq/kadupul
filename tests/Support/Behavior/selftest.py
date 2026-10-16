@@ -1202,18 +1202,29 @@ def provenance_contract():
 def local_login_form_contract():
     # The fresh-install local login form has no realm selector. Do not invent
     # a string realm that the production integer boundary must reject.
+    for target in ('/index.php', '/login.php'):
+        session = harness.Session('http://fixture.invalid')
+        calls = []
+        def request(path, fields=None):
+            calls.append((path, fields))
+            session.token = 'fixture-csrf'
+            return {'url': '<BASE>' + target, 'login_form': fields is None, 'admin_layout': fields is not None}
+        with patch.object(session, 'request', side_effect=request):
+            result = session.login('fixture-password')
+        assert calls == [('/index.php', None), (target, {
+            'action': 'login', 'login_username': 'admin',
+            'login_password': 'fixture-password', '__csrf_magic': 'fixture-csrf'})]
+        assert result == {'url': '<BASE>' + target, 'login_form': False, 'admin_layout': True}
     session = harness.Session('http://fixture.invalid')
-    calls = []
-    def request(path, fields=None):
-        calls.append((path, fields))
-        session.token = 'fixture-csrf'
-        return {'login_form': fields is None, 'admin_layout': fields is not None}
-    with patch.object(session, 'request', side_effect=request):
-        result = session.login('fixture-password')
-    assert calls == [('/index.php', None), ('/index.php', {
-        'action': 'login', 'login_username': 'admin',
-        'login_password': 'fixture-password', '__csrf_magic': 'fixture-csrf'})]
-    assert result == {'login_form': False, 'admin_layout': True}
+    session.token = 'fixture-csrf'
+    with patch.object(session, 'request', return_value={'url': 'https://foreign.invalid/login.php'}) as request:
+        try:
+            session.login('fixture-password')
+            raise AssertionError('A foreign login target must never receive credentials')
+        except RuntimeError as error:
+            assert 'left the fixture origin' in str(error)
+        assert request.call_count == 1
+
 
 
 FIXTURE_FUNCTIONS = """<?php

@@ -91,7 +91,7 @@ if (isset($_SESSION['refresh'])) {
     $myrefresh['seconds'] = 99999999;
     $myrefresh['page']    = 'index.php';
     $refreshIsLogout      = 'false';
-} elseif (!isset($_SESSION['sess_user_id']) && $script === 'index.php') {
+} elseif (!isset($_SESSION['sess_user_id']) && ($script === 'index.php' || $script === 'login.php')) {
     $myrefresh['seconds'] = 99999999;
     $myrefresh['page']    = sanitize_uri($_SERVER['REQUEST_URI']);
     $refreshIsLogout      = 'false';

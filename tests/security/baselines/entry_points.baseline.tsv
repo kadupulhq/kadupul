@@ -6,6 +6,8 @@ aggregate_templates.php	realm:5	include/auth.php
 app.php	symfony:front-controller	Symfony kernel; routes listed as app.php/... rows
 app.php/about	symfony:platform_about	methods=GET|HEAD; AuthenticatedAccess signed-in account; no realm required
 app.php/about/legacy	symfony:platform_about_legacy	methods=GET|HEAD|POST; AuthenticatedAccess signed-in account; no realm required
+app.php/console	symfony:platform_console	methods=GET|HEAD; ConsoleAccess realm 8
+app.php/console	symfony:platform_console_login_post	methods=POST; anonymous-allowed: compatibility POST uses a fixed installation login URL and preserves the body with 307; no request-selected destination; reviewed at 3f7cb40d65c0
 app.php/data-inputs	symfony:data_inputs	methods=GET|HEAD; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 55539f0a80ef and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
 app.php/data-inputs/actions/{operation}	symfony:data_input_bulk	methods=GET|HEAD|POST requirements=operation=delete|duplicate; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 1f46fb124365 and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
 app.php/data-inputs/legacy	symfony:data_input_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action af73f4343625 and controller e011435a3fdf and workflow b0abc0295d4c: feature realm 2
@@ -42,6 +44,7 @@ app.php/graphing/gprint-presets/legacy	symfony:gprint_preset_legacy	methods=GET|
 app.php/graphing/gprint-presets/new	symfony:gprint_preset_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 5
 app.php/graphing/gprint-presets/{id}/edit	symfony:gprint_preset_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 5
 app.php/healthz	symfony:health	methods=GET|HEAD; anonymous-allowed: liveness probe; returns a fixed status document
+app.php/help	symfony:platform_help	methods=GET|HEAD; AuthenticatedAccess signed-in account; no realm required
 app.php/inventory/devices	symfony:inventory_devices	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices.csv	symfony:inventory_devices_csv	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices.json	symfony:inventory_devices_json	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
@@ -134,14 +137,14 @@ include/global_arrays.php	anonymous-allowed	fragment without bootstrap, reviewed
 include/global_constants.php	anonymous-allowed	fragment without bootstrap, reviewed at 44950e59dd15; included by include/global.php
 include/global_form.php	anonymous-allowed	fragment without bootstrap, reviewed at ecb0178c09d6; included by include/global.php
 include/global_languages.php	anonymous-allowed	fragment without bootstrap, reviewed at 614a6beac129; included by include/global.php
-include/global_session.php	anonymous-allowed	fragment without bootstrap, reviewed at 89b8966e06b4; included by auth_changepassword.php, auth_login.php, graph_realtime.php
+include/global_session.php	anonymous-allowed	fragment without bootstrap, reviewed at 8a0d7ef0c310; included by auth_changepassword.php, auth_login.php, graph_realtime.php
 include/global_settings.php	anonymous-allowed	fragment without bootstrap, reviewed at 8fa0a2433725; included by include/global.php
 include/index.php	anonymous-allowed	redirect-only
 include/js/LC_MESSAGES/index.php	anonymous-allowed	redirect-only
 include/js/index.php	anonymous-allowed	redirect-only
 include/plugins.php	web-server-denied	nginx; apache .htaccess
 include/runtime.php	anonymous-allowed	fragment without bootstrap, reviewed at 338bc1c9ed7b; included by config/bootstrap.php, include/global.php
-include/session.php	anonymous-allowed	fragment without bootstrap, reviewed at 7abe13b5d1f6; included by include/global.php
+include/session.php	anonymous-allowed	fragment without bootstrap, reviewed at 9ce13af99492; included by include/global.php
 include/themes/classic/default/index.php	anonymous-allowed	redirect-only
 include/themes/classic/images/index.php	anonymous-allowed	redirect-only
 include/themes/classic/index.php	anonymous-allowed	redirect-only
@@ -175,7 +178,7 @@ include/top_general_header.php	anonymous-allowed	fragment without bootstrap, rev
 include/top_graph_header.php	anonymous-allowed	fragment without bootstrap, reviewed at 3499de0769a5; included by lib/functions.php
 include/top_header.php	anonymous-allowed	fragment without bootstrap, reviewed at 2ec65df77ed9; included by lib/functions.php
 include/vendor/	web-server-denied	nginx; apache .htaccess
-index.php	realm:8	include/auth.php
+index.php	symfony:forward	forwards to app.php/console
 install/background.php	cli-only	guard: include/cli_check.php
 install/cli_check.php	cli-only	guard: include/cli_check.php
 install/cli_test.php	cli-only	guard: php_sapi_name() check
@@ -252,6 +255,7 @@ locales/LC_MESSAGES/index.php	anonymous-allowed	redirect-only
 locales/index.php	anonymous-allowed	redirect-only
 locales/po/index.php	anonymous-allowed	redirect-only
 log/	web-server-denied	nginx; apache .htaccess
+login.php	realm:8	include/auth.php
 logout.php	anonymous-allowed	include/auth.php returns before the session check
 managers.php	realm:15	include/auth.php
 mibs/	web-server-denied	nginx; apache .htaccess

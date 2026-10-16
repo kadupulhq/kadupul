@@ -292,10 +292,15 @@ class Session:
         return contract
 
     def login(self, password):
-        self.request('/index.php')
+        form = self.request('/index.php')
         if not self.token:
             raise RuntimeError('Login form lacks CSRF token')
-        return self.request('/index.php', {'action': 'login', 'login_username': 'admin',
+        # Follow the displayed form's page after the console hands login to its
+        # dedicated entry. Upstream versions still serve it on index.php.
+        target = form['url']
+        if not target.startswith('<BASE>/'):
+            raise RuntimeError('Login form left the fixture origin')
+        return self.request(target[len('<BASE>'):], {'action': 'login', 'login_username': 'admin',
                             'login_password': password, '__csrf_magic': self.token})
 
 
@@ -492,7 +497,12 @@ class Harness:
         if login['login_form'] or not login['admin_layout']:
             raise RuntimeError('Admin authentication did not succeed')
         self.capture('ui/devices', session.request('/host.php'))
-        self.capture('auth/missing-csrf', Session(self.base).request('/index.php', {'action': 'login'}))
+        missing_csrf = Session(self.base)
+        login_form = missing_csrf.request('/index.php')
+        login_target = login_form['url']
+        if not login_target.startswith('<BASE>/'):
+            raise RuntimeError('Login form left the fixture origin')
+        self.capture('auth/missing-csrf', missing_csrf.request(login_target[len('<BASE>'):], {'action': 'login'}))
         self.capture('cli/device-help', self.php('cli/add_device.php', '--help'))
         self.capture('cli/device-missing', self.php('cli/add_device.php', '--description=missing-host'))
         self.capture('api/datasource-invalid', self.php('cli/add_datasource.php', '--host-id=oops', '--data-template-id=1'))
