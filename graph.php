@@ -34,9 +34,11 @@ if (!isset_request_var('rra_id')) {
 }
 
 if (get_request_var('rra_id') == 'all' || isempty_request_var('rra_id')) {
-    $sql_where = ' AND dspr.id IS NOT NULL';
+    $sql_where  = ' AND dspr.id IS NOT NULL';
+    $rra_filter = null;
 } else {
-    $sql_where = ' AND dspr.id=' . get_request_var('rra_id');
+    $sql_where  = '';
+    $rra_filter = get_request_var('rra_id');
 }
 
 $exists = db_fetch_cell_prepared(
@@ -60,7 +62,7 @@ if (!is_graph_allowed(get_request_var('local_graph_id'))) {
     exit;
 }
 
-$rras = get_associated_rras(get_request_var('local_graph_id'), $sql_where);
+$rras = get_associated_rras(get_request_var('local_graph_id'), $sql_where, $rra_filter);
 
 if (get_request_var('action') === 'zoom') {
     $graph_no_data_message = __('This Graph has no stored data to zoom into.');
