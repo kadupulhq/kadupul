@@ -56,6 +56,6 @@
         "status": "planned",
         "lts_status": "not assessed",
         "behavior_record": "tests/Golden/functions/kadupul/php-8.4/save_user_settings.json",
-        "notes": "A non-numeric user id is stored as user 0. See #872. Fixed: a user id that is not an integer or a digit string is now rejected and logged, and nothing is written (#872)."
+        "notes": "A non-numeric user id is stored as user 0. See #872. Fixed: a user id that is not an integer or a digit string is now rejected and logged, and nothing is written (#872). An id outside 0 to 16777215, the range of settings_user.user_id, is rejected the same way."
     }
 }

@@ -63,6 +63,6 @@
         "status": "implemented",
         "lts_status": "not assessed",
         "behavior_record": "tests/Golden/functions/kadupul/php-8.4/set_user_setting.json",
-        "notes": "Plan lists only ConfigurationSettings and UserSettings ports; graph config options follow user settings. Statements run through the ConfigurationSettings and UserSettings ports and their DBAL adapters (#867). Caches, defaults, hooks and the remote-collector write stay in this function. The db_* helpers still run before Composer loads and for argument types outside the port. The goldens pass unchanged through this wrapper. A non-numeric user id is stored as user 0. See #872. Fixed: a user id that is not an integer or a digit string is now rejected and logged, and nothing is written (#872)."
+        "notes": "Plan lists only ConfigurationSettings and UserSettings ports; graph config options follow user settings. Statements run through the ConfigurationSettings and UserSettings ports and their DBAL adapters (#867). Caches, defaults, hooks and the remote-collector write stay in this function. The db_* helpers still run before Composer loads and for argument types outside the port. The goldens pass unchanged through this wrapper. A non-numeric user id is stored as user 0. See #872. Fixed: a user id that is not an integer or a digit string is now rejected and logged, and nothing is written (#872). An id outside 0 to 16777215, the range of settings_user.user_id, is rejected the same way."
     }
 }
