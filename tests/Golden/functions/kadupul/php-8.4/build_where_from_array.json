@@ -185,10 +185,11 @@
     {
       "args": [{"$": "array", "pairs": [["id\n", 1]]}, []],
       "id": "field_trailing_newline",
-      "note": "the $ anchor accepts a trailing newline, so the name reaches the SQL fragment",
+      "note": "a single trailing newline is rejected like any other invalid name; $ alone would accept it",
       "result": {
-        "by_ref": {"params": {"type": "array", "value": [1]}},
-        "returned": {"type": "string", "value": "`id\n` = ?"}
+        "by_ref": {"params": {"type": "array", "value": []}},
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid field name in build_where_from_array: id "],
+        "returned": {"type": "string", "value": "1=0"}
       }
     },
     {
