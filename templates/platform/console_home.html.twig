@@ -1,0 +1,15 @@
+{# SPDX-FileCopyrightText: 2004-2026 The Cacti Group #}
+{# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors #}
+{# SPDX-License-Identifier: GPL-2.0-or-later #}
+{% extends 'base.html.twig' %}
+{% trans_default_domain 'console' %}
+{% block title %}{{ 'Console Page'|trans }}{% endblock %}
+{% block head %}
+{% if home.content.compatibility is not null %}
+{{ compatibility.head }}
+{% else %}
+{{ parent() }}
+{% endif %}
+<script src="{{ asset('include/js/console-home.js', 'legacy') }}" nonce="{{ home.content.compatibility ? home.content.compatibility.nonce : '' }}" type="module"></script>
+{% endblock %}
+{% block page %}{% include 'platform/console_home_shell.html.twig' %}{% endblock %}

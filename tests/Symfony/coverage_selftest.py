@@ -88,6 +88,12 @@ def main():
     measured = {'php': '8.2', 'files': {}}
     prefix = '/var/www/html/'
     required = [prefix + path for path in (
+        'bin/legacy-console-home.php', 'index.php', 'login.php', 'lib/headers_secure.php',
+        'src/Platform/Infrastructure/Legacy/LegacyBrowserWorker.php',
+        'src/Platform/Infrastructure/Legacy/ConsoleExtensionRuntime.php',
+        'src/Platform/Infrastructure/Legacy/ConsoleInstallation.php',
+        'src/Platform/Infrastructure/Symfony/Controller/ConsoleHomeController.php',
+        'src/Platform/Infrastructure/Symfony/Controller/HelpController.php',
         'links.php',
         'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php',
         'src/Navigation/Infrastructure/Symfony/Controller/LinkEditController.php',
@@ -481,6 +487,8 @@ def main():
         'invalid-hit': 'Invalid PCOV',
         'invalid-line': 'Invalid PCOV',
         'unmeasured-worker': 'Missing measured execution',
+        'unmeasured-console-worker': 'Missing measured execution: bin/legacy-console-home.php',
+        'missing-console-upgrade-check': 'Incomplete Symfony integration',
         'unmeasured-site-editor': 'Missing measured execution: src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php',
         'unmeasured-locale': 'Missing measured execution: src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php',
         'missing-site-creation-check': 'Incomplete Symfony integration',
@@ -540,6 +548,8 @@ def main():
                    'src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php']:
         failures['missing-runner-registration-' + source] = 'Integration test source differs'
         failures['stale-runner-registration-' + source] = 'Integration test source differs'
+    for source in ['tests/Symfony/console_home_http.py', 'tests/Symfony/console_browser_probe.cjs', 'include/js/console-home.js', 'templates/platform/console_home_body.html.twig']:
+        failures['missing-console-source-hash-' + source] = 'Integration test source differs'
     failures['stale-legacy-page-test-hash'] = 'Integration test source differs'
     for index in range(len(REQUIRED_CHECKS)):
         failures['missing-legacy-page-check-' + str(index)] = 'Incomplete Symfony integration'
@@ -649,6 +659,8 @@ def main():
                 evidence['checks'].remove(profile_checks[int(case.rsplit('-', 1)[1])])
             elif case == 'missing-data-source-profile-test-hash':
                 evidence['source_sha256'].pop('tests/Symfony/data_source_profile_scenarios.py')
+            elif case.startswith('missing-console-source-hash-'):
+                evidence['source_sha256'].pop(case.removeprefix('missing-console-source-hash-'))
             elif case == 'vdef-probe-hash':
                 evidence['source_sha256']['tests/Symfony/vdef_transaction_probe.php'] = '0' * 64
             elif case == 'vdef-browser-probe-hash':
@@ -819,6 +831,11 @@ def main():
                 worker['lines'][next(iter(worker['lines']))] = 2
             elif case == 'invalid-line':
                 worker['lines']['0'] = 1
+            elif case == 'unmeasured-console-worker':
+                console = data['files'][prefix + 'bin/legacy-console-home.php']
+                console['lines'] = {line: -1 for line in console['lines']}
+            elif case == 'missing-console-upgrade-check':
+                evidence['checks'].remove('console schema mismatch preserves the native installer redirect before worker startup')
             elif case == 'unmeasured-worker':
                 worker['lines'] = {line: -1 for line in worker['lines']}
             elif case == 'unmeasured-site-editor':

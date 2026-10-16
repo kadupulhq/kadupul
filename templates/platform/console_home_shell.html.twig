@@ -1,0 +1,32 @@
+{# SPDX-FileCopyrightText: 2004-2026 The Cacti Group #}
+{# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors #}
+{# SPDX-License-Identifier: GPL-2.0-or-later #}
+{% trans_default_domain 'console' %}
+{% if home.content.compatibility and home.content.compatibility.headerContent %}
+<div id="navBar" class="navBar">{{ chrome.breadcrumb|default('') }}</div>
+<title>{{ chrome.title|default('Console Page'|trans) }}</title>
+{% else %}
+<div id="cactiPageHead" class="cactiPageHead" role="banner">
+    <div id="tabs">{{ chrome.tabs|default('') }}</div>
+    <div class="cactiGraphHeaderBackground" style="display:none"><div id="gtabs">{{ chrome.graph_tabs|default('') }}</div></div>
+    <div class="cactiConsolePageHeadBackdrop"></div>
+</div>
+<div id="breadCrumbBar" class="breadCrumbBar">
+    <div id="navBar" class="navBar">{{ chrome.breadcrumb|default('') }}</div>
+    <div class="scrollBar"></div>
+    <div class="infoBar">{{ chrome.login|default('') }}</div>
+</div>
+<div class="cactiShadow"></div>
+{% endif %}
+<div id="cactiContent" class="cactiContent">
+    <div class="cactiConsoleNavigationArea" id="navigation">
+        <table style="width:100%"><tbody>
+            {{ chrome.menu|default('') }}
+            <tr><td style="text-align:center"><a class="cactiLogo pic" href="{{ installation_path('about.php') }}" aria-label="{{ 'About Kadupul'|trans({}, 'menu') }}"></a></td></tr>
+        </tbody></table>
+    </div>
+    <div id="navigation_right" class="cactiConsoleContentArea">
+        <main id="main">{% include 'platform/console_home_body.html.twig' %}</main>
+    </div>
+</div>
+{{ compatibility.bottom }}

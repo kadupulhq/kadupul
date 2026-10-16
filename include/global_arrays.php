@@ -1327,7 +1327,8 @@ $user_auth_realm_filenames = array(
     'aggregate_graphs.php' => 5,
     'spikekill.php' => 1043,
     'permission_denied.php' => -1,
-    'help.php' => -1
+    'help.php' => -1,
+    'login.php' => 8
 );
 
 $hash_type_codes = array(

@@ -27,7 +27,7 @@ import harness  # noqa: E402
 PASSWORD = 'entry-auth-sweep'
 CONSOLE_REALM = 8
 PROFILE_REALM = 20
-LOGIN_TARGETS = ('', 'index.php', 'auth_login.php')
+LOGIN_TARGETS = ('', 'index.php', 'login.php', 'auth_login.php')
 
 # The observed refusal contracts. auth.php renders the login form in place
 # (HTTP 200) for anonymous callers and the Permission Denied page (HTTP 200)
@@ -43,7 +43,7 @@ REFUSALS = [
     ('text-not-logged-in', lambda r: 'You must be logged in to access this area' in r['body']),
     # A redirect only refuses when it lands on the login entry; any other
     # target could be a success page.
-    ('redirect', lambda r: r['status'] in (301, 302, 303) and not r['admin_layout']
+    ('redirect', lambda r: r['status'] in (301, 302, 303, 307) and not r['admin_layout']
         and urllib.parse.urlsplit(r['location']).path.rsplit('/', 1)[-1] in LOGIN_TARGETS),
     ('status', lambda r: r['status'] in (401, 403) and not r['admin_layout']),
     # A legacy page may refuse the method before its auth include, as
@@ -113,8 +113,23 @@ class Client:
                 'admin_layout': bool(re.search(r"(?:id=['\"]main_logo|class=['\"]cactiPageHead)", body))}
 
     def login(self, username, password):
-        self.request('index.php')
-        result = self.request('index.php', {'action': 'login', 'login_username': username,
+        target = 'index.php'
+        form = self.request(target)
+        for _ in range(3):
+            if form['status'] not in (301, 302, 303):
+                break
+            absolute = urllib.parse.urljoin(self.base + '/' + target, form['location'])
+            base = urllib.parse.urlsplit(self.base + '/')
+            url = urllib.parse.urlsplit(absolute)
+            if (url.scheme, url.netloc) != (base.scheme, base.netloc) or not url.path.startswith(base.path):
+                raise RuntimeError('Login redirect left the fixture origin')
+            target = url.path[len(base.path):] + ('?' + url.query if url.query else '')
+            if url.path.rsplit('/', 1)[-1] not in LOGIN_TARGETS:
+                raise RuntimeError('Unexpected login redirect target')
+            form = self.request(target)
+        if form['status'] != 200:
+            raise RuntimeError('Login form unavailable')
+        result = self.request(target, {'action': 'login', 'login_username': username,
                                             'login_password': password})
         if result['status'] >= 400 or ('login_username' in result['body'] and result['status'] == 200):
             raise RuntimeError('Login failed for ' + username)

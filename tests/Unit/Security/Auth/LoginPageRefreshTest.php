@@ -74,6 +74,11 @@ test('an anonymous visitor elsewhere still times out to the logout page', functi
         ->toBe(array('logout' => 'true', 'page' => '/kadupul/logout.php?action=timeout'));
 });
 
+test('the dedicated login entry preserves an anonymous login form on refresh', function () {
+    expect(login_page_refresh_run('/kadupul/login.php', array()))
+        ->toBe(array('logout' => 'false', 'page' => '/kadupul/login.php'));
+});
+
 test('a signed-in user on the index page still times out to the logout page', function () {
     expect(login_page_refresh_run('/kadupul/index.php', array('sess_user_id' => 7)))
         ->toBe(array('logout' => 'true', 'page' => '/kadupul/logout.php?action=timeout'));

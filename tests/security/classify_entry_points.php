@@ -101,6 +101,7 @@ const UNGATED = [];
 // Symfony routes that deliberately answer without an actor.
 const ANONYMOUS_ROUTES = [
     'health' => 'liveness probe; returns a fixed status document',
+    'platform_console_login_post' => 'compatibility POST uses a fixed installation login URL and preserves the body with 307; no request-selected destination',
 ];
 // Actions that read the actor without the guard shape, traced by hand. The
 // detail pins the action body, so an edit to it shows as drift.
@@ -220,7 +221,7 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'c07761a00231ff569cbff177dc4b401f631cc34239e90e83d62f8a0cec0b69ce',
     'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => '4743883f8c2b1dc9b07c91a66bccdfa39f92531b6acafc0474bed5f92824513c',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => '2defe6625c46804a9e10651263ae0579aaee6bd5fee1847de5b6c1ff5c2a9cd2',
+    'config/services.yaml' => 'e8c1f3c200d85e1662845c2ceec9f22df087a95137d404d3ede3681cb8ca3fe9',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter
@@ -1686,7 +1687,9 @@ function guarded_checks(string $root, array $stmts, Closure $type_of, ?Closure $
         if ($target === ['Kadupul\\IdentityAccess\\Contract\\AuthenticatedAccess', 'authenticatedActor']) {
             $guard = refusal_guard($root, $stmts[1] ?? null, $stops, $type_of);
             if ($guard !== null && is_null_check($guard, $first->var->name)) {
-                return ['authenticatedActor' => true];
+                $remaining = guarded_checks($root, array_slice($stmts, 2), $type_of, $stops, $after);
+
+                return ['authenticatedActor' => true] + $remaining;
             }
         }
     }
@@ -2073,8 +2076,26 @@ function method_checks(string $root, string $class, Stmt\ClassMethod $method, in
     }
     // Only the action's own guard ends the request; one level down a
     // returned response would go back to a caller that carries on.
+    $nullRefusal = false;
+    if ($depth === 0) {
+        $statements = array_values($method->stmts ?? []);
+        foreach ($statements as $index => $statement) {
+            $assignment = expression_of($statement);
+            if ($assignment instanceof Expr\Assign && $assignment->expr === $call && is_variable($assignment->var)) {
+                $condition = refusal_guard(
+                    $root,
+                    $statements[$index + 1] ?? null,
+                    fn(?Expr $value): bool => returns_response($root, $class, $value),
+                    $type_of
+                );
+                $nullRefusal = $condition !== null && is_null_check($condition, $assignment->var->name);
+                break;
+            }
+        }
+    }
     $refuses = $depth === 0 && refused_on($method->stmts ?? [], $call)
-        ? fn(?Expr $e): bool => returns_response($root, $type, $e) : null;
+        ? fn(?Expr $e): bool => returns_response($root, $type, $e)
+        : ($nullRefusal ? fn(?Expr $e): bool => $e instanceof Expr\ConstFetch && $e->name->toLowerString() === 'null' : null);
 
     return method_checks($root, $type, $callee, $depth + 1, $seen, $handed, $refuses);
 }
@@ -2415,7 +2436,7 @@ function symfony_routes(string $root, array $files): array
                                 }
                             }
                         }
-                        if (isset($checks['authenticatedActor'])) {
+                        if (isset($checks['authenticatedActor']) && !isset($checks['consoleActor'])) {
                             $adapterName = authenticated_access_adapter($root);
                             $adapter = load_class($root, $adapterName);
                             $contracts = array_map(static fn(Name $name): string => $name->toString(), $adapter?->implements ?? []);
@@ -2461,7 +2482,8 @@ function symfony_routes(string $root, array $files): array
                             }
                             $rows[] = ['app.php' . $route['path'], 'symfony:' . $route['name'], $detail . '; ConsoleAccess ' . $grant . $reviewed];
                         } elseif (array_key_exists($route['name'], ANONYMOUS_ROUTES)) {
-                            $rows[] = ['app.php' . $route['path'], 'symfony:' . $route['name'], $detail . '; anonymous-allowed: ' . ANONYMOUS_ROUTES[$route['name']]];
+                            $rows[] = ['app.php' . $route['path'], 'symfony:' . $route['name'], $detail . '; anonymous-allowed: ' . ANONYMOUS_ROUTES[$route['name']]
+                                . ($route['name'] === 'platform_console_login_post' ? '; reviewed at ' . digest($method->stmts) : '')];
                         } else {
                             $rows[] = ['app.php' . $route['path'], 'unknown', $detail . '; no IdentityAccess check reached from ' . $file];
                         }

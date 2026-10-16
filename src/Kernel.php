@@ -19,6 +19,8 @@ final class Kernel extends BaseKernel implements CompilerPassInterface
     #[\Override]
     public function process(ContainerBuilder $container): void
     {
+        \Kadupul\Platform\Infrastructure\Symfony\ConsoleTranslations::register($container, $this->getProjectDir());
+
         // The installer owns the schema; DoctrineBundle's commands would create, drop or run SQL with full credentials.
         foreach ($container->findTaggedServiceIds('console.command') as $id => $tags) {
             if (array_any($tags, static fn(array $tag): bool => str_starts_with($tag['command'] ?? '', 'doctrine:') || str_starts_with($tag['command'] ?? '', 'dbal:'))) {

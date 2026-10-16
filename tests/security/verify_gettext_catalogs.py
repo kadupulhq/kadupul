@@ -12,6 +12,7 @@ import argparse
 import ast
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -108,23 +109,35 @@ def verify(source: Path, catalogs: Path) -> None:
                         *["-k" + key for key in keywords], "-o", str(pot), *files],
                        cwd=source, check=True, timeout=120)
         expected = entries(pot.read_text())
+        if (source / "templates/platform/console_home_body.html.twig").is_file():
+            extractor = Path(__file__).resolve().parents[2] / "tools/translations/extract-console.php"
+            console = subprocess.run([os.environ.get("PHP", "php"), str(extractor), str(source)],
+                                     capture_output=True, text=True, check=True, timeout=30)
+            extracted = entries(console.stdout)
+            if not extracted:
+                raise ValueError("No console Twig messages extracted")
+            for key, message in extracted.items():
+                if key in expected:
+                    message["references"] = " ".join(sorted(set(message["references"].split()) | set(expected[key]["references"].split())))
+                    message["flags"] = ",".join(sorted(set(message["flags"].split(",")) | set(expected[key]["flags"].split(","))))
+                expected[key] = message
         actual = entries((catalogs / "po/cacti.pot").read_text())
         required = set(expected) | set(historical)
         if any(key[1] in RETIRED_MESSAGES for key in actual) or any(key[1] in RETIRED_MESSAGES for key in expected):
             raise ValueError("Retired LDAP identity has returned")
         if not expected or required != set(actual):
-            raise ValueError(f"POT differs from current PHP and reviewed compatibility: missing={len(required - set(actual))}, stale={len(set(actual) - required)}")
+            raise ValueError(f"POT differs from current PHP/Twig and reviewed compatibility: missing={len(required - set(actual))}, stale={len(set(actual) - required)}")
         if any(expected[key]["references"] != actual[key]["references"] for key in expected):
-            raise ValueError("POT source locations differ from current PHP extraction")
+            raise ValueError("POT source locations differ from current PHP/Twig extraction")
         translations = sorted((catalogs / "po").glob("*.po"))
         if not translations:
             raise ValueError("No translation catalogs discovered")
         for po in translations:
             translated = entries(po.read_text())
             if set(translated) != required:
-                raise ValueError("PO differs from current PHP extraction: " + po.name)
+                raise ValueError("PO differs from current PHP/Twig extraction: " + po.name)
             if any(expected[key]["references"] != translated[key]["references"] for key in expected):
-                raise ValueError("PO source locations differ from current PHP extraction: " + po.name)
+                raise ValueError("PO source locations differ from current PHP/Twig extraction: " + po.name)
             for key, item in historical.items():
                 fields = item["translations"][po.stem]["fields"]
                 actual_fields = {field: value for field, value in translated[key].items() if field.startswith("msgstr")}

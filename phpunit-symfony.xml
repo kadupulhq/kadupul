@@ -13,6 +13,10 @@
     <source>
         <include>
             <directory suffix=".php">src</directory>
+            <file>bin/legacy-console-home.php</file>
+            <file>index.php</file>
+            <file>login.php</file>
+            <file>lib/headers_secure.php</file>
             <file>bin/legacy-device-edit.php</file>
             <file>bin/legacy-device-create.php</file>
             <file>bin/legacy-device-template.php</file>

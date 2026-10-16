@@ -210,18 +210,18 @@ final class LegacyConsoleMenu
     /**
      * Legacy pages show the full menu on the primary and on a remote collector
      * whose $config['connection'] is online. For a remote collector, values()
-     * returns only after confirming the primary is reachable and no recovery is
-     * pending, and refuses otherwise, so a refusal selects the offline menu.
+     * normally refuses unavailable primary routes. The home page also admits
+     * offline/recovery sessions and reports their connection state explicitly.
      */
     private function primaryOnline(): bool
     {
         try {
-            $this->configuration->values();
+            $values = $this->configuration->values();
         } catch (\RuntimeException) {
             return false;
         }
 
-        return true;
+        return ($values['connection_status'] ?? 'online') === 'online';
     }
 
     /** @return list<array{id: int, title: string, section: string}> */
