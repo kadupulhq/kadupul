@@ -101,7 +101,7 @@ final readonly class DoctrineVdefCatalog implements VdefCatalog
     public function selected(array $ids): array
     {
         if ($ids === [] || count($ids) > 500 || count(array_unique($ids)) !== count($ids)
-            || array_filter($ids, static fn(mixed $id): bool => !is_int($id) || $id < 1 || $id > 99999999) !== []) {
+            || array_any($ids, static fn(mixed $id): bool => !is_int($id) || $id < 1 || $id > 99999999)) {
             throw new \InvalidArgumentException('Invalid VDEF selection.');
         }
         $placeholders = implode(',', array_fill(0, count($ids), '?'));

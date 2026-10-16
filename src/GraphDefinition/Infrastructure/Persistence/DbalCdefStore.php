@@ -420,12 +420,12 @@ final readonly class DbalCdefStore implements CdefStore
         sort($sorted, SORT_NUMERIC);
         if ($ids === [] || count($ids) > self::MAX_SELECTION || !array_is_list($ids) || $sorted !== $ids
             || count(array_unique($ids)) !== count($ids)
-            || array_filter($ids, static fn(mixed $id): bool => !is_int($id) || $id < 1 || $id > 16777215) !== []) {
+            || array_any($ids, static fn(mixed $id): bool => !is_int($id) || $id < 1 || $id > 16777215)) {
             throw new \InvalidArgumentException('Invalid CDEF selection.');
         }
         $keys = array_keys($revisions);
         sort($keys, SORT_NUMERIC);
-        if ($keys !== $ids || array_filter($revisions, static fn(mixed $revision): bool => !is_string($revision)) !== []) {
+        if ($keys !== $ids || array_any($revisions, static fn(mixed $revision): bool => !is_string($revision))) {
             throw new \InvalidArgumentException(self::STALE);
         }
     }

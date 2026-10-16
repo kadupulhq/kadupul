@@ -205,7 +205,7 @@ final class VdefItemController
             // keys cannot masquerade as the list emitted by the actual form.
             $ids = json_decode($raw, false, 8);
             if (!is_array($ids) || !array_is_list($ids) || count($ids) > 500
-                || array_filter($ids, static fn(mixed $id): bool => !is_int($id) || $id < 1 || $id > 2147483647) !== []
+                || array_any($ids, static fn(mixed $id): bool => !is_int($id) || $id < 1 || $id > 2147483647)
                 || count(array_unique($ids, SORT_REGULAR)) !== count($ids)) {
                 return new Response($translator->trans('Invalid VDEF item order.', [], 'graph_definition'), 400, $headers);
             }
