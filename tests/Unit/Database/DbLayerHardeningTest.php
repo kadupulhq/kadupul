@@ -128,7 +128,7 @@ foreach (['user_setting_exists', 'get_graph_group', 'build_where_from_array', 'g
 });
 
 \test('production structured filters reject field names containing SQL syntax or whitespace', function () {
-    foreach (['host_id;DROP', '`host_id`', 'host id'] as $field) {
+    foreach (['host_id;DROP', '`host_id`', 'host id', "host_id\n", "host_id\n\n"] as $field) {
         $params = [];
         expect(build_where_from_array([$field => 7], $params))->toBe('1=0');
         expect($params)->toBe([]);
