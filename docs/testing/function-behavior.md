@@ -23,6 +23,9 @@ artifacts. It never regenerates goldens. Run `make test-functions` locally
 before moving or editing a captured function; update goldens explicitly only
 after reviewing the behavior change.
 
+A run that stops with a timeout from `install_cacti.php` did not compare anything. On a heavily loaded host the
+install step can exceed its 180 seconds; clean up the `fnwt_functions` project and run it again.
+
 Both start a throwaway compose project named `fnwt_functions`, install the
 fresh schema the way the main harness does, run every case file in
 `tests/Support/Behavior/function_cases/`, and tear the project down. Pass
@@ -54,7 +57,7 @@ For each case:
 | `result.diagnostics` | Warnings, notices and deprecations, one entry per distinct message with a `count`, and whether the `@` operator suppressed it. |
 | `result.output` | Anything the function printed. |
 | `result.log` | New lines in `log/cacti.log`, with the timestamp replaced. |
-| `warm` | `{same: true}`, or `{same: false, result: ...}` when an identical second call in the same process answers differently. This is how a `static` or global cache shows up. |
+| `warm` | `{same: true}`, or `{same: false, result: ...}` when an identical second call in the same process answers differently. This is how a `static` or global cache shows up. The two calls are compared after normalization, so an elapsed time or a random id that differs between them does not count as a different answer. |
 | `prelude`, `between` | Records of the setup steps that ran before the call and between the two calls. |
 | `sql` | Only when the case sets `record_sql`. One string per statement the first call executed: the text, then `-- ` and the bound values, then `xN` for a repeat and `!! ` and the error for a failed statement. |
 | `table_diff` | Only when the case sets `record_tables`. `- table {row}` for each row of `settings` or `settings_user` the first call removed or changed, `+ table {row}` for each it added or changed. |
