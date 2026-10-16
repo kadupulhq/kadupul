@@ -144,7 +144,7 @@ and fixed separately.
 | Function | Finding | Issue |
 | --- | --- | --- |
 | `padleft` | Never returned for a non-numeric pad; a numeric pad could stop short of the minimum. Fixed. | #860 |
-| `build_where_from_array` | A field name with a trailing newline passed the name check. | #861 |
+| `build_where_from_array` | A field name with a trailing newline passed the name check. Fixed. | #861 |
 | `cacti_log` | A newline in `$environ` starts a new log record; control bytes reach the file. | #870 |
 | `cacti_is_sensitive_key`, `cacti_redact_value` | The key list misses common credential names and matches some unrelated ones. | #871 |
 | `set_user_setting`, `save_user_settings` | A non-numeric user id is stored as user 0. | #872 |
