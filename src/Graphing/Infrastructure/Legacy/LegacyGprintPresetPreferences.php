@@ -35,7 +35,7 @@ final readonly class LegacyGprintPresetPreferences implements GprintPresetPrefer
             return null;
         }
         if (!is_array($filters) || array_diff(array_keys($filters), GprintPresetFilters::KEYS) !== []
-            || array_filter($filters, static fn($value): bool => !is_int($value) && !is_string($value)) !== []) {
+            || array_any($filters, static fn(mixed $value): bool => !is_int($value) && !is_string($value))) {
             return null;
         }
         return array_map(static fn(int|string $value): string => (string) $value, $filters);
@@ -80,7 +80,7 @@ final readonly class LegacyGprintPresetPreferences implements GprintPresetPrefer
 
     public function save(array $filters): void
     {
-        if (array_diff(array_keys($filters), GprintPresetFilters::KEYS) !== [] || array_filter($filters, static fn($value): bool => !is_int($value) && !is_string($value)) !== []) {
+        if (array_diff(array_keys($filters), GprintPresetFilters::KEYS) !== [] || array_any($filters, static fn(mixed $value): bool => !is_int($value) && !is_string($value))) {
             throw new \InvalidArgumentException('Invalid GPRINT preset filter preferences.');
         }
         $db = $this->database->get();

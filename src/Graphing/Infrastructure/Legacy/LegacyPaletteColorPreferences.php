@@ -33,7 +33,7 @@ final readonly class LegacyPaletteColorPreferences implements PaletteColorPrefer
         }
         $allowed = ['rows', 'page', 'filter', 'sort_column', 'sort_direction', 'has_graphs', 'named'];
         if (!is_array($filters) || array_diff(array_keys($filters), $allowed) !== []
-            || array_filter($filters, static fn($value): bool => !is_int($value) && !is_string($value)) !== []) {
+            || array_any($filters, static fn(mixed $value): bool => !is_int($value) && !is_string($value))) {
             return null;
         }
         return array_map(static fn(int|string $value): string => (string) $value, $filters);
@@ -79,7 +79,7 @@ final readonly class LegacyPaletteColorPreferences implements PaletteColorPrefer
     public function save(array $filters): void
     {
         $allowed = ['rows', 'page', 'filter', 'sort_column', 'sort_direction', 'has_graphs', 'named'];
-        if (array_diff(array_keys($filters), $allowed) !== [] || array_filter($filters, static fn($value): bool => !is_int($value) && !is_string($value)) !== []) {
+        if (array_diff(array_keys($filters), $allowed) !== [] || array_any($filters, static fn(mixed $value): bool => !is_int($value) && !is_string($value))) {
             throw new \InvalidArgumentException('Invalid color filter preferences.');
         }
         $db = $this->database->get();
