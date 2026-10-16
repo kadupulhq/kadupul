@@ -35,7 +35,7 @@ final class PaletteCsv
             $rows = [];
             $hexes = [];
             while (($values = fgetcsv($stream, null, ',', '"', '')) !== false) {
-                if (count($values) !== count($expected) || count(array_filter($values, is_string(...))) !== count($expected)) {
+                if (count($values) !== count($expected) || !array_all($values, static fn(mixed $value): bool => is_string($value))) {
                     throw new \InvalidArgumentException('CSV contains an invalid row.');
                 }
                 $row = array_combine($headers, $values);
