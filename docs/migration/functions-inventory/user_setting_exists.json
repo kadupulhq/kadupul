@@ -3,9 +3,9 @@
     "name": "user_setting_exists",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 455,
-        "end_line": 473,
-        "line_count": 19,
+        "start_line": 453,
+        "end_line": 476,
+        "line_count": 24,
         "signature": {
             "parameters": [
                 {
@@ -31,7 +31,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 5, "core_outside_functions_php": 2, "tests": 5, "plugins": 0},
+        "fan_out": {"core": 6, "core_outside_functions_php": 2, "tests": 11, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": ["user_setting_values"],
@@ -45,7 +45,7 @@
             "process_functions": [],
             "plugin_hooks": []
         },
-        "calls": {"functions": [], "recursive": false},
+        "calls": {"functions": ["cacti_log"], "recursive": false},
         "called_by": ["graph_config_value_exists"]
     },
     "human": {
@@ -54,6 +54,6 @@
         "status": "implemented",
         "lts_status": "not assessed",
         "behavior_record": "tests/Golden/functions/kadupul/php-8.4/user_setting_exists.json",
-        "notes": "Plan lists only ConfigurationSettings and UserSettings ports; graph config options follow user settings. Statements run through the ConfigurationSettings and UserSettings ports and their DBAL adapters (#867). Caches, defaults, hooks and the remote-collector write stay in this function. The db_* helpers still run before Composer loads and for argument types outside the port. The goldens pass unchanged through this wrapper."
+        "notes": "Plan lists only ConfigurationSettings and UserSettings ports; graph config options follow user settings. Statements run through the ConfigurationSettings and UserSettings ports and their DBAL adapters (#867). Caches, defaults, hooks and the remote-collector write stay in this function. The db_* helpers still run before Composer loads and for argument types outside the port. The goldens pass unchanged through this wrapper. Fixed: a user id that is not an integer or a digit string from 0 to 16777215 is now rejected and logged, returns false and is not cached (#887)."
     }
 }

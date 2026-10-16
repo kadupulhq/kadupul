@@ -3,9 +3,9 @@
     "name": "clear_user_setting",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 482,
-        "end_line": 499,
-        "line_count": 18,
+        "start_line": 485,
+        "end_line": 507,
+        "line_count": 23,
         "signature": {
             "parameters": [
                 {
@@ -31,7 +31,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 1, "core_outside_functions_php": 0, "tests": 4, "plugins": 0},
+        "fan_out": {"core": 2, "core_outside_functions_php": 0, "tests": 15, "plugins": 0},
         "body": {
             "uses_global": ["settings_user"],
             "static_variables": [],
@@ -45,7 +45,7 @@
             "process_functions": [],
             "plugin_hooks": []
         },
-        "calls": {"functions": [], "recursive": false},
+        "calls": {"functions": ["cacti_log"], "recursive": false},
         "called_by": []
     },
     "human": {
@@ -54,6 +54,6 @@
         "status": "implemented",
         "lts_status": "not assessed",
         "behavior_record": "tests/Golden/functions/kadupul/php-8.4/clear_user_setting.json",
-        "notes": "Plan lists only ConfigurationSettings and UserSettings ports; graph config options follow user settings. Statements run through the ConfigurationSettings and UserSettings ports and their DBAL adapters (#867). Caches, defaults, hooks and the remote-collector write stay in this function. The db_* helpers still run before Composer loads and for argument types outside the port. The goldens pass unchanged through this wrapper."
+        "notes": "Plan lists only ConfigurationSettings and UserSettings ports; graph config options follow user settings. Statements run through the ConfigurationSettings and UserSettings ports and their DBAL adapters (#867). Caches, defaults, hooks and the remote-collector write stay in this function. The db_* helpers still run before Composer loads and for argument types outside the port. The goldens pass unchanged through this wrapper. Fixed: a user id that is not an integer or a digit string from 0 to 16777215 is now rejected and logged, and nothing is deleted (#887)."
     }
 }

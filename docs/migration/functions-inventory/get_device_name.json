@@ -3,8 +3,8 @@
     "name": "get_device_name",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 3283,
-        "end_line": 3286,
+        "start_line": 3301,
+        "end_line": 3304,
         "line_count": 4,
         "signature": {
             "parameters": [

@@ -3,9 +3,9 @@
     "name": "read_user_setting",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 537,
-        "end_line": 604,
-        "line_count": 68,
+        "start_line": 545,
+        "end_line": 622,
+        "line_count": 78,
         "signature": {
             "parameters": [
                 {
@@ -49,7 +49,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 137, "core_outside_functions_php": 134, "tests": 27, "plugins": 0},
+        "fan_out": {"core": 137, "core_outside_functions_php": 134, "tests": 40, "plugins": 0},
         "body": {
             "uses_global": ["config"],
             "static_variables": [],
@@ -75,6 +75,6 @@
         "status": "implemented",
         "lts_status": "not assessed",
         "behavior_record": "tests/Golden/functions/kadupul/php-8.4/read_user_setting.json",
-        "notes": "Plan lists only ConfigurationSettings and UserSettings ports; graph config options follow user settings. Statements run through the ConfigurationSettings and UserSettings ports and their DBAL adapters (#867). Caches, defaults, hooks and the remote-collector write stay in this function. The db_* helpers still run before Composer loads and for argument types outside the port. The goldens pass unchanged through this wrapper."
+        "notes": "Plan lists only ConfigurationSettings and UserSettings ports; graph config options follow user settings. Statements run through the ConfigurationSettings and UserSettings ports and their DBAL adapters (#867). Caches, defaults, hooks and the remote-collector write stay in this function. The db_* helpers still run before Composer loads and for argument types outside the port. The goldens pass unchanged through this wrapper. Fixed: a user id that is not an integer or a digit string from 0 to 16777215 is now rejected before the query and the default is returned; it is not logged because cacti_log() reads a user setting through this function (#887)."
     }
 }

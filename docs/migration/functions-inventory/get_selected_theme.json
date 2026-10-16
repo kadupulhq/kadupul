@@ -3,8 +3,8 @@
     "name": "get_selected_theme",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 994,
-        "end_line": 1080,
+        "start_line": 1012,
+        "end_line": 1098,
         "line_count": 87,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,

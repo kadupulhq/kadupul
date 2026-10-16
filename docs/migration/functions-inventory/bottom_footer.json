@@ -3,8 +3,8 @@
     "name": "bottom_footer",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5398,
-        "end_line": 5424,
+        "start_line": 5416,
+        "end_line": 5442,
         "line_count": 27,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": false,
