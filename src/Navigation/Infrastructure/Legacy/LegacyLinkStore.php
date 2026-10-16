@@ -124,7 +124,7 @@ final readonly class LegacyLinkStore implements LinkStore
     public function mutate(int $actorId, array $ids, string $operation, string $revision): void
     {
         if (!in_array($operation, ['delete', 'enable', 'disable', 'up', 'down'], true) || $ids === [] || count($ids) > 100
-            || array_filter($ids, static fn($id): bool => !is_int($id) || $id < 1 || $id > 16767215) !== [] || count(array_unique($ids)) !== count($ids)
+            || array_any($ids, static fn(mixed $id): bool => !is_int($id) || $id < 1 || $id > 16767215) || count(array_unique($ids)) !== count($ids)
             || (in_array($operation, ['up', 'down'], true) && count($ids) !== 1)) {
             throw new \InvalidArgumentException('Invalid link selection.');
         }

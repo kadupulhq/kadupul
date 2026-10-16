@@ -249,7 +249,7 @@ final class ColumnDrift
                     ? "'" . $dbc['table_default'] . "'" : '"' . $dbc['table_default'] . '"');
                 $default = (string) $dbc['table_default'];
             } else {
-                if (strpos((string) $dbc['table_type'], 'int(') !== false && $dbc['table_default'] === '') {
+                if (str_contains((string) $dbc['table_type'], 'int(') && $dbc['table_default'] === '') {
                     $text .= ' DEFAULT "0"';
                     $default = '0';
                 } else {
