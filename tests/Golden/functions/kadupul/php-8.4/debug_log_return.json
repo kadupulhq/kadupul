@@ -1,0 +1,214 @@
+{
+  "cases": [
+    {
+      "ambient": {"config": {"poller_id": 1}},
+      "args": ["new_graphs"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "id": "new_graphs_missing",
+      "result": {"returned": {"type": "string", "value": ""}}
+    },
+    {
+      "ambient": {"config": {"poller_id": 1}},
+      "args": ["t"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "id": "other_missing",
+      "result": {"returned": {"type": "string", "value": ""}}
+    },
+    {
+      "ambient": {"config": {"poller_id": 1}},
+      "args": ["new_graphs"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {
+            "type": "array",
+            "value": {"$": "array", "pairs": [["new_graphs", ["a", "b"]]]}
+          }
+        }
+      ],
+      "id": "new_graphs_keeps_entries",
+      "note": "new_graphs is not drained: the second call returns the same table",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "debug_log_insert",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        },
+        {
+          "diagnostics": [],
+          "fn": "debug_log_insert",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "result": {
+        "returned": {
+          "type": "string",
+          "value": "<table style='width:100%;'><tr><td>a</td></tr><tr><td>b</td></tr></table>"
+        }
+      }
+    },
+    {
+      "ambient": {"config": {"poller_id": 1}},
+      "args": ["t"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "array", "value": {"$": "array", "pairs": [["t", []]]}}
+        }
+      ],
+      "id": "other_drains_entries",
+      "note": "any other type is emptied as it is read; the warm call returns an empty table",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "debug_log_insert",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        },
+        {
+          "diagnostics": [],
+          "fn": "debug_log_insert",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "result": {
+        "returned": {
+          "type": "string",
+          "value": "<table style='width:100%;'><tr><td>a</td></tr><tr><td>b</td></tr></table>"
+        }
+      },
+      "warm": {
+        "result": {
+          "diagnostics": [],
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "<table style='width:100%;'></table>"}
+        },
+        "same": false
+      }
+    },
+    {
+      "ambient": {"config": {"poller_id": 1}},
+      "args": ["t"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "array", "value": {"$": "array", "pairs": [["t", []]]}}
+        }
+      ],
+      "id": "other_html_passthrough",
+      "note": "entries are concatenated unescaped",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "debug_log_insert",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "result": {
+        "returned": {
+          "type": "string",
+          "value": "<table style='width:100%;'><tr><td><i>x</i></td></tr></table>"
+        }
+      },
+      "warm": {
+        "result": {
+          "diagnostics": [],
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "<table style='width:100%;'></table>"}
+        },
+        "same": false
+      }
+    },
+    {
+      "ambient": {"config": {"poller_id": 2}},
+      "args": ["t"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "array", "value": {"$": "array", "pairs": [["t", ["a"]]]}}
+        }
+      ],
+      "id": "remote_poller_entries_unreadable",
+      "note": "an entry stored for a remote poller without a session is never returned",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_unset_session",
+          "log": [],
+          "output": "",
+          "returned": {"type": "bool", "value": false}
+        },
+        {
+          "diagnostics": [],
+          "fn": "debug_log_insert",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "result": {"returned": {"type": "string", "value": ""}}
+    },
+    {
+      "ambient": {
+        "config": {"poller_id": 1},
+        "session": {"debug_log": {"$": "array", "pairs": [["t", []]]}}
+      },
+      "args": ["t"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "array", "value": {"$": "array", "pairs": [["t", []]]}}
+        }
+      ],
+      "id": "empty_list_for_type",
+      "note": "an existing but empty list still yields an empty table",
+      "result": {"returned": {"type": "string", "value": "<table style='width:100%;'></table>"}}
+    }
+  ],
+  "function": "debug_log_return",
+  "signature": [
+    {"by_ref": false, "name": "type", "optional": false, "type": null, "variadic": false}
+  ]
+}

@@ -1654,6 +1654,15 @@ def function_ambient_contract():
         assert out['id'] == '/var/www/html/i' and out['args'] == ['/var/www/html/a'] and out['note'] == '/var/www/html/n'
         assert out['result']['by_ref']['id']['value'] == '<APP>/x', out
         assert out['result']['by_ref']['args']['value'] == '<APP>/y', out
+
+        # A repeat that differs only in a normalized field (an elapsed time) is the same repeat.
+        timed = {'diagnostics': [], 'log': [], 'output': 'Total[0.0012] x\n', 'returned': {'type': 'null', 'value': None}}
+        record = {'function': 'f', 'signature': [], 'cases': [
+            {'id': 'a', 'note': '', 'warm': {'same': False, 'result': dict(timed, output='Total[0.0034] x\n')}, 'result': timed},
+            {'id': 'b', 'note': '', 'warm': {'same': False, 'result': dict(timed, output='Total[0.0034] y\n')}, 'result': timed}]}
+        folded = harness.normalize_function_record(record)['cases']
+        assert folded[0]['warm'] == {'same': True}, folded[0]
+        assert folded[1]['warm']['same'] is False, folded[1]
     print('ambient settings, config and session, prelude, between and mixed isolation behave; internal-function steps and failed savepoints stop the run')
 
 
@@ -1890,6 +1899,23 @@ def large_value_summary_contract():
     print('values over 64 elements are summarized by hash, smaller ones and non-default fields are untouched')
 
 
+def logging_shape_contract():
+    shape = harness.normalize_logging_shapes
+    assert shape('09/12/2026 02:39:50 - CMDPHP x') == '<TIMESTAMP:99/99/9999 99:99:99> - CMDPHP x'
+    assert shape('2026-09-12 02:39:50 - CMDPHP x') == '<TIMESTAMP:9999-99-99 99:99:99> - CMDPHP x', 'the format survives'
+    assert shape('note at 2026-09-12 02:39:50 - x') == 'note at 2026-09-12 02:39:50 - x', 'only a record start is a timestamp'
+    assert shape('Total[ 0.0123] msg') == 'Total[<T>] msg'
+    assert shape('x - POLLER: Poller[3] PID[4321] y') == 'x - POLLER: Poller[3] PID[<PID>] y'
+    assert shape('<[ 2026-10-15 09:46:18.806820 |    1424 ]> -- ') == '<[ <DATETIME> | <PID:7> ]> -- '
+    assert shape("id='clipboardData" + 'a' * 32 + "'") == "id='clipboardData<UID>'"
+    assert shape('(/harness/probe.php[135]:behavior_function_run(), /harness/function_capture.php[9]:behavior_call(), '
+                 '/harness/function_capture.php[169]:cacti_debug_backtrace())') == \
+        '(<harness frames: 2>, /harness/function_capture.php[<LINE>]:cacti_debug_backtrace())'
+    assert shape('E Backtrace:  (/var/www/html/lib/a.php[40]:f())') == 'E Backtrace:  (/var/www/html/lib/a.php[<LINE>]:f())'
+    assert shape('msg in file: /harness/function_capture.php  on line: 366') == 'msg in file: /harness/function_capture.php  on line: <LINE>'
+    print('logging shapes keep the timestamp format and drop wall clock, PID, random ids and harness frames')
+
+
 def function_comparison_contract():
     with tempfile.TemporaryDirectory(prefix='function comparison ') as directory:
         root = Path(directory)
@@ -1974,6 +2000,7 @@ def main():
     compact_json_contract()
     large_value_summary_contract()
     function_comparison_contract()
+    logging_shape_contract()
     failed_setup_manifest()
     unavailable_docker_failure()
     print('setup failure records an incomplete manifest without probing containers')

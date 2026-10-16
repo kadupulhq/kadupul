@@ -1,0 +1,9 @@
+{
+  "function": "debug_log_clear",
+  "cases": [
+    {"id": "clear_all", "args": [], "ambient": {"config": {"poller_id": 1}}, "prelude": [{"fn": "debug_log_insert", "args": ["a", "x"]}, {"fn": "debug_log_insert", "args": ["b", "y"]}], "between": [{"fn": "behavior_fixture_peek", "args": ["session_debug_log"]}, {"fn": "behavior_fixture_peek", "args": ["config_debug_log"]}], "note": "no argument: the whole debug_log is removed"},
+    {"id": "clear_one_type", "args": ["a"], "ambient": {"config": {"poller_id": 1}}, "prelude": [{"fn": "debug_log_insert", "args": ["a", "x"]}, {"fn": "debug_log_insert", "args": ["b", "y"]}], "between": [{"fn": "behavior_fixture_peek", "args": ["session_debug_log"]}, {"fn": "behavior_fixture_peek", "args": ["config_debug_log"]}]},
+    {"id": "clear_zero_string", "args": ["0"], "ambient": {"config": {"poller_id": 1}}, "prelude": [{"fn": "debug_log_insert", "args": ["0", "x"]}, {"fn": "debug_log_insert", "args": ["a", "y"]}], "between": [{"fn": "behavior_fixture_peek", "args": ["session_debug_log"]}, {"fn": "behavior_fixture_peek", "args": ["config_debug_log"]}], "note": "\"0\" == \"\" is false: only the type \"0\" is removed"},
+    {"id": "clear_remote_poller_log_untouched", "args": [], "ambient": {"config": {"poller_id": 2}}, "prelude": [{"fn": "behavior_fixture_unset_session", "args": []}, {"fn": "debug_log_insert", "args": ["a", "x"]}], "between": [{"fn": "behavior_fixture_peek", "args": ["session_debug_log"]}, {"fn": "behavior_fixture_peek", "args": ["config_debug_log"]}], "note": "clear only touches $_SESSION, not $config[debug_log]"}
+  ]
+}

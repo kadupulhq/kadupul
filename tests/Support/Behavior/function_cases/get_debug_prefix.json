@@ -1,0 +1,7 @@
+{
+  "function": "get_debug_prefix",
+  "cases": [
+    {"id": "format", "args": [], "note": "<[ date time.microseconds | pid right-aligned in 7 ]> -- ; wall clock and PID are replaced"},
+    {"id": "extra_arguments_ignored", "args": ["x", 1]}
+  ]
+}

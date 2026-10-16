@@ -1,0 +1,160 @@
+{
+  "cases": [
+    {
+      "ambient": {"settings": {"path_cactilog": "log/fnclog_x.log"}},
+      "args": [],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "log/fnclog_x.log"}
+        }
+      ],
+      "id": "configured_relative",
+      "note": "returns the setting as is and stores it in $config[log_path]",
+      "result": {"returned": {"type": "string", "value": "log/fnclog_x.log"}}
+    },
+    {
+      "ambient": {"settings": {"path_cactilog": "../outside/cacti.log"}},
+      "args": [],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "../outside/cacti.log"}
+        }
+      ],
+      "id": "configured_dotdot",
+      "note": "not normalised or confined",
+      "result": {"returned": {"type": "string", "value": "../outside/cacti.log"}}
+    },
+    {
+      "ambient": {"settings": {"path_cactilog": ""}},
+      "args": [],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "<APP>/log/cacti.log"}
+        }
+      ],
+      "id": "empty_setting",
+      "note": "falls back to <base_path>/log/cacti.log",
+      "result": {"returned": {"type": "string", "value": "<APP>/log/cacti.log"}}
+    },
+    {
+      "ambient": {"settings": {"path_cactilog": null}},
+      "args": [],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "<APP>/log/cacti.log"}
+        }
+      ],
+      "id": "unset_setting",
+      "note": "no row: the settings default or the fallback",
+      "result": {"returned": {"type": "string", "value": "<APP>/log/cacti.log"}}
+    },
+    {
+      "ambient": {"settings": {"path_cactilog": "0"}},
+      "args": [],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "0"}
+        }
+      ],
+      "id": "zero_string",
+      "note": "\"0\" == \"\" is false in PHP 8: kept",
+      "result": {"returned": {"type": "string", "value": "0"}}
+    },
+    {
+      "ambient": {"settings": {"path_cactilog": " "}},
+      "args": [],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": " "}
+        }
+      ],
+      "id": "whitespace",
+      "note": "not trimmed: kept",
+      "result": {"returned": {"type": "string", "value": " "}}
+    },
+    {
+      "ambient": {"settings": {"path_cactilog": "a\nb.log"}},
+      "args": [],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "a\nb.log"}
+        }
+      ],
+      "id": "with_lf",
+      "note": "not sanitised",
+      "result": {"returned": {"type": "string", "value": "a\nb.log"}}
+    },
+    {
+      "ambient": {"settings": {"path_cactilog": "log/日本.log"}},
+      "args": [],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "log/日本.log"}
+        }
+      ],
+      "id": "multibyte",
+      "result": {"returned": {"type": "string", "value": "log/日本.log"}}
+    },
+    {
+      "ambient": {
+        "settings": {
+          "path_cactilog": "log/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.log"
+        }
+      },
+      "args": [],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {
+            "type": "string",
+            "value": "log/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.log"
+          }
+        }
+      ],
+      "id": "long",
+      "result": {
+        "returned": {
+          "type": "string",
+          "value": "log/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.log"
+        }
+      }
+    }
+  ],
+  "function": "cacti_log_file",
+  "signature": []
+}

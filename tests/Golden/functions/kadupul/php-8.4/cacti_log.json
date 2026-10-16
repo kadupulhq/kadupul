@@ -1,0 +1,558 @@
+{
+  "cases": [
+    {
+      "ambient": {"settings": {"path_cactilog": "log/fnclog_cl.log"}},
+      "args": ["hello"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_read",
+          "log": [],
+          "output": "",
+          "returned": {
+            "type": "array",
+            "value": ["<TIMESTAMP:99/99/9999 99:99:99> - CMDPHP hello", ""]
+          }
+        }
+      ],
+      "id": "line_shape_in_file",
+      "note": "the file itself: timestamp format, one LF per record; a second identical call appends a second line",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_write",
+          "log": [],
+          "output": "",
+          "returned": {"type": "int", "value": 0}
+        }
+      ],
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "args": ["hello"],
+      "id": "basic_line",
+      "note": "file line: <date> - <environ> <message>; a second identical call appends a second line",
+      "result": {"log": ["<TIMESTAMP> - CMDPHP hello"], "returned": {"type": "null", "value": null}}
+    },
+    {
+      "args": ["x", false, "FOO"],
+      "id": "environ_custom",
+      "result": {"log": ["<TIMESTAMP> - FOO x"], "returned": {"type": "null", "value": null}}
+    },
+    {
+      "args": ["x", false, ""],
+      "id": "environ_empty",
+      "note": "empty environ leaves two spaces after the dash",
+      "result": {"log": ["<TIMESTAMP> -  x"], "returned": {"type": "null", "value": null}}
+    },
+    {
+      "args": ["x", false, null],
+      "id": "environ_null",
+      "result": {"log": ["<TIMESTAMP> -  x"], "returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"config": {"poller_id": 1}},
+      "args": ["x", false, "POLLER"],
+      "id": "environ_poller",
+      "note": "POLLER adds Poller[id] PID[pid]; the PID is replaced",
+      "result": {
+        "log": ["<TIMESTAMP> - POLLER: Poller[1] PID[<PID>] x"],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "args": ["x", true],
+      "id": "output_cli_plain",
+      "note": "CLI: the line, with the date prefix, is printed as well as logged",
+      "result": {
+        "log": ["<TIMESTAMP> - CMDPHP x"],
+        "output": "<TIMESTAMP:99/99/9999 99:99:99> - CMDPHP x\n",
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "ambient": {"config": {"poller_id": 1}},
+      "args": ["x", true, "POLLER"],
+      "id": "output_cli_poller",
+      "note": "POLLER prints Total[elapsed] instead of the date prefix",
+      "result": {
+        "log": ["<TIMESTAMP> - POLLER: Poller[1] PID[<PID>] x"],
+        "output": "Total[<T>] x\n",
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "args": ["x", true],
+      "id": "output_web_no_argv",
+      "note": "no $_SERVER[argv]: web request, nothing printed",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_server",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "result": {"log": ["<TIMESTAMP> - CMDPHP x"], "returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"settings": {"log_verbosity": "1"}},
+      "args": ["x", true],
+      "id": "output_cli_verbosity_none",
+      "note": "verbosity NONE: nothing in the file, but the CLI still prints",
+      "result": {
+        "output": "<TIMESTAMP:99/99/9999 99:99:99> - CMDPHP x\n",
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "args": [""],
+      "id": "empty_string",
+      "note": "returns false, no line",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [null],
+      "id": "null_message",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "trim(): Passing null to parameter #1 ($string) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [["a"]],
+      "id": "array_message",
+      "note": "trim() rejects an array",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "trim(): Argument #1 ($string) must be of type string, array given"
+        }
+      }
+    },
+    {
+      "args": [{"$": "bytes", "hex": "666f6ffffe626172"}],
+      "id": "invalid_utf8",
+      "note": "bytes are written as they are",
+      "result": {
+        "log": [
+          {"$": "bytes", "hex": "3c54494d455354414d503e202d20434d4450485020666f6ffffe626172"}
+        ],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "args": ["first\nsecond"],
+      "id": "lf_embedded",
+      "note": "SECURITY: clean_up_lines turns LF into a space, so an LF in the message cannot start a record",
+      "result": {
+        "log": ["<TIMESTAMP> - CMDPHP first second"],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "args": ["a\u0000b"],
+      "id": "nul_byte",
+      "note": "SECURITY: NUL is written to the file as is",
+      "result": {
+        "log": [{"$": "bytes", "hex": "3c54494d455354414d503e202d20434d4450485020610062"}],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "args": ["a\u001b[31mred\u001b[0mb"],
+      "id": "esc_sequence",
+      "note": "SECURITY: ANSI escapes reach the file as is",
+      "result": {
+        "log": [
+          {
+            "$": "bytes",
+            "hex": "3c54494d455354414d503e202d20434d4450485020611b5b33316d7265641b5b306d62"
+          }
+        ],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "args": ["msg", false, "X\n2026-01-01 00:00:00 - FORGED"],
+      "id": "environ_lf_injection",
+      "note": "SECURITY: $environ is not passed through clean_up_lines, so an LF there writes extra records",
+      "result": {
+        "log": ["<TIMESTAMP> - X", "<TIMESTAMP> - FORGED msg"],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "ambient": {"settings": {"log_verbosity": "2"}},
+      "args": ["m", false, "CMDPHP", ""],
+      "id": "gate_low_level_empty",
+      "result": {"log": ["<TIMESTAMP> - CMDPHP m"], "returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"settings": {"log_verbosity": "2"}},
+      "args": ["m", false, "CMDPHP", 2],
+      "id": "gate_low_level_low",
+      "result": {"log": ["<TIMESTAMP> - CMDPHP m"], "returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"settings": {"log_verbosity": "2"}},
+      "args": ["m", false, "CMDPHP", 5],
+      "id": "gate_low_level_debug",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"settings": {"log_verbosity": "1"}},
+      "args": ["m", false, "CMDPHP", 2],
+      "id": "gate_none_level_low",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"settings": {"log_verbosity": "3"}},
+      "args": ["m", false, "CMDPHP", 3],
+      "id": "gate_medium_level_medium",
+      "result": {"log": ["<TIMESTAMP> - CMDPHP m"], "returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"settings": {"log_verbosity": "5"}},
+      "args": ["m", false, "CMDPHP", 5],
+      "id": "gate_debug_level_debug",
+      "result": {"log": ["<TIMESTAMP> - CMDPHP m"], "returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"settings": {"log_verbosity": "6"}},
+      "args": ["m", false, "CMDPHP", 2],
+      "id": "gate_devdbg_level_low",
+      "result": {"log": ["<TIMESTAMP> - CMDPHP m"], "returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"settings": {"log_verbosity": "6"}},
+      "args": ["m", false, "CMDPHP", 3],
+      "id": "gate_devdbg_level_medium",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"settings": {"log_verbosity": "6"}},
+      "args": ["m", false, "CMDPHP", 6],
+      "id": "gate_devdbg_level_devdbg",
+      "result": {"log": ["<TIMESTAMP> - CMDPHP m"], "returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"settings": {"log_verbosity": "2", "selective_debug": "probe.php"}},
+      "args": ["m", false, "CMDPHP", 5],
+      "id": "selective_file_forces_debug",
+      "note": "the running script is listed: its level is forced to DEBUG, so a DEBUG message is logged under LOW",
+      "result": {"log": ["<TIMESTAMP> - CMDPHP m"], "returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"settings": {"selective_plugin_debug": "myplug"}},
+      "args": ["m", false, "CMDPHP", 5],
+      "id": "selective_plugin_forces_debug",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_server",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "<APP>/plugins/myplug/x.php"}
+        }
+      ],
+      "result": {"log": ["<TIMESTAMP> - CMDPHP m"], "returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"settings": {"log_destination": "1"}},
+      "args": ["ERROR: e"],
+      "id": "dest_file",
+      "result": {
+        "log": ["<TIMESTAMP> - CMDPHP ERROR: e"],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "ambient": {"settings": {"log_destination": "2"}},
+      "args": ["ERROR: e"],
+      "id": "dest_both",
+      "result": {
+        "log": ["<TIMESTAMP> - CMDPHP ERROR: e"],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "ambient": {"settings": {"log_destination": "3"}},
+      "args": ["ERROR: e"],
+      "id": "dest_syslog_only",
+      "note": "nothing in the file; the syslog write is not observable from PHP",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {
+        "settings": {"log_destination": "2", "log_perror": "1", "log_pstats": "", "log_pwarn": ""}
+      },
+      "args": ["ERROR: e"],
+      "id": "syslog_d2_error_1--",
+      "note": "syslog() is not observable from PHP; this reaches the branch, the file shows the part that is",
+      "result": {
+        "log": ["<TIMESTAMP> - CMDPHP ERROR: e"],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "ambient": {
+        "settings": {"log_destination": "2", "log_perror": "", "log_pstats": "", "log_pwarn": ""}
+      },
+      "args": ["ERROR: e"],
+      "id": "syslog_d2_error_---",
+      "result": {
+        "log": ["<TIMESTAMP> - CMDPHP ERROR: e"],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "ambient": {
+        "settings": {"log_destination": "2", "log_perror": "", "log_pstats": "", "log_pwarn": "1"}
+      },
+      "args": ["WARNING: w"],
+      "id": "syslog_d2_warning_-1-",
+      "result": {
+        "log": ["<TIMESTAMP> - CMDPHP WARNING: w"],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "ambient": {
+        "settings": {"log_destination": "2", "log_perror": "", "log_pstats": "", "log_pwarn": ""}
+      },
+      "args": ["WARNING: w"],
+      "id": "syslog_d2_warning_---",
+      "result": {
+        "log": ["<TIMESTAMP> - CMDPHP WARNING: w"],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "ambient": {
+        "settings": {"log_destination": "2", "log_perror": "", "log_pstats": "1", "log_pwarn": ""}
+      },
+      "args": ["STATS: s"],
+      "id": "syslog_d2_stats_--1",
+      "result": {
+        "log": ["<TIMESTAMP> - CMDPHP STATS: s"],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "ambient": {
+        "settings": {"log_destination": "2", "log_perror": "", "log_pstats": "1", "log_pwarn": ""}
+      },
+      "args": ["NOTICE: n"],
+      "id": "syslog_d2_notice_--1",
+      "result": {
+        "log": ["<TIMESTAMP> - CMDPHP NOTICE: n"],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "ambient": {
+        "settings": {"log_destination": "2", "log_perror": "", "log_pstats": "", "log_pwarn": ""}
+      },
+      "args": ["NOTICE: n"],
+      "id": "syslog_d2_notice_---",
+      "result": {
+        "log": ["<TIMESTAMP> - CMDPHP NOTICE: n"],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "ambient": {
+        "settings": {"log_destination": "2", "log_perror": "1", "log_pstats": "1", "log_pwarn": "1"}
+      },
+      "args": ["plain"],
+      "id": "syslog_d2_plain_111",
+      "result": {"log": ["<TIMESTAMP> - CMDPHP plain"], "returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {
+        "settings": {"log_destination": "3", "log_perror": "1", "log_pstats": "", "log_pwarn": ""}
+      },
+      "args": ["ERROR: e"],
+      "id": "syslog_d3_error_1--",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {
+        "settings": {"log_destination": "3", "log_perror": "1", "log_pstats": "1", "log_pwarn": "1"}
+      },
+      "args": ["plain"],
+      "id": "syslog_d3_plain_111",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {
+        "config": {"cacti_server_os": "win32"},
+        "settings": {"log_destination": "3", "log_perror": "1"}
+      },
+      "args": ["ERROR: e"],
+      "id": "syslog_win32_openlog",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"settings": {"path_cactilog": ""}},
+      "args": ["x"],
+      "id": "path_empty_uses_default",
+      "note": "falls back to log/cacti.log, which result.log reads",
+      "result": {"log": ["<TIMESTAMP> - CMDPHP x"], "returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"settings": {"path_cactilog": "log/fnclog_nodir/cacti.log"}},
+      "args": ["x"],
+      "id": "path_missing_directory",
+      "note": "fopen fails silently; the function still returns null",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "fopen(log/fnclog_nodir/cacti.log): Failed to open stream: No such file or directory",
+            "severity": "E_WARNING",
+            "suppressed": true
+          }
+        ],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "ambient": {"settings": {"path_cactilog": "log"}},
+      "args": ["x"],
+      "id": "path_is_directory",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "fopen(log): Failed to open stream: Is a directory",
+            "severity": "E_WARNING",
+            "suppressed": true
+          }
+        ],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "ambient": {"settings": {"path_cactilog": "log/fnclog_cl.log"}},
+      "args": ["x"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_read",
+          "log": [],
+          "output": "",
+          "returned": {"type": "array", "value": [""]}
+        }
+      ],
+      "id": "path_read_only_file",
+      "note": "mode 0444: the append fails, nothing is written, no diagnostic",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_write",
+          "log": [],
+          "output": "",
+          "returned": {"type": "int", "value": 0}
+        }
+      ],
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "fopen(log/fnclog_cl.log): Failed to open stream: Permission denied",
+            "severity": "E_WARNING",
+            "suppressed": true
+          }
+        ],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "args": ["x"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "bool", "value": false}
+        }
+      ],
+      "id": "database_log_unset",
+      "note": "an unset $database_log is initialised to false and restored to the previous value afterwards",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "bool", "value": false}
+        }
+      ],
+      "result": {"log": ["<TIMESTAMP> - CMDPHP x"], "returned": {"type": "null", "value": null}}
+    },
+    {
+      "args": ["SELECT secret", false, "DBCALL"],
+      "id": "dbcall_redacted",
+      "note": "with KADUPUL_REDACT_DATABASE_LOGS defined, DBCALL text is replaced",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_define",
+          "log": [],
+          "output": "",
+          "returned": {"type": "bool", "value": true}
+        }
+      ],
+      "result": {
+        "log": [
+          "<TIMESTAMP> - DBCALL Database diagnostic omitted during sensitive device creation"
+        ],
+        "returned": {"type": "null", "value": null}
+      }
+    }
+  ],
+  "function": "cacti_log",
+  "signature": [
+    {"by_ref": false, "name": "string", "optional": false, "type": null, "variadic": false},
+    {
+      "by_ref": false,
+      "default": false,
+      "name": "output",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    },
+    {
+      "by_ref": false,
+      "default": "CMDPHP",
+      "name": "environ",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    },
+    {
+      "by_ref": false,
+      "default": "",
+      "name": "level",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    }
+  ]
+}

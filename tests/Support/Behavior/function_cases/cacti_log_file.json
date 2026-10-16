@@ -1,0 +1,14 @@
+{
+  "function": "cacti_log_file",
+  "cases": [
+    {"id": "configured_relative", "args": [], "ambient": {"settings": {"path_cactilog": "log/fnclog_x.log"}}, "between": [{"fn": "behavior_fixture_peek", "args": ["log_path"]}], "note": "returns the setting as is and stores it in $config[log_path]"},
+    {"id": "configured_dotdot", "args": [], "ambient": {"settings": {"path_cactilog": "../outside/cacti.log"}}, "between": [{"fn": "behavior_fixture_peek", "args": ["log_path"]}], "note": "not normalised or confined"},
+    {"id": "empty_setting", "args": [], "ambient": {"settings": {"path_cactilog": ""}}, "between": [{"fn": "behavior_fixture_peek", "args": ["log_path"]}], "note": "falls back to <base_path>/log/cacti.log"},
+    {"id": "unset_setting", "args": [], "ambient": {"settings": {"path_cactilog": null}}, "between": [{"fn": "behavior_fixture_peek", "args": ["log_path"]}], "note": "no row: the settings default or the fallback"},
+    {"id": "zero_string", "args": [], "ambient": {"settings": {"path_cactilog": "0"}}, "between": [{"fn": "behavior_fixture_peek", "args": ["log_path"]}], "note": "\"0\" == \"\" is false in PHP 8: kept"},
+    {"id": "whitespace", "args": [], "ambient": {"settings": {"path_cactilog": " "}}, "between": [{"fn": "behavior_fixture_peek", "args": ["log_path"]}], "note": "not trimmed: kept"},
+    {"id": "with_lf", "args": [], "ambient": {"settings": {"path_cactilog": "a\nb.log"}}, "between": [{"fn": "behavior_fixture_peek", "args": ["log_path"]}], "note": "not sanitised"},
+    {"id": "multibyte", "args": [], "ambient": {"settings": {"path_cactilog": "log/日本.log"}}, "between": [{"fn": "behavior_fixture_peek", "args": ["log_path"]}]},
+    {"id": "long", "args": [], "ambient": {"settings": {"path_cactilog": "log/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.log"}}, "between": [{"fn": "behavior_fixture_peek", "args": ["log_path"]}]}
+  ]
+}

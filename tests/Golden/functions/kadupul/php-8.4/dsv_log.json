@@ -1,0 +1,106 @@
+{
+  "cases": [
+    {
+      "ambient": {"settings": {"data_source_trace": "on"}},
+      "args": ["msg", "value"],
+      "id": "trace_on_scalar",
+      "note": "line: DSTRACE <message> = <data>, at the default level LOW",
+      "result": {
+        "log": ["<TIMESTAMP> - DSTRACE msg = value"],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "ambient": {"settings": {"data_source_trace": ""}},
+      "args": ["msg", "value"],
+      "id": "trace_off_empty",
+      "note": "nothing is logged",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"settings": {"data_source_trace": null}},
+      "args": ["msg", "value"],
+      "id": "trace_off_unset",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"settings": {"data_source_trace": "1"}},
+      "args": ["msg", "value"],
+      "id": "trace_off_other_text",
+      "note": "only the exact string \"on\" enables it",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"settings": {"data_source_trace": "ON"}},
+      "args": ["msg", "value"],
+      "id": "trace_on_uppercase",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"settings": {"data_source_trace": "on"}},
+      "args": ["msg"],
+      "id": "data_null",
+      "note": "NULL spelled out",
+      "result": {
+        "log": ["<TIMESTAMP> - DSTRACE msg = NULL"],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "ambient": {"settings": {"data_source_trace": "on"}},
+      "args": ["msg", null],
+      "id": "data_null_explicit",
+      "result": {
+        "log": ["<TIMESTAMP> - DSTRACE msg = NULL"],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "ambient": {"settings": {"data_source_trace": "on"}},
+      "args": ["msg", {"$": "array", "pairs": [["a", 1], ["b", [1, 2]]]}],
+      "id": "data_array",
+      "note": "json_encode",
+      "result": {
+        "log": ["<TIMESTAMP> - DSTRACE msg = {\"a\":1,\"b\":[1,2]}"],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "ambient": {"settings": {"data_source_trace": "on"}},
+      "args": ["msg", ["a\nb"]],
+      "id": "data_array_lf",
+      "note": "json_encode escapes LF as \\n, so the line stays intact",
+      "result": {
+        "log": ["<TIMESTAMP> - DSTRACE msg = [\"a\\nb\"]"],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "ambient": {"settings": {"data_source_trace": "on"}},
+      "args": ["msg", "v", 5],
+      "id": "level_explicit_debug_dropped",
+      "note": "level 5 above verbosity 2: dropped",
+      "result": {"returned": {"type": "null", "value": null}}
+    }
+  ],
+  "function": "dsv_log",
+  "signature": [
+    {"by_ref": false, "name": "message", "optional": false, "type": null, "variadic": false},
+    {
+      "by_ref": false,
+      "default": null,
+      "name": "data",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    },
+    {
+      "by_ref": false,
+      "default": 2,
+      "name": "level",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    }
+  ]
+}

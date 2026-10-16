@@ -1,0 +1,209 @@
+{
+  "cases": [
+    {
+      "args": ["No response from 10.0.0.1"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "No response from 10.0.0.1"}
+        }
+      ],
+      "id": "snmp_noresponsefrom10001",
+      "note": "SNMP messages return true and set $snmp_error",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["noSuchName"],
+      "id": "snmp_nosuchname",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["No Such Object available on this agent"],
+      "id": "snmp_nosuchobjectavailableonthisage",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["Error in packet"],
+      "id": "snmp_errorinpacket",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["This name does not exist"],
+      "id": "snmp_thisnamedoesnotexist",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["End of MIB"],
+      "id": "snmp_endofmib",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["Timeout: No Response from host"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "Timeout: No Response from host"}
+        }
+      ],
+      "id": "snmp_timeout",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "End of MIB"}
+        }
+      ],
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["Unknown host"],
+      "id": "snmp_unknownhost",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["Connection timed out"],
+      "id": "snmp_connectiontimedout",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["Invalid object identifier"],
+      "id": "snmp_invalidobjectidentifier",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["Name or service not known"],
+      "id": "snmp_nameorservicenotknown",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["USM generic error in file x"],
+      "id": "snmp_usmgenericerrorinfilex",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["TIMEOUT"],
+      "id": "snmp_case_insensitive",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [" \t\\Timeout\n\\ "],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "Timeout"}
+        }
+      ],
+      "id": "snmp_trimmed_value",
+      "note": "trim() removes backslash, LF, tab and space from both ends",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "TIMEOUT"}
+        }
+      ],
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["unable to read from socket"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "id": "general_socket",
+      "note": "general messages return true but leave $snmp_error alone",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "Timeout"}
+        }
+      ],
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["Maximum execution time of 30 seconds exceeded"],
+      "id": "general_exec_time",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["transport read failed"],
+      "id": "general_transport",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["Undefined variable $x"],
+      "id": "not_ignored",
+      "note": "returns false",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {"args": [""], "id": "empty_string", "result": {"returned": {"type": "bool", "value": false}}},
+    {
+      "args": [null],
+      "id": "null_message",
+      "note": "stripos(null) is deprecated",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 15,
+            "file": "lib/functions.php",
+            "message": "stripos(): Passing null to parameter #1 ($haystack) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [["Timeout"]],
+      "id": "array_message",
+      "note": "stripos() rejects an array",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "stripos(): Argument #1 ($haystack) must be of type string, array given"
+        }
+      }
+    },
+    {
+      "args": [{"$": "bytes", "hex": "54696d656f7574ff"}],
+      "id": "invalid_utf8",
+      "result": {"returned": {"type": "bool", "value": true}}
+    }
+  ],
+  "function": "IgnoreErrorHandler",
+  "signature": [
+    {"by_ref": false, "name": "message", "optional": false, "type": null, "variadic": false}
+  ]
+}

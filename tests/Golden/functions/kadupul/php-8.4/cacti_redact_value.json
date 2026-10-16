@@ -1,0 +1,54 @@
+{
+  "cases": [
+    {
+      "args": ["password", "hunter2"],
+      "id": "sensitive_string",
+      "result": {"returned": {"type": "string", "value": "[REDACTED]"}}
+    },
+    {
+      "args": ["password", null],
+      "id": "sensitive_null",
+      "note": "a null secret is still replaced",
+      "result": {"returned": {"type": "string", "value": "[REDACTED]"}}
+    },
+    {
+      "args": ["community", ["public"]],
+      "id": "sensitive_array",
+      "result": {"returned": {"type": "string", "value": "[REDACTED]"}}
+    },
+    {
+      "args": ["name", "x"],
+      "id": "plain_string",
+      "result": {"returned": {"type": "string", "value": "x"}}
+    },
+    {
+      "args": ["name", null],
+      "id": "plain_null",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "args": ["options", {"$": "array", "pairs": [["password", "hunter2"]]}],
+      "id": "plain_array_not_walked",
+      "note": "the value is returned as is: a secret nested in it is not redacted",
+      "result": {
+        "returned": {"type": "array", "value": {"$": "array", "pairs": [["password", "hunter2"]]}}
+      }
+    },
+    {
+      "args": ["args", ["password=hunter2"]],
+      "id": "plain_list_with_secret_word",
+      "note": "content is never inspected, only the key",
+      "result": {"returned": {"type": "array", "value": ["password=hunter2"]}}
+    },
+    {
+      "args": ["password", null],
+      "id": "missing_value",
+      "result": {"returned": {"type": "string", "value": "[REDACTED]"}}
+    }
+  ],
+  "function": "cacti_redact_value",
+  "signature": [
+    {"by_ref": false, "name": "key", "optional": false, "type": null, "variadic": false},
+    {"by_ref": false, "name": "value", "optional": false, "type": null, "variadic": false}
+  ]
+}

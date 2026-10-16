@@ -1,0 +1,182 @@
+{
+  "cases": [
+    {
+      "ambient": {"config": {"poller_id": 1}},
+      "args": ["t", "Section"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {
+            "type": "array",
+            "value": {
+              "$": "array",
+              "pairs": [
+                [
+                  "t",
+                  [
+                    "<table class='cactiTable debug'><tr class='tableHeader'><td>Section</td></tr><tr><td style='padding:0px;'><table style='display:none;'><tr><td><div style='font-family: monospace;'>"
+                  ]
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "id": "start_plain",
+      "note": "allowcopy false: $copy_headerid is undefined and the table has no header id (warning)",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Undefined variable $copy_headerid",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "ambient": {"config": {"poller_id": 1}},
+      "args": ["t", "Section", true],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {
+            "type": "array",
+            "value": {
+              "$": "array",
+              "pairs": [
+                [
+                  "t",
+                  [
+                    "<table class='cactiTable debug' id='clipboardHeader<UID>'><tr class='tableHeader'><td>Section<div class='cactiTableButton debug'><span><a class='linkCopyDark cactiTableCopy' id='copyToClipboard<UID>'>Copy</a></span></div></td></tr><tr><td style='padding:0px;'><table style='display:none;' id='clipboardData<UID>'><tr><td><div style='font-family: monospace;'>"
+                  ]
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "id": "start_allowcopy",
+      "note": "ids carry a random 32 hex uid, replaced",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"config": {"poller_id": 1}},
+      "args": ["t", "<b>\"x\"&"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {
+            "type": "array",
+            "value": {
+              "$": "array",
+              "pairs": [
+                [
+                  "t",
+                  [
+                    "<table class='cactiTable debug'><tr class='tableHeader'><td>&lt;b&gt;&quot;x&quot;&amp;</td></tr><tr><td style='padding:0px;'><table style='display:none;'><tr><td><div style='font-family: monospace;'>"
+                  ]
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "id": "start_html_escaped",
+      "note": "the header text is html_escape()d",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Undefined variable $copy_headerid",
+            "severity": "E_WARNING",
+            "suppressed": false
+          }
+        ],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "ambient": {"config": {"poller_id": 1}},
+      "args": ["t", "S", "no"],
+      "between": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {
+            "type": "array",
+            "value": {
+              "$": "array",
+              "pairs": [
+                [
+                  "t",
+                  [
+                    "<table class='cactiTable debug' id='clipboardHeader<UID>'><tr class='tableHeader'><td>S<div class='cactiTableButton debug'><span><a class='linkCopyDark cactiTableCopy' id='copyToClipboard<UID>'>Copy</a></span></div></td></tr><tr><td style='padding:0px;'><table style='display:none;' id='clipboardData<UID>'><tr><td><div style='font-family: monospace;'>"
+                  ]
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_peek",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "id": "start_allowcopy_truthy_string",
+      "result": {"returned": {"type": "null", "value": null}}
+    }
+  ],
+  "function": "debug_log_insert_section_start",
+  "signature": [
+    {"by_ref": false, "name": "type", "optional": false, "type": null, "variadic": false},
+    {"by_ref": false, "name": "text", "optional": false, "type": null, "variadic": false},
+    {
+      "by_ref": false,
+      "default": false,
+      "name": "allowcopy",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "function": "debug_log_insert",
+  "cases": [
+    {"id": "main_poller_no_session", "args": ["t", "one"], "ambient": {"config": {"poller_id": 1}}, "between": [{"fn": "behavior_fixture_peek", "args": ["session_debug_log"]}, {"fn": "behavior_fixture_peek", "args": ["config_debug_log"]}], "note": "poller 1 writes to $_SESSION even when there is no session"},
+    {"id": "remote_poller_no_session", "args": ["t", "one"], "ambient": {"config": {"poller_id": 2}}, "prelude": [{"fn": "behavior_fixture_unset_session", "args": []}], "between": [{"fn": "behavior_fixture_peek", "args": ["session_debug_log"]}, {"fn": "behavior_fixture_peek", "args": ["config_debug_log"]}], "note": "a remote poller without a session writes to $config[debug_log], which debug_log_return never reads"},
+    {"id": "remote_poller_with_session", "args": ["t", "one"], "ambient": {"config": {"poller_id": 2}, "session": {"x": 1}}, "between": [{"fn": "behavior_fixture_peek", "args": ["session_debug_log"]}, {"fn": "behavior_fixture_peek", "args": ["config_debug_log"]}], "note": "an existing session wins over the poller id"},
+    {"id": "main_poller_with_session", "args": ["t", "one"], "ambient": {"config": {"poller_id": 1}, "session": {"x": 1}}, "between": [{"fn": "behavior_fixture_peek", "args": ["session_debug_log"]}, {"fn": "behavior_fixture_peek", "args": ["config_debug_log"]}]},
+    {"id": "appends_in_order", "args": ["t", "two"], "ambient": {"config": {"poller_id": 1}}, "prelude": [{"fn": "debug_log_insert", "args": ["t", "one"]}], "between": [{"fn": "behavior_fixture_peek", "args": ["session_debug_log"]}, {"fn": "behavior_fixture_peek", "args": ["config_debug_log"]}]},
+    {"id": "other_type_kept_apart", "args": ["b", "two"], "ambient": {"config": {"poller_id": 1}}, "prelude": [{"fn": "debug_log_insert", "args": ["a", "one"]}], "between": [{"fn": "behavior_fixture_peek", "args": ["session_debug_log"]}, {"fn": "behavior_fixture_peek", "args": ["config_debug_log"]}]},
+    {"id": "html_not_escaped", "args": ["t", "<script>alert(1)</script>"], "ambient": {"config": {"poller_id": 1}}, "between": [{"fn": "behavior_fixture_peek", "args": ["session_debug_log"]}, {"fn": "behavior_fixture_peek", "args": ["config_debug_log"]}], "note": "insert stores text as given; escaping is the caller's job"},
+    {"id": "null_type", "args": [null, "x"], "ambient": {"config": {"poller_id": 1}}, "between": [{"fn": "behavior_fixture_peek", "args": ["session_debug_log"]}, {"fn": "behavior_fixture_peek", "args": ["config_debug_log"]}], "note": "a null key is stored under \"\""}
+  ]
+}

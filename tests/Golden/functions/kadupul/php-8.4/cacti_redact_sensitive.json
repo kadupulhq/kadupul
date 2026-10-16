@@ -1,0 +1,340 @@
+{
+  "cases": [
+    {
+      "args": [
+        {
+          "$": "array",
+          "pairs": [
+            ["host", "a"],
+            ["password", "hunter2"],
+            ["port", 161],
+            ["snmp_community", "public"]
+          ]
+        }
+      ],
+      "id": "flat_mixed",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              ["host", "a"],
+              ["password", "[REDACTED]"],
+              ["port", 161],
+              ["snmp_community", "[REDACTED]"]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": [
+        {
+          "$": "array",
+          "pairs": [
+            [
+              "device",
+              {
+                "$": "array",
+                "pairs": [["name", "r1"], ["snmp_auth_passphrase", "x"], ["tags", ["a", "b"]]]
+              }
+            ],
+            ["token", "t"]
+          ]
+        }
+      ],
+      "id": "nested",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              [
+                "device",
+                {
+                  "$": "array",
+                  "pairs": [
+                    ["name", "r1"],
+                    ["snmp_auth_passphrase", "[REDACTED]"],
+                    ["tags", ["a", "b"]]
+                  ]
+                }
+              ],
+              ["token", "[REDACTED]"]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": [{"$": "array", "pairs": [["password", {"$": "array", "pairs": [["a", 1]]}]]}],
+      "id": "sensitive_key_with_array_value",
+      "note": "the whole value is replaced, not walked",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {"$": "array", "pairs": [["password", "[REDACTED]"]]}
+        }
+      }
+    },
+    {
+      "args": [{"$": "array", "pairs": [["name", null]]}],
+      "id": "non_sensitive_null",
+      "result": {"returned": {"type": "array", "value": {"$": "array", "pairs": [["name", null]]}}}
+    },
+    {
+      "args": [
+        [{"$": "array", "pairs": [["password", "a"]]}, {"$": "array", "pairs": [["name", "b"]]}]
+      ],
+      "id": "list_of_arrays",
+      "note": "a list is walked element by element",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": [
+            {"$": "array", "pairs": [["password", "[REDACTED]"]]},
+            {"$": "array", "pairs": [["name", "b"]]}
+          ]
+        }
+      }
+    },
+    {
+      "args": [{"$": "array", "pairs": [["compass", "north"], ["bypass", 1]]}],
+      "id": "over_redaction",
+      "note": "substring matching redacts unrelated keys",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {"$": "array", "pairs": [["compass", "[REDACTED]"], ["bypass", "[REDACTED]"]]}
+        }
+      }
+    },
+    {
+      "args": [
+        {
+          "$": "array",
+          "pairs": [
+            ["api_key", "k"],
+            ["authorization", "Bearer x"],
+            ["pwd", "p"],
+            ["private_key", "pk"]
+          ]
+        }
+      ],
+      "id": "unlisted_secret_names",
+      "note": "SECURITY: these names are not matched and pass through",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              ["api_key", "k"],
+              ["authorization", "Bearer x"],
+              ["pwd", "p"],
+              ["private_key", "pk"]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": [
+        {
+          "$": "array",
+          "pairs": [
+            ["dsn", "mysql://user:hunter2@host/db"],
+            ["header", "Authorization: Bearer abc"]
+          ]
+        }
+      ],
+      "id": "secret_in_value_not_key",
+      "note": "SECURITY: secrets embedded in values are not found",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              ["dsn", "mysql://user:hunter2@host/db"],
+              ["header", "Authorization: Bearer abc"]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": ["password"],
+      "id": "scalar_string",
+      "note": "a non-array is returned unchanged",
+      "result": {"returned": {"type": "string", "value": "password"}}
+    },
+    {
+      "args": [{"$": "array", "pairs": [["a", 1], [7, 2], ["", 3], ["0", 4]]}],
+      "id": "mixed_key_types",
+      "note": "\"0\" becomes the integer key 0 in PHP",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {"$": "array", "pairs": [["a", 1], [7, 2], ["", 3], [0, 4]]}
+        }
+      }
+    },
+    {
+      "args": [
+        {
+          "$": "array",
+          "pairs": [
+            [
+              "n",
+              {
+                "$": "array",
+                "pairs": [
+                  [
+                    "n",
+                    {
+                      "$": "array",
+                      "pairs": [
+                        [
+                          "n",
+                          {
+                            "$": "array",
+                            "pairs": [
+                              [
+                                "n",
+                                {
+                                  "$": "array",
+                                  "pairs": [
+                                    [
+                                      "n",
+                                      {
+                                        "$": "array",
+                                        "pairs": [
+                                          [
+                                            "n",
+                                            {
+                                              "$": "array",
+                                              "pairs": [["password", "deep"], ["x", 1]]
+                                            }
+                                          ]
+                                        ]
+                                      }
+                                    ]
+                                  ]
+                                }
+                              ]
+                            ]
+                          }
+                        ]
+                      ]
+                    }
+                  ]
+                ]
+              }
+            ]
+          ]
+        }
+      ],
+      "id": "deep_nesting_6",
+      "note": "6 levels deep; the secret at the bottom is redacted",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "array",
+            "pairs": [
+              [
+                "n",
+                {
+                  "$": "array",
+                  "pairs": [
+                    [
+                      "n",
+                      {
+                        "$": "array",
+                        "pairs": [
+                          [
+                            "n",
+                            {
+                              "$": "array",
+                              "pairs": [
+                                [
+                                  "n",
+                                  {
+                                    "$": "array",
+                                    "pairs": [
+                                      [
+                                        "n",
+                                        {
+                                          "$": "array",
+                                          "pairs": [
+                                            [
+                                              "n",
+                                              {
+                                                "$": "array",
+                                                "pairs": [["password", "[REDACTED]"], ["x", 1]]
+                                              }
+                                            ]
+                                          ]
+                                        }
+                                      ]
+                                    ]
+                                  }
+                                ]
+                              ]
+                            }
+                          ]
+                        ]
+                      }
+                    ]
+                  ]
+                }
+              ]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "args": [
+        {
+          "$": "list",
+          "count": 70,
+          "head": [
+            {"$": "array", "pairs": [["id", 0], ["password", "p0"]]},
+            {"$": "array", "pairs": [["id", 1], ["password", "p1"]]},
+            {"$": "array", "pairs": [["id", 2], ["password", "p2"]]},
+            {"$": "array", "pairs": [["id", 3], ["password", "p3"]]}
+          ],
+          "sha256": "55b658140336a67fbc3ff63300eaf3e873a5fb69995b818fb0e23d3f2a473c1a",
+          "types": ["object"]
+        }
+      ],
+      "id": "seventy_rows_summarised",
+      "note": "over 64 elements: recorded by digest in the golden",
+      "result": {
+        "returned": {
+          "type": "array",
+          "value": {
+            "$": "list",
+            "count": 70,
+            "head": [
+              {"$": "array", "pairs": [["id", 0], ["password", "[REDACTED]"]]},
+              {"$": "array", "pairs": [["id", 1], ["password", "[REDACTED]"]]},
+              {"$": "array", "pairs": [["id", 2], ["password", "[REDACTED]"]]},
+              {"$": "array", "pairs": [["id", 3], ["password", "[REDACTED]"]]}
+            ],
+            "sha256": "a663adfd5b8387cd61266afed8d69cbaa05db17cda5d857906f1d637cb0c14b1",
+            "types": ["object"]
+          }
+        }
+      }
+    }
+  ],
+  "function": "cacti_redact_sensitive",
+  "signature": [
+    {"by_ref": false, "name": "data", "optional": false, "type": null, "variadic": false}
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "cases": [
+    {
+      "args": ["", false, false, 1],
+      "id": "return_no_entry_limit1",
+      "note": "record=false returns the string; frames are the harness's call chain, one frame deep",
+      "result": {
+        "returned": {
+          "type": "string",
+          "value": "(<HARNESS>/function_capture.php[<LINE>]:cacti_debug_backtrace())"
+        }
+      }
+    },
+    {
+      "args": ["E", false, false, 1],
+      "id": "return_with_entry_limit1",
+      "note": "the entry is prefixed as \"E Backtrace: (\"",
+      "result": {
+        "returned": {
+          "type": "string",
+          "value": "E Backtrace:  (<HARNESS>/function_capture.php[<LINE>]:cacti_debug_backtrace())"
+        }
+      }
+    },
+    {
+      "args": ["", false, false, 2, 1],
+      "id": "return_limit2_skip1",
+      "note": "skip drops the innermost frames before the limit applies",
+      "result": {"returned": {"type": "string", "value": "(<harness frames: 2>)"}}
+    },
+    {
+      "args": ["E", true, true, 1],
+      "id": "record_html_prints_table",
+      "note": "html=true also prints a one-cell table",
+      "result": {
+        "log": [
+          "<TIMESTAMP> - CMDPHP E Backtrace:  (<HARNESS>/function_capture.php[<LINE>]:cacti_debug_backtrace())"
+        ],
+        "output": "<table style='width:100%;text-align:center;'><tr><td> (<HARNESS>/function_capture.php[<LINE>]:cacti_debug_backtrace())</td></tr></table>\n",
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "ambient": {"settings": {"log_verbosity": "1"}},
+      "args": ["E", false, true, 1],
+      "id": "record_logs_line",
+      "note": "record=true writes \"E Backtrace: (...)\" through cacti_log and returns null",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "args": ["", false, false, 1],
+      "id": "frames_with_class_and_without_file",
+      "note": "a method frame is printed as Class->function(); a callback invoked by array_map has no file",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_backtrace",
+          "log": [],
+          "output": "",
+          "returned": {
+            "type": "string",
+            "value": "E Backtrace:  (<harness frames: 1>, BehaviorFixtureTrace->take(), <HARNESS>/function_capture.php[<LINE>]:cacti_debug_backtrace())"
+          }
+        }
+      ],
+      "result": {
+        "returned": {
+          "type": "string",
+          "value": "(<HARNESS>/function_capture.php[<LINE>]:cacti_debug_backtrace())"
+        }
+      }
+    },
+    {
+      "args": ["", false, false, 1],
+      "id": "recorded_through_method",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_backtrace",
+          "log": [
+            "<TIMESTAMP> - CMDPHP E Backtrace:  (<harness frames: 1>, BehaviorFixtureTrace->take(), <HARNESS>/function_capture.php[<LINE>]:cacti_debug_backtrace())"
+          ],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "result": {
+        "returned": {
+          "type": "string",
+          "value": "(<HARNESS>/function_capture.php[<LINE>]:cacti_debug_backtrace())"
+        }
+      }
+    }
+  ],
+  "function": "cacti_debug_backtrace",
+  "signature": [
+    {
+      "by_ref": false,
+      "default": "",
+      "name": "entry",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    },
+    {
+      "by_ref": false,
+      "default": false,
+      "name": "html",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    },
+    {
+      "by_ref": false,
+      "default": true,
+      "name": "record",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    },
+    {
+      "by_ref": false,
+      "default": 0,
+      "name": "limit",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    },
+    {
+      "by_ref": false,
+      "default": 0,
+      "name": "skip",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    }
+  ]
+}

@@ -1187,12 +1187,45 @@ def capture_function(name, spec, run_probe):
     return {'function': name, 'signature': signature, 'cases': ordered}
 
 
+def collapse_harness_frames(match):
+    """The outermost frames of a backtrace belong to the capture harness; keep only how many."""
+    frames = match[2].split(', ')
+    count = 0
+    while count < len(frames) and re.search(r'(?:^|:)(?:behavior_\w+|array_map)\(\)$', frames[count]):
+        count += 1
+    if not count:
+        return match[0]
+    return match[1] + ', '.join(['<harness frames: %d>' % count] + frames[count:]) + match[3]
+
+
+def normalize_logging_shapes(value):
+    """Wall clock, PID and random ids in the output of the logging functions.
+
+    A timestamp keeps its format and loses its digits, so a change of format
+    still shows. Frame line numbers in a backtrace are the harness's, not the
+    application's, and move whenever either file is edited.
+    """
+    value = re.sub(r'^([0-9A-Za-z/.-]+ \d{2}:\d{2}:\d{2})(?= - )',
+                   lambda m: '<TIMESTAMP:' + re.sub(r'\d', '9', m[1]) + '>', value, flags=re.MULTILINE)
+    value = re.sub(r'^(Total\[)\s*\d+\.\d{4}(\] )', r'\1<T>\2', value, flags=re.MULTILINE)
+    value = re.sub(r'(POLLER: Poller\[\d+\] PID\[)\d+\]', r'\1<PID>]', value)
+    value = re.sub(r'^<\[ \d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{6} \| ( *\d+) \]> -- ',
+                   lambda m: '<[ <DATETIME> | <PID:' + str(len(m[1])) + '> ]> -- ', value, flags=re.MULTILINE)
+    value = re.sub(r"((?:copyToClipboard|clipboardData|clipboardHeader))[0-9a-f]{32}", r'\1<UID>', value)
+    value = re.sub(r'((?:<HARNESS>|/harness)/[\w./-]+\.php)(?:\[\d+\]|\(\d+\)(?= : eval\(\)))', r'\1[<LINE>]', value)
+    if 'Backtrace:' in value:
+        value = re.sub(r'(\.php)\[\d+\]', r'\1[<LINE>]', value)
+    value = re.sub(r'(Backtrace:\s*\(|^\()([^\r\n]*?)(\)\s*)$', collapse_harness_frames, value, flags=re.MULTILINE)
+    return re.sub(r'(in file: (?:<HARNESS>|/harness)/\S+\.php\s+on line: )\d+', r'\1<LINE>', value)
+
+
 def normalize_function_tree(value):
     if isinstance(value, dict):
         return {k: normalize_function_tree(v) for k, v in value.items()}
     if isinstance(value, list):
         return [normalize_function_tree(v) for v in value]
-    return normalize(value)
+    value = normalize(value)
+    return normalize_logging_shapes(value) if isinstance(value, str) else value
 
 
 def normalize_function_record(record):
@@ -1204,9 +1237,19 @@ def normalize_function_record(record):
     out = summarize_large({k: normalize_function_tree(v) for k, v in record.items() if k != 'cases'})
     # The case list is the record itself, however many cases a function has;
     # only what is inside a case is summarized.
-    out['cases'] = [summarize_large({k: v if k in FUNCTION_INPUT_KEYS else normalize_function_tree(v) for k, v in case.items()})
+    out['cases'] = [collapse_warm_repeat(summarize_large({k: v if k in FUNCTION_INPUT_KEYS else normalize_function_tree(v) for k, v in case.items()}))
                     for case in record['cases']]
     return out
+
+
+def collapse_warm_repeat(case):
+    # The recorder compares the two calls before normalization, so a field that
+    # carries an elapsed time (Total[0.0012]) differs between them on every run.
+    # Once the shapes are normalized the repeat may be identical after all.
+    warm = case.get('warm')
+    if isinstance(warm, dict) and warm.get('same') is False and warm.get('result') == case.get('result'):
+        case['warm'] = {'same': True}
+    return case
 
 
 FUNCTION_SUMMARY_THRESHOLD = 64

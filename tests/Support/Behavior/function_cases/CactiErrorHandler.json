@@ -1,0 +1,31 @@
+{
+  "function": "CactiErrorHandler",
+  "cases": [
+    {"id": "level_warning", "args": [2, "message warning", "/var/www/html/lib/example.php", 12], "note": "returns false; two log lines: the message and a backtrace"},
+    {"id": "level_notice", "args": [8, "message notice", "/var/www/html/lib/example.php", 12]},
+    {"id": "level_user_warning", "args": [512, "message user_warning", "/var/www/html/lib/example.php", 12]},
+    {"id": "level_user_error", "args": [256, "message user_error", "/var/www/html/lib/example.php", 12]},
+    {"id": "level_deprecated", "args": [8192, "message deprecated", "/var/www/html/lib/example.php", 12]},
+    {"id": "level_strict", "args": [2048, "message strict", "/var/www/html/lib/example.php", 12]},
+    {"id": "level_recoverable", "args": [4096, "message recoverable", "/var/www/html/lib/example.php", 12]},
+    {"id": "level_compile_warning", "args": [128, "message compile_warning", "/var/www/html/lib/example.php", 12]},
+    {"id": "level_error", "args": [1, "message error", "/var/www/html/lib/example.php", 12], "note": "fatal levels use the first switch arm"},
+    {"id": "level_parse", "args": [4, "message parse", "/var/www/html/lib/example.php", 12]},
+    {"id": "level_core_error", "args": [16, "message core_error", "/var/www/html/lib/example.php", 12]},
+    {"id": "level_compile_error", "args": [64, "message compile_error", "/var/www/html/lib/example.php", 12]},
+    {"id": "level_unknown", "args": [99999, "m", "/var/www/html/lib/example.php", 1], "note": "a level missing from $phperrors is reported as \"PHP Unknown Error\""},
+    {"id": "plugin_warning", "args": [2, "m", "/var/www/html/plugins/myplug/setup.php", 7], "note": "the file path names a plugin: \" in  Plugin\" with two spaces"},
+    {"id": "file_null", "args": [2, "m", null, 7]},
+    {"id": "message_forged_record", "args": [2, "a\n2026-01-01 00:00:00 - ERROR PHP ERROR: forged", "/var/www/html/lib/example.php", 1]},
+    {"id": "message_nul_esc", "args": [2, "a\u0000b\u001b[31m", "/var/www/html/lib/example.php", 1]},
+    {"id": "message_array", "args": [2, ["a"], "/var/www/html/lib/example.php", 1], "note": "string concatenation of an array"},
+    {"id": "ignored_snmp_message", "args": [2, "Timeout", "/var/www/html/lib/example.php", 1], "note": "IgnoreErrorHandler claims it: true, nothing logged"},
+    {"id": "install_constant_defined", "args": [2, "m", "/var/www/html/lib/example.php", 1], "prelude": [{"fn": "behavior_fixture_define", "args": ["IN_CACTI_INSTALL"]}], "note": "IN_CACTI_INSTALL short-circuits to true before anything else", "isolated": true},
+    {"id": "error_reporting_zero", "args": [2, "m", "/var/www/html/lib/example.php", 1], "prelude": [{"fn": "behavior_fixture_error_reporting", "args": [0]}], "note": "error_reporting() == 0 returns true", "isolated": true},
+    {"id": "error_reporting_silenced_php8", "args": [2, "m", "/var/www/html/lib/example.php", 1], "prelude": [{"fn": "behavior_fixture_error_reporting", "args": [4437]}], "note": "PHP 8 reports 4437 inside @, so this check never matches; the real @ case is below", "isolated": true},
+    {"id": "verbosity_none_hides_log", "args": [2, "m", "/var/www/html/lib/example.php", 1], "ambient": {"settings": {"log_verbosity": "1"}}, "note": "cacti_log is called without a level; NONE blocks the file"},
+    {"id": "fatal_with_plugin", "args": [1, "m", "/var/www/html/plugins/myplug/setup.php", 7], "note": "fatal in a plugin: disables the plugin (rolled back with the case) and tries to mail the administrator", "isolated": true},
+    {"id": "engine_user_warning", "args": [2, "Timeout", "/var/www/html/lib/example.php", 1], "prelude": [{"fn": "behavior_fixture_trigger", "args": [512, "raised by trigger_error", false]}], "note": "the application handler installed with set_error_handler; file and line are the helper's"},
+    {"id": "engine_silenced_warning", "args": [2, "Timeout", "/var/www/html/lib/example.php", 1], "prelude": [{"fn": "behavior_fixture_trigger", "args": [512, "raised under @", true]}], "note": "SECURITY-RELEVANT: under @ PHP 8 still calls the handler with error_reporting() = 4437, so the \"== 0\" test does not suppress it and the line is logged"}
+  ]
+}

@@ -1,0 +1,403 @@
+{
+  "cases": [
+    {
+      "args": [2, "message warning", "/var/www/html/lib/example.php", 12],
+      "id": "level_warning",
+      "note": "returns false; two log lines: the message and a backtrace",
+      "result": {
+        "log": [
+          "<TIMESTAMP> - ERROR PHP WARNING: message warning in file: <APP>/lib/example.php  on line: 12",
+          "<TIMESTAMP> - CMDPHP PHP ERROR WARNING Backtrace:  (<harness frames: 3>, <HARNESS>/function_capture.php[<LINE>]:CactiErrorHandler())"
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [8, "message notice", "/var/www/html/lib/example.php", 12],
+      "id": "level_notice",
+      "result": {
+        "log": [
+          "<TIMESTAMP> - ERROR PHP NOTICE: message notice in file: <APP>/lib/example.php  on line: 12",
+          "<TIMESTAMP> - CMDPHP PHP ERROR NOTICE Backtrace:  (<harness frames: 3>, <HARNESS>/function_capture.php[<LINE>]:CactiErrorHandler())"
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [512, "message user_warning", "/var/www/html/lib/example.php", 12],
+      "id": "level_user_warning",
+      "result": {
+        "log": [
+          "<TIMESTAMP> - ERROR PHP USER_WARNING: message user_warning in file: <APP>/lib/example.php  on line: 12",
+          "<TIMESTAMP> - CMDPHP PHP ERROR WARNING Backtrace:  (<harness frames: 3>, <HARNESS>/function_capture.php[<LINE>]:CactiErrorHandler())"
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [256, "message user_error", "/var/www/html/lib/example.php", 12],
+      "id": "level_user_error",
+      "result": {
+        "log": [
+          "<TIMESTAMP> - ERROR PHP USER_ERROR: message user_error in file: <APP>/lib/example.php  on line: 12",
+          "<TIMESTAMP> - CMDPHP PHP ERROR Backtrace:  (<harness frames: 3>, <HARNESS>/function_capture.php[<LINE>]:CactiErrorHandler())"
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [8192, "message deprecated", "/var/www/html/lib/example.php", 12],
+      "id": "level_deprecated",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Constant E_STRICT is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "log": [
+          "<TIMESTAMP> - ERROR PHP DEPRECATED: message deprecated in file: <APP>/lib/example.php  on line: 12",
+          "<TIMESTAMP> - CMDPHP PHP ERROR Backtrace:  (<harness frames: 3>, <HARNESS>/function_capture.php[<LINE>]:CactiErrorHandler())"
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [2048, "message strict", "/var/www/html/lib/example.php", 12],
+      "id": "level_strict",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Constant E_STRICT is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "log": [
+          "<TIMESTAMP> - ERROR PHP Unknown Error: message strict in file: <APP>/lib/example.php  on line: 12",
+          "<TIMESTAMP> - CMDPHP PHP ERROR STRICT Backtrace:  (<harness frames: 3>, <HARNESS>/function_capture.php[<LINE>]:CactiErrorHandler())"
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [4096, "message recoverable", "/var/www/html/lib/example.php", 12],
+      "id": "level_recoverable",
+      "result": {
+        "log": [
+          "<TIMESTAMP> - ERROR PHP RECOVERABLE_ERROR: message recoverable in file: <APP>/lib/example.php  on line: 12",
+          "<TIMESTAMP> - CMDPHP PHP ERROR Backtrace:  (<harness frames: 3>, <HARNESS>/function_capture.php[<LINE>]:CactiErrorHandler())"
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [128, "message compile_warning", "/var/www/html/lib/example.php", 12],
+      "id": "level_compile_warning",
+      "result": {
+        "log": [
+          "<TIMESTAMP> - ERROR PHP COMPILE_WARNING: message compile_warning in file: <APP>/lib/example.php  on line: 12",
+          "<TIMESTAMP> - CMDPHP PHP ERROR WARNING Backtrace:  (<harness frames: 3>, <HARNESS>/function_capture.php[<LINE>]:CactiErrorHandler())"
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [1, "message error", "/var/www/html/lib/example.php", 12],
+      "id": "level_error",
+      "note": "fatal levels use the first switch arm",
+      "result": {
+        "log": [
+          "<TIMESTAMP> - ERROR PHP ERROR: message error in file: <APP>/lib/example.php  on line: 12",
+          "<TIMESTAMP> - CMDPHP PHP ERROR PARSE Backtrace:  (<harness frames: 3>, <HARNESS>/function_capture.php[<LINE>]:CactiErrorHandler())"
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [4, "message parse", "/var/www/html/lib/example.php", 12],
+      "id": "level_parse",
+      "result": {
+        "log": [
+          "<TIMESTAMP> - ERROR PHP PARSE: message parse in file: <APP>/lib/example.php  on line: 12",
+          "<TIMESTAMP> - CMDPHP PHP ERROR PARSE Backtrace:  (<harness frames: 3>, <HARNESS>/function_capture.php[<LINE>]:CactiErrorHandler())"
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [16, "message core_error", "/var/www/html/lib/example.php", 12],
+      "id": "level_core_error",
+      "result": {
+        "log": [
+          "<TIMESTAMP> - ERROR PHP CORE_ERROR: message core_error in file: <APP>/lib/example.php  on line: 12",
+          "<TIMESTAMP> - CMDPHP PHP ERROR PARSE Backtrace:  (<harness frames: 3>, <HARNESS>/function_capture.php[<LINE>]:CactiErrorHandler())"
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [64, "message compile_error", "/var/www/html/lib/example.php", 12],
+      "id": "level_compile_error",
+      "result": {
+        "log": [
+          "<TIMESTAMP> - ERROR PHP COMPILE_ERROR: message compile_error in file: <APP>/lib/example.php  on line: 12",
+          "<TIMESTAMP> - CMDPHP PHP ERROR PARSE Backtrace:  (<harness frames: 3>, <HARNESS>/function_capture.php[<LINE>]:CactiErrorHandler())"
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [99999, "m", "/var/www/html/lib/example.php", 1],
+      "id": "level_unknown",
+      "note": "a level missing from $phperrors is reported as \"PHP Unknown Error\"",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "Constant E_STRICT is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "log": [
+          "<TIMESTAMP> - ERROR PHP Unknown Error: m in file: <APP>/lib/example.php  on line: 1",
+          "<TIMESTAMP> - CMDPHP PHP ERROR Backtrace:  (<harness frames: 3>, <HARNESS>/function_capture.php[<LINE>]:CactiErrorHandler())"
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [2, "m", "/var/www/html/plugins/myplug/setup.php", 7],
+      "id": "plugin_warning",
+      "note": "the file path names a plugin: \" in  Plugin\" with two spaces",
+      "result": {
+        "log": [
+          "<TIMESTAMP> - ERROR PHP WARNING in  Plugin 'myplug': m in file: <APP>/plugins/myplug/setup.php  on line: 7",
+          "<TIMESTAMP> - CMDPHP PHP ERROR WARNING Backtrace:  (<harness frames: 3>, <HARNESS>/function_capture.php[<LINE>]:CactiErrorHandler())"
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [2, "m", null, 7],
+      "id": "file_null",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 1,
+            "file": "lib/functions.php",
+            "message": "preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated",
+            "severity": "E_DEPRECATED",
+            "suppressed": false
+          }
+        ],
+        "log": [
+          "<TIMESTAMP> - ERROR PHP WARNING: m in file:   on line: 7",
+          "<TIMESTAMP> - CMDPHP PHP ERROR WARNING Backtrace:  (<harness frames: 3>, <HARNESS>/function_capture.php[<LINE>]:CactiErrorHandler())"
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [
+        2,
+        "a\n2026-01-01 00:00:00 - ERROR PHP ERROR: forged",
+        "/var/www/html/lib/example.php",
+        1
+      ],
+      "id": "message_forged_record",
+      "result": {
+        "log": [
+          "<TIMESTAMP> - ERROR PHP WARNING: a 2026-01-01 00:00:00 - ERROR PHP ERROR: forged in file: <APP>/lib/example.php  on line: 1",
+          "<TIMESTAMP> - CMDPHP PHP ERROR WARNING Backtrace:  (<harness frames: 3>, <HARNESS>/function_capture.php[<LINE>]:CactiErrorHandler())"
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [2, "a\u0000b\u001b[31m", "/var/www/html/lib/example.php", 1],
+      "id": "message_nul_esc",
+      "result": {
+        "log": [
+          {
+            "$": "bytes",
+            "hex": "3c54494d455354414d503e202d204552524f5220504850205741524e494e473a206100621b5b33316d20696e2066696c653a203c4150503e2f6c69622f6578616d706c652e70687020206f6e206c696e653a2031"
+          },
+          "<TIMESTAMP> - CMDPHP PHP ERROR WARNING Backtrace:  (<harness frames: 3>, <HARNESS>/function_capture.php[<LINE>]:CactiErrorHandler())"
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "args": [2, ["a"], "/var/www/html/lib/example.php", 1],
+      "id": "message_array",
+      "note": "string concatenation of an array",
+      "result": {
+        "exception": {
+          "class": "TypeError",
+          "code": 0,
+          "message": "stripos(): Argument #1 ($haystack) must be of type string, array given"
+        }
+      }
+    },
+    {
+      "args": [2, "Timeout", "/var/www/html/lib/example.php", 1],
+      "id": "ignored_snmp_message",
+      "note": "IgnoreErrorHandler claims it: true, nothing logged",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [2, "m", "/var/www/html/lib/example.php", 1],
+      "id": "install_constant_defined",
+      "note": "IN_CACTI_INSTALL short-circuits to true before anything else",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_define",
+          "log": [],
+          "output": "",
+          "returned": {"type": "bool", "value": true}
+        }
+      ],
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [2, "m", "/var/www/html/lib/example.php", 1],
+      "id": "error_reporting_zero",
+      "note": "error_reporting() == 0 returns true",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_error_reporting",
+          "log": [],
+          "output": "",
+          "returned": {"type": "int", "value": 30719}
+        }
+      ],
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [2, "m", "/var/www/html/lib/example.php", 1],
+      "id": "error_reporting_silenced_php8",
+      "note": "PHP 8 reports 4437 inside @, so this check never matches; the real @ case is below",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_error_reporting",
+          "log": [],
+          "output": "",
+          "returned": {"type": "int", "value": 30719}
+        }
+      ],
+      "result": {
+        "log": [
+          "<TIMESTAMP> - ERROR PHP WARNING: m in file: <APP>/lib/example.php  on line: 1",
+          "<TIMESTAMP> - CMDPHP PHP ERROR WARNING Backtrace:  (<harness frames: 3>, <HARNESS>/function_capture.php[<LINE>]:CactiErrorHandler())"
+        ],
+        "returned": {"type": "bool", "value": false}
+      }
+    },
+    {
+      "ambient": {"settings": {"log_verbosity": "1"}},
+      "args": [2, "m", "/var/www/html/lib/example.php", 1],
+      "id": "verbosity_none_hides_log",
+      "note": "cacti_log is called without a level; NONE blocks the file",
+      "result": {"returned": {"type": "bool", "value": false}}
+    },
+    {
+      "args": [1, "m", "/var/www/html/plugins/myplug/setup.php", 7],
+      "id": "fatal_with_plugin",
+      "note": "fatal in a plugin: disables the plugin (rolled back with the case) and tries to mail the administrator",
+      "result": {
+        "diagnostics": [
+          {
+            "count": 2,
+            "file": "include/vendor/symfony/deprecation-contracts/function.php",
+            "message": "Since symfony/framework-bundle 7.3: Not setting the \"property_info.with_constructor_extractor\" option explicitly is deprecated because its default value will change in version 8.0.",
+            "severity": "E_USER_DEPRECATED",
+            "suppressed": true
+          }
+        ],
+        "log": [
+          "<TIMESTAMP> - ERROR PHP ERROR in  Plugin 'myplug': m in file: <APP>/plugins/myplug/setup.php  on line: 7",
+          "<TIMESTAMP> - CMDPHP PHP ERROR PARSE Backtrace:  (<harness frames: 3>, <HARNESS>/function_capture.php[<LINE>]:CactiErrorHandler())",
+          "<TIMESTAMP> - CMDPHP ERRORS DETECTED - DISABLING PLUGIN 'myplug'",
+          "<TIMESTAMP> - SYSTEM WARNING: Primary Admin account notifications disabled!  Unable to send administrative Email."
+        ],
+        "returned": {"type": "bool", "value": false}
+      },
+      "warm": {
+        "result": {
+          "diagnostics": [],
+          "log": [
+            "<TIMESTAMP> - ERROR PHP ERROR in  Plugin 'myplug': m in file: <APP>/plugins/myplug/setup.php  on line: 7",
+            "<TIMESTAMP> - CMDPHP PHP ERROR PARSE Backtrace:  (<harness frames: 3>, <HARNESS>/function_capture.php[<LINE>]:CactiErrorHandler())",
+            "<TIMESTAMP> - CMDPHP ERRORS DETECTED - DISABLING PLUGIN 'myplug'",
+            "<TIMESTAMP> - SYSTEM WARNING: Primary Admin account notifications disabled!  Unable to send administrative Email."
+          ],
+          "output": "",
+          "returned": {"type": "bool", "value": false}
+        },
+        "same": false
+      }
+    },
+    {
+      "args": [2, "Timeout", "/var/www/html/lib/example.php", 1],
+      "id": "engine_user_warning",
+      "note": "the application handler installed with set_error_handler; file and line are the helper's",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_trigger",
+          "log": [
+            "<TIMESTAMP> - ERROR PHP USER_WARNING: raised by trigger_error in file: <HARNESS>/function_capture.php  on line: <LINE>",
+            "<TIMESTAMP> - CMDPHP PHP ERROR WARNING Backtrace:  (<harness frames: 6>, <HARNESS>/function_capture.php[<LINE>]:trigger_error(), CactiErrorHandler())"
+          ],
+          "output": "",
+          "returned": {"type": "string", "value": "raised by trigger_error"}
+        }
+      ],
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": [2, "Timeout", "/var/www/html/lib/example.php", 1],
+      "id": "engine_silenced_warning",
+      "note": "SECURITY-RELEVANT: under @ PHP 8 still calls the handler with error_reporting() = 4437, so the \"== 0\" test does not suppress it and the line is logged",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_trigger",
+          "log": [
+            "<TIMESTAMP> - ERROR PHP USER_WARNING: raised under @ in file: <HARNESS>/function_capture.php  on line: <LINE>",
+            "<TIMESTAMP> - CMDPHP PHP ERROR WARNING Backtrace:  (<harness frames: 6>, <HARNESS>/function_capture.php[<LINE>]:trigger_error(), CactiErrorHandler())"
+          ],
+          "output": "",
+          "returned": {"type": "string", "value": "raised under @"}
+        }
+      ],
+      "result": {"returned": {"type": "bool", "value": true}}
+    }
+  ],
+  "function": "CactiErrorHandler",
+  "signature": [
+    {"by_ref": false, "name": "level", "optional": false, "type": null, "variadic": false},
+    {"by_ref": false, "name": "message", "optional": false, "type": null, "variadic": false},
+    {"by_ref": false, "name": "file", "optional": false, "type": null, "variadic": false},
+    {"by_ref": false, "name": "line", "optional": false, "type": null, "variadic": false},
+    {
+      "by_ref": false,
+      "default": [],
+      "name": "context",
+      "optional": true,
+      "type": null,
+      "variadic": false
+    }
+  ]
+}

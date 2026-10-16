@@ -1,0 +1,229 @@
+{
+  "cases": [
+    {
+      "ambient": {"settings": []},
+      "args": [],
+      "id": "nothing_configured",
+      "note": "the probe script is /harness/probe.php: no match, empty string",
+      "result": {"returned": {"type": "string", "value": ""}}
+    },
+    {
+      "ambient": {"settings": {"selective_debug": "probe.php"}},
+      "args": [],
+      "id": "file_listed",
+      "result": {"returned": {"type": "int", "value": 5}}
+    },
+    {
+      "ambient": {"settings": {"selective_debug": "a.php, probe.php"}},
+      "args": [],
+      "id": "file_listed_with_space",
+      "note": "entries are not trimmed: \" probe.php\" does not match",
+      "result": {"returned": {"type": "string", "value": ""}}
+    },
+    {
+      "ambient": {"settings": {"selective_debug": "other.php"}},
+      "args": [],
+      "id": "file_other_only",
+      "result": {"returned": {"type": "string", "value": ""}}
+    },
+    {
+      "ambient": {"settings": {"selective_debug": "vianame.php"}},
+      "args": [],
+      "id": "script_name_fallback",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_server",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_server",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "/x/vianame.php"}
+        }
+      ],
+      "result": {"returned": {"type": "int", "value": 5}}
+    },
+    {
+      "ambient": {"settings": {"selective_debug": "viafile.php"}},
+      "args": [],
+      "id": "script_filename_fallback",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_server",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_server",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_server",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "/x/viafile.php"}
+        }
+      ],
+      "result": {"returned": {"type": "int", "value": 5}}
+    },
+    {
+      "ambient": {"settings": {"selective_debug": "functions.php"}},
+      "args": [],
+      "id": "no_server_entries_uses_functions_file",
+      "note": "falls back to the file that defines the function",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_server",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_server",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        },
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_server",
+          "log": [],
+          "output": "",
+          "returned": {"type": "null", "value": null}
+        }
+      ],
+      "result": {"returned": {"type": "int", "value": 5}}
+    },
+    {
+      "ambient": {"settings": {"selective_plugin_debug": "foo"}},
+      "args": [],
+      "id": "plugin_dir_listed",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_server",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "<APP>/plugins/foo/a.php"}
+        }
+      ],
+      "result": {"returned": {"type": "int", "value": 5}}
+    },
+    {
+      "ambient": {"settings": {"selective_plugin_debug": "bar"}},
+      "args": [],
+      "id": "plugin_dir_not_listed",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_server",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "<APP>/plugins/foo/a.php"}
+        }
+      ],
+      "result": {"returned": {"type": "string", "value": ""}}
+    },
+    {
+      "ambient": {"settings": {"selective_plugin_debug": "fo"}},
+      "args": [],
+      "id": "plugin_prefix_matches",
+      "note": "\"/fo\" is contained in \"/foo\": a plugin name is matched as a path prefix, so \"fo\" selects foo and foobar",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_server",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "<APP>/plugins/foo/a.php"}
+        }
+      ],
+      "result": {"returned": {"type": "int", "value": 5}}
+    },
+    {
+      "ambient": {"settings": {"selective_plugin_debug": ""}},
+      "args": [],
+      "id": "plugin_setting_empty",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_server",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "<APP>/plugins/foo/a.php"}
+        }
+      ],
+      "result": {"returned": {"type": "string", "value": ""}}
+    },
+    {
+      "ambient": {"settings": {"selective_plugin_debug": "x"}},
+      "args": [],
+      "id": "plugins_in_other_dir_name",
+      "note": "any directory containing \"plugins\" counts",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_server",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "<APP>/myplugins/x/a.php"}
+        }
+      ],
+      "result": {"returned": {"type": "int", "value": 5}}
+    },
+    {
+      "ambient": {"settings": {"selective_plugin_debug": "foo"}},
+      "args": [],
+      "id": "plugin_setting_ignored_outside_plugins",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_server",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "<APP>/foo/a.php"}
+        }
+      ],
+      "result": {"returned": {"type": "string", "value": ""}}
+    },
+    {
+      "ambient": {"settings": {"selective_debug": "a.php", "selective_plugin_debug": "zzz"}},
+      "args": [],
+      "id": "file_and_plugin_both",
+      "note": "the plugin check does not clear a level the file check set",
+      "prelude": [
+        {
+          "diagnostics": [],
+          "fn": "behavior_fixture_server",
+          "log": [],
+          "output": "",
+          "returned": {"type": "string", "value": "<APP>/plugins/foo/a.php"}
+        }
+      ],
+      "result": {"returned": {"type": "int", "value": 5}}
+    },
+    {
+      "ambient": {"settings": {"selective_debug": "probe.php"}},
+      "args": [],
+      "between": [{"setting": {"selective_debug": ""}}],
+      "id": "cached_for_the_process",
+      "note": "static: the second call keeps the first answer",
+      "result": {"returned": {"type": "int", "value": 5}}
+    }
+  ],
+  "function": "get_selective_log_level",
+  "signature": []
+}
