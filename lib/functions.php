@@ -3954,7 +3954,7 @@ function build_where_from_array($filters, &$params)
     $where = array();
 
     foreach ($filters as $field => $value) {
-        if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $field)) {
+        if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/D', $field)) {
             cacti_log('ERROR: Invalid field name in build_where_from_array: ' . $field, false, 'SECURITY');
             continue;
         }

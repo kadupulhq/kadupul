@@ -20,7 +20,7 @@
     {"id": "field_backtick", "args": [{"$": "array", "pairs": [["a`b", 1]]}, []]},
     {"id": "field_empty_name", "args": [{"$": "array", "pairs": [["", 1]]}, []]},
     {"id": "field_underscore_start", "args": [{"$": "array", "pairs": [["_x", 1]]}, []]},
-    {"id": "field_trailing_newline", "args": [{"$": "array", "pairs": [["id\n", 1]]}, []], "note": "the $ anchor accepts a trailing newline, so the name reaches the SQL fragment"},
+    {"id": "field_trailing_newline", "args": [{"$": "array", "pairs": [["id\n", 1]]}, []], "note": "a single trailing newline is rejected like any other invalid name; $ alone would accept it"},
     {"id": "field_trailing_two_newlines", "args": [{"$": "array", "pairs": [["id\n\n", 1]]}, []]},
     {"id": "field_embedded_newline", "args": [{"$": "array", "pairs": [["i\nd", 1]]}, []]},
     {"id": "field_unicode", "args": [{"$": "array", "pairs": [["é", 1]]}, []]},
