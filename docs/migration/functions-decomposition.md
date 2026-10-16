@@ -148,7 +148,7 @@ and fixed separately.
 | `cacti_log` | A newline in `$environ` starts a new log record; control bytes reach the file. | #870 |
 | `cacti_is_sensitive_key`, `cacti_redact_value` | The key list misses common credential names and matches some unrelated ones. | #871 |
 | `set_user_setting`, `save_user_settings` | A non-numeric user id is stored as user 0. | #872 |
-| `get_associated_rras` | `$sql_where` is concatenated into the query; its only caller validates it. | #873 |
+| `get_associated_rras` | `$sql_where` is concatenated into the query. Core now selects one RRA through a bound `$rra_id`; the fragment argument stays for plugin callers. | #873 |
 
 Several of these exist on `lts/1.2` as well.
 
