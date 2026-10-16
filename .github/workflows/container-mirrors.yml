@@ -15,8 +15,9 @@ on:
   push:
     branches: [main]
     paths:
-      - tools/containers/mirrors.json
-      - tools/containers/mirror.py
+      - tools/containers/**
+      - tests/tools/test_container_mirrors.py
+      - tests/tools/login_ghcr.sh
       - .github/workflows/container-mirrors.yml
   workflow_dispatch:
 
@@ -24,8 +25,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: container-mirrors
-  cancel-in-progress: false
+  group: container-mirrors-${{ github.event_name == 'pull_request' && github.event.pull_request.number || 'publish' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   inventory:
@@ -41,6 +42,7 @@ jobs:
       - uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca # v5.1.1
         with:
           install_args: python@3.12.12
+          cache: false
       - id: inventory
         name: Verify mirror admission and authentication contracts
         run: mise exec python@3.12.12 -- python tests/tools/test_container_mirrors.py
@@ -66,6 +68,7 @@ jobs:
       - uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca # v5.1.1
         with:
           install_args: python@3.12.12
+          cache: false
       - name: Install OCI copy tool
         run: sudo apt-get update -o Acquire::Retries=3 && sudo apt-get install -y --no-install-recommends skopeo
       - name: Publish and verify the pinned multi-platform manifest
@@ -76,7 +79,7 @@ jobs:
         run: mise exec python@3.12.12 -- python tools/containers/mirror.py --destination "$MIRROR_DESTINATION" --report mirror-receipt.json
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: mirror-${{ strategy.job-index }}
+          name: mirror-${{ strategy.job-index }}-${{ github.run_attempt }}
           path: mirror-receipt.json
           if-no-files-found: error
           retention-days: 14
@@ -113,3 +116,50 @@ jobs:
           docker pull "$ref"
           docker image inspect "$ref" --format '{{json .RepoDigests}}' | \
             jq -e --arg expected "${MIRROR_DESTINATION%:*}@${MIRROR_DIGEST}" 'index($expected) != null'
+
+  builder:
+    name: Authenticated release builder and SBOM
+    needs: consume
+    if: always() && needs.consume.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Authenticate before starting the mirrored builder
+        env:
+          GHCR_TOKEN: ${{ github.token }}
+          GHCR_USERNAME: ${{ github.actor }}
+        run: bash tests/tools/login_ghcr.sh
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+        with:
+          driver-opts: image=ghcr.io/kadupulhq/kadupul-mirrors/buildkit@sha256:cec9f139f45e93c5c69c60f8b07cfad9f43f4ef6b6a6cd917527fea5ff2e3dea
+      - uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca # v5.1.1
+        with:
+          install_args: python@3.12.12
+          cache: false
+      - name: Create a disposable build context
+        run: |
+          mkdir "$RUNNER_TEMP/mirror-build"
+          printf 'FROM scratch\nCOPY hello /hello\n' > "$RUNNER_TEMP/mirror-build/Dockerfile"
+          printf 'GHCR build fixture\n' > "$RUNNER_TEMP/mirror-build/hello"
+      - uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: ${{ runner.temp }}/mirror-build
+          platforms: linux/amd64,linux/arm64
+          outputs: type=oci,dest=${{ runner.temp }}/mirror-build.oci.tar
+          provenance: mode=max
+          sbom: generator=ghcr.io/kadupulhq/kadupul-mirrors/buildkit-syft-scanner@sha256:ae4f3b554449e7e25548e7d8ccc029d17357348e30c6e3df01b92bc93654d6a9
+      - name: Require both platforms and their generated SPDX attestations
+        run: mise exec python@3.12.12 -- python tools/containers/verify_build.py "$RUNNER_TEMP/mirror-build.oci.tar"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: mirror-builder-proof-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/mirror-build.oci.tar
+          if-no-files-found: error
+          retention-days: 14

@@ -22,7 +22,7 @@ jobs:
   # every scope the reusable jobs need has to be granted here.
   release:
     needs: offline-bundle
-    uses: kadupulhq/.github/.github/workflows/release.yml@917f4d4369474e947d29252a7597868927f3a38a # v1.0.0
+    uses: kadupulhq/.github/.github/workflows/release.yml@701fd2e1af15ff1dafa1d2225a33ad01e299d1ee # hosted-only authenticated builder inputs
     permissions:
       contents: write     # create the release and upload its assets
       packages: write     # push the image, its signature and its attestation
@@ -32,6 +32,9 @@ jobs:
       # The verified, dependency-complete offline builder supplies the archive.
       tarball: false
       image: true
+      hosted-runners-only: true
+      buildkit-image: ghcr.io/kadupulhq/kadupul-mirrors/buildkit@sha256:cec9f139f45e93c5c69c60f8b07cfad9f43f4ef6b6a6cd917527fea5ff2e3dea
+      sbom-generator: ghcr.io/kadupulhq/kadupul-mirrors/buildkit-syft-scanner@sha256:ae4f3b554449e7e25548e7d8ccc029d17357348e30c6e3df01b92bc93654d6a9
       draft: true
       php-version: '8.4'
 
@@ -105,7 +108,7 @@ jobs:
           gh attestation verify "oci://ghcr.io/${GH_REPO,,}:${RELEASE_TAG#v}" \
             --repo "$GH_REPO" \
             --source-digest "$GITHUB_SHA" \
-            --signer-digest 917f4d4369474e947d29252a7597868927f3a38a \
+            --signer-digest 701fd2e1af15ff1dafa1d2225a33ad01e299d1ee \
             --signer-workflow kadupulhq/.github/.github/workflows/release.yml
       - name: Publish the verified draft
         env:
