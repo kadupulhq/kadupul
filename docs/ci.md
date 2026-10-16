@@ -20,7 +20,7 @@ existing `fail-fast: false` so compatibility failures are fully observed.
 
 | Workflow | Events and purpose | Security, caches, artifacts, and dependencies |
 | --- | --- | --- |
-| `ci.yml` | Main pushes and all PRs; PHP boundary/syntax/tests, formatting, Node build/tests, gettext, Windows storage, six database versions, CDEF, installed application smoke, changelog | Read-only; disposable database credentials only. Node download cache in the JavaScript job. Smoke/CDEF retain observations. Independent jobs run in parallel. |
+| `ci.yml` | Main pushes and all PRs; PHP boundary/syntax/tests, formatting, Node build/tests, gettext, Windows storage, six database versions, CDEF, installed application smoke (including the function-behavior goldens), changelog | Read-only; disposable database credentials only. Node download cache in the JavaScript job. Smoke/CDEF retain observations. Independent jobs run in parallel. |
 | `security.yml` | Main/PR/weekly/manual; Semgrep new-finding PR gate and dependency review | SARIF upload alone needs `security-events: write`; dependency-review comments need `pull-requests: write`. Pinned Semgrep image; failed report retained. No provider secret. Existing differential/full-scan behavior preserved. |
 | `codeql.yml` | Main/PR/weekly/manual; public-repository JavaScript and Actions analysis | Job-scoped code-scanning permissions; PHP remains covered by Semgrep. |
 | `snyk.yml` | Main/PR/weekly/manual; complete Composer/npm/Python dependency discovery | `SNYK_TOKEN` configuration job precedes secret-dependent scanning. Five-project completion guard and safe receipt retained. No policy relaxation. |
@@ -62,9 +62,9 @@ upgrade validation checks. Their actual names come from the workflow jobs and
 matrix expansions, for example `PHP 8.4`, `JavaScript`, `Workflow files`,
 `Composer and npm dependencies`, `bundle`, and `Upgrade, RRD preservation and rollback`.
 Path-filtered optional E2E jobs should not be added as unconditional required
-checks without an always-reporting wrapper. This change does not alter rulesets
-or branch protections. At audit time the default ruleset requires a PR, but has
-no required status checks; documentation recommendations are not enforcement.
+checks without an always-reporting wrapper. Documentation recommendations are
+not enforcement; the rulesets that apply are listed under
+[Branch rulesets](#branch-rulesets).
 
 Coverage executes some tests already present in correctness CI. This repetition
 establishes physical coverage and subprocess provenance; cached historical
@@ -81,6 +81,27 @@ but not hash-locked; container service tags and some setup runtimes remain
 mutable. These pre-existing supply-chain gaps need their own supported-platform
 review and lock updates. No security scan, dependency pin or test assertion was
 weakened to simplify this change.
+
+## Branch rulesets
+
+Read back from the GitHub API on 2026-10-15. These are repository rulesets. The Terraform in
+`kadupulhq/terraform` does not define them.
+
+| Ruleset | Branches | Rules | Bypass |
+| --- | --- | --- | --- |
+| Main pull request protections | Default branch | No deletion or force push. Pull request with 0 required approvals; stale reviews dismissed on push; review threads must be resolved. Copilot code review. | None |
+| OpenSSF main validation | Default branch | Required checks `PHP 8.4`, `JavaScript`, `Gettext source and compiled catalogs`, `Semgrep`, `Dependency review` and `Code style`, with the branch required to be up to date. | None |
+| Default Protections | `lts/*` | No deletion or force push. Pull request with 1 required approval; stale reviews dismissed on push; approval of the last push; extra approval for unattributed changes; review threads resolved. Copilot code review. | Repository admin role, in pull request mode |
+
+The admin bypass on `lts/*` was added on 2026-10-15 for a repository with one maintainer, where a second
+approver does not exist. It lets an admin merge a pull request without the approval; it does not skip the
+pull request, and the other rules still apply to everyone else.
+
+No ruleset requires status checks on `lts/*`, so a passing CI run there is a maintainer convention and
+not enforced by GitHub. Check the current head before merging an LTS pull request.
+
+On the default branch the up-to-date requirement means that merging one pull request leaves the others
+behind. Rebase them and let the checks run again before merging.
 
 ## Sonar execution and configuration
 

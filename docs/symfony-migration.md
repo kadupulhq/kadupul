@@ -500,6 +500,13 @@ in a container with `--network none`; this is not a substitute for the full
 database-backed installation/polling harness. The release workflow builds and
 attaches the offline archive in addition to the existing release outputs.
 
+## Legacy function library
+
+`lib/functions.php` is being replaced by delegates that call classes under `src/`, one function at a time,
+with recorded behavior as the gate. The approach, decisions and current state are in
+[Decomposing lib/functions.php](migration/functions-decomposition.md). Settings storage is the first slice
+moved: the statements of the settings functions run through Platform ports and DBAL adapters.
+
 ## Replacement sequence
 
 | Existing dependency | Destination | Migration condition |

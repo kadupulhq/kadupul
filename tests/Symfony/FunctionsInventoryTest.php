@@ -376,6 +376,9 @@ PHP;
         mkdir($this->scratch . '/docs/migration', 0775, true);
         copy($root . '/lib/functions.php', $this->scratch . '/lib/functions.php');
         exec('cp -R ' . escapeshellarg($root . '/docs/migration/functions-inventory') . ' ' . escapeshellarg($this->scratch . '/docs/migration/'));
+        // Records name their golden as behavior_record, and the generator wants that file tracked.
+        mkdir($this->scratch . '/tests/Golden', 0775, true);
+        exec('cp -R ' . escapeshellarg($root . '/tests/Golden/functions') . ' ' . escapeshellarg($this->scratch . '/tests/Golden/'));
         exec('git -C ' . escapeshellarg($this->scratch) . ' init -q && git -C ' . escapeshellarg($this->scratch) . ' add -A 2>&1', $output, $status);
         self::assertSame(0, $status, implode("\n", $output));
 

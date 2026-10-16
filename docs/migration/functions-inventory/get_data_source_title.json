@@ -42,9 +42,9 @@
     "human": {
         "target_module": "DataInput/Domain",
         "wave": 4,
-        "status": "not assessed",
+        "status": "planned",
         "lts_status": "not assessed",
-        "behavior_record": null,
+        "behavior_record": "tests/Golden/functions/kadupul/php-8.4/get_data_source_title.json",
         "notes": "Plan lists DataInput and Graphing domain services; split chosen by name."
     }
 }

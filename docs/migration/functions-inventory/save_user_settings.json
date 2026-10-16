@@ -52,9 +52,9 @@
     "human": {
         "target_module": "Platform/Application/Port/UserSettings",
         "wave": 2,
-        "status": "not assessed",
+        "status": "planned",
         "lts_status": "not assessed",
-        "behavior_record": null,
-        "notes": ""
+        "behavior_record": "tests/Golden/functions/kadupul/php-8.4/save_user_settings.json",
+        "notes": "A non-numeric user id is stored as user 0. See #872."
     }
 }
