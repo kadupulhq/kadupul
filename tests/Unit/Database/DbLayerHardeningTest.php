@@ -74,7 +74,11 @@ function load_production_function(string $name): void
     eval('namespace Kadupul\\Tests\\ProductionFunctions; ' . $functionSource);
 }
 
-foreach (['user_setting_exists', 'get_graph_group', 'build_where_from_array', 'get_item', 'set_config_option'] as $function) {
+if (!defined('SQL_NO_CACHE')) {
+    define('SQL_NO_CACHE', '');
+}
+
+foreach (['user_setting_exists', 'get_graph_group', 'build_where_from_array', 'get_item', 'set_config_option', 'get_associated_rras'] as $function) {
     load_production_function($function);
 }
 
@@ -183,4 +187,37 @@ foreach (['user_setting_exists', 'get_graph_group', 'build_where_from_array', 'g
         @rmdir($basePath . '/lib');
         @rmdir($basePath);
     }
+});
+
+\test('production RRA lookup binds the selected RRA id', function () {
+    foreach (['7', 7, '1 OR 1=1'] as $rra) {
+        reset_db_calls();
+        get_associated_rras(42, '', $rra);
+
+        [$sql, $params] = $GLOBALS['production_function_db_calls'][0];
+        expect($params)->toBe([42, $rra]);
+        expect($sql)->toContain('WHERE gti.local_graph_id = ?');
+        expect($sql)->toContain('AND dspr.id = ?');
+        expect($sql)->not->toContain('OR 1=1');
+    }
+});
+
+\test('production RRA lookup keeps its default query and the fixed fragment', function () {
+    reset_db_calls();
+    get_associated_rras(42);
+    [$sql, $params] = $GLOBALS['production_function_db_calls'][0];
+    expect($params)->toBe([42]);
+    expect($sql)->not->toContain('dspr.id = ?');
+
+    reset_db_calls();
+    get_associated_rras(42, ' AND dspr.id IS NOT NULL');
+    [$sql, $params] = $GLOBALS['production_function_db_calls'][0];
+    expect($params)->toBe([42]);
+    expect($sql)->toContain('AND dspr.id IS NOT NULL');
+
+    reset_db_calls();
+    get_associated_rras(42, ' AND dspr.id IS NOT NULL', 5);
+    [$sql, $params] = $GLOBALS['production_function_db_calls'][0];
+    expect($params)->toBe([42, 5]);
+    expect(strpos($sql, 'IS NOT NULL'))->toBeLessThan(strpos($sql, 'dspr.id = ?'));
 });
