@@ -146,10 +146,12 @@ class ContainerMirrorTest(unittest.TestCase):
 
     def test_unreviewed_destinations_and_duplicate_inventory_are_refused(self):
         original = json.loads((ROOT / 'tools/containers/mirrors.json').read_text())
-        for mutation in ('source', 'destination', 'duplicate'):
+        for mutation in ('source', 'destination', 'duplicate', 'registry_host'):
             inventory = json.loads(json.dumps(original))
             if mutation == 'duplicate':
                 inventory['images'].append(inventory['images'][0])
+            elif mutation == 'registry_host':
+                inventory['images'][0]['source'] = inventory['images'][0]['source'].replace('docker.io/', 'dockerXio/')
             else:
                 inventory['images'][0][mutation] = 'unreviewed.invalid/image'
             with self.subTest(mutation=mutation), patch.object(Path, 'read_text', return_value=json.dumps(inventory)):

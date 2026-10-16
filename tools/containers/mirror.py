@@ -25,7 +25,7 @@ def images():
             raise ValueError('Unexpected mirror fields')
         if not re.fullmatch(r'sha256:[0-9a-f]{64}', image['digest']):
             raise ValueError('Invalid mirror digest')
-        source = re.fullmatch(r'docker.io/(library/(?:php|node|composer|mariadb|mysql|nginx)|moby/buildkit|docker/buildkit-syft-scanner)(?::[a-zA-Z0-9_.-]+)?@' + image['digest'], image['source'])
+        source = re.fullmatch(r'docker\.io/(library/(?:php|node|composer|mariadb|mysql|nginx)|moby/buildkit|docker/buildkit-syft-scanner)(?::[a-zA-Z0-9_.-]+)?@' + image['digest'], image['source'])
         if source is None or image['destination'] != PREFIX + source[1].rsplit('/', 1)[-1] + ':sha256-' + image['digest'][7:]:
             raise ValueError('Mirror must retain the reviewed official-image identity')
         if image['destination'] in seen:
