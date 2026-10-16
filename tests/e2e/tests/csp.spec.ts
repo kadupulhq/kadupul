@@ -27,8 +27,15 @@ async function loginAsAdmin(page: Page): Promise<void> {
 }
 
 test.describe('CSP header shape', () => {
-    test('root request carries CSP header with nonce token and all required directives', async ({ request }) => {
+    test('the root sends an anonymous visitor to the login page', async ({ request }) => {
         const resp = await request.get('/', { maxRedirects: 0 });
+        expect(resp.status()).toBe(302);
+        expect(new URL(resp.headers()['location'], 'http://localhost').pathname).toMatch(/(^|\/)login\.php$/);
+    });
+
+    // The root redirects to the login page, and the redirect has no document to protect.
+    test('login page request carries CSP header with nonce token and all required directives', async ({ request }) => {
+        const resp = await request.get('/login.php', { maxRedirects: 0 });
         expect(resp.status()).toBeLessThan(400);
 
         const cspHeader = resp.headers()[EXPECTED_CSP_HEADER];
@@ -56,7 +63,7 @@ test.describe('CSP header shape', () => {
     });
 
     test('only one CSP header flavor is set at a time', async ({ request }) => {
-        const resp = await request.get('/', { maxRedirects: 0 });
+        const resp = await request.get('/login.php', { maxRedirects: 0 });
         const enforce = resp.headers()['content-security-policy'];
         const reportOnly = resp.headers()['content-security-policy-report-only'];
         /* Dual emission would make the browser honor the intersection
