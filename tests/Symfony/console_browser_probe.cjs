@@ -22,7 +22,24 @@ async function main(input) {
         await context.addCookies(input.cookies);
         const page = await context.newPage();
         await page.coverage.startJSCoverage({ resetOnNavigation: false });
-        const response = await page.goto(`${input.base}/index.php`);
+        // Enter through home after the fixture invalidates the native policy
+        // cache, just as an admitted viewer does before opening another page.
+        assert.equal((await page.goto(`${input.base}/index.php`)).status(), 200);
+        const legacyResponse = await page.goto(`${input.base}/graphs.php`);
+        assert.equal(legacyResponse.status(), 200);
+        const legacy = await page.evaluate(() => ({
+            path: window.location.pathname,
+            navigation: typeof window.loadPage,
+            jquery: typeof window.jQuery,
+            scripts: [...document.scripts].filter(script => script.src).map(script => new URL(script.src).pathname),
+        }));
+        assert.equal(legacy.navigation, 'function', `Native navigation unavailable: ${JSON.stringify(legacy)}`);
+        // Use the shipped legacy navigation function. It must load the console
+        // document so that its module runs after leaving a legacy page.
+        const [response] = await Promise.all([
+            page.waitForNavigation(),
+            page.evaluate(url => loadPage(url, true), `${input.base}/index.php`),
+        ]);
         assert.equal(response.status(), 200);
         const policy = response.headers()['content-security-policy'];
         assert.ok(policy);

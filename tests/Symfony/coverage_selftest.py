@@ -864,6 +864,7 @@ def main():
     database_manifest = json.loads((args.database / 'observations.json').read_text())
     database_paths = [prefix + 'src/IdentityAccess/Infrastructure/Legacy/' + name + '.php'
                       for name in ('AuthenticationDatabaseSessionHandler', 'ReadOnlyDatabaseSessionHandler')]
+    database_paths.append(prefix + 'include/session.php')
     with tempfile.TemporaryDirectory(prefix='symfony-database-authentication-negative-') as directory:
         scratch = Path(directory)
         (scratch / 'raw').mkdir()

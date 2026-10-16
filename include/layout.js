@@ -2437,7 +2437,7 @@ function navigateUsingPost(href) {
 	}
 }
 
-/** Symfony Sites pages own their full document rather than legacy AJAX fragments. */
+/** These Symfony pages own their document and load their own script modules. */
 function navigateToSymfonySites(href) {
 	var target;
 	try {
@@ -2445,7 +2445,7 @@ function navigateToSymfonySites(href) {
 	} catch (error) {
 		return false;
 	}
-	if (target.origin !== window.location.origin || !(/\/sites\.php$|\/(?:app\.php|public\/index\.php)\/inventory\/sites(?:\/|$)/).test(target.pathname)) {
+	if (target.origin !== window.location.origin || !(/\/(?:sites|index)\.php$|\/(?:app\.php|public\/index\.php)\/(?:inventory\/sites|console|help)(?:\/|$)/).test(target.pathname)) {
 		return false;
 	}
 	window.location.assign(target.href);

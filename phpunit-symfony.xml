@@ -17,6 +17,7 @@
             <file>index.php</file>
             <file>login.php</file>
             <file>lib/headers_secure.php</file>
+            <file>include/session.php</file>
             <file>bin/legacy-device-edit.php</file>
             <file>bin/legacy-device-create.php</file>
             <file>bin/legacy-device-template.php</file>
