@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-15 10:38-0700\n"
+"POT-Creation-Date: 2026-10-15 22:42-0700\n"
 "PO-Revision-Date: 2024-04-20 19:06-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2508,8 +2508,8 @@ msgstr "ROOTConstellation name (optional)"
 msgid "No Tree Rules Found"
 msgstr "트리 규칙 없음"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6667 lib/functions.php:6737
-#: lib/functions.php:6833 lib/functions.php:7494 poller.php:417 poller.php:584
+#: cactid.php:27 help.php:54 lib/functions.php:6665 lib/functions.php:6735
+#: lib/functions.php:6831 lib/functions.php:7492 poller.php:417 poller.php:584
 #: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
 #: poller_automation.php:37 poller_boost.php:387
 #, fuzzy
@@ -4276,7 +4276,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller는 아직 운영되지 않았습니다."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8197 permission_denied.php:29 permission_denied.php:36
+#: lib/functions.php:8195 permission_denied.php:29 permission_denied.php:36
 msgid "Permission Denied"
 msgstr "사용 권한이 거부되었습니다."
 
@@ -5216,11 +5216,11 @@ msgstr "치명적 : Kadupul의이 영역에 액세스하려면 로그인해야�
 msgid "Login Again"
 msgstr "다시 로그인"
 
-#: include/auth.php:317 lib/functions.php:8198 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8196 permission_denied.php:38
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "이것이 오류라고 생각하면. Kadupul 관리자에게 문의하십시오."
 
-#: include/auth.php:317 lib/functions.php:8198 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8196 permission_denied.php:38
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Kadupul의이 섹션에 액세스하는 것은 허용되지 않습니다."
 
@@ -13039,32 +13039,32 @@ msgstr "성공!"
 msgid "Message Not Sent due to ping failure."
 msgstr "핑 실패로 인해 메시지가 전송되지 않았습니다."
 
-#: lib/functions.php:6667 lib/functions.php:6737
+#: lib/functions.php:6665 lib/functions.php:6735
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul 플러그인  %s이 (가) 다음 오류 때문에 비활성화되었습니다 :  %s! 자세한 내용은 Kadupul 로그 파일을 참조하십시오."
 
-#: lib/functions.php:6833
+#: lib/functions.php:6831
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "경고: PollerID: %s 에 유효하지 않은 호스트 이름: %s 이 (가) 있습니다. DNS를 통해 연결할 수 없습니까!"
 
-#: lib/functions.php:7257 lib/functions.php:7259
+#: lib/functions.php:7255 lib/functions.php:7257
 #, php-format
 msgid "- Beta %s"
 msgstr "- 베타  %s"
 
-#: lib/functions.php:7257
+#: lib/functions.php:7255
 #, php-format
 msgid "Version %s %s"
 msgstr "버전  %s  %s"
 
-#: lib/functions.php:7259
+#: lib/functions.php:7257
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7494
+#: lib/functions.php:7492
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "경고: 키 Kadupul 포함 파일 %s 이 (가) 누락되었습니다. 이 파일을 찾아 교체하십시오"

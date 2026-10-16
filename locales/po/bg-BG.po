@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-15 10:38-0700\n"
+"POT-Creation-Date: 2026-10-15 22:42-0700\n"
 "PO-Revision-Date: 2024-04-20 18:23-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2504,8 +2504,8 @@ msgstr "Constellation name (optional)"
 msgid "No Tree Rules Found"
 msgstr "Не са намерени правила за дърво"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6667 lib/functions.php:6737
-#: lib/functions.php:6833 lib/functions.php:7494 poller.php:417 poller.php:584
+#: cactid.php:27 help.php:54 lib/functions.php:6665 lib/functions.php:6735
+#: lib/functions.php:6831 lib/functions.php:7492 poller.php:417 poller.php:584
 #: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
 #: poller_automation.php:37 poller_boost.php:387
 #, fuzzy
@@ -4300,7 +4300,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller все още не работи."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8197 permission_denied.php:29 permission_denied.php:36
+#: lib/functions.php:8195 permission_denied.php:29 permission_denied.php:36
 msgid "Permission Denied"
 msgstr "Отказано разрешение"
 
@@ -5239,11 +5239,11 @@ msgstr "FATAL: Трябва да сте влезли в системата за 
 msgid "Login Again"
 msgstr "Влезте отново"
 
-#: include/auth.php:317 lib/functions.php:8198 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8196 permission_denied.php:38
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Ако смятате, че това е грешка. Моля, свържете се с вашия Kadupul Administrator."
 
-#: include/auth.php:317 lib/functions.php:8198 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8196 permission_denied.php:38
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Нямате достъп до този раздел на Kadupul."
 
@@ -13064,32 +13064,32 @@ msgstr "Успешно!"
 msgid "Message Not Sent due to ping failure."
 msgstr "Съобщението не е изпратено поради неуспешен пинг."
 
-#: lib/functions.php:6667 lib/functions.php:6737
+#: lib/functions.php:6665 lib/functions.php:6735
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Приставката „Kadupul disabled“ %s се дължи на следната грешка: %s! Вижте Kadupul логфайла за повече подробности."
 
-#: lib/functions.php:6833
+#: lib/functions.php:6831
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "ПРЕДУПРЕЖДЕНИЕ: PollerID:%s има невалидно име на хост:%s.  Не е ли достъпен чрез DNS!"
 
-#: lib/functions.php:7257 lib/functions.php:7259
+#: lib/functions.php:7255 lib/functions.php:7257
 #, php-format
 msgid "- Beta %s"
 msgstr "- Бета %s"
 
-#: lib/functions.php:7257
+#: lib/functions.php:7255
 #, php-format
 msgid "Version %s %s"
 msgstr "Версия %s %s"
 
-#: lib/functions.php:7259
+#: lib/functions.php:7257
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7494
+#: lib/functions.php:7492
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "ПРЕДУПРЕЖДЕНИЕ:  Ключовите Kadupul включват липсващ файл %s. Моля, намерете и заменете този файл"

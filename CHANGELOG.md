@@ -9,6 +9,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Make Logout Everywhere revoke file and database session credentials and remembered logins; preserve existing sessions and return failure if revocation cannot be committed. Bind remembered-login rotation to its admitted credential generation so an in-flight restoration cannot create a usable session or token after revocation.
 - Preserve existing RRD files and pending samples when a proxy existence check fails or returns an ambiguous response.
 - Restore authorization, HTML-context escaping, sort-column and theme tests to the Pest coverage suite using production helpers; retire tests for the removed remote-URL helper.
+- Fix `padleft()` never returning for a pad that is not numeric, and pad numeric values up to the requested minimum length instead of stopping after one pad character.
 
 - Update the native CI scanner to Semgrep 1.179.0 and hash-locked PyJWT 2.15.1, removing vulnerable scanner dependencies while preserving the existing scan policy.
 

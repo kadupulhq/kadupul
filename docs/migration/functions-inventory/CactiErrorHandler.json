@@ -3,8 +3,8 @@
     "name": "CactiErrorHandler",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6631,
-        "end_line": 6697,
+        "start_line": 6629,
+        "end_line": 6695,
         "line_count": 67,
         "signature": {
             "parameters": [

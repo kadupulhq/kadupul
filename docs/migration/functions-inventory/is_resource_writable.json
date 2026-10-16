@@ -3,8 +3,8 @@
     "name": "is_resource_writable",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7567,
-        "end_line": 7595,
+        "start_line": 7565,
+        "end_line": 7593,
         "line_count": 29,
         "signature": {
             "parameters": [

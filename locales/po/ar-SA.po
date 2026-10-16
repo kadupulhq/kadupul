@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-15 10:38-0700\n"
+"POT-Creation-Date: 2026-10-15 22:42-0700\n"
 "PO-Revision-Date: 2024-05-25 11:07-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2511,8 +2511,8 @@ msgstr "الجذر"
 msgid "No Tree Rules Found"
 msgstr "لم يتم العثور على قواعد شجرة"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6667 lib/functions.php:6737
-#: lib/functions.php:6833 lib/functions.php:7494 poller.php:417 poller.php:584
+#: cactid.php:27 help.php:54 lib/functions.php:6665 lib/functions.php:6735
+#: lib/functions.php:6831 lib/functions.php:7492 poller.php:417 poller.php:584
 #: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
 #: poller_automation.php:37 poller_boost.php:387
 #, fuzzy
@@ -4443,7 +4443,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "لم يعمل Kadupul Poller بعد."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8197 permission_denied.php:29 permission_denied.php:36
+#: lib/functions.php:8195 permission_denied.php:29 permission_denied.php:36
 msgid "Permission Denied"
 msgstr "تم رفض الإذن"
 
@@ -5383,11 +5383,11 @@ msgstr "FATAL: يجب تسجيل الدخول للوصول إلى هذه الم�
 msgid "Login Again"
 msgstr "تسجيل الدخول مرة أخرى"
 
-#: include/auth.php:317 lib/functions.php:8198 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8196 permission_denied.php:38
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "إذا كنت تشعر أن هذا خطأ. يرجى الاتصال بمدير Kadupul."
 
-#: include/auth.php:317 lib/functions.php:8198 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8196 permission_denied.php:38
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "لا يسمح لك بالوصول إلى هذا القسم من Kadupul."
 
@@ -13224,32 +13224,32 @@ msgstr "نجح!"
 msgid "Message Not Sent due to ping failure."
 msgstr "رسالة غير مرسلة بسبب فشل اختبار الاتصال."
 
-#: lib/functions.php:6667 lib/functions.php:6737
+#: lib/functions.php:6665 lib/functions.php:6735
 #, fuzzy, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "قام Kadupul بتعطيل البرنامج المساعد %s بسبب الخطأ التالي: %s!  راجع ملف سجل Kadupul لمزيد من التفاصيل."
 
-#: lib/functions.php:6833
+#: lib/functions.php:6831
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "تحذير: يحتوي PollerID: %s على اسم مضيف غير صالح: %s. لا يمكن الوصول إليه عبر DNS!"
 
-#: lib/functions.php:7257 lib/functions.php:7259
+#: lib/functions.php:7255 lib/functions.php:7257
 #, php-format
 msgid "- Beta %s"
 msgstr "- بيتا %s"
 
-#: lib/functions.php:7257
+#: lib/functions.php:7255
 #, php-format
 msgid "Version %s %s"
 msgstr "الإصدار %s %s"
 
-#: lib/functions.php:7259
+#: lib/functions.php:7257
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7494
+#: lib/functions.php:7492
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "تحذير: مفتاح Kadupul تضمين ملف %s مفقود.  الرجاء تحديد موقع هذا الملف واستبداله"

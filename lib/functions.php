@@ -6568,12 +6568,10 @@ function get_daysfromtime($time, $secs = false, $pad = '', $format = DAYS_FORMAT
 function padleft($pad = '', $value = '', $min = 2)
 {
     $result = "$value";
-    if (strlen($result) < $min && $pad != '') {
-        $padded = $pad . $result;
-        while ($padded != $result && strlen($result) < $min) {
-            $padded = $pad . $result;
-        }
-        $result = $padded;
+    $pad = "$pad";
+    // Each pass lengthens $result by strlen($pad), so a non-empty pad always ends the loop.
+    while ($pad !== '' && strlen($result) < $min) {
+        $result = $pad . $result;
     }
     return $result;
 }
