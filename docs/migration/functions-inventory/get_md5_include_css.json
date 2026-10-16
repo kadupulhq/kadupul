@@ -3,8 +3,8 @@
     "name": "get_md5_include_css",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7548,
-        "end_line": 7563,
+        "start_line": 7558,
+        "end_line": 7573,
         "line_count": 16,
         "signature": {
             "parameters": [

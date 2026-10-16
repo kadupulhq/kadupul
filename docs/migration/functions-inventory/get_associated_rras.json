@@ -3,9 +3,9 @@
     "name": "get_associated_rras",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 4511,
-        "end_line": 4531,
-        "line_count": 21,
+        "start_line": 4514,
+        "end_line": 4541,
+        "line_count": 28,
         "signature": {
             "parameters": [
                 {
@@ -25,6 +25,15 @@
                     "variadic": false,
                     "has_default": true,
                     "default": "''"
+                },
+                {
+                    "name": "rra_id",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "null"
                 }
             ],
             "return_type": null,
@@ -54,6 +63,6 @@
         "status": "planned",
         "lts_status": "not assessed",
         "behavior_record": "tests/Golden/functions/kadupul/php-8.4/get_associated_rras.json",
-        "notes": "Plan lists DataInput and Graphing domain services; split chosen by name. $sql_where is concatenated into the query; the only caller validates it. See #873."
+        "notes": "Plan lists DataInput and Graphing domain services; split chosen by name. Core selects one RRA through the bound $rra_id argument (#873). The $sql_where argument is still added to the query as written, for plugin callers, and must never contain request data."
     }
 }

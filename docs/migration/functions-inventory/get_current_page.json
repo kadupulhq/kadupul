@@ -3,8 +3,8 @@
     "name": "get_current_page",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 4595,
-        "end_line": 4628,
+        "start_line": 4605,
+        "end_line": 4638,
         "line_count": 34,
         "signature": {
             "parameters": [

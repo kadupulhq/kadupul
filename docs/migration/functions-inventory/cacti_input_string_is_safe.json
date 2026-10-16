@@ -3,8 +3,8 @@
     "name": "cacti_input_string_is_safe",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8004,
-        "end_line": 8027,
+        "start_line": 8014,
+        "end_line": 8037,
         "line_count": 24,
         "signature": {
             "parameters": [

@@ -3,8 +3,8 @@
     "name": "cacti_debug_backtrace",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6374,
-        "end_line": 6426,
+        "start_line": 6384,
+        "end_line": 6436,
         "line_count": 53,
         "signature": {
             "parameters": [

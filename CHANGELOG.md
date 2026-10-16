@@ -11,6 +11,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Restore authorization, HTML-context escaping, sort-column and theme tests to the Pest coverage suite using production helpers; retire tests for the removed remote-URL helper.
 - Fix `padleft()` never returning for a pad that is not numeric, and pad numeric values up to the requested minimum length instead of stopping after one pad character.
 - Reject a field name that ends in a newline in `build_where_from_array()` instead of passing it to the query, where it failed with an unknown column.
+- Let `get_associated_rras()` take the selected RRA id as a bound argument, and use it for the graph page instead of building a SQL fragment from the request.
 
 - Update the native CI scanner to Semgrep 1.179.0 and hash-locked PyJWT 2.15.1, removing vulnerable scanner dependencies while preserving the existing scan policy.
 

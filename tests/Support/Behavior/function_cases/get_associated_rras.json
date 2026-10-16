@@ -12,6 +12,12 @@
     {"record_sql": true, "id": "no_arguments", "args": []},
     {"record_sql": true, "id": "id_trailing_text", "args": ["1abc", "AND dspr.steps > 200"]},
     {"record_sql": true, "id": "id_text", "args": ["abc", "AND dspr.steps > 200"]},
-    {"record_sql": true, "unordered": true, "id": "id_zero_template_rows", "args": [0], "note": "items of no graph: the LEFT JOIN yields rows of NULLs that tie on the sort key, so their order is the engine's"}
+    {"record_sql": true, "unordered": true, "id": "id_zero_template_rows", "args": [0], "note": "items of no graph: the LEFT JOIN yields rows of NULLs that tie on the sort key, so their order is the engine's"},
+    {"record_sql": true, "id": "rra_id_int", "args": [4, "", 1], "note": "a selected RRA id is bound as a parameter"},
+    {"record_sql": true, "id": "rra_id_numeric_text", "args": [4, "", "1"]},
+    {"record_sql": true, "id": "rra_id_unknown", "args": [4, "", 999999]},
+    {"record_sql": true, "id": "rra_id_hostile_text", "args": [4, "", "1 OR 1=1"], "note": "the text stays a parameter; the integer column compares it as 1, so it cannot widen the query"},
+    {"record_sql": true, "id": "rra_id_with_fragment", "args": [4, " AND dspr.steps > 0", 1], "note": "the fixed fragment comes first and the RRA id placeholder follows it"},
+    {"record_sql": true, "id": "rra_id_null", "args": [4, "", null], "note": "null adds no condition"}
   ]
 }

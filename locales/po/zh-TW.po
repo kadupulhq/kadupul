@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-15 23:24-0700\n"
+"POT-Creation-Date: 2026-10-16 01:08-0700\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -382,17 +382,17 @@ msgstr "匯總預覽[%s]"
 msgid "Aggregate Preview %s"
 msgstr "匯總預覽[%s]"
 
-#: aggregate_graphs.php:763 graph.php:551 graphs.php:1692
+#: aggregate_graphs.php:763 graph.php:553 graphs.php:1692
 #, fuzzy
 msgid "RRDtool Command:"
 msgstr "RRDtool命令："
 
-#: aggregate_graphs.php:765 graph.php:560 graphs.php:1696
+#: aggregate_graphs.php:765 graph.php:562 graphs.php:1696
 #, fuzzy
 msgid "Not Checked"
 msgstr "檢查"
 
-#: aggregate_graphs.php:765 graph.php:556 graphs.php:1694
+#: aggregate_graphs.php:765 graph.php:558 graphs.php:1694
 #, fuzzy
 msgid "RRDtool Says:"
 msgstr "RRDtool說："
@@ -904,7 +904,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "請輸入您當前的密碼和新密碼<br>Kadupul密碼。"
 
 #: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
-#: include/global_settings.php:1840 lib/functions.php:6161
+#: include/global_settings.php:1840 lib/functions.php:6171
 #, fuzzy
 msgid "Username"
 msgstr "用戶名"
@@ -1006,7 +1006,7 @@ msgstr "用戶登錄"
 msgid "Enter your Username and Password below"
 msgstr "在下面輸入您的用戶名和密碼"
 
-#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6162
+#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6172
 #, fuzzy
 msgid "Password"
 msgstr "密碼"
@@ -1371,8 +1371,8 @@ msgstr "清除發現的設備"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:698 data_source_profiles.php:61 lib/functions.php:6520
-#: lib/functions.php:6525 lib/html.php:1393 lib/html.php:1465
+#: data_debug.php:698 data_source_profiles.php:61 lib/functions.php:6530
+#: lib/functions.php:6535 lib/html.php:1393 lib/html.php:1465
 #: lib/html_reports.php:1810 lib/html_reports.php:1838
 #: lib/html_reports.php:1915 lib/html_reports.php:1916
 #: lib/html_reports.php:1917 lib/spikekill.php:1734 lib/spikekill.php:1735
@@ -2520,7 +2520,7 @@ msgstr "版本"
 msgid "Community"
 msgstr "社群"
 
-#: automation_snmp.php:543 lib/functions.php:6157
+#: automation_snmp.php:543 lib/functions.php:6167
 #, fuzzy
 msgid "Port"
 msgstr "端口"
@@ -2869,8 +2869,8 @@ msgstr "根部"
 msgid "No Tree Rules Found"
 msgstr "找不到樹規則"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6665 lib/functions.php:6735
-#: lib/functions.php:6831 lib/functions.php:7492 poller.php:417 poller.php:584
+#: cactid.php:27 help.php:54 lib/functions.php:6675 lib/functions.php:6745
+#: lib/functions.php:6841 lib/functions.php:7502 poller.php:417 poller.php:584
 #: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
 #: poller_automation.php:37 poller_boost.php:387
 #, fuzzy
@@ -4520,7 +4520,7 @@ msgstr "為此數據模板指定的名稱。請注意，您只能將圖形模板
 #: data_sources.php:1101 graph_view.php:817 graphs.php:1601
 #: include/global_arrays.php:955 include/global_arrays.php:1004
 #: include/global_arrays.php:1692 include/global_arrays.php:1861
-#: lib/api_automation.php:426 lib/functions.php:6156 lib/html.php:2306
+#: lib/api_automation.php:426 lib/functions.php:6166 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 #, fuzzy
 msgid "Device"
@@ -4846,62 +4846,62 @@ msgstr "輪詢器運行時，不會更新基於非活動數據模板的數據源
 msgid "No Data Templates Found"
 msgstr "找不到數據模板"
 
-#: graph.php:52
+#: graph.php:54
 msgid "GRAPH DOES NOT EXIST"
 msgstr "聚合圖設置"
 
-#: graph.php:66
+#: graph.php:68
 msgid "This Graph has no stored data to zoom into."
 msgstr ""
 
-#: graph.php:100
+#: graph.php:102
 #, fuzzy
 msgid "The Graph you requested does not exist."
 msgstr "數據源不存在。"
 
-#: graph.php:131
+#: graph.php:133
 msgid "Viewing Graph"
 msgstr "查看圖表"
 
-#: graph.php:160 lib/html.php:538
+#: graph.php:162 lib/html.php:538
 #, fuzzy
 msgid "Graph Details, Zooming and Debugging Utilities"
 msgstr "圖形詳細信息，縮放和調試實用程序"
 
-#: graph.php:161
+#: graph.php:163
 #, fuzzy
 msgid "CSV Export"
 msgstr "CSV匯出"
 
-#: graph.php:165 graph.php:389 lib/html.php:558
+#: graph.php:167 graph.php:391 lib/html.php:558
 msgid "Edit Graph Template"
 msgstr "編輯圖表模板。"
 
-#: graph.php:170 lib/html.php:564 lib/html.php:573
+#: graph.php:172 lib/html.php:564 lib/html.php:573
 #, fuzzy
 msgid "Click to view just this Graph in Real-time"
 msgstr "單擊以實時查看此圖表"
 
-#: graph.php:270 lib/html.php:2745
+#: graph.php:272 lib/html.php:2745
 #, fuzzy
 msgid "Utility View"
 msgstr "實用視圖"
 
-#: graph.php:367
+#: graph.php:369
 msgid "Graph Utility View"
 msgstr "圖表工具視圖"
 
-#: graph.php:380
+#: graph.php:382
 #, fuzzy
 msgid "Graph Source/Properties"
 msgstr "圖源/屬性"
 
-#: graph.php:384
+#: graph.php:386
 #, fuzzy
 msgid "Graph Data"
 msgstr "圖數據"
 
-#: graph.php:549
+#: graph.php:551
 msgid "RRDtool Graph Syntax"
 msgstr "RRDtool圖形語法"
 
@@ -4912,7 +4912,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller尚未運行。"
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8195 permission_denied.php:29 permission_denied.php:36
+#: lib/functions.php:8205 permission_denied.php:29 permission_denied.php:36
 #, fuzzy
 msgid "Permission Denied"
 msgstr "存取被拒"
@@ -5991,12 +5991,12 @@ msgstr "致命：您必須登錄才能訪問Kadupul的這個區域。"
 msgid "Login Again"
 msgstr "再次登錄"
 
-#: include/auth.php:317 lib/functions.php:8196 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8206 permission_denied.php:38
 #, fuzzy
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "如果你覺得這是一個錯誤。請聯繫您的Kadupul管理員。"
 
-#: include/auth.php:317 lib/functions.php:8196 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8206 permission_denied.php:38
 #, fuzzy
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "您無權訪問此Kadupul部分。"
@@ -10565,8 +10565,8 @@ msgstr "數據"
 msgid "Visual"
 msgstr "視覺"
 
-#: include/global_settings.php:112 lib/functions.php:6160
-#: lib/functions.php:6165
+#: include/global_settings.php:112 lib/functions.php:6170
+#: lib/functions.php:6175
 #, fuzzy
 msgid "Authentication"
 msgstr "認證"
@@ -10610,12 +10610,12 @@ msgstr "圖形字體"
 msgid "PHP Mail() Function"
 msgstr "PHP Mail（）函數"
 
-#: include/global_settings.php:153 lib/functions.php:6141
+#: include/global_settings.php:153 lib/functions.php:6151
 #, fuzzy
 msgid "Sendmail"
 msgstr "發郵件"
 
-#: include/global_settings.php:154 lib/functions.php:6147
+#: include/global_settings.php:154 lib/functions.php:6157
 #, fuzzy
 msgid "SMTP"
 msgstr "SMTP"
@@ -12801,7 +12801,7 @@ msgstr "這是在電子郵件中的一行自動換行之前允許的字符數。
 msgid "Sendmail Options"
 msgstr "Sendmail選項"
 
-#: include/global_settings.php:1961 lib/functions.php:6141
+#: include/global_settings.php:1961 lib/functions.php:6151
 #, fuzzy
 msgid "Sendmail Path"
 msgstr "Sendmail路徑"
@@ -14219,8 +14219,8 @@ msgstr "地點:"
 msgid "Contact:"
 msgstr "聯繫方式："
 
-#: lib/api_device.php:1986 lib/functions.php:6174 lib/functions.php:6176
-#: lib/functions.php:6180
+#: lib/api_device.php:1986 lib/functions.php:6184 lib/functions.php:6186
+#: lib/functions.php:6190
 #, fuzzy
 msgid "Ping Results"
 msgstr "Ping結果"
@@ -15122,144 +15122,144 @@ msgstr "非查詢"
 msgid "Link %s"
 msgstr "連結 %s"
 
-#: lib/functions.php:4908 tree.php:1804 tree.php:1878 tree.php:1986
+#: lib/functions.php:4918 tree.php:1804 tree.php:1878 tree.php:1986
 #: user_admin.php:18 user_group_admin.php:20
 #, fuzzy
 msgid "Copy"
 msgstr "複製"
 
-#: lib/functions.php:5710
+#: lib/functions.php:5720
 #, fuzzy
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "郵件程序錯誤：沒有<b>TO</b>地址集！ <br>如果使用“ <i>測試郵件”</i>鏈接，請設置“ <b>警報電子郵件”</b>設置。"
 
-#: lib/functions.php:6104
+#: lib/functions.php:6114
 #, fuzzy, php-format
 msgid "Authentication failed: %s"
 msgstr "身份驗證失敗：%s"
 
-#: lib/functions.php:6108
+#: lib/functions.php:6118
 #, fuzzy, php-format
 msgid "HELO failed: %s"
 msgstr "HELO失敗了：%s"
 
-#: lib/functions.php:6111
+#: lib/functions.php:6121
 #, fuzzy, php-format
 msgid "Connect failed: %s"
 msgstr "連接失敗：%s"
 
-#: lib/functions.php:6114
+#: lib/functions.php:6124
 #, fuzzy
 msgid "SMTP error: "
 msgstr "SMTP錯誤： "
 
-#: lib/functions.php:6128
+#: lib/functions.php:6138
 #, fuzzy
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "這是Kadupul生成的測試消息。發送此消息是為了測試郵件設置的配置。"
 
-#: lib/functions.php:6129
+#: lib/functions.php:6139
 #, fuzzy
 msgid "Your email settings are currently set as follows"
 msgstr "您的電子郵件設置目前設置如下"
 
-#: lib/functions.php:6130
+#: lib/functions.php:6140
 #, fuzzy
 msgid "Method"
 msgstr "方法"
 
-#: lib/functions.php:6132
+#: lib/functions.php:6142
 #, fuzzy
 msgid "Checking Configuration...<br>"
 msgstr "檢查配置...... <br>"
 
-#: lib/functions.php:6139
+#: lib/functions.php:6149
 #, fuzzy
 msgid "PHP's Mailer Class"
 msgstr "PHP的郵件程序類"
 
-#: lib/functions.php:6145
+#: lib/functions.php:6155
 #, fuzzy
 msgid "Method: SMTP"
 msgstr "方法：SMTP"
 
-#: lib/functions.php:6162
+#: lib/functions.php:6172
 #, fuzzy
 msgid "Not Shown for Security Reasons"
 msgstr "未顯示安全原因"
 
-#: lib/functions.php:6163
+#: lib/functions.php:6173
 #, fuzzy
 msgid "Security"
 msgstr "安全性"
 
-#: lib/functions.php:6171
+#: lib/functions.php:6181
 #, fuzzy
 msgid "Ping Results:"
 msgstr "Ping結果"
 
-#: lib/functions.php:6171 lib/functions.php:6176
+#: lib/functions.php:6181 lib/functions.php:6186
 #, fuzzy
 msgid "Success"
 msgstr "成功"
 
-#: lib/functions.php:6180
+#: lib/functions.php:6190
 #, fuzzy
 msgid "Bypassed"
 msgstr "旁路"
 
-#: lib/functions.php:6189
+#: lib/functions.php:6199
 #, fuzzy
 msgid "Creating Message Text..."
 msgstr "創建消息文本..."
 
-#: lib/functions.php:6192
+#: lib/functions.php:6202
 #, fuzzy
 msgid "Sending Message..."
 msgstr "發送消息......"
 
-#: lib/functions.php:6196
+#: lib/functions.php:6206
 #, fuzzy
 msgid "Kadupul Test Message"
 msgstr "Kadupul測試消息"
 
-#: lib/functions.php:6198
+#: lib/functions.php:6208
 #, fuzzy
 msgid "Success!"
 msgstr "成功！"
 
-#: lib/functions.php:6201
+#: lib/functions.php:6211
 #, fuzzy
 msgid "Message Not Sent due to ping failure."
 msgstr "由於ping失敗而未發送消息。"
 
-#: lib/functions.php:6665 lib/functions.php:6735
+#: lib/functions.php:6675 lib/functions.php:6745
 #, fuzzy, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "由於以下錯誤，Kadupul禁用了插件%s：%s！有關更多詳細信息，請參閱Kadupul日誌文件。"
 
-#: lib/functions.php:6831
+#: lib/functions.php:6841
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr ""
 
-#: lib/functions.php:7255 lib/functions.php:7257
+#: lib/functions.php:7265 lib/functions.php:7267
 #: templates/platform/console_home_body.html.twig
 #, fuzzy, php-format
 msgid "- Beta %s"
 msgstr "-  Beta%s"
 
-#: lib/functions.php:7255 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7265 templates/platform/console_home_body.html.twig
 #, fuzzy, php-format
 msgid "Version %s %s"
 msgstr "版本%s%s"
 
-#: lib/functions.php:7257
+#: lib/functions.php:7267
 #, php-format
 msgid "%s %s"
 msgstr "%s - %s"
 
-#: lib/functions.php:7492
+#: lib/functions.php:7502
 #, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr ""
