@@ -47,14 +47,19 @@ def publish(image):
                        input=token, text=True, capture_output=True, env=environment, check=True, timeout=60)
         copied = False
         for registry in ('mirror.gcr.io', 'public.ecr.aws/docker', 'docker.io'):
-            source = image['source'].replace('docker.io/', registry + '/', 1)
+            # containers/image rejects references containing both tag and digest.
+            # Fetch the immutable identity; retain the version tag in the inventory.
+            repository = image['source'].split('@', 1)[0].split(':', 1)[0]
+            source = repository.replace('docker.io/', registry + '/', 1) + '@' + image['digest']
             command = ['skopeo', 'copy', '--all', '--preserve-digests', '--retry-times', '3',
                        'docker://' + source, 'docker://' + image['destination']]
             result = subprocess.run(command, capture_output=True, env=environment, timeout=2400)
             if result.returncode == 0:
                 copied = True
                 break
-            print('Pinned copy unavailable from ' + registry, flush=True)
+            diagnostic = result.stderr.decode('utf-8', errors='replace').replace(token, '[redacted]')
+            diagnostic = re.sub(r'[\x00-\x1f\x7f]', ' ', diagnostic)[-1500:]
+            print('Pinned copy unavailable from ' + registry + ': ' + diagnostic, flush=True)
         if not copied:
             raise RuntimeError('No upstream served the reviewed immutable image')
         manifest = subprocess.run(['skopeo', 'inspect', '--raw', 'docker://' + image['destination']],

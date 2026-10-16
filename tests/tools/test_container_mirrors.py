@@ -8,6 +8,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import tempfile
 import unittest
 from unittest.mock import patch
 
@@ -18,6 +19,27 @@ spec.loader.exec_module(mirror)
 
 
 class ContainerMirrorTest(unittest.TestCase):
+    def test_login_helper_uses_stdin_and_refuses_missing_credentials(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            docker = root / 'docker'
+            docker.write_text('#!/bin/sh\nprintf "%s\\n" "$@" > "$AUTH_ARGV"\ncat > "$AUTH_STDIN"\n')
+            docker.chmod(0o700)
+            environment = {**os.environ, 'PATH': str(root) + os.pathsep + os.environ['PATH'],
+                           'GHCR_TOKEN': 'fixture-read-token', 'GHCR_USERNAME': 'fixture',
+                           'AUTH_ARGV': str(root / 'arguments'), 'AUTH_STDIN': str(root / 'input')}
+            command = ['bash', str(ROOT / 'tests/tools/login_ghcr.sh')]
+            result = subprocess.run(command, env=environment, capture_output=True, text=True)
+            self.assertEqual(0, result.returncode, result.stderr)
+            self.assertEqual('fixture-read-token', (root / 'input').read_text())
+            self.assertEqual(['login', 'ghcr.io', '--username', 'fixture', '--password-stdin'], (root / 'arguments').read_text().splitlines())
+            self.assertNotIn('fixture-read-token', result.stdout + result.stderr)
+            (root / 'arguments').unlink()
+            environment.pop('GHCR_TOKEN')
+            result = subprocess.run(command, env=environment, capture_output=True, text=True)
+            self.assertNotEqual(0, result.returncode)
+            self.assertFalse((root / 'arguments').exists())
+
     def test_inventory_contains_seventeen_unique_immutable_destinations(self):
         images = mirror.images()
         self.assertEqual(17, len(images))
@@ -41,7 +63,7 @@ class ContainerMirrorTest(unittest.TestCase):
     def measured_publish(self, observed):
         manifest = b'{"schemaVersion":2}'
         digest = 'sha256:' + hashlib.sha256(manifest).hexdigest()
-        image = {'source': 'docker.io/library/php@' + digest,
+        image = {'source': 'docker.io/library/php:8.4-apache@' + digest,
                  'destination': mirror.PREFIX + 'php:sha256-' + digest[7:], 'digest': digest}
         calls = []
 
@@ -56,6 +78,7 @@ class ContainerMirrorTest(unittest.TestCase):
         self.assertNotIn('test-only-value', json.dumps([command for command, _ in calls]))
         self.assertIn('--all', calls[1][0])
         self.assertIn('--preserve-digests', calls[1][0])
+        self.assertIn('docker://mirror.gcr.io/library/php@' + digest, calls[1][0])
         self.assertFalse(Path(calls[0][1]['env']['REGISTRY_AUTH_FILE']).parent.exists())
 
     def test_authenticated_copy_preserves_every_platform_and_checks_remote_bytes(self):
