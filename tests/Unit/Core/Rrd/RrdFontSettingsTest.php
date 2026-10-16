@@ -15,6 +15,13 @@ function rrd_font_settings_filters(string $root): string
         . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'user_setting_value_allowed'), true) . ');';
 }
 
+/** Script lines that give an extracted save_user_settings() the user id rule it calls. */
+function rrd_font_settings_storage(string $root): string
+{
+    return 'require_once ' . var_export($root . '/src/Platform/Infrastructure/Legacy/LegacySettingsStorage.php', true) . ';'
+        . 'class_alias(' . var_export('Kadupul\Platform\Infrastructure\Legacy\LegacySettingsStorage', true) . ', \'LegacySettingsStorage\');';
+}
+
 test('every graph font size setting refuses sizes RRDtool cannot draw', function () {
     $names = array('title_size', 'legend_size', 'axis_size', 'unit_size');
     $values = array('', 'abc', '4', '4.5', '12', '72', '72.5', '1e400', '-8');
@@ -221,6 +228,7 @@ test('saving all user settings preserves a stored font size when its replacement
     $root = dirname(__DIR__, 4);
     $script = 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'settings_value_passes_filter'), true) . ');'
         . rrd_font_settings_filters($root)
+        . rrd_font_settings_storage($root)
         . 'eval(' . var_export(test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'save_user_settings'), true) . ');'
         . <<<'PHP'
         $writes = array();
@@ -510,6 +518,7 @@ test('user and group graph settings keep a font that is not installed unsaved', 
         form_save();';
     $user = rrd_font_settings_name_filter($root)
         . 'eval(' . var_export(test_php_function_source($functions, 'settings_value_passes_filter'), true) . ');'
+        . rrd_font_settings_storage($root)
         . 'eval(' . var_export(test_php_function_source($functions, 'save_user_settings'), true) . ');'
         . $settings_user . $request . '
         $writes = array();

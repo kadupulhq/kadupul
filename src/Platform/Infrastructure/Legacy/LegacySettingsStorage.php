@@ -42,7 +42,21 @@ use Kadupul\Platform\Infrastructure\Persistence\DbalUserSettings;
  */
 final readonly class LegacySettingsStorage
 {
+    // settings_user.user_id is mediumint unsigned.
+    private const int USER_ID_MAX = 16777215;
+
     public function __construct(private LegacyLockRetry $retry = new LegacyLockRetry()) {}
+
+    /**
+     * Whether the user setting functions may pass $id to settings_user: an int
+     * or ASCII digit string from 0 to the column maximum. The column coerces
+     * anything else, 'abc' to user 0 and 2^24 onto the maximum.
+     */
+    public static function acceptsUserId(mixed $id): bool
+    {
+        return (is_int($id) && $id >= 0 && $id <= self::USER_ID_MAX)
+            || (is_string($id) && preg_match('/^[0-9]+$/D', $id) === 1 && strlen(ltrim($id, '0')) <= strlen((string) self::USER_ID_MAX) && (int) $id <= self::USER_ID_MAX);
+    }
 
     /** Shared by legacy wrappers, including calls before Composer is loaded. */
     public static function instance(): self

@@ -324,6 +324,217 @@
         },
         "sql": []
       }
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["fncdb_pref", "given", false, "abc"],
+      "id": "explicit_user_text",
+      "note": "\"abc\" > 0 is true in PHP: rejected before the query: the default is returned, nothing is cached and nothing is logged (#887)",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'anon')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'mine')",
+        "INSERT INTO settings_user VALUES (2, 'fncdb_pref', 'theirs')"
+      ],
+      "result": {"returned": {"type": "string", "value": "given"}, "sql": []}
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["selected_theme", false, false, "abc"],
+      "id": "explicit_user_text_library_default",
+      "note": "no argument default, so the library default: rejected before the query: the default is returned, nothing is cached and nothing is logged (#887)",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'anon')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'mine')",
+        "INSERT INTO settings_user VALUES (2, 'fncdb_pref', 'theirs')"
+      ],
+      "result": {"returned": {"type": "string", "value": "modern"}, "sql": []}
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["fncdb_pref", "given", false, "2abc"],
+      "id": "explicit_user_digit_prefix",
+      "note": " rejected before the query: the default is returned, nothing is cached and nothing is logged (#887)",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'anon')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'mine')",
+        "INSERT INTO settings_user VALUES (2, 'fncdb_pref', 'theirs')"
+      ],
+      "result": {"returned": {"type": "string", "value": "given"}, "sql": []}
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["fncdb_pref", "given", false, "1.5"],
+      "id": "explicit_user_decimal_string",
+      "note": " rejected before the query: the default is returned, nothing is cached and nothing is logged (#887)",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'anon')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'mine')",
+        "INSERT INTO settings_user VALUES (2, 'fncdb_pref', 'theirs')"
+      ],
+      "result": {"returned": {"type": "string", "value": "given"}, "sql": []}
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["fncdb_pref", "given", false, " 2"],
+      "id": "explicit_user_leading_space",
+      "note": " rejected before the query: the default is returned, nothing is cached and nothing is logged (#887)",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'anon')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'mine')",
+        "INSERT INTO settings_user VALUES (2, 'fncdb_pref', 'theirs')"
+      ],
+      "result": {"returned": {"type": "string", "value": "given"}, "sql": []}
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["fncdb_pref", "given", false, 2.0],
+      "id": "explicit_user_float",
+      "note": "a float is not an integer id: rejected before the query: the default is returned, nothing is cached and nothing is logged (#887)",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'anon')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'mine')",
+        "INSERT INTO settings_user VALUES (2, 'fncdb_pref', 'theirs')"
+      ],
+      "result": {"returned": {"type": "string", "value": "given"}, "sql": []}
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["fncdb_pref", "given", false, [2]],
+      "id": "explicit_user_array",
+      "note": " rejected before the query: the default is returned, nothing is cached and nothing is logged (#887)",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'anon')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'mine')",
+        "INSERT INTO settings_user VALUES (2, 'fncdb_pref', 'theirs')"
+      ],
+      "result": {"returned": {"type": "string", "value": "given"}, "sql": []}
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["fncdb_pref", "given", false, 16777216],
+      "id": "explicit_user_column_max_plus_one",
+      "note": "past the column maximum: rejected before the query: the default is returned, nothing is cached and nothing is logged (#887)",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'anon')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'mine')",
+        "INSERT INTO settings_user VALUES (2, 'fncdb_pref', 'theirs')"
+      ],
+      "result": {"returned": {"type": "string", "value": "given"}, "sql": []}
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["fncdb_pref", "given", false, "16777216"],
+      "id": "explicit_user_column_max_plus_one_string",
+      "note": "past the column maximum: rejected before the query: the default is returned, nothing is cached and nothing is logged (#887)",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'anon')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'mine')",
+        "INSERT INTO settings_user VALUES (2, 'fncdb_pref', 'theirs')"
+      ],
+      "result": {"returned": {"type": "string", "value": "given"}, "sql": []}
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["fncdb_pref", "given", false, "9999999999999999999999999999999999999999"],
+      "id": "explicit_user_long_digit_string",
+      "note": "does not fit in a PHP int: rejected before the query: the default is returned, nothing is cached and nothing is logged (#887)",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'anon')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'mine')",
+        "INSERT INTO settings_user VALUES (2, 'fncdb_pref', 'theirs')"
+      ],
+      "result": {"returned": {"type": "string", "value": "given"}, "sql": []}
+    },
+    {
+      "ambient": {"session": {"sess_user_id": "abc"}},
+      "args": ["fncdb_pref", "given"],
+      "id": "session_user_text",
+      "note": "a session user id of \"abc\": rejected before the query: the default is returned, nothing is cached and nothing is logged (#887)",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'anon')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'mine')",
+        "INSERT INTO settings_user VALUES (2, 'fncdb_pref', 'theirs')"
+      ],
+      "result": {"returned": {"type": "string", "value": "given"}, "sql": []}
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 16777216}},
+      "args": ["fncdb_pref", "given"],
+      "id": "session_user_column_max_plus_one",
+      "note": "a session user id past the column maximum: rejected before the query: the default is returned, nothing is cached and nothing is logged (#887)",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'anon')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'mine')",
+        "INSERT INTO settings_user VALUES (2, 'fncdb_pref', 'theirs')"
+      ],
+      "result": {"returned": {"type": "string", "value": "given"}, "sql": []}
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["fncdb_pref", false, false, "2"],
+      "id": "explicit_user_digit_string",
+      "note": "a digit string is a valid id: user 2's row",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'anon')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'mine')",
+        "INSERT INTO settings_user VALUES (2, 'fncdb_pref', 'theirs')"
+      ],
+      "result": {
+        "returned": {"type": "string", "value": "theirs"},
+        "sql": [
+          "SELECT value FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",\"2\"]"
+        ]
+      }
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["fncdb_pref", false, false, "02"],
+      "id": "explicit_user_leading_zero",
+      "note": "leading zeros are digits: user 2's row",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'anon')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'mine')",
+        "INSERT INTO settings_user VALUES (2, 'fncdb_pref', 'theirs')"
+      ],
+      "result": {
+        "returned": {"type": "string", "value": "theirs"},
+        "sql": [
+          "SELECT value FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",\"02\"]"
+        ]
+      }
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["fncdb_pref", false, false, 16777215],
+      "id": "explicit_user_column_max",
+      "note": "the largest id settings_user.user_id holds: its row",
+      "prelude": ["INSERT INTO settings_user VALUES (16777215, 'fncdb_pref', 'max')"],
+      "result": {
+        "returned": {"type": "string", "value": "max"},
+        "sql": [
+          "SELECT value FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",16777215]"
+        ]
+      }
+    },
+    {
+      "ambient": {"session": {"sess_user_id": "1"}},
+      "args": ["fncdb_pref"],
+      "id": "session_user_digit_string",
+      "note": "a digit-string session user id is valid: user 1's row",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'anon')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'mine')",
+        "INSERT INTO settings_user VALUES (2, 'fncdb_pref', 'theirs')"
+      ],
+      "result": {
+        "returned": {"type": "string", "value": "mine"},
+        "sql": [
+          "SELECT value FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",\"1\"]"
+        ],
+        "state": [
+          "set session.sess_user_config_array = {\"$\":\"array\",\"pairs\":[[\"fncdb_pref\",\"mine\"]]}"
+        ]
+      }
     }
   ],
   "function": "read_user_setting",
