@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-15 10:38-0700\n"
+"POT-Creation-Date: 2026-10-15 22:42-0700\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2508,8 +2508,8 @@ msgstr "Root"
 msgid "No Tree Rules Found"
 msgstr "Không tìm thấy quy tắc cây"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6667 lib/functions.php:6737
-#: lib/functions.php:6833 lib/functions.php:7494 poller.php:417 poller.php:584
+#: cactid.php:27 help.php:54 lib/functions.php:6665 lib/functions.php:6735
+#: lib/functions.php:6831 lib/functions.php:7492 poller.php:417 poller.php:584
 #: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
 #: poller_automation.php:37 poller_boost.php:387
 msgid "Kadupul System Warning"
@@ -4272,7 +4272,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller chưa chạy."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8197 permission_denied.php:29 permission_denied.php:36
+#: lib/functions.php:8195 permission_denied.php:29 permission_denied.php:36
 msgid "Permission Denied"
 msgstr "Quyền bị từ chối"
 
@@ -5211,11 +5211,11 @@ msgstr "FATAL: Bạn phải đăng nhập để truy cập vào khu vực này c
 msgid "Login Again"
 msgstr "Đăng nhập lại"
 
-#: include/auth.php:317 lib/functions.php:8198 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8196 permission_denied.php:38
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Nếu bạn cảm thấy rằng đây là một lỗi. Vui lòng liên hệ với Quản trị viên Kadupul của bạn."
 
-#: include/auth.php:317 lib/functions.php:8198 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8196 permission_denied.php:38
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Bạn không được phép truy cập vào phần này của Kadupul."
 
@@ -13031,32 +13031,32 @@ msgstr "Thành công!"
 msgid "Message Not Sent due to ping failure."
 msgstr "Tin nhắn không được gửi do lỗi ping."
 
-#: lib/functions.php:6667 lib/functions.php:6737
+#: lib/functions.php:6665 lib/functions.php:6735
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul đã tắt plugin %s do lỗi sau: %s! Xem logfile Kadupul để biết thêm chi tiết."
 
-#: lib/functions.php:6833
+#: lib/functions.php:6831
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr ""
 
-#: lib/functions.php:7257 lib/functions.php:7259
+#: lib/functions.php:7255 lib/functions.php:7257
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:7257
+#: lib/functions.php:7255
 #, php-format
 msgid "Version %s %s"
 msgstr "Phiên bản %s %s"
 
-#: lib/functions.php:7259
+#: lib/functions.php:7257
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7494
+#: lib/functions.php:7492
 #, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr ""

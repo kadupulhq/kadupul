@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-15 10:38-0700\n"
+"POT-Creation-Date: 2026-10-15 22:42-0700\n"
 "PO-Revision-Date: 2024-04-20 18:31-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2507,8 +2507,8 @@ msgstr "Ρίζα"
 msgid "No Tree Rules Found"
 msgstr "Δεν βρέθηκαν κανάλια δέντρων"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6667 lib/functions.php:6737
-#: lib/functions.php:6833 lib/functions.php:7494 poller.php:417 poller.php:584
+#: cactid.php:27 help.php:54 lib/functions.php:6665 lib/functions.php:6735
+#: lib/functions.php:6831 lib/functions.php:7492 poller.php:417 poller.php:584
 #: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
 #: poller_automation.php:37 poller_boost.php:387
 msgid "Kadupul System Warning"
@@ -4303,7 +4303,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Ο Kadupul Poller δεν έχει τρέξει ακόμα."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8197 permission_denied.php:29 permission_denied.php:36
+#: lib/functions.php:8195 permission_denied.php:29 permission_denied.php:36
 msgid "Permission Denied"
 msgstr "Δεν επιτρέπεται η πρόσβαση"
 
@@ -5242,11 +5242,11 @@ msgstr "FATAL: Πρέπει να είστε συνδεδεμένοι για να
 msgid "Login Again"
 msgstr "Σύνδεση Ξανά"
 
-#: include/auth.php:317 lib/functions.php:8198 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8196 permission_denied.php:38
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Αν νομίζετε ότι αυτό είναι λάθος. Επικοινωνήστε με τον διαχειριστή του Kadupul."
 
-#: include/auth.php:317 lib/functions.php:8198 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8196 permission_denied.php:38
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Δεν επιτρέπεται η πρόσβαση σε αυτήν την ενότητα του Kadupul."
 
@@ -13059,32 +13059,32 @@ msgstr "Επιτυχία!"
 msgid "Message Not Sent due to ping failure."
 msgstr "Μήνυμα δεν έχει σταλεί λόγω βλάβης του ping."
 
-#: lib/functions.php:6667 lib/functions.php:6737
+#: lib/functions.php:6665 lib/functions.php:6735
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Το plugin Kadupul έχει απενεργοποιηθεί %s λόγω του ακόλουθου σφάλματος: %s! Δείτε το αρχείο καταγραφής Kadupul για περισσότερες λεπτομέρειες."
 
-#: lib/functions.php:6833
+#: lib/functions.php:6831
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Το PollerID:%s έχει μη έγκυρο όνομα κεντρικού υπολογιστή:%s.  Δεν είναι προσβάσιμο μέσω DNS!"
 
-#: lib/functions.php:7257 lib/functions.php:7259
+#: lib/functions.php:7255 lib/functions.php:7257
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:7257
+#: lib/functions.php:7255
 #, php-format
 msgid "Version %s %s"
 msgstr "Έκδοση %s %s"
 
-#: lib/functions.php:7259
+#: lib/functions.php:7257
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7494
+#: lib/functions.php:7492
 #, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ:  Το Key Kadupul Include File %s λείπει.  Εντοπίστε και αντικαταστήστε αυτό το αρχείο"

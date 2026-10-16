@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-15 10:38-0700\n"
+"POT-Creation-Date: 2026-10-15 22:42-0700\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2869,8 +2869,8 @@ msgstr "根部"
 msgid "No Tree Rules Found"
 msgstr "找不到樹規則"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6667 lib/functions.php:6737
-#: lib/functions.php:6833 lib/functions.php:7494 poller.php:417 poller.php:584
+#: cactid.php:27 help.php:54 lib/functions.php:6665 lib/functions.php:6735
+#: lib/functions.php:6831 lib/functions.php:7492 poller.php:417 poller.php:584
 #: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
 #: poller_automation.php:37 poller_boost.php:387
 #, fuzzy
@@ -4912,7 +4912,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller尚未運行。"
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8197 permission_denied.php:29 permission_denied.php:36
+#: lib/functions.php:8195 permission_denied.php:29 permission_denied.php:36
 #, fuzzy
 msgid "Permission Denied"
 msgstr "存取被拒"
@@ -5991,12 +5991,12 @@ msgstr "致命：您必須登錄才能訪問Kadupul的這個區域。"
 msgid "Login Again"
 msgstr "再次登錄"
 
-#: include/auth.php:317 lib/functions.php:8198 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8196 permission_denied.php:38
 #, fuzzy
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "如果你覺得這是一個錯誤。請聯繫您的Kadupul管理員。"
 
-#: include/auth.php:317 lib/functions.php:8198 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8196 permission_denied.php:38
 #, fuzzy
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "您無權訪問此Kadupul部分。"
@@ -15288,32 +15288,32 @@ msgstr "成功！"
 msgid "Message Not Sent due to ping failure."
 msgstr "由於ping失敗而未發送消息。"
 
-#: lib/functions.php:6667 lib/functions.php:6737
+#: lib/functions.php:6665 lib/functions.php:6735
 #, fuzzy, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "由於以下錯誤，Kadupul禁用了插件%s：%s！有關更多詳細信息，請參閱Kadupul日誌文件。"
 
-#: lib/functions.php:6833
+#: lib/functions.php:6831
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr ""
 
-#: lib/functions.php:7257 lib/functions.php:7259
+#: lib/functions.php:7255 lib/functions.php:7257
 #, fuzzy, php-format
 msgid "- Beta %s"
 msgstr "-  Beta%s"
 
-#: lib/functions.php:7257
+#: lib/functions.php:7255
 #, fuzzy, php-format
 msgid "Version %s %s"
 msgstr "版本%s%s"
 
-#: lib/functions.php:7259
+#: lib/functions.php:7257
 #, php-format
 msgid "%s %s"
 msgstr "%s - %s"
 
-#: lib/functions.php:7494
+#: lib/functions.php:7492
 #, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr ""
