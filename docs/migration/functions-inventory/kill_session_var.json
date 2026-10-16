@@ -3,8 +3,8 @@
     "name": "kill_session_var",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1405,
-        "end_line": 1418,
+        "start_line": 1414,
+        "end_line": 1427,
         "line_count": 14,
         "signature": {
             "parameters": [

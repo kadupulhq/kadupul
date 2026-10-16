@@ -3,8 +3,8 @@
     "name": "is_valid_pathname",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 2359,
-        "end_line": 2366,
+        "start_line": 2368,
+        "end_line": 2375,
         "line_count": 8,
         "signature": {
             "parameters": [

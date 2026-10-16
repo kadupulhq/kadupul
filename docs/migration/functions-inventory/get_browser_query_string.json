@@ -3,8 +3,8 @@
     "name": "get_browser_query_string",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 4576,
-        "end_line": 4598,
+        "start_line": 4585,
+        "end_line": 4607,
         "line_count": 23,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,

@@ -3,8 +3,8 @@
     "name": "user_setting_value_allowed",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 329,
-        "end_line": 393,
+        "start_line": 335,
+        "end_line": 399,
         "line_count": 65,
         "signature": {
             "parameters": [
@@ -31,7 +31,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 5, "core_outside_functions_php": 1, "tests": 4, "plugins": 0},
+        "fan_out": {"core": 5, "core_outside_functions_php": 1, "tests": 5, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

@@ -3,8 +3,8 @@
     "name": "generate_data_input_field_sequences",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 3670,
-        "end_line": 3693,
+        "start_line": 3679,
+        "end_line": 3702,
         "line_count": 24,
         "signature": {
             "parameters": [

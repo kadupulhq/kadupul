@@ -3,8 +3,8 @@
     "name": "get_md5_hash",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7456,
-        "end_line": 7478,
+        "start_line": 7465,
+        "end_line": 7487,
         "line_count": 23,
         "signature": {
             "parameters": [

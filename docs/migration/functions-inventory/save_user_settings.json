@@ -4,8 +4,8 @@
     "static": {
         "file": "lib/functions.php",
         "start_line": 256,
-        "end_line": 315,
-        "line_count": 60,
+        "end_line": 321,
+        "line_count": 66,
         "signature": {
             "parameters": [
                 {
@@ -22,7 +22,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 3, "core_outside_functions_php": 3, "tests": 7, "plugins": 0},
+        "fan_out": {"core": 4, "core_outside_functions_php": 3, "tests": 15, "plugins": 0},
         "body": {
             "uses_global": ["settings_user"],
             "static_variables": [],
@@ -41,6 +41,7 @@
         },
         "calls": {
             "functions": [
+                "cacti_log",
                 "set_user_setting",
                 "settings_value_passes_filter",
                 "user_setting_value_allowed"
@@ -55,6 +56,6 @@
         "status": "planned",
         "lts_status": "not assessed",
         "behavior_record": "tests/Golden/functions/kadupul/php-8.4/save_user_settings.json",
-        "notes": "A non-numeric user id is stored as user 0. See #872."
+        "notes": "A non-numeric user id is stored as user 0. See #872. Fixed: a user id that is not an integer or a digit string is now rejected and logged, and nothing is written (#872)."
     }
 }

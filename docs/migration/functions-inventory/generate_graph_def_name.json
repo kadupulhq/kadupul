@@ -3,8 +3,8 @@
     "name": "generate_graph_def_name",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 3646,
-        "end_line": 3661,
+        "start_line": 3655,
+        "end_line": 3670,
         "line_count": 16,
         "signature": {
             "parameters": [

@@ -3,8 +3,8 @@
     "name": "get_full_script_path",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 2987,
-        "end_line": 3038,
+        "start_line": 2996,
+        "end_line": 3047,
         "line_count": 52,
         "signature": {
             "parameters": [
