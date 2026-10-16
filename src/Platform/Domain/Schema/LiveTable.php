@@ -62,12 +62,8 @@ final readonly class LiveTable
     /** get_column_sequence_number(): the column's Seq_in_index in the index, or -1. */
     public function indexPosition(string $key, string $column): int|string
     {
-        foreach ($this->indexes as $index) {
-            if ($index['Key_name'] == $key && $index['Column_name'] == $column) {
-                return $index['Seq_in_index'];
-            }
-        }
+        $index = array_find($this->indexes, static fn(array $index): bool => $index['Key_name'] == $key && $index['Column_name'] == $column);
 
-        return -1;
+        return $index === null ? -1 : $index['Seq_in_index'];
     }
 }

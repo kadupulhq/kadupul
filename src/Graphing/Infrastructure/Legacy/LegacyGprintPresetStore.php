@@ -99,7 +99,7 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
 
     public function delete(int $actorId, array $ids, array $revisions): void
     {
-        if ($ids === [] || count($ids) > GprintPresetStore::MAX_DELETE_SELECTION || array_filter($ids, static fn($id): bool => !is_int($id) || $id < 1) !== []) {
+        if ($ids === [] || count($ids) > GprintPresetStore::MAX_DELETE_SELECTION || array_any($ids, static fn(mixed $id): bool => !is_int($id) || $id < 1)) {
             throw new \InvalidArgumentException('Invalid GPRINT preset selection.');
         }
         $ids = array_values(array_unique($ids));
