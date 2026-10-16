@@ -50,6 +50,9 @@ final class HelpPresentationTest extends TestCase
             $topics = new LegacyHelpTopics($root, $database, new InstallationConfiguration($root));
             self::assertSame('https://kadupul.org/guides/worked-example/', $topics->all()[0]->url);
             self::assertCount(8, $topics->all());
+            foreach ($topics->all() as $topic) {
+                self::assertStringStartsWith('https://kadupul.org/', $topic->url);
+            }
             $pdo->exec("INSERT INTO settings VALUES ('local_documentation', 'on')");
             self::assertSame('/kadupul/docs/Devices.html', $topics->all()[0]->url);
             self::assertNull($topics->all()[1]->url);

@@ -9,9 +9,11 @@
 <p>{{ 'Choose a topic to open the Kadupul documentation.'|trans }}</p>
 <ul>
 {% for topic in topics %}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- LegacyHelpTopics uses the fixed documentation map or allowlisted local filenames below validated url_path; Twig escapes the attribute. #}
     <li>{% if topic.url is not null %}<a href="{{ topic.url }}">{{ topic.label|trans }}</a>{% else %}{{ topic.label|trans }}: {{ 'Not available locally.'|trans }}{% endif %}</li>
 {% endfor %}
 </ul>
+{# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed script below the validated installation path; Twig escapes the attribute. #}
 <p><a href="{{ installation_path('index.php') }}">{{ 'Back to console'|trans }}</a></p>
 </main>
 {% endblock %}

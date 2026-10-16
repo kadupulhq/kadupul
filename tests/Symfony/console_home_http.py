@@ -89,8 +89,10 @@ def verify_console_home(harness, check):
         session = Session(harness.base)
         check(session.login('behavior-admin')['status'] == 200, 'new link grant is exercised with a fresh native permission cache')
         harness.truncate_artifacts('plugin.jsonl')
-        status, body, headers = page(session)
+        status, body, headers = page(session, '/index.php?console_fixture=first&header=true')
         check(status == 200 and 'console-file-fixture' in body, 'authorized embedded PHP content executes')
+        check('name="console-request-uri" content="/index.php?console_fixture=first&amp;header=true"' in body,
+              'native console hooks retain the original query string in REQUEST_URI')
         check(body.index('console-fixture-before') < body.index('console-file-fixture') < body.index('console-welcome') < body.index('console-fixture-after') < body.index('console-fixture-bottom'),
               'native console hooks and embedded content retain their order')
         events = [row['callback'] for row in harness.jsonl('/artifacts/plugin.jsonl') if row['callback'].startswith('console_')]

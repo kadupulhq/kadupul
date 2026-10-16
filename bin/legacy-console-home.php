@@ -37,9 +37,14 @@ try {
         throw new InvalidArgumentException('Invalid console handoff.');
     }
     $root = dirname(__DIR__);
+    $queryString = $command['server']['QUERY_STRING'] ?? '';
+    if (!is_string($queryString)) {
+        throw new InvalidArgumentException('Invalid console query string.');
+    }
     $_SERVER = array_replace($_SERVER, $command['server'], [
         'SCRIPT_FILENAME' => $root . '/index.php', 'SCRIPT_NAME' => $command['index_path'],
-        'PHP_SELF' => $command['index_path'], 'REQUEST_URI' => $command['index_path'], 'REQUEST_METHOD' => 'GET',
+        'PHP_SELF' => $command['index_path'],
+        'REQUEST_URI' => $command['index_path'] . ($queryString === '' ? '' : '?' . $queryString), 'REQUEST_METHOD' => 'GET',
     ]);
     $_COOKIE = $command['cookies'];
     $_GET = $_REQUEST = $command['query'];

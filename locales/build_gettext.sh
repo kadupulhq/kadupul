@@ -42,11 +42,16 @@ ${XGETTEXT_BIN} --from-code=UTF-8 --no-wrap --copyright-holder="The Cacti Group"
 
 
 # Keep the migrated console identities in the shared gettext catalogue.
-CONSOLE_POT_DIR=`mktemp -d`
-trap 'rm -rf "$CONSOLE_POT_DIR"' EXIT HUP INT TERM
-php tools/translations/extract-console.php > "$CONSOLE_POT_DIR/console.pot"
-msgcat --no-wrap locales/po/cacti.pot "$CONSOLE_POT_DIR/console.pot" -o "$CONSOLE_POT_DIR/merged.pot"
-cp "$CONSOLE_POT_DIR/merged.pot" locales/po/cacti.pot
+if [ -f templates/platform/console_home_body.html.twig ]; then
+    CONSOLE_POT_DIR=`mktemp -d` || exit 1
+    trap 'rm -rf "$CONSOLE_POT_DIR"' EXIT HUP INT TERM
+    if ! php tools/translations/extract-console.php > "$CONSOLE_POT_DIR/console.pot"; then
+        echo "ERROR: Console Twig extraction failed; translation artifacts remain incomplete." >&2
+        exit 1
+    fi
+    msgcat --no-wrap locales/po/cacti.pot "$CONSOLE_POT_DIR/console.pot" -o "$CONSOLE_POT_DIR/merged.pot" || exit 1
+    cp "$CONSOLE_POT_DIR/merged.pot" locales/po/cacti.pot || exit 1
+fi
 
 # Merge any changes to POT file into language files
 echo "Merging updates to language files..."

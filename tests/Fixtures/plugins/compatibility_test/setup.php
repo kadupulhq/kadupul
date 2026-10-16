@@ -155,6 +155,7 @@ function compatibility_console_head()
 {
     compatibility_test_record('console_head', []);
     print '<meta name="console-fixture" content="head">';
+    print '<meta name="console-request-uri" content="' . html_escape($_SERVER['REQUEST_URI']) . '">';
 }
 
 function compatibility_console_before()

@@ -109,6 +109,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'help return link retains the installation subdirectory: /public/index.php/help',
         'authorized embedded PHP content executes',
         'native console hooks execute exactly once in order',
+        'native console hooks retain the original query string in REQUEST_URI',
         'plugin session mutations persist across Symfony requests',
         'native plugin POST form retains CSRF protection',
         'native CSRF token is withheld from foreign plugin forms',

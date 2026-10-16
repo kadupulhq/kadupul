@@ -15,6 +15,7 @@
         <li>{% set linked_message %}{% trans %}<a href="%s">Create graphs</a> for your new devices{% endtrans %}{% endset %}{{ linked_message|format(installation_path('graphs_new.php')|e('html_attr'))|raw }}</li>
         <li>{% set linked_message %}{% trans %}<a href="%s">View</a> your new graphs{% endtrans %}{% endset %}{{ linked_message|format(installation_path('graph_view.php')|e('html_attr'))|raw }}</li>
     </ul>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed route below the validated installation path; Twig escapes the attribute. #}
     <a href="{{ installation_path('app.php/help') }}">{{ 'Help'|trans({}, 'help') }}</a>
 </td>
 <td class="textAreaNotes top right">
