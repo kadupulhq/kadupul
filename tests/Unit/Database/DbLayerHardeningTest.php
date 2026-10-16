@@ -266,17 +266,21 @@ function ignoring_warning(string $expected, callable $call): void
     }
 }
 
+/** Largest id settings_user.user_id can hold on this branch. */
+const SETTINGS_USER_ID_MAX = 16777215;
+
 function invalid_user_ids(): array
 {
     return [
         'abc', '1abc', '1.5', ' 1', '1 ', "1\n", '-5', '+1', '0x1A', '1e3',
-        '9223372036854775808', '99999999999999999999',
+        '9223372036854775808', '99999999999999999999', str_repeat('9', 40),
+        -5, -2, SETTINGS_USER_ID_MAX + 1, (string) (SETTINGS_USER_ID_MAX + 1), PHP_INT_MAX, (string) PHP_INT_MAX,
         [1], new \stdClass(), 1.5, 7.0,
     ];
 }
 
 \test('production set_user_setting writes valid integer and digit-string user ids', function () {
-    $cases = [[7, 7], ['7', '7'], ['007', '007'], [0, 0], ['0', '0'], [PHP_INT_MAX, PHP_INT_MAX], [(string) PHP_INT_MAX, (string) PHP_INT_MAX], [-1, 5], ['-1', 5]];
+    $cases = [[7, 7], ['7', '7'], ['007', '007'], [0, 0], ['0', '0'], [SETTINGS_USER_ID_MAX, SETTINGS_USER_ID_MAX], [(string) SETTINGS_USER_ID_MAX, (string) SETTINGS_USER_ID_MAX], [str_repeat('0', 30) . '7', str_repeat('0', 30) . '7'], [-1, 5], ['-1', 5]];
 
     foreach ($cases as [$user, $stored]) {
         with_user_setting_state(function () use ($user, $stored) {
@@ -304,7 +308,7 @@ function invalid_user_ids(): array
     });
 });
 
-\test('production set_user_setting rejects a non-integer user id without writing', function () {
+\test('production set_user_setting rejects a non-integer or out-of-range user id without writing', function () {
     foreach (array_merge(invalid_user_ids(), ['', null, [], false]) as $user) {
         with_user_setting_state(function () use ($user) {
             // The existing -1 sentinel comparison warns for an object before validation runs.
@@ -323,7 +327,7 @@ function invalid_user_ids(): array
 });
 
 \test('production save_user_settings writes for valid and fallback user ids', function () {
-    $cases = [[7, 7], ['7', '7'], [-1, 5], ['', 5], [null, 5], [0, 5], ['0', 5], [false, 5]];
+    $cases = [[7, 7], ['7', '7'], [SETTINGS_USER_ID_MAX, SETTINGS_USER_ID_MAX], [(string) SETTINGS_USER_ID_MAX, (string) SETTINGS_USER_ID_MAX], [-1, 5], ['', 5], [null, 5], [0, 5], ['0', 5], [false, 5]];
 
     foreach ($cases as [$user, $stored]) {
         with_user_setting_state(function () use ($user, $stored) {
@@ -336,7 +340,7 @@ function invalid_user_ids(): array
     }
 });
 
-\test('production save_user_settings rejects a non-integer user id before any write', function () {
+\test('production save_user_settings rejects a non-integer or out-of-range user id before any write', function () {
     foreach (invalid_user_ids() as $user) {
         with_user_setting_state(function () use ($user) {
             $GLOBALS['settings_user']['general']['other'] = ['method' => 'checkbox'];

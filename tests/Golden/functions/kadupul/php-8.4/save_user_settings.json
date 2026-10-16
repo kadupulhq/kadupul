@@ -387,6 +387,114 @@
         "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in save_user_settings: double"],
         "returned": {"type": "null", "value": null}
       }
+    },
+    {
+      "args": [-5],
+      "id": "user_negative_five",
+      "note": "below 0 is not a user id: rejected before the loop: no row is written and a SECURITY line is logged (#872)",
+      "prelude": [{"request": {"selected_theme": "dark"}}],
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in save_user_settings: integer"],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "args": [-2],
+      "id": "user_negative_two",
+      "note": "only -1 is the session sentinel: rejected before the loop: no row is written and a SECURITY line is logged (#872)",
+      "prelude": [{"request": {"selected_theme": "dark"}}],
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in save_user_settings: integer"],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": [0],
+      "id": "user_zero",
+      "note": "0 is empty: the session user is used",
+      "prelude": [{"request": {"selected_theme": "dark"}}],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "table_diff": [
+          "+ settings_user {\"name\":\"custom_fonts\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"expand_hosts\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"tree_history\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"hide_disabled\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"enable_hscroll\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"selected_theme\",\"user_id\":1,\"value\":\"dark\"}",
+          "+ settings_user {\"name\":\"show_aggregates\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"show_graph_title\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"thumbnail_section_tree_2\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"thumbnail_section_preview\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"allow_graph_dates_in_future\",\"user_id\":1,\"value\":\"\"}"
+        ]
+      }
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["0"],
+      "id": "user_zero_string",
+      "note": "\"0\" is empty: the session user is used",
+      "prelude": [{"request": {"selected_theme": "dark"}}],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "table_diff": [
+          "+ settings_user {\"name\":\"custom_fonts\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"expand_hosts\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"tree_history\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"hide_disabled\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"enable_hscroll\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"selected_theme\",\"user_id\":1,\"value\":\"dark\"}",
+          "+ settings_user {\"name\":\"show_aggregates\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"show_graph_title\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"thumbnail_section_tree_2\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"thumbnail_section_preview\",\"user_id\":1,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"allow_graph_dates_in_future\",\"user_id\":1,\"value\":\"\"}"
+        ]
+      }
+    },
+    {
+      "args": [16777215],
+      "id": "user_column_max",
+      "note": "the largest id settings_user.user_id holds: rows are written for it",
+      "prelude": [{"request": {"selected_theme": "dark"}}],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "table_diff": [
+          "+ settings_user {\"name\":\"custom_fonts\",\"user_id\":16777215,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"expand_hosts\",\"user_id\":16777215,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"tree_history\",\"user_id\":16777215,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"hide_disabled\",\"user_id\":16777215,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"enable_hscroll\",\"user_id\":16777215,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"selected_theme\",\"user_id\":16777215,\"value\":\"dark\"}",
+          "+ settings_user {\"name\":\"show_aggregates\",\"user_id\":16777215,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"show_graph_title\",\"user_id\":16777215,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"thumbnail_section_tree_2\",\"user_id\":16777215,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"thumbnail_section_preview\",\"user_id\":16777215,\"value\":\"\"}",
+          "+ settings_user {\"name\":\"allow_graph_dates_in_future\",\"user_id\":16777215,\"value\":\"\"}"
+        ]
+      }
+    },
+    {
+      "args": [16777216],
+      "id": "user_column_max_plus_one",
+      "note": "the column would clamp it onto user 16777215: rejected before the loop: no row is written and a SECURITY line is logged (#872)",
+      "prelude": [{"request": {"selected_theme": "dark"}}],
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in save_user_settings: integer"],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "args": ["9999999999999999999999999999999999999999"],
+      "id": "user_long_digit_string",
+      "note": "does not fit in a PHP int: rejected before the loop: no row is written and a SECURITY line is logged (#872)",
+      "prelude": [{"request": {"selected_theme": "dark"}}],
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in save_user_settings: string(40)"],
+        "returned": {"type": "null", "value": null}
+      }
     }
   ],
   "function": "save_user_settings",
