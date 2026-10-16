@@ -60,9 +60,9 @@
     "human": {
         "target_module": "Platform/Domain/Text",
         "wave": 1,
-        "status": "not assessed",
+        "status": "planned",
         "lts_status": "not assessed",
-        "behavior_record": null,
-        "notes": ""
+        "behavior_record": "tests/Golden/functions/kadupul/php-8.4/padleft.json",
+        "notes": "A non-numeric pad never returned, and a numeric one could stop short of the minimum. See #860."
     }
 }

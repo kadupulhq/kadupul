@@ -51,9 +51,9 @@
     "human": {
         "target_module": "Platform/Domain/Security",
         "wave": 3,
-        "status": "not assessed",
+        "status": "planned",
         "lts_status": "not assessed",
-        "behavior_record": null,
-        "notes": "Hard-stop domain: delegate and verify at the thorough tier."
+        "behavior_record": "tests/Golden/functions/kadupul/php-8.4/cacti_redact_value.json",
+        "notes": "Hard-stop domain: delegate and verify at the thorough tier. Decides from the key alone, so it shares the gaps of cacti_is_sensitive_key. See #871."
     }
 }

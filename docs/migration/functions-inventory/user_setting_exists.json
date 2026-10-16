@@ -51,9 +51,9 @@
     "human": {
         "target_module": "Platform/Application/Port/UserSettings",
         "wave": 2,
-        "status": "not assessed",
+        "status": "implemented",
         "lts_status": "not assessed",
-        "behavior_record": null,
-        "notes": "Plan lists only ConfigurationSettings and UserSettings ports; graph config options follow user settings."
+        "behavior_record": "tests/Golden/functions/kadupul/php-8.4/user_setting_exists.json",
+        "notes": "Plan lists only ConfigurationSettings and UserSettings ports; graph config options follow user settings. Statements run through the ConfigurationSettings and UserSettings ports and their DBAL adapters (#867). Caches, defaults, hooks and the remote-collector write stay in this function. The db_* helpers still run before Composer loads and for argument types outside the port. The goldens pass unchanged through this wrapper."
     }
 }
