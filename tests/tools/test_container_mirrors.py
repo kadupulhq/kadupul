@@ -76,10 +76,10 @@ class ContainerMirrorTest(unittest.TestCase):
             self.assertNotEqual(0, result.returncode)
             self.assertFalse((root / 'arguments').exists())
 
-    def test_inventory_contains_seventeen_unique_immutable_destinations(self):
+    def test_inventory_contains_nineteen_unique_immutable_destinations(self):
         images = mirror.images()
-        self.assertEqual(17, len(images))
-        self.assertEqual(17, len({image['destination'] for image in images}))
+        self.assertEqual(19, len(images))
+        self.assertEqual(19, len({image['destination'] for image in images}))
         for image in images:
             self.assertTrue(image['source'].endswith('@' + image['digest']))
             self.assertTrue(image['destination'].endswith(image['digest'][7:]))
@@ -96,11 +96,12 @@ class ContainerMirrorTest(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     mirror.images()
 
-    def measured_publish(self, observed):
+    def measured_publish(self, observed, repository='library/php', tag='8.4-apache'):
         manifest = b'{"schemaVersion":2}'
         digest = 'sha256:' + hashlib.sha256(manifest).hexdigest()
-        image = {'source': 'docker.io/library/php:8.4-apache@' + digest,
-                 'destination': mirror.PREFIX + 'php:sha256-' + digest[7:], 'digest': digest}
+        name = repository.rsplit('/', 1)[-1]
+        image = {'source': 'docker.io/' + repository + ':' + tag + '@' + digest,
+                 'destination': mirror.PREFIX + name + ':sha256-' + digest[7:], 'digest': digest}
         calls = []
 
         def run(command, **arguments):
@@ -114,12 +115,17 @@ class ContainerMirrorTest(unittest.TestCase):
         self.assertNotIn('test-only-value', json.dumps([command for command, _ in calls]))
         self.assertIn('--all', calls[1][0])
         self.assertIn('--preserve-digests', calls[1][0])
-        self.assertIn('docker://mirror.gcr.io/library/php@' + digest, calls[1][0])
-        self.assertEqual('docker://' + mirror.PREFIX + 'php:8.4-apache', calls[-1][0][-1])
+        self.assertIn('docker://mirror.gcr.io/' + repository + '@' + digest, calls[1][0])
+        self.assertEqual('docker://' + mirror.PREFIX + name + ':' + tag, calls[-1][0][-1])
         self.assertFalse(Path(calls[0][1]['env']['REGISTRY_AUTH_FILE']).parent.exists())
 
     def test_authenticated_copy_preserves_every_platform_and_checks_remote_bytes(self):
         self.measured_publish(b'{"schemaVersion":2}')
+
+    def test_non_library_builder_aliases_stay_in_ghcr(self):
+        for repository in ('moby/buildkit', 'docker/buildkit-syft-scanner'):
+            with self.subTest(repository=repository):
+                self.measured_publish(b'{"schemaVersion":2}', repository, 'stable-1')
 
     def test_remote_digest_mismatch_never_produces_verified_receipt(self):
         with self.assertRaisesRegex(RuntimeError, 'differs from the reviewed digest'):

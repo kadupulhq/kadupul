@@ -25,8 +25,8 @@ def images():
             raise ValueError('Unexpected mirror fields')
         if not re.fullmatch(r'sha256:[0-9a-f]{64}', image['digest']):
             raise ValueError('Invalid mirror digest')
-        source = re.fullmatch(r'docker.io/library/(php|node|composer|mariadb|mysql|nginx)(?::[a-zA-Z0-9_.-]+)?@' + image['digest'], image['source'])
-        if source is None or image['destination'] != PREFIX + source[1] + ':sha256-' + image['digest'][7:]:
+        source = re.fullmatch(r'docker.io/(library/(?:php|node|composer|mariadb|mysql|nginx)|moby/buildkit|docker/buildkit-syft-scanner)(?::[a-zA-Z0-9_.-]+)?@' + image['digest'], image['source'])
+        if source is None or image['destination'] != PREFIX + source[1].rsplit('/', 1)[-1] + ':sha256-' + image['digest'][7:]:
             raise ValueError('Mirror must retain the reviewed official-image identity')
         if image['destination'] in seen:
             raise ValueError('Duplicate mirror destination')
@@ -71,7 +71,7 @@ def publish(image):
         if ':' in versioned:
             # Preserve upstream family tags for dependency tooling, but only after
             # the admitted immutable manifest has been verified.
-            alias = versioned.replace('docker.io/library/', PREFIX, 1)
+            alias = image['destination'].split(':', 1)[0] + ':' + versioned.split(':', 1)[1]
             subprocess.run(['skopeo', 'copy', '--all', '--preserve-digests', '--retry-times', '3',
                             'docker://' + image['destination'], 'docker://' + alias],
                            capture_output=True, env=environment, check=True, timeout=600)
