@@ -198,7 +198,10 @@ PHP;
 		$source .= cacti_test_function_source($profile, $function) . "\n\n";
 	}
 
-	$source .= cacti_test_function_source($functions, 'save_user_settings') . "\n\n";
+	foreach (array('settings_user_id_is_valid', 'save_user_settings') as $function) {
+		$source .= cacti_test_function_source($functions, $function) . "\n\n";
+	}
+
 	$source .= "form_save();\n";
 	$source .= "print json_encode(array('saved' => \$GLOBALS['saved'], 'messages' => \$GLOBALS['messages'], 'error_fields' => array_keys(\$_SESSION['sess_error_fields'] ?? array())));\n";
 
