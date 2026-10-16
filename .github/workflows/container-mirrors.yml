@@ -79,7 +79,7 @@ jobs:
         run: mise exec python@3.12.12 -- python tools/containers/mirror.py --destination "$MIRROR_DESTINATION" --report mirror-receipt.json
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: mirror-${{ strategy.job-index }}
+          name: mirror-${{ strategy.job-index }}-${{ github.run_attempt }}
           path: mirror-receipt.json
           if-no-files-found: error
           retention-days: 14
@@ -159,7 +159,7 @@ jobs:
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
-          name: mirror-builder-proof
+          name: mirror-builder-proof-${{ github.run_attempt }}
           path: ${{ runner.temp }}/mirror-build.oci.tar
           if-no-files-found: error
           retention-days: 14
