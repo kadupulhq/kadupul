@@ -13,6 +13,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Reject a field name that ends in a newline in `build_where_from_array()` instead of passing it to the query, where it failed with an unknown column.
 - Let `get_associated_rras()` take the selected RRA id as a bound argument, and use it for the graph page instead of building a SQL fragment from the request.
 - Reject a user id that is not an integer or a digit string, or that falls outside 0 to 16777215 (the range of `settings_user.user_id`), in `set_user_setting()` and `save_user_settings()` instead of storing the setting under another user.
+- Apply the same user id check in `clear_user_setting()`, `read_user_setting()` and `user_setting_exists()`, so an id such as `'abc'` no longer deletes, reads or counts user 0's settings.
 
 - Update the native CI scanner to Semgrep 1.179.0 and hash-locked PyJWT 2.15.1, removing vulnerable scanner dependencies while preserving the existing scan policy.
 
