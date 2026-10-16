@@ -158,7 +158,7 @@ class ContainerMirrorTest(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     mirror.images()
 
-    def measured_publish(self, observed, repository='library/php', tag='8.4-apache', missing_mirror=False):
+    def measured_publish(self, observed, repository='library/php', tag='8.4-apache', first_unavailable=False):
         manifest = b'{"schemaVersion":2}'
         digest = 'sha256:' + hashlib.sha256(manifest).hexdigest()
         name = repository.rsplit('/', 1)[-1]
@@ -168,8 +168,8 @@ class ContainerMirrorTest(unittest.TestCase):
 
         def run(command, **arguments):
             calls.append((command, arguments))
-            if command[1] == 'copy' and len(calls) == 2 and missing_mirror:
-                return subprocess.CompletedProcess(command, 1, stdout=b'', stderr=b'fixture: mirror not found')
+            if command[1] == 'copy' and len(calls) == 2 and first_unavailable:
+                return subprocess.CompletedProcess(command, 1, stdout=b'', stderr=b'fixture: upstream unavailable')
             return subprocess.CompletedProcess(command, 0, stdout=observed if command[1] == 'inspect' else b'')
 
         with patch.dict(os.environ, {'GHCR_TOKEN': 'test-only-value', 'GHCR_USERNAME': 'fixture'}, clear=True), patch.object(subprocess, 'run', side_effect=run):
@@ -179,12 +179,13 @@ class ContainerMirrorTest(unittest.TestCase):
         self.assertNotIn('test-only-value', json.dumps([command for command, _ in calls]))
         self.assertIn('--all', calls[1][0])
         self.assertIn('--preserve-digests', calls[1][0])
-        self.assertIn('docker://' + mirror.PREFIX + name + '@' + digest, calls[1][0])
-        if missing_mirror:
-            self.assertIn('docker://mirror.gcr.io/' + repository + '@' + digest, calls[2][0])
-        else:
-            self.assertFalse(any('mirror.gcr.io' in argument for command, _ in calls for argument in command))
+        self.assertIn('docker://mirror.gcr.io/' + repository + '@' + digest, calls[1][0])
+        registry = 'public.ecr.aws/docker' if first_unavailable else 'mirror.gcr.io'
+        self.assertEqual(registry + '/' + repository + '@' + digest, receipt['copied_from'])
+        if first_unavailable:
+            self.assertIn('docker://public.ecr.aws/docker/' + repository + '@' + digest, calls[2][0])
         self.assertEqual('docker://' + mirror.PREFIX + name + ':' + tag, calls[-1][0][-1])
+        self.assertEqual('docker://' + mirror.PREFIX + name + '@' + digest, calls[-1][0][-2])
         self.assertFalse(Path(calls[0][1]['env']['REGISTRY_AUTH_FILE']).parent.exists())
 
     def test_authenticated_copy_preserves_every_platform_and_checks_remote_bytes(self):
@@ -195,8 +196,28 @@ class ContainerMirrorTest(unittest.TestCase):
             with self.subTest(repository=repository):
                 self.measured_publish(b'{"schemaVersion":2}', repository, 'stable-1')
 
-    def test_missing_mirror_bootstraps_the_same_digest_from_upstream(self):
-        self.measured_publish(b'{"schemaVersion":2}', missing_mirror=True)
+    def test_unavailable_upstream_tries_the_next_admitted_source(self):
+        self.measured_publish(b'{"schemaVersion":2}', first_unavailable=True)
+
+    def test_cached_ghcr_bytes_cannot_replace_upstream_provenance(self):
+        manifest = b'{"schemaVersion":2}'
+        digest = 'sha256:' + hashlib.sha256(manifest).hexdigest()
+        image = {'source': 'docker.io/library/php:8.4-apache@' + digest,
+                 'destination': mirror.PREFIX + 'php:sha256-' + digest[7:], 'digest': digest}
+        calls = []
+
+        def run(command, **arguments):
+            calls.append(command)
+            if command[1] == 'copy':
+                cached = command[-2].startswith('docker://' + mirror.PREFIX)
+                return subprocess.CompletedProcess(command, 0 if cached else 1, stdout=b'', stderr=b'upstream unavailable')
+            return subprocess.CompletedProcess(command, 0, stdout=manifest)
+
+        with patch.dict(os.environ, {'GHCR_TOKEN': 'test-only-value', 'GHCR_USERNAME': 'fixture'}, clear=True), patch.object(subprocess, 'run', side_effect=run):
+            with self.assertRaisesRegex(RuntimeError, 'No upstream served'):
+                mirror.publish(image)
+        self.assertEqual(3, len([command for command in calls if command[1] == 'copy']))
+        self.assertFalse(any(command[1] == 'inspect' for command in calls))
 
     def test_remote_digest_mismatch_never_produces_verified_receipt(self):
         with self.assertRaisesRegex(RuntimeError, 'differs from the reviewed digest'):

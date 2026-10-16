@@ -58,7 +58,7 @@ def verify(path):
                     statements.append(statement)
         if len(statements) != 1 or not statements[0].get('predicate', {}).get('spdxVersion', '').startswith('SPDX-'):
             raise ValueError('Missing generated SPDX attestation for ' + architecture)
-    return 'Verified amd64/arm64 builds and their SPDX attestations through authenticated GHCR helpers'
+    return 'Verified amd64/arm64 OCI images, blob digests and linked SPDX attestations'
 
 
 if __name__ == '__main__':

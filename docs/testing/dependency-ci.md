@@ -56,11 +56,12 @@ public registry during application builds and tests.
 The Container mirrors workflow copies all platforms with Skopeo's
 `--all --preserve-digests`, then hashes the manifest fetched from GHCR and
 requires the original digest. Only this publisher needs `packages: write`.
-It first reuses the admitted GHCR manifest and checks its complete platform graph,
-so an existing mirror remains usable if its old upstream digest disappears. For
-missing content it tries Google's public cache, ECR's official-image mirror and
-Docker Hub for the same pinned identity; upstreams only populate GHCR.
-A missing upstream or different manifest fails publication. Verified receipts
+It requires a successful copy from Google's public cache, ECR's official-image
+mirror or Docker Hub for the same pinned identity, and records the exact
+`copied_from` source in the receipt. Existing GHCR bytes cannot replace that
+upstream provenance check. If no admitted upstream serves the digest, or the
+manifest differs, publication fails even when GHCR already holds the image.
+Application and test pulls of already published mirrors remain available. Verified receipts
 expire after 14 days; GHCR images have a separate lifecycle.
 
 Consumer jobs grant `packages: read` and pass their short-lived `GITHUB_TOKEN`
@@ -72,7 +73,10 @@ offline workflow read access; the pinned shared image release workflow already
 logs into GHCR before starting its mirrored BuildKit daemon and uses the
 mirrored SBOM generator. Both helper images are digest-pinned. A disposable
 amd64/arm64 build verifies generated SPDX attestations without publishing a
-release. No personal token is stored in repository files or workflow secrets.
+release. The caller sets `hosted-runners-only: true`, keeping every shared release
+job on `ubuntu-latest` even if `DO_RUNNERS_ENABLED` is enabled later. This
+preserves the earlier hosted release boundary for package-write and OIDC
+credentials. No personal token is stored in repository files or workflow secrets.
 
 For local builds, provide `GHCR_USERNAME` and a classic token with
 `read:packages` as `GHCR_TOKEN` through your existing secret manager or shell

@@ -45,25 +45,22 @@ def publish(image):
         # Password input never appears in argv, output, reports or source files.
         subprocess.run(['skopeo', 'login', '--username', username, '--password-stdin', 'ghcr.io'],
                        input=token, text=True, capture_output=True, env=environment, check=True, timeout=60)
-        copied = False
-        # Reuse admitted GHCR content even if an old upstream digest disappears.
-        # Copying every platform still checks the complete existing manifest graph.
-        sources = [('ghcr.io', image['destination'].split(':', 1)[0] + '@' + image['digest'])]
+        copied_from = None
         # containers/image rejects references containing both tag and digest.
         repository = image['source'].split('@', 1)[0].split(':', 1)[0]
-        sources.extend((registry, repository.replace('docker.io/', registry + '/', 1) + '@' + image['digest'])
-                       for registry in ('mirror.gcr.io', 'public.ecr.aws/docker', 'docker.io'))
+        sources = [(registry, repository.replace('docker.io/', registry + '/', 1) + '@' + image['digest'])
+                   for registry in ('mirror.gcr.io', 'public.ecr.aws/docker', 'docker.io')]
         for registry, source in sources:
             command = ['skopeo', 'copy', '--all', '--preserve-digests', '--retry-times', '3',
                        'docker://' + source, 'docker://' + image['destination']]
             result = subprocess.run(command, capture_output=True, env=environment, timeout=2400)
             if result.returncode == 0:
-                copied = True
+                copied_from = source
                 break
             diagnostic = result.stderr.decode('utf-8', errors='replace').replace(token, '[redacted]')
             diagnostic = re.sub(r'[\x00-\x1f\x7f]', ' ', diagnostic)[-1500:]
             print('Pinned copy unavailable from ' + registry + ': ' + diagnostic, flush=True)
-        if not copied:
+        if copied_from is None:
             raise RuntimeError('No upstream served the reviewed immutable image')
         manifest = subprocess.run(['skopeo', 'inspect', '--raw', 'docker://' + image['destination']],
                                   capture_output=True, env=environment, check=True, timeout=120).stdout
@@ -75,10 +72,11 @@ def publish(image):
             # Preserve upstream family tags for dependency tooling, but only after
             # the admitted immutable manifest has been verified.
             alias = image['destination'].split(':', 1)[0] + ':' + versioned.split(':', 1)[1]
+            verified_reference = image['destination'].split(':', 1)[0] + '@' + observed
             subprocess.run(['skopeo', 'copy', '--all', '--preserve-digests', '--retry-times', '3',
-                            'docker://' + image['destination'], 'docker://' + alias],
+                            'docker://' + verified_reference, 'docker://' + alias],
                            capture_output=True, env=environment, check=True, timeout=600)
-        return {**image, 'verified_digest': observed}
+        return {**image, 'verified_digest': observed, 'copied_from': copied_from}
 
 
 def main():
