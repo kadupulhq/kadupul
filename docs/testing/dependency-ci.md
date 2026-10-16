@@ -48,7 +48,7 @@ dependency resolution; inspect their logs and proposed diffs before merging.
 
 Docker builds, Compose fixtures and workflow services use the repository's
 `ghcr.io/kadupulhq/kadupul-mirrors` packages. Every reference retains its reviewed
-upstream SHA-256 digest. The 17 admitted image manifests are recorded in
+upstream SHA-256 digest. The 19 admitted image manifests are recorded in
 `tools/containers/mirrors.json`; runtime families and database health checks are
 unchanged. CI no longer changes Docker daemon mirror settings or depends on a
 public registry during application builds and tests.
@@ -67,8 +67,10 @@ password through standard input and fails before invoking Docker if credentials
 are missing. Job services use GitHub's native `services.credentials` because
 GitHub pulls them before workflow steps. The release caller grants the reusable
 offline workflow read access; the pinned shared image release workflow already
-logs into GHCR before building. No personal token is stored in repository files
-or workflow secrets.
+logs into GHCR before starting its mirrored BuildKit daemon and uses the
+mirrored SBOM generator. Both helper images are digest-pinned. A disposable
+amd64/arm64 build verifies generated SPDX attestations without publishing a
+release. No personal token is stored in repository files or workflow secrets.
 
 For local builds, provide `GHCR_USERNAME` and a classic token with
 `read:packages` as `GHCR_TOKEN` through your existing secret manager or shell

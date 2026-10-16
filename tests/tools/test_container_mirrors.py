@@ -43,6 +43,7 @@ class ContainerMirrorTest(unittest.TestCase):
                     references.extend(re.findall(r'--from=([^\s]+/[^\s]+)', line))
             elif yaml:
                 references = re.findall(r'^\s*image:\s*([^\s]+)', source, re.MULTILINE)
+                references.extend(re.findall(r'^\s*(?:buildkit-image|sbom-generator|driver-opts|sbom):\s*(?:image=|generator=)?([^\s]+)', source, re.MULTILINE))
                 references = [ref for ref in references if ref not in ('${{', 'true', 'false', 'cacti-e2e:latest')]
             else:
                 references = re.findall(r"ghcr\.io/[^'\s]+", source)
