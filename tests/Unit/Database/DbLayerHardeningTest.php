@@ -59,7 +59,30 @@ function db_execute_prepared($sql, $params = [])
     return true;
 }
 
-function cacti_log(...$args): void {}
+function cacti_log(...$args): void
+{
+    $GLOBALS['production_function_log_calls'][] = $args;
+}
+
+function cacti_debug_backtrace(...$args): string
+{
+    return '';
+}
+
+function isset_request_var($name): bool
+{
+    return array_key_exists($name, $GLOBALS['production_function_request'] ?? []);
+}
+
+function get_nfilter_request_var($name, $default = '')
+{
+    return $GLOBALS['production_function_request'][$name] ?? $default;
+}
+
+function set_request_var($name, $value): void
+{
+    $GLOBALS['production_function_request'][$name] = $value;
+}
 
 function cacti_sizeof($value): int
 {
@@ -78,7 +101,11 @@ if (!defined('SQL_NO_CACHE')) {
     define('SQL_NO_CACHE', '');
 }
 
-foreach (['user_setting_exists', 'get_graph_group', 'build_where_from_array', 'get_item', 'set_config_option', 'get_associated_rras'] as $function) {
+if (!defined('POLLER_VERBOSITY_MEDIUM')) {
+    define('POLLER_VERBOSITY_MEDIUM', 3);
+}
+
+foreach (['user_setting_exists', 'get_graph_group', 'build_where_from_array', 'get_item', 'set_config_option', 'get_associated_rras', 'set_user_setting', 'save_user_settings'] as $function) {
     load_production_function($function);
 }
 
@@ -220,4 +247,152 @@ foreach (['user_setting_exists', 'get_graph_group', 'build_where_from_array', 'g
     [$sql, $params] = $GLOBALS['production_function_db_calls'][0];
     expect($params)->toBe([42, 5]);
     expect(strpos($sql, 'IS NOT NULL'))->toBeLessThan(strpos($sql, 'dspr.id = ?'));
+});
+
+/** Run a user-setting write with a known session and settings map, then restore both. */
+function with_user_setting_state(callable $write): void
+{
+    $hadSession = array_key_exists('_SESSION', $GLOBALS);
+    $originalSession = $_SESSION ?? null;
+    $hadSettingsUser = array_key_exists('settings_user', $GLOBALS);
+    $originalSettingsUser = $GLOBALS['settings_user'] ?? null;
+
+    try {
+        reset_db_calls();
+        $GLOBALS['production_function_log_calls'] = [];
+        $_SESSION = ['sess_user_id' => 5, 'sess_user_config_array' => ['cached' => 'kept']];
+        $GLOBALS['settings_user'] = ['general' => ['pref' => ['method' => 'textbox']]];
+        $GLOBALS['production_function_request'] = ['pref' => 'v'];
+        $write();
+    } finally {
+        if ($hadSession) {
+            $_SESSION = $originalSession;
+        } else {
+            unset($GLOBALS['_SESSION']);
+        }
+        if ($hadSettingsUser) {
+            $GLOBALS['settings_user'] = $originalSettingsUser;
+        } else {
+            unset($GLOBALS['settings_user']);
+        }
+        unset($GLOBALS['production_function_request']);
+    }
+}
+
+/** Swallow only the given pre-existing warning; delegate anything else to the previous handler. */
+function ignoring_warning(string $expected, callable $call): void
+{
+    $previous = set_error_handler(function (...$args) use ($expected, &$previous) {
+        if (str_contains($args[1], $expected)) {
+            return true;
+        }
+
+        return $previous === null ? false : $previous(...$args);
+    });
+
+    try {
+        $call();
+    } finally {
+        restore_error_handler();
+    }
+}
+
+/** Largest id settings_user.user_id can hold on this branch. */
+const SETTINGS_USER_ID_MAX = 65535;
+
+function invalid_user_ids(): array
+{
+    return [
+        'abc', '1abc', '1.5', ' 1', '1 ', "1\n", '-5', '+1', '0x1A', '1e3',
+        '9223372036854775808', '99999999999999999999', str_repeat('9', 40),
+        -5, -2, SETTINGS_USER_ID_MAX + 1, (string) (SETTINGS_USER_ID_MAX + 1), PHP_INT_MAX, (string) PHP_INT_MAX,
+        [1], new \stdClass(), 1.5, 7.0,
+    ];
+}
+
+\test('production set_user_setting writes valid integer and digit-string user ids', function () {
+    $cases = [[7, 7], ['7', '7'], ['007', '007'], [0, 0], ['0', '0'], [SETTINGS_USER_ID_MAX, SETTINGS_USER_ID_MAX], [(string) SETTINGS_USER_ID_MAX, (string) SETTINGS_USER_ID_MAX], [str_repeat('0', 30) . '7', str_repeat('0', 30) . '7'], [-1, 5], ['-1', 5]];
+
+    foreach ($cases as [$user, $stored]) {
+        with_user_setting_state(function () use ($user, $stored) {
+            set_user_setting('pref', 'v', $user);
+
+            expect($GLOBALS['production_function_db_calls'])->toHaveCount(1);
+            [$sql, $params] = $GLOBALS['production_function_db_calls'][0];
+            expect($sql)->toContain('INSERT INTO settings_user');
+            expect($params)->toBe([$stored, 'pref', 'v']);
+            expect($_SESSION)->not->toHaveKey('sess_user_config_array');
+            expect($GLOBALS['settings_user']['pref']['value'])->toBe('v');
+            expect($GLOBALS['production_function_log_calls'])->toBe([]);
+        });
+    }
+});
+
+\test('production set_user_setting keeps the no-session -1 notice', function () {
+    with_user_setting_state(function () {
+        unset($_SESSION['sess_user_id']);
+        set_user_setting('pref', 'v', -1);
+
+        expect($GLOBALS['production_function_db_calls'])->toBe([]);
+        expect($GLOBALS['production_function_log_calls'])->toHaveCount(1);
+        expect($GLOBALS['production_function_log_calls'][0][0])->toStartWith('NOTE: Attempt to set user setting');
+    });
+});
+
+\test('production set_user_setting rejects a non-integer or out-of-range user id without writing', function () {
+    foreach (array_merge(invalid_user_ids(), ['', null, [], false]) as $user) {
+        with_user_setting_state(function () use ($user) {
+            // The existing -1 sentinel comparison warns for an object before validation runs.
+            ignoring_warning('could not be converted to int', fn () => set_user_setting('pref', 'v', $user));
+
+            expect($GLOBALS['production_function_db_calls'])->toBe([]);
+            expect($_SESSION['sess_user_config_array'])->toBe(['cached' => 'kept']);
+            expect($GLOBALS['settings_user'])->not->toHaveKey('pref');
+            expect($GLOBALS['production_function_log_calls'])->toHaveCount(1);
+            [$message, , $level] = $GLOBALS['production_function_log_calls'][0];
+            expect($message)->toStartWith('ERROR: Invalid user id in set_user_setting: ' . gettype($user));
+            expect($message)->not->toContain('abc');
+            expect($level)->toBe('SECURITY');
+        });
+    }
+});
+
+\test('production save_user_settings writes for valid and fallback user ids', function () {
+    $cases = [[7, 7], ['7', '7'], [SETTINGS_USER_ID_MAX, SETTINGS_USER_ID_MAX], [(string) SETTINGS_USER_ID_MAX, (string) SETTINGS_USER_ID_MAX], [-1, 5], ['', 5], [null, 5], [0, 5], ['0', 5], [false, 5]];
+
+    foreach ($cases as [$user, $stored]) {
+        with_user_setting_state(function () use ($user, $stored) {
+            save_user_settings($user);
+
+            expect($GLOBALS['production_function_db_calls'])->toHaveCount(1);
+            expect($GLOBALS['production_function_db_calls'][0][1])->toBe([$stored, 'pref', 'v']);
+            expect($GLOBALS['production_function_log_calls'])->toBe([]);
+        });
+    }
+});
+
+\test('production save_user_settings rejects a non-integer or out-of-range user id before any write', function () {
+    foreach (invalid_user_ids() as $user) {
+        with_user_setting_state(function () use ($user) {
+            $GLOBALS['settings_user']['general']['other'] = ['method' => 'checkbox'];
+            ignoring_warning('could not be converted to int', fn () => save_user_settings($user));
+
+            expect($GLOBALS['production_function_db_calls'])->toBe([]);
+            expect($_SESSION['sess_user_config_array'])->toBe(['cached' => 'kept']);
+            expect($GLOBALS['production_function_log_calls'])->toHaveCount(1);
+            [$message, , $level] = $GLOBALS['production_function_log_calls'][0];
+            expect($message)->toStartWith('ERROR: Invalid user id in save_user_settings: ' . gettype($user));
+            expect($level)->toBe('SECURITY');
+        });
+    }
+});
+
+\test('production save_user_settings rejects a missing session user', function () {
+    with_user_setting_state(function () {
+        unset($_SESSION['sess_user_id']);
+        ignoring_warning('Undefined array key "sess_user_id"', fn () => save_user_settings());
+
+        expect($GLOBALS['production_function_db_calls'])->toBe([]);
+        expect($GLOBALS['production_function_log_calls'][0][2])->toBe('SECURITY');
+    });
 });
