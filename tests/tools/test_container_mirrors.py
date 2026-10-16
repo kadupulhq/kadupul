@@ -79,6 +79,7 @@ class ContainerMirrorTest(unittest.TestCase):
         self.assertIn('--all', calls[1][0])
         self.assertIn('--preserve-digests', calls[1][0])
         self.assertIn('docker://mirror.gcr.io/library/php@' + digest, calls[1][0])
+        self.assertEqual('docker://' + mirror.PREFIX + 'php:8.4-apache', calls[-1][0][-1])
         self.assertFalse(Path(calls[0][1]['env']['REGISTRY_AUTH_FILE']).parent.exists())
 
     def test_authenticated_copy_preserves_every_platform_and_checks_remote_bytes(self):

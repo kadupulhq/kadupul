@@ -67,6 +67,14 @@ def publish(image):
         observed = 'sha256:' + hashlib.sha256(manifest).hexdigest()
         if observed != image['digest']:
             raise RuntimeError('Published mirror manifest differs from the reviewed digest')
+        versioned = image['source'].split('@', 1)[0]
+        if ':' in versioned:
+            # Preserve upstream family tags for dependency tooling, but only after
+            # the admitted immutable manifest has been verified.
+            alias = versioned.replace('docker.io/library/', PREFIX, 1)
+            subprocess.run(['skopeo', 'copy', '--all', '--preserve-digests', '--retry-times', '3',
+                            'docker://' + image['destination'], 'docker://' + alias],
+                           capture_output=True, env=environment, check=True, timeout=600)
         return {**image, 'verified_digest': observed}
 
 

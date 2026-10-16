@@ -5,6 +5,7 @@ on:
     paths:
       - tools/containers/**
       - tests/tools/test_container_mirrors.py
+      - tests/tools/login_ghcr.sh
       - .github/workflows/container-mirrors.yml
   push:
     branches: [main, ci/authenticated-ghcr-mirrors]
@@ -74,3 +75,35 @@ jobs:
           path: mirror-receipt.json
           if-no-files-found: error
           retention-days: 14
+
+  consume:
+    name: Read-only mirror pull (${{ strategy.job-index }})
+    needs: [inventory, publish]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: read
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix: ${{ fromJSON(needs.inventory.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Authenticate with a read-only workflow token
+        env:
+          GHCR_TOKEN: ${{ github.token }}
+          GHCR_USERNAME: ${{ github.actor }}
+        run: bash tests/tools/login_ghcr.sh
+      - name: Pull the admitted image and verify its repository digest
+        env:
+          MIRROR_DESTINATION: ${{ matrix.image.destination }}
+          MIRROR_DIGEST: ${{ matrix.image.digest }}
+        run: |
+          set -euo pipefail
+          ref="${MIRROR_DESTINATION%@*}@${MIRROR_DIGEST}"
+          docker pull "$ref"
+          docker image inspect "$ref" --format '{{json .RepoDigests}}' | \
+            jq -e --arg expected "${MIRROR_DESTINATION%:*}@${MIRROR_DIGEST}" 'index($expected) != null'
