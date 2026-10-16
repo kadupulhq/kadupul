@@ -3,8 +3,8 @@
     "name": "get_color",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 3295,
-        "end_line": 3298,
+        "start_line": 3313,
+        "end_line": 3316,
         "line_count": 4,
         "signature": {
             "parameters": [

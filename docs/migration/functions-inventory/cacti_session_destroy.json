@@ -3,8 +3,8 @@
     "name": "cacti_session_destroy",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8302,
-        "end_line": 8306,
+        "start_line": 8320,
+        "end_line": 8324,
         "line_count": 5,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,

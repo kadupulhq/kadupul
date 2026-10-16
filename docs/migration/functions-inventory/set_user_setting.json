@@ -3,9 +3,9 @@
     "name": "set_user_setting",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 410,
-        "end_line": 444,
-        "line_count": 35,
+        "start_line": 409,
+        "end_line": 442,
+        "line_count": 34,
         "signature": {
             "parameters": [
                 {

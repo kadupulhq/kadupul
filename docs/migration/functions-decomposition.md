@@ -149,6 +149,7 @@ and fixed separately.
 | `cacti_is_sensitive_key`, `cacti_redact_value` | The key list misses common credential names and matches some unrelated ones. | #871 |
 | `set_user_setting`, `save_user_settings` | A non-numeric user id was stored as user 0. Fixed: a user id that is not an integer or a digit string, or is outside the 0 to 16777215 range of `settings_user.user_id`, is rejected and logged. | #872 |
 | `get_associated_rras` | `$sql_where` is concatenated into the query. Core now selects one RRA through a bound `$rra_id`; the fragment argument stays for plugin callers. | #873 |
+| `clear_user_setting`, `read_user_setting`, `user_setting_exists` | A non-numeric user id deleted, read or counted user 0's settings. Fixed: the same user id check as #872 applies. | #887 |
 
 Several of these exist on `lts/1.2` as well.
 

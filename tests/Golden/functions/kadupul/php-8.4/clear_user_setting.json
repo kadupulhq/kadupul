@@ -28,7 +28,7 @@
     {
       "args": ["fncdb_pref"],
       "id": "no_user_and_no_session",
-      "note": "user -1 with no session: undefined key, user null, nothing matches",
+      "note": "user -1 with no session: undefined key and user null, rejected before the delete with a SECURITY line (#887)",
       "prelude": ["INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'v')"],
       "result": {
         "diagnostics": [
@@ -40,8 +40,14 @@
             "suppressed": false
           }
         ],
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in clear_user_setting: NULL"],
         "returned": {"type": "null", "value": null},
-        "sql": ["DELETE FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",null]"]
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"selective_debug\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ]
       }
     },
     {
@@ -54,23 +60,337 @@
     {
       "args": ["fncdb_pref", "abc"],
       "id": "user_text",
-      "note": "\"abc\" is read as 0 by the comparison with an unsigned column",
+      "note": "\"abc\" is not an integer id: rejected before the delete: user 0's row is kept and a SECURITY line is logged (#887)",
       "prelude": ["INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'v')"],
       "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in clear_user_setting: string(3)"],
         "returned": {"type": "null", "value": null},
         "sql": [
-          "DELETE FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",\"abc\"]"
-        ],
-        "table_diff": ["- settings_user {\"name\":\"fncdb_pref\",\"user_id\":0,\"value\":\"v\"}"]
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ]
       }
     },
     {
       "args": ["fncdb_pref", [1]],
       "id": "user_array",
+      "note": "rejected before the delete: no row is deleted and a SECURITY line is logged (#887)",
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in clear_user_setting: array"],
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", "1abc"],
+      "id": "user_digit_prefix",
+      "note": " rejected before the delete: no row is deleted and a SECURITY line is logged (#887)",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'v')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'w')"
+      ],
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in clear_user_setting: string(4)"],
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", ""],
+      "id": "user_empty_string",
+      "note": " rejected before the delete: no row is deleted and a SECURITY line is logged (#887)",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'v')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'w')"
+      ],
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in clear_user_setting: string(0)"],
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", null],
+      "id": "user_null",
+      "note": "null == -1 is false: rejected before the delete: no row is deleted and a SECURITY line is logged (#887)",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'v')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'w')"
+      ],
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in clear_user_setting: NULL"],
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", false],
+      "id": "user_false",
+      "note": "false == -1 is false: rejected before the delete: no row is deleted and a SECURITY line is logged (#887)",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'v')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'w')"
+      ],
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in clear_user_setting: boolean"],
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", 1.5],
+      "id": "user_float",
+      "note": " rejected before the delete: no row is deleted and a SECURITY line is logged (#887)",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'v')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'w')"
+      ],
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in clear_user_setting: double"],
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", "1.5"],
+      "id": "user_decimal_string",
+      "note": " rejected before the delete: no row is deleted and a SECURITY line is logged (#887)",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'v')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'w')"
+      ],
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in clear_user_setting: string(3)"],
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", " 1"],
+      "id": "user_leading_space",
+      "note": " rejected before the delete: no row is deleted and a SECURITY line is logged (#887)",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'v')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'w')"
+      ],
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in clear_user_setting: string(2)"],
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", "-5"],
+      "id": "user_negative_string",
+      "note": " rejected before the delete: no row is deleted and a SECURITY line is logged (#887)",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'v')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'w')"
+      ],
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in clear_user_setting: string(2)"],
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", -2],
+      "id": "user_negative_two",
+      "note": "only -1 is the session sentinel: rejected before the delete: no row is deleted and a SECURITY line is logged (#887)",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'v')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'w')"
+      ],
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in clear_user_setting: integer"],
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", 16777216],
+      "id": "user_column_max_plus_one",
+      "note": "past the column maximum: rejected before the delete: no row is deleted and a SECURITY line is logged (#887)",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'v')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'w')"
+      ],
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in clear_user_setting: integer"],
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", "16777216"],
+      "id": "user_column_max_plus_one_string",
+      "note": "past the column maximum: rejected before the delete: no row is deleted and a SECURITY line is logged (#887)",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'v')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'w')"
+      ],
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in clear_user_setting: string(8)"],
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ]
+      }
+    },
+    {
+      "args": ["fncdb_pref", "9999999999999999999999999999999999999999"],
+      "id": "user_long_digit_string",
+      "note": "does not fit in a PHP int: rejected before the delete: no row is deleted and a SECURITY line is logged (#887)",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'v')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'w')"
+      ],
+      "result": {
+        "log": ["<TIMESTAMP> - SECURITY ERROR: Invalid user id in clear_user_setting: string(40)"],
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "SELECT value FROM settings WHERE name = ? -- [\"client_timezone_support\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_destination\"]",
+          "SELECT value FROM settings WHERE name = ? -- [\"log_verbosity\"]"
+        ]
+      }
+    },
+    {
+      "ambient": {"session": {"sess_user_id": 1}},
+      "args": ["fncdb_pref", true],
+      "id": "user_true",
+      "note": "true == -1 is true in PHP: the session user's row is deleted",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'v')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'w')"
+      ],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": ["DELETE FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",1]"],
+        "table_diff": ["- settings_user {\"name\":\"fncdb_pref\",\"user_id\":1,\"value\":\"w\"}"]
+      }
+    },
+    {
+      "args": ["fncdb_pref", "1"],
+      "id": "user_digit_string",
+      "note": "a digit string is a valid id: user 1's row is deleted",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'v')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'w')"
+      ],
       "result": {
         "returned": {"type": "null", "value": null},
         "sql": [
-          "DELETE FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",[1]] !! Exception: Array to string conversion"
+          "DELETE FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",\"1\"]"
+        ],
+        "table_diff": ["- settings_user {\"name\":\"fncdb_pref\",\"user_id\":1,\"value\":\"w\"}"]
+      }
+    },
+    {
+      "args": ["fncdb_pref", "01"],
+      "id": "user_leading_zero",
+      "note": "leading zeros are digits: user 1's row is deleted",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'v')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'w')"
+      ],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "DELETE FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",\"01\"]"
+        ],
+        "table_diff": ["- settings_user {\"name\":\"fncdb_pref\",\"user_id\":1,\"value\":\"w\"}"]
+      }
+    },
+    {
+      "args": ["fncdb_pref", 0],
+      "id": "user_zero",
+      "note": "0 is a valid id: user 0's row is deleted",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'v')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'w')"
+      ],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": ["DELETE FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",0]"],
+        "table_diff": ["- settings_user {\"name\":\"fncdb_pref\",\"user_id\":0,\"value\":\"v\"}"]
+      }
+    },
+    {
+      "args": ["fncdb_pref", "0"],
+      "id": "user_zero_string",
+      "note": "\"0\" is a valid id: user 0's row is deleted",
+      "prelude": [
+        "INSERT INTO settings_user VALUES (0, 'fncdb_pref', 'v')",
+        "INSERT INTO settings_user VALUES (1, 'fncdb_pref', 'w')"
+      ],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "DELETE FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",\"0\"]"
+        ],
+        "table_diff": ["- settings_user {\"name\":\"fncdb_pref\",\"user_id\":0,\"value\":\"v\"}"]
+      }
+    },
+    {
+      "args": ["fncdb_pref", 16777215],
+      "id": "user_column_max",
+      "note": "the largest id settings_user.user_id holds: that row is deleted",
+      "prelude": ["INSERT INTO settings_user VALUES (16777215, 'fncdb_pref', 'v')"],
+      "result": {
+        "returned": {"type": "null", "value": null},
+        "sql": [
+          "DELETE FROM settings_user WHERE name = ? AND user_id = ? -- [\"fncdb_pref\",16777215]"
+        ],
+        "table_diff": [
+          "- settings_user {\"name\":\"fncdb_pref\",\"user_id\":16777215,\"value\":\"v\"}"
         ]
       }
     }

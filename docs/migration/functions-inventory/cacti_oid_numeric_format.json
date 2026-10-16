@@ -3,8 +3,8 @@
     "name": "cacti_oid_numeric_format",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6598,
-        "end_line": 6605,
+        "start_line": 6616,
+        "end_line": 6623,
         "line_count": 8,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": false,

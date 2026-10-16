@@ -3,8 +3,8 @@
     "name": "array_rekey",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1460,
-        "end_line": 1479,
+        "start_line": 1478,
+        "end_line": 1497,
         "line_count": 20,
         "signature": {
             "parameters": [

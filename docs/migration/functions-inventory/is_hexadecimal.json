@@ -3,8 +3,8 @@
     "name": "is_hexadecimal",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 2155,
-        "end_line": 2170,
+        "start_line": 2173,
+        "end_line": 2188,
         "line_count": 16,
         "signature": {
             "parameters": [

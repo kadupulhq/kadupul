@@ -3,8 +3,8 @@
     "name": "user_setting_value_allowed",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 335,
-        "end_line": 399,
+        "start_line": 334,
+        "end_line": 398,
         "line_count": 65,
         "signature": {
             "parameters": [

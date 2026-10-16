@@ -261,8 +261,7 @@ function save_user_settings($user = -1)
         $user = $_SESSION['sess_user_id'];
     }
 
-    // settings_user.user_id is mediumint unsigned: other ids are coerced, 'abc' to user 0 and 2^24 onto user 16777215.
-    if (!((is_int($user) && $user >= 0 && $user <= 16777215) || (is_string($user) && preg_match('/^[0-9]+$/D', $user) && strlen(ltrim($user, '0')) <= 8 && (int) $user <= 16777215))) {
+    if (!LegacySettingsStorage::acceptsUserId($user)) {
         cacti_log('ERROR: Invalid user id in save_user_settings: ' . gettype($user) . (is_string($user) ? '(' . strlen($user) . ')' : ''), false, 'SECURITY');
         return;
     }
@@ -428,8 +427,7 @@ function set_user_setting($config_name, $value, $user = -1)
         }
 
         cacti_log('NOTE: Attempt to set user setting \'' . $config_name . '\', with no user id: ' . cacti_debug_backtrace('', false, false, 0, 1), false, $mode, POLLER_VERBOSITY_MEDIUM);
-    } elseif (!((is_int($user) && $user >= 0 && $user <= 16777215) || (is_string($user) && preg_match('/^[0-9]+$/D', $user) && strlen(ltrim($user, '0')) <= 8 && (int) $user <= 16777215))) {
-        // settings_user.user_id is mediumint unsigned: other ids are coerced, 'abc' to user 0 and 2^24 onto user 16777215.
+    } elseif (!LegacySettingsStorage::acceptsUserId($user)) {
         cacti_log('ERROR: Invalid user id in set_user_setting: ' . gettype($user) . (is_string($user) ? '(' . strlen($user) . ')' : ''), false, 'SECURITY');
     } elseif (db_table_exists('settings_user')) {
         if (strlen($config_name) > 255) {
@@ -455,6 +453,11 @@ function set_user_setting($config_name, $value, $user = -1)
 function user_setting_exists($config_name, $user_id)
 {
     static $user_setting_values = array();
+
+    if (!LegacySettingsStorage::acceptsUserId($user_id)) {
+        cacti_log('ERROR: Invalid user id in user_setting_exists: ' . gettype($user_id) . (is_string($user_id) ? '(' . strlen($user_id) . ')' : ''), false, 'SECURITY');
+        return false;
+    }
 
     if (!isset($user_setting_values[$user_id]) || !array_key_exists($config_name, $user_setting_values[$user_id])) {
         $value = false;
@@ -489,6 +492,11 @@ function clear_user_setting($config_name, $user = -1)
 
     if ($user == -1) {
         $user = $_SESSION['sess_user_id'];
+    }
+
+    if (!LegacySettingsStorage::acceptsUserId($user)) {
+        cacti_log('ERROR: Invalid user id in clear_user_setting: ' . gettype($user) . (is_string($user) ? '(' . strlen($user) . ')' : ''), false, 'SECURITY');
+        return;
     }
 
     if (db_table_exists('settings_user')) {
@@ -557,6 +565,11 @@ function read_user_setting($config_name, $default = false, $force = false, $user
             $effective_uid = $user;
         }
 
+        // Not logged: cacti_log() reads client_timezone_support through this function and would recurse.
+        if (!LegacySettingsStorage::acceptsUserId($effective_uid)) {
+            return ($default !== false ? $default : read_default_user_setting($config_name));
+        }
+
         $db_setting = false;
         if (db_table_exists('settings_user')) {
             $db_setting = LegacySettingsStorage::instance()->userSettingRow($config_name, $effective_uid);
@@ -580,6 +593,11 @@ function read_user_setting($config_name, $default = false, $force = false, $user
     }
 
     if (!isset($user_config_array[$config_name])) {
+        // Not logged: cacti_log() reads client_timezone_support through this function and would recurse.
+        if (!LegacySettingsStorage::acceptsUserId($effective_uid)) {
+            return ($default !== false ? $default : read_default_user_setting($config_name));
+        }
+
         $db_setting = false;
         if (db_table_exists('settings_user')) {
             $db_setting = LegacySettingsStorage::instance()->userSettingRow($config_name, $effective_uid);

@@ -8,6 +8,7 @@
 namespace Kadupul\Tests\ProductionFunctions;
 
 require_once dirname(__DIR__, 2) . '/Helpers/PhpSource.php';
+require_once dirname(__DIR__, 3) . '/src/Platform/Infrastructure/Legacy/LegacySettingsStorage.php';
 
 /** Capture database calls made by the production functions loaded below. */
 function db_calls(): array
@@ -42,7 +43,23 @@ function db_fetch_row_prepared($sql, $params = [])
 {
     $GLOBALS['production_function_db_calls'][] = [$sql, $params];
 
+    if (str_contains($sql, 'settings_user')) {
+        return $GLOBALS['production_function_user_row'] ?? [];
+    }
+
     return ['graph_type_id' => 1, 'sequence' => 9, 'local_graph_id' => 42, 'graph_template_id' => 7];
+}
+
+function db_fetch_cell($sql)
+{
+    $GLOBALS['production_function_db_calls'][] = [$sql, []];
+
+    return $GLOBALS['production_function_guest_id'] ?? '';
+}
+
+function read_config_option($name, $force = false)
+{
+    return $GLOBALS['production_function_config'][$name] ?? '';
 }
 
 function db_fetch_assoc_prepared($sql, $params = [])
@@ -61,10 +78,15 @@ function db_execute_prepared($sql, $params = [])
 
 /**
  * What LegacySettingsStorage does with no legacy session: the same helper
- * call, here the stubs above.
+ * call, here the stubs above. The user id rule is the real one.
  */
 final class LegacySettingsStorage
 {
+    public static function acceptsUserId(mixed $id): bool
+    {
+        return \Kadupul\Platform\Infrastructure\Legacy\LegacySettingsStorage::acceptsUserId($id);
+    }
+
     public static function instance(): object
     {
         return new class {
@@ -83,6 +105,16 @@ final class LegacySettingsStorage
             public function writeUserSetting(mixed $userId, mixed $name, mixed $value): bool
             {
                 return db_execute_prepared('INSERT INTO settings_user (user_id, name, value) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)', [$userId, $name, $value]);
+            }
+
+            public function removeUserSetting(mixed $name, mixed $userId): bool
+            {
+                return db_execute_prepared('DELETE FROM settings_user WHERE name = ? AND user_id = ?', [$name, $userId]);
+            }
+
+            public function userSettingRow(mixed $name, mixed $userId): array|false
+            {
+                return db_fetch_row_prepared('SELECT value FROM settings_user WHERE name = ? AND user_id = ?', [$name, $userId]);
             }
         };
     }
@@ -130,7 +162,7 @@ if (!defined('POLLER_VERBOSITY_MEDIUM')) {
     define('POLLER_VERBOSITY_MEDIUM', 3);
 }
 
-foreach (['user_setting_exists', 'get_graph_group', 'build_where_from_array', 'get_item', 'set_config_option', 'user_setting_value_allowed', 'set_user_setting', 'save_user_settings'] as $function) {
+foreach (['user_setting_exists', 'get_graph_group', 'build_where_from_array', 'get_item', 'set_config_option', 'user_setting_value_allowed', 'set_user_setting', 'save_user_settings', 'clear_user_setting', 'read_default_user_setting', 'read_user_setting'] as $function) {
     load_production_function($function);
 }
 
@@ -363,5 +395,181 @@ function invalid_user_ids(): array
 
         expect($GLOBALS['production_function_db_calls'])->toBe([]);
         expect($GLOBALS['production_function_log_calls'][0][2])->toBe('SECURITY');
+    });
+});
+
+\test('production clear_user_setting deletes for valid and fallback user ids', function () {
+    $cases = [[7, 7], ['7', '7'], ['007', '007'], [0, 0], ['0', '0'], [SETTINGS_USER_ID_MAX, SETTINGS_USER_ID_MAX], [(string) SETTINGS_USER_ID_MAX, (string) SETTINGS_USER_ID_MAX], [-1, 5], ['-1', 5]];
+
+    foreach ($cases as [$user, $stored]) {
+        with_user_setting_state(function () use ($user, $stored) {
+            clear_user_setting('pref', $user);
+
+            expect($GLOBALS['production_function_db_calls'])->toHaveCount(1);
+            [$sql, $params] = $GLOBALS['production_function_db_calls'][0];
+            expect($sql)->toContain('DELETE FROM settings_user');
+            expect($params)->toBe(['pref', $stored]);
+            expect($_SESSION)->not->toHaveKey('sess_user_config_array');
+            expect($GLOBALS['production_function_log_calls'])->toBe([]);
+        });
+    }
+});
+
+\test('production clear_user_setting rejects a non-integer or out-of-range user id without deleting', function () {
+    foreach (array_merge(invalid_user_ids(), ['', null, [], false]) as $user) {
+        with_user_setting_state(function () use ($user) {
+            ignoring_warning('could not be converted to int', fn() => clear_user_setting('pref', $user));
+
+            expect($GLOBALS['production_function_db_calls'])->toBe([]);
+            expect($_SESSION['sess_user_config_array'])->toBe(['cached' => 'kept']);
+            expect($GLOBALS['production_function_log_calls'])->toHaveCount(1);
+            [$message, , $level] = $GLOBALS['production_function_log_calls'][0];
+            expect($message)->toStartWith('ERROR: Invalid user id in clear_user_setting: ' . gettype($user));
+            expect($message)->not->toContain('abc');
+            expect($level)->toBe('SECURITY');
+        });
+    }
+});
+
+\test('production clear_user_setting rejects a missing session user', function () {
+    with_user_setting_state(function () {
+        unset($_SESSION['sess_user_id']);
+        ignoring_warning('Undefined array key "sess_user_id"', fn() => clear_user_setting('pref'));
+
+        expect($GLOBALS['production_function_db_calls'])->toBe([]);
+        expect($GLOBALS['production_function_log_calls'][0][0])->toBe('ERROR: Invalid user id in clear_user_setting: NULL');
+    });
+});
+
+\test('production clear_user_setting leaves auth_credential_generation alone before checking the user id', function () {
+    foreach ([7, 'abc'] as $user) {
+        with_user_setting_state(function () use ($user) {
+            clear_user_setting('auth_credential_generation', $user);
+
+            expect($GLOBALS['production_function_db_calls'])->toBe([]);
+            expect($_SESSION['sess_user_config_array'])->toBe(['cached' => 'kept']);
+            expect($GLOBALS['production_function_log_calls'])->toBe([]);
+        });
+    }
+});
+
+\test('production user_setting_exists rejects a non-integer or out-of-range user id without a query', function () {
+    foreach (array_merge(invalid_user_ids(), ['', null, [], false]) as $user) {
+        with_user_setting_state(function () use ($user) {
+            expect(user_setting_exists('pref', $user))->toBeFalse();
+
+            expect($GLOBALS['production_function_db_calls'])->toBe([]);
+            expect($GLOBALS['production_function_log_calls'])->toHaveCount(1);
+            [$message, , $level] = $GLOBALS['production_function_log_calls'][0];
+            expect($message)->toStartWith('ERROR: Invalid user id in user_setting_exists: ' . gettype($user));
+            expect($message)->not->toContain('abc');
+            expect($level)->toBe('SECURITY');
+        });
+    }
+});
+
+\test('production user_setting_exists queries and caches valid user ids', function () {
+    foreach ([[101, true], ['0101', true], [0, false], ['0', false], [SETTINGS_USER_ID_MAX, false]] as [$user, $exists]) {
+        $setting = 'valid_scope_' . uniqid();
+        with_user_setting_state(function () use ($setting, $user, $exists) {
+            expect(user_setting_exists($setting, $user))->toBe($exists);
+            expect(user_setting_exists($setting, $user))->toBe($exists);
+
+            expect($GLOBALS['production_function_db_calls'])->toHaveCount(1);
+            expect($GLOBALS['production_function_db_calls'][0][1])->toBe([$setting, $user]);
+            expect($GLOBALS['production_function_log_calls'])->toBe([]);
+        });
+    }
+});
+
+/** Run read_user_setting against a known session, configuration and stored row. */
+function with_user_setting_read(array $config, ?string $guestId, callable $read): void
+{
+    with_user_setting_state(function () use ($config, $guestId, $read) {
+        $GLOBALS['settings_user'] = ['general' => ['pref' => ['method' => 'textbox', 'default' => 'factory']]];
+        $GLOBALS['production_function_config'] = $config;
+        $GLOBALS['production_function_guest_id'] = $guestId;
+        $GLOBALS['production_function_user_row'] = ['value' => 'stored'];
+
+        try {
+            $read();
+        } finally {
+            unset($GLOBALS['production_function_config'], $GLOBALS['production_function_guest_id'], $GLOBALS['production_function_user_row']);
+        }
+    });
+}
+
+\test('production read_user_setting reads valid explicit, session and guest user ids', function () {
+    foreach ([7, '7', '007', SETTINGS_USER_ID_MAX, (string) SETTINGS_USER_ID_MAX] as $user) {
+        with_user_setting_read(['auth_method' => 1], null, function () use ($user) {
+            expect(read_user_setting('pref', 'dflt', false, $user))->toBe('stored');
+            expect($GLOBALS['production_function_db_calls'][0][1])->toBe(['pref', $user]);
+            expect($_SESSION['sess_user_config_array'])->toBe(['cached' => 'kept']);
+        });
+    }
+
+    with_user_setting_read(['auth_method' => 1], null, function () {
+        expect(read_user_setting('pref', 'dflt'))->toBe('stored');
+        expect($GLOBALS['production_function_db_calls'][0][1])->toBe(['pref', 5]);
+        expect($_SESSION['sess_user_config_array'])->toBe(['cached' => 'kept', 'pref' => 'stored']);
+    });
+
+    foreach ([[null, 0], ['', 0], ['9', '9']] as [$guestId, $effective]) {
+        with_user_setting_read(['auth_method' => 0], $guestId, function () use ($effective) {
+            unset($_SESSION['sess_user_id']);
+            expect(read_user_setting('pref', 'dflt'))->toBe('stored');
+            expect($GLOBALS['production_function_db_calls'])->toHaveCount(2);
+            expect($GLOBALS['production_function_db_calls'][1][1])->toBe(['pref', $effective]);
+        });
+    }
+
+    with_user_setting_read(['auth_method' => 1], null, function () {
+        unset($_SESSION['sess_user_id']);
+        expect(read_user_setting('pref', 'dflt'))->toBe('stored');
+        expect($GLOBALS['production_function_db_calls'][0][1])->toBe(['pref', 0]);
+    });
+
+    expect($GLOBALS['production_function_log_calls'])->toBe([]);
+});
+
+\test('production read_user_setting returns the default for an invalid explicit user id without a query', function () {
+    foreach (invalid_user_ids() as $user) {
+        foreach ([['dflt', 'dflt'], [false, 'factory']] as [$default, $expected]) {
+            with_user_setting_read(['auth_method' => 0], null, function () use ($user, $default, $expected) {
+                $value = null;
+                ignoring_warning('could not be converted to int', function () use (&$value, $user, $default) {
+                    $value = read_user_setting('pref', $default, false, $user);
+                });
+
+                expect($value)->toBe($expected);
+                expect($GLOBALS['production_function_db_calls'])->toBe([]);
+                expect($_SESSION['sess_user_config_array'])->toBe(['cached' => 'kept']);
+                expect($GLOBALS['production_function_log_calls'])->toBe([]);
+            });
+        }
+    }
+});
+
+\test('production read_user_setting returns the default for an invalid session or guest user id without caching it', function () {
+    foreach (['abc', '1abc', -5, (string) (SETTINGS_USER_ID_MAX + 1), 7.0] as $sessionUser) {
+        foreach ([false, true] as $force) {
+            with_user_setting_read(['auth_method' => 1], null, function () use ($sessionUser, $force) {
+                $_SESSION['sess_user_id'] = $sessionUser;
+
+                expect(read_user_setting('pref', 'dflt', $force))->toBe('dflt');
+                expect(read_user_setting('pref', false, $force))->toBe('factory');
+                expect($GLOBALS['production_function_db_calls'])->toBe([]);
+                expect($_SESSION['sess_user_config_array'])->toBe(['cached' => 'kept']);
+                expect($GLOBALS['production_function_log_calls'])->toBe([]);
+            });
+        }
+    }
+
+    with_user_setting_read(['auth_method' => 0], (string) (SETTINGS_USER_ID_MAX + 1), function () {
+        unset($_SESSION['sess_user_id']);
+
+        expect(read_user_setting('pref', 'dflt'))->toBe('dflt');
+        expect($GLOBALS['production_function_db_calls'])->toHaveCount(1);
+        expect($GLOBALS['production_function_db_calls'][0][0])->not->toContain('settings_user');
     });
 });

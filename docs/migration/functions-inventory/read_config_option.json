@@ -3,8 +3,8 @@
     "name": "read_config_option",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 901,
-        "end_line": 986,
+        "start_line": 919,
+        "end_line": 1004,
         "line_count": 86,
         "signature": {
             "parameters": [
@@ -31,7 +31,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 1053, "core_outside_functions_php": 967, "tests": 244, "plugins": 0},
+        "fan_out": {"core": 1053, "core_outside_functions_php": 967, "tests": 245, "plugins": 0},
         "body": {
             "uses_global": [
                 "config",
