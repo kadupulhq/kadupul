@@ -3,8 +3,8 @@
     "name": "cacti_session_regenerate",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8254,
-        "end_line": 8265,
+        "start_line": 8264,
+        "end_line": 8275,
         "line_count": 12,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,

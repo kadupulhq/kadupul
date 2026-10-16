@@ -3,8 +3,8 @@
     "name": "get_hash_host_template",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 4825,
-        "end_line": 4834,
+        "start_line": 4835,
+        "end_line": 4844,
         "line_count": 10,
         "signature": {
             "parameters": [

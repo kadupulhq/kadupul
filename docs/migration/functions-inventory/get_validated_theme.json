@@ -3,8 +3,8 @@
     "name": "get_validated_theme",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7621,
-        "end_line": 7632,
+        "start_line": 7631,
+        "end_line": 7642,
         "line_count": 12,
         "signature": {
             "parameters": [
