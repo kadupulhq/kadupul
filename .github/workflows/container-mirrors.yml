@@ -15,8 +15,9 @@ on:
   push:
     branches: [main]
     paths:
-      - tools/containers/mirrors.json
-      - tools/containers/mirror.py
+      - tools/containers/**
+      - tests/tools/test_container_mirrors.py
+      - tests/tools/login_ghcr.sh
       - .github/workflows/container-mirrors.yml
   workflow_dispatch:
 
@@ -154,27 +155,11 @@ jobs:
           provenance: mode=max
           sbom: generator=ghcr.io/kadupulhq/kadupul-mirrors/buildkit-syft-scanner@sha256:ae4f3b554449e7e25548e7d8ccc029d17357348e30c6e3df01b92bc93654d6a9
       - name: Require both platforms and their generated SPDX attestations
-        run: |
-          mise exec python@3.12.12 -- python - <<'PY'
-          import json, os, tarfile
-          from pathlib import Path
-          with tarfile.open(Path(os.environ['RUNNER_TEMP']) / 'mirror-build.oci.tar') as archive:
-              index = json.load(archive.extractfile('index.json'))
-              platforms = {entry.get('platform', {}).get('architecture') for entry in index['manifests']}
-              sboms = []
-              for member in archive.getmembers():
-                  if not member.isfile() or not member.name.startswith('blobs/sha256/'):
-                      continue
-                  try:
-                      document = json.load(archive.extractfile(member))
-                  except (ValueError, UnicodeDecodeError):
-                      continue
-                  if isinstance(document, dict) and isinstance(document.get('manifests'), list):
-                      platforms.update(entry.get('platform', {}).get('architecture') for entry in document['manifests'])
-                  if isinstance(document, dict) and document.get('predicateType') == 'https://spdx.dev/Document':
-                      assert document['predicate']['spdxVersion'].startswith('SPDX-')
-                      sboms.append(document)
-              assert {'amd64', 'arm64'} <= platforms, platforms
-              assert len(sboms) == 2, len(sboms)
-              print('Verified amd64/arm64 builds and two SPDX attestations through authenticated GHCR helpers')
-          PY
+        run: mise exec python@3.12.12 -- python tools/containers/verify_build.py "$RUNNER_TEMP/mirror-build.oci.tar"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: mirror-builder-proof
+          path: ${{ runner.temp }}/mirror-build.oci.tar
+          if-no-files-found: error
+          retention-days: 14

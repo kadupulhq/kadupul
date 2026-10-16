@@ -4,11 +4,13 @@
 """Protect the manifest identity and private authentication handoff."""
 import hashlib
 import importlib.util
+import io
 import json
 import os
 from pathlib import Path
 import re
 import subprocess
+import tarfile
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -17,6 +19,63 @@ ROOT = Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location('container_mirror', ROOT / 'tools/containers/mirror.py')
 mirror = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(mirror)
+build_spec = importlib.util.spec_from_file_location('mirror_build', ROOT / 'tools/containers/verify_build.py')
+build_proof = importlib.util.module_from_spec(build_spec)
+build_spec.loader.exec_module(build_proof)
+
+
+class MirrorBuildProofTest(unittest.TestCase):
+    def proof(self, missing=None, invalid_spdx=False, corrupt=False):
+        blobs = {}
+
+        def blob(document, media='application/vnd.oci.image.manifest.v1+json'):
+            payload = json.dumps(document).encode()
+            digest = 'sha256:' + hashlib.sha256(payload).hexdigest()
+            blobs['blobs/sha256/' + digest[7:]] = payload
+            return {'mediaType': media, 'digest': digest, 'size': len(payload)}
+
+        sbom = blob({'predicateType': 'https://spdx.dev/Document',
+                     'predicate': {'spdxVersion': '' if invalid_spdx else 'SPDX-2.3'}}, 'application/vnd.in-toto+json')
+        descriptors = []
+        for architecture in ('amd64', 'arm64'):
+            config = blob({'architecture': architecture, 'os': 'linux'}, 'application/vnd.oci.image.config.v1+json')
+            image = blob({'schemaVersion': 2, 'config': config, 'layers': []})
+            image['platform'] = {'architecture': architecture, 'os': 'linux'}
+            descriptors.append(image)
+            if missing == architecture:
+                continue
+            attestation = blob({'schemaVersion': 2, 'config': config, 'layers': [sbom]})
+            attestation['annotations'] = {'vnd.docker.reference.type': 'attestation-manifest',
+                                          'vnd.docker.reference.digest': image['digest']}
+            descriptors.append(attestation)
+        # OCI indexes can wrap another index, as Buildx's exporter does.
+        index = blob({'schemaVersion': 2, 'manifests': descriptors}, 'application/vnd.oci.image.index.v1+json')
+        blobs['index.json'] = json.dumps({'schemaVersion': 2, 'manifests': [index]}).encode()
+        if corrupt:
+            blobs['blobs/sha256/' + sbom['digest'][7:]] += b' '
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'proof.tar'
+            with tarfile.open(path, 'w') as archive:
+                for name, payload in blobs.items():
+                    member = tarfile.TarInfo(name)
+                    member.size = len(payload)
+                    archive.addfile(member, io.BytesIO(payload))
+            return build_proof.verify(path)
+
+    def test_platforms_can_share_one_spdx_blob(self):
+        self.assertIn('amd64/arm64', self.proof())
+
+    def test_missing_platform_attestation_is_refused(self):
+        with self.assertRaisesRegex(ValueError, 'attestation for arm64'):
+            self.proof(missing='arm64')
+
+    def test_invalid_spdx_document_is_refused(self):
+        with self.assertRaisesRegex(ValueError, 'Missing generated SPDX'):
+            self.proof(invalid_spdx=True)
+
+    def test_corrupted_oci_blob_is_refused(self):
+        with self.assertRaisesRegex(ValueError, 'digest mismatch'):
+            self.proof(corrupt=True)
 
 
 class ContainerMirrorTest(unittest.TestCase):
