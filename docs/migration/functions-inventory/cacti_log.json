@@ -3,8 +3,8 @@
     "name": "cacti_log",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1543,
-        "end_line": 1675,
+        "start_line": 1552,
+        "end_line": 1684,
         "line_count": 133,
         "signature": {
             "parameters": [
@@ -49,7 +49,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 1205, "core_outside_functions_php": 1139, "tests": 239, "plugins": 0},
+        "fan_out": {"core": 1207, "core_outside_functions_php": 1139, "tests": 239, "plugins": 0},
         "body": {
             "uses_global": ["config", "database_log"],
             "static_variables": ["start"],
@@ -94,6 +94,7 @@
             "ping_mail_server",
             "record_mailer_error",
             "repair_system_data_input_methods",
+            "save_user_settings",
             "set_config_option",
             "set_user_setting",
             "update_host_status"

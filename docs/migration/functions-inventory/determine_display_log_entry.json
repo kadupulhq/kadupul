@@ -3,8 +3,8 @@
     "name": "determine_display_log_entry",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1767,
-        "end_line": 1893,
+        "start_line": 1776,
+        "end_line": 1902,
         "line_count": 127,
         "signature": {
             "parameters": [

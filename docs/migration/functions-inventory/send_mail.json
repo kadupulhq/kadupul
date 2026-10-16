@@ -3,8 +3,8 @@
     "name": "send_mail",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5457,
-        "end_line": 5498,
+        "start_line": 5466,
+        "end_line": 5507,
         "line_count": 42,
         "signature": {
             "parameters": [

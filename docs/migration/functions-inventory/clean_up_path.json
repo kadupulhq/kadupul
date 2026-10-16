@@ -3,8 +3,8 @@
     "name": "clean_up_path",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 3214,
-        "end_line": 3225,
+        "start_line": 3223,
+        "end_line": 3234,
         "line_count": 12,
         "signature": {
             "parameters": [

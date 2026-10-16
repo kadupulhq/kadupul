@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-16 01:08-0700\n"
+"POT-Creation-Date: 2026-10-16 12:58-0700\n"
 "PO-Revision-Date: 2024-04-20 19:06-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -804,7 +804,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "비밀번호 변경 페이지에 문제가 있습니다. 즉시 Kadupul 관리자에게 문의하세요."
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4231 lib/html.php:2754
+#: include/global_form.php:1552 lib/functions.php:4240 lib/html.php:2754
 msgid "Change Password"
 msgstr "비밀번호 변경"
 
@@ -819,7 +819,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "현재 비밀번호와 새 비밀번호를 입력하십시오. <br> Kadupul 암호."
 
 #: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
-#: include/global_settings.php:1840 lib/functions.php:6171
+#: include/global_settings.php:1840 lib/functions.php:6180
 msgid "Username"
 msgstr "아이디"
 
@@ -912,7 +912,7 @@ msgstr "사용자 로그인"
 msgid "Enter your Username and Password below"
 msgstr "아래에 사용자 이름과 암호를 입력하십시오"
 
-#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6172
+#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6181
 msgid "Password"
 msgstr "비밀번호"
 
@@ -1220,8 +1220,8 @@ msgstr "검색된 장치 제거"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:698 data_source_profiles.php:61 lib/functions.php:6530
-#: lib/functions.php:6535 lib/html.php:1393 lib/html.php:1465
+#: data_debug.php:698 data_source_profiles.php:61 lib/functions.php:6539
+#: lib/functions.php:6544 lib/html.php:1393 lib/html.php:1465
 #: lib/html_reports.php:1810 lib/html_reports.php:1838
 #: lib/html_reports.php:1915 lib/html_reports.php:1916
 #: lib/html_reports.php:1917 lib/spikekill.php:1734 lib/spikekill.php:1735
@@ -2211,7 +2211,7 @@ msgstr "버전"
 msgid "Community"
 msgstr "커뮤니티"
 
-#: automation_snmp.php:543 lib/functions.php:6167
+#: automation_snmp.php:543 lib/functions.php:6176
 msgid "Port"
 msgstr "포트"
 
@@ -2508,8 +2508,8 @@ msgstr "ROOTConstellation name (optional)"
 msgid "No Tree Rules Found"
 msgstr "트리 규칙 없음"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6675 lib/functions.php:6745
-#: lib/functions.php:6841 lib/functions.php:7502 poller.php:417 poller.php:584
+#: cactid.php:27 help.php:54 lib/functions.php:6684 lib/functions.php:6754
+#: lib/functions.php:6850 lib/functions.php:7511 poller.php:417 poller.php:584
 #: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
 #: poller_automation.php:37 poller_boost.php:387
 #, fuzzy
@@ -2531,12 +2531,12 @@ msgstr "Kadupul 시스템 유틸리티"
 msgid "Notice: Kadupul Daemon PID["
 msgstr "알림: Kadupul 데몬 PID["
 
-#: cli/refresh_csrf.php:104 lib/functions.php:664 settings.php:295
+#: cli/refresh_csrf.php:104 lib/functions.php:673 settings.php:295
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
 msgstr "데이터 수집기 % d에 설정이 저장되지 않았습니다."
 
-#: cli/refresh_csrf.php:105 lib/functions.php:677 settings.php:307
+#: cli/refresh_csrf.php:105 lib/functions.php:686 settings.php:307
 #, php-format
 msgid "Settings save to Data Collector %d Failed."
 msgstr "데이터 수집기 % d에 설정이 저장되지 않았습니다."
@@ -3938,7 +3938,7 @@ msgstr "이 데이터 템플릿에 주어진 이름입니다. 그래프 템플�
 #: data_sources.php:1101 graph_view.php:817 graphs.php:1601
 #: include/global_arrays.php:955 include/global_arrays.php:1004
 #: include/global_arrays.php:1692 include/global_arrays.php:1861
-#: lib/api_automation.php:426 lib/functions.php:6166 lib/html.php:2306
+#: lib/api_automation.php:426 lib/functions.php:6175 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
 msgstr "장치"
@@ -4276,7 +4276,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller는 아직 운영되지 않았습니다."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8205 permission_denied.php:29 permission_denied.php:36
+#: lib/functions.php:8214 permission_denied.php:29 permission_denied.php:36
 msgid "Permission Denied"
 msgstr "사용 권한이 거부되었습니다."
 
@@ -5216,11 +5216,11 @@ msgstr "치명적 : Kadupul의이 영역에 액세스하려면 로그인해야�
 msgid "Login Again"
 msgstr "다시 로그인"
 
-#: include/auth.php:317 lib/functions.php:8206 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8215 permission_denied.php:38
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "이것이 오류라고 생각하면. Kadupul 관리자에게 문의하십시오."
 
-#: include/auth.php:317 lib/functions.php:8206 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8215 permission_denied.php:38
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Kadupul의이 섹션에 액세스하는 것은 허용되지 않습니다."
 
@@ -7219,7 +7219,7 @@ msgid "List Mode"
 msgstr "목록 모드"
 
 #: include/global_arrays.php:2066 include/global_arrays.php:2072
-#: lib/functions.php:4453 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
+#: lib/functions.php:4462 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "콘솔"
@@ -9003,8 +9003,8 @@ msgstr "데이터"
 msgid "Visual"
 msgstr "시각적"
 
-#: include/global_settings.php:112 lib/functions.php:6170
-#: lib/functions.php:6175
+#: include/global_settings.php:112 lib/functions.php:6179
+#: lib/functions.php:6184
 msgid "Authentication"
 msgstr "인증"
 
@@ -9040,11 +9040,11 @@ msgstr "그래프 글꼴"
 msgid "PHP Mail() Function"
 msgstr "PHP 메일 () 함수"
 
-#: include/global_settings.php:153 lib/functions.php:6151
+#: include/global_settings.php:153 lib/functions.php:6160
 msgid "Sendmail"
 msgstr "@ option"
 
-#: include/global_settings.php:154 lib/functions.php:6157
+#: include/global_settings.php:154 lib/functions.php:6166
 msgid "SMTP"
 msgstr "SMTP"
 
@@ -10894,7 +10894,7 @@ msgstr "전자 메일의 줄이 자동으로 줄 바꿈되기 전에 허용되�
 msgid "Sendmail Options"
 msgstr "센드 메일 옵션"
 
-#: include/global_settings.php:1961 lib/functions.php:6151
+#: include/global_settings.php:1961 lib/functions.php:6160
 msgid "Sendmail Path"
 msgstr "센드 메일 경로"
 
@@ -12079,8 +12079,8 @@ msgstr "위치:"
 msgid "Contact:"
 msgstr "연락처:"
 
-#: lib/api_device.php:1986 lib/functions.php:6184 lib/functions.php:6186
-#: lib/functions.php:6190
+#: lib/api_device.php:1986 lib/functions.php:6193 lib/functions.php:6195
+#: lib/functions.php:6199
 msgid "Ping Results"
 msgstr "Ping 결과"
 
@@ -12837,187 +12837,187 @@ msgstr "문제 발견되지 않음"
 msgid "RRDfile not created yet"
 msgstr "폴링 후 RRD 파일이 업데이트되지 않음"
 
-#: lib/functions.php:1201 lib/functions.php:1283
+#: lib/functions.php:1210 lib/functions.php:1292
 msgid "Message Not Found."
 msgstr "메시지를 찾을 수 없습니다."
 
-#: lib/functions.php:1698
+#: lib/functions.php:1707
 #, php-format
 msgid "Error %s is not readable"
 msgstr "오류  %s을 (를) 읽을 수 없습니다."
 
-#: lib/functions.php:4207
+#: lib/functions.php:4216
 msgid "Logged in a Guest"
 msgstr "다음 계정으로 로그인"
 
-#: lib/functions.php:4207 lib/functions.php:4225
+#: lib/functions.php:4216 lib/functions.php:4234
 msgid "Logged in as"
 msgstr "다음 계정으로 로그인"
 
-#: lib/functions.php:4207
+#: lib/functions.php:4216
 msgid "Login as Regular User"
 msgstr "일반 사용자로 로그인"
 
-#: lib/functions.php:4207
+#: lib/functions.php:4216
 msgid "guest"
 msgstr "명"
 
-#: lib/functions.php:4210 lib/functions.php:4235 lib/html.php:2770
+#: lib/functions.php:4219 lib/functions.php:4244 lib/html.php:2770
 msgid "User Community"
 msgstr "사용자 커뮤니티"
 
-#: lib/functions.php:4211 lib/functions.php:4236 lib/html.php:2772
+#: lib/functions.php:4220 lib/functions.php:4245 lib/html.php:2772
 #: lib/utility.php:1447
 msgid "Documentation"
 msgstr "문서"
 
-#: lib/functions.php:4228
+#: lib/functions.php:4237
 #, php-format
 msgid "Logged in as %s"
 msgstr "%s으로 로그인됨"
 
-#: lib/functions.php:4230 lib/html.php:2751
+#: lib/functions.php:4239 lib/html.php:2751
 msgid "Edit Profile"
 msgstr "프로필 수정"
 
-#: lib/functions.php:4240 lib/html.php:2755
+#: lib/functions.php:4249 lib/html.php:2755
 msgid "Logout"
 msgstr "로그아웃"
 
-#: lib/functions.php:4394
+#: lib/functions.php:4403
 msgid "Leaf"
 msgstr "잎"
 
-#: lib/functions.php:4418 lib/html_tree.php:648 lib/html_tree.php:684
+#: lib/functions.php:4427 lib/html_tree.php:648 lib/html_tree.php:684
 #: lib/html_tree.php:913 lib/html_tree.php:921 lib/html_tree.php:1522
 msgid "Non Query Based"
 msgstr "비 쿼리 기반"
 
-#: lib/functions.php:4456
+#: lib/functions.php:4465
 #, php-format
 msgid "Link %s"
 msgstr "%s 링크"
 
-#: lib/functions.php:4918 tree.php:1804 tree.php:1878 tree.php:1986
+#: lib/functions.php:4927 tree.php:1804 tree.php:1878 tree.php:1986
 #: user_admin.php:18 user_group_admin.php:20
 msgid "Copy"
 msgstr "복사"
 
-#: lib/functions.php:5720
+#: lib/functions.php:5729
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "메일러 오류 : <b>TO</b> 주소 세트가 없습니다! <br> <i>메일 테스트</i> 링크를 사용하는 경우 <b>경고 전자 메일</b> 설정을 지정하십시오."
 
-#: lib/functions.php:6114
+#: lib/functions.php:6123
 #, php-format
 msgid "Authentication failed: %s"
 msgstr "인증 실패 :  %s"
 
-#: lib/functions.php:6118
+#: lib/functions.php:6127
 #, php-format
 msgid "HELO failed: %s"
 msgstr "HELO 실패 :  %s"
 
-#: lib/functions.php:6121
+#: lib/functions.php:6130
 #, php-format
 msgid "Connect failed: %s"
 msgstr "연결 실패 :  %s"
 
-#: lib/functions.php:6124
+#: lib/functions.php:6133
 msgid "SMTP error: "
 msgstr "SMTP 오류 :"
 
-#: lib/functions.php:6138
+#: lib/functions.php:6147
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "Kadupul에서 생성 된 테스트 메시지입니다. 이 메시지는 메일 설정의 구성을 테스트하기 위해 전송되었습니다."
 
-#: lib/functions.php:6139
+#: lib/functions.php:6148
 msgid "Your email settings are currently set as follows"
 msgstr "이메일 설정은 현재 다음과 같이 설정되어 있습니다."
 
-#: lib/functions.php:6140
+#: lib/functions.php:6149
 msgid "Method"
 msgstr "방법"
 
-#: lib/functions.php:6142
+#: lib/functions.php:6151
 msgid "Checking Configuration...<br>"
 msgstr "구성 확인 중 ... <br>"
 
-#: lib/functions.php:6149
+#: lib/functions.php:6158
 msgid "PHP's Mailer Class"
 msgstr "PHP 메일러 클래스"
 
-#: lib/functions.php:6155
+#: lib/functions.php:6164
 msgid "Method: SMTP"
 msgstr "방법 : SMTP"
 
-#: lib/functions.php:6172
+#: lib/functions.php:6181
 msgid "Not Shown for Security Reasons"
 msgstr "보안상의 이유로 표시되지 않음"
 
-#: lib/functions.php:6173
+#: lib/functions.php:6182
 msgid "Security"
 msgstr "보안"
 
-#: lib/functions.php:6181
+#: lib/functions.php:6190
 msgid "Ping Results:"
 msgstr "핑 결과 :"
 
-#: lib/functions.php:6181 lib/functions.php:6186
+#: lib/functions.php:6190 lib/functions.php:6195
 msgid "Success"
 msgstr "성공"
 
-#: lib/functions.php:6190
+#: lib/functions.php:6199
 msgid "Bypassed"
 msgstr "우회"
 
-#: lib/functions.php:6199
+#: lib/functions.php:6208
 msgid "Creating Message Text..."
 msgstr "메시지 텍스트 작성 중 ..."
 
-#: lib/functions.php:6202
+#: lib/functions.php:6211
 msgid "Sending Message..."
 msgstr "메시지를 보내는 중 ..."
 
-#: lib/functions.php:6206
+#: lib/functions.php:6215
 #, fuzzy
 msgid "Kadupul Test Message"
 msgstr "Kadupul 테스트 메시지"
 
-#: lib/functions.php:6208
+#: lib/functions.php:6217
 msgid "Success!"
 msgstr "성공!"
 
-#: lib/functions.php:6211
+#: lib/functions.php:6220
 msgid "Message Not Sent due to ping failure."
 msgstr "핑 실패로 인해 메시지가 전송되지 않았습니다."
 
-#: lib/functions.php:6675 lib/functions.php:6745
+#: lib/functions.php:6684 lib/functions.php:6754
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul 플러그인  %s이 (가) 다음 오류 때문에 비활성화되었습니다 :  %s! 자세한 내용은 Kadupul 로그 파일을 참조하십시오."
 
-#: lib/functions.php:6841
+#: lib/functions.php:6850
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "경고: PollerID: %s 에 유효하지 않은 호스트 이름: %s 이 (가) 있습니다. DNS를 통해 연결할 수 없습니까!"
 
-#: lib/functions.php:7265 lib/functions.php:7267
+#: lib/functions.php:7274 lib/functions.php:7276
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- 베타  %s"
 
-#: lib/functions.php:7265 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7274 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "버전  %s  %s"
 
-#: lib/functions.php:7267
+#: lib/functions.php:7276
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7502
+#: lib/functions.php:7511
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "경고: 키 Kadupul 포함 파일 %s 이 (가) 누락되었습니다. 이 파일을 찾아 교체하십시오"

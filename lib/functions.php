@@ -261,6 +261,12 @@ function save_user_settings($user = -1)
         $user = $_SESSION['sess_user_id'];
     }
 
+    // settings_user.user_id is mediumint unsigned: other ids are coerced, 'abc' to user 0 and 2^24 onto user 16777215.
+    if (!((is_int($user) && $user >= 0 && $user <= 16777215) || (is_string($user) && preg_match('/^[0-9]+$/D', $user) && strlen(ltrim($user, '0')) <= 8 && (int) $user <= 16777215))) {
+        cacti_log('ERROR: Invalid user id in save_user_settings: ' . gettype($user) . (is_string($user) ? '(' . strlen($user) . ')' : ''), false, 'SECURITY');
+        return;
+    }
+
     foreach ($settings_user as $tab_short_name => $tab_fields) {
         foreach ($tab_fields as $field_name => $field_array) {
             if (isset_request_var($field_name) && isset($field_array['default']) && is_numeric($field_array['default'])
@@ -422,6 +428,9 @@ function set_user_setting($config_name, $value, $user = -1)
         }
 
         cacti_log('NOTE: Attempt to set user setting \'' . $config_name . '\', with no user id: ' . cacti_debug_backtrace('', false, false, 0, 1), false, $mode, POLLER_VERBOSITY_MEDIUM);
+    } elseif (!((is_int($user) && $user >= 0 && $user <= 16777215) || (is_string($user) && preg_match('/^[0-9]+$/D', $user) && strlen(ltrim($user, '0')) <= 8 && (int) $user <= 16777215))) {
+        // settings_user.user_id is mediumint unsigned: other ids are coerced, 'abc' to user 0 and 2^24 onto user 16777215.
+        cacti_log('ERROR: Invalid user id in set_user_setting: ' . gettype($user) . (is_string($user) ? '(' . strlen($user) . ')' : ''), false, 'SECURITY');
     } elseif (db_table_exists('settings_user')) {
         if (strlen($config_name) > 255) {
             cacti_log("ERROR: User setting name '$config_name' is too long, will be truncated", false, 'SYSTEM');

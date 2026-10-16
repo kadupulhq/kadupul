@@ -3,8 +3,8 @@
     "name": "user_setting_exists",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 446,
-        "end_line": 464,
+        "start_line": 455,
+        "end_line": 473,
         "line_count": 19,
         "signature": {
             "parameters": [
