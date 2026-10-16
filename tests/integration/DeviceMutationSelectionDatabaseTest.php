@@ -76,18 +76,39 @@ final class DeviceMutationSelectionDatabaseTest extends TestCase
 
     public function testDestinationCollectorsIncludeTheirEnabledStateInNumericOrder(): void
     {
-        $locked = $this->lock([], [5, 3, 3]);
-        self::assertSame([1, 3, 5], array_keys($locked['poller_locks']));
+        $locked = $this->lock([], [3, 1, 3]);
+        self::assertSame([1, 3], array_keys($locked['poller_locks']));
         self::assertSame('', $locked['poller_locks'][3][0]['disabled']);
-        self::assertSame('on', $locked['poller_locks'][5][0]['disabled']);
-        self::assertSame([1, 3, 5], $locked['pollers']);
+        self::assertSame([1, 3], $locked['pollers']);
     }
 
-    public function testMissingDestinationRowsRemainUnavailableToTheWorker(): void
+    public function testMissingDestinationSiteRemainsUnavailableToTheWorker(): void
     {
-        $locked = $this->lock([99], [99]);
-        self::assertSame([], $locked['site_locks'][99]);
-        self::assertSame([], $locked['poller_locks'][99]);
+        self::assertSame([], $this->lock([99])['site_locks'][99]);
+    }
+
+    public function testDisabledOrMissingDestinationCollectorStopsTheSelection(): void
+    {
+        foreach ([5, 99] as $pollerId) {
+            try {
+                (new DeviceMutationSelection())->lock($this->database, 7, [11], static function (string $status): void {}, [], [$pollerId]);
+                self::fail('Collector ' . $pollerId . ' was accepted as an assignment destination');
+            } catch (RuntimeException $error) {
+                self::assertSame('Assignment collector unavailable', $error->getMessage());
+            }
+        }
+    }
+
+    public function testDisabledOrMissingCleanupCollectorStopsTheSelection(): void
+    {
+        foreach ([5, 99] as $pollerId) {
+            try {
+                (new DeviceMutationSelection())->lock($this->database, 7, [11], static function (string $status): void {}, [], [], [$pollerId]);
+                self::fail('Collector ' . $pollerId . ' was accepted as a cleanup collector');
+            } catch (RuntimeException $error) {
+                self::assertSame('Pending cleanup collector unavailable', $error->getMessage());
+            }
+        }
     }
 
     public function testConcurrentDestinationChangesWaitUntilTheOwningTransactionEnds(): void
