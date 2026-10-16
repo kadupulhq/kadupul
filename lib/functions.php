@@ -147,8 +147,7 @@ function save_user_settings($user = -1) {
 		$user = $_SESSION['sess_user_id'];
 	}
 
-	/* settings_user.user_id is smallint unsigned: other ids are coerced, 'abc' to user 0 and 70000 onto user 65535 */
-	if (!((is_int($user) && $user >= 0 && $user <= 65535) || (is_string($user) && preg_match('/^[0-9]+$/D', $user) && strlen(ltrim($user, '0')) <= 5 && (int) $user <= 65535))) {
+	if (!settings_user_id_is_valid($user)) {
 		cacti_log('ERROR: Invalid user id in save_user_settings: ' . gettype($user) . (is_string($user) ? '(' . strlen($user) . ')' : ''), false, 'SECURITY');
 		return;
 	}
@@ -190,6 +189,18 @@ function save_user_settings($user = -1) {
 }
 
 /**
+ * settings_user_id_is_valid - checks that a user id fits settings_user.user_id
+ *
+ * @param $user - the user id
+ *
+ * @return (bool) - true for an integer or digit string from 0 to 65535
+ */
+function settings_user_id_is_valid($user) {
+	/* settings_user.user_id is smallint unsigned: other ids are coerced, 'abc' to user 0 and 70000 onto user 65535 */
+	return (is_int($user) && $user >= 0 && $user <= 65535) || (is_string($user) && preg_match('/^[0-9]+$/D', $user) && strlen(ltrim($user, '0')) <= 5 && (int) $user <= 65535);
+}
+
+/**
  * set_user_setting - sets/updates a user setting with the given value.
  *
  * @param $config_name - the name of the configuration setting as specified $settings array
@@ -213,8 +224,7 @@ function set_user_setting($config_name, $value, $user = -1) {
 		}
 
 		cacti_log('NOTE: Attempt to set user setting \'' . $config_name . '\', with no user id: ' . cacti_debug_backtrace('', false, false, 0, 1), false, $mode, POLLER_VERBOSITY_MEDIUM);
-	} elseif (!((is_int($user) && $user >= 0 && $user <= 65535) || (is_string($user) && preg_match('/^[0-9]+$/D', $user) && strlen(ltrim($user, '0')) <= 5 && (int) $user <= 65535))) {
-		/* settings_user.user_id is smallint unsigned: other ids are coerced, 'abc' to user 0 and 70000 onto user 65535 */
+	} elseif (!settings_user_id_is_valid($user)) {
 		cacti_log('ERROR: Invalid user id in set_user_setting: ' . gettype($user) . (is_string($user) ? '(' . strlen($user) . ')' : ''), false, 'SECURITY');
 	} elseif (db_table_exists('settings_user')) {
 		if (strlen($config_name) > 255) {
@@ -242,6 +252,11 @@ function set_user_setting($config_name, $value, $user = -1) {
  */
 function user_setting_exists($config_name, $user_id) {
 	static $user_setting_values = array();
+
+	if (!settings_user_id_is_valid($user_id)) {
+		cacti_log('ERROR: Invalid user id in user_setting_exists: ' . gettype($user_id) . (is_string($user_id) ? '(' . strlen($user_id) . ')' : ''), false, 'SECURITY');
+		return false;
+	}
 
 	if (!isset($user_setting_values[$user_id]) || !array_key_exists($config_name, $user_setting_values[$user_id])) {
 		$value = 0;
@@ -275,6 +290,11 @@ function clear_user_setting($config_name, $user = -1) {
 
 	if ($user == -1) {
 		$user = $_SESSION['sess_user_id'];
+	}
+
+	if (!settings_user_id_is_valid($user)) {
+		cacti_log('ERROR: Invalid user id in clear_user_setting: ' . gettype($user) . (is_string($user) ? '(' . strlen($user) . ')' : ''), false, 'SECURITY');
+		return;
 	}
 
 	if (db_table_exists('settings_user')) {
@@ -344,6 +364,11 @@ function read_user_setting($config_name, $default = false, $force = false, $user
 			$effective_uid = $user;
 		}
 
+		/* not logged: cacti_log() reads client_timezone_support through this function and would recurse */
+		if (!settings_user_id_is_valid($effective_uid)) {
+			return ($default !== false ? $default : read_default_user_setting($config_name));
+		}
+
 		$db_setting = false;
 		if (db_table_exists('settings_user')) {
 			$db_setting = db_fetch_row_prepared('SELECT value
@@ -371,6 +396,11 @@ function read_user_setting($config_name, $default = false, $force = false, $user
 	}
 
 	if (!isset($user_config_array[$config_name])) {
+		/* not logged: cacti_log() reads client_timezone_support through this function and would recurse */
+		if (!settings_user_id_is_valid($effective_uid)) {
+			return ($default !== false ? $default : read_default_user_setting($config_name));
+		}
+
 		$db_setting = false;
 		if (db_table_exists('settings_user')) {
 			$db_setting = db_fetch_row_prepared('SELECT value
