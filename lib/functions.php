@@ -4294,10 +4294,20 @@ function resolve_navigation_variables($text) {
  * get_associated_rras - returns a list of all RRAs referenced by a particular graph
  *
  * @param $local_graph_id - (int) the ID of the graph to retrieve a list of RRAs for
+ * @param $sql_where      - (string) a fixed SQL fragment, added to the query as written. It must never
+ *                          contain request data; use $rra_id to select one RRA.
+ * @param $rra_id         - (int|string|null) limit the list to this RRA. The value is bound, not added to the query.
  *
  * @return - (array) an array containing the name and id of each RRA found
  */
-function get_associated_rras($local_graph_id, $sql_where = '') {
+function get_associated_rras($local_graph_id, $sql_where = '', $rra_id = null) {
+	$params = array($local_graph_id);
+
+	if ($rra_id !== null) {
+		$sql_where .= ' AND dspr.id = ?';
+		$params[]   = $rra_id;
+	}
+
 	return db_fetch_assoc_prepared('SELECT DISTINCT ' . SQL_NO_CACHE . "
 		dspr.id, dsp.step, dspr.steps, dspr.rows, dspr.name, dtd.rrd_step, dspr.timespan
 		FROM graph_templates_item AS gti
@@ -4313,7 +4323,7 @@ function get_associated_rras($local_graph_id, $sql_where = '') {
 		WHERE gti.local_graph_id = ?
 		$sql_where
 		ORDER BY dspr.steps",
-		array($local_graph_id)
+		$params
 	);
 }
 

@@ -53,9 +53,11 @@ if (!isset_request_var('rra_id')) {
 }
 
 if (get_request_var('rra_id') == 'all' || isempty_request_var('rra_id')) {
-	$sql_where = ' AND dspr.id IS NOT NULL';
+	$sql_where  = ' AND dspr.id IS NOT NULL';
+	$rra_filter = null;
 } else {
-	$sql_where = ' AND dspr.id=' . get_request_var('rra_id');
+	$sql_where  = '';
+	$rra_filter = get_request_var('rra_id');
 }
 
 $exists = db_fetch_cell_prepared('SELECT local_graph_id
@@ -82,7 +84,7 @@ if (get_request_var('action') != 'properties') {
 	print "<table width='100%' class='cactiTable'>";
 }
 
-$rras = get_associated_rras(get_request_var('local_graph_id'), $sql_where);
+$rras = get_associated_rras(get_request_var('local_graph_id'), $sql_where, $rra_filter);
 
 switch (get_request_var('action')) {
 case 'view':
