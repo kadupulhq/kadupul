@@ -264,6 +264,7 @@ function save_user_settings($user = -1)
 
     if (!LegacySettingsStorage::acceptsUserId($user)) {
         cacti_log('ERROR: Invalid user id in save_user_settings: ' . gettype($user) . (is_string($user) ? '(' . strlen($user) . ')' : ''), false, 'SECURITY');
+        $_SESSION['sess_error_fields']['id'] = 'id';
         return;
     }
 
