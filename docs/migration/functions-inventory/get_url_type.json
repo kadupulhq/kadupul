@@ -3,8 +3,8 @@
     "name": "get_url_type",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6903,
-        "end_line": 6910,
+        "start_line": 6904,
+        "end_line": 6911,
         "line_count": 8,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,

@@ -3,8 +3,8 @@
     "name": "get_message_level",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1199,
-        "end_line": 1217,
+        "start_line": 1200,
+        "end_line": 1218,
         "line_count": 19,
         "signature": {
             "parameters": [
@@ -22,7 +22,7 @@
             "returns_reference": false
         },
         "docblock": false,
-        "fan_out": {"core": 4, "core_outside_functions_php": 0, "tests": 2, "plugins": 0},
+        "fan_out": {"core": 4, "core_outside_functions_php": 0, "tests": 3, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

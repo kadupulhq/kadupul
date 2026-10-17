@@ -3,8 +3,8 @@
     "name": "padleft",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6611,
-        "end_line": 6620,
+        "start_line": 6612,
+        "end_line": 6621,
         "line_count": 10,
         "signature": {
             "parameters": [

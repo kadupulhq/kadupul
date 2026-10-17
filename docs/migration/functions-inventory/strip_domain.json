@@ -3,8 +3,8 @@
     "name": "strip_domain",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 2203,
-        "end_line": 2214,
+        "start_line": 2204,
+        "end_line": 2215,
         "line_count": 12,
         "signature": {
             "parameters": [

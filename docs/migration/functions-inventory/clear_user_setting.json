@@ -3,8 +3,8 @@
     "name": "clear_user_setting",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 486,
-        "end_line": 508,
+        "start_line": 487,
+        "end_line": 509,
         "line_count": 23,
         "signature": {
             "parameters": [

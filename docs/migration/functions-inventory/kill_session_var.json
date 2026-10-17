@@ -3,8 +3,8 @@
     "name": "kill_session_var",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1433,
-        "end_line": 1446,
+        "start_line": 1434,
+        "end_line": 1447,
         "line_count": 14,
         "signature": {
             "parameters": [
@@ -22,7 +22,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 84, "core_outside_functions_php": 79, "tests": 32, "plugins": 0},
+        "fan_out": {"core": 84, "core_outside_functions_php": 79, "tests": 33, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

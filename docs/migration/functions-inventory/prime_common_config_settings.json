@@ -3,8 +3,8 @@
     "name": "prime_common_config_settings",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 782,
-        "end_line": 909,
+        "start_line": 783,
+        "end_line": 910,
         "line_count": 128,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": false,

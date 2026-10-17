@@ -3,8 +3,8 @@
     "name": "get_graph_title_cache",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 3331,
-        "end_line": 3339,
+        "start_line": 3332,
+        "end_line": 3340,
         "line_count": 9,
         "signature": {
             "parameters": [

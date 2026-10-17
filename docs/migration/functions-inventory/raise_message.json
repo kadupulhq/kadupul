@@ -3,8 +3,8 @@
     "name": "raise_message",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1284,
-        "end_line": 1329,
+        "start_line": 1285,
+        "end_line": 1330,
         "line_count": 46,
         "signature": {
             "parameters": [
@@ -40,7 +40,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 390, "core_outside_functions_php": 383, "tests": 55, "plugins": 0},
+        "fan_out": {"core": 390, "core_outside_functions_php": 383, "tests": 58, "plugins": 0},
         "body": {
             "uses_global": ["config", "messages", "no_http_headers"],
             "static_variables": [],

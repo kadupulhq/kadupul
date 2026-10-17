@@ -3,8 +3,8 @@
     "name": "parse_email_details",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5988,
-        "end_line": 6042,
+        "start_line": 5989,
+        "end_line": 6043,
         "line_count": 55,
         "signature": {
             "parameters": [

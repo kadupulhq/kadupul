@@ -3,8 +3,8 @@
     "name": "check_changed",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1173,
-        "end_line": 1180,
+        "start_line": 1174,
+        "end_line": 1181,
         "line_count": 8,
         "signature": {
             "parameters": [

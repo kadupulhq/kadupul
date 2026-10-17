@@ -3,8 +3,8 @@
     "name": "debug_log_insert",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 4975,
-        "end_line": 4992,
+        "start_line": 4976,
+        "end_line": 4993,
         "line_count": 18,
         "signature": {
             "parameters": [
