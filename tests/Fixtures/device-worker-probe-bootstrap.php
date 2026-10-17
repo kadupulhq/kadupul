@@ -102,13 +102,18 @@ function run_data_query(int $host, int $query): bool
     db_execute_prepared('INSERT INTO poller_reindex (host_id,data_query_id,arg1) VALUES (?,?,?)', [$host, $query, 'probe']);
     file_put_contents(getenv('KADUPUL_TEST_PROBE_READY'), 'ready');
     $deadline = microtime(true) + 8;
-    while (!is_file(getenv('KADUPUL_TEST_PROBE_RELEASE'))) {
+    $release = getenv('KADUPUL_TEST_PROBE_RELEASE');
+    while (true) {
+        // file_put_contents() exposes the file before its decision is complete.
+        $decision = is_file($release) ? file_get_contents($release) : false;
+        if ($decision === 'fail' || $decision === 'release') {
+            return $decision === 'release';
+        }
         if (microtime(true) >= $deadline) {
             throw new RuntimeException('Owned probe barrier timed out');
         }
         usleep(10000);
     }
-    return file_get_contents(getenv('KADUPUL_TEST_PROBE_RELEASE')) !== 'fail';
 }
 
 // PDO-class-only mode lets the parent use the same SQL prefix adapter.
