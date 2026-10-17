@@ -18,6 +18,26 @@ branch keeps upstream Cacti formatting.
 Reproduce a bug before fixing it, verify the changed behavior, and include the
 validation commands and results in the pull request.
 
+### Generated files that follow a PHP change
+
+Several checked-in files are derived from the PHP source. A change that moves lines
+or touches the files below fails CI until they are refreshed, and a rebase over a
+change to the same files needs them regenerated, not merged by hand. Run these from the
+repository root with the PHP and Python versions the repository selects through `mise`.
+
+| Changed | Refresh | Verify |
+| --- | --- | --- |
+| Lines move in a file listed in `tests/security/baselines/sink_inventory.baseline.tsv` or `architectural_hotspots.baseline.tsv` | Build with `tests/security/build_sink_inventory.sh` or `build_architectural_helper_report.sh --hotspots`, sort with `LC_ALL=C sort`, and replace only the changed file's lines | `tests/security/verify_sink_inventory.sh`, `verify_architectural_hotspots.sh` |
+| A page, include or other file whose gate is classified in `tests/security/baselines/entry_points.baseline.tsv` | Read the diff, then regenerate with `tests/security/build_entry_point_inventory.py`. For `lib/auth.php` the reviewed hash is in `tests/security/classify_entry_points.php`. | `tests/security/verify_entry_point_inventory.sh` |
+| A translatable string, or any line move in a file that has one | `locales/build_gettext.sh` (not `update-pot.sh`, which drops historical identities). Revert catalog changes that only touch `POT-Creation-Date`. | `tests/security/verify_gettext_catalogs.py` |
+| A function in `lib/functions.php` | `php tools/functions-inventory.php` | `php tools/functions-inventory.php --check` |
+| A new test file | Register it in `tests/phpunit-spikekill.xml`, or `tests/phpunit-database.xml` if it needs a database. Write the path relative to `tests/` with no leading `./`. | CI runs `tests/tools/verify_pest_inventory.php`, which compares the registered files with the recorded runs and fails on a mismatch |
+
+The entry-point classifier can run out of memory under the default `memory_limit`
+when run locally; set `memory_limit=-1` for that command. A reviewed hash records that a
+person read the file, so update it only after reading the diff, and say so in the pull
+request. Report the PHP version a result came from.
+
 ### Local Git hooks
 
 Enable the repository-owned hooks once per clone:
