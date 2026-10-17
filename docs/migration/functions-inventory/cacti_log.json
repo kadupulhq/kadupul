@@ -4,8 +4,8 @@
     "static": {
         "file": "lib/functions.php",
         "start_line": 1570,
-        "end_line": 1702,
-        "line_count": 133,
+        "end_line": 1744,
+        "line_count": 175,
         "signature": {
             "parameters": [
                 {
@@ -49,10 +49,10 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 1211, "core_outside_functions_php": 1139, "tests": 239, "plugins": 0},
+        "fan_out": {"core": 1211, "core_outside_functions_php": 1139, "tests": 242, "plugins": 0},
         "body": {
             "uses_global": ["config", "database_log"],
-            "static_variables": ["start"],
+            "static_variables": ["neutralize", "start"],
             "superglobals": ["$_SERVER"],
             "session": {"references": 0, "keys": []},
             "db_calls": {},
@@ -108,6 +108,6 @@
         "status": "planned",
         "lts_status": "not assessed",
         "behavior_record": "tests/Golden/functions/kadupul/php-8.4/cacti_log.json",
-        "notes": "Logging: PSR-3 adapter that keeps the cacti.log line format. The $environ argument is not cleaned, so a newline in it starts a new record, and control bytes reach the file. See #870."
+        "notes": "Logging: PSR-3 adapter that keeps the cacti.log line format. Control characters in both arguments, U+2028 and U+2029, and a newline in $environ are neutralized before the file, stdout and syslog writes (#870)."
     }
 }

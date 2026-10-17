@@ -3,8 +3,8 @@
     "name": "top_header",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5444,
-        "end_line": 5451,
+        "start_line": 5486,
+        "end_line": 5493,
         "line_count": 8,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": false,

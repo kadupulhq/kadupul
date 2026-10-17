@@ -3,12 +3,12 @@
     "name": "cacti_system_zone_set",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8503,
-        "end_line": 8511,
+        "start_line": 8545,
+        "end_line": 8553,
         "line_count": 9,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,
-        "fan_out": {"core": 4, "core_outside_functions_php": 2, "tests": 8, "plugins": 0},
+        "fan_out": {"core": 4, "core_outside_functions_php": 2, "tests": 9, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

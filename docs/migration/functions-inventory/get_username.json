@@ -3,8 +3,8 @@
     "name": "get_username",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 3446,
-        "end_line": 3449,
+        "start_line": 3488,
+        "end_line": 3491,
         "line_count": 4,
         "signature": {
             "parameters": [

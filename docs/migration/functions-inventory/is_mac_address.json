@@ -3,8 +3,8 @@
     "name": "is_mac_address",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 2218,
-        "end_line": 2229,
+        "start_line": 2260,
+        "end_line": 2271,
         "line_count": 12,
         "signature": {
             "parameters": [

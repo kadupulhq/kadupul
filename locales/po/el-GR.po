@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-16 14:22-0700\n"
+"POT-Creation-Date: 2026-10-16 23:20-0700\n"
 "PO-Revision-Date: 2024-04-20 18:31-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -804,7 +804,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "Υπάρχουν προβλήματα με τη σελίδα Αλλαγή κωδικού πρόσβασης.  Επικοινωνήστε αμέσως με τον διαχειριστή του Kadupul."
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4258 lib/html.php:2754
+#: include/global_form.php:1552 lib/functions.php:4300 lib/html.php:2754
 msgid "Change Password"
 msgstr "Αλλαγή Κωδικού"
 
@@ -817,7 +817,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "Εισαγάγετε τον τρέχοντα κωδικό σας και τον νέο σας κωδικό <br> Ο κωδικός Kadupul."
 
 #: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
-#: include/global_settings.php:1840 lib/functions.php:6198
+#: include/global_settings.php:1840 lib/functions.php:6240
 msgid "Username"
 msgstr "Όνομα Χρήστη"
 
@@ -910,7 +910,7 @@ msgstr "Είσοδος χρήστη"
 msgid "Enter your Username and Password below"
 msgstr "Εισαγάγετε το όνομα χρήστη και τον κωδικό σας παρακάτω"
 
-#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6199
+#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6241
 msgid "Password"
 msgstr "Κωδικός"
 
@@ -1218,8 +1218,8 @@ msgstr "Κατεβάστε τις ανακαλυφθείσες συσκευές"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:698 data_source_profiles.php:61 lib/functions.php:6557
-#: lib/functions.php:6562 lib/html.php:1393 lib/html.php:1465
+#: data_debug.php:698 data_source_profiles.php:61 lib/functions.php:6599
+#: lib/functions.php:6604 lib/html.php:1393 lib/html.php:1465
 #: lib/html_reports.php:1810 lib/html_reports.php:1838
 #: lib/html_reports.php:1915 lib/html_reports.php:1916
 #: lib/html_reports.php:1917 lib/spikekill.php:1734 lib/spikekill.php:1735
@@ -2210,7 +2210,7 @@ msgstr "Έκδοση"
 msgid "Community"
 msgstr "Κοινότητα"
 
-#: automation_snmp.php:543 lib/functions.php:6194
+#: automation_snmp.php:543 lib/functions.php:6236
 msgid "Port"
 msgstr "Θύρα"
 
@@ -2507,8 +2507,8 @@ msgstr "Ρίζα"
 msgid "No Tree Rules Found"
 msgstr "Δεν βρέθηκαν κανάλια δέντρων"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6702 lib/functions.php:6772
-#: lib/functions.php:6868 lib/functions.php:7529 poller.php:417 poller.php:584
+#: cactid.php:27 help.php:54 lib/functions.php:6744 lib/functions.php:6814
+#: lib/functions.php:6910 lib/functions.php:7571 poller.php:417 poller.php:584
 #: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
 #: poller_automation.php:37 poller_boost.php:387
 msgid "Kadupul System Warning"
@@ -3965,7 +3965,7 @@ msgstr "Το όνομα που δίνεται σε αυτό το πρότυπο 
 #: data_sources.php:1101 graph_view.php:817 graphs.php:1601
 #: include/global_arrays.php:955 include/global_arrays.php:1004
 #: include/global_arrays.php:1692 include/global_arrays.php:1861
-#: lib/api_automation.php:426 lib/functions.php:6193 lib/html.php:2306
+#: lib/api_automation.php:426 lib/functions.php:6235 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
 msgstr "Συσκευή"
@@ -4303,7 +4303,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Ο Kadupul Poller δεν έχει τρέξει ακόμα."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8232 permission_denied.php:29 permission_denied.php:36
+#: lib/functions.php:8274 permission_denied.php:29 permission_denied.php:36
 msgid "Permission Denied"
 msgstr "Δεν επιτρέπεται η πρόσβαση"
 
@@ -5242,11 +5242,11 @@ msgstr "FATAL: Πρέπει να είστε συνδεδεμένοι για να
 msgid "Login Again"
 msgstr "Σύνδεση Ξανά"
 
-#: include/auth.php:317 lib/functions.php:8233 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8275 permission_denied.php:38
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Αν νομίζετε ότι αυτό είναι λάθος. Επικοινωνήστε με τον διαχειριστή του Kadupul."
 
-#: include/auth.php:317 lib/functions.php:8233 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8275 permission_denied.php:38
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Δεν επιτρέπεται η πρόσβαση σε αυτήν την ενότητα του Kadupul."
 
@@ -7245,7 +7245,7 @@ msgid "List Mode"
 msgstr "Λειτουργία λίστας"
 
 #: include/global_arrays.php:2066 include/global_arrays.php:2072
-#: lib/functions.php:4480 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
+#: lib/functions.php:4522 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "Κονσόλα"
@@ -9027,8 +9027,8 @@ msgstr "Ημερομηνία"
 msgid "Visual"
 msgstr "Οπτικό"
 
-#: include/global_settings.php:112 lib/functions.php:6197
-#: lib/functions.php:6202
+#: include/global_settings.php:112 lib/functions.php:6239
+#: lib/functions.php:6244
 msgid "Authentication"
 msgstr "Πιστοποίηση"
 
@@ -9064,11 +9064,11 @@ msgstr "Γραμματοσειρές γραφήματος"
 msgid "PHP Mail() Function"
 msgstr "Λειτουργία PHP Mail ()"
 
-#: include/global_settings.php:153 lib/functions.php:6178
+#: include/global_settings.php:153 lib/functions.php:6220
 msgid "Sendmail"
 msgstr "Sendmail"
 
-#: include/global_settings.php:154 lib/functions.php:6184
+#: include/global_settings.php:154 lib/functions.php:6226
 msgid "SMTP"
 msgstr "SMTP (απλό πρωτόκολλο μεταφοράς ταχυδρομείου)"
 
@@ -10915,7 +10915,7 @@ msgstr "Αυτός είναι ο αριθμός των χαρακτήρων πο
 msgid "Sendmail Options"
 msgstr "Επιλογές Sendmail"
 
-#: include/global_settings.php:1961 lib/functions.php:6178
+#: include/global_settings.php:1961 lib/functions.php:6220
 msgid "Sendmail Path"
 msgstr "Διαδρομή Sendmail"
 
@@ -12099,8 +12099,8 @@ msgstr "Τοποθεσία:"
 msgid "Contact:"
 msgstr "Επαφή"
 
-#: lib/api_device.php:1986 lib/functions.php:6211 lib/functions.php:6213
-#: lib/functions.php:6217
+#: lib/api_device.php:1986 lib/functions.php:6253 lib/functions.php:6255
+#: lib/functions.php:6259
 msgid "Ping Results"
 msgstr "Αποτελέσματα Ping"
 
@@ -12860,183 +12860,183 @@ msgstr "Το αρχείο RRD δεν ενημερώθηκε μετά την ψη
 msgid "Message Not Found."
 msgstr "Το μήνυμα δε βρέθηκε."
 
-#: lib/functions.php:1725
+#: lib/functions.php:1767
 #, php-format
 msgid "Error %s is not readable"
 msgstr "Το σφάλμα %s δεν είναι αναγνώσιμο"
 
-#: lib/functions.php:4234
+#: lib/functions.php:4276
 msgid "Logged in a Guest"
 msgstr "Συνδεδεμένος ως"
 
-#: lib/functions.php:4234 lib/functions.php:4252
+#: lib/functions.php:4276 lib/functions.php:4294
 msgid "Logged in as"
 msgstr "Συνδεδεμένος ως"
 
-#: lib/functions.php:4234
+#: lib/functions.php:4276
 msgid "Login as Regular User"
 msgstr "Είσοδος ως τακτικός χρήστης"
 
-#: lib/functions.php:4234
+#: lib/functions.php:4276
 msgid "guest"
 msgstr "άτομο"
 
-#: lib/functions.php:4237 lib/functions.php:4262 lib/html.php:2770
+#: lib/functions.php:4279 lib/functions.php:4304 lib/html.php:2770
 msgid "User Community"
 msgstr "Κοινότητα χρηστών"
 
-#: lib/functions.php:4238 lib/functions.php:4263 lib/html.php:2772
+#: lib/functions.php:4280 lib/functions.php:4305 lib/html.php:2772
 #: lib/utility.php:1447
 msgid "Documentation"
 msgstr "Τεκμηρίωση"
 
-#: lib/functions.php:4255
+#: lib/functions.php:4297
 #, php-format
 msgid "Logged in as %s"
 msgstr "Συνδεδεμένος ως %s"
 
-#: lib/functions.php:4257 lib/html.php:2751
+#: lib/functions.php:4299 lib/html.php:2751
 msgid "Edit Profile"
 msgstr "Επεξεργασία Προφίλ"
 
-#: lib/functions.php:4267 lib/html.php:2755
+#: lib/functions.php:4309 lib/html.php:2755
 msgid "Logout"
 msgstr "Αποσύνδεση"
 
-#: lib/functions.php:4421
+#: lib/functions.php:4463
 msgid "Leaf"
 msgstr "Φύλλο"
 
-#: lib/functions.php:4445 lib/html_tree.php:648 lib/html_tree.php:684
+#: lib/functions.php:4487 lib/html_tree.php:648 lib/html_tree.php:684
 #: lib/html_tree.php:913 lib/html_tree.php:921 lib/html_tree.php:1522
 msgid "Non Query Based"
 msgstr "Μη βασισμένο σε ερωτήματα"
 
-#: lib/functions.php:4483
+#: lib/functions.php:4525
 #, php-format
 msgid "Link %s"
 msgstr "Σύνδεσμος %s"
 
-#: lib/functions.php:4945 tree.php:1804 tree.php:1878 tree.php:1986
+#: lib/functions.php:4987 tree.php:1804 tree.php:1878 tree.php:1986
 #: user_admin.php:18 user_group_admin.php:20
 msgid "Copy"
 msgstr "Αντιγραφή"
 
-#: lib/functions.php:5747
+#: lib/functions.php:5789
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Mailer Σφάλμα: Δεν <b>Για την</b> αντιμετώπιση που !! <br> Εάν χρησιμοποιείτε το σύνδεσμο <i>Δοκιμαστική αλληλογραφία</i> , ορίστε τη ρύθμιση <b>E-mail ειδοποίησης</b> ."
 
-#: lib/functions.php:6141
+#: lib/functions.php:6183
 #, php-format
 msgid "Authentication failed: %s"
 msgstr "Ο έλεγχος ταυτότητας απέτυχε: %s"
 
-#: lib/functions.php:6145
+#: lib/functions.php:6187
 #, php-format
 msgid "HELO failed: %s"
 msgstr "HELO απέτυχε: %s"
 
-#: lib/functions.php:6148
+#: lib/functions.php:6190
 #, php-format
 msgid "Connect failed: %s"
 msgstr "Η σύνδεση απέτυχε: %s"
 
-#: lib/functions.php:6151
+#: lib/functions.php:6193
 msgid "SMTP error: "
 msgstr "Σφάλμα SMTP:"
 
-#: lib/functions.php:6165
+#: lib/functions.php:6207
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "Αυτό είναι ένα μήνυμα δοκιμής που δημιουργήθηκε από το Kadupul. Αυτό το μήνυμα εστάλη για να ελέγξει τη διαμόρφωση των ρυθμίσεων αλληλογραφίας σας."
 
-#: lib/functions.php:6166
+#: lib/functions.php:6208
 msgid "Your email settings are currently set as follows"
 msgstr "Οι ρυθμίσεις email σας ρυθμίζονται αυτήν τη στιγμή ως εξής"
 
-#: lib/functions.php:6167
+#: lib/functions.php:6209
 msgid "Method"
 msgstr "Μέθοδος"
 
-#: lib/functions.php:6169
+#: lib/functions.php:6211
 msgid "Checking Configuration...<br>"
 msgstr "Έλεγχος διαμόρφωσης ... <br>"
 
-#: lib/functions.php:6176
+#: lib/functions.php:6218
 msgid "PHP's Mailer Class"
 msgstr "Η τάξη Mailer της PHP"
 
-#: lib/functions.php:6182
+#: lib/functions.php:6224
 msgid "Method: SMTP"
 msgstr "Μέθοδος: SMTP"
 
-#: lib/functions.php:6199
+#: lib/functions.php:6241
 msgid "Not Shown for Security Reasons"
 msgstr "Δεν εμφανίζεται για λόγους ασφάλειας"
 
-#: lib/functions.php:6200
+#: lib/functions.php:6242
 msgid "Security"
 msgstr "Ασφάλεια"
 
-#: lib/functions.php:6208
+#: lib/functions.php:6250
 msgid "Ping Results:"
 msgstr "Αποτελέσματα Ping:"
 
-#: lib/functions.php:6208 lib/functions.php:6213
+#: lib/functions.php:6250 lib/functions.php:6255
 msgid "Success"
 msgstr "Επιτυχία"
 
-#: lib/functions.php:6217
+#: lib/functions.php:6259
 msgid "Bypassed"
 msgstr "Παράκαμψη"
 
-#: lib/functions.php:6226
+#: lib/functions.php:6268
 msgid "Creating Message Text..."
 msgstr "Δημιουργία κειμένου μηνύματος ..."
 
-#: lib/functions.php:6229
+#: lib/functions.php:6271
 msgid "Sending Message..."
 msgstr "Αποστολή μηνύματος ..."
 
-#: lib/functions.php:6233
+#: lib/functions.php:6275
 #, fuzzy
 msgid "Kadupul Test Message"
 msgstr "Μήνυμα δοκιμής Kadupul"
 
-#: lib/functions.php:6235
+#: lib/functions.php:6277
 msgid "Success!"
 msgstr "Επιτυχία!"
 
-#: lib/functions.php:6238
+#: lib/functions.php:6280
 msgid "Message Not Sent due to ping failure."
 msgstr "Μήνυμα δεν έχει σταλεί λόγω βλάβης του ping."
 
-#: lib/functions.php:6702 lib/functions.php:6772
+#: lib/functions.php:6744 lib/functions.php:6814
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Το plugin Kadupul έχει απενεργοποιηθεί %s λόγω του ακόλουθου σφάλματος: %s! Δείτε το αρχείο καταγραφής Kadupul για περισσότερες λεπτομέρειες."
 
-#: lib/functions.php:6868
+#: lib/functions.php:6910
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Το PollerID:%s έχει μη έγκυρο όνομα κεντρικού υπολογιστή:%s.  Δεν είναι προσβάσιμο μέσω DNS!"
 
-#: lib/functions.php:7292 lib/functions.php:7294
+#: lib/functions.php:7334 lib/functions.php:7336
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:7292 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7334 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "Έκδοση %s %s"
 
-#: lib/functions.php:7294
+#: lib/functions.php:7336
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7529
+#: lib/functions.php:7571
 #, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ:  Το Key Kadupul Include File %s λείπει.  Εντοπίστε και αντικαταστήστε αυτό το αρχείο"

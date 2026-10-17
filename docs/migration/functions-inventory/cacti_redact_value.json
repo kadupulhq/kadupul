@@ -3,8 +3,8 @@
     "name": "cacti_redact_value",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8900,
-        "end_line": 8903,
+        "start_line": 8942,
+        "end_line": 8945,
         "line_count": 4,
         "signature": {
             "parameters": [
@@ -31,7 +31,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 3, "core_outside_functions_php": 2, "tests": 0, "plugins": 0},
+        "fan_out": {"core": 3, "core_outside_functions_php": 2, "tests": 5, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],
