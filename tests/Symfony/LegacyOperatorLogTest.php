@@ -188,6 +188,61 @@ final class LegacyOperatorLogTest extends TestCase
         self::assertSame([[LOG_WARNING, 'SYSTEM: WARNING: x STATS: y']], $sent);
     }
 
+    /** @return array{string, list<string>} the file contents and the syslog lines */
+    private function recordEverywhere(string $environ, string $message): array
+    {
+        $this->set('log_destination', '2');
+        $sent = [];
+        $this->log(static function (int $facility, int $priority, string $line) use (&$sent): void {
+            $sent[] = $line;
+        })->record($this->db, $environ, $message);
+
+        return [(string) file_get_contents($this->root . '/log/cacti.log'), $sent];
+    }
+
+    #[DataProvider('controls')]
+    public function testControlCharactersReachNeitherTheFileNorSyslog(string $raw, string $escaped): void
+    {
+        [$file, $sent] = $this->recordEverywhere('ENV' . $raw, 'ERROR: a' . $raw . 'b');
+        self::assertSame('03/04/2026 05:06:07 - ENV' . $escaped . ' ERROR: a' . $escaped . "b\n", $file);
+        self::assertSame(['ENV' . $escaped . ': ERROR: a' . $escaped . 'b'], $sent);
+    }
+
+    /** @return iterable<string, array{string, string}> */
+    public static function controls(): iterable
+    {
+        yield 'NUL' => ["\x00", '\x00'];
+        yield 'ESC' => ["\x1b[31m", '\x1b[31m'];
+        yield 'DEL' => ["\x7f", '\x7f'];
+        yield 'C1 CSI' => ["\u{009B}", '\u009b'];
+        yield 'right-to-left override' => ["\u{202E}", '\u202e'];
+        yield 'right-to-left isolate' => ["\u{2067}", '\u2067'];
+        yield 'line separator' => ["\u{2028}", '\u2028'];
+    }
+
+    public function testLineBreaksInEnvironBecomeSpaces(): void
+    {
+        [$file, $sent] = $this->recordEverywhere("X\r\n2026-01-01 00:00:00 - FORGED", 'ERROR: a');
+        self::assertSame("03/04/2026 05:06:07 - X  2026-01-01 00:00:00 - FORGED ERROR: a\n", $file);
+        self::assertSame(['X  2026-01-01 00:00:00 - FORGED: ERROR: a'], $sent);
+    }
+
+    public function testLineBreaksInTheSyslogMessageBecomeSpaces(): void
+    {
+        [$file, $sent] = $this->recordEverywhere('SYSTEM', "ERROR: a\r\nb");
+        // The file keeps collapsing a break and the space around it into one.
+        self::assertSame("03/04/2026 05:06:07 - SYSTEM ERROR: a b\n", $file);
+        self::assertSame(['SYSTEM: ERROR: a  b'], $sent);
+    }
+
+    public function testOrdinaryTextIsWrittenByteForByte(): void
+    {
+        $message = "ERROR: SQL failed: SELECT 'café', '日本' FROM t\tWHERE x = 1 \u{1F600}";
+        [$file, $sent] = $this->recordEverywhere('SYSTEM', $message);
+        self::assertSame('03/04/2026 05:06:07 - SYSTEM ' . $message . "\n", $file);
+        self::assertSame(['SYSTEM: ' . $message], $sent);
+    }
+
     #[DataProvider('facilities')]
     public function testSyslogFacilityFollowsTheServerOs(string $os, int $facility): void
     {
