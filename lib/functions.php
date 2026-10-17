@@ -1305,6 +1305,44 @@ function get_selective_log_level() {
 }
 
 /**
+ * cacti_log_neutralize - makes control characters in a log line visible
+ *
+ * The match is byte oriented so invalid UTF-8 can never make it fail and
+ * drop the line.
+ *
+ * @param $text - (string) the text to write to the log
+ *
+ * @return string	The text with CR and LF as spaces and other controls escaped
+ */
+function cacti_log_neutralize($text) {
+	$controls = '/[\x00-\x08\x0a-\x1f\x7f]|\xc2[\x80-\x9f]|\xd8\x9c|\xe2\x80[\x8e\x8f\xaa-\xae]|\xe2\x81[\xa6-\xa9]/';
+
+	if (!preg_match($controls, $text)) {
+		return $text;
+	}
+
+	$clean = preg_replace_callback($controls, function ($match) {
+		$bytes = $match[0];
+
+		if ($bytes == "\r" || $bytes == "\n") {
+			return ' ';
+		}
+
+		if (strlen($bytes) == 1) {
+			return sprintf('\x%02x', ord($bytes));
+		}
+
+		if (strlen($bytes) == 2) {
+			return sprintf('\u%04x', ((ord($bytes[0]) & 0x1f) << 6) | (ord($bytes[1]) & 0x3f));
+		}
+
+		return sprintf('\u%04x', ((ord($bytes[0]) & 0x0f) << 12) | ((ord($bytes[1]) & 0x3f) << 6) | (ord($bytes[2]) & 0x3f));
+	}, $text);
+
+	return $clean === null ? $text : $clean;
+}
+
+/**
  * cacti_log - logs a string to Cacti's log file or optionally to the browser
  *
  * @param $string - the string to append to the log file
@@ -1313,6 +1351,8 @@ function get_selective_log_level() {
  * @param $level - (int) only log if above the specified log level
  */
 function cacti_log($string, $output = false, $environ = 'CMDPHP', $level = '') {
+	$environ = cacti_log_neutralize((string) $environ);
+
 	global $config, $database_log;
 
 	static $start = null;
@@ -1384,7 +1424,7 @@ function cacti_log($string, $output = false, $environ = 'CMDPHP', $level = '') {
 	}
 
 	/* Log to Logfile */
-	$message = clean_up_lines($string) . PHP_EOL;
+	$message = cacti_log_neutralize(clean_up_lines($string)) . PHP_EOL;
 
 	if ($output) {
 		$omessage = $oprefix . $message;
@@ -1422,12 +1462,14 @@ function cacti_log($string, $output = false, $environ = 'CMDPHP', $level = '') {
 				openlog('Cacti', LOG_NDELAY | LOG_PID, LOG_SYSLOG);
 			}
 
+			$syslog_message = $environ . ': ' . cacti_log_neutralize($string);
+
 			if ($log_type == 'err' && read_config_option('log_perror')) {
-				syslog(LOG_CRIT, $environ . ': ' . $string);
+				syslog(LOG_CRIT, $syslog_message);
 			} elseif ($log_type == 'warn' && read_config_option('log_pwarn')) {
-				syslog(LOG_WARNING, $environ . ': ' . $string);
+				syslog(LOG_WARNING, $syslog_message);
 			} elseif (($log_type == 'stat' || $log_type == 'note') && read_config_option('log_pstats')) {
-				syslog(LOG_INFO, $environ . ': ' . $string);
+				syslog(LOG_INFO, $syslog_message);
 			}
 
 			closelog();
