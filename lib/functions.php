@@ -149,6 +149,7 @@ function save_user_settings($user = -1) {
 
 	if (!settings_user_id_is_valid($user)) {
 		cacti_log('ERROR: Invalid user id in save_user_settings: ' . gettype($user) . (is_string($user) ? '(' . strlen($user) . ')' : ''), false, 'SECURITY');
+		$_SESSION['sess_error_fields']['id'] = 'id';
 		return;
 	}
 
