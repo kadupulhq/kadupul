@@ -23,6 +23,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Save the Primary Admin setting only as a user id, and build the Guest User and User Template exclusion lists from integer ids, so a stored or session-cached value can no longer change those queries (#754).
 - Remove bare and timed RRDtool success trailers on Windows without deleting preceding graph or fetch payload bytes (#781).
 - Reject RRDtool fetch errors before parsing data-source headers, preventing failed reads from appearing as zero-valued statistics (#776).
+- Use the matched archive index from the RRD file in resize recommendations when its archive order differs from the data source profile (#780).
 - Check each group's own tree exceptions, and only tree exceptions, when a tree is opened by id, so `is_tree_allowed()` allows exactly the trees that `get_allowed_trees()` lists (#755).
 
 - Update the native CI scanner to Semgrep 1.179.0 and hash-locked PyJWT 2.15.1, removing vulnerable scanner dependencies while preserving the existing scan policy.
