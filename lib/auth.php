@@ -1298,9 +1298,9 @@ function is_tree_allowed($tree_id, $user_id = 0)
             return true;
         }
 
-        /* check for group perms */
+        /* each group policy applies to that group's own tree exceptions, as in get_allowed_trees() */
         $groups = db_fetch_assoc_prepared(
-            "SELECT uag.policy_trees
+            "SELECT uag.id, uag.policy_trees
 			FROM user_auth_group AS uag
 			INNER JOIN user_auth_group_members AS uagm
 			ON uag.id = uagm.group_id
@@ -1316,28 +1316,15 @@ function is_tree_allowed($tree_id, $user_id = 0)
         }
 
         foreach ($groups as $g) {
-            if (auth_check_perms($trees, $g['policy_trees'])) {
-                $_SESSION['sess_tree_perms'][$user_id][$tree_id] = true;
+            $gtrees = db_fetch_assoc_prepared(
+                'SELECT group_id
+				FROM user_auth_group_perms
+				WHERE group_id = ?
+				AND type = 2
+				AND item_id = ?',
+                array($g['id'], $tree_id)
+            );
 
-                return true;
-            }
-        }
-
-        /* check for group trees */
-        $gtrees = db_fetch_assoc_prepared(
-            "SELECT uagm.user_id
-			FROM user_auth_group AS uag
-			INNER JOIN user_auth_group_members AS uagm
-			ON uag.id = uagm.group_id
-			INNER JOIN user_auth_group_perms as uagp
-			ON uagp.group_id = uag.id
-			WHERE uag.enabled = 'on'
-			AND uagm.user_id = ?
-			AND uagp.item_id = ?",
-            array($user_id, $tree_id)
-        );
-
-        foreach ($groups as $g) {
             if (auth_check_perms($gtrees, $g['policy_trees'])) {
                 $_SESSION['sess_tree_perms'][$user_id][$tree_id] = true;
                 return true;
