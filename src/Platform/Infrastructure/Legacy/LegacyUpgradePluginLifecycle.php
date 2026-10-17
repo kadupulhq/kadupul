@@ -28,9 +28,9 @@ final class LegacyUpgradePluginLifecycle
         $preorder[] = $config['base_path'] . '/plugins/syslog';
 
         foreach ($plugins as $p) {
-            if (strpos($p, 'thold') !== false) {
+            if (str_contains($p, 'thold')) {
                 // Skip, upgrading this first
-            } elseif (strpos($p, 'syslog') !== false) {
+            } elseif (str_contains($p, 'syslog')) {
                 // Skip, upgrading this second
             } else {
                 $preorder[] = $p;
