@@ -55,9 +55,9 @@ if (isset($case['backtrack_limit'])) {
     ini_set('pcre.backtrack_limit', $case['backtrack_limit']);
 }
 $GLOBALS['syslog'] = [];
-$environ = $case['environ'] === null ? null : ($case['environ'] === 'array' ? ['x'] : base64_decode($case['environ']));
+$environ = $case['environ'] === null ? null : ($case['environ'] === 'array' ? ['x'] : ($case['environ'] === 'object' ? new stdClass() : base64_decode($case['environ'])));
 ob_start();
-$return = \CactiLogTest\cacti_log(base64_decode($case['message']), true, $environ);
+$return = \CactiLogTest\cacti_log(base64_decode($case['message']), true, $environ, $case['level'] ?? '');
 $stdout = ob_get_clean();
 echo json_encode([
     'return'   => $return,
@@ -74,7 +74,7 @@ CODE;
 
 function cactiLogControlRun(string $message, $environ = 'CMDPHP', array $options = []): array
 {
-    $case = ['message' => base64_encode($message), 'environ' => $environ === null || $environ === 'array' ? $environ : base64_encode($environ)] + $options;
+    $case = ['message' => base64_encode($message), 'environ' => in_array($environ, [null, 'array', 'object'], true) ? $environ : base64_encode($environ)] + $options;
     $process = test_php_run([PHP_BINARY, '-d', 'error_reporting=-1', '-r', cactiLogControlProgram($case)]);
     expect($process['status'])->toBe(0, $process['err'] . $process['out']);
     $result = json_decode($process['out'], true, 512, JSON_THROW_ON_ERROR);
@@ -115,6 +115,8 @@ test('C0 controls and DEL are written as visible escapes', function (string $raw
     'NUL'          => ["\x00", '\x00'],
     'ESC sequence' => ["\x1b[31mred\x1b[0m", '\x1b[31mred\x1b[0m'],
     'bell'         => ["\x07", '\x07'],
+    'vertical tab' => ["\x0b", '\x0b'],
+    'form feed'    => ["\x0c", '\x0c'],
     'unit sep'     => ["\x1f", '\x1f'],
     'DEL'          => ["\x7f", '\x7f'],
 ]);
@@ -145,15 +147,22 @@ test('bidirectional controls are written as visible escapes', function (string $
     'U+2069' => ["\u{2069}", '\u2069'],
 ]);
 
+test('line and paragraph separators are written as visible escapes', function (string $raw, string $escaped) {
+    expectCactiLogSinks(cactiLogControlRun('ERROR: a' . $raw . 'b', 'ENV' . $raw), 'ENV' . $escaped, 'ERROR: a' . $escaped . 'b');
+})->with([
+    'U+2028' => ["\u{2028}", '\u2028'],
+    'U+2029' => ["\u{2029}", '\u2029'],
+]);
+
 test('a tab is kept in the message and in environ', function () {
     expectCactiLogSinks(cactiLogControlRun("ERROR: a\tb", "E\tV"), "E\tV", "ERROR: a\tb");
 });
 
 test('ordinary multibyte text is written byte for byte', function () {
     // Includes the neighbours of every escaped sequence: ZWJ U+200D, U+2010,
-    // U+2028, U+202F, U+2065, U+206A, NBSP U+00A0, U+061B and U+061D.
+    // U+2027, U+202F, U+2065, U+206A, NBSP U+00A0, U+061B and U+061D.
     $text = "ERROR: café naïve Ångström Ελληνικά Русский 日本語 中文 한국어 العربية עברית "
-        . "😀 👍🏽 👨\u{200D}👩\u{200D}👧 \u{2010}\u{2028}\u{202F}\u{2065}\u{206A}\u{00A0}\u{061B}\u{061D}";
+        . "😀 👍🏽 👨\u{200D}👩\u{200D}👧 \u{2010}\u{2027}\u{202F}\u{2065}\u{206A}\u{00A0}\u{061B}\u{061D}";
 
     expectCactiLogSinks(cactiLogControlRun($text, 'ÉNV😀'), 'ÉNV😀', $text);
 });
@@ -164,12 +173,20 @@ test('invalid UTF-8 is written unchanged and does not drop the line', function (
     expectCactiLogSinks(cactiLogControlRun($text, "E\xffV"), "E\xffV", $text);
 });
 
-// clean_up_lines() already loses the message under this limit; the
-// environ shows that a failed match keeps the original text.
-test('a regex failure keeps environ unneutralized rather than dropping it', function () {
-    $result = cactiLogControlRun('ERROR: msg', "CMD\x1bPHP", ['backtrack_limit' => '1']);
+// pcre.backtrack_limit=1 with JIT off makes every match fail. The raw ESC in
+// the result shows the failure path ran; the LF must still become a space.
+test('a regex failure still turns CR and LF in environ into spaces', function () {
+    $result = cactiLogControlRun('ERROR: msg', "CMD\x1b\r\nPHP", ['backtrack_limit' => '1']);
 
-    expect($result['file'])->toBe("DATE - CMD\x1bPHP " . PHP_EOL);
+    expect($result['file'])->toBe("DATE - CMD\x1b  PHP " . PHP_EOL);
+});
+
+// clean_up_lines() returns null under the same limit.
+test('a null from clean_up_lines raises no diagnostic', function () {
+    $result = cactiLogControlRun('ERROR: msg', 'CMDPHP', ['backtrack_limit' => '1']);
+
+    expect($result['warnings'])->toBe([])
+        ->and($result['file'])->toBe('DATE - CMDPHP ' . PHP_EOL);
 });
 
 test('an array or null environ is converted as before', function () {
@@ -190,6 +207,23 @@ test('a message that is empty after trimming still returns false', function () {
         ->and($result['file'])->toBe('')
         ->and($result['stdout'])->toBe('')
         ->and($result['syslog'])->toBe([]);
+});
+
+// These return before environ is used, as the unfixed code did.
+test('a gated call with an array environ raises no warning', function () {
+    $result = cactiLogControlRun('ERROR: msg', 'array', ['level' => 5]);
+
+    expect($result['return'])->toBeNull()
+        ->and($result['file'])->toBe('')
+        ->and($result['warnings'])->toBe([]);
+});
+
+test('an empty message with an object environ returns false without an error', function () {
+    $result = cactiLogControlRun(' ', 'object');
+
+    expect($result['return'])->toBeFalse()
+        ->and($result['file'])->toBe('')
+        ->and($result['warnings'])->toBe([]);
 });
 
 test('the POLLER prefix is kept for a clean POLLER environ', function () {

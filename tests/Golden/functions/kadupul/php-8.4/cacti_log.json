@@ -268,11 +268,29 @@
       }
     },
     {
-      "args": ["café 日本語 😀 👨‍👩‍👧   ؛"],
+      "args": ["café 日本語 😀 👨‍👩‍👧 ‧ ؛"],
       "id": "multibyte_unchanged",
-      "note": "valid UTF-8 outside the escaped set, including ZWJ and U+2028, is written byte for byte",
+      "note": "valid UTF-8 outside the escaped set, including ZWJ, U+2027, NBSP and U+061B, is written byte for byte",
       "result": {
-        "log": ["<TIMESTAMP> - CMDPHP café 日本語 😀 👨‍👩‍👧   ؛"],
+        "log": ["<TIMESTAMP> - CMDPHP café 日本語 😀 👨‍👩‍👧 ‧ ؛"],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "args": ["a b"],
+      "id": "line_separator",
+      "note": "SECURITY: U+2028 LINE SEPARATOR is written as \\u2028 (#870)",
+      "result": {
+        "log": ["<TIMESTAMP> - CMDPHP a\\u2028b"],
+        "returned": {"type": "null", "value": null}
+      }
+    },
+    {
+      "args": ["a b"],
+      "id": "paragraph_separator",
+      "note": "SECURITY: U+2029 PARAGRAPH SEPARATOR is written as \\u2029 (#870)",
+      "result": {
+        "log": ["<TIMESTAMP> - CMDPHP a\\u2029b"],
         "returned": {"type": "null", "value": null}
       }
     },
@@ -313,6 +331,13 @@
       "ambient": {"settings": {"log_verbosity": "2"}},
       "args": ["m", false, "CMDPHP", 5],
       "id": "gate_low_level_debug",
+      "result": {"returned": {"type": "null", "value": null}}
+    },
+    {
+      "ambient": {"settings": {"log_verbosity": "2"}},
+      "args": ["m", false, ["x"], 5],
+      "id": "gate_array_environ",
+      "note": "a gated call returns before $environ is converted, so an array there raises no warning",
       "result": {"returned": {"type": "null", "value": null}}
     },
     {
