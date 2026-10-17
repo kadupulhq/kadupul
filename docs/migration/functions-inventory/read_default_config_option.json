@@ -3,8 +3,8 @@
     "name": "read_default_config_option",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 762,
-        "end_line": 779,
+        "start_line": 763,
+        "end_line": 780,
         "line_count": 18,
         "signature": {
             "parameters": [

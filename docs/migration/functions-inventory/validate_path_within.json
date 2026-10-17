@@ -3,8 +3,8 @@
     "name": "validate_path_within",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5235,
-        "end_line": 5250,
+        "start_line": 5199,
+        "end_line": 5214,
         "line_count": 16,
         "signature": {
             "parameters": [

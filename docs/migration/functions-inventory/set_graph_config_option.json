@@ -3,8 +3,8 @@
     "name": "set_graph_config_option",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 85,
-        "end_line": 88,
+        "start_line": 86,
+        "end_line": 89,
         "line_count": 4,
         "signature": {
             "parameters": [

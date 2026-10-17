@@ -3,8 +3,8 @@
     "name": "escape_page_action",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 9178,
-        "end_line": 9185,
+        "start_line": 9142,
+        "end_line": 9149,
         "line_count": 8,
         "signature": {
             "parameters": [

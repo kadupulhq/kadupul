@@ -3,8 +3,8 @@
     "name": "strip_alpha",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 2407,
-        "end_line": 2419,
+        "start_line": 2371,
+        "end_line": 2383,
         "line_count": 13,
         "signature": {
             "parameters": [

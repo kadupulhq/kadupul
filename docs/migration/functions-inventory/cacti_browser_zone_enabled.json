@@ -3,8 +3,8 @@
     "name": "cacti_browser_zone_enabled",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8555,
-        "end_line": 8570,
+        "start_line": 8519,
+        "end_line": 8534,
         "line_count": 16,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": false,

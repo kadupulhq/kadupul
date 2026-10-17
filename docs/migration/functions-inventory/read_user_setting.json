@@ -3,8 +3,8 @@
     "name": "read_user_setting",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 545,
-        "end_line": 622,
+        "start_line": 546,
+        "end_line": 623,
         "line_count": 78,
         "signature": {
             "parameters": [

@@ -25,7 +25,8 @@ function cactiLogControlProgram(array $case): string
 
     $functions = test_php_function_source($source, 'cacti_log') . "\n" . test_php_function_source($source, 'clean_up_lines');
 
-    $program = '$case = ' . var_export($case, true) . ';' . <<<'CODE'
+    $program = 'require ' . var_export(dirname(__DIR__, 4) . '/src/Platform/Infrastructure/Legacy/LegacyLogText.php', true) . ';';
+    $program .= '$case = ' . var_export($case, true) . ';' . <<<'CODE'
 $GLOBALS['warnings'] = [];
 set_error_handler(function ($level, $message) { $GLOBALS['warnings'][] = $message; return true; });
 define('POLLER_VERBOSITY_NONE', 1);

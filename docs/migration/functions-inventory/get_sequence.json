@@ -3,8 +3,8 @@
     "name": "get_sequence",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 4105,
-        "end_line": 4135,
+        "start_line": 4069,
+        "end_line": 4099,
         "line_count": 31,
         "signature": {
             "parameters": [

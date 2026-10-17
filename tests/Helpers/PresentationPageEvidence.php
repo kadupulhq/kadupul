@@ -32,6 +32,7 @@ final class PresentationPageEvidence
             'lib/graph_fonts.php', 'src/Graphing/Domain/Font/GraphFontMethod.php', 'src/Graphing/Domain/Font/GraphFont.php',
             'src/Graphing/Domain/Font/GraphFontProfile.php', 'src/Graphing/Domain/Font/GraphFontResolver.php',
             'src/Graphing/Infrastructure/Fontconfig/InstalledFontFamilies.php',
+            'src/Platform/Infrastructure/Legacy/LegacyLogText.php',
             // lib/functions.php reads and writes settings through these.
             'src/Platform/Infrastructure/Legacy/LegacySettingsStorage.php', 'src/Platform/Infrastructure/Legacy/LegacyLockRetry.php',
             'src/Platform/Infrastructure/Legacy/Dbal/LegacyDatabaseCall.php',

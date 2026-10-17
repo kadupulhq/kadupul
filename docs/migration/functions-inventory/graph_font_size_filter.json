@@ -3,8 +3,8 @@
     "name": "graph_font_size_filter",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 140,
-        "end_line": 145,
+        "start_line": 141,
+        "end_line": 146,
         "line_count": 6,
         "signature": {
             "parameters": [

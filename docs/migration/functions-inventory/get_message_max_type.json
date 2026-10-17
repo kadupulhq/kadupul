@@ -3,8 +3,8 @@
     "name": "get_message_max_type",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1253,
-        "end_line": 1276,
+        "start_line": 1254,
+        "end_line": 1277,
         "line_count": 24,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,

@@ -125,6 +125,7 @@ final class PresentationSinkContextEvidence
             'src/Platform/Infrastructure/Legacy/HostDataSubstitution.php',
             'src/Platform/Infrastructure/Legacy/LegacyReferenceWriteTransaction.php',
             'src/Platform/Infrastructure/Legacy/LegacyRequestContext.php',
+            'src/Platform/Infrastructure/Legacy/LegacyLogText.php',
             // lib/functions.php reads and writes settings through these.
             'src/Platform/Application/Port/ConfigurationSettings.php',
             'src/Platform/Application/Port/UserSettings.php',

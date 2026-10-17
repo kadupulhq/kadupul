@@ -3,8 +3,8 @@
     "name": "prepare_validate_result",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 2343,
-        "end_line": 2398,
+        "start_line": 2307,
+        "end_line": 2362,
         "line_count": 56,
         "signature": {
             "parameters": [

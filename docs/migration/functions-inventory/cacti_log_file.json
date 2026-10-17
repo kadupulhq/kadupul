@@ -3,8 +3,8 @@
     "name": "cacti_log_file",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1502,
-        "end_line": 1511,
+        "start_line": 1503,
+        "end_line": 1512,
         "line_count": 10,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,

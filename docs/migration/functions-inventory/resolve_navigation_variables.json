@@ -3,8 +3,8 @@
     "name": "resolve_navigation_variables",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 4556,
-        "end_line": 4571,
+        "start_line": 4520,
+        "end_line": 4535,
         "line_count": 16,
         "signature": {
             "parameters": [
