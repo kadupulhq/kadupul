@@ -650,7 +650,7 @@ msgstr "Jebkuru"
 #: lib/html_reports.php:1163 lib/html_reports.php:1167
 #: lib/html_reports.php:1175 lib/html_reports.php:1186
 #: lib/html_reports.php:1206 lib/html_reports.php:1462
-#: lib/html_reports.php:1467 lib/html_reports.php:1472 package_import.php:686
+#: lib/html_reports.php:1467 lib/html_reports.php:1472 package_import.php:687
 #: settings.php:591 settings.php:613 settings.php:644
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:62
 #: templates_import.php:298 templates_import.php:330 utilities.php:2099
@@ -1168,7 +1168,7 @@ msgstr "SNMP"
 #: lib/api_automation.php:53 lib/api_automation.php:280
 #: lib/api_automation.php:573 lib/api_automation.php:1199
 #: lib/html_reports.php:2031 lib/installer.php:2054 managers.php:216
-#: package_import.php:542 package_import.php:627 plugins.php:497
+#: package_import.php:543 package_import.php:628 plugins.php:497
 #: plugins.php:623 pollers.php:1007 templates_import.php:206
 #: templates_import.php:245 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:2141
@@ -2204,7 +2204,7 @@ msgid "Item"
 msgstr "Elements"
 
 #: automation_snmp.php:541 include/auth.php:341 include/global_settings.php:772
-#: package_import.php:504 permission_denied.php:43 plugins.php:641
+#: package_import.php:505 permission_denied.php:43 plugins.php:641
 msgid "Version"
 msgstr "Versija"
 
@@ -2389,7 +2389,7 @@ msgstr "Automatizācijas veidnes [jauna]"
 msgid "Device Automation Templates"
 msgstr "Ierīču automatizācijas veidnes"
 
-#: automation_templates.php:498 data_sources.php:2028 package_import.php:624
+#: automation_templates.php:498 data_sources.php:2028 package_import.php:625
 #: templates_import.php:242 user_admin.php:1212 user_group_admin.php:1231
 msgid "Template Name"
 msgstr "Veidnes nosaukums"
@@ -2893,7 +2893,7 @@ msgid "The Status of the Data Source Debug Check."
 msgstr "Datu avota atkļūdošanas pārbaudes statuss."
 
 #: data_debug.php:529 lib/installer.php:2508 lib/installer.php:2540
-#: package_import.php:596
+#: package_import.php:597
 msgid "Writable"
 msgstr "Rakstāms"
 
@@ -4034,8 +4034,8 @@ msgstr "Pielāgoti dati"
 msgid "Data Source Item %s"
 msgstr "Datu avota elements %s"
 
-#: data_sources.php:1267 data_templates.php:817 lib/import.php:2781
-#: package_import.php:598
+#: data_sources.php:1267 data_templates.php:817 lib/import.php:2799
+#: package_import.php:599
 msgid "New"
 msgstr "Jauns"
 
@@ -6508,7 +6508,7 @@ msgid "Data Input Field"
 msgstr "Datu ievades lauks"
 
 #: include/global_arrays.php:1363 include/global_form.php:579
-#: include/global_form.php:1679 package_import.php:862
+#: include/global_form.php:1679 package_import.php:863
 msgid "Data Source Profile"
 msgstr "Datu avota profils"
 
@@ -7890,7 +7890,7 @@ msgid "The script/source used to gather data for this data source."
 msgstr "Skripts/avots, kas tiek izmantots datu vākšanai šim datu avotam."
 
 #: include/global_form.php:581 include/global_form.php:1681
-#: package_import.php:864
+#: package_import.php:865
 msgid "Select the Data Source Profile.  The Data Source Profile controls polling interval, the data aggregation, and retention policy for the resulting Data Sources."
 msgstr "Atlasiet datu avota profilu. Datu avota profils kontrolē iegūto datu avotu aptaujas intervālu, datu apkopošanu un saglabāšanas politiku."
 
@@ -8642,27 +8642,27 @@ msgstr "Ievietot veidni no vietējās datnes"
 msgid "If the XML file containing template data is located on your local machine, select it here."
 msgstr "Ja XML fails, kurā ir veidnes dati, atrodas jūsu lokālajā datorā, atlasiet to šeit."
 
-#: include/global_form.php:1674 package_import.php:857
+#: include/global_form.php:1674 package_import.php:858
 msgid "Data Source Overrides"
 msgstr "Datu avotu profili"
 
-#: include/global_form.php:1683 package_import.php:866
+#: include/global_form.php:1683 package_import.php:867
 msgid "Create New from Template"
 msgstr "Izveidot jaunu no veidnes"
 
-#: include/global_form.php:1688 package_import.php:871
+#: include/global_form.php:1688 package_import.php:872
 msgid "Graph/Data Template Overrides"
 msgstr "Grafika veidnes opcijas"
 
-#: include/global_form.php:1693 package_import.php:876
+#: include/global_form.php:1693 package_import.php:877
 msgid "Remove Orphaned Graph Items"
 msgstr "Noņemiet bāreņu diagrammas vienumus"
 
-#: include/global_form.php:1695 package_import.php:878
+#: include/global_form.php:1695 package_import.php:879
 msgid "If checked, Kadupul will delete any Graph Items from both the Graph Template and associated Graphs that are not included in the imported Graph Template."
 msgstr "Ja šī izvēles rūtiņa ir atzīmēta, Kadupul izdzēsīs visus diagrammas vienumus gan no grafika veidnes, gan saistītajiem grafikiem, kas nav iekļauti importētajā grafika veidnē."
 
-#: include/global_form.php:1700 package_import.php:883
+#: include/global_form.php:1700 package_import.php:884
 msgid "Replace Data Query Suggested Value Patterns"
 msgstr "Aizstāt datu vaicājuma ieteiktos vērtību modeļus"
 
@@ -8671,29 +8671,29 @@ msgid "Replace Data Source and Graph Template Suggested Value Records for Data Q
 msgstr "Aizstāt datu avota un diagrammas veidnes ieteikto vērtību ierakstus datu vaicājumiem.  Grafiki un datu avoti iegūs jaunus nosaukumus pēc datu vaicājuma atkārtotas indeksēšanas vai izmantojot piespiedu ieteikto vērtību aizstāšanas procesu."
 
 #: include/global_form.php:1707 include/global_settings.php:673
-#: package_import.php:890
+#: package_import.php:891
 msgid "Graph Template Image Format"
 msgstr "Grafika veidnes attēla formāts"
 
-#: include/global_form.php:1708 package_import.php:891
+#: include/global_form.php:1708 package_import.php:892
 msgid "The Image Format to be used when importing or updating Graph Templates."
 msgstr "Noklusējuma attēla formāts, kas jāizmanto visām jaunajām diagrammu veidnēm."
 
 #: include/global_form.php:1714 include/global_settings.php:680
-#: package_import.php:898
+#: package_import.php:899
 msgid "Graph Template Height"
 msgstr "Grafika veidnes augstums"
 
-#: include/global_form.php:1715 package_import.php:899
+#: include/global_form.php:1715 package_import.php:900
 msgid "The Height to be used when importing or updating Graph Templates."
 msgstr "Noklusējuma diagrammas platums, kas tiks izmantots visām jaunajām diagrammu veidnēm."
 
 #: include/global_form.php:1722 include/global_settings.php:688
-#: package_import.php:907
+#: package_import.php:908
 msgid "Graph Template Width"
 msgstr "Grafika veidnes platums"
 
-#: include/global_form.php:1723 package_import.php:908
+#: include/global_form.php:1723 package_import.php:909
 msgid "The Width to be used when importing or updating Graph Templates."
 msgstr "Noklusējuma diagrammas platums, kas tiks izmantots visām jaunajām diagrammu veidnēm."
 
@@ -10890,7 +10890,7 @@ msgstr "LDAP CN iestatījumi"
 msgid "Field that will replace the Full Name when creating a new user, taken from LDAP. (on windows: displayname) "
 msgstr "Lauks, kas aizstās pilno vārdu, veidojot jaunu lietotāju, kas ņemts no LDAP. (logos: parādāmais nosaukums) "
 
-#: include/global_settings.php:1893 package_import.php:498
+#: include/global_settings.php:1893 package_import.php:499
 msgid "Email"
 msgstr "E-pasts"
 
@@ -11949,7 +11949,7 @@ msgstr "Atgūstas"
 #: lib/api_automation.php:33 lib/auth.php:3070 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:342 lib/plugins.php:1499
 #: lib/plugins.php:1500 lib/rrd.php:4209 lib/rrd.php:4221 lib/spikekill.php:301
-#: package_import.php:522 package_import.php:600 utilities.php:211
+#: package_import.php:523 package_import.php:601 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 msgid "Unknown"
 msgstr "Nezināms"
@@ -14112,7 +14112,7 @@ msgstr "Notikumi"
 msgid "Send Report"
 msgstr "Nosūtīt ziņojumu"
 
-#: lib/html_reports.php:1644 lib/import.php:2866 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:2884 user_admin.php:1776
 msgid "[new]"
 msgstr "[jauns]"
 
@@ -14351,105 +14351,109 @@ msgstr "Validācijas kļūda mainīgajam %s ar vērtību %s. Lai iegūtu sīkāk
 msgid "Validation Error"
 msgstr "Validācijas kļūda"
 
-#: lib/import.php:651
+#: lib/import.php:655 lib/import.php:674
 msgid "written"
 msgstr "rakstīts"
 
-#: lib/import.php:653
+#: lib/import.php:657
+msgid "not written"
+msgstr ""
+
+#: lib/import.php:660
 msgid "could not open"
 msgstr "nevarēja atvērt"
 
-#: lib/import.php:659
+#: lib/import.php:666
 msgid "not exists"
 msgstr "neeksistē"
 
-#: lib/import.php:662
+#: lib/import.php:669
 msgid "not writable"
 msgstr "nav rakstāms"
 
-#: lib/import.php:1879 lib/import.php:1900
+#: lib/import.php:1897 lib/import.php:1918
 #, php-format
 msgid "New Graph Template: %s"
 msgstr ", Diagrammas veidne: %s"
 
-#: lib/import.php:1914 lib/import.php:1926
+#: lib/import.php:1932 lib/import.php:1944
 #, php-format
 msgid "New Data Query: %s"
 msgstr "Datu vaicājums [%s]"
 
-#: lib/import.php:2563
+#: lib/import.php:2581
 msgid "Unknown Field"
 msgstr "Nezināms lauks"
 
-#: lib/import.php:2779
+#: lib/import.php:2797
 msgid "Updated"
 msgstr "Atjaunināts (veiktas izmaiņas)"
 
-#: lib/import.php:2783
+#: lib/import.php:2801
 msgid "Damaged"
 msgstr "Bojāts grafiks"
 
-#: lib/import.php:2785 package_import.php:592
+#: lib/import.php:2803 package_import.php:593
 msgid "Unchanged"
 msgstr "Bez izmaiņām"
 
-#: lib/import.php:2821
+#: lib/import.php:2839
 msgid "Import Preview Results"
 msgstr "Ievietot priekšskatījuma rezultātus"
 
-#: lib/import.php:2821
+#: lib/import.php:2839
 msgid "Import Results"
 msgstr "Ievietot rezultātus"
 
-#: lib/import.php:2825
+#: lib/import.php:2843
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Ja pakotne tiktu importēta, Kadupul veiktu šādas izmaiņas:"
 
-#: lib/import.php:2827
+#: lib/import.php:2845
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "Kadupul pakotnei ir importējis šādas preces:"
 
-#: lib/import.php:2830
+#: lib/import.php:2848
 msgid "Package Files"
 msgstr "Pakešu faili"
 
-#: lib/import.php:2834
+#: lib/import.php:2852
 msgid "[preview] "
 msgstr "[priekšskatījums] "
 
-#: lib/import.php:2839
+#: lib/import.php:2857
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "Ja veidne tiktu importēta, Kadupul veiktu šādas izmaiņas:"
 
-#: lib/import.php:2841
+#: lib/import.php:2859
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "Kadupul ir importējis šādus vienumus veidnei:"
 
-#: lib/import.php:2856
+#: lib/import.php:2874
 msgid "[success]"
 msgstr "[panākumi]"
 
-#: lib/import.php:2858
+#: lib/import.php:2876
 msgid "[fail]"
 msgstr "[neizdevās]"
 
-#: lib/import.php:2860
+#: lib/import.php:2878
 msgid "[preview]"
 msgstr "[priekšskatījums]"
 
-#: lib/import.php:2864
+#: lib/import.php:2882
 msgid "[updated]"
 msgstr "[atjaunināts]"
 
-#: lib/import.php:2868
+#: lib/import.php:2886
 msgid "[unchanged]"
 msgstr "[nemainīts]"
 
-#: lib/import.php:2904
+#: lib/import.php:2922
 msgid "Found Dependency:"
 msgstr "Atrastā atkarība:"
 
-#: lib/import.php:2906
+#: lib/import.php:2924
 msgid "Unmet Dependency:"
 msgstr "Neapmierinātā atkarība:"
 
@@ -14950,7 +14954,7 @@ msgstr "Attālajiem aptaujātājiem ir ļoti svarīgi, lai ceļiem, kurus jūs b
 msgid "Required Writable at Install Time Only"
 msgstr "Nepieciešams rakstīt tikai instalēšanas laikā"
 
-#: lib/installer.php:2512 lib/installer.php:2544 package_import.php:594
+#: lib/installer.php:2512 lib/installer.php:2544 package_import.php:595
 msgid "Not Writable"
 msgstr "Nav Rakstāms"
 
@@ -15114,11 +15118,11 @@ msgstr "Nav ieteicams atjaunināt veidnes, kurās jau esat veicis izmaiņas. Vei
 msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "Lūdzu, atlasiet ierīces veidnes, kuras vēlaties izmantot pēc instalēšanas. Ja jūsu operētājsistēma ir Windows, jums ir jāatlasa veidne \"Windows ierīce\". Ja jūsu operētājsistēma ir Linux/UNIX, noteikti atlasiet ierīces veidni Vietējā Linux mašīna."
 
-#: lib/installer.php:2749 package_import.php:492 plugins.php:629
+#: lib/installer.php:2749 package_import.php:493 plugins.php:629
 msgid "Author"
 msgstr "Autors"
 
-#: lib/installer.php:2749 package_import.php:495
+#: lib/installer.php:2749 package_import.php:496
 msgid "Homepage"
 msgstr "Mājas lapa"
 
@@ -16866,123 +16870,123 @@ msgstr "Jūs neesat uzticējies šim pakotnes autoram.  Ja vēlaties importēt, 
 msgid "The Package %s Imported Successfully"
 msgstr "%s pakotne veiksmīgi importēta"
 
-#: package_import.php:209
+#: package_import.php:214
 #, php-format
 msgid "The Package %s Import Failed"
 msgstr "Neizdevās ievietot %s pakotni"
 
-#: package_import.php:306
+#: package_import.php:307
 #, fuzzy
 msgid "Error: Invalid file path."
 msgstr "Ievadiet derīgu faila ceļu"
 
-#: package_import.php:389 package_import.php:395 package_import.php:451
-#: package_import.php:454
+#: package_import.php:390 package_import.php:396 package_import.php:452
+#: package_import.php:455
 msgid "Error in Package"
 msgstr "Kļūda pakotnē"
 
-#: package_import.php:389
+#: package_import.php:390
 msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available."
 msgstr "Plašāku informāciju skati cacti.log.  Iespējams, ka radās API atslēgas kļūda vai pakotne tika pielāgota, vai arī atrašanās vieta nav pieejama."
 
-#: package_import.php:389
+#: package_import.php:390
 #, php-format
 msgid "The package \"%s\" download or validation failed"
 msgstr "Pakotnes \"%s\" lejupielāde vai validācija neizdevās"
 
-#: package_import.php:395
+#: package_import.php:396
 msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available"
 msgstr "Plašāku informāciju skati cacti.log.  Var gadīties, ka radās API atslēgas kļūda vai pakotne tika pielāgota, vai arī atrašanās vieta nav pieejama"
 
-#: package_import.php:395
+#: package_import.php:396
 msgid "The package download or validation failed"
 msgstr "Pakotnes lejupielāde vai validācija neizdevās"
 
-#: package_import.php:451
+#: package_import.php:452
 msgid "Package XML File Damaged."
 msgstr "Pakotnes XML fails bojāts."
 
-#: package_import.php:451
+#: package_import.php:452
 msgid "The XML files appears to be invalid.  Please contact the package author"
 msgstr "XML faili šķiet nederīgi.  Lūdzu, sazinieties ar pakotnes autoru"
 
-#: package_import.php:454
+#: package_import.php:455
 msgid "Check the package repository file for files that should exist and find the one that is missing"
 msgstr "Pārbaudiet, vai pakotņu repozitorija failā nav failu, kuriem vajadzētu pastāvēt, un atrodiet trūkstošo failu"
 
-#: package_import.php:454
+#: package_import.php:455
 msgid "The XML files for the package does not exist"
 msgstr "Pakotnes XML faili neeksistē"
 
-#: package_import.php:488
+#: package_import.php:489
 msgid "Packages Details"
 msgstr "Pakotnes sīkāka informācija"
 
-#: package_import.php:501
+#: package_import.php:502
 msgid "Device class"
 msgstr "Ierīces klase"
 
-#: package_import.php:507
+#: package_import.php:508
 msgid "Copyright"
 msgstr "Autortiesības"
 
-#: package_import.php:532
+#: package_import.php:533
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
 msgstr "Importēt pakotnes failu nosaukumus [ Importē visus, ja neviens nav atlasīts. Importē atlasītos, ja ir izvēlēti. ]"
 
-#: package_import.php:536
+#: package_import.php:537
 msgid "Package"
 msgstr "Pakotne"
 
-#: package_import.php:539
+#: package_import.php:540
 msgid "Filename"
 msgstr "Faila nosaukums"
 
-#: package_import.php:590 package_import.php:677 templates_import.php:321
+#: package_import.php:591 package_import.php:678 templates_import.php:321
 msgid "Differences"
 msgstr "Atšķirības"
 
-#: package_import.php:617
+#: package_import.php:618
 msgid "Import Package Templates [ None selected imports all, Check to import selectively ]"
 msgstr "Importēt pakotnes veidnes [ Importē visas, ja neviena nav atlasīta. Importē atlasītās, ja ir izvēlētas. ]"
 
-#: package_import.php:621 templates_import.php:239
+#: package_import.php:622 templates_import.php:239
 msgid "Template Type"
 msgstr "Veidnes tips"
 
-#: package_import.php:630 templates_import.php:251
+#: package_import.php:631 templates_import.php:251
 msgid "Changes/Diffferences"
 msgstr "Izmaiņas/atšķirības"
 
-#: package_import.php:681 templates_import.php:325
+#: package_import.php:682 templates_import.php:325
 msgid "Orphans"
 msgstr "Bāreņi"
 
-#: package_import.php:734
+#: package_import.php:735
 msgid "File Differences for: "
 msgstr "Failu atšķirības: "
 
-#: package_import.php:841
+#: package_import.php:842
 msgid "Local Package Import File"
 msgstr "Vietējās pakotnes ievietošanas datne"
 
-#: package_import.php:842
+#: package_import.php:843
 msgid "The *.xml.gz file located on your Local machine to Upload and Import."
 msgstr "*.xml.gz datne, kas atrodas uz jūsu datora, ko augšupielādēt un ievietot."
 
-#: package_import.php:847
+#: package_import.php:848
 msgid "Automatically Trust Signer"
 msgstr "Automātiski pievienot kaktusiem"
 
-#: package_import.php:849
+#: package_import.php:850
 msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
 msgstr "Ja šī opcija ir atzīmēta, Kadupul automātiski uzticēs parakstītājam šo un visas turpmākās šī autora pakotnes."
 
-#: package_import.php:885
+#: package_import.php:886
 msgid "Replace Data Source and Graph Template Suggested Value Records.  Graphs and Data Sources will take on new names after either a Data Query Reindex or by using the forced Replace Suggested Values process."
 msgstr "Aizstāt datu avota un diagrammas veidnes ieteicamās vērtības ierakstus.  Grafiki un datu avoti iegūs jaunus nosaukumus pēc datu vaicājuma atkārtotas indeksēšanas vai izmantojot piespiedu ieteikto vērtību aizstāšanas procesu."
 
-#: package_import.php:956
+#: package_import.php:957
 msgid "Package Import"
 msgstr "Pakotnes ievietošana"
 
