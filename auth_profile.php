@@ -366,7 +366,7 @@ function form_save() {
 		api_plugin_hook('auth_profile_save');
 	}
 
-	if (cacti_sizeof($errors) == 0) {
+	if (cacti_sizeof($errors) == 0 && !is_error_message()) {
 		raise_message(1);
 	} else {
 		raise_message(35);

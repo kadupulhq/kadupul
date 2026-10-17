@@ -159,7 +159,7 @@ test('a user without graph_settings still edits their name and email as before',
 		->and(profile_setting_update('email_address', 'alice@example.com', false))->toBe(array(array('alice@example.com', 42)));
 });
 
-function profile_form_save(array $request) : array {
+function profile_form_save(array $request, $session_user = 42) : array {
 	$profile   = file_get_contents(dirname(__DIR__, 4) . '/auth_profile.php');
 	$functions = file_get_contents(dirname(__DIR__, 4) . '/lib/functions.php');
 	$source    = profile_setting_prelude();
@@ -167,6 +167,10 @@ function profile_form_save(array $request) : array {
 	$source .= <<<'PHP'
 $GLOBALS['saved']    = array();
 $GLOBALS['messages'] = array();
+$_SESSION['sess_user_id'] = $scenario['session_user'];
+
+function cacti_log($message, $output = false, $facility = '') {
+}
 
 function isset_request_var($name) {
 	return isset($GLOBALS['scenario']['request'][$name]);
@@ -198,14 +202,14 @@ PHP;
 		$source .= cacti_test_function_source($profile, $function) . "\n\n";
 	}
 
-	foreach (array('settings_user_id_is_valid', 'save_user_settings') as $function) {
+	foreach (array('settings_user_id_is_valid', 'save_user_settings', 'is_error_message') as $function) {
 		$source .= cacti_test_function_source($functions, $function) . "\n\n";
 	}
 
 	$source .= "form_save();\n";
 	$source .= "print json_encode(array('saved' => \$GLOBALS['saved'], 'messages' => \$GLOBALS['messages'], 'error_fields' => array_keys(\$_SESSION['sess_error_fields'] ?? array())));\n";
 
-	return cacti_test_run_php_source($source, array('request' => array('tab' => 'general') + $request, 'graph_settings' => true));
+	return cacti_test_run_php_source($source, array('request' => array('tab' => 'general') + $request, 'graph_settings' => true, 'session_user' => $session_user));
 }
 
 $validForm = array(
@@ -234,6 +238,15 @@ test('the settings form saves the drop-down values it offers as before', functio
 	))
 		->and($result['messages'])->toBe(array(1))
 		->and($result['error_fields'])->toBe(array());
+});
+
+test('the settings form reports a session user id settings_user cannot hold as a save failure', function () use ($validForm) {
+	/* user_auth.id is mediumint unsigned and settings_user.user_id is smallint unsigned */
+	$result = profile_form_save($validForm, 70000);
+
+	expect($result['saved'])->toBe(array())
+		->and($result['error_fields'])->toBe(array('id'))
+		->and($result['messages'])->toBe(array(35));
 });
 
 test('the settings form drops a drop-down value it could not submit and saves the rest', function () use ($validForm) {
