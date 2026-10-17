@@ -219,14 +219,54 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
                         $hash_cache += xml_to_graph_template($dep_hash_cache[$type][$i]['hash'], $hash_array, $hash_cache, $dep_hash_cache[$type][$i]['version'], $remove_orphans);
                         break;
                     case 'data_template':
-                        $hash_cache += xml_to_data_template($dep_hash_cache[$type][$i]['hash'], $hash_array, $hash_cache, $import_as_new, $profile_id);
+                        $transaction_started = $preview_only ? false : db_begin_transaction();
+
+                        if (!$preview_only && !$transaction_started) {
+                            return false;
+                        }
+
+                        $cache_add = xml_to_data_template($dep_hash_cache[$type][$i]['hash'], $hash_array, $hash_cache, $import_as_new, $profile_id);
+
+                        if ($cache_add === false) {
+                            if ($transaction_started) {
+                                db_rollback_transaction();
+                            }
+
+                            return false;
+                        }
+
+                        if ($transaction_started) {
+                            db_commit_transaction();
+                        }
+
+                        $hash_cache += $cache_add;
                         $repair++;
                         break;
                     case 'host_template':
                         $hash_cache += xml_to_host_template($dep_hash_cache[$type][$i]['hash'], $hash_array, $hash_cache, $host_template_data, $class);
                         break;
                     case 'data_input_method':
-                        $hash_cache += xml_to_data_input_method($dep_hash_cache[$type][$i]['hash'], $hash_array, $hash_cache);
+                        $transaction_started = $preview_only ? false : db_begin_transaction();
+
+                        if (!$preview_only && !$transaction_started) {
+                            return false;
+                        }
+
+                        $cache_add = xml_to_data_input_method($dep_hash_cache[$type][$i]['hash'], $hash_array, $hash_cache);
+
+                        if ($cache_add === false) {
+                            if ($transaction_started) {
+                                db_rollback_transaction();
+                            }
+
+                            return false;
+                        }
+
+                        if ($transaction_started) {
+                            db_commit_transaction();
+                        }
+
+                        $hash_cache += $cache_add;
                         $repair++;
                         break;
                     case 'data_query':
