@@ -21,6 +21,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Make the worker database test barrier wait for a complete decision, preventing a partially written file from turning an injected query failure into success.
 - Restore 36 silently omitted legacy regression suites to the required Pest runner and verify each registered file against recorded ordinary and privileged execution.
 - Save the Primary Admin setting only as a user id, and build the Guest User and User Template exclusion lists from integer ids, so a stored or session-cached value can no longer change those queries (#754).
+- Remove bare and timed RRDtool success trailers on Windows without deleting preceding graph or fetch payload bytes (#781).
 
 - Update the native CI scanner to Semgrep 1.179.0 and hash-locked PyJWT 2.15.1, removing vulnerable scanner dependencies while preserving the existing scan policy.
 

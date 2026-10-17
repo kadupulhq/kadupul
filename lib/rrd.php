@@ -1377,8 +1377,11 @@ function rrdtool_trim_output(&$output)
      * output.
      */
     if ($config['cacti_server_os'] == 'win32') {
-        $output = rtrim($output, "OK \n\r");
-        $okpos  = strlen($output);
+        // Remove the final protocol trailer without trimming binary payload bytes.
+        $okpos = strrpos($output, 'OK');
+        if ($okpos !== false && preg_match('/\AOK(?: u:[^\r\n]*)?\r?\n\z/', substr($output, $okpos)) === 1) {
+            $output = substr($output, 0, $okpos);
+        }
     } else {
         $okpos = strrpos($output, 'OK u:');
         if ($okpos !== false) {
