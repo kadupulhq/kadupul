@@ -14914,6 +14914,10 @@ msgstr ""
 msgid "could not open"
 msgstr ""
 
+#: lib/import.php:771
+msgid "not written"
+msgstr ""
+
 #: lib/import.php:773
 msgid "not exists"
 msgstr ""
