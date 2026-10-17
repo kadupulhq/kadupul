@@ -158,18 +158,27 @@ if ($config['cacti_server_os'] == 'win32') {
     unset($mail_methods[CACTI_MAIL_SENDMAIL]);
 }
 
-/* cache the admin account */
+/* cache the admin account.  The list is concatenated into the NOT IN clauses
+ * below, so it may only hold integer ids.  A session cached by an earlier
+ * release holds a quoted value and is rebuilt. */
 $admin_account = '0';
 
-if (isset($_SESSION['admin_account']) && isset($_SESSION['sess_user_id'])) {
-    $admin_account = $_SESSION['admin_account'];
-} elseif (isset($_SESSION['sess_user_id'])) {
-    $admin_account = db_fetch_cell('SELECT value FROM settings WHERE name="admin_user"');
-
-    if (!empty($admin_account)) {
-        $_SESSION['admin_account'] = db_qstr($admin_account) . ', ' . $_SESSION['sess_user_id'];
+if (isset($_SESSION['sess_user_id'])) {
+    if (isset($_SESSION['admin_account']) && preg_match('/^[0-9]+(, [0-9]+)*$/D', (string) $_SESSION['admin_account'])) {
+        $admin_account = $_SESSION['admin_account'];
     } else {
-        $_SESSION['admin_account'] = $_SESSION['sess_user_id'];
+        $admin_setting = (string) db_fetch_cell('SELECT value FROM settings WHERE name="admin_user"');
+        $admin_ids     = array();
+
+        if (ctype_digit($admin_setting) && (int) $admin_setting > 0) {
+            $admin_ids[] = (int) $admin_setting;
+        }
+
+        $admin_ids[] = (int) $_SESSION['sess_user_id'];
+
+        $admin_account = implode(', ', $admin_ids);
+
+        $_SESSION['admin_account'] = $admin_account;
     }
 }
 
@@ -1549,6 +1558,8 @@ $settings = array(
             'method' => 'drop_sql',
             'none_value' => __('No User'),
             'sql' => 'SELECT id AS id, username AS name FROM user_auth WHERE realm = 0 ORDER BY username',
+            'filter' => FILTER_VALIDATE_REGEXP,
+            'options' => array('options' => array('regexp' => '/^[0-9]{0,10}$/D')),
             'default' => '1'
         ),
         'guest_user' => array(
