@@ -25,6 +25,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Reject RRDtool fetch errors before parsing data-source headers, preventing failed reads from appearing as zero-valued statistics (#776).
 - Use the matched archive index from the RRD file in resize recommendations when its archive order differs from the data source profile (#780).
 - Check each group's own tree exceptions, and only tree exceptions, when a tree is opened by id, so `is_tree_allowed()` allows exactly the trees that `get_allowed_trees()` lists (#755).
+- Fail a package import when a script or resource file cannot be opened, is not writable or is only partly written, keep the uploaded package for a retry, and exit 1 from `cli/import_package.php` (#765).
 
 - Update the native CI scanner to Semgrep 1.179.0 and hash-locked PyJWT 2.15.1, removing vulnerable scanner dependencies while preserving the existing scan policy.
 
