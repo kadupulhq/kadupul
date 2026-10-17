@@ -215,7 +215,7 @@ case 'save':
 					array($field_name));
 			}
 		} elseif (isset_request_var($field_name)) {
-			if ($field_array['method'] == 'textbox' && isset($field_array['filter'])) {
+			if (($field_array['method'] == 'textbox' || $field_array['method'] == 'drop_sql') && isset($field_array['filter'])) {
 				if (isset($field_array['options'])) {
 					$value = filter_var(get_nfilter_request_var($field_name), $field_array['filter'], $field_array['options']);
 				} else {
