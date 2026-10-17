@@ -91,6 +91,11 @@ function db_install_execute($sql, $params = array(), $log = true) {
 	return true;
 }
 
+/* settings_user.user_id as cacti.sql defines it, so the widening is skipped */
+function db_install_fetch_cell($sql, $params = array(), $log = true) {
+	return array('status' => 3, 'data' => 'mediumint');
+}
+
 function db_table_exists($table, $log = true, $db_conn = false) {
 	return true;
 }

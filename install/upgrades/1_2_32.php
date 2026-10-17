@@ -63,4 +63,18 @@ function upgrade_to_1_2_32() {
 		PRIMARY KEY (`id`),
 		KEY `window_start` (`window_start`))
 		ENGINE=InnoDB ROW_FORMAT=Dynamic COMMENT='Login attempt counts for optional login throttling'");
+
+	/* settings_user.user_id must hold every user_auth.id. As smallint, an id
+	 * above 65535 is stored as 65535, so that account shares user 65535's
+	 * settings and session counter. A failed read is recorded as an error, so
+	 * the version is not advanced and the next upgrade tries again. */
+	$user_id_type = db_install_fetch_cell("SELECT DATA_TYPE
+		FROM information_schema.COLUMNS
+		WHERE TABLE_SCHEMA = SCHEMA()
+		AND TABLE_NAME = 'settings_user'
+		AND COLUMN_NAME = 'user_id'", array(), false);
+
+	if (strtolower((string) $user_id_type['data']) == 'smallint') {
+		db_install_execute("ALTER TABLE settings_user MODIFY user_id mediumint(8) unsigned NOT NULL default '0'");
+	}
 }

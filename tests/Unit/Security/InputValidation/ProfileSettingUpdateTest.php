@@ -240,9 +240,18 @@ test('the settings form saves the drop-down values it offers as before', functio
 		->and($result['error_fields'])->toBe(array());
 });
 
-test('the settings form reports a session user id settings_user cannot hold as a save failure', function () use ($validForm) {
-	/* user_auth.id is mediumint unsigned and settings_user.user_id is smallint unsigned */
+test('the settings form saves for a session user id above the old smallint column', function () use ($validForm) {
 	$result = profile_form_save($validForm, 70000);
+
+	expect($result['saved']['selected_theme'])->toBe(array('classic', 70000))
+		->and($result['saved']['default_tree_id'])->toBe(array('4', 70000))
+		->and($result['messages'])->toBe(array(1))
+		->and($result['error_fields'])->toBe(array());
+});
+
+test('the settings form reports a session user id settings_user cannot hold as a save failure', function () use ($validForm) {
+	/* settings_user.user_id is mediumint unsigned, as user_auth.id is */
+	$result = profile_form_save($validForm, 16777216);
 
 	expect($result['saved'])->toBe(array())
 		->and($result['error_fields'])->toBe(array('id'))
