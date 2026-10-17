@@ -98,6 +98,7 @@
       <file>Unit/Security/Misc/HelpPageErrorNotificationTest.php</file>
       <file>Unit/Security/Auth/ItemActionMutationCsrfTest.php</file>
       <file>Unit/Security/AdminAccountListTest.php</file>
+      <file>Unit/Security/Auth/TreeGroupExceptionParityTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>
