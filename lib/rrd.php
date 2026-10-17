@@ -2054,7 +2054,7 @@ function rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolut
     }
 
     $output = rrdtool_execute($cmd_line, false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe);
-    if (!is_string($output) || trim($output) === '') {
+    if (!is_string($output) || trim($output) === '' || str_starts_with(ltrim($output), 'ERROR:')) {
         return array();
     }
     $output = explode("\n", $output);
