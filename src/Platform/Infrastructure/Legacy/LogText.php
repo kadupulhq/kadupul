@@ -10,9 +10,8 @@ declare(strict_types=1);
 namespace Kadupul\Platform\Infrastructure\Legacy;
 
 /**
- * The control-character rule of cacti.log and syslog lines. lib/functions.php
- * requires this file before Composer loads, so it must stay free of
- * dependencies and globals.
+ * The control-character rule of cacti.log and syslog lines. It uses no
+ * dependencies or globals, so it can be loaded without the container.
  *
  * lib/functions.php keeps its own copy of this rule in cacti_log();
  * tests/Symfony/LogTextDriftTest.php fails if the two differ.
