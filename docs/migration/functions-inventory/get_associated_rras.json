@@ -3,8 +3,8 @@
     "name": "get_associated_rras",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 4541,
-        "end_line": 4568,
+        "start_line": 4583,
+        "end_line": 4610,
         "line_count": 28,
         "signature": {
             "parameters": [

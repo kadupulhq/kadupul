@@ -3,8 +3,8 @@
     "name": "update_host_status",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1930,
-        "end_line": 2164,
+        "start_line": 1972,
+        "end_line": 2206,
         "line_count": 235,
         "signature": {
             "parameters": [

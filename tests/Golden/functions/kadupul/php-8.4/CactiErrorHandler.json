@@ -226,10 +226,7 @@
       "id": "message_nul_esc",
       "result": {
         "log": [
-          {
-            "$": "bytes",
-            "hex": "3c54494d455354414d503e202d204552524f5220504850205741524e494e473a206100621b5b33316d20696e2066696c653a203c4150503e2f6c69622f6578616d706c652e70687020206f6e206c696e653a2031"
-          },
+          "<TIMESTAMP> - ERROR PHP WARNING: a\\x00b\\x1b[31m in file: <APP>/lib/example.php  on line: 1",
           "<TIMESTAMP> - CMDPHP PHP ERROR WARNING Backtrace:  (<harness frames: 3>, <HARNESS>/function_capture.php[<LINE>]:CactiErrorHandler())"
         ],
         "returned": {"type": "bool", "value": false}

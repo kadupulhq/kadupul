@@ -3,8 +3,8 @@
     "name": "move_item_down",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 4102,
-        "end_line": 4133,
+        "start_line": 4144,
+        "end_line": 4175,
         "line_count": 32,
         "signature": {
             "parameters": [

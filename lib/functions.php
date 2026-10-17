@@ -1572,6 +1572,44 @@ function cacti_log($string, $output = false, $environ = 'CMDPHP', $level = '')
     if (defined('KADUPUL_REDACT_DATABASE_LOGS') && KADUPUL_REDACT_DATABASE_LOGS && $environ === 'DBCALL') {
         $string = 'Database diagnostic omitted during sensitive device creation';
     }
+
+    /* Byte oriented so invalid UTF-8 can never make the match fail and drop
+       the line. CR and LF become spaces; other controls are made visible.
+       If PCRE fails anyway, CR and LF still become spaces. */
+    static $neutralize = null;
+
+    if ($neutralize === null) {
+        $neutralize = static function ($text) {
+            $controls = '/[\x00-\x08\x0a-\x1f\x7f]|\xc2[\x80-\x9f]|\xd8\x9c|\xe2\x80[\x8e\x8f\xa8-\xae]|\xe2\x81[\xa6-\xa9]/';
+
+            $found = preg_match($controls, $text);
+
+            if ($found === 0) {
+                return str_replace(["\r", "\n"], ' ', $text);
+            }
+
+            $clean = $found === false ? null : preg_replace_callback($controls, static function ($match) {
+                $bytes = $match[0];
+
+                if ($bytes == "\r" || $bytes == "\n") {
+                    return ' ';
+                }
+
+                if (strlen($bytes) == 1) {
+                    return sprintf('\x%02x', ord($bytes));
+                }
+
+                if (strlen($bytes) == 2) {
+                    return sprintf('\u%04x', ((ord($bytes[0]) & 0x1f) << 6) | (ord($bytes[1]) & 0x3f));
+                }
+
+                return sprintf('\u%04x', ((ord($bytes[0]) & 0x0f) << 12) | ((ord($bytes[1]) & 0x3f) << 6) | (ord($bytes[2]) & 0x3f));
+            }, $text);
+
+            return $clean === null ? str_replace(["\r", "\n"], ' ', $text) : $clean;
+        };
+    }
+
     global $config, $database_log;
 
     static $start = null;
@@ -1612,6 +1650,8 @@ function cacti_log($string, $output = false, $environ = 'CMDPHP', $level = '')
         }
     }
 
+    $environ = $neutralize((string) $environ);
+
     cacti_system_zone_set();
 
     /* fill in the current date for printing in the log */
@@ -1643,7 +1683,7 @@ function cacti_log($string, $output = false, $environ = 'CMDPHP', $level = '')
     }
 
     /* Log to Logfile */
-    $message = clean_up_lines($string) . PHP_EOL;
+    $message = $neutralize((string) clean_up_lines($string)) . PHP_EOL;
 
     if ($output) {
         $omessage = $oprefix . $message;
@@ -1681,12 +1721,14 @@ function cacti_log($string, $output = false, $environ = 'CMDPHP', $level = '')
                 openlog('Cacti', LOG_NDELAY | LOG_PID, LOG_SYSLOG);
             }
 
+            $syslog_message = $environ . ': ' . $neutralize($string);
+
             if ($log_type == 'err' && read_config_option('log_perror')) {
-                syslog(LOG_CRIT, $environ . ': ' . $string);
+                syslog(LOG_CRIT, $syslog_message);
             } elseif ($log_type == 'warn' && read_config_option('log_pwarn')) {
-                syslog(LOG_WARNING, $environ . ': ' . $string);
+                syslog(LOG_WARNING, $syslog_message);
             } elseif (($log_type == 'stat' || $log_type == 'note') && read_config_option('log_pstats')) {
-                syslog(LOG_INFO, $environ . ': ' . $string);
+                syslog(LOG_INFO, $syslog_message);
             }
 
             closelog();
