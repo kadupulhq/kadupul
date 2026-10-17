@@ -3,8 +3,8 @@
     "name": "build_where_from_array",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 3981,
-        "end_line": 4004,
+        "start_line": 3982,
+        "end_line": 4005,
         "line_count": 24,
         "signature": {
             "parameters": [

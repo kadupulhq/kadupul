@@ -3,8 +3,8 @@
     "name": "config_value_exists",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 740,
-        "end_line": 753,
+        "start_line": 741,
+        "end_line": 754,
         "line_count": 14,
         "signature": {
             "parameters": [

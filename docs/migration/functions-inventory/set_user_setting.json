@@ -3,8 +3,8 @@
     "name": "set_user_setting",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 410,
-        "end_line": 443,
+        "start_line": 411,
+        "end_line": 444,
         "line_count": 34,
         "signature": {
             "parameters": [
@@ -40,7 +40,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 28, "core_outside_functions_php": 19, "tests": 21, "plugins": 0},
+        "fan_out": {"core": 28, "core_outside_functions_php": 19, "tests": 22, "plugins": 0},
         "body": {
             "uses_global": ["settings_user"],
             "static_variables": [],

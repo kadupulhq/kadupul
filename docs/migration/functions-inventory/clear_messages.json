@@ -3,8 +3,8 @@
     "name": "clear_messages",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1409,
-        "end_line": 1428,
+        "start_line": 1410,
+        "end_line": 1429,
         "line_count": 20,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,

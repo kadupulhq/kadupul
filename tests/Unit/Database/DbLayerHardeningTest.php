@@ -162,7 +162,42 @@ if (!defined('POLLER_VERBOSITY_MEDIUM')) {
     define('POLLER_VERBOSITY_MEDIUM', 3);
 }
 
-foreach (['user_setting_exists', 'get_graph_group', 'build_where_from_array', 'get_item', 'set_config_option', 'user_setting_value_allowed', 'set_user_setting', 'save_user_settings', 'clear_user_setting', 'read_default_user_setting', 'read_user_setting'] as $function) {
+// Values from include/global_constants.php, for the loaded raise_message().
+foreach (['MESSAGE_LEVEL_NONE' => 0, 'MESSAGE_LEVEL_INFO' => 1, 'MESSAGE_LEVEL_ERROR' => 3] as $constant => $level) {
+    if (!defined($constant)) {
+        define($constant, $level);
+    }
+}
+
+function get_request_var($name)
+{
+    return $GLOBALS['production_function_request'][$name] ?? '';
+}
+
+function get_filter_request_var($name)
+{
+    return get_request_var($name);
+}
+
+function kill_session_var($name): void
+{
+    unset($_SESSION[$name]);
+}
+
+function reset_user_perms($user): void {}
+
+function header($line): void
+{
+    $GLOBALS['production_function_headers'][] = $line;
+}
+
+// form_save() of user_admin.php, renamed so it cannot collide with another page's form_save().
+eval('namespace Kadupul\\Tests\\ProductionFunctions; ' . preg_replace('/^function form_save\(/', 'function user_admin_form_save(', test_php_function_source(file_get_contents(dirname(__DIR__, 3) . '/user_admin.php'), 'form_save'), 1, $renamed));
+if ($renamed !== 1) {
+    throw new \RuntimeException('user_admin.php form_save() was not found');
+}
+
+foreach (['user_setting_exists', 'get_graph_group', 'build_where_from_array', 'get_item', 'set_config_option', 'user_setting_value_allowed', 'set_user_setting', 'save_user_settings', 'clear_user_setting', 'read_default_user_setting', 'read_user_setting', 'is_error_message', 'raise_message', 'get_message_level'] as $function) {
     load_production_function($function);
 }
 
@@ -368,6 +403,8 @@ function invalid_user_ids(): array
             expect($GLOBALS['production_function_db_calls'])->toHaveCount(1);
             expect($GLOBALS['production_function_db_calls'][0][1])->toBe([$stored, 'pref', 'v']);
             expect($GLOBALS['production_function_log_calls'])->toBe([]);
+            expect($_SESSION)->not->toHaveKey('sess_error_fields');
+            expect(is_error_message())->toBeFalse();
         });
     }
 });
@@ -384,6 +421,8 @@ function invalid_user_ids(): array
             [$message, , $level] = $GLOBALS['production_function_log_calls'][0];
             expect($message)->toStartWith('ERROR: Invalid user id in save_user_settings: ' . gettype($user));
             expect($level)->toBe('SECURITY');
+            expect($_SESSION['sess_error_fields'])->toBe(['id' => 'id']);
+            expect(is_error_message())->toBeTrue();
         });
     }
 });
@@ -395,7 +434,43 @@ function invalid_user_ids(): array
 
         expect($GLOBALS['production_function_db_calls'])->toBe([]);
         expect($GLOBALS['production_function_log_calls'][0][2])->toBe('SECURITY');
+        expect($_SESSION['sess_error_fields'])->toBe(['id' => 'id']);
     });
+});
+
+\test('user_admin.php reports a rejected user id as a save failure and a valid one as saved', function () {
+    $hadMessages = array_key_exists('messages', $GLOBALS);
+    $originalMessages = $GLOBALS['messages'] ?? null;
+    $hadNoHeaders = array_key_exists('no_http_headers', $GLOBALS);
+
+    try {
+        $GLOBALS['messages'] = [1 => ['message' => 'Save Successful.', 'level' => MESSAGE_LEVEL_INFO], 35 => ['message' => 'Some settings not saved.', 'level' => MESSAGE_LEVEL_ERROR]];
+        // raise_message() writes $_SESSION directly instead of starting a PHP session.
+        $GLOBALS['no_http_headers'] = true;
+
+        foreach ([[-5, [35], 0], ['16777216', [35], 0], [7, [1], 1], ['7', [1], 1]] as [$user, $raised, $writes]) {
+            with_user_setting_state(function () use ($user, $raised, $writes) {
+                $GLOBALS['production_function_request'] += ['save_component_graph_settings' => '1', 'id' => $user];
+                $GLOBALS['production_function_headers'] = [];
+
+                user_admin_form_save();
+
+                expect(array_keys($_SESSION['sess_messages']))->toBe($raised);
+                expect($GLOBALS['production_function_db_calls'])->toHaveCount($writes);
+                expect($GLOBALS['production_function_headers'])->toBe(['Location: user_admin.php?action=user_edit&header=false&id=' . $user]);
+            });
+        }
+    } finally {
+        if ($hadMessages) {
+            $GLOBALS['messages'] = $originalMessages;
+        } else {
+            unset($GLOBALS['messages']);
+        }
+        if (!$hadNoHeaders) {
+            unset($GLOBALS['no_http_headers']);
+        }
+        unset($GLOBALS['production_function_headers']);
+    }
 });
 
 \test('production clear_user_setting deletes for valid and fallback user ids', function () {

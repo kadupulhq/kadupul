@@ -3,8 +3,8 @@
     "name": "sanitize_search_string",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5059,
-        "end_line": 5079,
+        "start_line": 5060,
+        "end_line": 5080,
         "line_count": 21,
         "signature": {
             "parameters": [

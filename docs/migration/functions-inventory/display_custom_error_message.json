@@ -3,8 +3,8 @@
     "name": "display_custom_error_message",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1401,
-        "end_line": 1404,
+        "start_line": 1402,
+        "end_line": 1405,
         "line_count": 4,
         "signature": {
             "parameters": [

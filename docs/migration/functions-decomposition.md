@@ -148,6 +148,7 @@ and fixed separately.
 | `cacti_log` | A newline in `$environ` started a new log record; control bytes reached the file. Fixed: a newline in `$environ` becomes a space, and other control characters, U+2028 and U+2029 are written as visible escapes. `LegacyLogText` shares this rule with Symfony's `LegacyOperatorLog` and loads before Composer. | #870, #899 |
 | `cacti_is_sensitive_key`, `cacti_redact_value` | The key list misses common credential names and matches some unrelated ones. Fixed: the list now covers the common credential names. The substring match still redacts some unrelated names, which is left on purpose because it fails closed. | #871 |
 | `set_user_setting`, `save_user_settings` | A non-numeric user id was stored as user 0. Fixed: a user id that is not an integer or a digit string, or is outside the 0 to 16777215 range of `settings_user.user_id`, is rejected and logged. | #872 |
+| `save_user_settings` | A rejected user id left no error, so `user_admin.php` reported "Save Successful." Fixed: the rejection flags the `id` field and the page reports a save failure. | #891 |
 | `get_associated_rras` | `$sql_where` is concatenated into the query. Core now selects one RRA through a bound `$rra_id`; the fragment argument stays for plugin callers. | #873 |
 | `clear_user_setting`, `read_user_setting`, `user_setting_exists` | A non-numeric user id deleted, read or counted user 0's settings. Fixed: the same user id check as #872 applies. | #887 |
 

@@ -135,6 +135,13 @@ test('administrator graph settings reports failure without a success message for
         ->and($result['messages'])->toContain(35)->not->toContain(1);
 });
 
+test('administrator graph settings reports a rejected user id as a failure without saving', function (int $id) {
+    $result = profile_setting_run('form_save', array('id' => $id, 'save_component_graph_settings' => '1', 'min_tree_width' => '300'), true, 'user_admin.php');
+    expect(admin_action_probe_writes($result, '/^set_user_setting$/'))->toBe(array())
+        ->and($result['session']['sess_error_fields'])->toBe(array('id' => 'id'))
+        ->and($result['messages'])->toContain(35)->not->toContain(1);
+})->with(array('negative' => array(-5), 'past the column' => array(16777216)));
+
 test('nested thumbnail checkboxes can be enabled and disabled', function (bool $enabled) {
     $request = array('tab' => 'general');
     if ($enabled) {

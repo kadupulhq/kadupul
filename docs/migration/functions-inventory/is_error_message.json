@@ -3,12 +3,12 @@
     "name": "is_error_message",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1188,
-        "end_line": 1197,
+        "start_line": 1189,
+        "end_line": 1198,
         "line_count": 10,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,
-        "fan_out": {"core": 99, "core_outside_functions_php": 98, "tests": 21, "plugins": 0},
+        "fan_out": {"core": 99, "core_outside_functions_php": 98, "tests": 24, "plugins": 0},
         "body": {
             "uses_global": ["config", "messages"],
             "static_variables": [],
