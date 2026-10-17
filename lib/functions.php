@@ -1308,20 +1308,23 @@ function get_selective_log_level() {
  * cacti_log_neutralize - makes control characters in a log line visible
  *
  * The match is byte oriented so invalid UTF-8 can never make it fail and
- * drop the line.
+ * drop the line. If PCRE fails anyway, CR and LF still become spaces so a
+ * line break cannot reach the log.
  *
  * @param $text - (string) the text to write to the log
  *
  * @return string	The text with CR and LF as spaces and other controls escaped
  */
 function cacti_log_neutralize($text) {
-	$controls = '/[\x00-\x08\x0a-\x1f\x7f]|\xc2[\x80-\x9f]|\xd8\x9c|\xe2\x80[\x8e\x8f\xaa-\xae]|\xe2\x81[\xa6-\xa9]/';
+	$controls = '/[\x00-\x08\x0a-\x1f\x7f]|\xc2[\x80-\x9f]|\xd8\x9c|\xe2\x80[\x8e\x8f\xa8-\xae]|\xe2\x81[\xa6-\xa9]/';
 
-	if (!preg_match($controls, $text)) {
+	$found = preg_match($controls, $text);
+
+	if ($found === 0) {
 		return $text;
 	}
 
-	$clean = preg_replace_callback($controls, function ($match) {
+	$clean = $found === false ? null : preg_replace_callback($controls, function ($match) {
 		$bytes = $match[0];
 
 		if ($bytes == "\r" || $bytes == "\n") {
@@ -1339,7 +1342,7 @@ function cacti_log_neutralize($text) {
 		return sprintf('\u%04x', ((ord($bytes[0]) & 0x0f) << 12) | ((ord($bytes[1]) & 0x3f) << 6) | (ord($bytes[2]) & 0x3f));
 	}, $text);
 
-	return $clean === null ? $text : $clean;
+	return $clean === null ? str_replace(array("\r", "\n"), ' ', $text) : $clean;
 }
 
 /**
@@ -1351,8 +1354,6 @@ function cacti_log_neutralize($text) {
  * @param $level - (int) only log if above the specified log level
  */
 function cacti_log($string, $output = false, $environ = 'CMDPHP', $level = '') {
-	$environ = cacti_log_neutralize((string) $environ);
-
 	global $config, $database_log;
 
 	static $start = null;
@@ -1393,6 +1394,8 @@ function cacti_log($string, $output = false, $environ = 'CMDPHP', $level = '') {
 		}
 	}
 
+	$environ = cacti_log_neutralize((string) $environ);
+
 	cacti_system_zone_set();
 
 	/* fill in the current date for printing in the log */
@@ -1424,7 +1427,7 @@ function cacti_log($string, $output = false, $environ = 'CMDPHP', $level = '') {
 	}
 
 	/* Log to Logfile */
-	$message = cacti_log_neutralize(clean_up_lines($string)) . PHP_EOL;
+	$message = cacti_log_neutralize((string) clean_up_lines($string)) . PHP_EOL;
 
 	if ($output) {
 		$omessage = $oprefix . $message;
