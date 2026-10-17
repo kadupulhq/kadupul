@@ -3950,16 +3950,6 @@ function rrdtool_cacti_compare($data_source_id, &$info)
      * data source information
      -----------------------------------------------------------------------------------*/
     if (cacti_sizeof($cacti_info) && cacti_sizeof($info)) {
-        /* get the heartbeat from the profile */
-        $profile_heartbeat = db_fetch_cell_prepared(
-            'SELECT heartbeat
-			FROM data_source_profiles AS dsp
-			INNER JOIN data_template_data AS dtd
-			ON dsp.id = dtd.data_source_profile_id
-			WHERE dtd.local_data_id = ?',
-            array($data_source_id)
-        );
-
         /* cursory checks on total data sources */
         if (isset($cacti_info['ds']) && isset($info['ds'])) {
             if (cacti_sizeof($cacti_info['ds']) != cacti_sizeof($info['ds'])) {
@@ -3980,24 +3970,6 @@ function rrdtool_cacti_compare($data_source_id, &$info)
                     $info['ds'][$data_source_name]['seen'] = true;
 
                     continue;
-                }
-
-                /**
-                 * Accommodate a Kadupul bug where the heartbeat was not
-                 * propagated.
-                 */
-                if ($data_source['minimal_heartbeat'] != $profile_heartbeat) {
-                    cacti_log(sprintf('NOTE: Incorrect Data Source heartbeat found and corrected for Local Data ID %s and Data Source \'%s\'', $data_source_id, $data_source_name), false, 'DSDEBUG');
-
-                    db_execute_prepared(
-                        'UPDATE data_template_rrd
-						SET rrd_heartbeat = ?
-						WHERE local_data_id = ?
-						AND data_source_name = ?',
-                        array($profile_heartbeat, $data_source_id, $data_source_name)
-                    );
-
-                    $cacti_info['ds'][$data_source_name]['minimal_heartbeat'] = $profile_heartbeat;
                 }
 
                 /* verity that all data sources are seen */

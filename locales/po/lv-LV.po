@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.2.20\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-16 23:20-0700\n"
+"POT-Creation-Date: 2026-10-17 13:54-0700\n"
 "PO-Revision-Date: 2026-05-10 08:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -3066,7 +3066,7 @@ msgstr "Atkārtoti palaist analīzi"
 msgid "Check"
 msgstr "Pārbaudīt"
 
-#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4191
+#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4163
 #: utilities.php:798 utilities.php:815 utilities.php:3206
 msgid "Value"
 msgstr "Vērtība"
@@ -3656,7 +3656,7 @@ msgstr "Soļi"
 
 #: data_source_profiles.php:900 graphs_new.php:532 include/global_form.php:284
 #: lib/html.php:613 lib/html_filter.php:55 lib/installer.php:2837
-#: lib/rrd.php:4233 utilities.php:866 utilities.php:1838
+#: lib/rrd.php:4205 utilities.php:866 utilities.php:1838
 msgid "Rows"
 msgstr "Rindas"
 
@@ -6087,7 +6087,7 @@ msgstr "Dabiskā sakārtošana"
 msgid "Numeric Ordering"
 msgstr "Ciparu secība"
 
-#: include/global_arrays.php:953 lib/rrd.php:4157
+#: include/global_arrays.php:953 lib/rrd.php:4129
 msgid "Header"
 msgstr "Galvene"
 
@@ -7705,7 +7705,7 @@ msgstr "Cik bieži dati tiks vākti no datu avota?"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "Cik ilgi datu var trūkt, pirms RRDtool reģistrē nezināmus datus. Palieliniet šo vērtību, ja jūsu datu avots ir nestabils un vēlaties pārnest vecos datus, nevis rādīt diagrammās nepilnības. Šī vērtība tiek reizināta ar X-Files koeficientu, lai noteiktu faktisko laika ilgumu."
 
-#: include/global_form.php:226 lib/rrd.php:4236
+#: include/global_form.php:226 lib/rrd.php:4208
 msgid "X-Files Factor"
 msgstr "X-failu faktors"
 
@@ -8271,7 +8271,7 @@ msgstr "Necaurredzamība/Alfa kanāls"
 msgid "The opacity/alpha channel of the color."
 msgstr "Krāsas necaurredzamības/alfa kanāls."
 
-#: include/global_form.php:989 lib/rrd.php:4232
+#: include/global_form.php:989 lib/rrd.php:4204
 msgid "Consolidation Function"
 msgstr "Konsolidācijas funkcija"
 
@@ -11948,7 +11948,7 @@ msgstr "Atgūstas"
 
 #: lib/api_automation.php:33 lib/auth.php:3070 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:342 lib/plugins.php:1499
-#: lib/plugins.php:1500 lib/rrd.php:4209 lib/rrd.php:4221 lib/spikekill.php:301
+#: lib/plugins.php:1500 lib/rrd.php:4181 lib/rrd.php:4193 lib/spikekill.php:301
 #: package_import.php:523 package_import.php:601 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 msgid "Unknown"
@@ -11956,7 +11956,7 @@ msgstr "Nezināms"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
-#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4186
+#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4158
 #: utilities.php:356 utilities.php:1480 utilities.php:3206
 msgid "Type"
 msgstr "Tips"
@@ -15832,176 +15832,176 @@ msgstr "KĻŪDA: RRDfails %s nav ierakstāms"
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "Nepieciešamais RRDfile soļa lielums ir '%s', bet novērotais solis ir '%s'"
 
-#: lib/rrd.php:4010
+#: lib/rrd.php:3982
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "Datu avota “%s” veidam ir jābūt “%s”"
 
-#: lib/rrd.php:4016
+#: lib/rrd.php:3988
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "Datu avota '%s' RRD datu pulsam jābūt '%s'"
 
-#: lib/rrd.php:4028
+#: lib/rrd.php:4000
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "RRD minimumam datu avotam “%s” ir jābūt “%s”"
 
-#: lib/rrd.php:4037
+#: lib/rrd.php:4009
 #, fuzzy, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "Kadupul definīcijā trūkst DS '%s'"
 
-#: lib/rrd.php:4051 lib/rrd.php:4052
+#: lib/rrd.php:4023 lib/rrd.php:4024
 #, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Kadupul RRA '%s' ir tāds pats CF/soļi (%s, %s) kā '%s'"
 
-#: lib/rrd.php:4065 lib/rrd.php:4066
+#: lib/rrd.php:4037 lib/rrd.php:4038
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "RRA failam '%s' ir tik pat CF/soļi (%s, %s) kā '%s'"
 
-#: lib/rrd.php:4098
+#: lib/rrd.php:4070
 #, fuzzy, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr "'%s' pdp_per_row nav derīgs RRA '%s', kam jābūt '%s'.  Apsveriet iespēju dzēst un ļaut Kadupul atkārtoti izveidot RRD failu."
 
-#: lib/rrd.php:4102
+#: lib/rrd.php:4074
 #, fuzzy, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "XFF Kadupul RRA ID '%s' ir jābūt '%s'"
 
-#: lib/rrd.php:4106
+#: lib/rrd.php:4078
 #, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Kadupul RRA ID '%s' rindu skaits ir nepareizs.  Rindu skaits ir \"%s\", bet tam jābūt \"%s\""
 
-#: lib/rrd.php:4123
+#: lib/rrd.php:4095
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "Esošajā Kadupul RRD failā trūkst '%s' RRA"
 
-#: lib/rrd.php:4131
+#: lib/rrd.php:4103
 #, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "Kadupul definīcijā trūkst RRA '%s'"
 
-#: lib/rrd.php:4153
+#: lib/rrd.php:4125
 msgid "RRD File Information"
 msgstr "RRD faila informācija"
 
-#: lib/rrd.php:4185
+#: lib/rrd.php:4157
 msgid "Data Source Items"
 msgstr "Datu avota vienumi"
 
-#: lib/rrd.php:4187
+#: lib/rrd.php:4159
 msgid "Minimal Heartbeat"
 msgstr "Minimālais RRD datu pulss"
 
-#: lib/rrd.php:4188
+#: lib/rrd.php:4160
 msgid "Min"
 msgstr "Min"
 
-#: lib/rrd.php:4189
+#: lib/rrd.php:4161
 msgid "Max"
 msgstr "Maks."
 
-#: lib/rrd.php:4190
+#: lib/rrd.php:4162
 msgid "Last DS"
 msgstr "Pēdējā DS"
 
-#: lib/rrd.php:4192
+#: lib/rrd.php:4164
 msgid "Unknown Sec"
 msgstr "Nezināma sek"
 
-#: lib/rrd.php:4231
+#: lib/rrd.php:4203
 msgid "Round Robin Archive"
 msgstr "Round Robin arhīvs"
 
-#: lib/rrd.php:4234
+#: lib/rrd.php:4206
 msgid "Cur Row"
 msgstr "Pašreizējā rinda"
 
-#: lib/rrd.php:4235
+#: lib/rrd.php:4207
 msgid "PDP per Row"
 msgstr "PDP katrā rindā"
 
-#: lib/rrd.php:4237
+#: lib/rrd.php:4209
 msgid "CDP Prep Value (0)"
 msgstr "CDP sagatavošanas vērtība (0)"
 
-#: lib/rrd.php:4238
+#: lib/rrd.php:4210
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP nezināmie datu punkti (0)"
 
-#: lib/rrd.php:4319
+#: lib/rrd.php:4291
 msgid "Errors Found"
 msgstr "%s nav atrasts"
 
-#: lib/rrd.php:4331
+#: lib/rrd.php:4303
 msgid "Optional Tuning Recommendations"
 msgstr "Datu avotu labošanas ieteikumi"
 
-#: lib/rrd.php:4356 lib/rrd.php:4359
+#: lib/rrd.php:4328 lib/rrd.php:4331
 #, php-format
 msgid "rename %s to %s"
 msgstr "pārdēvēt %s par %s"
 
-#: lib/rrd.php:4451
+#: lib/rrd.php:4423
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "KĻŪDA, rakstot XML failu: %s"
 
-#: lib/rrd.php:4457
+#: lib/rrd.php:4429
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4463
+#: lib/rrd.php:4435
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "KĻŪDA: RRDfails %s nav ierakstāms"
 
-#: lib/rrd.php:4484
+#: lib/rrd.php:4456
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "Kļūda, parsējot rrdtool dump XML"
 
-#: lib/rrd.php:4520 lib/rrd.php:4539
+#: lib/rrd.php:4492 lib/rrd.php:4511
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "Kļūda, parsējot RRDtool izgāztuves XML"
 
-#: lib/rrd.php:4757
+#: lib/rrd.php:4729
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) noņemts no RRD faila"
 
-#: lib/rrd.php:4795
+#: lib/rrd.php:4767
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) pievieno RRD failam"
 
-#: lib/rrd.php:4826 lib/rrd.php:4842
+#: lib/rrd.php:4798 lib/rrd.php:4814
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "Vietnei nav rakstīšanas piekļuves %s, iespējams, nevar izveidot/atjaunināt RRD"
 
-#: lib/rrd.php:4838
+#: lib/rrd.php:4810
 msgid "(Custom)"
 msgstr "(Pielāgots)"
 
-#: lib/rrd.php:4844
+#: lib/rrd.php:4816
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "Neizdevās atvērt datu failu, iespējams, aptaujātajs vēl nav palaists"
 
-#: lib/rrd.php:4847
+#: lib/rrd.php:4819
 msgid "RRA Folder"
 msgstr "RRA mape"
 
-#: lib/rrd.php:4847
+#: lib/rrd.php:4819
 msgid "Root"
 msgstr "ROOT - uz objektu orientēta bibliotēku kopa mērogojamu datu analīzei"
 
-#: lib/rrd.php:4927
+#: lib/rrd.php:4899
 msgid "Unknown RRDtool Error"
 msgstr "Nezināma RRDtool kļūda"
 
