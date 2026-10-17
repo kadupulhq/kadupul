@@ -1585,7 +1585,7 @@ function cacti_log($string, $output = false, $environ = 'CMDPHP', $level = '')
             $found = preg_match($controls, $text);
 
             if ($found === 0) {
-                return $text;
+                return str_replace(["\r", "\n"], ' ', $text);
             }
 
             $clean = $found === false ? null : preg_replace_callback($controls, static function ($match) {
