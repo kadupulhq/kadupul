@@ -23,6 +23,20 @@ is no aggregate command that establishes that all CI checks passed.
 | `make test-themes` | The existing `test:themes` script in `tests/e2e/package.json`, explicitly using `playwright.config.js` and its local PHP server. Install locked browser dependencies with `mise exec -- npm ci --prefix tests/e2e` and the required Playwright browser/system dependencies. |
 | `make test-runner-contracts` | Python subprocess tests for suite dispatch, argument preservation, unavailable dependencies, empty JavaScript discovery and runner failure propagation. |
 
+The required legacy job records JUnit from both ordinary and privileged runs.
+`tests/tools/verify_pest_inventory.php` compares each registered file's case
+count with native Pest discovery using explicit canonical selectors. Missing
+files or reports, mismatched counts, failures and files with no executed case
+across the supplied modes fail verification. Skipped cases are reported
+separately. The reports are retained in the `legacy-suite-evidence-8.4` artifact.
+
+After installing both locked PHP dependency trees, run the verifier's parser and
+native omission regression with:
+
+```sh
+mise exec -- php include/vendor/bin/phpunit --no-configuration --bootstrap include/vendor/autoload.php --fail-on-empty-test-suite tests/tools/PestInventoryTest.php
+```
+
 Pass native runner arguments directly when narrowing or inspecting discovery:
 
 ```sh
