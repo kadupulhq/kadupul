@@ -45,6 +45,6 @@
         "status": "planned",
         "lts_status": "not assessed",
         "behavior_record": "tests/Golden/functions/kadupul/php-8.4/cacti_is_sensitive_key.json",
-        "notes": "The key list misses common credential names and matches some unrelated ones. See #871."
+        "notes": "The key list misses common credential names and matches some unrelated ones. See #871. Fixed in #871 by adding the common credential names to the list; the substring match still over-matches on purpose."
     }
 }
