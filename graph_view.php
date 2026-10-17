@@ -385,7 +385,7 @@ case 'tree_content':
 	}
 
 	if ($tree_id > 0) {
-		if (!is_tree_allowed($tree_id)) {
+		if (!is_tree_allowed($tree_id, 0, true)) {
 			header('Location: permission_denied.php');
 			exit;
 		}

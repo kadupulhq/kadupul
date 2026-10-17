@@ -137,6 +137,30 @@ function answers(array $user, array $groups): array {
 }
 
 /**
+ * Tree 1 stays enabled, tree 2 is disabled and tree 3 no longer exists, with
+ * the permission rows unchanged.
+ *
+ * @return array{viewer: array<int, bool>, default: array<int, bool>, listed: array<int, bool>}
+ */
+function unpublishedAnswers(array $user, array $groups): array {
+    load($user, $groups);
+    connection()->exec("UPDATE graph_tree SET enabled = '' WHERE id = 2");
+    connection()->exec('DELETE FROM graph_tree WHERE id = 3');
+    $_SESSION = [];
+    $rows = 0;
+    $listed = array_map('intval', array_column(get_allowed_trees(false, false, '', 'name', '', $rows, USER), 'id'));
+    $answers = ['viewer' => [], 'default' => [], 'listed' => []];
+    foreach (TREES as $tree) {
+        $_SESSION = [];
+        $answers['viewer'][$tree] = is_tree_allowed($tree, USER, true);
+        $_SESSION = [];
+        $answers['default'][$tree] = is_tree_allowed($tree, USER);
+        $answers['listed'][$tree] = in_array($tree, $listed, true);
+    }
+    return $answers;
+}
+
+/**
  * A tree is visible when the user or any enabled group the user belongs to
  * grants it: an Allow policy grants every tree it has no type 2 exception
  * for, and a Deny policy grants only the trees it has a type 2 exception for.
@@ -234,4 +258,31 @@ test('a disabled group grants nothing', function () {
     $user = ['policy' => 2, 'exceptions' => [], 'collide' => false];
     $groups = [['enabled' => '', 'policy' => 1, 'exceptions' => [], 'collide' => false]];
     expect(answers($user, $groups)['direct'])->toBe([1 => false, 2 => false, 3 => false]);
+});
+
+test('a viewer request agrees with the tree picker when a tree is disabled or missing', function () {
+    $mismatches = [];
+    foreach (matrix() as [$user, $groups]) {
+        $result = unpublishedAnswers($user, $groups);
+        $want = [
+            'viewer' => [1 => expected($user, $groups, 1), 2 => false, 3 => false],
+            // without the flag the answer is the permission alone, as before
+            'default' => [1 => expected($user, $groups, 1), 2 => expected($user, $groups, 2), 3 => expected($user, $groups, 3)],
+            'listed' => [1 => expected($user, $groups, 1), 2 => false, 3 => false],
+        ];
+        if ($result !== $want) {
+            $mismatches[] = json_encode(['user' => $user, 'groups' => $groups, 'result' => $result, 'expected' => $want]);
+        }
+    }
+    expect(array_slice($mismatches, 0, 5))->toBe([])->and(count($mismatches))->toBe(0);
+});
+
+test('a cached permission does not open a disabled or missing tree to a viewer request', function () {
+    unpublishedAnswers(['policy' => 1, 'exceptions' => [], 'collide' => false], []);
+    $cache = [USER => [1 => true, 2 => true, 3 => true]];
+    $_SESSION = ['sess_tree_perms' => $cache];
+    expect([is_tree_allowed(1, USER, true), is_tree_allowed(2, USER, true), is_tree_allowed(3, USER, true)])->toBe([true, false, false])
+        ->and($_SESSION['sess_tree_perms'])->toBe($cache)
+        ->and([is_tree_allowed(2, USER), is_tree_allowed(3, USER)])->toBe([true, true])
+        ->and([is_tree_allowed(2, -1, true), is_tree_allowed(2, -1)])->toBe([false, true]);
 });

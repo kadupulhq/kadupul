@@ -13,13 +13,15 @@
 /*
  * A report's Device item expands the device's graphs for the report owner.
  * reports_generate_html() gated it with is_tree_allowed() on the device id,
- * so the item followed whichever tree shared that number. The shipped
- * function runs in a child process with the permission helpers stubbed.
+ * so the item followed whichever tree shared that number. A Tree item is
+ * checked as a viewer, so a disabled tree is left out as in the tree picker.
+ * The shipped function runs in a child process with the permission helpers
+ * stubbed.
  */
 
 require_once dirname(__DIR__, 3) . '/Helpers/AuthEntryProbe.php';
 
-function report_device_item_run(array $trees, array $devices) : array {
+function report_device_item_run(array $trees, array $devices, array $items = array()) : array {
 	$reports = file_get_contents(dirname(__DIR__, 4) . '/lib/reports.php');
 	$empty   = sys_get_temp_dir() . '/kadupul-reports-' . bin2hex(random_bytes(6));
 
@@ -47,7 +49,7 @@ function db_fetch_row_prepared($sql, $params = array()) {
 }
 
 function db_fetch_assoc_prepared($sql, $params = array()) {
-	return array(array('id' => 11, 'item_type' => REPORTS_ITEM_HOST, 'host_id' => 5, 'tree_id' => 0, 'local_graph_id' => 0));
+	return $GLOBALS['scenario']['items'] ?: array(array('id' => 11, 'item_type' => REPORTS_ITEM_HOST, 'host_id' => 5, 'tree_id' => 0, 'local_graph_id' => 0));
 }
 
 function read_user_setting($name, $default = false, $force = false, $user = 0) {
@@ -65,8 +67,8 @@ function html_escape($string) {
 	return htmlspecialchars((string) $string, ENT_QUOTES, 'UTF-8');
 }
 
-function is_tree_allowed($tree_id, $user_id = 0) {
-	$GLOBALS['calls']['tree_checks'][] = array($tree_id, $user_id);
+function is_tree_allowed($tree_id, $user_id = 0, $enabled_only = false) {
+	$GLOBALS['calls']['tree_checks'][] = array($tree_id, $user_id, $enabled_only);
 
 	return in_array($tree_id, $GLOBALS['scenario']['trees']);
 }
@@ -75,6 +77,12 @@ function is_device_allowed($device_id, $user_id = 0) {
 	$GLOBALS['calls']['device_checks'][] = array($device_id, $user_id);
 
 	return in_array($device_id, $GLOBALS['scenario']['devices']);
+}
+
+function reports_tree_has_graphs($tree_id, $branch_id, $user_id, $regexp) {
+	$GLOBALS['calls']['expanded'][] = 'tree ' . $tree_id;
+
+	return false;
 }
 
 function reports_expand_device($report, $item, $device_id, $output, $format_ok, $theme) {
@@ -90,7 +98,7 @@ PHP;
 	$source .= "print json_encode(array('calls' => \$calls, 'html' => \$html));\n";
 
 	try {
-		return cacti_test_run_php_source($source, array('base_path' => $empty, 'trees' => $trees, 'devices' => $devices));
+		return cacti_test_run_php_source($source, array('base_path' => $empty, 'trees' => $trees, 'devices' => $devices, 'items' => $items));
 	} finally {
 		unlink($empty . '/lib/time.php');
 		rmdir($empty . '/lib');
@@ -120,4 +128,11 @@ test('a device item never consults tree permissions', function () {
 
 	expect($result['calls']['tree_checks'])->toBe(array())
 		->and($result['calls']['expanded'])->toBe(array(5));
+});
+
+test('a tree item asks for the owner as a viewer of an enabled tree', function () {
+	$tree = array('id' => 12, 'item_type' => 3 /* REPORTS_ITEM_TREE */, 'host_id' => 0, 'tree_id' => 4, 'branch_id' => 0, 'tree_cascade' => '', 'graph_name_regexp' => '', 'local_graph_id' => 0);
+
+	expect(report_device_item_run(array(4), array(), array($tree))['calls'])->toBe(array('expanded' => array('tree 4'), 'tree_checks' => array(array(4, 7, true)), 'device_checks' => array()))
+		->and(report_device_item_run(array(), array(), array($tree))['calls'])->toBe(array('expanded' => array(), 'tree_checks' => array(array(4, 7, true)), 'device_checks' => array()));
 });
