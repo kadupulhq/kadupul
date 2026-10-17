@@ -426,6 +426,10 @@ jobs:
       - name: Install isolated CSV test runner
         run: composer install --working-dir=tests --prefer-dist --no-progress --no-interaction
 
+      - name: Verify Pest inventory evidence and omitted-suite rejection
+        working-directory: tests
+        run: php ../include/vendor/bin/phpunit --no-configuration --bootstrap ../include/vendor/autoload.php --fail-on-empty-test-suite tools/PestInventoryTest.php
+
       - name: Verify PHP 8.1 idiom contracts
         working-directory: tests
         run: |
@@ -476,11 +480,26 @@ jobs:
         working-directory: tests
         env:
           RRDTOOL_TEST_BINARY: /usr/bin/rrdtool
-        run: php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --configuration=phpunit-spikekill.xml --colors=never
+        run: php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --configuration=phpunit-spikekill.xml --colors=never --log-junit="$RUNNER_TEMP/legacy-normal.xml"
 
       - name: Verify privileged spike-removal boundaries
         working-directory: tests
-        run: sudo -- "$(command -v php)" -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --configuration=phpunit-spikekill.xml --colors=never
+        run: sudo -- "$(command -v php)" -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --configuration=phpunit-spikekill.xml --colors=never --log-junit="$RUNNER_TEMP/legacy-privileged.xml"
+
+      - name: Verify every registered suite ran in both required modes
+        working-directory: tests
+        run: php tools/verify_pest_inventory.php phpunit-spikekill.xml "$RUNNER_TEMP/legacy-normal.xml" "$RUNNER_TEMP/legacy-privileged.xml"
+
+      - name: Preserve legacy suite execution evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: legacy-suite-evidence-${{ matrix.php }}
+          retention-days: 14
+          path: |
+            ${{ runner.temp }}/legacy-normal.xml
+            ${{ runner.temp }}/legacy-privileged.xml
+          if-no-files-found: error
 
   application-smoke:
     permissions:
