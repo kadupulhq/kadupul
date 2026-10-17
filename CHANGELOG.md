@@ -20,6 +20,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Apply the same control-character neutralization to Symfony maintenance log files and syslog through a shared rule that also loads before Composer.
 - Make the worker database test barrier wait for a complete decision, preventing a partially written file from turning an injected query failure into success.
 - Restore 36 silently omitted legacy regression suites to the required Pest runner and verify each registered file against recorded ordinary and privileged execution.
+- Save the Primary Admin setting only as a user id, and build the Guest User and User Template exclusion lists from integer ids, so a stored or session-cached value can no longer change those queries (#754).
 
 - Update the native CI scanner to Semgrep 1.179.0 and hash-locked PyJWT 2.15.1, removing vulnerable scanner dependencies while preserving the existing scan policy.
 

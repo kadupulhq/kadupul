@@ -196,7 +196,7 @@ switch (get_request_var('action')) {
                 $hidden_font = $field_array['method'] == 'font' && $font_method == 1
                     && get_nfilter_request_var($field_name) === (string) read_config_option($field_name, true);
 
-                if (($field_array['method'] == 'textbox' || $field_array['method'] == 'font') && isset($field_array['filter']) && !$hidden_font) {
+                if (($field_array['method'] == 'textbox' || $field_array['method'] == 'font' || $field_array['method'] == 'drop_sql') && isset($field_array['filter']) && !$hidden_font) {
                     if (isset($field_array['options'])) {
                         $value = filter_var(get_nfilter_request_var($field_name), $field_array['filter'], $field_array['options']);
                     } else {
