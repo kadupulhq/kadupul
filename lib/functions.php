@@ -1321,7 +1321,7 @@ function cacti_log_neutralize($text) {
 	$found = preg_match($controls, $text);
 
 	if ($found === 0) {
-		return $text;
+		return str_replace(array("\r", "\n"), ' ', $text);
 	}
 
 	$clean = $found === false ? null : preg_replace_callback($controls, function ($match) {
