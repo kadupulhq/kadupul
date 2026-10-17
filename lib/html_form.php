@@ -1194,6 +1194,7 @@ function form_multi_dropdown($form_name, $array_display, $sql_previous_values, $
             $sql_previous_values[][$column_id] = $value;
         }
     } elseif ($sql_previous_values == '') {
+        $sql_previous_values = array();
         $values = db_fetch_cell_prepared('SELECT value FROM settings WHERE name = ?', array($form_name));
         if ($values != '') {
             $values = explode(',', $values);

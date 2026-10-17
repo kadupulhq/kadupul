@@ -55,7 +55,7 @@ msgstr "This program is distributed in the hope that it will be useful, but WITH
 #: host_templates.php:485 host_templates.php:542 include/global_arrays.php:1656
 #: include/global_settings.php:325 lib/api_automation.php:1323
 #: lib/api_automation.php:1386 lib/api_automation.php:1457 lib/html.php:1505
-#: lib/html_form.php:1397 lib/html_reports.php:1937 managers.php:13
+#: lib/html_form.php:1398 lib/html_reports.php:1937 managers.php:13
 #: pollers.php:18 tree.php:1688 tree.php:1841 tree.php:1901 tree.php:1922
 #: user_admin.php:17 user_domains.php:15 user_group_admin.php:19
 msgid "Delete"
@@ -132,8 +132,8 @@ msgstr "निम्नलिखित एग्रीगेट ग्राफ 
 #: graphs.php:1232 graphs.php:1263 graphs.php:1275 graphs.php:1859
 #: host_templates.php:222 host_templates.php:236 host_templates.php:247
 #: host_templates.php:302 host_templates.php:375 lib/clog_webapi.php:225
-#: lib/html.php:2819 lib/html_form.php:1396 lib/html_form.php:1413
-#: lib/html_form.php:1424 lib/html_reports.php:632 managers.php:1066
+#: lib/html.php:2819 lib/html_form.php:1397 lib/html_form.php:1414
+#: lib/html_form.php:1425 lib/html_reports.php:632 managers.php:1066
 #: managers.php:1127 plugins.php:712 pollers.php:549 pollers.php:558
 #: pollers.php:567 pollers.php:576 pollers.php:585 tree.php:762 tree.php:771
 #: tree.php:780 tree.php:789 user_admin.php:252 user_admin.php:292
@@ -192,7 +192,7 @@ msgstr "टेम्पलेट आधारित एग्रीगेट क
 #: auth_changepassword.php:415 auth_profile.php:464 automation_networks.php:387
 #: automation_snmp.php:245 graphs.php:1169 graphs.php:1219 graphs.php:1222
 #: graphs.php:1266 graphs.php:1859 include/auth.php:309
-#: lib/api_aggregate.php:2209 lib/api_aggregate.php:2224 lib/html_form.php:1422
+#: lib/api_aggregate.php:2209 lib/api_aggregate.php:2224 lib/html_form.php:1423
 #: lib/html_reports.php:632 managers.php:1130 permission_denied.php:14
 #: permission_denied.php:16
 msgid "Return"
@@ -837,7 +837,7 @@ msgid "Confirm new password"
 msgstr "नए पासवर्ड की पुष्टि करें"
 
 #: auth_changepassword.php:413 auth_profile.php:582 graphs_new.php:517
-#: lib/html_form.php:1419 lib/html_form.php:1428 lib/html_graph.php:181
+#: lib/html_form.php:1420 lib/html_form.php:1429 lib/html_graph.php:181
 #: lib/html_tree.php:1012 settings.php:553
 msgid "Save"
 msgstr "सेव करें"
@@ -1204,7 +1204,7 @@ msgstr "नैट्टवर्क"
 msgid "Reset fields to defaults"
 msgstr "फ़ील्ड को डिफ़ॉल्ट पर रीसेट करें"
 
-#: automation_devices.php:515 lib/html_form.php:1436
+#: automation_devices.php:515 lib/html_form.php:1437
 msgid "Export"
 msgstr "एक्सपोर्ट"
 
@@ -5012,7 +5012,7 @@ msgid "(Select a graph type to create)"
 msgstr "(बनाने के लिए एक ग्राफ प्रकार का चयन करें)"
 
 #: graphs_new.php:631 include/global_arrays.php:986
-#: include/global_arrays.php:1064 lib/html_form.php:1417 lib/html_form.php:1430
+#: include/global_arrays.php:1064 lib/html_form.php:1418 lib/html_form.php:1431
 #: tree.php:1662
 msgid "Create"
 msgstr "बनाएं"
@@ -13585,7 +13585,7 @@ msgstr "से शुरू"
 msgid "End with"
 msgstr "अंतिम दिनांक"
 
-#: lib/html.php:2845 lib/html_form.php:1432
+#: lib/html.php:2845 lib/html_form.php:1433
 msgid "Close"
 msgstr "बंद"
 
@@ -13637,28 +13637,28 @@ msgstr "निर्देशिका नहीं मिली है"
 msgid "Enter a valid directory path"
 msgstr "एक मान्य निर्देशिका पथ दर्ज करें"
 
-#: lib/html_form.php:1297
+#: lib/html_form.php:1298
 #, fuzzy, php-format
 msgid "Kadupul Color (%s)"
 msgstr "Kadupul रंग ( %s)"
 
-#: lib/html_form.php:1344
+#: lib/html_form.php:1345
 msgid "NO FONT VERIFICATION POSSIBLE"
 msgstr "कोई अपवाद नहीं है"
 
-#: lib/html_form.php:1434
+#: lib/html_form.php:1435
 msgid "Import"
 msgstr "आयात करें"
 
-#: lib/html_form.php:1533
+#: lib/html_form.php:1534
 msgid "Warning Unsaved Form Data"
 msgstr "अनधिकृत रूप डेटा चेतावनी"
 
-#: lib/html_form.php:1535
+#: lib/html_form.php:1536
 msgid "Unsaved Changes Detected"
 msgstr "अनवांटेड परिवर्तन"
 
-#: lib/html_form.php:1536
+#: lib/html_form.php:1537
 #, fuzzy
 msgid "You have unsaved changes on this form.  If you press 'Continue' these changes will be discarded.  Press 'Cancel' to continue editing the form."
 msgstr "आपने इस फॉर्म में परिवर्तन नहीं किए हैं। यदि आप &#39;जारी रखें&#39; दबाते हैं तो ये परिवर्तन छोड़ दिए जाएंगे। प्रपत्र संपादित करना जारी रखने के लिए &#39;रद्द करें&#39; दबाएँ।"

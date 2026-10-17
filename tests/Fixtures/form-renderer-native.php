@@ -46,6 +46,19 @@ if (!empty($scenario['controls'])) {
     }
     $fields['font']['sub_checkbox'] = array('name' => 'enabled', 'value' => 'on');
     draw_edit_form(array('config' => array('no_form_tag' => true), 'fields' => $fields));
+} elseif (isset($scenario['multiselect'])) {
+    $db = new PDO('sqlite::memory:', null, null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+    $db->exec('CREATE TABLE settings(name TEXT PRIMARY KEY, value TEXT)');
+    if (array_key_exists('setting', $scenario['multiselect'])) {
+        $statement = $db->prepare('INSERT INTO settings(name, value) VALUES(?, ?)');
+        $statement->execute(array('choices', $scenario['multiselect']['setting']));
+    }
+    $config = array('is_web' => false, 'config_options_array' => array('hide_form_description' => 'off'));
+    form_start('save.php', 'multiselect');
+    draw_edit_form(array('config' => array('no_form_tag' => true), 'fields' => array(
+        'choices' => array('method' => 'drop_multi', 'friendly_name' => 'Choices', 'value' => $scenario['multiselect']['value'], 'array' => array('a' => 'A', 'b' => 'B', '0' => 'Zero')),
+    )));
+    form_end();
 } elseif (isset($scenario['input'])) {
     $function = $scenario['input'] === 'directory' ? 'form_dirpath_box' : 'form_font_box';
     $function('fixture', $scenario['value'] ?? '', 'default', 64, 30, 'text', $scenario['current_id'] ?? 0);
