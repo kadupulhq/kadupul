@@ -277,10 +277,24 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
 						$hash_cache += $cache_add;
 						break;
 				case 'data_template':
+					$transaction_started = $preview_only ? false : db_begin_transaction();
+
+					if (!$preview_only && !$transaction_started) {
+						return false;
+					}
+
 					$cache_add = xml_to_data_template($dep_hash_cache[$type][$i]['hash'], $hash_array, $hash_cache, $import_as_new, $profile_id);
 
 					if ($cache_add === false) {
+						if ($transaction_started) {
+							db_rollback_transaction();
+						}
+
 						return false;
+					}
+
+					if ($transaction_started) {
+						db_commit_transaction();
 					}
 
 					$hash_cache += $cache_add;
@@ -290,10 +304,24 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
 					$hash_cache += xml_to_host_template($dep_hash_cache[$type][$i]['hash'], $hash_array, $hash_cache, $host_template_data, $class);
 					break;
 				case 'data_input_method':
+					$transaction_started = $preview_only ? false : db_begin_transaction();
+
+					if (!$preview_only && !$transaction_started) {
+						return false;
+					}
+
 					$cache_add = xml_to_data_input_method($dep_hash_cache[$type][$i]['hash'], $hash_array, $hash_cache, $data_input_allowed, $refused_hashes);
 
 					if ($cache_add === false) {
+						if ($transaction_started) {
+							db_rollback_transaction();
+						}
+
 						return false;
+					}
+
+					if ($transaction_started) {
+						db_commit_transaction();
 					}
 
 					$hash_cache += $cache_add;

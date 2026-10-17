@@ -8,6 +8,7 @@
 			<file>./integration/BoostProcessTableMariaDbTest.php</file>
 			<file>./integration/BoostRecoveryRetryMariaDbTest.php</file>
 			<file>./integration/DurablePollerQueueMariaDbTest.php</file>
+			<file>integration/ImportParentRollbackMariaDbTest.php</file>
 		</testsuite>
 	</testsuites>
 </phpunit>
