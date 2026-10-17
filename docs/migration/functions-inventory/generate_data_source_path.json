@@ -3,8 +3,8 @@
     "name": "generate_data_source_path",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 3517,
-        "end_line": 3596,
+        "start_line": 3481,
+        "end_line": 3560,
         "line_count": 80,
         "signature": {
             "parameters": [

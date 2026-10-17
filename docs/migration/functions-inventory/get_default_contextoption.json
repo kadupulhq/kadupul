@@ -3,8 +3,8 @@
     "name": "get_default_contextoption",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6958,
-        "end_line": 6998,
+        "start_line": 6922,
+        "end_line": 6962,
         "line_count": 41,
         "signature": {
             "parameters": [
@@ -40,7 +40,7 @@
                     "name": "fgc_contextoption",
                     "resolved": true,
                     "expression": null,
-                    "line": 6995
+                    "line": 6959
                 }
             ]
         },

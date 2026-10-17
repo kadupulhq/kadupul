@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -14,6 +16,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\MockClock;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Process\Process;
 
 final class LegacyOperatorLogTest extends TestCase
 {
@@ -48,6 +51,54 @@ final class LegacyOperatorLogTest extends TestCase
         $this->log()->record($this->db, 'SYSTEM', "ANALYSIS STATS: done.\n  Total 1");
         $line = file_get_contents($this->root . '/log/cacti.log');
         self::assertSame("03/04/2026 05:06:07 - SYSTEM ANALYSIS STATS: done. Total 1\n", $line);
+    }
+
+    #[DataProvider('controlText')]
+    public function testControlTextIsNeutralizedInTheFileAndSyslog(string $raw, string $visible, string $fileVisible): void
+    {
+        $this->set('log_destination', '2');
+        $sent = [];
+        $this->log(static function (int $facility, int $priority, string $line) use (&$sent): void {
+            $sent[] = [$facility, $priority, $line];
+        })->record($this->db, 'ENV' . $raw . 'END', 'ERROR: a' . $raw . 'b');
+
+        self::assertSame('03/04/2026 05:06:07 - ENV' . $visible . 'END ERROR: a' . $fileVisible . "b\n", file_get_contents($this->root . '/log/cacti.log'));
+        self::assertSame([[LOG_SYSLOG, LOG_CRIT, 'ENV' . $visible . 'END: ERROR: a' . $visible . 'b']], $sent);
+    }
+
+    /** @return iterable<string, array{string, string, string}> */
+    public static function controlText(): iterable
+    {
+        yield 'CR' => ["\r", ' ', ' '];
+        yield 'LF' => ["\n", ' ', ' '];
+        yield 'CRLF' => ["\r\n", '  ', ' '];
+        foreach (["\x00", "\x07", "\x0b", "\x0c", "\x1b", "\x1f", "\x7f"] as $raw) {
+            $visible = sprintf('\\x%02x', ord($raw));
+            yield $visible => [$raw, $visible, $visible];
+        }
+        foreach ([0x80, 0x85, 0x9b, 0x9f, 0x61c, 0x200e, 0x200f, 0x2028, 0x2029, 0x202a, 0x202e, 0x2066, 0x2069] as $codepoint) {
+            $visible = sprintf('\\u%04x', $codepoint);
+            yield $visible => [mb_chr($codepoint, 'UTF-8'), $visible, $visible];
+        }
+        yield 'tab' => ["\t", "\t", "\t"];
+        yield 'UTF-8 text' => ['東京🙂مرحبا', '東京🙂مرحبا', '東京🙂مرحبا'];
+        yield 'invalid UTF-8' => ["\xff\xfe\xc2 \xe2\x80", "\xff\xfe\xc2 \xe2\x80", "\xff\xfe\xc2 \xe2\x80"];
+    }
+
+    public function testSharedRuleLoadsBeforeComposerWithoutAutoloading(): void
+    {
+        $program = <<<'PHP'
+spl_autoload_register(static function (string $class): void { throw new RuntimeException('Unexpected autoload: ' . $class); });
+require 'lib/functions.php';
+echo \Kadupul\Platform\Infrastructure\Legacy\LegacyLogText::neutralize("ENV\x1b\n");
+PHP;
+        $process = new Process([PHP_BINARY, '-n', '-r', $program], dirname(__DIR__, 2));
+        $process->setTimeout(10);
+        $process->run();
+
+        self::assertSame(0, $process->getExitCode(), $process->getErrorOutput());
+        self::assertSame('', $process->getErrorOutput());
+        self::assertSame('ENV\\x1b ', $process->getOutput());
     }
 
     /**

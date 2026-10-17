@@ -3,8 +3,8 @@
     "name": "is_base64_encoded",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5189,
-        "end_line": 5208,
+        "start_line": 5153,
+        "end_line": 5172,
         "line_count": 20,
         "signature": {
             "parameters": [

@@ -55,7 +55,8 @@ final readonly class LegacyOperatorLog
         if ($level !== null && !self::loudEnough($level, $value('log_verbosity', '2'))) {
             return;
         }
-        $text = (string) preg_replace('/\s*[\r\n]+\s*/', ' ', $message);
+        $environ = LegacyLogText::neutralize($environ);
+        $text = LegacyLogText::neutralize((string) preg_replace('/\s*[\r\n]+\s*/', ' ', $message));
         $destination = (int) $value('log_destination', '1');
         if (($destination === 1 || $destination === 2) && $value('log_verbosity', '2') !== '1') {
             $format = self::dateFormat($row('default_date_format'), $row('default_datechar'));
@@ -85,7 +86,7 @@ final readonly class LegacyOperatorLog
                 default => null,
             };
             if ($priority !== null) {
-                $this->send($priority, $environ . ': ' . $message);
+                $this->send($priority, $environ . ': ' . LegacyLogText::neutralize($message));
             }
         }
     }

@@ -3,8 +3,8 @@
     "name": "debounce_claim_notification",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8701,
-        "end_line": 8733,
+        "start_line": 8665,
+        "end_line": 8697,
         "line_count": 33,
         "signature": {
             "parameters": [

@@ -3,8 +3,8 @@
     "name": "is_error_message",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1187,
-        "end_line": 1196,
+        "start_line": 1188,
+        "end_line": 1197,
         "line_count": 10,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,

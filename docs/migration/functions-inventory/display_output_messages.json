@@ -3,8 +3,8 @@
     "name": "display_output_messages",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1365,
-        "end_line": 1398,
+        "start_line": 1366,
+        "end_line": 1399,
         "line_count": 34,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,
