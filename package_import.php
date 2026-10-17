@@ -218,13 +218,14 @@ function form_save() {
 		} else {
 			if ($data !== false) {
 				raise_message('import_success', __('The Package %s Imported Successfully', html_escape($package_name)), MESSAGE_LEVEL_INFO);
+
+				unlink($xmlfile);
+
+				unset($_SESSION['sess_import_package']);
 			} else {
+				/* keep the package so the import can be retried once the failure is fixed */
 				raise_message('import_fail', __('The Package %s Import Failed', html_escape($package_name)), MESSAGE_LEVEL_ERROR);
 			}
-
-			unlink($xmlfile);
-
-			unset($_SESSION['sess_import_package']);
 
 			header('Location: package_import.php');
 			exit;
