@@ -124,17 +124,17 @@
         }
       ],
       "id": "unlisted_secret_names",
-      "note": "SECURITY: these names are not matched and pass through",
+      "note": "these names were missed before #871 and are now redacted",
       "result": {
         "returned": {
           "type": "array",
           "value": {
             "$": "array",
             "pairs": [
-              ["api_key", "k"],
-              ["authorization", "Bearer x"],
-              ["pwd", "p"],
-              ["private_key", "pk"]
+              ["api_key", "[REDACTED]"],
+              ["authorization", "[REDACTED]"],
+              ["pwd", "[REDACTED]"],
+              ["private_key", "[REDACTED]"]
             ]
           }
         }

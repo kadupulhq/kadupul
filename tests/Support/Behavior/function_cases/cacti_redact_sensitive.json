@@ -7,7 +7,7 @@
     {"id": "non_sensitive_null", "args": [{"$": "array", "pairs": [["name", null]]}]},
     {"id": "list_of_arrays", "args": [[{"$": "array", "pairs": [["password", "a"]]}, {"$": "array", "pairs": [["name", "b"]]}]], "note": "a list is walked element by element"},
     {"id": "over_redaction", "args": [{"$": "array", "pairs": [["compass", "north"], ["bypass", 1]]}], "note": "substring matching redacts unrelated keys"},
-    {"id": "unlisted_secret_names", "args": [{"$": "array", "pairs": [["api_key", "k"], ["authorization", "Bearer x"], ["pwd", "p"], ["private_key", "pk"]]}], "note": "SECURITY: these names are not matched and pass through"},
+    {"id": "unlisted_secret_names", "args": [{"$": "array", "pairs": [["api_key", "k"], ["authorization", "Bearer x"], ["pwd", "p"], ["private_key", "pk"]]}], "note": "these names were missed before #871 and are now redacted"},
     {"id": "secret_in_value_not_key", "args": [{"$": "array", "pairs": [["dsn", "mysql://user:hunter2@host/db"], ["header", "Authorization: Bearer abc"]]}], "note": "SECURITY: secrets embedded in values are not found"},
     {"id": "scalar_string", "args": ["password"], "note": "a non-array is returned unchanged"},
     {"id": "mixed_key_types", "args": [{"$": "array", "pairs": [["a", 1], [7, 2], ["", 3], ["0", 4]]}], "note": "\"0\" becomes the integer key 0 in PHP"},

@@ -146,7 +146,7 @@ and fixed separately.
 | `padleft` | Never returned for a non-numeric pad; a numeric pad could stop short of the minimum. Fixed. | #860 |
 | `build_where_from_array` | A field name with a trailing newline passed the name check. Fixed. | #861 |
 | `cacti_log` | A newline in `$environ` starts a new log record; control bytes reach the file. | #870 |
-| `cacti_is_sensitive_key`, `cacti_redact_value` | The key list misses common credential names and matches some unrelated ones. | #871 |
+| `cacti_is_sensitive_key`, `cacti_redact_value` | The key list misses common credential names and matches some unrelated ones. Fixed: the list now covers the common credential names. The substring match still redacts some unrelated names, which is left on purpose because it fails closed. | #871 |
 | `set_user_setting`, `save_user_settings` | A non-numeric user id was stored as user 0. Fixed: a user id that is not an integer or a digit string, or is outside the 0 to 16777215 range of `settings_user.user_id`, is rejected and logged. | #872 |
 | `get_associated_rras` | `$sql_where` is concatenated into the query. Core now selects one RRA through a bound `$rra_id`; the fragment argument stays for plugin callers. | #873 |
 | `clear_user_setting`, `read_user_setting`, `user_setting_exists` | A non-numeric user id deleted, read or counted user 0's settings. Fixed: the same user id check as #872 applies. | #887 |

@@ -17,6 +17,12 @@
       "result": {"returned": {"type": "string", "value": "[REDACTED]"}}
     },
     {
+      "args": ["bearer", "abc"],
+      "id": "added_name_bearer",
+      "note": "redacted since #871",
+      "result": {"returned": {"type": "string", "value": "[REDACTED]"}}
+    },
+    {
       "args": ["name", "x"],
       "id": "plain_string",
       "result": {"returned": {"type": "string", "value": "x"}}

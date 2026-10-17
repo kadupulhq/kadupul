@@ -115,19 +115,19 @@
     {
       "args": ["api_key"],
       "id": "name_api_key",
-      "result": {"returned": {"type": "bool", "value": false}}
+      "result": {"returned": {"type": "bool", "value": true}}
     },
     {
       "args": ["apikey"],
       "id": "name_apikey",
-      "result": {"returned": {"type": "bool", "value": false}}
+      "result": {"returned": {"type": "bool", "value": true}}
     },
     {
       "args": ["private_key"],
       "id": "name_private_key",
-      "result": {"returned": {"type": "bool", "value": false}}
+      "result": {"returned": {"type": "bool", "value": true}}
     },
-    {"args": ["pwd"], "id": "name_pwd", "result": {"returned": {"type": "bool", "value": false}}},
+    {"args": ["pwd"], "id": "name_pwd", "result": {"returned": {"type": "bool", "value": true}}},
     {
       "args": ["passwd"],
       "id": "name_passwd",
@@ -136,22 +136,22 @@
     {
       "args": ["authorization"],
       "id": "name_authorization",
-      "result": {"returned": {"type": "bool", "value": false}}
+      "result": {"returned": {"type": "bool", "value": true}}
     },
     {
       "args": ["bearer"],
       "id": "name_bearer",
-      "result": {"returned": {"type": "bool", "value": false}}
+      "result": {"returned": {"type": "bool", "value": true}}
     },
     {
       "args": ["credential"],
       "id": "name_credential",
-      "result": {"returned": {"type": "bool", "value": false}}
+      "result": {"returned": {"type": "bool", "value": true}}
     },
     {
       "args": ["access_key"],
       "id": "name_access_key",
-      "result": {"returned": {"type": "bool", "value": false}}
+      "result": {"returned": {"type": "bool", "value": true}}
     },
     {
       "args": ["secret_key"],
@@ -161,7 +161,7 @@
     {
       "args": ["session_id"],
       "id": "name_session_id",
-      "result": {"returned": {"type": "bool", "value": false}}
+      "result": {"returned": {"type": "bool", "value": true}}
     },
     {
       "args": ["csrf_token"],
@@ -186,7 +186,7 @@
     {
       "args": ["communities"],
       "id": "name_communities",
-      "result": {"returned": {"type": "bool", "value": false}}
+      "result": {"returned": {"type": "bool", "value": true}}
     },
     {
       "args": ["db_pass"],
@@ -196,10 +196,30 @@
     {
       "args": ["privkey"],
       "id": "name_privkey",
-      "result": {"returned": {"type": "bool", "value": false}}
+      "result": {"returned": {"type": "bool", "value": true}}
     },
-    {"args": ["psk"], "id": "name_psk", "result": {"returned": {"type": "bool", "value": false}}},
-    {"args": ["jwt"], "id": "name_jwt", "result": {"returned": {"type": "bool", "value": false}}},
+    {"args": ["psk"], "id": "name_psk", "result": {"returned": {"type": "bool", "value": true}}},
+    {"args": ["jwt"], "id": "name_jwt", "result": {"returned": {"type": "bool", "value": true}}},
+    {
+      "args": ["API_KEY"],
+      "id": "added_upper_api_key",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["Authorization"],
+      "id": "added_mixed_authorization",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["wifi_psk_value"],
+      "id": "added_embedded_psk",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
+    {
+      "args": ["php_session_id"],
+      "id": "added_embedded_session_id",
+      "result": {"returned": {"type": "bool", "value": true}}
+    },
     {"args": [""], "id": "key_empty", "result": {"returned": {"type": "bool", "value": false}}},
     {"args": [null], "id": "key_null", "result": {"returned": {"type": "bool", "value": false}}},
     {"args": [0], "id": "key_int_zero", "result": {"returned": {"type": "bool", "value": false}}},

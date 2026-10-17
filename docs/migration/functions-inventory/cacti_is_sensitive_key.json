@@ -4,8 +4,8 @@
     "static": {
         "file": "lib/functions.php",
         "start_line": 8872,
-        "end_line": 8890,
-        "line_count": 19,
+        "end_line": 8893,
+        "line_count": 22,
         "signature": {
             "parameters": [
                 {
@@ -45,6 +45,6 @@
         "status": "planned",
         "lts_status": "not assessed",
         "behavior_record": "tests/Golden/functions/kadupul/php-8.4/cacti_is_sensitive_key.json",
-        "notes": "The key list misses common credential names and matches some unrelated ones. See #871."
+        "notes": "The key list misses common credential names and matches some unrelated ones. See #871. Fixed in #871 by adding the common credential names to the list; the substring match still over-matches on purpose."
     }
 }
