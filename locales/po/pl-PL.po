@@ -650,7 +650,7 @@ msgstr "Dowolny"
 #: lib/html_reports.php:1163 lib/html_reports.php:1167
 #: lib/html_reports.php:1175 lib/html_reports.php:1186
 #: lib/html_reports.php:1206 lib/html_reports.php:1462
-#: lib/html_reports.php:1467 lib/html_reports.php:1472 package_import.php:686
+#: lib/html_reports.php:1467 lib/html_reports.php:1472 package_import.php:687
 #: settings.php:591 settings.php:613 settings.php:644
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:62
 #: templates_import.php:298 templates_import.php:330 utilities.php:2099
@@ -1167,7 +1167,7 @@ msgstr "Agent SNMP"
 #: lib/api_automation.php:53 lib/api_automation.php:280
 #: lib/api_automation.php:573 lib/api_automation.php:1199
 #: lib/html_reports.php:2031 lib/installer.php:2054 managers.php:216
-#: package_import.php:542 package_import.php:627 plugins.php:497
+#: package_import.php:543 package_import.php:628 plugins.php:497
 #: plugins.php:623 pollers.php:1007 templates_import.php:206
 #: templates_import.php:245 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:2141
@@ -2201,7 +2201,7 @@ msgid "Item"
 msgstr "Element"
 
 #: automation_snmp.php:541 include/auth.php:341 include/global_settings.php:772
-#: package_import.php:504 permission_denied.php:43 plugins.php:641
+#: package_import.php:505 permission_denied.php:43 plugins.php:641
 msgid "Version"
 msgstr "Wersja"
 
@@ -2386,7 +2386,7 @@ msgstr "Szablony automatyki [nowe]"
 msgid "Device Automation Templates"
 msgstr "Szablony automatyki urządzeń"
 
-#: automation_templates.php:498 data_sources.php:2028 package_import.php:624
+#: automation_templates.php:498 data_sources.php:2028 package_import.php:625
 #: templates_import.php:242 user_admin.php:1212 user_group_admin.php:1231
 msgid "Template Name"
 msgstr "Nazwa Szablonu"
@@ -2891,7 +2891,7 @@ msgid "The Status of the Data Source Debug Check."
 msgstr "Status debugowania źródła danych."
 
 #: data_debug.php:529 lib/installer.php:2508 lib/installer.php:2540
-#: package_import.php:596
+#: package_import.php:597
 msgid "Writable"
 msgstr "Zapisywalny"
 
@@ -4030,8 +4030,8 @@ msgstr "Własny ładunek"
 msgid "Data Source Item %s"
 msgstr "Źródło danych Pozycja %s"
 
-#: data_sources.php:1267 data_templates.php:817 lib/import.php:2781
-#: package_import.php:598
+#: data_sources.php:1267 data_templates.php:817 lib/import.php:2799
+#: package_import.php:599
 msgid "New"
 msgstr "Nowy"
 
@@ -6501,7 +6501,7 @@ msgid "Data Input Field"
 msgstr "Pole wprowadzania danych"
 
 #: include/global_arrays.php:1363 include/global_form.php:579
-#: include/global_form.php:1679 package_import.php:862
+#: include/global_form.php:1679 package_import.php:863
 msgid "Data Source Profile"
 msgstr "Profil źródła danych"
 
@@ -7882,7 +7882,7 @@ msgid "The script/source used to gather data for this data source."
 msgstr "Skrypt/źródło użyte do zebrania danych dla tego źródła danych."
 
 #: include/global_form.php:581 include/global_form.php:1681
-#: package_import.php:864
+#: package_import.php:865
 msgid "Select the Data Source Profile.  The Data Source Profile controls polling interval, the data aggregation, and retention policy for the resulting Data Sources."
 msgstr "Wybierz profil źródła danych.  Profil źródła danych kontroluje interwał badania opinii publicznej, agregację danych oraz politykę zatrzymywania danych w odniesieniu do źródeł danych, które z tego wynikają."
 
@@ -8630,27 +8630,27 @@ msgstr "Szablon importu z pliku lokalnego"
 msgid "If the XML file containing template data is located on your local machine, select it here."
 msgstr "Jeśli plik XML zawierający dane szablonu znajduje się na Twojej lokalnej maszynie, wybierz go tutaj."
 
-#: include/global_form.php:1674 package_import.php:857
+#: include/global_form.php:1674 package_import.php:858
 msgid "Data Source Overrides"
 msgstr "Profile źródeł danych"
 
-#: include/global_form.php:1683 package_import.php:866
+#: include/global_form.php:1683 package_import.php:867
 msgid "Create New from Template"
 msgstr "Utwórz nowy z szablonu"
 
-#: include/global_form.php:1688 package_import.php:871
+#: include/global_form.php:1688 package_import.php:872
 msgid "Graph/Data Template Overrides"
 msgstr "Opcje szablonów wykresów"
 
-#: include/global_form.php:1693 package_import.php:876
+#: include/global_form.php:1693 package_import.php:877
 msgid "Remove Orphaned Graph Items"
 msgstr "Usuń osierocone elementy wykresu"
 
-#: include/global_form.php:1695 package_import.php:878
+#: include/global_form.php:1695 package_import.php:879
 msgid "If checked, Kadupul will delete any Graph Items from both the Graph Template and associated Graphs that are not included in the imported Graph Template."
 msgstr "Jeśli jest zaznaczone, Kadupul usunie wszystkie elementy wykresu zarówno z szablonu wykresu, jak i powiązanych wykresów, które nie są zawarte w importowanym szablonie wykresu."
 
-#: include/global_form.php:1700 package_import.php:883
+#: include/global_form.php:1700 package_import.php:884
 msgid "Replace Data Query Suggested Value Patterns"
 msgstr "Zastąp wzory sugerowanych wartości zapytania o dane"
 
@@ -8659,29 +8659,29 @@ msgid "Replace Data Source and Graph Template Suggested Value Records for Data Q
 msgstr "Zastąp rekordy sugerowanej wartości źródła danych i szablonu wykresu dla zapytań o dane.  Wykresy i źródła danych przyjmują nowe nazwy po ponownym indeksowaniu zapytania o dane lub przy użyciu wymuszonego procesu Zastąp sugerowane wartości."
 
 #: include/global_form.php:1707 include/global_settings.php:673
-#: package_import.php:890
+#: package_import.php:891
 msgid "Graph Template Image Format"
 msgstr "Szablon wykresu Format obrazu"
 
-#: include/global_form.php:1708 package_import.php:891
+#: include/global_form.php:1708 package_import.php:892
 msgid "The Image Format to be used when importing or updating Graph Templates."
 msgstr "Domyślny format obrazu, który ma być używany dla wszystkich nowych szablonów wykresów."
 
 #: include/global_form.php:1714 include/global_settings.php:680
-#: package_import.php:898
+#: package_import.php:899
 msgid "Graph Template Height"
 msgstr "Wysokość szablonu wykresu"
 
-#: include/global_form.php:1715 package_import.php:899
+#: include/global_form.php:1715 package_import.php:900
 msgid "The Height to be used when importing or updating Graph Templates."
 msgstr "Domyślna szerokość wykresu używana dla wszystkich nowych szablonów wykresów."
 
 #: include/global_form.php:1722 include/global_settings.php:688
-#: package_import.php:907
+#: package_import.php:908
 msgid "Graph Template Width"
 msgstr "Szerokość szablonu wykresu"
 
-#: include/global_form.php:1723 package_import.php:908
+#: include/global_form.php:1723 package_import.php:909
 msgid "The Width to be used when importing or updating Graph Templates."
 msgstr "Domyślna szerokość wykresu używana dla wszystkich nowych szablonów wykresów."
 
@@ -10870,7 +10870,7 @@ msgstr "Ustawienia LDAP CN"
 msgid "Field that will replace the Full Name when creating a new user, taken from LDAP. (on windows: displayname) "
 msgstr "Pole, które zastąpi Pełną nazwę podczas tworzenia nowego użytkownika, pobraną z LDAP. (na oknach: displayname)"
 
-#: include/global_settings.php:1893 package_import.php:498
+#: include/global_settings.php:1893 package_import.php:499
 msgid "Email"
 msgstr "Email"
 
@@ -11923,7 +11923,7 @@ msgstr "Odzyskiwanie"
 #: lib/api_automation.php:33 lib/auth.php:3070 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:342 lib/plugins.php:1499
 #: lib/plugins.php:1500 lib/rrd.php:4209 lib/rrd.php:4221 lib/spikekill.php:301
-#: package_import.php:522 package_import.php:600 utilities.php:211
+#: package_import.php:523 package_import.php:601 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 msgid "Unknown"
 msgstr "Nieznany"
@@ -14078,7 +14078,7 @@ msgstr "Wydarzenia"
 msgid "Send Report"
 msgstr "Wyślij raport"
 
-#: lib/html_reports.php:1644 lib/import.php:2866 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:2884 user_admin.php:1776
 msgid "[new]"
 msgstr "nowy] [nowy]."
 
@@ -14315,106 +14315,110 @@ msgstr "Błąd walidacji dla zmiennej %s o wartości %s.  Więcej informacji na 
 msgid "Validation Error"
 msgstr "Błąd walidacji"
 
-#: lib/import.php:651
+#: lib/import.php:655 lib/import.php:674
 msgid "written"
 msgstr "zapisany"
 
-#: lib/import.php:653
+#: lib/import.php:657
+msgid "not written"
+msgstr ""
+
+#: lib/import.php:660
 msgid "could not open"
 msgstr "nie mógł otworzyć się"
 
-#: lib/import.php:659
+#: lib/import.php:666
 msgid "not exists"
 msgstr "nie istnieje"
 
-#: lib/import.php:662
+#: lib/import.php:669
 msgid "not writable"
 msgstr "Zapisywalny"
 
-#: lib/import.php:1879 lib/import.php:1900
+#: lib/import.php:1897 lib/import.php:1918
 #, php-format
 msgid "New Graph Template: %s"
 msgstr "Wykres [Szablon: %s]"
 
-#: lib/import.php:1914 lib/import.php:1926
+#: lib/import.php:1932 lib/import.php:1944
 #, php-format
 msgid "New Data Query: %s"
 msgstr "Zapytanie o dane [%s]"
 
-#: lib/import.php:2563
+#: lib/import.php:2581
 msgid "Unknown Field"
 msgstr "Nieznane Pole"
 
-#: lib/import.php:2779
+#: lib/import.php:2797
 msgid "Updated"
 msgstr "Aktualizuj"
 
-#: lib/import.php:2783
+#: lib/import.php:2801
 msgid "Damaged"
 msgstr "Źródło danych, wykres"
 
-#: lib/import.php:2785 package_import.php:592
+#: lib/import.php:2803 package_import.php:593
 msgid "Unchanged"
 msgstr "bez zmian"
 
-#: lib/import.php:2821
+#: lib/import.php:2839
 msgid "Import Preview Results"
 msgstr "Importowanie wyników podglądu"
 
-#: lib/import.php:2821
+#: lib/import.php:2839
 msgid "Import Results"
 msgstr "Wyniki przywozu"
 
-#: lib/import.php:2825
+#: lib/import.php:2843
 #, fuzzy
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Kadupul wprowadziłyby następujące zmiany, gdyby Pakiet był importowany:"
 
-#: lib/import.php:2827
+#: lib/import.php:2845
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "Kadupul zaimportowało do Pakietu następujące pozycje"
 
-#: lib/import.php:2830
+#: lib/import.php:2848
 msgid "Package Files"
 msgstr "Pliki opakowaniowe"
 
-#: lib/import.php:2834
+#: lib/import.php:2852
 msgid "[preview] "
 msgstr "Podgląd"
 
-#: lib/import.php:2839
+#: lib/import.php:2857
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "Kadupul dokonywałoby następujących zmian, gdyby szablon został zaimportowany:"
 
-#: lib/import.php:2841
+#: lib/import.php:2859
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "Kadupul zaimportowało do Szablonu następujące elementy"
 
-#: lib/import.php:2856
+#: lib/import.php:2874
 msgid "[success]"
 msgstr "Sukces!"
 
-#: lib/import.php:2858
+#: lib/import.php:2876
 msgid "[fail]"
 msgstr "Błąd"
 
-#: lib/import.php:2860
+#: lib/import.php:2878
 msgid "[preview]"
 msgstr "Podgląd"
 
-#: lib/import.php:2864
+#: lib/import.php:2882
 msgid "[updated]"
 msgstr "Zaktualizowano"
 
-#: lib/import.php:2868
+#: lib/import.php:2886
 msgid "[unchanged]"
 msgstr "bez zmian"
 
-#: lib/import.php:2904
+#: lib/import.php:2922
 msgid "Found Dependency:"
 msgstr "Założona zależność:"
 
-#: lib/import.php:2906
+#: lib/import.php:2924
 msgid "Unmet Dependency:"
 msgstr "Niezaspokojona zależność:"
 
@@ -14908,7 +14912,7 @@ msgstr "W przypadku zdalnych ankieterów bardzo ważne jest, aby ścieżki, któ
 msgid "Required Writable at Install Time Only"
 msgstr "Wymagane pisanie tylko w czasie instalacji"
 
-#: lib/installer.php:2512 lib/installer.php:2544 package_import.php:594
+#: lib/installer.php:2512 lib/installer.php:2544 package_import.php:595
 msgid "Not Writable"
 msgstr "Zapisywalny"
 
@@ -15071,11 +15075,11 @@ msgstr "Nie zaleca się aktualizowania szablonów, w których już dokonano mody
 msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "Proszę wybrać szablony urządzeń, które mają być używane po zakończeniu instalacji.  W przypadku systemu operacyjnego Windows należy upewnić się, że wybrano szablon \"Urządzenie Windows\".  Jeśli Twoim systemem operacyjnym jest Linux/UNIX, upewnij się, że wybrałeś 'Local Linux Machine' Device Template."
 
-#: lib/installer.php:2749 package_import.php:492 plugins.php:629
+#: lib/installer.php:2749 package_import.php:493 plugins.php:629
 msgid "Author"
 msgstr "Autor"
 
-#: lib/installer.php:2749 package_import.php:495
+#: lib/installer.php:2749 package_import.php:496
 msgid "Homepage"
 msgstr "Strona główna"
 
@@ -16821,123 +16825,123 @@ msgstr "Nie ufasz temu autorowi pakietu.  Jeśli chcesz zaimportować, zaznacz p
 msgid "The Package %s Imported Successfully"
 msgstr "Pakiet %s zaimportowano pomyślnie"
 
-#: package_import.php:209
+#: package_import.php:214
 #, php-format
 msgid "The Package %s Import Failed"
 msgstr "Importowanie pakietu %s nie powiodło się"
 
-#: package_import.php:306
+#: package_import.php:307
 #, fuzzy
 msgid "Error: Invalid file path."
 msgstr "Wprowadź prawidłową ścieżkę dostępu do pliku"
 
-#: package_import.php:389 package_import.php:395 package_import.php:451
-#: package_import.php:454
+#: package_import.php:390 package_import.php:396 package_import.php:452
+#: package_import.php:455
 msgid "Error in Package"
 msgstr "Błąd w zapytaniu o dane"
 
-#: package_import.php:389
+#: package_import.php:390
 msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available."
 msgstr "Więcej informacji można znaleźć na stronie cacti.log.  Możliwe, że wystąpił błąd klucza API lub pakiet został okiełznany lub lokalizacja nie jest dostępna."
 
-#: package_import.php:389
+#: package_import.php:390
 #, php-format
 msgid "The package \"%s\" download or validation failed"
 msgstr "Pobieranie lub sprawdzanie poprawności pakietu „%s” nie powiodło się"
 
-#: package_import.php:395
+#: package_import.php:396
 msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available"
 msgstr "Więcej informacji można znaleźć na stronie cacti.log.  Możliwe, że wystąpił błąd klucza API lub pakiet został okiełznany lub lokalizacja nie jest dostępna"
 
-#: package_import.php:395
+#: package_import.php:396
 msgid "The package download or validation failed"
 msgstr "Pobieranie lub sprawdzanie poprawności pakietu nie powiodło się"
 
-#: package_import.php:451
+#: package_import.php:452
 msgid "Package XML File Damaged."
 msgstr "Pliki opakowaniowe"
 
-#: package_import.php:451
+#: package_import.php:452
 msgid "The XML files appears to be invalid.  Please contact the package author"
 msgstr "Pliki XML wydają się być nieprawidłowe.  Skontaktuj się z autorem pakietu"
 
-#: package_import.php:454
+#: package_import.php:455
 msgid "Check the package repository file for files that should exist and find the one that is missing"
 msgstr "Sprawdź plik repozytorium pakietów pod kątem plików, które powinny istnieć i znajdź ten, którego brakuje"
 
-#: package_import.php:454
+#: package_import.php:455
 msgid "The XML files for the package does not exist"
 msgstr "Pliki XML dla pakietu nie istnieją"
 
-#: package_import.php:488
+#: package_import.php:489
 msgid "Packages Details"
 msgstr "Pliki opakowaniowe"
 
-#: package_import.php:501
+#: package_import.php:502
 msgid "Device class"
 msgstr "Reguły dotyczące urządzeń"
 
-#: package_import.php:507
+#: package_import.php:508
 msgid "Copyright"
 msgstr "prawo"
 
-#: package_import.php:532
+#: package_import.php:533
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
 msgstr "Importuj nazwy plików pakietów [ Brak wybranych importuje wszystkie, zaznacz, aby importować selektywnie ]"
 
-#: package_import.php:536
+#: package_import.php:537
 msgid "Package"
 msgstr "Pliki opakowaniowe"
 
-#: package_import.php:539
+#: package_import.php:540
 msgid "Filename"
 msgstr "Przezwij"
 
-#: package_import.php:590 package_import.php:677 templates_import.php:321
+#: package_import.php:591 package_import.php:678 templates_import.php:321
 msgid "Differences"
 msgstr "Różnice"
 
-#: package_import.php:617
+#: package_import.php:618
 msgid "Import Package Templates [ None selected imports all, Check to import selectively ]"
 msgstr "Importuj szablony pakietów [ Nic nie wybrano importuje wszystko, zaznacz, aby importować selektywnie ]"
 
-#: package_import.php:621 templates_import.php:239
+#: package_import.php:622 templates_import.php:239
 msgid "Template Type"
 msgstr "Nazwa Szablonu"
 
-#: package_import.php:630 templates_import.php:251
+#: package_import.php:631 templates_import.php:251
 msgid "Changes/Diffferences"
 msgstr "Zmień urządzenie"
 
-#: package_import.php:681 templates_import.php:325
+#: package_import.php:682 templates_import.php:325
 msgid "Orphans"
 msgstr "Sieroctwo"
 
-#: package_import.php:734
+#: package_import.php:735
 msgid "File Differences for: "
 msgstr "Różnice w plikach dla:"
 
-#: package_import.php:841
+#: package_import.php:842
 msgid "Local Package Import File"
 msgstr "Pliki opakowaniowe"
 
-#: package_import.php:842
+#: package_import.php:843
 msgid "The *.xml.gz file located on your Local machine to Upload and Import."
 msgstr "Plik *.xml.gz znajdujący się na komputerze lokalnym do przesłania i zaimportowania."
 
-#: package_import.php:847
+#: package_import.php:848
 msgid "Automatically Trust Signer"
 msgstr "Automatycznie dodawaj do Kadupul"
 
-#: package_import.php:849
+#: package_import.php:850
 msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
 msgstr "Jeśli zaznaczone, Kadupul automatycznie zaufa sygnatariuszowi w odniesieniu do tego i wszelkich przyszłych pakietów tego autora."
 
-#: package_import.php:885
+#: package_import.php:886
 msgid "Replace Data Source and Graph Template Suggested Value Records.  Graphs and Data Sources will take on new names after either a Data Query Reindex or by using the forced Replace Suggested Values process."
 msgstr "Zastąp rekordy sugerowanej wartości źródła danych i szablonu wykresu.  Wykresy i źródła danych przyjmują nowe nazwy po ponownym indeksowaniu zapytania o dane lub przy użyciu wymuszonego procesu Zastąp sugerowane wartości."
 
-#: package_import.php:956
+#: package_import.php:957
 msgid "Package Import"
 msgstr "Importuj"
 

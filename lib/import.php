@@ -560,7 +560,8 @@ function import_package(
         return false;
     }
 
-    $filestatus = array();
+    $filestatus   = array();
+    $write_failed = false;
 
     if ($info_only) {
         return $data['info'];
@@ -645,10 +646,16 @@ function import_package(
                         $file = fopen($filename, 'wb');
 
                         if (is_resource($file)) {
-                            fwrite($file, $fdata, strlen($fdata));
-                            fclose($file);
+                            $length = fwrite($file, $fdata, strlen($fdata));
+                            $closed = fclose($file);
                             clearstatcache();
-                            $filestatus[$normalized_name] = __('written');
+
+                            /* a short write still leaves the file on disk, truncated */
+                            if ($length === strlen($fdata) && $closed) {
+                                $filestatus[$normalized_name] = __('written');
+                            } else {
+                                $filestatus[$normalized_name] = __('not written');
+                            }
                         } else {
                             $filestatus[$normalized_name] = __('could not open');
                         }
@@ -663,6 +670,12 @@ function import_package(
                     }
 
                     cacti_log('Write Status file: ' . $filename . ', with Status ' . $filestatus[$normalized_name], false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
+
+                    if ($filestatus[$normalized_name] != __('written')) {
+                        cacti_log('FATAL: Package file was not fully written: ' . $filename . ', with Status ' . $filestatus[$normalized_name], true, 'IMPORT', POLLER_VERBOSITY_LOW);
+
+                        $write_failed = true;
+                    }
                 }
             } else {
                 cacti_log('Previewing file: ' . $filename, false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
@@ -714,6 +727,11 @@ function import_package(
                 return false;
             }
         }
+    }
+
+    /* callers already treat false as a failed import */
+    if ($write_failed) {
+        return false;
     }
 
     if (!$preview) {
