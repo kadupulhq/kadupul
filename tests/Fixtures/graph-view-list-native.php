@@ -43,6 +43,8 @@ $_SESSION = array_merge(array('sess_user_id' => 1), $scenario['session'] ?? arra
 $_GET = $_POST = $_REQUEST = array_merge(array('action' => 'list', 'header' => 'false'), $scenario['request']);
 $_CACTI_REQUEST = array();
 $config = array('base_path' => $directory, 'url_path' => '/', 'poller_id' => 1, 'is_web' => false, 'config_options_array' => array('log_validation' => '', 'num_rows_table' => 10, 'selected_theme' => 'classic', 'autocomplete_enabled' => '', 'hide_form_description' => 'off'));
+// Match include/global_settings.php's Page Refresh default for tree rendering.
+$settings_user = array('graphs' => array('page_refresh' => array('default' => '300')));
 $no_session_write = array('graph_view.php');
 $item_rows = array(10 => '10', 20 => '20');
 $graph_timespans = $alignment = $graph_sources = array();

@@ -82,6 +82,7 @@ final class GraphViewListNativeTest extends TestCase
         self::assertSame(array(array('5', 0, true)), $allowed['tree_checks']);
         self::assertStringNotContainsString('<x-tree-pane>', $denied['html']);
         self::assertStringContainsString('<x-tree-pane>5</x-tree-pane>', $allowed['html']);
+        self::assertStringContainsString('refreshMSeconds = 300000;', $allowed['html']);
     }
 
     private function runController(array $scenario): array
