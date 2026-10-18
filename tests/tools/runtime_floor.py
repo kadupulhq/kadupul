@@ -17,7 +17,7 @@ def main():
     args = parser.parse_args()
     php = ['mise', 'exec', 'php@' + args.php_version, '--', 'php']
     version = subprocess.check_output(php + ['-r', 'echo PHP_VERSION;'], cwd=ROOT, text=True).strip()
-    if not version.startswith(args.php_version):
+    if version != args.php_version:
         raise AssertionError(f'Requested PHP {args.php_version}, got {version}')
     supported = tuple(int(part) for part in version.split('.')[:2]) >= (8, 4)
     entries = ['include/runtime.php'] if supported else ['include/runtime.php', 'include/global.php', 'config/bootstrap.php']
