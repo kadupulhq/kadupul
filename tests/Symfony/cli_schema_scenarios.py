@@ -104,25 +104,41 @@ def utc_date(harness):
     return observed
 
 
-def log_date_layouts(bounds):
-    """Supported date_time_format() layouts for a bounded command invocation."""
+def log_date_layout(harness):
+    """Read the CLI settings; missing rows use global_settings.php defaults.
+
+    Unsupported fixture values fail closed rather than guessing PHP coercions.
+    """
+    settings = dict(line.split('\t', 1) for line in harness.sql(
+        "SELECT name, value FROM settings WHERE name IN ('default_date_format', 'default_datechar')").splitlines())
+    orders = dict(enumerate(('mdY', 'MdY', 'dmY', 'dMY', 'Ymd', 'YMd')))
+    separators = {'0': '-', '1': '/', '2': '.'}
+    order = settings.get('default_date_format', '4')
+    separator = settings.get('default_datechar', '0')
+    if order not in {str(key) for key in orders} or separator not in separators:
+        raise ValueError('Unsupported fixture log date settings')
+    return orders[int(order)], separators[separator]
+
+
+def log_dates(bounds, layout):
+    """Configured date_time_format() output for a bounded command invocation."""
     first, last = bounds
     if not 0 <= (last - first).days <= 1:
         return None
     months = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split()
-    layouts = {(order, separator): set() for order in ('mdY', 'MdY', 'dmY', 'dMY', 'Ymd', 'YMd')
-               for separator in ('-', '/', '.')}
+    order, separator = layout
+    values = set()
     for day in {first, last}:
         fields = {'Y': f'{day.year:04d}', 'm': f'{day.month:02d}', 'd': f'{day.day:02d}', 'M': months[day.month - 1]}
-        for (order, separator), values in layouts.items():
-            values.add(separator.join(fields[field] for field in order))
-    return layouts
+        values.add(separator.join(fields[field] for field in order))
+    return values
 
 
-def dated_logs_match(original, native, original_days, native_days):
+def dated_logs_match(original, native, original_days, native_days, original_layout, native_layout):
     """Keep message/order/layout parity, allowing only observed calendar dates."""
-    original_layouts, native_layouts = log_date_layouts(original_days), log_date_layouts(native_days)
-    if original_layouts is None or native_layouts is None or len(original) != len(native):
+    original_dates, native_dates = log_dates(original_days, original_layout), log_dates(native_days, native_layout)
+    if (original_dates is None or native_dates is None or original_layout != native_layout
+            or len(original) != len(native)):
         return False
     for left, right in zip(original, native):
         left_stamp = re.fullmatch(r'(\S+) HH:MM:SS - (.*)', left)
@@ -131,9 +147,7 @@ def dated_logs_match(original, native, original_days, native_days):
             if left != right:
                 return False
             continue
-        if left_stamp[2] != right_stamp[2] or not any(
-                left_stamp[1] in original_layouts[layout] and right_stamp[1] in native_layouts[layout]
-                for layout in original_layouts):
+        if left_stamp[2] != right_stamp[2] or left_stamp[1] not in original_dates or right_stamp[1] not in native_dates:
             return False
     return True
 
@@ -156,6 +170,7 @@ def compare(harness, check, label, scripts, arguments, allowed, reset, snapshot,
     reset(harness)
     start = snapshot(harness)
     marks = len(log_lines(harness))
+    original_layout = log_date_layout(harness) if log_filter is not None else None
     original_start = utc_date(harness) if log_filter is not None else None
     original = run(harness, original_script, arguments)
     original_end = utc_date(harness) if log_filter is not None else None
@@ -164,6 +179,7 @@ def compare(harness, check, label, scripts, arguments, allowed, reset, snapshot,
     reset(harness)
     check(snapshot(harness) == start, f'{label}: the shim starts from the same {subject}')
     marks = len(log_lines(harness))
+    shim_layout = log_date_layout(harness) if log_filter is not None else None
     shim_start = utc_date(harness) if log_filter is not None else None
     shim = run(harness, shim_script, arguments)
     shim_end = utc_date(harness) if log_filter is not None else None
@@ -199,9 +215,11 @@ def compare(harness, check, label, scripts, arguments, allowed, reset, snapshot,
         check(after_shim == after_original, f'{label}: shim {subject} {"match" if subject == "rows" else "matches"} the original')
     if log_filter is not None:
         matching_logs = dated_logs_match(log_filter(original_log), log_filter(shim_log),
-                                         (original_start, original_end), (shim_start, shim_end))
+                                         (original_start, original_end), (shim_start, shim_end),
+                                         original_layout, shim_layout)
         if not matching_logs:
             print(f'{label}: original UTC dates {original_start}..{original_end}; shim UTC dates {shim_start}..{shim_end}', flush=True)
+            print(f'{label}: configured layouts {original_layout!r}, {shim_layout!r}', flush=True)
             print(f'{label}: original log {original_log!r}\n{label}: shim log {shim_log!r}', flush=True)
         check(matching_logs, f'{label}: shim logs the same cacti.log lines, date included')
     return {'original': original, 'shim': shim, 'original_log': original_log, 'shim_log': shim_log,

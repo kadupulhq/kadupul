@@ -135,7 +135,8 @@ class AuditExitComparisonTest(unittest.TestCase):
         snapshot = Mock(side_effect=[('start',), ('same schema',), ('start',), (state,)])
         with patch.object(schema, 'run', side_effect=[original, native]), \
                 patch.object(schema, 'log_lines', side_effect=[[], ['same log'], [], [log]]), \
-                patch.object(schema, 'utc_date', return_value=date(2026, 10, 17)):
+                patch.object(schema, 'utc_date', return_value=date(2026, 10, 17)), \
+                patch.object(schema, 'log_date_layout', return_value=('mdY', '/')):
             return schema.compare(object(), lambda condition, label: self.assertTrue(condition, label),
                                   'audit failed write', ('original.php', 'native.php'), ['--repair'],
                                   None, Mock(), snapshot, 'audit', stdout=lambda text: text,
@@ -197,11 +198,16 @@ class AuditExitComparisonTest(unittest.TestCase):
 
 
 class AuditLogDateTest(unittest.TestCase):
-    def compare(self, original, native, days=('2026-10-17', '2026-10-17', '2026-10-18', '2026-10-18')):
+    def compare(self, original, native, days=('2026-10-17', '2026-10-17', '2026-10-18', '2026-10-18'),
+                layout=('0', '1')):
         events = []
         ticks = iter(days)
 
         class ClockHarness:
+            def sql(inner, query):
+                self.assertEqual("SELECT name, value FROM settings WHERE name IN ('default_date_format', 'default_datechar')", query)
+                return f'default_date_format\t{layout[0]}\ndefault_datechar\t{layout[1]}\n'
+
             def command(inner, *arguments, check=False):
                 self.assertEqual(('date', '-u', '+%Y-%m-%d'), arguments)
                 self.assertTrue(check)
@@ -254,13 +260,14 @@ class AuditLogDateTest(unittest.TestCase):
         self.compare(['10/17/2026 10:00:00 - same'], ['10/17/2026 11:00:00 - same'], ('2026-10-17',) * 4)
 
     def test_all_supported_date_orders_and_separators_cross_midnight(self):
-        for before, after in [('10|17|2026', '10|18|2026'), ('Oct|17|2026', 'Oct|18|2026'),
+        for order, (before, after) in enumerate([('10|17|2026', '10|18|2026'), ('Oct|17|2026', 'Oct|18|2026'),
                               ('17|10|2026', '18|10|2026'), ('17|Oct|2026', '18|Oct|2026'),
-                              ('2026|10|17', '2026|10|18'), ('2026|Oct|17', '2026|Oct|18')]:
+                              ('2026|10|17', '2026|10|18'), ('2026|Oct|17', '2026|Oct|18')]):
             for separator in ('/', '-', '.'):
                 with self.subTest(order=before, separator=separator):
                     self.compare([before.replace('|', separator) + ' 23:59:58 - same'],
-                                 [after.replace('|', separator) + ' 00:00:00 - same'])
+                                 [after.replace('|', separator) + ' 00:00:00 - same'],
+                                 layout=(str(order), {'-': '0', '/': '1', '.': '2'}[separator]))
 
     def test_month_year_and_leap_day_boundaries(self):
         for before, after, first, second in [
@@ -269,7 +276,24 @@ class AuditLogDateTest(unittest.TestCase):
                 ('02/28/2027', '03/01/2027', '2027-02-28', '2027-03-01'),
                 ('10/10/2026', '11/10/2026', '2026-10-10', '2026-10-11')]:
             with self.subTest(before=before, after=after):
-                self.compare([before + ' 23:59:58 - same'], [after + ' 00:00:00 - same'], (first, first, second, second))
+                self.compare([before + ' 23:59:58 - same'], [after + ' 00:00:00 - same'], (first, first, second, second),
+                             layout=('2' if before == '10/10/2026' else '0', '1'))
+
+    def test_ambiguous_numeric_dates_cannot_select_an_unconfigured_layout(self):
+        with self.assertRaisesRegex(AssertionError, 'logs'):
+            self.compare(['10/10/2026 23:59:58 - same'], ['11/10/2026 00:00:00 - same'],
+                         ('2026-10-10', '2026-10-10', '2026-10-11', '2026-10-11'))
+
+    def test_missing_settings_use_actual_defaults_and_unsupported_values_fail_closed(self):
+        self.assertEqual(('Ymd', '-'), schema.log_date_layout(Mock(sql=Mock(return_value=''))))
+        for settings in ('default_date_format\tbad\n', 'default_datechar\t9\n'):
+            with self.subTest(settings=settings), self.assertRaises(ValueError):
+                schema.log_date_layout(Mock(sql=Mock(return_value=settings)))
+
+    def test_changed_configuration_between_commands_remains_a_failure(self):
+        with patch.object(schema, 'log_date_layout', side_effect=[('mdY', '/'), ('dmY', '/')]), \
+                self.assertRaisesRegex(AssertionError, 'logs'):
+            self.compare(['10/10/2026 10:00:00 - same'], ['10/10/2026 11:00:00 - same'], ('2026-10-10',) * 4)
 
     def test_a_single_command_can_span_midnight(self):
         self.compare(['10/17/2026 23:59:58 - first', '10/18/2026 00:00:00 - second'],
