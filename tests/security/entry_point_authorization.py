@@ -70,9 +70,11 @@ OPT_IN_SERVED = '.well-known/kadupul-entry-canary.txt'
 # Denied by default without a baseline row of their own: static docs, which
 # Nginx denies with the rest of docs/, a bootstrap name in another case, an
 # editor backup of config.php, a vendor file that is not a page asset and a
-# vendor name that hides a PHP extension before a page-asset one.
+# vendor name that hides a PHP extension before a page-asset one. The vendor
+# canaries sit in include/vendor/csrf, the one vendor directory the image hands
+# to www-data, because the harness writes them as that user.
 DENIED_EXTRA = ('docs/kadupul-entry-canary.html', 'include/Config.php', 'include/.config.php.swp',
-                'include/vendor/kadupul-entry-canary.txt', 'include/vendor/kadupul-entry-canary.php.css')
+                'include/vendor/csrf/kadupul-entry-canary.txt', 'include/vendor/csrf/kadupul-entry-canary.php.css')
 
 # CLI tools with no bootstrap of their own, so a request reaches their guard.
 CLI_TOOLS = ('script_server.php',)
