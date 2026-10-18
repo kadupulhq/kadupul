@@ -48,6 +48,7 @@
       <file>Unit/Security/CsrfMagicTokenCheckTest.php</file>
       <file>Unit/ImportPackageFileDestinationTest.php</file>
       <file>Unit/ImportPackageWriteFailureTest.php</file>
+      <file>Unit/TemplatesImportResultMessageTest.php</file>
       <file>Unit/Core/Poller/PollerBatchLeaseTest.php</file>
       <file>Unit/Core/Poller/PollerPostRunFailureTest.php</file>
       <file>Unit/Core/Poller/ShutdownOrphanCleanupTest.php</file>

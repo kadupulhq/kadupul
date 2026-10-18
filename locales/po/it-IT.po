@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-17 13:54-0700\n"
+"POT-Creation-Date: 2026-10-17 16:41-0700\n"
 "PO-Revision-Date: 2024-04-20 18:59-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -653,7 +653,7 @@ msgstr "Qualsiasi"
 #: lib/html_reports.php:1467 lib/html_reports.php:1472 package_import.php:687
 #: settings.php:591 settings.php:613 settings.php:644
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:62
-#: templates_import.php:298 templates_import.php:330 utilities.php:2099
+#: templates_import.php:299 templates_import.php:331 utilities.php:2099
 msgid "None"
 msgstr "Nessuno"
 
@@ -1168,8 +1168,8 @@ msgstr "SNMP"
 #: lib/api_automation.php:573 lib/api_automation.php:1199
 #: lib/html_reports.php:2031 lib/installer.php:2054 managers.php:216
 #: package_import.php:543 package_import.php:628 plugins.php:497
-#: plugins.php:623 pollers.php:1007 templates_import.php:206
-#: templates_import.php:245 user_admin.php:1073 user_group_admin.php:1095
+#: plugins.php:623 pollers.php:1007 templates_import.php:207
+#: templates_import.php:246 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:2141
 msgid "Status"
 msgstr "Stato"
@@ -2387,7 +2387,7 @@ msgid "Device Automation Templates"
 msgstr "Modelli di automazione dei dispositivi"
 
 #: automation_templates.php:498 data_sources.php:2028 package_import.php:625
-#: templates_import.php:242 user_admin.php:1212 user_group_admin.php:1231
+#: templates_import.php:243 user_admin.php:1212 user_group_admin.php:1231
 msgid "Template Name"
 msgstr "Nome del Modello"
 
@@ -2889,7 +2889,7 @@ msgstr "可写"
 msgid "Determines if the Data Collector or the Web Site have Write access."
 msgstr "Determina se il raccoglitore di dati o il sito web hanno accesso in scrittura."
 
-#: data_debug.php:535 templates_import.php:216
+#: data_debug.php:535 templates_import.php:217
 msgid "Exists"
 msgstr "Esiste"
 
@@ -2955,7 +2955,7 @@ msgid "No Checks"
 msgstr "Controlli"
 
 #: data_debug.php:768 lib/api_automation.php:757 lib/graphs.php:61
-#: lib/graphs.php:85 templates_import.php:220
+#: lib/graphs.php:85 templates_import.php:221
 msgid "Not Found"
 msgstr "Non trovato"
 
@@ -3995,7 +3995,7 @@ msgstr "Dati personalizzati"
 msgid "Data Source Item %s"
 msgstr "Fonte dei dati Voci %s"
 
-#: data_sources.php:1267 data_templates.php:817 lib/import.php:2799
+#: data_sources.php:1267 data_templates.php:817 lib/import.php:2839
 #: package_import.php:599
 msgid "New"
 msgstr "Nuovo"
@@ -11888,7 +11888,7 @@ msgid "Recovering"
 msgstr "Recupero in corso"
 
 #: lib/api_automation.php:33 lib/auth.php:3070 lib/clog_webapi.php:856
-#: lib/html_utility.php:1362 lib/import.php:342 lib/plugins.php:1499
+#: lib/html_utility.php:1362 lib/import.php:382 lib/plugins.php:1499
 #: lib/plugins.php:1500 lib/rrd.php:4181 lib/rrd.php:4193 lib/spikekill.php:301
 #: package_import.php:523 package_import.php:601 utilities.php:211
 #: utilities.php:212 utilities.php:2753
@@ -14046,7 +14046,7 @@ msgstr "Eventi"
 msgid "Send Report"
 msgstr "Invia Report"
 
-#: lib/html_reports.php:1644 lib/import.php:2884 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:2924 user_admin.php:1776
 msgid "[new]"
 msgstr "new"
 
@@ -14285,109 +14285,109 @@ msgstr "Errore di convalida per la variabile %s con un valore di %s.  Vedi backt
 msgid "Validation Error"
 msgstr "Errore di validazione"
 
-#: lib/import.php:655 lib/import.php:674
+#: lib/import.php:695 lib/import.php:714
 msgid "written"
 msgstr "in forma scritta"
 
-#: lib/import.php:657
+#: lib/import.php:697
 msgid "not written"
 msgstr ""
 
-#: lib/import.php:660
+#: lib/import.php:700
 msgid "could not open"
 msgstr "non poteva aprirsi"
 
-#: lib/import.php:666
+#: lib/import.php:706
 msgid "not exists"
 msgstr "non esiste"
 
-#: lib/import.php:669
+#: lib/import.php:709
 msgid "not writable"
 msgstr "Non Scrivibile"
 
-#: lib/import.php:1897 lib/import.php:1918
+#: lib/import.php:1937 lib/import.php:1958
 #, php-format
 msgid "New Graph Template: %s"
 msgstr "Grafico [Modello: %s]."
 
-#: lib/import.php:1932 lib/import.php:1944
+#: lib/import.php:1972 lib/import.php:1984
 #, php-format
 msgid "New Data Query: %s"
 msgstr "Interrogazione dati [%s]"
 
-#: lib/import.php:2581
+#: lib/import.php:2621
 msgid "Unknown Field"
 msgstr "Campo sconosciuto"
 
-#: lib/import.php:2797
+#: lib/import.php:2837
 msgid "Updated"
 msgstr "Aggiorna"
 
-#: lib/import.php:2801
+#: lib/import.php:2841
 msgid "Damaged"
 msgstr "Fonte dei dati, grafico"
 
-#: lib/import.php:2803 package_import.php:593
+#: lib/import.php:2843 package_import.php:593
 msgid "Unchanged"
 msgstr "Invariato"
 
-#: lib/import.php:2839
+#: lib/import.php:2879
 msgid "Import Preview Results"
 msgstr "Importare i risultati dell'anteprima"
 
-#: lib/import.php:2839
+#: lib/import.php:2879
 msgid "Import Results"
 msgstr "Importa risultati"
 
-#: lib/import.php:2843
+#: lib/import.php:2883
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Kadupul apporterebbe le seguenti modifiche se il pacchetto fosse importato:"
 
-#: lib/import.php:2845
+#: lib/import.php:2885
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "Kadupul ha importato i seguenti articoli per il pacchetto:"
 
-#: lib/import.php:2848
+#: lib/import.php:2888
 msgid "Package Files"
 msgstr "Pacchetti"
 
-#: lib/import.php:2852
+#: lib/import.php:2892
 msgid "[preview] "
 msgstr "Anteprima"
 
-#: lib/import.php:2857
+#: lib/import.php:2897
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "Kadupul apporterebbe le seguenti modifiche se il Template fosse importato:"
 
-#: lib/import.php:2859
+#: lib/import.php:2899
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "Kadupul ha importato i seguenti elementi per il Template:"
 
-#: lib/import.php:2874
+#: lib/import.php:2914
 msgid "[success]"
 msgstr "Riuscito!"
 
-#: lib/import.php:2876
+#: lib/import.php:2916
 msgid "[fail]"
 msgstr "Fallito"
 
-#: lib/import.php:2878
+#: lib/import.php:2918
 msgid "[preview]"
 msgstr "Anteprima"
 
-#: lib/import.php:2882
+#: lib/import.php:2922
 msgid "[updated]"
 msgstr "Aggiornato"
 
-#: lib/import.php:2886
+#: lib/import.php:2926
 msgid "[unchanged]"
 msgstr "Invariato"
 
-#: lib/import.php:2922
+#: lib/import.php:2962
 msgid "Found Dependency:"
 msgstr "Trovata la dipendenza:"
 
-#: lib/import.php:2924
+#: lib/import.php:2964
 msgid "Unmet Dependency:"
 msgstr "Dipendenza insoddisfatta:"
 
@@ -16866,7 +16866,7 @@ msgstr "Pacchetti"
 msgid "Filename"
 msgstr "Rinomina"
 
-#: package_import.php:591 package_import.php:678 templates_import.php:321
+#: package_import.php:591 package_import.php:678 templates_import.php:322
 msgid "Differences"
 msgstr "Differenze"
 
@@ -16874,15 +16874,15 @@ msgstr "Differenze"
 msgid "Import Package Templates [ None selected imports all, Check to import selectively ]"
 msgstr "Importa modelli di pacchetto [ Nessuno selezionato importa tutto, seleziona per importare in modo selettivo ]"
 
-#: package_import.php:622 templates_import.php:239
+#: package_import.php:622 templates_import.php:240
 msgid "Template Type"
 msgstr "Titolo del modello"
 
-#: package_import.php:631 templates_import.php:251
+#: package_import.php:631 templates_import.php:252
 msgid "Changes/Diffferences"
 msgstr "Modifica periferica"
 
-#: package_import.php:682 templates_import.php:325
+#: package_import.php:682 templates_import.php:326
 msgid "Orphans"
 msgstr "Orphaned"
 
@@ -17985,67 +17985,67 @@ msgstr "Salva file localmente"
 msgid "Available Templates [%s]"
 msgstr "Modelli disponibili [%s]."
 
-#: templates_import.php:102
+#: templates_import.php:103
 msgid "The Template Import Succeeded."
 msgstr "Importazione del modello riuscita."
 
-#: templates_import.php:127
+#: templates_import.php:128
 msgid "Error in Template"
 msgstr "Esporta Templates"
 
-#: templates_import.php:127
+#: templates_import.php:128
 #, php-format
 msgid "See the cacti.log for more information, and review the XML file for proper syntax.  The error details are shown below.<br><br><b>Errors:</b><br>%s"
 msgstr "Consultare il cacti.log per ulteriori informazioni e rivedere il file XML per la sintassi corretta.  I dettagli dell'errore sono mostrati di seguito.<br><br><b>Errori:</b><br>%s"
 
-#: templates_import.php:127
+#: templates_import.php:128
 #, php-format
 msgid "The Template XML file \"%s\" validation failed"
 msgstr "Convalida del file XML del modello \"%s\" non riuscita"
 
-#: templates_import.php:199
+#: templates_import.php:200
 msgid "Import Files [ If Files are missing, locate and install before using ]"
 msgstr "Importa file [ Se mancano file, individuare e installare prima di utilizzare ]"
 
-#: templates_import.php:203
+#: templates_import.php:204
 msgid "File Name"
 msgstr "Campo Nome"
 
-#: templates_import.php:218
+#: templates_import.php:219
 msgid "Not Readable"
 msgstr "Non Scrivibile"
 
-#: templates_import.php:235
+#: templates_import.php:236
 msgid "Import Templates [ None selected imports all, Check to import selectively ]"
 msgstr "Importa modelli [ Nessuno selezionato importa tutto, seleziona per importare in modo selettivo ]"
 
-#: templates_import.php:248
+#: templates_import.php:249
 msgid "Dependencies"
 msgstr "Includi dipendenze"
 
-#: templates_import.php:289
+#: templates_import.php:290
 #, fuzzy, php-format
 msgid "Met: %d"
 msgstr "MET"
 
-#: templates_import.php:293
+#: templates_import.php:294
 #, fuzzy, php-format
 msgid "Unmet: %d"
 msgstr "Non vengono soddisfatti"
 
-#: templates_import.php:302
+#: templates_import.php:303
 msgid "Some CDEF Items will not import due to an export error! Contact Template provider for an updated export."
 msgstr "Alcuni articoli CDEF non verranno importati a causa di un errore di esportazione! Contatta il fornitore del modello per un'esportazione aggiornata."
 
-#: templates_import.php:343 templates_import.php:429
+#: templates_import.php:344 templates_import.php:430
 msgid "Import Template"
 msgstr "Importa Template"
 
-#: templates_import.php:345
+#: templates_import.php:346
 msgid "ERROR"
 msgstr "ERRORE"
 
-#: templates_import.php:345
+#: templates_import.php:346
 msgid "Failed to access temporary folder, import functionality is disabled"
 msgstr "Impossibile accedere alla cartella temporanea, la funzionalità di importazione è disabilitata."
 

@@ -10,7 +10,7 @@ msgstr ""
 "#-#-#-#-#  cacti.pot (Kadupul 1.2.35)  #-#-#-#-#\n"
 "Project-Id-Version: Kadupul 1.2.35\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-16 23:20-0700\n"
+"POT-Creation-Date: 2026-10-17 16:41-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -630,8 +630,8 @@ msgstr ""
 #: lib/html_reports.php:1175 lib/html_reports.php:1186
 #: lib/html_reports.php:1206 lib/html_reports.php:1462
 #: lib/html_reports.php:1467 lib/html_reports.php:1472 package_import.php:687
-#: settings.php:591 settings.php:613 settings.php:644 templates_import.php:298
-#: templates_import.php:330 utilities.php:2099
+#: settings.php:591 settings.php:613 settings.php:644 templates_import.php:299
+#: templates_import.php:331 utilities.php:2099
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:62
 msgid "None"
 msgstr ""
@@ -1145,8 +1145,8 @@ msgstr ""
 #: lib/api_automation.php:573 lib/api_automation.php:1199
 #: lib/html_reports.php:2031 lib/installer.php:2054 managers.php:216
 #: package_import.php:543 package_import.php:628 plugins.php:497
-#: plugins.php:623 pollers.php:1007 templates_import.php:206
-#: templates_import.php:245 user_admin.php:1073 user_group_admin.php:1095
+#: plugins.php:623 pollers.php:1007 templates_import.php:207
+#: templates_import.php:246 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:2141
 msgid "Status"
 msgstr ""
@@ -2363,7 +2363,7 @@ msgid "Device Automation Templates"
 msgstr ""
 
 #: automation_templates.php:498 data_sources.php:2028 package_import.php:625
-#: templates_import.php:242 user_admin.php:1212 user_group_admin.php:1231
+#: templates_import.php:243 user_admin.php:1212 user_group_admin.php:1231
 msgid "Template Name"
 msgstr ""
 
@@ -2743,7 +2743,7 @@ msgstr ""
 msgid "Determines if the Data Collector or the Web Site have Write access."
 msgstr ""
 
-#: data_debug.php:535 templates_import.php:216
+#: data_debug.php:535 templates_import.php:217
 msgid "Exists"
 msgstr ""
 
@@ -2809,7 +2809,7 @@ msgid "No Checks"
 msgstr ""
 
 #: data_debug.php:768 lib/api_automation.php:757 lib/graphs.php:61
-#: lib/graphs.php:85 templates_import.php:220
+#: lib/graphs.php:85 templates_import.php:221
 msgid "Not Found"
 msgstr ""
 
@@ -3691,7 +3691,7 @@ msgstr ""
 msgid "Data Source Item %s"
 msgstr ""
 
-#: data_sources.php:1267 data_templates.php:817 lib/import.php:2799
+#: data_sources.php:1267 data_templates.php:817 lib/import.php:2839
 #: package_import.php:599
 msgid "New"
 msgstr ""
@@ -11526,7 +11526,7 @@ msgid "Recovering"
 msgstr ""
 
 #: lib/api_automation.php:33 lib/auth.php:3070 lib/clog_webapi.php:856
-#: lib/html_utility.php:1362 lib/import.php:342 lib/plugins.php:1499
+#: lib/html_utility.php:1362 lib/import.php:382 lib/plugins.php:1499
 #: lib/plugins.php:1500 lib/rrd.php:4181 lib/rrd.php:4193 lib/spikekill.php:301
 #: package_import.php:523 package_import.php:601 utilities.php:211
 #: utilities.php:212 utilities.php:2753
@@ -13679,7 +13679,7 @@ msgstr ""
 msgid "Send Report"
 msgstr ""
 
-#: lib/html_reports.php:1644 lib/import.php:2884 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:2924 user_admin.php:1776
 msgid "[new]"
 msgstr ""
 
@@ -13916,109 +13916,109 @@ msgstr ""
 msgid "Validation Error"
 msgstr ""
 
-#: lib/import.php:655 lib/import.php:674
+#: lib/import.php:695 lib/import.php:714
 msgid "written"
 msgstr ""
 
-#: lib/import.php:657
+#: lib/import.php:697
 msgid "not written"
 msgstr ""
 
-#: lib/import.php:660
+#: lib/import.php:700
 msgid "could not open"
 msgstr ""
 
-#: lib/import.php:666
+#: lib/import.php:706
 msgid "not exists"
 msgstr ""
 
-#: lib/import.php:669
+#: lib/import.php:709
 msgid "not writable"
 msgstr ""
 
-#: lib/import.php:1897 lib/import.php:1918
+#: lib/import.php:1937 lib/import.php:1958
 #, php-format
 msgid "New Graph Template: %s"
 msgstr ""
 
-#: lib/import.php:1932 lib/import.php:1944
+#: lib/import.php:1972 lib/import.php:1984
 #, php-format
 msgid "New Data Query: %s"
 msgstr ""
 
-#: lib/import.php:2581
+#: lib/import.php:2621
 msgid "Unknown Field"
 msgstr ""
 
-#: lib/import.php:2797
+#: lib/import.php:2837
 msgid "Updated"
 msgstr ""
 
-#: lib/import.php:2801
+#: lib/import.php:2841
 msgid "Damaged"
 msgstr ""
 
-#: lib/import.php:2803 package_import.php:593
+#: lib/import.php:2843 package_import.php:593
 msgid "Unchanged"
 msgstr ""
 
-#: lib/import.php:2839
+#: lib/import.php:2879
 msgid "Import Preview Results"
 msgstr ""
 
-#: lib/import.php:2839
+#: lib/import.php:2879
 msgid "Import Results"
 msgstr ""
 
-#: lib/import.php:2843
+#: lib/import.php:2883
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr ""
 
-#: lib/import.php:2845
+#: lib/import.php:2885
 msgid "Kadupul has imported the following items for the Package:"
 msgstr ""
 
-#: lib/import.php:2848
+#: lib/import.php:2888
 msgid "Package Files"
 msgstr ""
 
-#: lib/import.php:2852
+#: lib/import.php:2892
 msgid "[preview] "
 msgstr ""
 
-#: lib/import.php:2857
+#: lib/import.php:2897
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr ""
 
-#: lib/import.php:2859
+#: lib/import.php:2899
 msgid "Kadupul has imported the following items for the Template:"
 msgstr ""
 
-#: lib/import.php:2874
+#: lib/import.php:2914
 msgid "[success]"
 msgstr ""
 
-#: lib/import.php:2876
+#: lib/import.php:2916
 msgid "[fail]"
 msgstr ""
 
-#: lib/import.php:2878
+#: lib/import.php:2918
 msgid "[preview]"
 msgstr ""
 
-#: lib/import.php:2882
+#: lib/import.php:2922
 msgid "[updated]"
 msgstr ""
 
-#: lib/import.php:2886
+#: lib/import.php:2926
 msgid "[unchanged]"
 msgstr ""
 
-#: lib/import.php:2922
+#: lib/import.php:2962
 msgid "Found Dependency:"
 msgstr ""
 
-#: lib/import.php:2924
+#: lib/import.php:2964
 msgid "Unmet Dependency:"
 msgstr ""
 
@@ -16327,7 +16327,7 @@ msgstr ""
 msgid "Filename"
 msgstr ""
 
-#: package_import.php:591 package_import.php:678 templates_import.php:321
+#: package_import.php:591 package_import.php:678 templates_import.php:322
 msgid "Differences"
 msgstr ""
 
@@ -16335,15 +16335,15 @@ msgstr ""
 msgid "Import Package Templates [ None selected imports all, Check to import selectively ]"
 msgstr ""
 
-#: package_import.php:622 templates_import.php:239
+#: package_import.php:622 templates_import.php:240
 msgid "Template Type"
 msgstr ""
 
-#: package_import.php:631 templates_import.php:251
+#: package_import.php:631 templates_import.php:252
 msgid "Changes/Diffferences"
 msgstr ""
 
-#: package_import.php:682 templates_import.php:325
+#: package_import.php:682 templates_import.php:326
 msgid "Orphans"
 msgstr ""
 
@@ -17177,67 +17177,67 @@ msgstr ""
 msgid "Available Templates [%s]"
 msgstr ""
 
-#: templates_import.php:102
+#: templates_import.php:103
 msgid "The Template Import Succeeded."
 msgstr ""
 
-#: templates_import.php:127
+#: templates_import.php:128
 msgid "Error in Template"
 msgstr ""
 
-#: templates_import.php:127
+#: templates_import.php:128
 #, php-format
 msgid "See the cacti.log for more information, and review the XML file for proper syntax.  The error details are shown below.<br><br><b>Errors:</b><br>%s"
 msgstr ""
 
-#: templates_import.php:127
+#: templates_import.php:128
 #, php-format
 msgid "The Template XML file \"%s\" validation failed"
 msgstr ""
 
-#: templates_import.php:199
+#: templates_import.php:200
 msgid "Import Files [ If Files are missing, locate and install before using ]"
 msgstr ""
 
-#: templates_import.php:203
+#: templates_import.php:204
 msgid "File Name"
 msgstr ""
 
-#: templates_import.php:218
+#: templates_import.php:219
 msgid "Not Readable"
 msgstr ""
 
-#: templates_import.php:235
+#: templates_import.php:236
 msgid "Import Templates [ None selected imports all, Check to import selectively ]"
 msgstr ""
 
-#: templates_import.php:248
+#: templates_import.php:249
 msgid "Dependencies"
 msgstr ""
 
-#: templates_import.php:289
+#: templates_import.php:290
 #, php-format
 msgid "Met: %d"
 msgstr ""
 
-#: templates_import.php:293
+#: templates_import.php:294
 #, php-format
 msgid "Unmet: %d"
 msgstr ""
 
-#: templates_import.php:302
+#: templates_import.php:303
 msgid "Some CDEF Items will not import due to an export error! Contact Template provider for an updated export."
 msgstr ""
 
-#: templates_import.php:343 templates_import.php:429
+#: templates_import.php:344 templates_import.php:430
 msgid "Import Template"
 msgstr ""
 
-#: templates_import.php:345
+#: templates_import.php:346
 msgid "ERROR"
 msgstr ""
 
-#: templates_import.php:345
+#: templates_import.php:346
 msgid "Failed to access temporary folder, import functionality is disabled"
 msgstr ""
 
