@@ -19,7 +19,8 @@ final class AutomationTreeReplacementNativeTest extends TestCase
         if ($diagnostic !== '') {
             self::assertStringContainsString('AUTOM8 WARNING:', $state['log']);
             self::assertStringContainsString($diagnostic, $state['log']);
-            self::assertStringContainsString(json_encode($scenario['search'], JSON_INVALID_UTF8_SUBSTITUTE), $state['log']);
+            self::assertStringContainsString(str_replace(chr(127), '\\x7f', json_encode($scenario['search'], JSON_INVALID_UTF8_SUBSTITUTE)), $state['log']);
+            self::assertStringNotContainsString(chr(127), $state['log']);
         } else {
             self::assertStringNotContainsString('WARNING:', $state['log']);
         }
