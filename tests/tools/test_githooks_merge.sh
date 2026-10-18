@@ -191,4 +191,122 @@ if ! grep -Fq 'octopus-local.txt:1: trailing whitespace' "$fixture/octopus-autho
     cat "$fixture/octopus-authored.log"
     exit 1
 fi
+# Real PHP syntax checks must include unchanged incoming blobs. These
+# repositories intentionally have neither a fixer nor a style config.
+new_php_fixture() {
+    local name=$1
+    mkdir "$fixture/$name"
+    cd "$fixture/$name"
+    git init -q .
+    mkdir setup-hooks hooks
+    git config core.hooksPath "$PWD/setup-hooks"
+    git config user.name HookTest
+    git config user.email hook-test@example.invalid
+    git config commit.gpgsign false
+    printf 'base\n' > base.txt
+    printf '<?php\n' > tracked.php
+    for number in {1..20}; do
+        printf '// unchanged line %s\n' "$number" >> tracked.php
+    done
+    printf 'echo "base";\n' >> tracked.php
+    git add base.txt tracked.php
+    git commit -qm base
+    php_base=$(git rev-parse HEAD)
+    printf '#!/usr/bin/env bash\nexec bash %q\n' "$root/.githooks/pre-commit-checks" > hooks/pre-commit
+    chmod +x hooks/pre-commit
+}
+
+merge_php_incoming() {
+    git checkout -qb local "$php_base"
+    printf 'local\n' > local.txt
+    git add local.txt
+    git commit -qm local
+    git merge --no-commit --no-ff incoming > merge.log 2>&1
+    git config core.hooksPath "$PWD/hooks"
+}
+
+refuse_php_commit() {
+    local file=$1
+    local before_head before_index before_worktree
+    before_head=$(git rev-parse HEAD)
+    before_index=$(git write-tree)
+    before_worktree=$(git hash-object "$file")
+    if git commit --no-edit > failure.log 2>&1; then
+        echo "ERROR: incoming malformed PHP was committed: $file" >&2
+        exit 1
+    fi
+    if ! grep -Fq "PHP syntax failed: $file" failure.log; then
+        cat failure.log
+        exit 1
+    fi
+    [ "$(git rev-parse HEAD)" = "$before_head" ]
+    [ "$(git write-tree)" = "$before_index" ]
+    [ "$(git hash-object "$file")" = "$before_worktree" ]
+}
+
+for kind in add modify rename stage-prefix; do
+    new_php_fixture "php-$kind"
+    git checkout -qb incoming
+    case "$kind" in
+        add) file='incoming bad.php' ;;
+        modify) file=tracked.php ;;
+        rename)
+            file='renamed file.php'
+            git mv tracked.php "$file"
+            ;;
+        stage-prefix) file='0:incoming.php' ;;
+    esac
+    if [ "$kind" = modify ] || [ "$kind" = rename ]; then
+        printf 'function broken( {\n' >> "$file"
+    else
+        printf '<?php function broken( {\n' > "$file"
+    fi
+    git add -f -- "$file"
+    git commit -qm "incoming $kind PHP"
+    merge_php_incoming
+    [ "$(git rev-parse ":0:$file")" = "$(git rev-parse "MERGE_HEAD:$file")" ]
+    if [ "$kind" = rename ] && ! git diff --cached --name-status -M | grep -q '^R'; then
+        echo 'ERROR: fixture did not produce a staged rename' >&2
+        exit 1
+    fi
+    # A valid working copy must not conceal the malformed index blob.
+    printf '<?php echo "working copy";\n' > "$file"
+    refuse_php_commit "$file"
+    printf 'OK: unchanged incoming %s PHP rejected from the index; failed commit preserves staged and working content\n' "$kind"
+done
+
+new_php_fixture php-valid
+git checkout -qb incoming
+printf '<?php\nfunction legacy ( ) { return [1,2]; }  \n' > 'incoming valid.php'
+git add 'incoming valid.php'
+git commit -qm 'incoming valid legacy formatting'
+merge_php_incoming
+valid_blob=$(git rev-parse ':0:incoming valid.php')
+# The reverse proves that lint reads the index, and that the incoming
+# whitespace/style exception does not require a formatter or rewrite files.
+printf '<?php function broken( {\n' > 'incoming valid.php'
+PHP_CS_FIXER="$fixture/unavailable-fixer" git commit --no-edit > success.log 2>&1
+[ "$(git rev-parse 'HEAD:incoming valid.php')" = "$valid_blob" ]
+grep -Fq 'function broken( {' 'incoming valid.php'
+printf 'OK: valid incoming staged PHP committed without formatting or changing its invalid working copy\n'
+
+new_php_fixture php-octopus
+git checkout -qb incoming-one
+printf '<?php echo "one";\n' > one.php
+git add one.php
+git commit -qm 'first PHP parent'
+git checkout -qb incoming-two "$php_base"
+printf '<?php function broken( {\n' > two.php
+git add two.php
+git commit -qm 'second PHP parent'
+git checkout -qb local "$php_base"
+printf 'local\n' > local.txt
+git add local.txt
+git commit -qm local
+git merge --no-commit --no-ff incoming-one incoming-two > merge.log 2>&1
+[ "$(wc -l < "$(git rev-parse --git-path MERGE_HEAD)")" -eq 2 ]
+git config core.hooksPath "$PWD/hooks"
+refuse_php_commit two.php
+printf 'OK: malformed PHP from the second octopus parent rejected\n'
+
 exit "$edge_failed"

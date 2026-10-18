@@ -604,9 +604,23 @@ jobs:
 
       - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
         with:
-          php-version: '8.4'
+          php-version: '8.4.25'
           coverage: none
           tools: php-cs-fixer:3.95.27
+
+      - name: Preserve selected PHP for merge-hook checks
+        run: |
+          mkdir -p "$RUNNER_TEMP/hook-php/bin"
+          ln -s "$(readlink -f "$(command -v php)")" "$RUNNER_TEMP/hook-php/bin/php"
+      - uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca # v5.1.1
+        with:
+          install: false
+          add_shims_to_path: false
+      - name: Register the hook's pinned PHP runtime
+        run: |
+          mise plugins install --force php https://github.com/mise-plugins/asdf-php.git#e361a2c912a431393b7deb3ecf44b877900d889c
+          mise link php@8.4.25 "$RUNNER_TEMP/hook-php"
+          mise exec php@8.4.25 -- php -r 'exit(PHP_VERSION === "8.4.25" ? 0 : 1);'
 
       # main moves to PER-CS one edited file at a time, so only the PHP files
       # this push or pull request changes are checked. On a pull request HEAD
