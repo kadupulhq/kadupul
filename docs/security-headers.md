@@ -137,9 +137,10 @@ serve `.git/`.
 The `.htaccess` files shipped in `cache/`, `docs/`, `include/` and `lib/`
 are active wherever `AllowOverride` lets Apache read them. `docs/` keeps
 serving `index.php` and the local HTML documentation with its styles,
-scripts and images, so help links still work. The deny on PHP under
-`include/vendor/` needs Apache 2.4, or `mod_rewrite` on Apache 2.2; a 2.2
-server without `mod_rewrite` still serves those files.
+scripts and images, so help links still work. The deny on everything
+under `include/vendor/` except the stylesheets, scripts, images and fonts
+the interface loads needs Apache 2.4, or `mod_rewrite` on Apache 2.2; a
+2.2 server without `mod_rewrite` still serves those files.
 
 For distros that install Cacti via `.deb` or `.rpm`, put the same
 directives in `/etc/httpd/conf.d/cacti.conf` or `/etc/apache2/conf-available/`
