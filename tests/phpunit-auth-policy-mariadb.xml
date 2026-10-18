@@ -4,6 +4,7 @@
         <testsuite name="Native authorization policy database">
             <file>./Unit/Security/Auth/EffectiveGraphPolicyDisplayTest.php</file>
             <file>Unit/Security/Auth/TreeGroupExceptionParityTest.php</file>
+            <file>integration/SettingsUserIdWidthMariaDbTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

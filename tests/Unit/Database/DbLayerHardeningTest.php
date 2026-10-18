@@ -350,8 +350,8 @@ function ignoring_warning(string $expected, callable $call): void
     }
 }
 
-/** Largest id settings_user.user_id can hold on this branch. */
-const SETTINGS_USER_ID_MAX = 65535;
+/** Largest id settings_user.user_id (mediumint unsigned, as user_auth.id) can hold on this branch. */
+const SETTINGS_USER_ID_MAX = 16777215;
 
 function invalid_user_ids(): array
 {
@@ -465,7 +465,7 @@ function invalid_user_ids(): array
         // raise_message() writes $_SESSION directly instead of starting a PHP session.
         $GLOBALS['no_http_headers'] = true;
 
-        foreach ([[-5, [35], 0], ['70000', [35], 0], [7, [1], 1], ['7', [1], 1]] as [$user, $raised, $writes]) {
+        foreach ([[-5, [35], 0], ['16777216', [35], 0], ['70000', [1], 1], [7, [1], 1], ['7', [1], 1]] as [$user, $raised, $writes]) {
             with_user_setting_state(function () use ($user, $raised, $writes) {
                 $GLOBALS['production_function_request'] += ['save_component_graph_settings' => '1', 'id' => $user];
                 $GLOBALS['production_function_headers'] = [];
@@ -490,20 +490,25 @@ function invalid_user_ids(): array
     }
 });
 
-\test('settings_user_id_is_valid accepts exactly what the set_user_setting rule accepted', function () {
-    // The inline expression set_user_setting and save_user_settings used before the shared helper.
+\test('settings_user_id_is_valid keeps the set_user_setting format rule and accepts every mediumint id', function () {
+    // The inline expression set_user_setting and save_user_settings used while the column was smallint.
     $previous = fn ($user) => (bool) ((is_int($user) && $user >= 0 && $user <= 65535) || (is_string($user) && preg_match('/^[0-9]+$/D', $user) && strlen(ltrim($user, '0')) <= 5 && (int) $user <= 65535));
 
-    $accepted = [0, 1, SETTINGS_USER_ID_MAX, '0', '00', '5', '065535', (string) SETTINGS_USER_ID_MAX, str_repeat('0', 40) . '5', str_repeat('0', 40)];
+    $accepted = [0, 1, 65535, '0', '00', '5', '065535', '65535', str_repeat('0', 40) . '5', str_repeat('0', 40)];
+    // ids user_auth.id can hold that the smallint column could not
+    $widened  = [65536, 70000, SETTINGS_USER_ID_MAX, '65536', '70000', '016777215', (string) SETTINGS_USER_ID_MAX, str_repeat('0', 40) . SETTINGS_USER_ID_MAX];
     $rejected = [
-        -1, -2, SETTINGS_USER_ID_MAX + 1, PHP_INT_MAX, PHP_INT_MIN,
-        (string) (SETTINGS_USER_ID_MAX + 1), '0' . (SETTINGS_USER_ID_MAX + 1), str_repeat('9', 40),
+        -1, -2, SETTINGS_USER_ID_MAX + 1, 99999999, PHP_INT_MAX, PHP_INT_MIN,
+        (string) (SETTINGS_USER_ID_MAX + 1), '0' . (SETTINGS_USER_ID_MAX + 1), '99999999', '100000000', str_repeat('9', 40),
         "5\n", ' 5', '5 ', '+5', '-5', '5.0', '1e3', '0x1', "\u{FF15}", "\u{0665}", '', 'abc', '1abc',
         5.0, NAN, INF, true, false, null, [5], new \stdClass(),
     ];
 
     foreach ($accepted as $user) {
         expect(settings_user_id_is_valid($user))->toBeTrue()->and($previous($user))->toBeTrue();
+    }
+    foreach ($widened as $user) {
+        expect(settings_user_id_is_valid($user))->toBeTrue()->and($previous($user))->toBeFalse();
     }
     foreach ($rejected as $user) {
         expect(settings_user_id_is_valid($user))->toBeFalse()->and($previous($user))->toBeFalse();

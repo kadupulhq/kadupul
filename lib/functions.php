@@ -194,11 +194,11 @@ function save_user_settings($user = -1) {
  *
  * @param $user - the user id
  *
- * @return (bool) - true for an integer or digit string from 0 to 65535
+ * @return (bool) - true for an integer or digit string from 0 to 16777215
  */
 function settings_user_id_is_valid($user) {
-	/* settings_user.user_id is smallint unsigned: other ids are coerced, 'abc' to user 0 and 70000 onto user 65535 */
-	return (is_int($user) && $user >= 0 && $user <= 65535) || (is_string($user) && preg_match('/^[0-9]+$/D', $user) && strlen(ltrim($user, '0')) <= 5 && (int) $user <= 65535);
+	/* settings_user.user_id is mediumint unsigned: other ids are coerced, 'abc' to user 0 and 16777216 onto user 16777215 */
+	return (is_int($user) && $user >= 0 && $user <= 16777215) || (is_string($user) && preg_match('/^[0-9]+$/D', $user) && strlen(ltrim($user, '0')) <= 8 && (int) $user <= 16777215);
 }
 
 /**
