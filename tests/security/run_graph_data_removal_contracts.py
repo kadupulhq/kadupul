@@ -42,18 +42,23 @@ def validate_output(text):
         raise RuntimeError('Native removal proof reported a runtime failure.')
 
 
-def run(output):
+def selected_php(php_version):
+    php = subprocess.check_output(['mise', 'which', 'php', '--tool=php@' + php_version], text=True).strip()
+    if not Path(php).is_file():
+        raise RuntimeError('Selected PHP runtime unavailable.')
+    version = subprocess.check_output([php, '-r', 'echo PHP_VERSION;'], text=True)
+    if version != php_version or not version.startswith('8.4.'):
+        raise RuntimeError('Select PHP 8.4 through mise.')
+    return php, version
+
+
+def run(output, php_version='8.4.25'):
     if not os.environ.get('KADUPUL_REFERENCE_TEST_DSN', '').startswith('mysql:'):
         raise RuntimeError('Explicit native fixture DSN required.')
     if output.exists() and any(output.iterdir()):
         raise RuntimeError('Use an empty output directory; prior evidence is preserved.')
     output.mkdir(parents=True, exist_ok=True)
-    php = subprocess.check_output(['mise', 'which', 'php', '--tool=php@8.4.25'], text=True).strip()
-    if not Path(php).is_file():
-        raise RuntimeError('Selected PHP runtime unavailable.')
-    version = subprocess.check_output([php, '-r', 'echo PHP_VERSION;'], text=True)
-    if not version.startswith('8.4.'):
-        raise RuntimeError('Select PHP 8.4 through mise.')
+    php, version = selected_php(php_version)
     sources = manifest()
     report = {'php': version, 'sources': sources, 'exit': None, 'verified': False}
     try:
@@ -103,4 +108,6 @@ def run(output):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
-    run(parser.parse_args().output.resolve())
+    parser.add_argument('--php-version', default='8.4.25')
+    args = parser.parse_args()
+    run(args.output.resolve(), args.php_version)

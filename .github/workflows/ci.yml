@@ -315,6 +315,7 @@ jobs:
           KADUPUL_REFERENCE_OWNED_BACKEND: '1'
         run: |
           mkdir -p "$RUNNER_TEMP/cdef-api-coverage"
+          mise exec python@3.12.12 -- python tests/security/test_graph_data_removal_runner.py
           mise exec python@3.12.12 -- python tests/security/test_cdef_reference_runner.py
           mise exec python@3.12.12 -- python tests/security/test_cdef_reference_gettext.py
           mise exec "php@$KADUPUL_CI_PHP_VERSION" -- php -d pcov.directory="$GITHUB_WORKSPACE" \
@@ -326,7 +327,7 @@ jobs:
             --output "$RUNNER_TEMP/cdef-reference-proof"
           mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- python tests/security/run_schema_repair_contracts.py \
             --output "$RUNNER_TEMP/schema-repair-proof"
-          mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- python tests/security/run_graph_data_removal_contracts.py \
+          mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- python tests/security/run_graph_data_removal_contracts.py --php-version "$KADUPUL_CI_PHP_VERSION" \
             --output "$RUNNER_TEMP/graph-data-removal-proof"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
