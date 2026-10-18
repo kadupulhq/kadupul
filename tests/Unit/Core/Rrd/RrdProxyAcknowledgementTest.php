@@ -11,6 +11,11 @@ eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_con
 eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/rrd.php'), 'rrdtool_proxy_write'));
 eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/rrd.php'), 'rrdtool_rejection_is_permanent'));
 eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/rrd.php'), 'rrdtool_proxy_relative_paths'));
+eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/rrd.php'), 'rrd_command_deadline'));
+function socket_select(&$read, &$write, &$except, ...$timeout)
+{
+    return 1;
+}
 function cacti_log(...$args) {}
 function read_config_option($key)
 {
