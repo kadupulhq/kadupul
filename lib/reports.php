@@ -963,7 +963,7 @@ function reports_generate_html($reports_id, $output = REPORTS_OUTPUT_STDOUT, &$t
                     $outstr .= reports_expand_device($report, $item, $item['host_id'], $output, $format_ok, $theme);
                 }
             } elseif ($item['item_type'] == REPORTS_ITEM_TREE) {
-                if (is_tree_allowed($item['tree_id'], $report['user_id'])) {
+                if (is_tree_allowed($item['tree_id'], $report['user_id'], true)) {
                     if ($item['tree_cascade'] == 'on') {
                         $outstr .= expand_branch($report, $item, $item['branch_id'], $output, $format_ok, $theme);
                     } elseif (reports_tree_has_graphs($item['tree_id'], $item['branch_id'], $report['user_id'], $item['graph_name_regexp'])) {

@@ -72,6 +72,18 @@ final class GraphViewListNativeTest extends TestCase
         self::assertSame(array('tree_id' => 4, 'parent' => 2), json_decode($result['html'], true, 512, JSON_THROW_ON_ERROR));
     }
 
+    /** A tree the viewer may not open, including a disabled or missing one, takes the same denial as before. */
+    public function testNativeTreeContentAsksForAnEnabledTreeAndStopsWhenDenied(): void
+    {
+        $request = array('action' => 'tree_content', 'node' => 'tree_anchor-5');
+        $denied = $this->runController(array('request' => $request, 'tree_allowed' => false));
+        $allowed = $this->runController(array('request' => $request, 'tree_allowed' => true));
+        self::assertSame(array(array('5', 0, true)), $denied['tree_checks']);
+        self::assertSame(array(array('5', 0, true)), $allowed['tree_checks']);
+        self::assertStringNotContainsString('<x-tree-pane>', $denied['html']);
+        self::assertStringContainsString('<x-tree-pane>5</x-tree-pane>', $allowed['html']);
+    }
+
     private function runController(array $scenario): array
     {
         $root = dirname(__DIR__, 2);

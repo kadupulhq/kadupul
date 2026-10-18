@@ -129,9 +129,23 @@ function db_fetch_row_prepared($sql, $params)
 {
     return graph_view_native_query($sql, $params)->fetch(PDO::FETCH_ASSOC);
 }
+function html_validate_tree_vars() {}
+function db_table_exists($table)
+{
+    return false;
+}
+function grow_right_pane_tree($treeId, $leafId, $hostGroupData)
+{
+    echo '<x-tree-pane>' . (int) $treeId . '</x-tree-pane>';
+}
+function is_tree_allowed($treeId, $userId = 0, $enabledOnly = false)
+{
+    $GLOBALS['tree_checks'][] = array($treeId, $userId, $enabledOnly);
+    return $GLOBALS['scenario']['tree_allowed'] ?? false;
+}
 ob_start();
 register_shutdown_function(function () {
-    fwrite(STDOUT, json_encode(array('html' => ob_get_clean(), 'request' => $_REQUEST, 'session' => $_SESSION), JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));
+    fwrite(STDOUT, json_encode(array('html' => ob_get_clean(), 'request' => $_REQUEST, 'session' => $_SESSION, 'tree_checks' => $GLOBALS['tree_checks'] ?? array()), JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));
 });
 chdir($directory);
 require $controller;
