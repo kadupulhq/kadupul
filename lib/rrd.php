@@ -443,7 +443,7 @@ function rrdtool_proxy_read_key($socket, $logopt, $timeout = 10, $max_bytes = 16
         }
         $received .= $recv;
     }
-    // Later commands keep the blocking reads they had before the exchange.
+    // Command replies apply their own total deadline after the exchange.
     socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => 0, 'usec' => 0));
 
     if ($end > $max_bytes) {
@@ -519,7 +519,12 @@ function __rrd_close($rrdtool_pipe)
 function rrdtool_proxy_write($socket, $data)
 {
     while ($data !== '') {
-        $written = @socket_write($socket, $data);
+        try {
+            $written = @socket_write($socket, $data);
+        } catch (\Error $e) {
+            // A caller may still hold a socket discarded after a reply timeout.
+            return false;
+        }
         if ($written === false || $written === 0) {
             return false;
         }
@@ -527,6 +532,17 @@ function rrdtool_proxy_write($socket, $data)
     }
 
     return true;
+}
+
+/** Discard a desynchronized connection without sending another command. */
+function rrdtool_proxy_abort(\Socket $socket): void
+{
+    try {
+        @socket_shutdown($socket, 2);
+        @socket_close($socket);
+    } catch (\Error $e) {
+        // A caller can still hold a pipe array after a failed command closed it.
+    }
 }
 
 function __rrd_proxy_close($rrdp)
@@ -538,8 +554,7 @@ function __rrd_proxy_close($rrdp)
         if ($quit !== false) {
             rrdtool_proxy_write($rrdp[0], $quit . $terminator);
         }
-        @socket_shutdown($rrdp[0], 2);
-        @socket_close($rrdp[0]);
+        rrdtool_proxy_abort($rrdp[0]);
         return;
     }
 }
@@ -1439,6 +1454,13 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp 
     $rrdp_socket = $rrdp[0];
     $rrdp_public_key = $rrdp[1];
 
+    $timeout = max(1, min(3600, (int) ($config['rrd_command_timeout'] ?? 60)));
+    $deadline = hrtime(true) + $timeout * 1000000000;
+    $cap = rrd_command_deadline();
+    if ($cap !== null && $cap < $deadline) {
+        $deadline = $cap;
+    }
+
     if (strlen($command_line) >= 8192) {
         $command_line = gzencode($command_line, 1);
     }
@@ -1448,6 +1470,11 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp 
         if ($rrdp_auto_close) {
             __rrd_proxy_close($rrdp);
         }
+        return null;
+    }
+    if (hrtime(true) >= $deadline) {
+        cacti_log('CACTI2RRDP ERROR: Data Transfer - Time-out while reading.', $log_to_stdout, $logopt, POLLER_VERBOSITY_LOW);
+        rrdtool_proxy_abort($rrdp_socket);
         return null;
     }
     if (!rrdtool_proxy_write($rrdp_socket, $frame . $end_of_sequence)) {
@@ -1462,6 +1489,19 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp 
     $output = '';
 
     while (1) {
+        $remaining = $deadline - hrtime(true);
+        $read = array($rrdp_socket);
+        $write = $except = null;
+        $ready = $remaining > 0
+            ? @socket_select($read, $write, $except, intdiv($remaining, 1000000000), intdiv($remaining % 1000000000, 1000))
+            : 0;
+        if ($ready === false || $ready === 0) {
+            cacti_log('CACTI2RRDP ERROR: Data Transfer - Time-out while reading.', $log_to_stdout, $logopt, POLLER_VERBOSITY_LOW);
+            // No quit frame: another write could block, and late replies must
+            // never be consumed as the acknowledgement of the next command.
+            rrdtool_proxy_abort($rrdp_socket);
+            return null;
+        }
         $recv = socket_read($rrdp_socket, 100000, PHP_BINARY_READ);
         if ($recv === false) {
             cacti_log('CACTI2RRDP ERROR: Data Transfer - Time-out while reading.', $log_to_stdout, $logopt, POLLER_VERBOSITY_LOW);

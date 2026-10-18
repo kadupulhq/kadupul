@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Bound RRDtool proxy replies by the existing command timeout and poller budget; discard timed-out connections and leave outcomes unconfirmed (#784).
+
 - Register setup-php interpreters in mise under their reported patch versions and verify selection before publishing CI runtime evidence (#935).
 
 - Make Logout Everywhere revoke file and database session credentials and remembered logins; preserve existing sessions and return failure if revocation cannot be committed. Bind remembered-login rotation to its admitted credential generation so an in-flight restoration cannot create a usable session or token after revocation.
