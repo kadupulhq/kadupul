@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Register setup-php interpreters in mise under their reported patch versions and verify selection before publishing CI runtime evidence (#935).
+
 - Make Logout Everywhere revoke file and database session credentials and remembered logins; preserve existing sessions and return failure if revocation cannot be committed. Bind remembered-login rotation to its admitted credential generation so an in-flight restoration cannot create a usable session or token after revocation.
 - Preserve existing RRD files and pending samples when a proxy existence check fails or returns an ambiguous response.
 - Restore authorization, HTML-context escaping, sort-column and theme tests to the Pest coverage suite using production helpers; retire tests for the removed remote-URL helper.

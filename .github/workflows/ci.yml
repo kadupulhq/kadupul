@@ -23,7 +23,7 @@ jobs:
           persist-credentials: false
       - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
         with:
-          php-version: '8.4.25'
+          php-version: '8.4'
           extensions: curl, dom, gd, gmp, intl, ldap, mbstring, pcntl, pdo_mysql, posix, sockets, sqlite3, xml
           coverage: none
           tools: composer
@@ -35,21 +35,21 @@ jobs:
         with:
           install_args: python@3.12.12
           add_shims_to_path: false
+      - name: Register and verify actual PHP patch version
+        run: bash tests/tools/register_ci_php.sh "$RUNNER_TEMP/gettext-php" 8.4
       - name: Install locked Twig extraction dependencies
         run: |
-          mise plugins install --force php https://github.com/mise-plugins/asdf-php.git#e361a2c912a431393b7deb3ecf44b877900d889c
-          mise link php@8.4.25 "$RUNNER_TEMP/gettext-php"
-          mise exec php@8.4.25 -- composer install --no-dev --no-interaction --no-progress --prefer-dist --no-scripts
+          mise exec "php@$KADUPUL_CI_PHP_VERSION" -- composer install --no-dev --no-interaction --no-progress --prefer-dist --no-scripts
       - name: Verify selective Sonar scheduling
         run: mise exec python@3.12.12 -- python -m unittest discover -s tests/security -p test_sonar_change_scope.py -v
       - name: Install GNU gettext tools
         run: sudo apt-get update && sudo apt-get install -y gettext
       - name: Verify every shipped source and compiled catalog
-        run: mise exec php@8.4.25 python@3.12.12 -- python tests/security/verify_gettext_catalogs.py
+        run: mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- python tests/security/verify_gettext_catalogs.py
       - name: Verify test runner dispatch and missing-suite failures
         run: mise exec python@3.12.12 -- python tests/tools/test_suite_runner.py
       - name: Verify catalog rejection and historical compatibility boundaries
-        run: mise exec php@8.4.25 python@3.12.12 -- python tests/security/test_gettext_catalogs.py
+        run: mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- python tests/security/test_gettext_catalogs.py
 
   runtime-floor:
     timeout-minutes: 15
@@ -75,13 +75,13 @@ jobs:
         with:
           install_args: python@3.12.12
           add_shims_to_path: false
-      - name: Register selected PHP and verify CLI/HTTP runtime boundaries
+      - name: Register and verify actual PHP patch version
         env:
           TEST_PHP_VERSION: '${{ matrix.php }}'
         run: |
-          mise plugins install --force php https://github.com/mise-plugins/asdf-php.git#e361a2c912a431393b7deb3ecf44b877900d889c
-          mise link "php@$TEST_PHP_VERSION" "$RUNNER_TEMP/runtime-php"
-          mise exec python@3.12.12 -- python tests/tools/runtime_floor.py --php-version "$TEST_PHP_VERSION"
+          bash tests/tools/register_ci_php.sh "$RUNNER_TEMP/runtime-php" "$TEST_PHP_VERSION"
+      - name: Verify CLI and HTTP runtime boundaries
+        run: mise exec python@3.12.12 -- python tests/tools/runtime_floor.py --php-version "$KADUPUL_CI_PHP_VERSION"
 
   windows-storage-preflight:
     timeout-minutes: 20
@@ -265,7 +265,7 @@ jobs:
         run: bash tests/tools/login_ghcr.sh
       - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
         with:
-          php-version: '8.4.25'
+          php-version: '8.4'
           extensions: curl, dom, gd, gmp, intl, ldap, mbstring, pcntl, pdo_mysql, posix, sockets, sqlite3, xml
           coverage: pcov
           tools: composer
@@ -292,16 +292,16 @@ jobs:
         with:
           path: ~/.npm
           key: npm-downloads-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('package-lock.json') }}
+      - name: Register and verify actual PHP patch version
+        run: bash tests/tools/register_ci_php.sh "$RUNNER_TEMP/cdef-php" 8.4
       - name: Build actual dependencies and installer assets
         run: |
-          mise plugins install --force php https://github.com/mise-plugins/asdf-php.git#e361a2c912a431393b7deb3ecf44b877900d889c
-          mise link php@8.4.25 "$RUNNER_TEMP/cdef-php"
           sudo apt-get update -o Acquire::Retries=3
           sudo apt-get install -y --no-install-recommends rrdtool snmp
-          mise exec php@8.4.25 -- composer install --no-interaction --no-progress --prefer-dist
+          mise exec "php@$KADUPUL_CI_PHP_VERSION" -- composer install --no-interaction --no-progress --prefer-dist
           mise exec node@22.22.2 -- npm ci --ignore-scripts
           mise exec node@22.22.2 -- npm run build
-          mise exec php@8.4.25 -- php bin/console asset-map:compile
+          mise exec "php@$KADUPUL_CI_PHP_VERSION" -- php bin/console asset-map:compile
       - name: Native API coverage and actual installer caller proofs
         env:
           KADUPUL_TEST_MYSQL_DSN: mysql:host=127.0.0.1;port=${{ job.services.database.ports['3306'] }};dbname=kadupul_cdef_reference_test;charset=utf8mb4
@@ -317,16 +317,16 @@ jobs:
           mkdir -p "$RUNNER_TEMP/cdef-api-coverage"
           mise exec python@3.12.12 -- python tests/security/test_cdef_reference_runner.py
           mise exec python@3.12.12 -- python tests/security/test_cdef_reference_gettext.py
-          mise exec php@8.4.25 -- php -d pcov.directory="$GITHUB_WORKSPACE" \
+          mise exec "php@$KADUPUL_CI_PHP_VERSION" -- php -d pcov.directory="$GITHUB_WORKSPACE" \
             -d pcov.exclude='~/(include/vendor|tests)/~' include/vendor/bin/phpunit \
             -c phpunit-symfony.xml --filter 'CdefReferenceNativeTest|InstallerVersionConfirmationTest|InstallerFailedPollTest|LegacyAggregateSaveRefusalTest|AggregateItemTransactionTest|CdefNativeProbeCoverageTest|CdefCliNativeCoverageTest|AggregateGraphStatementTest|AggregateGraphItemsBoundaryTest|AggregateCacheCursorTest|HostDataSubstitutionTest|ForwardSchemaRepairTest' \
             --coverage-php "$RUNNER_TEMP/cdef-api-coverage/native.php" \
             --coverage-clover "$RUNNER_TEMP/cdef-api-coverage/native.xml"
-          mise exec php@8.4.25 python@3.12.12 -- python tests/security/run_cdef_reference_contracts.py \
+          mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- python tests/security/run_cdef_reference_contracts.py \
             --output "$RUNNER_TEMP/cdef-reference-proof"
-          mise exec php@8.4.25 python@3.12.12 -- python tests/security/run_schema_repair_contracts.py \
+          mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- python tests/security/run_schema_repair_contracts.py \
             --output "$RUNNER_TEMP/schema-repair-proof"
-          mise exec php@8.4.25 python@3.12.12 -- python tests/security/run_graph_data_removal_contracts.py \
+          mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- python tests/security/run_graph_data_removal_contracts.py \
             --output "$RUNNER_TEMP/graph-data-removal-proof"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
@@ -634,6 +634,9 @@ jobs:
         env:
           BASE: ${{ github.event_name == 'pull_request' && 'HEAD^1' || github.event.before }}
         run: bash tests/tools/check_php_style.sh "$BASE"
+
+      - name: Check PHP registration identity and failure contracts
+        run: bash tests/tools/test_register_ci_php.sh
 
       - name: Check the hook installer
         run: bash tests/tools/test_githooks_install.sh

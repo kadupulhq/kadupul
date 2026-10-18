@@ -62,6 +62,14 @@ Install php-cs-fixer 3.95.27 on `PATH`, or set `PHP_CS_FIXER` to that pinned
 executable. GitHub CI remains authoritative and must pass before merge. Local
 AI-review tools are intentionally not required by these hooks.
 
+### CI PHP version evidence
+
+Jobs that use setup-php select a minor series and register the preserved binary
+under its reported stable patch version. `tests/tools/register_ci_php.sh` rejects
+an unexpected series and verifies the selected interpreter through mise before
+publishing `KADUPUL_CI_PHP_VERSION` to later steps. These jobs pass that version
+to their consumers; the hook tests separately install and assert PHP 8.4.25.
+
 ## Pest profiling and isolated parallel feedback
 
 Install the locked application and test dependencies before running these tools.
