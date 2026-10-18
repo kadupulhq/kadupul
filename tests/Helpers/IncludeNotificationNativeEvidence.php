@@ -18,8 +18,14 @@ final class IncludeNotificationNativeEvidence
         'lib/functions.php', 'lib/path_helpers.php', 'lib/graph_fonts.php', 'lib/poller.php',
         'include/admin_notifications.php', 'include/global_constants.php',
         'src/Platform/Infrastructure/Legacy/LegacyIncludePathResolver.php',
+        'src/Platform/Infrastructure/Legacy/LegacyLockRetry.php',
+        'src/Platform/Infrastructure/Legacy/LegacySettingsStorage.php',
+        'src/Platform/Infrastructure/Legacy/LegacyLogText.php',
     ];
     public const COPIES = [
+        'src/Platform/Infrastructure/Legacy/LegacyLockRetry.php' => 'src/Platform/Infrastructure/Legacy/LegacyLockRetry.php',
+        'src/Platform/Infrastructure/Legacy/LegacySettingsStorage.php' => 'src/Platform/Infrastructure/Legacy/LegacySettingsStorage.php',
+        'src/Platform/Infrastructure/Legacy/LegacyLogText.php' => 'src/Platform/Infrastructure/Legacy/LegacyLogText.php',
         'lib/functions.php' => 'lib/functions.php', 'lib/path_helpers.php' => 'lib/path_helpers.php',
         'lib/graph_fonts.php' => 'lib/graph_fonts.php', 'lib/poller.php' => 'lib/poller.php',
         'include/admin_notifications.php' => 'include/admin_notifications.php',
