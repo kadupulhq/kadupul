@@ -2,9 +2,11 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 # include/ serves the interface's scripts, styles and images, so only the
-# bootstrap files and vendored PHP are denied. The prefix match on the
-# bootstrap names also covers config.php.dist and editor backups.
-<FilesMatch "(?i)^(config|global|plugins)\.php">
+# bootstrap files and include/vendor are denied. The name match also covers
+# config.php.dist, suffixed backups such as config.php.bak and config.php~,
+# and the hidden or hash-wrapped copies editors write beside the file
+# (.config.php.swp, #config.php#, .#config.php).
+<FilesMatch "(?i)^[.#]*(config|global|plugins)\.php">
     <IfModule mod_authz_core.c>
         Require all denied
     </IfModule>
@@ -14,10 +16,14 @@
     </IfModule>
 </FilesMatch>
 
-# include/vendor is rebuilt by Composer, so its deny lives here. Its CSS,
-# flag images and csrf-magic.js stay served.
+# include/vendor is rebuilt by Composer, so its deny lives here. Only the
+# static types the interface loads (flag-icons CSS and images, csrf-magic.js)
+# stay served, and not under a name such as x.php.css, which a server that
+# maps handlers with AddHandler runs as PHP. The test runs on the mapped file,
+# not the request URI, which keeps repeated slashes from reaching vendor PHP
+# when MergeSlashes is off.
 <IfModule mod_authz_core.c>
-    <If "%{REQUEST_URI} =~ m#/include/vendor/.*\.php(/|$)#i">
+    <If "%{REQUEST_FILENAME} =~ m#/include/+vendor(/|$)#i && ! %{REQUEST_FILENAME} =~ m#\.(css|js|svg|png|gif|jpe?g|webp|ico|woff2?|ttf|eot|otf)$#i || %{REQUEST_FILENAME} =~ m#/include/+vendor/.*\.ph(p|tml|ar)\.[^/]*$#i">
         Require all denied
     </If>
 </IfModule>
@@ -30,6 +36,8 @@
     <IfModule mod_rewrite.c>
         RewriteEngine On
         RewriteOptions Inherit
-        RewriteRule ^vendor/.*\.php(/|$) - [F,NC]
+        RewriteCond %{REQUEST_FILENAME} !\.(css|js|svg|png|gif|jpe?g|webp|ico|woff2?|ttf|eot|otf)$ [NC,OR]
+        RewriteCond %{REQUEST_FILENAME} \.ph(p|tml|ar)\.[^/]*$ [NC]
+        RewriteRule ^/*vendor(/|$) - [F,NC]
     </IfModule>
 </IfModule>
