@@ -247,8 +247,7 @@ $methods = array(
         'form' => $form(array('import_file' => $field('file', array('accept' => '.xml')))),
         'session' => array('sess_error_fields' => array('import_file' => 'import_file')),
     ),
-    // A button's click handler is the only thing that makes draw_edit_form()
-    // print the queued change handlers; see the form_change_action check.
+    // Both action queues are emitted and consumed together when present.
     'button-click-and-change' => array('form' => $form(array(
         'choice' => $field('drop_array', array('value' => '1', 'array' => array('1' => 'One'), 'on_change' => 'choiceChanged()')),
         'refresh' => $field('button', array('value' => 'Refresh <now>', 'title' => 'Reload "list"', 'on_click' => 'refreshList()')),

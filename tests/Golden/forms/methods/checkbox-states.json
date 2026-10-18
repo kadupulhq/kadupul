@@ -1,9 +1,5 @@
 {
-    "session": {
-        "form_change_actions": {
-            "default_on": "toggled()"
-        }
-    },
+    "session": [],
     "diagnostics": [],
     "log": []
 }

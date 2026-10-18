@@ -1,9 +1,5 @@
 {
-    "session": {
-        "form_change_actions": {
-            "custom_fonts": "graphSettings()"
-        }
-    },
+    "session": [],
     "diagnostics": [],
     "log": [],
     "elements_outside_forms": [],

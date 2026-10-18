@@ -3,6 +3,7 @@
 const { test, expect } = require('@playwright/test');
 const { execFileSync } = require('node:child_process');
 const path = require('node:path');
+const fs = require('node:fs');
 const root = path.resolve(__dirname, '../..');
 
 function render(scenario) {
@@ -76,5 +77,52 @@ test('multiselect setting fallback survives browser form serialization', async (
     { name: 'choices[]', value: 'a' },
     { name: 'choices[]', value: '0' },
   ]);
+  expect(errors).toEqual([]);
+});
+
+test('change-only edit form binds under nonce CSP and consumes its queue before the next form', async ({ page }) => {
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  const fixture = render({ actions: 'change' });
+  expect(fixture.nonce).not.toBe('');
+  await page.route('**/include/js/jquery.js', route => route.fulfill({
+    contentType: 'application/javascript',
+    body: fs.readFileSync(path.join(root, 'include/js/jquery.js'), 'utf8'),
+  }));
+  await page.route('**/tests/e2e/theme-smoke.html', route => route.fulfill({
+    contentType: 'text/html',
+    headers: { 'Content-Security-Policy': `default-src 'none'; script-src 'nonce-${fixture.nonce}'; style-src 'unsafe-inline'` },
+    body: fixture.markup + fixture.second_html,
+  }));
+  await page.goto('/tests/e2e/theme-smoke.html');
+  await page.evaluate(nonce => new Promise((resolve, reject) => {
+    const library = document.createElement('script');
+    library.nonce = nonce;
+    library.src = '/include/js/jquery.js';
+    library.onload = resolve;
+    library.onerror = reject;
+    document.head.append(library);
+  }), fixture.nonce);
+  // Execute the production-generated fixture script with its actual nonce.
+  await page.evaluate(({ nonce, script }) => {
+    window.changeCalls = 0;
+    const handler = document.createElement('script');
+    handler.nonce = nonce;
+    handler.textContent = script;
+    document.head.append(handler);
+  }, { nonce: fixture.nonce, script: fixture.script });
+  await page.locator('#choice').uncheck();
+  expect(await page.evaluate(() => window.changeCalls)).toBe(1);
+  await page.locator('#choice').check();
+  expect(await page.evaluate(() => window.changeCalls)).toBe(2);
+  await page.locator('#next_choice').uncheck();
+  expect(await page.evaluate(() => window.changeCalls)).toBe(2);
+  await page.evaluate(() => {
+    const blocked = document.createElement('script');
+    blocked.nonce = 'wrong-nonce';
+    blocked.textContent = 'window.changeCalls += 1000;';
+    document.head.append(blocked);
+  });
+  expect(await page.evaluate(() => window.changeCalls)).toBe(2);
   expect(errors).toEqual([]);
 });

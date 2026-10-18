@@ -1,9 +1,5 @@
 {
-    "session": {
-        "form_change_actions": {
-            "user_language": "languageChanged()"
-        }
-    },
+    "session": [],
     "diagnostics": [],
     "log": []
 }

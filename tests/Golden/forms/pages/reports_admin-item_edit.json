@@ -1,12 +1,5 @@
 {
-    "session": {
-        "form_change_actions": {
-            "item_type": "toggle_item_type()",
-            "tree_id": "changeTree()",
-            "site_id": "changeSite()",
-            "host_template_id": "changeDeviceTemplate()"
-        }
-    },
+    "session": [],
     "diagnostics": [],
     "log": [],
     "elements_outside_forms": [

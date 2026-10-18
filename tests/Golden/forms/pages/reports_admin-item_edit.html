@@ -328,6 +328,12 @@
         </div>
       </div>
       <div class="formRow odd" id="row_sequence"><div class="formColumnLeft"><div class="formFieldName">Sequence<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">Sequence of Item.</span></div></div></div></div><div class="formColumnRight"><div class="formData"><em></em><div style="display:none;"><input id="sequence" name="sequence" style="height:0px;" type="hidden" value=""></div></div></div></div>
+      <script nonce="&lt;NONCE&gt;" type="text/javascript">
+$('#item_type').on('change', function() { toggle_item_type(); });
+$('#tree_id').on('change', function() { changeTree(); });
+$('#site_id').on('change', function() { changeSite(); });
+$('#host_template_id').on('change', function() { changeDeviceTemplate(); });
+</script>
     </div>
   </div>
   <div class="break"></div><div style="display:none;"><input id="id" name="id" style="height:0px;" type="hidden" value="0"></div><div style="display:none;"><input id="report_id" name="report_id" style="height:0px;" type="hidden" value="4"></div><div style="display:none;"><input id="save_component_report_item" name="save_component_report_item" style="height:0px;" type="hidden" value="1"></div>

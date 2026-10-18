@@ -1,10 +1,5 @@
 {
-    "session": {
-        "form_change_actions": {
-            "tree_id": "applyTreeChange()",
-            "leaf_type": "applyItemTypeChange()"
-        }
-    },
+    "session": [],
     "diagnostics": [],
     "log": [],
     "elements_outside_forms": [],
