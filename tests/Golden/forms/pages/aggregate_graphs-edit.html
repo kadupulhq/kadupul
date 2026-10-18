@@ -53,6 +53,10 @@
         </div>
         <div class="hidden formRow"><div style="display:none;"><input id="id" name="id" style="height:0px;" type="hidden" value="9"></div></div><div class="hidden formRow"><div style="display:none;"><input id="local_graph_id" name="local_graph_id" style="height:0px;" type="hidden" value="42"></div></div><div class="hidden formRow"><div style="display:none;"><input id="aggregate_template_id" name="aggregate_template_id" style="height:0px;" type="hidden" value="0"></div></div><div class="hidden formRow"><div style="display:none;"><input id="graph_template_id" name="graph_template_id" style="height:0px;" type="hidden" value="3"></div></div>
         <div class="formRow even" id="row_suggestions"><div class="formColumnLeft"><div class="formFieldName">Prefix Replacement Values<div class="formTooltip"><div class="cactiTooltipHint fa fa-question-circle"><span style="display:none;">You may use these replacement values for the Prefix in the Aggregate Graph</span></div></div></div></div><div class="formColumnRight"><div class="formData"><em>|host_description|</em><div style="display:none;"><input id="suggestions" name="suggestions" style="height:0px;" type="hidden" value="|host_description|"></div></div></div></div>
+        <script nonce="&lt;NONCE&gt;" type="text/javascript">
+$('#total').on('change', function() { changeTotals(); });
+$('#total_type').on('change', function() { changeTotalsType(); });
+</script>
       </div>
     </div>
     <div class="break"></div>
@@ -307,6 +311,9 @@
           </div>
           </div>
         </div>
+        <script nonce="&lt;NONCE&gt;" type="text/javascript">
+$('#auto_scale_log').on('change', function() { changeScaleLog(); });
+</script>
       </div>
     </div>
     <div class="break"></div><div style="display:none;"><input id="save_component_graph" name="save_component_graph" style="height:0px;" type="hidden" value="1"></div><div style="display:none;"><input id="save_component_input" name="save_component_input" style="height:0px;" type="hidden" value="1"></div><div style="display:none;"><input id="rrdtool_version" name="rrdtool_version" style="height:0px;" type="hidden" value="1.4.0"></div>

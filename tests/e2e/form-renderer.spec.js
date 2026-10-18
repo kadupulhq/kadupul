@@ -3,6 +3,7 @@
 const { test, expect } = require('@playwright/test');
 const { execFileSync } = require('node:child_process');
 const path = require('node:path');
+const fs = require('node:fs');
 const root = path.resolve(__dirname, '../..');
 
 function render(scenario) {
@@ -76,5 +77,26 @@ test('multiselect setting fallback survives browser form serialization', async (
     { name: 'choices[]', value: 'a' },
     { name: 'choices[]', value: '0' },
   ]);
+  expect(errors).toEqual([]);
+});
+
+test('change-only edit form binds under nonce CSP and consumes its queue before the next form', async ({ page }) => {
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  const fixture = render({ actions: 'change' });
+  expect(fixture.nonce).not.toBe('');
+  const jquery = fs.readFileSync(path.join(root, 'include/js/jquery.js'), 'utf8').replace(/<\/script/gi, '<\\/script');
+  await page.route('**/tests/e2e/theme-smoke.html', route => route.fulfill({
+    contentType: 'text/html',
+    headers: { 'Content-Security-Policy': `default-src 'none'; script-src 'nonce-${fixture.nonce}'; style-src 'unsafe-inline'` },
+    body: `<html><body><script nonce="${fixture.nonce}">${jquery};window.changeCalls=0;</script>${fixture.html}${fixture.second_html}</body></html>`,
+  }));
+  await page.goto('/tests/e2e/theme-smoke.html');
+  await page.locator('#choice').uncheck();
+  expect(await page.evaluate(() => window.changeCalls)).toBe(1);
+  await page.locator('#choice').check();
+  expect(await page.evaluate(() => window.changeCalls)).toBe(2);
+  await page.locator('#next_choice').uncheck();
+  expect(await page.evaluate(() => window.changeCalls)).toBe(2);
   expect(errors).toEqual([]);
 });

@@ -1,10 +1,5 @@
 {
-    "session": {
-        "form_change_actions": {
-            "option_a": "groupChanged()",
-            "option_b": "groupChanged()"
-        }
-    },
+    "session": [],
     "diagnostics": [],
     "log": []
 }

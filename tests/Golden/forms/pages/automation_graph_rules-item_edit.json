@@ -1,10 +1,5 @@
 {
-    "session": {
-        "form_change_actions": {
-            "operation": "toggle_operation()",
-            "operator": "toggle_operator()"
-        }
-    },
+    "session": [],
     "diagnostics": [],
     "log": [],
     "elements_outside_forms": [],

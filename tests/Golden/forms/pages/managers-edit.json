@@ -1,17 +1,14 @@
 {
-    "session": {
-        "form_change_actions": {
-            "snmp_version": "setSNMP()",
-            "snmp_security_level": "setSNMP()",
-            "snmp_auth_protocol": "setSNMP()",
-            "snmp_priv_protocol": "setSNMP()"
-        }
-    },
+    "session": [],
     "diagnostics": [],
     "log": [],
     "elements_outside_forms": [],
     "script_ids": [
-        "form1"
+        "form1",
+        "snmp_auth_protocol",
+        "snmp_priv_protocol",
+        "snmp_security_level",
+        "snmp_version"
     ],
     "script_names": []
 }

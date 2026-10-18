@@ -1,9 +1,5 @@
 {
-    "session": {
-        "form_change_actions": {
-            "from_settings": "multiChanged()"
-        }
-    },
+    "session": [],
     "diagnostics": [],
     "log": []
 }

@@ -72,8 +72,18 @@ final class FormColorDropdownOutputTest extends TestCase
                 self::assertSame($color[0] === $expectedPrevious, $option->hasAttribute('selected'));
                 self::assertSame($color[2] === '' ? 'Kadupul Color (' . $color[1] . ')' : $color[2] . ' (' . $color[1] . ')', $option->textContent);
             }
-            self::assertSame('this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor;setColour()', $result['session']['form_change_actions'][$scenario['name']]);
-            self::assertCount(0, $xpath->query('//x|//script'));
+            $handler = 'this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor;setColour()';
+            if (!empty($scenario['handoff'])) {
+                self::assertArrayNotHasKey('form_change_actions', $result['session']);
+                $scripts = $xpath->query('//script');
+                self::assertCount(1, $scripts);
+                self::assertNotSame('', $scripts->item(0)->getAttribute('nonce'));
+                self::assertStringContainsString($handler, $scripts->item(0)->textContent);
+            } else {
+                self::assertSame($handler, $result['session']['form_change_actions'][$scenario['name']]);
+                self::assertCount(0, $xpath->query('//script'));
+            }
+            self::assertCount(0, $xpath->query('//x'));
             if (!empty($scenario['handoff']) && !empty($scenario['spacer'])) {
                 $spacer = $xpath->query('//div[contains(@class, "formHeaderText")]');
                 self::assertCount(1, $spacer);

@@ -26,6 +26,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Reject RRDtool fetch errors before parsing data-source headers, preventing failed reads from appearing as zero-valued statistics (#776).
 - Use the matched archive index from the RRD file in resize recommendations when its archive order differs from the data source profile (#780).
 - Check each group's own tree exceptions, and only tree exceptions, when a tree is opened by id, so `is_tree_allowed()` allows exactly the trees that `get_allowed_trees()` lists (#755).
+- Bind and consume change-only edit-form handlers immediately, preventing them from leaking into the next form (#700).
 - Render an empty multiselect value from its same-name setting without a PHP 8 string-append error; preserve explicit selections and empty arrays (#701).
 - Deny a disabled or missing tree when a viewer opens it by id or a report includes it, as the tree picker already hides it; tree editing still reaches disabled trees (#914).
 - Keep data-source diagnostics read-only: comparing an RRD no longer overwrites saved heartbeats with the profile default (#774).

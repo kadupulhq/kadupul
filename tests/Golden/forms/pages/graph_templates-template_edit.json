@@ -1,9 +1,5 @@
 {
-    "session": {
-        "form_change_actions": {
-            "auto_scale_log": "changeScaleLog()"
-        }
-    },
+    "session": [],
     "diagnostics": [],
     "log": [],
     "elements_outside_forms": [],

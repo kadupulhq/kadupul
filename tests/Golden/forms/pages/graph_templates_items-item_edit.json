@@ -1,9 +1,5 @@
 {
-    "session": {
-        "form_change_actions": {
-            "color_id": "this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor;changeColorId()"
-        }
-    },
+    "session": [],
     "diagnostics": [],
     "log": [],
     "elements_outside_forms": [],

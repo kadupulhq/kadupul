@@ -1,16 +1,12 @@
 {
-    "session": {
-        "form_change_actions": {
-            "operation": "toggle_operation()",
-            "operator": "toggle_operator()"
-        }
-    },
+    "session": [],
     "diagnostics": [],
     "log": [],
     "elements_outside_forms": [],
     "script_ids": [
         "field",
         "form_automation_global_item_edit",
+        "operation",
         "operator",
         "pattern",
         "rule_type",

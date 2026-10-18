@@ -1,9 +1,5 @@
 {
-    "session": {
-        "form_change_actions": {
-            "notes": "notesChanged()"
-        }
-    },
+    "session": [],
     "diagnostics": [],
     "log": []
 }

@@ -36,7 +36,21 @@ function db_fetch_assoc($sql)
 
 $_SESSION = $scenario['session'] ?? array();
 ob_start();
-if (!empty($scenario['controls'])) {
+if (isset($scenario['actions'])) {
+    $config = array('is_web' => false, 'config_options_array' => array('hide_form_description' => 'off'));
+    $fields = array('choice' => array('method' => 'checkbox', 'friendly_name' => 'Choice', 'value' => 'on'));
+    if (in_array($scenario['actions'], array('change', 'both'), true)) {
+        $fields['choice']['on_change'] = 'window.changeCalls++';
+    }
+    if (in_array($scenario['actions'], array('click', 'both'), true)) {
+        $fields['refresh'] = array('method' => 'button', 'friendly_name' => 'Refresh', 'value' => 'Refresh', 'on_click' => 'window.clickCalls++');
+    }
+    draw_edit_form(array('config' => array('no_form_tag' => true), 'fields' => $fields));
+    $firstSession = $_SESSION;
+    ob_start();
+    draw_edit_form(array('config' => array('no_form_tag' => true), 'fields' => array('next_choice' => array('method' => 'checkbox', 'friendly_name' => 'Next choice', 'value' => 'on'))));
+    $secondHtml = ob_get_clean();
+} elseif (!empty($scenario['controls'])) {
     $db = new PDO('sqlite::memory:', null, null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
     $db->exec("CREATE TABLE colors(id INTEGER PRIMARY KEY, hex TEXT, name TEXT); INSERT INTO colors VALUES(5,'FFFFFF','White')");
     $config = array('is_web' => false, 'config_options_array' => array('hide_form_description' => 'off'));
@@ -71,6 +85,10 @@ if (!empty($scenario['controls'])) {
 }
 $html = ob_get_clean();
 $result = array('html' => $html, 'session' => $_SESSION);
+if (isset($scenario['actions'])) {
+    $result['first_session'] = $firstSession;
+    $result['second_html'] = $secondHtml;
+}
 if (!empty($scenario['browser'])) {
     $document = new DOMDocument();
     $previous = libxml_use_internal_errors(true);
@@ -86,6 +104,7 @@ if (!empty($scenario['browser'])) {
     }
     $script = $scripts->item(0);
     $result['script'] = $script->textContent;
+    $result['nonce'] = $script->getAttribute('nonce');
     $script->parentNode->removeChild($script);
     $result['markup'] = $document->saveHTML();
 }

@@ -1,11 +1,5 @@
 {
-    "session": {
-        "form_change_actions": {
-            "total": "changeTotals()",
-            "total_type": "changeTotalsType()",
-            "auto_scale_log": "changeScaleLog()"
-        }
-    },
+    "session": [],
     "diagnostics": [],
     "log": [],
     "elements_outside_forms": [
