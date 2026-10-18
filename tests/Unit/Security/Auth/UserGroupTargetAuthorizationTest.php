@@ -39,7 +39,7 @@ $_POST = $request;
 $db = ' . var_export($db, true) . ';
 $writes = array();
 $message = null;
-$settings_user = array();
+$settings_user = $db["settings_user"] ?? array();
 $group_actions = array();
 $user_auth_realms = array();
 function isset_request_var($name) { return isset($GLOBALS["request"][$name]); }
@@ -57,12 +57,14 @@ function reset_group_perms($id) {}
 function cacti_count($x) { return count($x); }
 function cacti_sizeof($x) { return is_array($x) ? count($x) : 0; }
 function user_group_enable($id) { $GLOBALS["writes"][] = "ENABLE " . $id; }
+function kill_session_var($name) {}
 function db_execute_prepared($sql, $params = array()) {
 	if (strpos($sql, "INSERT INTO user_auth_group_realm") !== false) { $GLOBALS["writes"][] = "REALM " . $params[0] . ":" . $params[1]; }
 	elseif (strpos($sql, "REPLACE INTO user_auth_group_perms") !== false) { $GLOBALS["writes"][] = gate_marker($sql) . "PERM " . $params[0] . ":" . $params[1]; }
 	elseif (strpos($sql, "REPLACE INTO user_auth_group_members") !== false) { $GLOBALS["writes"][] = gate_marker($sql) . "MEMBER " . $params[0] . ":" . $params[1]; }
 	elseif (strpos($sql, "REPLACE INTO user_auth_group_realm") !== false) { $GLOBALS["writes"][] = gate_marker($sql) . "REALM " . $params[0] . ":" . $params[1]; }
 	elseif (strpos($sql, "INSERT INTO user_auth_group_perms") !== false) { $GLOBALS["writes"][] = "PERM " . $params[0] . ":" . $params[1]; }
+	elseif (strpos($sql, "REPLACE INTO settings_user_group") !== false) { $GLOBALS["writes"][] = gate_marker($sql) . "SETTING " . end($params); }
 	elseif (strpos($sql, "SET login_opts") !== false) { $GLOBALS["writes"][] = "LOGIN_OPTS " . $params[0]; }
 	else { $GLOBALS["writes"][] = strtok(trim($sql), " "); }
 	return true;
@@ -73,6 +75,8 @@ function gate_marker($sql) {
 	return strpos($normalized, "FROM user_auth_group WHERE id = ?") !== false ? "GATED " : "BARE ";
 }
 function db_fetch_insert_id() { return 77; }
+// The copy INSERT inserts one row unless the case says the source was gone.
+function db_affected_rows() { return $GLOBALS["db"]["affected"] ?? 1; }
 function db_fetch_assoc_prepared($sql, $params = array()) {
 	// The source group owns one realm and one permission; the copy owns none yet.
 	if ($params[0] != 5) { return array(); }
@@ -171,6 +175,25 @@ test('a copied group receives the realms and permissions of its source', functio
 
 	expect($result['writes'])->toContain('REALM 77:8')
 		->and($result['writes'])->toContain('PERM 77:4');
+});
+
+test('a copy is reported as failed and writes nothing when its insert adds no row', function () use ($db) {
+	// The source passed the existence check and was deleted before the INSERT ... SELECT.
+	$result = run_handler('form_actions', array('selected_items' => array(5), 'drp_action' => '2'), array('affected' => 0) + $db);
+
+	expect($result)->toBe(array('writes' => array('INSERT'), 'message' => 2));
+
+	$result = run_handler('form_actions', array('selected_items' => array(5), 'drp_action' => '2'), $db);
+
+	expect($result['message'])->toBeNull()
+		->and($result['writes'])->toContain('REALM 77:8');
+});
+
+test('graph settings are written through the parent group row', function () use ($db) {
+	$settings = array('settings_user' => array('general' => array('default_view_mode' => array(), 'timespan' => array('items' => array('default_timespan' => array())))));
+	$writes   = run_handler('form_save', array('id' => 5, 'save_component_graph_settings' => 1), $settings + $db)['writes'];
+
+	expect($writes)->toBe(array('GATED SETTING 5', 'GATED SETTING 5'));
 });
 
 test('a realm save that drops console access moves the landing page to graphs', function () use ($db) {

@@ -251,9 +251,13 @@ function user_group_copy($id, $prefix = 'New Group') {
 		policy_graphs, policy_trees, policy_hosts, policy_graph_templates, enabled
 		FROM user_auth_group WHERE id = ?', array($id));
 
-	$group_id = db_fetch_insert_id();
+	/* A source deleted after the existence check inserts nothing, and the
+	   insert id would then still name the last row this connection created. */
+	$copied = db_affected_rows() == 1;
 
-	if (!empty($group_id)) {
+	if ($copied) {
+		$group_id = db_fetch_insert_id();
+
 		$perms = db_fetch_assoc_prepared('SELECT *
 			FROM user_auth_group_perms
 			WHERE group_id = ?',
@@ -290,6 +294,8 @@ function user_group_copy($id, $prefix = 'New Group') {
 	}
 
 	$count++;
+
+	return $copied;
 }
 
 function update_policies(): never {
@@ -490,8 +496,16 @@ function form_actions() {
 					api_plugin_hook_function('user_group_remove', $selected_items[$i]);
 				}
 			} elseif (get_nfilter_request_var('drp_action') == '2') { /* copy */
+				$copy_error = false;
+
 				for ($i=0;($i<cacti_count($selected_items));$i++) {
-					user_group_copy($selected_items[$i], get_nfilter_request_var('group_prefix'));
+					if (!user_group_copy($selected_items[$i], get_nfilter_request_var('group_prefix'))) {
+						$copy_error = true;
+					}
+				}
+
+				if ($copy_error) {
+					raise_message(2);
 				}
 			} elseif (get_nfilter_request_var('drp_action') == '3') { /* enable */
 				for ($i=0;($i<cacti_count($selected_items));$i++) {
@@ -706,10 +720,10 @@ function form_save() {
 			foreach ($tab_fields as $field_name => $field_array) {
 				if ((isset($field_array['items'])) && (is_array($field_array['items']))) {
 					foreach ($field_array['items'] as $sub_field_name => $sub_field_array) {
-						db_execute_prepared('REPLACE INTO settings_user_group (group_id, name, value) VALUES (?, ?, ?)', array(get_filter_request_var('id'), $sub_field_name, get_nfilter_request_var($sub_field_name, '')));
+						db_execute_prepared('REPLACE INTO settings_user_group (group_id, name, value) SELECT id, ?, ? FROM user_auth_group WHERE id = ?', array($sub_field_name, get_nfilter_request_var($sub_field_name, ''), get_filter_request_var('id')));
 					}
 				} else {
-					db_execute_prepared('REPLACE INTO settings_user_group (group_id, name, value) VALUES (?, ?, ?)', array(get_request_var('id'), $field_name, get_nfilter_request_var($field_name)));
+					db_execute_prepared('REPLACE INTO settings_user_group (group_id, name, value) SELECT id, ?, ? FROM user_auth_group WHERE id = ?', array($field_name, get_nfilter_request_var($field_name), get_request_var('id')));
 				}
 			}
 		}
