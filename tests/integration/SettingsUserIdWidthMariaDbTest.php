@@ -93,14 +93,16 @@ function settings_user_width_connect() {
 
 	$config = array('poller_id' => 1);
 
+	/* db_connect_real() relaxes sql_mode through the connection these globals name, as config.php sets them before it connects */
+	$database_hostname = $host;
+	$database_port     = $port;
+	$database_default  = $schema;
+
 	if (!db_connect_real($host, $user, $password, $schema, 'mysql', $port, 1)) {
 		throw new RuntimeException('Cannot connect to the settings_user contract schema: ' . json_encode($config['DATABASE_ERROR'] ?? array()));
 	}
 
-	$database_hostname = $host;
-	$database_port     = $port;
-	$database_default  = $schema;
-	$connected         = true;
+	$connected = true;
 }
 
 function settings_user_width_reset() {
