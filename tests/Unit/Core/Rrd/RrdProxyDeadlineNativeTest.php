@@ -5,6 +5,9 @@ declare(strict_types=1);
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 3) . '/Helpers/NativeChildCoverageEvidence.php';
+require_once dirname(__DIR__, 3) . '/Helpers/RrdProxyDeadlineCoverageRegistration.php';
+
 test('proxy reply deadlines bound silence and partial frames and preserve admitted reuse', function (string $scenario, string $outputFlag) {
     $root = dirname(__DIR__, 4);
     $directory = sys_get_temp_dir() . '/rrd-proxy-deadline-' . bin2hex(random_bytes(8));
@@ -56,7 +59,14 @@ test('proxy reply deadlines bound silence and partial frames and preserve admitt
         if ($coverage !== null) {
             $reports = glob($directory . '/*.coverage');
             expect($reports)->toHaveCount(1);
-            $coverage->merge(unserialize(file_get_contents($reports[0])));
+            $arguments = [$reports[0], $root, RrdProxyDeadlineCoverageRegistration::PRODUCER,
+                json_encode([$scenario, $outputFlag], JSON_THROW_ON_ERROR),
+                RrdProxyDeadlineCoverageRegistration::SOURCES, RrdProxyDeadlineCoverageRegistration::MARKERS,
+                RrdProxyDeadlineCoverageRegistration::HITS];
+            $measured = NativeChildCoverageEvidence::load(...$arguments);
+            expect(NativeChildCoverageEvidence::verifyRejections(...[...$arguments, 'lib/rrd.php']))
+                ->toBe(count(RrdProxyDeadlineCoverageRegistration::SOURCES) + count(RrdProxyDeadlineCoverageRegistration::MARKERS) + 10);
+            $coverage->merge($measured);
         }
     } finally {
         fclose($pipes[1]);

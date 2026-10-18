@@ -12,7 +12,13 @@ if (PHP_SAPI !== 'cli') {
 $root = dirname(__DIR__, 2);
 $scenario = $argv[1];
 $directory = $argv[2];
+require $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
+require $root . '/tests/Helpers/RrdProxyDeadlineCoverageRegistration.php';
 if (isset($argv[4])) {
+    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root,
+        RrdProxyDeadlineCoverageRegistration::PRODUCER, json_encode([$scenario, $argv[3]], JSON_THROW_ON_ERROR),
+        RrdProxyDeadlineCoverageRegistration::SOURCES);
+    define('RRD_PROXY_DEADLINE_TEST_COVERAGE', true);
     define('RRD_TEST_COVERAGE_DIRECTORY', $directory);
     require __DIR__ . '/rrd-process-coverage.php';
 }
@@ -90,4 +96,7 @@ if ($scenario === 'success') {
 }
 pcntl_waitpid($pid, $status);
 $cap = null;
-echo json_encode([$result, $second, $elapsed, file_get_contents($directory . '/commands'), $logs, $closed], JSON_THROW_ON_ERROR);
+$commands = file_get_contents($directory . '/commands');
+if ($commands === false) { throw new RuntimeException('Missing native wire transcript'); }
+$nativeChildCoverageMarkers = RrdProxyDeadlineCoverageRegistration::MARKERS;
+echo json_encode([$result, $second, $elapsed, $commands, $logs, $closed], JSON_THROW_ON_ERROR);
