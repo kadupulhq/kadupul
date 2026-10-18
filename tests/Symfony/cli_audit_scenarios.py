@@ -5,7 +5,8 @@
 Each case restores the same starting state, runs the frozen original, restores
 it again, runs the shim, and compares stdout, stderr, the exit code, the
 schema, the audit tables, docs/audit_schema.sql and cacti.log, whole lines
-with only the time of day masked. Failed repairs and failed exports explicitly
+with time of day masked and dates validated against each invocation's UTC
+days while preserving their layout. Failed repairs and failed exports explicitly
 require the frozen original's exit 0 and the native command's exit 1.
 """
 import json

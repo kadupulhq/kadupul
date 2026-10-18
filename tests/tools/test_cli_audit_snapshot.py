@@ -2,8 +2,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Verify audit comparisons preserve state and require explicit exit contracts."""
 from contextlib import redirect_stdout
+from datetime import date, datetime, timezone
 from io import StringIO
 from pathlib import Path
+import subprocess
 import sys
 import unittest
 from unittest.mock import Mock, patch
@@ -132,7 +134,9 @@ class AuditExitComparisonTest(unittest.TestCase):
         native = {'exit': native_exit, 'stdout': stdout, 'stderr': stderr}
         snapshot = Mock(side_effect=[('start',), ('same schema',), ('start',), (state,)])
         with patch.object(schema, 'run', side_effect=[original, native]), \
-                patch.object(schema, 'log_lines', side_effect=[[], ['same log'], [], [log]]):
+                patch.object(schema, 'log_lines', side_effect=[[], ['same log'], [], [log]]), \
+                patch.object(schema, 'utc_date', return_value=date(2026, 10, 17)), \
+                patch.object(schema, 'log_date_layout', return_value=('mdY', '/')):
             return schema.compare(object(), lambda condition, label: self.assertTrue(condition, label),
                                   'audit failed write', ('original.php', 'native.php'), ['--repair'],
                                   None, Mock(), snapshot, 'audit', stdout=lambda text: text,
@@ -191,6 +195,143 @@ class AuditExitComparisonTest(unittest.TestCase):
                 schema.compare(object(), lambda condition, label: self.assertTrue(condition, label),
                                'audit failed write', ('original.php', 'native.php'), [], None, Mock(),
                                Mock(side_effect=['start', 'after', 'wrong start']), 'audit', expected_exits=(0, 1))
+
+
+class AuditLogDateTest(unittest.TestCase):
+    def compare(self, original, native, days=('2026-10-17', '2026-10-17', '2026-10-18', '2026-10-18'),
+                layout=('0', '1')):
+        events = []
+        ticks = iter(days)
+
+        class ClockHarness:
+            def sql(inner, query):
+                self.assertEqual("SELECT name, value FROM settings WHERE name IN ('default_date_format', 'default_datechar')", query)
+                if layout is None:
+                    return ''
+                return f'default_date_format\t{layout[0]}\ndefault_datechar\t{layout[1]}\n'
+
+            def command(inner, *arguments, check=False):
+                self.assertEqual(('date', '-u', '+%Y-%m-%d'), arguments)
+                self.assertTrue(check)
+                events.append('date')
+                return {'exit': 0, 'stdout': next(ticks) + '\n', 'stderr': ''}
+
+        def invoke(harness, script, arguments):
+            events.append(script)
+            return {'exit': 0, 'stdout': 'same output', 'stderr': ''}
+
+        with patch.object(schema, 'run', side_effect=invoke), \
+                patch.object(schema, 'log_lines', side_effect=[[], original, original, original + native]), \
+                redirect_stdout(StringIO()):
+            schema.compare(ClockHarness(), lambda condition, label: self.assertTrue(condition, label),
+                           'audit log date', ('original.php', 'native.php'), [], None, Mock(),
+                           lambda harness: 'same schema', 'audit', log_filter=audit.log_masked)
+        return events
+
+    def test_clock_probe_reads_the_selected_runtime_in_utc(self):
+        commands = []
+
+        class NativeDateHarness:
+            def command(inner, *arguments, check=False):
+                commands.append((arguments, check))
+                result = subprocess.run(arguments, check=check, capture_output=True, text=True)
+                return {'exit': result.returncode, 'stdout': result.stdout, 'stderr': result.stderr}
+
+        first = datetime.now(timezone.utc).date()
+        observed = schema.utc_date(NativeDateHarness())
+        last = datetime.now(timezone.utc).date()
+        self.assertIn(observed, {first, last})
+        self.assertEqual([(('date', '-u', '+%Y-%m-%d'), True)], commands)
+
+    def test_invalid_clock_output_and_failed_reads_are_not_accepted(self):
+        for output in ('not a date', '20261017', '2026-W42-6', '2026-02-30'):
+            with self.subTest(output=output), self.assertRaises(ValueError):
+                schema.utc_date(Mock(command=Mock(return_value={'stdout': output})))
+        with self.assertRaisesRegex(RuntimeError, 'clock unavailable'):
+            schema.utc_date(Mock(command=Mock(side_effect=RuntimeError('clock unavailable'))))
+
+    def test_recorded_midnight_failure_is_accepted(self):
+        self.compare(["10/17/2026 23:59:58 - DBCALL ERROR: mysqldump failed with exit code 2 for database 'cacti'"],
+                     ["10/18/2026 00:00:00 - DBCALL ERROR: mysqldump failed with exit code 2 for database 'cacti'"])
+
+    def test_each_command_has_its_own_clock_boundaries(self):
+        events = self.compare(['10/17/2026 23:59:58 - same'], ['10/18/2026 00:00:00 - same'])
+        self.assertEqual(['date', 'original.php', 'date', 'date', 'native.php', 'date'], events)
+
+    def test_same_day_still_ignores_only_the_time_of_day(self):
+        self.compare(['10/17/2026 10:00:00 - same'], ['10/17/2026 11:00:00 - same'], ('2026-10-17',) * 4)
+
+    def test_all_supported_date_orders_and_separators_cross_midnight(self):
+        for order, (before, after) in enumerate([('10|17|2026', '10|18|2026'), ('Oct|17|2026', 'Oct|18|2026'),
+                              ('17|10|2026', '18|10|2026'), ('17|Oct|2026', '18|Oct|2026'),
+                              ('2026|10|17', '2026|10|18'), ('2026|Oct|17', '2026|Oct|18')]):
+            for separator in ('/', '-', '.'):
+                with self.subTest(order=before, separator=separator):
+                    self.compare([before.replace('|', separator) + ' 23:59:58 - same'],
+                                 [after.replace('|', separator) + ' 00:00:00 - same'],
+                                 layout=(str(order), {'-': '0', '/': '1', '.': '2'}[separator]))
+
+    def test_month_year_and_leap_day_boundaries(self):
+        for before, after, first, second in [
+                ('12/31/2026', '01/01/2027', '2026-12-31', '2027-01-01'),
+                ('02/29/2028', '03/01/2028', '2028-02-29', '2028-03-01'),
+                ('02/28/2027', '03/01/2027', '2027-02-28', '2027-03-01'),
+                ('10/10/2026', '11/10/2026', '2026-10-10', '2026-10-11')]:
+            with self.subTest(before=before, after=after):
+                self.compare([before + ' 23:59:58 - same'], [after + ' 00:00:00 - same'], (first, first, second, second),
+                             layout=('2' if before == '10/10/2026' else '0', '1'))
+
+    def test_ambiguous_numeric_dates_cannot_select_an_unconfigured_layout(self):
+        with self.assertRaisesRegex(AssertionError, 'logs'):
+            self.compare(['10/10/2026 23:59:58 - same'], ['11/10/2026 00:00:00 - same'],
+                         ('2026-10-10', '2026-10-10', '2026-10-11', '2026-10-11'))
+
+    def test_missing_settings_use_actual_defaults_and_unsupported_values_fail_closed(self):
+        self.assertEqual(('mdY', '/'), schema.log_date_layout(Mock(sql=Mock(return_value=''))))
+        for settings in ('default_date_format\tbad\n', 'default_datechar\t9\n'):
+            with self.subTest(settings=settings), self.assertRaises(ValueError):
+                schema.log_date_layout(Mock(sql=Mock(return_value=settings)))
+
+    def test_absent_settings_follow_cli_bootstrap_defaults_through_comparison(self):
+        self.compare(['10/17/2026 23:59:58 - same'], ['10/18/2026 00:00:00 - same'], layout=None)
+
+    def test_changed_configuration_between_commands_remains_a_failure(self):
+        with patch.object(schema, 'log_date_layout', side_effect=[('mdY', '/'), ('dmY', '/')]), \
+                self.assertRaisesRegex(AssertionError, 'logs'):
+            self.compare(['10/10/2026 10:00:00 - same'], ['10/10/2026 11:00:00 - same'], ('2026-10-10',) * 4)
+
+    def test_a_single_command_can_span_midnight(self):
+        self.compare(['10/17/2026 23:59:58 - first', '10/18/2026 00:00:00 - second'],
+                     ['10/18/2026 00:00:01 - first', '10/18/2026 00:00:02 - second'],
+                     ('2026-10-17', '2026-10-18', '2026-10-18', '2026-10-18'))
+
+    def test_identical_stale_dates_do_not_pass_equality(self):
+        with self.assertRaisesRegex(AssertionError, 'logs'):
+            self.compare(['10/16/2026 12:00:00 - same'], ['10/16/2026 12:00:01 - same'])
+
+    def test_a_date_from_the_other_commands_window_is_rejected(self):
+        with self.assertRaisesRegex(AssertionError, 'logs'):
+            self.compare(['10/17/2026 23:59:58 - same'], ['10/17/2026 00:00:00 - same'])
+
+    def test_wrong_dates_and_layout_changes_remain_failures(self):
+        for changed in ('10/19/2026', '10/18/2025', '02/30/2026', '18/10/2026', '10-18-2026', 'Oct/18/2026'):
+            with self.subTest(changed=changed), self.assertRaisesRegex(AssertionError, 'logs'):
+                self.compare(['10/17/2026 23:59:58 - same'], [changed + ' 00:00:00 - same'])
+
+    def test_message_changes_missing_and_duplicate_records_remain_failures(self):
+        for changed in (['10/18/2026 00:00:00 - different'], [], ['10/18/2026 00:00:00 - same'] * 2):
+            with self.subTest(changed=changed), self.assertRaisesRegex(AssertionError, 'logs'):
+                self.compare(['10/17/2026 23:59:58 - same'], changed)
+
+    def test_existing_filter_exclusions_and_continuation_lines_are_preserved(self):
+        self.compare(['10/17/2026 23:59:58 - same', 'continuation', '10/16/2026 10:00:00' + audit.BACKTRACE + 'ignored'],
+                     ['10/18/2026 00:00:00 - same', 'continuation'])
+
+    def test_reversed_and_unbounded_clock_observations_fail_closed(self):
+        for days in (('2026-10-18', '2026-10-17', '2026-10-18', '2026-10-18'),
+                     ('2026-10-16', '2026-10-18', '2026-10-18', '2026-10-18')):
+            with self.subTest(days=days), self.assertRaisesRegex(AssertionError, 'logs'):
+                self.compare(['10/17/2026 23:59:58 - same'], ['10/18/2026 00:00:00 - same'], days)
 
 
 if __name__ == '__main__':
