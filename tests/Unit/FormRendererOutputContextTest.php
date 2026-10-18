@@ -119,34 +119,6 @@ final class FormRendererOutputContextTest extends TestCase
         self::assertTrue($xpath->query('//select[@id="drop_color"]/option[@value="5"]')->item(0)->hasAttribute('selected'));
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('actionModes')]
-    public function testEditFormBindsAndConsumesEachActionQueue(string $mode): void
-    {
-        $result = $this->render(array('actions' => $mode));
-        $document = new DOMDocument();
-        self::assertTrue($document->loadHTML($result['html'], LIBXML_NONET));
-        $scripts = $document->getElementsByTagName('script');
-        self::assertCount($mode === 'none' ? 0 : 1, $scripts);
-        if ($mode !== 'none') {
-            $script = $scripts->item(0);
-            self::assertNotSame('', $script->getAttribute('nonce'));
-            self::assertSame(in_array($mode, array('change', 'both'), true), str_contains($script->textContent, "$('#choice').on('change'"));
-            self::assertSame(in_array($mode, array('click', 'both'), true), str_contains($script->textContent, "$('#refresh').on('click'"));
-        }
-        foreach (array('first_session', 'session') as $session) {
-            self::assertArrayNotHasKey('form_change_actions', $result[$session]);
-            self::assertArrayNotHasKey('form_click_actions', $result[$session]);
-        }
-        self::assertStringNotContainsString('<script', $result['second_html']);
-        self::assertStringNotContainsString('window.changeCalls', $result['second_html']);
-        self::assertStringNotContainsString('window.clickCalls', $result['second_html']);
-    }
-
-    public static function actionModes(): array
-    {
-        return array(array('change'), array('click'), array('both'), array('none'));
-    }
-
     private function render(array $scenario): array
     {
         $coverage = $this->getTestResultObject()->getCodeCoverage();

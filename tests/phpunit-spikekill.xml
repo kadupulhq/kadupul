@@ -66,8 +66,7 @@
       <file>Unit/Core/Rrd/RrdResizeArchiveIndexTest.php</file>
       <file>Unit/Core/Rrd/RrdCompareReadOnlyTest.php</file>
       <file>Unit/Forms/MultiselectSettingFallbackTest.php</file>
-      <file>Unit/FormRendererOutputContextTest.php</file>
-      <file>Unit/FormColorDropdownOutputTest.php</file>
+      <file>Unit/Forms/ChangeActionQueueTest.php</file>
       <file>Unit/Security/DataSourceAccessTest.php</file>
       <file>Unit/Security/Auth/TreeConfirmationAuthorizationTest.php</file>
       <file>Unit/Security/NewGraphDeviceAccessTest.php</file>
