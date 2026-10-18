@@ -106,6 +106,7 @@
       <file>Unit/Security/AdminAccountListTest.php</file>
       <file>Unit/Security/Auth/TreeGroupExceptionParityTest.php</file>
       <file>Unit/Security/Auth/TreeViewerEnabledCallerTest.php</file>
+      <file>Unit/Security/Misc/IncludeDirectoryDenyTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

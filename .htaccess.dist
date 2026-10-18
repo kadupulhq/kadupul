@@ -20,7 +20,7 @@
 # than in a shipped root .htaccess so that upgrades never overwrite an
 # operator's copy of this file.
 
-<FilesMatch "(?i)^\.|^(composer\.(json|lock)|package(-lock)?\.json|phpunit[^/]*\.xml|mise\.toml)$">
+<FilesMatch "(?i)^\.|^(composer\.(json|lock)|package(-lock)?\.json|phpunit[^/]*\.xml[^/]*|mise\.toml)$">
 	<IfModule mod_authz_core.c>
 		Require all denied
 	</IfModule>

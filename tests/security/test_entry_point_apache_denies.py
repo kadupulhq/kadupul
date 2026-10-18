@@ -16,11 +16,14 @@ import build_entry_point_inventory as inventory  # noqa: E402
 
 ROOT = inventory.ROOT
 SERVED = ['include/vendor/csrf/csrf-magic.js', 'include/vendor/flag-icons/css/flag-icons.css',
-          'include/layout.js', 'include/themes/modern/main.css', 'index.php', 'include/auth.php']
+          'include/vendor/flag-icons/flags/4x3/se.svg', 'include/layout.js',
+          'include/themes/modern/main.css', 'index.php', 'include/auth.php']
 # Denied by default beyond the baseline rows: static docs, a name in another
-# case, a bootstrap-name prefix and a nested vendor path.
+# case, a bootstrap-name prefix, editor backups and nested vendor paths.
 DENIED = ['docs/Table-of-Contents.html', 'docs/html/install_unix.html', 'include/Config.php',
-          'include/config.php.dist', 'include/VENDOR/autoload.php']
+          'include/config.php.dist', 'include/.config.php.swp', 'include/#config.php#',
+          'include/VENDOR/autoload.php', 'include/vendor/csrf/README.md', 'include/vendor/csrf/x.php.css',
+          'include/vendor/csrf/X.PHTML.JS']
 # Served even with .htaccess.dist enabled.
 OPT_IN_SERVED = ['.well-known/acme-challenge/token', '.well-known/', 'index.php', 'include/js/jquery.js']
 # Denied only with .htaccess.dist enabled; these have no baseline row. The
@@ -69,6 +72,12 @@ def main():
         failures.append('unquoted <Files> read as a directory-wide verdict')
     if not inventory.apache_denied('d/x.php', {'d/.htaccess': inventory.htaccess_rules('<FilesMatch ^x>' + deny + '</FilesMatch>\n')}):
         failures.append('unquoted <FilesMatch> deny not applied')
+    # A conjunction with a negated clause, joined by || to a third clause.
+    expr = '<If "%{REQUEST_FILENAME} =~ m#/v/#i && ! %{REQUEST_FILENAME} =~ m#\\.css$#i || %{REQUEST_URI} =~ m#\\.php\\.#i">'
+    mixed = {'.htaccess': inventory.htaccess_rules(expr + deny + '</If>\n')}
+    for path, expected in (('v/a.js', True), ('v/a.css', False), ('w/a.css', False), ('w/a.php.css', True)):
+        if inventory.apache_denied(path, mixed) != expected:
+            failures.append('<If> with && ! and || read %s as %s' % (path, 'served' if expected else 'denied'))
     try:
         inventory.htaccess_rules('<RequireAll>' + deny + '</RequireAll>\n')
         failures.append('unsupported <RequireAll> section accepted')
