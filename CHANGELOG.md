@@ -31,6 +31,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Keep data-source diagnostics read-only: comparing an RRD no longer overwrites saved heartbeats with the profile default (#774).
 - Fail a package import when a script or resource file cannot be opened, is not writable or is only partly written, keep the uploaded package for a retry, and exit 1 from `cli/import_package.php` (#765).
 - Roll back a Data Template or Data Input Method import, with any items or fields it already saved, when one of its child hashes does not parse, and return failure instead of throwing a `TypeError`; the Import Templates page shows the validation error for a failed import or a file that does not parse instead of "The Template Import Succeeded." (#764).
+- Deny `include/vendor` files other than the stylesheets, scripts, images and fonts the interface loads, including names such as `x.php.css` that hide a PHP extension, and hidden or hash-wrapped editor backups of `config.php`, `global.php` and `plugins.php`, by the file Apache maps rather than the request URI, so repeated slashes no longer reach vendor PHP when `MergeSlashes` is off; the optional `.htaccess.dist` also denies `phpunit.xml.dist` (#747).
 
 - Update the native CI scanner to Semgrep 1.179.0 and hash-locked PyJWT 2.15.1, removing vulnerable scanner dependencies while preserving the existing scan policy.
 
