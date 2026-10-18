@@ -19,6 +19,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Escape control characters in `cacti_log()` output to the log file, the console and syslog, and turn a newline in its `$environ` argument into a space so it can no longer start a second log record.
 - Apply the same control-character neutralization to Symfony maintenance log files and syslog through a shared rule that also loads before Composer.
 - Make the worker database test barrier wait for a complete decision, preventing a partially written file from turning an injected query failure into success.
+- Validate audit and widen CLI parity log dates against each command's observed UTC days, allowing a midnight boundary while preserving date layout, separators and message comparisons (#924).
 - Restore 36 silently omitted legacy regression suites to the required Pest runner and verify each registered file against recorded ordinary and privileged execution.
 - Save the Primary Admin setting only as a user id, and build the Guest User and User Template exclusion lists from integer ids, so a stored or session-cached value can no longer change those queries (#754).
 - Remove bare and timed RRDtool success trailers on Windows without deleting preceding graph or fetch payload bytes (#781).

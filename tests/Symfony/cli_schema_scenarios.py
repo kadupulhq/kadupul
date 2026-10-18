@@ -6,9 +6,10 @@ Each case runs the frozen original and the shim from the same starting schema
 and compares stdout, stderr, the exit code and the schema each leaves behind.
 Exit parity is strict unless a caller specifies both expected exit codes.
 
-The widen cases also compare cacti.log, whole lines with only the time of day
-masked.
+Log comparisons validate dates against each command's observed UTC days,
+preserving the date layout and separator while masking time of day.
 """
+from datetime import date
 import json
 import re
 
@@ -94,6 +95,49 @@ def without_version(text, utility):
     return '\n'.join(line for line in text.splitlines() if not line.startswith(utility))
 
 
+def utc_date(harness):
+    """Read the actual container clock; the fixture PHP timezone is pinned to UTC."""
+    text = harness.command('date', '-u', '+%Y-%m-%d', check=True)['stdout'].strip()
+    observed = date.fromisoformat(text)
+    if observed.isoformat() != text:
+        raise ValueError('Noncanonical UTC date observation: ' + text)
+    return observed
+
+
+def log_date_layouts(bounds):
+    """Supported date_time_format() layouts for a bounded command invocation."""
+    first, last = bounds
+    if not 0 <= (last - first).days <= 1:
+        return None
+    months = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split()
+    layouts = {(order, separator): set() for order in ('mdY', 'MdY', 'dmY', 'dMY', 'Ymd', 'YMd')
+               for separator in ('-', '/', '.')}
+    for day in {first, last}:
+        fields = {'Y': f'{day.year:04d}', 'm': f'{day.month:02d}', 'd': f'{day.day:02d}', 'M': months[day.month - 1]}
+        for (order, separator), values in layouts.items():
+            values.add(separator.join(fields[field] for field in order))
+    return layouts
+
+
+def dated_logs_match(original, native, original_days, native_days):
+    """Keep message/order/layout parity, allowing only observed calendar dates."""
+    original_layouts, native_layouts = log_date_layouts(original_days), log_date_layouts(native_days)
+    if original_layouts is None or native_layouts is None or len(original) != len(native):
+        return False
+    for left, right in zip(original, native):
+        left_stamp = re.fullmatch(r'(\S+) HH:MM:SS - (.*)', left)
+        right_stamp = re.fullmatch(r'(\S+) HH:MM:SS - (.*)', right)
+        if left_stamp is None or right_stamp is None:
+            if left != right:
+                return False
+            continue
+        if left_stamp[2] != right_stamp[2] or not any(
+                left_stamp[1] in original_layouts[layout] and right_stamp[1] in native_layouts[layout]
+                for layout in original_layouts):
+            return False
+    return True
+
+
 def compare(harness, check, label, scripts, arguments, allowed, reset, snapshot, utility,
             stdout=normalise, stderr_filter=None, shim_stderr_filter=None, log_filter=None, subject='schema',
             original_stdout=None, expected_exits: tuple[int, int] | None = None):
@@ -112,13 +156,17 @@ def compare(harness, check, label, scripts, arguments, allowed, reset, snapshot,
     reset(harness)
     start = snapshot(harness)
     marks = len(log_lines(harness))
+    original_start = utc_date(harness) if log_filter is not None else None
     original = run(harness, original_script, arguments)
+    original_end = utc_date(harness) if log_filter is not None else None
     after_original = snapshot(harness)
     original_log = log_lines(harness)[marks:]
     reset(harness)
     check(snapshot(harness) == start, f'{label}: the shim starts from the same {subject}')
     marks = len(log_lines(harness))
+    shim_start = utc_date(harness) if log_filter is not None else None
     shim = run(harness, shim_script, arguments)
+    shim_end = utc_date(harness) if log_filter is not None else None
     after_shim = snapshot(harness)
     shim_log = log_lines(harness)[marks:]
     expected = (original_stdout or stdout)(original['stdout'])
@@ -150,9 +198,12 @@ def compare(harness, check, label, scripts, arguments, allowed, reset, snapshot,
                                            fromfile=f'original state {index}', tofile=f'native state {index}')), flush=True)
         check(after_shim == after_original, f'{label}: shim {subject} {"match" if subject == "rows" else "matches"} the original')
     if log_filter is not None:
-        if log_filter(shim_log) != log_filter(original_log):
+        matching_logs = dated_logs_match(log_filter(original_log), log_filter(shim_log),
+                                         (original_start, original_end), (shim_start, shim_end))
+        if not matching_logs:
+            print(f'{label}: original UTC dates {original_start}..{original_end}; shim UTC dates {shim_start}..{shim_end}', flush=True)
             print(f'{label}: original log {original_log!r}\n{label}: shim log {shim_log!r}', flush=True)
-        check(log_filter(shim_log) == log_filter(original_log), f'{label}: shim logs the same cacti.log lines, date included')
+        check(matching_logs, f'{label}: shim logs the same cacti.log lines, date included')
     return {'original': original, 'shim': shim, 'original_log': original_log, 'shim_log': shim_log,
             'after_original': after_original, 'after_shim': after_shim}
 
