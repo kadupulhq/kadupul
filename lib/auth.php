@@ -763,10 +763,23 @@ function auth_augment_roles_byname($role_name, $auth_name) {
  *
  * @param  (int)  $tree_id the ID of the graph tree to check permissions for
  * @param  (int)  If checking a user, specify the user_id otherwise for the current user leave blank
+ * @param  (bool) $enabled_only also require the tree to exist and be enabled, as the tree picker does
  *
  * @return (bool) whether the current user is allowed the view the specified graph tree or not
  */
-function is_tree_allowed($tree_id, $user_id = 0) {
+function is_tree_allowed($tree_id, $user_id = 0, $enabled_only = false) {
+	/* editors work on disabled trees, so only viewers ask; read before the cache, which holds only the permission */
+	if ($enabled_only) {
+		$enabled = db_fetch_cell_prepared('SELECT enabled
+			FROM graph_tree
+			WHERE id = ?',
+			array($tree_id));
+
+		if ($enabled !== 'on') {
+			return false;
+		}
+	}
+
 	if ($user_id === -1) {
 		return true;
 	}
@@ -1301,7 +1314,7 @@ function get_allowed_tree_content($tree_id, $parent = 0, $sql_where = '', $sql_o
 					}
 				} elseif ($h['id'] == 0) {
 					if (!is_tree_branch_empty($h['tree_id'], $h['id'])) {
-						if (is_tree_allowed($h['tree_id'])) {
+						if (is_tree_allowed($h['tree_id'], 0, true)) {
 							$new_hierarchy[] = $h;
 						}
 					}
