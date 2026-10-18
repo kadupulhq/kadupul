@@ -80,13 +80,18 @@ def htaccess_rules(text):
         elif kind.lower() == 'filesmatch':
             pattern, subject = re.compile(argument), 'name'
         else:
-            # Only a disjunction of REQUEST_URI matches is understood; any other
-            # expression stops the build rather than being read as served.
-            for clause in re.split(r'\s*\|\|\s*', argument.strip()):
-                m = re.fullmatch(r'%\{REQUEST_URI\}\s*=~\s*m#([^#]*)#(i?)', clause)
-                if not m:
-                    raise SystemExit('ERROR: unsupported <If> expression in .htaccess: ' + argument)
-                sections.append((re.compile(m[1], re.I if m[2] else 0), 'uri', verdict[-1].lower()))
+            # Only a disjunction of conjunctions of [!] REQUEST_URI or
+            # REQUEST_FILENAME matches is understood; any other expression stops
+            # the build rather than being read as served. Both variables are
+            # judged on the repository path, as for an install at the web root.
+            for alternative in re.split(r'\s*\|\|\s*', argument.strip()):
+                terms = []
+                for clause in re.split(r'\s*&&\s*', alternative):
+                    m = re.fullmatch(r'(!\s*)?%\{REQUEST_(?:URI|FILENAME)\}\s*=~\s*m#([^#]*)#(i?)', clause)
+                    if not m:
+                        raise SystemExit('ERROR: unsupported <If> expression in .htaccess: ' + argument)
+                    terms.append('(?%s.*(?%s:%s))' % ('!' if m[1] else '=', 'i' if m[3] else '-i', m[2]))
+                sections.append((re.compile('^' + ''.join(terms), re.S), 'uri', verdict[-1].lower()))
             continue
         sections.append((pattern, subject, verdict[-1].lower()))
     rest = SECTION.sub('', text)
