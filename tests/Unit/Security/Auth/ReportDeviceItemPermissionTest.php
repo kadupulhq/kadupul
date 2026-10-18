@@ -7,7 +7,8 @@
  * A report device item names a device. reports_generate_html() gated it with
  * is_tree_allowed() on the device id, so the item followed whatever tree had
  * that id rather than the owner's device permission. It now asks
- * is_device_allowed() for the report owner.
+ * is_device_allowed() for the report owner. A tree item is checked as a
+ * viewer, so a disabled tree is left out as in the tree picker.
  *
  * reports_generate_html() is extracted into this namespace with the
  * permission checks and the device expansion stubbed.
@@ -37,7 +38,7 @@ function db_fetch_row_prepared($sql, $params = array(), $log = true)
 
 function db_fetch_assoc_prepared($sql, $params = array(), $log = true)
 {
-    return array(array('id' => 1, 'item_type' => REPORTS_ITEM_HOST, 'host_id' => 4, 'local_graph_id' => 0));
+    return $GLOBALS['report_device']['items'] ?: array(array('id' => 1, 'item_type' => REPORTS_ITEM_HOST, 'host_id' => 4, 'local_graph_id' => 0));
 }
 
 function read_user_setting($name, $default = false, $force = false, $user = 0)
@@ -64,11 +65,18 @@ function is_device_allowed($device_id, $user_id = 0)
     return $GLOBALS['report_device']['device_allowed'];
 }
 
-function is_tree_allowed($tree_id, $user_id = 0)
+function is_tree_allowed($tree_id, $user_id = 0, $enabled_only = false)
 {
-    $GLOBALS['report_device']['tree_checks'][] = array($tree_id, $user_id);
+    $GLOBALS['report_device']['tree_checks'][] = array($tree_id, $user_id, $enabled_only);
 
     return $GLOBALS['report_device']['tree_allowed'];
+}
+
+function reports_tree_has_graphs($tree_id, $branch_id, $user_id, $regexp)
+{
+    $GLOBALS['report_device']['tree_expanded'][] = $tree_id;
+
+    return false;
 }
 
 function reports_expand_device($report, $item, $host_id, $output, $format_ok, $theme)
@@ -79,7 +87,7 @@ function reports_expand_device($report, $item, $host_id, $output, $format_ok, $t
 /**
  * @return array{html: string, device_checks: list<array{0: int, 1: int}>, tree_checks: list<array{0: int, 1: int}>}
  */
-function report_device_run(bool $device_allowed, bool $tree_allowed): array
+function report_device_run(bool $device_allowed, bool $tree_allowed, array $items = array()): array
 {
     global $config, $alignment;
 
@@ -98,6 +106,8 @@ function report_device_run(bool $device_allowed, bool $tree_allowed): array
         'tree_allowed'   => $tree_allowed,
         'device_checks'  => array(),
         'tree_checks'    => array(),
+        'tree_expanded'  => array(),
+        'items'          => $items,
     );
 
     $saved = $_SESSION ?? null;
@@ -134,4 +144,15 @@ test('a device item follows the owner device permission, not a tree with the sam
     'device denied, tree 4 allowed' => array(false, true),
     'both allowed'                  => array(true, true),
     'both denied'                   => array(false, false),
+));
+
+test('a tree item asks for the owner as a viewer of an enabled tree', function ($tree_allowed) {
+    $tree = array('id' => 2, 'item_type' => REPORTS_ITEM_TREE, 'host_id' => 0, 'tree_id' => 6, 'branch_id' => 0, 'tree_cascade' => '', 'graph_name_regexp' => '', 'local_graph_id' => 0);
+    $run = report_device_run(false, $tree_allowed, array($tree));
+
+    expect($run['tree_checks'])->toBe(array(array(6, 9, true)))
+        ->and($run['tree_expanded'])->toBe($tree_allowed ? array(6) : array());
+})->with(array(
+    'tree allowed' => array(true),
+    'tree denied'  => array(false),
 ));
