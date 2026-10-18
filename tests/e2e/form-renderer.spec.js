@@ -64,3 +64,17 @@ test('orphan form script exits without a selector error or submit handler', asyn
   expect(await page.evaluate(() => Object.keys(formArray))).toEqual([]);
   expect(errors).toEqual([]);
 });
+
+test('multiselect setting fallback survives browser form serialization', async ({ page }) => {
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await load(page, { multiselect: { value: '', setting: 'b' } });
+  await expect(page.locator('#choices')).toHaveValues(['b']);
+  expect(await page.evaluate(() => $('#multiselect').serializeArray())).toEqual([{ name: 'choices[]', value: 'b' }]);
+  await page.locator('#choices').selectOption(['a', '0']);
+  expect(await page.evaluate(() => $('#multiselect').serializeArray())).toEqual([
+    { name: 'choices[]', value: 'a' },
+    { name: 'choices[]', value: '0' },
+  ]);
+  expect(errors).toEqual([]);
+});
