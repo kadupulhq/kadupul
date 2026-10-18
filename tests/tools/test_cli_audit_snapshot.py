@@ -206,6 +206,8 @@ class AuditLogDateTest(unittest.TestCase):
         class ClockHarness:
             def sql(inner, query):
                 self.assertEqual("SELECT name, value FROM settings WHERE name IN ('default_date_format', 'default_datechar')", query)
+                if layout is None:
+                    return ''
                 return f'default_date_format\t{layout[0]}\ndefault_datechar\t{layout[1]}\n'
 
             def command(inner, *arguments, check=False):
@@ -285,10 +287,13 @@ class AuditLogDateTest(unittest.TestCase):
                          ('2026-10-10', '2026-10-10', '2026-10-11', '2026-10-11'))
 
     def test_missing_settings_use_actual_defaults_and_unsupported_values_fail_closed(self):
-        self.assertEqual(('Ymd', '-'), schema.log_date_layout(Mock(sql=Mock(return_value=''))))
+        self.assertEqual(('mdY', '/'), schema.log_date_layout(Mock(sql=Mock(return_value=''))))
         for settings in ('default_date_format\tbad\n', 'default_datechar\t9\n'):
             with self.subTest(settings=settings), self.assertRaises(ValueError):
                 schema.log_date_layout(Mock(sql=Mock(return_value=settings)))
+
+    def test_absent_settings_follow_cli_bootstrap_defaults_through_comparison(self):
+        self.compare(['10/17/2026 23:59:58 - same'], ['10/18/2026 00:00:00 - same'], layout=None)
 
     def test_changed_configuration_between_commands_remains_a_failure(self):
         with patch.object(schema, 'log_date_layout', side_effect=[('mdY', '/'), ('dmY', '/')]), \

@@ -105,16 +105,18 @@ def utc_date(harness):
 
 
 def log_date_layout(harness):
-    """Read the CLI settings; missing rows use global_settings.php defaults.
+    """Read the settings used when global.php initializes CLI log formatting.
 
-    Unsupported fixture values fail closed rather than guessing PHP coercions.
+    Initialization precedes global_settings.php: missing rows select mdY and /,
+    as LegacyOperatorLog::dateFormat documents. Unsupported fixture values
+    fail closed rather than guessing PHP coercions.
     """
     settings = dict(line.split('\t', 1) for line in harness.sql(
         "SELECT name, value FROM settings WHERE name IN ('default_date_format', 'default_datechar')").splitlines())
     orders = dict(enumerate(('mdY', 'MdY', 'dmY', 'dMY', 'Ymd', 'YMd')))
     separators = {'0': '-', '1': '/', '2': '.'}
-    order = settings.get('default_date_format', '4')
-    separator = settings.get('default_datechar', '0')
+    order = settings.get('default_date_format', '0')
+    separator = settings.get('default_datechar', '1')
     if order not in {str(key) for key in orders} or separator not in separators:
         raise ValueError('Unsupported fixture log date settings')
     return orders[int(order)], separators[separator]
