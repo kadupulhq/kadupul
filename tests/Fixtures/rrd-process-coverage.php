@@ -508,6 +508,13 @@ if (defined('INPUT_WHITELIST_RUNTIME_TEST_COVERAGE')) {
     $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
     $coverageFilter->includeFile($coverageRoot . '/lib/utility.php');
 }
+if (defined('RRD_PROXY_DEADLINE_TEST_COVERAGE')) {
+    // This producer measures the real client and cipher; the forked peer emits no report.
+    $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+    foreach (RrdProxyDeadlineCoverageRegistration::HITS as $file) {
+        $coverageFilter->includeFile($coverageRoot . '/' . $file);
+    }
+}
 $childCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
     (new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($coverageFilter),
     $coverageFilter

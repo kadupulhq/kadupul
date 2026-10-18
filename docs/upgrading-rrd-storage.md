@@ -29,3 +29,21 @@ are not expired automatically: removing a queue backlog to make a check pass
 would lose measurements. Preserve the pre-upgrade backup for rollback and stop
 all writers before restoring its matching database, RRD files, configuration,
 and code.
+
+## Proxy reply deadlines
+
+Proxy replies use the same `rrd_command_timeout` value as local acknowledged
+commands: 60 seconds by default, clamped to 1–3600 seconds. The active poller
+budget can shorten that deadline. Partial reply bytes do not restart the clock.
+A command whose budget has already expired is not sent.
+
+A timeout discards the connection without sending another frame and returns an
+unconfirmed result. The poller retains samples without acknowledgement and
+reconnects on a later attempt. A caller holding the old pipe receives a controlled
+failure; it must open a new connection. Check proxy health and network latency
+before increasing the command timeout. This bounds reply waiting; connection,
+encryption and command writes have their existing behavior.
+
+No schema or credential changes are required. Reverting the code restores the
+previous unbounded reply wait; it does not reverse commands the proxy may have
+executed before its reply was lost. LTS remains unchanged for issue #784.
