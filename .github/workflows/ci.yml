@@ -608,6 +608,22 @@ jobs:
           coverage: none
           tools: php-cs-fixer:3.95.27
 
+      - name: Install PHP build prerequisites for the pinned hook runtime
+        run: |
+          sudo apt-get update -o Acquire::Retries=3
+          sudo apt-get install -y --no-install-recommends autoconf bison build-essential curl gettext git libgd-dev libcurl4-openssl-dev libedit-dev libicu-dev libjpeg-dev libonig-dev libpng-dev libpq-dev libreadline-dev libsqlite3-dev libssl-dev libxml2-dev libzip-dev openssl pkg-config re2c zlib1g-dev
+      - uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca # v5.1.1
+        with:
+          install_args: php@8.4.25
+          plugins: php https://github.com/mise-plugins/asdf-php.git#e361a2c912a431393b7deb3ecf44b877900d889c
+          add_shims_to_path: false
+        env:
+          PHP_WITHOUT_PEAR: yes
+      - name: Verify the hook's pinned PHP runtime
+        run: |
+          mise exec php@8.4.25 -- php --version
+          mise exec php@8.4.25 -- php -r 'exit(PHP_VERSION === "8.4.25" ? 0 : 1);'
+
       # main moves to PER-CS one edited file at a time, so only the PHP files
       # this push or pull request changes are checked. On a pull request HEAD
       # is the test merge, and its first parent is the base branch tip. Calling

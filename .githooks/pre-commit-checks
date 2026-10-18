@@ -19,6 +19,7 @@ if [ -f "$merge_head_file" ]; then
 	done < "$merge_head_file"
 fi
 files=()
+lint_files=()
 php_files=()
 php_base_files=()
 resolved_paths=()
@@ -75,9 +76,15 @@ while IFS= read -r -d '' status; do
 			;;
 	esac
 
-	# During a merge, an incoming file whose staged blob exactly matches any
-	# incoming parent was already validated on that branch. Check content
-	# authored here or produced while resolving a conflict.
+	# Syntax validation also covers unchanged incoming PHP. Keep the existing
+	# exclusions; excluded authored files still receive whitespace checks.
+	case "$file" in
+		include/vendor/*|tests/Fixtures/*|node_modules/*) ;;
+		*.php) lint_files+=("$file") ;;
+	esac
+
+	# Whitespace and style checks apply to authored and conflict-resolved
+	# content. An incoming parent's validation history is not assumed.
 	if [ "${#merge_heads[@]}" -gt 0 ] && ! was_conflicted "$file" && ! was_conflicted "$base_file" \
 		&& matches_incoming "$file"; then
 		continue
@@ -96,14 +103,12 @@ while IFS= read -r -d '' status; do
 	esac
 done < <(git diff --cached --name-status --diff-filter=ACMR -M -z)
 
-if [ "${#files[@]}" -eq 0 ]; then
-	exit 0
+# An empty path list would check every staged file, including incoming ones.
+if [ "${#files[@]}" -gt 0 ]; then
+	git --literal-pathspecs diff --cached --check -- "${files[@]}"
 fi
 
-# Check authored and conflict-resolved paths; incoming blobs are handled above.
-git --literal-pathspecs diff --cached --check -- "${files[@]}"
-
-if [ "${#php_files[@]}" -eq 0 ]; then
+if [ "${#lint_files[@]}" -eq 0 ]; then
 	exit 0
 fi
 
@@ -116,18 +121,23 @@ php_cmd=(mise exec php@8.4.25 -- php)
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT HUP INT TERM
 
-for file in "${php_files[@]}"; do
+for file in "${lint_files[@]}"; do
 	target="$tmp/staged/$file"
 	mkdir -p "$(dirname "$target")"
-	git show ":$file" > "$target"
+	git show ":0:$file" > "$target"
 done
 
-for file in "${php_files[@]}"; do
+for file in "${lint_files[@]}"; do
 	if ! "${php_cmd[@]}" -l "$tmp/staged/$file" >/dev/null; then
 		echo "PHP syntax failed: $file" >&2
 		exit 1
 	fi
 done
+
+if [ "${#php_files[@]}" -eq 0 ]; then
+	echo 'Kadupul staged PHP syntax checks passed.'
+	exit 0
+fi
 
 fixer=${PHP_CS_FIXER:-}
 if [ -z "$fixer" ]; then
