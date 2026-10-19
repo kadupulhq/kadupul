@@ -18,13 +18,22 @@ function rrd_characterization_run($test, array $scenario, bool $fatal = false): 
 {
     $root = dirname(__DIR__, 2);
     $coverage = $test->getTestResultObject()->getCodeCoverage();
+    $contract = $scenario['coverage_contract'] ?? null;
+    if ($contract !== null && $contract !== 'rrd-one-shot') {
+        throw new RuntimeException('Unknown RRD characterization coverage contract.');
+    }
+    if ($coverage !== null && $contract === 'rrd-one-shot') {
+        require_once __DIR__ . '/NativeChildCoverageEvidence.php';
+        require_once __DIR__ . '/RrdOneShotCoverageRegistration.php';
+    }
     $directory = sys_get_temp_dir() . '/rrd-characterization-' . bin2hex(random_bytes(8));
     mkdir($directory, 0700);
     mkdir($directory . '/rra', 0700);
     foreach ($scenario['files'] ?? array() as $file) {
         touch($directory . '/rra/' . $file);
     }
-    file_put_contents($directory . '/scenario.json', json_encode($scenario, JSON_THROW_ON_ERROR));
+    $encoded_scenario = json_encode($scenario, JSON_THROW_ON_ERROR);
+    file_put_contents($directory . '/scenario.json', $encoded_scenario);
     // Stands in for RRDtool: records each invocation exactly as PHP made it and
     // answers the commands whose output the caller parses.
     $rrdtool = '#!' . PHP_BINARY . "\n<?php\n" . <<<'FAKE'
@@ -93,7 +102,21 @@ function rrd_characterization_run($test, array $scenario, bool $fatal = false): 
         if ($coverage !== null) {
             $reports = glob($directory . '/*.coverage');
             expect($reports)->toHaveCount(1);
-            $coverage->merge(unserialize(file_get_contents($reports[0])));
+            if ($contract === 'rrd-one-shot') {
+                $arguments = [$reports[0], $root, RrdOneShotCoverageRegistration::PRODUCER, $encoded_scenario,
+                    RrdOneShotCoverageRegistration::SOURCES, RrdOneShotCoverageRegistration::MARKERS,
+                    RrdOneShotCoverageRegistration::HITS];
+                $measured = NativeChildCoverageEvidence::load(...$arguments);
+                static $one_shot_evidence_checked = false;
+                if (!$one_shot_evidence_checked) {
+                    expect(NativeChildCoverageEvidence::verifyRejections(...[...$arguments, RrdOneShotCoverageRegistration::HITS[1]]))
+                        ->toBe(count(RrdOneShotCoverageRegistration::SOURCES) + count(RrdOneShotCoverageRegistration::MARKERS) + 10);
+                    $one_shot_evidence_checked = true;
+                }
+                $coverage->merge($measured);
+            } else {
+                $coverage->merge(unserialize(file_get_contents($reports[0])));
+            }
         }
 
         if ($fatal) {
