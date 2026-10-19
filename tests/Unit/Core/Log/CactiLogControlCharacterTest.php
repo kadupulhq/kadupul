@@ -180,18 +180,14 @@ test('invalid UTF-8 is written unchanged and does not drop the line', function (
 test('a regex failure cannot leave terminal controls in the log prefix', function () {
     $result = cactiLogControlRun('ERROR: msg', "CMD\x1b\r\nPHP", ['backtrack_limit' => '1']);
 
-    expect($result['file'])->toBe('DATE - CMD\\x1b  PHP ' . PHP_EOL)
-        ->and($result['stdout'])->toBe('DATE - CMD\\x1b  PHP ' . PHP_EOL)
-        ->and($result['syslog'])->toBe(['CMD\\x1b  PHP: ERROR: msg']);
+    expectCactiLogSinks($result, 'CMD\\x1b  PHP', 'ERROR: msg');
 });
 
 test('a regex failure leaves no control bytes in any legacy log destination', function (string $raw, string $escaped) {
     $result = cactiLogControlRun('ERROR: a' . $raw . 'b', 'ENV' . $raw, ['backtrack_limit' => '1']);
 
-    expect($result['file'])->toBe('DATE - ENV' . $escaped . ' ' . PHP_EOL)
-        ->and($result['stdout'])->toBe('DATE - ENV' . $escaped . ' ' . PHP_EOL)
-        ->and($result['syslog'])->toBe(['ENV' . $escaped . ': ERROR: a' . $escaped . 'b'])
-        ->and($result['warnings'])->toBe([]);
+    expectCactiLogSinks($result, 'ENV' . $escaped, 'ERROR: a' . $escaped . 'b');
+    expect($result['warnings'])->toBe([]);
 })->with([
     'C0 and DEL' => ["\x00\x07\x1b\x1f\x7f", '\\x00\\x07\\x1b\\x1f\\x7f'],
     'C1' => ["\u{0080}\u{0085}\u{009b}\u{009f}", '\\u0080\\u0085\\u009b\\u009f'],
@@ -201,11 +197,20 @@ test('a regex failure leaves no control bytes in any legacy log destination', fu
 ]);
 
 // clean_up_lines() returns null under the same limit.
-test('a null from clean_up_lines raises no diagnostic', function () {
+test('a null from clean_up_lines preserves the message without a diagnostic', function () {
     $result = cactiLogControlRun('ERROR: msg', 'CMDPHP', ['backtrack_limit' => '1']);
 
-    expect($result['warnings'])->toBe([])
-        ->and($result['file'])->toBe('DATE - CMDPHP ' . PHP_EOL);
+    expectCactiLogSinks($result, 'CMDPHP', 'ERROR: msg');
+    expect($result['warnings'])->toBe([]);
+});
+
+test('a regex failure preserves multiline message text in one log record', function () {
+    $result = cactiLogControlRun("ERROR: first\r\nsecond\nthird\rfourth", 'CMDPHP', ['backtrack_limit' => '1']);
+
+    expectCactiLogSinks($result, 'CMDPHP', 'ERROR: first  second third fourth');
+    expect(substr_count($result['file'], "\n"))->toBe(1)
+        ->and(substr_count($result['stdout'], "\n"))->toBe(1)
+        ->and($result['warnings'])->toBe([]);
 });
 
 test('an array or null environ is converted as before', function () {

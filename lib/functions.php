@@ -1648,7 +1648,7 @@ function cacti_log($string, $output = false, $environ = 'CMDPHP', $level = '')
     }
 
     /* Log to Logfile */
-    $message = \Kadupul\Platform\Infrastructure\Legacy\LegacyLogText::neutralize((string) clean_up_lines($string)) . PHP_EOL;
+    $message = \Kadupul\Platform\Infrastructure\Legacy\LegacyLogText::neutralize((string) (clean_up_lines($string) ?? $string)) . PHP_EOL;
 
     if ($output) {
         $omessage = $oprefix . $message;
