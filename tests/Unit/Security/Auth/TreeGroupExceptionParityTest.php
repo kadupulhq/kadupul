@@ -103,7 +103,7 @@ function connection(): \PDO
     }
     $dsn = getenv('KADUPUL_TEST_MYSQL_DSN');
     if ($dsn) {
-        $db = new \PDO($dsn, (string) getenv('KADUPUL_TEST_MYSQL_USER'), (string) getenv('KADUPUL_TEST_MYSQL_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+        $db = new \PDO($dsn, getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root', (string) getenv('KADUPUL_TEST_MYSQL_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
         $GLOBALS['tree_parity_prefix'] = 'tree_parity_' . bin2hex(random_bytes(5)) . '_';
     } else {
         $db = new \PDO('sqlite::memory:', null, null, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
