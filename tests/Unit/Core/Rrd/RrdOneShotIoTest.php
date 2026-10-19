@@ -7,6 +7,11 @@ declare(strict_types=1);
 
 require_once dirname(__DIR__, 3) . '/Helpers/RrdCharacterization.php';
 
+function rrd_one_shot_run($test, array $scenario): array
+{
+    return rrd_characterization_run($test, ['coverage_contract' => 'rrd-one-shot'] + $scenario);
+}
+
 beforeEach(function () {
     if (PHP_OS_FAMILY === 'Windows') {
         $this->markTestSkipped('POSIX one-shot process regression tests.');
@@ -52,7 +57,7 @@ PHP;
     chmod($server, 0700);
     $command = "first\n" . str_repeat('remaining-input ', 65536);
     try {
-        $output = rrd_characterization_run($this, [
+        $output = rrd_one_shot_run($this, [
             'options' => ['path_rrdtool' => $server],
             'calls' => [
                 ['fn' => 'pcntl_alarm', 'args' => [5]],
@@ -91,7 +96,7 @@ test('a completed process retains its diagnostic output on a nonzero exit', func
     file_put_contents($server, '#!' . PHP_BINARY . "\n<?php\n" . $source . 'exit(7);');
     chmod($server, 0700);
     try {
-        $output = rrd_characterization_run($this, ['options' => ['path_rrdtool' => $server], 'calls' => [
+        $output = rrd_one_shot_run($this, ['options' => ['path_rrdtool' => $server], 'calls' => [
             ['fn' => 'rrdtool_execute', 'args' => ['info fixture', false, $flag]],
         ]]);
         expect($output['results'][0]['returned'])->toBe("ERROR: declined\n" . ($flag === 5 ? "detail\n" : ''))
@@ -118,6 +123,11 @@ if ($mode === 'partial') {
     fclose(STDOUT);
 } elseif ($mode === 'closed-input') {
     fclose(STDIN);
+} elseif ($mode === 'eof-write') {
+    usleep(1500000);
+    stream_get_contents(STDIN);
+    file_put_contents(__DIR__ . '/eof-write', 'work triggered by EOF');
+    exit(0);
 }
 while (true) { usleep(10000); }
 PHP;
@@ -125,15 +135,18 @@ PHP;
     file_put_contents($directory . '/mode', $mode);
     chmod($server, 0700);
     try {
-        $call = ['fn' => 'rrdtool_execute', 'args' => [in_array($mode, ['not-reading', 'closed-input'], true) ? str_repeat('x', 1048576) : 'graph fixture', false, $flag],
+        $call = ['fn' => 'rrdtool_execute', 'args' => [in_array($mode, ['not-reading', 'closed-input', 'eof-write'], true) ? str_repeat('x', 1048576) : 'graph fixture', false, $flag],
             'config' => ['rrd_command_timeout' => $budget === null ? 1 : 30]];
         if ($budget !== null) {
             $call['command_budget_ns'] = $budget;
         }
         $start = hrtime(true);
         $scenario = ['options' => ['path_rrdtool' => $server], 'calls' => [
-            ['fn' => 'pcntl_alarm', 'args' => [5]], $call, ['fn' => 'pcntl_alarm', 'args' => [0]],
+            ['fn' => 'pcntl_alarm', 'args' => [$mode === 'eof-write' ? 8 : 5]], $call, ['fn' => 'pcntl_alarm', 'args' => [0]],
         ]];
+        if ($mode === 'eof-write') {
+            $scenario['require'] = ['tests/Fixtures/rrd-oneshot-close-delay.php'];
+        }
         if ($mode === 'export') {
             $items = [rrd_characterization_item(1, 'AREA', rrd_characterization_ds('traffic_in') + ['hex' => '00CF00'])];
             $scenario['files'] = ['router_traffic_11.rrd'];
@@ -143,10 +156,13 @@ PHP;
                 'export' => true, 'export_filename' => 'rra/export.png',
             ], false, [], 0], 'config' => ['rrd_command_timeout' => 1]];
         }
-        $output = rrd_characterization_run($this, $scenario);
-        expect((hrtime(true) - $start) / 1e9)->toBeLessThan(4)
+        $output = rrd_one_shot_run($this, $scenario);
+        expect((hrtime(true) - $start) / 1e9)->toBeLessThan($mode === 'eof-write' ? 6 : 4)
             ->and($output['results'][1]['returned'])->toBeFalse()
             ->and($output['results'][1]['printed'])->toBe('');
+        if ($mode === 'eof-write') {
+            expect(is_file($directory . '/eof-write'))->toBeFalse();
+        }
         $diagnostics = $output['results'][1]['diagnostics'];
         if ($mode === 'closed-input') {
             // The fixture records even the expected, suppressed broken-pipe warning.
@@ -171,7 +187,7 @@ PHP;
                 posix_kill($pid, SIGKILL);
             }
         }
-        foreach (['pid', 'mode', 'rrd-server'] as $name) {
+        foreach (['pid', 'mode', 'rrd-server', 'eof-write'] as $name) {
             if (is_file($directory . '/' . $name)) {
                 unlink($directory . '/' . $name);
             }
@@ -182,6 +198,7 @@ PHP;
     'silent child ignores SIGTERM' => ['silent', 1, null],
     'child does not read a large input' => ['not-reading', 1, null],
     'child closes input before delivery completes' => ['closed-input', 1, null],
+    'kill precedes EOF during timeout cleanup' => ['eof-write', 1, null],
     'partial graph' => ['partial', 3, null],
     'EOF with a live child' => ['closed-output', 0, null],
     'partial returned diagnostic' => ['partial', 5, null],
@@ -203,7 +220,7 @@ test('real RRDtool can answer a batch larger than both pipe buffers', function (
         $create = new Symfony\Component\Process\Process([$binary, 'create', $path, '--start', '1700000000', 'DS:value:GAUGE:600:U:U', 'RRA:AVERAGE:0.5:1:10']);
         $create->mustRun();
         $command = rtrim(str_repeat("last '$path'\n", 8000), "\n");
-        $output = rrd_characterization_run($this, ['options' => ['path_rrdtool' => $binary], 'calls' => [
+        $output = rrd_one_shot_run($this, ['options' => ['path_rrdtool' => $binary], 'calls' => [
             ['fn' => 'pcntl_alarm', 'args' => [15]],
             ['fn' => 'rrdtool_execute', 'args' => [$command, false, 1], 'config' => ['rrd_command_timeout' => 10]],
             ['fn' => 'pcntl_alarm', 'args' => [0]],

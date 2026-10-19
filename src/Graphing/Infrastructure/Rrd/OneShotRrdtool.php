@@ -75,14 +75,15 @@ final class OneShotRrdtool
                 }
             }
         } finally {
-            foreach ($pipes as $pipe) {
-                fclose($pipe);
-            }
             $state = proc_get_status($process);
             if ($state === false || $state['running']) {
                 // SIGKILL cannot be ignored; proc_close must not wait for a
                 // stalled child that ignores SIGTERM after the deadline.
+                // Kill before closing stdin: EOF may execute an unfinished command.
                 proc_terminate($process, 9);
+            }
+            foreach ($pipes as $pipe) {
+                fclose($pipe);
             }
             $status = proc_close($process);
         }

@@ -9,7 +9,16 @@
 // pinned byte for byte.
 
 list(, $root, $directory, $collect) = $argv;
+$encoded_scenario = file_get_contents($directory . '/scenario.json');
+$scenario = json_decode($encoded_scenario, true, 512, JSON_THROW_ON_ERROR);
 if ($collect === '1') {
+    if (($scenario['coverage_contract'] ?? null) === 'rrd-one-shot') {
+        require $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
+        require $root . '/tests/Helpers/RrdOneShotCoverageRegistration.php';
+        $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root,
+            RrdOneShotCoverageRegistration::PRODUCER, $encoded_scenario, RrdOneShotCoverageRegistration::SOURCES);
+        define('RRD_ONE_SHOT_TEST_COVERAGE', true);
+    }
     // Keep legacy bootstrap deprecations out of this child process; the
     // application scenario below runs with every error level enabled.
     error_reporting(E_ALL & ~E_DEPRECATED);
@@ -18,7 +27,6 @@ if ($collect === '1') {
     error_reporting(E_ALL);
 }
 
-$scenario = json_decode(file_get_contents($directory . '/scenario.json'), true, 512, JSON_THROW_ON_ERROR);
 $resolve_fixture_paths = static function ($value) use (&$resolve_fixture_paths, $directory) {
     if (is_array($value)) {
         $resolved = array();
@@ -292,4 +300,11 @@ foreach ($scenario['calls'] as $call) {
     );
 }
 
-echo json_encode(array('results' => $results), JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE);
+$encoded_result = json_encode(array('results' => $results), JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE);
+if (defined('RRD_ONE_SHOT_TEST_COVERAGE')) {
+    if (!$results || count($results) !== count($scenario['calls'])) {
+        throw new RuntimeException('One-shot coverage scenario did not complete its calls.');
+    }
+    $nativeChildCoverageMarkers = RrdOneShotCoverageRegistration::MARKERS;
+}
+echo $encoded_result;

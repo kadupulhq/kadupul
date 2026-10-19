@@ -343,7 +343,6 @@ if (defined('MIB_CACHE_TEST_COVERAGE')) {
 }
 $coverageFilter->includeFile($coverageRoot . '/lib/rrd.php');
 $coverageFilter->includeFile($coverageRoot . '/src/Graphing/Infrastructure/Rrd/ProxyCipher.php');
-$coverageFilter->includeFile($coverageRoot . '/src/Graphing/Infrastructure/Rrd/OneShotRrdtool.php');
 $coverageFilter->includeFile($coverageRoot . '/lib/dsdebug.php');
 $coverageFilter->includeFile($coverageRoot . '/lib/rrd_maintenance.php');
 $coverageFilter->includeFile($coverageRoot . '/lib/poller.php');
@@ -513,6 +512,12 @@ if (defined('RRD_PROXY_DEADLINE_TEST_COVERAGE')) {
     // This producer measures the real client and cipher; the forked peer emits no report.
     $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
     foreach (RrdProxyDeadlineCoverageRegistration::HITS as $file) {
+        $coverageFilter->includeFile($coverageRoot . '/' . $file);
+    }
+}
+if (defined('RRD_ONE_SHOT_TEST_COVERAGE')) {
+    $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+    foreach (RrdOneShotCoverageRegistration::HITS as $file) {
         $coverageFilter->includeFile($coverageRoot . '/' . $file);
     }
 }
