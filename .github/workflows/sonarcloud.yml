@@ -33,7 +33,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Set up scope runner
-        uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca # v5.1.1
+        uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
         with:
           install_args: python@3.12.12
       - name: Install coverage artifact verifier
@@ -123,7 +123,7 @@ jobs:
         run: bash tests/tools/login_ghcr.sh
 
       - name: Set up PHP
-        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
         with:
           php-version: '8.4'
           extensions: snmp, pcntl, sockets, gd, gmp, intl, ldap, mbstring, pdo_mysql, posix, xml
@@ -200,7 +200,7 @@ jobs:
           php -r '$m = simplexml_load_file("coverage.xml")->project->metrics; echo "Covered statements: {$m["coveredstatements"]} of {$m["statements"]}", PHP_EOL; exit((int) $m["coveredstatements"] > 0 ? 0 : 1);'
 
       - name: Set up integration runner
-        uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca # v5.1.1
+        uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
         with:
           install_args: python@3.12.12 node@22.22.2
 
@@ -292,7 +292,7 @@ jobs:
         run: bash tests/tools/login_ghcr.sh
 
       - name: Set up PHP
-        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
         with:
           php-version: '8.4'
           extensions: snmp, pcntl, sockets, gd, gmp, intl, ldap, mbstring, pdo_mysql, posix, xml
@@ -362,7 +362,7 @@ jobs:
           test -s var/symfony-coverage.php
 
       - name: Set up integration runner
-        uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca # v5.1.1
+        uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
         with:
           install_args: python@3.12.12 node@22.22.2
 
@@ -464,7 +464,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up integration runner
-        uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca # v5.1.1
+        uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
         with:
           install_args: python@3.12.12 node@22.22.2
 
