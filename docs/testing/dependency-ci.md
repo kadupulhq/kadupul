@@ -107,7 +107,7 @@ changes by reverting the consumer commit; never delete a package digest still
 referenced by supported revisions. This work changes main only; LTS keeps its
 existing registry configuration.
 
-Actionlint 1.7.12 and Semgrep 1.179.0 run as native, pinned tools. The scanner
+Actionlint 1.7.12 and Semgrep 1.180.0 run as native, pinned tools. The scanner
 lock includes patched PyJWT 2.15.1 and uses mise's Python 3.12.12 with
 `tests/tools/requirements-semgrep.txt`. Regenerate the lock from
 `requirements-semgrep.in` using pip-tools 7.5.1 with
@@ -118,12 +118,12 @@ The MCP SDK update is blocked as of 2026-10-19, tracked in
 [#950](https://github.com/kadupulhq/kadupul/issues/950). The lock contains
 `mcp==1.29.0`, affected by
 [GHSA-84m7-p3x7-pcfv](https://github.com/modelcontextprotocol/python-sdk/security/advisories/GHSA-84m7-p3x7-pcfv).
-The patched 1.x SDK starts at 1.30.0, but Semgrep 1.179.0 requires exactly
-1.29.0. Published Semgrep 1.180.0 and 1.181.0 retain that pin. An isolated
+The patched 1.x SDK starts at 1.30.0, but the locked Semgrep 1.180.0 requires
+exactly 1.29.0. Published Semgrep 1.181.0 retains that pin. An isolated
 Python 3.12.12 pip dry run rejected Semgrep 1.179.0 plus MCP 1.30.0 with
 `ResolutionImpossible`. [Upstream #11992](https://github.com/semgrep/semgrep/issues/11992)
-tracks the dependency update. The lock and Dependabot alert 17 remain unchanged;
-this assessment is not remediation.
+tracks the dependency update. The MCP pin and Dependabot alert 17 remain unchanged
+by the scanner update; SDK remediation is still pending.
 
 The security workflow runs `semgrep scan`; it does not start the stateful MCP
 Streamable HTTP server described by the advisory. This limits the demonstrated
