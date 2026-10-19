@@ -116,6 +116,8 @@ def verify_console_home(harness, check):
             if browser.returncode:
                 raise AssertionError('Console browser probe failed: ' + browser.stderr)
             proof = json.loads(browser.stdout)
+            check(proof.get('chrome_fragments_retained') is True,
+                  'console retains native graph tabs and account controls under ' + mode + ' CSP')
             check(all(proof.get(key) is True for key in ('console_script_executed', 'iframe_resize_executed', 'plugin_forms_protected', 'help_navigation')),
                   'console browser executes native forms, iframe resize and help navigation under ' + mode + ' CSP')
         harness.sql("REPLACE INTO settings(name,value) VALUES ('content_security_policy_script','')")

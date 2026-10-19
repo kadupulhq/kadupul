@@ -115,6 +115,8 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'native CSRF token is withheld from foreign plugin forms',
         'console browser executes native forms, iframe resize and help navigation under default CSP',
         'console browser executes native forms, iframe resize and help navigation under nonce CSP',
+        'console retains native graph tabs and account controls under default CSP',
+        'console retains native graph tabs and account controls under nonce CSP',
         'revoked console access refuses before extension callbacks',
         'existing JSON page-help contract remains available',
         'tree CLI creates a node under an existing header in its tree',
