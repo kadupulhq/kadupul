@@ -53,6 +53,9 @@ CODE;
         . $functions, true) . ');';
 
     $program .= <<<'CODE'
+if (!empty($case['redact_database_logs'])) {
+    define('KADUPUL_REDACT_DATABASE_LOGS', true);
+}
 if (isset($case['backtrack_limit'])) {
     ini_set('pcre.jit', '0');
     ini_set('pcre.backtrack_limit', $case['backtrack_limit']);
@@ -210,6 +213,16 @@ test('a regex failure preserves multiline message text in one log record', funct
     expectCactiLogSinks($result, 'CMDPHP', 'ERROR: first  second third fourth');
     expect(substr_count($result['file'], "\n"))->toBe(1)
         ->and(substr_count($result['stdout'], "\n"))->toBe(1)
+        ->and($result['warnings'])->toBe([]);
+});
+
+test('a regex failure preserves database message redaction', function () {
+    $result = cactiLogControlRun('ERROR: database password=must-not-log', 'DBCALL', ['backtrack_limit' => '1', 'redact_database_logs' => true]);
+    $expected = 'DATE - DBCALL Database diagnostic omitted during sensitive device creation' . PHP_EOL;
+
+    expect($result['file'])->toBe($expected)
+        ->and($result['stdout'])->toBe($expected)
+        ->and($result['syslog'])->toBe([])
         ->and($result['warnings'])->toBe([]);
 });
 
