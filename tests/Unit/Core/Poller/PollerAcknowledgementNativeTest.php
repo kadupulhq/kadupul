@@ -44,12 +44,17 @@ test('production poller files retain failed writes and preserve concurrent arriv
         if ($error !== '') {
             throw new RuntimeException($error . $output);
         }
-        expect(proc_close($process))->toBe(($failed && !(!$realtime && $failed === 'rejected')) && !in_array($failed, array('multi-bang', 'multi-hex-bang', 'multi-php-hex-bang', 'replace', 'replace-space', 'field-success', 'incomplete', 'incomplete-recent', 'page-success'), true) ? 1 : 0, $error . $output)->and($error)->toBe('');
+        expect(proc_close($process))->toBe(($failed && !(!$realtime && $failed === 'rejected')) && !in_array($failed, array('multi-bang', 'multi-hex-bang', 'multi-php-hex-bang', 'replace', 'replace-space', 'field-success', 'incomplete', 'incomplete-recent', 'page-success', 'unparseable-recent', 'unparseable-expired'), true) ? 1 : 0, $error . $output)->and($error)->toBe('');
         $expected = is_string($failed) ? array(array('output' => '42', 'remaining' => $failed === 'page' ? 120001 : 1)) : ($failed ? array('42','43') : array('43'));
         if (in_array($failed, array('select', 'handoff', 'init', 'init-function', 'busy', 'count'), true)) {
             $expected = array('42');
         }
         if (is_string($failed) && str_starts_with($failed, 'multi-')) $expected = array('43');
+        if (is_string($failed) && str_starts_with($failed, 'unparseable-')) {
+            $expected = $failed === 'unparseable-recent' ? array('failed') : array();
+            expect(json_decode(file_get_contents($dir . '/batch-result.json'), true))->toBe(array(0, false));
+            expect(json_decode(file_get_contents($dir . '/updates.json'), true))->toBe(array());
+        }
         if ($failed === 'delete') {
             $expected = array('42', '43');
         }
@@ -124,7 +129,7 @@ test('production poller files retain failed writes and preserve concurrent arriv
                         ? array_sum(array_map(static fn($fields) => count($fields['times']), $event))
                         : $event;
                 }, file($file, FILE_IGNORE_NEW_LINES)) : array();
-                if ($failed === true || in_array($failed, array('select', 'handoff', 'init', 'busy', 'count', 'incomplete', 'incomplete-recent', 'tail-failure', 'mismatch'), true)) {
+                if ($failed === true || in_array($failed, array('select', 'handoff', 'init', 'busy', 'count', 'incomplete', 'incomplete-recent', 'tail-failure', 'mismatch', 'unparseable-recent', 'unparseable-expired'), true)) {
                     expect($events)->toBe(array());
                 } elseif (in_array($failed, array('mixed', 'page'), true)) {
                     expect($events)->toHaveCount(1);
@@ -163,4 +168,4 @@ test('production poller files retain failed writes and preserve concurrent arriv
             } rmdir($dir . $suffix);
         }
     }
-})->with(array('multi bang field mapping' => array(false,'multi-bang'), 'multi hex-like field mapping from Spine' => array(false,'multi-hex-bang'), 'multi hex-like field mapping from PHP collector' => array(false,'multi-php-hex-bang'),array(false,false),array(false,true),array(true,false),array(true,true),array(false,'replace-space'),array(true,'replace-space'),array(false,'replace'),array(true,'replace'),array(true,'delete'),array(false,'rejected'),array(true,'rejected'),array(false,'mixed'),array(false,'page'),array(false,'select'),array(false,'handoff'),array(false,'delete'),array(true,'init'),array(false,'init'),array(false,'busy'),array(false,'count'),array(false,false,true),array(false,true,true),array(false,'init',true),array(false,'rejected',true),array(true,'select'),array(true,'init-function'),array(true,'field-failure'),array(true,'field-success'),array(false,'incomplete'),array(false,'incomplete-recent'),array(false,'mismatch'),array(false,'tail-failure'),array(false,'page-success')));
+})->with(array('recent malformed MULTI' => array(false,'unparseable-recent'), 'expired malformed MULTI' => array(false,'unparseable-expired'), 'multi bang field mapping' => array(false,'multi-bang'), 'multi hex-like field mapping from Spine' => array(false,'multi-hex-bang'), 'multi hex-like field mapping from PHP collector' => array(false,'multi-php-hex-bang'),array(false,false),array(false,true),array(true,false),array(true,true),array(false,'replace-space'),array(true,'replace-space'),array(false,'replace'),array(true,'replace'),array(true,'delete'),array(false,'rejected'),array(true,'rejected'),array(false,'mixed'),array(false,'page'),array(false,'select'),array(false,'handoff'),array(false,'delete'),array(true,'init'),array(false,'init'),array(false,'busy'),array(false,'count'),array(false,false,true),array(false,true,true),array(false,'init',true),array(false,'rejected',true),array(true,'select'),array(true,'init-function'),array(true,'field-failure'),array(true,'field-success'),array(false,'incomplete'),array(false,'incomplete-recent'),array(false,'mismatch'),array(false,'tail-failure'),array(false,'page-success')));

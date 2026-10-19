@@ -1082,7 +1082,7 @@ function process_poller_output_page(&$rrdtool_pipe, $remainder, $after, &$acknow
                         }
                     }
                 }
-            } else {
+            } elseif ($rrd_name != '') {
                 if ($data_template_id > 0) {
                     $unused_data_source_names = array_rekey(
                         db_fetch_assoc_prepared(

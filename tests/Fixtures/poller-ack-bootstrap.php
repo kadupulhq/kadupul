@@ -41,6 +41,12 @@ if (in_array(getenv('ACK_FAIL'), array('incomplete', 'incomplete-recent'), true)
 if (getenv('ACK_FAIL') === 'incomplete-recent') {
     $ack_db->exec("UPDATE poller_output SET time='" . date('Y-m-d H:i:s') . "'");
 }
+if (str_starts_with(getenv('ACK_FAIL'), 'unparseable-')) {
+    $ack_db->exec("UPDATE poller_item SET rrd_name=''; UPDATE poller_output SET rrd_name='',output='failed'");
+    if (getenv('ACK_FAIL') === 'unparseable-recent') {
+        $ack_db->exec("UPDATE poller_output SET time='" . date('Y-m-d H:i:s', time() - 60) . "'");
+    }
+}
 foreach (array('SQL_NO_CACHE' => '', 'POLLER_VERBOSITY_HIGH' => 4, 'POLLER_VERBOSITY_MEDIUM' => 3) as $name => $value) {
     define($name, $value);
 }
@@ -232,7 +238,7 @@ function rrdtool_function_update($updates, $pipe = false, &$completed = null, &$
         $GLOBALS['ack_db']->exec("UPDATE " . $GLOBALS['ack_table'] . " SET output='99' WHERE time='2020-01-01'");
     }
 
-    if (!in_array(getenv('ACK_FAIL'), array('mixed', 'page', 'rejected', 'incomplete', 'incomplete-recent', 'tail-failure', 'page-success'), true)) {
+    if (!in_array(getenv('ACK_FAIL'), array('mixed', 'page', 'rejected', 'incomplete', 'incomplete-recent', 'tail-failure', 'page-success', 'unparseable-recent', 'unparseable-expired'), true)) {
         $GLOBALS['ack_db']->exec('INSERT INTO ' . $GLOBALS['ack_table'] . " VALUES(1,'value','2020-01-02','43'" . (getenv('ACK_REALTIME') === '1' ? ',1' : '') . ')');
     }
     $completed = array();
