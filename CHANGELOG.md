@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Preserve file and stdout log message text when PCRE line cleanup fails, while continuing to escape control characters (#948).
+
 - Mark console welcome and navigation layout tables as presentational while preserving their text, links, classes and IDs (#946).
 
 - Escape log control characters even when PCRE fails, preserving the existing rules for ordinary text and early-bootstrap logging (#942).
