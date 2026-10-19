@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -164,3 +166,64 @@ test('an unparseable MULTI sample does not discard earlier complete samples for 
     expect($GLOBALS['ack_updates']['fixture.rrd']['times'])->toBe(array(strtotime('2020-01-01 00:00:00') => array('value' => '42')));
     expect($db->query("SELECT COUNT(*) FROM poller_output WHERE rrd_name=''")->fetchColumn())->toBe(0);
 });
+
+test('malformed MULTI samples never manufacture unknown values or acknowledge an unwritten timestamp', function (string $output, bool $recent) {
+    $db = $GLOBALS['ack_db'];
+    $GLOBALS['debug'] = false;
+    $GLOBALS['ack_table'] = 'poller_output';
+    $GLOBALS['ack_result'] = 1;
+    $db->exec("UPDATE data_local SET data_template_id=1; UPDATE poller_item SET rrd_name='',rrd_num=1");
+    $db->exec("CREATE TABLE data_template_rrd(id INTEGER,local_data_id INTEGER,data_source_name TEXT,data_input_field_id INTEGER); INSERT INTO data_template_rrd VALUES(1,1,'value',1)");
+    $db->exec("CREATE TABLE data_input_fields(id INTEGER,data_name TEXT); INSERT INTO data_input_fields VALUES(1,'value')");
+    $db->exec('CREATE TABLE graph_templates_item(task_item_id INTEGER); INSERT INTO graph_templates_item VALUES(1)');
+    $badTime = $recent ? date('Y-m-d H:i:s', time() - 60) : '2020-01-01 00:05:00';
+    $insert = $db->prepare("INSERT INTO poller_output VALUES(1,'',?,?)");
+    $insert->execute(['2020-01-01 00:00:00', 'value:42']);
+    $insert->execute([$badTime, $output]);
+    $pipe = true;
+
+    expect(process_poller_output($pipe, 2))->toBe(1);
+    expect($GLOBALS['ack_updates']['fixture.rrd']['times'])->toBe([
+        strtotime('2020-01-01 00:00:00') => ['value' => '42'],
+    ]);
+    $remaining = $db->query("SELECT output FROM poller_output WHERE rrd_name='' ORDER BY time")->fetchAll(\PDO::FETCH_COLUMN);
+    expect($remaining)->toBe($recent ? [$output] : []);
+})->with(['empty' => '', 'whitespace' => ' ', 'diagnostic' => 'failed', 'unknown scalar' => 'U', 'extra colon' => 'value:bad:token', 'unmapped field' => 'bogus:7'])
+    ->with(['recent' => true, 'expired' => false]);
+
+test('malformed MULTI tokens preserve sibling values and rows wait for write acknowledgement', function (string $output, array $expected, bool $written) {
+    $db = $GLOBALS['ack_db'];
+    $GLOBALS['debug'] = false;
+    $GLOBALS['ack_table'] = 'poller_output';
+    $GLOBALS['ack_result'] = $written ? 1 : false;
+    $db->exec("UPDATE data_local SET data_template_id=1; UPDATE poller_item SET rrd_name='',rrd_num=2");
+    $db->exec("CREATE TABLE data_template_rrd(id INTEGER,local_data_id INTEGER,data_source_name TEXT,data_input_field_id INTEGER); INSERT INTO data_template_rrd VALUES(1,1,'value',1),(2,1,'hidden',2)");
+    $db->exec('CREATE TABLE graph_templates_item(task_item_id INTEGER); INSERT INTO graph_templates_item VALUES(1),(2)');
+    $insert = $db->prepare("INSERT INTO poller_output VALUES(1,'','2020-01-01',?)");
+    $insert->execute([$output]);
+    $pipe = true;
+
+    expect(process_poller_output($pipe, 1))->toBe($written ? 1 : false);
+    expect($GLOBALS['ack_updates']['fixture.rrd']['times'][strtotime('2020-01-01')])->toBe($expected);
+    expect($db->query("SELECT output FROM poller_output WHERE rrd_name=''")->fetchAll(\PDO::FETCH_COLUMN))->toBe($written ? [] : [$output]);
+})->with([
+    'bare token between valid fields' => ['value:42 broken hidden:13', ['value' => '42', 'hidden' => '13']],
+    'extra colon after valid fields' => ['value:42 hidden:13 value:bad:token', ['value' => '42', 'hidden' => '13']],
+    'zero and explicit unknown' => ['broken value:0 hidden:U', ['value' => '0', 'hidden' => 'U']],
+])->with(['written' => true, 'write failed' => false]);
+
+test('named scalar samples retain their numeric and unknown behavior', function (string $output, string $expected) {
+    $db = $GLOBALS['ack_db'];
+    $GLOBALS['debug'] = false;
+    $GLOBALS['ack_table'] = 'poller_output';
+    $GLOBALS['ack_result'] = 1;
+    $db->exec("CREATE TABLE data_template_rrd(id INTEGER,local_data_id INTEGER,data_source_name TEXT,data_input_field_id INTEGER); INSERT INTO data_template_rrd VALUES(1,1,'value',1)");
+    $db->exec("CREATE TABLE data_input_fields(id INTEGER,data_name TEXT); INSERT INTO data_input_fields VALUES(1,'value')");
+    $insert = $db->prepare("INSERT INTO poller_output VALUES(1,'value','2020-01-01',?)");
+    $insert->execute([$output]);
+    $pipe = true;
+
+    expect(process_poller_output($pipe, 1))->toBe(1);
+    expect($GLOBALS['ack_updates']['fixture.rrd']['times'][strtotime('2020-01-01')])->toBe(['value' => $expected]);
+    expect($db->query("SELECT COUNT(*) FROM poller_output WHERE time='2020-01-01'")->fetchColumn())->toBe(0);
+})->with(['zero' => ['0', '0'], 'explicit unknown' => ['U', 'U'], 'invalid scalar' => ['not-a-number', 'U']]);

@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Retain malformed MULTI poller samples without inventing all-unknown RRD updates; preserve the existing age-based discard policy and valid sibling samples (#763).
+
 - Preserve file and stdout log message text when PCRE line cleanup fails, while continuing to escape control characters (#948).
 
 - Mark console welcome and navigation layout tables as presentational while preserving their text, links, classes and IDs (#946).
