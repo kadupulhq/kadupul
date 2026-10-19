@@ -243,6 +243,11 @@ foreach ($scenario['calls'] as $call) {
     foreach ($call['globals'] ?? array() as $name => $value) {
         $GLOBALS[$name] = $value;
     }
+    // Match the poller's caller-owned monotonic budget for native I/O scenarios.
+    if (isset($call['command_budget_ns'])) {
+        $command_deadline = & rrd_command_deadline();
+        $command_deadline = hrtime(true) + $call['command_budget_ns'];
+    }
     // A proxy scenario gives the call one session, as a request would, since
     // the fake proxy takes a single connection.
     if (isset($call['rrdp_argument'])) {

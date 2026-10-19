@@ -65,6 +65,7 @@
       <file>Unit/Core/Rrd/RrdProxyNativeTest.php</file>
       <file>Unit/Core/Rrd/RrdRejectionNativeTest.php</file>
       <file>Unit/Core/Rrd/RrdLegendTextTest.php</file>
+      <file>Unit/Core/Rrd/RrdOneShotIoTest.php</file>
       <file>Unit/Core/Rrd/RrdProxyCreateGuardNativeTest.php</file>
       <file>Unit/Core/Rrd/RrdProxyDeadlineNativeTest.php</file>
       <file>Unit/Core/Rrd/RrdFetchFailureTest.php</file>
