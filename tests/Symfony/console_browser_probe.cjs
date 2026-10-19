@@ -45,6 +45,9 @@ async function main(input) {
         assert.ok(policy);
         if (input.mode === 'nonce') assert.match(policy, /script-src[^;]*'nonce-/);
         assert.equal(await page.locator('#main').count(), 1);
+        assert.ok(await page.locator('#gtabs a.righttab').count() > 0);
+        assert.equal(await page.locator('#breadCrumbBar #user').count(), 1);
+        assert.equal(await page.locator('#breadCrumbBar a[href$="/logout.php"]').count(), 1);
         assert.equal(await page.locator('#console-fixture-before').count(), 1);
         assert.equal(await page.locator('#console-fixture-bottom').count(), 1);
         assert.equal(await page.locator('#console-fixture-form input[name="__csrf_magic"]').count(), 1);
@@ -79,7 +82,7 @@ async function main(input) {
         const helpResponse = await page.goto(new URL(help, input.base).href);
         assert.equal(helpResponse.status(), 200);
         assert.equal(await page.locator('main h1').innerText(), 'Help');
-        console.log(JSON.stringify({ console_script_executed: true, iframe_resize_executed: true, plugin_forms_protected: true, help_navigation: true }));
+        console.log(JSON.stringify({ console_script_executed: true, iframe_resize_executed: true, plugin_forms_protected: true, help_navigation: true, chrome_fragments_retained: true }));
     } finally {
         clearTimeout(deadline);
         await browser.close();

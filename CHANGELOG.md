@@ -6,6 +6,12 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Mark console welcome and navigation layout tables as presentational while preserving their text, links, classes and IDs (#946).
+
+- Escape log control characters even when PCRE fails, preserving the existing rules for ordinary text and early-bootstrap logging (#942).
+
+- Retain graph tabs and account controls on the Symfony console home by capturing the native helpers' printed HTML (#944).
+
 - Bound RRDtool proxy replies by the existing command timeout and poller budget; discard timed-out connections and leave outcomes unconfirmed (#784).
 
 - Register setup-php interpreters in mise under their reported patch versions and verify selection before publishing CI runtime evidence (#935).

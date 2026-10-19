@@ -25,9 +25,9 @@ final class ConsoleExtensionRuntime
         $chrome = [
             'title' => \html_escape($title),
             'tabs' => $fullPage && !$headerContent ? $this->output(static fn() => \html_show_tabs_left()) : '',
-            'graph_tabs' => $fullPage && !$headerContent ? (string) \html_graph_tabs_right() : '',
+            'graph_tabs' => $fullPage && !$headerContent ? $this->output(static fn() => \html_graph_tabs_right()) : '',
             'breadcrumb' => $fullPage ? (string) \draw_navigation_text() : '',
-            'login' => $fullPage && !$headerContent && \read_config_option('auth_method') != 0 ? (string) \draw_login_status(false) : '',
+            'login' => $fullPage && !$headerContent && \read_config_option('auth_method') != 0 ? $this->output(static fn() => \draw_login_status(false)) : '',
             'menu' => $fullPage ? $this->output(static fn() => \draw_menu()) : '',
         ];
         $before = $this->output(function (): void {

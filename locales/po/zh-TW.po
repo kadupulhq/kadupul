@@ -7052,7 +7052,7 @@ msgstr "所有類似數據源的數量（包括重複數據）"
 msgid "Main Console"
 msgstr "控制台"
 
-#: include/global_arrays.php:984 templates/platform/console_home_body.html.twig
+#: include/global_arrays.php:984
 #, fuzzy
 msgid "Console Page"
 msgstr "控制台頁面頂部"

@@ -6096,7 +6096,7 @@ msgstr "すべての類似データソースの数（重複を含む）"
 msgid "Main Console"
 msgstr "コンソール"
 
-#: include/global_arrays.php:984 templates/platform/console_home_body.html.twig
+#: include/global_arrays.php:984
 msgid "Console Page"
 msgstr "コンソールページの上部"
 

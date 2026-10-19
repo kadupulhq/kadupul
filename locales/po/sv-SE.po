@@ -6111,7 +6111,7 @@ msgstr "Antal av alla liknande datakällor (inklusive duplikat)"
 msgid "Main Console"
 msgstr "Huvudkonsol"
 
-#: include/global_arrays.php:984 templates/platform/console_home_body.html.twig
+#: include/global_arrays.php:984
 msgid "Console Page"
 msgstr "Konsolens sida"
 

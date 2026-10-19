@@ -6117,7 +6117,7 @@ msgstr "Contagem de todas as fontes de dados semelhantes (incluir duplicatas)"
 msgid "Main Console"
 msgstr "Consola"
 
-#: include/global_arrays.php:984 templates/platform/console_home_body.html.twig
+#: include/global_arrays.php:984
 msgid "Console Page"
 msgstr "Topo da página do console"
 

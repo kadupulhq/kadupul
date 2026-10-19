@@ -489,6 +489,8 @@ def main():
         'unmeasured-worker': 'Missing measured execution',
         'unmeasured-console-worker': 'Missing measured execution: bin/legacy-console-home.php',
         'missing-console-upgrade-check': 'Incomplete Symfony integration',
+        'missing-console-chrome-default-check': 'Incomplete Symfony integration',
+        'missing-console-chrome-nonce-check': 'Incomplete Symfony integration',
         'unmeasured-site-editor': 'Missing measured execution: src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php',
         'unmeasured-locale': 'Missing measured execution: src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php',
         'missing-site-creation-check': 'Incomplete Symfony integration',
@@ -836,6 +838,9 @@ def main():
                 console['lines'] = {line: -1 for line in console['lines']}
             elif case == 'missing-console-upgrade-check':
                 evidence['checks'].remove('console schema mismatch preserves the native installer redirect before worker startup')
+            elif case in ('missing-console-chrome-default-check', 'missing-console-chrome-nonce-check'):
+                mode = 'default' if case == 'missing-console-chrome-default-check' else 'nonce'
+                evidence['checks'].remove('console retains native graph tabs and account controls under ' + mode + ' CSP')
             elif case == 'unmeasured-worker':
                 worker['lines'] = {line: -1 for line in worker['lines']}
             elif case == 'unmeasured-site-editor':

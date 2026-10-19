@@ -6113,7 +6113,7 @@ msgstr "Nombre de toutes les sources de données similaires (y compris les doubl
 msgid "Main Console"
 msgstr "Console"
 
-#: include/global_arrays.php:984 templates/platform/console_home_body.html.twig
+#: include/global_arrays.php:984
 msgid "Console Page"
 msgstr "Page Console"
 

@@ -6145,7 +6145,7 @@ msgstr "Anzahl aller gleichartigen Datenquellen (Inklusive Duplikate)"
 msgid "Main Console"
 msgstr "Konsole"
 
-#: include/global_arrays.php:984 templates/platform/console_home_body.html.twig
+#: include/global_arrays.php:984
 msgid "Console Page"
 msgstr "Oben auf der Konsolenseite"
 

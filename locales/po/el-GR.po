@@ -6119,7 +6119,7 @@ msgstr "Καταμέτρηση όλων των παρόμοιων πηγών δ�
 msgid "Main Console"
 msgstr "Κονσόλα"
 
-#: include/global_arrays.php:984 templates/platform/console_home_body.html.twig
+#: include/global_arrays.php:984
 msgid "Console Page"
 msgstr "Κορυφή της σελίδας της κονσόλας"
 

@@ -123,7 +123,10 @@ final class ConsoleHomePresentationTest extends TestCase
             }
             $document = new \DOMDocument();
             @$document->loadHTML($body, LIBXML_NONET);
-            self::assertSame(1, (new \DOMXPath($document))->query("//a[@href='/kadupul/host.php']")->length);
+            $xpath = new \DOMXPath($document);
+            self::assertSame(1, $xpath->query("//a[@href='/kadupul/host.php']")->length);
+            self::assertSame(1, $xpath->query("//table[@id='console-welcome' and @role='presentation' and not(@aria-label) and not(@aria-labelledby)]")->length);
+            self::assertSame(1, $xpath->query("//*[@id='navigation']/table[@role='presentation']")->length);
             self::assertStringNotContainsString('<script>bad-version</script>', $body);
             self::assertStringNotContainsString('private-account', $body);
             self::assertLessThan(strpos($body, 'console-welcome'), strpos($body, 'id="before"'));
