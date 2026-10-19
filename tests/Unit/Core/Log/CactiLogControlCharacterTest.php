@@ -176,13 +176,29 @@ test('invalid UTF-8 is written unchanged and does not drop the line', function (
     expectCactiLogSinks(cactiLogControlRun($text, "E\xffV"), "E\xffV", $text);
 });
 
-// pcre.backtrack_limit=1 with JIT off makes every match fail. The raw ESC in
-// the result shows the failure path ran; the LF must still become a space.
-test('a regex failure still turns CR and LF in environ into spaces', function () {
+// pcre.backtrack_limit=1 with JIT off also makes clean_up_lines() return null.
+test('a regex failure cannot leave terminal controls in the log prefix', function () {
     $result = cactiLogControlRun('ERROR: msg', "CMD\x1b\r\nPHP", ['backtrack_limit' => '1']);
 
-    expect($result['file'])->toBe("DATE - CMD\x1b  PHP " . PHP_EOL);
+    expect($result['file'])->toBe('DATE - CMD\\x1b  PHP ' . PHP_EOL)
+        ->and($result['stdout'])->toBe('DATE - CMD\\x1b  PHP ' . PHP_EOL)
+        ->and($result['syslog'])->toBe(['CMD\\x1b  PHP: ERROR: msg']);
 });
+
+test('a regex failure leaves no control bytes in any legacy log destination', function (string $raw, string $escaped) {
+    $result = cactiLogControlRun('ERROR: a' . $raw . 'b', 'ENV' . $raw, ['backtrack_limit' => '1']);
+
+    expect($result['file'])->toBe('DATE - ENV' . $escaped . ' ' . PHP_EOL)
+        ->and($result['stdout'])->toBe('DATE - ENV' . $escaped . ' ' . PHP_EOL)
+        ->and($result['syslog'])->toBe(['ENV' . $escaped . ': ERROR: a' . $escaped . 'b'])
+        ->and($result['warnings'])->toBe([]);
+})->with([
+    'C0 and DEL' => ["\x00\x07\x1b\x1f\x7f", '\\x00\\x07\\x1b\\x1f\\x7f'],
+    'C1' => ["\u{0080}\u{0085}\u{009b}\u{009f}", '\\u0080\\u0085\\u009b\\u009f'],
+    'bidi' => ["\u{061c}\u{200e}\u{202e}\u{2069}", '\\u061c\\u200e\\u202e\\u2069'],
+    'separators' => ["\u{2028}\u{2029}", '\\u2028\\u2029'],
+    'ordinary text and malformed UTF-8' => ["東京\t\xff\xc2 \xe2\x80", "東京\t\xff\xc2 \xe2\x80"],
+]);
 
 // clean_up_lines() returns null under the same limit.
 test('a null from clean_up_lines raises no diagnostic', function () {
