@@ -1918,19 +1918,13 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
                     }
                 }
 
-                if (cacti_version_compare(get_rrdtool_version(), '1.5', '>=')) {
-                    $update_options = '--skip-past-updates';
-                } else {
-                    $update_options = '';
-                }
-
                 if (isset($rrd_fields['template']) && $rrd_update_template == '') {
                     $rrd_update_template = $rrd_fields['template'];
                 }
 
                 // Never advance this RRD's timestamp after dropping a valid field.
                 // A schema mismatch must retain the full sample for replay after repair.
-                $updated = rrdtool_execute("update $quoted_path $update_options --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
+                $updated = rrdtool_execute("update $quoted_path --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
 
                 if ($updated !== true) {
                     $rejection = rrdtool_last_rejection();
