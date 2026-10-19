@@ -38,7 +38,34 @@ final class LegacyLogText
             return sprintf('\\u%04x', ((ord($bytes[0]) & 0x0f) << 12) | ((ord($bytes[1]) & 0x3f) << 6) | (ord($bytes[2]) & 0x3f));
         }, $text);
 
-        // Preserve the legacy PCRE-failure fallback: keep the record on one line.
-        return $clean === null ? str_replace(["\r", "\n"], ' ', $text) : $clean;
+        return $clean ?? self::withoutPcre($text);
+    }
+
+    private static function withoutPcre(string $text): string
+    {
+        /** @var array<string, string>|null $replacements */
+        static $replacements = null;
+
+        if ($replacements === null) {
+            $replacements = ["\r" => ' ', "\n" => ' ', "\x7f" => '\\x7f'];
+            for ($byte = 0; $byte < 0x20; $byte++) {
+                if (!in_array($byte, [0x09, 0x0a, 0x0d], true)) {
+                    $replacements[chr($byte)] = sprintf('\\x%02x', $byte);
+                }
+            }
+            for ($byte = 0x80; $byte <= 0x9f; $byte++) {
+                $replacements["\xc2" . chr($byte)] = sprintf('\\u%04x', $byte);
+            }
+            foreach ([0x61c, 0x200e, 0x200f, 0x2028, 0x2029, 0x202a, 0x202b, 0x202c, 0x202d, 0x202e, 0x2066, 0x2067, 0x2068, 0x2069] as $codepoint) {
+                $character = $codepoint < 0x800
+                    ? chr(0xc0 | ($codepoint >> 6)) . chr(0x80 | ($codepoint & 0x3f))
+                    : chr(0xe0 | ($codepoint >> 12)) . chr(0x80 | (($codepoint >> 6) & 0x3f)) . chr(0x80 | ($codepoint & 0x3f));
+                $replacements[$character] = sprintf('\\u%04x', $codepoint);
+            }
+        }
+
+        // No regex or Unicode extension is required during early bootstrap.
+        // strtr preserves malformed UTF-8 and never rescans replacement text.
+        return strtr($text, $replacements);
     }
 }

@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Escape log control characters even when PCRE fails, preserving the existing rules for ordinary text and early-bootstrap logging (#942).
+
 - Bound RRDtool proxy replies by the existing command timeout and poller budget; discard timed-out connections and leave outcomes unconfirmed (#784).
 
 - Register setup-php interpreters in mise under their reported patch versions and verify selection before publishing CI runtime evidence (#935).

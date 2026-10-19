@@ -101,6 +101,22 @@ PHP;
         self::assertSame('ENV\\x1b ', $process->getOutput());
     }
 
+    #[DataProvider('controlText')]
+    public function testSharedRuleNeutralizesControlsWhenPcreFails(string $raw, string $visible, string $fileVisible): void
+    {
+        $program = 'if (preg_match("/./", "x") !== false) { exit(2); }'
+            . 'require "src/Platform/Infrastructure/Legacy/LegacyLogText.php";'
+            . 'echo \\Kadupul\\Platform\\Infrastructure\\Legacy\\LegacyLogText::neutralize('
+            . var_export('ENV' . $raw . 'END', true) . ');';
+        $process = new Process([PHP_BINARY, '-n', '-d', 'pcre.jit=0', '-d', 'pcre.backtrack_limit=1', '-r', $program], dirname(__DIR__, 2));
+        $process->setTimeout(10);
+        $process->run();
+
+        self::assertSame(0, $process->getExitCode(), $process->getErrorOutput());
+        self::assertSame('', $process->getErrorOutput());
+        self::assertSame('ENV' . $visible . 'END', $process->getOutput());
+    }
+
     /**
      * Each expectation is what include/global.php:528 defined as
      * CACTI_DATE_TIME_FORMAT for these rows in the behavior stack. It runs
