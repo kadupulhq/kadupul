@@ -47,3 +47,21 @@ encryption and command writes have their existing behavior.
 No schema or credential changes are required. Reverting the code restores the
 previous unbounded reply wait; it does not reverse commands the proxy may have
 executed before its reply was lost. LTS remains unchanged for issue #784.
+
+## POSIX one-shot deadlines
+
+On main, local POSIX one-shot commands drain stdout while sending stdin. Their
+I/O uses the same `rrd_command_timeout` setting: 60 seconds by default, clamped
+to 1–3600 seconds and shortened by an active caller budget. Receiving more bytes
+does not extend the deadline. Discard-output calls drain without retaining the
+response in memory.
+
+A timeout or incomplete input exchange kills and reaps the child, returns
+failure and logs that the command outcome is unconfirmed. Timed-out partial
+output is not returned or displayed. Graph exports propagate this failure.
+A timeout does not roll back changes RRDtool already made. Check the RRD or
+export file state before retrying a write.
+
+This does not change persistent acknowledged pipes, the Windows fallback or
+LTS (#782). No schema or credential migration is required. Reverting restores
+the former blocking path; it does not restore prior RRD or export file contents.

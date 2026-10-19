@@ -165,6 +165,108 @@ test("DOMPurify refuses to return an in-place raw-text root selected for removal
   });
 });
 
+test("DOMPurify revisits an original node moved behind the in-place iterator", async ({ page }) => {
+  await load(page, "purify.js");
+  const result = await page.evaluate(() => {
+    const root = document.createElement("div");
+    root.innerHTML = '<b>anchor</b><span>trigger</span><img onerror="unsafe()">';
+    const [anchor, trigger, image] = root.children;
+    let visits = 0;
+    DOMPurify.addHook("beforeSanitizeElements", node => {
+      if (node === trigger) root.insertBefore(image, anchor);
+      if (node === image) visits++;
+    });
+    const same = DOMPurify.sanitize(root, { IN_PLACE: true }) === root;
+    DOMPurify.removeAllHooks();
+    return { same, visits, handler: image.hasAttribute("onerror"), first: root.firstChild === image };
+  });
+  expect(result).toEqual({ same: true, visits: 1, handler: false, first: true });
+});
+
+test("DOMPurify neutralizes an unvisited original subtree moved outside the root", async ({ page }) => {
+  await load(page, "purify.js");
+  const result = await page.evaluate(() => {
+    const root = document.createElement("div");
+    root.innerHTML = '<b>trigger</b><section><img onerror="unsafe()"></section>';
+    const [trigger, section] = root.children;
+    const image = section.firstChild;
+    const outside = document.createElement("div");
+    DOMPurify.addHook("beforeSanitizeElements", node => {
+      if (node === trigger) outside.append(section);
+    });
+    DOMPurify.sanitize(root, { IN_PLACE: true });
+    DOMPurify.removeAllHooks();
+    return { moved: section.parentNode === outside, handler: image.hasAttribute("onerror") };
+  });
+  expect(result).toEqual({ moved: true, handler: false });
+});
+
+test("DOMPurify abort neutralizes an original subtree moved outside the root", async ({ page }) => {
+  await load(page, "purify.js");
+  const result = await page.evaluate(() => {
+    const root = document.createElement("div");
+    root.innerHTML = '<b>trigger</b><section><a href="javascript:unsafe()">link</a><template><iframe srcdoc="unsafe"></iframe></template></section>';
+    const [trigger, section] = root.children;
+    const link = section.firstChild;
+    const content = section.lastChild.content;
+    const frame = content.firstChild;
+    const outside = document.createElement("div");
+    DOMPurify.addHook("beforeSanitizeElements", node => {
+      if (node === trigger) {
+        outside.append(section);
+        throw new Error("abort after move");
+      }
+    });
+    let message;
+    try { DOMPurify.sanitize(root, { IN_PLACE: true }); } catch (error) { message = error.message; }
+    DOMPurify.removeAllHooks();
+    return { message, moved: section.parentNode === outside, href: link.hasAttribute("href"), srcdoc: frame.hasAttribute("srcdoc"), template: content.childNodes.length };
+  });
+  expect(result).toEqual({ message: "abort after move", moved: true, href: false, srcdoc: false, template: 0 });
+});
+
+test("DOMPurify applies the XHTML SMIL value guard when an attribute hook force-keeps", async ({ page }) => {
+  await load(page, "purify.js");
+  const result = await page.evaluate(() => {
+    const config = { PARSER_MEDIA_TYPE: "application/xhtml+xml", ADD_TAGS: ["animate"], ADD_ATTR: ["attributeName"] };
+    DOMPurify.setConfig(config);
+    const valid = DOMPurify.isValidAttribute("animate", "attributeName", "href");
+    DOMPurify.addHook("uponSanitizeAttribute", (_node, event) => { event.forceKeepAttr = true; });
+    const clean = DOMPurify.sanitize('<svg xmlns="http://www.w3.org/2000/svg"><animate attributeName="href" /></svg>');
+    DOMPurify.removeAllHooks();
+    DOMPurify.clearConfig();
+    return { valid, clean };
+  });
+  expect(result.valid).toBe(false);
+  expect(result.clean).toContain("animate");
+  expect(result.clean).not.toContain("attributeName");
+});
+
+for (const tree of ["shadow", "template"]) {
+  test(`DOMPurify scrubs merged template expressions before the ${tree} completion hook`, async ({ page }) => {
+    await load(page, "purify.js");
+    const result = await page.evaluate(tree => {
+      const root = document.createElement("div");
+      const template = document.createElement("template");
+      if (tree === "template") root.append(template);
+      const fragment = tree === "shadow" ? root.attachShadow({ mode: "open" }) : template.content;
+      fragment.append(document.createTextNode("$"), document.createElement("object"), document.createTextNode("{unsafe()}"));
+      // The new per-fragment scrub must use the cached prototype method too.
+      fragment.normalize = () => { throw new Error("clobbered normalize"); };
+      let observed;
+      DOMPurify.addHook("afterSanitizeShadowDOM", node => {
+        if (node === fragment) observed = node.textContent;
+      });
+      DOMPurify.sanitize(root, { IN_PLACE: true, SAFE_FOR_TEMPLATES: true });
+      DOMPurify.removeAllHooks();
+      return { observed, text: fragment.textContent };
+    }, tree);
+    expect(result.observed).toBeDefined();
+    expect(result.observed).not.toContain("${");
+    expect(result.text).not.toContain("${");
+  });
+}
+
 test("DOMPurify abort clears shadow and template trees and unsafe URI attributes", async ({ page }) => {
   await load(page, "purify.js");
   const result = await page.evaluate(() => {
@@ -745,7 +847,7 @@ test("DOMPurify keeps harmless markup and strips executable HTML and SVG", async
     };
   });
   expect(result).toEqual({
-    version: "3.4.16",
+    version: "3.4.17",
     text: "safe",
     scripts: 0,
     handlers: 0,
