@@ -114,6 +114,27 @@ lock includes patched PyJWT 2.15.1 and uses mise's Python 3.12.12 with
 `--generate-hashes --allow-unsafe --strip-extras`. The CSP stack uses the native
 Docker builder. Assertions and required check names remain unchanged.
 
+The MCP SDK update is blocked as of 2026-10-19, tracked in
+[#950](https://github.com/kadupulhq/kadupul/issues/950). The lock contains
+`mcp==1.29.0`, affected by
+[GHSA-84m7-p3x7-pcfv](https://github.com/modelcontextprotocol/python-sdk/security/advisories/GHSA-84m7-p3x7-pcfv).
+The patched 1.x SDK starts at 1.30.0, but Semgrep 1.179.0 requires exactly
+1.29.0. Published Semgrep 1.180.0 and 1.181.0 retain that pin. An isolated
+Python 3.12.12 pip dry run rejected Semgrep 1.179.0 plus MCP 1.30.0 with
+`ResolutionImpossible`. [Upstream #11992](https://github.com/semgrep/semgrep/issues/11992)
+tracks the dependency update. The lock and Dependabot alert 17 remain unchanged;
+this assessment is not remediation.
+
+The security workflow runs `semgrep scan`; it does not start the stateful MCP
+Streamable HTTP server described by the advisory. This limits the demonstrated
+CI exposure, without removing the affected installed package. Do not force the
+SDK upgrade past Semgrep's declared dependency or weaken hash verification.
+After a compatible scanner release is published, regenerate the lock with the
+versions and flags above, review every changed version and hash, and require a
+clean hash-checked install, `pip check`, scanner version check, real scan/report
+verification and current-head CI. Confirm that Dependabot marks alert 17 fixed
+after the replacement lock reaches main. LTS was not assessed for this advisory.
+
 ## Coverage and analysis
 
 Sonar coverage runs in two independent jobs: legacy unit/poller coverage, and
