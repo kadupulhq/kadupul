@@ -149,6 +149,7 @@ test('a proxied create sends a substituted maximum bare, or not at all when the 
 
     // A number goes as it is.
     $result = rrd_proxy_create_guard_run($this, 'max:' . $function . ':100', $missing);
+    expect($result[0])->toBeFalse();
     expect($result[2])->toStartWith("file_exists ./sample.rrd_EOT_\r\ncreate ./sample.rrd ")
         ->toContain('DS:value:GAUGE:600:0:100 ')->not->toContain("'");
 

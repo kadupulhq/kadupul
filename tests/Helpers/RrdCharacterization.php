@@ -127,15 +127,20 @@ function rrd_characterization_proxy_run($test, array $scenario, ?int $rrdp_argum
         list($server, $stdout, $port) = rrd_fake_proxy_start($directory, array(
             'proxy_private_key' => $proxy['private'], 'proxy_public_key' => $proxy['public'],
             'client_fingerprint' => $client['fingerprint'],
-            'replies' => array('info' => array(rrd_characterization_proxy_info_reply($scenario['rrd_cfs'] ?? array('AVERAGE')))),
+            'replies' => ($scenario['proxy_replies'] ?? array()) + array('info' => array(rrd_characterization_proxy_info_reply($scenario['rrd_cfs'] ?? array('AVERAGE')))),
         ));
         $scenario['options'] = array(
             'storage_location' => '1', 'rrdp_server' => '127.0.0.1', 'rrdp_port' => $port,
             'rsa_public_key' => $client['public'], 'rsa_private_key' => $client['private'], 'rrdp_fingerprint' => $proxy['fingerprint'],
         ) + ($scenario['options'] ?? array());
-        expect($scenario['calls'])->toHaveCount(1);
+        // Stateful export tests observe a local file before and after the selected proxy call.
+        if (!isset($scenario['proxy_call'])) {
+            expect($scenario['calls'])->toHaveCount(1);
+        }
+        $proxy_call = $scenario['proxy_call'] ?? 0;
+        expect(isset($scenario['calls'][$proxy_call]))->toBeTrue();
         if ($rrdp_argument !== null) {
-            $scenario['calls'][0]['rrdp_argument'] = $rrdp_argument;
+            $scenario['calls'][$proxy_call]['rrdp_argument'] = $rrdp_argument;
         }
         $output = rrd_characterization_run($test, $scenario);
         $output['received'] = rrd_fake_proxy_finish($directory, $server, $stdout);

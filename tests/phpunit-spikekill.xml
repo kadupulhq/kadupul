@@ -62,6 +62,7 @@
       <file>Unit/Core/Poller/PollerAcknowledgementNativeTest.php</file>
       <file>Unit/Core/Poller/RemoteQueuePreflightNativeTest.php</file>
       <file>Unit/Core/Rrd/RrdProxyAcknowledgementTest.php</file>
+      <file>Unit/Core/Rrd/RrdProxyNativeTest.php</file>
       <file>Unit/Core/Rrd/RrdRejectionNativeTest.php</file>
       <file>Unit/Core/Rrd/RrdProxyCreateGuardNativeTest.php</file>
       <file>Unit/Core/Rrd/RrdProxyDeadlineNativeTest.php</file>
