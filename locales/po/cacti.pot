@@ -5790,7 +5790,7 @@ msgstr ""
 msgid "Main Console"
 msgstr ""
 
-#: include/global_arrays.php:984 templates/platform/console_home_body.html.twig
+#: include/global_arrays.php:984
 msgid "Console Page"
 msgstr ""
 

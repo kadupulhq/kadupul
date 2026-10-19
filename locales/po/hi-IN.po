@@ -6137,7 +6137,7 @@ msgstr "सभी समान डेटा स्रोतों की गण�
 msgid "Main Console"
 msgstr "कंसोल"
 
-#: include/global_arrays.php:984 templates/platform/console_home_body.html.twig
+#: include/global_arrays.php:984
 msgid "Console Page"
 msgstr "कंसोल पेज के ऊपर"
 

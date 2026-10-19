@@ -4,7 +4,7 @@
 {% trans_default_domain 'console' %}
 {{ compatibility.before }}
 {% if home.content.showIntroduction %}
-<table class="cactiTable" id="console-welcome" aria-label="{{ 'Console Page'|trans }}">
+<table class="cactiTable" id="console-welcome" role="presentation">
 <tr class="tableRow">
 <td class="textAreaNotes top left">
     {# The trans blocks retain repository-owned gettext HTML. URL substitutions

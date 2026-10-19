@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Mark console welcome and navigation layout tables as presentational while preserving their text, links, classes and IDs (#946).
+
 - Escape log control characters even when PCRE fails, preserving the existing rules for ordinary text and early-bootstrap logging (#942).
 
 - Retain graph tabs and account controls on the Symfony console home by capturing the native helpers' printed HTML (#944).

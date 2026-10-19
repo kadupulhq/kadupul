@@ -6261,7 +6261,7 @@ msgstr "حساب جميع مصادر البيانات المماثلة (تضمي
 msgid "Main Console"
 msgstr "وحدة التحكم"
 
-#: include/global_arrays.php:984 templates/platform/console_home_body.html.twig
+#: include/global_arrays.php:984
 msgid "Console Page"
 msgstr "أعلى صفحة وحدة التحكم"
 

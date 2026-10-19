@@ -6118,7 +6118,7 @@ msgstr "Conteggio di tutte le fonti di dati simili (inclusi i duplicati)"
 msgid "Main Console"
 msgstr "Console"
 
-#: include/global_arrays.php:984 templates/platform/console_home_body.html.twig
+#: include/global_arrays.php:984
 msgid "Console Page"
 msgstr "Inizio della pagina della console"
 
