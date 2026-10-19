@@ -6088,7 +6088,7 @@ msgstr "所有类似的数据源(包括重复的)"
 msgid "Main Console"
 msgstr "主控台"
 
-#: include/global_arrays.php:984 templates/platform/console_home_body.html.twig
+#: include/global_arrays.php:984
 msgid "Console Page"
 msgstr "前端用户提交编辑页"
 

@@ -6131,7 +6131,7 @@ msgstr "Tüm Benzer Veri Kaynaklarının Sayısı (Kopyaları Dahil Et)"
 msgid "Main Console"
 msgstr "konsol"
 
-#: include/global_arrays.php:984 templates/platform/console_home_body.html.twig
+#: include/global_arrays.php:984
 msgid "Console Page"
 msgstr "Konsol Sayfa Başı"
 

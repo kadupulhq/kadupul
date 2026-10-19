@@ -6088,7 +6088,7 @@ msgstr "Đếm tất cả các nguồn dữ liệu tương tự (Bao gồm các 
 msgid "Main Console"
 msgstr "Bảng điều khiển"
 
-#: include/global_arrays.php:984 templates/platform/console_home_body.html.twig
+#: include/global_arrays.php:984
 msgid "Console Page"
 msgstr "Trang đầu bảng điều khiển"
 

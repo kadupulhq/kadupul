@@ -6092,7 +6092,7 @@ msgstr "모든 유사한 데이터 소스 수 (중복 포함)"
 msgid "Main Console"
 msgstr "콘솔"
 
-#: include/global_arrays.php:984 templates/platform/console_home_body.html.twig
+#: include/global_arrays.php:984
 msgid "Console Page"
 msgstr "콘솔 페이지 맨 위"
 
