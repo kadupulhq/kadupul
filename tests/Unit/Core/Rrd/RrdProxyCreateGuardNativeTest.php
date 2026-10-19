@@ -116,11 +116,11 @@ test('proxied updates carry a bare path, and a path the proxy cannot carry is no
 
     $direct = rrd_proxy_create_guard_run($this, 'update', 'OK u:0.00 s:0.00 r:0.00');
     expect($direct[0])->toBeFalse()
-        ->and($direct[2])->toBe("file_exists ./sample.rrd_EOT_\r\nupdate ./sample.rrd --skip-past-updates --template value 1700000060:42_EOT_\r\n");
+        ->and($direct[2])->toBe("file_exists ./sample.rrd_EOT_\r\nupdate ./sample.rrd --template value 1700000060:42_EOT_\r\n");
 
     // The RRA root is rewritten only where the path starts, so a nested copy of it survives the transport.
     $nested = rrd_proxy_create_guard_run($this, 'update-nested', 'OK u:0.00 s:0.00 r:0.00');
-    expect($nested[2])->toBe("file_exists ./sub/fixture/sample.rrd_EOT_\r\nupdate ./sub/fixture/sample.rrd --skip-past-updates --template value 1700000060:42_EOT_\r\n");
+    expect($nested[2])->toBe("file_exists ./sub/fixture/sample.rrd_EOT_\r\nupdate ./sub/fixture/sample.rrd --template value 1700000060:42_EOT_\r\n");
 
     $unsafe = rrd_proxy_create_guard_run($this, 'update-unsafe', 'OK u:0.00 s:0.00 r:0.00');
     expect($unsafe[0])->toBeFalse()->and($unsafe[2])->toBeFalse();

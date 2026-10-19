@@ -3052,7 +3052,7 @@ msgstr "Análise de repetição"
 msgid "Check"
 msgstr "Verificar"
 
-#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4203
+#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4197
 #: utilities.php:798 utilities.php:815 utilities.php:3206
 msgid "Value"
 msgstr "Valor"
@@ -3630,7 +3630,7 @@ msgstr "Etapas"
 
 #: data_source_profiles.php:900 graphs_new.php:532 include/global_form.php:284
 #: lib/html.php:613 lib/html_filter.php:55 lib/installer.php:2837
-#: lib/rrd.php:4245 utilities.php:866 utilities.php:1838
+#: lib/rrd.php:4239 utilities.php:866 utilities.php:1838
 msgid "Rows"
 msgstr "Linhas"
 
@@ -4297,7 +4297,7 @@ msgid "RRDtool Graph Syntax"
 msgstr "Sintaxe do Gráfico RRDtool"
 
 #: graph_image.php:174 graph_json.php:208 graph_realtime.php:330
-#: lib/rrd.php:2579
+#: lib/rrd.php:2573
 msgid "The Kadupul Poller has not run yet."
 msgstr "O Kadupul Poller ainda não fugiu."
 
@@ -6043,7 +6043,7 @@ msgstr "Ordenação Natural"
 msgid "Numeric Ordering"
 msgstr "Ordenação Numérica"
 
-#: include/global_arrays.php:953 lib/rrd.php:4169
+#: include/global_arrays.php:953 lib/rrd.php:4163
 msgid "Header"
 msgstr "Cabeçalho"
 
@@ -7660,7 +7660,7 @@ msgstr "A frequência com que os dados serão coletados da Fonte de Dados?"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "Durante quanto tempo podem faltar dados antes de o RRDtool registar dados desconhecidos.  Aumente este valor se a sua fonte de dados for instável e pretender transportar dados antigos em vez de mostrar lacunas nos seus gráficos.  Este valor é multiplicado pelo Fator de Arquivos X para determinar a quantidade de tempo real."
 
-#: include/global_form.php:226 lib/rrd.php:4248
+#: include/global_form.php:226 lib/rrd.php:4242
 msgid "X-Files Factor"
 msgstr "Fator de Arquivos X"
 
@@ -8222,7 +8222,7 @@ msgstr "Opacidade/Canal Alfa"
 msgid "The opacity/alpha channel of the color."
 msgstr "O canal opacidade/alfa da cor."
 
-#: include/global_form.php:989 lib/rrd.php:4244
+#: include/global_form.php:989 lib/rrd.php:4238
 msgid "Consolidation Function"
 msgstr "Função de consolidação"
 
@@ -11881,7 +11881,7 @@ msgstr "Recuperando"
 
 #: lib/api_automation.php:33 lib/auth.php:3085 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:382 lib/plugins.php:1499
-#: lib/plugins.php:1500 lib/rrd.php:4221 lib/rrd.php:4233 lib/spikekill.php:301
+#: lib/plugins.php:1500 lib/rrd.php:4215 lib/rrd.php:4227 lib/spikekill.php:301
 #: package_import.php:523 package_import.php:601 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 msgid "Unknown"
@@ -11889,7 +11889,7 @@ msgstr "Desconhecido"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
-#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4198
+#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4192
 #: utilities.php:356 utilities.php:1480 utilities.php:3206
 msgid "Type"
 msgstr "Tipo"
@@ -15728,194 +15728,194 @@ msgstr "Falha ao adicionar o item '<i>%s</i>' do gráfico de relatório Já exis
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "Item do gráfico de relatório ignorado '<i>%s</i>' Já existe"
 
-#: lib/rrd.php:2202
+#: lib/rrd.php:2196
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2205
+#: lib/rrd.php:2199
 msgid "The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2576
+#: lib/rrd.php:2570
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "ERRO: RRDfile %s não graváveis"
 
-#: lib/rrd.php:3986
+#: lib/rrd.php:3980
 #, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "O tamanho da etapa RRDfile necessário é '%s' , mas a etapa observada é '%s'"
 
-#: lib/rrd.php:4022
+#: lib/rrd.php:4016
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "Tipo para Fonte de Dados: \"%s\" deve ser \"%s\"."
 
-#: lib/rrd.php:4028
+#: lib/rrd.php:4022
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "Ritmo cardíaco para Fonte de Dados '%s' deve ser '%s'."
 
-#: lib/rrd.php:4040
+#: lib/rrd.php:4034
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "RRD mínimo para Fonte de Dados \"%s\" deve ser \"%s\"."
 
-#: lib/rrd.php:4049
+#: lib/rrd.php:4043
 #, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "DS '%s' em falta na definição de Kadupul"
 
-#: lib/rrd.php:4063 lib/rrd.php:4064
+#: lib/rrd.php:4057 lib/rrd.php:4058
 #, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Kadupul RRA \"%s\" tem o mesmo FC/etapas (%s, %s) que \"%s\"."
 
-#: lib/rrd.php:4077 lib/rrd.php:4078
+#: lib/rrd.php:4071 lib/rrd.php:4072
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Arquivo RRA '%s' tem o mesmo CF/etapas (%s, %s) que '%s'."
 
-#: lib/rrd.php:4110
+#: lib/rrd.php:4104
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr "A pdp_per_row de '%s' é inválida para RRA '%s' deve ser '%s'.  Considere excluir e permitir que o Kadupul recrie o arquivo RRD."
 
-#: lib/rrd.php:4114
+#: lib/rrd.php:4108
 #, fuzzy, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "XFF para Kadupul RRA id \"%s\" deve ser \"%s\"."
 
-#: lib/rrd.php:4118
+#: lib/rrd.php:4112
 #, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "O número de linhas para o ID Kadupul RRA '%s' está incorreto.  O número de linhas é '%s', mas deve ser '%s'"
 
-#: lib/rrd.php:4135
+#: lib/rrd.php:4129
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "RRA '%s' em falta no ficheiro RRD"
 
-#: lib/rrd.php:4143
+#: lib/rrd.php:4137
 #, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "RRA '%s' em falta na definição de Kadupul"
 
-#: lib/rrd.php:4165
+#: lib/rrd.php:4159
 msgid "RRD File Information"
 msgstr "Informações sobre o arquivo RRD"
 
-#: lib/rrd.php:4197
+#: lib/rrd.php:4191
 msgid "Data Source Items"
 msgstr "Itens de origem de dados"
 
-#: lib/rrd.php:4199
+#: lib/rrd.php:4193
 msgid "Minimal Heartbeat"
 msgstr "Batimento cardíaco mínimo"
 
-#: lib/rrd.php:4200
+#: lib/rrd.php:4194
 msgid "Min"
 msgstr "Min"
 
-#: lib/rrd.php:4201
+#: lib/rrd.php:4195
 msgid "Max"
 msgstr "Máx"
 
-#: lib/rrd.php:4202
+#: lib/rrd.php:4196
 msgid "Last DS"
 msgstr "Último DS"
 
-#: lib/rrd.php:4204
+#: lib/rrd.php:4198
 msgid "Unknown Sec"
 msgstr "Desconhecido Sec"
 
-#: lib/rrd.php:4243
+#: lib/rrd.php:4237
 msgid "Round Robin Archive"
 msgstr "Arquivo Round Robin"
 
-#: lib/rrd.php:4246
+#: lib/rrd.php:4240
 msgid "Cur Row"
 msgstr "Linha Cur"
 
-#: lib/rrd.php:4247
+#: lib/rrd.php:4241
 msgid "PDP per Row"
 msgstr "PDP por linha"
 
-#: lib/rrd.php:4249
+#: lib/rrd.php:4243
 msgid "CDP Prep Value (0)"
 msgstr "Valor de preparação do CDP (0)"
 
-#: lib/rrd.php:4250
+#: lib/rrd.php:4244
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP Desconhecido Pontos de dados (0)"
 
-#: lib/rrd.php:4331
+#: lib/rrd.php:4325
 msgid "Errors Found"
 msgstr "Nenhum %s foi encontrado"
 
-#: lib/rrd.php:4343
+#: lib/rrd.php:4337
 msgid "Optional Tuning Recommendations"
 msgstr "Campos de origem de dados"
 
-#: lib/rrd.php:4368 lib/rrd.php:4371
+#: lib/rrd.php:4362 lib/rrd.php:4365
 #, php-format
 msgid "rename %s to %s"
 msgstr "renomear %s para %s"
 
-#: lib/rrd.php:4463
+#: lib/rrd.php:4457
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "ERROR ao escrever um ficheiro XML: %s"
 
-#: lib/rrd.php:4469
+#: lib/rrd.php:4463
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4475
+#: lib/rrd.php:4469
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "ERRO: RRDfile %s não graváveis"
 
-#: lib/rrd.php:4496
+#: lib/rrd.php:4490
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "Erro ao analisar o XML de rrdtool dump"
 
-#: lib/rrd.php:4532 lib/rrd.php:4551
+#: lib/rrd.php:4526 lib/rrd.php:4545
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "Erro ao analisar o XML do RRDtool dump"
 
-#: lib/rrd.php:4769
+#: lib/rrd.php:4763
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removido do arquivo RRD"
 
-#: lib/rrd.php:4807
+#: lib/rrd.php:4801
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adicionando ao arquivo RRD"
 
-#: lib/rrd.php:4838 lib/rrd.php:4854
+#: lib/rrd.php:4832 lib/rrd.php:4848
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "Website não tem acesso de escrita a %s, pode ser incapaz de criar/atualizar RRDs"
 
-#: lib/rrd.php:4850
+#: lib/rrd.php:4844
 msgid "(Custom)"
 msgstr "Personalizado"
 
-#: lib/rrd.php:4856
+#: lib/rrd.php:4850
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "Falha ao abrir o arquivo de dados, o poller pode ainda não ter sido executado"
 
-#: lib/rrd.php:4859
+#: lib/rrd.php:4853
 msgid "RRA Folder"
 msgstr "Pasta RRA"
 
-#: lib/rrd.php:4859
+#: lib/rrd.php:4853
 msgid "Root"
 msgstr "Root"
 
-#: lib/rrd.php:4939
+#: lib/rrd.php:4933
 msgid "Unknown RRDtool Error"
 msgstr "Erro desconhecido do RRDtool"
 
