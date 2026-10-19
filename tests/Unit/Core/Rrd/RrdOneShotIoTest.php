@@ -13,6 +13,29 @@ beforeEach(function () {
     }
 });
 
+test('one-shot transport accepts a floating point monotonic deadline', function () {
+    require_once dirname(__DIR__, 4) . '/src/Graphing/Infrastructure/Rrd/OneShotRrdtool.php';
+    $process = proc_open([PHP_BINARY, '-r', 'stream_get_contents(STDIN); echo "payload";'], [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['redirect', 1]], $pipes);
+    expect(is_resource($process))->toBeTrue();
+    try {
+        $result = (new Kadupul\Graphing\Infrastructure\Rrd\OneShotRrdtool())->run($process, $pipes, "input\n", (float) hrtime(true) + 2000000000, true);
+        expect($result)->toBe(['completed' => true, 'status' => 0, 'output' => 'payload'])
+            ->and(is_resource($pipes[0]))->toBeFalse()
+            ->and(is_resource($pipes[1]))->toBeFalse()
+            ->and(is_resource($process))->toBeFalse();
+    } finally {
+        foreach ($pipes as $pipe) {
+            if (is_resource($pipe)) {
+                fclose($pipe);
+            }
+        }
+        if (is_resource($process)) {
+            proc_terminate($process, 9);
+            proc_close($process);
+        }
+    }
+});
+
 test('one-shot execution drains output while sending the remaining input', function (int $flag) {
     $directory = sys_get_temp_dir() . '/rrd-oneshot-' . bin2hex(random_bytes(8));
     mkdir($directory, 0700);

@@ -17,7 +17,7 @@ final class OneShotRrdtool
      * @param array<int, resource> $pipes
      * @return array{completed: bool, status: int, output: string}
      */
-    public function run($process, array $pipes, string $input, int $deadline, bool $captureOutput): array
+    public function run($process, array $pipes, string $input, int|float $deadline, bool $captureOutput): array
     {
         $output = '';
         $offset = 0;
@@ -25,11 +25,19 @@ final class OneShotRrdtool
         $finished = false;
         try {
             $ready = stream_set_blocking($pipes[0], false) && stream_set_blocking($pipes[1], false);
-            while ($ready && hrtime(true) < $deadline) {
+            while ($ready) {
+                $now = hrtime(true);
+                if ($now === false || $now >= $deadline) {
+                    break;
+                }
                 $read = isset($pipes[1]) ? [$pipes[1]] : [];
                 $write = isset($pipes[0]) ? [$pipes[0]] : [];
                 if (!$read && !$write) {
-                    if (!proc_get_status($process)['running']) {
+                    $state = proc_get_status($process);
+                    if ($state === false) {
+                        break;
+                    }
+                    if (!$state['running']) {
                         $finished = true;
                         break;
                     }
@@ -37,7 +45,7 @@ final class OneShotRrdtool
                     continue;
                 }
                 $except = null;
-                $remaining = max(0, min(100000000, $deadline - hrtime(true)));
+                $remaining = max(0, min(100000000, $deadline - $now));
                 if (@stream_select($read, $write, $except, 0, (int) ($remaining / 1000)) === false) {
                     break;
                 }
@@ -70,7 +78,8 @@ final class OneShotRrdtool
             foreach ($pipes as $pipe) {
                 fclose($pipe);
             }
-            if (proc_get_status($process)['running']) {
+            $state = proc_get_status($process);
+            if ($state === false || $state['running']) {
                 // SIGKILL cannot be ignored; proc_close must not wait for a
                 // stalled child that ignores SIGTERM after the deadline.
                 proc_terminate($process, 9);
