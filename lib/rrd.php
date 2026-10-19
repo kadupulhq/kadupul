@@ -1546,7 +1546,19 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp 
             return;
         case RRDTOOL_OUTPUT_STDOUT:
         case RRDTOOL_OUTPUT_GRAPH_DATA:
-            return rtrim(substr($output, 0, strpos($output, 'OK u')));
+            $error_status = preg_match('/^ERROR:([^\r\n]*)/m', $output, $error);
+            if ($error_status !== 0) {
+                if ($error_status === 1) {
+                    $rejection = & rrdtool_last_rejection();
+                    $rejection = trim($error[1]);
+                }
+                return false;
+            }
+            $okpos = strrpos($output, 'OK');
+            if ($okpos === false || preg_match('/\AOK(?: u:[^\r\n]+)?(?:\r?\n)?\z/', substr($output, $okpos)) !== 1) {
+                return false;
+            }
+            return rtrim(substr($output, 0, $okpos));
             break;
         case RRDTOOL_OUTPUT_STDERR:
         case RRDTOOL_OUTPUT_RETURN_STDERR:
@@ -1773,6 +1785,9 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
         return read_config_option('path_rrdtool') . ' create' . RRD_NL . "$data_source_path$create_ds$create_rra";
     } else {
         $success = rrdtool_execute("create $quoted_path $create_ds$create_rra", true, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'POLLER');
+        if (!is_string($success)) {
+            return false;
+        }
 
         if ($config['cacti_server_os'] != 'win32' && posix_getuid() == 0) {
             rrdtool_set_rrd_ownership($data_source_path, $owner_id, $group_id, 'POLLER', array("ERROR: Unable to set ownership for '%s'", "ERROR: Unable to set group for '%s'"), "ERROR: RRD file '%s' does not exist for ownership assignment");
@@ -3266,6 +3281,9 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
             } elseif (isset($graph_data_array['export_realtime'])) {
                 $output_flag = RRDTOOL_OUTPUT_GRAPH_DATA;
                 $output = rrdtool_execute("graph $graph_opts$graph_defs$txt_graph_items", false, $output_flag, $rrdtool_pipe);
+                if (!is_string($output) || $output === '') {
+                    return false;
+                }
 
                 try {
                     rrdtool_filesystem()->dumpFile($graph_data_array['export_realtime'], (string) $output);
