@@ -1236,9 +1236,25 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
             if (!is_resource($process)) {
                 unset($process);
             } else {
-                fwrite($pipes[0], escape_command($command_line) . "\r\nquit\r\n");
-                fclose($pipes[0]);
-                $fp = $pipes[1];
+                if ($config['cacti_server_os'] === 'unix') {
+                    require_once __DIR__ . '/../src/Graphing/Infrastructure/Rrd/OneShotRrdtool.php';
+                    $timeout = max(1, min(3600, (int) ($config['rrd_command_timeout'] ?? 60)));
+                    $deadline = hrtime(true) + $timeout * 1000000000;
+                    $cap = rrd_command_deadline();
+                    if ($cap !== null && $cap < $deadline) {
+                        $deadline = $cap;
+                    }
+                    $capture = in_array($output_flag, array(RRDTOOL_OUTPUT_STDOUT, RRDTOOL_OUTPUT_GRAPH_DATA, RRDTOOL_OUTPUT_STDERR, RRDTOOL_OUTPUT_RETURN_STDERR));
+                    $input = escape_command($command_line) . "\r\nquit\r\n";
+                    $exchange = new \Kadupul\Graphing\Infrastructure\Rrd\OneShotRrdtool();
+                    $result = $exchange->run($process, $pipes, $input, $deadline, $capture);
+                    $output = $result['completed'] ? $result['output'] : false;
+                    unset($process, $result);
+                } else {
+                    fwrite($pipes[0], escape_command($command_line) . "\r\nquit\r\n");
+                    fclose($pipes[0]);
+                    $fp = $pipes[1];
+                }
             }
         } else {
             cacti_log("ERROR: RRDtool executable not found, not executable or error in path '" . read_config_option('path_rrdtool') . "'.  No output written to RRDfile.");
@@ -1295,7 +1311,11 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
     /* store the last command to provide rrdtool segfault diagnostics */
     $last_command = $command_line;
 
-    if (!isset($fp)) {
+    if (isset($output) && $output === false) {
+        cacti_log('ERROR: RRDtool one-shot response was unavailable or timed out; command outcome is unconfirmed.', false, $logopt);
+        return false;
+    }
+    if (!isset($fp) && !isset($output)) {
         return (defined('RRDTOOL_OUTPUT_BOOLEAN') && $output_flag === RRDTOOL_OUTPUT_BOOLEAN) ? false : null;
     }
 
@@ -1320,9 +1340,11 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
     switch ($output_flag) {
         case RRDTOOL_OUTPUT_STDOUT:
         case RRDTOOL_OUTPUT_GRAPH_DATA:
-            $output = '';
-            while (!feof($fp)) {
-                $output .= fgets($fp, 4096);
+            if (isset($fp)) {
+                $output = '';
+                while (!feof($fp)) {
+                    $output .= fgets($fp, 4096);
+                }
             }
 
             if (isset($process)) {
@@ -1336,9 +1358,11 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
             break;
         case RRDTOOL_OUTPUT_STDERR:
         case RRDTOOL_OUTPUT_RETURN_STDERR:
-            $output = '';
-            while (!feof($fp)) {
-                $output .= fgets($fp, 4096);
+            if (isset($fp)) {
+                $output = '';
+                while (!feof($fp)) {
+                    $output .= fgets($fp, 4096);
+                }
             }
 
             if (isset($process)) {
@@ -1368,8 +1392,10 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
             /* Even callers discarding output must wait for queued writes
              * before the maintenance lock can be released. Drain first so
              * the child cannot block on a full stdout pipe. */
-            while (!feof($fp)) {
-                fread($fp, 8192);
+            if (isset($fp)) {
+                while (!feof($fp)) {
+                    fread($fp, 8192);
+                }
             }
             if (isset($process)) {
                 fclose($fp);
@@ -3275,7 +3301,9 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
             if (isset($graph_data_array['get_error'])) {
                 return rrdtool_execute("graph $graph_opts$graph_defs$txt_graph_items", false, RRDTOOL_OUTPUT_STDERR, $rrdtool_pipe);
             } elseif (isset($graph_data_array['export'])) {
-                rrdtool_execute("graph $graph_opts$graph_defs$txt_graph_items", false, RRDTOOL_OUTPUT_NULL, $rrdtool_pipe);
+                if (rrdtool_execute("graph $graph_opts$graph_defs$txt_graph_items", false, RRDTOOL_OUTPUT_NULL, $rrdtool_pipe) === false) {
+                    return false;
+                }
 
                 return 0;
             } elseif (isset($graph_data_array['export_realtime'])) {

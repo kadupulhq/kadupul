@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Drain POSIX one-shot RRDtool output while sending input, enforce the existing command timeout and caller budget, and report graph-export timeouts as failures (#782).
+
 - Return failure for rejected or unacknowledged proxy output, stop unconfirmed RRD creation, and preserve realtime graph caches when rendering fails or returns empty output (#769).
 
 - Consume old and duplicate direct-poller RRD samples as rejected, without publishing them as stored values; newer samples continue through the same writer (#775).

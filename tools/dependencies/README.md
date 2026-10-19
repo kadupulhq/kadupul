@@ -90,12 +90,16 @@ and `jquery-ui-dist` currently lags the official jQuery UI distribution.
 
 ## Remaining upgrade work (2026-09-19)
 
-DOMPurify is now pinned to 3.4.16. Its rolldown bundle changes the formatting
-of the former 3.4.15 patch anchors; the manifest consolidates those steps into
-exact function replacements while retaining their behavior. The upstream
-3.4.16 refusal to return an in-place root selected for removal is retained and
-has a browser regression. Original upstream source and map checksums are
-verified before applying the compatibility recipes.
+DOMPurify is pinned to 3.4.17 and Playwright to 1.64.0. The manifest verifies
+the original source and map checksums before applying the local compatibility
+recipes. The DOMPurify refresh preserves the existing protections and incorporates
+upstream tracking of original nodes moved during in-place sanitization, the XHTML
+SMIL attribute-value guard, and the per-fragment template-expression scrub.
+The new traversal passes carry the local in-place flag, cached normalization,
+and abort cleanup rules. Browser regressions cover moved and escaped nodes,
+force-kept SMIL attributes, and merged expressions in shadow and template content.
+Discarded subtrees are cleaned once through their original ancestor rather than
+walking the same descendants for every original node.
 
 This first compatibility-preserving batch updates DOMPurify 3.4.7 → 3.4.15,
 D3 7.8.2 → 7.9.0, jQuery UI 1.14.0 → 1.14.2, and tablesorter core/widgets/pager
