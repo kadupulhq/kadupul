@@ -3992,7 +3992,7 @@ msgstr "Цветове"
 msgid "Data Source Item %s"
 msgstr "Елемент на източник на данни %s"
 
-#: data_sources.php:1267 data_templates.php:817 lib/import.php:2839
+#: data_sources.php:1267 data_templates.php:817 lib/import.php:2849
 #: package_import.php:599
 msgid "New"
 msgstr "Нов"
@@ -11886,7 +11886,7 @@ msgid "Recovering"
 msgstr "Възстановяване"
 
 #: lib/api_automation.php:33 lib/auth.php:3085 lib/clog_webapi.php:856
-#: lib/html_utility.php:1362 lib/import.php:382 lib/plugins.php:1499
+#: lib/html_utility.php:1362 lib/import.php:392 lib/plugins.php:1499
 #: lib/plugins.php:1500 lib/rrd.php:4261 lib/rrd.php:4273 lib/spikekill.php:301
 #: package_import.php:523 package_import.php:601 utilities.php:211
 #: utilities.php:212 utilities.php:2753
@@ -14043,7 +14043,7 @@ msgstr "Събития"
 msgid "Send Report"
 msgstr "Изпрати доклад"
 
-#: lib/html_reports.php:1644 lib/import.php:2924 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:2934 user_admin.php:1776
 msgid "[new]"
 msgstr "[Ново]"
 
@@ -14282,109 +14282,113 @@ msgstr "Грешка при проверката за променлива %s с
 msgid "Validation Error"
 msgstr "Валидиране на грешка"
 
-#: lib/import.php:695 lib/import.php:714
+#: lib/import.php:328
+msgid "Legacy system input fields and mappings will be checked for repairs only when the template is imported."
+msgstr ""
+
+#: lib/import.php:705 lib/import.php:724
 msgid "written"
 msgstr "писмен"
 
-#: lib/import.php:697
+#: lib/import.php:707
 msgid "not written"
 msgstr ""
 
-#: lib/import.php:700
+#: lib/import.php:710
 msgid "could not open"
 msgstr "не можа да се отвори"
 
-#: lib/import.php:706
+#: lib/import.php:716
 msgid "not exists"
 msgstr "не съществува"
 
-#: lib/import.php:709
+#: lib/import.php:719
 msgid "not writable"
 msgstr "Презаписваща"
 
-#: lib/import.php:1937 lib/import.php:1958
+#: lib/import.php:1947 lib/import.php:1968
 #, php-format
 msgid "New Graph Template: %s"
 msgstr "Графика [Шаблон: %s]"
 
-#: lib/import.php:1972 lib/import.php:1984
+#: lib/import.php:1982 lib/import.php:1994
 #, php-format
 msgid "New Data Query: %s"
 msgstr "Заявка за данни [ %s]"
 
-#: lib/import.php:2621
+#: lib/import.php:2631
 msgid "Unknown Field"
 msgstr "Неизвестно поле"
 
-#: lib/import.php:2837
+#: lib/import.php:2847
 msgid "Updated"
 msgstr "Обновяване"
 
-#: lib/import.php:2841
+#: lib/import.php:2851
 msgid "Damaged"
 msgstr "Източник на данни, графика"
 
-#: lib/import.php:2843 package_import.php:593
+#: lib/import.php:2853 package_import.php:593
 msgid "Unchanged"
 msgstr "[непроменен]"
 
-#: lib/import.php:2879
+#: lib/import.php:2889
 msgid "Import Preview Results"
 msgstr "Резултати от импортиране на импортиране"
 
-#: lib/import.php:2879
+#: lib/import.php:2889
 msgid "Import Results"
 msgstr "Резултати от импортиране"
 
-#: lib/import.php:2883
+#: lib/import.php:2893
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Kadupul ще направи следните промени, ако пакетът беше импортиран:"
 
-#: lib/import.php:2885
+#: lib/import.php:2895
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "Kadupul е внесъл следните елементи за пакета:"
 
-#: lib/import.php:2888
+#: lib/import.php:2898
 msgid "Package Files"
 msgstr "Файлове на пакети"
 
-#: lib/import.php:2892
+#: lib/import.php:2902
 msgid "[preview] "
 msgstr "Преглед"
 
-#: lib/import.php:2897
+#: lib/import.php:2907
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "Kadupul ще направи следните промени, ако шаблонът е импортиран:"
 
-#: lib/import.php:2899
+#: lib/import.php:2909
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "Kadupul е импортирал следните елементи за шаблона:"
 
-#: lib/import.php:2914
+#: lib/import.php:2924
 msgid "[success]"
 msgstr "Успешно!"
 
-#: lib/import.php:2916
+#: lib/import.php:2926
 msgid "[fail]"
 msgstr "Скъсан"
 
-#: lib/import.php:2918
+#: lib/import.php:2928
 msgid "[preview]"
 msgstr "Преглед"
 
-#: lib/import.php:2922
+#: lib/import.php:2932
 msgid "[updated]"
 msgstr "Обновена на"
 
-#: lib/import.php:2926
+#: lib/import.php:2936
 msgid "[unchanged]"
 msgstr "[непроменен]"
 
-#: lib/import.php:2962
+#: lib/import.php:2972
 msgid "Found Dependency:"
 msgstr "Намерена зависимост:"
 
-#: lib/import.php:2964
+#: lib/import.php:2974
 msgid "Unmet Dependency:"
 msgstr "Неудовлетворена зависимост:"
 

@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Defer legacy system input-field and mapping repairs during template and package previews, and describe the checks as pending until a real import (#215).
+
 - Reject malformed template XML before processing objects, and return status 1 with diagnostics for failed CLI imports and previews while preserving returned per-object results and handling empty files without a PHP fatal error (#216).
 
 - Render plain-template CLI previews as text with proposed-change wording instead of HTML import-completion output (#217).

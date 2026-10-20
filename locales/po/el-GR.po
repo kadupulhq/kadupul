@@ -3995,7 +3995,7 @@ msgstr "Προσαρμοσμένα δεδομένα"
 msgid "Data Source Item %s"
 msgstr "Στοιχείο προέλευσης δεδομένων %s"
 
-#: data_sources.php:1267 data_templates.php:817 lib/import.php:2839
+#: data_sources.php:1267 data_templates.php:817 lib/import.php:2849
 #: package_import.php:599
 msgid "New"
 msgstr "Νέο"
@@ -11881,7 +11881,7 @@ msgid "Recovering"
 msgstr "αναληπτικό"
 
 #: lib/api_automation.php:33 lib/auth.php:3085 lib/clog_webapi.php:856
-#: lib/html_utility.php:1362 lib/import.php:382 lib/plugins.php:1499
+#: lib/html_utility.php:1362 lib/import.php:392 lib/plugins.php:1499
 #: lib/plugins.php:1500 lib/rrd.php:4261 lib/rrd.php:4273 lib/spikekill.php:301
 #: package_import.php:523 package_import.php:601 utilities.php:211
 #: utilities.php:212 utilities.php:2753
@@ -14036,7 +14036,7 @@ msgstr "Εκδηλώσεις"
 msgid "Send Report"
 msgstr "Αποστολή αναφοράς"
 
-#: lib/html_reports.php:1644 lib/import.php:2924 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:2934 user_admin.php:1776
 msgid "[new]"
 msgstr "[νέος]"
 
@@ -14275,109 +14275,113 @@ msgstr "Σφάλμα επικύρωσης για μεταβλητή %s με τι
 msgid "Validation Error"
 msgstr "Σφάλμα επικύρωσης"
 
-#: lib/import.php:695 lib/import.php:714
+#: lib/import.php:328
+msgid "Legacy system input fields and mappings will be checked for repairs only when the template is imported."
+msgstr ""
+
+#: lib/import.php:705 lib/import.php:724
 msgid "written"
 msgstr "γραπτός"
 
-#: lib/import.php:697
+#: lib/import.php:707
 msgid "not written"
 msgstr ""
 
-#: lib/import.php:700
+#: lib/import.php:710
 msgid "could not open"
 msgstr "δεν μπορούσε να ανοίξει"
 
-#: lib/import.php:706
+#: lib/import.php:716
 msgid "not exists"
 msgstr "δεν υπάρχει"
 
-#: lib/import.php:709
+#: lib/import.php:719
 msgid "not writable"
 msgstr "Εγγράψιμος"
 
-#: lib/import.php:1937 lib/import.php:1958
+#: lib/import.php:1947 lib/import.php:1968
 #, php-format
 msgid "New Graph Template: %s"
 msgstr "Γράφημα [Πρότυπο: %s]"
 
-#: lib/import.php:1972 lib/import.php:1984
+#: lib/import.php:1982 lib/import.php:1994
 #, php-format
 msgid "New Data Query: %s"
 msgstr "Ερώτημα δεδομένων [ %s]"
 
-#: lib/import.php:2621
+#: lib/import.php:2631
 msgid "Unknown Field"
 msgstr "Άγνωστο πεδίο"
 
-#: lib/import.php:2837
+#: lib/import.php:2847
 msgid "Updated"
 msgstr "Ενημέρωση"
 
-#: lib/import.php:2841
+#: lib/import.php:2851
 msgid "Damaged"
 msgstr "Πηγή δεδομένων, γράφημα"
 
-#: lib/import.php:2843 package_import.php:593
+#: lib/import.php:2853 package_import.php:593
 msgid "Unchanged"
 msgstr "Καμία αλλαγή"
 
-#: lib/import.php:2879
+#: lib/import.php:2889
 msgid "Import Preview Results"
 msgstr "Εισαγωγή προεπισκόπησης"
 
-#: lib/import.php:2879
+#: lib/import.php:2889
 msgid "Import Results"
 msgstr "Εισαγωγή Αποτελεσμάτων"
 
-#: lib/import.php:2883
+#: lib/import.php:2893
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Ο Kadupul θα πραγματοποιήσει τις ακόλουθες αλλαγές εάν εισήχθη το πακέτο:"
 
-#: lib/import.php:2885
+#: lib/import.php:2895
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "Ο Kadupul εισήγαγε τα παρακάτω στοιχεία για τη Συσκευασία:"
 
-#: lib/import.php:2888
+#: lib/import.php:2898
 msgid "Package Files"
 msgstr "Αρχεία πακέτων"
 
-#: lib/import.php:2892
+#: lib/import.php:2902
 msgid "[preview] "
 msgstr "Προεπισκόπηση"
 
-#: lib/import.php:2897
+#: lib/import.php:2907
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "Ο Kadupul θα πραγματοποιήσει τις παρακάτω αλλαγές εάν το Πρότυπο εισήχθη:"
 
-#: lib/import.php:2899
+#: lib/import.php:2909
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "Ο Kadupul εισήγαγε τα ακόλουθα στοιχεία για το Πρότυπο:"
 
-#: lib/import.php:2914
+#: lib/import.php:2924
 msgid "[success]"
 msgstr "Επιτυχία!"
 
-#: lib/import.php:2916
+#: lib/import.php:2926
 msgid "[fail]"
 msgstr "Αποτυχία"
 
-#: lib/import.php:2918
+#: lib/import.php:2928
 msgid "[preview]"
 msgstr "Προεπισκόπηση"
 
-#: lib/import.php:2922
+#: lib/import.php:2932
 msgid "[updated]"
 msgstr "Ενημερώθηκε"
 
-#: lib/import.php:2926
+#: lib/import.php:2936
 msgid "[unchanged]"
 msgstr "Καμία αλλαγή"
 
-#: lib/import.php:2962
+#: lib/import.php:2972
 msgid "Found Dependency:"
 msgstr "Βρήκε Εξάρτηση:"
 
-#: lib/import.php:2964
+#: lib/import.php:2974
 msgid "Unmet Dependency:"
 msgstr "Εξατομικευμένη εξάρτηση:"
 

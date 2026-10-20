@@ -4556,7 +4556,7 @@ msgstr "自定義數據"
 msgid "Data Source Item %s"
 msgstr "數據源項%s"
 
-#: data_sources.php:1267 data_templates.php:817 lib/import.php:2839
+#: data_sources.php:1267 data_templates.php:817 lib/import.php:2849
 #: package_import.php:599
 #, fuzzy
 msgid "New"
@@ -13958,7 +13958,7 @@ msgid "Recovering"
 msgstr "正在復原"
 
 #: lib/api_automation.php:33 lib/auth.php:3085 lib/clog_webapi.php:856
-#: lib/html_utility.php:1362 lib/import.php:382 lib/plugins.php:1499
+#: lib/html_utility.php:1362 lib/import.php:392 lib/plugins.php:1499
 #: lib/plugins.php:1500 lib/rrd.php:4261 lib/rrd.php:4273 lib/spikekill.php:301
 #: package_import.php:523 package_import.php:601 utilities.php:211
 #: utilities.php:212 utilities.php:2753
@@ -16450,7 +16450,7 @@ msgstr "活動"
 msgid "Send Report"
 msgstr "發送報告"
 
-#: lib/html_reports.php:1644 lib/import.php:2924 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:2934 user_admin.php:1776
 #, fuzzy
 msgid "[new]"
 msgstr "[新]"
@@ -16723,128 +16723,132 @@ msgstr "變量%s的驗證錯誤，值為%s。有關詳細信息，請參閱下�
 msgid "Validation Error"
 msgstr "驗證錯誤"
 
-#: lib/import.php:695 lib/import.php:714
+#: lib/import.php:328
+msgid "Legacy system input fields and mappings will be checked for repairs only when the template is imported."
+msgstr ""
+
+#: lib/import.php:705 lib/import.php:724
 #, fuzzy
 msgid "written"
 msgstr "書面"
 
-#: lib/import.php:697
+#: lib/import.php:707
 msgid "not written"
 msgstr ""
 
-#: lib/import.php:700
+#: lib/import.php:710
 #, fuzzy
 msgid "could not open"
 msgstr "打不開"
 
-#: lib/import.php:706
+#: lib/import.php:716
 #, fuzzy
 msgid "not exists"
 msgstr "不存在"
 
-#: lib/import.php:709
+#: lib/import.php:719
 #, fuzzy
 msgid "not writable"
 msgstr "可寫入"
 
-#: lib/import.php:1937 lib/import.php:1958
+#: lib/import.php:1947 lib/import.php:1968
 #, fuzzy, php-format
 msgid "New Graph Template: %s"
 msgstr "圖[模板：%s]"
 
-#: lib/import.php:1972 lib/import.php:1984
+#: lib/import.php:1982 lib/import.php:1994
 #, fuzzy, php-format
 msgid "New Data Query: %s"
 msgstr "數據查詢[%s]"
 
-#: lib/import.php:2621
+#: lib/import.php:2631
 #, fuzzy
 msgid "Unknown Field"
 msgstr "未知的領域"
 
-#: lib/import.php:2837
+#: lib/import.php:2847
 msgid "Updated"
 msgstr "更新"
 
-#: lib/import.php:2841
+#: lib/import.php:2851
 msgid "Damaged"
 msgstr "數據源，圖表"
 
-#: lib/import.php:2843 package_import.php:593
+#: lib/import.php:2853 package_import.php:593
 msgid "Unchanged"
 msgstr "[不變]"
 
-#: lib/import.php:2879
+#: lib/import.php:2889
 #, fuzzy
 msgid "Import Preview Results"
 msgstr "導入預覽結果"
 
-#: lib/import.php:2879
+#: lib/import.php:2889
 #, fuzzy
 msgid "Import Results"
 msgstr "匯入結果"
 
-#: lib/import.php:2883
+#: lib/import.php:2893
 #, fuzzy
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "如果導入包，Kadupul將進行以下更改："
 
-#: lib/import.php:2885
+#: lib/import.php:2895
 #, fuzzy
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "Kadupul為包裝導入了以下物品："
 
-#: lib/import.php:2888
+#: lib/import.php:2898
 #, fuzzy
 msgid "Package Files"
 msgstr "包文件"
 
-#: lib/import.php:2892
+#: lib/import.php:2902
 #, fuzzy
 msgid "[preview] "
 msgstr "預覽 "
 
-#: lib/import.php:2897
+#: lib/import.php:2907
 #, fuzzy
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "如果導入模板，Kadupul將進行以下更改："
 
-#: lib/import.php:2899
+#: lib/import.php:2909
 #, fuzzy
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "Kadupul為模板導入了以下項目："
 
-#: lib/import.php:2914
+#: lib/import.php:2924
 #, fuzzy
 msgid "[success]"
 msgstr "成功！"
 
-#: lib/import.php:2916
+#: lib/import.php:2926
 #, fuzzy
 msgid "[fail]"
 msgstr "失敗"
 
-#: lib/import.php:2918
+#: lib/import.php:2928
 #, fuzzy
 msgid "[preview]"
 msgstr "預覽"
 
-#: lib/import.php:2922
+#: lib/import.php:2932
 #, fuzzy
 msgid "[updated]"
 msgstr "已更新"
 
-#: lib/import.php:2926
+#: lib/import.php:2936
 #, fuzzy
 msgid "[unchanged]"
 msgstr "[不變]"
 
-#: lib/import.php:2962
+#: lib/import.php:2972
 #, fuzzy
 msgid "Found Dependency:"
 msgstr "找到依賴關係："
 
-#: lib/import.php:2964
+#: lib/import.php:2974
 #, fuzzy
 msgid "Unmet Dependency:"
 msgstr "未滿足的依賴關係："
