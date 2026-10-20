@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Retain offline collector output while children run and after completion, recover both local sample queues after acknowledgement, and report PHP collector queue-write failures (#759).
+
 - Stop collector synchronization on failed table copies, cleanup, or statistics updates; retain pending full-sync state and report failure instead of completion (#760).
 
 - Defer legacy system input-field and mapping repairs during template and package previews, and describe the checks as pending until a real import (#215).

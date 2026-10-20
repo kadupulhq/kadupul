@@ -2505,8 +2505,8 @@ msgid "No Tree Rules Found"
 msgstr "Не са намерени правила за дърво"
 
 #: cactid.php:27 help.php:54 lib/functions.php:6709 lib/functions.php:6779
-#: lib/functions.php:6875 lib/functions.php:7536 poller.php:417 poller.php:584
-#: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
+#: lib/functions.php:6875 lib/functions.php:7536 poller.php:416 poller.php:583
+#: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:387
 #, fuzzy
 msgid "Kadupul System Warning"
@@ -5259,11 +5259,11 @@ msgstr "Само Kadupul Администратори с привилегия з
 msgid "There is an Installation or Upgrade in progress."
 msgstr "В процес на изпълнение е инсталация или надстройка."
 
-#: include/global.php:580
+#: include/global.php:583
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "Последният път, когато този Data Collector е бил напълно синхронизиран с главния Kadupul сайт."
 
-#: include/global.php:584
+#: include/global.php:587
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "Основният събирач на данни е преминал към статус офлайн или възстановяване"
 
@@ -17099,50 +17099,50 @@ msgstr "Приставката не е съвместима"
 msgid "Enable Plugin Locally"
 msgstr "Активиране на приставката"
 
-#: poller.php:417
+#: poller.php:416
 #, php-format
 msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
 msgstr "ПРЕДУПРЕЖДЕНИЕ: %s не е в синхрон с интервала на цветовете за идентификатор на цветовете %d!  Интервалът на цветовете е %d секунди, с максимум %d секунди, но %d секунди са изминали от последното гласуване!"
 
-#: poller.php:584
+#: poller.php:583
 #, php-format
 msgid "WARNING: There are %d processes detected as overrunning a polling cycle for poller id %d, please investigate."
 msgstr "ПРЕДУПРЕЖДЕНИЕ: Има %d процеса, открити като превишаване на цикъла на гласуване за идентификатор на потребител %d, моля, проучете."
 
-#: poller.php:666
+#: poller.php:665
 #, php-format
 msgid "WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s."
 msgstr "ПРЕДУПРЕЖДЕНИЕ: Изходната таблица на полюса не е празна за идентификатор на полюса %d.  Проблеми: %d, %s."
 
-#: poller.php:719
+#: poller.php:718
 #, php-format
 msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
 msgstr "ГРЕШКА: Пътят на гръбначния стълб: %s е невалиден за POLER ID %d.  Poller не може да продължи!"
 
-#: poller.php:880
+#: poller.php:873
 #, php-format
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "Максималното време на изпълнение от %d секунди е превишено за идентификатор на цветен прашец %d. Излизане."
 
-#: poller.php:1001
+#: poller.php:994
 #, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
 msgstr "ПРЕДУПРЕЖДЕНИЕ: Цикълът на гласуване на Kadupul надхвърля интервала на Poller от"
 
-#: poller.php:1039
+#: poller.php:1032
 #, php-format
 msgid "WARNING: PollerID:%s with Name:%s is in Heartbeat Status"
 msgstr "ПРЕДУПРЕЖДЕНИЕ: PollerID:%s с име:%s е в състояние на сърдечен ритъм"
 
-#: poller.php:1041
+#: poller.php:1034
 msgid "Poller in Heartbeat Mode"
 msgstr "Poller в режим на сърдечен ритъм"
 
-#: poller.php:1333
+#: poller.php:1326
 msgid "Kadupul System Notification"
 msgstr "Kadupul System Utilities"
 
-#: poller.php:1333
+#: poller.php:1326
 #, fuzzy
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
 msgstr "ЗАБЕЛЕЖКА: Добавен е втори колектор за данни на Kadupul. Затова, позволявайки автоматично усилване!"

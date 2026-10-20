@@ -2506,8 +2506,8 @@ msgid "No Tree Rules Found"
 msgstr "Не знайдено Правил Дерев"
 
 #: cactid.php:27 help.php:54 lib/functions.php:6709 lib/functions.php:6779
-#: lib/functions.php:6875 lib/functions.php:7536 poller.php:417 poller.php:584
-#: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
+#: lib/functions.php:6875 lib/functions.php:7536 poller.php:416 poller.php:583
+#: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:387
 msgid "Kadupul System Warning"
 msgstr "Системне Попередження Kadupul"
@@ -5290,11 +5290,11 @@ msgstr ""
 msgid "There is an Installation or Upgrade in progress."
 msgstr ""
 
-#: include/global.php:580
+#: include/global.php:583
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr ""
 
-#: include/global.php:584
+#: include/global.php:587
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr ""
 
@@ -17093,49 +17093,49 @@ msgstr ""
 msgid "Enable Plugin Locally"
 msgstr ""
 
-#: poller.php:417
+#: poller.php:416
 #, php-format
 msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
 msgstr ""
 
-#: poller.php:584
+#: poller.php:583
 #, php-format
 msgid "WARNING: There are %d processes detected as overrunning a polling cycle for poller id %d, please investigate."
 msgstr ""
 
-#: poller.php:666
+#: poller.php:665
 #, php-format
 msgid "WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s."
 msgstr ""
 
-#: poller.php:719
+#: poller.php:718
 #, php-format
 msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
 msgstr ""
 
-#: poller.php:880
+#: poller.php:873
 #, php-format
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr ""
 
-#: poller.php:1001
+#: poller.php:994
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
 msgstr ""
 
-#: poller.php:1039
+#: poller.php:1032
 #, php-format
 msgid "WARNING: PollerID:%s with Name:%s is in Heartbeat Status"
 msgstr ""
 
-#: poller.php:1041
+#: poller.php:1034
 msgid "Poller in Heartbeat Mode"
 msgstr ""
 
-#: poller.php:1333
+#: poller.php:1326
 msgid "Kadupul System Notification"
 msgstr ""
 
-#: poller.php:1333
+#: poller.php:1326
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
 msgstr ""
 

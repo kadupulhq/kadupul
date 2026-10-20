@@ -10,6 +10,10 @@ if (PHP_SAPI !== 'cli') {
 $root = getenv('BOOST_RECOVERY_ROOT');
 $directory = getenv('BOOST_RECOVERY_DIRECTORY');
 $scenario = getenv('BOOST_RECOVERY_SCENARIO');
+$sourceTable = getenv('BOOST_RECOVERY_SOURCE_TABLE') ?: 'poller_output_boost';
+if (!in_array($sourceTable, array('poller_output_boost', 'poller_output'), true)) {
+    throw new RuntimeException('Invalid fixture source queue');
+}
 if (getenv('BOOST_RECOVERY_COVERAGE') === '1') {
     define('RRD_TEST_COVERAGE_DIRECTORY', $directory);
     define('RRD_TEST_CLI_COVERAGE_COPY', $directory . '/poller_recovery.php');
@@ -36,6 +40,7 @@ $remote = $remote_db_cnn_id;
 $tablePrefix = $mysql ? 'CREATE TEMPORARY TABLE ' : 'CREATE TABLE ';
 foreach (array($local, $remote) as $connection) {
     $connection->exec($tablePrefix . 'poller_output_boost (local_data_id INTEGER, rrd_name VARCHAR(32), time DATETIME, output VARCHAR(255), PRIMARY KEY(local_data_id,rrd_name,time))' . ($mysql ? ' DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci' : ''));
+    $connection->exec($tablePrefix . 'poller_output (local_data_id INTEGER, rrd_name VARCHAR(32), time DATETIME, output VARCHAR(255), PRIMARY KEY(local_data_id,rrd_name,time))' . ($mysql ? ' DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci' : ''));
     $connection->exec($tablePrefix . 'settings (name VARCHAR(64) PRIMARY KEY, value VARCHAR(255))');
     $connection->exec($tablePrefix . 'poller (id INTEGER PRIMARY KEY, status INTEGER)');
     $connection->exec('INSERT INTO poller (id,status) VALUES (2,2)');
@@ -47,7 +52,7 @@ $count = match ($scenario) {
     'final-failure', 'oversized', 'exact-boundary', 'full-packet-exact', 'envelope-overflow' => 1,
     default => 3,
 };
-$insert = $local->prepare('INSERT INTO poller_output_boost (local_data_id,rrd_name,time,output) VALUES (?,?,?,?)');
+$insert = $local->prepare('INSERT INTO ' . $sourceTable . ' (local_data_id,rrd_name,time,output) VALUES (?,?,?,?)');
 for ($i = 1; $i <= $count; $i++) {
     $row = array('local_data_id' => $i, 'rrd_name' => 'in', 'time' => '2026-01-01 00:00:01', 'output' => 'sample' . $i);
     if (in_array($scenario, array('case-change','case-retry'), true)) {
@@ -60,6 +65,14 @@ for ($i = 1; $i <= $count; $i++) {
     }
     $insert->execute(array_values($row));
     $rows[] = $row;
+}
+// Keep the other queue independent during helper calls; main recovery drains both.
+$otherTable = $sourceTable === 'poller_output' ? 'poller_output_boost' : 'poller_output';
+if (!str_starts_with($scenario, 'main-')) {
+    $otherInsert = $local->prepare('INSERT INTO ' . $otherTable . ' VALUES (?,?,?,?)');
+    $otherInsert->execute(array(1, 'in', '2026-01-01 00:00:01', 'other queue'));
+} elseif (str_starts_with($scenario, 'main-both-')) {
+    $local->exec('INSERT INTO ' . $otherTable . ' SELECT * FROM ' . $sourceTable);
 }
 if ($scenario === 'main-success') {
     // Resume retained samples after the previous worker exited, including an acknowledged packet.
@@ -75,7 +88,7 @@ $affected = array();
 $insertCalls = 0;
 $deleteCalls = 0;
 $failInsert = match ($scenario) {
-    'final-failure', 'main-failure' => 1,
+    'final-failure', 'main-failure', 'main-both-failure' => 1,
     'partial-failure', 'retry' => 2,
     default => 0,
 };
@@ -114,20 +127,20 @@ function recovery_native_statement($sql, $params, $connection)
             $sql = str_replace(' ON DUPLICATE KEY UPDATE output=VALUES(output)', ' ON CONFLICT(local_data_id,rrd_name,time) DO UPDATE SET output=excluded.output', $sql);
         }
     }
-    if (str_starts_with($sql, 'DELETE FROM poller_output_boost')) {
+    if (str_starts_with($sql, 'DELETE FROM ' . $GLOBALS['sourceTable'] . ' WHERE')) {
         $GLOBALS['deleteCalls']++;
         if ($GLOBALS['scenario'] === 'delete-failure') {
             return false;
         }
         if ($GLOBALS['deleteCalls'] === 1 && in_array($GLOBALS['scenario'], array('late-row', 'changed-row', 'case-change', 'space-change', 'case-retry', 'space-retry'), true)) {
-            $GLOBALS['local']->exec("INSERT INTO poller_output_boost VALUES (999,'late','2025-01-01 00:00:01','late value')");
+            $GLOBALS['local']->exec("INSERT INTO " . $GLOBALS['sourceTable'] . " VALUES (999,'late','2025-01-01 00:00:01','late value')");
             if (str_starts_with($GLOBALS['scenario'], 'case-') || str_starts_with($GLOBALS['scenario'], 'space-')) {
                 $replacement = str_starts_with($GLOBALS['scenario'], 'case-') ? 'u' : '42 ';
-                $change = $GLOBALS['local']->prepare('UPDATE poller_output_boost SET output=? WHERE local_data_id=2');
+                $change = $GLOBALS['local']->prepare('UPDATE ' . $GLOBALS['sourceTable'] . ' SET output=? WHERE local_data_id=2');
                 $change->execute(array($replacement));
             }
             if ($GLOBALS['scenario'] === 'changed-row') {
-                $GLOBALS['local']->exec("UPDATE poller_output_boost SET output = 'changed value' WHERE local_data_id = 2");
+                $GLOBALS['local']->exec("UPDATE " . $GLOBALS['sourceTable'] . " SET output = 'changed value' WHERE local_data_id = 2");
             }
         }
     }
@@ -153,7 +166,7 @@ function db_affected_rows($connection = false)
 }
 function db_fetch_cell($sql, $column = '', $log = true, $connection = false)
 {
-    if ($GLOBALS['scenario'] === 'main-max-failure' && str_contains($sql, 'MAX(time)')) {
+    if ($GLOBALS['scenario'] === 'main-max-failure' && str_contains($sql, 'MAX(time)') && str_contains($sql, 'FROM ' . $GLOBALS['sourceTable'])) {
         return false;
     }
     return recovery_native_statement($sql, array(), $connection)->fetchColumn();
@@ -167,14 +180,14 @@ function db_fetch_row($sql, $log = true, $connection = false)
 }
 function db_fetch_assoc_prepared($sql, $params = array(), $log = true, $connection = false)
 {
-    if ($GLOBALS['scenario'] === 'main-read-failure' && str_contains($sql, 'poller_output_boost')) {
+    if ($GLOBALS['scenario'] === 'main-read-failure' && str_contains($sql, 'FROM ' . $GLOBALS['sourceTable'])) {
         return false;
     }
     return recovery_native_statement($sql, $params, $connection)->fetchAll(PDO::FETCH_ASSOC);
 }
 register_shutdown_function(function () use ($local, $remote, $directory) {
-    $read = static fn($connection) => $connection->query('SELECT local_data_id,rrd_name,time,output FROM poller_output_boost ORDER BY local_data_id')->fetchAll(PDO::FETCH_ASSOC);
-    $result = array('local' => $read($local), 'remote' => $read($remote), 'queries' => $GLOBALS['queries'], 'rejectedPackets' => $GLOBALS['rejectedPackets'], 'logs' => $GLOBALS['logs'], 'insertCalls' => $GLOBALS['insertCalls'], 'deleteCalls' => $GLOBALS['deleteCalls'], 'success' => $GLOBALS['success'] ?? null, 'records' => $GLOBALS['records_inserted'] ?? 0, 'retryBefore' => $GLOBALS['retryBefore'] ?? null, 'limit' => $GLOBALS['limit'] ?? 1000000, 'status' => (int) $remote->query('SELECT status FROM poller WHERE id=2')->fetchColumn(), 'pid' => $local->query("SELECT value FROM settings WHERE name='recovery_pid'")->fetchColumn());
+    $read = static fn($connection, $table) => $connection->query('SELECT local_data_id,rrd_name,time,output FROM ' . $table . ' ORDER BY local_data_id')->fetchAll(PDO::FETCH_ASSOC);
+    $result = array('local' => $read($local, $GLOBALS['sourceTable']), 'remote' => $read($remote, 'poller_output_boost'), 'otherLocal' => $read($local, $GLOBALS['otherTable']), 'queries' => $GLOBALS['queries'], 'rejectedPackets' => $GLOBALS['rejectedPackets'], 'logs' => $GLOBALS['logs'], 'insertCalls' => $GLOBALS['insertCalls'], 'deleteCalls' => $GLOBALS['deleteCalls'], 'success' => $GLOBALS['success'] ?? null, 'records' => $GLOBALS['records_inserted'] ?? 0, 'retryBefore' => $GLOBALS['retryBefore'] ?? null, 'limit' => $GLOBALS['limit'] ?? 1000000, 'status' => (int) $remote->query('SELECT status FROM poller WHERE id=2')->fetchColumn(), 'pid' => $local->query("SELECT value FROM settings WHERE name='recovery_pid'")->fetchColumn());
     file_put_contents($directory . '/result.json', json_encode($result, JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));
 });
 if (str_starts_with($scenario, 'main-')) {
@@ -208,12 +221,12 @@ if ($scenario === 'oversized') {
     }
 }
 $records_inserted = 0;
-$success = poller_recovery_transfer_rows($rows, $limit, $scenario === 'missing-remote' ? false : $remote, $scenario === 'missing-local' ? false : $local, $records_inserted);
+$success = poller_recovery_transfer_rows($rows, $limit, $scenario === 'missing-remote' ? false : $remote, $scenario === 'missing-local' ? false : $local, $records_inserted, $sourceTable);
 if (in_array($scenario, array('retry','case-retry','space-retry'), true)) {
-    $retryBefore = array('success' => $success, 'records' => $records_inserted, 'local' => (int) $local->query('SELECT count(*) FROM poller_output_boost')->fetchColumn(), 'remote' => (int) $remote->query('SELECT count(*) FROM poller_output_boost')->fetchColumn());
+    $retryBefore = array('success' => $success, 'records' => $records_inserted, 'local' => (int) $local->query('SELECT count(*) FROM ' . $sourceTable)->fetchColumn(), 'remote' => (int) $remote->query('SELECT count(*) FROM poller_output_boost')->fetchColumn());
     $failInsert = 0;
     $records_inserted = 0;
-    $rows = $local->query('SELECT * FROM poller_output_boost ORDER BY local_data_id')->fetchAll(PDO::FETCH_ASSOC);
-    $success = poller_recovery_transfer_rows($rows, $limit, $remote, $local, $records_inserted);
+    $rows = $local->query('SELECT * FROM ' . $sourceTable . ' ORDER BY local_data_id')->fetchAll(PDO::FETCH_ASSOC);
+    $success = poller_recovery_transfer_rows($rows, $limit, $remote, $local, $records_inserted, $sourceTable);
 }
 exit;

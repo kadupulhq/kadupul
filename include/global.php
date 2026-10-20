@@ -317,7 +317,10 @@ if ($config['poller_id'] > 1 || isset($rdatabase_hostname)) {
         $boost_records = db_fetch_cell('SELECT COUNT(*)
 			FROM poller_output_boost', '', true, $local_db_cnn_id);
 
-        if ($boost_records > 0) {
+        $output_records = db_fetch_cell('SELECT EXISTS(SELECT 1 FROM poller_output LIMIT 1)', '', true, $local_db_cnn_id);
+
+        // An unreadable queue is not evidence that recovery has finished.
+        if ($boost_records === false || $output_records === false || $boost_records > 0 || $output_records > 0) {
             $config['connection'] = 'recovery';
         }
     }

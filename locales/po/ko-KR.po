@@ -2509,8 +2509,8 @@ msgid "No Tree Rules Found"
 msgstr "트리 규칙 없음"
 
 #: cactid.php:27 help.php:54 lib/functions.php:6709 lib/functions.php:6779
-#: lib/functions.php:6875 lib/functions.php:7536 poller.php:417 poller.php:584
-#: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
+#: lib/functions.php:6875 lib/functions.php:7536 poller.php:416 poller.php:583
+#: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:387
 #, fuzzy
 msgid "Kadupul System Warning"
@@ -5236,11 +5236,11 @@ msgstr "현재 설치 / 업그레이드 권한이있는 Kadupul 관리자 만 �
 msgid "There is an Installation or Upgrade in progress."
 msgstr "진행중인 설치 또는 업그레이드가 있습니다."
 
-#: include/global.php:580
+#: include/global.php:583
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "이 데이터 수집기가 Kadupul 주요 사이트와 완전히 동기화 된 마지막 시간입니다."
 
-#: include/global.php:584
+#: include/global.php:587
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "메인 데이터 수집기가 오프라인 또는 복구 중 상태로 전환되었습니다"
 
@@ -17075,51 +17075,51 @@ msgstr "플러그인이 호환되지 않습니다."
 msgid "Enable Plugin Locally"
 msgstr "플러그인 사용"
 
-#: poller.php:417
+#: poller.php:416
 #, php-format
 msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
 msgstr "경고: %s 이 (가) 폴러 ID %d 의 폴러 간격과 동기화되지 않았습니다! 폴러 간격은 %d 초이며 최대 %d 초이지만 마지막 설문 조사 이후 %d 초가 지났습니다!"
 
-#: poller.php:584
+#: poller.php:583
 #, php-format
 msgid "WARNING: There are %d processes detected as overrunning a polling cycle for poller id %d, please investigate."
 msgstr "경고: 폴러 ID %d 에 대한 폴링 사이클을 초과하는 것으로 탐지된 프로세스가 %d 개 있습니다. 조사하십시오."
 
-#: poller.php:666
+#: poller.php:665
 #, php-format
 msgid "WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s."
 msgstr "경고: 폴러 ID %d 에 대해 폴러 출력 테이블이 비어 있지 않습니다. 문제: %d, %s."
 
-#: poller.php:719
+#: poller.php:718
 #, php-format
 msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
 msgstr "오류: 척추 경로: %s 이 (가) 폴러 ID %d 에 유효하지 않습니다. 투표자는 계속할 수 없습니다!"
 
-#: poller.php:880
+#: poller.php:873
 #, php-format
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "폴러 ID %d 의 최대 런타임 %d 초를 초과했습니다. 종료 중."
 
-#: poller.php:1001
+#: poller.php:994
 #, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
 msgstr "경고: Kadupul 폴링 주기가 폴러 간격을 초과했습니다."
 
-#: poller.php:1039
+#: poller.php:1032
 #, php-format
 msgid "WARNING: PollerID:%s with Name:%s is in Heartbeat Status"
 msgstr "경고: 이름: %s 의 PollerID: %s 이 (가) 하트비트 상태입니다"
 
-#: poller.php:1041
+#: poller.php:1034
 msgid "Poller in Heartbeat Mode"
 msgstr "하트비트 모드의 폴러"
 
-#: poller.php:1333
+#: poller.php:1326
 #, fuzzy
 msgid "Kadupul System Notification"
 msgstr "Kadupul 시스템 유틸리티"
 
-#: poller.php:1333
+#: poller.php:1326
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
 msgstr "참고 : 두 번째 Kadupul 데이터 수집기가 추가되었습니다. 따라서 자동으로 부스트를 활성화하십시오!"
 

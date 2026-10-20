@@ -2504,8 +2504,8 @@ msgid "No Tree Rules Found"
 msgstr "Aucune règle d'arbre trouvée"
 
 #: cactid.php:27 help.php:54 lib/functions.php:6709 lib/functions.php:6779
-#: lib/functions.php:6875 lib/functions.php:7536 poller.php:417 poller.php:584
-#: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
+#: lib/functions.php:6875 lib/functions.php:7536 poller.php:416 poller.php:583
+#: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:387
 msgid "Kadupul System Warning"
 msgstr "Avertissement du système Kadupul"
@@ -5257,11 +5257,11 @@ msgstr "Seuls les administrateurs Kadupul disposant des droits d'installation et
 msgid "There is an Installation or Upgrade in progress."
 msgstr "Une installation ou une mise à niveau est en cours."
 
-#: include/global.php:580
+#: include/global.php:583
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "La dernière fois que ce collecteur a été entièrement synchronisé avec le site principal de Kadupul."
 
-#: include/global.php:584
+#: include/global.php:587
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "Le Collecteur de données principal est passé à un statut Hors Ligne ou En cours de récupération"
 
@@ -17080,50 +17080,50 @@ msgstr "Le plugin n'est pas compatible"
 msgid "Enable Plugin Locally"
 msgstr "Activer l'extension"
 
-#: poller.php:417
+#: poller.php:416
 #, php-format
 msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
 msgstr "AVERTISSEMENT : %s n'est pas synchronisé avec l'intervalle d'interrogation pour l'identifiant d'interrogation %d !  L'intervalle d'interrogation est de %d secondes, avec un maximum de %d secondes, mais %d secondes se sont écoulées depuis le dernier sondage !"
 
-#: poller.php:584
+#: poller.php:583
 #, php-format
 msgid "WARNING: There are %d processes detected as overrunning a polling cycle for poller id %d, please investigate."
 msgstr "AVERTISSEMENT : %d processus ont été détectés comme dépassant un cycle d'interrogation pour l'identifiant du sondeur %d, veuillez enquêter."
 
-#: poller.php:666
+#: poller.php:665
 #, php-format
 msgid "WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s."
 msgstr "AVERTISSEMENT : la table de sortie de l'interrogateur n'est pas vide pour l'identifiant de l'interrogateur %d.  Problèmes : %d, %s."
 
-#: poller.php:719
+#: poller.php:718
 #, php-format
 msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
 msgstr "ERREUR : le chemin de la colonne vertébrale : %s n'est pas valide pour l'ID du sondeur %d.  Le sondeur ne peut pas continuer !"
 
-#: poller.php:880
+#: poller.php:873
 #, php-format
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "Durée d'exécution maximale de %d secondes dépassée pour l'ID du sondeur %d. Sortie."
 
-#: poller.php:1001
+#: poller.php:994
 #, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
 msgstr "AVERTISSEMENT : le cycle d'interrogation des Kadupul a dépassé l'intervalle d'interrogation de"
 
-#: poller.php:1039
+#: poller.php:1032
 #, php-format
 msgid "WARNING: PollerID:%s with Name:%s is in Heartbeat Status"
 msgstr "AVERTISSEMENT : PollerID :%s avec le nom :%s est en état de battement de cœur"
 
-#: poller.php:1041
+#: poller.php:1034
 msgid "Poller in Heartbeat Mode"
 msgstr "Poller en mode battement de cœur"
 
-#: poller.php:1333
+#: poller.php:1326
 msgid "Kadupul System Notification"
 msgstr "Utilitaires du système Kadupul"
 
-#: poller.php:1333
+#: poller.php:1326
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
 msgstr "REMARQUE: Un deuxième collecteur de données Kadupul a été ajouté. Par conséquent, activer le boost automatiquement!"
 
