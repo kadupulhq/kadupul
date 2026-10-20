@@ -321,7 +321,7 @@ if ($auth_method != 0) {
                 $title_body = '<p>' . __('There is an Installation or Upgrade in progress.') . '</p><p>' . __('Only Kadupul Administrators with Install/Upgrade privilege may login at this time') . '</p>';
             }
             print "<!DOCTYPE html>\n";
-            print "<html>\n";
+            print "<html lang='" . html_escape(CACTI_LOCALE) . "'>\n";
             print "<head>\n";
             html_common_header($title_header);
             print "</head>\n";
@@ -330,7 +330,7 @@ if ($auth_method != 0) {
 			<div class='logoutCenter'>
 				<div class='logoutArea'>
 					<div class='cactiLogoutLogo'></div>
-					<legend>" . $title_header . "</legend>
+					<h1 class='loginHeading'>" . html_escape($title_header) . "</h1>
 					<div class='logoutTitle'>
 						" . $title_body . "
 						</p>

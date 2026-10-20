@@ -15,6 +15,20 @@ final class AuthControllerNativeCoverageTest extends TestCase
 {
     use \PestCodeCoverageCompatibility;
 
+    public function testLoginRendersAnAccessibleDocumentHeading(): void
+    {
+        $state = $this->runController(array('render_login' => true, 'request' => array('action' => '', 'login_username' => '')));
+        $document = new DOMDocument();
+        self::assertTrue($document->loadHTML($state['html'], LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING));
+        $xpath = new DOMXPath($document);
+        self::assertSame('en-US', $document->documentElement->getAttribute('lang'));
+        self::assertSame(1, $xpath->query('//h1[@class="loginHeading"]')->length);
+        self::assertSame('User Login', $xpath->evaluate('string(//h1)'));
+        self::assertSame(0, $xpath->query('//legend')->length);
+        self::assertSame(1, $xpath->query('//form[@id="login"]//input[@name="login_password"]')->length);
+        self::assertSame(array(), $state['audit']);
+    }
+
     #[\PHPUnit\Framework\Attributes\DataProvider('loginCases')]
     public function testLoginPersistsAuthenticationDecision(array $scenario, array $expected): void
     {

@@ -13,6 +13,7 @@ $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
 $directory = $argv[2];
 $mode = $scenario['mode'] ?? 'login';
+define('CACTI_LOCALE', 'en-US');
 require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
 if (isset($argv[3])) {
     $coverageSources = array('tests/Unit/Security/Auth/AuthControllerNativeCoverageTest.php', 'composer.lock', 'tests/composer.lock', 'tests/Fixtures/auth-controller-native.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/auth.php', 'auth_login.php', 'auth_changepassword.php', 'logout.php', 'lib/ldap.php', 'include/global_constants.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
@@ -197,12 +198,19 @@ function raise_message($key, ...$args)
 function api_plugin_hook($name)
 {
     $GLOBALS['events'][] = $name;
+    if (!empty($GLOBALS['scenario']['render_login']) && $name === 'login_after') {
+        // Capture the real form before unrelated session-refresh JavaScript.
+        exit;
+    }
 }
 function api_plugin_hook_function($name, ...$args)
 {
     // Stop after controller decisions, before unrelated visual theming.
-    return in_array($name, array('custom_login', 'custom_password'), true) ? OPER_MODE_RESKIN : ($args[0] ?? false);
+    return in_array($name, array('custom_login', 'custom_password'), true) && empty($GLOBALS['scenario']['render_login']) ? OPER_MODE_RESKIN : ($args[0] ?? false);
 }
+function get_selected_theme() { return 'classic'; }
+function get_current_page() { return 'login.php'; }
+function html_escape($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8'); }
 function cacti_require_post_actions($actions)
 {
     // Real method/token behavior has its own native LoginMutationCsrfTest.

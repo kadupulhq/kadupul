@@ -19,6 +19,7 @@ if (!is_array($scenario)) {
 }
 
 define('CACTI_VERSION', '1.3.0');
+define('CACTI_LOCALE', 'en-US');
 define('POLLER_VERBOSITY_NONE', 1);
 define('POLLER_VERBOSITY_LOW', 2);
 define('POLLER_VERBOSITY_MEDIUM', 3);

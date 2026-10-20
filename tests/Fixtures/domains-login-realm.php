@@ -14,6 +14,7 @@ $scenario = json_decode($argv[3], true, 512, JSON_THROW_ON_ERROR);
 define('POLLER_VERBOSITY_LOW', 2);
 define('POLLER_VERBOSITY_DEBUG', 5);
 define('OPER_MODE_NATIVE', 0);
+define('CACTI_LOCALE', 'en-US');
 define('OPER_MODE_RESKIN', 1);
 define('MESSAGE_LEVEL_WARN', 2);
 define('FILTER_VALIDATE_IS_REGEX', 99999);
