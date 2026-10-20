@@ -74,20 +74,48 @@ test('maintenance CLI entrypoints validate arguments and return status for suppo
         $source = file_get_contents($root . '/lib/import.php');
         expect($source)->toBeString();
         $renderer = test_php_function_source($source, 'import_display_results');
+        $producer = '';
+        if (in_array($scenario, array('template-malformed', 'template-empty', 'template-invalid-hash'), true)) {
+            $producer = test_php_function_source($source, 'import_xml_data')
+                . test_php_function_source($source, 'parse_xml_hash');
+            copy($root . '/lib/xml.php', $dir . '/lib/xml.php');
+        }
         $ports = <<<'PHP'
+if (!function_exists('import_xml_data')) {
 function import_xml_data($xml, ...$options) {
     if ($xml !== '<cacti/>') throw new RuntimeException('CLI did not pass the template bytes');
+    $scenario = getenv('MAINTENANCE_CLI_SCENARIO');
+    if ($scenario === 'template-noop') return array();
+    if ($scenario === 'template-false' || $scenario === 'template-preview-false') return false;
+    if ($scenario === 'template-message') { $GLOBALS['import_messages'][] = 7; return array(); }
+    if ($scenario === 'template-partial') return array('host_template' => array(
+        array('title' => 'Fixture device', 'type' => 'updated', 'result' => 'success'),
+        array('title' => 'Rejected template', 'type' => 'new', 'result' => 'fail')),
+        'files' => array('fixture.xml' => 'unchanged'));
+    if ($scenario === 'template-unchanged') return array('host_template' => array(array('title' => 'Fixture device', 'type' => 'unchanged', 'result' => 'success')));
     return array('host_template' => array(array('title' => 'Fixture device', 'type' => 'updated', 'result' => $GLOBALS['preview_only'] ? 'preview' : 'success')));
 }
+}
 function __($text, ...$args) { return $args ? vsprintf($text, $args) : $text; }
+function cacti_count($value) { return count($value); }
+function cacti_log(...$args) {}
 function html_escape($text) { return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
 function html_start_box($title, ...$options) { print '<table><tr><th>' . $title . '</th></tr>'; }
 function html_end_box() { print '</table>'; }
 $hash_type_names = array('host_template' => 'Device Templates');
 $ignorable_hashes = array();
+$messages = array(7 => array('message' => 'XML parse error.'));
+$config['library_path'] = __DIR__;
+define('POLLER_VERBOSITY_LOW', 2);
 PHP;
-        file_put_contents($dir . '/lib/import.php', '<?php ' . $renderer . $ports);
-        file_put_contents($dir . '/docs/template.xml', '<cacti/>');
+        file_put_contents($dir . '/lib/import.php', '<?php ' . $renderer . $producer . $ports);
+        $xml = match ($scenario) {
+            'template-malformed' => '<cacti>',
+            'template-empty' => '',
+            'template-invalid-hash' => '<cacti><invalid_hash><name>Invalid</name></invalid_hash></cacti>',
+            default => '<cacti/>',
+        };
+        file_put_contents($dir . '/docs/template.xml', $xml);
         $arguments[] = '--filename=' . $dir . '/docs/template.xml';
     }
 
@@ -107,7 +135,7 @@ PHP;
             throw new RuntimeException('Exit ' . $exitCode . ': ' . $output);
         }
         expect($output)->toContain($message);
-        if (str_starts_with($scenario, 'template-')) {
+        if (in_array($scenario, array('template-preview', 'template-import'), true)) {
             expect($output)->not->toContain('<table', '<tr', '<span', '</', 'class=')
                 ->and($output)->toContain('Fixture device', '[updated]');
             if ($scenario === 'template-preview') {
@@ -116,6 +144,12 @@ PHP;
             } else {
                 expect($output)->toContain('Import Results', '[success]')
                     ->not->toContain('[preview]', 'would make');
+            }
+        }
+        if (str_starts_with($scenario, 'template-')) {
+            expect($output)->not->toContain('Warning:', 'Fatal error:', '<table', '<span');
+            if ($scenario === 'template-partial') {
+                expect($output)->toContain('[success]', 'Fixture device', '[fail]', 'Rejected template');
             }
         }
 
@@ -135,6 +169,15 @@ PHP;
         }
     }
 })->with(array(
+    'malformed template XML reports failure' => array('import_template.php', array(), 1, 'XML parse error.', 'template-malformed'),
+    'empty template XML reports failure' => array('import_template.php', array(), 1, 'XML parse error.', 'template-empty'),
+    'invalid template hash reports failure without PHP warnings' => array('import_template.php', array(), 1, 'XML parse error.', 'template-invalid-hash'),
+    'false import outcome reports failure' => array('import_template.php', array(), 1, 'ERROR: Template import or preview failed', 'template-false'),
+    'false preview outcome reports failure' => array('import_template.php', array('--preview'), 1, 'ERROR: Template import or preview failed', 'template-preview-false'),
+    'message-only import failure reports diagnostics' => array('import_template.php', array(), 1, 'XML parse error.', 'template-message'),
+    'partial import failure preserves per-object results' => array('import_template.php', array(), 1, 'ERROR: Template import or preview failed', 'template-partial'),
+    'unchanged template import remains successful' => array('import_template.php', array(), 0, '[unchanged]', 'template-unchanged'),
+    'benign empty import result remains successful' => array('import_template.php', array(), 0, 'Read 8 bytes of XML data', 'template-noop'),
     'template preview uses plain text and proposed-change wording' => array('import_template.php', array('--preview'), 0, 'would make the following changes', 'template-preview'),
     'template import retains plain text and completed-change wording' => array('import_template.php', array(), 0, 'has imported the following items', 'template-import'),
     'rebuild rejects zero host ID' => array('rebuild_poller_cache.php', array('--host-id=0'), 1, '--host-id must be a positive integer'),
