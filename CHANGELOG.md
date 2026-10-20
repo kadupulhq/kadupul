@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Render plain-template CLI previews as text with proposed-change wording instead of HTML import-completion output (#217).
+
 - Stop data-query reordering with an error when its sort-field read fails; retain XML fallback for successfully read empty fields and missing rows (#744).
 
 - Delete stale remote poller items using valid SQL in strict database modes, preserving current, zero and NULL timestamps (#741).

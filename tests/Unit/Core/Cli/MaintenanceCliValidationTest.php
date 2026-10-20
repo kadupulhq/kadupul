@@ -53,7 +53,7 @@ test('maintenance CLI entrypoints validate arguments and return status for suppo
         . 'function db_fetch_row($sql) { if (strpos($sql, "SHOW TABLE STATUS") === 0) return array("Collation" => "utf8mb4_unicode_ci"); throw new LogicException("Unexpected database access: " . $sql); }'
         . 'function db_fetch_cell($sql) { return strpos($sql, "COUNT(*)") !== false ? 1 : "fixture"; }'
         . 'function db_table_exists($name) { if (preg_match("/^audit_(complete|columns|indexes|old_columns|old_indexes)_/", $name)) return true; return in_array("--load", $_SERVER["argv"], true) || (in_array(getenv("MAINTENANCE_CLI_SCENARIO"), array("audit-report", "audit-column-drift", "audit-column-order", "audit-drift", "audit-index-missing", "audit-index-key-mismatch", "audit-client-discovery"), true) && in_array($name, array("table_columns", "table_indexes"), true)); }'
-        . 'function db_fetch_cell_prepared($sql, $params = array()) { if (strpos($sql, "COUNT(*)") !== false) return 1; if (strpos($sql, "SELECT table_sequence") !== false) return isset($params[1]) && $params[1] === "name" ? 2 : 3; if (strpos($sql, "SELECT table_field") !== false) return "id"; throw new LogicException("Unexpected prepared cell query: " . $sql); }'
+        . 'function db_fetch_cell_prepared($sql, $params = array()) { if (str_starts_with(getenv("MAINTENANCE_CLI_SCENARIO") ?: "", "template-")) return 1; if (strpos($sql, "COUNT(*)") !== false) return 1; if (strpos($sql, "SELECT table_sequence") !== false) return isset($params[1]) && $params[1] === "name" ? 2 : 3; if (strpos($sql, "SELECT table_field") !== false) return "id"; throw new LogicException("Unexpected prepared cell query: " . $sql); }'
         . 'function db_fetch_row_prepared($sql, $params = array()) { if (strpos($sql, "information_schema.tables") !== false) return array("ENGINE" => "InnoDB", "COLLATION" => "utf8mb4"); if (strpos($sql, "FROM table_columns") !== false) { $field = $params[1] ?? "id"; if ($field === "name") return array("table_field" => "name", "table_type" => "varchar(20)", "table_null" => "YES", "table_key" => "", "table_default" => null, "table_extra" => ""); if ($field === "label") return array("table_field" => "label", "table_type" => "varchar(50)", "table_null" => "YES", "table_key" => "", "table_default" => null, "table_extra" => ""); return array("table_field" => "id", "table_type" => "int", "table_null" => "NO", "table_key" => "PRI", "table_default" => null, "table_extra" => ""); } if (strpos($sql, "FROM table_indexes") !== false && getenv("MAINTENANCE_CLI_SCENARIO") === "audit-index-key-mismatch") return array("idx_non_unique" => 1, "idx_key_name" => "idx_name", "idx_seq_in_index" => 1, "idx_column_name" => "name", "idx_packed" => null, "idx_comment" => "", "idx_index_type" => "BTREE"); return array(); }'
         . 'function db_fetch_assoc_prepared($sql, $params = array()) { if (strpos($sql, "FROM table_columns") !== false) { $rows = array(array("table_field" => "id", "table_type" => "int", "table_null" => "NO", "table_key" => "PRI", "table_default" => null, "table_extra" => "")); if (in_array(getenv("MAINTENANCE_CLI_SCENARIO"), array("audit-drift", "audit-column-drift", "audit-index-missing", "audit-index-key-mismatch"), true)) $rows[] = array("table_field" => "name", "table_type" => "varchar(20)", "table_null" => "YES", "table_key" => "", "table_default" => null, "table_extra" => ""); if (getenv("MAINTENANCE_CLI_SCENARIO") === "audit-column-order") { $rows[] = array("table_field" => "name", "table_type" => "varchar(20)", "table_null" => "YES", "table_key" => "", "table_default" => null, "table_extra" => ""); $rows[] = array("table_field" => "label", "table_type" => "varchar(50)", "table_null" => "YES", "table_key" => "", "table_default" => null, "table_extra" => ""); } return $rows; } if (strpos($sql, "FROM table_indexes") !== false && in_array(getenv("MAINTENANCE_CLI_SCENARIO"), array("audit-index-missing", "audit-index-key-mismatch"), true)) return array(array("idx_table_name" => "fixture_table", "idx_key_name" => "idx_name", "idx_seq_in_index" => 1, "idx_column_name" => "name", "idx_non_unique" => 1, "idx_index_type" => "BTREE")); return array(); }'
         . 'function db_column_exists($table, $column) { return $table === "fixture_table" && ($column === "id" || (in_array(getenv("MAINTENANCE_CLI_SCENARIO"), array("audit-column-drift", "audit-index-missing", "audit-index-key-mismatch"), true) && $column === "name") || (getenv("MAINTENANCE_CLI_SCENARIO") === "audit-column-order" && $column === "label")); } function db_index_exists($table, $index) { return getenv("MAINTENANCE_CLI_SCENARIO") === "audit-index-key-mismatch" && $index === "idx_name"; }'
@@ -67,6 +67,28 @@ test('maintenance CLI entrypoints validate arguments and return status for suppo
             . 'function update_data_query_sort_cache($host, $query) { return "ifName"; }'
             . 'function get_best_data_query_index_type($host, $query) { return match (getenv("MAINTENANCE_CLI_SCENARIO")) { "reorder-false" => false, "reorder-empty" => "", "reorder-zero" => "0", default => "ifName" }; }'
             . 'function update_snmp_index_order($row) { if (in_array(getenv("MAINTENANCE_CLI_SCENARIO"), array("reorder-false", "reorder-empty"), true)) throw new RuntimeException("Reorder reached after a failed read"); print "REORDER_OK:" . $row["snmp_index_on"]; }');
+    }
+
+    if (str_starts_with($scenario, 'template-')) {
+        require_once $root . '/tests/Helpers/PhpSource.php';
+        $source = file_get_contents($root . '/lib/import.php');
+        expect($source)->toBeString();
+        $renderer = test_php_function_source($source, 'import_display_results');
+        $ports = <<<'PHP'
+function import_xml_data($xml, ...$options) {
+    if ($xml !== '<cacti/>') throw new RuntimeException('CLI did not pass the template bytes');
+    return array('host_template' => array(array('title' => 'Fixture device', 'type' => 'updated', 'result' => $GLOBALS['preview_only'] ? 'preview' : 'success')));
+}
+function __($text, ...$args) { return $args ? vsprintf($text, $args) : $text; }
+function html_escape($text) { return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
+function html_start_box($title, ...$options) { print '<table><tr><th>' . $title . '</th></tr>'; }
+function html_end_box() { print '</table>'; }
+$hash_type_names = array('host_template' => 'Device Templates');
+$ignorable_hashes = array();
+PHP;
+        file_put_contents($dir . '/lib/import.php', '<?php ' . $renderer . $ports);
+        file_put_contents($dir . '/docs/template.xml', '<cacti/>');
+        $arguments[] = '--filename=' . $dir . '/docs/template.xml';
     }
 
     try {
@@ -85,6 +107,17 @@ test('maintenance CLI entrypoints validate arguments and return status for suppo
             throw new RuntimeException('Exit ' . $exitCode . ': ' . $output);
         }
         expect($output)->toContain($message);
+        if (str_starts_with($scenario, 'template-')) {
+            expect($output)->not->toContain('<table', '<tr', '<span', '</', 'class=')
+                ->and($output)->toContain('Fixture device', '[updated]');
+            if ($scenario === 'template-preview') {
+                expect($output)->toContain('Import Preview Results', '[preview]')
+                    ->not->toContain('has imported', '[success]');
+            } else {
+                expect($output)->toContain('Import Results', '[success]')
+                    ->not->toContain('[preview]', 'would make');
+            }
+        }
 
         if ($coverage !== null) {
             $reports = glob($dir . '/*.coverage');
@@ -102,6 +135,8 @@ test('maintenance CLI entrypoints validate arguments and return status for suppo
         }
     }
 })->with(array(
+    'template preview uses plain text and proposed-change wording' => array('import_template.php', array('--preview'), 0, 'would make the following changes', 'template-preview'),
+    'template import retains plain text and completed-change wording' => array('import_template.php', array(), 0, 'has imported the following items', 'template-import'),
     'rebuild rejects zero host ID' => array('rebuild_poller_cache.php', array('--host-id=0'), 1, '--host-id must be a positive integer'),
     'rebuild rejects zero thread count' => array('rebuild_poller_cache.php', array('--threads=0'), 1, 'valid Number of Treads'),
     'rebuild rejects negative thread count' => array('rebuild_poller_cache.php', array('--threads=-1'), 1, 'valid Number of Treads'),
