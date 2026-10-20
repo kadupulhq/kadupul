@@ -12468,7 +12468,7 @@ msgstr "未找到数据查询XML 文件'%s'"
 msgid "Found data query XML file at '%s'"
 msgstr "找到数据查询XML 文件 '%s'"
 
-#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2625
+#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2631
 msgid "Error parsing XML file into an array."
 msgstr "将XML 文件解析为数组时出错."
 
@@ -12761,12 +12761,12 @@ msgstr "重新索引数据查询完成"
 msgid "Unknown Index"
 msgstr "未知索引"
 
-#: lib/data_query.php:2749
+#: lib/data_query.php:2755
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "您必须为数据源'%s'选择XML输出列，并将复选框切换到右侧"
 
-#: lib/data_query.php:2755
+#: lib/data_query.php:2761
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "您的图表模板尚未使用数据模板。请更正您的图表模板"
 

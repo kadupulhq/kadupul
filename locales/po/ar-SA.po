@@ -12661,7 +12661,7 @@ msgstr "تعذر العثور على ملف XML استعلام البيانات 
 msgid "Found data query XML file at '%s'"
 msgstr "تم العثور على ملف XML للاستعلام عن البيانات في \"%s\""
 
-#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2625
+#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2631
 msgid "Error parsing XML file into an array."
 msgstr "خطأ في تحليل ملف XML في صفيف."
 
@@ -12954,12 +12954,12 @@ msgstr "اكتمل إعادة فهرسة بيانات الاستعلام"
 msgid "Unknown Index"
 msgstr "فهرس غير معروف"
 
-#: lib/data_query.php:2749
+#: lib/data_query.php:2755
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "يجب عليك تحديد عمود إخراج XML لمصدر البيانات '%s' وتبديل خانة الاختيار إلى يمينه"
 
-#: lib/data_query.php:2755
+#: lib/data_query.php:2761
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "لا يحتوي قالب الرسم البياني على قوالب بيانات قيد الاستخدام. يرجى تصحيح قالب الرسم البياني الخاص بك"
 

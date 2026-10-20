@@ -12550,7 +12550,7 @@ msgstr "Die XML-Datei zur Datenabfrage konnte nicht gefunden werden unter '%s'."
 msgid "Found data query XML file at '%s'"
 msgstr "Gefundene Datenabfrage-XML-Datei bei'%s'."
 
-#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2625
+#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2631
 msgid "Error parsing XML file into an array."
 msgstr "Fehler beim Parsen einer XML-Datei in ein Array."
 
@@ -12843,12 +12843,12 @@ msgstr "Re-Indizierung der Datenabfrage abgeschlossen"
 msgid "Unknown Index"
 msgstr "Unbekannter Index"
 
-#: lib/data_query.php:2749
+#: lib/data_query.php:2755
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "Sie müssen eine XML-Ausgabespalte für die Datenquelle'%s' auswählen und das Kontrollkästchen rechts umschalten."
 
-#: lib/data_query.php:2755
+#: lib/data_query.php:2761
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Ihre Grafikvorlage hat keine Datenvorlagen in Verwendung.  Bitte korrigieren Sie Ihre Grafikvorlage."
 

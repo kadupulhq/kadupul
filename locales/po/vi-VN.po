@@ -12468,7 +12468,7 @@ msgstr "Không thể tìm thấy tệp XML truy vấn dữ liệu tại &#39; %s
 msgid "Found data query XML file at '%s'"
 msgstr "Tìm thấy tệp XML truy vấn dữ liệu tại &#39; %s&#39;"
 
-#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2625
+#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2631
 msgid "Error parsing XML file into an array."
 msgstr "Lỗi phân tích tệp XML thành một mảng."
 
@@ -12761,12 +12761,12 @@ msgstr "Hoàn thành lập chỉ mục truy vấn dữ liệu"
 msgid "Unknown Index"
 msgstr "Chỉ mục không xác định"
 
-#: lib/data_query.php:2749
+#: lib/data_query.php:2755
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "Bạn phải chọn cột đầu ra XML cho Nguồn dữ liệu ' %s' và chuyển hộp kiểm sang bên phải"
 
-#: lib/data_query.php:2755
+#: lib/data_query.php:2761
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Mẫu biểu đồ của bạn không sử dụng Mẫu dữ liệu. Vui lòng sửa Mẫu biểu đồ của bạn"
 

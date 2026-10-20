@@ -12563,7 +12563,7 @@ msgstr "Nevarēja atrast datu vaicājuma XML failu '%s'"
 msgid "Found data query XML file at '%s'"
 msgstr "Atrasts datu vaicājuma XML fails '%s'"
 
-#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2625
+#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2631
 msgid "Error parsing XML file into an array."
 msgstr "Kļūda, analizējot XML failu masīvā."
 
@@ -12856,12 +12856,12 @@ msgstr "Datu vaicājuma atkārtota indeksēšana ir pabeigta"
 msgid "Unknown Index"
 msgstr "Nezināms indekss"
 
-#: lib/data_query.php:2749
+#: lib/data_query.php:2755
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "Jums ir jāatlasa XML izvades kolonna datu avotam “%s” un jāieslēdz izvēles rūtiņa tās labajā pusē."
 
-#: lib/data_query.php:2755
+#: lib/data_query.php:2761
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Jūsu diagrammas veidnē netiek izmantotas datu veidnes. Lūdzu, izlabojiet diagrammas veidni"
 

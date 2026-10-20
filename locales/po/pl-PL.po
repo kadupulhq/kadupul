@@ -12536,7 +12536,7 @@ msgstr "Nie można było znaleźć pliku XML z zapytaniem o dane w \"%s"
 msgid "Found data query XML file at '%s'"
 msgstr "Znaleziony plik XML z zapytaniem o dane w \"%s"
 
-#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2625
+#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2631
 msgid "Error parsing XML file into an array."
 msgstr "Błąd przetwarzający plik XML na tablicę."
 
@@ -12829,12 +12829,12 @@ msgstr "Zapytanie o dane w trybie Re-Indexing jest kompletne"
 msgid "Unknown Index"
 msgstr "Nieznany Indeks"
 
-#: lib/data_query.php:2749
+#: lib/data_query.php:2755
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "Musisz wybrać kolumnę wyjściową XML dla źródła danych '%s' i przełączyć pole wyboru w prawo"
 
-#: lib/data_query.php:2755
+#: lib/data_query.php:2761
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Szablon wykresu nie posiada szablonów danych w użyciu.  Proszę skorygować szablon wykresu"
 

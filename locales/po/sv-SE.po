@@ -12483,7 +12483,7 @@ msgstr "Kunde inte hitta XML-filen för datafrågor vid '%s'"
 msgid "Found data query XML file at '%s'"
 msgstr "XML-fil med datafråga hittades vid '%s'"
 
-#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2625
+#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2631
 msgid "Error parsing XML file into an array."
 msgstr "Fel vid parsning av XML-fil till en array."
 
@@ -12776,12 +12776,12 @@ msgstr "Omindexering av datafrågan komplett"
 msgid "Unknown Index"
 msgstr "Okänt index"
 
-#: lib/data_query.php:2749
+#: lib/data_query.php:2755
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "Du måste välja en XML-utdatakolumn för datakällan '%s' och växla kryssrutan till höger om den"
 
-#: lib/data_query.php:2755
+#: lib/data_query.php:2761
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Din Graph Template har inte Data Templates i bruk.  Vänligen korrigera din grafmall"
 

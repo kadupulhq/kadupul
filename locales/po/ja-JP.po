@@ -12480,7 +12480,7 @@ msgstr "'%s'にデータクエリXMLファイルが見つかりませんでし�
 msgid "Found data query XML file at '%s'"
 msgstr "'%s'にデータクエリXMLファイルが見つかりました"
 
-#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2625
+#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2631
 msgid "Error parsing XML file into an array."
 msgstr "XMLファイルを配列に解析中にエラーが発生しました。"
 
@@ -12773,12 +12773,12 @@ msgstr "データの再索引付けが完了しました"
 msgid "Unknown Index"
 msgstr "未知のインデックス"
 
-#: lib/data_query.php:2749
+#: lib/data_query.php:2755
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "データソース'%s'のXML出力列を選択し、その右側のチェックボックスを切り替える必要があります"
 
-#: lib/data_query.php:2755
+#: lib/data_query.php:2761
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "グラフテンプレートはデータテンプレートを使用していません。グラフテンプレートを修正してください"
 
