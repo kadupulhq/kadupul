@@ -967,9 +967,110 @@ def raw_classifier(request):
                           capture_output=True, text=True)
 
 
+def verify_inventory_pipeline():
+    """Exercise tracked-file discovery, the real classifier and the CI verifier."""
+    with tempfile.TemporaryDirectory(prefix='entry-point-pipeline-') as directory:
+        root = Path(directory)
+        security = root / 'tests/security'
+        security.mkdir(parents=True)
+        for name in ('build_entry_point_inventory.py', 'classify_entry_points.php',
+                     'verify_entry_point_inventory.sh'):
+            shutil.copyfile(inventory.ROOT / 'tests/security' / name, security / name)
+        # The classifier uses the locked parser from this checkout. The fixture
+        # repository tracks only its own inputs, not dependencies or these tools.
+        (root / 'include').mkdir()
+        (root / 'include/vendor').symlink_to(inventory.ROOT / 'include/vendor', target_is_directory=True)
+        fixtures = {
+            'gated.php': GATED,
+            'include/auth.php': '<?php\n',
+            'include/global_arrays.php': "<?php\n$user_auth_realm_filenames = ['gated.php' => 3, 'added.php' => 3];\n",
+            'include/.htaccess': 'Require all denied\n',
+            '.htaccess.dist': '# No additional opt-in denies in this fixture.\n',
+            'tests/e2e/nginx.conf': 'location ~ ^/(include)(/|$) { return 404; }\n',
+        }
+        for path, text in fixtures.items():
+            target = root / path
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(text)
+
+        def command(arguments):
+            return subprocess.run(arguments, cwd=root, capture_output=True, text=True,
+                                  timeout=inventory.CLASSIFIER_TIMEOUT_SECONDS + 10)
+
+        for arguments in (['git', 'init', '--quiet'], ['git', 'add', '--', *fixtures]):
+            result = command(arguments)
+            if result.returncode != 0:
+                return ['pipeline fixture Git setup failed: ' + result.stderr]
+        baseline = security / 'baselines/entry_points.baseline.tsv'
+        baseline.parent.mkdir()
+        generator = [sys.executable, str(security / 'build_entry_point_inventory.py')]
+        verifier = ['bash', str(security / 'verify_entry_point_inventory.sh')]
+        environment = {**os.environ, 'PYTHON': sys.executable}
+
+        def check(condition, detail):
+            if not condition:
+                raise AssertionError(detail)
+
+        def generate():
+            result = command(generator)
+            check(result.returncode == 0 and result.stderr == '', result.stderr or result.stdout)
+            lines = result.stdout.splitlines()
+            check(lines and lines[0] == 'entry\tgate\tdetail', result.stdout)
+            rows = [line.split('\t') for line in lines[1:]]
+            check(rows and all(len(row) == 3 for row in rows), result.stdout)
+            check(len({row[0] for row in rows}) == len(rows), result.stdout)
+            check(not (root / 'executed').exists(), 'classification executed the page')
+            return result.stdout, {row[0]: row[1] for row in rows}
+
+        def verify():
+            result = subprocess.run(verifier, cwd=root, env=environment,
+                                    capture_output=True, text=True,
+                                    timeout=inventory.CLASSIFIER_TIMEOUT_SECONDS + 10)
+            check(result.stderr == '', result.stderr)
+            return result
+
+        try:
+            clean, rows = generate()
+            check(rows == {'gated.php': 'realm:3', 'include/': 'web-server-denied'}, rows)
+            baseline.write_text(clean)
+            result = verify()
+            check(result.returncode == 0 and result.stdout.startswith('OK:'), result.stdout)
+
+            (root / 'added.php').write_text("<?php\nfile_put_contents(__DIR__ . '/executed', 'x');\n")
+            # An untracked page is outside git ls-files; staging it must make
+            # the same complete inventory command discover the missing gate.
+            check(generate()[0] == clean, 'inventory included an untracked file')
+            result = command(['git', 'add', '--', 'added.php'])
+            check(result.returncode == 0, result.stderr)
+            unknown, rows = generate()
+            check(rows.get('added.php') == 'unknown', rows)
+            result = verify()
+            check(result.returncode == 1, result.stdout)
+            check('ERROR: entry points without a recognised gate:' in result.stdout, result.stdout)
+            check('ERROR: entry-point inventory drift detected:' in result.stdout, result.stdout)
+            check('added.php' in result.stdout, result.stdout)
+
+            # Refreshing the baseline cannot approve an unknown route.
+            baseline.write_text(unknown)
+            result = verify()
+            check(result.returncode == 1, result.stdout)
+            check('ERROR: entry points without a recognised gate:' in result.stdout, result.stdout)
+            check('inventory drift detected' not in result.stdout, result.stdout)
+
+            (root / 'added.php').write_text(GATED)
+            corrected, rows = generate()
+            check(rows.get('added.php') == 'realm:3' and 'unknown' not in rows.values(), rows)
+            baseline.write_text(corrected)
+            result = verify()
+            check(result.returncode == 0 and result.stdout.startswith('OK:'), result.stdout)
+        except (AssertionError, subprocess.SubprocessError, OSError) as error:
+            return ['entry-point inventory pipeline: ' + str(error)]
+    return []
+
+
 def main():
-    failures = []
-    count = 0
+    failures = verify_inventory_pipeline()
+    count = 4
     # Real reviewed Data Input routes must pin private/application callees too.
     # Mutate owned copies of the actual source; unchanged action/adapter bytes
     # must not leave the realm annotation identical after removing enforcement.
