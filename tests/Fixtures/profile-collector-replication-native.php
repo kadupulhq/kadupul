@@ -208,7 +208,10 @@ function db_fetch_cell($sql, $default = '', $log = true, $connection = false)
 function db_fetch_row($sql, $log = true, $connection = false)
 {
     if (!empty($GLOBALS['scenario']['entrypoint']) && str_starts_with($sql, 'SHOW CREATE TABLE') && !str_contains($sql, 'data_template_data') && !str_contains($sql, 'data_source_profiles') && !str_contains($sql, 'version')) {
-        return [];
+        // Non-profile tables are healthy fixture ports. A missing schema now
+        // correctly stops synchronization before the profile contract is reached.
+        $table = trim(substr($sql, strlen('SHOW CREATE TABLE')), ' `');
+        return ['Create Table' => 'CREATE TABLE `' . $table . '` (id INT PRIMARY KEY)'];
     }
     $row = collector_statement($sql, [], $connection)->fetch(PDO::FETCH_ASSOC) ?: [];
     if (isset($row['Create Table'])) {
@@ -241,6 +244,9 @@ function db_table_exists($table, $log = true, $connection = false)
 {
     $connection = $connection ?: $GLOBALS['source'];
     $side = $connection === $GLOBALS['source'] ? 'source' : 'remote';
+    if (!empty($GLOBALS['scenario']['entrypoint']) && !isset($GLOBALS['maps'][$side][$table])) {
+        return true;
+    }
     $query = $connection->prepare('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=?');
     $query->execute([$GLOBALS['maps'][$side][$table]]);
     return (int) $query->fetchColumn() === 1;

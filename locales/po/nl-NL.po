@@ -15676,7 +15676,11 @@ msgstr "Benodigd: Kadupul >= %s"
 msgid "Not Stated"
 msgstr "Niet vermeld"
 
-#: lib/poller.php:2000 lib/poller.php:2245
+#: lib/poller.php:1984
+msgid "Synchronization failed. See the log for details."
+msgstr ""
+
+#: lib/poller.php:2008 lib/poller.php:2335
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 
