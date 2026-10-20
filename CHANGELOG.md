@@ -6,7 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
-- Return status 1 with diagnostics for failed template CLI imports and previews, preserving per-object results and handling empty files without a PHP fatal error (#216).
+- Reject malformed template XML before processing objects, and return status 1 with diagnostics for failed CLI imports and previews while preserving returned per-object results and handling empty files without a PHP fatal error (#216).
 
 - Render plain-template CLI previews as text with proposed-change wording instead of HTML import-completion output (#217).
 

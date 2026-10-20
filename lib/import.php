@@ -19,11 +19,11 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
     $files            = array();
     $ignorable_hashes = array();
 
-    $xml_array = xml2array($xml_data);
+    $xml_array = xml2array($xml_data, true);
 
     if (cacti_sizeof($xml_array) == 0) {
         $import_messages[] = 7; /* xml parse error */
-        return $info_array;
+        return false;
     }
 
     $host_template_data = array();

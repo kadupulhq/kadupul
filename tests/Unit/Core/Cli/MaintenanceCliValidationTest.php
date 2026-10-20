@@ -75,9 +75,11 @@ test('maintenance CLI entrypoints validate arguments and return status for suppo
         expect($source)->toBeString();
         $renderer = test_php_function_source($source, 'import_display_results');
         $producer = '';
-        if (in_array($scenario, array('template-malformed', 'template-empty', 'template-invalid-hash'), true)) {
+        if (in_array($scenario, array('template-malformed', 'template-empty', 'template-invalid-hash', 'template-trailing-data'), true)) {
             $producer = test_php_function_source($source, 'import_xml_data')
-                . test_php_function_source($source, 'parse_xml_hash');
+                . ($scenario === 'template-trailing-data'
+                    ? 'function parse_xml_hash($hash) { throw new RuntimeException("Malformed XML reached hash processing"); }'
+                    : test_php_function_source($source, 'parse_xml_hash'));
             copy($root . '/lib/xml.php', $dir . '/lib/xml.php');
         }
         $ports = <<<'PHP'
@@ -113,6 +115,7 @@ PHP;
             'template-malformed' => '<cacti>',
             'template-empty' => '',
             'template-invalid-hash' => '<cacti><invalid_hash><name>Invalid</name></invalid_hash></cacti>',
+            'template-trailing-data' => '<cacti><hash_0000010123456789abcdef0123456789abcdef><name>Fixture</name></hash_0000010123456789abcdef0123456789abcdef></cacti>junk',
             default => '<cacti/>',
         };
         file_put_contents($dir . '/docs/template.xml', $xml);
@@ -170,6 +173,7 @@ PHP;
     }
 })->with(array(
     'malformed template XML reports failure' => array('import_template.php', array(), 1, 'XML parse error.', 'template-malformed'),
+    'trailing XML content fails before hash processing' => array('import_template.php', array(), 1, 'XML parse error.', 'template-trailing-data'),
     'empty template XML reports failure' => array('import_template.php', array(), 1, 'XML parse error.', 'template-empty'),
     'invalid template hash reports failure without PHP warnings' => array('import_template.php', array(), 1, 'XML parse error.', 'template-invalid-hash'),
     'false import outcome reports failure' => array('import_template.php', array(), 1, 'ERROR: Template import or preview failed', 'template-false'),
