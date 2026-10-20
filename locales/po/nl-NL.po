@@ -12507,7 +12507,7 @@ msgstr "Het data query XML bestand kon niet worden gevonden in '%s'"
 msgid "Found data query XML file at '%s'"
 msgstr "Gevonden gegevens opvragen XML-bestand bij '%s'"
 
-#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2625
+#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2631
 msgid "Error parsing XML file into an array."
 msgstr "Fout bij het parseren van een XML-bestand in een array."
 
@@ -12800,12 +12800,12 @@ msgstr "Re-Indexing Data Query compleet"
 msgid "Unknown Index"
 msgstr "Onbekende index"
 
-#: lib/data_query.php:2749
+#: lib/data_query.php:2755
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "U moet een XML-uitvoerkolom selecteren voor Data Source '%s' en het selectievakje aan de rechterkant aankruisen."
 
-#: lib/data_query.php:2755
+#: lib/data_query.php:2761
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Uw Grafieksjabloon heeft geen datasjablonen in gebruik.  Gelieve uw Grafieksjabloon te corrigeren"
 

@@ -12577,7 +12577,7 @@ msgstr "לא ניתן למצוא קובץ XML לשאילתת נתונים ב- &#
 msgid "Found data query XML file at '%s'"
 msgstr "נמצא קובץ שאילתת נתוני XML ב- &#39; %s&#39;"
 
-#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2625
+#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2631
 msgid "Error parsing XML file into an array."
 msgstr "שגיאה בהעברת קובץ XML למערך."
 
@@ -12870,12 +12870,12 @@ msgstr "ביצוע שאילתה מחדש של נתוני הנתונים הושל
 msgid "Unknown Index"
 msgstr "אינדקס לא ידוע"
 
-#: lib/data_query.php:2749
+#: lib/data_query.php:2755
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "עליך לבחור עמודת פלט של XML עבור 'מקור הנתונים' %s ולהעביר את תיבת הסימון שמימינה"
 
-#: lib/data_query.php:2755
+#: lib/data_query.php:2761
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "תבנית התבנית שלך אינה מכילה תבניות נתונים בשימוש. תקן את תבנית התרשים שלך"
 

@@ -12501,7 +12501,7 @@ msgstr "XML файлът с заявка за данни не можа да бъ
 msgid "Found data query XML file at '%s'"
 msgstr "Намерен XML файл с заявка за търсене на „ %s“"
 
-#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2625
+#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2631
 msgid "Error parsing XML file into an array."
 msgstr "Грешка при анализиране на XML файл в масив."
 
@@ -12794,12 +12794,12 @@ msgstr "Повторно индексиране на заявката за да�
 msgid "Unknown Index"
 msgstr "Неизвестен индекс"
 
-#: lib/data_query.php:2749
+#: lib/data_query.php:2755
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "Трябва да изберете изходна колона XML за източник на данни „ %s“ и да поставите отметка в квадратчето отдясно"
 
-#: lib/data_query.php:2755
+#: lib/data_query.php:2761
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Шаблонът ви на графиката не се използва. Моля, коригирайте шаблона на графиката си"
 

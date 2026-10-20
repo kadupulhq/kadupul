@@ -12554,7 +12554,7 @@ msgstr "&#39; %s&#39; पर डेटा क्वेरी XML फ़ाइल
 msgid "Found data query XML file at '%s'"
 msgstr "&#39; %s&#39; पर डेटा क्वेरी XML फ़ाइल मिली"
 
-#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2625
+#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2631
 msgid "Error parsing XML file into an array."
 msgstr "XML फ़ाइल को एक सरणी में पार्स करने में त्रुटि।"
 
@@ -12847,12 +12847,12 @@ msgstr "डेटा क्वेरी फिर से अनुक्रम�
 msgid "Unknown Index"
 msgstr "अज्ञात सूचकांक"
 
-#: lib/data_query.php:2749
+#: lib/data_query.php:2755
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "आपको डेटा स्रोत ' %s' के लिए XML आउटपुट कॉलम चुनना होगा और चेकबॉक्स को इसके दाईं ओर टॉगल करना होगा"
 
-#: lib/data_query.php:2755
+#: lib/data_query.php:2761
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "आपके ग्राफ़ टेम्प्लेट में उपयोग में डेटा टेम्प्लेट नहीं हैं। कृपया अपना ग्राफ़ टेम्पलेट सही करें"
 

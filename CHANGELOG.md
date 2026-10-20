@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Stop data-query reordering with an error when its sort-field read fails; retain XML fallback for successfully read empty fields and missing rows (#744).
+
 - Delete stale remote poller items using valid SQL in strict database modes, preserving current, zero and NULL timestamps (#741).
 
 - Give login and denied-access pages a document language and a level-one heading while preserving their theme styling (#695).

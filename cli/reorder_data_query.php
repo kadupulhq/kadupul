@@ -123,6 +123,10 @@ if (cacti_sizeof($data_queries)) {
         update_data_query_sort_cache($data_query['host_id'], $data_query['snmp_query_id']);
         /* build array required for function call */
         $data_query['snmp_index_on'] = get_best_data_query_index_type($data_query['host_id'], $data_query['snmp_query_id']);
+        if ($data_query['snmp_index_on'] === false || $data_query['snmp_index_on'] === '') {
+            fwrite(STDERR, 'ERROR: Unable to determine sort field for Device[' . $data_query['host_id'] . '] and DQ[' . $data_query['snmp_query_id'] . '].' . PHP_EOL);
+            exit(1);
+        }
         /* as we request the output_type, 'value' gives the snmp_query_graph_id */
         $data_query['snmp_query_graph_id'] = $data_query['value'];
         debug(

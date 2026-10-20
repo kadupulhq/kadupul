@@ -12526,7 +12526,7 @@ msgstr "Veri sorgusu XML dosyası &#39; %s&#39; konumunda bulunamadı"
 msgid "Found data query XML file at '%s'"
 msgstr "&#39; %s&#39; konumunda veri sorgusu XML dosyası bulundu"
 
-#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2625
+#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2631
 msgid "Error parsing XML file into an array."
 msgstr "XML dosyasını bir diziye ayrıştırma hatası."
 
@@ -12819,12 +12819,12 @@ msgstr "Yeniden Dizin Verileri Sorgulama tamamlandı"
 msgid "Unknown Index"
 msgstr "Bilinmeyen Dizin"
 
-#: lib/data_query.php:2749
+#: lib/data_query.php:2755
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "' %s' Veri Kaynağı için bir XML çıktı sütunu seçmeli ve onay kutusunu sağa kaydırmalısınız"
 
-#: lib/data_query.php:2755
+#: lib/data_query.php:2761
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Grafik Şablonunuz kullanımda Veri Şablonları içermiyor. Lütfen Grafik Şablonunuzu düzeltin"
 

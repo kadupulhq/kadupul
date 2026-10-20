@@ -12476,7 +12476,7 @@ msgstr "&#39; %s&#39;에서 데이터 쿼리 XML 파일을 찾을 수 없습니�
 msgid "Found data query XML file at '%s'"
 msgstr "&#39; %s&#39;에 데이터 쿼리 XML 파일이 있습니다."
 
-#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2625
+#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2631
 msgid "Error parsing XML file into an array."
 msgstr "배열로 XML 파일을 구문 분석하는 중 오류가 발생했습니다."
 
@@ -12769,12 +12769,12 @@ msgstr "데이터 인덱싱 다시 완료"
 msgid "Unknown Index"
 msgstr "알 수없는 색인"
 
-#: lib/data_query.php:2749
+#: lib/data_query.php:2755
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "데이터 소스 ' %s'에 대한 XML 출력 열을 선택하고 오른쪽으로 확인란을 전환해야합니다."
 
-#: lib/data_query.php:2755
+#: lib/data_query.php:2761
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "그래프 템플릿에 데이터 템플릿이 사용되지 않았습니다. 그래프 템플릿을 수정하십시오."
 

@@ -12495,7 +12495,7 @@ msgstr "Δεν ήταν δυνατή η εύρεση αρχείου XML ερώτ
 msgid "Found data query XML file at '%s'"
 msgstr "Βρέθηκε αρχείο XML ερωτήματος δεδομένων στο &#39; %s&#39;"
 
-#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2625
+#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2631
 msgid "Error parsing XML file into an array."
 msgstr "Σφάλμα κατά την ανάλυση του αρχείου XML σε έναν πίνακα."
 
@@ -12788,12 +12788,12 @@ msgstr "Επαναπροσδιορισμός ερωτήματος δεδομέν
 msgid "Unknown Index"
 msgstr "Άγνωστος ευρετήριο"
 
-#: lib/data_query.php:2749
+#: lib/data_query.php:2755
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "Πρέπει να επιλέξετε μια στήλη εξόδου XML για την προέλευση δεδομένων ' %s' και να αλλάξετε το πλαίσιο ελέγχου στα δεξιά της"
 
-#: lib/data_query.php:2755
+#: lib/data_query.php:2761
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Το πρότυπο γραφήματος δεν χρησιμοποιεί πρότυπα δεδομένων. Διορθώστε το πρότυπο γραφήματος"
 
