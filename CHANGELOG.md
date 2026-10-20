@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Delete stale remote poller items using valid SQL in strict database modes, preserving current, zero and NULL timestamps (#741).
+
 - Give login and denied-access pages a document language and a level-one heading while preserving their theme styling (#695).
 
 - Insert RRDproxy cleaner file listings in batches of 400 rows, independently of each file's byte size (#623).

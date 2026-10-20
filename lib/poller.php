@@ -2198,8 +2198,8 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
             db_execute_prepared(
                 "DELETE FROM poller_item
 				WHERE last_updated < ?
-				AND last_updated > '0000-00-00'
-				AND last_updated NOT NULL",
+				AND last_updated > 0
+				AND last_updated IS NOT NULL",
                 array(date('Y-m-d H:i:s', $time)),
                 false,
                 $rcnn_id
