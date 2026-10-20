@@ -84,7 +84,6 @@
       <file>Unit/Security/Auth/RememberMePasswordChangeTest.php</file>
       <file>Unit/Security/Auth/LogoutTokenRevocationTest.php</file>
       <file>Unit/Security/Auth/PermissionDeniedPageTest.php</file>
-      <file>Unit/Security/Auth/AuthControllerNativeCoverageTest.php</file>
       <file>Unit/Security/Auth/TemplateUserFailureTest.php</file>
       <file>Unit/Security/Auth/LoginPageRefreshTest.php</file>
       <file>Unit/Security/Auth/CrossSiteGetGuardTest.php</file>
