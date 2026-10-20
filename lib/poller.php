@@ -1978,12 +1978,20 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
 {
     global $config;
 
+    $fail = static function () use ($remote_poller_id, $class, $config): bool {
+        cacti_log('ERROR: Synchronization of Poller ' . $remote_poller_id . ' failed.', false, 'REPLICATE');
+        if ($config['is_web'] && $class != 'plugins') {
+            raise_message('poller_sync_failed', __('Synchronization failed. See the log for details.'), MESSAGE_LEVEL_ERROR);
+        }
+        return false;
+    };
+
     replicate_log('Attempting to replicate to Poller ' . $remote_poller_id);
 
     // Record retry ownership before checking collector availability.
     if (($class == 'all' || $class == 'data') && !db_execute_prepared('UPDATE poller SET requires_sync="on" WHERE id=?', array($remote_poller_id))) {
         cacti_log('ERROR: Unable to mark Poller ' . $remote_poller_id . ' synchronization required. No replication was started.', false, 'REPLICATE');
-        return false;
+        return $fail();
     }
 
     $rcnn_id = poller_connect_to_remote($remote_poller_id);
@@ -2020,55 +2028,87 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
 			FROM settings
 			WHERE name LIKE "path_spine%"
 			AND name="poller_type"');
-        replicate_table_to_poller($rcnn_id, $data, 'settings');
+        if (replicate_table_to_poller($rcnn_id, $data, 'settings') === false) {
+            return $fail();
+        }
     }
 
     // Core tables
     if ($class == 'all') {
         $data = db_fetch_assoc('SELECT * FROM automation_graph_rule_items');
-        replicate_out_table($rcnn_id, $data, 'automation_graph_rule_items', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'automation_graph_rule_items', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc('SELECT * FROM automation_graph_rules');
-        replicate_out_table($rcnn_id, $data, 'automation_graph_rules', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'automation_graph_rules', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc('SELECT * FROM automation_match_rule_items');
-        replicate_out_table($rcnn_id, $data, 'automation_match_rule_items', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'automation_match_rule_items', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc('SELECT * FROM automation_snmp');
-        replicate_out_table($rcnn_id, $data, 'automation_snmp', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'automation_snmp', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc('SELECT * FROM automation_snmp_items');
-        replicate_out_table($rcnn_id, $data, 'automation_snmp_items', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'automation_snmp_items', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc('SELECT * FROM automation_templates');
-        replicate_out_table($rcnn_id, $data, 'automation_templates', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'automation_templates', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc('SELECT * FROM automation_tree_rule_items');
-        replicate_out_table($rcnn_id, $data, 'automation_tree_rule_items', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'automation_tree_rule_items', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc('SELECT * FROM automation_tree_rules');
-        replicate_out_table($rcnn_id, $data, 'automation_tree_rules', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'automation_tree_rules', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc('SELECT * FROM data_input');
-        replicate_out_table($rcnn_id, $data, 'data_input', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'data_input', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc('SELECT * FROM host_template');
-        replicate_out_table($rcnn_id, $data, 'host_template', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'host_template', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc('SELECT * FROM host_template_graph');
-        replicate_out_table($rcnn_id, $data, 'host_template_graph', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'host_template_graph', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc('SELECT * FROM host_template_snmp_query');
-        replicate_out_table($rcnn_id, $data, 'host_template_snmp_query', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'host_template_snmp_query', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc('SELECT * FROM snmp_query');
-        replicate_out_table($rcnn_id, $data, 'snmp_query', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'snmp_query', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc('SELECT * FROM data_input_fields');
-        replicate_out_table($rcnn_id, $data, 'data_input_fields', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'data_input_fields', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc('SELECT * FROM poller');
-        replicate_out_table($rcnn_id, $data, 'poller', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'poller', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         // Collector schema versions belong to its installer, never data synchronization.
     }
@@ -2076,43 +2116,67 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
     // Plugin tables
     if ($class == 'all' || $class == 'plugins') {
         $data = db_fetch_assoc('SELECT * FROM plugin_config');
-        replicate_out_table($rcnn_id, $data, 'plugin_config', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'plugin_config', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc('SELECT * FROM plugin_hooks');
-        replicate_out_table($rcnn_id, $data, 'plugin_hooks', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'plugin_hooks', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc('SELECT * FROM plugin_realms');
-        replicate_out_table($rcnn_id, $data, 'plugin_realms', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'plugin_realms', $remote_poller_id) === false) {
+            return $fail();
+        }
     }
 
     // Auth tables
     if ($class == 'all' || $class == 'auth') {
         $data = db_fetch_assoc('SELECT * FROM user_auth');
-        replicate_out_table($rcnn_id, $data, 'user_auth', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'user_auth', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc('SELECT * FROM user_auth_group');
-        replicate_out_table($rcnn_id, $data, 'user_auth_group', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'user_auth_group', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc('SELECT * FROM user_auth_group_members');
-        replicate_out_table($rcnn_id, $data, 'user_auth_group_members', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'user_auth_group_members', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc('SELECT * FROM user_auth_group_perms');
-        replicate_out_table($rcnn_id, $data, 'user_auth_group_perms', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'user_auth_group_perms', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc('SELECT * FROM user_auth_group_realm');
-        replicate_out_table($rcnn_id, $data, 'user_auth_group_realm', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'user_auth_group_realm', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc('SELECT * FROM user_auth_realm');
-        replicate_out_table($rcnn_id, $data, 'user_auth_realm', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'user_auth_realm', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc('SELECT * FROM user_auth_row_cache');
-        replicate_out_table($rcnn_id, $data, 'user_auth_row_cache', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'user_auth_row_cache', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc('SELECT * FROM user_domains');
-        replicate_out_table($rcnn_id, $data, 'user_domains', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'user_domains', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc('SELECT * FROM user_domains_ldap');
-        replicate_out_table($rcnn_id, $data, 'user_domains_ldap', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'user_domains_ldap', $remote_poller_id) === false) {
+            return $fail();
+        }
     }
 
     if ($class == 'all' || $class == 'data') {
@@ -2125,7 +2189,9 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
 			AND h.deleted = ""',
             array($remote_poller_id)
         );
-        replicate_out_table($rcnn_id, $data, 'host_snmp_query', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'host_snmp_query', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc_prepared(
             'SELECT pc.*
@@ -2133,7 +2199,9 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
 			WHERE pc.poller_id = ?',
             array($remote_poller_id)
         );
-        replicate_out_table($rcnn_id, $data, 'poller_command', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'poller_command', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc_prepared(
             'SELECT h.*
@@ -2142,7 +2210,9 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
 			AND h.deleted = ""',
             array($remote_poller_id)
         );
-        replicate_out_table($rcnn_id, $data, 'host', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'host', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc_prepared(
             'SELECT hsc.*
@@ -2153,7 +2223,9 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
 			AND h.deleted = ""',
             array($remote_poller_id)
         );
-        replicate_out_table($rcnn_id, $data, 'host_snmp_cache', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'host_snmp_cache', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         // Special class of 'update' for the table following tables 'poller_reindex', 'poller_item'
         $data = db_fetch_assoc_prepared(
@@ -2165,15 +2237,19 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
 			AND h.deleted = ""',
             array($remote_poller_id)
         );
-        replicate_out_table($rcnn_id, $data, 'poller_reindex', $remote_poller_id, false, array('assert_value'));
+        if (replicate_out_table($rcnn_id, $data, 'poller_reindex', $remote_poller_id, false, array('assert_value')) === false) {
+            return $fail();
+        }
 
         // Since we are doing an update, remove stale data
-        db_execute('DELETE pr
+        if (!db_execute('DELETE pr
 			FROM poller_reindex AS pr
 			LEFT JOIN host_snmp_query AS hsq
 			ON pr.host_id = hsq.host_id
 			AND pr.data_query_id = hsq.snmp_query_id
-			WHERE hsq.host_id IS NULL', false, $rcnn_id);
+			WHERE hsq.host_id IS NULL', false, $rcnn_id)) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc_prepared(
             'SELECT pi.*
@@ -2181,21 +2257,29 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
 			WHERE pi.poller_id = ?',
             array($remote_poller_id)
         );
-        replicate_out_table($rcnn_id, $data, 'poller_item', $remote_poller_id, false, array('last_updated'));
+        if (replicate_out_table($rcnn_id, $data, 'poller_item', $remote_poller_id, false, array('last_updated')) === false) {
+            return $fail();
+        }
 
         // Remove anything not updated recently
         $time = db_fetch_cell('SELECT MAX(UNIX_TIMESTAMP(last_updated)) FROM poller_item', '', false, $rcnn_id);
 
+        if ($time === false) {
+            return $fail();
+        }
+
         if (!empty($time)) {
             // You must update the last_updated locally
-            db_execute_prepared(
+            if (!db_execute_prepared(
                 'UPDATE poller_item
 				SET last_updated = FROM_UNIXTIME(?)
 				WHERE poller_id = ?',
                 array($time, $remote_poller_id)
-            );
+            )) {
+                return $fail();
+            }
 
-            db_execute_prepared(
+            if (!db_execute_prepared(
                 "DELETE FROM poller_item
 				WHERE last_updated < ?
 				AND last_updated > 0
@@ -2203,7 +2287,9 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
                 array(date('Y-m-d H:i:s', $time)),
                 false,
                 $rcnn_id
-            );
+            )) {
+                return $fail();
+            }
         }
 
         $data = db_fetch_assoc_prepared(
@@ -2215,7 +2301,9 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
 			AND h.deleted = ""',
             array($remote_poller_id)
         );
-        replicate_out_table($rcnn_id, $data, 'data_local', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'data_local', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc_prepared(
             'SELECT gl.*
@@ -2226,7 +2314,9 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
 			AND h.deleted = ""',
             array($remote_poller_id)
         );
-        replicate_out_table($rcnn_id, $data, 'graph_local', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'graph_local', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc_prepared(
             'SELECT dtd.*
@@ -2258,7 +2348,9 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
 			AND h.deleted = ""',
             array($remote_poller_id)
         );
-        replicate_out_table($rcnn_id, $data, 'data_template_rrd', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'data_template_rrd', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc_prepared(
             'SELECT gti.*
@@ -2271,7 +2363,9 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
 			AND h.deleted = ""',
             array($remote_poller_id)
         );
-        replicate_out_table($rcnn_id, $data, 'graph_templates_item', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'graph_templates_item', $remote_poller_id) === false) {
+            return $fail();
+        }
 
         $data = db_fetch_assoc_prepared(
             'SELECT did.*
@@ -2286,7 +2380,9 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
 			AND h.deleted = ""',
             array($remote_poller_id)
         );
-        replicate_out_table($rcnn_id, $data, 'data_input_data', $remote_poller_id);
+        if (replicate_out_table($rcnn_id, $data, 'data_input_data', $remote_poller_id) === false) {
+            return $fail();
+        }
     }
 
     if ($class == 'all') {
@@ -2303,18 +2399,24 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
         array($remote_poller_id)
     );
 
+    if ($stats === false) {
+        return $fail();
+    }
+
     if (cacti_sizeof($stats)) {
-        db_execute_prepared(
+        if (!db_execute_prepared(
             'UPDATE poller
 			SET snmp = ?, script = ?, server = ?
 			WHERE id = ?',
             array($stats['snmp'], $stats['script'], $stats['server'], $remote_poller_id)
-        );
+        )) {
+            return $fail();
+        }
     }
 
     if (($class == 'all' || $class == 'data') && !db_execute_prepared('UPDATE poller SET last_sync=NOW(), requires_sync="" WHERE id=?', array($remote_poller_id))) {
         cacti_log('ERROR: Poller ' . $remote_poller_id . ' completion-state write failed; synchronization remains required.', false, 'REPLICATE');
-        return false;
+        return $fail();
     }
 
     if ($class != 'plugins' && $config['is_web']) {
@@ -2339,10 +2441,13 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
  * @param  (bool)   $truncate         - A flag that if true, truncates, otherwise updates
  * @param  (array)  $exclude          - An array of column names to not update on replication
  *
- * @return (void)
+ * @return (bool) True only when every required replication statement succeeds.
  */
-function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate = true, $exclude = false, $level = POLLER_VERBOSITY_NONE)
+function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate = true, $exclude = false, $level = POLLER_VERBOSITY_NONE): bool
 {
+    if (!is_array($data)) {
+        return false;
+    }
     if ($table === 'data_template_data') {
         require_once __DIR__ . '/data_source_profile_integrity.php';
         return is_array($data) && replicate_data_source_profile_children($conn, $data, $truncate, $exclude);
@@ -2355,18 +2460,29 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
     } else {
         cacti_log("WARNING: Replicate Out Unable to get Table Schema for $table.  Table does not exist!", false, 'POLLER');
         $create = '';
-        return;
+        return false;
     }
 
     if (!db_table_exists($table, false, $conn) && $create != '') {
-        db_execute($create, false, $conn);
+        if (!db_execute($create, false, $conn)) {
+            return false;
+        }
     }
 
     if (cacti_sizeof($data)) {
         /* check if the table structure changed, and if so, recreate */
-        $local_columns  = db_fetch_assoc('SHOW COLUMNS FROM ' . $table);
+        $local_columns = db_fetch_assoc('SHOW COLUMNS FROM ' . $table);
+        if (!is_array($local_columns) || !$local_columns) {
+            return false;
+        }
         $remote_columns = db_fetch_assoc('SHOW COLUMNS FROM ' . $table, false, $conn);
-        $remote_rows    = db_fetch_cell('SELECT COUNT(*) FROM ' . $table, '', false, $conn);
+        if (!is_array($remote_columns) || !$remote_columns) {
+            return false;
+        }
+        $remote_rows = db_fetch_cell('SELECT COUNT(*) FROM ' . $table, '', false, $conn);
+        if ($remote_rows === false) {
+            return false;
+        }
 
         if ($exclude !== false && !is_array($exclude)) {
             $exclude = array($exclude);
@@ -2381,13 +2497,25 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
             $create = db_fetch_row('SHOW CREATE TABLE ' . $table);
             if (isset($create["CREATE TABLE `$table`"]) || isset($create['Create Table'])) {
                 replicate_log('NOTE: Replication Recreating Remote Table Structure for ' . $table, $level);
-                db_execute('DROP TABLE IF EXISTS ' . $table, true, $conn);
+                if (!db_execute('DROP TABLE IF EXISTS ' . $table, true, $conn)) {
+                    return false;
+                }
 
                 if (isset($create["CREATE TABLE `$table`"])) {
-                    db_execute($create["CREATE TABLE `$table`"], true, $conn);
+                    if (!db_execute($create["CREATE TABLE `$table`"], true, $conn)) {
+                        return false;
+                    }
                 } else {
-                    db_execute($create['Create Table'], true, $conn);
+                    if (!db_execute($create['Create Table'], true, $conn)) {
+                        return false;
+                    }
                 }
+                $remote_columns = db_fetch_assoc('SHOW COLUMNS FROM ' . $table, false, $conn);
+                if (!is_array($remote_columns) || !$remote_columns) {
+                    return false;
+                }
+            } else {
+                return false;
             }
         }
 
@@ -2395,7 +2523,9 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
             $prefix = "REPLACE INTO $table (";
             $suffix = '';
 
-            db_execute("TRUNCATE TABLE $table", true, $conn);
+            if (!db_execute("TRUNCATE TABLE $table", true, $conn)) {
+                return false;
+            }
         } else {
             $prefix = "INSERT INTO $table (";
             $suffix = ' ON DUPLICATE KEY UPDATE ';
@@ -2422,9 +2552,11 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
         $columns   = array_keys($data[0]);
         $skipcols  = array();
 
+        $remote_column_names = array_map('strtolower', array_column($remote_columns, 'Field'));
+
         // Find columns to skip, or exclude from updates
         foreach ($columns as $index => $c) {
-            if (!db_column_exists($table, $c, false, $conn)) {
+            if (!in_array(strtolower($c), $remote_column_names, true)) {
                 $skipcols[$index] = $c;
             } else {
                 $prefix .= ($colcnt > 0 ? ', ' : '') . "`$c`";
@@ -2449,7 +2581,9 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
             $rowcnt++;
 
             if ($rowcnt > 1000) {
-                db_execute($prefix . $sql . $suffix, true, $conn);
+                if (!db_execute($prefix . $sql . $suffix, true, $conn)) {
+                    return false;
+                }
                 $rows_affected = db_affected_rows($conn);
                 $rows_log      = ((($rows_done % 100000) + $rows_affected) > 100000);
                 $rows_done    += $rows_affected;
@@ -2463,7 +2597,9 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
         }
 
         if ($rowcnt > 0) {
-            db_execute($prefix . $sql . $suffix, true, $conn);
+            if (!db_execute($prefix . $sql . $suffix, true, $conn)) {
+                return false;
+            }
             $rows_done += db_affected_rows($conn);
         }
 
@@ -2476,20 +2612,32 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
 
             if (isset($create["CREATE TABLE `$table`"]) || isset($create['Create Table'])) {
                 replicate_log('NOTE: Replication Creating Remote Table Structure for ' . $table, $level);
-                db_execute('DROP TABLE IF EXISTS ' . $table, true, $conn);
+                if (!db_execute('DROP TABLE IF EXISTS ' . $table, true, $conn)) {
+                    return false;
+                }
 
                 if (isset($create["CREATE TABLE `$table`"])) {
-                    db_execute($create["CREATE TABLE `$table`"], true, $conn);
+                    if (!db_execute($create["CREATE TABLE `$table`"], true, $conn)) {
+                        return false;
+                    }
                 } else {
-                    db_execute($create['Create Table'], true, $conn);
+                    if (!db_execute($create['Create Table'], true, $conn)) {
+                        return false;
+                    }
                 }
+            } else {
+                return false;
             }
         } else {
             replicate_log('INFO: Table ' . $table . ' Not Replicated to Remote Poller ' . $remote_poller_id . ' Due to No Rows Found', $level);
 
-            db_execute("TRUNCATE TABLE $table", true, $conn);
+            if (!db_execute("TRUNCATE TABLE $table", true, $conn)) {
+                return false;
+            }
         }
     }
+
+    return true;
 }
 
 function replicate_log($text, $level = POLLER_VERBOSITY_NONE)
@@ -2638,13 +2786,20 @@ function poller_push_reindex_data_to_poller($device_id = 0, $data_query_id = 0, 
     }
 }
 
-function replicate_table_to_poller($conn, &$data, $table, $exclude = false)
+function replicate_table_to_poller($conn, &$data, $table, $exclude = false): bool
 {
+    if (!is_array($data)) {
+        return false;
+    }
     if ($table === 'data_template_data') {
         require_once __DIR__ . '/data_source_profile_integrity.php';
         return is_array($data) && replicate_data_source_profile_children($conn, $data, false, $exclude);
     }
     $max_packet  = db_fetch_row("SHOW GLOBAL VARIABLES LIKE 'max_allowed_packet'", true, $conn);
+
+    if ($max_packet === false) {
+        return false;
+    }
 
     if (cacti_sizeof($max_packet)) {
         $max_packet = $max_packet['Value'];
@@ -2661,7 +2816,16 @@ function replicate_table_to_poller($conn, &$data, $table, $exclude = false)
         $columns   = array_keys($data[0]);
         $skipcols  = array();
 
+        $remote_columns = db_fetch_assoc('SHOW COLUMNS FROM ' . $table, false, $conn);
+        if (!is_array($remote_columns) || !$remote_columns) {
+            return false;
+        }
+
         $remote_rows = db_fetch_cell("SELECT COUNT(*) FROM $table", '', true, $conn);
+
+        if ($remote_rows === false) {
+            return false;
+        }
 
         if ($exclude !== false && !is_array($exclude)) {
             $exclude = array($exclude);
@@ -2671,9 +2835,11 @@ function replicate_table_to_poller($conn, &$data, $table, $exclude = false)
             $exclude = false;
         }
 
+        $remote_column_names = array_map('strtolower', array_column($remote_columns, 'Field'));
+
         // Find columns to skip from updates
         foreach ($columns as $index => $c) {
-            if (!db_column_exists($table, $c, false, $conn)) {
+            if (!in_array(strtolower($c), $remote_column_names, true)) {
                 $skipcols[$index] = $c;
             } elseif ($exclude !== false && array_search($c, $exclude, true) !== false) {
                 $skipcols[$index] = $c;
@@ -2705,7 +2871,9 @@ function replicate_table_to_poller($conn, &$data, $table, $exclude = false)
             $sqllen += strlen($sql_row);
 
             if ($rowcnt > 150000 || ($sqllen + 1000 > $max_packet)) {
-                db_execute($prefix . $sql . $suffix, true, $conn);
+                if (!db_execute($prefix . $sql . $suffix, true, $conn)) {
+                    return false;
+                }
                 $rows_done += db_affected_rows($conn);
                 $sql = '';
                 $rowcnt = 0;
@@ -2714,12 +2882,16 @@ function replicate_table_to_poller($conn, &$data, $table, $exclude = false)
         }
 
         if ($rowcnt > 0) {
-            db_execute($prefix . $sql . $suffix, true, $conn);
+            if (!db_execute($prefix . $sql . $suffix, true, $conn)) {
+                return false;
+            }
             $rows_done += db_affected_rows($conn);
         }
 
         cacti_log('NOTE: Table ' . $table . ' Replicated to Poller With ' . $rows_done . ' Rows Updated', true, 'REPLICATE', POLLER_VERBOSITY_MEDIUM);
     }
+
+    return true;
 }
 
 function poller_recovery_flush_boost($poller_id)

@@ -49,7 +49,10 @@ test('replication removes only stale remote items and binds the remote cutoff', 
     $schema = file_get_contents($root . '/cacti.sql');
     expect($source)->toBeString()->and($schema)->toBeString();
     $function = \test_php_function_source($source, 'replicate_out');
+    // The read/failure guard and successful-cutoff cleanup are separate blocks.
+    // Capture both so an earlier guard cannot silently omit the actual mutation.
     $cleanup = \test_php_block_source('<?php ' . $function, '$time = db_fetch_cell(', '// Remove anything not updated recently');
+    $cleanup .= \test_php_block_source('<?php ' . $function, 'if (!empty($time))', '// Remove anything not updated recently');
     expect(preg_match('/^CREATE TABLE poller_item \(.*?^\) ENGINE=InnoDB ROW_FORMAT=Dynamic;/ms', $schema, $match))->toBe(1);
     $ddl = str_replace('CREATE TABLE poller_item (', 'CREATE TEMPORARY TABLE poller_item (', $match[0]);
     // Use the shipped columns; permit nullable legacy timestamps so
