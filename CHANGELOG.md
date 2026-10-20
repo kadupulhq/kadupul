@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Give login and denied-access pages a document language and a level-one heading while preserving their theme styling (#695).
+
 - Insert RRDproxy cleaner file listings in batches of 400 rows, independently of each file's byte size (#623).
 
 - Drain POSIX one-shot RRDtool output while sending input, enforce the existing command timeout and caller budget, and report graph-export timeouts as failures (#782).

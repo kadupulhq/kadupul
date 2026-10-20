@@ -462,6 +462,9 @@ jobs:
           php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/Core/NeverReturnTypeTest.php --colors=never
           php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/Security/Auth/ReportAdminGroupRealmTest.php --colors=never
           php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/HardeningAuth2026RegressionTest.php --colors=never
+          # Native PHPUnit classes run explicitly; the inventory accepts Pest-generated classes only.
+          php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/Security/Auth/AuthControllerNativeCoverageTest.php --colors=never --log-junit="$RUNNER_TEMP/authentication-native.xml"
+          test -s "$RUNNER_TEMP/authentication-native.xml"
           php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/TreeSortFalseGuardTest.php --colors=never
 
       - name: Verify string predicates and directory boundaries
@@ -500,6 +503,7 @@ jobs:
           path: |
             ${{ runner.temp }}/legacy-normal.xml
             ${{ runner.temp }}/legacy-privileged.xml
+            ${{ runner.temp }}/authentication-native.xml
           if-no-files-found: error
 
   application-smoke:
