@@ -321,7 +321,17 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
     }
 
     if ($repair) {
-        repair_system_data_input_methods();
+        if ($preview_only) {
+            foreach (array('data_input_method', 'data_template') as $repair_type) {
+                if (isset($info_array[$repair_type])) {
+                    foreach ($info_array[$repair_type] as $index => $repair_info) {
+                        $info_array[$repair_type][$index]['differences'][] = __('Legacy system input fields and mappings will be checked for repairs only when the template is imported.');
+                    }
+                }
+            }
+        } else {
+            repair_system_data_input_methods();
+        }
     }
 
     return $info_array;

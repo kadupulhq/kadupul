@@ -3968,7 +3968,7 @@ msgstr "맞춤 데이터"
 msgid "Data Source Item %s"
 msgstr "데이터 소스 항목  %s"
 
-#: data_sources.php:1267 data_templates.php:817 lib/import.php:2839
+#: data_sources.php:1267 data_templates.php:817 lib/import.php:2849
 #: package_import.php:599
 msgid "New"
 msgstr "신규"
@@ -11861,7 +11861,7 @@ msgid "Recovering"
 msgstr "복구 중"
 
 #: lib/api_automation.php:33 lib/auth.php:3085 lib/clog_webapi.php:856
-#: lib/html_utility.php:1362 lib/import.php:382 lib/plugins.php:1499
+#: lib/html_utility.php:1362 lib/import.php:392 lib/plugins.php:1499
 #: lib/plugins.php:1500 lib/rrd.php:4261 lib/rrd.php:4273 lib/spikekill.php:301
 #: package_import.php:523 package_import.php:601 utilities.php:211
 #: utilities.php:212 utilities.php:2753
@@ -14021,7 +14021,7 @@ msgstr "이벤트"
 msgid "Send Report"
 msgstr "보고 내용 발송"
 
-#: lib/html_reports.php:1644 lib/import.php:2924 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:2934 user_admin.php:1776
 msgid "[new]"
 msgstr "[새로운]"
 
@@ -14259,110 +14259,114 @@ msgstr "값  %s의 변수  %s에 대한 유효성 검사 오류입니다. 자세
 msgid "Validation Error"
 msgstr "유효성 검사 오류"
 
-#: lib/import.php:695 lib/import.php:714
+#: lib/import.php:328
+msgid "Legacy system input fields and mappings will be checked for repairs only when the template is imported."
+msgstr ""
+
+#: lib/import.php:705 lib/import.php:724
 msgid "written"
 msgstr "쓴"
 
-#: lib/import.php:697
+#: lib/import.php:707
 msgid "not written"
 msgstr ""
 
-#: lib/import.php:700
+#: lib/import.php:710
 msgid "could not open"
 msgstr "열리지 못함"
 
-#: lib/import.php:706
+#: lib/import.php:716
 msgid "not exists"
 msgstr "존재하지 않는다."
 
-#: lib/import.php:709
+#: lib/import.php:719
 msgid "not writable"
 msgstr "쓰기 가능 "
 
-#: lib/import.php:1937 lib/import.php:1958
+#: lib/import.php:1947 lib/import.php:1968
 #, php-format
 msgid "New Graph Template: %s"
 msgstr "그래프 [템플릿 :  %s]"
 
-#: lib/import.php:1972 lib/import.php:1984
+#: lib/import.php:1982 lib/import.php:1994
 #, php-format
 msgid "New Data Query: %s"
 msgstr "데이터 쿼리 [ %s]"
 
-#: lib/import.php:2621
+#: lib/import.php:2631
 msgid "Unknown Field"
 msgstr "알 수 없는 필드"
 
-#: lib/import.php:2837
+#: lib/import.php:2847
 msgid "Updated"
 msgstr "업데이트"
 
-#: lib/import.php:2841
+#: lib/import.php:2851
 msgid "Damaged"
 msgstr "데이터 소스, 그래프"
 
-#: lib/import.php:2843 package_import.php:593
+#: lib/import.php:2853 package_import.php:593
 msgid "Unchanged"
 msgstr "[변하지 않은]"
 
-#: lib/import.php:2879
+#: lib/import.php:2889
 msgid "Import Preview Results"
 msgstr "미리보기 결과 가져 오기"
 
-#: lib/import.php:2879
+#: lib/import.php:2889
 msgid "Import Results"
 msgstr "결과 가져 오기"
 
-#: lib/import.php:2883
+#: lib/import.php:2893
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Kadupul는 패키지를 가져온 경우 다음과 같이 변경합니다."
 
-#: lib/import.php:2885
+#: lib/import.php:2895
 #, fuzzy
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "Kadupul은 패키지에 대해 다음 항목을 가져 왔습니다."
 
-#: lib/import.php:2888
+#: lib/import.php:2898
 msgid "Package Files"
 msgstr "패키지 파일"
 
-#: lib/import.php:2892
+#: lib/import.php:2902
 msgid "[preview] "
 msgstr "미리보기"
 
-#: lib/import.php:2897
+#: lib/import.php:2907
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "Kadupul는 템플릿을 가져온 경우 다음과 같이 변경합니다."
 
-#: lib/import.php:2899
+#: lib/import.php:2909
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "Kadupul가 템플릿에 대해 다음 항목을 가져 왔습니다."
 
-#: lib/import.php:2914
+#: lib/import.php:2924
 msgid "[success]"
 msgstr "성공!"
 
-#: lib/import.php:2916
+#: lib/import.php:2926
 msgid "[fail]"
 msgstr "실패"
 
-#: lib/import.php:2918
+#: lib/import.php:2928
 msgid "[preview]"
 msgstr "미리보기"
 
-#: lib/import.php:2922
+#: lib/import.php:2932
 msgid "[updated]"
 msgstr "업데이트됨"
 
-#: lib/import.php:2926
+#: lib/import.php:2936
 msgid "[unchanged]"
 msgstr "[변하지 않은]"
 
-#: lib/import.php:2962
+#: lib/import.php:2972
 msgid "Found Dependency:"
 msgstr "발견 종속성 :"
 
-#: lib/import.php:2964
+#: lib/import.php:2974
 msgid "Unmet Dependency:"
 msgstr "Unmet Dependency :"
 

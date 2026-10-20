@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -7,7 +9,8 @@
  * Runs the real import_xml_data(), the Data Template and Data Input Method
  * importers and the transaction helpers against tables built from cacti.sql,
  * so a child hash that does not parse can be checked against what the
- * database keeps afterwards.
+ * database keeps afterwards. Compatibility repair cases also exercise the real
+ * repair helper, XML parser, and signed-package reader.
  */
 
 namespace ImportParentRollbackDatabase;
@@ -23,7 +26,8 @@ foreach (array(
     '/lib/import.php' => array(
         'import_xml_data', 'xml_to_data_template', 'xml_to_data_input_method', 'xml_detect_ignorable_hash_cache',
         'compare_data', 'resolve_hash_to_id', 'parse_xml_hash', 'check_hash_type', 'check_hash_version',
-        'xml_character_decode', 'import_is_base64_encoded',
+        'xml_character_decode', 'import_is_base64_encoded', 'import_package', 'import_read_package_data',
+        'import_package_get_public_key', 'import_package_get_details', 'is_cacti_public_key', 'xml_to_array',
     ),
     '/lib/database.php' => array('db_begin_transaction', 'db_commit_transaction', 'db_rollback_transaction'),
     '/lib/utility.php'  => array('update_replication_crc'),
@@ -50,6 +54,7 @@ foreach (array(
     'POLLER_VERBOSITY_LOW'    => 2,
     'POLLER_VERBOSITY_MEDIUM' => 3,
     'POLLER_VERBOSITY_HIGH'   => 4,
+    'POLLER_VERBOSITY_DEVDBG' => 5,
 ) as $constant => $value) {
     if (!defined($constant)) {
         define($constant, $value);
@@ -100,6 +105,11 @@ function db_fetch_row_prepared($sql, $params = array())
     return $row === false ? array() : $row;
 }
 
+function db_fetch_assoc_prepared($sql, $params = array())
+{
+    return query($sql, $params)->fetchAll(PDO::FETCH_ASSOC);
+}
+
 function db_fetch_assoc($sql)
 {
     return query($sql)->fetchAll(PDO::FETCH_ASSOC);
@@ -132,9 +142,17 @@ function sql_save($save, $table, $key_cols = 'id', $autoinc = true)
     return ($autoinc && empty($save['id'])) ? (int) pdo()->lastInsertId() : (isset($save['id']) ? $save['id'] : true);
 }
 
-function xml2array($data)
+$xmlSource = file_get_contents($root . '/lib/xml.php');
+foreach (array('xml2array', 'get_children') as $name) {
+    eval('namespace ImportParentRollbackDatabase\\Parser; ' . \test_php_function_source($xmlSource, $name));
+}
+eval('namespace ImportParentRollbackDatabase\\Parser; function cacti_count($values) { return count($values); }');
+
+function xml2array($data, bool $strict = false)
 {
-    return $GLOBALS['import_rollback_xml'];
+    return isset($GLOBALS['import_rollback_xml'])
+        ? $GLOBALS['import_rollback_xml']
+        : Parser\xml2array($data, $strict);
 }
 
 function cacti_input_string_is_safe($input_string)
@@ -144,9 +162,13 @@ function cacti_input_string_is_safe($input_string)
 
 function generate_data_input_field_sequences($input_string, $data_input_id) {}
 
+$repairSource = \test_php_function_source(file_get_contents($root . '/lib/functions.php'), 'repair_system_data_input_methods');
+eval('namespace ' . __NAMESPACE__ . '; ' . str_replace('function repair_system_data_input_methods(', 'function repair_legacy_fields(', $repairSource));
+
 function repair_system_data_input_methods($step = 'import')
 {
     $GLOBALS['import_rollback_repairs']++;
+    repair_legacy_fields($step);
 }
 
 function api_plugin_hook_function($name, $parameters = '')
@@ -154,7 +176,10 @@ function api_plugin_hook_function($name, $parameters = '')
     return $parameters;
 }
 
-function cacti_log($message, $output = false, $environ = 'CMDPHP', $level = '') {}
+function cacti_log($message, $output = false, $environ = 'CMDPHP', $level = '')
+{
+    $GLOBALS['import_rollback_logs'][] = $message;
+}
 
 function cacti_sizeof($array)
 {
@@ -186,7 +211,7 @@ function written()
     $rows = array();
 
     foreach (WRITTEN as $table) {
-        $rows[$table] = query('SELECT * FROM `' . $table . '` ORDER BY 1')->fetchAll(PDO::FETCH_ASSOC);
+        $rows[$table] = query('SELECT * FROM `' . $table . '` ORDER BY 1, 2')->fetchAll(PDO::FETCH_ASSOC);
     }
 
     return $rows;
@@ -276,6 +301,7 @@ beforeEach(function () {
     $GLOBALS['fields_data_input_edit']         = array_fill_keys(array('name', 'type_id', 'input_string'), array());
     $GLOBALS['fields_data_input_field_edit']   = array_fill_keys(array('name', 'data_name', 'input_output', 'update_rra', 'sequence', 'type_code', 'regexp_match', 'allow_nulls'), array());
     $GLOBALS['fields_data_input_field_edit_1'] = array();
+    unset($GLOBALS['import_rollback_xml']);
     $GLOBALS['preview_only']                   = false;
     $GLOBALS['import_debug_info']              = array();
     $GLOBALS['import_messages']                = array();
@@ -283,6 +309,7 @@ beforeEach(function () {
     $GLOBALS['ignorable_hashes']               = array();
     $GLOBALS['import_rollback_saves']          = array();
     $GLOBALS['import_rollback_repairs']        = 0;
+    $GLOBALS['import_rollback_logs']           = array();
 });
 
 afterEach(function () {
@@ -415,4 +442,121 @@ test('an import that fails inside a transaction the caller commits leaves only t
     $expected['settings'] = array(array('name' => 'outer', 'value' => 'committed'));
 
     expect(written())->toBe($expected);
+});
+
+// Test-only trust anchor; package and per-file signatures use real OpenSSL verification.
+function get_public_key_sha256(): string
+{
+    return trim($GLOBALS['import_preview_public_key']);
+}
+
+function get_public_key_sha1(): string
+{
+    return '';
+}
+
+function __($message, ...$args): string
+{
+    return $args ? vsprintf($message, $args) : $message;
+}
+
+function legacy_port_xml(): string
+{
+    $method = '3eb92bb845b9660a7445cf9740726522';
+    $good = 'fc64b99742ec417cc424dbf8c7692d36';
+    $bad = str_repeat('a', 32);
+    query("INSERT INTO data_input (id, hash, name, input_string, type_id) VALUES (1, ?, 'Get SNMP Data', '', 2)", array($method));
+    foreach (array(40 => $good, 255 => $bad) as $id => $hash) {
+        query("INSERT INTO data_input_fields (id, hash, data_input_id, name, data_name, input_output, update_rra, sequence, type_code, regexp_match, allow_nulls)
+            VALUES (?, ?, 1, 'SNMP Port', 'snmp_port', 'in', '', 0, 'snmp_port', '', '')", array($id, $hash));
+    }
+    // Both repair branches: preserve the canonical value on collision, reassign a lone legacy mapping.
+    query("INSERT INTO data_input_data (data_input_field_id, data_template_data_id, t_value, value)
+        VALUES (40, 1, '', '161'), (255, 1, '', '162'), (255, 2, '', '1161')");
+    query("INSERT INTO data_template_rrd (id, data_input_field_id, data_source_name) VALUES (1, 255, 'port')");
+
+    return '<cacti><hash_030103' . $method . '><name>Get SNMP Data</name><type_id>2</type_id><input_string></input_string><fields>'
+        . '<hash_070103' . $bad . '><name>SNMP Port</name><data_name>snmp_port</data_name><input_output>in</input_output>'
+        . '<update_rra></update_rra><sequence>0</sequence><type_code>snmp_port</type_code><regexp_match></regexp_match><allow_nulls></allow_nulls>'
+        . '</hash_070103' . $bad . '></fields></hash_030103' . $method . '></cacti>';
+}
+
+function signed_preview_package(string $xml): string
+{
+    $key = openssl_pkey_new(array('private_key_bits' => 2048, 'private_key_type' => OPENSSL_KEYTYPE_RSA));
+    if ($key === false || !openssl_sign($xml, $signature, $key, OPENSSL_ALGO_SHA256)) {
+        throw new \RuntimeException('Cannot sign fixture template.');
+    }
+    $GLOBALS['import_preview_public_key'] = openssl_pkey_get_details($key)['key'];
+    $unsigned = "<package>\n<info><name>Preview repair fixture</name></info>\n<publickey>"
+        . base64_encode($GLOBALS['import_preview_public_key']) . "</publickey>\n<files><file><name>template.xml</name><data>"
+        . base64_encode($xml) . '</data><filesignature>' . base64_encode($signature) . "</filesignature></file></files>\n   <signature></signature>\n</package>\n";
+    if (!openssl_sign($unsigned, $packageSignature, $key, OPENSSL_ALGO_SHA256)) {
+        throw new \RuntimeException('Cannot sign fixture package.');
+    }
+    $package = str_replace('<signature></signature>', '<signature>' . base64_encode($packageSignature) . '</signature>', $unsigned);
+    $path = tempnam(sys_get_temp_dir(), 'kadupul-preview-repair-');
+    if ($path === false || file_put_contents($path, gzencode($package)) === false) {
+        throw new \RuntimeException('Cannot write fixture package.');
+    }
+
+    return $path;
+}
+
+test('legacy field and mapping repairs run only on real imports', function (bool $package, bool $preview) {
+    $xml = legacy_port_xml();
+    $before = written();
+    $GLOBALS['preview_only'] = $preview;
+    $path = null;
+    try {
+        if ($package) {
+            $path = signed_preview_package($xml);
+            $result = import_package($path, preview: $preview, limitex: false);
+            expect($result)->toBeArray(implode(PHP_EOL, $GLOBALS['import_rollback_logs']));
+            $result = $result[0];
+        } else {
+            $result = import_xml_data($xml, false, 1);
+        }
+        expect($result)->toBeArray();
+        $after = written();
+        if ($preview) {
+            expect($after)->toBe($before);
+            expect($GLOBALS['import_rollback_repairs'])->toBe(0);
+            expect($result['data_input_method'][0]['result'])->toBe('preview');
+            expect($result['data_input_method'][0]['differences'])->toContain(
+                'Legacy system input fields and mappings will be checked for repairs only when the template is imported.'
+            );
+        } else {
+            expect($GLOBALS['import_rollback_repairs'])->toBe(1);
+            expect($result['data_input_method'][0]['result'])->toBe('success');
+            expect(array_column($after['data_input_fields'], 'id'))->toBe(array(40));
+            expect(array_column($after['data_input_data'], 'data_input_field_id'))->toBe(array(40, 40));
+            expect(array_column($after['data_input_data'], 'value'))->toBe(array('161', '1161'));
+            expect(array_column($after['data_template_rrd'], 'data_input_field_id'))->toBe(array(40));
+        }
+    } finally {
+        if ($path !== null) {
+            unlink($path);
+        }
+        unset($GLOBALS['import_preview_public_key']);
+    }
+})->with(array(
+    'plain preview' => array(false, true),
+    'signed package preview' => array(true, true),
+    'plain import' => array(false, false),
+    'signed package import' => array(true, false),
+));
+
+test('a data template preview also defers system input field repairs', function () {
+    legacy_port_xml();
+    $before = written();
+    $GLOBALS['preview_only'] = true;
+    $result = import(template(array('hash_080103' . md5('preview item') => item('preview'))));
+
+    expect($result)->toBeArray();
+    expect(written())->toBe($before);
+    expect($GLOBALS['import_rollback_repairs'])->toBe(0);
+    expect($result['data_template'][0]['differences'])->toContain(
+        'Legacy system input fields and mappings will be checked for repairs only when the template is imported.'
+    );
 });
