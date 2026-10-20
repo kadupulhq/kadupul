@@ -75,17 +75,25 @@ test('clog title caching accepts repeated scalar and list identifiers without wa
 
 test('RRD cleaner scan persists escaped metadata and preserves batch boundaries', function ($mode, $count, $fileSize, $expectedBatches) {
     $mtime = $mode === 'scan-proxy' && $fileSize === 'unknown' ? 'invalid' : 1700000000;
-    $rows = [["a'b\\.rrd", $fileSize, $mtime]];
-    for ($index = 1; $index < $count; $index++) $rows[] = [sprintf('sample%04d.rrd', $index), $fileSize, 1700000000];
+    $rows = [];
+    for ($index = 0; $index < $count; $index++) {
+        $rows[] = [$index === 0 ? "a'b\\.rrd" : sprintf('sample%04d.rrd', $index), $fileSize, $mtime];
+    }
     [$status, $output, $error] = per_cs_review_run($this, $mode, json_encode($rows, JSON_THROW_ON_ERROR));
     expect($status)->toBe(0)->and($error)->toBe('');
     $result = json_decode($output, true, flags: JSON_THROW_ON_ERROR);
     expect($result['rows'])->toHaveCount($count)->and($result['batches'])->toBe($expectedBatches);
-    expect($result['rows'][0]['name'])->toBe("a'b\\.rrd")
-        ->and($result['rows'][0]['size'])->toBe((int) $fileSize)
-        ->and($result['rows'][0]['in_cacti'])->toBe(0)
-        ->and($result['rows'][0]['last_mod'])->toBe($mtime === 'invalid' ? '1970-01-01 00:00:00' : '2023-11-14 22:13:20');
+    $expected = array_map(static fn($row) => [
+        'name' => $row[0],
+        'size' => (int) $row[1],
+        'last_mod' => $row[2] === 'invalid' ? '1970-01-01 00:00:00' : '2023-11-14 22:13:20',
+        'in_cacti' => 0,
+    ], $rows);
+    expect($result['rows'])->toBe($expected);
 })->with([
     ['scan-local', 1, 17, [1]], ['scan-local', 401, 17, [400, 1]],
-    ['scan-proxy', 2, 'unknown', [2]], ['scan-proxy', 2, 399, [1, 1]],
+    ['scan-proxy', 2, 'unknown', [2]], ['scan-proxy', 2, 399, [2]],
+    ['scan-proxy', 0, 4096, []], ['scan-proxy', 1, 4096, [1]],
+    ['scan-proxy', 400, 4096, [400]], ['scan-proxy', 401, 4096, [400, 1]],
+    ['scan-proxy', 800, 4096, [400, 400]], ['scan-proxy', 2401, 4096, [400, 400, 400, 400, 400, 400, 1]],
 ]);

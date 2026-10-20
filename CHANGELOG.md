@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Insert RRDproxy cleaner file listings in batches of 400 rows, independently of each file's byte size (#623).
+
 - Drain POSIX one-shot RRDtool output while sending input, enforce the existing command timeout and caller budget, and report graph-export timeouts as failures (#782).
 
 - Return failure for rejected or unacknowledged proxy output, stop unconfirmed RRD creation, and preserve realtime graph caches when rendering fails or returns empty output (#769).

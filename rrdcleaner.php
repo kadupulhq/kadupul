@@ -214,8 +214,8 @@ function get_files()
         if ($scan) {
             $files = explode("\r\n", $scan);
             foreach ($files as $file) {
-                list($pathname, $size, $mtime) = explode(',', $file);
-                $sql[] = "(" . db_qstr(str_replace($rra_path, '', $pathname)) . ", " . (int) $size . ", " . db_qstr(date('Y-m-d H:i:s', (int) $mtime)) . ",0)";
+                list($pathname, $file_size, $mtime) = explode(',', $file);
+                $sql[] = "(" . db_qstr(str_replace($rra_path, '', $pathname)) . ", " . (int) $file_size . ", " . db_qstr(date('Y-m-d H:i:s', (int) $mtime)) . ",0)";
                 $size++;
 
                 if ($size == 400) {

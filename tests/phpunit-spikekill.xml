@@ -26,6 +26,7 @@
       <file>Unit/Core/Cli/RrdMaintenanceCoordinationTest.php</file>
       <file>Unit/Core/Rrd/RrdMaintenanceLockTest.php</file>
       <file>Unit/Core/Rrd/MaintenancePurgeLeaseTest.php</file>
+      <file>Unit/PerCsReviewRegressionTest.php</file>
       <file>Unit/Core/Rrd/RrdResizeLeaseTest.php</file>
       <file>Unit/Core/Rrd/RrdTuneLeaseTest.php</file>
       <file>Unit/Core/Poller/PollerWriterDeadlineNativeTest.php</file>
