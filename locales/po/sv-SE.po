@@ -2504,8 +2504,8 @@ msgid "No Tree Rules Found"
 msgstr "Inga trädregler hittades"
 
 #: cactid.php:27 help.php:54 lib/functions.php:6709 lib/functions.php:6779
-#: lib/functions.php:6875 lib/functions.php:7536 poller.php:417 poller.php:584
-#: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
+#: lib/functions.php:6875 lib/functions.php:7536 poller.php:416 poller.php:583
+#: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:387
 msgid "Kadupul System Warning"
 msgstr "Kadupul systemvarning"
@@ -5257,11 +5257,11 @@ msgstr "Endast Kadupul-administratörer med behörigheten Install/Upgrade kan lo
 msgid "There is an Installation or Upgrade in progress."
 msgstr "Det pågår en installation eller uppgradering."
 
-#: include/global.php:580
+#: include/global.php:583
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "Huvuddatainsamlaren har återgått till online-status"
 
-#: include/global.php:584
+#: include/global.php:587
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "Huvuddatainsamlaren har gått till en offline- eller återställningsstatus"
 
@@ -17061,49 +17061,49 @@ msgstr "Insticksmodul är inte kompatibelt"
 msgid "Enable Plugin Locally"
 msgstr "Aktivera tillägget lokalt"
 
-#: poller.php:417
+#: poller.php:416
 #, php-format
 msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
 msgstr "VARNING: %s är inte synkroniserad med pollerintervallet för poller-id %d!  Pollerintervallet är %d sekunder, med högst %d sekunder, men %d sekunder har gått sedan den senaste omröstningen!"
 
-#: poller.php:584
+#: poller.php:583
 #, php-format
 msgid "WARNING: There are %d processes detected as overrunning a polling cycle for poller id %d, please investigate."
 msgstr "VARNING: Det finns %d processer som upptäcks som överskridna en omröstningscykel för omröstnings-ID %d, vänligen undersök."
 
-#: poller.php:666
+#: poller.php:665
 #, php-format
 msgid "WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s."
 msgstr "VARNING: Poller-utmatningstabellen är inte tom för poller-id %d.  Problem: %d, %s."
 
-#: poller.php:719
+#: poller.php:718
 #, php-format
 msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
 msgstr "FEL: Ryggradssökvägen: %s är ogiltig för undersöknings-ID %d.  Poller kan inte fortsätta!"
 
-#: poller.php:880
+#: poller.php:873
 #, php-format
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "Maximal körtid på %d sekunder har överskridits för undersöknings-id %d. Avslutar."
 
-#: poller.php:1001
+#: poller.php:994
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
 msgstr "VARNING: Kadupul Polling Cycle överskred pollningsintervall med "
 
-#: poller.php:1039
+#: poller.php:1032
 #, php-format
 msgid "WARNING: PollerID:%s with Name:%s is in Heartbeat Status"
 msgstr "WARNING: PollerID:%s med namn:%s är i Heartbeat-status"
 
-#: poller.php:1041
+#: poller.php:1034
 msgid "Poller in Heartbeat Mode"
 msgstr "Poller i Heartbeat-läge"
 
-#: poller.php:1333
+#: poller.php:1326
 msgid "Kadupul System Notification"
 msgstr "Avisering för Kadupul-system"
 
-#: poller.php:1333
+#: poller.php:1326
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
 msgstr "OBS: En andra Kadupul-datainsamlare har lagts till.  Därför aktiveras boost automatiskt!"
 

@@ -2517,8 +2517,8 @@ msgid "No Tree Rules Found"
 msgstr "कोई ट्री नियम नहीं मिला"
 
 #: cactid.php:27 help.php:54 lib/functions.php:6709 lib/functions.php:6779
-#: lib/functions.php:6875 lib/functions.php:7536 poller.php:417 poller.php:584
-#: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
+#: lib/functions.php:6875 lib/functions.php:7536 poller.php:416 poller.php:583
+#: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:387
 #, fuzzy
 msgid "Kadupul System Warning"
@@ -5279,11 +5279,11 @@ msgstr "इंस्टॉल / अपग्रेड विशेषाधि�
 msgid "There is an Installation or Upgrade in progress."
 msgstr "कोई स्थापना या नवीनीकरण प्रगति पर है।"
 
-#: include/global.php:580
+#: include/global.php:583
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "पिछली बार इस डेटा कलेक्टर को मुख्य कैक्टि साइट के साथ पूरा किया गया था।"
 
-#: include/global.php:584
+#: include/global.php:587
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "मुख्य डेटा कलेक्टर ऑफ़लाइन या रिकवरी स्टेटस पर चला गया है"
 
@@ -17191,51 +17191,51 @@ msgstr "प्लगइन संगत नहीं है"
 msgid "Enable Plugin Locally"
 msgstr "प्लगिन सक्षम करें"
 
-#: poller.php:417
+#: poller.php:416
 #, php-format
 msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
 msgstr "चेतावनी: %s पोलर आईडी %d के लिए पोलर इंटरवल के साथ सिंक नहीं है!  पोलर इंटरवल %d सेकंड का होता है, जिसमें अधिकतम %d सेकंड होते हैं, लेकिन पिछले पोल के बाद से %d सेकंड बीत चुके हैं!"
 
-#: poller.php:584
+#: poller.php:583
 #, php-format
 msgid "WARNING: There are %d processes detected as overrunning a polling cycle for poller id %d, please investigate."
 msgstr "चेतावनी: पोलर आईडी %d के लिए मतदान चक्र को ओवररनिंग करने के रूप में %d प्रक्रियाओं का पता चला है, कृपया जांच करें।"
 
-#: poller.php:666
+#: poller.php:665
 #, php-format
 msgid "WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s."
 msgstr "चेतावनी: पोलर आउटपुट तालिका पोलर आईडी %d के लिए खाली नहीं है।  समस्याएँ: %d, %s।"
 
-#: poller.php:719
+#: poller.php:718
 #, php-format
 msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
 msgstr "त्रुटि: रीढ़ की हड्डी का पथ: %s परागक आईडी %d के लिए अमान्य है।  पोलर जारी नहीं रख सकते!"
 
-#: poller.php:880
+#: poller.php:873
 #, php-format
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "परागकण आईडी %d के लिए %d सेकंड का अधिकतम रनटाइम पार हो गया। बाहर हो रहा है।"
 
-#: poller.php:1001
+#: poller.php:994
 #, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
 msgstr "चेतावनी: Kadupul पोलिंग साइकिल पोलर इंटरवल को पार कर गया"
 
-#: poller.php:1039
+#: poller.php:1032
 #, php-format
 msgid "WARNING: PollerID:%s with Name:%s is in Heartbeat Status"
 msgstr "चेतावनी: PollerID:%s नाम के साथ:%s दिल की धड़कन की स्थिति में है"
 
-#: poller.php:1041
+#: poller.php:1034
 msgid "Poller in Heartbeat Mode"
 msgstr "दिल की धड़कन मोड में पोलर"
 
-#: poller.php:1333
+#: poller.php:1326
 #, fuzzy
 msgid "Kadupul System Notification"
 msgstr "Kadupul सिस्टम यूटिलिटीज"
 
-#: poller.php:1333
+#: poller.php:1326
 #, fuzzy
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
 msgstr "नोट: एक दूसरा Kadupul डेटा कलेक्टर जोड़ा गया है। आगे, स्वचालित रूप से बढ़ावा देने में सक्षम!"

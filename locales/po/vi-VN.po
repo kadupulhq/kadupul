@@ -2509,8 +2509,8 @@ msgid "No Tree Rules Found"
 msgstr "Không tìm thấy quy tắc cây"
 
 #: cactid.php:27 help.php:54 lib/functions.php:6709 lib/functions.php:6779
-#: lib/functions.php:6875 lib/functions.php:7536 poller.php:417 poller.php:584
-#: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
+#: lib/functions.php:6875 lib/functions.php:7536 poller.php:416 poller.php:583
+#: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:387
 msgid "Kadupul System Warning"
 msgstr "Cảnh báo hệ thống Kadupul"
@@ -5231,11 +5231,11 @@ msgstr "Chỉ Quản trị viên Kadupul có đặc quyền Cài đặt / Nâng 
 msgid "There is an Installation or Upgrade in progress."
 msgstr "Có một cài đặt hoặc nâng cấp trong tiến trình."
 
-#: include/global.php:580
+#: include/global.php:583
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "Lần cuối cùng Bộ thu thập dữ liệu này được đồng bộ hóa hoàn toàn với trang web chính của Kadupul."
 
-#: include/global.php:584
+#: include/global.php:587
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr ""
 
@@ -17062,50 +17062,50 @@ msgstr "Plugin không tương thích"
 msgid "Enable Plugin Locally"
 msgstr "Sử dụng Plugin"
 
-#: poller.php:417
+#: poller.php:416
 #, fuzzy, php-format
 msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
 msgstr "CẢNH BÁO: %s không đồng bộ với Khoảng thời gian của Poller! Khoảng thời gian của Poller là &#39;% d&#39; giây, với tối đa &#39;% d&#39; giây, nhưng% d giây đã trôi qua kể từ cuộc thăm dò cuối cùng!"
 
-#: poller.php:584
+#: poller.php:583
 #, fuzzy, php-format
 msgid "WARNING: There are %d processes detected as overrunning a polling cycle for poller id %d, please investigate."
 msgstr "CẢNH BÁO: Có &#39;% d&#39; được phát hiện là vượt quá chu kỳ bỏ phiếu, vui lòng điều tra."
 
-#: poller.php:666
+#: poller.php:665
 #, fuzzy, php-format
 msgid "WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s."
 msgstr "CẢNH BÁO: Bảng đầu ra của xe đẩy không trống. Các vấn đề:% d, %s."
 
-#: poller.php:719
+#: poller.php:718
 #, fuzzy, php-format
 msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
 msgstr "LRI: Đường dẫn cột sống: %s không hợp lệ. Xe đẩy không thể tiếp tục!"
 
-#: poller.php:880
+#: poller.php:873
 #, fuzzy, php-format
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "Thời gian chạy tối đa% d giây vượt quá. Thoát hiểm."
 
-#: poller.php:1001
+#: poller.php:994
 #, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
 msgstr "CẢNH BÁO: Chu kỳ thăm dò của Kadupul đã vượt quá khoảng thời gian thăm dò của Kadupul bởi"
 
-#: poller.php:1039
+#: poller.php:1032
 #, php-format
 msgid "WARNING: PollerID:%s with Name:%s is in Heartbeat Status"
 msgstr ""
 
-#: poller.php:1041
+#: poller.php:1034
 msgid "Poller in Heartbeat Mode"
 msgstr ""
 
-#: poller.php:1333
+#: poller.php:1326
 msgid "Kadupul System Notification"
 msgstr "Tiện ích hệ thống Kadupul"
 
-#: poller.php:1333
+#: poller.php:1326
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
 msgstr "LƯU Ý: Một bộ thu thập dữ liệu Kadupul thứ hai đã được thêm vào. Do đó, cho phép tăng tự động!"
 

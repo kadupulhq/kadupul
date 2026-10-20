@@ -76,11 +76,16 @@ function debug($string)
  * @param mixed $remote_db_cnn_id Remote database connection.
  * @param mixed $local_db_cnn_id Local database connection.
  * @param int $records_inserted Number of rows in successful insert packets.
+ * @param string $source_table Allowlisted local queue being acknowledged.
  *
  * @return bool Whether every packet was delivered and its matching local row removed.
  */
-function poller_recovery_transfer_rows(array $rows, int $max_allowed_packet, $remote_db_cnn_id, $local_db_cnn_id, int &$records_inserted): bool
+function poller_recovery_transfer_rows(array $rows, int $max_allowed_packet, $remote_db_cnn_id, $local_db_cnn_id, int &$records_inserted, string $source_table = 'poller_output_boost'): bool
 {
+    if (!in_array($source_table, array('poller_output_boost', 'poller_output'), true)) {
+        return false;
+    }
+
     // A non-object handle would silently select the default (local) database.
     if (!is_object($remote_db_cnn_id) || !is_object($local_db_cnn_id)) {
         cacti_log('RECOVERY: A database connection is unavailable; samples were retained.', false, 'POLLER');
@@ -157,7 +162,7 @@ function poller_recovery_transfer_rows(array $rows, int $max_allowed_packet, $re
             $params[] = $row['output'];
         }
 
-        if (db_execute_prepared('DELETE FROM poller_output_boost WHERE ' . implode(' OR ', $conditions), $params, true, $local_db_cnn_id) === false) {
+        if (db_execute_prepared('DELETE FROM ' . $source_table . ' WHERE ' . implode(' OR ', $conditions), $params, true, $local_db_cnn_id) === false) {
             cacti_log('RECOVERY: Local acknowledgement cleanup failed; remaining samples were retained for retry.', false, 'POLLER');
 
             return false;
@@ -305,13 +310,15 @@ if ($run) {
 
     poller_push_reindex_data_to_poller(0, 0, true);
 
+    // Both queues can contain the only copy of an offline sample.
+    $source_table = 'poller_output_boost';
     while (true) {
         cacti_log('RECOVERY: Getting max_time for ' . $record_limit . ' records.', false, 'POLLER');
 
         $max_time = db_fetch_cell("SELECT MAX(time)
 			FROM (
 				SELECT time
-				FROM poller_output_boost
+				FROM $source_table
 				ORDER BY time ASC
 				LIMIT $record_limit
 			) AS rs", '', true, $local_db_cnn_id);
@@ -322,6 +329,11 @@ if ($run) {
 
             break;
         } elseif (empty($max_time)) {
+            if ($source_table === 'poller_output_boost') {
+                $source_table = 'poller_output';
+                continue;
+            }
+
             db_execute("DELETE FROM settings WHERE name='recovery_pid'", true, $local_db_cnn_id);
 
             break;
@@ -329,11 +341,13 @@ if ($run) {
             cacti_log('RECOVERY: Fetching records till time: ' . $max_time . ' from poller DB', false, 'POLLER');
 
             $rows = db_fetch_assoc_prepared(
-                'SELECT *
-				FROM poller_output_boost
+                "SELECT *
+				FROM $source_table
 				WHERE time <= ?
-				ORDER BY time ASC, local_data_id ASC',
-                array($max_time)
+				ORDER BY time ASC, local_data_id ASC",
+                array($max_time),
+                true,
+                $local_db_cnn_id
             );
 
             if (!is_array($rows) || !cacti_sizeof($rows)) {
@@ -344,7 +358,7 @@ if ($run) {
             }
 
             if (cacti_sizeof($rows)) {
-                if (!poller_recovery_transfer_rows($rows, $max_allowed_packet, $remote_db_cnn_id, $local_db_cnn_id, $records_inserted)) {
+                if (!poller_recovery_transfer_rows($rows, $max_allowed_packet, $remote_db_cnn_id, $local_db_cnn_id, $records_inserted, $source_table)) {
                     $recovery_failed = true;
 
                     break;

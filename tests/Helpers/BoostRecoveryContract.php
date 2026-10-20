@@ -12,17 +12,22 @@ abstract class BoostRecoveryContract extends TestCase
     use \PestCodeCoverageCompatibility;
 
     #[\PHPUnit\Framework\Attributes\DataProvider('scenarios')]
-    public function testRecoveryKeepsUnacknowledgedOrChangedSamples(string $scenario): void
+    public function testRecoveryKeepsUnacknowledgedOrChangedSamples(string $scenario, string $sourceTable): void
     {
-        $state = $this->runNative($scenario);
+        $state = $this->runNative($scenario, $sourceTable);
         $failures = array('final-failure', 'partial-failure', 'delete-failure', 'oversized', 'missing-remote', 'missing-local', 'exact-boundary', 'changed-row', 'case-change', 'space-change', 'envelope-overflow', 'main-failure');
         if (str_starts_with($scenario, 'main-')) {
-            self::assertSame($scenario !== 'main-success' ? 1 : 0, $state['exit']);
-            self::assertSame($scenario !== 'main-success' ? 5 : 2, $state['status']);
-            self::assertCount($scenario !== 'main-success' ? 3 : 0, $state['local']);
-            self::assertCount($scenario !== 'main-success' ? 0 : 3, $state['remote']);
-            self::assertSame($scenario !== 'main-success', $state['pid'] !== false);
-            self::assertCount($scenario === 'main-failure' ? 1 : 0, $state['rejectedPackets']);
+            $succeeded = in_array($scenario, array('main-success', 'main-both-success'), true);
+            self::assertSame(!$succeeded ? 1 : 0, $state['exit']);
+            self::assertSame(!$succeeded ? 5 : 2, $state['status']);
+            self::assertCount(!$succeeded ? 3 : 0, $state['local']);
+            self::assertCount(!$succeeded ? 0 : 3, $state['remote']);
+            self::assertSame(!$succeeded, $state['pid'] !== false);
+            self::assertCount(in_array($scenario, array('main-failure', 'main-both-failure'), true) ? 1 : 0, $state['rejectedPackets']);
+            self::assertCount($scenario === 'main-both-failure' ? 3 : 0, $state['otherLocal']);
+            if ($scenario === 'main-both-success') {
+                self::assertSame(6, $state['records']);
+            }
             if (str_starts_with($scenario, 'main-missing-')) {
                 self::assertSame(array(), $state['queries']);
                 self::assertSame(0, $state['insertCalls']);
@@ -30,6 +35,8 @@ abstract class BoostRecoveryContract extends TestCase
             }
             return;
         }
+        self::assertCount(1, $state['otherLocal']);
+        self::assertSame('other queue', $state['otherLocal'][0]['output']);
         self::assertSame(0, $state['exit']);
         self::assertSame(!in_array($scenario, $failures, true), $state['success']);
         if (in_array($scenario, array('missing-remote', 'missing-local', 'oversized', 'exact-boundary', 'envelope-overflow'), true)) {
@@ -106,8 +113,10 @@ abstract class BoostRecoveryContract extends TestCase
     public static function scenarios(): array
     {
         $result = array();
-        foreach (array('final-failure', 'partial-failure', 'success', 'delete-failure', 'oversized', 'missing-remote', 'missing-local', 'default-limit', 'split-boundary', 'exact-boundary', 'chunk-250', 'chunk-251', 'late-row', 'changed-row', 'retry', 'quote-output', 'main-failure', 'main-success', 'main-max-failure', 'main-read-failure', 'main-missing-local', 'main-missing-remote', 'case-change', 'space-change', 'case-retry', 'space-retry', 'full-packet-exact', 'envelope-overflow') as $scenario) {
-            $result[$scenario] = array($scenario);
+        foreach (array('final-failure', 'partial-failure', 'success', 'delete-failure', 'oversized', 'missing-remote', 'missing-local', 'default-limit', 'split-boundary', 'exact-boundary', 'chunk-250', 'chunk-251', 'late-row', 'changed-row', 'retry', 'quote-output', 'main-failure', 'main-success', 'main-both-success', 'main-both-failure', 'main-max-failure', 'main-read-failure', 'main-missing-local', 'main-missing-remote', 'case-change', 'space-change', 'case-retry', 'space-retry', 'full-packet-exact', 'envelope-overflow') as $scenario) {
+            foreach (array('poller_output_boost', 'poller_output') as $sourceTable) {
+                $result[$scenario . '-' . $sourceTable] = array($scenario, $sourceTable);
+            }
         }
         return $result;
     }
@@ -117,7 +126,7 @@ abstract class BoostRecoveryContract extends TestCase
         return false;
     }
 
-    private function runNative(string $scenario): array
+    private function runNative(string $scenario, string $sourceTable): array
     {
         $root = dirname(__DIR__, 2);
         $directory = sys_get_temp_dir() . '/native-boost-recovery-' . bin2hex(random_bytes(8));
@@ -134,6 +143,7 @@ abstract class BoostRecoveryContract extends TestCase
             $environment['BOOST_RECOVERY_ROOT'] = $root;
             $environment['BOOST_RECOVERY_DIRECTORY'] = $directory;
             $environment['BOOST_RECOVERY_SCENARIO'] = $scenario;
+            $environment['BOOST_RECOVERY_SOURCE_TABLE'] = $sourceTable;
             $environment['BOOST_RECOVERY_COVERAGE'] = $coverage !== null ? '1' : '0';
             $environment['BOOST_RECOVERY_MYSQL'] = $this->useMysql() ? '1' : '0';
             $process = proc_open(array(PHP_BINARY, '-d', 'opcache.jit=0', '-d', 'opcache.jit_buffer_size=0', '-d', 'pcov.directory=/', '-d', 'error_reporting=-1', '-d', 'display_errors=stderr', $directory . '/poller_recovery.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $directory, $environment);

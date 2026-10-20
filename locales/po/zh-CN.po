@@ -2507,8 +2507,8 @@ msgid "No Tree Rules Found"
 msgstr "未找到树规则"
 
 #: cactid.php:27 help.php:54 lib/functions.php:6709 lib/functions.php:6779
-#: lib/functions.php:6875 lib/functions.php:7536 poller.php:417 poller.php:584
-#: poller.php:666 poller.php:719 poller.php:880 poller.php:1001
+#: lib/functions.php:6875 lib/functions.php:7536 poller.php:416 poller.php:583
+#: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:387
 msgid "Kadupul System Warning"
 msgstr "Kadupul 系统警告"
@@ -5232,11 +5232,11 @@ msgstr "此时只有具有安装/升级权限的Kadupul 管理员才能登录"
 msgid "There is an Installation or Upgrade in progress."
 msgstr "正在进行安装或升级."
 
-#: include/global.php:580
+#: include/global.php:583
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "此数据采集器最后一次与主Kadupul 站点完全同步"
 
-#: include/global.php:584
+#: include/global.php:587
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "主数据收集器已进入离线或恢复状态"
 
@@ -17057,50 +17057,50 @@ msgstr "插件不兼容"
 msgid "Enable Plugin Locally"
 msgstr "启用插件"
 
-#: poller.php:417
+#: poller.php:416
 #, php-format
 msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
 msgstr "警告: %s 与Poller id %d采集周期时间不同步! 采集周期为 %d 秒,最大值为 %d 秒,但自上次采集以来已经过了 %d 秒!"
 
-#: poller.php:584
+#: poller.php:583
 #, php-format
 msgid "WARNING: There are %d processes detected as overrunning a polling cycle for poller id %d, please investigate."
 msgstr "警告：检测到%d个进程超过轮询器id%d的轮询周期，请调查。"
 
-#: poller.php:666
+#: poller.php:665
 #, php-format
 msgid "WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s."
 msgstr "警告：轮询器id%d的轮询器输出表不为空。问题：%d，%s。"
 
-#: poller.php:719
+#: poller.php:718
 #, php-format
 msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
 msgstr "错误：spine路径：%s对轮询器id%d无效。轮询器无法继续！"
 
-#: poller.php:880
+#: poller.php:873
 #, php-format
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "轮询程序id%d超过了%d秒的最大运行时间。正在退出。"
 
-#: poller.php:1001
+#: poller.php:994
 #, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
 msgstr "警告：Kadupul轮询周期超过轮询间隔 "
 
-#: poller.php:1039
+#: poller.php:1032
 #, php-format
 msgid "WARNING: PollerID:%s with Name:%s is in Heartbeat Status"
 msgstr "警告：名称：%s 的 PollerID：%s 处于检测信号状态"
 
-#: poller.php:1041
+#: poller.php:1034
 msgid "Poller in Heartbeat Mode"
 msgstr "心跳模式下的轮询器"
 
-#: poller.php:1333
+#: poller.php:1326
 msgid "Kadupul System Notification"
 msgstr "Kadupul 系统工具"
 
-#: poller.php:1333
+#: poller.php:1326
 #, fuzzy
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
 msgstr "注意：已添加第二个Kadupul数据收集器。因此，自动启用增强功能！"

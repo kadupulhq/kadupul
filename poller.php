@@ -191,8 +191,7 @@ poller_enabled_check($poller_id);
 
 // Validate the actual queue before launching producers, including remote collectors.
 // Only the primary writer requires local RRD storage; online remotes use its database.
-// Offline/recovery remotes retain their authoritative samples in the Boost queue;
-// their transient poller_output table is cleared and is not the durable queue.
+// Offline/recovery remotes retain both local queues for acknowledged recovery.
 require_once __DIR__ . '/lib/rrd_maintenance.php';
 if (((int) $poller_id === 1 || $config['connection'] === 'online')
     && !rrd_maintenance_poller_preflight((int) $poller_id === 1, $poller_db_cnn_id)) {
@@ -840,9 +839,6 @@ while ($poller_runs_completed < $poller_runs) {
                     if ($poller_id == 1) {
                         $rrds_processed += process_poller_output_batch($poller_output_deferred, $rrdtool_pipe, true, $poller_start + MAX_POLLER_RUNTIME);
                         $rrd_write_failed = $poller_output_deferred;
-                    } elseif ($config['connection'] != 'online') {
-                        /* truncate until formal remote management is supported */
-                        db_execute('TRUNCATE poller_output');
                     }
 
                     log_cacti_stats(
@@ -869,9 +865,6 @@ while ($poller_runs_completed < $poller_runs) {
                         if ($poller_output_deferred) {
                             $rrd_write_failed = true;
                         }
-                    } elseif ($config['connection'] != 'online') {
-                        /* truncate until formal remote management is supported */
-                        db_execute('TRUNCATE poller_output');
                     }
 
                     // end the process if the runtime exceeds MAX_POLLER_RUNTIME

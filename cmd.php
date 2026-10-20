@@ -30,6 +30,7 @@ $sessions   = array();
 $downhosts  = array();
 $host_count = 0;
 $tot_errors = 0;
+$poller_write_failed = false;
 $poller_id  = $config['poller_id'];
 $pmessage   = false;
 $help       = false;
@@ -321,14 +322,10 @@ if (cacti_sizeof($poller_items) && read_config_option('poller_enabled') == 'on')
 				if ($output_count > 0) {
 					cacti_log("Device[$last_host] Writing $output_count items to Poller Output Table", $print_data_to_stdout, 'POLLER', debug_level($host_id, POLLER_VERBOSITY_MEDIUM));
 
-					db_execute('INSERT IGNORE INTO poller_output
-						(local_data_id, rrd_name, time, output)
-						VALUES ' . implode(', ', $output_array), true, $poller_db_cnn_id);
-
-					if (read_config_option('boost_redirect') == 'on' && read_config_option('boost_rrd_update_enable') == 'on') {
-						db_execute('INSERT IGNORE INTO poller_output_boost
-							(local_data_id, rrd_name, time, output)
-							VALUES ' . implode(', ', $output_array), true, $poller_db_cnn_id);
+					if (!cmd_write_poller_output($output_array)) {
+						$poller_write_failed = true;
+						$host_id = $last_host;
+						break;
 					}
 
 					$output_array = array();
@@ -388,14 +385,9 @@ if (cacti_sizeof($poller_items) && read_config_option('poller_enabled') == 'on')
 			if ($output_count > 2000) {
 				cacti_log("Device[$host_id] Writing $output_count items to Poller Output Table", $print_data_to_stdout, 'POLLER', debug_level($host_id, POLLER_VERBOSITY_MEDIUM));
 
-				db_execute('INSERT IGNORE INTO poller_output
-					(local_data_id, rrd_name, time, output)
-					VALUES ' . implode(', ', $output_array), true, $poller_db_cnn_id);
-
-				if (read_config_option('boost_redirect') == 'on' && read_config_option('boost_rrd_update_enable') == 'on') {
-					db_execute('INSERT IGNORE INTO poller_output_boost
-						(local_data_id, rrd_name, time, output)
-						VALUES ' . implode(', ', $output_array), true, $poller_db_cnn_id);
+				if (!cmd_write_poller_output($output_array)) {
+					$poller_write_failed = true;
+					break;
 				}
 
 				$output_array = array();
@@ -416,18 +408,13 @@ if (cacti_sizeof($poller_items) && read_config_option('poller_enabled') == 'on')
 	// Record the last hosts polling time
 	$host_end = microtime(true);
 
+	// A failed flush stops collection; do not reuse an unconfirmed session clock.
 	// Flush the items to the output table
-	if ($output_count > 0) {
+	if ($output_count > 0 && !$poller_write_failed) {
 		cacti_log("Device[$host_id] Writing $output_count items to Poller Output Table", $print_data_to_stdout, 'POLLER', debug_level($host_id, POLLER_VERBOSITY_MEDIUM));
 
-		db_execute('INSERT IGNORE INTO poller_output
-			(local_data_id, rrd_name, time, output)
-			VALUES ' . implode(', ', $output_array), true, $poller_db_cnn_id);
-
-		if (read_config_option('boost_redirect') == 'on' && read_config_option('boost_rrd_update_enable') == 'on') {
-			db_execute('INSERT IGNORE INTO poller_output_boost
-				(local_data_id, rrd_name, time, output)
-				VALUES ' . implode(', ', $output_array), true, $poller_db_cnn_id);
+		if (!cmd_write_poller_output($output_array)) {
+			$poller_write_failed = true;
 		}
 	}
 
@@ -525,7 +512,49 @@ record_cmdphp_done();
 // close the database connection
 db_close();
 
-exit(0);
+exit($poller_write_failed ? 1 : 0);
+
+/** Write a collected batch and report either queue failure. */
+function cmd_write_poller_output(array $output_array): bool {
+	global $poller_db_cnn_id;
+
+	if (!$output_array) {
+		return true;
+	}
+
+	$values = implode(', ', $output_array);
+	$redirect = read_config_option('boost_redirect') == 'on' && read_config_option('boost_rrd_update_enable') == 'on';
+
+	// Recovery can replay either copy; both must describe the same sample time.
+	if ($redirect && db_execute('SET timestamp = UNIX_TIMESTAMP()', true, $poller_db_cnn_id) === false) {
+		cacti_log('ERROR: Unable to pin collector sample time; the batch was not written.', true, 'POLLER');
+		return false;
+	}
+
+	$written = false;
+	try {
+		$written = db_execute('INSERT IGNORE INTO poller_output
+			(local_data_id, rrd_name, time, output)
+			VALUES ' . $values, true, $poller_db_cnn_id) !== false;
+
+		if ($redirect) {
+			$boost_written = db_execute('INSERT IGNORE INTO poller_output_boost
+				(local_data_id, rrd_name, time, output)
+				VALUES ' . $values, true, $poller_db_cnn_id) !== false;
+			$written = $written && $boost_written;
+		}
+	} finally {
+		if ($redirect && db_execute('SET timestamp = DEFAULT', true, $poller_db_cnn_id) === false) {
+			$written = false;
+		}
+	}
+
+	if (!$written) {
+		cacti_log('ERROR: Unable to store collected samples in a poller output queue.', true, 'POLLER');
+	}
+
+	return $written;
+}
 
 // function to assist in logging
 function debug_level($host_id, $level) {
