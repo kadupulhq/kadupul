@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-function xml2array($data) {
+function xml2array($data, bool $strict = false) {
 	/* mvo voncken@mailandnews.com
 	original ripped from  on the php-manual:gdemartini@bol.com.br
 	to be used for data retrieval(result-structure is Data oriented) */
@@ -14,7 +14,9 @@ function xml2array($data) {
 	$index = array();
 	xml_parser_set_option($p, XML_OPTION_SKIP_WHITE, 1);
 	xml_parser_set_option($p, XML_OPTION_CASE_FOLDING, 0);
-	xml_parse_into_struct($p, $data, $vals, $index);
+	if (!xml_parse_into_struct($p, $data, $vals, $index) && $strict) {
+		return array();
+	}
 
 	$tree = array();
 	$i = 0;

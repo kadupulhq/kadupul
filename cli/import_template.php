@@ -101,16 +101,33 @@ if (cacti_sizeof($parms)) {
 
 	if ($filename != '') {
 		// CLI only (cli_check.php): the operator supplies this path and already has filesystem access.
-		if(file_exists($filename) && is_readable($filename)) { // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
-			$fp = fopen($filename,'r'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
-			$xml_data = fread($fp,filesize($filename)); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
-			fclose($fp);
+		if(is_file($filename) && is_readable($filename)) { // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
+			$xml_data = file_get_contents($filename); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
+			if ($xml_data === false) {
+				fwrite(STDERR, "ERROR: Could not read template file '$filename'." . PHP_EOL);
+				exit(1);
+			}
 
 			print 'Read ' . strlen($xml_data) . ' bytes of XML data' . PHP_EOL;
 
+			$import_messages = array();
 			$debug_data = import_xml_data($xml_data, false, $id, $remove_orphans, $replace_svalues);
+			$failed = $debug_data === false || cacti_sizeof($import_messages) > 0;
+			if (!$failed) {
+				$failed = array_any($debug_data, static fn(array $items, string $type): bool => $type !== 'files'
+					&& array_any($items, static fn(array $row): bool => ($row['result'] ?? null) === 'fail'));
+			}
 
 			import_display_results($debug_data, array(), false, $preview_only);
+			if ($failed) {
+				fwrite(STDERR, 'ERROR: Template import or preview failed. Check the XML file and cacti.log for details.' . PHP_EOL);
+				foreach (array_unique($import_messages) as $message) {
+					if (isset($messages[$message]['message'])) {
+						fwrite(STDERR, strip_tags($messages[$message]['message']) . PHP_EOL);
+					}
+				}
+				exit(1);
+			}
 		} else {
 			print "ERROR: file $filename is not readable, or does not exist" . PHP_EOL . PHP_EOL;
 			exit(1);
