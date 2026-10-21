@@ -3,6 +3,7 @@
   <testsuites>
     <testsuite name="Spikekill">
       <file>Unit/Core/Poller/OfflinePollerRetentionTest.php</file>
+      <file>Unit/Core/Poller/ReportPollerOutcomeTest.php</file>
       <file>Unit/DataQuerySortReadFailureTest.php</file>
       <file>Unit/XmlStrictParsingTest.php</file>
       <file>Unit/Core/Cli/MaintenanceCliValidationTest.php</file>

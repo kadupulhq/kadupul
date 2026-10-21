@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Make the reporting poller exit unsuccessfully on failed sends, report/owner reads or statistics writes, count accepted sends separately from attempts, and retain failed reports for retry while continuing the batch (#202).
+
 - Preserve the previous reindex cache on failed mark, insert, or stale-row deletion, and stop before collector propagation when the local replacement fails (#758).
 
 - Clear and warm the Symfony production cache before installer and CLI upgrade schema changes, including already-current databases; stop before upgrade schema writes if the cache refresh fails (#432).
