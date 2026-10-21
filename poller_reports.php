@@ -113,6 +113,10 @@ ini_set('max_execution_time', '0');
 
 $t = time();
 $number_sent = 0;
+$number_attempted = 0;
+$number_failed = 0;
+$number_skipped = 0;
+$run_failed = false;
 
 if (!$force) {
 	/* silently end if the registered process is still running, or process table missing */
@@ -123,6 +127,9 @@ if (!$force) {
 
 /* cacti upgrading */
 if (!db_table_exists('reports')) {
+	if (!$force) {
+		unregister_process('reports', 'master', 0);
+	}
 	exit(0);
 }
 
@@ -132,31 +139,49 @@ if (!$force) {
 } else {
 	$reports = db_fetch_assoc("SELECT * FROM reports WHERE enabled='on'");
 }
-reports_log('Kadupul Reports reports found: ' . cacti_sizeof($reports), true, 'REPORTS', POLLER_VERBOSITY_MEDIUM);
+if ($reports === false) {
+	reports_log('ERROR: Unable to read scheduled reports.', true, 'REPORTS', POLLER_VERBOSITY_LOW);
+	$run_failed = true;
+	$reports = array();
+} else {
+	reports_log('Kadupul Reports reports found: ' . cacti_sizeof($reports), true, 'REPORTS', POLLER_VERBOSITY_MEDIUM);
+}
 
 /* execute each of those reports */
 if (cacti_sizeof($reports)) {
 	foreach ($reports as $report) {
+		$number_attempted++;
 		reports_log('Reports processing report: ' . $report['name'], true, 'REPORTS', POLLER_VERBOSITY_MEDIUM);
 		$current_user = db_fetch_row_prepared('SELECT * FROM user_auth WHERE id = ?', array($report['user_id']));
+		if ($current_user === false) {
+			$number_failed++;
+			reports_log('ERROR: Unable to read the owner of report ' . $report['id'] . '.', true, 'REPORTS', POLLER_VERBOSITY_LOW);
+			continue;
+		}
 		if (isset($report['email'])) {
-			generate_report($report, false, 'poller');
-			$number_sent++;
+			if (generate_report($report, false) === true) {
+				$number_sent++;
+			} else {
+				$number_failed++;
+				reports_log('ERROR: Report ' . $report['id'] . ' could not be sent.', true, 'REPORTS', POLLER_VERBOSITY_LOW);
+			}
+		} else {
+			$number_skipped++;
 		}
 	}
+}
 
-	/* record the end time */
-	$end = microtime(true);
-
-	/* log statistics */
-	$reports_stats = sprintf('Time:%01.4f Reports:%s', $end - $start, $number_sent);
-	reports_log('REPORTS STATS: ' . $reports_stats, true, 'REPORTS', POLLER_VERBOSITY_LOW);
-	db_execute_prepared('REPLACE INTO settings (name, value) VALUES ("stats_reports", ?)', array($reports_stats));
+/* record statistics even when no report is due */
+$end = microtime(true);
+$reports_stats = sprintf('Time:%01.4f Reports:%d Attempted:%d Failed:%d Skipped:%d', $end - $start, $number_sent, $number_attempted, $number_failed, $number_skipped);
+reports_log('REPORTS STATS: ' . $reports_stats, true, 'REPORTS', POLLER_VERBOSITY_LOW);
+if (!db_execute_prepared('REPLACE INTO settings (name, value) VALUES ("stats_reports", ?)', array($reports_stats))) {
+	$run_failed = true;
+	reports_log('ERROR: Unable to save report poller statistics.', true, 'REPORTS', POLLER_VERBOSITY_LOW);
 }
 
 if (!$force) {
 	unregister_process('reports', 'master', 0);
 }
 
-exit(0);
-
+exit($run_failed || $number_failed > 0 ? 1 : 0);

@@ -97,7 +97,7 @@ final class NativeReportConsumers
                 foreach (explode("\n", $match[1]) as $line) {
                     $line = rtrim(trim($line), ',');
                     if ($line === '' || preg_match('/^(?:KEY|UNIQUE KEY|CONSTRAINT) /i', $line)) continue;
-                    $line = preg_replace('/\b(?:tinyint|smallint|mediumint|int|bigint)(?:\(\d+\))?(?: unsigned)?/i', 'INTEGER', $line);
+                    $line = preg_replace('/\b(?:tinyint|smallint|mediumint|int|bigint)\b(?:\(\d+\))?(?: unsigned)?/i', 'INTEGER', $line);
                     $line = preg_replace('/\b(?:varchar|char)\(\d+\)/i', 'TEXT', $line);
                     $columns[] = preg_replace('/\bAUTO_INCREMENT\b|\s+ON UPDATE CURRENT_TIMESTAMP/i', '', $line);
                 }
