@@ -126,7 +126,7 @@ final class NativeAutomationPresentation
     {
         require_once __DIR__ . '/PresentationPageEvidence.php';
         return array_values(array_unique(array_merge(PresentationPageEvidence::sources(), [
-            'cacti.sql', 'automation_devices.php', 'automation_graph_rules.php', 'automation_snmp.php', 'automation_templates.php', 'automation_tree_rules.php', 'lib/ping.php', 'tests/Helpers/NativeAutomationPresentation.php',
+            'cacti.sql', 'automation_devices.php', 'automation_graph_rules.php', 'automation_snmp.php', 'automation_tree_rules.php', 'lib/ping.php', 'tests/Helpers/NativeAutomationPresentation.php',
             'tests/Fixtures/automation-presentation-native.php', 'tests/Unit/AutomationPresentationNativeTest.php',
         ])));
     }

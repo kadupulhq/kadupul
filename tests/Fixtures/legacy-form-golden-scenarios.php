@@ -336,7 +336,6 @@ $pages = array(
     'automation_snmp-item_edit' => $page('automation_snmp.php', array('action' => 'item_edit', 'id' => '1'), array(
         array('sql' => 'FROM automation_snmp WHERE id = ?', 'params' => array(1), 'rows' => array(array('id' => '1', 'name' => 'Default <snmp>'))),
     )),
-    'automation_templates-edit' => $page('automation_templates.php', array('action' => 'edit')),
     'automation_tree_rules-edit' => $page('automation_tree_rules.php', array('action' => 'edit')),
     'automation_tree_rules-item_edit' => $page('automation_tree_rules.php', array('action' => 'item_edit', 'id' => '1', 'rule_type' => '3'), array_merge($columns, array(
         array('sql' => 'FROM automation_tree_rules WHERE id = ?', 'params' => array(1), 'rows' => array(array(

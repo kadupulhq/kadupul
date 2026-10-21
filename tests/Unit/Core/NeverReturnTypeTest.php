@@ -35,7 +35,6 @@ test('terminating production functions expose the never contract', function (str
 })->with([
     ['automation_devices.php', 'purge_discovery_results'],
     ['automation_snmp.php', 'automation_snmp_item_dnd'],
-    ['automation_templates.php', 'automation_template_dnd'],
     ['cli/md5sum.php', 'fail'],
     ['graphs.php', 'form_save'],
     ['include/csrf.php', 'csrf_error_callback'],
