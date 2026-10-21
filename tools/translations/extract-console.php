@@ -31,24 +31,31 @@ $twig = new Environment(new FilesystemLoader($root . '/templates'));
 $twig->addExtension(new TranslationExtension(new IdentityTranslator()));
 // Extraction only parses these names; it never renders a page or reads settings.
 $twig->addFunction(new TwigFunction('installation_path'));
+$twig->addFunction(new TwigFunction('asset'));
 $twig->addFilter(new TwigFilter('console_number'));
-$path = $root . '/templates/platform/console_home_body.html.twig';
-$contents = file_get_contents($path);
-if ($contents === false) {
-    throw new RuntimeException('Console translation source is unavailable.');
+$templates = ['templates/platform/console_home_body.html.twig', 'templates/platform/permission_denied.html.twig'];
+$catalogue = new MessageCatalogue('en');
+$sources = [];
+foreach ($templates as $template) {
+    $path = $root . '/' . $template;
+    $contents = file_get_contents($path);
+    if ($contents === false) {
+        throw new RuntimeException('Console translation source is unavailable.');
+    }
+    // TwigExtractor skips syntax errors. Refuse one explicitly before extracting.
+    $twig->parse($twig->tokenize(new Source($contents, $path)));
+    $extracted = new MessageCatalogue('en');
+    (new TwigExtractor($twig))->extract([$path], $extracted);
+    foreach (array_keys($extracted->all('console')) as $message) {
+        $sources[$message][] = $template;
+    }
 }
-// TwigExtractor skips syntax errors. Refuse one explicitly before extracting.
-$twig->parse($twig->tokenize(new Source($contents, $path)));
-$extracted = new MessageCatalogue('en');
-(new TwigExtractor($twig))->extract([$path], $extracted);
-$messages = $extracted->all('console');
-if (count($messages) < 9) {
+if (count($sources) < 15) {
     throw new RuntimeException('Console translation extraction is incomplete.');
 }
-$catalogue = new MessageCatalogue('en');
-foreach (array_keys($messages) as $message) {
+foreach ($sources as $message => $files) {
     $catalogue->set($message, '');
-    $metadata = ['sources' => ['templates/platform/console_home_body.html.twig']];
+    $metadata = ['sources' => $files];
     if (str_contains($message, '%s')) {
         $metadata['flags'] = ['php-format'];
     }
