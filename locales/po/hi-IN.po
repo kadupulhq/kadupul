@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-23 05:25-0600\n"
+"POT-Creation-Date: 2026-10-23 10:03-0600\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -45,9 +45,9 @@ msgstr "This program is distributed in the hope that it will be useful, but WITH
 
 #: aggregate_graphs.php:27 aggregate_templates.php:14
 #: automation_graph_rules.php:17 automation_networks.php:16
-#: automation_snmp.php:14 automation_snmp.php:592 automation_templates.php:15
-#: automation_tree_rules.php:17 data_queries.php:16 data_queries.php:863
-#: data_queries.php:972 data_queries.php:1252 data_source_profiles.php:16
+#: automation_snmp.php:14 automation_snmp.php:592 automation_tree_rules.php:17
+#: data_queries.php:16 data_queries.php:863 data_queries.php:972
+#: data_queries.php:1252 data_source_profiles.php:16
 #: data_source_profiles.php:934 data_sources.php:23 data_sources.php:1249
 #: data_templates.php:19 data_templates.php:791 graph_templates.php:22
 #: graph_templates.php:517 graphs.php:32 host_templates.php:20
@@ -116,24 +116,24 @@ msgstr "निम्नलिखित एग्रीगेट ग्राफ 
 #: aggregate_templates.php:316 automation_devices.php:211
 #: automation_devices.php:220 automation_graph_rules.php:332
 #: automation_networks.php:386 automation_snmp.php:245 automation_snmp.php:368
-#: automation_templates.php:160 automation_tree_rules.php:309
-#: data_queries.php:413 data_queries.php:427 data_queries.php:611
-#: data_source_profiles.php:416 data_source_profiles.php:428
-#: data_source_profiles.php:663 data_sources.php:616 data_sources.php:631
-#: data_sources.php:640 data_sources.php:649 data_sources.php:658
-#: data_sources.php:664 data_templates.php:486 data_templates.php:498
-#: data_templates.php:514 graph_templates.php:373 graph_templates.php:385
-#: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
-#: graph_view.php:1043 graphs.php:886 graphs.php:902 graphs.php:913
-#: graphs.php:924 graphs.php:939 graphs.php:956 graphs.php:965 graphs.php:1167
-#: graphs.php:1210 graphs.php:1232 graphs.php:1263 graphs.php:1275
-#: graphs.php:1859 host_templates.php:222 host_templates.php:236
-#: host_templates.php:247 host_templates.php:302 host_templates.php:375
-#: lib/clog_webapi.php:225 lib/html.php:2819 lib/html_form.php:1397
-#: lib/html_form.php:1414 lib/html_form.php:1425 lib/html_reports.php:632
-#: managers.php:1066 managers.php:1127 plugins.php:712 pollers.php:549
-#: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:762
-#: tree.php:771 tree.php:780 tree.php:789 user_admin.php:252 user_admin.php:292
+#: automation_tree_rules.php:309 data_queries.php:413 data_queries.php:427
+#: data_queries.php:611 data_source_profiles.php:416
+#: data_source_profiles.php:428 data_source_profiles.php:663
+#: data_sources.php:616 data_sources.php:631 data_sources.php:640
+#: data_sources.php:649 data_sources.php:658 data_sources.php:664
+#: data_templates.php:486 data_templates.php:498 data_templates.php:514
+#: graph_templates.php:373 graph_templates.php:385 graph_templates.php:407
+#: graph_templates.php:416 graph_templates.php:425 graph_view.php:1043
+#: graphs.php:886 graphs.php:902 graphs.php:913 graphs.php:924 graphs.php:939
+#: graphs.php:956 graphs.php:965 graphs.php:1167 graphs.php:1210
+#: graphs.php:1232 graphs.php:1263 graphs.php:1275 graphs.php:1859
+#: host_templates.php:222 host_templates.php:236 host_templates.php:247
+#: host_templates.php:302 host_templates.php:375 lib/clog_webapi.php:225
+#: lib/html.php:2819 lib/html_form.php:1397 lib/html_form.php:1414
+#: lib/html_form.php:1425 lib/html_reports.php:632 managers.php:1066
+#: managers.php:1127 plugins.php:712 pollers.php:549 pollers.php:558
+#: pollers.php:567 pollers.php:576 pollers.php:585 tree.php:762 tree.php:771
+#: tree.php:780 tree.php:789 user_admin.php:252 user_admin.php:292
 #: user_admin.php:303 user_admin.php:314 user_admin.php:337
 #: user_domains.php:220 user_domains.php:229 user_domains.php:238
 #: user_domains.php:247 user_group_admin.php:460 user_group_admin.php:479
@@ -147,17 +147,17 @@ msgstr "कैंसिल करें"
 #: aggregate_templates.php:316 automation_devices.php:211
 #: automation_devices.php:220 automation_graph_rules.php:332
 #: automation_networks.php:378 automation_snmp.php:218 automation_snmp.php:369
-#: automation_templates.php:160 automation_tree_rules.php:309
-#: data_queries.php:413 data_queries.php:427 data_queries.php:612
-#: data_source_profiles.php:416 data_source_profiles.php:428
-#: data_source_profiles.php:664 data_sources.php:616 data_sources.php:631
-#: data_sources.php:640 data_sources.php:649 data_sources.php:658
-#: data_sources.php:664 data_templates.php:486 data_templates.php:498
-#: data_templates.php:514 graph_templates.php:373 graph_templates.php:385
-#: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
-#: graphs.php:886 graphs.php:902 graphs.php:913 graphs.php:924 graphs.php:939
-#: graphs.php:956 graphs.php:965 graphs.php:1167 graphs.php:1210
-#: graphs.php:1232 graphs.php:1263 graphs.php:1275 host_templates.php:222
+#: automation_tree_rules.php:309 data_queries.php:413 data_queries.php:427
+#: data_queries.php:612 data_source_profiles.php:416
+#: data_source_profiles.php:428 data_source_profiles.php:664
+#: data_sources.php:616 data_sources.php:631 data_sources.php:640
+#: data_sources.php:649 data_sources.php:658 data_sources.php:664
+#: data_templates.php:486 data_templates.php:498 data_templates.php:514
+#: graph_templates.php:373 graph_templates.php:385 graph_templates.php:407
+#: graph_templates.php:416 graph_templates.php:425 graphs.php:886
+#: graphs.php:902 graphs.php:913 graphs.php:924 graphs.php:939 graphs.php:956
+#: graphs.php:965 graphs.php:1167 graphs.php:1210 graphs.php:1232
+#: graphs.php:1263 graphs.php:1275 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
 #: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2818
 #: lib/html_reports.php:574 managers.php:1066 managers.php:1127 pollers.php:549
@@ -403,17 +403,16 @@ msgstr "मिलान रेखांकन"
 #: aggregate_templates.php:606 automation_devices.php:485
 #: automation_graph_rules.php:809 automation_networks.php:1180
 #: automation_networks.php:1224 automation_snmp.php:703
-#: automation_templates.php:393 automation_tree_rules.php:845
-#: data_debug.php:1214 data_queries.php:1371 data_source_profiles.php:1186
-#: data_sources.php:1814 data_templates.php:1101 graph_templates.php:727
-#: graph_view.php:667 graphs.php:2114 graphs_new.php:526 host_templates.php:795
-#: lib/api_automation.php:42 lib/api_automation.php:43
-#: lib/api_automation.php:480 lib/api_automation.php:708
-#: lib/clog_webapi.php:608 lib/html.php:268 lib/html_filter.php:46
-#: lib/html_graph.php:191 lib/html_reports.php:2025 lib/html_tree.php:119
-#: lib/html_tree.php:967 managers.php:144 managers.php:504 managers.php:771
-#: plugins.php:491 pollers.php:869 rrdcleaner.php:523 settings.php:598
-#: settings.php:615 settings.php:674
+#: automation_tree_rules.php:845 data_debug.php:1214 data_queries.php:1371
+#: data_source_profiles.php:1186 data_sources.php:1814 data_templates.php:1101
+#: graph_templates.php:727 graph_view.php:667 graphs.php:2114
+#: graphs_new.php:526 host_templates.php:795 lib/api_automation.php:42
+#: lib/api_automation.php:43 lib/api_automation.php:480
+#: lib/api_automation.php:708 lib/clog_webapi.php:608 lib/html.php:268
+#: lib/html_filter.php:46 lib/html_graph.php:191 lib/html_reports.php:2025
+#: lib/html_tree.php:119 lib/html_tree.php:967 managers.php:144
+#: managers.php:504 managers.php:771 plugins.php:491 pollers.php:869
+#: rrdcleaner.php:523 settings.php:598 settings.php:615 settings.php:674
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:56
 #: tree.php:938 tree.php:973 tree.php:1008 tree.php:2217 user_admin.php:2074
 #: user_domains.php:643 user_group_admin.php:1993 utilities.php:1094
@@ -437,15 +436,15 @@ msgstr "रेखांकन"
 #: aggregate_graphs.php:1292 aggregate_graphs.php:1591
 #: aggregate_templates.php:622 automation_devices.php:582
 #: automation_graph_rules.php:851 automation_networks.php:1190
-#: automation_snmp.php:713 automation_templates.php:403
-#: automation_tree_rules.php:865 data_debug.php:1224 data_queries.php:1381
-#: data_source_profiles.php:1196 data_source_profiles.php:1318
-#: data_sources.php:1824 data_templates.php:1130 graph_templates.php:737
-#: graph_view.php:743 graphs.php:2135 graphs_new.php:536 host_templates.php:805
-#: include/global_form.php:242 lib/api_automation.php:182
-#: lib/api_automation.php:490 lib/api_automation.php:718
-#: lib/api_automation.php:1082 lib/html_reports.php:2045 managers.php:154
-#: managers.php:514 plugins.php:515 pollers.php:879 rrdcleaner.php:549
+#: automation_snmp.php:713 automation_tree_rules.php:865 data_debug.php:1224
+#: data_queries.php:1381 data_source_profiles.php:1196
+#: data_source_profiles.php:1318 data_sources.php:1824 data_templates.php:1130
+#: graph_templates.php:737 graph_view.php:743 graphs.php:2135
+#: graphs_new.php:536 host_templates.php:805 include/global_form.php:242
+#: lib/api_automation.php:182 lib/api_automation.php:490
+#: lib/api_automation.php:718 lib/api_automation.php:1082
+#: lib/html_reports.php:2045 managers.php:154 managers.php:514 plugins.php:515
+#: pollers.php:879 rrdcleaner.php:549
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:81
 #: tree.php:2227 user_admin.php:2135 user_domains.php:18 user_domains.php:653
 #: user_domains.php:739 user_group_admin.php:2003 utilities.php:1076
@@ -460,29 +459,28 @@ msgstr "एग्रीगेट का हिस्सा"
 #: aggregate_graphs.php:1303 aggregate_graphs.php:1596
 #: aggregate_templates.php:643 automation_devices.php:509
 #: automation_graph_rules.php:863 automation_networks.php:1224
-#: automation_snmp.php:728 automation_templates.php:418
-#: automation_tree_rules.php:877 data_debug.php:1139 data_queries.php:1396
-#: data_source_profiles.php:1217 data_sources.php:1764 data_templates.php:1151
-#: graph_templates.php:758 graph_view.php:675 graphs.php:2105
-#: graphs_new.php:515 host_templates.php:786 lib/api_automation.php:187
-#: lib/api_automation.php:471 lib/api_automation.php:723
-#: lib/api_automation.php:1087 lib/clog_webapi.php:533 lib/html.php:1787
-#: lib/html_filter.php:63 lib/html_graph.php:178 lib/html_reports.php:2056
-#: lib/html_tree.php:1009 managers.php:169 managers.php:529 managers.php:794
-#: plugins.php:530 pollers.php:914 tree.php:2242 user_admin.php:2150
-#: user_admin.php:2347 user_admin.php:2353 user_admin.php:2359
-#: user_admin.php:2365 user_admin.php:2371 user_admin.php:2377
+#: automation_snmp.php:728 automation_tree_rules.php:877 data_debug.php:1139
+#: data_queries.php:1396 data_source_profiles.php:1217 data_sources.php:1764
+#: data_templates.php:1151 graph_templates.php:758 graph_view.php:675
+#: graphs.php:2105 graphs_new.php:515 host_templates.php:786
+#: lib/api_automation.php:187 lib/api_automation.php:471
+#: lib/api_automation.php:723 lib/api_automation.php:1087
+#: lib/clog_webapi.php:533 lib/html.php:1787 lib/html_filter.php:63
+#: lib/html_graph.php:178 lib/html_reports.php:2056 lib/html_tree.php:1009
+#: managers.php:169 managers.php:529 managers.php:794 plugins.php:530
+#: pollers.php:914 tree.php:2242 user_admin.php:2150 user_admin.php:2347
+#: user_admin.php:2353 user_admin.php:2359 user_admin.php:2365
+#: user_admin.php:2371 user_admin.php:2377
 msgid "Go"
 msgstr "जाएं"
 
 #: aggregate_graphs.php:1303 aggregate_graphs.php:1596
-#: automation_devices.php:509 automation_snmp.php:728
-#: automation_templates.php:418 data_debug.php:1139 data_queries.php:1396
-#: data_source_profiles.php:1217 data_sources.php:1764 data_templates.php:1151
-#: graph_templates.php:758 graph_view.php:675 graphs.php:2105
-#: graphs_new.php:515 host_templates.php:786 lib/html_graph.php:178
-#: managers.php:169 managers.php:529 managers.php:794 plugins.php:530
-#: pollers.php:914
+#: automation_devices.php:509 automation_snmp.php:728 data_debug.php:1139
+#: data_queries.php:1396 data_source_profiles.php:1217 data_sources.php:1764
+#: data_templates.php:1151 graph_templates.php:758 graph_view.php:675
+#: graphs.php:2105 graphs_new.php:515 host_templates.php:786
+#: lib/html_graph.php:178 managers.php:169 managers.php:529 managers.php:794
+#: plugins.php:530 pollers.php:914
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
 #: tree.php:2242 user_admin.php:2150 user_domains.php:665
 #: user_group_admin.php:2018 utilities.php:1084 utilities.php:1470
@@ -493,29 +491,28 @@ msgstr "सेट / फ़िल्टर ताज़ा करें"
 #: aggregate_graphs.php:1304 aggregate_graphs.php:1597
 #: aggregate_templates.php:644 automation_devices.php:510
 #: automation_graph_rules.php:864 automation_networks.php:1225
-#: automation_snmp.php:729 automation_templates.php:419
-#: automation_tree_rules.php:878 data_debug.php:1140 data_queries.php:1397
-#: data_source_profiles.php:1218 data_sources.php:1765 data_templates.php:1152
-#: graph_templates.php:759 graph_view.php:676 graphs.php:2106
-#: graphs_new.php:516 host_templates.php:787 lib/api_automation.php:188
-#: lib/api_automation.php:472 lib/api_automation.php:724
-#: lib/api_automation.php:1088 lib/clog_webapi.php:534 lib/html_filter.php:68
-#: lib/html_graph.php:179 lib/html_graph.php:305 lib/html_reports.php:2057
-#: lib/html_tree.php:1010 lib/html_tree.php:1121 managers.php:170
-#: managers.php:530 managers.php:795 plugins.php:531 pollers.php:915
-#: tree.php:2243 user_admin.php:2151 user_admin.php:2347 user_admin.php:2353
-#: user_admin.php:2359 user_admin.php:2365 user_admin.php:2371
-#: user_admin.php:2377 user_domains.php:666
+#: automation_snmp.php:729 automation_tree_rules.php:878 data_debug.php:1140
+#: data_queries.php:1397 data_source_profiles.php:1218 data_sources.php:1765
+#: data_templates.php:1152 graph_templates.php:759 graph_view.php:676
+#: graphs.php:2106 graphs_new.php:516 host_templates.php:787
+#: lib/api_automation.php:188 lib/api_automation.php:472
+#: lib/api_automation.php:724 lib/api_automation.php:1088
+#: lib/clog_webapi.php:534 lib/html_filter.php:68 lib/html_graph.php:179
+#: lib/html_graph.php:305 lib/html_reports.php:2057 lib/html_tree.php:1010
+#: lib/html_tree.php:1121 managers.php:170 managers.php:530 managers.php:795
+#: plugins.php:531 pollers.php:915 tree.php:2243 user_admin.php:2151
+#: user_admin.php:2347 user_admin.php:2353 user_admin.php:2359
+#: user_admin.php:2365 user_admin.php:2371 user_admin.php:2377
+#: user_domains.php:666
 msgid "Clear"
 msgstr "明确"
 
 #: aggregate_graphs.php:1304 aggregate_graphs.php:1597 automation_snmp.php:729
-#: automation_templates.php:419 data_debug.php:1140 data_queries.php:1397
-#: data_source_profiles.php:1218 data_sources.php:1765 data_templates.php:1152
-#: graph_templates.php:759 graph_view.php:676 graphs.php:2106
-#: graphs_new.php:516 host_templates.php:787 lib/html_graph.php:179
-#: lib/html_tree.php:1010 managers.php:170 managers.php:530 managers.php:795
-#: plugins.php:531 pollers.php:915
+#: data_debug.php:1140 data_queries.php:1397 data_source_profiles.php:1218
+#: data_sources.php:1765 data_templates.php:1152 graph_templates.php:759
+#: graph_view.php:676 graphs.php:2106 graphs_new.php:516 host_templates.php:787
+#: lib/html_graph.php:179 lib/html_tree.php:1010 managers.php:170
+#: managers.php:530 managers.php:795 plugins.php:531 pollers.php:915
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:96
 #: tree.php:2243 user_admin.php:2151 user_domains.php:666
 #: user_group_admin.php:2019 utilities.php:1085 utilities.php:1471
@@ -703,8 +700,7 @@ msgstr "सकल टेम्पलेट [नया]"
 msgid "Aggregate Templates"
 msgstr "अलग-अलग टेम्प्लेट"
 
-#: aggregate_templates.php:612 automation_templates.php:399
-#: automation_templates.php:489 include/global_arrays.php:1004
+#: aggregate_templates.php:612 include/global_arrays.php:1004
 #: include/global_arrays.php:1068 lib/installer.php:2748 user_admin.php:2365
 #: user_group_admin.php:2160
 msgid "Templates"
@@ -1087,8 +1083,7 @@ msgstr "Pollers"
 msgid "Select Template"
 msgstr "टेम्पलेट का चयन करें"
 
-#: automation_devices.php:205 automation_templates.php:278
-#: automation_templates.php:499
+#: automation_devices.php:205
 msgid "Availability Method"
 msgstr "उपलब्धता विधि"
 
@@ -2265,15 +2260,15 @@ msgstr "मद #% d"
 msgid "none"
 msgstr "कुछ भी नहीं"
 
-#: automation_snmp.php:580 automation_templates.php:531 data_queries.php:849
-#: data_queries.php:958 lib/api_automation.php:1310 lib/api_automation.php:1373
+#: automation_snmp.php:580 data_queries.php:849 data_queries.php:958
+#: lib/api_automation.php:1310 lib/api_automation.php:1373
 #: lib/api_automation.php:1444 lib/html.php:1492 lib/html_reports.php:1930
 #: lib/html_reports.php:1932 tree.php:2384 tree.php:2391
 msgid "Move Down"
 msgstr "नीचे ले जाएं"
 
-#: automation_snmp.php:586 automation_templates.php:537 data_queries.php:854
-#: data_queries.php:963 lib/api_automation.php:1316 lib/api_automation.php:1379
+#: automation_snmp.php:586 data_queries.php:854 data_queries.php:963
+#: lib/api_automation.php:1316 lib/api_automation.php:1379
 #: lib/api_automation.php:1450 lib/html.php:1498 lib/html_reports.php:1932
 #: lib/html_reports.php:1934 tree.php:2388 tree.php:2392
 msgid "Move Up"
@@ -2322,91 +2317,6 @@ msgstr "V3 प्रविष्टियां"
 #: automation_snmp.php:842
 msgid "No SNMP Option Sets Found"
 msgstr "कोई SNMP विकल्प सेट नहीं मिला"
-
-#: automation_templates.php:155
-msgid "Click 'Continue' to delete the following Automation Template(s)."
-msgstr "फोलिंग ऑटोमेशन टेम्प्लेट को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें"
-
-#: automation_templates.php:160
-msgid "Delete Automation Template(s)"
-msgstr "स्वचालन खाका हटाएं"
-
-#: automation_templates.php:271 include/global_arrays.php:1370
-#: include/global_form.php:1211 include/global_form.php:1630
-#: lib/html_reports.php:1160
-msgid "Device Template"
-msgstr "डिवाइस टेम्पलेट"
-
-#: automation_templates.php:272
-msgid "Select a Device Template that Devices will be matched to."
-msgstr "एक डिवाइस टेम्प्लेट चुनें जिसे डिवाइस से मिलान किया जाएगा।"
-
-#: automation_templates.php:279
-msgid "Choose the Availability Method to use for Discovered Devices."
-msgstr "खोज उपकरणों के लिए उपयोग करने के लिए उपलब्धता विधि चुनें।"
-
-#: automation_templates.php:286 automation_templates.php:500
-msgid "System Description Match"
-msgstr "सिस्टम विवरण मिलान"
-
-#: automation_templates.php:287
-msgid "This is a unique string that will be matched to a devices sysDescr string to pair it to this Automation Template.  Any Perl regular expression can be used in addition to any SQL Where expression."
-msgstr "यह एक अनूठी स्ट्रिंग है जिसे इस स्वचालन खाके में बाँधने के लिए एक डिवाइस sysDescr स्ट्रिंग से मिलान किया जाएगा। किसी भी पर्ल रेगुलर एक्सप्रेशन को किसी भी एसक्यूएल जहाँ एक्सप्रेशन के अलावा इस्तेमाल किया जा सकता है।"
-
-#: automation_templates.php:293 automation_templates.php:501
-msgid "System Name Match"
-msgstr "सिस्टम नाम मिलान"
-
-#: automation_templates.php:294
-msgid "This is a unique string that will be matched to a devices sysName string to pair it to this Automation Template.  Any Perl regular expression can be used in addition to any SQL Where expression."
-msgstr "यह एक अद्वितीय स्ट्रिंग है जो इस ऑटोमेशन टेम्प्लेट में जोड़े जाने के लिए एक डिवाइस sysName स्ट्रिंग से मेल खाएगा। किसी भी पर्ल रेगुलर एक्सप्रेशन को किसी भी एसक्यूएल जहाँ एक्सप्रेशन के अलावा इस्तेमाल किया जा सकता है।"
-
-#: automation_templates.php:300
-msgid "System OID Match"
-msgstr "सिस्टम OID मैच"
-
-#: automation_templates.php:301
-msgid "This is a unique string that will be matched to a devices sysOid string to pair it to this Automation Template.  Any Perl regular expression can be used in addition to any SQL Where expression."
-msgstr "यह एक अद्वितीय स्ट्रिंग है जो इस स्वचालन खाके में बाँधने के लिए एक उपकरण sysOid स्ट्रिंग से मेल खाएगा। किसी भी पर्ल रेगुलर एक्सप्रेशन को किसी भी एसक्यूएल जहाँ एक्सप्रेशन के अलावा इस्तेमाल किया जा सकता है।"
-
-#: automation_templates.php:328
-#, php-format
-msgid "Automation Templates [edit: %s]"
-msgstr "स्वचालन टेम्पलेट्स [संपादित करें: %s]"
-
-#: automation_templates.php:330
-msgid "Automation Templates for [Deleted Template]"
-msgstr "[हटाए गए टेम्पलेट] के लिए ऑटोमेशन टेम्प्लेट"
-
-#: automation_templates.php:333
-msgid "Automation Templates [new]"
-msgstr "स्वचालन टेम्पलेट्स [नया]"
-
-#: automation_templates.php:384
-msgid "Device Automation Templates"
-msgstr "डिवाइस स्वचालन टेम्पलेट्स"
-
-#: automation_templates.php:498 data_sources.php:2028 package_import.php:630
-#: templates_import.php:243 user_admin.php:1212 user_group_admin.php:1231
-msgid "Template Name"
-msgstr "टेम्पलेट का नाम"
-
-#: automation_templates.php:502
-msgid "System ObjectId Match"
-msgstr "सिस्टम ऑब्जेक्ट मैच"
-
-#: automation_templates.php:506 data_queries.php:818 data_queries.php:925
-#: tree.php:2330
-msgid "Order"
-msgstr "ऑर्डर"
-
-#: automation_templates.php:516
-msgid "Unknown Template"
-msgstr "अज्ञात टेम्पलेट"
-
-#: automation_templates.php:551
-msgid "No Automation Device Templates Found"
-msgstr "कोई स्वचालन उपकरण टेम्पलेट नहीं मिला"
 
 #: automation_tree_rules.php:126
 msgid "An attempt was made to perform a SQL injection in Tree automation"
@@ -3237,6 +3147,10 @@ msgstr "यदि इस ग्राफ़ टेम्प्लेट को �
 msgid "Suggested Values - Graphs"
 msgstr "सुझाए गए मान - रेखांकन"
 
+#: data_queries.php:818 data_queries.php:925 tree.php:2330
+msgid "Order"
+msgstr "ऑर्डर"
+
 #: data_queries.php:819 data_queries.php:926
 msgid "Equation"
 msgstr "समीकरण"
@@ -3925,6 +3839,11 @@ msgstr "यदि यह डेटा स्रोत रेखांकन द�
 #: data_sources.php:2025
 msgid "Whether or not data will be collected for this Data Source. Controlled at the Data Template level."
 msgstr "इस डेटा स्रोत के लिए डेटा एकत्र किया जाएगा या नहीं। डेटा टेम्प्लेट स्तर पर नियंत्रित।"
+
+#: data_sources.php:2028 package_import.php:630 templates_import.php:243
+#: user_admin.php:1212 user_group_admin.php:1231
+msgid "Template Name"
+msgstr "टेम्पलेट का नाम"
 
 #: data_sources.php:2031
 msgid "The Data Template that this Data Source was based upon."
@@ -6351,6 +6270,11 @@ msgstr "ग्राफ टेम्पलेट आइटम"
 #: include/global_arrays.php:1368
 msgid "Graph Template Input"
 msgstr "ग्राफ टेम्पलेट इनपुट"
+
+#: include/global_arrays.php:1370 include/global_form.php:1211
+#: include/global_form.php:1630 lib/html_reports.php:1160
+msgid "Device Template"
+msgstr "डिवाइस टेम्पलेट"
 
 #: include/global_arrays.php:1371 lib/html.php:1368
 msgid "VDEF"
