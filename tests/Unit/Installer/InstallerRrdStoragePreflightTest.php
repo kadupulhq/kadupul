@@ -11,6 +11,9 @@ test('installer rejects unsafe storage before database changes even when forced'
     $dir = sys_get_temp_dir() . '/installer-rrd-' . bin2hex(random_bytes(8));
     mkdir($dir, 0700);
     mkdir($dir . '/rra', 0700);
+    mkdir($dir . '/bin', 0700);
+    // Cache compilation is a separate boundary; this fixture tests storage admission.
+    file_put_contents($dir . '/bin/console', '<?php if(array_slice($argv,1)!==["cache:clear","--env=prod","--no-debug","--no-interaction"]||getenv("APP_ENV")!=="prod"||getenv("APP_DEBUG")!=="0"){exit(2);}touch(dirname(__DIR__)."/cache-refreshed");');
     $parentCoverage = $this->getTestResultObject()->getCodeCoverage();
     $coverage = '';
     if ($parentCoverage !== null) {
@@ -29,7 +32,7 @@ function log_install_medium(...$args) {}
 function log_install_always(...$args) { throw new LogicException('upgrade boundary reached'); }
 function clean_up_lines($text) { return $text; }
 define('CACTI_VERSION', '1.3.0');
-$config = array('base_path' => $root, 'rra_path' => __DIR__ . '/rra', 'cacti_server_os' => strpos($mode, 'windows') === 0 ? 'win32' : 'unix');
+$config = array('base_path' => __DIR__, 'rra_path' => __DIR__ . '/rra', 'cacti_server_os' => strpos($mode, 'windows') === 0 ? 'win32' : 'unix');
 if (strpos($mode, 'proxy-local') === 0) { $config['force_storage_location_local'] = true; }
 if ($mode === 'proxy-local-group') { chmod(__DIR__ . '/rra', 0770); }
 if ($mode === 'proxy-local-missing' || $mode === 'missing' || $mode === 'windows-missing') { $config['rra_path'] .= '/missing'; }
@@ -44,6 +47,7 @@ if (strpos($mode, 'collector-') === 0) {
     $remote_db_cnn_id = 'primary-connection';
     if ($mode === 'collector-forced') { $config['force_storage_location_local'] = true; }
 }
+require $root . '/include/vendor/autoload.php';
 require $root . '/lib/installer.php';
 $reflection = new ReflectionClass('Installer');
 $installer = $reflection->newInstanceWithoutConstructor();
@@ -83,6 +87,7 @@ FIXTURE;
         expect($error)->toBe('')->and(proc_close($process))->toBe(0, $output);
         $result = json_decode($output, true);
         expect($result[0])->toBe($ready);
+        expect(is_file($dir . '/cache-refreshed'))->toBe($ready);
         if ($ready) {
             expect($result[1])->toBe('upgrade boundary reached');
         } elseif ($mode === 'memory' || $mode === 'memory-string' || $mode === 'queue-unavailable') {
@@ -106,6 +111,8 @@ FIXTURE;
         }
         chmod($dir . '/rra', 0700);
         rmdir($dir . '/rra');
+        unlink($dir . '/bin/console');
+        rmdir($dir . '/bin');
         rmdir($dir);
     }
 })->with(array(array('collector-install', true), array('collector-online', true), array('collector-offline', true), array('collector-forced', false), array('memory-string', false), array('fresh', true), array('memory', false), array('queue-unavailable', false), array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('windows-attribute', true), array('windows-missing', false), array('windows-file', false), array('windows-readonly', false), array('proxy', true), array('proxy-local-private', true), array('proxy-local-group', false), array('proxy-local-missing', false)))->with(array('upgrade', 'downgrade', 'downgrade-string', 'auto-upgrade', 'auto-downgrade'));
