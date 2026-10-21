@@ -329,32 +329,6 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
         }
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('editorOutcomes')]
-    public function testConcurrentEditorCannotResurrectDeletedDefinitions(string $outcome, string $editor): void
-    {
-        $state = $this->runNative(array('reference_guard' => $outcome, 'editor' => $editor));
-        self::assertTrue($state['waiting']);
-        self::assertSame(0, $state['definitionOrphans']);
-        $ids = array_map('intval', array_column($state['writer']['tables']['data_source_profiles'], 'id'));
-        self::assertSame($outcome === 'commit' ? array() : ($editor === 'copy' ? array(3,4) : array(3)), $ids);
-        if ($outcome === 'rollback') {
-            self::assertNotEmpty($state['writer']['tables']['data_source_profiles_cf']);
-            if ($editor !== 'remove') {
-                self::assertNotEmpty($state['writer']['tables']['data_source_profiles_rra']);
-            }
-        }
-    }
-    public static function editorOutcomes(): array
-    {
-        $cases = array();
-        foreach (array('commit','rollback') as $outcome) {
-            foreach (array('profile','rra','copy','remove') as $editor) {
-                $cases[$outcome . ' ' . $editor] = array($outcome, $editor);
-            }
-        }
-        return $cases;
-    }
-
     public static function deletionOutcomes(): array
     {
         $cases = array();
@@ -364,44 +338,5 @@ final class ProfileDeletionDatabaseTest extends ProfileDeletionContract
             }
         }
         return $cases;
-    }
-
-    public function testUsageLockBlocksConcurrentReferenceInsertion(): void
-    {
-        $state = $this->runNative(array());
-        $isolation = array_values(array_filter($state['calls'], static fn($call) => $call[0] === 'SET TRANSACTION ISOLATION LEVEL REPEATABLE READ'));
-        self::assertCount(1, $isolation);
-        $queries = array_values(array_filter($state['calls'], static fn($call) => str_contains($call[0], 'FROM data_template_data') && str_contains($call[0], 'FOR UPDATE') && $call[1] === array(3)));
-        self::assertCount(1, $queries);
-        $table = 'profile_lock_' . bin2hex(random_bytes(8));
-        $connect = static fn() => new PDO(getenv('KADUPUL_TEST_MYSQL_DSN'), getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root', getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: '', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_EMULATE_PREPARES => false));
-        $first = $connect();
-        $second = $connect();
-        try {
-            $first->exec('CREATE TABLE ' . $table . ' (id INTEGER PRIMARY KEY, data_source_profile_id INTEGER, INDEX data_source_profile_id (data_source_profile_id)) ENGINE=InnoDB');
-            $first->exec('INSERT INTO ' . $table . ' VALUES (1,1),(2,2),(4,4),(99,99)');
-            $second->exec('SET SESSION innodb_lock_wait_timeout=1');
-            $first->exec('SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED');
-            $first->exec($isolation[0][0]);
-            $first->beginTransaction();
-            $query = $first->prepare(str_replace('data_template_data', $table, $queries[0][0]));
-            $query->execute($queries[0][1]);
-            self::assertSame(array(), $query->fetchAll(PDO::FETCH_ASSOC));
-            try {
-                $second->exec('INSERT INTO ' . $table . ' VALUES (3,3)');
-                self::fail('A reference must not be inserted while the deletion usage lock is held');
-            } catch (PDOException $exception) {
-                self::assertSame(1205, (int) $exception->errorInfo[1]);
-            }
-            $second->exec('INSERT INTO ' . $table . ' VALUES (98,98)');
-            $first->rollBack();
-            $second->exec('INSERT INTO ' . $table . ' VALUES (3,3)');
-            self::assertSame(6, (int) $first->query('SELECT COUNT(*) FROM ' . $table)->fetchColumn());
-        } finally {
-            if ($first->inTransaction()) {
-                $first->rollBack();
-            }
-            $first->exec('DROP TABLE IF EXISTS ' . $table);
-        }
     }
 }

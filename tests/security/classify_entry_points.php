@@ -2166,6 +2166,15 @@ const REVIEWED_FEATURE_ACCESS = [
             'src/Platform/Infrastructure/Persistence/DbalRrdCheckAccess.php' => '6f0222557edd0c1b2f307aae6c309b7129e88c0bb0909a15999d27cdd3ebba89',
         ],
     ],
+    '/graphing/data-source-profiles' => [
+        'label' => 'data source profile',
+        'realm' => 9,
+        'contract' => 'Kadupul\\Graphing\\Application\\Port\\DataSourceProfileAccess',
+        'adapter' => 'Kadupul\\Graphing\\Infrastructure\\Persistence\\DbalDataSourceProfileAccess',
+        'sources' => [
+            'src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileAccess.php' => 'c06b81cf3ed7160f8f0fc2aa3c10fca2d4d658b9ca15f819ef7d5a93dc85402c',
+        ],
+    ],
     '/graph-definitions/cdefs' => [
         'label' => 'CDEF',
         'realm' => 14,

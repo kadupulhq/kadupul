@@ -344,8 +344,6 @@ $pages = array(
     ))),
     'data_queries-edit' => $page('data_queries.php', array('action' => 'edit')),
     'data_queries-item_edit' => $page('data_queries.php', array('action' => 'item_edit', 'snmp_query_id' => '1')),
-    'data_source_profiles-edit' => $page('data_source_profiles.php', array('action' => 'edit')),
-    'data_source_profiles-item_edit' => $page('data_source_profiles.php', array('action' => 'item_edit', 'profile_id' => '1')),
     // Match the rendered Add link: Any listing scope opens a new None/device-less source.
     'data_sources-ds_edit' => $page('data_sources.php', array('action' => 'ds_edit', 'host_id' => '0'), array(
         array('sql' => 'SELECT id, name FROM data_template ORDER BY name', 'rows' => array(array('id' => '4', 'name' => 'Interface - Traffic <in/out>'), array('id' => '9', 'name' => 'Unix - Load Average'))),

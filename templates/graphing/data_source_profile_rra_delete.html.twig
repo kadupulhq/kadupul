@@ -1,0 +1,21 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'Delete Data Source Profile Item'|trans({}, 'data_source_profile') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    <h1>{{ 'Delete Data Source Profile Item'|trans({}, 'data_source_profile') }}</h1>
+    <p>{{ "Click 'Continue' to delete the following Data Source Profile RRA."|trans({}, 'data_source_profile') }}</p>
+    <p>{{ 'Data Source Profile: %name%'|trans({'%name%': profile.name}, 'data_source_profile') }}<br>{{ 'RRA Name: %name%'|trans({'%name%': archive.name}, 'data_source_profile') }}</p>
+    {% if profile.readOnly %}<p role="alert">{{ 'Profiles that are in use by Data Sources become read only for now.'|trans({}, 'data_source_profile') }}</p>{% endif %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form.revision) }}
+        {% if not profile.readOnly %}<button type="submit">{{ 'Continue'|trans({}, 'data_source_profile') }}</button>{% endif %}
+        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+        <a href="{{ path('data_source_profile_edit', {id: profile.id}) }}">{{ 'Cancel'|trans({}, 'data_source_profile') }}</a>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

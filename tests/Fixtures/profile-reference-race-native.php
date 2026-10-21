@@ -88,10 +88,6 @@ try {
         $db->exec("INSERT INTO `$data` VALUES (2,0,'existing')");
     }
     $parentId = (int) $db->query('SELECT CONNECTION_ID()')->fetchColumn();
-    if (!empty($scenario['editor'])) {
-        $db->exec("INSERT INTO `$rra` (id,data_source_profile_id) VALUES (13,3)");
-        $db->exec("INSERT INTO `$cf` VALUES (3,1)");
-    }
     if (in_array($operation, ['rra-update', 'rra-upsert'], true)) {
         $db->exec("INSERT INTO `$rra` (id,data_source_profile_id) VALUES (2,0)");
     }
@@ -104,26 +100,12 @@ try {
     $db->exec("DELETE FROM `$profiles` WHERE id=3");
     $target = str_starts_with($operation, 'rra-') ? $rra : (str_starts_with($operation, 'cf-') ? $cf : $data);
     $command = [PHP_BINARY, __FILE__, '--writer', $target, $operation];
-    if (!empty($scenario['editor'])) {
-        $request = match ($scenario['editor']) {
-            'profile' => ['action' => 'save', 'save_component_profile' => '1', 'id' => 3, 'name' => 'changed', 'step' => 300, 'heartbeat' => 300, 'x_files_factor' => 0.5, 'consolidation_function_id' => [1,3]],
-            'rra' => ['action' => 'save', 'save_component_rra' => '1', 'id' => 0, 'profile_id' => 3, 'name' => 'new', 'steps' => 1, 'rows' => 100, 'timespan' => 30000],
-            'remove' => ['action' => 'item_remove', 'id' => 13],
-            default => ['action' => 'actions', 'drp_action' => '2', 'title_format' => '<profile_title> copy'],
-        };
-        $editor = ['editor_tables' => ['data_source_profiles' => $profiles, 'data_template_data' => $data, 'data_source_profiles_rra' => $rra, 'data_source_profiles_cf' => $cf], 'request' => $request];
-        mkdir($directory . '/editor');
-        putenv('PROFILE_DELETE_MYSQL=1');
-        $db->exec("DELETE FROM `$rra` WHERE data_source_profile_id=3");
-        $db->exec("DELETE FROM `$cf` WHERE data_source_profile_id=3");
-        $command = [PHP_BINARY, '-d', 'display_errors=1', '-d', 'error_reporting=24575', __DIR__ . '/profile-deletion-native.php', json_encode($editor, JSON_THROW_ON_ERROR), $directory . '/editor'];
-    }
     $process = proc_open($command, [0 => ['pipe','r'], 1 => ['pipe','w'], 2 => ['pipe','w'], 3 => ['pipe','w']], $pipes);
     if (!is_resource($process)) {
         throw new RuntimeException('Unable to launch concurrent reference writer');
     }
     fclose($pipes[0]);
-    $writerId = (int) fgets($pipes[empty($scenario['editor']) ? 1 : 3]);
+    $writerId = (int) fgets($pipes[1]);
     fclose($pipes[3]);
     $monitor = profile_guard_connection(true);
     $version = $monitor->query('SELECT VERSION()')->fetchColumn();
@@ -170,7 +152,7 @@ try {
         $db->commit();
     }
     $output = stream_get_contents($pipes[1]);
-    $writer = !empty($scenario['editor']) ? json_decode(file_get_contents($directory . '/editor/result.json'), true, flags: JSON_THROW_ON_ERROR) : json_decode($output, true, flags: JSON_THROW_ON_ERROR);
+    $writer = json_decode($output, true, flags: JSON_THROW_ON_ERROR);
     $stderr = stream_get_contents($pipes[2]);
     fclose($pipes[1]);
     fclose($pipes[2]);
@@ -189,13 +171,6 @@ try {
     $definitionOrphans = (int) $db->query("SELECT COUNT(*) FROM `$rra` d LEFT JOIN `$profiles` p ON p.id=d.data_source_profile_id WHERE d.data_source_profile_id<>0 AND p.id IS NULL")->fetchColumn() + (int) $db->query("SELECT COUNT(*) FROM `$cf` d LEFT JOIN `$profiles` p ON p.id=d.data_source_profile_id WHERE d.data_source_profile_id<>0 AND p.id IS NULL")->fetchColumn();
     file_put_contents($directory . '/result.json', json_encode(['definitionOrphans' => $definitionOrphans, 'available' => $available, 'waiting' => $waiting, 'writer' => $writer, 'orphans' => $orphans, 'legacyName' => $db->query("SELECT name FROM `$data` WHERE id=1")->fetchColumn(), 'zero' => (int) $db->query("SELECT data_source_profile_id FROM `$data` WHERE id=4")->fetchColumn(), 'rejected' => $rejected, 'missingRejected' => $missingRejected, 'modifiedRejected' => $modifiedRejected], JSON_THROW_ON_ERROR));
 } finally {
-    if (is_dir($directory . '/editor')) {
-        $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory . '/editor', FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
-        foreach ($files as $file) {
-            $file->isDir() ? rmdir($file->getPathname()) : unlink($file->getPathname());
-        }
-        rmdir($directory . '/editor');
-    }
     if ($db->inTransaction()) {
         $db->rollBack();
     }

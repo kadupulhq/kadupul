@@ -165,7 +165,6 @@ function itemActionCases()
         array('data_queries.php', 'item_movedown_dssv', array()),
         array('data_queries.php', 'item_remove_dssv', array()),
         array('data_queries.php', 'item_remove', array()),
-        array('data_source_profiles.php', 'item_remove', array()),
         array('data_sources.php', 'rrd_add', array()),
         array('data_sources.php', 'rrd_remove', array()),
         array('data_templates.php', 'rrd_add', array()),
@@ -228,7 +227,7 @@ test('item editors and lists still open by GET', function ($controller, $action)
 })->with(array(
     array('automation_snmp.php', 'item_edit'),
     array('automation_graph_rules.php', 'item_edit'), array('automation_tree_rules.php', 'item_edit'),
-    array('data_queries.php', 'item_edit'), array('data_source_profiles.php', 'item_edit'),
+    array('data_queries.php', 'item_edit'),
     array('data_sources.php', 'data_edit'), array('data_templates.php', 'template_edit'),
     array('graphs_items.php', 'item_edit'), array('graph_templates_items.php', 'item_edit'),
     array('host_templates.php', 'edit'), array('tree.php', 'edit'),

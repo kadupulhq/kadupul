@@ -1,0 +1,29 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% block title %}{{ (archive ? 'Edit RRA' : 'Add RRA')|trans({}, 'data_source_profile') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+    <p><a href="{{ path('data_source_profile_edit', {id: profile.id}) }}">{{ 'Back to Data Source Profile'|trans({}, 'data_source_profile') }}</a></p>
+    <h1>{% if archive %}{{ (profile.readOnly ? 'RRA [edit: %name% (Some Elements Read Only)]' : 'RRA [edit: %name%]')|trans({'%name%': archive.name}, 'data_source_profile') }}{% else %}{{ 'RRA [new]'|trans({}, 'data_source_profile') }}{% endif %}</h1>
+    <p>{{ 'Data Source Profile: %name%'|trans({'%name%': profile.name}, 'data_source_profile') }}</p>
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.steps) }}
+        {{ form_row(form.rows) }}
+        {{ form_row(form.timespan) }}
+        {% if archive %}
+        <p><strong>{{ 'Data Retention'|trans({}, 'data_source_profile') }}</strong>: <em>{{ profile_retention(profile.step, archive.steps, archive.rows) }}</em></p>
+        <p><strong>{{ 'RRA Size (in Bytes)'|trans({}, 'data_source_profile') }}</strong>: <em>{{ profile_archive_size(archive.rows, profile.consolidationFunctions|length) }}</em></p>
+        {% endif %}
+        {{ form_widget(form.revision) }}
+        <button type="submit">{{ 'Save'|trans({}, 'data_source_profile') }}</button>
+        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+        <a href="{{ path('data_source_profile_edit', {id: profile.id}) }}">{{ 'Cancel'|trans({}, 'data_source_profile') }}</a>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

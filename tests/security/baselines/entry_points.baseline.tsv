@@ -54,6 +54,14 @@ app.php/graphing/colors/import	symfony:palette_color_import	methods=GET|HEAD|POS
 app.php/graphing/colors/legacy	symfony:palette_color_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 5
 app.php/graphing/colors/new	symfony:palette_color_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 5
 app.php/graphing/colors/{id}/edit	symfony:palette_color_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 5
+app.php/graphing/data-source-profiles	symfony:data_source_profile_list	methods=GET|HEAD; ConsoleAccess realm 8 + realm 9
+app.php/graphing/data-source-profiles/actions/{operation}	symfony:data_source_profile_action	methods=GET|HEAD|POST requirements=operation=delete|duplicate; ConsoleAccess realm 8 + realm 9
+app.php/graphing/data-source-profiles/legacy	symfony:data_source_profile_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 9
+app.php/graphing/data-source-profiles/new	symfony:data_source_profile_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 9
+app.php/graphing/data-source-profiles/{id}/edit	symfony:data_source_profile_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 9
+app.php/graphing/data-source-profiles/{id}/rras/new	symfony:data_source_profile_rra_create	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 9
+app.php/graphing/data-source-profiles/{id}/rras/{rraId}/delete	symfony:data_source_profile_rra_delete	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7},rraId=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 9
+app.php/graphing/data-source-profiles/{id}/rras/{rraId}/edit	symfony:data_source_profile_rra_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7},rraId=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 9
 app.php/graphing/gprint-presets	symfony:gprint_preset_list	methods=GET|HEAD; ConsoleAccess realm 8 + realm 5
 app.php/graphing/gprint-presets/actions/delete	symfony:gprint_preset_delete	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 5
 app.php/graphing/gprint-presets/legacy	symfony:gprint_preset_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 5
@@ -120,7 +128,7 @@ csp_report.php	anonymous-allowed	CSP violation report sink; browsers post report
 data_debug.php	realm:15	include/auth.php
 data_input.php	symfony:forward	forwards to app.php/data-inputs/legacy
 data_queries.php	realm:13	include/auth.php
-data_source_profiles.php	realm:9	include/auth.php
+data_source_profiles.php	symfony:forward	forwards to app.php/graphing/data-source-profiles/legacy
 data_sources.php	realm:3	include/auth.php
 data_templates.php	realm:11	include/auth.php
 docs/	web-server-denied	nginx; apache .htaccess

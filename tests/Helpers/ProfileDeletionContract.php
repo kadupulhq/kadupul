@@ -11,126 +11,6 @@ abstract class ProfileDeletionContract extends TestCase
 {
     use \PestCodeCoverageCompatibility;
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('scenarios')]
-    public function testDeletionIsAtomicAndReportsRefusals(array $scenario): void
-    {
-        $state = $this->runNative($scenario);
-        $failure = $scenario['failure'] ?? '';
-        $expected = $failure !== '' || ($scenario['selected'] ?? array(3)) === array(1,2) ? array(1,2,3) : array(1,2);
-        self::assertSame($expected, array_map('intval', array_column($state['tables']['data_source_profiles'], 'id')));
-        self::assertSame($expected, array_map('intval', array_column($state['tables']['data_source_profiles_rra'], 'data_source_profile_id')));
-        self::assertSame($expected, array_map('intval', array_column($state['tables']['data_source_profiles_cf'], 'data_source_profile_id')));
-        $inUse = in_array(1, $scenario['selected'] ?? array(3), true);
-        $messages = json_encode($state['messages']);
-        if ($inUse) {
-            self::assertStringContainsString('Data Source Profiles in use by Data Templates or Data Sources can not be deleted.', $messages);
-            self::assertStringContainsString('for user 7', $state['log']);
-        } else {
-            self::assertStringNotContainsString('profile_in_use', $messages);
-        }
-        if ($failure !== '') {
-            self::assertStringContainsString('profile_delete_failed', $messages);
-        }
-        if ($failure === '' && $expected === array(1,2,3)) {
-            self::assertSame(array(), array_filter($state['calls'], static fn($call) => str_starts_with($call[0], 'DELETE')));
-        }
-        if ($failure === 'lookup-aborted' || $failure === 'commit' || str_starts_with($failure, 'data_source_profiles')) {
-            self::assertSame(1, $state['rollbacks']);
-        }
-        if (!str_starts_with($failure, 'lookup') && !in_array($failure, array('begin', 'isolation', 'guard-missing', 'guard-modified', 'guard-engine', 'guard-rra-engine', 'guard-cf-engine'), true)) {
-            $locking = array_filter($state['calls'], static fn($call) => str_contains($call[0], 'FROM data_template_data') && str_contains($call[0], 'FOR UPDATE') && $call[1] === ($scenario['selected'] ?? array(3)));
-            self::assertCount(1, $locking);
-        }
-    }
-
-    #[\PHPUnit\Framework\Attributes\DataProvider('pages')]
-    public function testNativeProfilePagesPreserveTheirContext(array $request, string $needle): void
-    {
-        $state = $this->runNative(array('request' => $request));
-        self::assertStringNotContainsString('Warning:', $state['html']);
-        self::assertStringNotContainsString('Fatal error:', $state['html']);
-        self::assertStringContainsString($needle, $state['html']);
-        self::assertSame(array(1,2,3), array_map('intval', array_column($state['tables']['data_source_profiles'], 'id')));
-    }
-
-    #[\PHPUnit\Framework\Attributes\DataProvider('saveScenarios')]
-    public function testNativeProfileEditorsPreserveCreationAndRefuseStaleIds(array $request, bool $success, bool $created): void
-    {
-        $state = $this->runNative(array('request' => $request));
-        self::assertStringNotContainsString('Warning:', $state['html']);
-        self::assertStringNotContainsString('Fatal error:', $state['html']);
-        self::assertArrayHasKey($success ? 1 : 2, $state['messages']);
-        self::assertSame($created ? array(1,2,3,4) : array(1,2,3), array_map('intval', array_column($state['tables']['data_source_profiles'], 'id')));
-        if (!$success) {
-            self::assertSame(array(11,12,13), array_map('intval', array_column($state['tables']['data_source_profiles_rra'], 'id')));
-            self::assertSame(array(1,2,3), array_map('intval', array_column($state['tables']['data_source_profiles_cf'], 'data_source_profile_id')));
-        }
-    }
-    public static function saveScenarios(): array
-    {
-        $profile = array('action' => 'save', 'save_component_profile' => '1', 'name' => 'changed', 'step' => 300, 'heartbeat' => 600, 'x_files_factor' => 0.5, 'consolidation_function_id' => array(1,3));
-        $rra = array('action' => 'save', 'save_component_rra' => '1', 'name' => 'new', 'steps' => 1, 'rows' => 100, 'timespan' => 30000);
-        return array(
-            'edit existing profile' => array($profile + array('id' => 3), true, false),
-            'create profile' => array($profile + array('id' => 0), true, true),
-            'stale parent id' => array($profile + array('id' => 99), false, false),
-            'edit RRA' => array($rra + array('id' => 13, 'profile_id' => 3), true, false),
-            'create RRA' => array($rra + array('id' => 0, 'profile_id' => 3), true, false),
-            'stale RRA id' => array($rra + array('id' => 99, 'profile_id' => 3), false, false),
-            'RRA parent gone' => array($rra + array('id' => 0, 'profile_id' => 99), false, false),
-            'RRA belongs elsewhere' => array($rra + array('id' => 12, 'profile_id' => 3), false, false)
-        );
-    }
-
-    public static function pages(): array
-    {
-        return array(
-            'confirm delete' => array(array('selected_items' => null, 'chk_3' => 'on'), 'Unused profile'),
-            'confirm duplicate' => array(array('selected_items' => null, 'chk_3' => 'on', 'drp_action' => '2'), 'title_format'),
-            'sampling span' => array(array('action' => 'ajax_span', 'profile_id' => 3, 'rows' => 100, 'span' => 1), 'Hour'),
-            'absolute span' => array(array('action' => 'ajax_span', 'profile_id' => 3, 'rows' => 100, 'span' => 60), 'Hour'),
-            'invalid span' => array(array('action' => 'ajax_span', 'profile_id' => 3, 'rows' => 0, 'span' => 1), 'N/A'),
-            'profile size' => array(array('action' => 'ajax_size', 'id' => 3, 'type' => 'profile', 'cfs' => 0, 'rows' => 100), 'KBytes'),
-            'rra size' => array(array('action' => 'ajax_size', 'id' => 3, 'type' => 'rra', 'cfs' => 0, 'rows' => 100), 'KBytes'),
-            'rra delete confirmation' => array(array('action' => 'item_remove_confirm', 'id' => 13, 'profile_id' => 3), 'Hourly'),
-            'edit unused profile' => array(array('action' => 'edit', 'id' => 3), 'Unused profile'),
-            'edit referenced profile' => array(array('action' => 'edit', 'id' => 2), 'Read Only'),
-            'edit rra' => array(array('action' => 'item_edit', 'id' => 13, 'profile_id' => 3), 'Hourly'),
-            'new rra' => array(array('action' => 'item_edit', 'id' => 0, 'profile_id' => 3), 'Rows'),
-        );
-    }
-
-    public function testNativeDuplicateCopiesProfileAndItsChildren(): void
-    {
-        $state = $this->runNative(array('request' => array('drp_action' => '2', 'title_format' => '<profile_title> copy')));
-        self::assertSame(array(1,2,3,4), array_map('intval', array_column($state['tables']['data_source_profiles'], 'id')));
-        $profile = $state['tables']['data_source_profiles'][3];
-        self::assertSame('Unused profile copy', $profile['name']);
-        self::assertSame(300, (int) $profile['step']);
-        self::assertNotSame('ghi', $profile['hash']);
-        foreach (array('data_source_profiles_rra', 'data_source_profiles_cf') as $table) {
-            self::assertSame(array(1,2,3,4), array_map('intval', array_column($state['tables'][$table], 'data_source_profile_id')));
-        }
-        self::assertSame('Hourly', $state['tables']['data_source_profiles_rra'][3]['name']);
-        self::assertSame(1, (int) $state['tables']['data_source_profiles_cf'][3]['consolidation_function_id']);
-    }
-
-    public function testMissingDuplicateSourceReportsFailureWithoutChanges(): void
-    {
-        $state = $this->runNative(array('selected' => array(99), 'request' => array('drp_action' => '2', 'title_format' => '<profile_title> copy')));
-        self::assertSame(array(1,2,3), array_map('intval', array_column($state['tables']['data_source_profiles'], 'id')));
-        self::assertStringContainsString('profile_error', json_encode($state['messages']));
-    }
-
-    public static function scenarios(): array
-    {
-        $cases = array('unused' => array(array()), 'mixed' => array(array('selected' => array(1,2,3))), 'all referenced' => array(array('selected' => array(1,2))));
-        foreach (array('guard-engine', 'guard-rra-engine', 'guard-cf-engine','guard-missing','guard-modified','lookup-aborted','lookup-false','lookup-invalid','lookup-invalid-row','lookup-throw','isolation','begin','commit','data_source_profiles','data_source_profiles_rra','data_source_profiles_cf') as $failure) {
-            $cases[$failure] = array(array('failure' => $failure));
-        }
-        return $cases;
-    }
-
     protected function useMysql(): bool
     {
         return false;
@@ -206,7 +86,7 @@ abstract class ProfileDeletionContract extends TestCase
         mkdir($directory, 0700);
         $coverage = $this->getTestResultObject()->getCodeCoverage();
         try {
-            $fixture = isset($scenario['collector']) ? 'profile-collector-replication-native.php' : (isset($scenario['guard_unit']) ? 'profile-reference-guard-unit.php' : (isset($scenario['reference_guard']) ? 'profile-reference-race-native.php' : (isset($scenario['upgrade']) ? 'profile-index-upgrade-native.php' : 'profile-deletion-native.php')));
+            $fixture = isset($scenario['collector']) ? 'profile-collector-replication-native.php' : (isset($scenario['guard_unit']) ? 'profile-reference-guard-unit.php' : (isset($scenario['reference_guard']) ? 'profile-reference-race-native.php' : 'profile-index-upgrade-native.php'));
             $command = array(PHP_BINARY, '-d', 'opcache.jit=0', '-d', 'opcache.jit_buffer_size=0', '-d', 'pcov.directory=/', '-d', 'error_reporting=24575', '-d', 'display_errors=stderr', $root . '/tests/Fixtures/' . $fixture, json_encode($scenario, JSON_THROW_ON_ERROR), $directory);
             if ($coverage !== null) {
                 $command[] = $directory;

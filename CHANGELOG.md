@@ -103,6 +103,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Serve Device Rules (automation templates) through Symfony and Twig. Edits, moves and deletes are revision-checked and recheck the Automation realm in their transaction; a move renumbers the discovery match order without gaps, and a match the database cannot compile as a regular expression is refused. Old `automation_templates.php` links navigate; posts to it no longer change data.
 
+- Serve the Data Source Profile list, editor, RRAs, duplication and deletion through Symfony and Twig. Every change is revision-checked and rechecks the Data Source Profiles realm in its transaction, a profile used by data sources refuses structural changes to its RRAs as well as its step, factor and functions, and deletion refuses the default profile and refuses the whole selection when any profile is in use. Old `data_source_profiles.php` links navigate and its size and span lookups still answer; posts to it no longer change data.
+
 ## [1.3.0-alpha.1]
 
 - First Kadupul preview for isolated evaluation. This is pre-alpha software, with no production support or supported migration path. It combines the existing monitoring, polling and graphing application with an incremental Symfony 7.4 migration; PHP 8.4 or later is required.

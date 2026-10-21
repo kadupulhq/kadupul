@@ -1795,6 +1795,56 @@ template that no longer exists answers 404 instead of succeeding silently; the
 list search treats `%` and `_` literally. The old page's unused graph tree
 helpers are not carried over.
 
+### Data Source Profile administration
+
+The profile list, editor, RRA editor and the duplicate and delete confirmations
+use Symfony routes, Forms and Twig under `/graphing/data-source-profiles`. They
+live in the Graphing module, which owns RRD integration: a profile is the step,
+heartbeat, X-Files Factor, consolidation functions and archives `lib/rrd.php`
+creates each RRDfile with. Every route requires console access and the Data
+Source Profiles realm (9); writes recheck the account and both realms with
+locking reads inside their transaction, and need the primary collector, InnoDB
+tables and the eight intact reference guards from
+`docs/data-source-profile-integrity.md`. A missing or modified guard refuses
+every write, as it refused the legacy save and delete.
+
+Each form carries a revision of the profile, its functions and archives, or of
+the one archive, and a stale form is refused. A profile that local data sources
+use keeps its step, factor, functions and archive steps and rows: the editor
+shows them disabled, an omitted field keeps the stored value, and a submitted
+change refuses the whole save. The legacy page only disabled the archive fields
+in the browser and accepted any archive change on the server. The heartbeat
+stays editable and is copied to the template and data source RRD rows, with
+the warning that existing RRDfiles need `rrdtool tune`. The count of local
+data sources is read after the profile row is locked, which every reference
+writer's guard trigger waits for.
+
+Deletion locks the selected profiles and the matching `data_template_data`
+range and refuses the whole selection when one is in use or is the default;
+the legacy action deleted the unused profiles of a mixed selection and could
+delete the default. Duplication copies the selection in one transaction under
+new hashes, never as the default. Marking a profile the default moves the flag;
+clearing the box does not unset it, as before.
+
+`data_source_profiles.php` forwards GET navigation, maps the old edit, RRA edit
+and RRA removal links, and answers 409 to posted forms after authorizing them.
+It still answers the `ajax_size` and `ajax_span` lookups with the legacy text,
+now as `text/plain`, and refuses malformed or out of range numbers with 400
+before any arithmetic. The Twig pages compute size and retention on the server
+instead of calling them, so they no longer update while a field is edited. A
+list visit without filters keeps the user's saved filters, and `clear=1`
+resets them.
+
+Other differences from the legacy page: new choices for the polling interval,
+heartbeat, aggregation level and default timespan must come from the legacy
+lists, while a stored value off a list stays valid; an aggregation level must
+be a whole multiple of the polling interval; the X-Files Factor must be a
+decimal from 0 up to but not including 1, as RRDtool requires; RRA rows must be
+from 1 to 4294967295; names are limited to 255 characters, counted in
+characters. A refused read-only change is recorded as a failed
+`graphing.data_source_profile.edit` audit event instead of a `cacti.log`
+warning. At most 100 profiles may be selected.
+
 ### Template synchronization discovery boundary
 
 Bulk template synchronization first validates and commits the primary template
