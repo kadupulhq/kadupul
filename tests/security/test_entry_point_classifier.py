@@ -1524,6 +1524,9 @@ final class NullableQuery {
         'CDEF': ('/graph-definitions/cdefs', 14, 'GraphDefinition', 'CdefAccess',
                  ['src/GraphDefinition/Infrastructure/Persistence/DbalCdefAccess.php'],
                  [('CDEF_REALM = 14', 'CDEF_REALM = 15')]),
+        'Automation template': ('/automation/templates', 23, 'Automation', 'AutomationTemplateAccess',
+                                ['src/Automation/Infrastructure/Persistence/DbalAutomationTemplateAccess.php'],
+                                [('AUTOMATION_REALM = 23', 'AUTOMATION_REALM = 24')]),
     }
     for feature, (route, realm, module, contract, files, tampering) in feature_specs.items():
         for label, (body, admitted) in feature_cases.items():

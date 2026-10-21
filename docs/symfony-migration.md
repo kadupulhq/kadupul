@@ -1759,6 +1759,42 @@ The page no longer loads the legacy header bundle, so `page_head` and the
 `custom_denied` hook prints without asking to reskin is dropped. A failed
 worker answers 503, and a schema mismatch keeps the installer redirect.
 
+### Automation template administration
+
+Device Rules (`automation_templates.php`) use Symfony routes, Forms and Twig
+under `/automation/templates`: the list, the editor, moves and the delete
+confirmation. Every route requires console access and the Automation realm
+(23); writes recheck the account and both realms with locking reads inside
+their transaction and need the primary collector, which replicates the table to
+remote collectors. Edits and deletes carry a revision of the template and a
+move carries a revision of the whole match order, so a stale form is refused.
+`automation_templates.php` forwards GET navigation and the old edit link,
+answers 405 to the old action links and 409 to posted forms after authorizing
+them. A list visit without filters keeps the user's saved filters, and
+`clear=1` resets them.
+
+Discovery (`automation_find_os()`) uses the first matching template by
+`sequence`, and the list shows that order with ties settled by ID. A move swaps
+a template with its neighbour in the whole table, not only the filtered page,
+and renumbers every template from 1, as the legacy drag and drop did. New
+templates keep legacy's sequence 0, so they still match before numbered ones.
+The description match is still stored through `FILTER_SANITIZE_FULL_SPECIAL_CHARS`,
+because discovery compares the stored text; that filter does not encode
+entities twice, so an unchanged form saves the same value. Name and OID matches
+are stored as entered.
+
+Differences from legacy: no drag and drop or AJAX filters, and a template moves
+one place at a time; at most 100 templates per selection; the device template
+must exist (legacy accepted any non-empty value), and a template whose device
+template was deleted opens without a preselected choice instead of the first
+one; the name match is limited to 255 characters and the OID match to its
+60-character column (the legacy form allowed 128 for both and the server did
+not check); a match the database cannot compile as a regular expression is
+refused, because discovery's query then fails for every template; deleting a
+template that no longer exists answers 404 instead of succeeding silently; the
+list search treats `%` and `_` literally. The old page's unused graph tree
+helpers are not carried over.
+
 ### Template synchronization discovery boundary
 
 Bulk template synchronization first validates and commits the primary template

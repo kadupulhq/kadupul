@@ -221,7 +221,7 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'c07761a00231ff569cbff177dc4b401f631cc34239e90e83d62f8a0cec0b69ce',
     'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => '4743883f8c2b1dc9b07c91a66bccdfa39f92531b6acafc0474bed5f92824513c',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => '8c65ae3e27bd38327cb8ee2f8ac817c7b29f139c9a41db52fa0d650cb20d0d59',
+    'config/services.yaml' => '71d3037d30aefc44076bffe1d550322084cd5e208f7b2377b5020e41114dee32',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter
@@ -2173,6 +2173,14 @@ const REVIEWED_FEATURE_ACCESS = [
         'adapter' => 'Kadupul\\GraphDefinition\\Infrastructure\\Persistence\\DbalCdefAccess',
         'sources' => [
             'src/GraphDefinition/Infrastructure/Persistence/DbalCdefAccess.php' => 'e11ea939a76da0dcb0db1041d95907f5524d5bfb79d2bbf3ea415406ce934612',
+        ],
+    ],    '/automation/templates' => [
+        'label' => 'automation template',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Automation\\Application\\Port\\AutomationTemplateAccess',
+        'adapter' => 'Kadupul\\Automation\\Infrastructure\\Persistence\\DbalAutomationTemplateAccess',
+        'sources' => [
+            'src/Automation/Infrastructure/Persistence/DbalAutomationTemplateAccess.php' => 'c6197adc65aa98d6b9419ebc4a33f6aded49874f27e9d20b9e631dc95df9f6dc',
         ],
     ],
 ];

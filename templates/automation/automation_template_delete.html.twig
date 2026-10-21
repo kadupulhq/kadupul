@@ -1,0 +1,23 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'Delete Automation Templates'|trans({}, 'automation') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    <h1>{{ 'Delete Automation Templates'|trans({}, 'automation') }}</h1>
+    <p>{{ 'Click Continue to delete the following Automation Templates.'|trans({}, 'automation') }}</p>
+    <ul>
+        {% for template in templates %}<li>{{ template.deviceTemplate ?? 'Unknown Template'|trans({}, 'automation') }}{% if template.sysDescr != '' %} ({{ template.sysDescr }}){% endif %}</li>{% endfor %}
+    </ul>
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form.selection) }}
+        {{ form_widget(form.revisions) }}
+        <button type="submit">{{ 'Continue'|trans({}, 'automation') }}</button>
+        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route. #}
+        <a href="{{ path('automation_templates') }}">{{ 'Cancel'|trans({}, 'automation') }}</a>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

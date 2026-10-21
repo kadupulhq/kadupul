@@ -124,6 +124,9 @@ services:
     Kadupul\GraphDefinition\:
         resource: '../src/GraphDefinition/'
 
+    Kadupul\Automation\:
+        resource: '../src/Automation/'
+
     Kadupul\GraphDefinition\Infrastructure\Persistence\DoctrineVdefCatalog:
         arguments:
             $database: '@doctrine.dbal.web_connection'

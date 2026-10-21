@@ -1,0 +1,31 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% block title %}{{ (template ? 'Edit Automation Template' : 'Add Automation Template')|trans({}, 'automation') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route. #}
+    <p><a href="{{ path('automation_templates') }}">{{ 'Back to Device Automation Templates'|trans({}, 'automation') }}</a></p>
+    <h1>
+        {%- if not template %}{{ 'Automation Templates [new]'|trans({}, 'automation') }}
+        {%- elseif deviceTemplate is null %}{{ 'Automation Templates for [Deleted Template]'|trans({}, 'automation') }}
+        {%- else %}{{ 'Automation Templates [edit: %name%]'|trans({'%name%': deviceTemplate}, 'automation') }}{% endif -%}
+    </h1>
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.host_template) }}
+        {{ form_row(form.availability_method) }}
+        {{ form_row(form.sysDescr) }}
+        {{ form_row(form.sysName) }}
+        {{ form_row(form.sysOid) }}
+        {{ form_widget(form.revision) }}
+        <button type="submit">{{ 'Save'|trans({}, 'automation') }}</button>
+    {{ form_end(form) }}
+    {% if template %}
+        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+        <p><a href="{{ path('automation_template_delete', {ids: [template.id]}) }}">{{ 'Delete'|trans({}, 'automation') }}</a></p>
+    {% endif %}
+</main>
+{% endblock %}

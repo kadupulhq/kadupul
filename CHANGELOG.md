@@ -101,6 +101,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Render the permission denied page with Symfony and Twig, keeping the `custom_denied` reskin hook, the AJAX denial text, the validated Return link and existing translations.
 
+- Serve Device Rules (automation templates) through Symfony and Twig. Edits, moves and deletes are revision-checked and recheck the Automation realm in their transaction; a move renumbers the discovery match order without gaps, and a match the database cannot compile as a regular expression is refused. Old `automation_templates.php` links navigate; posts to it no longer change data.
+
 ## [1.3.0-alpha.1]
 
 - First Kadupul preview for isolated evaluation. This is pre-alpha software, with no production support or supported migration path. It combines the existing monitoring, polling and graphing application with an incremental Symfony 7.4 migration; PHP 8.4 or later is required.
