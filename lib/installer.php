@@ -3234,6 +3234,7 @@ class Installer implements JsonSerializable
         if ($storage_error !== '') {
             throw new RuntimeException($storage_error);
         }
+        self::refreshSymfonyCache();
         $failure = '';
 
         switch ($this->mode) {
@@ -3318,6 +3319,38 @@ class Installer implements JsonSerializable
             log_install_always('', $failure);
             $this->setProgress(Installer::PROGRESS_COMPLETE);
             $this->setStep(Installer::STEP_ERROR);
+        }
+    }
+
+    /** Refresh derived production state before any install/upgrade schema work. */
+    public static function refreshSymfonyCache(): void
+    {
+        global $config;
+
+        // Both callers run in the existing installer CLI worker. Reuse its
+        // validated runtime instead of executing another configured interpreter.
+        $php = realpath(PHP_BINARY);
+        if (PHP_SAPI !== 'cli' || $php === false || !is_file($php) || !is_executable($php)) {
+            throw new RuntimeException(__('The installer CLI interpreter is unavailable for refreshing the Symfony production cache.'));
+        }
+
+        $message = __('Unable to refresh the Symfony production cache. Check cache permissions and run bin/console cache:clear --env=prod --no-debug before retrying the upgrade.');
+        $process = new \Symfony\Component\Process\Process(
+            array($php, $config['base_path'] . '/bin/console', 'cache:clear', '--env=prod', '--no-debug', '--no-interaction'),
+            $config['base_path'],
+            array('APP_ENV' => 'prod', 'APP_DEBUG' => '0'),
+            null,
+            120
+        );
+        // Compiler diagnostics can contain configuration; report the operation only.
+        $process->disableOutput();
+        try {
+            $status = $process->run();
+        } catch (Throwable $error) {
+            throw new RuntimeException($message, 0, $error);
+        }
+        if ($status !== 0) {
+            throw new RuntimeException($message);
         }
     }
 

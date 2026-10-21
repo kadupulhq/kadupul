@@ -352,8 +352,29 @@ The original files under
 The compile does not remove stale output or notice later source changes. Rerun
 it after every upgrade or edit to a mapped file; to return to the `?md5` URLs,
 delete `public/assets/`. The production image and the offline bundle compile
-during their build. The kernel caches its configuration in `var/cache/`, so
-clear that directory after changing `asset_mapper.yaml`.
+during their build. The kernel caches its configuration in `var/cache/`.
+
+Stop web traffic and collectors while deploying new application code. The web
+installer's CLI worker and normal `cli/upgrade_database.php` command clear and
+warm the production Symfony cache before upgrade schema writes, using their running
+PHP interpreter. The CLI also refreshes the cache when the database version is
+already current. Special maintenance modes such as `--check-rrd-storage` keep
+their existing behavior and do not refresh it. Cache refresh has a 120-second
+timeout; a failure stops the upgrade before schema or version writes. Ensure
+the upgrade user can write `var/cache/`, correct the reported problem and retry.
+
+For deployments that skip the installer and database upgrade command, or after
+changing `asset_mapper.yaml`, run this from the application directory as the
+deployment user before restoring traffic:
+
+```sh
+php bin/console cache:clear --env=prod --no-debug
+```
+
+This command clears and warms the production cache. Restart long-running
+workers after deploying. On code rollback, refresh the cache again with the
+restored code before restarting workers and traffic. Clearing the cache does
+not reverse database changes; follow the relevant migration's recovery steps.
 
 Web servers must serve `public/assets/` as static files and never execute
 anything there. The compile skips PHP files, but a deny keeps a hand-placed

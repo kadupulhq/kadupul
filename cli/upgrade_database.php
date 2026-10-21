@@ -188,19 +188,32 @@ if ($forcever == '') {
 /* try to find current (old) version in the array */
 $old_version_index = (array_key_exists($old_cacti_version, $cacti_version_codes) ? $old_cacti_version : '');
 
-/* do a version check */
-if ($old_cacti_version == CACTI_VERSION) {
+/* Validate before starting a cache worker or performing schema writes. */
+$version_current = $old_cacti_version == CACTI_VERSION;
+if (!$version_current) {
+    if ($old_cacti_version < 0.7) {
+        print 'You are attempting to install cacti ' . CACTI_VERSION . ' onto a 0.6.x database.' . PHP_EOL . "To continue, you must create a new database, import 'cacti.sql' into it," . PHP_EOL . "and\tupdate 'include/config.php' to point to the new database." . PHP_EOL;
+        exit(1);
+    } elseif (empty($old_cacti_version)) {
+        print "You have created a new database, but have not yet imported the 'cacti.sql' file." . PHP_EOL;
+        exit(1);
+    } elseif ($old_version_index == '') {
+        print "Invalid Kadupul version $old_cacti_version, cannot upgrade to " . CACTI_VERSION . PHP_EOL;
+        exit(1);
+    }
+}
+
+require_once __DIR__ . '/../lib/installer.php';
+try {
+    Installer::refreshSymfonyCache();
+} catch (Throwable $error) {
+    fwrite(STDERR, $error->getMessage() . PHP_EOL);
+    exit(1);
+}
+
+if ($version_current) {
     print 'Your Kadupul is already up to date (v' . CACTI_VERSION . ' vs v' . $old_cacti_version . ')' . PHP_EOL;
-    exit;
-} elseif ($old_cacti_version < 0.7) {
-    print 'You are attempting to install cacti ' . CACTI_VERSION . ' onto a 0.6.x database.' . PHP_EOL . "To continue, you must create a new database, import 'cacti.sql' into it," . PHP_EOL . "and\tupdate 'include/config.php' to point to the new database." . PHP_EOL;
-    exit(1);
-} elseif (empty($old_cacti_version)) {
-    print "You have created a new database, but have not yet imported the 'cacti.sql' file." . PHP_EOL;
-    exit(1);
-} elseif ($old_version_index == '') {
-    print "Invalid Kadupul version $old_cacti_version, cannot upgrade to " . CACTI_VERSION . PHP_EOL;
-    exit(1);
+    exit(0);
 }
 
 print 'Upgrading from v' . $old_cacti_version . PHP_EOL;
@@ -208,7 +221,6 @@ print 'Upgrading from v' . $old_cacti_version . PHP_EOL;
 $prev_cacti_version = $old_cacti_version;
 $orig_cacti_version = get_cacti_version();
 $upgrade_failed = false;
-require_once __DIR__ . '/../lib/installer.php';
 
 // loop through versions from old version to the current, performing updates for each version in the chain
 foreach ($cacti_version_codes as $cacti_upgrade_version => $hash_code) {

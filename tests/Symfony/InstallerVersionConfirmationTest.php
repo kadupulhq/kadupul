@@ -17,6 +17,40 @@ final class InstallerVersionConfirmationTest extends TestCase
     private PDO $database;
     private array $previousGlobals;
 
+    public static function cacheRefreshCases(): iterable
+    {
+        foreach (['installer', 'cli'] as $entry) {
+            foreach (['warm', 'fresh', 'fallback', 'command-failure', 'configured-other-php'] as $scenario) {
+                yield $entry . '-' . $scenario => [$entry, $scenario];
+            }
+        }
+        yield 'cli-invalid-version' => ['cli', 'invalid-version'];
+    }
+
+    #[DataProvider('cacheRefreshCases')]
+    public function testUpgradeRefreshesProductionCacheBeforeMutationOrSuccess(string $entry, string $scenario): void
+    {
+        $process = new Symfony\Component\Process\Process([PHP_BINARY, dirname(__DIR__) . '/Fixtures/installer-cache-native.php', $entry, $scenario]);
+        self::assertSame(0, $process->run(), $process->getErrorOutput() . $process->getOutput());
+        self::assertSame('', $process->getErrorOutput());
+        $state = json_decode($process->getOutput(), true, flags: JSON_THROW_ON_ERROR);
+        $failed = in_array($scenario, ['command-failure', 'invalid-version'], true);
+        self::assertSame($scenario === 'fresh' ? null : 'old', $state['before']);
+        self::assertSame($failed ? 'old' : 'new', $state['after']);
+        self::assertSame('keep', $state['dev']);
+        if ($entry === 'installer') {
+            self::assertSame($failed ? null : 'new', $state['mutation']);
+            self::assertSame($failed, $state['error'] !== null);
+        } else {
+            self::assertSame($failed ? 1 : 0, $state['exit']);
+            self::assertSame(!$failed, str_contains($state['output'], 'already up to date'));
+        }
+        if (!$failed) {
+            self::assertSame(['prod', '0'], $state['console_env']);
+        }
+        self::assertStringNotContainsString('private-child-', (string) $state['error'] . $state['output']);
+    }
+
     protected function setUp(): void
     {
         // Exercise the actual shared public writer, isolating its legacy class

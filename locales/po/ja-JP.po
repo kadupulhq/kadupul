@@ -574,7 +574,7 @@ msgstr "いいえ"
 #: data_templates.php:1321 graph_templates.php:921 host_templates.php:997
 #: include/global_settings.php:968 include/global_settings.php:1942
 #: lib/api_automation.php:1438 lib/installer.php:2134 lib/installer.php:2162
-#: lib/installer.php:3994 tree.php:2399 tree.php:2400 user_admin.php:2267
+#: lib/installer.php:4027 tree.php:2399 tree.php:2400 user_admin.php:2267
 #: user_domains.php:754 user_domains.php:758 user_group_admin.php:2084
 msgid "Yes"
 msgstr "はい"
@@ -2461,7 +2461,7 @@ msgstr "ツリー作成基準"
 msgid "Change Leaf Type"
 msgstr "葉の種類を変更"
 
-#: automation_tree_rules.php:740 lib/installer.php:4218 utilities.php:2752
+#: automation_tree_rules.php:740 lib/installer.php:4251 utilities.php:2752
 #: utilities.php:2753 utilities.php:2756 utilities.php:2757
 msgid "WARNING:"
 msgstr "警告:"
@@ -11787,7 +11787,7 @@ msgid "Please wait while the installation system for Kadupul Version %s initiali
 msgstr "Kadupulバージョン%sのインストールシステムが初期化されている間お待ちください。これを機能させるには、JavaScriptを有効にする必要があります。"
 
 #: install/install.php:101 lib/html_utility.php:1359 lib/installer.php:2095
-#: lib/installer.php:4134
+#: lib/installer.php:4167
 msgid "Error"
 msgstr "エラー"
 
@@ -14576,7 +14576,7 @@ msgid "Location checks"
 msgstr "位置確認"
 
 #: lib/installer.php:2038 lib/installer.php:2189 lib/installer.php:2193
-#: lib/installer.php:2349 lib/installer.php:2354 lib/installer.php:4238
+#: lib/installer.php:2349 lib/installer.php:2354 lib/installer.php:4271
 msgid "ERROR:"
 msgstr "エラー:"
 
@@ -15194,256 +15194,264 @@ msgstr "問題を報告する"
 msgid "Get Started"
 msgstr "始める"
 
-#: lib/installer.php:3251
+#: lib/installer.php:3252
 #, php-format
 msgid "Starting %s Process for v%s"
 msgstr "V %sの%sプロセスを開始"
 
-#: lib/installer.php:3277
+#: lib/installer.php:3278
 msgid "Unable to update application defaults."
 msgstr ""
 
-#: lib/installer.php:3285
+#: lib/installer.php:3286
 msgid "The primary CDEF reference contract could not be installed. Review the schema and installer privileges before retrying."
 msgstr ""
 
-#: lib/installer.php:3295
+#: lib/installer.php:3296
 msgid "The installed database version could not be confirmed. Review the installer errors before retrying."
 msgstr ""
 
-#: lib/installer.php:3303
+#: lib/installer.php:3304
 #, php-format
 msgid "Finished %s Process for v%s"
 msgstr "V %sの%sプロセスを完了しました"
 
-#: lib/installer.php:3444
+#: lib/installer.php:3334
+msgid "The installer CLI interpreter is unavailable for refreshing the Symfony production cache."
+msgstr ""
+
+#: lib/installer.php:3337
+msgid "Unable to refresh the Symfony production cache. Check cache permissions and run bin/console cache:clear --env=prod --no-debug before retrying the upgrade."
+msgstr ""
+
+#: lib/installer.php:3477
 #, php-format
 msgid "Found %s templates to install"
 msgstr "インストールする%sテンプレートが見つかりました"
 
-#: lib/installer.php:3454
+#: lib/installer.php:3487
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "パッケージ#%s '%s'をインポートしようとしています。"
 
-#: lib/installer.php:3463
+#: lib/installer.php:3496
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "プロファイル'%s'のパッケージ#%s'%s'のインポートに成功しました"
 
-#: lib/installer.php:3469
+#: lib/installer.php:3502
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "プロファイル'%s'のパッケージ#%s'%s'のインポートに失敗しました"
 
-#: lib/installer.php:3486
+#: lib/installer.php:3519
 #, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "デバイステンプレート'%s'のマッピング自動化テンプレート"
 
-#: lib/installer.php:3507
+#: lib/installer.php:3540
 msgid "No templates were selected for import"
 msgstr "インポートするテンプレートが選択されていません"
 
-#: lib/installer.php:3517
+#: lib/installer.php:3550
 msgid "Updating remote configuration file"
 msgstr "設定待ち"
 
-#: lib/installer.php:3552
+#: lib/installer.php:3585
 #, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "デフォルトのデータソースプロファイルを%s (%s)に設定しています"
 
-#: lib/installer.php:3580
+#: lib/installer.php:3613
 #, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "選択したプロファイル（%s）が見つかりませんでした。変更は行われませんでした"
 
-#: lib/installer.php:3589
+#: lib/installer.php:3622
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "自動化ネットワーク（%s）の更新、モード\"%s\" => \"%s\"、サブネット\"%s\" => %s\""
 
-#: lib/installer.php:3599
+#: lib/installer.php:3632
 msgid "Failed to find automation network, no changes were made"
 msgstr "自動化ネットワークが見つかりませんでした。変更は行われませんでした"
 
-#: lib/installer.php:3603
+#: lib/installer.php:3636
 msgid "Adding extra snmp settings for automation"
 msgstr "自動化のための追加のSNMP設定の追加"
 
-#: lib/installer.php:3609
+#: lib/installer.php:3642
 #, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "オートメーションオプションセット%sの選択"
 
-#: lib/installer.php:3622
+#: lib/installer.php:3655
 #, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "自動化オプションセット%sの更新"
 
-#: lib/installer.php:3625
+#: lib/installer.php:3658
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "自動化オプションセット%sが正常に更新されました"
 
-#: lib/installer.php:3627
+#: lib/installer.php:3660
 #, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "自動化オプションセット%sのシーケンス変更"
 
-#: lib/installer.php:3635
+#: lib/installer.php:3668
 #, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "自動化オプションセット%sの更新に失敗しました"
 
-#: lib/installer.php:3638
+#: lib/installer.php:3671
 msgid "Failed to find any automation option set"
 msgstr "コピーするデータが見つかりませんでした。"
 
-#: lib/installer.php:3668
+#: lib/installer.php:3701
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "最初のKadupulデバイスのデバイステンプレートは%sです"
 
-#: lib/installer.php:3698
+#: lib/installer.php:3731
 msgid "Creating Graphs for Default Device"
 msgstr "このデバイスのグラフを作成する"
 
-#: lib/installer.php:3705
+#: lib/installer.php:3738
 msgid "Adding Device to Default Tree"
 msgstr "デバイスデフォルト"
 
-#: lib/installer.php:3713
+#: lib/installer.php:3746
 msgid "No templated graphs for Default Device were found"
 msgstr "デフォルトデバイスのテンプレートグラフが見つかりませんでした"
 
-#: lib/installer.php:3717
+#: lib/installer.php:3750
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "警告：オペレーティングシステムのデバイステンプレートが見つかりません。 Kadupulサーバーを監視するには、デバイステンプレートまたはKadupulパッケージをインポートする必要があります。"
 
-#: lib/installer.php:3724
+#: lib/installer.php:3757
 msgid "Running first-time data query for local host"
 msgstr "ローカルホストの初回データクエリの実行"
 
-#: lib/installer.php:3732
+#: lib/installer.php:3765
 msgid "Repopulating poller cache"
 msgstr "ポーラーキャッシュを再構築する"
 
-#: lib/installer.php:3737
+#: lib/installer.php:3770
 msgid "Repopulating SNMP Agent cache"
 msgstr "SNMPエージェントのキャッシュを再構築する"
 
-#: lib/installer.php:3742
+#: lib/installer.php:3775
 msgid "Generating RSA Key Pair"
 msgstr "RSAキーペアの生成"
 
-#: lib/installer.php:3753
+#: lib/installer.php:3786
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "変換するテーブルが%s個見つかりました"
 
-#: lib/installer.php:3760
+#: lib/installer.php:3793
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "テーブル#%s「%s」を変換しています"
 
-#: lib/installer.php:3768
+#: lib/installer.php:3801
 #, php-format
 msgid "Converting Table #%s '%s' failed in-process: %s"
 msgstr ""
 
-#: lib/installer.php:3776
+#: lib/installer.php:3809
 msgid "No tables where found or selected for conversion"
 msgstr "変換用に検出または選択されたテーブルはありません"
 
-#: lib/installer.php:3788
+#: lib/installer.php:3821
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "%sから%sに切り替えました"
 
-#: lib/installer.php:3792
+#: lib/installer.php:3825
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "注：データベースキャッシュに一時ファイルを使用する：%s"
 
-#: lib/installer.php:3814
+#: lib/installer.php:3847
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "V %s（ DB %s）からv %sにアップグレード中"
 
-#: lib/installer.php:3822
+#: lib/installer.php:3855
 #, php-format
 msgid "ERROR: Failed to find upgrade function for v%s"
 msgstr ""
 
-#: lib/installer.php:3831
+#: lib/installer.php:3864
 #, php-format
 msgid "ERROR: Database version %s could not be confirmed; retry from the last confirmed version."
 msgstr ""
 
-#: lib/installer.php:3840
+#: lib/installer.php:3873
 #, php-format
 msgid "ERROR: Required upgrade file for v%s was not found."
 msgstr ""
 
-#: lib/installer.php:3892
+#: lib/installer.php:3925
 msgid "Install aborted due to no EULA acceptance"
 msgstr "EULAが受け入れられないため、インストールが中止されました"
 
-#: lib/installer.php:3916
+#: lib/installer.php:3949
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "バックグラウンドはすでに%sで開始されています。%sでのこの試みはスキップされました"
 
-#: lib/installer.php:3940
+#: lib/installer.php:3973
 #, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "インストール中に例外が発生しました: #%s - %s"
 
-#: lib/installer.php:3959
+#: lib/installer.php:3992
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "インストールは%sに開始され、%sに完了しました"
 
-#: lib/installer.php:3996
+#: lib/installer.php:4029
 msgid "Both"
 msgstr "両方"
 
-#: lib/installer.php:3996
+#: lib/installer.php:4029
 #, php-format
 msgid "No - %s"
 msgstr "No - %s"
 
-#: lib/installer.php:4001
+#: lib/installer.php:4034
 #, php-format
 msgid "%s - N/A"
 msgstr "%s - N/A"
 
-#: lib/installer.php:4001 lib/installer.php:4003
+#: lib/installer.php:4034 lib/installer.php:4036
 msgid "Web"
 msgstr "Web"
 
-#: lib/installer.php:4003 lib/installer.php:4006
+#: lib/installer.php:4036 lib/installer.php:4039
 #, php-format
 msgid "%s - No"
 msgstr "%s - No"
 
-#: lib/installer.php:4006
+#: lib/installer.php:4039
 msgid "Cli"
 msgstr "CLI"
 
-#: lib/installer.php:4012
+#: lib/installer.php:4045
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "PHPオプションの設定%s = %s"
 
-#: lib/installer.php:4018
+#: lib/installer.php:4051
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "PHPオプション%sの設定に失敗しました。%sです（%sにする必要があります）"
 
-#: lib/installer.php:4055
+#: lib/installer.php:4088
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "同期を試みるときにデータコレクタが見つかりません"
 

@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Clear and warm the Symfony production cache before installer and CLI upgrade schema changes, including already-current databases; stop before upgrade schema writes if the cache refresh fails (#432).
+
 - Retain offline collector output while children run and after completion, recover both local sample queues after acknowledgement, and report PHP collector queue-write failures (#759).
 
 - Stop collector synchronization on failed table copies, cleanup, or statistics updates; retain pending full-sync state and report failure instead of completion (#760).
