@@ -6,6 +6,8 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+require_once __DIR__ . '/reference_write.php';
+
 /**
  * exec_poll - executes a command and returns its output
  *
@@ -486,59 +488,71 @@ function update_reindex_cache($host_id, $data_query_id)
 
 function poller_update_poller_reindex_from_buffer($host_id, $data_query_id, &$recache_stack)
 {
-    /* set all fields present value to 0, to mark the outliers when we are all done */
-    db_execute_prepared(
-        'UPDATE poller_reindex
+    $completed = reference_write_atomic(static function () use ($host_id, $data_query_id, $recache_stack): bool {
+        /* set all fields present value to 0, to mark the outliers when we are all done */
+        if (!db_execute_prepared(
+            'UPDATE poller_reindex
 		SET present = 0
 		WHERE host_id = ?
 		AND data_query_id = ?',
-        array($host_id, $data_query_id)
-    );
-
-    /* setup the database call */
-    $sql_prefix   = 'INSERT INTO poller_reindex (host_id, data_query_id, action, op, assert_value, arg1, present) VALUES';
-    $sql_suffix   = ' ON DUPLICATE KEY UPDATE action=VALUES(action), op=VALUES(op), assert_value=VALUES(assert_value), present=VALUES(present)';
-
-    /* use a reasonable insert buffer, the default is 1MByte */
-    $max_packet   = 256000;
-
-    /* setup some defaults */
-    $overhead     = strlen($sql_prefix) + strlen($sql_suffix);
-    $buf_len      = 0;
-    $buf_count    = 0;
-    $buffer       = '';
-
-    foreach ($recache_stack AS $record) {
-        if ($buf_count == 0) {
-            $delim = ' ';
-        } else {
-            $delim = ', ';
+            array($host_id, $data_query_id)
+        )) {
+            return false;
         }
 
-        $buffer .= $delim . $record;
+        /* setup the database call */
+        $sql_prefix   = 'INSERT INTO poller_reindex (host_id, data_query_id, action, op, assert_value, arg1, present) VALUES';
+        $sql_suffix   = ' ON DUPLICATE KEY UPDATE action=VALUES(action), op=VALUES(op), assert_value=VALUES(assert_value), present=VALUES(present)';
 
-        $buf_len += strlen($record);
+        /* use a reasonable insert buffer, the default is 1MByte */
+        $max_packet   = 256000;
 
-        if (($overhead + $buf_len) > ($max_packet - 1024)) {
-            db_execute($sql_prefix . $buffer . $sql_suffix);
+        /* setup some defaults */
+        $overhead     = strlen($sql_prefix) + strlen($sql_suffix);
+        $buf_len      = 0;
+        $buf_count    = 0;
+        $buffer       = '';
 
-            $buffer    = '';
-            $buf_len   = 0;
-            $buf_count = 0;
-        } else {
-            $buf_count++;
+        foreach ($recache_stack AS $record) {
+            if ($buf_count == 0) {
+                $delim = ' ';
+            } else {
+                $delim = ', ';
+            }
+
+            $buffer .= $delim . $record;
+
+            $buf_len += strlen($record);
+
+            if (($overhead + $buf_len) > ($max_packet - 1024)) {
+                if (!db_execute($sql_prefix . $buffer . $sql_suffix)) {
+                    return false;
+                }
+
+                $buffer    = '';
+                $buf_len   = 0;
+                $buf_count = 0;
+            } else {
+                $buf_count++;
+            }
         }
-    }
 
-    if ($buf_count > 0) {
-        db_execute($sql_prefix . $buffer . $sql_suffix);
-    }
+        if ($buf_count > 0) {
+            if (!db_execute($sql_prefix . $buffer . $sql_suffix)) {
+                return false;
+            }
+        }
 
-    /* remove stale records FROM the poller reindex */
-    db_execute_prepared('DELETE FROM poller_reindex
+        /* remove stale records FROM the poller reindex */
+        return db_execute_prepared('DELETE FROM poller_reindex
 		WHERE host_id = ?
 		AND data_query_id = ?
 		AND present = 0', array($host_id, $data_query_id));
+    }, ['poller_reindex']);
+
+    if ($completed !== true) {
+        throw new RuntimeException('Poller reindex cache replacement could not be confirmed.');
+    }
 
     poller_push_reindex_only_data_to_main($host_id, $data_query_id);
 }

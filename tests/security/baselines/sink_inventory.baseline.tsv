@@ -43,23 +43,23 @@ cmd_exec	./lib/ping.php:181	                $result = shell_exec('chcp 437 && pi
 cmd_exec	./lib/ping.php:188	                    $result = shell_exec('ping -6 -W ' . ceil($this->timeout / 1000) . ' -c ' . $this->retries . ' -p ' . $pattern . ' ' . cacti_escapeshellarg($this->host['hostname']));
 cmd_exec	./lib/ping.php:190	                    $result = shell_exec('ping -W ' . ceil($this->timeout / 1000) . ' -c ' . $this->retries . ' -p ' . $pattern . ' ' . cacti_escapeshellarg($this->host['hostname']) . ' 2>&1');
 cmd_exec	./lib/ping.php:201	                        $result = shell_exec($ping_path . ' -W ' . ceil($this->timeout / 1000) . ' -c ' . $this->retries . ' -p ' . $pattern . ' ' . cacti_escapeshellarg($this->host['hostname']));
-cmd_exec	./lib/poller.php:101	            $output = shell_exec($command);
-cmd_exec	./lib/poller.php:143	                pclose(popen('start "Cactiplus" /I ' . $filename . ' ' . $args, 'r'));
-cmd_exec	./lib/poller.php:145	                pclose(popen('start "Cactiplus" /I ' . $filename . ' ' . $args . ' ' . $redirect_args, 'r'));
-cmd_exec	./lib/poller.php:148	            exec($filename . ' ' . $args . ' > /dev/null 2>&1 &');
-cmd_exec	./lib/poller.php:150	            exec($filename . ' ' . $args . ' ' . $redirect_args . ' &');
-cmd_exec	./lib/poller.php:154	            exec($filename . ' ' . $args . ' > /dev/null 2>&1 &');
-cmd_exec	./lib/poller.php:156	            exec($filename . ' ' . $args . ' ' . $redirect_args . ' &');
-cmd_exec	./lib/poller.php:1738	                                        $process = proc_open(array($php_path, '-l', $tmpfile), $descriptors, $pipes);
-cmd_exec	./lib/poller.php:185	    $process = proc_open($cmd, $descriptors, $pipes);
-cmd_exec	./lib/poller.php:22	            $fp = popen($command, 'r');
-cmd_exec	./lib/poller.php:24	            $fp = popen($command, 'rb');
-cmd_exec	./lib/poller.php:37	        $output = shell_exec($command);
-cmd_exec	./lib/poller.php:48	 *                    of the proc_open() and proc_close() functions (php 4.3+)
-cmd_exec	./lib/poller.php:49	 * @param  (array)    $pipes - the array of r/w pipes returned from proc_open()
-cmd_exec	./lib/poller.php:50	 * @param  (resource) $proc_fd - the file descriptor returned from proc_open()
-cmd_exec	./lib/poller.php:86	                $fp = popen($command, 'r');
-cmd_exec	./lib/poller.php:88	                $fp = popen($command, 'rb');
+cmd_exec	./lib/poller.php:103	            $output = shell_exec($command);
+cmd_exec	./lib/poller.php:145	                pclose(popen('start "Cactiplus" /I ' . $filename . ' ' . $args, 'r'));
+cmd_exec	./lib/poller.php:147	                pclose(popen('start "Cactiplus" /I ' . $filename . ' ' . $args . ' ' . $redirect_args, 'r'));
+cmd_exec	./lib/poller.php:150	            exec($filename . ' ' . $args . ' > /dev/null 2>&1 &');
+cmd_exec	./lib/poller.php:152	            exec($filename . ' ' . $args . ' ' . $redirect_args . ' &');
+cmd_exec	./lib/poller.php:156	            exec($filename . ' ' . $args . ' > /dev/null 2>&1 &');
+cmd_exec	./lib/poller.php:158	            exec($filename . ' ' . $args . ' ' . $redirect_args . ' &');
+cmd_exec	./lib/poller.php:1752	                                        $process = proc_open(array($php_path, '-l', $tmpfile), $descriptors, $pipes);
+cmd_exec	./lib/poller.php:187	    $process = proc_open($cmd, $descriptors, $pipes);
+cmd_exec	./lib/poller.php:24	            $fp = popen($command, 'r');
+cmd_exec	./lib/poller.php:26	            $fp = popen($command, 'rb');
+cmd_exec	./lib/poller.php:39	        $output = shell_exec($command);
+cmd_exec	./lib/poller.php:50	 *                    of the proc_open() and proc_close() functions (php 4.3+)
+cmd_exec	./lib/poller.php:51	 * @param  (array)    $pipes - the array of r/w pipes returned from proc_open()
+cmd_exec	./lib/poller.php:52	 * @param  (resource) $proc_fd - the file descriptor returned from proc_open()
+cmd_exec	./lib/poller.php:88	                $fp = popen($command, 'r');
+cmd_exec	./lib/poller.php:90	                $fp = popen($command, 'rb');
 cmd_exec	./lib/rrd.php:228	    return proc_open(array(read_config_option('path_rrdtool'), '-'), $descriptors, $streams);
 cmd_exec	./lib/rrd_maintenance.php:287	                    // RRD pipes may come from proc_open(), which pclose() does not wait for.
 cmd_exec	./lib/rrdcheck.php:839	    $process = proc_open($command, $fds, $pipes);
@@ -392,9 +392,9 @@ dynamic_include	./lib/plugins.php:81	                        include_once($full_
 dynamic_include	./lib/plugins.php:858	            include_once($plugin_setup);
 dynamic_include	./lib/plugins.php:910	            include_once($plugin_setup);
 dynamic_include	./lib/plugins.php:988	    include_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./lib/poller.php:304	    include_once($config['library_path'] . '/data_query.php');
-dynamic_include	./lib/poller.php:305	    include_once($config['library_path'] . '/snmp.php');
-dynamic_include	./lib/poller.php:880	    include_once($config['library_path'] . '/rrd.php');
+dynamic_include	./lib/poller.php:306	    include_once($config['library_path'] . '/data_query.php');
+dynamic_include	./lib/poller.php:307	    include_once($config['library_path'] . '/snmp.php');
+dynamic_include	./lib/poller.php:894	    include_once($config['library_path'] . '/rrd.php');
 dynamic_include	./lib/reports.php:1081	    include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/reports.php:1082	    include_once($config['library_path'] . '/data_query.php');
 dynamic_include	./lib/reports.php:1083	    include_once($config['library_path'] . '/html_tree.php');
@@ -573,9 +573,9 @@ fs_write	./lib/input_whitelist.php:111	        $stream = @fopen($temporary, 'x+b
 fs_write	./lib/input_whitelist.php:41	            $lock = @fopen($lockPath, 'x+b');
 fs_write	./lib/input_whitelist.php:49	            $lock = @fopen($lockPath, 'r+b');
 fs_write	./lib/installer.php:3073	            $file = fopen($cacheFile, "r");
-fs_write	./lib/poller.php:1729	                                if (file_put_contents($tmpfile, $contents) !== false) {
-fs_write	./lib/poller.php:1757	                                            file_put_contents($mypath, $contents);
-fs_write	./lib/poller.php:1786	                            file_put_contents($mypath, $contents);
+fs_write	./lib/poller.php:1743	                                if (file_put_contents($tmpfile, $contents) !== false) {
+fs_write	./lib/poller.php:1771	                                            file_put_contents($mypath, $contents);
+fs_write	./lib/poller.php:1800	                            file_put_contents($mypath, $contents);
 fs_write	./lib/reports.php:1818	        $f = fopen($fn, 'wb');
 fs_write	./lib/reports.php:1876	        $f = fopen($fn, 'wb');
 fs_write	./lib/rrd.php:3317	                    rrdtool_filesystem()->dumpFile($graph_data_array['export_realtime'], (string) $output);

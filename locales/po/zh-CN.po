@@ -15639,11 +15639,11 @@ msgstr "需要:Kadupul >= %s"
 msgid "Not Stated"
 msgstr "没有说明"
 
-#: lib/poller.php:1984
+#: lib/poller.php:1998
 msgid "Synchronization failed. See the log for details."
 msgstr ""
 
-#: lib/poller.php:2008 lib/poller.php:2335
+#: lib/poller.php:2022 lib/poller.php:2349
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 
