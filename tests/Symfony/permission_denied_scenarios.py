@@ -47,7 +47,7 @@ def verify_permission_denied(harness, check, prefix=''):
               'permission denied renders in place: ' + prefix + path)
         check(hrefs(body, 'Return') == [prefix + '/graph_view.php?action=tree&amp;node=3'], 'local Referer becomes the Return link: ' + prefix + path)
         check(hrefs(body, 'Login Again') == [prefix + '/logout.php'], 'Login Again keeps the installation path: ' + prefix + path)
-        check(prefix + '/include/js/permission-denied' in body and '<script>' not in body, 'Return behavior loads from an external script: ' + prefix + path)
+        check(re.search(re.escape(prefix) + r'/(?:public/assets/)?include/js/permission-denied', body) is not None and '<script>' not in body, 'Return behavior loads from an external script: ' + prefix + path)
         check('no-store' in headers.get('Cache-Control', '') and "'unsafe-inline'" not in headers.get('Content-Security-Policy', ''),
               'permission denied is private and under the strict policy: ' + prefix + path)
     if prefix:
@@ -68,13 +68,14 @@ def verify_permission_denied(harness, check, prefix=''):
     check(response['status'] == 200 and response['url'] == '<BASE>/permission_denied.php' and response['title'] == 'Permission Denied',
           'caller redirect renders the Symfony page')
 
-    for operation in ('--install', '--enable'):
-        harness.php('cli/plugin_manage.php', '--plugin=compatibility_test', operation)
-    # The native API admits registration only from a setup or install function.
-    registration = harness.php('-r', 'require "include/cli_check.php"; function setup_denied_hook() { api_plugin_register_hook("compatibility_test", "custom_denied", "compatibility_denied", "setup.php", true); } setup_denied_hook();')
-    check(registration['exit'] == 0 and harness.sql("SELECT COUNT(*) FROM plugin_hooks WHERE name='compatibility_test' AND hook='custom_denied' AND status=1").strip() == '1',
-          'custom_denied registered through the native plugin API')
     try:
+        for operation in ('--install', '--enable'):
+            result = harness.php('cli/plugin_manage.php', '--plugin=compatibility_test', operation)
+            check(result['exit'] == 0, 'permission denied plugin lifecycle ' + operation)
+        # The native API admits registration only from a setup or install function.
+        registration = harness.php('-r', 'require "include/cli_check.php"; function setup_denied_hook() { api_plugin_register_hook("compatibility_test", "custom_denied", "compatibility_denied", "setup.php", true); } setup_denied_hook();')
+        check(registration['exit'] == 0 and harness.sql("SELECT COUNT(*) FROM plugin_hooks WHERE name='compatibility_test' AND hook='custom_denied' AND status=1").strip() == '1',
+              'custom_denied registered through the native plugin API')
         harness.truncate_artifacts('plugin.jsonl')
         status, body, _ = page(session, '/permission_denied.php')
         events = [row['args'] for row in harness.jsonl('/artifacts/plugin.jsonl') if row['callback'] == 'custom_denied']
@@ -101,7 +102,11 @@ def verify_permission_denied(harness, check, prefix=''):
     finally:
         harness.sql("REPLACE INTO settings (name,value) VALUES ('content_security_policy_script','')")
         harness.sql("DELETE FROM settings WHERE name='compatibility_denied_reskin'")
-        harness.sql("DELETE FROM plugin_hooks WHERE name='compatibility_test' AND hook='custom_denied'")
+        # Later scenarios seed their own compatibility_test row; leave none behind.
+        harness.php('cli/plugin_manage.php', '--plugin=compatibility_test', '--uninstall')
+    check(harness.sql("SELECT COUNT(*) FROM plugin_config WHERE directory='compatibility_test'").strip() == '0'
+          and harness.sql("SELECT COUNT(*) FROM plugin_hooks WHERE name='compatibility_test'").strip() == '0',
+          'permission denied scenario uninstalls its fixture plugin')
 
 
 def verify_permission_denied_prefix(harness, check):
