@@ -103,6 +103,10 @@ services:
     Kadupul\Platform\Application\Port\ConsoleHomeContent:
         alias: Kadupul\Platform\Infrastructure\Legacy\LegacyConsoleHomeContent
 
+    Kadupul\Platform\Application\Query\ViewPermissionDenied: ~
+    Kadupul\Platform\Application\Port\PermissionDeniedContent:
+        alias: Kadupul\Platform\Infrastructure\Legacy\LegacyPermissionDeniedContent
+
     Kadupul\IdentityAccess\Application\Port\AuthenticatedSession:
         alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuthenticatedSession
 

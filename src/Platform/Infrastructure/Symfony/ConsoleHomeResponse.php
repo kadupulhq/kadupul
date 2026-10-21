@@ -11,7 +11,7 @@ namespace Kadupul\Platform\Infrastructure\Symfony;
 
 use Symfony\Component\HttpFoundation\Response;
 
-/** Only the console's trusted compatibility fragments retain legacy CSP modes. */
+/** Only trusted native extension output (console fragments, a custom_denied page) retains legacy CSP modes. */
 final class ConsoleHomeResponse extends Response
 {
     /** @param array<string, string> $compatibilityPolicies */

@@ -132,8 +132,9 @@ To rollback from nonce mode, switch `content_security_policy_script` back to
 empty in the settings UI. The policy reverts to `'unsafe-inline'` immediately;
 no code changes are needed.
 
-The migration is incremental. The pilot phase has converted `logout.php` and
-`permission_denied.php` to use nonces. The remaining ~180 inline tags across
+The migration is incremental. The pilot phase has converted `logout.php` to use
+nonces; `permission_denied.php` now renders through Symfony with no inline
+script. The remaining ~180 inline tags across
 the UI continue to work under the default (empty) mode. Each page adopts nonce
 attributes as it gets touched for other changes. Plugins that emit inline
 scripts will work under empty, `unsafe-eval`, and `nonce-report` modes, but

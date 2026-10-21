@@ -31,6 +31,21 @@ final readonly class LegacyBrowserWorker
     /** @return array<string, mixed> */
     public function console(int $actorId): array
     {
+        return $this->run('legacy-console-home.php', ['index_path' => $this->configuration->urlPath() . '/index.php'], $actorId);
+    }
+
+    /** @return array<string, mixed> */
+    public function permissionDenied(int $actorId): array
+    {
+        return $this->run('legacy-permission-denied.php', ['page_path' => $this->configuration->urlPath() . '/permission_denied.php'], $actorId);
+    }
+
+    /**
+     * @param array<string, string> $entry the native script path the worker presents to include/auth.php
+     * @return array<string, mixed>
+     */
+    private function run(string $script, array $entry, int $actorId): array
+    {
         $request = $this->requests->getCurrentRequest();
         $snapshot = $this->session->read();
         if ($request === null || $request->getMethod() !== 'GET' && $request->getMethod() !== 'HEAD'
@@ -63,7 +78,7 @@ final readonly class LegacyBrowserWorker
             'credential' => $snapshot['sess_user_credential'],
             'session_id' => session_id(),
             'session_path' => session_save_path(),
-            'index_path' => $this->configuration->urlPath() . '/index.php',
+            ...$entry,
             'server' => array_intersect_key($request->server->all(), array_flip([
                 'HTTPS', 'HTTP_HOST', 'SERVER_NAME', 'SERVER_PORT', 'REMOTE_ADDR', 'HTTP_USER_AGENT', 'HTTP_ACCEPT_LANGUAGE',
                 'HTTP_ORIGIN', 'HTTP_REFERER', 'HTTP_X_REQUESTED_WITH', 'QUERY_STRING',
@@ -79,7 +94,7 @@ final readonly class LegacyBrowserWorker
         if (strlen($input) > 65536) {
             throw new BadRequestHttpException('Console request is too large.');
         }
-        $process = new Process([$binary, $this->projectDir . '/bin/legacy-console-home.php'], $this->projectDir, null, $input, 60);
+        $process = new Process([$binary, $this->projectDir . '/bin/' . $script], $this->projectDir, null, $input, 60);
         $bytes = 0;
         try {
             $process->run(static function (string $type, string $chunk) use (&$bytes): void {

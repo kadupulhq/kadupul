@@ -97,26 +97,27 @@ test.describe('Pilot pages carry matching nonces', () => {
         expect(bodyMatch![1]).toBe(headerNonce);
     });
 
-    test('permission_denied.php body nonce matches header nonce (authenticated)', async ({ page }) => {
+    test('permission_denied.php renders in place under the Symfony CSP (authenticated)', async ({ page }) => {
         await loginAsAdmin(page);
 
-        /* permission_denied.php requires an authenticated session. Reuse
-         * the page's storage state for a request API call so we get
-         * headers AND body without redirect-following. */
+        /* The compatibility entry renders the Symfony page without a redirect,
+         * and the page has no inline script left to carry a nonce. */
         const resp = await page.context().request.get('/permission_denied.php', { maxRedirects: 0 });
-
-        const cspHeader = resp.headers()[EXPECTED_CSP_HEADER];
-        expect(cspHeader).toBeTruthy();
-
-        const nonceMatch = cspHeader!.match(/'nonce-([A-Za-z0-9_-]+)'/);
-        expect(nonceMatch).not.toBeNull();
-        const headerNonce = nonceMatch![1];
-
-        const body = await resp.text();
-        const bodyMatch = body.match(/<script[^>]*\bnonce=["']([A-Za-z0-9_-]+)["']/);
-        expect(bodyMatch, 'permission_denied.php must render <script nonce="...">').not.toBeNull(); // nosemgrep: javascript.lang.security.audit.unknown-value-with-script-tag.unknown-value-with-script-tag
-
-        expect(bodyMatch![1]).toBe(headerNonce);
+        expect(resp.status()).toBe(200);
+        const rendered = await page.goto('/permission_denied.php');
+        expect(rendered!.status()).toBe(200);
+        for (const response of [resp, rendered!]) {
+            const policy = response.headers()['content-security-policy'];
+            expect(policy).toBeTruthy();
+            for (const directive of ["default-src 'self'", "object-src 'none'", "frame-ancestors 'none'", "base-uri 'self'", "form-action 'self'"]) {
+                expect(policy).toContain(directive);
+            }
+            expect(policy).not.toContain("'unsafe-inline'");
+            expect(response.headers()['content-security-policy-report-only']).toBeUndefined();
+            expect(response.headers()['cache-control']).toContain('no-store');
+        }
+        await expect(page.locator('h1')).toContainText('Permission Denied');
+        await expect(page.locator('script:not([src]), style, [nonce], [onclick], [onchange], [onsubmit]')).toHaveCount(0);
     });
 
     test('About compatibility redirect and rendered page enforce the Symfony CSP', async ({ page }) => {

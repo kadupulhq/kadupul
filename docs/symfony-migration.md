@@ -1739,6 +1739,26 @@ it rechecks the actor, the revisions and every graph, template, aggregate and
 nested reference under lock. The contract's own checks and triggers remain the
 final guard. Writes, including deletion, need the primary collector.
 
+### Permission denied page
+
+`permission_denied.php` forwards to `/app.php/permission-denied`, which renders
+in place, so the many pages that redirect there keep working. The route needs a
+signed-in account and no realm; an anonymous request is sent to `login.php`.
+The `custom_denied` hook, the Referer check and the version line run in the
+console's native browser worker (`bin/legacy-permission-denied.php`), so the
+hook keeps its name, argument and strict `OPER_MODE_RESKIN` comparison, and
+`validate_redirect_url()` still decides the Return link. A reskinned page is
+returned as printed, after csrf-magic's rewriter, under the native CSP its
+nonces match. Otherwise an AJAX request gets the 401 text of
+`raise_ajax_permission_denied()` and a page request gets the Twig page, which
+uses the existing gettext messages and moves the history-back handler to
+`include/js/permission-denied.js`. Status stays 200 for the page.
+
+The page no longer loads the legacy header bundle, so `page_head` and the
+`global_session.php` footer hooks do not run there, as on About. Output a
+`custom_denied` hook prints without asking to reskin is dropped. A failed
+worker answers 503, and a schema mismatch keeps the installer redirect.
+
 ### Template synchronization discovery boundary
 
 Bulk template synchronization first validates and commits the primary template

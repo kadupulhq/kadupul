@@ -32,7 +32,8 @@ final readonly class ConsoleHomeExceptionSubscriber implements EventSubscriberIn
 
     public function onException(ExceptionEvent $event): void
     {
-        if ($event->getRequest()->attributes->get('_route') !== 'platform_console') {
+        // The permission denied page starts the same browser worker.
+        if (!in_array($event->getRequest()->attributes->get('_route'), ['platform_console', 'platform_permission_denied'], true)) {
             return;
         }
         $error = $event->getThrowable();

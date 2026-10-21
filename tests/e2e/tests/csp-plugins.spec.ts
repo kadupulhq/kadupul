@@ -2,8 +2,7 @@ import { test, expect, type Page, type Request } from '@playwright/test';
 
 /*
  * Plugin CSP harness. The base csp.spec.ts proves the header shape and
- * verifies the pilot pages (logout, permission_denied) carry matching
- * nonces. This spec extends coverage to two third-party plugins shipped
+ * verifies the pilot page (logout) carries matching nonces. This spec extends coverage to two third-party plugins shipped
  * by external projects — thold and monitor — to catch the case where a
  * plugin emits inline <script> tags directly without calling
  * CactiSecureHeaders::getNonceAttribute().
