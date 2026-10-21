@@ -1434,6 +1434,10 @@ def functions_in_container(args):
     status = 2
     try:
         harness.setup()
+        # Function goldens record the first kernel boot and its warm repeat.
+        # Installation now warms prod. Restore the cold input in this owned
+        # container so first-boot diagnostics remain part of the capture.
+        harness.command('rm', '-rf', '/var/www/html/var/cache/prod', check=True)
         def probe(name, extra):
             return parse_function_probe(name, harness.php('/harness/probe.php', 'function', name, *extra))
 

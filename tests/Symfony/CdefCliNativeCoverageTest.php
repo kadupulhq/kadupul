@@ -79,7 +79,11 @@ final class CdefCliNativeCoverageTest extends TestCase
                 if (!is_file($root . '/' . $path)) continue;
                 $filesystem->copy($root . '/' . $path, $candidate . '/' . $path, true);
             }
-            foreach (['include/vendor', 'include/fa', 'public/assets'] as $path) {
+            // Composer resolves application classes relative to its own directory.
+            // A symlink would make cache:clear boot the original checkout's kernel.
+            self::assertDirectoryExists($root . '/include/vendor');
+            $filesystem->mirror($root . '/include/vendor', $candidate . '/include/vendor');
+            foreach (['include/fa', 'public/assets'] as $path) {
                 self::assertDirectoryExists($root . '/' . $path);
                 $filesystem->symlink($root . '/' . $path, $candidate . '/' . $path);
             }

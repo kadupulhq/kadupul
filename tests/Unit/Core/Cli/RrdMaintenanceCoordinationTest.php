@@ -4,6 +4,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 require_once dirname(__DIR__, 4) . '/lib/rrd_maintenance.php';
 
+/** Keep peripheral cache I/O inside the owned CLI fixture, using the real Process. */
+function rrd_cli_cache_fixture(string $dir, string $root): string
+{
+    mkdir($dir . '/bin', 0700);
+    file_put_contents($dir . '/bin/console', '<?php if(array_slice($argv,1)!==["cache:clear","--env=prod","--no-debug","--no-interaction"]||getenv("APP_ENV")!=="prod"||getenv("APP_DEBUG")!=="0"){exit(2);}touch(dirname(__DIR__)."/cache-refreshed");');
+
+    return 'require_once ' . var_export($root . '/include/vendor/autoload.php', true) . ';';
+}
+
 function rrd_cli_fixture_remove($path)
 {
     if (is_dir($path) && !is_link($path)) {
@@ -547,6 +556,7 @@ REMOTE;
         $bootstrap .= '$config["connection"]=' . var_export($connection, true) . ';';
         $bootstrap .= '$config["force_storage_location_local"]=' . var_export($forced, true) . ';';
         $bootstrap .= "\n" . 'function db_fetch_cell_prepared(...$args){touch(dirname(__DIR__)."/queue-read");return ' . var_export($engine, true) . ';}';
+        $bootstrap .= rrd_cli_cache_fixture($dir, $root);
         file_put_contents($dir . '/include/cli_check.php', $bootstrap);
         $args = array_merge(array(PHP_BINARY), rrd_cli_coverage_arguments($this, $dir, $root, 'upgrade_database.php'), array($dir . '/cli/upgrade_database.php', '--forcever=1.2.30'), $probe ? array('--check-rrd-storage') : array(), $local ? array('--local') : array());
         $process = proc_open($args, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
@@ -558,6 +568,7 @@ REMOTE;
         $accepted = !$primaryDenied && !$probe && !$forced && ($engine === 'InnoDB' || $connection !== 'online');
         expect(proc_close($process))->toBe($accepted ? 0 : 1, $out . $err)
             ->and(file_exists($dir . '/upgraded'))->toBe($accepted)
+            ->and(file_exists($dir . '/cache-refreshed'))->toBe($accepted)
             // Online primary upgrades are refused; admitted local/offline paths never switch.
             ->and(file_exists($dir . '/main-db'))->toBeFalse();
         if ($primaryDenied) {
@@ -672,6 +683,7 @@ test('database upgrade reports rejected versions and completed migrations accura
             if ($boundary) {
                 $fixture .= 'register_shutdown_function(function(){file_put_contents(dirname(__DIR__)."/owner-transaction",$GLOBALS["versionWriter"]->inTransaction()?"open":"closed");});';
             }
+            $fixture .= rrd_cli_cache_fixture($dir, $root);
             file_put_contents($dir . '/include/cli_check.php', $fixture);
             $registration = $boundary ? [
                 'producer' => 'tests/Unit/Core/Cli/RrdMaintenanceCoordinationTest.php',
@@ -700,6 +712,7 @@ test('database upgrade reports rejected versions and completed migrations accura
             }
             expect($actualStatus)->toBe($expectedStatus)
                 ->and($output)->toContain($expectedOutput)
+                ->and(file_exists($dir . '/cache-refreshed'))->toBe(!in_array($version, array('1.2.999', '0.6.0', ''), true))
                 ->and(file_exists($dir . '/schema-write'))->toBeFalse('The final marker must use the actual confirmed version writer.');
             $observer = new PDO('sqlite:' . $dir . '/version.sqlite');
             expect($observer->query('SELECT cacti FROM version')->fetchAll(PDO::FETCH_COLUMN))
