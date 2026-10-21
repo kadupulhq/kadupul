@@ -109,7 +109,10 @@ final class PermissionDeniedPresentationTest extends TestCase
         self::assertSame(1, $xpath->query('//a[@href="/kadupul/host.php?id=3&action=edit" and .="Return"]')->length);
         self::assertSame(0, $xpath->query('//a[contains(@class, "returnTo")]')->length);
         self::assertSame(1, $xpath->query('//a[@href="/kadupul/logout.php" and .="Login Again"]')->length);
-        self::assertSame(1, $xpath->query('//script[starts-with(@src, "/kadupul/include/js/permission-denied") and not(@nonce)]')->length);
+        $scripts = $xpath->query('//script[@src and not(@nonce)]');
+        self::assertSame(1, $scripts->length);
+        // The source path, or its AssetMapper copy when public/assets is compiled, as CI does.
+        self::assertMatchesRegularExpression('~\A/kadupul/(?:include/js/permission-denied\.js\?[0-9a-f]{32}|public/assets/include/js/permission-denied-[A-Za-z0-9_-]+\.js)\z~', $scripts->item(0)->getAttribute('src'));
         self::assertSame(0, $xpath->query('//script[not(@src)]')->length);
         self::assertSame('Version <script>1.3.0</script> | (c) 2004-2026 - The Cacti Group', $xpath->evaluate('string(//div[@class="versionInfo"])'));
         self::assertStringNotContainsString('<script>1.3.0', (string) $response->getContent());
