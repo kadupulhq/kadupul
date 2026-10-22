@@ -48,6 +48,32 @@ class SnykProjectReportTest(unittest.TestCase):
     def setUp(self):
         self.checkout = Path("/owned/checkout")
 
+    def test_catalog_manifest_adds_seventh_completed_project_without_dropping_existing_scans(self):
+        expected = {
+            "composer.lock": "composer",
+            "package-lock.json": "npm",
+            "tests/composer.lock": "composer",
+            "tests/Symfony/requirements.txt": "pip",
+            "tests/tools/requirements.txt": "pip",
+            "tests/e2e/package-lock.json": "npm",
+            ".github/scripts/catalog/requirements.txt": "pip",
+        }
+        self.assertEqual(guard.EXPECTED_PROJECTS, expected)
+        self.assertEqual(len(complete_report()), 7)
+        self.assertEqual(guard.verify_report(complete_report(), self.checkout),
+                         {name: 1 for name in expected})
+
+    def test_catalog_build_dependencies_require_their_own_completed_project_scan(self):
+        missing = [project for project in complete_report()
+                   if project["targetFile"] != ".github/scripts/catalog/requirements.txt"]
+        with self.assertRaisesRegex(guard.ReportError, "exactly 7 project results"):
+            guard.verify_report(missing, self.checkout)
+
+    def test_snyk_venv_installs_hash_pinned_catalog_requirements(self):
+        workflow = Path(__file__).resolve().parents[2] / ".github/workflows/snyk.yml"
+        command = '"$RUNNER_TEMP/snyk-python/bin/python" -m pip install --require-hashes -r .github/scripts/catalog/requirements.txt'
+        self.assertIn(command, workflow.read_text())
+
     def test_complete_report_preserves_counts_and_policy_ignore_history(self):
         report = complete_report()
         report[0]["filtered"] = {"ignore": [{"id": "owned-ignored-issue"}], "patch": []}
@@ -59,13 +85,13 @@ class SnykProjectReportTest(unittest.TestCase):
         for record in report:
             del record["targetFile"]
             record["displayTargetFile"] = "./" + record["displayTargetFile"]
-        self.assertEqual(len(guard.verify_report(report, self.checkout)), 6)
+        self.assertEqual(len(guard.verify_report(report, self.checkout)), 7)
 
     def test_checkout_bound_absolute_and_relative_manifest_identities_agree(self):
         report = complete_report()
         for record in report:
             record["targetFile"] = str(self.checkout / record["targetFile"])
-        self.assertEqual(len(guard.verify_report(report, self.checkout)), 6)
+        self.assertEqual(len(guard.verify_report(report, self.checkout)), 7)
 
     def test_pest_parser_dependency_requires_its_own_completed_project_scan(self):
         report = complete_report()
@@ -77,7 +103,7 @@ class SnykProjectReportTest(unittest.TestCase):
     def test_incomplete_duplicate_unexpected_and_nonarray_reports_fail(self):
         report = complete_report()
         bad = [None, {}, [], report[0], report[:-1], report + [report[0]],
-               [report[0]] * 6, [*report[:-1], {"ok": False, "error": "DO_NOT_PRINT"}]]
+               [report[0]] * 7, [*report[:-1], {"ok": False, "error": "DO_NOT_PRINT"}]]
         for candidate in bad:
             with self.subTest(candidate_type=type(candidate).__name__):
                 with self.assertRaises(guard.ReportError):
@@ -159,6 +185,9 @@ class SnykProjectReportTest(unittest.TestCase):
                 self.assertEqual(parsed["complete"], code == 0)
                 self.assertEqual(result.returncode, 0 if code == 0 else 1)
                 self.assertEqual(parsed["cli_exit"], code)
+                if code == 0:
+                    self.assertEqual(len(parsed["projects"]), 7)
+                    self.assertEqual(parsed["projects"][".github/scripts/catalog/requirements.txt"], 1)
             bad = complete_report()
             bad[0]["error"] = "DO_NOT_PRINT_PROVIDER_DETAILS"
             report.write_text(json.dumps(bad))

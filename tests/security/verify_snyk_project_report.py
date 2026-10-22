@@ -19,6 +19,7 @@ EXPECTED_PROJECTS = {
     "tests/Symfony/requirements.txt": "pip",
     "tests/tools/requirements.txt": "pip",
     "tests/e2e/package-lock.json": "npm",
+    ".github/scripts/catalog/requirements.txt": "pip",
 }
 
 
