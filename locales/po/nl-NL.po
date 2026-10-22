@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-22 11:07-0700\n"
+"POT-Creation-Date: 2026-10-22 11:40-0700\n"
 "PO-Revision-Date: 2024-04-20 19:11-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -52,7 +52,7 @@ msgstr "Dit programma is gedistribueerd in de hoop dat het zinnig zal zijn, maar
 #: data_source_profiles.php:934 data_sources.php:23 data_sources.php:1249
 #: data_templates.php:19 data_templates.php:791 graph_templates.php:22
 #: graph_templates.php:517 graphs.php:32 host_templates.php:20
-#: host_templates.php:485 host_templates.php:542 include/global_arrays.php:1656
+#: host_templates.php:485 host_templates.php:542 include/global_arrays.php:1657
 #: include/global_settings.php:325 lib/api_automation.php:1323
 #: lib/api_automation.php:1386 lib/api_automation.php:1457 lib/html.php:1505
 #: lib/html_form.php:1398 lib/html_reports.php:1937 managers.php:13
@@ -431,8 +431,8 @@ msgstr "Zoeken"
 #: aggregate_graphs.php:1587 color_templates.php:680 data_sources.php:2004
 #: data_sources.php:2143 graph_view.php:488 graph_view.php:739
 #: graph_view.php:803 graphs.php:2131 graphs.php:2323
-#: include/global_arrays.php:994 include/global_arrays.php:1230
-#: include/global_arrays.php:2016 lib/api_automation.php:283 lib/html.php:1955
+#: include/global_arrays.php:995 include/global_arrays.php:1231
+#: include/global_arrays.php:2017 lib/api_automation.php:283 lib/html.php:1955
 #: lib/html.php:2024 lib/html_graph.php:197 lib/html_tree.php:1022
 #: lib/html_tree.php:1378 tree.php:917 tree.php:2366 user_admin.php:801
 #: user_admin.php:1073 user_admin.php:2347 user_group_admin.php:940
@@ -591,12 +591,12 @@ msgid " [ Custom Graphs List Applied - Clear to Reset ]"
 msgstr "[ Aangepaste grafieklijst toegepast - Filter VAN lijst ]"
 
 #: aggregate_graphs.php:1547 aggregate_graphs.php:1653
-#: include/global_arrays.php:2768
+#: include/global_arrays.php:2769
 msgid "Aggregate Graphs"
 msgstr "Geaggregeerde grafieken"
 
 #: aggregate_graphs.php:1562 data_debug.php:1110 data_sources.php:1733
-#: graph_view.php:699 graphs.php:2067 include/global_arrays.php:2896
+#: graph_view.php:699 graphs.php:2067 include/global_arrays.php:2897
 #: include/global_settings.php:703 lib/api_automation.php:446
 #: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:381
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:59
@@ -629,9 +629,9 @@ msgstr "Alle"
 #: data_sources.php:1738 data_sources.php:2059 data_templates.php:1323
 #: graph_templates_items.php:53 graphs.php:950 graphs.php:1596 graphs.php:1605
 #: graphs.php:2072 graphs_items.php:271 graphs_items.php:391
-#: include/global_arrays.php:524 include/global_arrays.php:582
-#: include/global_arrays.php:674 include/global_arrays.php:886
-#: include/global_arrays.php:1745 include/global_form.php:574
+#: include/global_arrays.php:525 include/global_arrays.php:583
+#: include/global_arrays.php:675 include/global_arrays.php:887
+#: include/global_arrays.php:1746 include/global_form.php:574
 #: include/global_form.php:883 include/global_form.php:891
 #: include/global_form.php:899 include/global_form.php:938
 #: include/global_form.php:945 include/global_form.php:971
@@ -708,13 +708,13 @@ msgid "Aggregate Template [new]"
 msgstr "Aggregeer template [nieuw]"
 
 #: aggregate_templates.php:598 aggregate_templates.php:697
-#: include/global_arrays.php:2750
+#: include/global_arrays.php:2751
 msgid "Aggregate Templates"
 msgstr "Aggregeer template"
 
 #: aggregate_templates.php:612 automation_templates.php:399
 #: automation_templates.php:489 color_templates.php:685
-#: include/global_arrays.php:1003 include/global_arrays.php:1067
+#: include/global_arrays.php:1004 include/global_arrays.php:1068
 #: lib/installer.php:2748 user_admin.php:2365 user_group_admin.php:2160
 msgid "Templates"
 msgstr "Sjablonen"
@@ -743,7 +743,7 @@ msgid "Graphs Using"
 msgstr "Grafiek gebruikt"
 
 #: aggregate_templates.php:709 graphs.php:2126 host_templates.php:730
-#: include/global_arrays.php:959 include/global_arrays.php:1365
+#: include/global_arrays.php:960 include/global_arrays.php:1366
 #: include/global_form.php:1399 include/global_form.php:1635
 #: lib/html_reports.php:1181 tree.php:1944
 msgid "Graph Template"
@@ -919,7 +919,7 @@ msgstr "Wachtwoord"
 msgid "Local"
 msgstr "Lokaal"
 
-#: auth_login.php:364 include/global_arrays.php:874 lib/auth.php:1071
+#: auth_login.php:364 include/global_arrays.php:875 lib/auth.php:1071
 #: lib/auth.php:1076
 msgid "LDAP"
 msgstr "LDAP"
@@ -948,18 +948,18 @@ msgstr "Generiek"
 msgid "User Account Details"
 msgstr "Details gebruikersaccount"
 
-#: auth_profile.php:313 include/global_arrays.php:858
+#: auth_profile.php:313 include/global_arrays.php:859
 #: include/global_settings.php:2753 lib/html.php:2191 lib/html.php:2213
 #: lib/html.php:2748
 msgid "Tree View"
 msgstr "Boomstructuur"
 
-#: auth_profile.php:317 include/global_arrays.php:859 lib/html.php:2198
+#: auth_profile.php:317 include/global_arrays.php:860 lib/html.php:2198
 #: lib/html.php:2222 lib/html.php:2749
 msgid "List View"
 msgstr "Lijstweergave"
 
-#: auth_profile.php:321 include/global_arrays.php:860 lib/html.php:2205
+#: auth_profile.php:321 include/global_arrays.php:861 lib/html.php:2205
 #: lib/html.php:2750
 msgid "Preview View"
 msgstr "Voorbeeldweergave"
@@ -1108,8 +1108,8 @@ msgid "Delete Device(s)"
 msgstr "Verwijder appara(a)t(en)"
 
 #: automation_devices.php:262 automation_devices.php:578
-#: include/global_arrays.php:991 include/global_arrays.php:1047
-#: include/global_arrays.php:2330 lib/api_automation.php:178
+#: include/global_arrays.php:992 include/global_arrays.php:1048
+#: include/global_arrays.php:2331 lib/api_automation.php:178
 #: lib/api_automation.php:271 lib/api_automation.php:486
 #: lib/api_automation.php:563 lib/api_automation.php:1189 pollers.php:1031
 #: tree.php:916 tree.php:2360 user_admin.php:1065 user_admin.php:2359
@@ -1151,12 +1151,12 @@ msgstr "Omschrijving"
 msgid "OS"
 msgstr "OS"
 
-#: automation_devices.php:278 include/global_arrays.php:525
+#: automation_devices.php:278 include/global_arrays.php:526
 msgid "Uptime"
 msgstr "Uptime"
 
 #: automation_devices.php:279 automation_devices.php:560
-#: include/global_arrays.php:1019 utilities.php:2156
+#: include/global_arrays.php:1020 utilities.php:2156
 msgid "SNMP"
 msgstr "SNMP"
 
@@ -1236,13 +1236,13 @@ msgstr "N/B"
 #: automation_graph_rules.php:14 automation_snmp.php:15
 #: automation_tree_rules.php:14 color_templates.php:14 data_queries.php:17
 #: data_source_profiles.php:17 data_templates.php:20 graph_templates.php:23
-#: graphs.php:52 host_templates.php:21 include/global_arrays.php:1653
+#: graphs.php:52 host_templates.php:21 include/global_arrays.php:1654
 msgid "Duplicate"
 msgstr "Dupliceer"
 
 #: automation_graph_rules.php:15 automation_networks.php:18
 #: automation_tree_rules.php:15 data_sources.php:26
-#: include/global_arrays.php:1654 include/global_settings.php:1803
+#: include/global_arrays.php:1655 include/global_settings.php:1803
 #: managers.php:14 managers.php:20 plugins.php:24 pollers.php:20
 #: user_admin.php:19 user_domains.php:17 user_domains.php:397
 #: user_group_admin.php:21
@@ -1251,7 +1251,7 @@ msgstr "Inschakelen"
 
 #: automation_graph_rules.php:16 automation_networks.php:17
 #: automation_tree_rules.php:16 data_sources.php:27
-#: include/global_arrays.php:1655 managers.php:15 managers.php:19
+#: include/global_arrays.php:1656 managers.php:15 managers.php:19
 #: plugins.php:25 pollers.php:19 user_admin.php:20 user_domains.php:16
 #: user_group_admin.php:22
 msgid "Disable"
@@ -1339,14 +1339,14 @@ msgid "Graph Creation Criteria"
 msgstr "Criteria voor het maken van een grafiek"
 
 #: automation_graph_rules.php:800 automation_graph_rules.php:847
-#: automation_graph_rules.php:954 include/global_arrays.php:1014
-#: include/global_arrays.php:2786
+#: automation_graph_rules.php:954 include/global_arrays.php:1015
+#: include/global_arrays.php:2787
 msgid "Graph Rules"
 msgstr "Grafiekregels"
 
 #: automation_graph_rules.php:815 automation_graph_rules.php:965
-#: graphs.php:2127 include/global_arrays.php:1368
-#: include/global_arrays.php:2895 include/global_form.php:1645
+#: graphs.php:2127 include/global_arrays.php:1369
+#: include/global_arrays.php:2896 include/global_form.php:1645
 #: include/global_form.php:2207
 msgid "Data Query"
 msgstr "Data query"
@@ -1355,7 +1355,7 @@ msgstr "Data query"
 #: automation_graph_rules.php:983 automation_networks.php:535
 #: automation_tree_rules.php:856 automation_tree_rules.php:976
 #: automation_tree_rules.php:994 data_debug.php:1175 data_sources.php:1798
-#: include/global_arrays.php:918 include/global_form.php:1527
+#: include/global_arrays.php:919 include/global_form.php:1527
 #: include/global_settings.php:438 include/global_settings.php:454
 #: lib/api_automation.php:27 lib/html_reports.php:2036
 #: lib/html_reports.php:2141 lib/html_reports.php:2152
@@ -1370,8 +1370,8 @@ msgstr "Ingeschakeld"
 #: automation_graph_rules.php:843 automation_graph_rules.php:983
 #: automation_networks.php:1090 automation_tree_rules.php:857
 #: automation_tree_rules.php:994 data_debug.php:1176 data_sources.php:1799
-#: data_templates.php:1325 include/global_arrays.php:917
-#: include/global_arrays.php:1577 include/global_arrays.php:1869
+#: data_templates.php:1325 include/global_arrays.php:918
+#: include/global_arrays.php:1578 include/global_arrays.php:1870
 #: include/global_settings.php:437 include/global_settings.php:453
 #: include/global_settings.php:1384 include/global_settings.php:1646
 #: include/global_settings.php:1660 include/global_settings.php:1673
@@ -1469,7 +1469,7 @@ msgstr "Uitvoeren ontdekken in debug-modus"
 msgid "Click 'Continue' to cancel on going Network Discovery(s)."
 msgstr "Klik op 'Volgende' om het zoeken van het/de volgende netwerk(en) te stoppen."
 
-#: automation_networks.php:401 include/global_arrays.php:510
+#: automation_networks.php:401 include/global_arrays.php:511
 msgid "SNMP Get"
 msgstr "SNMP get"
 
@@ -1478,17 +1478,17 @@ msgid "Manual"
 msgstr "Handmatig"
 
 #: automation_networks.php:409 automation_networks.php:1064
-#: include/global_arrays.php:1883 include/global_settings.php:1385
+#: include/global_arrays.php:1884 include/global_settings.php:1385
 msgid "Daily"
 msgstr "Dagelijks"
 
 #: automation_networks.php:410 automation_networks.php:1065
-#: include/global_arrays.php:1884
+#: include/global_arrays.php:1885
 msgid "Weekly"
 msgstr "Wekelijks"
 
 #: automation_networks.php:411 automation_networks.php:1066
-#: include/global_arrays.php:1885
+#: include/global_arrays.php:1886
 msgid "Monthly"
 msgstr "Maandelijks"
 
@@ -1612,11 +1612,11 @@ msgstr "%d Thread"
 #: automation_networks.php:505 automation_networks.php:506
 #: automation_networks.php:507 automation_networks.php:508
 #: automation_networks.php:509 automation_networks.php:510
-#: automation_networks.php:511 include/global_arrays.php:821
-#: include/global_arrays.php:822 include/global_arrays.php:823
-#: include/global_arrays.php:824 include/global_arrays.php:825
-#: include/global_arrays.php:826 include/global_arrays.php:827
-#: include/global_arrays.php:828 include/global_arrays.php:829
+#: automation_networks.php:511 include/global_arrays.php:822
+#: include/global_arrays.php:823 include/global_arrays.php:824
+#: include/global_arrays.php:825 include/global_arrays.php:826
+#: include/global_arrays.php:827 include/global_arrays.php:828
+#: include/global_arrays.php:829 include/global_arrays.php:830
 #, php-format
 msgid "%d Threads"
 msgstr "%d Threads"
@@ -1637,19 +1637,19 @@ msgstr "%d Minuut"
 #: automation_networks.php:522 automation_networks.php:523
 #: automation_networks.php:524 automation_networks.php:525
 #: automation_networks.php:1212 automation_networks.php:1213
-#: data_sources.php:1557 include/global_arrays.php:712
-#: include/global_arrays.php:713 include/global_arrays.php:714
-#: include/global_arrays.php:715 include/global_arrays.php:752
-#: include/global_arrays.php:753 include/global_arrays.php:755
-#: include/global_arrays.php:756 include/global_arrays.php:757
-#: include/global_arrays.php:758 include/global_arrays.php:759
-#: include/global_arrays.php:760 include/global_arrays.php:1209
-#: include/global_arrays.php:1210 include/global_arrays.php:1584
-#: include/global_arrays.php:1588 include/global_arrays.php:1596
-#: include/global_arrays.php:1597 include/global_arrays.php:1621
-#: include/global_arrays.php:1622 include/global_arrays.php:1623
-#: include/global_arrays.php:1624 include/global_arrays.php:1625
-#: include/global_arrays.php:1638 include/global_settings.php:1714
+#: data_sources.php:1557 include/global_arrays.php:713
+#: include/global_arrays.php:714 include/global_arrays.php:715
+#: include/global_arrays.php:716 include/global_arrays.php:753
+#: include/global_arrays.php:754 include/global_arrays.php:756
+#: include/global_arrays.php:757 include/global_arrays.php:758
+#: include/global_arrays.php:759 include/global_arrays.php:760
+#: include/global_arrays.php:761 include/global_arrays.php:1210
+#: include/global_arrays.php:1211 include/global_arrays.php:1585
+#: include/global_arrays.php:1589 include/global_arrays.php:1597
+#: include/global_arrays.php:1598 include/global_arrays.php:1622
+#: include/global_arrays.php:1623 include/global_arrays.php:1624
+#: include/global_arrays.php:1625 include/global_arrays.php:1626
+#: include/global_arrays.php:1639 include/global_settings.php:1714
 #: include/global_settings.php:1715 include/global_settings.php:1716
 #: include/global_settings.php:1717 include/global_settings.php:1718
 #: include/global_settings.php:2679 include/global_settings.php:2887
@@ -1659,29 +1659,29 @@ msgstr "%d Minuut"
 msgid "%d Minutes"
 msgstr "%d Minuten"
 
-#: automation_networks.php:526 include/global_arrays.php:761
-#: include/global_arrays.php:771 include/global_arrays.php:1458
+#: automation_networks.php:526 include/global_arrays.php:762
+#: include/global_arrays.php:772 include/global_arrays.php:1459
 #, php-format
 msgid "%d Hour"
 msgstr "%d Uur"
 
 #: automation_networks.php:527 automation_networks.php:528
 #: automation_networks.php:529 data_source_profiles.php:1123
-#: include/global_arrays.php:717 include/global_arrays.php:718
-#: include/global_arrays.php:719 include/global_arrays.php:720
-#: include/global_arrays.php:721 include/global_arrays.php:762
-#: include/global_arrays.php:763 include/global_arrays.php:764
-#: include/global_arrays.php:765 include/global_arrays.php:772
-#: include/global_arrays.php:773 include/global_arrays.php:774
-#: include/global_arrays.php:775 include/global_arrays.php:1459
-#: include/global_arrays.php:1460 include/global_arrays.php:1461
-#: include/global_arrays.php:1462 include/global_arrays.php:1529
-#: include/global_arrays.php:1530 include/global_arrays.php:1531
-#: include/global_arrays.php:1532 include/global_arrays.php:1533
-#: include/global_arrays.php:1550 include/global_arrays.php:1551
-#: include/global_arrays.php:1552 include/global_arrays.php:1553
-#: include/global_arrays.php:1554 include/global_arrays.php:1560
-#: include/global_arrays.php:1561 include/global_settings.php:1720
+#: include/global_arrays.php:718 include/global_arrays.php:719
+#: include/global_arrays.php:720 include/global_arrays.php:721
+#: include/global_arrays.php:722 include/global_arrays.php:763
+#: include/global_arrays.php:764 include/global_arrays.php:765
+#: include/global_arrays.php:766 include/global_arrays.php:773
+#: include/global_arrays.php:774 include/global_arrays.php:775
+#: include/global_arrays.php:776 include/global_arrays.php:1460
+#: include/global_arrays.php:1461 include/global_arrays.php:1462
+#: include/global_arrays.php:1463 include/global_arrays.php:1530
+#: include/global_arrays.php:1531 include/global_arrays.php:1532
+#: include/global_arrays.php:1533 include/global_arrays.php:1534
+#: include/global_arrays.php:1551 include/global_arrays.php:1552
+#: include/global_arrays.php:1553 include/global_arrays.php:1554
+#: include/global_arrays.php:1555 include/global_arrays.php:1561
+#: include/global_arrays.php:1562 include/global_settings.php:1720
 #: include/global_settings.php:1721 include/global_settings.php:1722
 #: include/global_settings.php:1723 include/global_settings.php:2891
 #: include/global_settings.php:2892
@@ -1791,37 +1791,37 @@ msgid "What Day(s) of the week will this Network Range be discovered."
 msgstr "Welke dag(en) van de week moet dit netwerk worden gescant."
 
 #: automation_networks.php:636 automation_networks.php:694
-#: include/global_arrays.php:1941
+#: include/global_arrays.php:1942
 msgid "Sunday"
 msgstr "Zondag"
 
 #: automation_networks.php:637 automation_networks.php:695
-#: include/global_arrays.php:1942
+#: include/global_arrays.php:1943
 msgid "Monday"
 msgstr "Maandag"
 
 #: automation_networks.php:638 automation_networks.php:696
-#: include/global_arrays.php:1943
+#: include/global_arrays.php:1944
 msgid "Tuesday"
 msgstr "Dinsdag"
 
 #: automation_networks.php:639 automation_networks.php:697
-#: include/global_arrays.php:1944
+#: include/global_arrays.php:1945
 msgid "Wednesday"
 msgstr "Woensdag"
 
 #: automation_networks.php:640 automation_networks.php:698
-#: include/global_arrays.php:1945
+#: include/global_arrays.php:1946
 msgid "Thursday"
 msgstr "Donderdag"
 
 #: automation_networks.php:641 automation_networks.php:699
-#: include/global_arrays.php:1946
+#: include/global_arrays.php:1947
 msgid "Friday"
 msgstr "Vrijdag"
 
 #: automation_networks.php:642 automation_networks.php:700
-#: include/global_arrays.php:1947
+#: include/global_arrays.php:1948
 msgid "Saturday"
 msgstr "Zaterdag"
 
@@ -1833,51 +1833,51 @@ msgstr "Maanden per jaar"
 msgid "What Months(s) of the Year will this Network Range be discovered."
 msgstr "Welke maand(en) van het jaar moet dit netwerk worden gescant."
 
-#: automation_networks.php:652 include/global_arrays.php:1895
+#: automation_networks.php:652 include/global_arrays.php:1896
 msgid "January"
 msgstr "Januari"
 
-#: automation_networks.php:653 include/global_arrays.php:1896
+#: automation_networks.php:653 include/global_arrays.php:1897
 msgid "February"
 msgstr "Februari"
 
-#: automation_networks.php:654 include/global_arrays.php:1897
+#: automation_networks.php:654 include/global_arrays.php:1898
 msgid "March"
 msgstr "Maart"
 
-#: automation_networks.php:655 include/global_arrays.php:1898
+#: automation_networks.php:655 include/global_arrays.php:1899
 msgid "April"
 msgstr "April"
 
-#: automation_networks.php:656 include/global_arrays.php:1899
+#: automation_networks.php:656 include/global_arrays.php:1900
 msgid "May"
 msgstr "Mei"
 
-#: automation_networks.php:657 include/global_arrays.php:1900
+#: automation_networks.php:657 include/global_arrays.php:1901
 msgid "June"
 msgstr "Juni"
 
-#: automation_networks.php:658 include/global_arrays.php:1901
+#: automation_networks.php:658 include/global_arrays.php:1902
 msgid "July"
 msgstr "Juli"
 
-#: automation_networks.php:659 include/global_arrays.php:1902
+#: automation_networks.php:659 include/global_arrays.php:1903
 msgid "August"
 msgstr "Augustus"
 
-#: automation_networks.php:660 include/global_arrays.php:1903
+#: automation_networks.php:660 include/global_arrays.php:1904
 msgid "September"
 msgstr "September"
 
-#: automation_networks.php:661 include/global_arrays.php:1904
+#: automation_networks.php:661 include/global_arrays.php:1905
 msgid "October"
 msgstr "Oktober"
 
-#: automation_networks.php:662 include/global_arrays.php:1905
+#: automation_networks.php:662 include/global_arrays.php:1906
 msgid "November"
 msgstr "November"
 
-#: automation_networks.php:663 include/global_arrays.php:1906
+#: automation_networks.php:663 include/global_arrays.php:1907
 msgid "December"
 msgstr "December"
 
@@ -2010,7 +2010,7 @@ msgid "Network Filters"
 msgstr "Netwerkfilters"
 
 #: automation_networks.php:1054 automation_networks.php:1186
-#: include/global_arrays.php:1011
+#: include/global_arrays.php:1012
 msgid "Networks"
 msgstr "Netwerken"
 
@@ -2067,8 +2067,8 @@ msgstr "Actief"
 msgid "Idle"
 msgstr "Inactief"
 
-#: automation_networks.php:1150 include/global_arrays.php:892
-#: include/global_arrays.php:1211 include/global_settings.php:2592
+#: automation_networks.php:1150 include/global_arrays.php:893
+#: include/global_arrays.php:1212 include/global_settings.php:2592
 #: lib/html_reports.php:2183 user_admin.php:2115
 msgid "Never"
 msgstr "Nooit"
@@ -2085,19 +2085,19 @@ msgstr "Vernieuwen"
 
 #: automation_networks.php:1207 automation_networks.php:1208
 #: automation_networks.php:1209 automation_networks.php:1210
-#: data_sources.php:1553 include/global_arrays.php:710
-#: include/global_arrays.php:746 include/global_arrays.php:747
-#: include/global_arrays.php:748 include/global_arrays.php:749
-#: include/global_arrays.php:750 include/global_arrays.php:751
-#: include/global_arrays.php:1204 include/global_arrays.php:1205
-#: include/global_arrays.php:1206 include/global_arrays.php:1207
-#: include/global_arrays.php:1578 include/global_arrays.php:1579
-#: include/global_arrays.php:1580 include/global_arrays.php:1581
-#: include/global_arrays.php:1582 include/global_arrays.php:1617
-#: include/global_arrays.php:1618 include/global_arrays.php:1630
-#: include/global_arrays.php:1631 include/global_arrays.php:1632
-#: include/global_arrays.php:1633 include/global_arrays.php:1634
-#: include/global_arrays.php:1635 include/global_arrays.php:1636
+#: data_sources.php:1553 include/global_arrays.php:711
+#: include/global_arrays.php:747 include/global_arrays.php:748
+#: include/global_arrays.php:749 include/global_arrays.php:750
+#: include/global_arrays.php:751 include/global_arrays.php:752
+#: include/global_arrays.php:1205 include/global_arrays.php:1206
+#: include/global_arrays.php:1207 include/global_arrays.php:1208
+#: include/global_arrays.php:1579 include/global_arrays.php:1580
+#: include/global_arrays.php:1581 include/global_arrays.php:1582
+#: include/global_arrays.php:1583 include/global_arrays.php:1618
+#: include/global_arrays.php:1619 include/global_arrays.php:1631
+#: include/global_arrays.php:1632 include/global_arrays.php:1633
+#: include/global_arrays.php:1634 include/global_arrays.php:1635
+#: include/global_arrays.php:1636 include/global_arrays.php:1637
 #: include/global_settings.php:1285 include/global_settings.php:1286
 #: include/global_settings.php:1287 include/global_settings.php:1288
 #: include/global_settings.php:2675 include/global_settings.php:2676
@@ -2332,7 +2332,7 @@ msgstr "Klik op 'Volgende' om de volgende automatiseringstemplate(s) te verwijde
 msgid "Delete Automation Template(s)"
 msgstr "Verwijder automatiseringtemplate(s)"
 
-#: automation_templates.php:271 include/global_arrays.php:1369
+#: automation_templates.php:271 include/global_arrays.php:1370
 #: include/global_form.php:1211 include/global_form.php:1630
 #: lib/html_reports.php:1160
 msgid "Device Template"
@@ -2478,8 +2478,8 @@ msgid "Are you sure you wish to continue?"
 msgstr "Weet u zeker dat u wilt verdergaan?"
 
 #: automation_tree_rules.php:836 automation_tree_rules.php:861
-#: automation_tree_rules.php:961 include/global_arrays.php:1015
-#: include/global_arrays.php:2810
+#: automation_tree_rules.php:961 include/global_arrays.php:1016
+#: include/global_arrays.php:2811
 msgid "Tree Rules"
 msgstr "Boomstructuur"
 
@@ -2664,7 +2664,7 @@ msgstr "Geaggregeerde"
 msgid "Color Item"
 msgstr "Kleur item"
 
-#: color_templates.php:60 include/global_arrays.php:1008
+#: color_templates.php:60 include/global_arrays.php:1009
 #: include/global_form.php:975 include/global_form.php:2089
 msgid "Color"
 msgstr "Kleur"
@@ -2768,7 +2768,7 @@ msgid "Color Template '%s' had no Aggregate Templates or Graphs using this Color
 msgstr "Kleurensjabloon '%s' had geen verzamelsjablonen of grafieken met deze kleursjabloon."
 
 #: color_templates.php:552 color_templates.php:566 color_templates.php:661
-#: include/global_arrays.php:2726
+#: include/global_arrays.php:2727
 msgid "Color Templates"
 msgstr "Kleurtemplates"
 
@@ -2849,7 +2849,7 @@ msgstr ""
 
 #: data_debug.php:501 data_debug.php:959 data_queries.php:769
 #: data_sources.php:1166 data_templates.php:719 graphs_items.php:387
-#: include/global_arrays.php:1006 include/global_form.php:960
+#: include/global_arrays.php:1007 include/global_form.php:960
 #: lib/api_aggregate.php:2338 lib/html.php:1363
 msgid "Data Source"
 msgstr "Data bron"
@@ -2941,8 +2941,8 @@ msgid "Summary of issues found for the Data Source."
 msgstr "Eventuele samenvattende problemen die voor de gegevensbron zijn gevonden."
 
 #: data_debug.php:646 data_debug.php:1220 data_sources.php:1820
-#: data_sources.php:1982 include/global_arrays.php:995
-#: include/global_arrays.php:1041 include/global_arrays.php:2312
+#: data_sources.php:1982 include/global_arrays.php:996
+#: include/global_arrays.php:1042 include/global_arrays.php:2313
 #: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:325
 msgid "Data Sources"
@@ -3447,7 +3447,7 @@ msgstr "XML bestand gevonden"
 msgid "Could not locate XML file."
 msgstr "XML bestand niet gevonden."
 
-#: data_queries.php:1206 host_templates.php:466 include/global_arrays.php:2420
+#: data_queries.php:1206 host_templates.php:466 include/global_arrays.php:2421
 msgid "Associated Graph Templates"
 msgstr "Gekoppelde grafiektemplates"
 
@@ -3477,8 +3477,8 @@ msgid "Delete Associated Graph"
 msgstr "Verwijder gekoppelde grafiek"
 
 #: data_queries.php:1362 data_queries.php:1377 data_queries.php:1512
-#: include/global_arrays.php:1000 include/global_arrays.php:1227
-#: include/global_arrays.php:2402 lib/api_automation.php:1078
+#: include/global_arrays.php:1001 include/global_arrays.php:1228
+#: include/global_arrays.php:2403 lib/api_automation.php:1078
 msgid "Data Queries"
 msgstr "Data queries"
 
@@ -3510,7 +3510,7 @@ msgstr "Gebruikte templates"
 msgid "The number of Graphs Templates using this Data Query."
 msgstr "Het aantal grafiektemplates dat deze data query gebruikt."
 
-#: data_queries.php:1505 include/global_arrays.php:1361
+#: data_queries.php:1505 include/global_arrays.php:1362
 #: include/global_form.php:570 include/global_form.php:1380
 msgid "Data Input Method"
 msgstr "Data invoer methode"
@@ -3659,12 +3659,12 @@ msgstr "%s KBytes per data bron"
 msgid "Enter a valid number of Rows to obtain the RRA size."
 msgstr "Voer een geldig aantal rijen in om de RRA-grootte te verkrijgen."
 
-#: data_source_profiles.php:1088 include/global_arrays.php:788
-#: include/global_arrays.php:789 include/global_arrays.php:790
-#: include/global_arrays.php:791 include/global_arrays.php:792
-#: include/global_arrays.php:793 include/global_arrays.php:794
-#: include/global_arrays.php:795 include/global_arrays.php:796
-#: include/global_arrays.php:1475 include/global_settings.php:1652
+#: data_source_profiles.php:1088 include/global_arrays.php:789
+#: include/global_arrays.php:790 include/global_arrays.php:791
+#: include/global_arrays.php:792 include/global_arrays.php:793
+#: include/global_arrays.php:794 include/global_arrays.php:795
+#: include/global_arrays.php:796 include/global_arrays.php:797
+#: include/global_arrays.php:1476 include/global_settings.php:1652
 #, php-format
 msgid "%d Years"
 msgstr "%d Jaren"
@@ -3673,48 +3673,48 @@ msgstr "%d Jaren"
 msgid "1 Year"
 msgstr "1 Jaar"
 
-#: data_source_profiles.php:1097 include/global_arrays.php:782
-#: include/global_arrays.php:1469 rrdcleaner.php:537
+#: data_source_profiles.php:1097 include/global_arrays.php:783
+#: include/global_arrays.php:1470 rrdcleaner.php:537
 #, php-format
 msgid "%d Month"
 msgstr "%d Maand"
 
-#: data_source_profiles.php:1097 include/global_arrays.php:783
-#: include/global_arrays.php:784 include/global_arrays.php:785
-#: include/global_arrays.php:786 include/global_arrays.php:1470
-#: include/global_arrays.php:1471 include/global_arrays.php:1472
-#: include/global_arrays.php:1473 rrdcleaner.php:538 rrdcleaner.php:539
+#: data_source_profiles.php:1097 include/global_arrays.php:784
+#: include/global_arrays.php:785 include/global_arrays.php:786
+#: include/global_arrays.php:787 include/global_arrays.php:1471
+#: include/global_arrays.php:1472 include/global_arrays.php:1473
+#: include/global_arrays.php:1474 rrdcleaner.php:538 rrdcleaner.php:539
 #: rrdcleaner.php:540
 #, php-format
 msgid "%d Months"
 msgstr "%d Maanden"
 
-#: data_source_profiles.php:1106 include/global_arrays.php:723
-#: include/global_arrays.php:779 include/global_arrays.php:1467
+#: data_source_profiles.php:1106 include/global_arrays.php:724
+#: include/global_arrays.php:780 include/global_arrays.php:1468
 #: rrdcleaner.php:533 rrdcleaner.php:534
 #, php-format
 msgid "%d Week"
 msgstr "%d Week"
 
-#: data_source_profiles.php:1106 include/global_arrays.php:780
-#: include/global_arrays.php:781 include/global_arrays.php:1468
+#: data_source_profiles.php:1106 include/global_arrays.php:781
+#: include/global_arrays.php:782 include/global_arrays.php:1469
 #: include/global_settings.php:2895 include/global_settings.php:2896
 #: include/global_settings.php:2897 rrdcleaner.php:535 rrdcleaner.php:536
 #, php-format
 msgid "%d Weeks"
 msgstr "%d Weken"
 
-#: data_source_profiles.php:1115 include/global_arrays.php:722
-#: include/global_arrays.php:766 include/global_arrays.php:776
-#: include/global_arrays.php:1463
+#: data_source_profiles.php:1115 include/global_arrays.php:723
+#: include/global_arrays.php:767 include/global_arrays.php:777
+#: include/global_arrays.php:1464
 #, php-format
 msgid "%d Day"
 msgstr "%d Dag"
 
-#: data_source_profiles.php:1115 include/global_arrays.php:767
-#: include/global_arrays.php:777 include/global_arrays.php:778
-#: include/global_arrays.php:1464 include/global_arrays.php:1465
-#: include/global_arrays.php:1466 include/global_settings.php:1647
+#: data_source_profiles.php:1115 include/global_arrays.php:768
+#: include/global_arrays.php:778 include/global_arrays.php:779
+#: include/global_arrays.php:1465 include/global_arrays.php:1466
+#: include/global_arrays.php:1467 include/global_settings.php:1647
 #: include/global_settings.php:1648 include/global_settings.php:1649
 #: include/global_settings.php:1650 include/global_settings.php:1661
 #: include/global_settings.php:1662 include/global_settings.php:1663
@@ -3723,16 +3723,16 @@ msgstr "%d Dag"
 msgid "%d Days"
 msgstr "%d Dagen"
 
-#: data_source_profiles.php:1123 include/global_arrays.php:716
-#: include/global_arrays.php:1528 include/global_arrays.php:1549
-#: include/global_arrays.php:1559 include/global_arrays.php:1589
-#: include/global_arrays.php:1598 include/global_arrays.php:1626
+#: data_source_profiles.php:1123 include/global_arrays.php:717
+#: include/global_arrays.php:1529 include/global_arrays.php:1550
+#: include/global_arrays.php:1560 include/global_arrays.php:1590
+#: include/global_arrays.php:1599 include/global_arrays.php:1627
 #: include/global_settings.php:1420 include/global_settings.php:1719
 #: include/global_settings.php:2890
 msgid "1 Hour"
 msgstr "1 Uur"
 
-#: data_source_profiles.php:1177 include/global_arrays.php:1234
+#: data_source_profiles.php:1177 include/global_arrays.php:1235
 msgid "Data Source Profiles"
 msgstr "Data bron profielen"
 
@@ -3965,8 +3965,8 @@ msgid "The name given to this data template.  Please note that you may only chan
 msgstr "De naam van dit data template. Let op dat u alleen grafiek templates kunt wijzigen naar een 100% compatible grafiek template, dit betekent dat deze dezelfde data bronnen moeten hebben."
 
 #: data_sources.php:1101 graph_view.php:817 graphs.php:1601
-#: include/global_arrays.php:955 include/global_arrays.php:1004
-#: include/global_arrays.php:1692 include/global_arrays.php:1861
+#: include/global_arrays.php:956 include/global_arrays.php:1005
+#: include/global_arrays.php:1693 include/global_arrays.php:1862
 #: lib/api_automation.php:426 lib/functions.php:6200 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
@@ -4014,9 +4014,9 @@ msgstr "RRDtool tune info"
 msgid "External"
 msgstr "Extern"
 
-#: data_sources.php:1555 include/global_arrays.php:711
-#: include/global_arrays.php:1208 include/global_arrays.php:1583
-#: include/global_arrays.php:1619 include/global_arrays.php:1637
+#: data_sources.php:1555 include/global_arrays.php:712
+#: include/global_arrays.php:1209 include/global_arrays.php:1584
+#: include/global_arrays.php:1620 include/global_arrays.php:1638
 #: include/global_settings.php:1713 include/global_settings.php:2678
 msgid "1 Minute"
 msgstr "1 Minuut"
@@ -4090,7 +4090,7 @@ msgstr "Geen data bron gevonden"
 msgid "No Graphs"
 msgstr "Grafieken"
 
-#: data_sources.php:2149 include/global_arrays.php:996
+#: data_sources.php:2149 include/global_arrays.php:997
 msgid "Aggregates"
 msgstr "Geaggregeerde"
 
@@ -4198,7 +4198,7 @@ msgid "After you uncheck this checkbox and then Save the Data Template, any exis
 msgstr "Nadat u dit selectievakje hebt uitgeschakeld en vervolgens de gegevenssjabloon hebt opgeslagen, verliezen alle bestaande gegevensbronnen op basis van deze gegevenssjabloon hun aangepaste gegevens. Dit kan resulteren in verbroken gegevensverzameling en grafieken"
 
 #: data_templates.php:1092 data_templates.php:1126 data_templates.php:1296
-#: include/global_arrays.php:1238 include/global_arrays.php:2294
+#: include/global_arrays.php:1239 include/global_arrays.php:2295
 msgid "Data Templates"
 msgstr "Data templates"
 
@@ -4414,7 +4414,7 @@ msgstr "Klik op 'Volgende' om de grafieken te synchroniseren met de volgende gra
 msgid "Graph Template Items [edit: %s]"
 msgstr "Grafiektemplate items [wijzig %s]"
 
-#: graph_templates.php:497 include/global_arrays.php:2264
+#: graph_templates.php:497 include/global_arrays.php:2265
 msgid "Graph Item Inputs"
 msgstr "Grafiek item invoer"
 
@@ -4445,8 +4445,8 @@ msgid "Check this checkbox if you wish to allow the user to override the value o
 msgstr "Vink dit selectievakje aan als u de gebruiker wilt toestaan de waarde aan de rechterkant te overschrijven tijdens het maken van grafieken."
 
 #: graph_templates.php:718 graph_templates.php:733 graph_templates.php:900
-#: graphs_new.php:637 include/global_arrays.php:1237
-#: include/global_arrays.php:2240 lib/html_tree.php:541 user_admin.php:1204
+#: graphs_new.php:637 include/global_arrays.php:1238
+#: include/global_arrays.php:2241 lib/html_tree.php:541 user_admin.php:1204
 #: user_group_admin.php:1223
 msgid "Graph Templates"
 msgstr "Grafiektemplates"
@@ -4561,7 +4561,7 @@ msgstr "[ Aangepaste grafieklijst toegepast - Filter VAN lijst ]"
 msgid "View"
 msgstr "Weergeven"
 
-#: graph_view.php:677 graph_view.php:929 include/global_arrays.php:1216
+#: graph_view.php:677 graph_view.php:929 include/global_arrays.php:1217
 msgid "View Graphs"
 msgstr "Toon grafieken"
 
@@ -4578,7 +4578,7 @@ msgstr "Rapport"
 msgid "All Graphs & Templates"
 msgstr "Alle grafiektemplates"
 
-#: graph_view.php:704 include/global_arrays.php:2894 lib/graphs.php:40
+#: graph_view.php:704 include/global_arrays.php:2895 lib/graphs.php:40
 #: lib/graphs.php:49 lib/html.php:221 lib/html_graph.php:144
 #: lib/html_tree.php:978
 msgid "Not Templated"
@@ -4621,7 +4621,7 @@ msgstr "De afmetingen van deze grafiek wanneer niet in voorvertoning modus."
 msgid "Select the Report to add the selected Graphs to."
 msgstr "Selecteer het rapport waaraan u de geselecteerde grafieken wilt toevoegen."
 
-#: graph_view.php:995 include/global_arrays.php:2040
+#: graph_view.php:995 include/global_arrays.php:2041
 #: include/global_settings.php:2749
 msgid "Preview Mode"
 msgstr "Voorvertoning modus"
@@ -4683,7 +4683,7 @@ msgstr "Samenvatting details"
 msgid "Download"
 msgstr "Download"
 
-#: graphs.php:37 graphs.php:902 include/global_arrays.php:2090
+#: graphs.php:37 graphs.php:902 include/global_arrays.php:2091
 msgid "Change Graph Template"
 msgstr "Wijzig grafiektemplate"
 
@@ -4776,7 +4776,7 @@ msgstr "Bestemming structuur:"
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
 msgstr "Kies een nieuw apparaat voor deze grafiek(en) en klik op 'Volgende'."
 
-#: graphs.php:945 include/global_arrays.php:988
+#: graphs.php:945 include/global_arrays.php:989
 msgid "New Device"
 msgstr "Nieuw apparaat"
 
@@ -4934,7 +4934,7 @@ msgstr "Data bron [geen apparaat]"
 msgid "Data Sources [%s]"
 msgstr "Data bronnen [%s]"
 
-#: graphs_items.php:266 include/global_arrays.php:1360
+#: graphs_items.php:266 include/global_arrays.php:1361
 #: include/global_form.php:1640
 msgid "Data Template"
 msgstr "Data template"
@@ -4997,8 +4997,8 @@ msgstr "Maak nieuw apparaat"
 msgid "(Select a graph type to create)"
 msgstr "(Selecteer een type grafiek om te maken)"
 
-#: graphs_new.php:631 include/global_arrays.php:986
-#: include/global_arrays.php:1064 lib/html_form.php:1418 lib/html_form.php:1431
+#: graphs_new.php:631 include/global_arrays.php:987
+#: include/global_arrays.php:1065 lib/html_form.php:1418 lib/html_form.php:1431
 #: tree.php:1662
 msgid "Create"
 msgstr "Maken"
@@ -5174,7 +5174,7 @@ msgid "Delete Item from Device Template"
 msgstr "Verwijder apparaattemplate(s)"
 
 #: host_templates.php:703 host_templates.php:801 host_templates.php:968
-#: include/global_arrays.php:1239 include/global_arrays.php:2276
+#: include/global_arrays.php:1240 include/global_arrays.php:2277
 msgid "Device Templates"
 msgstr "Apparaattemplate"
 
@@ -5219,7 +5219,7 @@ msgstr "Gebruikt door apparaten"
 msgid "The number of Devices using this Device Template."
 msgstr "Het aantal apparaten dat dit apparaat template gebruikt."
 
-#: host_templates.php:993 include/global_arrays.php:1102
+#: host_templates.php:993 include/global_arrays.php:1103
 msgid "Unassigned"
 msgstr "Niet toegewezen"
 
@@ -5272,1437 +5272,1437 @@ msgstr "De laatste keer dat deze Dataverzamelaar volledig gesynchroniseerd werd 
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "De hoofdgegevensverzamelaar is naar een offline of herstellende status gegaan"
 
-#: include/global_arrays.php:139
+#: include/global_arrays.php:140
 msgid "Save Successful."
 msgstr "Succesvol opgeslagen."
 
-#: include/global_arrays.php:142
+#: include/global_arrays.php:143
 msgid "Save Failed."
 msgstr "Opslaan mislukt."
 
-#: include/global_arrays.php:145
+#: include/global_arrays.php:146
 msgid "Save Failed due to field input errors (Check red fields)."
 msgstr "Opslaan mislukt: veld invoer fouten (Controleer rode velden)."
 
-#: include/global_arrays.php:148
+#: include/global_arrays.php:149
 msgid "Passwords do not match, please retype."
 msgstr "De wachtwoorden komen niet overeen. Voert u deze alstublieft opnieuw in."
 
-#: include/global_arrays.php:151
+#: include/global_arrays.php:152
 msgid "You must select at least one field."
 msgstr "U moet tenminste een veld selecteren."
 
-#: include/global_arrays.php:154
+#: include/global_arrays.php:155
 msgid "You must have built in user authentication turned on to use this feature."
 msgstr "U moet de ingebouwde gebruikersauthenticatie ingeschakeld hebben om deze feature te gebruiken."
 
-#: include/global_arrays.php:157
+#: include/global_arrays.php:158
 msgid "XML parse error."
 msgstr "XML parsefout."
 
-#: include/global_arrays.php:160
+#: include/global_arrays.php:161
 msgid "The directory highlighted does not exist.  Please enter a valid directory."
 msgstr "De gemarkeerde map bestaat niet.  Voer een geldig telefoonboek in."
 
-#: include/global_arrays.php:163
+#: include/global_arrays.php:164
 msgid "The Kadupul log file must have the extension '.log'"
 msgstr "Het Kadupul logbestand moet de extensie '.log' hebben"
 
-#: include/global_arrays.php:166
+#: include/global_arrays.php:167
 msgid "Data Input for method does not appear to be whitelisted."
 msgstr "De gegevensinvoer voor de methode lijkt niet in een witte lijst te staan."
 
-#: include/global_arrays.php:169
+#: include/global_arrays.php:170
 msgid "Data Source does not exist."
 msgstr "Data bron bestaat niet."
 
-#: include/global_arrays.php:172
+#: include/global_arrays.php:173
 msgid "Username already in use."
 msgstr "Gebruikersnaam is al in gebruik."
 
-#: include/global_arrays.php:175
+#: include/global_arrays.php:176
 msgid "The SNMP v3 Privacy Passphrases do not match"
 msgstr "Het SNMPv3 privacy wachtwoord komt niet overeen"
 
-#: include/global_arrays.php:178
+#: include/global_arrays.php:179
 msgid "The SNMP v3 Authentication Passphrases do not match"
 msgstr "Het SNMPv3 authenticatie wachtwoord komt niet overeen"
 
-#: include/global_arrays.php:181
+#: include/global_arrays.php:182
 msgid "XML: Kadupul version does not exist."
 msgstr "XML: Kadupul versie bestaat niet."
 
-#: include/global_arrays.php:184
+#: include/global_arrays.php:185
 msgid "XML: Hash version does not exist."
 msgstr "XML: Hash versie bestaat niet."
 
-#: include/global_arrays.php:187
+#: include/global_arrays.php:188
 msgid "XML: Generated with a newer version of Kadupul."
 msgstr "XML: Gegenereerd met een nieuwere versie van Kadupul."
 
-#: include/global_arrays.php:190
+#: include/global_arrays.php:191
 msgid "XML: Cannot locate type code."
 msgstr "XML: Type code kon niet worden gevonden."
 
-#: include/global_arrays.php:193
+#: include/global_arrays.php:194
 msgid "Username already exists."
 msgstr "Gebruikersnaam bestaat al."
 
-#: include/global_arrays.php:196
+#: include/global_arrays.php:197
 msgid "Username change not permitted for designated template or guest user."
 msgstr "Het wijzigen van de gebruikersnaam is niet toegestaan vanwege het rechtenprofiel of als u een gastgebruiker bent."
 
-#: include/global_arrays.php:199
+#: include/global_arrays.php:200
 msgid "User delete not permitted for designated template or guest user."
 msgstr "Verwijderen van gebruiker niet toegestaan voor aangewezen sjablonen of het gastaccount."
 
-#: include/global_arrays.php:202
+#: include/global_arrays.php:203
 msgid "User delete not permitted for designated graph export user."
 msgstr "Verwijderen van gebruiker niet toegestaan voor aangewezen grafiek export gebruiker."
 
-#: include/global_arrays.php:205
+#: include/global_arrays.php:206
 msgid "Data Template includes deleted Data Source Profile.  Please resave the Data Template with an existing Data Source Profile."
 msgstr "Data template bevat een verwijderd data bron profiel. Sla het data template opnieuw op met een bestaand data bron profiel."
 
-#: include/global_arrays.php:208
+#: include/global_arrays.php:209
 msgid "Graph Template includes deleted GPrint Prefix.  Please run database repair script to identify and/or correct."
 msgstr "Grafiek template bevat verwijderde GPrint voorvoegsel. Draai het database reparatiescript om dit te identificeren en te corrigeren."
 
-#: include/global_arrays.php:211
+#: include/global_arrays.php:212
 msgid "Graph Template includes deleted CDEFs.  Please run database repair script to identify and/or correct."
 msgstr "Grafiek template bevat verwijderde CDEF’s. Draai het database reparatiescript om dit te identificeren en te corrigeren."
 
-#: include/global_arrays.php:214
+#: include/global_arrays.php:215
 msgid "Graph Template includes deleted Data Input Method.  Please run database repair script to identify."
 msgstr "Grafiek template bevat een verwijderde data invoer methode. Draai het database reparatiescript om dit te identificeren."
 
-#: include/global_arrays.php:217
+#: include/global_arrays.php:218
 msgid "Data Template not found during Export.  Please run database repair script to identify."
 msgstr "Data template niet gevonden tijdens het exporteren. Draai het database reparatiescript om dit te identificeren."
 
-#: include/global_arrays.php:220
+#: include/global_arrays.php:221
 msgid "Device Template not found during Export.  Please run database repair script to identify."
 msgstr "Apparaat template niet gevonden tijdens het exporteren. Draai het database reparatiescript om dit te identificeren."
 
-#: include/global_arrays.php:223
+#: include/global_arrays.php:224
 msgid "Data Query not found during Export.  Please run database repair script to identify."
 msgstr "Data query niet gevonden tijdens het exporteren. Draai het database reparatiescript om dit te identificeren."
 
-#: include/global_arrays.php:226
+#: include/global_arrays.php:227
 msgid "Graph Template not found during Export.  Please run database repair script to identify."
 msgstr "Grafiek template niet gevonden tijdens exporteren. Draait het Database reparatie script om deze fout te identificeren."
 
-#: include/global_arrays.php:229
+#: include/global_arrays.php:230
 msgid "Graph not found.  Either it has been deleted or your database needs repair."
 msgstr "Grafiek niet gevonden. Of het is verwijderd of uw database moet worden gerepareerd."
 
-#: include/global_arrays.php:232
+#: include/global_arrays.php:233
 msgid "SNMPv3 Auth Passphrases must be 8 characters or greater."
 msgstr "SNMPv3 Auth wachtwoord moet minimaal 8 karakters lang zijn."
 
-#: include/global_arrays.php:235
+#: include/global_arrays.php:236
 msgid "Some Graphs not updated. Unable to change device for Data Query based Graphs."
 msgstr "Sommige grafieken zijn niet bijgewerkt. Het apparaat is niet gewijzigd voor de data query gebaseerde grafiek."
 
-#: include/global_arrays.php:238
+#: include/global_arrays.php:239
 msgid "Unable to change device for Data Query based Graphs."
 msgstr "Het apparaat voor data query gebaseerde grafiek is niet gewijzigd."
 
-#: include/global_arrays.php:241
+#: include/global_arrays.php:242
 msgid "Some settings not saved. Check messages below.  Check red fields for errors."
 msgstr "Sommige instellingen zijn niet opgeslagen. Controleer de berichten hieronder.  Controleer rode velden op fouten."
 
-#: include/global_arrays.php:244
+#: include/global_arrays.php:245
 msgid "The file highlighted does not exist.  Please enter a valid file name."
 msgstr "Het gemarkeerde bestand bestaat niet.  Voer een geldige bestandsnaam in."
 
-#: include/global_arrays.php:247
+#: include/global_arrays.php:248
 msgid "All User Settings have been returned to their default values."
 msgstr "Alle gebruikersinstellingen zijn teruggezet naar de standaardwaarden."
 
-#: include/global_arrays.php:250
+#: include/global_arrays.php:251
 msgid "Suggested Field Name was not entered.  Please enter a field name and try again."
 msgstr "De voorgestelde veldnaam is niet ingevoerd.  Voer een veldnaam in en probeer het opnieuw."
 
-#: include/global_arrays.php:253
+#: include/global_arrays.php:254
 msgid "Suggested Value was not entered.  Please enter a suggested value and try again."
 msgstr "De voorgestelde waarde is niet ingevoerd.  Voer een voorgestelde waarde in en probeer het opnieuw."
 
-#: include/global_arrays.php:256
+#: include/global_arrays.php:257
 msgid "You must select at least one object from the list."
 msgstr "U moet ten minste één object uit de lijst selecteren."
 
-#: include/global_arrays.php:259
+#: include/global_arrays.php:260
 msgid "Device Template updated.  Remember to Sync Devices to push all changes to Devices that use this Device Template."
 msgstr "Apparaatsjabloon bijgewerkt.  Vergeet niet om sjablonen te synchroniseren om alle wijzigingen aan apparaten die deze apparaatsjabloon gebruiken, door te drukken."
 
-#: include/global_arrays.php:262
+#: include/global_arrays.php:263
 msgid "Save Successful. Settings replicated to Remote Data Collectors."
 msgstr "Bespaar Succesvol. Instellingen gerepliceerd naar externe gegevensverzamelaars."
 
-#: include/global_arrays.php:265
+#: include/global_arrays.php:266
 msgid "Save Failed.  Minimum Values must be less than Maximum Value."
 msgstr "Opslaan mislukt.  De minimumwaarden moeten lager zijn dan de maximumwaarde."
 
-#: include/global_arrays.php:268
+#: include/global_arrays.php:269
 msgid "Unable to change password.  User account not found."
 msgstr "Kan wachtwoord niet wijzigen. Gebruikersaccount niet gevonden."
 
-#: include/global_arrays.php:271
+#: include/global_arrays.php:272
 msgid "Data Input Saved.  You must update the Data Templates referencing this Data Input Method before creating Graphs or Data Sources."
 msgstr "Gegevensinvoer opgeslagen.  U moet de datasjablonen die naar deze data-invoermethode verwijzen bijwerken voordat u grafieken of gegevensbronnen maakt."
 
-#: include/global_arrays.php:274
+#: include/global_arrays.php:275
 msgid "Data Input Saved.  You must update the Data Templates referencing this Data Input Method before the Data Collectors will start using any new or modified Data Input - Input Fields."
 msgstr "Gegevensinvoer opgeslagen.  U moet de datasjablonen die naar deze data-invoermethode verwijzen bijwerken voordat de gegevensverzamelaars nieuwe of gewijzigde data-invoervelden gaan gebruiken."
 
-#: include/global_arrays.php:277
+#: include/global_arrays.php:278
 msgid "Data Input Field Saved.  You must update the Data Templates referencing this Data Input Method before creating Graphs or Data Sources."
 msgstr "Gegevensinvoerveld opgeslagen.  U moet de datasjablonen die naar deze data-invoermethode verwijzen bijwerken voordat u grafieken of gegevensbronnen maakt."
 
-#: include/global_arrays.php:280
+#: include/global_arrays.php:281
 msgid "Data Input Field Saved.  You must update the Data Templates referencing this Data Input Method before the Data Collectors will start using any new or modified Data Input - Input Fields."
 msgstr "Gegevensinvoerveld opgeslagen.  U moet de datasjablonen die naar deze data-invoermethode verwijzen bijwerken voordat de gegevensverzamelaars nieuwe of gewijzigde data-invoervelden gaan gebruiken."
 
-#: include/global_arrays.php:283
+#: include/global_arrays.php:284
 msgid "Log file specified is not a Kadupul log or archive file."
 msgstr "Het gespecificeerde log bestand is geen Kadupul log of archief bestand."
 
-#: include/global_arrays.php:286
+#: include/global_arrays.php:287
 msgid "Log file specified was Kadupul archive file and was removed."
 msgstr "Het gespecificeerde log bestand was een Kadupul archief en is daarom verwijderd."
 
-#: include/global_arrays.php:289
+#: include/global_arrays.php:290
 msgid "Kadupul log purged successfully"
 msgstr "Kadupul log succesvol geleegd"
 
-#: include/global_arrays.php:292
+#: include/global_arrays.php:293
 msgid "If you force a password change, you must also allow the user to change their password."
 msgstr "Als je forceert om een wachtwoord te wijzigen moet je de gebruiker ook de rechten geven om het wachtwoord te wijzigen."
 
-#: include/global_arrays.php:295
+#: include/global_arrays.php:296
 msgid "You are not allowed to change your password."
 msgstr "U mag uw wachtwoord niet wijzigen."
 
-#: include/global_arrays.php:298
+#: include/global_arrays.php:299
 msgid "Unable to determine size of password field, please check permissions of db user"
 msgstr "Niet in staat om de grootte van het wachtwoord veld te bepalen, controleer dan de machtigingen van db gebruiker"
 
-#: include/global_arrays.php:301
+#: include/global_arrays.php:302
 #, fuzzy
 msgid "Unable to increase size of password field, please check permission of db user"
 msgstr "Niet in staat om de grootte van het wachtwoord veld te verhogen, gelieve te controleren toestemming van db gebruiker"
 
-#: include/global_arrays.php:304
+#: include/global_arrays.php:305
 msgid "LDAP/AD based password change not supported."
 msgstr "Het wijzigen van op LDAP/AD gebaseerde wachtwoorden wordt niet ondersteund."
 
-#: include/global_arrays.php:307
+#: include/global_arrays.php:308
 msgid "Password successfully changed."
 msgstr "Wachtwoord succesvol gewijzigd."
 
-#: include/global_arrays.php:310
+#: include/global_arrays.php:311
 msgid "Unable to clear log, no write permissions"
 msgstr "Logbestand legen mislukt, geen schrijfrechten"
 
-#: include/global_arrays.php:313
+#: include/global_arrays.php:314
 msgid "Unable to clear log, file does not exist"
 msgstr "Logbestand legen mislukt. Het bestand bestaat niet"
 
-#: include/global_arrays.php:316
+#: include/global_arrays.php:317
 msgid "CSRF Timeout, refreshing page."
 msgstr "CSRF time-out, pagina wordt vernieuwd."
 
-#: include/global_arrays.php:319
+#: include/global_arrays.php:320
 msgid "CSRF Timeout occurred due to inactivity, page refreshed."
 msgstr "CSRF Time-out door inactiviteit, pagina vernieuwd."
 
-#: include/global_arrays.php:322
+#: include/global_arrays.php:323
 msgid "Invalid timestamp. Select timestamp in the future."
 msgstr "Ongeldige tijd. Selecteer een tijd in de toekomst."
 
-#: include/global_arrays.php:325
+#: include/global_arrays.php:326
 msgid "Data Collector(s) synchronized for offline operation"
 msgstr "Dataverzamelaar(s) gesynchroniseerd voor offline gebruik"
 
-#: include/global_arrays.php:328
+#: include/global_arrays.php:329
 msgid "Data Collector(s) not found when attempting synchronization"
 msgstr "Dataverzamelaar(s) niet gevonden bij een poging tot synchronisatie"
 
-#: include/global_arrays.php:331
+#: include/global_arrays.php:332
 msgid "Unable to establish MySQL connection with Remote Data Collector."
 msgstr "MySQL-verbinding met Remote Data Collector kan niet tot stand worden gebracht."
 
-#: include/global_arrays.php:334
+#: include/global_arrays.php:335
 msgid "Data Collector synchronization must be initiated from the main Kadupul server."
 msgstr "Data collector synchronisatie moet worden geïnitieerd vanaf de hoofd Kadupul server."
 
-#: include/global_arrays.php:337
+#: include/global_arrays.php:338
 msgid "Synchronization does not include the Central Kadupul Database server."
 msgstr "Synchronisatie omvat niet de Central Kadupul Database server."
 
-#: include/global_arrays.php:340
+#: include/global_arrays.php:341
 msgid "When saving a Remote Data Collector, the Database Hostname must be unique from all others."
 msgstr "Bij het opslaan van een Remote Data Collector moet de Database Hostname uniek zijn ten opzichte van alle andere."
 
-#: include/global_arrays.php:343
+#: include/global_arrays.php:344
 msgid "Your Remote Database Hostname must be something other than 'localhost' for each Remote Data Collector."
 msgstr "Uw Remote Database Hostname moet iets anders zijn dan 'localhost' voor elke Remote Data Collector."
 
-#: include/global_arrays.php:346
+#: include/global_arrays.php:347
 msgid "Path variables on this page were only saved locally."
 msgstr "Padvariabelen op deze pagina zijn alleen lokaal opgeslagen."
 
-#: include/global_arrays.php:349
+#: include/global_arrays.php:350
 msgid "Report Saved"
 msgstr "Rapport opgeslagen"
 
-#: include/global_arrays.php:352
+#: include/global_arrays.php:353
 msgid "Report Save Failed"
 msgstr "Rapport niet opgeslagen"
 
-#: include/global_arrays.php:355
+#: include/global_arrays.php:356
 msgid "Report Item Saved"
 msgstr "Rapportitem opgeslagen"
 
-#: include/global_arrays.php:358
+#: include/global_arrays.php:359
 msgid "Report Item Save Failed"
 msgstr "Rapportitem niet opgeslagen"
 
-#: include/global_arrays.php:361
+#: include/global_arrays.php:362
 msgid "Graph was not found attempting to Add to Report"
 msgstr "Grafiek werd niet gevonden in een poging om toe te voegen aan het rapport"
 
-#: include/global_arrays.php:364
+#: include/global_arrays.php:365
 msgid "Unable to Add Graphs.  Current user is not owner"
 msgstr "Kan geen grafieken toevoegen.  Huidige gebruiker is geen eigenaar"
 
-#: include/global_arrays.php:367
+#: include/global_arrays.php:368
 msgid "Unable to Add all Graphs.  See error message for details."
 msgstr "Niet in staat om alle grafieken toe te voegen.  Zie de foutmelding voor details."
 
-#: include/global_arrays.php:370
+#: include/global_arrays.php:371
 msgid "You must select at least one Graph to add to a Report."
 msgstr "U moet ten minste één grafiek selecteren om aan een rapport toe te voegen."
 
-#: include/global_arrays.php:373
+#: include/global_arrays.php:374
 msgid "All Graphs have been added to the Report.  Duplicate Graphs with the same Timespan were skipped."
 msgstr "Alle grafieken zijn toegevoegd aan het verslag.  Dubbele grafieken met dezelfde tijdspanne werden overgeslagen."
 
-#: include/global_arrays.php:376
+#: include/global_arrays.php:377
 msgid "Poller Resource Cache cleared.  Main Data Collector will rebuild at the next poller start, and Remote Data Collectors will sync afterwards."
 msgstr "Poller bron cache verwijderd. Hoofd data collector wordt herbouwd tijdens de volgende run en de andere data collectoren worden daarna gesynchroniseerd."
 
-#: include/global_arrays.php:379
+#: include/global_arrays.php:380
 msgid "Permission Denied.  You do not have permission to the requested action."
 msgstr "Toestemming geweigerd. Je hebt geen toestemming voor de gevraagde actie."
 
-#: include/global_arrays.php:382
+#: include/global_arrays.php:383
 msgid "Page is not defined.  Therefore, it can not be displayed."
 msgstr "Pagina is niet gedefinieerd. Daarom kan het niet worden weergegeven."
 
-#: include/global_arrays.php:385
+#: include/global_arrays.php:386
 msgid "Unexpected error occurred"
 msgstr "Er heeft zich een onverwachte fout voorgedaan"
 
-#: include/global_arrays.php:500 include/global_arrays.php:923
+#: include/global_arrays.php:501 include/global_arrays.php:924
 msgid "Function"
 msgstr "Functie"
 
-#: include/global_arrays.php:501 include/global_arrays.php:925
+#: include/global_arrays.php:502 include/global_arrays.php:926
 msgid "Special Data Source"
 msgstr "Speciale data bron"
 
-#: include/global_arrays.php:502 include/global_arrays.php:927
+#: include/global_arrays.php:503 include/global_arrays.php:928
 msgid "Custom String"
 msgstr "Aangepaste waarde"
 
-#: include/global_arrays.php:506 include/global_arrays.php:964
+#: include/global_arrays.php:507 include/global_arrays.php:965
 msgid "Current Graph Item Data Source"
 msgstr "Huidige data bron van grafiek item"
 
-#: include/global_arrays.php:511
+#: include/global_arrays.php:512
 msgid "SNMP Query"
 msgstr "SNMP query"
 
-#: include/global_arrays.php:512 include/global_arrays.php:519
+#: include/global_arrays.php:513 include/global_arrays.php:520
 msgid "Script/Command"
 msgstr "Script/Opdracht"
 
-#: include/global_arrays.php:513
+#: include/global_arrays.php:514
 msgid "Script Query"
 msgstr "Script query"
 
-#: include/global_arrays.php:514 include/global_arrays.php:520
+#: include/global_arrays.php:515 include/global_arrays.php:521
 #: utilities.php:2158
 msgid "Script Server"
 msgstr "Script server"
 
-#: include/global_arrays.php:515
+#: include/global_arrays.php:516
 msgid "Script Server Query"
 msgstr "Script server"
 
-#: include/global_arrays.php:526
+#: include/global_arrays.php:527
 msgid "Index Count"
 msgstr "Index Telling"
 
-#: include/global_arrays.php:527
+#: include/global_arrays.php:528
 msgid "Verify All"
 msgstr "Alles verifieer"
 
-#: include/global_arrays.php:531
+#: include/global_arrays.php:532
 msgid "All Re-Indexing will be manual or managed through scripts or Device Automation."
 msgstr "Alle herindexeringen zijn handmatig of worden beheerd vanuit scripts of de apparaat automatisering."
 
-#: include/global_arrays.php:532
+#: include/global_arrays.php:533
 msgid "When the Devices SNMP uptime goes backward, a Re-Index will be performed."
 msgstr "Wanneer de SNMP uptime van apparaten achteruit gaat, zal een herindexering worden uitgevoerd."
 
-#: include/global_arrays.php:533
+#: include/global_arrays.php:534
 msgid "When the Data Query index count changes, a Re-Index will be performed."
 msgstr "Wanneer de data query indexering veranderd, zal een herindexering plaats vinden."
 
-#: include/global_arrays.php:534
+#: include/global_arrays.php:535
 msgid "Every polling cycle, a Re-Index will be performed.  Very expensive."
 msgstr "Tijdens iedere polling cyclus zal een herindexering worden uitgevoerd. Dit is erg zwaar."
 
-#: include/global_arrays.php:538
+#: include/global_arrays.php:539
 msgid "SNMP Field Name (Dropdown)"
 msgstr "SNMP veld naam (Dropdown)"
 
-#: include/global_arrays.php:539
+#: include/global_arrays.php:540
 msgid "SNMP Field Value (From User)"
 msgstr "SNMP veld waarde (Van gebruiker)"
 
-#: include/global_arrays.php:540
+#: include/global_arrays.php:541
 msgid "SNMP Output Type (Dropdown)"
 msgstr "SNMP uitvoer type (Dropdown)"
 
-#: include/global_arrays.php:564 include/global_arrays.php:570
+#: include/global_arrays.php:565 include/global_arrays.php:571
 msgid "Normal"
 msgstr "Normaal"
 
-#: include/global_arrays.php:565
+#: include/global_arrays.php:566
 msgid "Light"
 msgstr "Licht"
 
-#: include/global_arrays.php:566 include/global_arrays.php:571
+#: include/global_arrays.php:567 include/global_arrays.php:572
 msgid "Mono"
 msgstr "Mono"
 
-#: include/global_arrays.php:575
+#: include/global_arrays.php:576
 msgid "North"
 msgstr "Noord"
 
-#: include/global_arrays.php:576
+#: include/global_arrays.php:577
 msgid "South"
 msgstr "Zuid"
 
-#: include/global_arrays.php:577
+#: include/global_arrays.php:578
 msgid "West"
 msgstr "West"
 
-#: include/global_arrays.php:578
+#: include/global_arrays.php:579
 msgid "East"
 msgstr "Oost"
 
-#: include/global_arrays.php:583
+#: include/global_arrays.php:584
 msgid "Left"
 msgstr "Links"
 
-#: include/global_arrays.php:584
+#: include/global_arrays.php:585
 msgid "Right"
 msgstr "Rechts"
 
-#: include/global_arrays.php:585
+#: include/global_arrays.php:586
 msgid "Justified"
 msgstr "Uitgelijnd"
 
-#: include/global_arrays.php:586 lib/html.php:2842
+#: include/global_arrays.php:587 lib/html.php:2842
 msgid "Center"
 msgstr "Centraal"
 
-#: include/global_arrays.php:590
+#: include/global_arrays.php:591
 msgid "Top -> Down"
 msgstr "Boven -> Beneden"
 
-#: include/global_arrays.php:591
+#: include/global_arrays.php:592
 msgid "Bottom -> Up"
 msgstr "Beneden -> Boven"
 
-#: include/global_arrays.php:595 tree.php:1766
+#: include/global_arrays.php:596 tree.php:1766
 msgid "Numeric"
 msgstr "Numeriek"
 
-#: include/global_arrays.php:596
+#: include/global_arrays.php:597
 msgid "Timestamp"
 msgstr "Timestamp"
 
-#: include/global_arrays.php:597
+#: include/global_arrays.php:598
 msgid "Duration"
 msgstr "Duur"
 
-#: include/global_arrays.php:635
+#: include/global_arrays.php:636
 msgid "Not In Use"
 msgstr "Niet in gebruik"
 
-#: include/global_arrays.php:636 include/global_arrays.php:637
-#: include/global_arrays.php:638 include/global_arrays.php:881
-#: include/global_arrays.php:882
+#: include/global_arrays.php:637 include/global_arrays.php:638
+#: include/global_arrays.php:639 include/global_arrays.php:882
+#: include/global_arrays.php:883
 #, php-format
 msgid "Version %d"
 msgstr "Versie %d"
 
-#: include/global_arrays.php:642 include/global_arrays.php:652
+#: include/global_arrays.php:643 include/global_arrays.php:653
 msgid "[None]"
 msgstr "[Geen]"
 
-#: include/global_arrays.php:643
+#: include/global_arrays.php:644
 msgid "MD5"
 msgstr "MD5"
 
-#: include/global_arrays.php:644
+#: include/global_arrays.php:645
 msgid "SHA"
 msgstr "SHA"
 
-#: include/global_arrays.php:645
+#: include/global_arrays.php:646
 msgid "SHA-224"
 msgstr "SHA-224"
 
-#: include/global_arrays.php:646
+#: include/global_arrays.php:647
 msgid "SHA-256"
 msgstr "SHA-256"
 
-#: include/global_arrays.php:647
+#: include/global_arrays.php:648
 #, fuzzy
 msgid "SHA-384"
 msgstr "SHA-392"
 
-#: include/global_arrays.php:648
+#: include/global_arrays.php:649
 msgid "SHA-512"
 msgstr "SHA-512"
 
-#: include/global_arrays.php:653
+#: include/global_arrays.php:654
 msgid "DES"
 msgstr "DES"
 
-#: include/global_arrays.php:654
+#: include/global_arrays.php:655
 msgid "AES"
 msgstr "DES"
 
-#: include/global_arrays.php:655
+#: include/global_arrays.php:656
 msgid "AES-128"
 msgstr "AES-128"
 
-#: include/global_arrays.php:656
+#: include/global_arrays.php:657
 msgid "AES-192"
 msgstr "AES-192"
 
-#: include/global_arrays.php:657
+#: include/global_arrays.php:658
 msgid "AES-192-C"
 msgstr "AES-192"
 
-#: include/global_arrays.php:658
+#: include/global_arrays.php:659
 msgid "AES-256"
 msgstr "AES-256"
 
-#: include/global_arrays.php:659
+#: include/global_arrays.php:660
 msgid "AES-256-C"
 msgstr "AES-256"
 
-#: include/global_arrays.php:668
+#: include/global_arrays.php:669
 msgid "Logfile Only"
 msgstr "Uitsluitend logbestand"
 
-#: include/global_arrays.php:669
+#: include/global_arrays.php:670
 msgid "Logfile and Syslog/Eventlog"
 msgstr "Logbestand en syslog/eventlog"
 
-#: include/global_arrays.php:670
+#: include/global_arrays.php:671
 msgid "Syslog/Eventlog Only"
 msgstr "Uitsluitend syslog/eventlog"
 
-#: include/global_arrays.php:675
+#: include/global_arrays.php:676
 msgid "Ping and SNMP Uptime"
 msgstr "Ping en SNMP uptime"
 
-#: include/global_arrays.php:676
+#: include/global_arrays.php:677
 msgid "Ping or SNMP Uptime"
 msgstr "Ping of SNMP uptime"
 
-#: include/global_arrays.php:677
+#: include/global_arrays.php:678
 msgid "SNMP Uptime"
 msgstr "SNMP uptime"
 
-#: include/global_arrays.php:678
+#: include/global_arrays.php:679
 msgid "SNMP Desc"
 msgstr "SNMP Desc"
 
-#: include/global_arrays.php:679
+#: include/global_arrays.php:680
 msgid "SNMP getNext"
 msgstr "SNMP getNext"
 
-#: include/global_arrays.php:680
+#: include/global_arrays.php:681
 msgid "Ping"
 msgstr "Ping"
 
-#: include/global_arrays.php:684
+#: include/global_arrays.php:685
 msgid "ICMP Ping"
 msgstr "ICMP ping"
 
-#: include/global_arrays.php:685
+#: include/global_arrays.php:686
 msgid "TCP Ping"
 msgstr "TCP ping"
 
-#: include/global_arrays.php:686
+#: include/global_arrays.php:687
 #, fuzzy
 msgid "TCP Ping Closed"
 msgstr "TCP ping"
 
-#: include/global_arrays.php:687
+#: include/global_arrays.php:688
 msgid "UDP Ping"
 msgstr "UDP ping"
 
-#: include/global_arrays.php:691
+#: include/global_arrays.php:692
 msgid "NONE - Syslog Only if Selected"
 msgstr "GEEN - Uitsluitend syslog indien geselecteerd"
 
-#: include/global_arrays.php:692
+#: include/global_arrays.php:693
 msgid "LOW - Statistics and Errors"
 msgstr "LAAG - Statistieken en foutmeldingen"
 
-#: include/global_arrays.php:693
+#: include/global_arrays.php:694
 msgid "MEDIUM - Statistics, Errors and Results"
 msgstr "MEDIUM - Statistieken, foutmeldingen en resultaten"
 
-#: include/global_arrays.php:694
+#: include/global_arrays.php:695
 msgid "HIGH - Statistics, Errors, Results and Major I/O Events"
 msgstr "HOOG - Statistieken, foutmeldingen, resultaten en grote I/O gebeurtenissen"
 
-#: include/global_arrays.php:695
+#: include/global_arrays.php:696
 msgid "DEBUG - Statistics, Errors, Results, I/O and Program Flow"
 msgstr "DEBUG - Statistieken, foutmeldingen, resultaten, I/O en programma flow"
 
-#: include/global_arrays.php:696
+#: include/global_arrays.php:697
 msgid "DEVEL - Developer DEBUG Level"
 msgstr "DEVEL - Ontwikkelaar DEBUG meldingen"
 
-#: include/global_arrays.php:709
+#: include/global_arrays.php:710
 msgid "Selected Poller Interval"
 msgstr "Selecteer poller interval"
 
-#: include/global_arrays.php:727 include/global_arrays.php:728
-#: include/global_arrays.php:729 include/global_arrays.php:730
-#: include/global_arrays.php:800 include/global_arrays.php:801
-#: include/global_arrays.php:802 include/global_arrays.php:803
+#: include/global_arrays.php:728 include/global_arrays.php:729
+#: include/global_arrays.php:730 include/global_arrays.php:731
+#: include/global_arrays.php:801 include/global_arrays.php:802
+#: include/global_arrays.php:803 include/global_arrays.php:804
 #, php-format
 msgid "Every %d Seconds"
 msgstr "Iedere %d seconden"
 
-#: include/global_arrays.php:731 include/global_arrays.php:804
-#: include/global_arrays.php:849
+#: include/global_arrays.php:732 include/global_arrays.php:805
+#: include/global_arrays.php:850
 msgid "Every Minute"
 msgstr "Iedere minuut"
 
-#: include/global_arrays.php:732 include/global_arrays.php:733
-#: include/global_arrays.php:734 include/global_arrays.php:735
-#: include/global_arrays.php:736 include/global_arrays.php:805
-#: include/global_arrays.php:810 include/global_arrays.php:850
+#: include/global_arrays.php:733 include/global_arrays.php:734
+#: include/global_arrays.php:735 include/global_arrays.php:736
+#: include/global_arrays.php:737 include/global_arrays.php:806
+#: include/global_arrays.php:811 include/global_arrays.php:851
 #, php-format
 msgid "Every %d Minutes"
 msgstr "Iedere %d minuten"
 
-#: include/global_arrays.php:737 include/global_arrays.php:811
+#: include/global_arrays.php:738 include/global_arrays.php:812
 msgid "Every Hour"
 msgstr "Ieder uur"
 
-#: include/global_arrays.php:738 include/global_arrays.php:739
-#: include/global_arrays.php:740 include/global_arrays.php:741
-#: include/global_arrays.php:812 include/global_arrays.php:813
-#: include/global_arrays.php:814 include/global_arrays.php:815
-#: include/global_arrays.php:1871 include/global_arrays.php:1872
-#: include/global_arrays.php:1873 include/global_arrays.php:1874
-#: include/global_arrays.php:1875 include/global_settings.php:2567
+#: include/global_arrays.php:739 include/global_arrays.php:740
+#: include/global_arrays.php:741 include/global_arrays.php:742
+#: include/global_arrays.php:813 include/global_arrays.php:814
+#: include/global_arrays.php:815 include/global_arrays.php:816
+#: include/global_arrays.php:1872 include/global_arrays.php:1873
+#: include/global_arrays.php:1874 include/global_arrays.php:1875
+#: include/global_arrays.php:1876 include/global_settings.php:2567
 #: include/global_settings.php:2568
 #, php-format
 msgid "Every %d Hours"
 msgstr "Iedere %d uren"
 
-#: include/global_arrays.php:742
+#: include/global_arrays.php:743
 #, php-format
 msgid "Every %d Day"
 msgstr "Iedere %d dagen"
 
-#: include/global_arrays.php:754
+#: include/global_arrays.php:755
 #, fuzzy, php-format
 msgid "%0.1f Minutes"
 msgstr "%0.1f minuten"
 
-#: include/global_arrays.php:787 include/global_arrays.php:1474
+#: include/global_arrays.php:788 include/global_arrays.php:1475
 #: include/global_settings.php:1651 rrdcleaner.php:541
 #, php-format
 msgid "%d Year"
 msgstr "%d Jaar"
 
-#: include/global_arrays.php:809
+#: include/global_arrays.php:810
 msgid "Disabled/Manual"
 msgstr "Gehandicapten/Handboek"
 
-#: include/global_arrays.php:816
+#: include/global_arrays.php:817
 msgid "Every day"
 msgstr "Elke dag"
 
-#: include/global_arrays.php:820
+#: include/global_arrays.php:821
 msgid "1 Thread"
 msgstr "%d Thread"
 
-#: include/global_arrays.php:864
+#: include/global_arrays.php:865
 msgid "Builtin Authentication"
 msgstr "Ingebouwde authenticatie"
 
-#: include/global_arrays.php:865
+#: include/global_arrays.php:866
 msgid "Web Basic Authentication"
 msgstr "Web basic authenticatie"
 
-#: include/global_arrays.php:869
+#: include/global_arrays.php:870
 msgid "LDAP Authentication"
 msgstr "LDAP authenticatie"
 
-#: include/global_arrays.php:870
+#: include/global_arrays.php:871
 msgid "Multiple LDAP/AD Domains"
 msgstr "Meerdere LDAP/AD domeinen"
 
-#: include/global_arrays.php:875
+#: include/global_arrays.php:876
 msgid "Active Directory"
 msgstr "Active Directory"
 
-#: include/global_arrays.php:887
+#: include/global_arrays.php:888
 msgid "LDAPS"
 msgstr "LDAP"
 
-#: include/global_arrays.php:888
+#: include/global_arrays.php:889
 msgid "LDAP + TLS"
 msgstr "LDAP + TLS"
 
-#: include/global_arrays.php:893
+#: include/global_arrays.php:894
 msgid "Hard"
 msgstr "Moeilijk"
 
-#: include/global_arrays.php:894
+#: include/global_arrays.php:895
 msgid "Demand"
 msgstr "Vraag"
 
-#: include/global_arrays.php:895 user_admin.php:653 user_group_admin.php:795
+#: include/global_arrays.php:896 user_admin.php:653 user_group_admin.php:795
 msgid "Allow"
 msgstr "Toestaan"
 
-#: include/global_arrays.php:896
+#: include/global_arrays.php:897
 msgid "Try"
 msgstr "Proberen"
 
-#: include/global_arrays.php:900
+#: include/global_arrays.php:901
 msgid "No Searching"
 msgstr "Niet zoeken"
 
-#: include/global_arrays.php:901
+#: include/global_arrays.php:902
 msgid "Anonymous Searching"
 msgstr "Anoniem zoeken"
 
-#: include/global_arrays.php:902
+#: include/global_arrays.php:903
 msgid "Specific Searching"
 msgstr "Specifiek zoeken"
 
-#: include/global_arrays.php:919
+#: include/global_arrays.php:920
 msgid "Enabled (strict mode)"
 msgstr "Ingeschakeld (strikt modus)"
 
-#: include/global_arrays.php:924 include/global_form.php:2132
+#: include/global_arrays.php:925 include/global_form.php:2132
 #: include/global_form.php:2174 lib/api_automation.php:1287
 #: lib/api_automation.php:1350
 msgid "Operator"
 msgstr "Operator"
 
-#: include/global_arrays.php:926
+#: include/global_arrays.php:927
 msgid "Another CDEF"
 msgstr "Nog een CDEF"
 
-#: include/global_arrays.php:945
+#: include/global_arrays.php:946
 msgid "Inherit Parent Sorting"
 msgstr "Overerf de sortering van een bovenliggend niveau"
 
-#: include/global_arrays.php:946
+#: include/global_arrays.php:947
 msgid "Manual Ordering (No Sorting)"
 msgstr "Handmatig sorteren (Geen sortering)"
 
-#: include/global_arrays.php:947
+#: include/global_arrays.php:948
 msgid "Alphabetic Ordering"
 msgstr "Alfabetisch sorteren"
 
-#: include/global_arrays.php:948
+#: include/global_arrays.php:949
 msgid "Natural Ordering"
 msgstr "Natuurlijke sortering"
 
-#: include/global_arrays.php:949
+#: include/global_arrays.php:950
 msgid "Numeric Ordering"
 msgstr "Numerieke sortering"
 
-#: include/global_arrays.php:953 lib/rrd.php:4209
+#: include/global_arrays.php:954 lib/rrd.php:4209
 msgid "Header"
 msgstr "Kolomkop"
 
-#: include/global_arrays.php:954 include/global_arrays.php:1005
-#: include/global_arrays.php:1691 include/global_arrays.php:1860
+#: include/global_arrays.php:955 include/global_arrays.php:1006
+#: include/global_arrays.php:1692 include/global_arrays.php:1861
 #: lib/html.php:2831
 msgid "Graph"
 msgstr "Grafiek"
 
-#: include/global_arrays.php:960 tree.php:1953
+#: include/global_arrays.php:961 tree.php:1953
 msgid "Data Query Index"
 msgstr "Data query index"
 
-#: include/global_arrays.php:965
+#: include/global_arrays.php:966
 msgid "Current Graph Item Polling Interval"
 msgstr "Huidige polling interval van dit grafiek item"
 
-#: include/global_arrays.php:966
+#: include/global_arrays.php:967
 msgid "All Data Sources (Do not Include Duplicates)"
 msgstr "Alle data bronnen (Dubbelen uitgesloten)"
 
-#: include/global_arrays.php:967
+#: include/global_arrays.php:968
 msgid "All Data Sources (Include Duplicates)"
 msgstr "Alle data bronnen (Inclusief dubbelen)"
 
-#: include/global_arrays.php:968
+#: include/global_arrays.php:969
 msgid "All Similar Data Sources (Do not Include Duplicates)"
 msgstr "Alle vergelijkbare data bronnen (Dubbelen uitgesloten)"
 
-#: include/global_arrays.php:969
+#: include/global_arrays.php:970
 msgid "All Similar Data Sources (Do not Include Duplicates) Polling Interval"
 msgstr "Alle vergelijkbare data bronnen (Dubbelen uitgesloten) Poller interval"
 
-#: include/global_arrays.php:970
+#: include/global_arrays.php:971
 msgid "All Similar Data Sources (Include Duplicates)"
 msgstr "Alle vergelijkbare data bronnen (Inclusief dubbelen)"
 
-#: include/global_arrays.php:971
+#: include/global_arrays.php:972
 msgid "Current Data Source Item: Minimum Value"
 msgstr "Huidige data bron item: minimale waarde"
 
-#: include/global_arrays.php:972
+#: include/global_arrays.php:973
 msgid "Current Data Source Item: Maximum Value"
 msgstr "Huidige data bron item: Maximale waarde"
 
-#: include/global_arrays.php:973
+#: include/global_arrays.php:974
 msgid "Graph: Lower Limit"
 msgstr "Grafiek: onder limiet"
 
-#: include/global_arrays.php:974
+#: include/global_arrays.php:975
 msgid "Graph: Upper Limit"
 msgstr "Grafiek: boven limiet"
 
-#: include/global_arrays.php:975
+#: include/global_arrays.php:976
 msgid "Count of All Data Sources (Do not Include Duplicates)"
 msgstr "Totaal van alle data bronnen (dubbelen niet meegeteld)"
 
-#: include/global_arrays.php:976
+#: include/global_arrays.php:977
 msgid "Count of All Data Sources (Include Duplicates)"
 msgstr "Totaal van alle data bronnen (dubbelen wel meegeteld)"
 
-#: include/global_arrays.php:977
+#: include/global_arrays.php:978
 msgid "Count of All Similar Data Sources (Do not Include Duplicates)"
 msgstr "Totaal van alle gelijke data bronnen (dubbelen niet meegeteld)"
 
-#: include/global_arrays.php:978
+#: include/global_arrays.php:979
 msgid "Count of All Similar Data Sources (Include Duplicates)"
 msgstr "Totaal van alle gelijke data bronnen (dubbelen wel meegeteld)"
 
-#: include/global_arrays.php:983 include/global_arrays.php:1063
+#: include/global_arrays.php:984 include/global_arrays.php:1064
 msgid "Main Console"
 msgstr "Console"
 
-#: include/global_arrays.php:984
+#: include/global_arrays.php:985
 msgid "Console Page"
 msgstr "Bovenkant van de console pagina"
 
-#: include/global_arrays.php:987 lib/html_form_template.php:627
+#: include/global_arrays.php:988 lib/html_form_template.php:627
 #: lib/html_form_template.php:639
 msgid "New Graphs"
 msgstr "Nieuwe grafieken"
 
-#: include/global_arrays.php:990 include/global_arrays.php:1046
-#: include/global_arrays.php:1065
+#: include/global_arrays.php:991 include/global_arrays.php:1047
+#: include/global_arrays.php:1066
 msgid "Management"
 msgstr "Onderhoud"
 
-#: include/global_arrays.php:992 tree.php:915 tree.php:2348
+#: include/global_arrays.php:993 tree.php:915 tree.php:2348
 msgid "Sites"
 msgstr "Locaties"
 
-#: include/global_arrays.php:993 include/global_arrays.php:1231 tree.php:2208
+#: include/global_arrays.php:994 include/global_arrays.php:1232 tree.php:2208
 #: tree.php:2223 tree.php:2290 user_admin.php:1343 user_admin.php:2371
 #: user_admin.php:2377 user_group_admin.php:1355 user_group_admin.php:2166
 msgid "Trees"
 msgstr "Boomstructuren"
 
-#: include/global_arrays.php:998 include/global_arrays.php:1049
-#: include/global_arrays.php:1066
+#: include/global_arrays.php:999 include/global_arrays.php:1050
+#: include/global_arrays.php:1067
 msgid "Data Collection"
 msgstr "Data verzameling"
 
-#: include/global_arrays.php:999 include/global_arrays.php:1050
-#: include/global_arrays.php:2204 pollers.php:860
+#: include/global_arrays.php:1000 include/global_arrays.php:1051
+#: include/global_arrays.php:2205 pollers.php:860
 msgid "Data Collectors"
 msgstr "Data verzamelaars"
 
-#: include/global_arrays.php:1001 include/global_arrays.php:1226
-#: include/global_arrays.php:2366
+#: include/global_arrays.php:1002 include/global_arrays.php:1227
+#: include/global_arrays.php:2367
 msgid "Data Input Methods"
 msgstr "Data invoer methoden"
 
-#: include/global_arrays.php:1007 include/global_arrays.php:2897
+#: include/global_arrays.php:1008 include/global_arrays.php:2898
 msgid "Aggregate"
 msgstr "Aggregeer"
 
-#: include/global_arrays.php:1010 include/global_arrays.php:1068
-#: include/global_arrays.php:1223 include/global_settings.php:623
+#: include/global_arrays.php:1011 include/global_arrays.php:1069
+#: include/global_arrays.php:1224 include/global_settings.php:623
 msgid "Automation"
 msgstr "Automatisering"
 
-#: include/global_arrays.php:1012
+#: include/global_arrays.php:1013
 msgid "Discovered Devices"
 msgstr "Ontdekte apparaten"
 
-#: include/global_arrays.php:1013
+#: include/global_arrays.php:1014
 msgid "Device Rules"
 msgstr "Apparaatregels"
 
-#: include/global_arrays.php:1017 include/global_arrays.php:1069
-#: include/global_arrays.php:1235 lib/html_filter.php:160
+#: include/global_arrays.php:1018 include/global_arrays.php:1070
+#: include/global_arrays.php:1236 lib/html_filter.php:160
 #: lib/html_graph.php:243 lib/html_tree.php:1065
 msgid "Presets"
 msgstr "Voorinstellingen"
 
-#: include/global_arrays.php:1018
+#: include/global_arrays.php:1019
 msgid "Data Profiles"
 msgstr "Data profielen"
 
-#: include/global_arrays.php:1020 include/global_arrays.php:2138
+#: include/global_arrays.php:1021 include/global_arrays.php:2139
 msgid "CDEFs"
 msgstr "CDEF's"
 
-#: include/global_arrays.php:1021 include/global_arrays.php:2528
+#: include/global_arrays.php:1022 include/global_arrays.php:2529
 msgid "VDEFs"
 msgstr "VDEF's"
 
-#: include/global_arrays.php:1022 include/global_arrays.php:2228
+#: include/global_arrays.php:1023 include/global_arrays.php:2229
 msgid "Colors"
 msgstr "Kleuren"
 
-#: include/global_arrays.php:1023
+#: include/global_arrays.php:1024
 msgid "GPRINTs"
 msgstr "GPRINTs"
 
-#: include/global_arrays.php:1025 include/global_arrays.php:1070
+#: include/global_arrays.php:1026 include/global_arrays.php:1071
 msgid "Import/Export"
 msgstr "Importeren/exporteren"
 
-#: include/global_arrays.php:1026 include/global_arrays.php:1242
-#: include/global_arrays.php:2654
+#: include/global_arrays.php:1027 include/global_arrays.php:1243
+#: include/global_arrays.php:2655
 msgid "Import Templates"
 msgstr "Importeer templates"
 
-#: include/global_arrays.php:1027 include/global_arrays.php:2660
+#: include/global_arrays.php:1028 include/global_arrays.php:2661
 msgid "Import Packages"
 msgstr "Importeer templates"
 
-#: include/global_arrays.php:1028 include/global_arrays.php:1241
-#: include/global_arrays.php:2642 templates_export.php:142
+#: include/global_arrays.php:1029 include/global_arrays.php:1242
+#: include/global_arrays.php:2643 templates_export.php:142
 msgid "Export Templates"
 msgstr "Exporteer templates"
 
-#: include/global_arrays.php:1030 include/global_arrays.php:1052
-#: include/global_arrays.php:1071 lib/plugins.php:1443
+#: include/global_arrays.php:1031 include/global_arrays.php:1053
+#: include/global_arrays.php:1072 lib/plugins.php:1443
 msgid "Configuration"
 msgstr "Configuratie"
 
-#: include/global_arrays.php:1031 include/global_arrays.php:1053
+#: include/global_arrays.php:1032 include/global_arrays.php:1054
 #: lib/html.php:2549 lib/html.php:2846
 msgid "Settings"
 msgstr "Instellingen"
 
-#: include/global_arrays.php:1032 include/global_arrays.php:2582
+#: include/global_arrays.php:1033 include/global_arrays.php:2583
 #: user_admin.php:2131 user_admin.php:2236 user_group_admin.php:733
 #: user_group_admin.php:2172
 msgid "Users"
 msgstr "Gebruikers"
 
-#: include/global_arrays.php:1033 include/global_arrays.php:2612
+#: include/global_arrays.php:1034 include/global_arrays.php:2613
 msgid "User Groups"
 msgstr "Gebruiker groepen"
 
-#: include/global_arrays.php:1034 include/global_arrays.php:2600
+#: include/global_arrays.php:1035 include/global_arrays.php:2601
 #: user_domains.php:634 user_domains.php:728
 msgid "User Domains"
 msgstr "Gebruiker domeinen"
 
-#: include/global_arrays.php:1036 include/global_arrays.php:1055
-#: include/global_arrays.php:1072 include/global_arrays.php:2456
+#: include/global_arrays.php:1037 include/global_arrays.php:1056
+#: include/global_arrays.php:1073 include/global_arrays.php:2457
 msgid "Utilities"
 msgstr "Gereedschappen"
 
-#: include/global_arrays.php:1037 include/global_arrays.php:1056
+#: include/global_arrays.php:1038 include/global_arrays.php:1057
 msgid "System Utilities"
 msgstr "Systeem gereedschappen"
 
-#: include/global_arrays.php:1038 include/global_arrays.php:1073
-#: include/global_arrays.php:1116 include/global_arrays.php:1219
-#: include/global_arrays.php:2216 user_admin.php:1497 user_group_admin.php:1519
+#: include/global_arrays.php:1039 include/global_arrays.php:1074
+#: include/global_arrays.php:1117 include/global_arrays.php:1220
+#: include/global_arrays.php:2217 user_admin.php:1497 user_group_admin.php:1519
 msgid "External Links"
 msgstr "Externe links"
 
-#: include/global_arrays.php:1040 include/global_arrays.php:1075
+#: include/global_arrays.php:1041 include/global_arrays.php:1076
 msgid "Troubleshooting"
 msgstr "Probleemoplossen"
 
-#: include/global_arrays.php:1074
+#: include/global_arrays.php:1075
 msgid "Support"
 msgstr "Ondersteuning"
 
-#: include/global_arrays.php:1079
+#: include/global_arrays.php:1080
 msgid "Access Points, Controllers"
 msgstr "Toegangspunten, controllers"
 
-#: include/global_arrays.php:1080
+#: include/global_arrays.php:1081
 msgid "Application Related"
 msgstr "Automatiseringsregels toepassen"
 
-#: include/global_arrays.php:1081
+#: include/global_arrays.php:1082
 msgid "Kadupul Related"
 msgstr "Kadupul rapportage"
 
-#: include/global_arrays.php:1082
+#: include/global_arrays.php:1083
 msgid "Database Related"
 msgstr "Database status"
 
-#: include/global_arrays.php:1083
+#: include/global_arrays.php:1084
 msgid "Facilities Related"
 msgstr "Faciliteitengerelateerd"
 
-#: include/global_arrays.php:1084
+#: include/global_arrays.php:1085
 msgid "Generic Device"
 msgstr "Generiek log niveau"
 
-#: include/global_arrays.php:1085
+#: include/global_arrays.php:1086
 msgid "HPC/Grid Computing"
 msgstr "Rasteropties"
 
-#: include/global_arrays.php:1086
+#: include/global_arrays.php:1087
 msgid "Hypervisor Related"
 msgstr "Gerelateerd aan hypervisor"
 
-#: include/global_arrays.php:1087
+#: include/global_arrays.php:1088
 msgid "ILO, IPMI, iDrac, etc."
 msgstr "ILO, IPMI, iDrac, etc."
 
-#: include/global_arrays.php:1088
+#: include/global_arrays.php:1089
 msgid "Licensing Related"
 msgstr "Licentiegerelateerd"
 
-#: include/global_arrays.php:1089
+#: include/global_arrays.php:1090
 msgid "Linux Related"
 msgstr "Linux-gerelateerd"
 
-#: include/global_arrays.php:1090
+#: include/global_arrays.php:1091
 msgid "Load Balancer"
 msgstr "Load balancing"
 
-#: include/global_arrays.php:1091
+#: include/global_arrays.php:1092
 msgid "Network Switch"
 msgstr "Netwerkfilters"
 
-#: include/global_arrays.php:1092
+#: include/global_arrays.php:1093
 msgid "Network Router"
 msgstr "Netwerkfilters"
 
-#: include/global_arrays.php:1093
+#: include/global_arrays.php:1094
 msgid "NAS/SAN Related"
 msgstr "NAS/SAN GERELATEERD"
 
-#: include/global_arrays.php:1094
+#: include/global_arrays.php:1095
 msgid "Network Firewalls"
 msgstr "Netwerkfilters"
 
-#: include/global_arrays.php:1095
+#: include/global_arrays.php:1096
 msgid "Power Related PDUs/STS, etc."
 msgstr "Stroomgerelateerde PDU 's/STS, enz."
 
-#: include/global_arrays.php:1096
+#: include/global_arrays.php:1097
 msgid "Printer Related"
 msgstr "Database status"
 
-#: include/global_arrays.php:1097
+#: include/global_arrays.php:1098
 msgid "Storage Related"
 msgstr "Opslaggerelateerd"
 
-#: include/global_arrays.php:1098
+#: include/global_arrays.php:1099
 msgid "Telco Related"
 msgstr "Selecteer template"
 
-#: include/global_arrays.php:1099
+#: include/global_arrays.php:1100
 msgid "Web Server Related"
 msgstr "Webservergerelateerd"
 
-#: include/global_arrays.php:1100
+#: include/global_arrays.php:1101
 msgid "Windows Related"
 msgstr "Windows-gerelateerd"
 
-#: include/global_arrays.php:1101
+#: include/global_arrays.php:1102
 msgid "UPS Related"
 msgstr "UPS-gerelateerd"
 
-#: include/global_arrays.php:1125
+#: include/global_arrays.php:1126
 msgid "All Lines"
 msgstr "Alle regels"
 
-#: include/global_arrays.php:1126 include/global_arrays.php:1127
-#: include/global_arrays.php:1128 include/global_arrays.php:1129
-#: include/global_arrays.php:1130 include/global_arrays.php:1131
-#: include/global_arrays.php:1132 include/global_arrays.php:1133
-#: include/global_arrays.php:1134 include/global_arrays.php:1135
-#: include/global_arrays.php:1136 include/global_arrays.php:1137
+#: include/global_arrays.php:1127 include/global_arrays.php:1128
+#: include/global_arrays.php:1129 include/global_arrays.php:1130
+#: include/global_arrays.php:1131 include/global_arrays.php:1132
+#: include/global_arrays.php:1133 include/global_arrays.php:1134
+#: include/global_arrays.php:1135 include/global_arrays.php:1136
+#: include/global_arrays.php:1137 include/global_arrays.php:1138
 #, php-format
 msgid "%d Lines"
 msgstr "%d Regels"
 
-#: include/global_arrays.php:1215
+#: include/global_arrays.php:1216
 msgid "Console Access"
 msgstr "Console toegang"
 
-#: include/global_arrays.php:1217
+#: include/global_arrays.php:1218
 msgid "Realtime Graphs"
 msgstr "Realtime grafieken"
 
-#: include/global_arrays.php:1218
+#: include/global_arrays.php:1219
 msgid "Update Profile"
 msgstr "Profiel bijwerken"
 
-#: include/global_arrays.php:1221
+#: include/global_arrays.php:1222
 msgid "Users/Groups"
 msgstr "Gebruiker groepen"
 
-#: include/global_arrays.php:1222
+#: include/global_arrays.php:1223
 msgid "Settings/Utilities"
 msgstr "Instellingen/gebruiksmogelijkheden"
 
-#: include/global_arrays.php:1224
+#: include/global_arrays.php:1225
 msgid "Installation/Upgrades"
 msgstr "Installatie/Upgrades"
 
-#: include/global_arrays.php:1229
+#: include/global_arrays.php:1230
 msgid "Sites/Devices/Data"
 msgstr "Plaatsen/Apparaten/Data"
 
-#: include/global_arrays.php:1232
+#: include/global_arrays.php:1233
 msgid "Spike Handling"
 msgstr "Spike Kill instellingen"
 
-#: include/global_arrays.php:1244 utilities.php:2384
+#: include/global_arrays.php:1245 utilities.php:2384
 msgid "Log Administration"
 msgstr "Log beheer"
 
-#: include/global_arrays.php:1245
+#: include/global_arrays.php:1246
 msgid "Log Viewing"
 msgstr "Log inzien"
 
-#: include/global_arrays.php:1247
+#: include/global_arrays.php:1248
 msgid "Reports Administration"
 msgstr "Log beheer"
 
-#: include/global_arrays.php:1248
+#: include/global_arrays.php:1249
 msgid "Reports Creation"
 msgstr "Rapportage creëren"
 
-#: include/global_arrays.php:1249
+#: include/global_arrays.php:1250
 msgid "Show Graph Action Icons"
 msgstr "Toon grafiektitel"
 
-#: include/global_arrays.php:1250
+#: include/global_arrays.php:1251
 msgid "Show User Help Links"
 msgstr "Help-links voor gebruikers weergeven"
 
-#: include/global_arrays.php:1251
+#: include/global_arrays.php:1252
 msgid "Plugin Administration"
 msgstr "Log beheer"
 
-#: include/global_arrays.php:1255
+#: include/global_arrays.php:1256
 msgid "Normal User"
 msgstr "Particulier"
 
-#: include/global_arrays.php:1256
+#: include/global_arrays.php:1257
 msgid "Template Editor"
 msgstr "Sjabloon-bewerker"
 
-#: include/global_arrays.php:1257
+#: include/global_arrays.php:1258
 msgid "General Administration"
 msgstr "Algemeen beheer"
 
-#: include/global_arrays.php:1258
+#: include/global_arrays.php:1259
 msgid "System Administration"
 msgstr "Systeembeheer"
 
-#: include/global_arrays.php:1357 lib/html.php:1367
+#: include/global_arrays.php:1358 lib/html.php:1367
 msgid "CDEF"
 msgstr "CDEF"
 
-#: include/global_arrays.php:1358
+#: include/global_arrays.php:1359
 msgid "CDEF Item"
 msgstr "CDEF Item"
 
-#: include/global_arrays.php:1359
+#: include/global_arrays.php:1360
 msgid "GPRINT Preset"
 msgstr "GPRINT voorinstelling"
 
-#: include/global_arrays.php:1362
+#: include/global_arrays.php:1363
 msgid "Data Input Field"
 msgstr "Data invoer veld"
 
-#: include/global_arrays.php:1363 include/global_form.php:579
+#: include/global_arrays.php:1364 include/global_form.php:579
 #: include/global_form.php:1679 package_import.php:868
 msgid "Data Source Profile"
 msgstr "Data bron profiel"
 
-#: include/global_arrays.php:1364
+#: include/global_arrays.php:1365
 msgid "Data Template Item"
 msgstr "Data template item"
 
-#: include/global_arrays.php:1366
+#: include/global_arrays.php:1367
 msgid "Graph Template Item"
 msgstr "Grafiek template item"
 
-#: include/global_arrays.php:1367
+#: include/global_arrays.php:1368
 msgid "Graph Template Input"
 msgstr "Grafiek template invoer"
 
-#: include/global_arrays.php:1370 lib/html.php:1368
+#: include/global_arrays.php:1371 lib/html.php:1368
 msgid "VDEF"
 msgstr "VDEF"
 
-#: include/global_arrays.php:1371
+#: include/global_arrays.php:1372
 msgid "VDEF Item"
 msgstr "VDEF item"
 
-#: include/global_arrays.php:1425
+#: include/global_arrays.php:1426
 msgid "Last Half Hour"
 msgstr "Afgelopen half uur"
 
-#: include/global_arrays.php:1426
+#: include/global_arrays.php:1427
 msgid "Last Hour"
 msgstr "Afgelopen uur"
 
-#: include/global_arrays.php:1427 include/global_arrays.php:1428
-#: include/global_arrays.php:1429 include/global_arrays.php:1430
+#: include/global_arrays.php:1428 include/global_arrays.php:1429
+#: include/global_arrays.php:1430 include/global_arrays.php:1431
 #, php-format
 msgid "Last %d Hours"
 msgstr "Afgelopen %d uren"
 
-#: include/global_arrays.php:1431
+#: include/global_arrays.php:1432
 msgid "Last Day"
 msgstr "Afgelopen dag"
 
-#: include/global_arrays.php:1432 include/global_arrays.php:1433
-#: include/global_arrays.php:1434
+#: include/global_arrays.php:1433 include/global_arrays.php:1434
+#: include/global_arrays.php:1435
 #, php-format
 msgid "Last %d Days"
 msgstr "Afgelopen %d dagen"
 
-#: include/global_arrays.php:1435
+#: include/global_arrays.php:1436
 msgid "Last Week"
 msgstr "Afgelopen week"
 
-#: include/global_arrays.php:1436
+#: include/global_arrays.php:1437
 #, php-format
 msgid "Last %d Weeks"
 msgstr "Afgelopen %d weken"
 
-#: include/global_arrays.php:1437
+#: include/global_arrays.php:1438
 msgid "Last Month"
 msgstr "Afgelopen maand"
 
-#: include/global_arrays.php:1438 include/global_arrays.php:1439
-#: include/global_arrays.php:1440 include/global_arrays.php:1441
+#: include/global_arrays.php:1439 include/global_arrays.php:1440
+#: include/global_arrays.php:1441 include/global_arrays.php:1442
 #, php-format
 msgid "Last %d Months"
 msgstr "Afgelopen %d maanden"
 
-#: include/global_arrays.php:1442
+#: include/global_arrays.php:1443
 msgid "Last Year"
 msgstr "Afgelopen jaar"
 
-#: include/global_arrays.php:1443
+#: include/global_arrays.php:1444
 #, php-format
 msgid "Last %d Years"
 msgstr "Afgelopen %d jaren"
 
-#: include/global_arrays.php:1444
+#: include/global_arrays.php:1445
 msgid "Day Shift"
 msgstr "Werkdag"
 
-#: include/global_arrays.php:1445
+#: include/global_arrays.php:1446
 msgid "This Day"
 msgstr "Vandaag"
 
-#: include/global_arrays.php:1446
+#: include/global_arrays.php:1447
 msgid "This Week"
 msgstr "Deze week"
 
-#: include/global_arrays.php:1447
+#: include/global_arrays.php:1448
 msgid "This Month"
 msgstr "Deze maand"
 
-#: include/global_arrays.php:1448
+#: include/global_arrays.php:1449
 msgid "This Year"
 msgstr "Dit jaar"
 
-#: include/global_arrays.php:1449
+#: include/global_arrays.php:1450
 msgid "Previous Day"
 msgstr "Vorige dag"
 
-#: include/global_arrays.php:1450
+#: include/global_arrays.php:1451
 msgid "Previous Week"
 msgstr "Vorige week"
 
-#: include/global_arrays.php:1451
+#: include/global_arrays.php:1452
 msgid "Previous Month"
 msgstr "Vorige maand"
 
-#: include/global_arrays.php:1452
+#: include/global_arrays.php:1453
 msgid "Previous Year"
 msgstr "Vorig jaar"
 
-#: include/global_arrays.php:1457
+#: include/global_arrays.php:1458
 #, php-format
 msgid "%d Min"
 msgstr "%d Min"
 
-#: include/global_arrays.php:1512
+#: include/global_arrays.php:1513
 msgid "Month Number, Day, Year"
 msgstr "Maand nummer, dag, jaar"
 
-#: include/global_arrays.php:1513
+#: include/global_arrays.php:1514
 msgid "Month Name, Day, Year"
 msgstr "Maand naam, dag, jaar"
 
-#: include/global_arrays.php:1514
+#: include/global_arrays.php:1515
 msgid "Day, Month Number, Year"
 msgstr "Dag, maand nummer, jaar"
 
-#: include/global_arrays.php:1515
+#: include/global_arrays.php:1516
 msgid "Day, Month Name, Year"
 msgstr "Dag, maand naam, jaar"
 
-#: include/global_arrays.php:1516
+#: include/global_arrays.php:1517
 msgid "Year, Month Number, Day"
 msgstr "Jaar, maand nummer, dag"
 
-#: include/global_arrays.php:1517
+#: include/global_arrays.php:1518
 msgid "Year, Month Name, Day"
 msgstr "Jaar, maand naam, dag"
 
-#: include/global_arrays.php:1527 include/global_arrays.php:1558
+#: include/global_arrays.php:1528 include/global_arrays.php:1559
 msgid "After Boost"
 msgstr "After Boost"
 
-#: include/global_arrays.php:1537 include/global_arrays.php:1538
-#: include/global_arrays.php:1539 include/global_arrays.php:1540
-#: include/global_arrays.php:1541 include/global_arrays.php:1603
-#: include/global_arrays.php:1604
+#: include/global_arrays.php:1538 include/global_arrays.php:1539
+#: include/global_arrays.php:1540 include/global_arrays.php:1541
+#: include/global_arrays.php:1542 include/global_arrays.php:1604
+#: include/global_arrays.php:1605
 #, php-format
 msgid "%d MBytes"
 msgstr "%d MBytes"
 
-#: include/global_arrays.php:1542
+#: include/global_arrays.php:1543
 msgid "1 GByte"
 msgstr "1 GByte"
 
-#: include/global_arrays.php:1543 include/global_arrays.php:1606
+#: include/global_arrays.php:1544 include/global_arrays.php:1607
 #: lib/boost.php:124
 #, php-format
 msgid "%s GBytes"
 msgstr "%s GBytes"
 
-#: include/global_arrays.php:1544 include/global_arrays.php:1545
-#: include/global_arrays.php:1607 include/global_arrays.php:1608
-#: include/global_arrays.php:1609 include/global_arrays.php:1610
-#: include/global_arrays.php:1611 include/global_arrays.php:1612
+#: include/global_arrays.php:1545 include/global_arrays.php:1546
+#: include/global_arrays.php:1608 include/global_arrays.php:1609
+#: include/global_arrays.php:1610 include/global_arrays.php:1611
+#: include/global_arrays.php:1612 include/global_arrays.php:1613
 #, php-format
 msgid "%d GBytes"
 msgstr "%d GBytes"
 
-#: include/global_arrays.php:1565
+#: include/global_arrays.php:1566
 msgid "2,000 Data Source Items"
 msgstr "2000 Data bron items"
 
-#: include/global_arrays.php:1566
+#: include/global_arrays.php:1567
 msgid "5,000 Data Source Items"
 msgstr "5000 Data bron items"
 
-#: include/global_arrays.php:1567
+#: include/global_arrays.php:1568
 msgid "10,000 Data Source Items"
 msgstr "10000 Data bron items"
 
-#: include/global_arrays.php:1568
+#: include/global_arrays.php:1569
 msgid "15,000 Data Source Items"
 msgstr "15000 Data bron items"
 
-#: include/global_arrays.php:1569
+#: include/global_arrays.php:1570
 msgid "25,000 Data Source Items"
 msgstr "25000 Data bron items"
 
-#: include/global_arrays.php:1570
+#: include/global_arrays.php:1571
 msgid "50,000 Data Source Items (Default)"
 msgstr "50000 Data bron items (Standaard)"
 
-#: include/global_arrays.php:1571
+#: include/global_arrays.php:1572
 msgid "100,000 Data Source Items"
 msgstr "100000 Data bron items"
 
-#: include/global_arrays.php:1572
+#: include/global_arrays.php:1573
 msgid "200,000 Data Source Items"
 msgstr "200000 Data bron items"
 
-#: include/global_arrays.php:1573
+#: include/global_arrays.php:1574
 msgid "400,000 Data Source Items"
 msgstr "400000 Data bron items"
 
-#: include/global_arrays.php:1590
+#: include/global_arrays.php:1591
 msgid "2 Hours"
 msgstr "2 uur"
 
-#: include/global_arrays.php:1591
+#: include/global_arrays.php:1592
 msgid "4 Hours"
 msgstr "4 uur"
 
-#: include/global_arrays.php:1592
+#: include/global_arrays.php:1593
 msgid "6 Hours"
 msgstr "6 uur"
 
-#: include/global_arrays.php:1599 include/global_settings.php:1503
+#: include/global_arrays.php:1600 include/global_settings.php:1503
 #: include/global_settings.php:1504 include/global_settings.php:1505
 #, php-format
 msgid "%s Hours"
 msgstr "%s Uren"
 
-#: include/global_arrays.php:1605
+#: include/global_arrays.php:1606
 #, php-format
 msgid "%d GByte"
 msgstr "%d GBytes"
 
-#: include/global_arrays.php:1613 utilities.php:2850 utilities.php:2851
+#: include/global_arrays.php:1614 utilities.php:2850 utilities.php:2851
 #: utilities.php:2900
 msgid "Unlimited"
 msgstr "Onbeperkt"
 
-#: include/global_arrays.php:1620 include/global_settings.php:1402
+#: include/global_arrays.php:1621 include/global_settings.php:1402
 #: include/global_settings.php:1403 include/global_settings.php:1404
 #: include/global_settings.php:1405 include/global_settings.php:1415
 #: include/global_settings.php:1416 include/global_settings.php:1417
@@ -6718,765 +6718,765 @@ msgstr "Onbeperkt"
 msgid "%s Minutes"
 msgstr "%s Minuten"
 
-#: include/global_arrays.php:1642
+#: include/global_arrays.php:1643
 msgid "1 Megabyte"
 msgstr "1 Megabyte"
 
-#: include/global_arrays.php:1643 include/global_arrays.php:1644
-#: include/global_arrays.php:1645 include/global_arrays.php:1646
-#: include/global_arrays.php:1647 include/global_arrays.php:1648
+#: include/global_arrays.php:1644 include/global_arrays.php:1645
+#: include/global_arrays.php:1646 include/global_arrays.php:1647
+#: include/global_arrays.php:1648 include/global_arrays.php:1649
 #, php-format
 msgid "%d Megabytes"
 msgstr "%d Megabytes"
 
-#: include/global_arrays.php:1652
+#: include/global_arrays.php:1653
 msgid "Send Now"
 msgstr "Nu versturen"
 
-#: include/global_arrays.php:1660
+#: include/global_arrays.php:1661
 msgid "Take Ownership"
 msgstr "Word eigenaar"
 
-#: include/global_arrays.php:1664
+#: include/global_arrays.php:1665
 msgid "Inline PNG Image"
 msgstr "Inline PNG afbeelding"
 
-#: include/global_arrays.php:1669
+#: include/global_arrays.php:1670
 msgid "Inline JPEG Image"
 msgstr "Inline JPEG afbeelding"
 
-#: include/global_arrays.php:1670
+#: include/global_arrays.php:1671
 msgid "Inline GIF Image"
 msgstr "Inline GIF afbeelding"
 
-#: include/global_arrays.php:1673
+#: include/global_arrays.php:1674
 msgid "Attached PNG Image"
 msgstr "Bijgevoegd PNG afbeelding"
 
-#: include/global_arrays.php:1676
+#: include/global_arrays.php:1677
 msgid "Attached JPEG Image"
 msgstr "Bijgevoegd JPEG afbeelding"
 
-#: include/global_arrays.php:1677
+#: include/global_arrays.php:1678
 msgid "Attached GIF Image"
 msgstr "Bijgevoegd GIF afbeelding"
 
-#: include/global_arrays.php:1681
+#: include/global_arrays.php:1682
 msgid "Inline PNG Image, LN Style"
 msgstr "Inline PNG afbeelding, LN stijl"
 
-#: include/global_arrays.php:1683
+#: include/global_arrays.php:1684
 msgid "Inline JPEG Image, LN Style"
 msgstr "Inline JPG afbeelding, LN stijl"
 
-#: include/global_arrays.php:1684
+#: include/global_arrays.php:1685
 msgid "Inline GIF Image, LN Style"
 msgstr "Inline GIF afbeelding, LN stijl"
 
-#: include/global_arrays.php:1689
+#: include/global_arrays.php:1690
 msgid "Text"
 msgstr "Tekst"
 
-#: include/global_arrays.php:1690 include/global_form.php:2252
+#: include/global_arrays.php:1691 include/global_form.php:2252
 msgid "Tree"
 msgstr "Menu"
 
-#: include/global_arrays.php:1693
+#: include/global_arrays.php:1694
 msgid "Horizontal Rule"
 msgstr "Horizontale lijn"
 
-#: include/global_arrays.php:1697
+#: include/global_arrays.php:1698
 msgid "left"
 msgstr "links"
 
-#: include/global_arrays.php:1698
+#: include/global_arrays.php:1699
 msgid "center"
 msgstr "midden"
 
-#: include/global_arrays.php:1699
+#: include/global_arrays.php:1700
 msgid "right"
 msgstr "rechts"
 
-#: include/global_arrays.php:1703
+#: include/global_arrays.php:1704
 msgid "Minute(s)"
 msgstr "Minu(u)t(en)"
 
-#: include/global_arrays.php:1704
+#: include/global_arrays.php:1705
 msgid "Hour(s)"
 msgstr "U(u)r(en)"
 
-#: include/global_arrays.php:1705
+#: include/global_arrays.php:1706
 msgid "Day(s)"
 msgstr "Dag(en)"
 
-#: include/global_arrays.php:1706
+#: include/global_arrays.php:1707
 msgid "Week(s)"
 msgstr "We(e)k(en)"
 
-#: include/global_arrays.php:1707
+#: include/global_arrays.php:1708
 msgid "Month(s), Day of Month"
 msgstr "Maand(en), dag van de maand"
 
-#: include/global_arrays.php:1708
+#: include/global_arrays.php:1709
 msgid "Month(s), Day of Week"
 msgstr "Maand(en), dag van de week"
 
-#: include/global_arrays.php:1709
+#: include/global_arrays.php:1710
 msgid "Year(s)"
 msgstr "Ja(a)r(en)"
 
-#: include/global_arrays.php:1713
+#: include/global_arrays.php:1714
 msgid "Keep Graph Types"
 msgstr "Behoud grafiektypen"
 
-#: include/global_arrays.php:1714
+#: include/global_arrays.php:1715
 msgid "Keep Type and STACK"
 msgstr "Behoud type en STACK"
 
-#: include/global_arrays.php:1715
+#: include/global_arrays.php:1716
 msgid "Convert to AREA/STACK Graph"
 msgstr "Converteer naar AREA/STACK grafiek"
 
-#: include/global_arrays.php:1716
+#: include/global_arrays.php:1717
 msgid "Convert to LINE1 Graph"
 msgstr "Converteer naar LINE1 grafiek"
 
-#: include/global_arrays.php:1717
+#: include/global_arrays.php:1718
 msgid "Convert to LINE2 Graph"
 msgstr "Converteer naar LINE2 grafiek"
 
-#: include/global_arrays.php:1718
+#: include/global_arrays.php:1719
 msgid "Convert to LINE3 Graph"
 msgstr "Converteer naar LINE3 grafiek"
 
-#: include/global_arrays.php:1719
+#: include/global_arrays.php:1720
 msgid "Convert to LINE1/STACK Graph"
 msgstr "Converteer naar LINE1 grafiek"
 
-#: include/global_arrays.php:1720
+#: include/global_arrays.php:1721
 msgid "Convert to LINE2/STACK Graph"
 msgstr "Converteer naar LINE2 grafiek"
 
-#: include/global_arrays.php:1721
+#: include/global_arrays.php:1722
 msgid "Convert to LINE3/STACK Graph"
 msgstr "Converteer naar LINE3 grafiek"
 
-#: include/global_arrays.php:1725
+#: include/global_arrays.php:1726
 msgid "No Totals"
 msgstr "Geen totalen"
 
-#: include/global_arrays.php:1726
+#: include/global_arrays.php:1727
 msgid "Print All Legend Items"
 msgstr "Toon alle legenda items"
 
-#: include/global_arrays.php:1727
+#: include/global_arrays.php:1728
 msgid "Print Totaling Legend Items Only"
 msgstr "Afdrukken van in totaal alleen legende-items"
 
-#: include/global_arrays.php:1731
+#: include/global_arrays.php:1732
 msgid "Total Similar Data Sources"
 msgstr "Totaal Soortgelijke gegevensbronnen"
 
-#: include/global_arrays.php:1732
+#: include/global_arrays.php:1733
 msgid "Total All Data Sources"
 msgstr "Totaal alle gegevensbronnen"
 
-#: include/global_arrays.php:1736
+#: include/global_arrays.php:1737
 msgid "No Reordering"
 msgstr "Niet herstructureren"
 
-#: include/global_arrays.php:1737
+#: include/global_arrays.php:1738
 msgid "Data Source, Graph"
 msgstr "Data bron, grafiek"
 
-#: include/global_arrays.php:1738
+#: include/global_arrays.php:1739
 msgid "Graph, Data Source"
 msgstr "Grafiek, data bron"
 
-#: include/global_arrays.php:1739
+#: include/global_arrays.php:1740
 msgid "Base Graph Order"
 msgstr "Heeft grafieken"
 
-#: include/global_arrays.php:1746
+#: include/global_arrays.php:1747
 msgid "contains"
 msgstr "bevat"
 
-#: include/global_arrays.php:1747
+#: include/global_arrays.php:1748
 msgid "does not contain"
 msgstr "bevat niet"
 
-#: include/global_arrays.php:1748
+#: include/global_arrays.php:1749
 msgid "begins with"
 msgstr "begint met"
 
-#: include/global_arrays.php:1749
+#: include/global_arrays.php:1750
 msgid "does not begin with"
 msgstr "begint niet met"
 
-#: include/global_arrays.php:1750
+#: include/global_arrays.php:1751
 msgid "ends with"
 msgstr "eindigt met"
 
-#: include/global_arrays.php:1751
+#: include/global_arrays.php:1752
 msgid "does not end with"
 msgstr "eindigt niet met"
 
-#: include/global_arrays.php:1752
+#: include/global_arrays.php:1753
 msgid "matches"
 msgstr "komt overeen"
 
-#: include/global_arrays.php:1753
+#: include/global_arrays.php:1754
 msgid "is not equal to"
 msgstr "is niet gelijk aan"
 
-#: include/global_arrays.php:1754
+#: include/global_arrays.php:1755
 msgid "is less than"
 msgstr "is kleiner dan"
 
-#: include/global_arrays.php:1755
+#: include/global_arrays.php:1756
 msgid "is less than or equal"
 msgstr "is kleiner dan of gelijk aan"
 
-#: include/global_arrays.php:1756
+#: include/global_arrays.php:1757
 msgid "is greater than"
 msgstr "is groter dan"
 
-#: include/global_arrays.php:1757
+#: include/global_arrays.php:1758
 msgid "is greater than or equal"
 msgstr "is groter dan of gelijk aan"
 
-#: include/global_arrays.php:1758
+#: include/global_arrays.php:1759
 msgid "is unknown"
 msgstr "is onbekend"
 
-#: include/global_arrays.php:1759
+#: include/global_arrays.php:1760
 msgid "is not unknown"
 msgstr "is niet onbekend"
 
-#: include/global_arrays.php:1760
+#: include/global_arrays.php:1761
 msgid "is empty"
 msgstr "is leeg"
 
-#: include/global_arrays.php:1761
+#: include/global_arrays.php:1762
 msgid "is not empty"
 msgstr "is niet leeg"
 
-#: include/global_arrays.php:1762
+#: include/global_arrays.php:1763
 msgid "matches regular expression"
 msgstr "komt overeen met reguliere expressie"
 
-#: include/global_arrays.php:1763
+#: include/global_arrays.php:1764
 msgid "does not match regular expression"
 msgstr "komt niet overeen met reguliere expressie"
 
-#: include/global_arrays.php:1865
+#: include/global_arrays.php:1866
 msgid "Fixed String"
 msgstr "Vaste waarde"
 
-#: include/global_arrays.php:1870
+#: include/global_arrays.php:1871
 msgid "Every 1 Hour"
 msgstr "Ieder uur"
 
-#: include/global_arrays.php:1876
+#: include/global_arrays.php:1877
 msgid "Every Day"
 msgstr "Iedere dag"
 
-#: include/global_arrays.php:1877
+#: include/global_arrays.php:1878
 msgid "Every Week"
 msgstr "Iedere week"
 
-#: include/global_arrays.php:1878 include/global_arrays.php:1879
+#: include/global_arrays.php:1879 include/global_arrays.php:1880
 #, php-format
 msgid "Every %d Weeks"
 msgstr "Iedere %d weken"
 
-#: include/global_arrays.php:1910
+#: include/global_arrays.php:1911
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jan"
 msgstr "Jan"
 
-#: include/global_arrays.php:1911
+#: include/global_arrays.php:1912
 msgctxt "A short textual representation of a month, three letters"
 msgid "Feb"
 msgstr "Feb"
 
-#: include/global_arrays.php:1912
+#: include/global_arrays.php:1913
 msgctxt "A short textual representation of a month, three letters"
 msgid "Mar"
 msgstr "Maa"
 
-#: include/global_arrays.php:1913
+#: include/global_arrays.php:1914
 msgctxt "A short textual representation of a month, three letters"
 msgid "Apr"
 msgstr "Apr"
 
-#: include/global_arrays.php:1914
+#: include/global_arrays.php:1915
 msgctxt "A short textual representation of a month, three letters"
 msgid "May"
 msgstr "Mei"
 
-#: include/global_arrays.php:1915
+#: include/global_arrays.php:1916
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jun"
 msgstr "Jun"
 
-#: include/global_arrays.php:1916
+#: include/global_arrays.php:1917
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jul"
 msgstr "Jul"
 
-#: include/global_arrays.php:1917
+#: include/global_arrays.php:1918
 msgctxt "A short textual representation of a month, three letters"
 msgid "Aug"
 msgstr "Aug"
 
-#: include/global_arrays.php:1918
+#: include/global_arrays.php:1919
 msgctxt "A short textual representation of a month, three letters"
 msgid "Sep"
 msgstr "Sep"
 
-#: include/global_arrays.php:1919
+#: include/global_arrays.php:1920
 msgctxt "A short textual representation of a month, three letters"
 msgid "Oct"
 msgstr "Okt"
 
-#: include/global_arrays.php:1920
+#: include/global_arrays.php:1921
 msgctxt "A short textual representation of a month, three letters"
 msgid "Nov"
 msgstr "Nov"
 
-#: include/global_arrays.php:1921
+#: include/global_arrays.php:1922
 msgctxt "A short textual representation of a month, three letters"
 msgid "Dec"
 msgstr "Dec"
 
-#: include/global_arrays.php:1925
+#: include/global_arrays.php:1926
 msgid "Use the First Handler Found"
 msgstr "Gebruik de PHP GetText Handler"
 
-#: include/global_arrays.php:1929
+#: include/global_arrays.php:1930
 msgid "Use the PHP GetText Handler"
 msgstr "Gebruik de PHP GetText Handler"
 
-#: include/global_arrays.php:1933
+#: include/global_arrays.php:1934
 msgid "Use the Oscarotero GetText Handler"
 msgstr "Gebruik de Oscarotero GetText Handler"
 
-#: include/global_arrays.php:1937
+#: include/global_arrays.php:1938
 msgid "Use the MonoTranslator GetText Handler"
 msgstr "Gebruik de MonoTranslator GetText Handler"
 
-#: include/global_arrays.php:1951
+#: include/global_arrays.php:1952
 msgctxt "A textual representation of a day, three letters"
 msgid "Sun"
 msgstr "Zo"
 
-#: include/global_arrays.php:1952
+#: include/global_arrays.php:1953
 msgctxt "A textual representation of a day, three letters"
 msgid "Mon"
 msgstr "Ma"
 
-#: include/global_arrays.php:1953
+#: include/global_arrays.php:1954
 msgctxt "A textual representation of a day, three letters"
 msgid "Tue"
 msgstr "Di"
 
-#: include/global_arrays.php:1954
+#: include/global_arrays.php:1955
 msgctxt "A textual representation of a day, three letters"
 msgid "Wed"
 msgstr "Wo"
 
-#: include/global_arrays.php:1955
+#: include/global_arrays.php:1956
 msgctxt "A textual representation of a day, three letters"
 msgid "Thu"
 msgstr "Do"
 
-#: include/global_arrays.php:1956
+#: include/global_arrays.php:1957
 msgctxt "A textual representation of a day, three letters"
 msgid "Fri"
 msgstr "Vr"
 
-#: include/global_arrays.php:1957
+#: include/global_arrays.php:1958
 msgctxt "A textual representation of a day, three letters"
 msgid "Sat"
 msgstr "Za"
 
-#: include/global_arrays.php:1961
+#: include/global_arrays.php:1962
 msgid "Arabic"
 msgstr "Arabisch"
 
-#: include/global_arrays.php:1962
+#: include/global_arrays.php:1963
 msgid "Bulgarian"
 msgstr "Bulgaars"
 
-#: include/global_arrays.php:1963
+#: include/global_arrays.php:1964
 msgid "Chinese (China)"
 msgstr "Chinees"
 
-#: include/global_arrays.php:1964
+#: include/global_arrays.php:1965
 msgid "Chinese (Taiwan)"
 msgstr "Chinees (Taiwan)"
 
-#: include/global_arrays.php:1965
+#: include/global_arrays.php:1966
 msgid "Dutch"
 msgstr "Nederlands"
 
-#: include/global_arrays.php:1966
+#: include/global_arrays.php:1967
 msgid "English"
 msgstr "Engels"
 
-#: include/global_arrays.php:1967
+#: include/global_arrays.php:1968
 msgid "French"
 msgstr "Frans"
 
-#: include/global_arrays.php:1968
+#: include/global_arrays.php:1969
 msgid "German"
 msgstr "Duits"
 
-#: include/global_arrays.php:1969
+#: include/global_arrays.php:1970
 msgid "Greek"
 msgstr "Grieks"
 
-#: include/global_arrays.php:1970
+#: include/global_arrays.php:1971
 msgid "Hebrew"
 msgstr "Hebreeuws"
 
-#: include/global_arrays.php:1971
+#: include/global_arrays.php:1972
 msgid "Hindi"
 msgstr "Hindi"
 
-#: include/global_arrays.php:1972
+#: include/global_arrays.php:1973
 msgid "Italian"
 msgstr "Italiaans"
 
-#: include/global_arrays.php:1973
+#: include/global_arrays.php:1974
 msgid "Japanese"
 msgstr "Japans"
 
-#: include/global_arrays.php:1974
+#: include/global_arrays.php:1975
 msgid "Korean"
 msgstr "Koreaans"
 
-#: include/global_arrays.php:1975
+#: include/global_arrays.php:1976
 msgid "Polish"
 msgstr "Pools"
 
-#: include/global_arrays.php:1976
+#: include/global_arrays.php:1977
 msgid "Portuguese"
 msgstr "Portugees"
 
-#: include/global_arrays.php:1977
+#: include/global_arrays.php:1978
 msgid "Portuguese (Brazil)"
 msgstr "Portugees (Brazilië)"
 
-#: include/global_arrays.php:1978
+#: include/global_arrays.php:1979
 msgid "Russian"
 msgstr "Russisch"
 
-#: include/global_arrays.php:1979
+#: include/global_arrays.php:1980
 msgid "Spanish"
 msgstr "Spaans"
 
-#: include/global_arrays.php:1980
+#: include/global_arrays.php:1981
 msgid "Swedish"
 msgstr "Zweeds"
 
-#: include/global_arrays.php:1981
+#: include/global_arrays.php:1982
 msgid "Turkish"
 msgstr "Turks"
 
-#: include/global_arrays.php:1982
+#: include/global_arrays.php:1983
 msgid "Vietnamese"
 msgstr "Vietnamees"
 
-#: include/global_arrays.php:1986
+#: include/global_arrays.php:1987
 msgid "Classic"
 msgstr "Klassiek"
 
-#: include/global_arrays.php:1987
+#: include/global_arrays.php:1988
 msgid "Modern"
 msgstr "Modern"
 
-#: include/global_arrays.php:1988
+#: include/global_arrays.php:1989
 msgid "Dark"
 msgstr "Donker"
 
-#: include/global_arrays.php:1989
+#: include/global_arrays.php:1990
 msgid "Paper-plane"
 msgstr "Papier-vliegtuig"
 
-#: include/global_arrays.php:1990
+#: include/global_arrays.php:1991
 msgid "Paw"
 msgstr "Poot"
 
-#: include/global_arrays.php:1991
+#: include/global_arrays.php:1992
 msgid "Sunrise"
 msgstr "Doel.nu"
 
-#: include/global_arrays.php:1995
+#: include/global_arrays.php:1996
 msgid "[Fail]"
 msgstr "[Mislukt]"
 
-#: include/global_arrays.php:1996
+#: include/global_arrays.php:1997
 msgid "[Warning]"
 msgstr "WAARSCHUWING:"
 
-#: include/global_arrays.php:1997
+#: include/global_arrays.php:1998
 msgid "[Restart]"
 msgstr "Beperkt"
 
-#: include/global_arrays.php:1998
+#: include/global_arrays.php:1999
 msgid "[Success]"
 msgstr "[Succesvol]"
 
-#: include/global_arrays.php:1999
+#: include/global_arrays.php:2000
 msgid "[Skipped]"
 msgstr "[Overgeslagen]"
 
-#: include/global_arrays.php:2004 include/global_arrays.php:2010
+#: include/global_arrays.php:2005 include/global_arrays.php:2011
 msgid "User Profile (Edit)"
 msgstr "Gebruikersprofiel (bewerken)"
 
-#: include/global_arrays.php:2022 include/global_arrays.php:2028
+#: include/global_arrays.php:2023 include/global_arrays.php:2029
 msgid "Tree Mode"
 msgstr "Boomwijze"
 
-#: include/global_arrays.php:2034
+#: include/global_arrays.php:2035
 msgid "List Mode"
 msgstr "Lijst modus"
 
-#: include/global_arrays.php:2066 include/global_arrays.php:2072
+#: include/global_arrays.php:2067 include/global_arrays.php:2073
 #: lib/functions.php:4487 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "Console"
 
-#: include/global_arrays.php:2078
+#: include/global_arrays.php:2079
 msgid "Graph Management"
 msgstr "Beheer grafiek"
 
-#: include/global_arrays.php:2084 include/global_arrays.php:2126
-#: include/global_arrays.php:2144 include/global_arrays.php:2198
-#: include/global_arrays.php:2210 include/global_arrays.php:2222
-#: include/global_arrays.php:2234 include/global_arrays.php:2246
-#: include/global_arrays.php:2282 include/global_arrays.php:2300
-#: include/global_arrays.php:2318 include/global_arrays.php:2336
-#: include/global_arrays.php:2354 include/global_arrays.php:2378
-#: include/global_arrays.php:2414 include/global_arrays.php:2540
-#: include/global_arrays.php:2564 include/global_arrays.php:2588
-#: include/global_arrays.php:2606 include/global_arrays.php:2618
-#: include/global_arrays.php:2732 include/global_arrays.php:2756
-#: include/global_arrays.php:2774 include/global_arrays.php:2792
-#: include/global_arrays.php:2816
+#: include/global_arrays.php:2085 include/global_arrays.php:2127
+#: include/global_arrays.php:2145 include/global_arrays.php:2199
+#: include/global_arrays.php:2211 include/global_arrays.php:2223
+#: include/global_arrays.php:2235 include/global_arrays.php:2247
+#: include/global_arrays.php:2283 include/global_arrays.php:2301
+#: include/global_arrays.php:2319 include/global_arrays.php:2337
+#: include/global_arrays.php:2355 include/global_arrays.php:2379
+#: include/global_arrays.php:2415 include/global_arrays.php:2541
+#: include/global_arrays.php:2565 include/global_arrays.php:2589
+#: include/global_arrays.php:2607 include/global_arrays.php:2619
+#: include/global_arrays.php:2733 include/global_arrays.php:2757
+#: include/global_arrays.php:2775 include/global_arrays.php:2793
+#: include/global_arrays.php:2817
 msgid "(Edit)"
 msgstr "(bewerken)"
 
-#: include/global_arrays.php:2096 include/global_arrays.php:2162
-#: include/global_arrays.php:2252 include/global_arrays.php:2288
-#: include/global_arrays.php:2306 include/global_arrays.php:2324
-#: include/global_arrays.php:2342 include/global_arrays.php:2372
-#: include/global_arrays.php:2408 include/global_arrays.php:2438
-#: include/global_arrays.php:2534 include/global_arrays.php:2738
-#: include/global_arrays.php:2762 include/global_arrays.php:2780
-#: include/global_arrays.php:2798 include/global_arrays.php:2822
+#: include/global_arrays.php:2097 include/global_arrays.php:2163
+#: include/global_arrays.php:2253 include/global_arrays.php:2289
+#: include/global_arrays.php:2307 include/global_arrays.php:2325
+#: include/global_arrays.php:2343 include/global_arrays.php:2373
+#: include/global_arrays.php:2409 include/global_arrays.php:2439
+#: include/global_arrays.php:2535 include/global_arrays.php:2739
+#: include/global_arrays.php:2763 include/global_arrays.php:2781
+#: include/global_arrays.php:2799 include/global_arrays.php:2823
 #: lib/api_automation.php:1289 lib/api_automation.php:1352
 #: lib/api_automation.php:1422 lib/html_reports.php:1792 plugins.php:605
 msgid "Actions"
 msgstr "Acties"
 
-#: include/global_arrays.php:2102 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2103 lib/api_aggregate.php:2333
 msgid "Graph Items"
 msgstr "Grafiekitems"
 
-#: include/global_arrays.php:2108
+#: include/global_arrays.php:2109
 msgid "Create New Graphs"
 msgstr "Nieuwe grafieken maken"
 
-#: include/global_arrays.php:2114
+#: include/global_arrays.php:2115
 msgid "Create Graphs from Data Query"
 msgstr "Grafieken maken vanuit een data query"
 
-#: include/global_arrays.php:2120
+#: include/global_arrays.php:2121
 msgid "GPRINT Presets"
 msgstr "GPRINT voorinstelling"
 
-#: include/global_arrays.php:2132 include/global_arrays.php:2150
-#: include/global_arrays.php:2270 include/global_arrays.php:2360
-#: include/global_arrays.php:2384 include/global_arrays.php:2546
+#: include/global_arrays.php:2133 include/global_arrays.php:2151
+#: include/global_arrays.php:2271 include/global_arrays.php:2361
+#: include/global_arrays.php:2385 include/global_arrays.php:2547
 msgid "(Remove)"
 msgstr "(Verwijder)"
 
-#: include/global_arrays.php:2156
+#: include/global_arrays.php:2157
 msgid "CDEF Items"
 msgstr "CDEF Items"
 
-#: include/global_arrays.php:2168 include/global_arrays.php:2174
-#: include/global_arrays.php:2180 include/global_arrays.php:2186
-#: include/global_arrays.php:2480
+#: include/global_arrays.php:2169 include/global_arrays.php:2175
+#: include/global_arrays.php:2181 include/global_arrays.php:2187
+#: include/global_arrays.php:2481
 msgid "View Log"
 msgstr "Logboek Bekijken"
 
-#: include/global_arrays.php:2192
+#: include/global_arrays.php:2193
 msgid "Graph Trees"
 msgstr "Grafiek Bomen"
 
-#: include/global_arrays.php:2258 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2259 lib/api_aggregate.php:2333
 msgid "Graph Template Items"
 msgstr "Grafiektemplate items"
 
-#: include/global_arrays.php:2348
+#: include/global_arrays.php:2349
 msgid "Round Robin Archives"
 msgstr "Ronde Robin Archief"
 
-#: include/global_arrays.php:2390
+#: include/global_arrays.php:2391
 msgid "Data Input Fields"
 msgstr "Data invoer velden"
 
-#: include/global_arrays.php:2396 include/global_arrays.php:2426
+#: include/global_arrays.php:2397 include/global_arrays.php:2427
 msgid "(Remove Item)"
 msgstr "(Verwijder item)"
 
-#: include/global_arrays.php:2432 include/global_settings.php:310
+#: include/global_arrays.php:2433 include/global_settings.php:310
 #: rrdcleaner.php:323
 msgid "RRD Cleaner"
 msgstr "RRD Opruimen"
 
-#: include/global_arrays.php:2444
+#: include/global_arrays.php:2445
 msgid "List unused Files"
 msgstr "Lijst van ongebruikte bestanden"
 
-#: include/global_arrays.php:2450
+#: include/global_arrays.php:2451
 msgid "RRD Check"
 msgstr "Uitvoeren van de controle"
 
-#: include/global_arrays.php:2462 include/global_arrays.php:2474
+#: include/global_arrays.php:2463 include/global_arrays.php:2475
 #: utilities.php:2395
 msgid "View Poller Cache"
 msgstr "Toon poller cache"
 
-#: include/global_arrays.php:2468 utilities.php:2399
+#: include/global_arrays.php:2469 utilities.php:2399
 msgid "View Data Query Cache"
 msgstr "Toon data query cache"
 
-#: include/global_arrays.php:2486
+#: include/global_arrays.php:2487
 msgid "Clear Log"
 msgstr "Log wissen"
 
-#: include/global_arrays.php:2492 utilities.php:2388
+#: include/global_arrays.php:2493 utilities.php:2388
 msgid "View User Log"
 msgstr "Toon gebruikerslog"
 
-#: include/global_arrays.php:2498
+#: include/global_arrays.php:2499
 msgid "Clear User Log"
 msgstr "Gebruikerslog leegmaken"
 
-#: include/global_arrays.php:2504 utilities.php:2379 utilities.php:2380
+#: include/global_arrays.php:2505 utilities.php:2379 utilities.php:2380
 msgid "Technical Support"
 msgstr "Technische ondersteuning"
 
-#: include/global_arrays.php:2510 utilities.php:2570
+#: include/global_arrays.php:2511 utilities.php:2570
 msgid "Boost Status"
 msgstr "Verhoog de status"
 
-#: include/global_arrays.php:2516 utilities.php:2454
+#: include/global_arrays.php:2517 utilities.php:2454
 msgid "View SNMP Agent Cache"
 msgstr "Toon SNMP agent cache"
 
-#: include/global_arrays.php:2522 utilities.php:2465
+#: include/global_arrays.php:2523 utilities.php:2465
 msgid "View SNMP Agent Notification Log"
 msgstr "Toon SNMP agent notificatie log"
 
-#: include/global_arrays.php:2552
+#: include/global_arrays.php:2553
 msgid "VDEF Items"
 msgstr "VDEF Items"
 
-#: include/global_arrays.php:2558
+#: include/global_arrays.php:2559
 msgid "View SNMP Notification Receivers"
 msgstr "Toon SNMP notificatie ontvangers"
 
-#: include/global_arrays.php:2570
+#: include/global_arrays.php:2571
 msgid "Kadupul Settings"
 msgstr "Kadupul instellingen"
 
-#: include/global_arrays.php:2576
+#: include/global_arrays.php:2577
 msgid "External Link"
 msgstr "Externe link"
 
-#: include/global_arrays.php:2594 include/global_arrays.php:2624
+#: include/global_arrays.php:2595 include/global_arrays.php:2625
 msgid "(Action)"
 msgstr "(Actie)"
 
-#: include/global_arrays.php:2630 lib/html.php:2785
+#: include/global_arrays.php:2631 lib/html.php:2785
 msgid "About Kadupul"
 msgstr "Over Kadupul"
 
-#: include/global_arrays.php:2636
+#: include/global_arrays.php:2637
 msgid "Kadupul Help"
 msgstr "Kadupul home"
 
-#: include/global_arrays.php:2648
+#: include/global_arrays.php:2649
 msgid "Export Results"
 msgstr "Exporteer resultaten"
 
-#: include/global_arrays.php:2666 include/global_arrays.php:2696
+#: include/global_arrays.php:2667 include/global_arrays.php:2697
 #: lib/html.php:1963 lib/html.php:2037
 msgid "Reporting"
 msgstr "Rapportages"
 
-#: include/global_arrays.php:2672 include/global_arrays.php:2702
+#: include/global_arrays.php:2673 include/global_arrays.php:2703
 msgid "Report Add"
 msgstr "Rapportage toevoegen"
 
-#: include/global_arrays.php:2678 include/global_arrays.php:2708
+#: include/global_arrays.php:2679 include/global_arrays.php:2709
 msgid "Report Delete"
 msgstr "Rapportage verwijderen"
 
-#: include/global_arrays.php:2684 include/global_arrays.php:2714
+#: include/global_arrays.php:2685 include/global_arrays.php:2715
 msgid "Report Edit"
 msgstr "Rapportage wijzigen"
 
-#: include/global_arrays.php:2690 include/global_arrays.php:2720
+#: include/global_arrays.php:2691 include/global_arrays.php:2721
 msgid "Report Edit Item"
 msgstr "Rapportageitem wijzen"
 
-#: include/global_arrays.php:2744
+#: include/global_arrays.php:2745
 msgid "Color Template Items"
 msgstr "Kleur template items"
 
-#: include/global_arrays.php:2804
+#: include/global_arrays.php:2805
 msgid "Graph Rule Items"
 msgstr "Grafiek Regel Items"
 
-#: include/global_arrays.php:2828
+#: include/global_arrays.php:2829
 msgid "Tree Rule Items"
 msgstr "Boomregelpunten"
 
-#: include/global_arrays.php:2859 include/global_arrays.php:2875
+#: include/global_arrays.php:2860 include/global_arrays.php:2876
 #: lib/api_device.php:1952
 msgid "days"
 msgstr "dagen"
 
-#: include/global_arrays.php:2860
+#: include/global_arrays.php:2861
 msgid "hrs"
 msgstr "uren"
 
-#: include/global_arrays.php:2861
+#: include/global_arrays.php:2862
 msgid "mins"
 msgstr "minuten"
 
-#: include/global_arrays.php:2862
+#: include/global_arrays.php:2863
 msgid "secs"
 msgstr "seconden"
 
-#: include/global_arrays.php:2876 lib/api_device.php:1952
+#: include/global_arrays.php:2877 lib/api_device.php:1952
 msgid "hours"
 msgstr "uren"
 
-#: include/global_arrays.php:2877 lib/api_device.php:1952
+#: include/global_arrays.php:2878 lib/api_device.php:1952
 msgid "minutes"
 msgstr "minuten"
 
-#: include/global_arrays.php:2878
+#: include/global_arrays.php:2879
 msgid "seconds"
 msgstr "seconden"
 

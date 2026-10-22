@@ -1110,7 +1110,7 @@
   },
   "package": {
     "path": "install/templates/Generic_SNMP_Device.xml.gz",
-    "sha256": "a538c8231f382c6953e2a30c254e2cbfb1afe9ccde82002c5084f560969b71f4",
+    "sha256": "c33f26acfae58a28773b5b75f236adfeda71e0a2e1a48783e6abca832d330fa6",
     "template_file": "Generic_SNMP_Device.xml",
     "embedded_query_path": "resource/snmp_queries/interface.xml",
     "embedded_query_sha256": "08a4d06420065748b4ba19a8ad0c0638360e15f2ffe4d019616f5d0c2478bbdc"

@@ -45,7 +45,7 @@ $GLOBALS['nativePresentationObserver'] = static function (array $rendered) use (
         $cols = array_keys($row);
         $db->prepare('INSERT INTO ' . $table . ' (' . implode(',', $cols) . ') VALUES (' . implode(',', array_fill(0, count($cols), '?')) . ')')->execute(array_values($row));
     };
-    $insert('version', array('cacti' => '1.2.35'));
+    $insert('version', array('cacti' => '1.2.36'));
     $insert('settings', array('name' => 'unrelated_setting','value' => 'Retain exactly'));
     $insert('settings', array('name' => 'ldap_specific_password','value' => 'fixture-old-value'));
     foreach (array('cactiApplVersion','cactiApplPollerEnabled') as $name) {
@@ -187,7 +187,7 @@ $GLOBALS['nativePresentationObserver'] = static function (array $rendered) use (
             throw new RuntimeException('Settings save unexpectedly allocated a remote collector');
         }
         foreach ($after['snmpagent_cache'] as $row) {
-            $expectedValue = $row['name'] === 'cactiApplVersion' ? '1.2.35' : '1';
+            $expectedValue = $row['name'] === 'cactiApplVersion' ? '1.2.36' : '1';
             if ($row['value'] !== $expectedValue) {
                 throw new RuntimeException('Actual local SNMP settings handoff missing');
             }

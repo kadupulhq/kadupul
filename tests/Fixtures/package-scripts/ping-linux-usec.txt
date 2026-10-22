@@ -1,0 +1,1 @@
+64 bytes from 192.0.2.1: icmp_seq=1 ttl=64 time=850 usec
