@@ -15,6 +15,8 @@ $file = match (true) {
 mkdir($directory . '/lib', 0700);
 $copy = $directory . '/lib/' . $file;
 copy($root . '/lib/' . $file, $copy);
+require $root . '/tests/Helpers/LegacyLibraryLinks.php';
+link_legacy_library($root, $directory . '/lib');
 symlink($root . '/src', $directory . '/src');
 symlink($root . '/include', $directory . '/include');
 if (isset($argv[3])) {
