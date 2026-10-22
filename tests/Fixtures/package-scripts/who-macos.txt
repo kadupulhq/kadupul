@@ -1,0 +1,4 @@
+operator        console      Oct  3 22:17
+operator        ttys000      Oct 22 10:33
+operator        ttys003      Oct 21 15:43
+operator        ttys005      Oct 21 21:31

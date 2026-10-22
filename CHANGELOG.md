@@ -8,6 +8,10 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Report U for every requested Apache server-status field when the page cannot be fetched or has no scoreboard, instead of zero thread counts, and give up after 5 seconds instead of PHP's 60-second default.
 
+- Replace the bundled Perl data input scripts (ping, load average, logged-in users, processes, memory, partitions) and the Python 2 SB6141 modem script with PHP ports that print the same output without a shell; the process count no longer includes the pipeline's own shell and grep.
+
+- Report U for every requested Apache server-status field when the page cannot be fetched or has no scoreboard, instead of zero thread counts, and give up after 5 seconds instead of PHP's 60-second default.
+
 - Trust the Kadupul package signing key alongside the Cacti keys for package import, preview and installation, and add `kadupul:package:sign` to re-sign packages with a key read from `KADUPUL_PACKAGE_SIGNING_KEY`.
 
 - Refuse shell metacharacters in the webhits.pl and diskfree.pl arguments, which both paste a Data Source input value into a shell command.
