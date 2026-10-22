@@ -12,11 +12,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Point the stock data input methods and the Unix partition query at the PHP scripts on fresh installs, and on upgrade wherever the input string is still the shipped default; customized methods and the Perl scripts are left in place.
 
-- Report U for every requested Apache server-status field when the page cannot be fetched or has no scoreboard, instead of zero thread counts, and give up after 5 seconds instead of PHP's 60-second default.
-
-- Replace the bundled Perl data input scripts (ping, load average, logged-in users, processes, memory, partitions) and the Python 2 SB6141 modem script with PHP ports that print the same output without a shell; the process count no longer includes the pipeline's own shell and grep.
-
-- Report U for every requested Apache server-status field when the page cannot be fetched or has no scoreboard, instead of zero thread counts, and give up after 5 seconds instead of PHP's 60-second default.
+- Ship the PHP scripts in the Apache, BayTech, Generic SNMP, Local Linux, MikroTik, MikroTik SwOS and SB6141 packages, re-signed with the Kadupul package key.
 
 - Trust the Kadupul package signing key alongside the Cacti keys for package import, preview and installation, and add `kadupul:package:sign` to re-sign packages with a key read from `KADUPUL_PACKAGE_SIGNING_KEY`.
 
