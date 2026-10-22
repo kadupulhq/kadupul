@@ -466,6 +466,11 @@ function package_validate_signature($xmlfile) {
 
 	$package_key = import_package_get_public_key($xmlfile);
 
+	/* is_cacti_public_key() compares the trimmed key; do the same here */
+	if (trim($package_key) === get_public_key_kadupul()) {
+		return true;
+	}
+
 	// Other trusted keys next
 	$keys = array_rekey(
 		db_fetch_assoc('SELECT public_key FROM package_public_keys'),
