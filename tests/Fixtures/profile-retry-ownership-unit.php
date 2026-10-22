@@ -14,6 +14,8 @@ copy($root . '/' . $relative, $copy);
 if (!$device) {
     copy($root . '/lib/data_source_profile_integrity.php', $directory . '/data_source_profile_integrity.php');
 }
+require $root . '/tests/Helpers/LegacyLibraryLinks.php';
+link_legacy_library($root, $directory);
 if (isset($argv[3])) {
     define('RRD_TEST_COVERAGE_DIRECTORY', $directory);
     define('RRD_TEST_CLI_COVERAGE_COPY', $copy);

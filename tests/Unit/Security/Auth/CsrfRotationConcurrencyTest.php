@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 require_once dirname(__DIR__, 3) . '/Helpers/ChildProcessCoverage.php';
 require_once dirname(__DIR__, 3) . '/Fixtures/csrf-rotation-sqlite.php';
+require_once dirname(__DIR__, 3) . '/Helpers/LegacyLibraryLinks.php';
 require_once dirname(__DIR__, 4) . '/lib/csrf_rotation.php';
 
 function csrf_rotation_wait(string $file, float $seconds = 5): void
@@ -33,6 +34,7 @@ function csrf_rotation_fixture(): array
     file_put_contents($fixture . '/lib/utility.php', '<?php');
     file_put_contents($fixture . '/lib/csrf_rotation.php', '<?php require ' . var_export($root . '/lib/csrf_rotation.php', true) . ';');
     file_put_contents($fixture . '/include/cli_check.php', '<?php require ' . var_export($root . '/tests/Fixtures/csrf-rotation-process.php', true) . ';');
+    link_legacy_library($root, $fixture . '/lib');
     $connections = array();
     $profile = getenv('CSRF_ROTATION_MYSQL');
     $profile = $profile !== false && $profile !== '' ? json_decode($profile, true, 512, JSON_THROW_ON_ERROR) : null;

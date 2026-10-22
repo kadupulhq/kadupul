@@ -20,6 +20,8 @@ foreach (IncludeNotificationNativeEvidence::COPIES as $source => $file) {
         throw new RuntimeException('Cannot create owned notification source copy');
     }
 }
+require $root . '/tests/Helpers/LegacyLibraryLinks.php';
+link_legacy_library($root, $directory . '/lib');
 IncludeNotificationNativeEvidence::verifyCopies($root, $directory);
 $snapshot = NativeChildCoverageEvidence::snapshot($root, IncludeNotificationNativeEvidence::PRODUCER, IncludeNotificationNativeEvidence::SCENARIO, IncludeNotificationNativeEvidence::SOURCES);
 if (isset($argv[2])) {
