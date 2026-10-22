@@ -455,6 +455,11 @@ function get_public_key_sha1(): string
     return '';
 }
 
+function get_public_key_kadupul(): string
+{
+    return '';
+}
+
 function __($message, ...$args): string
 {
     return $args ? vsprintf($message, $args) : $message;

@@ -342,6 +342,7 @@ function is_cacti_public_key($public_key)
     $public_key = trim($public_key);
     $keys[] = get_public_key_sha1();
     $keys[] = get_public_key_sha256();
+    $keys[] = get_public_key_kadupul();
 
     foreach ($keys as $key) {
         if ($public_key === $key) {
@@ -362,6 +363,14 @@ function get_public_key_sha256()
     $public_key = "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApH0rQ6cEYMCeHh5b7zCw\n5Mxzrj5N6PNW4NJE6YvjpzR40SE/B+vGnwpQZB+bmAVPJcn7TgUf5+ZnPoLL7BNn\nfFhDOREzQYhcTGTxTFQ/AD/DdgzyALdWsV14mwkaxKchnY3XZY1Jg/tm+AFOBrEX\n3Oa4pkOf7+V2HXVhbMhWrsoW5/tI8AQBQtzadqxXDGMpwlwKb6QNlUPk1slQFn3e\nk9rpWgq/84OxsJs2MVFyo/Nh6ehu8cE7OYHOJ/1qQ+8w99ro+zllwLqStY3/Z3Bl\nQmGcllo3/LfnWc10aqdtpFOxWcJwzkQ1vvjzAuWYPmW/fNbft3+pRuS7sa2jj/oN\nvQIDAQAB\n-----END PUBLIC KEY-----";
 
     return $public_key;
+}
+
+/* Kadupul package signing key, RSA-4096, DER SHA-256
+ * 7a9479b973d128752276d80b903ac2715a96fcab8b2ef2c58ac43bb09f59fc60. The PEM is
+ * over 200 bytes, so every verify call uses SHA-256 for it. */
+function get_public_key_kadupul(): string
+{
+    return "-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAt7of6rbEqcoqLxHtXyPf\n0C3Ghpwe62Ac2ADdsgtUSYWWlV+81JnCQfIcJ+bTjam3A6chnJRTBZfXFVRiLv9P\nKwF9bA5O3//lJkrStFrBzI2hVr5NA+pAgmGuSuFeDKSqSXZjF1tgS3t43stCq2wm\nMWGoYkw+Dx8SIc/Kw2/TZZ+FHFAu22dr0gdo1tv7b/PDVmXH3D+NOCYCMudcuGhM\n0vbbA7CxWSmg6mA2n0E2YVa3G2f9QkfRYMAb6sNEKW3FhXAyKBqmbi6vuMc0C+B3\nWJaqF8JJN3PaHyXQH61VBw1aM/Eva3qT+jyJC9Uo4ijxbcBPfKcE857OkYqSa4ZC\nJYBp6L8ZRo25wvORRwmGBHqm4szmiad+3yVU/emJe46W3oT3Iz1U5dhii4rmthIG\nD2uWcdEGq+8a+gk8WsJ/VuICpspGXd1pttdHdOzbyniOPdoqJBukpcFp1Fbp+6bO\nljaXoWLlpTxiAylp1DxWl49cnTwgPHNR+6qjBVJjhBDYlpU5yGpcydHThfleuVF+\nX37HFKdl+u2B3P+Fjx4pT+erRlzdX0NznrXA9NPMQRYFGRo/aIFkAfdDbqmOGFmE\n8pE4HQvkV8LYinX6RMqhTYMytkQGao3rzvEMUKzUNq2sBticWv2C2E9D/2mgPhyR\n12b7mgYXW8YkEWX+U5NXSj0CAwEAAQ==\n-----END PUBLIC KEY-----";
 }
 
 function get_public_key()
