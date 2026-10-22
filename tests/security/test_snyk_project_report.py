@@ -71,7 +71,7 @@ class SnykProjectReportTest(unittest.TestCase):
 
     def test_snyk_venv_installs_hash_pinned_catalog_requirements(self):
         workflow = Path(__file__).resolve().parents[2] / ".github/workflows/snyk.yml"
-        command = '"$RUNNER_TEMP/snyk-python/bin/python" -m pip install --require-hashes -r .github/scripts/catalog/requirements.txt'
+        command = '"$RUNNER_TEMP/snyk-python/bin/python" -m pip install --only-binary=:all: --require-hashes -r .github/scripts/catalog/requirements.txt'
         self.assertIn(command, workflow.read_text())
 
     def test_complete_report_preserves_counts_and_policy_ignore_history(self):

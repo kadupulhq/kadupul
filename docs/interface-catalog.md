@@ -9,7 +9,7 @@ The renderer reconstructs `resource/snmp_queries/interface.xml` from the ordered
 Install the pinned build dependencies and run validation using the commands below. The Python dependencies are needed only for development and CI; Cacti-compatible PHP polling, Spine, database schemas, importers and installers continue to use their existing files and protocols.
 
 ```sh
-mise exec -- python -m pip install --require-hashes -r .github/scripts/catalog/requirements.txt
+mise exec -- python -m pip install --only-binary=:all: --require-hashes -r .github/scripts/catalog/requirements.txt
 mise exec -- python .github/scripts/catalog/interface_catalog.py
 mise exec -- python .github/scripts/catalog/interface_catalog.py --render > /tmp/interface-catalog-rendered.xml
 cmp resource/snmp_queries/interface.xml /tmp/interface-catalog-rendered.xml

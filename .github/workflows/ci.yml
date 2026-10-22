@@ -51,7 +51,7 @@ jobs:
       - name: Verify catalog rejection and historical compatibility boundaries
         run: mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- python tests/security/test_gettext_catalogs.py
       - name: Install interface catalog build dependencies
-        run: mise exec python@3.12.12 -- python -m pip install --require-hashes -r .github/scripts/catalog/requirements.txt
+        run: mise exec python@3.12.12 -- python -m pip install --only-binary=:all: --require-hashes -r .github/scripts/catalog/requirements.txt
       - name: Verify unchanged interface catalog artifacts and rejection cases
         run: |
           mise exec python@3.12.12 -- python .github/scripts/catalog/interface_catalog.py
