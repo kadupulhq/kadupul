@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Refuse shell metacharacters in the webhits.pl and diskfree.pl arguments, which both paste a Data Source input value into a shell command.
+
 - Make the reporting poller exit unsuccessfully on failed sends, report/owner reads or statistics writes, count accepted sends separately from attempts, and retain failed reports for retry while continuing the batch (#202).
 
 - Preserve the previous reindex cache on failed mark, insert, or stale-row deletion, and stop before collector propagation when the local replacement fails (#758).
