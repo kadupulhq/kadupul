@@ -123,6 +123,28 @@ class InterfaceCatalogTest(unittest.TestCase):
         self.assertEqual(self.catalog['identities'], original)
         self.rejected(self.catalog)  # A changed generated artifact cannot pass the unchanged-output gate.
 
+    def test_xml_text_escape_preserves_quotes_and_roundtrips(self):
+        value = 'Quoted "interface" & \'alias\' <example>'
+        next(p for p in self.catalog['query']['header'] if p['key'] == 'name')['value'] = value
+        rendered = MODULE.render_query(self.catalog)
+        self.assertIn(b'Quoted "interface" &amp; \'alias\' &lt;example&gt;', rendered)
+        self.assertEqual(MODULE.parse_xml(rendered).findtext('name'), value)
+
+    def test_safe_parser_rejects_utf16_dtd_before_entity_resolution(self):
+        raw = ('<?xml version="1.0" encoding="utf-16"?>'
+               '<!DOCTYPE xml [<!ENTITY example "fixture value">]>'
+               '<xml>&example;</xml>').encode('utf-16')
+        with self.assertRaisesRegex(ValueError, 'DTDForbidden') as denied:
+            MODULE.parse_xml(raw)
+        error = io.StringIO()
+        with mock.patch.object(MODULE, 'validate', side_effect=denied.exception), mock.patch.object(sys, 'argv', ['interface_catalog']), contextlib.redirect_stderr(error):
+            with self.assertRaises(SystemExit) as exit_status:
+                MODULE.main()
+        self.assertEqual(exit_status.exception.code, 1)
+        self.assertIn('Catalog validation failed:', error.getvalue())
+        self.assertIn('DTDForbidden', error.getvalue())
+        self.assertNotIn('Traceback', error.getvalue())
+
     def test_existing_rrd_semantics_and_bindings_cannot_drift(self):
         for key, value in [('rrd_type', 'DERIVE'), ('minimum', '-1'), ('maximum', '1000'), ('heartbeat', 42), ('rrd_item', self.catalog['metrics'][1]['rrd_item'])]:
             catalog = copy.deepcopy(self.catalog)

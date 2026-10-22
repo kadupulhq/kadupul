@@ -9,13 +9,14 @@ import argparse
 import base64
 import gzip
 import hashlib
+from html import escape
 import io
 import json
 from pathlib import Path
 import re
 import sys
-import xml.etree.ElementTree as ET
-from xml.sax.saxutils import escape
+
+from defusedxml import ElementTree as ET
 
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import SchemaError, ValidationError
@@ -65,11 +66,11 @@ def validate_oid(value: str) -> None:
 def render_query(catalog: dict) -> bytes:
     query = catalog['query']
     lines = [f"<{query['root']}>"]
-    lines.extend(f"\t<{p['key']}>{escape(p['value'])}</{p['key']}>" for p in query['header'])
+    lines.extend(f"\t<{p['key']}>{escape(p['value'], quote=False)}</{p['key']}>" for p in query['header'])
     lines.extend(['', '\t<fields>'])
     for field in query['fields']:
         lines.append(f"\t\t<{field['name']}>")
-        lines.extend(f"\t\t\t<{p['key']}>{escape(p['value'])}</{p['key']}>" for p in field['properties'])
+        lines.extend(f"\t\t\t<{p['key']}>{escape(p['value'], quote=False)}</{p['key']}>" for p in field['properties'])
         lines.append(f"\t\t</{field['name']}>")
     lines.extend(['\t</fields>', f"</{query['root']}>", ''])
     return '\n'.join(lines).encode('utf-8')
@@ -85,10 +86,10 @@ def artifact(root: Path, path: str, digest: str) -> bytes:
     return raw
 
 
-def parse_xml(raw: bytes) -> ET.Element:
+def parse_xml(raw: bytes):
     if re.search(rb'<!\s*(?:DOCTYPE|ENTITY)\b', raw, re.I):
         raise ValueError('Catalog artifacts must not contain DTD/entity declarations')
-    return ET.fromstring(raw)
+    return ET.fromstring(raw, forbid_dtd=True, forbid_entities=True, forbid_external=True)
 
 
 def package_files(raw: bytes) -> dict[str, bytes]:
