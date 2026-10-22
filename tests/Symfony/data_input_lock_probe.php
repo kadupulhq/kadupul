@@ -26,9 +26,14 @@ $root = dirname(__DIR__, 2);
 define('CACTI_VERSION', trim(file_get_contents($root . '/include/cacti_version')));
 $source = file_get_contents($root . '/cacti.sql');
 $created = [];
-function db_install_execute($sql)
+// Binds parameters as the real db_install_execute() does; upgrade steps pass values as well as DDL.
+function db_install_execute($sql, $params = [], $log = true)
 {
-    return $GLOBALS['installer_connection']->exec($sql);
+    if ($params === []) {
+        return $GLOBALS['installer_connection']->exec($sql);
+    }
+
+    return $GLOBALS['installer_connection']->prepare($sql)->execute($params);
 }
 function db_index_exists($table, $name)
 {
@@ -134,7 +139,7 @@ foreach (['db_install_add_cache' => 'install/functions.php', 'clean_up_lines' =>
     eval(test_php_function_source($functionSource, $function));
 }
 require $root . '/lib/installer.php';
-$tables = ['data_input_data', 'aggregate_graphs', 'data_template_rrd', 'data_input_fields', 'settings_user', 'version', 'poller_output', 'data_source_profiles', 'data_template_data', 'data_source_profiles_rra', 'data_source_profiles_cf'];
+$tables = ['data_input_data', 'aggregate_graphs', 'data_template_rrd', 'data_input_fields', 'settings_user', 'version', 'poller_output', 'data_source_profiles', 'data_template_data', 'data_source_profiles_rra', 'data_source_profiles_cf', 'data_input', 'settings'];
 foreach ($tables as $table) {
     $check = $owner->prepare('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=?');
     $check->execute([$table]);

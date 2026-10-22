@@ -27,7 +27,7 @@ final class CdefCliCoverageRegistration
             'cli/upgrade_database.php', 'include/cli_check.php', 'include/global.php',
             'lib/data_query.php', 'lib/poller.php', 'lib/utility.php', 'install/functions.php',
             'lib/rrd_maintenance.php', 'lib/data_source_profile_integrity.php',
-            'install/upgrades/1_2_34.php', 'install/upgrades/1_2_35.php', 'lib/schema_repair_integrity.php',
+            'install/upgrades/1_2_34.php', 'install/upgrades/1_2_35.php', 'install/upgrades/1_2_36.php', 'lib/schema_repair_integrity.php',
             'src/Platform/Infrastructure/Legacy/LegacyComponentAutoloader.php',
             'phpunit-symfony.xml', '.github/workflows/ci.yml',
             'tests/Helpers/CdefCliCoverageRegistration.php', 'tests/Fixtures/cdef-cli-native-coverage.php',

@@ -46,6 +46,17 @@
             <file>lib/schema_repair_integrity.php</file>
             <file>install/upgrades/1_2_31.php</file>
             <file>install/upgrades/1_2_35.php</file>
+            <file>install/upgrades/1_2_36.php</file>
+            <file>scripts/script_command.php</file>
+            <file>scripts/ping.php</file>
+            <file>scripts/unix_processes.php</file>
+            <file>scripts/unix_users.php</file>
+            <file>scripts/loadavg_multi.php</file>
+            <file>scripts/linux_memory.php</file>
+            <file>scripts/query_unix_partitions.php</file>
+            <file>scripts/motorola_surfboard_SB6141.php</file>
+            <file>scripts/ss_apache_stats.php</file>
+            <file>tools/edit-package.php</file>
         </include>
     </source>
 </phpunit>
