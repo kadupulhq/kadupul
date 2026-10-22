@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-17 22:24-0700\n"
+"POT-Creation-Date: 2026-10-22 11:07-0700\n"
 "PO-Revision-Date: 2025-12-23 22:54+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -647,7 +647,7 @@ msgstr "Cualquiera"
 #: lib/html_reports.php:1163 lib/html_reports.php:1167
 #: lib/html_reports.php:1175 lib/html_reports.php:1186
 #: lib/html_reports.php:1206 lib/html_reports.php:1462
-#: lib/html_reports.php:1467 lib/html_reports.php:1472 package_import.php:687
+#: lib/html_reports.php:1467 lib/html_reports.php:1472 package_import.php:692
 #: settings.php:591 settings.php:613 settings.php:644
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:62
 #: templates_import.php:299 templates_import.php:331 utilities.php:2099
@@ -1164,7 +1164,7 @@ msgstr "SNMP"
 #: lib/api_automation.php:53 lib/api_automation.php:280
 #: lib/api_automation.php:573 lib/api_automation.php:1199
 #: lib/html_reports.php:2031 lib/installer.php:2054 managers.php:216
-#: package_import.php:543 package_import.php:628 plugins.php:497
+#: package_import.php:548 package_import.php:633 plugins.php:497
 #: plugins.php:623 pollers.php:1007 templates_import.php:207
 #: templates_import.php:246 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:2141
@@ -2199,7 +2199,7 @@ msgid "Item"
 msgstr "Item"
 
 #: automation_snmp.php:541 include/auth.php:341 include/global_settings.php:772
-#: package_import.php:505 permission_denied.php:43 plugins.php:641
+#: package_import.php:510 permission_denied.php:43 plugins.php:641
 msgid "Version"
 msgstr "Versión"
 
@@ -2384,7 +2384,7 @@ msgstr "Plantillas de automatización [nueva]"
 msgid "Device Automation Templates"
 msgstr "Plantilla de automatización de Dispositivos"
 
-#: automation_templates.php:498 data_sources.php:2028 package_import.php:625
+#: automation_templates.php:498 data_sources.php:2028 package_import.php:630
 #: templates_import.php:243 user_admin.php:1212 user_group_admin.php:1231
 msgid "Template Name"
 msgstr "Nombre de Plantilla"
@@ -2877,7 +2877,7 @@ msgid "The Status of the Data Source Debug Check."
 msgstr "El estado de la comprobación de depuración del origen de datos."
 
 #: data_debug.php:529 lib/installer.php:2508 lib/installer.php:2540
-#: package_import.php:597
+#: package_import.php:602
 msgid "Writable"
 msgstr "Escribible"
 
@@ -3992,8 +3992,8 @@ msgstr "Datos personalizados"
 msgid "Data Source Item %s"
 msgstr "Item de Data Source %s"
 
-#: data_sources.php:1267 data_templates.php:817 lib/import.php:2849
-#: package_import.php:599
+#: data_sources.php:1267 data_templates.php:817 lib/import.php:2858
+#: package_import.php:604
 msgid "New"
 msgstr "Nuevo"
 
@@ -6462,7 +6462,7 @@ msgid "Data Input Field"
 msgstr "Campo de entrada de datos"
 
 #: include/global_arrays.php:1363 include/global_form.php:579
-#: include/global_form.php:1679 package_import.php:863
+#: include/global_form.php:1679 package_import.php:868
 msgid "Data Source Profile"
 msgstr "Perfil de Data Source"
 
@@ -7842,7 +7842,7 @@ msgid "The script/source used to gather data for this data source."
 msgstr "El script/fuente usado para obtener datos para este Data Source."
 
 #: include/global_form.php:581 include/global_form.php:1681
-#: package_import.php:865
+#: package_import.php:870
 msgid "Select the Data Source Profile.  The Data Source Profile controls polling interval, the data aggregation, and retention policy for the resulting Data Sources."
 msgstr "Seleccione el perfil de Data Source. El perfil de Data Source controla el intervalo de Sondeo, la agregación de datos, y política de retención para los Data Sources resultantes."
 
@@ -8589,27 +8589,27 @@ msgstr "Importar plantilla desde equipo local"
 msgid "If the XML file containing template data is located on your local machine, select it here."
 msgstr "Si el archivo XML que contiene datos de plantilla está ubicado en su equipo local, seleccione aquí."
 
-#: include/global_form.php:1674 package_import.php:858
+#: include/global_form.php:1674 package_import.php:863
 msgid "Data Source Overrides"
 msgstr "Perfiles de Data Source"
 
-#: include/global_form.php:1683 package_import.php:867
+#: include/global_form.php:1683 package_import.php:872
 msgid "Create New from Template"
 msgstr "Crear Aggregate desde plantilla"
 
-#: include/global_form.php:1688 package_import.php:872
+#: include/global_form.php:1688 package_import.php:877
 msgid "Graph/Data Template Overrides"
 msgstr "Opciones de la plantilla de gráfico"
 
-#: include/global_form.php:1693 package_import.php:877
+#: include/global_form.php:1693 package_import.php:882
 msgid "Remove Orphaned Graph Items"
 msgstr "Eliminar items de huérfanos del gráfico"
 
-#: include/global_form.php:1695 package_import.php:879
+#: include/global_form.php:1695 package_import.php:884
 msgid "If checked, Kadupul will delete any Graph Items from both the Graph Template and associated Graphs that are not included in the imported Graph Template."
 msgstr "Si está marcada, Kadupul eliminará cualquier item de gráfico de la plantilla de gráfico y gráficos asociados que no están incluidos en la plantilla de gráficos importada."
 
-#: include/global_form.php:1700 package_import.php:884
+#: include/global_form.php:1700 package_import.php:889
 msgid "Replace Data Query Suggested Value Patterns"
 msgstr "Reemplazar patrones de valor sugerido de consulta de datos"
 
@@ -8618,29 +8618,29 @@ msgid "Replace Data Source and Graph Template Suggested Value Records for Data Q
 msgstr "Reemplace los registros de valor sugerido de fuentes de datos y plantillas de gráficos para las consultas de datos.  Los gráficos y las fuentes de datos adoptarán nuevos nombres después de un reindexado de consulta de datos o mediante el proceso de reemplazo forzado de valores sugeridos."
 
 #: include/global_form.php:1707 include/global_settings.php:673
-#: package_import.php:891
+#: package_import.php:896
 msgid "Graph Template Image Format"
 msgstr "Formato de imagen de la Plantilla de gráfico"
 
-#: include/global_form.php:1708 package_import.php:892
+#: include/global_form.php:1708 package_import.php:897
 msgid "The Image Format to be used when importing or updating Graph Templates."
 msgstr "El formato de imagen predeterminado a usar para todas las Plantillas de gráfico nuevas."
 
 #: include/global_form.php:1714 include/global_settings.php:680
-#: package_import.php:899
+#: package_import.php:904
 msgid "Graph Template Height"
 msgstr "Altura de Plantilla de gráfico"
 
-#: include/global_form.php:1715 package_import.php:900
+#: include/global_form.php:1715 package_import.php:905
 msgid "The Height to be used when importing or updating Graph Templates."
 msgstr "El ancho de gráfico predeterminado a usar para todas las Plantillas de gráficos nuevas."
 
 #: include/global_form.php:1722 include/global_settings.php:688
-#: package_import.php:908
+#: package_import.php:913
 msgid "Graph Template Width"
 msgstr "Ancho de Plantilla de gráfico"
 
-#: include/global_form.php:1723 package_import.php:909
+#: include/global_form.php:1723 package_import.php:914
 msgid "The Width to be used when importing or updating Graph Templates."
 msgstr "El ancho de gráfico predeterminado a usar para todas las Plantillas de gráficos nuevas."
 
@@ -10824,7 +10824,7 @@ msgstr "Configuración CN de LDAP"
 msgid "Field that will replace the Full Name when creating a new user, taken from LDAP. (on windows: displayname) "
 msgstr "Campo que reemplazará el nombre completo al crear un nuevo usuario, tomado de LDAP. (en Windows: DisplayName) "
 
-#: include/global_settings.php:1893 package_import.php:499
+#: include/global_settings.php:1893 package_import.php:504
 msgid "Email"
 msgstr "Correo"
 
@@ -11875,9 +11875,9 @@ msgid "Recovering"
 msgstr "Recuperando"
 
 #: lib/api_automation.php:33 lib/auth.php:3085 lib/clog_webapi.php:856
-#: lib/html_utility.php:1362 lib/import.php:392 lib/plugins.php:1499
+#: lib/html_utility.php:1362 lib/import.php:401 lib/plugins.php:1499
 #: lib/plugins.php:1500 lib/rrd.php:4261 lib/rrd.php:4273 lib/spikekill.php:301
-#: package_import.php:523 package_import.php:601 utilities.php:211
+#: package_import.php:528 package_import.php:606 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 msgid "Unknown"
 msgstr "Desconocido"
@@ -14029,7 +14029,7 @@ msgstr "Eventos"
 msgid "Send Report"
 msgstr "Enviar Reporte"
 
-#: lib/html_reports.php:1644 lib/import.php:2934 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:2943 user_admin.php:1776
 msgid "[new]"
 msgstr "[nuevo]"
 
@@ -14272,109 +14272,109 @@ msgstr "Error de validación"
 msgid "Legacy system input fields and mappings will be checked for repairs only when the template is imported."
 msgstr ""
 
-#: lib/import.php:705 lib/import.php:724
+#: lib/import.php:714 lib/import.php:733
 msgid "written"
 msgstr "escrito"
 
-#: lib/import.php:707
+#: lib/import.php:716
 msgid "not written"
 msgstr ""
 
-#: lib/import.php:710
+#: lib/import.php:719
 msgid "could not open"
 msgstr "no se ha podido abrir"
 
-#: lib/import.php:716
+#: lib/import.php:725
 msgid "not exists"
 msgstr "no existen"
 
-#: lib/import.php:719
+#: lib/import.php:728
 msgid "not writable"
 msgstr "no escribible"
 
-#: lib/import.php:1947 lib/import.php:1968
+#: lib/import.php:1956 lib/import.php:1977
 #, php-format
 msgid "New Graph Template: %s"
 msgstr "Gráfico [Plantilla: %s]"
 
-#: lib/import.php:1982 lib/import.php:1994
+#: lib/import.php:1991 lib/import.php:2003
 #, php-format
 msgid "New Data Query: %s"
 msgstr "Consulta de datos [%s]"
 
-#: lib/import.php:2631
+#: lib/import.php:2640
 msgid "Unknown Field"
 msgstr "Campo desconocido"
 
-#: lib/import.php:2847
+#: lib/import.php:2856
 msgid "Updated"
 msgstr "Actualizar"
 
-#: lib/import.php:2851
+#: lib/import.php:2860
 msgid "Damaged"
 msgstr "%d Grafico"
 
-#: lib/import.php:2853 package_import.php:593
+#: lib/import.php:2862 package_import.php:598
 msgid "Unchanged"
 msgstr "[no cargado]"
 
-#: lib/import.php:2889
+#: lib/import.php:2898
 msgid "Import Preview Results"
 msgstr "Importar resultados de vista previa"
 
-#: lib/import.php:2889
+#: lib/import.php:2898
 msgid "Import Results"
 msgstr "Importar resultados"
 
-#: lib/import.php:2893
+#: lib/import.php:2902
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Kadupul haría los siguientes cambios si el paquete fue importado:"
 
-#: lib/import.php:2895
+#: lib/import.php:2904
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "Kadupul ha importado los siguientes items del paquete:"
 
-#: lib/import.php:2898
+#: lib/import.php:2907
 msgid "Package Files"
 msgstr "Archivos del paquete"
 
-#: lib/import.php:2902
+#: lib/import.php:2911
 msgid "[preview] "
 msgstr "[vista previa] "
 
-#: lib/import.php:2907
+#: lib/import.php:2916
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "Kadupul haría los siguientes cambios si la Plantilla fue importada:"
 
-#: lib/import.php:2909
+#: lib/import.php:2918
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "Kadupul ha importado los siguientes items para la Plantilla:"
 
-#: lib/import.php:2924
+#: lib/import.php:2933
 msgid "[success]"
 msgstr "[exitoso]"
 
-#: lib/import.php:2926
+#: lib/import.php:2935
 msgid "[fail]"
 msgstr "[fallo]"
 
-#: lib/import.php:2928
+#: lib/import.php:2937
 msgid "[preview]"
 msgstr "[previo]"
 
-#: lib/import.php:2932
+#: lib/import.php:2941
 msgid "[updated]"
 msgstr "[actualizado]"
 
-#: lib/import.php:2936
+#: lib/import.php:2945
 msgid "[unchanged]"
 msgstr "[no cargado]"
 
-#: lib/import.php:2972
+#: lib/import.php:2981
 msgid "Found Dependency:"
 msgstr "Dependencia encontrada:"
 
-#: lib/import.php:2974
+#: lib/import.php:2983
 msgid "Unmet Dependency:"
 msgstr "Dependencia no cumplida:"
 
@@ -14868,7 +14868,7 @@ msgstr "Para Sondas remotas, es crítico que las ubicaciones que estarás actual
 msgid "Required Writable at Install Time Only"
 msgstr "Solo requiere acceso de escritura al momento de la instalación"
 
-#: lib/installer.php:2512 lib/installer.php:2544 package_import.php:595
+#: lib/installer.php:2512 lib/installer.php:2544 package_import.php:600
 msgid "Not Writable"
 msgstr "No permite escritura"
 
@@ -15030,11 +15030,11 @@ msgstr "No es recomendable actualizar las plantillas en las que ya ha realizado 
 msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "Seleccione la Plantilla de dispositivos que desea usar después de la instalación. Si su sistema operativo es Windows, asegúrese de seleccionar la Plantilla 'Windows Device'. Si su sistema operativo es Linux/Unix, asegúrese de seleccionar la Plantilla de dispositivos 'Local Linux Machine'."
 
-#: lib/installer.php:2749 package_import.php:493 plugins.php:629
+#: lib/installer.php:2749 package_import.php:498 plugins.php:629
 msgid "Author"
 msgstr "Autor"
 
-#: lib/installer.php:2749 package_import.php:496
+#: lib/installer.php:2749 package_import.php:501
 msgid "Homepage"
 msgstr "Página de inicio"
 
@@ -16837,75 +16837,75 @@ msgstr "Compruebe el archivo del repositorio de paquetes en busca de archivos qu
 msgid "The XML files for the package does not exist"
 msgstr "Los archivos XML para el paquete no existen"
 
-#: package_import.php:489
+#: package_import.php:494
 msgid "Packages Details"
 msgstr "Archivos del paquete"
 
-#: package_import.php:502
+#: package_import.php:507
 msgid "Device class"
 msgstr "Reglas de dispositivos"
 
-#: package_import.php:508
+#: package_import.php:513
 msgid "Copyright"
 msgstr "derecha"
 
-#: package_import.php:533
+#: package_import.php:538
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
 msgstr "Importar nombres de archivo de paquete [ Ninguno seleccionado importa todos, marque para importar selectivamente ]"
 
-#: package_import.php:537
+#: package_import.php:542
 msgid "Package"
 msgstr "Archivos del paquete"
 
-#: package_import.php:540
+#: package_import.php:545
 msgid "Filename"
 msgstr "Renombrar"
 
-#: package_import.php:591 package_import.php:678 templates_import.php:322
+#: package_import.php:596 package_import.php:683 templates_import.php:322
 msgid "Differences"
 msgstr "Ver las diferencias"
 
-#: package_import.php:618
+#: package_import.php:623
 msgid "Import Package Templates [ None selected imports all, Check to import selectively ]"
 msgstr "Importar plantillas de paquete [ Ninguna seleccionada importa todas, marque para importar selectivamente ]"
 
-#: package_import.php:622 templates_import.php:240
+#: package_import.php:627 templates_import.php:240
 msgid "Template Type"
 msgstr "Nombre de Plantilla"
 
-#: package_import.php:631 templates_import.php:252
+#: package_import.php:636 templates_import.php:252
 msgid "Changes/Diffferences"
 msgstr "Cambiar dispositivo"
 
-#: package_import.php:682 templates_import.php:326
+#: package_import.php:687 templates_import.php:326
 msgid "Orphans"
 msgstr "Huérfanos"
 
-#: package_import.php:735
+#: package_import.php:740
 msgid "File Differences for: "
 msgstr "Diferencias de archivo para:"
 
-#: package_import.php:842
+#: package_import.php:847
 msgid "Local Package Import File"
 msgstr "Archivos del paquete"
 
-#: package_import.php:843
+#: package_import.php:848
 msgid "The *.xml.gz file located on your Local machine to Upload and Import."
 msgstr "El archivo * .xml.gz ubicado en su equipo local para cargar e importar."
 
-#: package_import.php:848
+#: package_import.php:853
 msgid "Automatically Trust Signer"
 msgstr "Agregar a Kadupul automáticamente"
 
-#: package_import.php:850
+#: package_import.php:855
 msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
 msgstr "Si se marca, Kadupul confiará automáticamente en el firmante para este y cualquier paquete futuro de ese autor."
 
-#: package_import.php:886
+#: package_import.php:891
 msgid "Replace Data Source and Graph Template Suggested Value Records.  Graphs and Data Sources will take on new names after either a Data Query Reindex or by using the forced Replace Suggested Values process."
 msgstr "Reemplace los registros de valores sugeridos de fuentes de datos y plantillas de gráficos.  Los gráficos y las fuentes de datos adoptarán nuevos nombres después de un reindexado de consulta de datos o mediante el proceso de reemplazo forzado de valores sugeridos."
 
-#: package_import.php:957
+#: package_import.php:962
 msgid "Package Import"
 msgstr "Importar"
 
