@@ -24,7 +24,7 @@ $root = dirname(__DIR__, 2);
 
 foreach (array(
     '/lib/import.php' => array(
-        'import_xml_data', 'xml_to_data_template', 'xml_to_data_input_method', 'xml_detect_ignorable_hash_cache',
+        'import_xml_data', 'xml_to_data_template', 'xml_to_data_input_method', 'xml_to_data_query', 'xml_detect_ignorable_hash_cache',
         'compare_data', 'resolve_hash_to_id', 'parse_xml_hash', 'check_hash_type', 'check_hash_version',
         'xml_character_decode', 'import_is_base64_encoded', 'import_package', 'import_read_package_data',
         'import_package_get_public_key', 'import_package_get_details', 'is_cacti_public_key', 'xml_to_array',
@@ -71,6 +71,7 @@ const TABLES = array(
     'graph_templates', 'graph_templates_item', 'graph_template_input', 'data_template', 'data_template_data',
     'data_template_rrd', 'data_input_data', 'host_template', 'data_input', 'data_input_fields', 'snmp_query',
     'snmp_query_graph', 'snmp_query_graph_sv', 'snmp_query_graph_rrd_sv', 'graph_templates_gprint', 'cdef',
+    'snmp_query_graph_rrd',
     'cdef_items', 'vdef', 'vdef_items', 'data_source_profiles', 'data_source_profiles_rra',
     'poller_data_template_field_mappings', 'settings',
 );
@@ -565,3 +566,69 @@ test('a data template preview also defers system input field repairs', function 
         'Legacy system input fields and mappings will be checked for repairs only when the template is imported.'
     );
 });
+
+test('the shipped interface query reimports without duplicate identities and follows suggested-value replacement policy', function (bool $replace) {
+    $root = dirname(__DIR__, 2);
+    $package = simplexml_load_string(gzdecode(file_get_contents($root . '/install/templates/Generic_SNMP_Device.xml.gz')));
+    expect($package)->not->toBeFalse();
+    $template = null;
+    foreach ($package->files->file as $file) {
+        if ((string) $file->name === 'Generic_SNMP_Device.xml') {
+            $template = base64_decode((string) $file->data, true);
+        }
+    }
+    expect($template)->toBeString();
+    $objects = Parser\xml2array($template, true);
+    $queries = array_filter($objects, static fn($object) => ($object['xml_path'] ?? '') === '<path_cacti>/resource/snmp_queries/interface.xml');
+    expect($queries)->toHaveCount(1);
+    $fullHash = array_key_first($queries);
+    $hash = parse_xml_hash($fullHash)['hash'];
+    $definition = $queries[$fullHash];
+
+    // Native dependency resolution receives the package's existing identities.
+    $cache = array();
+    $next = 100;
+    $remember = static function ($value) use (&$remember, &$cache, &$next): void {
+        if (is_array($value)) {
+            foreach ($value as $key => $child) {
+                $remember($key);
+                $remember($child);
+            }
+        } elseif (is_string($value) && preg_match('/^hash_[a-f0-9]{38}$/D', $value)) {
+            $parsed = parse_xml_hash($value);
+            expect($parsed)->toBeArray();
+            $cache[$parsed['type']][$parsed['hash']] ??= ++$next;
+        }
+    };
+    $remember($objects);
+    unset($cache['data_query'][$hash]);
+    $GLOBALS['config']['base_path'] = $root;
+    $GLOBALS['fields_data_query_edit'] = array_fill_keys(array('name', 'description', 'xml_path', 'data_input_id'), array());
+    $GLOBALS['fields_data_query_item_edit'] = array_fill_keys(array('name', 'graph_template_id'), array());
+    $files = array();
+    expect(xml_to_data_query($hash, $definition, $cache, $files))->toBeArray();
+    expect($files[$root . '/resource/snmp_queries/interface.xml'])->toBe('found');
+    expect($GLOBALS['import_debug_info']['result'])->toBe('success');
+    $tables = array('snmp_query', 'snmp_query_graph', 'snmp_query_graph_rrd', 'snmp_query_graph_sv', 'snmp_query_graph_rrd_sv');
+    $snapshot = static function () use ($tables): array {
+        $rows = array();
+        foreach ($tables as $table) {
+            $rows[$table] = query('SELECT * FROM `' . $table . '` ORDER BY 1, 2')->fetchAll(PDO::FETCH_ASSOC);
+        }
+        return $rows;
+    };
+    $first = $snapshot();
+    expect($first['snmp_query'])->toHaveCount(1);
+    expect($first['snmp_query_graph'])->toHaveCount(count($definition['graphs']));
+    expect($first['snmp_query_graph_rrd'])->not->toBeEmpty();
+    expect(xml_to_data_query($hash, $definition, $cache, $files))->toBeArray();
+    expect($snapshot())->toBe($first);
+
+    $graph = (int) $first['snmp_query_graph'][0]['id'];
+    $custom = md5('operator additional interface title');
+    query('INSERT INTO snmp_query_graph_sv (hash, snmp_query_graph_id, sequence, field_name, text) VALUES (?, ?, 999, ?, ?)', array($custom, $graph, 'title', 'Operator interface label'));
+    expect(xml_to_data_query($hash, $definition, $cache, $files, $replace))->toBeArray();
+    expect((int) query('SELECT COUNT(*) FROM snmp_query_graph_sv WHERE hash = ?', array($custom))->fetchColumn())->toBe($replace ? 0 : 1);
+    expect(query('SELECT id FROM snmp_query WHERE hash = ?', array($hash))->fetchColumn())->toBe($first['snmp_query'][0]['id']);
+    expect(query('SELECT id FROM snmp_query_graph ORDER BY id')->fetchAll(PDO::FETCH_COLUMN))->toBe(array_column($first['snmp_query_graph'], 'id'));
+})->with(array(false, true));

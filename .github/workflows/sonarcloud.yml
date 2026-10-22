@@ -401,7 +401,9 @@ jobs:
           set -euo pipefail
           mise exec python@3.12.12 -- python -m venv "$RUNNER_TEMP/coverage-python"
           "$RUNNER_TEMP/coverage-python/bin/python" -m pip install -r tests/Symfony/requirements.txt
+          "$RUNNER_TEMP/coverage-python/bin/python" -m pip install --require-hashes -r .github/scripts/catalog/requirements.txt
           "$RUNNER_TEMP/coverage-python/bin/python" -m coverage run --data-file=var/offline.coverage --include='tools/build-offline.py' tools/build-offline.py
+          "$RUNNER_TEMP/coverage-python/bin/python" -m coverage run --append --data-file=var/offline.coverage --include='.github/scripts/catalog/interface_catalog.py' -m unittest discover -s tests/tools -p 'test_interface_catalog.py' -v
           "$RUNNER_TEMP/coverage-python/bin/python" -m coverage xml --data-file=var/offline.coverage -o var/offline-coverage.xml
           mise exec python@3.12.12 -- python tests/Symfony/offline_coverage.py --archive dist/kadupul-offline.tar.gz --output "$RUNNER_TEMP/offline-tools"
           mise exec python@3.12.12 -- python tests/Symfony/coverage_selftest.py --unit var/symfony-coverage.php --files "$RUNNER_TEMP/symfony-files" --database "$RUNNER_TEMP/symfony-database" --offline "$RUNNER_TEMP/offline-tools"

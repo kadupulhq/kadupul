@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Validate and reproduce the existing interface query from a build-time catalog, preserving shipped query bytes, signed packages and template identities, with regression coverage for existing import and COUNTER behavior.
+
 - Trust the Kadupul package signing key alongside the Cacti keys for package import, preview and installation, and add `kadupul:package:sign` to re-sign packages with a key read from `KADUPUL_PACKAGE_SIGNING_KEY`.
 
 - Refuse shell metacharacters in the webhits.pl and diskfree.pl arguments, which both paste a Data Source input value into a shell command.
