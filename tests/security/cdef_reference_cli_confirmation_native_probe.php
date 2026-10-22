@@ -38,10 +38,10 @@ $environment['KADUPUL_REFERENCE_RUNTIME_SCHEMA'] = $schema;
 $environment['KADUPUL_REFERENCE_PRIMARY_SCHEMA'] = $primary;
 $mode = $argv[1] ?? '';
 $version = trim(file_get_contents($root . '/include/cacti_version'));
-// This prior-release scenario completes 1.2.34 before confirming the final
+// This prior-release scenario completes 1.2.35 before confirming the final
 // installed version. A later marker failure must retain that confirmed step.
 $initialVersion = '1.2.33';
-$lastConfirmedVersion = '1.2.34';
+$lastConfirmedVersion = '1.2.35';
 installerAssert(version_compare($version, $lastConfirmedVersion, '>'), 'the final version follows the admitted intermediate migration');
 
 function cliFixtureSnapshot(PDO $database, string $schema): array
