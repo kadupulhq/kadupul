@@ -27,13 +27,14 @@ class RouteSamples(unittest.TestCase):
                       'app.php/graphing/color-templates/new',
                       'app.php/graphing/color-template-items/legacy',
                       'app.php/utilities/rrd-check/purge',
-                      'data_input.php', 'links.php', 'host_templates.php', 'rrdcheck.php'):
+                      'app.php/graphing/data-source-profiles/{id}/rras/{rraId}/edit',
+                      'data_source_profiles.php', 'data_input.php', 'links.php', 'host_templates.php', 'rrdcheck.php'):
             with self.subTest(entry=entry):
                 self.assertTrue(has_feature_realm(entry))
         for entry in ('app.php/about', 'about.php', 'app.php/graphing/colors-other',
                       'app.php/inventory/devices/{id}', 'app.php/links-extra',
                       'app.php/utilities/rrd-checker', 'app.php/automation/templates-other',
-                      'automation_snmp.php'):
+                      'automation_snmp.php', 'app.php/graphing/data-source-profiles-other'):
             with self.subTest(entry=entry):
                 self.assertFalse(has_feature_realm(entry))
 
@@ -64,6 +65,23 @@ class RouteSamples(unittest.TestCase):
         route_fixtures(rig, [('app.php/data-inputs/{id}/fields/{field}', 'symfony:data_input_field', '')], fixtures)
         self.assertIn("VALUES (12,'Value','value','in',1)", rig.statement)
         self.assertEqual('app.php/data-inputs/12/fields/31', sample('app.php/data-inputs/{id}/fields/{field}', 'methods=GET', fixtures))
+
+    def test_every_data_source_profile_route_binds_a_real_profile_and_archive(self):
+        class Rig:
+            def sql(self, statement):
+                self.statement = statement
+                return '3\t13'
+        rig = Rig()
+        fixtures = {'devices': 7, 'sites': 9}
+        rows = [row for row in entries() if row[0].startswith('app.php/graphing/data-source-profiles')]
+        self.assertTrue(any('{' in entry for entry, _, _ in rows))
+        route_fixtures(rig, rows, fixtures)
+        self.assertIn('FROM data_source_profiles_rra', rig.statement)
+        for entry, _, detail in rows:
+            with self.subTest(entry=entry):
+                self.assertNotIn('{', sample(entry, detail, fixtures))
+        self.assertEqual('app.php/graphing/data-source-profiles/3/rras/13/delete',
+                         sample('app.php/graphing/data-source-profiles/{id}/rras/{rraId}/delete', 'methods=GET', fixtures))
 
     def test_missing_fixture_refuses_instead_of_using_arbitrary_id(self):
         with self.assertRaisesRegex(ValueError, 'Missing concrete route fixture'):
