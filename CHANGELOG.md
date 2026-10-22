@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Trust the Kadupul package signing key alongside the Cacti keys for package import, preview and installation, and add `kadupul:package:sign` to re-sign packages with a key read from `KADUPUL_PACKAGE_SIGNING_KEY`.
+
 - Refuse shell metacharacters in the webhits.pl and diskfree.pl arguments, which both paste a Data Source input value into a shell command.
 
 - Make the reporting poller exit unsuccessfully on failed sends, report/owner reads or statistics writes, count accepted sends separately from attempts, and retain failed reports for retry while continuing the batch (#202).

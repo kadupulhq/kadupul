@@ -1461,6 +1461,26 @@ Known differences from `cli/audit_database.php`:
   unauthorized operator` and exit 1. The original ignored `--as` and printed
   the help.
 
+### Package signing
+
+`php bin/console kadupul:package:sign <package> [<output>]` signs an unsigned or
+Cacti-signed `.xml.gz` template package: each file over its decoded bytes, then
+the package XML as `import_read_package_data()` rebuilds it. It embeds the
+signing key's public key and writes gzip output, replacing the input when no
+output path is given. The private key is read only from
+`KADUPUL_PACKAGE_SIGNING_KEY`, as PEM or base64 DER, and is never printed:
+
+```sh
+KADUPUL_PACKAGE_SIGNING_KEY="$(security find-generic-password -s kadupul-package-signing -a kadupul -w)" \
+  php bin/console kadupul:package:sign install/templates/Apache_Webserver.xml.gz
+```
+
+Installations accept the Kadupul key (DER SHA-256
+`7a9479b973d128752276d80b903ac2715a96fcab8b2ef2c58ac43bb09f59fc60`) as a
+built-in key beside Cacti's, so Cacti-signed packages keep importing. The
+command prints the signing key's fingerprint and warns when it is not the
+Kadupul key. Keys below 2048 bits are refused, as the importer rejects them.
+
 ### Device statistics reset
 
 The Inventory list offers a Clear device statistics confirmation at
