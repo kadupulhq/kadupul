@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Validate and reproduce the existing interface query from a build-time catalog, preserving shipped query bytes, signed packages and template identities, with regression coverage for existing import and COUNTER behavior.
+
 - Report U for every requested Apache server-status field when the page cannot be fetched or has no scoreboard, instead of zero thread counts, and give up after 5 seconds instead of PHP's 60-second default.
 
 - Replace the bundled Perl data input scripts (ping, load average, logged-in users, processes, memory, partitions) and the Python 2 SB6141 modem script with PHP ports that print the same output without a shell; the process count no longer includes the pipeline's own shell and grep.
