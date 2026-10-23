@@ -5,7 +5,7 @@
       "id": "installed_version",
       "note": "the value in the version table",
       "result": {
-        "returned": {"type": "string", "value": "1.2.36"},
+        "returned": {"type": "string", "value": "1.2.37"},
         "sql": ["SELECT cacti FROM version LIMIT 1"]
       }
     },
@@ -54,7 +54,7 @@
       "id": "cached_value_survives_update",
       "note": "the second call ignores the table change",
       "result": {
-        "returned": {"type": "string", "value": "1.2.36"},
+        "returned": {"type": "string", "value": "1.2.37"},
         "sql": ["SELECT cacti FROM version LIMIT 1"]
       }
     },

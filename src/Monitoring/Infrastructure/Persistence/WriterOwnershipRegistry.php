@@ -15,23 +15,23 @@ use Kadupul\Monitoring\Domain\StorageField;
 use Kadupul\Monitoring\Domain\WriterOwnership;
 
 /**
- * Model-driven write claims, held in memory, combined with what the legacy
- * probe reports. A claim is only ever made by an explicit claim() call and
- * is refused for a field the legacy poller writes; there is no automatic
- * handoff in either direction. If the legacy poller starts writing a field
- * after it was claimed, both sides claim it and the answer is a conflict.
+ * Model-driven write claims combined with what the legacy probe reports. A
+ * claim is only ever made by an explicit claim() call and is refused for a
+ * field the legacy poller writes; there is no automatic handoff in either
+ * direction. If the legacy poller starts writing a field after it was
+ * claimed, both sides claim it and the answer is a conflict.
  */
 final class WriterOwnershipRegistry implements WriterOwnershipProbe
 {
-    /** @var array<string, StorageField> */
-    private array $claims = [];
-
-    public function __construct(private readonly WriterOwnershipProbe $legacy) {}
+    public function __construct(
+        private readonly WriterOwnershipProbe $legacy,
+        private readonly WriterClaimStore $claims = new InMemoryWriterClaimStore(),
+    ) {}
 
     public function ownership(StorageField $field): WriterOwnership
     {
         $legacy = $this->legacy->ownership($field);
-        if (!isset($this->claims[$field->toString()])) {
+        if (!$this->claims->holds($field)) {
             return $legacy;
         }
 
@@ -40,22 +40,24 @@ final class WriterOwnershipRegistry implements WriterOwnershipProbe
 
     public function claim(StorageField $field): WriterOwnership
     {
-        if (isset($this->claims[$field->toString()])) {
+        if ($this->claims->holds($field)) {
             return $this->ownership($field);
         }
         $legacy = $this->legacy->ownership($field);
         if ($this->legacyHolds($legacy)) {
             throw new OwnershipClaimRefused(sprintf('Storage field %s is %s; model-driven collection cannot claim it, and no handoff is implemented.', $field->toString(), $legacy->value));
         }
-        $this->claims[$field->toString()] = $field;
+        // A false return means a concurrent caller recorded the same claim
+        // first; the field has one model-driven claim either way.
+        $this->claims->record($field);
 
-        return WriterOwnership::ModelDriven;
+        return $this->ownership($field);
     }
 
     /** @return list<StorageField> */
     public function claims(): array
     {
-        return array_values($this->claims);
+        return $this->claims->all();
     }
 
     private function legacyHolds(WriterOwnership $legacy): bool

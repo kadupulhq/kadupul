@@ -46,6 +46,32 @@ final readonly class MetricBinding
             && $this->expectedType === $other->expectedType;
     }
 
+    /**
+     * Refuses to overwrite $stored unless this binding follows from it. A
+     * store shared by several processes checks this inside its write, so a
+     * caller holding a stale copy cannot undo another caller's rejection or
+     * swap the definition of a binding that is still live. A new definition
+     * is accepted only as a fresh proposal over a rejected one, which is how
+     * RegisterBinding replaces it.
+     */
+    public function assertMayReplace(self $stored): void
+    {
+        $id = $stored->key->bindingId();
+        if (!$this->key->equals($stored->key)) {
+            throw new InvalidBinding(sprintf('Binding %s cannot replace binding %s; the keys differ.', $this->key->bindingId(), $id));
+        }
+        if ($this->definitionEquals($stored)) {
+            if ($this->status !== $stored->status && !$stored->status->canMoveTo($this->status)) {
+                throw new BindingTransitionRejected(sprintf('Binding %s is stored as %s and cannot become %s; reload it before changing it.', $id, $stored->status->value, $this->status->value));
+            }
+
+            return;
+        }
+        if ($stored->status !== BindingStatus::Rejected || $this->status !== BindingStatus::Proposed) {
+            throw new BindingConflict(sprintf('Binding %s is stored as %s with a different definition; reject it before proposing another.', $id, $stored->status->value));
+        }
+    }
+
     public function withStatus(BindingStatus $next): self
     {
         if (!$this->status->canMoveTo($next)) {

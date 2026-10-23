@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Tests\Monitoring;
 
+use Kadupul\Monitoring\Domain\BindingConflict;
 use Kadupul\Monitoring\Domain\BindingKey;
 use Kadupul\Monitoring\Domain\BindingMatch;
 use Kadupul\Monitoring\Domain\BindingOrigin;
@@ -23,6 +24,7 @@ use Kadupul\Monitoring\Domain\RrdDataSourceType;
 use Kadupul\Monitoring\Domain\StorageField;
 use Kadupul\Telemetry\Contract\MetricId;
 use Kadupul\Telemetry\Contract\ResourceId;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class MetricBindingTest extends TestCase
@@ -141,6 +143,37 @@ final class MetricBindingTest extends TestCase
     {
         $this->expectException(InvalidBinding::class);
         new BindingMatch(MatchConfidence::None, [], null, null);
+    }
+
+    /** @return iterable<string, array{MetricBinding, MetricBinding, ?class-string<\Throwable>}> stored, replacement, refusal */
+    public static function replacements(): iterable
+    {
+        $proposed = BindingFixture::binding();
+        $approved = $proposed->withStatus(BindingStatus::Approved);
+        $rejected = $proposed->withStatus(BindingStatus::Rejected);
+        $other = BindingFixture::binding(field: BindingFixture::field(8, 'traffic_in'));
+
+        yield 'the same binding again' => [$approved, $approved, null];
+        yield 'one step along the lifecycle' => [$proposed, $approved, null];
+        yield 'a stale copy undoing a rejection' => [$rejected, $approved, BindingTransitionRejected::class];
+        yield 'a stale copy undoing an approval' => [$approved, $proposed, BindingTransitionRejected::class];
+        yield 'a new definition over a live binding' => [$approved, $other, BindingConflict::class];
+        yield 'a new definition over a proposed binding' => [$proposed, $other, BindingConflict::class];
+        yield 'a new proposal over a rejected definition' => [$rejected, $other, null];
+        yield 'a new definition approved without a proposal' => [$rejected, $other->withStatus(BindingStatus::Approved), BindingConflict::class];
+        yield 'another key' => [$proposed, BindingFixture::binding(key: BindingFixture::key(identity: 'eth1')), InvalidBinding::class];
+    }
+
+    /** @param ?class-string<\Throwable> $refusal */
+    #[DataProvider('replacements')]
+    public function testAStoredBindingIsReplacedOnlyAlongItsLifecycle(MetricBinding $stored, MetricBinding $replacement, ?string $refusal): void
+    {
+        if ($refusal !== null) {
+            $this->expectException($refusal);
+            $this->expectExceptionMessage($stored->key->bindingId());
+        }
+        $replacement->assertMayReplace($stored);
+        self::assertNull($refusal);
     }
 
     public function testTheBindingCarriesTheExpectedDataSourceType(): void

@@ -14,7 +14,10 @@ use Kadupul\Monitoring\Domain\BindingKey;
 use Kadupul\Monitoring\Domain\MetricBinding;
 use Kadupul\Monitoring\Domain\StorageField;
 
-/** Keyed by binding key, so saving the same key replaces the earlier version. */
+/**
+ * Keyed by binding key, so saving the same key replaces the earlier version,
+ * subject to the same replacement rule the database store applies.
+ */
 final class InMemoryBindingRepository implements BindingRepository
 {
     /** @var array<string, MetricBinding> */
@@ -37,6 +40,10 @@ final class InMemoryBindingRepository implements BindingRepository
 
     public function save(MetricBinding $binding): void
     {
+        $stored = $this->bindings[$binding->key->canonical()] ?? null;
+        if ($stored !== null) {
+            $binding->assertMayReplace($stored);
+        }
         $this->bindings[$binding->key->canonical()] = $binding;
     }
 }

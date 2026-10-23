@@ -2025,6 +2025,42 @@ CREATE TABLE host_template_snmp_query (
 --
 
 --
+-- Table structure for table `kadupul_metric_binding`
+--
+
+CREATE TABLE kadupul_metric_binding (
+  device_id int(10) unsigned NOT NULL,
+  metric varchar(255) NOT NULL,
+  resource_kind varchar(64) NOT NULL,
+  resource_identity varbinary(255) NOT NULL,
+  protocol varchar(16) NOT NULL,
+  pack_name varchar(64) NOT NULL,
+  pack_version varchar(64) NOT NULL,
+  local_data_id int(10) unsigned NOT NULL,
+  data_source_name varbinary(19) NOT NULL,
+  expected_type varchar(16) NOT NULL,
+  status varchar(16) NOT NULL,
+  origin varchar(32) NOT NULL,
+  source_detail text NOT NULL,
+  recorded_at datetime(6) NOT NULL,
+  last_verified_at datetime(6) default NULL,
+  PRIMARY KEY (device_id, metric, resource_kind, resource_identity, protocol),
+  KEY storage_field (local_data_id, data_source_name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=Dynamic;
+
+--
+-- Table structure for table `kadupul_writer_ownership`
+--
+
+CREATE TABLE kadupul_writer_ownership (
+  local_data_id int(10) unsigned NOT NULL,
+  data_source_name varbinary(19) NOT NULL,
+  writer varchar(32) NOT NULL,
+  claimed_at datetime(6) NOT NULL,
+  PRIMARY KEY (local_data_id, data_source_name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=Dynamic;
+
+--
 -- Table structure for table `plugin_config`
 --
 

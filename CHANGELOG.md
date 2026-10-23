@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Keep model-driven metric bindings and writer ownership claims in two new tables, `kadupul_metric_binding` and `kadupul_writer_ownership`, created on fresh installations and by the 1.2.37 upgrade step. No existing table changes, and existing data sources stay with the legacy poller.
+
 - Validate and reproduce the existing interface query from a build-time catalog, preserving shipped query bytes, signed packages and template identities, with regression coverage for existing import and COUNTER behavior.
 
 - Report U for every requested Apache server-status field when the page cannot be fetched or has no scoreboard, instead of zero thread counts, and give up after 5 seconds instead of PHP's 60-second default.
