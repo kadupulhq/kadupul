@@ -20,6 +20,7 @@ class RouteSamples(unittest.TestCase):
         for entry in ('app.php/data-inputs/actions/delete', 'app.php/links',
                       'app.php/graph-definitions/vdefs/{id}/items',
                       'app.php/graph-definitions/cdefs', 'app.php/graphing/colors/import',
+                      'app.php/automation/templates/{id}/move/{direction}', 'automation_templates.php',
                       'app.php/inventory/device-templates/action/delete',
                       'app.php/aggregate-templates/new',
                       'app.php/graphing/gprint-presets/new',
@@ -31,7 +32,8 @@ class RouteSamples(unittest.TestCase):
                 self.assertTrue(has_feature_realm(entry))
         for entry in ('app.php/about', 'about.php', 'app.php/graphing/colors-other',
                       'app.php/inventory/devices/{id}', 'app.php/links-extra',
-                      'app.php/utilities/rrd-checker'):
+                      'app.php/utilities/rrd-checker', 'app.php/automation/templates-other',
+                      'automation_snmp.php'):
             with self.subTest(entry=entry):
                 self.assertFalse(has_feature_realm(entry))
 

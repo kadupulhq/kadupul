@@ -17,7 +17,7 @@ require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
 if (getenv('AUTOMATION_PRESENTATION_COVERAGE') === '1') {
     $testLoader = require $root . '/tests/vendor/autoload.php';
     $filter = new SebastianBergmann\CodeCoverage\Filter();
-    foreach (['automation_devices.php', 'automation_graph_rules.php', 'automation_snmp.php', 'automation_templates.php', 'automation_tree_rules.php', 'lib/html_form.php', 'lib/html.php', 'lib/functions.php', 'lib/html_utility.php', 'include/csrf.php'] as $source) $filter->includeFile($root . '/' . $source);
+    foreach (['automation_devices.php', 'automation_graph_rules.php', 'automation_snmp.php', 'automation_tree_rules.php', 'lib/html_form.php', 'lib/html.php', 'lib/functions.php', 'lib/html_utility.php', 'include/csrf.php'] as $source) $filter->includeFile($root . '/' . $source);
     $coverage = new SebastianBergmann\CodeCoverage\CodeCoverage((new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($filter), $filter);
     $snapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/automation-presentation-native.php', $input, NativeAutomationPresentation::sources());
     $coverage->start('native automation presentation');

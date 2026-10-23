@@ -34,6 +34,12 @@ graph_definitions:
         namespace: Kadupul\GraphDefinition\Infrastructure\Symfony\Controller
     type: attribute
 
+automation:
+    resource:
+        path: '../src/Automation/Infrastructure/Symfony/Controller/'
+        namespace: Kadupul\Automation\Infrastructure\Symfony\Controller
+    type: attribute
+
 navigation:
     resource:
         path: '../src/Navigation/Infrastructure/Symfony/Controller/'

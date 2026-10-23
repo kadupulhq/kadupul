@@ -6,6 +6,12 @@ aggregate_templates.php	realm:5	include/auth.php
 app.php	symfony:front-controller	Symfony kernel; routes listed as app.php/... rows
 app.php/about	symfony:platform_about	methods=GET|HEAD; AuthenticatedAccess signed-in account; no realm required
 app.php/about/legacy	symfony:platform_about_legacy	methods=GET|HEAD|POST; AuthenticatedAccess signed-in account; no realm required
+app.php/automation/templates	symfony:automation_templates	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
+app.php/automation/templates/delete	symfony:automation_template_delete	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 23
+app.php/automation/templates/legacy	symfony:automation_templates_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 23
+app.php/automation/templates/new	symfony:automation_template_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 23
+app.php/automation/templates/{id}/edit	symfony:automation_template_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 23
+app.php/automation/templates/{id}/move/{direction}	symfony:automation_template_move	methods=POST requirements=id=[1-9][0-9]{0,7},direction=up|down; ConsoleAccess realm 8 + realm 23
 app.php/console	symfony:platform_console	methods=GET|HEAD; ConsoleAccess realm 8
 app.php/console	symfony:platform_console_login_post	methods=POST; anonymous-allowed: compatibility POST uses a fixed installation login URL and preserves the body with 307; no request-selected destination; reviewed at 3f7cb40d65c0
 app.php/data-inputs	symfony:data_inputs	methods=GET|HEAD; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 55539f0a80ef and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
@@ -94,7 +100,7 @@ automation_devices.php	realm:23	include/auth.php
 automation_graph_rules.php	realm:23	include/auth.php
 automation_networks.php	realm:23	include/auth.php
 automation_snmp.php	realm:23	include/auth.php
-automation_templates.php	realm:23	include/auth.php
+automation_templates.php	symfony:forward	forwards to app.php/automation/templates/legacy
 automation_tree_rules.php	realm:23	include/auth.php
 bin/	web-server-denied	nginx; apache .htaccess
 cache/	web-server-denied	nginx; apache .htaccess

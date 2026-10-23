@@ -152,9 +152,6 @@ function itemActionCases()
         array('automation_snmp.php', 'item_moveup', array()),
         array('automation_snmp.php', 'item_movedown', array()),
         array('automation_snmp.php', 'item_remove', array()),
-        array('automation_templates.php', 'moveup', array()),
-        array('automation_templates.php', 'movedown', array()),
-        array('automation_templates.php', 'remove', array()),
         array('automation_graph_rules.php', 'item_moveup', array('rule_type' => '2')),
         array('automation_graph_rules.php', 'item_movedown', array('rule_type' => '2')),
         array('automation_graph_rules.php', 'item_remove', array('rule_type' => '2')),
@@ -198,7 +195,6 @@ function itemActionCases()
         array('tree.php', 'unlock', array()),
         array('tree.php', 'ajax_dnd', array('tree_ids' => array('line1', 'line2'))),
         array('automation_snmp.php', 'ajax_dnd', array('snmp_item' => array('line1', 'line2'))),
-        array('automation_templates.php', 'ajax_dnd', array('template_ids' => array('line1', 'line2'))),
         array('graphs_new.php', 'query_reload', array('host_id' => '1')),
         array('automation_graph_rules.php', 'remove', array()),
         array('automation_tree_rules.php', 'remove', array()),
@@ -230,7 +226,7 @@ test('item actions run from a POST that carries a valid token', function ($contr
 test('item editors and lists still open by GET', function ($controller, $action) {
     expect(runItemActionRequest($this, $controller, 'GET', 'missing', $action))->toBe('READSTATUS:200');
 })->with(array(
-    array('automation_snmp.php', 'item_edit'), array('automation_templates.php', 'edit'),
+    array('automation_snmp.php', 'item_edit'),
     array('automation_graph_rules.php', 'item_edit'), array('automation_tree_rules.php', 'item_edit'),
     array('data_queries.php', 'item_edit'), array('data_source_profiles.php', 'item_edit'),
     array('data_sources.php', 'data_edit'), array('data_templates.php', 'template_edit'),
@@ -324,7 +320,7 @@ test('no page triggers ajax_dnd or query_reload by GET', function () {
 
     expect($offenders)->toBe(array());
 
-    foreach (array('automation_templates.php', 'tree.php') as $file) {
+    foreach (array('tree.php') as $file) {
         expect(file_get_contents($root . '/' . $file))
             ->toMatch("/loadPageUsingPost(?:Checked)?\\('[a-z_]+\\.php\\?action=ajax_dnd.*?', \\$\\.tableDnD\\.serialize\\(\\) \\+ '&__csrf_magic=' \\+ encodeURIComponent\\(csrfMagicToken\\)\\);/");
     }

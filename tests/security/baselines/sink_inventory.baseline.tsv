@@ -668,14 +668,6 @@ header_redirect	./automation_snmp.php:319	    header('Location: automation_snmp.
 header_redirect	./automation_snmp.php:44	        header('Location: automation_snmp.php?action=edit&id=' . get_request_var('id'));
 header_redirect	./automation_snmp.php:51	        header('Location: automation_snmp.php?action=edit&id=' . get_request_var('id'));
 header_redirect	./automation_snmp.php:62	        header('Location: automation_snmp.php?header=false&action=edit&header=false&id=' . get_request_var('id'));
-header_redirect	./automation_templates.php:124	        header('Location: automation_templates.php?header=false');
-header_redirect	./automation_templates.php:164	        header('Location: automation_templates.php?header=false');
-header_redirect	./automation_templates.php:212	            header('Location: automation_templates.php?header=false&id=' . (empty($template_id) ? get_nfilter_request_var('id') : $template_id));
-header_redirect	./automation_templates.php:214	            header('Location: automation_templates.php?header=false');
-header_redirect	./automation_templates.php:37	        header('Location: automation_templates.php?header=false');
-header_redirect	./automation_templates.php:42	        header('Location: automation_templates.php?header=false');
-header_redirect	./automation_templates.php:47	        header('Location: automation_templates.php?header=false');
-header_redirect	./automation_templates.php:86	    header('Location: automation_templates.php?header=false');
 header_redirect	./automation_tree_rules.php:104	        header('Location: automation_tree_rules.php?header=false&action=edit&id=' . (empty($rule_id) ? get_request_var('id') : $rule_id));
 header_redirect	./automation_tree_rules.php:130	            header('Location: automation_tree_rules.php?header=false&action=item_edit&id=' . get_request_var('id') . '&item_id=' . (empty($item_id) ? get_request_var('item_id') : $item_id) . '&rule_type=' . AUTOMATION_RULE_TYPE_TREE_MATCH);
 header_redirect	./automation_tree_rules.php:146	            header('Location: automation_tree_rules.php?header=false&action=item_edit&id=' . get_request_var('id') . '&item_id=' . (empty($item_id) ? get_request_var('item_id') : $item_id) . '&rule_type=' . AUTOMATION_RULE_TYPE_TREE_MATCH);

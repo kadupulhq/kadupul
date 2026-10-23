@@ -78,7 +78,6 @@ const hardCoded = new Map([
   ['auth_changepassword.php', notMigrated],
   ['auth_profile.php', notMigrated],
   ['automation_snmp.php', notMigrated],
-  ['automation_templates.php', notMigrated],
   ['data_debug.php', notMigrated],
   ['data_queries.php', notMigrated],
   ['data_source_profiles.php', notMigrated],
