@@ -223,6 +223,7 @@ jobs:
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --cache-directory="$RUNNER_TEMP/collector-cleanup-phpunit.cache" Symfony/DeviceCollectorJournalNativeTest.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/queued-purge-phpunit.cache" Symfony/QueuedCollectorPurgeTest.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/poller-buffer-phpunit.cache" Symfony/PollerCacheBufferWriteTest.php
+        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/profile-store-phpunit.cache" Symfony/DataSourceProfileStoreDatabaseTest.php
         # Use the disposable matrix server's existing administrator identity;
         # the probe creates/drops only its own random schema in a finally block.
         KADUPUL_REFERENCE_TEST_DSN="$KADUPUL_TEST_MYSQL_DSN" \
@@ -592,6 +593,8 @@ jobs:
         run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Symfony/permission_denied_http.py
       - name: Verify automation templates through HTTP and MariaDB
         run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Symfony/automation_template_http.py
+      - name: Verify Data Source Profiles through HTTP and MariaDB
+        run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Symfony/data_source_profile_http.py
       - name: Verify the actual CLI upgrades an installed LTS database version
         run: mise exec "php@$KADUPUL_OFFLINE_FIXTURE_PHP_VERSION" python@3.12.12 -- python tests/Symfony/schema_upgrade_cli_http.py
       - name: Refuse forbidden access at every entry point

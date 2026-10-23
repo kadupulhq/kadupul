@@ -80,7 +80,6 @@ const hardCoded = new Map([
   ['automation_snmp.php', notMigrated],
   ['data_debug.php', notMigrated],
   ['data_queries.php', notMigrated],
-  ['data_source_profiles.php', notMigrated],
   ['data_sources.php', notMigrated],
   ['data_templates.php', notMigrated],
   ['graph_templates.php', notMigrated],

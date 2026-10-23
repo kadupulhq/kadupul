@@ -1,0 +1,64 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% block title %}{{ (profile ? 'Edit Data Source Profile' : 'Add Data Source Profile')|trans({}, 'data_source_profile') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route. #}
+    <p><a href="{{ path('data_source_profile_list') }}">{{ 'Back to Data Source Profiles'|trans({}, 'data_source_profile') }}</a></p>
+    <h1>{% if profile %}{{ (profile.readOnly ? 'Data Source Profile [edit: %name% (Read Only)]' : 'Data Source Profile [edit: %name%]')|trans({'%name%': profile.name}, 'data_source_profile') }}{% else %}{{ 'Data Source Profile [new]'|trans({}, 'data_source_profile') }}{% endif %}</h1>
+    {% if saved %}<output>{{ 'Data Source Profile saved.'|trans({}, 'data_source_profile') }}</output>{% endif %}
+    {% if retune %}<p role="alert">{{ "Changing the Heartbeat from this page, does not change the Heartbeat for your existing Data Sources.  Use RRDtool's 'tune' function to make that change to your existing RRDfiles heartbeats, or run the CLI utility update_heartbeat.php to correct."|trans({}, 'data_source_profile') }}</p>{% endif %}
+    {% if profile and profile.readOnly %}<p>{{ 'Profiles that are in use by Data Sources become read only for now.'|trans({}, 'data_source_profile') }} {{ 'The polling interval, X-Files Factor, Consolidation Functions and RRAs cannot be changed.'|trans({}, 'data_source_profile') }}</p>{% endif %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.step) }}
+        {{ form_row(form.heartbeat) }}
+        {{ form_row(form.x_files_factor) }}
+        {{ form_row(form.consolidation_function_id) }}
+        {{ form_row(form.default) }}
+        {% if profile and profile.isDefault %}<p>{{ 'To change the default, mark another profile as the default.'|trans({}, 'data_source_profile') }}</p>{% endif %}
+        {% if profile %}
+        <p><strong>{{ 'RRDfile Size (in Bytes)'|trans({}, 'data_source_profile') }}</strong>: <em>{{ profile_size(rows, profile.consolidationFunctions|length) }}</em></p>
+        {% endif %}
+        {{ form_widget(form.revision) }}
+        <button type="submit">{{ 'Save'|trans({}, 'data_source_profile') }}</button>
+    {{ form_end(form) }}
+    {% if profile %}
+    <section aria-labelledby="data-source-profile-rras">
+        <h2 id="data-source-profile-rras">{{ (profile.readOnly ? 'Data Source Profile RRAs (Read Only)' : 'Data Source Profile RRAs (press save to update timespans)')|trans({}, 'data_source_profile') }}</h2>
+        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+        {% if not profile.readOnly %}<p><a href="{{ path('data_source_profile_rra_create', {id: profile.id}) }}">{{ 'Add RRA'|trans({}, 'data_source_profile') }}</a></p>{% endif %}
+        <table class="cactiTable">
+            <thead><tr class="tableHeader">
+                <th scope="col">{{ 'Name'|trans({}, 'data_source_profile') }}</th>
+                <th scope="col">{{ 'Data Retention'|trans({}, 'data_source_profile') }}</th>
+                <th scope="col">{{ 'Graph Timespan'|trans({}, 'data_source_profile') }}</th>
+                <th scope="col">{{ 'Steps'|trans({}, 'data_source_profile') }}</th>
+                <th scope="col">{{ 'Rows'|trans({}, 'data_source_profile') }}</th>
+                <th scope="col">{{ 'Actions'|trans({}, 'data_source_profile') }}</th>
+            </tr></thead>
+            <tbody>
+            {% for archive in profile.archives %}
+                <tr>
+                    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+                    <td><a href="{{ path('data_source_profile_rra_edit', {id: profile.id, rraId: archive.id}) }}">{{ archive.name }}</a></td>
+                    <td><em>{{ profile_retention(profile.step, archive.steps, archive.rows) }}</em></td>
+                    <td><em>{{ profile_timespan(archive.timespan) }}</em></td>
+                    <td><em>{{ archive.steps }}</em></td>
+                    <td><em>{{ archive.rows }}</em></td>
+                    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+                    <td>{% if not profile.readOnly %}<a href="{{ path('data_source_profile_rra_delete', {id: profile.id, rraId: archive.id}) }}">{{ 'Delete'|trans({}, 'data_source_profile') }}</a>{% endif %}</td>
+                </tr>
+            {% else %}
+                <tr><td colspan="6"><em>{{ 'No RRAs'|trans({}, 'data_source_profile') }}</em></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    {% endif %}
+</main>
+{% endblock %}
