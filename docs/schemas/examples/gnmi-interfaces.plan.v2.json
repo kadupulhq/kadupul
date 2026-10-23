@@ -1,0 +1,80 @@
+{
+  "plan_schema_version": 2,
+  "plan_id": "0f8b2c1e-6a43-4d7e-9b52-3c1d7a9e4f11",
+  "generated_at": "2026-10-23T14:05:00Z",
+  "device_id": 42,
+  "status": "proposed",
+  "pack": {
+    "name": "openconfig-interfaces",
+    "version": "1.0.0"
+  },
+  "targets": [
+    {
+      "protocol": "gnmi",
+      "endpoint": {
+        "credential_ref": "gnmi/core-sw-01",
+        "port": 9339,
+        "tls": {
+          "verify": true
+        }
+      },
+      "subscription": {
+        "mode": "sample",
+        "interval_seconds": 60,
+        "paths": [
+          "/interfaces/interface[name=eth1]/state/counters/in-octets",
+          "/interfaces/interface[name=*]/state/counters/out-octets",
+          "/interfaces/interface[name=*]/state/oper-status"
+        ]
+      },
+      "metrics": [
+        {
+          "id": "interface.in_octets",
+          "type": "counter",
+          "unit": "octets",
+          "counter_bits": 64,
+          "labels": [
+            "name"
+          ],
+          "source": "/interfaces/interface[name=eth1]/state/counters/in-octets",
+          "binding": {
+            "binding_id": "bnd-c907772ac0a8b91b859f204c6836f9c6",
+            "resource": {
+              "kind": "interface",
+              "identity": "eth1"
+            }
+          }
+        },
+        {
+          "id": "interface.out_octets",
+          "type": "counter",
+          "unit": "octets",
+          "counter_bits": 64,
+          "labels": [
+            "name"
+          ],
+          "source": "/interfaces/interface[name=*]/state/counters/out-octets"
+        },
+        {
+          "id": "interface.oper_status",
+          "type": "gauge",
+          "unit": "state",
+          "labels": [
+            "name"
+          ],
+          "source": "/interfaces/interface[name=*]/state/oper-status",
+          "value_map": {
+            "UP": 1,
+            "DOWN": 2,
+            "TESTING": 3,
+            "UNKNOWN": 4,
+            "DORMANT": 5,
+            "NOT_PRESENT": 6,
+            "LOWER_LAYER_DOWN": 7
+          }
+        }
+      ]
+    }
+  ],
+  "dedup_key": "4f1c7d2e9b3a4c5d8e6f7a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d"
+}

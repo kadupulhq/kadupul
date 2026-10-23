@@ -1,0 +1,339 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kadupul:schema:monitoring-pack:1",
+  "title": "Kadupul monitoring pack, schema version 1",
+  "description": "Declares which metrics to collect from which device models and how each protocol maps to them. Metric ids are protocol independent; every protocol-specific detail lives under metrics[].mappings or discovery.mappings. Cross-reference rules that JSON Schema cannot express (graph metrics must name pack metrics, metric ids must be unique, collection.interval_seconds.default must be at least min) are enforced by the semantic validator and listed in docs/model-driven-monitoring.md.",
+  "type": "object",
+  "required": ["schema_version", "name", "version", "capabilities", "model_families", "discovery", "metrics", "collection", "compatibility"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "name": { "$ref": "#/$defs/packName" },
+    "version": { "$ref": "#/$defs/semver" },
+    "description": { "type": "string", "minLength": 1, "maxLength": 500 },
+    "capabilities": {
+      "type": "object",
+      "description": "A pack applies to a device when every capability in 'all' is verified and, if 'any' is present, at least one capability in 'any' is verified.",
+      "minProperties": 1,
+      "properties": {
+        "all": { "$ref": "#/$defs/capabilityList" },
+        "any": { "$ref": "#/$defs/capabilityList" }
+      },
+      "additionalProperties": false,
+      "patternProperties": { "^x-": true }
+    },
+    "model_families": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "enum": ["yang", "openconfig", "redfish", "snmp-mib"] }
+    },
+    "discovery": { "$ref": "#/$defs/discovery" },
+    "metrics": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/metric" }
+    },
+    "collection": { "$ref": "#/$defs/collection" },
+    "graphs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/graph" }
+    },
+    "alerts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/alert" }
+    },
+    "compatibility": { "$ref": "#/$defs/compatibility" }
+  },
+  "additionalProperties": false,
+  "patternProperties": { "^x-": true },
+  "$defs": {
+    "packName": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      "maxLength": 64
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?(\\+[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "semverRange": {
+      "type": "string",
+      "description": "Composer-style constraint such as ^1.0 or >=1.2 <2.0.",
+      "pattern": "^[0-9A-Za-z.^~<>=!*| ,-]+$",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "metricId": {
+      "type": "string",
+      "description": "Dotted lowercase, for example interface.in_octets.",
+      "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$",
+      "maxLength": 128
+    },
+    "labelName": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "maxLength": 64
+    },
+    "capabilityList": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9._:/-]*$",
+        "maxLength": 128
+      }
+    },
+    "protocol": { "enum": ["snmp", "gnmi", "redfish", "netconf", "restconf"] },
+    "numericOid": {
+      "type": "string",
+      "pattern": "^[0-9]+(\\.[0-9]+)+$"
+    },
+    "valueMap": {
+      "type": "object",
+      "description": "Maps non-numeric device values to numbers so a gauge stays numeric. Unmapped values are reported as bad quality, never as zero.",
+      "minProperties": 1,
+      "additionalProperties": { "type": "integer" }
+    },
+    "discovery": {
+      "type": "object",
+      "required": ["resource", "identity"],
+      "properties": {
+        "resource": {
+          "type": "string",
+          "description": "Resource kind such as interface or power_supply.",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "identity": {
+          "type": "object",
+          "required": ["key"],
+          "properties": {
+            "key": { "$ref": "#/$defs/labelName" },
+            "description": { "type": "string" }
+          },
+          "additionalProperties": false,
+          "patternProperties": { "^x-": true }
+        },
+        "mappings": {
+          "type": "object",
+          "properties": {
+            "snmp": {
+              "type": "object",
+              "required": ["identity_oid"],
+              "properties": {
+                "identity_oid": { "$ref": "#/$defs/numericOid" },
+                "index_is_identity": { "type": "boolean" }
+              },
+              "additionalProperties": false,
+              "patternProperties": { "^x-": true }
+            },
+            "gnmi": {
+              "type": "object",
+              "required": ["path"],
+              "properties": {
+                "path": { "type": "string", "minLength": 1 },
+                "origin": { "type": "string" }
+              },
+              "additionalProperties": false,
+              "patternProperties": { "^x-": true }
+            },
+            "redfish": {
+              "type": "object",
+              "required": ["collection_path"],
+              "properties": {
+                "collection_path": { "type": "string", "pattern": "^/redfish/v1/" }
+              },
+              "additionalProperties": false,
+              "patternProperties": { "^x-": true }
+            },
+            "netconf": {
+              "type": "object",
+              "required": ["xpath"],
+              "properties": { "xpath": { "type": "string", "minLength": 1 } },
+              "additionalProperties": false,
+              "patternProperties": { "^x-": true }
+            },
+            "restconf": {
+              "type": "object",
+              "required": ["resource_path"],
+              "properties": { "resource_path": { "type": "string", "pattern": "^/" } },
+              "additionalProperties": false,
+              "patternProperties": { "^x-": true }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "patternProperties": { "^x-": true }
+    },
+    "metric": {
+      "type": "object",
+      "required": ["id", "type", "unit", "mappings"],
+      "properties": {
+        "id": { "$ref": "#/$defs/metricId" },
+        "type": { "enum": ["counter", "gauge"] },
+        "unit": { "type": "string", "minLength": 1, "maxLength": 32 },
+        "counter_bits": {
+          "enum": [32, 64],
+          "description": "Width of the source counter, used for rollover detection. Only valid when type is counter."
+        },
+        "labels": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/labelName" }
+        },
+        "description": { "type": "string", "maxLength": 500 },
+        "mappings": {
+          "type": "object",
+          "minProperties": 1,
+          "properties": {
+            "snmp": {
+              "type": "object",
+              "required": ["oid"],
+              "properties": {
+                "oid": { "$ref": "#/$defs/numericOid" },
+                "mib": { "type": "string" },
+                "object": { "type": "string" },
+                "scale": { "type": "number", "exclusiveMinimum": 0 },
+                "value_map": { "$ref": "#/$defs/valueMap" }
+              },
+              "additionalProperties": false,
+              "patternProperties": { "^x-": true }
+            },
+            "gnmi": {
+              "type": "object",
+              "required": ["path"],
+              "properties": {
+                "path": { "type": "string", "minLength": 1 },
+                "origin": { "type": "string" },
+                "scale": { "type": "number", "exclusiveMinimum": 0 },
+                "value_map": { "$ref": "#/$defs/valueMap" }
+              },
+              "additionalProperties": false,
+              "patternProperties": { "^x-": true }
+            },
+            "redfish": {
+              "type": "object",
+              "required": ["resource_path", "property"],
+              "properties": {
+                "resource_path": { "type": "string", "pattern": "^/redfish/v1/" },
+                "property": { "type": "string", "minLength": 1 },
+                "scale": { "type": "number", "exclusiveMinimum": 0 },
+                "value_map": { "$ref": "#/$defs/valueMap" }
+              },
+              "additionalProperties": false,
+              "patternProperties": { "^x-": true }
+            },
+            "netconf": {
+              "type": "object",
+              "required": ["xpath"],
+              "properties": {
+                "xpath": { "type": "string", "minLength": 1 },
+                "scale": { "type": "number", "exclusiveMinimum": 0 },
+                "value_map": { "$ref": "#/$defs/valueMap" }
+              },
+              "additionalProperties": false,
+              "patternProperties": { "^x-": true }
+            },
+            "restconf": {
+              "type": "object",
+              "required": ["resource_path"],
+              "properties": {
+                "resource_path": { "type": "string", "pattern": "^/" },
+                "scale": { "type": "number", "exclusiveMinimum": 0 },
+                "value_map": { "$ref": "#/$defs/valueMap" }
+              },
+              "additionalProperties": false,
+              "patternProperties": { "^x-": true }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "if": { "properties": { "type": { "const": "gauge" } }, "required": ["type"] },
+      "then": { "not": { "required": ["counter_bits"] } },
+      "additionalProperties": false,
+      "patternProperties": { "^x-": true }
+    },
+    "collection": {
+      "type": "object",
+      "required": ["protocol_preference", "interval_seconds"],
+      "properties": {
+        "protocol_preference": {
+          "type": "array",
+          "description": "Ordered, most preferred first. A protocol the device does not verify is skipped.",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/protocol" }
+        },
+        "interval_seconds": {
+          "type": "object",
+          "required": ["min", "default"],
+          "properties": {
+            "min": { "type": "integer", "minimum": 1 },
+            "default": { "type": "integer", "minimum": 1 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "patternProperties": { "^x-": true }
+    },
+    "graph": {
+      "type": "object",
+      "required": ["name", "metrics", "unit"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "metrics": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/metricId" }
+        },
+        "unit": { "type": "string", "minLength": 1, "maxLength": 32 }
+      },
+      "additionalProperties": false,
+      "patternProperties": { "^x-": true }
+    },
+    "alert": {
+      "type": "object",
+      "required": ["name", "metric", "condition"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "metric": { "$ref": "#/$defs/metricId" },
+        "condition": {
+          "type": "object",
+          "required": ["operator", "threshold"],
+          "properties": {
+            "operator": { "enum": ["gt", "gte", "lt", "lte", "eq", "neq"] },
+            "threshold": { "type": "number" },
+            "for_seconds": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        "severity": { "enum": ["info", "warning", "critical"] }
+      },
+      "additionalProperties": false,
+      "patternProperties": { "^x-": true }
+    },
+    "compatibility": {
+      "type": "object",
+      "required": ["kadupul"],
+      "properties": {
+        "kadupul": { "$ref": "#/$defs/semverRange" },
+        "legacy_templates": {
+          "type": "object",
+          "description": "Informational mapping to legacy device-template artifacts. A pack never replaces or edits them.",
+          "properties": {
+            "graph_templates": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+            "data_queries": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "patternProperties": { "^x-": true }
+    }
+  }
+}

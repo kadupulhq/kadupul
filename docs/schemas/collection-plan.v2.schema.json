@@ -1,0 +1,528 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kadupul:schema:collection-plan:2",
+  "title": "Kadupul collection plan, plan_schema_version 2",
+  "description": "Language-neutral instruction from the control plane to a collector. Version 2 adds an optional logical binding to each metric. A plan never contains credentials, only credential_ref names resolved by the collector, and never contains storage detail: no file path, RRD name, local data id or SQL, including in x- extension keys. Readers ignore unknown fields only when the key starts with x-; any other unknown field is a validation error. The planner writes version 1 when no metric has a binding, so version 1 readers keep working until a binding is approved.",
+  "type": "object",
+  "required": [
+    "plan_schema_version",
+    "plan_id",
+    "generated_at",
+    "device_id",
+    "status",
+    "pack",
+    "targets",
+    "dedup_key"
+  ],
+  "properties": {
+    "plan_schema_version": {
+      "const": 2
+    },
+    "plan_id": {
+      "type": "string",
+      "description": "UUID, unique per generated plan revision.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC, RFC 3339."
+    },
+    "device_id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "status": {
+      "enum": [
+        "proposed",
+        "approved",
+        "active",
+        "superseded"
+      ]
+    },
+    "pack": {
+      "type": "object",
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+          "maxLength": 64
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?(\\+[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/target"
+      }
+    },
+    "dedup_key": {
+      "type": "string",
+      "description": "Opaque lowercase hex SHA-256 computed by the planner. Equal keys mean the same logical plan; readers compare it and never parse it.",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "additionalProperties": false,
+  "patternProperties": {
+    "^x-": true
+  },
+  "$defs": {
+    "metricId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$",
+      "maxLength": 128
+    },
+    "target": {
+      "type": "object",
+      "required": [
+        "protocol",
+        "endpoint",
+        "subscription",
+        "metrics"
+      ],
+      "properties": {
+        "protocol": {
+          "enum": [
+            "snmp",
+            "gnmi",
+            "redfish",
+            "netconf",
+            "restconf"
+          ]
+        },
+        "endpoint": {
+          "type": "object",
+          "required": [
+            "credential_ref"
+          ],
+          "properties": {
+            "credential_ref": {
+              "type": "string",
+              "description": "Name of a credential held by the collector's secret store. Never a secret value.",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$",
+              "maxLength": 128
+            },
+            "port": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 65535
+            },
+            "tls": {
+              "type": "object",
+              "properties": {
+                "verify": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "ca_ref": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false,
+          "patternProperties": {
+            "^x-": true
+          },
+          "propertyNames": {
+            "$ref": "#/$defs/storageFreeKey"
+          }
+        },
+        "subscription": {
+          "type": "object",
+          "required": [
+            "mode"
+          ],
+          "properties": {
+            "mode": {
+              "enum": [
+                "sample",
+                "on_change",
+                "poll"
+              ]
+            },
+            "interval_seconds": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "paths": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "oids": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^[0-9]+(\\.[0-9]+)+$"
+              }
+            },
+            "resources": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "mode": {
+                    "enum": [
+                      "sample",
+                      "poll"
+                    ]
+                  }
+                },
+                "required": [
+                  "mode"
+                ]
+              },
+              "then": {
+                "required": [
+                  "interval_seconds"
+                ]
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "mode": {
+                    "const": "on_change"
+                  }
+                },
+                "required": [
+                  "mode"
+                ]
+              },
+              "then": {
+                "not": {
+                  "required": [
+                    "interval_seconds"
+                  ]
+                }
+              }
+            }
+          ],
+          "additionalProperties": false,
+          "patternProperties": {
+            "^x-": true
+          },
+          "propertyNames": {
+            "$ref": "#/$defs/storageFreeKey"
+          }
+        },
+        "metrics": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "type",
+              "unit",
+              "source"
+            ],
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/metricId"
+              },
+              "type": {
+                "enum": [
+                  "counter",
+                  "gauge"
+                ]
+              },
+              "unit": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 32
+              },
+              "source": {
+                "type": "string",
+                "description": "The path, OID or resource property in this target's subscription that yields the metric.",
+                "minLength": 1
+              },
+              "counter_bits": {
+                "enum": [
+                  32,
+                  64
+                ]
+              },
+              "labels": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*$"
+                }
+              },
+              "scale": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "value_map": {
+                "type": "object",
+                "minProperties": 1,
+                "additionalProperties": {
+                  "type": "integer"
+                }
+              },
+              "binding": {
+                "$ref": "#/$defs/binding"
+              }
+            },
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "gauge"
+                }
+              },
+              "required": [
+                "type"
+              ]
+            },
+            "then": {
+              "not": {
+                "required": [
+                  "counter_bits"
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "patternProperties": {
+              "^x-": true
+            },
+            "propertyNames": {
+              "$ref": "#/$defs/storageFreeKey"
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "protocol": {
+                "const": "gnmi"
+              }
+            },
+            "required": [
+              "protocol"
+            ]
+          },
+          "then": {
+            "properties": {
+              "subscription": {
+                "required": [
+                  "paths"
+                ],
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "oids"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "resources"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "protocol": {
+                "const": "snmp"
+              }
+            },
+            "required": [
+              "protocol"
+            ]
+          },
+          "then": {
+            "properties": {
+              "subscription": {
+                "required": [
+                  "oids"
+                ],
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "paths"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "resources"
+                      ]
+                    }
+                  ]
+                },
+                "properties": {
+                  "mode": {
+                    "const": "poll"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "protocol": {
+                "const": "redfish"
+              }
+            },
+            "required": [
+              "protocol"
+            ]
+          },
+          "then": {
+            "properties": {
+              "subscription": {
+                "required": [
+                  "resources"
+                ],
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "paths"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "oids"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "protocol": {
+                "enum": [
+                  "netconf",
+                  "restconf"
+                ]
+              }
+            },
+            "required": [
+              "protocol"
+            ]
+          },
+          "then": {
+            "properties": {
+              "subscription": {
+                "required": [
+                  "paths"
+                ],
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "oids"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "resources"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false,
+      "patternProperties": {
+        "^x-": true
+      },
+      "propertyNames": {
+        "$ref": "#/$defs/storageFreeKey"
+      }
+    },
+    "storageFreeKey": {
+      "description": "Object keys that could carry storage detail are refused everywhere, case-insensitively, extension keys included.",
+      "type": "string",
+      "not": {
+        "pattern": "[Rr][Rr][Dd]|[Ll][Oo][Cc][Aa][Ll]_[Dd][Aa][Tt][Aa]|[Dd][Aa][Tt][Aa]_[Ss][Oo][Uu][Rr][Cc][Ee]|[Ss][Qq][Ll]|^([Xx]-)?[Pp][Aa][Tt][Hh]$"
+      }
+    },
+    "binding": {
+      "type": "object",
+      "description": "The logical binding the metric is stored under. Present only when the metric source yields exactly one resource.",
+      "required": [
+        "binding_id",
+        "resource"
+      ],
+      "properties": {
+        "binding_id": {
+          "type": "string",
+          "description": "Opaque id assigned by the control plane. Readers compare it and never parse it.",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "resource": {
+          "type": "object",
+          "required": [
+            "kind",
+            "identity"
+          ],
+          "properties": {
+            "kind": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*$"
+            },
+            "identity": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "propertyNames": {
+    "$ref": "#/$defs/storageFreeKey"
+  }
+}
