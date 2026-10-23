@@ -3,7 +3,8 @@
 This document describes the design for monitoring that starts from the data
 models a device advertises, not from a protocol-specific template, and records
 how much of it exists in code. Part of it is implemented and tested in
-isolation; none of it is wired into the running application. The
+isolation. Its services are wired into the container with writes disabled, but no
+controller, command or poller calls them. The
 [status table](#status) separates what exists from what does not, and
 [known limitations](#known-limitations) lists what blocks production use.
 Decisions are recorded in the [ADRs](adr/README.md).
@@ -452,8 +453,19 @@ reference names the file without giving a path; only an infrastructure adapter
 turns it into one. Resolution only reads. It reports ownership as found and
 cannot change it.
 
-Bindings are stored by `InMemoryBindingRepository`. There is no database
-adapter and no schema.
+Bindings are stored by `DbalBindingRepository` in `kadupul_metric_binding`
+([0009](adr/0009-durable-binding-and-ownership-store.md)); unit tests use
+`InMemoryBindingRepository`, and both pass the same contract tests
+(`BindingRepositoryContract`). The primary key is the binding key, so one row
+exists per key. Pack name and version are stored with the definition and are
+not part of the key. A save locks the stored row and refuses a write that does
+not follow from it (`MetricBinding::assertMayReplace`): a stale copy cannot undo
+a rejection or move an approval back, and a different definition replaces only a
+rejected binding, as a new proposal. Resource identity and data-source name are
+`varbinary`, so `eth0`, `ETH0` and `eth0 ` are different keys and `traffic_in`
+and `Traffic_in` different fields. A value longer than its column is refused
+instead of truncated, database errors reach the caller, and a row changed outside
+the store so that it breaks a domain rule is reported as `StoredBindingUnreadable`.
 
 ## Legacy data-source discovery
 
@@ -522,8 +534,13 @@ The default is legacy. `LegacyDataSourceDiscovery::ownership()` reports
 `poller_item` row currently exists, because a missing row is more often a poller
 cache waiting to be rebuilt than a field nobody writes.
 
-`WriterOwnershipRegistry` combines that answer with in-memory model-driven
-claims. A claim happens only through an explicit `claim()` call and is refused
+`WriterOwnershipRegistry` combines that answer with model-driven claims kept by a
+`WriterClaimStore`: `DbalWriterClaimStore` in `kadupul_writer_ownership`, one row
+per storage field, in the application, and `InMemoryWriterClaimStore` in unit
+tests. No row means no claim, so the legacy answer stands. A claim is a plain
+insert, and the primary key decides between two writers: one commits, the other
+sees a duplicate key and reports the field as already claimed. Nothing deletes a
+claim. A claim happens only through an explicit `claim()` call and is refused
 for a field the legacy poller or a conflict holds. If the legacy poller starts
 writing a field after it was claimed, both sides claim it and the answer is
 `conflict`. There is no automatic handoff in either direction, and approving a
@@ -543,7 +560,9 @@ device id and collection protocol, and a batch may mix devices. Each sample ends
 
 The write gate (`WriteGate`) is closed by default. Opening it takes an explicit
 `WriteGate::enabled()`, so wiring the sink in by accident cannot start writing to
-existing graphs.
+existing graphs. In the container the gate comes from the
+`kadupul.monitoring.rrd_writes_enabled` parameter, which is `false` and has no
+environment source.
 
 The checks run in this order, and a sample stops at the first refusal.
 
@@ -695,10 +714,12 @@ model-driven path coexists with them
 
 Nothing in the legacy application is changed or removed by this work: device
 templates, data queries, graph templates, RRDtool storage, Spine, the poller,
-plugin hooks and database schema are untouched. The new code only reads legacy
-tables, and writes only through the gated sink to files a binding names. The
-`Kadupul\Graphing\Infrastructure\Rrd` classes are excluded from the container in
-`config/services.yaml`. Packs and legacy templates coexist
+plugin hooks and existing tables are untouched. The schema gains two new tables,
+`kadupul_metric_binding` and `kadupul_writer_ownership`, and nothing else. The new
+code only reads legacy tables, writes only its own two tables, and writes RRD
+files only through the gated sink to files a binding names. The
+`Kadupul\Graphing\Infrastructure\Rrd` classes are registered individually in
+`config/services.yaml`, not by directory, and default to unconfigured storage. Packs and legacy templates coexist
 ([0002](adr/0002-monitoring-packs-and-legacy-templates.md)). A pack can name the
 legacy templates it corresponds to, for information only. Legacy templates are
 not deprecated until parity and a migration path are shown. The storage design is
@@ -747,8 +768,8 @@ merged only with a working use case and tests.
 | 1. Contracts | Telemetry contract, ModelRegistry types, pack and plan schemas, ADRs | Done |
 | 2. Capability state | Discovery result and reconciliation; in-memory stores | Done |
 | 3. Packs and planner | Pack loading and validation; planner producing plans | Done |
-| 4. Storage foundation | Raw sample values, `SampleSink`, bindings, writer ownership, legacy discovery, gated RRD sink, plan v2 | Done in isolation; nothing is wired into the application |
-| 5. Production wiring | Service configuration, a durable binding store with its schema and upgrade, a `local_data_id`-to-file adapter, an IdentityAccess authorizer, an audit event for approval and activation | Not started |
+| 4. Storage foundation | Raw sample values, `SampleSink`, bindings, writer ownership, legacy discovery, gated RRD sink, plan v2 | Done |
+| 5. Production wiring | Service configuration, a durable binding store with its schema and upgrade, a `local_data_id`-to-file adapter, an IdentityAccess authorizer, an audit event for approval and activation | Slice A (service configuration) and slice B (durable binding and ownership stores, schema step 1.2.37) done. Remaining: durable plan, pack and capability stores, the `local_data_id`-to-file adapter, the authorizers, the audit event, a source for the running version so `PackLifecycle` can be wired |
 | 6. First protocol adapter | One real adapter behind `CapabilityProvider`, using an actual library, and a collector that executes a plan end to end | Not started; needs a protocol library |
 | 7. Poller handoff | A decision record and legacy-side tests for [moving a legacy field](#future-poller-handoff), then the implementation | Not started; proposal only |
 | 8. New series and presentation | Creating RRD files for new series, graphing and alerting from metric ids, template parity and migration guidance | Not started |
@@ -757,9 +778,30 @@ merged only with a working use case and tests.
 
 Statuses: implemented (code with a use case and tests under `tests/Symfony`),
 scaffolding (a port or type with no production adapter, or an adapter nothing
-calls), and future. Nothing below is wired into `config/services.yaml`, and the
-binding, ownership, plan and capability stores are in memory, so none of it is
-reachable from the running application.
+calls), and future. The Telemetry, ModelRegistry, Monitoring and Graphing sink
+services are wired in `config/services.yaml` (milestone 5, slice A). Bindings
+and writer ownership claims are kept in the database on the `main` connection
+(slice B). The plan, pack, capability and model stores are in memory and lose
+their state at the end of each request, nothing calls the use cases from a
+controller or command, and the RRD write gate is closed. `ModelDrivenWiringTest`
+boots the test container and checks that the services resolve without opening a
+connection.
+
+Service wiring defaults. `kadupul.monitoring.rrd_writes_enabled` is `false` and
+no environment variable feeds it, so `SampleSink` resolves to `RecordSamples`
+with a closed gate and every sample is refused as `WritesDisabled`. Binding
+approval and plan activation have no authorizer, so no binding is approved and
+opening the gate would not store anything; do not change the parameter until an
+authorizer exists. `kadupul.monitoring.rrdtool_binary` and
+`kadupul.monitoring.rrd_root` are empty by default. While either is empty,
+`RrdStorageFactory` returns `UnconfiguredRrdStorage`, which refuses every storage
+call, so nothing guesses a binary or a directory and nothing reads the legacy
+`path_rrdtool` or `path_rra` settings. A non-empty but invalid value throws
+`InvalidRrdConfiguration` when the service is built. `kadupul.monitoring.rrd_paths`
+(`local_data_id` to relative path) is empty and nothing fills it.
+`kadupul.telemetry.series_limit_per_metric` (1000) is a provisional value, not a
+measured one. `PackLifecycle` and `PackValidator` are not wired because the
+validator needs the running product version and no non-legacy source exists yet.
 
 | Item | Status |
 | --- | --- |
@@ -773,16 +815,17 @@ reachable from the running application.
 | Monitoring: capability discovery result | Implemented: `DiscoverDeviceCapabilities`, `InMemoryDeviceCapabilityStore`. The `CapabilityProvider` port is scaffolding: no protocol adapter exists |
 | Monitoring: pack loading and validation | Implemented: `PackValidator`, `JsonPackReader` (JSON only), `PackLifecycle`, `InMemoryPackRepository` |
 | Monitoring: planner and collection plan | Implemented: `MonitoringPlanner`, `CollectionPlan`, `PlanSerializer` (v1 and v2), `ActivateCollectionPlan`, `InMemoryCollectionPlanStore`. Scaffolding: `PlanActivationAuthorizer` has no IdentityAccess adapter, so activation is always denied outside tests |
-| Monitoring: metric bindings | Implemented: `MetricBinding`, `BindingKey`, `StorageField`, `RegisterBinding`, `ApproveBinding`, `ResolveBinding` behind `BindingCatalog`, `InMemoryBindingRepository`. Scaffolding: `BindingApprovalAuthorizer` has no adapter, so approval is denied outside tests |
-| Monitoring: writer ownership | Implemented: `WriterOwnershipRegistry` (in-memory claims) over the `WriterOwnershipProbe` port; legacy side is `LegacyDataSourceDiscovery::ownership()` |
+| Monitoring: metric bindings | Implemented: `MetricBinding`, `BindingKey`, `StorageField`, `RegisterBinding`, `ApproveBinding`, `ResolveBinding` behind `BindingCatalog`, `DbalBindingRepository` (wired) and `InMemoryBindingRepository` (tests). `DbalMonitoringStoreDatabaseTest` runs against MariaDB or MySQL when `KADUPUL_TEST_MYSQL_DSN` is set and skips otherwise. Scaffolding: `BindingApprovalAuthorizer` has no adapter, so approval is denied outside tests |
+| Monitoring: writer ownership | Implemented: `WriterOwnershipRegistry` over the `WriterOwnershipProbe` port, with claims in `DbalWriterClaimStore` (wired) or `InMemoryWriterClaimStore` (tests); legacy side is `LegacyDataSourceDiscovery::ownership()` |
+| Schema: `kadupul_metric_binding`, `kadupul_writer_ownership` | Implemented: `cacti.sql`, `docs/audit_schema.sql` and the 1.2.37 upgrade step, compared by `ModelDrivenSchemaTest` and, on a server, `ModelDrivenSchemaDatabaseTest` |
 | Monitoring: legacy data-source discovery | Implemented and read-only: `LegacyDataSourceDiscovery`, `LegacyExistingMonitoring` (also the `ExistingMonitoring` adapter used for overlaps). Tested on SQLite only; no caller in the application |
-| Graphing: gated sample write | Implemented: `RecordSamples`, `WriteGate`, `RrdUpdateFormatter`, `RrdtoolInspector`, `RrdtoolUpdater`, `RrdtoolProcess`, `ConfiguredRootTargetLocator`. Tested with real RRDtool files in a temporary directory; no production caller, and excluded from the container |
-| Clock adapters: `Telemetry\Infrastructure\Clock\SymfonyClock`, `Graphing\Infrastructure\Clock\SymfonyClock` | Scaffolding: each implements its module's `Clock` port over Symfony's `ClockInterface` and returns UTC with microseconds; tested with `MockClock` in `SymfonyClockTest`, not wired into `config/services.yaml`, so tests still use `FixedClock` |
+| Graphing: gated sample write | Implemented: `RecordSamples`, `WriteGate`, `RrdUpdateFormatter`, `RrdtoolInspector`, `RrdtoolUpdater`, `RrdtoolProcess`, `ConfiguredRootTargetLocator`. Tested with real RRDtool files in a temporary directory; wired as the `SampleSink` with a closed gate and unconfigured storage by default; no production caller |
+| Clock adapters: `Telemetry\Infrastructure\Clock\SymfonyClock`, `Graphing\Infrastructure\Clock\SymfonyClock` | Scaffolding: each implements its module's `Clock` port over Symfony's `ClockInterface` and returns UTC with microseconds; tested with `MockClock` in `SymfonyClockTest`; wired to the `Clock` ports in `config/services.yaml`, while unit tests still use `FixedClock` |
 | Audit event for plan approval, activation and binding approval | Future |
 | Capability reconciliation and caching | Reconciliation on rediscovery implemented in `DiscoverDeviceCapabilities`; time-to-live caching and operator overrides future |
 | Resource enumeration (interfaces and other pack resources) | Future; the planner takes resources as input |
 | Production wiring of the sink: `local_data_id`-to-file adapter, configuration | Future |
-| Durable storage for bindings, claims, plans and capabilities, with schema | Future |
+| Durable storage for plans, packs and capabilities | Future |
 | IdentityAccess authorizers for plan activation and binding approval | Future |
 | Creation of RRD files for new series | Future |
 | Poller handoff of a legacy field | Future; proposal only |
@@ -797,15 +840,22 @@ reachable from the running application.
 - A sample whose collection protocol differs from its binding's protocol
   resolves to no binding. Moving a series from one protocol to another needs a
   new binding.
-- There is no adapter from a `local_data_id` to an RRD file and no production
-  wiring. `ConfiguredRootTargetLocator` takes an explicit map of relative paths
+- There is no adapter from a `local_data_id` to an RRD file. The sink is wired
+  but its storage is unconfigured by default. `ConfiguredRootTargetLocator` takes an explicit map of relative paths
   and a root; nothing builds that map from the legacy tables.
-- Bindings, ownership claims, plans and capabilities are held in memory and are
-  lost on restart. There is no schema or upgrade.
+- Plans, packs and capabilities are held in memory and are lost on restart.
+  Bindings and ownership claims are durable, but nothing releases or hands over
+  a claim.
+- Two registrations of different keys for the same storage field can race: the
+  one-series-per-field check is in `RegisterBinding`, and no unique key covers
+  the field because a rejected binding may share it.
+- The database store tests and the upgrade test skip without
+  `KADUPUL_TEST_MYSQL_DSN`. CI runs them on MariaDB 10.11 and MySQL 8.4.
 - There is no IdentityAccess authorizer, so binding approval and plan
   activation are denied outside tests. Without approval no binding resolves.
 - Legacy discovery is tested on SQLite only, not MariaDB or MySQL, covers
-  interface identity fields and six reviewed field names, and has no caller.
+  interface identity fields and six reviewed field names, and is wired to the
+  web connection but has no caller. The wiring test does not open a connection.
 - An existing legacy field cannot be claimed, so nothing legacy can be moved to
   model-driven collection today.
 - The write path updates existing files only. It does not create them.

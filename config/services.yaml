@@ -1,3 +1,21 @@
+parameters:
+    # Model-driven RRD writes. The gate is closed and no environment variable
+    # feeds it. Binding approval and plan activation have no IdentityAccess
+    # authorizer yet, so nothing can be approved and opening the gate would
+    # have no effect; keep it false until an authorizer exists and this
+    # comment is replaced by the decision that opens it.
+    kadupul.monitoring.rrd_writes_enabled: false
+    # Empty means unconfigured. The sink then refuses every storage call
+    # instead of guessing a binary or a directory; nothing reads the legacy
+    # path_rrdtool or path_rra settings.
+    kadupul.monitoring.rrdtool_binary: ''
+    kadupul.monitoring.rrd_root: ''
+    # local_data_id => path below the root ending in .rrd. Nothing builds this
+    # from the legacy tables yet, so an unmapped id is reported as a missing file.
+    kadupul.monitoring.rrd_paths: {}
+    # Provisional ceiling on distinct series per metric for the normalizer.
+    kadupul.telemetry.series_limit_per_metric: 1000
+
 services:
     _defaults:
         autowire: true
@@ -397,9 +415,181 @@ services:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceLocations
     Kadupul\Inventory\Application\Query\SuggestDeviceLocations: ~
 
+    # Model-driven monitoring (Telemetry, ModelRegistry, Monitoring, Graphing sink).
+    # Bindings and writer ownership claims are durable (milestone 5, slice B).
+    # The other in-memory services lose their state at the end of each request;
+    # they are wired so the use cases resolve, not because persistence exists.
+    Kadupul\Telemetry\Infrastructure\:
+        resource: '../src/Telemetry/Infrastructure/'
+    Kadupul\Telemetry\Application\Contract\Clock:
+        alias: Kadupul\Telemetry\Infrastructure\Clock\SymfonyClock
+    Kadupul\Graphing\Application\Port\Clock:
+        alias: Kadupul\Graphing\Infrastructure\Clock\SymfonyClock
+    # In-memory: the guard counts series within one request only.
+    Kadupul\Telemetry\Domain\CardinalityGuard:
+        arguments:
+            $limitPerMetric: '%kadupul.telemetry.series_limit_per_metric%'
+    Kadupul\Telemetry\Application\CounterNormalizer: ~
+
+    Kadupul\ModelRegistry\Infrastructure\:
+        resource: '../src/ModelRegistry/Infrastructure/'
+    # In-memory repositories.
+    Kadupul\ModelRegistry\Application\Port\ModelRepository:
+        alias: Kadupul\ModelRegistry\Infrastructure\Persistence\InMemoryModelRepository
+    Kadupul\ModelRegistry\Application\Port\DeviceAssociationRepository:
+        alias: Kadupul\ModelRegistry\Infrastructure\Persistence\InMemoryDeviceAssociationRepository
+    Kadupul\ModelRegistry\Contract\ModelCatalog:
+        alias: Kadupul\ModelRegistry\Infrastructure\Catalog\RepositoryModelCatalog
+    Kadupul\ModelRegistry\Application\Command\RegisterModel: ~
+    Kadupul\ModelRegistry\Application\Command\RecordDeviceObservation: ~
+    Kadupul\ModelRegistry\Application\Query\LookupModel: ~
+    Kadupul\ModelRegistry\Application\Query\ResolveDependencies: ~
+
+    Kadupul\Monitoring\Infrastructure\:
+        resource: '../src/Monitoring/Infrastructure/'
+    # Read-only legacy discovery over the web connection; SELECT statements only.
+    Kadupul\Monitoring\Infrastructure\Legacy\LegacyDataSourceDiscovery:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
+    Kadupul\Monitoring\Application\Port\ExistingMonitoring:
+        alias: Kadupul\Monitoring\Infrastructure\Legacy\LegacyExistingMonitoring
+    # Bindings and ownership claims are kept on the main connection: they are
+    # central configuration, and the web connection may use read-only
+    # credentials. An offline collector has no main connection and fails
+    # instead of keeping a private copy.
+    Kadupul\Monitoring\Infrastructure\Persistence\DbalBindingRepository:
+        arguments:
+            $database: '@doctrine.dbal.main_connection'
+    Kadupul\Monitoring\Application\Port\BindingRepository:
+        alias: Kadupul\Monitoring\Infrastructure\Persistence\DbalBindingRepository
+    Kadupul\Monitoring\Infrastructure\Persistence\DbalWriterClaimStore:
+        arguments:
+            $database: '@doctrine.dbal.main_connection'
+    # In-memory stores: plans, packs and capabilities.
+    Kadupul\Monitoring\Application\Port\CollectionPlanStore:
+        alias: Kadupul\Monitoring\Infrastructure\Persistence\InMemoryCollectionPlanStore
+    Kadupul\Monitoring\Application\Port\DeviceCapabilityStore:
+        alias: Kadupul\Monitoring\Infrastructure\Persistence\InMemoryDeviceCapabilityStore
+    Kadupul\Monitoring\Application\Port\PackRepository:
+        alias: Kadupul\Monitoring\Infrastructure\Persistence\InMemoryPackRepository
+    Kadupul\Monitoring\Infrastructure\Persistence\WriterOwnershipRegistry:
+        arguments:
+            $legacy: '@Kadupul\Monitoring\Infrastructure\Legacy\LegacyDataSourceDiscovery'
+            $claims: '@Kadupul\Monitoring\Infrastructure\Persistence\DbalWriterClaimStore'
+    Kadupul\Monitoring\Application\Port\WriterOwnershipProbe:
+        alias: Kadupul\Monitoring\Infrastructure\Persistence\WriterOwnershipRegistry
+    Kadupul\Monitoring\Contract\BindingCatalog:
+        alias: Kadupul\Monitoring\Application\ResolveBinding
+    Kadupul\Monitoring\Application\ResolveBinding: ~
+    Kadupul\Monitoring\Application\RegisterBinding: ~
+    # No authorizer is wired, so approval and activation are denied.
+    Kadupul\Monitoring\Application\ApproveBinding:
+        arguments:
+            $authorizer: null
+    Kadupul\Monitoring\Domain\ActivationPolicy: ~
+    Kadupul\Monitoring\Application\ActivateCollectionPlan:
+        arguments:
+            $authorizer: null
+    # No protocol adapter exists, so discovery has no providers.
+    Kadupul\Monitoring\Application\DiscoverDeviceCapabilities:
+        arguments:
+            $providers: []
+    Kadupul\Monitoring\Application\MonitoringPlanner: ~
+
+    # The RRD sink. Storage adapters come from RrdStorageFactory, which returns a
+    # refusing stand-in while the root or binary is empty.
+    Kadupul\Graphing\Infrastructure\Rrd\RrdStorageFactory: ~
+    Kadupul\Graphing\Infrastructure\Rrd\RrdUpdateFormatter: ~
+    Kadupul\Graphing\Application\Command\WriteGate:
+        arguments:
+            $writesEnabled: '%kadupul.monitoring.rrd_writes_enabled%'
+    Kadupul\Graphing\Application\Port\RrdTargetLocator:
+        factory: ['@Kadupul\Graphing\Infrastructure\Rrd\RrdStorageFactory', 'locator']
+        arguments:
+            $root: '%kadupul.monitoring.rrd_root%'
+            $relativePaths: '%kadupul.monitoring.rrd_paths%'
+    Kadupul\Graphing\Application\Port\RrdTargetInspector:
+        factory: ['@Kadupul\Graphing\Infrastructure\Rrd\RrdStorageFactory', 'inspector']
+        arguments:
+            $binary: '%kadupul.monitoring.rrdtool_binary%'
+    Kadupul\Graphing\Application\Port\RrdUpdater:
+        factory: ['@Kadupul\Graphing\Infrastructure\Rrd\RrdStorageFactory', 'updater']
+        arguments:
+            $binary: '%kadupul.monitoring.rrdtool_binary%'
+    Kadupul\Graphing\Application\Port\UpdateFormatter:
+        alias: Kadupul\Graphing\Infrastructure\Rrd\RrdUpdateFormatter
+    Kadupul\Graphing\Application\Command\RecordSamples: ~
+    Kadupul\Telemetry\Contract\SampleSink:
+        alias: Kadupul\Graphing\Application\Command\RecordSamples
+
 when@test:
     services:
         _defaults:
             autowire: true
             autoconfigure: true
         Kadupul\Tests\Fixtures\PresentationProbeCommand: ~
+        # Private services are removed when unused; these public aliases let the
+        # wiring test resolve them through test.service_container.
+        test.model_driven.sample_sink:
+            alias: Kadupul\Telemetry\Contract\SampleSink
+            public: true
+        test.model_driven.binding_catalog:
+            alias: Kadupul\Monitoring\Contract\BindingCatalog
+            public: true
+        test.model_driven.model_catalog:
+            alias: Kadupul\ModelRegistry\Contract\ModelCatalog
+            public: true
+        test.model_driven.telemetry_clock:
+            alias: Kadupul\Telemetry\Application\Contract\Clock
+            public: true
+        test.model_driven.graphing_clock:
+            alias: Kadupul\Graphing\Application\Port\Clock
+            public: true
+        test.model_driven.rrd_locator:
+            alias: Kadupul\Graphing\Application\Port\RrdTargetLocator
+            public: true
+        test.model_driven.register_model:
+            alias: Kadupul\ModelRegistry\Application\Command\RegisterModel
+            public: true
+        test.model_driven.record_device_observation:
+            alias: Kadupul\ModelRegistry\Application\Command\RecordDeviceObservation
+            public: true
+        test.model_driven.lookup_model:
+            alias: Kadupul\ModelRegistry\Application\Query\LookupModel
+            public: true
+        test.model_driven.resolve_dependencies:
+            alias: Kadupul\ModelRegistry\Application\Query\ResolveDependencies
+            public: true
+        test.model_driven.register_binding:
+            alias: Kadupul\Monitoring\Application\RegisterBinding
+            public: true
+        test.model_driven.approve_binding:
+            alias: Kadupul\Monitoring\Application\ApproveBinding
+            public: true
+        test.model_driven.activate_collection_plan:
+            alias: Kadupul\Monitoring\Application\ActivateCollectionPlan
+            public: true
+        test.model_driven.discover_device_capabilities:
+            alias: Kadupul\Monitoring\Application\DiscoverDeviceCapabilities
+            public: true
+        test.model_driven.monitoring_planner:
+            alias: Kadupul\Monitoring\Application\MonitoringPlanner
+            public: true
+        test.model_driven.counter_normalizer:
+            alias: Kadupul\Telemetry\Application\CounterNormalizer
+            public: true
+        test.model_driven.plan_serializer:
+            alias: Kadupul\Monitoring\Infrastructure\Serialization\PlanSerializer
+            public: true
+        test.model_driven.pack_reader:
+            alias: Kadupul\Monitoring\Infrastructure\Pack\JsonPackReader
+            public: true
+        test.model_driven.binding_repository:
+            alias: Kadupul\Monitoring\Application\Port\BindingRepository
+            public: true
+        test.model_driven.writer_ownership:
+            alias: Kadupul\Monitoring\Application\Port\WriterOwnershipProbe
+            public: true
+        test.model_driven.main_connection:
+            alias: doctrine.dbal.main_connection
+            public: true
