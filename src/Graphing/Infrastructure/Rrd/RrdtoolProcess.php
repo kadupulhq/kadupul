@@ -11,16 +11,19 @@ namespace Kadupul\Graphing\Infrastructure\Rrd;
 
 use Kadupul\Graphing\Application\Port\StorageRejected;
 use Kadupul\Telemetry\Contract\RejectionReason;
+use Symfony\Component\Process\Exception\ProcessSignaledException;
+use Symfony\Component\Process\Exception\ProcessStartFailedException;
+use Symfony\Component\Process\Exception\ProcessTimedOutException;
+use Symfony\Component\Process\Process;
 
 /**
- * Runs one rrdtool command as an argument vector, never through a shell,
- * with a deadline. The binary is configured explicitly rather than read
+ * Runs one rrdtool command as an argument vector, not through a shell, with
+ * a deadline. The binary is configured explicitly rather than read
  * from legacy settings, so the write path does not depend on the legacy
  * bootstrap and cannot be redirected by a stored setting.
  */
 final class RrdtoolProcess
 {
-    private const CHUNK = 65536;
     private const MAX_CAPTURE = 1048576;
 
     public function __construct(
@@ -46,78 +49,45 @@ final class RrdtoolProcess
                 throw new UnrepresentableArgument('An rrdtool argument cannot contain NUL.');
             }
         }
-        $deadline = hrtime(true) + (int) ($this->timeoutSeconds * 1e9);
-        // A fixed environment keeps rrdtool's output format and time zone independent of the caller's.
-        $process = proc_open(
+        // When the spawn itself fails, Symfony retries it through /bin/sh with
+        // every argument single-quoted. Checking the binary first keeps a
+        // removed or unexecutable rrdtool a start failure rather than a
+        // shell's exit 126; only removal between here and the spawn reaches
+        // that quoted fallback.
+        if (!is_file($this->binary) || !is_executable($this->binary)) {
+            throw $this->notStarted();
+        }
+        // Keys set to false are removed, so rrdtool's output format and time
+        // zone do not depend on the caller's environment.
+        $environment = array_map(static fn(): bool => false, getenv() + $_ENV);
+        $process = new Process(
             [$this->binary, ...$arguments],
-            [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']],
-            $pipes,
             null,
-            ['PATH' => '/usr/bin:/bin', 'LC_ALL' => 'C', 'TZ' => 'UTC'],
+            ['PATH' => '/usr/bin:/bin', 'LC_ALL' => 'C', 'TZ' => 'UTC'] + $environment,
+            null,
+            $this->timeoutSeconds,
         );
-        if (!is_resource($process)) {
-            throw new StorageRejected(RejectionReason::StorageFailure, 'rrdtool could not be started.');
-        }
-        fclose($pipes[0]);
-        $captured = [1 => '', 2 => ''];
-        $open = [1 => $pipes[1], 2 => $pipes[2]];
-        foreach ($open as $stream) {
-            stream_set_blocking($stream, false);
-        }
+        $process->disableOutput();
+        $captured = [Process::OUT => '', Process::ERR => ''];
+        $capture = static function (string $type, string $chunk) use (&$captured): void {
+            $captured[$type] .= substr($chunk, 0, max(0, self::MAX_CAPTURE - strlen($captured[$type])));
+        };
         try {
-            // Both streams are drained together; reading one to the end first can deadlock once the other fills its pipe.
-            while ($open !== []) {
-                $remaining = $deadline - hrtime(true);
-                if ($remaining <= 0) {
-                    throw $this->timedOut();
-                }
-                $read = array_values($open);
-                $write = null;
-                $except = null;
-                if (stream_select($read, $write, $except, intdiv($remaining, 1000000000), intdiv($remaining % 1000000000, 1000)) === false) {
-                    throw new StorageRejected(RejectionReason::StorageFailure, 'Waiting for rrdtool output failed.');
-                }
-                foreach ($read as $stream) {
-                    $index = array_search($stream, $open, true);
-                    $chunk = fread($stream, self::CHUNK);
-                    if ($chunk !== false && $chunk !== '') {
-                        if (strlen($captured[$index]) < self::MAX_CAPTURE) {
-                            $captured[$index] .= substr($chunk, 0, self::MAX_CAPTURE - strlen($captured[$index]));
-                        }
-                    } elseif (feof($stream)) {
-                        fclose($stream);
-                        unset($open[$index]);
-                    }
-                }
-            }
-            $exitCode = $this->waitForExit($process, $deadline);
-        } catch (StorageRejected $e) {
-            proc_terminate($process, 9);
-            foreach ($open as $stream) {
-                fclose($stream);
-            }
-            proc_close($process);
-            throw $e;
+            $exitCode = $process->run($capture);
+        } catch (ProcessTimedOutException) {
+            throw $this->timedOut();
+        } catch (ProcessStartFailedException) {
+            throw $this->notStarted();
+        } catch (ProcessSignaledException $e) {
+            $exitCode = 128 + $e->getSignal();
         }
-        proc_close($process);
 
-        return new RrdtoolResult($exitCode, $captured[1], $captured[2]);
+        return new RrdtoolResult($exitCode, $captured[Process::OUT], $captured[Process::ERR]);
     }
 
-    /** @param resource $process */
-    private function waitForExit($process, int $deadline): int
+    private function notStarted(): StorageRejected
     {
-        // proc_get_status reports the exit code only the first time it sees the process stopped, so it is read here once.
-        while (true) {
-            $status = proc_get_status($process);
-            if (!$status['running']) {
-                return $status['signaled'] ? 128 + $status['termsig'] : $status['exitcode'];
-            }
-            if (hrtime(true) >= $deadline) {
-                throw $this->timedOut();
-            }
-            usleep(1000);
-        }
+        return new StorageRejected(RejectionReason::StorageFailure, 'rrdtool could not be started.');
     }
 
     private function timedOut(): StorageRejected

@@ -48,8 +48,11 @@ The RRD implementation (`RecordSamples` in Graphing) follows these rules.
   injected clock. A second at or before the file's last update is refused as a
   duplicate or out of order. Two readings of one data source in one second are a
   duplicate, because rows have one-second resolution.
-- RRDtool runs as an argument vector, without a shell, from a configured binary,
-  with a deadline. A template or row that begins with `-` is refused.
+- RRDtool runs as an argument vector through Symfony Process, from a configured
+  binary, with a deadline. Symfony Process retries a failed spawn through
+  `/bin/sh` with each argument single-quoted; the binary is checked just before
+  starting so only a binary removed in that interval reaches that path. A
+  template or row that begins with `-` is refused.
 - Files are located under one configured root with no default, symlinks are
   resolved, and the resolved path is the one passed to RRDtool.
 - After a failed multi-row call the file is read again, and rows RRDtool already

@@ -578,10 +578,15 @@ the real path to stay inside the real root, and hands that resolved path to
 RRDtool. Tests cover symlinked files and directories that escape the root,
 traversal, a dangling link and a directory named like a file.
 
-Process execution. `RrdtoolProcess` runs the binary as an argument vector with no
-shell, from a configured absolute path rather than a legacy setting, with a fixed
-environment (`PATH`, `LC_ALL=C`, `TZ=UTC`), a deadline, and both output streams
-drained together and capped at 1 MiB. `RrdtoolUpdater` refuses any template or
+Process execution. `RrdtoolProcess` starts the binary through Symfony Process
+with an argument array, never a command string, from a configured absolute path
+rather than a legacy setting, with a fixed environment (`PATH`, `LC_ALL=C`,
+`TZ=UTC`, nothing inherited), a deadline after which the process is killed, and
+both output streams drained together and capped at 1 MiB. When a spawn fails,
+Symfony Process retries it through `/bin/sh` with each argument single-quoted.
+`RrdtoolProcess` checks that the binary is still an executable file just before
+starting it, so only a binary removed in that interval reaches the quoted
+fallback, which then reports exit status 126 or 127 as a `StorageFailure`. `RrdtoolUpdater` refuses any template or
 row that begins with `-`, so no value can be read as an option such as
 `--daemon`.
 
@@ -772,6 +777,7 @@ reachable from the running application.
 | Monitoring: writer ownership | Implemented: `WriterOwnershipRegistry` (in-memory claims) over the `WriterOwnershipProbe` port; legacy side is `LegacyDataSourceDiscovery::ownership()` |
 | Monitoring: legacy data-source discovery | Implemented and read-only: `LegacyDataSourceDiscovery`, `LegacyExistingMonitoring` (also the `ExistingMonitoring` adapter used for overlaps). Tested on SQLite only; no caller in the application |
 | Graphing: gated sample write | Implemented: `RecordSamples`, `WriteGate`, `RrdUpdateFormatter`, `RrdtoolInspector`, `RrdtoolUpdater`, `RrdtoolProcess`, `ConfiguredRootTargetLocator`. Tested with real RRDtool files in a temporary directory; no production caller, and excluded from the container |
+| Clock adapters: `Telemetry\Infrastructure\Clock\SymfonyClock`, `Graphing\Infrastructure\Clock\SymfonyClock` | Scaffolding: each implements its module's `Clock` port over Symfony's `ClockInterface` and returns UTC with microseconds; tested with `MockClock` in `SymfonyClockTest`, not wired into `config/services.yaml`, so tests still use `FixedClock` |
 | Audit event for plan approval, activation and binding approval | Future |
 | Capability reconciliation and caching | Reconciliation on rediscovery implemented in `DiscoverDeviceCapabilities`; time-to-live caching and operator overrides future |
 | Resource enumeration (interfaces and other pack resources) | Future; the planner takes resources as input |
@@ -822,8 +828,9 @@ reachable from the running application.
   classes reported 0 findings across 188 files, with 106 of those files
   partially parsed. Zero findings is not a clean result for the unparsed
   regions. A manual search of the same code found no `exec`-family calls,
-  `eval`, `unserialize` or backticks; the only process launch is the
-  argument-array `proc_open` in `RrdtoolProcess`.
+  `eval`, `unserialize` or backticks; the only process launch was the
+  argument-array `proc_open` in `RrdtoolProcess`, which now uses Symfony Process
+  with an argument array instead. The Semgrep run predates that change.
 
 End-to-end evidence with fakes only: `ModelDrivenMonitoringWorkflowTest` runs
 discovery, the registry check, the shipped example pack, planning, plan
