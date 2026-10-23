@@ -179,3 +179,17 @@ function compatibility_console_bottom()
     compatibility_test_record('console_bottom', []);
     print '<footer id="console-fixture-bottom">Bottom</footer>';
 }
+
+// Registered only by the permission denied integration scenario.
+function compatibility_denied($mode)
+{
+    compatibility_test_record('custom_denied', [$mode, $_SERVER['SCRIPT_NAME'] ?? '']);
+    if (read_config_option('compatibility_denied_reskin') !== 'on') {
+        print '<p id="denied-native-output">ignored</p>';
+        return $mode;
+    }
+    print '<!DOCTYPE html><html><head><title>Custom denied</title></head><body><h1 id="denied-fixture">Custom denied</h1>';
+    print '<form id="denied-fixture-form" method="post" action="utilities.php"><button>Local action</button></form>';
+    print '<script ' . CactiSecureHeaders::getNonceAttribute() . '>window.deniedFixture = true;</script></body></html>';
+    return OPER_MODE_RESKIN;
+}

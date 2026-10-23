@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-23 02:46-0600\n"
+"POT-Creation-Date: 2026-10-23 05:25-0600\n"
 "PO-Revision-Date: 2024-04-20 19:24-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -188,8 +188,8 @@ msgstr "Aşağıdaki Toplam Grafikleri, Şablon tabanlı bir Toplam&#39;a geçir
 #: automation_snmp.php:245 graphs.php:1169 graphs.php:1219 graphs.php:1222
 #: graphs.php:1266 graphs.php:1859 include/auth.php:309
 #: lib/api_aggregate.php:2209 lib/api_aggregate.php:2224 lib/html_form.php:1423
-#: lib/html_reports.php:632 managers.php:1130 permission_denied.php:14
-#: permission_denied.php:16
+#: lib/html_reports.php:632 managers.php:1130
+#: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "Dönüş"
 
@@ -2196,7 +2196,8 @@ msgid "Item"
 msgstr "Öğe"
 
 #: automation_snmp.php:541 include/auth.php:341 include/global_settings.php:772
-#: package_import.php:510 permission_denied.php:43 plugins.php:641
+#: package_import.php:510 plugins.php:641
+#: templates/platform/permission_denied.html.twig
 msgid "Version"
 msgstr "Versiyon"
 
@@ -4146,7 +4147,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller henüz çalışmadı."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8239 permission_denied.php:29 permission_denied.php:36
+#: lib/functions.php:8239 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "Izin reddedildi"
 
@@ -5088,15 +5089,17 @@ msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "FATAL: Bu Kadupul alanına erişmek için giriş yapmalısınız."
 
 #: include/auth.php:309 include/auth.php:311 lib/auth.php:5647
-#: permission_denied.php:14 permission_denied.php:16
+#: templates/platform/permission_denied.html.twig
 msgid "Login Again"
 msgstr "Tekrar giriş yap"
 
-#: include/auth.php:317 lib/functions.php:8240 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8240
+#: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Bunun bir hata olduğunu düşünüyorsanız. Lütfen Kadupul Yöneticinizle görüşün."
 
-#: include/auth.php:317 lib/functions.php:8240 permission_denied.php:38
+#: include/auth.php:317 lib/functions.php:8240
+#: templates/platform/permission_denied.html.twig
 #, fuzzy
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Kadupul bu bölümüne erişmene izin verilmiyor."

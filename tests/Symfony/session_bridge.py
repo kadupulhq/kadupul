@@ -55,6 +55,8 @@ def main():
         verify_console_home(harness, check)
         verify_console_collectors(harness, check)
         verify_console_prefix(harness, check)
+        from permission_denied_scenarios import verify_permission_denied
+        verify_permission_denied(harness, check)
         anonymous = Session(harness.base)
         response = anonymous.request('/app.php/session')
         check(response['status'] == 401, 'Symfony entry requires an authenticated session')

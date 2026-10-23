@@ -12,7 +12,7 @@
         {% block javascripts %}{% endblock %}
         {% endblock %}
     </head>
-    <body>{% block page %}
+    <body{% block body_attributes %}{% endblock %}>{% block page %}
         {% set menu = console_menu() %}
         <div id="cactiPageHead" class="cactiPageHead" role="banner"><div id="tabs"></div></div>
         <div id="cactiContent" class="cactiContent">

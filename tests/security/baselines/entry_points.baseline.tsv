@@ -82,6 +82,7 @@ app.php/links/action/{operation}	symfony:navigation_link_action	methods=GET|HEAD
 app.php/links/legacy	symfony:navigation_links_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8
 app.php/links/new	symfony:navigation_link_create	methods=GET|HEAD|POST; ConsoleAccess realm 8
 app.php/links/{id}/edit	symfony:navigation_link_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8
+app.php/permission-denied	symfony:platform_permission_denied	methods=GET|HEAD; AuthenticatedAccess signed-in account; no realm required
 app.php/session	symfony:session	methods=GET|HEAD; ConsoleAccess realm 8; reviewed at c1e137157c2e: answers 401 with no identity when the actor is null
 app.php/utilities/rrd-check	symfony:platform_rrd_checks	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
 app.php/utilities/rrd-check/legacy	symfony:platform_rrd_check_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 15
@@ -271,7 +272,7 @@ logout.php	anonymous-allowed	include/auth.php returns before the session check
 managers.php	realm:15	include/auth.php
 mibs/	web-server-denied	nginx; apache .htaccess
 package_import.php	realm:17	include/auth.php
-permission_denied.php	authenticated	include/auth.php realm -1
+permission_denied.php	symfony:forward	forwards to app.php/permission-denied
 plugins.php	realm:101	include/auth.php
 plugins/index.php	anonymous-allowed	redirect-only
 poller.php	cli-only	guard: include/cli_check.php

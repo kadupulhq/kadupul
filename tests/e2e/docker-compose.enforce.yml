@@ -4,8 +4,8 @@
 #
 # Flips CSP_MODE to 'nonce' so the browser rejects any inline <script>
 # or <style> that doesn't carry a matching nonce attribute. Only the
-# pilot pages (logout.php, permission_denied.php) emit matching
-# nonces today, so most of the UI fails to render JS under this
+# pilot page (logout.php) emits matching nonces today, so most of
+# the legacy UI fails to render JS under this
 # profile. Useful for asserting that the enforcing policy actually
 # blocks un-migrated content.
 
