@@ -5,6 +5,7 @@ from html.parser import HTMLParser
 import json
 from urllib.error import HTTPError
 from urllib.parse import urlencode
+from urllib.request import Request
 
 REQUIRED_CHECKS = (
     'installed legacy write requires actual CSRF before mutation: /graphs.php',
@@ -24,7 +25,7 @@ REQUIRED_CHECKS = (
     'installed deleted graph editor refuses stale identity without mutation',
     'installed color synchronization reports genuine empty usage',
     'installed color synchronization regenerates actual template and standalone cohorts',
-    'installed color second cohort refusal preserves failed graph and reports earlier committed cohort',
+    'installed color cohort refusal rolls back every cohort of the template',
     'installed color discovery failure reports refusal instead of empty usage',
     'installed aggregate graph editor saves actual rendered settings and member identity',
     'installed aggregate graph malformed request refuses before all nine participant writes',
@@ -155,6 +156,34 @@ def confirmation(session, page, action, identifier, check, updates=None, enabled
 
 def bulk(session, page, action, identifier, check, updates=None, enabled=True):
     return request(session, page, confirmation(session, page, action, identifier, check, updates, enabled))
+
+
+def color_sync_path(identifier):
+    return '/app.php/graphing/color-templates/actions?' + urlencode([('action', 'sync'), ('ids[]', str(identifier))])
+
+
+def color_sync_form(session, identifier):
+    """Render the Symfony color template sync confirmation and return its form."""
+    path = color_sync_path(identifier)
+    status, body, _ = request(session, path)
+    parsed = RenderedForm()
+    parsed.feed(body)
+    form = next((fields for fields in parsed.forms if 'color_template_action[selection]' in fields), None)
+    if status != 200 or form is None:
+        raise RuntimeError('Color template sync confirmation did not render: HTTP %d' % status)
+    return path, form
+
+
+def color_sync(session, identifier, form=None):
+    """Post the sync form with the same-origin evidence Symfony's stateless CSRF needs."""
+    path, rendered = color_sync_form(session, identifier) if form is None else (color_sync_path(identifier), form)
+    request_ = Request(session.base + path, data=urlencode(rendered).encode(), headers={'Origin': session.base})
+    try:
+        response = session.opener.open(request_, timeout=120)
+    except HTTPError as error:
+        response = error
+    with response:
+        return response.status, response.read().decode('utf-8', errors='strict')
 
 
 def template_snapshot(harness, identifier):
@@ -462,7 +491,7 @@ def verify_color_cohorts(harness, session, aggregate, color, created, check):
                 f'WHERE aggregate_template_id={aggregate};'
                 f'UPDATE aggregate_graphs_graph_item SET color_template={color} '
                 f'WHERE aggregate_graph_id={standalone};')
-    status, body, _ = bulk(session, '/color_templates.php', 3, color, check, enabled=False)
+    status, body = color_sync(session, color)
     check(status == 200 and 'had 1 Aggregate Templates pushed out and 1 Non-Templated Aggregates' in body
           and all(int(harness.sql(f'SELECT COUNT(*) FROM graph_templates_item WHERE '
                                  f'local_graph_id={local} AND color_id=4').strip()) > 0
@@ -475,20 +504,20 @@ def verify_color_cohorts(harness, session, aggregate, color, created, check):
                 f"FOR EACH ROW BEGIN IF NEW.local_graph_id={created[0][1]} THEN "
                 "SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Owned HTTP second cohort refusal'; END IF; END$$\nDELIMITER ;")
     try:
-        status, body, _ = bulk(session, '/color_templates.php', 3, color, check, enabled=False)
-        check(status == 200 and 'synchronization failed. Some aggregates may already have been updated' in body
+        status, body = color_sync(session, color)
+        # One worker transaction covers both cohorts of a template.
+        check(status == 502 and 'synchronization failed. Some aggregates may already have been updated' in body
               and harness.sql(f'SELECT * FROM graph_templates_item WHERE local_graph_id={created[0][1]} ORDER BY id') == before_standalone
-              and harness.sql(f'SELECT * FROM graph_templates_item WHERE local_graph_id={created[1][1]} ORDER BY id') != before_template,
-              'installed color second cohort refusal preserves failed graph and reports earlier committed cohort')
+              and harness.sql(f'SELECT * FROM graph_templates_item WHERE local_graph_id={created[1][1]} ORDER BY id') == before_template,
+              'installed color cohort refusal rolls back every cohort of the template')
     finally:
         harness.sql('DROP TRIGGER owned_http_color_refusal')
     # A same-name checked discovery must fail, rather than report a legitimately unused template.
-    form = confirmation(session, '/color_templates.php', 3, color, check, enabled=False)
+    _, form = color_sync_form(session, color)
     harness.sql('RENAME TABLE aggregate_graph_templates_item TO owned_http_template_cache')
     try:
-        status, body, _ = request(session, '/color_templates.php', form)
-        check(status == 200 and 'synchronization failed' in body
-              and 'had no Aggregate Templates or Graphs' not in body,
+        status, body = color_sync(session, color, form)
+        check(status == 502 and 'had no Aggregate Templates or Graphs' not in body,
               'installed color discovery failure reports refusal instead of empty usage')
     finally:
         harness.sql('RENAME TABLE owned_http_template_cache TO aggregate_graph_templates_item')
@@ -532,7 +561,7 @@ def verify_cdef_legacy_pages(harness, session, check):
                           f"aggregate_template_id={aggregate} AND item_skip='on'").strip() == '0',
               'installed aggregate template persists the user inclusion choice')
         harness.sql(f"INSERT INTO color_templates(color_template_id,name) VALUES ({color},'Owned HTTP color');")
-        status, body, _ = bulk(session, '/color_templates.php', 3, color, check)
+        status, body = color_sync(session, color)
         check(status == 200 and 'had no Aggregate Templates or Graphs' in body,
               'installed color synchronization reports genuine empty usage')
         status, _, failed_cache = request(session, f'/aggregate_templates.php?action=edit&id={aggregate}')

@@ -1,0 +1,20 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'Delete Color Item'|trans({}, 'color_template') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    <h1>{{ 'Delete Color Item'|trans({}, 'color_template') }}</h1>
+    <p>{{ 'Click Continue to delete the following Color Template Color.'|trans({}, 'color_template') }}</p>
+    <p>{{ 'Color Template: %name%'|trans({'%name%': template.name}, 'color_template') }}<br>{{ 'Color Hex: %hex%'|trans({'%hex%': item.hex}, 'color_template') }}</p>
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form.revision) }}
+        <button type="submit">{{ 'Continue'|trans({}, 'color_template') }}</button>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+        <a href="{{ path('color_template_edit', {id: template.id}) }}">{{ 'Cancel'|trans({}, 'color_template') }}</a>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

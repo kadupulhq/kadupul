@@ -17,7 +17,6 @@ MESSAGES = (
     'Aggregate graph regeneration failed. Other graph settings may already have been saved; review them before retrying.',
     'Aggregate graph regeneration failed. Graph regeneration could not be confirmed; review the settings before retrying.',
     'Aggregate graph creation could not be confirmed. Review the graph settings before retrying.',
-    'Color Template synchronization failed. Some aggregates may already have been updated; retry after reviewing the settings.',
 )
 
 

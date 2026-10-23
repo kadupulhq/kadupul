@@ -1,0 +1,46 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% block title %}{{ {delete: 'Delete Color Templates', duplicate: 'Duplicate Color Templates', sync: 'Synchronize Color Templates'}[action]|trans({}, 'color_template') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    <h1>{{ {delete: 'Delete Color Templates', duplicate: 'Duplicate Color Templates', sync: 'Synchronize Color Templates'}[action]|trans({}, 'color_template') }}</h1>
+    {% if completed or synchronized is not empty %}
+    <ul role="status">
+        {% for result in synchronized %}
+            <li>{{ (result.aggregate_templates or result.aggregate_graphs
+                ? "Color Template '%name%' had %templates% Aggregate Templates pushed out and %graphs% Non-Templated Aggregates pushed out"
+                : "Color Template '%name%' had no Aggregate Templates or Graphs using this Color Template.")|trans({'%name%': result.template, '%templates%': result.aggregate_templates, '%graphs%': result.aggregate_graphs}, 'color_template') }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% if not_run is not empty %}
+    <p role="alert">{{ 'The time limit was reached before these Color Templates were synchronized. Select them again to synchronize them:'|trans({}, 'color_template') }}</p>
+    <ul>{% for template in not_run %}<li>{{ template.name }}</li>{% endfor %}</ul>
+    {% endif %}
+    {% if completed %}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+    <p><a href="{{ path('color_template_list', filters) }}">{{ 'Back to Color Templates'|trans({}, 'color_template') }}</a></p>
+    {% else %}
+    <p>{{ {delete: 'Click Continue to delete the following Color Templates.', duplicate: 'Click Continue to duplicate the following Color Templates. You can optionally change the title format for the new Color Templates.', sync: 'Click Continue to synchronize all Aggregate Graphs with the selected Color Templates.'}[action]|trans({}, 'color_template') }}</p>
+    {% if action == 'sync' %}<p>{{ 'Each Color Template is synchronized in turn. Synchronization stops at the first failure, and templates not started within %seconds% seconds are left for another run.'|trans({'%seconds%': constant('Kadupul\\Graphing\\Application\\Port\\ColorTemplateSynchronization::DEADLINE_SECONDS')}, 'color_template') }}</p>{% endif %}
+    <ul>
+        {% for template in templates %}
+            <li>{{ template.name }}{% if action == 'delete' and not template.deletable %} ({{ 'used by %graphs% aggregate graph items and %templates% aggregate template items'|trans({'%graphs%': template.graphs, '%templates%': template.templates}, 'color_template') }}){% endif %}</li>
+        {% endfor %}
+    </ul>
+    {% if action == 'delete' and used %}<p role="alert">{{ 'Color Templates used by an aggregate graph or aggregate template cannot be deleted.'|trans({}, 'color_template') }}</p>{% endif %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form.selection) }}
+        {{ form_widget(form.revisions) }}
+        {% if form.title_format is defined %}{{ form_row(form.title_format) }}{% endif %}
+        {% if not (action == 'delete' and used) %}<button type="submit">{{ 'Continue'|trans({}, 'color_template') }}</button>{% endif %}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+        <a href="{{ path('color_template_list', filters) }}">{{ 'Cancel'|trans({}, 'color_template') }}</a>
+    {{ form_end(form) }}
+    {% endif %}
+</main>
+{% endblock %}

@@ -94,8 +94,7 @@ final class PresentationAssociationEditorNativeCoverageTest extends TestCase
         $root = dirname(__DIR__, 2);
         $source = file_get_contents($root . '/tests/Fixtures/presentation-association-editors-native.php');
         self::assertNotFalse($source);
-        foreach (array('query-edit-xml' => 'data_query_edit();', 'query-association-edit' => 'data_query_item_edit();',
-            'color-edit' => 'aggregate_color_item_edit();', 'color-confirm' => 'aggregate_color_item_remove_confirm();') as $case => $call) {
+        foreach (array('query-edit-xml' => 'data_query_edit();', 'query-association-edit' => 'data_query_item_edit();') as $case => $call) {
             $directory = sys_get_temp_dir() . '/presentation-mutation-control-' . bin2hex(random_bytes(8));
             self::assertTrue(mkdir($directory, 0700));
             try {

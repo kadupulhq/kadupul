@@ -2147,6 +2147,16 @@ const REVIEWED_FEATURE_ACCESS = [
             'src/Graphing/Infrastructure/Legacy/GprintPresetSql.php' => 'df4f5a7ee047782c1a1e85893599f69bd3463d9f10c23046b8c8f61c8438f31f',
         ],
     ],
+    '/graphing/color-templates' => [
+        'label' => 'color template',
+        'realm' => 5,
+        'contract' => 'Kadupul\\Graphing\\Application\\Port\\ColorTemplateAccess',
+        'adapter' => 'Kadupul\\Graphing\\Infrastructure\\Legacy\\LegacyColorTemplateAccess',
+        'sources' => [
+            'src/Graphing/Infrastructure/Legacy/LegacyColorTemplateAccess.php' => '08d987e0995c5c09916bcb5d6980917c7558ae4fd93f8e395734fc390aec196c',
+            'src/Graphing/Infrastructure/Legacy/ColorTemplateSql.php' => 'a97eae170ec6008d41b208437686d11230c3eab13f1f56f692699af0747e27cd',
+        ],
+    ],
     '/utilities/rrd-check' => [
         'label' => 'RRD check',
         'realm' => 15,

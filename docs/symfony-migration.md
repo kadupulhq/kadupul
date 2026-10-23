@@ -1668,6 +1668,39 @@ trigger for `graph_templates_item.gprint_id`, so an item inserted by another
 writer after the check commits can still reference a deleted preset. The CDEF
 reference contract does not cover GPRINT.
 
+### Color template administration
+
+The color template list, editor, color items and the delete, duplicate and
+sync actions use Symfony routes, Forms and Twig under
+`/graphing/color-templates`. They live in the Graphing module beside the
+palette colors the items reference. `color_templates.php` and
+`color_templates_items.php` forward to two legacy routes, which redirect safe
+GET navigation and answer 409 to posted forms. Every route needs console access
+and realm 5, rechecked inside each write transaction. Names keep the
+255-character limit, counted in characters, and are stored as entered.
+
+Name edits, item edits and removals, item order and every bulk action carry a
+revision and refuse stale forms. A selection holds at most 100 templates, or
+10 for sync. A template that an aggregate graph or aggregate template uses
+keeps at least one color: `push_out_aggregates()` divides by the color count,
+so removing its last item is refused. The
+legacy list disabled the checkbox of a template used by an aggregate template,
+which also hid duplicate and sync; every row is now selectable, and the server
+refuses to delete a template that an aggregate graph or aggregate template
+references. That check locks the referencing rows, but neither aggregate item
+table has a foreign key, so an aggregate saved by another writer after the
+check commits can still reference a deleted template.
+
+Sync calls the legacy `push_out_aggregates()` through
+`bin/legacy-color-template-sync.php`, one worker per template, for the
+aggregate templates and the non-propagating or untemplated aggregate graphs
+the legacy action pushed out. Each worker rechecks the account and realms,
+locks the template and its items, refuses a template changed since the
+confirmation, and commits all of its aggregates or none. As before, the action
+stops at the first failed template; earlier templates stay committed. A worker
+may run for 120 seconds, so no new worker starts once a request has spent 180
+seconds; the page lists the templates left unsynchronized.
+
 ### RRD check
 
 The RRD check list, its search, age and row filters, and the purge action use

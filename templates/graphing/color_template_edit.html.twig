@@ -1,0 +1,59 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% block title %}{{ (template ? 'Edit Color Template' : 'Add Color Template')|trans({}, 'color_template') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+    <p><a href="{{ path('color_template_list', filters) }}">{{ 'Back to Color Templates'|trans({}, 'color_template') }}</a></p>
+    <h1>{{ template ? 'Color Template [edit: %name%]'|trans({'%name%': template.name}, 'color_template') : 'Color Template [new]'|trans({}, 'color_template') }}</h1>
+    {% if saved %}<output>{{ 'Color Template saved.'|trans({}, 'color_template') }}</output>{% endif %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.name) }}
+        {{ form_widget(form.revision) }}
+        <button type="submit">{{ 'Save'|trans({}, 'color_template') }}</button>
+    {{ form_end(form) }}
+    {% if template %}
+    <section aria-labelledby="color-template-items">
+        <h2 id="color-template-items">{{ 'Color Template Items'|trans({}, 'color_template') }}</h2>
+        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+        <p><a href="{{ path('color_template_item_create', {id: template.id}) }}">{{ 'Add Color Item'|trans({}, 'color_template') }}</a></p>
+        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route. #}
+        <form method="post" action="{{ path('color_template_item_order', {id: template.id}) }}">
+            <input type="hidden" name="color_template_order[items]" value="{{ items|map(item => item.id)|json_encode }}">
+            <input type="hidden" name="color_template_order[revision]" value="{{ order_revision }}">
+            <input type="hidden" name="color_template_order[_token]" value="{{ csrf_token('color_template_order') }}">
+            <table class="cactiTable">
+                <thead><tr class="tableHeader">
+                    <th scope="col">{{ 'Color Item'|trans({}, 'color_template') }}</th>
+                    <th scope="col">{{ 'Color'|trans({}, 'color_template') }}</th>
+                    <th scope="col">{{ 'Hex'|trans({}, 'color_template') }}</th>
+                    <th scope="col">{{ 'Actions'|trans({}, 'color_template') }}</th>
+                </tr></thead>
+                <tbody>
+                {% for item in items %}
+                    <tr>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+                        <td><a href="{{ path('color_template_item_edit', {id: template.id, itemId: item.id}) }}">{{ 'Item # %number%'|trans({'%number%': loop.index}, 'color_template') }}</a></td>
+                        <td>{{ item.colorName }}</td>
+                        <td>{{ item.hex }}</td>
+                        <td>
+                            {% if not loop.first %}<button type="submit" name="color_template_order[moveUp]" value="{{ item.id }}">{{ 'Move Up'|trans({}, 'color_template') }}</button>{% endif %}
+                            {% if not loop.last %}<button type="submit" name="color_template_order[moveDown]" value="{{ item.id }}">{{ 'Move Down'|trans({}, 'color_template') }}</button>{% endif %}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+                            <a href="{{ path('color_template_item_delete', {id: template.id, itemId: item.id}) }}">{{ 'Delete'|trans({}, 'color_template') }}</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="4"><em>{{ 'No Items'|trans({}, 'color_template') }}</em></td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </form>
+    </section>
+    {% endif %}
+</main>
+{% endblock %}

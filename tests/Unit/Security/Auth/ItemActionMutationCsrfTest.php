@@ -161,9 +161,6 @@ function itemActionCases()
         array('automation_tree_rules.php', 'item_moveup', array()),
         array('automation_tree_rules.php', 'item_movedown', array()),
         array('automation_tree_rules.php', 'item_remove', array()),
-        array('color_templates_items.php', 'item_moveup', array()),
-        array('color_templates_items.php', 'item_movedown', array()),
-        array('color_templates_items.php', 'item_remove', array()),
         array('data_queries.php', 'item_moveup_gsv', array()),
         array('data_queries.php', 'item_movedown_gsv', array()),
         array('data_queries.php', 'item_remove_gsv', array()),
@@ -202,7 +199,6 @@ function itemActionCases()
         array('tree.php', 'ajax_dnd', array('tree_ids' => array('line1', 'line2'))),
         array('automation_snmp.php', 'ajax_dnd', array('snmp_item' => array('line1', 'line2'))),
         array('automation_templates.php', 'ajax_dnd', array('template_ids' => array('line1', 'line2'))),
-        array('color_templates_items.php', 'ajax_dnd', array('color_item' => array('line1', 'line2'))),
         array('graphs_new.php', 'query_reload', array('host_id' => '1')),
         array('automation_graph_rules.php', 'remove', array()),
         array('automation_tree_rules.php', 'remove', array()),
@@ -236,7 +232,6 @@ test('item editors and lists still open by GET', function ($controller, $action)
 })->with(array(
     array('automation_snmp.php', 'item_edit'), array('automation_templates.php', 'edit'),
     array('automation_graph_rules.php', 'item_edit'), array('automation_tree_rules.php', 'item_edit'),
-    array('color_templates_items.php', 'item_edit'),
     array('data_queries.php', 'item_edit'), array('data_source_profiles.php', 'item_edit'),
     array('data_sources.php', 'data_edit'), array('data_templates.php', 'template_edit'),
     array('graphs_items.php', 'item_edit'), array('graph_templates_items.php', 'item_edit'),
@@ -335,7 +330,7 @@ test('no page triggers ajax_dnd or query_reload by GET', function () {
     }
     // These callers encode the complete URL as a JavaScript value. Keep the
     // POST/token handoff and all contextual encoding flags in the contract.
-    foreach (array('automation_snmp.php' => 'automation_snmp.php', 'color_templates.php' => 'color_templates_items.php') as $file => $controller) {
+    foreach (array('automation_snmp.php' => 'automation_snmp.php') as $file => $controller) {
         expect(file_get_contents($root . '/' . $file))
             ->toContain("loadPageUsingPostChecked(<?php print json_encode('$controller?action=ajax_dnd&id=' . ")
             ->toMatch("/JSON_HEX_TAG \\| JSON_HEX_AMP \\| JSON_HEX_APOS \\| JSON_HEX_QUOT \\| JSON_THROW_ON_ERROR\\);\\?>, \\$\\.tableDnD\\.serialize\\(\\) \\+ '&__csrf_magic=' \\+ encodeURIComponent\\(csrfMagicToken\\)\\);/");

@@ -151,6 +151,8 @@ def main():
         verify_palette_colors(harness, session, user_id, check)
         from gprint_preset_scenarios import verify_gprint_presets
         verify_gprint_presets(harness, session, user_id, check)
+        from color_template_scenarios import verify_color_templates
+        verify_color_templates(harness, session, user_id, check)
         from vdef_scenarios import verify_vdefs
         verify_vdefs(harness, session, user_id, check)
         from rrdcheck_scenarios import verify_rrdcheck
