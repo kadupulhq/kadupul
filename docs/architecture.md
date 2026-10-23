@@ -7,12 +7,19 @@ inside each module, and Symfony 7.4 as the application framework. LTS is unchang
 
 These are initial boundaries to validate against real use cases during migration,
 not a claim that the procedural application has already been decomposed.
+The ModelRegistry, Monitoring and Telemetry rows, and the Graphing sample write,
+describe the design in
+[model-driven monitoring](model-driven-monitoring.md); see its status table for
+what exists.
 
 | Module | Owns | Does not own |
 | --- | --- | --- |
 | Inventory | Device identity, sites, device groups and desired configuration | Collection scheduling or measurement storage |
 | Collection | Polling schedules, collector ownership, collection runs and sample acceptance | Device administration or graph presentation |
-| Graphing | Graph definitions, render/export requests and RRD integration | User identity or collector scheduling |
+| ModelRegistry | Known device models (YANG, OpenConfig, Redfish, SNMP MIB), revisions and per-device model associations | Collection decisions or protocol clients |
+| Monitoring | Capability discovery results, monitoring packs, collection plans, metric bindings and storage-field writer ownership; it decides what to collect and leaves when and how to a collector, so it does not replace Collection | Device identity, model catalogue or sample storage |
+| Telemetry | Protocol-neutral metric, resource and sample contracts, including exact 64-bit counters, raw sample values and the `SampleSink` contract | Scheduling, graph rendering or storage |
+| Graphing | Graph definitions, render/export requests and RRD integration, including the gated write of model-driven samples to existing RRD files | User identity, collector scheduling, or deciding which field a series maps to |
 | IdentityAccess | Identity, role assignments, authorization policy and audit attribution | Device or graph business rules |
 | Alerting | Alert rules, evaluation, incidents and notification intent | Mail transport or device configuration |
 | Platform | Operational health and application integration infrastructure | Business rules shared merely for convenience |
