@@ -265,7 +265,7 @@ if ($stage === 'save') {
     $audit = new class implements Kadupul\IdentityAccess\Contract\AuditTrail {
         public function record(Kadupul\IdentityAccess\Contract\AuditEvent $event): void {}
     };
-    $store = new Kadupul\Navigation\Infrastructure\Legacy\LegacyLinkStore($connection, $access, $audit, $configuration, $root);
+    $store = new Kadupul\Navigation\Infrastructure\Legacy\LegacyLinkStore($connection, $access, $audit, $configuration, Kadupul\Platform\Contract\PlatformConfiguration::fromBootstrap($root . '/include', 1, '/', PHP_OS));
     if ($scenario === 'grant-rollback') {
         $db->exec($db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite'
             ? "CREATE TRIGGER reject_permission_epoch BEFORE UPDATE OF reset_perms ON user_auth BEGIN SELECT RAISE(ABORT,'epoch-write-rejected'); END"
