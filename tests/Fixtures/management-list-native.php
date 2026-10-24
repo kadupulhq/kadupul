@@ -18,6 +18,8 @@ function management_list_fixture_run(): never
         if ($result === false) throw new RuntimeException('Invalid owned filter pattern');
         return $result;
     });
+    // The extracted helpers find the default session through the registry.
+    require_once $root . '/src/Platform/Infrastructure/Legacy/LegacyConnectionRegistry.php';
     foreach (['db_qstr', 'db_qstr_rlike'] as $name) eval(test_php_function_source(file_get_contents($root . '/lib/database.php'), $name));
     $GLOBALS['database_hostname'] = 'owned';
     $GLOBALS['database_port'] = '0';

@@ -12518,11 +12518,11 @@ msgstr "يجب عليك تحديد عمود إخراج XML لمصدر البيا
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "لا يحتوي قالب الرسم البياني على قوالب بيانات قيد الاستخدام. يرجى تصحيح قالب الرسم البياني الخاص بك"
 
-#: lib/database.php:2197
+#: lib/database.php:2149
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "فشل في تحديد طول حقل كلمة المرور ، لا يمكن الاستمرار كما قد تلف كلمة المرور"
 
-#: lib/database.php:2204
+#: lib/database.php:2156
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "فشل في تعديل طول حقل كلمة المرور ، لا يمكن الاستمرار كما قد تلف كلمة المرور"
 

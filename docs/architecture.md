@@ -122,6 +122,19 @@ key and value for pages, plugins and the poller. `rra_path` is not in it
 because RRD maintenance rewrites it at run time, and `is_web` is not because
 global.php decides it per entry script.
 
+`lib/database.php` reaches its connection state through
+`Platform/Infrastructure/Legacy/LegacyConnectionRegistry`: the session array,
+each session's reconnect settings, the default key and a collector's local and
+main handles. The state itself stays in the globals of the same names, because
+`include/global.php`, the `bin/legacy-*.php` handoffs, `lib/poller.php`,
+plugins and test fixtures read and assign them directly after the library
+loads. The registry reads them on every call and holds nothing, so a direct
+assignment is seen at once. Two declarations remain in `lib/database.php`:
+`db_check_reconnect()` writes the default key's parts back to the globals when
+`include/config.php` is missing, and `db_dump_data()` reads the account it
+hands to the database client. Moving the state out of the globals waits on a
+plugin contract for it.
+
 Assignable-site, device-creation choice, device-site filter, device details
 and site catalog reads use Doctrine DBAL. Each Inventory infrastructure adapter
 receives a module-owned DBAL connection and implements the existing application

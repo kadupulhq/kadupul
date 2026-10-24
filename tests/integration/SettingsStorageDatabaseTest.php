@@ -109,7 +109,7 @@ final class SettingsStorageDatabaseTest extends TestCase
             'write' => true,
             'read' => ['value' => 'x'],
             'dbal_loaded' => false,
-            'storage_classes' => ['Kadupul\Platform\Infrastructure\Legacy\LegacyLockRetry', 'Kadupul\Platform\Infrastructure\Legacy\LegacySettingsStorage'],
+            'storage_classes' => ['Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry', 'Kadupul\Platform\Infrastructure\Legacy\LegacyLockRetry', 'Kadupul\Platform\Infrastructure\Legacy\LegacySettingsStorage'],
             'composer_init' => [],
             'vendor_functions' => [],
         ], $boot);

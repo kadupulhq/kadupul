@@ -85,7 +85,7 @@ lib/clog_webapi.php	15	17
 lib/data_input_worker.php	1	1
 lib/data_query.php	12	18
 lib/data_source_profile_integrity.php	1	4
-lib/database.php	43	140
+lib/database.php	26	44
 lib/dsdebug.php	4	5
 lib/dsstats.php	13	26
 lib/export.php	9	24
