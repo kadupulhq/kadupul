@@ -115,7 +115,11 @@ final class TemporaryRrdRoot
         $rows = [];
         foreach (explode("\n", $this->run($rrdtool, ['fetch', $file, 'AVERAGE', '--start', (string) $start, '--end', (string) $end])) as $line) {
             if (preg_match('/\A([0-9]+): (.*)\z/', trim($line), $m) === 1) {
-                $rows[] = [(int) $m[1], preg_split('/\s+/', trim($m[2])) ?: []];
+                // rrdtool prints unknown as printf("%e") of its stored NaN. x86
+                // builds store a sign-bit NaN that glibc prints as -nan; the sign
+                // of a NaN carries no value, so both spellings mean unknown.
+                $values = preg_split('/\s+/', trim($m[2])) ?: [];
+                $rows[] = [(int) $m[1], array_map(static fn(string $v): string => $v === '-nan' ? 'nan' : $v, $values)];
             }
         }
 
