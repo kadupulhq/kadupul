@@ -26,41 +26,8 @@ final readonly class PaletteColorFilters
 
     public static function fromQuery(array $query, int $defaultRows, bool $defaultHasGraphs = false): self
     {
-        $allowed = ['filter', 'rows', 'page', 'sort_column', 'sort_direction', 'has_graphs', 'named'];
-        if (array_diff(array_keys($query), $allowed) !== []) {
-            throw new \InvalidArgumentException('Invalid color filters.');
-        }
-        foreach ($query as $key => $value) {
-            if (!is_string($value)) {
-                throw new \InvalidArgumentException('Invalid color filters.');
-            }
-        }
-        $filter = $query['filter'] ?? '';
-        $page = self::integer($query['page'] ?? '1', 1, 1000000);
-        $rowsText = $query['rows'] ?? '-1';
-        $rows = $rowsText === '-1' ? $defaultRows : self::integer($rowsText, 1, 5000);
-        $sort = $query['sort_column'] ?? 'name';
-        $direction = strtoupper($query['sort_direction'] ?? 'ASC');
-        $named = $query['named'] ?? 'true';
-        $hasGraphs = $query['has_graphs'] ?? ($defaultHasGraphs ? 'true' : 'false');
-        if (strlen($filter) > 200 || preg_match('//u', $filter) !== 1 || str_contains($filter, "\0")
-            || !in_array($sort, self::SORTS, true) || !in_array($direction, ['ASC', 'DESC'], true)
-            || !in_array($named, ['true', 'false'], true) || !in_array($hasGraphs, ['true', 'false'], true) || $rows < 1) {
-            throw new \InvalidArgumentException('Invalid color filters.');
-        }
-        return new self($filter, $page, $rows, $rowsText, $sort, $direction, $hasGraphs === 'true', $named === 'true');
-    }
-
-    private static function integer(string $value, int $minimum, int $maximum): int
-    {
-        if (!preg_match('/\A[0-9]{1,7}\z/D', $value)) {
-            throw new \InvalidArgumentException('Invalid color filters.');
-        }
-        $parsed = (int) $value;
-        if ($parsed < $minimum || $parsed > $maximum) {
-            throw new \InvalidArgumentException('Invalid color filters.');
-        }
-        return $parsed;
+        $list = ListFilterQuery::parse($query, ['filter', 'rows', 'page', 'sort_column', 'sort_direction', 'has_graphs', 'named'], self::SORTS, 'name', ['has_graphs' => $defaultHasGraphs, 'named' => true], $defaultRows, false, 'Invalid color filters.');
+        return new self($list->filter, $list->page, $list->rows, $list->rowsParam, $list->sortColumn, $list->sortDirection, $list->flags['has_graphs'], $list->flags['named']);
     }
 
     public function query(): array

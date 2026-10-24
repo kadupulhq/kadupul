@@ -28,42 +28,10 @@ final readonly class DataSourceProfileFilters
     /** @param array<string, mixed> $query */
     public static function fromQuery(array $query, int $defaultRows, bool $defaultHasData = false): self
     {
-        if (array_diff(array_keys($query), self::KEYS) !== []) {
-            throw new \InvalidArgumentException('Invalid profile filters.');
-        }
-        foreach ($query as $value) {
-            if (!is_string($value)) {
-                throw new \InvalidArgumentException('Invalid profile filters.');
-            }
-        }
-        $filter = $query['filter'] ?? '';
-        $page = self::integer($query['page'] ?? '1', 1, 1000000);
-        $rowsText = $query['rows'] ?? '-1';
-        $rows = $rowsText === '-1' ? $defaultRows : self::integer($rowsText, 1, 5000);
         // The legacy list sorted by polling interval until a column was chosen.
-        $sort = $query['sort_column'] ?? 'step';
-        $direction = strtoupper($query['sort_direction'] ?? 'ASC');
-        $hasData = $query['has_data'] ?? ($defaultHasData ? 'true' : 'false');
-        if (mb_strlen($filter, 'UTF-8') > 200 || preg_match('//u', $filter) !== 1 || str_contains($filter, "\0")
-            || !in_array($sort, self::SORTS, true) || !in_array($direction, ['ASC', 'DESC'], true)
-            || !in_array($hasData, ['true', 'false'], true) || $rows < 1) {
-            throw new \InvalidArgumentException('Invalid profile filters.');
-        }
+        $list = ListFilterQuery::parse($query, self::KEYS, self::SORTS, 'step', ['has_data' => $defaultHasData], $defaultRows, true, 'Invalid profile filters.');
 
-        return new self($filter, $page, $rows, $rowsText, $sort, $direction, $hasData === 'true');
-    }
-
-    private static function integer(string $value, int $minimum, int $maximum): int
-    {
-        if (preg_match('/\A[0-9]{1,7}\z/D', $value) !== 1) {
-            throw new \InvalidArgumentException('Invalid profile filters.');
-        }
-        $parsed = (int) $value;
-        if ($parsed < $minimum || $parsed > $maximum) {
-            throw new \InvalidArgumentException('Invalid profile filters.');
-        }
-
-        return $parsed;
+        return new self($list->filter, $list->page, $list->rows, $list->rowsParam, $list->sortColumn, $list->sortDirection, $list->flags['has_data']);
     }
 
     /** @return array<string, string> */

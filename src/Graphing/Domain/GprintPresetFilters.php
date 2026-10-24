@@ -28,41 +28,9 @@ final readonly class GprintPresetFilters
     /** @param array<string, mixed> $query */
     public static function fromQuery(array $query, int $defaultRows, bool $defaultHasGraphs = false): self
     {
-        if (array_diff(array_keys($query), self::KEYS) !== []) {
-            throw new \InvalidArgumentException('Invalid GPRINT preset filters.');
-        }
-        foreach ($query as $value) {
-            if (!is_string($value)) {
-                throw new \InvalidArgumentException('Invalid GPRINT preset filters.');
-            }
-        }
-        $filter = $query['filter'] ?? '';
-        $page = self::integer($query['page'] ?? '1', 1, 1000000);
-        $rowsText = $query['rows'] ?? '-1';
-        $rows = $rowsText === '-1' ? $defaultRows : self::integer($rowsText, 1, 5000);
-        $sort = $query['sort_column'] ?? 'name';
-        $direction = strtoupper($query['sort_direction'] ?? 'ASC');
-        $hasGraphs = $query['has_graphs'] ?? ($defaultHasGraphs ? 'true' : 'false');
-        if (strlen($filter) > 200 || preg_match('//u', $filter) !== 1 || str_contains($filter, "\0")
-            || !in_array($sort, self::SORTS, true) || !in_array($direction, ['ASC', 'DESC'], true)
-            || !in_array($hasGraphs, ['true', 'false'], true) || $rows < 1) {
-            throw new \InvalidArgumentException('Invalid GPRINT preset filters.');
-        }
+        $list = ListFilterQuery::parse($query, self::KEYS, self::SORTS, 'name', ['has_graphs' => $defaultHasGraphs], $defaultRows, false, 'Invalid GPRINT preset filters.');
 
-        return new self($filter, $page, $rows, $rowsText, $sort, $direction, $hasGraphs === 'true');
-    }
-
-    private static function integer(string $value, int $minimum, int $maximum): int
-    {
-        if (!preg_match('/\A[0-9]{1,7}\z/D', $value)) {
-            throw new \InvalidArgumentException('Invalid GPRINT preset filters.');
-        }
-        $parsed = (int) $value;
-        if ($parsed < $minimum || $parsed > $maximum) {
-            throw new \InvalidArgumentException('Invalid GPRINT preset filters.');
-        }
-
-        return $parsed;
+        return new self($list->filter, $list->page, $list->rows, $list->rowsParam, $list->sortColumn, $list->sortDirection, $list->flags['has_graphs']);
     }
 
     /** @return array<string, int|string> */
