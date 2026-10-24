@@ -225,6 +225,166 @@ test("DOMPurify abort neutralizes an original subtree moved outside the root", a
   expect(result).toEqual({ message: "abort after move", moved: true, href: false, srcdoc: false, template: 0 });
 });
 
+test("DOMPurify drops an SVG template inside template content without reading its content", async ({ page }) => {
+  await load(page, "purify.js");
+  const result = await page.evaluate(() => {
+    try {
+      return DOMPurify.sanitize("<div><template><div><svg><g><template></template></g></svg></div></template></div>");
+    } catch (error) {
+      return error.message;
+    }
+  });
+  expect(result).toBe("<div><template><div><svg><g></g></svg></div></template></div>");
+});
+
+test("DOMPurify sanitizes an in-place tree holding an SVG template", async ({ page }) => {
+  await load(page, "purify.js");
+  const result = await page.evaluate(() => {
+    const root = document.createElement("div");
+    root.innerHTML = '<svg><template></template></svg><img src="x" onerror="unsafe()">';
+    document.body.append(root);
+    const image = root.lastChild;
+    let message = null;
+    try { DOMPurify.sanitize(root, { IN_PLACE: true }); } catch (error) { message = error.message; }
+    return { message, handler: image.hasAttribute("onerror"), html: root.innerHTML };
+  });
+  expect(result).toEqual({ message: null, handler: false, html: '<svg></svg><img src="x">' });
+});
+
+test("DOMPurify abort tears down template content holding a text node", async ({ page }) => {
+  await load(page, "purify.js");
+  const result = await page.evaluate(() => {
+    const root = document.createElement("div");
+    root.innerHTML = '<b>trigger</b><template>text<i>x</i></template><img src="x" onerror="unsafe()">';
+    const [trigger, template, image] = root.children;
+    const content = template.content;
+    DOMPurify.addHook("beforeSanitizeElements", node => {
+      if (node === trigger) throw new Error("abort with text");
+    });
+    let message;
+    try { DOMPurify.sanitize(root, { IN_PLACE: true }); } catch (error) { message = error.message; }
+    DOMPurify.removeAllHooks();
+    return { message, handler: image.hasAttribute("onerror"), children: root.childNodes.length, template: content.childNodes.length };
+  });
+  expect(result).toEqual({ message: "abort with text", handler: false, children: 0, template: 0 });
+});
+
+test("DOMPurify abort tears down a shadow root holding a text node", async ({ page }) => {
+  await load(page, "purify.js");
+  const result = await page.evaluate(() => {
+    const root = document.createElement("div");
+    root.innerHTML = '<b>trigger</b><span></span><img src="x" onerror="unsafe()">';
+    const [trigger, host, image] = root.children;
+    const shadow = host.attachShadow({ mode: "open" });
+    shadow.innerHTML = 'text<a href="javascript:unsafe()">link</a>';
+    const link = shadow.lastChild;
+    DOMPurify.addHook("beforeSanitizeElements", node => {
+      if (node === trigger) throw new Error("abort with text");
+    });
+    let message;
+    try { DOMPurify.sanitize(root, { IN_PLACE: true }); } catch (error) { message = error.message; }
+    DOMPurify.removeAllHooks();
+    return { message, handler: image.hasAttribute("onerror"), href: link.hasAttribute("href"), children: root.childNodes.length, shadow: shadow.childNodes.length };
+  });
+  expect(result).toEqual({ message: "abort with text", handler: false, href: false, children: 0, shadow: 0 });
+});
+
+test("DOMPurify abort finishes when a removed custom element empties its shadow root", async ({ page }) => {
+  await load(page, "purify.js");
+  const result = await page.evaluate(() => {
+    customElements.define("x-greedy", class extends HTMLElement {
+      disconnectedCallback() {
+        const parent = this.owner;
+        while (parent && parent.firstChild) parent.removeChild(parent.firstChild);
+      }
+    });
+    const root = document.createElement("div");
+    document.body.append(root);
+    root.innerHTML = '<b>trigger</b><span></span><p><img src="x" onerror="unsafe()"></p>';
+    const [trigger, host, escaped] = root.children;
+    const image = escaped.firstChild;
+    const shadow = host.attachShadow({ mode: "open" });
+    shadow.innerHTML = "text<i>i</i><x-greedy></x-greedy>";
+    shadow.lastChild.owner = shadow;
+    const outside = document.createElement("section");
+    document.body.append(outside);
+    DOMPurify.addHook("beforeSanitizeElements", node => {
+      if (node === trigger) {
+        outside.append(escaped);
+        throw new Error("abort in teardown");
+      }
+    });
+    let message;
+    try { DOMPurify.sanitize(root, { IN_PLACE: true, ADD_TAGS: ["x-greedy"] }); } catch (error) { message = error.message; }
+    DOMPurify.removeAllHooks();
+    return { message, children: root.childNodes.length, moved: escaped.parentNode === outside, handler: image.hasAttribute("onerror") };
+  });
+  expect(result).toEqual({ message: "abort in teardown", children: 0, moved: true, handler: false });
+});
+
+test("DOMPurify abort detaches text and comment children of the root", async ({ page }) => {
+  await load(page, "purify.js");
+  const result = await page.evaluate(() => {
+    const root = document.createElement("div");
+    document.body.append(root);
+    root.innerHTML = '<b>trigger</b>{{constructor.constructor("unsafe()")()}}<!--<img src=x onerror=unsafe()>-->';
+    const trigger = root.firstChild;
+    DOMPurify.addHook("beforeSanitizeElements", node => {
+      if (node === trigger) throw new Error("abort at root");
+    });
+    let message;
+    try { DOMPurify.sanitize(root, { IN_PLACE: true, SAFE_FOR_TEMPLATES: true }); } catch (error) { message = error.message; }
+    DOMPurify.removeAllHooks();
+    return { message, children: root.childNodes.length };
+  });
+  expect(result).toEqual({ message: "abort at root", children: 0 });
+});
+
+test("DOMPurify scrubs expressions around a template element in another namespace", async ({ page }) => {
+  await load(page, "purify.js");
+  const result = await page.evaluate(() => {
+    const config = {
+      PARSER_MEDIA_TYPE: "application/xhtml+xml",
+      ALLOWED_NAMESPACES: ["http://www.w3.org/1999/xhtml", "urn:x"],
+      ADD_TAGS: ["template"],
+      SAFE_FOR_TEMPLATES: true,
+    };
+    const read = run => { try { return run(); } catch (error) { return error.message; } };
+    const dom = read(() => {
+      const body = DOMPurify.sanitize(
+        '<div xmlns="http://www.w3.org/1999/xhtml"><template xmlns="urn:x">{{a}}<b>{{c}}</b></template>{{d}}</div>',
+        { ...config, RETURN_DOM: true },
+      );
+      return { templates: body.getElementsByTagNameNS("urn:x", "template").length, text: body.textContent };
+    });
+    const root = document.createElementNS("urn:x", "template");
+    root.textContent = "{{a}}";
+    document.body.append(root);
+    const inPlace = read(() => { DOMPurify.sanitize(root, { ...config, IN_PLACE: true }); return root.textContent; });
+    return { dom, inPlace };
+  });
+  expect(result).toEqual({
+    dom: { templates: 1, text: "   " },
+    inPlace: " ",
+  });
+});
+
+test("DOMPurify sanitizes an in-place HTML element named TEMPLATE that is not a template", async ({ page }) => {
+  await load(page, "purify.js");
+  const result = await page.evaluate(() => {
+    const root = document.createElement("div");
+    document.body.append(root);
+    const element = document.createElementNS("http://www.w3.org/1999/xhtml", "TEMPLATE");
+    root.append(element);
+    root.insertAdjacentHTML("beforeend", '<img src="x" onerror="unsafe()">');
+    const image = root.lastChild;
+    let message = null;
+    try { DOMPurify.sanitize(root, { IN_PLACE: true }); } catch (error) { message = error.message; }
+    return { message, template: element instanceof HTMLTemplateElement, handler: image.hasAttribute("onerror") };
+  });
+  expect(result).toEqual({ message: null, template: false, handler: false });
+});
+
 test("DOMPurify applies the XHTML SMIL value guard when an attribute hook force-keeps", async ({ page }) => {
   await load(page, "purify.js");
   const result = await page.evaluate(() => {
