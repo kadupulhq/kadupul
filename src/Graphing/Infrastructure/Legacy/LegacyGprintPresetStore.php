@@ -14,7 +14,6 @@ use Kadupul\Graphing\Application\Port\GprintPresetStore;
 use Kadupul\Graphing\Domain\GprintPreset;
 use Kadupul\Graphing\Domain\GprintPresetFilters;
 use Kadupul\Graphing\Domain\GprintPresetPage;
-use Kadupul\IdentityAccess\Contract\AuditEvent;
 use Kadupul\IdentityAccess\Contract\AuditTrail;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Contract\LegacyConfiguration;
@@ -23,7 +22,12 @@ use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 #[AsAlias(GprintPresetStore::class)]
 final readonly class LegacyGprintPresetStore implements GprintPresetStore
 {
-    public function __construct(private DatabaseConnection $database, private GprintPresetAccess $access, private AuditTrail $audit, private LegacyConfiguration $configuration) {}
+    private LegacyAuditedTransaction $transaction;
+
+    public function __construct(private DatabaseConnection $database, GprintPresetAccess $access, AuditTrail $audit, LegacyConfiguration $configuration)
+    {
+        $this->transaction = new LegacyAuditedTransaction($database, $access, $audit, $configuration, GprintPresetSql::class, ['graph_templates_gprint', 'graph_templates_item', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_realm', 'user_auth_group_members', 'settings'], 'GPRINT', 'GPRINT operation', 'GPRINT Presets', 'graphing.gprint', 'gprint_preset');
+    }
 
     public function defaultRows(): int
     {
@@ -130,71 +134,7 @@ final readonly class LegacyGprintPresetStore implements GprintPresetStore
 
     private function write(int $actorId, string $action, callable $operation): mixed
     {
-        $db = $this->database->get();
-        $decision = AuditEvent::DENIED;
-        $outcome = AuditEvent::DENIED;
-        $started = false;
-        try {
-            if ($db->inTransaction()) {
-                throw new \RuntimeException('GPRINT transaction unavailable.');
-            }
-            $this->assertTransactional($db);
-            if (!$db->beginTransaction()) {
-                throw new \RuntimeException('GPRINT transaction unavailable.');
-            }
-            $started = true;
-            $this->access->assertCurrent($actorId);
-            $decision = AuditEvent::ALLOWED;
-            $outcome = AuditEvent::FAILED;
-            $result = $operation($db);
-            if (!$db->commit()) {
-                throw new \RuntimeException('GPRINT operation commit was not confirmed.');
-            }
-            $outcome = AuditEvent::SUCCEEDED;
-            return $result;
-        } catch (\Throwable $error) {
-            if ($started && $db->inTransaction()) {
-                try {
-                    $rolledBack = $db->rollBack();
-                } catch (\Throwable $rollbackError) {
-                    throw new \RuntimeException('GPRINT operation rollback was not confirmed.', 0, $rollbackError);
-                }
-                if (!$rolledBack) {
-                    throw new \RuntimeException('GPRINT operation rollback was not confirmed.', 0, $error);
-                }
-            }
-            throw $error;
-        } finally {
-            try {
-                $this->audit->record(new AuditEvent(bin2hex(random_bytes(16)), $actorId, 'graphing.gprint.' . $action, 'gprint_preset', 'gprint_preset', $decision, $outcome));
-            } catch (\Throwable) {
-                // Audit failure does not change the confirmed persistence outcome.
-            }
-        }
-    }
-
-    private function assertTransactional(\PDO $db): void
-    {
-        if ($db->getAttribute(\PDO::ATTR_DRIVER_NAME) !== 'mysql') {
-            return;
-        }
-        if (($this->configuration->values()['collector_id'] ?? null) !== 1) {
-            throw new \RuntimeException('GPRINT Presets must be changed on the primary collector.');
-        }
-        foreach (['graph_templates_gprint', 'graph_templates_item', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_realm', 'user_auth_group_members', 'settings'] as $table) {
-            // Check the actual connection table, including temporary shadows.
-            $query = $db->query('SHOW CREATE TABLE `' . $table . '`');
-            $definition = $query === false ? false : GprintPresetSql::one($query, \PDO::FETCH_NUM);
-            if ($definition === false || !is_string($definition[1] ?? null)
-                || preg_match('/\ACREATE TABLE /i', $definition[1]) !== 1
-                || preg_match('/\n\) ENGINE=InnoDB\b/i', $definition[1]) !== 1) {
-                throw new \RuntimeException('GPRINT writes require transactional tables.');
-            }
-        }
-        // Keep the dependency range lock when the session default is READ COMMITTED.
-        if ($db->exec('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ') === false) {
-            throw new \RuntimeException('GPRINT transaction isolation was not confirmed.');
-        }
+        return $this->transaction->run($actorId, $action, 'gprint_preset', $operation);
     }
 
     private function lock(): string
