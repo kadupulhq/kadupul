@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Fail CI when first-party PHP gains a `global` statement or a variable named in one, against a committed per-file baseline that may only fall; new files under `src/` may not use `global`.
+
 - Harden in-place DOMPurify cleanup in the vendored patch set.
 
 - Keep model-driven metric bindings and writer ownership claims in two new tables, `kadupul_metric_binding` and `kadupul_writer_ownership`, created on fresh installations and by the 1.2.37 upgrade step. No existing table changes, and existing data sources stay with the legacy poller.

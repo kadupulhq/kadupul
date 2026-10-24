@@ -24,7 +24,7 @@ existing `fail-fast: false` so compatibility failures are fully observed.
 | `security.yml` | Main/PR/weekly/manual; Semgrep new-finding PR gate and dependency review | SARIF upload alone needs `security-events: write`; dependency-review comments need `pull-requests: write`. Pinned Semgrep image; failed report retained. No provider secret. Existing differential/full-scan behavior preserved. |
 | `codeql.yml` | Main/PR/weekly/manual; public-repository JavaScript and Actions analysis | Job-scoped code-scanning permissions; PHP remains covered by Semgrep. |
 | `snyk.yml` | Main/PR/weekly/manual; complete Composer/npm/Python dependency discovery | `SNYK_TOKEN` configuration job precedes secret-dependent scanning. Five-project completion guard and safe receipt retained. No policy relaxation. |
-| `security-proof.yml` | Main/stack PR/manual; sink, architecture, entry-point and branding inventories | Read-only baselines; private advisory proof is manual, uses the job token, and retains artifacts. No baseline expansion. |
+| `security-proof.yml` | Main/stack PR/manual; sink, architecture, entry-point, global statement and branding inventories | Read-only baselines; private advisory proof is manual, uses the job token, and retains artifacts. No baseline expansion. |
 | `lint.yml` | Workflow/action changes and manual; actionlint and zizmor | Digest-pinned actionlint image and version-pinned zizmor; job token supports native metadata queries. |
 | `theme-e2e.yml` | Main/stack PR; actual theme/browser and compiled-asset compatibility | npm E2E cache; browser-library checksum checks and failure artifacts retained. |
 | `csp-e2e.yml` | Relevant PR paths; independent unit, HTTP, and Docker/browser CSP checks | npm E2E cache; cleanup and browser reports retained. No provider secrets. |
@@ -52,6 +52,44 @@ PR runs; tag/reusable release builds are not interrupted. Release concurrency is
 per tag and never cancels a running publication. Existing Claude review
 concurrency stays scoped to the reviewed PR; independent comment replies are
 bounded but are not cancelled merely because another reply arrives.
+
+## Global statement ratchet
+
+`tests/security/global_statement_inventory.php` counts `global` statements, and
+the variables they name, in first-party PHP. The `global statement ratchet`
+job in `security-proof.yml` compares the count with
+`tests/security/baselines/global_statements.baseline.tsv`, a sorted
+`file`, `statements`, `variables` table. The check fails when any file or the
+total gains a statement or a variable. It also fails when a count falls and
+the baseline still holds the old number, and prints the command that lowers
+it, so the baseline only tightens:
+
+```sh
+mise exec -- php tests/security/global_statement_inventory.php > tests/security/baselines/global_statements.baseline.tsv
+mise exec -- php tests/security/global_statement_inventory.php --check
+```
+
+On a pull request the job also reads the baseline at the base tip and fails
+when the new baseline allows more statements or variables in total or under
+`src/`, or adds a `src/` file. A new file under `src/` therefore cannot use
+`global` at all, and raising the baseline does not get a new global past the
+check. Other files are compared only through the totals, so a rename keeps
+passing.
+
+Counting uses `token_get_all()` with `TOKEN_PARSE`, the parser that runs the
+file. A `T_GLOBAL` token is one statement; the variables are the names up to
+its `;` or `?>`, as written, so a name repeated in one statement counts twice.
+Statements at file scope, in nested functions, closures and methods all
+count. `global` in a comment, a string or a heredoc is not a token, `$GLOBALS`
+is an ordinary variable, and `TOKEN_PARSE` reports a method, property or named
+argument called `global` as a name rather than the keyword. `$GLOBALS` reads
+and writes are not counted. A file that does not parse fails the check
+instead of counting as zero. Files come from `git ls-files` with untracked,
+unignored files added, so ignored output such as `var/` never counts.
+`include/vendor/`, `vendor/` and `tests/` are excluded; no tracked first-party
+PHP is generated. `GlobalStatementInventoryTest` in `composer test` holds the
+counter to fixtures under `tests/Fixtures/global-statements/` and runs the
+check against scratch repositories.
 
 ## Required correctness and remaining opportunities
 
