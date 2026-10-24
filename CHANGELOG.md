@@ -6,6 +6,12 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Give Symfony services an immutable `PlatformConfiguration` holding the installation paths, URL path, collector id and server OS that `include/global.php` sets; `$config` keeps the same keys and values. The external link and help adapters now receive it instead of the project directory.
+
+- Fail CI when first-party PHP gains a `global` statement or a variable named in one, against a committed per-file baseline that may only fall; new files under `src/` may not use `global`.
+
+- Harden in-place DOMPurify cleanup in the vendored patch set.
+
 - Keep model-driven metric bindings and writer ownership claims in two new tables, `kadupul_metric_binding` and `kadupul_writer_ownership`, created on fresh installations and by the 1.2.37 upgrade step. No existing table changes, and existing data sources stay with the legacy poller.
 
 - Validate and reproduce the existing interface query from a build-time catalog, preserving shipped query bytes, signed packages and template identities, with regression coverage for existing import and COUNTER behavior.

@@ -96,6 +96,40 @@ jobs:
       - name: Verify Apache verdicts depend on the .htaccess rules
         run: mise exec python@3.12.12 -- python tests/security/test_entry_point_apache_denies.py
 
+  global-statement-ratchet:
+    timeout-minutes: 20
+    name: global statement ratchet
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    steps:
+      # Two commits so a pull request's test merge can read the base tip's
+      # baseline as HEAD^1.
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+
+      # The counter uses only the tokenizer, so no Composer install is needed.
+      - name: Set up PHP
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.4'
+          coverage: none
+
+      # Fails when a file or the total gains a global statement or a named
+      # variable, when either falls without the baseline being lowered, and
+      # on a pull request when the baseline allows more than the base does.
+      - name: Verify global statements do not exceed the baseline
+        env:
+          EVENT: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT" = pull_request ]; then
+            php tests/security/global_statement_inventory.php --check --base HEAD^1
+          else
+            php tests/security/global_statement_inventory.php --check
+          fi
+
   branding-migration-guard:
     permissions:
       contents: read

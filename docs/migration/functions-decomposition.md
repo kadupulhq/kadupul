@@ -41,6 +41,7 @@ fixed in its own change so the extraction stays a pure move.
 | A function is `implemented` only with a behavior record, and `verified` only when its goldens pass through the delegate. | [Status gates](functions-inventory/README.md#status-gates) |
 | Recorded behavior does not drift. | The install, login and poller smoke job runs `harness.py functions` against the committed goldens on every pull request. |
 | Goldens are never edited to make a test pass. A changed golden needs a stated reason. | Review |
+| `global` statements may fall but not rise, and a new file under `src/` may not use one. | The global statement ratchet in `security-proof.yml`; see [CI](../ci.md#global-statement-ratchet) |
 
 ## Constraints
 

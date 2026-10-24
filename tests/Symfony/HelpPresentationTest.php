@@ -47,7 +47,8 @@ final class HelpPresentationTest extends TestCase
             $pdo->exec('CREATE TABLE settings (name TEXT, value TEXT)');
             $database = self::createStub(DatabaseConnection::class);
             $database->method('get')->willReturn($pdo);
-            $topics = new LegacyHelpTopics($root, $database, new InstallationConfiguration($root));
+            $configuration = new InstallationConfiguration($root);
+            $topics = new LegacyHelpTopics($configuration->platform(), $database, $configuration);
             self::assertSame('https://kadupul.org/guides/worked-example/', $topics->all()[0]->url);
             self::assertCount(8, $topics->all());
             foreach ($topics->all() as $topic) {
