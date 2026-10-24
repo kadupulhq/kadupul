@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Give Symfony services an immutable `PlatformConfiguration` holding the installation paths, URL path, collector id and server OS that `include/global.php` sets; `$config` keeps the same keys and values. The external link and help adapters now receive it instead of the project directory.
+
 - Fail CI when first-party PHP gains a `global` statement or a variable named in one, against a committed per-file baseline that may only fall; new files under `src/` may not use `global`.
 
 - Harden in-place DOMPurify cleanup in the vendored patch set.
