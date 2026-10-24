@@ -15,7 +15,6 @@ use Kadupul\Graphing\Domain\ColorTemplate;
 use Kadupul\Graphing\Domain\ColorTemplateFilters;
 use Kadupul\Graphing\Domain\ColorTemplateItem;
 use Kadupul\Graphing\Domain\ColorTemplatePage;
-use Kadupul\IdentityAccess\Contract\AuditEvent;
 use Kadupul\IdentityAccess\Contract\AuditTrail;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Contract\LegacyConfiguration;
@@ -27,7 +26,12 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
     public const string CHANGED = 'The selected Color Templates changed. Reload before continuing.';
     public const string LAST_COLOR = 'A Color Template used by an aggregate graph or aggregate template must keep at least one color.';
 
-    public function __construct(private DatabaseConnection $database, private ColorTemplateAccess $access, private AuditTrail $audit, private LegacyConfiguration $configuration) {}
+    private LegacyAuditedTransaction $transaction;
+
+    public function __construct(private DatabaseConnection $database, ColorTemplateAccess $access, AuditTrail $audit, LegacyConfiguration $configuration)
+    {
+        $this->transaction = new LegacyAuditedTransaction($database, $access, $audit, $configuration, ColorTemplateSql::class, ['color_templates', 'color_template_items', 'colors', 'aggregate_graphs_graph_item', 'aggregate_graph_templates_item', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_realm', 'user_auth_group_members', 'settings'], 'Color template', 'Color template', 'Color Templates', 'graphing.color_template', 'color_template');
+    }
 
     public function defaultRows(): int
     {
@@ -310,71 +314,7 @@ final readonly class LegacyColorTemplateStore implements ColorTemplateStore
 
     private function write(int $actorId, string $action, string $target, callable $operation): mixed
     {
-        $db = $this->database->get();
-        $decision = AuditEvent::DENIED;
-        $outcome = AuditEvent::DENIED;
-        $started = false;
-        try {
-            if ($db->inTransaction()) {
-                throw new \RuntimeException('Color template transaction unavailable.');
-            }
-            $this->assertTransactional($db);
-            if (!$db->beginTransaction()) {
-                throw new \RuntimeException('Color template transaction unavailable.');
-            }
-            $started = true;
-            $this->access->assertCurrent($actorId);
-            $decision = AuditEvent::ALLOWED;
-            $outcome = AuditEvent::FAILED;
-            $result = $operation($db);
-            if (!$db->commit()) {
-                throw new \RuntimeException('Color template commit was not confirmed.');
-            }
-            $outcome = AuditEvent::SUCCEEDED;
-            return $result;
-        } catch (\Throwable $error) {
-            if ($started && $db->inTransaction()) {
-                try {
-                    $rolledBack = $db->rollBack();
-                } catch (\Throwable $rollbackError) {
-                    throw new \RuntimeException('Color template rollback was not confirmed.', 0, $rollbackError);
-                }
-                if (!$rolledBack) {
-                    throw new \RuntimeException('Color template rollback was not confirmed.', 0, $error);
-                }
-            }
-            throw $error;
-        } finally {
-            try {
-                $this->audit->record(new AuditEvent(bin2hex(random_bytes(16)), $actorId, 'graphing.color_template.' . $action, 'color_template', $target, $decision, $outcome));
-            } catch (\Throwable) {
-                // Audit failure does not change the confirmed persistence outcome.
-            }
-        }
-    }
-
-    private function assertTransactional(\PDO $db): void
-    {
-        if ($db->getAttribute(\PDO::ATTR_DRIVER_NAME) !== 'mysql') {
-            return;
-        }
-        if (($this->configuration->values()['collector_id'] ?? null) !== 1) {
-            throw new \RuntimeException('Color Templates must be changed on the primary collector.');
-        }
-        foreach (['color_templates', 'color_template_items', 'colors', 'aggregate_graphs_graph_item', 'aggregate_graph_templates_item', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_realm', 'user_auth_group_members', 'settings'] as $table) {
-            // Check the actual connection table, including temporary shadows.
-            $query = $db->query('SHOW CREATE TABLE `' . $table . '`');
-            $definition = $query === false ? false : ColorTemplateSql::one($query, \PDO::FETCH_NUM);
-            if ($definition === false || !is_string($definition[1] ?? null)
-                || preg_match('/\ACREATE TABLE /i', $definition[1]) !== 1
-                || preg_match('/\n\) ENGINE=InnoDB\b/i', $definition[1]) !== 1) {
-                throw new \RuntimeException('Color template writes require transactional tables.');
-            }
-        }
-        // Keep the reference range lock when the session default is READ COMMITTED.
-        if ($db->exec('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ') === false) {
-            throw new \RuntimeException('Color template transaction isolation was not confirmed.');
-        }
+        return $this->transaction->run($actorId, $action, $target, $operation);
     }
 
     private function lock(bool $shared = false): string
