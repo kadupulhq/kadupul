@@ -15,6 +15,7 @@ use Kadupul\IdentityAccess\Contract\AuditEvent;
 use Kadupul\IdentityAccess\Contract\AuditTrail;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Contract\LegacyConfiguration;
+use Kadupul\Platform\Contract\PlatformConfiguration;
 
 final readonly class LegacyLinkStore implements LinkStore
 {
@@ -23,11 +24,11 @@ final readonly class LegacyLinkStore implements LinkStore
         private LinkAccess $access,
         private AuditTrail $audit,
         private LegacyConfiguration $configuration,
-        private string $projectDir
+        private PlatformConfiguration $platform
     ) {}
     public function files(): array
     {
-        $directory = $this->projectDir . '/include/content';
+        $directory = $this->platform->basePath . '/include/content';
         $files = [];
         foreach (is_dir($directory) ? scandir($directory) ?: [] : [] as $name) {
             $path = $directory . '/' . $name;

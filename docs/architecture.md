@@ -113,6 +113,15 @@ reaches the database only through an `Application/Port` such as
 `DatabaseMaintenance`, never by importing `Platform/Contract` or `Infrastructure`
 directly.
 
+`Platform/Contract/PlatformConfiguration` is the typed copy of the `$config`
+values `include/global.php` sets once and nothing writes later: `base_path`,
+`url_path`, `library_path`, `include_path`, `poller_id` and `cacti_server_os`.
+The container builds it lazily from `include/config.php` with global.php's own
+rules, and adapters receive it by constructor injection. `$config` keeps every
+key and value for pages, plugins and the poller. `rra_path` is not in it
+because RRD maintenance rewrites it at run time, and `is_web` is not because
+global.php decides it per entry script.
+
 Assignable-site, device-creation choice, device-site filter, device details
 and site catalog reads use Doctrine DBAL. Each Inventory infrastructure adapter
 receives a module-owned DBAL connection and implements the existing application

@@ -15,6 +15,7 @@ use Kadupul\IdentityAccess\Contract\Actor;
 use Kadupul\IdentityAccess\Contract\AuditTrail;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Contract\LegacyConfiguration;
+use Kadupul\Platform\Contract\PlatformConfiguration;
 use PHPUnit\Framework\TestCase;
 
 final class LegacyLinkStoreTest extends TestCase
@@ -39,7 +40,7 @@ final class LegacyLinkStoreTest extends TestCase
         $this->access->method('authorize')->willReturn(new Actor(1, 'admin'));
         $configuration = $this->createMock(LegacyConfiguration::class);
         $configuration->method('values')->willReturn(['collector_id' => 1]);
-        $this->store = new LegacyLinkStore($database, $this->access, $this->createMock(AuditTrail::class), $configuration, dirname(__DIR__, 2));
+        $this->store = new LegacyLinkStore($database, $this->access, $this->createMock(AuditTrail::class), $configuration, PlatformConfiguration::fromBootstrap(dirname(__DIR__, 2) . '/include', 1, '/', PHP_OS));
     }
     private function create(string $title = 'A'): int
     {
@@ -68,7 +69,7 @@ final class LegacyLinkStoreTest extends TestCase
         };
         $configuration = $this->createMock(LegacyConfiguration::class);
         $configuration->method('values')->willReturn(['collector_id' => 1]);
-        $store = new LegacyLinkStore($database, $this->access, $this->createMock(AuditTrail::class), $configuration, $directory);
+        $store = new LegacyLinkStore($database, $this->access, $this->createMock(AuditTrail::class), $configuration, PlatformConfiguration::fromBootstrap($directory . '/include', 1, '/', PHP_OS));
         try {
             self::assertSame(['.status', 'status.html'], $store->files());
             $fields = array_replace(ExternalLinkTest::fields(), ['filename' => '.status', 'fileurl' => '']);

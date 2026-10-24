@@ -12,6 +12,7 @@ namespace Kadupul\Platform\Infrastructure\Legacy;
 use Kadupul\Platform\Application\Port\HelpTopics;
 use Kadupul\Platform\Application\ReadModel\HelpTopic;
 use Kadupul\Platform\Contract\DatabaseConnection;
+use Kadupul\Platform\Contract\PlatformConfiguration;
 
 /** Reuse the existing documentation map and the Local Page Help Only setting. */
 final readonly class LegacyHelpTopics implements HelpTopics
@@ -27,7 +28,7 @@ final readonly class LegacyHelpTopics implements HelpTopics
         'Troubleshoot missing data' => 'Data-Debug.html',
     ];
 
-    public function __construct(private string $projectDir, private DatabaseConnection $database, private InstallationConfiguration $configuration) {}
+    public function __construct(private PlatformConfiguration $platform, private DatabaseConnection $database, private InstallationConfiguration $configuration) {}
 
     public function all(): array
     {
@@ -36,7 +37,7 @@ final readonly class LegacyHelpTopics implements HelpTopics
         $topics = [];
         foreach (self::TOPICS as $label => $page) {
             $url = $local
-                ? (is_file($this->projectDir . '/docs/' . $page) ? $this->configuration->urlPath() . '/docs/' . $page : null)
+                ? (is_file($this->platform->basePath . '/docs/' . $page) ? $this->configuration->urlPath() . '/docs/' . $page : null)
                 : \cacti_documentation_url($page);
             $topics[] = new HelpTopic($label, $url);
         }

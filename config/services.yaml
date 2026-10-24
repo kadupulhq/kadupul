@@ -49,6 +49,12 @@ services:
     Kadupul\Platform\Contract\LegacyConfiguration:
         alias: Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration
 
+    # Lazy, so a service that receives it reads config.php only when it uses
+    # a value, as it did through LegacyConfiguration.
+    Kadupul\Platform\Contract\PlatformConfiguration:
+        lazy: true
+        factory: ['@Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration', 'platform']
+
     Kadupul\Platform\Contract\ReferenceWriteTransactionRunner:
         alias: Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner
 

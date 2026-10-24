@@ -165,4 +165,25 @@ final class InstallationConfiguration implements LegacyConfiguration
             throw new \RuntimeException('The Symfony application requires the primary MySQL installation outside supported online collector administration routes.');
         }
     }
+
+    /**
+     * The values global.php derives from this installation's include/
+     * directory and config.php. The include path is the directory global.php
+     * runs from, so it is resolved the way __FILE__ is.
+     */
+    public function platform(): \Kadupul\Platform\Contract\PlatformConfiguration
+    {
+        $settings = $this->load();
+        $includeDirectory = realpath($this->projectDir . '/include');
+        if ($includeDirectory === false) {
+            throw new \RuntimeException('Installation include directory is required.');
+        }
+
+        return \Kadupul\Platform\Contract\PlatformConfiguration::fromBootstrap(
+            $includeDirectory,
+            $settings['poller_id'] ?? null,
+            \array_key_exists('url_path', $settings) ? $settings['url_path'] : '/cacti/',
+            PHP_OS,
+        );
+    }
 }
