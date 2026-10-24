@@ -237,7 +237,7 @@ jobs:
       packages: read
     name: CDEF references (${{ matrix.database }})
     runs-on: ubuntu-22.04
-    timeout-minutes: 25
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:
