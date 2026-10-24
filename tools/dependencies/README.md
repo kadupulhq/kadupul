@@ -56,6 +56,12 @@ Fail-closed cleanup traverses attached shadow roots and template content using
 cached prototype getters. An aborted shadow prepass also neutralizes its already
 removed subtrees. Two browser regressions reproduce retained event handlers before
 these patches and verify their removal afterward.
+Template content reads share one helper that returns no content for an element
+other than `HTMLTemplateElement`, matching upstream's plain property read. Aborted
+cleanup detaches each child of the root, shadow roots and template content with the
+cached `Node.prototype.removeChild`, working from a snapshot of the child list and
+continuing past a failed removal. Eight browser regressions failed before these
+patches and pass afterward.
 The final template-expression scrub uses an explicit work stack rather than
 recursing through nested template fragments. An isolated test of that production
 helper covers 12,000 nested fragments and preserves text normalization/scrubbing.
