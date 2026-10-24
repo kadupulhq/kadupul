@@ -123,6 +123,7 @@ final class PresentationSinkContextEvidence
             'src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php',
             'src/Platform/Contract/IconRegistry.php',
             'src/Platform/Infrastructure/Legacy/HostDataSubstitution.php',
+            'src/Platform/Infrastructure/Legacy/LegacyConnectionRegistry.php',
             'src/Platform/Infrastructure/Legacy/LegacyReferenceWriteTransaction.php',
             'src/Platform/Infrastructure/Legacy/LegacyRequestContext.php',
             'src/Platform/Infrastructure/Legacy/LegacyLogText.php',

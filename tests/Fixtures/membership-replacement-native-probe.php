@@ -122,6 +122,8 @@ $database_source = file_get_contents(dirname(__DIR__, 2) . '/lib/database.php');
 if ($database_source === false) {
     throw new RuntimeException('Cannot read production database helpers');
 }
+// The extracted helper finds the default session through the registry.
+require_once dirname(__DIR__, 2) . '/src/Platform/Infrastructure/Legacy/LegacyConnectionRegistry.php';
 eval(test_php_function_source($database_source, 'db_get_table_column_types'));
 require dirname(__DIR__, 2) . '/lib/auth.php';
 $nested = !empty($scenario['nested']);

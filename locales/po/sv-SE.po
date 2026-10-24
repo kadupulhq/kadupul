@@ -12384,11 +12384,11 @@ msgstr "Du måste välja en XML-utdatakolumn för datakällan '%s' och växla kr
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Din Graph Template har inte Data Templates i bruk.  Vänligen korrigera din grafmall"
 
-#: lib/database.php:2197
+#: lib/database.php:2149
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Misslyckades med att bestämma lösenordsfältets längd, kan inte fortsätta eftersom lösenordet kan skadas"
 
-#: lib/database.php:2204
+#: lib/database.php:2156
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Misslyckades med att ändra lösenordsfältets längd, kan inte fortsätta eftersom lösenordet kan skadas"
 
