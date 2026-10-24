@@ -12379,11 +12379,11 @@ msgstr "Bạn phải chọn cột đầu ra XML cho Nguồn dữ liệu ' %s' v�
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Mẫu biểu đồ của bạn không sử dụng Mẫu dữ liệu. Vui lòng sửa Mẫu biểu đồ của bạn"
 
-#: lib/database.php:2197
+#: lib/database.php:2149
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Không thể xác định độ dài trường mật khẩu, không thể tiếp tục vì có thể làm hỏng mật khẩu"
 
-#: lib/database.php:2204
+#: lib/database.php:2156
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Không thể thay đổi độ dài trường mật khẩu, không thể tiếp tục vì có thể làm hỏng mật khẩu"
 
