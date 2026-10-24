@@ -1,0 +1,7 @@
+{
+  "42": [
+    { "resource": "interface/eth0", "metric": "interface.in_octets", "origin": "legacy:data-query/SNMP - Interface Statistics", "protocol": "snmp" },
+    { "resource": "interface/eth0", "metric": "interface.out_octets", "origin": "legacy:data-query/SNMP - Interface Statistics", "protocol": "snmp" }
+  ],
+  "57": []
+}

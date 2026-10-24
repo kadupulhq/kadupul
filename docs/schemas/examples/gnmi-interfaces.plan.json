@@ -1,0 +1,54 @@
+{
+  "plan_schema_version": 1,
+  "plan_id": "0f8b2c1e-6a43-4d7e-9b52-3c1d7a9e4f10",
+  "generated_at": "2026-10-23T14:05:00Z",
+  "device_id": 42,
+  "status": "proposed",
+  "pack": { "name": "openconfig-interfaces", "version": "1.0.0" },
+  "targets": [
+    {
+      "protocol": "gnmi",
+      "endpoint": {
+        "credential_ref": "gnmi/core-sw-01",
+        "port": 9339,
+        "tls": { "verify": true }
+      },
+      "subscription": {
+        "mode": "sample",
+        "interval_seconds": 60,
+        "paths": [
+          "/interfaces/interface[name=*]/state/counters/in-octets",
+          "/interfaces/interface[name=*]/state/counters/out-octets",
+          "/interfaces/interface[name=*]/state/oper-status"
+        ]
+      },
+      "metrics": [
+        {
+          "id": "interface.in_octets",
+          "type": "counter",
+          "unit": "octets",
+          "counter_bits": 64,
+          "labels": ["name"],
+          "source": "/interfaces/interface[name=*]/state/counters/in-octets"
+        },
+        {
+          "id": "interface.out_octets",
+          "type": "counter",
+          "unit": "octets",
+          "counter_bits": 64,
+          "labels": ["name"],
+          "source": "/interfaces/interface[name=*]/state/counters/out-octets"
+        },
+        {
+          "id": "interface.oper_status",
+          "type": "gauge",
+          "unit": "state",
+          "labels": ["name"],
+          "source": "/interfaces/interface[name=*]/state/oper-status",
+          "value_map": { "UP": 1, "DOWN": 2, "TESTING": 3, "UNKNOWN": 4, "DORMANT": 5, "NOT_PRESENT": 6, "LOWER_LAYER_DOWN": 7 }
+        }
+      ]
+    }
+  ],
+  "dedup_key": "9c1185a5c5e9fc54612808977ee8f548b2258d31a0d6f1b1d7c5d7e0b3a94c21"
+}

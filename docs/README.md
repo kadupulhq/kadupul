@@ -7,3 +7,5 @@ SPDX-License-Identifier: GPL-2.0-or-later
 # Kadupul documentation
 
 Documentation is available at https://kadupulhq.github.io/website/.
+
+- [Model-driven monitoring](model-driven-monitoring.md) and its [architecture decision records](adr/README.md)

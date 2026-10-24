@@ -131,7 +131,7 @@ $config = ['base_path' => $root, 'poller_id' => 1, 'connection' => 'local', 'is_
 require $root . '/include/global_constants.php';
 require $root . '/include/global_arrays.php';
 require $root . '/tests/Helpers/PhpSource.php';
-foreach (['db_install_add_cache' => 'install/functions.php', 'clean_up_lines' => 'lib/functions.php'] as $function => $path) {
+foreach (['db_install_add_cache' => 'install/functions.php', 'db_install_fetch_function' => 'install/functions.php', 'db_install_fetch_cell' => 'install/functions.php', 'clean_up_lines' => 'lib/functions.php'] as $function => $path) {
     $functionSource = file_get_contents($root . '/' . $path);
     if ($functionSource === false) {
         throw new RuntimeException('Installer dependency source unavailable: ' . $path);
@@ -140,7 +140,9 @@ foreach (['db_install_add_cache' => 'install/functions.php', 'clean_up_lines' =>
 }
 require $root . '/lib/installer.php';
 $tables = ['data_input_data', 'aggregate_graphs', 'data_template_rrd', 'data_input_fields', 'settings_user', 'version', 'poller_output', 'data_source_profiles', 'data_template_data', 'data_source_profiles_rra', 'data_source_profiles_cf', 'data_input', 'settings'];
-foreach ($tables as $table) {
+// Created by the 1.2.37 upgrade step rather than the fixture, and dropped with it.
+$upgradeTables = ['kadupul_metric_binding', 'kadupul_writer_ownership'];
+foreach ([...$tables, ...$upgradeTables] as $table) {
     $check = $owner->prepare('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=?');
     $check->execute([$table]);
     if ((int) $check->fetchColumn() !== 0) {
@@ -348,6 +350,9 @@ try {
     }
     foreach (array_reverse($created) as $table) {
         $owner->exec("DROP TABLE `$table`");
+    }
+    foreach ($upgradeTables as $table) {
+        $owner->exec("DROP TABLE IF EXISTS `$table`");
     }
     foreach ($cache_files ?? [] as $cache_file) {
         if (is_file($cache_file)) {
