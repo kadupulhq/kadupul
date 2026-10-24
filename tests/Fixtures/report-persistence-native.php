@@ -48,6 +48,8 @@ $databaseSource = file_get_contents($root . '/lib/database.php');
 if (!is_string($databaseSource)) {
     throw new RuntimeException('Cannot read report transaction helpers');
 }
+// The extracted helpers find the default session through the registry.
+require_once $root . '/src/Platform/Infrastructure/Legacy/LegacyConnectionRegistry.php';
 foreach (['db_begin_transaction', 'db_commit_transaction', 'db_rollback_transaction'] as $function) {
     eval(test_php_function_source($databaseSource, $function)); // nosemgrep: php.lang.security.eval-use.eval-use
 }

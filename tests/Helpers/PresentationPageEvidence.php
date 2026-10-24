@@ -24,7 +24,8 @@ final class PresentationPageEvidence
         return array_values(array_unique(array_merge(self::measuredSources(), $goldens, array(
             'composer.json', 'composer.lock', 'tests/composer.json', 'tests/composer.lock', 'config/icons.json', 'cli/refresh_csrf.php',
             'include/vendor/composer/installed.json', 'tests/vendor/composer/installed.json',
-            'include/runtime.php', 'lib/database.php', 'lib/headers_secure.php', 'include/global_constants.php',
+            'include/runtime.php', 'lib/database.php', 'src/Platform/Infrastructure/Legacy/LegacyConnectionRegistry.php',
+            'lib/headers_secure.php', 'include/global_constants.php',
             'lib/html_validate.php', 'include/global_languages.php', 'lib/auth.php', 'lib/plugins.php',
             'include/plugins.php', 'include/global_arrays.php', 'lib/variables.php', 'lib/mib_cache.php',
             'lib/poller.php', 'lib/snmpagent.php', 'lib/aggregate.php', 'lib/api_automation.php', 'include/csrf.php',

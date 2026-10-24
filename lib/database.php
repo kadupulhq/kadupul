@@ -6,6 +6,9 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+// include/global.php connects before it loads Composer.
+require_once __DIR__ . '/../src/Platform/Infrastructure/Legacy/LegacyConnectionRegistry.php';
+
 /**
  * db_connect_real - makes a connection to the database server
  *
@@ -39,17 +42,19 @@ function db_connect_real(
     $persist = false
 ) {
 
-    global $database_sessions, $database_details, $database_total_queries, $database_persist, $config;
+    global $database_total_queries, $config;
+
+    $database_persist = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::persist();
 
     $database_total_queries = 0;
 
     $i = 0;
-    if (isset($database_sessions["$device:$port:$db_name"])) {
+    if (\Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::hasSession("$device:$port:$db_name")) {
         if (!empty($config['DEBUG_SQL_CONNECT'])) {
             error_log(sprintf('NOTE: Connect using cached connection %s:%s/%s.', $device, $port, $db_name));
         }
 
-        return $database_sessions["$device:$port:$db_name"];
+        return \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::session("$device:$port:$db_name");
     }
 
     $odevice = $device;
@@ -125,11 +130,7 @@ function db_connect_real(
                 'NO_AUTO_VALUE_ON_ZERO'
             );
 
-            $database_sessions["$odevice:$port:$db_name"] = $cnn_id;
-
-            $object_hash = spl_object_hash($cnn_id);
-
-            $database_details[$object_hash] = array(
+            \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::remember("$odevice:$port:$db_name", $cnn_id, array(
                 'database_conn'     => $cnn_id,
                 'database_hostname' => $device,
                 'database_username' => $user,
@@ -143,7 +144,7 @@ function db_connect_real(
                 'database_ssl_cert' => $db_ssl_cert,
                 'database_ssl_ca'   => $db_ssl_ca,
                 'database_persist'  => $persist,
-            );
+            ));
 
             $ver = db_get_global_variable('version', $cnn_id);
 
@@ -251,7 +252,7 @@ function db_connect_real(
  */
 function db_check_reconnect($db_conn = false, $log = true)
 {
-    global $config, $database_details;
+    global $config;
 
     if (file_exists($config['base_path'] . '/include/config.php')) {
         include($config['base_path'] . '/include/config.php');
@@ -261,8 +262,11 @@ function db_check_reconnect($db_conn = false, $log = true)
         global $database_ssl, $database_ssl_key, $database_ssl_cert, $database_ssl_ca;
     }
 
-    if (cacti_sizeof($database_details) && $db_conn !== false) {
-        foreach ($database_details as $det) {
+    // Read after config.php, which runs in this scope and could reuse the name.
+    $connection_settings = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::settings();
+
+    if (cacti_sizeof($connection_settings) && $db_conn !== false) {
+        foreach ($connection_settings as $det) {
             if (spl_object_hash($det['database_conn']) == spl_object_hash($db_conn)) {
                 $database_hostname = $det['database_hostname'];
                 $database_username = $det['database_username'];
@@ -374,7 +378,10 @@ function db_get_active_replicas()
  */
 function db_close(&$db_conn = false)
 {
-    global $database_sessions, $error_logged, $database_default, $database_hostname, $database_port, $database_details;
+    global $error_logged;
+
+    [$database_hostname, $database_port, $database_default] = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::defaultTarget();
+    $default_key = "$database_hostname:$database_port:$database_default";
 
     /* check for a connection being passed, if not use legacy behavior */
     if (!is_object($db_conn)) {
@@ -382,7 +389,7 @@ function db_close(&$db_conn = false)
             error_log(sprintf('NOTE: Disconnecting from %s:%s/%s.', $database_hostname, $database_port, $database_default));
         }
 
-        $db_conn = $database_sessions["$database_hostname:$database_port:$database_default"];
+        $db_conn = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::session($default_key);
 
         if (!is_object($db_conn)) {
             if (!empty($config['DEBUG_SQL_CONNECT'])) {
@@ -392,16 +399,17 @@ function db_close(&$db_conn = false)
             return false;
         }
 
-        $database_sessions["$database_hostname:$database_port:$database_default"] = null;
+        \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::setSession($default_key, null);
 
-        if (isset($error_logged["$database_hostname:$database_port:$database_default"])) {
-            unset($error_logged["$database_hostname:$database_port:$database_default"]);
+        if (isset($error_logged[$default_key])) {
+            unset($error_logged[$default_key]);
         }
     } elseif (!empty($config['DEBUG_SQL_CONNECT'])) {
         $id   = spl_object_id($db_conn);
         $hash = spl_object_hash($db_conn);
-        if (isset($database_details[$hash])) {
-            $det = $database_details[$hash];
+        $connection_settings = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::settings();
+        if (isset($connection_settings[$hash])) {
+            $det = $connection_settings[$hash];
 
             error_log(sprintf('NOTE: Disconnecting from %s:%s/%s.', $det['database_hostname'], $det['database_port'], $det['database_default']));
         } else {
@@ -448,7 +456,10 @@ function db_execute($sql, $log = true, $db_conn = false)
  */
 function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = false, $execute_name = 'Exec', $default_value = true, $return_func = 'no_return_function', $return_params = array())
 {
-    global $database_sessions, $error_logged, $database_default, $config, $database_hostname, $database_port, $database_total_queries, $database_last_error, $database_log, $affected_rows, $database_details;
+    global $error_logged, $config, $database_total_queries, $database_last_error, $database_log, $affected_rows;
+
+    [$database_hostname, $database_port, $database_default] = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::defaultTarget();
+    $default_key = "$database_hostname:$database_port:$database_default";
 
     $database_total_queries++;
 
@@ -458,12 +469,12 @@ function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = fa
 
     /* check for a connection being passed, if not use legacy behavior */
     if (!is_object($db_conn)) {
-        if (isset($database_sessions["$database_hostname:$database_port:$database_default"])) {
-            $db_conn = $database_sessions["$database_hostname:$database_port:$database_default"];
-        } elseif (!isset($error_logged["$database_hostname:$database_port:$database_default"])) {
+        if (\Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::hasSession($default_key)) {
+            $db_conn = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::session($default_key);
+        } elseif (!isset($error_logged[$default_key])) {
             if (!empty($config['DEBUG_SQL_CONNECT'])) {
                 error_log(sprintf('WARNING: Execute unable to find connection for %s:%s/%s.', $database_hostname, $database_port, $database_default));
-                $error_logged["$database_hostname:$database_port:$database_default"] = true;
+                $error_logged[$default_key] = true;
             }
         }
 
@@ -482,10 +493,11 @@ function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = fa
     } elseif (!empty($config['DEBUG_SQL_CONNECT'])) {
         $id   = spl_object_id($db_conn);
         $hash = spl_object_hash($db_conn);
+        $connection_settings = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::settings();
 
         if (!isset($error_logged[$id])) {
-            if (isset($database_details[$hash])) {
-                $det = $database_details[$hash];
+            if (isset($connection_settings[$hash])) {
+                $det = $connection_settings[$hash];
 
                 error_log(sprintf("NOTE: Execute Using %s:%s/%s.", $det['database_hostname'], $det['database_port'], $det['database_default']));
             } else {
@@ -876,12 +888,8 @@ function db_fetch_assoc_return($query)
  */
 function db_fetch_insert_id($db_conn = false)
 {
-    global $database_sessions, $database_default, $database_hostname, $database_port;
-
     /* check for a connection being passed, if not use legacy behavior */
-    if (!is_object($db_conn)) {
-        $db_conn = $database_sessions["$database_hostname:$database_port:$database_default"];
-    }
+    $db_conn = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::select($db_conn);
 
     if (is_object($db_conn)) {
         return $db_conn->lastInsertId();
@@ -900,15 +908,13 @@ function db_fetch_insert_id($db_conn = false)
  */
 function db_affected_rows($db_conn = false)
 {
-    global $database_sessions, $database_default, $database_hostname, $database_port, $affected_rows;
+    global $affected_rows;
 
     /* check for a connection being passed, if not use legacy behavior */
-    if (!is_object($db_conn)) {
-        $db_conn = $database_sessions["$database_hostname:$database_port:$database_default"];
+    $db_conn = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::select($db_conn);
 
-        if (!is_object($db_conn)) {
-            return false;
-        }
+    if (!is_object($db_conn)) {
+        return false;
     }
 
     return $affected_rows[spl_object_hash($db_conn)];
@@ -927,15 +933,11 @@ function db_affected_rows($db_conn = false)
  */
 function db_add_column($table, $column, $log = true, $db_conn = false)
 {
-    global $database_sessions, $database_default, $database_hostname, $database_port;
-
     /* check for a connection being passed, if not use legacy behavior */
-    if (!is_object($db_conn)) {
-        $db_conn = $database_sessions["$database_hostname:$database_port:$database_default"];
+    $db_conn = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::select($db_conn);
 
-        if (!is_object($db_conn)) {
-            return false;
-        }
+    if (!is_object($db_conn)) {
+        return false;
     }
 
     $result = db_fetch_assoc('SHOW columns FROM `' . $table . '`', $log, $db_conn);
@@ -1008,15 +1010,11 @@ function db_add_column($table, $column, $log = true, $db_conn = false)
  */
 function db_remove_column($table, $column, $log = true, $db_conn = false)
 {
-    global $database_sessions, $database_default, $database_hostname, $database_port;
-
     /* check for a connection being passed, if not use legacy behavior */
-    if (!is_object($db_conn)) {
-        $db_conn = $database_sessions["$database_hostname:$database_port:$database_default"];
+    $db_conn = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::select($db_conn);
 
-        if (!is_object($db_conn)) {
-            return false;
-        }
+    if (!is_object($db_conn)) {
+        return false;
     }
 
     $result = db_fetch_assoc('SHOW columns FROM `' . $table . '`', $log, $db_conn);
@@ -1208,9 +1206,9 @@ function db_table_exists($table, $log = true, $db_conn = false)
  */
 function db_cacti_initialized($is_web = true)
 {
-    global $database_sessions, $database_default, $config, $database_hostname, $database_port, $config;
+    global $config;
 
-    $db_conn = $database_sessions["$database_hostname:$database_port:$database_default"];
+    $db_conn = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::select(false);
 
     if (!is_object($db_conn)) {
         return false;
@@ -1279,15 +1277,11 @@ function db_column_exists($table, $column, $log = true, $db_conn = false)
  */
 function db_get_table_column_types($table, $db_conn = false)
 {
-    global $database_sessions, $database_default, $database_hostname, $database_port;
-
     /* check for a connection being passed, if not use legacy behavior */
-    if (!is_object($db_conn)) {
-        $db_conn = $database_sessions["$database_hostname:$database_port:$database_default"];
+    $db_conn = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::select($db_conn);
 
-        if (!is_object($db_conn)) {
-            return false;
-        }
+    if (!is_object($db_conn)) {
+        return false;
     }
 
     $columns = db_fetch_assoc("SHOW COLUMNS FROM $table", false, $db_conn);
@@ -1318,15 +1312,11 @@ function db_get_table_column_types($table, $db_conn = false)
  */
 function db_update_table($table, $data, $removecolumns = false, $log = true, $db_conn = false)
 {
-    global $database_sessions, $database_default, $database_hostname, $database_port;
-
     /* check for a connection being passed, if not use legacy behavior */
-    if (!is_object($db_conn)) {
-        $db_conn = $database_sessions["$database_hostname:$database_port:$database_default"];
+    $db_conn = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::select($db_conn);
 
-        if (!is_object($db_conn)) {
-            return false;
-        }
+    if (!is_object($db_conn)) {
+        return false;
     }
 
     if (!db_table_exists($table, $log, $db_conn)) {
@@ -1561,15 +1551,11 @@ function db_format_index_create($indexes)
  */
 function db_table_create($table, $data, $log = true, $db_conn = false)
 {
-    global $database_sessions, $database_default, $database_hostname, $database_port;
-
     /* check for a connection being passed, if not use legacy behavior */
-    if (!is_object($db_conn)) {
-        $db_conn = $database_sessions["$database_hostname:$database_port:$database_default"];
+    $db_conn = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::select($db_conn);
 
-        if (!is_object($db_conn)) {
-            return false;
-        }
+    if (!is_object($db_conn)) {
+        return false;
     }
 
     if (!db_table_exists($table, $log, $db_conn)) {
@@ -1678,15 +1664,11 @@ function db_table_create($table, $data, $log = true, $db_conn = false)
  */
 function db_get_global_variable($variable, $db_conn = false)
 {
-    global $database_sessions, $database_default, $database_hostname, $database_port;
-
     /* check for a connection being passed, if not use legacy behavior */
-    if (!is_object($db_conn)) {
-        $db_conn = $database_sessions["$database_hostname:$database_port:$database_default"];
+    $db_conn = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::select($db_conn);
 
-        if (!is_object($db_conn)) {
-            return false;
-        }
+    if (!is_object($db_conn)) {
+        return false;
     }
 
     $data = db_fetch_row("SHOW GLOBAL VARIABLES LIKE '$variable'", true, $db_conn);
@@ -1708,15 +1690,11 @@ function db_get_global_variable($variable, $db_conn = false)
  */
 function db_get_session_variable($variable, $db_conn = false)
 {
-    global $database_sessions, $database_default, $database_hostname, $database_port;
-
     /* check for a connection being passed, if not use legacy behavior */
-    if (!is_object($db_conn)) {
-        $db_conn = $database_sessions["$database_hostname:$database_port:$database_default"];
+    $db_conn = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::select($db_conn);
 
-        if (!is_object($db_conn)) {
-            return false;
-        }
+    if (!is_object($db_conn)) {
+        return false;
     }
 
     $data = db_fetch_row("SHOW SESSION VARIABLES LIKE '$variable'", true, $db_conn);
@@ -1737,15 +1715,11 @@ function db_get_session_variable($variable, $db_conn = false)
  */
 function db_begin_transaction($db_conn = false)
 {
-    global $database_sessions, $database_default, $database_hostname, $database_port;
-
     /* check for a connection being passed, if not use legacy behavior */
-    if (!is_object($db_conn)) {
-        $db_conn = $database_sessions["$database_hostname:$database_port:$database_default"];
+    $db_conn = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::select($db_conn);
 
-        if (!is_object($db_conn)) {
-            return false;
-        }
+    if (!is_object($db_conn)) {
+        return false;
     }
 
     return $db_conn->beginTransaction();
@@ -1759,15 +1733,11 @@ function db_begin_transaction($db_conn = false)
  */
 function db_commit_transaction($db_conn = false)
 {
-    global $database_sessions, $database_default, $database_hostname, $database_port;
-
     /* check for a connection being passed, if not use legacy behavior */
-    if (!is_object($db_conn)) {
-        $db_conn = $database_sessions["$database_hostname:$database_port:$database_default"];
+    $db_conn = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::select($db_conn);
 
-        if (!is_object($db_conn)) {
-            return false;
-        }
+    if (!is_object($db_conn)) {
+        return false;
     }
 
     /* @@in_transaction is a MariaDB variable. On MySQL the query raises
@@ -1790,15 +1760,11 @@ function db_commit_transaction($db_conn = false)
  */
 function db_rollback_transaction($db_conn = false)
 {
-    global $database_sessions, $database_default, $database_hostname, $database_port;
-
     /* check for a connection being passed, if not use legacy behavior */
-    if (!is_object($db_conn)) {
-        $db_conn = $database_sessions["$database_hostname:$database_port:$database_default"];
+    $db_conn = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::select($db_conn);
 
-        if (!is_object($db_conn)) {
-            return false;
-        }
+    if (!is_object($db_conn)) {
+        return false;
     }
 
     return $db_conn->rollBack();
@@ -1842,12 +1808,8 @@ function array_to_sql_or($array, $sql_column)
  */
 function db_replace($table_name, $array_items, $keyCols, $db_conn = false)
 {
-    global $database_sessions, $database_default, $database_hostname, $database_port;
-
     /* check for a connection being passed, if not use legacy behavior */
-    if (!is_object($db_conn)) {
-        $db_conn = $database_sessions["$database_hostname:$database_port:$database_default"];
-    }
+    $db_conn = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::select($db_conn);
 
     $log_items = $array_items;
     $redact_fields = array(
@@ -1892,15 +1854,11 @@ function cacti_safe_column_name($col)
 
 function _db_replace($db_conn, $table, $fieldArray, $keyCols)
 {
-    global $database_sessions, $database_default, $database_hostname, $database_port;
-
     /* check for a connection being passed, if not use legacy behavior */
-    if (!is_object($db_conn)) {
-        $db_conn = $database_sessions["$database_hostname:$database_port:$database_default"];
+    $db_conn = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::select($db_conn);
 
-        if (!is_object($db_conn)) {
-            return false;
-        }
+    if (!is_object($db_conn)) {
+        return false;
     }
 
     if (!is_array($keyCols)) {
@@ -1959,12 +1917,10 @@ function _db_replace($db_conn, $table, $fieldArray, $keyCols)
  */
 function sql_save($array_items, $table_name, $key_cols = 'id', $autoinc = true, $db_conn = false)
 {
-    global $database_sessions, $database_default, $database_hostname, $database_port, $database_last_error;
+    global $database_last_error;
 
     /* check for a connection being passed, if not use legacy behavior */
-    if (!is_object($db_conn)) {
-        $db_conn = $database_sessions["$database_hostname:$database_port:$database_default"];
-    }
+    $db_conn = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::select($db_conn);
 
     $log = true;
     if (!db_table_exists($table_name, $log, $db_conn)) {
@@ -2048,12 +2004,8 @@ function sql_save($array_items, $table_name, $key_cols = 'id', $autoinc = true, 
  */
 function db_qstr($s, $db_conn = false)
 {
-    global $database_sessions, $database_default, $database_hostname, $database_port;
-
     /* check for a connection being passed, if not use legacy behavior */
-    if (!is_object($db_conn)) {
-        $db_conn = $database_sessions["$database_hostname:$database_port:$database_default"];
-    }
+    $db_conn = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::select($db_conn);
 
     if (is_null($s)) {
         return 'NULL';
@@ -2246,11 +2198,9 @@ function db_error()
  */
 function db_get_default_database($db_conn = false)
 {
-    global $database_default;
-
     $database = db_fetch_cell('SELECT DATABASE()', '', true, $db_conn);
     if (empty($database)) {
-        $database = $database_default;
+        $database = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::defaultTarget()[2];
     }
 }
 
@@ -2282,11 +2232,12 @@ function db_force_remote_cnn()
  */
 function db_switch_remote_to_main()
 {
-    global $config, $database_sessions, $database_hostname, $database_port, $database_default;
-    global $remote_db_cnn_id, $local_db_cnn_id;
+    global $config;
+
+    $handles = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::handles();
 
     if ($config['poller_id'] > 1) {
-        $database_sessions["$database_hostname:$database_port:$database_default"] = $remote_db_cnn_id;
+        \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::setDefaultSession($handles['remote']);
 
         return true;
     }
@@ -2307,11 +2258,12 @@ function db_switch_remote_to_main()
  */
 function db_switch_main_to_local()
 {
-    global $config, $database_sessions, $database_hostname, $database_port, $database_default;
-    global $remote_db_cnn_id, $local_db_cnn_id;
+    global $config;
+
+    $handles = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::handles();
 
     if ($config['poller_id'] > 1) {
-        $database_sessions["$database_hostname:$database_port:$database_default"] = $local_db_cnn_id;
+        \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::setDefaultSession($handles['local']);
 
         return true;
     }
