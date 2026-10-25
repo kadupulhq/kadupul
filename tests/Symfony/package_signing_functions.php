@@ -18,10 +18,11 @@ namespace Kadupul\Tests\PackageSigning;
 
 require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
 
-foreach (['POLLER_VERBOSITY_LOW' => 2, 'POLLER_VERBOSITY_MEDIUM' => 3] as $constant => $value) {
-    if (!defined($constant)) {
-        define($constant, $value);
-    }
+// PHPUnit loads this file during discovery. Defining only a subset of the
+// production constants here would make any later in-process load of
+// global_constants.php fail on the first redefinition.
+if (!defined('POLLER_VERBOSITY_LOW')) {
+    require_once dirname(__DIR__, 2) . '/include/global_constants.php';
 }
 
 function load(): void
