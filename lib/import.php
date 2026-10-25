@@ -587,6 +587,9 @@ function import_read_package_data($xmlfile, &$public_key)
  * @param  (array)       $import_hashes - The hashes to import from the package
  * @param  (array)       $import_files - The XML resource files and script files to import from the package
  * @param  (string)      $class - The Class of the Package in the case of a Device Template
+ * @param  (bool)        $keep_existing_files - If true, a script or resource file that already exists
+ *                       is left as it is and reported as kept; files that are missing are still written.
+ *                       The installer sets this so a package copy cannot replace a newer file in the tree.
  *
  */
 function import_package(
@@ -599,7 +602,8 @@ function import_package(
     $limitex = true,
     $import_hashes = array(),
     $import_files = array(),
-    $class = ''
+    $class = '',
+    $keep_existing_files = false
 ) {
 
     global $config, $preview_only;
@@ -699,6 +703,14 @@ function import_package(
              * realpath(base_path), which differs from base_path behind a symlink. */
             if (!$preview) {
                 if (!cacti_sizeof($import_files) || in_array($name, $import_files, true) || in_array($normalized_name, $import_files, true)) {
+                    if ($keep_existing_files && file_exists($filename)) {
+                        cacti_log('Keeping existing file: ' . $filename, false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
+
+                        $filestatus[$normalized_name] = __('kept');
+
+                        continue;
+                    }
+
                     cacti_log('Writing file: ' . $filename, false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
 
                     if ((is_writeable(dirname($filename)) && !file_exists($filename)) || is_writable($filename)) {

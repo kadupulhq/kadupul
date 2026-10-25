@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Russian Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-23 14:52-0600\n"
+"POT-Creation-Date: 2026-10-25 10:54-0600\n"
 "PO-Revision-Date: 2024-12-06 19:24+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -3472,7 +3472,7 @@ msgstr "Пользовательские данные"
 msgid "Data Source Item %s"
 msgstr "Источник данных Пункт %s"
 
-#: data_sources.php:1267 data_templates.php:817 lib/import.php:2858
+#: data_sources.php:1267 data_templates.php:817 lib/import.php:2870
 #: package_import.php:604
 msgid "New"
 msgstr "Новый"
@@ -13693,7 +13693,7 @@ msgstr "События"
 msgid "Send Report"
 msgstr "Отправить отчёт"
 
-#: lib/html_reports.php:1644 lib/import.php:2943 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:2955 user_admin.php:1776
 msgid "[new]"
 msgstr "[новый]"
 
@@ -13936,113 +13936,117 @@ msgstr "Ошибка проверки"
 msgid "Legacy system input fields and mappings will be checked for repairs only when the template is imported."
 msgstr ""
 
-#: lib/import.php:714 lib/import.php:733
+#: lib/import.php:709
+msgid "kept"
+msgstr ""
+
+#: lib/import.php:726 lib/import.php:745
 msgid "written"
 msgstr "письменная"
 
-#: lib/import.php:716
+#: lib/import.php:728
 msgid "not written"
 msgstr ""
 
-#: lib/import.php:719
+#: lib/import.php:731
 msgid "could not open"
 msgstr "не смог открыть"
 
-#: lib/import.php:725
+#: lib/import.php:737
 msgid "not exists"
 msgstr "не существует"
 
-#: lib/import.php:728
+#: lib/import.php:740
 msgid "not writable"
 msgstr "Записи"
 
-#: lib/import.php:1956 lib/import.php:1977
+#: lib/import.php:1968 lib/import.php:1989
 #, php-format
 msgid "New Graph Template: %s"
 msgstr "Новый шаблон графика: %s"
 
-#: lib/import.php:1991 lib/import.php:2003
+#: lib/import.php:2003 lib/import.php:2015
 #, php-format
 msgid "New Data Query: %s"
 msgstr "Запрос данных [%s]"
 
-#: lib/import.php:2640
+#: lib/import.php:2652
 msgid "Unknown Field"
 msgstr "Неизвестное Поле"
 
-#: lib/import.php:2856
+#: lib/import.php:2868
 msgid "Updated"
 msgstr "Обновить"
 
-#: lib/import.php:2860
+#: lib/import.php:2872
 msgid "Damaged"
 msgstr "Источник данных, график"
 
-#: lib/import.php:2862 package_import.php:598
+#: lib/import.php:2874 package_import.php:598
 msgid "Unchanged"
 msgstr "Без изменений"
 
-#: lib/import.php:2898
+#: lib/import.php:2910
 msgid "Import Preview Results"
 msgstr "Импорт результатов предварительного просмотра"
 
-#: lib/import.php:2898
+#: lib/import.php:2910
 msgid "Import Results"
 msgstr "Импорт Результатов"
 
-#: lib/import.php:2902
+#: lib/import.php:2914
 #, fuzzy
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Kadupul внесли бы следующие изменения, если бы Пакет был импортирован:"
 
-#: lib/import.php:2904
+#: lib/import.php:2916
 #, fuzzy
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "Kadupul импортировали следующие товары для пакета:"
 
-#: lib/import.php:2907
+#: lib/import.php:2919
 msgid "Package Files"
 msgstr "Файлы пакетов"
 
-#: lib/import.php:2911
+#: lib/import.php:2923
 msgid "[preview] "
 msgstr "[предпросмотр] "
 
-#: lib/import.php:2916
+#: lib/import.php:2928
 #, fuzzy
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "Kadupul внесут следующие изменения, если Шаблон будет импортирован:"
 
-#: lib/import.php:2918
+#: lib/import.php:2930
 #, fuzzy
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "Kadupul импортировали следующие элементы для Шаблона:"
 
-#: lib/import.php:2933
+#: lib/import.php:2945
 msgid "[success]"
 msgstr "[выполненно]"
 
-#: lib/import.php:2935
+#: lib/import.php:2947
 msgid "[fail]"
 msgstr "[ошибка]"
 
-#: lib/import.php:2937
+#: lib/import.php:2949
 msgid "[preview]"
 msgstr "[предпросмотр] "
 
-#: lib/import.php:2941
+#: lib/import.php:2953
 msgid "[updated]"
 msgstr "[updated]"
 
-#: lib/import.php:2945
+#: lib/import.php:2957
 msgid "[unchanged]"
 msgstr "Без изменений"
 
-#: lib/import.php:2981
+#: lib/import.php:2993
 msgid "Found Dependency:"
 msgstr "Нашли Зависимость:"
 
-#: lib/import.php:2983
+#: lib/import.php:2995
 msgid "Unmet Dependency:"
 msgstr "Неурегулированная зависимость:"
 

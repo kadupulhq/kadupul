@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-23 14:52-0600\n"
+"POT-Creation-Date: 2026-10-25 10:54-0600\n"
 "PO-Revision-Date: 2024-04-20 18:59-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -3456,7 +3456,7 @@ msgstr "Dati personalizzati"
 msgid "Data Source Item %s"
 msgstr "Fonte dei dati Voci %s"
 
-#: data_sources.php:1267 data_templates.php:817 lib/import.php:2858
+#: data_sources.php:1267 data_templates.php:817 lib/import.php:2870
 #: package_import.php:604
 msgid "New"
 msgstr "Nuovo"
@@ -13645,7 +13645,7 @@ msgstr "Eventi"
 msgid "Send Report"
 msgstr "Invia Report"
 
-#: lib/html_reports.php:1644 lib/import.php:2943 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:2955 user_admin.php:1776
 msgid "[new]"
 msgstr "new"
 
@@ -13888,109 +13888,113 @@ msgstr "Errore di validazione"
 msgid "Legacy system input fields and mappings will be checked for repairs only when the template is imported."
 msgstr ""
 
-#: lib/import.php:714 lib/import.php:733
+#: lib/import.php:709
+msgid "kept"
+msgstr ""
+
+#: lib/import.php:726 lib/import.php:745
 msgid "written"
 msgstr "in forma scritta"
 
-#: lib/import.php:716
+#: lib/import.php:728
 msgid "not written"
 msgstr ""
 
-#: lib/import.php:719
+#: lib/import.php:731
 msgid "could not open"
 msgstr "non poteva aprirsi"
 
-#: lib/import.php:725
+#: lib/import.php:737
 msgid "not exists"
 msgstr "non esiste"
 
-#: lib/import.php:728
+#: lib/import.php:740
 msgid "not writable"
 msgstr "Non Scrivibile"
 
-#: lib/import.php:1956 lib/import.php:1977
+#: lib/import.php:1968 lib/import.php:1989
 #, php-format
 msgid "New Graph Template: %s"
 msgstr "Grafico [Modello: %s]."
 
-#: lib/import.php:1991 lib/import.php:2003
+#: lib/import.php:2003 lib/import.php:2015
 #, php-format
 msgid "New Data Query: %s"
 msgstr "Interrogazione dati [%s]"
 
-#: lib/import.php:2640
+#: lib/import.php:2652
 msgid "Unknown Field"
 msgstr "Campo sconosciuto"
 
-#: lib/import.php:2856
+#: lib/import.php:2868
 msgid "Updated"
 msgstr "Aggiorna"
 
-#: lib/import.php:2860
+#: lib/import.php:2872
 msgid "Damaged"
 msgstr "Fonte dei dati, grafico"
 
-#: lib/import.php:2862 package_import.php:598
+#: lib/import.php:2874 package_import.php:598
 msgid "Unchanged"
 msgstr "Invariato"
 
-#: lib/import.php:2898
+#: lib/import.php:2910
 msgid "Import Preview Results"
 msgstr "Importare i risultati dell'anteprima"
 
-#: lib/import.php:2898
+#: lib/import.php:2910
 msgid "Import Results"
 msgstr "Importa risultati"
 
-#: lib/import.php:2902
+#: lib/import.php:2914
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Kadupul apporterebbe le seguenti modifiche se il pacchetto fosse importato:"
 
-#: lib/import.php:2904
+#: lib/import.php:2916
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "Kadupul ha importato i seguenti articoli per il pacchetto:"
 
-#: lib/import.php:2907
+#: lib/import.php:2919
 msgid "Package Files"
 msgstr "Pacchetti"
 
-#: lib/import.php:2911
+#: lib/import.php:2923
 msgid "[preview] "
 msgstr "Anteprima"
 
-#: lib/import.php:2916
+#: lib/import.php:2928
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "Kadupul apporterebbe le seguenti modifiche se il Template fosse importato:"
 
-#: lib/import.php:2918
+#: lib/import.php:2930
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "Kadupul ha importato i seguenti elementi per il Template:"
 
-#: lib/import.php:2933
+#: lib/import.php:2945
 msgid "[success]"
 msgstr "Riuscito!"
 
-#: lib/import.php:2935
+#: lib/import.php:2947
 msgid "[fail]"
 msgstr "Fallito"
 
-#: lib/import.php:2937
+#: lib/import.php:2949
 msgid "[preview]"
 msgstr "Anteprima"
 
-#: lib/import.php:2941
+#: lib/import.php:2953
 msgid "[updated]"
 msgstr "Aggiornato"
 
-#: lib/import.php:2945
+#: lib/import.php:2957
 msgid "[unchanged]"
 msgstr "Invariato"
 
-#: lib/import.php:2981
+#: lib/import.php:2993
 msgid "Found Dependency:"
 msgstr "Trovata la dipendenza:"
 
-#: lib/import.php:2983
+#: lib/import.php:2995
 msgid "Unmet Dependency:"
 msgstr "Dipendenza insoddisfatta:"
 

@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Keep a script or resource file that already exists when the installer imports a device template package, instead of writing the package's older embedded copy over it; missing files are still written, and package import from the web page and the command line is unchanged. A test lists the embedded files that still differ from the tree, so new differences fail CI (#998).
+
 - Add native Symfony/Twig browsing for device, graph, data and aggregate templates; data queries; SNMP option sets; graph and tree rules; discovery networks; and notification receivers. Existing PHP forms still handle edits and bulk actions (#1007).
 
 - Update the hash-locked CI Semgrep scanner from 1.180.0 to 1.181.0.

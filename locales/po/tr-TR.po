@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-23 14:52-0600\n"
+"POT-Creation-Date: 2026-10-25 10:54-0600\n"
 "PO-Revision-Date: 2024-04-20 19:24-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -3460,7 +3460,7 @@ msgstr "Özel Veriler"
 msgid "Data Source Item %s"
 msgstr "Veri Kaynağı Öğesi %s"
 
-#: data_sources.php:1267 data_templates.php:817 lib/import.php:2858
+#: data_sources.php:1267 data_templates.php:817 lib/import.php:2870
 #: package_import.php:604
 msgid "New"
 msgstr "Yeni"
@@ -13671,7 +13671,7 @@ msgstr "Olaylar"
 msgid "Send Report"
 msgstr "Rapor gönder"
 
-#: lib/html_reports.php:1644 lib/import.php:2943 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:2955 user_admin.php:1776
 msgid "[new]"
 msgstr "[yeni]"
 
@@ -13914,111 +13914,115 @@ msgstr "Doğrulama Hatası"
 msgid "Legacy system input fields and mappings will be checked for repairs only when the template is imported."
 msgstr ""
 
-#: lib/import.php:714 lib/import.php:733
+#: lib/import.php:709
+msgid "kept"
+msgstr ""
+
+#: lib/import.php:726 lib/import.php:745
 msgid "written"
 msgstr "yazılı"
 
-#: lib/import.php:716
+#: lib/import.php:728
 msgid "not written"
 msgstr ""
 
-#: lib/import.php:719
+#: lib/import.php:731
 msgid "could not open"
 msgstr "Açılamadı"
 
-#: lib/import.php:725
+#: lib/import.php:737
 msgid "not exists"
 msgstr "yok"
 
-#: lib/import.php:728
+#: lib/import.php:740
 msgid "not writable"
 msgstr "Yazılabilir değil"
 
-#: lib/import.php:1956 lib/import.php:1977
+#: lib/import.php:1968 lib/import.php:1989
 #, php-format
 msgid "New Graph Template: %s"
 msgstr "Grafik [Şablon: %s]"
 
-#: lib/import.php:1991 lib/import.php:2003
+#: lib/import.php:2003 lib/import.php:2015
 #, php-format
 msgid "New Data Query: %s"
 msgstr "Veri Sorgu [ %s]"
 
-#: lib/import.php:2640
+#: lib/import.php:2652
 msgid "Unknown Field"
 msgstr "Bilinmeyen alan"
 
-#: lib/import.php:2856
+#: lib/import.php:2868
 msgid "Updated"
 msgstr "Güncelle"
 
-#: lib/import.php:2860
+#: lib/import.php:2872
 msgid "Damaged"
 msgstr "Veri Kaynağı, Grafik"
 
-#: lib/import.php:2862 package_import.php:598
+#: lib/import.php:2874 package_import.php:598
 msgid "Unchanged"
 msgstr "Değişemedi"
 
-#: lib/import.php:2898
+#: lib/import.php:2910
 msgid "Import Preview Results"
 msgstr "Önizleme Sonuçlarını İçe Aktar"
 
-#: lib/import.php:2898
+#: lib/import.php:2910
 msgid "Import Results"
 msgstr "İçeri Aktarma Sonuçları"
 
-#: lib/import.php:2902
+#: lib/import.php:2914
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Paket ithal edildiyse, Kadupul aşağıdaki değişiklikleri yapar:"
 
-#: lib/import.php:2904
+#: lib/import.php:2916
 #, fuzzy
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "Kadupul, Paket için aşağıdaki öğeleri içe aktardı:"
 
-#: lib/import.php:2907
+#: lib/import.php:2919
 msgid "Package Files"
 msgstr "Paket Dosyaları"
 
-#: lib/import.php:2911
+#: lib/import.php:2923
 msgid "[preview] "
 msgstr "Önizleme"
 
-#: lib/import.php:2916
+#: lib/import.php:2928
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "Şablon içe aktarılırsa, Kadupul aşağıdaki değişiklikleri yapar:"
 
-#: lib/import.php:2918
+#: lib/import.php:2930
 #, fuzzy
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "Kadupul, Şablon için aşağıdaki öğeleri içe aktardı:"
 
-#: lib/import.php:2933
+#: lib/import.php:2945
 msgid "[success]"
 msgstr "Başarılı!"
 
-#: lib/import.php:2935
+#: lib/import.php:2947
 msgid "[fail]"
 msgstr "Başarısız"
 
-#: lib/import.php:2937
+#: lib/import.php:2949
 msgid "[preview]"
 msgstr "Önizleme"
 
-#: lib/import.php:2941
+#: lib/import.php:2953
 msgid "[updated]"
 msgstr "Güncellendi"
 
-#: lib/import.php:2945
+#: lib/import.php:2957
 msgid "[unchanged]"
 msgstr "Değişemedi"
 
-#: lib/import.php:2981
+#: lib/import.php:2993
 msgid "Found Dependency:"
 msgstr "Bulunan Bağımlılık:"
 
-#: lib/import.php:2983
+#: lib/import.php:2995
 msgid "Unmet Dependency:"
 msgstr "Karşılanmayan Bağımlılık:"
 
