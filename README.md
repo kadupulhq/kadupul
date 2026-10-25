@@ -13,6 +13,14 @@ available, but there is no supported release and no migration path. See
 
 [Documentation](https://kadupulhq.github.io/website/) · [Issue tracker](https://github.com/kadupulhq/kadupul/issues) · [Discussions](https://github.com/kadupulhq/kadupul/discussions)
 
+## Screenshot
+
+![Graph preview with seven ping-latency graphs](docs/images/graph-preview.png)
+
+The graph preview page of a source checkout of `main`, showing ping latency
+for demo devices. The device list and the plotted data were generated for the
+screenshot and do not come from real equipment.
+
 ## Branches
 
 | Branch | PHP | phpseclib | Notes |
