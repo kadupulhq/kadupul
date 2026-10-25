@@ -14,14 +14,18 @@ use Kadupul\Graphing\Application\Port\PaletteColorStore;
 use Kadupul\Graphing\Domain\PaletteColor;
 use Kadupul\Graphing\Domain\PaletteColorFilters;
 use Kadupul\Graphing\Domain\PaletteColorPage;
-use Kadupul\IdentityAccess\Contract\AuditEvent;
 use Kadupul\IdentityAccess\Contract\AuditTrail;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Contract\LegacyConfiguration;
 
 final readonly class LegacyPaletteColorStore implements PaletteColorStore
 {
-    public function __construct(private DatabaseConnection $database, private PaletteColorAccess $access, private AuditTrail $audit, private LegacyConfiguration $configuration) {}
+    private LegacyAuditedTransaction $transaction;
+
+    public function __construct(private DatabaseConnection $database, PaletteColorAccess $access, AuditTrail $audit, LegacyConfiguration $configuration)
+    {
+        $this->transaction = new LegacyAuditedTransaction($database, $access, $audit, $configuration, PaletteSql::class, ['colors', 'graph_templates_item', 'color_template_items', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_realm', 'user_auth_group_members', 'settings'], 'Color', 'Color operation', 'Colors', 'graphing.palette', 'palette');
+    }
     public function defaultRows(): int
     {
         $rows = filter_var(PaletteSql::column(PaletteSql::execute($this->database->get(), "SELECT value FROM settings WHERE name = 'num_rows_table'")), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 5000]]);
@@ -193,70 +197,7 @@ final readonly class LegacyPaletteColorStore implements PaletteColorStore
     }
     private function write(int $actorId, string $action, callable $operation): mixed
     {
-        $db = $this->database->get();
-        $decision = AuditEvent::DENIED;
-        $outcome = AuditEvent::DENIED;
-        $started = false;
-        try {
-            if ($db->inTransaction()) {
-                throw new \RuntimeException('Color transaction unavailable.');
-            }
-            $this->assertTransactional($db);
-            if (!$db->beginTransaction()) {
-                throw new \RuntimeException('Color transaction unavailable.');
-            }
-            $started = true;
-            $this->access->assertCurrent($actorId);
-            $decision = AuditEvent::ALLOWED;
-            $outcome = AuditEvent::FAILED;
-            $result = $operation($db);
-            if (!$db->commit()) {
-                throw new \RuntimeException('Color operation commit was not confirmed.');
-            }
-            $outcome = AuditEvent::SUCCEEDED;
-            return $result;
-        } catch (\Throwable $error) {
-            if ($started && $db->inTransaction()) {
-                try {
-                    $rolledBack = $db->rollBack();
-                } catch (\Throwable $rollbackError) {
-                    throw new \RuntimeException('Color operation rollback was not confirmed.', 0, $rollbackError);
-                }
-                if (!$rolledBack) {
-                    throw new \RuntimeException('Color operation rollback was not confirmed.', 0, $error);
-                }
-            }
-            throw $error;
-        } finally {
-            try {
-                $this->audit->record(new AuditEvent(bin2hex(random_bytes(16)), $actorId, 'graphing.palette.' . $action, 'palette', 'palette', $decision, $outcome));
-            } catch (\Throwable) {
-                // Audit failure does not change the confirmed persistence outcome.
-            }
-        }
-    }
-    private function assertTransactional(\PDO $db): void
-    {
-        if ($db->getAttribute(\PDO::ATTR_DRIVER_NAME) !== 'mysql') {
-            return;
-        }
-        if (($this->configuration->values()['collector_id'] ?? null) !== 1) {
-            throw new \RuntimeException('Colors must be changed on the primary collector.');
-        }
-        foreach (['colors', 'graph_templates_item', 'color_template_items', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_realm', 'user_auth_group_members', 'settings'] as $table) {
-            // Check the actual connection table, including temporary shadows.
-            $query = $db->query('SHOW CREATE TABLE `' . $table . '`');
-            $definition = $query === false ? false : PaletteSql::one($query, \PDO::FETCH_NUM);
-            if ($definition === false || !is_string($definition[1] ?? null)
-                || preg_match('/\ACREATE TABLE /i', $definition[1]) !== 1
-                || preg_match('/\n\) ENGINE=InnoDB\b/i', $definition[1]) !== 1) {
-                throw new \RuntimeException('Color writes require transactional tables.');
-            }
-        }
-        // Preserve dependency range locks when the session default was changed.
-        if ($db->exec('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ') === false) {
-            throw new \RuntimeException('Color transaction isolation was not confirmed.');
-        }
+        return $this->transaction->run($actorId, $action, 'palette', $operation);
     }
     private function lock(): string
     {
