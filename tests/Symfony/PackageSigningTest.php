@@ -96,6 +96,32 @@ final class PackageSigningTest extends TestCase
         self::assertSame([], glob($this->directory . '/.*.tmp*') ?: []);
     }
 
+    public function testSigningInPlaceKeepsThePackageMode(): void
+    {
+        $package = $this->write('in-place.xml.gz', $this->unsigned());
+        chmod($package, 0640);
+
+        [$status, $display] = $this->sign($package, null, self::pem(self::key(4096)));
+
+        self::assertSame(0, $status, $display);
+        clearstatcache();
+        self::assertSame(0640, fileperms($package) & 0777);
+    }
+
+    public function testANewSignedPackageGetsTheModeTheUmaskAllows(): void
+    {
+        $output = $this->directory . '/signed.xml.gz';
+        $umask = umask(0027);
+        try {
+            [$status, $display] = $this->sign($this->write('unsigned.xml.gz', $this->unsigned()), $output, self::pem(self::key(4096)));
+        } finally {
+            umask($umask);
+        }
+
+        self::assertSame(0, $status, $display);
+        self::assertSame(0640, fileperms($output) & 0777);
+    }
+
     public function testATamperedFileIsRejectedEvenWithAValidPackageSignature(): void
     {
         $output = $this->directory . '/signed.xml.gz';

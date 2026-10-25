@@ -113,7 +113,12 @@ final readonly class SignPackageCommand
             }
             throw new PackageSigningFailed('Cannot create a temporary file beside ' . $target . '.');
         }
-        if (file_put_contents($temporary, $bytes) !== strlen($bytes) || !chmod($temporary, 0644) || !rename($temporary, $target)) {
+        // tempnam() creates the file 0600, which the web server could not read
+        // once it replaced a bundled package. Keep the replaced package's mode,
+        // or give a new one the mode a plain write under the umask would get.
+        $existing = is_file($target) ? fileperms($target) : false;
+        $mode = $existing === false ? 0666 & ~umask() : $existing & 0777;
+        if (file_put_contents($temporary, $bytes) !== strlen($bytes) || !chmod($temporary, $mode) || !rename($temporary, $target)) {
             unlink($temporary);
             throw new PackageSigningFailed('Cannot write ' . $target . '.');
         }
