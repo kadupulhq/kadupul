@@ -22,7 +22,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     help: <<<'HELP'
         Signs each file in an unsigned or Cacti-signed <info>.xml.gz</info> package and
         the package itself, embeds the signing key's public key, and writes gzip output.
-        Without an output path the package is replaced in place.
+        Without an output path the package is replaced in place and keeps its file
+        mode. A new output file takes its mode from the umask; the web server user
+        must be able to read it for the installer to import it, so sign with umask
+        022 or chmod the file afterwards.
 
         The private key comes only from the <info>KADUPUL_PACKAGE_SIGNING_KEY</info>
         environment variable, as PEM or base64 DER (PKCS#8). It is never read from a
