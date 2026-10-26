@@ -44,9 +44,10 @@ function upgrade_to_1_2_36(): void
         );
     }
 
-    // Remote collectors copy data_input when this value changes. A fixed value
-    // for this step changes it once and keeps the upgrade's result repeatable.
-    // Nothing compares the value or its length, so the algorithm is arbitrary.
+    // A change marker written for collector synchronization, as
+    // update_replication_crc() writes after data_input edits. Nothing in the
+    // tree compares the value or its length, so the algorithm is arbitrary; a
+    // fixed value keeps the upgrade's result repeatable.
     db_install_execute(
         'REPLACE INTO settings (name, value) VALUES (?, ?)',
         ['poller_replicate_data_input_crc', hash('sha256', 'kadupul 1.2.36 package script inputs')]
