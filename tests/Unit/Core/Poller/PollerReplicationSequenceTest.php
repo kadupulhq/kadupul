@@ -155,14 +155,23 @@ function cacti_log(string $message, mixed ...$args): void
     record(array('cacti_log', $message, $args));
 }
 
+/**
+ * Record a level by its constant name. Whichever test file loads first defines
+ * these constants for the whole process, so their values differ between suites.
+ */
+function level(array $args, string $constant): array
+{
+    return array_map(fn(mixed $arg): mixed => $arg === constant($constant) ? $constant : $arg, $args);
+}
+
 function replicate_log(string $message, mixed ...$args): void
 {
-    record(array('replicate_log', $message, $args));
+    record(array('replicate_log', $message, level($args, 'POLLER_VERBOSITY_LOW')));
 }
 
 function raise_message(string $name, mixed ...$args): void
 {
-    record(array('raise_message', $name, $args));
+    record(array('raise_message', $name, level($args, 'MESSAGE_LEVEL_ERROR')));
 }
 
 foreach (array('POLLER_VERBOSITY_LOW' => 2, 'MESSAGE_LEVEL_ERROR' => 1) as $name => $value) {

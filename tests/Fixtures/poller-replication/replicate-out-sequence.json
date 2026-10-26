@@ -146,7 +146,7 @@
         ["fetch_row_prepared",45,[2],"local"],
         ["execute_prepared",46,[3,2,1,2],true,"local"],
         ["execute_prepared",47,[2],true,"local"],
-        ["replicate_log","Synchronization of Poller 2 completed",[2]],
+        ["replicate_log","Synchronization of Poller 2 completed",["POLLER_VERBOSITY_LOW"]],
         ["raise_message","poller_sync",[]]
       ]
     },
@@ -287,7 +287,7 @@
         ["fetch_row_prepared",45,[2],"local"],
         ["execute_prepared",46,[3,2,1,2],true,"local"],
         ["execute_prepared",47,[2],true,"local"],
-        ["replicate_log","Synchronization of Poller 2 completed",[2]],
+        ["replicate_log","Synchronization of Poller 2 completed",["POLLER_VERBOSITY_LOW"]],
         ["raise_message","poller_sync",[]]
       ]
     },
@@ -343,7 +343,7 @@
         ["upsert","settings","remote",[1],3],
         ["fetch_row_prepared",45,[2],"local"],
         ["execute_prepared",46,[3,2,1,2],true,"local"],
-        ["replicate_log","Synchronization of Poller 2 completed",[2]],
+        ["replicate_log","Synchronization of Poller 2 completed",["POLLER_VERBOSITY_LOW"]],
         ["raise_message","poller_sync",[]]
       ]
     },
@@ -385,7 +385,7 @@
         ["copy","user_domains_ldap",2,true,false,"remote",[28],4],
         ["fetch_row_prepared",45,[2],"local"],
         ["execute_prepared",46,[3,2,1,2],true,"local"],
-        ["replicate_log","Synchronization of Poller 2 completed",[2]],
+        ["replicate_log","Synchronization of Poller 2 completed",["POLLER_VERBOSITY_LOW"]],
         ["raise_message","poller_sync",[]]
       ]
     },
@@ -453,7 +453,7 @@
         ["connect",2],
         ["fetch_row_prepared",45,[2],"local"],
         ["execute_prepared",46,[3,2,1,2],true,"local"],
-        ["replicate_log","Synchronization of Poller 2 completed",[2]],
+        ["replicate_log","Synchronization of Poller 2 completed",["POLLER_VERBOSITY_LOW"]],
         ["raise_message","poller_sync",[]]
       ]
     },
@@ -472,7 +472,7 @@
       "shared": 7,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-settings|web": {
@@ -482,7 +482,7 @@
       "tail": [
         ["upsert","settings","remote",false,3],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|automation_graph_rule_items|web": {
@@ -491,7 +491,7 @@
       "shared": 9,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-automation_graph_rule_items|web": {
@@ -501,7 +501,7 @@
       "tail": [
         ["copy","automation_graph_rule_items",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|automation_graph_rules|web": {
@@ -510,7 +510,7 @@
       "shared": 11,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-automation_graph_rules|web": {
@@ -520,7 +520,7 @@
       "tail": [
         ["copy","automation_graph_rules",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|automation_match_rule_items|web": {
@@ -529,7 +529,7 @@
       "shared": 13,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-automation_match_rule_items|web": {
@@ -539,7 +539,7 @@
       "tail": [
         ["copy","automation_match_rule_items",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|automation_snmp|web": {
@@ -548,7 +548,7 @@
       "shared": 15,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-automation_snmp|web": {
@@ -558,7 +558,7 @@
       "tail": [
         ["copy","automation_snmp",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|automation_snmp_items|web": {
@@ -567,7 +567,7 @@
       "shared": 17,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-automation_snmp_items|web": {
@@ -577,7 +577,7 @@
       "tail": [
         ["copy","automation_snmp_items",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|automation_templates|web": {
@@ -586,7 +586,7 @@
       "shared": 19,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-automation_templates|web": {
@@ -596,7 +596,7 @@
       "tail": [
         ["copy","automation_templates",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|automation_tree_rule_items|web": {
@@ -605,7 +605,7 @@
       "shared": 21,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-automation_tree_rule_items|web": {
@@ -615,7 +615,7 @@
       "tail": [
         ["copy","automation_tree_rule_items",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|automation_tree_rules|web": {
@@ -624,7 +624,7 @@
       "shared": 23,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-automation_tree_rules|web": {
@@ -634,7 +634,7 @@
       "tail": [
         ["copy","automation_tree_rules",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|data_input|web": {
@@ -643,7 +643,7 @@
       "shared": 25,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-data_input|web": {
@@ -653,7 +653,7 @@
       "tail": [
         ["copy","data_input",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|host_template|web": {
@@ -662,7 +662,7 @@
       "shared": 27,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-host_template|web": {
@@ -672,7 +672,7 @@
       "tail": [
         ["copy","host_template",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|host_template_graph|web": {
@@ -681,7 +681,7 @@
       "shared": 29,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-host_template_graph|web": {
@@ -691,7 +691,7 @@
       "tail": [
         ["copy","host_template_graph",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|host_template_snmp_query|web": {
@@ -700,7 +700,7 @@
       "shared": 31,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-host_template_snmp_query|web": {
@@ -710,7 +710,7 @@
       "tail": [
         ["copy","host_template_snmp_query",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|snmp_query|web": {
@@ -719,7 +719,7 @@
       "shared": 33,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-snmp_query|web": {
@@ -729,7 +729,7 @@
       "tail": [
         ["copy","snmp_query",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|data_input_fields|web": {
@@ -738,7 +738,7 @@
       "shared": 35,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-data_input_fields|web": {
@@ -748,7 +748,7 @@
       "tail": [
         ["copy","data_input_fields",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|poller|web": {
@@ -757,7 +757,7 @@
       "shared": 37,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-poller|web": {
@@ -767,7 +767,7 @@
       "tail": [
         ["copy","poller",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|plugin_config|web": {
@@ -776,7 +776,7 @@
       "shared": 39,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-plugin_config|web": {
@@ -786,7 +786,7 @@
       "tail": [
         ["copy","plugin_config",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|plugin_hooks|web": {
@@ -795,7 +795,7 @@
       "shared": 41,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-plugin_hooks|web": {
@@ -805,7 +805,7 @@
       "tail": [
         ["copy","plugin_hooks",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|plugin_realms|web": {
@@ -814,7 +814,7 @@
       "shared": 43,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-plugin_realms|web": {
@@ -824,7 +824,7 @@
       "tail": [
         ["copy","plugin_realms",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|user_auth|web": {
@@ -833,7 +833,7 @@
       "shared": 45,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-user_auth|web": {
@@ -843,7 +843,7 @@
       "tail": [
         ["copy","user_auth",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|user_auth_group|web": {
@@ -852,7 +852,7 @@
       "shared": 47,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-user_auth_group|web": {
@@ -862,7 +862,7 @@
       "tail": [
         ["copy","user_auth_group",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|user_auth_group_members|web": {
@@ -871,7 +871,7 @@
       "shared": 49,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-user_auth_group_members|web": {
@@ -881,7 +881,7 @@
       "tail": [
         ["copy","user_auth_group_members",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|user_auth_group_perms|web": {
@@ -890,7 +890,7 @@
       "shared": 51,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-user_auth_group_perms|web": {
@@ -900,7 +900,7 @@
       "tail": [
         ["copy","user_auth_group_perms",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|user_auth_group_realm|web": {
@@ -909,7 +909,7 @@
       "shared": 53,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-user_auth_group_realm|web": {
@@ -919,7 +919,7 @@
       "tail": [
         ["copy","user_auth_group_realm",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|user_auth_realm|web": {
@@ -928,7 +928,7 @@
       "shared": 55,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-user_auth_realm|web": {
@@ -938,7 +938,7 @@
       "tail": [
         ["copy","user_auth_realm",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|user_auth_row_cache|web": {
@@ -947,7 +947,7 @@
       "shared": 57,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-user_auth_row_cache|web": {
@@ -957,7 +957,7 @@
       "tail": [
         ["copy","user_auth_row_cache",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|user_domains|web": {
@@ -966,7 +966,7 @@
       "shared": 59,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-user_domains|web": {
@@ -976,7 +976,7 @@
       "tail": [
         ["copy","user_domains",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|user_domains_ldap|web": {
@@ -985,7 +985,7 @@
       "shared": 61,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-user_domains_ldap|web": {
@@ -995,7 +995,7 @@
       "tail": [
         ["copy","user_domains_ldap",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|host_snmp_query|web": {
@@ -1004,7 +1004,7 @@
       "shared": 63,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-host_snmp_query|web": {
@@ -1014,7 +1014,7 @@
       "tail": [
         ["copy","host_snmp_query",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|poller_command|web": {
@@ -1023,7 +1023,7 @@
       "shared": 65,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-poller_command|web": {
@@ -1033,7 +1033,7 @@
       "tail": [
         ["copy","poller_command",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|host|web": {
@@ -1042,7 +1042,7 @@
       "shared": 67,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-host|web": {
@@ -1052,7 +1052,7 @@
       "tail": [
         ["copy","host",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|host_snmp_cache|web": {
@@ -1061,7 +1061,7 @@
       "shared": 69,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-host_snmp_cache|web": {
@@ -1071,7 +1071,7 @@
       "tail": [
         ["copy","host_snmp_cache",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|poller_reindex|web": {
@@ -1080,7 +1080,7 @@
       "shared": 71,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-poller_reindex|web": {
@@ -1090,7 +1090,7 @@
       "tail": [
         ["copy","poller_reindex",2,false,["assert_value"],"remote",false,6],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|poller_item|web": {
@@ -1099,7 +1099,7 @@
       "shared": 74,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-poller_item|web": {
@@ -1109,7 +1109,7 @@
       "tail": [
         ["copy","poller_item",2,false,["last_updated"],"remote",false,6],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|data_local|web": {
@@ -1118,7 +1118,7 @@
       "shared": 79,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-data_local|web": {
@@ -1128,7 +1128,7 @@
       "tail": [
         ["copy","data_local",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|graph_local|web": {
@@ -1137,7 +1137,7 @@
       "shared": 81,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-graph_local|web": {
@@ -1147,7 +1147,7 @@
       "tail": [
         ["copy","graph_local",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|data_template_data|web": {
@@ -1156,7 +1156,7 @@
       "shared": 83,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed while replicating data-source definitions.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed while replicating data-source definitions. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed while replicating data-source definitions. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-data_template_data|web": {
@@ -1166,7 +1166,7 @@
       "tail": [
         ["copy","data_template_data",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed while replicating data-source definitions.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed while replicating data-source definitions. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed while replicating data-source definitions. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|data_template_rrd|web": {
@@ -1175,7 +1175,7 @@
       "shared": 85,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-data_template_rrd|web": {
@@ -1185,7 +1185,7 @@
       "tail": [
         ["copy","data_template_rrd",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|graph_templates_item|web": {
@@ -1194,7 +1194,7 @@
       "shared": 87,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-graph_templates_item|web": {
@@ -1204,7 +1204,7 @@
       "tail": [
         ["copy","graph_templates_item",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|data_input_data|web": {
@@ -1213,7 +1213,7 @@
       "shared": 89,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|read-data_input_data|web": {
@@ -1223,7 +1223,7 @@
       "tail": [
         ["copy","data_input_data",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "plugins|plugin_config|web": {
@@ -1248,7 +1248,7 @@
       "shared": 4,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "auth|user_auth|cli": {
@@ -1265,7 +1265,7 @@
       "shared": 20,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "auth|user_domains_ldap|cli": {
@@ -1283,7 +1283,7 @@
       "tail": [
         ["cacti_log","ERROR: Unable to mark Poller 2 synchronization required. No replication was started.",[false,"REPLICATE"]],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|retry-mark|cli": {
@@ -1317,7 +1317,7 @@
       "shared": 4,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed while replicating data-source definitions. Collector profile guards and reference index must be upgraded before replication; its schema version was retained.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed while replicating data-source definitions. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed while replicating data-source definitions. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|guards|cli": {
@@ -1326,7 +1326,7 @@
       "shared": 4,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed while replicating data-source definitions. Collector profile guards and reference index must be upgraded before replication; its schema version was retained.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed while replicating data-source definitions. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed while replicating data-source definitions. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|reindex-cleanup|web": {
@@ -1335,7 +1335,7 @@
       "shared": 72,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|reindex-cleanup|cli": {
@@ -1352,7 +1352,7 @@
       "shared": 75,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|cutoff-read|cli": {
@@ -1384,7 +1384,7 @@
         ["fetch_row_prepared",45,[2],"local"],
         ["execute_prepared",46,[3,2,1,2],true,"local"],
         ["execute_prepared",47,[2],true,"local"],
-        ["replicate_log","Synchronization of Poller 2 completed",[2]],
+        ["replicate_log","Synchronization of Poller 2 completed",["POLLER_VERBOSITY_LOW"]],
         ["raise_message","poller_sync",[]]
       ]
     },
@@ -1417,7 +1417,7 @@
       "shared": 76,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|cutoff-write|cli": {
@@ -1434,7 +1434,7 @@
       "shared": 77,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|cutoff-delete|cli": {
@@ -1451,7 +1451,7 @@
       "shared": 91,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|statistics-read|cli": {
@@ -1468,7 +1468,7 @@
       "shared": 92,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|statistics-write|cli": {
@@ -1486,7 +1486,7 @@
       "tail": [
         ["cacti_log","ERROR: Poller 2 completion-state write failed; synchronization remains required.",[false,"REPLICATE"]],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
-        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.",1]]
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
       ]
     },
     "all|completion|cli": {
