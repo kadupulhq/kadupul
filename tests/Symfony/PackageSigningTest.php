@@ -96,30 +96,79 @@ final class PackageSigningTest extends TestCase
         self::assertSame([], glob($this->directory . '/.*.tmp*') ?: []);
     }
 
-    public function testSigningInPlaceKeepsThePackageMode(): void
+    /** @return iterable<string, array{int, int}> */
+    public static function replacedModes(): iterable
+    {
+        yield 'owner only' => [0600, 0600];
+        yield 'group read' => [0640, 0640];
+        yield 'world writable' => [0666, 0644];
+        yield 'executable by all' => [0777, 0644];
+        yield 'setuid' => [04755, 0644];
+    }
+
+    #[DataProvider('replacedModes')]
+    public function testSigningInPlaceKeepsThePackageModeWithoutWriteOrExecuteForOthers(int $before, int $after): void
     {
         $package = $this->write('in-place.xml.gz', $this->unsigned());
-        chmod($package, 0640);
+        chmod($package, $before);
 
         [$status, $display] = $this->sign($package, null, self::pem(self::key(4096)));
 
         self::assertSame(0, $status, $display);
         clearstatcache();
-        self::assertSame(0640, fileperms($package) & 0777);
+        self::assertSame($after, fileperms($package) & 07777);
     }
 
-    public function testANewSignedPackageGetsTheModeTheUmaskAllows(): void
+    /** @return iterable<string, array{int, int}> */
+    public static function umaskModes(): iterable
+    {
+        yield 'umask 027' => [0027, 0640];
+        yield 'umask 022' => [0022, 0644];
+        yield 'umask 002' => [0002, 0644];
+        yield 'umask 0' => [0, 0644];
+    }
+
+    #[DataProvider('umaskModes')]
+    public function testANewSignedPackageGetsTheUmaskModeWithoutWriteForOthers(int $umask, int $mode): void
     {
         $output = $this->directory . '/signed.xml.gz';
-        $umask = umask(0027);
+        $previous = umask($umask);
         try {
             [$status, $display] = $this->sign($this->write('unsigned.xml.gz', $this->unsigned()), $output, self::pem(self::key(4096)));
         } finally {
-            umask($umask);
+            umask($previous);
         }
 
         self::assertSame(0, $status, $display);
-        self::assertSame(0640, fileperms($output) & 0777);
+        self::assertSame($mode, fileperms($output) & 07777);
+    }
+
+    public function testAFailedReplaceLeavesNoTemporaryFile(): void
+    {
+        // A directory cannot be replaced by a file, so the rename fails after the temporary file exists.
+        $output = $this->directory . '/signed.xml.gz';
+        mkdir($output);
+        $renameWarnings = 0;
+        set_error_handler(static function (int $level, string $message) use (&$renameWarnings): bool {
+            if ($level === E_WARNING && str_starts_with($message, 'rename(')) {
+                ++$renameWarnings;
+
+                return true;
+            }
+
+            return false;
+        });
+        try {
+            [$status, $display] = $this->sign($this->write('unsigned.xml.gz', $this->unsigned()), $output, self::pem(self::key(4096)));
+        } finally {
+            restore_error_handler();
+            rmdir($output);
+        }
+
+        self::assertSame(1, $status, $display);
+        self::assertSame(1, $renameWarnings);
+        self::assertStringContainsString('Cannot write', $display);
+        self::assertSame([], glob($this->directory . '/.*.tmp*') ?: []);
     }
 
     public function testATamperedFileIsRejectedEvenWithAValidPackageSignature(): void

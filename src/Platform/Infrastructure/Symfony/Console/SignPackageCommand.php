@@ -23,9 +23,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
         Signs each file in an unsigned or Cacti-signed <info>.xml.gz</info> package and
         the package itself, embeds the signing key's public key, and writes gzip output.
         Without an output path the package is replaced in place and keeps its file
-        mode. A new output file takes its mode from the umask; the web server user
-        must be able to read it for the installer to import it, so sign with umask
-        022 or chmod the file afterwards.
+        mode, less any group or other write bit and any execute bit. A new output
+        file takes its mode from the umask but never gets group or other write. The
+        web server user must be able to read the package for the installer to
+        import it, so sign with umask 022 or chmod the file afterwards.
 
         The private key comes only from the <info>KADUPUL_PACKAGE_SIGNING_KEY</info>
         environment variable, as PEM or base64 DER (PKCS#8). It is never read from a
@@ -118,9 +119,10 @@ final readonly class SignPackageCommand
         }
         // tempnam() creates the file 0600, which the web server could not read
         // once it replaced a bundled package. Keep the replaced package's mode,
-        // or give a new one the mode a plain write under the umask would get.
+        // or give a new one the mode a plain write under the umask would get,
+        // but never let anyone but the owner write it or anyone execute it.
         $existing = is_file($target) ? fileperms($target) : false;
-        $mode = $existing === false ? 0666 & ~umask() : $existing & 0777;
+        $mode = ($existing === false ? 0666 & ~umask() : $existing) & 0644;
         if (file_put_contents($temporary, $bytes) !== strlen($bytes) || !chmod($temporary, $mode) || !rename($temporary, $target)) {
             unlink($temporary);
             throw new PackageSigningFailed('Cannot write ' . $target . '.');
