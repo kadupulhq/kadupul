@@ -844,11 +844,11 @@ msgstr "访问被拒绝,请联系Kadupul 管理员."
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr "访问被拒绝,请联系Kadupul 管理员."
 
-#: auth_login.php:119 lib/auth.php:4394 lib/auth.php:4400 lib/auth.php:4505
-#: lib/auth.php:4556 lib/auth.php:4581 lib/auth.php:4604 lib/auth.php:4644
-#: lib/auth.php:4656 lib/auth.php:4679 lib/auth.php:4802 lib/auth.php:4822
-#: lib/auth.php:5034 lib/auth.php:5076 lib/auth.php:5086 lib/auth.php:5102
-#: lib/auth.php:5116 lib/auth.php:5154
+#: auth_login.php:119 lib/auth.php:4394 lib/auth.php:4400 lib/auth.php:4490
+#: lib/auth.php:4499 lib/auth.php:4546 lib/auth.php:4571 lib/auth.php:4594
+#: lib/auth.php:4634 lib/auth.php:4646 lib/auth.php:4669 lib/auth.php:4792
+#: lib/auth.php:4812 lib/auth.php:5024 lib/auth.php:5066 lib/auth.php:5076
+#: lib/auth.php:5092 lib/auth.php:5106 lib/auth.php:5144
 msgid "Access Denied!  Login Failed."
 msgstr "拒绝访问,用户帐号被禁用."
 
@@ -4708,7 +4708,7 @@ msgstr "您必须先登录才能访问该区域的Kadupul."
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "FATAL: 您必须先登录才能访问Kadupul 的那个区域."
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5647
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5637
 #: templates/platform/permission_denied.html.twig
 msgid "Login Again"
 msgstr "重新登录"
@@ -11770,45 +11770,45 @@ msgstr "已配置Web 基本身份认证,但没有从Web 服务器传递用户名
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "%s 通过Web 服务器进行身份认证, 但 '模板'和'来宾用户'在Kadupul 中未定义."
 
-#: lib/auth.php:4616 lib/auth.php:4815
+#: lib/auth.php:4606 lib/auth.php:4805
 msgid "Access Denied!  No password provided by user."
 msgstr "拒绝访问！用户未提供密码。"
 
-#: lib/auth.php:4788 lib/auth.php:5854
+#: lib/auth.php:4778 lib/auth.php:5844
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "访问被拒绝！模板用户id%s不存在。请与管理员联系。"
 
-#: lib/auth.php:4796
+#: lib/auth.php:4786
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:5149
+#: lib/auth.php:5139
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "您的Kadupul管理员已强制使用复杂的密码登录，而您当前的Kadupul密码不符合新要求。因此，您必须立即更改密码。"
 
-#: lib/auth.php:5189
+#: lib/auth.php:5179
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "密码必须至少包含 %d 个字符!"
 
-#: lib/auth.php:5195
+#: lib/auth.php:5185
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "您的密码必须至少包含1个数字字符!"
 
-#: lib/auth.php:5199
+#: lib/auth.php:5189
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "您的密码必须包含小写字母和大写字母的混合形式!"
 
-#: lib/auth.php:5205
+#: lib/auth.php:5195
 msgid "Your password must contain at least 1 special character!"
 msgstr "您的密码必须至少包含1个特殊字符!"
 
-#: lib/auth.php:5640
+#: lib/auth.php:5630
 msgid "Kadupul Login Failure"
 msgstr "Kadupul 日志已清除"
 
-#: lib/auth.php:5940
+#: lib/auth.php:5930
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "之前未设置身份验证。尝试设置为本地身份验证，但未找到管理员帐户。"
 

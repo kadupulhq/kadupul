@@ -848,11 +848,11 @@ msgstr "पहुँच निषेध, कृपया आप Kadupul प्�
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr "पहुँच निषेध, कृपया आप कैक्टि प्रशासक से संपर्क करें।"
 
-#: auth_login.php:119 lib/auth.php:4394 lib/auth.php:4400 lib/auth.php:4505
-#: lib/auth.php:4556 lib/auth.php:4581 lib/auth.php:4604 lib/auth.php:4644
-#: lib/auth.php:4656 lib/auth.php:4679 lib/auth.php:4802 lib/auth.php:4822
-#: lib/auth.php:5034 lib/auth.php:5076 lib/auth.php:5086 lib/auth.php:5102
-#: lib/auth.php:5116 lib/auth.php:5154
+#: auth_login.php:119 lib/auth.php:4394 lib/auth.php:4400 lib/auth.php:4490
+#: lib/auth.php:4499 lib/auth.php:4546 lib/auth.php:4571 lib/auth.php:4594
+#: lib/auth.php:4634 lib/auth.php:4646 lib/auth.php:4669 lib/auth.php:4792
+#: lib/auth.php:4812 lib/auth.php:5024 lib/auth.php:5066 lib/auth.php:5076
+#: lib/auth.php:5092 lib/auth.php:5106 lib/auth.php:5144
 msgid "Access Denied!  Login Failed."
 msgstr "प्रवेश निषेध, उपयोगकर्ता खाता अक्षम।"
 
@@ -4744,7 +4744,7 @@ msgstr "Kadupul के इस क्षेत्र तक पहुँचने
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "FATAL: Kadupul के इस क्षेत्र तक पहुंचने के लिए आपको लॉग इन होना चाहिए।"
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5647
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5637
 #: templates/platform/permission_denied.html.twig
 msgid "Login Again"
 msgstr "फिर से लॉगिन करें"
@@ -11845,46 +11845,46 @@ msgstr "वेब बेसिक प्रमाणीकरण कॉन्फ
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "वेब सर्वर द्वारा %s को प्रमाणित किया गया है, लेकिन टेम्पलेट और अतिथि उपयोगकर्ता दोनों Kadupul में परिभाषित नहीं हैं।"
 
-#: lib/auth.php:4616 lib/auth.php:4815
+#: lib/auth.php:4606 lib/auth.php:4805
 msgid "Access Denied!  No password provided by user."
 msgstr "पहुंच अस्वीकृत! उपयोगकर्ता द्वारा प्रदान किया गया कोई पासवर्ड नहीं।"
 
-#: lib/auth.php:4788 lib/auth.php:5854
+#: lib/auth.php:4778 lib/auth.php:5844
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "पहुंच अस्वीकृत!  टेम्पलेट उपयोगकर्ता आईडी %s मौजूद नहीं है।  कृपया अपने एडमिनिस्ट्रेटर से संपर्क करें।"
 
-#: lib/auth.php:4796
+#: lib/auth.php:4786
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:5149
+#: lib/auth.php:5139
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "आपके Kadupul व्यवस्थापक ने लॉगिन के लिए जटिल पासवर्ड को मजबूर कर दिया है और आपका वर्तमान Kadupul पासवर्ड नई आवश्यकताओं से मेल नहीं खाता है। इसलिए, आपको अब अपना पासवर्ड बदलना होगा।"
 
-#: lib/auth.php:5189
+#: lib/auth.php:5179
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "पासवर्ड कम से कम% d वर्ण का होना चाहिए!"
 
-#: lib/auth.php:5195
+#: lib/auth.php:5185
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "आपके पासवर्ड में कम से कम 1 संख्यात्मक चरित्र होना चाहिए!"
 
-#: lib/auth.php:5199
+#: lib/auth.php:5189
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "आपके पासवर्ड में लोअर केस और अपर केस कैरेक्टर का मिश्रण होना चाहिए!"
 
-#: lib/auth.php:5205
+#: lib/auth.php:5195
 msgid "Your password must contain at least 1 special character!"
 msgstr "आपके पासवर्ड में कम से कम 1 विशेष वर्ण होना चाहिए!"
 
-#: lib/auth.php:5640
+#: lib/auth.php:5630
 #, fuzzy
 msgid "Kadupul Login Failure"
 msgstr "Kadupul लॉग क्लीयर"
 
-#: lib/auth.php:5940
+#: lib/auth.php:5930
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "प्रमाणीकरण पहले सेट नहीं किया गया था। स्थानीय प्रमाणीकरण पर सेट करने का प्रयास किया गया, लेकिन कोई व्यवस्थापकीय खाता नहीं मिला।"
 

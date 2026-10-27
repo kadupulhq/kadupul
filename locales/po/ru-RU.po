@@ -841,11 +841,11 @@ msgstr "Kadupul больше не поддерживает аутентифик�
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr "Невозможно определить область входа пользователя Login Realm или Domain . Пожалуйста свяжитесь со своим Администратором."
 
-#: auth_login.php:119 lib/auth.php:4394 lib/auth.php:4400 lib/auth.php:4505
-#: lib/auth.php:4556 lib/auth.php:4581 lib/auth.php:4604 lib/auth.php:4644
-#: lib/auth.php:4656 lib/auth.php:4679 lib/auth.php:4802 lib/auth.php:4822
-#: lib/auth.php:5034 lib/auth.php:5076 lib/auth.php:5086 lib/auth.php:5102
-#: lib/auth.php:5116 lib/auth.php:5154
+#: auth_login.php:119 lib/auth.php:4394 lib/auth.php:4400 lib/auth.php:4490
+#: lib/auth.php:4499 lib/auth.php:4546 lib/auth.php:4571 lib/auth.php:4594
+#: lib/auth.php:4634 lib/auth.php:4646 lib/auth.php:4669 lib/auth.php:4792
+#: lib/auth.php:4812 lib/auth.php:5024 lib/auth.php:5066 lib/auth.php:5076
+#: lib/auth.php:5092 lib/auth.php:5106 lib/auth.php:5144
 msgid "Access Denied!  Login Failed."
 msgstr "Доступ запрещен, учетная запись пользователя отключена."
 
@@ -4748,7 +4748,7 @@ msgstr "Вы должны войти в систему, чтобы получи�
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "Вы должны войти в систему, чтобы получить доступ к этой области Kadupul."
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5647
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5637
 #: templates/platform/permission_denied.html.twig
 msgid "Login Again"
 msgstr "Войти снова"
@@ -11841,46 +11841,46 @@ msgstr "Настроена базовая аутентификация Web Basic
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "%s аутентифицированы веб сервером, но и шаблоны, и гостевые пользователи не определены в Kadupul."
 
-#: lib/auth.php:4616 lib/auth.php:4815
+#: lib/auth.php:4606 lib/auth.php:4805
 msgid "Access Denied!  No password provided by user."
 msgstr "Доступ запрещен! Пользователь не предоставил пароль."
 
-#: lib/auth.php:4788 lib/auth.php:5854
+#: lib/auth.php:4778 lib/auth.php:5844
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "Доступ запрещен! Идентификатор пользователя шаблона %s не существует.  Обратитесь к администратору."
 
-#: lib/auth.php:4796
+#: lib/auth.php:4786
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:5149
+#: lib/auth.php:5139
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "Ваш администратор Kadupul ввел сложные пароли для входа в систему, и ваш текущий пароль Kadupul не соответствует новым требованиям. Поэтому вы должны изменить свой пароль сейчас."
 
-#: lib/auth.php:5189
+#: lib/auth.php:5179
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "Пароль должен содержать не менее %d символов!"
 
-#: lib/auth.php:5195
+#: lib/auth.php:5185
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "Ваш пароль должен содержать не менее 1 цифрового символа!"
 
-#: lib/auth.php:5199
+#: lib/auth.php:5189
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "Ваш пароль должен содержать символы нижнего регистра и верхнего регистра!"
 
-#: lib/auth.php:5205
+#: lib/auth.php:5195
 msgid "Your password must contain at least 1 special character!"
 msgstr "Ваш пароль должен содержать не менее 1 специального символа!"
 
-#: lib/auth.php:5640
+#: lib/auth.php:5630
 #, fuzzy
 msgid "Kadupul Login Failure"
 msgstr "Журнал Kadupul очищен."
 
-#: lib/auth.php:5940
+#: lib/auth.php:5930
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "Аутентификация ранее не устанавливалась. Попытка установить локальную аутентификацию, но учетная запись администратора не найдена."
 
