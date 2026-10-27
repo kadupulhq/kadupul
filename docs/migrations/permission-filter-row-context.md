@@ -48,6 +48,11 @@ for the base snapshot `c68a8c0b0`. Within `src/`, it falls from ten declarations
 with eighteen bindings to nine/seventeen. These counts do not include other
 pending cleanup PRs.
 
+With #1018 and #1024 merged, main starts at 890 declarations/1627 bindings.
+This change reduces that combined baseline to 889/1626; `src/` remains at
+nine declarations/seventeen bindings. The earlier counts retain their original
+snapshot context.
+
 The renderer still calls legacy request, translation, nonce, HTML and database
 helpers. The bootstrap catalog remains shared by other legacy pages. This slice
 removes one direct global dependency; it does not claim the full renderer is a
