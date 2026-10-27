@@ -195,7 +195,7 @@ msgstr "為了將下面的聚合圖遷移到基於模板的聚合，它們只能
 #: auth_changepassword.php:415 auth_profile.php:464 automation_networks.php:387
 #: automation_snmp.php:245 graphs.php:1169 graphs.php:1219 graphs.php:1222
 #: graphs.php:1266 graphs.php:1859 include/auth.php:309
-#: lib/api_aggregate.php:2209 lib/api_aggregate.php:2224 lib/html_form.php:1423
+#: lib/api_aggregate.php:2249 lib/api_aggregate.php:2264 lib/html_form.php:1423
 #: lib/html_reports.php:632 managers.php:1130
 #: templates/platform/permission_denied.html.twig
 #, fuzzy
@@ -402,7 +402,7 @@ msgid "You may use these replacement values for the Prefix in the Aggregate Grap
 msgstr "您可以將這些替換值用於聚合圖中的前綴"
 
 #: aggregate_graphs.php:988 aggregate_templates.php:536 graphs.php:1116
-#: lib/api_aggregate.php:2344
+#: lib/api_aggregate.php:2384
 #, fuzzy
 msgid "Total"
 msgstr "總計"
@@ -412,7 +412,7 @@ msgstr "總計"
 msgid "All Items"
 msgstr "所有項目"
 
-#: aggregate_graphs.php:1010 graphs.php:1707 lib/api_aggregate.php:2504
+#: aggregate_graphs.php:1010 graphs.php:1707 lib/api_aggregate.php:2544
 #, fuzzy
 msgid "Graph Configuration"
 msgstr "圖形配置"
@@ -2964,7 +2964,7 @@ msgstr ""
 #: data_debug.php:501 data_debug.php:959 data_queries.php:769
 #: data_sources.php:1166 data_templates.php:719 graphs_items.php:387
 #: include/global_arrays.php:1008 include/global_form.php:960
-#: lib/api_aggregate.php:2338 lib/html.php:1363
+#: lib/api_aggregate.php:2378 lib/html.php:1363
 #, fuzzy
 msgid "Data Source"
 msgstr "資料來源"
@@ -4568,7 +4568,7 @@ msgstr "相關圖表項"
 msgid "Item #%s"
 msgstr "項目＃%s"
 
-#: graph_templates_inputs.php:225 lib/api_aggregate.php:2486 lib/html.php:1515
+#: graph_templates_inputs.php:225 lib/api_aggregate.php:2526 lib/html.php:1515
 #, fuzzy
 msgid "No Items"
 msgstr "沒有課程"
@@ -7970,7 +7970,7 @@ msgstr "(編輯)"
 msgid "Actions"
 msgstr "動作"
 
-#: include/global_arrays.php:2104 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2104 lib/api_aggregate.php:2373
 #, fuzzy
 msgid "Graph Items"
 msgstr "圖形項目"
@@ -8014,7 +8014,7 @@ msgstr "檢視日誌"
 msgid "Graph Trees"
 msgstr "圖樹"
 
-#: include/global_arrays.php:2260 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2260 lib/api_aggregate.php:2373
 #, fuzzy
 msgid "Graph Template Items"
 msgstr "圖形模板項"
@@ -9112,7 +9112,7 @@ msgstr "圖例方向（--legend-direction = &lt;direction&gt;）"
 msgid "Place the legend items in the given vertical order."
 msgstr "將圖例項目放在給定的垂直順序中。"
 
-#: include/global_form.php:953 lib/api_aggregate.php:2339 lib/html.php:1364
+#: include/global_form.php:953 lib/api_aggregate.php:2379 lib/html.php:1364
 #, fuzzy
 msgid "Graph Item Type"
 msgstr "圖表項目類型"
@@ -13452,62 +13452,62 @@ msgstr "shell_exec（）和/或exec（）函數當前被阻止。"
 msgid "Display Graphs from this Aggregate"
 msgstr "顯示此聚合的圖形"
 
-#: lib/api_aggregate.php:2197
+#: lib/api_aggregate.php:2237
 #, fuzzy
 msgid "The Graphs chosen for the Aggregate Graph below represent Graphs from multiple Graph Templates.  Aggregate does not support creating Aggregate Graphs from multiple Graph Templates."
 msgstr "為下面的聚合圖選擇的圖表表示來自多個圖模板的圖。 Aggregate不支持從多個圖表模板創建聚合圖。"
 
-#: lib/api_aggregate.php:2198 lib/api_aggregate.php:2217
+#: lib/api_aggregate.php:2238 lib/api_aggregate.php:2257
 msgid "Press 'Return' to return and select different Graphs"
 msgstr "按“返回”返回並選擇不同的圖表"
 
-#: lib/api_aggregate.php:2216
+#: lib/api_aggregate.php:2256
 #, fuzzy
 msgid "The Graphs chosen for the Aggregate Graph do not use Graph Templates.  Aggregate does not support creating Aggregate Graphs from non-templated graphs."
 msgstr "為聚合圖選擇的圖不使用圖模板。 Aggregate不支持從非模板化圖形創建聚合圖。"
 
-#: lib/api_aggregate.php:2337 lib/html.php:1361
+#: lib/api_aggregate.php:2377 lib/html.php:1361
 #, fuzzy
 msgid "Graph Item"
 msgstr "圖項目"
 
-#: lib/api_aggregate.php:2340 lib/html.php:1365
+#: lib/api_aggregate.php:2380 lib/html.php:1365
 #, fuzzy
 msgid "CF Type"
 msgstr "CF型"
 
-#: lib/api_aggregate.php:2341 lib/html.php:1370
+#: lib/api_aggregate.php:2381 lib/html.php:1370
 #, fuzzy
 msgid "Item Color"
 msgstr "項目顏色"
 
-#: lib/api_aggregate.php:2342
+#: lib/api_aggregate.php:2382
 #, fuzzy
 msgid "Color Template"
 msgstr "彩色模板"
 
-#: lib/api_aggregate.php:2343
+#: lib/api_aggregate.php:2383
 #, fuzzy
 msgid "Skip"
 msgstr "跳過"
 
-#: lib/api_aggregate.php:2424
+#: lib/api_aggregate.php:2464
 msgid "Aggregate Items are not modifiable"
 msgstr "聚合項目不可修改"
 
-#: lib/api_aggregate.php:2427 lib/api_aggregate.php:2430
-#: lib/api_aggregate.php:2434 lib/html.php:1418 lib/html.php:1420
+#: lib/api_aggregate.php:2467 lib/api_aggregate.php:2470
+#: lib/api_aggregate.php:2474 lib/html.php:1418 lib/html.php:1420
 #: lib/html_reports.php:1921
 #, fuzzy, php-format
 msgid "Item # %d"
 msgstr "項目＃%d"
 
-#: lib/api_aggregate.php:2434
+#: lib/api_aggregate.php:2474
 #, fuzzy
 msgid "Aggregate Items are not editable"
 msgstr "聚合項目不可編輯"
 
-#: lib/api_aggregate.php:2540
+#: lib/api_aggregate.php:2580
 #, fuzzy
 msgid "Override this Value"
 msgstr "覆蓋此值"

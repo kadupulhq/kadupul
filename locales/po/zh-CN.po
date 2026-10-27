@@ -182,7 +182,7 @@ msgstr "为了将下面的聚合图迁移到基于模板的聚合,它们只能�
 #: auth_changepassword.php:415 auth_profile.php:464 automation_networks.php:387
 #: automation_snmp.php:245 graphs.php:1169 graphs.php:1219 graphs.php:1222
 #: graphs.php:1266 graphs.php:1859 include/auth.php:309
-#: lib/api_aggregate.php:2209 lib/api_aggregate.php:2224 lib/html_form.php:1423
+#: lib/api_aggregate.php:2249 lib/api_aggregate.php:2264 lib/html_form.php:1423
 #: lib/html_reports.php:632 managers.php:1130
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
@@ -368,7 +368,7 @@ msgid "You may use these replacement values for the Prefix in the Aggregate Grap
 msgstr "您可以将这些替换值用于聚合图中的前缀"
 
 #: aggregate_graphs.php:988 aggregate_templates.php:536 graphs.php:1116
-#: lib/api_aggregate.php:2344
+#: lib/api_aggregate.php:2384
 msgid "Total"
 msgstr "一共"
 
@@ -376,7 +376,7 @@ msgstr "一共"
 msgid "All Items"
 msgstr "所有项目"
 
-#: aggregate_graphs.php:1010 graphs.php:1707 lib/api_aggregate.php:2504
+#: aggregate_graphs.php:1010 graphs.php:1707 lib/api_aggregate.php:2544
 msgid "Graph Configuration"
 msgstr "图形配置"
 
@@ -2578,7 +2578,7 @@ msgstr ""
 #: data_debug.php:501 data_debug.php:959 data_queries.php:769
 #: data_sources.php:1166 data_templates.php:719 graphs_items.php:387
 #: include/global_arrays.php:1008 include/global_form.php:960
-#: lib/api_aggregate.php:2338 lib/html.php:1363
+#: lib/api_aggregate.php:2378 lib/html.php:1363
 msgid "Data Source"
 msgstr "数据源"
 
@@ -3956,7 +3956,7 @@ msgstr "关联相关图形"
 msgid "Item #%s"
 msgstr "项目 #%s"
 
-#: graph_templates_inputs.php:225 lib/api_aggregate.php:2486 lib/html.php:1515
+#: graph_templates_inputs.php:225 lib/api_aggregate.php:2526 lib/html.php:1515
 msgid "No Items"
 msgstr "无项目"
 
@@ -6833,7 +6833,7 @@ msgstr "(编辑)"
 msgid "Actions"
 msgstr "操作"
 
-#: include/global_arrays.php:2104 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2104 lib/api_aggregate.php:2373
 msgid "Graph Items"
 msgstr "图形项"
 
@@ -6869,7 +6869,7 @@ msgstr "查看日志"
 msgid "Graph Trees"
 msgstr "图形树"
 
-#: include/global_arrays.php:2260 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2260 lib/api_aggregate.php:2373
 msgid "Graph Template Items"
 msgstr "图形模板项"
 
@@ -7765,7 +7765,7 @@ msgstr "图例方向 (--legend-direction=&lt;direction&gt;)"
 msgid "Place the legend items in the given vertical order."
 msgstr "按照给定的垂直顺序放置图例项目."
 
-#: include/global_form.php:953 lib/api_aggregate.php:2339 lib/html.php:1364
+#: include/global_form.php:953 lib/api_aggregate.php:2379 lib/html.php:1364
 msgid "Graph Item Type"
 msgstr "图形项类型"
 
@@ -11401,54 +11401,54 @@ msgstr "shell_exec（）和/或exec（）函数当前被阻止。"
 msgid "Display Graphs from this Aggregate"
 msgstr "显示来自该聚集的图形"
 
-#: lib/api_aggregate.php:2197
+#: lib/api_aggregate.php:2237
 msgid "The Graphs chosen for the Aggregate Graph below represent Graphs from multiple Graph Templates.  Aggregate does not support creating Aggregate Graphs from multiple Graph Templates."
 msgstr "为下面的聚合图形选择的图形表示来自多个图形模板的图形. 聚合不支持从多个图形模板创建聚合图形."
 
-#: lib/api_aggregate.php:2198 lib/api_aggregate.php:2217
+#: lib/api_aggregate.php:2238 lib/api_aggregate.php:2257
 msgid "Press 'Return' to return and select different Graphs"
 msgstr "按'返回'返回并选择不同的图形"
 
-#: lib/api_aggregate.php:2216
+#: lib/api_aggregate.php:2256
 msgid "The Graphs chosen for the Aggregate Graph do not use Graph Templates.  Aggregate does not support creating Aggregate Graphs from non-templated graphs."
 msgstr "为聚合图形选择的图形不使用图形模板. 聚合不支持从非模板图创建聚合图形."
 
-#: lib/api_aggregate.php:2337 lib/html.php:1361
+#: lib/api_aggregate.php:2377 lib/html.php:1361
 msgid "Graph Item"
 msgstr "图形项"
 
-#: lib/api_aggregate.php:2340 lib/html.php:1365
+#: lib/api_aggregate.php:2380 lib/html.php:1365
 msgid "CF Type"
 msgstr "CF 类型"
 
-#: lib/api_aggregate.php:2341 lib/html.php:1370
+#: lib/api_aggregate.php:2381 lib/html.php:1370
 msgid "Item Color"
 msgstr "项目颜色"
 
-#: lib/api_aggregate.php:2342
+#: lib/api_aggregate.php:2382
 msgid "Color Template"
 msgstr "颜色模板"
 
-#: lib/api_aggregate.php:2343
+#: lib/api_aggregate.php:2383
 msgid "Skip"
 msgstr "跳过"
 
-#: lib/api_aggregate.php:2424
+#: lib/api_aggregate.php:2464
 msgid "Aggregate Items are not modifiable"
 msgstr "聚合项目不可修改"
 
-#: lib/api_aggregate.php:2427 lib/api_aggregate.php:2430
-#: lib/api_aggregate.php:2434 lib/html.php:1418 lib/html.php:1420
+#: lib/api_aggregate.php:2467 lib/api_aggregate.php:2470
+#: lib/api_aggregate.php:2474 lib/html.php:1418 lib/html.php:1420
 #: lib/html_reports.php:1921
 #, php-format
 msgid "Item # %d"
 msgstr "项 # %d"
 
-#: lib/api_aggregate.php:2434
+#: lib/api_aggregate.php:2474
 msgid "Aggregate Items are not editable"
 msgstr "聚合项目不可编辑"
 
-#: lib/api_aggregate.php:2540
+#: lib/api_aggregate.php:2580
 msgid "Override this Value"
 msgstr "覆盖此值"
 

@@ -8,6 +8,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Pass bootstrap row choices explicitly through legacy permission filters, removing the renderer's global binding while preserving tab-hook catalog changes.
 
+- Reject malformed aggregate parent identifiers, bound prepared insert batches, and hold the verified table engine stable until item replacement completes. Failed replacements preserve previous items and caller-owned work (#1017).
 - Add ten Twig views for stored user/group realm grants, display preferences, graph preferences, time preferences and login options. Preference readers allowlist public keys and preserve zero, empty and missing values; existing PHP forms still handle changes.
 
 - Add ten Twig views for user/group memberships and stored graph, device, template and tree permission exceptions. Show the stored default policy without presenting these records as effective access. Existing PHP pages still handle policy and membership changes.
