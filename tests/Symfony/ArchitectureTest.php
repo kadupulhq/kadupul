@@ -296,6 +296,21 @@ final class ArchitectureTest extends TestCase
         }
     }
 
+    public function testPermissionAssociationsReceiveSubmittedFieldsExplicitly(): void
+    {
+        $source = file_get_contents(dirname(__DIR__, 2) . '/src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php');
+        self::assertIsString($source);
+        foreach (token_get_all($source) as $token) {
+            if (!is_array($token)) {
+                continue;
+            }
+            self::assertNotSame(T_GLOBAL, $token[0]);
+            if ($token[0] === T_VARIABLE) {
+                self::assertNotContains($token[1], ['$GLOBALS', '$_GET', '$_POST', '$_REQUEST', '$_COOKIE', '$_SESSION', '$_SERVER', '$_FILES', '$_ENV']);
+            }
+        }
+    }
+
     public function testSymfonyEntryPointsDoNotBootstrapLegacyApplication(): void
     {
         foreach (['app.php', 'public/index.php', 'sites.php', 'host.php'] as $file) {

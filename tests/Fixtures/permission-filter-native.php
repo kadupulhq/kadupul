@@ -194,7 +194,7 @@ if (isset($argv[3])) {
 require (getenv('PERMISSION_FILTER_CONTROLLER_ROOT') ?: $root) . '/' . $scenario['page'];
 if (!empty($scenario['no_association'])) {
     require $root . '/src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php';
-    $tab = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::apply($scenario['page'] === 'user_group_admin.php');
+    $tab = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::apply($scenario['page'] === 'user_group_admin.php', array_keys($_POST));
     $nativeChildCoverageMarkers = array('association-contract-returned');
     print json_encode(array('tab' => $tab, 'queries' => $queries), JSON_THROW_ON_ERROR);
     exit;
@@ -205,6 +205,11 @@ if (isset($scenario['association'])) {
         $GLOBALS['nativeChildCoverageMarkers'] = array('association-state-readback');
         print json_encode($state, JSON_THROW_ON_ERROR);
     });
+    if (array_key_exists('submitted_fields', $scenario)) {
+        require $root . '/src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php';
+        \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::apply($scenario['page'] === 'user_group_admin.php', $scenario['submitted_fields']);
+        exit;
+    }
     form_actions();
     throw new RuntimeException('Association did not complete its controller redirect');
 }

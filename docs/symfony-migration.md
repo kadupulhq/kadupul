@@ -1920,3 +1920,8 @@ The [relationship browsing slice](migrations/relationships-batch-10.md) adds ten
 parent-scoped Twig views. Existing parent catalogs link to them. Legacy PHP
 continues to handle edits and operational actions. This slice does not retire
 legacy writers or remove their global state.
+
+The [permission selection input boundary](migrations/permission-selection-input.md)
+passes submitted field names from authenticated legacy page handlers to the
+association helper. It removes that helper's direct POST dependency while keeping
+its existing writer, transaction and permission-cache lifecycle.

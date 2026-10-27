@@ -143,6 +143,31 @@ final class PermissionFilterRendererTest extends TestCase
         return $cases;
     }
 
+    public function testExplicitSelectionDoesNotReadAmbientPostFields(): void
+    {
+        foreach (array('user_admin.php', 'user_group_admin.php') as $page) {
+            foreach (array('associate_graph' => 1, $page === 'user_admin.php' ? 'associate_groups' : 'associate_member' => 0) as $flag => $type) {
+                foreach (array(false, true) as $add) {
+                    foreach (array(array(), array('chk_42', 'chk_invalid', 'chk_41_extra', 41)) as $fields) {
+                        $result = $this->render(array('page' => $page, 'association' => $flag, 'type' => $type, 'add' => $add, 'submitted_fields' => $fields));
+                        // The fixture's ambient POST selects 41 and 43. Only the
+                        // explicit field list may select 42 for this operation.
+                        $expected = array(array('subject' => 7, 'item' => 41), array('subject' => 77, 'item' => 41));
+                        if ($add || $fields === array()) {
+                            array_splice($expected, 1, 0, array(array('subject' => 7, 'item' => 42)));
+                        }
+                        self::assertSame($expected, $result['rows']);
+                        $writes = array_values(array_filter($result['queries'], static fn(array $query): bool => str_starts_with($query[0], 'REPLACE INTO') || str_starts_with($query[0], 'DELETE FROM')));
+                        self::assertCount($fields === array() ? 0 : 1, $writes);
+                        if ($fields !== array()) {
+                            self::assertSame(array(7, 42, ...($type === 0 ? array() : array($type))), $writes[0][1]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public function testOtherActionsDoNotWriteAssociations(): void
     {
         foreach (array('user_admin.php', 'user_group_admin.php') as $page) {

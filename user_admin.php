@@ -91,7 +91,7 @@ function form_actions()
     global $user_actions, $auth_realms;
 
     require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php';
-    $association_tab = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::apply(false);
+    $association_tab = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::apply(false, array_keys($_POST));
     if ($association_tab !== null) {
         header('Location: user_admin.php?action=user_edit&header=false&tab=' . $association_tab . '&id=' . get_nfilter_request_var('id'));
         exit;
