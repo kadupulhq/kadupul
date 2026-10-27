@@ -559,7 +559,7 @@ differed only in its unnormalized `Total[...]` elapsed time (`0.0211` versus
 This is recorded as baseline nondeterminism, not a migration regression or an
 approved golden rewrite.
 
-The existing coverage suite aborts at `tests/HandOff/AggregateDataHandoffTest.php`
+The existing coverage suite aborts at `tests/handoff/AggregateDataHandoffTest.php`
 because `lib/type_secure.php` is missing, on both the local runtime and the Linux
 container. Focused CSV tests passed (4 tests); header tests also passed. These
 pre-existing failures must not be represented as a passing full test suite.
@@ -1293,7 +1293,7 @@ deprecation warning to stderr; while the database is behind, it still runs the
 core and plugin upgrades. It needs the Console
 Access and Installation/Upgrades realms, the realm of the install wizard,
 which is the only place the web UI changes the core schema
-(`include/global_arrays.php:1284-1285`). `--dry-run` reads the file and the
+(`include/global_arrays.php:1294-1295`). `--dry-run` reads the file and the
 schema and changes nothing, not even the two audit tables. `--json` prints
 `status`, `database`, `dry_run`, `mode`, `upgrade`, `baseline`, `tables`,
 `alters`, `imported` and `exported`.
@@ -1528,8 +1528,8 @@ clears it. Confirmation revisions include all supported options. The isolated
 worker rechecks authorization, writes the entire primary selection transactionally,
 refreshes polling configuration and invokes legacy action 4. Remote outcomes are
 verified and failures report uncertainty because remote writes are not distributed
-transactions. Bulk collector/site/template assignment and SNMP credential changes
-remain separate pending slices; the legacy bulk options page is not retired yet.
+transactions. Bulk site, template and collector assignments and bulk SNMP settings
+are described in the sections below.
 
 
 ### Bulk site, template and collector assignments
@@ -1627,7 +1627,7 @@ Inventory now coordinates bounded device selections through `PlaceDevices`. Dest
 
 The list retains collector/template/exact-location filters and the core not-up status filter. Legacy sort columns other than name/hostname are rejected rather than silently ignored. CSV compatibility intentionally uses the bounded public-data export; it never exports SNMP credentials or unrestricted host rows.
 
-Applying already configured device automation rules is available through a Symfony confirmation and `ApplyDeviceRules`, with rule execution owned by the Automation adapter. Rule authoring/administration remains a later module migration. Existing mutating hooks remain in the isolated workers. Legacy UI injection hooks (`device_top`, `host_edit_*`, `device_edit_*`, `device_filters`, `device_sql_where`, `device_display_text`, `device_table_*`, `device_change_javascript`) and custom `device_action_array`, `device_action_prepare` and `device_action_execute` hooks no longer run on core device pages. Plugin-owned pages are outside this queue; plugin authors must provide their own routes or a typed Symfony extension before relying on the new core UI. This is a main-only compatibility change and must be reviewed before release.
+Applying already configured device automation rules is available through a Symfony confirmation and `ApplyDeviceRules`, with rule execution owned by the Automation adapter. Device Rules administration is described under Automation template administration; graph and tree rule authoring remain later migrations. Existing mutating hooks remain in the isolated workers. Legacy UI injection hooks (`device_top`, `host_edit_*`, `device_edit_*`, `device_filters`, `device_sql_where`, `device_display_text`, `device_table_*`, `device_change_javascript`) and custom `device_action_array`, `device_action_prepare` and `device_action_execute` hooks no longer run on core device pages. Plugin-owned pages are outside this queue; plugin authors must provide their own routes or a typed Symfony extension before relying on the new core UI. This is a main-only compatibility change and must be reviewed before release.
 ### Palette CSV spreadsheet safety
 
 Palette downloads mark every operator-controlled name and hex cell as literal
