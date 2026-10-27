@@ -263,6 +263,9 @@ def route_fixtures(rig, rows, ids):
     # relationship IDs are sampled. Fresh installs also have empty rule and
     # receiver catalogs; create disabled, task-owned parents only when needed.
     relationship_inserts = {
+        'aggregate_graph_templates': "INSERT INTO graph_templates (name) SELECT 'entry-sweep' WHERE NOT EXISTS (SELECT 1 FROM graph_templates); INSERT INTO aggregate_graph_templates (name,graph_template_id,gprint_prefix,graph_type,total,total_type,total_prefix,order_type,user_id) SELECT 'entry-sweep',MIN(id),'',1,0,1,'',0,1 FROM graph_templates; SET @entry_aggregate_id = LAST_INSERT_ID(); INSERT INTO aggregate_graph_templates_graph (aggregate_template_id) VALUES (@entry_aggregate_id); SELECT @entry_aggregate_id",
+        'host_template': "INSERT INTO host_template (name, class) VALUES ('entry-sweep', 'general'); SELECT LAST_INSERT_ID()",
+        'data_template': "INSERT INTO data_template (name) VALUES ('entry-sweep'); SELECT LAST_INSERT_ID()",
         'automation_snmp': "INSERT INTO automation_snmp (name) VALUES ('entry-sweep'); SELECT LAST_INSERT_ID()",
         'automation_graph_rules': "INSERT INTO automation_graph_rules (name) VALUES ('entry-sweep'); SELECT LAST_INSERT_ID()",
         'automation_tree_rules': "INSERT INTO automation_tree_rules (name) VALUES ('entry-sweep'); SELECT LAST_INSERT_ID()",

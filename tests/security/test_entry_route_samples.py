@@ -85,7 +85,7 @@ class RouteSamples(unittest.TestCase):
         self.assertEqual('app.php/relationships/aggregate-template-items/43', sample(entry, '', ids))
 
     def test_empty_rule_and_receiver_catalogs_get_real_inserted_ids(self):
-        tables = {'snmp-option-entries': 'automation_snmp', 'graph-rule-device-criteria': 'automation_graph_rules',
+        tables = {'aggregate-template-items': 'aggregate_graph_templates', 'device-template-queries': 'host_template', 'data-template-definitions': 'data_template', 'snmp-option-entries': 'automation_snmp', 'graph-rule-device-criteria': 'automation_graph_rules',
                   'tree-rule-steps': 'automation_tree_rules', 'receiver-history': 'snmpagent_managers'}
         for route, table in tables.items():
             class Rig:
@@ -93,7 +93,7 @@ class RouteSamples(unittest.TestCase):
                 def sql(self, statement):
                     if statement == 'SELECT MIN(id) FROM ' + table:
                         return '57' if self.created else 'NULL'
-                    if statement.startswith('INSERT INTO ' + table + ' '):
+                    if 'INSERT INTO ' + table + ' ' in statement:
                         self.created = True
                         self.insert = statement
                         return '57'
