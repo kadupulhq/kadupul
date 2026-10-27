@@ -13,7 +13,8 @@ SPDX-License-Identifier: GPL-2.0-or-later
 {% set parameters = filters|merge({id: parentId}) %}
 {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- The enum owns the legacy script/action and encodes the validated parent identity. #}
 <p><a href="{{ installation_path(screen.parentScreen.legacyScript) }}?{{ screen.legacyQuery(parentId)|url_encode }}">{{ 'Editing and advanced operations'|trans }}</a></p>
-{% if screen.identityView %}<p>{{ 'Recorded memberships and permission exceptions only. These rows do not represent effective access. Use the operation page to manage policies and assignments.'|trans }}</p>{% endif %}
+{% if screen.identitySettingsView %}<p>{{ 'Stored grants and allowlisted settings only. Values are shown as recorded; inherited defaults and effective access are not calculated. Missing settings have no stored override.'|trans }}</p>
+{% elseif screen.identityView %}<p>{{ 'Recorded memberships and permission exceptions only. These rows do not represent effective access. Use the operation page to manage policies and assignments.'|trans }}</p>{% endif %}
 {% if screen.value == 'snmp-option-entries' %}<p>{{ 'Credentials and credential identifiers are excluded. Open the operation page to manage them.'|trans }}</p>{% endif %}
 {% if screen.value == 'receiver-subscriptions' %}<p>{{ 'Recorded subscriptions only. Use the operation page to select notifications or rebuild the agent cache.'|trans }}</p>{% endif %}
 {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed enum route and validated numeric parent. #}
@@ -36,6 +37,9 @@ SPDX-License-Identifier: GPL-2.0-or-later
             <td>{% if column == 'name' and screen.editableEntry %}
                 {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Enum-owned script/action with encoded numeric parent and child identities. #}
                 <a href="{{ installation_path(screen.entryScript) }}?{{ screen.entryQuery(parentId, record.id)|url_encode }}">{{ value is null or value is same as('') ? 'Unnamed'|trans : value }}</a>
+            {% elseif column == 'name' and screen.settingLabels is not empty %}{{ screen.settingLabels[value] is defined ? screen.settingLabels[value]|trans : value }} <code>{{ value }}</code>
+            {% elseif column == 'value' %}{% if value is null %}{{ 'Not set'|trans }}{% elseif value is same as('') %}{{ 'Empty string'|trans }}{% else %}{{ value }}{% endif %}
+            {% elseif column == 'grant' %}{{ value|trans }}
             {% elseif column == 'policy' %}{{ ({1: 'Allow', 2: 'Deny'}[value] ?? 'Unknown')|trans }}
             {% elseif column == 'enabled' %}{{ (value is null ? 'Unknown' : (value == 'on' ? 'Yes' : 'No'))|trans }}
             {% elseif column == 'operator' %}{{ (operators[value] ?? 'Unknown')|trans }}
