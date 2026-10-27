@@ -30,7 +30,7 @@ function data_input_substitution_run(string $kind, string $program, array $argum
         'data-input-substitution-' . $kind,
         array($program, $arguments),
         array('data-input-substitution-complete'),
-        array('lib/functions.php'),
+        array('lib/functions.php', 'src/DataInput/Domain/InputStringSubstitution.php'),
         array(
             'include/global_constants.php', 'lib/path_helpers.php', 'lib/graph_fonts.php',
             'tests/Fixtures/data-input-substitution-native.php', 'tests/Fixtures/script-substitution-matrix.php',
@@ -215,6 +215,41 @@ PHP, array('template' => $template));
     'backtick subshell' => array('"`(true); printf %s <arg1>`"'),
 ));
 
+test('backslashes inside backticks and fields inside ${} produce no command', function (string $caller, string $template) {
+    $result = data_input_substitution_run('nested-rejected', <<<'PHP'
+$directory = sys_get_temp_dir() . '/kadupul-data-input-' . bin2hex(random_bytes(8));
+mkdir($directory, 0700);
+$marker = $directory . '/executed';
+try {
+    $command = data_input_command($arguments['caller'], $arguments['template'], array('arg1' => '$(touch ' . $marker . ')'), array('id' => 9));
+    $shell = data_input_shell_words($command);
+    $executed = file_exists($marker);
+} finally {
+    if (file_exists($marker)) {
+        unlink($marker);
+    }
+    rmdir($directory);
+}
+echo json_encode(array($command, $executed, $shell['status']));
+PHP, array('caller' => $caller, 'template' => $template));
+
+    expect($result)->toBe(array('', false, 0));
+})->with(array('poller', 'test'))->with(array(
+    'escaped quotes in backticks' => array('`printf "%s" \\\\"<arg1>\\\\"`'),
+    'parameter default' => array('"${X:-<arg1>}"'),
+    'parameter default with prefix' => array('"${X:-x<arg1>}"'),
+));
+
+test('parameter expansions without fields keep their command lines', function () {
+    $result = data_input_substitution_run('param-kept', <<<'PHP'
+$command = data_input_command('poller', 'printf "${X:-%s}" "<arg1>"', array('arg1' => 'a b'));
+echo json_encode(array($command, data_input_shell_words($command)));
+PHP);
+
+    expect($result[0])->toBe("printf \"\${X:-%s}\" 'a b'");
+    expect($result[1]['words'])->toBe(array('printf', '%s', 'a b'));
+});
+
 test('raw path settings keep the quoting the template gives them', function () {
     $result = data_input_substitution_run('paths', <<<'PHP'
 $command = data_input_command('poller', '"<path_php_binary>" -q "<path_cacti>/scripts/x.php" <arg1>', array('arg1' => 'a b'));
@@ -226,5 +261,5 @@ PHP, array('base' => '/opt/kadupul base'));
 });
 
 test('substitution matrix keeps every value literal through /bin/sh', function () {
-    expect(data_input_substitution_run('matrix', 'echo json_encode(script_substitution_matrix());'))->toBe(1303);
+    expect(data_input_substitution_run('matrix', 'echo json_encode(script_substitution_matrix());'))->toBe(1312);
 });

@@ -73,10 +73,22 @@ function script_substitution_matrix(): int
         ['"$(printf %s > /dev/null; printf %s <field>)"', ['field' => "'p'"], ''],
         ['"`(true); printf %s <field>`"', ['field' => "'p'"], ''],
         ['"$((1 + <field>))"', ['field' => "'p'"], ''],
+        // The shell unescapes backslashes inside backticks before parsing the
+        // inner command, and ${...} words have their own quoting rules.
+        ['`printf "%s" \\\\"<field>\\\\"`', ['field' => "'p'"], ''],
+        ['`printf %s \\\\\'<field>\\\'`', ['field' => "'p'"], ''],
+        ['`printf %s $(printf `x`) <field>`', ['field' => "'p'"], ''],
+        ['"${X:-<field>}"', ['field' => "'p'"], ''],
+        ['${X:-x<field>}', ['field' => "'p'"], ''],
+        ['"${X:-\\}}" <field>', ['field' => "'p'"], ''],
+        // Parameter expansions without fields or backslashes are kept as written.
+        ['"${HOME:-/tmp}" <field>', ['field' => "'p'"], '"${HOME:-/tmp}" \'p\''],
+        ['${X#*/} "<field>"', ['field' => "'p'"], '${X#*/} \'p\''],
+        ["\"\${X:-'}'}\" <field>", ['field' => "'p'"], "\"\${X:-'}'}\" 'p'"],
     ];
 
     foreach ($cases as $index => [$template, $values, $expected]) {
-        $check(substitute_script_path($template, $values), $expected, 'parser ' . $index);
+        $check(\Kadupul\DataInput\Domain\InputStringSubstitution::substitute($template, $values), $expected, 'parser ' . $index);
     }
 
     $directory = sys_get_temp_dir() . '/kadupul-shell-matrix-' . bin2hex(random_bytes(8));
@@ -96,7 +108,7 @@ function script_substitution_matrix(): int
                         $suffix   = in_array($shape, ['suffix', 'embedded'], true) ? 'suffix' : '';
                         $template = $quote . $prefix . str_repeat('\\', $slashes) . '<field>' . ($shape === 'adjacent' ? '<other>' : '') . $suffix . $quote;
                         $escaped  = $value === '' ? escapeshellarg($value) : cacti_escapeshellarg($value);
-                        $argument = substitute_script_path($template, ['field' => $escaped, 'other' => cacti_escapeshellarg('other')]);
+                        $argument = \Kadupul\DataInput\Domain\InputStringSubstitution::substitute($template, ['field' => $escaped, 'other' => cacti_escapeshellarg('other')]);
                         $expected = $prefix . str_repeat('\\', $quote === "'" ? $slashes : intdiv($slashes, 2)) . str_replace(["\r", "\n"], '', $value) . ($shape === 'adjacent' ? 'other' : '') . $suffix;
                         $pipes    = [];
                         $process  = proc_open(['/bin/sh', '-c', 'printf %s ' . $argument], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
