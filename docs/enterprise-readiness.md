@@ -85,3 +85,12 @@ distinguish direct access from legacy worker/session/plugin dependencies.
 Eleven declarations and 71 unused bindings are removed; live adapters remain
 assessed rather than retired. Full installed-session, collector and retained
 legacy-action acceptance remain release gates.
+
+### Identity relationship browsing
+
+Status: implemented. Ten views display stored user/group memberships and four
+resource permission types for each owner. Existing console and user
+administration grants protect all views. See [acceptance evidence and limits](migrations/identity-relationships-batch-10.md).
+Effective authorization and legacy policy/membership mutations remain on their
+existing paths. Installed-session and collector HTTP acceptance remain release
+gates. This slice does not retire authentication or permission globals.

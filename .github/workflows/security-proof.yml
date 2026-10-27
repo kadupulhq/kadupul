@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main, 'chore/consolidate-main-*']
+    branches: [main, 'chore/consolidate-main-*', 'migration/twig-*']
   workflow_dispatch:
     inputs:
       repo_name:

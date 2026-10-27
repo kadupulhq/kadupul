@@ -7,6 +7,7 @@ follows [Semantic Versioning](VERSIONING.md).
 ## [Unreleased]
 
 - Remove 71 unused global bindings from 45 retained operation-page functions, tighten their per-file ratchet, and document global-state boundaries behind every Twig migration family. Native HTTP controllers are now checked alongside application/domain code for direct global access.
+- Add ten Twig views for user/group memberships and stored graph, device, template and tree permission exceptions. Show the stored default policy without presenting these records as effective access. Existing PHP pages still handle policy and membership changes.
 
 - Add ten native Symfony/Twig management catalogs for graphs, data sources, aggregates, reports, recorded plugins and template relationships, with resource/owner permissions and bounded browsing. Legacy editors and operations remain available.
 - Add ten Symfony/Twig relationship views for template definitions, automation criteria and steps, SNMP option entries, and receiver subscriptions and history. Parent catalog links preserve access to existing editing and operational actions.
