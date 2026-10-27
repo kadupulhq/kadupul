@@ -2133,10 +2133,10 @@ const ADMINISTRATION_LIST_ACCESS_SOURCES = [
 
 // Reviewed management route defaults, actor/realm admission and scoped inputs.
 const MANAGEMENT_CATALOG_ACCESS_SOURCES = [
-    'src/Navigation/Infrastructure/Persistence/DbalManagementCatalogAccess.php' => '4739eb9de87551d5fb1dc63466b7b1b866c8d727786f3aec247fa9673464f870',
-    'src/Navigation/Contract/Management/CatalogScreen.php' => '54cd8c110a13e381a8d5f5ce8589b645466c7e38d378e583666da77c7a3a46ee',
-    'src/Navigation/Application/Query/ViewManagementCatalog.php' => '84f6528b048fb7e2be2e70f87ca6bc3556466a1ae268884aef8527aa9f7f25fe',
-    'src/Navigation/Infrastructure/Symfony/Controller/ManagementCatalogController.php' => '32f8f726a61fa40aaa5ff2319434e8f2a53c83410f01e54de4ea9ef0805d9b52',
+    'src/Navigation/Infrastructure/Persistence/DbalManagementCatalogAccess.php' => '40b5a0c78d075c9b17e648b891fef944e213d5b11546027ff336e485e6c7a3f3',
+    'src/Navigation/Contract/Management/CatalogScreen.php' => 'baed17d0ea795c70815402844a4e84d06a4f16a126b9a9285c10014ab4873d15',
+    'src/Navigation/Application/Query/ViewManagementCatalog.php' => 'd33928dadc140353aad969ce74626e21b79c772d1f546bf93cca6a12f53fbc0a',
+    'src/Navigation/Infrastructure/Symfony/Controller/ManagementCatalogController.php' => '007e1b1bbbf42125e701410fe1d37a02ea0d7bf0acb4d4d9247ed43be659fe6d',
     'src/Navigation/Infrastructure/Symfony/Controller/PersonalReportCatalogController.php' => 'c8b3780e8a5314d4c31bb8fa8326723b054688685f2ab4ae339cd44f56d606a9',
 ];
 
@@ -2153,6 +2153,78 @@ const RELATIONSHIP_ACCESS_SOURCES = [
 ];
 
 const REVIEWED_FEATURE_ACCESS = [
+    '/management/graph-input-items' => [
+        'label' => 'management catalog',
+        'realm' => 10,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/query-data-sources' => [
+        'label' => 'management catalog',
+        'realm' => 13,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/query-graph-suggestions' => [
+        'label' => 'management catalog',
+        'realm' => 13,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/query-data-suggestions' => [
+        'label' => 'management catalog',
+        'realm' => 13,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/query-device-templates' => [
+        'additional_realms' => [12],
+        'label' => 'management catalog',
+        'realm' => 13,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/graph-device-templates' => [
+        'additional_realms' => [12],
+        'label' => 'management catalog',
+        'realm' => 10,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/snmp-mibs' => [
+        'label' => 'management catalog',
+        'realm' => 15,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/mib-objects' => [
+        'label' => 'management catalog',
+        'realm' => 15,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/mib-conventions' => [
+        'label' => 'management catalog',
+        'realm' => 15,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/mib-notification-attributes' => [
+        'label' => 'management catalog',
+        'realm' => 15,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
     '/relationships/user-realm-grants' => [
         'label' => 'parent-scoped relationships',
         'realm' => 1,
@@ -3000,6 +3072,9 @@ function symfony_routes(string $root, array $files): array
                                     continue;
                                 }
                                 $grant .= ' + realm ' . $feature['realm'];
+                                foreach ($feature['additional_realms'] ?? [] as $realm) {
+                                    $grant .= ' + realm ' . $realm;
+                                }
                             }
                             $rows[] = ['app.php' . $route['path'], 'symfony:' . $route['name'], $detail . '; ConsoleAccess ' . $grant . $reviewed];
                         } elseif (array_key_exists($route['name'], ANONYMOUS_ROUTES)) {
