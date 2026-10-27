@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-test('aggregate item replacement binds values and preserves unrelated rows', function ($table, $payload) {
+test('aggregate item replacement binds values and preserves unrelated rows', function ($table, $payload, $expectedSave) {
     $root = dirname(__DIR__, 3);
     $directory = sys_get_temp_dir() . '/aggregate-query-' . bin2hex(random_bytes(8));
     mkdir($directory, 0700);
@@ -28,6 +28,7 @@ $database_default = 'query-fixture';
 $database_sessions = array("$database_hostname:$database_port:$database_default" => $db);
 $db->exec("CREATE TABLE $table ($id INTEGER, graph_templates_item_id INTEGER, sequence INTEGER, color_template INTEGER, t_graph_type_id TEXT, graph_type_id INTEGER, t_cdef_id TEXT, cdef_id INTEGER, item_skip TEXT, item_total TEXT)");
 $db->exec("INSERT INTO $table ($id, graph_templates_item_id) VALUES (1, 10), (2, 20)");
+$before = $db->query("SELECT * FROM $table ORDER BY graph_templates_item_id")->fetchAll(PDO::FETCH_ASSOC);
 $queries = array();
 function cacti_log(...$args) {}
 function db_execute_prepared(...$args) { throw new RuntimeException('Unconfirmed SQL wrapper execution'); }
@@ -41,7 +42,7 @@ $second = array($id => 1, 'graph_templates_item_id' => 12);
 $nullable = array($id => 1, 'graph_templates_item_id' => 13,
     't_graph_type_id' => null, 't_cdef_id' => null, 'item_skip' => null, 'item_total' => null);
 $saved = aggregate_graph_items_save(array($item, $second, $nullable), $table);
-echo json_encode(array('saved' => $saved, 'queries' => $queries,
+echo json_encode(array('saved' => $saved, 'queries' => $queries, 'before' => $before,
     'rows' => $db->query("SELECT * FROM $table ORDER BY graph_templates_item_id")->fetchAll(PDO::FETCH_ASSOC)));
 PHP;
     $coverage = $this->getTestResultObject()->getCodeCoverage();
@@ -51,9 +52,9 @@ PHP;
             . 'require $argv[1] . "/tests/Fixtures/rrd-process-coverage.php";' . $program;
     }
     try {
-        $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . $root,
+        $process = proc_open([PHP_BINARY, '-d', 'pcov.directory=' . $root,
             '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $program,
-            $root, $table, $payload, $directory), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+            $root, $table, $payload, $directory], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
         if (!is_resource($process)) {
             throw new RuntimeException('Unable to start aggregate query probe');
         }
@@ -66,22 +67,27 @@ PHP;
         }
         expect($stderr)->toBe('');
         $result = json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
-        expect($result['saved'])->toBeTrue();
-        $id = $table === 'aggregate_graphs_graph_item' ? 'aggregate_graph_id' : 'aggregate_template_id';
-        expect($result['queries'][0])->toBe(array("DELETE FROM $table WHERE $id = ?", array(1)));
-        expect(substr_count($result['queries'][1][0], '?'))->toBe(30);
-        expect($result['queries'][1][0])->not->toContain('DELETE');
-        expect($result['rows'])->toHaveCount(4);
-        expect(array_column($result['rows'], 'graph_templates_item_id'))->toBe(array(11, 12, 13, 20));
-        expect($result['rows'][0]['t_graph_type_id'])->toBe("on'); DELETE FROM $table; --");
-        expect($result['rows'][0]['t_cdef_id'])->toBe("quote'\\value");
-        expect($result['rows'][0]['sequence'])->toBe(3);
-        expect($result['rows'][1]['sequence'])->toBe(0);
-        foreach (array('t_graph_type_id', 't_cdef_id', 'item_skip', 'item_total') as $field) {
-            expect($result['rows'][1][$field])->toBe('');
-            expect($result['rows'][2][$field])->toBeNull();
+        expect($result['saved'])->toBe($expectedSave);
+        if (!$expectedSave) {
+            expect($result['queries'])->toBe([]);
+            expect($result['rows'])->toBe($result['before']);
+        } else {
+            $id = $table === 'aggregate_graphs_graph_item' ? 'aggregate_graph_id' : 'aggregate_template_id';
+            expect($result['queries'][0])->toBe(["DELETE FROM $table WHERE $id = ?", [1]]);
+            expect(substr_count($result['queries'][1][0], '?'))->toBe(30);
+            expect($result['queries'][1][0])->not->toContain('DELETE');
+            expect($result['rows'])->toHaveCount(4);
+            expect(array_column($result['rows'], 'graph_templates_item_id'))->toBe([11, 12, 13, 20]);
+            expect($result['rows'][0]['t_graph_type_id'])->toBe("on'); DELETE FROM $table; --");
+            expect($result['rows'][0]['t_cdef_id'])->toBe("quote'\\value");
+            expect($result['rows'][0]['sequence'])->toBe(3);
+            expect($result['rows'][1]['sequence'])->toBe(0);
+            foreach (['t_graph_type_id', 't_cdef_id', 'item_skip', 'item_total'] as $field) {
+                expect($result['rows'][1][$field])->toBe('');
+                expect($result['rows'][2][$field])->toBeNull();
+            }
+            expect($result['rows'][3][$id])->toBe(2);
         }
-        expect($result['rows'][3][$id])->toBe(2);
         if ($coverage !== null) {
             foreach (glob($directory . '/*.coverage') as $report) {
                 $coverage->merge(unserialize(file_get_contents($report)));
@@ -93,5 +99,9 @@ PHP;
         }
         rmdir($directory);
     }
-})->with(array('aggregate_graphs_graph_item', 'aggregate_graph_templates_item'))
-    ->with(array('1', '1 OR 1=1', '1; DROP TABLE aggregate_graphs_graph_item; --'));
+})->with(['aggregate_graphs_graph_item', 'aggregate_graph_templates_item'])
+    ->with([
+        ['1', true],
+        ['1 OR 1=1', false],
+        ['1; DROP TABLE aggregate_graphs_graph_item; --', false],
+    ]);

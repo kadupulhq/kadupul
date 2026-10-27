@@ -765,6 +765,54 @@ function aggregate_graphs_insert_graph_items(
 
 }
 
+/** Return a positive parent ID without accepting SQL fragments or arrays. */
+function aggregate_graph_items_parent_id($value)
+{
+    if (!is_int($value) && !is_string($value)) {
+        return false;
+    }
+    $digits = ltrim(trim((string) $value), '0');
+    if ($digits === '' || !ctype_digit($digits)) {
+        return false;
+    }
+
+    return filter_var($digits, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+}
+
+/** Normalize one item before any database changes. */
+function aggregate_graph_items_row($item, $defaults, $id_field, $parent_id)
+{
+    if (!is_array($item)) {
+        return false;
+    }
+    $item = array_intersect_key(array_merge($defaults, $item), $defaults);
+    if (!isset($item[$id_field], $item['graph_templates_item_id'])) {
+        return false;
+    }
+    $id = aggregate_graph_items_parent_id($item[$id_field]);
+    if ($id === false || ($parent_id !== null && $parent_id !== $id)) {
+        return false;
+    }
+    foreach ($item as $value) {
+        if ($value !== null && !is_scalar($value)) {
+            return false;
+        }
+    }
+    $item[$id_field] = $id;
+
+    return $item;
+}
+
+/** Bound INSERTs below the native prepared-statement parameter limit. */
+function aggregate_graph_items_queries($table, $id_field, $parent_id, $insert, $parameters): iterable
+{
+    yield ["DELETE FROM $table WHERE $id_field = ?", [$parent_id]];
+    foreach (array_chunk($parameters, 10000) as $chunk) {
+        $rows = array_fill(0, intdiv(count($chunk), 10), '(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        yield [$insert . implode(', ', $rows), $chunk];
+    }
+}
+
 /**
  * insert or update aggregate graph items in DB tables
  * @param array $items
@@ -801,26 +849,16 @@ function aggregate_graph_items_save($items, $table)
     $defaults['item_skip']       = '';
     $defaults['item_total']      = '';
 
-    $items_sql = array();
     $parameters = array();
-    $aggregate_id = (int) ($items[0][$id_field] ?? 0);
+    $aggregate_id = null;
     foreach ($items as $item) {
-        if (!is_array($item) || (int) ($item[$id_field] ?? -1) !== $aggregate_id) {
+        $item = aggregate_graph_items_row($item, $defaults, $id_field, $aggregate_id);
+        if ($item === false) {
             return false;
         }
-        // substitute any missing fields with defaults
-        $item = array_merge($defaults, $item);
-
-        // remove any extra fields
-        $item = array_intersect_key($item, $defaults);
-
-        // without these graph item makes no sense
-        if (!isset($item[$id_field]) || !isset($item['graph_templates_item_id'])) {
-            return false;
-        }
+        $aggregate_id = $item[$id_field];
 
         // Keep values out of SQL while preserving the existing integer fields.
-        $items_sql[] = ' (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         array_push(
             $parameters,
             (int) $item[$id_field],
@@ -838,7 +876,6 @@ function aggregate_graph_items_save($items, $table)
 
     $sql = 'INSERT INTO ' . $table;
     $sql .= '(' . implode(', ', array_keys($defaults)) . ') VALUES ';
-    $sql .= implode(', ', $items_sql);
 
     cacti_log(__FUNCTION__ . ' called. SQL: ' . $sql, true, 'AGGREGATE', POLLER_VERBOSITY_DEBUG);
 
@@ -850,8 +887,32 @@ function aggregate_graph_items_save($items, $table)
         if (aggregate_graph_database() !== $db) {
             throw new RuntimeException('Aggregate cache connection changed during regeneration.');
         }
+        if ($db->inTransaction()) {
+            $candidate = 'kadupul_aggregate_items_' . bin2hex(random_bytes(8));
+            if ($db->exec('SAVEPOINT ' . $candidate) === false) {
+                throw new RuntimeException('Aggregate cache savepoint could not be confirmed.');
+            }
+            $savepoint = $candidate;
+            if ($db->errorCode() !== '00000') {
+                throw new RuntimeException('Aggregate cache savepoint could not be confirmed.');
+            }
+        } else {
+            if (!$db->beginTransaction()) {
+                throw new RuntimeException('Aggregate cache transaction could not start.');
+            }
+            $started = true;
+            if ($db->errorCode() !== '00000') {
+                throw new RuntimeException('Aggregate cache transaction could not be confirmed.');
+            }
+        }
         $driver = $db->getAttribute(PDO::ATTR_DRIVER_NAME);
         if ($driver === 'mysql') {
+            // Hold the checked table's metadata lock until transaction completion.
+            $lock = $db->query('SELECT 1 FROM `' . $table . '` LIMIT 0');
+            if ($lock === false || !$lock->closeCursor()
+                || $lock->errorCode() !== '00000' || $db->errorCode() !== '00000') {
+                throw new RuntimeException('Aggregate cache table lock could not be confirmed.');
+            }
             $metadata = $db->query('SHOW CREATE TABLE `' . $table . '`');
             if ($metadata === false) {
                 throw new RuntimeException('Aggregate cache metadata is unavailable.');
@@ -882,30 +943,9 @@ function aggregate_graph_items_save($items, $table)
                 throw new RuntimeException('Aggregate cache engine metadata close could not be confirmed.');
             }
         } elseif ($driver !== 'sqlite') {
-            return false;
+            throw new RuntimeException('Aggregate cache requires a supported transactional driver.');
         }
-        if ($db->inTransaction()) {
-            $candidate = 'kadupul_aggregate_items_' . bin2hex(random_bytes(8));
-            if ($db->exec('SAVEPOINT ' . $candidate) === false) {
-                throw new RuntimeException('Aggregate cache savepoint could not be confirmed.');
-            }
-            $savepoint = $candidate;
-            if ($db->errorCode() !== '00000') {
-                throw new RuntimeException('Aggregate cache savepoint could not be confirmed.');
-            }
-        } else {
-            if (!$db->beginTransaction()) {
-                throw new RuntimeException('Aggregate cache transaction could not start.');
-            }
-            $started = true;
-            if ($db->errorCode() !== '00000') {
-                throw new RuntimeException('Aggregate cache transaction could not be confirmed.');
-            }
-        }
-        foreach (array(
-            array("DELETE FROM $table WHERE " . $id_field . ' = ?', array($aggregate_id)),
-            array($sql, $parameters),
-        ) as [$statement_sql, $statement_parameters]) {
+        foreach (aggregate_graph_items_queries($table, $id_field, $aggregate_id, $sql, $parameters) as [$statement_sql, $statement_parameters]) {
             $statement = $db->prepare($statement_sql);
             if ($statement === false || !$statement->execute($statement_parameters)
                 || $statement->errorCode() !== '00000' || $db->errorCode() !== '00000') {

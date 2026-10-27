@@ -182,7 +182,7 @@ msgstr "Để di chuyển Biểu đồ tổng hợp bên dưới sang Tập hợ
 #: auth_changepassword.php:415 auth_profile.php:464 automation_networks.php:387
 #: automation_snmp.php:245 graphs.php:1169 graphs.php:1219 graphs.php:1222
 #: graphs.php:1266 graphs.php:1858 include/auth.php:309
-#: lib/api_aggregate.php:2209 lib/api_aggregate.php:2224 lib/html_form.php:1423
+#: lib/api_aggregate.php:2249 lib/api_aggregate.php:2264 lib/html_form.php:1423
 #: lib/html_reports.php:632 managers.php:1129
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
@@ -368,7 +368,7 @@ msgid "You may use these replacement values for the Prefix in the Aggregate Grap
 msgstr "Bạn có thể sử dụng các giá trị thay thế này cho Tiền tố trong Đồ thị tổng hợp"
 
 #: aggregate_graphs.php:988 aggregate_templates.php:536 graphs.php:1116
-#: lib/api_aggregate.php:2344
+#: lib/api_aggregate.php:2384
 msgid "Total"
 msgstr "Tổng"
 
@@ -376,7 +376,7 @@ msgstr "Tổng"
 msgid "All Items"
 msgstr "Tất cả Item"
 
-#: aggregate_graphs.php:1010 graphs.php:1706 lib/api_aggregate.php:2504
+#: aggregate_graphs.php:1010 graphs.php:1706 lib/api_aggregate.php:2544
 msgid "Graph Configuration"
 msgstr "Cấu hình đồ thị"
 
@@ -2578,7 +2578,7 @@ msgstr ""
 #: data_debug.php:501 data_debug.php:959 data_queries.php:769
 #: data_sources.php:1166 data_templates.php:719 graphs_items.php:387
 #: include/global_arrays.php:1008 include/global_form.php:960
-#: lib/api_aggregate.php:2338 lib/html.php:1363
+#: lib/api_aggregate.php:2378 lib/html.php:1363
 msgid "Data Source"
 msgstr "Nguồn dữ liệu"
 
@@ -3956,7 +3956,7 @@ msgstr "Mục đồ thị liên kết"
 msgid "Item #%s"
 msgstr "Mặt hàng"
 
-#: graph_templates_inputs.php:225 lib/api_aggregate.php:2486 lib/html.php:1515
+#: graph_templates_inputs.php:225 lib/api_aggregate.php:2526 lib/html.php:1515
 msgid "No Items"
 msgstr "Sản phẩm"
 
@@ -6835,7 +6835,7 @@ msgstr "(Sửa)"
 msgid "Actions"
 msgstr "Hành động"
 
-#: include/global_arrays.php:2104 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2104 lib/api_aggregate.php:2373
 msgid "Graph Items"
 msgstr "Mục đồ thị"
 
@@ -6871,7 +6871,7 @@ msgstr "viewログ"
 msgid "Graph Trees"
 msgstr "Cây đồ thị"
 
-#: include/global_arrays.php:2260 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2260 lib/api_aggregate.php:2373
 msgid "Graph Template Items"
 msgstr "Mục mẫu biểu đồ"
 
@@ -7770,7 +7770,7 @@ msgstr "Hướng huyền thoại (--legend-direction = &lt;direction&gt;)"
 msgid "Place the legend items in the given vertical order."
 msgstr "Đặt các mục huyền thoại theo thứ tự dọc cho trước."
 
-#: include/global_form.php:953 lib/api_aggregate.php:2339 lib/html.php:1364
+#: include/global_form.php:953 lib/api_aggregate.php:2379 lib/html.php:1364
 msgid "Graph Item Type"
 msgstr "Loại đồ thị"
 
@@ -11401,54 +11401,54 @@ msgstr "Các hàm shell_exec () và / hoặc exec () hiện đang bị chặn."
 msgid "Display Graphs from this Aggregate"
 msgstr "Hiển thị biểu đồ từ Tập hợp này"
 
-#: lib/api_aggregate.php:2197
+#: lib/api_aggregate.php:2237
 msgid "The Graphs chosen for the Aggregate Graph below represent Graphs from multiple Graph Templates.  Aggregate does not support creating Aggregate Graphs from multiple Graph Templates."
 msgstr "Các biểu đồ được chọn cho Biểu đồ tổng hợp bên dưới biểu thị các biểu đồ từ nhiều mẫu biểu đồ. Tổng hợp không hỗ trợ tạo Đồ thị tổng hợp từ nhiều Mẫu biểu đồ."
 
-#: lib/api_aggregate.php:2198 lib/api_aggregate.php:2217
+#: lib/api_aggregate.php:2238 lib/api_aggregate.php:2257
 msgid "Press 'Return' to return and select different Graphs"
 msgstr "Nhấn &#39;Return&#39; để quay lại và chọn các biểu đồ khác nhau"
 
-#: lib/api_aggregate.php:2216
+#: lib/api_aggregate.php:2256
 msgid "The Graphs chosen for the Aggregate Graph do not use Graph Templates.  Aggregate does not support creating Aggregate Graphs from non-templated graphs."
 msgstr "Các biểu đồ được chọn cho Biểu đồ tổng hợp không sử dụng Biểu đồ mẫu. Uẩn không hỗ trợ tạo Đồ thị tổng hợp từ các đồ thị không có templated."
 
-#: lib/api_aggregate.php:2337 lib/html.php:1361
+#: lib/api_aggregate.php:2377 lib/html.php:1361
 msgid "Graph Item"
 msgstr "Mục đồ thị"
 
-#: lib/api_aggregate.php:2340 lib/html.php:1365
+#: lib/api_aggregate.php:2380 lib/html.php:1365
 msgid "CF Type"
 msgstr "Loại CF"
 
-#: lib/api_aggregate.php:2341 lib/html.php:1370
+#: lib/api_aggregate.php:2381 lib/html.php:1370
 msgid "Item Color"
 msgstr "Màu mục"
 
-#: lib/api_aggregate.php:2342
+#: lib/api_aggregate.php:2382
 msgid "Color Template"
 msgstr "Mẫu màu"
 
-#: lib/api_aggregate.php:2343
+#: lib/api_aggregate.php:2383
 msgid "Skip"
 msgstr "Bỏ qua"
 
-#: lib/api_aggregate.php:2424
+#: lib/api_aggregate.php:2464
 msgid "Aggregate Items are not modifiable"
 msgstr "Mục tổng hợp không thể sửa đổi"
 
-#: lib/api_aggregate.php:2427 lib/api_aggregate.php:2430
-#: lib/api_aggregate.php:2434 lib/html.php:1418 lib/html.php:1420
+#: lib/api_aggregate.php:2467 lib/api_aggregate.php:2470
+#: lib/api_aggregate.php:2474 lib/html.php:1418 lib/html.php:1420
 #: lib/html_reports.php:1921
 #, php-format
 msgid "Item # %d"
 msgstr "Mục #% d"
 
-#: lib/api_aggregate.php:2434
+#: lib/api_aggregate.php:2474
 msgid "Aggregate Items are not editable"
 msgstr "Mục tổng hợp không thể chỉnh sửa"
 
-#: lib/api_aggregate.php:2540
+#: lib/api_aggregate.php:2580
 msgid "Override this Value"
 msgstr "Ghi đè giá trị này"
 

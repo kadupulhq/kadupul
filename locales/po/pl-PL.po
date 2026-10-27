@@ -182,7 +182,7 @@ msgstr "W celu migracji poniższych wykresów zagregowanych do wykresu zagregowa
 #: auth_changepassword.php:415 auth_profile.php:464 automation_networks.php:387
 #: automation_snmp.php:245 graphs.php:1169 graphs.php:1219 graphs.php:1222
 #: graphs.php:1266 graphs.php:1858 include/auth.php:309
-#: lib/api_aggregate.php:2209 lib/api_aggregate.php:2224 lib/html_form.php:1423
+#: lib/api_aggregate.php:2249 lib/api_aggregate.php:2264 lib/html_form.php:1423
 #: lib/html_reports.php:632 managers.php:1129
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
@@ -368,7 +368,7 @@ msgid "You may use these replacement values for the Prefix in the Aggregate Grap
 msgstr "Możesz użyć tych wartości zastępczych dla prefiksu na wykresie agregacyjnym"
 
 #: aggregate_graphs.php:988 aggregate_templates.php:536 graphs.php:1116
-#: lib/api_aggregate.php:2344
+#: lib/api_aggregate.php:2384
 msgid "Total"
 msgstr "Razem"
 
@@ -376,7 +376,7 @@ msgstr "Razem"
 msgid "All Items"
 msgstr "Wszystkie pozycje"
 
-#: aggregate_graphs.php:1010 graphs.php:1706 lib/api_aggregate.php:2504
+#: aggregate_graphs.php:1010 graphs.php:1706 lib/api_aggregate.php:2544
 msgid "Graph Configuration"
 msgstr "Konfiguracja wykresu"
 
@@ -2584,7 +2584,7 @@ msgstr ""
 #: data_debug.php:501 data_debug.php:959 data_queries.php:769
 #: data_sources.php:1166 data_templates.php:719 graphs_items.php:387
 #: include/global_arrays.php:1008 include/global_form.php:960
-#: lib/api_aggregate.php:2338 lib/html.php:1363
+#: lib/api_aggregate.php:2378 lib/html.php:1363
 msgid "Data Source"
 msgstr "Źródło danych"
 
@@ -4001,7 +4001,7 @@ msgstr "Powiązane pozycje wykresów"
 msgid "Item #%s"
 msgstr "Element #%s"
 
-#: graph_templates_inputs.php:225 lib/api_aggregate.php:2486 lib/html.php:1515
+#: graph_templates_inputs.php:225 lib/api_aggregate.php:2526 lib/html.php:1515
 msgid "No Items"
 msgstr "Brak elementów"
 
@@ -6879,7 +6879,7 @@ msgstr "(Edytuj)"
 msgid "Actions"
 msgstr "Akcje"
 
-#: include/global_arrays.php:2104 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2104 lib/api_aggregate.php:2373
 msgid "Graph Items"
 msgstr "Elementy wykresu"
 
@@ -6915,7 +6915,7 @@ msgstr "Zobacz log"
 msgid "Graph Trees"
 msgstr "Wykresy drzew"
 
-#: include/global_arrays.php:2260 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2260 lib/api_aggregate.php:2373
 msgid "Graph Template Items"
 msgstr "Elementy szablonu wykresu"
 
@@ -7813,7 +7813,7 @@ msgstr "Kierunek legendy (- kierunek lewy=&lt;kierunek&gt;)"
 msgid "Place the legend items in the given vertical order."
 msgstr "Umieść elementy legendy w podanej kolejności pionowej."
 
-#: include/global_form.php:953 lib/api_aggregate.php:2339 lib/html.php:1364
+#: include/global_form.php:953 lib/api_aggregate.php:2379 lib/html.php:1364
 msgid "Graph Item Type"
 msgstr "Typ elementu wykresu"
 
@@ -11448,54 +11448,54 @@ msgstr "Funkcje shell_exec() i/lub exec() są obecnie zablokowane."
 msgid "Display Graphs from this Aggregate"
 msgstr "Wyświetlanie wykresów z tego agregatu"
 
-#: lib/api_aggregate.php:2197
+#: lib/api_aggregate.php:2237
 msgid "The Graphs chosen for the Aggregate Graph below represent Graphs from multiple Graph Templates.  Aggregate does not support creating Aggregate Graphs from multiple Graph Templates."
 msgstr "Wykresy wybrane dla poniższego wykresu zbiorczego przedstawiają wykresy z wielu szablonów wykresów.  Aggregate nie obsługuje tworzenia wykresów Aggregate z wielu szablonów wykresów."
 
-#: lib/api_aggregate.php:2198 lib/api_aggregate.php:2217
+#: lib/api_aggregate.php:2238 lib/api_aggregate.php:2257
 msgid "Press 'Return' to return and select different Graphs"
 msgstr "Naciśnij 'Return', aby powrócić i wybrać różne wykresy"
 
-#: lib/api_aggregate.php:2216
+#: lib/api_aggregate.php:2256
 msgid "The Graphs chosen for the Aggregate Graph do not use Graph Templates.  Aggregate does not support creating Aggregate Graphs from non-templated graphs."
 msgstr "Wykresy wybrane dla wykresu zagregowanego nie wykorzystują szablonów wykresów.  Aggregate nie obsługuje tworzenia wykresów Aggregate z wykresów niewzorcowanych."
 
-#: lib/api_aggregate.php:2337 lib/html.php:1361
+#: lib/api_aggregate.php:2377 lib/html.php:1361
 msgid "Graph Item"
 msgstr "Element wykresu"
 
-#: lib/api_aggregate.php:2340 lib/html.php:1365
+#: lib/api_aggregate.php:2380 lib/html.php:1365
 msgid "CF Type"
 msgstr "CF Rodzaj CF"
 
-#: lib/api_aggregate.php:2341 lib/html.php:1370
+#: lib/api_aggregate.php:2381 lib/html.php:1370
 msgid "Item Color"
 msgstr "Kolor elementu"
 
-#: lib/api_aggregate.php:2342
+#: lib/api_aggregate.php:2382
 msgid "Color Template"
 msgstr "Szablon kolorowy"
 
-#: lib/api_aggregate.php:2343
+#: lib/api_aggregate.php:2383
 msgid "Skip"
 msgstr "Pomiń"
 
-#: lib/api_aggregate.php:2424
+#: lib/api_aggregate.php:2464
 msgid "Aggregate Items are not modifiable"
 msgstr "Pozycje zagregowane nie mogą być modyfikowane"
 
-#: lib/api_aggregate.php:2427 lib/api_aggregate.php:2430
-#: lib/api_aggregate.php:2434 lib/html.php:1418 lib/html.php:1420
+#: lib/api_aggregate.php:2467 lib/api_aggregate.php:2470
+#: lib/api_aggregate.php:2474 lib/html.php:1418 lib/html.php:1420
 #: lib/html_reports.php:1921
 #, php-format
 msgid "Item # %d"
 msgstr "Pozycja # %d"
 
-#: lib/api_aggregate.php:2434
+#: lib/api_aggregate.php:2474
 msgid "Aggregate Items are not editable"
 msgstr "Pozycje zagregowane nie mogą być edytowane"
 
-#: lib/api_aggregate.php:2540
+#: lib/api_aggregate.php:2580
 msgid "Override this Value"
 msgstr "Nadpisz tę wartość"
 

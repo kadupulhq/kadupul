@@ -182,7 +182,7 @@ msgstr "Para migrar os Gráficos Agregados abaixo para um Agregado baseado em Te
 #: auth_changepassword.php:415 auth_profile.php:464 automation_networks.php:387
 #: automation_snmp.php:245 graphs.php:1169 graphs.php:1219 graphs.php:1222
 #: graphs.php:1266 graphs.php:1858 include/auth.php:309
-#: lib/api_aggregate.php:2209 lib/api_aggregate.php:2224 lib/html_form.php:1423
+#: lib/api_aggregate.php:2249 lib/api_aggregate.php:2264 lib/html_form.php:1423
 #: lib/html_reports.php:632 managers.php:1129
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
@@ -368,7 +368,7 @@ msgid "You may use these replacement values for the Prefix in the Aggregate Grap
 msgstr "Você pode usar esses valores de substituição para o Prefixo no Gráfico Agregado"
 
 #: aggregate_graphs.php:988 aggregate_templates.php:536 graphs.php:1116
-#: lib/api_aggregate.php:2344
+#: lib/api_aggregate.php:2384
 msgid "Total"
 msgstr "Total"
 
@@ -376,7 +376,7 @@ msgstr "Total"
 msgid "All Items"
 msgstr "Todos os Items"
 
-#: aggregate_graphs.php:1010 graphs.php:1706 lib/api_aggregate.php:2504
+#: aggregate_graphs.php:1010 graphs.php:1706 lib/api_aggregate.php:2544
 msgid "Graph Configuration"
 msgstr "Configuração do gráfico"
 
@@ -2578,7 +2578,7 @@ msgstr ""
 #: data_debug.php:501 data_debug.php:959 data_queries.php:769
 #: data_sources.php:1166 data_templates.php:719 graphs_items.php:387
 #: include/global_arrays.php:1008 include/global_form.php:960
-#: lib/api_aggregate.php:2338 lib/html.php:1363
+#: lib/api_aggregate.php:2378 lib/html.php:1363
 msgid "Data Source"
 msgstr "Fonte de Dados"
 
@@ -3976,7 +3976,7 @@ msgstr "Itens de gráfico associados"
 msgid "Item #%s"
 msgstr "Item #%s"
 
-#: graph_templates_inputs.php:225 lib/api_aggregate.php:2486 lib/html.php:1515
+#: graph_templates_inputs.php:225 lib/api_aggregate.php:2526 lib/html.php:1515
 msgid "No Items"
 msgstr "Sem Itens"
 
@@ -6853,7 +6853,7 @@ msgstr "(Editar)"
 msgid "Actions"
 msgstr "Acções"
 
-#: include/global_arrays.php:2104 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2104 lib/api_aggregate.php:2373
 msgid "Graph Items"
 msgstr "Itens de gráfico"
 
@@ -6889,7 +6889,7 @@ msgstr "Ver Registo"
 msgid "Graph Trees"
 msgstr "Árvores Gráficas"
 
-#: include/global_arrays.php:2260 lib/api_aggregate.php:2333
+#: include/global_arrays.php:2260 lib/api_aggregate.php:2373
 msgid "Graph Template Items"
 msgstr "Itens do modelo de gráfico"
 
@@ -7785,7 +7785,7 @@ msgstr "Legend Direction (--legend-direction=&lt;direction&gt;)"
 msgid "Place the legend items in the given vertical order."
 msgstr "Coloque os itens de legenda na ordem vertical dada."
 
-#: include/global_form.php:953 lib/api_aggregate.php:2339 lib/html.php:1364
+#: include/global_form.php:953 lib/api_aggregate.php:2379 lib/html.php:1364
 msgid "Graph Item Type"
 msgstr "Tipo de item gráfico"
 
@@ -11418,54 +11418,54 @@ msgstr "As funções shell_exec() e/ou exec() estão atualmente bloqueadas."
 msgid "Display Graphs from this Aggregate"
 msgstr "Exibir gráficos a partir deste agregado"
 
-#: lib/api_aggregate.php:2197
+#: lib/api_aggregate.php:2237
 msgid "The Graphs chosen for the Aggregate Graph below represent Graphs from multiple Graph Templates.  Aggregate does not support creating Aggregate Graphs from multiple Graph Templates."
 msgstr "Os Gráficos escolhidos para o Gráfico Agregado abaixo representam Gráficos de múltiplos Modelos de Gráficos.  O Aggregate não suporta a criação de Gráficos Agregados a partir de múltiplos Modelos de Gráficos."
 
-#: lib/api_aggregate.php:2198 lib/api_aggregate.php:2217
+#: lib/api_aggregate.php:2238 lib/api_aggregate.php:2257
 msgid "Press 'Return' to return and select different Graphs"
 msgstr "Pressione 'Return' para retornar e selecionar diferentes Gráficos"
 
-#: lib/api_aggregate.php:2216
+#: lib/api_aggregate.php:2256
 msgid "The Graphs chosen for the Aggregate Graph do not use Graph Templates.  Aggregate does not support creating Aggregate Graphs from non-templated graphs."
 msgstr "Os Gráficos selecionados para o Gráfico Agregado não utilizam Modelos de Gráficos.  O Aggregate não suporta a criação de Aggregate Graphs a partir de gráficos não contemplados."
 
-#: lib/api_aggregate.php:2337 lib/html.php:1361
+#: lib/api_aggregate.php:2377 lib/html.php:1361
 msgid "Graph Item"
 msgstr "Gráfico Item"
 
-#: lib/api_aggregate.php:2340 lib/html.php:1365
+#: lib/api_aggregate.php:2380 lib/html.php:1365
 msgid "CF Type"
 msgstr "Tipo CF"
 
-#: lib/api_aggregate.php:2341 lib/html.php:1370
+#: lib/api_aggregate.php:2381 lib/html.php:1370
 msgid "Item Color"
 msgstr "Cor do Item"
 
-#: lib/api_aggregate.php:2342
+#: lib/api_aggregate.php:2382
 msgid "Color Template"
 msgstr "Modelo de cor"
 
-#: lib/api_aggregate.php:2343
+#: lib/api_aggregate.php:2383
 msgid "Skip"
 msgstr "Saltar"
 
-#: lib/api_aggregate.php:2424
+#: lib/api_aggregate.php:2464
 msgid "Aggregate Items are not modifiable"
 msgstr "Itens agregados não são modificáveis"
 
-#: lib/api_aggregate.php:2427 lib/api_aggregate.php:2430
-#: lib/api_aggregate.php:2434 lib/html.php:1418 lib/html.php:1420
+#: lib/api_aggregate.php:2467 lib/api_aggregate.php:2470
+#: lib/api_aggregate.php:2474 lib/html.php:1418 lib/html.php:1420
 #: lib/html_reports.php:1921
 #, php-format
 msgid "Item # %d"
 msgstr "Item # %d"
 
-#: lib/api_aggregate.php:2434
+#: lib/api_aggregate.php:2474
 msgid "Aggregate Items are not editable"
 msgstr "Itens agregados não são editáveis"
 
-#: lib/api_aggregate.php:2540
+#: lib/api_aggregate.php:2580
 msgid "Override this Value"
 msgstr "Substituir este valor"
 

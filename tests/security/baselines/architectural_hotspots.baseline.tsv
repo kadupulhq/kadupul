@@ -335,8 +335,8 @@ dynamic_include	./install/upgrades/1_2_20.php:11		include_once($config['base_pat
 dynamic_include	./lib/aggregate.php:1129	    include_once($config['base_path'] . '/lib/api_graph.php');
 dynamic_include	./lib/aggregate.php:828	    include_once($config['base_path'] . '/lib/cdef.php');
 dynamic_include	./lib/aggregate.php:924	    include_once($config['base_path'] . '/lib/cdef.php');
-dynamic_include	./lib/api_aggregate.php:1101	        include_once($config['base_path'] . '/lib/api_aggregate.php');
-dynamic_include	./lib/api_aggregate.php:2252	    include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/api_aggregate.php:1141	        include_once($config['base_path'] . '/lib/api_aggregate.php');
+dynamic_include	./lib/api_aggregate.php:2292	    include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/api_aggregate.php:484	        include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./lib/api_automation.php:2552	    include_once($config['base_path'] . '/lib/template.php');
 dynamic_include	./lib/api_automation.php:2553	    include_once($config['base_path'] . '/lib/api_automation_tools.php');
