@@ -40,6 +40,11 @@ function boostOnDemandProbe(string $body, array $environment = array()): array
     }
 }
 
+function boostOnDemandWorstCaseSize(array $batch): int
+{
+    return strlen($batch['sql']) + array_sum(array_map(static fn($value) => (2 * strlen((string) $value)) + 2, $batch['params']));
+}
+
 function boostOnDemandBatchPattern(): string
 {
     return '/^INSERT INTO poller_output_boost \(local_data_id, rrd_name, time, output\) VALUES '
@@ -92,7 +97,7 @@ for ($i = 1; $i <= 5; $i++) {
     // 1 + 2 + 19 + 38 = 60 bytes of bound values per row
     $results[] = array('local_data_id' => $i, 'rrd_name' => 'ds', 'time' => '2026-01-01 00:00:00', 'output' => str_repeat('x', 37) . $i);
 }
-echo json_encode(boost_on_demand_batches($results, 200));
+echo json_encode(boost_on_demand_batches($results, 600));
 PROBE;
 
     $batches = boostOnDemandProbe($body);
@@ -100,8 +105,8 @@ PROBE;
     expect(count($batches))->toBeGreaterThan(1);
     $ids = array();
     foreach ($batches as $batch) {
-        expect(strlen($batch['sql']) + array_sum(array_map(static fn($value) => strlen((string) $value), $batch['params'])))
-            ->toBeLessThanOrEqual(200)
+        expect(boostOnDemandWorstCaseSize($batch))
+            ->toBeLessThanOrEqual(600)
             ->and($batch['sql'])->toMatch(boostOnDemandBatchPattern())
             ->and(count($batch['params']))->toBe(4 * substr_count($batch['sql'], '(?, ?, ?, ?)'));
         for ($i = 0; $i < count($batch['params']); $i += 4) {
@@ -128,4 +133,37 @@ PROBE;
     foreach ($batches as $batch) {
         expect($batch['sql'])->toMatch(boostOnDemandBatchPattern());
     }
+});
+
+test('on-demand batches count escaped quotes and backslashes against max_allowed_packet', function () {
+    $body = <<<'PROBE'
+$results = array();
+for ($i = 1; $i <= 12; $i++) {
+    $results[] = array('local_data_id' => $i, 'rrd_name' => 'ds', 'time' => '2026-01-01 00:00:00', 'output' => str_repeat("'\\\\", 10));
+}
+echo json_encode(boost_on_demand_batches($results, 600));
+PROBE;
+
+    $batches = boostOnDemandProbe($body);
+
+    expect(count($batches))->toBeGreaterThan(1);
+    $rows = 0;
+    foreach ($batches as $batch) {
+        expect(boostOnDemandWorstCaseSize($batch))->toBeLessThanOrEqual(600);
+        $rows += count($batch['params']) / 4;
+    }
+    expect($rows)->toBe(12)
+        ->and(boostOnDemandWorstCaseSize($batches[0]))->toBeGreaterThan(600 - 100);
+});
+
+test('on-demand batches stay within the MySQL placeholder limit', function () {
+    $body = <<<'PROBE'
+$results = array();
+for ($i = 1; $i <= 16384; $i++) {
+    $results[] = array('local_data_id' => 1, 'rrd_name' => 'v', 'time' => '2026-01-01 00:00:00', 'output' => (string) $i);
+}
+echo json_encode(array_map(static fn ($batch) => count($batch['params']) / 4, boost_on_demand_batches($results, 1073741824)));
+PROBE;
+
+    expect(boostOnDemandProbe($body))->toBe(array(16383, 1));
 });

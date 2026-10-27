@@ -22,7 +22,7 @@ function cacti_sizeof($value)
 }
 function db_fetch_row($sql)
 {
-    return array('Value' => strpos($GLOBALS['mode'], 'split-') === 0 ? 180 : 1000);
+    return array('Value' => strpos($GLOBALS['mode'], 'split-') === 0 ? 250 : 1000);
 }
 function db_execute_prepared($sql, $params, $log, $connection)
 {

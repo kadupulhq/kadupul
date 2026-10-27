@@ -28,7 +28,7 @@ test('production Boost handoff requires successful writes to the selected databa
             ->and($result['handler_restored'])->toBeTrue()->and($result['samples_unchanged'])->toBeTrue()
             ->and($result['writes'])->toHaveCount($mode === 'split-success' ? 2 : 1);
         foreach ($result['writes'] as $write) {
-            expect(strlen($write['sql']) + array_sum(array_map('strlen', $write['params'])))->toBeLessThanOrEqual(str_starts_with($mode, 'split-') ? 180 : 1000);
+            expect(strlen($write['sql']) + array_sum(array_map(static fn($value) => (2 * strlen((string) $value)) + 2, $write['params'])))->toBeLessThanOrEqual(str_starts_with($mode, 'split-') ? 250 : 1000);
             expect($write['connection'])->toBe($connection === 'online' ? 'primary-database' : false);
             expect($write['sql'])->toStartWith('INSERT INTO poller_output_boost ')
                 ->toEndWith(' ON DUPLICATE KEY UPDATE output=VALUES(output)');

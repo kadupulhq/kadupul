@@ -236,6 +236,9 @@ function boost_on_demand_batches(array $results, int $maxAllowedPacket): array
     $fixed = strlen($prefix) + strlen($suffix) + strlen($tuple);
     $step  = strlen($tuple) + 2;
 
+    // MySQL allows 65535 placeholders per statement; four per row.
+    $max_rows = intdiv(65535, 4);
+
     foreach ($results as $result) {
         $row = [
             $result['local_data_id'],
@@ -247,10 +250,12 @@ function boost_on_demand_batches(array $results, int $maxAllowedPacket): array
         $row_bytes = 0;
 
         foreach ($row as $value) {
-            $row_bytes += strlen((string) $value);
+            // Emulated prepares send each value quoted and escaped, which at
+            // worst doubles it and adds the quotes.
+            $row_bytes += (2 * strlen((string) $value)) + 2;
         }
 
-        if ($rows > 0 && ($fixed + ($rows * $step) + $bytes + $row_bytes) > $maxAllowedPacket) {
+        if ($rows > 0 && ($rows >= $max_rows || ($fixed + ($rows * $step) + $bytes + $row_bytes) > $maxAllowedPacket)) {
             $flush();
         }
 
