@@ -6,6 +6,10 @@ aggregate_templates.php	realm:5	include/auth.php
 app.php	symfony:front-controller	Symfony kernel; routes listed as app.php/... rows
 app.php/about	symfony:platform_about	methods=GET|HEAD; AuthenticatedAccess signed-in account; no realm required
 app.php/about/legacy	symfony:platform_about_legacy	methods=GET|HEAD|POST; AuthenticatedAccess signed-in account; no realm required
+app.php/administration/domains	symfony:admin_user_domains	methods=GET|HEAD; ConsoleAccess realm 8 + realm 1
+app.php/administration/user-groups	symfony:admin_user_groups	methods=GET|HEAD; ConsoleAccess realm 8 + realm 1
+app.php/administration/users	symfony:admin_users	methods=GET|HEAD; ConsoleAccess realm 8 + realm 1
+app.php/automation/discovered-devices	symfony:admin_discovered_devices	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/graph-rules	symfony:admin_graph_rules	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/networks	symfony:admin_networks	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/snmp-options	symfony:admin_snmp_options	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
@@ -18,6 +22,7 @@ app.php/automation/templates/{id}/move/{direction}	symfony:automation_template_m
 app.php/automation/tree-rules	symfony:admin_tree_rules	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/console	symfony:platform_console	methods=GET|HEAD; ConsoleAccess realm 8
 app.php/console	symfony:platform_console_login_post	methods=POST; anonymous-allowed: compatibility POST uses a fixed installation login URL and preserves the body with 307; no request-selected destination; reviewed at 3f7cb40d65c0
+app.php/data-collection/collectors	symfony:admin_collectors	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/data-collection/queries	symfony:admin_data_queries	methods=GET|HEAD; ConsoleAccess realm 8 + realm 13
 app.php/data-inputs	symfony:data_inputs	methods=GET|HEAD; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 55539f0a80ef and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
 app.php/data-inputs/actions/{operation}	symfony:data_input_bulk	methods=GET|HEAD|POST requirements=operation=delete|duplicate; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 1f46fb124365 and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
@@ -72,6 +77,7 @@ app.php/graphing/gprint-presets/actions/delete	symfony:gprint_preset_delete	meth
 app.php/graphing/gprint-presets/legacy	symfony:gprint_preset_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 5
 app.php/graphing/gprint-presets/new	symfony:gprint_preset_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 5
 app.php/graphing/gprint-presets/{id}/edit	symfony:gprint_preset_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 5
+app.php/graphing/trees	symfony:admin_trees	methods=GET|HEAD; ConsoleAccess realm 8 + realm 4
 app.php/healthz	symfony:health	methods=GET|HEAD; anonymous-allowed: liveness probe; returns a fixed status document
 app.php/help	symfony:platform_help	methods=GET|HEAD; AuthenticatedAccess signed-in account; no realm required
 app.php/inventory/devices	symfony:inventory_devices	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
@@ -107,10 +113,14 @@ app.php/templates/aggregates	symfony:admin_aggregate_templates	methods=GET|HEAD;
 app.php/templates/data-sources	symfony:admin_data_templates	methods=GET|HEAD; ConsoleAccess realm 8 + realm 11
 app.php/templates/devices	symfony:admin_device_templates	methods=GET|HEAD; ConsoleAccess realm 8 + realm 12
 app.php/templates/graphs	symfony:admin_graph_templates	methods=GET|HEAD; ConsoleAccess realm 8 + realm 10
+app.php/utilities/login-history	symfony:admin_login_history	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
 app.php/utilities/notification-receivers	symfony:admin_notification_receivers	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
+app.php/utilities/rrd-candidates	symfony:admin_rrd_candidates	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
 app.php/utilities/rrd-check	symfony:platform_rrd_checks	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
 app.php/utilities/rrd-check/legacy	symfony:platform_rrd_check_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 15
 app.php/utilities/rrd-check/purge	symfony:platform_rrd_check_purge	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 15
+app.php/utilities/snmp-notifications	symfony:admin_snmp_notifications	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
+app.php/utilities/snmp-objects	symfony:admin_snmp_objects	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
 auth_changepassword.php	authenticated	own session check; action=checkpass answers anonymously with the password policy verdict; reviewed at ff7ac6fa6c55
 auth_login.php	anonymous-allowed	login handler; include/auth.php includes it after bootstrap, so a direct request stops at the first undefined function; reviewed at 858e41478258
 auth_profile.php	realm:20	include/auth.php; guest_account withdrawn from anonymous and guest callers

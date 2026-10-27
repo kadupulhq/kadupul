@@ -28,12 +28,35 @@ final readonly class DbalPlatformAdministrationCatalog implements Administration
 
     public function supports(ListScreen $screen): bool
     {
-        return in_array($screen, [ListScreen::NotificationReceivers], true);
+        return in_array($screen, [ListScreen::NotificationReceivers, ListScreen::Collectors, ListScreen::RrdCandidates, ListScreen::SnmpObjects, ListScreen::SnmpNotifications], true);
     }
 
     public function read(ListScreen $screen, ListFilters $filters): array
     {
         $source = match ($screen) {
+            ListScreen::Collectors => <<<'SQL'
+SELECT p.id, p.name, p.hostname,
+ CASE WHEN p.disabled = 'on' THEN 4 WHEN UNIX_TIMESTAMP() - UNIX_TIMESTAMP(p.last_status) > 310 THEN 6 ELSE p.status END AS collector_status,
+ p.processes, p.threads, p.total_time, p.avg_time, p.max_time,
+ COALESCE(h.hosts, 0) AS hosts, p.snmp, p.script, p.server, p.last_update, p.last_status,
+ CASE WHEN p.id = 1 THEN NULL ELSE p.last_sync END AS last_sync
+ FROM poller p LEFT JOIN (SELECT poller_id, COUNT(*) AS hosts FROM host GROUP BY poller_id) h ON h.poller_id = p.id
+SQL,
+            ListScreen::RrdCandidates => <<<'SQL'
+SELECT p.id, p.name, p.name_cache, p.local_data_id, p.data_template_id,
+ t.name AS data_template_name, p.last_mod, ROUND(p.size / 1024, 2) AS size_kib
+ FROM data_source_purge_temp p LEFT JOIN data_template t ON t.id = p.data_template_id
+ WHERE p.in_cacti = 0
+SQL,
+            ListScreen::SnmpObjects => <<<'SQL'
+SELECT oid AS id, name, mib, kind, `max-access` AS max_access, value AS object_value, description
+ FROM snmpagent_cache
+SQL,
+            ListScreen::SnmpNotifications => <<<'SQL'
+SELECT l.id, l.notification AS name, l.time AS event_time, m.hostname, l.severity, l.mib, l.varbinds
+ FROM snmpagent_notifications_log l LEFT JOIN snmpagent_managers m ON m.id = l.manager_id
+SQL,
+
             ListScreen::NotificationReceivers => <<<'SQL'
 SELECT m.id, m.description AS name, m.hostname, m.disabled,
  COALESCE(n.count_notify, 0) AS count_notify, COALESCE(l.count_log, 0) AS count_log
@@ -49,6 +72,9 @@ SQL,
             throw new \InvalidArgumentException('Invalid list sort.');
         }
         $search = match ($screen) {
+            ListScreen::RrdCandidates => ['name', 'name_cache', 'data_template_name'],
+            ListScreen::SnmpObjects => ['id', 'name', 'mib'],
+            ListScreen::SnmpNotifications => ['name', 'varbinds'],
             ListScreen::NotificationReceivers => ['name', 'hostname'],
             default => ['name'],
         };

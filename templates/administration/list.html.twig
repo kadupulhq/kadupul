@@ -9,12 +9,13 @@ SPDX-License-Identifier: GPL-2.0-or-later
 {% block title %}{{ screen.title|trans }}{% endblock %}
 {% block body %}
 <h1>{{ screen.title|trans }}</h1>
-<p>{{ 'Create, edit and bulk actions open the existing administration forms.'|trans }}</p>
+<p>{{ 'Changes and advanced filters use the existing administration forms.'|trans }}</p>
+{% if screen.value == 'rrd-candidates' %}<p>{{ 'This view reads the last recorded scan. Refresh and cleanup use the existing RRD Cleaner.'|trans }}</p>{% endif %}
 <p>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Enum-owned script and action below the validated installation root. #}
-    <a href="{{ installation_path(screen.legacyScript ~ '?action=' ~ screen.editAction) }}">{{ 'Create'|trans }}</a>
+    {% if screen.creatable %}<a href="{{ installation_path(screen.legacyScript) }}?{{ screen.editQuery|url_encode }}">{{ 'Create'|trans }}</a>{% endif %}
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Enum-owned script; query values are URL encoded then attribute escaped. #}
-    <a href="{{ installation_path(screen.legacyScript) }}?{{ {filter: filters.filter, rows: filters.rows}|url_encode }}">{{ 'Bulk actions and advanced filters'|trans }}</a>
+    <a href="{{ installation_path(screen.legacyScript) }}?{{ screen.legacyQuery|merge({filter: filters.filter, rows: filters.rows})|url_encode }}">{{ 'Bulk actions and advanced filters'|trans }}</a>
 </p>
 <div class="cactiTable"><div class="cactiTableTitle">{{ 'Filters'|trans }}</div>
 {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- The router supplies this fixed route name. #}
@@ -40,6 +41,14 @@ SPDX-License-Identifier: GPL-2.0-or-later
 {% set value_labels = {
     device_class: device_classes,
     image_format: {1: 'PNG', 3: 'SVG'},
+    collector_status: {0: 'New/Idle', 1: 'Running', 2: 'Idle', 3: 'Down', 4: 'Disabled', 5: 'Recovering', 6: 'Heartbeat'},
+    auth_realm: {0: 'Local', 2: 'Web Basic', 3: 'LDAP'},
+    domain_type: {1: 'LDAP', 2: 'Active Directory'}, default_domain: {0: 'No', 1: 'Yes'},
+    graph_policy: {0: 'DENY', 1: 'ALLOW', 2: 'DENY'}, device_policy: {0: 'DENY', 1: 'ALLOW', 2: 'DENY'},
+    template_policy: {0: 'DENY', 1: 'ALLOW', 2: 'DENY'}, locked: {0: 'No', 1: 'Yes'},
+    result: {0: 'Failed', 1: 'Success - Password', 2: 'Success - Token', 3: 'Success - Password Change'},
+    severity: {1: 'LOW', 2: 'MEDIUM', 3: 'HIGH', 4: 'CRITICAL'},
+    snmp_available: {0: 'Down', 1: 'Up'}, device_up: {0: 'Down', 1: 'Up'},
     network_status: {'Disabled': 'Disabled', 'Running': 'Running', 'Idle': 'Idle'},
     enabled: {'on': 'Enabled', '': 'Disabled'}, active: {'on': 'Active', '': 'Disabled'},
     disabled: {'on': 'Disabled', '': 'Enabled'},
@@ -55,9 +64,14 @@ SPDX-License-Identifier: GPL-2.0-or-later
         <tr class="{{ loop.index is odd ? 'odd' : 'even' }}">
         {% for column, label in screen.columns %}
             {% set value = record[column] %}
-            <td>{% if column == 'name' %}
+            <td>{% if column == 'name' and screen.editable %}
                 {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Script/action are enum constants, ID is read from its numeric primary key, and the query is URL encoded. #}
-                <a class="linkEditMain" href="{{ installation_path(screen.legacyScript) }}?{{ {action: screen.editAction, id: record.id}|url_encode }}">{{ value is same as('') or value is null ? 'Unnamed'|trans : value }}</a>
+                <a class="linkEditMain" href="{{ installation_path(screen.legacyScript) }}?{{ screen.editQuery(record.id)|url_encode }}">{{ value is same as('') or value is null ? 'Unnamed'|trans : value }}</a>
+            {% elseif column == 'name' %}{{ value is same as('') or value is null ? 'Unnamed'|trans : value }}
+            {% elseif column in ['event_time', 'last_check'] %}
+                {% if value > 0 %}{{ value|date('Y-m-d H:i:s') }}{% else %}{{ 'N/A'|trans }}{% endif %}
+            {% elseif column == 'full_name' and value is null and screen.value == 'login-history' %}{{ '(User Removed)'|trans }}
+            {% elseif column == 'auth_realm' and value is null %}{{ 'Unavailable'|trans }}
             {% elseif column in ['count_notify', 'count_log'] %}
                 {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed receiver editor with URL encoded primary key and a fixed tab. #}
                 <a href="{{ installation_path('managers.php') }}?{{ {action: 'edit', id: record.id, tab: column == 'count_notify' ? 'notifications' : 'logs'}|url_encode }}">{{ value }}</a>

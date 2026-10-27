@@ -149,7 +149,7 @@ final class LegacyConsoleMenu
     public static function listPath(string $script): string
     {
         foreach (ListScreen::cases() as $screen) {
-            if ($screen->legacyScript() === $script) {
+            if ($screen->legacyScript() === $script && $screen->legacyQuery() === []) {
                 return $screen->path();
             }
         }
@@ -164,7 +164,8 @@ final class LegacyConsoleMenu
         if (!$this->console instanceof RealmGrants) {
             return [];
         }
-        $definition = $this->primaryOnline() ? self::SECTIONS : self::OFFLINE_SECTIONS;
+        $online = $this->primaryOnline();
+        $definition = $online ? self::SECTIONS : self::OFFLINE_SECTIONS;
         try {
             $actor = $this->console->consoleActor();
             if ($actor === null) {
@@ -192,7 +193,7 @@ final class LegacyConsoleMenu
             $visible = [];
             foreach ($items as $path => [$label, $realm]) {
                 if (isset($granted[$realm])) {
-                    $visible[] = ['label' => $this->translator->trans($label, [], 'menu'), 'path' => self::listPath($path)];
+                    $visible[] = ['label' => $this->translator->trans($label, [], 'menu'), 'path' => $online ? self::listPath($path) : $path];
                 }
             }
             $sections[$section] = ['label' => $this->translator->trans($section, [], 'menu'), 'items' => $visible];

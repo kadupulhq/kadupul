@@ -18,6 +18,7 @@ use Kadupul\Automation\Infrastructure\Persistence\DbalAutomationAdministrationCa
 use Kadupul\DataInput\Infrastructure\Persistence\DbalDataInputAdministrationCatalog;
 use Kadupul\Graphing\Infrastructure\Persistence\DbalGraphingAdministrationCatalog;
 use Kadupul\IdentityAccess\Contract\Actor;
+use Kadupul\IdentityAccess\Infrastructure\Persistence\DbalIdentityAccessAdministrationCatalog;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\Navigation\Application\Query\AdministrationListDenied;
 use Kadupul\Navigation\Contract\Administration\ListFilters;
@@ -71,8 +72,8 @@ final class AdministrationCatalogNativeTest extends TestCase
         $this->database->executeStatement("SET SESSION sql_mode = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION,ONLY_FULL_GROUP_BY'");
         $source = file_get_contents(dirname(__DIR__, 2) . '/cacti.sql');
         self::assertNotFalse($source);
-        foreach (['host_template', 'host', 'graph_templates', 'graph_templates_graph', 'graph_local', 'data_template', 'data_template_data', 'data_source_profiles', 'data_input', 'aggregate_graph_templates', 'aggregate_graphs', 'snmp_query', 'snmp_query_graph', 'automation_snmp', 'automation_snmp_items', 'automation_networks', 'automation_processes', 'automation_ips', 'automation_graph_rules', 'automation_tree_rules', 'graph_tree', 'graph_tree_items', 'poller', 'snmpagent_managers', 'snmpagent_managers_notifications', 'snmpagent_notifications_log', 'settings', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_members', 'user_auth_group_realm'] as $table) {
-            self::assertSame(1, preg_match('/CREATE TABLE `?' . preg_quote($table, '/') . '`?\s*\(.*?\) ENGINE=[^;]+;/is', $source, $match), $table);
+        foreach (['host_template', 'host', 'graph_templates', 'graph_templates_graph', 'graph_local', 'data_template', 'data_template_data', 'data_source_profiles', 'data_input', 'aggregate_graph_templates', 'aggregate_graphs', 'snmp_query', 'snmp_query_graph', 'automation_snmp', 'automation_snmp_items', 'automation_networks', 'automation_processes', 'automation_ips', 'automation_graph_rules', 'automation_tree_rules', 'graph_tree', 'graph_tree_items', 'poller', 'snmpagent_managers', 'snmpagent_managers_notifications', 'snmpagent_notifications_log', 'settings', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_members', 'user_auth_group_realm', 'automation_devices', 'data_source_purge_temp', 'user_log', 'user_domains', 'user_domains_ldap', 'snmpagent_cache'] as $table) {
+            self::assertSame(1, preg_match('/CREATE TABLE `?' . preg_quote($table, '/') . '`?\s*\(.*?\)\s*ENGINE=[^;]+;/is', $source, $match), $table);
             $this->database->executeStatement($match[0]);
         }
     }
@@ -85,7 +86,7 @@ final class AdministrationCatalogNativeTest extends TestCase
         }
     }
 
-    public function testAllTenQueriesReadActualSchemaAndEverySupportedSort(): void
+    public function testAllQueriesReadActualSchemaAndEverySupportedSort(): void
     {
         foreach (ListScreen::cases() as $screen) {
             self::assertSame([], $this->catalog($screen)->read($screen, ListFilters::fromQuery($screen, [])));
@@ -98,7 +99,7 @@ final class AdministrationCatalogNativeTest extends TestCase
                     $records = $this->catalog($screen)->read($screen, ListFilters::fromQuery($screen, ['sort_column' => $column, 'sort_direction' => $direction]));
                     self::assertCount(1, $this->statements, 'One bounded query per list, independent of row count.');
                     self::assertNotEmpty($records, $screen->value . ':' . $column);
-                    self::assertSame([], array_diff(array_keys($records[0]), array_keys($screen->columns())), $screen->value);
+                    self::assertSame([], array_diff(array_keys($records[0]), [...array_keys($screen->columns()), 'id']), $screen->value);
                     self::assertSame([], array_diff(array_keys($screen->columns()), array_keys($records[0])), $screen->value);
                 }
             }
@@ -116,6 +117,53 @@ final class AdministrationCatalogNativeTest extends TestCase
         $network = $this->read(ListScreen::Networks)[0];
         self::assertSame('Running', $network['network_status']);
         self::assertSame([1, 1, 1, 5, 3], array_map('intval', [$network['pending'], $network['running'], $network['done'], $network['up_hosts'], $network['snmp_hosts']]));
+    }
+
+    public function testSecondBatchPreservesIdentityCountsAndDiagnosticOwnership(): void
+    {
+        $this->seed();
+        $users = array_column($this->read(ListScreen::Users), null, 'id');
+        self::assertSame('2026-01-01 12:00:00', $users[7]['last_attempt']);
+        self::assertNull($users[8]['last_attempt']);
+        self::assertSame('Domain seven', $users[8]['domain_name']);
+        $log = $this->read(ListScreen::LoginHistory);
+        self::assertCount(3, $log);
+        self::assertSame('2026-03-01 12:00:00', $log[0]['login_time']);
+        self::assertNull($log[0]['full_name']);
+        self::assertNull($log[1]['full_name']);
+        self::assertSame('Current User', $log[2]['full_name']);
+        self::assertCount(3, array_unique(array_column($log, 'id')));
+        self::assertSame(2, (int) $this->read(ListScreen::UserGroups)[0]['members']);
+        $domain = $this->read(ListScreen::UserDomains)[0];
+        self::assertSame(['operator-seven', 'displayName', 'mail'], [$domain['effective_user'], $domain['cn_full_name'], $domain['cn_email']]);
+        $trees = array_column($this->read(ListScreen::Trees), null, 'id');
+        self::assertSame([1, 2, 1, 1], array_map('intval', [$trees[7]['sites'], $trees[7]['branches'], $trees[7]['hosts'], $trees[7]['graphs']]));
+        self::assertSame(0, (int) $trees[8]['branches']);
+        $screen = ListScreen::Trees;
+        $filtered = $this->catalog($screen)->read($screen, ListFilters::fromQuery($screen, ['filter' => 'Subtree']));
+        self::assertCount(1, $filtered);
+        self::assertSame(2, (int) $filtered[0]['branches']);
+        $collectors = array_column($this->read(ListScreen::Collectors), null, 'id');
+        self::assertSame(1, (int) $collectors[7]['hosts']);
+        self::assertSame(4, (int) $collectors[8]['collector_status']);
+        self::assertSame(['orphan.rrd'], array_column($this->read(ListScreen::RrdCandidates), 'name'));
+        self::assertSame(2.0, (float) $this->read(ListScreen::RrdCandidates)[0]['size_kib']);
+        $discovered = $this->read(ListScreen::DiscoveredDevices)[0];
+        self::assertSame('router seven', $discovered['sys_name']);
+        self::assertSame(1234, (int) $discovered['uptime_seconds']);
+        self::assertCount(2, $this->read(ListScreen::SnmpObjects));
+        $notifications = $this->read(ListScreen::SnmpNotifications);
+        self::assertCount(4, $notifications);
+        self::assertSame('orphan', $notifications[0]['name']);
+        self::assertNull($notifications[0]['hostname']);
+        foreach (ListScreen::cases() as $screen) {
+            foreach ($this->read($screen) as $record) {
+                self::assertNotContains('not-public-fixture', $record, $screen->value);
+            }
+        }
+        self::assertSame(2, (int) $this->database->fetchOne('SELECT COUNT(*) FROM data_source_purge_temp'));
+        self::assertSame(4, (int) $this->database->fetchOne('SELECT COUNT(*) FROM snmpagent_notifications_log'));
+        self::assertSame(3, (int) $this->database->fetchOne('SELECT COUNT(*) FROM user_log'));
     }
 
     public function testPaginationIsBoundedAndStableAcrossDuplicateNames(): void
@@ -177,7 +225,7 @@ final class AdministrationCatalogNativeTest extends TestCase
 
     private function catalog(ListScreen $screen): AdministrationCatalog
     {
-        foreach ([new DbalGraphingAdministrationCatalog($this->database), new DbalDataInputAdministrationCatalog($this->database), new DbalAutomationAdministrationCatalog($this->database), new DbalPlatformAdministrationCatalog($this->database)] as $catalog) {
+        foreach ([new DbalIdentityAccessAdministrationCatalog($this->database), new DbalGraphingAdministrationCatalog($this->database), new DbalDataInputAdministrationCatalog($this->database), new DbalAutomationAdministrationCatalog($this->database), new DbalPlatformAdministrationCatalog($this->database)] as $catalog) {
             if ($catalog->supports($screen)) {
                 return $catalog;
             }
@@ -242,5 +290,33 @@ final class AdministrationCatalogNativeTest extends TestCase
         foreach ([7, 8, 9] as $id) {
             $this->insert('snmpagent_notifications_log', ['id' => $id, 'manager_id' => 7]);
         }
+        $this->insert('user_auth', ['id' => 7, 'username' => 'operator-seven', 'full_name' => 'Current User', 'enabled' => 'on', 'realm' => 0]);
+        $this->insert('user_auth', ['id' => 8, 'username' => 'different', 'full_name' => 'Peer', 'enabled' => 'on', 'realm' => 1007]);
+        $this->insert('user_auth_group', ['id' => 7, 'name' => 'Group seven', 'description' => 'Test group']);
+        $this->insert('user_auth_group_members', ['group_id' => 7, 'user_id' => 7]);
+        $this->insert('user_auth_group_members', ['group_id' => 7, 'user_id' => 8]);
+        $this->insert('user_domains', ['domain_id' => 7, 'domain_name' => 'Domain seven', 'type' => 1, 'defdomain' => 1, 'user_id' => 7]);
+        $this->insert('user_domains_ldap', ['domain_id' => 7, 'cn_full_name' => 'displayName', 'cn_email' => 'mail', 'specific_password' => 'not-public-fixture']);
+        foreach ([['operator-seven', 7, '2026-01-01 12:00:00'], ['old-name', 7, '2026-02-01 12:00:00'], ['operator-seven', 8, '2026-03-01 12:00:00']] as [$username, $id, $time]) {
+            $this->insert('user_log', ['username' => $username, 'user_id' => $id, 'time' => $time, 'result' => 1, 'ip' => '192.0.2.7']);
+        }
+        $this->database->update('graph_tree', ['user_id' => 7, 'modified_by' => 7], ['id' => 7]);
+        $this->insert('graph_tree', ['id' => 8, 'name' => 'Empty tree']);
+        $this->insert('graph_tree_items', ['id' => 8, 'graph_tree_id' => 7, 'site_id' => 3]);
+        $this->insert('graph_tree_items', ['id' => 9, 'graph_tree_id' => 7, 'host_id' => 7]);
+        $this->insert('graph_tree_items', ['id' => 10, 'graph_tree_id' => 7, 'local_graph_id' => 7]);
+        $this->insert('graph_tree_items', ['id' => 11, 'graph_tree_id' => 7, 'title' => 'Other branch']);
+        $this->insert('poller', ['id' => 7, 'name' => 'Collector seven', 'hostname' => 'collector.invalid', 'status' => 1, 'last_status' => date('Y-m-d H:i:s'), 'dbpass' => 'not-public-fixture']);
+        $this->insert('poller', ['id' => 8, 'name' => 'Disabled collector', 'disabled' => 'on', 'status' => 1, 'last_status' => '2000-01-01 00:00:00']);
+        $this->database->update('host', ['poller_id' => 7], ['id' => 7]);
+        $this->insert('automation_devices', ['id' => 7, 'hostname' => 'Found router', 'ip' => '192.0.2.7', 'sysName' => 'router:seven', 'sysUptime' => 123400, 'snmp_password' => 'not-public-fixture']);
+        $this->insert('data_source_purge_temp', ['id' => 7, 'name' => 'orphan.rrd', 'data_template_id' => 7, 'size' => 2048]);
+        $this->insert('data_source_purge_temp', ['id' => 8, 'name' => 'in-use.rrd', 'in_cacti' => 1]);
+        foreach (['1.3.6.1', '1.3.6.2'] as $oid) {
+            $this->insert('snmpagent_cache', ['oid' => $oid, 'name' => 'testNotification', 'mib' => $oid, 'value' => 'sample', 'description' => '<b>description</b>']);
+        }
+        $this->database->executeStatement("UPDATE snmpagent_notifications_log SET notification = 'testNotification', mib = '1.3.6.1', time = 1700000000");
+        $this->insert('snmpagent_notifications_log', ['id' => 10, 'manager_id' => 99, 'notification' => 'orphan', 'mib' => 'orphan', 'time' => 1700000001]);
+
     }
 }

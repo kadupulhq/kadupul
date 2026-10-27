@@ -2126,15 +2126,85 @@ function authenticated_access_adapter(string $root): string
 // Reviewed list admission includes the route-to-screen-to-realm mapping.
 const ADMINISTRATION_LIST_ACCESS_SOURCES = [
     'src/Navigation/Infrastructure/Persistence/DbalAdministrationListAccess.php' => 'f839c850fdaacc0d81ff9955968e26f7700c312e2aec243b7ce71c317af2509a',
-    'src/Navigation/Contract/Administration/ListScreen.php' => '426272c9ee76d892679ccacd9503a2f1240ea1a2850c6b72c602162726534abc',
+    'src/Navigation/Contract/Administration/ListScreen.php' => 'e533a5e479a85c3ef1e6ebbdf534d4907e4830fcd679419c848f26a051d83762',
     'src/Navigation/Application/Query/ViewAdministrationList.php' => 'a3cde50ce81aa19e6a47c155b04e0f6f2f0a1c4cc2fac41e7d4c2ed15936746f',
-    'src/Navigation/Infrastructure/Symfony/Controller/AdministrationListController.php' => '4432c3a9d046b7d9772e210b377479190454a9e16b81a83c1036eabe15deecab',
+    'src/Navigation/Infrastructure/Symfony/Controller/AdministrationListController.php' => '54dc1a7934059452acf4371fda223cb29718da6c9fddbb7198c54a4a858c54db',
 ];
 
 // Route prefix => feature realm, its access contract, the contract's only
 // adapter and the reviewed bytes of the files that decide it. A changed file
 // needs a fresh review.
 const REVIEWED_FEATURE_ACCESS = [
+    '/administration/users' => [
+        'label' => 'administration list',
+        'realm' => 1,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
+        'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    '/administration/user-groups' => [
+        'label' => 'administration list',
+        'realm' => 1,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
+        'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    '/administration/domains' => [
+        'label' => 'administration list',
+        'realm' => 1,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
+        'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    '/automation/discovered-devices' => [
+        'label' => 'administration list',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
+        'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    '/data-collection/collectors' => [
+        'label' => 'administration list',
+        'realm' => 3,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
+        'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    '/graphing/trees' => [
+        'label' => 'administration list',
+        'realm' => 4,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
+        'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    '/utilities/rrd-candidates' => [
+        'label' => 'administration list',
+        'realm' => 15,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
+        'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    '/utilities/snmp-objects' => [
+        'label' => 'administration list',
+        'realm' => 15,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
+        'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    '/utilities/snmp-notifications' => [
+        'label' => 'administration list',
+        'realm' => 15,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
+        'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    '/utilities/login-history' => [
+        'label' => 'administration list',
+        'realm' => 15,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
+        'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
     '/templates/devices' => [
         'label' => 'administration list',
         'realm' => 12,

@@ -25,6 +25,7 @@ class RouteSamples(unittest.TestCase):
                       'app.php/templates/aggregates', 'app.php/data-collection/queries', 'app.php/automation/snmp-options',
                       'app.php/automation/graph-rules', 'app.php/automation/tree-rules', 'app.php/automation/networks',
                       'app.php/utilities/notification-receivers',
+                      'app.php/administration/users', 'app.php/administration/user-groups', 'app.php/administration/domains', 'app.php/automation/discovered-devices', 'app.php/data-collection/collectors', 'app.php/graphing/trees', 'app.php/utilities/rrd-candidates', 'app.php/utilities/snmp-objects', 'app.php/utilities/snmp-notifications', 'app.php/utilities/login-history',
                       'app.php/inventory/device-templates/action/delete',
                       'app.php/aggregate-templates/new',
                       'app.php/graphing/gprint-presets/new',
@@ -38,7 +39,7 @@ class RouteSamples(unittest.TestCase):
         for entry in ('app.php/about', 'about.php', 'app.php/graphing/colors-other',
                       'app.php/inventory/devices/{id}', 'app.php/links-extra',
                       'app.php/utilities/rrd-checker', 'app.php/automation/templates-other',
-                      'automation_snmp.php', 'app.php/graphing/data-source-profiles-other'):
+                      'automation_snmp.php', 'app.php/graphing/data-source-profiles-other', 'app.php/administration/users-other'):
             with self.subTest(entry=entry):
                 self.assertFalse(has_feature_realm(entry))
 
