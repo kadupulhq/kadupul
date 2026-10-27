@@ -14,7 +14,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 {% set parameters = screen.scoped ? filters|merge({id: parentId}) : filters %}
 {% set parent = screen.scoped ? {id: parentId} : {} %}
 {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Enum-owned script and URL-encoded fixed action/numeric identity below the installation root. #}
-<p><a href="{{ installation_path(screen.legacyScript) }}{% if screen.legacyQuery(parentId) is not empty %}?{{ screen.legacyQuery(parentId)|url_encode }}{% endif %}">{{ 'Editing, actions and advanced filters'|trans }}</a></p>
+<p><a href="{{ installation_path(screen.legacyScript) }}{% if screen.legacyQuery(parentId) is not empty %}?{{ (operationParameters ?? screen.legacyQuery(parentId))|url_encode }}{% endif %}">{{ 'Editing, actions and advanced filters'|trans }}</a></p>
 {% if screen.value == 'plugins' %}<p>{{ 'Recorded database metadata only. Plugin discovery, compatibility checks and lifecycle actions remain on the plugin operation page.'|trans }}</p>{% endif %}
 {% if screen.value == 'my-reports' %}<p>{{ 'Only reports owned by your account are listed here.'|trans }}</p>{% endif %}
 {% if screen.value in ['reports', 'my-reports'] %}<p>{{ 'Reports without an owner are shown as disabled. Listing does not change their stored state.'|trans }}</p>{% endif %}
@@ -35,9 +35,26 @@ SPDX-License-Identifier: GPL-2.0-or-later
         <tr class="{{ loop.index is odd ? 'odd' : 'even' }}">
         {% for column, label in screen.columns %}
             {% set value = record[column] %}
-            <td>{% if column == 'name' and screen.value != 'plugins' %}
+            <td>{% if column == 'name' and screen.editableRecord %}
                 {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Enum-owned script/action and URL-encoded numeric record/parent identities. #}
                 <a href="{{ installation_path(screen.recordScript) }}?{{ screen.legacyQuery(parentId, record.id)|url_encode }}">{{ value is null or value is same as('') ? 'Unnamed'|trans : value }}</a>
+                {% set children = {
+                    'graph-template-inputs': {'management_graph_input_items': 'Associations'},
+                    'data-query-graphs': {'management_query_data_sources': 'Data Source Mappings', 'management_query_graph_suggestions': 'Graph Suggestions', 'management_query_data_suggestions': 'Data Suggestions'}
+                } %}
+                {% for destination, label in children[screen.value] ?? {} %}
+                    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed child routes and the record's numeric primary key. #}
+                    <a href="{{ path(destination, {id: record.id}) }}">{{ label|trans }}</a>
+                {% endfor %}
+            {% elseif column == 'name' and screen.metadataView %}{{ value is null or value is same as('') ? 'Unnamed'|trans : value }}
+                {% set children = {
+                    'snmp-mibs': {'management_mib_objects': 'Objects', 'management_mib_conventions': 'Textual Conventions', 'management_mib_notification_attributes': 'Notification Attributes'}
+                } %}
+                {% for destination, label in children[screen.value] ?? {} %}
+                    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed child route and the registered MIB numeric primary key. #}
+                    <a href="{{ path(destination, {id: record.id}) }}">{{ label|trans }}</a>
+                {% endfor %}
+            {% elseif column == 'resolved' %}{{ (value == 1 ? 'Yes' : 'No')|trans }}
             {% elseif column in ['enabled', 'active'] %}{{ (value == 'on' ? 'Enabled' : 'Disabled')|trans }}
             {% elseif screen.value == 'plugins' and column == 'status' %}
                 {% set statuses = {'-1': 'Not Compatible', '0': 'Not Installed', '1': 'Active', '2': 'Awaiting Configuration', '3': 'Awaiting Upgrade', '4': 'Installed'} %}

@@ -41,6 +41,7 @@ final class ManagementCatalogRoutesTest extends TestCase
     private bool $missing = false;
     private bool $empty = false;
     private array $reads = [];
+    private ?array $operationOverride = null;
 
     protected function setUp(): void
     {
@@ -80,7 +81,7 @@ final class ManagementCatalogRoutesTest extends TestCase
                 $record['mailtime'] = 1700000000;
             }
             $record['name'] = 'Router <img src=x onerror=alert(1)>';
-            return new CatalogPage($this->empty ? [] : array_fill(0, $filters->rows + 1, $record), $screen->scoped() ? 'Parent <b>' : null);
+            return new CatalogPage($this->empty ? [] : array_fill(0, $filters->rows + 1, $record), $screen->scoped() ? 'Parent <b>' : null, $this->operationOverride);
         });
         $container->set(ViewManagementCatalog::class, new ViewManagementCatalog([$catalog], $access));
         $configuration = $this->createStub(LegacyConfiguration::class);
@@ -103,7 +104,7 @@ final class ManagementCatalogRoutesTest extends TestCase
     #[DataProvider('screens')]
     public function testEveryScreenRendersEscapedDataAndPreservesLegacyOperations(CatalogScreen $screen, string $path): void
     {
-        $response = $this->get($path . '?filter=router&rows=10&sort_column=id&sort_direction=DESC&page=2');
+        $response = $this->get($path . '?filter=router&rows=10&sort_column=name&sort_direction=DESC&page=2');
         self::assertSame(200, $response->getStatusCode(), (string) $response->getContent());
         self::assertStringContainsString('no-store', (string) $response->headers->get('Cache-Control'));
         $html = (string) $response->getContent();
@@ -118,7 +119,7 @@ final class ManagementCatalogRoutesTest extends TestCase
         self::assertSame(10, $xpath->query('//main//tbody/tr')->length);
         self::assertSame(0, $xpath->query('//main//script | //main//*[@onclick] | //main//form[@method="post"]')->length);
         $next = $xpath->query('//a[@rel="next"]')->item(0)->getAttribute('href');
-        foreach (['filter=router', 'rows=10', 'sort_column=id', 'sort_direction=DESC', 'page=3'] as $part) {
+        foreach (['filter=router', 'rows=10', 'sort_column=name', 'sort_direction=DESC', 'page=3'] as $part) {
             self::assertStringContainsString($part, $next);
         }
         if ($screen->scoped()) {
@@ -127,7 +128,7 @@ final class ManagementCatalogRoutesTest extends TestCase
         }
         $legacy = '/monitor/' . $screen->legacyScript();
         self::assertStringContainsString($legacy, $html);
-        if ($screen !== CatalogScreen::Plugins) {
+        if ($screen->editableRecord()) {
             $query = http_build_query($screen->legacyQuery(4, 7));
             self::assertStringContainsString('/monitor/' . $screen->recordScript() . '?' . htmlspecialchars($query, ENT_QUOTES), $html);
         }
@@ -245,6 +246,8 @@ final class ManagementCatalogRoutesTest extends TestCase
         try {
             $container = $kernel->getContainer()->get('test.service_container');
             $catalogs = [
+                $container->get(\Kadupul\Graphing\Infrastructure\Persistence\DbalMappingCatalog::class),
+                $container->get(\Kadupul\Platform\Infrastructure\Persistence\DbalMibCatalog::class),
                 $container->get(\Kadupul\Graphing\Infrastructure\Persistence\DbalGraphingManagementCatalog::class),
                 $container->get(\Kadupul\DataInput\Infrastructure\Persistence\DbalQueryGraphCatalog::class),
                 $container->get(\Kadupul\Reporting\Infrastructure\Persistence\DbalReportManagementCatalog::class),
@@ -255,6 +258,28 @@ final class ManagementCatalogRoutesTest extends TestCase
             }
         } finally {
             $kernel->shutdown();
+        }
+    }
+
+    public function testOperationLinksCarryTheAuthoritativeOwningTemplateAndQuery(): void
+    {
+        $this->operationOverride = ['action' => 'input_edit', 'id' => 4, 'graph_template_id' => 99];
+        $response = $this->get('/management/graph-input-items/4');
+        self::assertSame(200, $response->getStatusCode());
+        self::assertStringContainsString('/monitor/graph_templates_inputs.php?action=input_edit&amp;id=4&amp;graph_template_id=99', (string) $response->getContent());
+        $this->operationOverride = ['action' => 'item_edit', 'id' => 4, 'snmp_query_id' => 98];
+        self::assertStringContainsString('/monitor/data_queries.php?action=item_edit&amp;id=4&amp;snmp_query_id=98', (string) $this->get('/management/query-data-sources/4')->getContent());
+        self::assertSame(200, $this->get('/management/mib-objects/4294967295')->getStatusCode());
+        self::assertSame(4294967295, $this->reads[2][3]);
+        self::assertSame(400, $this->get('/management/mib-objects/4294967296')->getStatusCode());
+    }
+
+    public function testMibRegistryLinksToEachNativeMetadataView(): void
+    {
+        $response = $this->get('/management/snmp-mibs');
+        self::assertSame(200, $response->getStatusCode());
+        foreach (['mib-objects', 'mib-conventions', 'mib-notification-attributes'] as $child) {
+            self::assertStringContainsString('/management/' . $child . '/7', (string) $response->getContent());
         }
     }
 

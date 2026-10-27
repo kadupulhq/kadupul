@@ -155,7 +155,7 @@ final class LegacyConsoleMenu
             }
         }
         foreach (CatalogScreen::cases() as $screen) {
-            if (!$screen->scoped() && $screen->legacyScript() === $script) {
+            if (!$screen->scoped() && !$screen->metadataView() && $screen->legacyScript() === $script) {
                 return $screen->path();
             }
         }

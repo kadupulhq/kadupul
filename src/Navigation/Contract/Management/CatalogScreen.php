@@ -23,9 +23,31 @@ enum CatalogScreen: string
     case DeviceGraphs = 'device-template-graphs';
     case QueryGraphs = 'data-query-graphs';
 
+    case InputItems = 'graph-input-items';
+    case QuerySources = 'query-data-sources';
+    case QueryGraphSuggestions = 'query-graph-suggestions';
+    case QueryDataSuggestions = 'query-data-suggestions';
+    case QueryDeviceTemplates = 'query-device-templates';
+    case GraphDeviceTemplates = 'graph-device-templates';
+    case Mibs = 'snmp-mibs';
+    case MibObjects = 'mib-objects';
+    case MibConventions = 'mib-conventions';
+    case MibAttributes = 'mib-notification-attributes';
+
     public function title(): string
     {
         return match ($this) {
+            self::InputItems => 'Graph Input Associations',
+            self::QuerySources => 'Query Data Source Mappings',
+            self::QueryGraphSuggestions => 'Query Graph Suggested Values',
+            self::QueryDataSuggestions => 'Query Data Suggested Values',
+            self::QueryDeviceTemplates => 'Query Device Templates',
+            self::GraphDeviceTemplates => 'Graph Device Templates',
+            self::Mibs => 'Registered SNMP MIBs',
+            self::MibObjects => 'MIB Objects',
+            self::MibConventions => 'MIB Textual Conventions',
+            self::MibAttributes => 'MIB Notification Attributes',
+
             self::Graphs => 'Graphs', self::DataSources => 'Data Sources', self::Aggregates => 'Aggregate Graphs',
             self::AdminReports => 'Administrator Reports', self::MyReports => 'My Reports', self::Plugins => 'Recorded Plugins',
             self::GraphItems => 'Graph Template Items', self::GraphInputs => 'Graph Template Inputs',
@@ -36,15 +58,32 @@ enum CatalogScreen: string
     public function realm(): int
     {
         return match ($this) {
+            self::InputItems => 10,
+            self::QuerySources => 13,
+            self::QueryGraphSuggestions => 13,
+            self::QueryDataSuggestions => 13,
+            self::QueryDeviceTemplates => 13,
+            self::GraphDeviceTemplates => 10,
+            self::Mibs => 15,
+            self::MibObjects => 15,
+            self::MibConventions => 15,
+            self::MibAttributes => 15,
+
             self::Graphs, self::Aggregates => 5, self::DataSources => 3,
             self::AdminReports => 21, self::MyReports => 22, self::Plugins => 101,
             self::GraphItems, self::GraphInputs => 10, self::DeviceGraphs => 12, self::QueryGraphs => 13,
         };
     }
 
+    /** @return list<int> Grants required to display related resource names. */
+    public function relatedRealms(): array
+    {
+        return in_array($this, [self::QueryDeviceTemplates, self::GraphDeviceTemplates], true) ? [12] : [];
+    }
+
     public function scoped(): bool
     {
-        return in_array($this, [self::GraphItems, self::GraphInputs, self::DeviceGraphs, self::QueryGraphs], true);
+        return in_array($this, [self::InputItems, self::QuerySources, self::QueryGraphSuggestions, self::QueryDataSuggestions, self::QueryDeviceTemplates, self::GraphDeviceTemplates, self::MibObjects, self::MibConventions, self::MibAttributes, self::GraphItems, self::GraphInputs, self::DeviceGraphs, self::QueryGraphs], true);
     }
 
     public function route(): string
@@ -60,6 +99,10 @@ enum CatalogScreen: string
     public function legacyScript(): string
     {
         return match ($this) {
+            self::InputItems => 'graph_templates_inputs.php',
+            self::QuerySources, self::QueryGraphSuggestions, self::QueryDataSuggestions, self::QueryDeviceTemplates => 'data_queries.php',
+            self::GraphDeviceTemplates => 'graph_templates.php',
+            self::Mibs, self::MibObjects, self::MibConventions, self::MibAttributes => 'utilities.php',
             self::Graphs => 'graphs.php', self::DataSources => 'data_sources.php', self::Aggregates => 'aggregate_graphs.php',
             self::AdminReports => 'reports_admin.php', self::MyReports => 'reports_user.php', self::Plugins => 'plugins.php',
             self::GraphItems, self::GraphInputs => 'graph_templates.php', self::DeviceGraphs => 'host_templates.php', self::QueryGraphs => 'data_queries.php',
@@ -69,7 +112,19 @@ enum CatalogScreen: string
     /** @return array<string, string> Complete sort allowlist. */
     public function columns(): array
     {
+        if ($this === self::MibConventions) {
+            return ['name' => 'Name', 'type' => 'Type', 'description' => 'Description'];
+        }
+        if ($this === self::MibAttributes) {
+            return ['name' => 'Notification', 'attribute' => 'Attribute', 'sequence' => 'Sequence'];
+        }
         return ['name' => 'Name', 'id' => 'ID'] + match ($this) {
+            self::InputItems => ['sequence' => 'Sequence', 'type' => 'Graph Type ID', 'consolidation' => 'Consolidation ID', 'resolved' => 'Template Item Found'],
+            self::QuerySources => ['data_template_id' => 'Data Template ID', 'template' => 'Data Template', 'data_source' => 'Data Source', 'resolved' => 'Template Source Found'],
+            self::QueryGraphSuggestions => ['sequence' => 'Sequence', 'value' => 'Suggested Value'],
+            self::QueryDataSuggestions => ['sequence' => 'Sequence', 'data_template_id' => 'Data Template ID', 'template' => 'Data Template', 'value' => 'Suggested Value'],
+            self::QueryDeviceTemplates, self::GraphDeviceTemplates, self::Mibs => [],
+            self::MibObjects => ['type' => 'Type', 'otype' => 'Object Type', 'kind' => 'Kind', 'access' => 'Access', 'description' => 'Description'],
             self::Graphs => ['device' => 'Device', 'template' => 'Graph Template', 'size' => 'Size', 'query_id' => 'Data Query ID', 'snmp_index' => 'Index'],
             self::DataSources => ['device' => 'Device', 'template' => 'Data Template', 'active' => 'Status', 'rrd_step' => 'RRD Step', 'profile' => 'Data Source Profile'],
             self::Aggregates => ['template' => 'Aggregate Template', 'graph_id' => 'Local Graph ID', 'size' => 'Size', 'members' => 'Member Graphs'],
@@ -85,6 +140,15 @@ enum CatalogScreen: string
     /** Fixed legacy destination and encoded data; never operator-supplied URLs. */
     public function legacyQuery(int $parentId = 0, ?int $recordId = null): array
     {
+        if ($this->metadataView()) {
+            return match ($this) {
+                self::InputItems => ['action' => 'input_edit', 'id' => $parentId],
+                self::QuerySources, self::QueryGraphSuggestions, self::QueryDataSuggestions => ['action' => 'item_edit', 'id' => $parentId],
+                self::QueryDeviceTemplates => ['action' => 'edit', 'id' => $parentId],
+                self::GraphDeviceTemplates => ['action' => 'template_edit', 'id' => $parentId],
+                default => ['action' => 'view_snmpagent_cache'],
+            };
+        }
         if ($recordId === null) {
             return $this->scoped() ? ['action' => in_array($this, [self::GraphItems, self::GraphInputs], true) ? 'template_edit' : 'edit', 'id' => $parentId] : [];
         }
@@ -99,6 +163,21 @@ enum CatalogScreen: string
             self::QueryGraphs => ['action' => 'item_edit', 'id' => $recordId, 'snmp_query_id' => $parentId],
             self::Plugins => [],
         };
+    }
+
+    public function metadataView(): bool
+    {
+        return in_array($this, [self::InputItems, self::QuerySources, self::QueryGraphSuggestions, self::QueryDataSuggestions, self::QueryDeviceTemplates, self::GraphDeviceTemplates, self::Mibs, self::MibObjects, self::MibConventions, self::MibAttributes], true);
+    }
+
+    public function editableRecord(): bool
+    {
+        return !$this->metadataView() && $this !== self::Plugins;
+    }
+
+    public function maximumParentId(): int
+    {
+        return in_array($this, [self::MibObjects, self::MibConventions, self::MibAttributes], true) ? 4294967295 : 16777215;
     }
 
     public function recordScript(): string
