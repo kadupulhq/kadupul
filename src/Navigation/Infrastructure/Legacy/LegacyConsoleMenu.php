@@ -193,7 +193,11 @@ final class LegacyConsoleMenu
             $visible = [];
             foreach ($items as $path => [$label, $realm]) {
                 if (isset($granted[$realm])) {
-                    $visible[] = ['label' => $this->translator->trans($label, [], 'menu'), 'path' => $online ? self::listPath($path) : $path];
+                    $destination = $online ? self::listPath($path) : $path;
+                    if ($online && $path === 'utilities.php') {
+                        $destination = 'app.php/utilities/system';
+                    }
+                    $visible[] = ['label' => $this->translator->trans($label, [], 'menu'), 'path' => $destination];
                 }
             }
             $sections[$section] = ['label' => $this->translator->trans($section, [], 'menu'), 'items' => $visible];

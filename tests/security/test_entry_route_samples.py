@@ -31,14 +31,14 @@ class RouteSamples(unittest.TestCase):
                       'app.php/graphing/gprint-presets/new',
                       'app.php/graphing/color-templates/new',
                       'app.php/graphing/color-template-items/legacy',
-                      'app.php/utilities/rrd-check/purge',
+                      'app.php/utilities/rrd-check/purge', 'app.php/utilities/system', 'app.php/utilities/system/poller-cache',
                       'app.php/graphing/data-source-profiles/{id}/rras/{rraId}/edit',
                       'data_source_profiles.php', 'data_input.php', 'links.php', 'host_templates.php', 'rrdcheck.php'):
             with self.subTest(entry=entry):
                 self.assertTrue(has_feature_realm(entry))
         for entry in ('app.php/about', 'about.php', 'app.php/graphing/colors-other',
                       'app.php/inventory/devices/{id}', 'app.php/links-extra',
-                      'app.php/utilities/rrd-checker', 'app.php/automation/templates-other',
+                      'app.php/utilities/rrd-checker', 'app.php/utilities/system-extra', 'app.php/automation/templates-other',
                       'automation_snmp.php', 'app.php/graphing/data-source-profiles-other', 'app.php/administration/users-other'):
             with self.subTest(entry=entry):
                 self.assertFalse(has_feature_realm(entry))

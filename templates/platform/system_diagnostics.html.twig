@@ -1,0 +1,79 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% trans_default_domain 'diagnostics' %}
+{% block title %}{{ screen.title|trans }} - Kadupul{% endblock %}
+{% block body %}
+<main id="system-diagnostics">
+    <h1>{{ screen.title|trans }}</h1>
+    <nav aria-label="{{ 'System Utilities'|trans }}">
+        <ul>
+        {% for item in screens %}
+            {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Enum cases select only the ten fixed diagnostic routes; path() encodes the URL. #}
+            <li><a href="{{ path('platform_diagnostics_' ~ item.value|replace({'-': '_'})) }}"{% if item == screen %} aria-current="page"{% endif %}>{{ item.title|trans }}</a></li>
+        {% endfor %}
+        </ul>
+    </nav>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- The enum supplies a fixed legacy script/query below the validated installation root. #}
+    <p><a href="{{ installation_path('utilities.php' ~ screen.legacyQuery) }}">{{ 'Advanced diagnostics and maintenance'|trans }}</a></p>
+    {% if screen.value == 'menu' %}
+        <p>{{ 'Choose a diagnostic view. Maintenance, exports and advanced filters remain available through the existing operation pages.'|trans }}</p>
+        <ul>
+        {% for label, destination in {'Log Administration': 'utilities.php?action=view_logfile', 'View User Log': 'utilities.php?action=view_user_log', 'RRDfile Cleaner': 'rrdcleaner.php', 'RRDfile Checker': 'rrdcheck.php', 'SNMP Agent Cache': 'utilities.php?action=view_snmpagent_cache', 'SNMP Notification History': 'utilities.php?action=view_snmpagent_events', 'SNMP Notification Receivers': 'managers.php'} %}
+            {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Destinations are literals from this template, never supplied data. #}
+            <li><a href="{{ installation_path(destination) }}">{{ label|trans }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        {% if screen.value == 'summary' %}<p>{{ 'Recorded configuration and inventory counts. External tool probes and tuning recommendations are available in advanced diagnostics.'|trans }}</p>{% endif %}
+        {% if screen.value == 'database-settings' or screen.value == 'php' %}<p>{{ 'Only approved diagnostic settings are displayed. Credentials and environment variables are excluded.'|trans }}</p>{% endif %}
+        {% if screen.value == 'database-status' %}<p>{{ 'Numeric server counters are displayed.'|trans }}</p>{% endif %}
+        {% if screen.value == 'poller-cache' %}<p>{{ 'Command arguments and SNMP credentials are excluded.'|trans }}</p>{% endif %}
+        {% if screen.value == 'boost' %}<p>{{ 'Recorded Boost settings and database statistics. Row estimates are not exact queue counts. Refresh to read current values.'|trans }}</p>{% endif %}
+        <form method="get" aria-label="{{ 'Diagnostic filters'|trans }}">
+            <label for="filter">{{ 'Search'|trans }}</label>
+            <input id="filter" name="filter" value="{{ filters.query.filter }}" maxlength="512">
+            <label for="rows">{{ 'Rows'|trans }}</label>
+            <select id="rows" name="rows">{% for count in [10, 25, 50, 100] %}<option value="{{ count }}"{% if count == filters.rows %} selected{% endif %}>{{ count }}</option>{% endfor %}</select>
+            {% for name, label in {'host_id': 'Device ID', 'template_id': 'Template ID', 'snmp_query_id': 'Data Query ID'} %}
+                {% if filters.query[name] is defined %}
+                    <label for="{{ name }}">{{ label|trans }}</label><input type="number" id="{{ name }}" name="{{ name }}" value="{{ filters.query[name] }}" min="-1" max="16777215">
+                {% endif %}
+            {% endfor %}
+            {% for control in [['poller_action', 'Action', {'-1': 'Any', '0': 'SNMP', '1': 'Script', '2': 'Script Server'}], ['status', 'Status', {'-1': 'Any', '0': 'Disabled', '1': 'Enabled'}], ['with_index', 'Include Index', {'0': 'No', '1': 'Yes'}]] %}
+                {% set name = control[0] %}{% set label = control[1] %}{% set choices = control[2] %}
+                {% if filters.query[name] is defined %}
+                    <label for="{{ name }}">{{ label|trans }}</label><select id="{{ name }}" name="{{ name }}">{% for value, text in choices %}<option value="{{ value }}"{% if value == filters.query[name] %} selected{% endif %}>{{ text|trans }}</option>{% endfor %}</select>
+                {% endif %}
+            {% endfor %}
+            <button type="submit">{{ 'Apply'|trans }}</button>
+        </form>
+        {% if screen.value in ['poller-cache', 'data-query-cache'] %}<p>{{ 'Use -1 for any device, template or query. In the poller cache, device 0 selects records without a device.'|trans }}</p>{% endif %}
+        <table class="cactiTable">
+            <caption>{{ screen.title|trans }}</caption>
+            <thead><tr>{% for column in page.columns %}<th scope="col">{{ column|trans }}</th>{% endfor %}</tr></thead>
+            <tbody>
+            {% for row in page.rows %}
+                <tr>{% for cell in row %}<td>{% if loop.first and screen.value in ['summary', 'php', 'boost'] %}{{ cell|trans }}{% else %}{% if screen.value == 'php' and cell == 'Installed' %}{{ 'Installed'|trans }}{% else %}{{ cell }}{% endif %}{% endif %}</td>{% endfor %}</tr>
+            {% else %}
+                <tr><td colspan="{{ page.columns|length }}">{{ 'No diagnostic records found.'|trans }}</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <nav aria-label="{{ 'Diagnostic pages'|trans }}">
+            {% set route = 'platform_diagnostics_' ~ screen.value|replace({'-': '_'}) %}
+            {% if filters.page > 1 %}
+                {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed enum route and validated query parameters, encoded by path(). #}
+                <a rel="prev" href="{{ path(route, filters.query|merge({'page': filters.page - 1})) }}">{{ 'Previous'|trans }}</a>
+            {% endif %}
+            <span>{{ 'Page %page%'|trans({'%page%': filters.page}) }}</span>
+            {% if page.hasNext and filters.page < 99999 %}
+                {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed enum route and validated query parameters, encoded by path(). #}
+                <a rel="next" href="{{ path(route, filters.query|merge({'page': filters.page + 1})) }}">{{ 'Next'|trans }}</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</main>
+{% endblock %}

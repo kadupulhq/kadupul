@@ -1898,3 +1898,12 @@ they do not run legacy pages or capture their HTML. Editors and operational
 actions still use the existing PHP forms. Login identity joins, tree counts,
 read-only navigation, collector routing and diagnostic limitations are documented
 with the verification evidence. LTS is unchanged.
+
+## System Utilities diagnostic views
+
+The [ten-view diagnostics slice](migrations/system-diagnostics-batch-10.md) adds
+Symfony/Twig views for System Utilities, six technical-support tabs, Boost status
+and the two device caches. These views receive explicit read models and retain
+current-account, realm and device permissions. Maintenance actions, detailed
+legacy diagnostics and plugin entries keep their existing paths. The slice does
+not retire `utilities.php` or claim a reduction in its global statements.
