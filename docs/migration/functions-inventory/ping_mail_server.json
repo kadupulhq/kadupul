@@ -3,8 +3,8 @@
     "name": "ping_mail_server",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6135,
-        "end_line": 6185,
+        "start_line": 6132,
+        "end_line": 6182,
         "line_count": 51,
         "signature": {
             "parameters": [

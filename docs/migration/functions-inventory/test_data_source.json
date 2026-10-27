@@ -4,8 +4,8 @@
     "static": {
         "file": "lib/functions.php",
         "start_line": 2479,
-        "end_line": 2945,
-        "line_count": 467,
+        "end_line": 2948,
+        "line_count": 470,
         "signature": {
             "parameters": [
                 {
@@ -58,7 +58,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 4, "core_outside_functions_php": 0, "tests": 7, "plugins": 0},
+        "fan_out": {"core": 4, "core_outside_functions_php": 0, "tests": 11, "plugins": 0},
         "body": {
             "uses_global": ["called_by_script_server"],
             "static_variables": [],

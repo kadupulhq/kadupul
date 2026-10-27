@@ -3,8 +3,8 @@
     "name": "appendHeaderSuppression",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5495,
-        "end_line": 5502,
+        "start_line": 5492,
+        "end_line": 5499,
         "line_count": 8,
         "signature": {
             "parameters": [

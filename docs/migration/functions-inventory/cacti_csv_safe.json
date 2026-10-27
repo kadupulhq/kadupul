@@ -3,8 +3,8 @@
     "name": "cacti_csv_safe",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8011,
-        "end_line": 8032,
+        "start_line": 8008,
+        "end_line": 8029,
         "line_count": 22,
         "signature": {
             "parameters": [

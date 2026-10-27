@@ -3,8 +3,8 @@
     "name": "get_hash_data_input",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 4762,
-        "end_line": 4781,
+        "start_line": 4759,
+        "end_line": 4778,
         "line_count": 20,
         "signature": {
             "parameters": [

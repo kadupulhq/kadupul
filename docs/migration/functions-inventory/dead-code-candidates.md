@@ -85,8 +85,8 @@ or deprecating anything. Do not remove a function on the count alone.
 | `is_urlencoded` | 2 | 1 | 4 | 0 | Platform/Domain/Text |
 | `normalize_poller_multi_value_result` | 2 | 1 | 4 | 0 | DataInput/Application |
 | `CactiErrorHandler` | 2 | 2 | 5 | 0 | Platform/Infrastructure/Legacy |
-| `get_full_test_script_path` | 2 | 0 | 5 | 0 | DataInput/Application |
 | `is_hex_string` | 2 | 2 | 5 | 0 | Platform/Domain/Text |
+| `get_full_test_script_path` | 2 | 0 | 6 | 0 | DataInput/Application |
 | `cacti_cookie_session_set` | 2 | 1 | 7 | 0 | IdentityAccess |
 | `cacti_format_ipv6_colon` | 2 | 2 | 8 | 0 | Platform/Domain/Network |
 | `cacti_csv_safe` | 2 | 1 | 9 | 0 | Platform/Domain/Security |
