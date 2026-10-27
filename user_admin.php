@@ -1615,7 +1615,7 @@ function user_realms_edit($header_label)
 
 function settings_edit($header_label)
 {
-    global $settings_user, $tabs_graphs, $graph_views;
+    global $settings_user, $tabs_graphs;
 
     /* ================= input validation ================= */
     get_filter_request_var('id');

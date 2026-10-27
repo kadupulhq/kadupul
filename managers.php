@@ -264,8 +264,7 @@ function manager()
 
 function manager_edit()
 {
-    global $config, $snmp_auth_protocols, $snmp_priv_protocols, $snmp_versions,
-    $tabs_manager_edit, $fields_manager_edit, $manager_notification_actions;
+    global $config, $tabs_manager_edit, $fields_manager_edit;
 
     /* ================= input validation ================= */
     get_filter_request_var('id');

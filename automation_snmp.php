@@ -156,7 +156,7 @@ function form_automation_snmp_save()
  ------------------------ */
 function form_automation_snmp_actions()
 {
-    global $config, $automation_snmp_actions;
+    global $automation_snmp_actions;
 
     /* ================= input validation ================= */
     get_filter_request_var('drp_action');
@@ -410,7 +410,7 @@ function automation_snmp_item_remove()
 
 function automation_snmp_item_edit()
 {
-    global $config, $snmp_auth_protocols, $snmp_priv_protocols, $snmp_versions, $snmp_security_levels;
+    global $snmp_versions;
 
     #include_once($config['base_path'].'/plugins/mactrack/lib/automation_functions.php');
 
@@ -484,7 +484,7 @@ function automation_snmp_item_edit()
 
 function automation_snmp_edit()
 {
-    global $config, $fields_automation_snmp_edit;
+    global $fields_automation_snmp_edit;
 
     /* ================= input validation ================= */
     get_filter_request_var('id');
@@ -653,7 +653,7 @@ function automation_snmp_edit()
 
 function automation_snmp()
 {
-    global $config, $item_rows, $automation_snmp_actions;
+    global $item_rows, $automation_snmp_actions;
 
     /* ================= input validation and session storage ================= */
     $filters = array(

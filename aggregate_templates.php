@@ -259,7 +259,7 @@ function aggregate_get_graph_items($table, $id) {}
  */
 function aggregate_form_actions()
 {
-    global $aggregate_actions, $config;
+    global $aggregate_actions;
 
     /* ================= input validation ================= */
     get_filter_request_var('drp_action');
@@ -342,7 +342,7 @@ function aggregate_form_actions()
  */
 function aggregate_template_edit()
 {
-    global $image_types, $struct_aggregate_template;
+    global $struct_aggregate_template;
 
     /* ================= input validation ================= */
     get_filter_request_var('id');
@@ -550,7 +550,7 @@ function aggregate_template_edit()
  */
 function aggregate_template()
 {
-    global $aggregate_actions, $item_rows, $config;
+    global $aggregate_actions, $item_rows;
 
     /* ================= input validation and session storage ================= */
     $filters = array(

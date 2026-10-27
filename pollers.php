@@ -421,7 +421,7 @@ function poller_host_duplicate($poller_id, $host) {
 }
 
 function form_actions() {
-	global $config, $poller_actions;
+	global $poller_actions;
 
 	/* ================= input validation ================= */
 	get_filter_request_var('drp_action', FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/^([a-zA-Z0-9_]+)$/')));

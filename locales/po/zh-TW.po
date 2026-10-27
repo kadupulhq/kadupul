@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-27 14:09-0700\n"
+"POT-Creation-Date: 2026-10-27 12:58-0700\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -52,7 +52,7 @@ msgstr "本程序的發布是希望它有用，但沒有任何擔保;甚至沒�
 #: data_queries.php:16 data_queries.php:863 data_queries.php:972
 #: data_queries.php:1252 data_sources.php:23 data_sources.php:1249
 #: data_templates.php:19 data_templates.php:791 graph_templates.php:22
-#: graph_templates.php:517 graphs.php:32 host_templates.php:20
+#: graph_templates.php:516 graphs.php:32 host_templates.php:20
 #: host_templates.php:485 host_templates.php:542 include/global_arrays.php:1658
 #: include/global_settings.php:325 lib/api_automation.php:1323
 #: lib/api_automation.php:1386 lib/api_automation.php:1457 lib/html.php:1505
@@ -125,7 +125,7 @@ msgstr "單擊“繼續”以刪除以下聚合圖。"
 #: aggregate_templates.php:316 automation_devices.php:211
 #: automation_devices.php:220 automation_graph_rules.php:332
 #: automation_networks.php:386 automation_snmp.php:245 automation_snmp.php:368
-#: automation_tree_rules.php:309 data_queries.php:413 data_queries.php:427
+#: automation_tree_rules.php:308 data_queries.php:413 data_queries.php:427
 #: data_queries.php:611 data_sources.php:616 data_sources.php:631
 #: data_sources.php:640 data_sources.php:649 data_sources.php:658
 #: data_sources.php:664 data_templates.php:486 data_templates.php:498
@@ -134,16 +134,16 @@ msgstr "單擊“繼續”以刪除以下聚合圖。"
 #: graph_view.php:1043 graphs.php:886 graphs.php:902 graphs.php:913
 #: graphs.php:924 graphs.php:939 graphs.php:956 graphs.php:965 graphs.php:1167
 #: graphs.php:1210 graphs.php:1232 graphs.php:1263 graphs.php:1275
-#: graphs.php:1859 host_templates.php:222 host_templates.php:236
+#: graphs.php:1858 host_templates.php:222 host_templates.php:236
 #: host_templates.php:247 host_templates.php:302 host_templates.php:375
 #: lib/clog_webapi.php:225 lib/html.php:2819 lib/html_form.php:1397
 #: lib/html_form.php:1414 lib/html_form.php:1425 lib/html_reports.php:632
-#: managers.php:1066 managers.php:1127 plugins.php:712 pollers.php:549
+#: managers.php:1065 managers.php:1126 plugins.php:712 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:762
 #: tree.php:771 tree.php:780 tree.php:789 user_admin.php:252 user_admin.php:292
 #: user_admin.php:303 user_admin.php:314 user_admin.php:337
-#: user_domains.php:220 user_domains.php:229 user_domains.php:238
-#: user_domains.php:247 user_group_admin.php:460 user_group_admin.php:479
+#: user_domains.php:219 user_domains.php:228 user_domains.php:237
+#: user_domains.php:246 user_group_admin.php:460 user_group_admin.php:479
 #: user_group_admin.php:490 user_group_admin.php:501
 #, fuzzy
 msgid "Cancel"
@@ -155,7 +155,7 @@ msgstr "取消"
 #: aggregate_templates.php:316 automation_devices.php:211
 #: automation_devices.php:220 automation_graph_rules.php:332
 #: automation_networks.php:378 automation_snmp.php:218 automation_snmp.php:369
-#: automation_tree_rules.php:309 data_queries.php:413 data_queries.php:427
+#: automation_tree_rules.php:308 data_queries.php:413 data_queries.php:427
 #: data_queries.php:612 data_sources.php:616 data_sources.php:631
 #: data_sources.php:640 data_sources.php:649 data_sources.php:658
 #: data_sources.php:664 data_templates.php:486 data_templates.php:498
@@ -166,12 +166,12 @@ msgstr "取消"
 #: graphs.php:1232 graphs.php:1263 graphs.php:1275 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
 #: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2818
-#: lib/html_reports.php:574 managers.php:1066 managers.php:1127 pollers.php:549
+#: lib/html_reports.php:574 managers.php:1065 managers.php:1126 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:762
 #: tree.php:771 tree.php:780 tree.php:789 user_admin.php:252 user_admin.php:292
 #: user_admin.php:303 user_admin.php:314 user_admin.php:337
-#: user_domains.php:220 user_domains.php:229 user_domains.php:238
-#: user_domains.php:247 user_group_admin.php:460 user_group_admin.php:479
+#: user_domains.php:219 user_domains.php:228 user_domains.php:237
+#: user_domains.php:246 user_group_admin.php:460 user_group_admin.php:479
 #: user_group_admin.php:490 user_group_admin.php:501
 #, fuzzy
 msgid "Continue"
@@ -194,9 +194,9 @@ msgstr "為了將下面的聚合圖遷移到基於模板的聚合，它們只能
 #: aggregate_graphs.php:406 aggregate_graphs.php:456 aggregate_graphs.php:504
 #: auth_changepassword.php:415 auth_profile.php:464 automation_networks.php:387
 #: automation_snmp.php:245 graphs.php:1169 graphs.php:1219 graphs.php:1222
-#: graphs.php:1266 graphs.php:1859 include/auth.php:309
+#: graphs.php:1266 graphs.php:1858 include/auth.php:309
 #: lib/api_aggregate.php:2249 lib/api_aggregate.php:2264 lib/html_form.php:1423
-#: lib/html_reports.php:632 managers.php:1130
+#: lib/html_reports.php:632 managers.php:1129
 #: templates/platform/permission_denied.html.twig
 #, fuzzy
 msgid "Return"
@@ -372,17 +372,17 @@ msgstr "匯總預覽[%s]"
 msgid "Aggregate Preview %s"
 msgstr "匯總預覽[%s]"
 
-#: aggregate_graphs.php:763 graph.php:553 graphs.php:1692
+#: aggregate_graphs.php:763 graph.php:553 graphs.php:1691
 #, fuzzy
 msgid "RRDtool Command:"
 msgstr "RRDtool命令："
 
-#: aggregate_graphs.php:765 graph.php:562 graphs.php:1696
+#: aggregate_graphs.php:765 graph.php:562 graphs.php:1695
 #, fuzzy
 msgid "Not Checked"
 msgstr "檢查"
 
-#: aggregate_graphs.php:765 graph.php:558 graphs.php:1694
+#: aggregate_graphs.php:765 graph.php:558 graphs.php:1693
 #, fuzzy
 msgid "RRDtool Says:"
 msgstr "RRDtool說："
@@ -412,14 +412,14 @@ msgstr "總計"
 msgid "All Items"
 msgstr "所有項目"
 
-#: aggregate_graphs.php:1010 graphs.php:1707 lib/api_aggregate.php:2544
+#: aggregate_graphs.php:1010 graphs.php:1706 lib/api_aggregate.php:2544
 #, fuzzy
 msgid "Graph Configuration"
 msgstr "圖形配置"
 
-#: aggregate_graphs.php:1060 automation_graph_rules.php:612
-#: automation_graph_rules.php:627 automation_graph_rules.php:643
-#: automation_tree_rules.php:416 automation_tree_rules.php:574
+#: aggregate_graphs.php:1060 automation_graph_rules.php:610
+#: automation_graph_rules.php:625 automation_graph_rules.php:641
+#: automation_tree_rules.php:414 automation_tree_rules.php:572
 #, fuzzy
 msgid "Show"
 msgstr "顯示"
@@ -436,21 +436,21 @@ msgstr "匹配圖"
 
 #: aggregate_graphs.php:1282 aggregate_graphs.php:1556
 #: aggregate_templates.php:606 automation_devices.php:485
-#: automation_graph_rules.php:809 automation_networks.php:1180
+#: automation_graph_rules.php:807 automation_networks.php:1180
 #: automation_networks.php:1224 automation_snmp.php:703
-#: automation_tree_rules.php:845 data_debug.php:1214 data_queries.php:1371
-#: data_sources.php:1814 data_templates.php:1101 graph_templates.php:727
-#: graph_view.php:667 graphs.php:2114 graphs_new.php:526 host_templates.php:795
+#: automation_tree_rules.php:843 data_debug.php:1214 data_queries.php:1371
+#: data_sources.php:1814 data_templates.php:1101 graph_templates.php:726
+#: graph_view.php:667 graphs.php:2113 graphs_new.php:526 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
 #: lib/api_automation.php:480 lib/api_automation.php:708
 #: lib/clog_webapi.php:608 lib/html.php:268 lib/html_filter.php:46
 #: lib/html_graph.php:191 lib/html_reports.php:2025 lib/html_tree.php:119
-#: lib/html_tree.php:967 managers.php:144 managers.php:504 managers.php:771
-#: plugins.php:491 pollers.php:869 rrdcleaner.php:523 settings.php:598
+#: lib/html_tree.php:967 managers.php:144 managers.php:503 managers.php:770
+#: plugins.php:491 pollers.php:869 rrdcleaner.php:519 settings.php:598
 #: settings.php:615 settings.php:674
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:60
 #: tree.php:938 tree.php:973 tree.php:1008 tree.php:2217 user_admin.php:2074
-#: user_domains.php:643 user_group_admin.php:1993 utilities.php:1094
+#: user_domains.php:642 user_group_admin.php:1993 utilities.php:1094
 #: utilities.php:1521 utilities.php:1832 utilities.php:2135 utilities.php:3125
 #: utilities.php:3387
 #, fuzzy
@@ -459,8 +459,8 @@ msgstr "搜尋"
 
 #: aggregate_graphs.php:1288 aggregate_graphs.php:1324
 #: aggregate_graphs.php:1587 data_sources.php:2004 data_sources.php:2143
-#: graph_view.php:488 graph_view.php:739 graph_view.php:803 graphs.php:2131
-#: graphs.php:2323 include/global_arrays.php:996 include/global_arrays.php:1232
+#: graph_view.php:488 graph_view.php:739 graph_view.php:803 graphs.php:2130
+#: graphs.php:2322 include/global_arrays.php:996 include/global_arrays.php:1232
 #: include/global_arrays.php:2018 lib/api_automation.php:283 lib/html.php:1955
 #: lib/html.php:2024 lib/html_graph.php:197 lib/html_tree.php:1022
 #: lib/html_tree.php:1378 tree.php:917 tree.php:2366 user_admin.php:801
@@ -472,18 +472,18 @@ msgstr "圖表"
 
 #: aggregate_graphs.php:1292 aggregate_graphs.php:1591
 #: aggregate_templates.php:622 automation_devices.php:582
-#: automation_graph_rules.php:851 automation_networks.php:1190
-#: automation_snmp.php:713 automation_tree_rules.php:865 data_debug.php:1224
+#: automation_graph_rules.php:849 automation_networks.php:1190
+#: automation_snmp.php:713 automation_tree_rules.php:863 data_debug.php:1224
 #: data_queries.php:1381 data_sources.php:1824 data_templates.php:1130
-#: graph_templates.php:737 graph_view.php:743 graphs.php:2135
+#: graph_templates.php:736 graph_view.php:743 graphs.php:2134
 #: graphs_new.php:536 host_templates.php:805 include/global_form.php:242
 #: lib/api_automation.php:182 lib/api_automation.php:490
 #: lib/api_automation.php:718 lib/api_automation.php:1082
-#: lib/html_reports.php:2045 managers.php:154 managers.php:514 plugins.php:515
-#: pollers.php:879 rrdcleaner.php:549
+#: lib/html_reports.php:2045 managers.php:154 managers.php:513 plugins.php:515
+#: pollers.php:879 rrdcleaner.php:545
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:85
-#: tree.php:2227 user_admin.php:2135 user_domains.php:18 user_domains.php:653
-#: user_domains.php:739 user_group_admin.php:2003 utilities.php:1076
+#: tree.php:2227 user_admin.php:2135 user_domains.php:18 user_domains.php:652
+#: user_domains.php:738 user_group_admin.php:2003 utilities.php:1076
 #: utilities.php:1842 utilities.php:2166 utilities.php:3153 utilities.php:3429
 #, fuzzy
 msgid "Default"
@@ -496,15 +496,15 @@ msgstr "聚合的一部分"
 
 #: aggregate_graphs.php:1303 aggregate_graphs.php:1596
 #: aggregate_templates.php:643 automation_devices.php:509
-#: automation_graph_rules.php:863 automation_networks.php:1224
-#: automation_snmp.php:728 automation_tree_rules.php:877 data_debug.php:1139
+#: automation_graph_rules.php:861 automation_networks.php:1224
+#: automation_snmp.php:728 automation_tree_rules.php:875 data_debug.php:1139
 #: data_queries.php:1396 data_sources.php:1764 data_templates.php:1151
-#: graph_templates.php:758 graph_view.php:675 graphs.php:2105
+#: graph_templates.php:757 graph_view.php:675 graphs.php:2104
 #: graphs_new.php:515 host_templates.php:786 lib/api_automation.php:187
 #: lib/api_automation.php:471 lib/api_automation.php:723
 #: lib/api_automation.php:1087 lib/clog_webapi.php:533 lib/html.php:1787
 #: lib/html_filter.php:63 lib/html_graph.php:178 lib/html_reports.php:2056
-#: lib/html_tree.php:1009 managers.php:169 managers.php:529 managers.php:794
+#: lib/html_tree.php:1009 managers.php:169 managers.php:528 managers.php:793
 #: plugins.php:530 pollers.php:914 tree.php:2242 user_admin.php:2150
 #: user_admin.php:2347 user_admin.php:2353 user_admin.php:2359
 #: user_admin.php:2365 user_admin.php:2371 user_admin.php:2377
@@ -515,12 +515,12 @@ msgstr "送出"
 #: aggregate_graphs.php:1303 aggregate_graphs.php:1596
 #: automation_devices.php:509 automation_snmp.php:728 data_debug.php:1139
 #: data_queries.php:1396 data_sources.php:1764 data_templates.php:1151
-#: graph_templates.php:758 graph_view.php:675 graphs.php:2105
+#: graph_templates.php:757 graph_view.php:675 graphs.php:2104
 #: graphs_new.php:515 host_templates.php:786 lib/html_graph.php:178
-#: managers.php:169 managers.php:529 managers.php:794 plugins.php:530
+#: managers.php:169 managers.php:528 managers.php:793 plugins.php:530
 #: pollers.php:914
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:99
-#: tree.php:2242 user_admin.php:2150 user_domains.php:665
+#: tree.php:2242 user_admin.php:2150 user_domains.php:664
 #: user_group_admin.php:2018 utilities.php:1084 utilities.php:1470
 #: utilities.php:1823 utilities.php:2126 utilities.php:3161 utilities.php:3437
 #, fuzzy
@@ -529,31 +529,31 @@ msgstr "設置/刷新過濾器"
 
 #: aggregate_graphs.php:1304 aggregate_graphs.php:1597
 #: aggregate_templates.php:644 automation_devices.php:510
-#: automation_graph_rules.php:864 automation_networks.php:1225
-#: automation_snmp.php:729 automation_tree_rules.php:878 data_debug.php:1140
+#: automation_graph_rules.php:862 automation_networks.php:1225
+#: automation_snmp.php:729 automation_tree_rules.php:876 data_debug.php:1140
 #: data_queries.php:1397 data_sources.php:1765 data_templates.php:1152
-#: graph_templates.php:759 graph_view.php:676 graphs.php:2106
+#: graph_templates.php:758 graph_view.php:676 graphs.php:2105
 #: graphs_new.php:516 host_templates.php:787 lib/api_automation.php:188
 #: lib/api_automation.php:472 lib/api_automation.php:724
 #: lib/api_automation.php:1088 lib/clog_webapi.php:534 lib/html_filter.php:68
 #: lib/html_graph.php:179 lib/html_graph.php:305 lib/html_reports.php:2057
 #: lib/html_tree.php:1010 lib/html_tree.php:1121 managers.php:170
-#: managers.php:530 managers.php:795 plugins.php:531 pollers.php:915
+#: managers.php:529 managers.php:794 plugins.php:531 pollers.php:915
 #: tree.php:2243 user_admin.php:2151 user_admin.php:2347 user_admin.php:2353
 #: user_admin.php:2359 user_admin.php:2365 user_admin.php:2371
-#: user_admin.php:2377 user_domains.php:666
+#: user_admin.php:2377 user_domains.php:665
 #, fuzzy
 msgid "Clear"
 msgstr "清除"
 
 #: aggregate_graphs.php:1304 aggregate_graphs.php:1597 automation_snmp.php:729
 #: data_debug.php:1140 data_queries.php:1397 data_sources.php:1765
-#: data_templates.php:1152 graph_templates.php:759 graph_view.php:676
-#: graphs.php:2106 graphs_new.php:516 host_templates.php:787
+#: data_templates.php:1152 graph_templates.php:758 graph_view.php:676
+#: graphs.php:2105 graphs_new.php:516 host_templates.php:787
 #: lib/html_graph.php:179 lib/html_tree.php:1010 managers.php:170
-#: managers.php:530 managers.php:795 plugins.php:531 pollers.php:915
+#: managers.php:529 managers.php:794 plugins.php:531 pollers.php:915
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:100
-#: tree.php:2243 user_admin.php:2151 user_domains.php:666
+#: tree.php:2243 user_admin.php:2151 user_domains.php:665
 #: user_group_admin.php:2019 utilities.php:1085 utilities.php:1471
 #: utilities.php:1824 utilities.php:2127 utilities.php:3162 utilities.php:3438
 #, fuzzy
@@ -567,9 +567,9 @@ msgid "Graph Title"
 msgstr "圖標題"
 
 #: aggregate_graphs.php:1330 aggregate_graphs.php:1663
-#: automation_graph_rules.php:964 automation_tree_rules.php:971
+#: automation_graph_rules.php:962 automation_tree_rules.php:969
 #: data_debug.php:517 data_queries.php:1482 data_sources.php:1998
-#: data_templates.php:1260 graph_templates.php:864 graphs.php:2339
+#: data_templates.php:1260 graph_templates.php:863 graphs.php:2338
 #: host_templates.php:949 lib/api_automation.php:282 pollers.php:995
 #: tree.php:2306 user_admin.php:809 user_admin.php:924 user_admin.php:1073
 #: user_admin.php:1212 user_admin.php:1351 user_group_admin.php:741
@@ -584,37 +584,37 @@ msgstr "ID"
 msgid "Included in Aggregate"
 msgstr "包含在Aggregate中"
 
-#: aggregate_graphs.php:1332 aggregate_graphs.php:1665 graph_templates.php:881
-#: graph_view.php:832 graph_view.php:845 graphs.php:2357 lib/spikekill.php:1745
+#: aggregate_graphs.php:1332 aggregate_graphs.php:1665 graph_templates.php:880
+#: graph_view.php:832 graph_view.php:845 graphs.php:2356 lib/spikekill.php:1745
 #, fuzzy
 msgid "Size"
 msgstr "尺寸"
 
 #: aggregate_graphs.php:1348 aggregate_templates.php:724
-#: automation_tree_rules.php:723 data_queries.php:1534 data_sources.php:2085
-#: data_sources.php:2086 data_templates.php:1321 graph_templates.php:921
+#: automation_tree_rules.php:721 data_queries.php:1534 data_sources.php:2085
+#: data_sources.php:2086 data_templates.php:1321 graph_templates.php:920
 #: host_templates.php:997 include/global_settings.php:969
 #: include/global_settings.php:1943 lib/api_automation.php:1438 tree.php:2399
-#: tree.php:2400 user_admin.php:2269 user_domains.php:758
+#: tree.php:2400 user_admin.php:2269 user_domains.php:757
 #: user_group_admin.php:2086
 #, fuzzy
 msgid "No"
 msgstr "否"
 
 #: aggregate_graphs.php:1348 aggregate_templates.php:724
-#: automation_tree_rules.php:716 data_debug.php:781 data_debug.php:786
+#: automation_tree_rules.php:714 data_debug.php:781 data_debug.php:786
 #: data_debug.php:791 data_queries.php:1534 data_sources.php:2085
-#: data_sources.php:2086 data_templates.php:1321 graph_templates.php:921
+#: data_sources.php:2086 data_templates.php:1321 graph_templates.php:920
 #: host_templates.php:997 include/global_settings.php:968
 #: include/global_settings.php:1942 lib/api_automation.php:1438
 #: lib/installer.php:2134 lib/installer.php:2162 lib/installer.php:4027
-#: tree.php:2399 tree.php:2400 user_admin.php:2267 user_domains.php:754
-#: user_domains.php:758 user_group_admin.php:2084
+#: tree.php:2399 tree.php:2400 user_admin.php:2267 user_domains.php:753
+#: user_domains.php:757 user_group_admin.php:2084
 #, fuzzy
 msgid "Yes"
 msgstr "是"
 
-#: aggregate_graphs.php:1354 graphs.php:2399 lib/api_automation.php:601
+#: aggregate_graphs.php:1354 graphs.php:2398 lib/api_automation.php:601
 #, fuzzy
 msgid "No Graphs Found"
 msgstr "找不到圖表"
@@ -631,9 +631,9 @@ msgid "Aggregate Graphs"
 msgstr "聚合圖"
 
 #: aggregate_graphs.php:1562 data_debug.php:1110 data_sources.php:1733
-#: graph_view.php:699 graphs.php:2067 include/global_arrays.php:2898
+#: graph_view.php:699 graphs.php:2066 include/global_arrays.php:2898
 #: include/global_settings.php:703 lib/api_automation.php:446
-#: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:381
+#: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:379
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:63
 #: utilities.php:2094
 #, fuzzy
@@ -642,16 +642,16 @@ msgstr "模板"
 
 #: aggregate_graphs.php:1566 automation_devices.php:495
 #: automation_devices.php:528 automation_devices.php:546
-#: automation_devices.php:564 automation_graph_rules.php:819
-#: automation_graph_rules.php:841 automation_tree_rules.php:855
+#: automation_devices.php:564 automation_graph_rules.php:817
+#: automation_graph_rules.php:839 automation_tree_rules.php:853
 #: data_debug.php:1114 data_sources.php:1737 graph_templates_items.php:447
-#: graphs.php:2071 graphs_items.php:270 lib/api_automation.php:26
+#: graphs.php:2070 graphs_items.php:270 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3980 lib/auth.php:4029
 #: lib/html.php:2310 lib/html.php:2338 lib/html.php:2377 lib/html.php:2411
 #: lib/html_reports.php:1030 lib/html_reports.php:1034
 #: lib/html_reports.php:1157 lib/html_reports.php:1167
-#: lib/html_reports.php:2035 managers.php:490 managers.php:781
+#: lib/html_reports.php:2035 managers.php:489 managers.php:780
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:65
 #: utilities.php:1064 utilities.php:1785 utilities.php:2098 utilities.php:2145
 #: utilities.php:2155 utilities.php:3135 utilities.php:3397 utilities.php:3413
@@ -660,12 +660,12 @@ msgid "Any"
 msgstr "任何"
 
 #: aggregate_graphs.php:1567 aggregate_graphs.php:1677
-#: automation_graph_rules.php:974 automation_graph_rules.php:975
-#: automation_networks.php:460 automation_tree_rules.php:983
+#: automation_graph_rules.php:972 automation_graph_rules.php:973
+#: automation_networks.php:460 automation_tree_rules.php:981
 #: data_debug.php:1115 data_sources.php:626 data_sources.php:1103
 #: data_sources.php:1738 data_sources.php:2059 data_templates.php:1323
-#: graph_templates_items.php:53 graphs.php:950 graphs.php:1596 graphs.php:1605
-#: graphs.php:2072 graphs_items.php:271 graphs_items.php:391
+#: graph_templates_items.php:53 graphs.php:950 graphs.php:1595 graphs.php:1604
+#: graphs.php:2071 graphs_items.php:271 graphs_items.php:391
 #: include/global_arrays.php:526 include/global_arrays.php:584
 #: include/global_arrays.php:676 include/global_arrays.php:888
 #: include/global_arrays.php:1747 include/global_form.php:574
@@ -764,7 +764,7 @@ msgstr "聚合模板"
 msgid "Templates"
 msgstr "模板"
 
-#: aggregate_templates.php:638 graph_templates.php:753
+#: aggregate_templates.php:638 graph_templates.php:752
 #, fuzzy
 msgid "Has Graphs"
 msgstr "有圖表"
@@ -780,18 +780,18 @@ msgid "Aggregate Templates that are in use can not be Deleted.  In use is define
 msgstr "無法刪除正在使用的聚合模板。在使用中定義為由Aggregate引用。"
 
 #: aggregate_templates.php:707 data_queries.php:1488 data_sources.php:2016
-#: data_templates.php:1266 graph_templates.php:870 host_templates.php:955
+#: data_templates.php:1266 graph_templates.php:869 host_templates.php:955
 #, fuzzy
 msgid "Deletable"
 msgstr "可刪除"
 
 #: aggregate_templates.php:708 data_queries.php:1211 data_queries.php:1493
-#: graph_templates.php:875
+#: graph_templates.php:874
 #, fuzzy
 msgid "Graphs Using"
 msgstr "圖表使用"
 
-#: aggregate_templates.php:709 graphs.php:2126 host_templates.php:730
+#: aggregate_templates.php:709 graphs.php:2125 host_templates.php:730
 #: include/global_arrays.php:961 include/global_arrays.php:1367
 #: include/global_form.php:1399 include/global_form.php:1635
 #: lib/html_reports.php:1181 tree.php:1944
@@ -1058,7 +1058,7 @@ msgid "The login name for this user."
 msgstr "此用戶的登錄名。"
 
 #: auth_profile.php:342 include/global_form.php:1503
-#: include/global_settings.php:1887 user_admin.php:2247 user_domains.php:482
+#: include/global_settings.php:1887 user_admin.php:2247 user_domains.php:481
 #: user_group_admin.php:741 utilities.php:1161
 #, fuzzy
 msgid "Full Name"
@@ -1278,8 +1278,8 @@ msgid "SNMP"
 msgstr "SNMP"
 
 #: automation_devices.php:280 automation_devices.php:524
-#: automation_graph_rules.php:837 automation_networks.php:1075
-#: automation_tree_rules.php:851 data_debug.php:523 data_debug.php:1169
+#: automation_graph_rules.php:835 automation_networks.php:1075
+#: automation_tree_rules.php:849 data_debug.php:523 data_debug.php:1169
 #: data_sources.php:1793 data_templates.php:1289 lib/api_automation.php:52
 #: lib/api_automation.php:53 lib/api_automation.php:280
 #: lib/api_automation.php:573 lib/api_automation.php:1199
@@ -1333,7 +1333,7 @@ msgid "Export to a file"
 msgstr "導出到文件"
 
 #: automation_devices.php:516 data_debug.php:1141 lib/clog_webapi.php:216
-#: lib/clog_webapi.php:535 managers.php:796
+#: lib/clog_webapi.php:535 managers.php:795
 #, fuzzy
 msgid "Purge"
 msgstr "清除"
@@ -1374,7 +1374,7 @@ msgstr "複製"
 #: automation_tree_rules.php:15 data_sources.php:26
 #: include/global_arrays.php:1656 include/global_settings.php:1803
 #: managers.php:14 managers.php:20 plugins.php:24 pollers.php:20
-#: user_admin.php:19 user_domains.php:17 user_domains.php:397
+#: user_admin.php:19 user_domains.php:17 user_domains.php:396
 #: user_group_admin.php:21
 #, fuzzy
 msgid "Enable"
@@ -1401,115 +1401,115 @@ msgstr "按“繼續”以刪除以下圖表規則。"
 msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Graph Rules."
 msgstr "單擊“繼續”以復制以下規則。您可以選擇更改新圖表規則的標題格式。"
 
-#: automation_graph_rules.php:305 automation_tree_rules.php:282 graphs.php:908
+#: automation_graph_rules.php:305 automation_tree_rules.php:281 graphs.php:908
 #: graphs.php:919
 #, fuzzy
 msgid "Title Format"
 msgstr "標題格式:"
 
-#: automation_graph_rules.php:306 automation_tree_rules.php:283
+#: automation_graph_rules.php:306 automation_tree_rules.php:282
 msgid "rule_name"
 msgstr "規則名稱"
 
-#: automation_graph_rules.php:313 automation_tree_rules.php:290
+#: automation_graph_rules.php:313 automation_tree_rules.php:289
 msgid "Click 'Continue' to enable the following Rule(s)."
 msgstr "單擊“繼續”以啟用以下規則。"
 
-#: automation_graph_rules.php:315 automation_tree_rules.php:292
+#: automation_graph_rules.php:315 automation_tree_rules.php:291
 msgid "Make sure, that those rules have successfully been tested!"
 msgstr "確保這些規則已成功通過測試！"
 
-#: automation_graph_rules.php:321 automation_tree_rules.php:298
+#: automation_graph_rules.php:321 automation_tree_rules.php:297
 msgid "Click 'Continue' to disable the following Rule(s)."
 msgstr "單擊“繼續”以禁用以下規則。"
 
-#: automation_graph_rules.php:332 automation_tree_rules.php:309
+#: automation_graph_rules.php:332 automation_tree_rules.php:308
 msgid "Apply requested action"
 msgstr "應用請求的操作"
 
-#: automation_graph_rules.php:467 automation_tree_rules.php:509
+#: automation_graph_rules.php:466 automation_tree_rules.php:507
 msgid "Are You Sure?"
 msgstr "確定嗎？"
 
-#: automation_graph_rules.php:467
+#: automation_graph_rules.php:466
 #, fuzzy, php-format
 msgid "Are you sure you want to delete the Rule '%s'?"
 msgstr "您確定要刪除規則&#39;％s&#39;嗎？"
 
-#: automation_graph_rules.php:596
+#: automation_graph_rules.php:594
 #, fuzzy, php-format
 msgid "Rule Selection [edit: %s]"
 msgstr "規則選擇[編輯：%s]"
 
-#: automation_graph_rules.php:602
+#: automation_graph_rules.php:600
 #, fuzzy
 msgid "Rule Selection [new]"
 msgstr "規則選擇[新]"
 
-#: automation_graph_rules.php:612 automation_graph_rules.php:627
-#: automation_graph_rules.php:643 automation_tree_rules.php:416
-#: automation_tree_rules.php:574
+#: automation_graph_rules.php:610 automation_graph_rules.php:625
+#: automation_graph_rules.php:641 automation_tree_rules.php:414
+#: automation_tree_rules.php:572
 #, fuzzy
 msgid "Don't Show"
 msgstr "不顯示"
 
-#: automation_graph_rules.php:612
+#: automation_graph_rules.php:610
 msgid "Rule Details."
 msgstr "規則細節。"
 
-#: automation_graph_rules.php:627
+#: automation_graph_rules.php:625
 msgid "Matching Devices."
 msgstr "匹配設備。"
 
-#: automation_graph_rules.php:643
+#: automation_graph_rules.php:641
 msgid "Matching Objects."
 msgstr "匹配對象。"
 
-#: automation_graph_rules.php:684
+#: automation_graph_rules.php:682
 #, fuzzy
 msgid "Device Selection Criteria"
 msgstr "設備選擇標準"
 
-#: automation_graph_rules.php:692
+#: automation_graph_rules.php:690
 #, fuzzy
 msgid "Graph Creation Criteria"
 msgstr "圖形創建標準"
 
-#: automation_graph_rules.php:800 automation_graph_rules.php:847
-#: automation_graph_rules.php:954 include/global_arrays.php:1016
+#: automation_graph_rules.php:798 automation_graph_rules.php:845
+#: automation_graph_rules.php:952 include/global_arrays.php:1016
 #: include/global_arrays.php:2788
 #, fuzzy
 msgid "Graph Rules"
 msgstr "圖規則"
 
-#: automation_graph_rules.php:815 automation_graph_rules.php:965
-#: graphs.php:2127 include/global_arrays.php:1370
+#: automation_graph_rules.php:813 automation_graph_rules.php:963
+#: graphs.php:2126 include/global_arrays.php:1370
 #: include/global_arrays.php:2897 include/global_form.php:1645
 #: include/global_form.php:2207
 #, fuzzy
 msgid "Data Query"
 msgstr "數據查詢"
 
-#: automation_graph_rules.php:842 automation_graph_rules.php:967
-#: automation_graph_rules.php:983 automation_networks.php:535
-#: automation_tree_rules.php:856 automation_tree_rules.php:976
-#: automation_tree_rules.php:994 data_debug.php:1175 data_sources.php:1798
+#: automation_graph_rules.php:840 automation_graph_rules.php:965
+#: automation_graph_rules.php:981 automation_networks.php:535
+#: automation_tree_rules.php:854 automation_tree_rules.php:974
+#: automation_tree_rules.php:992 data_debug.php:1175 data_sources.php:1798
 #: include/global_arrays.php:920 include/global_form.php:1527
 #: include/global_settings.php:438 include/global_settings.php:454
 #: lib/api_automation.php:27 lib/html_reports.php:2036
 #: lib/html_reports.php:2141 lib/html_reports.php:2152
-#: lib/html_reports.php:2188 managers.php:241 managers.php:612
+#: lib/html_reports.php:2188 managers.php:241 managers.php:611
 #: user_admin.php:924 user_admin.php:936 user_admin.php:2248
-#: user_domains.php:335 user_domains.php:743 user_group_admin.php:76
+#: user_domains.php:334 user_domains.php:742 user_group_admin.php:76
 #: user_group_admin.php:741 user_group_admin.php:756 user_group_admin.php:2076
 #: utilities.php:2146 utilities.php:3008
 #, fuzzy
 msgid "Enabled"
 msgstr "啟用"
 
-#: automation_graph_rules.php:843 automation_graph_rules.php:983
-#: automation_networks.php:1090 automation_tree_rules.php:857
-#: automation_tree_rules.php:994 data_debug.php:1176 data_sources.php:1799
+#: automation_graph_rules.php:841 automation_graph_rules.php:981
+#: automation_networks.php:1090 automation_tree_rules.php:855
+#: automation_tree_rules.php:992 data_debug.php:1176 data_sources.php:1799
 #: data_templates.php:1325 include/global_arrays.php:919
 #: include/global_arrays.php:1579 include/global_arrays.php:1871
 #: include/global_settings.php:437 include/global_settings.php:453
@@ -1519,36 +1519,36 @@ msgstr "啟用"
 #: include/global_settings.php:1802 include/global_settings.php:2566
 #: lib/api_automation.php:28 lib/html.php:2844 lib/html_reports.php:2037
 #: lib/html_reports.php:2188 lib/html_utility.php:1340 managers.php:241
-#: managers.php:612 pollers.php:33 user_admin.php:936 user_domains.php:397
+#: managers.php:611 pollers.php:33 user_admin.php:936 user_domains.php:396
 #: user_group_admin.php:756 utilities.php:2147 utilities.php:2699
 #: utilities.php:3008
 #, fuzzy
 msgid "Disabled"
 msgstr "停用"
 
-#: automation_graph_rules.php:963 automation_tree_rules.php:970
+#: automation_graph_rules.php:961 automation_tree_rules.php:968
 #, fuzzy
 msgid "Rule Name"
 msgstr "規則名稱"
 
-#: automation_graph_rules.php:963
+#: automation_graph_rules.php:961
 #, fuzzy
 msgid "The name of this rule."
 msgstr "此規則的名稱。"
 
-#: automation_graph_rules.php:964
+#: automation_graph_rules.php:962
 #, fuzzy
 msgid "The internal database ID for this rule.  Useful in performing debugging and automation."
 msgstr "此規則的內部數據庫ID。在執行調試和自動化時很有用。"
 
-#: automation_graph_rules.php:966 include/global_form.php:1832
+#: automation_graph_rules.php:964 include/global_form.php:1832
 #: include/global_form.php:1918 include/global_form.php:2023
 #: include/global_form.php:2218
 #, fuzzy
 msgid "Graph Type"
 msgstr "圖表類型"
 
-#: automation_graph_rules.php:989
+#: automation_graph_rules.php:987
 #, fuzzy
 msgid "No Graph Rules Found"
 msgstr "找不到圖表規則"
@@ -1674,7 +1674,7 @@ msgid "General Settings"
 msgstr "一般設定"
 
 #: automation_networks.php:439 automation_snmp.php:511 data_queries.php:817
-#: data_queries.php:924 data_queries.php:1209 graph_templates.php:500
+#: data_queries.php:924 data_queries.php:1209 graph_templates.php:499
 #: include/global_form.php:201 include/global_form.php:267
 #: include/global_form.php:324 include/global_form.php:344
 #: include/global_form.php:385 include/global_form.php:515
@@ -1685,8 +1685,8 @@ msgstr "一般設定"
 #: include/global_form.php:2101 include/global_form.php:2199
 #: include/global_form.php:2244 lib/installer.php:2054 lib/installer.php:2127
 #: lib/installer.php:2157 lib/installer.php:2749 lib/installer.php:2837
-#: lib/vdef.php:56 managers.php:576 pollers.php:46 user_admin.php:924
-#: user_domains.php:311 utilities.php:864 utilities.php:3206
+#: lib/vdef.php:56 managers.php:575 pollers.php:46 user_admin.php:924
+#: user_domains.php:310 utilities.php:864 utilities.php:3206
 #, fuzzy
 msgid "Name"
 msgstr "名稱"
@@ -2640,107 +2640,107 @@ msgstr ""
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "應用於此規則項的字段名稱。"
 
-#: automation_tree_rules.php:273
+#: automation_tree_rules.php:272
 msgid "Click 'Continue' to delete the following Rule(s)."
 msgstr "單擊“繼續”以刪除以下規則。"
 
-#: automation_tree_rules.php:280
+#: automation_tree_rules.php:279
 msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Rules."
 msgstr "單擊“繼續”以復制以下規則。您可以選擇更改新規則的標題格式。"
 
-#: automation_tree_rules.php:416
+#: automation_tree_rules.php:414
 #, fuzzy
 msgid "Created Trees"
 msgstr "創建樹木"
 
-#: automation_tree_rules.php:509
+#: automation_tree_rules.php:507
 #, fuzzy, php-format
 msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "您確定要刪除規則&#39;％s&#39;嗎？"
 
-#: automation_tree_rules.php:574
+#: automation_tree_rules.php:572
 msgid "Eligible Objects"
 msgstr "符合條件的物品"
 
-#: automation_tree_rules.php:587
+#: automation_tree_rules.php:585
 #, fuzzy, php-format
 msgid "Tree Rule Selection [edit: %s]"
 msgstr "樹規則選擇[編輯：%s]"
 
-#: automation_tree_rules.php:589
+#: automation_tree_rules.php:587
 #, fuzzy
 msgid "Tree Rules Selection [new]"
 msgstr "樹規則選擇[新]"
 
-#: automation_tree_rules.php:641
+#: automation_tree_rules.php:639
 #, fuzzy
 msgid "Object Selection Criteria"
 msgstr "對象選擇標準"
 
-#: automation_tree_rules.php:649
+#: automation_tree_rules.php:647
 #, fuzzy
 msgid "Tree Creation Criteria"
 msgstr "樹創建標準"
 
-#: automation_tree_rules.php:737
+#: automation_tree_rules.php:735
 #, fuzzy
 msgid "Change Leaf Type"
 msgstr "改變葉子類型"
 
-#: automation_tree_rules.php:740 lib/installer.php:4251 utilities.php:2752
+#: automation_tree_rules.php:738 lib/installer.php:4251 utilities.php:2752
 #: utilities.php:2753 utilities.php:2756 utilities.php:2757
 #, fuzzy
 msgid "WARNING:"
 msgstr "警告："
 
-#: automation_tree_rules.php:741
+#: automation_tree_rules.php:739
 #, fuzzy
 msgid "You are changing the leaf type to \"Device\" which does not support Graph-based object matching/creation."
 msgstr "您正在將葉類型更改為“設備”，它不支持基於圖形的對象匹配/創建。"
 
-#: automation_tree_rules.php:742
+#: automation_tree_rules.php:740
 #, fuzzy
 msgid "By changing the leaf type, all invalid rules will be automatically removed and will not be recoverable."
 msgstr "通過更改葉類型，將自動刪除所有無效規則，並且無法恢復。"
 
-#: automation_tree_rules.php:743
+#: automation_tree_rules.php:741
 #, fuzzy
 msgid "Are you sure you wish to continue?"
 msgstr "你確定要繼續嗎？"
 
-#: automation_tree_rules.php:836 automation_tree_rules.php:861
-#: automation_tree_rules.php:961 include/global_arrays.php:1017
+#: automation_tree_rules.php:834 automation_tree_rules.php:859
+#: automation_tree_rules.php:959 include/global_arrays.php:1017
 #: include/global_arrays.php:2812
 #, fuzzy
 msgid "Tree Rules"
 msgstr "樹規則"
 
-#: automation_tree_rules.php:972
+#: automation_tree_rules.php:970
 #, fuzzy
 msgid "Hook into Tree"
 msgstr "鉤到樹上"
 
-#: automation_tree_rules.php:973
+#: automation_tree_rules.php:971
 #, fuzzy
 msgid "At Subtree"
 msgstr "在Subtree"
 
-#: automation_tree_rules.php:974
+#: automation_tree_rules.php:972
 #, fuzzy
 msgid "This Type"
 msgstr "這個類型"
 
-#: automation_tree_rules.php:975
+#: automation_tree_rules.php:973
 #, fuzzy
 msgid "Using Grouping"
 msgstr "使用分組"
 
-#: automation_tree_rules.php:984
+#: automation_tree_rules.php:982
 #, fuzzy
 msgid "ROOT"
 msgstr "根部"
 
-#: automation_tree_rules.php:1000
+#: automation_tree_rules.php:998
 #, fuzzy
 msgid "No Tree Rules Found"
 msgstr "找不到樹規則"
@@ -3329,7 +3329,7 @@ msgstr "個人資料"
 
 #: data_debug.php:1154 data_debug.php:1173 data_debug.php:1184
 #: data_sources.php:1777 data_sources.php:1797 data_templates.php:1111
-#: graphs.php:2124 graphs_new.php:488 host_templates.php:716
+#: graphs.php:2123 graphs_new.php:488 host_templates.php:716
 #: host_templates.php:734 lib/clog_webapi.php:549 lib/html.php:227
 #: lib/html_reports.php:1138 lib/html_reports.php:2284 plugins.php:501
 #: settings.php:590 settings.php:612 settings.php:643 tree.php:914
@@ -3672,7 +3672,7 @@ msgstr "找不到XML文件。"
 msgid "Associated Graph Templates"
 msgstr "關聯圖模板"
 
-#: data_queries.php:1210 graph_templates.php:858 graphs_new.php:640
+#: data_queries.php:1210 graph_templates.php:857 graphs_new.php:640
 #: lib/api_automation.php:576
 #, fuzzy
 msgid "Graph Template Name"
@@ -3720,7 +3720,7 @@ msgstr "數據查詢名稱"
 msgid "The name of this Data Query."
 msgstr "此數據查詢的名稱。"
 
-#: data_queries.php:1485 graph_templates.php:867
+#: data_queries.php:1485 graph_templates.php:866
 #, fuzzy
 msgid "The internal ID for this Graph Template.  Useful when performing automation or debugging."
 msgstr "此圖表模板的內部ID。在執行自動化或調試時很有用。"
@@ -3900,7 +3900,7 @@ msgstr "打開數據源信息模式。"
 msgid "Edit Graph: '%s'."
 msgstr "編輯圖表模板。"
 
-#: data_sources.php:1017 graphs.php:1558
+#: data_sources.php:1017 graphs.php:1557
 #, fuzzy
 msgid "Edit Device."
 msgstr "編輯設備。"
@@ -3930,7 +3930,7 @@ msgstr "選定的數據模板"
 msgid "The name given to this data template.  Please note that you may only change Graph Templates to a 100%$ compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "為此數據模板指定的名稱。請注意，您只能將圖形模板更改為100％兼容的圖形模板，這意味著它包含相同的數據源。"
 
-#: data_sources.php:1101 graph_view.php:817 graphs.php:1601
+#: data_sources.php:1101 graph_view.php:817 graphs.php:1600
 #: include/global_arrays.php:957 include/global_arrays.php:1006
 #: include/global_arrays.php:1694 include/global_arrays.php:1863
 #: lib/api_automation.php:426 lib/functions.php:6200 lib/html.php:2306
@@ -4018,11 +4018,11 @@ msgstr "數據來源[%s]"
 msgid "Bad Indexes"
 msgstr "索引"
 
-#: data_sources.php:1806 graphs.php:2100
+#: data_sources.php:1806 graphs.php:2099
 msgid "Note that this query may take some time to run."
 msgstr "請注意，此查詢可能需要一些時間才能運行。"
 
-#: data_sources.php:1806 graphs.php:2100
+#: data_sources.php:1806 graphs.php:2099
 #, fuzzy
 msgid "Orphaned"
 msgstr "孤"
@@ -4444,7 +4444,7 @@ msgstr "圖形高度"
 msgid "Graph Width"
 msgstr "圖寬度"
 
-#: graph_templates.php:402 graph_templates.php:887
+#: graph_templates.php:402 graph_templates.php:886
 #, fuzzy
 msgid "Image Format"
 msgstr "圖片格式"
@@ -4465,47 +4465,47 @@ msgstr "將圖表同步到圖表模板"
 msgid "Click 'Continue' to perform a Quick Synchronization of your Graphs for the following Graph Template(s). Use this option if your Graphs have Graph Items that do not match your Graph Template.  If this option does not work, use the Full Sync Graphs option, which will take more time to complete."
 msgstr "點擊“繼續”以使您的圖表與以下圖表模板同步。如果您的圖形與圖形模板的多個版本一起存在並希望使它們在外觀上都很常見，則此功能非常重要。"
 
-#: graph_templates.php:490
+#: graph_templates.php:489
 #, fuzzy, php-format
 msgid "Graph Template Items [edit: %s]"
 msgstr "圖表模板項[編輯：%s]"
 
-#: graph_templates.php:497 include/global_arrays.php:2266
+#: graph_templates.php:496 include/global_arrays.php:2266
 #, fuzzy
 msgid "Graph Item Inputs"
 msgstr "圖表項輸入"
 
-#: graph_templates.php:523
+#: graph_templates.php:522
 #, fuzzy
 msgid "No Inputs"
 msgstr "沒有輸入"
 
-#: graph_templates.php:572
+#: graph_templates.php:571
 #, fuzzy
 msgid "Graph Template not found."
 msgstr "找不到圖表模板"
 
-#: graph_templates.php:587
+#: graph_templates.php:586
 #, fuzzy, php-format
 msgid "Graph Template [edit: %s]"
 msgstr "圖表模板[編輯：%s]"
 
-#: graph_templates.php:589
+#: graph_templates.php:588
 #, fuzzy
 msgid "Graph Template [new]"
 msgstr "圖表模板[新]"
 
-#: graph_templates.php:605
+#: graph_templates.php:604
 #, fuzzy
 msgid "Graph Template Options"
 msgstr "圖形模板選項"
 
-#: graph_templates.php:621
+#: graph_templates.php:620
 #, fuzzy
 msgid "Check this checkbox if you wish to allow the user to override the value on the right during Graph creation."
 msgstr "如果您希望允許用戶在創建圖表期間覆蓋右側的值，請選中此復選框。"
 
-#: graph_templates.php:718 graph_templates.php:733 graph_templates.php:900
+#: graph_templates.php:717 graph_templates.php:732 graph_templates.php:899
 #: graphs_new.php:637 include/global_arrays.php:1239
 #: include/global_arrays.php:2242 lib/html_tree.php:541 user_admin.php:1204
 #: user_group_admin.php:1223
@@ -4513,42 +4513,42 @@ msgstr "如果您希望允許用戶在創建圖表期間覆蓋右側的值，請
 msgid "Graph Templates"
 msgstr "圖表模板"
 
-#: graph_templates.php:861
+#: graph_templates.php:860
 #, fuzzy
 msgid "The name of this Graph Template."
 msgstr "此圖表模板的名稱。"
 
-#: graph_templates.php:872
+#: graph_templates.php:871
 #, fuzzy
 msgid "Graph Templates that are in use cannot be Deleted.  In use is defined as being referenced by a Graph."
 msgstr "圖表正在使用的模板無法刪除。使用中定義為由圖引用。"
 
-#: graph_templates.php:878
+#: graph_templates.php:877
 #, fuzzy
 msgid "The number of Graphs using this Graph Template."
 msgstr "使用此圖表模板的圖表數量。"
 
-#: graph_templates.php:884
+#: graph_templates.php:883
 #, fuzzy
 msgid "The default size of the resulting Graphs."
 msgstr "生成的圖形的默認大小。"
 
-#: graph_templates.php:890
+#: graph_templates.php:889
 #, fuzzy
 msgid "The default image format for the resulting Graphs."
 msgstr "生成的圖形的默認圖像格式。"
 
-#: graph_templates.php:893 graph_xport.php:103 graph_xport.php:149
+#: graph_templates.php:892 graph_xport.php:103 graph_xport.php:149
 #, fuzzy
 msgid "Vertical Label"
 msgstr "垂直標籤"
 
-#: graph_templates.php:896
+#: graph_templates.php:895
 #, fuzzy
 msgid "The vertical label for the resulting Graphs."
 msgstr "結果圖的垂直標籤。"
 
-#: graph_templates.php:930
+#: graph_templates.php:929
 #, fuzzy
 msgid "No Graph Templates Found"
 msgstr "找不到圖表模板"
@@ -4674,13 +4674,13 @@ msgstr "所有圖表和模板"
 msgid "Not Templated"
 msgstr "沒有模板化"
 
-#: graph_view.php:812 graph_view.php:840 graphs.php:2333
+#: graph_view.php:812 graph_view.php:840 graphs.php:2332
 #: include/global_form.php:1884 lib/html_reports.php:1201 tree.php:1021
 #, fuzzy
 msgid "Graph Name"
 msgstr "圖名稱"
 
-#: graph_view.php:814 graph_view.php:842 graphs.php:2336
+#: graph_view.php:814 graph_view.php:842 graphs.php:2335
 msgid "The Title of this Graph.  Generally programmatically generated from the Graph Template definition or Suggested Naming rules.  The max length of the Title is controlled under Settings->Visual."
 msgstr "該圖的標題。通常以編程方式從“圖表模板”定義或“建議命名”規則生成。標題的最大長度在Settings-&gt; Visual下控制。"
 
@@ -4689,27 +4689,27 @@ msgstr "該圖的標題。通常以編程方式從“圖表模板”定義或“
 msgid "The device for this Graph."
 msgstr "該組的名稱。"
 
-#: graph_view.php:822 graphs.php:2345
+#: graph_view.php:822 graphs.php:2344
 #, fuzzy
 msgid "Source Type"
 msgstr "來源類型"
 
-#: graph_view.php:824 graphs.php:2348
+#: graph_view.php:824 graphs.php:2347
 #, fuzzy
 msgid "The underlying source that this Graph was based upon."
 msgstr "此Graph基於的基礎源。"
 
-#: graph_view.php:827 graphs.php:2351
+#: graph_view.php:827 graphs.php:2350
 #, fuzzy
 msgid "Source Name"
 msgstr "來源名稱"
 
-#: graph_view.php:829 graphs.php:2354
+#: graph_view.php:829 graphs.php:2353
 #, fuzzy
 msgid "The Graph Template or Data Query that this Graph was based upon."
 msgstr "此圖表所基於的圖表模板或數據查詢。"
 
-#: graph_view.php:834 graph_view.php:847 graphs.php:2360
+#: graph_view.php:834 graph_view.php:847 graphs.php:2359
 #, fuzzy
 msgid "The size of this Graph when not in Preview mode."
 msgstr "未處於預覽模式時此圖表的大小。"
@@ -4943,124 +4943,124 @@ msgstr "按“返回”返回並選擇不同的圖表。"
 msgid "Click 'Continue' to apply Automation Rules to the following Graphs."
 msgstr "單擊“繼續”將自動化規則應用於以下圖表。"
 
-#: graphs.php:1314
+#: graphs.php:1313
 #, fuzzy
 msgid "Graph Items [new]"
 msgstr "圖形項目[新]"
 
-#: graphs.php:1358
+#: graphs.php:1357
 #, fuzzy, php-format
 msgid "Graph Items [edit: %s]"
 msgstr "圖表項[編輯：%s]"
 
-#: graphs.php:1482
+#: graphs.php:1481
 #, fuzzy, php-format
 msgid "Graph [edit: %s]"
 msgstr "圖[編輯：%s]"
 
-#: graphs.php:1492
+#: graphs.php:1491
 #, fuzzy
 msgid "Graph [new]"
 msgstr "圖[新]"
 
-#: graphs.php:1517
+#: graphs.php:1516
 #, fuzzy
 msgid "Turn Off Graph Debug Mode."
 msgstr "關閉圖形調試模式。"
 
-#: graphs.php:1519
+#: graphs.php:1518
 #, fuzzy
 msgid "Turn On Graph Debug Mode."
 msgstr "打開圖形調試模式。"
 
-#: graphs.php:1541
+#: graphs.php:1540
 #, fuzzy
 msgid "Edit Graph Template."
 msgstr "編輯圖表模板。"
 
-#: graphs.php:1553
+#: graphs.php:1552
 #, fuzzy, php-format
 msgid "Edit Data Source: '%s'."
 msgstr "數據來源[%s]"
 
-#: graphs.php:1562
+#: graphs.php:1561
 #, fuzzy
 msgid "Unlock Graph."
 msgstr "解鎖圖表。"
 
-#: graphs.php:1564
+#: graphs.php:1563
 #, fuzzy
 msgid "Lock Graph."
 msgstr "鎖定圖。"
 
-#: graphs.php:1593
+#: graphs.php:1592
 #, fuzzy
 msgid "Selected Graph Template"
 msgstr "選定的圖形模板"
 
-#: graphs.php:1594
+#: graphs.php:1593
 #, fuzzy, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "選擇要應用於此圖表的圖表模板。請注意，您只能將圖形模板更改為100 %%兼容的圖形模板，這意味著它包含相同的數據源。"
 
-#: graphs.php:1602
+#: graphs.php:1601
 #, fuzzy
 msgid "Choose the Device that this Graph belongs to."
 msgstr "選擇此圖表所屬的設備。"
 
-#: graphs.php:1658
+#: graphs.php:1657
 #, fuzzy
 msgid "Supplemental Graph Template Data"
 msgstr "補充圖表模板數據"
 
-#: graphs.php:1660
+#: graphs.php:1659
 #, fuzzy
 msgid "Graph Fields"
 msgstr "圖形字段"
 
-#: graphs.php:1661
+#: graphs.php:1660
 #, fuzzy
 msgid "Graph Item Fields"
 msgstr "圖表項目字段"
 
-#: graphs.php:1905 spikekill.php:42
+#: graphs.php:1904 spikekill.php:42
 msgid "Graph access denied"
 msgstr ""
 
-#: graphs.php:2040
+#: graphs.php:2039
 #, fuzzy
 msgid "Graph Management [ Custom Graphs List Applied - Clear to Reset ]"
 msgstr "[自定義圖表列表已應用 - 從列表中過濾]"
 
-#: graphs.php:2042
+#: graphs.php:2041
 #, fuzzy
 msgid "Graph Management [ All Devices ]"
 msgstr "[所有設備]的新圖表"
 
-#: graphs.php:2044
+#: graphs.php:2043
 #, fuzzy
 msgid "Graph Management [ Non Device Based ]"
 msgstr "用戶組管理[編輯：%s]"
 
-#: graphs.php:2047
+#: graphs.php:2046
 #, fuzzy, php-format
 msgid "Graph Management [ %s ]"
 msgstr "圖形管理"
 
-#: graphs.php:2120
+#: graphs.php:2119
 msgid "Graph Source"
 msgstr "圖，數據源"
 
-#: graphs.php:2125
+#: graphs.php:2124
 msgid "Non Templated"
 msgstr "沒有模板化"
 
-#: graphs.php:2342
+#: graphs.php:2341
 #, fuzzy
 msgid "The internal database ID for this Graph.  Useful when performing automation or debugging."
 msgstr "此圖的內部數據庫ID。在執行自動化或調試時很有用。"
 
-#: graphs.php:2386
+#: graphs.php:2385
 #, fuzzy
 msgid "Empty Graph"
 msgstr "複製圖"
@@ -6250,7 +6250,7 @@ msgid "%d Day"
 msgstr "%d 天"
 
 #: include/global_arrays.php:725 include/global_arrays.php:781
-#: include/global_arrays.php:1469 rrdcleaner.php:533 rrdcleaner.php:534
+#: include/global_arrays.php:1469 rrdcleaner.php:529 rrdcleaner.php:530
 #, fuzzy, php-format
 msgid "%d Week"
 msgstr "%d週"
@@ -6318,13 +6318,13 @@ msgstr "%d 天"
 #: include/global_arrays.php:782 include/global_arrays.php:783
 #: include/global_arrays.php:1470 include/global_settings.php:2895
 #: include/global_settings.php:2896 include/global_settings.php:2897
-#: rrdcleaner.php:535 rrdcleaner.php:536
+#: rrdcleaner.php:531 rrdcleaner.php:532
 #, fuzzy, php-format
 msgid "%d Weeks"
 msgstr "%d週"
 
 #: include/global_arrays.php:784 include/global_arrays.php:1471
-#: rrdcleaner.php:537
+#: rrdcleaner.php:533
 #, fuzzy, php-format
 msgid "%d Month"
 msgstr "%d月"
@@ -6333,13 +6333,13 @@ msgstr "%d月"
 #: include/global_arrays.php:787 include/global_arrays.php:788
 #: include/global_arrays.php:1472 include/global_arrays.php:1473
 #: include/global_arrays.php:1474 include/global_arrays.php:1475
-#: rrdcleaner.php:538 rrdcleaner.php:539 rrdcleaner.php:540
+#: rrdcleaner.php:534 rrdcleaner.php:535 rrdcleaner.php:536
 #, fuzzy, php-format
 msgid "%d Months"
 msgstr "%d個月"
 
 #: include/global_arrays.php:789 include/global_arrays.php:1476
-#: include/global_settings.php:1651 rrdcleaner.php:541
+#: include/global_settings.php:1651 rrdcleaner.php:537
 #, fuzzy, php-format
 msgid "%d Year"
 msgstr "%d年"
@@ -6721,7 +6721,7 @@ msgid "User Groups"
 msgstr "用戶群組"
 
 #: include/global_arrays.php:1036 include/global_arrays.php:2602
-#: user_domains.php:634 user_domains.php:728
+#: user_domains.php:633 user_domains.php:727
 #, fuzzy
 msgid "User Domains"
 msgstr "用戶域名"
@@ -8035,7 +8035,7 @@ msgid "(Remove Item)"
 msgstr "（除去項目）"
 
 #: include/global_arrays.php:2434 include/global_settings.php:310
-#: rrdcleaner.php:323
+#: rrdcleaner.php:321
 #, fuzzy
 msgid "RRD Cleaner"
 msgstr "RRD清潔工"
@@ -11857,7 +11857,7 @@ msgid "The name of the primary administrative account that will automatically re
 msgstr "當Kadupul系統遇到問題時將自動接收電子郵件的主管理帳戶的名稱。要接收這些電子郵件，請確保您的郵件設置正確，並且管理帳戶具有已設置的電子郵件地址。"
 
 #: include/global_settings.php:1559 include/global_settings.php:1569
-#: include/global_settings.php:1577 user_domains.php:329
+#: include/global_settings.php:1577 user_domains.php:328
 #, fuzzy
 msgid "No User"
 msgstr "使用者："
@@ -11872,7 +11872,7 @@ msgstr "遊客"
 msgid "The name of the guest user for viewing graphs; is 'No User' by default."
 msgstr "用於查看圖表的訪客用戶的名稱;默認為“無用戶”。"
 
-#: include/global_settings.php:1574 user_domains.php:325
+#: include/global_settings.php:1574 user_domains.php:324
 #, fuzzy
 msgid "User Template"
 msgstr "使用者範本"
@@ -12050,16 +12050,16 @@ msgstr "1天"
 msgid "LDAP General Settings"
 msgstr "LDAP常規設置"
 
-#: include/global_settings.php:1731 user_domains.php:352
+#: include/global_settings.php:1731 user_domains.php:351
 #, fuzzy
 msgid "Server(s)"
 msgstr "服務器"
 
-#: include/global_settings.php:1732 user_domains.php:353
+#: include/global_settings.php:1732 user_domains.php:352
 msgid "A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
 msgstr "有效 LDAP 服務器的 DNS 主機名或 IP 地址的空格分隔列表。 Kadupul 將嘗試從左到右使用 LDAP 服務器來驗證用戶。"
 
-#: include/global_settings.php:1738 user_domains.php:361
+#: include/global_settings.php:1738 user_domains.php:360
 #, fuzzy
 msgid "Port Standard"
 msgstr "港口標準"
@@ -12068,7 +12068,7 @@ msgstr "港口標準"
 msgid "TCP port for Non-SSL communications including LDAP + TLS.  Default is 389."
 msgstr "用於非SSL通信的TCP / UDP端口。"
 
-#: include/global_settings.php:1746 user_domains.php:370
+#: include/global_settings.php:1746 user_domains.php:369
 #, fuzzy
 msgid "Port SSL"
 msgstr "端口SSL"
@@ -12077,7 +12077,7 @@ msgstr "端口SSL"
 msgid "TCP port for LDAPS for SSL communications.  Default is 636."
 msgstr "用於非SSL通信的TCP / UDP端口。"
 
-#: include/global_settings.php:1754 user_domains.php:379
+#: include/global_settings.php:1754 user_domains.php:378
 #, fuzzy
 msgid "Protocol Version"
 msgstr "協議版本"
@@ -12110,7 +12110,7 @@ msgstr "LDAP 調試模式"
 msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log during Binding and Searching activities."
 msgstr "如果選中 Kadupul 將在綁定和搜索活動期間將額外的 LDAP 信息記錄到 Kadupul 日誌中。"
 
-#: include/global_settings.php:1783 user_domains.php:386
+#: include/global_settings.php:1783 user_domains.php:385
 #, fuzzy
 msgid "Encryption"
 msgstr "加密"
@@ -12127,17 +12127,17 @@ msgstr "TLS 證書要求"
 msgid "Should LDAP verify TLS Certificates when received by the Client.  Demand and Hard refuse a server whose certificate does not verify.  Never and Allow skip that check, so anyone on the network path can pose as the directory and read the passwords sent to it."
 msgstr ""
 
-#: include/global_settings.php:1797 user_domains.php:393
+#: include/global_settings.php:1797 user_domains.php:392
 #, fuzzy
 msgid "Referrals"
 msgstr "推廣引薦"
 
-#: include/global_settings.php:1798 user_domains.php:394
+#: include/global_settings.php:1798 user_domains.php:393
 #, fuzzy
 msgid "Enable or Disable LDAP referrals.  If disabled, it may increase the speed of searches."
 msgstr "啟用或禁用LDAP引用。如果禁用，則可能會提高搜索速度。"
 
-#: include/global_settings.php:1807 user_domains.php:400
+#: include/global_settings.php:1807 user_domains.php:399
 #, fuzzy
 msgid "Mode"
 msgstr "模式"
@@ -12146,55 +12146,55 @@ msgstr "模式"
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
 msgstr "Kadupul將嘗試針對LDAP服務器進行身份驗證的模式。 <blockquote> <i>沒有搜索</i> - 沒有可分辨名稱（DN）搜索，只是嘗試使用提供的專有名稱（DN）格式進行綁定。 <br><br> <i>匿名搜索</i> - 嘗試通過匿名綁定搜索LDAP目錄的用戶名，以找到用戶的專有名稱（DN）。 <br><br> <i>特定搜索</i> - 嘗試通過特定可分辨名稱（DN）和特定密碼搜索LDAP目錄，以進行綁定以找到用戶的可分辨名稱（DN）。"
 
-#: include/global_settings.php:1814 user_domains.php:407
+#: include/global_settings.php:1814 user_domains.php:406
 #, fuzzy
 msgid "Distinguished Name (DN)"
 msgstr "專有名稱（DN）"
 
-#: include/global_settings.php:1815 user_domains.php:408
+#: include/global_settings.php:1815 user_domains.php:407
 msgid "The \"Distinguished Name\" syntax, applicable for both OpenLDAP and Windows AD configurations, offers flexibility in defining user identity. For OpenLDAP, the format follows this structure: <i>\"uid=&lt;username&gt;,ou=people,dc=domain,dc=local\"</i>. Windows AD provides an alternative syntax: <i>\"&lt;username&gt;@win2kdomain.local\"</i>, commonly known as \"userPrincipalName (UPN)\". In this context, \"&lt;username&gt;\" represents the specific username provided during the login prompt. This is particularly pertinent when operating in \"No Searching\" mode, or \"Require Group Membership\" enabled."
 msgstr ""
 
-#: include/global_settings.php:1821 user_domains.php:415
+#: include/global_settings.php:1821 user_domains.php:414
 #, fuzzy
 msgid "Require Group Membership"
 msgstr "需要組成員資格"
 
-#: include/global_settings.php:1822 user_domains.php:416
+#: include/global_settings.php:1822 user_domains.php:415
 #, fuzzy
 msgid "Require user to be member of group to authenticate. Group settings must be set for this to work, enabling without proper group settings will cause authentication failure."
 msgstr "要求用戶成為組的成員進行身份驗證。必須設置組設置才能使其正常工作，如果沒有正確的組設置啟用將導致身份驗證失敗。"
 
-#: include/global_settings.php:1827 user_domains.php:421
+#: include/global_settings.php:1827 user_domains.php:420
 #, fuzzy
 msgid "LDAP Group Settings"
 msgstr "LDAP組設置"
 
-#: include/global_settings.php:1831 user_domains.php:425
+#: include/global_settings.php:1831 user_domains.php:424
 #, fuzzy
 msgid "Group Distinguished Name (DN)"
 msgstr "集團專有名稱（DN）"
 
-#: include/global_settings.php:1832 user_domains.php:426
+#: include/global_settings.php:1832 user_domains.php:425
 #, fuzzy
 msgid "Distinguished Name of the group that user must have membership."
 msgstr "用戶必須具有成員資格的組的專有名稱。"
 
-#: include/global_settings.php:1838 user_domains.php:432
+#: include/global_settings.php:1838 user_domains.php:431
 #, fuzzy
 msgid "Group Member Attribute"
 msgstr "組成員屬性"
 
-#: include/global_settings.php:1839 user_domains.php:433
+#: include/global_settings.php:1839 user_domains.php:432
 msgid "This refers to the specific attribute within the LDAP directory that holds the usernames of group members. It is crucial to ensure that the attribute value aligns with the configuration specified in the \"Distinguished Name\" or that the actual attribute value is searchable using the settings outlined in the \"Distinguished Name\"."
 msgstr ""
 
-#: include/global_settings.php:1845 user_domains.php:439
+#: include/global_settings.php:1845 user_domains.php:438
 #, fuzzy
 msgid "Group Member Type"
 msgstr "集團成員類型"
 
-#: include/global_settings.php:1846 user_domains.php:440
+#: include/global_settings.php:1846 user_domains.php:439
 #, fuzzy
 msgid "Defines if users use full Distinguished Name or just Username in the defined Group Member Attribute."
 msgstr "定義用戶是否在定義的組成員屬性中使用完整的專有名稱或僅使用用戶名。"
@@ -12203,12 +12203,12 @@ msgstr "定義用戶是否在定義的組成員屬性中使用完整的專有名
 msgid "Distinguished Name"
 msgstr "專有名稱"
 
-#: include/global_settings.php:1855 user_domains.php:446
+#: include/global_settings.php:1855 user_domains.php:445
 #, fuzzy
 msgid "LDAP Specific Search Settings"
 msgstr "LDAP特定搜索設置"
 
-#: include/global_settings.php:1859 user_domains.php:450
+#: include/global_settings.php:1859 user_domains.php:449
 #, fuzzy
 msgid "Search Base"
 msgstr "搜尋基本點"
@@ -12217,7 +12217,7 @@ msgstr "搜尋基本點"
 msgid "Search base for searching the LDAP directory, such as <i>'dc=win2kdomain,dc=local'</i> or <i>'ou=people,dc=domain,dc=local'</i>."
 msgstr "用於搜索LDAP目錄的搜索庫，例如<i>“dc = win2kdomain，dc = local”</i>或<i>“ou = people，dc = domain，dc = local”</i> 。"
 
-#: include/global_settings.php:1865 user_domains.php:457
+#: include/global_settings.php:1865 user_domains.php:456
 #, fuzzy
 msgid "Search Filter"
 msgstr "搜索過濾器"
@@ -12226,32 +12226,32 @@ msgstr "搜索過濾器"
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>'(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))'</i> or for OpenLDAP: <i>'(&(objectClass=account)(uid=&lt;username&gt))'</i>.  '&lt;username&gt' is replaced with the username that was supplied at the login prompt. "
 msgstr "搜索過濾器用於在LDAP目錄中定位用戶，例如對於windows： <i>&#39;（＆（objectclass = user）（objectcategory = user）（userPrincipalName = &lt;username&gt; *））&#39;</i>或OpenLDAP： <i>&#39;（＆（objectClass） = account）（uid = &lt;username&gt;））&#39;</i> 。 &#39;&lt;username&gt;&#39;將替換為登錄提示符下提供的用戶名。"
 
-#: include/global_settings.php:1871 user_domains.php:464
+#: include/global_settings.php:1871 user_domains.php:463
 #, fuzzy
 msgid "Search Distinguished Name (DN)"
 msgstr "搜索專有名稱（DN）"
 
-#: include/global_settings.php:1872 user_domains.php:465
+#: include/global_settings.php:1872 user_domains.php:464
 #, fuzzy
 msgid "Distinguished Name for Specific Searching binding to the LDAP directory."
 msgstr "特定搜索綁定到LDAP目錄的專有名稱。"
 
-#: include/global_settings.php:1877 user_domains.php:471
+#: include/global_settings.php:1877 user_domains.php:470
 #, fuzzy
 msgid "Search Password"
 msgstr "搜索密碼"
 
-#: include/global_settings.php:1878 user_domains.php:472
+#: include/global_settings.php:1878 user_domains.php:471
 #, fuzzy
 msgid "Password for Specific Searching binding to the LDAP directory."
 msgstr "特定搜索綁定到LDAP目錄的密碼。"
 
-#: include/global_settings.php:1883 user_domains.php:478
+#: include/global_settings.php:1883 user_domains.php:477
 #, fuzzy
 msgid "LDAP CN Settings"
 msgstr "LDAP CN設置"
 
-#: include/global_settings.php:1888 user_domains.php:483
+#: include/global_settings.php:1888 user_domains.php:482
 #, fuzzy
 msgid "Field that will replace the Full Name when creating a new user, taken from LDAP. (on windows: displayname) "
 msgstr "從LDAP獲取的創建新用戶時將替換全名的字段。 （在windows上：displayname） "
@@ -18965,7 +18965,7 @@ msgstr "請關閉瀏覽器或%s登錄再次%s"
 msgid "Version %s"
 msgstr "版本 %s"
 
-#: managers.php:25 managers.php:218 managers.php:585
+#: managers.php:25 managers.php:218 managers.php:584
 #, fuzzy
 msgid "Notifications"
 msgstr "通知"
@@ -18975,7 +18975,7 @@ msgstr "通知"
 msgid "SNMP Notification Receivers"
 msgstr "SNMP通知接收器"
 
-#: managers.php:150 managers.php:223 managers.php:510 managers.php:848
+#: managers.php:150 managers.php:223 managers.php:509 managers.php:847
 #, fuzzy
 msgid "Receivers"
 msgstr "寄送群組"
@@ -18990,114 +18990,114 @@ msgstr "ID"
 msgid "No SNMP Notification Receivers"
 msgstr "沒有SNMP通知接收器"
 
-#: managers.php:281
+#: managers.php:280
 #, fuzzy, php-format
 msgid "SNMP Notification Receiver [edit: %s]"
 msgstr "SNMP通知接收器[編輯：%s]"
 
-#: managers.php:283
+#: managers.php:282
 #, fuzzy
 msgid "SNMP Notification Receiver [new]"
 msgstr "SNMP通知接收器[新]"
 
-#: managers.php:486 managers.php:578 utilities.php:3131 utilities.php:3206
+#: managers.php:485 managers.php:577 utilities.php:3131 utilities.php:3206
 #, fuzzy
 msgid "MIB"
 msgstr "MIB"
 
-#: managers.php:577 utilities.php:1934 utilities.php:3206
+#: managers.php:576 utilities.php:1934 utilities.php:3206
 #, fuzzy
 msgid "OID"
 msgstr "OID"
 
-#: managers.php:579
+#: managers.php:578
 #, fuzzy
 msgid "Kind"
 msgstr "屬性"
 
-#: managers.php:580 utilities.php:3206
+#: managers.php:579 utilities.php:3206
 #, fuzzy
 msgid "Max-Access"
 msgstr "最大權限"
 
-#: managers.php:581
+#: managers.php:580
 #, fuzzy
 msgid "Monitored"
 msgstr "監控"
 
-#: managers.php:617
+#: managers.php:616
 #, fuzzy
 msgid "No SNMP Notifications"
 msgstr "沒有SNMP通知"
 
-#: managers.php:777 utilities.php:3393
+#: managers.php:776 utilities.php:3393
 #, fuzzy
 msgid "Severity"
 msgstr "重要性"
 
-#: managers.php:796 utilities.php:3439
+#: managers.php:795 utilities.php:3439
 #, fuzzy
 msgid "Purge Notification Log"
 msgstr "清除通知日誌"
 
-#: managers.php:843 utilities.php:3499
+#: managers.php:842 utilities.php:3499
 #, fuzzy
 msgid "Time"
 msgstr "時間"
 
-#: managers.php:844 utilities.php:3499
+#: managers.php:843 utilities.php:3499
 #, fuzzy
 msgid "Notification"
 msgstr "通知"
 
-#: managers.php:845 utilities.php:3499
+#: managers.php:844 utilities.php:3499
 #, fuzzy
 msgid "Varbinds"
 msgstr "變量綁定"
 
-#: managers.php:862
+#: managers.php:861
 #, fuzzy
 msgid "Severity Level"
 msgstr "嚴重程度"
 
-#: managers.php:878 utilities.php:3521
+#: managers.php:877 utilities.php:3521
 #, fuzzy
 msgid "No SNMP Notification Log Entries"
 msgstr "沒有SNMP通知日誌條目"
 
-#: managers.php:1052
+#: managers.php:1051
 msgid "Click 'Continue' to delete the following Notification Receiver"
 msgid_plural "Click 'Continue' to delete following Notification Receiver"
 msgstr[0] "單擊“繼續”以刪除以下通知接收器"
 
-#: managers.php:1054
+#: managers.php:1053
 msgid "Click 'Continue' to enable the following Notification Receiver"
 msgid_plural "Click 'Continue' to enable following Notification Receiver"
 msgstr[0] "單擊“繼續”以啟用以下通知接收器"
 
-#: managers.php:1056
+#: managers.php:1055
 msgid "Click 'Continue' to disable the following Notification Receiver"
 msgid_plural "Click 'Continue' to disable following Notification Receiver"
 msgstr[0] "單擊“繼續”以禁用以下通知接收器"
 
-#: managers.php:1066
+#: managers.php:1065
 #, fuzzy, php-format
 msgid "%s Notification Receivers"
 msgstr "％s通知接收者"
 
-#: managers.php:1117
+#: managers.php:1116
 msgid "Click 'Continue' to forward the following Notification Objects to this Notification Receiver."
 msgstr "單擊“繼續”將以下通知對象轉發到此通知接收器。"
 
-#: managers.php:1118
+#: managers.php:1117
 msgid "Click 'Continue' to disable forwarding the following Notification Objects to this Notification Receiver."
 msgstr "單擊“繼續”以禁用將以下通知對象轉發到此通知接收器。"
 
-#: managers.php:1127
+#: managers.php:1126
 msgid "Disable Notification Objects"
 msgstr "禁用通知對象"
 
-#: managers.php:1129
+#: managers.php:1128
 msgid "You must select at least one notification object."
 msgstr "您必須至少選擇一個通知對象。"
 
@@ -19937,76 +19937,76 @@ msgctxt "dropdown action"
 msgid "Archive"
 msgstr "檔案"
 
-#: rrdcleaner.php:30 rrdcleaner.php:437 rrdcleaner.php:473
+#: rrdcleaner.php:30 rrdcleaner.php:434 rrdcleaner.php:469
 msgid "Automatic local RRD cleanup is unavailable on Windows. Stop all RRD writers before manual cleanup."
 msgstr ""
 
-#: rrdcleaner.php:368
+#: rrdcleaner.php:366
 #, fuzzy
 msgid "RRD Files"
 msgstr "RRD文件"
 
-#: rrdcleaner.php:377
+#: rrdcleaner.php:375
 #, fuzzy
 msgid "RRD File Name"
 msgstr "RRD文件名"
 
-#: rrdcleaner.php:378
+#: rrdcleaner.php:376
 #, fuzzy
 msgid "DS Name"
 msgstr "DS 名稱"
 
-#: rrdcleaner.php:379
+#: rrdcleaner.php:377
 #, fuzzy
 msgid "DS ID"
 msgstr "DS ID"
 
-#: rrdcleaner.php:380
+#: rrdcleaner.php:378
 #, fuzzy
 msgid "Template ID"
 msgstr "主題 ID"
 
-#: rrdcleaner.php:382
+#: rrdcleaner.php:380
 #, fuzzy
 msgid "Last Modified"
 msgstr "最後修改"
 
-#: rrdcleaner.php:383
+#: rrdcleaner.php:381
 #, fuzzy
 msgid "Size [KB]"
 msgstr "大小[KB]"
 
-#: rrdcleaner.php:394 rrdcleaner.php:395
+#: rrdcleaner.php:392 rrdcleaner.php:393
 #, fuzzy
 msgid "Deleted"
 msgstr "已刪除"
 
-#: rrdcleaner.php:403
+#: rrdcleaner.php:401
 #, fuzzy
 msgid "No unused RRD Files"
 msgstr "沒有未使用的RRD文件"
 
-#: rrdcleaner.php:426
+#: rrdcleaner.php:424
 #, fuzzy
 msgid "Total Size [MB]:"
 msgstr "總大小[MB]："
 
-#: rrdcleaner.php:428
+#: rrdcleaner.php:426
 #, fuzzy
 msgid "Last Scan:"
 msgstr "上次掃描："
 
-#: rrdcleaner.php:529
+#: rrdcleaner.php:525
 #, fuzzy
 msgid "Time Since Update"
 msgstr "更新後的時間"
 
-#: rrdcleaner.php:545
+#: rrdcleaner.php:541
 #, fuzzy
 msgid "RRDfiles"
 msgstr "RRDfiles"
 
-#: rrdcleaner.php:564 user_domains.php:665 user_group_admin.php:2018
+#: rrdcleaner.php:560 user_domains.php:664 user_group_admin.php:2018
 #: user_group_admin.php:2148 user_group_admin.php:2154
 #: user_group_admin.php:2160 user_group_admin.php:2166
 #: user_group_admin.php:2172
@@ -20015,7 +20015,7 @@ msgctxt "filter: use"
 msgid "Go"
 msgstr "送出"
 
-#: rrdcleaner.php:565 user_group_admin.php:2019 user_group_admin.php:2148
+#: rrdcleaner.php:561 user_group_admin.php:2019 user_group_admin.php:2148
 #: user_group_admin.php:2154 user_group_admin.php:2160
 #: user_group_admin.php:2166
 #, fuzzy
@@ -20023,27 +20023,27 @@ msgctxt "filter: reset"
 msgid "Clear"
 msgstr "清除"
 
-#: rrdcleaner.php:566
+#: rrdcleaner.php:562
 #, fuzzy
 msgid "Rescan"
 msgstr "重新掃描"
 
-#: rrdcleaner.php:571
+#: rrdcleaner.php:567
 #, fuzzy
 msgid "Delete All"
 msgstr "刪除全部"
 
-#: rrdcleaner.php:571
+#: rrdcleaner.php:567
 #, fuzzy
 msgid "Delete All Unknown RRDfiles"
 msgstr "刪除所有未知的RRD文件"
 
-#: rrdcleaner.php:572
+#: rrdcleaner.php:568
 #, fuzzy
 msgid "Archive All"
 msgstr "歸檔所有"
 
-#: rrdcleaner.php:572
+#: rrdcleaner.php:568
 #, fuzzy
 msgid "Archive All Unknown RRDfiles"
 msgstr "存檔所有未知的RRD文件"
@@ -21353,166 +21353,166 @@ msgstr "模板權限%s"
 msgid "Tree Permission %s"
 msgstr "樹權限%s"
 
-#: user_domains.php:215
+#: user_domains.php:214
 msgid "Click 'Continue' to delete the following User Domain."
 msgid_plural "Click 'Continue' to delete following User Domains."
 msgstr[0] "單擊“繼續”以刪除以下用戶域。"
 
-#: user_domains.php:220
+#: user_domains.php:219
 msgid "Delete User Domain"
 msgid_plural "Delete User Domains"
 msgstr[0] "刪除用戶域"
 
-#: user_domains.php:224
+#: user_domains.php:223
 msgid "Click 'Continue' to disable the following User Domain."
 msgid_plural "Click 'Continue' to disable following User Domains."
 msgstr[0] "單擊“繼續”以禁用以下用戶域。"
 
-#: user_domains.php:229
+#: user_domains.php:228
 msgid "Disable User Domain"
 msgid_plural "Disable User Domains"
 msgstr[0] "禁用用戶域"
 
-#: user_domains.php:233
+#: user_domains.php:232
 msgid "Click 'Continue' to enable the following User Domain."
 msgstr "單擊“繼續”以啟用以下用戶域。"
 
-#: user_domains.php:238
+#: user_domains.php:237
 msgid "Enabled User Domain"
 msgid_plural "Enable User Domains"
 msgstr[0] "啟用用戶域"
 
-#: user_domains.php:242
+#: user_domains.php:241
 #, fuzzy
 msgid "Click 'Continue' to make the following the following User Domain the default one."
 msgstr "單擊“繼續”以使以下用戶域成為默認用戶域。"
 
-#: user_domains.php:247
+#: user_domains.php:246
 #, fuzzy
 msgid "Make Selected Domain Default"
 msgstr "使選定域默認"
 
-#: user_domains.php:302
+#: user_domains.php:301
 #, fuzzy, php-format
 msgid "User Domain [edit: %s]"
 msgstr "用戶域[編輯：%s]"
 
-#: user_domains.php:304
+#: user_domains.php:303
 #, fuzzy
 msgid "User Domain [new]"
 msgstr "用戶域名[新]"
 
-#: user_domains.php:312
+#: user_domains.php:311
 #, fuzzy
 msgid "Enter a meaningful name for this domain. This will be the name that appears in the Login Realm during login."
 msgstr "為此域輸入有意義的名稱。這將是登錄期間登錄領域中顯示的名稱。"
 
-#: user_domains.php:318
+#: user_domains.php:317
 #, fuzzy
 msgid "Domains Type"
 msgstr "域類型"
 
-#: user_domains.php:319
+#: user_domains.php:318
 #, fuzzy
 msgid "Choose what type of domain this is."
 msgstr "選擇這是什麼類型的域。"
 
-#: user_domains.php:326
+#: user_domains.php:325
 #, fuzzy
 msgid "The name of the user that Kadupul will use as a template for new user accounts."
 msgstr "Kadupul將用作新用戶帳戶模板的用戶名。"
 
-#: user_domains.php:336
+#: user_domains.php:335
 #, fuzzy
 msgid "If this checkbox is checked, users will be able to login using this domain."
 msgstr "如果選中此復選框，則用戶將能夠使用此域登錄。"
 
-#: user_domains.php:362
+#: user_domains.php:361
 #, fuzzy
 msgid "TCP/UDP port for Non SSL communications."
 msgstr "用於非SSL通信的TCP / UDP端口。"
 
-#: user_domains.php:371
+#: user_domains.php:370
 #, fuzzy
 msgid "TCP/UDP port for SSL communications."
 msgstr "用於SSL通信的TCP / UDP端口。"
 
-#: user_domains.php:380
+#: user_domains.php:379
 #, fuzzy
 msgid "Protocol Version that the server supports."
 msgstr "服務器支持的協議版本。"
 
-#: user_domains.php:387
+#: user_domains.php:386
 #, fuzzy
 msgid "Encryption that the server supports. TLS is only supported by Protocol Version 3."
 msgstr "服務器支持的加密。 TLS僅受協議版本3支持。"
 
-#: user_domains.php:401
+#: user_domains.php:400
 #, fuzzy
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN)."
 msgstr "Kadupul將嘗試針對LDAP服務器進行身份驗證的模式。 <blockquote> <i>沒有搜索</i> - 沒有可分辨名稱（DN）搜索，只是嘗試使用提供的專有名稱（DN）格式進行綁定。 <br><br> <i>匿名搜索</i> - 嘗試通過匿名綁定搜索LDAP目錄的用戶名，以查找用戶可分辨名稱（DN）。 <br><br> <i>特定搜索</i> - 嘗試通過特定可分辨名稱（DN）和特定密碼搜索LDAP目錄，以便綁定以查找用戶可分辨名稱（DN）。"
 
-#: user_domains.php:451
+#: user_domains.php:450
 #, fuzzy
 msgid "Search base for searching the LDAP directory, such as <i>\"dc=win2kdomain,dc=local\"</i> or <i>\"ou=people,dc=domain,dc=local\"</i>."
 msgstr "用於搜索LDAP目錄的搜索庫，例如<i>“dc = win2kdomain，dc = local”</i>或<i>“ou = people，dc = domain，dc = local”</i> 。"
 
-#: user_domains.php:458
+#: user_domains.php:457
 #, fuzzy
 msgid "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> or for OpenLDAP: <i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>.  \"&lt;username&gt\" is replaced with the username that was supplied at the login prompt."
 msgstr "搜索過濾器用於在LDAP目錄中定位用戶，例如對於windows： <i>“（＆（objectclass = user）（objectcategory = user）（userPrincipalName = &lt;username&gt; *））”</i>或OpenLDAP： <i>“（＆（objectClass） = account）（uid = &lt;username&gt;））“</i> 。 “&lt;username&gt;”將替換為登錄提示符下提供的用戶名。"
 
-#: user_domains.php:489
+#: user_domains.php:488
 #, fuzzy
 msgid "eMail"
 msgstr "電子郵件"
 
-#: user_domains.php:490
+#: user_domains.php:489
 #, fuzzy
 msgid "Field that will replace the email taken from LDAP. (on windows: mail) "
 msgstr "將替換從LDAP獲取的電子郵件的字段。 （在Windows上：郵件） "
 
-#: user_domains.php:515
+#: user_domains.php:514
 #, fuzzy
 msgid "Domain Properties"
 msgstr "域屬性"
 
-#: user_domains.php:649
+#: user_domains.php:648
 #, fuzzy
 msgid "Domains"
 msgstr "網域"
 
-#: user_domains.php:737
+#: user_domains.php:736
 #, fuzzy
 msgid "Domain Name"
 msgstr "網域名稱"
 
-#: user_domains.php:738
+#: user_domains.php:737
 #, fuzzy
 msgid "Domain Type"
 msgstr "域類型"
 
-#: user_domains.php:740
+#: user_domains.php:739
 #, fuzzy
 msgid "Effective User"
 msgstr "有效的用戶"
 
-#: user_domains.php:741
+#: user_domains.php:740
 #, fuzzy
 msgid "CN FullName"
 msgstr "CN FullName"
 
-#: user_domains.php:742
+#: user_domains.php:741
 #, fuzzy
 msgid "CN eMail"
 msgstr "CN電子郵件"
 
-#: user_domains.php:755
+#: user_domains.php:754
 #, fuzzy
 msgid "None Selected"
 msgstr "未選擇"
 
-#: user_domains.php:763
+#: user_domains.php:762
 #, fuzzy
 msgid "No User Domains Found"
 msgstr "找不到用戶域"
