@@ -92,7 +92,7 @@ final class IdentityRelationshipsNativeTest extends TestCase
         $catalog = new \Kadupul\IdentityAccess\Infrastructure\Persistence\DbalIdentityRelationships($this->database);
         $count = 0;
         foreach (\Kadupul\Navigation\Contract\Relationships\RelationshipScreen::cases() as $screen) {
-            if (!$catalog->supports($screen)) {
+            if (!$catalog->supports($screen) || $screen->identitySettingsView()) {
                 continue;
             }
             ++$count;

@@ -41,6 +41,7 @@ final class RelationshipRoutesTest extends TestCase
     private bool $missing = false;
     private bool $empty = false;
     private array $reads = [];
+    private ?array $recordOverride = null;
 
     protected function setUp(): void
     {
@@ -76,6 +77,9 @@ final class RelationshipRoutesTest extends TestCase
             }
             if ($this->missing) {
                 throw new RelationshipParentNotFound();
+            }
+            if ($this->recordOverride !== null) {
+                return new RelationshipPage('Parent <b>', $this->recordOverride);
             }
             $record = array_fill_keys(array_keys($screen->columns()), '<script>window.bad = 1</script>');
             $record['id'] = 7;
@@ -271,6 +275,27 @@ final class RelationshipRoutesTest extends TestCase
         }
         self::assertSame(200, $this->get('/relationships/receiver-history/4294967295')->getStatusCode());
         self::assertSame(4294967295, $this->reads[0][2]);
+    }
+
+    public function testStoredSettingsKeepZeroEmptyAndNullDistinctAndTranslateLabels(): void
+    {
+        $this->recordOverride = [
+            ['id' => 'selected_theme', 'name' => 'selected_theme', 'value' => '0'],
+            ['id' => 'page_refresh', 'name' => 'page_refresh', 'value' => ''],
+        ];
+        foreach ([RelationshipScreen::UserDisplay, RelationshipScreen::GroupDisplay] as $screen) {
+            $html = (string) $this->get(substr($screen->path(), 7) . '/4')->getContent();
+            $dom = new \DOMDocument();
+            self::assertTrue(@$dom->loadHTML($html));
+            $xpath = new \DOMXPath($dom);
+            self::assertSame('0', trim($xpath->query('//tr[td/code="selected_theme"]/td[2]')->item(0)->textContent));
+            self::assertSame('Empty string', trim($xpath->query('//tr[td/code="page_refresh"]/td[2]')->item(0)->textContent));
+            self::assertStringContainsString('Theme', $xpath->query('//tr[td/code="selected_theme"]/td[1]')->item(0)->textContent);
+            self::assertStringContainsString('Missing settings have no stored override.', $html);
+        }
+        $this->recordOverride = [['id' => 'graph_settings', 'name' => 'graph_settings', 'value' => null]];
+        $response = $this->get('/relationships/user-login-options/4');
+        self::assertStringContainsString('Not set', (string) $response->getContent());
     }
 
     private function get(string $uri): Response

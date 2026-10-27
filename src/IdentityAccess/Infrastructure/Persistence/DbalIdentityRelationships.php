@@ -43,18 +43,47 @@ final readonly class DbalIdentityRelationships implements RelationshipCatalog
         if ($parent === false) {
             throw new RelationshipParentNotFound();
         }
-        $source = match ($screen) {
-            RelationshipScreen::UserGroups => 'SELECT m.group_id AS id, g.name, g.enabled, g.description
+        $source = match (true) {
+            $screen->identitySettingsView() => $this->settingsSource($screen, $ownerTable, $ownerId, $user),
+            $screen === RelationshipScreen::UserGroups => 'SELECT m.group_id AS id, g.name, g.enabled, g.description
                 FROM user_auth_group_members m LEFT JOIN user_auth_group g ON g.id = m.group_id WHERE m.user_id = ?',
-            RelationshipScreen::GroupMembers => 'SELECT m.user_id AS id, u.username AS name, u.realm, u.enabled
+            $screen === RelationshipScreen::GroupMembers => 'SELECT m.user_id AS id, u.username AS name, u.realm, u.enabled
                 FROM user_auth_group_members m LEFT JOIN user_auth u ON u.id = m.user_id WHERE m.group_id = ?',
             default => $this->permissionSource($screen, $ownerTable, $ownerId, $permissionTable),
         };
         // Sorting identifiers are enum-owned. Values remain bound parameters.
+        $search = 'COALESCE(listing.name, \'\') LIKE ?';
+        $parameters = [$parentId, '%' . $filters->filter . '%'];
+        if ($screen->settingLabels() !== []) {
+            $search = '(' . $search . ' OR listing.value LIKE ?)';
+            $parameters[] = '%' . $filters->filter . '%';
+        }
         $records = $this->database->fetchAllAssociative('SELECT listing.* FROM (' . $source . ') listing
-            WHERE COALESCE(listing.name, \'\') LIKE ? ORDER BY listing.`' . $filters->sortColumn . '` ' . $filters->sortDirection
-            . ', listing.id ASC LIMIT ' . ($filters->rows + 1) . ' OFFSET ' . (($filters->page - 1) * $filters->rows), [$parentId, '%' . $filters->filter . '%']);
+            WHERE ' . $search . ' ORDER BY listing.`' . $filters->sortColumn . '` ' . $filters->sortDirection
+            . ', listing.id ASC LIMIT ' . ($filters->rows + 1) . ' OFFSET ' . (($filters->page - 1) * $filters->rows), $parameters);
         return new RelationshipPage($parent, $records);
+    }
+
+    private function settingsSource(RelationshipScreen $screen, string $ownerTable, string $ownerId, bool $user): string
+    {
+        if (in_array($screen, [RelationshipScreen::UserRealms, RelationshipScreen::GroupRealms], true)) {
+            $table = $user ? 'user_auth_realm' : 'user_auth_group_realm';
+            return "SELECT realm_id AS id, realm_id AS name, 'Assigned' AS `grant` FROM $table WHERE $ownerId = ?";
+        }
+        // Every key is an enum constant, never request data or a plugin key.
+        $keys = array_keys($screen->settingLabels());
+        if ($keys === []) {
+            throw new \InvalidArgumentException('Missing setting allowlist.');
+        }
+        if (in_array($screen, [RelationshipScreen::UserLogin, RelationshipScreen::GroupLogin], true)) {
+            $keysSql = implode(' UNION ALL ', array_map(static fn(string $key): string => "SELECT '$key' AS name", $keys));
+            $valuesSql = implode(' ', array_map(static fn(string $key): string => "WHEN '$key' THEN owner.`$key`", $keys));
+            return "SELECT setting.name AS id, setting.name, CASE setting.name $valuesSql END AS value
+                FROM $ownerTable owner CROSS JOIN ($keysSql) setting WHERE owner.id = ?";
+        }
+        $table = $user ? 'settings_user' : 'settings_user_group';
+        $keysSql = implode(', ', array_map(static fn(string $key): string => "'$key'", $keys));
+        return "SELECT name AS id, name, value FROM $table WHERE $ownerId = ? AND name IN ($keysSql)";
     }
 
     private function permissionSource(RelationshipScreen $screen, string $ownerTable, string $ownerId, string $permissionTable): string
