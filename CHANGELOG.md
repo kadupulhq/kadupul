@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Verify a local login password once. A known account no longer verifies again before a rehash, so known, unknown, disabled and locked usernames each cost one hash, and a password replaced during the login refuses it (GHSA-p3rg-7pc3-2h86, upstream Cacti #8157).
 - Pass bootstrap row choices explicitly through legacy permission filters, removing the renderer's global binding while preserving tab-hook catalog changes.
 - Pass bulk permission selection field names explicitly from authenticated user/group page handlers instead of reading POST inside the association helper.
 - Remove 71 unused global bindings from 45 retained operation-page functions, tighten their per-file ratchet, and document global-state boundaries behind every Twig migration family. Native HTTP controllers are now checked alongside application/domain code for direct global access.

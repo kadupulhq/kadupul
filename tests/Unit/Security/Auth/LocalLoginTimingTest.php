@@ -12,7 +12,7 @@
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 
-function local_login_timing_run(string $username, string $password, string $state = "enabled", ?string $legacy_hash = null): array
+function local_login_timing_run(string $username, string $password, string $state = "enabled", ?string $legacy_hash = null, bool $replaced = false): array
 {
     $auth = file_get_contents(dirname(__DIR__, 4) . '/lib/auth.php');
 
@@ -34,7 +34,14 @@ function auth_checkclear_lockout($username, $realm) {}
 function auth_process_lockout_check($username, $realm) { global $error; if ($GLOBALS['scenario']['state'] === 'locked' && $username === 'alice') { $error = true; return true; } return false; }
 function auth_process_lockout($username, $realm) {}
 function db_column_exists($table, $column) { return true; }
-function db_fetch_row_prepared($sql, $params = array()) { return $GLOBALS['users'][$params[0]] ?? array(); }
+function db_fetch_row_prepared($sql, $params = array()) {
+    $row = $GLOBALS['users'][$params[0]] ?? array();
+    // A password reset that lands between verification and the full row read.
+    if ($row && str_contains($sql, 'SELECT *') && !empty($GLOBALS['scenario']['replaced'])) {
+        $row['password'] = 'replaced-hash';
+    }
+    return $row;
+}
 function db_fetch_cell_prepared($sql, $params = array()) { return $GLOBALS['users'][$params[0]]['password'] ?? ''; }
 function db_execute_prepared($sql, $params = array()) { return true; }
 function compat_password_verify($password, $hash) {
@@ -66,7 +73,7 @@ PHP;
     $program .= 'print json_encode(array(\'user\' => $user, \'error\' => $error, \'error_msg\' => $error_msg, \'hashes\' => $GLOBALS[\'hashes\']));';
 
     $process = proc_open(
-        array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, json_encode(array('username' => $username, 'password' => $password, 'state' => $state, 'legacy_hash' => $legacy_hash))),
+        array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, json_encode(array('username' => $username, 'password' => $password, 'state' => $state, 'legacy_hash' => $legacy_hash, 'replaced' => $replaced))),
         array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
         $pipes
     );
@@ -90,14 +97,14 @@ test('an unknown username runs as many password verifications as a known one', f
         ->and($known['error'])->toBeTrue()
         ->and($unknown['error'])->toBeTrue()
         ->and($known['error_msg'])->toBe($unknown['error_msg'])
-        ->and($known['hashes'])->not->toBe(array())
+        ->and(count($known['hashes']))->toBe($password === '' ? 0 : 1)
         ->and(count($unknown['hashes']))->toBe(count($known['hashes']));
 })->with(array('wrong password' => 'guess', 'blank password' => ''));
 
 test('the stand-in work hashes at the PASSWORD_DEFAULT cost', function () {
     $unknown = local_login_timing_run('nobody', 'guess');
 
-    expect($unknown['hashes'])->toBe(array('hash:' . PASSWORD_DEFAULT, 'hash:' . PASSWORD_DEFAULT));
+    expect($unknown['hashes'])->toBe(array('hash:' . PASSWORD_DEFAULT));
 });
 
 test('a correct password still returns the account', function () {
@@ -105,6 +112,35 @@ test('a correct password still returns the account', function () {
 
     expect($result['user']['id'] ?? null)->toBe(42)
         ->and($result['error'])->toBeFalse();
+});
+
+// GHSA-p3rg-7pc3-2h86, upstream Cacti #8157: a known account used to verify
+// twice, once to log in and again before a rehash. Each path now does the work
+// of one verification, so the count is fixed rather than only equal.
+test('every local login path does the work of exactly one password verification', function (string $username, string $state, string $password, ?string $hash) {
+    $result = local_login_timing_run($username, $password, $state, $hash);
+
+    expect(count($result['hashes']))->toBe(trim($password) === '' ? 0 : 1);
+})->with(array(
+    'known, wrong password' => array('alice', 'enabled', 'guess', null),
+    'known, right password' => array('alice', 'enabled', 'right', null),
+    'known, blank password' => array('alice', 'enabled', '', null),
+    'unknown' => array('nobody', 'enabled', 'guess', null),
+    'unknown, blank password' => array('nobody', 'enabled', '', null),
+    'disabled' => array('alice', 'disabled', 'guess', null),
+    'locked' => array('alice', 'locked', 'guess', null),
+    'legacy MD5, wrong password' => array('alice', 'enabled', 'guess', '7c4f29407893c334a6cb7a87bf045c0d'),
+    'legacy MD5, right password' => array('alice', 'enabled', 'right', '7c4f29407893c334a6cb7a87bf045c0d'),
+    'empty stored hash' => array('alice', 'enabled', 'guess', ''),
+));
+
+test('a password replaced after verification refuses the login', function () {
+    $result = local_login_timing_run('alice', 'right', 'enabled', null, true);
+
+    expect($result['user'])->toBe(array())
+        ->and($result['error'])->toBeTrue()
+        ->and($result['error_msg'])->toBe('Access Denied!  Login Failed.')
+        ->and($result['hashes'])->toBe(array('known-hash'));
 });
 
 test('disabled and locked usernames do the same password work as unknown names', function (string $state, string $password) {
