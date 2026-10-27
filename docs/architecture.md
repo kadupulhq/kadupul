@@ -190,6 +190,9 @@ so this path needs no procedural bootstrap or process bridge.
 
 - Inventory list: migrate required filters, saved preferences, exports, plugin
   contributions and navigation; compare behavior before replacing `host.php`.
+  `host.php` is now a forwarding shim (#307, `host.php:13-24`); legacy device
+  list hooks no longer run on core device pages (see "Legacy device entry and
+  menus" in [symfony-migration.md](symfony-migration.md)).
 - Inventory writes: move edit/bulk commands, validation, resource authorization,
   transactions and audit effects into the module; retire corresponding legacy
   dispatch actions only after regression coverage passes.

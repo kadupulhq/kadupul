@@ -137,9 +137,10 @@ headers only and mutation methods are rejected.
 The adapter projects the four legacy graph/device visibility modes without the
 legacy fast path that overlooks device exceptions. Default-allow exceptions are
 explicitly checked. The explicit state filter replaces legacy saved display
-preferences for this new screen. `host.php` remains operational; advanced filters,
+preferences for this new screen. `host.php` remained operational at this slice; advanced filters,
 full exports, advanced edits, bulk actions, plugin-provided list hooks/columns and navigation
-cutover are remaining migration work, not claimed parity.
+cutover were left as later migration work, not claimed parity. `host.php` now only
+forwards to Symfony; see [Legacy device entry and menus](#legacy-device-entry-and-menus).
 
 Run the module/kernel checks with `composer test`. Run real HTTP/database checks:
 
@@ -173,8 +174,9 @@ sorts by name with an ID tie-breaker; `page` and `size=25|50|100` provide bounde
 pagination with lookahead. Twig escapes site text and carries filters between
 pages. Controller responses are private/no-store. GET/HEAD are supported; Symfony
 rejects mutations at routing with a generic 405. Site deletion/duplication, remaining edit fields,
-other sort columns, saved preferences and legacy navigation cutover remain to be
-migrated. `sites.php` remains operational.
+other sort columns, saved preferences and legacy navigation cutover were left to
+later slices, and `sites.php` remained operational. See
+[Completed Sites workflow on main](#completed-sites-workflow-on-main) for the current state.
 
 ## Site editing slice
 
@@ -209,7 +211,7 @@ editors do not enforce the new revision protocol, so they can still overwrite la
 
 Failed persistence attempts roll back when the transaction remains active. An
 uncertain failure returns 502 and asks the operator to reload before retrying;
-there is no automatic retry. Controller responses are private/no-store. Other settings and destructive/bulk operations remain in `sites.php`.
+there is no automatic retry. Controller responses are private/no-store. Other settings and destructive/bulk operations stayed in `sites.php` until the [Completed Sites workflow](#completed-sites-workflow-on-main).
 
 ## Inventory details slice
 
@@ -248,8 +250,11 @@ Opening a device from the list preserves its search, filters, sorting, page and
 page size through validation errors and successful saves. “Back to devices”
 returns to that view. Only validated list parameters are carried in `list[...]`;
 form actions and links use fixed Symfony routes, never a supplied return URL.
-Other settings, including SNMP credentials, templates and poller assignment, remain
-in the legacy editor and cannot be submitted through this form.
+Other settings, including SNMP credentials, templates and poller assignment, stayed
+in the legacy editor at this slice and cannot be submitted through this form. Later
+slices moved them: [Device SNMP editing](#device-snmp-editing),
+[Device template assignment](#device-template-assignment) and
+[Device collector assignment](#device-collector-assignment).
 
 Symfony's built-in stateless CSRF protection requires the form token and same-origin
 browser evidence. Missing or cross-origin evidence fails closed; no second session
@@ -855,8 +860,8 @@ Successful creation redirects with HTTP 303 to the existing Twig site editor.
 Validation failures return 422, revoked access 401/403 and uncertain write results
 502 with a message to inspect the list before retrying. Responses are private and
 not stored. Labels and errors use the English/French Inventory catalogs. Existing
-site address/map editing, duplication and deletion remain in `sites.php`; LTS is
-unchanged.
+site address/map editing, duplication and deletion stayed in `sites.php` until the
+batch below; LTS is unchanged.
 
 
 ## Completed Sites workflow on main
@@ -1000,7 +1005,8 @@ Unassigned. Timeouts and remote/plugin effects retain the existing uncertain-sav
 behavior; the adapter never automatically retries.
 
 This completes site assignment in the editor; template, collector and detailed
-polling/credential editing remain separate migration slices. LTS is unchanged.
+polling/credential editing were separate migration slices, described in the
+sections that follow. LTS is unchanged.
 
 ### Device polling settings
 
@@ -1016,7 +1022,8 @@ configured maximum.
 NULL ping methods and other unsupported historical values require an explicit
 valid choice before saving; they are not silently normalized. The worker repeats validation and retains the
 legacy cache/poller/plugin path. SNMP credential and protocol editing, template
-and collector assignment remain separate slices. LTS is unchanged.
+and collector assignment were separate slices, described in the sections that
+follow. LTS is unchanged.
 
 
 ### Device SNMP editing
