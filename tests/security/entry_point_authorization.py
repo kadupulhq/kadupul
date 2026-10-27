@@ -227,14 +227,6 @@ def route_fixtures(rig, rows, ids):
     def present(prefix):
         return any(entry.startswith('app.php/' + prefix) for entry, _, _ in rows)
 
-    relationship_tables = {'device-template-queries': 'host_template', 'data-template-definitions': 'data_template', 'aggregate-template-items': 'aggregate_graph_templates', 'snmp-option-entries': 'automation_snmp', 'graph-rule-device-criteria': 'automation_graph_rules', 'graph-rule-query-criteria': 'automation_graph_rules', 'tree-rule-device-criteria': 'automation_tree_rules', 'tree-rule-steps': 'automation_tree_rules', 'receiver-subscriptions': 'snmpagent_managers', 'receiver-history': 'snmpagent_managers'}
-    for route, table in relationship_tables.items():
-        prefix = 'relationships/' + route
-        if present(prefix):
-            value = rig.sql('SELECT MIN(id) FROM ' + table).strip()
-            if not value.isdecimal() or int(value) < 1:
-                raise ValueError('Missing concrete relationship parent: ' + prefix)
-            ids[prefix] = {'id': int(value)}
     if present('graphing/gprint-presets'):
         ids['graphing/gprint-presets'] = {'id': int(rig.sql('SELECT MIN(id) FROM graph_templates_gprint').strip())}
     if present('graphing/data-source-profiles'):
@@ -265,6 +257,26 @@ def route_fixtures(rig, rows, ids):
         ids['graphing/colors'] = {'id': int(rig.sql('SELECT MIN(id) FROM colors').strip())}
     if present('links'):
         ids['links'] = {'id': 1}
+
+    relationship_tables = {'device-template-queries': 'host_template', 'data-template-definitions': 'data_template', 'aggregate-template-items': 'aggregate_graph_templates', 'snmp-option-entries': 'automation_snmp', 'graph-rule-device-criteria': 'automation_graph_rules', 'graph-rule-query-criteria': 'automation_graph_rules', 'tree-rule-device-criteria': 'automation_tree_rules', 'tree-rule-steps': 'automation_tree_rules', 'receiver-subscriptions': 'snmpagent_managers', 'receiver-history': 'snmpagent_managers'}
+    # Existing aggregate/device-template fixtures must be created before their
+    # relationship IDs are sampled. Fresh installs also have empty rule and
+    # receiver catalogs; create disabled, task-owned parents only when needed.
+    relationship_inserts = {
+        'automation_snmp': "INSERT INTO automation_snmp (name) VALUES ('entry-sweep'); SELECT LAST_INSERT_ID()",
+        'automation_graph_rules': "INSERT INTO automation_graph_rules (name) VALUES ('entry-sweep'); SELECT LAST_INSERT_ID()",
+        'automation_tree_rules': "INSERT INTO automation_tree_rules (name) VALUES ('entry-sweep'); SELECT LAST_INSERT_ID()",
+        'snmpagent_managers': "INSERT INTO snmpagent_managers (hostname, description, disabled, max_log_size, snmp_username, snmp_password, snmp_auth_protocol, snmp_priv_passphrase, snmp_priv_protocol, snmp_message_type) VALUES ('127.0.0.1', 'entry-sweep', 'on', 10, '', '', 'MD5', '', 'DES', 1); SELECT LAST_INSERT_ID()",
+    }
+    for route, table in relationship_tables.items():
+        prefix = 'relationships/' + route
+        if present(prefix):
+            value = rig.sql('SELECT MIN(id) FROM ' + table).strip()
+            if (not value.isdecimal() or int(value) < 1) and table in relationship_inserts:
+                value = rig.sql(relationship_inserts[table]).strip()
+            if not value.isdecimal() or int(value) < 1:
+                raise ValueError('Missing concrete relationship parent: ' + prefix)
+            ids[prefix] = {'id': int(value)}
 
 
 def entries():
