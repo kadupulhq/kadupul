@@ -13,14 +13,14 @@ An existing installation is four things, and only one of them is a database.
 
 | Part | What it is | Hardest problem |
 |---|---|---|
-| Database | 126 tables | Distinguishing configuration from local state |
+| Database | 113 tables in a fresh 1.2.31 schema, plus plugin tables | Distinguishing configuration from local state |
 | RRD files | One per data source, on disk | Paths are stored in the database |
 | `include/config.php` | Credentials, paths, connection | Hand-edited, never uniform |
 | `plugins/` | Third-party code | Not ours, versions vary, some abandoned |
 
 ## Configuration against state
 
-Most of the 126 tables are configuration and must come across intact. A
+Most of these tables are configuration and must come across intact. A
 meaningful minority are local state that the poller rebuilds on its next cycle,
 and copying them wastes time and imports staleness.
 
@@ -104,5 +104,6 @@ Each stage is separately runnable and separately verifiable.
 ## Versions we migrate from
 
 1.2.x and later only. Earlier installs upgrade to 1.2 with the supported upgrade
-path first, which is 47 upgrade scripts we are not reimplementing. The tool
+path first, which runs up to 39 upgrade scripts (`install/upgrades/0_8_1.php`
+through `1_2_0.php`) that we are not reimplementing. The tool
 should say so rather than trying.

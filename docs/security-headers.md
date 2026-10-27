@@ -195,7 +195,7 @@ across Kadupul pages depend on it).
 
 Plugin sources are cloned into the PHP image at build time via the
 `PLUGIN_THOLD_REPO`, `PLUGIN_THOLD_REF`, `PLUGIN_MONITOR_REPO`, and
-`PLUGIN_MONITOR_REF` build args. Defaults track `develop-1.2.x` on both
+`PLUGIN_MONITOR_REF` build args. Defaults track `develop` on both
 plugins. The container entrypoint copies the cloned trees into
 `plugins/<dir>` and seeds `plugin_config` rows with `status=1` (installed,
 not active). Status 1 is enough for `plugins.php?plugin=<dir>` to render

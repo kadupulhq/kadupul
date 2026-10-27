@@ -18,6 +18,7 @@ tests/
   02-self-signed-tls.sh          self-signed HTTPS poller fetch
   03-session-persistence.sh      cacti_auth_transition() does not bounce (curl-based)
   04-realm-enforcement.sh        is_realm_allowed() guardrail + runtime
+  09-cli-maintenance-integration.sh  cli/ contracts against the seeded database
 ```
 
 ## Run
@@ -51,8 +52,6 @@ By default the master Kadupul UI binds to `127.0.0.1:8088`. To use a different p
   -n 200 /var/www/html/log/cacti.log` -- Kadupul's own log.
 - `docker compose -f tests/e2e/docker/docker-compose.yml exec cacti-db mariadb
   -ucactiuser -pcactiuser cacti` -- direct DB shell.
-- Playwright traces land in `tests/e2e/docker/test-results/` (retained on
-  failure).
 
 ## Credentials seeded by `setup.sh`
 
@@ -104,7 +103,7 @@ line 29 fatal-errors. The canonical entry for the auth flow is
 
 1. **Tests 01 + 03 login flow.** Inspect what fields `auth_login.php` POST
    actually requires on this branch (CSRF token, exact `submit` button name).
-   Update the curl POST and the Playwright `page.click` selector to match.
+   Update the curl POST to match.
 2. **Test 02 expectation.** Decide whether the harness should treat
    `get_default_contextoption()`-strict-verify as a permanent FAIL marker
    (until app fix) or whether to add an `EXPECTED_FAIL` mechanism that lets the

@@ -15,18 +15,21 @@ the local runtime patches are described below. Kadupul's `index.php` directory
 guards and pre-existing Amharic/Chamorro translations are retained. Existing
 `include/vendor/phpmailer/src` and `language` paths remain unchanged.
 
-The nested autoloader is regenerated with the existing Composer toolchain:
-
-```sh
-COMPOSER_ROOT_VERSION=7.1.1 mise exec php@8.1.34 -- php /opt/homebrew/bin/composer update --working-dir=include/vendor/phpmailer --no-dev --no-scripts --no-plugins --no-interaction
-```
-
-Use the appropriate Composer executable path on other systems. Only the empty
-production dependency set is installed. Upstream disables lockfile creation;
-the stale nested development lockfile was removed (recoverable from Git).
+Main does not track `include/vendor`. `composer install` runs
+`tools/dependencies/install-legacy.php`, which installs these files, including
+the nested autoloader under `vendor/`, from the source revision pinned in
+`legacy-files.json` and checks each one against its recorded SHA-256. That
+autoloader was generated during the 2026-09-19 refresh with
+`composer update --working-dir=include/vendor/phpmailer --no-dev --no-scripts`
+on PHP 8.1.34, before main required PHP 8.4. Only the empty production
+dependency set is installed. Upstream disables lockfile creation; the stale
+nested development lockfile was removed (recoverable from Git). There is no
+refresh script on main: a new PHPMailer release means pointing
+`legacy-files.json` at a source revision that contains the new files and
+updating its `revision`, `archive_sha256` and per-file digests.
 Upstream's development-only dependencies are not shipped or application runtime
-requirements. This manually vendored package is not covered by root Composer
-audit, so check its upstream releases/advisories independently.
+requirements. This package is not covered by root Composer audit, so check its
+upstream releases/advisories independently.
 
 PHPMailer 7 makes language state static. Kadupul now invokes its static language
 API for every message, including English and unavailable locales, preventing
