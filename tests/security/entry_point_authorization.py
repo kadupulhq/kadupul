@@ -189,7 +189,7 @@ def has_feature_realm(entry):
                 'graph-definitions/cdefs', 'automation/templates', 'graphing/color-templates',
                 'graphing/color-template-items', 'aggregate-templates',
                 'inventory/device-templates', 'graphing/colors', 'links', 'data-inputs',
-                'utilities/rrd-check', 'utilities/system', 'graphing/data-source-profiles',
+                'utilities/rrd-check', 'utilities/system', 'graphing/data-source-profiles', 'management',
                 'templates/devices', 'templates/graphs', 'templates/data-sources', 'templates/aggregates',
                 'data-collection/queries', 'automation/snmp-options', 'automation/graph-rules',
                 'automation/tree-rules', 'automation/networks', 'utilities/notification-receivers',
@@ -197,6 +197,12 @@ def has_feature_realm(entry):
     return entry in legacy or any(entry == 'app.php/' + prefix or
                                  entry.startswith('app.php/' + prefix + '/')
                                  for prefix in prefixes)
+
+
+
+def authentication_only(entry, gate, detail):
+    """Authenticated feature routes still need the realm-withdrawal probes."""
+    return gate == 'authenticated' or ('AuthenticatedAccess' in detail and not has_feature_realm(entry))
 
 
 def sample(entry, detail, ids):
@@ -257,6 +263,16 @@ def route_fixtures(rig, rows, ids):
         ids['graphing/colors'] = {'id': int(rig.sql('SELECT MIN(id) FROM colors').strip())}
     if present('links'):
         ids['links'] = {'id': 1}
+    for prefix, table in (('management/graph-template-items', 'graph_templates'),
+                          ('management/graph-template-inputs', 'graph_templates'),
+                          ('management/device-template-graphs', 'host_template'),
+                          ('management/data-query-graphs', 'snmp_query')):
+        if present(prefix):
+            parent = rig.sql('SELECT MIN(id) FROM ' + table).strip()
+            if not parent.isdecimal() or int(parent) < 1:
+                raise RuntimeError('Missing concrete management parent: ' + prefix)
+            ids[prefix] = {'id': int(parent)}
+
 
     relationship_tables = {'device-template-queries': 'host_template', 'data-template-definitions': 'data_template', 'aggregate-template-items': 'aggregate_graph_templates', 'snmp-option-entries': 'automation_snmp', 'graph-rule-device-criteria': 'automation_graph_rules', 'graph-rule-query-criteria': 'automation_graph_rules', 'tree-rule-device-criteria': 'automation_tree_rules', 'tree-rule-steps': 'automation_tree_rules', 'receiver-subscriptions': 'snmpagent_managers', 'receiver-history': 'snmpagent_managers'}
     # Existing aggregate/device-template fixtures must be created before their
@@ -425,7 +441,7 @@ def main():
                     expect('anonymous GET public/index.php' + url[7:], anonymous.request('public/index.php' + url[7:]))
                 if post:
                     expect('anonymous POST ' + url, anonymous.request(url, {}))
-                if gate == 'authenticated' or 'AuthenticatedAccess' in detail:
+                if authentication_only(entry, gate, detail):
                     continue
                 for name, client in (('norealm', norealm), ('console', console)):
                     if name == 'console' and not has_feature_realm(entry) and (gate == 'realm:%d' % CONSOLE_REALM or 'ConsoleAccess realm 8;' in detail + ';'):
