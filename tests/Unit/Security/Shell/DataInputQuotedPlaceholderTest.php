@@ -270,6 +270,50 @@ PHP, array('caller' => $caller, 'template' => $template, 'shell' => $path));
     'locale string' => array('$"<arg1>"'),
 ));
 
+test('a field directly after an unescaped dollar produces no command', function (string $shell, string $caller, string $template) {
+    $path = $shell === 'bash' ? trim((string) shell_exec('command -v bash')) : $shell;
+    if ($path === '') {
+        $this->markTestSkipped('bash is not installed');
+    }
+
+    $result = data_input_substitution_run('dollar-rejected', <<<'PHP'
+$directory = sys_get_temp_dir() . '/kadupul-data-input-' . bin2hex(random_bytes(8));
+mkdir($directory, 0700);
+$marker = $directory . '/executed';
+try {
+    // A backslash and quote at the start of the value desynchronize $'...'.
+    $command = data_input_command($arguments['caller'], $arguments['template'], array('arg1' => "\\'\$(touch " . $marker . ') #'), array('id' => 9));
+    $shell = data_input_shell_words($command, $arguments['shell']);
+    $executed = file_exists($marker);
+} finally {
+    if (file_exists($marker)) {
+        unlink($marker);
+    }
+    rmdir($directory);
+}
+echo json_encode(array($command, $executed, $shell['status']));
+PHP, array('caller' => $caller, 'template' => $template, 'shell' => $path));
+
+    expect($result)->toBe(array('', false, 0));
+})->with(array('/bin/sh', 'bash'))->with(array('poller', 'test'))->with(array(
+    'bare' => array('$<arg1>'),
+    'after text' => array('x$<arg1>'),
+    'double quoted' => array('"$<arg1>"'),
+    'single quoted' => array("'$<arg1>'"),
+    'after escaped backslash' => array('\\\\$<arg1>'),
+    'before a backslash' => array('$\\<arg1>'),
+));
+
+test('an escaped dollar before a field stays literal', function () {
+    $result = data_input_substitution_run('dollar-escaped', <<<'PHP'
+$command = data_input_command('poller', 'printf %s \\$<arg1>', array('arg1' => 'a b'));
+echo json_encode(array($command, data_input_shell_words($command)));
+PHP);
+
+    expect($result[0])->toBe("printf %s \\$'a b'");
+    expect($result[1]['words'])->toBe(array('printf', '%s', '$a b'));
+});
+
 test('parameter expansions without fields keep their command lines', function () {
     $result = data_input_substitution_run('param-kept', <<<'PHP'
 $command = data_input_command('poller', 'printf "${X:-%s}" "<arg1>"', array('arg1' => 'a b'));
@@ -291,5 +335,5 @@ PHP, array('base' => '/opt/kadupul base'));
 });
 
 test('substitution matrix keeps every value literal through /bin/sh', function () {
-    expect(data_input_substitution_run('matrix', 'echo json_encode(script_substitution_matrix());'))->toBe(1316);
+    expect(data_input_substitution_run('matrix', 'echo json_encode(script_substitution_matrix());'))->toBe(1321);
 });

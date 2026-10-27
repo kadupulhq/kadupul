@@ -41,6 +41,8 @@ final class InputStringSubstitution
      * which the shell unescapes before parsing the inner command, and to a field or
      * backslash inside ${...}, whose word has its own quoting rules, and to bash's
      * $'...' and $"..." quoting, where a backslash can escape the closing quote.
+     * A field directly after an unescaped $ is rejected for the same reason: the
+     * value's opening quote would turn it into $'...'.
      *
      * Ported from Cacti 1.2.x (GHSA-5v3j-wcrr-jxjg, Cacti PR #8238 and #8359).
      *
@@ -85,9 +87,19 @@ final class InputStringSubstitution
                             $out = substr($out, 0, -1);
                         }
 
+                        if (self::endsWithDollar($out)) {
+                            return '';
+                        }
+
                         $out .= $value;
                     } elseif ($stack[$top]['quoteEmpty'] && ($i + $token_len) < $len && $template[$i + $token_len] === $quote) {
-                        $out = substr($out, 0, -1) . $value;
+                        $out = substr($out, 0, -1);
+
+                        if (self::endsWithDollar($out)) {
+                            return '';
+                        }
+
+                        $out .= $value;
                         $i++;
                         $stack[$top]['quote'] = '';
                     } else {
@@ -95,6 +107,10 @@ final class InputStringSubstitution
                         // the closing quote; inside single quotes it is literal.
                         if ($quote === '"' && (strlen($out) - strlen(rtrim($out, '\\'))) % 2 === 1) {
                             $out = substr($out, 0, -1);
+                        }
+
+                        if (self::endsWithDollar($out)) {
+                            return '';
                         }
 
                         $out .= $quote . $value . $quote;
@@ -237,5 +253,17 @@ final class InputStringSubstitution
         }
 
         return $out;
+    }
+
+    /** True when the text ends in a $ that no backslash escapes. */
+    private static function endsWithDollar(string $text): bool
+    {
+        if (!str_ends_with($text, '$')) {
+            return false;
+        }
+
+        $before = substr($text, 0, -1);
+
+        return (strlen($before) - strlen(rtrim($before, '\\'))) % 2 === 0;
     }
 }

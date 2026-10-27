@@ -85,6 +85,12 @@ function script_substitution_matrix(): int
         ["\$'x\\'<field>'", ['field' => "'p'"], ''],
         ['$"<field>"', ['field' => "'p'"], ''],
         ['printf %s $\'a\' <field>', ['field' => "'p'"], ''],
+        // A field after an unescaped $ would open $'...'.
+        ['$<field>', ['field' => "'p'"], ''],
+        ['x$<field>', ['field' => "'p'"], ''],
+        ['"$<field>"', ['field' => "'p'"], ''],
+        ['\\\\$<field>', ['field' => "'p'"], ''],
+        ['\\$<field>', ['field' => "'p'"], '\\$\'p\''],
         // Inside double quotes $' is literal text.
         ['"$\'<field>\'"', ['field' => "'p'"], '"$\'"\'p\'"\'"'],
         // Parameter expansions without fields or backslashes are kept as written.
