@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -21,7 +23,7 @@ beforeEach(function () {
         'mysql:host=127.0.0.1;port=' . $port,
         getenv('KADUPUL_AGGREGATE_TEST_USER') ?: 'root',
         getenv('KADUPUL_AGGREGATE_TEST_PASSWORD') ?: '',
-        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_EMULATE_PREPARES => false)
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_EMULATE_PREPARES => false],
     ) extends PDO {
         public int $mutations = 0;
         public int $maxParameters = 0;
@@ -57,8 +59,8 @@ beforeEach(function () {
     $GLOBALS['database_hostname'] = '127.0.0.1';
     $GLOBALS['database_port'] = $port;
     $GLOBALS['database_default'] = $name;
-    $GLOBALS['database_sessions'] = array('127.0.0.1:' . $port . ':' . $name => $connection);
-    $GLOBALS['config'] = array();
+    $GLOBALS['database_sessions'] = ['127.0.0.1:' . $port . ':' . $name => $connection];
+    $GLOBALS['config'] = [];
 });
 
 afterEach(function () {
@@ -81,7 +83,7 @@ function aggregateDatabaseRows()
 
 function aggregateDatabaseItems($child = 11)
 {
-    return array(array('aggregate_graph_id' => 1, 'graph_templates_item_id' => $child));
+    return [['aggregate_graph_id' => 1, 'graph_templates_item_id' => $child]];
 }
 
 it('replaces only the bound parent using native prepared statements', function () {
@@ -93,7 +95,7 @@ it('replaces only the bound parent using native prepared statements', function (
 
 it('rejects malformed parents before executing any mutation', function () {
     $before = aggregateDatabaseRows();
-    $items = array(array('aggregate_graph_id' => '1 OR 1=1', 'graph_templates_item_id' => 11));
+    $items = [['aggregate_graph_id' => '1 OR 1=1', 'graph_templates_item_id' => 11]];
     expect(aggregate_graph_items_save($items, 'aggregate_graphs_graph_item'))->toBeFalse();
     expect($GLOBALS['aggregate_test_connection']->mutations)->toBe(0);
     expect(aggregateDatabaseRows())->toBe($before);
@@ -116,7 +118,7 @@ it('preserves caller work after a replacement fails inside its transaction', fun
     $before = aggregateDatabaseRows();
     expect(aggregate_graph_items_save(
         array_merge(aggregateDatabaseItems(), aggregateDatabaseItems()),
-        'aggregate_graphs_graph_item'
+        'aggregate_graphs_graph_item',
     ))->toBeFalse();
     expect($connection->inTransaction())->toBeTrue();
     expect(aggregateDatabaseRows())->toBe($before);
@@ -133,9 +135,9 @@ it('leaves successful caller-owned work uncommitted', function () {
 });
 
 it('batches more than the native parameter limit without losing other parents', function () {
-    $items = array();
+    $items = [];
     for ($id = 100; $id < 7100; $id++) {
-        $items[] = array('aggregate_graph_id' => 1, 'graph_templates_item_id' => $id);
+        $items[] = ['aggregate_graph_id' => 1, 'graph_templates_item_id' => $id];
     }
     expect(aggregate_graph_items_save($items, 'aggregate_graphs_graph_item'))->toBeTrue();
     expect(aggregateDatabaseRows())->toHaveCount(7001);
@@ -170,15 +172,15 @@ it('uses the template parent column and restores its items on a failed replaceme
     $connection->exec("INSERT INTO aggregate_graph_templates_item
 		(aggregate_template_id, graph_templates_item_id, color_template, item_skip, item_total)
 		VALUES (1, 10, 0, '', ''), (2, 20, 0, '', '')");
-    $item = array('aggregate_template_id' => '01', 'graph_templates_item_id' => 11);
-    expect(aggregate_graph_items_save(array($item), 'aggregate_graph_templates_item'))->toBeTrue();
+    $item = ['aggregate_template_id' => '01', 'graph_templates_item_id' => 11];
+    expect(aggregate_graph_items_save([$item], 'aggregate_graph_templates_item'))->toBeTrue();
     $select = 'SELECT * FROM aggregate_graph_templates_item ORDER BY aggregate_template_id, graph_templates_item_id';
     $before = $connection->query($select)->fetchAll(PDO::FETCH_ASSOC);
-    expect(array_map('intval', array_column($before, 'graph_templates_item_id')))->toBe(array(11, 20));
-    expect(aggregate_graph_items_save(array($item, $item), 'aggregate_graph_templates_item'))->toBeFalse();
+    expect(array_map('intval', array_column($before, 'graph_templates_item_id')))->toBe([11, 20]);
+    expect(aggregate_graph_items_save([$item, $item], 'aggregate_graph_templates_item'))->toBeFalse();
     expect($connection->query($select)->fetchAll(PDO::FETCH_ASSOC))->toBe($before);
     $item['aggregate_template_id'] = '1 OR 1=1';
-    expect(aggregate_graph_items_save(array($item), 'aggregate_graph_templates_item'))->toBeFalse();
+    expect(aggregate_graph_items_save([$item], 'aggregate_graph_templates_item'))->toBeFalse();
     expect($connection->query($select)->fetchAll(PDO::FETCH_ASSOC))->toBe($before);
 });
 
@@ -189,7 +191,7 @@ it('holds the checked engine stable until transaction completion', function () {
         . ';dbname=' . $GLOBALS['aggregate_test_database'],
         getenv('KADUPUL_AGGREGATE_TEST_USER') ?: 'root',
         getenv('KADUPUL_AGGREGATE_TEST_PASSWORD') ?: '',
-        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION],
     );
     $other->exec('SET SESSION lock_wait_timeout=1');
     $blocked = false;
