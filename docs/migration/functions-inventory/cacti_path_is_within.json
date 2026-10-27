@@ -3,8 +3,8 @@
     "name": "cacti_path_is_within",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8749,
-        "end_line": 8769,
+        "start_line": 8768,
+        "end_line": 8788,
         "line_count": 21,
         "signature": {
             "parameters": [
@@ -31,7 +31,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 12, "core_outside_functions_php": 8, "tests": 28, "plugins": 0},
+        "fan_out": {"core": 12, "core_outside_functions_php": 8, "tests": 30, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

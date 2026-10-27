@@ -3,12 +3,12 @@
     "name": "get_selected_theme",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1014,
-        "end_line": 1100,
+        "start_line": 1015,
+        "end_line": 1101,
         "line_count": 87,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,
-        "fan_out": {"core": 28, "core_outside_functions_php": 25, "tests": 22, "plugins": 0},
+        "fan_out": {"core": 28, "core_outside_functions_php": 25, "tests": 24, "plugins": 0},
         "body": {
             "uses_global": ["config", "themes"],
             "static_variables": [],

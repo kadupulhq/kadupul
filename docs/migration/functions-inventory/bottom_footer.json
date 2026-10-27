@@ -3,12 +3,12 @@
     "name": "bottom_footer",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5423,
-        "end_line": 5449,
+        "start_line": 5442,
+        "end_line": 5468,
         "line_count": 27,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": false,
-        "fan_out": {"core": 126, "core_outside_functions_php": 125, "tests": 14, "plugins": 0},
+        "fan_out": {"core": 114, "core_outside_functions_php": 113, "tests": 13, "plugins": 0},
         "body": {
             "uses_global": ["config", "no_session_write"],
             "static_variables": [],

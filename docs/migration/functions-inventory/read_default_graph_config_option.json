@@ -3,8 +3,8 @@
     "name": "read_default_graph_config_option",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 113,
-        "end_line": 116,
+        "start_line": 114,
+        "end_line": 117,
         "line_count": 4,
         "signature": {
             "parameters": [

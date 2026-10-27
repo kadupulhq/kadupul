@@ -3,12 +3,12 @@
     "name": "top_header",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5451,
-        "end_line": 5458,
+        "start_line": 5470,
+        "end_line": 5477,
         "line_count": 8,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": false,
-        "fan_out": {"core": 108, "core_outside_functions_php": 107, "tests": 17, "plugins": 0},
+        "fan_out": {"core": 96, "core_outside_functions_php": 95, "tests": 16, "plugins": 0},
         "body": {
             "uses_global": ["config"],
             "static_variables": [],

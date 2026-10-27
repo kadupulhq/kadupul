@@ -44,7 +44,6 @@ or deprecating anything. Do not remove a function on the count alone.
 | `get_device_name` | 1 | 0 | 0 | 0 | Inventory/Application |
 | `get_nonsystem_data_input` | 1 | 1 | 0 | 0 | DataInput/Application |
 | `get_web_browser` | 1 | 0 | 0 | 0 | Platform/Presentation/Http |
-| `is_page_ajax` | 1 | 0 | 0 | 0 | Platform/Presentation/Http |
 | `padleft` | 1 | 0 | 0 | 0 | Platform/Domain/Text |
 | `ping_mail_server` | 1 | 0 | 0 | 0 | Alerting/Application/Port/MailSender |
 | `read_default_graph_config_option` | 1 | 0 | 0 | 0 | Platform/Application/Port/UserSettings |
@@ -75,10 +74,10 @@ or deprecating anything. Do not remove a function on the count alone.
 | `get_uptime` | 2 | 2 | 1 | 0 | Platform/Domain/Time |
 | `is_device_debug_enabled` | 2 | 1 | 1 | 0 | Inventory/Application |
 | `is_mac_address` | 2 | 1 | 1 | 0 | Platform/Domain/Network |
+| `is_page_ajax` | 2 | 1 | 1 | 0 | Platform/Presentation/Http |
 | `raise_ajax_permission_denied` | 2 | 2 | 1 | 0 | Platform/Presentation/Http |
 | `send_mail` | 2 | 1 | 1 | 0 | Alerting/Application/Port/MailSender |
 | `clog_admin` | 2 | 2 | 2 | 0 | IdentityAccess |
-| `get_full_test_script_path` | 2 | 0 | 2 | 0 | DataInput/Application |
 | `check_changed` | 2 | 1 | 3 | 0 | legacy-retained |
 | `get_default_contextoption` | 2 | 0 | 3 | 0 | Platform/Presentation/Http |
 | `get_format_message_instance` | 2 | 0 | 4 | 0 | Platform/Application/Port/FlashMessages |
@@ -86,6 +85,7 @@ or deprecating anything. Do not remove a function on the count alone.
 | `is_urlencoded` | 2 | 1 | 4 | 0 | Platform/Domain/Text |
 | `normalize_poller_multi_value_result` | 2 | 1 | 4 | 0 | DataInput/Application |
 | `CactiErrorHandler` | 2 | 2 | 5 | 0 | Platform/Infrastructure/Legacy |
+| `get_full_test_script_path` | 2 | 0 | 5 | 0 | DataInput/Application |
 | `is_hex_string` | 2 | 2 | 5 | 0 | Platform/Domain/Text |
 | `cacti_cookie_session_set` | 2 | 1 | 7 | 0 | IdentityAccess |
 | `cacti_format_ipv6_colon` | 2 | 2 | 8 | 0 | Platform/Domain/Network |

@@ -3,8 +3,8 @@
     "name": "split_emaildetail",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6045,
-        "end_line": 6099,
+        "start_line": 6064,
+        "end_line": 6118,
         "line_count": 55,
         "signature": {
             "parameters": [

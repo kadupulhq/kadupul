@@ -3,8 +3,8 @@
     "name": "get_rrdtool_version",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7454,
-        "end_line": 7463,
+        "start_line": 7473,
+        "end_line": 7482,
         "line_count": 10,
         "signature": {
             "parameters": [
@@ -22,7 +22,7 @@
             "returns_reference": false
         },
         "docblock": false,
-        "fan_out": {"core": 24, "core_outside_functions_php": 24, "tests": 18, "plugins": 0},
+        "fan_out": {"core": 23, "core_outside_functions_php": 23, "tests": 19, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": ["version"],

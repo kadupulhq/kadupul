@@ -3,8 +3,8 @@
     "name": "sanitize_unserialize_selected_items",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5288,
-        "end_line": 5316,
+        "start_line": 5307,
+        "end_line": 5335,
         "line_count": 29,
         "signature": {
             "parameters": [
@@ -22,7 +22,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 26, "core_outside_functions_php": 26, "tests": 12, "plugins": 0},
+        "fan_out": {"core": 23, "core_outside_functions_php": 23, "tests": 12, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

@@ -3,8 +3,8 @@
     "name": "validate_relative_path_within",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5226,
-        "end_line": 5281,
+        "start_line": 5245,
+        "end_line": 5300,
         "line_count": 56,
         "signature": {
             "parameters": [
@@ -31,7 +31,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 4, "core_outside_functions_php": 3, "tests": 17, "plugins": 0},
+        "fan_out": {"core": 4, "core_outside_functions_php": 3, "tests": 20, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

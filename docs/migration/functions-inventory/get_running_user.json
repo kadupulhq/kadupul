@@ -3,8 +3,8 @@
     "name": "get_running_user",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7687,
-        "end_line": 7773,
+        "start_line": 7706,
+        "end_line": 7792,
         "line_count": 87,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": false,

@@ -3,8 +3,8 @@
     "name": "get_cacti_cli_version",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7308,
-        "end_line": 7313,
+        "start_line": 7327,
+        "end_line": 7332,
         "line_count": 6,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,

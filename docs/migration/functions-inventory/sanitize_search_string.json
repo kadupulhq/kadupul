@@ -3,8 +3,8 @@
     "name": "sanitize_search_string",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5060,
-        "end_line": 5080,
+        "start_line": 5079,
+        "end_line": 5099,
         "line_count": 21,
         "signature": {
             "parameters": [
@@ -22,7 +22,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 115, "core_outside_functions_php": 114, "tests": 10, "plugins": 0},
+        "fan_out": {"core": 111, "core_outside_functions_php": 110, "tests": 10, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": ["drop_char_match", "drop_char_replace"],

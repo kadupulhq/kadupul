@@ -3,8 +3,8 @@
     "name": "stri_replace",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 3168,
-        "end_line": 3183,
+        "start_line": 3187,
+        "end_line": 3202,
         "line_count": 16,
         "signature": {
             "parameters": [
