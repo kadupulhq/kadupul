@@ -15264,7 +15264,7 @@ msgstr "No indicado"
 msgid "Synchronization failed. See the log for details."
 msgstr ""
 
-#: lib/poller.php:2022 lib/poller.php:2349
+#: lib/poller.php:2022 lib/poller.php:2254
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 

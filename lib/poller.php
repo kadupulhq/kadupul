@@ -2047,149 +2047,54 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
         }
     }
 
-    // Core tables
-    if ($class == 'all') {
-        $data = db_fetch_assoc('SELECT * FROM automation_graph_rule_items');
-        if (replicate_out_table($rcnn_id, $data, 'automation_graph_rule_items', $remote_poller_id) === false) {
-            return $fail();
+    // Each group is copied for 'all' and for its own class, in this order.
+    // Collector schema versions belong to its installer, never data synchronization.
+    $table_classes = array(
+        'all' => array(
+            'automation_graph_rule_items',
+            'automation_graph_rules',
+            'automation_match_rule_items',
+            'automation_snmp',
+            'automation_snmp_items',
+            'automation_templates',
+            'automation_tree_rule_items',
+            'automation_tree_rules',
+            'data_input',
+            'host_template',
+            'host_template_graph',
+            'host_template_snmp_query',
+            'snmp_query',
+            'data_input_fields',
+            'poller',
+        ),
+        'plugins' => array(
+            'plugin_config',
+            'plugin_hooks',
+            'plugin_realms',
+        ),
+        'auth' => array(
+            'user_auth',
+            'user_auth_group',
+            'user_auth_group_members',
+            'user_auth_group_perms',
+            'user_auth_group_realm',
+            'user_auth_realm',
+            'user_auth_row_cache',
+            'user_domains',
+            'user_domains_ldap',
+        ),
+    );
+
+    foreach ($table_classes as $table_class => $tables) {
+        if ($class != 'all' && $class != $table_class) {
+            continue;
         }
 
-        $data = db_fetch_assoc('SELECT * FROM automation_graph_rules');
-        if (replicate_out_table($rcnn_id, $data, 'automation_graph_rules', $remote_poller_id) === false) {
-            return $fail();
-        }
-
-        $data = db_fetch_assoc('SELECT * FROM automation_match_rule_items');
-        if (replicate_out_table($rcnn_id, $data, 'automation_match_rule_items', $remote_poller_id) === false) {
-            return $fail();
-        }
-
-        $data = db_fetch_assoc('SELECT * FROM automation_snmp');
-        if (replicate_out_table($rcnn_id, $data, 'automation_snmp', $remote_poller_id) === false) {
-            return $fail();
-        }
-
-        $data = db_fetch_assoc('SELECT * FROM automation_snmp_items');
-        if (replicate_out_table($rcnn_id, $data, 'automation_snmp_items', $remote_poller_id) === false) {
-            return $fail();
-        }
-
-        $data = db_fetch_assoc('SELECT * FROM automation_templates');
-        if (replicate_out_table($rcnn_id, $data, 'automation_templates', $remote_poller_id) === false) {
-            return $fail();
-        }
-
-        $data = db_fetch_assoc('SELECT * FROM automation_tree_rule_items');
-        if (replicate_out_table($rcnn_id, $data, 'automation_tree_rule_items', $remote_poller_id) === false) {
-            return $fail();
-        }
-
-        $data = db_fetch_assoc('SELECT * FROM automation_tree_rules');
-        if (replicate_out_table($rcnn_id, $data, 'automation_tree_rules', $remote_poller_id) === false) {
-            return $fail();
-        }
-
-        $data = db_fetch_assoc('SELECT * FROM data_input');
-        if (replicate_out_table($rcnn_id, $data, 'data_input', $remote_poller_id) === false) {
-            return $fail();
-        }
-
-        $data = db_fetch_assoc('SELECT * FROM host_template');
-        if (replicate_out_table($rcnn_id, $data, 'host_template', $remote_poller_id) === false) {
-            return $fail();
-        }
-
-        $data = db_fetch_assoc('SELECT * FROM host_template_graph');
-        if (replicate_out_table($rcnn_id, $data, 'host_template_graph', $remote_poller_id) === false) {
-            return $fail();
-        }
-
-        $data = db_fetch_assoc('SELECT * FROM host_template_snmp_query');
-        if (replicate_out_table($rcnn_id, $data, 'host_template_snmp_query', $remote_poller_id) === false) {
-            return $fail();
-        }
-
-        $data = db_fetch_assoc('SELECT * FROM snmp_query');
-        if (replicate_out_table($rcnn_id, $data, 'snmp_query', $remote_poller_id) === false) {
-            return $fail();
-        }
-
-        $data = db_fetch_assoc('SELECT * FROM data_input_fields');
-        if (replicate_out_table($rcnn_id, $data, 'data_input_fields', $remote_poller_id) === false) {
-            return $fail();
-        }
-
-        $data = db_fetch_assoc('SELECT * FROM poller');
-        if (replicate_out_table($rcnn_id, $data, 'poller', $remote_poller_id) === false) {
-            return $fail();
-        }
-
-        // Collector schema versions belong to its installer, never data synchronization.
-    }
-
-    // Plugin tables
-    if ($class == 'all' || $class == 'plugins') {
-        $data = db_fetch_assoc('SELECT * FROM plugin_config');
-        if (replicate_out_table($rcnn_id, $data, 'plugin_config', $remote_poller_id) === false) {
-            return $fail();
-        }
-
-        $data = db_fetch_assoc('SELECT * FROM plugin_hooks');
-        if (replicate_out_table($rcnn_id, $data, 'plugin_hooks', $remote_poller_id) === false) {
-            return $fail();
-        }
-
-        $data = db_fetch_assoc('SELECT * FROM plugin_realms');
-        if (replicate_out_table($rcnn_id, $data, 'plugin_realms', $remote_poller_id) === false) {
-            return $fail();
-        }
-    }
-
-    // Auth tables
-    if ($class == 'all' || $class == 'auth') {
-        $data = db_fetch_assoc('SELECT * FROM user_auth');
-        if (replicate_out_table($rcnn_id, $data, 'user_auth', $remote_poller_id) === false) {
-            return $fail();
-        }
-
-        $data = db_fetch_assoc('SELECT * FROM user_auth_group');
-        if (replicate_out_table($rcnn_id, $data, 'user_auth_group', $remote_poller_id) === false) {
-            return $fail();
-        }
-
-        $data = db_fetch_assoc('SELECT * FROM user_auth_group_members');
-        if (replicate_out_table($rcnn_id, $data, 'user_auth_group_members', $remote_poller_id) === false) {
-            return $fail();
-        }
-
-        $data = db_fetch_assoc('SELECT * FROM user_auth_group_perms');
-        if (replicate_out_table($rcnn_id, $data, 'user_auth_group_perms', $remote_poller_id) === false) {
-            return $fail();
-        }
-
-        $data = db_fetch_assoc('SELECT * FROM user_auth_group_realm');
-        if (replicate_out_table($rcnn_id, $data, 'user_auth_group_realm', $remote_poller_id) === false) {
-            return $fail();
-        }
-
-        $data = db_fetch_assoc('SELECT * FROM user_auth_realm');
-        if (replicate_out_table($rcnn_id, $data, 'user_auth_realm', $remote_poller_id) === false) {
-            return $fail();
-        }
-
-        $data = db_fetch_assoc('SELECT * FROM user_auth_row_cache');
-        if (replicate_out_table($rcnn_id, $data, 'user_auth_row_cache', $remote_poller_id) === false) {
-            return $fail();
-        }
-
-        $data = db_fetch_assoc('SELECT * FROM user_domains');
-        if (replicate_out_table($rcnn_id, $data, 'user_domains', $remote_poller_id) === false) {
-            return $fail();
-        }
-
-        $data = db_fetch_assoc('SELECT * FROM user_domains_ldap');
-        if (replicate_out_table($rcnn_id, $data, 'user_domains_ldap', $remote_poller_id) === false) {
-            return $fail();
+        foreach ($tables as $table) {
+            $data = db_fetch_assoc('SELECT * FROM ' . $table);
+            if (replicate_out_table($rcnn_id, $data, $table, $remote_poller_id) === false) {
+                return $fail();
+            }
         }
     }
 
