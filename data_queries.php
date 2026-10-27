@@ -581,7 +581,7 @@ function data_query_item_remove_dssv()
 
 function data_query_item_remove_confirm()
 {
-    global $vdef_functions, $vdef_item_types, $custom_vdef_data_source_types;
+    // Confirmation data comes from the selected query/graph association.
 
     /* ================= input validation ================= */
     get_filter_request_var('id');

@@ -8,6 +8,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 {% trans_default_domain 'administration' %}
 {% block title %}{{ screen.title|trans }}{% endblock %}
 {% block body %}
+{% if screen.value in ['snmp-objects', 'snmp-notifications'] %}<p><a href="{{ path('management_snmp_mibs') }}">{{ 'Registered SNMP MIBs'|trans({}, 'management') }}</a></p>{% endif %}
 <h1>{{ screen.title|trans }}</h1>
 <p>{{ 'Changes and advanced filters use the existing administration forms.'|trans }}</p>
 {% if screen.value == 'rrd-candidates' %}<p>{{ 'This view reads the last recorded scan. Refresh and cleanup use the existing RRD Cleaner.'|trans }}</p>{% endif %}
@@ -78,6 +79,11 @@ SPDX-License-Identifier: GPL-2.0-or-later
                 {% elseif screen.value == 'data-queries' %}
                     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed child route and numeric query identity. #}
                     <a href="{{ path('management_data_query_graphs', {id: record.id}) }}">{{ 'Graph Mappings'|trans({}, 'management') }}</a>
+                {% endif %}
+                {% set metadataRoutes = {'graph-templates': 'management_graph_device_templates', 'data-queries': 'management_query_device_templates'} %}
+                {% if metadataRoutes[screen.value] is defined %}
+                    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed route and the template/query numeric primary key. #}
+                    <a href="{{ path(metadataRoutes[screen.value], {id: record.id}) }}">{{ 'Device Templates'|trans({}, 'management') }}</a>
                 {% endif %}
             {% elseif column == 'name' %}{{ value is same as('') or value is null ? 'Unnamed'|trans : value }}
             {% elseif column in ['event_time', 'last_check'] %}

@@ -21,6 +21,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
     {% if screen.value == 'menu' %}
         <p>{{ 'Choose a diagnostic view. Maintenance, exports and advanced filters remain available through the existing operation pages.'|trans }}</p>
         <ul>
+            <li><a href="{{ path('management_snmp_mibs') }}">{{ 'Registered SNMP MIBs'|trans({}, 'management') }}</a></li>
         {% for label, destination in {'Log Administration': 'utilities.php?action=view_logfile', 'View User Log': 'utilities.php?action=view_user_log', 'RRDfile Cleaner': 'rrdcleaner.php', 'RRDfile Checker': 'rrdcheck.php', 'SNMP Agent Cache': 'utilities.php?action=view_snmpagent_cache', 'SNMP Notification History': 'utilities.php?action=view_snmpagent_events', 'SNMP Notification Receivers': 'managers.php'} %}
             {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Destinations are literals from this template, never supplied data. #}
             <li><a href="{{ installation_path(destination) }}">{{ label|trans }}</a></li>
