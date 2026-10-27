@@ -80,6 +80,7 @@ class RouteSamples(unittest.TestCase):
                   'snmp-option-entries', 'graph-rule-device-criteria', 'graph-rule-query-criteria',
                   'tree-rule-device-criteria', 'tree-rule-steps', 'receiver-subscriptions', 'receiver-history']
         routes += ['user-group-memberships', 'group-members', 'user-graphs-permissions', 'user-devices-permissions', 'user-templates-permissions', 'user-trees-permissions', 'group-graphs-permissions', 'group-devices-permissions', 'group-templates-permissions', 'group-trees-permissions']
+        routes += ['user-realm-grants', 'user-display-preferences', 'user-graph-preferences', 'user-time-preferences', 'user-login-options', 'group-realm-grants', 'group-display-preferences', 'group-graph-preferences', 'group-time-preferences', 'group-login-options']
         for route in routes:
             entry = 'app.php/relationships/' + route + '/{id}'
             rig = Rig()

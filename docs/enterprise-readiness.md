@@ -95,3 +95,12 @@ administration grants protect all views. See [acceptance evidence and limits](mi
 Effective authorization and legacy policy/membership mutations remain on their
 existing paths. Installed-session and collector HTTP acceptance remain release
 gates. This slice does not retire authentication or permission globals.
+
+### Identity settings browsing
+
+Status: implemented. Ten views display stored realm grants and allowlisted
+user/group settings behind existing user administration authorization.
+[Scope, evidence and release limits](migrations/identity-settings-batch-10.md)
+cover schema-backed projections, credential exclusion, owner scoping and
+seven-theme presentation tests. Installed-session and collector HTTP acceptance
+remain release gates. Existing preference resolution and writers remain active.

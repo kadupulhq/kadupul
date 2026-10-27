@@ -134,9 +134,14 @@ app.php/relationships/device-template-queries/{id}	symfony:relationships_device_
 app.php/relationships/graph-rule-device-criteria/{id}	symfony:relationships_graph_rule_device_criteria	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
 app.php/relationships/graph-rule-query-criteria/{id}	symfony:relationships_graph_rule_query_criteria	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
 app.php/relationships/group-devices-permissions/{id}	symfony:relationships_group_devices_permissions	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 1
+app.php/relationships/group-display-preferences/{id}	symfony:relationships_group_display_preferences	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 1
+app.php/relationships/group-graph-preferences/{id}	symfony:relationships_group_graph_preferences	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 1
 app.php/relationships/group-graphs-permissions/{id}	symfony:relationships_group_graphs_permissions	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 1
+app.php/relationships/group-login-options/{id}	symfony:relationships_group_login_options	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 1
 app.php/relationships/group-members/{id}	symfony:relationships_group_members	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 1
+app.php/relationships/group-realm-grants/{id}	symfony:relationships_group_realm_grants	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 1
 app.php/relationships/group-templates-permissions/{id}	symfony:relationships_group_templates_permissions	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 1
+app.php/relationships/group-time-preferences/{id}	symfony:relationships_group_time_preferences	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 1
 app.php/relationships/group-trees-permissions/{id}	symfony:relationships_group_trees_permissions	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 1
 app.php/relationships/receiver-history/{id}	symfony:relationships_receiver_history	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 15
 app.php/relationships/receiver-subscriptions/{id}	symfony:relationships_receiver_subscriptions	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 15
@@ -144,9 +149,14 @@ app.php/relationships/snmp-option-entries/{id}	symfony:relationships_snmp_option
 app.php/relationships/tree-rule-device-criteria/{id}	symfony:relationships_tree_rule_device_criteria	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
 app.php/relationships/tree-rule-steps/{id}	symfony:relationships_tree_rule_steps	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
 app.php/relationships/user-devices-permissions/{id}	symfony:relationships_user_devices_permissions	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 1
+app.php/relationships/user-display-preferences/{id}	symfony:relationships_user_display_preferences	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 1
+app.php/relationships/user-graph-preferences/{id}	symfony:relationships_user_graph_preferences	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 1
 app.php/relationships/user-graphs-permissions/{id}	symfony:relationships_user_graphs_permissions	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 1
 app.php/relationships/user-group-memberships/{id}	symfony:relationships_user_group_memberships	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 1
+app.php/relationships/user-login-options/{id}	symfony:relationships_user_login_options	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 1
+app.php/relationships/user-realm-grants/{id}	symfony:relationships_user_realm_grants	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 1
 app.php/relationships/user-templates-permissions/{id}	symfony:relationships_user_templates_permissions	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 1
+app.php/relationships/user-time-preferences/{id}	symfony:relationships_user_time_preferences	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 1
 app.php/relationships/user-trees-permissions/{id}	symfony:relationships_user_trees_permissions	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 1
 app.php/session	symfony:session	methods=GET|HEAD; ConsoleAccess realm 8; reviewed at c1e137157c2e: answers 401 with no identity when the actor is null
 app.php/templates/aggregates	symfony:admin_aggregate_templates	methods=GET|HEAD; ConsoleAccess realm 8 + realm 5
