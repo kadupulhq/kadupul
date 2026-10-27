@@ -80,6 +80,7 @@ class RouteSamples(unittest.TestCase):
                   'snmp-option-entries', 'graph-rule-device-criteria', 'graph-rule-query-criteria',
                   'tree-rule-device-criteria', 'tree-rule-steps', 'receiver-subscriptions', 'receiver-history']
         routes += ['user-group-memberships', 'group-members', 'user-graphs-permissions', 'user-devices-permissions', 'user-templates-permissions', 'user-trees-permissions', 'group-graphs-permissions', 'group-devices-permissions', 'group-templates-permissions', 'group-trees-permissions']
+        routes += ['user-realm-grants', 'user-display-preferences', 'user-graph-preferences', 'user-time-preferences', 'user-login-options', 'group-realm-grants', 'group-display-preferences', 'group-graph-preferences', 'group-time-preferences', 'group-login-options']
         for route in routes:
             entry = 'app.php/relationships/' + route + '/{id}'
             rig = Rig()
@@ -135,6 +136,29 @@ class RouteSamples(unittest.TestCase):
             self.assertEqual(entry.replace('{id}', '57'), sample(entry, '', ids))
             if table == 'snmpagent_managers':
                 self.assertIn("'on'", rig.insert)
+
+    def test_mapping_and_mib_routes_bind_existing_or_created_parents(self):
+        routes = {'graph-input-items': 'graph_template_input', 'query-data-sources': 'snmp_query_graph',
+                  'query-graph-suggestions': 'snmp_query_graph', 'query-data-suggestions': 'snmp_query_graph',
+                  'query-device-templates': 'snmp_query', 'graph-device-templates': 'graph_templates',
+                  'mib-objects': 'snmpagent_mibs', 'mib-conventions': 'snmpagent_mibs', 'mib-notification-attributes': 'snmpagent_mibs'}
+        for route, table in routes.items():
+            class Rig:
+                def sql(self, statement):
+                    if statement.startswith('SELECT MIN(id) FROM ' + table): return '53'
+                    raise AssertionError(statement)
+            ids = {'devices': 1, 'sites': 1}
+            entry = 'app.php/management/' + route + '/{id}'
+            route_fixtures(Rig(), [(entry, '', '')], ids)
+            self.assertEqual(entry.replace('{id}', '53'), sample(entry, '', ids))
+            self.assertTrue(has_feature_realm(entry))
+        for route in ['graph-input-items', 'query-data-sources', 'mib-objects']:
+            class Empty:
+                def sql(self, statement): return 'NULL' if statement.startswith('SELECT MIN') else '61'
+            ids = {'devices': 1, 'sites': 1}
+            entry = 'app.php/management/' + route + '/{id}'
+            route_fixtures(Empty(), [(entry, '', '')], ids)
+            self.assertEqual(entry.replace('{id}', '61'), sample(entry, '', ids))
 
     def test_parent_child_and_enum_parameters(self):
         fixtures = {'graphing/color-templates': {'id': 12, 'itemId': 31},

@@ -224,15 +224,23 @@ jobs:
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/queued-purge-phpunit.cache" Symfony/QueuedCollectorPurgeTest.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/poller-buffer-phpunit.cache" Symfony/PollerCacheBufferWriteTest.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/profile-store-phpunit.cache" Symfony/DataSourceProfileStoreDatabaseTest.php
-        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/administration-list-phpunit.cache" Symfony/AdministrationCatalogNativeTest.php Symfony/RelationshipCatalogNativeTest.php Symfony/IdentityRelationshipsNativeTest.php
+        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/administration-list-phpunit.cache" Symfony/AdministrationCatalogNativeTest.php Symfony/RelationshipCatalogNativeTest.php Symfony/IdentityRelationshipsNativeTest.php Symfony/IdentitySettingsNativeTest.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/system-diagnostics-phpunit.cache" Symfony/SystemDiagnosticsDatabaseTest.php
-        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/management-catalog-phpunit.cache" Symfony/ManagementCatalogNativeTest.php
+        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/management-catalog-phpunit.cache" Symfony/ManagementCatalogNativeTest.php Symfony/MappingMetadataNativeTest.php
         # Use the disposable matrix server's existing administrator identity;
         # the probe creates/drops only its own random schema in a finally block.
         KADUPUL_REFERENCE_TEST_DSN="$KADUPUL_TEST_MYSQL_DSN" \
           KADUPUL_REFERENCE_TEST_USER="$KADUPUL_TEST_MYSQL_ADMIN_USER" \
           KADUPUL_REFERENCE_TEST_PASSWORD="$KADUPUL_TEST_MYSQL_ADMIN_PASSWORD" \
           php -d zend.exception_ignore_args=1 security/reference_write_transaction_native_probe.php
+
+    - name: Aggregate item replacement contracts
+      working-directory: tests
+      env:
+        KADUPUL_AGGREGATE_TEST_PORT: '3306'
+        KADUPUL_AGGREGATE_TEST_USER: root
+        KADUPUL_AGGREGATE_TEST_PASSWORD: cactiroot
+      run: php vendor/bin/pest --test-directory=. --configuration=phpunit-aggregate.xml --fail-on-empty-test-suite --colors=never
 
   cdef-reference-contracts:
     permissions:

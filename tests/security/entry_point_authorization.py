@@ -274,6 +274,25 @@ def route_fixtures(rig, rows, ids):
             ids[prefix] = {'id': int(parent)}
 
 
+    metadata_tables = {'graph-input-items': 'graph_template_input', 'query-data-sources': 'snmp_query_graph',
+                       'query-graph-suggestions': 'snmp_query_graph', 'query-data-suggestions': 'snmp_query_graph',
+                       'query-device-templates': 'snmp_query', 'graph-device-templates': 'graph_templates',
+                       'mib-objects': 'snmpagent_mibs', 'mib-conventions': 'snmpagent_mibs', 'mib-notification-attributes': 'snmpagent_mibs'}
+    metadata_inserts = {
+        'graph_template_input': "INSERT INTO graph_template_input (name,graph_template_id) SELECT 'entry-sweep',MIN(id) FROM graph_templates; SELECT LAST_INSERT_ID()",
+        'snmp_query_graph': "INSERT INTO snmp_query_graph (name,snmp_query_id) SELECT 'entry-sweep',MIN(id) FROM snmp_query; SELECT LAST_INSERT_ID()",
+        'snmpagent_mibs': "INSERT INTO snmpagent_mibs (name,file) VALUES ('ENTRY-SWEEP-MIB',''); SELECT LAST_INSERT_ID()",
+    }
+    for route, table in metadata_tables.items():
+        prefix = 'management/' + route
+        if present(prefix):
+            value = rig.sql('SELECT MIN(id) FROM ' + table).strip()
+            if (not value.isdecimal() or int(value) < 1) and table in metadata_inserts:
+                value = rig.sql(metadata_inserts[table]).strip()
+            if not value.isdecimal() or int(value) < 1:
+                raise RuntimeError('Missing concrete metadata parent: ' + prefix)
+            ids[prefix] = {'id': int(value)}
+
     relationship_tables = {'device-template-queries': 'host_template', 'data-template-definitions': 'data_template', 'aggregate-template-items': 'aggregate_graph_templates', 'snmp-option-entries': 'automation_snmp', 'graph-rule-device-criteria': 'automation_graph_rules', 'graph-rule-query-criteria': 'automation_graph_rules', 'tree-rule-device-criteria': 'automation_tree_rules', 'tree-rule-steps': 'automation_tree_rules', 'receiver-subscriptions': 'snmpagent_managers', 'receiver-history': 'snmpagent_managers'}
     # Existing aggregate/device-template fixtures must be created before their
     # relationship IDs are sampled. Fresh installs also have empty rule and
@@ -297,7 +316,7 @@ def route_fixtures(rig, rows, ids):
                 raise ValueError('Missing concrete relationship parent: ' + prefix)
             ids[prefix] = {'id': int(value)}
 
-    relationship_tables = {'device-template-queries': 'host_template', 'data-template-definitions': 'data_template', 'aggregate-template-items': 'aggregate_graph_templates', 'snmp-option-entries': 'automation_snmp', 'graph-rule-device-criteria': 'automation_graph_rules', 'graph-rule-query-criteria': 'automation_graph_rules', 'tree-rule-device-criteria': 'automation_tree_rules', 'tree-rule-steps': 'automation_tree_rules', 'receiver-subscriptions': 'snmpagent_managers', 'receiver-history': 'snmpagent_managers', 'user-group-memberships': 'user_auth', 'group-members': 'user_auth_group', 'user-graphs-permissions': 'user_auth', 'user-devices-permissions': 'user_auth', 'user-templates-permissions': 'user_auth', 'user-trees-permissions': 'user_auth', 'group-graphs-permissions': 'user_auth_group', 'group-devices-permissions': 'user_auth_group', 'group-templates-permissions': 'user_auth_group', 'group-trees-permissions': 'user_auth_group'}
+    relationship_tables = {'device-template-queries': 'host_template', 'data-template-definitions': 'data_template', 'aggregate-template-items': 'aggregate_graph_templates', 'snmp-option-entries': 'automation_snmp', 'graph-rule-device-criteria': 'automation_graph_rules', 'graph-rule-query-criteria': 'automation_graph_rules', 'tree-rule-device-criteria': 'automation_tree_rules', 'tree-rule-steps': 'automation_tree_rules', 'receiver-subscriptions': 'snmpagent_managers', 'receiver-history': 'snmpagent_managers', 'user-group-memberships': 'user_auth', 'group-members': 'user_auth_group', 'user-graphs-permissions': 'user_auth', 'user-devices-permissions': 'user_auth', 'user-templates-permissions': 'user_auth', 'user-trees-permissions': 'user_auth', 'group-graphs-permissions': 'user_auth_group', 'group-devices-permissions': 'user_auth_group', 'group-templates-permissions': 'user_auth_group', 'group-trees-permissions': 'user_auth_group', 'user-realm-grants': 'user_auth', 'user-display-preferences': 'user_auth', 'user-graph-preferences': 'user_auth', 'user-time-preferences': 'user_auth', 'user-login-options': 'user_auth', 'group-realm-grants': 'user_auth_group', 'group-display-preferences': 'user_auth_group', 'group-graph-preferences': 'user_auth_group', 'group-time-preferences': 'user_auth_group', 'group-login-options': 'user_auth_group'}
     # Existing aggregate/device-template fixtures must be created before their
     # relationship IDs are sampled. Fresh installs also have empty rule and
     # receiver catalogs; create disabled, task-owned parents only when needed.

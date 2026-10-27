@@ -1916,6 +1916,13 @@ Personal reports preserve the normal-user realm without adding console access.
 Graph and device visibility reuse a shared IdentityAccess policy projection while
 Inventory's existing helper remains a compatibility delegate. Existing PHP
 editors, bulk operations and plugin/report execution retain their write paths.
+
+The [mapping and MIB slice](migrations/mapping-mib-batch-10.md) adds ten Twig
+views using the merged management catalog infrastructure. Template ownership,
+composite mapping identities and MIB module scope are checked in bounded DBAL
+readers. Related confirmation rendering no longer binds three unused VDEF
+globals; its HTML and request/query calls remain unchanged.
+
 The [relationship browsing slice](migrations/relationships-batch-10.md) adds ten
 parent-scoped Twig views. Existing parent catalogs link to them. Legacy PHP
 continues to handle edits and operational actions. This slice does not retire
@@ -1925,3 +1932,8 @@ The [identity relationship slice](migrations/identity-relationships-batch-10.md)
 adds ten views for recorded memberships and permission exceptions. It reuses the
 relationship infrastructure and existing user administration authorization.
 These views do not calculate effective permissions or change their enforcement.
+
+The [identity settings slice](migrations/identity-settings-batch-10.md) adds ten
+views for stored user/group grants, preferences and login options. It extends
+the identity relationship reader without changing preference inheritance,
+plugin settings, authorization evaluation or legacy writes.

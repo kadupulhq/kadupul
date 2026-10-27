@@ -2133,10 +2133,10 @@ const ADMINISTRATION_LIST_ACCESS_SOURCES = [
 
 // Reviewed management route defaults, actor/realm admission and scoped inputs.
 const MANAGEMENT_CATALOG_ACCESS_SOURCES = [
-    'src/Navigation/Infrastructure/Persistence/DbalManagementCatalogAccess.php' => '4739eb9de87551d5fb1dc63466b7b1b866c8d727786f3aec247fa9673464f870',
-    'src/Navigation/Contract/Management/CatalogScreen.php' => '54cd8c110a13e381a8d5f5ce8589b645466c7e38d378e583666da77c7a3a46ee',
-    'src/Navigation/Application/Query/ViewManagementCatalog.php' => '84f6528b048fb7e2be2e70f87ca6bc3556466a1ae268884aef8527aa9f7f25fe',
-    'src/Navigation/Infrastructure/Symfony/Controller/ManagementCatalogController.php' => '32f8f726a61fa40aaa5ff2319434e8f2a53c83410f01e54de4ea9ef0805d9b52',
+    'src/Navigation/Infrastructure/Persistence/DbalManagementCatalogAccess.php' => '40b5a0c78d075c9b17e648b891fef944e213d5b11546027ff336e485e6c7a3f3',
+    'src/Navigation/Contract/Management/CatalogScreen.php' => 'baed17d0ea795c70815402844a4e84d06a4f16a126b9a9285c10014ab4873d15',
+    'src/Navigation/Application/Query/ViewManagementCatalog.php' => 'd33928dadc140353aad969ce74626e21b79c772d1f546bf93cca6a12f53fbc0a',
+    'src/Navigation/Infrastructure/Symfony/Controller/ManagementCatalogController.php' => '007e1b1bbbf42125e701410fe1d37a02ea0d7bf0acb4d4d9247ed43be659fe6d',
     'src/Navigation/Infrastructure/Symfony/Controller/PersonalReportCatalogController.php' => 'c8b3780e8a5314d4c31bb8fa8326723b054688685f2ab4ae339cd44f56d606a9',
 ];
 
@@ -2147,12 +2147,155 @@ const RELATIONSHIP_ACCESS_SOURCES = [
     'src/Navigation/Infrastructure/Persistence/ParentRelationshipAccess.php' => 'b4f98da46da26f6f9eed2b6b9fe2761b256c1a0c7b7b3f54905407db3a407cac',
     'src/Navigation/Infrastructure/Persistence/DbalAdministrationListAccess.php' => 'f839c850fdaacc0d81ff9955968e26f7700c312e2aec243b7ce71c317af2509a',
     'src/Navigation/Contract/Administration/ListScreen.php' => 'e533a5e479a85c3ef1e6ebbdf534d4907e4830fcd679419c848f26a051d83762',
-    'src/Navigation/Contract/Relationships/RelationshipScreen.php' => '7513a3bac8904f6368b639b1b9f1d03f4b5fac85173d140af4f291dd5d8ff95f',
+    'src/Navigation/Contract/Relationships/RelationshipScreen.php' => 'a01c4c444f3e252d23b5a4510b24baecfe1c9b77ea39c2bdaea1903400c5153f',
     'src/Navigation/Application/Query/ViewRelationships.php' => '3687d22d648ae1e246aae67644cdaa0f005db6e75ba7702c8b761f70c1212f61',
-    'src/Navigation/Infrastructure/Symfony/Controller/RelationshipController.php' => '9f153ce46ac23c7b20140ffa1e163d58900afff031998a7329e9082fadc846d9',
+    'src/Navigation/Infrastructure/Symfony/Controller/RelationshipController.php' => '9923e1416a17e81bdc237e17256ae9f7aa1796966d4c1fbfd5df202c8fdc3d24',
 ];
 
 const REVIEWED_FEATURE_ACCESS = [
+    '/management/graph-input-items' => [
+        'label' => 'management catalog',
+        'realm' => 10,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/query-data-sources' => [
+        'label' => 'management catalog',
+        'realm' => 13,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/query-graph-suggestions' => [
+        'label' => 'management catalog',
+        'realm' => 13,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/query-data-suggestions' => [
+        'label' => 'management catalog',
+        'realm' => 13,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/query-device-templates' => [
+        'additional_realms' => [12],
+        'label' => 'management catalog',
+        'realm' => 13,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/graph-device-templates' => [
+        'additional_realms' => [12],
+        'label' => 'management catalog',
+        'realm' => 10,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/snmp-mibs' => [
+        'label' => 'management catalog',
+        'realm' => 15,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/mib-objects' => [
+        'label' => 'management catalog',
+        'realm' => 15,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/mib-conventions' => [
+        'label' => 'management catalog',
+        'realm' => 15,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/mib-notification-attributes' => [
+        'label' => 'management catalog',
+        'realm' => 15,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/relationships/user-realm-grants' => [
+        'label' => 'parent-scoped relationships',
+        'realm' => 1,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\RelationshipAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\ParentRelationshipAccess',
+        'sources' => RELATIONSHIP_ACCESS_SOURCES,
+    ],
+    '/relationships/user-display-preferences' => [
+        'label' => 'parent-scoped relationships',
+        'realm' => 1,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\RelationshipAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\ParentRelationshipAccess',
+        'sources' => RELATIONSHIP_ACCESS_SOURCES,
+    ],
+    '/relationships/user-graph-preferences' => [
+        'label' => 'parent-scoped relationships',
+        'realm' => 1,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\RelationshipAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\ParentRelationshipAccess',
+        'sources' => RELATIONSHIP_ACCESS_SOURCES,
+    ],
+    '/relationships/user-time-preferences' => [
+        'label' => 'parent-scoped relationships',
+        'realm' => 1,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\RelationshipAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\ParentRelationshipAccess',
+        'sources' => RELATIONSHIP_ACCESS_SOURCES,
+    ],
+    '/relationships/user-login-options' => [
+        'label' => 'parent-scoped relationships',
+        'realm' => 1,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\RelationshipAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\ParentRelationshipAccess',
+        'sources' => RELATIONSHIP_ACCESS_SOURCES,
+    ],
+    '/relationships/group-realm-grants' => [
+        'label' => 'parent-scoped relationships',
+        'realm' => 1,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\RelationshipAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\ParentRelationshipAccess',
+        'sources' => RELATIONSHIP_ACCESS_SOURCES,
+    ],
+    '/relationships/group-display-preferences' => [
+        'label' => 'parent-scoped relationships',
+        'realm' => 1,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\RelationshipAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\ParentRelationshipAccess',
+        'sources' => RELATIONSHIP_ACCESS_SOURCES,
+    ],
+    '/relationships/group-graph-preferences' => [
+        'label' => 'parent-scoped relationships',
+        'realm' => 1,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\RelationshipAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\ParentRelationshipAccess',
+        'sources' => RELATIONSHIP_ACCESS_SOURCES,
+    ],
+    '/relationships/group-time-preferences' => [
+        'label' => 'parent-scoped relationships',
+        'realm' => 1,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\RelationshipAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\ParentRelationshipAccess',
+        'sources' => RELATIONSHIP_ACCESS_SOURCES,
+    ],
+    '/relationships/group-login-options' => [
+        'label' => 'parent-scoped relationships',
+        'realm' => 1,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\RelationshipAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\ParentRelationshipAccess',
+        'sources' => RELATIONSHIP_ACCESS_SOURCES,
+    ],
+
     '/relationships/user-group-memberships' => [
         'label' => 'parent-scoped relationships',
         'realm' => 1,
@@ -2929,6 +3072,9 @@ function symfony_routes(string $root, array $files): array
                                     continue;
                                 }
                                 $grant .= ' + realm ' . $feature['realm'];
+                                foreach ($feature['additional_realms'] ?? [] as $realm) {
+                                    $grant .= ' + realm ' . $realm;
+                                }
                             }
                             $rows[] = ['app.php' . $route['path'], 'symfony:' . $route['name'], $detail . '; ConsoleAccess ' . $grant . $reviewed];
                         } elseif (array_key_exists($route['name'], ANONYMOUS_ROUTES)) {

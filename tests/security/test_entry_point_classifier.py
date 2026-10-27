@@ -1641,10 +1641,7 @@ final class FeatureAction {
         'src/Navigation/Infrastructure/Symfony/Controller/ManagementCatalogController.php',
         'src/Navigation/Infrastructure/Symfony/Controller/PersonalReportCatalogController.php',
     ]
-    management_routes = {'graphs': 5, 'data-sources': 3, 'aggregate-graphs': 5, 'reports': 21,
-                         'my-reports': 22, 'plugins': 101, 'graph-template-items/{id}': 10,
-                         'graph-template-inputs/{id}': 10, 'device-template-graphs/{id}': 12,
-                         'data-query-graphs/{id}': 13}
+    management_routes = {'graphs': 5, 'data-sources': 3, 'aggregate-graphs': 5, 'reports': 21, 'my-reports': 22, 'plugins': 101, 'graph-template-items/{id}': 10, 'graph-template-inputs/{id}': 10, 'device-template-graphs/{id}': 12, 'data-query-graphs/{id}': 13, 'graph-input-items/{id}': 10, 'query-data-sources/{id}': 13, 'query-graph-suggestions/{id}': 13, 'query-data-suggestions/{id}': 13, 'query-device-templates/{id}': 13, 'graph-device-templates/{id}': 10, 'snmp-mibs': 15, 'mib-objects/{id}': 15, 'mib-conventions/{id}': 15, 'mib-notification-attributes/{id}': 15}
     with tempfile.TemporaryDirectory(prefix='entry-classifier-management-') as directory:
         root = Path(directory)
         (root / 'include').mkdir()
@@ -1659,7 +1656,8 @@ final class FeatureAction {
         for route, realm in management_routes.items():
             count += 1
             row = rows.get('app.php/management/' + route, ('missing', ''))
-            if not row[0].startswith('symfony:management_') or not row[1].endswith(' + realm %d' % realm):
+            suffix = ' + realm %d' % realm + (' + realm 12' if route.startswith(('query-device-templates/', 'graph-device-templates/')) else '')
+            if not row[0].startswith('symfony:management_') or not row[1].endswith(suffix):
                 failures.append('Management catalog %s: unexpected classification %s' % (route, row))
         for path in management_sources:
             (root / path).write_text((project / path).read_text() + '\n// Unreviewed admission change.\n')
@@ -1680,7 +1678,7 @@ final class FeatureAction {
                 failures.append('An unpinned management controller inherited a feature grant: ' + route)
     # Parent-scoped admission is pinned to the complete screen/parent mapping.
     relationship_sources = ['src/Navigation/Infrastructure/Persistence/ParentRelationshipAccess.php', 'src/Navigation/Infrastructure/Persistence/DbalAdministrationListAccess.php', 'src/Navigation/Contract/Administration/ListScreen.php', 'src/Navigation/Contract/Relationships/RelationshipScreen.php', 'src/Navigation/Application/Query/ViewRelationships.php', 'src/Navigation/Infrastructure/Symfony/Controller/RelationshipController.php']
-    relationship_routes = {'device-template-queries': 12, 'data-template-definitions': 11, 'aggregate-template-items': 5, 'snmp-option-entries': 23, 'graph-rule-device-criteria': 23, 'graph-rule-query-criteria': 23, 'tree-rule-device-criteria': 23, 'tree-rule-steps': 23, 'receiver-subscriptions': 15, 'receiver-history': 15, 'user-group-memberships': 1, 'group-members': 1, 'user-graphs-permissions': 1, 'user-devices-permissions': 1, 'user-templates-permissions': 1, 'user-trees-permissions': 1, 'group-graphs-permissions': 1, 'group-devices-permissions': 1, 'group-templates-permissions': 1, 'group-trees-permissions': 1}
+    relationship_routes = {'device-template-queries': 12, 'data-template-definitions': 11, 'aggregate-template-items': 5, 'snmp-option-entries': 23, 'graph-rule-device-criteria': 23, 'graph-rule-query-criteria': 23, 'tree-rule-device-criteria': 23, 'tree-rule-steps': 23, 'receiver-subscriptions': 15, 'receiver-history': 15, 'user-group-memberships': 1, 'group-members': 1, 'user-graphs-permissions': 1, 'user-devices-permissions': 1, 'user-templates-permissions': 1, 'user-trees-permissions': 1, 'group-graphs-permissions': 1, 'group-devices-permissions': 1, 'group-templates-permissions': 1, 'group-trees-permissions': 1, 'user-realm-grants': 1, 'user-display-preferences': 1, 'user-graph-preferences': 1, 'user-time-preferences': 1, 'user-login-options': 1, 'group-realm-grants': 1, 'group-display-preferences': 1, 'group-graph-preferences': 1, 'group-time-preferences': 1, 'group-login-options': 1}
     with tempfile.TemporaryDirectory(prefix='entry-classifier-relationships-') as directory:
         root = Path(directory)
         for path in relationship_sources:

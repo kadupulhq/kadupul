@@ -17,6 +17,9 @@ final class AggregateItemTransactionTest extends TestCase
         yield ['later-insert'];
         yield ['caller-failure'];
         yield ['mixed-owners'];
+        foreach (['sql', 'array', 'boolean', 'null', 'zero', 'negative', 'overflow', 'structured'] as $case) {
+            yield ['invalid-' . $case];
+        }
     }
 
     private function runFixture(string $case): array
@@ -62,5 +65,15 @@ final class AggregateItemTransactionTest extends TestCase
         self::assertSame([11, 12, 200], array_column($result['rows'], 'graph_templates_item_id'));
         self::assertSame($result['before'], $result['after_caller_rollback']);
         self::assertTrue($result['handler_preserved']);
+    }
+
+    public function testLargeReplacementUsesBoundedPreparedBatches(): void
+    {
+        $result = $this->runFixture('large');
+        self::assertTrue($result['saved']);
+        self::assertSame(7001, $result['row_count']);
+        self::assertSame(10000, $result['max_parameters']);
+        self::assertSame(8, $result['prepared_queries']);
+        self::assertFalse($result['transaction']);
     }
 }
