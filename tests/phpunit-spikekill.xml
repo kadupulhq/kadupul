@@ -117,6 +117,7 @@
       <file>Unit/Security/Auth/UserListGroupFilterTest.php</file>
       <file>Unit/Security/Auth/BulkUserActionGuardTest.php</file>
       <file>Unit/Security/Auth/ChangePasswordLockoutTest.php</file>
+      <file>Unit/Security/Auth/ChangePasswordUsernameRenderingTest.php</file>
       <file>Unit/Security/Auth/GraphViewSettingOutputTest.php</file>
       <file>Unit/Security/Auth/ProfileSettingValidationTest.php</file>
       <file>Unit/Security/Misc/HelpPageErrorNotificationTest.php</file>
