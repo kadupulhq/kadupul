@@ -240,6 +240,36 @@ PHP, array('caller' => $caller, 'template' => $template));
     'parameter default with prefix' => array('"${X:-x<arg1>}"'),
 ));
 
+test('bash ANSI-C and locale quoting produce no command', function (string $shell, string $caller, string $template) {
+    $path = $shell === 'bash' ? trim((string) shell_exec('command -v bash')) : $shell;
+    if ($path === '') {
+        $this->markTestSkipped('bash is not installed');
+    }
+
+    $result = data_input_substitution_run('ansi-c-rejected', <<<'PHP'
+$directory = sys_get_temp_dir() . '/kadupul-data-input-' . bin2hex(random_bytes(8));
+mkdir($directory, 0700);
+$marker = $directory . '/executed';
+try {
+    $command = data_input_command($arguments['caller'], $arguments['template'], array('arg1' => '$(touch ' . $marker . ')'), array('id' => 9));
+    $shell = data_input_shell_words($command, $arguments['shell']);
+    $executed = file_exists($marker);
+} finally {
+    if (file_exists($marker)) {
+        unlink($marker);
+    }
+    rmdir($directory);
+}
+echo json_encode(array($command, $executed, $shell['status']));
+PHP, array('caller' => $caller, 'template' => $template, 'shell' => $path));
+
+    expect($result)->toBe(array('', false, 0));
+})->with(array('/bin/sh', 'bash'))->with(array('poller', 'test'))->with(array(
+    'escaped quote in ANSI-C string' => array("$'x\\'<arg1>'"),
+    'ANSI-C string before a field' => array("printf %s $'a\\'b' <arg1>"),
+    'locale string' => array('$"<arg1>"'),
+));
+
 test('parameter expansions without fields keep their command lines', function () {
     $result = data_input_substitution_run('param-kept', <<<'PHP'
 $command = data_input_command('poller', 'printf "${X:-%s}" "<arg1>"', array('arg1' => 'a b'));
@@ -261,5 +291,5 @@ PHP, array('base' => '/opt/kadupul base'));
 });
 
 test('substitution matrix keeps every value literal through /bin/sh', function () {
-    expect(data_input_substitution_run('matrix', 'echo json_encode(script_substitution_matrix());'))->toBe(1312);
+    expect(data_input_substitution_run('matrix', 'echo json_encode(script_substitution_matrix());'))->toBe(1316);
 });

@@ -58,18 +58,18 @@ function data_input_command(string $caller, string $template, array $fields, arr
 }
 
 /**
- * Lets /bin/sh parse the command as the poller would, but prints each word
+ * Lets the shell parse the command as the poller would, but prints each word
  * instead of running the script.
  *
  * @return array{status: int, words: list<string>, err: string}
  */
-function data_input_shell_words(string $command): array
+function data_input_shell_words(string $command, string $shell = '/bin/sh'): array
 {
     $pipes   = array();
-    $process = proc_open(array('/bin/sh', '-c', 'printf "%s\\0" ' . $command), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $process = proc_open(array($shell, '-c', 'printf "%s\\0" ' . $command), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
 
     if (!is_resource($process)) {
-        throw new RuntimeException('Cannot start /bin/sh');
+        throw new RuntimeException('Cannot start ' . $shell);
     }
 
     $out = stream_get_contents($pipes[1]);

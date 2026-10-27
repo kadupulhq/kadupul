@@ -39,7 +39,8 @@ final class InputStringSubstitution
      * template yields an empty string rather than a command that might expose a
      * field to the outer quote. The same applies to a backslash inside backticks,
      * which the shell unescapes before parsing the inner command, and to a field or
-     * backslash inside ${...}, whose word has its own quoting rules.
+     * backslash inside ${...}, whose word has its own quoting rules, and to bash's
+     * $'...' and $"..." quoting, where a backslash can escape the closing quote.
      *
      * Ported from Cacti 1.2.x (GHSA-5v3j-wcrr-jxjg, Cacti PR #8238 and #8359).
      *
@@ -143,6 +144,10 @@ final class InputStringSubstitution
                 $stack[] = ['quote' => '', 'quoteEmpty' => false, 'kind' => 'cmdsub'];
 
                 continue;
+            }
+
+            if ($quote === '' && $ch === '$' && $i + 1 < $len && ($template[$i + 1] === "'" || $template[$i + 1] === '"')) {
+                return '';
             }
 
             if ($ch === '$' && $i + 1 < $len && $template[$i + 1] === '{') {

@@ -81,6 +81,12 @@ function script_substitution_matrix(): int
         ['"${X:-<field>}"', ['field' => "'p'"], ''],
         ['${X:-x<field>}', ['field' => "'p'"], ''],
         ['"${X:-\\}}" <field>', ['field' => "'p'"], ''],
+        // bash's $'...' and $"..." honor backslash escapes the scanner does not model.
+        ["\$'x\\'<field>'", ['field' => "'p'"], ''],
+        ['$"<field>"', ['field' => "'p'"], ''],
+        ['printf %s $\'a\' <field>', ['field' => "'p'"], ''],
+        // Inside double quotes $' is literal text.
+        ['"$\'<field>\'"', ['field' => "'p'"], '"$\'"\'p\'"\'"'],
         // Parameter expansions without fields or backslashes are kept as written.
         ['"${HOME:-/tmp}" <field>', ['field' => "'p'"], '"${HOME:-/tmp}" \'p\''],
         ['${X#*/} "<field>"', ['field' => "'p'"], '${X#*/} \'p\''],
