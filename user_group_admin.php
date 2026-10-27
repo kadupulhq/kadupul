@@ -363,7 +363,7 @@ function form_actions()
 
     require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php';
     try {
-        $association_tab = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::apply(true);
+        $association_tab = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::apply(true, array_keys($_POST));
     } catch (\Kadupul\IdentityAccess\Infrastructure\Legacy\MissingPermissionGroup $error) {
         if (!$error->rollbackConfirmed) {
             throw $error;
