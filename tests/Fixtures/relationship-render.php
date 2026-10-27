@@ -50,6 +50,7 @@ $container->set(Kadupul\Platform\Contract\DatabaseConnection::class, new class (
 $pages = [];
 try {
     foreach (Kadupul\Navigation\Contract\Relationships\RelationshipScreen::cases() as $screen) {
+        if ($screen->identityView() !== (($argv[2] ?? '') === 'identity')) { continue; }
         $uri = substr($screen->path(), 7) . '/4';
         $request = Symfony\Component\HttpFoundation\Request::create($uri);
         $response = $kernel->handle($request);

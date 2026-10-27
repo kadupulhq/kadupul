@@ -34,6 +34,16 @@ final readonly class RelationshipController
     #[Route('/relationships/tree-rule-steps/{id}', name: 'relationships_tree_rule_steps', defaults: ['screen' => 'tree-rule-steps'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
     #[Route('/relationships/receiver-subscriptions/{id}', name: 'relationships_receiver_subscriptions', defaults: ['screen' => 'receiver-subscriptions'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
     #[Route('/relationships/receiver-history/{id}', name: 'relationships_receiver_history', defaults: ['screen' => 'receiver-history'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
+    #[Route('/relationships/user-group-memberships/{id}', name: 'relationships_user_group_memberships', defaults: ['screen' => 'user-group-memberships'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
+    #[Route('/relationships/group-members/{id}', name: 'relationships_group_members', defaults: ['screen' => 'group-members'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
+    #[Route('/relationships/user-graphs-permissions/{id}', name: 'relationships_user_graphs_permissions', defaults: ['screen' => 'user-graphs-permissions'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
+    #[Route('/relationships/user-devices-permissions/{id}', name: 'relationships_user_devices_permissions', defaults: ['screen' => 'user-devices-permissions'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
+    #[Route('/relationships/user-templates-permissions/{id}', name: 'relationships_user_templates_permissions', defaults: ['screen' => 'user-templates-permissions'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
+    #[Route('/relationships/user-trees-permissions/{id}', name: 'relationships_user_trees_permissions', defaults: ['screen' => 'user-trees-permissions'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
+    #[Route('/relationships/group-graphs-permissions/{id}', name: 'relationships_group_graphs_permissions', defaults: ['screen' => 'group-graphs-permissions'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
+    #[Route('/relationships/group-devices-permissions/{id}', name: 'relationships_group_devices_permissions', defaults: ['screen' => 'group-devices-permissions'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
+    #[Route('/relationships/group-templates-permissions/{id}', name: 'relationships_group_templates_permissions', defaults: ['screen' => 'group-templates-permissions'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
+    #[Route('/relationships/group-trees-permissions/{id}', name: 'relationships_group_trees_permissions', defaults: ['screen' => 'group-trees-permissions'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
     public function __invoke(RelationshipScreen $screen, string $id, Request $request, ConsoleAccess $console, RelationshipAccess $access, ViewRelationships $view, Environment $twig, TranslatorInterface $translator): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
