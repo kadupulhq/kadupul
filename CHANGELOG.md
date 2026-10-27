@@ -6,9 +6,9 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
-- Update flag-icons to 7.6.0 and Playwright to 1.64.1, and check bundled flag versions against the dependency manifest.
-
 - Keep a package's file mode when `kadupul:package:sign` replaces it in place, and give a new output file the mode the umask allows, instead of always setting 0644; group and other write and all execute bits are always removed. The 1.2.36 upgrade step now writes its fixed collector-copy marker as a SHA-256 value instead of RIPEMD-160; nothing reads the value.
+
+- Update flag-icons to 7.6.0 and Playwright to 1.64.1, and check bundled flag versions against the dependency manifest.
 
 - Route the `db_*` helpers' connection state through `LegacyConnectionRegistry` instead of `global` declarations in `lib/database.php`; the connection globals keep the same names, values and assignment points for plugins and the poller, and the helpers' return values, retries and reconnects are unchanged. A warning for a missing connection key keeps its text but now names `LegacyConnectionRegistry.php` as its file and line.
 
