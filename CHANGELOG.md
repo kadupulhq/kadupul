@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Add ten Twig views for stored user/group realm grants, display preferences, graph preferences, time preferences and login options. Preference readers allowlist public keys and preserve zero, empty and missing values; existing PHP forms still handle changes.
+
 - Add ten Twig views for user/group memberships and stored graph, device, template and tree permission exceptions. Show the stored default policy without presenting these records as effective access. Existing PHP pages still handle policy and membership changes.
 
 - Add ten Symfony/Twig relationship views for template definitions, automation criteria and steps, SNMP option entries, and receiver subscriptions and history. Parent catalog links preserve access to existing editing and operational actions.
