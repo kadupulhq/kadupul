@@ -9,6 +9,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Add ten Twig views for graph-input associations, data-query mappings and suggestions, template relationships, and registered SNMP MIB metadata. Remove three unused VDEF global bindings from the related data-query confirmation page without changing its HTML or request/query calls.
 
 - Add ten native Symfony/Twig management catalogs for graphs, data sources, aggregates, reports, recorded plugins and template relationships, with resource/owner permissions and bounded browsing. Legacy editors and operations remain available.
+- Add ten Symfony/Twig relationship views for template definitions, automation criteria and steps, SNMP option entries, and receiver subscriptions and history. Parent catalog links preserve access to existing editing and operational actions.
 
 - Add ten native Symfony/Twig System Utilities diagnostic views with injected readers, bounded filters, device-scoped cache reads and English/French catalogs. Existing maintenance actions and advanced diagnostics remain available through legacy pages.
 

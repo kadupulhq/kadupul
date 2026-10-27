@@ -1922,3 +1922,8 @@ views using the merged management catalog infrastructure. Template ownership,
 composite mapping identities and MIB module scope are checked in bounded DBAL
 readers. Related confirmation rendering no longer binds three unused VDEF
 globals; its HTML and request/query calls remain unchanged.
+
+The [relationship browsing slice](migrations/relationships-batch-10.md) adds ten
+parent-scoped Twig views. Existing parent catalogs link to them. Legacy PHP
+continues to handle edits and operational actions. This slice does not retire
+legacy writers or remove their global state.

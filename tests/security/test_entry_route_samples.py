@@ -71,6 +71,69 @@ class RouteSamples(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, 'Missing concrete management parent'):
             route_fixtures(Rig(), [('app.php/management/graph-template-items/{id}', 'symfony:management', '')],
                            {'devices': 1, 'sites': 1})
+    def test_relationship_routes_bind_existing_parents(self):
+        class Rig:
+            def sql(self, statement):
+                self.statement = statement
+                return '37'
+        routes = ['device-template-queries', 'data-template-definitions', 'aggregate-template-items',
+                  'snmp-option-entries', 'graph-rule-device-criteria', 'graph-rule-query-criteria',
+                  'tree-rule-device-criteria', 'tree-rule-steps', 'receiver-subscriptions', 'receiver-history']
+        for route in routes:
+            entry = 'app.php/relationships/' + route + '/{id}'
+            rig = Rig()
+            fixtures = {'devices': 7, 'sites': 9}
+            route_fixtures(rig, [(entry, 'symfony:relationships_' + route, '')], fixtures)
+            self.assertTrue(rig.statement.startswith('SELECT MIN(id) FROM '))
+            self.assertEqual(entry.replace('{id}', '37'), sample(entry, 'methods=GET', fixtures))
+            self.assertTrue(has_feature_realm(entry))
+        class Missing:
+            def sql(self, statement):
+                return 'NULL'
+        with self.assertRaisesRegex(ValueError, 'Missing concrete relationship parent'):
+            route_fixtures(Missing(), [(entry, '', '')], {'devices': 7, 'sites': 9})
+
+    def test_relationships_sample_after_aggregate_creation(self):
+        class Rig:
+            created = False
+            def sql(self, statement):
+                if statement.startswith('INSERT INTO aggregate_graph_templates ('):
+                    self.created = True
+                    return '43'
+                if statement.startswith('INSERT INTO aggregate_graph_templates_graph '):
+                    return ''
+                if statement == 'SELECT MIN(id) FROM aggregate_graph_templates':
+                    return '43' if self.created else 'NULL'
+                raise AssertionError(statement)
+        rig = Rig()
+        ids = {'devices': 7, 'sites': 9}
+        entry = 'app.php/relationships/aggregate-template-items/{id}'
+        route_fixtures(rig, [('app.php/aggregate-templates/{id}', '', ''), (entry, '', '')], ids)
+        self.assertTrue(rig.created)
+        self.assertEqual('app.php/relationships/aggregate-template-items/43', sample(entry, '', ids))
+
+    def test_empty_rule_and_receiver_catalogs_get_real_inserted_ids(self):
+        tables = {'aggregate-template-items': 'aggregate_graph_templates', 'device-template-queries': 'host_template', 'data-template-definitions': 'data_template', 'snmp-option-entries': 'automation_snmp', 'graph-rule-device-criteria': 'automation_graph_rules',
+                  'tree-rule-steps': 'automation_tree_rules', 'receiver-history': 'snmpagent_managers'}
+        for route, table in tables.items():
+            class Rig:
+                created = False
+                def sql(self, statement):
+                    if statement == 'SELECT MIN(id) FROM ' + table:
+                        return '57' if self.created else 'NULL'
+                    if 'INSERT INTO ' + table + ' ' in statement:
+                        self.created = True
+                        self.insert = statement
+                        return '57'
+                    raise AssertionError(statement)
+            rig = Rig()
+            ids = {'devices': 7, 'sites': 9}
+            entry = 'app.php/relationships/' + route + '/{id}'
+            route_fixtures(rig, [(entry, '', '')], ids)
+            self.assertTrue(rig.created)
+            self.assertEqual(entry.replace('{id}', '57'), sample(entry, '', ids))
+            if table == 'snmpagent_managers':
+                self.assertIn("'on'", rig.insert)
 
     def test_mapping_and_mib_routes_bind_existing_or_created_parents(self):
         routes = {'graph-input-items': 'graph_template_input', 'query-data-sources': 'snmp_query_graph',

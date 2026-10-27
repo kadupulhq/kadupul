@@ -78,3 +78,11 @@ and metadata rendering. The related unused-global cleanup has byte-for-byte
 confirmation output and request/query characterization. Installed-session and
 collector HTTP acceptance remain release gates; legacy editing and MIB cache
 lifecycle operations remain active.
+
+### Relationship browsing views
+
+Status: implemented. Ten parent-scoped views use Twig, existing feature
+authorization and bounded DBAL readers. See [scope and acceptance evidence](migrations/relationships-batch-10.md).
+Kernel, native-schema and seven-theme browser regressions are registered.
+Installed-session and collector HTTP acceptance remain release gates; legacy
+editing and operational paths remain active.

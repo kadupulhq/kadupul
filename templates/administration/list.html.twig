@@ -86,6 +86,20 @@ SPDX-License-Identifier: GPL-2.0-or-later
                     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed route and the template/query numeric primary key. #}
                     <a href="{{ path(metadataRoutes[screen.value], {id: record.id}) }}">{{ 'Device Templates'|trans({}, 'management') }}</a>
                 {% endif %}
+
+                {% set related = {
+                    'device-templates': {'relationships_device_template_queries': 'Device queries'},
+                    'data-templates': {'relationships_data_template_definitions': 'Definitions'},
+                    'aggregate-templates': {'relationships_aggregate_template_items': 'Aggregate items'},
+                    'snmp-options': {'relationships_snmp_option_entries': 'SNMP entries'},
+                    'graph-rules': {'relationships_graph_rule_device_criteria': 'Device criteria', 'relationships_graph_rule_query_criteria': 'Query criteria'},
+                    'tree-rules': {'relationships_tree_rule_device_criteria': 'Device criteria', 'relationships_tree_rule_steps': 'Tree steps'},
+                    'notification-receivers': {'relationships_receiver_subscriptions': 'Subscriptions', 'relationships_receiver_history': 'History'}
+                } %}
+                {% for destination, label in related[screen.value] ?? {} %}
+                    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed route names in this template and the parent's numeric primary key. #}
+                    <a href="{{ path(destination, {id: record.id}) }}">{{ label|trans({}, 'relationships') }}</a>
+                {% endfor %}
             {% elseif column == 'name' %}{{ value is same as('') or value is null ? 'Unnamed'|trans : value }}
             {% elseif column in ['event_time', 'last_check'] %}
                 {% if value > 0 %}{{ value|date('Y-m-d H:i:s') }}{% else %}{{ 'N/A'|trans }}{% endif %}
