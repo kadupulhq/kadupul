@@ -99,6 +99,19 @@ final class ConsoleMenuTest extends TestCase
         self::assertNotContains('utilities.php', $paths);
     }
 
+    public function testManagementCatalogMenuDestinationsFollowTheFeatureRealms(): void
+    {
+        foreach (\Kadupul\Navigation\Contract\Management\CatalogScreen::cases() as $screen) {
+            if ($screen->scoped()) {
+                continue;
+            }
+            $menu = self::menu(new Actor(7, 'operator'), [8, $screen->realm()]);
+            $paths = array_merge(...array_map(static fn(array $section): array => array_column($section['items'], 'path'), $menu->sections()));
+            self::assertContains($screen->path(), $paths, $screen->value);
+            self::assertNotContains($screen->legacyScript(), $paths);
+        }
+    }
+
     public function testCollectorWithoutAnOnlinePrimaryGetsTheOfflineMenu(): void
     {
         $configuration = self::createStub(LegacyConfiguration::class);

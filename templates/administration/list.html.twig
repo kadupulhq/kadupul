@@ -67,6 +67,18 @@ SPDX-License-Identifier: GPL-2.0-or-later
             <td>{% if column == 'name' and screen.editable %}
                 {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Script/action are enum constants, ID is read from its numeric primary key, and the query is URL encoded. #}
                 <a class="linkEditMain" href="{{ installation_path(screen.legacyScript) }}?{{ screen.editQuery(record.id)|url_encode }}">{{ value is same as('') or value is null ? 'Unnamed'|trans : value }}</a>
+            {% if screen.value == 'graph-templates' %}
+                    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed child route and numeric template identity. #}
+                    <a href="{{ path('management_graph_template_items', {id: record.id}) }}">{{ 'Graph Items'|trans({}, 'management') }}</a>
+                    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed child route and numeric template identity. #}
+                    <a href="{{ path('management_graph_template_inputs', {id: record.id}) }}">{{ 'Graph Inputs'|trans({}, 'management') }}</a>
+                {% elseif screen.value == 'device-templates' %}
+                    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed child route and numeric template identity. #}
+                    <a href="{{ path('management_device_template_graphs', {id: record.id}) }}">{{ 'Associated Graphs'|trans({}, 'management') }}</a>
+                {% elseif screen.value == 'data-queries' %}
+                    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed child route and numeric query identity. #}
+                    <a href="{{ path('management_data_query_graphs', {id: record.id}) }}">{{ 'Graph Mappings'|trans({}, 'management') }}</a>
+                {% endif %}
             {% elseif column == 'name' %}{{ value is same as('') or value is null ? 'Unnamed'|trans : value }}
             {% elseif column in ['event_time', 'last_check'] %}
                 {% if value > 0 %}{{ value|date('Y-m-d H:i:s') }}{% else %}{{ 'N/A'|trans }}{% endif %}
