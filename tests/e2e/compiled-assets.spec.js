@@ -202,3 +202,77 @@ for (const theme of themes) {
     expect(errors).toEqual([]);
   });
 }
+
+for (const theme of themes) {
+  test(`${theme} renders ten identity relationship views with escaped text and native filters`, async ({ page }) => {
+    const { execFileSync } = require('node:child_process');
+    const pages = JSON.parse(execFileSync(process.env.PHP_BINARY || 'php',
+      [path.join(root, 'tests/Fixtures/relationship-render.php'), theme, 'identity'], { encoding: 'utf8' }));
+    expect(Object.keys(pages)).toHaveLength(10);
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await page.route('**/relationships/**', route => {
+      const rendered = pages[new URL(route.request().url()).pathname];
+      if (!rendered) throw new Error('Missing catalog fixture');
+      return route.fulfill({ contentType: 'text/html', ...rendered });
+    });
+    for (const uri of Object.keys(pages)) {
+      const response = await page.goto(uri);
+      expect(response.status()).toBe(200);
+      expect(response.headers()['content-security-policy']).toBeTruthy();
+      await expect(page.locator('#relationship-list')).toBeVisible();
+      await expect(page.locator('main h1')).toBeVisible();
+      await expect(page.locator('main tbody img, main tbody script')).toHaveCount(0);
+      await expect(page.locator('main tbody')).toContainText('Router <img src=x onerror=alert(1)>');
+      expect(await page.evaluate(() => window.bad)).toBeUndefined();
+      await page.locator('#relationship-filter').focus();
+      await page.keyboard.press('Tab');
+      await expect(page.locator('#relationship-rows')).toBeFocused();
+      await page.locator('#relationship-filter').fill('router');
+      await Promise.all([
+        page.waitForURL(url => url.searchParams.get('filter') === 'router'),
+        page.getByRole('button', { name: 'Go', exact: true }).click(),
+      ]);
+      expect(new URL(page.url()).pathname).toBe(uri);
+      expect(new URL(page.url()).searchParams.get('rows')).toBe('25');
+    }
+    expect(errors).toEqual([]);
+  });
+}
+
+for (const theme of themes) {
+  test(`${theme} renders ten identity settings views with escaped text and native filters`, async ({ page }) => {
+    const { execFileSync } = require('node:child_process');
+    const pages = JSON.parse(execFileSync(process.env.PHP_BINARY || 'php',
+      [path.join(root, 'tests/Fixtures/relationship-render.php'), theme, 'settings'], { encoding: 'utf8' }));
+    expect(Object.keys(pages)).toHaveLength(10);
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await page.route('**/relationships/**', route => {
+      const rendered = pages[new URL(route.request().url()).pathname];
+      if (!rendered) throw new Error('Missing catalog fixture');
+      return route.fulfill({ contentType: 'text/html', ...rendered });
+    });
+    for (const uri of Object.keys(pages)) {
+      const response = await page.goto(uri);
+      expect(response.status()).toBe(200);
+      expect(response.headers()['content-security-policy']).toBeTruthy();
+      await expect(page.locator('#relationship-list')).toBeVisible();
+      await expect(page.locator('main h1')).toBeVisible();
+      await expect(page.locator('main tbody img, main tbody script')).toHaveCount(0);
+      await expect(page.locator('main tbody')).toContainText('Router <img src=x onerror=alert(1)>');
+      expect(await page.evaluate(() => window.bad)).toBeUndefined();
+      await page.locator('#relationship-filter').focus();
+      await page.keyboard.press('Tab');
+      await expect(page.locator('#relationship-rows')).toBeFocused();
+      await page.locator('#relationship-filter').fill('router');
+      await Promise.all([
+        page.waitForURL(url => url.searchParams.get('filter') === 'router'),
+        page.getByRole('button', { name: 'Go', exact: true }).click(),
+      ]);
+      expect(new URL(page.url()).pathname).toBe(uri);
+      expect(new URL(page.url()).searchParams.get('rows')).toBe('25');
+    }
+    expect(errors).toEqual([]);
+  });
+}

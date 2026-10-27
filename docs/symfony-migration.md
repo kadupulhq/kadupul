@@ -1921,3 +1921,13 @@ The [relationship browsing slice](migrations/relationships-batch-10.md) adds ten
 parent-scoped Twig views. Existing parent catalogs link to them. Legacy PHP
 continues to handle edits and operational actions. This slice does not retire
 legacy writers or remove their global state.
+
+The [identity relationship slice](migrations/identity-relationships-batch-10.md)
+adds ten views for recorded memberships and permission exceptions. It reuses the
+relationship infrastructure and existing user administration authorization.
+These views do not calculate effective permissions or change their enforcement.
+
+The [identity settings slice](migrations/identity-settings-batch-10.md) adds ten
+views for stored user/group grants, preferences and login options. It extends
+the identity relationship reader without changing preference inheritance,
+plugin settings, authorization evaluation or legacy writes.
