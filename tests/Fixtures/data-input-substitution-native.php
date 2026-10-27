@@ -23,12 +23,23 @@ function db_fetch_row_prepared($sql, $params = array(), $log = true, $db_conn = 
         return $GLOBALS['data_input_fixture']['host'];
     }
 
+    // One row serves both test_data_source() and get_full_test_script_path().
     return array(
-        'id'            => 7,
-        'data_input_id' => 3,
-        'type_id'       => DATA_INPUT_TYPE_SCRIPT,
-        'input_string'  => $GLOBALS['data_input_fixture']['template'],
+        'id'                    => 7,
+        'data_input_id'         => 3,
+        'type_id'               => $GLOBALS['data_input_fixture']['type'] ?? DATA_INPUT_TYPE_SCRIPT,
+        'input_string'          => $GLOBALS['data_input_fixture']['template'],
+        'data_template_data_id' => 7,
+        'data_template_id'      => 5,
+        'active'                => 'on',
+        'rrd_step'              => 300,
+        'name'                  => 'fixture',
     );
+}
+
+function db_fetch_cell_prepared($sql, $params = array(), $column = '', $log = true, $db_conn = false)
+{
+    return 0;
 }
 
 function db_fetch_assoc_prepared($sql, $params = array(), $log = true, $db_conn = false)
@@ -55,6 +66,18 @@ function data_input_command(string $caller, string $template, array $fields, arr
     }
 
     return (string) get_full_test_script_path(5, 9);
+}
+
+/**
+ * Runs the production test_data_source() for a script or script server method.
+ *
+ * @param array<string, string|null> $fields
+ */
+function data_input_test_source(string $template, array $fields, int $type): bool
+{
+    $GLOBALS['data_input_fixture'] = array('template' => $template, 'fields' => $fields, 'host' => array('id' => 9), 'type' => $type);
+
+    return test_data_source(5, 9);
 }
 
 /**

@@ -2599,7 +2599,10 @@ function test_data_source($data_template_id, $host_id, $snmp_query_id = 0, $snmp
 
                 dsv_log('parts', $parts);
 
-                if (file_exists($parts[0])) {
+                // Dropping the function name by splitting on spaces is only safe
+                // when it is a plain word; otherwise the split could cut a quoted
+                // value and change how the shell parses the rest.
+                if (file_exists($parts[0]) && (!isset($parts[1]) || preg_match('/^[A-Za-z0-9_]+$/', $parts[1]))) {
                     unset($parts[1]);
 
                     $script = implode(' ', $parts);
@@ -3013,11 +3016,7 @@ function get_full_test_script_path($data_template_id, $host_id)
 
     $full_path = \Kadupul\DataInput\Domain\InputStringSubstitution::substitute((string) $full_path, $escaped_values);
 
-    /**
-     * sometimes a certain input value will not have anything entered... null out these fields
-     * in the input string so we don't mess up the script
-     */
-    return preg_replace('/(<[A-Za-z0-9_]+>)+/', '', $full_path);
+    return $full_path;
 }
 
 /**
@@ -3085,9 +3084,7 @@ function get_full_script_path($local_data_id)
 
     $full_path = \Kadupul\DataInput\Domain\InputStringSubstitution::substitute((string) $full_path, $escaped_values);
 
-    /* sometimes a certain input value will not have anything entered... null out these fields
-    in the input string so we don't mess up the script */
-    return preg_replace('/(<[A-Za-z0-9_]+>)+/', '', $full_path);
+    return $full_path;
 }
 
 /**

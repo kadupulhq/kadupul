@@ -49,7 +49,7 @@ final class InputStringSubstitution
      * @param string                   $template       the data input method's input string
      * @param array<int|string, mixed> $escaped_values field name => escaped value, plus raw path_* values
      *
-     * @return string the command line; unknown tokens are left for the caller to strip
+     * @return string the command line, with tokens that have no value removed
      */
     public static function substitute(string $template, array $escaped_values): string
     {
@@ -122,9 +122,10 @@ final class InputStringSubstitution
                     continue;
                 }
 
-                $out .= $m[0];
+                // A field with no value contributes nothing, and is removed here
+                // rather than afterwards so the checks above see the text that
+                // actually surrounds each value.
                 $i += $token_len;
-                $stack[$top]['quoteEmpty'] = false;
 
                 continue;
             }

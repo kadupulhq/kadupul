@@ -29,8 +29,12 @@ function script_substitution_matrix(): int
     $cases = [
         ['', [], ''],
         ['plain', [], 'plain'],
-        ['<unknown>', [], '<unknown>'],
-        ['"<unknown>"', [], '"<unknown>"'],
+        ['<unknown>', [], ''],
+        ['"<unknown>"', [], '""'],
+        // Tokens without a value are removed before neighbours are checked.
+        ['"<unknown><field>"', ['field' => "'p'"], "'p'"],
+        ['$<unknown><field>', ['field' => "'p'"], ''],
+        ['$<unknown>"<field>"', ['field' => "'p'"], ''],
         ['<bad-name>', [], '<bad-name>'],
         ['<unterminated', [], '<unterminated'],
         ['<0_>', ['0_' => 'ok'], 'ok'],

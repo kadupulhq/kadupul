@@ -194,8 +194,7 @@ PHP);
 
     [$shell, $executed, $marker] = $result;
     expect($executed)->toBeFalse();
-    // The trailing cleanup still removes token-shaped text from values.
-    expect($shell)->toBe(array('status' => 0, 'words' => array('cmd', '', '; touch ' . $marker . ' #'), 'err' => ''));
+    expect($shell)->toBe(array('status' => 0, 'words' => array('cmd', '<arg2>', '; touch ' . $marker . ' #'), 'err' => ''));
 });
 
 test('unsupported grammar inside a command substitution produces no command', function (string $template) {
@@ -302,6 +301,53 @@ PHP, array('caller' => $caller, 'template' => $template, 'shell' => $path));
     'single quoted' => array("'$<arg1>'"),
     'after escaped backslash' => array('\\\\$<arg1>'),
     'before a backslash' => array('$\\<arg1>'),
+    'after an empty field' => array('$<unknown><arg1>'),
+    'after text and an empty field' => array('x$<unknown><arg1>'),
+    'quoted after an empty field' => array('$<unknown>"<arg1>"'),
+));
+
+test('an empty field does not change how a quoted field is parsed', function (string $shell) {
+    $path = $shell === 'bash' ? trim((string) shell_exec('command -v bash')) : $shell;
+    if ($path === '') {
+        $this->markTestSkipped('bash is not installed');
+    }
+
+    $result = data_input_substitution_run('empty-neighbour', <<<'PHP'
+$command = data_input_command('poller', '"<unknown><arg1>"', array('arg1' => "\\'\$(printf x) #"));
+echo json_encode(array($command, data_input_shell_words($command, $arguments['shell'])));
+PHP, array('shell' => $path));
+
+    expect($result[0])->toBe("'\\'\\''\$(printf x) #'");
+    expect($result[1]['words'])->toBe(array("\\'\$(printf x) #"));
+})->with(array('/bin/sh', 'bash'));
+
+test('test_data_source runs a script server method only when its function name is a plain word', function (string $template, array $fields, bool $expected) {
+    $result = data_input_substitution_run('test-source', <<<'PHP'
+$directory = sys_get_temp_dir() . '/kadupul-data-input-' . bin2hex(random_bytes(8));
+mkdir($directory, 0700);
+$marker = $directory . '/executed';
+file_put_contents($directory . '/probe.php', '<?php print 1;');
+$config['base_path'] = $directory;
+$config['config_options_array']['path_php_binary'] = PHP_BINARY;
+$config['config_options_array']['data_source_trace'] = '';
+try {
+    $fields = str_replace('{marker}', $marker, $arguments['fields']);
+    $passed = data_input_test_source($arguments['template'], $fields, DATA_INPUT_TYPE_PHP_SCRIPT_SERVER);
+    $executed = file_exists($marker);
+} finally {
+    if (file_exists($marker)) {
+        unlink($marker);
+    }
+    unlink($directory . '/probe.php');
+    rmdir($directory);
+}
+echo json_encode(array($passed, $executed));
+PHP, array('template' => $template, 'fields' => $fields));
+
+    expect($result)->toBe(array($expected, false));
+})->with(array(
+    'function name' => array('<path_cacti>/probe.php probe_fn <arg1>', array('arg1' => 'a b'), true),
+    'field in the function position' => array('<path_cacti>/probe.php <arg1>', array('arg1' => "x \$(touch {marker}) '"), false),
 ));
 
 test('an escaped dollar before a field stays literal', function () {
@@ -335,5 +381,5 @@ PHP, array('base' => '/opt/kadupul base'));
 });
 
 test('substitution matrix keeps every value literal through /bin/sh', function () {
-    expect(data_input_substitution_run('matrix', 'echo json_encode(script_substitution_matrix());'))->toBe(1321);
+    expect(data_input_substitution_run('matrix', 'echo json_encode(script_substitution_matrix());'))->toBe(1324);
 });
