@@ -107,6 +107,16 @@ app.php/links/action/{operation}	symfony:navigation_link_action	methods=GET|HEAD
 app.php/links/legacy	symfony:navigation_links_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8
 app.php/links/new	symfony:navigation_link_create	methods=GET|HEAD|POST; ConsoleAccess realm 8
 app.php/links/{id}/edit	symfony:navigation_link_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8
+app.php/management/aggregate-graphs	symfony:management_aggregate_graphs	methods=GET|HEAD; ConsoleAccess realm 8 + realm 5
+app.php/management/data-query-graphs/{id}	symfony:management_data_query_graphs	methods=GET|HEAD requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 13
+app.php/management/data-sources	symfony:management_data_sources	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
+app.php/management/device-template-graphs/{id}	symfony:management_device_template_graphs	methods=GET|HEAD requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 12
+app.php/management/graph-template-inputs/{id}	symfony:management_graph_template_inputs	methods=GET|HEAD requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 10
+app.php/management/graph-template-items/{id}	symfony:management_graph_template_items	methods=GET|HEAD requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 10
+app.php/management/graphs	symfony:management_graphs	methods=GET|HEAD; ConsoleAccess realm 8 + realm 5
+app.php/management/my-reports	symfony:management_my_reports	methods=GET|HEAD; AuthenticatedAccess signed-in account + realm 22
+app.php/management/plugins	symfony:management_plugins	methods=GET|HEAD; ConsoleAccess realm 8 + realm 101
+app.php/management/reports	symfony:management_reports	methods=GET|HEAD; ConsoleAccess realm 8 + realm 21
 app.php/permission-denied	symfony:platform_permission_denied	methods=GET|HEAD; AuthenticatedAccess signed-in account; no realm required
 app.php/relationships/aggregate-template-items/{id}	symfony:relationships_aggregate_template_items	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 5
 app.php/relationships/data-template-definitions/{id}	symfony:relationships_data_template_definitions	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 11

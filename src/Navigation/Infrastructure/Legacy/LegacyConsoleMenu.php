@@ -11,6 +11,7 @@ namespace Kadupul\Navigation\Infrastructure\Legacy;
 
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\Navigation\Contract\Administration\ListScreen;
+use Kadupul\Navigation\Contract\Management\CatalogScreen;
 use Kadupul\IdentityAccess\Contract\RealmGrants;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Contract\LegacyConfiguration;
@@ -153,6 +154,11 @@ final class LegacyConsoleMenu
                 return $screen->path();
             }
         }
+        foreach (CatalogScreen::cases() as $screen) {
+            if (!$screen->scoped() && $screen->legacyScript() === $script) {
+                return $screen->path();
+            }
+        }
         return $script;
     }
 
@@ -178,6 +184,9 @@ final class LegacyConsoleMenu
                     $realms[] = $realm;
                 }
             }
+            if ($definition === self::SECTIONS) {
+                array_push($realms, 21, 22, 101);
+            }
             foreach ($links as $link) {
                 $realms[] = self::LINK_REALM_OFFSET + $link['id'];
             }
@@ -201,6 +210,16 @@ final class LegacyConsoleMenu
                 }
             }
             $sections[$section] = ['label' => $this->translator->trans($section, [], 'menu'), 'items' => $visible];
+        }
+
+        if ($definition === self::SECTIONS) {
+            foreach ([CatalogScreen::AdminReports, CatalogScreen::MyReports, CatalogScreen::Plugins] as $screen) {
+                if (isset($granted[$screen->realm()])) {
+                    $section = $screen === CatalogScreen::Plugins ? 'Configuration' : 'Reports';
+                    $sections[$section] ??= ['label' => $this->translator->trans($section, [], 'menu'), 'items' => []];
+                    $sections[$section]['items'][] = ['label' => $this->translator->trans($screen->title(), [], 'management'), 'path' => $screen->path()];
+                }
+            }
         }
 
         foreach ($links as $link) {

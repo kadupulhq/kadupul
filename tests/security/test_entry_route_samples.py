@@ -4,7 +4,7 @@
 """Concrete route samples must preserve parent-child bindings and fail closed."""
 import unittest
 from unittest.mock import patch
-from entry_point_authorization import BASELINE, Client, entries, sample, route_fixtures, has_feature_realm
+from entry_point_authorization import authentication_only, BASELINE, Client, entries, sample, route_fixtures, has_feature_realm
 
 
 class RouteSamples(unittest.TestCase):
@@ -31,18 +31,46 @@ class RouteSamples(unittest.TestCase):
                       'app.php/graphing/gprint-presets/new',
                       'app.php/graphing/color-templates/new',
                       'app.php/graphing/color-template-items/legacy',
-                      'app.php/utilities/rrd-check/purge', 'app.php/utilities/system', 'app.php/utilities/system/poller-cache',
+                      'app.php/utilities/rrd-check/purge', 'app.php/management/graphs', 'app.php/management/graph-template-items/{id}', 'app.php/utilities/system', 'app.php/utilities/system/poller-cache',
                       'app.php/graphing/data-source-profiles/{id}/rras/{rraId}/edit',
                       'data_source_profiles.php', 'data_input.php', 'links.php', 'host_templates.php', 'rrdcheck.php'):
             with self.subTest(entry=entry):
                 self.assertTrue(has_feature_realm(entry))
         for entry in ('app.php/about', 'about.php', 'app.php/graphing/colors-other',
                       'app.php/inventory/devices/{id}', 'app.php/links-extra',
-                      'app.php/utilities/rrd-checker', 'app.php/utilities/system-extra', 'app.php/automation/templates-other',
+                      'app.php/utilities/rrd-checker', 'app.php/management-extra', 'app.php/utilities/system-extra', 'app.php/automation/templates-other',
                       'automation_snmp.php', 'app.php/graphing/data-source-profiles-other', 'app.php/administration/users-other'):
             with self.subTest(entry=entry):
                 self.assertFalse(has_feature_realm(entry))
 
+    def test_personal_report_feature_denials_are_not_skipped_as_authenticated_only(self):
+        self.assertFalse(authentication_only('app.php/management/my-reports', 'symfony:management_my_reports',
+                                             'AuthenticatedAccess signed-in account + realm 22'))
+        self.assertTrue(authentication_only('app.php/about', 'symfony:platform_about',
+                                            'AuthenticatedAccess signed-in account; no realm required'))
+        self.assertTrue(authentication_only('auth_profile.php', 'authenticated', 'own session'))
+
+    def test_management_parent_routes_use_actual_installed_parent_ids(self):
+        class Rig:
+            def sql(self, statement):
+                return {'SELECT MIN(id) FROM graph_templates': '17',
+                        'SELECT MIN(id) FROM host_template': '23',
+                        'SELECT MIN(id) FROM snmp_query': '31'}[statement]
+        rows = [('app.php/management/' + name + '/{id}', 'symfony:management', '') for name in
+                ('graph-template-items', 'graph-template-inputs', 'device-template-graphs', 'data-query-graphs')]
+        ids = {'devices': 1, 'sites': 1}
+        route_fixtures(Rig(), rows, ids)
+        for name, expected in [('graph-template-items', 17), ('graph-template-inputs', 17),
+                               ('device-template-graphs', 23), ('data-query-graphs', 31)]:
+            self.assertEqual('app.php/management/' + name + '/' + str(expected),
+                             sample('app.php/management/' + name + '/{id}', '', ids))
+
+    def test_missing_management_parent_is_a_fixture_failure(self):
+        class Rig:
+            def sql(self, statement): return ''
+        with self.assertRaisesRegex(RuntimeError, 'Missing concrete management parent'):
+            route_fixtures(Rig(), [('app.php/management/graph-template-items/{id}', 'symfony:management', '')],
+                           {'devices': 1, 'sites': 1})
     def test_relationship_routes_bind_existing_parents(self):
         class Rig:
             def sql(self, statement):
