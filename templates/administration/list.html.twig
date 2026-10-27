@@ -80,6 +80,8 @@ SPDX-License-Identifier: GPL-2.0-or-later
                     <a href="{{ path('management_data_query_graphs', {id: record.id}) }}">{{ 'Graph Mappings'|trans({}, 'management') }}</a>
                 {% endif %}
                 {% set related = {
+                    'users': {'relationships_user_group_memberships': 'User Group Memberships', 'relationships_user_graphs_permissions': 'User Graph Permission Exceptions', 'relationships_user_devices_permissions': 'User Device Permission Exceptions', 'relationships_user_templates_permissions': 'User Template Permission Exceptions', 'relationships_user_trees_permissions': 'User Tree Permission Exceptions'},
+                    'user-groups': {'relationships_group_members': 'Group Members', 'relationships_group_graphs_permissions': 'Group Graph Permission Exceptions', 'relationships_group_devices_permissions': 'Group Device Permission Exceptions', 'relationships_group_templates_permissions': 'Group Template Permission Exceptions', 'relationships_group_trees_permissions': 'Group Tree Permission Exceptions'},
                     'device-templates': {'relationships_device_template_queries': 'Device queries'},
                     'data-templates': {'relationships_data_template_definitions': 'Definitions'},
                     'aggregate-templates': {'relationships_aggregate_template_items': 'Aggregate items'},
