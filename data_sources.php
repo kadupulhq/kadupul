@@ -1626,7 +1626,7 @@ function validate_data_source_vars()
 
 function ds()
 {
-    global $ds_actions, $item_rows, $sampling_intervals;
+    global $ds_actions, $item_rows;
     if (get_request_var('host_id') > 0 && !is_device_allowed(get_filter_request_var('host_id'))) {
         set_request_var('host_id', '-2');
     }

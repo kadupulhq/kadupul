@@ -260,7 +260,7 @@ function api_networks_save($post) {
    ------------------------ */
 
 function form_actions() {
-	global $config, $network_actions, $fields_networkss_edit;
+	global $network_actions;
 
 	/* ================= input validation ================= */
 	get_filter_request_var('drp_action');
@@ -396,7 +396,7 @@ function form_actions() {
 }
 
 function network_edit() {
-	global $config, $ping_methods;;
+	global $ping_methods;;
 
 	$ping_methods[PING_SNMP] = __('SNMP Get');
 
@@ -990,7 +990,7 @@ function get_networks(&$sql_where, $rows, $apply_limits = true) {
 }
 
 function networks() {
-	global $network_actions, $networkss, $config, $item_rows;
+	global $network_actions;
 
 	/* ================= input validation and session storage ================= */
 	$filters = array(

@@ -76,3 +76,12 @@ authorization and bounded DBAL readers. See [scope and acceptance evidence](migr
 Kernel, native-schema and seven-theme browser regressions are registered.
 Installed-session and collector HTTP acceptance remain release gates; legacy
 editing and operational paths remain active.
+
+### Global state behind Twig migrations
+
+Status: implemented for the unused-binding cleanup and native-layer guard.
+The [audit and migration boundaries](migrations/twig-global-state-audit.md)
+distinguish direct access from legacy worker/session/plugin dependencies.
+Eleven declarations and 71 unused bindings are removed; live adapters remain
+assessed rather than retired. Full installed-session, collector and retained
+legacy-action acceptance remain release gates.

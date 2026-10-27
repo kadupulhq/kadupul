@@ -219,7 +219,7 @@ function save()
 
 function automation_graph_rules_form_actions()
 {
-    global $config, $automation_graph_rules_actions;
+    global $automation_graph_rules_actions;
 
     /* ================= input validation ================= */
     get_filter_request_var('drp_action');
@@ -398,7 +398,6 @@ function automation_graph_rules_item_remove()
 
 function automation_graph_rules_item_edit()
 {
-    global $config;
 
     /* ================= input validation ================= */
     get_filter_request_var('id');
@@ -533,7 +532,6 @@ function automation_change_query_type()
 
 function automation_graph_rules_edit()
 {
-    global $config;
     global $fields_automation_graph_rules_edit1, $fields_automation_graph_rules_edit2, $fields_automation_graph_rules_edit3;
 
     /* ================= input validation ================= */
@@ -742,7 +740,7 @@ function automation_graph_rules_edit()
 
 function automation_graph_rules()
 {
-    global $automation_graph_rules_actions, $config, $item_rows;
+    global $automation_graph_rules_actions, $item_rows;
 
     /* ================= input validation and session storage ================= */
     $filters = array(
