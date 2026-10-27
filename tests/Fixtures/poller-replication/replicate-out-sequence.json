@@ -1,0 +1,1510 @@
+{
+  "sql": [
+    "UPDATE poller SET requires_sync=\"on\" WHERE id=?",
+    "SELECT *\n\t\t\tFROM settings\n\t\t\tWHERE name NOT LIKE \"%_lastrun%\"\n\t\t\tAND name NOT LIKE \"path_%\"\n\t\t\tAND name NOT LIKE \"%_path\"\n\t\t\tAND name NOT LIKE \"stats%\"\n\t\t\tAND name != \"rrdtool_version\"\n\t\t\tAND name NOT LIKE \"poller_replicate%\"\n\t\t\tAND name NOT LIKE \"install%\"\n\t\t\tAND name != \"poller_enabled\"\n\t\t\tAND name NOT LIKE \"md5dirsum%\"\n\t\t\tUNION\n\t\t\tSELECT *\n\t\t\tFROM settings\n\t\t\tWHERE name LIKE \"path_spine%\"\n\t\t\tAND name=\"poller_type\"",
+    "SELECT * FROM automation_graph_rule_items",
+    "SELECT * FROM automation_graph_rules",
+    "SELECT * FROM automation_match_rule_items",
+    "SELECT * FROM automation_snmp",
+    "SELECT * FROM automation_snmp_items",
+    "SELECT * FROM automation_templates",
+    "SELECT * FROM automation_tree_rule_items",
+    "SELECT * FROM automation_tree_rules",
+    "SELECT * FROM data_input",
+    "SELECT * FROM host_template",
+    "SELECT * FROM host_template_graph",
+    "SELECT * FROM host_template_snmp_query",
+    "SELECT * FROM snmp_query",
+    "SELECT * FROM data_input_fields",
+    "SELECT * FROM poller",
+    "SELECT * FROM plugin_config",
+    "SELECT * FROM plugin_hooks",
+    "SELECT * FROM plugin_realms",
+    "SELECT * FROM user_auth",
+    "SELECT * FROM user_auth_group",
+    "SELECT * FROM user_auth_group_members",
+    "SELECT * FROM user_auth_group_perms",
+    "SELECT * FROM user_auth_group_realm",
+    "SELECT * FROM user_auth_realm",
+    "SELECT * FROM user_auth_row_cache",
+    "SELECT * FROM user_domains",
+    "SELECT * FROM user_domains_ldap",
+    "SELECT hsq.*\n\t\t\tFROM host_snmp_query AS hsq\n\t\t\tINNER JOIN host AS h\n\t\t\tON h.id=hsq.host_id\n\t\t\tWHERE h.poller_id = ?\n\t\t\tAND h.deleted = \"\"",
+    "SELECT pc.*\n\t\t\tFROM poller_command AS pc\n\t\t\tWHERE pc.poller_id = ?",
+    "SELECT h.*\n\t\t\tFROM host AS h\n\t\t\tWHERE h.poller_id = ?\n\t\t\tAND h.deleted = \"\"",
+    "SELECT hsc.*\n\t\t\tFROM host_snmp_cache AS hsc\n\t\t\tINNER JOIN host AS h\n\t\t\tON h.id=hsc.host_id\n\t\t\tWHERE h.poller_id = ?\n\t\t\tAND h.deleted = \"\"",
+    "SELECT pri.*\n\t\t\tFROM poller_reindex AS pri\n\t\t\tINNER JOIN host AS h\n\t\t\tON h.id=pri.host_id\n\t\t\tWHERE h.poller_id = ?\n\t\t\tAND h.deleted = \"\"",
+    "DELETE pr\n\t\t\tFROM poller_reindex AS pr\n\t\t\tLEFT JOIN host_snmp_query AS hsq\n\t\t\tON pr.host_id = hsq.host_id\n\t\t\tAND pr.data_query_id = hsq.snmp_query_id\n\t\t\tWHERE hsq.host_id IS NULL",
+    "SELECT pi.*\n\t\t\tFROM poller_item AS pi\n\t\t\tWHERE pi.poller_id = ?",
+    "SELECT MAX(UNIX_TIMESTAMP(last_updated)) FROM poller_item",
+    "UPDATE poller_item\n\t\t\t\tSET last_updated = FROM_UNIXTIME(?)\n\t\t\t\tWHERE poller_id = ?",
+    "DELETE FROM poller_item\n\t\t\t\tWHERE last_updated < ?\n\t\t\t\tAND last_updated > 0\n\t\t\t\tAND last_updated IS NOT NULL",
+    "SELECT dl.*\n\t\t\tFROM data_local AS dl\n\t\t\tINNER JOIN host AS h\n\t\t\tON h.id=dl.host_id\n\t\t\tWHERE h.poller_id = ?\n\t\t\tAND h.deleted = \"\"",
+    "SELECT gl.*\n\t\t\tFROM graph_local AS gl\n\t\t\tINNER JOIN host AS h\n\t\t\tON h.id=gl.host_id\n\t\t\tWHERE h.poller_id = ?\n\t\t\tAND h.deleted = \"\"",
+    "SELECT dtd.*\n\t\t\tFROM data_template_data AS dtd\n\t\t\tINNER JOIN data_local AS dl\n\t\t\tON dtd.local_data_id=dl.id\n\t\t\tINNER JOIN host AS h\n\t\t\tON h.id=dl.host_id\n\t\t\tWHERE h.poller_id = ?\n\t\t\tAND h.deleted = \"\"",
+    "SELECT dtr.*\n\t\t\tFROM data_template_rrd AS dtr\n\t\t\tINNER JOIN data_local AS dl\n\t\t\tON dtr.local_data_id=dl.id\n\t\t\tINNER JOIN host AS h\n\t\t\tON h.id=dl.host_id\n\t\t\tWHERE h.poller_id = ?\n\t\t\tAND h.deleted = \"\"",
+    "SELECT gti.*\n\t\t\tFROM graph_templates_item AS gti\n\t\t\tINNER JOIN graph_local AS gl\n\t\t\tON gti.local_graph_id=gl.id\n\t\t\tINNER JOIN host AS h\n\t\t\tON h.id=gl.host_id\n\t\t\tWHERE h.poller_id = ?\n\t\t\tAND h.deleted = \"\"",
+    "SELECT did.*\n\t\t\tFROM data_input_data AS did\n\t\t\tINNER JOIN data_template_data AS dtd\n\t\t\tON did.data_template_data_id=dtd.id\n\t\t\tINNER JOIN data_local AS dl\n\t\t\tON dl.id=dtd.local_data_id\n\t\t\tINNER JOIN host AS h\n\t\t\tON h.id=dl.host_id\n\t\t\tWHERE h.poller_id = ?\n\t\t\tAND h.deleted = \"\"",
+    "SELECT\n\t\tSUM(CASE WHEN action=0 THEN 1 ELSE 0 END) AS snmp,\n\t\tSUM(CASE WHEN action=1 THEN 1 ELSE 0 END) AS script,\n\t\tSUM(CASE WHEN action=2 THEN 1 ELSE 0 END) AS server\n\t\tFROM poller_item\n\t\tWHERE poller_id = ?",
+    "UPDATE poller\n\t\t\tSET snmp = ?, script = ?, server = ?\n\t\t\tWHERE id = ?",
+    "UPDATE poller SET last_sync=NOW(), requires_sync=\"\" WHERE id=?"
+  ],
+  "cases": {
+    "all||web": {
+      "result": true,
+      "events": [
+        ["replicate_log","Attempting to replicate to Poller 2",[]],
+        ["execute_prepared",0,[2],true,"local"],
+        ["connect",2],
+        ["guards","remote"],
+        ["index","remote"],
+        ["fetch_assoc",1,"local"],
+        ["upsert","settings","remote",[1],3],
+        ["fetch_assoc",2,"local"],
+        ["copy","automation_graph_rule_items",2,true,false,"remote",[2],4],
+        ["fetch_assoc",3,"local"],
+        ["copy","automation_graph_rules",2,true,false,"remote",[3],4],
+        ["fetch_assoc",4,"local"],
+        ["copy","automation_match_rule_items",2,true,false,"remote",[4],4],
+        ["fetch_assoc",5,"local"],
+        ["copy","automation_snmp",2,true,false,"remote",[5],4],
+        ["fetch_assoc",6,"local"],
+        ["copy","automation_snmp_items",2,true,false,"remote",[6],4],
+        ["fetch_assoc",7,"local"],
+        ["copy","automation_templates",2,true,false,"remote",[7],4],
+        ["fetch_assoc",8,"local"],
+        ["copy","automation_tree_rule_items",2,true,false,"remote",[8],4],
+        ["fetch_assoc",9,"local"],
+        ["copy","automation_tree_rules",2,true,false,"remote",[9],4],
+        ["fetch_assoc",10,"local"],
+        ["copy","data_input",2,true,false,"remote",[10],4],
+        ["fetch_assoc",11,"local"],
+        ["copy","host_template",2,true,false,"remote",[11],4],
+        ["fetch_assoc",12,"local"],
+        ["copy","host_template_graph",2,true,false,"remote",[12],4],
+        ["fetch_assoc",13,"local"],
+        ["copy","host_template_snmp_query",2,true,false,"remote",[13],4],
+        ["fetch_assoc",14,"local"],
+        ["copy","snmp_query",2,true,false,"remote",[14],4],
+        ["fetch_assoc",15,"local"],
+        ["copy","data_input_fields",2,true,false,"remote",[15],4],
+        ["fetch_assoc",16,"local"],
+        ["copy","poller",2,true,false,"remote",[16],4],
+        ["fetch_assoc",17,"local"],
+        ["copy","plugin_config",2,true,false,"remote",[17],4],
+        ["fetch_assoc",18,"local"],
+        ["copy","plugin_hooks",2,true,false,"remote",[18],4],
+        ["fetch_assoc",19,"local"],
+        ["copy","plugin_realms",2,true,false,"remote",[19],4],
+        ["fetch_assoc",20,"local"],
+        ["copy","user_auth",2,true,false,"remote",[20],4],
+        ["fetch_assoc",21,"local"],
+        ["copy","user_auth_group",2,true,false,"remote",[21],4],
+        ["fetch_assoc",22,"local"],
+        ["copy","user_auth_group_members",2,true,false,"remote",[22],4],
+        ["fetch_assoc",23,"local"],
+        ["copy","user_auth_group_perms",2,true,false,"remote",[23],4],
+        ["fetch_assoc",24,"local"],
+        ["copy","user_auth_group_realm",2,true,false,"remote",[24],4],
+        ["fetch_assoc",25,"local"],
+        ["copy","user_auth_realm",2,true,false,"remote",[25],4],
+        ["fetch_assoc",26,"local"],
+        ["copy","user_auth_row_cache",2,true,false,"remote",[26],4],
+        ["fetch_assoc",27,"local"],
+        ["copy","user_domains",2,true,false,"remote",[27],4],
+        ["fetch_assoc",28,"local"],
+        ["copy","user_domains_ldap",2,true,false,"remote",[28],4],
+        ["fetch_assoc_prepared",29,[2],"local"],
+        ["copy","host_snmp_query",2,true,false,"remote",[29],4],
+        ["fetch_assoc_prepared",30,[2],"local"],
+        ["copy","poller_command",2,true,false,"remote",[30],4],
+        ["fetch_assoc_prepared",31,[2],"local"],
+        ["copy","host",2,true,false,"remote",[31],4],
+        ["fetch_assoc_prepared",32,[2],"local"],
+        ["copy","host_snmp_cache",2,true,false,"remote",[32],4],
+        ["fetch_assoc_prepared",33,[2],"local"],
+        ["copy","poller_reindex",2,false,["assert_value"],"remote",[33],6],
+        ["execute",34,false,"remote"],
+        ["fetch_assoc_prepared",35,[2],"local"],
+        ["copy","poller_item",2,false,["last_updated"],"remote",[35],6],
+        ["fetch_cell",36,"",false,"remote"],
+        ["execute_prepared",37,[1700000000,2],true,"local"],
+        ["execute_prepared",38,["2023-11-14 22:13:20"],false,"remote"],
+        ["fetch_assoc_prepared",39,[2],"local"],
+        ["copy","data_local",2,true,false,"remote",[39],4],
+        ["fetch_assoc_prepared",40,[2],"local"],
+        ["copy","graph_local",2,true,false,"remote",[40],4],
+        ["fetch_assoc_prepared",41,[2],"local"],
+        ["copy","data_template_data",2,true,false,"remote",[41],4],
+        ["fetch_assoc_prepared",42,[2],"local"],
+        ["copy","data_template_rrd",2,true,false,"remote",[42],4],
+        ["fetch_assoc_prepared",43,[2],"local"],
+        ["copy","graph_templates_item",2,true,false,"remote",[43],4],
+        ["fetch_assoc_prepared",44,[2],"local"],
+        ["copy","data_input_data",2,true,false,"remote",[44],4],
+        ["hook","replicate_out",{"remote_poller_id":2,"rcnn_id":"remote","class":"all"}],
+        ["fetch_row_prepared",45,[2],"local"],
+        ["execute_prepared",46,[3,2,1,2],true,"local"],
+        ["execute_prepared",47,[2],true,"local"],
+        ["replicate_log","Synchronization of Poller 2 completed",["POLLER_VERBOSITY_LOW"]],
+        ["raise_message","poller_sync",[]]
+      ]
+    },
+    "all||cli": {
+      "result": true,
+      "events": [
+        ["replicate_log","Attempting to replicate to Poller 2",[]],
+        ["execute_prepared",0,[2],true,"local"],
+        ["connect",2],
+        ["guards","remote"],
+        ["index","remote"],
+        ["fetch_assoc",1,"local"],
+        ["upsert","settings","remote",[1],3],
+        ["fetch_assoc",2,"local"],
+        ["copy","automation_graph_rule_items",2,true,false,"remote",[2],4],
+        ["fetch_assoc",3,"local"],
+        ["copy","automation_graph_rules",2,true,false,"remote",[3],4],
+        ["fetch_assoc",4,"local"],
+        ["copy","automation_match_rule_items",2,true,false,"remote",[4],4],
+        ["fetch_assoc",5,"local"],
+        ["copy","automation_snmp",2,true,false,"remote",[5],4],
+        ["fetch_assoc",6,"local"],
+        ["copy","automation_snmp_items",2,true,false,"remote",[6],4],
+        ["fetch_assoc",7,"local"],
+        ["copy","automation_templates",2,true,false,"remote",[7],4],
+        ["fetch_assoc",8,"local"],
+        ["copy","automation_tree_rule_items",2,true,false,"remote",[8],4],
+        ["fetch_assoc",9,"local"],
+        ["copy","automation_tree_rules",2,true,false,"remote",[9],4],
+        ["fetch_assoc",10,"local"],
+        ["copy","data_input",2,true,false,"remote",[10],4],
+        ["fetch_assoc",11,"local"],
+        ["copy","host_template",2,true,false,"remote",[11],4],
+        ["fetch_assoc",12,"local"],
+        ["copy","host_template_graph",2,true,false,"remote",[12],4],
+        ["fetch_assoc",13,"local"],
+        ["copy","host_template_snmp_query",2,true,false,"remote",[13],4],
+        ["fetch_assoc",14,"local"],
+        ["copy","snmp_query",2,true,false,"remote",[14],4],
+        ["fetch_assoc",15,"local"],
+        ["copy","data_input_fields",2,true,false,"remote",[15],4],
+        ["fetch_assoc",16,"local"],
+        ["copy","poller",2,true,false,"remote",[16],4],
+        ["fetch_assoc",17,"local"],
+        ["copy","plugin_config",2,true,false,"remote",[17],4],
+        ["fetch_assoc",18,"local"],
+        ["copy","plugin_hooks",2,true,false,"remote",[18],4],
+        ["fetch_assoc",19,"local"],
+        ["copy","plugin_realms",2,true,false,"remote",[19],4],
+        ["fetch_assoc",20,"local"],
+        ["copy","user_auth",2,true,false,"remote",[20],4],
+        ["fetch_assoc",21,"local"],
+        ["copy","user_auth_group",2,true,false,"remote",[21],4],
+        ["fetch_assoc",22,"local"],
+        ["copy","user_auth_group_members",2,true,false,"remote",[22],4],
+        ["fetch_assoc",23,"local"],
+        ["copy","user_auth_group_perms",2,true,false,"remote",[23],4],
+        ["fetch_assoc",24,"local"],
+        ["copy","user_auth_group_realm",2,true,false,"remote",[24],4],
+        ["fetch_assoc",25,"local"],
+        ["copy","user_auth_realm",2,true,false,"remote",[25],4],
+        ["fetch_assoc",26,"local"],
+        ["copy","user_auth_row_cache",2,true,false,"remote",[26],4],
+        ["fetch_assoc",27,"local"],
+        ["copy","user_domains",2,true,false,"remote",[27],4],
+        ["fetch_assoc",28,"local"],
+        ["copy","user_domains_ldap",2,true,false,"remote",[28],4],
+        ["fetch_assoc_prepared",29,[2],"local"],
+        ["copy","host_snmp_query",2,true,false,"remote",[29],4],
+        ["fetch_assoc_prepared",30,[2],"local"],
+        ["copy","poller_command",2,true,false,"remote",[30],4],
+        ["fetch_assoc_prepared",31,[2],"local"],
+        ["copy","host",2,true,false,"remote",[31],4],
+        ["fetch_assoc_prepared",32,[2],"local"],
+        ["copy","host_snmp_cache",2,true,false,"remote",[32],4],
+        ["fetch_assoc_prepared",33,[2],"local"],
+        ["copy","poller_reindex",2,false,["assert_value"],"remote",[33],6],
+        ["execute",34,false,"remote"],
+        ["fetch_assoc_prepared",35,[2],"local"],
+        ["copy","poller_item",2,false,["last_updated"],"remote",[35],6],
+        ["fetch_cell",36,"",false,"remote"],
+        ["execute_prepared",37,[1700000000,2],true,"local"],
+        ["execute_prepared",38,["2023-11-14 22:13:20"],false,"remote"],
+        ["fetch_assoc_prepared",39,[2],"local"],
+        ["copy","data_local",2,true,false,"remote",[39],4],
+        ["fetch_assoc_prepared",40,[2],"local"],
+        ["copy","graph_local",2,true,false,"remote",[40],4],
+        ["fetch_assoc_prepared",41,[2],"local"],
+        ["copy","data_template_data",2,true,false,"remote",[41],4],
+        ["fetch_assoc_prepared",42,[2],"local"],
+        ["copy","data_template_rrd",2,true,false,"remote",[42],4],
+        ["fetch_assoc_prepared",43,[2],"local"],
+        ["copy","graph_templates_item",2,true,false,"remote",[43],4],
+        ["fetch_assoc_prepared",44,[2],"local"],
+        ["copy","data_input_data",2,true,false,"remote",[44],4],
+        ["hook","replicate_out",{"remote_poller_id":2,"rcnn_id":"remote","class":"all"}],
+        ["fetch_row_prepared",45,[2],"local"],
+        ["execute_prepared",46,[3,2,1,2],true,"local"],
+        ["execute_prepared",47,[2],true,"local"]
+      ]
+    },
+    "data||web": {
+      "result": true,
+      "events": [
+        ["replicate_log","Attempting to replicate to Poller 2",[]],
+        ["execute_prepared",0,[2],true,"local"],
+        ["connect",2],
+        ["guards","remote"],
+        ["index","remote"],
+        ["fetch_assoc_prepared",29,[2],"local"],
+        ["copy","host_snmp_query",2,true,false,"remote",[29],4],
+        ["fetch_assoc_prepared",30,[2],"local"],
+        ["copy","poller_command",2,true,false,"remote",[30],4],
+        ["fetch_assoc_prepared",31,[2],"local"],
+        ["copy","host",2,true,false,"remote",[31],4],
+        ["fetch_assoc_prepared",32,[2],"local"],
+        ["copy","host_snmp_cache",2,true,false,"remote",[32],4],
+        ["fetch_assoc_prepared",33,[2],"local"],
+        ["copy","poller_reindex",2,false,["assert_value"],"remote",[33],6],
+        ["execute",34,false,"remote"],
+        ["fetch_assoc_prepared",35,[2],"local"],
+        ["copy","poller_item",2,false,["last_updated"],"remote",[35],6],
+        ["fetch_cell",36,"",false,"remote"],
+        ["execute_prepared",37,[1700000000,2],true,"local"],
+        ["execute_prepared",38,["2023-11-14 22:13:20"],false,"remote"],
+        ["fetch_assoc_prepared",39,[2],"local"],
+        ["copy","data_local",2,true,false,"remote",[39],4],
+        ["fetch_assoc_prepared",40,[2],"local"],
+        ["copy","graph_local",2,true,false,"remote",[40],4],
+        ["fetch_assoc_prepared",41,[2],"local"],
+        ["copy","data_template_data",2,true,false,"remote",[41],4],
+        ["fetch_assoc_prepared",42,[2],"local"],
+        ["copy","data_template_rrd",2,true,false,"remote",[42],4],
+        ["fetch_assoc_prepared",43,[2],"local"],
+        ["copy","graph_templates_item",2,true,false,"remote",[43],4],
+        ["fetch_assoc_prepared",44,[2],"local"],
+        ["copy","data_input_data",2,true,false,"remote",[44],4],
+        ["fetch_row_prepared",45,[2],"local"],
+        ["execute_prepared",46,[3,2,1,2],true,"local"],
+        ["execute_prepared",47,[2],true,"local"],
+        ["replicate_log","Synchronization of Poller 2 completed",["POLLER_VERBOSITY_LOW"]],
+        ["raise_message","poller_sync",[]]
+      ]
+    },
+    "data||cli": {
+      "result": true,
+      "events": [
+        ["replicate_log","Attempting to replicate to Poller 2",[]],
+        ["execute_prepared",0,[2],true,"local"],
+        ["connect",2],
+        ["guards","remote"],
+        ["index","remote"],
+        ["fetch_assoc_prepared",29,[2],"local"],
+        ["copy","host_snmp_query",2,true,false,"remote",[29],4],
+        ["fetch_assoc_prepared",30,[2],"local"],
+        ["copy","poller_command",2,true,false,"remote",[30],4],
+        ["fetch_assoc_prepared",31,[2],"local"],
+        ["copy","host",2,true,false,"remote",[31],4],
+        ["fetch_assoc_prepared",32,[2],"local"],
+        ["copy","host_snmp_cache",2,true,false,"remote",[32],4],
+        ["fetch_assoc_prepared",33,[2],"local"],
+        ["copy","poller_reindex",2,false,["assert_value"],"remote",[33],6],
+        ["execute",34,false,"remote"],
+        ["fetch_assoc_prepared",35,[2],"local"],
+        ["copy","poller_item",2,false,["last_updated"],"remote",[35],6],
+        ["fetch_cell",36,"",false,"remote"],
+        ["execute_prepared",37,[1700000000,2],true,"local"],
+        ["execute_prepared",38,["2023-11-14 22:13:20"],false,"remote"],
+        ["fetch_assoc_prepared",39,[2],"local"],
+        ["copy","data_local",2,true,false,"remote",[39],4],
+        ["fetch_assoc_prepared",40,[2],"local"],
+        ["copy","graph_local",2,true,false,"remote",[40],4],
+        ["fetch_assoc_prepared",41,[2],"local"],
+        ["copy","data_template_data",2,true,false,"remote",[41],4],
+        ["fetch_assoc_prepared",42,[2],"local"],
+        ["copy","data_template_rrd",2,true,false,"remote",[42],4],
+        ["fetch_assoc_prepared",43,[2],"local"],
+        ["copy","graph_templates_item",2,true,false,"remote",[43],4],
+        ["fetch_assoc_prepared",44,[2],"local"],
+        ["copy","data_input_data",2,true,false,"remote",[44],4],
+        ["fetch_row_prepared",45,[2],"local"],
+        ["execute_prepared",46,[3,2,1,2],true,"local"],
+        ["execute_prepared",47,[2],true,"local"]
+      ]
+    },
+    "settings||web": {
+      "result": true,
+      "events": [
+        ["replicate_log","Attempting to replicate to Poller 2",[]],
+        ["connect",2],
+        ["guards","remote"],
+        ["index","remote"],
+        ["fetch_assoc",1,"local"],
+        ["upsert","settings","remote",[1],3],
+        ["fetch_row_prepared",45,[2],"local"],
+        ["execute_prepared",46,[3,2,1,2],true,"local"],
+        ["replicate_log","Synchronization of Poller 2 completed",["POLLER_VERBOSITY_LOW"]],
+        ["raise_message","poller_sync",[]]
+      ]
+    },
+    "settings||cli": {
+      "result": true,
+      "events": [
+        ["replicate_log","Attempting to replicate to Poller 2",[]],
+        ["connect",2],
+        ["guards","remote"],
+        ["index","remote"],
+        ["fetch_assoc",1,"local"],
+        ["upsert","settings","remote",[1],3],
+        ["fetch_row_prepared",45,[2],"local"],
+        ["execute_prepared",46,[3,2,1,2],true,"local"]
+      ]
+    },
+    "auth||web": {
+      "result": true,
+      "events": [
+        ["replicate_log","Attempting to replicate to Poller 2",[]],
+        ["connect",2],
+        ["fetch_assoc",20,"local"],
+        ["copy","user_auth",2,true,false,"remote",[20],4],
+        ["fetch_assoc",21,"local"],
+        ["copy","user_auth_group",2,true,false,"remote",[21],4],
+        ["fetch_assoc",22,"local"],
+        ["copy","user_auth_group_members",2,true,false,"remote",[22],4],
+        ["fetch_assoc",23,"local"],
+        ["copy","user_auth_group_perms",2,true,false,"remote",[23],4],
+        ["fetch_assoc",24,"local"],
+        ["copy","user_auth_group_realm",2,true,false,"remote",[24],4],
+        ["fetch_assoc",25,"local"],
+        ["copy","user_auth_realm",2,true,false,"remote",[25],4],
+        ["fetch_assoc",26,"local"],
+        ["copy","user_auth_row_cache",2,true,false,"remote",[26],4],
+        ["fetch_assoc",27,"local"],
+        ["copy","user_domains",2,true,false,"remote",[27],4],
+        ["fetch_assoc",28,"local"],
+        ["copy","user_domains_ldap",2,true,false,"remote",[28],4],
+        ["fetch_row_prepared",45,[2],"local"],
+        ["execute_prepared",46,[3,2,1,2],true,"local"],
+        ["replicate_log","Synchronization of Poller 2 completed",["POLLER_VERBOSITY_LOW"]],
+        ["raise_message","poller_sync",[]]
+      ]
+    },
+    "auth||cli": {
+      "result": true,
+      "events": [
+        ["replicate_log","Attempting to replicate to Poller 2",[]],
+        ["connect",2],
+        ["fetch_assoc",20,"local"],
+        ["copy","user_auth",2,true,false,"remote",[20],4],
+        ["fetch_assoc",21,"local"],
+        ["copy","user_auth_group",2,true,false,"remote",[21],4],
+        ["fetch_assoc",22,"local"],
+        ["copy","user_auth_group_members",2,true,false,"remote",[22],4],
+        ["fetch_assoc",23,"local"],
+        ["copy","user_auth_group_perms",2,true,false,"remote",[23],4],
+        ["fetch_assoc",24,"local"],
+        ["copy","user_auth_group_realm",2,true,false,"remote",[24],4],
+        ["fetch_assoc",25,"local"],
+        ["copy","user_auth_realm",2,true,false,"remote",[25],4],
+        ["fetch_assoc",26,"local"],
+        ["copy","user_auth_row_cache",2,true,false,"remote",[26],4],
+        ["fetch_assoc",27,"local"],
+        ["copy","user_domains",2,true,false,"remote",[27],4],
+        ["fetch_assoc",28,"local"],
+        ["copy","user_domains_ldap",2,true,false,"remote",[28],4],
+        ["fetch_row_prepared",45,[2],"local"],
+        ["execute_prepared",46,[3,2,1,2],true,"local"]
+      ]
+    },
+    "plugins||web": {
+      "result": true,
+      "events": [
+        ["replicate_log","Attempting to replicate to Poller 2",[]],
+        ["connect",2],
+        ["fetch_assoc",17,"local"],
+        ["copy","plugin_config",2,true,false,"remote",[17],4],
+        ["fetch_assoc",18,"local"],
+        ["copy","plugin_hooks",2,true,false,"remote",[18],4],
+        ["fetch_assoc",19,"local"],
+        ["copy","plugin_realms",2,true,false,"remote",[19],4],
+        ["fetch_row_prepared",45,[2],"local"],
+        ["execute_prepared",46,[3,2,1,2],true,"local"]
+      ]
+    },
+    "plugins||cli": {
+      "result": true,
+      "events": [
+        ["replicate_log","Attempting to replicate to Poller 2",[]],
+        ["connect",2],
+        ["fetch_assoc",17,"local"],
+        ["copy","plugin_config",2,true,false,"remote",[17],4],
+        ["fetch_assoc",18,"local"],
+        ["copy","plugin_hooks",2,true,false,"remote",[18],4],
+        ["fetch_assoc",19,"local"],
+        ["copy","plugin_realms",2,true,false,"remote",[19],4],
+        ["fetch_row_prepared",45,[2],"local"],
+        ["execute_prepared",46,[3,2,1,2],true,"local"]
+      ]
+    },
+    "unknown||web": {
+      "result": true,
+      "events": [
+        ["replicate_log","Attempting to replicate to Poller 2",[]],
+        ["connect",2],
+        ["fetch_row_prepared",45,[2],"local"],
+        ["execute_prepared",46,[3,2,1,2],true,"local"],
+        ["replicate_log","Synchronization of Poller 2 completed",["POLLER_VERBOSITY_LOW"]],
+        ["raise_message","poller_sync",[]]
+      ]
+    },
+    "unknown||cli": {
+      "result": true,
+      "events": [
+        ["replicate_log","Attempting to replicate to Poller 2",[]],
+        ["connect",2],
+        ["fetch_row_prepared",45,[2],"local"],
+        ["execute_prepared",46,[3,2,1,2],true,"local"]
+      ]
+    },
+    "all|settings|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 7,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-settings|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 6,
+      "tail": [
+        ["upsert","settings","remote",false,3],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|automation_graph_rule_items|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 9,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-automation_graph_rule_items|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 8,
+      "tail": [
+        ["copy","automation_graph_rule_items",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|automation_graph_rules|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 11,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-automation_graph_rules|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 10,
+      "tail": [
+        ["copy","automation_graph_rules",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|automation_match_rule_items|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 13,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-automation_match_rule_items|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 12,
+      "tail": [
+        ["copy","automation_match_rule_items",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|automation_snmp|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 15,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-automation_snmp|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 14,
+      "tail": [
+        ["copy","automation_snmp",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|automation_snmp_items|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 17,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-automation_snmp_items|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 16,
+      "tail": [
+        ["copy","automation_snmp_items",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|automation_templates|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 19,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-automation_templates|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 18,
+      "tail": [
+        ["copy","automation_templates",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|automation_tree_rule_items|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 21,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-automation_tree_rule_items|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 20,
+      "tail": [
+        ["copy","automation_tree_rule_items",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|automation_tree_rules|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 23,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-automation_tree_rules|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 22,
+      "tail": [
+        ["copy","automation_tree_rules",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|data_input|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 25,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-data_input|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 24,
+      "tail": [
+        ["copy","data_input",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|host_template|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 27,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-host_template|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 26,
+      "tail": [
+        ["copy","host_template",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|host_template_graph|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 29,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-host_template_graph|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 28,
+      "tail": [
+        ["copy","host_template_graph",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|host_template_snmp_query|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 31,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-host_template_snmp_query|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 30,
+      "tail": [
+        ["copy","host_template_snmp_query",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|snmp_query|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 33,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-snmp_query|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 32,
+      "tail": [
+        ["copy","snmp_query",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|data_input_fields|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 35,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-data_input_fields|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 34,
+      "tail": [
+        ["copy","data_input_fields",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|poller|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 37,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-poller|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 36,
+      "tail": [
+        ["copy","poller",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|plugin_config|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 39,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-plugin_config|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 38,
+      "tail": [
+        ["copy","plugin_config",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|plugin_hooks|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 41,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-plugin_hooks|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 40,
+      "tail": [
+        ["copy","plugin_hooks",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|plugin_realms|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 43,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-plugin_realms|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 42,
+      "tail": [
+        ["copy","plugin_realms",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|user_auth|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 45,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-user_auth|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 44,
+      "tail": [
+        ["copy","user_auth",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|user_auth_group|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 47,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-user_auth_group|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 46,
+      "tail": [
+        ["copy","user_auth_group",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|user_auth_group_members|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 49,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-user_auth_group_members|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 48,
+      "tail": [
+        ["copy","user_auth_group_members",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|user_auth_group_perms|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 51,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-user_auth_group_perms|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 50,
+      "tail": [
+        ["copy","user_auth_group_perms",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|user_auth_group_realm|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 53,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-user_auth_group_realm|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 52,
+      "tail": [
+        ["copy","user_auth_group_realm",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|user_auth_realm|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 55,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-user_auth_realm|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 54,
+      "tail": [
+        ["copy","user_auth_realm",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|user_auth_row_cache|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 57,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-user_auth_row_cache|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 56,
+      "tail": [
+        ["copy","user_auth_row_cache",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|user_domains|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 59,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-user_domains|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 58,
+      "tail": [
+        ["copy","user_domains",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|user_domains_ldap|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 61,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-user_domains_ldap|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 60,
+      "tail": [
+        ["copy","user_domains_ldap",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|host_snmp_query|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 63,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-host_snmp_query|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 62,
+      "tail": [
+        ["copy","host_snmp_query",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|poller_command|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 65,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-poller_command|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 64,
+      "tail": [
+        ["copy","poller_command",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|host|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 67,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-host|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 66,
+      "tail": [
+        ["copy","host",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|host_snmp_cache|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 69,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-host_snmp_cache|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 68,
+      "tail": [
+        ["copy","host_snmp_cache",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|poller_reindex|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 71,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-poller_reindex|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 70,
+      "tail": [
+        ["copy","poller_reindex",2,false,["assert_value"],"remote",false,6],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|poller_item|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 74,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-poller_item|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 73,
+      "tail": [
+        ["copy","poller_item",2,false,["last_updated"],"remote",false,6],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|data_local|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 79,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-data_local|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 78,
+      "tail": [
+        ["copy","data_local",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|graph_local|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 81,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-graph_local|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 80,
+      "tail": [
+        ["copy","graph_local",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|data_template_data|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 83,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed while replicating data-source definitions.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed while replicating data-source definitions. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-data_template_data|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 82,
+      "tail": [
+        ["copy","data_template_data",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed while replicating data-source definitions.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed while replicating data-source definitions. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|data_template_rrd|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 85,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-data_template_rrd|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 84,
+      "tail": [
+        ["copy","data_template_rrd",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|graph_templates_item|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 87,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-graph_templates_item|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 86,
+      "tail": [
+        ["copy","graph_templates_item",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|data_input_data|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 89,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|read-data_input_data|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 88,
+      "tail": [
+        ["copy","data_input_data",2,true,false,"remote",false,4],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "plugins|plugin_config|web": {
+      "result": false,
+      "base": "plugins||web",
+      "shared": 4,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]]
+      ]
+    },
+    "plugins|plugin_realms|web": {
+      "result": false,
+      "base": "plugins||web",
+      "shared": 8,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]]
+      ]
+    },
+    "auth|user_auth|web": {
+      "result": false,
+      "base": "auth||web",
+      "shared": 4,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "auth|user_auth|cli": {
+      "result": false,
+      "base": "auth||cli",
+      "shared": 4,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]]
+      ]
+    },
+    "auth|user_domains_ldap|web": {
+      "result": false,
+      "base": "auth||web",
+      "shared": 20,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "auth|user_domains_ldap|cli": {
+      "result": false,
+      "base": "auth||cli",
+      "shared": 20,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]]
+      ]
+    },
+    "all|retry-mark|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 2,
+      "tail": [
+        ["cacti_log","ERROR: Unable to mark Poller 2 synchronization required. No replication was started.",[false,"REPLICATE"]],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|retry-mark|cli": {
+      "result": false,
+      "base": "all||cli",
+      "shared": 2,
+      "tail": [
+        ["cacti_log","ERROR: Unable to mark Poller 2 synchronization required. No replication was started.",[false,"REPLICATE"]],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]]
+      ]
+    },
+    "all|connect|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 3,
+      "tail": [
+        ["replicate_log","Failed to connect to Poller 2 Database",[]]
+      ]
+    },
+    "all|connect|cli": {
+      "result": false,
+      "base": "all||cli",
+      "shared": 3,
+      "tail": [
+        ["replicate_log","Failed to connect to Poller 2 Database",[]]
+      ]
+    },
+    "all|guards|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 4,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed while replicating data-source definitions. Collector profile guards and reference index must be upgraded before replication; its schema version was retained.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed while replicating data-source definitions. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|guards|cli": {
+      "result": false,
+      "base": "all||cli",
+      "shared": 4,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed while replicating data-source definitions. Collector profile guards and reference index must be upgraded before replication; its schema version was retained.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed while replicating data-source definitions. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|reindex-cleanup|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 72,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|reindex-cleanup|cli": {
+      "result": false,
+      "base": "all||cli",
+      "shared": 72,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]]
+      ]
+    },
+    "all|cutoff-read|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 75,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|cutoff-read|cli": {
+      "result": false,
+      "base": "all||cli",
+      "shared": 75,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]]
+      ]
+    },
+    "all|no-cutoff|web": {
+      "result": true,
+      "base": "all||web",
+      "shared": 75,
+      "tail": [
+        ["fetch_assoc_prepared",39,[2],"local"],
+        ["copy","data_local",2,true,false,"remote",[39],4],
+        ["fetch_assoc_prepared",40,[2],"local"],
+        ["copy","graph_local",2,true,false,"remote",[40],4],
+        ["fetch_assoc_prepared",41,[2],"local"],
+        ["copy","data_template_data",2,true,false,"remote",[41],4],
+        ["fetch_assoc_prepared",42,[2],"local"],
+        ["copy","data_template_rrd",2,true,false,"remote",[42],4],
+        ["fetch_assoc_prepared",43,[2],"local"],
+        ["copy","graph_templates_item",2,true,false,"remote",[43],4],
+        ["fetch_assoc_prepared",44,[2],"local"],
+        ["copy","data_input_data",2,true,false,"remote",[44],4],
+        ["hook","replicate_out",{"remote_poller_id":2,"rcnn_id":"remote","class":"all"}],
+        ["fetch_row_prepared",45,[2],"local"],
+        ["execute_prepared",46,[3,2,1,2],true,"local"],
+        ["execute_prepared",47,[2],true,"local"],
+        ["replicate_log","Synchronization of Poller 2 completed",["POLLER_VERBOSITY_LOW"]],
+        ["raise_message","poller_sync",[]]
+      ]
+    },
+    "all|no-cutoff|cli": {
+      "result": true,
+      "base": "all||cli",
+      "shared": 75,
+      "tail": [
+        ["fetch_assoc_prepared",39,[2],"local"],
+        ["copy","data_local",2,true,false,"remote",[39],4],
+        ["fetch_assoc_prepared",40,[2],"local"],
+        ["copy","graph_local",2,true,false,"remote",[40],4],
+        ["fetch_assoc_prepared",41,[2],"local"],
+        ["copy","data_template_data",2,true,false,"remote",[41],4],
+        ["fetch_assoc_prepared",42,[2],"local"],
+        ["copy","data_template_rrd",2,true,false,"remote",[42],4],
+        ["fetch_assoc_prepared",43,[2],"local"],
+        ["copy","graph_templates_item",2,true,false,"remote",[43],4],
+        ["fetch_assoc_prepared",44,[2],"local"],
+        ["copy","data_input_data",2,true,false,"remote",[44],4],
+        ["hook","replicate_out",{"remote_poller_id":2,"rcnn_id":"remote","class":"all"}],
+        ["fetch_row_prepared",45,[2],"local"],
+        ["execute_prepared",46,[3,2,1,2],true,"local"],
+        ["execute_prepared",47,[2],true,"local"]
+      ]
+    },
+    "all|cutoff-write|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 76,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|cutoff-write|cli": {
+      "result": false,
+      "base": "all||cli",
+      "shared": 76,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]]
+      ]
+    },
+    "all|cutoff-delete|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 77,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|cutoff-delete|cli": {
+      "result": false,
+      "base": "all||cli",
+      "shared": 77,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]]
+      ]
+    },
+    "all|statistics-read|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 91,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|statistics-read|cli": {
+      "result": false,
+      "base": "all||cli",
+      "shared": 91,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]]
+      ]
+    },
+    "all|statistics-write|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 92,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|statistics-write|cli": {
+      "result": false,
+      "base": "all||cli",
+      "shared": 92,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]]
+      ]
+    },
+    "all|completion|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 93,
+      "tail": [
+        ["cacti_log","ERROR: Poller 2 completion-state write failed; synchronization remains required.",[false,"REPLICATE"]],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|completion|cli": {
+      "result": false,
+      "base": "all||cli",
+      "shared": 93,
+      "tail": [
+        ["cacti_log","ERROR: Poller 2 completion-state write failed; synchronization remains required.",[false,"REPLICATE"]],
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]]
+      ]
+    },
+    "data|data_template_data|cli": {
+      "result": false,
+      "base": "data||cli",
+      "shared": 27,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed while replicating data-source definitions.",[false,"REPLICATE"]]
+      ]
+    }
+  }
+}

@@ -73,15 +73,22 @@ final class PackageScriptUpgradeTest extends TestCase
 
         upgrade_to_1_2_36();
         $first = $this->inputStrings();
+        $marker = $this->replicationMarker();
         upgrade_to_1_2_36();
 
         self::assertNotContains(DB_STATUS_ERROR, $GLOBALS['forward_schema_status']);
         self::assertSame($first, $this->inputStrings(), 'Running the step twice must change nothing more.');
+        self::assertSame('f8ff375791fe710aeef58e9099d00ef90ffb00f18b0d3081fed7e7fc081727ec', $marker);
+        self::assertSame($marker, $this->replicationMarker(), 'A second run must not trigger another collector copy.');
         foreach ($inputs as $hash => [, $port]) {
             self::assertSame($customized[$hash] ?? $port, $first[$hash]);
         }
         self::assertSame('perl <path_cacti>/scripts/webhits.pl <log_path>', $first['cc948e4de13f32b6aea45abaadd287a3']);
-        self::assertNotSame('before', $this->db->query("SELECT value FROM settings WHERE name = 'poller_replicate_data_input_crc'")->fetchColumn());
+    }
+
+    private function replicationMarker(): string|false
+    {
+        return $this->db->query("SELECT value FROM settings WHERE name = 'poller_replicate_data_input_crc'")->fetchColumn();
     }
 
     public function testShippedStringsMatchTheFreshInstallSchema(): void
