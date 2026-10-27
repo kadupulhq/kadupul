@@ -26,7 +26,7 @@ screenshot and do not come from real equipment.
 | Branch | PHP | phpseclib | Notes |
 |---|---|---|---|
 | `main` | 8.4 or later | 4.x | Incremental Symfony 7.4 migration |
-| `lts/1.2` | 8.1 or later | 3.x | Tracks the 1.2 series |
+| `lts/1.2` | 8.1 or later | 4.x | Tracks the 1.2 series |
 
 ## Running from source
 
@@ -58,6 +58,11 @@ Windows ACL validation is not implemented. Ordinary Windows updates use
 synchronous RRDtool acknowledgements; Unix capacity evidence does not establish
 Windows throughput. Remote RRDtool proxy storage retains its existing path.
 See [filesystem requirements](docs/testing/spikekill-safety.md).
+
+Aggregate graph and template item updates require persistent InnoDB tables.
+If item replacement fails, the previous items remain and graph propagation
+stops. Other graph settings saved earlier in the request may remain changed;
+review the reported error before retrying.
 
 ## First-release goals
 
