@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Keep the database user and password out of `mysqladmin` process arguments in `scripts/sql.php` and `scripts/ss_sql.php`. Both scripts pass a private option file that is removed after each call, and `ss_sql.php` requests `status` again, so it no longer always returns `U` (upstream Cacti #8545 and #8450).
 - Remove 71 unused global bindings from 45 retained operation-page functions, tighten their per-file ratchet, and document global-state boundaries behind every Twig migration family. Native HTTP controllers are now checked alongside application/domain code for direct global access.
 - Say in `rebuild_poller_cache.php --help` that `--threads` defaults to the Poller Command Concurrent Processes setting, not 5 (#1021).
 
