@@ -77,3 +77,12 @@ authorization and bounded DBAL readers. See [scope and acceptance evidence](migr
 Kernel, native-schema and seven-theme browser regressions are registered.
 Installed-session and collector HTTP acceptance remain release gates; legacy
 editing and operational paths remain active.
+
+### Identity relationship browsing
+
+Status: implemented. Ten views display stored user/group memberships and four
+resource permission types for each owner. Existing console and user
+administration grants protect all views. See [acceptance evidence and limits](migrations/identity-relationships-batch-10.md).
+Effective authorization and legacy policy/membership mutations remain on their
+existing paths. Installed-session and collector HTTP acceptance remain release
+gates. This slice does not retire authentication or permission globals.
