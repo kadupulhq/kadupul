@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Escape Boost on-demand staging values and cast data source IDs before batching, matching the LTS handoff. Batch sizing and duplicate-key updates are unchanged.
 - Add ten Twig views for graph-input associations, data-query mappings and suggestions, template relationships, and registered SNMP MIB metadata. Remove three unused VDEF global bindings from the related data-query confirmation page without changing its HTML or request/query calls.
 - Reject malformed aggregate parent identifiers, bound prepared insert batches, and hold the verified table engine stable until item replacement completes. Failed replacements preserve previous items and caller-owned work (#1017).
 - Add ten Twig views for stored user/group realm grants, display preferences, graph preferences, time preferences and login options. Preference readers allowlist public keys and preserve zero, empty and missing values; existing PHP forms still handle changes.

@@ -248,12 +248,11 @@ function boost_poller_on_demand(&$results)
                 $out_length = 0;
 
                 foreach ($results as $result) {
-                    $tmp_buffer =
-                        "('" .
-                        $result['local_data_id'] . "','" .
-                        $result['rrd_name'] . "','" .
-                        $result['time'] . "','" .
-                        $result['output'] . "')";
+                    $tmp_buffer = '(' .
+                        (int) $result['local_data_id'] . ',' .
+                        db_qstr($result['rrd_name'], $conn) . ',' .
+                        db_qstr($result['time'], $conn) . ',' .
+                        db_qstr($result['output'], $conn) . ')';
 
                     $tmp_length = strlen($tmp_buffer);
 

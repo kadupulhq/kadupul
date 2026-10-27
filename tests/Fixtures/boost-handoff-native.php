@@ -10,7 +10,7 @@ if ($collect === '1') {
 }
 $config = array('poller_id' => $connection === 'local' ? 1 : 2, 'connection' => $connection);
 $remote_db_cnn_id = 'primary-database';
-$writes = array();
+$writes = $quoted = array();
 function read_config_option($key)
 {
     return in_array($key, array('boost_rrd_update_enable', 'boost_rrd_update_system_enable'), true) ? 'on' : '';
@@ -29,12 +29,22 @@ function db_execute($sql, $log, $connection)
     $GLOBALS['writes'][] = array('sql' => $sql, 'connection' => $connection);
     return !str_ends_with($GLOBALS['mode'], 'failure');
 }
+// Stands in for PDO::quote() on a MySQL connection.
+function db_qstr($value, $connection = false)
+{
+    $GLOBALS['quoted'][] = array('value' => $value, 'connection' => $connection);
+    return "'" . strtr($value, array('\\' => '\\\\', "\0" => '\\0', "\n" => '\\n', "\r" => '\\r',
+        "'" => "\\'", '"' => '\\"', "\x1a" => '\\Z')) . "'";
+}
 require $root . '/lib/boost.php';
 $handler = static function () {
     throw new RuntimeException('Unexpected caller warning');
 };
 set_error_handler($handler);
-$samples = array(
+$samples = $mode === 'quoted-success' ? array(
+    array('local_data_id' => '7', 'rrd_name' => "it's", 'time' => '2026-01-01 00:00:00', 'output' => "1'2\\3"),
+    array('local_data_id' => '8', 'rrd_name' => 'value', 'time' => '2026-01-01 00:01:00', 'output' => "a\"b\nc"),
+) : array(
     array('local_data_id' => 1, 'rrd_name' => 'value', 'time' => '2026-01-01 00:00:00', 'output' => '42'),
     array('local_data_id' => 2, 'rrd_name' => 'value', 'time' => '2026-01-01 00:00:00', 'output' => '43'),
 );
@@ -42,5 +52,5 @@ $original = $samples;
 $result = boost_poller_on_demand($samples);
 $restored = set_error_handler($handler) === $handler;
 restore_error_handler();
-echo json_encode(array('result' => $result, 'writes' => $writes,
+echo json_encode(array('result' => $result, 'writes' => $writes, 'quoted' => $quoted,
     'handler_restored' => $restored, 'samples_unchanged' => $samples === $original), JSON_THROW_ON_ERROR);
