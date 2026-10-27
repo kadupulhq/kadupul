@@ -354,6 +354,9 @@ services:
     Kadupul\Navigation\Application\Command\SaveLink: ~
     Kadupul\Navigation\Application\Command\ChangeLinks: ~
     Kadupul\Navigation\Application\Query\ListLinks: ~
+    Kadupul\Navigation\Application\Query\ViewManagementCatalog:
+        arguments:
+            $catalogs: !tagged_iterator kadupul.management_catalog
     Kadupul\Navigation\Application\Query\ViewRelationships:
         arguments:
             $catalogs: !tagged_iterator kadupul.relationship_catalog
