@@ -171,6 +171,13 @@ test('ASCII text wraps exactly as wordwrap() wraps it', function () {
 	}
 });
 
+test('ASCII trailing line breaks follow the installed PHP wordwrap behavior', function () {
+	/* PHP 8.4.27 stopped inserting a second break after a full final line. */
+	$text = "x z\n /y\nbb b\nx c/\n";
+
+	expect(errimg_rrdtool_error_image_wrap($text, 2))->toBe(wordwrap($text, 2, "\n", true));
+});
+
 test('translated text wraps on characters and never splits one', function (string $text) {
 	$wrapped = errimg_rrdtool_error_image_wrap($text, 36);
 	$lines   = explode("\n", $wrapped);
