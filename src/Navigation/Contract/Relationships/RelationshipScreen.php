@@ -36,9 +36,31 @@ enum RelationshipScreen: string
     case GroupTemplates = 'group-templates-permissions';
     case GroupTrees = 'group-trees-permissions';
 
+    case UserRealms = 'user-realm-grants';
+    case UserDisplay = 'user-display-preferences';
+    case UserGraphPreferences = 'user-graph-preferences';
+    case UserTime = 'user-time-preferences';
+    case UserLogin = 'user-login-options';
+    case GroupRealms = 'group-realm-grants';
+    case GroupDisplay = 'group-display-preferences';
+    case GroupGraphPreferences = 'group-graph-preferences';
+    case GroupTime = 'group-time-preferences';
+    case GroupLogin = 'group-login-options';
+
     public function parentScreen(): ListScreen
     {
         return match ($this) {
+            self::UserRealms => ListScreen::Users,
+            self::UserDisplay => ListScreen::Users,
+            self::UserGraphPreferences => ListScreen::Users,
+            self::UserTime => ListScreen::Users,
+            self::UserLogin => ListScreen::Users,
+            self::GroupRealms => ListScreen::UserGroups,
+            self::GroupDisplay => ListScreen::UserGroups,
+            self::GroupGraphPreferences => ListScreen::UserGroups,
+            self::GroupTime => ListScreen::UserGroups,
+            self::GroupLogin => ListScreen::UserGroups,
+
             self::UserGroups => ListScreen::Users,
             self::GroupMembers => ListScreen::UserGroups,
             self::UserGraphs => ListScreen::Users,
@@ -61,6 +83,17 @@ enum RelationshipScreen: string
     public function title(): string
     {
         return match ($this) {
+            self::UserRealms => 'User Realm Grants',
+            self::UserDisplay => 'User Display Preferences',
+            self::UserGraphPreferences => 'User Graph Preferences',
+            self::UserTime => 'User Time Preferences',
+            self::UserLogin => 'User Login Options',
+            self::GroupRealms => 'Group Realm Grants',
+            self::GroupDisplay => 'Group Display Preferences',
+            self::GroupGraphPreferences => 'Group Graph Preferences',
+            self::GroupTime => 'Group Time Preferences',
+            self::GroupLogin => 'Group Login Options',
+
             self::UserGroups => 'User Group Memberships',
             self::GroupMembers => 'Group Members',
             self::UserGraphs => 'User Graph Permission Exceptions',
@@ -98,6 +131,9 @@ enum RelationshipScreen: string
     public function columns(): array
     {
         return match ($this) {
+            self::UserRealms, self::GroupRealms => ['name' => 'Realm ID', 'grant' => 'Assignment'],
+            self::UserDisplay, self::GroupDisplay, self::UserGraphPreferences, self::GroupGraphPreferences,
+            self::UserTime, self::GroupTime, self::UserLogin, self::GroupLogin => ['name' => 'Setting', 'value' => 'Stored Value'],
             self::UserGroups => ['name' => 'Group', 'id' => 'ID', 'enabled' => 'Enabled', 'description' => 'Description'],
             self::GroupMembers => ['name' => 'Username', 'id' => 'ID', 'realm' => 'Authentication Realm', 'enabled' => 'Enabled'],
             self::UserGraphs, self::UserDevices, self::UserTemplates, self::UserTrees,
@@ -117,6 +153,16 @@ enum RelationshipScreen: string
     {
         if ($this->identityView()) {
             return ['action' => $this->parentScreen() === ListScreen::Users ? 'user_edit' : 'edit', 'id' => $parentId, 'tab' => match ($this) {
+                self::UserRealms => 'realms',
+                self::UserDisplay => 'settings',
+                self::UserGraphPreferences => 'settings',
+                self::UserTime => 'settings',
+                self::UserLogin => 'general',
+                self::GroupRealms => 'realms',
+                self::GroupDisplay => 'settings',
+                self::GroupGraphPreferences => 'settings',
+                self::GroupTime => 'settings',
+                self::GroupLogin => 'general',
                 self::UserGroups => 'permsgr',
                 self::GroupMembers => 'members',
                 self::UserGraphs => 'permsg',
@@ -140,6 +186,41 @@ enum RelationshipScreen: string
     public function identityView(): bool
     {
         return in_array($this->parentScreen(), [ListScreen::Users, ListScreen::UserGroups], true);
+    }
+
+    public function identitySettingsView(): bool
+    {
+        return in_array($this, [self::UserRealms, self::GroupRealms, self::UserDisplay, self::GroupDisplay,
+            self::UserGraphPreferences, self::GroupGraphPreferences, self::UserTime, self::GroupTime,
+            self::UserLogin, self::GroupLogin], true);
+    }
+
+    /** Explicit public setting keys only. Plugin and credential settings are excluded. @return array<string, string> */
+    public function settingLabels(): array
+    {
+        return match ($this) {
+            self::UserDisplay, self::GroupDisplay => [
+                'selected_theme' => 'Theme', 'default_view_mode' => 'Default View Mode', 'user_language' => 'User Language',
+                'enable_hscroll' => 'Enable Horizontal Scrolling', 'page_refresh' => 'Page Refresh',
+            ],
+            self::UserGraphPreferences, self::GroupGraphPreferences => [
+                'show_graph_title' => 'Show Graph Title', 'hide_disabled' => 'Hide Disabled', 'show_aggregates' => 'Show Device Aggregates',
+                'preview_graphs_per_page' => 'Preview Graphs Per Page', 'num_columns' => 'Preview Thumbnail Columns',
+                'num_columns_tree' => 'Tree View Thumbnail Columns', 'default_height' => 'Thumbnail Height', 'default_width' => 'Thumbnail Width',
+                'thumbnail_section_preview' => 'Preview Thumbnails', 'thumbnail_section_tree_2' => 'Tree Thumbnails',
+                'treeview_graphs_per_page' => 'Tree Graphs Per Page', 'default_tree_id' => 'Default Tree', 'expand_hosts' => 'Expand Devices', 'tree_history' => 'Tree History',
+            ],
+            self::UserTime, self::GroupTime => [
+                'client_timezone_support' => 'Timezone Support', 'default_date_format' => 'Date Display Format', 'default_datechar' => 'Date Separator',
+                'default_rra_id' => 'Default Time Range', 'default_timespan' => 'Default Timespan', 'default_timeshift' => 'Default Timeshift',
+                'allow_graph_dates_in_future' => 'Allow Graph Dates in Future', 'first_weekdayid' => 'First Day of the Week',
+                'day_shift_start' => 'Start of Daily Shift', 'day_shift_end' => 'End of Daily Shift',
+            ],
+            self::UserLogin => ['enabled' => 'Enabled', 'locked' => 'Locked', 'must_change_password' => 'Must Change Password',
+                'password_change' => 'Can Change Password', 'login_opts' => 'Login Option', 'graph_settings' => 'Can Change Graph Settings'],
+            self::GroupLogin => ['enabled' => 'Enabled', 'login_opts' => 'Login Option', 'graph_settings' => 'Can Change Graph Settings'],
+            default => [],
+        };
     }
 
     public function editableEntry(): bool
