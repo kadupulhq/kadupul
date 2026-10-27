@@ -7,7 +7,8 @@ test('flag icons retain every configured locale and all CSS asset references', f
     $root = dirname(__DIR__, 2);
     $base = $root . '/include/vendor/flag-icons';
     $package = json_decode(file_get_contents($base . '/package.json'), true, 512, JSON_THROW_ON_ERROR);
-    expect($package['version'])->toBe('7.5.0');
+    $manifest = json_decode(file_get_contents($root . '/package.json'), true, 512, JSON_THROW_ON_ERROR);
+    expect($package['version'])->toBe($manifest['dependencies']['flag-icons']);
     $css = file_get_contents($base . '/css/flag-icons.css');
     $program = <<<'PHP'
 function read_config_option($key) { return '0'; }
