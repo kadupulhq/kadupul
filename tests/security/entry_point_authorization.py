@@ -189,7 +189,7 @@ def has_feature_realm(entry):
                 'graph-definitions/cdefs', 'automation/templates', 'graphing/color-templates',
                 'graphing/color-template-items', 'aggregate-templates',
                 'inventory/device-templates', 'graphing/colors', 'links', 'data-inputs',
-                'utilities/rrd-check', 'graphing/data-source-profiles',
+                'utilities/rrd-check', 'utilities/system', 'graphing/data-source-profiles',
                 'templates/devices', 'templates/graphs', 'templates/data-sources', 'templates/aggregates',
                 'data-collection/queries', 'automation/snmp-options', 'automation/graph-rules',
                 'automation/tree-rules', 'automation/networks', 'utilities/notification-receivers',

@@ -91,6 +91,14 @@ final class ConsoleMenuTest extends TestCase
         }
     }
 
+    public function testUtilitiesRealmOpensTheNativeDiagnosticMenu(): void
+    {
+        $menu = self::menu(new Actor(7, 'operator'), [8, 15]);
+        $paths = array_merge(...array_map(static fn(array $section): array => array_column($section['items'], 'path'), $menu->sections()));
+        self::assertContains('app.php/utilities/system', $paths);
+        self::assertNotContains('utilities.php', $paths);
+    }
+
     public function testCollectorWithoutAnOnlinePrimaryGetsTheOfflineMenu(): void
     {
         $configuration = self::createStub(LegacyConfiguration::class);

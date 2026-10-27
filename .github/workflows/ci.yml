@@ -225,6 +225,7 @@ jobs:
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/poller-buffer-phpunit.cache" Symfony/PollerCacheBufferWriteTest.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/profile-store-phpunit.cache" Symfony/DataSourceProfileStoreDatabaseTest.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/administration-list-phpunit.cache" Symfony/AdministrationCatalogNativeTest.php
+        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/system-diagnostics-phpunit.cache" Symfony/SystemDiagnosticsDatabaseTest.php
         # Use the disposable matrix server's existing administrator identity;
         # the probe creates/drops only its own random schema in a finally block.
         KADUPUL_REFERENCE_TEST_DSN="$KADUPUL_TEST_MYSQL_DSN" \

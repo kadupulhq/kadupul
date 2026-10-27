@@ -85,3 +85,46 @@ for (const theme of themes) {
     }
   });
 }
+
+// Render through the real kernel and Twig. Controlled admission/data adapters
+// isolate presentation; installed authentication is verified by other harnesses.
+for (const theme of themes) {
+  test(`${theme} keeps all ten diagnostic views visible and keyboard accessible`, async ({ page }) => {
+    const { execFileSync } = require('node:child_process');
+    const pages = JSON.parse(execFileSync(process.env.PHP_BINARY || 'php',
+      [path.join(root, 'tests/Fixtures/system-diagnostics-render.php'), theme], { encoding: 'utf8' }));
+    expect(Object.keys(pages)).toHaveLength(10);
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await page.route('**/utilities/system**', route => {
+      const rendered = pages[new URL(route.request().url()).pathname];
+      if (!rendered) throw new Error('Missing diagnostic fixture');
+      return route.fulfill({ contentType: 'text/html', ...rendered });
+    });
+    for (const uri of Object.keys(pages)) {
+      const response = await page.goto(uri);
+      expect(response.status()).toBe(200);
+      expect(response.headers()['content-security-policy']).toBeTruthy();
+      const main = page.locator('main');
+      await expect(main).toBeVisible();
+      await expect(main.locator('h1')).toBeVisible();
+      await expect(main.locator('a[aria-current="page"]')).toHaveCount(1);
+      expect(await page.evaluate(() => window.bad)).toBeUndefined();
+      if (uri !== '/utilities/system') {
+        await expect(main.locator('tbody script')).toHaveCount(0);
+        await expect(main.locator('tbody')).toContainText('<script>window.bad = 1</script>');
+        await expect(page.locator('#filter')).toBeVisible();
+        await page.locator('#filter').focus();
+        await page.keyboard.press('Tab');
+        await expect(page.locator('#rows')).toBeFocused();
+        await page.locator('#filter').fill('router');
+        await Promise.all([
+          page.waitForURL(url => url.searchParams.get('filter') === 'router'),
+          page.getByRole('button', { name: 'Apply', exact: true }).click(),
+        ]);
+        expect(new URL(page.url()).searchParams.get('rows')).toBe('25');
+      }
+    }
+    expect(errors).toEqual([]);
+  });
+}

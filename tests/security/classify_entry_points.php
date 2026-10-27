@@ -2314,6 +2314,15 @@ const REVIEWED_FEATURE_ACCESS = [
             'src/Platform/Infrastructure/Persistence/DbalRrdCheckAccess.php' => '6f0222557edd0c1b2f307aae6c309b7129e88c0bb0909a15999d27cdd3ebba89',
         ],
     ],
+    '/utilities/system' => [
+        'label' => 'system diagnostics',
+        'realm' => 15,
+        'contract' => 'Kadupul\\Platform\\Application\\Port\\RrdCheckAccess',
+        'adapter' => 'Kadupul\\Platform\\Infrastructure\\Persistence\\DbalRrdCheckAccess',
+        'sources' => [
+            'src/Platform/Infrastructure/Persistence/DbalRrdCheckAccess.php' => '6f0222557edd0c1b2f307aae6c309b7129e88c0bb0909a15999d27cdd3ebba89',
+        ],
+    ],
     '/graphing/data-source-profiles' => [
         'label' => 'data source profile',
         'realm' => 9,

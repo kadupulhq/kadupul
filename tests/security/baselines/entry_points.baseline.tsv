@@ -121,6 +121,16 @@ app.php/utilities/rrd-check/legacy	symfony:platform_rrd_check_legacy	methods=GET
 app.php/utilities/rrd-check/purge	symfony:platform_rrd_check_purge	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 15
 app.php/utilities/snmp-notifications	symfony:admin_snmp_notifications	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
 app.php/utilities/snmp-objects	symfony:admin_snmp_objects	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
+app.php/utilities/system	symfony:platform_diagnostics_menu	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
+app.php/utilities/system/boost	symfony:platform_diagnostics_boost	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
+app.php/utilities/system/changelog	symfony:platform_diagnostics_changelog	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
+app.php/utilities/system/data-query-cache	symfony:platform_diagnostics_data_query_cache	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
+app.php/utilities/system/database	symfony:platform_diagnostics_database	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
+app.php/utilities/system/database-settings	symfony:platform_diagnostics_database_settings	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
+app.php/utilities/system/database-status	symfony:platform_diagnostics_database_status	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
+app.php/utilities/system/php	symfony:platform_diagnostics_php	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
+app.php/utilities/system/poller-cache	symfony:platform_diagnostics_poller_cache	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
+app.php/utilities/system/summary	symfony:platform_diagnostics_summary	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
 auth_changepassword.php	authenticated	own session check; action=checkpass answers anonymously with the password policy verdict; reviewed at ff7ac6fa6c55
 auth_login.php	anonymous-allowed	login handler; include/auth.php includes it after bootstrap, so a direct request stops at the first undefined function; reviewed at 858e41478258
 auth_profile.php	realm:20	include/auth.php; guest_account withdrawn from anonymous and guest callers
