@@ -5042,6 +5042,11 @@ function rrdtool_error_image_font() {
 
 /* wordwrap($string, $width, "\n", true) counting UTF-8 characters instead of bytes */
 function rrdtool_error_image_wrap($string, $width) {
+	/* ASCII needs no character conversion; keep the installed PHP's wordwrap semantics. */
+	if (!preg_match('/[\x80-\xFF]/', $string)) {
+		return wordwrap($string, $width, "\n", true);
+	}
+
 	$chars = preg_split('//u', $string, -1, PREG_SPLIT_NO_EMPTY);
 
 	if ($chars === false) {
