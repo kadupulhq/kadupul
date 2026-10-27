@@ -23,7 +23,7 @@ final readonly class ViewManagementCatalog
     public function __invoke(CatalogScreen $screen, array $query, string $id): array
     {
         $actor = $this->access->authorize($screen);
-        if (!preg_match('/\A(?:0|[1-9][0-9]{0,7})\z/D', $id) || (int) $id > 16777215
+        if (!preg_match('/\A(?:0|[1-9][0-9]{0,9})\z/D', $id) || (filter_var($id, FILTER_VALIDATE_INT) === false || (int) $id > $screen->maximumParentId())
             || ($screen->scoped() ? $id === '0' : $id !== '0')) {
             throw new \InvalidArgumentException('Invalid parent identity.');
         }
@@ -32,7 +32,7 @@ final readonly class ViewManagementCatalog
             if ($catalog->supports($screen)) {
                 $page = $catalog->read($screen, $filters, $actor->id, (int) $id);
                 return ['filters' => $filters->query(), 'records' => array_slice($page->records, 0, $filters->rows),
-                    'hasNext' => count($page->records) > $filters->rows && $filters->page < 99999, 'parentName' => $page->parentName];
+                    'hasNext' => count($page->records) > $filters->rows && $filters->page < 99999, 'parentName' => $page->parentName, 'operationParameters' => $page->operationParameters];
             }
         }
         throw new \LogicException('Management catalog is unavailable.');

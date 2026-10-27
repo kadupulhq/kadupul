@@ -1641,10 +1641,7 @@ final class FeatureAction {
         'src/Navigation/Infrastructure/Symfony/Controller/ManagementCatalogController.php',
         'src/Navigation/Infrastructure/Symfony/Controller/PersonalReportCatalogController.php',
     ]
-    management_routes = {'graphs': 5, 'data-sources': 3, 'aggregate-graphs': 5, 'reports': 21,
-                         'my-reports': 22, 'plugins': 101, 'graph-template-items/{id}': 10,
-                         'graph-template-inputs/{id}': 10, 'device-template-graphs/{id}': 12,
-                         'data-query-graphs/{id}': 13}
+    management_routes = {'graphs': 5, 'data-sources': 3, 'aggregate-graphs': 5, 'reports': 21, 'my-reports': 22, 'plugins': 101, 'graph-template-items/{id}': 10, 'graph-template-inputs/{id}': 10, 'device-template-graphs/{id}': 12, 'data-query-graphs/{id}': 13, 'graph-input-items/{id}': 10, 'query-data-sources/{id}': 13, 'query-graph-suggestions/{id}': 13, 'query-data-suggestions/{id}': 13, 'query-device-templates/{id}': 13, 'graph-device-templates/{id}': 10, 'snmp-mibs': 15, 'mib-objects/{id}': 15, 'mib-conventions/{id}': 15, 'mib-notification-attributes/{id}': 15}
     with tempfile.TemporaryDirectory(prefix='entry-classifier-management-') as directory:
         root = Path(directory)
         (root / 'include').mkdir()
@@ -1659,7 +1656,8 @@ final class FeatureAction {
         for route, realm in management_routes.items():
             count += 1
             row = rows.get('app.php/management/' + route, ('missing', ''))
-            if not row[0].startswith('symfony:management_') or not row[1].endswith(' + realm %d' % realm):
+            suffix = ' + realm %d' % realm + (' + realm 12' if route.startswith(('query-device-templates/', 'graph-device-templates/')) else '')
+            if not row[0].startswith('symfony:management_') or not row[1].endswith(suffix):
                 failures.append('Management catalog %s: unexpected classification %s' % (route, row))
         for path in management_sources:
             (root / path).write_text((project / path).read_text() + '\n// Unreviewed admission change.\n')
