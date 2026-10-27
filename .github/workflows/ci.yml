@@ -234,6 +234,14 @@ jobs:
           KADUPUL_REFERENCE_TEST_PASSWORD="$KADUPUL_TEST_MYSQL_ADMIN_PASSWORD" \
           php -d zend.exception_ignore_args=1 security/reference_write_transaction_native_probe.php
 
+    - name: Aggregate item replacement contracts
+      working-directory: tests
+      env:
+        KADUPUL_AGGREGATE_TEST_PORT: '3306'
+        KADUPUL_AGGREGATE_TEST_USER: root
+        KADUPUL_AGGREGATE_TEST_PASSWORD: cactiroot
+      run: php vendor/bin/pest --test-directory=. --configuration=phpunit-aggregate.xml --fail-on-empty-test-suite --colors=never
+
   cdef-reference-contracts:
     permissions:
       contents: read
