@@ -58,7 +58,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 4, "core_outside_functions_php": 0, "tests": 11, "plugins": 0},
+        "fan_out": {"core": 4, "core_outside_functions_php": 0, "tests": 12, "plugins": 0},
         "body": {
             "uses_global": ["called_by_script_server"],
             "static_variables": [],
