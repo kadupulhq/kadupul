@@ -1632,6 +1632,34 @@ final class FeatureAction {
                     failures.append('Administration list %s still certified after changing %s' % (route, path))
             (root / path).write_text((project / path).read_text())
 
+    # Parent-scoped admission is pinned to the complete screen/parent mapping.
+    relationship_sources = ['src/Navigation/Infrastructure/Persistence/ParentRelationshipAccess.php', 'src/Navigation/Infrastructure/Persistence/DbalAdministrationListAccess.php', 'src/Navigation/Contract/Administration/ListScreen.php', 'src/Navigation/Contract/Relationships/RelationshipScreen.php', 'src/Navigation/Application/Query/ViewRelationships.php', 'src/Navigation/Infrastructure/Symfony/Controller/RelationshipController.php']
+    relationship_routes = {'device-template-queries': 12, 'data-template-definitions': 11, 'aggregate-template-items': 5, 'snmp-option-entries': 23, 'graph-rule-device-criteria': 23, 'graph-rule-query-criteria': 23, 'tree-rule-device-criteria': 23, 'tree-rule-steps': 23, 'receiver-subscriptions': 15, 'receiver-history': 15}
+    with tempfile.TemporaryDirectory(prefix='entry-classifier-relationships-') as directory:
+        root = Path(directory)
+        for path in relationship_sources:
+            (root / path).parent.mkdir(parents=True, exist_ok=True)
+            (root / path).write_text((project / path).read_text())
+        (root / 'include').mkdir()
+        (root / 'include/global_arrays.php').write_text(REALMS)
+        session = root / 'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php'
+        session.parent.mkdir(parents=True, exist_ok=True)
+        session.write_text(SESSION)
+        rows = run(root, [])
+        for route, realm in relationship_routes.items():
+            count += 1
+            row = rows.get('app.php/relationships/' + route + '/{id}', ('missing', ''))
+            if not row[0].startswith('symfony:relationships_') or not row[1].endswith(' + realm %d' % realm):
+                failures.append('Relationship %s: unexpected classification %s' % (route, row))
+        for path in relationship_sources:
+            (root / path).write_text((project / path).read_text() + '\n// Unreviewed admission change.\n')
+            rows = run(root, [])
+            for route in relationship_routes:
+                count += 1
+                if rows.get('app.php/relationships/' + route + '/{id}', ('missing',))[0] != 'unknown':
+                    failures.append('Relationship %s still certified after changing %s' % (route, path))
+            (root / path).write_text((project / path).read_text())
+
     # Verify realm metadata from the actual VDEF authorization path, including
     # the checked actor identity and side-effect ordering after console admission.
     project = Path(__file__).resolve().parents[2]

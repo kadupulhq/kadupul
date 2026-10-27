@@ -43,6 +43,28 @@ class RouteSamples(unittest.TestCase):
             with self.subTest(entry=entry):
                 self.assertFalse(has_feature_realm(entry))
 
+    def test_relationship_routes_bind_existing_parents(self):
+        class Rig:
+            def sql(self, statement):
+                self.statement = statement
+                return '37'
+        routes = ['device-template-queries', 'data-template-definitions', 'aggregate-template-items',
+                  'snmp-option-entries', 'graph-rule-device-criteria', 'graph-rule-query-criteria',
+                  'tree-rule-device-criteria', 'tree-rule-steps', 'receiver-subscriptions', 'receiver-history']
+        for route in routes:
+            entry = 'app.php/relationships/' + route + '/{id}'
+            rig = Rig()
+            fixtures = {'devices': 7, 'sites': 9}
+            route_fixtures(rig, [(entry, 'symfony:relationships_' + route, '')], fixtures)
+            self.assertTrue(rig.statement.startswith('SELECT MIN(id) FROM '))
+            self.assertEqual(entry.replace('{id}', '37'), sample(entry, 'methods=GET', fixtures))
+            self.assertTrue(has_feature_realm(entry))
+        class Missing:
+            def sql(self, statement):
+                return 'NULL'
+        with self.assertRaisesRegex(ValueError, 'Missing concrete relationship parent'):
+            route_fixtures(Missing(), [(entry, '', '')], {'devices': 7, 'sites': 9})
+
     def test_parent_child_and_enum_parameters(self):
         fixtures = {'graphing/color-templates': {'id': 12, 'itemId': 31},
                     'graph-definitions/vdefs': {'vdefId': 4, 'itemId': 5},

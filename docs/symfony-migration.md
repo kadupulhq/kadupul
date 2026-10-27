@@ -1907,3 +1907,8 @@ and the two device caches. These views receive explicit read models and retain
 current-account, realm and device permissions. Maintenance actions, detailed
 legacy diagnostics and plugin entries keep their existing paths. The slice does
 not retire `utilities.php` or claim a reduction in its global statements.
+
+The [relationship browsing slice](migrations/relationships-batch-10.md) adds ten
+parent-scoped Twig views. Existing parent catalogs link to them. Legacy PHP
+continues to handle edits and operational actions. This slice does not retire
+legacy writers or remove their global state.

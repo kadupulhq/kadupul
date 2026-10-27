@@ -108,6 +108,16 @@ app.php/links/legacy	symfony:navigation_links_legacy	methods=GET|HEAD|POST; Cons
 app.php/links/new	symfony:navigation_link_create	methods=GET|HEAD|POST; ConsoleAccess realm 8
 app.php/links/{id}/edit	symfony:navigation_link_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8
 app.php/permission-denied	symfony:platform_permission_denied	methods=GET|HEAD; AuthenticatedAccess signed-in account; no realm required
+app.php/relationships/aggregate-template-items/{id}	symfony:relationships_aggregate_template_items	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 5
+app.php/relationships/data-template-definitions/{id}	symfony:relationships_data_template_definitions	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 11
+app.php/relationships/device-template-queries/{id}	symfony:relationships_device_template_queries	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 12
+app.php/relationships/graph-rule-device-criteria/{id}	symfony:relationships_graph_rule_device_criteria	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
+app.php/relationships/graph-rule-query-criteria/{id}	symfony:relationships_graph_rule_query_criteria	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
+app.php/relationships/receiver-history/{id}	symfony:relationships_receiver_history	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 15
+app.php/relationships/receiver-subscriptions/{id}	symfony:relationships_receiver_subscriptions	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 15
+app.php/relationships/snmp-option-entries/{id}	symfony:relationships_snmp_option_entries	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
+app.php/relationships/tree-rule-device-criteria/{id}	symfony:relationships_tree_rule_device_criteria	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
+app.php/relationships/tree-rule-steps/{id}	symfony:relationships_tree_rule_steps	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
 app.php/session	symfony:session	methods=GET|HEAD; ConsoleAccess realm 8; reviewed at c1e137157c2e: answers 401 with no identity when the actor is null
 app.php/templates/aggregates	symfony:admin_aggregate_templates	methods=GET|HEAD; ConsoleAccess realm 8 + realm 5
 app.php/templates/data-sources	symfony:admin_data_templates	methods=GET|HEAD; ConsoleAccess realm 8 + realm 11

@@ -185,7 +185,7 @@ def has_feature_realm(entry):
     legacy = {'gprint_presets.php', 'vdef.php', 'cdef.php', 'automation_templates.php', 'color_templates.php',
               'color_templates_items.php', 'aggregate_templates.php', 'host_templates.php',
               'color.php', 'links.php', 'data_input.php', 'rrdcheck.php', 'data_source_profiles.php'}
-    prefixes = ('graphing/gprint-presets', 'graph-definitions/vdefs',
+    prefixes = ('relationships', 'graphing/gprint-presets', 'graph-definitions/vdefs',
                 'graph-definitions/cdefs', 'automation/templates', 'graphing/color-templates',
                 'graphing/color-template-items', 'aggregate-templates',
                 'inventory/device-templates', 'graphing/colors', 'links', 'data-inputs',
@@ -227,6 +227,14 @@ def route_fixtures(rig, rows, ids):
     def present(prefix):
         return any(entry.startswith('app.php/' + prefix) for entry, _, _ in rows)
 
+    relationship_tables = {'device-template-queries': 'host_template', 'data-template-definitions': 'data_template', 'aggregate-template-items': 'aggregate_graph_templates', 'snmp-option-entries': 'automation_snmp', 'graph-rule-device-criteria': 'automation_graph_rules', 'graph-rule-query-criteria': 'automation_graph_rules', 'tree-rule-device-criteria': 'automation_tree_rules', 'tree-rule-steps': 'automation_tree_rules', 'receiver-subscriptions': 'snmpagent_managers', 'receiver-history': 'snmpagent_managers'}
+    for route, table in relationship_tables.items():
+        prefix = 'relationships/' + route
+        if present(prefix):
+            value = rig.sql('SELECT MIN(id) FROM ' + table).strip()
+            if not value.isdecimal() or int(value) < 1:
+                raise ValueError('Missing concrete relationship parent: ' + prefix)
+            ids[prefix] = {'id': int(value)}
     if present('graphing/gprint-presets'):
         ids['graphing/gprint-presets'] = {'id': int(rig.sql('SELECT MIN(id) FROM graph_templates_gprint').strip())}
     if present('graphing/data-source-profiles'):
