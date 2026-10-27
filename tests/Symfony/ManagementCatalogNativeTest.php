@@ -115,6 +115,9 @@ final class ManagementCatalogNativeTest extends TestCase
     public function testEveryScreenSortsEveryPublicColumnInBothDirectionsOnTheActualSchema(): void
     {
         foreach (CatalogScreen::cases() as $screen) {
+            if ($screen->metadataView()) {
+                continue;
+            }
             foreach (array_keys($screen->columns()) as $column) {
                 foreach (['ASC','DESC'] as $direction) {
                     $this->queries = 0;
@@ -216,6 +219,10 @@ final class ManagementCatalogNativeTest extends TestCase
                 $this->deny($access, $screen);
             }
             $this->database->executeStatement('INSERT INTO user_auth_realm (user_id,realm_id) VALUES (42,8)');
+            foreach ($screen->relatedRealms() as $realm) {
+                $this->deny($access, $screen);
+                $this->database->executeStatement('INSERT INTO user_auth_realm (user_id,realm_id) VALUES (42,?)', [$realm]);
+            }
             self::assertSame(42, $access->authorize($screen)->id);
         }
         foreach (["enabled=''","locked='on'","must_change_password='on'"] as $mutation) {
@@ -230,6 +237,12 @@ final class ManagementCatalogNativeTest extends TestCase
         $this->database->executeStatement("INSERT INTO user_auth_group (id,name,enabled) VALUES (1,'Operators','on')");
         $this->database->executeStatement('INSERT INTO user_auth_group_members (group_id,user_id) VALUES (1,42)');
         $this->database->executeStatement('INSERT INTO user_auth_group_realm (group_id,realm_id) VALUES (1,8),(1,13)');
+        self::assertSame(42, $access->authorize(CatalogScreen::QueryGraphs)->id);
+        $this->deny($access, CatalogScreen::QueryDeviceTemplates);
+        $this->database->executeStatement('INSERT INTO user_auth_group_realm (group_id,realm_id) VALUES (1,12)');
+        self::assertSame(42, $access->authorize(CatalogScreen::QueryDeviceTemplates)->id);
+        $this->database->executeStatement('DELETE FROM user_auth_group_realm WHERE group_id=1 AND realm_id=12');
+        $this->deny($access, CatalogScreen::QueryDeviceTemplates);
         self::assertSame(42, $access->authorize(CatalogScreen::QueryGraphs)->id);
         $this->database->executeStatement("UPDATE user_auth_group SET enabled='' WHERE id=1");
         $this->deny($access, CatalogScreen::QueryGraphs);

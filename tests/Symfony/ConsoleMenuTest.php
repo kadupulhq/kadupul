@@ -102,7 +102,7 @@ final class ConsoleMenuTest extends TestCase
     public function testManagementCatalogMenuDestinationsFollowTheFeatureRealms(): void
     {
         foreach (\Kadupul\Navigation\Contract\Management\CatalogScreen::cases() as $screen) {
-            if ($screen->scoped()) {
+            if ($screen->scoped() || $screen->metadataView()) {
                 continue;
             }
             $menu = self::menu(new Actor(7, 'operator'), [8, $screen->realm()]);
@@ -110,6 +110,15 @@ final class ConsoleMenuTest extends TestCase
             self::assertContains($screen->path(), $paths, $screen->value);
             self::assertNotContains($screen->legacyScript(), $paths);
         }
+    }
+
+    public function testMetadataRegistryDoesNotReplaceTheUtilitiesMenu(): void
+    {
+        self::assertSame('utilities.php', LegacyConsoleMenu::listPath('utilities.php'));
+        $menu = self::menu(new Actor(7, 'operator'), [8, 15]);
+        $paths = array_merge(...array_map(static fn(array $section): array => array_column($section['items'], 'path'), $menu->sections()));
+        self::assertContains('app.php/utilities/system', $paths);
+        self::assertNotContains('app.php/management/snmp-mibs', $paths);
     }
 
     public function testCollectorWithoutAnOnlinePrimaryGetsTheOfflineMenu(): void

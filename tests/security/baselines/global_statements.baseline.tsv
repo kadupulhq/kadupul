@@ -34,7 +34,7 @@ cli/update_heartbeat.php	1	1
 cli/upgrade_database.php	2	7
 cmd.php	10	31
 data_debug.php	4	7
-data_queries.php	5	9
+data_queries.php	4	6
 data_sources.php	4	7
 data_templates.php	3	9
 graph_templates.php	4	11

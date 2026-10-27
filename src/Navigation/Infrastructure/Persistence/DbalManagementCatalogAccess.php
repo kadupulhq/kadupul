@@ -40,6 +40,11 @@ final readonly class DbalManagementCatalogAccess implements ManagementCatalogAcc
         if (!$this->accountAllows($actor->id) || ($screen !== CatalogScreen::MyReports && !$this->hasRealm($actor->id, self::CONSOLE_REALM)) || !$this->hasRealm($actor->id, $screen->realm())) {
             throw new AdministrationListDenied(false);
         }
+        foreach ($screen->relatedRealms() as $realm) {
+            if (!$this->hasRealm($actor->id, $realm)) {
+                throw new AdministrationListDenied(false);
+            }
+        }
         return $actor;
     }
 
