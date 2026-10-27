@@ -71,6 +71,13 @@ PHP);
 $root = dirname(__DIR__, 2);
 $directory = $argv[2];
 $scenario = json_decode($argv[1], true, flags: JSON_THROW_ON_ERROR);
+if (isset($argv[3])) {
+    define('RRD_TEST_COVERAGE_DIRECTORY', $argv[3]);
+    require __DIR__ . '/rrd-process-coverage.php';
+    require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
+    require_once $root . '/tests/Helpers/ProfileDeletionContract.php';
+    $GLOBALS['nativeChildCoverageSnapshot'] = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/profile-collector-replication-native.php', $argv[1], ProfileDeletionContract::collectorCoverageSources());
+}
 // This profile-only schema exercises the historical 1.2.33 -> 1.2.34
 // Installer boundary. Current-release forward repairs require the owned full
 // schema in run_schema_repair_contracts.py; never run them on prefixed tables.
@@ -154,6 +161,9 @@ function db_fetch_assoc_prepared($sql, $params = [], $log = true, $connection = 
         }
         if (!preg_match('/data_source_profiles|\bversion\b|information_schema.TABLES|information_schema.TRIGGERS|information_schema.STATISTICS|SHOW COLUMNS FROM data_template_data|FROM data_template_data WHERE/', $sql)) {
             $GLOBALS['calls'][] = ['source', $sql];
+            if (($GLOBALS['scenario']['failure'] ?? '') === 'read-plugin_config' && str_contains($sql, 'FROM plugin_config')) {
+                return false;
+            }
             return [];
         }
     }
@@ -605,6 +615,7 @@ try {
     }
     $callerAfter = $source->query('SELECT step FROM `' . $maps['source']['data_source_profiles'] . '` WHERE id=1')->fetchColumn();
     file_put_contents($directory . '/result.json', json_encode(['retry_initial' => $retry_initial, 'upgrade_target' => !empty($scenario['upgrade_entry']) ? CACTI_VERSION : null, 'migration_version' => $migration_version, 'version_confirmation' => $version_confirmation, 'upgrade_error' => $upgrade_error, 'remote_version' => $remote->query('SELECT cacti FROM `' . $maps['remote']['version'] . '`')->fetchColumn(), 'caller_before' => $callerBefore, 'caller_after' => $callerAfter, 'source_active' => $sourceActive, 'snapshot_blocked' => $snapshot_blocked ?? false, 'remote_step' => $remote->query('SELECT step FROM `' . $maps['remote']['data_source_profiles'] . '` WHERE id=77')->fetchColumn(), 'sync' => $source->query('SELECT requires_sync FROM `' . $maps['source']['poller'] . '` ORDER BY id')->fetchAll(PDO::FETCH_COLUMN), 'rras' => $rras, 'result' => $result ?? null, 'hooks' => $hooks, 'messages' => $messages, 'rows' => $rows, 'parent' => $parent, 'log' => $log, 'calls' => $calls], JSON_THROW_ON_ERROR));
+    $GLOBALS['nativeChildCoverageMarkers'] = ['collector-result-persisted'];
 } finally {
     if ($upgradeSchema !== null) {
         $installer->exec("DROP DATABASE `$upgradeSchema`");

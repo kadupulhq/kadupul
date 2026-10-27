@@ -79,6 +79,11 @@ abstract class ProfileDeletionContract extends TestCase
         self::assertSame('MUL', $baseline->query("SELECT table_key FROM table_columns WHERE table_name = 'data_template_data' AND table_field = 'data_source_profile_id'")->fetchColumn());
     }
 
+    public static function collectorCoverageSources(): array
+    {
+        return array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Helpers/ProfileDeletionContract.php', 'tests/Unit/ProfileDeletionNativeTest.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php', 'lib/reference_write.php', 'lib/data_source_profile_integrity.php');
+    }
+
     protected function runNative(array $scenario): array
     {
         $root = dirname(__DIR__, 2);
@@ -106,7 +111,12 @@ abstract class ProfileDeletionContract extends TestCase
             if ($coverage !== null) {
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
-                $coverage->merge(unserialize(file_get_contents($reports[0])));
+                if ($fixture === 'profile-collector-replication-native.php') {
+                    require_once __DIR__ . '/NativeChildCoverageEvidence.php';
+                    $coverage->merge(NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/' . $fixture, json_encode($scenario, JSON_THROW_ON_ERROR), self::collectorCoverageSources(), ['collector-result-persisted'], ['lib/poller.php']));
+                } else {
+                    $coverage->merge(unserialize(file_get_contents($reports[0])));
+                }
             }
             return $state;
         } finally {
