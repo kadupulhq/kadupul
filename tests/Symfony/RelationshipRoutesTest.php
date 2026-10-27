@@ -244,6 +244,7 @@ final class RelationshipRoutesTest extends TestCase
         try {
             $container = $kernel->getContainer()->get('test.service_container');
             $catalogs = [
+                $container->get(\Kadupul\IdentityAccess\Infrastructure\Persistence\DbalIdentityRelationships::class),
                 $container->get(\Kadupul\Graphing\Infrastructure\Persistence\DbalTemplateRelationships::class),
                 $container->get(\Kadupul\Automation\Infrastructure\Persistence\DbalAutomationRelationships::class),
                 $container->get(\Kadupul\Platform\Infrastructure\Persistence\DbalReceiverRelationships::class),

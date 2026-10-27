@@ -25,9 +25,31 @@ enum RelationshipScreen: string
     case ReceiverSubscriptions = 'receiver-subscriptions';
     case ReceiverHistory = 'receiver-history';
 
+    case UserGroups = 'user-group-memberships';
+    case GroupMembers = 'group-members';
+    case UserGraphs = 'user-graphs-permissions';
+    case UserDevices = 'user-devices-permissions';
+    case UserTemplates = 'user-templates-permissions';
+    case UserTrees = 'user-trees-permissions';
+    case GroupGraphs = 'group-graphs-permissions';
+    case GroupDevices = 'group-devices-permissions';
+    case GroupTemplates = 'group-templates-permissions';
+    case GroupTrees = 'group-trees-permissions';
+
     public function parentScreen(): ListScreen
     {
         return match ($this) {
+            self::UserGroups => ListScreen::Users,
+            self::GroupMembers => ListScreen::UserGroups,
+            self::UserGraphs => ListScreen::Users,
+            self::UserDevices => ListScreen::Users,
+            self::UserTemplates => ListScreen::Users,
+            self::UserTrees => ListScreen::Users,
+            self::GroupGraphs => ListScreen::UserGroups,
+            self::GroupDevices => ListScreen::UserGroups,
+            self::GroupTemplates => ListScreen::UserGroups,
+            self::GroupTrees => ListScreen::UserGroups,
+
             self::DeviceQueries => ListScreen::DeviceTemplates, self::DataDefinitions => ListScreen::DataTemplates,
             self::AggregateItems => ListScreen::AggregateTemplates, self::SnmpEntries => ListScreen::SnmpOptions,
             self::GraphDeviceCriteria, self::GraphQueryCriteria => ListScreen::GraphRules,
@@ -39,6 +61,17 @@ enum RelationshipScreen: string
     public function title(): string
     {
         return match ($this) {
+            self::UserGroups => 'User Group Memberships',
+            self::GroupMembers => 'Group Members',
+            self::UserGraphs => 'User Graph Permission Exceptions',
+            self::UserDevices => 'User Device Permission Exceptions',
+            self::UserTemplates => 'User Template Permission Exceptions',
+            self::UserTrees => 'User Tree Permission Exceptions',
+            self::GroupGraphs => 'Group Graph Permission Exceptions',
+            self::GroupDevices => 'Group Device Permission Exceptions',
+            self::GroupTemplates => 'Group Template Permission Exceptions',
+            self::GroupTrees => 'Group Tree Permission Exceptions',
+
             self::DeviceQueries => 'Device Template Data Queries', self::DataDefinitions => 'Data Template Definitions',
             self::AggregateItems => 'Aggregate Template Items', self::SnmpEntries => 'SNMP Option Entries',
             self::GraphDeviceCriteria => 'Graph Rule Device Criteria', self::GraphQueryCriteria => 'Graph Rule Query Criteria',
@@ -65,6 +98,10 @@ enum RelationshipScreen: string
     public function columns(): array
     {
         return match ($this) {
+            self::UserGroups => ['name' => 'Group', 'id' => 'ID', 'enabled' => 'Enabled', 'description' => 'Description'],
+            self::GroupMembers => ['name' => 'Username', 'id' => 'ID', 'realm' => 'Authentication Realm', 'enabled' => 'Enabled'],
+            self::UserGraphs, self::UserDevices, self::UserTemplates, self::UserTrees,
+            self::GroupGraphs, self::GroupDevices, self::GroupTemplates, self::GroupTrees => ['name' => 'Resource', 'id' => 'Resource ID', 'resolved' => 'Resource Found', 'policy' => 'Default Policy'],
             self::DeviceQueries => ['name' => 'Data Query', 'id' => 'ID', 'input_method' => 'Input Method', 'graphs' => 'Graph Mappings'],
             self::DataDefinitions => ['name' => 'Data Source Name', 'id' => 'ID', 'source_type' => 'Data Source Type', 'heartbeat' => 'Heartbeat', 'minimum' => 'Minimum', 'maximum' => 'Maximum'],
             self::AggregateItems => ['name' => 'Graph Item', 'id' => 'Item ID', 'sequence' => 'Sequence', 'resolved' => 'Template Item Found', 'skip' => 'Skip', 'total' => 'Total', 'graph_type' => 'Graph Type', 'cdef' => 'CDEF', 'color_template' => 'Color Template'],
@@ -78,11 +115,31 @@ enum RelationshipScreen: string
 
     public function legacyQuery(int $parentId): array
     {
+        if ($this->identityView()) {
+            return ['action' => $this->parentScreen() === ListScreen::Users ? 'user_edit' : 'edit', 'id' => $parentId, 'tab' => match ($this) {
+                self::UserGroups => 'permsgr',
+                self::GroupMembers => 'members',
+                self::UserGraphs => 'permsg',
+                self::UserDevices => 'permsd',
+                self::UserTemplates => 'permste',
+                self::UserTrees => 'permstr',
+                self::GroupGraphs => 'permsg',
+                self::GroupDevices => 'permsd',
+                self::GroupTemplates => 'permste',
+                self::GroupTrees => 'permstr',
+                default => throw new \LogicException('Missing identity tab.'),
+            }];
+        }
         $query = ['action' => $this === self::DataDefinitions ? 'template_edit' : 'edit', 'id' => $parentId];
         if ($this === self::ReceiverSubscriptions || $this === self::ReceiverHistory) {
             $query['tab'] = $this === self::ReceiverSubscriptions ? 'notifications' : 'logs';
         }
         return $query;
+    }
+
+    public function identityView(): bool
+    {
+        return in_array($this->parentScreen(), [ListScreen::Users, ListScreen::UserGroups], true);
     }
 
     public function editableEntry(): bool

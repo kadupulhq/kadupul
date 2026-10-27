@@ -227,11 +227,13 @@ def route_fixtures(rig, rows, ids):
     def present(prefix):
         return any(entry.startswith('app.php/' + prefix) for entry, _, _ in rows)
 
-    relationship_tables = {'device-template-queries': 'host_template', 'data-template-definitions': 'data_template', 'aggregate-template-items': 'aggregate_graph_templates', 'snmp-option-entries': 'automation_snmp', 'graph-rule-device-criteria': 'automation_graph_rules', 'graph-rule-query-criteria': 'automation_graph_rules', 'tree-rule-device-criteria': 'automation_tree_rules', 'tree-rule-steps': 'automation_tree_rules', 'receiver-subscriptions': 'snmpagent_managers', 'receiver-history': 'snmpagent_managers'}
+    relationship_tables = {'device-template-queries': 'host_template', 'data-template-definitions': 'data_template', 'aggregate-template-items': 'aggregate_graph_templates', 'snmp-option-entries': 'automation_snmp', 'graph-rule-device-criteria': 'automation_graph_rules', 'graph-rule-query-criteria': 'automation_graph_rules', 'tree-rule-device-criteria': 'automation_tree_rules', 'tree-rule-steps': 'automation_tree_rules', 'receiver-subscriptions': 'snmpagent_managers', 'receiver-history': 'snmpagent_managers', 'user-group-memberships': 'user_auth', 'group-members': 'user_auth_group', 'user-graphs-permissions': 'user_auth', 'user-devices-permissions': 'user_auth', 'user-templates-permissions': 'user_auth', 'user-trees-permissions': 'user_auth', 'group-graphs-permissions': 'user_auth_group', 'group-devices-permissions': 'user_auth_group', 'group-templates-permissions': 'user_auth_group', 'group-trees-permissions': 'user_auth_group'}
     for route, table in relationship_tables.items():
         prefix = 'relationships/' + route
         if present(prefix):
             value = rig.sql('SELECT MIN(id) FROM ' + table).strip()
+            if table == 'user_auth_group' and (not value.isdecimal() or int(value) < 1):
+                value = rig.sql("INSERT INTO user_auth_group (name, description) VALUES ('entry-sweep', ''); SELECT LAST_INSERT_ID()").strip()
             if not value.isdecimal() or int(value) < 1:
                 raise ValueError('Missing concrete relationship parent: ' + prefix)
             ids[prefix] = {'id': int(value)}
