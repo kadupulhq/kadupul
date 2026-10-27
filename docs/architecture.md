@@ -162,9 +162,10 @@ migration path could apply changes the installer does not know about. A table
 moves to Doctrine-managed schema only after it has one documented owner and
 upgrade tests cover both the installer and the migration.
 
-Migrated Twig pages currently make no stylesheet, script, image, media or frame
-requests. A template boundary test rejects static remote resource URLs while
-allowing ordinary navigation links. Future browser dependencies must use an
+Migrated Twig pages request only assets the installation serves: the base
+layout links the installed theme stylesheet, and the console home, permission
+denied and VDEF item pages load a local script. A template boundary test rejects
+static remote resource URLs while allowing ordinary navigation links. Future browser dependencies must use an
 exact version and lockfile, build to a repository-owned path, and be present in
 the disconnected release verification before a migrated page references them.
 
@@ -174,7 +175,10 @@ adapter isolates the legacy save API in a CLI process, rechecks authorization an
 revision under a row lock, and preserves graph/poller/plugin effects. The local
 transaction cannot roll back arbitrary external effects. This is a transitional
 adapter to retire as owning modules acquire explicit integration contracts.
-Remaining device settings and bulk actions still use the legacy editor.
+Device creation, SNMP, options, templates, collector, placement, enable and
+disable, removal, associations and maintenance have their own Symfony
+controllers and forms. `host.php` forwards to `LegacyDevicesController`, which
+redirects old links to them and answers the old location lookup.
 
 Site name/notes editing uses a Site aggregate, EditSite command and SiteEditor
 port. Its legacy-schema adapter owns a transaction and row lock, rechecks access
