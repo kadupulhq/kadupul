@@ -1930,3 +1930,8 @@ The [identity settings slice](migrations/identity-settings-batch-10.md) adds ten
 views for stored user/group grants, preferences and login options. It extends
 the identity relationship reader without changing preference inheritance,
 plugin settings, authorization evaluation or legacy writes.
+
+The [RRDtool web-context input boundary](migrations/rrd-web-context-input.md)
+passes viewer state explicitly to the local-process adapter. The procedural
+caller still owns cookie/configuration integration; session release and timezone
+preparation keep their ordering around the existing executable check.

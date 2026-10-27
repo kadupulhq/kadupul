@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Pass browser timezone input explicitly to the local RRDtool web-context adapter while preserving session-close and process-start ordering.
+
 - Reject malformed aggregate parent identifiers, bound prepared insert batches, and hold the verified table engine stable until item replacement completes. Failed replacements preserve previous items and caller-owned work (#1017).
 - Add ten Twig views for stored user/group realm grants, display preferences, graph preferences, time preferences and login options. Preference readers allowlist public keys and preserve zero, empty and missing values; existing PHP forms still handle changes.
 
