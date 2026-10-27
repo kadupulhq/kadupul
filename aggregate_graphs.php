@@ -575,7 +575,7 @@ function form_actions()
 
 function graph_edit()
 {
-    global $config, $struct_graph, $struct_aggregate_graph, $image_types, $consolidation_functions, $graph_item_types, $struct_graph_item;
+    global $config, $struct_graph, $struct_aggregate_graph, $struct_graph_item;
 
     // Remove filter item
     unset($struct_graph_item['data_template_id']);

@@ -204,7 +204,7 @@ function form_save()
 
 function form_actions()
 {
-    global $graph_actions, $config, $image_types;
+    global $graph_actions, $image_types;
 
     /* ================= input validation ================= */
     get_filter_request_var('drp_action', FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/^([a-zA-Z0-9_]+)$/')));
@@ -448,7 +448,6 @@ function form_actions()
 
 function item()
 {
-    global $consolidation_functions, $graph_item_types;
 
     /* ================= input validation ================= */
     get_filter_request_var('id');
@@ -549,7 +548,7 @@ function item()
 
 function template_edit()
 {
-    global $struct_graph, $image_types, $fields_graph_template_template_edit;
+    global $struct_graph, $fields_graph_template_template_edit;
 
     /* ================= input validation ================= */
     get_filter_request_var('id');
