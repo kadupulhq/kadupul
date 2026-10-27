@@ -2684,14 +2684,15 @@ function test_data_source($data_template_id, $host_id, $snmp_query_id = 0, $snmp
  * keeps its quotes and <path_cacti>/scripts/x.php stays one bare word for the
  * script server.
  *
- * Grouping, case patterns, comments, redirections and here-documents inside a
- * command substitution need more grammar than this scanner models, so such a
- * template yields an empty string rather than a command that might expose a
- * field to the outer quote. The same applies to a field or backslash inside
- * backticks, which the shell ends at the next backtick and unescapes before
- * parsing the inner command, and to a field or backslash inside ${...}, whose
- * word has its own quoting rules, and to bash's
- * $'...' and $"..." quoting, where a backslash can escape the closing quote.
+ * Newlines, a # that starts a word, and << at the top level, any backslash
+ * inside $(...), backticks or ${...}, and grouping, case patterns, comments,
+ * redirections and here-documents inside a command substitution need more
+ * grammar than this scanner models, so such a template yields an empty
+ * string rather than a command that might expose a field to the outer quote.
+ * The same applies to a field inside backticks, which the shell ends at the
+ * next backtick, to a field inside ${...}, whose word has its own quoting
+ * rules, and to bash's $'...' and $"..." quoting, where a backslash can escape
+ * the closing quote.
  * A field directly after an unescaped $ is rejected for the same reason: the
  * value's opening quote would turn it into $'...'.
  *
@@ -2742,6 +2743,12 @@ function substitute_script_path($template, $escaped_values) {
 			$template
 		);
 	} while ($template !== $previous);
+
+	// A newline ends a comment and starts a new command or here-document
+	// line, which this scanner does not model.
+	if (strpbrk($template, "\r\n") !== false) {
+		return '';
+	}
 
 	$out = '';
 	$len = strlen($template);
@@ -2815,7 +2822,17 @@ function substitute_script_path($template, $escaped_values) {
 
 		$kinds = array_column($stack, 'kind');
 
-		if ($ch === '\\' && (in_array('backtick', $kinds, true) || in_array('param', $kinds, true))) {
+		// Inside $(...), backticks and ${...} a backslash can escape a
+		// character that would otherwise end the frame, so fail closed.
+		if ($ch === '\\' && count($stack) > 1) {
+			return '';
+		}
+
+		// At the top level a # starting a word comments out the rest of the
+		// line, quotes included, and << starts a here-document.
+		if ($quote === '' && count($stack) === 1
+			&& (($ch === '#' && ($out === '' || strpbrk(substr($out, -1), " \t;&|()<>") !== false))
+				|| ($ch === '<' && $i + 1 < $len && $template[$i + 1] === '<'))) {
 			return '';
 		}
 

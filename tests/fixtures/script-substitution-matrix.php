@@ -185,7 +185,7 @@ function script_substitution_property(int $seed, int $cases, array $shells): arr
 	$directory = sys_get_temp_dir() . '/kadupul-shell-property-' . bin2hex(random_bytes(8));
 	mkdir($directory, 0700);
 	$marker   = $directory . '/executed';
-	$alphabet = ['\\', '$', '(', ')', '"', "'", '`', ' ', 'a', 'b', '<arg>', '<unknown>'];
+	$alphabet = ['\\', '$', '(', ')', '"', "'", '`', ' ', 'a', 'b', '<arg>', '<unknown>', '#', "\n", '<', '>', '\\)'];
 	$values   = [
 		escapeshellarg('$(touch ' . $marker . ')'),
 		escapeshellarg('x ;touch ' . $marker . "; '"),
