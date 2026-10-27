@@ -1,6 +1,8 @@
 # CI architecture and modernization policy
 
 Audit baseline: `ee000fd3ce5c10a872adb1d7bc7f20b30e7d20f4` on `main`.
+The last six rows of the workflow table describe workflows added after that
+commit, as of `948eb2810`.
 This is a PHP 8.4 application migrating from Cacti to Symfony 7.4. Application
 Composer dependencies live in `include/vendor`; PHPUnit 10 runs through
 `composer test`. Pest 4 has its own locked `tests/composer.json` and vendor tree.
@@ -35,6 +37,12 @@ existing `fail-fast: false` so compatibility failures are fully observed.
 | `claude-review.yml` | PR updates, authorized comments and manual review | `ANTHROPIC_API_KEY`; trusted-default-branch configuration; scoped review/comment write permissions. Existing review job concurrency retained. |
 | `digitalocean-runner-smoke.yml` | Manual; single-job ephemeral runner contract | Read-only; ten-minute timeout. Does not provision or delete droplets. |
 | `sonarcloud.yml` | Main/all PR/manual scheduling; selected complete multi-language coverage/analysis | Only scanner and credential preflight receive `SONAR_TOKEN`; npm and Composer download caches, full history, no cached vendor tree. Analysis has read-only contents/PR permissions. |
+| `cli-docker-integration.yml` | Main/`lts/1.2` pushes and PRs on CLI, library, schema and harness paths, manual; runs `09-cli-maintenance-integration.sh` in the Docker E2E harness | Read-only contents; `packages: read` with the job token for GHCR pulls. No other secrets. |
+| `container-mirrors.yml` | Container and workflow PR paths, main pushes to mirror tooling, manual; inventories `tools/containers/mirrors.json`, copies the images to GHCR on non-PR runs, then pulls them read-only and builds a two-platform fixture image through the mirrored BuildKit with SBOM and provenance attestations | Only the publish job, which never runs on a PR, gets `packages: write`; receipts and build artifacts retained. |
+| `fuzz.yml` | Main/PR/weekly/manual; fast-check property runs against the shipped asset synchronizer | Read-only; npm download cache; results log retained for 14 days. |
+| `pest-profile.yml` | Manual only; full or filtered Pest run with optional serial coverage, for timing | Read-only; 240-minute timeout; profile log and JUnit retained. |
+| `release-artifacts.yml` | Main pushes, all PRs, manual; builds the release image, verifies offline dependencies and unprivileged FPM health with no network | Read-only contents; `packages: read` with the job token. No publishing permission. |
+| `scorecard.yml` | Main pushes, branch protection changes, weekly, manual; OpenSSF Scorecard | Job-scoped `security-events`, `id-token` and `actions: read` permissions; publishes results and uploads SARIF; assessment artifact retained. |
 
 `DO_RUNNERS_ENABLED` selects the existing eligible DigitalOcean runner paths;
 its current repository value is false. Fork jobs retain GitHub-hosted execution.

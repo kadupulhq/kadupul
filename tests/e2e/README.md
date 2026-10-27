@@ -13,11 +13,11 @@ shape, pilot-page nonce match, and browser behavior per mode.
   `nonce` (enforcing). Use for asserting the blocking path.
 - `playwright.config.ts`: default `baseURL` is `http://localhost:8080`,
   overridable via `E2E_BASE_URL`.
-- `tests/csp.spec.ts`: six tests covering both modes via `E2E_CSP_ENFORCE`.
+- `tests/csp.spec.ts`: seven tests covering both modes via `E2E_CSP_ENFORCE`.
 
 ## Running locally
 
-Requirements: Docker (with Compose v2) and Node.js 20+, which Playwright 1.63 requires.
+Requirements: Docker (with Compose v2) and Node.js 20+, which Playwright 1.64 requires.
 
 ### Report-only mode (default, realistic rollout posture)
 
