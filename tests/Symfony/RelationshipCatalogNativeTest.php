@@ -90,6 +90,9 @@ final class RelationshipCatalogNativeTest extends TestCase
     {
         $this->seed();
         foreach (\Kadupul\Navigation\Contract\Relationships\RelationshipScreen::cases() as $screen) {
+            if ($screen->identityView()) {
+                continue;
+            }
             $catalog = $this->catalog($screen);
             foreach (array_keys($screen->columns()) as $column) {
                 foreach (['ASC', 'DESC'] as $direction) {

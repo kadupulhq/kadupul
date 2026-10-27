@@ -316,6 +316,30 @@ def route_fixtures(rig, rows, ids):
                 raise ValueError('Missing concrete relationship parent: ' + prefix)
             ids[prefix] = {'id': int(value)}
 
+    relationship_tables = {'device-template-queries': 'host_template', 'data-template-definitions': 'data_template', 'aggregate-template-items': 'aggregate_graph_templates', 'snmp-option-entries': 'automation_snmp', 'graph-rule-device-criteria': 'automation_graph_rules', 'graph-rule-query-criteria': 'automation_graph_rules', 'tree-rule-device-criteria': 'automation_tree_rules', 'tree-rule-steps': 'automation_tree_rules', 'receiver-subscriptions': 'snmpagent_managers', 'receiver-history': 'snmpagent_managers', 'user-group-memberships': 'user_auth', 'group-members': 'user_auth_group', 'user-graphs-permissions': 'user_auth', 'user-devices-permissions': 'user_auth', 'user-templates-permissions': 'user_auth', 'user-trees-permissions': 'user_auth', 'group-graphs-permissions': 'user_auth_group', 'group-devices-permissions': 'user_auth_group', 'group-templates-permissions': 'user_auth_group', 'group-trees-permissions': 'user_auth_group'}
+    # Existing aggregate/device-template fixtures must be created before their
+    # relationship IDs are sampled. Fresh installs also have empty rule and
+    # receiver catalogs; create disabled, task-owned parents only when needed.
+    relationship_inserts = {
+        'user_auth_group': "INSERT INTO user_auth_group (name, description) VALUES ('entry-sweep', ''); SELECT LAST_INSERT_ID()",
+        'aggregate_graph_templates': "INSERT INTO graph_templates (name) SELECT 'entry-sweep' WHERE NOT EXISTS (SELECT 1 FROM graph_templates); INSERT INTO aggregate_graph_templates (name,graph_template_id,gprint_prefix,graph_type,total,total_type,total_prefix,order_type,user_id) SELECT 'entry-sweep',MIN(id),'',1,0,1,'',0,1 FROM graph_templates; SET @entry_aggregate_id = LAST_INSERT_ID(); INSERT INTO aggregate_graph_templates_graph (aggregate_template_id) VALUES (@entry_aggregate_id); SELECT @entry_aggregate_id",
+        'host_template': "INSERT INTO host_template (name, class) VALUES ('entry-sweep', 'general'); SELECT LAST_INSERT_ID()",
+        'data_template': "INSERT INTO data_template (name) VALUES ('entry-sweep'); SELECT LAST_INSERT_ID()",
+        'automation_snmp': "INSERT INTO automation_snmp (name) VALUES ('entry-sweep'); SELECT LAST_INSERT_ID()",
+        'automation_graph_rules': "INSERT INTO automation_graph_rules (name) VALUES ('entry-sweep'); SELECT LAST_INSERT_ID()",
+        'automation_tree_rules': "INSERT INTO automation_tree_rules (name) VALUES ('entry-sweep'); SELECT LAST_INSERT_ID()",
+        'snmpagent_managers': "INSERT INTO snmpagent_managers (hostname, description, disabled, max_log_size, snmp_username, snmp_password, snmp_auth_protocol, snmp_priv_passphrase, snmp_priv_protocol, snmp_message_type) VALUES ('127.0.0.1', 'entry-sweep', 'on', 10, '', '', 'MD5', '', 'DES', 1); SELECT LAST_INSERT_ID()",
+    }
+    for route, table in relationship_tables.items():
+        prefix = 'relationships/' + route
+        if present(prefix):
+            value = rig.sql('SELECT MIN(id) FROM ' + table).strip()
+            if (not value.isdecimal() or int(value) < 1) and table in relationship_inserts:
+                value = rig.sql(relationship_inserts[table]).strip()
+            if not value.isdecimal() or int(value) < 1:
+                raise ValueError('Missing concrete relationship parent: ' + prefix)
+            ids[prefix] = {'id': int(value)}
+
 
 def entries():
     rows = [line.split('\t') for line in BASELINE.read_text().splitlines()[1:] if line.strip()]

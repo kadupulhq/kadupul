@@ -79,6 +79,7 @@ class RouteSamples(unittest.TestCase):
         routes = ['device-template-queries', 'data-template-definitions', 'aggregate-template-items',
                   'snmp-option-entries', 'graph-rule-device-criteria', 'graph-rule-query-criteria',
                   'tree-rule-device-criteria', 'tree-rule-steps', 'receiver-subscriptions', 'receiver-history']
+        routes += ['user-group-memberships', 'group-members', 'user-graphs-permissions', 'user-devices-permissions', 'user-templates-permissions', 'user-trees-permissions', 'group-graphs-permissions', 'group-devices-permissions', 'group-templates-permissions', 'group-trees-permissions']
         for route in routes:
             entry = 'app.php/relationships/' + route + '/{id}'
             rig = Rig()
