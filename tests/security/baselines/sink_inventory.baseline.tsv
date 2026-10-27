@@ -377,7 +377,7 @@ dynamic_include	./lib/html_tree.php:806		include($config['include_path'] . '/glo
 dynamic_include	./lib/html_tree.php:807		include_once($config['library_path'] . '/data_query.php');
 dynamic_include	./lib/html_tree.php:808		include_once($config['library_path'] . '/html_utility.php');
 dynamic_include	./lib/import.php:16	    include_once($config['library_path'] . '/xml.php');
-dynamic_include	./lib/import.php:2230	    include_once($config['library_path'] . '/vdef.php');
+dynamic_include	./lib/import.php:2242	    include_once($config['library_path'] . '/vdef.php');
 dynamic_include	./lib/installer.php:3849	                include_once($upgrade_file);
 dynamic_include	./lib/mib_cache.php:43	        include_once($config['include_path'] . '/vendor/phpsnmp/mib_parser.php');
 dynamic_include	./lib/plugins.php:1016	    include_once($config['base_path'] . '/lib/poller.php');
@@ -565,7 +565,7 @@ fs_write	./lib/functions.php:940	        file_put_contents(sys_get_temp_dir() . 
 fs_write	./lib/functions.php:952	            file_put_contents(sys_get_temp_dir() . '/cacti-option.log', get_debug_prefix() .
 fs_write	./lib/functions.php:961	                file_put_contents(sys_get_temp_dir() . '/cacti-option.log', get_debug_prefix() .
 fs_write	./lib/import.php:479	    $f   = fopen($filename, 'r');
-fs_write	./lib/import.php:705	                        $file = fopen($filename, 'wb');
+fs_write	./lib/import.php:717	                        $file = fopen($filename, 'wb');
 fs_write	./lib/input_whitelist.php:111	        $stream = @fopen($temporary, 'x+b');
 fs_write	./lib/input_whitelist.php:41	            $lock = @fopen($lockPath, 'x+b');
 fs_write	./lib/input_whitelist.php:49	            $lock = @fopen($lockPath, 'r+b');
