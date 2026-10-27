@@ -65,6 +65,11 @@ final class AdministrationListRoutesTest extends TestCase
             }
             $row = array_fill_keys(array_keys($screen->columns()), 'example <script>alert(1)</script>');
             $row['id'] = 7;
+            foreach (['event_time', 'last_check'] as $column) {
+                if (array_key_exists($column, $row)) {
+                    $row[$column] = 1700000000;
+                }
+            }
             $row['name'] = 'Router <img src=x onerror=alert(1)>';
             return array_fill(0, $filters->rows + 1, $row);
         });
@@ -79,10 +84,10 @@ final class AdministrationListRoutesTest extends TestCase
         $this->kernel->shutdown();
     }
 
-    public function testAllTenRoutesRenderEscapedTablesAndLegacyFormLinks(): void
+    public function testAllRoutesRenderEscapedTablesAndLegacyFormLinks(): void
     {
         foreach (ListScreen::cases() as $screen) {
-            $response = $this->get($screen, '?filter=Router&rows=10&sort_column=id&sort_direction=DESC');
+            $response = $this->get($screen, '?filter=Router&rows=10&sort_column=' . (array_key_exists('id', $screen->columns()) ? 'id' : 'name') . '&sort_direction=DESC');
             self::assertSame(200, $response->getStatusCode(), $screen->value . ': ' . $response->getContent());
             self::assertStringContainsString('no-store', (string) $response->headers->get('Cache-Control'));
             $html = (string) $response->getContent();
@@ -98,8 +103,17 @@ final class AdministrationListRoutesTest extends TestCase
             self::assertStringContainsString('filter=Router', $xpath->query('//a[@rel="next"]')->item(0)->getAttribute('href'));
             self::assertSame(0, $xpath->query('//form[translate(@method,"POST","post")="post"]')->length);
             $links = array_map(static fn(\DOMElement $link): string => $link->getAttribute('href'), iterator_to_array($xpath->query('//a')));
-            self::assertContains('/monitor/' . $screen->legacyScript() . '?action=' . $screen->editAction(), $links);
-            self::assertContains('/monitor/' . $screen->legacyScript() . '?action=' . $screen->editAction() . '&id=7', $links);
+            if ($screen->creatable()) {
+                self::assertContains('/monitor/' . $screen->legacyScript() . '?' . http_build_query($screen->editQuery()), $links);
+            } else {
+                self::assertStringNotContainsString('>Create</a>', $html);
+            }
+            if ($screen->editable()) {
+                self::assertContains('/monitor/' . $screen->legacyScript() . '?' . http_build_query($screen->editQuery(7)), $links);
+            } else {
+                self::assertStringNotContainsString('class="linkEditMain"', $html);
+            }
+            self::assertContains('/monitor/' . $screen->legacyScript() . '?' . http_build_query($screen->legacyQuery() + ['filter' => 'Router', 'rows' => '10']), $links);
         }
         self::assertSame(array_merge(...array_map(static fn(ListScreen $screen): array => [$screen, $screen], ListScreen::cases())), $this->authorized);
     }
@@ -133,7 +147,7 @@ final class AdministrationListRoutesTest extends TestCase
             self::assertSame('', $this->kernel->handle(Request::create($path, 'HEAD'))->getContent());
             self::assertSame(405, $this->kernel->handle(Request::create($path, 'POST', ['action' => 'delete']))->getStatusCode());
         }
-        self::assertSame(10, $this->reads);
+        self::assertSame(count(ListScreen::cases()), $this->reads);
         $this->empty = true;
         $html = (string) $this->get(ListScreen::DataQueries)->getContent();
         self::assertStringContainsString('No records found.', $html);
@@ -144,7 +158,7 @@ final class AdministrationListRoutesTest extends TestCase
         self::assertStringNotContainsString('credentials', (string) $response->getContent());
     }
 
-    public function testAllTenRoutesSelectAndRenderTheUserLocale(): void
+    public function testAllRoutesSelectAndRenderTheUserLocale(): void
     {
         $container = $this->kernel->getContainer()->get('test.service_container');
         $pdo = new \PDO('sqlite::memory:');
@@ -161,7 +175,11 @@ final class AdministrationListRoutesTest extends TestCase
             self::assertSame(200, $response->getStatusCode());
             self::assertSame('fr', $request->getLocale());
             self::assertStringContainsString('Actions groupées et filtres avancés', (string) $response->getContent());
-            self::assertStringContainsString('Créer', (string) $response->getContent());
+            if ($screen->creatable()) {
+                self::assertStringContainsString('Créer', (string) $response->getContent());
+            } else {
+                self::assertStringNotContainsString('>Créer</a>', (string) $response->getContent());
+            }
         }
     }
 

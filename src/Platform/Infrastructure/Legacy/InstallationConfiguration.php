@@ -160,7 +160,7 @@ final class InstallationConfiguration implements LegacyConfiguration
             'inventory_sites', 'inventory_sites_json', 'inventory_sites_legacy', 'inventory_site_edit', 'inventory_site_create', 'inventory_site_action',
             'navigation_links', 'navigation_links_legacy', 'navigation_link_create', 'navigation_link_edit', 'navigation_link_action',
             'platform_help', 'platform_about', 'platform_about_legacy',
-            'admin_device_templates', 'admin_graph_templates', 'admin_data_templates', 'admin_aggregate_templates',
+            'admin_users', 'admin_user_groups', 'admin_user_domains', 'admin_discovered_devices', 'admin_collectors', 'admin_trees', 'admin_rrd_candidates', 'admin_snmp_objects', 'admin_snmp_notifications', 'admin_login_history', 'admin_device_templates', 'admin_graph_templates', 'admin_data_templates', 'admin_aggregate_templates',
             'admin_data_queries', 'admin_snmp_options', 'admin_graph_rules', 'admin_tree_rules', 'admin_networks', 'admin_notification_receivers',
             'graph_vdefs', 'graph_vdef_create', 'graph_vdef_edit', 'graph_vdef_item_edit', 'graph_vdef_item_delete', 'graph_vdef_item_reorder', 'graph_vdef_action', 'graph_vdef_legacy',
         ], true)) {

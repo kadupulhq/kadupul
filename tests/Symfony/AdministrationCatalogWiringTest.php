@@ -25,10 +25,10 @@ final class AdministrationCatalogWiringTest extends TestCase
         try {
             $container = $kernel->getContainer()->get('test.service_container');
             $access = $this->createMock(AdministrationListAccess::class);
-            $access->expects(self::exactly(10))->method('authorize');
+            $access->expects(self::exactly(count(ListScreen::cases())))->method('authorize');
             $container->set(AdministrationListAccess::class, $access);
             $database = $this->createMock(Connection::class);
-            $database->expects(self::exactly(10))->method('fetchAllAssociative')->willReturn([]);
+            $database->expects(self::exactly(count(ListScreen::cases())))->method('fetchAllAssociative')->willReturn([]);
             $container->set('doctrine.dbal.web_connection', $database);
             $view = $container->get(ViewAdministrationList::class);
             foreach (ListScreen::cases() as $screen) {

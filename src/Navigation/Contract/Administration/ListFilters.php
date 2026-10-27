@@ -28,8 +28,8 @@ final readonly class ListFilters
         $filter = $query['filter'] ?? '';
         $rows = $query['rows'] ?? '25';
         $page = $query['page'] ?? '1';
-        $column = $query['sort_column'] ?? 'name';
-        $direction = $query['sort_direction'] ?? 'ASC';
+        $column = $query['sort_column'] ?? $screen->defaultSortColumn();
+        $direction = $query['sort_direction'] ?? $screen->defaultSortDirection();
         if (!mb_check_encoding($filter, 'UTF-8') || mb_strlen($filter) > 255 || preg_match('/[\x00-\x1f\x7f]/', $filter)
             || !in_array($rows, ['10', '25', '50', '100'], true)
             || preg_match('/\A[1-9][0-9]{0,4}\z/D', $page) !== 1

@@ -2386,7 +2386,7 @@ function utilities()
             'description' => __('The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application.')
         ),
         __('View User Log') => array(
-            'link'  => 'utilities.php?action=view_user_log',
+            'link'  => 'app.php/utilities/login-history',
             'description' => __('Allows Administrators to browse the user log.  Administrators can filter and export the log as well.')
         )
     );
@@ -2437,7 +2437,7 @@ function utilities()
     if ($config['poller_id'] == 1) {
         $utilities[__('RRD Utilities')] = array(
             __('RRDfile Cleaner') => array(
-                'link'  => 'rrdcleaner.php',
+                'link'  => 'app.php/utilities/rrd-candidates',
                 'mode'  => 'online',
                 'description' => __('When you delete Data Sources from Kadupul, the corresponding RRDfiles are not removed automatically.  Use this utility to facilitate the removal of these old files.')
             ),
@@ -2452,7 +2452,7 @@ function utilities()
     if (snmpagent_enabled()) {
         $utilities[__('SNMP Agent Utilities')] = array(
             __('View SNMP Agent Cache') => array(
-                'link'  => 'utilities.php?action=view_snmpagent_cache',
+                'link'  => 'app.php/utilities/snmp-objects',
                 'mode'  => 'online',
                 'description' => __('This shows all objects being handled by the SNMP Agent.')
             ),
@@ -2463,7 +2463,7 @@ function utilities()
                 'description' => __('The SNMP cache will be cleared and re-generated if you select this option. Note that it takes another poller run to restore the SNMP cache completely.')
             ),
             __('View SNMP Agent Notification Log') => array(
-                'link'  => 'utilities.php?action=view_snmpagent_events',
+                'link'  => 'app.php/utilities/snmp-notifications',
                 'mode'  => 'online',
                 'description' => __('This menu pick allows you to view the latest events SNMP Agent has handled in relation to the registered notification receivers.')
             ),

@@ -28,12 +28,27 @@ final readonly class DbalGraphingAdministrationCatalog implements Administration
 
     public function supports(ListScreen $screen): bool
     {
-        return in_array($screen, [ListScreen::DeviceTemplates, ListScreen::GraphTemplates, ListScreen::DataTemplates, ListScreen::AggregateTemplates], true);
+        return in_array($screen, [ListScreen::DeviceTemplates, ListScreen::GraphTemplates, ListScreen::DataTemplates, ListScreen::AggregateTemplates, ListScreen::Trees], true);
     }
 
     public function read(ListScreen $screen, ListFilters $filters): array
     {
         $source = match ($screen) {
+            ListScreen::Trees => <<<'SQL'
+SELECT t.id, t.name, t.enabled, t.locked, owner.username AS owner, t.sequence,
+ t.last_modified, editor.username AS modified_by,
+ COALESCE(i.sites, 0) AS sites, COALESCE(i.branches, 0) AS branches, COALESCE(i.hosts, 0) AS hosts, COALESCE(i.graphs, 0) AS graphs
+ FROM graph_tree t
+ LEFT JOIN user_auth owner ON owner.id = t.user_id
+ LEFT JOIN user_auth editor ON editor.id = t.modified_by
+ LEFT JOIN (SELECT graph_tree_id,
+ SUM(CASE WHEN site_id > 0 THEN 1 ELSE 0 END) AS sites,
+ SUM(CASE WHEN local_graph_id = 0 AND host_id = 0 AND site_id = 0 THEN 1 ELSE 0 END) AS branches,
+ SUM(CASE WHEN host_id > 0 THEN 1 ELSE 0 END) AS hosts,
+ SUM(CASE WHEN local_graph_id > 0 THEN 1 ELSE 0 END) AS graphs
+ FROM graph_tree_items GROUP BY graph_tree_id) i ON i.graph_tree_id = t.id
+SQL,
+
             ListScreen::DeviceTemplates => <<<'SQL'
 SELECT ht.id, ht.name, ht.class AS device_class, COALESCE(h.hosts, 0) AS hosts
  FROM host_template ht
@@ -75,6 +90,12 @@ SQL,
         $where = implode(' OR ', array_map(static fn(string $column): string => 'listing.' . $column . ' LIKE ?', $search));
         $params = array_fill(0, count($search), '%' . $filters->filter . '%');
         $types = array_fill(0, count($search), ParameterType::STRING);
+        if ($screen === ListScreen::Trees) {
+            // Match a child title without filtering the rows used for usage counts.
+            $where .= ' OR EXISTS (SELECT 1 FROM graph_tree_items ti WHERE ti.graph_tree_id = listing.id AND ti.title LIKE ?)';
+            $params[] = '%' . $filters->filter . '%';
+            $types[] = ParameterType::STRING;
+        }
         return $this->database->fetchAllAssociative(
             'SELECT listing.* FROM (' . $source . ') listing WHERE (' . $where . ') ORDER BY listing.'
                 . $filters->sortColumn . ' ' . $filters->sortDirection . ', listing.id ASC LIMIT ? OFFSET ?',
