@@ -687,7 +687,7 @@ function perm_remove()
 
 function user_group_members_edit($header_label)
 {
-    global $config, $auth_realms;
+    global $auth_realms;
 
     process_member_request_vars();
 
@@ -1637,7 +1637,7 @@ function user_group_realms_edit($header_label)
 
 function user_group_settings_edit($header_label)
 {
-    global $settings_user, $tabs_graphs, $graph_views;
+    global $settings_user, $tabs_graphs;
 
     /* ================= input validation ================= */
     get_filter_request_var('id');

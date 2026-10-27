@@ -1941,6 +1941,11 @@ passes submitted field names from authenticated legacy page handlers to the
 association helper. It removes that helper's direct POST dependency while keeping
 its existing writer, transaction and permission-cache lifecycle.
 
+The [Twig global-state audit](migrations/twig-global-state-audit.md) covers the
+native layers, retained operation pages and shared compatibility adapters. It
+removes 71 unused bindings and identifies the session, connection, plugin and
+worker ownership work needed before the remaining globals can disappear.
+
 The [identity relationship slice](migrations/identity-relationships-batch-10.md)
 adds ten views for recorded memberships and permission exceptions. It reuses the
 relationship infrastructure and existing user administration authorization.

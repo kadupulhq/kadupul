@@ -70,7 +70,6 @@ switch (get_request_var('action')) {
  */
 function rrdclean_fill_table()
 {
-    global $config, $rra_path;
 
     /* suppress warnings */
     error_reporting(0);
@@ -106,7 +105,6 @@ function rrdcleaner_lastupdate()
  */
 function rrdclean_truncate_tables()
 {
-    global $config;
 
     /* suppress warnings */
     error_reporting(0);
@@ -175,7 +173,7 @@ function rrdclean_error_handler($errno, $errmsg, $filename, $linenum, $vars = []
  */
 function get_files()
 {
-    global $config, $rra_path;
+    global $rra_path;
 
     /* suppress warnings */
     error_reporting(0);
@@ -269,7 +267,7 @@ function get_files()
  */
 function list_rrd()
 {
-    global $config, $item_rows, $ds_actions, $rra_path;
+    global $config, $ds_actions;
 
     /* suppress warnings */
     error_reporting(0);
@@ -432,7 +430,6 @@ function rrdcleaner_legend($total_size)
 
 function remove_all_rrds()
 {
-    global $config, $rra_path;
     if (!rrd_maintenance_cleanup_supported()) {
         raise_message('rrd_cleanup_unsupported', __('Automatic local RRD cleanup is unavailable on Windows. Stop all RRD writers before manual cleanup.'), MESSAGE_LEVEL_ERROR);
         return false;
@@ -468,7 +465,6 @@ function remove_all_rrds()
  */
 function do_rrd()
 {
-    global $config, $rra_path;
     if (!rrd_maintenance_cleanup_supported()) {
         raise_message('rrd_cleanup_unsupported', __('Automatic local RRD cleanup is unavailable on Windows. Stop all RRD writers before manual cleanup.'), MESSAGE_LEVEL_ERROR);
         return false;

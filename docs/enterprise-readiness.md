@@ -96,6 +96,15 @@ See [scope and verification](migrations/permission-selection-input.md). Legacy
 request helpers and database/session ownership remain compatibility dependencies;
 installed collector/session acceptance remains a release gate.
 
+### Global state behind Twig migrations
+
+Status: implemented for the unused-binding cleanup and native-layer guard.
+The [audit and migration boundaries](migrations/twig-global-state-audit.md)
+distinguish direct access from legacy worker/session/plugin dependencies.
+Eleven declarations and 71 unused bindings are removed; live adapters remain
+assessed rather than retired. Full installed-session, collector and retained
+legacy-action acceptance remain release gates.
+
 ### Identity relationship browsing
 
 Status: implemented. Ten views display stored user/group memberships and four

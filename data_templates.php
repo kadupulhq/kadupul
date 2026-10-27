@@ -627,7 +627,7 @@ function template_rrd_add()
 
 function template_edit()
 {
-    global $struct_data_source, $struct_data_source_item, $data_source_types, $fields_data_template_template_edit, $fields_host_edit, $hash_system_data_inputs;
+    global $struct_data_source, $struct_data_source_item, $fields_data_template_template_edit, $fields_host_edit;
 
     /* ================= input validation ================= */
     get_filter_request_var('id');
