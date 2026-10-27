@@ -25,13 +25,13 @@ findings, request re-review, and verify latest-head CI before an authorized merg
 
 ## Web page conventions
 - Start with `include('./include/auth.php');` to enforce auth/session/CSRF.
-- Flow pattern: `set_default_action(); switch (get_request_var('action')) { ... }` with helpers like `top_header()` and `bottom_footer()` for layout (see `data_input.php`).
+- Flow pattern: `set_default_action(); switch (get_request_var('action')) { ... }` with helpers like `top_header()` and `bottom_footer()` for layout (see `host_templates.php`).
 - Request/validation: use `get_request_var/get_filter_request_var/get_nfilter_request_var`, `form_input_validate(...)`, and utilities like `sanitize_unserialize_selected_items(...)`. Don’t read `$_REQUEST` directly.
 - CSRF: AJAX posts include `__csrf_magic: csrfMagicToken` (see usages in `host_templates.php`, `data_queries.php`).
 - i18n: wrap UI strings with `__('...')`.
 
 ## CLI and daemon workflows
-- Install/upgrade: `php -q cli/install_cacti.php --accept-eula --install --force`; DB upgrade when needed: `php -q cli/upgrade_database.php --forcever=$(cat include/cacti_version)` (see README).
+- Install/upgrade: `php -q cli/install_cacti.php --accept-eula --install --force`; DB upgrade when needed: `php -q cli/upgrade_database.php --forcever=$(cat include/cacti_version)`.
 - Polling:
   - One-shot: `php poller.php --poller=1 --force --debug`.
   - Daemon loop: `./cactid.php --foreground --debug` or systemd via `tests/tools/cactid.service` and `service/README.md`.
@@ -52,7 +52,7 @@ findings, request re-review, and verify latest-head CI before an authorized merg
   - Minimal smoke: create `include/config.php` from `.dist`, import `cacti.sql`, then run install + `poller.php` as above; tail `log/cacti.log` for `SYSTEM STATS`.
 
 ## Coding do’s in this repo
-- Use prepared DB helpers and input validators; follow patterns in `data_input.php`, `host_templates.php`.
+- Use prepared DB helpers and input validators; follow patterns in `host_templates.php`.
 - Reuse HTML helpers (`lib/html_*.php`) for forms, filters, pagination.
 - Raise UI messages via `raise_message(...)` and redirect with `header('Location: ...')`.
 - Respect remote poller modes and `$config['is_web']`/CLI guards (`$no_http_header_files` in `include/global.php`).
@@ -71,7 +71,7 @@ findings, request re-review, and verify latest-head CI before an authorized merg
 ## Useful references
 - Bootstrap/config: `include/global.php`, `include/config.php.dist`.
 - Core libs: `lib/database.php`, `lib/functions.php`, `lib/poller.php`, `lib/template.php`, `lib/plugins.php`.
-- Exemplars: `data_input.php` (full CRUD page), `host_templates.php` (AJAX + CSRF + validation), `cactid.php` (daemon loop), `cli/install_cacti.php` (installer flow).
+- Exemplars: `host_templates.php` (full CRUD page with AJAX, CSRF and validation), `cactid.php` (daemon loop), `cli/install_cacti.php` (installer flow).
 
 ## Main migration review
 
