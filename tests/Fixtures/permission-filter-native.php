@@ -196,6 +196,7 @@ if (!empty($scenario['no_association'])) {
     require $root . '/src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php';
     $tab = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::apply($scenario['page'] === 'user_group_admin.php', array_keys($_POST));
     $nativeChildCoverageMarkers = array('association-contract-returned');
+    // nosemgrep: php.lang.security.injection.printed-request.printed-request -- CLI JSON protocol; the PHP_SAPI guard rejects HTTP before reading input.
     print json_encode(array('tab' => $tab, 'queries' => $queries), JSON_THROW_ON_ERROR);
     exit;
 }
