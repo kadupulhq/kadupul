@@ -6,14 +6,19 @@ aggregate_templates.php	realm:5	include/auth.php
 app.php	symfony:front-controller	Symfony kernel; routes listed as app.php/... rows
 app.php/about	symfony:platform_about	methods=GET|HEAD; AuthenticatedAccess signed-in account; no realm required
 app.php/about/legacy	symfony:platform_about_legacy	methods=GET|HEAD|POST; AuthenticatedAccess signed-in account; no realm required
+app.php/automation/graph-rules	symfony:admin_graph_rules	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
+app.php/automation/networks	symfony:admin_networks	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
+app.php/automation/snmp-options	symfony:admin_snmp_options	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/templates	symfony:automation_templates	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/templates/delete	symfony:automation_template_delete	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 23
 app.php/automation/templates/legacy	symfony:automation_templates_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 23
 app.php/automation/templates/new	symfony:automation_template_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 23
 app.php/automation/templates/{id}/edit	symfony:automation_template_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 23
 app.php/automation/templates/{id}/move/{direction}	symfony:automation_template_move	methods=POST requirements=id=[1-9][0-9]{0,7},direction=up|down; ConsoleAccess realm 8 + realm 23
+app.php/automation/tree-rules	symfony:admin_tree_rules	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/console	symfony:platform_console	methods=GET|HEAD; ConsoleAccess realm 8
 app.php/console	symfony:platform_console_login_post	methods=POST; anonymous-allowed: compatibility POST uses a fixed installation login URL and preserves the body with 307; no request-selected destination; reviewed at 3f7cb40d65c0
+app.php/data-collection/queries	symfony:admin_data_queries	methods=GET|HEAD; ConsoleAccess realm 8 + realm 13
 app.php/data-inputs	symfony:data_inputs	methods=GET|HEAD; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 55539f0a80ef and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
 app.php/data-inputs/actions/{operation}	symfony:data_input_bulk	methods=GET|HEAD|POST requirements=operation=delete|duplicate; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 1f46fb124365 and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
 app.php/data-inputs/legacy	symfony:data_input_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action af73f4343625 and controller e011435a3fdf and workflow b0abc0295d4c: feature realm 2
@@ -98,6 +103,11 @@ app.php/links/new	symfony:navigation_link_create	methods=GET|HEAD|POST; ConsoleA
 app.php/links/{id}/edit	symfony:navigation_link_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8
 app.php/permission-denied	symfony:platform_permission_denied	methods=GET|HEAD; AuthenticatedAccess signed-in account; no realm required
 app.php/session	symfony:session	methods=GET|HEAD; ConsoleAccess realm 8; reviewed at c1e137157c2e: answers 401 with no identity when the actor is null
+app.php/templates/aggregates	symfony:admin_aggregate_templates	methods=GET|HEAD; ConsoleAccess realm 8 + realm 5
+app.php/templates/data-sources	symfony:admin_data_templates	methods=GET|HEAD; ConsoleAccess realm 8 + realm 11
+app.php/templates/devices	symfony:admin_device_templates	methods=GET|HEAD; ConsoleAccess realm 8 + realm 12
+app.php/templates/graphs	symfony:admin_graph_templates	methods=GET|HEAD; ConsoleAccess realm 8 + realm 10
+app.php/utilities/notification-receivers	symfony:admin_notification_receivers	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
 app.php/utilities/rrd-check	symfony:platform_rrd_checks	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
 app.php/utilities/rrd-check/legacy	symfony:platform_rrd_check_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 15
 app.php/utilities/rrd-check/purge	symfony:platform_rrd_check_purge	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 15

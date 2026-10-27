@@ -16,6 +16,7 @@ use Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuthenticatedSession;
 use Kadupul\IdentityAccess\Infrastructure\Legacy\ReadOnlyDatabaseSessionHandler;
 use Kadupul\IdentityAccess\Infrastructure\Legacy\SharedSession;
 use Kadupul\Navigation\Infrastructure\Legacy\LegacyConsoleMenu;
+use Kadupul\Navigation\Contract\Administration\ListScreen;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Contract\LegacyConfiguration;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -67,6 +68,22 @@ final class ConsoleMenuTest extends TestCase
             }
             self::assertNotSame([], $legacy, $branch);
             self::assertSame($legacy, $mirrored, $branch);
+        }
+    }
+
+    public function testMigratedListsKeepTheirLegacyRealmsAndUseTheirTwigPaths(): void
+    {
+        $screens = ListScreen::cases();
+        $realms = array_values(array_unique(array_map(static fn(ListScreen $screen): int => $screen->realm(), $screens)));
+        $menu = self::menu(new Actor(7, 'operator'), [8, ...$realms]);
+        $paths = array_merge(...array_map(static fn(array $section): array => array_column($section['items'], 'path'), $menu->sections()));
+        foreach ($screens as $screen) {
+            self::assertSame($screen->path(), LegacyConsoleMenu::listPath($screen->legacyScript()));
+            self::assertTrue(LegacyConsoleMenu::isAppPath($screen->path()));
+            if ($screen !== ListScreen::NotificationReceivers) {
+                self::assertContains($screen->path(), $paths);
+                self::assertNotContains($screen->legacyScript(), $paths);
+            }
         }
     }
 

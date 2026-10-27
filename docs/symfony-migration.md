@@ -1875,3 +1875,15 @@ Application rollback must restore both files together and account for in-flight
 workers. It does not restore previously committed associations or collector state.
 The new boundary belongs to the main-only Symfony migration; LTS callers do not
 opt into it.
+
+### Ten administration list views
+
+The [ten-list administration slice](migrations/administration-lists-batch-10.md)
+adds Symfony/Twig browsing for device, graph, data and aggregate templates; data
+queries; SNMP option sets; graph and tree rules; discovery networks; and SNMP
+notification receivers. The Symfony menu opens the new lists. Each list links to
+existing PHP editors and bulk actions, which remain the only write paths. Search,
+allowlisted sorting and bounded paging move into the new views; advanced filters,
+legacy preferences and mutations are still migration work. The slice documents
+count corrections, GET behavior, authorization, verification and rollback. LTS is
+unchanged.
