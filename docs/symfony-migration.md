@@ -1467,7 +1467,11 @@ Known differences from `cli/audit_database.php`:
 Cacti-signed `.xml.gz` template package: each file over its decoded bytes, then
 the package XML as `import_read_package_data()` rebuilds it. It embeds the
 signing key's public key and writes gzip output, replacing the input when no
-output path is given. The private key is read only from
+output path is given. A replaced package keeps its file mode with group and
+other write and all execute bits removed; a new output file takes its mode from
+the signing process's umask but never gets group or other write. The web server
+user must be able to read the package for the installer to import it, so sign
+with umask 022 or chmod the file afterwards. The private key is read only from
 `KADUPUL_PACKAGE_SIGNING_KEY`, as PEM or base64 DER, and is never printed:
 
 ```sh
