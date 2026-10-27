@@ -8,6 +8,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 {% trans_default_domain 'administration' %}
 {% block title %}{{ screen.title|trans }}{% endblock %}
 {% block body %}
+{# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony generates the fixed management_snmp_mibs route without supplied URL or parameters. #}
 {% if screen.value in ['snmp-objects', 'snmp-notifications'] %}<p><a href="{{ path('management_snmp_mibs') }}">{{ 'Registered SNMP MIBs'|trans({}, 'management') }}</a></p>{% endif %}
 <h1>{{ screen.title|trans }}</h1>
 <p>{{ 'Changes and advanced filters use the existing administration forms.'|trans }}</p>
