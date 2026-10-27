@@ -2468,7 +2468,7 @@ function utilities()
                 'description' => __('This menu pick allows you to view the latest events SNMP Agent has handled in relation to the registered notification receivers.')
             ),
             __('SNMP Notification Receivers') => array(
-                'link'  => 'managers.php',
+                'link'  => 'app.php/utilities/notification-receivers',
                 'mode'  => 'online',
                 'description' => __('Allows Administrators to maintain SNMP notification receivers.')
             ),

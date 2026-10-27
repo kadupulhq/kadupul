@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Add native Symfony/Twig browsing for device, graph, data and aggregate templates; data queries; SNMP option sets; graph and tree rules; discovery networks; and notification receivers. Existing PHP forms still handle edits and bulk actions (#1007).
+
 - Update the hash-locked CI Semgrep scanner from 1.180.0 to 1.181.0.
 
 - Keep a package's file mode when `kadupul:package:sign` replaces it in place, and give a new output file the mode the umask allows, instead of always setting 0644; group and other write and all execute bits are always removed. The 1.2.36 upgrade step now writes its fixed collector-copy marker as a SHA-256 value instead of RIPEMD-160; nothing reads the value.

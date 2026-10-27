@@ -77,7 +77,10 @@ jobs:
         with:
           snyk-version: v1.1307.4
       - name: Verify complete-project report guard
-        run: mise exec python@3.12.12 -- python -m unittest discover -s tests/security -p test_snyk_project_report.py -v
+        run: mise exec python@3.12.12 -- python -m unittest discover -s tests/security -p 'test_snyk*.py' -v
+      - name: Match Composer's root-only development requirements
+        # This checkout is disposable. Root manifests and all locked packages stay intact.
+        run: mise exec python@3.12.12 -- python tests/security/prepare_snyk_composer_locks.py composer.lock tests/composer.lock
       - name: Test Composer and npm dependencies
         id: dependency_scan
         run: |

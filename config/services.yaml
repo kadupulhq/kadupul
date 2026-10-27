@@ -354,6 +354,10 @@ services:
     Kadupul\Navigation\Application\Command\SaveLink: ~
     Kadupul\Navigation\Application\Command\ChangeLinks: ~
     Kadupul\Navigation\Application\Query\ListLinks: ~
+    Kadupul\Navigation\Application\Query\ViewAdministrationList:
+        arguments:
+            $catalogs: !tagged_iterator kadupul.administration_catalog
+
     Kadupul\Navigation\Application\Port\LinkAccess:
         alias: Kadupul\Navigation\Infrastructure\Legacy\LegacyLinkAccess
     Kadupul\Navigation\Application\Port\LinkStore:

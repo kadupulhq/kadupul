@@ -1,0 +1,78 @@
+{#
+SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-2.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% import '_list.html.twig' as lists %}
+{% trans_default_domain 'administration' %}
+{% block title %}{{ screen.title|trans }}{% endblock %}
+{% block body %}
+<h1>{{ screen.title|trans }}</h1>
+<p>{{ 'Create, edit and bulk actions open the existing administration forms.'|trans }}</p>
+<p>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Enum-owned script and action below the validated installation root. #}
+    <a href="{{ installation_path(screen.legacyScript ~ '?action=' ~ screen.editAction) }}">{{ 'Create'|trans }}</a>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Enum-owned script; query values are URL encoded then attribute escaped. #}
+    <a href="{{ installation_path(screen.legacyScript) }}?{{ {filter: filters.filter, rows: filters.rows}|url_encode }}">{{ 'Bulk actions and advanced filters'|trans }}</a>
+</p>
+<div class="cactiTable"><div class="cactiTableTitle">{{ 'Filters'|trans }}</div>
+{# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- The router supplies this fixed route name. #}
+<form method="get" action="{{ path(route) }}" class="filterTable">
+    <label for="filter">{{ 'Search'|trans }}</label>
+    <input id="filter" name="filter" value="{{ filters.filter }}" maxlength="255">
+    {{ lists.rows_per_page('rows', 'Rows', {10: '10', 25: '25', 50: '50', 100: '100'}, filters.rows, 'administration') }}
+    <input type="hidden" name="sort_column" value="{{ filters.sort_column }}">
+    <input type="hidden" name="sort_direction" value="{{ filters.sort_direction }}">
+    <button type="submit">{{ 'Go'|trans }}</button>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed route supplied by the router. #}
+    <a href="{{ path(route) }}">{{ 'Clear'|trans }}</a>
+</form></div>
+{% set device_classes = {
+    wireless: 'Access Points, Controllers', application: 'Application Related', cacti: 'Kadupul Related',
+    database: 'Database Related', facilities: 'Facilities Related', general: 'Generic Device',
+    hpc: 'HPC/Grid Computing', hypervisor: 'Hypervisor Related', remotemgmt: 'ILO, IPMI, iDrac, etc.',
+    license: 'Licensing Related', linux: 'Linux Related', loadbalancer: 'Load Balancer', switch: 'Network Switch',
+    router: 'Network Router', nassan: 'NAS/SAN Related', firewall: 'Network Firewalls', power: 'Power Related PDUs/STS, etc.',
+    printer: 'Printer Related', storage: 'Storage Related', telephony: 'Telco Related', webserver: 'Web Server Related',
+    windows: 'Windows Related', ups: 'UPS Related', unassigned: 'Unassigned'
+} %}
+{% set value_labels = {
+    device_class: device_classes,
+    image_format: {1: 'PNG', 3: 'SVG'},
+    network_status: {'Disabled': 'Disabled', 'Running': 'Running', 'Idle': 'Idle'},
+    enabled: {'on': 'Enabled', '': 'Disabled'}, active: {'on': 'Active', '': 'Disabled'},
+    disabled: {'on': 'Disabled', '': 'Enabled'},
+    sched_type: {1: 'Manual', 2: 'Daily', 3: 'Weekly', 4: 'Monthly', 5: 'Monthly on Day'},
+    leaf_type: {1: 'Header', 2: 'Graph', 3: 'Device'},
+    host_grouping_type: {1: 'Graph Template', 2: 'Data Query Index'}
+} %}
+<table class="cactiTable" id="administration-list">
+    <caption>{{ screen.title|trans }}</caption>
+    <thead><tr>{% for column, label in screen.columns %}{{ lists.sort_header(route, filters|merge({page: 1}), column, label, 'administration') }}{% endfor %}</tr></thead>
+    <tbody>
+    {% for record in records %}
+        <tr class="{{ loop.index is odd ? 'odd' : 'even' }}">
+        {% for column, label in screen.columns %}
+            {% set value = record[column] %}
+            <td>{% if column == 'name' %}
+                {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Script/action are enum constants, ID is read from its numeric primary key, and the query is URL encoded. #}
+                <a class="linkEditMain" href="{{ installation_path(screen.legacyScript) }}?{{ {action: screen.editAction, id: record.id}|url_encode }}">{{ value is same as('') or value is null ? 'Unnamed'|trans : value }}</a>
+            {% elseif column in ['count_notify', 'count_log'] %}
+                {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed receiver editor with URL encoded primary key and a fixed tab. #}
+                <a href="{{ installation_path('managers.php') }}?{{ {action: 'edit', id: record.id, tab: column == 'count_notify' ? 'notifications' : 'logs'}|url_encode }}">{{ value }}</a>
+            {% elseif value_labels[column][value ?? ''] is defined %}
+                {{ value_labels[column][value ?? '']|trans }}
+            {% elseif value is null or value is same as('') %}
+                {{ (column == 'device_class' ? 'Unassigned' : (column == 'profile_name' ? 'External' : (column == 'next_start' ? 'N/A' : (column == 'subtree_name' ? 'ROOT' : 'None'))))|trans }}
+            {% elseif value == '0000-00-00 00:00:00' %}
+                {{ (column == 'last_started' ? 'Never' : 'N/A')|trans }}
+            {% elseif column in ['last_started', 'next_start'] %}{{ value|slice(0, 16) }}
+            {% else %}{{ value }}{% endif %}</td>
+        {% endfor %}
+        </tr>
+    {% else %}<tr><td colspan="{{ screen.columns|length }}">{{ 'No records found.'|trans }}</td></tr>{% endfor %}
+    </tbody>
+</table>
+{{ lists.pagination(route, filters, filters.page, filters.page > 1, hasNext, 'List pages', 'Page %page%', {'%page%': filters.page}, 'administration') }}
+{% endblock %}

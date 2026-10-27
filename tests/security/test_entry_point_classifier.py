@@ -1594,6 +1594,40 @@ final class FeatureAction {
                 count += 1
                 if run(root, []).get('app.php' + route, ('missing',))[0] != 'unknown':
                     failures.append('%s alternative authorization implementation was still certified' % feature)
+    # Screen-dependent grants must stay bound to the actual route defaults.
+    list_sources = [
+        'src/Navigation/Infrastructure/Persistence/DbalAdministrationListAccess.php',
+        'src/Navigation/Contract/Administration/ListScreen.php',
+        'src/Navigation/Application/Query/ViewAdministrationList.php',
+        'src/Navigation/Infrastructure/Symfony/Controller/AdministrationListController.php',
+    ]
+    list_routes = {'templates/devices': 12, 'templates/graphs': 10, 'templates/data-sources': 11,
+                   'templates/aggregates': 5, 'data-collection/queries': 13, 'automation/snmp-options': 23,
+                   'automation/graph-rules': 23, 'automation/tree-rules': 23, 'automation/networks': 23,
+                   'utilities/notification-receivers': 15}
+    with tempfile.TemporaryDirectory(prefix='entry-classifier-admin-lists-') as directory:
+        root = tree(directory)
+        for path in list_sources:
+            (root / path).parent.mkdir(parents=True, exist_ok=True)
+            (root / path).write_text((project / path).read_text())
+        session = root / 'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php'
+        session.parent.mkdir(parents=True, exist_ok=True)
+        session.write_text(SESSION)
+        rows = run(root, [])
+        for route, realm in list_routes.items():
+            count += 1
+            row = rows.get('app.php/' + route, ('missing', ''))
+            if not row[0].startswith('symfony:admin_') or not row[1].endswith(' + realm %d' % realm):
+                failures.append('Administration list %s: unexpected classification %s' % (route, row))
+        for path in list_sources:
+            (root / path).write_text((project / path).read_text() + '\n// Unreviewed admission change.\n')
+            rows = run(root, [])
+            for route in list_routes:
+                count += 1
+                if rows.get('app.php/' + route, ('missing',))[0] != 'unknown':
+                    failures.append('Administration list %s still certified after changing %s' % (route, path))
+            (root / path).write_text((project / path).read_text())
+
     # Verify realm metadata from the actual VDEF authorization path, including
     # the checked actor identity and side-effect ordering after console admission.
     project = Path(__file__).resolve().parents[2]

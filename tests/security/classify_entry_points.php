@@ -221,7 +221,7 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'c07761a00231ff569cbff177dc4b401f631cc34239e90e83d62f8a0cec0b69ce',
     'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => '4743883f8c2b1dc9b07c91a66bccdfa39f92531b6acafc0474bed5f92824513c',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => '957f5053bc12e7dcc5c0ccac9cf80a4d8a9de9f1656750330b6ec6575e38df19',
+    'config/services.yaml' => 'e2bec2a4ecd1ec47db34206ada5133700728921ad51237fef1096efe7fc258e2',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter
@@ -2123,10 +2123,88 @@ function authenticated_access_adapter(string $root): string
     return ABOUT_ACCESS_ADAPTER;
 }
 
+// Reviewed list admission includes the route-to-screen-to-realm mapping.
+const ADMINISTRATION_LIST_ACCESS_SOURCES = [
+    'src/Navigation/Infrastructure/Persistence/DbalAdministrationListAccess.php' => 'f839c850fdaacc0d81ff9955968e26f7700c312e2aec243b7ce71c317af2509a',
+    'src/Navigation/Contract/Administration/ListScreen.php' => '426272c9ee76d892679ccacd9503a2f1240ea1a2850c6b72c602162726534abc',
+    'src/Navigation/Application/Query/ViewAdministrationList.php' => 'a3cde50ce81aa19e6a47c155b04e0f6f2f0a1c4cc2fac41e7d4c2ed15936746f',
+    'src/Navigation/Infrastructure/Symfony/Controller/AdministrationListController.php' => '4432c3a9d046b7d9772e210b377479190454a9e16b81a83c1036eabe15deecab',
+];
+
 // Route prefix => feature realm, its access contract, the contract's only
 // adapter and the reviewed bytes of the files that decide it. A changed file
 // needs a fresh review.
 const REVIEWED_FEATURE_ACCESS = [
+    '/templates/devices' => [
+        'label' => 'administration list',
+        'realm' => 12,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
+        'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    '/templates/graphs' => [
+        'label' => 'administration list',
+        'realm' => 10,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
+        'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    '/templates/data-sources' => [
+        'label' => 'administration list',
+        'realm' => 11,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
+        'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    '/templates/aggregates' => [
+        'label' => 'administration list',
+        'realm' => 5,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
+        'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    '/data-collection/queries' => [
+        'label' => 'administration list',
+        'realm' => 13,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
+        'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    '/automation/snmp-options' => [
+        'label' => 'administration list',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
+        'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    '/automation/graph-rules' => [
+        'label' => 'administration list',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
+        'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    '/automation/tree-rules' => [
+        'label' => 'administration list',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
+        'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    '/automation/networks' => [
+        'label' => 'administration list',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
+        'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    '/utilities/notification-receivers' => [
+        'label' => 'administration list',
+        'realm' => 15,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
+        'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
     '/graphing/colors' => [
         'label' => 'palette',
         'realm' => 5,
@@ -2233,6 +2311,12 @@ function feature_access_guard(string $root, string $class, Stmt\ClassMethod $met
 {
     $contract = $feature['contract'];
     $adapter = $feature['adapter'];
+    // A screen-dependent realm is certified only for the pinned controller's
+    // fixed route defaults, not for arbitrary callers of the same contract.
+    if ($contract === 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess'
+        && $class !== 'Kadupul\\Navigation\\Infrastructure\\Symfony\\Controller\\AdministrationListController') {
+        return false;
+    }
     foreach ($files as $path) {
         foreach (walk(parse_file($root, $path, true) ?? []) as $node) {
             if ($node instanceof Stmt\Class_ && $node->namespacedName?->toString() !== $adapter) {

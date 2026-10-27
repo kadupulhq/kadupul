@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Kadupul\Navigation\Infrastructure\Legacy;
 
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
+use Kadupul\Navigation\Contract\Administration\ListScreen;
 use Kadupul\IdentityAccess\Contract\RealmGrants;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Contract\LegacyConfiguration;
@@ -144,6 +145,17 @@ final class LegacyConsoleMenu
         return preg_match('~\A[a-z0-9_]+\.php(?:/[a-z0-9_-]+)*(?:\?[a-z0-9_]+=[0-9]+)?\z~D', $path) === 1;
     }
 
+    /** Existing PHP URLs remain available for forms and advanced operations. */
+    public static function listPath(string $script): string
+    {
+        foreach (ListScreen::cases() as $screen) {
+            if ($screen->legacyScript() === $script) {
+                return $screen->path();
+            }
+        }
+        return $script;
+    }
+
     /** @return list<array{label: string, items: list<array{label: string, path: string}>}> */
     private function build(): array
     {
@@ -180,7 +192,7 @@ final class LegacyConsoleMenu
             $visible = [];
             foreach ($items as $path => [$label, $realm]) {
                 if (isset($granted[$realm])) {
-                    $visible[] = ['label' => $this->translator->trans($label, [], 'menu'), 'path' => $path];
+                    $visible[] = ['label' => $this->translator->trans($label, [], 'menu'), 'path' => self::listPath($path)];
                 }
             }
             $sections[$section] = ['label' => $this->translator->trans($section, [], 'menu'), 'items' => $visible];
