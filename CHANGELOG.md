@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Add ten native Symfony/Twig management catalogs for graphs, data sources, aggregates, reports, recorded plugins and template relationships, with resource/owner permissions and bounded browsing. Legacy editors and operations remain available.
+
 - Add ten native Symfony/Twig System Utilities diagnostic views with injected readers, bounded filters, device-scoped cache reads and English/French catalogs. Existing maintenance actions and advanced diagnostics remain available through legacy pages.
 
 - Keep a script or resource file that already exists when the installer imports a device template package, instead of writing the package's older embedded copy over it; missing files are still written, and package import from the web page and the command line is unchanged. A test lists the embedded files that still differ from the tree, so new differences fail CI (#998).

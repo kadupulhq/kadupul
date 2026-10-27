@@ -1907,3 +1907,12 @@ and the two device caches. These views receive explicit read models and retain
 current-account, realm and device permissions. Maintenance actions, detailed
 legacy diagnostics and plugin entries keep their existing paths. The slice does
 not retire `utilities.php` or claim a reduction in its global statements.
+
+## Graph, data-source, report and template relationship catalogs
+
+The [ten management catalogs](migrations/management-catalogs-batch-10.md) add native
+Symfony/Twig browsing for six management lists and four scoped relationship lists.
+Personal reports preserve the normal-user realm without adding console access.
+Graph and device visibility reuse a shared IdentityAccess policy projection while
+Inventory's existing helper remains a compatibility delegate. Existing PHP
+editors, bulk operations and plugin/report execution retain their write paths.

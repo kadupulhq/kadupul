@@ -221,7 +221,7 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'c07761a00231ff569cbff177dc4b401f631cc34239e90e83d62f8a0cec0b69ce',
     'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => '4743883f8c2b1dc9b07c91a66bccdfa39f92531b6acafc0474bed5f92824513c',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => 'e2bec2a4ecd1ec47db34206ada5133700728921ad51237fef1096efe7fc258e2',
+    'config/services.yaml' => '22252597f063465bb77462b214652372d0525180068d4bbedba920b49445a262',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter
@@ -2131,6 +2131,15 @@ const ADMINISTRATION_LIST_ACCESS_SOURCES = [
     'src/Navigation/Infrastructure/Symfony/Controller/AdministrationListController.php' => '54dc1a7934059452acf4371fda223cb29718da6c9fddbb7198c54a4a858c54db',
 ];
 
+// Reviewed management route defaults, actor/realm admission and scoped inputs.
+const MANAGEMENT_CATALOG_ACCESS_SOURCES = [
+    'src/Navigation/Infrastructure/Persistence/DbalManagementCatalogAccess.php' => '4739eb9de87551d5fb1dc63466b7b1b866c8d727786f3aec247fa9673464f870',
+    'src/Navigation/Contract/Management/CatalogScreen.php' => '54cd8c110a13e381a8d5f5ce8589b645466c7e38d378e583666da77c7a3a46ee',
+    'src/Navigation/Application/Query/ViewManagementCatalog.php' => '84f6528b048fb7e2be2e70f87ca6bc3556466a1ae268884aef8527aa9f7f25fe',
+    'src/Navigation/Infrastructure/Symfony/Controller/ManagementCatalogController.php' => '32f8f726a61fa40aaa5ff2319434e8f2a53c83410f01e54de4ea9ef0805d9b52',
+    'src/Navigation/Infrastructure/Symfony/Controller/PersonalReportCatalogController.php' => 'c8b3780e8a5314d4c31bb8fa8326723b054688685f2ab4ae339cd44f56d606a9',
+];
+
 // Route prefix => feature realm, its access contract, the contract's only
 // adapter and the reviewed bytes of the files that decide it. A changed file
 // needs a fresh review.
@@ -2204,6 +2213,76 @@ const REVIEWED_FEATURE_ACCESS = [
         'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
         'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
         'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    '/management/graphs' => [
+        'label' => 'management catalog',
+        'realm' => 5,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/data-sources' => [
+        'label' => 'management catalog',
+        'realm' => 3,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/aggregate-graphs' => [
+        'label' => 'management catalog',
+        'realm' => 5,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/reports' => [
+        'label' => 'management catalog',
+        'realm' => 21,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/my-reports' => [
+        'label' => 'management catalog',
+        'realm' => 22,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/plugins' => [
+        'label' => 'management catalog',
+        'realm' => 101,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/graph-template-items' => [
+        'label' => 'management catalog',
+        'realm' => 10,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/graph-template-inputs' => [
+        'label' => 'management catalog',
+        'realm' => 10,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/device-template-graphs' => [
+        'label' => 'management catalog',
+        'realm' => 12,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/data-query-graphs' => [
+        'label' => 'management catalog',
+        'realm' => 13,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
     ],
     '/templates/devices' => [
         'label' => 'administration list',
@@ -2396,6 +2475,14 @@ function feature_access_guard(string $root, string $class, Stmt\ClassMethod $met
         && $class !== 'Kadupul\\Navigation\\Infrastructure\\Symfony\\Controller\\AdministrationListController') {
         return false;
     }
+    if ($contract === 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess') {
+        $expectedController = $feature['realm'] === 22
+            ? 'Kadupul\\Navigation\\Infrastructure\\Symfony\\Controller\\PersonalReportCatalogController'
+            : 'Kadupul\\Navigation\\Infrastructure\\Symfony\\Controller\\ManagementCatalogController';
+        if ($class !== $expectedController) {
+            return false;
+        }
+    }
     foreach ($files as $path) {
         foreach (walk(parse_file($root, $path, true) ?? []) as $node) {
             if ($node instanceof Stmt\Class_ && $node->namespacedName?->toString() !== $adapter) {
@@ -2410,7 +2497,12 @@ function feature_access_guard(string $root, string $class, Stmt\ClassMethod $met
     $typeOf = receiver_types($root, $class, $method);
     $stmts = array_values($method->stmts ?? []);
     foreach ($stmts as $index => $stmt) {
-        if (actor_assignment($root, $stmt, $typeOf) !== null) {
+        $authenticated = $feature['realm'] === 22
+            && $contract === 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess'
+            && $stmt instanceof Stmt\Expression && $stmt->expr instanceof Expr\Assign
+            && is_variable($stmt->expr->var)
+            && call_target($stmt->expr->expr, $typeOf) === ['Kadupul\\IdentityAccess\\Contract\\AuthenticatedAccess', 'authenticatedActor'];
+        if (actor_assignment($root, $stmt, $typeOf) !== null || $authenticated) {
             // guarded_checks already proved the actor assignment and its
             // immediate refusal. The next service must authorize before
             // request parsing, database reads, or another side effect.
@@ -2635,7 +2727,20 @@ function symfony_routes(string $root, array $files): array
                             }
                             // Validate sole implementation just as for console contracts.
                             $realms ??= session_realms($root, $sources);
-                            $rows[] = ['app.php' . $route['path'], 'symfony:' . $route['name'], $detail . '; AuthenticatedAccess signed-in account; no realm required'];
+                            $feature = reviewed_feature_access($route['path']);
+                            if ($feature !== null) {
+                                // Personal reports retain realm 22 without console realm 8.
+                                // The exact controller, route defaults and enforcing sources
+                                // are pinned; arbitrary authenticated callers receive no grant.
+                                if ($feature['contract'] !== 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess'
+                                    || $feature['realm'] !== 22 || !feature_access_guard($root, $name, $method, $sources, $feature)) {
+                                    $rows[] = ['app.php' . $route['path'], 'unknown', $detail . '; no reviewed authenticated feature admission'];
+                                    continue;
+                                }
+                                $rows[] = ['app.php' . $route['path'], 'symfony:' . $route['name'], $detail . '; AuthenticatedAccess signed-in account + realm 22'];
+                            } else {
+                                $rows[] = ['app.php' . $route['path'], 'symfony:' . $route['name'], $detail . '; AuthenticatedAccess signed-in account; no realm required'];
+                            }
                         } elseif (isset($checks['consoleActor'])) {
                             $realms ??= session_realms($root, $sources);
                             $grant = 'realm ' . $realms['consoleActor'];

@@ -1632,6 +1632,53 @@ final class FeatureAction {
                     failures.append('Administration list %s still certified after changing %s' % (route, path))
             (root / path).write_text((project / path).read_text())
 
+    # Management catalogs use a separate pinned route/screen mapping, including
+    # scoped parent identities. An arbitrary caller cannot inherit its grant.
+    management_sources = [
+        'src/Navigation/Infrastructure/Persistence/DbalManagementCatalogAccess.php',
+        'src/Navigation/Contract/Management/CatalogScreen.php',
+        'src/Navigation/Application/Query/ViewManagementCatalog.php',
+        'src/Navigation/Infrastructure/Symfony/Controller/ManagementCatalogController.php',
+        'src/Navigation/Infrastructure/Symfony/Controller/PersonalReportCatalogController.php',
+    ]
+    management_routes = {'graphs': 5, 'data-sources': 3, 'aggregate-graphs': 5, 'reports': 21,
+                         'my-reports': 22, 'plugins': 101, 'graph-template-items/{id}': 10,
+                         'graph-template-inputs/{id}': 10, 'device-template-graphs/{id}': 12,
+                         'data-query-graphs/{id}': 13}
+    with tempfile.TemporaryDirectory(prefix='entry-classifier-management-') as directory:
+        root = Path(directory)
+        (root / 'include').mkdir()
+        (root / 'include/global_arrays.php').write_text(REALMS)
+        for path in management_sources:
+            (root / path).parent.mkdir(parents=True, exist_ok=True)
+            (root / path).write_text((project / path).read_text())
+        session = root / 'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php'
+        session.parent.mkdir(parents=True, exist_ok=True)
+        session.write_text(SESSION)
+        rows = run(root, [])
+        for route, realm in management_routes.items():
+            count += 1
+            row = rows.get('app.php/management/' + route, ('missing', ''))
+            if not row[0].startswith('symfony:management_') or not row[1].endswith(' + realm %d' % realm):
+                failures.append('Management catalog %s: unexpected classification %s' % (route, row))
+        for path in management_sources:
+            (root / path).write_text((project / path).read_text() + '\n// Unreviewed admission change.\n')
+            rows = run(root, [])
+            for route in management_routes:
+                count += 1
+                if rows.get('app.php/management/' + route, ('missing',))[0] != 'unknown':
+                    failures.append('Management catalog %s still certified after changing %s' % (route, path))
+            (root / path).write_text((project / path).read_text())
+        controller = root / management_sources[-2]
+        original = controller.read_text()
+        controller.write_text(original.replace('final readonly class ManagementCatalogController',
+                                               'final readonly class OtherCatalogController'))
+        rows = run(root, [])
+        for route in management_routes:
+            count += 1
+            if rows.get('app.php/management/' + route, ('missing',))[0] != 'unknown':
+                failures.append('An unpinned management controller inherited a feature grant: ' + route)
+
     # Verify realm metadata from the actual VDEF authorization path, including
     # the checked actor identity and side-effect ordering after console admission.
     project = Path(__file__).resolve().parents[2]

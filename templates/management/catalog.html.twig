@@ -1,0 +1,63 @@
+{#
+SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-2.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% import '_list.html.twig' as lists %}
+{% trans_default_domain 'management' %}
+{% block title %}{{ screen.title|trans }} - Kadupul{% endblock %}
+{% block body %}
+<main id="management-catalog">
+<h1>{{ screen.title|trans }}{% if parentName is not null %}: {{ parentName is same as('') ? 'Unnamed'|trans : parentName }} ({{ parentId }}){% endif %}</h1>
+{% set route = screen.route %}
+{% set parameters = screen.scoped ? filters|merge({id: parentId}) : filters %}
+{% set parent = screen.scoped ? {id: parentId} : {} %}
+{# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Enum-owned script and URL-encoded fixed action/numeric identity below the installation root. #}
+<p><a href="{{ installation_path(screen.legacyScript) }}{% if screen.legacyQuery(parentId) is not empty %}?{{ screen.legacyQuery(parentId)|url_encode }}{% endif %}">{{ 'Editing, actions and advanced filters'|trans }}</a></p>
+{% if screen.value == 'plugins' %}<p>{{ 'Recorded database metadata only. Plugin discovery, compatibility checks and lifecycle actions remain on the plugin operation page.'|trans }}</p>{% endif %}
+{% if screen.value == 'my-reports' %}<p>{{ 'Only reports owned by your account are listed here.'|trans }}</p>{% endif %}
+{% if screen.value in ['reports', 'my-reports'] %}<p>{{ 'Reports without an owner are shown as disabled. Listing does not change their stored state.'|trans }}</p>{% endif %}
+{# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- The enum supplies the route and the path parameters are validated numeric identities. #}
+<form method="get" action="{{ path(route, parent) }}" class="filterTable" aria-label="{{ 'List filters'|trans }}">
+    <label for="catalog-filter">{{ 'Search'|trans }}</label><input id="catalog-filter" name="filter" value="{{ filters.filter }}" maxlength="255">
+    {{ lists.rows_per_page('catalog-rows', 'Rows', {10: '10', 25: '25', 50: '50', 100: '100'}, filters.rows, 'management') }}
+    <input type="hidden" name="sort_column" value="{{ filters.sort_column }}"><input type="hidden" name="sort_direction" value="{{ filters.sort_direction }}">
+    <button type="submit">{{ 'Go'|trans }}</button>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Enum route with the same validated parent identity. #}
+    <a href="{{ path(route, parent) }}">{{ 'Clear'|trans }}</a>
+</form>
+<table class="cactiTable">
+    <caption>{{ screen.title|trans }}</caption>
+    <thead><tr>{% for column, label in screen.columns %}{{ lists.sort_header(route, parameters|merge({page: 1}), column, label, 'management') }}{% endfor %}</tr></thead>
+    <tbody>
+    {% for record in records %}
+        <tr class="{{ loop.index is odd ? 'odd' : 'even' }}">
+        {% for column, label in screen.columns %}
+            {% set value = record[column] %}
+            <td>{% if column == 'name' and screen.value != 'plugins' %}
+                {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Enum-owned script/action and URL-encoded numeric record/parent identities. #}
+                <a href="{{ installation_path(screen.recordScript) }}?{{ screen.legacyQuery(parentId, record.id)|url_encode }}">{{ value is null or value is same as('') ? 'Unnamed'|trans : value }}</a>
+            {% elseif column in ['enabled', 'active'] %}{{ (value == 'on' ? 'Enabled' : 'Disabled')|trans }}
+            {% elseif screen.value == 'plugins' and column == 'status' %}
+                {% set statuses = {'-1': 'Not Compatible', '0': 'Not Installed', '1': 'Active', '2': 'Awaiting Configuration', '3': 'Awaiting Upgrade', '4': 'Installed'} %}
+                {{ (statuses[value] ?? 'Unknown')|trans }}
+            {% elseif column in ['mailtime', 'lastsent'] %}
+                {% if value == 0 %}{{ 'Never'|trans }}{% else %}{{ ('@' ~ value)|date('Y-m-d H:i:s', 'UTC') }}{% endif %}
+            {% elseif column == 'interval' %}
+                {% set intervals = {10: 'Minute(s)', 11: 'Hour(s)', 1: 'Day(s)', 2: 'Week(s)', 3: 'Month(s), Day of Month', 4: 'Month(s), Day of Week', 5: 'Year(s)'} %}
+                {{ (intervals[value] ?? 'Unknown')|trans }}
+            {% elseif column == 'attachment_type' %}
+                {% set attachments = {1: 'Inline PNG Image', 2: 'Inline JPEG Image', 3: 'Inline GIF Image', 11: 'Attached PNG Image', 12: 'Attached JPEG Image', 13: 'Attached GIF Image', 91: 'Inline PNG Image, LN Style', 92: 'Inline JPEG Image, LN Style', 93: 'Inline GIF Image, LN Style'} %}
+                {{ (attachments[value] ?? 'Unknown')|trans }}
+            {% elseif column == 'image_format' %}{{ {1: 'PNG', 2: 'GIF', 3: 'SVG'}[value] ?? value }}
+            {% elseif value is null or value is same as('') %}{{ 'None'|trans }}
+            {% else %}{{ value }}{% endif %}</td>
+        {% endfor %}
+        </tr>
+    {% else %}<tr><td colspan="{{ screen.columns|length }}">{{ 'No records found.'|trans }}</td></tr>{% endfor %}
+    </tbody>
+</table>
+{{ lists.pagination(route, parameters, filters.page, filters.page > 1, hasNext, 'List pages', 'Page %page%', {'%page%': filters.page}, 'management') }}
+</main>
+{% endblock %}
