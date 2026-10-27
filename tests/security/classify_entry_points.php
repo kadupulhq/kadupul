@@ -221,7 +221,7 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'c07761a00231ff569cbff177dc4b401f631cc34239e90e83d62f8a0cec0b69ce',
     'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => '4743883f8c2b1dc9b07c91a66bccdfa39f92531b6acafc0474bed5f92824513c',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => '22252597f063465bb77462b214652372d0525180068d4bbedba920b49445a262',
+    'config/services.yaml' => '3b9f8d1c5672302705ad5a8acae943c890bd86d557296db74c7bbe64d2b95739',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter
@@ -2143,7 +2143,87 @@ const MANAGEMENT_CATALOG_ACCESS_SOURCES = [
 // Route prefix => feature realm, its access contract, the contract's only
 // adapter and the reviewed bytes of the files that decide it. A changed file
 // needs a fresh review.
+const RELATIONSHIP_ACCESS_SOURCES = [
+    'src/Navigation/Infrastructure/Persistence/ParentRelationshipAccess.php' => 'b4f98da46da26f6f9eed2b6b9fe2761b256c1a0c7b7b3f54905407db3a407cac',
+    'src/Navigation/Infrastructure/Persistence/DbalAdministrationListAccess.php' => 'f839c850fdaacc0d81ff9955968e26f7700c312e2aec243b7ce71c317af2509a',
+    'src/Navigation/Contract/Administration/ListScreen.php' => 'e533a5e479a85c3ef1e6ebbdf534d4907e4830fcd679419c848f26a051d83762',
+    'src/Navigation/Contract/Relationships/RelationshipScreen.php' => '955ed8ce1f32655b4a07f6a50b7b0e0e3470b05bf7b0afef471513c2d122d994',
+    'src/Navigation/Application/Query/ViewRelationships.php' => '3687d22d648ae1e246aae67644cdaa0f005db6e75ba7702c8b761f70c1212f61',
+    'src/Navigation/Infrastructure/Symfony/Controller/RelationshipController.php' => '9a9bb5354bc896b2943a17b572d456931eba78e0055981e7798341ecd7edf492',
+];
+
 const REVIEWED_FEATURE_ACCESS = [
+    '/relationships/device-template-queries' => [
+        'label' => 'parent-scoped relationships',
+        'realm' => 12,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\RelationshipAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\ParentRelationshipAccess',
+        'sources' => RELATIONSHIP_ACCESS_SOURCES,
+    ],
+    '/relationships/data-template-definitions' => [
+        'label' => 'parent-scoped relationships',
+        'realm' => 11,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\RelationshipAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\ParentRelationshipAccess',
+        'sources' => RELATIONSHIP_ACCESS_SOURCES,
+    ],
+    '/relationships/aggregate-template-items' => [
+        'label' => 'parent-scoped relationships',
+        'realm' => 5,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\RelationshipAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\ParentRelationshipAccess',
+        'sources' => RELATIONSHIP_ACCESS_SOURCES,
+    ],
+    '/relationships/snmp-option-entries' => [
+        'label' => 'parent-scoped relationships',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\RelationshipAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\ParentRelationshipAccess',
+        'sources' => RELATIONSHIP_ACCESS_SOURCES,
+    ],
+    '/relationships/graph-rule-device-criteria' => [
+        'label' => 'parent-scoped relationships',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\RelationshipAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\ParentRelationshipAccess',
+        'sources' => RELATIONSHIP_ACCESS_SOURCES,
+    ],
+    '/relationships/graph-rule-query-criteria' => [
+        'label' => 'parent-scoped relationships',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\RelationshipAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\ParentRelationshipAccess',
+        'sources' => RELATIONSHIP_ACCESS_SOURCES,
+    ],
+    '/relationships/tree-rule-device-criteria' => [
+        'label' => 'parent-scoped relationships',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\RelationshipAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\ParentRelationshipAccess',
+        'sources' => RELATIONSHIP_ACCESS_SOURCES,
+    ],
+    '/relationships/tree-rule-steps' => [
+        'label' => 'parent-scoped relationships',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\RelationshipAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\ParentRelationshipAccess',
+        'sources' => RELATIONSHIP_ACCESS_SOURCES,
+    ],
+    '/relationships/receiver-subscriptions' => [
+        'label' => 'parent-scoped relationships',
+        'realm' => 15,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\RelationshipAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\ParentRelationshipAccess',
+        'sources' => RELATIONSHIP_ACCESS_SOURCES,
+    ],
+    '/relationships/receiver-history' => [
+        'label' => 'parent-scoped relationships',
+        'realm' => 15,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\RelationshipAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\ParentRelationshipAccess',
+        'sources' => RELATIONSHIP_ACCESS_SOURCES,
+    ],
+
     '/administration/users' => [
         'label' => 'administration list',
         'realm' => 1,
@@ -2482,6 +2562,10 @@ function feature_access_guard(string $root, string $class, Stmt\ClassMethod $met
         if ($class !== $expectedController) {
             return false;
         }
+    }
+    if ($contract === 'Kadupul\\Navigation\\Application\\Port\\RelationshipAccess'
+        && $class !== 'Kadupul\\Navigation\\Infrastructure\\Symfony\\Controller\\RelationshipController') {
+        return false;
     }
     foreach ($files as $path) {
         foreach (walk(parse_file($root, $path, true) ?? []) as $node) {

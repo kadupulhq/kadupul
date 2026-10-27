@@ -17,6 +17,12 @@ final readonly class ListFilters
     /** @param array<string, mixed> $query */
     public static function fromQuery(ListScreen $screen, array $query): self
     {
+        return self::fromColumns($screen->columns(), $query, $screen->defaultSortColumn(), $screen->defaultSortDirection());
+    }
+
+    /** @param array<string, string> $columns @param array<string, mixed> $query */
+    public static function fromColumns(array $columns, array $query, string $defaultColumn = 'name', string $defaultDirection = 'ASC'): self
+    {
         if (array_diff(array_keys($query), ['filter', 'rows', 'page', 'sort_column', 'sort_direction']) !== []) {
             throw new \InvalidArgumentException('Invalid list filters.');
         }
@@ -28,12 +34,12 @@ final readonly class ListFilters
         $filter = $query['filter'] ?? '';
         $rows = $query['rows'] ?? '25';
         $page = $query['page'] ?? '1';
-        $column = $query['sort_column'] ?? $screen->defaultSortColumn();
-        $direction = $query['sort_direction'] ?? $screen->defaultSortDirection();
+        $column = $query['sort_column'] ?? $defaultColumn;
+        $direction = $query['sort_direction'] ?? $defaultDirection;
         if (!mb_check_encoding($filter, 'UTF-8') || mb_strlen($filter) > 255 || preg_match('/[\x00-\x1f\x7f]/', $filter)
             || !in_array($rows, ['10', '25', '50', '100'], true)
             || preg_match('/\A[1-9][0-9]{0,4}\z/D', $page) !== 1
-            || !array_key_exists($column, $screen->columns()) || !in_array($direction, ['ASC', 'DESC'], true)) {
+            || !array_key_exists($column, $columns) || !in_array($direction, ['ASC', 'DESC'], true)) {
             throw new \InvalidArgumentException('Invalid list filters.');
         }
         return new self($filter, (int) $rows, (int) $page, $column, $direction);

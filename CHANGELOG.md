@@ -9,6 +9,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Reject malformed aggregate parent identifiers, bound prepared insert batches, and hold the verified table engine stable until item replacement completes. Failed replacements preserve previous items and caller-owned work (#1017).
 
 - Add ten native Symfony/Twig management catalogs for graphs, data sources, aggregates, reports, recorded plugins and template relationships, with resource/owner permissions and bounded browsing. Legacy editors and operations remain available.
+- Add ten Symfony/Twig relationship views for template definitions, automation criteria and steps, SNMP option entries, and receiver subscriptions and history. Parent catalog links preserve access to existing editing and operational actions.
 
 - Add ten native Symfony/Twig System Utilities diagnostic views with injected readers, bounded filters, device-scoped cache reads and English/French catalogs. Existing maintenance actions and advanced diagnostics remain available through legacy pages.
 
