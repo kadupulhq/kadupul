@@ -360,6 +360,53 @@ PHP);
     expect($result[1]['words'])->toBe(array('printf', '%s', '$a b'));
 });
 
+test('removing an empty or unknown field does not join its neighbours into new syntax', function (string $shell, string $template, string $expected) {
+    $path = $shell === 'bash' ? trim((string) shell_exec('command -v bash')) : $shell;
+    if ($path === '') {
+        $this->markTestSkipped('bash is not installed');
+    }
+
+    $result = data_input_substitution_run('neighbour-join', <<<'PHP'
+$directory = sys_get_temp_dir() . '/kadupul-data-input-' . bin2hex(random_bytes(8));
+mkdir($directory, 0700);
+$marker = $directory . '/executed';
+$out = array();
+try {
+    foreach (array('$(touch ' . $marker . ')', 'x ;touch ' . $marker . "; '") as $payload) {
+        // test_data_source passes an empty field as an empty string.
+        $command = data_input_command('test', $arguments['template'], array('arg1' => $payload, 'empty' => ''), array('id' => 9));
+        data_input_shell_words($command, $arguments['shell']);
+        $out[] = array($command === str_replace('{1}', escapeshellarg($payload), $arguments['expected']), file_exists($marker));
+        if (file_exists($marker)) {
+            unlink($marker);
+        }
+    }
+} finally {
+    rmdir($directory);
+}
+echo json_encode($out);
+PHP, array('template' => $template, 'expected' => $expected, 'shell' => $path));
+
+    expect($result)->toBe(array(array(true, false), array(true, false)));
+})->with(array('/bin/sh', 'bash'))->with(array(
+    'unknown before an escaped quote' => array('\<unknown>"<arg1>"', '\"{1}"'),
+    'unknown inside $(' => array('"$<unknown>(<arg1>)"', '"$({1})"'),
+    'unknown before a quoted field' => array("$<unknown>'<arg1>'", ''),
+    'empty before an escaped quote' => array('\<empty>"<arg1>"', '\"{1}"'),
+    'empty inside $(' => array('"$<empty>(<arg1>)"', '"$({1})"'),
+    'empty before a quoted field' => array("$<empty>'<arg1>'", ''),
+));
+
+test('random templates never let a field value run under sh or bash', function () {
+    $bash = trim((string) shell_exec('command -v bash'));
+    $shells = $bash === '' ? array('/bin/sh') : array('/bin/sh', $bash);
+    $result = data_input_substitution_run('property', 'echo json_encode(script_substitution_property(20261027, 3000, $arguments["shells"]));', array('shells' => $shells));
+
+    expect($result['cases'])->toBe(3000);
+    expect($result['commands'])->toBeGreaterThan(1000);
+    expect($result['runs'])->toBe($result['commands'] * count($shells));
+});
+
 test('parameter expansions without fields keep their command lines', function () {
     $result = data_input_substitution_run('param-kept', <<<'PHP'
 $command = data_input_command('poller', 'printf "${X:-%s}" "<arg1>"', array('arg1' => 'a b'));
@@ -381,5 +428,5 @@ PHP, array('base' => '/opt/kadupul base'));
 });
 
 test('substitution matrix keeps every value literal through /bin/sh', function () {
-    expect(data_input_substitution_run('matrix', 'echo json_encode(script_substitution_matrix());'))->toBe(1324);
+    expect(data_input_substitution_run('matrix', 'echo json_encode(script_substitution_matrix());'))->toBe(1331);
 });

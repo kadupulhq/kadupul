@@ -37,9 +37,10 @@ final class InputStringSubstitution
      * Grouping, case patterns, comments, redirections and here-documents inside a
      * command substitution need more grammar than this scanner models, so such a
      * template yields an empty string rather than a command that might expose a
-     * field to the outer quote. The same applies to a backslash inside backticks,
-     * which the shell unescapes before parsing the inner command, and to a field or
-     * backslash inside ${...}, whose word has its own quoting rules, and to bash's
+     * field to the outer quote. The same applies to a field or backslash inside
+     * backticks, which the shell ends at the next backtick and unescapes before
+     * parsing the inner command, and to a field or backslash inside ${...}, whose
+     * word has its own quoting rules, and to bash's
      * $'...' and $"..." quoting, where a backslash can escape the closing quote.
      * A field directly after an unescaped $ is rejected for the same reason: the
      * value's opening quote would turn it into $'...'.
@@ -49,10 +50,22 @@ final class InputStringSubstitution
      * @param string                   $template       the data input method's input string
      * @param array<int|string, mixed> $escaped_values field name => escaped value, plus raw path_* values
      *
-     * @return string the command line, with tokens that have no value removed
+     * @return string the command line, with tokens that have no value or an empty value removed
      */
     public static function substitute(string $template, array $escaped_values): string
     {
+        // Remove the tokens that contribute no text first, so the scan below sees
+        // the characters the shell will actually see next to each value. Removing
+        // one can join its neighbours into another token, so repeat until stable.
+        do {
+            $previous = $template;
+            $template = (string) preg_replace_callback(
+                '/<([A-Za-z0-9_]+)>/',
+                static fn(array $m): string => array_key_exists($m[1], $escaped_values) && (string) $escaped_values[$m[1]] !== '' ? $m[0] : '',
+                $template
+            );
+        } while ($template !== $previous);
+
         $out = '';
         $len = strlen($template);
         $i   = 0;
@@ -67,65 +80,58 @@ final class InputStringSubstitution
             $ch    = $template[$i];
 
             if ($ch === '<' && preg_match('/\G<([A-Za-z0-9_]+)>/', $template, $m, 0, $i)) {
-                $token_len = strlen($m[0]);
+                // The pre-pass left only tokens with a non-empty value. The shell
+                // ends a backtick substitution at the next backtick even inside
+                // quotes, so no value is safe there or inside ${...}.
+                $kinds = array_column($stack, 'kind');
 
-                if (array_key_exists($m[1], $escaped_values)) {
-                    if (in_array('param', array_column($stack, 'kind'), true)) {
+                if (in_array('param', $kinds, true) || in_array('backtick', $kinds, true)) {
+                    return '';
+                }
+
+                $token_len  = strlen($m[0]);
+                $value      = (string) $escaped_values[$m[1]];
+                $value_len  = strlen($value);
+                $self_quote = $value_len >= 2 && ($value[0] === '"' || $value[0] === "'") && $value[$value_len - 1] === $value[0];
+
+                if (!$self_quote) {
+                    $out .= $value;
+                } elseif ($quote === '') {
+                    // An odd run of backslashes would escape the value's opening
+                    // quote and leave its closing quote unmatched.
+                    $out = self::shedOddBackslash($out);
+
+                    if (self::endsWithDollar($out)) {
                         return '';
                     }
 
-                    $value      = (string) $escaped_values[$m[1]];
-                    $value_len  = strlen($value);
-                    $self_quote = $value_len >= 2 && ($value[0] === '"' || $value[0] === "'") && $value[$value_len - 1] === $value[0];
+                    $out .= $value;
+                } elseif ($stack[$top]['quoteEmpty'] && ($i + $token_len) < $len && $template[$i + $token_len] === $quote) {
+                    $out = self::shedOddBackslash(substr($out, 0, -1));
 
-                    if (!$self_quote) {
-                        $out .= $value;
-                    } elseif ($quote === '') {
-                        // An odd run of backslashes would escape the value's opening
-                        // quote and leave its closing quote unmatched.
-                        if ((strlen($out) - strlen(rtrim($out, '\\'))) % 2 === 1) {
-                            $out = substr($out, 0, -1);
-                        }
-
-                        if (self::endsWithDollar($out)) {
-                            return '';
-                        }
-
-                        $out .= $value;
-                    } elseif ($stack[$top]['quoteEmpty'] && ($i + $token_len) < $len && $template[$i + $token_len] === $quote) {
-                        $out = substr($out, 0, -1);
-
-                        if (self::endsWithDollar($out)) {
-                            return '';
-                        }
-
-                        $out .= $value;
-                        $i++;
-                        $stack[$top]['quote'] = '';
-                    } else {
-                        // Inside double quotes a trailing odd backslash would escape
-                        // the closing quote; inside single quotes it is literal.
-                        if ($quote === '"' && (strlen($out) - strlen(rtrim($out, '\\'))) % 2 === 1) {
-                            $out = substr($out, 0, -1);
-                        }
-
-                        if (self::endsWithDollar($out)) {
-                            return '';
-                        }
-
-                        $out .= $quote . $value . $quote;
+                    if (self::endsWithDollar($out)) {
+                        return '';
                     }
 
-                    $i += $token_len;
-                    $stack[$top]['quoteEmpty'] = false;
+                    $out .= $value;
+                    $i++;
+                    $stack[$top]['quote'] = '';
+                } else {
+                    // Inside double quotes a trailing odd backslash would escape
+                    // the closing quote; inside single quotes it is literal text.
+                    if ($quote === '"') {
+                        $out = self::shedOddBackslash($out);
+                    }
 
-                    continue;
+                    if (self::endsWithDollar($out)) {
+                        return '';
+                    }
+
+                    $out .= $quote . $value . $quote;
                 }
 
-                // A field with no value contributes nothing, and is removed here
-                // rather than afterwards so the checks above see the text that
-                // actually surrounds each value.
                 $i += $token_len;
+                $stack[$top]['quoteEmpty'] = false;
 
                 continue;
             }
@@ -254,6 +260,12 @@ final class InputStringSubstitution
         }
 
         return $out;
+    }
+
+    /** Drops the last backslash when the text ends in an odd run of them. */
+    private static function shedOddBackslash(string $text): string
+    {
+        return (strlen($text) - strlen(rtrim($text, '\\'))) % 2 === 1 ? substr($text, 0, -1) : $text;
     }
 
     /** True when the text ends in a $ that no backslash escapes. */

@@ -60,8 +60,10 @@ function script_substitution_matrix(): int
         // \$ and \` are escaped and open nothing.
         ['"$(printf %s <field>)"', ['field' => "'p'"], '"$(printf %s \'p\')"'],
         ['$(printf %s <field>)', ['field' => "'p'"], '$(printf %s \'p\')'],
-        ['"`printf %s <field>`"', ['field' => "'p'"], '"`printf %s \'p\'`"'],
-        ['`printf %s <field>`', ['field' => "'p'"], '`printf %s \'p\'`'],
+        // The shell ends a backtick substitution at the next backtick, even one
+        // inside a quoted value, so a field there produces no command.
+        ['"`printf %s <field>`"', ['field' => "'p'"], ''],
+        ['`printf %s <field>`', ['field' => "'p'"], ''],
         ['"\\$(<field>)"', ['field' => "'p'"], '"\\$("\'p\'")"'],
         ['"\\`<field>"', ['field' => "'p'"], '"\\`"\'p\'""'],
         ['\\$(<field>)', ['field' => "'p'"], '\\$(\'p\')'],
@@ -95,6 +97,15 @@ function script_substitution_matrix(): int
         ['"$<field>"', ['field' => "'p'"], ''],
         ['\\\\$<field>', ['field' => "'p'"], ''],
         ['\\$<field>', ['field' => "'p'"], '\\$\'p\''],
+        // Removing a token without a value must not join its neighbours into
+        // syntax the scan never saw.
+        ['\\<unknown>"<field>"', ['field' => "'p'"], '\\"\'p\'"'],
+        ['"$<unknown>(<field>)"', ['field' => "'p'"], '"$(\'p\')"'],
+        ["\$<unknown>'<field>'", ['field' => "'p'"], ''],
+        ['\\<empty>"<field>"', ['field' => "'p'", 'empty' => ''], '\\"\'p\'"'],
+        ['"$<empty>(<field>)"', ['field' => "'p'", 'empty' => ''], '"$(\'p\')"'],
+        ["\$<empty>'<field>'", ['field' => "'p'", 'empty' => ''], ''],
+        ['<a<unknown>>', ['a' => "'p'"], "'p'"],
         // Inside double quotes $' is literal text.
         ['"$\'<field>\'"', ['field' => "'p'"], '"$\'"\'p\'"\'"'],
         // Parameter expansions without fields or backslashes are kept as written.
@@ -154,4 +165,82 @@ function script_substitution_matrix(): int
     }
 
     return $count;
+}
+
+/**
+ * Random templates over shell quoting characters, with field values that try to
+ * run a command. Whenever substitute() returns a command, no listed shell may
+ * create the marker.
+ *
+ * @param list<string> $shells
+ *
+ * @return array{cases: int, commands: int, runs: int}
+ */
+function script_substitution_property(int $seed, int $cases, array $shells): array
+{
+    $directory = sys_get_temp_dir() . '/kadupul-shell-property-' . bin2hex(random_bytes(8));
+    mkdir($directory, 0700);
+    $marker   = $directory . '/executed';
+    $alphabet = ['\\', '$', '(', ')', '"', "'", '`', ' ', 'a', 'b', '<arg>', '<unknown>'];
+    $values   = [
+        escapeshellarg('$(touch ' . $marker . ')'),
+        escapeshellarg('x ;touch ' . $marker . "; '"),
+        escapeshellarg("\\'\$(touch " . $marker . ') #'),
+        escapeshellarg('`touch ' . $marker . '`'),
+        '',
+    ];
+    $commands = 0;
+    $runs     = 0;
+
+    mt_srand($seed, MT_RAND_MT19937);
+
+    try {
+        for ($case = 0; $case < $cases; $case++) {
+            $template = '';
+            $length   = mt_rand(1, 10);
+
+            for ($n = 0; $n < $length; $n++) {
+                $template .= $alphabet[mt_rand(0, count($alphabet) - 1)];
+            }
+
+            $value   = $values[mt_rand(0, count($values) - 1)];
+            $command = \Kadupul\DataInput\Domain\InputStringSubstitution::substitute($template, ['arg' => $value]);
+
+            if ($command === '') {
+                continue;
+            }
+
+            $commands++;
+
+            foreach ($shells as $shell) {
+                $pipes   = [];
+                $process = proc_open([$shell, '-c', $command], [0 => ['file', '/dev/null', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, $directory);
+
+                if (!is_resource($process)) {
+                    throw new RuntimeException('Cannot start ' . $shell);
+                }
+
+                stream_get_contents($pipes[1]);
+                stream_get_contents($pipes[2]);
+                fclose($pipes[1]);
+                fclose($pipes[2]);
+                proc_close($process);
+                $runs++;
+
+                if (file_exists($marker)) {
+                    throw new RuntimeException('Field value ran under ' . $shell . ' for case ' . $case . ': ' . var_export($template, true));
+                }
+            }
+        }
+    } finally {
+        foreach (glob($directory . '/{,.}*', GLOB_BRACE) ?: [] as $file) {
+            if (is_file($file)) {
+                unlink($file);
+            }
+        }
+
+        rmdir($directory);
+    }
+
+    return ['cases' => $cases, 'commands' => $commands, 'runs' => $runs];
 }
