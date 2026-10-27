@@ -192,7 +192,8 @@ def has_feature_realm(entry):
                 'utilities/rrd-check', 'graphing/data-source-profiles',
                 'templates/devices', 'templates/graphs', 'templates/data-sources', 'templates/aggregates',
                 'data-collection/queries', 'automation/snmp-options', 'automation/graph-rules',
-                'automation/tree-rules', 'automation/networks', 'utilities/notification-receivers')
+                'automation/tree-rules', 'automation/networks', 'utilities/notification-receivers',
+                'administration/users', 'administration/user-groups', 'administration/domains', 'automation/discovered-devices', 'data-collection/collectors', 'graphing/trees', 'utilities/rrd-candidates', 'utilities/snmp-objects', 'utilities/snmp-notifications', 'utilities/login-history')
     return entry in legacy or any(entry == 'app.php/' + prefix or
                                  entry.startswith('app.php/' + prefix + '/')
                                  for prefix in prefixes)

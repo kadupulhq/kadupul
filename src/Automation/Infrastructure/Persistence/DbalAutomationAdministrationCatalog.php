@@ -28,12 +28,20 @@ final readonly class DbalAutomationAdministrationCatalog implements Administrati
 
     public function supports(ListScreen $screen): bool
     {
-        return in_array($screen, [ListScreen::SnmpOptions, ListScreen::GraphRules, ListScreen::TreeRules, ListScreen::Networks], true);
+        return in_array($screen, [ListScreen::SnmpOptions, ListScreen::GraphRules, ListScreen::TreeRules, ListScreen::Networks, ListScreen::DiscoveredDevices], true);
     }
 
     public function read(ListScreen $screen, ListFilters $filters): array
     {
         $source = match ($screen) {
+            ListScreen::DiscoveredDevices => <<<'SQL'
+SELECT d.id, d.hostname AS name, d.ip, REPLACE(d.sysName, ':', ' ') AS sys_name,
+ REPLACE(d.sysLocation, ':', ' ') AS sys_location, REPLACE(d.sysContact, ':', ' ') AS sys_contact,
+ REPLACE(d.sysDescr, ':', ' ') AS sys_description, REPLACE(d.os, ':', ' ') AS os,
+ FLOOR(d.sysUptime / 100) AS uptime_seconds, d.snmp AS snmp_available, d.up AS device_up, d.time AS last_check
+ FROM automation_devices d
+SQL,
+
             ListScreen::SnmpOptions => <<<'SQL'
 SELECT s.id, s.name, COALESCE(n.networks, 0) AS networks, COALESCE(i.totals, 0) AS totals,
  COALESCE(i.v1entries, 0) AS v1entries, COALESCE(i.v2entries, 0) AS v2entries, COALESCE(i.v3entries, 0) AS v3entries
@@ -83,6 +91,7 @@ SQL,
             throw new \InvalidArgumentException('Invalid list sort.');
         }
         $search = match ($screen) {
+            ListScreen::DiscoveredDevices => ['name', 'ip', 'sys_name', 'sys_description', 'sys_location', 'sys_contact'],
             default => ['name'],
         };
         $where = implode(' OR ', array_map(static fn(string $column): string => 'listing.' . $column . ' LIKE ?', $search));

@@ -78,9 +78,13 @@ final class ConsoleMenuTest extends TestCase
         $menu = self::menu(new Actor(7, 'operator'), [8, ...$realms]);
         $paths = array_merge(...array_map(static fn(array $section): array => array_column($section['items'], 'path'), $menu->sections()));
         foreach ($screens as $screen) {
-            self::assertSame($screen->path(), LegacyConsoleMenu::listPath($screen->legacyScript()));
+            if ($screen->legacyQuery() === []) {
+                self::assertSame($screen->path(), LegacyConsoleMenu::listPath($screen->legacyScript()));
+            } else {
+                self::assertSame('utilities.php', LegacyConsoleMenu::listPath($screen->legacyScript()));
+            }
             self::assertTrue(LegacyConsoleMenu::isAppPath($screen->path()));
-            if ($screen !== ListScreen::NotificationReceivers) {
+            if (!in_array($screen, [ListScreen::NotificationReceivers, ListScreen::RrdCandidates, ListScreen::SnmpObjects, ListScreen::SnmpNotifications, ListScreen::LoginHistory], true)) {
                 self::assertContains($screen->path(), $paths);
                 self::assertNotContains($screen->legacyScript(), $paths);
             }

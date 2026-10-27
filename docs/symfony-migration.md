@@ -1887,3 +1887,14 @@ allowlisted sorting and bounded paging move into the new views; advanced filters
 legacy preferences and mutations are still migration work. The slice documents
 count corrections, GET behavior, authorization, verification and rollback. LTS is
 unchanged.
+
+### Ten more administration and diagnostic list views
+
+The [second ten-list slice](migrations/administration-lists-batch-20.md) adds native
+Symfony/Twig browsing for users, groups, authentication domains, discovered
+devices, collectors, trees, recorded RRD cleanup candidates, SNMP agent objects,
+SNMP notifications and login history. These readers issue explicit DBAL queries;
+they do not run legacy pages or capture their HTML. Editors and operational
+actions still use the existing PHP forms. Login identity joins, tree counts,
+read-only navigation, collector routing and diagnostic limitations are documented
+with the verification evidence. LTS is unchanged.

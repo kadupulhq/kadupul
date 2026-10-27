@@ -33,6 +33,16 @@ final readonly class AdministrationListController
     #[Route('/automation/tree-rules', name: 'admin_tree_rules', defaults: ['screen' => 'tree-rules'], methods: ['GET', 'HEAD'])]
     #[Route('/automation/networks', name: 'admin_networks', defaults: ['screen' => 'networks'], methods: ['GET', 'HEAD'])]
     #[Route('/utilities/notification-receivers', name: 'admin_notification_receivers', defaults: ['screen' => 'notification-receivers'], methods: ['GET', 'HEAD'])]
+    #[Route('/administration/users', name: 'admin_users', defaults: ['screen' => 'users'], methods: ['GET', 'HEAD'])]
+    #[Route('/administration/user-groups', name: 'admin_user_groups', defaults: ['screen' => 'user-groups'], methods: ['GET', 'HEAD'])]
+    #[Route('/administration/domains', name: 'admin_user_domains', defaults: ['screen' => 'user-domains'], methods: ['GET', 'HEAD'])]
+    #[Route('/automation/discovered-devices', name: 'admin_discovered_devices', defaults: ['screen' => 'discovered-devices'], methods: ['GET', 'HEAD'])]
+    #[Route('/data-collection/collectors', name: 'admin_collectors', defaults: ['screen' => 'collectors'], methods: ['GET', 'HEAD'])]
+    #[Route('/graphing/trees', name: 'admin_trees', defaults: ['screen' => 'trees'], methods: ['GET', 'HEAD'])]
+    #[Route('/utilities/rrd-candidates', name: 'admin_rrd_candidates', defaults: ['screen' => 'rrd-candidates'], methods: ['GET', 'HEAD'])]
+    #[Route('/utilities/snmp-objects', name: 'admin_snmp_objects', defaults: ['screen' => 'snmp-objects'], methods: ['GET', 'HEAD'])]
+    #[Route('/utilities/snmp-notifications', name: 'admin_snmp_notifications', defaults: ['screen' => 'snmp-notifications'], methods: ['GET', 'HEAD'])]
+    #[Route('/utilities/login-history', name: 'admin_login_history', defaults: ['screen' => 'login-history'], methods: ['GET', 'HEAD'])]
     public function __invoke(ListScreen $screen, Request $request, ConsoleAccess $console, AdministrationListAccess $access, ViewAdministrationList $view, Environment $twig, TranslatorInterface $translator): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];

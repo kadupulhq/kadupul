@@ -54,7 +54,7 @@ final class LayoutRenderingTest extends TestCase
         self::assertSame(1, $xpath->query('//div[@id="navigation_right" and contains(@class, "cactiConsoleContentArea")]/main')->length);
         self::assertSame(['Main Console', 'Create', 'Management', 'Data Collection', 'Presets'], self::texts($xpath, '//li[@class="menuitem"]/span[@class="menu_parent"]'));
         self::assertSame(
-            ['/kadupul/index.php', '/kadupul/app.php/inventory/devices/new', '/kadupul/host.php', '/kadupul/sites.php', '/kadupul/data_sources.php', '/kadupul/pollers.php', '/kadupul/cdef.php', '/kadupul/vdef.php', '/kadupul/about.php'],
+            ['/kadupul/index.php', '/kadupul/app.php/inventory/devices/new', '/kadupul/host.php', '/kadupul/sites.php', '/kadupul/data_sources.php', '/kadupul/app.php/data-collection/collectors', '/kadupul/cdef.php', '/kadupul/vdef.php', '/kadupul/about.php'],
             array_map(static fn(\DOMElement $link): string => $link->getAttribute('href'), iterator_to_array($xpath->query('//nav[@id="navigation"]//a'))),
         );
         $current = $xpath->query('//a[@aria-current="page"]');

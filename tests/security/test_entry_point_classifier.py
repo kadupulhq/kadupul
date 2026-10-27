@@ -1604,7 +1604,8 @@ final class FeatureAction {
     list_routes = {'templates/devices': 12, 'templates/graphs': 10, 'templates/data-sources': 11,
                    'templates/aggregates': 5, 'data-collection/queries': 13, 'automation/snmp-options': 23,
                    'automation/graph-rules': 23, 'automation/tree-rules': 23, 'automation/networks': 23,
-                   'utilities/notification-receivers': 15}
+                   'utilities/notification-receivers': 15,
+                   'administration/users': 1, 'administration/user-groups': 1, 'administration/domains': 1, 'automation/discovered-devices': 23, 'data-collection/collectors': 3, 'graphing/trees': 4, 'utilities/rrd-candidates': 15, 'utilities/snmp-objects': 15, 'utilities/snmp-notifications': 15, 'utilities/login-history': 15}
     with tempfile.TemporaryDirectory(prefix='entry-classifier-admin-lists-') as directory:
         root = tree(directory)
         for path in list_sources:
