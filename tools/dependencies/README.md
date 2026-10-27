@@ -114,16 +114,17 @@ locked 4.19.1 and updates compatible test dependency patches.
 
 - Main uses phpseclib 4 with PHP >=8.4; LTS retains phpseclib 3 and PHP >=8.1.
   See [phpseclib.md](phpseclib.md) for migration scope and remaining legacy proxy code.
-- Pest remains on 1.23.1 for this batch. Pest 2 can run on PHP 8.1, but migrating
-  to PHPUnit 10 requires updating the native subprocess coverage integration.
-  This is migration work, not a runtime incompatibility excuse; newer Pest
-  majors also raise the PHP minimum.
+- Pest remained on 1.23.1 for this batch. #463 later moved `tests/composer.lock`
+  to Pest 4.7.8 on PHPUnit 12.5; the root `composer.lock` keeps PHPUnit 10.5 for
+  `composer test`.
 - PHPMailer, gettext, legacy graph/widget libraries and icon assets still need
   separate upstream/compatibility review. They are not covered by root Composer
   or the E2E npm audit merely because their files live in this repository.
-- jQuery 4, Chart.js 4, billboard.js 4, dygraphs 2, screenfull 6 and Font Awesome
-  7 must not be treated as drop-in replacements. Their API, module or browser
-  compatibility changes need call-site migration and dedicated regression tests.
+- Chart.js 4, billboard.js 4, dygraphs 2 and screenfull 6 must not be treated as
+  drop-in replacements. Their API, module or browser compatibility changes need
+  call-site migration and dedicated regression tests. jQuery 4.0.0 now ships with
+  the call-site fixes from #834, and Font Awesome 7.3.1 is installed from
+  `package.json` (#152).
 - The multiselect implementation already matches upstream 3.0.1 despite its
   stale 3.0.0 banner; its filter differs only in whitespace. jstree 3.3.17,
   js-storage 1.1.0, pace-js 1.2.4 and Playwright 1.63.0 match the latest releases

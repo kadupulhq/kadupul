@@ -1,6 +1,6 @@
 # phpseclib branch policy
 
-- Main: Composer-managed phpseclib `^4.0` (currently 4.0.1), PHP >=8.4.
+- Main: Composer-managed phpseclib `^4.0` (currently 4.0.2), PHP >=8.4.
 - `lts/1.2`: Composer-managed phpseclib `^3.0`, existing PHP >=8.1 support.
 
 The installer floor and Composer platform resolution on main are both 8.4.0.
@@ -25,4 +25,4 @@ checkout. Only rrdproxy on phpseclib `^4.0` has been tested. The older
 client sent a 192-byte key, which does not fit SHA-256 OAEP under a 2048-bit
 key, so a proxy that still expects that frame is not supported.
 
-Upstream manifest: https://github.com/phpseclib/phpseclib/blob/4.0.1/composer.json
+Upstream manifest: https://github.com/phpseclib/phpseclib/blob/4.0.2/composer.json

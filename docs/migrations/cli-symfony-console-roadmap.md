@@ -14,8 +14,8 @@ direct web access to the command directory.
 | --- | --- | --- |
 | Foundation | `analyze_database.php` | Merged in #414 |
 | Schema tools | `convert_tables.php`, `fix_mediumint.php` | Merged in #434 |
-| Audit | `audit_database.php` | #451: new command implemented; hardened compatibility CLI retained pending migration acceptance |
-| Repair | `repair_database.php` | In progress, after #451 |
+| Audit | `audit_database.php` | Merged in #802 (from the closed #451): new command implemented; hardened compatibility CLI retained pending migration acceptance |
+| Repair | `repair_database.php` | In progress, after the audit command |
 | Users and permissions | `copy_user.php`, `add_perms.php` | Planned |
 | Graphs and trees | `add_graphs.php`, `add_graph_template.php`, `add_tree.php`, `remove_graphs.php`, `remove_broken_graphs.php`, `repair_graphs.php`, `poller_graphs_reapply_names.php` | Planned |
 | Data sources and queries | `add_datasource.php`, `add_data_query.php`, `reorder_data_query.php`, `poller_data_sources_reapply_names.php`, `rebuild_poller_cache.php`, `poller_output_empty.php`, `poller_replicate.php`, `replay_rejected_samples.php` | Planned |
@@ -33,7 +33,7 @@ each script's legacy output where they can, and change behaviour only where the
 original was unsafe. Each change is listed as a known difference in
 `docs/symfony-migration.md`.
 
-Audit (#451):
+Audit (#802, carrying the reviewed #451 source):
 
 - A repair never narrows a column. A column wider than the baseline, such as
   one widened by `kadupul:database:widen-id-columns`, is reported as widened
