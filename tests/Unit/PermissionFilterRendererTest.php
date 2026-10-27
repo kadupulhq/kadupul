@@ -143,6 +143,26 @@ final class PermissionFilterRendererTest extends TestCase
         return $cases;
     }
 
+    public function testExplicitRowChoicesDoNotReadTheAmbientCatalog(): void
+    {
+        foreach (self::filters() as [$page, $function]) {
+            foreach (array(array(), array(42 => '<Forty & two>', 9 => 'Nine')) as $choices) {
+                $result = $this->render(array('page' => $page, 'function' => $function, 'rows' => '42', 'row_choices' => $choices));
+                $document = new DOMDocument();
+                self::assertTrue($document->loadHTML($result['html'], LIBXML_NOERROR | LIBXML_NONET));
+                $xpath = new DOMXPath($document);
+                $options = iterator_to_array($xpath->query('//select[@id="rows"]/option'));
+                self::assertSame(array('-1', ...array_map('strval', array_keys($choices))), array_map(static fn($option) => $option->getAttribute('value'), $options));
+                self::assertCount(0, $xpath->query('//select[@id="rows"]/option[@value="25"]'));
+                if ($choices !== array()) {
+                    self::assertSame('<Forty & two>', $options[1]->textContent);
+                    self::assertTrue($options[1]->hasAttribute('selected'));
+                    self::assertCount(0, $xpath->query('//select[@id="rows"]//forty'));
+                }
+            }
+        }
+    }
+
     public function testOtherActionsDoNotWriteAssociations(): void
     {
         foreach (array('user_admin.php', 'user_group_admin.php') as $page) {

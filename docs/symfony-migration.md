@@ -1930,3 +1930,8 @@ The [identity settings slice](migrations/identity-settings-batch-10.md) adds ten
 views for stored user/group grants, preferences and login options. It extends
 the identity relationship reader without changing preference inheritance,
 plugin settings, authorization evaluation or legacy writes.
+
+The [permission filter row-context slice](migrations/permission-filter-row-context.md)
+passes the existing bootstrap catalog through retained legacy edit pages and
+filters. It removes the shared renderer's row-choice global without replacing
+the catalog, its input limit or tab-hook customization.

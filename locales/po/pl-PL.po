@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-25 10:54-0600\n"
+"POT-Creation-Date: 2026-10-27 14:09-0700\n"
 "PO-Revision-Date: 2024-04-20 19:13-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -408,7 +408,7 @@ msgstr "Pasujące wykresy"
 #: lib/html_tree.php:967 managers.php:144 managers.php:504 managers.php:771
 #: plugins.php:491 pollers.php:869 rrdcleaner.php:523 settings.php:598
 #: settings.php:615 settings.php:674
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:56
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:60
 #: tree.php:938 tree.php:973 tree.php:1008 tree.php:2217 user_admin.php:2074
 #: user_domains.php:643 user_group_admin.php:1993 utilities.php:1094
 #: utilities.php:1521 utilities.php:1832 utilities.php:2135 utilities.php:3125
@@ -439,7 +439,7 @@ msgstr "Wykresy"
 #: lib/api_automation.php:718 lib/api_automation.php:1082
 #: lib/html_reports.php:2045 managers.php:154 managers.php:514 plugins.php:515
 #: pollers.php:879 rrdcleaner.php:549
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:81
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:85
 #: tree.php:2227 user_admin.php:2135 user_domains.php:18 user_domains.php:653
 #: user_domains.php:739 user_group_admin.php:2003 utilities.php:1076
 #: utilities.php:1842 utilities.php:2166 utilities.php:3153 utilities.php:3429
@@ -474,7 +474,7 @@ msgstr "Idź"
 #: graphs_new.php:515 host_templates.php:786 lib/html_graph.php:178
 #: managers.php:169 managers.php:529 managers.php:794 plugins.php:530
 #: pollers.php:914
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:99
 #: tree.php:2242 user_admin.php:2150 user_domains.php:665
 #: user_group_admin.php:2018 utilities.php:1084 utilities.php:1470
 #: utilities.php:1823 utilities.php:2126 utilities.php:3161 utilities.php:3437
@@ -505,7 +505,7 @@ msgstr "Wyczyść"
 #: graphs.php:2106 graphs_new.php:516 host_templates.php:787
 #: lib/html_graph.php:179 lib/html_tree.php:1010 managers.php:170
 #: managers.php:530 managers.php:795 plugins.php:531 pollers.php:915
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:96
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:100
 #: tree.php:2243 user_admin.php:2151 user_domains.php:666
 #: user_group_admin.php:2019 utilities.php:1085 utilities.php:1471
 #: utilities.php:1824 utilities.php:2127 utilities.php:3162 utilities.php:3438
@@ -577,7 +577,7 @@ msgstr "Wykresy zagregowane"
 #: graph_view.php:699 graphs.php:2067 include/global_arrays.php:2898
 #: include/global_settings.php:703 lib/api_automation.php:446
 #: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:381
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:59
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:63
 #: utilities.php:2094
 msgid "Template"
 msgstr "Szablon"
@@ -594,7 +594,7 @@ msgstr "Szablon"
 #: lib/html_reports.php:1030 lib/html_reports.php:1034
 #: lib/html_reports.php:1157 lib/html_reports.php:1167
 #: lib/html_reports.php:2035 managers.php:490 managers.php:781
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:61
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:65
 #: utilities.php:1064 utilities.php:1785 utilities.php:2098 utilities.php:2145
 #: utilities.php:2155 utilities.php:3135 utilities.php:3397 utilities.php:3413
 msgid "Any"
@@ -630,7 +630,7 @@ msgstr "Dowolny"
 #: lib/html_reports.php:1206 lib/html_reports.php:1462
 #: lib/html_reports.php:1467 lib/html_reports.php:1472 package_import.php:692
 #: settings.php:591 settings.php:613 settings.php:644
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:62
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:66
 #: templates_import.php:299 templates_import.php:331 utilities.php:2099
 msgid "None"
 msgstr "Brak"
