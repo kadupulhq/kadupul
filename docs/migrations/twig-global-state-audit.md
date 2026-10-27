@@ -83,6 +83,11 @@ repository ratchet falls from 902 declarations/1701 bindings to 891/1630. The te
 `src/` declarations are unchanged. These are counts of bindings, not a claim that
 the underlying global variable names no longer exist anywhere in the application.
 
+With the mapping views in #1018 merged, main starts at 901 declarations/1698
+bindings. This cleanup reduces that combined baseline to 890/1627; `src/`
+remains at ten declarations/eighteen bindings. The 71-binding reduction above
+excludes #1018's three removed bindings.
+
 Three further candidates remain unresolved because their functions include PHP
 into their local scope: `user_admin.php::form_save()` (`$settings_user`),
 `user_group_admin.php::form_actions()` (`$user_auth_realms`), and
