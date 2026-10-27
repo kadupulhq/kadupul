@@ -88,6 +88,14 @@ Kernel, native-schema and seven-theme browser regressions are registered.
 Installed-session and collector HTTP acceptance remain release gates; legacy
 editing and operational paths remain active.
 
+### Explicit permission selection input
+
+Status: implemented. Authenticated user/group page handlers pass POST field names
+to the shared association helper. The helper no longer reads the POST superglobal.
+See [scope and verification](migrations/permission-selection-input.md). Legacy
+request helpers and database/session ownership remain compatibility dependencies;
+installed collector/session acceptance remains a release gate.
+
 ### Global state behind Twig migrations
 
 Status: implemented for the unused-binding cleanup and native-layer guard.
