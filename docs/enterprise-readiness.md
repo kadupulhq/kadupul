@@ -84,3 +84,12 @@ to the shared association helper. The helper no longer reads the POST supergloba
 See [scope and verification](migrations/permission-selection-input.md). Legacy
 request helpers and database/session ownership remain compatibility dependencies;
 installed collector/session acceptance remains a release gate.
+
+### Identity relationship browsing
+
+Status: implemented. Ten views display stored user/group memberships and four
+resource permission types for each owner. Existing console and user
+administration grants protect all views. See [acceptance evidence and limits](migrations/identity-relationships-batch-10.md).
+Effective authorization and legacy policy/membership mutations remain on their
+existing paths. Installed-session and collector HTTP acceptance remain release
+gates. This slice does not retire authentication or permission globals.

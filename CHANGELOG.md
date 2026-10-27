@@ -7,6 +7,7 @@ follows [Semantic Versioning](VERSIONING.md).
 ## [Unreleased]
 
 - Pass bulk permission selection field names explicitly from authenticated user/group page handlers instead of reading POST inside the association helper.
+- Add ten Twig views for user/group memberships and stored graph, device, template and tree permission exceptions. Show the stored default policy without presenting these records as effective access. Existing PHP pages still handle policy and membership changes.
 
 - Add ten native Symfony/Twig management catalogs for graphs, data sources, aggregates, reports, recorded plugins and template relationships, with resource/owner permissions and bounded browsing. Legacy editors and operations remain available.
 - Add ten Symfony/Twig relationship views for template definitions, automation criteria and steps, SNMP option entries, and receiver subscriptions and history. Parent catalog links preserve access to existing editing and operational actions.

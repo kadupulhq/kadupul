@@ -1925,3 +1925,8 @@ The [permission selection input boundary](migrations/permission-selection-input.
 passes submitted field names from authenticated legacy page handlers to the
 association helper. It removes that helper's direct POST dependency while keeping
 its existing writer, transaction and permission-cache lifecycle.
+
+The [identity relationship slice](migrations/identity-relationships-batch-10.md)
+adds ten views for recorded memberships and permission exceptions. It reuses the
+relationship infrastructure and existing user administration authorization.
+These views do not calculate effective permissions or change their enforcement.
