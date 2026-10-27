@@ -1917,3 +1917,7 @@ Personal reports preserve the normal-user realm without adding console access.
 Graph and device visibility reuse a shared IdentityAccess policy projection while
 Inventory's existing helper remains a compatibility delegate. Existing PHP
 editors, bulk operations and plugin/report execution retain their write paths.
+The [relationship browsing slice](migrations/relationships-batch-10.md) adds ten
+parent-scoped Twig views. Existing parent catalogs link to them. Legacy PHP
+continues to handle edits and operational actions. This slice does not retire
+legacy writers or remove their global state.

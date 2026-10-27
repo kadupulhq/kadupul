@@ -1,0 +1,53 @@
+{#
+SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-2.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% import '_list.html.twig' as lists %}
+{% trans_default_domain 'relationships' %}
+{% block title %}{{ screen.title|trans }} - Kadupul{% endblock %}
+{% block body %}
+<main id="relationship-list">
+<h1>{{ screen.title|trans }}: {{ parentName is same as('') ? 'Unnamed'|trans : parentName }} ({{ parentId }})</h1>
+{% set parameters = filters|merge({id: parentId}) %}
+{# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- The enum owns the legacy script/action and encodes the validated parent identity. #}
+<p><a href="{{ installation_path(screen.parentScreen.legacyScript) }}?{{ screen.legacyQuery(parentId)|url_encode }}">{{ 'Editing and advanced operations'|trans }}</a></p>
+{% if screen.value == 'snmp-option-entries' %}<p>{{ 'Credentials and credential identifiers are excluded. Open the operation page to manage them.'|trans }}</p>{% endif %}
+{% if screen.value == 'receiver-subscriptions' %}<p>{{ 'Recorded subscriptions only. Use the operation page to select notifications or rebuild the agent cache.'|trans }}</p>{% endif %}
+{# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed enum route and validated numeric parent. #}
+<form method="get" action="{{ path(screen.route, {id: parentId}) }}" class="filterTable" aria-label="{{ 'Relationship filters'|trans }}">
+    <label for="relationship-filter">{{ 'Search'|trans }}</label><input id="relationship-filter" name="filter" maxlength="255" value="{{ filters.filter }}">
+    {{ lists.rows_per_page('relationship-rows', 'Rows', {10: '10', 25: '25', 50: '50', 100: '100'}, filters.rows, 'relationships') }}
+    <input type="hidden" name="sort_column" value="{{ filters.sort_column }}"><input type="hidden" name="sort_direction" value="{{ filters.sort_direction }}">
+    <button type="submit">{{ 'Go'|trans }}</button>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed enum route and validated numeric parent. #}
+    <a href="{{ path(screen.route, {id: parentId}) }}">{{ 'Clear'|trans }}</a>
+</form>
+{% set operators = {0: 'None', 1: 'contains', 2: 'does not contain', 3: 'begins with', 4: 'does not begin with', 5: 'ends with', 6: 'does not end with', 7: 'matches', 8: 'is not equal to', 9: 'is less than', 10: 'is less than or equal', 11: 'is greater than', 12: 'is greater than or equal', 13: 'is unknown', 14: 'is not unknown', 15: 'is empty', 16: 'is not empty', 17: 'matches regular expression', 18: 'does not match regular expression'} %}
+<table class="cactiTable">
+    <caption>{{ screen.title|trans }}</caption>
+    <thead><tr>{% for column, label in screen.columns %}{{ lists.sort_header(screen.route, parameters|merge({page: 1}), column, label, 'relationships') }}{% endfor %}</tr></thead>
+    <tbody>
+    {% for record in records %}
+        <tr class="{{ loop.index is odd ? 'odd' : 'even' }}">{% for column, label in screen.columns %}
+            {% set value = record[column] %}
+            <td>{% if column == 'name' and screen.editableEntry %}
+                {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Enum-owned script/action with encoded numeric parent and child identities. #}
+                <a href="{{ installation_path(screen.entryScript) }}?{{ screen.entryQuery(parentId, record.id)|url_encode }}">{{ value is null or value is same as('') ? 'Unnamed'|trans : value }}</a>
+            {% elseif column == 'operator' %}{{ (operators[value] ?? 'Unknown')|trans }}
+            {% elseif column == 'operation' %}{{ ({0: 'None', 1: 'AND', 2: 'OR', 3: 'Open bracket', 4: 'Close bracket'}[value] ?? 'Unknown')|trans }}
+            {% elseif column == 'source_type' %}{{ {1: 'GAUGE', 2: 'COUNTER', 3: 'DERIVE', 4: 'ABSOLUTE'}[value] ?? value }}
+            {% elseif column == 'sort_type' %}{{ ({0: 'Inherit Parent Sorting', 1: 'Manual', 2: 'Alphabetical', 3: 'Numeric', 4: 'Natural'}[value] ?? 'Unknown')|trans }}
+            {% elseif column in ['skip', 'total', 'propagate'] %}{{ (value == 'on' ? 'Yes' : 'No')|trans }}
+            {% elseif column == 'resolved' %}{{ (value == 1 ? 'Yes' : 'No')|trans }}
+            {% elseif column == 'event_time' %}{% if value > 0 %}{{ ('@' ~ value)|date('Y-m-d H:i:s', 'UTC') }}{% else %}{{ 'N/A'|trans }}{% endif %}
+            {% elseif value is null or value is same as('') %}{{ 'None'|trans }}
+            {% else %}{{ value }}{% endif %}</td>
+        {% endfor %}</tr>
+    {% else %}<tr><td colspan="{{ screen.columns|length }}">{{ 'No records found.'|trans }}</td></tr>{% endfor %}
+    </tbody>
+</table>
+{{ lists.pagination(screen.route, parameters, filters.page, filters.page > 1, hasNext, 'Relationship pages', 'Page %page%', {'%page%': filters.page}, 'relationships') }}
+</main>
+{% endblock %}
