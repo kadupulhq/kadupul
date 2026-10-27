@@ -28,15 +28,15 @@ test('production Boost handoff requires successful writes to the selected databa
             ->and($result['handler_restored'])->toBeTrue()->and($result['samples_unchanged'])->toBeTrue()
             ->and($result['writes'])->toHaveCount($mode === 'split-success' ? 2 : 1);
         foreach ($result['writes'] as $write) {
-            expect(strlen($write['sql']))->toBeLessThanOrEqual(str_starts_with($mode, 'split-') ? 180 : 1000);
+            expect(strlen($write['sql']) + array_sum(array_map('strlen', $write['params'])))->toBeLessThanOrEqual(str_starts_with($mode, 'split-') ? 180 : 1000);
             expect($write['connection'])->toBe($connection === 'online' ? 'primary-database' : false);
             expect($write['sql'])->toStartWith('INSERT INTO poller_output_boost ')
                 ->toEndWith(' ON DUPLICATE KEY UPDATE output=VALUES(output)');
         }
         if ($mode === 'split-failure') {
-            expect($result['writes'][0]['sql'])->toContain("'42'")->not->toContain("'43'");
+            expect($result['writes'][0]['params'])->toContain('42')->not->toContain('43');
         } elseif (!$failed) {
-            expect(implode(' ', array_column($result['writes'], 'sql')))->toContain("'42'")->toContain("'43'");
+            expect(array_merge(...array_column($result['writes'], 'params')))->toContain('42')->toContain('43');
         }
         if ($coverage !== null) {
             $reports = glob($directory . '/*.coverage');
