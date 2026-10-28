@@ -459,6 +459,31 @@ because Symfony requests do not run the legacy bootstrap that calls it.
 
 To render a page without the layout, override `page` with `{{ block('body') }}`.
 
+### Request profiling
+
+Profiling exists to compare a migrated route with its legacy page; it is off in
+production and should be enabled only for a measurement.
+
+- Symfony side: in `APP_ENV=dev` or `test` every response carries a
+  `Server-Timing` header (`app`, `mem`, and `db` when the kernel runs with
+  debug, since Doctrine counts queries only then). The production container
+  does not define the listener.
+- Legacy side: set `KADUPUL_PROFILE=1` in the web server's PHP environment.
+  Any other value, or the variable being absent, disables it.
+- A request that sends `X-Kadupul-Profile-Id` (1 to 64 letters, digits or
+  hyphens) appends one JSON line per hop, `{id, path, ms, queries, peak_bytes}`,
+  to `var/profile/requests.jsonl`, or to the path in `KADUPUL_PROFILE_LOG`.
+  `queries` is `null` when no counter was available. A redirect logs each hop
+  under the same id because clients resend the header.
+- The log is never rotated or pruned. Enable profiling for the measurement,
+  then unset it and delete the log.
+- The log records request paths. Keep `var/` unserved: Apache uses the shipped
+  `var/.htaccess`, and Nginx installs must keep the `var` deny location from
+  `tests/e2e/nginx.conf`.
+
+`tests/tools/profile_routes.py` drives both passes; `.github/workflows/route-profile.yml`
+shows the environment for each.
+
 `templates/_list.html.twig` holds macros for list pages: `rows_per_page`,
 `sort_header`, `selection_cell` and `pagination`. Each takes the caller's
 translation domain, and every visible string is a message key in that domain.

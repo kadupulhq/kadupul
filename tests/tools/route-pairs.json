@@ -1,0 +1,66 @@
+[
+  {
+    "legacy": "about.php",
+    "symfony": "app.php/about/legacy"
+  },
+  {
+    "legacy": "automation_templates.php",
+    "symfony": "app.php/automation/templates/legacy"
+  },
+  {
+    "legacy": "cdef.php",
+    "symfony": "app.php/graph-definitions/cdefs/legacy"
+  },
+  {
+    "legacy": "color.php",
+    "symfony": "app.php/graphing/colors/legacy"
+  },
+  {
+    "legacy": "color_templates.php",
+    "symfony": "app.php/graphing/color-templates/legacy"
+  },
+  {
+    "legacy": "color_templates_items.php?action=item_edit&color_template_id=1",
+    "symfony": "app.php/graphing/color-templates/items/legacy?action=item_edit&color_template_id=1"
+  },
+  {
+    "legacy": "data_input.php",
+    "symfony": "app.php/data-inputs/legacy"
+  },
+  {
+    "legacy": "data_source_profiles.php",
+    "symfony": "app.php/graphing/data-source-profiles/legacy"
+  },
+  {
+    "legacy": "gprint_presets.php",
+    "symfony": "app.php/graphing/gprint-presets/legacy"
+  },
+  {
+    "legacy": "host.php",
+    "symfony": "app.php/inventory/devices/legacy"
+  },
+  {
+    "legacy": "index.php",
+    "symfony": "app.php/console"
+  },
+  {
+    "legacy": "links.php",
+    "symfony": "app.php/links/legacy"
+  },
+  {
+    "legacy": "permission_denied.php",
+    "symfony": "app.php/permission-denied"
+  },
+  {
+    "legacy": "rrdcheck.php",
+    "symfony": "app.php/utilities/rrd-check/legacy"
+  },
+  {
+    "legacy": "sites.php",
+    "symfony": "app.php/inventory/sites/legacy"
+  },
+  {
+    "legacy": "vdef.php",
+    "symfony": "app.php/graph-definitions/vdefs/legacy"
+  }
+]

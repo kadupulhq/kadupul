@@ -1,0 +1,279 @@
+{
+  "runner": {
+    "description": "Local measurement, not a CI runner. Docker Compose stack from tests/e2e (OrbStack) with the public mariadb:10.11, nginx:alpine and php:8.4-fpm-alpine images in place of the pinned ghcr.io mirrors, which were not pullable from this machine.",
+    "machine": "Apple M3 Max, 14 CPUs, arm64, 16 GB to the Docker VM",
+    "php": "8.4.27 (php-fpm, NTS, opcache defaults)",
+    "date": "2026-10-28",
+    "source_revision": "b2d103396e",
+    "runs": 20,
+    "warmup": 3,
+    "fixture": "Fresh tests/e2e database seeded from cacti.sql, admin/admin, no devices or graphs",
+    "time_pass": "APP_ENV=prod, APP_DEBUG=0, no KADUPUL_PROFILE, client wall time to last byte, one process, sequential",
+    "counts_pass": "APP_ENV=test, APP_DEBUG=1 (DoctrineBundle only registers its counter in debug), KADUPUL_PROFILE=1, queries and peak_bytes from var/profile/requests.jsonl joined by X-Kadupul-Profile-Id",
+    "pairs": "tests/tools/route-pairs.json: each forwarding shim against its direct app.php route, so this measures forwarding overhead"
+  },
+  "caveats": [
+    "Both sides of every pair are served by Symfony, so the comparison is shim against direct route, not legacy page against migrated page.",
+    "An earlier recording read 0 queries everywhere because the counts pass ran with APP_DEBUG=0 and Doctrine's debug data holder did not exist. This recording runs with APP_DEBUG=1; a missing counter is now a failure.",
+    "Pages that report 0 (about, colors, color templates, data inputs, gprint presets, links, console, permission denied) were not independently confirmed query-free. Pages that issue queries report the same count on both sides, as the shim forwards to the same controller.",
+    "Single run on a laptop; medians of 20 differ by a few milliseconds between sessions."
+  ],
+  "pairs": [
+    {
+      "legacy": "about.php",
+      "symfony": "app.php/about/legacy",
+      "legacy_stats": {
+        "median_ms": 9.534,
+        "p95_ms": 11.953,
+        "queries": 0.0,
+        "peak_bytes": 6291456
+      },
+      "symfony_stats": {
+        "median_ms": 7.766,
+        "p95_ms": 8.242,
+        "queries": 0.0,
+        "peak_bytes": 6291456
+      }
+    },
+    {
+      "legacy": "automation_templates.php",
+      "symfony": "app.php/automation/templates/legacy",
+      "legacy_stats": {
+        "median_ms": 10.767,
+        "p95_ms": 12.449,
+        "queries": 13.0,
+        "peak_bytes": 6291456
+      },
+      "symfony_stats": {
+        "median_ms": 9.94,
+        "p95_ms": 10.95,
+        "queries": 13.0,
+        "peak_bytes": 4194304
+      }
+    },
+    {
+      "legacy": "cdef.php",
+      "symfony": "app.php/graph-definitions/cdefs/legacy",
+      "legacy_stats": {
+        "median_ms": 10.57,
+        "p95_ms": 13.757,
+        "queries": 16.0,
+        "peak_bytes": 4194304
+      },
+      "symfony_stats": {
+        "median_ms": 10.268,
+        "p95_ms": 10.814,
+        "queries": 16.0,
+        "peak_bytes": 4194304
+      }
+    },
+    {
+      "legacy": "color.php",
+      "symfony": "app.php/graphing/colors/legacy",
+      "legacy_stats": {
+        "median_ms": 10.055,
+        "p95_ms": 11.179,
+        "queries": 0.0,
+        "peak_bytes": 4194304
+      },
+      "symfony_stats": {
+        "median_ms": 10.39,
+        "p95_ms": 11.043,
+        "queries": 0.0,
+        "peak_bytes": 4194304
+      }
+    },
+    {
+      "legacy": "color_templates.php",
+      "symfony": "app.php/graphing/color-templates/legacy",
+      "legacy_stats": {
+        "median_ms": 8.512,
+        "p95_ms": 10.289,
+        "queries": 0.0,
+        "peak_bytes": 4194304
+      },
+      "symfony_stats": {
+        "median_ms": 8.746,
+        "p95_ms": 10.603,
+        "queries": 0.0,
+        "peak_bytes": 4194304
+      }
+    },
+    {
+      "legacy": "color_templates_items.php?action=item_edit&color_template_id=1",
+      "symfony": "app.php/graphing/color-templates/items/legacy?action=item_edit&color_template_id=1",
+      "legacy_stats": {
+        "median_ms": 10.221,
+        "p95_ms": 10.739,
+        "queries": 0.0,
+        "peak_bytes": 4194304
+      },
+      "symfony_stats": {
+        "median_ms": 10.119,
+        "p95_ms": 10.888,
+        "queries": 0.0,
+        "peak_bytes": 4194304
+      }
+    },
+    {
+      "legacy": "data_input.php",
+      "symfony": "app.php/data-inputs/legacy",
+      "legacy_stats": {
+        "median_ms": 59.422,
+        "p95_ms": 66.354,
+        "queries": 0.0,
+        "peak_bytes": 4194304
+      },
+      "symfony_stats": {
+        "median_ms": 59.491,
+        "p95_ms": 61.756,
+        "queries": 0.0,
+        "peak_bytes": 4194304
+      }
+    },
+    {
+      "legacy": "data_source_profiles.php",
+      "symfony": "app.php/graphing/data-source-profiles/legacy",
+      "legacy_stats": {
+        "median_ms": 9.646,
+        "p95_ms": 11.032,
+        "queries": 13.0,
+        "peak_bytes": 4194304
+      },
+      "symfony_stats": {
+        "median_ms": 9.637,
+        "p95_ms": 9.931,
+        "queries": 13.0,
+        "peak_bytes": 4194304
+      }
+    },
+    {
+      "legacy": "gprint_presets.php",
+      "symfony": "app.php/graphing/gprint-presets/legacy",
+      "legacy_stats": {
+        "median_ms": 8.483,
+        "p95_ms": 12.299,
+        "queries": 0.0,
+        "peak_bytes": 4194304
+      },
+      "symfony_stats": {
+        "median_ms": 7.878,
+        "p95_ms": 8.474,
+        "queries": 0.0,
+        "peak_bytes": 4194304
+      }
+    },
+    {
+      "legacy": "host.php",
+      "symfony": "app.php/inventory/devices/legacy",
+      "legacy_stats": {
+        "median_ms": 8.718,
+        "p95_ms": 9.173,
+        "queries": 3.0,
+        "peak_bytes": 4194304
+      },
+      "symfony_stats": {
+        "median_ms": 8.375,
+        "p95_ms": 8.741,
+        "queries": 3.0,
+        "peak_bytes": 4194304
+      }
+    },
+    {
+      "legacy": "index.php",
+      "symfony": "app.php/console",
+      "legacy_stats": {
+        "median_ms": 55.128,
+        "p95_ms": 60.994,
+        "queries": 0.0,
+        "peak_bytes": 4194304
+      },
+      "symfony_stats": {
+        "median_ms": 52.972,
+        "p95_ms": 57.899,
+        "queries": 0.0,
+        "peak_bytes": 4194304
+      }
+    },
+    {
+      "legacy": "links.php",
+      "symfony": "app.php/links/legacy",
+      "legacy_stats": {
+        "median_ms": 9.619,
+        "p95_ms": 10.659,
+        "queries": 0.0,
+        "peak_bytes": 4194304
+      },
+      "symfony_stats": {
+        "median_ms": 9.167,
+        "p95_ms": 9.739,
+        "queries": 0.0,
+        "peak_bytes": 4194304
+      }
+    },
+    {
+      "legacy": "permission_denied.php",
+      "symfony": "app.php/permission-denied",
+      "legacy_stats": {
+        "median_ms": 51.904,
+        "p95_ms": 58.657,
+        "queries": 0.0,
+        "peak_bytes": 4194304
+      },
+      "symfony_stats": {
+        "median_ms": 52.522,
+        "p95_ms": 71.387,
+        "queries": 0.0,
+        "peak_bytes": 4194304
+      }
+    },
+    {
+      "legacy": "rrdcheck.php",
+      "symfony": "app.php/utilities/rrd-check/legacy",
+      "legacy_stats": {
+        "median_ms": 9.718,
+        "p95_ms": 11.12,
+        "queries": 14.0,
+        "peak_bytes": 6291456
+      },
+      "symfony_stats": {
+        "median_ms": 9.599,
+        "p95_ms": 9.995,
+        "queries": 14.0,
+        "peak_bytes": 6291456
+      }
+    },
+    {
+      "legacy": "sites.php",
+      "symfony": "app.php/inventory/sites/legacy",
+      "legacy_stats": {
+        "median_ms": 8.325,
+        "p95_ms": 9.947,
+        "queries": 3.0,
+        "peak_bytes": 6291456
+      },
+      "symfony_stats": {
+        "median_ms": 8.616,
+        "p95_ms": 13.16,
+        "queries": 3.0,
+        "peak_bytes": 6291456
+      }
+    },
+    {
+      "legacy": "vdef.php",
+      "symfony": "app.php/graph-definitions/vdefs/legacy",
+      "legacy_stats": {
+        "median_ms": 11.393,
+        "p95_ms": 13.148,
+        "queries": 5.0,
+        "peak_bytes": 6291456
+      },
+      "symfony_stats": {
+        "median_ms": 10.035,
+        "p95_ms": 11.751,
+        "queries": 5.0,
+        "peak_bytes": 6291456
+      }
+    }
+  ]
+}
