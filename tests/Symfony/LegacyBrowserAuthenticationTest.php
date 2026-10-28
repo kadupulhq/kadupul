@@ -129,29 +129,125 @@ final class LegacyBrowserAuthenticationTest extends TestCase
         self::assertSame(1, (int) $pdo->query('SELECT COUNT(*) FROM user_auth_cache')->fetchColumn());
     }
 
+    public function testForwardedAddressFromUntrustedPeerCannotSelectRememberedToken(): void
+    {
+        $pdo = new PDO('sqlite::memory:');
+        $pdo->exec('CREATE TABLE settings (name TEXT, value TEXT)');
+        $pdo->exec("INSERT INTO settings VALUES ('auth_method','1'),('auth_cache_enabled','on'),('guest_user','3'),('force_https','')");
+        $pdo->exec('CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, realm INTEGER, enabled TEXT, locked TEXT, password TEXT DEFAULT "", must_change_password TEXT DEFAULT "", password_change TEXT DEFAULT "")');
+        $pdo->exec("INSERT INTO user_auth(id,username,realm,enabled,locked) VALUES (9, 'account', 0, 'on', '')");
+        $pdo->exec('CREATE TABLE user_auth_cache (id INTEGER PRIMARY KEY, user_id INTEGER, token TEXT, hostname TEXT)');
+        $pdo->prepare('INSERT INTO user_auth_cache VALUES (1, 9, ?, ?)')->execute([hash('sha512', 'token'), '192.0.2.4']);
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '192.0.2.4';
+        $_COOKIE = ['cacti_remembers' => '9,0,token'];
+        $request = Request::create('/about', 'GET', [], $_COOKIE, [], $_SERVER);
+        $connection = $this->createMock(DatabaseConnection::class);
+        $connection->method('get')->willReturn($pdo);
+        $values = ['proxy_headers' => ['HTTP_X_FORWARDED_FOR'], 'proxy_trusted_addresses' => ['192.0.2.10']];
+        self::assertNull($this->authentication($request, $connection, $values)->restore());
+        self::assertFalse($pdo->inTransaction());
+        self::assertSame(1, (int) $pdo->query('SELECT COUNT(*) FROM user_auth_cache')->fetchColumn());
+    }
+
+    /** Cases shared with get_client_addr(); null here is false there. */
     public static function nativeProxyAddresses(): iterable
     {
-        yield 'default ignores forwarded header' => [[], ['HTTP_X_FORWARDED_FOR' => '192.0.2.4'], '127.0.0.1'];
-        yield 'configured literal server key' => [['HTTP_X_FORWARDED_FOR'], ['HTTP_X_FORWARDED_FOR' => '192.0.2.4'], '192.0.2.4'];
-        yield 'legacy display header is not invented HTTP mapping' => [['X-Forwarded-For'], ['HTTP_X_FORWARDED_FOR' => '192.0.2.4'], '127.0.0.1'];
-        yield 'unknown key refused' => [['HTTP_EVIL_PROXY'], ['HTTP_EVIL_PROXY' => '192.0.2.4'], '127.0.0.1'];
-        yield 'legacy true allowlist' => [true, ['HTTP_X_FORWARDED_FOR' => 'invalid,192.0.2.4'], '192.0.2.4'];
-        yield 'invalid address falls back' => [['HTTP_X_FORWARDED_FOR'], ['HTTP_X_FORWARDED_FOR' => 'invalid'], '127.0.0.1'];
+        $proxy = ['192.0.2.10'];
+        $xff = ['HTTP_X_FORWARDED_FOR'];
+        yield 'no forwarding configured' => [[], [], ['REMOTE_ADDR' => '127.0.0.1', 'HTTP_X_FORWARDED_FOR' => '192.0.2.4'], '127.0.0.1'];
+        yield 'header without trusted proxy' => [$xff, [], ['REMOTE_ADDR' => '127.0.0.1', 'HTTP_X_FORWARDED_FOR' => '192.0.2.4'], '127.0.0.1'];
+        yield 'untrusted peer' => [$xff, $proxy, ['REMOTE_ADDR' => '198.51.100.7', 'HTTP_X_FORWARDED_FOR' => '203.0.113.5'], '198.51.100.7'];
+        yield 'legacy true from untrusted peer' => [true, [], ['REMOTE_ADDR' => '198.51.100.7', 'HTTP_X_FORWARDED_FOR' => '203.0.113.5'], '198.51.100.7'];
+        yield 'trusted list not array' => [$xff, '192.0.2.10', ['REMOTE_ADDR' => '192.0.2.10', 'HTTP_X_FORWARDED_FOR' => '203.0.113.5'], '192.0.2.10'];
+        yield 'cidr entry ignored' => [$xff, ['192.0.2.0/24', 42], ['REMOTE_ADDR' => '192.0.2.10', 'HTTP_X_FORWARDED_FOR' => '203.0.113.5'], '192.0.2.10'];
+        yield 'prefix is not a match' => [$xff, ['192.0.2.1'], ['REMOTE_ADDR' => '192.0.2.10', 'HTTP_X_FORWARDED_FOR' => '203.0.113.5'], '192.0.2.10'];
+        yield 'trusted proxy' => [$xff, $proxy, ['REMOTE_ADDR' => '192.0.2.10', 'HTTP_X_FORWARDED_FOR' => ' 203.0.113.5 '], '203.0.113.5'];
+        yield 'ipv6 proxy spelling' => [$xff, ['2001:0db8:0:0::1'], ['REMOTE_ADDR' => '2001:db8::1', 'HTTP_X_FORWARDED_FOR' => '2001:db8::5'], '2001:db8::5'];
+        yield 'address chain' => [$xff, $proxy, ['REMOTE_ADDR' => '192.0.2.10', 'HTTP_X_FORWARDED_FOR' => '203.0.113.5, 198.51.100.7'], null];
+        yield 'invalid forwarded' => [$xff, $proxy, ['REMOTE_ADDR' => '192.0.2.10', 'HTTP_X_FORWARDED_FOR' => 'localhost'], null];
+        yield 'empty forwarded' => [$xff, $proxy, ['REMOTE_ADDR' => '192.0.2.10', 'HTTP_X_FORWARDED_FOR' => ''], null];
+        yield 'missing header' => [$xff, $proxy, ['REMOTE_ADDR' => '192.0.2.10'], null];
+        yield 'two headers' => [['HTTP_X_FORWARDED_FOR', 'HTTP_CLIENT_IP'], $proxy, ['REMOTE_ADDR' => '192.0.2.10', 'HTTP_X_FORWARDED_FOR' => '203.0.113.5'], null];
+        yield 'remote addr header' => [['REMOTE_ADDR'], $proxy, ['REMOTE_ADDR' => '192.0.2.10'], null];
+        yield 'header not allowed' => [['HTTP_X_EVIL'], $proxy, ['REMOTE_ADDR' => '192.0.2.10', 'HTTP_X_EVIL' => '203.0.113.5'], null];
+        yield 'nested selection' => [[[]], $proxy, ['REMOTE_ADDR' => '192.0.2.10', 'HTTP_X_FORWARDED_FOR' => '203.0.113.5'], null];
+        yield 'legacy true from trusted peer' => [true, $proxy, ['REMOTE_ADDR' => '192.0.2.10', 'HTTP_X_FORWARDED_FOR' => '203.0.113.5'], null];
+        yield 'invalid peer' => [$xff, $proxy, ['REMOTE_ADDR' => 'not-an-ip'], null];
+        yield 'no peer' => [$xff, $proxy, [], null];
     }
 
     #[DataProvider('nativeProxyAddresses')]
-    public function testNativeProxyConfigurationKeepsLegacyLiteralServerConvention(array|bool $configured, array $server, string $expected): void
+    public function testNativeProxyAddressHonoursOnlyTrustedPeers(array|bool $headers, mixed $trusted, array $server, ?string $expected): void
     {
-        $_SERVER += $server;
-        $request = Request::create('/about', 'GET', [], [], [], $_SERVER);
-        $database = $this->createMock(DatabaseConnection::class);
-        $authentication = $this->authentication($request, $database);
+        $_SERVER = $server;
+        $request = Request::create('/about', 'GET', [], [], [], $server);
+        $request->server->replace($server);
+        $authentication = $this->authentication($request, $this->createMock(DatabaseConnection::class));
         $method = new ReflectionMethod($authentication, 'nativeIp');
-        self::assertSame($expected, $method->invoke($authentication, $request, ['proxy_headers' => $configured]));
+        $config = ['proxy_headers' => $headers, 'proxy_trusted_addresses' => $trusted];
+        self::assertSame($expected, $method->invoke($authentication, $request, $config));
+        // A consulted value that disagrees with the native globals selects nothing.
         foreach (array_keys($server) as $name) {
+            $consulted = $name === 'REMOTE_ADDR' || $expected !== $server['REMOTE_ADDR'];
             $request->server->set($name, '192.0.2.99');
+            self::assertSame($consulted ? null : $expected, $method->invoke($authentication, $request, $config));
+            $request->server->set($name, $server[$name]);
         }
-        self::assertSame('127.0.0.1', $method->invoke($authentication, $request, ['proxy_headers' => $configured]));
+    }
+
+    public function testNativeProxyAddressMatchesLegacyClientAddress(): void
+    {
+        $root = dirname(__DIR__, 2);
+        $cases = [];
+        foreach (self::nativeProxyAddresses() as $name => [$headers, $trusted, $server]) {
+            $cases[$name] = ['headers' => $headers, 'trusted' => $trusted, 'server' => $server];
+        }
+        $program = <<<'PHP'
+            <?php
+            $root = $argv[1];
+            $config = ['is_web' => false, 'base_path' => $root, 'include_path' => $root . '/include'];
+            require $root . '/include/global_constants.php';
+            require $root . '/lib/functions.php';
+            $config['config_options_array'] = ['selective_debug' => '', 'log_verbosity' => POLLER_VERBOSITY_NONE];
+            preg_match('/\$allowed_proxy_headers\s*=\s*array\((.*?)\);/s', file_get_contents($root . '/include/global_arrays.php'), $block);
+            preg_match_all("/'([^']+)'/", $block[1], $names);
+            $allowed_proxy_headers = $names[1];
+            $results = ['allowed' => $allowed_proxy_headers, 'clients' => []];
+            foreach (json_decode(stream_get_contents(STDIN), true, 512, JSON_THROW_ON_ERROR) as $name => $case) {
+                $config['proxy_headers'] = $case['headers'];
+                $config['proxy_trusted_addresses'] = $case['trusted'];
+                $_SERVER = $case['server'];
+                $results['clients'][$name] = get_client_addr();
+            }
+            echo json_encode($results, JSON_THROW_ON_ERROR);
+            PHP;
+        $script = tempnam(sys_get_temp_dir(), 'client-addr-parity-');
+        file_put_contents($script, $program);
+        try {
+            $process = proc_open([PHP_BINARY, '-d', 'error_reporting=24575', $script, $root], [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
+            self::assertIsResource($process);
+            fwrite($pipes[0], json_encode($cases, JSON_THROW_ON_ERROR));
+            fclose($pipes[0]);
+            $stdout = stream_get_contents($pipes[1]);
+            $stderr = stream_get_contents($pipes[2]);
+            fclose($pipes[1]);
+            fclose($pipes[2]);
+            self::assertSame(0, proc_close($process), $stderr);
+            self::assertSame('', $stderr);
+        } finally {
+            unlink($script);
+        }
+        $legacy = json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
+        self::assertSame($legacy['allowed'], (new ReflectionClassConstant(LegacyBrowserAuthentication::class, 'PROXY_HEADERS'))->getValue());
+        $native = [];
+        foreach ($cases as $name => $case) {
+            $_SERVER = $case['server'];
+            $request = Request::create('/about', 'GET', [], [], [], $case['server']);
+            $request->server->replace($case['server']);
+            $authentication = $this->authentication($request, $this->createMock(DatabaseConnection::class));
+            $native[$name] = (new ReflectionMethod($authentication, 'nativeIp'))->invoke($authentication, $request, ['proxy_headers' => $case['headers'], 'proxy_trusted_addresses' => $case['trusted']]) ?? false;
+        }
+        self::assertSame($legacy['clients'], $native);
     }
 
     public function testBasicMappingUsesConfiguredLegacyCsvAfterDomainStripping(): void
