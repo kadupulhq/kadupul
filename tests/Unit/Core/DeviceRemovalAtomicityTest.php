@@ -24,6 +24,7 @@ function device_removal_run(array $scenario): array
     }
     $program .= <<<'PHP'
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
+require $argv[2] . '/src/Platform/Infrastructure/Legacy/LegacyConnectionRegistry.php';
 $db = new PDO('sqlite::memory:', options: array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 $database_hostname = 'fixture'; $database_port = 0; $database_default = 'device';
 $database_sessions = array('fixture:0:device' => $db);
@@ -80,7 +81,7 @@ foreach (array('host_graph', 'host_snmp_query', 'host_snmp_cache', 'poller_item'
 $state['rows']['poller_command'] = $db->query('SELECT command FROM poller_command ORDER BY command')->fetchAll(PDO::FETCH_COLUMN);
 echo json_encode($state, JSON_THROW_ON_ERROR);
 PHP;
-    $process = proc_open(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, json_encode($scenario + array('caller' => false), JSON_THROW_ON_ERROR)), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $process = proc_open(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, json_encode($scenario + array('caller' => false), JSON_THROW_ON_ERROR), dirname(__DIR__, 3)), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
     $out = stream_get_contents($pipes[1]);
     $err = stream_get_contents($pipes[2]);
     fclose($pipes[1]);

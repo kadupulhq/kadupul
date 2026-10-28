@@ -37,7 +37,7 @@ function api_device_cache_crc_update($poller_id, $variable = 'poller_replicate_d
  */
 function api_device_remove($device_id)
 {
-    global $config, $database_sessions, $database_hostname, $database_port, $database_default;
+    global $config;
 
     if (!is_numeric($device_id) || (int) $device_id <= 0) {
         return false;
@@ -78,7 +78,7 @@ function api_device_remove($device_id)
         }
     }
 
-    $db = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
+    $db = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::select(false);
     if (!$db instanceof PDO || !api_device_remove_rows($db, $device_id, (int) $poller_id)) {
         raise_message('device_remove_failed_' . $device_id, __('Unable to remove Device %s because its database records could not be removed together.', $device_id), MESSAGE_LEVEL_ERROR);
 
