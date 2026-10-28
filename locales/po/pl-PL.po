@@ -12426,11 +12426,11 @@ msgstr "Musisz wybrać kolumnę wyjściową XML dla źródła danych '%s' i prze
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Szablon wykresu nie posiada szablonów danych w użyciu.  Proszę skorygować szablon wykresu"
 
-#: lib/database.php:2408
+#: lib/database.php:2409
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Nie udało się określić długości pola hasła, nie może być kontynuowane, podobnie jak może uszkodzić hasło"
 
-#: lib/database.php:2415
+#: lib/database.php:2416
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Nie udało się zmienić długości pola hasła, nie może być kontynuowane, podobnie jak może uszkodzić hasło"
 

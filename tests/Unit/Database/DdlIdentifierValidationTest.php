@@ -320,6 +320,13 @@ test('index, column and table metadata helpers refuse unsafe identifiers', funct
         ->and(ddl_state()['read'])->toBe(array());
 });
 
+test('lookups accept the hyphenated column names the shipped schema uses', function () {
+    ddl_reset(array('cell' => 'max-access'));
+
+    expect(db_column_exists('snmpagent_cache', 'max-access'))->toBeTrue()
+        ->and(ddl_state()['read'])->toBe(array("SHOW columns FROM `snmpagent_cache` LIKE 'max-access'"));
+});
+
 test('db_add_index writes the index through quoted identifiers', function () {
     ddl_reset();
 

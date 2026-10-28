@@ -12404,11 +12404,11 @@ msgstr "È necessario selezionare una colonna di output XML per Data Source '%s'
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Il tuo modello grafico non ha modelli di dati in uso.  Per favore correggete il vostro modello grafico"
 
-#: lib/database.php:2408
+#: lib/database.php:2409
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Impossibile determinare la lunghezza del campo password, non può continuare come potrebbe corrompere la password"
 
-#: lib/database.php:2415
+#: lib/database.php:2416
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Impossibile modificare la lunghezza del campo password, non può continuare come potrebbe corrompere la password"
 

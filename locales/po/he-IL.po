@@ -12458,11 +12458,11 @@ msgstr "עליך לבחור עמודת פלט של XML עבור 'מקור הנת
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "תבנית התבנית שלך אינה מכילה תבניות נתונים בשימוש. תקן את תבנית התרשים שלך"
 
-#: lib/database.php:2408
+#: lib/database.php:2409
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "הגדרת אורך השדה של הסיסמה נכשלה, לא ניתן להמשיך כסיסמה פגומה"
 
-#: lib/database.php:2415
+#: lib/database.php:2416
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "נכשל שינוי אורך השדה סיסמה, לא יכול להמשיך כמו סיסמה פגומה"
 

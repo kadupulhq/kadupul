@@ -12391,11 +12391,11 @@ msgstr "データソース'%s'のXML出力列を選択し、その右側のチ�
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "グラフテンプレートはデータテンプレートを使用していません。グラフテンプレートを修正してください"
 
-#: lib/database.php:2408
+#: lib/database.php:2409
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "パスワードフィールドの長さを特定できませんでした。パスワードを破損する可能性があるため続行できません"
 
-#: lib/database.php:2415
+#: lib/database.php:2416
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "パスワードフィールド長の変更に失敗しました。パスワードを破損する可能性があるため続行できません"
 

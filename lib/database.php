@@ -941,7 +941,8 @@ function db_has_control_chars($value)
  */
 function db_is_safe_identifier($identifier)
 {
-    return is_string($identifier) && preg_match('/^[A-Za-z0-9_]+$/', $identifier) === 1;
+    // The hyphen is kept for existing columns such as snmpagent_cache.max-access.
+    return is_string($identifier) && preg_match('/^[A-Za-z0-9_-]+$/D', $identifier) === 1;
 }
 
 /**
@@ -967,7 +968,7 @@ function db_format_qualified_identifier($identifier)
     $quoted_parts = array();
 
     foreach ($parts as $part) {
-        if (preg_match('/^`([A-Za-z0-9_]+)`$/D', $part, $matches) === 1) {
+        if (preg_match('/^`([A-Za-z0-9_-]+)`$/D', $part, $matches) === 1) {
             $part = $matches[1];
         }
 
@@ -1046,7 +1047,7 @@ function db_is_safe_table_option($option)
  */
 function db_is_safe_index_column($column)
 {
-    return is_string($column) && preg_match('/^`?[A-Za-z0-9_]+`?(?:\([0-9]+\))?$/', trim($column)) === 1;
+    return is_string($column) && preg_match('/^`?[A-Za-z0-9_-]+`?(?:\([0-9]+\))?$/D', trim($column)) === 1;
 }
 
 /**
