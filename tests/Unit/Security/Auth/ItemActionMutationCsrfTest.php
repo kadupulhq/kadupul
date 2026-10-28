@@ -268,7 +268,7 @@ test('pages send the device, tree, rule, data source and utility actions by POST
     $token = '[^;]*__csrf_magic\'?\s*:\s*csrfMagicToken';
 
     expect($source('host.php'))->toContain('/config/bootstrap.php')
-        ->toContain('/app.php/inventory/devices/legacy');
+        ->toContain("'app.php/inventory/devices/legacy'");
 
     expect($source('graphs_new.php'))->toMatch("/class='cactiPostAction' href='#' data-navigation='fullpage' data-url='\" \\. html_escape\\('host\\.php\\?action=query_verbose&/");
 
