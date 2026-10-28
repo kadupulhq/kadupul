@@ -283,6 +283,22 @@ class SonarChangeScopeTest(unittest.TestCase):
         self.assertFalse(self.policy(actor="dependabot[bot]", all_prs="true").full_analysis)
         self.assertFalse(self.policy(event_name="pull_request_target").full_analysis)
 
+    def test_merge_queue_follows_the_trusted_pull_request_switch(self):
+        event = {"repository": {"full_name": "owned/repository", "default_branch": "main"},
+                 "merge_group": {"head_ref": "refs/heads/gh-readonly-queue/main/pr-1-abc"}}
+        ref = "refs/heads/gh-readonly-queue/main/pr-1-abc"
+        decide = lambda **kw: scope.event_policy("merge_group", event, kw.get("enable", "true"),
+                                                 kw.get("all_prs", ""), "", "owned/repository",
+                                                 kw.get("actor", "maintainer"), ref)
+        self.assertFalse(decide().full_analysis)
+        self.assertEqual(decide().reason, "merge-queue-not-enforced")
+        self.assertTrue(decide(all_prs="true").full_analysis)
+        self.assertFalse(decide(all_prs="true", enable="false").full_analysis)
+        self.assertFalse(decide(all_prs="true", actor="dependabot[bot]").full_analysis)
+        with self.assertRaises(ValueError):
+            scope.event_policy("merge_group", {"repository": event["repository"]}, "true", "true", "",
+                               "owned/repository", "maintainer", ref)
+
     def test_bad_configuration_or_event_cannot_masquerade_as_clean_skip(self):
         for flag in ["enabled", "1", "true\nfalse"]:
             with self.assertRaises(ValueError):
@@ -309,17 +325,36 @@ class SonarChangeScopeTest(unittest.TestCase):
                 self.assertIn("SONAR_TOKEN is not configured", result.stdout)
 
 
-    def test_future_required_gate_rejects_failed_cancelled_and_skipped_analysis(self):
+    def test_quality_gate_fails_closed_when_analysis_is_due(self):
         content = (ROOT / ".github/workflows/sonarcloud.yml").read_text()
         shell = textwrap.dedent(content.split("      - name: Require completed analysis\n", 1)[1]
                                 .split("        run: |\n", 1)[1])
-        for scope_result in ["success", "failure", "cancelled", "skipped"]:
-            for analysis_result in ["success", "failure", "cancelled", "skipped"]:
-                result = subprocess.run(["/bin/bash", "-e", "-c", shell],
-                                        env={**os.environ, "SCOPE_RESULT": scope_result,
-                                             "ANALYSIS_RESULT": analysis_result}, capture_output=True, text=True)
-                self.assertEqual(result.returncode, 0 if scope_result == analysis_result == "success" else 1)
+        results = ["success", "failure", "cancelled", "skipped"]
 
+        def gate(scope_result, full, all_prs, analysis_result, reason="development-branch"):
+            return subprocess.run(["/bin/bash", "-e", "-c", shell],
+                                  env={**os.environ, "SCOPE_RESULT": scope_result,
+                                       "FULL_ANALYSIS": full, "ALL_PRS": all_prs,
+                                       "SCOPE_REASON": reason,
+                                       "ANALYSIS_RESULT": analysis_result},
+                                  capture_output=True, text=True)
+
+        for scope_result in results:
+            for full in ["true", "false", ""]:
+                for all_prs in ["true", ""]:
+                    for analysis_result in results:
+                        with self.subTest(scope=scope_result, full=full, all_prs=all_prs,
+                                          analysis=analysis_result):
+                            due = full == "true" or all_prs == "true"
+                            passes = scope_result == "success" and (
+                                not due or analysis_result == "success")
+                            result = gate(scope_result, full, all_prs, analysis_result)
+                            self.assertEqual(result.returncode, 0 if passes else 1)
+        skipped = gate("success", "false", "", "skipped", reason="::warning::injected")
+        self.assertEqual(skipped.returncode, 0)
+        self.assertIn("out of scope for this run (unknown)", skipped.stdout)
+        self.assertNotIn("::warning::", skipped.stdout)
+        self.assertIn("(development-branch)", gate("success", "false", "", "skipped").stdout)
 
 
 if __name__ == "__main__":

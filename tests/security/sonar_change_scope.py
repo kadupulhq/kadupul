@@ -193,6 +193,14 @@ def event_policy(event_name: str, event: dict, enable: str, all_prs: str,
         # Match GitHub startsWith(), which compares strings without case.
         selected = branch.lower().startswith(("sonar/", "release/"))
         return Scope(selected, "analysis-branch" if selected else "development-branch")
+    if event_name == "merge_group":
+        # GitHub builds merge groups only from this repository's queued pull
+        # requests, so they follow the trusted pull request switch.
+        if not isinstance(event.get("merge_group"), dict):
+            raise ValueError("Merge group identity is unavailable")
+        if flags[1] == "true":
+            return Scope(True, "merge-queue")
+        return Scope(False, "merge-queue-not-enforced")
     return Scope(False, "unsupported-event")
 
 
