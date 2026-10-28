@@ -391,6 +391,7 @@ test('Boost releases a native writer when archive discovery or row selection is 
     $bootstrap = '<?php $config = array("cacti_server_os" => "unix", "rra_path" => __DIR__);' .
         'define("CACTI_LOCALE", "en-US"); function cacti_log(...$args) {} function boost_debug(...$args) {}' .
         'function cacti_sizeof($rows) { return count($rows); } function db_fetch_cell_prepared(...$args) { return 0; }' .
+        'function db_execute_prepared(...$args) { return true; }' .
         'function cacti_escapeshellarg($value) { return escapeshellarg($value); }' .
         'function read_config_option($name) { return $name === "path_rrdtool" ? ' . var_export($binary, true) . ' : ""; }' .
         'function boost_get_arch_table_names($table) { return ' . ($emptyArchives ? 'array()' : 'array("fixture")') . '; }' .

@@ -70,6 +70,10 @@ function boost_get_arch_table_names(...$args)
 function db_fetch_cell($sql)
 {
     $mode = getenv('BOOST_MODE');
+    if ($sql === 'SELECT @boost_child_session') {
+        // A reconnected session no longer holds the child's token.
+        return $mode === 'output-session-kept' ? $GLOBALS['session_token'] : null;
+    }
     if (strpos($sql, 'WHERE status < 0') !== false) {
         return $mode === 'master-failed-count' ? false : ($mode === 'master-child-failed' ? 1 : 0);
     }
@@ -93,6 +97,9 @@ function db_fetch_cell_prepared($sql, $params = array())
     }
     if ($mode === 'output-next-count' && strpos($sql, 'SELECT COUNT(*)') !== false) {
         return false;
+    }
+    if (strpos($mode, 'output-session-') === 0 && strpos($sql, 'SELECT COUNT(*)') !== false) {
+        return 0;
     }
     if ($mode === 'archive-retry' && strpos($sql, 'TABLE_ROWS') !== false) {
         return 0;
@@ -130,7 +137,7 @@ function db_fetch_assoc($sql)
     if (getenv('BOOST_MODE') === 'output-legacy-lock') {
         return array(array('local_data_id' => 42, 'rrd_name' => 'value', 'timestamp' => '1700000000', 'output' => '42'));
     }
-    if (getenv('BOOST_MODE') === 'output-next-count') {
+    if (getenv('BOOST_MODE') === 'output-next-count' || strpos(getenv('BOOST_MODE'), 'output-session-') === 0) {
         return array();
     }
     return strpos($sql, 'information_schema.tables') !== false && strpos(getenv('BOOST_MODE'), 'master-success') === 0
@@ -198,6 +205,10 @@ function db_execute($sql)
 }
 function db_execute_prepared(...$args)
 {
+    if (($args[0] ?? '') === 'SET @boost_child_session = ?') {
+        $GLOBALS['session_token'] = $args[1][0];
+        return getenv('BOOST_MODE') !== 'output-session-set';
+    }
     if (getenv('BOOST_MODE') === 'output-legacy-lock' && str_contains((string) ($args[0] ?? ''), 'DELETE')) {
         $GLOBALS['legacy_deletes'] = ($GLOBALS['legacy_deletes'] ?? 0) + 1;
     }
