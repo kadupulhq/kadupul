@@ -3,8 +3,8 @@
     "name": "escape_page_action",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 9148,
-        "end_line": 9155,
+        "start_line": 9164,
+        "end_line": 9171,
         "line_count": 8,
         "signature": {
             "parameters": [
@@ -40,7 +40,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 25, "core_outside_functions_php": 24, "tests": 3, "plugins": 0},
+        "fan_out": {"core": 22, "core_outside_functions_php": 21, "tests": 3, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -29,9 +31,9 @@ function dq_path_child(string $program, array $input = array(), ?string $cwd = n
     $stderr = stream_get_contents($pipes[2]);
     fclose($pipes[1]);
     fclose($pipes[2]);
-    proc_close($process);
+    $status = proc_close($process);
 
-    expect($stderr)->toBe('');
+    expect($stderr)->toBe('')->and($status)->toBe(0);
 
     return json_decode($stdout, true) ?? array('raw' => $stdout);
 }
