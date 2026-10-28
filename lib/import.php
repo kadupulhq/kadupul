@@ -1522,7 +1522,9 @@ function xml_to_data_query($hash, &$xml_array, &$hash_cache, &$files, $replace_s
     if (isset($save['xml_path'])) {
         $path = str_replace('<path_cacti>', $config['base_path'], $save['xml_path']);
 
-        if (!file_exists($path)) {
+        // The preview must not say whether a path outside resource/ exists;
+        // get_data_query_array() refuses those paths anyway (GHSA-2x86-jpm8-9vgp).
+        if (!cacti_path_is_within($path, $config['base_path'] . '/resource') || !is_file($path)) {
             $files[$path] = 'missing';
         } elseif (!is_readable($path)) {
             $files[$path] = 'notreadable';

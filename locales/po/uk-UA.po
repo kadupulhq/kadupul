@@ -47,7 +47,7 @@ msgstr "Ця програма розповсюджується з надією, 
 #: automation_graph_rules.php:17 automation_networks.php:16
 #: automation_snmp.php:14 automation_snmp.php:592 automation_tree_rules.php:17
 #: data_queries.php:16 data_queries.php:863 data_queries.php:972
-#: data_queries.php:1252 data_sources.php:23 data_sources.php:1249
+#: data_queries.php:1254 data_sources.php:23 data_sources.php:1249
 #: data_templates.php:19 data_templates.php:791 graph_templates.php:22
 #: graph_templates.php:516 graphs.php:32 host_templates.php:20
 #: host_templates.php:485 host_templates.php:542 include/global_arrays.php:1658
@@ -398,7 +398,7 @@ msgstr "Відповідні Графіки"
 #: aggregate_templates.php:606 automation_devices.php:485
 #: automation_graph_rules.php:807 automation_networks.php:1180
 #: automation_networks.php:1224 automation_snmp.php:703
-#: automation_tree_rules.php:843 data_debug.php:1214 data_queries.php:1371
+#: automation_tree_rules.php:843 data_debug.php:1214 data_queries.php:1373
 #: data_sources.php:1814 data_templates.php:1101 graph_templates.php:726
 #: graph_view.php:667 graphs.php:2113 graphs_new.php:526 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
@@ -432,7 +432,7 @@ msgstr "Графіки"
 #: aggregate_templates.php:622 automation_devices.php:582
 #: automation_graph_rules.php:849 automation_networks.php:1190
 #: automation_snmp.php:713 automation_tree_rules.php:863 data_debug.php:1224
-#: data_queries.php:1381 data_sources.php:1824 data_templates.php:1130
+#: data_queries.php:1383 data_sources.php:1824 data_templates.php:1130
 #: graph_templates.php:736 graph_view.php:743 graphs.php:2134
 #: graphs_new.php:536 host_templates.php:805 include/global_form.php:242
 #: lib/api_automation.php:182 lib/api_automation.php:490
@@ -454,7 +454,7 @@ msgstr "Частина Агрегованого"
 #: aggregate_templates.php:643 automation_devices.php:509
 #: automation_graph_rules.php:861 automation_networks.php:1224
 #: automation_snmp.php:728 automation_tree_rules.php:875 data_debug.php:1139
-#: data_queries.php:1396 data_sources.php:1764 data_templates.php:1151
+#: data_queries.php:1398 data_sources.php:1764 data_templates.php:1151
 #: graph_templates.php:757 graph_view.php:675 graphs.php:2104
 #: graphs_new.php:515 host_templates.php:786 lib/api_automation.php:187
 #: lib/api_automation.php:471 lib/api_automation.php:723
@@ -469,7 +469,7 @@ msgstr "Вперед"
 
 #: aggregate_graphs.php:1303 aggregate_graphs.php:1596
 #: automation_devices.php:509 automation_snmp.php:728 data_debug.php:1139
-#: data_queries.php:1396 data_sources.php:1764 data_templates.php:1151
+#: data_queries.php:1398 data_sources.php:1764 data_templates.php:1151
 #: graph_templates.php:757 graph_view.php:675 graphs.php:2104
 #: graphs_new.php:515 host_templates.php:786 lib/html_graph.php:178
 #: managers.php:169 managers.php:528 managers.php:793 plugins.php:530
@@ -485,7 +485,7 @@ msgstr "Встановити/Оновити Фільтри"
 #: aggregate_templates.php:644 automation_devices.php:510
 #: automation_graph_rules.php:862 automation_networks.php:1225
 #: automation_snmp.php:729 automation_tree_rules.php:876 data_debug.php:1140
-#: data_queries.php:1397 data_sources.php:1765 data_templates.php:1152
+#: data_queries.php:1399 data_sources.php:1765 data_templates.php:1152
 #: graph_templates.php:758 graph_view.php:676 graphs.php:2105
 #: graphs_new.php:516 host_templates.php:787 lib/api_automation.php:188
 #: lib/api_automation.php:472 lib/api_automation.php:724
@@ -500,7 +500,7 @@ msgid "Clear"
 msgstr "Очистити"
 
 #: aggregate_graphs.php:1304 aggregate_graphs.php:1597 automation_snmp.php:729
-#: data_debug.php:1140 data_queries.php:1397 data_sources.php:1765
+#: data_debug.php:1140 data_queries.php:1399 data_sources.php:1765
 #: data_templates.php:1152 graph_templates.php:758 graph_view.php:676
 #: graphs.php:2105 graphs_new.php:516 host_templates.php:787
 #: lib/html_graph.php:179 lib/html_tree.php:1010 managers.php:170
@@ -519,7 +519,7 @@ msgstr "Заголовок Графіку"
 
 #: aggregate_graphs.php:1330 aggregate_graphs.php:1663
 #: automation_graph_rules.php:962 automation_tree_rules.php:969
-#: data_debug.php:517 data_queries.php:1482 data_sources.php:1998
+#: data_debug.php:517 data_queries.php:1484 data_sources.php:1998
 #: data_templates.php:1260 graph_templates.php:863 graphs.php:2338
 #: host_templates.php:949 lib/api_automation.php:282 pollers.php:995
 #: tree.php:2306 user_admin.php:809 user_admin.php:924 user_admin.php:1073
@@ -539,7 +539,7 @@ msgid "Size"
 msgstr "Розмір"
 
 #: aggregate_graphs.php:1348 aggregate_templates.php:724
-#: automation_tree_rules.php:721 data_queries.php:1534 data_sources.php:2085
+#: automation_tree_rules.php:721 data_queries.php:1536 data_sources.php:2085
 #: data_sources.php:2086 data_templates.php:1321 graph_templates.php:920
 #: host_templates.php:997 include/global_settings.php:969
 #: include/global_settings.php:1943 lib/api_automation.php:1438 tree.php:2399
@@ -550,7 +550,7 @@ msgstr "Ні"
 
 #: aggregate_graphs.php:1348 aggregate_templates.php:724
 #: automation_tree_rules.php:714 data_debug.php:781 data_debug.php:786
-#: data_debug.php:791 data_queries.php:1534 data_sources.php:2085
+#: data_debug.php:791 data_queries.php:1536 data_sources.php:2085
 #: data_sources.php:2086 data_templates.php:1321 graph_templates.php:920
 #: host_templates.php:997 include/global_settings.php:968
 #: include/global_settings.php:1942 lib/api_automation.php:1438
@@ -708,12 +708,12 @@ msgstr "Заголовок Шаблону"
 msgid "Aggregate Templates that are in use can not be Deleted.  In use is defined as being referenced by an Aggregate."
 msgstr "Шаблони Агрегації, котрі використовуються не можуть бути Видалені. Використання має на увазі посилання на Агрегований графік."
 
-#: aggregate_templates.php:707 data_queries.php:1488 data_sources.php:2016
+#: aggregate_templates.php:707 data_queries.php:1490 data_sources.php:2016
 #: data_templates.php:1266 graph_templates.php:869 host_templates.php:955
 msgid "Deletable"
 msgstr "Видаляється"
 
-#: aggregate_templates.php:708 data_queries.php:1211 data_queries.php:1493
+#: aggregate_templates.php:708 data_queries.php:1213 data_queries.php:1495
 #: graph_templates.php:874
 msgid "Graphs Using"
 msgstr "Використання Графіками"
@@ -1492,7 +1492,7 @@ msgid "General Settings"
 msgstr "Основні Налаштування"
 
 #: automation_networks.php:439 automation_snmp.php:511 data_queries.php:817
-#: data_queries.php:924 data_queries.php:1209 graph_templates.php:499
+#: data_queries.php:924 data_queries.php:1211 graph_templates.php:499
 #: include/global_form.php:201 include/global_form.php:267
 #: include/global_form.php:324 include/global_form.php:344
 #: include/global_form.php:385 include/global_form.php:515
@@ -2223,7 +2223,7 @@ msgstr "Priv Protocol"
 msgid "Context"
 msgstr "Контекст"
 
-#: automation_snmp.php:553 data_queries.php:1213 utilities.php:2151
+#: automation_snmp.php:553 data_queries.php:1215 utilities.php:2151
 msgid "Action"
 msgstr "Дія"
 
@@ -3178,87 +3178,87 @@ msgstr "Запити Даних [редагування: %s]"
 msgid "Data Queries [new]"
 msgstr "Запити Даних [новий]"
 
-#: data_queries.php:1195
+#: data_queries.php:1197
 msgid "Successfully located XML file"
 msgstr "XML файл успішно знайдено"
 
-#: data_queries.php:1198
+#: data_queries.php:1200
 msgid "Could not locate XML file."
 msgstr "Не вдалось знайти XML файл."
 
-#: data_queries.php:1206 host_templates.php:466 include/global_arrays.php:2422
+#: data_queries.php:1208 host_templates.php:466 include/global_arrays.php:2422
 msgid "Associated Graph Templates"
 msgstr "Асоційовані Шаблони Графіків"
 
-#: data_queries.php:1210 graph_templates.php:857 graphs_new.php:640
+#: data_queries.php:1212 graph_templates.php:857 graphs_new.php:640
 #: lib/api_automation.php:576
 msgid "Graph Template Name"
 msgstr "Ім'я Шаблону Графіків"
 
-#: data_queries.php:1212
+#: data_queries.php:1214
 msgid "Mapping ID"
 msgstr "ID Меппінгу"
 
-#: data_queries.php:1239
+#: data_queries.php:1241
 msgid "Association Read Only until XML file located"
 msgstr "Асоційовано тільки для читання, поки XML файл не буде знайдено"
 
-#: data_queries.php:1256
+#: data_queries.php:1258
 msgid "Mapped Graph Templates with Graphs are read only"
 msgstr "Замеппінговані Шаблони Графіків з Графіками тільки для читання"
 
-#: data_queries.php:1263
+#: data_queries.php:1265
 msgid "No Graph Templates Defined."
 msgstr "Шаблонів Графіків не Визначено."
 
-#: data_queries.php:1305
+#: data_queries.php:1307
 msgid "Delete Associated Graph"
 msgstr "Видалити Асоційований Графік"
 
-#: data_queries.php:1362 data_queries.php:1377 data_queries.php:1512
+#: data_queries.php:1364 data_queries.php:1379 data_queries.php:1514
 #: include/global_arrays.php:1002 include/global_arrays.php:1229
 #: include/global_arrays.php:2404 lib/api_automation.php:1078
 msgid "Data Queries"
 msgstr "Запити Даних"
 
-#: data_queries.php:1476 utilities.php:1934
+#: data_queries.php:1478 utilities.php:1934
 msgid "Data Query Name"
 msgstr "Ім'я Запиту Даних"
 
-#: data_queries.php:1479
+#: data_queries.php:1481
 msgid "The name of this Data Query."
 msgstr "Ім'я Запиту Даних."
 
-#: data_queries.php:1485 graph_templates.php:866
+#: data_queries.php:1487 graph_templates.php:866
 msgid "The internal ID for this Graph Template.  Useful when performing automation or debugging."
 msgstr "Внутрішній ID для цього Шаблону Графіків. Корисний при виконанні відлагодження та автоматизації."
 
-#: data_queries.php:1490
+#: data_queries.php:1492
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "Запити Даних котрі використовуються не можуть бути Видаленими. Використовуються означає, що на них посилаються Графік чи Шаблон Графіків."
 
-#: data_queries.php:1496
+#: data_queries.php:1498
 msgid "The number of Graphs using this Data Query."
 msgstr "Кількість Графіків, що використовують цей Запит Даних."
 
-#: data_queries.php:1499
+#: data_queries.php:1501
 msgid "Templates Using"
 msgstr "Шаблонів Використовує"
 
-#: data_queries.php:1502
+#: data_queries.php:1504
 msgid "The number of Graphs Templates using this Data Query."
 msgstr "Кількість Шаблонів Графіків, що використовують цей Запит Даних."
 
-#: data_queries.php:1505 include/global_arrays.php:1363
+#: data_queries.php:1507 include/global_arrays.php:1363
 #: include/global_form.php:570 include/global_form.php:1380
 msgid "Data Input Method"
 msgstr "Метод Введення Даних"
 
-#: data_queries.php:1508
+#: data_queries.php:1510
 msgid "The Data Input Method used to collect data for Data Sources associated with this Data Query."
 msgstr "Метод Введення Даних що використовується для Джерела Даних асоційованих з цим Запитом Даних."
 
-#: data_queries.php:1542
+#: data_queries.php:1544
 msgid "No Data Queries Found"
 msgstr "Не знайдено Запитів Даних"
 
@@ -3474,7 +3474,7 @@ msgstr "Користувацькі Дані"
 msgid "Data Source Item %s"
 msgstr "Елемент Джерела Даних %s"
 
-#: data_sources.php:1267 data_templates.php:817 lib/import.php:2870
+#: data_sources.php:1267 data_templates.php:817 lib/import.php:2872
 #: package_import.php:604
 msgid "New"
 msgstr "Новий"
@@ -13638,7 +13638,7 @@ msgstr ""
 msgid "Send Report"
 msgstr ""
 
-#: lib/html_reports.php:1644 lib/import.php:2955 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:2957 user_admin.php:1776
 msgid "[new]"
 msgstr ""
 
@@ -13903,89 +13903,89 @@ msgstr ""
 msgid "not writable"
 msgstr ""
 
-#: lib/import.php:1968 lib/import.php:1989
+#: lib/import.php:1970 lib/import.php:1991
 #, fuzzy, php-format
 msgid "New Graph Template: %s"
 msgstr "Новий Шаблон Графіків"
 
-#: lib/import.php:2003 lib/import.php:2015
+#: lib/import.php:2005 lib/import.php:2017
 #, php-format
 msgid "New Data Query: %s"
 msgstr "Запит Даних [%s]"
 
-#: lib/import.php:2652
+#: lib/import.php:2654
 msgid "Unknown Field"
 msgstr ""
 
-#: lib/import.php:2868
+#: lib/import.php:2870
 msgid "Updated"
 msgstr "RRD Оновлено"
 
-#: lib/import.php:2872
+#: lib/import.php:2874
 msgid "Damaged"
 msgstr ""
 
-#: lib/import.php:2874 package_import.php:598
+#: lib/import.php:2876 package_import.php:598
 msgid "Unchanged"
 msgstr ""
 
-#: lib/import.php:2910
+#: lib/import.php:2912
 msgid "Import Preview Results"
 msgstr ""
 
-#: lib/import.php:2910
+#: lib/import.php:2912
 msgid "Import Results"
 msgstr ""
 
-#: lib/import.php:2914
+#: lib/import.php:2916
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr ""
 
-#: lib/import.php:2916
+#: lib/import.php:2918
 msgid "Kadupul has imported the following items for the Package:"
 msgstr ""
 
-#: lib/import.php:2919
+#: lib/import.php:2921
 msgid "Package Files"
 msgstr ""
 
-#: lib/import.php:2923
+#: lib/import.php:2925
 msgid "[preview] "
 msgstr ""
 
-#: lib/import.php:2928
+#: lib/import.php:2930
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr ""
 
-#: lib/import.php:2930
+#: lib/import.php:2932
 msgid "Kadupul has imported the following items for the Template:"
 msgstr ""
 
-#: lib/import.php:2945
+#: lib/import.php:2947
 msgid "[success]"
 msgstr ""
 
-#: lib/import.php:2947
+#: lib/import.php:2949
 msgid "[fail]"
 msgstr ""
 
-#: lib/import.php:2949
+#: lib/import.php:2951
 msgid "[preview]"
 msgstr ""
 
-#: lib/import.php:2953
+#: lib/import.php:2955
 msgid "[updated]"
 msgstr ""
 
-#: lib/import.php:2957
+#: lib/import.php:2959
 msgid "[unchanged]"
 msgstr ""
 
-#: lib/import.php:2993
+#: lib/import.php:2995
 msgid "Found Dependency:"
 msgstr ""
 
-#: lib/import.php:2995
+#: lib/import.php:2997
 msgid "Unmet Dependency:"
 msgstr ""
 
