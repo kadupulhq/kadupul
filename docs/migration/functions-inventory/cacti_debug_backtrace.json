@@ -3,8 +3,8 @@
     "name": "cacti_debug_backtrace",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6418,
-        "end_line": 6470,
+        "start_line": 6434,
+        "end_line": 6486,
         "line_count": 53,
         "signature": {
             "parameters": [
@@ -58,7 +58,7 @@
             "returns_reference": false
         },
         "docblock": false,
-        "fan_out": {"core": 33, "core_outside_functions_php": 16, "tests": 16, "plugins": 0},
+        "fan_out": {"core": 33, "core_outside_functions_php": 16, "tests": 18, "plugins": 0},
         "body": {
             "uses_global": ["config"],
             "static_variables": [],

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -21,14 +23,14 @@ final class LegacyRrdWebContext
 
     /** Apply the request timezone immediately before a local process starts.
      *
-     * @param array<string, mixed> $config Application configuration.
+     * @param mixed $timezone Browser offset in minutes; null means no supplied value.
      *
      * @return void
      */
-    public function prepareProcess(array $config): void
+    public function prepareProcess(bool $isWeb, mixed $timezone): void
     {
-        if ($config['is_web'] && isset($_COOKIE['CactiTimeZone'])) {
-            \cacti_time_zone_set($_COOKIE['CactiTimeZone']);
+        if ($isWeb && $timezone !== null) {
+            \cacti_time_zone_set($timezone);
         }
     }
 }

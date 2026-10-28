@@ -3,8 +3,8 @@
     "name": "exec_into_array",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 4190,
-        "end_line": 4206,
+        "start_line": 4206,
+        "end_line": 4222,
         "line_count": 17,
         "signature": {
             "parameters": [

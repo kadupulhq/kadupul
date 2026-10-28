@@ -3,8 +3,8 @@
     "name": "array_rekey",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1480,
-        "end_line": 1499,
+        "start_line": 1481,
+        "end_line": 1500,
         "line_count": 20,
         "signature": {
             "parameters": [
@@ -40,7 +40,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 202, "core_outside_functions_php": 195, "tests": 36, "plugins": 0},
+        "fan_out": {"core": 201, "core_outside_functions_php": 194, "tests": 40, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

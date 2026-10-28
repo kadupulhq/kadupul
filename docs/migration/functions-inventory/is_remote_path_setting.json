@@ -3,8 +3,8 @@
     "name": "is_remote_path_setting",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 634,
-        "end_line": 643,
+        "start_line": 635,
+        "end_line": 644,
         "line_count": 10,
         "signature": {
             "parameters": [
@@ -22,7 +22,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 6, "core_outside_functions_php": 4, "tests": 4, "plugins": 0},
+        "fan_out": {"core": 6, "core_outside_functions_php": 4, "tests": 5, "plugins": 0},
         "body": {
             "uses_global": ["config"],
             "static_variables": [],
