@@ -3,9 +3,9 @@
     "name": "get_full_script_path",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 3021,
-        "end_line": 3072,
-        "line_count": 52,
+        "start_line": 3030,
+        "end_line": 3088,
+        "line_count": 59,
         "signature": {
             "parameters": [
                 {
@@ -22,7 +22,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 4, "core_outside_functions_php": 2, "tests": 1, "plugins": 0},
+        "fan_out": {"core": 4, "core_outside_functions_php": 2, "tests": 4, "plugins": 0},
         "body": {
             "uses_global": ["config"],
             "static_variables": [],

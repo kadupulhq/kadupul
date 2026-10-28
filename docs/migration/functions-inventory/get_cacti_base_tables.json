@@ -3,8 +3,8 @@
     "name": "get_cacti_base_tables",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7867,
-        "end_line": 7889,
+        "start_line": 7883,
+        "end_line": 7905,
         "line_count": 23,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,

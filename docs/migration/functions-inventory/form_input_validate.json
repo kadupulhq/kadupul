@@ -3,8 +3,8 @@
     "name": "form_input_validate",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1115,
-        "end_line": 1152,
+        "start_line": 1116,
+        "end_line": 1153,
         "line_count": 38,
         "signature": {
             "parameters": [
@@ -58,7 +58,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 389, "core_outside_functions_php": 387, "tests": 24, "plugins": 0},
+        "fan_out": {"core": 374, "core_outside_functions_php": 372, "tests": 24, "plugins": 0},
         "body": {
             "uses_global": ["messages"],
             "static_variables": [],
