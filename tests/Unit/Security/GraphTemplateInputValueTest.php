@@ -215,7 +215,7 @@ test('graph input values must have the shape of their graph item field', functio
     array('text_format', "line one\nline two", true),
     array('value', str_repeat('界', 255), true),
     array('value', str_repeat('界', 256), false),
-    array('value', "\xff", false),
+    'invalid UTF-8' => array('value', "\xff", false),
 ));
 
 test('a later out-of-range graph input prevents every input write', function () {
