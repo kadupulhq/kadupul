@@ -354,6 +354,10 @@ services:
         exclude: ['../src/Graphing/Infrastructure/Rrd/', '../src/Graphing/Infrastructure/Legacy/LegacyRrdWebContext.php']
     Kadupul\Graphing\Application\Port\BoostPartitionWriter:
         alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyBoostPartitionWriter
+    # Public so poller_boost.php can reach it through the kernel container when the
+    # master runs in queue mode.
+    Kadupul\Graphing\Infrastructure\Symfony\BoostPartitionDispatcher:
+        public: true
     Kadupul\Graphing\Infrastructure\Symfony\FlushBoostPartitionHandler:
         arguments:
             $timeout: '%kadupul.boost.partition_timeout%'

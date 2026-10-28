@@ -196,9 +196,66 @@ if ($child == false) {
             /* Allow mysql to flush the rename transaction */
             sleep(7);
 
-            cacti_log('INFO: Boost spawning child processes ...', true, 'BOOST');
-            $children = boost_launch_children($run_id);
-            $children_ok = boost_wait_children($children, max(1, (int) read_config_option('boost_rrd_update_max_runtime')) * 3);
+            if ((int) ($config['poller_id'] ?? 1) === 1 && read_config_option('boost_processing_mode') === 'queue') {
+                $expected_children = max(1, (int) read_config_option('boost_parallel'));
+                $deadline = hrtime(true) + max(1, (int) read_config_option('boost_rrd_update_max_runtime')) * 3 * 1000000000;
+                $children_ok = false;
+
+                cacti_log('INFO: Boost queueing ' . $expected_children . ' partitions ...', true, 'BOOST');
+
+                /* A worker only runs a partition of the run named here. One that
+                 * passed this check just before the clear below may still start a
+                 * child for this run. That is safe: its status row carries the old
+                 * run id and no later run counts it, the archives it touches stay
+                 * until a run verifies them, and the next master ends running
+                 * boost children (boost_kill_running_processes covers every
+                 * boost task, including queue-started children). */
+                set_config_option('boost_active_run', $run_id);
+
+                /* sig_handler() exits, which skips the finally below. Clear only
+                 * our own value so a newer master's run is never wiped. */
+                $clear_active_run = function () use ($run_id) {
+                    if (read_config_option('boost_active_run', true) === $run_id) {
+                        set_config_option('boost_active_run', '');
+                    }
+                };
+                register_shutdown_function($clear_active_run);
+
+                try {
+                    boost_dispatch_partitions($run_id, $expected_children);
+
+                    while (true) {
+                        $reported = (int) db_fetch_cell_prepared('SELECT COUNT(*) FROM poller_output_boost_processes WHERE run_id = ?', array($run_id));
+
+                        if ($reported >= $expected_children) {
+                            $children_ok = true;
+                            break;
+                        }
+
+                        /* The count above also runs once after the deadline. */
+                        if (hrtime(true) >= $deadline) {
+                            break;
+                        }
+
+                        sleep(1);
+                    }
+
+                    if (!$children_ok) {
+                        cacti_log($reported === 0
+                            ? 'ERROR: no Boost queue worker reported; run "bin/console messenger:consume boost"'
+                            : 'ERROR: Boost queue run timed out: ' . $reported . ' of ' . $expected_children . ' partitions reported; check "bin/console messenger:consume boost" worker capacity and logs.', true, 'BOOST');
+                    }
+                } catch (\Throwable $e) {
+                    cacti_log('ERROR: Boost could not queue its partitions (' . $e::class . '); archives retained for retry.', true, 'BOOST');
+                } finally {
+                    $clear_active_run();
+                }
+            } else {
+                cacti_log('INFO: Boost spawning child processes ...', true, 'BOOST');
+                $children = boost_launch_children($run_id);
+                $expected_children = count($children);
+                $children_ok = boost_wait_children($children, max(1, (int) read_config_option('boost_rrd_update_max_runtime')) * 3);
+            }
 
             cacti_log('INFO: Boost last child processes ended.', true, 'BOOST');
 
@@ -206,7 +263,7 @@ if ($child == false) {
             $failed_children = db_fetch_cell_prepared('SELECT COUNT(*) FROM poller_output_boost_processes WHERE run_id = ? AND status < 0', array($run_id));
             $rrd_updates = db_fetch_cell_prepared('SELECT SUM(status) FROM poller_output_boost_processes WHERE run_id = ?', array($run_id));
             $reported_children = db_fetch_cell_prepared('SELECT COUNT(*) FROM poller_output_boost_processes WHERE run_id = ?', array($run_id));
-            $run_failed = !$children_ok || !is_numeric($reported_children) || (int) $reported_children !== count($children)
+            $run_failed = !$children_ok || !is_numeric($reported_children) || (int) $reported_children !== $expected_children
                 || !($failed_children === 0 || $failed_children === '0')
                 || !is_numeric($rrd_updates) || $rrd_updates < 0;
 
@@ -341,6 +398,22 @@ function sig_handler($signo)
         } elseif (!$child) {
             db_execute("SELECT RELEASE_ALL_LOCKS()");
         }
+    }
+}
+
+/** Queue mode: hand the run's partitions to the Messenger transport. */
+function boost_dispatch_partitions(string $run_id, int $partitions): void
+{
+    global $config;
+
+    $kernel = require $config['base_path'] . '/config/bootstrap.php';
+
+    try {
+        $kernel->boot();
+        $kernel->getContainer()->get(\Kadupul\Graphing\Infrastructure\Symfony\BoostPartitionDispatcher::class)
+            ->dispatch($run_id, $partitions);
+    } finally {
+        $kernel->shutdown();
     }
 }
 
