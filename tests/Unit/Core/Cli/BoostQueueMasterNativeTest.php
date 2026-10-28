@@ -28,7 +28,7 @@ $state = is_file($stateFile) ? json_decode(file_get_contents($stateFile), true) 
 $state['dispatched'] = array(); $state['activeAtDispatch'] = null; $state['log'] = array(); $state['effects'] = array(); $state['sleeps'] = array();
 $clock = 0;
 $child = false; $forcerun = true; $rrd_updates = -1; $run_failed = false;
-$config = array('poller_id' => $scenario['poller_id'] ?? 1);
+$config = array('poller_id' => $scenario['poller_id'] ?? 1, 'base_path' => '/kadupul');
 $state['options']['boost_last_run_time'] ??= 1234;
 function active_run() { return $GLOBALS['state']['options']['boost_active_run'] ?? ''; }
 function consume() {
@@ -79,8 +79,9 @@ function unregister_process(...$args) {}
 function boost_kill_running_processes() {}
 function boost_prepare_process_table() { return true; }
 function boost_prune_memstats() {}
-function boost_dispatch_partitions($run, $partitions) {
+function boost_dispatch_partitions($run, $partitions, $base_path) {
     $GLOBALS['state']['activeAtDispatch'] = active_run() === $run;
+    $GLOBALS['state']['dispatchBase'] = $base_path;
     if (($GLOBALS['scenario']['dispatch'] ?? 'ok') === 'fail') {
         throw new \RuntimeException('Boost partition 1 of 2 could not be queued.');
     }
@@ -154,6 +155,7 @@ test('queue mode dispatches one message per partition and succeeds when all repo
 
     expect($run['error'])->toBe('')->and($run['status'])->toBe(0)
         ->and($state['dispatched'])->toBe(array(1, 2))
+        ->and($state['dispatchBase'])->toBe('/kadupul')
         ->and($state['activeAtDispatch'])->toBeTrue()
         ->and($state['options']['boost_active_run'])->toBe('')
         ->and($state['options']['boost_poller_status'])->toStartWith('complete')

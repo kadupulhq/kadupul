@@ -119,7 +119,7 @@ final class BoostSchemaUpgradeTest extends TestCase
         } catch (RuntimeException $e) {
             self::assertStringContainsString(self::STATUS . ' is missing or differs', $e->getMessage());
         }
-        self::assertSame("varchar(64)|NO|''", $this->runIdShape());
+        self::assertSame('varchar(64)|NO|', $this->runIdShape());
     }
 
     public function testLegacyChildRowsCoexistAndAreNotCountedForARun(): void
@@ -241,10 +241,16 @@ final class BoostSchemaUpgradeTest extends TestCase
         return (string) $this->database()->query("SELECT GROUP_CONCAT(COLUMN_NAME ORDER BY ORDINAL_POSITION) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '" . $table . "'")->fetchColumn();
     }
 
-    /** COLUMN_TYPE|IS_NULLABLE|COLUMN_DEFAULT of run_id; MariaDB reports a NULL default as the text NULL. */
+    /**
+     * COLUMN_TYPE|IS_NULLABLE|COLUMN_DEFAULT of run_id. MariaDB reports a NULL
+     * default as the text NULL and quotes a string default; MySQL returns SQL
+     * NULL and the bare string, so both are reduced to the MySQL form.
+     */
     private function runIdShape(): string
     {
-        return (string) $this->database()->query("SELECT CONCAT_WS('|', COLUMN_TYPE, IS_NULLABLE, IFNULL(COLUMN_DEFAULT, 'NULL')) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '" . self::STATUS . "' AND COLUMN_NAME = 'run_id'")->fetchColumn();
+        $shape = (string) $this->database()->query("SELECT CONCAT_WS('|', COLUMN_TYPE, IS_NULLABLE, IFNULL(COLUMN_DEFAULT, 'NULL')) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '" . self::STATUS . "' AND COLUMN_NAME = 'run_id'")->fetchColumn();
+
+        return (string) preg_replace("/\\|'(.*)'$/", '|$1', $shape);
     }
 
     private function scalar(string $sql, string $run): string

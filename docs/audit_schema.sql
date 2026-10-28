@@ -1371,7 +1371,7 @@ INSERT INTO `table_indexes` VALUES ('poller_output_boost',0,'PRIMARY',3,'rrd_nam
 INSERT INTO `table_indexes` VALUES ('poller_output_boost_local_data_ids',0,'PRIMARY',1,'local_data_id',NULL,0,NULL,NULL,'','HASH','');
 INSERT INTO `table_indexes` VALUES ('poller_output_boost_local_data_ids',1,'process_handler',1,'process_handler',NULL,0,NULL,NULL,'YES','HASH','');
 INSERT INTO `table_indexes` VALUES ('poller_output_boost_processes',0,'PRIMARY',1,'sock_int_value',NULL,0,NULL,NULL,'','HASH','');
-INSERT INTO `table_indexes` VALUES ('poller_output_boost_processes',0,'run_partition',1,'run_id',NULL,0,NULL,NULL,'','HASH','');
+INSERT INTO `table_indexes` VALUES ('poller_output_boost_processes',0,'run_partition',1,'run_id',NULL,0,NULL,NULL,'YES','HASH','');
 INSERT INTO `table_indexes` VALUES ('poller_output_boost_processes',0,'run_partition',2,'process_handler',NULL,0,NULL,NULL,'','HASH','');
 INSERT INTO `table_indexes` VALUES ('poller_output_rejected',0,'PRIMARY',1,'local_data_id','A',NULL,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('poller_output_rejected',0,'PRIMARY',2,'rrd_name','A',NULL,NULL,NULL,'','BTREE','');
