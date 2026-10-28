@@ -238,7 +238,7 @@ include/config.php	web-server-denied	nginx; apache .htaccess
 include/content/index.php	anonymous-allowed	redirect-only
 include/csrf.php	anonymous-allowed	fragment without bootstrap, reviewed at bc25ffb52c48; included by include/global.php
 include/global.php	web-server-denied	nginx; apache .htaccess
-include/global_arrays.php	anonymous-allowed	fragment without bootstrap, reviewed at 36b3d991ff66; included by include/global.php, lib/api_aggregate.php, lib/boost.php
+include/global_arrays.php	anonymous-allowed	fragment without bootstrap, reviewed at fd079835be4f; included by include/global.php, lib/api_aggregate.php, lib/boost.php
 include/global_constants.php	anonymous-allowed	fragment without bootstrap, reviewed at 44950e59dd15; included by include/global.php
 include/global_form.php	anonymous-allowed	fragment without bootstrap, reviewed at ecb0178c09d6; included by include/global.php
 include/global_languages.php	anonymous-allowed	fragment without bootstrap, reviewed at 614a6beac129; included by include/global.php

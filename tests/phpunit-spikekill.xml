@@ -124,6 +124,7 @@
       <file>Unit/Security/Auth/ChangePasswordLockoutTest.php</file>
       <file>Unit/Security/Auth/ChangePasswordUsernameRenderingTest.php</file>
       <file>Unit/SnmpPortIntegerTest.php</file>
+      <file>Unit/Security/ImportDataSourceItemValidationTest.php</file>
       <file>Unit/Security/Auth/GraphViewSettingOutputTest.php</file>
       <file>Unit/Security/Auth/ProfileSettingValidationTest.php</file>
       <file>Unit/Security/Misc/HelpPageErrorNotificationTest.php</file>
