@@ -123,6 +123,7 @@ function cacti_sizeof($rows)
 }
 
 function boost_debug(...$args) {}
+function boost_debug_log_path() { return ''; }
 function boost_time_to_run(...$args) { return true; }
 function register_process_start(...$args) { return true; }
 function unregister_process(...$args) {}
