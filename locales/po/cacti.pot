@@ -391,7 +391,7 @@ msgstr ""
 #: tree.php:2217 user_admin.php:2074 user_domains.php:642
 #: user_group_admin.php:1993 utilities.php:1094 utilities.php:1521
 #: utilities.php:1832 utilities.php:2135 utilities.php:3125 utilities.php:3387
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:56
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:60
 msgid "Search"
 msgstr ""
 
@@ -421,7 +421,7 @@ msgstr ""
 #: user_domains.php:18 user_domains.php:652 user_domains.php:738
 #: user_group_admin.php:2003 utilities.php:1076 utilities.php:1842
 #: utilities.php:2166 utilities.php:3153 utilities.php:3429
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:81
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:85
 msgid "Default"
 msgstr ""
 
@@ -455,7 +455,7 @@ msgstr ""
 #: pollers.php:914 tree.php:2242 user_admin.php:2150 user_domains.php:664
 #: user_group_admin.php:2018 utilities.php:1084 utilities.php:1470
 #: utilities.php:1823 utilities.php:2126 utilities.php:3161 utilities.php:3437
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:99
 msgid "Set/Refresh Filters"
 msgstr ""
 
@@ -486,7 +486,7 @@ msgstr ""
 #: tree.php:2243 user_admin.php:2151 user_domains.php:665
 #: user_group_admin.php:2019 utilities.php:1085 utilities.php:1471
 #: utilities.php:1824 utilities.php:2127 utilities.php:3162 utilities.php:3438
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:96
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:100
 msgid "Clear Filters"
 msgstr ""
 
@@ -556,7 +556,7 @@ msgstr ""
 #: include/global_settings.php:703 lib/api_automation.php:446
 #: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:379
 #: utilities.php:2094
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:59
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:63
 msgid "Template"
 msgstr ""
 
@@ -574,7 +574,7 @@ msgstr ""
 #: lib/html_reports.php:2035 managers.php:489 managers.php:780
 #: utilities.php:1064 utilities.php:1785 utilities.php:2098 utilities.php:2145
 #: utilities.php:2155 utilities.php:3135 utilities.php:3397 utilities.php:3413
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:61
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:65
 msgid "Any"
 msgstr ""
 
@@ -609,7 +609,7 @@ msgstr ""
 #: lib/html_reports.php:1467 lib/html_reports.php:1472 package_import.php:692
 #: settings.php:591 settings.php:613 settings.php:644 templates_import.php:299
 #: templates_import.php:331 utilities.php:2099
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:62
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:66
 msgid "None"
 msgstr ""
 

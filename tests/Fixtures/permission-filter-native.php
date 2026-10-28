@@ -215,7 +215,7 @@ if (isset($scenario['association'])) {
     throw new RuntimeException('Association did not complete its controller redirect');
 }
 ob_start();
-($scenario['function'] . '_filter')('Example');
+($scenario['function'] . '_filter')('Example', $scenario['row_choices'] ?? (is_array($item_rows) ? $item_rows : array()));
 $html = ob_get_clean();
 // Browser behavior tests execute the script nodes parsed from the actual markup.
 $document = new DOMDocument();

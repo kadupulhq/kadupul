@@ -150,7 +150,6 @@ scripts/ss_sql.php	3	3
 settings.php	1	2
 snmpagent_persist.php	3	5
 src/Graphing/Infrastructure/Rrd/GraphOptionsGenerator.php	1	2
-src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php	1	1
 src/IdentityAccess/Infrastructure/Legacy/PermissionMutation.php	1	4
 src/Platform/Infrastructure/Legacy/ConsoleExtensionRuntime.php	2	3
 src/Platform/Infrastructure/Legacy/Dbal/LegacyDatabaseCall.php	2	2

@@ -122,3 +122,11 @@ user/group settings behind existing user administration authorization.
 cover schema-backed projections, credential exclusion, owner scoping and
 seven-theme presentation tests. Installed-session and collector HTTP acceptance
 remain release gates. Existing preference resolution and writers remain active.
+
+### Explicit permission-filter row choices
+
+Status: implemented. The retained user/group edit paths pass bootstrap row choices
+to the shared filter renderer, which no longer declares a global. Native cases
+cover custom/empty catalogs and catalog changes in tab hooks. See
+[scope and verification](migrations/permission-filter-row-context.md). Indirect
+request/database dependencies and installed collector/session acceptance remain.
