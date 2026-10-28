@@ -101,6 +101,12 @@ function cacti_log($message, ...$arguments)
 {
     $GLOBALS['logs'][] = $message;
 }
+// lib/poller.php is stubbed, so load the production recovery PID probe from the real file.
+require_once $root . '/tests/Helpers/PhpSource.php';
+$poller_source = file_get_contents($root . '/lib/poller.php');
+foreach (array('cacti_process_pid_is_valid', 'cacti_process_signalable') as $poller_function) {
+    eval(test_php_function_source($poller_source, $poller_function));
+}
 function poller_push_reindex_data_to_poller(...$arguments) {}
 function db_qstr($value, $connection = false)
 {
