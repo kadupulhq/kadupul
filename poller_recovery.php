@@ -271,7 +271,10 @@ $recovery_failed  = false;
 debug('About to start recovery processing');
 
 if (!empty($recovery_pid)) {
-    $pid = posix_kill($recovery_pid, 0);
+    // False reads as "stale, clear the row and run", so a pid this account cannot
+    // signal still counts as stale, as before. The bound keeps a value pid_t cannot
+    // hold from narrowing to -1, reading as live, and stopping recovery for good.
+    $pid = cacti_process_signalable($recovery_pid, false);
     if ($pid === false) {
         /* we found a stale PID, so we delete it from the table */
         db_execute("DELETE FROM settings WHERE name='recovery_pid'", true, $local_db_cnn_id);

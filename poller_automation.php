@@ -84,7 +84,9 @@ function sig_handler($signo)
 
                 if (cacti_sizeof($pids)) {
                     foreach ($pids as $pid) {
-                        posix_kill($pid, SIGTERM);
+                        if (cacti_process_still_running($pid)) {
+                            cacti_process_kill($pid, SIGTERM, 'AUTOM8');
+                        }
                     }
                 }
 
@@ -109,7 +111,9 @@ function sig_handler($signo)
 
                 if (cacti_sizeof($pids)) {
                     foreach ($pids as $pid) {
-                        posix_kill($pid, SIGTERM);
+                        if (cacti_process_still_running($pid)) {
+                            cacti_process_kill($pid, SIGTERM, 'AUTOM8');
+                        }
                     }
                 }
 
@@ -284,7 +288,12 @@ if (!$master && $thread == 0) {
     if (cacti_sizeof($pids)) {
         foreach ($pids as $pid) {
             if (isProcessRunning($pid)) {
-                killProcess($pid);
+                if (!killProcess($pid) && cacti_process_kill_denied($pid)) {
+                    cacti_log("WARNING: Automation Process $pid is owned by another user and was not killed, not starting another discovery for Network ID: $network_id", true, 'AUTOM8');
+
+                    exit(0);
+                }
+
                 cacti_log("WARNING: Automation Process $pid is still running for Network ID: $network_id", true, 'AUTOM8');
             } else {
                 cacti_log("WARNING: Process $pid claims to be running but not found for Network ID: $network_id", true, 'AUTOM8');
@@ -880,12 +889,12 @@ function display_help()
 
 function isProcessRunning($pid)
 {
-    return posix_kill($pid, 0);
+    return cacti_process_still_running($pid);
 }
 
 function killProcess($pid)
 {
-    return posix_kill($pid, SIGTERM);
+    return cacti_process_kill($pid, SIGTERM, 'AUTOM8');
 }
 
 function removeMyProcess($pid, $network_id)

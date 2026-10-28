@@ -1257,8 +1257,14 @@ function dsstats_kill_running_processes()
 
     if (cacti_sizeof($processes)) {
         foreach ($processes as $p) {
-            cacti_log(sprintf('WARNING: Killing DSStats %s PID %d due to another due to signal or overrun.', ucfirst($p['taskname']), $p['pid']), false, 'BOOST');
-            posix_kill($p['pid'], SIGTERM);
+            if (cacti_process_still_running($p['pid'])) {
+                cacti_log(sprintf('WARNING: Killing DSStats %s PID %d due to another due to signal or overrun.', ucfirst($p['taskname']), $p['pid']), false, 'BOOST');
+                if (!cacti_process_kill($p['pid'], SIGTERM, 'BOOST') && cacti_process_kill_denied($p['pid'])) {
+                    cacti_log(sprintf('WARNING: Unable to kill DSStats %s PID %d owned by another user, leaving it registered.', ucfirst($p['taskname']), $p['pid']), false, 'BOOST');
+
+                    continue;
+                }
+            }
 
             unregister_process($p['tasktype'], $p['taskname'], $p['taskid'], $p['pid']);
         }

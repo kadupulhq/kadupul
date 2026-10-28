@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.3.0.-1\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-27 16:55-0700\n"
+"POT-Creation-Date: 2026-10-27 18:15-0700\n"
 "PO-Revision-Date: 2023-07-27 15:11+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2395,7 +2395,7 @@ msgstr "Не знайдено Правил Дерев"
 #: cactid.php:27 help.php:54 lib/functions.php:6725 lib/functions.php:6795
 #: lib/functions.php:6891 lib/functions.php:7552 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
-#: poller_automation.php:37 poller_boost.php:387
+#: poller_automation.php:37 poller_boost.php:392
 msgid "Kadupul System Warning"
 msgstr "Системне Попередження Kadupul"
 
@@ -16745,15 +16745,15 @@ msgstr ""
 msgid "WARNING: Main Kadupul database %s offline or in recovery"
 msgstr ""
 
-#: poller_automation.php:987 poller_automation.php:1040
+#: poller_automation.php:996 poller_automation.php:1049
 msgid "Kadupul Primary Admin"
 msgstr ""
 
-#: poller_automation.php:1143
+#: poller_automation.php:1152
 msgid "Kadupul Automation Report requires an html based Email client"
 msgstr ""
 
-#: poller_boost.php:387
+#: poller_boost.php:392
 msgid "WARNING: Detected Poller Boost Overrun, Possible Boost Poller Crash"
 msgstr ""
 

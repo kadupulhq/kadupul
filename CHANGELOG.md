@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Refuse to signal a process-table PID that cannot name a Kadupul task. PID 1, zero, negative or malformed values and values wider than `pid_t` are never passed to `posix_kill()`, and worker cleanup confirms a registered PID still runs the same program before signalling it. This ports the lts/1.2 protection from upstream Cacti #7955 and #7414.
 - Verify a local login password once. A known account no longer verifies again before a rehash, so known, unknown, disabled and locked usernames each cost one hash, and a password replaced during the login refuses it (GHSA-p3rg-7pc3-2h86, upstream Cacti #8157).
 - Escape the username shown on the change password page for an account with no stored password, so a stored username renders as text (upstream Cacti #8338).
 - Bind on-demand Boost sample inserts so poller output is stored verbatim instead of being concatenated into SQL.

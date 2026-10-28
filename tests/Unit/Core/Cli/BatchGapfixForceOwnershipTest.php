@@ -32,6 +32,8 @@ function posix_get_last_error() { return $GLOBALS['mode'] === 'denied' ? 1 : 3; 
 function unregister_process(...$args) { echo "UNREGISTER\n"; }
 function db_execute($sql) { echo "UNREGISTER\n"; }
 PHP;
+    // Production is_system_pid() bounds the stored pid; the namespaced doubles above shadow the rest.
+    $program = str_replace("namespace ForcedRepairProbe;\n", "namespace ForcedRepairProbe;\nrequire_once " . var_export(dirname(__DIR__, 4) . '/lib/poller.php', true) . ";\n", $program);
     file_put_contents($script, $program . "\n\tif (\$force) {" . $match[1] . "\necho 'QUEUE RESET';");
     try {
         $process = proc_open(array(PHP_BINARY, $script, $mode), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes);

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-27 16:55-0700\n"
+"POT-Creation-Date: 2026-10-27 18:15-0700\n"
 "PO-Revision-Date: 2025-12-23 22:54+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2394,7 +2394,7 @@ msgstr "No se encontraron reglas de árbol"
 #: cactid.php:27 help.php:54 lib/functions.php:6725 lib/functions.php:6795
 #: lib/functions.php:6891 lib/functions.php:7552 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
-#: poller_automation.php:37 poller_boost.php:387
+#: poller_automation.php:37 poller_boost.php:392
 msgid "Kadupul System Warning"
 msgstr "Advertencia de Sistema Kadupul"
 
@@ -16746,15 +16746,15 @@ msgstr "NOTA: Se ha agregado un segundo recolector de datos Kadupul. Por lo tant
 msgid "WARNING: Main Kadupul database %s offline or in recovery"
 msgstr "ADVERTENCIA: Base de datos principal de Kadupul fuera de línea o en recuperación"
 
-#: poller_automation.php:987 poller_automation.php:1040
+#: poller_automation.php:996 poller_automation.php:1049
 msgid "Kadupul Primary Admin"
 msgstr "Administrador principal de Kadupul"
 
-#: poller_automation.php:1143
+#: poller_automation.php:1152
 msgid "Kadupul Automation Report requires an html based Email client"
 msgstr "El informe de automatización de Kadupul requiere un cliente de correo electrónico basado en HTML"
 
-#: poller_boost.php:387
+#: poller_boost.php:392
 msgid "WARNING: Detected Poller Boost Overrun, Possible Boost Poller Crash"
 msgstr "ADVERTENCIA: Se detectó desbordamiento de impulso de poller, posible bloqueo de Boost Poller"
 

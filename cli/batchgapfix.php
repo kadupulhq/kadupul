@@ -189,7 +189,13 @@ if ($child == 0) {
 			printf("NOTE: Found %s running processes." . PHP_EOL, cacti_sizeof($running));
 
 			foreach($running as $r) {
-				$alive = @posix_kill($r['pid'], 0);
+				// A value pid_t cannot hold narrows to -1 or names our own group.
+				if (is_system_pid($r['pid'])) {
+					printf("NOTE: Ignoring registered PID %s, which cannot name a repair worker." . PHP_EOL, cacti_process_pid_for_log($r['pid']));
+					continue;
+				}
+
+				$alive = @posix_kill((int) $r['pid'], 0);
 				// A stale PID can belong to another process; stop workers manually.
 				// Only ESRCH proves absence. EPERM and other probe failures retain ownership.
 				if ($alive || posix_get_last_error() !== 3) {
