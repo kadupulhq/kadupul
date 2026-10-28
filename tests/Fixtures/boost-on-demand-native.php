@@ -66,6 +66,10 @@ function db_fetch_cell_prepared($sql, $params)
 {
     return 1;
 }
+function db_fetch_row_prepared($sql, $params)
+{
+    return array('data_template_id' => 1);
+}
 function db_execute($sql, ...$args)
 {
     return true;

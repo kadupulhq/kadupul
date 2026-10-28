@@ -1042,6 +1042,15 @@ function boost_process_local_data_ids($last_id, $child, $rrdtool_pipe)
                 /* reset the rrd file path and templates, assume non multi output */
                 boost_timer('rrd_filename_and_template', BOOST_TIMER_START);
                 $rrd_data     = boost_get_rrd_filename_and_template($item['local_data_id']);
+
+                /* A failed lookup is not a removed data source; keep its samples queued. */
+                if ($rrd_data === false) {
+                    boost_timer('rrd_filename_and_template', BOOST_TIMER_END);
+                    $local_data_id = $item['local_data_id'];
+                    $failed_ids[$local_data_id] = array('path' => '', 'reason' => null);
+                    continue;
+                }
+
                 $rrd_tmpl     = $rrd_data['rrd_template'];
                 $template_len = strlen($rrd_tmpl);
 
