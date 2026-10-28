@@ -59,3 +59,16 @@ it starts can write the RRD files. `Restart=always` is required: the worker
 exits after `--time-limit` or `--memory-limit` and systemd starts it again.
 See "Boost queue workers" in docs/symfony-migration.md for setup, scaling and
 the checks to run before enabling queue mode.
+
+To let Messenger own the Boost cycle instead of poller.php, set
+`KADUPUL_BOOST_SCHEDULER=1` in both the poller and the scheduler worker
+environments and run
+`php bin/console messenger:consume scheduler_boost --time-limit=3600 --memory-limit=128M --failure-limit=1`
+alongside the row-cache consumer (`scheduler_row_cache`). Enabling the scheduler
+stops poller.php from launching Boost. That environment setting is what
+prevents two masters per cycle; the master's own process registration is only a
+best-effort backstop and can let two near-simultaneous masters both start.
+
+Stop the scheduler_boost consumer before running `bin/console kadupul:boost:run`
+manually; it holds the boost lock for its whole life, so the command exits 2
+while it runs.

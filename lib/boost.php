@@ -1789,6 +1789,17 @@ function boost_poller_bottom()
 
         boost_update_snmp_statistics();
 
+        /* With the Messenger scheduler enabled, kadupul:boost:run starts the
+         * master and this launch would race it. This early return is the
+         * guard, so both the poller's and the scheduler worker's environments
+         * must set KADUPUL_BOOST_SCHEDULER=1. The master's register_process_start()
+         * (poller_boost.php:169) is only a best-effort backstop: it is a
+         * check-then-insert without a lock, so two masters starting together
+         * can both register. */
+        if (getenv('KADUPUL_BOOST_SCHEDULER') === '1') {
+            return;
+        }
+
         $boost_log     = boost_debug_log_path();
         $boost_logdir  = dirname($boost_log);
 

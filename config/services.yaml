@@ -361,6 +361,15 @@ services:
     Kadupul\Graphing\Infrastructure\Symfony\FlushBoostPartitionHandler:
         arguments:
             $timeout: '%kadupul.boost.partition_timeout%'
+    Kadupul\Graphing\Infrastructure\Symfony\BoostSchedule:
+        arguments:
+            $enabled: '%env(default::KADUPUL_BOOST_SCHEDULER)%'
+    Kadupul\Graphing\Infrastructure\Symfony\BoostRunHandler:
+        arguments:
+            $enabled: '%env(default::KADUPUL_BOOST_SCHEDULER)%'
+    Kadupul\Graphing\Infrastructure\Symfony\BoostState:
+        arguments:
+            $directory: '%kernel.project_dir%/var/scheduler'
     Kadupul\Graphing\Application\Query\ListPaletteColors: ~
     Kadupul\Graphing\Application\Query\FindPaletteColor: ~
     Kadupul\Graphing\Application\Query\FindPaletteColors: ~
