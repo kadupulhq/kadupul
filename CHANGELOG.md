@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Require a set Boost debug log path to end in `.log` on the settings page, and have Boost ignore a stored path that does not (GHSA-m6wx-f538-m6q3, upstream Cacti #8150 and #8148).
 - Report a data query XML file as located on the edit page and in the template import preview only when it is a regular file under `resource/`, which the loader reads, and refuse a NUL byte in path containment checks (GHSA-2x86-jpm8-9vgp, upstream Cacti #8150 and #8151).
 - Keep the database user and password out of `mysqladmin` process arguments in `scripts/sql.php` and `scripts/ss_sql.php`. Both scripts pass a private option file that is removed after each call, and `ss_sql.php` requests `status` again, so it no longer always returns `U` (upstream Cacti #8545 and #8450).
 - Verify a local login password once. A known account no longer verifies again before a rehash, so known, unknown, disabled and locked usernames each cost one hash, and a password replaced during the login refuses it (GHSA-p3rg-7pc3-2h86, upstream Cacti #8157).
