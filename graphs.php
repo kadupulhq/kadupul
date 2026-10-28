@@ -421,7 +421,7 @@ function form_save(): never
                                     'UPDATE graph_templates_item
 									SET `' . $column . '` = ?
 									WHERE id = ?',
-                                    array(get_nfilter_request_var($column . '_' . $input['id']), $item['id'])
+                                    array(graph_template_input_storage_value($column, get_nfilter_request_var($column . '_' . $input['id'])), $item['id'])
                                 );
                             }
                         }

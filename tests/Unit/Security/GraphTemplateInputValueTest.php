@@ -19,7 +19,7 @@ require_once __DIR__ . '/../../Helpers/PhpSource.php';
 
 $root = dirname(__DIR__, 3);
 $functions = array(
-    'lib/graph_template_input.php' => array('graph_template_input_column', 'graph_template_input_value_is_allowed', 'graph_template_input_xml_items_are_valid'),
+    'lib/graph_template_input.php' => array('graph_template_input_column', 'graph_template_input_value_is_allowed', 'graph_template_input_storage_value', 'graph_template_input_xml_items_are_valid'),
     'lib/template.php' => array('push_out_graph_input'),
     'lib/import.php' => array('parse_xml_hash', 'check_hash_type', 'check_hash_version', 'xml_character_decode', 'xml_to_graph_template'),
     'lib/functions.php' => array('cacti_version_compare', 'version_to_decimal'),
@@ -200,7 +200,10 @@ test('graph input values must have the shape of their graph item field', functio
     array('line_width', '100', false),
     array('line_width', '999.9', false),
     array('line_width', '1.234', false),
-    array('line_width', '1,5', false),
+    array('line_width', '1,5', true),
+    array('line_width', '99,99', true),
+    array('line_width', '100,0', false),
+    array('line_width', '1,234', false),
     array('line_width', '01.00', true),
     array('dashes', str_repeat('1', 20), true),
     array('dashes', str_repeat('1', 21), false),
@@ -219,16 +222,25 @@ test('a later out-of-range graph input prevents every input write', function () 
     expect(save_graph_inputs(array('alpha_7' => 'FF', 'line_width_8' => '999.9')))->toBe(array());
 });
 
+test('graph saves preserve localized widths as decimal storage values', function () {
+    $writes = save_graph_inputs(array('alpha_7' => 'FF', 'line_width_8' => '1,25'));
+    expect(array_column($writes, 1))->toBe(array(array('FF', 101), array('FF', 102), array('1.25', 101), array('1.25', 102)));
+});
+
+test('an empty optional numeric graph input retains zero storage semantics', function (string $column) {
+    $writes = save_graph_inputs(array($column . '_7' => ''), array(array('id' => 7, 'column_name' => $column)));
+    expect(array_column($writes, 1))->toBe(array(array('0', 101), array('0', 102)));
+})->with(array('color_id', 'line_width', 'dash_offset', 'sequence'));
+
+test('an omitted graph input retains its existing value', function () {
+    $writes = save_graph_inputs(array('alpha_7' => 'FF'));
+    expect(array_column($writes, 1))->toBe(array(array('FF', 101), array('FF', 102)));
+});
+
 test('a valid multibyte graph label is preserved at the input handoff', function () {
     $label = str_repeat('界', 100);
     $writes = save_graph_inputs(array('text_format_7' => $label), array(array('id' => 7, 'column_name' => 'text_format')));
     expect(array_column($writes, 1))->toBe(array(array($label, 101), array($label, 102)));
-});
-
-test('a later out-of-range stored width prevents every push-out write', function () {
-    Fixture::$column = 'line_width';
-    Fixture::$rows = array(array('local_graph_id' => 9, 'line_width' => '1.5'), array('local_graph_id' => 10, 'line_width' => '999.9'));
-    expect(push_out_graph_input(5, 30, array()))->toBeFalse()->and(Fixture::$writes)->toBe(array());
 });
 
 test('push-out preserves valid multibyte labels and NULL values', function () {

@@ -66,7 +66,7 @@ function graph_template_input_value_is_allowed($column, $value)
         case 'hard_return':
             return in_array($value, array('', '0', '1', 'on'), true);
         case 'line_width':
-            return $value === '' || (strlen($value) <= 5 && preg_match('/^\d+(?:\.\d{1,2})?$/D', $value) === 1 && (float) $value <= 99.99);
+            return $value === '' || (strlen($value) <= 5 && preg_match('/^\d+(?:[.,]\d{1,2})?$/D', $value) === 1 && (float) str_replace(',', '.', $value) <= 99.99);
         case 'dash_offset':
             return $value === '' || (preg_match('/^-?\d{1,7}$/D', $value) === 1 && (int) $value >= -8388608 && (int) $value <= 8388607);
         case 'sequence':
@@ -84,6 +84,17 @@ function graph_template_input_value_is_allowed($column, $value)
     $characters = preg_match_all('/./us', $value);
 
     return $characters !== false && $characters <= 255;
+}
+
+/** Convert validated form values to storage form while preserving existing empty numeric semantics. */
+function graph_template_input_storage_value(mixed $column, mixed $value): mixed
+{
+    if ($value !== null && is_scalar($value) && (string) $value === ''
+        && in_array($column, array('color_id', 'line_width', 'dash_offset', 'sequence'), true)) {
+        return '0';
+    }
+
+    return $column === 'line_width' && is_string($value) ? str_replace(',', '.', $value) : $value;
 }
 
 /**
