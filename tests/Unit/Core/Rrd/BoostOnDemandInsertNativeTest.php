@@ -60,7 +60,7 @@ test('on-demand rows with quotes and backslashes are stored verbatim', function 
     $outputs = array("in:1'x out:2", 'a\\\\b', 'tail\\', '"; DROP', "multi\nline");
     $body = <<<'PROBE'
 $config = array('poller_id' => 1, 'connection' => 'online');
-$pdo = new PDO(getenv('KADUPUL_TEST_MYSQL_DSN'), getenv('KADUPUL_TEST_MYSQL_USER'), getenv('KADUPUL_TEST_MYSQL_PASSWORD'), array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+$pdo = new PDO(getenv('KADUPUL_TEST_MYSQL_DSN'), getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root', getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: '', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 $pdo->exec('DROP TABLE IF EXISTS poller_output_boost');
 $pdo->exec('CREATE TABLE poller_output_boost (local_data_id int unsigned NOT NULL DEFAULT 0, rrd_name varchar(19) NOT NULL DEFAULT "", time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, output varchar(512) NOT NULL, PRIMARY KEY (local_data_id, time, rrd_name)) ENGINE=InnoDB');
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
