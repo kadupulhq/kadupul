@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -88,10 +90,13 @@ require ' . var_export($root . '/lib/poller.php', true) . ';
         $error = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
         fclose($pipes[2]);
-        proc_close($process);
+        $status = proc_close($process);
     } finally {
         unlink($script);
     }
+
+    expect($status)->toBe(0, $error . $output);
+    expect($error)->toBe('');
 
     $marker = strrpos((string) $output, "\n@@RESULT@@");
     $decoded = $marker === false ? null : json_decode(substr($output, $marker + 11), true);
