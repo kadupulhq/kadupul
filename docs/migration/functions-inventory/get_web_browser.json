@@ -3,8 +3,8 @@
     "name": "get_web_browser",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 4213,
-        "end_line": 4226,
+        "start_line": 4229,
+        "end_line": 4242,
         "line_count": 14,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,

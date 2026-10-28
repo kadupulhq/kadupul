@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Chinese Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-27 12:58-0700\n"
+"POT-Creation-Date: 2026-10-27 16:55-0700\n"
 "PO-Revision-Date: 2024-06-23 04:09+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -47,7 +47,7 @@ msgstr "本程序是基于帮助别人的想法而发布的,但它没有任何�
 #: automation_graph_rules.php:17 automation_networks.php:16
 #: automation_snmp.php:14 automation_snmp.php:592 automation_tree_rules.php:17
 #: data_queries.php:16 data_queries.php:863 data_queries.php:972
-#: data_queries.php:1252 data_sources.php:23 data_sources.php:1249
+#: data_queries.php:1254 data_sources.php:23 data_sources.php:1249
 #: data_templates.php:19 data_templates.php:791 graph_templates.php:22
 #: graph_templates.php:516 graphs.php:32 host_templates.php:20
 #: host_templates.php:485 host_templates.php:542 include/global_arrays.php:1658
@@ -398,7 +398,7 @@ msgstr "匹配图形"
 #: aggregate_templates.php:606 automation_devices.php:485
 #: automation_graph_rules.php:807 automation_networks.php:1180
 #: automation_networks.php:1224 automation_snmp.php:703
-#: automation_tree_rules.php:843 data_debug.php:1214 data_queries.php:1371
+#: automation_tree_rules.php:843 data_debug.php:1214 data_queries.php:1373
 #: data_sources.php:1814 data_templates.php:1101 graph_templates.php:726
 #: graph_view.php:667 graphs.php:2113 graphs_new.php:526 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
@@ -406,8 +406,8 @@ msgstr "匹配图形"
 #: lib/clog_webapi.php:608 lib/html.php:268 lib/html_filter.php:46
 #: lib/html_graph.php:191 lib/html_reports.php:2025 lib/html_tree.php:119
 #: lib/html_tree.php:967 managers.php:144 managers.php:503 managers.php:770
-#: plugins.php:491 pollers.php:869 rrdcleaner.php:519 settings.php:598
-#: settings.php:615 settings.php:674
+#: plugins.php:491 pollers.php:869 rrdcleaner.php:519 settings.php:605
+#: settings.php:622 settings.php:681
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:60
 #: tree.php:938 tree.php:973 tree.php:1008 tree.php:2217 user_admin.php:2074
 #: user_domains.php:642 user_group_admin.php:1993 utilities.php:1094
@@ -432,7 +432,7 @@ msgstr "图形"
 #: aggregate_templates.php:622 automation_devices.php:582
 #: automation_graph_rules.php:849 automation_networks.php:1190
 #: automation_snmp.php:713 automation_tree_rules.php:863 data_debug.php:1224
-#: data_queries.php:1381 data_sources.php:1824 data_templates.php:1130
+#: data_queries.php:1383 data_sources.php:1824 data_templates.php:1130
 #: graph_templates.php:736 graph_view.php:743 graphs.php:2134
 #: graphs_new.php:536 host_templates.php:805 include/global_form.php:242
 #: lib/api_automation.php:182 lib/api_automation.php:490
@@ -454,7 +454,7 @@ msgstr "部分聚合"
 #: aggregate_templates.php:643 automation_devices.php:509
 #: automation_graph_rules.php:861 automation_networks.php:1224
 #: automation_snmp.php:728 automation_tree_rules.php:875 data_debug.php:1139
-#: data_queries.php:1396 data_sources.php:1764 data_templates.php:1151
+#: data_queries.php:1398 data_sources.php:1764 data_templates.php:1151
 #: graph_templates.php:757 graph_view.php:675 graphs.php:2104
 #: graphs_new.php:515 host_templates.php:786 lib/api_automation.php:187
 #: lib/api_automation.php:471 lib/api_automation.php:723
@@ -469,7 +469,7 @@ msgstr "Go"
 
 #: aggregate_graphs.php:1303 aggregate_graphs.php:1596
 #: automation_devices.php:509 automation_snmp.php:728 data_debug.php:1139
-#: data_queries.php:1396 data_sources.php:1764 data_templates.php:1151
+#: data_queries.php:1398 data_sources.php:1764 data_templates.php:1151
 #: graph_templates.php:757 graph_view.php:675 graphs.php:2104
 #: graphs_new.php:515 host_templates.php:786 lib/html_graph.php:178
 #: managers.php:169 managers.php:528 managers.php:793 plugins.php:530
@@ -485,7 +485,7 @@ msgstr "设置/刷新过滤器"
 #: aggregate_templates.php:644 automation_devices.php:510
 #: automation_graph_rules.php:862 automation_networks.php:1225
 #: automation_snmp.php:729 automation_tree_rules.php:876 data_debug.php:1140
-#: data_queries.php:1397 data_sources.php:1765 data_templates.php:1152
+#: data_queries.php:1399 data_sources.php:1765 data_templates.php:1152
 #: graph_templates.php:758 graph_view.php:676 graphs.php:2105
 #: graphs_new.php:516 host_templates.php:787 lib/api_automation.php:188
 #: lib/api_automation.php:472 lib/api_automation.php:724
@@ -500,7 +500,7 @@ msgid "Clear"
 msgstr "清除"
 
 #: aggregate_graphs.php:1304 aggregate_graphs.php:1597 automation_snmp.php:729
-#: data_debug.php:1140 data_queries.php:1397 data_sources.php:1765
+#: data_debug.php:1140 data_queries.php:1399 data_sources.php:1765
 #: data_templates.php:1152 graph_templates.php:758 graph_view.php:676
 #: graphs.php:2105 graphs_new.php:516 host_templates.php:787
 #: lib/html_graph.php:179 lib/html_tree.php:1010 managers.php:170
@@ -519,7 +519,7 @@ msgstr "图形标题"
 
 #: aggregate_graphs.php:1330 aggregate_graphs.php:1663
 #: automation_graph_rules.php:962 automation_tree_rules.php:969
-#: data_debug.php:517 data_queries.php:1482 data_sources.php:1998
+#: data_debug.php:517 data_queries.php:1484 data_sources.php:1998
 #: data_templates.php:1260 graph_templates.php:863 graphs.php:2338
 #: host_templates.php:949 lib/api_automation.php:282 pollers.php:995
 #: tree.php:2306 user_admin.php:809 user_admin.php:924 user_admin.php:1073
@@ -539,7 +539,7 @@ msgid "Size"
 msgstr "大小"
 
 #: aggregate_graphs.php:1348 aggregate_templates.php:724
-#: automation_tree_rules.php:721 data_queries.php:1534 data_sources.php:2085
+#: automation_tree_rules.php:721 data_queries.php:1536 data_sources.php:2085
 #: data_sources.php:2086 data_templates.php:1321 graph_templates.php:920
 #: host_templates.php:997 include/global_settings.php:969
 #: include/global_settings.php:1943 lib/api_automation.php:1438 tree.php:2399
@@ -550,7 +550,7 @@ msgstr "否"
 
 #: aggregate_graphs.php:1348 aggregate_templates.php:724
 #: automation_tree_rules.php:714 data_debug.php:781 data_debug.php:786
-#: data_debug.php:791 data_queries.php:1534 data_sources.php:2085
+#: data_debug.php:791 data_queries.php:1536 data_sources.php:2085
 #: data_sources.php:2086 data_templates.php:1321 graph_templates.php:920
 #: host_templates.php:997 include/global_settings.php:968
 #: include/global_settings.php:1942 lib/api_automation.php:1438
@@ -629,7 +629,7 @@ msgstr "任何"
 #: lib/html_reports.php:1175 lib/html_reports.php:1186
 #: lib/html_reports.php:1206 lib/html_reports.php:1462
 #: lib/html_reports.php:1467 lib/html_reports.php:1472 package_import.php:692
-#: settings.php:591 settings.php:613 settings.php:644
+#: settings.php:598 settings.php:620 settings.php:651
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:66
 #: templates_import.php:299 templates_import.php:331 utilities.php:2099
 msgid "None"
@@ -708,12 +708,12 @@ msgstr "模板标题"
 msgid "Aggregate Templates that are in use can not be Deleted.  In use is defined as being referenced by an Aggregate."
 msgstr "正在使用中的聚合模板不能被删除. 在使用中意味着它被由聚合图形引用."
 
-#: aggregate_templates.php:707 data_queries.php:1488 data_sources.php:2016
+#: aggregate_templates.php:707 data_queries.php:1490 data_sources.php:2016
 #: data_templates.php:1266 graph_templates.php:869 host_templates.php:955
 msgid "Deletable"
 msgstr "可删除"
 
-#: aggregate_templates.php:708 data_queries.php:1211 data_queries.php:1493
+#: aggregate_templates.php:708 data_queries.php:1213 data_queries.php:1495
 #: graph_templates.php:874
 msgid "Graphs Using"
 msgstr "图形正在使用"
@@ -780,7 +780,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "更改密码页面有问题。请立即联系您的Kadupul管理员。"
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4265 lib/html.php:2754
+#: include/global_form.php:1552 lib/functions.php:4281 lib/html.php:2754
 msgid "Change Password"
 msgstr "更改密码"
 
@@ -793,7 +793,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "请输入您的Kadupul新密码."
 
 #: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
-#: include/global_settings.php:1851 lib/functions.php:6205
+#: include/global_settings.php:1851 lib/functions.php:6221
 msgid "Username"
 msgstr "用户名"
 
@@ -811,7 +811,7 @@ msgstr "确认新密码"
 
 #: auth_changepassword.php:413 auth_profile.php:582 graphs_new.php:517
 #: lib/html_form.php:1420 lib/html_form.php:1429 lib/html_graph.php:181
-#: lib/html_tree.php:1012 settings.php:553
+#: lib/html_tree.php:1012 settings.php:560
 msgid "Save"
 msgstr "保存"
 
@@ -844,11 +844,11 @@ msgstr "访问被拒绝,请联系Kadupul 管理员."
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr "访问被拒绝,请联系Kadupul 管理员."
 
-#: auth_login.php:119 lib/auth.php:4394 lib/auth.php:4400 lib/auth.php:4505
-#: lib/auth.php:4556 lib/auth.php:4581 lib/auth.php:4604 lib/auth.php:4644
-#: lib/auth.php:4656 lib/auth.php:4679 lib/auth.php:4802 lib/auth.php:4822
-#: lib/auth.php:5034 lib/auth.php:5076 lib/auth.php:5086 lib/auth.php:5102
-#: lib/auth.php:5116 lib/auth.php:5154
+#: auth_login.php:119 lib/auth.php:4394 lib/auth.php:4400 lib/auth.php:4490
+#: lib/auth.php:4499 lib/auth.php:4546 lib/auth.php:4571 lib/auth.php:4594
+#: lib/auth.php:4634 lib/auth.php:4646 lib/auth.php:4669 lib/auth.php:4792
+#: lib/auth.php:4812 lib/auth.php:5024 lib/auth.php:5066 lib/auth.php:5076
+#: lib/auth.php:5092 lib/auth.php:5106 lib/auth.php:5144
 msgid "Access Denied!  Login Failed."
 msgstr "拒绝访问,用户帐号被禁用."
 
@@ -886,7 +886,7 @@ msgstr "用户登录"
 msgid "Enter your Username and Password below"
 msgstr "在下面输入您的用户名和密码"
 
-#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6206
+#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6222
 msgid "Password"
 msgstr "密码"
 
@@ -1193,7 +1193,7 @@ msgstr "清空已发现的设备"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:698 lib/functions.php:6564 lib/functions.php:6569
+#: data_debug.php:698 lib/functions.php:6580 lib/functions.php:6585
 #: lib/html.php:1393 lib/html.php:1465 lib/html_reports.php:1810
 #: lib/html_reports.php:1838 lib/html_reports.php:1915
 #: lib/html_reports.php:1916 lib/html_reports.php:1917 lib/spikekill.php:1734
@@ -1492,7 +1492,7 @@ msgid "General Settings"
 msgstr "通用设置"
 
 #: automation_networks.php:439 automation_snmp.php:511 data_queries.php:817
-#: data_queries.php:924 data_queries.php:1209 graph_templates.php:499
+#: data_queries.php:924 data_queries.php:1211 graph_templates.php:499
 #: include/global_form.php:201 include/global_form.php:267
 #: include/global_form.php:324 include/global_form.php:344
 #: include/global_form.php:385 include/global_form.php:515
@@ -2183,7 +2183,7 @@ msgstr "版本"
 msgid "Community"
 msgstr "团体名"
 
-#: automation_snmp.php:543 lib/functions.php:6201
+#: automation_snmp.php:543 lib/functions.php:6217
 msgid "Port"
 msgstr "端口"
 
@@ -2223,7 +2223,7 @@ msgstr "隐私协议"
 msgid "Context"
 msgstr "Context"
 
-#: automation_snmp.php:553 data_queries.php:1213 utilities.php:2151
+#: automation_snmp.php:553 data_queries.php:1215 utilities.php:2151
 msgid "Action"
 msgstr "启动"
 
@@ -2393,8 +2393,8 @@ msgstr "ROOT"
 msgid "No Tree Rules Found"
 msgstr "未找到树规则"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6709 lib/functions.php:6779
-#: lib/functions.php:6875 lib/functions.php:7536 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6725 lib/functions.php:6795
+#: lib/functions.php:6891 lib/functions.php:7552 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:387
 msgid "Kadupul System Warning"
@@ -2413,12 +2413,12 @@ msgstr "Kadupul 系统工具"
 msgid "Notice: Kadupul Daemon PID["
 msgstr "注意：Kadupul 守护进程 PID["
 
-#: cli/refresh_csrf.php:104 lib/functions.php:693 settings.php:295
+#: cli/refresh_csrf.php:104 lib/functions.php:694 settings.php:302
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
 msgstr "设置保存到数据采集器 %d 失败."
 
-#: cli/refresh_csrf.php:105 lib/functions.php:706 settings.php:307
+#: cli/refresh_csrf.php:105 lib/functions.php:707 settings.php:314
 #, php-format
 msgid "Settings save to Data Collector %d Failed."
 msgstr "设置保存到数据采集器 %d 失败."
@@ -2884,7 +2884,7 @@ msgstr "配置文件"
 #: graphs.php:2123 graphs_new.php:488 host_templates.php:716
 #: host_templates.php:734 lib/clog_webapi.php:549 lib/html.php:227
 #: lib/html_reports.php:1138 lib/html_reports.php:2284 plugins.php:501
-#: settings.php:590 settings.php:612 settings.php:643 tree.php:914
+#: settings.php:597 settings.php:619 settings.php:650 tree.php:914
 #: user_admin.php:2084 user_admin.php:2109 user_admin.php:2123
 #: utilities.php:1043 utilities.php:1484
 msgid "All"
@@ -3165,87 +3165,87 @@ msgstr "数据查询 [编辑: %s]"
 msgid "Data Queries [new]"
 msgstr "数据查询[新建]"
 
-#: data_queries.php:1195
+#: data_queries.php:1197
 msgid "Successfully located XML file"
 msgstr "成功找到XML 文件"
 
-#: data_queries.php:1198
+#: data_queries.php:1200
 msgid "Could not locate XML file."
 msgstr "未找到XML 文件."
 
-#: data_queries.php:1206 host_templates.php:466 include/global_arrays.php:2422
+#: data_queries.php:1208 host_templates.php:466 include/global_arrays.php:2422
 msgid "Associated Graph Templates"
 msgstr "关联图形模板"
 
-#: data_queries.php:1210 graph_templates.php:857 graphs_new.php:640
+#: data_queries.php:1212 graph_templates.php:857 graphs_new.php:640
 #: lib/api_automation.php:576
 msgid "Graph Template Name"
 msgstr "图形模板名称"
 
-#: data_queries.php:1212
+#: data_queries.php:1214
 msgid "Mapping ID"
 msgstr "映射ID"
 
-#: data_queries.php:1239
+#: data_queries.php:1241
 msgid "Association Read Only until XML file located"
 msgstr "关联只读，直到找到XML文件"
 
-#: data_queries.php:1256
+#: data_queries.php:1258
 msgid "Mapped Graph Templates with Graphs are read only"
 msgstr "带图形的映射图形模板是只读的"
 
-#: data_queries.php:1263
+#: data_queries.php:1265
 msgid "No Graph Templates Defined."
 msgstr "无图形模板定义."
 
-#: data_queries.php:1305
+#: data_queries.php:1307
 msgid "Delete Associated Graph"
 msgstr "删除关联图"
 
-#: data_queries.php:1362 data_queries.php:1377 data_queries.php:1512
+#: data_queries.php:1364 data_queries.php:1379 data_queries.php:1514
 #: include/global_arrays.php:1002 include/global_arrays.php:1229
 #: include/global_arrays.php:2404 lib/api_automation.php:1078
 msgid "Data Queries"
 msgstr "数据查询"
 
-#: data_queries.php:1476 utilities.php:1934
+#: data_queries.php:1478 utilities.php:1934
 msgid "Data Query Name"
 msgstr "数据查询名称"
 
-#: data_queries.php:1479
+#: data_queries.php:1481
 msgid "The name of this Data Query."
 msgstr "这个数据查询的名称."
 
-#: data_queries.php:1485 graph_templates.php:866
+#: data_queries.php:1487 graph_templates.php:866
 msgid "The internal ID for this Graph Template.  Useful when performing automation or debugging."
 msgstr "此图形模板的内部标识. 执行自动化或调试时很有用."
 
-#: data_queries.php:1490
+#: data_queries.php:1492
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "正在使用的数据查询不能被删除. 在使用中被定义为被图形或图形模板引用."
 
-#: data_queries.php:1496
+#: data_queries.php:1498
 msgid "The number of Graphs using this Data Query."
 msgstr "使用此数据查询的图的数量."
 
-#: data_queries.php:1499
+#: data_queries.php:1501
 msgid "Templates Using"
 msgstr "使用中的模板"
 
-#: data_queries.php:1502
+#: data_queries.php:1504
 msgid "The number of Graphs Templates using this Data Query."
 msgstr "使用此数据查询的图形模板的数量."
 
-#: data_queries.php:1505 include/global_arrays.php:1363
+#: data_queries.php:1507 include/global_arrays.php:1363
 #: include/global_form.php:570 include/global_form.php:1380
 msgid "Data Input Method"
 msgstr "数据输入方法"
 
-#: data_queries.php:1508
+#: data_queries.php:1510
 msgid "The Data Input Method used to collect data for Data Sources associated with this Data Query."
 msgstr "用于收集与此数据查询关联的数据源的数据的数据输入方法."
 
-#: data_queries.php:1542
+#: data_queries.php:1544
 msgid "No Data Queries Found"
 msgstr "未找到数据查询"
 
@@ -3405,7 +3405,7 @@ msgstr "给这个数据模板的名字。 请注意，您只能将图形模板�
 #: data_sources.php:1101 graph_view.php:817 graphs.php:1600
 #: include/global_arrays.php:957 include/global_arrays.php:1006
 #: include/global_arrays.php:1694 include/global_arrays.php:1863
-#: lib/api_automation.php:426 lib/functions.php:6200 lib/html.php:2306
+#: lib/api_automation.php:426 lib/functions.php:6216 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
 msgstr "设备"
@@ -3435,7 +3435,7 @@ msgstr "自定义数据"
 msgid "Data Source Item %s"
 msgstr "数据源的项目%s"
 
-#: data_sources.php:1267 data_templates.php:817 lib/import.php:2870
+#: data_sources.php:1267 data_templates.php:817 lib/import.php:2872
 #: package_import.php:604
 msgid "New"
 msgstr "新"
@@ -3764,7 +3764,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller 尚未运行."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8239 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8255 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "没有权限"
 
@@ -4708,17 +4708,17 @@ msgstr "您必须先登录才能访问该区域的Kadupul."
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "FATAL: 您必须先登录才能访问Kadupul 的那个区域."
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5647
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5637
 #: templates/platform/permission_denied.html.twig
 msgid "Login Again"
 msgstr "重新登录"
 
-#: include/auth.php:317 lib/functions.php:8240
+#: include/auth.php:317 lib/functions.php:8256
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "如果您觉得这是一个报错,请联系Kadupul 管理员."
 
-#: include/auth.php:317 lib/functions.php:8240
+#: include/auth.php:317 lib/functions.php:8256
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "您不能访问Kadupul 的这个部分."
@@ -6795,7 +6795,7 @@ msgid "List Mode"
 msgstr "列表模式"
 
 #: include/global_arrays.php:2068 include/global_arrays.php:2074
-#: lib/functions.php:4487 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
+#: lib/functions.php:4503 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "控制台"
@@ -8593,8 +8593,8 @@ msgstr "数据"
 msgid "Visual"
 msgstr "外观"
 
-#: include/global_settings.php:112 lib/functions.php:6204
-#: lib/functions.php:6209
+#: include/global_settings.php:112 lib/functions.php:6220
+#: lib/functions.php:6225
 msgid "Authentication"
 msgstr "认证"
 
@@ -8630,11 +8630,11 @@ msgstr "图形字体"
 msgid "PHP Mail() Function"
 msgstr "PHP Mail() 函数"
 
-#: include/global_settings.php:153 lib/functions.php:6185
+#: include/global_settings.php:153 lib/functions.php:6201
 msgid "Sendmail"
 msgstr "发送邮件"
 
-#: include/global_settings.php:154 lib/functions.php:6191
+#: include/global_settings.php:154 lib/functions.php:6207
 msgid "SMTP"
 msgstr "SMTP"
 
@@ -10487,7 +10487,7 @@ msgstr "这是在电子邮件中的一行被自动换行之前允许多少个字
 msgid "Sendmail Options"
 msgstr "Sendmail 选项"
 
-#: include/global_settings.php:1972 lib/functions.php:6185
+#: include/global_settings.php:1972 lib/functions.php:6201
 msgid "Sendmail Path"
 msgstr "Sendmail 路径"
 
@@ -11680,8 +11680,8 @@ msgstr "位置:"
 msgid "Contact:"
 msgstr "联系人:"
 
-#: lib/api_device.php:1986 lib/functions.php:6218 lib/functions.php:6220
-#: lib/functions.php:6224
+#: lib/api_device.php:1986 lib/functions.php:6234 lib/functions.php:6236
+#: lib/functions.php:6240
 msgid "Ping Results"
 msgstr "Ping 结果"
 
@@ -11770,45 +11770,45 @@ msgstr "已配置Web 基本身份认证,但没有从Web 服务器传递用户名
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "%s 通过Web 服务器进行身份认证, 但 '模板'和'来宾用户'在Kadupul 中未定义."
 
-#: lib/auth.php:4616 lib/auth.php:4815
+#: lib/auth.php:4606 lib/auth.php:4805
 msgid "Access Denied!  No password provided by user."
 msgstr "拒绝访问！用户未提供密码。"
 
-#: lib/auth.php:4788 lib/auth.php:5854
+#: lib/auth.php:4778 lib/auth.php:5844
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "访问被拒绝！模板用户id%s不存在。请与管理员联系。"
 
-#: lib/auth.php:4796
+#: lib/auth.php:4786
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:5149
+#: lib/auth.php:5139
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "您的Kadupul管理员已强制使用复杂的密码登录，而您当前的Kadupul密码不符合新要求。因此，您必须立即更改密码。"
 
-#: lib/auth.php:5189
+#: lib/auth.php:5179
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "密码必须至少包含 %d 个字符!"
 
-#: lib/auth.php:5195
+#: lib/auth.php:5185
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "您的密码必须至少包含1个数字字符!"
 
-#: lib/auth.php:5199
+#: lib/auth.php:5189
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "您的密码必须包含小写字母和大写字母的混合形式!"
 
-#: lib/auth.php:5205
+#: lib/auth.php:5195
 msgid "Your password must contain at least 1 special character!"
 msgstr "您的密码必须至少包含1个特殊字符!"
 
-#: lib/auth.php:5640
+#: lib/auth.php:5630
 msgid "Kadupul Login Failure"
 msgstr "Kadupul 日志已清除"
 
-#: lib/auth.php:5940
+#: lib/auth.php:5930
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "之前未设置身份验证。尝试设置为本地身份验证，但未找到管理员帐户。"
 
@@ -12378,11 +12378,11 @@ msgstr "您必须为数据源'%s'选择XML输出列，并将复选框切换到�
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "您的图表模板尚未使用数据模板。请更正您的图表模板"
 
-#: lib/database.php:2409
+#: lib/database.php:2405
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "无法确定密码字段长度,无法继续,因为可能会损坏密码"
 
-#: lib/database.php:2416
+#: lib/database.php:2412
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "无法更改密码字段长度,无法继续,因为可能会损坏密码"
 
@@ -12437,186 +12437,186 @@ msgstr "未发现问题"
 msgid "RRDfile not created yet"
 msgstr "采集之后,RRD 文件未更新"
 
-#: lib/functions.php:1230 lib/functions.php:1312
+#: lib/functions.php:1231 lib/functions.php:1313
 msgid "Message Not Found."
 msgstr "未找到警报消息。"
 
-#: lib/functions.php:1732
+#: lib/functions.php:1733
 #, php-format
 msgid "Error %s is not readable"
 msgstr "出错: %s 不可读"
 
-#: lib/functions.php:4241
+#: lib/functions.php:4257
 msgid "Logged in a Guest"
 msgstr "当前登录的用户为"
 
-#: lib/functions.php:4241 lib/functions.php:4259
+#: lib/functions.php:4257 lib/functions.php:4275
 msgid "Logged in as"
 msgstr "当前登录的用户为"
 
-#: lib/functions.php:4241
+#: lib/functions.php:4257
 msgid "Login as Regular User"
 msgstr "以普通用户身份登录"
 
-#: lib/functions.php:4241
+#: lib/functions.php:4257
 msgid "guest"
 msgstr "客户"
 
-#: lib/functions.php:4244 lib/functions.php:4269 lib/html.php:2770
+#: lib/functions.php:4260 lib/functions.php:4285 lib/html.php:2770
 msgid "User Community"
 msgstr "社区"
 
-#: lib/functions.php:4245 lib/functions.php:4270 lib/html.php:2772
+#: lib/functions.php:4261 lib/functions.php:4286 lib/html.php:2772
 #: lib/utility.php:1447
 msgid "Documentation"
 msgstr "文档"
 
-#: lib/functions.php:4262
+#: lib/functions.php:4278
 #, php-format
 msgid "Logged in as %s"
 msgstr "登入为 %s"
 
-#: lib/functions.php:4264 lib/html.php:2751
+#: lib/functions.php:4280 lib/html.php:2751
 msgid "Edit Profile"
 msgstr "编辑个人资料"
 
-#: lib/functions.php:4274 lib/html.php:2755
+#: lib/functions.php:4290 lib/html.php:2755
 msgid "Logout"
 msgstr "退出"
 
-#: lib/functions.php:4428
+#: lib/functions.php:4444
 msgid "Leaf"
 msgstr "叶子"
 
-#: lib/functions.php:4452 lib/html_tree.php:648 lib/html_tree.php:684
+#: lib/functions.php:4468 lib/html_tree.php:648 lib/html_tree.php:684
 #: lib/html_tree.php:913 lib/html_tree.php:921 lib/html_tree.php:1522
 msgid "Non Query Based"
 msgstr "非基于查询"
 
-#: lib/functions.php:4490
+#: lib/functions.php:4506
 #, php-format
 msgid "Link %s"
 msgstr "链接 %s"
 
-#: lib/functions.php:4952 tree.php:1804 tree.php:1878 tree.php:1986
+#: lib/functions.php:4968 tree.php:1804 tree.php:1878 tree.php:1986
 #: user_admin.php:18 user_group_admin.php:20
 msgid "Copy"
 msgstr "复制"
 
-#: lib/functions.php:5754
+#: lib/functions.php:5770
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Mailer Error: 没有设置<b> 收件人 </b>地址!! 如果使用 <i>邮件测试</i> 链接,请设置<b> 报警邮件 </b>设置."
 
-#: lib/functions.php:6148
+#: lib/functions.php:6164
 #, php-format
 msgid "Authentication failed: %s"
 msgstr "认证失败: %s"
 
-#: lib/functions.php:6152
+#: lib/functions.php:6168
 #, php-format
 msgid "HELO failed: %s"
 msgstr "HELO 失败: %s"
 
-#: lib/functions.php:6155
+#: lib/functions.php:6171
 #, php-format
 msgid "Connect failed: %s"
 msgstr "连接失败: %s"
 
-#: lib/functions.php:6158
+#: lib/functions.php:6174
 msgid "SMTP error: "
 msgstr "SMTP error: "
 
-#: lib/functions.php:6172
+#: lib/functions.php:6188
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "这是从Kadupul 生成的测试消息. 发送此邮件是为了测试您的邮件设置的配置."
 
-#: lib/functions.php:6173
+#: lib/functions.php:6189
 msgid "Your email settings are currently set as follows"
 msgstr "您的电子邮件设置目前设置如下"
 
-#: lib/functions.php:6174
+#: lib/functions.php:6190
 msgid "Method"
 msgstr "方法"
 
-#: lib/functions.php:6176
+#: lib/functions.php:6192
 msgid "Checking Configuration...<br>"
 msgstr "检查配置... <br>"
 
-#: lib/functions.php:6183
+#: lib/functions.php:6199
 msgid "PHP's Mailer Class"
 msgstr "PHP Mailer 的类"
 
-#: lib/functions.php:6189
+#: lib/functions.php:6205
 msgid "Method: SMTP"
 msgstr "方法: SMTP"
 
-#: lib/functions.php:6206
+#: lib/functions.php:6222
 msgid "Not Shown for Security Reasons"
 msgstr "由于安全原因没有显示"
 
-#: lib/functions.php:6207
+#: lib/functions.php:6223
 msgid "Security"
 msgstr "安全"
 
-#: lib/functions.php:6215
+#: lib/functions.php:6231
 msgid "Ping Results:"
 msgstr "Ping 结果:"
 
-#: lib/functions.php:6215 lib/functions.php:6220
+#: lib/functions.php:6231 lib/functions.php:6236
 msgid "Success"
 msgstr "成功"
 
-#: lib/functions.php:6224
+#: lib/functions.php:6240
 msgid "Bypassed"
 msgstr "绕过"
 
-#: lib/functions.php:6233
+#: lib/functions.php:6249
 msgid "Creating Message Text..."
 msgstr "创建消息文本..."
 
-#: lib/functions.php:6236
+#: lib/functions.php:6252
 msgid "Sending Message..."
 msgstr "正在发送消息..."
 
-#: lib/functions.php:6240
+#: lib/functions.php:6256
 msgid "Kadupul Test Message"
 msgstr "Kadupul 测试消息"
 
-#: lib/functions.php:6242
+#: lib/functions.php:6258
 msgid "Success!"
 msgstr "成功!"
 
-#: lib/functions.php:6245
+#: lib/functions.php:6261
 msgid "Message Not Sent due to ping failure."
 msgstr "由于ping 失败,邮件未发送."
 
-#: lib/functions.php:6709 lib/functions.php:6779
+#: lib/functions.php:6725 lib/functions.php:6795
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul 禁用了插件 %s 因为以下错误: %s! 更多详细信息,请参考Kadupul 日志文件."
 
-#: lib/functions.php:6875
+#: lib/functions.php:6891
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "警告：PollerID：%s 的主机名无效：%s。 是否无法通过DNS访问！"
 
-#: lib/functions.php:7299 lib/functions.php:7301
+#: lib/functions.php:7315 lib/functions.php:7317
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:7299 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7315 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "版本 %s %s"
 
-#: lib/functions.php:7301
+#: lib/functions.php:7317
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7536
+#: lib/functions.php:7552
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "警告：缺少密钥Kadupul包含文件%s。 请找到并替换此文件"
@@ -12673,11 +12673,11 @@ msgstr "在线"
 msgid "Get Page Help"
 msgstr "获取帮助"
 
-#: lib/html.php:215 settings.php:634
+#: lib/html.php:215 settings.php:641
 msgid "Templates Selected"
 msgstr "选择的模板"
 
-#: lib/html.php:269 settings.php:599 settings.php:616 settings.php:675
+#: lib/html.php:269 settings.php:606 settings.php:623 settings.php:682
 msgid "Enter keyword"
 msgstr "请输入关键字"
 
@@ -13616,7 +13616,7 @@ msgstr "事件"
 msgid "Send Report"
 msgstr "发送报告"
 
-#: lib/html_reports.php:1644 lib/import.php:2955 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:2957 user_admin.php:1776
 msgid "[new]"
 msgstr "[新的]"
 
@@ -13882,89 +13882,89 @@ msgstr "不存在"
 msgid "not writable"
 msgstr "不可写"
 
-#: lib/import.php:1968 lib/import.php:1989
+#: lib/import.php:1970 lib/import.php:1991
 #, php-format
 msgid "New Graph Template: %s"
 msgstr "图形 [模板: %s]"
 
-#: lib/import.php:2003 lib/import.php:2015
+#: lib/import.php:2005 lib/import.php:2017
 #, php-format
 msgid "New Data Query: %s"
 msgstr "数据查询 [%s]"
 
-#: lib/import.php:2652
+#: lib/import.php:2654
 msgid "Unknown Field"
 msgstr "未知字段"
 
-#: lib/import.php:2868
+#: lib/import.php:2870
 msgid "Updated"
 msgstr "更新"
 
-#: lib/import.php:2872
+#: lib/import.php:2874
 msgid "Damaged"
 msgstr "数据源,图"
 
-#: lib/import.php:2874 package_import.php:598
+#: lib/import.php:2876 package_import.php:598
 msgid "Unchanged"
 msgstr "[不变]"
 
-#: lib/import.php:2910
+#: lib/import.php:2912
 msgid "Import Preview Results"
 msgstr "导入预览结果"
 
-#: lib/import.php:2910
+#: lib/import.php:2912
 msgid "Import Results"
 msgstr "导入结果"
 
-#: lib/import.php:2914
+#: lib/import.php:2916
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "如果导入包,Kadupul 将做出以下更改:"
 
-#: lib/import.php:2916
+#: lib/import.php:2918
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "Kadupul 已经为包引用了以下条目:"
 
-#: lib/import.php:2919
+#: lib/import.php:2921
 msgid "Package Files"
 msgstr "包文件"
 
-#: lib/import.php:2923
+#: lib/import.php:2925
 msgid "[preview] "
 msgstr "预览"
 
-#: lib/import.php:2928
+#: lib/import.php:2930
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "如果导入模板,Kadupul 将做出以下更改:"
 
-#: lib/import.php:2930
+#: lib/import.php:2932
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "Kadupul 已为模板导入以下项目:"
 
-#: lib/import.php:2945
+#: lib/import.php:2947
 msgid "[success]"
 msgstr "[成功]"
 
-#: lib/import.php:2947
+#: lib/import.php:2949
 msgid "[fail]"
 msgstr "[失败]"
 
-#: lib/import.php:2949
+#: lib/import.php:2951
 msgid "[preview]"
 msgstr "预览"
 
-#: lib/import.php:2953
+#: lib/import.php:2955
 msgid "[updated]"
 msgstr "[更新]"
 
-#: lib/import.php:2957
+#: lib/import.php:2959
 msgid "[unchanged]"
 msgstr "[不变]"
 
-#: lib/import.php:2993
+#: lib/import.php:2995
 msgid "Found Dependency:"
 msgstr "查找依赖:"
 
-#: lib/import.php:2995
+#: lib/import.php:2997
 msgid "Unmet Dependency:"
 msgstr "取消设置依赖项:"
 
@@ -17176,60 +17176,60 @@ msgstr "归档所有"
 msgid "Archive All Unknown RRDfiles"
 msgstr "存档所有未知的RRD 文件"
 
-#: settings.php:403
+#: settings.php:410
 msgid "NOTE: Path Settings on this Tab are only saved locally!"
 msgstr "注意：此选项卡上的路径设置仅在本地保存！"
 
-#: settings.php:408
+#: settings.php:415
 #, php-format
 msgid "Kadupul Settings (%s)%s"
 msgstr "Kadupul 设置(%s)%s"
 
-#: settings.php:541
+#: settings.php:548
 msgid "Changing Permission Model Warning"
 msgstr "更改权限模型警告"
 
-#: settings.php:542
+#: settings.php:549
 msgid "Changing Permission Model will alter a users effective Graph permissions."
 msgstr "更改权限模型将更改用户的有效 Graph 权限。"
 
-#: settings.php:543
+#: settings.php:550
 msgid "After you change the Graph Permission Model you should audit your Users and User Groups Effective Graph permission to ensure that you still have adequate control of your Graphs.  NOTE: If you want to restrict all Graphs at the Device or Graph Template Graph Permission Model, the default Graph Policy should be set to 'Deny'."
 msgstr "更改 Graph 权限模型后，应审核用户和用户组有效 Graph 权限，以确保您仍能充分控制 Graph。 注意：如果要限制设备或图形模板图形权限模型中的所有图形，则应将默认图形策略设置为“拒绝”。"
 
-#: settings.php:557
+#: settings.php:564
 msgid "Poller Interval must be less than Cron Interval"
 msgstr "采集周期必须小于Cron 周期"
 
-#: settings.php:585
+#: settings.php:592
 msgid "Select Plugin(s)"
 msgstr "选择插件"
 
-#: settings.php:587
+#: settings.php:594
 msgid "Plugins Selected"
 msgstr "插件选择"
 
-#: settings.php:607
+#: settings.php:614
 msgid "Select File(s)"
 msgstr "选择文件"
 
-#: settings.php:609
+#: settings.php:616
 msgid "Files Selected"
 msgstr "选择的文件"
 
-#: settings.php:632
+#: settings.php:639
 msgid "Select Template(s)"
 msgstr "选择模板"
 
-#: settings.php:637
+#: settings.php:644
 msgid "All Templates Selected"
 msgstr "所有模板被选中"
 
-#: settings.php:711
+#: settings.php:718
 msgid "Send a Test Email"
 msgstr "发送测试电子邮件"
 
-#: settings.php:722
+#: settings.php:729
 msgid "Test Email Results"
 msgstr "测试电子邮件结果"
 

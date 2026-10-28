@@ -202,6 +202,73 @@ function boost_check_correct_enabled()
     return true;
 }
 
+/**
+ * Split on-demand samples into bound multi-row inserts that stay within
+ * max_allowed_packet. A row larger than the limit is still returned alone.
+ *
+ * @param  array<int, array<string, mixed>>                   $results
+ * @return list<array{sql: string, params: list<scalar|null>}>
+ */
+function boost_on_demand_batches(array $results, int $maxAllowedPacket): array
+{
+    $prefix  = 'INSERT INTO poller_output_boost (local_data_id, rrd_name, time, output) VALUES ';
+    $suffix  = ' ON DUPLICATE KEY UPDATE output=VALUES(output)';
+    $tuple   = '(?, ?, ?, ?)';
+    $batches = [];
+    $params  = [];
+    $rows    = 0;
+    $bytes   = 0;
+
+    $flush = static function () use (&$batches, &$params, &$rows, &$bytes, $prefix, $suffix, $tuple): void {
+        if ($rows > 0) {
+            $batches[] = [
+                'sql'    => $prefix . implode(', ', array_fill(0, $rows, $tuple)) . $suffix,
+                'params' => $params,
+            ];
+        }
+
+        $params = [];
+        $rows   = 0;
+        $bytes  = 0;
+    };
+
+    // Fixed text plus one tuple; each further row adds a tuple and ', '.
+    $fixed = strlen($prefix) + strlen($suffix) + strlen($tuple);
+    $step  = strlen($tuple) + 2;
+
+    // MySQL allows 65535 placeholders per statement; four per row.
+    $max_rows = intdiv(65535, 4);
+
+    foreach ($results as $result) {
+        $row = [
+            $result['local_data_id'],
+            $result['rrd_name'],
+            $result['time'],
+            $result['output'],
+        ];
+
+        $row_bytes = 0;
+
+        foreach ($row as $value) {
+            // Emulated prepares send each value quoted and escaped, which at
+            // worst doubles it and adds the quotes.
+            $row_bytes += (2 * strlen((string) $value)) + 2;
+        }
+
+        if ($rows > 0 && ($rows >= $max_rows || ($fixed + ($rows * $step) + $bytes + $row_bytes) > $maxAllowedPacket)) {
+            $flush();
+        }
+
+        array_push($params, ...$row);
+        $rows++;
+        $bytes += $row_bytes;
+    }
+
+    $flush();
+
+    return $batches;
+}
+
 function boost_poller_on_demand(&$results)
 {
     global $config, $remote_db_cnn_id;
@@ -225,13 +292,6 @@ function boost_poller_on_demand(&$results)
         /* install the boost error handler */
         set_error_handler('boost_error_handler');
 
-        $out_buffer  = '';
-        $sql_prefix  = 'INSERT INTO poller_output_boost (local_data_id, rrd_name, time, output) VALUES ';
-        $sql_suffix  = ' ON DUPLICATE KEY UPDATE output=VALUES(output)';
-
-        // Add 1 here for potential delimiter
-        $overhead    = strlen($sql_prefix) + strlen($sql_suffix) + 1;
-
         if (boost_check_correct_enabled()) {
             /* if boost redirect is on, rows are being inserted directly */
             if (read_config_option('boost_redirect') == 'on') {
@@ -243,59 +303,10 @@ function boost_poller_on_demand(&$results)
             $max_allowed_packet = $max_allowed_packet['Value'];
 
             if (cacti_sizeof($results)) {
-                $delim      = '';
-                $delim_len  = 0;
-                $out_length = 0;
-
-                foreach ($results as $result) {
-                    $tmp_buffer =
-                        "('" .
-                        $result['local_data_id'] . "','" .
-                        $result['rrd_name'] . "','" .
-                        $result['time'] . "','" .
-                        $result['output'] . "')";
-
-                    $tmp_length = strlen($tmp_buffer);
-
-                    // Calculate length of output buffer, plus overhead, plus the temp buffer
-                    // is it greater than what SQL allows?
-                    if (($out_length + $overhead + $tmp_length) > $max_allowed_packet) {
-
-                        // Overall length was greater, but do we actually have anything
-                        // already buffered? Or was it just the temp buffer that overflowed
-                        // things?
-                        if ($out_length > 0) {
-                            if (db_execute($sql_prefix . $out_buffer . $sql_suffix, true, $conn) === false) {
-                                restore_error_handler();
-                                return null;
-                            }
-                        }
-
-                        // Make the temp buffer the starting point for the output buffer, but
-                        // we don't need a delimiter at this point, so don't include it
-                        $out_buffer = $tmp_buffer;
-                        $out_length = $tmp_length;
-                    } else {
-                        // We didn't overflow so lets add the temp buffer to the output buffer
-                        // and include the delimiter string/length.  This will be a blank
-                        // delimiter on the first iteration as the output buffer will always
-                        // be blank.
-                        $out_buffer .= $delim . $tmp_buffer;
-                        $out_length += $delim_len + $tmp_length;
-                    }
-
-                    // Only on the first iteration do we need to set the delimiter as
-                    // after that, we will always need it when we are not overflowing
-                    if ($delim_len == 0) {
-                        $delim     = ',';
-                        $delim_len = strlen($delim);
-                    }
-                }
-
-                // output buffer had something left, lets flush it
-                if ($out_buffer != '') {
-                    if (db_execute($sql_prefix . $out_buffer . $sql_suffix, true, $conn) === false) {
+                foreach (boost_on_demand_batches($results, (int) $max_allowed_packet) as $batch) {
+                    if (db_execute_prepared($batch['sql'], $batch['params'], true, $conn) === false) {
                         restore_error_handler();
+
                         return null;
                     }
                 }
@@ -1750,7 +1761,7 @@ function boost_poller_bottom()
 
         boost_update_snmp_statistics();
 
-        $boost_log     = read_config_option('path_boost_log');
+        $boost_log     = boost_debug_log_path();
         $boost_logdir  = dirname($boost_log);
 
         if ($boost_log != '') {
@@ -1844,6 +1855,27 @@ function boost_update_snmp_statistics()
     $mc->object('boostStatsTotalsDataSources')->set($total_data_sources);
 
     $mc->object('boostStatsLastUpdate')->set(time());
+}
+
+/**
+ * boost_debug_log_path - the Boost debug log path, or '' when it is unset or
+ *   does not end in .log. Settings refuse other names, but a value stored
+ *   before that check, or written outside the settings page, still reaches
+ *   here (GHSA-m6wx-f538-m6q3).
+ *
+ * @return (string) the path to append debug output to, or ''
+ */
+function boost_debug_log_path()
+{
+    $path = (string) read_config_option('path_boost_log');
+
+    if ($path != '' && pathinfo($path, PATHINFO_EXTENSION) != 'log') {
+        cacti_log("WARNING: Boost debug log '$path' does not end in .log and is ignored.", false, 'BOOST');
+
+        return '';
+    }
+
+    return $path;
 }
 
 function boost_debug($string)

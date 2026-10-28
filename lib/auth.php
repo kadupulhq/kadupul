@@ -4468,48 +4468,38 @@ function local_auth_login_process($username)
             $user = secpass_login_process($username);
 
             /**
-             * If the password needs to be rehashed for security purposes,
-             * do that now.
+             * secpass_login_process() is the only password verification, so a
+             * returned row means the password matched. Verifying again here
+             * made a known account cost one more hash than an unknown one.
              */
-            $stored_pass = db_fetch_cell_prepared(
-                'SELECT password
-			FROM user_auth
-			WHERE username = ?
-			AND realm = 0',
-                array($username)
-            );
+            if (cacti_sizeof($user) && !$error) {
+                $verified_hash = $user['password'];
 
-            if ($stored_pass != '') {
-                $password = get_nfilter_request_var('login_password');
+                $user = db_fetch_row_prepared(
+                    'SELECT *
+				FROM user_auth
+				WHERE username = ?
+				AND realm = 0',
+                    array($username)
+                );
 
-                $valid = compat_password_verify($password, $stored_pass);
-
-                cacti_log("DEBUG: User '" . $username . "' password for rehash is " . ($valid ? '' : 'in') . 'valid', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
-
-                if ($valid && !$error) {
-                    $user = db_fetch_row_prepared(
-                        'SELECT *
-					FROM user_auth
-					WHERE username = ?
-					AND realm = 0',
-                        array($username)
-                    );
-
+                // The session binds to the stored hash, so a password replaced
+                // since verification must not log in under the new one.
+                if (!cacti_sizeof($user) || !is_string($user['password']) || !hash_equals($verified_hash, $user['password'])) {
+                    $error     = true;
+                    $error_msg = __('Access Denied!  Login Failed.');
+                    $user      = array();
+                } elseif (compat_password_needs_rehash($verified_hash, PASSWORD_DEFAULT)) {
                     // Rehash only the local row that logged in; other realms may
                     // reuse the username, and a refused login changes nothing.
-                    if (!$error && cacti_sizeof($user) && compat_password_needs_rehash($stored_pass, PASSWORD_DEFAULT)) {
-                        $password = compat_password_hash($password, PASSWORD_DEFAULT);
-                        db_check_password_length();
-                        if (!auth_rehash_password_preserving_sessions($user['id'], $stored_pass, $password)) {
-                            $error     = true;
-                            $error_msg = __('Access Denied!  Login Failed.');
-                            $user      = array();
-                        }
+                    $password = compat_password_hash(get_nfilter_request_var('login_password'), PASSWORD_DEFAULT);
+                    db_check_password_length();
+                    if (!auth_rehash_password_preserving_sessions($user['id'], $verified_hash, $password)) {
+                        $error     = true;
+                        $error_msg = __('Access Denied!  Login Failed.');
+                        $user      = array();
                     }
                 }
-            } else {
-                // A known account verifies here a second time; keep unknown usernames level.
-                auth_unknown_user_password_verify(get_nfilter_request_var('login_password'));
             }
         }
 

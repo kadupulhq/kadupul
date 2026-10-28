@@ -11,6 +11,7 @@ use Kadupul\Platform\Infrastructure\Legacy\LegacySettingsStorage;
 require_once __DIR__ . '/../src/Platform/Infrastructure/Legacy/LegacyLockRetry.php';
 require_once __DIR__ . '/../src/Platform/Infrastructure/Legacy/LegacySettingsStorage.php';
 require_once __DIR__ . '/../src/Platform/Infrastructure/Legacy/LegacyLogText.php';
+require_once __DIR__ . '/../src/DataInput/Domain/InputStringSubstitution.php';
 require_once __DIR__ . '/path_helpers.php';
 require_once __DIR__ . '/graph_fonts.php';
 
@@ -2598,7 +2599,10 @@ function test_data_source($data_template_id, $host_id, $snmp_query_id = 0, $snmp
 
                 dsv_log('parts', $parts);
 
-                if (file_exists($parts[0])) {
+                // Dropping the function name by splitting on spaces is only safe
+                // when it is a plain word; otherwise the split could cut a quoted
+                // value and change how the shell parses the rest.
+                if (file_exists($parts[0]) && (!isset($parts[1]) || preg_match('/^[A-Za-z0-9_]+$/', $parts[1]))) {
                     unset($parts[1]);
 
                     $script = implode(' ', $parts);
@@ -2985,6 +2989,8 @@ function get_full_test_script_path($data_template_id, $host_id)
 
     $host = db_fetch_row_prepared('SELECT * FROM host WHERE id = ?', array($host_id));
 
+    $escaped_values = array();
+
     if (cacti_sizeof($data)) {
         foreach ($data as $item) {
             if (isset($host[$item['data_name']])) {
@@ -2995,19 +3001,22 @@ function get_full_test_script_path($data_template_id, $host_id)
                 $value = cacti_escapeshellarg((string) $item['value']);
             }
 
-            $full_path = str_replace('<' . $item['data_name'] . '>', $value, $full_path);
+            // The first row for a name wins, as it did with str_replace().
+            $escaped_values += array($item['data_name'] => $value);
         }
     }
 
-    $search    = array('<path_cacti>', '<path_snmpget>', '<path_php_binary>');
-    $replace   = array($config['base_path'], read_config_option('path_snmpget'), read_config_option('path_php_binary'));
-    $full_path = str_replace($search, $replace, $full_path);
+    // Field names keep precedence over the raw path settings, as when fields
+    // were replaced first.
+    $escaped_values += array(
+        'path_cacti'      => $config['base_path'],
+        'path_snmpget'    => read_config_option('path_snmpget'),
+        'path_php_binary' => read_config_option('path_php_binary'),
+    );
 
-    /**
-     * sometimes a certain input value will not have anything entered... null out these fields
-     * in the input string so we don't mess up the script
-     */
-    return preg_replace('/(<[A-Za-z0-9_]+>)+/', '', $full_path);
+    $full_path = \Kadupul\DataInput\Domain\InputStringSubstitution::substitute((string) $full_path, $escaped_values);
+
+    return $full_path;
 }
 
 /**
@@ -3050,6 +3059,8 @@ function get_full_script_path($local_data_id)
 
     $full_path = $data_source['input_string'];
 
+    $escaped_values = array();
+
     if (cacti_sizeof($data)) {
         foreach ($data as $item) {
             $value = cacti_escapeshellarg($item['value']);
@@ -3058,17 +3069,22 @@ function get_full_script_path($local_data_id)
                 $value = "''";
             }
 
-            $full_path = str_replace('<' . $item['data_name'] . '>', $value, $full_path);
+            // The first row for a name wins, as it did with str_replace().
+            $escaped_values += array($item['data_name'] => $value);
         }
     }
 
-    $search    = array('<path_cacti>', '<path_snmpget>', '<path_php_binary>');
-    $replace   = array($config['base_path'], read_config_option('path_snmpget'), read_config_option('path_php_binary'));
-    $full_path = str_replace($search, $replace, $full_path);
+    // Field names keep precedence over the raw path settings, as when fields
+    // were replaced first.
+    $escaped_values += array(
+        'path_cacti'      => $config['base_path'],
+        'path_snmpget'    => read_config_option('path_snmpget'),
+        'path_php_binary' => read_config_option('path_php_binary'),
+    );
 
-    /* sometimes a certain input value will not have anything entered... null out these fields
-    in the input string so we don't mess up the script */
-    return preg_replace('/(<[A-Za-z0-9_]+>)+/', '', $full_path);
+    $full_path = \Kadupul\DataInput\Domain\InputStringSubstitution::substitute((string) $full_path, $escaped_values);
+
+    return $full_path;
 }
 
 /**
@@ -8748,6 +8764,11 @@ function cacti_format_ipv6_colon($address)
  */
 function cacti_path_is_within($candidate, $base)
 {
+    // realpath() throws on a NUL byte, and no such path can be inside $base.
+    if (str_contains((string) $candidate, "\0") || str_contains((string) $base, "\0")) {
+        return false;
+    }
+
     $resolved = realpath($candidate);
 
     if ($resolved === false) {

@@ -164,6 +164,7 @@ define('SQL_NO_CACHE', '');
 require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
 eval(test_php_function_source(file_get_contents(dirname(__DIR__, 2) . '/lib/boost.php'), 'boost_delete_samples'));
 eval(test_php_function_source(file_get_contents(dirname(__DIR__, 2) . '/lib/boost.php'), 'boost_acquire_legacy_lock'));
+eval(test_php_function_source(file_get_contents(dirname(__DIR__, 2) . '/lib/boost.php'), 'boost_debug_log_path'));
 foreach (array('version_to_decimal', 'cacti_version_compare') as $name) {
     eval(test_php_function_source(file_get_contents(dirname(__DIR__, 2) . '/lib/functions.php'), $name));
 }

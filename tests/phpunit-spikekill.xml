@@ -119,6 +119,7 @@
       <file>Unit/Security/Auth/UserListGroupFilterTest.php</file>
       <file>Unit/Security/Auth/BulkUserActionGuardTest.php</file>
       <file>Unit/Security/Auth/ChangePasswordLockoutTest.php</file>
+      <file>Unit/Security/Auth/ChangePasswordUsernameRenderingTest.php</file>
       <file>Unit/Security/Auth/GraphViewSettingOutputTest.php</file>
       <file>Unit/Security/Auth/ProfileSettingValidationTest.php</file>
       <file>Unit/Security/Misc/HelpPageErrorNotificationTest.php</file>
@@ -129,6 +130,10 @@
       <file>Unit/Security/Misc/IncludeDirectoryDenyTest.php</file>
       <file>Unit/Database/DdlIdentifierValidationTest.php</file>
       <file>Unit/Core/Rrd/RrdCommandArgumentValidationTest.php</file>
+      <file>Unit/Security/Misc/BoostDebugLogPathTest.php</file>
+      <file>Unit/Security/Misc/DataQueryXmlPathTest.php</file>
+      <file>Unit/SqlScriptCredentialsTest.php</file>
+      <file>Unit/Security/Shell/DataInputQuotedPlaceholderTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>
