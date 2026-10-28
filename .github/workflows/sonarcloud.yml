@@ -154,16 +154,8 @@ jobs:
           sudo apt-get update -o Acquire::Retries=3
           sudo apt-get install -y --no-install-recommends rrdtool
 
-      - name: Locate Composer download cache
-        id: composer-cache
-        run: echo "directory=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
       - name: Cache Composer downloads
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ${{ steps.composer-cache.outputs.directory }}
-          key: composer-downloads-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('composer.lock', 'tests/composer.lock') }}
-          restore-keys: |
-            composer-downloads-${{ runner.os }}-${{ runner.arch }}-
+        uses: ./.github/actions/composer-cache # zizmor: ignore[self-repository]
 
       - name: Install application dependencies
         run: composer install --no-interaction --no-progress
@@ -289,16 +281,8 @@ jobs:
           sudo apt-get update -o Acquire::Retries=3
           sudo apt-get install -y --no-install-recommends rrdtool
 
-      - name: Locate Composer download cache
-        id: composer-cache
-        run: echo "directory=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
       - name: Cache Composer downloads
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ${{ steps.composer-cache.outputs.directory }}
-          key: composer-downloads-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('composer.lock', 'tests/composer.lock') }}
-          restore-keys: |
-            composer-downloads-${{ runner.os }}-${{ runner.arch }}-
+        uses: ./.github/actions/composer-cache # zizmor: ignore[self-repository]
 
       - name: Install application dependencies
         run: composer install --no-interaction --no-progress
@@ -457,16 +441,8 @@ jobs:
           sudo apt-get update -o Acquire::Retries=3
           sudo apt-get install -y --no-install-recommends rrdtool
 
-      - name: Locate Composer download cache
-        id: composer-cache
-        run: echo "directory=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
       - name: Cache Composer downloads
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ${{ steps.composer-cache.outputs.directory }}
-          key: composer-downloads-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('composer.lock', 'tests/composer.lock') }}
-          restore-keys: |
-            composer-downloads-${{ runner.os }}-${{ runner.arch }}-
+        uses: ./.github/actions/composer-cache # zizmor: ignore[self-repository]
 
       - name: Install application dependencies
         run: composer install --no-interaction --no-progress
