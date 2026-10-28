@@ -134,10 +134,10 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Authenticate to GitHub Container Registry
-        env:
-          GHCR_TOKEN: ${{ github.token }}
-          GHCR_USERNAME: ${{ github.actor }}
-        run: bash tests/tools/login_ghcr.sh
+        uses: ./.github/actions/ghcr-login # zizmor: ignore[self-repository]
+        with:
+          token: ${{ github.token }}
+          username: ${{ github.actor }}
 
       - name: Set up PHP
         uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
@@ -269,10 +269,10 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Authenticate to GitHub Container Registry
-        env:
-          GHCR_TOKEN: ${{ github.token }}
-          GHCR_USERNAME: ${{ github.actor }}
-        run: bash tests/tools/login_ghcr.sh
+        uses: ./.github/actions/ghcr-login # zizmor: ignore[self-repository]
+        with:
+          token: ${{ github.token }}
+          username: ${{ github.actor }}
 
       - name: Set up PHP
         uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
@@ -437,10 +437,10 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Authenticate to GitHub Container Registry
-        env:
-          GHCR_TOKEN: ${{ github.token }}
-          GHCR_USERNAME: ${{ github.actor }}
-        run: bash tests/tools/login_ghcr.sh
+        uses: ./.github/actions/ghcr-login # zizmor: ignore[self-repository]
+        with:
+          token: ${{ github.token }}
+          username: ${{ github.actor }}
 
       - name: Set up PHP
         uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
