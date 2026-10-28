@@ -334,9 +334,9 @@ dynamic_include	./lib/aggregate.php:924	    include_once($config['base_path'] . 
 dynamic_include	./lib/api_aggregate.php:1141	        include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./lib/api_aggregate.php:2292	    include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/api_aggregate.php:484	        include_once($config['base_path'] . '/lib/api_aggregate.php');
-dynamic_include	./lib/api_automation.php:2552	    include_once($config['base_path'] . '/lib/template.php');
-dynamic_include	./lib/api_automation.php:2553	    include_once($config['base_path'] . '/lib/api_automation_tools.php');
-dynamic_include	./lib/api_automation.php:2554	    include_once($config['base_path'] . '/lib/utility.php');
+dynamic_include	./lib/api_automation.php:2601	    include_once($config['base_path'] . '/lib/template.php');
+dynamic_include	./lib/api_automation.php:2602	    include_once($config['base_path'] . '/lib/api_automation_tools.php');
+dynamic_include	./lib/api_automation.php:2603	    include_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./lib/api_device.php:1194	    include_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./lib/api_device.php:1195	    include_once($config['base_path'] . '/lib/variables.php');
 dynamic_include	./lib/api_device.php:1196	    include_once($config['base_path'] . '/lib/data_query.php');
