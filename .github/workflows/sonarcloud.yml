@@ -382,7 +382,9 @@ jobs:
           retention-days: 14
 
   application-coverage:
-    timeout-minutes: 90
+    # 84 to 90 minutes on the self-hosted runners, against 54 on
+    # GitHub-hosted ones, so 90 cancelled passing runs.
+    timeout-minutes: 120
     name: Application and browser coverage
     needs: scope
     outputs:
