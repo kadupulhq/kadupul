@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-27 16:55-0700\n"
+"POT-Creation-Date: 2026-10-28 03:48-0700\n"
 "PO-Revision-Date: 2026-03-16 13:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -4751,11 +4751,11 @@ msgstr "Endast Kadupul-administratörer med behörigheten Install/Upgrade kan lo
 msgid "There is an Installation or Upgrade in progress."
 msgstr "Det pågår en installation eller uppgradering."
 
-#: include/global.php:583
+#: include/global.php:585
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "Huvuddatainsamlaren har återgått till online-status"
 
-#: include/global.php:587
+#: include/global.php:589
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "Huvuddatainsamlaren har gått till en offline- eller återställningsstatus"
 
@@ -12384,11 +12384,11 @@ msgstr "Du måste välja en XML-utdatakolumn för datakällan '%s' och växla kr
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Din Graph Template har inte Data Templates i bruk.  Vänligen korrigera din grafmall"
 
-#: lib/database.php:2405
+#: lib/database.php:2425
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Misslyckades med att bestämma lösenordsfältets längd, kan inte fortsätta eftersom lösenordet kan skadas"
 
-#: lib/database.php:2412
+#: lib/database.php:2432
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Misslyckades med att ändra lösenordsfältets längd, kan inte fortsätta eftersom lösenordet kan skadas"
 

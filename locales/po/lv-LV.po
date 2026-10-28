@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.2.20\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-27 16:55-0700\n"
+"POT-Creation-Date: 2026-10-28 03:48-0700\n"
 "PO-Revision-Date: 2026-05-10 08:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -4783,11 +4783,11 @@ msgstr "Pašlaik var pieteikties tikai Kadupul administratori ar instalēšanas/
 msgid "There is an Installation or Upgrade in progress."
 msgstr "Pašlaik notiek uzstādīšana vai atjaunināšana."
 
-#: include/global.php:583
+#: include/global.php:585
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "Galvenais datu apkopotājs atkal ir tiešsaistē"
 
-#: include/global.php:587
+#: include/global.php:589
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "Galvenais datu apkopotājs ir bezsaistē vai atgūtas"
 
@@ -12450,11 +12450,11 @@ msgstr "Jums ir jāatlasa XML izvades kolonna datu avotam “%s” un jāieslēd
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Jūsu diagrammas veidnē netiek izmantotas datu veidnes. Lūdzu, izlabojiet diagrammas veidni"
 
-#: lib/database.php:2405
+#: lib/database.php:2425
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Neizdevās noteikt paroles lauka garumu, nevar turpināt, jo var tikt bojāta parole"
 
-#: lib/database.php:2412
+#: lib/database.php:2432
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Neizdevās mainīt paroles lauka garumu, nevar turpināt, jo var tikt bojāta parole"
 

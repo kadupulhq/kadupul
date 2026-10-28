@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-27 16:55-0700\n"
+"POT-Creation-Date: 2026-10-28 03:48-0700\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -4735,11 +4735,11 @@ msgstr "Chỉ Quản trị viên Kadupul có đặc quyền Cài đặt / Nâng 
 msgid "There is an Installation or Upgrade in progress."
 msgstr "Có một cài đặt hoặc nâng cấp trong tiến trình."
 
-#: include/global.php:583
+#: include/global.php:585
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "Lần cuối cùng Bộ thu thập dữ liệu này được đồng bộ hóa hoàn toàn với trang web chính của Kadupul."
 
-#: include/global.php:587
+#: include/global.php:589
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr ""
 
@@ -12379,11 +12379,11 @@ msgstr "Bạn phải chọn cột đầu ra XML cho Nguồn dữ liệu ' %s' v�
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Mẫu biểu đồ của bạn không sử dụng Mẫu dữ liệu. Vui lòng sửa Mẫu biểu đồ của bạn"
 
-#: lib/database.php:2405
+#: lib/database.php:2425
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Không thể xác định độ dài trường mật khẩu, không thể tiếp tục vì có thể làm hỏng mật khẩu"
 
-#: lib/database.php:2412
+#: lib/database.php:2432
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Không thể thay đổi độ dài trường mật khẩu, không thể tiếp tục vì có thể làm hỏng mật khẩu"
 

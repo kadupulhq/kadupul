@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul German Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-27 16:55-0700\n"
+"POT-Creation-Date: 2026-10-28 03:48-0700\n"
 "PO-Revision-Date: 2024-05-25 15:08+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -4779,11 +4779,11 @@ msgstr "Nur Kadupul-Administratoren mit der Berechtigung Install/Upgrade dürfen
 msgid "There is an Installation or Upgrade in progress."
 msgstr "Es ist eine Installation oder ein Upgrade im Gange."
 
-#: include/global.php:583
+#: include/global.php:585
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "Das letzte Mal, als dieser Datensammler vollständig mit der Hauptseite von Kadupul synchronisiert wurde."
 
-#: include/global.php:587
+#: include/global.php:589
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "Der Hauptdatensammler hat einen Offline- oder Wiederherstellungsstatus erreicht"
 
@@ -12450,11 +12450,11 @@ msgstr "Sie müssen eine XML-Ausgabespalte für die Datenquelle'%s' auswählen u
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Ihre Grafikvorlage hat keine Datenvorlagen in Verwendung.  Bitte korrigieren Sie Ihre Grafikvorlage."
 
-#: lib/database.php:2405
+#: lib/database.php:2425
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Die Länge des Passwortfeldes konnte nicht bestimmt werden, kann nicht fortgesetzt werden, da das Passwort beschädigt werden kann."
 
-#: lib/database.php:2412
+#: lib/database.php:2432
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Die Länge des Passwortfeldes konnte nicht geändert werden, kann nicht fortgesetzt werden, da das Passwort beschädigt werden kann."
 
