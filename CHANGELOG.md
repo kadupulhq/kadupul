@@ -161,6 +161,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Profile requests. With `KADUPUL_PROFILE=1`, legacy pages append wall time, peak memory and query count to `var/profile/requests.jsonl`; the Symfony profiler runs in dev and test, and `tests/tools/profile_routes.py` compares each legacy URL with its Symfony route on time and query count.
 - Fail Sonar-analysed pull requests and merge groups when a changed executable line is not covered by tests.
 - Show plugin menu entries added through the `config_arrays` hook on Twig console pages. A plugin menu that fails to load falls back to the built-in menu.
+- Render eight confirmation pages from two shared Twig templates without changing their HTML.
 
 ## [1.3.0-alpha.1]
 
