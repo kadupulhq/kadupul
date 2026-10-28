@@ -921,6 +921,272 @@ function db_affected_rows($db_conn = false)
 }
 
 /**
+ * db_has_control_chars - test whether a DDL value contains an ASCII control character
+ *
+ * @param  (string) Value to test
+ *
+ * @return (bool) True when a control character is present
+ */
+function db_has_control_chars($value)
+{
+    return preg_match('/[\x00-\x1F\x7F]/', (string) $value) === 1;
+}
+
+/**
+ * db_is_safe_identifier - validate a table, column or index name used in DDL
+ *
+ * @param  (string) Identifier to validate
+ *
+ * @return (bool) True when safe inside backticks
+ */
+function db_is_safe_identifier($identifier)
+{
+    // The hyphen is kept for existing columns such as snmpagent_cache.max-access.
+    return is_string($identifier) && preg_match('/^[A-Za-z0-9_-]+$/D', $identifier) === 1;
+}
+
+/**
+ * db_format_qualified_identifier - validate and quote a table name, optionally
+ *   qualified by a database name
+ *
+ * @param  (string) A table name, optionally database.table, either part may be backticked
+ *
+ * @return (string|bool) The quoted identifier or false when invalid
+ */
+function db_format_qualified_identifier($identifier)
+{
+    if (!is_string($identifier)) {
+        return false;
+    }
+
+    $parts = explode('.', $identifier);
+
+    if (count($parts) > 2) {
+        return false;
+    }
+
+    $quoted_parts = array();
+
+    foreach ($parts as $part) {
+        if (preg_match('/^`([A-Za-z0-9_-]+)`$/D', $part, $matches) === 1) {
+            $part = $matches[1];
+        }
+
+        if (!db_is_safe_identifier($part)) {
+            return false;
+        }
+
+        $quoted_parts[] = "`$part`";
+    }
+
+    return implode('.', $quoted_parts);
+}
+
+/**
+ * db_is_safe_column_type - validate a column type clause used in DDL
+ *
+ * @param  (string) Column type clause, for example 'int(10) unsigned' or "enum('a','b')"
+ *
+ * @return (bool) True when the clause is a single type with no SQL separators
+ */
+function db_is_safe_column_type($type)
+{
+    if (!is_string($type) || db_has_control_chars($type)) {
+        return false;
+    }
+
+    $type = trim($type);
+
+    if ($type === '' || preg_match('/[`;#]|--|\/\*/', $type)) {
+        return false;
+    }
+
+    if (preg_match('/^([A-Za-z]+)\s*(?:\((.*)\))?\s*((?:\s+(?:unsigned|signed|zerofill|binary))*)$/i', $type, $matches) !== 1) {
+        return false;
+    }
+
+    if (!isset($matches[2]) || $matches[2] === '') {
+        return true;
+    }
+
+    $base_type = strtolower($matches[1]);
+    $params    = $matches[2];
+
+    if (preg_match('/^\s*[0-9]+\s*(?:,\s*[0-9]+\s*)?$/', $params) === 1) {
+        return true;
+    }
+
+    if ($base_type === 'enum' || $base_type === 'set') {
+        // MySQL accepts single or double quoted members, and plugins use both.
+        $value = "(?:'(?:[^'\\\\]|\\\\.|'')*'|\"(?:[^\"\\\\]|\\\\.|\"\")*\")";
+
+        return preg_match("/^\\s*$value(?:\\s*,\\s*$value)*\\s*$/", $params) === 1;
+    }
+
+    return false;
+}
+
+/**
+ * db_is_safe_table_option - validate an engine, charset, collation or row format token
+ *
+ * @param  (string) Table option token
+ *
+ * @return (bool) True when safe in a DDL option clause
+ */
+function db_is_safe_table_option($option)
+{
+    return is_string($option) && preg_match('/^[A-Za-z0-9_]+$/', $option) === 1;
+}
+
+/**
+ * db_is_safe_index_column - validate an index column with an optional prefix length
+ *
+ * @param  (string) Index column, for example 'name' or 'name(10)'
+ *
+ * @return (bool) True when safe in index DDL
+ */
+function db_is_safe_index_column($column)
+{
+    return is_string($column) && preg_match('/^`?[A-Za-z0-9_-]+`?(?:\([0-9]+\))?$/D', trim($column)) === 1;
+}
+
+/**
+ * db_is_safe_column_definition - validate a column definition array
+ *
+ * @param  (array) Column definition as used by db_add_column()
+ *
+ * @return (bool) True when safe to compose into CREATE or ALTER TABLE
+ */
+function db_is_safe_column_definition($column)
+{
+    if (!is_array($column) || !isset($column['name']) || !db_is_safe_identifier($column['name'])) {
+        return false;
+    }
+
+    if (!isset($column['type']) || !db_is_safe_column_type($column['type'])) {
+        return false;
+    }
+
+    if (isset($column['after']) && !db_is_safe_identifier($column['after'])) {
+        return false;
+    }
+
+    if (isset($column['on_update']) && strtoupper($column['on_update']) !== 'CURRENT_TIMESTAMP') {
+        return false;
+    }
+
+    foreach (array('default', 'comment') as $field) {
+        if (isset($column[$field]) && db_has_control_chars($column[$field])) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
+ * db_build_column_definition_sql - build a validated column definition fragment
+ *
+ * @param  (array)         Column definition as used by db_add_column()
+ * @param  (bool|resource) The connection to use or false to use the default
+ * @param  (bool)          Include the AFTER clause when present
+ *
+ * @return (string|bool) The SQL fragment, or false when the definition is unsafe
+ */
+function db_build_column_definition_sql($column, $db_conn = false, $include_after = true)
+{
+    if (!db_is_safe_column_definition($column)) {
+        return false;
+    }
+
+    $sql = '`' . $column['name'] . '` ' . $column['type'];
+
+    if (isset($column['unsigned'])) {
+        $sql .= ' unsigned';
+    }
+
+    if (isset($column['NULL']) && $column['NULL'] === false) {
+        $sql .= ' NOT NULL';
+    }
+
+    if (isset($column['NULL']) && $column['NULL'] === true && !isset($column['default'])) {
+        $sql .= ' default NULL';
+    }
+
+    if (isset($column['default'])) {
+        if (strtolower($column['type']) == 'timestamp' && $column['default'] === 'CURRENT_TIMESTAMP') {
+            $sql .= ' default CURRENT_TIMESTAMP';
+        } else {
+            $sql .= ' default ' . (is_numeric($column['default']) ? $column['default'] : db_qstr($column['default'], $db_conn));
+        }
+    }
+
+    if (isset($column['on_update'])) {
+        $sql .= ' ON UPDATE ' . $column['on_update'];
+    }
+
+    if (isset($column['auto_increment'])) {
+        $sql .= ' auto_increment';
+    }
+
+    if (isset($column['comment'])) {
+        $sql .= ' COMMENT ' . db_qstr($column['comment'], $db_conn);
+    }
+
+    if ($include_after && isset($column['after'])) {
+        $sql .= ' AFTER `' . $column['after'] . '`';
+    }
+
+    return $sql;
+}
+
+/**
+ * db_is_safe_table_definition - validate a table definition array
+ *
+ * @param  (array) Table definition as used by db_table_create()
+ *
+ * @return (bool) True when safe to compose into CREATE TABLE
+ */
+function db_is_safe_table_definition($data)
+{
+    if (!is_array($data) || !isset($data['columns']) || !is_array($data['columns']) || !isset($data['type']) || !db_is_safe_table_option($data['type'])) {
+        return false;
+    }
+
+    foreach (array('charset', 'collate', 'row_format') as $option) {
+        if (isset($data[$option]) && !db_is_safe_table_option($data[$option])) {
+            return false;
+        }
+    }
+
+    if (isset($data['comment']) && db_has_control_chars($data['comment'])) {
+        return false;
+    }
+
+    foreach ($data['columns'] as $column) {
+        if (!db_is_safe_column_definition($column)) {
+            return false;
+        }
+    }
+
+    if (isset($data['primary']) && db_format_index_create($data['primary']) === false) {
+        return false;
+    }
+
+    foreach (array('keys', 'unique_keys') as $key_type) {
+        if (isset($data[$key_type]) && cacti_sizeof($data[$key_type])) {
+            foreach ($data[$key_type] as $key) {
+                if (!isset($key['name']) || !db_is_safe_identifier($key['name']) || !isset($key['columns']) || db_format_index_create($key['columns']) === false) {
+                    return false;
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
+/**
  * db_add_column - add a column to table
  *
  * @param  (string)        The name of the table
@@ -940,6 +1206,10 @@ function db_add_column($table, $column, $log = true, $db_conn = false)
         return false;
     }
 
+    if (!db_is_safe_identifier($table) || !db_is_safe_column_definition($column)) {
+        return false;
+    }
+
     $result = db_fetch_assoc('SHOW columns FROM `' . $table . '`', $log, $db_conn);
     if ($result === false) {
         return false;
@@ -950,47 +1220,14 @@ function db_add_column($table, $column, $log = true, $db_conn = false)
         $columns[] = $arr['Field'];
     }
 
-    if (isset($column['name']) && !in_array($column['name'], $columns)) {
-        $sql = 'ALTER TABLE `' . $table . '` ADD `' . $column['name'] . '`';
-        if (isset($column['type'])) {
-            $sql .= ' ' . $column['type'];
+    if (isset($column['name']) && !in_array($column['name'], $columns, true)) {
+        $definition = db_build_column_definition_sql($column, $db_conn);
+
+        if ($definition === false) {
+            return false;
         }
 
-        if (isset($column['unsigned'])) {
-            $sql .= ' unsigned';
-        }
-
-        if (isset($column['NULL']) && $column['NULL'] === false) {
-            $sql .= ' NOT NULL';
-        }
-
-        if (isset($column['NULL']) && $column['NULL'] === true && !isset($column['default'])) {
-            $sql .= ' default NULL';
-        }
-
-        if (isset($column['default'])) {
-            if (strtolower($column['type']) == 'timestamp' && $column['default'] === 'CURRENT_TIMESTAMP') {
-                $sql .= ' default CURRENT_TIMESTAMP';
-            } else {
-                $sql .= ' default ' . (is_numeric($column['default']) ? $column['default'] : "'" . $column['default'] . "'");
-            }
-        }
-
-        if (isset($column['on_update'])) {
-            $sql .= ' ON UPDATE ' . $column['on_update'];
-        }
-
-        if (isset($column['auto_increment'])) {
-            $sql .= ' auto_increment';
-        }
-
-        if (isset($column['comment'])) {
-            $sql .= " COMMENT '" . $column['comment'] . "'";
-        }
-
-        if (isset($column['after'])) {
-            $sql .= ' AFTER ' . $column['after'];
-        }
+        $sql = 'ALTER TABLE `' . $table . '` ADD ' . $definition;
 
         return db_execute($sql, $log, $db_conn);
     }
@@ -1014,6 +1251,10 @@ function db_remove_column($table, $column, $log = true, $db_conn = false)
     $db_conn = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::select($db_conn);
 
     if (!is_object($db_conn)) {
+        return false;
+    }
+
+    if (!db_is_safe_identifier($table) || !db_is_safe_identifier($column)) {
         return false;
     }
 
@@ -1049,11 +1290,20 @@ function db_add_index($table, $type, $key, $columns, $log = true, $db_conn = fal
         $columns = array($columns);
     }
 
-    $sql = 'ALTER TABLE `' . $table . '` ADD ' . $type . ' `' . $key . '`(`' . implode('`,`', $columns) . '`)';
+    if (!db_is_safe_identifier($table) || !db_is_safe_identifier($key) || !preg_match('/^(UNIQUE |FULLTEXT |SPATIAL )?(INDEX|KEY)$/i', $type)) {
+        return false;
+    }
+
+    $columns = db_format_index_create($columns);
+
+    if ($columns === false) {
+        return false;
+    }
+
+    $sql = 'ALTER TABLE `' . $table . '` ADD ' . $type . ' `' . $key . '`(' . $columns . ')';
 
     if (db_index_exists($table, $key, false, $db_conn)) {
-        $type = str_ireplace('UNIQUE ', '', $type);
-        if (!db_execute("ALTER TABLE $table DROP $type $key", $log, $db_conn)) {
+        if (!db_execute("ALTER TABLE `$table` DROP INDEX `$key`", $log, $db_conn)) {
             return false;
         }
     }
@@ -1074,6 +1324,10 @@ function db_add_index($table, $type, $key, $columns, $log = true, $db_conn = fal
 function db_index_exists($table, $index, $log = true, $db_conn = false)
 {
     global $database_log, $config;
+
+    if (!db_is_safe_identifier($table) || !db_is_safe_identifier($index)) {
+        return false;
+    }
 
     if (!isset($database_log)) {
         $database_log = false;
@@ -1110,12 +1364,22 @@ function db_index_matches($table, $index, $columns, $log = true, $db_conn = fals
 {
     global $database_log, $config;
 
+    if (!db_is_safe_identifier($table) || !db_is_safe_identifier($index)) {
+        return false;
+    }
+
     if (!isset($database_log)) {
         $database_log = false;
     }
 
     if (!is_array($columns)) {
         $columns = array($columns);
+    }
+
+    foreach ($columns as $column) {
+        if (!db_is_safe_identifier($column)) {
+            return false;
+        }
     }
 
     $_log  = $database_log;
@@ -1252,6 +1516,10 @@ function db_column_exists($table, $column, $log = true, $db_conn = false)
 {
     static $results = array();
 
+    if (!db_is_safe_identifier($table) || !db_is_safe_identifier($column)) {
+        return false;
+    }
+
     if ($db_conn === false) {
         $index = '-1';
     } else {
@@ -1284,7 +1552,13 @@ function db_get_table_column_types($table, $db_conn = false)
         return false;
     }
 
-    $columns = db_fetch_assoc("SHOW COLUMNS FROM $table", false, $db_conn);
+    $table_identifier = db_format_qualified_identifier($table);
+
+    if ($table_identifier === false) {
+        return false;
+    }
+
+    $columns = db_fetch_assoc("SHOW COLUMNS FROM $table_identifier", false, $db_conn);
     $cols    = array();
     if (cacti_sizeof($columns)) {
         foreach ($columns as $col) {
@@ -1319,6 +1593,26 @@ function db_update_table($table, $data, $removecolumns = false, $log = true, $db
         return false;
     }
 
+    if (!db_is_safe_identifier($table)) {
+        return false;
+    }
+
+    // A partial update may not carry every column, so check the option tokens
+    // here rather than the whole definition.
+    if (isset($data['type']) && !db_is_safe_table_option($data['type'])) {
+        return false;
+    }
+
+    foreach (array('charset', 'collate', 'row_format') as $option) {
+        if (isset($data[$option]) && !db_is_safe_table_option($data[$option])) {
+            return false;
+        }
+    }
+
+    if (isset($data['comment']) && db_has_control_chars($data['comment'])) {
+        return false;
+    }
+
     if (!db_table_exists($table, $log, $db_conn)) {
         return db_table_create($table, $data, $log, $db_conn);
     }
@@ -1336,7 +1630,7 @@ function db_update_table($table, $data, $removecolumns = false, $log = true, $db
     $info = db_fetch_row("SELECT ENGINE, TABLE_COMMENT
 		FROM information_schema.TABLES
 		WHERE TABLE_SCHEMA = SCHEMA()
-		AND TABLE_NAME = '$table'", $log, $db_conn);
+		AND TABLE_NAME = " . db_qstr($table, $db_conn), $log, $db_conn);
 
     if (isset($info['ENGINE']) && isset($data['type']) && strtolower($info['ENGINE']) != strtolower($data['type'])) {
         if (!db_execute("ALTER TABLE `$table` ENGINE = " . $data['type'], $log, $db_conn)) {
@@ -1358,7 +1652,7 @@ function db_update_table($table, $data, $removecolumns = false, $log = true, $db
         } else {
             // Check that column is correct and fix it
             // FIXME: Need to still check default value
-            $arr = db_fetch_row("SHOW columns FROM `$table` LIKE '" . $column['name'] . "'", $log, $db_conn);
+            $arr = db_fetch_row("SHOW columns FROM `$table` LIKE " . db_qstr($column['name'], $db_conn), $log, $db_conn);
 
             if (str_contains(strtolower($arr['Type']), ' unsigned')) {
                 $arr['Type'] = str_ireplace(' unsigned', '', $arr['Type']);
@@ -1369,42 +1663,13 @@ function db_update_table($table, $data, $removecolumns = false, $log = true, $db
                 || (((!isset($column['unsigned']) || !$column['unsigned']) && isset($arr['unsigned']))
                     || (isset($column['unsigned']) && $column['unsigned'] && !isset($arr['unsigned'])))
                 || (isset($column['auto_increment']) && ($column['auto_increment'] ? 'auto_increment' : '') != $arr['Extra'])) {
-                $sql = 'ALTER TABLE `' . $table . '` CHANGE `' . $column['name'] . '` `' . $column['name'] . '`';
-                if (isset($column['type'])) {
-                    $sql .= ' ' . $column['type'];
+                $definition = db_build_column_definition_sql($column, $db_conn, false);
+
+                if ($definition === false) {
+                    return false;
                 }
 
-                if (isset($column['unsigned'])) {
-                    $sql .= ' unsigned';
-                }
-
-                if (isset($column['NULL']) && $column['NULL'] == false) {
-                    $sql .= ' NOT NULL';
-                }
-
-                if (isset($column['NULL']) && $column['NULL'] == true && !isset($column['default'])) {
-                    $sql .= ' default NULL';
-                }
-
-                if (isset($column['default'])) {
-                    if (strtolower($column['type']) == 'timestamp' && $column['default'] === 'CURRENT_TIMESTAMP') {
-                        $sql .= ' default CURRENT_TIMESTAMP';
-                    } else {
-                        $sql .= ' default ' . (is_numeric($column['default']) ? $column['default'] : "'" . $column['default'] . "'");
-                    }
-                }
-
-                if (isset($column['on_update'])) {
-                    $sql .= ' ON UPDATE ' . $column['on_update'];
-                }
-
-                if (isset($column['auto_increment'])) {
-                    $sql .= ' auto_increment';
-                }
-
-                if (isset($column['comment'])) {
-                    $sql .= " COMMENT '" . $column['comment'] . "'";
-                }
+                $sql = 'ALTER TABLE `' . $table . '` CHANGE `' . $column['name'] . '` ' . $definition;
 
                 if (!db_execute($sql, $log, $db_conn)) {
                     return false;
@@ -1417,6 +1682,10 @@ function db_update_table($table, $data, $removecolumns = false, $log = true, $db
         $result = db_fetch_assoc('SHOW columns FROM `' . $table . '`', $log, $db_conn);
         foreach ($result as $arr) {
             if (!in_array($arr['Field'], $allcolumns)) {
+                if (!db_is_safe_identifier($arr['Field'])) {
+                    return false;
+                }
+
                 if (!db_remove_column($table, $arr['Field'], $log, $db_conn)) {
                     return false;
                 }
@@ -1425,7 +1694,7 @@ function db_update_table($table, $data, $removecolumns = false, $log = true, $db
     }
 
     if (isset($info['TABLE_COMMENT']) && isset($data['comment']) && str_replace("'", '', $info['TABLE_COMMENT']) != str_replace("'", '', $data['comment'])) {
-        if (!db_execute("ALTER TABLE `$table` COMMENT '" . str_replace("'", '', $data['comment']) . "'", $log, $db_conn)) {
+        if (!db_execute("ALTER TABLE `$table` COMMENT = " . db_qstr(str_replace("'", '', $data['comment']), $db_conn), $log, $db_conn)) {
             return false;
         }
     }
@@ -1447,8 +1716,14 @@ function db_update_table($table, $data, $removecolumns = false, $log = true, $db
                     $add = array_diff($k['columns'], $index);
                     $del = array_diff($index, $k['columns']);
                     if (!empty($add) || !empty($del)) {
+                        $columns = db_format_index_create($k['columns']);
+
+                        if (!db_is_safe_identifier($n) || $columns === false) {
+                            return false;
+                        }
+
                         if (!db_execute("ALTER TABLE `$table` DROP INDEX `$n`", $log, $db_conn) ||
-                            !db_execute("ALTER TABLE `$table` ADD INDEX `$n` (" . $k['name'] . '` (' . db_format_index_create($k['columns']) . ')', $log, $db_conn)) {
+                            !db_execute("ALTER TABLE `$table` ADD INDEX `$n` (" . $columns . ')', $log, $db_conn)) {
                             return false;
                         }
                     }
@@ -1457,6 +1732,10 @@ function db_update_table($table, $data, $removecolumns = false, $log = true, $db
             }
 
             if ($removeindex) {
+                if (!db_is_safe_identifier($n)) {
+                    return false;
+                }
+
                 if (!db_execute("ALTER TABLE `$table` DROP INDEX `$n`", $log, $db_conn)) {
                     return false;
                 }
@@ -1468,7 +1747,13 @@ function db_update_table($table, $data, $removecolumns = false, $log = true, $db
     if (isset($data['keys'])) {
         foreach ($data['keys'] as $k) {
             if (!isset($allindexes[$k['name']])) {
-                if (!db_execute("ALTER TABLE `$table` ADD INDEX `" . $k['name'] . '` (' . db_format_index_create($k['columns']) . ')', $log, $db_conn)) {
+                $columns = db_format_index_create($k['columns']);
+
+                if (!db_is_safe_identifier($k['name']) || $columns === false) {
+                    return false;
+                }
+
+                if (!db_execute("ALTER TABLE `$table` ADD INDEX `" . $k['name'] . '` (' . $columns . ')', $log, $db_conn)) {
                     return false;
                 }
             }
@@ -1488,15 +1773,20 @@ function db_update_table($table, $data, $removecolumns = false, $log = true, $db
     if (isset($data['primary'])) {
         if (!isset($allindexes['PRIMARY'])) {
             // No current primary key, so add it
-            if (!db_execute("ALTER TABLE `$table` ADD PRIMARY KEY(" . db_format_index_create($data['primary']) . ')', $log, $db_conn)) {
+            $primary = db_format_index_create($data['primary']);
+
+            if ($primary === false || !db_execute("ALTER TABLE `$table` ADD PRIMARY KEY(" . $primary . ')', $log, $db_conn)) {
                 return false;
             }
         } else {
             $add = array_diff($data['primary'], $allindexes['PRIMARY']);
             $del = array_diff($allindexes['PRIMARY'], $data['primary']);
             if (!empty($add) || !empty($del)) {
-                if (!db_execute("ALTER TABLE `$table` DROP PRIMARY KEY", $log, $db_conn) ||
-                    !db_execute("ALTER TABLE `$table` ADD PRIMARY KEY(" . db_format_index_create($data['primary']) . ')', $log, $db_conn)) {
+                $primary = db_format_index_create($data['primary']);
+
+                if ($primary === false
+                    || !db_execute("ALTER TABLE `$table` DROP PRIMARY KEY", $log, $db_conn)
+                    || !db_execute("ALTER TABLE `$table` ADD PRIMARY KEY(" . $primary . ')', $log, $db_conn)) {
                     return false;
                 }
             }
@@ -1512,31 +1802,36 @@ function db_update_table($table, $data, $removecolumns = false, $log = true, $db
  *
  * @param  (array) An array of indexes to process
  *
- * @return (string) A list of preprocessed indexes into a form
- *                  compatible with the array definition
+ * @return (string|bool) A list of preprocessed indexes into a form
+ *                       compatible with the array definition, or false
+ *                       when a column is not a safe identifier
  */
 function db_format_index_create($indexes)
 {
-    if (is_array($indexes)) {
-        $outindex = '';
-        foreach ($indexes as $index) {
-            $index = trim($index);
-            if (str_ends_with($index, ')')) {
-                $outindex .= ($outindex != '' ? ',' : '') . $index;
-            } else {
-                $outindex .= ($outindex != '' ? ',' : '') . '`' . $index . '`';
-            }
+    if (!is_array($indexes)) {
+        // Some plugins pass a compound key as one string, 'col1`,`col2'.
+        $indexes = preg_split('/`\s*,\s*`/', trim($indexes));
+    }
+
+    $outindex = '';
+
+    foreach ($indexes as $index) {
+        $index = trim($index, " \t\n\r\0\x0B`");
+
+        if (!db_is_safe_index_column($index)) {
+            return false;
         }
 
-        return $outindex;
-    } else {
-        $indexes = trim($indexes);
-        if (str_ends_with($indexes, ')')) {
-            return $indexes;
-        } else {
-            return '`' . trim($indexes, ' `') . '`';
+        $length = '';
+        if (str_ends_with($index, ')')) {
+            $length = substr($index, strpos($index, '('));
+            $index  = substr($index, 0, strpos($index, '('));
         }
+
+        $outindex .= ($outindex != '' ? ',' : '') . '`' . trim($index, ' `') . '`' . $length;
     }
+
+    return $outindex;
 }
 
 /**
@@ -1558,6 +1853,10 @@ function db_table_create($table, $data, $log = true, $db_conn = false)
         return false;
     }
 
+    if (!db_is_safe_identifier($table) || !db_is_safe_table_definition($data)) {
+        return false;
+    }
+
     if (!db_table_exists($table, $log, $db_conn)) {
         $c = 0;
         $sql = 'CREATE TABLE `' . $table . "` (\n";
@@ -1567,90 +1866,47 @@ function db_table_create($table, $data, $log = true, $db_conn = false)
                     $sql .= ",\n";
                 }
 
-                $sql .= '`' . $column['name'] . '`';
-
-                if (isset($column['type'])) {
-                    $sql .= ' ' . $column['type'];
-                }
-
-                if (isset($column['unsigned'])) {
-                    $sql .= ' unsigned';
-                }
-
-                if (isset($column['NULL']) && $column['NULL'] == false) {
-                    $sql .= ' NOT NULL';
-                }
-
-                if (isset($column['NULL']) && $column['NULL'] == true && !isset($column['default'])) {
-                    $sql .= ' default NULL';
-                }
-
-                if (isset($column['default'])) {
-                    if (strtolower($column['type']) == 'timestamp' && $column['default'] === 'CURRENT_TIMESTAMP') {
-                        $sql .= ' default CURRENT_TIMESTAMP';
-                    } else {
-                        $sql .= ' default ' . (is_numeric($column['default']) ? $column['default'] : "'" . $column['default'] . "'");
-                    }
-                }
-
-                if (isset($column['on_update'])) {
-                    $sql .= ' ON UPDATE ' . $column['on_update'];
-                }
-
-                if (isset($column['comment'])) {
-                    $sql .= " COMMENT '" . $column['comment'] . "'";
-                }
-
-                if (isset($column['auto_increment'])) {
-                    $sql .= ' auto_increment';
-                }
+                $sql .= db_build_column_definition_sql($column, $db_conn, false);
 
                 $c++;
             }
         }
 
         if (isset($data['primary'])) {
-            if (is_array($data['primary'])) {
-                $sql .= ",\n PRIMARY KEY (`" . implode('`,`' . $data['primary']) . '`)';
-            } else {
-                $sql .= ",\n PRIMARY KEY (`" . $data['primary'] . '`)';
-            }
+            $sql .= ",\n PRIMARY KEY (" . db_format_index_create($data['primary']) . ')';
         }
 
         if (isset($data['keys']) && cacti_sizeof($data['keys'])) {
             foreach ($data['keys'] as $key) {
-                if (isset($key['name'])) {
-                    if (is_array($key['columns'])) {
-                        $sql .= ",\n KEY `" . $key['name'] . '` (`' . implode('`,`', $key['columns']) . '`)';
-                    } else {
-                        $sql .= ",\n KEY `" . $key['name'] . '` (`' . $key['columns'] . '`)';
-                    }
-                }
+                $sql .= ",\n KEY `" . $key['name'] . '` (' . db_format_index_create($key['columns']) . ')';
             }
         }
+
+        if (isset($data['unique_keys']) && cacti_sizeof($data['unique_keys'])) {
+            foreach ($data['unique_keys'] as $key) {
+                $sql .= ",\n UNIQUE KEY `" . $key['name'] . '` (' . db_format_index_create($key['columns']) . ')';
+            }
+        }
+
         $sql .= ') ENGINE = ' . $data['type'];
 
+        if (isset($data['charset'])) {
+            $sql .= ' DEFAULT CHARSET = ' . $data['charset'];
+        }
+
+        if (isset($data['collate'])) {
+            $sql .= ' COLLATE = ' . $data['collate'];
+        }
+
         if (isset($data['comment'])) {
-            $sql .= " COMMENT = '" . $data['comment'] . "'";
+            $sql .= ' COMMENT = ' . db_qstr($data['comment'], $db_conn);
         }
 
         if (isset($data['row_format']) && strtolower(db_get_global_variable('innodb_file_format', $db_conn)) == 'barracuda') {
             $sql .= ' ROW_FORMAT = ' . $data['row_format'];
         }
 
-        if (db_execute($sql, $log, $db_conn)) {
-            if (isset($data['charset'])) {
-                db_execute("ALTER TABLE `$table` CHARSET = " . $data['charset']);
-            }
-
-            if (isset($data['collate'])) {
-                db_execute("ALTER TABLE `$table` COLLATE = " . $data['collate']);
-            }
-
-            return true;
-        } else {
-            return false;
-        }
+        return db_execute($sql, $log, $db_conn);
     }
 }
 
@@ -2378,6 +2634,56 @@ function db_dump_data($database = '', $tables = '', $credentials = array(), $out
     }
 
     return $retval;
+}
+
+/**
+ * db_client_option_file - write MySQL client credentials to a private option
+ *   file so they never appear in a client's process arguments. Pass the path
+ *   as the client's first argument with --defaults-extra-file= and unlink it
+ *   once the client exits.
+ *
+ * The client reads this file after the global option files, so these
+ * credentials still override them. The invoking account's own ~/.my.cnf is
+ * read later and can override them, which command-line flags did not allow.
+ * An empty password writes no password line, as the old calls omitted
+ * --password.
+ *
+ * @param  (string) $username - client user name
+ * @param  (string) $password - client password, or '' for none
+ *
+ * @return (string|false) the option file path, or false when it was not written
+ */
+function db_client_option_file($username, $password)
+{
+    $username = (string) $username;
+    $password = (string) $password;
+
+    // An option file value cannot carry a line break or NUL.
+    if (strpbrk($username . $password, "\r\n\0") !== false) {
+        return false;
+    }
+
+    // tempnam() creates the file exclusively with mode 0600.
+    $path = tempnam(sys_get_temp_dir(), 'kadupul-mysql-');
+
+    if ($path === false) {
+        return false;
+    }
+
+    $quote    = static fn($value) => '"' . addcslashes($value, '\\"') . '"';
+    $contents = '[client]' . PHP_EOL . 'user=' . $quote($username) . PHP_EOL;
+
+    if ($password !== '') {
+        $contents .= 'password=' . $quote($password) . PHP_EOL;
+    }
+
+    if (!chmod($path, 0600) || file_put_contents($path, $contents) !== strlen($contents)) {
+        unlink($path);
+
+        return false;
+    }
+
+    return $path;
 }
 
 /**

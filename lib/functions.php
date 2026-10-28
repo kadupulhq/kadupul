@@ -8764,6 +8764,11 @@ function cacti_format_ipv6_colon($address)
  */
 function cacti_path_is_within($candidate, $base)
 {
+    // realpath() throws on a NUL byte, and no such path can be inside $base.
+    if (str_contains((string) $candidate, "\0") || str_contains((string) $base, "\0")) {
+        return false;
+    }
+
     $resolved = realpath($candidate);
 
     if ($resolved === false) {

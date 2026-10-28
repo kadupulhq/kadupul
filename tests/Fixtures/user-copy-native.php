@@ -23,7 +23,7 @@ class CopyFaultPdo extends PDO
     public string $fault = '';
     public function prepare(string $query, array $options = []): PDOStatement|false
     {
-        if ($this->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite' && preg_match('/^SHOW COLUMNS FROM ([a-z_]+)$/', $query, $match)) {
+        if ($this->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite' && preg_match('/^SHOW COLUMNS FROM `?([a-z_]+)`?$/', $query, $match)) {
             $query = "SELECT name AS Field,type AS Type,CASE WHEN [notnull]=1 THEN 'NO' ELSE 'YES' END AS [Null],trim(dflt_value, char(39)) AS [Default],CASE WHEN name='id' THEN 'auto_increment' ELSE '' END AS Extra FROM pragma_table_info('" . $match[1] . "')";
         }
         return parent::prepare($query, $options);

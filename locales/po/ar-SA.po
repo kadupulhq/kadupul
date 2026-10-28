@@ -47,7 +47,7 @@ msgstr "يتم توزيع هذا البرنامج على أمل أن يكون م
 #: automation_graph_rules.php:17 automation_networks.php:16
 #: automation_snmp.php:14 automation_snmp.php:592 automation_tree_rules.php:17
 #: data_queries.php:16 data_queries.php:863 data_queries.php:972
-#: data_queries.php:1252 data_sources.php:23 data_sources.php:1249
+#: data_queries.php:1254 data_sources.php:23 data_sources.php:1249
 #: data_templates.php:19 data_templates.php:791 graph_templates.php:22
 #: graph_templates.php:516 graphs.php:32 host_templates.php:20
 #: host_templates.php:485 host_templates.php:542 include/global_arrays.php:1658
@@ -398,7 +398,7 @@ msgstr "مطابقة الرسوم البيانية"
 #: aggregate_templates.php:606 automation_devices.php:485
 #: automation_graph_rules.php:807 automation_networks.php:1180
 #: automation_networks.php:1224 automation_snmp.php:703
-#: automation_tree_rules.php:843 data_debug.php:1214 data_queries.php:1371
+#: automation_tree_rules.php:843 data_debug.php:1214 data_queries.php:1373
 #: data_sources.php:1814 data_templates.php:1101 graph_templates.php:726
 #: graph_view.php:667 graphs.php:2113 graphs_new.php:526 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
@@ -406,8 +406,8 @@ msgstr "مطابقة الرسوم البيانية"
 #: lib/clog_webapi.php:608 lib/html.php:268 lib/html_filter.php:46
 #: lib/html_graph.php:191 lib/html_reports.php:2025 lib/html_tree.php:119
 #: lib/html_tree.php:967 managers.php:144 managers.php:503 managers.php:770
-#: plugins.php:491 pollers.php:869 rrdcleaner.php:519 settings.php:598
-#: settings.php:615 settings.php:674
+#: plugins.php:491 pollers.php:869 rrdcleaner.php:519 settings.php:605
+#: settings.php:622 settings.php:681
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:60
 #: tree.php:938 tree.php:973 tree.php:1008 tree.php:2217 user_admin.php:2074
 #: user_domains.php:642 user_group_admin.php:1993 utilities.php:1094
@@ -432,7 +432,7 @@ msgstr "الرسوم"
 #: aggregate_templates.php:622 automation_devices.php:582
 #: automation_graph_rules.php:849 automation_networks.php:1190
 #: automation_snmp.php:713 automation_tree_rules.php:863 data_debug.php:1224
-#: data_queries.php:1381 data_sources.php:1824 data_templates.php:1130
+#: data_queries.php:1383 data_sources.php:1824 data_templates.php:1130
 #: graph_templates.php:736 graph_view.php:743 graphs.php:2134
 #: graphs_new.php:536 host_templates.php:805 include/global_form.php:242
 #: lib/api_automation.php:182 lib/api_automation.php:490
@@ -454,7 +454,7 @@ msgstr "جزء من التجميع"
 #: aggregate_templates.php:643 automation_devices.php:509
 #: automation_graph_rules.php:861 automation_networks.php:1224
 #: automation_snmp.php:728 automation_tree_rules.php:875 data_debug.php:1139
-#: data_queries.php:1396 data_sources.php:1764 data_templates.php:1151
+#: data_queries.php:1398 data_sources.php:1764 data_templates.php:1151
 #: graph_templates.php:757 graph_view.php:675 graphs.php:2104
 #: graphs_new.php:515 host_templates.php:786 lib/api_automation.php:187
 #: lib/api_automation.php:471 lib/api_automation.php:723
@@ -469,7 +469,7 @@ msgstr "أذهب"
 
 #: aggregate_graphs.php:1303 aggregate_graphs.php:1596
 #: automation_devices.php:509 automation_snmp.php:728 data_debug.php:1139
-#: data_queries.php:1396 data_sources.php:1764 data_templates.php:1151
+#: data_queries.php:1398 data_sources.php:1764 data_templates.php:1151
 #: graph_templates.php:757 graph_view.php:675 graphs.php:2104
 #: graphs_new.php:515 host_templates.php:786 lib/html_graph.php:178
 #: managers.php:169 managers.php:528 managers.php:793 plugins.php:530
@@ -485,7 +485,7 @@ msgstr "مجموعة / تحديث الفلاتر"
 #: aggregate_templates.php:644 automation_devices.php:510
 #: automation_graph_rules.php:862 automation_networks.php:1225
 #: automation_snmp.php:729 automation_tree_rules.php:876 data_debug.php:1140
-#: data_queries.php:1397 data_sources.php:1765 data_templates.php:1152
+#: data_queries.php:1399 data_sources.php:1765 data_templates.php:1152
 #: graph_templates.php:758 graph_view.php:676 graphs.php:2105
 #: graphs_new.php:516 host_templates.php:787 lib/api_automation.php:188
 #: lib/api_automation.php:472 lib/api_automation.php:724
@@ -500,7 +500,7 @@ msgid "Clear"
 msgstr "واضح"
 
 #: aggregate_graphs.php:1304 aggregate_graphs.php:1597 automation_snmp.php:729
-#: data_debug.php:1140 data_queries.php:1397 data_sources.php:1765
+#: data_debug.php:1140 data_queries.php:1399 data_sources.php:1765
 #: data_templates.php:1152 graph_templates.php:758 graph_view.php:676
 #: graphs.php:2105 graphs_new.php:516 host_templates.php:787
 #: lib/html_graph.php:179 lib/html_tree.php:1010 managers.php:170
@@ -519,7 +519,7 @@ msgstr "عنوان الرسم البياني"
 
 #: aggregate_graphs.php:1330 aggregate_graphs.php:1663
 #: automation_graph_rules.php:962 automation_tree_rules.php:969
-#: data_debug.php:517 data_queries.php:1482 data_sources.php:1998
+#: data_debug.php:517 data_queries.php:1484 data_sources.php:1998
 #: data_templates.php:1260 graph_templates.php:863 graphs.php:2338
 #: host_templates.php:949 lib/api_automation.php:282 pollers.php:995
 #: tree.php:2306 user_admin.php:809 user_admin.php:924 user_admin.php:1073
@@ -539,7 +539,7 @@ msgid "Size"
 msgstr "مداخل خلفية الحجم"
 
 #: aggregate_graphs.php:1348 aggregate_templates.php:724
-#: automation_tree_rules.php:721 data_queries.php:1534 data_sources.php:2085
+#: automation_tree_rules.php:721 data_queries.php:1536 data_sources.php:2085
 #: data_sources.php:2086 data_templates.php:1321 graph_templates.php:920
 #: host_templates.php:997 include/global_settings.php:969
 #: include/global_settings.php:1943 lib/api_automation.php:1438 tree.php:2399
@@ -550,7 +550,7 @@ msgstr "لا"
 
 #: aggregate_graphs.php:1348 aggregate_templates.php:724
 #: automation_tree_rules.php:714 data_debug.php:781 data_debug.php:786
-#: data_debug.php:791 data_queries.php:1534 data_sources.php:2085
+#: data_debug.php:791 data_queries.php:1536 data_sources.php:2085
 #: data_sources.php:2086 data_templates.php:1321 graph_templates.php:920
 #: host_templates.php:997 include/global_settings.php:968
 #: include/global_settings.php:1942 lib/api_automation.php:1438
@@ -629,7 +629,7 @@ msgstr "الجميع"
 #: lib/html_reports.php:1175 lib/html_reports.php:1186
 #: lib/html_reports.php:1206 lib/html_reports.php:1462
 #: lib/html_reports.php:1467 lib/html_reports.php:1472 package_import.php:692
-#: settings.php:591 settings.php:613 settings.php:644
+#: settings.php:598 settings.php:620 settings.php:651
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:66
 #: templates_import.php:299 templates_import.php:331 utilities.php:2099
 msgid "None"
@@ -708,12 +708,12 @@ msgstr "عنوان القالب"
 msgid "Aggregate Templates that are in use can not be Deleted.  In use is defined as being referenced by an Aggregate."
 msgstr "لا يمكن حذف القوالب التجميعية قيد الاستخدام. يتم تعريف الاستخدام على أنه مرجع من قبل Aggregate."
 
-#: aggregate_templates.php:707 data_queries.php:1488 data_sources.php:2016
+#: aggregate_templates.php:707 data_queries.php:1490 data_sources.php:2016
 #: data_templates.php:1266 graph_templates.php:869 host_templates.php:955
 msgid "Deletable"
 msgstr "به deletable"
 
-#: aggregate_templates.php:708 data_queries.php:1211 data_queries.php:1493
+#: aggregate_templates.php:708 data_queries.php:1213 data_queries.php:1495
 #: graph_templates.php:874
 msgid "Graphs Using"
 msgstr "الرسوم البيانية عن طريق"
@@ -813,7 +813,7 @@ msgstr "تأكيد كلمة المرور الجديدة"
 
 #: auth_changepassword.php:413 auth_profile.php:582 graphs_new.php:517
 #: lib/html_form.php:1420 lib/html_form.php:1429 lib/html_graph.php:181
-#: lib/html_tree.php:1012 settings.php:553
+#: lib/html_tree.php:1012 settings.php:560
 msgid "Save"
 msgstr "حفظ"
 
@@ -1496,7 +1496,7 @@ msgid "General Settings"
 msgstr "الاعدادات العامة"
 
 #: automation_networks.php:439 automation_snmp.php:511 data_queries.php:817
-#: data_queries.php:924 data_queries.php:1209 graph_templates.php:499
+#: data_queries.php:924 data_queries.php:1211 graph_templates.php:499
 #: include/global_form.php:201 include/global_form.php:267
 #: include/global_form.php:324 include/global_form.php:344
 #: include/global_form.php:385 include/global_form.php:515
@@ -2228,7 +2228,7 @@ msgstr "البروتوكول الخاص"
 msgid "Context"
 msgstr "السياق"
 
-#: automation_snmp.php:553 data_queries.php:1213 utilities.php:2151
+#: automation_snmp.php:553 data_queries.php:1215 utilities.php:2151
 msgid "Action"
 msgstr "الإجراء"
 
@@ -2418,12 +2418,12 @@ msgstr "Kadupul System Utilities"
 msgid "Notice: Kadupul Daemon PID["
 msgstr "ملاحظة: Kadupul Daemon PID ["
 
-#: cli/refresh_csrf.php:104 lib/functions.php:694 settings.php:295
+#: cli/refresh_csrf.php:104 lib/functions.php:694 settings.php:302
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
 msgstr "%d تخطي الإعدادات المحفوظة في أداة تجميع البيانات بسبب نبضات القلب."
 
-#: cli/refresh_csrf.php:105 lib/functions.php:707 settings.php:307
+#: cli/refresh_csrf.php:105 lib/functions.php:707 settings.php:314
 #, php-format
 msgid "Settings save to Data Collector %d Failed."
 msgstr "%d فشل حفظ الإعدادات في \"جامع البيانات\"."
@@ -2800,7 +2800,7 @@ msgstr "إعادة تشغيل التحليل"
 msgid "Check"
 msgstr "التحقق من"
 
-#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4243
+#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4278
 #: utilities.php:798 utilities.php:815 utilities.php:3206
 msgid "Value"
 msgstr "القيمة"
@@ -2900,7 +2900,7 @@ msgstr "الملف الشخصي"
 #: graphs.php:2123 graphs_new.php:488 host_templates.php:716
 #: host_templates.php:734 lib/clog_webapi.php:549 lib/html.php:227
 #: lib/html_reports.php:1138 lib/html_reports.php:2284 plugins.php:501
-#: settings.php:590 settings.php:612 settings.php:643 tree.php:914
+#: settings.php:597 settings.php:619 settings.php:650 tree.php:914
 #: user_admin.php:2084 user_admin.php:2109 user_admin.php:2123
 #: utilities.php:1043 utilities.php:1484
 msgid "All"
@@ -3212,87 +3212,87 @@ msgstr "استعلامات البيانات [عدل: %s]"
 msgid "Data Queries [new]"
 msgstr "استعلامات البيانات [جديد]"
 
-#: data_queries.php:1195
+#: data_queries.php:1197
 msgid "Successfully located XML file"
 msgstr "تم العثور على ملف XML بنجاح"
 
-#: data_queries.php:1198
+#: data_queries.php:1200
 msgid "Could not locate XML file."
 msgstr "لا يمكن تحديد موقع ملف XML."
 
-#: data_queries.php:1206 host_templates.php:466 include/global_arrays.php:2422
+#: data_queries.php:1208 host_templates.php:466 include/global_arrays.php:2422
 msgid "Associated Graph Templates"
 msgstr "قوالب الرسم البياني المرتبطة"
 
-#: data_queries.php:1210 graph_templates.php:857 graphs_new.php:640
+#: data_queries.php:1212 graph_templates.php:857 graphs_new.php:640
 #: lib/api_automation.php:576
 msgid "Graph Template Name"
 msgstr "اسم قالب الرسم البياني"
 
-#: data_queries.php:1212
+#: data_queries.php:1214
 msgid "Mapping ID"
 msgstr "معرف التعيين"
 
-#: data_queries.php:1239
+#: data_queries.php:1241
 msgid "Association Read Only until XML file located"
 msgstr "الاقتران للقراءة فقط حتى تحديد موقع ملف XML"
 
-#: data_queries.php:1256
+#: data_queries.php:1258
 msgid "Mapped Graph Templates with Graphs are read only"
 msgstr "يتم قراءة قوالب Graph المعنونة مع الرسومات البيانية فقط"
 
-#: data_queries.php:1263
+#: data_queries.php:1265
 msgid "No Graph Templates Defined."
 msgstr "لا توجد قوالب الرسم البياني محددة."
 
-#: data_queries.php:1305
+#: data_queries.php:1307
 msgid "Delete Associated Graph"
 msgstr "حذف الرسم البياني المرتبط"
 
-#: data_queries.php:1362 data_queries.php:1377 data_queries.php:1512
+#: data_queries.php:1364 data_queries.php:1379 data_queries.php:1514
 #: include/global_arrays.php:1002 include/global_arrays.php:1229
 #: include/global_arrays.php:2404 lib/api_automation.php:1078
 msgid "Data Queries"
 msgstr "استعلامات البيانات"
 
-#: data_queries.php:1476 utilities.php:1934
+#: data_queries.php:1478 utilities.php:1934
 msgid "Data Query Name"
 msgstr "اسم استعلام البيانات"
 
-#: data_queries.php:1479
+#: data_queries.php:1481
 msgid "The name of this Data Query."
 msgstr "اسم هذا الاستعلام عن البيانات."
 
-#: data_queries.php:1485 graph_templates.php:866
+#: data_queries.php:1487 graph_templates.php:866
 msgid "The internal ID for this Graph Template.  Useful when performing automation or debugging."
 msgstr "المعرف الداخلي لهذا القالب الرسم البياني. مفيد عند تنفيذ التشغيل الآلي أو التصحيح."
 
-#: data_queries.php:1490
+#: data_queries.php:1492
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "لا يمكن حذف &quot;استعلامات البيانات&quot; قيد الاستخدام. يتم تعريف الاستخدام على أنه يتم الرجوع إليه إما من خلال الرسم البياني أو قالب الرسم البياني."
 
-#: data_queries.php:1496
+#: data_queries.php:1498
 msgid "The number of Graphs using this Data Query."
 msgstr "عدد الرسوم البيانية باستخدام هذا الاستعلام البيانات."
 
-#: data_queries.php:1499
+#: data_queries.php:1501
 msgid "Templates Using"
 msgstr "قوالب باستخدام"
 
-#: data_queries.php:1502
+#: data_queries.php:1504
 msgid "The number of Graphs Templates using this Data Query."
 msgstr "عدد قوالب الرسومات البيانية التي تستخدم هذا الاستعلام عن البيانات."
 
-#: data_queries.php:1505 include/global_arrays.php:1363
+#: data_queries.php:1507 include/global_arrays.php:1363
 #: include/global_form.php:570 include/global_form.php:1380
 msgid "Data Input Method"
 msgstr "طريقة إدخال البيانات"
 
-#: data_queries.php:1508
+#: data_queries.php:1510
 msgid "The Data Input Method used to collect data for Data Sources associated with this Data Query."
 msgstr "طريقة إدخال البيانات المستخدمة لجمع البيانات لمصادر البيانات المرتبطة بطلب البيانات هذا."
 
-#: data_queries.php:1542
+#: data_queries.php:1544
 msgid "No Data Queries Found"
 msgstr "لم يتم العثور على استعلامات البيانات"
 
@@ -3550,7 +3550,7 @@ msgstr "البيانات المخصصة"
 msgid "Data Source Item %s"
 msgstr "عنصر مصدر البيانات %s"
 
-#: data_sources.php:1267 data_templates.php:817 lib/import.php:2870
+#: data_sources.php:1267 data_templates.php:817 lib/import.php:2872
 #: package_import.php:604
 msgid "New"
 msgstr "جديد"
@@ -3876,7 +3876,7 @@ msgid "RRDtool Graph Syntax"
 msgstr "RRDtool الرسم البياني البناء"
 
 #: graph_image.php:174 graph_json.php:208 graph_realtime.php:330
-#: lib/rrd.php:2614
+#: lib/rrd.php:2649
 msgid "The Kadupul Poller has not run yet."
 msgstr "لم يعمل Kadupul Poller بعد."
 
@@ -4567,7 +4567,7 @@ msgid "Save Filters"
 msgstr "احفظ المرشحات"
 
 #: graphs_new.php:532 include/global_form.php:284 lib/html.php:613
-#: lib/html_filter.php:55 lib/installer.php:2837 lib/rrd.php:4285
+#: lib/html_filter.php:55 lib/installer.php:2837 lib/rrd.php:4320
 #: utilities.php:866 utilities.php:1838
 msgid "Rows"
 msgstr "الصفوف"
@@ -5701,7 +5701,7 @@ msgstr "الترتيب الطبيعي"
 msgid "Numeric Ordering"
 msgstr "طلب رقمي"
 
-#: include/global_arrays.php:955 lib/rrd.php:4209
+#: include/global_arrays.php:955 lib/rrd.php:4244
 msgid "Header"
 msgstr "رأس"
 
@@ -5881,7 +5881,7 @@ msgid "Export Templates"
 msgstr "قوالب التصدير"
 
 #: include/global_arrays.php:1032 include/global_arrays.php:1054
-#: include/global_arrays.php:1073 lib/plugins.php:1443
+#: include/global_arrays.php:1073 lib/plugins.php:1337
 msgid "Configuration"
 msgstr "التكوين"
 
@@ -7344,7 +7344,7 @@ msgstr "نبضة قلب"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "كم من الوقت يمكن أن تكون البيانات مفقودة قبل أن يسجل RRDtool بيانات غير معروفة. قم بزيادة هذه القيمة إذا كان مصدر البيانات غير مستقر وترغب في ترحيل البيانات القديمة بدلاً من إظهار الفجوات في الرسومات البيانية. يتم ضرب هذه القيمة بواسطة X-Files Factor لتحديد مقدار الوقت الفعلي."
 
-#: include/global_form.php:226 lib/rrd.php:4288
+#: include/global_form.php:226 lib/rrd.php:4323
 msgid "X-Files Factor"
 msgstr "X-Files Factor"
 
@@ -7914,7 +7914,7 @@ msgstr "تعتيم / قناة ألفا"
 msgid "The opacity/alpha channel of the color."
 msgstr "قناة التعتيم / ألفا للون."
 
-#: include/global_form.php:989 lib/rrd.php:4284
+#: include/global_form.php:989 lib/rrd.php:4319
 msgid "Consolidation Function"
 msgstr "وظيفة توحيد"
 
@@ -11597,8 +11597,8 @@ msgid "Recovering"
 msgstr "يستردّ"
 
 #: lib/api_automation.php:33 lib/auth.php:3085 lib/clog_webapi.php:856
-#: lib/html_utility.php:1362 lib/import.php:401 lib/plugins.php:1499
-#: lib/plugins.php:1500 lib/rrd.php:4261 lib/rrd.php:4273 lib/spikekill.php:301
+#: lib/html_utility.php:1362 lib/import.php:401 lib/plugins.php:1393
+#: lib/plugins.php:1394 lib/rrd.php:4296 lib/rrd.php:4308 lib/spikekill.php:301
 #: package_import.php:528 package_import.php:606 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 msgid "Unknown"
@@ -11606,7 +11606,7 @@ msgstr "غير معروف"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
-#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4238
+#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4273
 #: utilities.php:356 utilities.php:1480 utilities.php:3206
 msgid "Type"
 msgstr "النوع"
@@ -12518,11 +12518,11 @@ msgstr "يجب عليك تحديد عمود إخراج XML لمصدر البيا
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "لا يحتوي قالب الرسم البياني على قوالب بيانات قيد الاستخدام. يرجى تصحيح قالب الرسم البياني الخاص بك"
 
-#: lib/database.php:2149
+#: lib/database.php:2405
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "فشل في تحديد طول حقل كلمة المرور ، لا يمكن الاستمرار كما قد تلف كلمة المرور"
 
-#: lib/database.php:2156
+#: lib/database.php:2412
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "فشل في تعديل طول حقل كلمة المرور ، لا يمكن الاستمرار كما قد تلف كلمة المرور"
 
@@ -12814,11 +12814,11 @@ msgstr "متواجد"
 msgid "Get Page Help"
 msgstr "احصل على مساعدة"
 
-#: lib/html.php:215 settings.php:634
+#: lib/html.php:215 settings.php:641
 msgid "Templates Selected"
 msgstr "قوالب مختارة"
 
-#: lib/html.php:269 settings.php:599 settings.php:616 settings.php:675
+#: lib/html.php:269 settings.php:606 settings.php:623 settings.php:682
 msgid "Enter keyword"
 msgstr "ادخل الكلمة المفتاحية"
 
@@ -13762,7 +13762,7 @@ msgstr "الفعاليات"
 msgid "Send Report"
 msgstr "ارسال تبليغ"
 
-#: lib/html_reports.php:1644 lib/import.php:2955 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:2957 user_admin.php:1776
 msgid "[new]"
 msgstr "[الجديد]"
 
@@ -14029,94 +14029,94 @@ msgstr "لا يوجد"
 msgid "not writable"
 msgstr "قابل للكتابة"
 
-#: lib/import.php:1968 lib/import.php:1989
+#: lib/import.php:1970 lib/import.php:1991
 #, php-format
 msgid "New Graph Template: %s"
 msgstr "قالب رسم بياني جديد: %s"
 
-#: lib/import.php:2003 lib/import.php:2015
+#: lib/import.php:2005 lib/import.php:2017
 #, php-format
 msgid "New Data Query: %s"
 msgstr "استعلام بيانات جديد: %s"
 
-#: lib/import.php:2652
+#: lib/import.php:2654
 msgid "Unknown Field"
 msgstr "حقل غير معروف"
 
-#: lib/import.php:2868
+#: lib/import.php:2870
 msgid "Updated"
 msgstr "تم التحديث"
 
-#: lib/import.php:2872
+#: lib/import.php:2874
 #, fuzzy
 msgid "Damaged"
 msgstr "اسم مصدر البيانات"
 
-#: lib/import.php:2874 package_import.php:598
+#: lib/import.php:2876 package_import.php:598
 #, fuzzy
 msgid "Unchanged"
 msgstr "[دون تغيير]"
 
-#: lib/import.php:2910
+#: lib/import.php:2912
 msgid "Import Preview Results"
 msgstr "استيراد نتائج المعاينة"
 
-#: lib/import.php:2910
+#: lib/import.php:2912
 msgid "Import Results"
 msgstr "نتائج الاستيراد"
 
-#: lib/import.php:2914
+#: lib/import.php:2916
 #, fuzzy
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Kadupul سيجعل التغييرات التالية إذا تم استيراد الحزمة:"
 
-#: lib/import.php:2916
+#: lib/import.php:2918
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "قامت Kadupul باستيراد العناصر التالية للحزمة:"
 
-#: lib/import.php:2919
+#: lib/import.php:2921
 msgid "Package Files"
 msgstr "ملفات الحزمة"
 
-#: lib/import.php:2923
+#: lib/import.php:2925
 msgid "[preview] "
 msgstr "معاينة"
 
-#: lib/import.php:2928
+#: lib/import.php:2930
 #, fuzzy
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "Kadupul سيجعل التغييرات التالية إذا تم استيراد القالب:"
 
-#: lib/import.php:2930
+#: lib/import.php:2932
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "قامت Kadupul باستيراد العناصر التالية للقالب:"
 
-#: lib/import.php:2945
+#: lib/import.php:2947
 #, fuzzy
 msgid "[success]"
 msgstr "نجاح"
 
-#: lib/import.php:2947
+#: lib/import.php:2949
 msgid "[fail]"
 msgstr "فشل"
 
-#: lib/import.php:2949
+#: lib/import.php:2951
 msgid "[preview]"
 msgstr "معاينة"
 
-#: lib/import.php:2953
+#: lib/import.php:2955
 msgid "[updated]"
 msgstr "[updated]"
 
-#: lib/import.php:2957
+#: lib/import.php:2959
 msgid "[unchanged]"
 msgstr "[دون تغيير]"
 
-#: lib/import.php:2993
+#: lib/import.php:2995
 msgid "Found Dependency:"
 msgstr "وجدت التبعية:"
 
-#: lib/import.php:2995
+#: lib/import.php:2997
 msgid "Unmet Dependency:"
 msgstr "الإعالة غير الملباة:"
 
@@ -15355,31 +15355,31 @@ msgstr "انتهت مهلة TCP ping"
 msgid "Ping not performed due to setting."
 msgstr "لم يتم تنفيذ Ping بسبب الإعداد."
 
-#: lib/plugins.php:706
+#: lib/plugins.php:596
 #, php-format
 msgid "%s Version %s or above is required for %s. "
 msgstr "%s الإصدار %s أو أعلى مطلوب للحصول على %s. "
 
-#: lib/plugins.php:710
+#: lib/plugins.php:600
 #, php-format
 msgid "%s is required for %s, and it is not installed. "
 msgstr "%s مطلوب %s ، ولم يتم تثبيته. "
 
-#: lib/plugins.php:726
+#: lib/plugins.php:616
 msgid "Plugin cannot be installed."
 msgstr "لا يمكن تثبيت المكون الإضافي."
 
-#: lib/plugins.php:786
+#: lib/plugins.php:676
 #, php-format
 msgid "The Plugin directory '%s' needs to be renamed to remove 'plugin_' from the name before it can be installed."
 msgstr "يجب إعادة تسمية دليل المكون الإضافي \"%s\" لإزالة \"plugin_\" من الاسم قبل تثبيته."
 
-#: lib/plugins.php:789
+#: lib/plugins.php:679
 #, php-format
 msgid "The Plugin in the directory '%s' does not include an version function '%s()'.  This function must exist for the plugin to be installed."
 msgstr "لا يتضمن المكون الإضافي في الدليل \"%s\" وظيفة الإصدار \"%s ()\".  يجب أن تكون هذه الوظيفة موجودة لتثبيت المكون الإضافي."
 
-#: lib/plugins.php:822
+#: lib/plugins.php:712
 #, php-format
 msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
 msgstr "لا يتضمن المكون الإضافي في الدليل \"%s\" وظيفة التثبيت \"%s ()\".  يجب أن تكون هذه الوظيفة موجودة لتثبيت المكون الإضافي."
@@ -15388,20 +15388,20 @@ msgstr "لا يتضمن المكون الإضافي في الدليل \"%s\" و�
 msgid "Legacy Plugin"
 msgstr "البرنامج المساعد القديم"
 
-#: lib/plugins.php:1443 lib/plugins.php:1451 plugins.php:511 plugins.php:595
+#: lib/plugins.php:1337 lib/plugins.php:1345 plugins.php:511 plugins.php:595
 msgid "Plugins"
 msgstr "الإضافات"
 
-#: lib/plugins.php:1471
+#: lib/plugins.php:1365
 msgid "Plugin INFO must declare a valid compat version"
 msgstr ""
 
-#: lib/plugins.php:1475 lib/plugins.php:1478
+#: lib/plugins.php:1369 lib/plugins.php:1372
 #, fuzzy, php-format
 msgid "Requires: Kadupul >= %s"
 msgstr "يتطلب: Kadupul > = %s"
 
-#: lib/plugins.php:1501
+#: lib/plugins.php:1395
 msgid "Not Stated"
 msgstr "غير مذكور"
 
@@ -15480,194 +15480,194 @@ msgstr "فشل إضافة عنصر الرسم البياني للتقرير '<i>
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "عنصر الرسم البياني للتقرير الذي تم تخطيه '<i>%s</i>' موجود بالفعل"
 
-#: lib/rrd.php:2237
+#: lib/rrd.php:2272
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2240
+#: lib/rrd.php:2275
 msgid "The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2611
+#: lib/rrd.php:2646
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "خطأ: %s RRDfile غير قابل للكتابة"
 
-#: lib/rrd.php:4026
+#: lib/rrd.php:4061
 #, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "حجم خطوة ملف RRDfile المطلوب هو \"%s\" ولكن الخطوة المرصودة هي \"%s\""
 
-#: lib/rrd.php:4062
+#: lib/rrd.php:4097
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "اكتب لمصدر البيانات \"%s\" يجب أن يكون \"%s\""
 
-#: lib/rrd.php:4068
+#: lib/rrd.php:4103
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "نبضات لمصدر البيانات \"%s\" يجب أن تكون \"%s\""
 
-#: lib/rrd.php:4080
+#: lib/rrd.php:4115
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "يجب أن يكون الحد الأدنى لمصدر البيانات \"%s\" هو \"%s\""
 
-#: lib/rrd.php:4089
+#: lib/rrd.php:4124
 #, fuzzy, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "DS '%s' مفقود في تعريف Kadupul"
 
-#: lib/rrd.php:4103 lib/rrd.php:4104
+#: lib/rrd.php:4138 lib/rrd.php:4139
 #, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "يحتوي Kadupul RRA '%s' على نفس CF / الخطوات (%s ، %s) مثل \"%s\""
 
-#: lib/rrd.php:4117 lib/rrd.php:4118
+#: lib/rrd.php:4152 lib/rrd.php:4153
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "يحتوي ملف RRA '%s' على نفس CF / الخطوات (%s ، %s) مثل \"%s\""
 
-#: lib/rrd.php:4150
+#: lib/rrd.php:4185
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr "pdp_per_row \"%s\" غير صالح ل RRA \"%s\" يجب أن يكون \"%s\".  ضع في اعتبارك حذف Kadupul والسماح له بإعادة إنشاء ملف RRDfile."
 
-#: lib/rrd.php:4154
+#: lib/rrd.php:4189
 #, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "معرف XFF ل Kadupul RRA هو \"%s\" ولكن يجب أن يكون \"%s\""
 
-#: lib/rrd.php:4158
+#: lib/rrd.php:4193
 #, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "عدد الصفوف لمعرف Kadupul RRA '%s' غير صحيح.  عدد الصفوف \"%s\" ولكن يجب أن يكون \"%s\""
 
-#: lib/rrd.php:4175
+#: lib/rrd.php:4210
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "RRA '%s' مفقود في ملف Kadupul RRD الحالي"
 
-#: lib/rrd.php:4183
+#: lib/rrd.php:4218
 #, fuzzy, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "RRA \"%s\" مفقود في تعريف Kadupul"
 
-#: lib/rrd.php:4205
+#: lib/rrd.php:4240
 msgid "RRD File Information"
 msgstr "RRD ملف المعلومات"
 
-#: lib/rrd.php:4237
+#: lib/rrd.php:4272
 msgid "Data Source Items"
 msgstr "عناصر مصدر البيانات"
 
-#: lib/rrd.php:4239
+#: lib/rrd.php:4274
 msgid "Minimal Heartbeat"
 msgstr "أدنى ضربات القلب"
 
-#: lib/rrd.php:4240
+#: lib/rrd.php:4275
 msgid "Min"
 msgstr "بحد أدنى"
 
-#: lib/rrd.php:4241
+#: lib/rrd.php:4276
 msgid "Max"
 msgstr "الحد الأعلى"
 
-#: lib/rrd.php:4242
+#: lib/rrd.php:4277
 msgid "Last DS"
 msgstr "آخر DS"
 
-#: lib/rrd.php:4244
+#: lib/rrd.php:4279
 msgid "Unknown Sec"
 msgstr "غير معروف"
 
-#: lib/rrd.php:4283
+#: lib/rrd.php:4318
 msgid "Round Robin Archive"
 msgstr "جولة روبن الأرشيف"
 
-#: lib/rrd.php:4286
+#: lib/rrd.php:4321
 msgid "Cur Row"
 msgstr "صف كو"
 
-#: lib/rrd.php:4287
+#: lib/rrd.php:4322
 msgid "PDP per Row"
 msgstr "PDP لكل صف"
 
-#: lib/rrd.php:4289
+#: lib/rrd.php:4324
 msgid "CDP Prep Value (0)"
 msgstr "قيمة الإعداد المسبق لـ CDP (0)"
 
-#: lib/rrd.php:4290
+#: lib/rrd.php:4325
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP نقاط بيانات غير معروفة (0)"
 
-#: lib/rrd.php:4371
+#: lib/rrd.php:4406
 msgid "Errors Found"
 msgstr "تم العثور على أخطاء"
 
-#: lib/rrd.php:4383
+#: lib/rrd.php:4418
 msgid "Optional Tuning Recommendations"
 msgstr "توصيات ضبط اختيارية"
 
-#: lib/rrd.php:4408 lib/rrd.php:4411
+#: lib/rrd.php:4445 lib/rrd.php:4448
 #, php-format
 msgid "rename %s to %s"
 msgstr "إعادة تسمية %s إلى %s"
 
-#: lib/rrd.php:4503
+#: lib/rrd.php:4542
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "خطأ أثناء كتابة ملف XML: %s"
 
-#: lib/rrd.php:4509
+#: lib/rrd.php:4548
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4515
+#: lib/rrd.php:4554
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "خطأ: %s RRDfile غير قابل للكتابة"
 
-#: lib/rrd.php:4536
+#: lib/rrd.php:4575
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "خطأ أثناء تحليل XML من تفريغ rrdtool"
 
-#: lib/rrd.php:4572 lib/rrd.php:4591
+#: lib/rrd.php:4611 lib/rrd.php:4630
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "خطأ أثناء تحليل XML تفريغ RRDtool"
 
-#: lib/rrd.php:4809
+#: lib/rrd.php:4848
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRA (CF = %s ، الصفوف = %d ، PDP_PER_ROW = %d ، XFF = %1.2f) تمت إزالته من ملف RRD"
 
-#: lib/rrd.php:4847
+#: lib/rrd.php:4886
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF = %s ، الصفوف = %d ، PDP_PER_ROW = %d ، XFF = %1.2f) إضافة إلى ملف RRD"
 
-#: lib/rrd.php:4878 lib/rrd.php:4894
+#: lib/rrd.php:4917 lib/rrd.php:4933
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "لا يحتوي موقع الويب على حق الوصول للكتابة إلى %s ، وقد لا يتمكن من إنشاء / تحديث RRDs"
 
-#: lib/rrd.php:4890
+#: lib/rrd.php:4929
 msgid "(Custom)"
 msgstr "مخصص"
 
-#: lib/rrd.php:4896
+#: lib/rrd.php:4935
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "فشل في فتح ملف البيانات ، ربما لم يتم تشغيل برنامج التلقيم حتى الآن"
 
-#: lib/rrd.php:4899
+#: lib/rrd.php:4938
 msgid "RRA Folder"
 msgstr "مجلد RRA"
 
-#: lib/rrd.php:4899
+#: lib/rrd.php:4938
 msgid "Root"
 msgstr "الجذر"
 
-#: lib/rrd.php:4979
+#: lib/rrd.php:5018
 msgid "Unknown RRDtool Error"
 msgstr "خطأ RRDtool غير معروف"
 
@@ -17393,60 +17393,60 @@ msgstr "ارشيف جميع"
 msgid "Archive All Unknown RRDfiles"
 msgstr "ارشيف جميع غير معروف RRDfiles"
 
-#: settings.php:403
+#: settings.php:410
 msgid "NOTE: Path Settings on this Tab are only saved locally!"
 msgstr "ملاحظة: يتم حفظ إعدادات المسار في علامة التبويب هذه محليًا فقط!"
 
-#: settings.php:408
+#: settings.php:415
 #, fuzzy, php-format
 msgid "Kadupul Settings (%s)%s"
 msgstr "إعدادات Kadupul (%s)%s"
 
-#: settings.php:541
+#: settings.php:548
 msgid "Changing Permission Model Warning"
 msgstr "تحذير تغيير نموذج الأذونات"
 
-#: settings.php:542
+#: settings.php:549
 msgid "Changing Permission Model will alter a users effective Graph permissions."
 msgstr "سيؤدي تغيير نموذج الأذونات إلى تغيير أذونات Graph الفعالة للمستخدمين."
 
-#: settings.php:543
+#: settings.php:550
 msgid "After you change the Graph Permission Model you should audit your Users and User Groups Effective Graph permission to ensure that you still have adequate control of your Graphs.  NOTE: If you want to restrict all Graphs at the Device or Graph Template Graph Permission Model, the default Graph Policy should be set to 'Deny'."
 msgstr "بعد تغيير نموذج إذن الرسم البياني، يجب عليك تدقيق إذن الرسم البياني الفعال للمستخدمين ومجموعات المستخدمين للتأكد من أنه لا يزال لديك تحكم كاف في الرسوم البيانية الخاصة بك.  ملاحظة: إذا كنت تريد تقييد جميع الرسوم البيانية في الجهاز أو نموذج إذن الرسم البياني لقالب الرسم البياني، فيجب تعيين نهج الرسم البياني الافتراضي إلى \"رفض\"."
 
-#: settings.php:557
+#: settings.php:564
 msgid "Poller Interval must be less than Cron Interval"
 msgstr "يجب أن تكون الفاصل الزمني Poller أقل من Cron Interval"
 
-#: settings.php:585
+#: settings.php:592
 msgid "Select Plugin(s)"
 msgstr "حدد المكوّن (الإضافات)"
 
-#: settings.php:587
+#: settings.php:594
 msgid "Plugins Selected"
 msgstr "المكونات الإضافية المحددة"
 
-#: settings.php:607
+#: settings.php:614
 msgid "Select File(s)"
 msgstr "اختر الملف"
 
-#: settings.php:609
+#: settings.php:616
 msgid "Files Selected"
 msgstr "الملفات المحددة"
 
-#: settings.php:632
+#: settings.php:639
 msgid "Select Template(s)"
 msgstr "اختر قالب (نماذج)"
 
-#: settings.php:637
+#: settings.php:644
 msgid "All Templates Selected"
 msgstr "جميع القوالب المحددة"
 
-#: settings.php:711
+#: settings.php:718
 msgid "Send a Test Email"
 msgstr "إرسال اختبار البريد الإلكتروني"
 
-#: settings.php:722
+#: settings.php:729
 msgid "Test Email Results"
 msgstr "اختبار نتائج البريد الإلكتروني"
 

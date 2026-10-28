@@ -8,8 +8,10 @@ namespace Kadupul\Tests\StringPredicates;
 require_once dirname(__DIR__, 2) . '/Helpers/PhpSource.php';
 
 // Load the production functions without starting the database or poller.
-foreach (['lib/poller.php' => 'file_escaped', 'lib/database.php' => 'db_format_index_create', 'lib/html_utility.php' => 'form_alternate_row_class'] as $file => $function) {
-    eval('namespace ' . __NAMESPACE__ . '; ' . \test_php_function_source(file_get_contents(dirname(__DIR__, 3) . '/' . $file), $function));
+foreach (['lib/poller.php' => ['file_escaped'], 'lib/database.php' => ['db_is_safe_index_column', 'db_format_index_create'], 'lib/html_utility.php' => ['form_alternate_row_class']] as $file => $functions) {
+    foreach ($functions as $function) {
+        eval('namespace ' . __NAMESPACE__ . '; ' . \test_php_function_source(file_get_contents(dirname(__DIR__, 3) . '/' . $file), $function));
+    }
 }
 
 test('file quote detection requires both literal ends', function ($file, $expected) {
@@ -20,14 +22,15 @@ test('file quote detection requires both literal ends', function ($file, $expect
     ["\"a\0b\"", true], ["\"a\"\n", false],
 ]);
 
-test('index formatting distinguishes expression suffixes from ordinary names', function ($indexes, $expected) {
+test('index formatting quotes names, keeps prefix lengths and refuses anything else', function ($indexes, $expected) {
     expect(db_format_index_create($indexes))->toBe($expected);
 })->with([
-    ['name', '`name`'], ['', '``'], [' name ', '`name`'],
-    ['name(10)', 'name(10)'], [' name(10) ', 'name(10)'],
-    ['name(10)x', '`name(10)x`'], ['name(10', '`name(10`'],
-    [[], ''], [['name', 'value(10)'], '`name`,value(10)'],
-    [['name', 'value(10)x'], '`name`,`value(10)x`'],
+    ['name', '`name`'], ['', false], [' name ', '`name`'],
+    ['name(10)', '`name`(10)'], [' name(10) ', '`name`(10)'],
+    ['name(10)x', false], ['name(10', false],
+    ['name`,`value(10)', '`name`,`value`(10)'],
+    [[], ''], [['name', 'value(10)'], '`name`,`value`(10)'],
+    [['name', 'value(10)x'], false],
 ]);
 
 test('row prefix checks preserve numeric ids and disabled rows', function ($id, $disabled, $expected) {

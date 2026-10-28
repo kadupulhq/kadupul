@@ -21,6 +21,7 @@
       <file>integration/LegacyDbalConnectionDatabaseTest.php</file>
       <file>integration/DatabaseConnectionStateDatabaseTest.php</file>
       <file>integration/SettingsStorageDatabaseTest.php</file>
+      <file>integration/PluginDdlCharsetDatabaseTest.php</file>
       <file>integration/ImportParentRollbackDatabaseTest.php</file>
       <file>Unit/Security/Auth/TreeGroupExceptionParityTest.php</file>
     </testsuite>

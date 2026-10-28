@@ -67,7 +67,7 @@ function db_fetch_assoc($sql, ...$args)
     if ($sql === 'SHOW TABLES') {
         return $GLOBALS['db']->query("SELECT name FROM sqlite_master WHERE type='table'")->fetchAll(PDO::FETCH_ASSOC);
     }
-    if (preg_match('/SHOW COLUMNS FROM `([^`]+)`/', $sql, $match)) {
+    if (preg_match('/SHOW COLUMNS FROM `([^`]+)`/i', $sql, $match)) {
         return array_map(fn($row) => array('Field' => $row['name']), $GLOBALS['db']->query('PRAGMA table_info(`' . $match[1] . '`)')->fetchAll(PDO::FETCH_ASSOC));
     }
     return str_contains($sql, 'FROM poller') ? array() : plugin_compat_query($sql, array())->fetchAll(PDO::FETCH_ASSOC);
@@ -78,8 +78,11 @@ function db_execute($sql, ...$args)
     $sql = preg_replace('/\) ENGINE = \w+$/', ')', $sql);
     return $GLOBALS['db']->exec($sql) !== false;
 }
-function db_fetch_cell($sql)
+function db_fetch_cell($sql, ...$args)
 {
+    if (preg_match("/^SHOW TABLES LIKE '(\\w+)'$/", $sql, $match)) {
+        return plugin_compat_query("SELECT name FROM sqlite_master WHERE type='table' AND name = ?", array($match[1]))->fetchColumn();
+    }
     return plugin_compat_query($sql, array())->fetchColumn();
 }
 function cacti_count($value)
@@ -134,6 +137,25 @@ function cacti_require_post_request()
 }
 if (defined('PLUGIN_COMPAT_TEST_COVERAGE')) {
     require getenv('PLUGIN_COMPAT_ROOT') . '/tests/Fixtures/rrd-process-coverage.php';
+}
+// The plugin DDL wrappers delegate to the validated helpers in lib/database.php;
+// load those as written, with the SQLite handle as the default connection.
+require_once getenv('PLUGIN_COMPAT_ROOT') . '/tests/Helpers/PhpSource.php';
+require_once getenv('PLUGIN_COMPAT_ROOT') . '/src/Platform/Infrastructure/Legacy/LegacyConnectionRegistry.php';
+$database_hostname = 'localhost';
+$database_port = '3306';
+$database_default = 'cacti';
+$database_sessions = array('localhost:3306:cacti' => $db);
+$plugin_compat_sources = array(
+    'lib/database.php' => array('db_has_control_chars', 'db_is_safe_identifier', 'db_is_safe_column_type', 'db_is_safe_table_option', 'db_is_safe_index_column', 'db_is_safe_column_definition', 'db_build_column_definition_sql', 'db_is_safe_table_definition', 'db_format_index_create', 'db_qstr', 'db_table_exists', 'db_table_create', 'db_add_column'),
+);
+foreach ($plugin_compat_sources as $file => $functions) {
+    $source = file_get_contents(getenv('PLUGIN_COMPAT_ROOT') . '/' . $file);
+    foreach ($functions as $function) {
+        if (str_contains($source, 'function ' . $function . '(')) {
+            eval(test_php_function_source($source, $function)); // nosemgrep: php.lang.security.eval-use.eval-use
+        }
+    }
 }
 require getenv('PLUGIN_COMPAT_ROOT') . '/lib/plugins.php';
 register_shutdown_function(function () {
