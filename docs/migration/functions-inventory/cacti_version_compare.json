@@ -3,8 +3,8 @@
     "name": "cacti_version_compare",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7334,
-        "end_line": 7374,
+        "start_line": 7370,
+        "end_line": 7410,
         "line_count": 41,
         "signature": {
             "parameters": [

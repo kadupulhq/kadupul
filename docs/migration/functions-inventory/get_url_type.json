@@ -3,12 +3,12 @@
     "name": "get_url_type",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6920,
-        "end_line": 6927,
+        "start_line": 6956,
+        "end_line": 6963,
         "line_count": 8,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,
-        "fan_out": {"core": 5, "core_outside_functions_php": 2, "tests": 3, "plugins": 0},
+        "fan_out": {"core": 6, "core_outside_functions_php": 2, "tests": 3, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

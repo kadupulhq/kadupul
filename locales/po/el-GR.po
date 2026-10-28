@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-27 16:55-0700\n"
+"POT-Creation-Date: 2026-10-27 19:13-0700\n"
 "PO-Revision-Date: 2024-04-20 18:31-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2395,7 +2395,7 @@ msgid "No Tree Rules Found"
 msgstr "Δεν βρέθηκαν κανάλια δέντρων"
 
 #: cactid.php:27 help.php:54 lib/functions.php:6725 lib/functions.php:6795
-#: lib/functions.php:6891 lib/functions.php:7552 poller.php:416 poller.php:583
+#: lib/functions.php:6898 lib/functions.php:7588 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:392
 msgid "Kadupul System Warning"
@@ -3785,7 +3785,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Ο Kadupul Poller δεν έχει τρέξει ακόμα."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8255 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8291 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "Δεν επιτρέπεται η πρόσβαση"
 
@@ -4734,12 +4734,12 @@ msgstr "FATAL: Πρέπει να είστε συνδεδεμένοι για να
 msgid "Login Again"
 msgstr "Σύνδεση Ξανά"
 
-#: include/auth.php:317 lib/functions.php:8256
+#: include/auth.php:317 lib/functions.php:8292
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Αν νομίζετε ότι αυτό είναι λάθος. Επικοινωνήστε με τον διαχειριστή του Kadupul."
 
-#: include/auth.php:317 lib/functions.php:8256
+#: include/auth.php:317 lib/functions.php:8292
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Δεν επιτρέπεται η πρόσβαση σε αυτήν την ενότητα του Kadupul."
@@ -11969,430 +11969,430 @@ msgstr "Οι κωδικοί πρόσβασης δεν ταιριάζουν"
 msgid "System Device"
 msgstr "Συγχρονισμός συσκευών"
 
-#: lib/data_query.php:64 lib/data_query.php:466
+#: lib/data_query.php:73 lib/data_query.php:475
 msgid "Automation Execution for Data Query complete"
 msgstr "Η εκτέλεση του Automation for Data Query ολοκληρώθηκε"
 
-#: lib/data_query.php:67 lib/data_query.php:469
+#: lib/data_query.php:76 lib/data_query.php:478
 msgid "Plugin Hooks complete"
 msgstr "Τα συμπληρωματικά άγκιστρα συμπληρώνονται"
 
-#: lib/data_query.php:85
+#: lib/data_query.php:94
 #, php-format
 msgid "Running Data Query [%s]."
 msgstr "Εκτέλεση ερωτήματος δεδομένων [ %s]."
 
-#: lib/data_query.php:97
+#: lib/data_query.php:106
 #, php-format
 msgid "Found Type = '%s' [%s]."
 msgstr "Βρέθηκε Τύπος = &#39; %s&#39; [ %s]."
 
-#: lib/data_query.php:119
+#: lib/data_query.php:128
 #, php-format
 msgid "Unknown Type = '%s'."
 msgstr "Άγνωστος τύπος = &#39; %s&#39;."
 
-#: lib/data_query.php:154
+#: lib/data_query.php:163
 msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
 msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Η Ταξινόμηση πεδίου σύνδεσης έχει αλλάξει. Μπορεί να προκύψουν ζητήματα ανασύνθεσης!"
 
-#: lib/data_query.php:166
+#: lib/data_query.php:175
 msgid "Update Data Query Sort Cache complete"
 msgstr "Η ενημέρωση της ερώτησης για την ταξινόμηση της συλλογής δεδομένων ολοκληρώθηκε"
 
-#: lib/data_query.php:193
+#: lib/data_query.php:202
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "Βρέθηκαν%s Τοπικά αναγνωριστικά δεδομένων για επαλήθευση"
 
-#: lib/data_query.php:299
+#: lib/data_query.php:308
 #, php-format
 msgid "Index Change Detected! CurrentIndex: %s, PreviousIndex: %s"
 msgstr "Ανίχνευση αλλαγής ευρετηρίου! CurrentIndex: %s, PreviousIndex: %s"
 
-#: lib/data_query.php:323
+#: lib/data_query.php:332
 #, php-format
 msgid "Transient Index Removal Detected! PreviousIndex: %s.  No action taken."
 msgstr "Η ανίχνευση ευρετηρίου εντοπίστηκε! PreviousIndex: %s"
 
-#: lib/data_query.php:326
+#: lib/data_query.php:335
 #, php-format
 msgid "Index Removal Detected! PreviousIndex: %s"
 msgstr "Η ανίχνευση ευρετηρίου εντοπίστηκε! PreviousIndex: %s"
 
-#: lib/data_query.php:366
+#: lib/data_query.php:375
 #, php-format
 msgid "Verification of %s Local Data ID's Complete"
 msgstr "Ολοκληρώθηκε η επαλήθευση του αναγνωριστικού τοπικών δεδομένων %s"
 
-#: lib/data_query.php:369
+#: lib/data_query.php:378
 #, php-format
 msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
 msgstr "Βρέθηκαν Αλλαγή%s και%s Ορφανών τοπικών αναγνωριστικών δεδομένων για εκ νέου χάρτη."
 
-#: lib/data_query.php:372
+#: lib/data_query.php:381
 msgid "Done remapping Graphs to their new Indexes"
 msgstr "Επανατοποθέτηση γραφημάτων στους νέους τους δείκτες"
 
-#: lib/data_query.php:378 lib/data_query.php:385
+#: lib/data_query.php:387 lib/data_query.php:394
 msgid "Done updating Data Source Title Cache"
 msgstr "Διπλότυπο προφίλ προέλευσης δεδομένων"
 
-#: lib/data_query.php:381 lib/data_query.php:388
+#: lib/data_query.php:390 lib/data_query.php:397
 msgid "Done updating Graph Title Cache"
 msgstr "Έγινε ενημέρωση της κρυφής μνήμης τίτλου γραφήματος"
 
-#: lib/data_query.php:392
+#: lib/data_query.php:401
 msgid "Index Association with Local Data complete"
 msgstr "Σύνδεση ευρετηρίου με τοπικά δεδομένα"
 
-#: lib/data_query.php:398
+#: lib/data_query.php:407
 #, php-format
 msgid "Update Re-Index Cache complete. There were %s index changes, and %s orphaned indexes."
 msgstr "Η ενημέρωση της προσωρινής μνήμης Re-Index ολοκληρώθηκε. Υπήρξαν %s αλλαγές ευρετηρίου και %s ορφανά ευρετήρια."
 
-#: lib/data_query.php:402
+#: lib/data_query.php:411
 msgid "Update Poller Cache for Query complete"
 msgstr "Ενημερώστε την ενημερωμένη προσωρινή μνήμη Poller για το ερώτημα"
 
-#: lib/data_query.php:404
+#: lib/data_query.php:413
 msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
 msgstr "Δεν εντοπίστηκαν αλλαγές στο ευρετήριο, παρακάμπτοντας την επανάληψη ευρετηρίου και την επαναπληροφόρηση της προσωρινής μνήμης cache"
 
-#: lib/data_query.php:458
+#: lib/data_query.php:467
 msgid "Automation Executing for Data Query complete"
 msgstr "Η εκτέλεση του Automation Executing for Data Query ολοκληρώνεται"
 
-#: lib/data_query.php:461
+#: lib/data_query.php:470
 msgid "Plugin hooks complete"
 msgstr "Τα άγκιστρα προσθήκης ολοκληρώθηκαν"
 
-#: lib/data_query.php:520
+#: lib/data_query.php:529
 msgid "Checking for Sort Field change.  No changes detected."
 msgstr "Έλεγχος αλλαγής ταξινόμησης πεδίου. Δεν εντοπίστηκαν αλλαγές."
 
-#: lib/data_query.php:525
+#: lib/data_query.php:534
 #, php-format
 msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "Εντοπίστηκε νέο πεδίο ταξινόμησης: &#39; %s&#39; Παλιό πεδίο ταξινόμησης &#39; %s&#39;"
 
-#: lib/data_query.php:546
+#: lib/data_query.php:555
 msgid "ERROR: New Sort Field not suitable.  Sort Field will not change."
 msgstr "Σφάλμα: Το νέο πεδίο ταξινόμησης δεν είναι κατάλληλο. Το πεδίο ταξινόμησης δεν θα αλλάξει."
 
-#: lib/data_query.php:560
+#: lib/data_query.php:569
 msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "Το νέο πεδίο ταξινόμησης επικυρώθηκε. Το πεδίο Ταξινόμηση ενημερώνεται."
 
-#: lib/data_query.php:673
+#: lib/data_query.php:682
 #, php-format
 msgid "Could not find data query XML file at '%s'"
 msgstr "Δεν ήταν δυνατή η εύρεση αρχείου XML ερώτησης δεδομένων στο &#39; %s&#39;"
 
-#: lib/data_query.php:677
+#: lib/data_query.php:686
 #, php-format
 msgid "Found data query XML file at '%s'"
 msgstr "Βρέθηκε αρχείο XML ερωτήματος δεδομένων στο &#39; %s&#39;"
 
-#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2631
+#: lib/data_query.php:710 lib/data_query.php:943 lib/data_query.php:2640
 msgid "Error parsing XML file into an array."
 msgstr "Σφάλμα κατά την ανάλυση του αρχείου XML σε έναν πίνακα."
 
-#: lib/data_query.php:705 lib/data_query.php:938
+#: lib/data_query.php:714 lib/data_query.php:947
 msgid "XML file parsed ok."
 msgstr "Το αρχείο XML αναλύθηκε εντάξει."
 
-#: lib/data_query.php:713 lib/data_query.php:941
+#: lib/data_query.php:722 lib/data_query.php:950
 #, php-format
 msgid "Invalid field &lt;index_order&gt;%s&lt;/index_order&gt;"
 msgstr "Μη έγκυρο πεδίο &lt;index_order&gt; %s &lt;/ index_order&gt;"
 
-#: lib/data_query.php:714 lib/data_query.php:942
+#: lib/data_query.php:723 lib/data_query.php:951
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
 msgstr "Πρέπει να περιέχει μόνο πεδία &lt;direction&gt; input / direction&gt; ή &lt;direction&gt; input-output &lt;/ direction&gt;"
 
-#: lib/data_query.php:731
+#: lib/data_query.php:740
 msgid "Data Query returned no indexes."
 msgstr "Σφάλμα: Το ερώτημα δεδομένων δεν επέστρεψε ευρετήρια."
 
-#: lib/data_query.php:732
+#: lib/data_query.php:741
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; που λείπουν σε αρχείο XML, το &#39;Count Count Changed&#39; δεν υποστηρίζεται"
 
-#: lib/data_query.php:735
+#: lib/data_query.php:744
 #, php-format
 msgid "Executing script for num of indexes '%s'"
 msgstr "Εκτέλεση δέσμης ενεργειών για τον αριθμό των ευρετηρίων &#39; %s&#39;"
 
-#: lib/data_query.php:738
+#: lib/data_query.php:747
 #, php-format
 msgid "Found number of indexes: %s"
 msgstr "Βρέθηκε αριθμός δεικτών: %s"
 
-#: lib/data_query.php:742
+#: lib/data_query.php:751
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; που λείπουν σε αρχείο XML, το &#39;Count Count Changed&#39; δεν υποστηρίζεται"
 
-#: lib/data_query.php:744
+#: lib/data_query.php:753
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
 msgstr "&lt;arg_num_indexes&gt; που λείπουν σε αρχείο XML, &#39;Index Count Changed&#39; προσομοιωμένοι με την καταμέτρηση των καταχωρίσεων arg_index"
 
-#: lib/data_query.php:755
+#: lib/data_query.php:764
 msgid "ERROR: Data Query returned no indexes."
 msgstr "Σφάλμα: Το ερώτημα δεδομένων δεν επέστρεψε ευρετήρια."
 
-#: lib/data_query.php:759
+#: lib/data_query.php:768
 #, php-format
 msgid "Executing script for list of indexes '%s', Index Count: %s"
 msgstr "Εκτέλεση δέσμης ενεργειών για τη λίστα ευρετηρίων &#39; %s&#39;, Index Count: %s"
 
-#: lib/data_query.php:761
+#: lib/data_query.php:770
 msgid "Click to show Data Query output for 'index'"
 msgstr "Κάντε κλικ για να εμφανίσετε την έξοδο δεδομένων Query για &#39;index&#39;"
 
-#: lib/data_query.php:764
+#: lib/data_query.php:773
 #, php-format
 msgid "Found index: %s"
 msgstr "Βρέθηκε ευρετήριο: %s"
 
-#: lib/data_query.php:779 lib/data_query.php:1349
+#: lib/data_query.php:788 lib/data_query.php:1358
 #, php-format
 msgid "Click to show Data Query output for field '%s'"
 msgstr "Κάντε κλικ για να εμφανίσετε την έξοδο δεδομένων ερωτήματος για το πεδίο &#39; %s&#39;"
 
-#: lib/data_query.php:785
+#: lib/data_query.php:794
 #, php-format
 msgid "Sort field returned no data for field name %s, skipping"
 msgstr "Το πεδίο ταξινόμησης δεν επέστρεψε δεδομένα για το όνομα πεδίου %s, παρακάμπτοντας"
 
-#: lib/data_query.php:787
+#: lib/data_query.php:796
 #, php-format
 msgid "Executing script query '%s'"
 msgstr "Εκτέλεση ερωτήματος δέσμης ενεργειών &#39; %s&#39;"
 
-#: lib/data_query.php:798 lib/data_query.php:805
+#: lib/data_query.php:807 lib/data_query.php:814
 #, php-format
 msgid "Found item [%s='%s'] index: %s"
 msgstr "Βρέθηκε στοιχείο [ %s = &#39; %s&#39;] ευρετήριο: %s"
 
-#: lib/data_query.php:845 lib/data_query.php:861
+#: lib/data_query.php:854 lib/data_query.php:870
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
 msgstr "Σύνολο:% f, Δέλτα:% f, %s"
 
-#: lib/data_query.php:928
+#: lib/data_query.php:937
 #, php-format
 msgid "Invalid host_id: %s"
 msgstr "Μη έγκυρο host_id: %s"
 
-#: lib/data_query.php:952
+#: lib/data_query.php:961
 msgid "Auto Bulk Walk Size Selected."
 msgstr "Επιλεγμένο μέγεθος αυτόματου μαζικού περπατήματος."
 
-#: lib/data_query.php:974 lib/data_query.php:1033
+#: lib/data_query.php:983 lib/data_query.php:1042
 msgid "Failed to load SNMP session."
 msgstr "Αποτυχία φόρτωσης της περιόδου σύνδεσης SNMP."
 
-#: lib/data_query.php:984
+#: lib/data_query.php:993
 #, php-format
 msgid "Tested Bulk Walk Size %d with a response of %2.4f."
 msgstr "Δοκιμασμένο μέγεθος μαζικής βόλτας %d με απάντηση %2.4f."
 
-#: lib/data_query.php:995
+#: lib/data_query.php:1004
 #, php-format
 msgid "Bulk Walk Size selected was %d."
 msgstr "Το μέγεθος μαζικού περιπάτου που επιλέχθηκε ήταν %d."
 
-#: lib/data_query.php:998
+#: lib/data_query.php:1007
 msgid "Saving Bulk Walk Size to Device."
 msgstr "Αποθήκευση μεγέθους μαζικής διαδρομής στη συσκευή."
 
-#: lib/data_query.php:1012
+#: lib/data_query.php:1021
 #, php-format
 msgid "Bulk Walk Size is fixed at %d."
 msgstr "Το μέγεθος μαζικού περπατήματος έχει καθοριστεί σε %d."
 
-#: lib/data_query.php:1046
+#: lib/data_query.php:1055
 #, php-format
 msgid "Executing SNMP get for num of indexes @ '%s' Index Count: %s"
 msgstr "Εκτέλεση του SNMP για αριθμούς ευρετηρίων @ &#39; %s&#39; Αριθμός Αναφοράς: %s"
 
-#: lib/data_query.php:1048
+#: lib/data_query.php:1057
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
 msgstr "&lt;oid_num_indexes&gt; που λείπουν σε αρχείο XML, &#39;Αναπροσαρμογή ευρετηρίου&#39; αναμιγνύεται με την καταμέτρηση εγγραφών oid_index"
 
-#: lib/data_query.php:1051
+#: lib/data_query.php:1060
 #, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
 msgstr "Εκτέλεση περιπάτου SNMP για τη λίστα ευρετηρίων @ &#39; %s&#39; Count Count: %s"
 
-#: lib/data_query.php:1055
+#: lib/data_query.php:1064
 msgid "No SNMP data returned"
 msgstr "Δεν επιστράφηκαν δεδομένα SNMP"
 
-#: lib/data_query.php:1060
+#: lib/data_query.php:1069
 #, php-format
 msgid "Index found at OID: '%s' value: '%s'"
 msgstr "Ευρετήριο που βρέθηκε στο OID: &#39; %s&#39; αξία: &#39; %s&#39;"
 
-#: lib/data_query.php:1091
+#: lib/data_query.php:1100
 #, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
 msgstr "Φιλτράρισμα λίστας ευρετηρίων @ &#39; %s&#39; Αριθμός αναφορών: %s"
 
-#: lib/data_query.php:1095
+#: lib/data_query.php:1104
 #, php-format
 msgid "Filtered Index by value found at OID: '%s' value: '%s'"
 msgstr "Φιλτράρισμα ευρετηρίου που βρέθηκε στο OID: &#39; %s&#39; αξία: &#39; %s&#39;"
 
-#: lib/data_query.php:1111
+#: lib/data_query.php:1120
 #, php-format
 msgid "Filtering list of indexes @ '%s' Index Count: %s"
 msgstr "Φιλτράρισμα λίστας ευρετηρίων @ &#39; %s&#39; Αριθμός αναφορών: %s"
 
-#: lib/data_query.php:1115
+#: lib/data_query.php:1124
 #, php-format
 msgid "Filtered Index found at OID: '%s' value: '%s'"
 msgstr "Φιλτράρισμα ευρετηρίου που βρέθηκε στο OID: &#39; %s&#39; αξία: &#39; %s&#39;"
 
-#: lib/data_query.php:1135
+#: lib/data_query.php:1144
 #, php-format
 msgid "Fixing wrong 'method' field for '%s' since 'rewrite_index' or 'oid_suffix' is defined"
 msgstr "Προσδιορισμός λανθασμένου πεδίου &#39;μεθόδου&#39; για το &#39; %s&#39; από τη στιγμή που ορίζεται &#39;rewrite_index&#39; ή &#39;oid_suffix&#39;"
 
-#: lib/data_query.php:1142
+#: lib/data_query.php:1151
 #, php-format
 msgid "Inserting index data for field '%s' [value='%s']"
 msgstr "Εισαγωγή δεδομένων ευρετηρίου για το πεδίο &#39; %s&#39; [value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1147
+#: lib/data_query.php:1156
 #, php-format
 msgid "Located input field '%s' [get]"
 msgstr "Βρίσκεται πεδίο εισαγωγής &#39; %s&#39; [get]"
 
-#: lib/data_query.php:1156
+#: lib/data_query.php:1165
 #, php-format
 msgid "Found OID rewrite rule: 's/%s/%s/'"
 msgstr "Βρήκε τον κανόνα επανεγγραφής OID: &#39;s / %s / %s /&#39;"
 
-#: lib/data_query.php:1167
+#: lib/data_query.php:1176
 #, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
 msgstr "oid_rewrite στο OID: &#39; %s&#39; νέο OID: &#39; %s&#39;"
 
-#: lib/data_query.php:1172
+#: lib/data_query.php:1181
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='%s']"
 msgstr "Εκτέλεση του SNMP get για δεδομένα @ &#39; %s&#39; [value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1183
+#: lib/data_query.php:1192
 #, php-format
 msgid "Field '%s' %s"
 msgstr "Πεδίο &#39; %s&#39; %s"
 
-#: lib/data_query.php:1244
+#: lib/data_query.php:1253
 #, php-format
 msgid "Executing SNMP get for %s oids (%s)"
 msgstr "Εκτέλεση του SNMP για %s ( %s)"
 
-#: lib/data_query.php:1282 lib/data_query.php:1389 lib/data_query.php:1397
+#: lib/data_query.php:1291 lib/data_query.php:1398 lib/data_query.php:1406
 #, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
 msgstr "Το πεδίο ταξινόμησης δεν επέστρεψε δεδομένα. Δεν είναι δυνατή η συνέχιση του νέου δείκτη για το OID [ %s]"
 
-#: lib/data_query.php:1288
+#: lib/data_query.php:1297
 #, php-format
 msgid "Found result for data @ '%s' [value='%s']"
 msgstr "Βρέθηκε αποτέλεσμα για δεδομένα @ &#39; %s&#39; [value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1301
+#: lib/data_query.php:1310
 #, php-format
 msgid "Setting result for data @ '%s' [key='%s', value='%s']"
 msgstr "Ορισμός αποτελέσματος για δεδομένα @ &#39; %s&#39; [key = &#39; %s&#39;, value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1311
+#: lib/data_query.php:1320
 #, php-format
 msgid "Skipped result for data @ '%s' [key='%s', value='%s']"
 msgstr "Παραλήφθηκε αποτέλεσμα για δεδομένα @ &#39; %s&#39; [key = &#39; %s&#39;, value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1329
+#: lib/data_query.php:1338
 #, php-format
 msgid "Got SNMP get result for data @ '%s' [value='%s'] (index: %s)"
 msgstr "Λήψη SNMP πάρει αποτέλεσμα για δεδομένα @ &#39; %s&#39; [value = &#39; %s&#39;] (ευρετήριο: %s)"
 
-#: lib/data_query.php:1343
+#: lib/data_query.php:1352
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
 msgstr "Εκτέλεση του SNMP get για δεδομένα @ &#39; %s&#39; [value = &#39;value value&#39;]"
 
-#: lib/data_query.php:1351
+#: lib/data_query.php:1360
 #, php-format
 msgid "Located input field '%s' [walk]"
 msgstr "Βρίσκεται πεδίο εισαγωγής &#39; %s&#39; [με τα πόδια]"
 
-#: lib/data_query.php:1402
+#: lib/data_query.php:1411
 #, php-format
 msgid "Executing SNMP walk for data @ '%s'"
 msgstr "Εκτέλεση βάδισης SNMP για δεδομένα @ &#39; %s&#39;"
 
-#: lib/data_query.php:1421 lib/data_query.php:1479 lib/data_query.php:1528
-#: lib/data_query.php:1579
+#: lib/data_query.php:1430 lib/data_query.php:1488 lib/data_query.php:1537
+#: lib/data_query.php:1588
 #, php-format
 msgid "No index[%s] in value_index_parse, skipping."
 msgstr "Δεν υπάρχει δείκτης[%s] στο value_index_parse, παράλειψη."
 
-#: lib/data_query.php:1462
+#: lib/data_query.php:1471
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from %s]"
 msgstr "Βρέθηκε στοιχείο [ %s = &#39; %s&#39;] ευρετήριο: %s [από %s]"
 
-#: lib/data_query.php:1504
+#: lib/data_query.php:1513
 #, php-format
 msgid "Found OCTET STRING '%s' decoded value: '%s'"
 msgstr "Βρέθηκε OCTET STRING αποκωδικοποιημένη τιμή &#39; %s&#39;: &#39; %s&#39;"
 
-#: lib/data_query.php:1510 lib/data_query.php:1559
+#: lib/data_query.php:1519 lib/data_query.php:1568
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
 msgstr "Βρέθηκε στοιχείο [ %s = &#39; %s&#39;] ευρετήριο: %s [από regexp oid parse]"
 
-#: lib/data_query.php:1587
+#: lib/data_query.php:1596
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
 msgstr "Βρέθηκε στοιχείο [ %s = &#39; %s&#39;] ευρετήριο: %s [από το regexp oid value parse]"
 
-#: lib/data_query.php:1822
+#: lib/data_query.php:1831
 #, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
 msgstr "Βρέθηκε ψεύτικο στοιχείο rewrite_value, index='%s'"
 
-#: lib/data_query.php:1835
+#: lib/data_query.php:1844
 msgid "Could not parse translation map (rewrite_value)"
 msgstr "Δεν ήταν δυνατή η ανάλυση του χάρτη μετάφρασης (rewrite_value)"
 
-#: lib/data_query.php:1859
+#: lib/data_query.php:1868
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
 msgstr "oid_rewrite στο OID: &#39; %s&#39; νέο OID: &#39; %s&#39;"
 
-#: lib/data_query.php:1973
+#: lib/data_query.php:1982
 msgid "Update graph data query cache complete"
 msgstr "Η ενημέρωση της ερώτησης για την ταξινόμηση της συλλογής δεδομένων ολοκληρώθηκε"
 
-#: lib/data_query.php:1992
+#: lib/data_query.php:2001
 msgid "Re-Indexing Data Query complete"
 msgstr "Επαναπροσδιορισμός ερωτήματος δεδομένων ολοκληρώθηκε"
 
-#: lib/data_query.php:2144
+#: lib/data_query.php:2153
 msgid "Unknown Index"
 msgstr "Άγνωστος ευρετήριο"
 
-#: lib/data_query.php:2755
+#: lib/data_query.php:2764
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "Πρέπει να επιλέξετε μια στήλη εξόδου XML για την προέλευση δεδομένων ' %s' και να αλλάξετε το πλαίσιο ελέγχου στα δεξιά της"
 
-#: lib/data_query.php:2761
+#: lib/data_query.php:2770
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Το πρότυπο γραφήματος δεν χρησιμοποιεί πρότυπα δεδομένων. Διορθώστε το πρότυπο γραφήματος"
 
@@ -12614,28 +12614,28 @@ msgstr "Μήνυμα δεν έχει σταλεί λόγω βλάβης του p
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Το plugin Kadupul έχει απενεργοποιηθεί %s λόγω του ακόλουθου σφάλματος: %s! Δείτε το αρχείο καταγραφής Kadupul για περισσότερες λεπτομέρειες."
 
-#: lib/functions.php:6891
+#: lib/functions.php:6898
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Το PollerID:%s έχει μη έγκυρο όνομα κεντρικού υπολογιστή:%s.  Δεν είναι προσβάσιμο μέσω DNS!"
 
-#: lib/functions.php:7315 lib/functions.php:7317
+#: lib/functions.php:7351 lib/functions.php:7353
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:7315 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7351 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "Έκδοση %s %s"
 
-#: lib/functions.php:7317
+#: lib/functions.php:7353
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7552
+#: lib/functions.php:7588
 #, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ:  Το Key Kadupul Include File %s λείπει.  Εντοπίστε και αντικαταστήστε αυτό το αρχείο"

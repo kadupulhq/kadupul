@@ -40,7 +40,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 361, "core_outside_functions_php": 354, "tests": 64, "plugins": 0},
+        "fan_out": {"core": 361, "core_outside_functions_php": 354, "tests": 65, "plugins": 0},
         "body": {
             "uses_global": ["config", "messages", "no_http_headers"],
             "static_variables": [],
