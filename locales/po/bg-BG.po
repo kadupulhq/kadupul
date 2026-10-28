@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-27 16:55-0700\n"
+"POT-Creation-Date: 2026-10-27 23:21-0700\n"
 "PO-Revision-Date: 2024-04-20 18:23-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -778,7 +778,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "Възникнаха проблеми със страницата Промяна на паролата.  Свържете се незабавно с вашия администратор на Kadupul."
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4281 lib/html.php:2754
+#: include/global_form.php:1552 lib/functions.php:4284 lib/html.php:2754
 msgid "Change Password"
 msgstr "Промяна на паролата"
 
@@ -791,7 +791,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "Моля, въведете текущата си парола и новата си <br> Kadupul парола."
 
 #: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
-#: include/global_settings.php:1851 lib/functions.php:6221
+#: include/global_settings.php:1851 lib/functions.php:6238
 msgid "Username"
 msgstr "Потребител"
 
@@ -884,7 +884,7 @@ msgstr "?џ???‚?Ђ?µ?±???‚?µ?»"
 msgid "Enter your Username and Password below"
 msgstr "По-долу въведете потребителското си име и парола"
 
-#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6222
+#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6239
 msgid "Password"
 msgstr "Парола"
 
@@ -1191,7 +1191,7 @@ msgstr "Прочистване на откритите устройства"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:698 lib/functions.php:6580 lib/functions.php:6585
+#: data_debug.php:698 lib/functions.php:6597 lib/functions.php:6602
 #: lib/html.php:1393 lib/html.php:1465 lib/html_reports.php:1810
 #: lib/html_reports.php:1838 lib/html_reports.php:1915
 #: lib/html_reports.php:1916 lib/html_reports.php:1917 lib/spikekill.php:1734
@@ -2181,7 +2181,7 @@ msgstr "Версия"
 msgid "Community"
 msgstr "Общност"
 
-#: automation_snmp.php:543 lib/functions.php:6217
+#: automation_snmp.php:543 lib/functions.php:6234
 msgid "Port"
 msgstr "Порт"
 
@@ -2391,8 +2391,8 @@ msgstr "Constellation name (optional)"
 msgid "No Tree Rules Found"
 msgstr "Не са намерени правила за дърво"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6725 lib/functions.php:6795
-#: lib/functions.php:6891 lib/functions.php:7552 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6742 lib/functions.php:6812
+#: lib/functions.php:6908 lib/functions.php:7569 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:392
 #, fuzzy
@@ -2783,7 +2783,7 @@ msgstr "Повторно анализиране"
 msgid "Check"
 msgstr "Проверка"
 
-#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4278
+#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4280
 #: utilities.php:798 utilities.php:815 utilities.php:3206
 msgid "Value"
 msgstr "Стойност"
@@ -3423,7 +3423,7 @@ msgstr "Името, дадено на този шаблон за данни. М�
 #: data_sources.php:1101 graph_view.php:817 graphs.php:1600
 #: include/global_arrays.php:957 include/global_arrays.php:1006
 #: include/global_arrays.php:1694 include/global_arrays.php:1863
-#: lib/api_automation.php:426 lib/functions.php:6216 lib/html.php:2306
+#: lib/api_automation.php:426 lib/functions.php:6233 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
 msgstr "Устройство"
@@ -3777,12 +3777,12 @@ msgid "RRDtool Graph Syntax"
 msgstr "Синтаксис на графиката RRDtool"
 
 #: graph_image.php:174 graph_json.php:208 graph_realtime.php:330
-#: lib/rrd.php:2649
+#: lib/rrd.php:2651
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller все още не работи."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8255 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8272 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "Отказано разрешение"
 
@@ -4467,7 +4467,7 @@ msgid "Save Filters"
 msgstr "Запазване на филтрите"
 
 #: graphs_new.php:532 include/global_form.php:284 lib/html.php:613
-#: lib/html_filter.php:55 lib/installer.php:2837 lib/rrd.php:4320
+#: lib/html_filter.php:55 lib/installer.php:2837 lib/rrd.php:4322
 #: utilities.php:866 utilities.php:1838
 msgid "Rows"
 msgstr "Редове"
@@ -4731,12 +4731,12 @@ msgstr "FATAL: Трябва да сте влезли в системата за 
 msgid "Login Again"
 msgstr "Влезте отново"
 
-#: include/auth.php:317 lib/functions.php:8256
+#: include/auth.php:317 lib/functions.php:8273
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Ако смятате, че това е грешка. Моля, свържете се с вашия Kadupul Administrator."
 
-#: include/auth.php:317 lib/functions.php:8256
+#: include/auth.php:317 lib/functions.php:8273
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Нямате достъп до този раздел на Kadupul."
@@ -5600,7 +5600,7 @@ msgstr "Естествен ред"
 msgid "Numeric Ordering"
 msgstr "Цифрова поръчка"
 
-#: include/global_arrays.php:955 lib/rrd.php:4244
+#: include/global_arrays.php:955 lib/rrd.php:4246
 msgid "Header"
 msgstr "Хедър"
 
@@ -6814,7 +6814,7 @@ msgid "List Mode"
 msgstr "Списъчен изглед"
 
 #: include/global_arrays.php:2068 include/global_arrays.php:2074
-#: lib/functions.php:4503 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
+#: lib/functions.php:4506 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "Административна конзола"
@@ -7239,7 +7239,7 @@ msgstr "Heartbeat"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "Колко време може да липсват данни, преди RRDtool да запише неизвестни данни. Увеличете тази стойност, ако вашият източник на данни е нестабилен и искате да пренесете стари данни, вместо да показвате пропуски в графиките си. Тази стойност се умножава по X-Files Factor, за да се определи действителното време."
 
-#: include/global_form.php:226 lib/rrd.php:4323
+#: include/global_form.php:226 lib/rrd.php:4325
 msgid "X-Files Factor"
 msgstr "Фактор на Х-Файлове"
 
@@ -7809,7 +7809,7 @@ msgstr "Непрозрачност / Алфа канал"
 msgid "The opacity/alpha channel of the color."
 msgstr "Непрозрачността / алфа каналът на цвета."
 
-#: include/global_form.php:989 lib/rrd.php:4319
+#: include/global_form.php:989 lib/rrd.php:4321
 msgid "Consolidation Function"
 msgstr "Консолидационна функция"
 
@@ -8613,8 +8613,8 @@ msgstr "Данни"
 msgid "Visual"
 msgstr "Зрителни"
 
-#: include/global_settings.php:112 lib/functions.php:6220
-#: lib/functions.php:6225
+#: include/global_settings.php:112 lib/functions.php:6237
+#: lib/functions.php:6242
 msgid "Authentication"
 msgstr "Идентификация"
 
@@ -8650,11 +8650,11 @@ msgstr "Графични шрифтове"
 msgid "PHP Mail() Function"
 msgstr "Функция PHP Mail ()"
 
-#: include/global_settings.php:153 lib/functions.php:6201
+#: include/global_settings.php:153 lib/functions.php:6218
 msgid "Sendmail"
 msgstr "Sendmail"
 
-#: include/global_settings.php:154 lib/functions.php:6207
+#: include/global_settings.php:154 lib/functions.php:6224
 msgid "SMTP"
 msgstr "SMTP"
 
@@ -10510,7 +10510,7 @@ msgstr "Това е колко символа ще бъдат позволени
 msgid "Sendmail Options"
 msgstr "Опции на Sendmail"
 
-#: include/global_settings.php:1972 lib/functions.php:6201
+#: include/global_settings.php:1972 lib/functions.php:6218
 msgid "Sendmail Path"
 msgstr "Път за изпращане мейли"
 
@@ -11486,7 +11486,7 @@ msgstr "Възстановяване"
 
 #: lib/api_automation.php:33 lib/auth.php:3085 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:401 lib/plugins.php:1393
-#: lib/plugins.php:1394 lib/rrd.php:4296 lib/rrd.php:4308 lib/spikekill.php:301
+#: lib/plugins.php:1394 lib/rrd.php:4298 lib/rrd.php:4310 lib/spikekill.php:301
 #: package_import.php:528 package_import.php:606 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 msgid "Unknown"
@@ -11494,7 +11494,7 @@ msgstr "알려지지 않음"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
-#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4273
+#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4275
 #: utilities.php:356 utilities.php:1480 utilities.php:3206
 msgid "Type"
 msgstr "Тип"
@@ -11703,8 +11703,8 @@ msgstr "Място:"
 msgid "Contact:"
 msgstr "Контакт:"
 
-#: lib/api_device.php:1986 lib/functions.php:6234 lib/functions.php:6236
-#: lib/functions.php:6240
+#: lib/api_device.php:1986 lib/functions.php:6251 lib/functions.php:6253
+#: lib/functions.php:6257
 msgid "Ping Results"
 msgstr "Резултати от Ping"
 
@@ -12100,7 +12100,7 @@ msgstr "XML файлът с заявка за данни не можа да бъ
 msgid "Found data query XML file at '%s'"
 msgstr "Намерен XML файл с заявка за търсене на „ %s“"
 
-#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2631
+#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2634
 msgid "Error parsing XML file into an array."
 msgstr "Грешка при анализиране на XML файл в масив."
 
@@ -12393,12 +12393,12 @@ msgstr "Повторно индексиране на заявката за да�
 msgid "Unknown Index"
 msgstr "Неизвестен индекс"
 
-#: lib/data_query.php:2755
+#: lib/data_query.php:2758
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "Трябва да изберете изходна колона XML за източник на данни „ %s“ и да поставите отметка в квадратчето отдясно"
 
-#: lib/data_query.php:2761
+#: lib/data_query.php:2764
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Шаблонът ви на графиката не се използва. Моля, коригирайте шаблона на графиката си"
 
@@ -12470,177 +12470,177 @@ msgstr "Съобщението не е намерено."
 msgid "Error %s is not readable"
 msgstr "Грешка %s не може да се чете"
 
-#: lib/functions.php:4257
+#: lib/functions.php:4260
 msgid "Logged in a Guest"
 msgstr "Вход като"
 
-#: lib/functions.php:4257 lib/functions.php:4275
+#: lib/functions.php:4260 lib/functions.php:4278
 msgid "Logged in as"
 msgstr "Вход като"
 
-#: lib/functions.php:4257
+#: lib/functions.php:4260
 msgid "Login as Regular User"
 msgstr "Влезте като обикновен потребител"
 
-#: lib/functions.php:4257
+#: lib/functions.php:4260
 msgid "guest"
 msgstr "гост"
 
-#: lib/functions.php:4260 lib/functions.php:4285 lib/html.php:2770
+#: lib/functions.php:4263 lib/functions.php:4288 lib/html.php:2770
 msgid "User Community"
 msgstr "Потребителска общност"
 
-#: lib/functions.php:4261 lib/functions.php:4286 lib/html.php:2772
+#: lib/functions.php:4264 lib/functions.php:4289 lib/html.php:2772
 #: lib/utility.php:1447
 msgid "Documentation"
 msgstr "Документация"
 
-#: lib/functions.php:4278
+#: lib/functions.php:4281
 #, php-format
 msgid "Logged in as %s"
 msgstr "Влезли сте като %s"
 
-#: lib/functions.php:4280 lib/html.php:2751
+#: lib/functions.php:4283 lib/html.php:2751
 msgid "Edit Profile"
 msgstr "Редактирай Профила"
 
-#: lib/functions.php:4290 lib/html.php:2755
+#: lib/functions.php:4293 lib/html.php:2755
 msgid "Logout"
 msgstr "Изход"
 
-#: lib/functions.php:4444
+#: lib/functions.php:4447
 msgid "Leaf"
 msgstr "Лист"
 
-#: lib/functions.php:4468 lib/html_tree.php:648 lib/html_tree.php:684
+#: lib/functions.php:4471 lib/html_tree.php:648 lib/html_tree.php:684
 #: lib/html_tree.php:913 lib/html_tree.php:921 lib/html_tree.php:1522
 msgid "Non Query Based"
 msgstr "Въз основа на заявките"
 
-#: lib/functions.php:4506
+#: lib/functions.php:4509
 #, php-format
 msgid "Link %s"
 msgstr "Връзка %s"
 
-#: lib/functions.php:4968 tree.php:1804 tree.php:1878 tree.php:1986
+#: lib/functions.php:4971 tree.php:1804 tree.php:1878 tree.php:1986
 #: user_admin.php:18 user_group_admin.php:20
 msgid "Copy"
 msgstr "Копирайте"
 
-#: lib/functions.php:5770
+#: lib/functions.php:5787
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Мейлър Грешка: Не е <b>за</b> справяне <b>с</b> определени !! <br> Ако използвате връзката <i>Test Mail,</i> моля, задайте настройката за <b>електронна поща предупреждение.</b>"
 
-#: lib/functions.php:6164
+#: lib/functions.php:6181
 #, php-format
 msgid "Authentication failed: %s"
 msgstr "Неуспешно удостоверяване: %s"
 
-#: lib/functions.php:6168
+#: lib/functions.php:6185
 #, php-format
 msgid "HELO failed: %s"
 msgstr "HELO не успя: %s"
 
-#: lib/functions.php:6171
+#: lib/functions.php:6188
 #, php-format
 msgid "Connect failed: %s"
 msgstr "Неуспешно сввързавне към: %s"
 
-#: lib/functions.php:6174
+#: lib/functions.php:6191
 msgid "SMTP error: "
 msgstr "Грешка в SMTP:"
 
-#: lib/functions.php:6188
+#: lib/functions.php:6205
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "Това е тестово съобщение, генерирано от Kadupul. Това съобщение беше изпратено, за да тествате конфигурацията на настройките за поща."
 
-#: lib/functions.php:6189
+#: lib/functions.php:6206
 msgid "Your email settings are currently set as follows"
 msgstr "Настройките ви за електронна поща понастоящем са зададени както следва"
 
-#: lib/functions.php:6190
+#: lib/functions.php:6207
 msgid "Method"
 msgstr "Метод"
 
-#: lib/functions.php:6192
+#: lib/functions.php:6209
 msgid "Checking Configuration...<br>"
 msgstr "Проверка на конфигурацията ... <br>"
 
-#: lib/functions.php:6199
+#: lib/functions.php:6216
 msgid "PHP's Mailer Class"
 msgstr "Пощенски клас на PHP"
 
-#: lib/functions.php:6205
+#: lib/functions.php:6222
 msgid "Method: SMTP"
 msgstr "Метод: SMTP"
 
-#: lib/functions.php:6222
+#: lib/functions.php:6239
 msgid "Not Shown for Security Reasons"
 msgstr "Не се показва за причини, свързани със сигурността"
 
-#: lib/functions.php:6223
+#: lib/functions.php:6240
 msgid "Security"
 msgstr "Сигурност"
 
-#: lib/functions.php:6231
+#: lib/functions.php:6248
 msgid "Ping Results:"
 msgstr "Резултати от Ping:"
 
-#: lib/functions.php:6231 lib/functions.php:6236
+#: lib/functions.php:6248 lib/functions.php:6253
 msgid "Success"
 msgstr "Готово"
 
-#: lib/functions.php:6240
+#: lib/functions.php:6257
 msgid "Bypassed"
 msgstr "Байпасният"
 
-#: lib/functions.php:6249
+#: lib/functions.php:6266
 msgid "Creating Message Text..."
 msgstr "Създаване на текст на съобщението ..."
 
-#: lib/functions.php:6252
+#: lib/functions.php:6269
 msgid "Sending Message..."
 msgstr "Съобщението се изпраща ..."
 
-#: lib/functions.php:6256
+#: lib/functions.php:6273
 msgid "Kadupul Test Message"
 msgstr "Съобщение за изпитване на какти"
 
-#: lib/functions.php:6258
+#: lib/functions.php:6275
 msgid "Success!"
 msgstr "Успешно!"
 
-#: lib/functions.php:6261
+#: lib/functions.php:6278
 msgid "Message Not Sent due to ping failure."
 msgstr "Съобщението не е изпратено поради неуспешен пинг."
 
-#: lib/functions.php:6725 lib/functions.php:6795
+#: lib/functions.php:6742 lib/functions.php:6812
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Приставката „Kadupul disabled“ %s се дължи на следната грешка: %s! Вижте Kadupul логфайла за повече подробности."
 
-#: lib/functions.php:6891
+#: lib/functions.php:6908
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "ПРЕДУПРЕЖДЕНИЕ: PollerID:%s има невалидно име на хост:%s.  Не е ли достъпен чрез DNS!"
 
-#: lib/functions.php:7315 lib/functions.php:7317
+#: lib/functions.php:7332 lib/functions.php:7334
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- Бета %s"
 
-#: lib/functions.php:7315 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7332 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "Версия %s %s"
 
-#: lib/functions.php:7317
+#: lib/functions.php:7334
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7552
+#: lib/functions.php:7569
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "ПРЕДУПРЕЖДЕНИЕ:  Ключовите Kadupul включват липсващ файл %s. Моля, намерете и заменете този файл"
@@ -15356,194 +15356,194 @@ msgstr "Неуспешно добавяне на елемент от графи�
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "Елементът на графиката „Пропуснати“ „ <i> %s</i> “ вече е налице"
 
-#: lib/rrd.php:2272
+#: lib/rrd.php:2274
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2275
+#: lib/rrd.php:2277
 msgid "The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2646
+#: lib/rrd.php:2648
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "ГРЕШКА: RRDfile %s не може да се запише"
 
-#: lib/rrd.php:4061
+#: lib/rrd.php:4063
 #, fuzzy, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "Необходимият размер на RRD файла е „{ 0 }“, но наблюдаваната стъпка е „{ 1 }“"
 
-#: lib/rrd.php:4097
+#: lib/rrd.php:4099
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "Типът за източник на данни „ %s“ трябва да бъде „ %s“"
 
-#: lib/rrd.php:4103
+#: lib/rrd.php:4105
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "Сърцето за източник на данни „ %s“ трябва да бъде „ %s“"
 
-#: lib/rrd.php:4115
+#: lib/rrd.php:4117
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "RRD минимум за източник на данни &#39; %s&#39; трябва да бъде &#39; %s&#39;"
 
-#: lib/rrd.php:4124
+#: lib/rrd.php:4126
 #, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "DS &#39; %s&#39; липсва в определението Kadupul"
 
-#: lib/rrd.php:4138 lib/rrd.php:4139
+#: lib/rrd.php:4140 lib/rrd.php:4141
 #, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Kadupul RRA &#39; %s&#39; има същите CF / стъпки ( %s, %s) като &#39; %s&#39;"
 
-#: lib/rrd.php:4152 lib/rrd.php:4153
+#: lib/rrd.php:4154 lib/rrd.php:4155
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Файлът RRA &#39; %s&#39; има същите стъпки ( %s, %s) като &#39; %s&#39;"
 
-#: lib/rrd.php:4185
+#: lib/rrd.php:4187
 #, fuzzy, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr "Pdp_per_row на „{ 0 }“ е невалиден за RRA „{ 1 }“ трябва да бъде „{ 2 }“. Помислете дали да не изтриете и позволите на Kadupul да пресъздадат RRD файла."
 
-#: lib/rrd.php:4189
+#: lib/rrd.php:4191
 #, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "XFF за id Kadupul RRA &#39; %s&#39; трябва да бъде &#39; %s&#39;"
 
-#: lib/rrd.php:4193
+#: lib/rrd.php:4195
 #, fuzzy, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Броят редове за Kadupul RRA ID '{ 0 }' е неправилен.  Броят на редовете е „{ 1 }“, но трябва да бъде „{ 2 }“"
 
-#: lib/rrd.php:4210
+#: lib/rrd.php:4212
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "RRA &#39; %s&#39; липсва в RRDfile"
 
-#: lib/rrd.php:4218
+#: lib/rrd.php:4220
 #, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "RRA &#39; %s&#39; липсва в дефиницията на Kadupul"
 
-#: lib/rrd.php:4240
+#: lib/rrd.php:4242
 msgid "RRD File Information"
 msgstr "Информация за RRD файла"
 
-#: lib/rrd.php:4272
+#: lib/rrd.php:4274
 msgid "Data Source Items"
 msgstr "Елементи на източника на данни"
 
-#: lib/rrd.php:4274
+#: lib/rrd.php:4276
 msgid "Minimal Heartbeat"
 msgstr "Минимален пулс"
 
-#: lib/rrd.php:4275
+#: lib/rrd.php:4277
 msgid "Min"
 msgstr "мин."
 
-#: lib/rrd.php:4276
+#: lib/rrd.php:4278
 msgid "Max"
 msgstr "Максимум"
 
-#: lib/rrd.php:4277
+#: lib/rrd.php:4279
 msgid "Last DS"
 msgstr "Последен DS"
 
-#: lib/rrd.php:4279
+#: lib/rrd.php:4281
 msgid "Unknown Sec"
 msgstr "Неизвестен раздел"
 
-#: lib/rrd.php:4318
+#: lib/rrd.php:4320
 msgid "Round Robin Archive"
 msgstr "Кръг Робин Архив"
 
-#: lib/rrd.php:4321
+#: lib/rrd.php:4323
 msgid "Cur Row"
 msgstr "Cur Row"
 
-#: lib/rrd.php:4322
+#: lib/rrd.php:4324
 msgid "PDP per Row"
 msgstr "PDP на ред"
 
-#: lib/rrd.php:4324
+#: lib/rrd.php:4326
 msgid "CDP Prep Value (0)"
 msgstr "CDP Предварителна стойност (0)"
 
-#: lib/rrd.php:4325
+#: lib/rrd.php:4327
 msgid "CDP Unknown Data points (0)"
 msgstr "Точки на неизвестни данни за CDP (0)"
 
-#: lib/rrd.php:4406
+#: lib/rrd.php:4408
 msgid "Errors Found"
 msgstr "Няма намерени %s"
 
-#: lib/rrd.php:4418
+#: lib/rrd.php:4420
 msgid "Optional Tuning Recommendations"
 msgstr "Полета на източника на данни"
 
-#: lib/rrd.php:4445 lib/rrd.php:4448
+#: lib/rrd.php:4447 lib/rrd.php:4450
 #, php-format
 msgid "rename %s to %s"
 msgstr "преименувайте %s на %s"
 
-#: lib/rrd.php:4542
+#: lib/rrd.php:4544
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "ГРЕШКА при писане на XML файл: %s"
 
-#: lib/rrd.php:4548
+#: lib/rrd.php:4550
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4554
+#: lib/rrd.php:4556
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "ГРЕШКА: RRDfile %s не може да се запише"
 
-#: lib/rrd.php:4575
+#: lib/rrd.php:4577
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "Грешка при анализирането на XML на dump на rrdtool"
 
-#: lib/rrd.php:4611 lib/rrd.php:4630
+#: lib/rrd.php:4613 lib/rrd.php:4632
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "Грешка при анализиране на XML на RRDtool"
 
-#: lib/rrd.php:4848
+#: lib/rrd.php:4850
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_ROW =% d, XFF =% 1.2f) са премахнати от RRD файла"
 
-#: lib/rrd.php:4886
+#: lib/rrd.php:4888
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_ROW =% d, XFF =% 1.2f) добавяне към RRD файла"
 
-#: lib/rrd.php:4917 lib/rrd.php:4933
+#: lib/rrd.php:4919 lib/rrd.php:4935
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "Уебсайтът няма достъп за запис до %s, може да не е в състояние да създаде / актуализира RRD"
 
-#: lib/rrd.php:4929
+#: lib/rrd.php:4931
 msgid "(Custom)"
 msgstr "(Потребителска)"
 
-#: lib/rrd.php:4935
+#: lib/rrd.php:4937
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "Неуспешно отваряне на файл с данни, полърът може да не е стартирал още"
 
-#: lib/rrd.php:4938
+#: lib/rrd.php:4940
 msgid "RRA Folder"
 msgstr "RRA Папка"
 
-#: lib/rrd.php:4938
+#: lib/rrd.php:4940
 msgid "Root"
 msgstr "Root"
 
-#: lib/rrd.php:5018
+#: lib/rrd.php:5020
 msgid "Unknown RRDtool Error"
 msgstr "Неизвестна грешка на RRDtool"
 

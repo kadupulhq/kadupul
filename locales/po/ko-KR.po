@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-27 16:55-0700\n"
+"POT-Creation-Date: 2026-10-27 23:21-0700\n"
 "PO-Revision-Date: 2024-04-20 19:06-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -780,7 +780,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "비밀번호 변경 페이지에 문제가 있습니다. 즉시 Kadupul 관리자에게 문의하세요."
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4281 lib/html.php:2754
+#: include/global_form.php:1552 lib/functions.php:4284 lib/html.php:2754
 msgid "Change Password"
 msgstr "비밀번호 변경"
 
@@ -795,7 +795,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "현재 비밀번호와 새 비밀번호를 입력하십시오. <br> Kadupul 암호."
 
 #: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
-#: include/global_settings.php:1851 lib/functions.php:6221
+#: include/global_settings.php:1851 lib/functions.php:6238
 msgid "Username"
 msgstr "아이디"
 
@@ -888,7 +888,7 @@ msgstr "사용자 로그인"
 msgid "Enter your Username and Password below"
 msgstr "아래에 사용자 이름과 암호를 입력하십시오"
 
-#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6222
+#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6239
 msgid "Password"
 msgstr "비밀번호"
 
@@ -1195,7 +1195,7 @@ msgstr "검색된 장치 제거"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:698 lib/functions.php:6580 lib/functions.php:6585
+#: data_debug.php:698 lib/functions.php:6597 lib/functions.php:6602
 #: lib/html.php:1393 lib/html.php:1465 lib/html_reports.php:1810
 #: lib/html_reports.php:1838 lib/html_reports.php:1915
 #: lib/html_reports.php:1916 lib/html_reports.php:1917 lib/spikekill.php:1734
@@ -2185,7 +2185,7 @@ msgstr "버전"
 msgid "Community"
 msgstr "커뮤니티"
 
-#: automation_snmp.php:543 lib/functions.php:6217
+#: automation_snmp.php:543 lib/functions.php:6234
 msgid "Port"
 msgstr "포트"
 
@@ -2395,8 +2395,8 @@ msgstr "ROOTConstellation name (optional)"
 msgid "No Tree Rules Found"
 msgstr "트리 규칙 없음"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6725 lib/functions.php:6795
-#: lib/functions.php:6891 lib/functions.php:7552 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6742 lib/functions.php:6812
+#: lib/functions.php:6908 lib/functions.php:7569 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:392
 #, fuzzy
@@ -2788,7 +2788,7 @@ msgstr "재방송 분석"
 msgid "Check"
 msgstr "체크"
 
-#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4278
+#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4280
 #: utilities.php:798 utilities.php:815 utilities.php:3206
 msgid "Value"
 msgstr "값"
@@ -3409,7 +3409,7 @@ msgstr "이 데이터 템플릿에 주어진 이름입니다. 그래프 템플�
 #: data_sources.php:1101 graph_view.php:817 graphs.php:1600
 #: include/global_arrays.php:957 include/global_arrays.php:1006
 #: include/global_arrays.php:1694 include/global_arrays.php:1863
-#: lib/api_automation.php:426 lib/functions.php:6216 lib/html.php:2306
+#: lib/api_automation.php:426 lib/functions.php:6233 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
 msgstr "장치"
@@ -3763,12 +3763,12 @@ msgid "RRDtool Graph Syntax"
 msgstr "RRDtool 그래프 구문"
 
 #: graph_image.php:174 graph_json.php:208 graph_realtime.php:330
-#: lib/rrd.php:2649
+#: lib/rrd.php:2651
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller는 아직 운영되지 않았습니다."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8255 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8272 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "사용 권한이 거부되었습니다."
 
@@ -4454,7 +4454,7 @@ msgid "Save Filters"
 msgstr "필터 저장"
 
 #: graphs_new.php:532 include/global_form.php:284 lib/html.php:613
-#: lib/html_filter.php:55 lib/installer.php:2837 lib/rrd.php:4320
+#: lib/html_filter.php:55 lib/installer.php:2837 lib/rrd.php:4322
 #: utilities.php:866 utilities.php:1838
 msgid "Rows"
 msgstr "행"
@@ -4718,12 +4718,12 @@ msgstr "치명적 : Kadupul의이 영역에 액세스하려면 로그인해야�
 msgid "Login Again"
 msgstr "다시 로그인"
 
-#: include/auth.php:317 lib/functions.php:8256
+#: include/auth.php:317 lib/functions.php:8273
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "이것이 오류라고 생각하면. Kadupul 관리자에게 문의하십시오."
 
-#: include/auth.php:317 lib/functions.php:8256
+#: include/auth.php:317 lib/functions.php:8273
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Kadupul의이 섹션에 액세스하는 것은 허용되지 않습니다."
@@ -5586,7 +5586,7 @@ msgstr "자연 주문"
 msgid "Numeric Ordering"
 msgstr "숫자 순서 지정"
 
-#: include/global_arrays.php:955 lib/rrd.php:4244
+#: include/global_arrays.php:955 lib/rrd.php:4246
 msgid "Header"
 msgstr "헤더"
 
@@ -6801,7 +6801,7 @@ msgid "List Mode"
 msgstr "목록 모드"
 
 #: include/global_arrays.php:2068 include/global_arrays.php:2074
-#: lib/functions.php:4503 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
+#: lib/functions.php:4506 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "콘솔"
@@ -7227,7 +7227,7 @@ msgstr "하트비트"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "RRDtool에서 알 수없는 데이터를 기록하기 전에 얼마나 오래 데이터가 누락 될 수 있습니다. 데이터 소스가 불안정하고 그래프에 간격을 표시하지 않고 이전 데이터를 전달하려는 경우이 값을 늘리십시오. 이 값에 X-Files Factor를 곱하여 실제 시간을 판별하십시오."
 
-#: include/global_form.php:226 lib/rrd.php:4323
+#: include/global_form.php:226 lib/rrd.php:4325
 msgid "X-Files Factor"
 msgstr "X 파일 요소"
 
@@ -7797,7 +7797,7 @@ msgstr "불투명 / 알파 채널"
 msgid "The opacity/alpha channel of the color."
 msgstr "색상의 불투명도 / 알파 채널입니다."
 
-#: include/global_form.php:989 lib/rrd.php:4319
+#: include/global_form.php:989 lib/rrd.php:4321
 msgid "Consolidation Function"
 msgstr "통합 기능"
 
@@ -8601,8 +8601,8 @@ msgstr "데이터"
 msgid "Visual"
 msgstr "시각적"
 
-#: include/global_settings.php:112 lib/functions.php:6220
-#: lib/functions.php:6225
+#: include/global_settings.php:112 lib/functions.php:6237
+#: lib/functions.php:6242
 msgid "Authentication"
 msgstr "인증"
 
@@ -8638,11 +8638,11 @@ msgstr "그래프 글꼴"
 msgid "PHP Mail() Function"
 msgstr "PHP 메일 () 함수"
 
-#: include/global_settings.php:153 lib/functions.php:6201
+#: include/global_settings.php:153 lib/functions.php:6218
 msgid "Sendmail"
 msgstr "@ option"
 
-#: include/global_settings.php:154 lib/functions.php:6207
+#: include/global_settings.php:154 lib/functions.php:6224
 msgid "SMTP"
 msgstr "SMTP"
 
@@ -10496,7 +10496,7 @@ msgstr "전자 메일의 줄이 자동으로 줄 바꿈되기 전에 허용되�
 msgid "Sendmail Options"
 msgstr "센드 메일 옵션"
 
-#: include/global_settings.php:1972 lib/functions.php:6201
+#: include/global_settings.php:1972 lib/functions.php:6218
 msgid "Sendmail Path"
 msgstr "센드 메일 경로"
 
@@ -11471,7 +11471,7 @@ msgstr "복구 중"
 
 #: lib/api_automation.php:33 lib/auth.php:3085 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:401 lib/plugins.php:1393
-#: lib/plugins.php:1394 lib/rrd.php:4296 lib/rrd.php:4308 lib/spikekill.php:301
+#: lib/plugins.php:1394 lib/rrd.php:4298 lib/rrd.php:4310 lib/spikekill.php:301
 #: package_import.php:528 package_import.php:606 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 msgid "Unknown"
@@ -11479,7 +11479,7 @@ msgstr "알 수 없음"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
-#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4273
+#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4275
 #: utilities.php:356 utilities.php:1480 utilities.php:3206
 msgid "Type"
 msgstr "유형"
@@ -11688,8 +11688,8 @@ msgstr "위치:"
 msgid "Contact:"
 msgstr "연락처:"
 
-#: lib/api_device.php:1986 lib/functions.php:6234 lib/functions.php:6236
-#: lib/functions.php:6240
+#: lib/api_device.php:1986 lib/functions.php:6251 lib/functions.php:6253
+#: lib/functions.php:6257
 msgid "Ping Results"
 msgstr "Ping 결과"
 
@@ -12085,7 +12085,7 @@ msgstr "&#39; %s&#39;에서 데이터 쿼리 XML 파일을 찾을 수 없습니�
 msgid "Found data query XML file at '%s'"
 msgstr "&#39; %s&#39;에 데이터 쿼리 XML 파일이 있습니다."
 
-#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2631
+#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2634
 msgid "Error parsing XML file into an array."
 msgstr "배열로 XML 파일을 구문 분석하는 중 오류가 발생했습니다."
 
@@ -12378,12 +12378,12 @@ msgstr "데이터 인덱싱 다시 완료"
 msgid "Unknown Index"
 msgstr "알 수없는 색인"
 
-#: lib/data_query.php:2755
+#: lib/data_query.php:2758
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "데이터 소스 ' %s'에 대한 XML 출력 열을 선택하고 오른쪽으로 확인란을 전환해야합니다."
 
-#: lib/data_query.php:2761
+#: lib/data_query.php:2764
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "그래프 템플릿에 데이터 템플릿이 사용되지 않았습니다. 그래프 템플릿을 수정하십시오."
 
@@ -12455,178 +12455,178 @@ msgstr "메시지를 찾을 수 없습니다."
 msgid "Error %s is not readable"
 msgstr "오류  %s을 (를) 읽을 수 없습니다."
 
-#: lib/functions.php:4257
+#: lib/functions.php:4260
 msgid "Logged in a Guest"
 msgstr "다음 계정으로 로그인"
 
-#: lib/functions.php:4257 lib/functions.php:4275
+#: lib/functions.php:4260 lib/functions.php:4278
 msgid "Logged in as"
 msgstr "다음 계정으로 로그인"
 
-#: lib/functions.php:4257
+#: lib/functions.php:4260
 msgid "Login as Regular User"
 msgstr "일반 사용자로 로그인"
 
-#: lib/functions.php:4257
+#: lib/functions.php:4260
 msgid "guest"
 msgstr "명"
 
-#: lib/functions.php:4260 lib/functions.php:4285 lib/html.php:2770
+#: lib/functions.php:4263 lib/functions.php:4288 lib/html.php:2770
 msgid "User Community"
 msgstr "사용자 커뮤니티"
 
-#: lib/functions.php:4261 lib/functions.php:4286 lib/html.php:2772
+#: lib/functions.php:4264 lib/functions.php:4289 lib/html.php:2772
 #: lib/utility.php:1447
 msgid "Documentation"
 msgstr "문서"
 
-#: lib/functions.php:4278
+#: lib/functions.php:4281
 #, php-format
 msgid "Logged in as %s"
 msgstr "%s으로 로그인됨"
 
-#: lib/functions.php:4280 lib/html.php:2751
+#: lib/functions.php:4283 lib/html.php:2751
 msgid "Edit Profile"
 msgstr "프로필 수정"
 
-#: lib/functions.php:4290 lib/html.php:2755
+#: lib/functions.php:4293 lib/html.php:2755
 msgid "Logout"
 msgstr "로그아웃"
 
-#: lib/functions.php:4444
+#: lib/functions.php:4447
 msgid "Leaf"
 msgstr "잎"
 
-#: lib/functions.php:4468 lib/html_tree.php:648 lib/html_tree.php:684
+#: lib/functions.php:4471 lib/html_tree.php:648 lib/html_tree.php:684
 #: lib/html_tree.php:913 lib/html_tree.php:921 lib/html_tree.php:1522
 msgid "Non Query Based"
 msgstr "비 쿼리 기반"
 
-#: lib/functions.php:4506
+#: lib/functions.php:4509
 #, php-format
 msgid "Link %s"
 msgstr "%s 링크"
 
-#: lib/functions.php:4968 tree.php:1804 tree.php:1878 tree.php:1986
+#: lib/functions.php:4971 tree.php:1804 tree.php:1878 tree.php:1986
 #: user_admin.php:18 user_group_admin.php:20
 msgid "Copy"
 msgstr "복사"
 
-#: lib/functions.php:5770
+#: lib/functions.php:5787
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "메일러 오류 : <b>TO</b> 주소 세트가 없습니다! <br> <i>메일 테스트</i> 링크를 사용하는 경우 <b>경고 전자 메일</b> 설정을 지정하십시오."
 
-#: lib/functions.php:6164
+#: lib/functions.php:6181
 #, php-format
 msgid "Authentication failed: %s"
 msgstr "인증 실패 :  %s"
 
-#: lib/functions.php:6168
+#: lib/functions.php:6185
 #, php-format
 msgid "HELO failed: %s"
 msgstr "HELO 실패 :  %s"
 
-#: lib/functions.php:6171
+#: lib/functions.php:6188
 #, php-format
 msgid "Connect failed: %s"
 msgstr "연결 실패 :  %s"
 
-#: lib/functions.php:6174
+#: lib/functions.php:6191
 msgid "SMTP error: "
 msgstr "SMTP 오류 :"
 
-#: lib/functions.php:6188
+#: lib/functions.php:6205
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "Kadupul에서 생성 된 테스트 메시지입니다. 이 메시지는 메일 설정의 구성을 테스트하기 위해 전송되었습니다."
 
-#: lib/functions.php:6189
+#: lib/functions.php:6206
 msgid "Your email settings are currently set as follows"
 msgstr "이메일 설정은 현재 다음과 같이 설정되어 있습니다."
 
-#: lib/functions.php:6190
+#: lib/functions.php:6207
 msgid "Method"
 msgstr "방법"
 
-#: lib/functions.php:6192
+#: lib/functions.php:6209
 msgid "Checking Configuration...<br>"
 msgstr "구성 확인 중 ... <br>"
 
-#: lib/functions.php:6199
+#: lib/functions.php:6216
 msgid "PHP's Mailer Class"
 msgstr "PHP 메일러 클래스"
 
-#: lib/functions.php:6205
+#: lib/functions.php:6222
 msgid "Method: SMTP"
 msgstr "방법 : SMTP"
 
-#: lib/functions.php:6222
+#: lib/functions.php:6239
 msgid "Not Shown for Security Reasons"
 msgstr "보안상의 이유로 표시되지 않음"
 
-#: lib/functions.php:6223
+#: lib/functions.php:6240
 msgid "Security"
 msgstr "보안"
 
-#: lib/functions.php:6231
+#: lib/functions.php:6248
 msgid "Ping Results:"
 msgstr "핑 결과 :"
 
-#: lib/functions.php:6231 lib/functions.php:6236
+#: lib/functions.php:6248 lib/functions.php:6253
 msgid "Success"
 msgstr "성공"
 
-#: lib/functions.php:6240
+#: lib/functions.php:6257
 msgid "Bypassed"
 msgstr "우회"
 
-#: lib/functions.php:6249
+#: lib/functions.php:6266
 msgid "Creating Message Text..."
 msgstr "메시지 텍스트 작성 중 ..."
 
-#: lib/functions.php:6252
+#: lib/functions.php:6269
 msgid "Sending Message..."
 msgstr "메시지를 보내는 중 ..."
 
-#: lib/functions.php:6256
+#: lib/functions.php:6273
 #, fuzzy
 msgid "Kadupul Test Message"
 msgstr "Kadupul 테스트 메시지"
 
-#: lib/functions.php:6258
+#: lib/functions.php:6275
 msgid "Success!"
 msgstr "성공!"
 
-#: lib/functions.php:6261
+#: lib/functions.php:6278
 msgid "Message Not Sent due to ping failure."
 msgstr "핑 실패로 인해 메시지가 전송되지 않았습니다."
 
-#: lib/functions.php:6725 lib/functions.php:6795
+#: lib/functions.php:6742 lib/functions.php:6812
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul 플러그인  %s이 (가) 다음 오류 때문에 비활성화되었습니다 :  %s! 자세한 내용은 Kadupul 로그 파일을 참조하십시오."
 
-#: lib/functions.php:6891
+#: lib/functions.php:6908
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "경고: PollerID: %s 에 유효하지 않은 호스트 이름: %s 이 (가) 있습니다. DNS를 통해 연결할 수 없습니까!"
 
-#: lib/functions.php:7315 lib/functions.php:7317
+#: lib/functions.php:7332 lib/functions.php:7334
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- 베타  %s"
 
-#: lib/functions.php:7315 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7332 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "버전  %s  %s"
 
-#: lib/functions.php:7317
+#: lib/functions.php:7334
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7552
+#: lib/functions.php:7569
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "경고: 키 Kadupul 포함 파일 %s 이 (가) 누락되었습니다. 이 파일을 찾아 교체하십시오"
@@ -15344,194 +15344,194 @@ msgstr "이미 추가 된 보고서 그래프 항목 &#39; <i> %s</i> &#39;을 (
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "건너 뛴 보고서 그래프 항목 &#39; <i> %s</i> &#39;이 (가) 이미 있음"
 
-#: lib/rrd.php:2272
+#: lib/rrd.php:2274
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2275
+#: lib/rrd.php:2277
 msgid "The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2646
+#: lib/rrd.php:2648
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "오류 : RRD 파일  %s을 (를) 쓸 수 없습니다."
 
-#: lib/rrd.php:4061
+#: lib/rrd.php:4063
 #, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "필요한 RRD 파일 단계 크기는 '%s' 이지만 관찰된 단계는 '%s' 입니다"
 
-#: lib/rrd.php:4097
+#: lib/rrd.php:4099
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "데이터 원본 &#39; %s&#39;의 형식이 &#39; %s&#39;이어야합니다."
 
-#: lib/rrd.php:4103
+#: lib/rrd.php:4105
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "데이터 원본 &#39; %s&#39;의 하트 비트가 &#39; %s&#39;이어야합니다."
 
-#: lib/rrd.php:4115
+#: lib/rrd.php:4117
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "데이터 원본 &#39; %s&#39;의 RRD 최소값은 &#39; %s&#39;이어야합니다."
 
-#: lib/rrd.php:4124
+#: lib/rrd.php:4126
 #, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "Kadupul 정의에서 DS &#39; %s&#39;이 누락되었습니다."
 
-#: lib/rrd.php:4138 lib/rrd.php:4139
+#: lib/rrd.php:4140 lib/rrd.php:4141
 #, fuzzy, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Kadupul RRA &#39; %s&#39;의 CF / 스텝 수 ( %s,  %s)가 &#39; %s&#39;"
 
-#: lib/rrd.php:4152 lib/rrd.php:4153
+#: lib/rrd.php:4154 lib/rrd.php:4155
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "파일 RRA &#39; %s&#39;은 (는) &#39; %s&#39;(으)로 동일한 CF / 단계 ( %s,  %s)"
 
-#: lib/rrd.php:4185
+#: lib/rrd.php:4187
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr "'%s' 의 pdp_per_row가 유효하지 않습니다. RRA '%s' 은 (는) '%s' 이어야 합니다. Kadupul가 RRD 파일을 다시 만들 수 있도록 삭제하고 허용하는 것이 좋습니다."
 
-#: lib/rrd.php:4189
+#: lib/rrd.php:4191
 #, fuzzy, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "Kadupul에 대한 XFF RRA id &#39; %s&#39;은 (는) &#39; %s&#39;이어야합니다."
 
-#: lib/rrd.php:4193
+#: lib/rrd.php:4195
 #, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Kadupul RRA ID '%s' 의 행 수가 잘못되었습니다. 행 수는 '%s' 이지만 '%s' 이어야 합니다"
 
-#: lib/rrd.php:4210
+#: lib/rrd.php:4212
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "RRA &#39; %s&#39;은 (는) RRDfile에 없습니다."
 
-#: lib/rrd.php:4218
+#: lib/rrd.php:4220
 #, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "Kadupul 정의에서 RRA &#39; %s&#39;이 누락되었습니다."
 
-#: lib/rrd.php:4240
+#: lib/rrd.php:4242
 msgid "RRD File Information"
 msgstr "RRD 파일 정보"
 
-#: lib/rrd.php:4272
+#: lib/rrd.php:4274
 msgid "Data Source Items"
 msgstr "데이터 소스 항목"
 
-#: lib/rrd.php:4274
+#: lib/rrd.php:4276
 msgid "Minimal Heartbeat"
 msgstr "최소 하트 비트"
 
-#: lib/rrd.php:4275
+#: lib/rrd.php:4277
 msgid "Min"
 msgstr "최소"
 
-#: lib/rrd.php:4276
+#: lib/rrd.php:4278
 msgid "Max"
 msgstr "최대"
 
-#: lib/rrd.php:4277
+#: lib/rrd.php:4279
 msgid "Last DS"
 msgstr "마지막 DS"
 
-#: lib/rrd.php:4279
+#: lib/rrd.php:4281
 msgid "Unknown Sec"
 msgstr "알 수없는 초"
 
-#: lib/rrd.php:4318
+#: lib/rrd.php:4320
 msgid "Round Robin Archive"
 msgstr "라운드 로빈 아카이브"
 
-#: lib/rrd.php:4321
+#: lib/rrd.php:4323
 msgid "Cur Row"
 msgstr "커 로우"
 
-#: lib/rrd.php:4322
+#: lib/rrd.php:4324
 msgid "PDP per Row"
 msgstr "행당 PDP"
 
-#: lib/rrd.php:4324
+#: lib/rrd.php:4326
 msgid "CDP Prep Value (0)"
 msgstr "CDP 준비 값 (0)"
 
-#: lib/rrd.php:4325
+#: lib/rrd.php:4327
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP 알 수없는 데이터 요소 (0)"
 
-#: lib/rrd.php:4406
+#: lib/rrd.php:4408
 msgid "Errors Found"
 msgstr " %s을 찾을 수 없습니다."
 
-#: lib/rrd.php:4418
+#: lib/rrd.php:4420
 msgid "Optional Tuning Recommendations"
 msgstr "데이터 소스 필드"
 
-#: lib/rrd.php:4445 lib/rrd.php:4448
+#: lib/rrd.php:4447 lib/rrd.php:4450
 #, php-format
 msgid "rename %s to %s"
 msgstr "%s에서  %s (으)로 이름 바꾸기"
 
-#: lib/rrd.php:4542
+#: lib/rrd.php:4544
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "XML 파일을 쓰는 동안 오류가 발생했습니다 :  %s"
 
-#: lib/rrd.php:4548
+#: lib/rrd.php:4550
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4554
+#: lib/rrd.php:4556
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "오류 : RRD 파일  %s을 (를) 쓸 수 없습니다."
 
-#: lib/rrd.php:4575
+#: lib/rrd.php:4577
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "rrdtool 덤프의 XML을 구문 분석하는 동안 오류가 발생했습니다."
 
-#: lib/rrd.php:4611 lib/rrd.php:4630
+#: lib/rrd.php:4613 lib/rrd.php:4632
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "RRDtool 덤프의 XML을 구문 분석하는 동안 오류가 발생했습니다."
 
-#: lib/rrd.php:4848
+#: lib/rrd.php:4850
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRA (CF =  %s, ROWS = % d, PDP_PER_ROW = % d, XFF = % 1.2f)가 RRD 파일에서 제거되었습니다."
 
-#: lib/rrd.php:4886
+#: lib/rrd.php:4888
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF =  %s, ROWS = % d, PDP_PER_ROW = % d, XFF = % 1.2f) RRD 파일에 추가"
 
-#: lib/rrd.php:4917 lib/rrd.php:4933
+#: lib/rrd.php:4919 lib/rrd.php:4935
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "웹 사이트에  %s에 대한 쓰기 권한이 없으며 RRD를 만들거나 업데이트 할 수 없음"
 
-#: lib/rrd.php:4929
+#: lib/rrd.php:4931
 msgid "(Custom)"
 msgstr "사용자 정의"
 
-#: lib/rrd.php:4935
+#: lib/rrd.php:4937
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "데이터 파일을 열지 못했습니다. 폴러가 아직 실행되지 않았을 수 있습니다."
 
-#: lib/rrd.php:4938
+#: lib/rrd.php:4940
 msgid "RRA Folder"
 msgstr "RRA 폴더"
 
-#: lib/rrd.php:4938
+#: lib/rrd.php:4940
 msgid "Root"
 msgstr "워드프레스 루트 디렉토리를 확인할 수 없습니다"
 
-#: lib/rrd.php:5018
+#: lib/rrd.php:5020
 msgid "Unknown RRDtool Error"
 msgstr "알 수없는 RRDtool 오류"
 

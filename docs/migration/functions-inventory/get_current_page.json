@@ -3,8 +3,8 @@
     "name": "get_current_page",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 4655,
-        "end_line": 4688,
+        "start_line": 4657,
+        "end_line": 4690,
         "line_count": 34,
         "signature": {
             "parameters": [
@@ -22,7 +22,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 31, "core_outside_functions_php": 25, "tests": 32, "plugins": 0},
+        "fan_out": {"core": 31, "core_outside_functions_php": 25, "tests": 33, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

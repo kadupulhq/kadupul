@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-27 16:55-0700\n"
+"POT-Creation-Date: 2026-10-27 23:21-0700\n"
 "PO-Revision-Date: 2024-04-20 18:31-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -780,7 +780,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "Υπάρχουν προβλήματα με τη σελίδα Αλλαγή κωδικού πρόσβασης.  Επικοινωνήστε αμέσως με τον διαχειριστή του Kadupul."
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4281 lib/html.php:2754
+#: include/global_form.php:1552 lib/functions.php:4284 lib/html.php:2754
 msgid "Change Password"
 msgstr "Αλλαγή Κωδικού"
 
@@ -793,7 +793,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "Εισαγάγετε τον τρέχοντα κωδικό σας και τον νέο σας κωδικό <br> Ο κωδικός Kadupul."
 
 #: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
-#: include/global_settings.php:1851 lib/functions.php:6221
+#: include/global_settings.php:1851 lib/functions.php:6238
 msgid "Username"
 msgstr "Όνομα Χρήστη"
 
@@ -886,7 +886,7 @@ msgstr "Είσοδος χρήστη"
 msgid "Enter your Username and Password below"
 msgstr "Εισαγάγετε το όνομα χρήστη και τον κωδικό σας παρακάτω"
 
-#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6222
+#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6239
 msgid "Password"
 msgstr "Κωδικός"
 
@@ -1193,7 +1193,7 @@ msgstr "Κατεβάστε τις ανακαλυφθείσες συσκευές"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:698 lib/functions.php:6580 lib/functions.php:6585
+#: data_debug.php:698 lib/functions.php:6597 lib/functions.php:6602
 #: lib/html.php:1393 lib/html.php:1465 lib/html_reports.php:1810
 #: lib/html_reports.php:1838 lib/html_reports.php:1915
 #: lib/html_reports.php:1916 lib/html_reports.php:1917 lib/spikekill.php:1734
@@ -2184,7 +2184,7 @@ msgstr "Έκδοση"
 msgid "Community"
 msgstr "Κοινότητα"
 
-#: automation_snmp.php:543 lib/functions.php:6217
+#: automation_snmp.php:543 lib/functions.php:6234
 msgid "Port"
 msgstr "Θύρα"
 
@@ -2394,8 +2394,8 @@ msgstr "Ρίζα"
 msgid "No Tree Rules Found"
 msgstr "Δεν βρέθηκαν κανάλια δέντρων"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6725 lib/functions.php:6795
-#: lib/functions.php:6891 lib/functions.php:7552 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6742 lib/functions.php:6812
+#: lib/functions.php:6908 lib/functions.php:7569 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:392
 msgid "Kadupul System Warning"
@@ -2785,7 +2785,7 @@ msgstr "Ανάλυση αναστροφής"
 msgid "Check"
 msgstr "Ελεγχος"
 
-#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4278
+#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4280
 #: utilities.php:798 utilities.php:815 utilities.php:3206
 msgid "Value"
 msgstr "Αξία"
@@ -3426,7 +3426,7 @@ msgstr "Το όνομα που δίνεται σε αυτό το πρότυπο 
 #: data_sources.php:1101 graph_view.php:817 graphs.php:1600
 #: include/global_arrays.php:957 include/global_arrays.php:1006
 #: include/global_arrays.php:1694 include/global_arrays.php:1863
-#: lib/api_automation.php:426 lib/functions.php:6216 lib/html.php:2306
+#: lib/api_automation.php:426 lib/functions.php:6233 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
 msgstr "Συσκευή"
@@ -3780,12 +3780,12 @@ msgid "RRDtool Graph Syntax"
 msgstr "RRDtool Σύνταξη γραφήματος"
 
 #: graph_image.php:174 graph_json.php:208 graph_realtime.php:330
-#: lib/rrd.php:2649
+#: lib/rrd.php:2651
 msgid "The Kadupul Poller has not run yet."
 msgstr "Ο Kadupul Poller δεν έχει τρέξει ακόμα."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8255 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8272 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "Δεν επιτρέπεται η πρόσβαση"
 
@@ -4470,7 +4470,7 @@ msgid "Save Filters"
 msgstr "Αποθηκεύστε φίλτρα"
 
 #: graphs_new.php:532 include/global_form.php:284 lib/html.php:613
-#: lib/html_filter.php:55 lib/installer.php:2837 lib/rrd.php:4320
+#: lib/html_filter.php:55 lib/installer.php:2837 lib/rrd.php:4322
 #: utilities.php:866 utilities.php:1838
 msgid "Rows"
 msgstr "Σειρές"
@@ -4734,12 +4734,12 @@ msgstr "FATAL: Πρέπει να είστε συνδεδεμένοι για να
 msgid "Login Again"
 msgstr "Σύνδεση Ξανά"
 
-#: include/auth.php:317 lib/functions.php:8256
+#: include/auth.php:317 lib/functions.php:8273
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Αν νομίζετε ότι αυτό είναι λάθος. Επικοινωνήστε με τον διαχειριστή του Kadupul."
 
-#: include/auth.php:317 lib/functions.php:8256
+#: include/auth.php:317 lib/functions.php:8273
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Δεν επιτρέπεται η πρόσβαση σε αυτήν την ενότητα του Kadupul."
@@ -5603,7 +5603,7 @@ msgstr "Φυσική παραγγελία"
 msgid "Numeric Ordering"
 msgstr "Αριθμητική παραγγελία"
 
-#: include/global_arrays.php:955 lib/rrd.php:4244
+#: include/global_arrays.php:955 lib/rrd.php:4246
 msgid "Header"
 msgstr "Κεφαλίδα"
 
@@ -6817,7 +6817,7 @@ msgid "List Mode"
 msgstr "Λειτουργία λίστας"
 
 #: include/global_arrays.php:2068 include/global_arrays.php:2074
-#: lib/functions.php:4503 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
+#: lib/functions.php:4506 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "Κονσόλα"
@@ -7241,7 +7241,7 @@ msgstr "Heartbeat"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "Πόσο καιρό μπορεί να λείπουν δεδομένα πριν το RRDtool καταγράψει άγνωστα δεδομένα. Αυξήστε αυτήν την τιμή εάν η πηγή δεδομένων σας είναι ασταθής και θέλετε να μεταφέρετε παλιά δεδομένα αντί να εμφανίσετε κενά στα γραφήματα. Αυτή η τιμή πολλαπλασιάζεται με το συντελεστή αρχείων X για να προσδιοριστεί το πραγματικό χρονικό διάστημα."
 
-#: include/global_form.php:226 lib/rrd.php:4323
+#: include/global_form.php:226 lib/rrd.php:4325
 msgid "X-Files Factor"
 msgstr "X-Files Factor"
 
@@ -7811,7 +7811,7 @@ msgstr "Κανάλι αδιαφάνειας / άλφα"
 msgid "The opacity/alpha channel of the color."
 msgstr "Το κανάλι αδιαφάνειας / άλφα του χρώματος."
 
-#: include/global_form.php:989 lib/rrd.php:4319
+#: include/global_form.php:989 lib/rrd.php:4321
 msgid "Consolidation Function"
 msgstr "Λειτουργία ενοποίησης"
 
@@ -8615,8 +8615,8 @@ msgstr "Ημερομηνία"
 msgid "Visual"
 msgstr "Οπτικό"
 
-#: include/global_settings.php:112 lib/functions.php:6220
-#: lib/functions.php:6225
+#: include/global_settings.php:112 lib/functions.php:6237
+#: lib/functions.php:6242
 msgid "Authentication"
 msgstr "Πιστοποίηση"
 
@@ -8652,11 +8652,11 @@ msgstr "Γραμματοσειρές γραφήματος"
 msgid "PHP Mail() Function"
 msgstr "Λειτουργία PHP Mail ()"
 
-#: include/global_settings.php:153 lib/functions.php:6201
+#: include/global_settings.php:153 lib/functions.php:6218
 msgid "Sendmail"
 msgstr "Sendmail"
 
-#: include/global_settings.php:154 lib/functions.php:6207
+#: include/global_settings.php:154 lib/functions.php:6224
 msgid "SMTP"
 msgstr "SMTP (απλό πρωτόκολλο μεταφοράς ταχυδρομείου)"
 
@@ -10507,7 +10507,7 @@ msgstr "Αυτός είναι ο αριθμός των χαρακτήρων πο
 msgid "Sendmail Options"
 msgstr "Επιλογές Sendmail"
 
-#: include/global_settings.php:1972 lib/functions.php:6201
+#: include/global_settings.php:1972 lib/functions.php:6218
 msgid "Sendmail Path"
 msgstr "Διαδρομή Sendmail"
 
@@ -11481,7 +11481,7 @@ msgstr "αναληπτικό"
 
 #: lib/api_automation.php:33 lib/auth.php:3085 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:401 lib/plugins.php:1393
-#: lib/plugins.php:1394 lib/rrd.php:4296 lib/rrd.php:4308 lib/spikekill.php:301
+#: lib/plugins.php:1394 lib/rrd.php:4298 lib/rrd.php:4310 lib/spikekill.php:301
 #: package_import.php:528 package_import.php:606 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 msgid "Unknown"
@@ -11489,7 +11489,7 @@ msgstr "Άγνωστο"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
-#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4273
+#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4275
 #: utilities.php:356 utilities.php:1480 utilities.php:3206
 msgid "Type"
 msgstr "Τύπος"
@@ -11698,8 +11698,8 @@ msgstr "Τοποθεσία:"
 msgid "Contact:"
 msgstr "Επαφή"
 
-#: lib/api_device.php:1986 lib/functions.php:6234 lib/functions.php:6236
-#: lib/functions.php:6240
+#: lib/api_device.php:1986 lib/functions.php:6251 lib/functions.php:6253
+#: lib/functions.php:6257
 msgid "Ping Results"
 msgstr "Αποτελέσματα Ping"
 
@@ -12094,7 +12094,7 @@ msgstr "Δεν ήταν δυνατή η εύρεση αρχείου XML ερώτ
 msgid "Found data query XML file at '%s'"
 msgstr "Βρέθηκε αρχείο XML ερωτήματος δεδομένων στο &#39; %s&#39;"
 
-#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2631
+#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2634
 msgid "Error parsing XML file into an array."
 msgstr "Σφάλμα κατά την ανάλυση του αρχείου XML σε έναν πίνακα."
 
@@ -12387,12 +12387,12 @@ msgstr "Επαναπροσδιορισμός ερωτήματος δεδομέν
 msgid "Unknown Index"
 msgstr "Άγνωστος ευρετήριο"
 
-#: lib/data_query.php:2755
+#: lib/data_query.php:2758
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "Πρέπει να επιλέξετε μια στήλη εξόδου XML για την προέλευση δεδομένων ' %s' και να αλλάξετε το πλαίσιο ελέγχου στα δεξιά της"
 
-#: lib/data_query.php:2761
+#: lib/data_query.php:2764
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Το πρότυπο γραφήματος δεν χρησιμοποιεί πρότυπα δεδομένων. Διορθώστε το πρότυπο γραφήματος"
 
@@ -12464,178 +12464,178 @@ msgstr "Το μήνυμα δε βρέθηκε."
 msgid "Error %s is not readable"
 msgstr "Το σφάλμα %s δεν είναι αναγνώσιμο"
 
-#: lib/functions.php:4257
+#: lib/functions.php:4260
 msgid "Logged in a Guest"
 msgstr "Συνδεδεμένος ως"
 
-#: lib/functions.php:4257 lib/functions.php:4275
+#: lib/functions.php:4260 lib/functions.php:4278
 msgid "Logged in as"
 msgstr "Συνδεδεμένος ως"
 
-#: lib/functions.php:4257
+#: lib/functions.php:4260
 msgid "Login as Regular User"
 msgstr "Είσοδος ως τακτικός χρήστης"
 
-#: lib/functions.php:4257
+#: lib/functions.php:4260
 msgid "guest"
 msgstr "άτομο"
 
-#: lib/functions.php:4260 lib/functions.php:4285 lib/html.php:2770
+#: lib/functions.php:4263 lib/functions.php:4288 lib/html.php:2770
 msgid "User Community"
 msgstr "Κοινότητα χρηστών"
 
-#: lib/functions.php:4261 lib/functions.php:4286 lib/html.php:2772
+#: lib/functions.php:4264 lib/functions.php:4289 lib/html.php:2772
 #: lib/utility.php:1447
 msgid "Documentation"
 msgstr "Τεκμηρίωση"
 
-#: lib/functions.php:4278
+#: lib/functions.php:4281
 #, php-format
 msgid "Logged in as %s"
 msgstr "Συνδεδεμένος ως %s"
 
-#: lib/functions.php:4280 lib/html.php:2751
+#: lib/functions.php:4283 lib/html.php:2751
 msgid "Edit Profile"
 msgstr "Επεξεργασία Προφίλ"
 
-#: lib/functions.php:4290 lib/html.php:2755
+#: lib/functions.php:4293 lib/html.php:2755
 msgid "Logout"
 msgstr "Αποσύνδεση"
 
-#: lib/functions.php:4444
+#: lib/functions.php:4447
 msgid "Leaf"
 msgstr "Φύλλο"
 
-#: lib/functions.php:4468 lib/html_tree.php:648 lib/html_tree.php:684
+#: lib/functions.php:4471 lib/html_tree.php:648 lib/html_tree.php:684
 #: lib/html_tree.php:913 lib/html_tree.php:921 lib/html_tree.php:1522
 msgid "Non Query Based"
 msgstr "Μη βασισμένο σε ερωτήματα"
 
-#: lib/functions.php:4506
+#: lib/functions.php:4509
 #, php-format
 msgid "Link %s"
 msgstr "Σύνδεσμος %s"
 
-#: lib/functions.php:4968 tree.php:1804 tree.php:1878 tree.php:1986
+#: lib/functions.php:4971 tree.php:1804 tree.php:1878 tree.php:1986
 #: user_admin.php:18 user_group_admin.php:20
 msgid "Copy"
 msgstr "Αντιγραφή"
 
-#: lib/functions.php:5770
+#: lib/functions.php:5787
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Mailer Σφάλμα: Δεν <b>Για την</b> αντιμετώπιση που !! <br> Εάν χρησιμοποιείτε το σύνδεσμο <i>Δοκιμαστική αλληλογραφία</i> , ορίστε τη ρύθμιση <b>E-mail ειδοποίησης</b> ."
 
-#: lib/functions.php:6164
+#: lib/functions.php:6181
 #, php-format
 msgid "Authentication failed: %s"
 msgstr "Ο έλεγχος ταυτότητας απέτυχε: %s"
 
-#: lib/functions.php:6168
+#: lib/functions.php:6185
 #, php-format
 msgid "HELO failed: %s"
 msgstr "HELO απέτυχε: %s"
 
-#: lib/functions.php:6171
+#: lib/functions.php:6188
 #, php-format
 msgid "Connect failed: %s"
 msgstr "Η σύνδεση απέτυχε: %s"
 
-#: lib/functions.php:6174
+#: lib/functions.php:6191
 msgid "SMTP error: "
 msgstr "Σφάλμα SMTP:"
 
-#: lib/functions.php:6188
+#: lib/functions.php:6205
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "Αυτό είναι ένα μήνυμα δοκιμής που δημιουργήθηκε από το Kadupul. Αυτό το μήνυμα εστάλη για να ελέγξει τη διαμόρφωση των ρυθμίσεων αλληλογραφίας σας."
 
-#: lib/functions.php:6189
+#: lib/functions.php:6206
 msgid "Your email settings are currently set as follows"
 msgstr "Οι ρυθμίσεις email σας ρυθμίζονται αυτήν τη στιγμή ως εξής"
 
-#: lib/functions.php:6190
+#: lib/functions.php:6207
 msgid "Method"
 msgstr "Μέθοδος"
 
-#: lib/functions.php:6192
+#: lib/functions.php:6209
 msgid "Checking Configuration...<br>"
 msgstr "Έλεγχος διαμόρφωσης ... <br>"
 
-#: lib/functions.php:6199
+#: lib/functions.php:6216
 msgid "PHP's Mailer Class"
 msgstr "Η τάξη Mailer της PHP"
 
-#: lib/functions.php:6205
+#: lib/functions.php:6222
 msgid "Method: SMTP"
 msgstr "Μέθοδος: SMTP"
 
-#: lib/functions.php:6222
+#: lib/functions.php:6239
 msgid "Not Shown for Security Reasons"
 msgstr "Δεν εμφανίζεται για λόγους ασφάλειας"
 
-#: lib/functions.php:6223
+#: lib/functions.php:6240
 msgid "Security"
 msgstr "Ασφάλεια"
 
-#: lib/functions.php:6231
+#: lib/functions.php:6248
 msgid "Ping Results:"
 msgstr "Αποτελέσματα Ping:"
 
-#: lib/functions.php:6231 lib/functions.php:6236
+#: lib/functions.php:6248 lib/functions.php:6253
 msgid "Success"
 msgstr "Επιτυχία"
 
-#: lib/functions.php:6240
+#: lib/functions.php:6257
 msgid "Bypassed"
 msgstr "Παράκαμψη"
 
-#: lib/functions.php:6249
+#: lib/functions.php:6266
 msgid "Creating Message Text..."
 msgstr "Δημιουργία κειμένου μηνύματος ..."
 
-#: lib/functions.php:6252
+#: lib/functions.php:6269
 msgid "Sending Message..."
 msgstr "Αποστολή μηνύματος ..."
 
-#: lib/functions.php:6256
+#: lib/functions.php:6273
 #, fuzzy
 msgid "Kadupul Test Message"
 msgstr "Μήνυμα δοκιμής Kadupul"
 
-#: lib/functions.php:6258
+#: lib/functions.php:6275
 msgid "Success!"
 msgstr "Επιτυχία!"
 
-#: lib/functions.php:6261
+#: lib/functions.php:6278
 msgid "Message Not Sent due to ping failure."
 msgstr "Μήνυμα δεν έχει σταλεί λόγω βλάβης του ping."
 
-#: lib/functions.php:6725 lib/functions.php:6795
+#: lib/functions.php:6742 lib/functions.php:6812
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Το plugin Kadupul έχει απενεργοποιηθεί %s λόγω του ακόλουθου σφάλματος: %s! Δείτε το αρχείο καταγραφής Kadupul για περισσότερες λεπτομέρειες."
 
-#: lib/functions.php:6891
+#: lib/functions.php:6908
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Το PollerID:%s έχει μη έγκυρο όνομα κεντρικού υπολογιστή:%s.  Δεν είναι προσβάσιμο μέσω DNS!"
 
-#: lib/functions.php:7315 lib/functions.php:7317
+#: lib/functions.php:7332 lib/functions.php:7334
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:7315 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7332 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "Έκδοση %s %s"
 
-#: lib/functions.php:7317
+#: lib/functions.php:7334
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7552
+#: lib/functions.php:7569
 #, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ:  Το Key Kadupul Include File %s λείπει.  Εντοπίστε και αντικαταστήστε αυτό το αρχείο"
@@ -15349,194 +15349,194 @@ msgstr "Αποτυχία προσθήκης στοιχείου γραφήματ�
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "Παράλειψη του στοιχείου γραφήματος αναφοράς &#39; <i> %s</i> &#39; υπάρχει ήδη"
 
-#: lib/rrd.php:2272
+#: lib/rrd.php:2274
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2275
+#: lib/rrd.php:2277
 msgid "The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2646
+#: lib/rrd.php:2648
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "ΣΦΆΛΜΑ: ΤΟ αρχείο RRD %s δεν μπορεί να εγγραφεί"
 
-#: lib/rrd.php:4061
+#: lib/rrd.php:4063
 #, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "Το απαιτούμενο μέγεθος βήματος αρχείου RRD είναι '%s' αλλά το βήμα που παρατηρήθηκε είναι '%s'"
 
-#: lib/rrd.php:4097
+#: lib/rrd.php:4099
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "Τύπος για την προέλευση δεδομένων &#39; %s&#39; θα πρέπει να είναι &#39; %s&#39;"
 
-#: lib/rrd.php:4103
+#: lib/rrd.php:4105
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "Καρδιά για την προέλευση δεδομένων &#39; %s&#39; θα πρέπει να είναι &#39; %s&#39;"
 
-#: lib/rrd.php:4115
+#: lib/rrd.php:4117
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "Το ελάχιστο RRD για την προέλευση δεδομένων &#39; %s&#39; θα πρέπει να είναι &#39; %s&#39;"
 
-#: lib/rrd.php:4124
+#: lib/rrd.php:4126
 #, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "Το DS &#39; %s&#39; λείπει από τον ορισμό του Kadupul"
 
-#: lib/rrd.php:4138 lib/rrd.php:4139
+#: lib/rrd.php:4140 lib/rrd.php:4141
 #, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Το Kadupul RRA &#39; %s&#39; έχει τα ίδια CF / βήματα ( %s, %s) ως &#39; %s&#39;"
 
-#: lib/rrd.php:4152 lib/rrd.php:4153
+#: lib/rrd.php:4154 lib/rrd.php:4155
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Το αρχείο RRA &#39; %s&#39; έχει τα ίδια CF / βήματα ( %s, %s) ως &#39; %s&#39;"
 
-#: lib/rrd.php:4185
+#: lib/rrd.php:4187
 #, fuzzy, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr "Το pdp_per_row του '%s' δεν είναι έγκυρο για το RRA '%s' θα πρέπει να είναι '%s'.  Εξετάστε το ενδεχόμενο να διαγράψετε και να επιτρέψετε στους Kadupul να δημιουργήσουν ξανά το αρχείο RRD."
 
-#: lib/rrd.php:4189
+#: lib/rrd.php:4191
 #, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "Το XFF για τον κάτοχο RRA id &#39; %s&#39; θα πρέπει να είναι &#39; %s&#39;"
 
-#: lib/rrd.php:4193
+#: lib/rrd.php:4195
 #, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Ο αριθμός των σειρών για το αναγνωριστικό RRA Kadupul '%s' είναι λανθασμένος.  Ο αριθμός των σειρών είναι '%s' αλλά πρέπει να είναι '%s'"
 
-#: lib/rrd.php:4210
+#: lib/rrd.php:4212
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "Το RRA &#39; %s&#39; λείπει στο αρχείο RRD"
 
-#: lib/rrd.php:4218
+#: lib/rrd.php:4220
 #, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "Το RRA &#39; %s&#39; λείπει από τον ορισμό του Kadupul"
 
-#: lib/rrd.php:4240
+#: lib/rrd.php:4242
 msgid "RRD File Information"
 msgstr "Πληροφορίες αρχείου RRD"
 
-#: lib/rrd.php:4272
+#: lib/rrd.php:4274
 msgid "Data Source Items"
 msgstr "Στοιχεία πηγής δεδομένων"
 
-#: lib/rrd.php:4274
+#: lib/rrd.php:4276
 msgid "Minimal Heartbeat"
 msgstr "Ελάχιστη καρδιακή αρρυθμία"
 
-#: lib/rrd.php:4275
+#: lib/rrd.php:4277
 msgid "Min"
 msgstr "Ελάχιστο"
 
-#: lib/rrd.php:4276
+#: lib/rrd.php:4278
 msgid "Max"
 msgstr "Μέγιστο"
 
-#: lib/rrd.php:4277
+#: lib/rrd.php:4279
 msgid "Last DS"
 msgstr "Τελευταίο DS"
 
-#: lib/rrd.php:4279
+#: lib/rrd.php:4281
 msgid "Unknown Sec"
 msgstr "Άγνωστη ενότητα"
 
-#: lib/rrd.php:4318
+#: lib/rrd.php:4320
 msgid "Round Robin Archive"
 msgstr "Αρχείο Robin Round"
 
-#: lib/rrd.php:4321
+#: lib/rrd.php:4323
 msgid "Cur Row"
 msgstr "Cur Row"
 
-#: lib/rrd.php:4322
+#: lib/rrd.php:4324
 msgid "PDP per Row"
 msgstr "PDP ανά σειρά"
 
-#: lib/rrd.php:4324
+#: lib/rrd.php:4326
 msgid "CDP Prep Value (0)"
 msgstr "Τιμή προεπιλογής CDP (0)"
 
-#: lib/rrd.php:4325
+#: lib/rrd.php:4327
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP Άγνωστα Σημεία δεδομένων (0)"
 
-#: lib/rrd.php:4406
+#: lib/rrd.php:4408
 msgid "Errors Found"
 msgstr "Δεν βρέθηκαν %s"
 
-#: lib/rrd.php:4418
+#: lib/rrd.php:4420
 msgid "Optional Tuning Recommendations"
 msgstr "Πεδία προέλευσης δεδομένων"
 
-#: lib/rrd.php:4445 lib/rrd.php:4448
+#: lib/rrd.php:4447 lib/rrd.php:4450
 #, php-format
 msgid "rename %s to %s"
 msgstr "μετονομάστε %s σε %s"
 
-#: lib/rrd.php:4542
+#: lib/rrd.php:4544
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "Σφάλμα κατά την εγγραφή αρχείου XML: %s"
 
-#: lib/rrd.php:4548
+#: lib/rrd.php:4550
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4554
+#: lib/rrd.php:4556
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "ΣΦΆΛΜΑ: ΤΟ αρχείο RRD %s δεν μπορεί να εγγραφεί"
 
-#: lib/rrd.php:4575
+#: lib/rrd.php:4577
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "Παρουσιάστηκε σφάλμα κατά την ανάλυση της XML της σφαλτικής μνήμης rrdtool"
 
-#: lib/rrd.php:4611 lib/rrd.php:4630
+#: lib/rrd.php:4613 lib/rrd.php:4632
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "Σφάλμα κατά την ανάλυση της XML της απόρριψης RRDtool"
 
-#: lib/rrd.php:4848
+#: lib/rrd.php:4850
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_ROW =% d, XFF =% 1.2f) αφαιρεθεί από το αρχείο RRD"
 
-#: lib/rrd.php:4886
+#: lib/rrd.php:4888
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_ROW =% d, XFF =% 1.2f) προσθήκη στο αρχείο RRD"
 
-#: lib/rrd.php:4917 lib/rrd.php:4933
+#: lib/rrd.php:4919 lib/rrd.php:4935
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "Ο ιστότοπος δεν έχει πρόσβαση εγγραφής στο %s, ίσως δεν είναι δυνατή η δημιουργία / ενημέρωση RRD"
 
-#: lib/rrd.php:4929
+#: lib/rrd.php:4931
 msgid "(Custom)"
 msgstr "Προσαρμογή"
 
-#: lib/rrd.php:4935
+#: lib/rrd.php:4937
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "Δεν ήταν δυνατή η εκκίνηση αρχείου δεδομένων, ενδέχεται να μην έχει εκτελεστεί ακόμα το poller"
 
-#: lib/rrd.php:4938
+#: lib/rrd.php:4940
 msgid "RRA Folder"
 msgstr "Φάκελος RRA"
 
-#: lib/rrd.php:4938
+#: lib/rrd.php:4940
 msgid "Root"
 msgstr "Ρίζα"
 
-#: lib/rrd.php:5018
+#: lib/rrd.php:5020
 msgid "Unknown RRDtool Error"
 msgstr "Άγνωστο σφάλμα RRDtool"
 

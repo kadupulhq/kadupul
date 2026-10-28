@@ -3,8 +3,8 @@
     "name": "cacti_temp_file",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8944,
-        "end_line": 8960,
+        "start_line": 8960,
+        "end_line": 8976,
         "line_count": 17,
         "signature": {
             "parameters": [

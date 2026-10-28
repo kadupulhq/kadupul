@@ -3,8 +3,8 @@
     "name": "cacti_version_compare",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7334,
-        "end_line": 7374,
+        "start_line": 7350,
+        "end_line": 7390,
         "line_count": 41,
         "signature": {
             "parameters": [
@@ -40,7 +40,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 32, "core_outside_functions_php": 30, "tests": 34, "plugins": 0},
+        "fan_out": {"core": 32, "core_outside_functions_php": 30, "tests": 35, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

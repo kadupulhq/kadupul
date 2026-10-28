@@ -3,8 +3,8 @@
     "name": "is_urlencoded",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5154,
-        "end_line": 5161,
+        "start_line": 5156,
+        "end_line": 5163,
         "line_count": 8,
         "signature": {
             "parameters": [

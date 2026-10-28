@@ -3,9 +3,9 @@
     "name": "get_full_script_path",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 3030,
-        "end_line": 3088,
-        "line_count": 59,
+        "start_line": 3031,
+        "end_line": 3090,
+        "line_count": 60,
         "signature": {
             "parameters": [
                 {

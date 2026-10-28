@@ -1185,9 +1185,9 @@ function snmp_escape_string($string)
     }
 
     if ($config['cacti_server_os'] == 'win32') {
-        /* SECURITY: Always wrap the string in quotes on Windows,
-         * preventing command chaining via &, |, or ^ operators. */
-        $string = str_replace(SNMP_ESCAPE_CHARACTER, "\\" . SNMP_ESCAPE_CHARACTER, $string);
+        /* cmd.exe ignores the backslash escape and toggles quoting on every
+         * quotation mark, so quotes alone cannot stop its operators. */
+        $string = str_replace(array('"', '&', '|', '^', '<', '>', '(', ')'), '', $string);
 
         return SNMP_ESCAPE_CHARACTER . $string . SNMP_ESCAPE_CHARACTER;
     }

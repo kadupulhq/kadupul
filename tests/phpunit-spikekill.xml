@@ -136,6 +136,7 @@
       <file>Unit/Security/Misc/DataQueryXmlPathTest.php</file>
       <file>Unit/SqlScriptCredentialsTest.php</file>
       <file>Unit/Security/Shell/DataInputQuotedPlaceholderTest.php</file>
+      <file>Unit/Security/Shell/Win32CmdArgumentTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

@@ -3,8 +3,8 @@
     "name": "sanitize_uri",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5108,
-        "end_line": 5145,
+        "start_line": 5110,
+        "end_line": 5147,
         "line_count": 38,
         "signature": {
             "parameters": [

@@ -87,7 +87,9 @@ function rrdtool_local_processes(): \Kadupul\Graphing\Infrastructure\Rrd\LocalRr
 
 function escape_command($command)
 {
-    return $command;		# we escape every single argument now, no need for 'special' escaping
+    // RRDtool reads one command per line, and continuation lines are folded
+    // before this point, so a remaining CR or LF came from interpolated data.
+    return str_replace(array("\r", "\n"), ' ', (string) $command);
     #return preg_replace("/(\\\$|`)/", "", $command); # current cacti code
     #TODO return preg_replace((\\\$(?=\w+|\*|\@|\#|\?|\-|\\\$|\!|\_|[0-9]|\(.*\))|`(?=.*(?=`)))","$2", $command);  #allow for a single $
 }

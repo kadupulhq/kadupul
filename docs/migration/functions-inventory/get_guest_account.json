@@ -3,12 +3,12 @@
     "name": "get_guest_account",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 3395,
-        "end_line": 3409,
+        "start_line": 3397,
+        "end_line": 3411,
         "line_count": 15,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,
-        "fan_out": {"core": 17, "core_outside_functions_php": 15, "tests": 21, "plugins": 0},
+        "fan_out": {"core": 17, "core_outside_functions_php": 15, "tests": 22, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

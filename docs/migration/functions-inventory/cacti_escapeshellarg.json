@@ -3,9 +3,9 @@
     "name": "cacti_escapeshellarg",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5363,
-        "end_line": 5407,
-        "line_count": 45,
+        "start_line": 5369,
+        "end_line": 5423,
+        "line_count": 55,
         "signature": {
             "parameters": [
                 {
@@ -25,13 +25,31 @@
                     "variadic": false,
                     "has_default": true,
                     "default": "true"
+                },
+                {
+                    "name": "cmd",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "false"
+                },
+                {
+                    "name": "strip_env",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "false"
                 }
             ],
             "return_type": null,
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 103, "core_outside_functions_php": 98, "tests": 51, "plugins": 0},
+        "fan_out": {"core": 109, "core_outside_functions_php": 104, "tests": 54, "plugins": 0},
         "body": {
             "uses_global": ["config"],
             "static_variables": [],

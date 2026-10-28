@@ -2596,7 +2596,10 @@ function get_script_query_path($args, $script_path, $host_id)
 
         $extra_arguments = '';
         foreach ($parts as $index => $part) {
-            $extra_arguments .= ($index > 0 ? ' ' : '') . cacti_escapeshellarg(substitute_host_data($part, '|', '|', $host_id));
+            // A monitored device supplies these values and cmd.exe runs them on
+            // Windows. Credentials may hold a '%'; a hostname or address never does.
+            $strip_env = strpos($part, '|host_hostname|') !== false || strpos($part, '|host_management_ip|') !== false;
+            $extra_arguments .= ($index > 0 ? ' ' : '') . cacti_escapeshellarg(substitute_host_data($part, '|', '|', $host_id), true, true, $strip_env);
         }
     } else {
         $extra_arguments = '';

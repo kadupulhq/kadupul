@@ -2975,7 +2975,7 @@ function get_full_test_script_path($data_template_id, $host_id)
     );
 
     $data = db_fetch_assoc_prepared(
-        "SELECT " . SQL_NO_CACHE . " dif.data_name, did.value
+        "SELECT " . SQL_NO_CACHE . " dif.data_name, dif.type_code, did.value
 		FROM data_input_fields AS dif
 		LEFT JOIN data_input_data AS did
 		ON dif.id = did.data_input_field_id
@@ -2993,12 +2993,14 @@ function get_full_test_script_path($data_template_id, $host_id)
 
     if (cacti_sizeof($data)) {
         foreach ($data as $item) {
+            // Values reach cmd.exe on Windows; only a hostname never holds a '%'.
+            $hostname = $item['data_name'] === 'hostname' || ($item['type_code'] ?? '') === 'hostname';
             if (isset($host[$item['data_name']])) {
-                $value = cacti_escapeshellarg($host[$item['data_name']]);
+                $value = cacti_escapeshellarg($host[$item['data_name']], true, true, $hostname);
             } elseif ($item['data_name'] == 'host_id' || $item['data_name'] == 'hostid') {
                 $value = cacti_escapeshellarg($host['id']);
             } else {
-                $value = cacti_escapeshellarg((string) $item['value']);
+                $value = cacti_escapeshellarg((string) $item['value'], true, true, $hostname);
             }
 
             // The first row for a name wins, as it did with str_replace().
@@ -3047,7 +3049,7 @@ function get_full_script_path($local_data_id)
     }
 
     $data = db_fetch_assoc_prepared(
-        "SELECT " . SQL_NO_CACHE . " dif.data_name, did.value
+        "SELECT " . SQL_NO_CACHE . " dif.data_name, dif.type_code, did.value
 		FROM data_input_fields AS dif
 		LEFT JOIN data_input_data AS did
 		ON dif.id = did.data_input_field_id
@@ -3063,7 +3065,8 @@ function get_full_script_path($local_data_id)
 
     if (cacti_sizeof($data)) {
         foreach ($data as $item) {
-            $value = cacti_escapeshellarg($item['value']);
+            // Values reach cmd.exe on Windows; only a hostname field never holds a '%'.
+            $value = cacti_escapeshellarg($item['value'], true, true, ($item['type_code'] ?? '') === 'hostname');
 
             if ($value == '') {
                 $value = "''";
@@ -5357,10 +5360,14 @@ function cacti_escapeshellcmd($string)
  *
  * @param $string 	- the string to be escaped
  * @param $quote 	- true: do NOT remove quotes from result; false: do remove quotes
+ * @param $cmd 		- true: the value reaches cmd.exe on Windows, so drop the characters it
+ *                    acts on even inside quotes; no effect on Unix
+ * @param $strip_env - with $cmd, also drop '%' so cmd.exe cannot expand a variable;
+ *                    only for values that never contain one, such as a hostname
  *
  * @return			- the escaped [quoted|unquoted] string
  */
-function cacti_escapeshellarg($string, $quote = true)
+function cacti_escapeshellarg($string, $quote = true, $cmd = false, $strip_env = false)
 {
     global $config;
 
@@ -5393,6 +5400,16 @@ function cacti_escapeshellarg($string, $quote = true)
          * on windows, command injection requires to close any open quotation first
          * so we have to escape any quotation here
          */
+        if ($cmd) {
+            /* cmd.exe ignores the backslash escape and toggles quoting on every
+             * quotation mark, so quoting alone cannot stop these operators. */
+            $string = str_replace(array('"', '&', '|', '^', '<', '>', '(', ')'), '', $string);
+
+            if ($strip_env) {
+                $string = str_replace('%', '', $string);
+            }
+        }
+
         if (substr_count($string, CACTI_ESCAPE_CHARACTER)) {
             $string = str_replace(CACTI_ESCAPE_CHARACTER, "\\" . CACTI_ESCAPE_CHARACTER, $string);
         }

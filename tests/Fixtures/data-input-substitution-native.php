@@ -47,7 +47,7 @@ function db_fetch_assoc_prepared($sql, $params = array(), $log = true, $db_conn 
     $rows = array();
 
     foreach ($GLOBALS['data_input_fixture']['fields'] as $name => $value) {
-        $rows[] = array('data_name' => (string) $name, 'value' => $value);
+        $rows[] = array('data_name' => (string) $name, 'type_code' => $GLOBALS['data_input_fixture']['types'][$name] ?? '', 'value' => $value);
     }
 
     return $rows;
@@ -56,10 +56,11 @@ function db_fetch_assoc_prepared($sql, $params = array(), $log = true, $db_conn 
 /**
  * @param array<string, string|null> $fields
  * @param array<string, mixed>       $host
+ * @param array<string, string>      $types
  */
-function data_input_command(string $caller, string $template, array $fields, array $host = array()): string
+function data_input_command(string $caller, string $template, array $fields, array $host = array(), array $types = array()): string
 {
-    $GLOBALS['data_input_fixture'] = array('template' => $template, 'fields' => $fields, 'host' => $host);
+    $GLOBALS['data_input_fixture'] = array('template' => $template, 'fields' => $fields, 'host' => $host, 'types' => $types);
 
     if ($caller === 'poller') {
         return (string) get_full_script_path(7);

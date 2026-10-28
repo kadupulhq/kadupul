@@ -3,8 +3,8 @@
     "name": "date_time_format",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7265,
-        "end_line": 7293,
+        "start_line": 7281,
+        "end_line": 7309,
         "line_count": 29,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,

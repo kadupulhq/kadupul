@@ -1,6 +1,7 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -8,7 +9,7 @@ $functionsSource = file_get_contents(__DIR__ . '/../../lib/functions.php');
 
 test('GHSA-c4qp-j9r9-fq24: test-script path expansion shell-escapes data_input values', function () use ($functionsSource) {
 	expect($functionsSource)->toContain("function get_full_test_script_path(");
-	expect($functionsSource)->toContain("\$value = cacti_escapeshellarg((string) \$item['value']);");
+	expect($functionsSource)->toContain("\$value = cacti_escapeshellarg((string) \$item['value'], true, true, \$hostname);");
 });
 
 test('GHSA-c4qp-j9r9-fq24: get_full_test_script_path does not wrap raw field values in manual quotes', function () use ($functionsSource) {

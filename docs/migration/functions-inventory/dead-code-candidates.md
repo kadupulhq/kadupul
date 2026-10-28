@@ -64,7 +64,6 @@ or deprecating anything. Do not remove a function on the count alone.
 | `get_rrd_cfs` | 2 | 0 | 0 | 0 | Graphing/Domain |
 | `is_base64_encoded` | 2 | 2 | 0 | 0 | Platform/Domain/Text |
 | `is_function_enabled` | 2 | 2 | 0 | 0 | Platform/Application/Port/ProcessRunner |
-| `is_valid_pathname` | 2 | 1 | 0 | 0 | Platform/Domain/Security |
 | `sanitize_cdef` | 2 | 2 | 0 | 0 | Platform/Domain/Security |
 | `cacti_browser_zone_set` | 2 | 0 | 1 | 0 | Platform/Domain/Time |
 | `clog_authorized` | 2 | 1 | 1 | 0 | IdentityAccess |
@@ -75,6 +74,7 @@ or deprecating anything. Do not remove a function on the count alone.
 | `is_device_debug_enabled` | 2 | 1 | 1 | 0 | Inventory/Application |
 | `is_mac_address` | 2 | 1 | 1 | 0 | Platform/Domain/Network |
 | `is_page_ajax` | 2 | 1 | 1 | 0 | Platform/Presentation/Http |
+| `is_valid_pathname` | 2 | 1 | 1 | 0 | Platform/Domain/Security |
 | `raise_ajax_permission_denied` | 2 | 2 | 1 | 0 | Platform/Presentation/Http |
 | `send_mail` | 2 | 1 | 1 | 0 | Alerting/Application/Port/MailSender |
 | `clog_admin` | 2 | 2 | 2 | 0 | IdentityAccess |
