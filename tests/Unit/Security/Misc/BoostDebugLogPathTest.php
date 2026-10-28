@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -27,9 +29,9 @@ function boost_log_child(string $program, array $input = array(), ?string $cwd =
     $stderr = stream_get_contents($pipes[2]);
     fclose($pipes[1]);
     fclose($pipes[2]);
-    proc_close($process);
+    $status = proc_close($process);
 
-    expect($stderr)->toBe('');
+    expect($stderr)->toBe('')->and($status)->toBe(0);
 
     return json_decode($stdout, true) ?? array('raw' => $stdout);
 }
@@ -149,3 +151,53 @@ test('Boost opens its debug log only through the checked path', function () {
         expect(preg_match_all("/\\\$\\w+\\s*=\\s*read_config_option\\('path_boost_log'\\)/", $source))->toBe(0, $file);
     }
 });
+
+test('the poller handoff refuses a stored non-log redirect and keeps an admitted log', function (string $suffix, bool $allowed) {
+    $work = sys_get_temp_dir() . '/kadupul-boostredirect-' . bin2hex(random_bytes(6));
+    mkdir($work . '/lib', 0700, true);
+    file_put_contents($work . '/lib/poller.php', "<?php\n");
+    $path = $work . '/boost.' . $suffix;
+    file_put_contents($path, 'owned fixture');
+
+    $library = file_get_contents(dirname(__DIR__, 4) . '/lib/boost.php');
+    // The old caller reads the setting directly and has no helper dependency.
+    // Keep it executable so the regression reaches the actual old handoff.
+    $helper = '';
+    try {
+        $helper = test_php_function_source($library, 'boost_debug_log_path');
+    } catch (RuntimeException $error) {
+        if ($error->getMessage() !== 'Function not found: boost_debug_log_path') {
+            throw $error;
+        }
+    }
+
+    $program = '$input = json_decode(stream_get_contents(STDIN), true);'
+        . '$GLOBALS["input"] = $input; $GLOBALS["commands"] = array();'
+        . '$config = array("base_path" => $input["base"], "library_path" => $input["base"] . "/lib", "cacti_server_os" => "unix");'
+        . 'function read_config_option($name) { return array("boost_rrd_update_enable" => "on", "path_boost_log" => $GLOBALS["input"]["path"], "path_php_binary" => PHP_BINARY)[$name] ?? ""; }'
+        . 'function boost_update_snmp_statistics() {}'
+        . 'function boost_debug($message) {}'
+        . 'function cacti_log(...$args) {}'
+        . 'function cacti_escapeshellarg($value) { return escapeshellarg($value); }'
+        . 'function exec_background(...$args) { $GLOBALS["commands"][] = $args; }'
+        . $helper . "\n"
+        . test_php_function_source($library, 'boost_poller_bottom') . "\n"
+        . 'boost_poller_bottom(); print json_encode($GLOBALS["commands"]);';
+
+    try {
+        $calls = boost_log_child($program, array('base' => $work, 'path' => $path));
+        expect($calls)->toHaveCount(1)
+            ->and(str_contains($calls[0][1], '--debug'))->toBe($allowed);
+        if ($allowed) {
+            expect($calls[0][2])->toContain('>>')->toContain($path);
+        } else {
+            expect($calls[0][2])->toBe('');
+        }
+        expect(file_get_contents($path))->toBe('owned fixture');
+    } finally {
+        unlink($path);
+        unlink($work . '/lib/poller.php');
+        rmdir($work . '/lib');
+        rmdir($work);
+    }
+})->with(array('stored PHP path' => array('php', false), 'admitted log path' => array('log', true)));

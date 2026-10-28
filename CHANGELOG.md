@@ -7,11 +7,19 @@ follows [Semantic Versioning](VERSIONING.md).
 ## [Unreleased]
 
 - Require a set Boost debug log path to end in `.log` on the settings page, and have Boost ignore a stored path that does not (GHSA-m6wx-f538-m6q3, upstream Cacti #8150 and #8148).
+- Report a data query XML file as located on the edit page and in the template import preview only when it is a regular file under `resource/`, which the loader reads, and refuse a NUL byte in path containment checks (GHSA-2x86-jpm8-9vgp, upstream Cacti #8150 and #8151).
+- Keep the database user and password out of `mysqladmin` process arguments in `scripts/sql.php` and `scripts/ss_sql.php`. Both scripts pass a private option file that is removed after each call, and `ss_sql.php` requests `status` again, so it no longer always returns `U` (upstream Cacti #8545 and #8450).
+- Verify a local login password once. A known account no longer verifies again before a rehash, so known, unknown, disabled and locked usernames each cost one hash, and a password replaced during the login refuses it (GHSA-p3rg-7pc3-2h86, upstream Cacti #8157).
+- Escape the username shown on the change password page for an account with no stored password, so a stored username renders as text (upstream Cacti #8338).
+- Bind on-demand Boost sample inserts so poller output is stored verbatim instead of being concatenated into SQL.
+- Pass browser timezone input explicitly to the local RRDtool web-context adapter while preserving session-close and process-start ordering.
+
 - Pass bootstrap row choices explicitly through legacy permission filters, removing the renderer's global binding while preserving tab-hook catalog changes.
 - Pass bulk permission selection field names explicitly from authenticated user/group page handlers instead of reading POST inside the association helper.
 - Remove 71 unused global bindings from 45 retained operation-page functions, tighten their per-file ratchet, and document global-state boundaries behind every Twig migration family. Native HTTP controllers are now checked alongside application/domain code for direct global access.
 - Say in `rebuild_poller_cache.php --help` that `--threads` defaults to the Poller Command Concurrent Processes setting, not 5 (#1021).
 
+- Keep data input field values out of quotes the input string opens. A value the template wraps in quotes, embeds in a quoted word, or places beside another field stays a single literal argument when the poller or Test Data Source runs the command; unsupported shell grammar inside a command substitution, a field or backslash inside backticks or `${...}`, bash `$'...'` or `$"..."` quoting, a field directly after an unescaped `$`, a backslash inside `$(...)`, and a newline, word-initial `#` or `<<` at the top level yield no command. Fields are substituted in one pass, and fields with no value or an empty value are removed before scanning, so token-shaped text inside a value is no longer stripped. Test Data Source no longer splits a quoted value when it drops a script server function name. Shipped data input methods produce the same command lines (GHSA-5v3j-wcrr-jxjg, #1118).
 - Add ten Twig views for graph-input associations, data-query mappings and suggestions, template relationships, and registered SNMP MIB metadata. Remove three unused VDEF global bindings from the related data-query confirmation page without changing its HTML or request/query calls.
 - Reject malformed aggregate parent identifiers, bound prepared insert batches, and hold the verified table engine stable until item replacement completes. Failed replacements preserve previous items and caller-owned work (#1017).
 - Add ten Twig views for stored user/group realm grants, display preferences, graph preferences, time preferences and login options. Preference readers allowlist public keys and preserve zero, empty and missing values; existing PHP forms still handle changes.

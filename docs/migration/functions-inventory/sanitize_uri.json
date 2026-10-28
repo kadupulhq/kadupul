@@ -3,8 +3,8 @@
     "name": "sanitize_uri",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5092,
-        "end_line": 5129,
+        "start_line": 5108,
+        "end_line": 5145,
         "line_count": 38,
         "signature": {
             "parameters": [
@@ -22,7 +22,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 15, "core_outside_functions_php": 11, "tests": 48, "plugins": 0},
+        "fan_out": {"core": 15, "core_outside_functions_php": 11, "tests": 49, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": ["drop_char_match", "drop_char_replace"],

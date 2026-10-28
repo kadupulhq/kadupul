@@ -320,6 +320,21 @@ final class ArchitectureTest extends TestCase
         }
     }
 
+    public function testRrdWebContextReceivesRequestStateExplicitly(): void
+    {
+        $source = file_get_contents(dirname(__DIR__, 2) . '/src/Graphing/Infrastructure/Legacy/LegacyRrdWebContext.php');
+        self::assertIsString($source);
+        foreach (token_get_all($source) as $token) {
+            if (!is_array($token)) {
+                continue;
+            }
+            self::assertNotSame(T_GLOBAL, $token[0]);
+            if ($token[0] === T_VARIABLE) {
+                self::assertNotContains($token[1], ['$GLOBALS', '$_GET', '$_POST', '$_REQUEST', '$_COOKIE', '$_SESSION', '$_SERVER', '$_FILES', '$_ENV']);
+            }
+        }
+    }
+
     public function testPermissionFilterReceivesItsRowCatalogExplicitly(): void
     {
         $source = file_get_contents(dirname(__DIR__, 2) . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php');

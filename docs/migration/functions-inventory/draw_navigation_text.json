@@ -3,8 +3,8 @@
     "name": "draw_navigation_text",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 4288,
-        "end_line": 4512,
+        "start_line": 4304,
+        "end_line": 4528,
         "line_count": 225,
         "signature": {
             "parameters": [
@@ -22,7 +22,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 16, "core_outside_functions_php": 14, "tests": 1, "plugins": 0},
+        "fan_out": {"core": 16, "core_outside_functions_php": 14, "tests": 2, "plugins": 0},
         "body": {
             "uses_global": ["config", "navigation"],
             "static_variables": [],
@@ -40,7 +40,7 @@
                     "name": "draw_navigation_text",
                     "resolved": true,
                     "expression": null,
-                    "line": 4292
+                    "line": 4308
                 }
             ]
         },
